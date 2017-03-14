@@ -41,20 +41,20 @@ defaultproperties
     DrivePos=(X=3.0,Y=0.0,Z=7.0)
 
     // Hull armor
-    FrontArmor(0)=(Thickness=6.4,Slope=47.0) // late model glacis design, with large, non-protruding driver hatches
-    RightArmor(0)=(Thickness=3.8)
-    LeftArmor(0)=(Thickness=3.8)
-    RearArmor(0)=(Thickness=3.8,Slope=10.0)
-/*
-    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper") // late model glacis design, with large, non-protruding driver hatches
-    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    FrontArmor(0)=(Thickness=5.08,Slope=-45.0,MaxRelativeHeight=41.0,LocationName="lower nose")
+    FrontArmor(1)=(Thickness=5.08,MaxRelativeHeight=55.0,LocationName="mid nose") // represents flattest, front facing part of rounded nose plate
+    FrontArmor(2)=(Thickness=5.08,Slope=56.0,MaxRelativeHeight=73.0,LocationName="upper nose")
+    FrontArmor(3)=(Thickness=6.35,Slope=47.0,LocationName="upper")
+    RightArmor(0)=(Thickness=3.81)
+    LeftArmor(0)=(Thickness=3.81)
+    RearArmor(0)=(Thickness=3.81,Slope=-10.0,MaxRelativeHeight=61.0,LocationName="lower")
+    RearArmor(1)=(Thickness=3.81,Slope=22.0,LocationName="upper")
 
+    FrontLeftAngle=335.0
+    FrontRightAngle=25.0
+    RearRightAngle=155.0
+    RearLeftAngle=205.0
+/*
     UFrontArmorFactor=6.4
     URightArmorFactor=3.8
     ULeftArmorFactor=3.8
@@ -62,11 +62,6 @@ defaultproperties
     UFrontArmorSlope=47.0
     URearArmorSlope=10.0
 */
-    FrontLeftAngle=335.0
-    FrontRightAngle=25.0
-    RearRightAngle=155.0
-    RearLeftAngle=205.0
-
     // Movement
     MaxCriticalSpeed=638.0 // 38 kph
     GearRatios(4)=0.71

@@ -42,20 +42,21 @@ defaultproperties
     HUDOverlayFOV=90.0
 
     // Hull armor
-    FrontArmor(0)=(Thickness=12.0,Slope=30.0) // model 1943 upper glacis plate, as the part of the upper front hull most exposed (angle also)
-    RightArmor(0)=(Thickness=9.0,Slope=15.0)
-    LeftArmor(0)=(Thickness=9.0,Slope=15.0)
-    RearArmor(0)=(Thickness=6.0,Slope=49.0)
-/*
-    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    FrontArmor(0)=(Thickness=10.0,Slope=-30.0,MaxRelativeHeight=-0.5,LocationName="lower")
+    FrontArmor(1)=(Thickness=6.0,Slope=72.0,MaxRelativeHeight=19.7,LocationName="upper")
+    FrontArmor(2)=(Thickness=12.0,Slope=30.0,LocationName="driver plate") // model 1943 stepped upper hull
+    RightArmor(0)=(Thickness=9.0,MaxRelativeHeight=15.5,LocationName="lower")
+    RightArmor(1)=(Thickness=9.0,Slope=15.0,LocationName="upper")
+    LeftArmor(0)=(Thickness=9.0,MaxRelativeHeight=15.5,LocationName="lower")
+    LeftArmor(1)=(Thickness=9.0,Slope=15.0,LocationName="upper")
+    RearArmor(0)=(Thickness=6.0,Slope=-41.0,MaxRelativeHeight=-0.5,LocationName="lower")
+    RearArmor(1)=(Thickness=6.0,Slope=49.0,LocationName="upper")
 
+    FrontLeftAngle=337.0 // angles adjusted from original
+    FrontRightAngle=23.0
+    RearRightAngle=157.0
+    RearLeftAngle=203.0
+/*
     UFrontArmorFactor=12.0 // model 1943 upper glacis plate, as the part of the upper front hull most exposed (angle also)
     URightArmorFactor=9.0
     ULeftArmorFactor=9.0
@@ -65,11 +66,6 @@ defaultproperties
     ULeftArmorSlope=15.0
     URearArmorSlope=49.0
 */
-    FrontLeftAngle=337.0 // angles adjusted from original
-    FrontRightAngle=23.0
-    RearRightAngle=157.0
-    RearLeftAngle=203.0
-
     // Movement
     GearRatios(4)=0.72
     TransRatio=0.09

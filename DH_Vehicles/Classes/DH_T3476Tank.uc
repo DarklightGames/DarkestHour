@@ -42,20 +42,20 @@ defaultproperties
     HUDOverlayFOV=90.0
 
     // Hull armor
-    FrontArmor(0)=(Thickness=4.5,Slope=60.0)
-    RightArmor(0)=(Thickness=4.5,Slope=40.0)
-    LeftArmor(0)=(Thickness=4.5,Slope=40.0)
-    RearArmor(0)=(Thickness=4.5,Slope=45.0)
-/*
-    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    FrontArmor(0)=(Thickness=4.5,Slope=-60.0,MaxRelativeHeight=-7.0,LocationName="lower")
+    FrontArmor(1)=(Thickness=4.5,Slope=60.0,LocationName="upper")
+    RightArmor(0)=(Thickness=4.5,MaxRelativeHeight=13.2,LocationName="lower")
+    RightArmor(1)=(Thickness=4.5,Slope=40.0,LocationName="upper")
+    LeftArmor(0)=(Thickness=4.5,MaxRelativeHeight=13.2,LocationName="lower")
+    LeftArmor(1)=(Thickness=4.5,Slope=40.0,LocationName="upper")
+    RearArmor(0)=(Thickness=4.5,Slope=-45.0,MaxRelativeHeight=-0.4,LocationName="lower")
+    RearArmor(1)=(Thickness=4.5,Slope=48.0,LocationName="upper")
 
+    FrontLeftAngle=330.0
+    FrontRightAngle=30.0
+    RearRightAngle=155.0
+    RearLeftAngle=205.0
+/*
     UFrontArmorFactor=4.5
     URightArmorFactor=4.5
     ULeftArmorFactor=4.5
@@ -65,11 +65,6 @@ defaultproperties
     ULeftArmorSlope=40.0
     URearArmorSlope=45.0
 */
-    FrontLeftAngle=330.0
-    FrontRightAngle=30.0
-    RearRightAngle=155.0
-    RearLeftAngle=205.0
-
     // Movement
     MaxCriticalSpeed=948.0 // 57 kph
     GearRatios(3)=0.65

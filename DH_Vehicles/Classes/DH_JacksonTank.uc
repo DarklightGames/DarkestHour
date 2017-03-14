@@ -39,20 +39,24 @@ defaultproperties
     DriveAnim="VPanzer3_driver_idle_open"
 
     // Hull armor
-    FrontArmor(0)=(Thickness=3.8,Slope=55.0)
-    RightArmor(0)=(Thickness=1.9,Slope=38.0)
-    LeftArmor(0)=(Thickness=1.9,Slope=38.0)
-    RearArmor(0)=(Thickness=1.9)
-/*
-    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    FrontArmor(0)=(Thickness=5.08,Slope=-45.0,MaxRelativeHeight=42.0,LocationName="lower nose")
+    FrontArmor(1)=(Thickness=5.08,MaxRelativeHeight=56.0,LocationName="mid nose") // represents flattest, front facing part of rounded nose plate
+    FrontArmor(2)=(Thickness=5.08,Slope=56.0,MaxRelativeHeight=78.6,LocationName="upper nose")
+    FrontArmor(3)=(Thickness=3.81,Slope=55.0,LocationName="upper")
+    RightArmor(0)=(Thickness=2.54,MaxRelativeHeight=64.0,LocationName="lower")
+    RightArmor(1)=(Thickness=1.91,Slope=-26.0,MaxRelativeHeight=78.6,LocationName="upper")
+    RightArmor(2)=(Thickness=1.91,Slope=38.0,LocationName="upper")
+    LeftArmor(0)=(Thickness=2.54,MaxRelativeHeight=64.0,LocationName="lower")
+    LeftArmor(1)=(Thickness=1.91,Slope=-26.0,MaxRelativeHeight=78.6,LocationName="upper")
+    LeftArmor(2)=(Thickness=1.91,Slope=38.0,LocationName="upper")
+    RearArmor(0)=(Thickness=1.91,Slope=-45.0,MaxRelativeHeight=38.5,LocationName="lowest")
+    RearArmor(1)=(Thickness=1.91,MaxRelativeHeight=64.0,LocationName="lower")
+    RearArmor(2)=(Thickness=1.91,Slope=-26.0,MaxRelativeHeight=78.6,LocationName="upper")
+    RearArmor(3)=(Thickness=1.91,Slope=38.0,LocationName="upper")
 
+    FrontLeftAngle=332.0
+    RearLeftAngle=208.0
+/*
     UFrontArmorFactor=3.8
     URightArmorFactor=1.9
     ULeftArmorFactor=1.9
@@ -61,9 +65,6 @@ defaultproperties
     URightArmorSlope=38.0
     ULeftArmorSlope=38.0
 */
-    FrontLeftAngle=332.0
-    RearLeftAngle=208.0
-
     // Movement
     MaxCriticalSpeed=766.0 // 46 kph
     GearRatios(4)=0.75

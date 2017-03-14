@@ -40,20 +40,21 @@ defaultproperties
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
 
     // Hull armor
-    FrontArmor(0)=(Thickness=8.0,Slope=50.0)
-    RightArmor(0)=(Thickness=4.0,Slope=30.0)
-    LeftArmor(0)=(Thickness=4.0,Slope=30.0)
-    RearArmor(0)=(Thickness=2.0,Slope=9.0)
-/*
-    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    FrontArmor(0)=(Thickness=5.0,Slope=-57.0,MaxRelativeHeight=-12.2,LocationName="lower nose")
+    FrontArmor(1)=(Thickness=8.0,Slope=45.0,MaxRelativeHeight=12.5,LocationName="upper nose") // later model with this armor plate increased from 60mm to 80mm
+    FrontArmor(2)=(Thickness=2.0,Slope=86.0,MaxRelativeHeight=21.7,LocationName="glacis")
+    FrontArmor(3)=(Thickness=8.0,Slope=50.0,LocationName="superstructure")
+    RightArmor(0)=(Thickness=3.0,MaxRelativeHeight=18.7,LocationName="lower")
+    RightArmor(1)=(Thickness=4.0,Slope=30.0,LocationName="superstructure") // TODO: Bird & Livingston says this plate was reduced to 30mm in this later model?
+    LeftArmor(0)=(Thickness=3.0,MaxRelativeHeight=18.7,LocationName="lower")
+    LeftArmor(1)=(Thickness=4.0,Slope=30.0,LocationName="superstructure")
+    RearArmor(0)=(Thickness=2.0,Slope=-10.0,MaxRelativeHeight=22.5,LocationName="lower")
+    RearArmor(1)=(Thickness=2.0,Slope=12.0,MaxRelativeHeight=50.5,LocationName="upper")
+    RearArmor(2)=(Thickness=3.0,Slope=33.0,LocationName="superstructure")
 
+    FrontLeftAngle=332.0
+    RearLeftAngle=208.0
+/*
     UFrontArmorFactor=8.0
     URightArmorFactor=4.0
     ULeftArmorFactor=4.0
@@ -63,9 +64,6 @@ defaultproperties
     ULeftArmorSlope=30.0
     URearArmorSlope=9.0
 */
-    FrontLeftAngle=332.0
-    RearLeftAngle=208.0
-
     // Movement
     MaxCriticalSpeed=730.0 // 44 kph
 

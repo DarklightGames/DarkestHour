@@ -44,20 +44,22 @@ defaultproperties
     HUDOverlayFOV=90.0
 
     // Hull armor
-    FrontArmor(0)=(Thickness=9.0,Slope=30.0)
-    RightArmor(0)=(Thickness=7.5,Slope=15.0)
-    LeftArmor(0)=(Thickness=7.5,Slope=15.0)
-    RearArmor(0)=(Thickness=6.0,Slope=49.0)
-/*
-    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    FrontArmor(0)=(Thickness=9.0,Slope=-30.0,MaxRelativeHeight=-11.0,LocationName="lower") // note: sources agree IS2 (our base hull) had 100mm, but show ISU-152 having 90mm
+    FrontArmor(1)=(Thickness=6.0,Slope=72.0,MaxRelativeHeight=0.1,LocationName="upper")
+    FrontArmor(2)=(Thickness=9.0,Slope=30.0,LocationName="superstructure")
+    RightArmor(0)=(Thickness=9.0,MaxRelativeHeight=0.8,LocationName="lower")
+    RightArmor(1)=(Thickness=7.5,Slope=15.0,LocationName="superstructure")
+    LeftArmor(0)=(Thickness=9.0,MaxRelativeHeight=0.8,LocationName="lower")
+    LeftArmor(1)=(Thickness=7.5,Slope=15.0,LocationName="superstructure")
+    RearArmor(0)=(Thickness=6.0,Slope=-41.0,MaxRelativeHeight=-12.8,LocationName="lower")
+    RearArmor(1)=(Thickness=6.0,Slope=49.0,MaxRelativeHeight=24.2,LocationName="upper")
+    RearArmor(2)=(Thickness=6.0,LocationName="superstructure")
 
+    FrontLeftAngle=322.0 // angles adjusted from original
+    FrontRightAngle=38.0
+    RearRightAngle=163.0
+    RearLeftAngle=197.0
+/*
     UFrontArmorFactor=9.0
     URightArmorFactor=7.5
     ULeftArmorFactor=7.5
@@ -67,11 +69,6 @@ defaultproperties
     ULeftArmorSlope=15.0
     URearArmorSlope=49.0
 */
-    FrontLeftAngle=322.0 // angles adjusted from original
-    FrontRightAngle=38.0
-    RearRightAngle=163.0
-    RearLeftAngle=197.0
-
     // Movement
     GearRatios(4)=0.72
     TransRatio=0.09

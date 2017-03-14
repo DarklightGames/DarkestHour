@@ -44,31 +44,29 @@ defaultproperties
     DriveAnim="VBA64_driver_idle_close"
 
     // Hull armor
-    FrontArmor(0)=(Thickness=3.0,Slope=40.0)
-    RightArmor(0)=(Thickness=0.8)
-    LeftArmor(0)=(Thickness=0.8)
-    RearArmor(0)=(Thickness=0.8)
-/*
-    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    FrontArmor(0)=(Thickness=3.0,Slope=-41.0,MaxRelativeHeight=40.0,LocationName="lower nose") // assumed 30mm to all front & 8mm elsewhere; measured all the slopes in the hull mesh
+    FrontArmor(1)=(Thickness=3.0,Slope=42.0,MaxRelativeHeight=61.0,LocationName="upper nose")
+    FrontArmor(2)=(Thickness=3.0,Slope=73.0,MaxRelativeHeight=77.0,LocationName="upper")
+    FrontArmor(3)=(Thickness=3.0,Slope=37.0,LocationName="driver plate")
+    RightArmor(0)=(Thickness=0.8,Slope=-22.5,MaxRelativeHeight=51.0,LocationName="lower") // composite slope & height for sides, as varies along length of hull
+    RightArmor(1)=(Thickness=0.8,Slope=30.0,LocationName="upper")
+    LeftArmor(0)=(Thickness=0.8,Slope=-22.5,MaxRelativeHeight=51.0,LocationName="lower")
+    LeftArmor(1)=(Thickness=0.8,Slope=30.0,LocationName="upper")
+    RearArmor(0)=(Thickness=0.8,Slope=-27.5,MaxRelativeHeight=46.0,LocationName="lower")
+    RearArmor(1)=(Thickness=0.8,Slope=24.0,MaxRelativeHeight=75.5,LocationName="upper")
+    RearArmor(2)=(Thickness=0.8,Slope=38.0,LocationName="turret upstand")
 
+    FrontLeftAngle=338.0
+    FrontRightAngle=22.0
+    RearRightAngle=158.0
+    RearLeftAngle=202.0
+/*
     UFrontArmorFactor=3.0
     URightArmorFactor=0.8
     ULeftArmorFactor=0.8
     URearArmorFactor=0.8
     UFrontArmorSlope=40.0
 */
-    FrontLeftAngle=338.0
-    FrontRightAngle=22.0
-    RearRightAngle=158.0
-    RearLeftAngle=202.0
-
     // Movement
     MaxCriticalSpeed=1039.0 // 62 kph
     GearRatios(0)=-0.35

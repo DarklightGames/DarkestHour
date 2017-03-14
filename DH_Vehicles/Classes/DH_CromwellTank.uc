@@ -53,26 +53,23 @@ defaultproperties
     OverlayFPCamPos=(X=9.0,Y=0.0,Z=0.0)
 
     // Hull armor
-    FrontArmor(0)=(Thickness=6.3)
-    RightArmor(0)=(Thickness=3.2)
-    LeftArmor(0)=(Thickness=3.2)
-    RearArmor(0)=(Thickness=3.2)
-/*
-    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    FrontArmor(0)=(Thickness=2.54,Slope=-62.0,MaxRelativeHeight=36.0,LocationName="lower nose")
+    FrontArmor(1)=(Thickness=5.72,Slope=-20.0,MaxRelativeHeight=50.5,LocationName="nose")
+    FrontArmor(2)=(Thickness=2.96,Slope=70.0,MaxRelativeHeight=67.5,LocationName="glacis")
+    FrontArmor(3)=(Thickness=6.35,LocationName="upper")
+    RightArmor(0)=(Thickness=2.86,MaxRelativeHeight=79.0,LocationName="lower") // lower side armour was 1.5 inch front half & 1" back half, so split the difference
+    RightArmor(1)=(Thickness=4.13,LocationName="upper")                        // upper side armour was 1.75" front half & 1.5" back half, so split the difference
+    LeftArmor(0)=(Thickness=2.85,MaxRelativeHeight=79.0,LocationName="lower")
+    LeftArmor(1)=(Thickness=4.13,LocationName="upper")
+    RearArmor(0)=(Thickness=3.18)
 
+    FrontRightAngle=27.0
+    RearRightAngle=153.0
+/*
     UFrontArmorFactor=6.3
     URightArmorFactor=3.2
     ULeftArmorFactor=3.2
     URearArmorFactor=3.2
-    FrontRightAngle=27.0
-    RearRightAngle=153.0
 */
     // Movement
     MaxCriticalSpeed=948.0 // 57 kph

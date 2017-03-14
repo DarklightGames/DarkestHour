@@ -37,20 +37,26 @@ defaultproperties
     bDrawDriverInTP=false
 
     // Hull armor
-    FrontArmor(0)=(Thickness=8.2,Slope=20.0)
-    RightArmor(0)=(Thickness=3.1)
-    LeftArmor(0)=(Thickness=3.1)
-    RearArmor(0)=(Thickness=5.0,Slope=10.0)
-/*
-    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    FrontArmor(0)=(Thickness=2.0,Slope=-75.0,MaxRelativeHeight=-26.5,LocationName="lower nose")
+    FrontArmor(1)=(Thickness=8.0,Slope=-20.0,MaxRelativeHeight=5.5,LocationName="nose")
+    FrontArmor(2)=(Thickness=8.0,Slope=52.0,MaxRelativeHeight=22.0,LocationName="upper nose")
+    FrontArmor(3)=(Thickness=3.0,Slope=86.0,MaxRelativeHeight=23.7,LocationName="glacis")
+    FrontArmor(4)=(Thickness=8.0,Slope=10.0,MaxRelativeHeight=42.0,LocationName="lower super")
+    FrontArmor(5)=(Thickness=3.0,Slope=68.0,LocationName="upper super")
+    RightArmor(0)=(Thickness=3.0,MaxRelativeHeight=28.6,LocationName="lower")
+    RightArmor(1)=(Thickness=3.0,Slope=11.0,LocationName="superstructure")
+    LeftArmor(0)=(Thickness=3.0,MaxRelativeHeight=28.6,LocationName="lower")
+    LeftArmor(1)=(Thickness=3.0,Slope=11.0,LocationName="superstructure")
+    RearArmor(0)=(Thickness=5.0,Slope=-10.0,MaxRelativeHeight=2.5,LocationName="lower")
+    RearArmor(1)=(Thickness=5.0,Slope=17.0,MaxRelativeHeight=29.0,LocationName="upper")
+    RearArmor(2)=(Thickness=1.7,Slope=78.0,MaxRelativeHeight=43.3,LocationName="deck")
+    RearArmor(3)=(Thickness=3.0,LocationName="superstructure")
 
+    FrontLeftAngle=330.0
+    FrontRightAngle=30.0
+    RearRightAngle=150.0
+    RearLeftAngle=210.0
+/*
     UFrontArmorFactor=8.2
     URightArmorFactor=3.1
     ULeftArmorFactor=3.1
@@ -58,11 +64,6 @@ defaultproperties
     UFrontArmorSlope=20.0
     URearArmorSlope=10.0
 */
-    FrontLeftAngle=330.0
-    FrontRightAngle=30.0
-    RearRightAngle=150.0
-    RearLeftAngle=210.0
-
     // Movement
     MaxCriticalSpeed=729.0 // 43 kph
 

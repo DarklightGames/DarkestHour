@@ -38,20 +38,17 @@ defaultproperties
     DriveAnim="VPanzer3_driver_idle_open"
 
     // Hull armor
-    FrontArmor(0)=(Thickness=2.9,Slope=48.0)
-    RightArmor(0)=(Thickness=2.9)
-    LeftArmor(0)=(Thickness=2.9)
-    RearArmor(0)=(Thickness=2.5,Slope=17.0)
-/*
-    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    FrontArmor(0)=(Thickness=4.45,Slope=-23.0,MaxRelativeHeight=48.5,LocationName="lower")
+    FrontArmor(1)=(Thickness=2.86,Slope=48.0,LocationName="upper")
+    RightArmor(0)=(Thickness=2.7) // side armor was 1.125 inches front half & 1" back half, so split the difference (no upper/lower split as is same)
+    LeftArmor(0)=(Thickness=2.7)
+    RearArmor(0)=(Thickness=2.54,Slope=-17.0,MaxRelativeHeight=45.2,LocationName="lowest")
+    RearArmor(1)=(Thickness=2.54,MaxRelativeHeight=81.3) // this is the main lower and upper hull combined, as both are 1 inch & vertical
+    RearArmor(2)=(Thickness=2.54,Slope=49.0,LocationName="upper slope")
 
+    FrontLeftAngle=332.0
+    RearLeftAngle=208.0
+/*
     UFrontArmorFactor=2.9
     URightArmorFactor=2.9
     ULeftArmorFactor=2.9
@@ -59,9 +56,6 @@ defaultproperties
     UFrontArmorSlope=48.0
     URearArmorSlope=17.0
 */
-    FrontLeftAngle=332.0
-    RearLeftAngle=208.0
-
     // Movement
     MaxCriticalSpeed=1057.0 // 63 kph
     GearRatios(3)=0.65

@@ -42,20 +42,19 @@ defaultproperties
     DriveAnim="VPanzer3_driver_idle_open"
 
     // Hull armor
-    FrontArmor(0)=(Thickness=15.0,Slope=50.0)
-    RightArmor(0)=(Thickness=8.0,Slope=25.0)
-    LeftArmor(0)=(Thickness=8.0,Slope=25.0)
-    RearArmor(0)=(Thickness=8.0,Slope=-30.0)
-/*
-    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    FrontArmor(0)=(Thickness=10.0,Slope=-50.0,MaxRelativeHeight=-33.2,LocationName="lower")
+    FrontArmor(1)=(Thickness=15.0,Slope=50.0,MaxRelativeHeight=27.0,LocationName="upper")
+    FrontArmor(2)=(Thickness=25.0,Slope=15.0,LocationName="superstructure")
+    RightArmor(0)=(Thickness=8.0,MaxRelativeHeight=-14.0,LocationName="lower")
+    RightArmor(1)=(Thickness=8.0,Slope=25.0,LocationName="upper/super")
+    LeftArmor(0)=(Thickness=8.0,MaxRelativeHeight=-14.0,LocationName="lower")
+    LeftArmor(1)=(Thickness=8.0,Slope=25.0,LocationName="upper/super")
+    RearArmor(0)=(Thickness=8.0,Slope=-30.0,MaxRelativeHeight=24.8,LocationName="lower")
+    RearArmor(1)=(Thickness=8.0,Slope=10.0,LocationName="superstructure")
 
+    FrontLeftAngle=332.0
+    RearLeftAngle=208.0
+/*
     UFrontArmorFactor=15.0
     URightArmorFactor=8.0
     ULeftArmorFactor=8.0
@@ -65,9 +64,6 @@ defaultproperties
     ULeftArmorSlope=25.0
     URearArmorSlope=-30.0
 */
-    FrontLeftAngle=332.0
-    RearLeftAngle=208.0
-
     // Movement
     MaxCriticalSpeed=638.0 // 38 kph
     GearRatios(1)=0.25

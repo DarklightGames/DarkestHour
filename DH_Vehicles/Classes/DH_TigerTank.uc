@@ -41,20 +41,22 @@ defaultproperties
     DriveAnim="VTiger_driver_idle_close"
 
     // Hull armor
-    FrontArmor(0)=(Thickness=10.8,Slope=24.0)
-    RightArmor(0)=(Thickness=8.7)
-    LeftArmor(0)=(Thickness=8.7)
-    RearArmor(0)=(Thickness=8.7,Slope=-8.0)
-/*
-    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    FrontArmor(0)=(Thickness=6.0,Slope=-63.0,MaxRelativeHeight=-26.5,LocationName="lowest")
+    FrontArmor(1)=(Thickness=10.2,Slope=-25.0,MaxRelativeHeight=16.0,LocationName="lower")
+    FrontArmor(2)=(Thickness=6.0,Slope=70.0,MaxRelativeHeight=26.5,LocationName="glacis")
+    FrontArmor(3)=(Thickness=10.2,Slope=9.0,LocationName="upper")
+    RightArmor(0)=(Thickness=6.2,MaxRelativeHeight=17.7,LocationName="lower")
+    RightArmor(1)=(Thickness=8.2,LocationName="upper")
+    LeftArmor(0)=(Thickness=6.2,MaxRelativeHeight=17.7,LocationName="lower")
+    LeftArmor(1)=(Thickness=8.2,LocationName="upper")
+    RearArmor(0)=(Thickness=6.0,Slope=-50.0,MaxRelativeHeight=-26.5,LocationName="lowest")
+    RearArmor(1)=(Thickness=8.2,Slope=-9.0)
 
+    FrontLeftAngle=329.0
+    FrontRightAngle=31.0
+    RearRightAngle=149.0
+    RearLeftAngle=211.0
+/*
     UFrontArmorFactor=10.8
     URightArmorFactor=8.7
     ULeftArmorFactor=8.7
@@ -62,11 +64,6 @@ defaultproperties
     UFrontArmorSlope=24.0
     URearArmorSlope=-8.0
 */
-    FrontLeftAngle=329.0
-    FrontRightAngle=31.0
-    RearRightAngle=149.0
-    RearLeftAngle=211.0
-
     // Movement
     MaxCriticalSpeed=693.0 // 41 kph
     GearRatios(4)=0.7

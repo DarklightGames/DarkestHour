@@ -16,9 +16,14 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3_anm.ShermanM4A3E2_body_int')
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3_anm.ShermanM4A3E2_body_int')
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3_anm.ShermanM4A3E2_body_int')
-    FrontArmor(0)=(Thickness=8.7)
-    RightArmor(0)=(Thickness=5.8)
-    LeftArmor(0)=(Thickness=5.8)
+    FrontArmor(0)=(Thickness=13.97)
+    FrontArmor(1)=(Thickness=13.97)
+    FrontArmor(2)=(Thickness=11.43)
+    FrontArmor(3)=(Thickness=8.7) // TODO: Bird & Livingston says 64mm plus 38mm for front, & 38mm + 38mm for upper sides
+    RightArmor(0)=(Thickness=3.81,MaxRelativeHeight=69.7,LocationName="lower")
+    RightArmor(1)=(Thickness=5.8,LocationName="upper")
+    LeftArmor(0)=(Thickness=3.81,MaxRelativeHeight=69.7,LocationName="lower")
+    LeftArmor(1)=(Thickness=5.8,LocationName="upper")
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3E2_dest'
     GearRatios(4)=0.67
     TransRatio=0.07

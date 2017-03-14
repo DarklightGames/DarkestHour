@@ -41,28 +41,23 @@ defaultproperties
     DriveAnim="VBA64_driver_idle_close"
 
     // Hull armor
-    FrontArmor(0)=(Thickness=1.6)
-    RightArmor(0)=(Thickness=0.9)
-    LeftArmor(0)=(Thickness=0.9)
-    RearArmor(0)=(Thickness=0.9)
-/*
-    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    FrontArmor(0)=(Thickness=1.59,Slope=-30.0,MaxRelativeHeight=71.0,LocationName="lower")
+    FrontArmor(1)=(Thickness=1.27,Slope=60.0,MaxRelativeHeight=101.5,LocationName="upper")
+    FrontArmor(2)=(Thickness=1.91,Slope=45.0,LocationName="driver plate")
+    RightArmor(0)=(Thickness=0.95,Slope=-22.0,MaxRelativeHeight=91.5,LocationName="lower")
+    RightArmor(1)=(Thickness=0.95,Slope=22.0,LocationName="upper")
+    LeftArmor(0)=(Thickness=0.95,Slope=-22.0,MaxRelativeHeight=91.5,LocationName="lower")
+    LeftArmor(1)=(Thickness=0.95,Slope=22.0,LocationName="upper")
+    RearArmor(0)=(Thickness=0.95)
 
+    FrontLeftAngle=332.0
+    RearLeftAngle=208.0
+/*
     UFrontArmorFactor=1.6
     URightArmorFactor=0.9
     ULeftArmorFactor=0.9
     URearArmorFactor=0.9
 */
-    FrontLeftAngle=332.0
-    RearLeftAngle=208.0
-
     // Movement
     MaxCriticalSpeed=1077.0 // 64 kph
     GearRatios(3)=0.6

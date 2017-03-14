@@ -40,20 +40,22 @@ defaultproperties
     DriveAnim="VPanzer3_driver_idle_open"
 
     // Hull armor
-    FrontArmor(0)=(Thickness=1.3,Slope=38.0)
-    RightArmor(0)=(Thickness=1.3,Slope=23.0)
-    LeftArmor(0)=(Thickness=1.3,Slope=23.0)
-    RearArmor(0)=(Thickness=1.3,Slope=13.0)
-/*
-    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    FrontArmor(0)=(Thickness=1.27,Slope=-53.0,MaxRelativeHeight=-20.0,LocationName="lower nose")
+    FrontArmor(1)=(Thickness=1.27,Slope=-24.0,MaxRelativeHeight=-1.9,LocationName="nose")
+    FrontArmor(2)=(Thickness=1.27,Slope=38.0,MaxRelativeHeight=17.0,LocationName="upper nose")
+    FrontArmor(3)=(Thickness=1.27,Slope=64.0,LocationName="upper")
+    RightArmor(0)=(Thickness=1.27,MaxRelativeHeight=14.5,LocationName="lower")
+    RightArmor(1)=(Thickness=1.27,Slope=23.0,LocationName="upper")
+    LeftArmor(0)=(Thickness=1.27,MaxRelativeHeight=14.5,LocationName="lower")
+    LeftArmor(1)=(Thickness=1.27,Slope=23.0,LocationName="upper")
+    RearArmor(0)=(Thickness=1.27,Slope=-35.0,MaxRelativeHeight=20.5,LocationName="lower")
+    RearArmor(1)=(Thickness=1.27,Slope=13.0,LocationName="upper")
 
+    FrontLeftAngle=330.0
+    FrontRightAngle=30.0
+    RearRightAngle=150.0
+    RearLeftAngle=210.0
+/*
     UFrontArmorFactor=1.3
     URightArmorFactor=1.3
     ULeftArmorFactor=1.3
@@ -63,11 +65,6 @@ defaultproperties
     ULeftArmorSlope=23.0
     URearArmorSlope=13.0
 */
-    FrontLeftAngle=330.0
-    FrontRightAngle=30.0
-    RearRightAngle=150.0
-    RearLeftAngle=210.0
-
     // Movement
     MaxCriticalSpeed=1193.0 // 71 kph
     GearRatios(3)=0.62

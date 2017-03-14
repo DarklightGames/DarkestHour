@@ -42,20 +42,17 @@ defaultproperties
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
 
     // Hull armor
-    FrontArmor(0)=(Thickness=15.0,Slope=50.0)
-    RightArmor(0)=(Thickness=8.0,Slope=25.0)
-    LeftArmor(0)=(Thickness=8.0,Slope=25.0)
+    FrontArmor(0)=(Thickness=10.0,Slope=-50.0,MaxRelativeHeight=-35.0,LocationName="lower")
+    FrontArmor(1)=(Thickness=15.0,Slope=50.0,LocationName="upper")
+    RightArmor(0)=(Thickness=8.0,MaxRelativeHeight=-15.0,LocationName="lower")
+    RightArmor(1)=(Thickness=8.0,Slope=25.0,LocationName="upper")
+    LeftArmor(0)=(Thickness=8.0,MaxRelativeHeight=-15.0,LocationName="lower")
+    LeftArmor(1)=(Thickness=8.0,Slope=25.0,LocationName="upper")
     RearArmor(0)=(Thickness=8.0,Slope=-30.0)
-/*
-    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
 
+    FrontLeftAngle=332.0
+    RearLeftAngle=208.0
+/*
     UFrontArmorFactor=15.0
     URightArmorFactor=8.0
     ULeftArmorFactor=8.0
@@ -65,9 +62,6 @@ defaultproperties
     ULeftArmorSlope=25.0
     URearArmorSlope=-30.0
 */
-    FrontLeftAngle=332.0
-    RearLeftAngle=208.0
-
     // Movement
     MaxCriticalSpeed=693.0 // 41 kph
     GearRatios(3)=0.45

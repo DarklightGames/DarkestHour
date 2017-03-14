@@ -52,13 +52,18 @@ defaultproperties
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
 
     // Hull armor
-    FrontArmor(0)=(Thickness=6.5,Slope=-35.0,MaxRelativeHeight=-8.0,LocationName="lower")
+    FrontArmor(0)=(Thickness=6.5,Slope=-55.0,MaxRelativeHeight=-8.0,LocationName="lower")
     FrontArmor(1)=(Thickness=8.5,Slope=55.0,LocationName="upper")
     RightArmor(0)=(Thickness=4.0,MaxRelativeHeight=23.0,LocationName="lower")
     RightArmor(1)=(Thickness=4.0,Slope=40.0,LocationName="upper")
     LeftArmor(0)=(Thickness=4.0,MaxRelativeHeight=23.0,LocationName="lower")
     LeftArmor(1)=(Thickness=4.0,Slope=40.0,LocationName="upper")
-    RearArmor(0)=(Thickness=4.0)
+    RearArmor(0)=(Thickness=4.0,Slope=-30.0)
+
+    FrontLeftAngle=334.0
+    FrontRightAngle=26.0
+    RearRightAngle=154.0
+    RearLeftAngle=206.0
 /*
     UFrontArmorFactor=8.5
     UFrontArmorSlope=55.0
@@ -78,11 +83,6 @@ defaultproperties
     URearArmorFactor=4.0
     URearArmorSlope=-30.0
 */
-    FrontLeftAngle=334.0
-    FrontRightAngle=26.0
-    RearRightAngle=154.0
-    RearLeftAngle=206.0
-
     // Movement
     bTurnInPlace=true // don't think this affects panther's ability to turn, i.e. to neutral turn; think it's just a bot property
     GearRatios(4)=0.8

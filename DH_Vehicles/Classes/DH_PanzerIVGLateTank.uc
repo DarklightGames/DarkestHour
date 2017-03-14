@@ -38,20 +38,18 @@ defaultproperties
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VPanzer4_driver_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=65536,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
 
     // Hull armor
-    FrontArmor(0)=(Thickness=8.2,Slope=12.0)
+    FrontArmor(0)=(Thickness=3.0,Slope=-64.0,MaxRelativeHeight=-20.0,LocationName="lower nose")
+    FrontArmor(1)=(Thickness=8.0,Slope=-12.0,MaxRelativeHeight=6.8,LocationName="nose")
+    FrontArmor(2)=(Thickness=2.5,Slope=73.0,MaxRelativeHeight=22.5,LocationName="glacis")
+    FrontArmor(3)=(Thickness=8.0,Slope=10.0,LocationName="upper")
     RightArmor(0)=(Thickness=3.0)
     LeftArmor(0)=(Thickness=3.0)
-    RearArmor(0)=(Thickness=2.1,Slope=9.0)
-/*
-    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    RearArmor(0)=(Thickness=2.0,Slope=-9.0,MaxRelativeHeight=22.5,LocationName="lower")
+    RearArmor(1)=(Thickness=2.0,Slope=12.0,LocationName="upper")
 
+    FrontLeftAngle=332.0
+    RearLeftAngle=208.0
+/*
     UFrontArmorFactor=8.2
     URightArmorFactor=3.0
     ULeftArmorFactor=3.0
@@ -59,9 +57,6 @@ defaultproperties
     UFrontArmorSlope=12.0
     URearArmorSlope=9.0
 */
-    FrontLeftAngle=332.0
-    RearLeftAngle=208.0
-
     // Movement
     MaxCriticalSpeed=729.0 // 43 kph
     GearRatios(4)=0.65

@@ -40,31 +40,25 @@ defaultproperties
     DrivePos=(X=5.0,Y=0.0,Z=3.0)
 
     // Hull armor
-    FrontArmor(0)=(Thickness=5.1,Slope=55.0)
-    RightArmor(0)=(Thickness=3.8)
-    LeftArmor(0)=(Thickness=3.8)
-    RearArmor(0)=(Thickness=3.8)
-/*
-    FrontArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    FrontArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RightArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RightArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    LeftArmor(0)=(Thickness=x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    LeftArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
-    RearArmor(0)=(Thickness=x.0,Slope=-x.0,MaxRelativeHeight=x.0,LocationName="lower")
-    RearArmor(1)=(Thickness=x.0,Slope=x.0,LocationName="upper")
+    FrontArmor(0)=(Thickness=5.08,Slope=-45.0,MaxRelativeHeight=41.0,LocationName="lower nose")
+    FrontArmor(1)=(Thickness=5.08,MaxRelativeHeight=55.0,LocationName="mid nose") // represents flattest, front facing part of rounded nose plate
+    FrontArmor(2)=(Thickness=5.08,Slope=55.0,LocationName="upper")
+    RightArmor(0)=(Thickness=3.81)
+    LeftArmor(0)=(Thickness=3.81)
+    RearArmor(0)=(Thickness=3.81,Slope=-10.0,MaxRelativeHeight=70.0,LocationName="lower")
+    RearArmor(1)=(Thickness=3.81,LocationName="upper")
 
+    FrontLeftAngle=335.0
+    FrontRightAngle=25.0
+    RearRightAngle=155.0
+    RearLeftAngle=205.0
+/*
     UFrontArmorFactor=5.1
     URightArmorFactor=3.8
     ULeftArmorFactor=3.8
     URearArmorFactor=3.8
     UFrontArmorSlope=55.0
 */
-    FrontLeftAngle=335.0
-    FrontRightAngle=25.0
-    RearRightAngle=155.0
-    RearLeftAngle=205.0
-
     // Movement
     MaxCriticalSpeed=638.0 // 38 kph
     GearRatios(4)=0.72
