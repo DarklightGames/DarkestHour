@@ -4046,79 +4046,79 @@ exec function SetArmorHeight(optional string Side, optional byte Index, optional
 {
     local DHVehicle        V;
     local DHArmoredVehicle AV;
+    local bool             bDontChangeValue;
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && V.IsA('DHArmoredVehicle'))
     {
         AV = DHArmoredVehicle(V);
         DestroyPlaneAttachments(AV); // remove any existing angle plane attachments
 
-        if (Side ~= "F" || Side ~= "Front")
+        if (NewValue == 999.0) // option to just display the existing height, not setting a new value (pass 999 as new height)
         {
-            if (Index >= AV.FrontArmor.Length)
-            {
-                AV.FrontArmor.Length = Index + 1;
-            }
-
-            Log(AV.VehicleNameString @ "FrontArmor[" $ Index $ "].MaxRelativeHeight =" @ NewValue @ "(was" @ AV.FrontArmor[Index].MaxRelativeHeight $ ")");
-            AV.FrontArmor[Index].MaxRelativeHeight = NewValue;
-            SpawnPlaneAttachment(AV, rot(0, 0, 16384), AV.FrontArmor[Index].MaxRelativeHeight * vect(0.0, 0.0, 1.0));
+            bDontChangeValue = true;
         }
-        else if (Side ~= "R" || Side ~= "Right")
+        else if (Side ~= "A" || Side ~= "All") // option to display heights for this armor index position for all sides
         {
-            if (Index >= AV.RightArmor.Length)
-            {
-                AV.RightArmor.Length = Index + 1;
-            }
-
-            Log(AV.VehicleNameString @ "RightArmor[" $ Index $ "].MaxRelativeHeight =" @ NewValue @ "(was" @ AV.RightArmor[Index].MaxRelativeHeight $ ")");
-            AV.RightArmor[Index].MaxRelativeHeight = NewValue;
-            SpawnPlaneAttachment(AV, rot(0, 16384, 16384), AV.RightArmor[Index].MaxRelativeHeight * vect(0.0, 0.0, 1.0));
+            Side = "All";
+            bDontChangeValue = true;
         }
-        else if (Side ~= "B" || Side ~= "Back" || Side ~= "Rear")
-        {
-            if (Index >= AV.RearArmor.Length)
-            {
-                AV.RearArmor.Length = Index + 1;
-            }
 
-            Log(AV.VehicleNameString @ "RearArmor[" $ Index $ "].MaxRelativeHeight =" @ NewValue @ "(was" @ AV.RearArmor[Index].MaxRelativeHeight $ ")");
-            AV.RearArmor[Index].MaxRelativeHeight = NewValue;
-            SpawnPlaneAttachment(AV, rot(0, 32768, 16384), AV.RearArmor[Index].MaxRelativeHeight * vect(0.0, 0.0, 1.0));
+        if (Side ~= "F" || Side ~= "Front" || Side ~= "All")
+        {
+            ProcessSetArmorHeight(AV, AV.FrontArmor, Index, NewValue, "Front", 0, bDontChangeValue);
         }
-        else if (Side ~= "L" || Side ~= "Left")
-        {
-            if (Index >= AV.LeftArmor.Length)
-            {
-                AV.LeftArmor.Length = Index + 1;
-            }
 
-            Log(AV.VehicleNameString @ "LeftArmor[" $ Index $ "].MaxRelativeHeight =" @ NewValue @ "(was" @ AV.LeftArmor[Index].MaxRelativeHeight $ ")");
-            AV.LeftArmor[Index].MaxRelativeHeight = NewValue;
-            SpawnPlaneAttachment(AV, rot(0, -16384, 16384), AV.LeftArmor[Index].MaxRelativeHeight * vect(0.0, 0.0, 1.0));
+        if (Side ~= "R" || Side ~= "Right" || Side ~= "All")
+        {
+            ProcessSetArmorHeight(AV, AV.RightArmor, Index, NewValue, "Right", 16384, bDontChangeValue);
         }
-        else if (Side ~= "A" || Side ~= "All") // option to just display heights for this armor index position for all sides
+
+        if (Side ~= "B" || Side ~= "Back" || Side ~= "Rear" || Side ~= "All")
         {
-            if (Index < AV.FrontArmor.Length - 1) // minus 1 because we don't want to show the highest band as it doesn't have a max height
-            {
-                SpawnPlaneAttachment(AV, rot(0, 0, 16384), AV.FrontArmor[Index].MaxRelativeHeight * vect(0.0, 0.0, 1.0));
-            }
+            ProcessSetArmorHeight(AV, AV.RearArmor, Index, NewValue, "Rear", 32768, bDontChangeValue);
+        }
 
-            if (Index < AV.RightArmor.Length - 1)
-            {
-                SpawnPlaneAttachment(AV, rot(0, 16384, 16384), AV.RightArmor[Index].MaxRelativeHeight * vect(0.0, 0.0, 1.0));
-            }
-
-            if (Index < AV.RearArmor.Length - 1)
-            {
-                SpawnPlaneAttachment(AV, rot(0, 32768, 16384), AV.RearArmor[Index].MaxRelativeHeight * vect(0.0, 0.0, 1.0));
-            }
-
-            if (Index < AV.LeftArmor.Length - 1)
-            {
-                SpawnPlaneAttachment(AV, rot(0, -16384, 16384), AV.LeftArmor[Index].MaxRelativeHeight * vect(0.0, 0.0, 1.0));
-            }
+        if (Side ~= "L" || Side ~= "Left" || Side ~= "All")
+        {
+            ProcessSetArmorHeight(AV, AV.LeftArmor, Index, NewValue, "Left", -16384, bDontChangeValue);
         }
     }
+}
+
+// New helper function for debug exec SetArmorHeight
+function ProcessSetArmorHeight(DHVehicle V, out array<DHArmoredVehicle.ArmorSection> ArmorArray, byte Index, float NewValue, string SideText, int PlaneYaw, optional bool bDontChangeValue)
+{
+    local rotator PlaneRotation;
+
+    // Option to just display the existing height, not setting a new value
+    if (bDontChangeValue)
+    {
+        if (Index >= ArmorArray.Length - 1)
+        {
+            return; // invalid index no. (minus 1 because we don't draw a height plane for the highest armor band as it isn't supposed to have a max height)
+        }
+
+        Log(V.VehicleNameString $ ":" @ SideText $ "Armor[" $ Index $ "].MaxRelativeHeight =" @ ArmorArray[Index].MaxRelativeHeight
+            $ ", thickness =" @ ArmorArray[Index].Thickness $ "mm, slope =" @ ArmorArray[Index].Slope @ "degrees");
+    }
+    // Default is to set a new max height value
+    else
+    {
+        if (Index >= ArmorArray.Length)
+        {
+            ArmorArray.Length = Index + 1; // extend armor array if a higher index no. has been specified
+        }
+
+        Log(V.VehicleNameString $ ":" @ SideText $ "Armor[" $ Index $ "].MaxRelativeHeight =" @ NewValue @ "(was" @ ArmorArray[Index].MaxRelativeHeight
+            $ "), thickness =" @ ArmorArray[Index].Thickness $ "mm, slope =" @ ArmorArray[Index].Slope @ "degrees");
+
+        ArmorArray[Index].MaxRelativeHeight = NewValue;
+    }
+
+    // Display an angle plane showing the max height
+    PlaneRotation.Yaw = PlaneYaw;
+    PlaneRotation.Roll = 16384;
+    SpawnPlaneAttachment(V, PlaneRotation, ArmorArray[Index].MaxRelativeHeight * vect(0.0, 0.0, 1.0));
 }
 
 // New debug exec to show & adjust a vehicle's TreadHitMaxHeight, which is the highest point (above the origin) where a side hit may damage treads
