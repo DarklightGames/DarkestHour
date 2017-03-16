@@ -378,7 +378,7 @@ simulated function bool IsVehiclePoolIndexValid(RORoleInfo RI, byte VehiclePoolI
 
 simulated function byte GetVehiclePoolSpawnsRemaining(byte VehiclePoolIndex)
 {
-    if (VehiclePoolMaxSpawns[VehiclePoolIndex] == 255)
+    if (IsVehiclePoolInfinite(VehiclePoolIndex))
     {
         return 255;
     }
