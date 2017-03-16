@@ -5,6 +5,11 @@ import pprint
 start = 'start'
 
 
+def p_directive(p):
+    '''directive : DIRECTIVE'''
+    p[0] = ('directive', p[1])
+
+
 def p_pre_unary_operator(p):
     '''pre_unary_operator : MINUS
                           | NOT
@@ -212,7 +217,7 @@ def p_assignment_operator(p):
 
 def p_assignment_statement(p):
     'assignment_statement : target assignment_operator expression'
-    p[0] = ('assignment_statement', p[1], p[3])
+    p[0] = ('assignment_statement', p[2], p[1], p[3])
 
 
 def p_string_literal(p):
@@ -724,7 +729,8 @@ def p_declaration(p):
                    | struct_definition
                    | enum_definition
                    | state_definition
-                   | replication_block'''
+                   | replication_block
+                   | directive'''
     p[0] = p[1]
 
 

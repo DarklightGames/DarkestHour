@@ -26,6 +26,10 @@ class xuccparser():
 xucc = xuccparser()
 
 
+def r_directive(p):
+    return p[1]
+
+
 def r_within(p):
     return 'within(' + render(p[1]) + ')'
 
@@ -138,7 +142,7 @@ def r_attribute(p):
 
 
 def r_assignment_statement(p):
-    return '{} = {}'.format(render(p[1]), render(p[2]))
+    return '{} {} {}'.format(render(p[2]), p[1], render(p[3]))
 
 
 def r_subscription(p):
@@ -193,8 +197,7 @@ def r_var_name_list(p):
 
 
 def r_var_declaration(p):
-    # print p[3]
-    return 'var%s %s %s %s;' % (render(p[1]), render(p[2]), render(p[3]), render(p[4]))
+    return ' '.join(filter(lambda x: x != '', ['var' + render(p[1])] + list(render(x) for x in p[2:])))
 
 
 def r_paren_id(p):
@@ -260,7 +263,10 @@ def r_type(p):
 
 
 def r_class_modifiers(p):
-    return '\n'.join(render(q) for q in p[1] if q)
+    xucc.indentation += 1
+    s = '\n'.join(xucc.indent() + render(q) for q in p[1] if q)
+    xucc.indentation -= 1
+    return s
 
 
 def r_identifier(p):
@@ -301,6 +307,7 @@ def r_defaultproperties_array(p):
 
 
 def r_defaultproperties_object(p):
+    global xucc
     s = 'Begin Object Class=%s Name=%s\n' % (render(p[1]), render(p[2]))
     xucc.indentation += 1
     s += '\n'.join((xucc.indent() + render(k)) for k in p[3])
@@ -312,7 +319,9 @@ def r_defaultproperties_object(p):
 def r_class_declaration(p):
     global xucc
     # TODO: pretty sure classes can extend nothing!
-    return 'class {} {}\n{};'.format(xucc.classname, render(p[2]), render(p[3]))
+    s = ' '.join(filter(lambda x: x != '', ['class', xucc.classname, render(p[2])]))
+    t = render(p[3])
+    return '\n'.join(filter(lambda x: x != '', [s, t])) + ';'
 
 
 def r_defaultproperties_object_arguments(p):
@@ -372,7 +381,11 @@ def r_default(p):
 
 
 def r_default_case(p):
-    return 'default:'
+    s = xucc.indent() + 'default:\n'
+    xucc.indentation += 1
+    s += render(p[1])
+    xucc.indentation -= 1
+    return s
 
 
 def r_super_call(p):
@@ -418,11 +431,19 @@ def r_continue_statement(p):
 
 
 def r_switch_statement(p):
-    return 'switch (%s)\n{\n%s\n}' % (render(p[1]), '\n'.join(render(q) for q in p[2]))
-
+    s = xucc.indent() + 'switch (' + render(p[1]) + '\n' + xucc.indent() + '{\n'
+    xucc.indentation += 1
+    s += '\n'.join(render(q) for q in p[2])
+    xucc.indentation -= 1
+    s += '\n' + xucc.indent() + '}'
+    return s
 
 def r_switch_case(p):
-    return 'case %s:\n%s' % (render(p[1]), render(p[2]))
+    s = xucc.indent() + 'case ' + render(p[1]) + ':\n'
+    xucc.indentation += 1
+    s += render(p[2])
+    xucc.indentation -= 1
+    return s
 
 
 def r_do_statement(p):

@@ -311,6 +311,7 @@ def t_DEFAULT_LABEL(t):
 
 def t_DIRECTIVE(t):
     r'\#(\w+)\s+(.+)'
+    return t
 
 
 def t_REFERENCE(t):

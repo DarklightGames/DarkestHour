@@ -7,7 +7,7 @@ argparser.add_argument('dir', default='.', help='root directory')
 argparser.add_argument('package')
 argparser.add_argument('-mod', required=True, help='mod name')
 argparser.add_argument('-clean', required=False, action='store_true', help='compile all packages')
-args = argparser.parse_args(['C:\Users\colin_000\Documents\GitHub\DarkestHour', 'DH_GerPlayers', '-mod', 'DarkestHour'])
+args = argparser.parse_args(['C:\Users\colin_000\Documents\GitHub\DarkestHour', 'DH_LevelActors', '-mod', 'DarkestHour'])
 
 package_dir = os.path.join(args.dir, args.package)
 package_classes_dir = os.path.join(package_dir, 'Classes')
