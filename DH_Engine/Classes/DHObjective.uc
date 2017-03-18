@@ -55,28 +55,52 @@ struct ObjOperationAction
     var() EObjectiveOperation Operation;
 };
 
-var(ROObjTerritory) bool            bSetInactiveOnCapture;      // Simliar to bRecaptureable, but doesn't disable timer, just sets to inactive (bRecaptureable must = true)
+// Territory variables
 var(ROObjTerritory) bool            bUseHardBaseRate;           // Tells the capture rate to always be the base value, so we can have consistent capture times
-var(ROObjective) bool               bIsInitiallyActive;         // Purpose is mainly to consolidate the variables of actors into one area (less confusing to new levelers)
-var()   bool                        bVehiclesCanCapture;
-var()   bool                        bTankersCanCapture;
-var()   bool                        bUsePostCaptureOperations;  // Enables below variables to be used for post capture clear check/calls
-var()   bool                        bDisableWhenAlliesClearObj;
-var()   bool                        bDisableWhenAxisClearObj;
-var()   bool                        bGroupActionsAtDisable;
-var()   bool                        bHideOnMap;
-var()   bool                        bHideOnMapWhenInactive;
-var()   bool                        bHideLabelWhenInactive;
-var()   bool                        bResetDeathPenalties;        // will reset all players death penalty counts
-var()   int                         AlliedAwardedReinforcements; // Amount of reinforcement to aware for allies if the obj is captured
-var()   int                         AxisAwardedReinforcements;   // Amount of reinforcement to aware for axis if the obj is captured
-var()   int                         PlayersNeededToCapture;
-var()   name                        NoArtyVolumeProtectionTag;   // optional Tag for associated no arty volume that protects this SP only when the SP is active
 
+// Basic Obj variables
+var(ROObjective) bool               bIsInitiallyActive;         // Purpose is mainly to consolidate the variables of actors into one area (less confusing to new levelers)
+
+// Capture/Actions variables
+var(DHObjectiveCapture) bool        bVehiclesCanCapture;
+var(DHObjectiveCapture) bool        bTankersCanCapture;
+var(DHObjectiveCapture) bool        bUsePostCaptureOperations;  // Enables below variables to be used for post capture clear check/calls
+var(DHObjectiveCapture) bool        bSetInactiveOnCapture;      // Simliar to bRecaptureable, but doesn't disable timer, just sets to inactive (bRecaptureable must = true)
+var(DHObjectiveCapture) bool        bNeutralizeBeforeCapture;   // if this is true the objective will neutralize first (then can be captured by either team)
+var(DHObjectiveCapture) int         PlayersNeededToCapture;
+var(DHObjectiveCapture) byte        PreventCaptureTime;         // time to prevent capture after the objective is activated (default: 0 max: 255 seconds)
+var(DHObjectiveCapture) bool        bGroupActionsAtDisable;
+var(DHObjectiveCapture) bool        bNeutralOnActivation;       // Should this capture be neutral when it is activated
+var(DHObjectiveCapture) array<int>  AxisRequiredObjForCapture;  // Objectives which are required to progress capture bar towards "capture" (obj can still be neutralized)
+var(DHObjectiveCapture) array<int>  AlliesRequiredObjForCapture;
+
+
+// Clear variables
+var(DHObjectiveClear) bool          bSetInactiveOnClear;        // Sets the objective inactive when cleared
+var(DHObjectiveClear) bool          bDisableWhenAlliesClearObj;
+var(DHObjectiveClear) bool          bDisableWhenAxisClearObj;
+
+// Visual variables
+var(DHObjectiveVisual) bool         bHideOnMap;
+var(DHObjectiveVisual) bool         bHideOnMapWhenInactive;
+var(DHObjectiveVisual) bool         bHideLabelWhenInactive;
+var(DHObjectiveVisual) bool         bHideCaptureBarRatio;        // Hide the enemy/friendly player ratio on the capture bar for this objective
+
+// Award variables
+var(DHObjectiveAwards) bool         bResetDeathPenalties;        // will reset all players death penalty counts
+var(DHObjectiveAwards) int          AlliedAwardedReinforcements; // Amount of reinforcement to award for allies if the obj is captured
+var(DHObjectiveAwards) int          AxisAwardedReinforcements;   // Amount of reinforcement to award for axis if the obj is captured
+
+// Other variables
+var(DHObjectiveOther) bool          bAlliesFinalObjective;
+var(DHObjectiveOther) bool          bAxisFinalObjective;
+var(DHObjectiveOther) name          NoArtyVolumeProtectionTag;   // optional Tag for associated no arty volume that protects this SP only when the SP is active
+
+// Non configurable variables
+var     byte                        NoCapProgressTimeRemaining;  // time remaining until obj can be captured (replicated to clients)
+var     float                       NoCapTimeRemainingFloat;     // used to calculate time (timer runs 4 times a second, so we need a float)
 var     bool                        bCheckIfAxisCleared;
 var     bool                        bCheckIfAlliesCleared;
-var     bool                        bAlliesContesting;
-var     bool                        bAxisContesting;
 var     bool                        bIsLocked;
 
 // Capture operations (after capture)
@@ -110,25 +134,25 @@ var(DH_GroupedActions)      array<VehiclePoolAction>    AxisGroupVehiclePoolActi
 var(DH_GroupedActions)      array<name>                 AlliesGroupCaptureEvents;
 var(DH_GroupedActions)      array<name>                 AxisGroupCaptureEvents;
 
-// Contested operations (used when a side begins capturing)
-var(DH_ContestedActions)    array<ObjOperationAction>   AlliesContestObjActions;
-var(DH_ContestedActions)    array<ObjOperationAction>   AxisContestObjActions;
-var(DH_ContestedActions)    array<SpawnPointAction>     AlliesContestSpawnPointActions;
-var(DH_ContestedActions)    array<SpawnPointAction>     AxisContestSpawnPointActions;
-var(DH_ContestedActions)    array<VehiclePoolAction>    AlliesContestVehiclePoolActions;
-var(DH_ContestedActions)    array<VehiclePoolAction>    AxisContestVehiclePoolActions;
-var(DH_ContestedActions)    array<name>                 AlliesContestEvents;
-var(DH_ContestedActions)    array<name>                 AxisContestEvents;
+// Timed operations (timer starts when the objective is activated)
+// It will trigger even if this obj is deactivated
+// It will cancel only if this obj is disabled or the timer is over
+var(DH_TimedActions)        int                         TimedActionsTime;
+var                         float                       TimedActionsTimeRemaining;
+var(DH_TimedActions)        bool                        bTimedActionsFireOnce;
+var                         bool                        bTimedActionsFired;
+var                         bool                        bTimedActionsRunning;
+var(DH_TimedActions)        array<ObjOperationAction>   TimedObjActions;
+var(DH_TimedActions)        array<SpawnPointAction>     TimedSpawnPointActions;
+var(DH_TimedActions)        array<VehiclePoolAction>    TimedVehiclePoolActions;
+var(DH_TimedActions)        array<name>                 TimedEvents;
 
-// Contest end operations (used when a side fails to capture and contest ends)
-var(DH_ContestEndActions)   array<ObjOperationAction>   AlliesContestEndObjActions;
-var(DH_ContestEndActions)   array<ObjOperationAction>   AxisContestEndObjActions;
-var(DH_ContestEndActions)   array<SpawnPointAction>     AlliesContestEndSpawnPointActions;
-var(DH_ContestEndActions)   array<SpawnPointAction>     AxisContestEndSpawnPointActions;
-var(DH_ContestEndActions)   array<VehiclePoolAction>    AlliesContestEndVehiclePoolActions;
-var(DH_ContestEndActions)   array<VehiclePoolAction>    AxisContestEndVehiclePoolActions;
-var(DH_ContestEndActions)   array<name>                 AlliesContestEndEvents;
-var(DH_ContestEndActions)   array<name>                 AxisContestEndEvents;
+replication
+{
+    // Variables the server will replicate to all clients
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        NoCapProgressTimeRemaining;
+}
 
 function PostBeginPlay()
 {
@@ -163,12 +187,6 @@ function PostBeginPlay()
 
     ObjState = InitialObjState;
 
-    // Override the GameObjective variable bInitiallyActive with DH
-    if (Role == ROLE_Authority)
-    {
-        SetActive(bIsInitiallyActive);
-    }
-
     // Add self to game objectives
     if (DarkestHourGame(Level.Game) != none)
     {
@@ -186,13 +204,44 @@ function Reset()
 {
     super.Reset();
 
+    NoCapProgressTimeRemaining = 0;
+    TimedActionsTimeRemaining = 0.0;
+    NoCapTimeRemainingFloat = 0.0;
+    bTimedActionsFired = false;
+    bTimedActionsRunning = false;
     SetActive(bIsInitiallyActive);
 
     bCheckIfAxisCleared = false;
     bCheckIfAlliesCleared = false;
-    bAlliesContesting = false;
-    bAxisContesting = false;
     bIsLocked = false;
+}
+
+function SetActive(bool bActiveStatus)
+{
+    super.SetActive(bActiveStatus);
+
+    if (bActiveStatus)
+    {
+        // Instigate timed actions if a timer value was set
+        if (TimedActionsTime > 0)
+        {
+            bTimedActionsRunning = true;
+            TimedActionsTimeRemaining = TimedActionsTime;
+        }
+
+        NoCapTimeRemainingFloat = float(PreventCaptureTime);
+
+        // Make neutral if desired
+        if (bNeutralOnActivation && !bDisabled && ObjState != OBJ_Neutral)
+        {
+            ObjState = OBJ_Neutral;
+
+            if (DarkestHourGame(Level.Game) != none)
+            {
+                DarkestHourGame(Level.Game).NotifyObjStateChanged();
+            }
+        }
+    }
 }
 
 function DoSpawnPointAction(SpawnPointAction SPA)
@@ -303,108 +352,6 @@ function DoObjectiveAction(ObjOperationAction OOA)
     }
 }
 
-function HandleContestedActions(int Team, bool bStarted)
-{
-    local int i;
-
-    // Contested started
-    if (bStarted)
-    {
-        if (Team == AXIS_TEAM_INDEX)
-        {
-            for (i = 0; i < AxisContestObjActions.Length; ++i)
-            {
-                DoObjectiveAction(AxisContestObjActions[i]);
-            }
-
-            for (i = 0; i < AxisContestSpawnPointActions.Length; ++i)
-            {
-                DoSpawnPointAction(AxisContestSpawnPointActions[i]);
-            }
-
-            for (i = 0; i < AxisContestVehiclePoolActions.Length; ++i)
-            {
-                DoVehiclePoolAction(AxisContestVehiclePoolActions[i]);
-            }
-
-            for (i = 0; i < AxisContestEvents.Length; ++i)
-            {
-                TriggerEvent(AxisContestEvents[i], none, none);
-            }
-        }
-        else if (Team == ALLIES_TEAM_INDEX)
-        {
-            for (i = 0; i < AlliesContestObjActions.Length; ++i)
-            {
-                DoObjectiveAction(AlliesContestObjActions[i]);
-            }
-
-            for (i = 0; i < AlliesContestSpawnPointActions.Length; ++i)
-            {
-                DoSpawnPointAction(AlliesContestSpawnPointActions[i]);
-            }
-
-            for (i = 0; i < AlliesContestVehiclePoolActions.Length; ++i)
-            {
-                DoVehiclePoolAction(AlliesContestVehiclePoolActions[i]);
-            }
-
-            for (i = 0; i < AlliesContestEvents.Length; ++i)
-            {
-                TriggerEvent(AlliesContestEvents[i], none, none);
-            }
-        }
-    }
-    // Contested failed/ended
-    else
-    {
-        if (Team == AXIS_TEAM_INDEX)
-        {
-            for (i = 0; i < AxisContestEndObjActions.Length; ++i)
-            {
-                DoObjectiveAction(AxisContestEndObjActions[i]);
-            }
-
-            for (i = 0; i < AxisContestEndSpawnPointActions.Length; ++i)
-            {
-                DoSpawnPointAction(AxisContestEndSpawnPointActions[i]);
-            }
-
-            for (i = 0; i < AxisContestEndVehiclePoolActions.Length; ++i)
-            {
-                DoVehiclePoolAction(AxisContestEndVehiclePoolActions[i]);
-            }
-
-            for (i = 0; i < AxisContestEndEvents.Length; ++i)
-            {
-                TriggerEvent(AxisContestEndEvents[i], none, none);
-            }
-        }
-        else if (Team == ALLIES_TEAM_INDEX)
-        {
-            for (i = 0; i < AlliesContestEndObjActions.Length; ++i)
-            {
-                DoObjectiveAction(AlliesContestEndObjActions[i]);
-            }
-
-            for (i = 0; i < AlliesContestEndSpawnPointActions.Length; ++i)
-            {
-                DoSpawnPointAction(AlliesContestEndSpawnPointActions[i]);
-            }
-
-            for (i = 0; i < AlliesContestEndVehiclePoolActions.Length; ++i)
-            {
-                DoVehiclePoolAction(AlliesContestEndVehiclePoolActions[i]);
-            }
-
-            for (i = 0; i < AlliesContestEndEvents.Length; ++i)
-            {
-                TriggerEvent(AlliesContestEndEvents[i], none, none);
-            }
-        }
-    }
-}
-
 function HandleGroupActions(int Team)
 {
     local DarkesthourGame DHGame;
@@ -488,6 +435,40 @@ function HandleGroupActions(int Team)
 
 }
 
+function HandleTimedActions()
+{
+    local int i;
+
+    // If this is only supposed to fire once and already fired, don't
+    if (bTimedActionsFireOnce && bTimedActionsFired)
+    {
+        return;
+    }
+
+    // Actions
+    for (i = 0; i < TimedObjActions.Length; ++i)
+    {
+        DoObjectiveAction(TimedObjActions[i]);
+    }
+
+    for (i = 0; i < TimedSpawnPointActions.Length; ++i)
+    {
+        DoSpawnPointAction(TimedSpawnPointActions[i]);
+    }
+
+    for (i = 0; i < TimedVehiclePoolActions.Length; ++i)
+    {
+        DoVehiclePoolAction(TimedVehiclePoolActions[i]);
+    }
+
+    for (i = 0; i < TimedEvents.Length; ++i)
+    {
+        TriggerEvent(TimedEvents[i], none, none);
+    }
+
+    bTimedActionsFired = true;
+}
+
 function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
 {
     local DarkestHourGame           G;
@@ -501,8 +482,6 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     local int                       RoundTime;
 
     CurrentCapProgress = 0.0;
-    bAlliesContesting = false; // set to false as the objective was captured
-    bAxisContesting = false;   // ...
 
     G = DarkestHourGame(Level.Game);
     GRI = DHGameReplicationInfo(G.GameReplicationInfo);
@@ -515,7 +494,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     // If it's not recapturable, make it inactive
     if (!bRecaptureable)
     {
-        bActive = false;
+        SetActive(false);
 
         // Only turn off the timer if bUsePostCaptureOperations is false, we will turn it off after it's clear of enemies (in timer)
         if (!bUsePostCaptureOperations)
@@ -683,6 +662,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
 
 function Timer()
 {
+    local DHGameReplicationInfo   DHGRI;
     local ROPlayerReplicationInfo PRI;
     local DHRoleInfo              RI;
     local Controller              FirstCapturer, C;
@@ -695,6 +675,13 @@ function Timer()
     local byte                    CurrentCapAxisCappers, CurrentCapAlliesCappers, CP;
 
     if (ROTeamGame(Level.Game) == none || !ROTeamGame(Level.Game).IsInState('RoundInPlay') || (!bActive && !bUsePostCaptureOperations))
+    {
+        return;
+    }
+
+    DHGRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (DHGRI == none)
     {
         return;
     }
@@ -748,94 +735,105 @@ function Timer()
         }
     }
 
+    // Check if we should trigger timed actions
+    if (TimedActionsTimeRemaining > 0.0)
+    {
+        TimedActionsTimeRemaining = FMax(0.0, TimedActionsTimeRemaining - 0.25);
+    }
+    else if (bTimedActionsRunning)
+    {
+        HandleTimedActions();
+        bTimedActionsRunning = false; // Stop checking as timed actions should be handled
+    }
+
     // Now that we calculated how many of each team is in the objective, lets do the bUsePostCaptureOperations checks
     if (bUsePostCaptureOperations)
     {
-        if (bCheckIfAxisCleared && NumForCheck[0] <= 0)
+        // If either team has cleared the objective
+        if (bCheckIfAxisCleared && NumForCheck[0] <= 0 || bCheckIfAlliesCleared && NumForCheck[1] <= 0)
         {
-            // IT IS CLEARED OF AXIS (SO DO ALLIES ACTIONS)
-            bCheckIfAxisCleared = false; // stop checking
-
-            for (i = 0; i < AlliesClearedCaptureObjActions.Length; ++i)
+            // If cleared of axis, then do Allied actions
+            if (bCheckIfAxisCleared && NumForCheck[0] <= 0)
             {
-                DoObjectiveAction(AlliesClearedCaptureObjActions[i]);
+                bCheckIfAxisCleared = false; // stop checking
+
+                for (i = 0; i < AlliesClearedCaptureObjActions.Length; ++i)
+                {
+                    DoObjectiveAction(AlliesClearedCaptureObjActions[i]);
+                }
+
+                for (i = 0; i < AlliesClearedCaptureSpawnPointActions.Length; ++i)
+                {
+                    DoSpawnPointAction(AlliesClearedCaptureSpawnPointActions[i]);
+                }
+
+                for (i = 0; i < AlliesClearedCaptureVehiclePoolActions.Length; ++i)
+                {
+                    DoVehiclePoolAction(AlliesClearedCaptureVehiclePoolActions[i]);
+                }
+
+                for (i = 0; i < AlliesClearedCaptureEvents.Length; ++i)
+                {
+                    TriggerEvent(AlliesClearedCaptureEvents[i], none, none);
+                }
+
+                if (bGroupActionsAtDisable)
+                {
+                    HandleGroupActions(ALLIES_TEAM_INDEX);
+                }
             }
 
-            for (i = 0; i < AlliesClearedCaptureSpawnPointActions.Length; ++i)
+            // If cleared of Allies, then do Axis actions
+            if (bCheckIfAlliesCleared && NumForCheck[1] <= 0)
             {
-                DoSpawnPointAction(AlliesClearedCaptureSpawnPointActions[i]);
+
+                bCheckIfAlliesCleared = false; // stop checking
+
+                for (i = 0; i < AxisClearedCaptureObjActions.Length; ++i)
+                {
+                    DoObjectiveAction(AxisClearedCaptureObjActions[i]);
+                }
+
+                for (i = 0; i < AxisClearedCaptureSpawnPointActions.Length; ++i)
+                {
+                    DoSpawnPointAction(AxisClearedCaptureSpawnPointActions[i]);
+                }
+
+                for (i = 0; i < AxisClearedCaptureVehiclePoolActions.Length; ++i)
+                {
+                    DoVehiclePoolAction(AxisClearedCaptureVehiclePoolActions[i]);
+                }
+
+                for (i = 0; i < AxisClearedCaptureEvents.Length; ++i)
+                {
+                    TriggerEvent(AxisClearedCaptureEvents[i], none, none);
+                }
+
+                if (bGroupActionsAtDisable)
+                {
+                    HandleGroupActions(AXIS_TEAM_INDEX);
+                }
             }
 
-            for (i = 0; i < AlliesClearedCaptureVehiclePoolActions.Length; ++i)
-            {
-                DoVehiclePoolAction(AlliesClearedCaptureVehiclePoolActions[i]);
-            }
-
-            for (i = 0; i < AlliesClearedCaptureEvents.Length; ++i)
-            {
-                TriggerEvent(AlliesClearedCaptureEvents[i], none, none);
-            }
-
-            if (bGroupActionsAtDisable)
-            {
-                HandleGroupActions(ALLIES_TEAM_INDEX);
-            }
-
-            if (bDisableWhenAlliesClearObj)
+            // Handle common is cleared logic
+            if (bSetInactiveOnClear && !(bAlliesFinalObjective && ObjState == OBJ_Axis) && !(bAxisFinalObjective && ObjState == OBJ_Allies))
             {
                 CurrentCapProgress = 0.0;
-                bActive = false;
+                SetActive(false);
+                DisableCapBarsForThisObj();
+                return;
+            }
+            else if (bDisableWhenAxisClearObj || bDisableWhenAlliesClearObj)
+            {
+                CurrentCapProgress = 0.0;
+                SetActive(false);
                 SetTimer(0.0, false);
                 DisableCapBarsForThisObj();
-
                 return;
             }
             else if (!bRecaptureable)
             {
                 SetTimer(0.0, false);
-
-                return;
-            }
-        }
-
-        if (bCheckIfAlliesCleared && NumForCheck[1] <= 0)
-        {
-            // IT IS CLEARED OF ALLIES (SO DO AXIS ACTIONS)
-            bCheckIfAlliesCleared = false; // stop checking
-
-            for (i = 0; i < AxisClearedCaptureObjActions.Length; ++i)
-            {
-                DoObjectiveAction(AxisClearedCaptureObjActions[i]);
-            }
-
-            for (i = 0; i < AxisClearedCaptureSpawnPointActions.Length; ++i)
-            {
-                DoSpawnPointAction(AxisClearedCaptureSpawnPointActions[i]);
-            }
-
-            for (i = 0; i < AxisClearedCaptureVehiclePoolActions.Length; ++i)
-            {
-                DoVehiclePoolAction(AxisClearedCaptureVehiclePoolActions[i]);
-            }
-
-            if (bGroupActionsAtDisable)
-            {
-                HandleGroupActions(AXIS_TEAM_INDEX);
-            }
-
-            if (bDisableWhenAxisClearObj)
-            {
-                CurrentCapProgress = 0.0;
-                bActive = false;
-                SetTimer(0.0, false);
-                DisableCapBarsForThisObj();
-
-                return;
-            }
-            else if (!bRecaptureable)
-            {
-                SetTimer(0.0, false);
-
                 return;
             }
         }
@@ -867,9 +865,52 @@ function Timer()
         }
     }
 
-    // Figure what the replicated # of cappers should be (to take into account the leader bonus)
-    CurrentCapAxisCappers = NumForCheck[AXIS_TEAM_INDEX]; // * int(4.0 * LeaderBonus[AXIS_TEAM_INDEX]);
-    CurrentCapAlliesCappers = NumForCheck[ALLIES_TEAM_INDEX]; // * int(4.0 * LeaderBonus[ALLIES_TEAM_INDEX]);
+    // If we are not ready to capture because of precap prevention set rate to zero
+    if (NoCapTimeRemainingFloat > 0.0)
+    {
+        NoCapTimeRemainingFloat -= 0.25; // Timer is ran 4 times a second, so we reduce accordingly
+        NoCapProgressTimeRemaining = byte(NoCapTimeRemainingFloat); // Update the replicated byte so clients can see how much longer until the obj unlocks
+        Rate[0] = 0.0;
+        Rate[1] = 0.0;
+    }
+    else
+    {
+        NoCapProgressTimeRemaining = 0; // Make sure this value gets zeroed
+    }
+
+    // Theel: TODO need to indicate to the player that they cannot capture this obj until they control the required obj
+    // Determine if we can progress on the capture (will set rate to 0.0 to prevent it)
+    // If the objective is bNeutralizeBeforeCapture & if we are capturing (not neutralizing)
+    if (bNeutralizeBeforeCapture && ObjState == OBJ_Neutral)
+    {
+        // Check if Axis are trying to capture
+        if (CurrentCapTeam == AXIS_TEAM_INDEX)
+        {
+            // Then check if Axis have required objectives controlled
+            for (i = 0; i < AxisRequiredObjForCapture.Length; ++i)
+            {
+                if (DHGRI.DHObjectives[AxisRequiredObjForCapture[i]].ObjState != AXIS_TEAM_INDEX)
+                {
+                    // We don't have required objectives controlled, no progress allowed
+                    Rate[AXIS_TEAM_INDEX] = 0.0;
+                }
+            }
+        }
+
+        if (CurrentCapTeam == ALLIES_TEAM_INDEX)
+        {
+            for (i = 0; i < AlliesRequiredObjForCapture.Length; ++i)
+            {
+                if (DHGRI.DHObjectives[AlliesRequiredObjForCapture[i]].ObjState != ALLIES_TEAM_INDEX)
+                {
+                    Rate[ALLIES_TEAM_INDEX] = 0.0;
+                }
+            }
+        }
+    }
+
+    CurrentCapAxisCappers = NumForCheck[AXIS_TEAM_INDEX];
+    CurrentCapAlliesCappers = NumForCheck[ALLIES_TEAM_INDEX];
 
     // Note: Comparing number of players as opposed to rates to decide which side has advantage for the capture, for fear that rates could be abused in this instance
     if (ObjState != OBJ_Axis && NumForCheck[AXIS_TEAM_INDEX] > NumForCheck[ALLIES_TEAM_INDEX])
@@ -881,13 +922,6 @@ function Timer()
         }
         else
         {
-            // Axis are contesting capture
-            if (!bAxisContesting && ObjState != OBJ_Neutral) // this stops multiple actions each timer loop
-            {
-                HandleContestedActions(AXIS_TEAM_INDEX, true);
-                bAxisContesting = true;
-            }
-
             CurrentCapTeam = AXIS_TEAM_INDEX;
             CurrentCapProgress += 0.25 * Rate[AXIS_TEAM_INDEX];
         }
@@ -900,13 +934,6 @@ function Timer()
         }
         else
         {
-            // Allies are contesting capture
-            if (!bAlliesContesting && ObjState != OBJ_Neutral) //this stops multiple actions each timer loop
-            {
-                HandleContestedActions(ALLIES_TEAM_INDEX, true);
-                bAlliesContesting = true;
-            }
-
             CurrentCapTeam = ALLIES_TEAM_INDEX;
             CurrentCapProgress += 0.25 * Rate[ALLIES_TEAM_INDEX];
         }
@@ -924,20 +951,15 @@ function Timer()
 
     if (CurrentCapProgress == 0.0)
     {
-        // CurrentCapProgress hit zero again, so we should check if the objective was contested and handle any necessary actions
-        if (bAxisContesting)
-        {
-            HandleContestedActions(AXIS_TEAM_INDEX, false);
-        }
-        else if (bAlliesContesting)
-        {
-            HandleContestedActions(ALLIES_TEAM_INDEX, false);
-        }
-
-        // Contest has ended
-        bAxisContesting = false;
-        bAlliesContesting = false;
         CurrentCapTeam = NEUTRAL_TEAM_INDEX;
+    }
+    else if (ObjState != OBJ_Neutral && CurrentCapProgress == 1.0 && bNeutralizeBeforeCapture)
+    {
+        // If the objective is not neutral, has completed progress, & is set to bNeutralizedBeforeCaptured
+        // Then we call different logic which will neutralize the objective without "completing" it
+        ObjectiveNeutralized(CurrentCapTeam);
+
+        return;
     }
     else if (CurrentCapProgress == 1.0)
     {
@@ -1097,7 +1119,22 @@ function Timer()
     UpdateCompressedCapProgress();
 }
 
-// Overriden to the fix a console warning that would display when EventInstigator was none.
+// New function to implement the bNeutralizeBeforeCapture option
+function ObjectiveNeutralized(int Team)
+{
+    // Reset values as the objective was neutralized
+    CurrentCapProgress = 0.0;
+    CurrentCapTeam = NEUTRAL_TEAM_INDEX;
+    ObjState = OBJ_Neutral;
+
+    // Alert the game of changes
+    ROTeamGame(Level.Game).NotifyObjStateChanged();
+
+    // Notify players
+    BroadcastLocalizedMessage(class'DHObjectiveMessage', Team + 4, none, none, self);
+}
+
+// Overridden to the fix a console warning that would display when EventInstigator was none
 function Trigger(Actor Other, Pawn EventInstigator)
 {
     local PlayerReplicationInfo PRI;
