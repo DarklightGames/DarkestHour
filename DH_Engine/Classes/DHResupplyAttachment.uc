@@ -32,11 +32,6 @@ function ProcessActorLeave()
     local Pawn P, R;
     local bool bFound;
 
-    if (ResupplyActors.Length == 0)
-    {
-        return;
-    }
-
     for (i = 0; i < ResupplyActors.Length; ++i)
     {
         R = ResupplyActors[i];
@@ -46,17 +41,12 @@ function ProcessActorLeave()
             continue;
         }
 
-        foreach VisibleCollidingActors(class'Pawn', P, 300.0)
+        bFound = false;
+
+        foreach VisibleCollidingActors(class'Pawn', P, CollisionRadius)
         {
             // This stops us from the vehicle resupplying itself.
-            if (Base != none && Base == P)
-            {
-                continue;
-            }
-
-            bFound = false;
-
-            if (P == R)
+            if (Base != none && Base == P && P == R)
             {
                 bFound = true;
                 break;
