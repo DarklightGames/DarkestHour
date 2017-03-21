@@ -823,7 +823,7 @@ function Timer()
                 DisableCapBarsForThisObj();
                 return;
             }
-            else if (bDisableWhenAxisClearObj || bDisableWhenAlliesClearObj)
+            else if (bDisableWhenAxisClearObj && ObjState == OBJ_Axis || bDisableWhenAlliesClearObj && ObjState == OBJ_Allies)
             {
                 CurrentCapProgress = 0.0;
                 SetActive(false);
