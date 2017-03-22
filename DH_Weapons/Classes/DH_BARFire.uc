@@ -122,7 +122,7 @@ defaultproperties
     PctProneIronRecoil=0.25
     PctBipodDeployRecoil=0.05
     PctRestDeployRecoil=0.1
-    RecoilRate=0.075
+    RecoilRate=0.1
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
     ShellIronSightOffset=(X=20.0,Z=-2.0)
     ShellRotOffsetIron=(Pitch=500)

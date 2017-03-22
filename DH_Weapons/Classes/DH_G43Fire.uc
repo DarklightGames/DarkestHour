@@ -36,6 +36,6 @@ defaultproperties
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stSVT'
     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
     AimError=1200.0
-    Spread=75.0
+    Spread=70.0
     SpreadStyle=SS_Random
 }

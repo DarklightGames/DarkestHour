@@ -15,10 +15,11 @@ defaultproperties
     FireSounds(0)=SoundGroup'DH_WeaponSounds.mp40.mp40_fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.mp40.mp40_fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.mp40.mp40_fire03'
-    MaxVerticalRecoilAngle=500
-    MaxHorizontalRecoilAngle=65
-    PctProneIronRecoil=0.5
-    RecoilRate=0.075
+    MaxVerticalRecoilAngle=310
+    MaxHorizontalRecoilAngle=40
+    PctStandIronRecoil=0.75
+    PctCrouchIronRecoil=0.5
+    RecoilRate=0.05
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
     ShellIronSightOffset=(X=15.0)
     FireAnim="Shoot_Loop"
@@ -40,6 +41,6 @@ defaultproperties
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stMP'
     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
     AimError=1200.0
-    Spread=300.0
+    Spread=315.0
     SpreadStyle=SS_Random
 }

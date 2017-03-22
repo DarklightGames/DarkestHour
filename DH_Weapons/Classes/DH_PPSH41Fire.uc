@@ -16,9 +16,9 @@ defaultproperties
     FireIronAnim="Iron_Shoot_Loop"
     FireIronLoopAnim="Iron_Shoot_Loop"
     FireIronEndAnim="Iron_Shoot_End"
-    MaxVerticalRecoilAngle=600
-    MaxHorizontalRecoilAngle=110
-    RecoilRate=0.05
+    MaxVerticalRecoilAngle=300
+    MaxHorizontalRecoilAngle=100
+    RecoilRate=0.03335
     ShellEjectClass=class'ROAmmo.ShellEject1st762x25mm'
     ShellIronSightOffset=(X=15.0)
     ShellRotOffsetIron=(Pitch=11000)
@@ -41,6 +41,6 @@ defaultproperties
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPPSH'
     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
     AimError=1800.0
-    Spread=320.0
+    Spread=360.0
     SpreadStyle=SS_Random
 }
