@@ -176,7 +176,7 @@ function EConstructionProxyError GetProvisionalPosition(out vector OutLocation, 
 {
     local PlayerController PC;
     local vector TraceStart, TraceEnd, HitLocation, HitNormal, Left, Forward, X, Y, Z, HitNormalSum, BaseLocation;
-    local Actor HitActor;
+    local Actor TempHitActor, HitActor;
     local rotator R;
     local float GroundSlopeDegrees, AngleRadians;
     local EConstructionProxyError Error;
@@ -197,7 +197,15 @@ function EConstructionProxyError GetProvisionalPosition(out vector OutLocation, 
     // Trace out into the world and try and hit something static.
     TraceStart = PawnOwner.Location + PawnOwner.EyePosition();
     TraceEnd = TraceStart + (vector(PC.CalcViewRotation) * class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProxyDistanceInMeters));
-    HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart);
+
+    foreach TraceActors(class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
+    {
+        if (TempHitActor.bStatic && !TempHitActor.IsA('ROBulletWhipAttachment') && !TempHitActor.IsA('Volume'))
+        {
+            HitActor = TempHitActor;
+            break;
+        }
+    }
 
     if (HitActor == none)
     {
@@ -205,10 +213,29 @@ function EConstructionProxyError GetProvisionalPosition(out vector OutLocation, 
         // something solid to rest on
         TraceStart = TraceEnd;
         TraceEnd = TraceStart + vect(0, 0, -16384); // TODO: get rid of magic number
-        HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart);
+
+        foreach TraceActors(class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
+        {
+            if (TempHitActor.bStatic && !TempHitActor.IsA('ROBulletWhipAttachment') && !TempHitActor.IsA('Volume'))
+            {
+                HitActor = TempHitActor;
+                break;
+            }
+        }
     }
 
-    if (HitActor != none && HitActor.bStatic && !HitActor.bDeleteMe)
+    if (HitActor == none)
+    {
+        // Didn't hit anything!
+        Error = CPE_NoGround;
+        // TODO: verify correctness
+        BaseLocation = TraceStart;
+        R = PC.CalcViewRotation;
+        R.Pitch = 0;
+        R.Roll = 0;
+        Forward = vector(R);
+    }
+    else
     {
         BaseLocation = HitLocation;
 
@@ -260,7 +287,9 @@ function EConstructionProxyError GetProvisionalPosition(out vector OutLocation, 
                 TraceEnd = BaseLocation + QuatRotateVector(QuatFromRotator(rotator(X)), TraceEnd);
 
                 // Trace across the diameter of the collision cylinder
-                if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) != none)
+                HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
+
+                if (HitActor != none && !HitActor.IsA('ROBulletWhipAttachment') && !HitActor.IsA('Volume'))
                 {
                     Error = CPE_NoRoom;
                     break;
@@ -269,7 +298,9 @@ function EConstructionProxyError GetProvisionalPosition(out vector OutLocation, 
                 // Trace down from the top of the cylinder to the bottom
                 TraceEnd = TraceStart - (Z * (CollisionHeight + class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.FloatToleranceInMeters)));
 
-                if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, false) == none)
+                HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, false);
+
+                if (HitActor == none)
                 {
                     Error = CPE_NoGround;
                     break;
@@ -295,17 +326,6 @@ function EConstructionProxyError GetProvisionalPosition(out vector OutLocation, 
         Forward = Normal(vector(PC.CalcViewRotation));
         Left = Forward cross HitNormalSum;
         Forward = HitNormalSum cross Left;
-    }
-    else
-    {
-        // Didn't hit anything!
-        Error = CPE_NoGround;
-        // TODO: verify correctness
-        BaseLocation = TraceEnd;
-        R = PC.CalcViewRotation;
-        R.Pitch = 0;
-        R.Roll = 0;
-        Forward = vector(R);
     }
 
     OutLocation = BaseLocation;
