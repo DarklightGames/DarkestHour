@@ -273,22 +273,6 @@ simulated function Tick(float DeltaTime)
     }
 }
 
-simulated function exec StartConstructing()
-{
-    if (ConstructionProxy != none)
-    {
-        ConstructionProxy.Destroy();
-    }
-
-    if (Weapon != none)
-    {
-        Weapon.PutDown();
-    }
-
-    ConstructionProxy = Spawn(class'DHConstructionProxy', self);
-    ConstructionProxy.SetConstructionClass(class'DHConstruction_Test');
-}
-
 // PossessedBy - figure out what dummy attachments are needed
 function PossessedBy(Controller C)
 {

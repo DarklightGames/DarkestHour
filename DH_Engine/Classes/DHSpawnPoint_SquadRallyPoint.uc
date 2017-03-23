@@ -13,17 +13,17 @@ var int RallyPointIndex;                        // The index into SRI.RallyPoint
 var int SpawnsRemaining;                        // The amount of spawns remaining on the rally point.
 var sound CreationSound;                        // Sound that is played when the squad rally point is first placed.
 
-var int ConstructionRadiusInMeters;             // The distance, in meters, that squadmates and enemies must be within to influence the ConstructionCounter.
+var int EstablishmentRadiusInMeters;             // The distance, in meters, that squadmates and enemies must be within to influence the EstablishmentCounter.
 var int OverrunRadiusInMeters;                  // The distance, in meters, that enemies must be within to immediately overrun a rally point.
 var int EncroachmentRadiusInMeters;             // The distance, in meters, that enemies must be within to affect the EncroachmentPenaltyCounter
 var int EncroachmentPenaltyBlockThreshold;      // The value that EncroachmentPenaltyCounter must reach for the rally point to be "blocked".
 var int EncroachmentPenaltyOverrunThreshold;    // The value that EncroachmentPenaltyCounter must reach for the rally point to be "overrun".
 var int EncroachmentPenaltyCounter;             // Running counter of encroachment penalty.
 
-var float ConstructionCounter;                  // Running counter to keep track of construction status.
-var float ConstructionCounterThreshold;         // The value that ConstructionCounter must reach for the rally point to be "established".
+var float EstablishmentCounter;                  // Running counter to keep track of Establishment status.
+var float EstablishmentCounterThreshold;         // The value that EstablishmentCounter must reach for the rally point to be "established".
 
-var float ConstructionStartTimeSeconds;         // The value of Level.TimeSeconds when this rally point began construction.
+var float EstablishmentStartTimeSeconds;         // The value of Level.TimeSeconds when this rally point began Establishment.
 var float OverrunMinimumTimeSeconds;            // The number of seconds a rally point must be "alive" for in order to be overrun by enemies. (To stop squad rally points being used as "enemy radar".
 
 var bool bCanSendAbandonmentWarningMessage;     // Whether or not we should send the abandonment message the next time the squad rally point has no teammates nearby while constructing
@@ -62,10 +62,10 @@ auto state Constructing
 
         global.Timer();
 
-        GetPlayerCountsWithinRadius(default.ConstructionRadiusInMeters, SquadmateCount, EnemyCount);
+        GetPlayerCountsWithinRadius(default.EstablishmentRadiusInMeters, SquadmateCount, EnemyCount);
 
-        ConstructionCounter -= EnemyCount;
-        ConstructionCounter += SquadmateCount;
+        EstablishmentCounter -= EnemyCount;
+        EstablishmentCounter += SquadmateCount;
 
         if (bCanSendAbandonmentWarningMessage && SquadmateCount == 0)
         {
@@ -82,19 +82,19 @@ auto state Constructing
         if (SquadmateCount == 0 && EnemyCount == 0)
         {
             // No one is around to establish the rally point, start depleting the counter.
-            ConstructionCounter -= 1;
+            EstablishmentCounter -= 1;
         }
 
-        if (ConstructionCounter >= default.ConstructionCounterThreshold)
+        if (EstablishmentCounter >= default.EstablishmentCounterThreshold)
         {
-            // Rally point exceeded the construction counter threshold. This
+            // Rally point exceeded the Establishment counter threshold. This
             // rally point is now established!
             GotoState('Active');
         }
-        else if (ConstructionCounter <= 0)
+        else if (EstablishmentCounter <= 0)
         {
             // Delay destruction of the rally point so it can't be used as enemy radar.
-            if (Level.TimeSeconds - ConstructionStartTimeSeconds > default.OverrunMinimumTimeSeconds)
+            if (Level.TimeSeconds - EstablishmentStartTimeSeconds > default.OverrunMinimumTimeSeconds)
             {
                 // "A squad rally point failed to be established."
                 SRI.BroadcastLocalizedMessage(SRI.SquadMessageClass, 55);
@@ -105,7 +105,7 @@ auto state Constructing
     }
 
 Begin:
-ConstructionStartTimeSeconds = Level.TimeSeconds;
+EstablishmentStartTimeSeconds = Level.TimeSeconds;
 SetTimer(1.0, true);
 }
 
@@ -343,8 +343,8 @@ defaultproperties
     EncroachmentPenaltyBlockThreshold=10
     EncroachmentPenaltyOverrunThreshold=30
     OverrunRadiusInMeters=10
-    ConstructionRadiusInMeters=25
-    ConstructionCounterThreshold=60
+    EstablishmentRadiusInMeters=25
+    EstablishmentCounterThreshold=60
     OverrunMinimumTimeSeconds=15
     bHidden=false
     bCanSendAbandonmentWarningMessage=true

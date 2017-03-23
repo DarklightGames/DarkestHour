@@ -23,8 +23,12 @@ var     sound   PlacementSound;
 var     float   FloatToleranceInMeters;
 
 // Construction
+var     int     SupplyCost;
 var     int     CurrentStageIndex;
 var     bool    bDestroyOnConstruction;
+
+// Destruction
+var     int     DestroyedLifespan;          // How long does the actor stay around after it's been destroyed?
 
 // Damage
 var     int     Health;
@@ -50,19 +54,19 @@ struct Anchor
 var array<Anchor> Anchors;
 
 // Staging
-struct ConstructionStage
+struct Stage
 {
     var int Health;
-    var StaticMesh StaticMesh;
+    var StaticMesh StaticMesh;  // This can be overridden in GetStaticMesh
     var sound Sound;
     var Emitter Emitter;
 };
 
 var int StageIndex;
-var array<ConstructionStage> ConstructionStages;
+var array<Stage> Stages;
 
 function OnConstructed();
-function OnConstructionStageIndexChanged(int OldIndex);
+function OnStageIndexChanged(int OldIndex);
 function OnTeamIndexChanged();
 function OnHealthChanged();
 
@@ -74,6 +78,8 @@ final function int GetTeamIndex()
 final function SetTeamIndex(int TeamIndex)
 {
     self.TeamIndex = TeamIndex;
+
+    SetStaticMesh(GetStaticMesh(TeamIndex, StageIndex));
 
     OnTeamIndexChanged();
 }
@@ -97,11 +103,11 @@ auto state Constructing
             Destroy();
         }
         // TODO: handle taking damage during construction
-        else if (Health > ConstructionStages[StageIndex].Health)
+        else if (Health > Stages[StageIndex].Health)
         {
-            OnConstructionStageIndexChanged(StageIndex++);
+            OnStageIndexChanged(StageIndex++);
 
-            SetStaticMesh(ConstructionStages[StageIndex].StaticMesh);
+            SetStaticMesh(GetStaticMesh(TeamIndex, StageIndex));
         }
         else if (Health >= HealthMax)
         {
@@ -128,6 +134,16 @@ Begin:
     }
 }
 
+// TODO: have destroyed thing
+/*
+state IsDestroyed
+{
+Begin:
+    // TODO: set destroyed SM
+    LifeSpan = DestroyedLifespan;
+}
+*/
+
 event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     super.TakeDamage(Damage, EventInstigator, HitLocation, Momentum, DamageType, HitIndex);
@@ -137,12 +153,27 @@ event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Mo
     OnHealthChanged();
 }
 
+function static StaticMesh GetStaticMesh(int TeamIndex, int StageIndex)
+{
+    if (StageIndex < 0 || StageIndex >= default.Stages.Length)
+    {
+        return default.StaticMesh;
+    }
+
+    return default.Stages[StageIndex].StaticMesh;
+}
+
+function static string GetMenuName(int TeamIndex)
+{
+    return default.MenuName;
+}
+
 defaultproperties
 {
     RemoteRole=ROLE_SimulatedProxy
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.hedgehog_01'
-    ConstructionStages(0)=(Health=0,StaticMesh=none,Sound=none,Emitter=none)
+    Stages(0)=(Health=0,StaticMesh=none,Sound=none,Emitter=none)
     HealthMax=100
     ProxyDistanceInMeters=5.0
     GroundSlopeMaxInDegrees=25.0
@@ -179,6 +210,9 @@ defaultproperties
     FloatToleranceInMeters=0.5
 
     LocalRotationRate=32768
+
+    // Destruction
+    DestroyedLifespan=15.0
 
     PlacementSound=Sound'Inf_Player.Gibimpact.Gibimpact' // TODO: placeholder
 }

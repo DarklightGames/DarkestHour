@@ -5,6 +5,8 @@
 
 class DHConstruction_Resupply extends DHConstruction;
 
+#exec OBJ LOAD FILE=..\StaticMeshes\DH_Construction_stc.usx
+
 var DHResupplyAttachment ResupplyAttachment;
 
 function PostBeginPlay()
@@ -45,9 +47,24 @@ event Destroyed()
     }
 }
 
+function static StaticMesh GetStaticMesh(int TeamIndex, int StageIndex)
+{
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            return StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box';    // TODO: fix
+        case ALLIES_TEAM_INDEX:
+            // TODO: possible have it nation based?
+            return StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box';
+    }
+
+    return super.GetStaticMesh(TeamIndex, StageIndex);
+}
+
 defaultproperties
 {
     StaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box'
     bShouldAlignToGround=true
     MenuName="Resupply Box"
+    ProxyDistanceInMeters=2.0
 }

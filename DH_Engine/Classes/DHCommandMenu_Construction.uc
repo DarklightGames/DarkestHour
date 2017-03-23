@@ -10,14 +10,24 @@ var array<class<DHConstruction> > ConstructionClasses;
 function Setup()
 {
     local int i;
+    local int TeamIndex;
+
+    TeamIndex = -1;
+
+    if (Interaction != none &&
+        Interaction.ViewportOwner != none &&
+        Interaction.ViewportOwner.Actor != none)
+    {
+        TeamIndex = Interaction.ViewportOwner.Actor.GetTeamNum();
+    }
 
     Options.Length = ConstructionClasses.Length;
 
-    // TODO: if there's more than 8
+    // TODO: if there's more than 8, make submenus programmatically
 
     for (i = 0; i < ConstructionClasses.Length; ++i)
     {
-        Options[i].ActionText = ConstructionClasses[i].default.MenuName;
+        Options[i].ActionText = ConstructionClasses[i].static.GetMenuName(TeamIndex);
         Options[i].Material = ConstructionClasses[i].default.MenuMaterial;
         Options[i].OptionalObject = ConstructionClasses[i];
     }
@@ -25,26 +35,18 @@ function Setup()
 
 function bool OnSelect(DHCommandInteraction Interaction, int Index, vector Location)
 {
-    local DHPlayer PC;
     local DHPawn P;
-    local class<DHConstruction> ConstructionClass;
 
     if (Interaction == none || Interaction.ViewportOwner == none || Index < 0 || Index >= Options.Length)
     {
         return false;
     }
 
-    PC = DHPlayer(Interaction.ViewportOwner.Actor);
-
-    // TODO: possibly move speech commands out of the menu, since it's not
-    // really it's responsbility.
-    P = DHPawn(PC.Pawn);
+    P = DHPawn(Interaction.ViewportOwner.Actor.Pawn);
 
     if (P != none)
     {
-        ConstructionClass = class<DHConstruction>(Options[Index].OptionalObject);
-
-        P.SetConstructionProxy(ConstructionClass);
+        P.SetConstructionProxy(class<DHConstruction>(Options[Index].OptionalObject));
     }
 
     Interaction.Hide();
@@ -54,21 +56,10 @@ function bool OnSelect(DHCommandInteraction Interaction, int Index, vector Locat
 
 function bool ShouldHideMenu()
 {
-    local DHPlayer PC;
-
-    if (Interaction == none || Interaction.ViewportOwner == none)
-    {
-        return true;
-    }
-
-    PC = DHPlayer(Interaction.ViewportOwner.Actor);
-
-    if (PC == none || DHPawn(PC.Pawn) == none)
-    {
-        return true;
-    }
-
-    return false;
+    return Interaction == none ||
+           Interaction.ViewportOwner == none ||
+           Interaction.ViewportOwner.Actor == none ||
+           DHPawn(Interaction.ViewportOwner.Actor.Pawn) == none;
 }
 
 defaultproperties
@@ -77,5 +68,6 @@ defaultproperties
     ConstructionClasses(1)=class'DHConstruction_ConcertinaWire'
     ConstructionClasses(2)=class'DHConstruction_Resupply'
     ConstructionClasses(3)=class'DHConstruction_Sandbags'
+    ConstructionClasses(4)=class'DHConstruction_PlatoonHQ'
 }
 
