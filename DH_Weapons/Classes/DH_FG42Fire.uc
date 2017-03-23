@@ -106,10 +106,10 @@ defaultproperties
     FireVolume=512.0
     MaxVerticalRecoilAngle=900
     MaxHorizontalRecoilAngle=180
-    PctStandIronRecoil=0.42
+    PctStandIronRecoil=0.5
     PctCrouchRecoil=0.75
-    PctCrouchIronRecoil=0.32
-    PctProneIronRecoil=0.22
+    PctCrouchIronRecoil=0.4
+    PctProneIronRecoil=0.3
     PctBipodDeployRecoil=0.05
     PctRestDeployRecoil=0.1
     RecoilRate=0.075
