@@ -43,6 +43,10 @@ defaultproperties
     WarnTargetPct=0.9
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stMG'
     AimError=1800.0
-    Spread=125.0
+    Spread=70.0
+    BipodDeployedSpreadModifier=1.0
+    ProneSpreadModifier=1.0
+    CrouchSpreadModifier=1.0
+    RestDeploySpreadModifier=1.0
     SpreadStyle=SS_Random
 }
