@@ -1,4 +1,5 @@
 from ply import lex
+from subprocess import Popen, PIPE
 
 primitive_types = {
     'float': 'FLOAT',
@@ -91,6 +92,12 @@ variable_modifiers = {
     'travel': 'TRAVEL',
 }
 
+ucpp_keywords = {
+    'GIT_BRANCH': 'GIT_BRANCH',
+    'GIT_TAG': 'GIT_TAG',
+    'GIT_COMMIT': 'GIT_COMMIT'
+}
+
 reserved = {
     'always': 'ALWAYS',
     'array': 'ARRAY',
@@ -132,7 +139,7 @@ reserved = {
     'function': 'FUNCTION',
     'global': 'GLOBAL',
     'globalconfig': 'GLOBALCONFIG',
-    # 'goto': 'GOTO',
+    'goto': 'GOTO',
     'if': 'IF',
     'ignores': 'IGNORES',
     'import': 'IMPORT',
@@ -180,11 +187,12 @@ reserved = {
     'vect': 'VECT',
     'while': 'WHILE',
     # the following are keywords added by ulex
-    'typeof': 'TYPEOF',
+    'typeof': 'TYPEOF'
 }
 
 reserved.update(class_modifiers)
 reserved.update(variable_modifiers)
+reserved.update(ucpp_keywords)
 
 tokens = [
     'DEFAULT',
@@ -371,6 +379,14 @@ def t_newline(t):
 
 def t_error(t):
     pass
+
+
+def t_MACRO(t):
+    r'\{\%GIT_TAG\%\}'
+    p = Popen(['git', 'describe', '--abbrev=0', '--tags'], stdout=PIPE, stderr=PIPE, stdin=PIPE)
+    t.type = 'USTRING'
+    t.value = '"' + p.stdout.read().strip() + '"'
+    return t
 
 
 lexer = lex.lex(debug=False)

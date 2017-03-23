@@ -219,6 +219,11 @@ def p_assignment_statement(p):
     'assignment_statement : target assignment_operator expression'
     p[0] = ('assignment_statement', p[2], p[1], p[3])
 
+def p_git_branch(p):
+    'git_branch : GIT_BRANCH'
+    # TODO: it's okay just make it something else
+    p[0] = p[1]
+
 
 def p_string_literal(p):
     'string_literal : USTRING'
@@ -267,6 +272,16 @@ def p_arrayindex(p):
     '''arrayindex : LSQUARE INTEGER RSQUARE
                   | LSQUARE identifier RSQUARE'''
     p[0] = p[2]
+
+
+def p_goto_1(p):
+    '''goto : GOTO UNAME'''
+    p[0] = ('goto', p[2])
+
+
+def p_goto_2(p):
+    '''goto : GOTO LPAREN UNAME RPAREN'''
+    p[0] = ('goto', p[3])
 
 
 def p_arrayindex_or_empty(p):
@@ -928,6 +943,7 @@ def p_simple_statement(p):
                         | break_statement
                         | continue_statement
                         | assignment_statement
+                        | goto
                         | expression'''
     p[0] = p[1]
 
@@ -980,7 +996,8 @@ def p_codeline(p):
 def p_statement(p):
     '''statement : codeline
                  | const_declaration
-                 | compound_statement'''
+                 | compound_statement
+                 | label'''
     p[0] = p[1]
 
 
@@ -1143,6 +1160,11 @@ def p_switch_case_1(p):
 def p_switch_case_2(p):
     'switch_case : DEFAULT_LABEL statements_or_empty'
     p[0] = ('default_case', p[2])
+
+
+def p_label(p):
+    '''label : ID COLON'''
+    p[0] = ('label', p[1])
 
 
 def p_switch_cases_1(p):

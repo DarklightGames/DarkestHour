@@ -3,7 +3,7 @@ from lex import lexer
 import re
 
 
-class xuccparser():
+class ucppparser():
     def __init__(self):
         self.ast = None
         self.generic_types = []
@@ -12,18 +12,22 @@ class xuccparser():
         self.classname = ''
         self.indentation = 0
 
-    def compile(self, s, template_parameters=[]):
-        # self.template_arguments = ['string', 'Object']
+    def compile(self, s):
         lexer.lineno = 1
-        self.ast = parser.parse(s, debug=False)
-        self.classname = '_'.join([self.ast[1][0][1][1]] + self.template_arguments)
-        return render(self.ast)
+        return parser.parse(s, debug=False)
+
+    def render(self, ast, template_arguments=[]):
+        self.indentation = 0
+        self.template_arguments = template_arguments
+        self.classname = '_'.join([ast[1][0][1][1]] + self.template_arguments)
+        return render(ast)
+
 
     def indent(self):
         return '    ' * self.indentation
 
 
-xucc = xuccparser()
+ucpp = ucppparser()
 
 
 def r_directive(p):
@@ -37,7 +41,7 @@ def r_within(p):
 def r_constructor(p):
     # create the 'return self' as the last line
     p[2][2][1].append(('codeline', ('return_statement', ('identifier', 'self'))))
-    return 'function %s __ctor__(%s)\n%s' % (xucc.classname, render(p[1]), render(p[2]))
+    return 'function %s __ctor__(%s)\n%s' % (ucpp.classname, render(p[1]), render(p[2]))
 
 
 def r_function_modifiers(p):
@@ -49,32 +53,32 @@ def r_function_modifiers(p):
 
 
 def r_elif_statement(p):
-    s = xucc.indent() + 'else if (' + render(p[1]) + ')\n'
-    s += xucc.indent() + '{\n'
-    xucc.indentation += 1
+    s = ucpp.indent() + 'else if (' + render(p[1]) + ')\n'
+    s += ucpp.indent() + '{\n'
+    ucpp.indentation += 1
     s += render(p[2])
-    xucc.indentation -= 1
-    s += '\n' + xucc.indent() + '}'
+    ucpp.indentation -= 1
+    s += '\n' + ucpp.indent() + '}'
     return s
 
 
 def r_else_statement(p):
-    s = xucc.indent() + 'else\n'
-    s += xucc.indent() + '{\n'
-    xucc.indentation += 1
+    s = ucpp.indent() + 'else\n'
+    s += ucpp.indent() + '{\n'
+    ucpp.indentation += 1
     s += render(p[1])
-    xucc.indentation -= 1
-    s += '\n' + xucc.indent() + '}'
+    ucpp.indentation -= 1
+    s += '\n' + ucpp.indent() + '}'
     return s
 
 
 def r_if_statement(p):
-    s = xucc.indent() + 'if (' + render(p[1]) + ')\n'
-    s += xucc.indent() + '{\n'
-    xucc.indentation += 1
+    s = ucpp.indent() + 'if (' + render(p[1]) + ')\n'
+    s += ucpp.indent() + '{\n'
+    ucpp.indentation += 1
     s += render(p[2])
-    xucc.indentation -= 1
-    s += '\n' + xucc.indent() + '}'
+    ucpp.indentation -= 1
+    s += '\n' + ucpp.indent() + '}'
     t = '\n'.join(map(lambda x: render(x), p[3]))
     u = render(p[4])
     return '\n'.join(filter(lambda x: x != '', [s, t, u]))
@@ -99,12 +103,12 @@ def r_string_parameterized(p):
 
 
 def r_for_statement(p):
-    s = xucc.indent()  + 'for (' + '; '.join(map(lambda x: render(x), p[1:4])) + ')\n'
-    s += xucc.indent() + '{\n'
-    xucc.indentation += 1
+    s = ucpp.indent()  + 'for (' + '; '.join(map(lambda x: render(x), p[1:4])) + ')\n'
+    s += ucpp.indent() + '{\n'
+    ucpp.indentation += 1
     s += render(p[4])
-    xucc.indentation -= 1
-    s += '\n' + xucc.indent() + '}'
+    ucpp.indentation -= 1
+    s += '\n' + ucpp.indent() + '}'
     return s
 
 
@@ -162,7 +166,7 @@ def r_function_body(p):
 
 
 def r_local_declaration(p):
-    return xucc.indent() + ('local %s %s;' % (render(p[1]), render(p[2])))
+    return ucpp.indent() + ('local %s %s;' % (render(p[1]), render(p[2])))
 
 
 def r_local_declarations(p):
@@ -197,7 +201,7 @@ def r_var_name_list(p):
 
 
 def r_var_declaration(p):
-    return ' '.join(filter(lambda x: x != '', ['var' + render(p[1])] + list(render(x) for x in p[2:])))
+    return ' '.join(filter(lambda x: x != '', ['var' + render(p[1])] + list(render(x) for x in p[2:]))) + ';'
 
 
 def r_paren_id(p):
@@ -212,9 +216,9 @@ def r_function_definition(p):
         return '{};'.format(render(p[1]))
     else:
         s = render(p[1])
-        xucc.indentation += 1
+        ucpp.indentation += 1
         t = render(p[2])
-        xucc.indentation -= 1
+        ucpp.indentation -= 1
         return '\n'.join([s, t])
 
 
@@ -248,13 +252,13 @@ def r_identifier_list(p):
 
 
 def r_template(p):
-    global xucc
-    xucc.template_parameters = [render(q) for q in p[1][1]]
+    global ucpp
+    ucpp.template_parameters = [render(q) for q in p[1][1]]
     return ''
 
 
 def r_generic_type(p):
-    global  xucc
+    global  ucpp
     return '{}_{}'.format(render(p[1]), '_'.join(render(q) for q in p[2]))
 
 
@@ -263,30 +267,40 @@ def r_type(p):
 
 
 def r_class_modifiers(p):
-    xucc.indentation += 1
-    s = '\n'.join(xucc.indent() + render(q) for q in p[1] if q)
-    xucc.indentation -= 1
+    ucpp.indentation += 1
+    s = '\n'.join(ucpp.indent() + render(q) for q in p[1] if q)
+    ucpp.indentation -= 1
     return s
 
 
 def r_identifier(p):
-    global xucc
+    global ucpp
     s = render(p[1])
     # TODO: do a look-up for template parameters, in scope
     try:
-        i = xucc.template_parameters.index(s)
-        return render(xucc.template_arguments[i])
+        i = ucpp.template_parameters.index(s)
+        print '*' * 100
+        print ucpp.template_parameters
+        return render(ucpp.template_arguments[i])
     except ValueError:
         return s
+
+
+def r_goto(p):
+    return 'Goto(' + render(p[1]) + ')'
+
+
+def r_label(p):
+    return p[1] + ':'
 
 
 def r_defaultproperties(p):
     if p[1] is None:
         return ''
     s = 'defaultproperties\n{\n'
-    xucc.indentation += 1
-    s +=  '\n'.join(xucc.indent() + render(k) for k in p[1])
-    xucc.indentation -= 1
+    ucpp.indentation += 1
+    s +=  '\n'.join(ucpp.indent() + render(k) for k in p[1])
+    ucpp.indentation -= 1
     s += '\n}'
     return s
 
@@ -307,19 +321,19 @@ def r_defaultproperties_array(p):
 
 
 def r_defaultproperties_object(p):
-    global xucc
+    global ucpp
     s = 'Begin Object Class=%s Name=%s\n' % (render(p[1]), render(p[2]))
-    xucc.indentation += 1
-    s += '\n'.join((xucc.indent() + render(k)) for k in p[3])
-    xucc.indentation -= 1
-    s += '\n' + xucc.indent() + 'End Object'
+    ucpp.indentation += 1
+    s += '\n'.join((ucpp.indent() + render(k)) for k in p[3])
+    ucpp.indentation -= 1
+    s += '\n' + ucpp.indent() + 'End Object'
     return s
 
 
 def r_class_declaration(p):
-    global xucc
+    global ucpp
     # TODO: pretty sure classes can extend nothing!
-    s = ' '.join(filter(lambda x: x != '', ['class', xucc.classname, render(p[2])]))
+    s = ' '.join(filter(lambda x: x != '', ['class', ucpp.classname, render(p[2])]))
     t = render(p[3])
     return '\n'.join(filter(lambda x: x != '', [s, t])) + ';'
 
@@ -333,8 +347,8 @@ def r_struct_definition(p):
 
 
 def r_enum_values(p):
-    global xucc
-    return ',\n'.join(map(lambda x: xucc.indent() + x, p[1]))
+    global ucpp
+    return ',\n'.join(map(lambda x: ucpp.indent() + x, p[1]))
 
 
 def r_expression_parenthesized(p):
@@ -347,9 +361,9 @@ def r_enum_definition(p):
 
 def r_enum_declaration(p):
     s = 'enum ' + p[1] + '\n{\n'
-    xucc.indentation += 1
+    ucpp.indentation += 1
     s += render(p[2])
-    xucc.indentation -= 1
+    ucpp.indentation -= 1
     s += '\n}'
     return s
 
@@ -381,10 +395,10 @@ def r_default(p):
 
 
 def r_default_case(p):
-    s = xucc.indent() + 'default:\n'
-    xucc.indentation += 1
+    s = ucpp.indent() + 'default:\n'
+    ucpp.indentation += 1
     s += render(p[1])
-    xucc.indentation -= 1
+    ucpp.indentation -= 1
     return s
 
 
@@ -400,12 +414,12 @@ def r_reference(p):
 
 
 def r_foreach_statement(p):
-    s = xucc.indent() + 'foreach ' + render(p[1]) + '\n'
-    s += xucc.indent() + '{\n'
-    xucc.indentation += 1
+    s = ucpp.indent() + 'foreach ' + render(p[1]) + '\n'
+    s += ucpp.indent() + '{\n'
+    ucpp.indentation += 1
     s += render(p[2])
-    xucc.indentation -= 1
-    s += '\n' + xucc.indent() + '}'
+    ucpp.indentation -= 1
+    s += '\n' + ucpp.indent() + '}'
     return s
 
 
@@ -414,8 +428,8 @@ def r_vect(p):
 
 
 def r_codeline(p):
-    global xucc
-    return xucc.indent() + '%s;' % render(p[1])
+    global ucpp
+    return ucpp.indent() + '%s;' % render(p[1])
 
 
 def r_start(p):
@@ -431,23 +445,23 @@ def r_continue_statement(p):
 
 
 def r_switch_statement(p):
-    s = xucc.indent() + 'switch (' + render(p[1]) + '\n' + xucc.indent() + '{\n'
-    xucc.indentation += 1
+    s = ucpp.indent() + 'switch (' + render(p[1]) + ')\n' + ucpp.indent() + '{\n'
+    ucpp.indentation += 1
     s += '\n'.join(render(q) for q in p[2])
-    xucc.indentation -= 1
-    s += '\n' + xucc.indent() + '}'
+    ucpp.indentation -= 1
+    s += '\n' + ucpp.indent() + '}'
     return s
 
 def r_switch_case(p):
-    s = xucc.indent() + 'case ' + render(p[1]) + ':\n'
-    xucc.indentation += 1
+    s = ucpp.indent() + 'case ' + render(p[1]) + ':\n'
+    ucpp.indentation += 1
     s += render(p[2])
-    xucc.indentation -= 1
+    ucpp.indentation -= 1
     return s
 
 
 def r_do_statement(p):
-    s = 'do\n{\n%s\n}' % render(p[1])
+    s = ucpp.indent() + 'do\n' + ucpp.indent() + '{\n%s\n}' % render(p[1])
     if p[2] is not None:
         s = ' '.join([s, 'until (%s);' % render(p[2])])
     return s
@@ -498,13 +512,13 @@ def r_state_ignores(p):
 
 
 def r_while_statement(p):
-    global xucc
-    s = xucc.indent() + 'while (' + render(p[1]) + ')\n'
-    s += xucc.indent() + '{\n'
-    xucc.indentation += 1
+    global ucpp
+    s = ucpp.indent() + 'while (' + render(p[1]) + ')\n'
+    s += ucpp.indent() + '{\n'
+    ucpp.indentation += 1
     s += render(p[2])
-    xucc.indentation -= 1
-    s += '\n' + xucc.indent() + '}'
+    ucpp.indentation -= 1
+    s += '\n' + ucpp.indent() + '}'
     return s
 
 
