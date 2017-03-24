@@ -19,7 +19,8 @@ defaultproperties
     Mesh=SkeletalMesh'DH_M1Grenade_1st.M1_Grenade'
     Skins(2)=texture'DH_Weapon_tex.AlliedSmallArms.M1Grenade' // TODO: there is no specularity mask for this weapon
 
-    PlayerViewOffset=(X=15.0,Y=15.0)
+    DisplayFOV=90.0
+    PlayerViewOffset=(X=15.0,Y=15.0,Z=15.0)
 
     FuzeLength=4.0
     bHasReleaseLever=true

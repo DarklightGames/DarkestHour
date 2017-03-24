@@ -33,6 +33,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
+    DisplayFOV=90.0
     IronSightDisplayFOV=20.0
     ZoomOutTime=0.2
     FreeAimRotationSpeed=7.5

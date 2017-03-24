@@ -20,6 +20,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
+    DisplayFOV=80.0
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=30.0
 
