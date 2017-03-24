@@ -31,6 +31,7 @@ defaultproperties
     HighDetailOverlayIndex=2
     HandTex=texture'Weapons1st_tex.Arms.hands_gergloves'
 
+    DisplayFOV=80.0
     IronSightDisplayFOV=40.0
 
     MaxNumPrimaryMags=2

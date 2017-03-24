@@ -7,5 +7,4 @@ class DH_30CalBarrel extends DHWeaponBarrel;
 
 defaultproperties
 {
-    FiringHeatIncrement=0.75
 }

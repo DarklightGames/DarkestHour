@@ -134,11 +134,11 @@ function UpdateBarrelStatus()
 
 defaultproperties
 {
-    SteamTemperature=225.0
-    CriticalTemperature=250.0
-    FailureTemperature=275.0
+    SteamTemperature=180.0
+    CriticalTemperature=230.0
+    FailureTemperature=315.0
     BarrelCoolingRate=1.0
-    FiringHeatIncrement=1.0
+    FiringHeatIncrement=1.43
     BarrelTimerRate=3.0
     DrawType=DT_None
     bHidden=true
