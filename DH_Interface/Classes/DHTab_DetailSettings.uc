@@ -9,12 +9,13 @@ function SetupPositions()
 {
     super.SetupPositions();
 
+    sb_Section2.ManageComponent(sl_DistanceLOD);
     sb_Section2.UnmanageComponent(co_ScopeDetail);
 }
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    super.InitComponent(MyController, MyOwner);
+    super(UT2K4Tab_DetailSettings).InitComponent(MyController, MyOwner);
 
     RemoveComponent(co_ScopeDetail);
 }
@@ -211,6 +212,7 @@ function UpdateGlobalDetails()
             ch_DecoLayers.SetComponentValue(false, false);
             ch_MotionBlur.SetComponentValue(true, false);
             sl_DistanceLOD.SetComponentValue(0.25, false); // Range = 0.0 - 1.0
+            fDistance = 0.25;
             ch_HDR.SetComponentValue(false, false);
             break;
 
@@ -240,6 +242,7 @@ function UpdateGlobalDetails()
             ch_Weather.SetComponentValue(true, false);
             ch_MotionBlur.SetComponentValue(true, false);
             sl_DistanceLOD.SetComponentValue(0.50, false); // Range = 0.0 - 1.0
+            fDistance = 0.5;
             ch_HDR.SetComponentValue(false, false);
             break;
 
@@ -271,6 +274,7 @@ function UpdateGlobalDetails()
             ch_Weather.SetComponentValue(true, false);
             ch_MotionBlur.SetComponentValue(true, false);
             sl_DistanceLOD.SetComponentValue(0.75, false); // Range = 0.0 - 1.0
+            fDistance = 0.75;
             ch_HDR.SetComponentValue(false, false);
             break;
 
@@ -309,6 +313,7 @@ function UpdateGlobalDetails()
             ch_Weather.SetComponentValue(true, false);
             ch_MotionBlur.SetComponentValue(true, false);
             sl_DistanceLOD.SetComponentValue(1.0, false); // Range = 0.0 - 1.0
+            fDistance = 1.0;
             ch_HDR.SetComponentValue(true, false);
             break;
 
@@ -348,6 +353,7 @@ function UpdateGlobalDetails()
             ch_Weather.SetComponentValue(true, false);
             ch_MotionBlur.SetComponentValue(true, false);
             sl_DistanceLOD.SetComponentValue(1.0, false); // Range = 0.0 - 1.0
+            fDistance = 1.0;
             ch_HDR.SetComponentValue(true, false);
             break;
 
@@ -382,6 +388,7 @@ function UpdateGlobalDetails()
             ch_Weather.SetComponentValue(true, false);
             ch_MotionBlur.SetComponentValue(true, false);
             sl_DistanceLOD.SetComponentValue(1.0, false); // Range = 0.0 - 1.0
+            fDistance = 1.0;
             ch_HDR.SetComponentValue(true, false);
             break;
     }
