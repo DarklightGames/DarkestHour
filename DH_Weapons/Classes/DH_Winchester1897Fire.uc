@@ -29,15 +29,17 @@ defaultproperties
     LeanSpreadModifier=1.0
 
     RecoilRate=0.075
-    MaxVerticalRecoilAngle=3500
-    MaxHorizontalRecoilAngle=800
+    MaxVerticalRecoilAngle=900
+    MaxHorizontalRecoilAngle=120
 
     FireAnim="shoot"
     FireIronAnim="iron_shoot"
     FireIronEndAnim="Iron_shot"
 
-    ShakeRotMag=(X=0.0,Y=0.0,Z=175.0)
-    ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
-    ShakeRotTime=0.75
-    ShakeOffsetMag=(X=0.0,Y=0.0,Z=3.0)
+    ShakeOffsetMag=(X=3.0,Y=2.0,Z=8.0)
+    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    ShakeOffsetTime=1.0
+    ShakeRotMag=(X=50.0,Y=50.0,Z=300.0)
+    ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
+    ShakeRotTime=2.0
 }

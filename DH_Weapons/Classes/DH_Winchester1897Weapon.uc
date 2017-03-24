@@ -32,9 +32,10 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_Winchester1897_1st.Winchester1897'
 
-    PlayerIronsightFOV=60.0 // revert unwanted inherited value from DHSniperWeapon
-    IronSightDisplayFOV=30.0
-    BobModifyFactor=0.2 // revert unwanted inherited value from DHSniperWeapon
+    DisplayFOV=80
+    PlayerIronsightFOV=65.0
+    IronSightDisplayFOV=50.0
+    BobModifyFactor=0.4
 
     MaxNumPrimaryMags=7
     InitialNumPrimaryMags=7
