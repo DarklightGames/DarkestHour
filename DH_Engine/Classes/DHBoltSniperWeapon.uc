@@ -537,7 +537,7 @@ simulated function OutOfAmmo()
 defaultproperties
 {
     bPlusOneLoading=false
-    BobModifyFactor=0.05
+    BobModifyFactor=0.8
     ZoomOutTime=0.4
 
     PostFireIdleAnim="Idle"

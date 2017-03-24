@@ -285,7 +285,7 @@ defaultproperties
 
     PlayerIronsightFOV=90.0
     FreeAimRotationSpeed=6.0
-    BobModifyFactor=0.15
+    BobModifyFactor=0.85
 
     IronBringUp="Scope_in"
     IronPutDown="Scope_out"

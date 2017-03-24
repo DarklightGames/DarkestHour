@@ -178,7 +178,7 @@ defaultproperties
 {
     FreeAimRotationSpeed=6.0
     SwayModifyFactor=0.4
-    BobModifyFactor=0.12
+    BobModifyFactor=0.9
     ZoomOutTime=0.4
 
     IronIdleAnim="Iron_idle"

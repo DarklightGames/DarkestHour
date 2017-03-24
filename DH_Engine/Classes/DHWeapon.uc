@@ -619,7 +619,7 @@ defaultproperties
 {
     PlayerIronsightFOV=60.0
     SwayModifyFactor=0.66
-    BobModifyFactor=0.2
+    BobModifyFactor=1.0
     BobDamping=1.6
     SelectAnimRate=1.0
     PutDownAnimRate=1.0

@@ -5051,6 +5051,12 @@ function CheckBob(float DeltaTime, vector Y)
             BobModifier = 1.0;
         }
 
+        // Apply weapon bob modifier factor if bIronSights
+        if (bIronSights && Weapon != none && DHWeapon(Weapon) != none)
+        {
+            BobModifier *= DHWeapon(Weapon).BobModifyFactor;
+        }
+
         // If ironsighted, update ironsight bob properties based on the movement state (added this if/else block)
         if (bIronSights)
         {
