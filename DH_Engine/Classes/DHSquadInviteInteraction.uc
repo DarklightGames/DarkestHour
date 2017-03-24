@@ -17,7 +17,6 @@ function Initialized()
 {
     super.Initialized();
 
-    // TODO: make sure this gets called at the right time
     InvitationText = Repl(InvitationText, "{0}", class'GameInfo'.static.MakeColorCode(class'DHColor'.default.SquadColor) $ default.SenderName $ class'GameInfo'.static.MakeColorCode(class'UColor'.default.White));
     InvitationText = Repl(InvitationText, "{1}", class'GameInfo'.static.MakeColorCode(class'DHColor'.default.SquadColor) $ default.SquadName $ class'GameInfo'.static.MakeColorCode(class'UColor'.default.White));
 
