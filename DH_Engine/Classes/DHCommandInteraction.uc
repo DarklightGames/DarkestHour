@@ -16,12 +16,11 @@ var float               MenuAlpha;
 var vector              Cursor;
 var int                 SelectedIndex;
 
-// Colin: This is necessary because trying to DrawTile on idential TexRotators
-// and other procedural materials in the same frame ends up only drawing one
-// of them.
-
 const MAX_OPTIONS = 8;
 
+// This is necessary because trying to DrawTile on identical TexRotators
+// and other procedural materials in the same frame ends up only drawing one
+// of them.
 var Texture             OptionTextures[MAX_OPTIONS];
 var array<TexRotator>   OptionTexRotators;
 
@@ -242,11 +241,6 @@ function Tick(float DeltaTime)
         else
         {
             SelectedIndex = (Menu.Options.Length * (Theta / Tau));
-
-            if (Menu.IsOptionDisabled(SelectedIndex))
-            {
-                SelectedIndex = -1;
-            }
         }
     }
     else
@@ -306,31 +300,34 @@ function PostRender(Canvas C)
         // Draw all the options.
         for (i = 0; i < Menu.Options.Length; ++i)
         {
-            if (SelectedIndex == i)
-            {
-                // TODO: also do some sort of "push out" with some sort of offset thing?
-
-                C.DrawColor = default.SelectedColor;
-                C.DrawColor.A = byte(255 * (MenuAlpha * 0.9));
-            }
-            else if (Menu.IsOptionDisabled(i))
+            if (Menu.IsOptionDisabled(i))
             {
                 C.DrawColor = default.DisabledColor;
                 C.DrawColor.A = byte(255 * (MenuAlpha * 0.5));
             }
             else
             {
-                switch (Menu.Options[i].Type)
+                if (SelectedIndex == i)
                 {
-                    case TYPE_Normal:
-                        C.DrawColor = class'UColor'.default.White;
-                        break;
-                    case TYPE_Submenu:
-                        C.DrawColor = default.SubmenuColor;
-                        break;
-                }
+                    // TODO: also do some sort of "push out" with some sort of offset thing?
 
-                C.DrawColor.A = byte(255 * (MenuAlpha * 0.5));
+                    C.DrawColor = default.SelectedColor;
+                    C.DrawColor.A = byte(255 * (MenuAlpha * 0.9));
+                }
+                else
+                {
+                    switch (Menu.Options[i].Type)
+                    {
+                        case TYPE_Normal:
+                            C.DrawColor = class'UColor'.default.White;
+                            break;
+                        case TYPE_Submenu:
+                            C.DrawColor = default.SubmenuColor;
+                            break;
+                    }
+
+                    C.DrawColor.A = byte(255 * (MenuAlpha * 0.5));
+                }
             }
 
             if (SelectedIndex == i)
@@ -472,18 +469,18 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
     return false;
 }
 
-function bool OnSelect(int Index, optional vector Location)
+function OnSelect(int OptionIndex, optional vector Location)
 {
     local DHCommandMenu Menu;
 
     Menu = DHCommandMenu(Menus.Peek());
 
-    if (Menu == none || Index < 0 || Index >= Menu.Options.Length || Menu.IsOptionDisabled(Index))
+    if (Menu == none || OptionIndex < 0 || OptionIndex >= Menu.Options.Length || Menu.IsOptionDisabled(OptionIndex))
     {
-        return false;
+        return;
     }
 
-    Menu.OnSelect(self, Index, Location);
+    Menu.OnSelect(OptionIndex, Location);
 }
 
 defaultproperties

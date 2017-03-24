@@ -108,7 +108,7 @@ replication
         ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog,
         ServerMetricsDump, ServerLockWeapons,
         ServerSquadCreate, ServerSquadLeave, ServerSquadJoin, ServerSquadSay,
-        SeverSquadJoinAuto, ServerSquadInvite, ServerSquadKick, ServerSquadPromote,
+        ServerSquadJoinAuto, ServerSquadInvite, ServerSquadKick, ServerSquadPromote,
         ServerSquadCommandeer, ServerSquadLock, ServerSquadOrder, ServerSquadSignal,
         ServerSquadRename, ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint;
 
@@ -4501,10 +4501,10 @@ function ServerSquadJoin(int TeamIndex, int SquadIndex, optional bool bWasInvite
 
 simulated exec function SquadJoinAuto()
 {
-    SeverSquadJoinAuto();
+    ServerSquadJoinAuto();
 }
 
-function SeverSquadJoinAuto()
+function ServerSquadJoinAuto()
 {
     if (SquadReplicationInfo != none)
     {
@@ -4716,35 +4716,42 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-    if (PRI == none || !PRI.IsSquadLeader())
+    if (PRI == none)
     {
         return false;
     }
 
-    // Trace out into the world and find a pawn we are looking at.
-    TraceStart = Pawn.Location + Pawn.EyePosition();
-    TraceEnd = TraceStart + (GetMaxViewDistance() * vector(Rotation));
-    OtherPawn = DHPawn(Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true));
-
-    if (OtherPawn != none && OtherPawn.GetTeamNum() == GetTeamNum())
+    if (PRI.IsSquadLeader())
     {
-        OtherPRI = DHPlayerReplicationInfo(OtherPawn.PlayerReplicationInfo);
+        // Trace out into the world and find a pawn we are looking at.
+        TraceStart = Pawn.Location + Pawn.EyePosition();
+        TraceEnd = TraceStart + (GetMaxViewDistance() * vector(Rotation));
+        OtherPawn = DHPawn(Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true));
 
-        MenuObject = OtherPawn;
-
-        if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, OtherPRI))
+        if (OtherPawn != none && OtherPawn.GetTeamNum() == GetTeamNum())
         {
-            MenuClassName = "DH_Engine.DHCommandMenu_SquadManageMember";
-        }
-        else
-        {
-            MenuClassName = "DH_Engine.DHCommandMenu_SquadManageNonMember";
+            OtherPRI = DHPlayerReplicationInfo(OtherPawn.PlayerReplicationInfo);
+
+            MenuObject = OtherPawn;
+
+            if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, OtherPRI))
+            {
+                MenuClassName = "DH_Engine.DHCommandMenu_SquadManageMember";
+            }
+            else
+            {
+                MenuClassName = "DH_Engine.DHCommandMenu_SquadManageNonMember";
+            }
+
+            return true;
         }
 
-        return true;
+        MenuClassName = "DH_Engine.DHCommandMenu_SquadLeader";
     }
-
-    MenuClassName = "DH_Engine.DHCommandMenu_SquadLeader";
+    else
+    {
+        MenuClassName = "DH_Engine.DHCommandMenu_LoneWolf";
+    }
 
     return true;
 }

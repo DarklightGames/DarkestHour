@@ -50,4 +50,5 @@ function OnActive();                    // Called when a menu becomes the topmos
 function OnPassive();                   // Called when a menu is no longer the topmost menu on the stack
 function OnHoverIn(int OptionIndex);    // Called when a menu option is hovered over
 function OnHoverOut(int OptionIndex);   // Called when a menu option is no longer being hovered over
-function bool OnSelect(DHCommandInteraction Interaction, int Index, vector Location);
+function OnSelect(int OptionIndex, vector Location);
+

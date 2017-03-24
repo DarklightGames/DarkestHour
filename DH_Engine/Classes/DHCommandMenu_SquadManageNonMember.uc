@@ -44,15 +44,15 @@ function bool ShouldHideMenu()
     return P == none || P.bDeleteMe || P.Health <= 0;
 }
 
-function bool OnSelect(DHCommandInteraction Interaction, int Index, vector Location)
+function OnSelect(int OptionIndex, vector Location)
 {
     local DHPlayer PC;
     local Pawn P;
     local DHPlayerReplicationInfo OtherPRI;
 
-    if (Interaction == none || Interaction.ViewportOwner == none || Index < 0 || Index >= Options.Length)
+    if (Interaction == none || Interaction.ViewportOwner == none || OptionIndex < 0 || OptionIndex >= Options.Length)
     {
-        return false;
+        return;
     }
 
     P = Pawn(MenuObject);
@@ -66,7 +66,7 @@ function bool OnSelect(DHCommandInteraction Interaction, int Index, vector Locat
 
     if (PC != none && OtherPRI != none)
     {
-        switch (Index)
+        switch (OptionIndex)
         {
             case 0: // Invite
                 PC.ServerSquadInvite(OtherPRI);
@@ -77,8 +77,6 @@ function bool OnSelect(DHCommandInteraction Interaction, int Index, vector Locat
     }
 
     Interaction.Hide();
-
-    return true;
 }
 
 function GetOptionText(int OptionIndex, out string ActionText, out string SubjectText)

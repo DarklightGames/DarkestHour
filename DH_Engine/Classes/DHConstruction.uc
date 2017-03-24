@@ -36,7 +36,7 @@ var     int     HealthMax;
 
 // Menu
 var     localized string    MenuName;
-var     localized Material  MenuMaterial;
+var     localized Material  MenuIcon;
 
 // Anchors
 enum EAnchorType
@@ -163,9 +163,14 @@ function static StaticMesh GetStaticMesh(int TeamIndex, int StageIndex)
     return default.Stages[StageIndex].StaticMesh;
 }
 
-function static string GetMenuName(int TeamIndex)
+function static string GetMenuName(DHPlayer PC)
 {
     return default.MenuName;
+}
+
+function static Material GetMenuIcon(DHPlayer PC)
+{
+    return default.MenuIcon;
 }
 
 defaultproperties

@@ -5,20 +5,19 @@
 
 class DHCommandMenu_SquadLeader extends DHCommandMenu;
 
-function bool OnSelect(DHCommandInteraction Interaction, int Index, vector Location)
+function OnSelect(int Index, vector Location)
 {
     local DHPlayer PC;
 
     if (Interaction == none || Interaction.ViewportOwner == none || Index < 0 || Index >= Options.Length)
     {
-        return false;
+        return;
     }
 
     PC = DHPlayer(Interaction.ViewportOwner.Actor);
 
     // TODO: possibly move speech commands out of the menu, since it's not
     // really it's responsbility.
-
     switch (Index)
     {
         case 0: // Fire
@@ -38,7 +37,7 @@ function bool OnSelect(DHCommandInteraction Interaction, int Index, vector Locat
             break;
         case 2: // Construction
             Interaction.PushMenu("DH_Engine.DHCommandMenu_Construction");
-            return false;
+            return;
         case 3: // Move
             PC.ConsoleCommand("SPEECH ALERT 1");
             PC.ServerSquadSignal(SIGNAL_Move, Location);
@@ -48,8 +47,6 @@ function bool OnSelect(DHCommandInteraction Interaction, int Index, vector Locat
     }
 
     Interaction.Hide();
-
-    return true;
 }
 
 function bool IsOptionDisabled(int OptionIndex)

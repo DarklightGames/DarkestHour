@@ -578,7 +578,28 @@ simulated function bool IsInSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, i
     return PRI != none && PRI.Team.TeamIndex == TeamIndex && PRI.SquadIndex == SquadIndex;
 }
 
+simulated function bool IsSquadJoinable(int TeamIndex, int SquadIndex)
+{
+    return IsSquadActive(TeamIndex, SquadIndex) && !IsSquadFull(TeamIndex, SquadIndex) && !IsSquadLocked(TeamIndex, SquadIndex);
+}
+
+simulated function bool IsAnySquadJoinable(int TeamIndex)
+{
+    local int i;
+
+    for (i = 0; i < GetTeamSquadLimit(TeamIndex); ++i)
+    {
+        if (IsSquadJoinable(TeamIndex, i))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 // Attempt to make the specified player join the most populous open squad.
+// Returns the squad index of the newly joined squad, or -1 if it failed.
 function int JoinSquadAuto(DHPlayerReplicationInfo PRI)
 {
     local int i, SquadIndex, MaxMemberCount, MemberCount;
@@ -592,7 +613,7 @@ function int JoinSquadAuto(DHPlayerReplicationInfo PRI)
 
     for (i = 0; i < GetTeamSquadLimit(PRI.Team.TeamIndex); ++i)
     {
-        if (IsSquadLocked(PRI.Team.TeamIndex, i))
+        if (!IsSquadJoinable(PRI.Team.TeamIndex, i))
         {
             continue;
         }

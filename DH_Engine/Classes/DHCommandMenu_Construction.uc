@@ -10,15 +10,11 @@ var array<class<DHConstruction> > ConstructionClasses;
 function Setup()
 {
     local int i;
-    local int TeamIndex;
+    local DHPlayer PC;
 
-    TeamIndex = -1;
-
-    if (Interaction != none &&
-        Interaction.ViewportOwner != none &&
-        Interaction.ViewportOwner.Actor != none)
+    if (Interaction != none && Interaction.ViewportOwner != none)
     {
-        TeamIndex = Interaction.ViewportOwner.Actor.GetTeamNum();
+        PC = DHPlayer(Interaction.ViewportOwner.Actor);
     }
 
     Options.Length = ConstructionClasses.Length;
@@ -27,31 +23,29 @@ function Setup()
 
     for (i = 0; i < ConstructionClasses.Length; ++i)
     {
-        Options[i].ActionText = ConstructionClasses[i].static.GetMenuName(TeamIndex);
-        Options[i].Material = ConstructionClasses[i].default.MenuMaterial;
         Options[i].OptionalObject = ConstructionClasses[i];
+        Options[i].ActionText = ConstructionClasses[i].static.GetMenuName(PC);
+        Options[i].Material = ConstructionClasses[i].static.GetMenuIcon(PC);
     }
 }
 
-function bool OnSelect(DHCommandInteraction Interaction, int Index, vector Location)
+function OnSelect(int OptionIndex, vector Location)
 {
     local DHPawn P;
 
-    if (Interaction == none || Interaction.ViewportOwner == none || Index < 0 || Index >= Options.Length)
+    if (Interaction == none || Interaction.ViewportOwner == none || OptionIndex < 0 || OptionIndex >= Options.Length)
     {
-        return false;
+        return;
     }
 
     P = DHPawn(Interaction.ViewportOwner.Actor.Pawn);
 
     if (P != none)
     {
-        P.SetConstructionProxy(class<DHConstruction>(Options[Index].OptionalObject));
+        P.SetConstructionProxy(class<DHConstruction>(Options[OptionIndex].OptionalObject));
     }
 
     Interaction.Hide();
-
-    return true;
 }
 
 function bool ShouldHideMenu()
