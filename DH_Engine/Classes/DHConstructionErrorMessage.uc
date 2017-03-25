@@ -20,6 +20,7 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
     if (CP != none)
     {
         Result = Repl(Result, "{0}", CP.ConstructionClass.default.MenuName);
+        Result = Repl(Result, "{1}", CP.ConstructionClass.default.DuplicateDistanceInMeters);
     }
 
     return Result;
@@ -35,5 +36,6 @@ defaultproperties
     ErrorMessages(5)="You cannot construct a {0} at this location."
     ErrorMessages(6)="Not enough room."
     ErrorMessages(7)="{0} must be placed on earthen terrain."
+    ErrorMessages(8)="Too close to an existing {0} (must be {1} meters away)."
 }
 

@@ -3,21 +3,10 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHConstructionProxy extends Actor;
+class DHConstructionProxy extends Actor
+    dependson(DHConstruction);
 
-enum EConstructionProxyError
-{
-    CPE_None,
-    CPE_Fatal,          // Some fatal error occurred, usually a case of unexpected values
-    CPE_NoGround,       // No solid ground was able to be found
-    CPE_TooSteep,       // The ground slope exceeded the allowable maximum
-    CPE_InWater,        // The construction is in water and the construction type disallows this
-    CPE_Restricted,     // Construction overlaps a restriction volume
-    CPE_NoRoom,         // No room to place this construction
-    CPE_NotOnTerrain    // Construction is not on terrain
-};
-
-var EConstructionProxyError ProxyError;
+var DHConstruction.EConstructionError   ProxyError;
 
 var DHPawn                  PawnOwner;
 var class<DHConstruction>   ConstructionClass;
@@ -46,7 +35,8 @@ function SetConstructionClass(class<DHConstruction> ConstructionClass)
 
     if (ConstructionClass == none)
     {
-        Error("Cannot set the construction class to none");
+        Warn("Cannot set the construction class to none");
+        return;
     }
 
     SetCollisionSize(ConstructionClass.default.CollisionHeight, ConstructionClass.default.CollisionRadius);
@@ -154,7 +144,7 @@ function Tick(float DeltaTime)
     SetLocation(L);
     SetRotation(R);
 
-    if (ProxyError == CPE_None)
+    if (ProxyError == ERROR_None)
     {
         // Location was determined to be okay, now do another pass.
         ProxyError = GetPositionError();
@@ -162,7 +152,7 @@ function Tick(float DeltaTime)
 
     switch (ProxyError)
     {
-        case CPE_None:
+        case ERROR_None:
             SetStaticMeshColor(class'UColor'.default.Green);
             break;
         default:
@@ -172,26 +162,26 @@ function Tick(float DeltaTime)
 }
 
 // This function gets the provisional location and rotation of the construction.
-function EConstructionProxyError GetProvisionalPosition(out vector OutLocation, out rotator OutRotation)
+function DHConstruction.EConstructionError GetProvisionalPosition(out vector OutLocation, out rotator OutRotation)
 {
     local PlayerController PC;
     local vector TraceStart, TraceEnd, HitLocation, HitNormal, Left, Forward, X, Y, Z, HitNormalSum, BaseLocation;
     local Actor TempHitActor, HitActor;
     local rotator R;
     local float GroundSlopeDegrees, AngleRadians;
-    local EConstructionProxyError Error;
+    local DHConstruction.EConstructionError Error;
     local int i;
 
     if (PawnOwner == none)
     {
-        return CPE_Fatal;
+        return ERROR_Fatal;
     }
 
     PC = PlayerController(PawnOwner.Controller);
 
     if (PC == none || ConstructionClass == none)
     {
-        return CPE_Fatal;
+        return ERROR_Fatal;
     }
 
     // Trace out into the world and try and hit something static.
@@ -227,7 +217,7 @@ function EConstructionProxyError GetProvisionalPosition(out vector OutLocation, 
     if (HitActor == none)
     {
         // Didn't hit anything!
-        Error = CPE_NoGround;
+        Error = ERROR_NoGround;
         // TODO: verify correctness
         BaseLocation = TraceStart;
         R = PC.CalcViewRotation;
@@ -241,7 +231,7 @@ function EConstructionProxyError GetProvisionalPosition(out vector OutLocation, 
 
         if (ConstructionClass.default.bCanOnlyPlaceOnTerrain && !HitActor.IsA('TerrainInfo'))
         {
-            Error = CPE_NotOnTerrain;
+            Error = ERROR_NotOnTerrain;
         }
 
         if (!ConstructionClass.default.bShouldAlignToGround)
@@ -257,13 +247,13 @@ function EConstructionProxyError GetProvisionalPosition(out vector OutLocation, 
         // Hit something static in the world.
         GroundSlopeDegrees = class'UUnits'.static.RadiansToDegrees(Acos(HitNormal dot vect(0, 0, 1)));
 
-        if (Error == CPE_None && GroundSlopeDegrees >= ConstructionClass.default.GroundSlopeMaxInDegrees)
+        if (Error == ERROR_None && GroundSlopeDegrees >= ConstructionClass.default.GroundSlopeMaxInDegrees)
         {
             // Too steep!
-            Error = CPE_TooSteep;
+            Error = ERROR_TooSteep;
         }
 
-        if (Error == CPE_None)
+        if (Error == ERROR_None)
         {
             // TODO: test the anchor points
             // TODO: enable or disable this check
@@ -291,7 +281,7 @@ function EConstructionProxyError GetProvisionalPosition(out vector OutLocation, 
 
                 if (HitActor != none && !HitActor.IsA('ROBulletWhipAttachment') && !HitActor.IsA('Volume'))
                 {
-                    Error = CPE_NoRoom;
+                    Error = ERROR_NoRoom;
                     break;
                 }
 
@@ -302,7 +292,7 @@ function EConstructionProxyError GetProvisionalPosition(out vector OutLocation, 
 
                 if (HitActor == none)
                 {
-                    Error = CPE_NoGround;
+                    Error = ERROR_NoGround;
                     break;
                 }
                 else
@@ -312,7 +302,7 @@ function EConstructionProxyError GetProvisionalPosition(out vector OutLocation, 
             }
         }
 
-        if (Error == CPE_None)
+        if (Error == ERROR_None)
         {
             HitNormalSum.X /= TRACE_RESOLUTION;
             HitNormalSum.Y /= TRACE_RESOLUTION;
@@ -336,21 +326,23 @@ function EConstructionProxyError GetProvisionalPosition(out vector OutLocation, 
 
 // We separate this function from GetProvisionalPosition because we need to have
 // the server do it's own check before attempting to spawn the construction.
-function EConstructionProxyError GetPositionError()
+function DHConstruction.EConstructionError GetPositionError()
 {
     local DHRestrictionVolume RV;
+    local Actor A;
+    local DHConstruction C;
     local Actor TouchingActor;
 
     if (!ConstructionClass.default.bCanPlaceInWater && PhysicsVolume != none && PhysicsVolume.bWaterVolume)
     {
-        return CPE_InWater;
+        return ERROR_InWater;
     }
 
     foreach TouchingActors(class'DHRestrictionVolume', RV)
     {
         if (RV != none && RV.bNoConstructions)
         {
-            return CPE_Restricted;
+            return ERROR_Restricted;
         }
     }
 
@@ -358,11 +350,24 @@ function EConstructionProxyError GetPositionError()
     {
         if (TouchingActor != none && TouchingActor.bBlockActors)
         {
-            return CPE_NoRoom;
+            return ERROR_NoRoom;
         }
     }
 
-    return CPE_None;
+    if (ConstructionClass.default.DuplicateDistanceInMeters > 0.0)
+    {
+        foreach RadiusActors(ConstructionClass, A, class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.DuplicateDistanceInMeters))
+        {
+            C = DHConstruction(A);
+
+            if (C != none && C.GetTeamIndex() == PawnOwner.GetTeamNum())
+            {
+                return ERROR_TooClose;
+            }
+        }
+    }
+
+    return ERROR_None;
 }
 
 defaultproperties

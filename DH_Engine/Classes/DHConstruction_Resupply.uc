@@ -52,9 +52,8 @@ function static StaticMesh GetStaticMesh(int TeamIndex, int StageIndex)
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            return StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box';    // TODO: fix
+            return StaticMesh'DH_Construction_stc.Ammo.DH_Ger_ammo_box';
         case ALLIES_TEAM_INDEX:
-            // TODO: possible have it nation based?
             return StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box';
     }
 
@@ -68,3 +67,4 @@ defaultproperties
     MenuName="Resupply Box"
     ProxyDistanceInMeters=2.0
 }
+

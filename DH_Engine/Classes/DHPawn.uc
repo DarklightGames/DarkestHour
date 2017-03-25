@@ -5982,7 +5982,7 @@ simulated function Fire( optional float F )
 {
     if (Level.NetMode != NM_DedicatedServer && ConstructionProxy != none)
     {
-        if (ConstructionProxy.ProxyError == CPE_None)
+        if (ConstructionProxy.ProxyError == ERROR_None)
         {
             ServerCreateConstruction(ConstructionProxy.ConstructionClass, ConstructionProxy.Location, ConstructionProxy.Rotation);
 

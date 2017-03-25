@@ -6,6 +6,20 @@
 class DHConstruction extends Actor
     abstract;
 
+enum EConstructionError
+{
+    ERROR_None,
+    ERROR_Fatal,            // Some fatal error occurred, usually a case of unexpected values
+    ERROR_NoGround,         // No solid ground was able to be found
+    ERROR_TooSteep,         // The ground slope exceeded the allowable maximum
+    ERROR_InWater,          // The construction is in water and the construction type disallows this
+    ERROR_Restricted,       // Construction overlaps a restriction volume
+    ERROR_NoRoom,           // No room to place this construction
+    ERROR_NotOnTerrain,     // Construction is not on terrain
+    ERROR_TooClose,         // Too close to an identical construction
+    ERROR_Other             // ERROR:
+};
+
 // Ownership
 var() private int TeamIndex;
 
@@ -21,6 +35,7 @@ var     rotator StartRotationMax;
 var     int     LocalRotationRate;
 var     sound   PlacementSound;
 var     float   FloatToleranceInMeters;
+var     float   DuplicateDistanceInMeters;  // The distance required between identical constructions of the same type
 
 // Construction
 var     int     SupplyCost;
