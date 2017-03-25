@@ -16,7 +16,7 @@ state Constructed
     }
 Begin:
     SetTimer(1.0, true);
-};
+}
 
 
 function OnConstructed()
