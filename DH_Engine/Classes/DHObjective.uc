@@ -90,6 +90,7 @@ var(DHObjectiveVisual) bool         bHideCaptureBarRatio;        // Hide the ene
 var(DHObjectiveAwards) bool         bResetDeathPenalties;        // will reset all players death penalty counts
 var(DHObjectiveAwards) int          AlliedAwardedReinforcements; // Amount of reinforcement to award for allies if the obj is captured
 var(DHObjectiveAwards) int          AxisAwardedReinforcements;   // Amount of reinforcement to award for axis if the obj is captured
+var(DHObjectiveAwards) int          MinutesAwarded;              // Time in minutes awarded to round time when objective is captured
 
 // Other variables
 var(DHObjectiveOther) bool          bAlliesFinalObjective;
@@ -577,6 +578,12 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     // Award reinforcements
     G.ModifyReinforcements(AXIS_TEAM_INDEX, AxisAwardedReinforcements * FMax(0.1, (G.NumPlayers / G.MaxPlayers)));
     G.ModifyReinforcements(ALLIES_TEAM_INDEX, AlliedAwardedReinforcements * FMax(0.1, (G.NumPlayers / G.MaxPlayers)));
+
+    // Award round time
+    if (MinutesAwarded != 0)
+    {
+        G.ModifyRoundTime(MinutesAwarded*60, 0);
+    }
 
     // Handle attrition unlock
     if (G.DHLevelInfo != none && G.DHLevelInfo.AttritionMaxOpenObj > 0)
