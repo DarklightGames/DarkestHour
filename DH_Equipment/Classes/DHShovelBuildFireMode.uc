@@ -5,6 +5,8 @@
 
 class DHShovelBuildFireMode extends WeaponFire;
 
+var float TraceDistanceInMeters;
+
 // Modified to check (via a trace) that player is facing an obstacle that can be cut & that player is stationary & not diving to prone
 simulated function bool AllowFire()
 {
@@ -12,21 +14,17 @@ simulated function bool AllowFire()
     local vector         HitLocation, HitNormal;
     local Actor HitActor;
 
-    HitActor = Trace(HitLocation, HitNormal, Weapon.Location + (100.0 * vector(Weapon.Rotation)), Weapon.Location, true);
+    HitActor = Trace(HitLocation, HitNormal, Weapon.Location + (class'DHUnits'.static.MetersToUnreal(default.TraceDistanceInMeters) * vector(Weapon.Rotation)), Weapon.Location, true);
 
     Construction = DHConstruction(HitActor);
 
-    // TODO: do a check that the construction can be built up
-
     if (Construction != none &&
-        Construction.GetTeamIndex() == Instigator.GetTeamNum() &&
+        (Construction.GetTeamIndex() == NEUTRAL_TEAM_INDEX || Construction.GetTeamIndex() == Instigator.GetTeamNum()) &&
         Construction.CanBeBuilt() &&
         Instigator != none &&
         !Instigator.IsProneTransitioning() &&
         Instigator.Velocity == vect(0.0, 0.0, 0.0))
     {
-        Log("can be built!");
-
         return true;
     }
 
@@ -37,7 +35,7 @@ event ModeDoFire()
 {
     if (AllowFire())
     {
-        Log("doing to state!");
+        // TODO: get the exact construction we're lookin' at
 
         GotoState('Building');
     }
@@ -78,9 +76,11 @@ state Building
 
 defaultproperties
 {
+    TraceDistanceInMeters=2.0
+
     bModeExclusive=true
     bFireOnRelease=false
 
     FireAnim="dig"
-    FireLoopAnim="dig"
 }
+

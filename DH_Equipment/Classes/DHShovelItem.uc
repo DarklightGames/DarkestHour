@@ -5,6 +5,10 @@
 
 class DHShovelItem extends DHWeapon;
 
+function bool FillAmmo() { return false; }
+function bool ResupplyAmmo() { return false; }
+simulated exec function ROManualReload() { return; }
+
 defaultproperties
 {
     FireModeClass(0)=class'DH_Equipment.DHShovelBuildFireMode'

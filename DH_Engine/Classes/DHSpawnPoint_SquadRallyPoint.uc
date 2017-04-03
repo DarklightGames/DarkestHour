@@ -105,8 +105,8 @@ auto state Constructing
     }
 
 Begin:
-EstablishmentStartTimeSeconds = Level.TimeSeconds;
-SetTimer(1.0, true);
+    EstablishmentStartTimeSeconds = Level.TimeSeconds;
+    SetTimer(1.0, true);
 }
 
 function Timer()

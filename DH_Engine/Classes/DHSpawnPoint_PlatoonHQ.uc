@@ -20,3 +20,36 @@ simulated function string GetStyleName()
         return "DHSpawnButtonStyle";
     }
 }
+
+function bool PerformSpawn(DHPlayer PC)
+{
+    local DarkestHourGame G;
+    local vector SpawnLocation;
+    local rotator SpawnRotation;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (PC == none || PC.Pawn != none || G == none)
+    {
+        return false;
+    }
+
+    if (CanSpawnWithParameters(GRI, PC.GetTeamNum(), PC.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex))
+    {
+        GetSpawnPosition(SpawnLocation, SpawnRotation, PC.VehiclePoolIndex);
+
+        if (G.SpawnPawn(PC, SpawnLocation, SpawnRotation, self) == none)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+defaultproperties
+{
+    bHidden=false
+}

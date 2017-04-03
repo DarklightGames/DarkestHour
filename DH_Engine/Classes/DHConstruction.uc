@@ -4,7 +4,8 @@
 //==============================================================================
 
 class DHConstruction extends Actor
-    abstract;
+    abstract
+    placeable;
 
 enum EConstructionError
 {
@@ -20,8 +21,16 @@ enum EConstructionError
     ERROR_Other             // ERROR:
 };
 
+enum ETeamOwner
+{
+    TEAM_Axis,
+    TEAM_Allies,
+    TEAM_Neutral
+};
+
 // Ownership
-var() private int TeamIndex;
+var() private ETeamOwner TeamOwner;         // This is for levelers only.
+var private int TeamIndex;
 
 // Placement
 var     float   ProxyDistanceInMeters;      // The distance at which the proxy object will be away from the player when
@@ -36,6 +45,7 @@ var     int     LocalRotationRate;
 var     sound   PlacementSound;
 var     float   FloatToleranceInMeters;
 var     float   DuplicateDistanceInMeters;  // The distance required between identical constructions of the same type
+var     class<Emitter> PlacementEmitterClass;
 
 // Construction
 var     int     SupplyCost;
@@ -52,21 +62,6 @@ var     int     HealthMax;
 var     localized string    MenuName;
 var     localized Material  MenuIcon;
 
-// Anchors
-enum EAnchorType
-{
-    ANCHOR_Above,
-    ANCHOR_Below
-};
-
-struct Anchor
-{
-    var EAnchorType Type;
-    var vector Location;
-};
-
-var array<Anchor> Anchors;
-
 // Staging
 struct Stage
 {
@@ -79,15 +74,16 @@ struct Stage
 var int StageIndex;
 var array<Stage> Stages;
 
+replication
+{
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        Health;
+}
+
 function OnConstructed();
 function OnStageIndexChanged(int OldIndex);
 function OnTeamIndexChanged();
 function OnHealthChanged();
-
-static function bool HasStages()
-{
-    return default.Stages.Length > 1;
-}
 
 final function int GetTeamIndex()
 {
@@ -107,6 +103,8 @@ simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
+    SetTeamIndex(int(TeamOwner));
+
     Health = 1;
 
     if (Role == ROLE_Authority)
@@ -117,6 +115,14 @@ simulated function PostBeginPlay()
 
 auto state Constructing
 {
+    event BeginState()
+    {
+        if (PlacementEmitterClass != none)
+        {
+            Spawn(PlacementEmitterClass);
+        }
+    }
+
     function OnHealthChanged()
     {
         if (Health <= 0)
@@ -124,7 +130,7 @@ auto state Constructing
             Destroy();
         }
         // TODO: handle taking damage during construction
-        else if (Health >= Stages[StageIndex].StageHealth)
+        else if (StageIndex > 0 && StageIndex < Stages.Length && Health >= Stages[StageIndex].StageHealth)
         {
             OnStageIndexChanged(StageIndex++);
 
@@ -136,8 +142,10 @@ auto state Constructing
         }
     }
 Begin:
-    if (!HasStages())
+    if (default.Stages.Length == 0)
     {
+        // There are no intermediate stages, so put the construction immediately
+        // into the fully constructed state.
         Health = HealthMax;
     }
 
@@ -148,7 +156,7 @@ state Constructed
 {
     function OnHealthChanged()
     {
-
+        // TODO: take damage up in here
     }
 Begin:
     OnConstructed();
@@ -216,6 +224,7 @@ defaultproperties
     HealthMax=100
     ProxyDistanceInMeters=5.0
     GroundSlopeMaxInDegrees=25.0
+    StageIndex=-1
 
     bStatic=false
     bNoDelete=false
@@ -247,14 +256,12 @@ defaultproperties
     bCanPlaceInWater=false
     bCanPlaceIndoors=false
     FloatToleranceInMeters=0.5
+    PlacementSound=Sound'Inf_Player.Gibimpact.Gibimpact' // TODO: placeholder
+    PlacementEmitterClass=class'DH_Effects.DHConstructionEffect'
 
     LocalRotationRate=32768
 
     // Destruction
     DestroyedLifespan=15.0
-
-    PlacementSound=Sound'Inf_Player.Gibimpact.Gibimpact' // TODO: placeholder
-
-    StageIndex=-1
 }
 
