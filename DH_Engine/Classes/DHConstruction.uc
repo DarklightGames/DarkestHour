@@ -28,8 +28,8 @@ enum ETeamOwner
     TEAM_Neutral
 };
 
-// Ownership
-var() private ETeamOwner TeamOwner;         // This is for levelers only.
+var() ETeamOwner TeamOwner;         // This is for levelers' convenience only.
+
 var private int TeamIndex;
 
 // Placement
@@ -55,8 +55,8 @@ var     bool    bDestroyOnConstruction;
 var     int     DestroyedLifespan;          // How long does the actor stay around after it's been destroyed?
 
 // Damage
-var     int     Health;
-var     int     HealthMax;
+var private int     Health;
+var     int         HealthMax;
 
 // Menu
 var     localized string    MenuName;
@@ -78,16 +78,31 @@ replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
         Health;
+    reliable if (Role < ROLE_Authority)
+        ServerAddHealth;
 }
 
 function OnConstructed();
 function OnStageIndexChanged(int OldIndex);
 function OnTeamIndexChanged();
-function OnHealthChanged();
 
 final function int GetTeamIndex()
 {
     return TeamIndex;
+}
+
+function SetHealth(int Health)
+{
+    self.Health = Clamp(Health, 0, HealthMax);
+
+    OnHealthChanged();
+}
+
+function AddHealth(int Health)
+{
+    self.Health = Min(HealthMax, self.Health + Health);
+
+    OnHealthChanged();
 }
 
 final function SetTeamIndex(int TeamIndex)
@@ -97,6 +112,11 @@ final function SetTeamIndex(int TeamIndex)
     SetStaticMesh(GetStaticMesh(TeamIndex, StageIndex));
 
     OnTeamIndexChanged();
+}
+
+function ServerAddHealth(int Health)
+{
+    AddHealth(Health);
 }
 
 simulated function PostBeginPlay()
@@ -113,6 +133,43 @@ simulated function PostBeginPlay()
     }
 }
 
+function OnHealthChanged()
+{
+    local int i;
+    local int OldStageIndex;
+    local bool bDidFindStage;
+
+    if (Health <= 0)
+    {
+        Destroy();
+    }
+    else if (Health >= HealthMax)
+    {
+        GotoState('Constructed');
+    }
+    else
+    {
+        for (i = Stages.Length - 1; i >= 0; --i)
+        {
+            if (Health >= Stages[i].StageHealth)
+            {
+                OldStageIndex = StageIndex;
+                StageIndex = i;
+                OnStageIndexChanged(OldStageIndex);
+                SetStaticMesh(GetStaticMesh(TeamIndex, StageIndex));
+                bDidFindStage = true;
+                break;
+            }
+        }
+
+        if (!bDidFindStage)
+        {
+            Warn("Invalid internal state of construction! Check your defaultproperties for consistency.");
+            Destroy();
+        }
+    }
+}
+
 auto state Constructing
 {
     event BeginState()
@@ -123,43 +180,23 @@ auto state Constructing
         }
     }
 
-    function OnHealthChanged()
-    {
-        if (Health <= 0)
-        {
-            Destroy();
-        }
-        // TODO: handle taking damage during construction
-        else if (StageIndex > 0 && StageIndex < Stages.Length && Health >= Stages[StageIndex].StageHealth)
-        {
-            OnStageIndexChanged(StageIndex++);
-
-            SetStaticMesh(GetStaticMesh(TeamIndex, StageIndex));
-        }
-        else if (Health >= HealthMax)
-        {
-            GotoState('Constructed');
-        }
-    }
 Begin:
     if (default.Stages.Length == 0)
     {
         // There are no intermediate stages, so put the construction immediately
         // into the fully constructed state.
-        Health = HealthMax;
+        SetHealth(HealthMax);
     }
 
-    OnHealthChanged();
+    SetHealth(default.Health);
 }
 
 state Constructed
 {
-    function OnHealthChanged()
-    {
-        // TODO: take damage up in here
-    }
 Begin:
     OnConstructed();
+
+    SetStaticMesh(GetStaticMesh(TeamIndex, -1));
 
     if (bDestroyOnConstruction)
     {
@@ -181,8 +218,6 @@ event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Mo
 {
     super.TakeDamage(Damage, EventInstigator, HitLocation, Momentum, DamageType, HitIndex);
 
-    // TODO: probably want to go into some sort of destroyed state once health is depleted
-
     OnHealthChanged();
 }
 
@@ -190,12 +225,8 @@ function static StaticMesh GetStaticMesh(int TeamIndex, int StageIndex)
 {
     if (StageIndex < 0 || StageIndex >= default.Stages.Length)
     {
-        Log("StageIndex" @ StageIndex);
-
         return default.StaticMesh;
     }
-
-    Log(default.Stages[StageIndex].StaticMesh);
 
     return default.Stages[StageIndex].StaticMesh;
 }
@@ -222,6 +253,7 @@ defaultproperties
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.hedgehog_01'
     HealthMax=100
+    Health=1
     ProxyDistanceInMeters=5.0
     GroundSlopeMaxInDegrees=25.0
     StageIndex=-1

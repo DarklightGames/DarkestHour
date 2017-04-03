@@ -5,12 +5,12 @@
 
 class DHShovelBuildFireMode extends WeaponFire;
 
+var DHConstruction Construction;
 var float TraceDistanceInMeters;
 
 // Modified to check (via a trace) that player is facing an obstacle that can be cut & that player is stationary & not diving to prone
 simulated function bool AllowFire()
 {
-    local DHConstruction Construction;
     local vector         HitLocation, HitNormal;
     local Actor HitActor;
 
@@ -65,6 +65,10 @@ state Building
 
     event EndState()
     {
+        if (Construction != none)
+        {
+            Construction.ServerAddHealth(25);
+        }
         // TODO: add health to the construction?
     }
 
