@@ -155,7 +155,7 @@ function BroadcastTeam(Controller Sender, coerce string Msg, optional name Type)
     local Controller C;
     local PlayerController P;
 
-    if (!AllowsBroadcast(Sender, Len(Msg)) || Sender == none || PlayerController(Sender) == none || PlayerController(Sender).IsSpectating())
+    if (!AllowsBroadcast(Sender, Len(Msg)) || Sender == none || PlayerController(Sender) == none || PlayerController(Sender).PlayerReplicationInfo == none || PlayerController(Sender).PlayerReplicationInfo.bOnlySpectator)
     {
         return;
     }
@@ -164,7 +164,7 @@ function BroadcastTeam(Controller Sender, coerce string Msg, optional name Type)
     {
         P = PlayerController(C);
 
-        if (P != none && P.PlayerReplicationInfo.Team == Sender.PlayerReplicationInfo.Team)
+        if (P != none && P.PlayerReplicationInfo != none && P.PlayerReplicationInfo.Team == Sender.PlayerReplicationInfo.Team)
         {
             BroadcastText(Sender.PlayerReplicationInfo, P, Msg, Type);
         }
