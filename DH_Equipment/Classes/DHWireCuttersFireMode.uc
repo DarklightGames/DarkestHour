@@ -11,7 +11,7 @@ simulated function bool AllowFire()
     local DHObstacleInstance TracedObstacle;
     local vector             HitLocation, HitNormal;
 
-    TracedObstacle = DHObstacleInstance(Trace(HitLocation, HitNormal, 100.0 * vector(Weapon.Rotation), Weapon.Location, true));
+    TracedObstacle = DHObstacleInstance(Trace(HitLocation, HitNormal, Weapon.Location + (100.0 * vector(Weapon.Rotation)), Weapon.Location, true));
 
     if (TracedObstacle != none &&
         TracedObstacle.Info.CanBeCut() &&

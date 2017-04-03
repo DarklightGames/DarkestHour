@@ -7,6 +7,8 @@ class DHConstruction_Hedgehog extends DHConstruction;
 
 defaultproperties
 {
+    Stages(0)=(StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.hedgehog_01_unassembled',StageHealth=0)
+
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.hedgehog_01'
     bShouldAlignToGround=true
     MenuName="Hedgehog"

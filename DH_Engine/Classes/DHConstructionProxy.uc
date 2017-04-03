@@ -40,7 +40,7 @@ function SetConstructionClass(class<DHConstruction> ConstructionClass)
     }
 
     SetCollisionSize(ConstructionClass.default.CollisionHeight, ConstructionClass.default.CollisionRadius);
-    SetStaticMesh(ConstructionClass.default.StaticMesh);
+    SetStaticMesh(ConstructionClass.static.GetStaticMesh(PawnOwner.GetTeamNum(), -1));
 
     // Initialize the local rotation based on the parameters in the new construction class
     LocalRotation = class'URotator'.static.RandomRange(ConstructionClass.default.StartRotationMin, ConstructionClass.default.StartRotationMax);

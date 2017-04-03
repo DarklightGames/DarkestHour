@@ -39,7 +39,6 @@ var     float   DuplicateDistanceInMeters;  // The distance required between ide
 
 // Construction
 var     int     SupplyCost;
-var     int     CurrentStageIndex;
 var     bool    bDestroyOnConstruction;
 
 // Destruction
@@ -71,7 +70,7 @@ var array<Anchor> Anchors;
 // Staging
 struct Stage
 {
-    var int Health;
+    var int StageHealth;
     var StaticMesh StaticMesh;  // This can be overridden in GetStaticMesh
     var sound Sound;
     var Emitter Emitter;
@@ -84,6 +83,11 @@ function OnConstructed();
 function OnStageIndexChanged(int OldIndex);
 function OnTeamIndexChanged();
 function OnHealthChanged();
+
+static function bool HasStages()
+{
+    return default.Stages.Length > 1;
+}
 
 final function int GetTeamIndex()
 {
@@ -103,6 +107,8 @@ simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
+    Health = 1;
+
     if (Role == ROLE_Authority)
     {
         PlaySound(PlacementSound, SLOT_Misc, 4.0,, 60.0,, true);
@@ -118,7 +124,7 @@ auto state Constructing
             Destroy();
         }
         // TODO: handle taking damage during construction
-        else if (Health > Stages[StageIndex].Health)
+        else if (Health >= Stages[StageIndex].StageHealth)
         {
             OnStageIndexChanged(StageIndex++);
 
@@ -130,8 +136,12 @@ auto state Constructing
         }
     }
 Begin:
-// TODO: temporary!
-GotoState('Constructed');
+    if (!HasStages())
+    {
+        Health = HealthMax;
+    }
+
+    OnHealthChanged();
 }
 
 state Constructed
@@ -172,8 +182,12 @@ function static StaticMesh GetStaticMesh(int TeamIndex, int StageIndex)
 {
     if (StageIndex < 0 || StageIndex >= default.Stages.Length)
     {
+        Log("StageIndex" @ StageIndex);
+
         return default.StaticMesh;
     }
+
+    Log(default.Stages[StageIndex].StaticMesh);
 
     return default.Stages[StageIndex].StaticMesh;
 }
@@ -188,12 +202,17 @@ function static Material GetMenuIcon(DHPlayer PC)
     return default.MenuIcon;
 }
 
+simulated function bool CanBeBuilt()
+{
+    // TODO: this probably needs something else
+    return Health < HealthMax;
+}
+
 defaultproperties
 {
     RemoteRole=ROLE_SimulatedProxy
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.hedgehog_01'
-    Stages(0)=(Health=0,StaticMesh=none,Sound=none,Emitter=none)
     HealthMax=100
     ProxyDistanceInMeters=5.0
     GroundSlopeMaxInDegrees=25.0
@@ -235,5 +254,7 @@ defaultproperties
     DestroyedLifespan=15.0
 
     PlacementSound=Sound'Inf_Player.Gibimpact.Gibimpact' // TODO: placeholder
+
+    StageIndex=-1
 }
 

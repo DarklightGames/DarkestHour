@@ -7,6 +7,9 @@ class DHShovelItem extends DHWeapon;
 
 defaultproperties
 {
+    FireModeClass(0)=class'DH_Equipment.DHShovelBuildFireMode'
+    FireModeClass(1)=class'DH_Equipment.DHShovelMeleeFire'
+
     ItemName="Shovel"
     AttachmentClass=class'DHWireCuttersAttachment'
     InventoryGroup=8    // TODO: figure out best one!
@@ -28,10 +31,11 @@ defaultproperties
     CrawlBackwardAnim="crawlB"
     CrawlStartAnim="crawlIn"
     CrawlEndAnim="crawlOut"
-    SprintStartAnim="sprintStart"
-    SprintLoopAnim="sprintMiddle"
-    SprintEndAnim="sprintEnd"
+    SprintStartAnim="sprint_Start"
+    SprintLoopAnim="sprint_Middle"
+    SprintEndAnim="sprint_End"
 
     AIRating=0.0
     CurrentRating=0.0
 }
+

@@ -1339,7 +1339,7 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
 
             if (DistanceInMeters < RALLY_POINT_RADIUS_IN_METERS)
             {
-                // "You must be an additional {0} meters away from your squad's other  point."
+                // "You must be an additional {0} meters away from your squad's other rally point."
                 PC.ReceiveLocalizedMessage(SquadMessageClass, class'UInteger'.static.FromShorts(45, RALLY_POINT_RADIUS_IN_METERS - DistanceInMeters));
 
                 return none;
