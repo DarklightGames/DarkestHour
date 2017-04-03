@@ -170,8 +170,8 @@ simulated function string GetStyleName()
 defaultproperties
 {
     TeamIndex=-1
-    SpawnProtectionTime=2.5
-    SpawnKillProtectionTime=5.0
+    SpawnProtectionTime=2.0
+    SpawnKillProtectionTime=6.0
     bAlwaysRelevant=true
     RemoteRole=ROLE_SimulatedProxy
     bIsActive=false
