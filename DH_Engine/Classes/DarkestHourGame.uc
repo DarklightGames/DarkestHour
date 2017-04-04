@@ -50,6 +50,7 @@ var     array<int>                  AttritionObjOrder;                      // O
 
 var     bool                        bSwapTeams;
 var     bool                        bUseReinforcementWarning;
+var     bool                        bTimeChangesAtZeroReinf;
 var     float                       AlliesToAxisRatio;
 
 var     class<DHMetrics>            MetricsClass;
@@ -208,6 +209,25 @@ function PostBeginPlay()
 
         default:
             break; // do nothing
+    }
+
+    // Determine WinLimit and RoundLimit (these overrides will also override webadmin's value)
+    if (DHLevelInfo.WinLimitOverride > 0)
+    {
+        WinLimit = DHLevelInfo.WinLimitOverride;
+    }
+    else
+    {
+        WinLimit = default.WinLimit;
+    }
+
+    if (DHLevelInfo.RoundLimitOverride > 0)
+    {
+        RoundLimit = DHLevelInfo.RoundLimitOverride;
+    }
+    else
+    {
+        RoundLimit = default.RoundLimit;
     }
 
     // General game type settings
@@ -2551,6 +2571,7 @@ state RoundOver
     function BeginState()
     {
         local DHArtillerySpawner AS;
+        local float TempScore;
 
         RoundStartTime = ElapsedTime;
         ROGameReplicationInfo(GameReplicationInfo).bReinforcementsComing[AXIS_TEAM_INDEX] = 0;
@@ -2560,6 +2581,17 @@ state RoundOver
         foreach DynamicActors(class'DHArtillerySpawner', AS)
         {
             AS.Destroy();
+        }
+
+        // Determine if teams needs swapped
+        if (DHLevelInfo != none && DHLevelInfo.SwapTeamsOnRoundEnd)
+        {
+            ChangeSides();
+
+            // Swap team score as well
+            TempScore = GameReplicationInfo.Teams[0].Score;
+            GameReplicationInfo.Teams[0].Score = GameReplicationInfo.Teams[1].Score;
+            GameReplicationInfo.Teams[1].Score = TempScore;
         }
     }
 
@@ -2629,7 +2661,7 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
                     Level.Game.Broadcast(self, "The battle ended because a team's reinforcements reached zero by attrition", 'Say');
                     Choosewinner();
                 }
-                else
+                else if (bTimeChangesAtZeroReinf)
                 {
                     ModifyRoundTime(Min(GetRoundTime(), 90), 2); //Set time remaining to 90 seconds
                 }
@@ -4360,6 +4392,7 @@ defaultproperties
     bEnableMetrics=false
     bUseWeaponLocking=true
     bUseReinforcementWarning=true
+    bTimeChangesAtZeroReinf=true
     bPublicPlay=true
 
     WeaponLockTimes(0)=0

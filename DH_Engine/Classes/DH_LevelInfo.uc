@@ -39,6 +39,10 @@ var() bool                  bHardTeamRatio;             // Determines if AlliesT
 var() EAxisNation           AxisNation;
 var() EAlliedNation         AlliedNation;
 
+var() int                   WinLimitOverride;
+var() int                   RoundLimitOverride;         // Allows the map to override the server's RoundLimit (useful for maps that need extra rounds)
+var() bool                  SwapTeamsOnRoundEnd;        // Will swap teams & team score if the round ends
+
 var() EGameType             GameType;
 
 var() sound                 AlliesWinsMusic;            // Optional override for Allies victory music
