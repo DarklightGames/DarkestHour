@@ -77,7 +77,7 @@ var array<Stage> Stages;
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
-        Health;
+        TeamIndex, Health;
     reliable if (Role < ROLE_Authority)
         ServerAddHealth;
 }
