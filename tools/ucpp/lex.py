@@ -349,16 +349,28 @@ def t_UFLOAT(t):
     return t
 
 
+def int32(x):
+    if x > 0xFFFFFFFF:
+        raise OverflowError
+    if x > 0x7FFFFFFF:
+        x = int(0x100000000 - x)
+        if x < 2147483648:
+            return -x
+        else:
+            return -2147483648
+    return x
+
+
 def t_HEX(t):
     r'0[xX][0-9a-fA-F]+'
     t.type = 'INTEGER'
-    t.value = int(t.value, 0)
+    t.value = int32(int(t.value, 0))
     return t
 
 
 def t_INTEGER(t):
     r'[-+]?\d+'
-    t.value = int(t.value)
+    t.value = int32(int(t.value))
     return t
 
 
