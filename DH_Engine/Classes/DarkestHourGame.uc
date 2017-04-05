@@ -2571,7 +2571,6 @@ state RoundOver
     function BeginState()
     {
         local DHArtillerySpawner AS;
-        local float TempScore;
 
         RoundStartTime = ElapsedTime;
         ROGameReplicationInfo(GameReplicationInfo).bReinforcementsComing[AXIS_TEAM_INDEX] = 0;
@@ -2582,22 +2581,13 @@ state RoundOver
         {
             AS.Destroy();
         }
-
-        // Determine if teams needs swapped
-        if (DHLevelInfo != none && DHLevelInfo.SwapTeamsOnRoundEnd)
-        {
-            ChangeSides();
-
-            // Swap team score as well
-            TempScore = GameReplicationInfo.Teams[0].Score;
-            GameReplicationInfo.Teams[0].Score = GameReplicationInfo.Teams[1].Score;
-            GameReplicationInfo.Teams[1].Score = TempScore;
-        }
     }
 
     // Modified to spawn a DHClientResetGame actor on a server, which replicates to net clients to remove any temporary client-only actors, e.g. smoke effects
     function Timer()
     {
+        local float TempScore;
+
         global.Timer();
 
         if (ElapsedTime > RoundStartTime + 5.0)
@@ -2605,6 +2595,17 @@ state RoundOver
             if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
             {
                 Spawn(class'DHClientResetGame');
+            }
+
+            // Determine if teams needs swapped
+            if (DHLevelInfo != none && DHLevelInfo.SwapTeamsOnRoundEnd)
+            {
+                ChangeSides();
+
+                // Swap team score as well
+                TempScore = GameReplicationInfo.Teams[0].Score;
+                GameReplicationInfo.Teams[0].Score = GameReplicationInfo.Teams[1].Score;
+                GameReplicationInfo.Teams[1].Score = TempScore;
             }
 
             GotoState('RoundInPlay');
