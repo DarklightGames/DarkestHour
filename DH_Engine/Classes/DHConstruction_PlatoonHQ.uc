@@ -69,7 +69,7 @@ defaultproperties
 {
     MenuName="Platoon HQ"
 
-    StaticMesh=StaticMesh'LyesKrovySM.Bunkers.LyesKrovy_bunker1'  // TODO: a proper platoon HQ bunker
+    StaticMesh=StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent'  // TODO: a proper platoon HQ bunker
 
     // Placement
     bShouldAlignToGround=false
