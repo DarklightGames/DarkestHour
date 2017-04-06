@@ -86,7 +86,7 @@ function OnConstructed();
 function OnStageIndexChanged(int OldIndex);
 function OnTeamIndexChanged();
 
-final function int GetTeamIndex()
+final simulated function int GetTeamIndex()
 {
     return TeamIndex;
 }
