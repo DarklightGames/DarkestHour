@@ -78,7 +78,10 @@ function bool InternalOnDraw(Canvas C)
     SubCoords.Width = ActualWidth();
     SubCoords.Height = ActualHeight();
 
-    MyHud.DrawMap(C, SubCoords, PC);
+    if (MyHud != none)
+    {
+        MyHud.DrawMap(C, SubCoords, PC);
+    }
 
     return false;
 }
