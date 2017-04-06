@@ -2,6 +2,9 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2016
 //==============================================================================
+// This interaction displays configuable radial menus (DHCommandMenu) with up to
+// 8 different options.
+//==============================================================================
 
 class DHCommandInteraction extends DHInteraction;
 
@@ -20,7 +23,7 @@ const MAX_OPTIONS = 8;
 
 // This is necessary because trying to DrawTile on identical TexRotators
 // and other procedural materials in the same frame ends up only drawing one
-// of them.
+// of them (probably due to engine-level render batching).
 var Texture             OptionTextures[MAX_OPTIONS];
 var array<TexRotator>   OptionTexRotators;
 
@@ -42,6 +45,7 @@ function Hide()
     GotoState('FadeOut');
 }
 
+// Programmatically create the materials used for each option.
 function CreateOptionTexRotators(int OptionCount)
 {
     local int i;
@@ -84,6 +88,8 @@ function CreateOptionTexRotators(int OptionCount)
     }
 }
 
+// Pushes a new menu onto the top of the stack to be displayed immediately.
+// Allows the specification of an optional object to attach to the menu.
 function DHCommandMenu PushMenu(string ClassName, optional Object OptionalObject)
 {
     local DHCommandMenu Menu, OldMenu;
@@ -120,6 +126,7 @@ function DHCommandMenu PushMenu(string ClassName, optional Object OptionalObject
     return Menu;
 }
 
+// Pops the top menu off of the stack.
 function DHCommandMenu PopMenu()
 {
     local DHCommandMenu Menu, NewMenu;
@@ -220,9 +227,6 @@ function Tick(float DeltaTime)
 
     if (Menu.Options.Length > 0 && Cursor != vect(0, 0, 0))
     {
-        // TODO: extract this to a function to be reused, may be useful in
-        // other areas.
-
         // Calculated the selected index
         ArcLength = Tau / Menu.Options.Length;
         Theta = Atan(Cursor.Y, Cursor.X) + (ArcLength / 2);
