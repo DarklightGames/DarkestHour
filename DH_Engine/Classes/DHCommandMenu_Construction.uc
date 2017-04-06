@@ -10,12 +10,13 @@ function Setup()
     local int i, j, StartIndex;
     local DHPlayer PC;
     local DHGameReplicationInfo GRI;
+    local array<class<DHConstruction> > ConstructionClasses;
 
-    GRI = DHGameReplicationInfo(Interaction.ViewpowerOwner.Actor.GameReplicationInfo);
+    GRI = DHGameReplicationInfo(Interaction.ViewportOwner.Actor.GameReplicationInfo);
 
-    if (UInteger(OptionIndex) != none)
+    if (UInteger(MenuObject) != none)
     {
-        StartIndex = UInteger(OptionalObject).Value;
+        StartIndex = UInteger(MenuObject).Value;
     }
 
     if (Interaction != none && Interaction.ViewportOwner != none)
@@ -23,25 +24,37 @@ function Setup()
         PC = DHPlayer(Interaction.ViewportOwner.Actor);
     }
 
+    // For simplicity's sake, we'll map the static array to a dynamic array so
+    // we can know how many classes we have to deal upfront and not have to deal
+    // with handling null values during iteration.
+    for (i = 0; i < arraycount(GRI.ConstructionClasses); ++i)
+    {
+        if (GRI.ConstructionClasses[i] != none)
+        {
+            ConstructionClasses[ConstructionClasses.Length] = GRI.ConstructionClasses[i];
+        }
+    }
+
     Options.Length = 8;
 
     if (GRI != none)
     {
-        for (j = 0, i = StartIndex; i < GRI.ConstructionClasses.Length && j < 7; ++i, ++j)
+        for (i = StartIndex; i < ConstructionClasses.Length && j < Options.Length - 1; ++i)
         {
-            Options[j].OptionalObject = GRI.ConstructionClasses[i];
-            Options[j].ActionText = GRI.ConstructionClasses[i].static.GetMenuName(PC);
-            Options[j].Material = GRI.ConstructionClasses[i].static.GetMenuIcon(PC);
+            Options[j].OptionalObject = ConstructionClasses[i];
+            Options[j].ActionText = ConstructionClasses[i].static.GetMenuName(PC);
+            Options[j].Material = ConstructionClasses[i].static.GetMenuIcon(PC);
+            ++j;
         }
 
-        if (GRI.ConstructionClasses.Length - i > 1)
+        if (ConstructionClasses.Length - i > 1)
         {
             // More options are available, so let's make a submenu option.
             j += 1;
             Options[j].OptionalObject = class'UInteger'.static.Create(i);
             Options[j].ActionText = "...";
             Options[j].Material = none; // TODO: some sort of ellipses icon?
-        } 
+        }
     }
 }
 
