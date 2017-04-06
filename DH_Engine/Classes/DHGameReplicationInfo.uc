@@ -13,7 +13,7 @@ struct ArtilleryTarget
     var vector                  Location;
     var vector                  HitLocation;
     var float                   Time;
-    var bool                    bIsSmoke;
+    var bool                    bIsSmoke;   // TODO: convert to enum
 };
 
 struct SpawnVehicle
@@ -93,6 +93,10 @@ var localized string    ForceScaleText;
 var localized string    ReinforcementsInfiniteText;
 var localized string    DeathPenaltyText;
 
+const CONSTRUCTION_CLASSES_MAX = 32;
+
+var class<DHConstruction>   ConstructionClasses[CONSTRUCTION_CLASSES_MAX];
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -128,7 +132,8 @@ replication
         CurrentGameType,
         CurrentAlliedToAxisRatio,
         TeamVehicleCounts,
-        SpawnPoints;
+        SpawnPoints,
+        ConstructionClasses;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))
         AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex;
@@ -767,5 +772,9 @@ defaultproperties
     ForceScaleText="Size"
     ReinforcementsInfiniteText="Infinite"
     DeathPenaltyText="Death Penalty"
+    ConstructionClasses(0)=class'DH_Engine.DHConstruction_ConcertinaWire'
+    ConstructionClasses(1)=class'DH_Engine.DHConstruction_Hedgehog'
+    ConstructionClasses(2)=class'DH_Engine.DHConstruction_PlatoonHQ'
+    ConstructionClasses(3)=class'DH_Engine.DHConstruction_Resupply'
+    ConstructionClasses(4)=class'DH_Engine.DHConstruction_Sandbags'
 }
-
