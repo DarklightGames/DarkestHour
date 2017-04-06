@@ -157,6 +157,7 @@ function OnHealthChanged()
                 StageIndex = i;
                 OnStageIndexChanged(OldStageIndex);
                 SetStaticMesh(GetStaticMesh(TeamIndex, StageIndex));
+                NetUpdateTime = Level.TimeSeconds - 1.0;
                 bDidFindStage = true;
                 break;
             }
@@ -170,37 +171,46 @@ function OnHealthChanged()
     }
 }
 
-auto state Constructing
+auto simulated state Constructing
 {
     event BeginState()
     {
-        if (PlacementEmitterClass != none)
+        if (Level.NetMode != NM_DedicatedServer && PlacementEmitterClass != none)
         {
+            // TODO: this needs to happen
             Spawn(PlacementEmitterClass);
         }
     }
 
 Begin:
-    if (default.Stages.Length == 0)
+    if (Role == ROLE_Authority)
     {
-        // There are no intermediate stages, so put the construction immediately
-        // into the fully constructed state.
-        SetHealth(HealthMax);
-    }
+        if (default.Stages.Length == 0)
+        {
+            // There are no intermediate stages, so put the construction immediately
+            // into the fully constructed state.
+            SetHealth(HealthMax);
+        }
 
-    SetHealth(default.Health);
+        SetHealth(default.Health);
+    }
 }
 
-state Constructed
+simulated state Constructed
 {
 Begin:
-    OnConstructed();
-
-    SetStaticMesh(GetStaticMesh(TeamIndex, -1));
-
-    if (bDestroyOnConstruction)
+    if (Role == ROLE_Authority)
     {
-        Destroy();
+        OnConstructed();
+
+        SetStaticMesh(GetStaticMesh(TeamIndex, -1));
+
+        NetUpdateTime = Level.TimeSeconds - 1.0;
+
+        if (bDestroyOnConstruction)
+        {
+            Destroy();
+        }
     }
 }
 
