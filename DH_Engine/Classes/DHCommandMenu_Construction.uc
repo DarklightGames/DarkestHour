@@ -50,7 +50,6 @@ function Setup()
         if (ConstructionClasses.Length - i > 1)
         {
             // More options are available, so let's make a submenu option.
-            j += 1;
             Options[j].OptionalObject = class'UInteger'.static.Create(i);
             Options[j].ActionText = "...";
             Options[j].Material = none; // TODO: some sort of ellipses icon?
@@ -69,7 +68,7 @@ function OnSelect(int OptionIndex, vector Location)
 
     if (OptionIndex == Options.Length - 1)
     {
-        Interaction.PushMenu("DHCommandMenu_Construction", Options[OptionIndex].OptionalObject);
+        Interaction.PushMenu("DH_Engine.DHCommandMenu_Construction", Options[OptionIndex].OptionalObject);
     }
     else
     {
