@@ -3236,6 +3236,46 @@ exec function DebugEvent(name EventToTrigger, optional bool bUntrigger)
     }
 }
 
+exec function GetMyLocation()
+{
+    local string s;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        s = "(X=" $ ViewTarget.Location.X $ ",Y=" $ ViewTarget.Location.Y $ ",Z=" $ ViewTarget.Location.Z $ ")";
+        player.console.Message(s, 1.0);
+        CopyToClipBoard(s);
+    }
+}
+
+exec function GetMyRotation()
+{
+    local string s;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        s = "(Pitch=" $ Rotation.Pitch $ ",Yaw=" $ Rotation.Yaw $ ",Roll=" $ Rotation.Roll $ ")";
+        player.console.Message(s, 1.0);
+        CopyToClipBoard(s);
+    }
+}
+
+exec function SetMyLocation(vector NewLocation)
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        ViewTarget.SetLocation(NewLocation);
+    }
+}
+
+exec function SetMyRotation(rotator NewRotation)
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        SetRotation(NewRotation);
+    }
+}
+
 exec function MetricsDump()
 {
     ServerMetricsDump();
