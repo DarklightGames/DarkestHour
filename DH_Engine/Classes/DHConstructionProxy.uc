@@ -332,6 +332,7 @@ function DHConstruction.EConstructionError GetPositionError()
     local Actor A;
     local DHConstruction C;
     local Actor TouchingActor;
+    local ROMineVolume MV;
 
     if (!ConstructionClass.default.bCanPlaceInWater && PhysicsVolume != none && PhysicsVolume.bWaterVolume)
     {
@@ -343,6 +344,19 @@ function DHConstruction.EConstructionError GetPositionError()
         if (RV != none && RV.bNoConstructions)
         {
             return ERROR_Restricted;
+        }
+    }
+
+    // Don't allow constructions in active minefields
+    foreach TouchingActors(class'ROMineVolume', MV)
+    {
+        if (MV != none &&
+            MV.bActive &&
+            (MV.MineKillStyle == KS_All ||
+             (PawnOwner.GetTeamNum() == AXIS_TEAM_INDEX && MV.MineKillStyle == KS_Axis) ||
+             (PawnOwner.GetTeamNum() == ALLIES_TEAM_INDEX && MV.MineKillStyle == KS_Allies)))
+        {
+            return ERROR_InMinefield;
         }
     }
 

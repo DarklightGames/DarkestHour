@@ -37,5 +37,6 @@ defaultproperties
     ErrorMessages(6)="Not enough room."
     ErrorMessages(7)="{0} must be placed on earthen terrain."
     ErrorMessages(8)="Too close to an existing {0} (must be {1}m away)."
+    ErrorMessages(9)="You cannot construct a {0} in a minefield."
 }
 

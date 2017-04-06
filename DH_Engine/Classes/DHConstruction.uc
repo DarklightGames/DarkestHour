@@ -18,6 +18,7 @@ enum EConstructionError
     ERROR_NoRoom,           // No room to place this construction
     ERROR_NotOnTerrain,     // Construction is not on terrain
     ERROR_TooClose,         // Too close to an identical construction
+    ERROR_InMinefield,      // Cannot be in a minefield!
     ERROR_Other             // ERROR:
 };
 
