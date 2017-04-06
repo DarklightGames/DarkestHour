@@ -24,6 +24,7 @@ def main():
     argparser = argparse.ArgumentParser()
     argparser.add_argument('dir', default='.', help='root directory')
     argparser.add_argument('-mod', required=True, help='mod name')
+    argparser.add_argument('-ignore_dependencies', required=False, default=False, action='store_true', help='ignore package dependencies')
     argparser.add_argument('-clean', required=False, action='store_true', help='compile all packages')
     argparser.add_argument('-dumpint', required=False, action='store_true', help='dump localization files (.int)')
     args = argparser.parse_args()
@@ -110,7 +111,7 @@ def main():
 
         should_compile_package = False
 
-        if args.clean or len(packages_to_compile) > 0:
+        if args.clean or (not args.ignore_dependencies and len(packages_to_compile) > 0):
             should_compile_package = True
         
         package_src_dir = os.path.join(args.dir, package, 'Classes')
