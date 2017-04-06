@@ -2534,11 +2534,7 @@ function AddDefaultInventory()
                 CreateInventory(S);
             }
 
-            // TODO: make this better
-            if (PRI != none && PRI.SquadIndex != -1)
-            {
-                CreateInventory("DH_Equipment.DHShovelItem");
-            }
+            CreateInventory("DH_Equipment.DHShovelItem");
 
             RI = P.GetRoleInfo();
 
@@ -2643,11 +2639,7 @@ function AddDefaultInventory()
                 CreateInventory(S);
             }
 
-            // TODO: make this better
-            if (PRI != none && PRI.SquadIndex != -1)
-            {
-                CreateInventory("DH_Equipment.DHShovelItem");
-            }
+            CreateInventory("DH_Equipment.DHShovelItem");
         }
     }
 
@@ -6023,7 +6015,7 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vecto
 {
     local DHConstruction C; // TODO: run some sort of thing that attempts to actually *create* the actor, for now
 
-    C = Spawn(ConstructionClass,,, L, R);
+    C = Spawn(ConstructionClass, self,, L, R);
 
     if (C != none)
     {
