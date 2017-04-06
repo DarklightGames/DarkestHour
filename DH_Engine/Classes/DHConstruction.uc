@@ -126,11 +126,6 @@ simulated function PostBeginPlay()
     SetTeamIndex(int(TeamOwner));
 
     Health = 1;
-
-    if (Role == ROLE_Authority)
-    {
-        PlaySound(PlacementSound, SLOT_Misc, 4.0,, 60.0,, true);
-    }
 }
 
 function OnHealthChanged()
@@ -173,12 +168,20 @@ function OnHealthChanged()
 
 auto simulated state Constructing
 {
-    event BeginState()
+    simulated event BeginState()
     {
-        if (Level.NetMode != NM_DedicatedServer && PlacementEmitterClass != none)
+        if (Level.NetMode != NM_DedicatedServer)
         {
             // TODO: this needs to happen
-            Spawn(PlacementEmitterClass);
+            if (PlacementEmitterClass != none)
+            {
+                Spawn(PlacementEmitterClass);
+            }
+
+            if (PlacementSound != none)
+            {
+                PlaySound(PlacementSound, SLOT_Misc, 4.0,, 60.0,, true);
+            }
         }
     }
 
