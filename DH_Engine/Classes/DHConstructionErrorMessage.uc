@@ -28,8 +28,6 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
 
 defaultproperties
 {
-    ErrorMessages(0)=""
-    ErrorMessages(1)=""
     ErrorMessages(2)="No ground."
     ErrorMessages(3)="The ground is too steep here."
     ErrorMessages(4)="A {0} cannot be placed in water."
