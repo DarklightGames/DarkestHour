@@ -261,6 +261,11 @@ simulated function bool CanBeBuilt()
     return Health < HealthMax;
 }
 
+function Reset()
+{
+    Destroy();
+}
+
 defaultproperties
 {
     RemoteRole=ROLE_SimulatedProxy
