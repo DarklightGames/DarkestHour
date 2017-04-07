@@ -234,7 +234,7 @@ function GetPlayerCountsWithinRadius(float RadiusInMeters, optional out int Squa
     }
 }
 
-function GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, int VehiclePoolIndex)
+function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, int VehiclePoolIndex)
 {
     local vector HitLocation, HitNormal;
 
@@ -250,23 +250,13 @@ function GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, i
     }
 
     SpawnRotation = Rotation;
-}
-
-// Returns true if the spawn point is "visible" to a player with the arguments
-// provided.
-simulated function bool IsVisibleTo(int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
-{
-    if (!super.IsVisibleTo(TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex))
-    {
-        return false;
-    }
-
-    if (self.SquadIndex != SquadIndex)
-    {
-        return false;
-    }
 
     return true;
+}
+
+simulated function bool IsVisibleTo(int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
+{
+    return super.IsVisibleTo(TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex) && self.SquadIndex == SquadIndex;
 }
 
 function bool PerformSpawn(DHPlayer PC)
@@ -282,10 +272,9 @@ function bool PerformSpawn(DHPlayer PC)
         return false;
     }
 
-    if (CanSpawnWithParameters(GRI, PC.GetTeamNum(), PC.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex))
+    if (CanSpawnWithParameters(GRI, PC.GetTeamNum(), PC.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex) &&
+        GetSpawnPosition(SpawnLocation, SpawnRotation, PC.VehiclePoolIndex))
     {
-        GetSpawnPosition(SpawnLocation, SpawnRotation, PC.VehiclePoolIndex);
-
         if (G.SpawnPawn(PC, SpawnLocation, SpawnRotation, self) == none)
         {
             return false;

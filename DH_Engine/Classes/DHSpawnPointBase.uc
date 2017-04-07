@@ -70,10 +70,12 @@ simulated function bool CanSpawnRole(DHRoleInfo RI)
 }
 
 // Override to specify a different spawn pose, otherwise it just uses the spawn point's pose.
-function GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, int VehiclePoolIndex)
+function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, int VehiclePoolIndex)
 {
     SpawnLocation = Location;
     SpawnRotation = Rotation;
+
+    return true;
 }
 
 // Returns true if the spawn point is "visible" to a player with the arguments

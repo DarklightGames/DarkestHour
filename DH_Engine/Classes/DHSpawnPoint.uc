@@ -177,10 +177,9 @@ function bool PerformSpawn(DHPlayer PC)
 
     G = DarkestHourGame(Level.Game);
 
-    if (CanSpawnWithParameters(GRI, PC.GetTeamNum(), Pc.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex))
+    if (CanSpawnWithParameters(GRI, PC.GetTeamNum(), Pc.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex) &&
+        GetSpawnPosition(SpawnLocation, SpawnRotation, PC.VehiclePoolIndex))
     {
-        GetSpawnPosition(SpawnLocation, SpawnRotation, PC.VehiclePoolIndex);
-
         if (PC.VehiclePoolIndex >= 0)
         {
             return G.SpawnManager.SpawnVehicle(PC, SpawnLocation, SpawnRotation) != none;
@@ -196,7 +195,7 @@ function bool PerformSpawn(DHPlayer PC)
 }
 
 // TODO: not sure what to do with this
-function GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, int VehiclePoolIndex)
+function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, int VehiclePoolIndex)
 {
     local Controller    C;
     local Pawn          P;
@@ -292,6 +291,8 @@ function GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, i
         SpawnLocation = Location;
         SpawnRotation = Rotation;
     }
+
+    return true;
 }
 
 defaultproperties
