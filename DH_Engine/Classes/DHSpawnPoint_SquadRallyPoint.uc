@@ -120,7 +120,7 @@ function Timer()
     if (OverrunningEnemiesCount >= 1)
     {
         // "A squad rally point has been overrun by enemies."
-        SRI.BroadcastSquadLocalizedMessage(SRI.SquadMessageClass, 54);
+        SRI.BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SRI.SquadMessageClass, 54);
 
         Destroy();
     }
@@ -166,7 +166,7 @@ state Active
         else
         {
             // "A squad rally point has been overrun by enemies."
-            SRI.BroadcastSquadLocalizedMessage(SRI.SquadMessageClass, 54);
+            SRI.BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SRI.SquadMessageClass, 54);
 
             Destroy();
         }
