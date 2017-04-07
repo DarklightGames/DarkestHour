@@ -68,12 +68,18 @@ event Destroyed()
 defaultproperties
 {
     MenuName="Platoon HQ"
-
-    StaticMesh=StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent'  // TODO: a proper platoon HQ bunker
+    StaticMesh=StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent'
 
     // Placement
-    bShouldAlignToGround=false
+    bShouldAlignToGround=true
     bCanPlaceIndoors=false
     DuplicateDistanceInMeters=250
     ProxyDistanceInMeters=10.0
+    bCanOnlyPlaceOnTerrain=true
+    bCanPlaceInWater=false
+    GroundSlopeMaxInDegrees=5
+
+    // Collision
+    CollisionHeight=120
+    CollisionRadius=300
 }
