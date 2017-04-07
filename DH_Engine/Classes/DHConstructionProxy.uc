@@ -389,6 +389,6 @@ defaultproperties
     DrawType=DT_StaticMesh
     bCollideActors=true
     bCollideWorld=false
-    bBlockActors=true
+    bBlockActors=false
 }
 
