@@ -580,7 +580,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     G.ModifyReinforcements(ALLIES_TEAM_INDEX, AlliedAwardedReinforcements * FMax(0.1, (G.NumPlayers / G.MaxPlayers)));
 
     // Award round time
-    if (MinutesAwarded != 0)
+    if (MinutesAwarded != 0 && !bUsePostCaptureOperations)
     {
         G.ModifyRoundTime(MinutesAwarded*60, 0);
     }
@@ -828,14 +828,28 @@ function Timer()
                 CurrentCapProgress = 0.0;
                 SetActive(false);
                 DisableCapBarsForThisObj();
+
+                // Award time as the objective was cleared and objective is inactive
+                if (MinutesAwarded != 0)
+                {
+                    DarkestHourGame(Level.Game).ModifyRoundTime(MinutesAwarded*60, 0);
+                }
+
                 return;
             }
             else if (bDisableWhenAxisClearObj && ObjState == OBJ_Axis || bDisableWhenAlliesClearObj && ObjState == OBJ_Allies)
             {
                 CurrentCapProgress = 0.0;
                 SetActive(false);
-                SetTimer(0.0, false);
+                SetTimer(0.0, false); // Disable the objective (not just set inactive, it is not meant to be enabled again until reset)
                 DisableCapBarsForThisObj();
+
+                // Award time as the objective was cleared and objective is disabled
+                if (MinutesAwarded != 0)
+                {
+                    DarkestHourGame(Level.Game).ModifyRoundTime(MinutesAwarded*60, 0);
+                }
+
                 return;
             }
             else if (!bRecaptureable)
