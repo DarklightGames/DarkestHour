@@ -6021,6 +6021,7 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vecto
     {
         C.SetTeamIndex(GetTeamNum());
         C.SetStaticMesh(ConstructionClass.default.StaticMesh);
+        C.SetCollisionSize(0.0, 0.0);
     }
 }
 
