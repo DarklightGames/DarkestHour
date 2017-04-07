@@ -39,7 +39,7 @@ function SetConstructionClass(class<DHConstruction> ConstructionClass)
         return;
     }
 
-    SetCollisionSize(ConstructionClass.default.CollisionHeight, ConstructionClass.default.CollisionRadius);
+    SetCollisionSize(ConstructionClass.default.CollisionRadius, ConstructionClass.default.CollisionHeight);
     SetStaticMesh(ConstructionClass.static.GetStaticMesh(PawnOwner.GetTeamNum(), -1));
 
     // Initialize the local rotation based on the parameters in the new construction class
@@ -47,7 +47,6 @@ function SetConstructionClass(class<DHConstruction> ConstructionClass)
 
     // TODO: create "OK" textures
     CreateMaterials();
-
 }
 
 function CreateMaterials()
