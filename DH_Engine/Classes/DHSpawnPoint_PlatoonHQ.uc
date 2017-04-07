@@ -90,6 +90,5 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
 
 defaultproperties
 {
-    bHidden=false
     SpawnRadius=60.0
 }
