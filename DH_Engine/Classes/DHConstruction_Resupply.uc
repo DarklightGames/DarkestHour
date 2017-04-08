@@ -67,5 +67,7 @@ defaultproperties
     MenuName="Resupply Box"
     ProxyDistanceInMeters=3.0
     DuplicateDistanceInMeters=50.0
+    CollisionRadius=60.0
+    CollisionHeight=30.0
 }
 

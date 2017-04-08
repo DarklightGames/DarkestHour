@@ -29,8 +29,7 @@ enum ETeamOwner
     TEAM_Neutral
 };
 
-var() ETeamOwner TeamOwner;         // This is for levelers' convenience only.
-
+var() ETeamOwner TeamOwner;                 // This enum is for the levelers' convenience only.
 var private int TeamIndex;
 
 // Placement
@@ -45,12 +44,14 @@ var     rotator StartRotationMax;
 var     int     LocalRotationRate;
 var     sound   PlacementSound;
 var     float   FloatToleranceInMeters;
-var     float   DuplicateDistanceInMeters;  // The distance required between identical constructions of the same type
+var     float   DuplicateDistanceInMeters;      // The distance required between identical constructions of the same type
 var     class<Emitter> PlacementEmitterClass;
 
 // Construction
-var     int     SupplyCost;
-var     bool    bDestroyOnConstruction;
+var     int     SupplyCost;                     // The amount of supply points this construction costs.
+var     bool    bDestroyOnConstruction;         // If true, this actor will be destroyed after being fully constructed.
+var     int     Progress;                       // The current count of progress.
+var     int     ProgressMax;                    // The amount of construction points required to be built.
 
 // Destruction
 var     int     DestroyedLifespan;          // How long does the actor stay around after it's been destroyed?
@@ -66,7 +67,7 @@ var     localized Material  MenuIcon;
 // Staging
 struct Stage
 {
-    var int StageHealth;
+    var int Progress;           // The progress level at which this stage is used.
     var StaticMesh StaticMesh;  // This can be overridden in GetStaticMesh
     var sound Sound;
     var Emitter Emitter;
@@ -80,30 +81,18 @@ replication
     reliable if (bNetDirty && Role == ROLE_Authority)
         TeamIndex, Health;
     reliable if (Role < ROLE_Authority)
-        ServerAddHealth;
+        ServerDecrementProgress, ServerIncrementProgress;
 }
 
 function OnConstructed();
 function OnStageIndexChanged(int OldIndex);
 function OnTeamIndexChanged();
+function OnHealthChanged();
+function OnProgressChanged();
 
 final simulated function int GetTeamIndex()
 {
     return TeamIndex;
-}
-
-function SetHealth(int Health)
-{
-    self.Health = Clamp(Health, 0, HealthMax);
-
-    OnHealthChanged();
-}
-
-function AddHealth(int Health)
-{
-    self.Health = Min(HealthMax, self.Health + Health);
-
-    OnHealthChanged();
 }
 
 final function SetTeamIndex(int TeamIndex)
@@ -111,13 +100,19 @@ final function SetTeamIndex(int TeamIndex)
     self.TeamIndex = TeamIndex;
 
     SetStaticMesh(GetStaticMesh(TeamIndex, StageIndex));
-
     OnTeamIndexChanged();
 }
 
-function ServerAddHealth(int Health)
+function ServerDecrementProgress()
 {
-    AddHealth(Health);
+    Progress -= 1;
+    OnProgressChanged();
+}
+
+function ServerIncrementProgress()
+{
+    Progress += 1;
+    OnProgressChanged();
 }
 
 simulated function PostBeginPlay()
@@ -126,45 +121,7 @@ simulated function PostBeginPlay()
 
     SetTeamIndex(int(TeamOwner));
 
-    Health = 1;
-}
-
-function OnHealthChanged()
-{
-    local int i;
-    local int OldStageIndex;
-    local bool bDidFindStage;
-
-    if (Health <= 0)
-    {
-        Destroy();
-    }
-    else if (Health >= HealthMax)
-    {
-        GotoState('Constructed');
-    }
-    else
-    {
-        for (i = Stages.Length - 1; i >= 0; --i)
-        {
-            if (Health >= Stages[i].StageHealth)
-            {
-                OldStageIndex = StageIndex;
-                StageIndex = i;
-                OnStageIndexChanged(OldStageIndex);
-                SetStaticMesh(GetStaticMesh(TeamIndex, StageIndex));
-                NetUpdateTime = Level.TimeSeconds - 1.0;
-                bDidFindStage = true;
-                break;
-            }
-        }
-
-        if (!bDidFindStage)
-        {
-            Warn("Invalid internal state of construction! Check your defaultproperties for consistency.");
-            Destroy();
-        }
-    }
+    Health = HealthMax;
 }
 
 auto simulated state Constructing
@@ -186,6 +143,45 @@ auto simulated state Constructing
         }
     }
 
+    function OnProgressChanged()
+    {
+        local int i;
+        local int OldStageIndex;
+        local bool bDidFindStage;
+
+        if (Progress < 0)
+        {
+            // TODO: possibly refund supplies to nearby supply cache/vehicle?
+            Destroy();
+        }
+        else if (Progress >= Progress)
+        {
+            GotoState('Constructed');
+        }
+        else
+        {
+            for (i = Stages.Length - 1; i >= 0; --i)
+            {
+                if (Progress >= Stages[i].Progress)
+                {
+                    OldStageIndex = StageIndex;
+                    StageIndex = i;
+                    OnStageIndexChanged(OldStageIndex);
+                    SetStaticMesh(GetStaticMesh(TeamIndex, StageIndex));
+                    NetUpdateTime = Level.TimeSeconds - 1.0;
+                    bDidFindStage = true;
+                    break;
+                }
+            }
+
+            if (!bDidFindStage)
+            {
+                Warn("Invalid internal state of construction! Check your defaultproperties for consistency.");
+                Destroy();
+            }
+        }
+    }
+
 Begin:
     if (Role == ROLE_Authority)
     {
@@ -193,10 +189,9 @@ Begin:
         {
             // There are no intermediate stages, so put the construction immediately
             // into the fully constructed state.
-            SetHealth(HealthMax);
+            Progress = ProgressMax;
+            OnProgressChanged();
         }
-
-        SetHealth(default.Health);
     }
 }
 
@@ -207,26 +202,17 @@ Begin:
     {
         OnConstructed();
 
-        SetStaticMesh(GetStaticMesh(TeamIndex, -1));
-
-        NetUpdateTime = Level.TimeSeconds - 1.0;
-
         if (bDestroyOnConstruction)
         {
             Destroy();
         }
+        else
+        {
+            SetStaticMesh(GetStaticMesh(TeamIndex, -1));
+            NetUpdateTime = Level.TimeSeconds - 1.0;
+        }
     }
 }
-
-// TODO: have destroyed thing
-/*
-state IsDestroyed
-{
-Begin:
-    // TODO: set destroyed SM
-    LifeSpan = DestroyedLifespan;
-}
-*/
 
 event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
@@ -258,7 +244,7 @@ function static Material GetMenuIcon(DHPlayer PC)
 simulated function bool CanBeBuilt()
 {
     // TODO: this probably needs something else
-    return Health < HealthMax;
+    return IsInState('Constructing');
 }
 
 function Reset()
