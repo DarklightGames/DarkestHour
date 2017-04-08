@@ -17,9 +17,9 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
-    Headgear(0)=class'DH_GerPlayers.DH_FJHelmet1'
-    Headgear(1)=class'DH_GerPlayers.DH_FJHelmet2'
-    Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNet1'
+    Headgear(0)=class'DH_GerPlayers.DH_FJHelmetOne'
+    Headgear(1)=class'DH_GerPlayers.DH_FJHelmetTwo'
+    Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNetOne'
     Limit=1
     Limit33to44=2
     LimitOver44=2

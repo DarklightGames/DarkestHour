@@ -20,9 +20,9 @@ defaultproperties
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
     Grenades(1)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon')
     Grenades(2)=(Item=class'DH_Equipment.DH_OrangeSmokeWeapon')
-    Headgear(0)=class'DH_GerPlayers.DH_FJHelmetCamo1'
-    Headgear(1)=class'DH_GerPlayers.DH_FJHelmetCamo2'
-    Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNet1'
+    Headgear(0)=class'DH_GerPlayers.DH_FJHelmetCamoOne'
+    Headgear(1)=class'DH_GerPlayers.DH_FJHelmetCamoTwo'
+    Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNetOne'
     Limit=1
     Limit33to44=2
     LimitOver44=2

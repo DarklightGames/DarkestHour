@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_FJ45CombatEngineer extends DH_FJ_1945;
+class DH_FJ45CombatEngineer extends DH_FJ_1945Late;
 
 defaultproperties
 {
@@ -18,8 +18,8 @@ defaultproperties
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
     Grenades(1)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon')
     GivenItems(0)="DH_Equipment.DHWireCuttersItem"
-    Headgear(0)=class'DH_GerPlayers.DH_FJHelmet1'
-    Headgear(1)=class'DH_GerPlayers.DH_FJHelmet2'
-    Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNet1'
+    Headgear(0)=class'DH_GerPlayers.DH_FJHelmetOne'
+    Headgear(1)=class'DH_GerPlayers.DH_FJHelmetTwo'
+    Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNetOne'
     Limit=3
 }

@@ -16,8 +16,8 @@ defaultproperties
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
     GivenItems(0)="DH_Mortars.DH_Kz8cmGrW42Weapon"
     GivenItems(1)="DH_Equipment.DHBinocularsItem"
-    Headgear(0)=class'DH_GerPlayers.DH_FJHelmetCamo1'
-    Headgear(1)=class'DH_GerPlayers.DH_FJHelmetCamo2'
-    Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNet1'
+    Headgear(0)=class'DH_GerPlayers.DH_FJHelmetCamoOne'
+    Headgear(1)=class'DH_GerPlayers.DH_FJHelmetCamoTwo'
+    Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNetOne'
     Limit=1
 }

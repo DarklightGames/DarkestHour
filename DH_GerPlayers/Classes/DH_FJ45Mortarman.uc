@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_FJ45Mortarman extends DH_FJ_1945;
+class DH_FJ45Mortarman extends DH_FJ_1945Late;
 
 defaultproperties
 {
@@ -18,10 +18,10 @@ defaultproperties
     GivenItems(0)="DH_Mortars.DH_Kz8cmGrW42Weapon"
     GivenItems(1)="DH_Equipment.DHBinocularsItem"
     HeadgearProbabilities(0)=0.333
-    Headgear(0)=class'DH_GerPlayers.DH_FJHelmet1'
+    Headgear(0)=class'DH_GerPlayers.DH_FJHelmetOne'
     HeadgearProbabilities(1)=0.333
-    Headgear(1)=class'DH_GerPlayers.DH_FJHelmet2'
+    Headgear(1)=class'DH_GerPlayers.DH_FJHelmetTwo'
     HeadgearProbabilities(2)=0.334
-    Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNet2'
+    Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNetTwo'
     Limit=1
 }

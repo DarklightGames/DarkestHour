@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_FJ45Assault extends DH_FJ_1945;
+class DH_FJ45Assault extends DH_FJ_1945Late;
 
 defaultproperties
 {
@@ -16,8 +16,8 @@ defaultproperties
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_STG44Weapon',AssociatedAttachment=class'ROInventory.ROSTG44AmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
     Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
-    Headgear(0)=class'DH_GerPlayers.DH_FJHelmet1'
-    Headgear(1)=class'DH_GerPlayers.DH_FJHelmet2'
-    Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNet2'
+    Headgear(0)=class'DH_GerPlayers.DH_FJHelmetOne'
+    Headgear(1)=class'DH_GerPlayers.DH_FJHelmetTwo'
+    Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNetTwo'
     Limit=4
 }
