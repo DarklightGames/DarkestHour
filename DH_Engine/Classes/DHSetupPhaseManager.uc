@@ -22,9 +22,12 @@ var() bool              bReplacePreStart;                   // If true will over
 var() bool              bResetRoundTimer;                   // If true will reset the round's timer to the proper value when phase is over
 var() TeamReinf         PhaseEndReinforcements;             // What to set reinforcements to at the end of the phase (0 means no change, -1 set to zero)
 var() bool              bPreventTimeChangeAtZeroReinf;      // bTimeChangesAtZeroReinf will be set to false for this match
+var() int               SpawningEnabledTime;                // Round time at which players can spawn
 
 var int                 TimerCount;
 var int                 SetupPhaseDurationActual;
+var int                 SpawningEnabledTimeActual;
+var bool                bPlayersCanNowSpawn;
 
 event PreBeginPlay()
 {
@@ -48,13 +51,18 @@ event PreBeginPlay()
         G.bTimeChangesAtZeroReinf = false;
     }
 
+    // Handle more detailed timer
     SetupPhaseDurationActual = SetupPhaseDuration + 5;
+    SpawningEnabledTimeActual = SpawningEnabledTime + 5;
+
+    // Handle other Game setup
 
     super.PreBeginPlay();
 }
 
 function Reset()
 {
+    bPlayersCanNowSpawn = false;
     TimerCount = 0;
     GotoState('Initialize');
 }
@@ -80,6 +88,11 @@ state Timing
             return;
         }
 
+        if (SpawningEnabledTime > 0)
+        {
+            EnablePlayerSpawning(false);
+        }
+
         SetTimer(1.0, true);
     }
 
@@ -103,6 +116,13 @@ state Timing
                         s = Repl(PhaseMessage, "{0}", SetupPhaseDurationActual - TimerCount);
                         PC.ClientMessage(s,'CriticalEvent');
                     }
+                }
+
+                // Determine if we should allow spawning yet
+                if (!bPlayersCanNowSpawn && SpawningEnabledTime > 0 && TimerCount >= SpawningEnabledTimeActual)
+                {
+                    EnablePlayerSpawning(true);
+                    bPlayersCanNowSpawn = true;
                 }
             }
 
@@ -214,6 +234,39 @@ state Timing
 
         GotoState('Done');
     }
+
+    function EnablePlayerSpawning(bool bCanSpawn)
+    {
+        local Controller C;
+        local DHPlayer DHP;
+        local DarkestHourGame G;
+        local DHGameReplicationInfo GRI;
+
+        G = DarkestHourGame(Level.Game);
+
+        if (G == none)
+        {
+            return;
+        }
+
+        GRI = DHGameReplicationInfo(G.GameReplicationInfo);
+
+        if (GRI == none)
+        {
+            return;
+        }
+
+        for (C = Level.ControllerList; C != none; C = C.NextController)
+        {
+            DHP = DHPlayer(C);
+
+            if (DHP != none)
+            {
+                DHP.bCanRespawn = bCanSpawn;
+            }
+        }
+    }
+
 }
 
 state Done
@@ -226,7 +279,8 @@ defaultproperties
     PhaseEndMessage="Round Has Started!"
     bReplacePreStart=true
     bScaleStartingReinforcements=true
-    SetupPhaseDuration=30
+    SetupPhaseDuration=60
+    SpawningEnabledTime=30
     Texture=texture'DHEngine_Tex.LevelActor'
     bHidden=true
     RemoteRole=ROLE_None
