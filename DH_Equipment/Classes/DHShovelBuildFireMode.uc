@@ -67,7 +67,7 @@ state Building
     {
         if (Construction != none)
         {
-            Construction.ServerAddHealth(25);
+            Construction.ServerIncrementProgress();
         }
         // TODO: add health to the construction?
     }

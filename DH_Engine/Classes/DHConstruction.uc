@@ -42,7 +42,11 @@ var     float   GroundSlopeMaxInDegrees;
 var     rotator StartRotationMin;
 var     rotator StartRotationMax;
 var     int     LocalRotationRate;
+
 var     sound   PlacementSound;
+var     float   PlacementSoundRadius;
+var     float   PlacementSoundVolume;
+
 var     float   FloatToleranceInMeters;
 var     float   DuplicateDistanceInMeters;      // The distance required between identical constructions of the same type
 var     class<Emitter> PlacementEmitterClass;
@@ -126,62 +130,40 @@ simulated function PostBeginPlay()
 
 auto simulated state Constructing
 {
-    simulated event BeginState()
-    {
-        if (Level.NetMode != NM_DedicatedServer)
-        {
-            // TODO: this needs to happen
-            if (PlacementEmitterClass != none)
-            {
-                Spawn(PlacementEmitterClass);
-            }
-
-            if (PlacementSound != none)
-            {
-                PlaySound(PlacementSound, SLOT_Misc, 4.0,, 60.0,, true);
-            }
-        }
-    }
-
     function OnProgressChanged()
     {
         local int i;
         local int OldStageIndex;
-        local bool bDidFindStage;
 
         if (Progress < 0)
         {
             // TODO: possibly refund supplies to nearby supply cache/vehicle?
             Destroy();
         }
-        else if (Progress >= Progress)
+        else if (Progress >= ProgressMax)
         {
             GotoState('Constructed');
         }
         else
         {
+            Log("Finding stage." @ Progress @ ProgressMax);
+
             for (i = Stages.Length - 1; i >= 0; --i)
             {
-                if (Progress >= Stages[i].Progress)
+                if (Progress >= Stages[i].Progress && StageIndex != i)
                 {
+                    Log("found stage" @ i);
+
                     OldStageIndex = StageIndex;
                     StageIndex = i;
                     OnStageIndexChanged(OldStageIndex);
                     SetStaticMesh(GetStaticMesh(TeamIndex, StageIndex));
                     NetUpdateTime = Level.TimeSeconds - 1.0;
-                    bDidFindStage = true;
                     break;
                 }
             }
-
-            if (!bDidFindStage)
-            {
-                Warn("Invalid internal state of construction! Check your defaultproperties for consistency.");
-                Destroy();
-            }
         }
     }
-
 Begin:
     if (Role == ROLE_Authority)
     {
@@ -190,7 +172,22 @@ Begin:
             // There are no intermediate stages, so put the construction immediately
             // into the fully constructed state.
             Progress = ProgressMax;
-            OnProgressChanged();
+        }
+
+        OnProgressChanged();
+    }
+
+    // Client-side effects
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        if (PlacementEmitterClass != none)
+        {
+            Spawn(PlacementEmitterClass);
+        }
+
+        if (PlacementSound != none)
+        {
+            PlaySound(PlacementSound, SLOT_Misc, PlacementSoundVolume,, PlacementSoundRadius,, true);
         }
     }
 }
@@ -228,6 +225,8 @@ function static StaticMesh GetStaticMesh(int TeamIndex, int StageIndex)
         return default.StaticMesh;
     }
 
+    Log("GetStaticMesh" @ StageIndex @ default.Stages[StageIndex].StaticMesh);
+
     return default.Stages[StageIndex].StaticMesh;
 }
 
@@ -261,7 +260,6 @@ defaultproperties
     Health=1
     ProxyDistanceInMeters=5.0
     GroundSlopeMaxInDegrees=25.0
-    StageIndex=-1
 
     bStatic=false
     bNoDelete=false
@@ -295,10 +293,17 @@ defaultproperties
     FloatToleranceInMeters=0.5
     PlacementSound=Sound'Inf_Player.Gibimpact.Gibimpact' // TODO: placeholder
     PlacementEmitterClass=class'DH_Effects.DHConstructionEffect'
+    PlacementSoundRadius=60.0
+    PlacementSoundVolume=4.0
 
     LocalRotationRate=32768
 
     // Destruction
     DestroyedLifespan=15.0
+
+    // Progress
+    StageIndex=-1
+    Progress=0
+    ProgressMax=8
 }
 
