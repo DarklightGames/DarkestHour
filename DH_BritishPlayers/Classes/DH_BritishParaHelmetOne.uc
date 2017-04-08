@@ -3,10 +3,10 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_BritishParaHelmet2 extends DHHeadgear;
+class DH_BritishParaHelmetOne extends DHHeadgear;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'dhgear_anm.BritParaHelmet2'
-    Skins(0)=texture'DHBritishCharactersTex.Headgear.BritParaHelmet2'
+    Mesh=SkeletalMesh'dhgear_anm.BritParaHelmet1'
+    Skins(0)=texture'DHBritishCharactersTex.Headgear.BritParaHelmet1'
 }

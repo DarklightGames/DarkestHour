@@ -3,15 +3,14 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_FJHelmet1 extends DHHeadgear;
+class DH_HeerHelmetSnowThree extends DHHeadgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-//  L.AddPrecacheMaterial(material'DHGermanCharactersTex.GerHeadGear.FJ_Helmet1');
 }
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'dhgear_anm.Ger_Fallsch_Helmet'
-    Skins(0)=texture'DHGermanCharactersTex.GerHeadgear.FJ_Helmet1'
+    Mesh=SkeletalMesh'gear_anm.ger_helmet'
+    Skins(0)=texture'DHGermanCharactersTex.GerHeadgear.WH_HG_SnowCamo'
 }

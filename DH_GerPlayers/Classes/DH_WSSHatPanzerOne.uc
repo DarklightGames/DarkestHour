@@ -3,15 +3,16 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_FJHelmetNet2 extends DHHeadgear;
+class DH_WSSHatPanzerOne extends DHHeadgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-//  L.AddPrecacheMaterial(material'DHGermanCharactersTex.GerHeadGear.FJ_HelmetNet2');
+    L.AddPrecacheMaterial(material'DHGermanCharactersTex.GerHeadGear.SS_HG_1');
 }
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'dhgear_anm.Ger_Fallsch_Helmet'
-    Skins(0)=texture'DHGermanCharactersTex.GerHeadgear.FJ_HelmetNet2'
+    bIsHelmet=false
+    Mesh=SkeletalMesh'gear_anm.ger_tankercap_cap'
+    Skins(0)=texture'DHGermanCharactersTex.GerHeadgear.SS_HG_1'
 }

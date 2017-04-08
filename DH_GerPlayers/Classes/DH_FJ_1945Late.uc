@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DH_FJ_1945 extends DH_Fallschirmjager
+class DH_FJ_1945Late extends DH_Fallschirmjager
     abstract;
 
 defaultproperties
