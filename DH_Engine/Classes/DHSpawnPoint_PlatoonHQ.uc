@@ -10,6 +10,28 @@ class DHSpawnPoint_PlatoonHQ extends DHSpawnPointBase
 
 var float SpawnRadius;
 
+auto state Establishing
+{
+    function Timer()
+    {
+        GotoState('Established');
+    }
+
+Begin:
+    BlockReason = SPBR_Constructing;
+    SetTimer(60.0, true);   // TODO: magic number
+}
+
+state Established
+{
+    function Timer()
+    {
+        // TODO: check if we are being captured?
+    }
+Begin:
+    BlockReason = SPBR_None;
+}
+
 // TODO: Override with different style
 simulated function string GetStyleName()
 {
@@ -52,18 +74,22 @@ function bool PerformSpawn(DHPlayer PC)
 
 function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, int VehiclePoolIndex)
 {
-    local int i;
+    local int i, j;
     local DHPawnCollisionTest CT;
-    local vector L, X, Y, Z;
+    local vector L;
     local float ArcLength;
 
-    ArcLength = (Pi * 2) / 8;
+    const SEGMENT_COUNT = 8;
 
-    for (i = 0; i < 8; ++i)
+    ArcLength = (Pi * 2) / SEGMENT_COUNT;
+
+    j = Rand(SEGMENT_COUNT);
+
+    for (i = 0; i < SEGMENT_COUNT; ++i)
     {
         L = Location;
-        L.X += Cos(ArcLength * i) * SpawnRadius;
-        L.Y += Sin(ArcLength * i) * SpawnRadius;
+        L.X += Cos(ArcLength * (i + j) % SEGMENT_COUNT) * SpawnRadius;
+        L.Y += Sin(ArcLength * (i + j) % SEGMENT_COUNT) * SpawnRadius;
         L.Z += 10.0 + class'DHPawn'.default.CollisionHeight / 2;
 
         CT = Spawn(class'DHPawnCollisionTest',,, L);
@@ -76,9 +102,6 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
 
     if (CT != none)
     {
-        GetAxes(rot(0, 0, 0), X, Y, Z);
-        class'DHLib'.static.DrawStayingDebugCylinder(self, L, X, Y, Z, class'DHPawnCollisionTest'.default.CollisionRadius, class'DHPawnCollisionTest'.default.CollisionHeight, 20, 255, 0, 0);
-
         SpawnLocation = L;
         SpawnRotation = Rotation;
         CT.Destroy();

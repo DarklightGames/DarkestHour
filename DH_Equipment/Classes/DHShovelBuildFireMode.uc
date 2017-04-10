@@ -11,10 +11,19 @@ var float TraceDistanceInMeters;
 // Modified to check (via a trace) that player is facing an obstacle that can be cut & that player is stationary & not diving to prone
 simulated function bool AllowFire()
 {
-    local vector         HitLocation, HitNormal;
+    local vector TraceStart, TraceEnd, HitLocation, HitNormal;
     local Actor HitActor;
 
-    HitActor = Trace(HitLocation, HitNormal, Weapon.Location + (class'DHUnits'.static.MetersToUnreal(default.TraceDistanceInMeters) * vector(Weapon.Rotation)), Weapon.Location, true);
+    TraceStart = Weapon.Location;
+    TraceEnd = TraceStart + (class'DHUnits'.static.MetersToUnreal(default.TraceDistanceInMeters) * vector(Weapon.Rotation));
+
+    foreach Weapon.TraceActors(class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart, vect(32, 32, 0))
+    {
+        if (HitActor.bStatic && !HitActor.IsA('Volume') && !HitActor.IsA('ROBulletWhipAttachment') || HitActor.IsA('DHConstruction'))
+        {
+            break;
+        }
+    }
 
     Construction = DHConstruction(HitActor);
 

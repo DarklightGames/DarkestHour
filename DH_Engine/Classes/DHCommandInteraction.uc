@@ -259,7 +259,7 @@ function Tick(float DeltaTime)
             Menu.OnHoverOut(OldSelectedIndex);
         }
 
-        if (SelectedIndex != -1)
+        if (SelectedIndex != -1 && !Menu.IsOptionDisabled(SelectedIndex))
         {
             PC.Pawn.PlayOwnedSound(sound'ROMenuSounds.msfxDown', SLOT_Interface, 1.0);
 

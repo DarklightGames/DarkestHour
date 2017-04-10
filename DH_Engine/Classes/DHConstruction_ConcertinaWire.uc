@@ -8,6 +8,8 @@ class DHConstruction_ConcertinaWire extends DHConstruction;
 defaultproperties
 {
     Stages(0)=(Progress=0,StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_01_unassembled',Sound=none,Emitter=none)
+    CollisionRadius=90
+    CollisionHeight=50
 
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_02'
     bShouldAlignToGround=true

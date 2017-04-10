@@ -19,6 +19,7 @@ enum EConstructionError
     ERROR_NotOnTerrain,     // Construction is not on terrain
     ERROR_TooClose,         // Too close to an identical construction
     ERROR_InMinefield,      // Cannot be in a minefield!
+    ERROR_NearSpawnPoint,   // Cannot be so close to a spawn point (or location hint)
     ERROR_Other             // ERROR:
 };
 
@@ -270,8 +271,8 @@ defaultproperties
     bBlockActors=true
     bBlockKarma=true
 
-    CollisionHeight=1.0
-    CollisionRadius=1.0
+    CollisionHeight=30.0
+    CollisionRadius=60.0
 
     bNetNotify=true
     NetUpdateFrequency=0.1

@@ -79,6 +79,9 @@ defaultproperties
     bCanPlaceInWater=false
     GroundSlopeMaxInDegrees=5
 
+    StartRotationMin=(Yaw=32768)
+    StartRotationMax=(Yaw=32768)
+
     // Collision
     CollisionHeight=120
     CollisionRadius=300

@@ -17,6 +17,8 @@ var Material                RedMaterial;
 var rotator                 LocalRotation;
 var rotator                 LocalRotationRate;
 
+var DHConstructionProxyProjector Projector;
+
 function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -26,6 +28,23 @@ function PostBeginPlay()
     if (PawnOwner == none)
     {
         Destroy();
+    }
+
+    Projector = Spawn(class'DHConstructionProxyProjector', self);
+
+    if (Projector != none)
+    {
+        Projector.SetBase(self);
+    }
+}
+
+event Destroyed()
+{
+    super.Destroyed();
+
+    if (Projector != none)
+    {
+        Projector.Destroy();
     }
 }
 
@@ -63,9 +82,9 @@ function CreateMaterials()
     {
         FC = new class'FadeColor';
         FC.Color1 = class'UColor'.default.White;
-        FC.Color1.A = 128;
+        FC.Color1.A = 64;
         FC.Color2 = class'UColor'.default.White;
-        FC.Color2.A = 255;
+        FC.Color2.A = 128;
         FC.FadePeriod = 0.25;
         FC.ColorFadeType = FC_Sinusoidal;
 
@@ -110,10 +129,10 @@ function SetStaticMeshColor(color Color)
                 if (FC != none)
                 {
                     FC.Color1 = Color;
-                    FC.Color1.A = 128;
+                    FC.Color1.A = 64;
 
                     FC.Color2 = Color;
-                    FC.Color2.A = 255;
+                    FC.Color2.A = 128;
                 }
             }
         }
@@ -122,7 +141,7 @@ function SetStaticMeshColor(color Color)
 
 function Tick(float DeltaTime)
 {
-    local vector L;
+    local vector L, RL;
     local rotator R;
 
     super.Tick(DeltaTime);
@@ -134,7 +153,7 @@ function Tick(float DeltaTime)
 
     LocalRotation += (LocalRotationRate * DeltaTime);
 
-    // TODO: combine getprovisionallocation and getpositionerror into one
+    // TODO: Combine getprovisionallocation and getpositionerror into one
     // function able to be run on the client and the server independently
     // An error may be thrown when determining the location, so store it here.
     ProxyError = GetProvisionalPosition(L, R);
@@ -157,6 +176,25 @@ function Tick(float DeltaTime)
         default:
             SetStaticMeshColor(class'UColor'.default.Red);
             break;
+    }
+
+    RL.Z = ConstructionClass.default.CollisionHeight;
+
+    if (Projector != none)
+    {
+        switch (ProxyError)
+        {
+        case ERROR_None:
+            Projector.ProjTexture = Projector.GreenTexture;
+            break;
+        default:
+            Projector.ProjTexture = Projector.RedTexture;
+            break;
+        }
+
+        Projector.SetDrawScale((ConstructionClass.default.CollisionRadius * 2) / Projector.ProjTexture.MaterialUSize());
+        Projector.SetRelativeLocation(RL);
+        Projector.SetRelativeRotation(rot(-16384, 0, 0));
     }
 }
 
@@ -312,6 +350,15 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
             HitNormalSum = vect(0, 0, 1);
         }
 
+        // Now check the groundslope again.
+        GroundSlopeDegrees = class'UUnits'.static.RadiansToDegrees(Acos(HitNormalSum dot vect(0, 0, 1)));
+
+        if (Error == ERROR_None && GroundSlopeDegrees >= ConstructionClass.default.GroundSlopeMaxInDegrees)
+        {
+            // Too steep!
+            Error = ERROR_TooSteep;
+        }
+
         Forward = Normal(vector(PC.CalcViewRotation));
         Left = Forward cross HitNormalSum;
         Forward = HitNormalSum cross Left;
@@ -332,12 +379,16 @@ function DHConstruction.EConstructionError GetPositionError()
     local DHConstruction C;
     local Actor TouchingActor;
     local ROMineVolume MV;
+    local DHSpawnPointBase SP;
+    local DHLocationHint LH;
 
+    // Don't allow the construction to be placed in water if this is disallowed.
     if (!ConstructionClass.default.bCanPlaceInWater && PhysicsVolume != none && PhysicsVolume.bWaterVolume)
     {
         return ERROR_InWater;
     }
 
+    // Don't allow constructions to overlap restriction volumes that restrict constructions.
     foreach TouchingActors(class'DHRestrictionVolume', RV)
     {
         if (RV != none && RV.bNoConstructions)
@@ -346,7 +397,7 @@ function DHConstruction.EConstructionError GetPositionError()
         }
     }
 
-    // Don't allow constructions in active minefields
+    // Don't allow constructions in active minefields.
     foreach TouchingActors(class'ROMineVolume', MV)
     {
         if (MV != none &&
@@ -359,6 +410,7 @@ function DHConstruction.EConstructionError GetPositionError()
         }
     }
 
+    // Don't allow the construction to touch blocking actors.
     foreach TouchingActors(class'Actor', TouchingActor)
     {
         if (TouchingActor != none && TouchingActor.bBlockActors)
@@ -367,6 +419,32 @@ function DHConstruction.EConstructionError GetPositionError()
         }
     }
 
+    // Don't allow constructions within 2 meters of spawn points or location hints.
+    foreach RadiusActors(class'DHSpawnPointBase', SP, ConstructionClass.default.CollisionRadius + class'DHUnits'.static.MetersToUnreal(2.0))
+    {
+        return ERROR_NearSpawnPoint;
+    }
+
+    foreach RadiusActors(class'DHLocationHint', LH, ConstructionClass.default.CollisionRadius + class'DHUnits'.static.MetersToUnreal(2.0))
+    {
+        return ERROR_NearSpawnPoint;
+    }
+
+    // Don't allow constructions to have overlapping collision radii.
+    // NOTE: We are using a 25 meter radius here just to include the largest
+    // likely combined radius. Using AllActors would be incredibly slow, and
+    // keeping a separate list of constructions via replication or some other
+    // mechanism might be a bad idea.
+    foreach CollidingActors(class'DHConstruction', C, class'DHUnits'.static.MetersToUnreal(25.0))
+    {
+        if (VSize(Location - C.Location) < ConstructionClass.default.CollisionRadius + C.default.CollisionRadius)
+        {
+            return ERROR_NoRoom;
+        }
+    }
+
+    // If a duplicate distance is specified, don't allow the construction to be
+    // placed if is within the duplicate distance.
     if (ConstructionClass.default.DuplicateDistanceInMeters > 0.0)
     {
         foreach RadiusActors(ConstructionClass, A, class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.DuplicateDistanceInMeters))
