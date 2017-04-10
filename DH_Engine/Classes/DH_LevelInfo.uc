@@ -33,6 +33,24 @@ enum EGameType
     GT_SearchAndDestroy
 };
 
+enum ESeason
+{
+    SEASON_Spring,
+    SEASON_Summer,
+    SEASON_Autumn,
+    SEASON_Winter
+};
+
+enum EWeather
+{
+    WEATHER_Clear,
+    WEATHER_Rainy,
+    WEATHER_Snowy
+};
+
+var() ESeason               Season;
+var() EWeather              Weather;
+
 var() float                 AlliesToAxisRatio;          // Player ratio based on team, allows for unbalanced teams
 var() bool                  bHardTeamRatio;             // Determines if AlliesToAxisRatio should be hard or soft (affected by # of players)
 
@@ -80,4 +98,5 @@ defaultproperties
     AlliesWinsMusic=sound'DH_win.Allies.DH_AlliesGroup'
     AxisWinsMusic=sound'DH_win.German.DH_GermanGroup'
     SpawnMode=ESM_RedOrchestra
+    Season=SEASON_Summer
 }
