@@ -151,18 +151,6 @@ simulated function PostBeginPlay()
 
     super.PostBeginPlay();
 
-    foreach AllActors(class'DHSpawnPoint', SP)
-    {
-        if (i >= SPAWN_POINTS_MAX)
-        {
-            Warn("Number of DHSpawnPoint actors exceeds" @ SPAWN_POINTS_MAX @ ", some spawn points will be ignored!");
-
-            break;
-        }
-
-        SpawnPoints[i++] = SP;
-    }
-
     foreach AllActors(class'WaterVolume', WV)
     {
         WV.PawnEntryActor = none;
