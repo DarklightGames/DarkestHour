@@ -234,7 +234,7 @@ state Done
 
 defaultproperties
 {
-    PhaseEndSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01''
+    PhaseEndSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01'
     PhaseMessage="Round Begins In: {0} seconds"
     PhaseEndMessage="Round Has Started!"
     bReplacePreStart=true
