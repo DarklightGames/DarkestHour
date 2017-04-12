@@ -169,12 +169,12 @@ simulated function PostBeginPlay()
         FSI.TouchEffect = none;
     }
 
-    for (i = 0; i < ConstructionClassNames.Length; ++i)
+    if (Role == ROLE_Authority)
     {
-        Log(ConstructionClassNames[i]);
-        Log(DynamicLoadObject(ConstructionClassNames[i], class'class'));
-
-        AddConstructionClass(class<DHConstruction>(DynamicLoadObject(ConstructionClassNames[i], class'class')));
+        for (i = 0; i < ConstructionClassNames.Length; ++i)
+        {
+            AddConstructionClass(class<DHConstruction>(DynamicLoadObject(ConstructionClassNames[i], class'class')));
+        }
     }
 }
 
@@ -786,11 +786,11 @@ defaultproperties
     ForceScaleText="Size"
     ReinforcementsInfiniteText="Infinite"
     DeathPenaltyText="Death Penalty"
-    ConstructionClassNames(0)="DH_Constructions.DHConstruction_ConcertinaWire"
-    ConstructionClassNames(1)="DH_Constructions.DHConstruction_Hedgehog"
-    ConstructionClassNames(2)="DH_Constructions.DHConstruction_PlatoonHQ"
-    ConstructionClassNames(3)="DH_Constructions.DHConstruction_Resupply"
-    ConstructionClassNames(4)="DH_Constructions.DHConstruction_Sandbags"
-    ConstructionClassNames(5)="DH_Constructions.DHConstruction_ATGun_Medium"
+    ConstructionClassNames(0)="DH_Construction.DHConstruction_ConcertinaWire"
+    ConstructionClassNames(1)="DH_Construction.DHConstruction_Hedgehog"
+    ConstructionClassNames(2)="DH_Construction.DHConstruction_PlatoonHQ"
+    ConstructionClassNames(3)="DH_Construction.DHConstruction_Resupply"
+    ConstructionClassNames(4)="DH_Construction.DHConstruction_Sandbags"
+    ConstructionClassNames(5)="DH_Construction.DHConstruction_ATGun_Medium"
 }
 
