@@ -1,0 +1,10 @@
+Begin Actor Class=DHAdvanceObjective Name=DHAdvanceObjective0
+    bPathsChanged=True
+    bLightChanged=True
+    Level=LevelInfo'myLevel.LevelInfo0'
+    Region=(Zone=LevelInfo'myLevel.LevelInfo0',iLeaf=-1)
+    Tag="DHAdvanceObjective"
+    PhysicsVolume=DefaultPhysicsVolume'myLevel.DefaultPhysicsVolume0'
+    Location=(X=36.000000,Y=58.000000)
+    bSelected=True
+End Actor
