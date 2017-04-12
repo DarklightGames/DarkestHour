@@ -19,7 +19,7 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
 
     if (CP != none)
     {
-        Result = Repl(Result, "{0}", CP.ConstructionClass.default.MenuName);
+        Result = Repl(Result, "{0}", CP.ConstructionClass.static.GetMenuName(none));
         Result = Repl(Result, "{1}", int(CP.ConstructionClass.default.DuplicateDistanceInMeters));
     }
 
@@ -36,6 +36,6 @@ defaultproperties
     ErrorMessages(7)="{0} must be placed on earthen terrain."
     ErrorMessages(8)="Too close to an existing {0} (must be {1}m away)."
     ErrorMessages(9)="You cannot construct a {0} in a minefield."
-    ErrorMessages(10)="You cannot construct a {0} near a a spawn point."
+    ErrorMessages(10)="You cannot construct a {0} near a spawn point."
 }
 

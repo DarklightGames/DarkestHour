@@ -9,6 +9,7 @@ class DHConstructionProxy extends Actor
 var DHConstruction.EConstructionError   ProxyError;
 
 var DHPawn                  PawnOwner;
+var DHPlayer                PlayerOwner;
 var class<DHConstruction>   ConstructionClass;
 
 var Material                GreenMaterial;
@@ -18,6 +19,7 @@ var rotator                 LocalRotation;
 var rotator                 LocalRotationRate;
 
 var DHConstructionProxyProjector Projector;
+var array<DHConstructionProxyAttachment> Attachments;
 
 function PostBeginPlay()
 {
@@ -26,6 +28,13 @@ function PostBeginPlay()
     PawnOwner = DHPawn(Owner);
 
     if (PawnOwner == none)
+    {
+        return;
+    }
+
+    PlayerOwner = DHPlayer(PawnOwner.Controller);
+
+    if (PlayerOwner == none)
     {
         Destroy();
     }
@@ -46,11 +55,26 @@ event Destroyed()
     {
         Projector.Destroy();
     }
+
+    DestroyAttachments();
 }
 
-function SetConstructionClass(class<DHConstruction> ConstructionClass)
+function DestroyAttachments()
 {
-    self.ConstructionClass = ConstructionClass;
+    local int i;
+
+    for (i = 0; i < Attachments.Length; ++i)
+    {
+        Attachments[i].Destroy();
+    }
+
+    Attachments.Length = 0;
+}
+
+final function SetConstructionClass(class<DHConstruction> ConstructionClass)
+{
+    local float NewRadius;
+    local float NewHeight;
 
     if (ConstructionClass == none)
     {
@@ -58,65 +82,64 @@ function SetConstructionClass(class<DHConstruction> ConstructionClass)
         return;
     }
 
-    SetCollisionSize(ConstructionClass.default.CollisionRadius, ConstructionClass.default.CollisionHeight);
-    SetStaticMesh(ConstructionClass.static.GetStaticMesh(PawnOwner.GetTeamNum(), -1));
+    self.ConstructionClass = ConstructionClass;
+
+    // Determine the collision size to use given the current team and level info.
+    ConstructionClass.static.GetCollisionSize(PlayerOwner.GetTeamNum(), PlayerOwner.ClientLevelInfo, NewRadius, NewHeight);
+    SetCollisionSize(NewRadius, NewHeight);
+
+    DestroyAttachments();
+    ConstructionClass.static.UpdateProxy(self);
 
     // Initialize the local rotation based on the parameters in the new construction class
     LocalRotation = class'URotator'.static.RandomRange(ConstructionClass.default.StartRotationMin, ConstructionClass.default.StartRotationMax);
 
-    // TODO: create "OK" textures
-    CreateMaterials();
+    // Set the error to none so that our material colors get initialized properly
+    SetProxyError(ERROR_None);
 }
 
-function CreateMaterials()
+function static Material CreateProxyMaterial(Material M)
 {
-    local int i;
-    local array<Material> StaticMeshSkins;
     local Combiner C;
     local FadeColor FC;
     local FinalBlend FB;
 
-    StaticMeshSkins = (new class'UStaticMesh').FindStaticMeshSkins(StaticMesh);
+    FC = new class'FadeColor';
+    FC.Color1 = class'UColor'.default.White;
+    FC.Color1.A = 64;
+    FC.Color2 = class'UColor'.default.White;
+    FC.Color2.A = 128;
+    FC.FadePeriod = 0.25;
+    FC.ColorFadeType = FC_Sinusoidal;
 
-    for (i = 0; i < StaticMeshSkins.Length; ++i)
-    {
-        FC = new class'FadeColor';
-        FC.Color1 = class'UColor'.default.White;
-        FC.Color1.A = 64;
-        FC.Color2 = class'UColor'.default.White;
-        FC.Color2.A = 128;
-        FC.FadePeriod = 0.25;
-        FC.ColorFadeType = FC_Sinusoidal;
+    C = new class'Combiner';
+    C.CombineOperation = CO_Multiply;
+    C.AlphaOperation = AO_Multiply;
+    C.Material1 = M;
+    C.Material2 = FC;
+    C.Modulate4X = true;
 
-        C = new class'Combiner';
-        C.CombineOperation = CO_Multiply;
-        C.AlphaOperation = AO_Multiply;
-        C.Material1 = StaticMeshSkins[i];
-        C.Material2 = FC;
-        C.Modulate4X = true;
+    FB = new class'FinalBlend';
+    FB.FrameBufferBlending = FB_AlphaBlend;
+    FB.ZWrite = true;
+    FB.ZTest = true;
+    FB.AlphaTest = true;
+    FB.TwoSided = true;
+    FB.Material = C;
 
-        FB = new class'FinalBlend';
-        FB.FrameBufferBlending = FB_AlphaBlend;
-        FB.ZWrite = true;
-        FB.ZTest = true;
-        FB.AlphaTest = true;
-        FB.TwoSided = true;
-        FB.Material = C;
-
-        Skins[i] = FB;
-    }
+    return FB;
 }
 
-function SetStaticMeshColor(color Color)
+function static UpdateProxyMaterialColors(Actor A, color Color)
 {
     local FinalBlend FB;
     local Combiner C;
     local FadeColor FC;
     local int i;
 
-    for (i = 0; i < Skins.Length; ++i)
+    for (i = 0; i < A.Skins.Length; ++i)
     {
-        FB = FinalBlend(Skins[i]);
+        FB = FinalBlend(A.Skins[i]);
 
         if (FB != none)
         {
@@ -139,10 +162,55 @@ function SetStaticMeshColor(color Color)
     }
 }
 
+function SetProxyError(DHConstruction.EConstructionError NewProxyError)
+{
+    local int i;
+    local color ProxyColor;
+
+    ProxyError = NewProxyError;
+
+    if (Projector != none)
+    {
+        switch (ProxyError)
+        {
+        case ERROR_None:
+            Projector.ProjTexture = Projector.GreenTexture;
+            break;
+        default:
+            Projector.ProjTexture = Projector.RedTexture;
+            break;
+        }
+    }
+
+    ProxyColor = GetProxyErrorColor(ProxyError);
+
+    UpdateProxyMaterialColors(self, ProxyColor);
+
+    for (i = 0; i < Attachments.Length; ++i)
+    {
+        if (Attachments[i] != none)
+        {
+            UpdateProxyMaterialColors(Attachments[i], ProxyColor);
+        }
+    }
+}
+
+function static color GetProxyErrorColor(DHConstruction.EConstructionError ProxyError)
+{
+    switch (ProxyError)
+    {
+        case ERROR_None:
+            return class'UColor'.default.Green;
+        default:
+            return class'UColor'.default.Red;
+    }
+}
+
 function Tick(float DeltaTime)
 {
     local vector L, RL;
     local rotator R;
+    local DHConstruction.EConstructionError NewProxyError;
 
     super.Tick(DeltaTime);
 
@@ -156,43 +224,32 @@ function Tick(float DeltaTime)
     // TODO: Combine getprovisionallocation and getpositionerror into one
     // function able to be run on the client and the server independently
     // An error may be thrown when determining the location, so store it here.
-    ProxyError = GetProvisionalPosition(L, R);
+    NewProxyError = GetProvisionalPosition(L, R);
 
     // Set the location
     SetLocation(L);
     SetRotation(R);
 
-    if (ProxyError == ERROR_None)
+    if (NewProxyError == ERROR_None)
     {
         // Location was determined to be okay, now do another pass.
-        ProxyError = GetPositionError();
+        NewProxyError = GetPositionError();
     }
 
-    switch (ProxyError)
+    if (ProxyError != NewProxyError)
     {
-        case ERROR_None:
-            SetStaticMeshColor(class'UColor'.default.Green);
-            break;
-        default:
-            SetStaticMeshColor(class'UColor'.default.Red);
-            break;
+        SetProxyError(NewProxyError);
     }
 
+    // NOTE: The relative location and rotation needs to be set every tick.
+    // Without it, the projector seems to "drift" away from the object it's
+    // attached to. This is probably due to some sort of cumulative floating
+    // point errors.
     RL.Z = ConstructionClass.default.CollisionHeight;
 
     if (Projector != none)
     {
-        switch (ProxyError)
-        {
-        case ERROR_None:
-            Projector.ProjTexture = Projector.GreenTexture;
-            break;
-        default:
-            Projector.ProjTexture = Projector.RedTexture;
-            break;
-        }
-
-        Projector.SetDrawScale((ConstructionClass.default.CollisionRadius * 2) / Projector.ProjTexture.MaterialUSize());
+        Projector.SetDrawScale((CollisionRadius * 2) / Projector.ProjTexture.MaterialUSize());
         Projector.SetRelativeLocation(RL);
         Projector.SetRelativeRotation(rot(-16384, 0, 0));
     }
@@ -201,7 +258,6 @@ function Tick(float DeltaTime)
 // This function gets the provisional location and rotation of the construction.
 function DHConstruction.EConstructionError GetProvisionalPosition(out vector OutLocation, out rotator OutRotation)
 {
-    local PlayerController PC;
     local vector TraceStart, TraceEnd, HitLocation, HitNormal, Left, Forward, X, Y, Z, HitNormalSum, BaseLocation;
     local Actor TempHitActor, HitActor;
     local rotator R;
@@ -209,21 +265,14 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
     local DHConstruction.EConstructionError Error;
     local int i;
 
-    if (PawnOwner == none)
-    {
-        return ERROR_Fatal;
-    }
-
-    PC = PlayerController(PawnOwner.Controller);
-
-    if (PC == none || ConstructionClass == none)
+    if (PawnOwner == none || PlayerOwner == none || ConstructionClass == none)
     {
         return ERROR_Fatal;
     }
 
     // Trace out into the world and try and hit something static.
     TraceStart = PawnOwner.Location + PawnOwner.EyePosition();
-    TraceEnd = TraceStart + (vector(PC.CalcViewRotation) * class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProxyDistanceInMeters));
+    TraceEnd = TraceStart + (vector(PlayerOwner.CalcViewRotation) * class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProxyDistanceInMeters));
 
     foreach TraceActors(class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
     {
@@ -257,7 +306,7 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
         Error = ERROR_NoGround;
         // TODO: verify correctness
         BaseLocation = TraceStart;
-        R = PC.CalcViewRotation;
+        R = PlayerOwner.CalcViewRotation;
         R.Pitch = 0;
         R.Roll = 0;
         Forward = vector(R);
@@ -277,7 +326,7 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
             HitNormal = vect(0, 0, 1);
         }
 
-        Forward = Normal(vector(PC.CalcViewRotation));
+        Forward = Normal(vector(PlayerOwner.CalcViewRotation));
         Left = Forward cross HitNormal;
         Forward = HitNormal cross Left;
 
@@ -359,12 +408,12 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
             Error = ERROR_TooSteep;
         }
 
-        Forward = Normal(vector(PC.CalcViewRotation));
+        Forward = Normal(vector(PlayerOwner.CalcViewRotation));
         Left = Forward cross HitNormalSum;
         Forward = HitNormalSum cross Left;
     }
 
-    OutLocation = BaseLocation;
+    OutLocation = BaseLocation + (ConstructionClass.static.GetPlacementOffset() << rotator(Forward));
     OutRotation = QuatToRotator(QuatProduct(QuatFromRotator(LocalRotation), QuatFromRotator(rotator(Forward))));
 
     return Error;
@@ -381,6 +430,7 @@ function DHConstruction.EConstructionError GetPositionError()
     local ROMineVolume MV;
     local DHSpawnPointBase SP;
     local DHLocationHint LH;
+    local float OtherRadius, OtherHeight;
 
     // Don't allow the construction to be placed in water if this is disallowed.
     if (!ConstructionClass.default.bCanPlaceInWater && PhysicsVolume != none && PhysicsVolume.bWaterVolume)
@@ -420,12 +470,12 @@ function DHConstruction.EConstructionError GetPositionError()
     }
 
     // Don't allow constructions within 2 meters of spawn points or location hints.
-    foreach RadiusActors(class'DHSpawnPointBase', SP, ConstructionClass.default.CollisionRadius + class'DHUnits'.static.MetersToUnreal(2.0))
+    foreach RadiusActors(class'DHSpawnPointBase', SP, CollisionRadius + class'DHUnits'.static.MetersToUnreal(2.0))
     {
         return ERROR_NearSpawnPoint;
     }
 
-    foreach RadiusActors(class'DHLocationHint', LH, ConstructionClass.default.CollisionRadius + class'DHUnits'.static.MetersToUnreal(2.0))
+    foreach RadiusActors(class'DHLocationHint', LH, CollisionRadius + class'DHUnits'.static.MetersToUnreal(2.0))
     {
         return ERROR_NearSpawnPoint;
     }
@@ -437,7 +487,9 @@ function DHConstruction.EConstructionError GetPositionError()
     // mechanism might be a bad idea.
     foreach CollidingActors(class'DHConstruction', C, class'DHUnits'.static.MetersToUnreal(25.0))
     {
-        if (VSize(Location - C.Location) < ConstructionClass.default.CollisionRadius + C.default.CollisionRadius)
+        C.GetCollisionSize(C.GetTeamIndex(), PlayerOwner.ClientLevelInfo, OtherRadius, OtherHeight);
+
+        if (VSize(Location - C.Location) < CollisionRadius + OtherRadius)
         {
             return ERROR_NoRoom;
         }

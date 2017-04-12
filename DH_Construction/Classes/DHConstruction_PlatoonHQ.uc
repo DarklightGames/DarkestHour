@@ -5,7 +5,33 @@
 
 class DHConstruction_PlatoonHQ extends DHConstruction;
 
+#exec OBJ LOAD FILE=
+
 var DHSpawnPointBase    SpawnPoint;
+var ROSoundAttachment   SoundAttachment;
+
+var sound               RainSound;
+
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    if (Level.NetMode < NM_DedicatedServer)
+    {
+        SoundAttachment = Spawn(class'ROSoundAttachment');
+
+        if (SoundAttachment != none)
+        {
+            SoundAttachment.SetBase(self);
+            SoundAttachment.SetRelativeLocation(vect(0, 0, 250));
+            SoundAttachment.AmbientSound = RainSound;
+            SoundAttachment.SoundVolume = 100;
+            SoundAttachment.SoundRadius = 100;
+            SoundAttachment.TransientSoundRadius=100;
+            SoundAttachment.TransientSoundVolume=100;
+        }
+    }
+}
 
 state Constructed
 {
@@ -63,6 +89,11 @@ event Destroyed()
     {
         SpawnPoint.Destroy();
     }
+
+    if (SoundAttachment != none)
+    {
+        SoundAttachment.Destroy();
+    }
 }
 
 defaultproperties
@@ -85,4 +116,6 @@ defaultproperties
     // Collision
     CollisionHeight=120
     CollisionRadius=300
+
+    RainSound=Sound'Amb_Weather01.Rain.Krasnyi_Rain_Inside_Heavy'
 }

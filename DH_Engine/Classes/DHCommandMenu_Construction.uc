@@ -29,7 +29,8 @@ function Setup()
     // with handling null values during iteration.
     for (i = 0; i < arraycount(GRI.ConstructionClasses); ++i)
     {
-        if (GRI.ConstructionClasses[i] != none)
+        if (GRI.ConstructionClasses[i] != none &&
+            GRI.ConstructionClasses[i].static.CanPlayerBuild(PC))
         {
             ConstructionClasses[ConstructionClasses.Length] = GRI.ConstructionClasses[i];
         }
@@ -46,6 +47,10 @@ function Setup()
             Options[j].Material = ConstructionClasses[i].static.GetMenuIcon(PC);
             ++j;
         }
+
+        Log(ConstructionClasses.Length);
+        Log(i);
+        Log(ConstructionClasses.Length - i);
 
         if (ConstructionClasses.Length - i > 1)
         {

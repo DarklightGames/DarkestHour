@@ -43,12 +43,13 @@ var     float   GroundSlopeMaxInDegrees;
 var     rotator StartRotationMin;
 var     rotator StartRotationMax;
 var     int     LocalRotationRate;
+var     vector  PlacementOffset;
 
 var     sound   PlacementSound;
 var     float   PlacementSoundRadius;
 var     float   PlacementSoundVolume;
 
-var     float   FloatToleranceInMeters;
+var     float   FloatToleranceInMeters;         // The distance the construction is allowed to "float" off of the ground at any given point along it's circumfrence
 var     float   DuplicateDistanceInMeters;      // The distance required between identical constructions of the same type
 var     class<Emitter> PlacementEmitterClass;
 
@@ -58,8 +59,8 @@ var     bool    bDestroyOnConstruction;         // If true, this actor will be d
 var     int     Progress;                       // The current count of progress.
 var     int     ProgressMax;                    // The amount of construction points required to be built.
 
-// Destruction
-var     int     DestroyedLifespan;          // How long does the actor stay around after it's been destroyed?
+// Death
+var     int     DeadLifespan;                   // How long does the actor stay around after it's been killed?
 
 // Damage
 var private int     Health;
@@ -68,6 +69,9 @@ var     int         HealthMax;
 // Menu
 var     localized string    MenuName;
 var     localized Material  MenuIcon;
+
+// Level Info
+var DH_LevelInfo LevelInfo;
 
 // Staging
 struct Stage
@@ -103,8 +107,6 @@ final simulated function int GetTeamIndex()
 final function SetTeamIndex(int TeamIndex)
 {
     self.TeamIndex = TeamIndex;
-
-    SetStaticMesh(GetStaticMesh(TeamIndex, StageIndex));
     OnTeamIndexChanged();
 }
 
@@ -122,11 +124,28 @@ function ServerIncrementProgress()
 
 simulated function PostBeginPlay()
 {
+    local DH_LevelInfo LI;
+
     super.PostBeginPlay();
 
-    SetTeamIndex(int(TeamOwner));
+    if (Role == ROLE_Authority)
+    {
+        Log("FINDING LEVEL INFO");
 
-    Health = HealthMax;
+        foreach AllActors(class'DH_LevelInfo', LI)
+        {
+            LOG("FOUND LEVEL INFO");
+            LevelInfo = LI;
+            break;
+        }
+
+        Log("LEVELINFO IS" @ LevelInfo);
+        LOG("SETTING TEAM INDEX");
+
+        SetTeamIndex(int(TeamOwner));
+
+        Health = HealthMax;
+    }
 }
 
 auto simulated state Constructing
@@ -147,18 +166,14 @@ auto simulated state Constructing
         }
         else
         {
-            Log("Finding stage." @ Progress @ ProgressMax);
-
             for (i = Stages.Length - 1; i >= 0; --i)
             {
                 if (Progress >= Stages[i].Progress && StageIndex != i)
                 {
-                    Log("found stage" @ i);
-
                     OldStageIndex = StageIndex;
                     StageIndex = i;
                     OnStageIndexChanged(OldStageIndex);
-                    SetStaticMesh(GetStaticMesh(TeamIndex, StageIndex));
+                    UpdateAppearance();
                     NetUpdateTime = Level.TimeSeconds - 1.0;
                     break;
                 }
@@ -206,10 +221,17 @@ Begin:
         }
         else
         {
-            SetStaticMesh(GetStaticMesh(TeamIndex, -1));
+            UpdateAppearance();
             NetUpdateTime = Level.TimeSeconds - 1.0;
         }
     }
+}
+
+simulated state Dead
+{
+Begin:
+    // TODO: set SM to destroyed SM
+    Lifespan = DeadLifespan;
 }
 
 event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
@@ -219,16 +241,16 @@ event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Mo
     OnHealthChanged();
 }
 
-function static StaticMesh GetStaticMesh(int TeamIndex, int StageIndex)
+function UpdateAppearance()
 {
     if (StageIndex < 0 || StageIndex >= default.Stages.Length)
     {
-        return default.StaticMesh;
+        SetStaticMesh(default.StaticMesh);
     }
-
-    Log("GetStaticMesh" @ StageIndex @ default.Stages[StageIndex].StaticMesh);
-
-    return default.Stages[StageIndex].StaticMesh;
+    else
+    {
+        SetStaticMesh(default.Stages[StageIndex].StaticMesh);
+    }
 }
 
 function static string GetMenuName(DHPlayer PC)
@@ -243,13 +265,49 @@ function static Material GetMenuIcon(DHPlayer PC)
 
 simulated function bool CanBeBuilt()
 {
-    // TODO: this probably needs something else
     return IsInState('Constructing');
+}
+
+function static GetCollisionSize(int TeamIndex, DH_LevelInfo LI, out float NewRadius, out float NewHeight)
+{
+    NewRadius = default.CollisionRadius;
+    NewHeight = default.CollisionHeight;
+}
+
+// This function is used for determining if a player is able to build this type
+// of construction. You can override this if you want to have a team or
+// role-specific constructions, for example.
+function static bool CanPlayerBuild(DHPlayer PC)
+{
+    return true;
 }
 
 function Reset()
 {
     Destroy();
+}
+
+// Override to set a new proxy appearance if you require something more
+// complex than a simple static mesh.
+function static UpdateProxy(DHConstructionProxy CP)
+{
+    local int i;
+    local array<Material> StaticMeshSkins;
+
+    CP.SetDrawType(DT_StaticMesh);
+    CP.SetStaticMesh(default.StaticMesh);
+
+    StaticMeshSkins = (new class'UStaticMesh').FindStaticMeshSkins(CP.StaticMesh);
+
+    for (i = 0; i < StaticMeshSkins.Length; ++i)
+    {
+        CP.Skins[i] = CP.CreateProxyMaterial(StaticMeshSkins[i]);
+    }
+}
+
+function static vector GetPlacementOffset()
+{
+    return default.PlacementOffset;
 }
 
 defaultproperties
@@ -299,12 +357,14 @@ defaultproperties
 
     LocalRotationRate=32768
 
-    // Destruction
-    DestroyedLifespan=15.0
+    // Death
+    DeadLifespan=15.0
 
     // Progress
     StageIndex=-1
     Progress=0
     ProgressMax=8
+
+    TeamIndex=NEUTRAL_TEAM_INDEX
 }
 

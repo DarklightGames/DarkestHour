@@ -78,7 +78,6 @@ state Building
         {
             Construction.ServerIncrementProgress();
         }
-        // TODO: add health to the construction?
     }
 
     function Timer()

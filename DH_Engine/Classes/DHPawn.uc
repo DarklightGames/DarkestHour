@@ -6015,12 +6015,12 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vecto
 {
     local DHConstruction C; // TODO: run some sort of thing that attempts to actually *create* the actor, for now
 
-    C = Spawn(ConstructionClass, self,, L, R);
+    C = Spawn(ConstructionClass, Controller,, L, R);
 
     if (C != none)
     {
         C.SetTeamIndex(GetTeamNum());
-        C.SetStaticMesh(ConstructionClass.default.StaticMesh);
+        C.UpdateAppearance();
         C.SetCollisionSize(0.0, 0.0);
     }
 }

@@ -47,17 +47,17 @@ event Destroyed()
     }
 }
 
-function static StaticMesh GetStaticMesh(int TeamIndex, int StageIndex)
+function UpdateAppearance()
 {
-    switch (TeamIndex)
+    switch (GetTeamIndex())
     {
         case AXIS_TEAM_INDEX:
-            return StaticMesh'DH_Construction_stc.Ammo.DH_Ger_ammo_box';
+            SetStaticMesh(StaticMesh'DH_Construction_stc.Ammo.DH_Ger_ammo_box');
+            break;
         case ALLIES_TEAM_INDEX:
-            return StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box';
+            SetStaticMesh(StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box');
+            break;
     }
-
-    return super.GetStaticMesh(TeamIndex, StageIndex);
 }
 
 defaultproperties

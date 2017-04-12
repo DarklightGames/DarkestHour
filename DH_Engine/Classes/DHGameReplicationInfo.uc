@@ -61,10 +61,10 @@ var int                 SpawnsRemaining[2];
 var float               AttritionRate[2];
 var float               CurrentAlliedToAxisRatio;
 
-// Vehicle pool and spawn point info is heavily fragmented due to the arbitrary variable size limit (255 bytes) that exists in UnrealScript
+// NOTE: Vehicle pool and spawn point info is heavily fragmented due to the arbitrary variable size limit (255 bytes) that exists in UnrealScript
 const VEHICLE_POOLS_MAX = 32;
 
-//TODO: vehicle classes should have been made available in static data for client and server to read
+// TODO: vehicle classes should have been made available in static data for client and server to read
 var class<ROVehicle>    VehiclePoolVehicleClasses[VEHICLE_POOLS_MAX];
 var byte                VehiclePoolIsActives[VEHICLE_POOLS_MAX];
 var float               VehiclePoolNextAvailableTimes[VEHICLE_POOLS_MAX];
@@ -95,6 +95,7 @@ var localized string    DeathPenaltyText;
 
 const CONSTRUCTION_CLASSES_MAX = 32;
 
+var private array<string>   ConstructionClassNames;
 var class<DHConstruction>   ConstructionClasses[CONSTRUCTION_CLASSES_MAX];
 
 replication
@@ -144,7 +145,6 @@ replication
 // Another problem is a big splash effect was being played for every ejected bullet shell case that hit water, looking totally wrong for such a small, relatively slow object
 simulated function PostBeginPlay()
 {
-    local DHSpawnPoint     SP;
     local WaterVolume      WV;
     local FluidSurfaceInfo FSI;
     local int              i;
@@ -167,8 +167,34 @@ simulated function PostBeginPlay()
     foreach AllActors(class'FluidSurfaceInfo', FSI)
     {
         FSI.TouchEffect = none;
-        FSI.TouchEffect = none;
     }
+
+    for (i = 0; i < ConstructionClassNames.Length; ++i)
+    {
+        Log(ConstructionClassNames[i]);
+        Log(DynamicLoadObject(ConstructionClassNames[i], class'class'));
+
+        AddConstructionClass(class<DHConstruction>(DynamicLoadObject(ConstructionClassNames[i], class'class')));
+    }
+}
+
+function int AddConstructionClass(class<DHConstruction> ConstructionClass)
+{
+    local int i;
+
+    if (ConstructionClass != none)
+    {
+        for (i = 0; i < arraycount(ConstructionClasses); ++i)
+        {
+            if (ConstructionClasses[i] == none)
+            {
+                ConstructionClasses[i] = ConstructionClass;
+                return i;
+            }
+        }
+    }
+
+    return -1;
 }
 
 //------------------------------------------------------------------------------
@@ -760,9 +786,11 @@ defaultproperties
     ForceScaleText="Size"
     ReinforcementsInfiniteText="Infinite"
     DeathPenaltyText="Death Penalty"
-    ConstructionClasses(0)=class'DH_Engine.DHConstruction_ConcertinaWire'
-    ConstructionClasses(1)=class'DH_Engine.DHConstruction_Hedgehog'
-    ConstructionClasses(2)=class'DH_Engine.DHConstruction_PlatoonHQ'
-    ConstructionClasses(3)=class'DH_Engine.DHConstruction_Resupply'
-    ConstructionClasses(4)=class'DH_Engine.DHConstruction_Sandbags'
+    ConstructionClassNames(0)="DH_Constructions.DHConstruction_ConcertinaWire"
+    ConstructionClassNames(1)="DH_Constructions.DHConstruction_Hedgehog"
+    ConstructionClassNames(2)="DH_Constructions.DHConstruction_PlatoonHQ"
+    ConstructionClassNames(3)="DH_Constructions.DHConstruction_Resupply"
+    ConstructionClassNames(4)="DH_Constructions.DHConstruction_Sandbags"
+    ConstructionClassNames(5)="DH_Constructions.DHConstruction_ATGun_Medium"
 }
+
