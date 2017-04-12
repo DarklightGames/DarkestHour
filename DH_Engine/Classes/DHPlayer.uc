@@ -1972,7 +1972,7 @@ function bool CanRestartPlayer()
     {
         return false;
     }
-    else if (DHGRI.ElapsedTime < NextSpawnTime)
+    else if (DHGRI.ElapsedTime < NextSpawnTime || DHGRI.ElapsedTime < DHGRI.SpawningEnableTime)
     {
         return false;
     }

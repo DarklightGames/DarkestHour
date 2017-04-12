@@ -23,6 +23,7 @@ var() bool              bResetRoundTimer;                   // If true will rese
 var() TeamReinf         PhaseEndReinforcements;             // What to set reinforcements to at the end of the phase (0 means no change, -1 set to zero)
 var() bool              bPreventTimeChangeAtZeroReinf;      // bTimeChangesAtZeroReinf will be set to false for this match
 var() int               SpawningEnabledTime;                // Round time at which players can spawn
+var() sound             PhaseEndSound;
 
 var int                 TimerCount;
 var int                 SetupPhaseDurationActual;
@@ -88,10 +89,7 @@ state Timing
             return;
         }
 
-        if (SpawningEnabledTime > 0)
-        {
-            EnablePlayerSpawning(false);
-        }
+        GRI.SpawningEnableTime = SpawningEnabledTimeActual;
 
         SetTimer(1.0, true);
     }
@@ -116,13 +114,6 @@ state Timing
                         s = Repl(PhaseMessage, "{0}", SetupPhaseDurationActual - TimerCount);
                         PC.ClientMessage(s,'CriticalEvent');
                     }
-                }
-
-                // Determine if we should allow spawning yet
-                if (!bPlayersCanNowSpawn && SpawningEnabledTime > 0 && TimerCount >= SpawningEnabledTimeActual)
-                {
-                    EnablePlayerSpawning(true);
-                    bPlayersCanNowSpawn = true;
                 }
             }
 
@@ -221,7 +212,7 @@ state Timing
             }
         }
 
-        // Set the end message out
+        // Announce the end of the phase
         for (C = Level.ControllerList; C != none; C = C.NextController)
         {
             PC = PlayerController(C);
@@ -229,44 +220,12 @@ state Timing
             if (PC != none)
             {
                 PC.ClientMessage(PhaseEndMessage,'CriticalEvent');
+                PC.PlayAnnouncement(PhaseEndSound, 1, true);
             }
         }
 
         GotoState('Done');
     }
-
-    function EnablePlayerSpawning(bool bCanSpawn)
-    {
-        local Controller C;
-        local DHPlayer DHP;
-        local DarkestHourGame G;
-        local DHGameReplicationInfo GRI;
-
-        G = DarkestHourGame(Level.Game);
-
-        if (G == none)
-        {
-            return;
-        }
-
-        GRI = DHGameReplicationInfo(G.GameReplicationInfo);
-
-        if (GRI == none)
-        {
-            return;
-        }
-
-        for (C = Level.ControllerList; C != none; C = C.NextController)
-        {
-            DHP = DHPlayer(C);
-
-            if (DHP != none)
-            {
-                DHP.bCanRespawn = bCanSpawn;
-            }
-        }
-    }
-
 }
 
 state Done
@@ -275,6 +234,7 @@ state Done
 
 defaultproperties
 {
+    PhaseEndSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01''
     PhaseMessage="Round Begins In: {0} seconds"
     PhaseEndMessage="Round Has Started!"
     bReplacePreStart=true

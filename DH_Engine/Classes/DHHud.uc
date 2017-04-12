@@ -48,7 +48,7 @@ var     localized string    AndMoreText;
 var     localized string    LegendCarriedArtilleryRadioText;
 var     localized string    TimeElapsedText;
 var     localized string    JoinTeamText;
-var     localized string    SpawningWillEnableShortlyText;
+var     localized string    NotReadyToSpawnText;
 var     localized string    SelectSpawnPointText;
 var     localized string    SpawnInfantryText;
 var     localized string    SpawnVehicleText;
@@ -4465,9 +4465,10 @@ simulated function DrawSpectatingHud(Canvas C)
                 switch (PC.ClientLevelInfo.SpawnMode)
                 {
                     case ESM_DarkestHour:
-                        if (!PC.bCanRespawn)
+                        if (DHGRI.SpawningEnableTime - DHGRI.ElapsedTime > 0)
                         {
-                            s = default.SpawningWillEnableShortlyText;
+                            s = default.NotReadyToSpawnText;
+                            s = Repl(s, "{s}", DHGRI.SpawningEnableTime - DHGRI.ElapsedTime);
                             bShouldFlashText = true;
                         }
                         else if (PC.VehiclePoolIndex != -1 && PC.SpawnPointIndex != -1)
@@ -5217,7 +5218,7 @@ defaultproperties
     SpawnNoRoleText="You will deploy in {2} | Press [ESC] to change"
     ReinforcementsDepletedText="Reinforcements depleted!"
     DeathPenaltyText="Death Penalty Count: {0} (+{1} second respawn time)"
-    SpawningWillEnableShortlyText="Spawning will enable shortly"
+    NotReadyToSpawnText="Spawning will enable in {s} seconds (Use this time to organize squads and plan)"
 
     // Screen indicator icons
     PlayerNameIconMaterial=material'DH_InterfaceArt_tex.HUD.player_icon_world'

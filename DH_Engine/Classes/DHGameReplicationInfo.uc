@@ -35,6 +35,7 @@ var int                 AlliesVictoryMusicIndex;
 var int                 AxisVictoryMusicIndex;
 
 var int                 RoundEndTime;  // Length of a round in seconds (this can be modified at real time unlike RoundDuration, which it replaces)
+var int                 SpawningEnableTime; // When spawning for the round should be enabled (default: 0)
 
 const ROLES_MAX = 16;
 
@@ -134,6 +135,7 @@ replication
         CurrentAlliedToAxisRatio,
         TeamVehicleCounts,
         SpawnPoints,
+        SpawningEnableTime,
         ConstructionClasses;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))
