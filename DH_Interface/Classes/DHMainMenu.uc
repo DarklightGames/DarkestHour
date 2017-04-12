@@ -423,6 +423,8 @@ function GetQuickPlayIp()
 
 defaultproperties
 {
+    // If you see this you can remove this comment
+
     // IP variables
     QuickPlayString="Quick Join"
     JoinTestServerString="Join Test Server"
