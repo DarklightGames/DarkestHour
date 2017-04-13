@@ -5,32 +5,14 @@
 
 class DHConstruction_PlatoonHQ extends DHConstruction;
 
-#exec OBJ LOAD FILE=
-
 var DHSpawnPointBase    SpawnPoint;
-var ROSoundAttachment   SoundAttachment;
+var ROSoundAttachment   RainSoundAttachment;
 
 var sound               RainSound;
 
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
-
-    if (Level.NetMode < NM_DedicatedServer)
-    {
-        SoundAttachment = Spawn(class'ROSoundAttachment');
-
-        if (SoundAttachment != none)
-        {
-            SoundAttachment.SetBase(self);
-            SoundAttachment.SetRelativeLocation(vect(0, 0, 250));
-            SoundAttachment.AmbientSound = RainSound;
-            SoundAttachment.SoundVolume = 100;
-            SoundAttachment.SoundRadius = 100;
-            SoundAttachment.TransientSoundRadius=100;
-            SoundAttachment.TransientSoundVolume=100;
-        }
-    }
 }
 
 state Constructed
@@ -40,6 +22,30 @@ state Constructed
         super.BeginState();
 
         SetTimer(1.0, true);
+
+        if (Level.NetMode < NM_DedicatedServer)
+        {
+            if (RainSoundAttachment != none)
+            {
+                RainSoundAttachment.Destroy();
+            }
+
+            if (LevelInfo != none && LevelInfo.Weather == WEATHER_Rainy)
+            {
+                RainSoundAttachment = Spawn(class'ROSoundAttachment');
+
+                if (RainSoundAttachment != none)
+                {
+                    RainSoundAttachment.SetBase(self);
+                    RainSoundAttachment.SetRelativeLocation(vect(0, 0, 250));
+                    RainSoundAttachment.AmbientSound = RainSound;
+                    RainSoundAttachment.SoundVolume = 100;
+                    RainSoundAttachment.SoundRadius = 100;
+                    RainSoundAttachment.TransientSoundRadius=100;
+                    RainSoundAttachment.TransientSoundVolume=100;
+                }
+            }
+        }
     }
 
     function Timer()
@@ -74,10 +80,6 @@ function OnConstructed()
         HitLocation.Z += class'DHPawn'.default.CollisionHeight / 2;
 
         SpawnPoint.SetLocation(HitLocation);
-
-        // TODO: do a spawn test to make sure we can even do this crap?!
-//        SpawnPoint.SetBase(self);
-//        SpawnPoint.SetRelativeLocation(class'DHPawn'.default.CollisionHeight * vect(0, 0, 1));
         SpawnPoint.TeamIndex = GetTeamIndex();
         SpawnPoint.SetIsActive(true);
     }
@@ -90,9 +92,9 @@ event Destroyed()
         SpawnPoint.Destroy();
     }
 
-    if (SoundAttachment != none)
+    if (RainSoundAttachment != none)
     {
-        SoundAttachment.Destroy();
+        RainSoundAttachment.Destroy();
     }
 }
 
