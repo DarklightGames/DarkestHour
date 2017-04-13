@@ -14,4 +14,6 @@ defaultproperties
     InitialPrimaryAmmo=42
     InitialSecondaryAmmo=25
     InitialTertiaryAmmo=4
+    SecondarySpread=0.00135
+    TertiarySpread=0.0036
 }
