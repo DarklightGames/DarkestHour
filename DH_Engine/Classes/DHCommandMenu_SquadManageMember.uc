@@ -67,13 +67,16 @@ function OnSelect(int OptionIndex, vector Location)
         {
             switch (OptionIndex)
             {
-                case 0: // Kick
+                case 0: // Invite
+                    PC.ServerSquadInvite(OtherPRI);
+                    break;
+                case 1: // Kick
                     PC.ServerSquadKick(OtherPRI);
                     break;
-                case 1: // Promote to leader
+                case 2: // Promote to leader
                     PC.ServerSquadPromote(OtherPRI);
                     break;
-                case 2: // Ban
+                case 3: // Ban
                     // TODO: we don't have banning yet!
                     break;
                 default:
@@ -83,6 +86,49 @@ function OnSelect(int OptionIndex, vector Location)
     }
 
     Interaction.Hide();
+}
+
+function bool IsOptionDisabled(int OptionIndex)
+{
+    local DHPlayer PC;
+    local DHPlayerReplicationInfo PRI, OtherPRI;
+    local Pawn P;
+
+    if (Interaction == none || Interaction.ViewportOwner == none || OptionIndex < 0 || OptionIndex >= Options.Length)
+    {
+        return true;
+    }
+
+    PC = DHPlayer(Interaction.ViewportOwner.Actor);
+
+    if (PC != none)
+    {
+        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+    }
+
+    P = Pawn(MenuObject);
+
+    if (P != none)
+    {
+        OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+    }
+
+    if (OtherPRI == none)
+    {
+        return true;
+    }
+
+    switch (OptionIndex)
+    {
+        case 0: // Invite
+            return OtherPRI.IsInSquad();
+        case 1: // Kick from squad
+        case 2: // Promote to squad leader
+        case 3: // Ban from squad
+            return !OtherPRI.IsInSameSquad(PRI, OtherPRI);
+        default:
+            return true;
+    }
 }
 
 function GetOptionText(int OptionIndex, out string ActionText, out string SubjectText)
@@ -107,8 +153,9 @@ function GetOptionText(int OptionIndex, out string ActionText, out string Subjec
 
 defaultproperties
 {
-    Options(0)=(ActionText="Kick from squad",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
-    Options(1)=(ActionText="Promote to squad leader",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
-    Options(2)=(ActionText="Ban from squad",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
+    Options(0)=(ActionText="Invite to squad",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
+    Options(1)=(ActionText="Kick from squad",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
+    Options(2)=(ActionText="Promote to squad leader",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
+    Options(3)=(ActionText="Ban from squad",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
 }
 

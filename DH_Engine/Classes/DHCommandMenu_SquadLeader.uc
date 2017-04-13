@@ -16,8 +16,6 @@ function OnSelect(int Index, vector Location)
 
     PC = DHPlayer(Interaction.ViewportOwner.Actor);
 
-    // TODO: possibly move speech commands out of the menu, since it's not
-    // really it's responsbility.
     switch (Index)
     {
         case 0: // Fire
@@ -29,7 +27,6 @@ function OnSelect(int Index, vector Location)
             {
                 PC.ConsoleCommand("SPEECH ALERT 6");
             }
-
             PC.ServerSquadSignal(SIGNAL_Fire, Location);
             break;
         case 1: // Create rally point
@@ -42,11 +39,34 @@ function OnSelect(int Index, vector Location)
             PC.ConsoleCommand("SPEECH ALERT 1");
             PC.ServerSquadSignal(SIGNAL_Move, Location);
             break;
+        case 4:
+            Interaction.PushMenu("DH_Engine.DHCommandMenu_SquadManageMember", MenuObject);
+            return;
         default:
             break;
     }
 
     Interaction.Hide();
+}
+
+function GetOptionText(int OptionIndex, out string ActionText, out string SubjectText)
+{
+    local DHPawn OtherPawn;
+
+    OtherPawn = DHPawn(MenuObject);
+
+    super.GetOptionText(OptionIndex, ActionText, SubjectText);
+
+    switch (OptionIndex)
+    {
+        case 4:
+            if (OtherPawn != none && OtherPawn.PlayerReplicationInfo != none)
+            {
+                SubjectText = OtherPawn.PlayerReplicationInfo.PlayerName;
+            }
+        default:
+            break;
+    }
 }
 
 function bool IsOptionDisabled(int OptionIndex)
@@ -58,7 +78,9 @@ function bool IsOptionDisabled(int OptionIndex)
     switch (OptionIndex)
     {
     case 2:
-        return PC == none || PC.Pawn == none || !PC.Pawn.IsA('DHPawn');
+        return PC == none || DHPawn(PC.Pawn) == none;
+    case 4:
+        return PC == none || DHPawn(MenuObject) == none || DHPawn(MenuObject).Health <= 0 || PC.GetTeamNum() != DHPawn(MenuObject).GetTeamNum();
     default:
         return false;
     }
@@ -70,4 +92,5 @@ defaultproperties
     Options(1)=(ActionText="Create Rally Point",Material=Material'DH_InterfaceArt_tex.HUD.squad_order_attack')
     Options(2)=(ActionText="Construction",Material=Material'DH_InterfaceArt_tex.HUD.squad_order_defend',Type=TYPE_Submenu)
     Options(3)=(ActionText="Move",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_move')
+    Options(4)=(ActionText="...",Type=TYPE_Submenu)
 }

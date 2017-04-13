@@ -4761,32 +4761,28 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
         return false;
     }
 
-    if (PRI.IsSquadLeader())
+    if (PRI.IsInSquad())
     {
-        // Trace out into the world and find a pawn we are looking at.
-        TraceStart = Pawn.Location + Pawn.EyePosition();
-        TraceEnd = TraceStart + (GetMaxViewDistance() * vector(Rotation));
-        OtherPawn = DHPawn(Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true));
-
-        if (OtherPawn != none && OtherPawn.GetTeamNum() == GetTeamNum())
+        if (PRI.IsSquadLeader())
         {
-            OtherPRI = DHPlayerReplicationInfo(OtherPawn.PlayerReplicationInfo);
+            // Trace out into the world and find a pawn we are looking at.
+            TraceStart = Pawn.Location + Pawn.EyePosition();
+            TraceEnd = TraceStart + (GetMaxViewDistance() * vector(Rotation));
+            OtherPawn = DHPawn(Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true));
 
-            MenuObject = OtherPawn;
-
-            if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, OtherPRI))
+            if (OtherPawn != none && OtherPawn.GetTeamNum() == GetTeamNum())
             {
-                MenuClassName = "DH_Engine.DHCommandMenu_SquadManageMember";
-            }
-            else
-            {
-                MenuClassName = "DH_Engine.DHCommandMenu_SquadManageNonMember";
+                OtherPRI = DHPlayerReplicationInfo(OtherPawn.PlayerReplicationInfo);
+                MenuObject = OtherPawn;
             }
 
-            return true;
+            MenuClassName = "DH_Engine.DHCommandMenu_SquadLeader";
         }
-
-        MenuClassName = "DH_Engine.DHCommandMenu_SquadLeader";
+        else
+        {
+            // TODO: some menu for someone i dunno
+            return false;
+        }
     }
     else
     {
