@@ -1891,7 +1891,7 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                 ModifyReinforcements(DHKilled.GetTeamNum(), 1, false, true);
 
                 // Punish killer for spawn killing if the killed wasn't a combat spawn by incrementing his WeaponLockViolations & reducing his score
-                if (!DHKilled.IsCombatSpawned())
+                if (!DHPawn(KilledPawn).IsCombatSpawned())
                 {
                     DHKiller.WeaponLockViolations++;
                     DHKiller.LockWeapons(WeaponLockTimes[Min(DHKiller.WeaponLockViolations, arraycount(WeaponLockTimes) - 1)]); // TODO: probably add 1 second as we are 'mid second' in game time
