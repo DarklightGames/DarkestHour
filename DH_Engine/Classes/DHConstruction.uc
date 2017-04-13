@@ -243,13 +243,20 @@ event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Mo
 
 function UpdateAppearance()
 {
-    if (StageIndex < 0 || StageIndex >= default.Stages.Length)
+    if (IsInState('Constructed'))
     {
         SetStaticMesh(default.StaticMesh);
     }
     else
     {
-        SetStaticMesh(default.Stages[StageIndex].StaticMesh);
+        if (StageIndex < 0 || StageIndex >= default.Stages.Length)
+        {
+            SetStaticMesh(default.StaticMesh);
+        }
+        else
+        {
+            SetStaticMesh(default.Stages[StageIndex].StaticMesh);
+        }
     }
 }
 
