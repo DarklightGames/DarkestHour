@@ -15,8 +15,10 @@ struct TeamReinf
 var() localized string  PhaseMessage;                       // Message to send periodically when phase is current
 var() localized string  PhaseEndMessage;                    // Message to send to team when end is reached
 var() int               SetupPhaseDuration;                 // How long should the setup phase be in seconds
-var() array<name>       SetupPhaseBoundaryVols;             // Array of minefield volumes to disable once setup phase is over
-var() array<name>       SetupPhaseBoundaryDSMs;             // Array of DestroyableStaticMeshes to disable once phase is over
+
+var() name              PhaseMineFieldTag;                  // Tag of minefield volumes to disable once setup phase is over
+var() name              PhaseBoundaryTag;                   // Tag of DestroyableStaticMeshes to disable once phase is over
+
 var() bool              bScaleStartingReinforcements;       // Scales starting reinforcements to current number of players
 var() bool              bReplacePreStart;                   // If true will override the game's default PreStartTime, making it zero
 var() bool              bResetRoundTimer;                   // If true will reset the round's timer to the proper value when phase is over
@@ -28,7 +30,6 @@ var() sound             PhaseEndSound;
 var int                 TimerCount;
 var int                 SetupPhaseDurationActual;
 var int                 SpawningEnabledTimeActual;
-var bool                bPlayersCanNowSpawn;
 
 event PreBeginPlay()
 {
@@ -56,27 +57,16 @@ event PreBeginPlay()
     SetupPhaseDurationActual = SetupPhaseDuration + 5;
     SpawningEnabledTimeActual = SpawningEnabledTime + 5;
 
-    // Handle other Game setup
-
     super.PreBeginPlay();
 }
 
 function Reset()
 {
-    bPlayersCanNowSpawn = false;
     TimerCount = 0;
-    GotoState('Initialize');
+    //GotoState('Timing');
 }
 
-auto state Initialize
-{
-    function BeginState()
-    {
-        GotoState('Timing');
-    }
-}
-
-state Timing
+auto state Timing
 {
     function BeginState()
     {
@@ -89,6 +79,10 @@ state Timing
             return;
         }
 
+        // Prevent weapon dropping
+        Level.Game.bAllowWeaponThrowing = false;
+
+        // Set the time at which spawning is allowed
         GRI.SpawningEnableTime = SpawningEnabledTimeActual;
 
         SetTimer(1.0, true);
@@ -102,7 +96,7 @@ state Timing
 
         if (TimerCount < SetupPhaseDurationActual)
         {
-            // Set the message out every 5 seconds
+            // Set the message out every x seconds (currently every 1 second)
             if (TimerCount > 0 && TimerCount % 1 == 0)
             {
                 for (C = Level.ControllerList; C != none; C = C.NextController)
@@ -126,7 +120,6 @@ state Timing
 
     function PhaseEnded()
     {
-        local int i;
         local Controller C;
         local PlayerController PC;
         local ROMineVolume V;
@@ -150,66 +143,44 @@ state Timing
             return;
         }
 
-        // Disable phase boundaries (volumes are static)
-        foreach AllActors(class'ROMineVolume', V)
+        // Allow weapon dropping
+        Level.Game.bAllowWeaponThrowing = true;
+
+        // Disable phase minefields (volumes are static so use AllActors)
+        foreach AllActors(class'ROMineVolume', V, PhaseMineFieldTag)
         {
-            for (i = 0; i < SetupPhaseBoundaryVols.Length; ++i)
-            {
-                if (V.Tag == SetupPhaseBoundaryVols[i])
-                {
-                    V.Deactivate();
-                }
-            }
+            V.Deactivate();
         }
 
-        // Disable DSMS
-        foreach AllActors(class'DHDestroyableSM', DSM)
+        // Remove boundary (DSMs are dynamic)
+        foreach DynamicActors(class'DHDestroyableSM', DSM, PhaseBoundaryTag)
         {
-            for (i = 0; i < SetupPhaseBoundaryDSMs.Length; ++i)
-            {
-                if (DSM.Tag == SetupPhaseBoundaryDSMs[i])
-                {
-                    DSM.DestroyDSM(none);
-                }
-            }
+            DSM.DestroyDSM(none);
         }
 
         // Reset round time if desired
         if (bResetRoundTimer)
         {
-            G.ModifyRoundTime(G.LevelInfo.RoundDuration*60, 2);
+            G.ModifyRoundTime(G.LevelInfo.RoundDuration * 60, 2);
         }
 
-        // Reset reinforcements (scaled if true)
+        // Handle Axis reinforcement changes if any
+        if (PhaseEndReinforcements.AxisReinforcements >= 0)
+        {
+            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = PhaseEndReinforcements.AxisReinforcements;
+        }
+
+        // Handle  Allied reinforcement changes if any
+        if (PhaseEndReinforcements.AlliesReinforcements >= 0)
+        {
+            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = PhaseEndReinforcements.AlliesReinforcements;
+        }
+
+        // Now scale the reinforcements if desired
         if (bScaleStartingReinforcements)
         {
             GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = G.LevelInfo.Allies.SpawnLimit * FMax(0.1, (G.NumPlayers / G.MaxPlayers));
             GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = G.LevelInfo.Axis.SpawnLimit * FMax(0.1, (G.NumPlayers / G.MaxPlayers));
-        }
-
-        // Handle phase end reinforcement changes
-        if (PhaseEndReinforcements.AxisReinforcements != 0)
-        {
-            if (PhaseEndReinforcements.AxisReinforcements == -1)
-            {
-                GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = 0;
-            }
-            else
-            {
-                GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = PhaseEndReinforcements.AxisReinforcements;
-            }
-        }
-
-        if (PhaseEndReinforcements.AlliesReinforcements != 0)
-        {
-            if (PhaseEndReinforcements.AlliesReinforcements == -1)
-            {
-                GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = 0;
-            }
-            else
-            {
-                GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = PhaseEndReinforcements.AlliesReinforcements;
-            }
         }
 
         // Announce the end of the phase
@@ -219,7 +190,7 @@ state Timing
 
             if (PC != none)
             {
-                PC.ClientMessage(PhaseEndMessage,'CriticalEvent');
+                PC.ClientMessage(PhaseEndMessage, 'CriticalEvent');
                 PC.PlayAnnouncement(PhaseEndSound, 1, true);
             }
         }
@@ -234,6 +205,7 @@ state Done
 
 defaultproperties
 {
+    PhaseEndReinforcements=(AxisReinforcements=-1,AlliesReinforcements=-1)
     PhaseEndSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01'
     PhaseMessage="Round Begins In: {0} seconds"
     PhaseEndMessage="Round Has Started!"
