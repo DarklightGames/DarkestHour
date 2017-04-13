@@ -9,7 +9,6 @@ defaultproperties
 {
     VehicleNameString="Achilles Mk.IC"
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_AchillesCannonPawn')
-    Mesh=SkeletalMesh'DH_Wolverine_anm.Achilles_body_ext'
     Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Achilles_body_ext'
     Skins(1)=texture'DH_VehiclesUK_tex.ext_vehicles.Achilles_turret_ext'
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.M10.Achilles_dest'
