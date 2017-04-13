@@ -6,13 +6,14 @@
 class DH_ShermanFireflyTank extends DHArmoredVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_ShermanFirefly_anm.ukx
+#exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc.ux
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUK_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
 
 defaultproperties
 {
     // Vehicle properties
-    VehicleNameString="Sherman Mk.VC"
+    VehicleNameString="Sherman Mk.VC 'Firefly'"
     VehicleTeam=1
     VehicleMass=13.5
 
@@ -27,16 +28,16 @@ defaultproperties
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanFireFlyCannonPawn',WeaponBone="Turret_placement")
-    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-120.0,Y=-70.0,Z=35.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
-    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-155.0,Y=-25.0,Z=35.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider4_idle")
-    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-155.0,Y=25.0,Z=35.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")
-    PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-110.0,Y=70.0,Z=35.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider5_idle")
+    PassengerPawns(0)=(AttachBone="Body",DrivePos=(X=-144.0,Y=-68.0,Z=43.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
+    PassengerPawns(1)=(AttachBone="Body",DrivePos=(X=-186.0,Y=-29.0,Z=45.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider4_idle")
+    PassengerPawns(2)=(AttachBone="Body",DrivePos=(X=-186.0,Y=29.0,Z=45.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")
+    PassengerPawns(3)=(AttachBone="Body",DrivePos=(X=-119.0,Y=68.0,Z=46.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider5_idle")
 
     // Driver
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,ViewFOV=90.0,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,ViewFOV=90.0)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true,ViewFOV=90.0)
-    DrivePos=(X=7.0,Y=0.0,Z=11.0)
+    OverlayFPCamPos=(X=10.5,Y=0.0,Z=10.8)
 
     // Hull armor
     FrontArmor(0)=(Thickness=5.08,Slope=-45.0,MaxRelativeHeight=36.0,LocationName="lower nose")
@@ -45,12 +46,12 @@ defaultproperties
     RightArmor(0)=(Thickness=3.81)
     LeftArmor(0)=(Thickness=3.81)
     RearArmor(0)=(Thickness=3.81,Slope=-10.0,MaxRelativeHeight=64.5,LocationName="lower")
-    RearArmor(1)=(Thickness=3.81,Slope=25.0,LocationName="upper")
+    RearArmor(1)=(Thickness=3.81,Slope=20.0,LocationName="upper")
 
-    FrontLeftAngle=335.0
-    FrontRightAngle=25.0
-    RearRightAngle=155.0
-    RearLeftAngle=205.0
+    FrontLeftAngle=330.0
+    FrontRightAngle=30.0
+    RearRightAngle=157.0
+    RearLeftAngle=203.0
 /*
     UFrontArmorFactor=5.1
     URightArmorFactor=3.8
@@ -61,31 +62,35 @@ defaultproperties
 */
     // Movement
     MaxCriticalSpeed=693.0 // 41 kph
+    GearRatios(1)=0.19
     GearRatios(3)=0.62
     GearRatios(4)=0.76
-    TransRatio=0.09
+    TransRatio=0.091
 
     // Damage
-    VehHitpoints(0)=(PointRadius=30.0,PointOffset=(X=-90.0,Z=6.0)) // engine
-    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=75.0,Y=22.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=-55.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(3)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=55.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(4)=(PointRadius=30.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    TreadHitMaxHeight=64.0
+    VehHitpoints(0)=(PointRadius=32.0,PointOffset=(X=-120.0,Y=0.0,Z=5.0)) // engine
+    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="Body",PointOffset=(X=75.0,Y=22.0,Z=0.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="Body",PointOffset=(X=67.0,Y=-55.0,Z=31.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(3)=(PointRadius=20.0,PointScale=1.0,PointBone="Body",PointOffset=(X=67.0,Y=55.0,Z=31.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(4)=(PointRadius=30.0,PointScale=1.0,PointBone="Body",PointOffset=(X=-15.0,Y=0.0,Z=0.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    TreadHitMaxHeight=70.15
+    DamagedTrackStaticMeshLeft=StaticMesh'DH_allies_vehicles_stc.Sherman.Firefly_DamagedTrack_left'
+    DamagedTrackStaticMeshRight=StaticMesh'DH_allies_vehicles_stc.Sherman.Firefly_DamagedTrack_right'
     DamagedEffectScale=0.9
-    DamagedEffectOffset=(X=-113.0,Y=20.0,Z=79.0)
+    DamagedEffectOffset=(X=-80.0,Y=0.0,Z=75.0)
     HullFireChance=0.45
-    FireAttachBone="Player_Driver"
+    FireAttachBone="Body"
+    FireEffectOffset=(X=80.0,Y=-35.0,Z=60.0)
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Firefly_Dest'
 
     // Exit
-    ExitPositions(0)=(X=125.0,Y=-25.0,Z=200.0)  // driver's hatch
-    ExitPositions(1)=(X=0.0,Y=-25.0,Z=225.0)    // commander's hatch
-    ExitPositions(2)=(X=-100.0,Y=-150.0,Z=75.0) // passenger (l)
-    ExitPositions(3)=(X=-250.0,Y=-35.0,Z=75.0)  // passenger (bl)
-    ExitPositions(4)=(X=-250.0,Y=35.0,Z=75.0)   // passenger (br)
-    ExitPositions(5)=(X=-100.0,Y=150.0,Z=75.0)  // passenger (r)
-    ExitPositions(6)=(X=250.0,Y=0.0,Z=75.0)     // front
+    ExitPositions(0)=(X=80.0,Y=-115.0,Z=125.0)   // driver's hatch (exit to side)
+    ExitPositions(1)=(X=-12.0,Y=25.0,Z=235.0)    // commander's hatch
+    ExitPositions(2)=(X=-144.0,Y=-115.0,Z=105.0) // passenger (l)
+    ExitPositions(3)=(X=-230.0,Y=-29.0,Z=105.0)  // passenger (bl)
+    ExitPositions(4)=(X=-230.0,Y=29.0,Z=105.0)   // passenger (br)
+    ExitPositions(5)=(X=-119.0,Y=115.0,Z=105.0)  // passenger (r)
+    ExitPositions(6)=(X=80.0,Y=115.0,Z=125.0)    // co-driver's hatch (a fallback)
 
     // Sounds
     IdleSound=SoundGroup'DH_AlliedVehicleSounds.Sherman.ShermanEngineLoop'
@@ -93,14 +98,14 @@ defaultproperties
     ShutDownSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
     LeftTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_L'
     RightTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_R'
-    RumbleSoundBone="Turret_placement"
     RumbleSound=sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
 
     // Visual effects
     LeftTreadIndex=5
     RightTreadIndex=4
     TreadVelocityScale=250.0
-    ExhaustPipes(0)=(ExhaustPosition=(X=-116.0,Z=35.0),ExhaustRotation=(Pitch=31000,Yaw=-16384))
+    WheelRotationScale=1400
+    ExhaustPipes(0)=(ExhaustPosition=(X=-170.0,Y=0.0,Z=80.0),ExhaustRotation=(Pitch=50972,Yaw=32768))
     LeftLeverBoneName="lever_L"
     RightLeverBoneName="lever_R"
 
@@ -108,47 +113,45 @@ defaultproperties
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.firefly_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.FireFly_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.FireFly_turret_look'
-    VehicleHudEngineX=0.51
-    VehicleHudTreadsPosX(0)=0.34
-    VehicleHudTreadsPosX(1)=0.64
-    VehicleHudTreadsPosY=0.51
-    VehicleHudTreadsScale=0.72
-    VehicleHudOccupantsX(0)=0.43
-    VehicleHudOccupantsX(1)=0.5
-    VehicleHudOccupantsY(1)=0.5
+    VehicleHudTreadsPosX(0)=0.38
+    VehicleHudTreadsPosX(1)=0.62
+    VehicleHudTreadsPosY=0.495
+    VehicleHudTreadsScale=0.67
+    VehicleHudOccupantsX(0)=0.435
+    VehicleHudOccupantsY(0)=0.34
     VehicleHudOccupantsX(2)=0.375
     VehicleHudOccupantsY(2)=0.75
     VehicleHudOccupantsX(3)=0.45
-    VehicleHudOccupantsY(3)=0.8
+    VehicleHudOccupantsY(3)=0.82
     VehicleHudOccupantsX(4)=0.55
-    VehicleHudOccupantsY(4)=0.8
+    VehicleHudOccupantsY(4)=0.82
     VehicleHudOccupantsX(5)=0.625
-    VehicleHudOccupantsY(5)=0.75
+    VehicleHudOccupantsY(5)=0.72
     SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.sherman_firefly'
 
     // Visible wheels
-    LeftWheelBones(0)="Wheel_R_1" // the left & right wheel bones are muddled up in the skeletal mesh !
-    LeftWheelBones(1)="Wheel_R_2"
-    LeftWheelBones(2)="Wheel_R_3"
-    LeftWheelBones(3)="Wheel_R_4"
-    LeftWheelBones(4)="Wheel_R_5"
-    LeftWheelBones(5)="Wheel_R_6"
-    LeftWheelBones(6)="Wheel_R_7"
-    LeftWheelBones(7)="Wheel_R_8"
-    LeftWheelBones(8)="Wheel_R_9"
-    LeftWheelBones(9)="Wheel_R_10"
-    LeftWheelBones(10)="Wheel_R_11"
-    RightWheelBones(0)="Wheel_L_1"
-    RightWheelBones(1)="Wheel_L_2"
-    RightWheelBones(2)="Wheel_L_3"
-    RightWheelBones(3)="Wheel_L_4"
-    RightWheelBones(4)="Wheel_L_5"
-    RightWheelBones(5)="Wheel_L_6"
-    RightWheelBones(6)="Wheel_L_7"
-    RightWheelBones(7)="Wheel_L_8"
-    RightWheelBones(8)="Wheel_L_9"
-    RightWheelBones(9)="Wheel_L_10"
-    RightWheelBones(10)="Wheel_L_11"
+    LeftWheelBones(0)="Wheel_L_1"
+    LeftWheelBones(1)="Wheel_L_2"
+    LeftWheelBones(2)="Wheel_L_3"
+    LeftWheelBones(3)="Wheel_L_4"
+    LeftWheelBones(4)="Wheel_L_5"
+    LeftWheelBones(5)="Wheel_L_6"
+    LeftWheelBones(6)="Wheel_L_7"
+    LeftWheelBones(7)="Wheel_L_8"
+    LeftWheelBones(8)="Wheel_L_9"
+    LeftWheelBones(9)="Wheel_L_10"
+    LeftWheelBones(10)="Wheel_L_11"
+    RightWheelBones(0)="Wheel_R_1"
+    RightWheelBones(1)="Wheel_R_2"
+    RightWheelBones(2)="Wheel_R_3"
+    RightWheelBones(3)="Wheel_R_4"
+    RightWheelBones(4)="Wheel_R_5"
+    RightWheelBones(5)="Wheel_R_6"
+    RightWheelBones(6)="Wheel_R_7"
+    RightWheelBones(7)="Wheel_R_8"
+    RightWheelBones(8)="Wheel_R_9"
+    RightWheelBones(9)="Wheel_R_10"
+    RightWheelBones(10)="Wheel_R_11"
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=LF_Steering
@@ -156,8 +159,7 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="steer_wheel_LF"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=20.0,Z=17.0)
-        WheelRadius=36.0
+        WheelRadius=35.0
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_ShermanFireflyTank.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -165,8 +167,7 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="steer_wheel_RF"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=20.0,Z=17.0)
-        WheelRadius=36.0
+        WheelRadius=35.0
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_ShermanFireflyTank.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
@@ -174,8 +175,7 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer_wheel_LR"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-30.0,Z=17.0)
-        WheelRadius=36.0
+        WheelRadius=35.0
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_ShermanFireflyTank.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -183,24 +183,21 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer_wheel_RR"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-30.0,Z=17.0)
-        WheelRadius=36.0
+        WheelRadius=35.0
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_ShermanFireflyTank.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Z=17.0)
-        WheelRadius=36.0
+        WheelRadius=35.0
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_ShermanFireflyTank.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_R"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Z=17.0)
-        WheelRadius=36.0
+        WheelRadius=35.0
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_ShermanFireflyTank.Right_Drive_Wheel'
 
@@ -209,7 +206,7 @@ defaultproperties
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(Z=0.0) // default is -0.5
+        KCOMOffset=(X=-0.1,Y=0.0,Z=0.0) // default is X=0.0, Z=-0.5
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
