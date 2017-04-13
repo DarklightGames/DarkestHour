@@ -119,7 +119,7 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
     return true;
 }
 
-function bool IsActive()
+simulated function bool IsActive()
 {
     return bIsActive;
 }
