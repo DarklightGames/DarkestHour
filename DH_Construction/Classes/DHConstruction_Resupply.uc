@@ -69,5 +69,6 @@ defaultproperties
     DuplicateDistanceInMeters=100.0
     CollisionRadius=50.0
     CollisionHeight=30.0
+    bCanPlaceIndoors=true
 }
 

@@ -20,7 +20,8 @@ enum EConstructionError
     ERROR_TooClose,         // Too close to an identical construction
     ERROR_InMinefield,      // Cannot be in a minefield!
     ERROR_NearSpawnPoint,   // Cannot be so close to a spawn point (or location hint)
-    ERROR_Other             // ERROR:
+    ERROR_Indoors,          // Cannot be placed indoors
+    ERROR_Other
 };
 
 enum ETeamOwner
@@ -38,6 +39,7 @@ var     float   ProxyDistanceInMeters;      // The distance at which the proxy o
 var     bool    bShouldAlignToGround;
 var     bool    bCanPlaceInWater;
 var     bool    bCanPlaceIndoors;
+var     float   IndoorsCeilingHeightInMeters;
 var     bool    bCanOnlyPlaceOnTerrain;
 var     float   GroundSlopeMaxInDegrees;
 var     rotator StartRotationMin;
@@ -361,6 +363,7 @@ defaultproperties
     PlacementEmitterClass=class'DH_Effects.DHConstructionEffect'
     PlacementSoundRadius=60.0
     PlacementSoundVolume=4.0
+    IndoorsCeilingHeightInMeters=5.0
 
     LocalRotationRate=32768
 

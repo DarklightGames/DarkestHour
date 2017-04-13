@@ -6,20 +6,24 @@
 class DHConstructionProxy extends Actor
     dependson(DHConstruction);
 
+var class<DHConstruction>   ConstructionClass;
+
 var DHConstruction.EConstructionError   ProxyError;
 
 var DHPawn                  PawnOwner;
 var DHPlayer                PlayerOwner;
-var class<DHConstruction>   ConstructionClass;
 
-var Material                GreenMaterial;
-var Material                RedMaterial;
-
+// Rotation
 var rotator                 LocalRotation;
 var rotator                 LocalRotationRate;
 
-var DHConstructionProxyProjector Projector;
-var array<DHConstructionProxyAttachment> Attachments;
+var Actor                   Surface;
+
+// Projector
+var DHConstructionProxyProjector            Projector;
+
+// Attachments
+var array<DHConstructionProxyAttachment>    Attachments;
 
 function PostBeginPlay()
 {
@@ -222,7 +226,8 @@ function Tick(float DeltaTime)
     LocalRotation += (LocalRotationRate * DeltaTime);
 
     // TODO: Combine getprovisionallocation and getpositionerror into one
-    // function able to be run on the client and the server independently
+    // function able to be run on the client and the server independently!
+
     // An error may be thrown when determining the location, so store it here.
     NewProxyError = GetProvisionalPosition(L, R);
 
@@ -258,10 +263,10 @@ function Tick(float DeltaTime)
 // This function gets the provisional location and rotation of the construction.
 function DHConstruction.EConstructionError GetProvisionalPosition(out vector OutLocation, out rotator OutRotation)
 {
-    local vector TraceStart, TraceEnd, HitLocation, HitNormal, Left, Forward, X, Y, Z, HitNormalSum, BaseLocation;
+    local vector TraceStart, TraceEnd, HitLocation, HitNormal, Left, Forward, X, Y, Z, HitNormalSum, BaseLocation, CeilingHitLocation, CeilingHitNormal;
     local Actor TempHitActor, HitActor;
     local rotator R;
-    local float GroundSlopeDegrees, AngleRadians;
+    local float GroundSlopeDegrees, AngleRadians, SquareLength;
     local DHConstruction.EConstructionError Error;
     local int i;
 
@@ -288,7 +293,7 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
         // We didn't hit anything, trace down to the ground in hopes of finding
         // something solid to rest on
         TraceStart = TraceEnd;
-        TraceEnd = TraceStart + vect(0, 0, -16384); // TODO: get rid of magic number
+        TraceEnd = TraceStart + vect(0, 0, -1) * class'DHUnits'.static.MetersToUnreal(2.0);; // TODO: get rid of magic number
 
         foreach TraceActors(class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
         {
@@ -416,6 +421,54 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
     OutLocation = BaseLocation + (ConstructionClass.static.GetPlacementOffset() << rotator(Forward));
     OutRotation = QuatToRotator(QuatProduct(QuatFromRotator(LocalRotation), QuatFromRotator(rotator(Forward))));
 
+    if (Error == ERROR_None && !ConstructionClass.default.bCanPlaceIndoors)
+    {
+        // Knowing whether or not we are "indoors" is somewhat subjective,
+        // therefore, any attempt to systemize will not be 100% correct to all
+        // people all the time.
+        //
+        // The primary reason for classifying constructions as being unable to
+        // be built inside is to stop players from blocking tight entrances and
+        // walkways (eg. stairs, hallways, doors etc.)
+        //
+        // Most of these tight spaces are inside of buildings, where BSP and
+        // static meshes are likely to be on the floor. It's also true that most
+        // of these spaces have a fairly low roof. Therefore, we hit on the
+        // following solution.
+        //
+        // A construction is deemed "inside" if both of these are true:
+        // 1. The floor below it is BSP or static mesh.
+        // 2. The space above it is obstructed with static geometry.
+        //
+        // This will work perfectly fine for the vast majority of cases. Some
+        // cases where this logic could produce incorrect results include:
+        // 1. On a bridge with low metal girders. [FALSE POSITIVE]
+        // 2. On the top floor of a house with no roof. [FALSE NEGATIVE]
+        // 3. In a garage where the floor is terrain. [FALSE NEGATIVE]
+        //
+        // We are more concerned with reducing false negatives (allowing
+        // placement when it would be detrimental to gameplay) than eliminating
+        // false positives, so a DHRestrictionVolume can be used by levelers to
+        // plug any holes left open by the programmatic logic.
+        if (HitActor != none && HitActor.bStatic && !HitActor.IsA('TerrainInfo'))
+        {
+            // Determine the size of the extents trace (a square that is
+            // inscribed inside a circle with the collision radius).
+            SquareLength = Sin(Pi / 4) * CollisionRadius;
+
+            // Do an extents trace upwards to determine if there is a ceiling
+            // above us.
+            // TODO: will the extents trace hit the ground if it's uneven?
+            TraceStart = OutLocation;
+            TraceEnd = TraceStart + ((vect(0, 0, 1) * class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.IndoorsCeilingHeightInMeters)) << rotator(Forward));
+
+            if (Trace(CeilingHitLocation, CeilingHitNormal, TraceEnd, TraceStart,, vect(1.0, 1.0, 0.0) * SquareLength) != none)
+            {
+                Error = ERROR_Indoors;
+            }
+        }
+    }
+
     return Error;
 }
 
@@ -484,7 +537,7 @@ function DHConstruction.EConstructionError GetPositionError()
     // NOTE: We are using a 25 meter radius here just to include the largest
     // likely combined radius. Using AllActors would be incredibly slow, and
     // keeping a separate list of constructions via replication or some other
-    // mechanism might be a bad idea.
+    // mechanism would probably be a bad idea.
     foreach CollidingActors(class'DHConstruction', C, class'DHUnits'.static.MetersToUnreal(25.0))
     {
         C.GetCollisionSize(C.GetTeamIndex(), PlayerOwner.ClientLevelInfo, OtherRadius, OtherHeight);
