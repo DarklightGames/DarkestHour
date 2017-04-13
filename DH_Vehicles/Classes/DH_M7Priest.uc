@@ -203,7 +203,7 @@ defaultproperties
         BoneName="steer_wheel_RR"
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=0.0,Y=0.0,Z=9.0)
-        WheelRadius=33.00
+        WheelRadius=33.0
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_M7Priest.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel

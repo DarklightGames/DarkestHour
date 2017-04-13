@@ -61,7 +61,7 @@ defaultproperties
         UseRandomSubdivision=true
         Opacity=0.45
         CoordinateSystem=PTCS_Relative
-        StartLocationOffset=(X=8,Y=0,Z=0)
+        StartLocationOffset=(X=8.0,Y=0.0,Z=0.0)
         StartLocationShape=PTLS_Sphere
         UseRotationFrom=PTRS_Normal
         StartSpinRange=(X=(Min=-1.0,Max=1.0),Y=(Min=-1.0,Max=1.0),Z=(Min=-1.0,Max=1.0))

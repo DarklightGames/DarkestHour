@@ -80,11 +80,11 @@ defaultproperties
     // Exit
     ExitPositions(0)=(X=100.0,Y=-30.0,Z=175.0) // driver hatch
     ExitPositions(1)=(X=0.0,Y=0.0,Z=225.0)     // commander hatch
-    ExitPositions(2)=(X=100.0,Y=30.0,Z=175.0)  // hull MG mg hatch
+    ExitPositions(2)=(X=100.0,Y=30.0,Z=175.0)  // hull MG hatch
     ExitPositions(3)=(X=-75.0,Y=-125.0,Z=75.0) // left
     ExitPositions(4)=(X=-200.0,Y=2.24,Z=75.0)  // rear
     ExitPositions(5)=(X=-75.0,Y=125.0,Z=75.0)  // right
-    ExitPositions(6)=(X=200.0,Y=0,Z=75.0)      // front
+    ExitPositions(6)=(X=200.0,Y=0.0,Z=75.0)    // front
 
     // Sounds
     SoundPitch=32 // half normal pitch = 1 octave lower
