@@ -363,7 +363,7 @@ defaultproperties
     PlacementEmitterClass=class'DH_Effects.DHConstructionEffect'
     PlacementSoundRadius=60.0
     PlacementSoundVolume=4.0
-    IndoorsCeilingHeightInMeters=5.0
+    IndoorsCeilingHeightInMeters=10.0
 
     LocalRotationRate=32768
 
