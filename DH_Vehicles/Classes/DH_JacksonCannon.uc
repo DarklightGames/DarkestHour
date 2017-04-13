@@ -12,6 +12,7 @@ defaultproperties
     Skins(0)=texture'DH_VehiclesUS_tex3.ext_vehicles.M36_turret_ext'
     Skins(1)=texture'DH_VehiclesUS_tex3.int_vehicles.M36_turret_int'
     Skins(2)=texture'DH_VehiclesUS_tex3.int_vehicles.M36_turret_int2'
+    Skins(3)=texture'DH_VehiclesUS_tex3.ext_vehicles.M36_turret_ext' // shows the muzzle brake
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc2.Jackson.Jackson_turret_col'
     FireAttachBone="Turret"
     FireEffectScale=1.5 // turret fire is larger & positioned in centre of open turret
@@ -50,7 +51,7 @@ defaultproperties
     TertiarySpread=0.00125
 
     // Weapon fire
-    WeaponFireOffset=26.2
+    WeaponFireOffset=33.0
     AddedPitch=145
 
     // Sounds
