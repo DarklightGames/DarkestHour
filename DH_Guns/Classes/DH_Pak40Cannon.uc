@@ -12,7 +12,7 @@ defaultproperties
     Skins(0)=texture'MilitaryAxisSMT.Artillery.RO_BC_pak40'
     Skins(1)=texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
     Skins(2)=texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
-//  CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Pak40.pak40_turret_coll' // TODO - make 'turret' col mesh
+    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Pak40.pak40_turret_coll'
     BeginningIdleAnim="com_idle_close"
     GunnerAttachmentBone="com_player"
 

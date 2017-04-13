@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_17PounderGun_anm.17Pounder_turret'
     Skins(0)=texture'DH_Artillery_Tex.17pounder.17Pounder'
     Skins(1)=texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle_MN'
-//  CollisionStaticMesh=StaticMesh'DH_Artillery_stc.17pounder.17pdr_turret_coll' // TODO - make 'turret' col mesh
+    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.17pounder.17pdr_turret_coll'
     BeginningIdleAnim="com_idle_close"
     GunnerAttachmentBone="com_player"
 
