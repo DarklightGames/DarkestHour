@@ -1982,7 +1982,6 @@ defaultproperties
     RightLeverAxis=AXIS_Z
 
     // Camera
-    PlayerCameraBone="Camera_driver"
     TPCamDistance=375.0
     TPCamLookat=(X=0.0,Y=0.0,Z=0.0)
     TPCamWorldOffset=(X=0.0,Y=0.0,Z=100.0)
