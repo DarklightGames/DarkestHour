@@ -585,12 +585,6 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
         G.ModifyRoundTime(MinutesAwarded*60, 0);
     }
 
-    // Handle attrition unlock
-    if (G.DHLevelInfo != none && G.DHLevelInfo.AttritionMaxOpenObj > 0)
-    {
-        G.AttritionUnlockObjective(ObjNum);
-    }
-
     switch (Team)
     {
         case AXIS_TEAM_INDEX:

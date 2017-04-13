@@ -30,7 +30,8 @@ enum EGameType
     GT_Push,
     GT_Attrition,
     GT_Advance,
-    GT_SearchAndDestroy
+    GT_SearchAndDestroy,
+    GT_Cutoff
 };
 
 enum ESeason
@@ -71,8 +72,6 @@ var() ESpawnMode            SpawnMode;
 // when the enemy holds 50% more of the objectives. (eg. Team A has 2
 // objectives, while Team B has 4.)
 var() InterpCurve           AttritionRateCurve;
-
-var() int                   AttritionMaxOpenObj;     // Max allowed open objectives for attrition, 0 means all obj can be open (active)
 
 var() material              LoadingScreenRef;        // Used to stop loading screen image from being removed on save (not otherwise used)
                                                      // Must be set to myLevel.GUI.LoadingScreen to work!

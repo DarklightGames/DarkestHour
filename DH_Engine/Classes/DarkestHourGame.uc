@@ -46,8 +46,6 @@ var     int                         ServerTickFrameCount;                   // K
 
 var     float                       TeamAttritionCounter[2];
 
-var     array<int>                  AttritionObjOrder;                      // Order of objectives that were randomly opened
-
 var     bool                        bSwapTeams;
 var     bool                        bUseReinforcementWarning;
 var     bool                        bTimeChangesAtZeroReinf;
@@ -2105,8 +2103,6 @@ state RoundInPlay
         TeamAttritionCounter[AXIS_TEAM_INDEX] = 0;
         TeamAttritionCounter[ALLIES_TEAM_INDEX] = 0;
 
-        AttritionObjOrder.Length = 0;
-
         // Reset PlayerSessions
         PlayerSessions.Clear();
 
@@ -2229,18 +2225,6 @@ state RoundInPlay
         {
             Metrics.OnRoundBegin();
         }
-
-        // Activate attrition objectives
-        if (DHLevelInfo.GameType == GT_Attrition)
-        {
-            AttritionSelectObjectiveOrder();
-
-            for (i = 0; i < DHLevelInfo.AttritionMaxOpenObj; ++i)
-            {
-                AttritionUnlockObjective();
-            }
-        }
-
     }
 
     // Modified for DHObjectives
@@ -4130,57 +4114,6 @@ function int GetNumObjectives()
     }
 
     return count;
-}
-
-// This is called at the start of an attrition round, it develops a random order at which the objectives will unlock
-function AttritionSelectObjectiveOrder()
-{
-    local int i;
-
-    AttritionObjOrder.Length = 0; // Clear the array just in case, (we do reset it at the beginning of the round also)
-
-    // Build array of objective indices
-    for (i = 0; i < arraycount(DHObjectives); ++i)
-    {
-        if (DHObjectives[i] != none)
-        {
-            AttritionObjOrder[AttritionObjOrder.Length] = i;
-        }
-    }
-
-    // Shuffle the constructed array
-    class'UArray'.static.IShuffle(AttritionObjOrder);
-}
-
-// This function unlocks the next objective that is not active in the attrition objective order
-// It is called when an objective is taken and at the beginning of the round foreach AttritionMaxOpenObj
-function AttritionUnlockObjective(optional int ObjNum)
-{
-    local int i, j, StartIndex;
-
-    StartIndex = class'UArray'.static.IIndexOf(AttritionObjOrder, ObjNum);
-
-    if (StartIndex == -1)
-    {
-        Warn("Issue in AttritionUnlockObjective()");
-        return;
-    }
-
-    // i = 1 so we skip the objective just captured (otherwise it'll pick itself each time due to setting itself inactive in HandleCompletion)
-    for (i = 1; i < AttritionObjOrder.Length; ++i)
-    {
-        j = AttritionObjOrder[(StartIndex + i) % AttritionObjOrder.Length];
-
-        if (DHObjectives[j].IsActive())
-        {
-            continue;
-        }
-        else if (!DHObjectives[j].IsActive())
-        {
-            DHObjectives[j].SetActive(true);
-            break;
-        }
-    }
 }
 
 function BroadcastSquad(Controller Sender, coerce string Msg, optional name Type)
