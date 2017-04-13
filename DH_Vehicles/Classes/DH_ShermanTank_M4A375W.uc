@@ -76,7 +76,6 @@ defaultproperties
     TreadHitMaxHeight=65.0
     DamagedTrackStaticMeshLeft=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3E2_DamagedTrack_left'
     DamagedTrackStaticMeshRight=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3E2_DamagedTrack_right'
-    DamagedTrackAttachBone="body"
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-113.0,Y=20.0,Z=79.0)
     FireAttachBone="Player_Driver"

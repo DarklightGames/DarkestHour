@@ -105,7 +105,6 @@ var     bool                bRightTrackDamaged;    // the left track has been da
 var     sound               TrackDamagedSound;     // alternative tread sound to play when a track is damaged
 var     material            DamagedTreadPanner;    // replacement skin used for a damaged tread
 var     StaticMesh          DamagedTrackStaticMeshLeft, DamagedTrackStaticMeshRight; // static meshes to use for damaged left & right tracks
-var     name                DamagedTrackAttachBone; // bone name for attaching damaged tracks
 var     Actor               DamagedTrackLeft, DamagedTrackRight; // static mesh attachment to show damaged track, e.g. broken track links (clientside only)
 
 // Vehicle HUD icon
@@ -2511,7 +2510,7 @@ simulated function SetDamagedTracks()
         // Matt: added support for spawning damaged track model as decorative static mesh
         if (DamagedTrackStaticMeshLeft != none && DamagedTrackLeft == none)
         {
-            DamagedTrackLeft = SpawnAttachment(class'DHDecoAttachment', DamagedTrackAttachBone, DamagedTrackStaticMeshLeft);
+            DamagedTrackLeft = SpawnAttachment(class'DHDecoAttachment',, DamagedTrackStaticMeshLeft);
             DamagedTrackLeft.Skins[0] = default.Skins[LeftTreadIndex]; // sets damaged tread skin to match treads for this tank (i.e. whether normal or snowy)
         }
     }
@@ -2527,7 +2526,7 @@ simulated function SetDamagedTracks()
 
         if (DamagedTrackStaticMeshRight != none && DamagedTrackRight == none)
         {
-            DamagedTrackRight = SpawnAttachment(class'DHDecoAttachment', DamagedTrackAttachBone, DamagedTrackStaticMeshRight);
+            DamagedTrackRight = SpawnAttachment(class'DHDecoAttachment',, DamagedTrackStaticMeshRight);
             DamagedTrackRight.Skins[0] = default.Skins[RightTreadIndex];
         }
     }
