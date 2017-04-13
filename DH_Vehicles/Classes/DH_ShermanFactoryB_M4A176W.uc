@@ -8,5 +8,4 @@ class DH_ShermanFactoryB_M4A176W extends DH_ShermanFactory; // later version wit
 defaultproperties
 {
     VehicleClass=class'DH_Vehicles.DH_ShermanTankB_M4A176W'
-    Mesh=SkeletalMesh'DH_ShermanM4A1_anm.ShermanM4A1_body_extB'
 }

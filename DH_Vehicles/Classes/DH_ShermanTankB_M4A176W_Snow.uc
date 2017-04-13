@@ -15,4 +15,5 @@ defaultproperties
     Skins(5)=texture'DH_VehiclesUS_tex2.Treads.M10_treadsnow'
     CannonSkins(0)=texture'DH_VehiclesUS_tex2.ext_vehicles.Sherman76w_turret_Snow'
     CannonSkins(1)=texture'DH_VehiclesUS_tex2.ext_vehicles.Sherman_body_snow'
+    VehicleAttachments(0)=(Skin=texture'DH_VehiclesUS_tex2.ext_vehicles.Sherman76w_turret_Snow') // snowy sandbags on front hull
 }

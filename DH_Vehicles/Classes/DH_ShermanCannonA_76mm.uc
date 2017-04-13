@@ -20,9 +20,10 @@ simulated function InitializeVehicleBase()
 defaultproperties
 {
     // Turret mesh
-    Mesh=SkeletalMesh'DH_ShermanM4A1_anm.Sherman76mm_turret_extA'
+    Mesh=SkeletalMesh'DH_ShermanM4A1_anm.Sherman76mm_turret_ext'
     Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman76w_turret_ext'
     Skins(1)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_body_ext'
+    Skins(2)=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha' // hides the muzzle brake
     WeaponAttachOffset=(X=-1.0,Y=-1.0,Z=0.0) // this is for M4A1; X=1 works better on M4A3 hull
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Sherman_turret_76mm_Coll'
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
@@ -70,7 +71,7 @@ defaultproperties
 
     // Weapon fire
     WeaponFireAttachmentBone="barrelA"
-    WeaponFireOffset=1.5
+    WeaponFireOffset=-2.0
     AddedPitch=52
     AltFireOffset=(X=-178.0,Y=-21.0,Z=2.0)
     AltFireSpawnOffsetX=17.0
