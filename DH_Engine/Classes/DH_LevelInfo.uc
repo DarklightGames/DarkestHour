@@ -53,19 +53,14 @@ var() EWeather              Weather;
 
 var() float                 AlliesToAxisRatio;          // Player ratio based on team, allows for unbalanced teams
 var() bool                  bHardTeamRatio;             // Determines if AlliesToAxisRatio should be hard or soft (affected by # of players)
-
-var() EAxisNation           AxisNation;
-var() EAlliedNation         AlliedNation;
-
-var() int                   WinLimitOverride;
-var() int                   RoundLimitOverride;         // Allows the map to override the server's RoundLimit (useful for maps that need extra rounds)
 var() bool                  SwapTeamsOnRoundEnd;        // Will swap teams & team score if the round ends
 
-var() EGameType             GameType;
-
-var() sound                 AlliesWinsMusic;            // Optional override for Allies victory music
+var() EAxisNation           AxisNation;
 var() sound                 AxisWinsMusic;              // Optional override for Axis victory music
+var() EAlliedNation         AlliedNation;
+var() sound                 AlliesWinsMusic;            // Optional override for Allies victory music
 
+var() EGameType             GameType;
 var() ESpawnMode            SpawnMode;
 
 // Colin: Defines the rate of reinforcement drain per minute

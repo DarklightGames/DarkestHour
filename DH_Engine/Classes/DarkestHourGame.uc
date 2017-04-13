@@ -186,6 +186,9 @@ function PostBeginPlay()
         return;
     }
 
+    // Allow weapon dropping (this is here in case it is set to false and then the server changes map and saved as false)
+    bAllowWeaponThrowing = true;
+
     // Setup game type variables
     switch (DHLevelInfo.GameType)
     {
@@ -209,25 +212,6 @@ function PostBeginPlay()
 
         default:
             break; // do nothing
-    }
-
-    // Determine WinLimit and RoundLimit (these overrides will also override webadmin's value)
-    if (DHLevelInfo.WinLimitOverride > 0)
-    {
-        WinLimit = DHLevelInfo.WinLimitOverride;
-    }
-    else
-    {
-        WinLimit = default.WinLimit;
-    }
-
-    if (DHLevelInfo.RoundLimitOverride > 0)
-    {
-        RoundLimit = DHLevelInfo.RoundLimitOverride;
-    }
-    else
-    {
-        RoundLimit = default.RoundLimit;
     }
 
     // General game type settings
