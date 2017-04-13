@@ -147,15 +147,21 @@ auto state Timing
         Level.Game.bAllowWeaponThrowing = true;
 
         // Disable phase minefields (volumes are static so use AllActors)
-        foreach AllActors(class'ROMineVolume', V, PhaseMineFieldTag)
+        if (PhaseMineFieldTag != '')
         {
-            V.Deactivate();
+            foreach AllActors(class'ROMineVolume', V, PhaseMineFieldTag)
+            {
+                V.Deactivate();
+            }
         }
 
-        // Remove boundary (DSMs are dynamic)
-        foreach DynamicActors(class'DHDestroyableSM', DSM, PhaseBoundaryTag)
+        if (PhaseBoundaryTag != '')
         {
-            DSM.DestroyDSM(none);
+            // Remove boundary (DSMs are dynamic)
+            foreach DynamicActors(class'DHDestroyableSM', DSM, PhaseBoundaryTag)
+            {
+                DSM.DestroyDSM(none);
+            }
         }
 
         // Reset round time if desired
