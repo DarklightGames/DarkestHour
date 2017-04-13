@@ -489,7 +489,7 @@ simulated function bool WeaponAllowMantle()
 // Determines if the weapon is thrown on death.
 function bool CanDeadThrow()
 {
-    return bCanThrow;
+    return bCanThrow && Level.Game.bAllowWeaponThrowing;
 }
 
 // Modified to avoid "accessed none" Instigator log errors
