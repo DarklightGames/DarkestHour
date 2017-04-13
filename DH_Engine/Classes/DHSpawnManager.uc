@@ -163,6 +163,7 @@ function bool SpawnPlayer(DHPlayer PC)
                 if (P != none)
                 {
                     P.SpawnPoint = SP;
+                    P.bCombatSpawned = SP.bCombatSpawn;
                 }
             }
 

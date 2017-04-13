@@ -1890,10 +1890,13 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                 DHKilled.NextVehicleSpawnTime = DHKilled.LastKilledTime + SPAWN_KILL_RESPAWN_TIME;
                 ModifyReinforcements(DHKilled.GetTeamNum(), 1, false, true);
 
-                // Punish killer for spawn killing by locking his weapons (also incrementing his WeaponLockViolations) & reducing his score
-                DHKiller.WeaponLockViolations++;
-                DHKiller.LockWeapons(WeaponLockTimes[Min(DHKiller.WeaponLockViolations, arraycount(WeaponLockTimes) - 1)]); // TODO: probably add 1 second as we are 'mid second' in game time
-                DHKiller.PlayerReplicationInfo.Score -= 2;
+                // Punish killer for spawn killing if the killed wasn't a combat spawn by incrementing his WeaponLockViolations & reducing his score
+                if (!DHKilled.IsCombatSpawned())
+                {
+                    DHKiller.WeaponLockViolations++;
+                    DHKiller.LockWeapons(WeaponLockTimes[Min(DHKiller.WeaponLockViolations, arraycount(WeaponLockTimes) - 1)]); // TODO: probably add 1 second as we are 'mid second' in game time
+                    DHKiller.PlayerReplicationInfo.Score -= 2;
+                }
             }
         }
 
@@ -4314,12 +4317,12 @@ defaultproperties
     bPublicPlay=true
 
     WeaponLockTimes(0)=0
-    WeaponLockTimes(1)=0
+    WeaponLockTimes(1)=2
     WeaponLockTimes(2)=5
     WeaponLockTimes(3)=10
     WeaponLockTimes(4)=15
     WeaponLockTimes(5)=20
-    WeaponLockTimes(6)=25
+    WeaponLockTimes(6)=30
     WeaponLockTimes(7)=30
     WeaponLockTimes(8)=45
     WeaponLockTimes(9)=60

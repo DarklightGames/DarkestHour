@@ -337,5 +337,6 @@ defaultproperties
     OverrunMinimumTimeSeconds=15
     bHidden=false
     bCanSendAbandonmentWarningMessage=true
+    bCombatSpawn=true
 }
 

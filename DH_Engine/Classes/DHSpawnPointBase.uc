@@ -15,6 +15,7 @@ enum ESpawnPointBlockReason
     SPBR_Constructing
 };
 
+var bool bCombatSpawn;
 var int SpawnPointIndex;
 var int TeamIndex;
 var ESpawnPointBlockReason BlockReason;

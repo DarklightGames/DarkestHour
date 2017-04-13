@@ -231,5 +231,6 @@ simulated function string GetStyleName()
 
 defaultproperties
 {
+    bCombatSpawn=true
 }
 

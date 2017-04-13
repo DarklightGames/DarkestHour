@@ -18,6 +18,7 @@ var     bool    bHasBeenPossessed;        // fixes players getting new ammunitio
 var     bool    bNeedToAttachDriver;      // flags that net client was unable to attach Driver to VehicleWeapon, as hasn't yet received VW actor (tells vehicle to do it instead)
 var     bool    bClientSkipDriveAnim;     // set by vehicle replicated to net client that's already played correct initial driver anim, so DriveAnim doesn't override that
 var     bool    bClientPlayedDriveAnim;   // flags that net client already played DriveAnim on entering vehicle, so replicated vehicle knows not to set bClientSkipDriveAnim
+var     bool    bCombatSpawned;           // Indicates the pawn was spawned in combat
 
 // Player model
 var     array<material> FaceSkins;        // list of body & face skins to be randomly selected for pawn
@@ -619,6 +620,12 @@ function bool IsSpawnProtected()
 function bool IsSpawnKillProtected()
 {
     return SpawnKillTimeEnds > Level.TimeSeconds;
+}
+
+// Returns true if this pawn spawned on a combat spawnpoint (MDV, Squad Rally, HQ)
+function bool IsCombatSpawned()
+{
+    return bCombatSpawned;
 }
 
 // Modified to handle new DH SpawnProtEnds variable, & also to avoid occasional "accessed none" log error (re Level.Game) when called on net client
