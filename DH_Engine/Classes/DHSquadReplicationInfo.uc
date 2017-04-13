@@ -456,7 +456,10 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
 
     if (PRI.SquadIndex == -1)
     {
-        PC.ClientLeaveSquadResult(SE_NotInSquad);
+        if (PC != none)
+        {
+            PC.ClientLeaveSquadResult(SE_NotInSquad);
+        }
 
         return false;
     }
