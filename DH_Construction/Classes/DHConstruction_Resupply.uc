@@ -66,7 +66,7 @@ defaultproperties
     bShouldAlignToGround=true
     MenuName="Resupply Box"
     ProxyDistanceInMeters=3.0
-    DuplicateDistanceInMeters=50.0
+    DuplicateDistanceInMeters=100.0
     CollisionRadius=50.0
     CollisionHeight=30.0
 }
