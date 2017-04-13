@@ -115,7 +115,7 @@ defaultproperties
 
     // Collision
     CollisionHeight=120
-    CollisionRadius=300
+    CollisionRadius=250
 
     RainSound=Sound'Amb_Weather01.Rain.Krasnyi_Rain_Inside_Heavy'
 }
