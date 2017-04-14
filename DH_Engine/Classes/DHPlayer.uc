@@ -1877,15 +1877,21 @@ function ClientToggleDuck()
 // Instead we let WVP's clientside IncrementRange() check that it's a valid operation before sending server call
 exec function LeanRight()
 {
-    // TODO: if IsPlacingConstruction, rotate the construction proxy
-    if (ROPawn(Pawn) != none)
+    local DHPawn P;
+
+    P = DHPawn(Pawn);
+
+    if (P != none)
     {
-        if (!Pawn.bBipodDeployed)
+        if (!P.bBipodDeployed)
         {
-            ROPawn(Pawn).LeanRight();
+            P.LeanRight();
         }
 
-        ServerLeanRight(true);
+        if (P.ConstructionProxy == none)
+        {
+            ServerLeanRight(true);
+        }
     }
     else if (VehicleWeaponPawn(Pawn) != none)
     {
@@ -1895,14 +1901,21 @@ exec function LeanRight()
 
 exec function LeanLeft()
 {
-    if (ROPawn(Pawn) != none)
+    local DHPawn P;
+
+    P = DHPawn(Pawn);
+
+    if (P != none)
     {
-        if (!Pawn.bBipodDeployed)
+        if (!P.bBipodDeployed)
         {
-            ROPawn(Pawn).LeanLeft();
+            P.LeanLeft();
         }
 
-        ServerLeanLeft(true);
+        if (P.ConstructionProxy == none)
+        {
+            ServerLeanLeft(true);
+        }
     }
     else if (VehicleWeaponPawn(Pawn) != none && VehicleWeaponPawn(Pawn).Gun != none)
     {
