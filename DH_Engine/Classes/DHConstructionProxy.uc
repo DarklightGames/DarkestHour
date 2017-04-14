@@ -254,6 +254,7 @@ function Tick(float DeltaTime)
 
     if (Projector != none)
     {
+        Projector.MaxTraceDistance = CollisionHeight * 2;
         Projector.SetDrawScale((CollisionRadius * 2) / Projector.ProjTexture.MaterialUSize());
         Projector.SetRelativeLocation(RL);
         Projector.SetRelativeRotation(rot(-16384, 0, 0));
