@@ -44,27 +44,42 @@ var     bool    bCanOnlyPlaceOnTerrain;
 var     float   GroundSlopeMaxInDegrees;
 var     rotator StartRotationMin;
 var     rotator StartRotationMax;
-var     int     LocalRotationRate;
-var     vector  PlacementOffset;
+var     int     LocalRotationRate;              // The amount of yaw, per second, to
 
-var     sound   PlacementSound;
-var     float   PlacementSoundRadius;
-var     float   PlacementSoundVolume;
+var     vector          PlacementOffset;        // 3D offset in the proxy's local-space during placement
+var     sound           PlacementSound;         // Sound to play when construction is first placed down
+var     float           PlacementSoundRadius;
+var     float           PlacementSoundVolume;
+var     class<Emitter>  PlacementEmitterClass;  // Emitter to spawn when the construction is first placed down
 
 var     float   FloatToleranceInMeters;         // The distance the construction is allowed to "float" off of the ground at any given point along it's circumfrence
 var     float   DuplicateDistanceInMeters;      // The distance required between identical constructions of the same type
-var     class<Emitter> PlacementEmitterClass;
 
 // Construction
-var     int     SupplyCost;                     // The amount of supply points this construction costs.
-var     bool    bDestroyOnConstruction;         // If true, this actor will be destroyed after being fully constructed.
-var     int     Progress;                       // The current count of progress.
-var     int     ProgressMax;                    // The amount of construction points required to be built.
+var     int     SupplyCost;                     // The amount of supply points this construction costs
+var     bool    bDestroyOnConstruction;         // If true, this actor will be destroyed after being fully constructed
+var     int     Progress;                       // The current count of progress
+var     int     ProgressMax;                    // The amount of construction points required to be built
 
-// Death
-var     int     DeadLifespan;                   // How long does the actor stay around after it's been killed?
+// Broken
+var     int             BrokenLifespan;             // How long does the actor stay around after it's been killed?
+var     StaticMesh      BrokenStaticMesh;           // Static mesh to use when the construction is broken
+var     sound           BrokenSound;                // Sound to play when the construction is broken
+var     float           BrokenSoundRadius;
+var     float           BrokenSoundVolume;
+var     class<Emitter>  BrokenEmitterClass;         // Emitter to spawn when the construction is broken
 
 // Damage
+struct DamageTypeScale
+{
+    var class<DamageType>   DamageType;
+    var float               Scale;
+};
+
+var array<DamageTypeScale>      DamageTypeScales;
+var array<class<DamageType> >   HarmfulDamageTypes;
+
+// Health
 var private int     Health;
 var     int         HealthMax;
 
@@ -98,7 +113,6 @@ replication
 function OnConstructed();
 function OnStageIndexChanged(int OldIndex);
 function OnTeamIndexChanged();
-function OnHealthChanged();
 function OnProgressChanged();
 
 final simulated function int GetTeamIndex()
@@ -229,25 +243,43 @@ Begin:
     }
 }
 
-simulated state Dead
+simulated state Broken
 {
+    event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+    {
+        // Do nothing, since we're broken already!
+    }
+
 Begin:
+    UpdateAppearance();
     // TODO: set SM to destroyed SM
-    Lifespan = DeadLifespan;
+    Lifespan = BrokenLifespan;
 }
 
-event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
-{
-    super.TakeDamage(Damage, EventInstigator, HitLocation, Momentum, DamageType, HitIndex);
 
-    OnHealthChanged();
+simulated function bool IsBroken()
+{
+    return IsInState('Broken');
+}
+
+simulated function bool IsConstructed()
+{
+    return IsInState('Constructed');
 }
 
 function UpdateAppearance()
 {
-    if (IsInState('Constructed'))
+    if (IsConstructed())
     {
         SetStaticMesh(default.StaticMesh);
+        SetCollision(true, true, true);
+        KSetBlockKarma(true);
+    }
+    else if (IsBroken())
+    {
+        SetStaticMesh(default.BrokenStaticMesh);
+        SetCollision(false, false, false);
+        KSetBlockKarma(false);
     }
     else
     {
@@ -259,6 +291,9 @@ function UpdateAppearance()
         {
             SetStaticMesh(default.Stages[StageIndex].StaticMesh);
         }
+
+        SetCollision(true, true, true);
+        KSetBlockKarma(true);
     }
 }
 
@@ -319,8 +354,59 @@ function static vector GetPlacementOffset()
     return default.PlacementOffset;
 }
 
+//==============================================================================
+// DAMAGE
+//==============================================================================
+
+function bool ShouldTakeDamageFromDamageType(class<DamageType> DamageType)
+{
+    local int i;
+
+    for (i = 0; i < HarmfulDamageTypes.Length; ++i)
+    {
+        if (DamageType == HarmfulDamageTypes[i] || ClassIsChildOf(DamageType, HarmfulDamageTypes[i]))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function TakeDamage(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+{
+    if (!ShouldTakeDamageFromDamageType(DamageType))
+    {
+        return;
+    }
+
+    Health -= GetScaledDamage(DamageType, Damage);
+
+    if (Health <= 0)
+    {
+        GotoState('Broken');
+    }
+}
+
+function int GetScaledDamage(class<DamageType> DamageType, int Damage)
+{
+    local int i;
+
+    for (i = 0; i < DamageTypeScales.Length; ++i)
+    {
+        if (DamageType == DamageTypeScales[i].DamageType ||
+            ClassIsChildOf(DamageType, DamageTypeScales[i].DamageType))
+        {
+            return Damage * DamageTypeScales[i].Scale;
+        }
+    }
+
+    return Damage;
+}
+
 defaultproperties
 {
+    TeamIndex=NEUTRAL_TEAM_INDEX
     RemoteRole=ROLE_SimulatedProxy
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.hedgehog_01'
@@ -368,13 +454,17 @@ defaultproperties
     LocalRotationRate=32768
 
     // Death
-    DeadLifespan=15.0
+    BrokenLifespan=15.0
 
     // Progress
     StageIndex=-1
     Progress=0
     ProgressMax=8
 
-    TeamIndex=NEUTRAL_TEAM_INDEX
+    // Damage
+    HarmfulDamageTypes(0)=class'ROArtilleryDamType'
+//    HarmfulDamageTypes(1)=class'DH_SatchelDamType'
+    HarmfulDamageTypes(2)=class'ROTankShellExplosionDamage'
 }
+
 
