@@ -4701,13 +4701,13 @@ simulated function EndBurnFX()
 // Modified so a burning player can't switch weapons (he's forced to drop the one he's carrying in his hands & this stops him bringing up another weapon)
 simulated function bool CanSwitchWeapon()
 {
-    return !bOnFire && super.CanSwitchWeapon();
+    return !bOnFire && ConstructionProxy == none && super.CanSwitchWeapon();
 }
 
 // Modified so a burning player can't switch weapons
 simulated function bool CanBusySwitchWeapon()
 {
-    return !bOnFire && super.CanBusySwitchWeapon();
+    return !bOnFire && ConstructionProxy == none && super.CanBusySwitchWeapon();
 }
 
 // New function to make a burning player drop the weapon he is holding
@@ -5977,15 +5977,15 @@ exec function LogWepAttach(optional bool bLogAllWeaponAttachments)
     }
 }
 
-simulated function Fire( optional float F )
+simulated function Fire(optional float F)
 {
     if (Level.NetMode != NM_DedicatedServer && ConstructionProxy != none)
     {
         if (ConstructionProxy.ProxyError == ERROR_None)
         {
             ServerCreateConstruction(ConstructionProxy.ConstructionClass, ConstructionProxy.Location, ConstructionProxy.Rotation);
-
             ConstructionProxy.Destroy();
+            SwitchToLastWeapon();
         }
         else
         {
@@ -6015,12 +6015,20 @@ function SetConstructionProxy(class<DHConstruction> ConstructionClass)
         }
 
         ConstructionProxy.SetConstructionClass(ConstructionClass);
+
+        GiveWeapon("DH_Weapons.DH_EmptyWeapon");
+        PendingWeapon = Weapon(FindInventoryType(class<Weapon>(DynamicLoadObject("DH_Weapons.DH_EmptyWeapon", class'class'))));
+
+        if (PendingWeapon != none)
+        {
+            ChangedWeapon();
+        }
     }
 }
 
 function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vector L, rotator R)
 {
-    local DHConstruction C; // TODO: run some sort of thing that attempts to actually *create* the actor, for now
+    local DHConstruction C;
 
     C = Spawn(ConstructionClass, Controller,, L, R);
 
@@ -6029,6 +6037,45 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vecto
         C.SetTeamIndex(GetTeamNum());
         C.UpdateAppearance();
         C.SetCollisionSize(0.0, 0.0);
+    }
+}
+
+// Overridden to fix an accessed none that could happen if Weapon was none.
+simulated function NextWeapon()
+{
+    if (Level.Pauser != none)
+    {
+        return;
+    }
+
+    if (!bRecievedInitialLoadout)
+    {
+        return;
+    }
+
+    if (Weapon == none && Controller != none)
+    {
+        Controller.SwitchToBestWeapon();
+        return;
+    }
+
+    if (PendingWeapon != none)
+    {
+        if (PendingWeapon.bForceSwitch)
+        {
+            return;
+        }
+
+        PendingWeapon = Inventory.NextWeapon(none, PendingWeapon);
+    }
+    else
+    {
+        PendingWeapon = Inventory.NextWeapon(none, Weapon);
+    }
+
+    if (PendingWeapon != none && PendingWeapon != Weapon && Weapon != none)
+    {
+        Weapon.PutDown();
     }
 }
 

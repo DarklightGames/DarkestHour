@@ -119,7 +119,7 @@ replication
         ClientFadeFromBlack, ClientAddHudDeathMessage, ClientSquadInvite,
         ClientSquadSignal;
 
-    // Variables the owning client will replicate to the server
+    // Functions the owning client will call on the server
     reliable if (Role < ROLE_Authority)
         ServerSetIsInSpawnMenu;
 }
@@ -2225,6 +2225,7 @@ simulated exec function ROIronSights()
     if (P != none && P.ConstructionProxy != none)
     {
         P.ConstructionProxy.Destroy();
+        P.SwitchToLastWeapon();
     }
     else if (Pawn != none && Pawn.Weapon != none && !Pawn.IsProneTransitioning())
     {
