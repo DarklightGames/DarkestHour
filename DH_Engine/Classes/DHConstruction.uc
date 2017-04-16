@@ -146,17 +146,11 @@ simulated function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        Log("FINDING LEVEL INFO");
-
         foreach AllActors(class'DH_LevelInfo', LI)
         {
-            LOG("FOUND LEVEL INFO");
             LevelInfo = LI;
             break;
         }
-
-        Log("LEVELINFO IS" @ LevelInfo);
-        LOG("SETTING TEAM INDEX");
 
         SetTeamIndex(int(TeamOwner));
 
@@ -252,6 +246,7 @@ simulated state Broken
 
 Begin:
     UpdateAppearance();
+    NetUpdateTime = Level.TimeSeconds - 1.0;
     // TODO: set SM to destroyed SM
     Lifespan = BrokenLifespan;
 }
