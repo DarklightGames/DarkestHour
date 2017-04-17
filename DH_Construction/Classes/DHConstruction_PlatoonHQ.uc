@@ -85,7 +85,7 @@ function OnConstructed()
     }
 }
 
-event Destroyed()
+function DestroyAttachments()
 {
     if (SpawnPoint != none)
     {
@@ -98,10 +98,29 @@ event Destroyed()
     }
 }
 
+event Destroyed()
+{
+    DestroyAttachments();
+}
+
+state Broken
+{
+	function BeginState()
+	{
+        super.BeginState();
+
+        DestroyAttachments();
+	}
+}
+
 defaultproperties
 {
     MenuName="Platoon HQ"
+    BrokenStaticMesh=StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent_destroyed'
     StaticMesh=StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent'
+
+    Stages(0)=(StaticMesh=StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent_unpacked')
+    ProgressMax=4
 
     // Placement
     bShouldAlignToGround=true
@@ -118,6 +137,9 @@ defaultproperties
     // Collision
     CollisionHeight=120
     CollisionRadius=250
+
+    // Health
+    HealthMax=250
 
     RainSound=Sound'Amb_Weather01.Rain.Krasnyi_Rain_Inside_Heavy'
 }

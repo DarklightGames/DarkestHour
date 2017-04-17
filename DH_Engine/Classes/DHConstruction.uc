@@ -105,7 +105,7 @@ var array<Stage> Stages;
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
-        TeamIndex, Health;
+        TeamIndex;
     reliable if (Role < ROLE_Authority)
         ServerDecrementProgress, ServerIncrementProgress;
 }
@@ -158,7 +158,7 @@ simulated function PostBeginPlay()
     }
 }
 
-auto simulated state Constructing
+auto state Constructing
 {
     function OnProgressChanged()
     {
@@ -218,7 +218,7 @@ Begin:
     }
 }
 
-simulated state Constructed
+state Constructed
 {
 Begin:
     if (Role == ROLE_Authority)
@@ -237,7 +237,7 @@ Begin:
     }
 }
 
-simulated state Broken
+state Broken
 {
     event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
     {

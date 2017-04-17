@@ -321,7 +321,7 @@ simulated function string GetStyleName()
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_Military_stc.Parachute.Chute_pack' // TODO: replace with custom made one
+    StaticMesh=StaticMesh'DH_Construction_stc.Backpacks.USA_backpack' // TODO: replace with custom made one
     DrawType=DT_StaticMesh
     TeamIndex=-1
     SquadIndex=-1

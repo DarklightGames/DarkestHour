@@ -15,7 +15,7 @@ defaultproperties
     FireModeClass(1)=class'DH_Equipment.DHShovelMeleeFire'
 
     ItemName="Shovel"
-    AttachmentClass=class'DHWireCuttersAttachment'
+    AttachmentClass=class'DHShovelAttachment'
     InventoryGroup=8    // TODO: figure out best one!
     Priority=1
     bCanThrow=false
