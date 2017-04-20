@@ -19,6 +19,8 @@ var() int               SetupPhaseDuration;                 // How long should t
 var() name              PhaseMineFieldTag;                  // Tag of minefield volumes to disable once setup phase is over
 var() name              PhaseBoundaryTag;                   // Tag of DestroyableStaticMeshes to disable once phase is over
 
+var() array<name>       InitialSpawnPointTags;              // Tags of spawn points that should only be active while in setup phase
+
 var() bool              bScaleStartingReinforcements;       // Scales starting reinforcements to current number of players
 var() bool              bReplacePreStart;                   // If true will override the game's default PreStartTime, making it zero
 var() bool              bResetRoundTimer;                   // If true will reset the round's timer to the proper value when phase is over
@@ -120,6 +122,7 @@ auto state Timing
 
     function PhaseEnded()
     {
+        local int i;
         local Controller C;
         local PlayerController PC;
         local ROMineVolume V;
@@ -187,6 +190,15 @@ auto state Timing
         {
             GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = G.LevelInfo.Allies.SpawnLimit * FMax(0.1, (G.NumPlayers / G.MaxPlayers));
             GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = G.LevelInfo.Axis.SpawnLimit * FMax(0.1, (G.NumPlayers / G.MaxPlayers));
+        }
+
+        // Deactivate any initial spawn points
+        if (G.SpawnManager != none)
+        {
+            for (i = 0; i < InitialSpawnPointTags.Length; ++i)
+            {
+                G.SpawnManager.SetSpawnPointIsActiveByTag(InitialSpawnPointTags[i], false);
+            }
         }
 
         // Announce the end of the phase
