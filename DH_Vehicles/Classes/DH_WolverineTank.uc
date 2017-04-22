@@ -106,7 +106,7 @@ defaultproperties
     WheelRotationScale=1100
     ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect' // based on Sherman M4A2 chassis, which was the version with a diesel engine
     ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
-    ExhaustPipes(0)=(ExhaustPosition=(X=-100.0,Z=40.0),ExhaustRotation=(Pitch=31000,Yaw=-16384))
+    ExhaustPipes(0)=(ExhaustPosition=(X=-168.0,Y=0.0,Z=57.0),ExhaustRotation=(Pitch=63500,Yaw=32768))
     LeftLeverBoneName="lever_L"
     RightLeverBoneName="lever_R"
 

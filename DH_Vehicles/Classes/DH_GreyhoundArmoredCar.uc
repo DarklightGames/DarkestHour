@@ -105,7 +105,7 @@ defaultproperties
     ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
 
     // Visual effects
-    ExhaustPipes(0)=(ExhaustPosition=(X=-170.0,Y=34.0,Z=45.0),ExhaustRotation=(Pitch=34000,Yaw=-5000))
+    ExhaustPipes(0)=(ExhaustPosition=(X=-180.0,Y=42.0,Z=54.0),ExhaustRotation=(Pitch=63000,Yaw=32768))
     SteerBoneName="Drive_wheel"
     SteeringScaleFactor=2.0
 

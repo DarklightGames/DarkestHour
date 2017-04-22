@@ -105,7 +105,9 @@ defaultproperties
     RightTreadPanDirection=(Pitch=32768,Yaw=0,Roll=16384)
     TreadVelocityScale=110.0
     WheelRotationScale=500
-    ExhaustPipes(0)=(ExhaustPosition=(X=-160.0,Y=65.0,Z=-10.0),ExhaustRotation=(Pitch=31000,Yaw=-16384))
+    ExhaustPipes(0)=(ExhaustPosition=(X=-153.0,Y=-36.0,Z=40.0),ExhaustRotation=(Pitch=16384))
+    ExhaustPipes(1)=(ExhaustPosition=(X=-153.0,Y=0.0,Z=40.0),ExhaustRotation=(Pitch=16384))
+    ExhaustPipes(2)=(ExhaustPosition=(X=-153.0,Y=36.0,Z=40.0),ExhaustRotation=(Pitch=16384))
     LeftLeverBoneName="lever_L"
     RightLeverBoneName="lever_R"
 
