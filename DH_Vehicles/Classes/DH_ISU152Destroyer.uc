@@ -108,7 +108,7 @@ defaultproperties
 
     // Visual effects
     TreadVelocityScale=125.0
-    WheelRotationScale=1000 // was 2500, but lowered to more closely match tread speed
+    WheelRotationScale=65000.0
     ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-220.0,Y=60.0,Z=30.0),ExhaustRotation=(Pitch=34000,Roll=-10000)) // positions adjusted from original

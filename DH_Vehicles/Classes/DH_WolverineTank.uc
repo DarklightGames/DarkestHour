@@ -103,7 +103,7 @@ defaultproperties
     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
     RightTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
     TreadVelocityScale=228.0
-    WheelRotationScale=1100
+    WheelRotationScale=71500.0
     ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect' // based on Sherman M4A2 chassis, which was the version with a diesel engine
     ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-168.0,Y=0.0,Z=57.0),ExhaustRotation=(Pitch=63500,Yaw=32768))

@@ -93,9 +93,9 @@ var     rotator             LeftTreadPanDirection, RightTreadPanDirection; // ma
 var     sound               LeftTreadSound, RightTreadSound;               // tread movement sound
 var     name                LeftTrackSoundBone, RightTrackSoundBone;       // attachment bone names for tread sound attachments
 var     Actor               LeftTreadSoundAttach, RightTreadSoundAttach;   // references to sound attachments used to make tread sounds
-var     array<name>         LeftWheelBones, RightWheelBones; // bone names for the track wheels on each side, used to animate wheels (visual only, no driving effect)
-var     rotator             LeftWheelRot, RightWheelRot;     // keep track of the wheel rotational speed for animation
-var     int                 WheelRotationScale;              // allows adjustment of wheel rotation speed for each vehicle
+var     array<name>         LeftWheelBones, RightWheelBones;               // bone names for track wheels on each side, used to animate wheels (visual only)
+var     float               LeftWheelsRotation, RightWheelsRotation;       // keep track of the wheel rotation position for animation
+var     float               WheelRotationScale;                            // allows adjustment of wheel rotation speed for each vehicle, relative to tread movement speed
 
 // Damaged treads
 var     float               TreadHitMaxHeight;     // height (in UU) of top of treads above hull mesh centre, used to detect tread hits (replaces RO's TreadHitMinAngle)
@@ -328,9 +328,11 @@ simulated function PostNetReceive()
 // Modified to handle treads (including damaged treads), engine & interior rumble sounds, & MaxCriticalSpeed,
 // to prevent all movement if vehicle can't move (engine off or both tracks disabled), & to disable Tick if vehicle is stationary & has no driver
 // Also to remove (from deprecated ROTreadCraft version) RO disabled throttle stuff & modifying value of WheelLatFrictionScale based on speed (did nothing)
+// And to make the wheel rotation relative to DeltaTime, as before the wheel speed was variable & depended on the CPU's tick rate
 simulated function Tick(float DeltaTime)
 {
     local KRigidBodyState BodyState;
+    local rotator         WheelsRotation;
     local float           VehicleSpeed, MotionSoundVolume, LinTurnSpeed;
     local int             i;
 
@@ -405,13 +407,14 @@ simulated function Tick(float DeltaTime)
                 if (LeftTreadPanner != none)
                 {
                     LeftTreadPanner.PanRate = (ForwardVel / TreadVelocityScale) + LinTurnSpeed;
-                    LeftWheelRot.Pitch += LeftTreadPanner.PanRate * WheelRotationScale;
+                    LeftWheelsRotation += LeftTreadPanner.PanRate * WheelRotationScale * DeltaTime;
+                    WheelsRotation.Pitch = LeftWheelsRotation;
 
                     for (i = 0; i < LeftWheelBones.Length; ++i)
                     {
                         if (LeftWheelBones[i] != '')
                         {
-                            SetBoneRotation(LeftWheelBones[i], LeftWheelRot);
+                            SetBoneRotation(LeftWheelBones[i], WheelsRotation);
                         }
                     }
                 }
@@ -419,13 +422,14 @@ simulated function Tick(float DeltaTime)
                 if (RightTreadPanner != none)
                 {
                     RightTreadPanner.PanRate = (ForwardVel / TreadVelocityScale) - LinTurnSpeed;
-                    RightWheelRot.Pitch += RightTreadPanner.PanRate * WheelRotationScale;
+                    RightWheelsRotation += RightTreadPanner.PanRate * WheelRotationScale * DeltaTime;
+                    WheelsRotation.Pitch = RightWheelsRotation;
 
                     for (i = 0; i < RightWheelBones.Length; ++i)
                     {
                         if (RightWheelBones[i] != '')
                         {
-                            SetBoneRotation(RightWheelBones[i], RightWheelRot);
+                            SetBoneRotation(RightWheelBones[i], WheelsRotation);
                         }
                     }
                 }

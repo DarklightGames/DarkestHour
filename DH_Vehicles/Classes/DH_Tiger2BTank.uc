@@ -107,7 +107,7 @@ defaultproperties
 
     // Visual effects
     TreadVelocityScale=200.0
-    WheelRotationScale=900
+    WheelRotationScale=58500.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-232.0,Y=23.0,Z=27.0),ExhaustRotation=(Pitch=22000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-232.0,Y=-27.0,Z=27.0),ExhaustRotation=(Pitch=22000))
     SteerBoneName="Steering"

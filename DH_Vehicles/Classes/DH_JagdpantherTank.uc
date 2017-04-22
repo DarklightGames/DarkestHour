@@ -122,7 +122,7 @@ defaultproperties
     LeftTreadIndex=2
     RightTreadIndex=1
     TreadVelocityScale=172.0
-    WheelRotationScale=750
+    WheelRotationScale=48750.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-230.0,Y=20.0,Z=109.592003),ExhaustRotation=(Pitch=22000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-230.0,Y=-20.0,Z=109.592003),ExhaustRotation=(Pitch=22000))
     // TODO: ideally get better matching schurzen texture made for this camo variant, but for now this is passable match:

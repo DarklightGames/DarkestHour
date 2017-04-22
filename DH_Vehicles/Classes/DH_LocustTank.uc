@@ -162,11 +162,12 @@ defaultproperties
     SoundPitch=32
 
     // Visual effects
-    TreadVelocityScale=120.0
     LeftTreadIndex=4
     RightTreadIndex=5
     LeftTreadPanDirection=(Pitch=0,Yaw=16384,Roll=16384)
     RightTreadPanDirection=(Pitch=0,Yaw=16384,Roll=16384)
+    TreadVelocityScale=120.0
+    WheelRotationScale=45500.0 
     ExhaustPipes(0)=(ExhaustPosition=(X=-53.0,Y=68.0,Z=29.0),ExhaustRotation=(Yaw=16384))
     LeftLeverBoneName="lever_L"
     RightLeverBoneName="lever_R"

@@ -101,7 +101,7 @@ defaultproperties
     LeftTreadIndex=4
     RightTreadIndex=3
     TreadVelocityScale=100.0
-    WheelRotationScale=768
+    WheelRotationScale=49920.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-170.0,Y=16.0,Z=30.0),ExhaustRotation=(Pitch=22000,Yaw=9000))
     LeftLeverBoneName="lever_L"
     RightLeverBoneName="lever_R"

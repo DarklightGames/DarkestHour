@@ -1962,7 +1962,6 @@ defaultproperties
     LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
     RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
     TreadVelocityScale=450.0
-    WheelRotationScale=700
 
     // Sounds
     SoundRadius=650.0

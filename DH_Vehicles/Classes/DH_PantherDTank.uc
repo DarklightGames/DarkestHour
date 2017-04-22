@@ -124,7 +124,7 @@ defaultproperties
 
     // Visual effects
     TreadVelocityScale=225.0
-    WheelRotationScale=1250
+    WheelRotationScale=81250.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-230.0,Y=20.0,Z=65.0),ExhaustRotation=(Pitch=22000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-230.0,Y=-20.0,Z=65.0),ExhaustRotation=(Pitch=22000))
     RandomAttachment=(AttachBone="body",Skin=none) // TODO: we don't have a schurzen skin for this camo variant, so add here if one gets made

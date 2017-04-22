@@ -28,7 +28,7 @@ defaultproperties
     VehicleSpikeTime=60.0
     MaxPitchSpeed=350.0
     TreadVelocityScale=400.0
-    WheelRotationScale=3000
+    WheelRotationScale=195000.0
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L02'
     RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R02'
     RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble03'

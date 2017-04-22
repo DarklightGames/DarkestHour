@@ -102,7 +102,7 @@ defaultproperties
     // Visual effects
     LeftTreadIndex=3
     TreadVelocityScale=146.0
-    WheelRotationScale=1000
+    WheelRotationScale=65000.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-175.0,Y=40.0,Z=-25.0),ExhaustRotation=(Pitch=34000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-175.0,Y=-40.0,Z=-25.0),ExhaustRotation=(Pitch=34000))
     LeftLeverBoneName="lever_L"

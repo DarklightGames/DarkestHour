@@ -115,7 +115,7 @@ defaultproperties
     LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=16384)
     RightTreadPanDirection=(Pitch=32768,Yaw=0,Roll=16384)
     TreadVelocityScale=350.0
-    WheelRotationScale=800
+    WheelRotationScale=52000.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-252.0,Y=24.0,Z=30.0),ExhaustRotation=(Pitch=22000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-252.0,Y=-28.0,Z=30.0),ExhaustRotation=(Pitch=22000))
     SteerBoneName="Steering"

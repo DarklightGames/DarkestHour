@@ -34,7 +34,7 @@ defaultproperties
     FrontLeftAngle=321.0
     MaxPitchSpeed=350.0
     TreadVelocityScale=40.0
-    WheelRotationScale=150
+    WheelRotationScale=9750.0
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L02'
     RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R02'
     RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble03'
