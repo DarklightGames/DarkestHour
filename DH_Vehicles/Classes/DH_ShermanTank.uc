@@ -70,6 +70,8 @@ defaultproperties
     VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-15.0,Y=-40.0,Z=87.0),DamageMultiplier=4.0,HitPointType=HP_AmmoStore)
     VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(Z=55.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=66.0
+    DamagedTrackStaticMeshLeft=StaticMesh'DH_allies_vehicles_stc.Sherman.M4A1_DamagedTrack_left'
+    DamagedTrackStaticMeshRight=StaticMesh'DH_allies_vehicles_stc.Sherman.M4A1_DamagedTrack_right'
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-120.0,Y=0.0,Z=95.0)
     HullFireChance=0.45
@@ -97,8 +99,8 @@ defaultproperties
     // Visual effects
     LeftTreadIndex=5
     RightTreadIndex=4
-    LeftTreadPanDirection=(Pitch=32768,Yaw=0,Roll=-16384)
-    RightTreadPanDirection=(Pitch=0,Yaw=32768,Roll=-16384)
+    LeftTreadPanDirection=(Pitch=20480,Yaw=0,Roll=0)
+    RightTreadPanDirection=(Pitch=20480,Yaw=0,Roll=0)
     TreadVelocityScale=110.0
     WheelRotationScale=45500.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-145.0,Y=0.0,Z=70.0),ExhaustRotation=(Pitch=57000,Yaw=32768))
