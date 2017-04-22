@@ -3691,6 +3691,23 @@ exec function DebugPenetration(bool bEnable)
     }
 }
 
+// New debug exec to adjust a vehicle's tread rotation direction
+exec function SetTreadDir(int NewPitch, int NewYaw, int NewRoll)
+{
+    local DHVehicle V;
+    local rotator   NewPanDirection;
+
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && V.bHasTreads)
+    {
+        Log(V.VehicleNameString @ "TreadPanDirection =" @ NewPitch @ NewYaw @ NewRoll @ "(was" @ V.LeftTreadPanDirection $ ")");
+        NewPanDirection.Pitch = NewPitch;
+        NewPanDirection.Yaw = NewYaw;
+        NewPanDirection.Roll = NewRoll;
+        V.LeftTreadPanner.PanDirection = NewPanDirection;
+        V.RightTreadPanner.PanDirection = NewPanDirection;
+    }
+}
+
 // New debug exec to adjust rotation speed of treads
 exec function SetTreadSpeed(int NewValue, optional bool bAddToCurrentSpeed)
 {
