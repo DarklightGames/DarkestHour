@@ -179,12 +179,16 @@ function Fire(optional float F)
     }
 }
 
-// Implemented to handle externally-mounted MGs where player must be unbuttoned to reload (& not using binoculars)
+// Implemented to handle externally-mounted MGs where player must be unbuttoned to reload, & to prevent reloading if player using binoculars
 simulated function bool CanReload()
 {
-    return !bMustUnbuttonToReload
-        || (DriverPositionIndex == UnbuttonedPositionIndex && (!IsInState('ViewTransition') || LastPositionIndex > UnbuttonedPositionIndex)) // unbuttoned position & not just unbuttoning
-        || (DriverPositionIndex > UnbuttonedPositionIndex && DriverPositionIndex != BinocPositionIndex); // above the lowest unbuttoned position, but not on binocs
+    if (DriverPositionIndex == BinocPositionIndex)
+    {
+        return false;
+    }
+
+    return !bMustUnbuttonToReload || DriverPositionIndex > UnbuttonedPositionIndex
+        || (DriverPositionIndex == UnbuttonedPositionIndex && (!IsInState('ViewTransition') || LastPositionIndex > UnbuttonedPositionIndex)); // if unbuttoned position make sure not unbuttoning
 }
 
 // Modified to show screen message advising player they must unbutton to reload an external MG, if they press the reload key (perhaps in confusion on finding they can't reload)
