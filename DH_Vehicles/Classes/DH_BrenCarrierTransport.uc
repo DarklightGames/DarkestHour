@@ -14,7 +14,7 @@ defaultproperties
 {
     bIsApc=true
     bHasTreads=true
-//  bSpecialTankTurning=true // TODO: think BC should have this as is fully tracked (RO version had this)
+    bSpecialTankTurning=true
     TreadHitMaxHeight=7.0
     VehicleHudTreadsPosX(0)=0.37
     VehicleHudTreadsPosX(1)=0.66
@@ -71,7 +71,7 @@ defaultproperties
     GearRatios(2)=0.35
     GearRatios(3)=0.55
     GearRatios(4)=0.6
-    TransRatio=0.12
+    TransRatio=0.145
     LSDFactor=1.0
     EngineBrakeFactor=0.0001
     EngineBrakeRPMScale=0.1
@@ -133,8 +133,8 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="steer_wheel_LF"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Z=10.0)
-        WheelRadius=33.0
+        BoneOffset=(X=-34.5,Y=0.0,Z=3.5)
+        WheelRadius=28.0
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -142,8 +142,8 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="steer_wheel_RF"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Z=10.0)
-        WheelRadius=33.0
+        BoneOffset=(X=-34.5,Y=0.0,Z=3.5)
+        WheelRadius=28.0
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
@@ -151,8 +151,8 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer_wheel_LR"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Z=10.0)
-        WheelRadius=33.0
+        BoneOffset=(X=23.5,Y=0.0,Z=3.5)
+        WheelRadius=28.0
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -160,26 +160,10 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer_wheel_RR"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(Z=10.0)
-        WheelRadius=33.0
+        BoneOffset=(X=23.5,Y=0.0,Z=3.5)
+        WheelRadius=28.0
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.RR_Steering'
-    Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
-        bPoweredWheel=true
-        BoneName="Wheel_T_L_3"
-        BoneRollAxis=AXIS_Y
-        BoneOffset=(Z=10.0)
-        WheelRadius=33.0
-    End Object
-    Wheels(4)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.Left_Drive_Wheel'
-    Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
-        bPoweredWheel=true
-        BoneName="Wheel_T_R_3"
-        BoneRollAxis=AXIS_Y
-        BoneOffset=(Z=10.0)
-        WheelRadius=33.0
-    End Object
-    Wheels(5)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.Right_Drive_Wheel'
     VehicleMass=5.0
     bHasHandbrake=true
     DriveAnim="VUC_driver_idle_close"
@@ -210,7 +194,7 @@ defaultproperties
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(Z=-0.5) // default is zero
+        KCOMOffset=(X=0.05,Y=0.0,Z=-0.85) // default is zero
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
