@@ -6,6 +6,8 @@
 class DHSpawnPoint_SquadRallyPoint extends DHSpawnPointBase
     notplaceable;
 
+#exec OBJ LOAD FILE=..\StaticMeshes\DH_Construction_stc.usx
+
 var DHSquadReplicationInfo SRI;                 // Convenience variable to access the SquadReplicationInfo.
 
 var int SquadIndex;                             // The squad index of the squad that owns this rally point.
@@ -41,6 +43,8 @@ function PostBeginPlay()
     if (Role == ROLE_Authority)
     {
         SRI = DarkestHourGame(Level.Game).SquadReplicationInfo;
+
+        // TODO: set the RP backpack to the right type
 
         if (SRI == none)
         {
@@ -317,6 +321,51 @@ simulated function string GetStyleName()
     {
         return "DHRallyPointButtonStyle";
     }
+}
+
+function UpdateAppearance()
+{
+    local DarkestHourGame G;
+    local DH_LevelInfo.EAlliedNation AlliedNation;
+    local StaticMesh NewStaticMesh;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none && G.DHLevelInfo != none)
+    {
+        AlliedNation = G.DHLevelInfo.AlliedNation;
+    }
+
+    switch (TeamIndex)
+    {
+    case AXIS_TEAM_INDEX:
+        NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.GER_backpack';
+        break;
+    case ALLIES_TEAM_INDEX:
+        switch (AlliedNation)
+        {
+        case NATION_Britain:
+            NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.BRIT_backpack';
+            break;
+        case NATION_Canada:
+            NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.CAN_backpack';
+            break;
+        default:
+            NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.USA_backpack';
+            break;
+        }
+    default:
+        break;
+    }
+
+    SetStaticMesh(NewStaticMesh);
+}
+
+function SetTeamIndex(int TeamIndex)
+{
+    self.TeamIndex = TeamIndex;
+
+    UpdateAppearance();
 }
 
 defaultproperties

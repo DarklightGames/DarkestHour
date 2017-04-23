@@ -1479,7 +1479,7 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
 
     if (RP != none)
     {
-        RP.TeamIndex = P.GetTeamNum();
+        RP.SetTeamIndex(P.GetTeamNum());
         RP.SquadIndex = PRI.SquadIndex;
         RP.RallyPointIndex = RallyPointIndex;
     }

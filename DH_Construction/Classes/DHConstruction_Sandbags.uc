@@ -7,7 +7,7 @@ class DHConstruction_Sandbags extends DHConstruction;
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_Military_stc.sandbag.Sandbag_StackedSCurve'
+    StaticMesh=StaticMesh'DH_Construction_stc.Sandbags.sandbags_01'
     bShouldAlignToGround=true
     MenuName="Sandbags"
     CollisionHeight=100
