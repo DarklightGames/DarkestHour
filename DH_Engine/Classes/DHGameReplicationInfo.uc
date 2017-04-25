@@ -89,6 +89,7 @@ const OBJECTIVES_MAX = 32;
 var DHObjective         DHObjectives[OBJECTIVES_MAX];
 
 var bool                bUseDeathPenaltyCount;
+var bool                bIsInSetupPhase;
 
 var localized string    ForceScaleText;
 var localized string    ReinforcementsInfiniteText;
@@ -136,6 +137,7 @@ replication
         TeamVehicleCounts,
         SpawnPoints,
         SpawningEnableTime,
+        bIsInSetupPhase,
         ConstructionClasses;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))

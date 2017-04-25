@@ -3601,9 +3601,19 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
     local DHWeapon DHW;
     local vector   Extent, HitLoc, HitNorm, StartLoc, EndLoc, Direction;
     local int      i;
-    local DHPlayer Player;
+    local DHPlayer PC;
 
+    PC = DHPlayer(Controller);
     DHW = DHWeapon(Weapon);
+
+    // Do a check if the game is in a setup phase
+    // Because mantling can bypass destroyable static mesh collision, lets just prevent mantling all together while in the setup phase
+    // This is a simulated function which both the server and the client need to check, so the client can't use Level.Game (reason for accessing controller)
+    // If mantling is ever fixed to where it cannot bypass DSM collision, then this check is not needed
+    if (PC != none && PC.GameReplicationInfo != none && DHGameReplicationInfo(PC.GameReplicationInfo).bIsInSetupPhase)
+    {
+        return false;
+    }
 
     if (bOnFire || !bForceTest && (Velocity != vect(0.0, 0.0, 0.0) || bIsCrouched || bWantsToCrouch || bIsCrawling || IsInState('EndProning') || IsInState('CrouchingFromProne') ||
         (Level.TimeSeconds + 1.0 < NextJumpTime) || Stamina < 2.0 || bIsMantling || Physics != PHYS_Walking || bBipodDeployed ||
@@ -3784,11 +3794,9 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
         SetTimer(1.0, false); // In case client or server fail to get here for any reason, this will abort the one that did
     }
 
-    Player = DHPlayer(Controller);
-
-    if (Player != none)
+    if (PC != none)
     {
-        Player.QueueHint(1, true);
+        PC.QueueHint(1, true);
     }
 
     return true;

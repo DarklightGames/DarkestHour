@@ -87,6 +87,9 @@ auto state Timing
         // Set the time at which spawning is allowed
         GRI.SpawningEnableTime = SpawningEnabledTimeActual;
 
+        // Tell GRI that we are in setup phase (to prevent player mantling)
+        GRI.bIsInSetupPhase = true;
+
         SetTimer(1.0, true);
     }
 
@@ -148,6 +151,9 @@ auto state Timing
 
         // Allow weapon dropping
         Level.Game.bAllowWeaponThrowing = true;
+
+        // Tell GRI that we are no longer in setup phase (to allow player mantling)
+        GRI.bIsInSetupPhase = false;
 
         // Disable phase minefields (volumes are static so use AllActors)
         if (PhaseMineFieldTag != '')
