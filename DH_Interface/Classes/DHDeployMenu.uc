@@ -355,7 +355,7 @@ function UpdateRoundStatus()
             RoundTime = Max(0, GRI.RoundEndTime - GRI.ElapsedTime);
         }
 
-        if (GRI.RoundDuration == 0)
+        if (GRI.RoundDuration == 0 && GRI.bMatchHasBegun)
         {
             l_RoundTime.Caption = class'DHHud'.default.NoTimeLimitText;
         }
