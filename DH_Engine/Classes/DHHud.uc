@@ -10,6 +10,18 @@ class DHHud extends ROHud
 #exec OBJ LOAD FILE=..\Textures\DH_Weapon_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
 
+// Death messages
+struct DHObituary
+{
+    var string              KillerName;
+    var string              VictimName;
+    var Color               KillerColor;
+    var Color               VictimColor;
+    var class<DamageType>   DamageType;
+    var float               EndOfLife;
+    var bool                bShowInstantly;
+};
+
 const   MAX_OBJ_ON_SIT = 12; // the maximum objectives that can be listed down the side on the situational map (not on the map itself)
 
 const   VOICE_ICON_DIST_MAX = 2624.672119; // maximum distance from a talking player at which we will show a voice icon
@@ -63,7 +75,7 @@ var     localized string    CaptureBarUnlockText;
 
 // Death messages
 var     array<string>       ConsoleDeathMessages;   // paired with DHObituaries array & holds accompanying console death messages
-var     array<Obituary>     DHObituaries;           // replaced RO's Obituaries static array, so we can have more than 4 death messages
+var     array<DHObituary>   DHObituaries;           // replaced RO's Obituaries static array, so we can have more than 4 death messages
 var     float               ObituaryFadeInTime;     // for some added suspense:
 var     float               ObituaryDelayTime;
 
@@ -352,8 +364,8 @@ function AddDHTextMessage(string M, class<DHLocalMessage> MessageClass, PlayerRe
 // shown.
 function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Victim, class<DamageType> DamageType)
 {
-    local Obituary O;
-    local int      IndexPosition;
+    local DHObituary    O;
+    local int           IndexPosition;
 
     if (Victim == none)
     {
@@ -373,11 +385,12 @@ function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Vic
     // If a suicide, team kill, or spawn kill then have the kill message display ASAP
     if ((Killer != none && Killer.Team.TeamIndex == Victim.Team.TeamIndex) || DamageType == class'DHSpawnKillDamageType')
     {
-        O.EndOfLife = Level.TimeSeconds + (ObituaryLifeSpan - ObituaryDelayTime);
+        O.EndOfLife = Level.TimeSeconds + ObituaryLifeSpan + ObituaryFadeInTime - ObituaryDelayTime;
+        O.bShowInstantly = true;
     }
-    else // Otherwise have it wait the delay time (the entire life span)
+    else
     {
-        O.EndOfLife = Level.TimeSeconds + ObituaryLifeSpan;
+        O.EndOfLife = Level.TimeSeconds + ObituaryLifeSpan + ObituaryFadeInTime;
     }
 
     // Making the player's name show up in white in the kill list
@@ -3903,7 +3916,7 @@ function DisplayMessages(Canvas C)
     local int   i;
     local float X, Y, XL, YL, Scale, TimeOfDeath, FadeInBeginTime, FadeInEndTime, FadeOutBeginTime;
     local byte  Alpha;
-    local Obituary O;
+    local DHObituary O;
 
     super(HudBase).DisplayMessages(C);
 
@@ -3942,12 +3955,20 @@ function DisplayMessages(Canvas C)
         O = DHObituaries[i];
 
         TimeOfDeath = O.EndOfLife - default.ObituaryLifeSpan;
-        FadeInBeginTime = TimeOfDeath + default.ObituaryDelayTime;
 
-        // Ignore this one if not due for display yet
-        if (Level.TimeSeconds < FadeInBeginTime)
+        if (O.bShowInstantly)
         {
-            continue;
+            FadeInBeginTime = Level.TimeSeconds;
+        }
+        else
+        {
+            FadeInBeginTime = TimeOfDeath + default.ObituaryDelayTime;
+
+            // Ignore this one if not due for display yet
+            if (Level.TimeSeconds < FadeInBeginTime)
+            {
+                continue;
+            }
         }
 
         FadeInEndTime = FadeInBeginTime + default.ObituaryFadeInTime;
