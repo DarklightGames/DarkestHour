@@ -214,9 +214,13 @@ simulated function UpdateScoreBoard(Canvas C)
     {
         s $= HUD.default.NoTimeLimitText;
     }
-    else if (DHGRI.bMatchHasBegun)
+    else if (DHGRI.bMatchHasBegun && !DHGRI.bRoundIsOver)
     {
         s $= class'TimeSpan'.static.ToString(Max(0, DHGRI.RoundEndTime - GRI.ElapsedTime));
+    }
+    else if (DHGRI.bRoundIsOver)
+    {
+        s $= class'TimeSpan'.static.ToString(DHGRI.RoundEndTime);
     }
     else
     {

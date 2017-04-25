@@ -90,6 +90,7 @@ var DHObjective         DHObjectives[OBJECTIVES_MAX];
 
 var bool                bUseDeathPenaltyCount;
 var bool                bIsInSetupPhase;
+var bool                bRoundIsOver;
 
 var localized string    ForceScaleText;
 var localized string    ReinforcementsInfiniteText;
@@ -138,6 +139,7 @@ replication
         SpawnPoints,
         SpawningEnableTime,
         bIsInSetupPhase,
+        bRoundIsOver,
         ConstructionClasses;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))

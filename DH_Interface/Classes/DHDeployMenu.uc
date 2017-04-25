@@ -350,6 +350,10 @@ function UpdateRoundStatus()
         {
             RoundTime = Max(0, GRI.RoundStartTime + GRI.PreStartTime - GRI.ElapsedTime);
         }
+        else if (GRI.bRoundIsOver)
+        {
+            RoundTime = GRI.RoundEndTime;
+        }
         else
         {
             RoundTime = Max(0, GRI.RoundEndTime - GRI.ElapsedTime);

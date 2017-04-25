@@ -3,6 +3,8 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
+// To do: Stop casting GRI and just make a damn class variable and set it in PBP (we have 24 functions which declare a local)
+
 class DarkestHourGame extends ROTeamGame;
 
 // When a player leaves the server this info is stored for the session so if they return these values won't reset
@@ -2109,6 +2111,7 @@ state RoundInPlay
         LevelInfo.Allies.ReinforcementInterval = OriginalReinforcementIntervals[ALLIES_TEAM_INDEX];
 
         GRI = DHGameReplicationInfo(GameReplicationInfo);
+        GRI.bRoundIsOver = false;
         GRI.RoundStartTime = RoundStartTime;
         GRI.RoundEndTime = RoundStartTime + RoundDuration;
         GRI.AttritionRate[AXIS_TEAM_INDEX] = 0;
@@ -2553,10 +2556,18 @@ state RoundOver
     function BeginState()
     {
         local DHArtillerySpawner AS;
+        local DHGameReplicationInfo GRI;
+
+        GRI = DHGameReplicationInfo(GameReplicationInfo);
 
         RoundStartTime = ElapsedTime;
-        ROGameReplicationInfo(GameReplicationInfo).bReinforcementsComing[AXIS_TEAM_INDEX] = 0;
-        ROGameReplicationInfo(GameReplicationInfo).bReinforcementsComing[ALLIES_TEAM_INDEX] = 0;
+
+        if (GRI != none)
+        {
+            GRI.bReinforcementsComing[AXIS_TEAM_INDEX] = 0;
+            GRI.bReinforcementsComing[ALLIES_TEAM_INDEX] = 0;
+            GRI.bRoundIsOver = true;
+        }
 
         // Destroy any artillery spawners so they don't keep calling arty
         foreach DynamicActors(class'DHArtillerySpawner', AS)
@@ -2593,6 +2604,17 @@ state RoundOver
             GotoState('RoundInPlay');
         }
     }
+}
+
+// Extended to inform GRI that the round is over so the time remaining can "pause" on the second the round ended (instead of continuing to count down)
+function EndGame(PlayerReplicationInfo Winner, string Reason)
+{
+    if (GameReplicationInfo != none && DHGameReplicationInfo(GameReplicationInfo) != none)
+    {
+        DHGameReplicationInfo(GameReplicationInfo).bRoundIsOver = true;
+    }
+
+    super.EndGame(Winner, Reason);
 }
 
 function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcements, optional bool bOnlyIfNotZero)

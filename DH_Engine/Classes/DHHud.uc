@@ -4426,6 +4426,10 @@ simulated function DrawSpectatingHud(Canvas C)
         {
             CurrentTime = DHGRI.RoundStartTime + DHGRI.PreStartTime - DHGRI.ElapsedTime;
         }
+        else if (DHGRI.bRoundIsOver)
+        {
+            CurrentTime = DHGRI.RoundEndTime;
+        }
         else
         {
             CurrentTime = DHGRI.RoundEndTime - DHGRI.ElapsedTime;
