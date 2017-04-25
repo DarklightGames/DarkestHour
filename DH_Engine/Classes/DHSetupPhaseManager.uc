@@ -22,7 +22,7 @@ var() name              PhaseBoundaryTag;                   // Tag of Destroyabl
 var() array<name>       InitialSpawnPointTags;              // Tags of spawn points that should only be active while in setup phase
 
 var() bool              bScaleStartingReinforcements;       // Scales starting reinforcements to current number of players
-var() bool              bReplacePreStart;                   // If true will override the game's default PreStartTime, making it zero
+var() bool              bSkipPreStart;                   // If true will override the game's default PreStartTime, making it zero
 var() bool              bResetRoundTimer;                   // If true will reset the round's timer to the proper value when phase is over
 var() TeamReinf         PhaseEndReinforcements;             // What to set reinforcements to at the end of the phase (0 means no change, -1 set to zero)
 var() bool              bPreventTimeChangeAtZeroReinf;      // bTimeChangesAtZeroReinf will be set to false for this match
@@ -44,10 +44,10 @@ event PreBeginPlay()
         return;
     }
 
-    // Remove the pre start time if we are using a post-start setup phase!
-    if (bReplacePreStart)
+    // Skip the pre start time if we are using a post-start setup phase!
+    if (bSkipPreStart)
     {
-        G.PreStartTime = 0;
+        G.bSkipPreStartTime = true;
     }
 
     if (bPreventTimeChangeAtZeroReinf)
@@ -65,7 +65,7 @@ event PreBeginPlay()
 function Reset()
 {
     TimerCount = 0;
-    //GotoState('Timing');
+    GotoState('Timing');
 }
 
 auto state Timing
@@ -233,7 +233,7 @@ defaultproperties
     PhaseEndSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01'
     PhaseMessage="Round Begins In: {0} seconds"
     PhaseEndMessage="Round Has Started!"
-    bReplacePreStart=true
+    bSkipPreStart=true
     bScaleStartingReinforcements=true
     SetupPhaseDuration=60
     SpawningEnabledTime=30

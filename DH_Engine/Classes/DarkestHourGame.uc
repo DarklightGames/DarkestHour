@@ -26,6 +26,8 @@ var()   config bool                 bSessionKickOnSecondFFViolation;
 var()   config bool                 bUseWeaponLocking;                      // Weapons can lock (preventing fire) for punishment
 var     int                         WeaponLockTimes[10];
 
+var     bool                        bSkipPreStartTime;                      // Whether or not to skip the PreStartTime configured on the server
+
 var     class<DHObstacleManager>    ObstacleManagerClass;
 
 var     float                       ChangeTeamInterval;
@@ -214,7 +216,16 @@ function PostBeginPlay()
 
     // General game type settings
     GRI.bAllowNetDebug = bAllowNetDebug;
-    GRI.PreStartTime = PreStartTime;
+
+    if (bSkipPreStartTime)
+    {
+        GRI.PreStartTime = 0;
+    }
+    else
+    {
+        GRI.PreStartTime = PreStartTime;
+    }
+
     GRI.RoundDuration = RoundDuration;
     GRI.bReinforcementsComing[AXIS_TEAM_INDEX] = 0;
     GRI.bReinforcementsComing[ALLIES_TEAM_INDEX] = 0;
