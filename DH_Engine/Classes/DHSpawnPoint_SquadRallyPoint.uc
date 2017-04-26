@@ -10,6 +10,8 @@ class DHSpawnPoint_SquadRallyPoint extends DHSpawnPointBase
 
 var DHSquadReplicationInfo SRI;                 // Convenience variable to access the SquadReplicationInfo.
 
+var float CreatedTimeSeconds;                   //  The time (in relation to Level.TimeSeconds) that this rally point was created
+
 var int SquadIndex;                             // The squad index of the squad that owns this rally point.
 var int RallyPointIndex;                        // The index into SRI.RallyPoints.
 var int SpawnsRemaining;                        // The amount of spawns remaining on the rally point.
@@ -44,7 +46,7 @@ function PostBeginPlay()
     {
         SRI = DarkestHourGame(Level.Game).SquadReplicationInfo;
 
-        // TODO: set the RP backpack to the right type
+        CreatedTimeSeconds = Level.TimeSeconds;
 
         if (SRI == none)
         {
@@ -185,9 +187,16 @@ state Active
     event BeginState()
     {
         SetIsActive(true);
+    }
+}
 
-        // "The squad has established a new rally point."
-        SRI.BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SRI.SquadMessageClass, 44);
+function SetIsActive(bool bIsActive)
+{
+    super.SetIsActive(bIsActive);
+
+    if (SRI != none && bIsActive)
+    {
+        SRI.OnSquadRallyPointActivated(self);
     }
 }
 
@@ -370,7 +379,7 @@ function SetTeamIndex(int TeamIndex)
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_Construction_stc.Backpacks.USA_backpack' // TODO: replace with custom made one
+    StaticMesh=StaticMesh'DH_Construction_stc.Backpacks.USA_backpack'
     DrawType=DT_StaticMesh
     TeamIndex=-1
     SquadIndex=-1

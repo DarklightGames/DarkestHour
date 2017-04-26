@@ -11,6 +11,8 @@ const SQUAD_RALLY_POINTS_MAX = 2;
 const TEAM_SQUAD_MEMBERS_MAX = 64;
 const TEAM_SQUADS_MAX = 8;  // SQUAD_SIZE_MIN / TEAM_SQUAD_MEMBERS_MAX
 
+const RALLY_POINTS_MAX = 32;    // TEAM_SQUADS_MAX * SQUAD_RALLY_POINTS_MAX * 2
+
 const SQUAD_NAME_LENGTH_MIN = 3;
 const SQUAD_NAME_LENGTH_MAX = 16;
 
@@ -58,7 +60,7 @@ var private ESquadOrderType         AxisOrderTypes[TEAM_SQUADS_MAX];
 var private vector                  AxisOrderLocations[TEAM_SQUADS_MAX];
 var private float                   AxisNextRallyPointTimes[TEAM_SQUADS_MAX];   // Stores the next time (in relation to Level.TimeSeconds) that a squad can place a new rally point.
 
-var DHSpawnPoint_SquadRallyPoint    RallyPoints[16];
+var DHSpawnPoint_SquadRallyPoint    RallyPoints[RALLY_POINTS_MAX];
 
 var private DHPlayerReplicationInfo AlliesMembers[TEAM_SQUAD_MEMBERS_MAX];
 var private string                  AlliesNames[TEAM_SQUADS_MAX];
@@ -757,14 +759,11 @@ function bool InviteToSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int Squ
     local DHPlayer PC, OtherPC;
     local DHBot Bot;
 
-    Log("InviteToSquad" @ Recipient);
-
     if (Recipient == none ||
         !IsOnTeam(PRI, TeamIndex) ||
         !IsOnTeam(Recipient, TeamIndex) ||
         !IsSquadLeader(PRI, TeamIndex, SquadIndex))
     {
-        Log("A");
         return false;
     }
 
@@ -783,8 +782,6 @@ function bool InviteToSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int Squ
 
     if (Recipient.IsInSquad())
     {
-        Log("B");
-
         if (PC != none)
         {
             // "Invitation could not be sent because {0} is already in a squad.";
@@ -812,8 +809,6 @@ function bool InviteToSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int Squ
     {
         // Bots always and immediately accept squad invitations.
         Bot = DHBot(Recipient.Owner);
-
-        Log("Recipient.Owner" @ Recipient.Owner);
 
         if (Bot != none)
         {
@@ -1278,6 +1273,25 @@ function SetSquadNextRallyPointTime(int TeamIndex, int SquadIndex, float TimeSec
     }
 }
 
+function array<DHSpawnPoint_SquadRallyPoint> GetActiveSquadRallyPoints(int TeamIndex, int SquadIndex)
+{
+    local array<DHSpawnPoint_SquadRallyPoint> ActiveSquadRallyPoints;
+    local int i;
+
+    for (i = 0; i < arraycount(RallyPoints); ++i)
+    {
+        if (RallyPoints[i] != none &&
+            RallyPoints[i].TeamIndex == TeamIndex &&
+            RallyPoints[i].SquadIndex == SquadIndex &&
+            RallyPoints[i].IsActive())
+        {
+            ActiveSquadRallyPoints[ActiveSquadRallyPoints.Length] = RallyPoints[i];
+        }
+    }
+
+    return ActiveSquadRallyPoints;
+}
+
 const RALLY_POINT_RADIUS_IN_METERS = 100;
 
 function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
@@ -1449,6 +1463,9 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
         return none;
     }
 
+    // Found an empty rally point index to use.
+    RallyPointIndex = -1;
+
     for (i = 0; i < arraycount(RallyPoints); ++i)
     {
         if (RallyPoints[i] == none)
@@ -1458,7 +1475,7 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
         }
     }
 
-    if (RallyPointIndex < 0)
+    if (RallyPointIndex == -1)
     {
         Warn("Too many rally points!");
 
@@ -1505,6 +1522,39 @@ function DestroySquadRallyPoint(DHPlayerReplicationInfo PRI, DHSpawnPoint_SquadR
     BroadcastSquadLocalizedMessage(SRP.TeamIndex, SRP.SquadIndex, SquadMessageClass, 57);
 
     SRP.Destroy();
+}
+
+function OnSquadRallyPointActivated(DHSpawnPoint_SquadRallyPoint SRP)
+{
+    local int i;
+    local int RallyPointIndex;
+    local array<DHSpawnPoint_SquadRallyPoint> ActiveSquadRallyPoints;
+
+    // "The squad has established a new rally point."
+    BroadcastSquadLocalizedMessage(SRP.TeamIndex, SRP.SquadIndex, SquadMessageClass, 44);
+
+    // Check if this squad already has more than the maximum rally points.
+    // If so, forcibly delete the oldest one.
+    ActiveSquadRallyPoints = GetActiveSquadRallyPoints(SRP.TeamIndex, SRP.SquadIndex);
+
+    if (ActiveSquadRallyPoints.Length > SQUAD_RALLY_POINTS_MAX)
+    {
+        RallyPointIndex = -1;
+
+        for (i = 0; i < ActiveSquadRallyPoints.Length; ++i)
+        {
+            if (RallyPointIndex == -1 || ActiveSquadRallyPoints[i].CreatedTimeSeconds < RallyPoints[RallyPointIndex].CreatedTimeSeconds)
+            {
+                RallyPointIndex = ActiveSquadRallyPoints[i].RallyPointIndex;
+            }
+        }
+
+        if (RallyPointIndex >= 0)
+        {
+            RallyPoints[RallyPointIndex].Destroy();
+            RallyPoints[RallyPointIndex] = none;
+        }
+    }
 }
 
 defaultproperties
