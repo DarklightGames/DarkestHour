@@ -15,3 +15,19 @@ static final function UFloat Create(optional float Value)
 
     return F;
 }
+
+static final function float MaxValue()
+{
+    return 3.40282347E+38f;
+}
+
+static final function float MinValue()
+{
+    return -3.40282347E+38f;
+}
+
+static final function float Epsilon()
+{
+    return 1.401298E-45f;
+}
+
