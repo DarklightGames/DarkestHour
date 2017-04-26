@@ -38,5 +38,6 @@ defaultproperties
     ErrorMessages(9)="You cannot construct a {0} in a minefield."
     ErrorMessages(10)="You cannot construct a {0} near a spawn point."
     ErrorMessages(11)="You cannot construct a {0} indoors."
+    ErrorMessages(12)="You cannot construct a {0} inside an objective."
 }
 

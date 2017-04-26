@@ -105,12 +105,12 @@ event Destroyed()
 
 state Broken
 {
-	function BeginState()
-	{
+    function BeginState()
+    {
         super.BeginState();
 
         DestroyAttachments();
-	}
+    }
 }
 
 defaultproperties
@@ -125,6 +125,7 @@ defaultproperties
     // Placement
     bShouldAlignToGround=true
     bCanPlaceIndoors=false
+    bCanPlaceInObjective=false
     DuplicateDistanceInMeters=250
     ProxyDistanceInMeters=10.0
     bCanOnlyPlaceOnTerrain=true

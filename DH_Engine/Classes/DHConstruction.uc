@@ -21,6 +21,7 @@ enum EConstructionError
     ERROR_InMinefield,      // Cannot be in a minefield!
     ERROR_NearSpawnPoint,   // Cannot be so close to a spawn point (or location hint)
     ERROR_Indoors,          // Cannot be placed indoors
+    ERROR_InObjective,
     ERROR_Other
 };
 
@@ -35,7 +36,7 @@ var() ETeamOwner TeamOwner;                 // This enum is for the levelers' co
 var private int TeamIndex;
 
 // Placement
-var     float   ProxyDistanceInMeters;      // The distance at which the proxy object will be away from the player when
+var     float   ProxyDistanceInMeters;          // The distance at which the proxy object will be away from the player when
 var     bool    bShouldAlignToGround;
 var     bool    bCanPlaceInWater;
 var     bool    bCanPlaceIndoors;
@@ -44,7 +45,8 @@ var     bool    bCanOnlyPlaceOnTerrain;
 var     float   GroundSlopeMaxInDegrees;
 var     rotator StartRotationMin;
 var     rotator StartRotationMax;
-var     int     LocalRotationRate;              // The amount of yaw, per second, to
+var     int     LocalRotationRate;
+var     bool    bCanPlaceInObjective;
 
 var     vector          PlacementOffset;        // 3D offset in the proxy's local-space during placement
 var     sound           PlacementSound;         // Sound to play when construction is first placed down
@@ -418,6 +420,7 @@ defaultproperties
     bCollideWorld=false
     bBlockActors=true
     bBlockKarma=true
+    bCanPlaceInObjective=true
 
     CollisionHeight=30.0
     CollisionRadius=60.0

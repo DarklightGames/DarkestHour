@@ -485,6 +485,10 @@ function DHConstruction.EConstructionError GetPositionError()
     local DHSpawnPointBase SP;
     local DHLocationHint LH;
     local float OtherRadius, OtherHeight;
+    local DHGameReplicationInfo GRI;
+    local int i;
+
+    GRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
 
     // Don't allow the construction to be placed in water if this is disallowed.
     if (!ConstructionClass.default.bCanPlaceInWater && PhysicsVolume != none && PhysicsVolume.bWaterVolume)
@@ -520,6 +524,18 @@ function DHConstruction.EConstructionError GetPositionError()
         if (TouchingActor != none && TouchingActor.bBlockActors)
         {
             return ERROR_NoRoom;
+        }
+    }
+
+    // Don't allow construction to be placed in objectives if this is disallowed.
+    if (!ConstructionClass.default.bCanPlaceInObjective)
+    {
+        for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
+        {
+            if (GRI.DHObjectives[i] != none && GRI.DHObjectives[i].WithinArea(self))
+            {
+                return ERROR_InObjective;
+            }
         }
     }
 
