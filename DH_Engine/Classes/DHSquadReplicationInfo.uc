@@ -1306,10 +1306,11 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
     local rotator R;
     local DHMineVolume MineVolume;
     local PhysicsVolume PV;
-    local int DistanceInMeters, SecondsToWait;
+    local int SecondsToWait;
     local DHPawnCollisionTest CT;
     local vector L;
     local DHRestrictionVolume RV;
+    local float D, ClosestBlockingRallyPointDistance;
 
     if (PC == none)
     {
@@ -1335,23 +1336,31 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
         return none;
     }
 
+    ClosestBlockingRallyPointDistance = class'UFloat'.static.MaxValue();
+
     // Cannot be too close to another rally point.
     for (i = 0; i < arraycount(RallyPoints); ++i)
     {
-        if (RallyPoints[i] != none &&
-            RallyPoints[i].TeamIndex == PC.GetTeamNum() &&
-            RallyPoints[i].SquadIndex == PC.GetSquadIndex())
+        if (RallyPoints[i] != none && RallyPoints[i].TeamIndex == PC.GetTeamNum() && RallyPoints[i].SquadIndex == PC.GetSquadIndex())
         {
-            DistanceInMeters = class'DHUnits'.static.UnrealToMeters(VSize(RallyPoints[i].Location - P.Location));
+            D = VSize(RallyPoints[i].Location - P.Location);
 
-            if (DistanceInMeters < RALLY_POINT_RADIUS_IN_METERS)
+            if (D < class'DHUnits'.static.MetersToUnreal(RALLY_POINT_RADIUS_IN_METERS))
             {
-                // "You must be an additional {0} meters away from your squad's other rally point."
-                PC.ReceiveLocalizedMessage(SquadMessageClass, class'UInteger'.static.FromShorts(45, RALLY_POINT_RADIUS_IN_METERS - DistanceInMeters));
-
-                return none;
+                if (D < ClosestBlockingRallyPointDistance)
+                {
+                    ClosestBlockingRallyPointDistance = D;
+                }
             }
         }
+    }
+
+    if (ClosestBlockingRallyPointDistance != class'UFloat'.static.MaxValue())
+    {
+        // "You must be an additional {0} meters away from your squad's other rally point."
+        PC.ReceiveLocalizedMessage(SquadMessageClass, class'UInteger'.static.FromShorts(45, Max(1, RALLY_POINT_RADIUS_IN_METERS - class'DHUnits'.static.UnrealToMeters(ClosestBlockingRallyPointDistance))));
+
+        return none;
     }
 
     // Cannot place a rally point too soon after placing one recently.

@@ -89,7 +89,7 @@ function bool IsOptionDisabled(int OptionIndex)
 defaultproperties
 {
     Options(0)=(ActionText="Fire",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
-    Options(1)=(ActionText="Create Rally Point",Material=Material'DH_InterfaceArt_tex.HUD.squad_order_attack')
+    Options(1)=(ActionText="Create Rally Point",Material=Material'DH_GUI_Tex.DeployMenu.RallyPointDiffuse')
     Options(2)=(ActionText="Construction",Material=Material'DH_InterfaceArt_tex.HUD.squad_order_defend',Type=TYPE_Submenu)
     Options(3)=(ActionText="Move",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_move')
     Options(4)=(ActionText="...",Type=TYPE_Submenu)
