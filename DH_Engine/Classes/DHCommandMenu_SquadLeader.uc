@@ -77,6 +77,7 @@ function bool IsOptionDisabled(int OptionIndex)
 
     switch (OptionIndex)
     {
+    case 1:
     case 2:
         return PC == none || DHPawn(PC.Pawn) == none;
     case 4:
