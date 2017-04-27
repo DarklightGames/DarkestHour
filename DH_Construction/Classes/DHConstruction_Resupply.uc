@@ -60,6 +60,21 @@ function UpdateAppearance()
     }
 }
 
+function static StaticMesh GetProxyStaticMesh(DHConstructionProxy CP)
+{
+    switch (CP.PlayerOwner.GetTeamNum())
+    {
+        case AXIS_TEAM_INDEX:
+            return StaticMesh'DH_Construction_stc.Ammo.DH_Ger_ammo_box';
+        case ALLIES_TEAM_INDEX:
+            return StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box';
+        default:
+            break;
+    }
+
+    return super.GetProxyStaticMesh(CP);
+}
+
 defaultproperties
 {
     StaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box'

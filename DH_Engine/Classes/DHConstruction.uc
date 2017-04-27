@@ -336,7 +336,7 @@ function static UpdateProxy(DHConstructionProxy CP)
     local array<Material> StaticMeshSkins;
 
     CP.SetDrawType(DT_StaticMesh);
-    CP.SetStaticMesh(default.StaticMesh);
+    CP.SetStaticMesh(GetProxyStaticMesh(CP));
 
     StaticMeshSkins = (new class'UStaticMesh').FindStaticMeshSkins(CP.StaticMesh);
 
@@ -344,6 +344,11 @@ function static UpdateProxy(DHConstructionProxy CP)
     {
         CP.Skins[i] = CP.CreateProxyMaterial(StaticMeshSkins[i]);
     }
+}
+
+function static StaticMesh GetProxyStaticMesh(DHConstructionProxy CP)
+{
+    return default.StaticMesh;
 }
 
 function static vector GetPlacementOffset()
