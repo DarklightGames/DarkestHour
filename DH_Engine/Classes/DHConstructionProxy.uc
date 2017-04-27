@@ -214,7 +214,7 @@ function Tick(float DeltaTime)
 {
     local vector L, RL;
     local rotator R;
-    local DHConstruction.EConstructionError NewProxyError;
+    local DHConstruction.EConstructionError ProvisionalPositionError, NewProxyError;
 
     super.Tick(DeltaTime);
 
@@ -229,16 +229,18 @@ function Tick(float DeltaTime)
     // function able to be run on the client and the server independently!
 
     // An error may be thrown when determining the location, so store it here.
-    NewProxyError = GetProvisionalPosition(L, R);
+    ProvisionalPositionError = GetProvisionalPosition(L, R);
 
     // Set the location
     SetLocation(L);
     SetRotation(R);
 
+    NewProxyError = GetPositionError();
+
     if (NewProxyError == ERROR_None)
     {
         // Location was determined to be okay, now do another pass.
-        NewProxyError = GetPositionError();
+        NewProxyError = ProvisionalPositionError;
     }
 
     if (ProxyError != NewProxyError)
