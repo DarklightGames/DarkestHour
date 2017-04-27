@@ -92,12 +92,6 @@ function SelectSpawnPoint(int SpawnPointIndex)
 
     for (i = 0; i < arraycount(b_SpawnPoints); ++i)
     {
-        if (i == SpawnPointIndex)
-        {
-            Log("b_SpawnPoints[" $ i $ "]" @ b_SpawnPoints[i]);
-            Log("Tag" @ b_SpawnPoints[i].Tag);
-        }
-
         b_SpawnPoints[i].SetChecked(b_SpawnPoints[i].Tag != -1 && b_SpawnPoints[i].Tag == SpawnPointIndex);
     }
 
