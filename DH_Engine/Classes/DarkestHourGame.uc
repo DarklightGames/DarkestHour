@@ -3456,8 +3456,8 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
         GRI.ClearArtilleryTarget(DHPlayer(Other));
     }
 
-    // If we changed team then set the NextChangeTeamTime
-    if (bNewTeam && PC != none)
+    // If we changed team and we aren't in standalone then set the NextChangeTeamTime
+    if (PC != none && bNewTeam && Level.NetMode != NM_Standalone)
     {
         PC.NextChangeTeamTime = GRI.ElapsedTime + default.ChangeTeamInterval;
     }
