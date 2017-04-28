@@ -1293,32 +1293,32 @@ function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector Hi
 }
 
 // Modified for Squad system and so it doesn't call ChangeTeam() when a player "Logins" to the server
-// Theel
-// TODO: Clean up this function, very messy (code copied from nearly all parent classes up to GameInfo() (order of code should be correct)
-// This also will make it so when a player joins the server it doesn't say they joined Axis before they actually pick their team
+// Will also make it so when a player joins the server it doesn't say they joined Axis before they actually pick their team
+// This function has a lot of code that probably isn't needed, but kept in case it is (may need cleaned up at some point)
 event PlayerController Login(string Portal, string Options, out string Error)
 {
-    local PlayerController NewPlayer, TestPlayer;
-    local DHPlayer PC;
-    local Controller C;
-    local NavigationPoint StartSpot;
-    local string          InName, InAdminName, InPassword, InChecksum, InCharacter,InSex;
-    local byte            InTeam;
-    local bool bSpectator, bAdmin;
-    local class<Security> MySecurityClass;
-    local pawn TestPawn;
+    local PlayerController  NewPlayer, TestPlayer;
+    local DHPlayer          PC;
+    local Controller        C;
+    local NavigationPoint   StartSpot;
+    local string            InName, InAdminName, InPassword, InChecksum, InCharacter,InSex;
+    local byte              InTeam;
+    local bool              bSpectator, bAdmin;
+    local class<Security>   MySecurityClass;
+    local pawn              TestPawn;
 
     // Stop the game from automatically trimming longer names
     InName = Left(ParseOption(Options, "Name"), 32);
 
-    if ( MaxLives > 0 )
+    if (MaxLives > 0)
     {
-        // check that game isn't too far along
-        for ( C=Level.ControllerList; C!=None; C=C.NextController )
+        // Check that game isn't too far along (ancient unreal code dealing with NumLives and LateEntryLives
+        // This could probably be removed
+        for (C = Level.ControllerList; C != none; C = C.NextController)
         {
-            if ( (C.PlayerReplicationInfo != None) && (C.PlayerReplicationInfo.NumLives > LateEntryLives) )
+            if ((C.PlayerReplicationInfo != none) && (C.PlayerReplicationInfo.NumLives > LateEntryLives))
             {
-                Options = "?SpectatorOnly=1"$Options;
+                Options = "?SpectatorOnly=1" $ Options;
                 break;
             }
         }
@@ -1335,7 +1335,9 @@ event PlayerController Login(string Portal, string Options, out string Error)
     InPassword = ParseOption ( Options, "Password" );
     InChecksum = ParseOption ( Options, "Checksum" );
 
-    if ( HasOption(Options, "Load") )
+    // Todo:
+    // We don't support save games, this could probably go bye bye also
+    if (HasOption(Options, "Load"))
     {
         log("Loading Savegame");
 
@@ -1344,57 +1346,68 @@ event PlayerController Login(string Portal, string Options, out string Error)
 
         // Try to match up to existing unoccupied player in level,
         // for savegames - also needed coop level switching.
-        ForEach DynamicActors(class'PlayerController', TestPlayer )
+        foreach DynamicActors(class'PlayerController', TestPlayer)
         {
-            if ( (TestPlayer.Player==None) && (TestPlayer.PlayerOwnerName~=InName) )
+            if ((TestPlayer.Player == none) && (TestPlayer.PlayerOwnerName ~= InName))
             {
                 TestPawn = TestPlayer.Pawn;
-                if ( TestPawn != None )
+
+                if (TestPawn != none)
+                {
                     TestPawn.SetRotation(TestPawn.Controller.Rotation);
                     log("FOUND "$TestPlayer@TestPlayer.PlayerReplicationInfo.PlayerName);
+                }
+
                 return TestPlayer;
             }
         }
     }
 
-    bSpectator = ( ParseOption( Options, "SpectatorOnly" ) ~= "1" );
-    if (AccessControl != None)
+    bSpectator = (ParseOption( Options, "SpectatorOnly" ) ~= "1");
+
+    if (AccessControl != none)
+    {
         bAdmin = AccessControl.CheckOptionsAdmin(Options);
+    }
 
     // Make sure there is capacity except for admins. (This might have changed since the PreLogin call).
-    if ( !bAdmin && AtCapacity(bSpectator) )
+    if (!bAdmin && AtCapacity(bSpectator))
     {
-        Error = GameMessageClass.Default.MaxedOutMessage;
-        return None;
+        Error = GameMessageClass.default.MaxedOutMessage;
+        return none;
     }
 
     // If admin, force spectate mode if the server already full of reg. players
-    if ( bAdmin && AtCapacity(false))
-        bSpectator = true;
-
-    // Pick a team (if need teams)
-    InTeam = PickTeam(InTeam,None);
-
-    // Find a start spot.
-    StartSpot = FindPlayerStart( None, InTeam, Portal );
-
-    if( StartSpot == None )
+    if (bAdmin && AtCapacity(false))
     {
-        Error = GameMessageClass.Default.FailedPlaceMessage;
-        return None;
+        bSpectator = true;
     }
 
-    if ( PlayerControllerClass == None )
+    // Pick a team (if need teams)
+    InTeam = PickTeam(InTeam, none);
+
+    // Find a start spot.
+    StartSpot = FindPlayerStart(none, InTeam, Portal);
+
+    if(StartSpot == none)
+    {
+        Error = GameMessageClass.default.FailedPlaceMessage;
+        return none;
+    }
+
+    if (PlayerControllerClass == none)
+    {
         PlayerControllerClass = class<PlayerController>(DynamicLoadObject(PlayerControllerClassName, class'Class'));
+    }
 
     NewPlayer = spawn(PlayerControllerClass,,,StartSpot.Location,StartSpot.Rotation);
 
     // Handle spawn failure.
-    if( NewPlayer == None )
+    if (NewPlayer == none)
     {
         log("Couldn't spawn player controller of class "$PlayerControllerClass);
-        Error = GameMessageClass.Default.FailedSpawnMessage;
-        return None;
+        Error = GameMessageClass.default.FailedSpawnMessage;
+        return none;
     }
 
     NewPlayer.StartSpot = StartSpot;
@@ -1404,41 +1417,62 @@ event PlayerController Login(string Portal, string Options, out string Error)
 
     // Apply security to this controller
     MySecurityClass=class<Security>(DynamicLoadObject(SecurityClass,class'class'));
-    if (MySecurityClass!=None)
+
+    if (MySecurityClass != none)
     {
         NewPlayer.PlayerSecurity = spawn(MySecurityClass,NewPlayer);
-        if (NewPlayer.PlayerSecurity==None)
+
+        if (NewPlayer.PlayerSecurity == none)
+        {
             log("Could not spawn security for player "$NewPlayer,'Security');
+        }
     }
     else if (SecurityClass == "")
+    {
         log("No value for Engine.GameInfo.SecurityClass -- System is not secure.",'Security');
+    }
     else
+    {
         log("Unknown security class ["$SecurityClass$"] -- System is not secure.",'Security');
+    }
 
-    if ( bAttractCam )
+    if (bAttractCam)
+    {
         NewPlayer.GotoState('AttractMode');
+    }
     else
+    {
         NewPlayer.GotoState('Spectating');
+    }
 
     // Init player's name
-    if( InName=="" )
+    if (InName == "")
+    {
         InName=DefaultPlayerName;
-    if( Level.NetMode!=NM_Standalone || NewPlayer.PlayerReplicationInfo.PlayerName==DefaultPlayerName )
-        ChangeName( NewPlayer, InName, false );
+    }
+    if (Level.NetMode != NM_Standalone || NewPlayer.PlayerReplicationInfo.PlayerName == DefaultPlayerName)
+    {
+        ChangeName(NewPlayer, InName, false);
+    }
 
-    // custom voicepack
+    // Custom voicepack (Theel: this probably doesn't work, but might be needed)
     NewPlayer.PlayerReplicationInfo.VoiceTypeName = ParseOption ( Options, "Voice");
 
     InCharacter = ParseOption(Options, "Character");
     NewPlayer.SetPawnClass(DefaultPlayerClassName, InCharacter);
     InSex = ParseOption(Options, "Sex");
-    if ( Left(InSex,3) ~= "F" )
+
+    // Look at this garbage
+    if (Left(InSex,3) ~= "F")
+    {
         NewPlayer.SetPawnFemale();  // only effective if character not valid
+    }
 
     // Set the player's ID.
     NewPlayer.PlayerReplicationInfo.PlayerID = CurrentID++;
 
-    if ( bSpectator || NewPlayer.PlayerReplicationInfo.bOnlySpectator ) // || !ChangeTeam(newPlayer, InTeam, false) )
+    // Here is where the ChangeTeam() call was removed
+    if (bSpectator || NewPlayer.PlayerReplicationInfo.bOnlySpectator) // || !ChangeTeam(newPlayer, InTeam, false) )
     {
         NewPlayer.PlayerReplicationInfo.bOnlySpectator = true;
         NewPlayer.PlayerReplicationInfo.bIsSpectator = true;
@@ -1451,46 +1485,62 @@ event PlayerController Login(string Portal, string Options, out string Error)
     newPlayer.StartSpot = StartSpot;
 
     // Init player's administrative privileges and log it
-    if (AccessControl != None && AccessControl.AdminLogin(NewPlayer, InAdminName, InPassword))
+    if (AccessControl != none && AccessControl.AdminLogin(NewPlayer, InAdminName, InPassword))
     {
         AccessControl.AdminEntered(NewPlayer, InAdminName);
     }
 
     NumPlayers++;
-    if ( NumPlayers > 20 )
+
+    if (NumPlayers > 20)
+    {
         bLargeGameVOIP = true;
+    }
+
     bWelcomePending = true;
 
-    if ( bTestMode )
+    // WTF is this?
+    if (bTestMode)
+    {
         TestLevel();
+    }
 
-    // if delayed start, don't give a pawn to the player yet
+    // If delayed start, don't give a pawn to the player yet
     // Normal for multiplayer games
-    if ( bDelayedStart )
+    if (bDelayedStart)
     {
         NewPlayer.GotoState('PlayerWaiting');
     }
 
-    if ( Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer )
+    // Init voice chat if we are in a MP environment
+    if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
     {
         NewPlayer.VoiceReplicationInfo = VoiceReplicationInfo;
-        if ( Level.NetMode == NM_ListenServer && Level.GetLocalPlayerController() == PC )
+        if (Level.NetMode == NM_ListenServer && Level.GetLocalPlayerController() == PC)
+        {
             NewPlayer.InitializeVoiceChat();
+        }
     }
 
-    if ( bMustJoinBeforeStart && GameReplicationInfo.bMatchHasBegun )
-        UnrealPlayer(NewPlayer).bLatecomer = true;
-
-    if ( Level.NetMode == NM_Standalone )
+    if (bMustJoinBeforeStart && GameReplicationInfo.bMatchHasBegun)
     {
-        if( NewPlayer.PlayerReplicationInfo.bOnlySpectator )
+        UnrealPlayer(NewPlayer).bLatecomer = true;
+    }
+
+    if (Level.NetMode == NM_Standalone)
+    {
+        if (NewPlayer.PlayerReplicationInfo.bOnlySpectator)
         {
             // Compensate for the space left for the player
-            if ( !bCustomBots && (bAutoNumBots || (bTeamGame && (InitialBots%2 == 1))) )
+            if (!bCustomBots && (bAutoNumBots || (bTeamGame && (InitialBots%2 == 1))))
+            {
                 InitialBots++;
+            }
         }
         else
+        {
             StandalonePlayer = NewPlayer;
+        }
     }
 
     PC = DHPlayer(NewPlayer);
