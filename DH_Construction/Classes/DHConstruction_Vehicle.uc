@@ -109,4 +109,5 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_02'
     bDestroyOnConstruction=true
     bShouldAlignToGround=true
+    BrokenLifespan=0.0
 }
