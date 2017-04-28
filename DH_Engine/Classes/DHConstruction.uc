@@ -245,6 +245,17 @@ Begin:
 
 state Broken
 {
+    function BeginState()
+    {
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            if (BrokenEmitterClass != none)
+            {
+                Spawn(BrokenEmitterClass, self,, Location, Rotation);
+            }
+        }
+    }
+
     event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
     {
         // Do nothing, since we're broken already!
