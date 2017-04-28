@@ -13,4 +13,6 @@ var int         Kills;
 var int         Score;
 var int         Deaths;
 var int         DeathPenaltyCount;
+var int         NextChangeTeamTime;
+var byte        TeamIndex;
 

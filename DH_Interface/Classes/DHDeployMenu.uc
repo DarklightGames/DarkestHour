@@ -85,6 +85,8 @@ var localized   string                      SelectSpawnPointText;
 var localized   string                      DeployInTimeText;
 var localized   string                      DeployNowText;
 var localized   string                      ReservedString;
+var localized   string                      ChangeTeamConfirmText;
+var localized   string                      CantChangeTeamYetText;
 
 var localized   string                      LockText;
 var localized   string                      UnlockText;
@@ -95,7 +97,6 @@ var localized   string                      VehicleUnavailableString;
 // GetTeamNum function is not reliable after receiving a successful team change
 // signal from InternalOnMessage.
 var             byte                        CurrentTeam;
-var             float                       NextChangeTeamTime;
 
 var             ELoadoutMode                LoadoutMode;
 
@@ -734,17 +735,47 @@ function bool OnClick(GUIComponent Sender)
 
         //Axis
         case b_Axis:
-            ChangeTeam(AXIS_TEAM_INDEX);
+            if (CurrentTeam != 0 && PC.NextChangeTeamTime < GRI.ElapsedTime)
+            {
+                Controller.OpenMenu(Controller.QuestionMenuClass);
+                GUIQuestionPage(Controller.TopPage()).SetupQuestion(Repl(default.ChangeTeamConfirmText, "{s}", class'DarkestHourGame'.default.ChangeTeamInterval), QBTN_YesNo);
+                GUIQuestionPage(Controller.TopPage()).NewOnButtonClick = ChangeToAxisChoice;
+            }
+            else if (CurrentTeam != 0)
+            {
+                Controller.OpenMenu(Controller.QuestionMenuClass);
+                GUIQuestionPage(Controller.TopPage()).SetupQuestion(Repl(default.CantChangeTeamYetText, "{s}", PC.NextChangeTeamTime - GRI.ElapsedTime), QBTN_Ok);
+            }
             break;
 
         //Allies
         case b_Allies:
-            ChangeTeam(ALLIES_TEAM_INDEX);
+            if (CurrentTeam != 1 && PC.NextChangeTeamTime < GRI.ElapsedTime)
+            {
+                Controller.OpenMenu(Controller.QuestionMenuClass);
+                GUIQuestionPage(Controller.TopPage()).SetupQuestion(Repl(default.ChangeTeamConfirmText, "{s}", class'DarkestHourGame'.default.ChangeTeamInterval), QBTN_YesNo);
+                GUIQuestionPage(Controller.TopPage()).NewOnButtonClick = ChangeToAlliesChoice;
+            }
+            else if (CurrentTeam != 1)
+            {
+                Controller.OpenMenu(Controller.QuestionMenuClass);
+                GUIQuestionPage(Controller.TopPage()).SetupQuestion(Repl(default.CantChangeTeamYetText, "{s}", PC.NextChangeTeamTime - GRI.ElapsedTime), QBTN_Ok);
+            }
             break;
 
         //Spectate
         case b_Spectate:
-            ChangeTeam(254);
+            if (PC.NextChangeTeamTime < GRI.ElapsedTime)
+            {
+                Controller.OpenMenu(Controller.QuestionMenuClass);
+                GUIQuestionPage(Controller.TopPage()).SetupQuestion(Repl(default.ChangeTeamConfirmText, "{s}", class'DarkestHourGame'.default.ChangeTeamInterval), QBTN_YesNo);
+                GUIQuestionPage(Controller.TopPage()).NewOnButtonClick = ChangeToSpectateChoice;
+            }
+            else
+            {
+                Controller.OpenMenu(Controller.QuestionMenuClass);
+                GUIQuestionPage(Controller.TopPage()).SetupQuestion(Repl(default.CantChangeTeamYetText, "{s}", PC.NextChangeTeamTime - GRI.ElapsedTime), QBTN_Ok);
+            }
             break;
 
         //Equipment
@@ -772,6 +803,51 @@ function bool OnClick(GUIComponent Sender)
     }
 
     return false;
+}
+
+function bool ChangeToAxisChoice(byte Button)
+{
+    switch (Button)
+    {
+        // Yes
+        case 16:
+            ChangeTeam(AXIS_TEAM_INDEX);
+            return true;
+            break;
+        default:
+            return true;
+            break;
+    }
+}
+
+function bool ChangeToAlliesChoice(byte Button)
+{
+    switch (Button)
+    {
+        // Yes
+        case 16:
+            ChangeTeam(ALLIES_TEAM_INDEX);
+            return true;
+            break;
+        default:
+            return true;
+            break;
+    }
+}
+
+function bool ChangeToSpectateChoice(byte Button)
+{
+    switch (Button)
+    {
+        // Yes
+        case 16:
+            ChangeTeam(254); // Spectate
+            return true;
+            break;
+        default:
+            return true;
+            break;
+    }
 }
 
 function Apply()
@@ -1323,8 +1399,8 @@ function UpdateVehicleImage()
 
 function ChangeTeam(byte Team)
 {
-    if (Team != CurrentTeam &&
-        PC.Level.TimeSeconds >= NextChangeTeamTime)
+    // Confirm that we are actually changing teams
+    if (Team != CurrentTeam)
     {
         SetButtonsEnabled(false);
 
@@ -1344,8 +1420,6 @@ function OnTeamChanged(byte Team)
     UpdateButtons();
     UpdateRoundStatus();
     UpdateSquads();
-
-    NextChangeTeamTime = PC.Level.TimeSeconds + class'DarkestHourGame'.default.ChangeTeamInterval;
 }
 
 function OnSpawnPointChanged(int SpawnPointIndex, optional bool bDoubleClick)
@@ -2301,9 +2375,10 @@ defaultproperties
     SelectSpawnPointText="Select a spawn point"
     DeployInTimeText="Press Continue to deploy ({0})"
     DeployNowText="Press Continue to deploy now!"
+    ChangeTeamConfirmText="Are you sure you want to change teams? (you will not be able to change back for {s} seconds)"
+    CantChangeTeamYetText="You have {s} seconds before you can change teams"
     bButtonsEnabled=true
     VehicleNoneMaterial=material'DH_GUI_tex.DeployMenu.vehicle_none'
-    NextChangeTeamTime=0.0
     OnPreDraw=InternalOnPreDraw
     ReservedString="Reserved"
     OnKeyEvent=InternalOnKeyEvent

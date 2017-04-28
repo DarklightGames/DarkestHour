@@ -58,7 +58,7 @@ var     int                     NextVehicleSpawnTime;       // the time at which
 var     int                     DHPrimaryWeapon;            // Picking up RO's slack, this should have been replicated from the outset
 var     int                     DHSecondaryWeapon;
 var     bool                    bSpawnPointInvalidated;
-var     float                   NextChangeTeamTime;         // the time at which a player can change teams next (updated in Level.Game.ChangeTeam)
+var     int                     NextChangeTeamTime;         // the time at which a player can change teams next
 var     int                     DeathPenaltyCount;          // number of deaths accumulated that affects respawn time (only increases if bUseDeathPenalty is enabled)
                                                             // it resets whenever an objective is taken
 
@@ -94,7 +94,7 @@ replication
         NextSpawnTime, SpawnPointIndex, VehiclePoolIndex,
         DHPrimaryWeapon, DHSecondaryWeapon, bSpawnPointInvalidated,
         NextVehicleSpawnTime, LastKilledTime, DeathPenaltyCount,
-        WeaponUnlockTime, SquadReplicationInfo, SquadMemberLocations;
+        WeaponUnlockTime, SquadReplicationInfo, SquadMemberLocations, NextChangeTeamTime;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -153,10 +153,10 @@ simulated event PostBeginPlay()
 // In that situation we record a PendingWeaponLockSeconds  on client, then here we use it to set the weapon lock on client as soon as it receives the GRI
 simulated function PostNetReceive()
 {
-    if (PendingWeaponLockSeconds  > 0 && GameReplicationInfo != none)
+    if (PendingWeaponLockSeconds > 0 && GameReplicationInfo != none)
     {
         LockWeapons(PendingWeaponLockSeconds );
-        PendingWeaponLockSeconds  = 0;
+        PendingWeaponLockSeconds = 0;
     }
 
     super.PostNetReceive();
@@ -359,7 +359,7 @@ exec function PlayerMenu(optional int Tab)
 {
     bPendingMapDisplay = false;
 
-    if (!bWeaponsSelected)
+    if (PlayerReplicationInfo.Team == none || PlayerReplicationInfo.Team.TeamIndex == 254)
     {
         ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
     }
@@ -384,9 +384,8 @@ function ShowMidGameMenu(bool bPause)
     }
     else
     {
-        // If we haven't picked a team, role and weapons yet, or is a spectator... open the team pick menu
-        if (!bWeaponsSelected ||
-            PlayerReplicationInfo.Team == none ||
+        // If we haven't picked a team or is a spectator... open the team pick menu
+        if (PlayerReplicationInfo.Team == none ||
             PlayerReplicationInfo.Team.TeamIndex == 254)
         {
             ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
@@ -1004,6 +1003,30 @@ function ClientSetBehindView(bool B)
     {
         Pawn.ResetConfig();
         Vehicle(Pawn).DesiredTPCamDistance = Vehicle(Pawn).TPCamDistance;
+    }
+}
+
+// Modified to edit an if state in Timer()
+auto state PlayerWaiting
+{
+    // In the else if() statement, PRI != none was added so if the player isn't knowledgeable of their PRI yet it doesn't even open a menu
+    // This actually works quite well because now players will actually see the server's MOTD text
+    simulated function Timer()
+    {
+        if (!bPendingMapDisplay || bDemoOwner)
+        {
+            SetTimer(0, false);
+        }
+        else if(Player != none && GUIController(Player.GUIController) != none && !GUIController(Player.GUIController).bActive && PlayerReplicationInfo != none)
+        {
+            bPendingMapDisplay = false;
+            SetTimer(0, false);
+            PlayerMenu();
+
+            // We init the hint manager here because it needs to be
+            // initialized after the Player variables have been set
+            UpdateHintManagement(bShowHints);
+        }
     }
 }
 
@@ -2278,6 +2301,11 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
     // Attempt to change teams
     if (newTeam != 255)
     {
+        if (NextChangeTeamTime >= GRI.ElapsedTime)
+        {
+            return;
+        }
+
         // Spectate
         if (newTeam == 254)
         {
@@ -2451,7 +2479,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
                 RI = DHRoleInfo(Game.GetRoleInfo(PlayerReplicationInfo.Team.TeamIndex, DesiredRole));
             }
 
-            Log(GRI.CanSpawnWithParameters(NewSpawnPointIndex, GetTeamNum(), DesiredRole, PRI.SquadIndex, NewVehiclePoolIndex));
+            //Log("Can Spawn With Parameters: " $ GRI.CanSpawnWithParameters(NewSpawnPointIndex, GetTeamNum(), DesiredRole, PRI.SquadIndex, NewVehiclePoolIndex));
 
             if (GRI != none && GRI.CanSpawnWithParameters(NewSpawnPointIndex, GetTeamNum(), DesiredRole, PRI.SquadIndex, NewVehiclePoolIndex))
             {

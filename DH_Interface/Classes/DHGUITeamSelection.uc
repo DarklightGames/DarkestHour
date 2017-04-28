@@ -157,6 +157,24 @@ function SelectTeam(int Team)
 {
     SelectedTeam = Team;
 
+    // Important check
+    if (PC == none && GRI == none)
+    {
+        return;
+    }
+
+    // Check to make sure we actually can "change" teams
+    if (PC.PlayerReplicationInfo != none &&
+        PC.PlayerReplicationInfo.Team != none &&
+        PC.PlayerReplicationInfo.Team.TeamIndex != Team &&
+        PC.NextChangeTeamTime >= GRI.ElapsedTime)
+    {
+        // Trying to change teams, but recently did (give an error)
+        Controller.OpenMenu(Controller.QuestionMenuClass);
+        GUIQuestionPage(Controller.TopPage()).SetupQuestion(Repl(class'DHDeployMenu'.default.CantChangeTeamYetText, "{s}", PC.NextChangeTeamTime - GRI.ElapsedTime), QBTN_Ok);
+        return;
+    }
+
     SetButtonsState(true);
 
     if (Team == -1) // Spectate

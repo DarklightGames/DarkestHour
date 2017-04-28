@@ -32,7 +32,7 @@ var     bool                        bSkipPreStartTime;                      // W
 
 var     class<DHObstacleManager>    ObstacleManagerClass;
 
-var     float                       ChangeTeamInterval;
+var     int                         ChangeTeamInterval;
 
 var     array<float>                ReinforcementMessagePercentages;
 var     int                         TeamReinforcementMessageIndices[2];
@@ -1292,16 +1292,206 @@ function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector Hi
     return Damage;
 }
 
+// Modified for Squad system and so it doesn't call ChangeTeam() when a player "Logins" to the server
+// Theel
+// TODO: Clean up this function, very messy (code copied from nearly all parent classes up to GameInfo() (order of code should be correct)
+// This also will make it so when a player joins the server it doesn't say they joined Axis before they actually pick their team
 event PlayerController Login(string Portal, string Options, out string Error)
 {
-    local string InName;
-    local PlayerController NewPlayer;
+    local PlayerController NewPlayer, TestPlayer;
     local DHPlayer PC;
+    local Controller C;
+    local NavigationPoint StartSpot;
+    local string          InName, InAdminName, InPassword, InChecksum, InCharacter,InSex;
+    local byte            InTeam;
+    local bool bSpectator, bAdmin;
+    local class<Security> MySecurityClass;
+    local pawn TestPawn;
 
     // Stop the game from automatically trimming longer names
     InName = Left(ParseOption(Options, "Name"), 32);
 
-    NewPlayer = super.Login(Portal, Options, Error);
+    if ( MaxLives > 0 )
+    {
+        // check that game isn't too far along
+        for ( C=Level.ControllerList; C!=None; C=C.NextController )
+        {
+            if ( (C.PlayerReplicationInfo != None) && (C.PlayerReplicationInfo.NumLives > LateEntryLives) )
+            {
+                Options = "?SpectatorOnly=1"$Options;
+                break;
+            }
+        }
+    }
+
+    Options = StripColor(Options);  // Strip out color Codes
+
+    BaseMutator.ModifyLogin(Portal, Options);
+
+    // Get URL options.
+    InName     = Left(ParseOption ( Options, "Name"), 20);
+    InTeam     = GetIntOption( Options, "Team", 255 ); // default to "no team"
+    InAdminName= ParseOption ( Options, "AdminName");
+    InPassword = ParseOption ( Options, "Password" );
+    InChecksum = ParseOption ( Options, "Checksum" );
+
+    if ( HasOption(Options, "Load") )
+    {
+        log("Loading Savegame");
+
+        InitSavedLevel();
+        bIsSaveGame = true;
+
+        // Try to match up to existing unoccupied player in level,
+        // for savegames - also needed coop level switching.
+        ForEach DynamicActors(class'PlayerController', TestPlayer )
+        {
+            if ( (TestPlayer.Player==None) && (TestPlayer.PlayerOwnerName~=InName) )
+            {
+                TestPawn = TestPlayer.Pawn;
+                if ( TestPawn != None )
+                    TestPawn.SetRotation(TestPawn.Controller.Rotation);
+                    log("FOUND "$TestPlayer@TestPlayer.PlayerReplicationInfo.PlayerName);
+                return TestPlayer;
+            }
+        }
+    }
+
+    bSpectator = ( ParseOption( Options, "SpectatorOnly" ) ~= "1" );
+    if (AccessControl != None)
+        bAdmin = AccessControl.CheckOptionsAdmin(Options);
+
+    // Make sure there is capacity except for admins. (This might have changed since the PreLogin call).
+    if ( !bAdmin && AtCapacity(bSpectator) )
+    {
+        Error = GameMessageClass.Default.MaxedOutMessage;
+        return None;
+    }
+
+    // If admin, force spectate mode if the server already full of reg. players
+    if ( bAdmin && AtCapacity(false))
+        bSpectator = true;
+
+    // Pick a team (if need teams)
+    InTeam = PickTeam(InTeam,None);
+
+    // Find a start spot.
+    StartSpot = FindPlayerStart( None, InTeam, Portal );
+
+    if( StartSpot == None )
+    {
+        Error = GameMessageClass.Default.FailedPlaceMessage;
+        return None;
+    }
+
+    if ( PlayerControllerClass == None )
+        PlayerControllerClass = class<PlayerController>(DynamicLoadObject(PlayerControllerClassName, class'Class'));
+
+    NewPlayer = spawn(PlayerControllerClass,,,StartSpot.Location,StartSpot.Rotation);
+
+    // Handle spawn failure.
+    if( NewPlayer == None )
+    {
+        log("Couldn't spawn player controller of class "$PlayerControllerClass);
+        Error = GameMessageClass.Default.FailedSpawnMessage;
+        return None;
+    }
+
+    NewPlayer.StartSpot = StartSpot;
+
+    // Init player's replication info
+    NewPlayer.GameReplicationInfo = GameReplicationInfo;
+
+    // Apply security to this controller
+    MySecurityClass=class<Security>(DynamicLoadObject(SecurityClass,class'class'));
+    if (MySecurityClass!=None)
+    {
+        NewPlayer.PlayerSecurity = spawn(MySecurityClass,NewPlayer);
+        if (NewPlayer.PlayerSecurity==None)
+            log("Could not spawn security for player "$NewPlayer,'Security');
+    }
+    else if (SecurityClass == "")
+        log("No value for Engine.GameInfo.SecurityClass -- System is not secure.",'Security');
+    else
+        log("Unknown security class ["$SecurityClass$"] -- System is not secure.",'Security');
+
+    if ( bAttractCam )
+        NewPlayer.GotoState('AttractMode');
+    else
+        NewPlayer.GotoState('Spectating');
+
+    // Init player's name
+    if( InName=="" )
+        InName=DefaultPlayerName;
+    if( Level.NetMode!=NM_Standalone || NewPlayer.PlayerReplicationInfo.PlayerName==DefaultPlayerName )
+        ChangeName( NewPlayer, InName, false );
+
+    // custom voicepack
+    NewPlayer.PlayerReplicationInfo.VoiceTypeName = ParseOption ( Options, "Voice");
+
+    InCharacter = ParseOption(Options, "Character");
+    NewPlayer.SetPawnClass(DefaultPlayerClassName, InCharacter);
+    InSex = ParseOption(Options, "Sex");
+    if ( Left(InSex,3) ~= "F" )
+        NewPlayer.SetPawnFemale();  // only effective if character not valid
+
+    // Set the player's ID.
+    NewPlayer.PlayerReplicationInfo.PlayerID = CurrentID++;
+
+    if ( bSpectator || NewPlayer.PlayerReplicationInfo.bOnlySpectator ) // || !ChangeTeam(newPlayer, InTeam, false) )
+    {
+        NewPlayer.PlayerReplicationInfo.bOnlySpectator = true;
+        NewPlayer.PlayerReplicationInfo.bIsSpectator = true;
+        NewPlayer.PlayerReplicationInfo.bOutOfLives = true;
+        NumSpectators++;
+
+        return NewPlayer;
+    }
+
+    newPlayer.StartSpot = StartSpot;
+
+    // Init player's administrative privileges and log it
+    if (AccessControl != None && AccessControl.AdminLogin(NewPlayer, InAdminName, InPassword))
+    {
+        AccessControl.AdminEntered(NewPlayer, InAdminName);
+    }
+
+    NumPlayers++;
+    if ( NumPlayers > 20 )
+        bLargeGameVOIP = true;
+    bWelcomePending = true;
+
+    if ( bTestMode )
+        TestLevel();
+
+    // if delayed start, don't give a pawn to the player yet
+    // Normal for multiplayer games
+    if ( bDelayedStart )
+    {
+        NewPlayer.GotoState('PlayerWaiting');
+    }
+
+    if ( Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer )
+    {
+        NewPlayer.VoiceReplicationInfo = VoiceReplicationInfo;
+        if ( Level.NetMode == NM_ListenServer && Level.GetLocalPlayerController() == PC )
+            NewPlayer.InitializeVoiceChat();
+    }
+
+    if ( bMustJoinBeforeStart && GameReplicationInfo.bMatchHasBegun )
+        UnrealPlayer(NewPlayer).bLatecomer = true;
+
+    if ( Level.NetMode == NM_Standalone )
+    {
+        if( NewPlayer.PlayerReplicationInfo.bOnlySpectator )
+        {
+            // Compensate for the space left for the player
+            if ( !bCustomBots && (bAutoNumBots || (bTeamGame && (InitialBots%2 == 1))) )
+                InitialBots++;
+        }
+        else
+            StandalonePlayer = NewPlayer;
+    }
 
     PC = DHPlayer(NewPlayer);
 
@@ -3185,11 +3375,15 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
     }
 
     PC = DHPlayer(Other);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    // Colin: There is a 5 second buffer time between switching teams. This
-    // stops players from being able to rapid-fire switch teams and spam
-    // others with team-change messages.
-    if (PC != none && PC.NextChangeTeamTime >= Level.TimeSeconds)
+    if (GRI == none)
+    {
+        return false;
+    }
+
+    // Do a check to see if we can change teams yet
+    if (PC != none && PC.NextChangeTeamTime >= GRI.ElapsedTime)
     {
         return false;
     }
@@ -3203,8 +3397,6 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
     }
 
     Other.StartSpot = none;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     if (Other.PlayerReplicationInfo.Team != none)
     {
@@ -3254,9 +3446,10 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
         GRI.ClearArtilleryTarget(DHPlayer(Other));
     }
 
-    if (PC != none)
+    // If we changed team then set the NextChangeTeamTime
+    if (bNewTeam && PC != none)
     {
-        PC.NextChangeTeamTime = Level.TimeSeconds + default.ChangeTeamInterval;
+        PC.NextChangeTeamTime = GRI.ElapsedTime + default.ChangeTeamInterval;
     }
 
     return true;
@@ -4079,9 +4272,13 @@ event PostLogin(PlayerController NewPlayer)
                 PRI.Deaths = S.Deaths;
                 PRI.Kills = S.Kills;
                 PRI.Score = S.Score;
+
+                Teams[S.TeamIndex].AddToTeam(PC);
+
                 PC.LastKilledTime = S.LastKilledTime;
                 PC.WeaponLockViolations = S.WeaponLockViolations;
                 PC.DeathPenaltyCount = S.DeathPenaltyCount;
+                PC.NextChangeTeamTime = S.NextChangeTeamTime;
 
                 if (GameReplicationInfo != none && S.WeaponUnlockTime > GameReplicationInfo.ElapsedTime)
                 {
@@ -4133,6 +4330,12 @@ function Logout(Controller Exiting)
         S.WeaponUnlockTime = PC.WeaponUnlockTime;
         S.WeaponLockViolations = PC.WeaponLockViolations;
         S.DeathPenaltyCount = PC.DeathPenaltyCount;
+        S.NextChangeTeamTime = PC.NextChangeTeamTime;
+
+        if (PRI.Team != none)
+        {
+            S.TeamIndex = PRI.Team.TeamIndex;
+        }
     }
 }
 
@@ -4327,7 +4530,7 @@ defaultproperties
     TeamAIType(0)=class'DH_Engine.DHTeamAI'
     TeamAIType(1)=class'DH_Engine.DHTeamAI'
 
-    ChangeTeamInterval=1.0
+    ChangeTeamInterval=120
 
     ReinforcementMessagePercentages(0)=0.5
     ReinforcementMessagePercentages(1)=0.25
