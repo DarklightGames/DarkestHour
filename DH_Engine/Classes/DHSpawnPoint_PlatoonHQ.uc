@@ -114,5 +114,5 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
 defaultproperties
 {
     SpawnRadius=60.0
-    bIsCombatSpawn=true
+    bCombatSpawn=true
 }

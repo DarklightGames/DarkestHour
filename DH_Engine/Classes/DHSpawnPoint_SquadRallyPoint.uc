@@ -400,6 +400,6 @@ defaultproperties
     OverrunMinimumTimeSeconds=15
     bHidden=false
     bCanSendAbandonmentWarningMessage=true
-    bIsCombatSpawn=true
+    bCombatSpawn=true
 }
 
