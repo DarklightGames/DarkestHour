@@ -454,7 +454,7 @@ function UpdateSpawnPoints()
                 p_Map.b_SpawnPoints[i].MenuStateChange(MSAT_Disabled);
             }
 
-            p_Map.b_SpawnPoints[i].Style = Controller.GetStyle(GRI.SpawnPoints[i].GetStyleName(), FS);
+            p_Map.b_SpawnPoints[i].Style = Controller.GetStyle(GRI.SpawnPoints[i].GetMapStyleName(), FS);
         }
         else
         {

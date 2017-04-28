@@ -217,7 +217,7 @@ function bool PerformSpawn(DHPlayer PC)
     return false;
 }
 
-simulated function string GetStyleName()
+simulated function string GetMapStyleName()
 {
     if (IsBlocked())
     {

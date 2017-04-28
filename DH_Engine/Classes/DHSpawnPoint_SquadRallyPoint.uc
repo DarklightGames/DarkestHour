@@ -320,7 +320,7 @@ function OnSpawnKill(Pawn VictimPawn, Controller KillerController)
     }
 }
 
-simulated function string GetStyleName()
+simulated function string GetMapStyleName()
 {
     if (IsBlocked())
     {

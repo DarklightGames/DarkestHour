@@ -33,7 +33,7 @@ Begin:
 }
 
 // TODO: Override with different style
-simulated function string GetStyleName()
+simulated function string GetMapStyleName()
 {
     if (IsBlocked())
     {
@@ -114,5 +114,5 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
 defaultproperties
 {
     SpawnRadius=60.0
-    bCombatSpawn=true
+    bIsCombatSpawn=true
 }
