@@ -3001,6 +3001,16 @@ static function string ParseChatPercVar(Mutator BaseMutator, Controller Who, str
 // exec FUNCTIONS - These functions natively require admin access
 //***********************************************************************************
 
+exec function DebugDestroyConstructions()
+{
+    local DHConstruction C;
+
+    foreach AllActors(class'DHConstruction', C)
+    {
+        C.GotoState('Broken');
+    }
+}
+
 // Quick test function to change a role's limit (Allied only)
 // function doesn't support bots
 exec function DebugSetRoleLimit(int Team, int Index, int NewLimit)
