@@ -439,6 +439,7 @@ function UpdateSpawnPoints()
 
             p_Map.b_SpawnPoints[i].SetPosition(X, Y, p_Map.b_SpawnPoints[i].WinWidth, p_Map.b_SpawnPoints[i].WinHeight, true);
             p_Map.b_SpawnPoints[i].SetVisibility(true);
+            p_Map.b_SpawnPoints[i].CenterText = GRI.SpawnPoints[i].GetMapText();
 
             if (GRI.SpawnPoints[i].CanSpawnWithParameters(GRI, CurrentTeam, RoleIndex, SquadIndex, GetSelectedVehiclePoolIndex()))
             {

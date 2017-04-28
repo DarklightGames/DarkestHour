@@ -377,6 +377,11 @@ function SetTeamIndex(int TeamIndex)
     UpdateAppearance();
 }
 
+function string GetMapText()
+{
+    return string(SpawnsRemaining);
+}
+
 defaultproperties
 {
     StaticMesh=StaticMesh'DH_Construction_stc.Backpacks.USA_backpack'
@@ -395,6 +400,6 @@ defaultproperties
     OverrunMinimumTimeSeconds=15
     bHidden=false
     bCanSendAbandonmentWarningMessage=true
-    bCombatSpawn=true
+    bIsCombatSpawn=true
 }
 

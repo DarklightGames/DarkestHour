@@ -7,6 +7,8 @@ class DHGUICheckBoxButton extends GUICheckBoxButton;
 
 var bool bCanClickUncheck;
 
+var string CenterText;
+
 delegate OnCheckChanged(GUIComponent Sender, bool bChecked);
 
 // Colin: Modified to not call OnChange if the checked status was not actually
@@ -36,7 +38,22 @@ function bool InternalOnClick(GUIComponent Sender)
     return true;
 }
 
+function InternalOnRendered(Canvas C)
+{
+    local float XL, YL;
+
+    if (CenterText != "")
+    {
+        C.Font = class'ROHud'.static.LoadSmallFontStatic(7);
+        C.SetDrawColor(0, 0, 0);
+        C.TextSize(CenterText, XL, YL);
+        C.SetPos(ActualLeft() + (ActualWidth() / 2) - (XL / 2), ActualTop() + (ActualHeight() / 2) - (YL / 2));
+        C.DrawText(CenterText);
+    }
+}
+
 defaultproperties
 {
     bCanClickUncheck=true
+    OnRendered=InternalOnRendered
 }
