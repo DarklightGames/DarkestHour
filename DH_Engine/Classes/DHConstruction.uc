@@ -180,13 +180,17 @@ auto state Constructing
         {
             for (i = Stages.Length - 1; i >= 0; --i)
             {
-                if (Progress >= Stages[i].Progress && StageIndex != i)
+                if (Progress >= Stages[i].Progress)
                 {
-                    OldStageIndex = StageIndex;
-                    StageIndex = i;
-                    OnStageIndexChanged(OldStageIndex);
-                    UpdateAppearance();
-                    NetUpdateTime = Level.TimeSeconds - 1.0;
+                    if (StageIndex != i)
+                    {
+                        OldStageIndex = StageIndex;
+                        StageIndex = i;
+                        OnStageIndexChanged(OldStageIndex);
+                        UpdateAppearance();
+                        NetUpdateTime = Level.TimeSeconds - 1.0;
+                    }
+
                     break;
                 }
             }
