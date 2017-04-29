@@ -32,6 +32,9 @@ enum ETeamOwner
     TEAM_Neutral
 };
 
+// Client state management
+var name StateName, OldStateName;
+
 var() ETeamOwner TeamOwner;                 // This enum is for the levelers' convenience only.
 var private int TeamIndex;
 
@@ -107,7 +110,7 @@ var array<Stage> Stages;
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
-        TeamIndex;
+        TeamIndex, StateName;
     reliable if (Role < ROLE_Authority)
         ServerDecrementProgress, ServerIncrementProgress;
 }
@@ -116,6 +119,10 @@ function OnConstructed();
 function OnStageIndexChanged(int OldIndex);
 function OnTeamIndexChanged();
 function OnProgressChanged();
+
+simulated function bool IsBroken() { return false; }
+simulated function bool IsConstructed() { return false; }
+simulated function bool CanBeBuilt() { return false; }
 
 final simulated function int GetTeamIndex()
 {
@@ -160,8 +167,13 @@ simulated function PostBeginPlay()
     }
 }
 
-auto state Constructing
+auto simulated state Constructing
 {
+    simulated function bool CanBeBuilt()
+    {
+        return true;
+    }
+
     function OnProgressChanged()
     {
         local int i;
@@ -196,9 +208,12 @@ auto state Constructing
             }
         }
     }
+
 Begin:
     if (Role == ROLE_Authority)
     {
+        StateName = GetStateName();
+
         if (default.Stages.Length == 0)
         {
             // There are no intermediate stages, so put the construction immediately
@@ -224,8 +239,13 @@ Begin:
     }
 }
 
-state Constructed
+simulated state Constructed
 {
+    simulated function bool IsConstructed()
+    {
+        return true;
+    }
+
 Begin:
     if (Role == ROLE_Authority)
     {
@@ -238,14 +258,15 @@ Begin:
         else
         {
             UpdateAppearance();
+            StateName = GetStateName();
             NetUpdateTime = Level.TimeSeconds - 1.0;
         }
     }
 }
 
-state Broken
+simulated state Broken
 {
-    function BeginState()
+    simulated function BeginState()
     {
         if (Level.NetMode != NM_DedicatedServer)
         {
@@ -261,22 +282,19 @@ state Broken
         // Do nothing, since we're broken already!
     }
 
+    simulated function bool IsBroken()
+    {
+        return true;
+    }
+
 Begin:
-    UpdateAppearance();
-    NetUpdateTime = Level.TimeSeconds - 1.0;
-    // TODO: set SM to destroyed SM
-    Lifespan = BrokenLifespan;
-}
-
-
-simulated function bool IsBroken()
-{
-    return IsInState('Broken');
-}
-
-simulated function bool IsConstructed()
-{
-    return IsInState('Constructed');
+    if (Role == ROLE_Authority)
+    {
+        UpdateAppearance();
+        StateName = GetStateName();
+        Lifespan = BrokenLifespan;
+        NetUpdateTime = Level.TimeSeconds - 1.0;
+    }
 }
 
 function UpdateAppearance()
@@ -317,11 +335,6 @@ function static string GetMenuName(DHPlayer PC)
 function static Material GetMenuIcon(DHPlayer PC)
 {
     return default.MenuIcon;
-}
-
-simulated function bool CanBeBuilt()
-{
-    return IsInState('Constructing');
 }
 
 function static GetCollisionSize(int TeamIndex, DH_LevelInfo LI, out float NewRadius, out float NewHeight)
@@ -419,6 +432,14 @@ function int GetScaledDamage(class<DamageType> DamageType, int Damage)
     }
 
     return Damage;
+}
+
+simulated function PostNetReceive()
+{
+    if (StateName != GetStateName())
+    {
+        GotoState(StateName);
+    }
 }
 
 defaultproperties

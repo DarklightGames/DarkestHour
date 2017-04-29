@@ -15,13 +15,16 @@ simulated function PostBeginPlay()
     super.PostBeginPlay();
 }
 
-state Constructed
+simulated state Constructed
 {
-    event BeginState()
+    simulated function BeginState()
     {
         super.BeginState();
 
-        SetTimer(1.0, true);
+        if (Role == ROLE_Authority)
+        {
+            SetTimer(1.0, true);
+        }
 
         if (Level.NetMode < NM_DedicatedServer)
         {
@@ -103,9 +106,9 @@ event Destroyed()
     DestroyAttachments();
 }
 
-state Broken
+simulated state Broken
 {
-    function BeginState()
+    simulated function BeginState()
     {
         super.BeginState();
 
