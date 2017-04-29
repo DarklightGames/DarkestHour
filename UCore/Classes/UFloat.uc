@@ -16,6 +16,11 @@ static final function UFloat Create(optional float Value)
     return F;
 }
 
+static final function float Infinity()
+{
+    return 1.0 / 0.0;
+}
+
 static final function float MaxValue()
 {
     return 3.40282347E+38f;
