@@ -1336,7 +1336,7 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
         return none;
     }
 
-    ClosestBlockingRallyPointDistance = class'UFloat'.static.MaxValue();
+    ClosestBlockingRallyPointDistance = class'UFloat'.static.Infinity();
 
     // Cannot be too close to another rally point.
     for (i = 0; i < arraycount(RallyPoints); ++i)
@@ -1355,7 +1355,7 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
         }
     }
 
-    if (ClosestBlockingRallyPointDistance != class'UFloat'.static.MaxValue())
+    if (ClosestBlockingRallyPointDistance != class'UFloat'.static.Infinity())
     {
         // "You must be an additional {0} meters away from your squad's other rally point."
         PC.ReceiveLocalizedMessage(SquadMessageClass, class'UInteger'.static.FromShorts(45, Max(1, RALLY_POINT_RADIUS_IN_METERS - class'DHUnits'.static.UnrealToMeters(ClosestBlockingRallyPointDistance))));
