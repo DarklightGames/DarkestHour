@@ -30,7 +30,7 @@ function Setup()
     for (i = 0; i < arraycount(GRI.ConstructionClasses); ++i)
     {
         if (GRI.ConstructionClasses[i] != none &&
-            GRI.ConstructionClasses[i].static.CanPlayerBuild(PC))
+            GRI.ConstructionClasses[i].static.ShouldShowOnMenu(PC))
         {
             ConstructionClasses[ConstructionClasses.Length] = GRI.ConstructionClasses[i];
         }
@@ -47,10 +47,6 @@ function Setup()
             Options[j].Material = ConstructionClasses[i].static.GetMenuIcon(PC);
             ++j;
         }
-
-        Log(ConstructionClasses.Length);
-        Log(i);
-        Log(ConstructionClasses.Length - i);
 
         if (ConstructionClasses.Length - i > 1)
         {
@@ -90,7 +86,16 @@ function OnSelect(int OptionIndex, vector Location)
 
 function bool IsOptionDisabled(int OptionIndex)
 {
-    return Options[OptionIndex].OptionalObject == none;
+    local class<DHConstruction> C;
+
+    C = class<DHConstruction>(Options[OptionIndex].OptionalObject);
+
+    if (C == none || !C.static.CanPlayerBuild(DHPlayer(Interaction.ViewportOwner.Actor)))
+    {
+        return true;
+    }
+
+    return false;
 }
 
 function bool ShouldHideMenu()

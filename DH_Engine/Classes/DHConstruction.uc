@@ -35,8 +35,9 @@ enum ETeamOwner
 // Client state management
 var name StateName, OldStateName;
 
-var() ETeamOwner TeamOwner;                 // This enum is for the levelers' convenience only.
+var() ETeamOwner TeamOwner;     // This enum is for the levelers' convenience only.
 var private int TeamIndex;
+var int TeamLimit;              // The amount of this type of construction that is allowed, per team.
 
 // Placement
 var     float   ProxyDistanceInMeters;          // The distance at which the proxy object will be away from the player when
@@ -165,6 +166,11 @@ simulated function PostBeginPlay()
 
         Health = HealthMax;
     }
+}
+
+simulated event Destroyed()
+{
+    super.Destroyed();
 }
 
 auto simulated state Constructing
@@ -343,11 +349,41 @@ function static GetCollisionSize(int TeamIndex, DH_LevelInfo LI, out float NewRa
     NewHeight = default.CollisionHeight;
 }
 
+function static bool ShouldShowOnMenu(DHPlayer PC)
+{
+    return true;
+}
+
 // This function is used for determining if a player is able to build this type
 // of construction. You can override this if you want to have a team or
 // role-specific constructions, for example.
 function static bool CanPlayerBuild(DHPlayer PC)
 {
+    local int Count;
+    local Actor A;
+    local DHConstruction C;
+
+    if (PC == none)
+    {
+        return false;
+    }
+
+    // TODO: this is massively inefficient
+    foreach PC.AllActors(default.Class, A)
+    {
+        C = DHConstruction(A);
+
+        if (C != none && C.TeamIndex == PC.GetTeamNum())
+        {
+            ++Count;
+        }
+    }
+
+    if (default.TeamLimit > 0 && Count >= default.TeamLimit)
+    {
+        return false;
+    }
+
     return true;
 }
 
