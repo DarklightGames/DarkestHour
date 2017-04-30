@@ -17,6 +17,34 @@ function JSONValue Parse(string S)
     return ReadValue();
 }
 
+function JSONArray ParseArray(string S)
+{
+    local JSONValue ParseValue;
+
+    ParseValue = Parse(S);
+
+    if (ParseValue != none)
+    {
+        return ParseValue.AsArray();
+    }
+
+    return none;
+}
+
+function JSONObject ParseObject(string S)
+{
+    local JSONValue ParseValue;
+
+    ParseValue = Parse(S);
+
+    if (ParseValue != none)
+    {
+        return ParseValue.AsObject();
+    }
+
+    return none;
+}
+
 function JSONValue ReadValue()
 {
     switch (InputBuffer.Peek(1))
