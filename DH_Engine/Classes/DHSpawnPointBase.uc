@@ -171,7 +171,7 @@ simulated function string GetMapStyleName()
 }
 
 // Override to change the text displayed overtop of the spawn point icon on the map.
-function string GetMapText();
+simulated function string GetMapText();
 
 defaultproperties
 {

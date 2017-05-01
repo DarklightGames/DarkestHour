@@ -377,7 +377,7 @@ function SetTeamIndex(int TeamIndex)
     UpdateAppearance();
 }
 
-function string GetMapText()
+simulated function string GetMapText()
 {
     return string(SpawnsRemaining);
 }
