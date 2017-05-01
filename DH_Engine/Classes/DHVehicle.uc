@@ -124,6 +124,10 @@ var     class<DHResupplyAttachment> ResupplyAttachmentClass; // option for a fun
 var     name                        ResupplyAttachBone;      // bone name for attaching resupply attachment
 var     DHResupplyAttachment        ResupplyAttachment;      // reference to any resupply actor
 
+var     class<DHConstructionSupplyAttachment>   SupplyAttachmentClass;
+var     name                                    SupplyAttachBone;
+var     DHConstructionSupplyAttachment          SupplyAttachment;
+
 // Spawning
 var     DHSpawnPoint_Vehicle    SpawnPointAttachment;
 var     DHSpawnPointBase        SpawnPoint;                 // The spawn point that was used to spawn this vehicle.
@@ -2210,6 +2214,16 @@ simulated function SpawnVehicleAttachments()
             if (ResupplyAttachment != none)
             {
                 ResupplyAttachment.SetTeamIndex(VehicleTeam);
+            }
+        }
+
+        if (SupplyAttachmentClass != none && SupplyAttachBone != '' && SupplyAttachment == none)
+        {
+            SupplyAttachment = DHConstructionSupplyAttachment(SpawnAttachment(SupplyAttachmentClass, SupplyAttachBone));
+
+            if (SupplyAttachment != none)
+            {
+                SupplyAttachment.TeamIndex = VehicleTeam;
             }
         }
 

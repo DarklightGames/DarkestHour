@@ -39,6 +39,25 @@ static final function array<Object> Map(array<Object> A, Functor_Object_Object M
     return B;
 }
 
+// Creates a "union" of two arrays, eliminating duplicates.
+function array<Object> Union(array<Object> LHS, array<Object> RHS)
+{
+    local int i;
+    local array<Object> U;
+
+    U = LHS;
+
+    for (i = 0; i < RHS.Length; ++i)
+    {
+        if (class'UArray'.static.IndexOf(U, RHS[i]) == -1)
+        {
+            U[U.Length] = RHS[i];
+        }
+    }
+
+    return U;
+}
+
 // Slice tries to immitate Python's slice syntax.
 static final function array<Object> Slice(array<Object> A, int Start, int End, int Step)
 {

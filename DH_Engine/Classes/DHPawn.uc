@@ -107,6 +107,7 @@ var     DHSpawnPointBase    SpawnPoint;                     // the spawn point t
 
 // Construction
 var     DHConstructionProxy ConstructionProxy;
+var     ArrayList_Object    TouchingSupplyAttachments;
 
 replication
 {
@@ -134,6 +135,11 @@ replication
 // Also removes needlessly setting some variables to what will be default values anyway for a spawning actor
 simulated function PostBeginPlay()
 {
+    if (Role == ROLE_Authority)
+    {
+        TouchingSupplyAttachments = new class'ArrayList_Object';
+    }
+
     super(Pawn).PostBeginPlay();
 
     if (Level.bStartup && !bNoDefaultInventory)
@@ -241,6 +247,8 @@ simulated function PostNetReceive()
 // We also enable burning effects when he first catches fire, or stop them if he's no longer on fire
 simulated function Tick(float DeltaTime)
 {
+    local DHConstructionSupplyAttachment CSA;
+
     super.Tick(DeltaTime);
 
     // If player is on fire, cause fire damage every second & force him to drop any weapon in his hands
@@ -270,6 +278,14 @@ simulated function Tick(float DeltaTime)
         else if (bBurnFXOn)
         {
             EndBurnFX();
+        }
+    }
+
+    if (Role == ROLE_Authority)
+    {
+        foreach TouchingActors(class'DHConstructionSupplyAttachment', CSA)
+        {
+            Log(CSA);
         }
     }
 }

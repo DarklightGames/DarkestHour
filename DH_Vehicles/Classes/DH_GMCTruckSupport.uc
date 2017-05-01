@@ -18,4 +18,7 @@ defaultproperties
     VehHitpoints(3)=(PointRadius=40.0,PointScale=1.0,PointBone="body",PointOffset=(X=-80.0,Y=0.0,Z=90.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     ExitPositions(2)=(X=-273.0,Y=-34.0,Z=25.0) // back left rider
     ExitPositions(3)=(X=-271.0,Y=23.0,Z=25.0)  // back right rider
+
+    SupplyAttachmentClass=class'DHConstructionSupplyAttachment'
+    SupplyAttachBone="Deco"
 }
