@@ -798,5 +798,6 @@ defaultproperties
     ConstructionClassNames(3)="DH_Construction.DHConstruction_Resupply"
     ConstructionClassNames(4)="DH_Construction.DHConstruction_Sandbags"
     ConstructionClassNames(5)="DH_Construction.DHConstruction_ATGun_Medium"
+    ConstructionClassNames(6)="DH_Construction.DHConstruction_ATGun_Heavy"
 }
 
