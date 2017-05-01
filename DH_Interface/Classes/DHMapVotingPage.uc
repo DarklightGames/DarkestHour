@@ -48,7 +48,7 @@ function SendVote(GUIComponent Sender)
             MapObject = (new class'JSONParser').ParseObject(MVRI.MapList[MapIndex].MapName);
 
             // Do a check if the current player count is in bounds of recommended range or if level has failed QA
-            if (MapObject != none && MapObject.Get("MinPlayers").AsString() != "" && MapObject.Get("MaxPlayers").AsString() != "")
+            if (MapObject != none && MapObject.Get("MinPlayers") != none && MapObject.Get("MaxPlayers") != none)
             {
                 Min = MapObject.Get("MinPlayers").AsInteger();
                 Max = MapObject.Get("MaxPlayers").AsInteger();

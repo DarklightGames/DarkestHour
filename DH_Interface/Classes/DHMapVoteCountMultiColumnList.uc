@@ -49,7 +49,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
     MapObject = (new class'JSONParser').ParseObject(VRI.MapList[VRI.MapVoteCount[SortData[i].SortItem].MapIndex].MapName);
 
     // Set the local MapNameString as it is reused
-    if (MapObject != none && MapObject.Get("MapName").AsString() != "")
+    if (MapObject != none && MapObject.Get("MapName") != none)
     {
         MapNameString = MapObject.Get("MapName").AsString();
     }
@@ -67,7 +67,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
     DrawStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left, string(VRI.MapVoteCount[SortData[i].SortItem].VoteCount), FontScale);
 
     // Player Range
-    if (MapObject != none && MapObject.Get("MinPlayers").AsString() != "" && MapObject.Get("MaxPlayers").AsString() != "")
+    if (MapObject != none && MapObject.Get("MinPlayers") != none && MapObject.Get("MaxPlayers") != none)
     {
         GetCellLeftWidth(2, CellLeft, CellWidth);
         OldDrawTyle = DrawStyle;
@@ -109,7 +109,7 @@ function string GetSortString(int i)
         // Parse the JSON object
     MapObject = (new class'JSONParser').ParseObject(VRI.MapList[VRI.MapVoteCount[i].MapIndex].MapName);
 
-    if (MapObject != none && MapObject.Get("MapName").AsString() != "")
+    if (MapObject != none && MapObject.Get("MapName") != none)
     {
         MapNameString = MapObject.Get("MapName").AsString();
     }

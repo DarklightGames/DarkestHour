@@ -68,7 +68,7 @@ function AddMap(string MapName, string Mutators, string GameOptions)
     local string                DecodedString;
 
     // Dont add duplicate map names
-    for (i = 0; i < MapList.length; i++)
+    for (i = 0; i < MapList.Length; ++i)
     {
         if(MapName ~= MapList[i].MapName)
         {
@@ -78,7 +78,7 @@ function AddMap(string MapName, string Mutators, string GameOptions)
 
     MapInfo = History.GetMapHistory(MapName);
 
-    MapList.length = MapCount + 1;
+    MapList.Length = MapCount + 1;
 
     if (MapInfo.G != "")
     {
@@ -106,7 +106,7 @@ function AddMap(string MapName, string Mutators, string GameOptions)
     MapList[MapCount].Sequence = MapInfo.S;
 
     // Check if there is specific repeat limit for this map
-    if (MapObject != none && MapObject.Get("RepeatLimit").AsString() != "")
+    if (MapObject != none && MapObject.Get("RepeatLimit") != none)
     {
         // Change MapRepeatLimit to our specific value for this map
         MapRepeatLimit = MapObject.Get("RepeatLimit").AsInteger();
@@ -119,7 +119,7 @@ function AddMap(string MapName, string Mutators, string GameOptions)
     // Set the map to enabled/disabled based on MapRepeatLimit
     MapList[MapCount].bEnabled = MapInfo.S > MapRepeatLimit || MapInfo.S == 0;
 
-    MapCount++;
+    ++MapCount;
 
     if (Mutators != "" && Mutators != MapInfo.U)
     {
@@ -262,7 +262,7 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
     // Parse the mapname
     MapObject = (new class'JSONParser').ParseObject(MapList[MapIndex].MapName);
 
-    if (MapObject != none && MapObject.Get("MapName").AsString() != "")
+    if (MapObject != none && MapObject.Get("MapName") != none)
     {
         MapNameString = MapObject.Get("MapName").AsString();
     }
@@ -314,7 +314,10 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
         return;
     }
 
-    Log("___" $ Index $ " - " $ PlayerController(Voter).PlayerReplicationInfo.PlayerName $ " voted for " $ MapNameString $ "(" $ GameConfig[GameIndex].Acronym $ ")", 'MapVote');
+    if (class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        Log("___" $ Index $ " - " $ PlayerController(Voter).PlayerReplicationInfo.PlayerName $ " voted for " $ MapNameString $ "(" $ GameConfig[GameIndex].Acronym $ ")", 'MapVote');
+    }
 
     PrevMapVote = MVRI[Index].MapVote;
     PrevGameVote = MVRI[Index].GameVote;
@@ -387,7 +390,7 @@ function bool IsValidVote(int MapIndex, int GameIndex)
     // Parse the mapname
     MapObject = (new class'JSONParser').ParseObject(MapList[MapIndex].MapName);
 
-    if (MapObject != none && MapObject.Get("MapName").AsString() != "")
+    if (MapObject != none && MapObject.Get("MapName") != none)
     {
         MapNameString = MapObject.Get("MapName").AsString();
     }
@@ -396,9 +399,9 @@ function bool IsValidVote(int MapIndex, int GameIndex)
         MapNameString = MapList[MapIndex].MapName;
     }
 
-    for (i = 0; i < PreFixList.Length; i++)
+    for (i = 0; i < PreFixList.Length; ++i)
     {
-        if (Left(MapNameString, len(PrefixList[i])) ~= PrefixList[i])
+        if (Left(MapNameString, Len(PrefixList[i])) ~= PrefixList[i])
         {
             return true;
         }
@@ -430,7 +433,7 @@ function string SetupGameMap(MapVoteMapList MapInfo, int GameIndex, MapHistoryIn
     // Add Per-GameType Game Options
     if (GameConfig[GameIndex].Options != "")
     {
-        OptionString = OptionString $ Repl(Repl(GameConfig[GameIndex].Options,",","?")," ","");
+        OptionString = OptionString $ Repl(Repl(GameConfig[GameIndex].Options, ", ", "?"), " ", "");
     }
 
     // Add Per-Map Game Options
@@ -442,7 +445,7 @@ function string SetupGameMap(MapVoteMapList MapInfo, int GameIndex, MapHistoryIn
     // Parse the mapname
     MapObject = (new class'JSONParser').ParseObject(MapInfo.MapName);
 
-    if (MapObject != none && MapObject.Get("MapName").AsString() != "")
+    if (MapObject != none && MapObject.Get("MapName") != none)
     {
         MapNameString = MapObject.Get("MapName").AsString();
     }
@@ -463,7 +466,7 @@ function string SetupGameMap(MapVoteMapList MapInfo, int GameIndex, MapHistoryIn
 
     MapsInRotation = Level.Game.MaplistHandler.GetCurrentMapRotation();
 
-    for (i = 0; i < MapsInRotation.Length; i++)
+    for (i = 0; i < MapsInRotation.Length; ++i)
     {
         if (InStr(MapsInRotation[i], ReturnString) != -1)
         {
@@ -705,7 +708,7 @@ function TallyVotes(bool bForceMapSwitch)
     // Parse the mapname
     MapObject = (new class'JSONParser').ParseObject(MapList[TopMap - TopMap / MapCount * MapCount].MapName);
 
-    if (MapObject != none && MapObject.Get("MapName").AsString() != "")
+    if (MapObject != none && MapObject.Get("MapName") != none)
     {
         MapNameString = MapObject.Get("MapName").AsString();
     }

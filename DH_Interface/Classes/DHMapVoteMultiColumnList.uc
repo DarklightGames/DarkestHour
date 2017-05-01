@@ -30,14 +30,14 @@ function LoadList(VotingReplicationInfo LoadVRI, int GameTypeIndex)
 
     Split(VRI.GameConfig[GameTypeIndex].Prefix, ",", PrefixList);
 
-    for (m = 0; m < VRI.MapList.Length; m++)
+    for (m = 0; m < VRI.MapList.Length; ++m)
     {
-        for (p = 0; p < PreFixList.Length; p++)
+        for (p = 0; p < PreFixList.Length; ++p)
         {
             // Parse the JSON object
             MapObject = (new class'JSONParser').ParseObject(VRI.MapList[m].MapName);
 
-            if (MapObject != none && MapObject.Get("MapName").AsString() != "")
+            if (MapObject != none && MapObject.Get("MapName") != none)
             {
                 MapNameString = MapObject.Get("MapName").AsString();
             }
@@ -48,8 +48,8 @@ function LoadList(VotingReplicationInfo LoadVRI, int GameTypeIndex)
 
             if (left(MapNameString, len(PrefixList[p])) ~= PrefixList[p])
             {
-                l = MapVoteData.length;
-                MapVoteData.insert(l,1);
+                l = MapVoteData.Length;
+                MapVoteData.Insert(l,1);
                 MapVoteData[l] = m;
                 AddedItem();
                 break;
@@ -118,7 +118,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
     MapObject = (new class'JSONParser').ParseObject(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName);
 
     // Set the local MapNameString as it is reused
-    if (MapObject != none && MapObject.Get("MapName").AsString() != "")
+    if (MapObject != none && MapObject.Get("MapName") != none)
     {
         MapNameString = MapObject.Get("MapName").AsString();
     }
@@ -139,7 +139,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
 
     // Allied Side
     // -----------------------------------
-    if (MapObject != none && MapObject.Get("Country").AsString() != "")
+    if (MapObject != none && MapObject.Get("Country") != none)
     {
         GetCellLeftWidth(2, CellLeft, CellWidth);
         DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, MapObject.Get("Country").AsString(), FontScale);
@@ -147,7 +147,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
 
     // Type
     // -----------------------------------
-    if (MapObject != none && MapObject.Get("GameType").AsString() != "")
+    if (MapObject != none && MapObject.Get("GameType") != none)
     {
         GetCellLeftWidth(3, CellLeft, CellWidth);
         DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, MapObject.Get("GameType").AsString(), FontScale);
@@ -155,7 +155,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
 
     // Player Range
     // -----------------------------------
-    if (MapObject != none && MapObject.Get("MinPlayers").AsString() != "" && MapObject.Get("MaxPlayers").AsString() != "")
+    if (MapObject != none && MapObject.Get("MinPlayers") != none && MapObject.Get("MaxPlayers") != none)
     {
         GetCellLeftWidth(4, CellLeft, CellWidth);
         OldDrawTyle = DrawStyle;
@@ -198,7 +198,7 @@ function string GetSortString(int i)
     // Parse the JSON object
     MapObject = (new class'JSONParser').ParseObject(VRI.MapList[i].MapName);
 
-    if (MapObject != none && MapObject.Get("MapName").AsString() != "")
+    if (MapObject != none && MapObject.Get("MapName") != none)
     {
         MapNameString = MapObject.Get("MapName").AsString();
     }
@@ -214,12 +214,12 @@ function string GetSortString(int i)
         case 1: // Source
             return Caps(class'DHMapList'.static.GetMapSource(MapNameString));
         case 2: // Allied country
-            if (MapObject != none && MapObject.Get("Country").AsString() != "")
+            if (MapObject != none && MapObject.Get("Country") != none)
             {
                 return Caps(MapObject.Get("Country").AsString());
             }
         case 4: // Type
-            if (MapObject != none && MapObject.Get("GameType").AsString() != "")
+            if (MapObject != none && MapObject.Get("GameType") != none)
             {
                 return Caps(MapObject.Get("GameType").AsString());
             }
