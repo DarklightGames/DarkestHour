@@ -198,9 +198,9 @@ simulated function UpdateScoreBoard(Canvas C)
     Y = CalcY(1.0, C);
     C.DrawTile(HeaderImage, C.ClipX, Y, 0.0, 0.0, 2048.0, 64.0);
 
-    C.DrawColor = HUD.default.BlackColor;
-    C.Font = HUD.static.GetLargeMenuFont(C);
-    C.DrawTextJustified(TitleText, 1, 0.0, 0.0, C.ClipX, Y);
+    C.DrawColor = HUD.default.WhiteColor;
+    C.Font = HUD.static.GetSmallMenuFont(C);
+    C.DrawTextJustified(Left(DHGRI.ServerName, 64), 1, 0.0, 0.0, C.ClipX, Y);
 
     // Now set standard font & line height
     C.Font = HUD.static.GetSmallerMenuFont(C);
