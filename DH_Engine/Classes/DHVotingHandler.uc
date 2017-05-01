@@ -433,7 +433,7 @@ function string SetupGameMap(MapVoteMapList MapInfo, int GameIndex, MapHistoryIn
     // Add Per-GameType Game Options
     if (GameConfig[GameIndex].Options != "")
     {
-        OptionString = OptionString $ Repl(Repl(GameConfig[GameIndex].Options, ", ", "?"), " ", "");
+        OptionString = OptionString $ Repl(Repl(GameConfig[GameIndex].Options, ",", "?"), " ", "");
     }
 
     // Add Per-Map Game Options
