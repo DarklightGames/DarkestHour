@@ -18,16 +18,58 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     }
 }
 
+// Override to support json objects
+function LoadList(VotingReplicationInfo LoadVRI, int GameTypeIndex)
+{
+    local int m,p,l;
+    local array<string> PrefixList;
+    local JSONObject MapObject;
+    local string MapNameString;
+
+    VRI = LoadVRI;
+
+    Split(VRI.GameConfig[GameTypeIndex].Prefix, ",", PrefixList);
+
+    for (m = 0; m < VRI.MapList.Length; m++)
+    {
+        for (p = 0; p < PreFixList.Length; p++)
+        {
+            // Parse the JSON object
+            MapObject = (new class'JSONParser').ParseObject(VRI.MapList[m].MapName);
+
+            if (MapObject != none && MapObject.Get("MapName").AsString() != "")
+            {
+                MapNameString = MapObject.Get("MapName").AsString();
+            }
+            else
+            {
+                MapNameString = VRI.MapList[m].MapName;
+            }
+
+            if (left(MapNameString, len(PrefixList[p])) ~= PrefixList[p])
+            {
+                l = MapVoteData.length;
+                MapVoteData.insert(l,1);
+                MapVoteData[l] = m;
+                AddedItem();
+                break;
+            }
+        }
+    }
+
+    OnDrawItem = DrawItem;
+}
+
 // Override to remove any prefix from lists and handle new features
 function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool bSelected, bool bPending)
 {
-    local float CellLeft, CellWidth;
-    local eMenuState MState;
-    local GUIStyles DrawStyle, OldDrawTyle;
-    local array<string> Parts;
-    local DHGameReplicationInfo GRI;
-    local int Min, Max;
-    local string PlayerRangeString;
+    local float                     CellLeft, CellWidth;
+    local eMenuState                MState;
+    local GUIStyles                 DrawStyle, OldDrawTyle;
+    local DHGameReplicationInfo     GRI;
+    local int                       Min, Max;
+    local string                    PlayerRangeString, MapNameString;
+    local JSONObject                MapObject;
 
     GRI = DHGameReplicationInfo(PlayerOwner().GameReplicationInfo);
 
@@ -71,39 +113,55 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
         MState = MenuState;
     }
 
-    // Split the mapname string, which may be consolitated with other variables
-    Split(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName, ";", Parts);
+    // Parse the JSON object
+    // -----------------------------------
+    MapObject = (new class'JSONParser').ParseObject(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName);
 
-    // Begin Drawing!
+    // Set the local MapNameString as it is reused
+    if (MapObject != none && MapObject.Get("MapName").AsString() != "")
+    {
+        MapNameString = MapObject.Get("MapName").AsString();
+    }
+    else
+    {
+        MapNameString = VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName;
+    }
+
     // Map Name
+    // -----------------------------------
     GetCellLeftWidth(0, CellLeft, CellWidth);
-    DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapList'.static.GetPrettyName(Parts[0]), FontScale);
+    DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapList'.static.GetPrettyName(MapNameString), FontScale);
 
     // Source
+    // -----------------------------------
     GetCellLeftWidth(1, CellLeft, CellWidth);
-    DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapList'.static.GetMapSource(Parts[0]), FontScale);
+    DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapList'.static.GetMapSource(MapNameString), FontScale);
 
     // Allied Side
-    if (Parts.Length >= 2)
+    // -----------------------------------
+    if (MapObject != none && MapObject.Get("Country").AsString() != "")
     {
         GetCellLeftWidth(2, CellLeft, CellWidth);
-        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[1], FontScale);
+        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, MapObject.Get("Country").AsString(), FontScale);
     }
 
     // Type
-    if (Parts.Length >= 3)
+    // -----------------------------------
+    if (MapObject != none && MapObject.Get("GameType").AsString() != "")
     {
         GetCellLeftWidth(3, CellLeft, CellWidth);
-        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, Parts[2], FontScale);
+        DrawStyle.DrawText(Canvas, MState, CellLeft, Y, CellWidth, H, TXTA_Left, MapObject.Get("GameType").AsString(), FontScale);
     }
 
     // Player Range
-    if (Parts.Length >= 4)
+    // -----------------------------------
+    if (MapObject != none && MapObject.Get("MinPlayers").AsString() != "" && MapObject.Get("MaxPlayers").AsString() != "")
     {
         GetCellLeftWidth(4, CellLeft, CellWidth);
         OldDrawTyle = DrawStyle;
-        Min = int(Parts[3]);
-        Max = int(Parts[4]);
+
+        Min = MapObject.Get("MinPlayers").AsInteger();
+        Max = MapObject.Get("MaxPlayers").AsInteger();
 
         if (Min > 0 || Max <= GRI.MaxPlayers)
         {
@@ -134,34 +192,37 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
 
 function string GetSortString(int i)
 {
-    local array<string> Parts;
+    local JSONObject    MapObject;
+    local string        MapNameString;
 
-    Split(VRI.MapList[i].MapName, ";", Parts);
+    // Parse the JSON object
+    MapObject = (new class'JSONParser').ParseObject(VRI.MapList[i].MapName);
+
+    if (MapObject != none && MapObject.Get("MapName").AsString() != "")
+    {
+        MapNameString = MapObject.Get("MapName").AsString();
+    }
+    else
+    {
+        MapNameString = VRI.MapList[i].MapName;
+    }
 
     switch (SortColumn)
     {
         case 0: // Map name
-            if (Parts.Length > 0)
-            {
-                return Caps(class'DHMapList'.static.GetPrettyName(Parts[0]));
-            }
+            return Caps(class'DHMapList'.static.GetPrettyName(MapNameString));
         case 1: // Source
-            if (Parts.Length > 1)
-            {
-                return Caps(class'DHMapList'.static.GetMapSource(Parts[0]));
-            }
-            break;
+            return Caps(class'DHMapList'.static.GetMapSource(MapNameString));
         case 2: // Allied country
-            if (Parts.Length > 2)
+            if (MapObject != none && MapObject.Get("Country").AsString() != "")
             {
-                return Caps(Parts[2]);
+                return Caps(MapObject.Get("Country").AsString());
             }
         case 4: // Type
-            if (Parts.Length > 3)
+            if (MapObject != none && MapObject.Get("GameType").AsString() != "")
             {
-                return Caps(Parts[3]);
+                return Caps(MapObject.Get("GameType").AsString());
             }
-            break;
         default:
             break;
     }

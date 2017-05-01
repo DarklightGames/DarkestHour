@@ -67,6 +67,49 @@ static final function array<int> ToBytes(string S)
     return UTF8Bytes;
 }
 
+static final function string FromByteArray(array<byte> Bytes)
+{
+    local string S;
+    local int i, c, ExtraBytesToRead;
+
+    while (i < Bytes.Length)
+    {
+        c = 0;
+        ExtraBytesToRead = GetTrailingBytesForUTF8(Bytes[i]);
+
+        if (ExtraBytesToRead >= (Bytes.Length - i))
+        {
+            Warn("Exhausted bytes in conversion");
+            break;
+        }
+
+        switch (ExtraBytesToRead)
+        {
+            case 5:
+                c += Bytes[i++];
+                c = c << 6;
+            case 4:
+                c += Bytes[i++];
+                c = c << 6;
+            case 3:
+                c += Bytes[i++];
+                c = c << 6;
+            case 2:
+                c += Bytes[i++];
+                c = c << 6;
+            case 1:
+                c += Bytes[i++];
+                c = c << 6;
+            case 0:
+                c += Bytes[i++];
+        }
+
+        S $= Chr(c);
+    }
+
+    return S;
+}
+
 static final function string FromBytes(array<int> Bytes)
 {
     local string S;

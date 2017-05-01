@@ -20,12 +20,12 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool bSelected, bool bPending)
 {
-    local float CellLeft, CellWidth;
-    local GUIStyles DrawStyle, OldDrawTyle;
-    local array<string> Parts;
-    local DHGameReplicationInfo GRI;
-    local int Min, Max;
-    local string PlayerRangeString;
+    local float                     CellLeft, CellWidth;
+    local GUIStyles                 DrawStyle, OldDrawTyle;
+    local DHGameReplicationInfo     GRI;
+    local int                       Min, Max;
+    local string                    PlayerRangeString, MapNameString;
+    local JSONObject                MapObject;
 
     GRI = DHGameReplicationInfo(PlayerOwner().GameReplicationInfo);
 
@@ -45,24 +45,34 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
         DrawStyle = Style;
     }
 
-    // Split the mapname string, which may be consolitated with other variables
-    Split(VRI.MapList[VRI.MapVoteCount[SortData[i].SortItem].MapIndex].MapName, ";", Parts);
+    // Parse the JSON object
+    MapObject = (new class'JSONParser').ParseObject(VRI.MapList[VRI.MapVoteCount[SortData[i].SortItem].MapIndex].MapName);
+
+    // Set the local MapNameString as it is reused
+    if (MapObject != none && MapObject.Get("MapName").AsString() != "")
+    {
+        MapNameString = MapObject.Get("MapName").AsString();
+    }
+    else
+    {
+        MapNameString = VRI.MapList[VRI.MapVoteCount[SortData[i].SortItem].MapIndex].MapName;
+    }
 
     // Map Name
     GetCellLeftWidth(0, CellLeft, CellWidth);
-    DrawStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapList'.static.GetPrettyName(Parts[0]), FontScale);
+    DrawStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left, class'DHMapList'.static.GetPrettyName(MapNameString), FontScale);
 
     // Vote Count
     GetCellLeftWidth(1, CellLeft, CellWidth);
     DrawStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left, string(VRI.MapVoteCount[SortData[i].SortItem].VoteCount), FontScale);
 
     // Player Range
-    if (Parts.Length >= 5)
+    if (MapObject != none && MapObject.Get("MinPlayers").AsString() != "" && MapObject.Get("MaxPlayers").AsString() != "")
     {
         GetCellLeftWidth(2, CellLeft, CellWidth);
         OldDrawTyle = DrawStyle;
-        Min = int(Parts[3]);
-        Max = int(Parts[4]);
+        Min = MapObject.Get("MinPlayers").AsInteger();
+        Max = MapObject.Get("MaxPlayers").AsInteger();
 
         if (Min > 0 || Max <= GRI.MaxPlayers)
         {
@@ -93,17 +103,25 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
 
 function string GetSortString(int i)
 {
-    local array<string> Parts;
+    local JSONObject    MapObject;
+    local string        MapNameString;
 
-    Split(VRI.MapList[VRI.MapVoteCount[i].MapIndex].MapName, ";", Parts);
+        // Parse the JSON object
+    MapObject = (new class'JSONParser').ParseObject(VRI.MapList[VRI.MapVoteCount[i].MapIndex].MapName);
+
+    if (MapObject != none && MapObject.Get("MapName").AsString() != "")
+    {
+        MapNameString = MapObject.Get("MapName").AsString();
+    }
+    else
+    {
+        MapNameString = VRI.MapList[VRI.MapVoteCount[i].MapIndex].MapName;
+    }
 
     switch (SortColumn)
     {
         case 0: // Map name
-            if (Parts.Length > 0)
-            {
-                return Caps(class'DHMapList'.static.GetPrettyName(Parts[0]));
-            }
+            return Caps(class'DHMapList'.static.GetPrettyName(MapNameString));
         case 1: // Votes
             return class'UString'.static.ZFill(string(VRI.MapVoteCount[i].VoteCount), 4);
         default:

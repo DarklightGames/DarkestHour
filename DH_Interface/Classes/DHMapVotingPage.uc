@@ -3,40 +3,9 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHMapVotingPage extends MapVotingPage config(DHMapVotingInfo);
+class DHMapVotingPage extends MapVotingPage;
 
 var localized string                            lmsgMapOutOfBounds;
-
-var(DHMapVotingInfo) config array<string>       MapVoteInfo;
-
-function InternalOnOpen()
-{
-    local int i, m;
-
-    super.InternalOnOpen();
-
-    // Loops the Vote Replication Map List, for each map, it loops the client's MapList config and if matches, changes the string
-    if (MVRI != none || !MVRI.bMapVote)
-    {
-        for (m = 0; m < MVRI.MapList.Length; m++)
-        {
-            for (i = 0; i < MapVoteInfo.Length; ++i)
-            {
-                if (MVRI.MapList[m].MapName ~= Left(MapVoteInfo[i], Len(MVRI.MapList[m].MapName)))
-                {
-                    MVRI.MapList[m].MapName = MapVoteInfo[i];
-
-                    // Disable the level completely if it has been blacklisted!
-                    if (InStr(MapVoteInfo[i], "BLACKLISTED") != -1)
-                    {
-                        MVRI.MapList[m].bEnabled = false;
-                    }
-                }
-            }
-        }
-    }
-
-}
 
 function bool AlignBK(Canvas C)
 {
@@ -48,12 +17,12 @@ function bool AlignBK(Canvas C)
     return false;
 }
 
+// Modified to confirm we are voting within bounds (this will need changed)
 function SendVote(GUIComponent Sender)
 {
-    local int MapIndex, GameConfigIndex;
-    local DHGameReplicationInfo GRI;
-    local int Min, Max;
-    local array<string> Parts;
+    local int                       MapIndex, GameConfigIndex, Min, Max;
+    local DHGameReplicationInfo     GRI;
+    local JSONObject                MapObject;
 
     if (PlayerOwner() == none)
     {
@@ -75,14 +44,14 @@ function SendVote(GUIComponent Sender)
         {
             GameConfigIndex = MapVoteCountMultiColumnList(lb_VoteCountListBox.List).GetSelectedGameConfigIndex();
 
-            // Split the mapname string, which may be consolitated with other variables
-            Split(MVRI.MapList[MapIndex].MapName, ";", Parts);
+            // Parse the JSON object
+            MapObject = (new class'JSONParser').ParseObject(MVRI.MapList[MapIndex].MapName);
 
             // Do a check if the current player count is in bounds of recommended range or if level has failed QA
-            if (Parts.Length >= 5) //Require all info
+            if (MapObject != none && MapObject.Get("MinPlayers").AsString() != "" && MapObject.Get("MaxPlayers").AsString() != "")
             {
-                Min = int(Parts[3]);
-                Max = int(Parts[4]);
+                Min = MapObject.Get("MinPlayers").AsInteger();
+                Max = MapObject.Get("MaxPlayers").AsInteger();
 
                 if (GRI.PRIArray.Length < Min || (GRI.PRIArray.Length > Max && GRI.PRIArray.Length < GRI.MaxPlayers))
                 {

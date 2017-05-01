@@ -58,6 +58,87 @@ function Timer()
     }
 }
 
+// Modified to handle map specific repeat limit
+function AddMap(string MapName, string Mutators, string GameOptions)
+{
+    local MapHistoryInfo        MapInfo;
+    local bool                  bUpdate;
+    local int                   i, MapRepeatLimit;
+    local JSONObject            MapObject;
+    local string                DecodedString;
+
+    // Dont add duplicate map names
+    for (i = 0; i < MapList.length; i++)
+    {
+        if(MapName ~= MapList[i].MapName)
+        {
+            return;
+        }
+    }
+
+    MapInfo = History.GetMapHistory(MapName);
+
+    MapList.length = MapCount + 1;
+
+    if (MapInfo.G != "")
+    {
+        DecodedString = class'UTF8Encoding'.static.FromByteArray(class'Base64Encoding'.static.Decode(MapInfo.G));
+
+        MapObject = (new class'JSONParser').ParseObject(DecodedString);
+
+        if (MapObject != none)
+        {
+            MapObject.PutString("MapName", MapName);
+            MapList[MapCount].MapName = MapObject.Encode();
+        }
+        else
+        {
+            Warn("MapObject failed to parse in DHVotingHandler for:" @ MapName);
+            MapList[MapCount].MapName = MapName;
+        }
+    }
+    else
+    {
+        MapList[MapCount].MapName = MapName;
+    }
+
+    MapList[MapCount].PlayCount = MapInfo.P;
+    MapList[MapCount].Sequence = MapInfo.S;
+
+    // Check if there is specific repeat limit for this map
+    if (MapObject != none && MapObject.Get("RepeatLimit").AsString() != "")
+    {
+        // Change MapRepeatLimit to our specific value for this map
+        MapRepeatLimit = MapObject.Get("RepeatLimit").AsInteger();
+    }
+    else
+    {
+        MapRepeatLimit = RepeatLimit; // Server base value
+    }
+
+    // Set the map to enabled/disabled based on MapRepeatLimit
+    MapList[MapCount].bEnabled = MapInfo.S > MapRepeatLimit || MapInfo.S == 0;
+
+    MapCount++;
+
+    if (Mutators != "" && Mutators != MapInfo.U)
+    {
+        MapInfo.U = Mutators;
+        bUpdate = true;
+    }
+
+    if (MapInfo.M == "")
+    {
+        MapInfo.M = MapName;
+        bUpdate = true;
+    }
+
+    if (bUpdate)
+    {
+        History.AddMap(MapInfo);
+    }
+}
+
 // NOTE: overridden to fix vote 'duplication' bug
 function PlayerExit(Controller Exiting)
 {
@@ -150,6 +231,8 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
     local MapHistoryInfo MapInfo;
     local DHPlayer       P;
     local int            Index, VoteCount, PrevMapVote, PrevGameVote;
+    local string         MapNameString;
+    local JSONObject     MapObject;
 
     P = DHPlayer(Voter);
 
@@ -176,14 +259,26 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
         return;
     }
 
+    // Parse the mapname
+    MapObject = (new class'JSONParser').ParseObject(MapList[MapIndex].MapName);
+
+    if (MapObject != none && MapObject.Get("MapName").AsString() != "")
+    {
+        MapNameString = MapObject.Get("MapName").AsString();
+    }
+    else
+    {
+        MapNameString = MapList[MapIndex].MapName;
+    }
+
     if (PlayerController(Voter).PlayerReplicationInfo.bAdmin || PlayerController(Voter).PlayerReplicationInfo.bSilentAdmin) // administrator vote
     {
         TextMessage = lmsgAdminMapChange;
-        TextMessage = Repl(TextMessage, "%mapname%", PrepMapStr(MapList[MapIndex].MapName));
+        TextMessage = Repl(TextMessage, "%mapname%", PrepMapStr(MapNameString));
         Level.Game.Broadcast(self, TextMessage);
-        Log("Admin has forced map switch to " $ MapList[MapIndex].MapName $ "(" $ GameConfig[GameIndex].Acronym $ ")", 'MapVote');
+        Log("Admin has forced map switch to " $ MapNameString $ "(" $ GameConfig[GameIndex].Acronym $ ")", 'MapVote');
 
-        if (MapList[MapIndex].MapName == SwapAndRestartText)
+        if (MapNameString == SwapAndRestartText)
         {
             ExitVoteAndSwap();
 
@@ -192,7 +287,7 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
 
         CloseAllVoteWindows();
         bLevelSwitchPending = true;
-        MapInfo = History.PlayMap(MapList[MapIndex].MapName);
+        MapInfo = History.PlayMap(MapNameString);
         ServerTravelString = SetupGameMap(MapList[MapIndex], GameIndex, MapInfo);
         Log("ServerTravelString = " $ ServerTravelString, 'MapVoteDebug');
         Level.ServerTravel(ServerTravelString, false); // change the map
@@ -219,7 +314,7 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
         return;
     }
 
-    Log("___" $ Index $ " - " $ PlayerController(Voter).PlayerReplicationInfo.PlayerName $ " voted for " $ MapList[MapIndex].MapName $ "(" $ GameConfig[GameIndex].Acronym $ ")", 'MapVote');
+    Log("___" $ Index $ " - " $ PlayerController(Voter).PlayerReplicationInfo.PlayerName $ " voted for " $ MapNameString $ "(" $ GameConfig[GameIndex].Acronym $ ")", 'MapVote');
 
     PrevMapVote = MVRI[Index].MapVote;
     PrevGameVote = MVRI[Index].GameVote;
@@ -262,7 +357,7 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
     {
         TextMessage = Repl(TextMessage, "%votecount%", string(VoteCount));
         TextMessage = Repl(TextMessage, "%playername%", PlayerController(Voter).PlayerReplicationInfo.PlayerName);
-        TextMessage = Repl(TextMessage, "%mapname%", PrepMapStr(MapList[MapIndex].MapName));
+        TextMessage = Repl(TextMessage, "%mapname%", PrepMapStr(MapNameString));
         Level.Game.Broadcast(self, TextMessage);
     }
 
@@ -276,6 +371,108 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
     MVRI[Index].VoteCount = VoteCount;
 
     TallyVotes(false);
+}
+
+// Overridden to handle consolidated MapName
+function bool IsValidVote(int MapIndex, int GameIndex)
+{
+    local int               i;
+    local array<string>     PrefixList;
+    local JSONObject        MapObject;
+    local string            MapNameString;
+
+    // Check if the maps prefix is one listed for the gametype
+    Split(GameConfig[GameIndex].Prefix, ",", PrefixList);
+
+    // Parse the mapname
+    MapObject = (new class'JSONParser').ParseObject(MapList[MapIndex].MapName);
+
+    if (MapObject != none && MapObject.Get("MapName").AsString() != "")
+    {
+        MapNameString = MapObject.Get("MapName").AsString();
+    }
+    else
+    {
+        MapNameString = MapList[MapIndex].MapName;
+    }
+
+    for (i = 0; i < PreFixList.Length; i++)
+    {
+        if (Left(MapNameString, len(PrefixList[i])) ~= PrefixList[i])
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// Overridden for consolidate MapName
+function string SetupGameMap(MapVoteMapList MapInfo, int GameIndex, MapHistoryInfo MapHistoryInfo)
+{
+    local string            ReturnString, MutatorString, OptionString, MapNameString;
+    local array<string>     MapsInRotation;
+    local int               i;
+    local JSONObject        MapObject;
+
+    // Add Per-GameType Mutators
+    if (GameConfig[GameIndex].Mutators != "")
+    {
+        MutatorString = MutatorString $ GameConfig[GameIndex].Mutators;
+    }
+
+    // Add Per-Map Mutators
+    if (MapHistoryInfo.U != "")
+    {
+        MutatorString = MutatorString $ "," $ MapHistoryInfo.U;
+    }
+
+    // Add Per-GameType Game Options
+    if (GameConfig[GameIndex].Options != "")
+    {
+        OptionString = OptionString $ Repl(Repl(GameConfig[GameIndex].Options,",","?")," ","");
+    }
+
+    // Add Per-Map Game Options
+    if (MapHistoryInfo.G != "")
+    {
+        OptionString = OptionString $ "?" $ MapHistoryInfo.G;
+    }
+
+    // Parse the mapname
+    MapObject = (new class'JSONParser').ParseObject(MapInfo.MapName);
+
+    if (MapObject != none && MapObject.Get("MapName").AsString() != "")
+    {
+        MapNameString = MapObject.Get("MapName").AsString();
+    }
+    else
+    {
+        MapNameString = MapInfo.MapName;
+    }
+
+    // Remove the .rom off of the map name, if it exists
+    if (Right(MapNameString, 4) == ".rom")
+    {
+        ReturnString = Left(MapNameString, Len(MapNameString) - 4);
+    }
+    else
+    {
+        ReturnString = MapNameString;
+    }
+
+    MapsInRotation = Level.Game.MaplistHandler.GetCurrentMapRotation();
+
+    for (i = 0; i < MapsInRotation.Length; i++)
+    {
+        if (InStr(MapsInRotation[i], ReturnString) != -1)
+        {
+            ReturnString = MapsInRotation[i];
+            break;
+        }
+    }
+
+    return ReturnString;
 }
 
 // Overridden to fix accessed none errors - the logic of the function itself is a nightmare and whoever wrote it is a criminal
@@ -404,9 +601,10 @@ function GetDefaultMap(out int MapIdx, out int GameIdx)
 function TallyVotes(bool bForceMapSwitch)
 {
     local MapHistoryInfo MapInfo;
-    local string         CurrentMap;
+    local string         CurrentMap, MapNameString;
     local array<int>     VoteCount, Ranking;
     local int            Index, MapIdx, GameIdx, TopMap, PlayersThatVoted, Votes, TieCount, r, x, y;
+    local JSONObject     MapObject;
 
     if (bLevelSwitchPending)
     {
@@ -504,6 +702,18 @@ function TallyVotes(bool bForceMapSwitch)
         }
     }
 
+    // Parse the mapname
+    MapObject = (new class'JSONParser').ParseObject(MapList[TopMap - TopMap / MapCount * MapCount].MapName);
+
+    if (MapObject != none && MapObject.Get("MapName").AsString() != "")
+    {
+        MapNameString = MapObject.Get("MapName").AsString();
+    }
+    else
+    {
+        MapNameString = MapList[TopMap - TopMap / MapCount * MapCount].MapName;
+    }
+
     // Check for a tie
     if (PlayersThatVoted > 1) // need more than one player vote for a tie
     {
@@ -527,7 +737,7 @@ function TallyVotes(bool bForceMapSwitch)
 
             r = 0;
 
-            while (MapList[TopMap - (TopMap / MapCount) * MapCount].MapName ~= CurrentMap)
+            while (MapNameString ~= CurrentMap)
             {
                 TopMap = Ranking[Rand(TieCount)];
 
@@ -546,12 +756,12 @@ function TallyVotes(bool bForceMapSwitch)
     // If everyone has voted go ahead and change map
     if (bForceMapSwitch || (Level.Game.NumPlayers == PlayersThatVoted && Level.Game.NumPlayers > 0))
     {
-        if (MapList[TopMap - TopMap / MapCount * MapCount].MapName == "")
+        if (MapNameString == "")
         {
             return;
         }
 
-        if (MapList[TopMap - TopMap / MapCount * MapCount].MapName == SwapAndRestartText)
+        if (MapNameString == SwapAndRestartText)
         {
             ExitVoteAndSwap();
 
@@ -559,12 +769,12 @@ function TallyVotes(bool bForceMapSwitch)
         }
 
         TextMessage = lmsgMapWon;
-        TextMessage = Repl(TextMessage, "%mapname%", MapList[TopMap - TopMap / MapCount * MapCount].MapName $ "(" $ GameConfig[TopMap / MapCount].Acronym $ ")");
+        TextMessage = Repl(TextMessage, "%mapname%", MapNameString $ "(" $ GameConfig[TopMap / MapCount].Acronym $ ")");
         Level.Game.Broadcast(self, TextMessage);
 
         CloseAllVoteWindows();
 
-        MapInfo = History.PlayMap(MapList[TopMap - TopMap / MapCount * MapCount].MapName);
+        MapInfo = History.PlayMap(MapNameString);
         ServerTravelString = SetupGameMap(MapList[TopMap - TopMap / MapCount * MapCount], TopMap / MapCount, MapInfo);
         Log("ServerTravelString =" $ ServerTravelString, 'MapVoteDebug');
         History.Save();
