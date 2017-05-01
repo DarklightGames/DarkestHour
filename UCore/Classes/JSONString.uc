@@ -16,6 +16,11 @@ function string AsString()
     return String;
 }
 
+function int AsInteger()
+{
+    return int(String);
+}
+
 function string Encode()
 {
     return "\"" $ String $ "\"";
