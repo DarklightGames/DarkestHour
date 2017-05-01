@@ -54,7 +54,7 @@ var() EWeather              Weather;
 
 var() float                 AlliesToAxisRatio;          // Player ratio based on team, allows for unbalanced teams
 var() bool                  bHardTeamRatio;             // Determines if AlliesToAxisRatio should be hard or soft (affected by # of players)
-var() bool                  SwapTeamsOnRoundEnd;        // Will swap teams & team score if the round ends
+var() bool                  bSwapTeamsOnRoundEnd;        // Will swap teams & team score if the round ends
 
 var() EAxisNation           AxisNation;
 var() sound                 AxisWinsMusic;              // Optional override for Axis victory music

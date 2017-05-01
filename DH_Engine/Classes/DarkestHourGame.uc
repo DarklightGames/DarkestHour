@@ -2831,7 +2831,7 @@ state RoundOver
             }
 
             // Determine if teams needs swapped
-            if (DHLevelInfo != none && DHLevelInfo.SwapTeamsOnRoundEnd)
+            if (DHLevelInfo != none && DHLevelInfo.bSwapTeamsOnRoundEnd)
             {
                 ChangeSides();
 
