@@ -307,30 +307,46 @@ function UpdateAppearance()
 {
     if (IsConstructed())
     {
-        SetStaticMesh(default.StaticMesh);
+        SetStaticMesh(GetConstructedStaticMesh());
         SetCollision(true, true, true);
         KSetBlockKarma(true);
     }
     else if (IsBroken())
     {
-        SetStaticMesh(default.BrokenStaticMesh);
+        SetStaticMesh(GetBrokenStaticMesh());
         SetCollision(false, false, false);
         KSetBlockKarma(false);
     }
     else
     {
-        if (StageIndex < 0 || StageIndex >= default.Stages.Length)
-        {
-            SetStaticMesh(default.StaticMesh);
-        }
-        else
-        {
-            SetStaticMesh(default.Stages[StageIndex].StaticMesh);
-        }
-
+        SetStaticMesh(GetStageStaticMesh(StageIndex));
         SetCollision(true, true, true);
         KSetBlockKarma(true);
     }
+}
+
+function StaticMesh GetConstructedStaticMesh()
+{
+    return default.StaticMesh;
+}
+
+function StaticMesh GetBrokenStaticMesh()
+{
+    return default.BrokenStaticMesh;
+}
+
+function StaticMesh GetStageStaticMesh(int StageIndex)
+{
+    if (StageIndex < 0 || StageIndex >= default.Stages.Length)
+    {
+        return default.StaticMesh;
+    }
+    else
+    {
+        return default.Stages[StageIndex].StaticMesh;
+    }
+
+    return none;
 }
 
 function static string GetMenuName(DHPlayer PC)

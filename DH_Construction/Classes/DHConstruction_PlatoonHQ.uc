@@ -116,13 +116,54 @@ simulated state Broken
     }
 }
 
+function StaticMesh GetConstructedStaticMesh()
+{
+    switch (GetTeamIndex())
+    {
+        case AXIS_TEAM_INDEX:
+            return StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent';
+        case ALLIES_TEAM_INDEX:
+            return StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent';
+    }
+}
+
+function StaticMesh GetBrokenStaticMesh()
+{
+    switch (GetTeamIndex())
+    {
+        case AXIS_TEAM_INDEX:
+            return StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent_destroyed';
+        case ALLIES_TEAM_INDEX:
+            return StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent_destroyed';
+    }
+}
+
+function StaticMesh GetStageStaticMesh(int StageIndex)
+{
+    switch (GetTeamIndex())
+    {
+        case AXIS_TEAM_INDEX:
+            return StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent_unpacked';
+        case ALLIES_TEAM_INDEX:
+            return StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent_unpacked';
+    }
+}
+
+function static StaticMesh GetProxyStaticMesh(DHConstructionProxy CP)
+{
+    switch (CP.PlayerOwner.GetTeamNum())
+    {
+        case AXIS_TEAM_INDEX:
+            return StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent';
+        case ALLIES_TEAM_INDEX:
+            return StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent';
+    }
+}
+
 defaultproperties
 {
     MenuName="Platoon HQ"
-    BrokenStaticMesh=StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent_destroyed'
-    StaticMesh=StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent'
-
-    Stages(0)=(StaticMesh=StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent_unpacked')
+    Stages(0)=()
     ProgressMax=4
 
     // Placement
