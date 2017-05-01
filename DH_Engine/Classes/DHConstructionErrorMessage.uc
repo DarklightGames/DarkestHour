@@ -19,7 +19,7 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
 
     if (CP != none)
     {
-        Result = Repl(Result, "{0}", CP.ConstructionClass.static.GetMenuName(none));
+        Result = Repl(Result, "{0}", CP.ConstructionClass.static.GetMenuName(CP.PlayerOwner));
         Result = Repl(Result, "{1}", int(CP.ConstructionClass.default.DuplicateDistanceInMeters));
     }
 

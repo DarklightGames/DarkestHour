@@ -70,8 +70,7 @@ function static UpdateProxy(DHConstructionProxy CP)
 
 function static string GetMenuName(DHPlayer PC)
 {
-    // TODO: not the sexiest
-    return GetVehicleClass(PC.GetTeamNum(), none).default.VehicleNameString;
+    return GetVehicleClass(PC.GetTeamNum(), PC.GetLevelInfo()).default.VehicleNameString;
 }
 
 function UpdateAppearance()
