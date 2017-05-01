@@ -378,8 +378,16 @@ function static bool CanPlayerBuild(DHPlayer PC)
     local int Count;
     local Actor A;
     local DHConstruction C;
+    local DH_LevelInfo LI;
 
     if (PC == none)
+    {
+        return false;
+    }
+
+    LI = PC.GetLevelInfo();
+
+    if (LI != none && LI.IsConstructionRestricted(default.Class))
     {
         return false;
     }

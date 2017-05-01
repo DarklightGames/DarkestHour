@@ -49,6 +49,7 @@ enum EWeather
     WEATHER_Snowy
 };
 
+// These are used as hints for skinning dynamically placed objects.
 var() ESeason               Season;
 var() EWeather              Weather;
 
@@ -63,6 +64,10 @@ var() sound                 AlliesWinsMusic;            // Optional override for
 
 var() EGameType             GameType;
 var() ESpawnMode            SpawnMode;
+
+var() bool                          bAreRallyPointsEnabled;
+var() bool                          bAreConstructionsEnabled;
+var() array<class<DHConstruction> > RestrictedConstructions;
 
 // Colin: Defines the rate of reinforcement drain per minute
 // when the enemy controls more objectives.
@@ -81,6 +86,21 @@ var const bool              bDHDebugMode;            // flag for whether debug c
 singular static function bool DHDebugMode()
 {
     return default.bDHDebugMode;
+}
+
+simulated function bool IsConstructionRestricted(class<DHConstruction> ConstructionClass)
+{
+    local int i;
+
+    for (i = 0; i < RestrictedConstructions.Length; ++i)
+    {
+        if (ConstructionClass == RestrictedConstructions[i])
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 defaultproperties

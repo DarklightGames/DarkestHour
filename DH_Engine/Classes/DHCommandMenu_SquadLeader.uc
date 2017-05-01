@@ -29,7 +29,7 @@ function OnSelect(int Index, vector Location)
             }
             PC.ServerSquadSignal(SIGNAL_Fire, Location);
             break;
-        case 1: // Create rally point
+        case 1: // Rally Point
             PC.ServerSquadSpawnRallyPoint();
             break;
         case 2: // Construction
@@ -71,15 +71,16 @@ function GetOptionText(int OptionIndex, out string ActionText, out string Subjec
 
 function bool IsOptionDisabled(int OptionIndex)
 {
-    local PlayerController PC;
+    local DHPlayer PC;
 
-    PC = Interaction.ViewportOwner.Actor;
+    PC = DHPlayer(Interaction.ViewportOwner.Actor);
 
     switch (OptionIndex)
     {
-    case 1:
-    case 2:
-        return PC == none || DHPawn(PC.Pawn) == none;
+    case 1: // Rally Point
+        return PC == none || DHPawn(Pc.Pawn) == none || !PC.GetLevelInfo().bAreRallyPointsEnabled;
+    case 2: // Construction
+        return PC == none || DHPawn(PC.Pawn) == none || !PC.GetLevelInfo().bAreConstructionsEnabled;
     case 4:
         return PC == none || DHPawn(MenuObject) == none || DHPawn(MenuObject).Health <= 0 || PC.GetTeamNum() != DHPawn(MenuObject).GetTeamNum();
     default:

@@ -6037,6 +6037,22 @@ function SetConstructionProxy(class<DHConstruction> ConstructionClass)
 function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vector L, rotator R)
 {
     local DHConstruction C;
+    local DHPlayer PC;
+    local DH_LevelInfo LI;
+
+    PC = DHPlayer(Controller);
+
+    if (PC == none)
+    {
+        return;
+    }
+
+    LI = PC.GetLevelInfo();
+
+    if (LI == none || !LI.bAreConstructionsEnabled || LI.IsConstructionRestricted(ConstructionClass))
+    {
+        return;
+    }
 
     C = Spawn(ConstructionClass, Controller,, L, R);
 

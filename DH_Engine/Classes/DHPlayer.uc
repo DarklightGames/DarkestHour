@@ -141,11 +141,34 @@ simulated event PostBeginPlay()
     if (Level.NetMode != NM_DedicatedServer)
     {
         // Find DH_LevelInfo and assign it to ClientLevelInfo, so client can access it
-        foreach self.AllActors(class'DH_LevelInfo', ClientLevelInfo)
+        foreach AllActors(class'DH_LevelInfo', ClientLevelInfo)
         {
             break;
         }
     }
+}
+
+// Added so that the DH_LevelInfo can be retrieved easily on both the server and
+// client from a DHPlayer instance.
+simulated function DH_LevelInfo GetLevelInfo()
+{
+    local DarkestHourGame G;
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        return ClientLevelInfo;
+    }
+    else
+    {
+        G = DarkestHourGame(Level.Game);
+
+        if (G != none)
+        {
+            return G.DHLevelInfo;
+        }
+    }
+
+    return none;
 }
 
 // Modified to add hacky fix for problem where player re-joins a server with an active weapon lock saved in his DHPlayerSession
