@@ -8,12 +8,10 @@ class DHMapVoteCountMultiColumnList extends MapVoteCountMultiColumnList;
 var(Style) string                RedListStyleName; // Name of the style to use for when current player is out of recommended player range
 var(Style) noexport GUIStyles    RedListStyle;
 
-var() editconst noexport DHVotingReplicationInfo    DHMVRI;
+var DHVotingReplicationInfo      DHMVRI;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    DHMVRI = DHVotingReplicationInfo(PlayerOwner().VoteReplicationInfo);
-
     Super.InitComponent(MyController,MyOwner);
 
     if (RedListStyleName != "" && RedListStyle == none)
@@ -22,12 +20,25 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     }
 }
 
+function LoadList(VotingReplicationInfo LoadVRI)
+{
+    local int i;
+
+    VRI = LoadVRI;
+    DHMVRI = DHVotingReplicationInfo(LoadVRI);
+
+    for( i=0; i<VRI.MapVoteCount.Length; i++)
+        AddedItem();
+
+    OnDrawItem = DrawItem;
+}
+
 function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool bSelected, bool bPending)
 {
     local float                     CellLeft, CellWidth;
     local GUIStyles                 DrawStyle, OldDrawTyle;
     local DHGameReplicationInfo     GRI;
-    local int                       Min, Max;
+    local int                       Min, Max, CalcIndex;
     local string                    PlayerRangeString, MapNameString;
     local JSONObject                MapObject;
 
@@ -49,8 +60,13 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
         DrawStyle = Style;
     }
 
+    CalcIndex = VRI.MapVoteCount[SortData[i].SortItem].MapIndex;
+
     // Set the MapObject from DHVotingReplicationInfo
-    MapObject = DHMVRI.MapListObjects[VRI.MapVoteCount[SortData[i].SortItem].MapIndex];
+    if (CalcIndex > 0 && CalcIndex < DHMVRI.MapListObjects.Length)
+    {
+        MapObject = DHMVRI.MapListObjects[CalcIndex];
+    }
 
     // Set the local MapNameString as it is reused
     if (MapObject != none && MapObject.Get("MapName") != none)

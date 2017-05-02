@@ -8,14 +8,10 @@ class DHMapVoteMultiColumnList extends MapVoteMultiColumnList;
 var(Style) string                RedListStyleName; // name of the style to use for when current player is out of recommended player range
 var(Style) noexport GUIStyles    RedListStyle;
 
-var TreeMap_string_int  MapNameIndices;
-
-var() editconst noexport DHVotingReplicationInfo    DHMVRI;
+var DHVotingReplicationInfo      DHMVRI;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    DHMVRI = DHVotingReplicationInfo(PlayerOwner().VoteReplicationInfo);
-
     super.InitComponent(MyController,MyOwner);
 
     if (RedListStyleName != "" && RedListStyle == none)
@@ -24,27 +20,16 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     }
 }
 
-function int GetMapIndex(string MapName)
-{
-    local int Index;
-
-    if (MapNameIndices != none && MapNameIndices.Get(MapName, Index))
-    {
-        return Index;
-    }
-
-    return -1;
-}
-
 // Override to support json objects
 function LoadList(VotingReplicationInfo LoadVRI, int GameTypeIndex)
 {
-    local int m,p,l;
+    local int m, p, l, CalcIndex;
     local array<string> PrefixList;
     local JSONObject MapObject;
     local string MapNameString;
 
     VRI = LoadVRI;
+    DHMVRI = DHVotingReplicationInfo(LoadVRI);
 
     Split(VRI.GameConfig[GameTypeIndex].Prefix, ",", PrefixList);
 
@@ -52,8 +37,13 @@ function LoadList(VotingReplicationInfo LoadVRI, int GameTypeIndex)
     {
         for (p = 0; p < PreFixList.Length; ++p)
         {
+            CalcIndex = m;// GetMapIndex(VRI.MapList[m].MapName);
+
             // Set the MapObject from DHVotingReplicationInfo
-            MapObject = DHMVRI.MapListObjects[GetMapIndex(VRI.MapList[m].MapName)];
+            if (CalcIndex >= 0 && CalcIndex < DHMVRI.MapListObjects.Length)
+            {
+                MapObject = DHMVRI.MapListObjects[CalcIndex];
+            }
 
             if (MapObject != none && MapObject.Get("MapName") != none)
             {
@@ -85,7 +75,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
     local eMenuState                MState;
     local GUIStyles                 DrawStyle, OldDrawTyle;
     local DHGameReplicationInfo     GRI;
-    local int                       Min, Max;
+    local int                       Min, Max, CalcIndex;
     local string                    PlayerRangeString, MapNameString;
     local JSONObject                MapObject;
 
@@ -131,8 +121,13 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
         MState = MenuState;
     }
 
+    CalcIndex = i; //GetMapIndex(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName);
+
     // Set the MapObject from DHVotingReplicationInfo
-    MapObject = DHMVRI.MapListObjects[GetMapIndex(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName)];
+    if (CalcIndex > 0 && CalcIndex < DHMVRI.MapListObjects.Length)
+    {
+        MapObject = DHMVRI.MapListObjects[CalcIndex];
+    }
 
     // Set the local MapNameString as it is reused
     if (MapObject != none && MapObject.Get("MapName") != none)
@@ -211,9 +206,15 @@ function string GetSortString(int i)
 {
     local JSONObject    MapObject;
     local string        MapNameString;
+    local int           CalcIndex;
+
+    CalcIndex = i;// GetMapIndex(VRI.MapList[i].MapName);
 
     // Set the MapObject from DHVotingReplicationInfo
-    MapObject = DHMVRI.MapListObjects[GetMapIndex(VRI.MapList[i].MapName)];
+    if (CalcIndex >= 0 && CalcIndex < DHMVRI.MapListObjects.Length)
+    {
+        MapObject = DHMVRI.MapListObjects[CalcIndex];
+    }
 
     if (MapObject != none && MapObject.Get("MapName") != none)
     {

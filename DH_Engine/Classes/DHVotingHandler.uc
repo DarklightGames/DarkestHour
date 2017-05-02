@@ -17,9 +17,9 @@ var TreeMap_string_int  MapNameIndices;
 
 function PostBeginPlay()
 {
-    super.PostBeginPlay();
-
     MapNameIndices = new class'TreeMap_string_int';
+
+    super.PostBeginPlay();
 }
 
 function int GetMapIndex(string MapName)
@@ -119,9 +119,14 @@ function AddMap(string MapName, string Mutators, string GameOptions)
         {
             MapNameIndices.Put(MapName, MapCount);
         }
+
+        MapList[MapCount].MapName = MapObject.Encode();
+    }
+    else
+    {
+        MapList[MapCount].MapName = MapName;
     }
 
-    MapList[MapCount].MapName = MapName;
     MapList[MapCount].PlayCount = MapInfo.P;
     MapList[MapCount].Sequence = MapInfo.S;
 
@@ -645,7 +650,7 @@ function TallyVotes(bool bForceMapSwitch)
     local MapHistoryInfo MapInfo;
     local string         CurrentMap, MapNameString;
     local array<int>     VoteCount, Ranking;
-    local int            Index, MapIdx, GameIdx, TopMap, PlayersThatVoted, Votes, TieCount, r, x, y;
+    local int            Index, MapIdx, GameIdx, TopMap, PlayersThatVoted, Votes, TieCount, r, x, y, CalcIndex;
     local JSONObject     MapObject;
 
     if (bLevelSwitchPending)
@@ -744,7 +749,12 @@ function TallyVotes(bool bForceMapSwitch)
         }
     }
 
-    MapObject = MapObjects[TopMap - TopMap / MapCount * MapCount];
+    CalcIndex = TopMap - TopMap / MapCount * MapCount;
+
+    if (GetMapIndex(MapList[CalcIndex].MapName) >= 0 && GetMapIndex(MapList[CalcIndex].MapName) < MapObjects.Length)
+    {
+        MapObject = MapObjects[GetMapIndex(MapList[CalcIndex].MapName)];
+    }
 
     if (MapObject != none && MapObject.Get("MapName") != none)
     {
@@ -752,7 +762,7 @@ function TallyVotes(bool bForceMapSwitch)
     }
     else
     {
-        MapNameString = MapList[TopMap - TopMap / MapCount * MapCount].MapName;
+        MapNameString = MapList[CalcIndex].MapName;
     }
 
     // Check for a tie
@@ -794,6 +804,8 @@ function TallyVotes(bool bForceMapSwitch)
         }
     }
 
+    CalcIndex = TopMap - TopMap / MapCount * MapCount;
+
     // If everyone has voted go ahead and change map
     if (bForceMapSwitch || (Level.Game.NumPlayers == PlayersThatVoted && Level.Game.NumPlayers > 0))
     {
@@ -816,7 +828,7 @@ function TallyVotes(bool bForceMapSwitch)
         CloseAllVoteWindows();
 
         MapInfo = History.PlayMap(MapNameString);
-        ServerTravelString = SetupGameMap(MapList[TopMap - TopMap / MapCount * MapCount], TopMap / MapCount, MapInfo);
+        ServerTravelString = SetupGameMap(MapList[CalcIndex], TopMap / MapCount, MapInfo);
         Log("ServerTravelString =" $ ServerTravelString, 'MapVoteDebug');
         History.Save();
 
@@ -827,7 +839,7 @@ function TallyVotes(bool bForceMapSwitch)
 
         if (bAccumulationMode)
         {
-            SaveAccVotes(TopMap - TopMap / MapCount * MapCount, TopMap / MapCount);
+            SaveAccVotes(CalcIndex, TopMap / MapCount);
         }
 
         CurrentGameConfig = TopMap / MapCount;

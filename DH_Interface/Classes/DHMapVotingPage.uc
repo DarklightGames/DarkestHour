@@ -11,9 +11,9 @@ var() editconst noexport DHVotingReplicationInfo    DHMVRI;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    DHMVRI = DHVotingReplicationInfo(PlayerOwner().VoteReplicationInfo);
-
     Super.Initcomponent(MyController, MyOwner);
+
+    DHMVRI = DHVotingReplicationInfo(MVRI);
 }
 
 function bool AlignBK(Canvas C)
