@@ -23,6 +23,8 @@ simulated function ReceiveMapInfo(VotingHandler.MapVoteMapList MapInfo)
         Log("Adding this map to MapListObjects:" @ MapInfo.MapName);
     }
 
+    Log("MapNames:" @ MapInfo.MapName);
+
     DebugLog("___Receiving - " $ MapInfo.MapName);
     ReplicationReply();
 }

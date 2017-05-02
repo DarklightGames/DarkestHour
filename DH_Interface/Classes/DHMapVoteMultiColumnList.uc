@@ -10,6 +10,21 @@ var(Style) noexport GUIStyles    RedListStyle;
 
 var DHVotingReplicationInfo      DHMVRI;
 
+function int GetIndexByMapName(string MapName)
+{
+    local int i;
+
+    for (i = 0; i < DHMVRI.MapListObjects.Length; ++i)
+    {
+        if (DHMVRI.MapListObjects[i].Get("MapName").AsString() ~= MapName)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     super.InitComponent(MyController,MyOwner);
@@ -37,7 +52,7 @@ function LoadList(VotingReplicationInfo LoadVRI, int GameTypeIndex)
     {
         for (p = 0; p < PreFixList.Length; ++p)
         {
-            CalcIndex = m;// GetMapIndex(VRI.MapList[m].MapName);
+            CalcIndex = GetIndexByMapName(VRI.MapList[m].MapName); // GetMapIndex(VRI.MapList[m].MapName);
 
             // Set the MapObject from DHVotingReplicationInfo
             if (CalcIndex >= 0 && CalcIndex < DHMVRI.MapListObjects.Length)
@@ -121,7 +136,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
         MState = MenuState;
     }
 
-    CalcIndex = i; //GetMapIndex(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName);
+    CalcIndex = GetIndexByMapName(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName); //GetMapIndex(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName);
 
     // Set the MapObject from DHVotingReplicationInfo
     if (CalcIndex > 0 && CalcIndex < DHMVRI.MapListObjects.Length)
@@ -208,7 +223,7 @@ function string GetSortString(int i)
     local string        MapNameString;
     local int           CalcIndex;
 
-    CalcIndex = i;// GetMapIndex(VRI.MapList[i].MapName);
+    CalcIndex = GetIndexByMapName(VRI.MapList[i].MapName); // GetMapIndex(VRI.MapList[i].MapName);
 
     // Set the MapObject from DHVotingReplicationInfo
     if (CalcIndex >= 0 && CalcIndex < DHMVRI.MapListObjects.Length)
