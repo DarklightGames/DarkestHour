@@ -8,8 +8,12 @@ class DHMapVoteCountMultiColumnList extends MapVoteCountMultiColumnList;
 var(Style) string                RedListStyleName; // Name of the style to use for when current player is out of recommended player range
 var(Style) noexport GUIStyles    RedListStyle;
 
+var() editconst noexport DHVotingReplicationInfo    DHMVRI;
+
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
+    DHMVRI = DHVotingReplicationInfo(PlayerOwner().VoteReplicationInfo);
+
     Super.InitComponent(MyController,MyOwner);
 
     if (RedListStyleName != "" && RedListStyle == none)
@@ -45,8 +49,8 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
         DrawStyle = Style;
     }
 
-    // Parse the JSON object
-    MapObject = (new class'JSONParser').ParseObject(VRI.MapList[VRI.MapVoteCount[SortData[i].SortItem].MapIndex].MapName);
+    // Set the MapObject from DHVotingReplicationInfo
+    MapObject = DHMVRI.MapListObjects[VRI.MapVoteCount[SortData[i].SortItem].MapIndex];
 
     // Set the local MapNameString as it is reused
     if (MapObject != none && MapObject.Get("MapName") != none)
@@ -106,8 +110,8 @@ function string GetSortString(int i)
     local JSONObject    MapObject;
     local string        MapNameString;
 
-        // Parse the JSON object
-    MapObject = (new class'JSONParser').ParseObject(VRI.MapList[VRI.MapVoteCount[i].MapIndex].MapName);
+    // Set the MapObject from DHVotingReplicationInfo
+    MapObject = DHMVRI.MapListObjects[VRI.MapVoteCount[i].MapIndex];
 
     if (MapObject != none && MapObject.Get("MapName") != none)
     {

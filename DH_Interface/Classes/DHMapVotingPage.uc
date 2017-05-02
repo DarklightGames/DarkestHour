@@ -5,7 +5,16 @@
 
 class DHMapVotingPage extends MapVotingPage;
 
-var localized string                            lmsgMapOutOfBounds;
+var localized string                                lmsgMapOutOfBounds;
+
+var() editconst noexport DHVotingReplicationInfo    DHMVRI;
+
+function InitComponent(GUIController MyController, GUIComponent MyOwner)
+{
+    DHMVRI = DHVotingReplicationInfo(PlayerOwner().VoteReplicationInfo);
+
+    Super.Initcomponent(MyController, MyOwner);
+}
 
 function bool AlignBK(Canvas C)
 {
@@ -44,8 +53,8 @@ function SendVote(GUIComponent Sender)
         {
             GameConfigIndex = MapVoteCountMultiColumnList(lb_VoteCountListBox.List).GetSelectedGameConfigIndex();
 
-            // Parse the JSON object
-            MapObject = (new class'JSONParser').ParseObject(MVRI.MapList[MapIndex].MapName);
+            // Set the MapObject from DHVotingReplicationInfo
+            MapObject = DHMVRI.MapListObjects[MapIndex];
 
             // Do a check if the current player count is in bounds of recommended range or if level has failed QA
             if (MapObject != none && MapObject.Get("MinPlayers") != none && MapObject.Get("MaxPlayers") != none)

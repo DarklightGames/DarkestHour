@@ -11,6 +11,29 @@ var localized string    SwapAndRestartText;
 var config    float     MapVoteIntervalDuration;
 var config    bool      bUseSwapVote;
 
+var array<JSONObject>   MapObjects;
+
+var TreeMap_string_int  MapNameIndices;
+
+function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    MapNameIndices = new class'TreeMap_string_int';
+}
+
+function int GetMapIndex(string MapName)
+{
+    local int Index;
+
+    if (MapNameIndices != none && MapNameIndices.Get(MapName, Index))
+    {
+        return Index;
+    }
+
+    return -1;
+}
+
 // Modified to avoid calling PlayCountDown() on the VotingReplicationInfo as that just spams log errors as this game doesn't have a StatusAnnouncer actor
 function Timer()
 {
@@ -83,25 +106,22 @@ function AddMap(string MapName, string Mutators, string GameOptions)
     if (MapInfo.G != "")
     {
         DecodedString = class'UTF8Encoding'.static.FromByteArray(class'Base64Encoding'.static.Decode(MapInfo.G));
-
         MapObject = (new class'JSONParser').ParseObject(DecodedString);
 
         if (MapObject != none)
         {
             MapObject.PutString("MapName", MapName);
-            MapList[MapCount].MapName = MapObject.Encode();
         }
-        else
+
+        MapObjects[MapCount] = MapObject;
+
+        if (MapNameIndices != none)
         {
-            Warn("MapObject failed to parse in DHVotingHandler for:" @ MapName);
-            MapList[MapCount].MapName = MapName;
+            MapNameIndices.Put(MapName, MapCount);
         }
-    }
-    else
-    {
-        MapList[MapCount].MapName = MapName;
     }
 
+    MapList[MapCount].MapName = MapName;
     MapList[MapCount].PlayCount = MapInfo.P;
     MapList[MapCount].Sequence = MapInfo.S;
 
@@ -137,6 +157,28 @@ function AddMap(string MapName, string Mutators, string GameOptions)
     {
         History.AddMap(MapInfo);
     }
+}
+
+// Modified to use DHVotingReplicationInfo
+function AddMapVoteReplicationInfo(PlayerController Player)
+{
+    local DHVotingReplicationInfo M;
+
+    if (class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        Log("___Spawning VotingReplicationInfo", 'MapVoteDebug');
+    }
+
+    M = Spawn(class'DHVotingReplicationInfo', Player, , Player.Location);
+
+    if (M == none)
+    {
+        Log("___Failed to spawn VotingReplicationInfo", 'MapVote');
+        return;
+    }
+
+    M.PlayerID = Player.PlayerReplicationInfo.PlayerID;
+    MVRI[MVRI.Length] = M;
 }
 
 // NOTE: overridden to fix vote 'duplication' bug
@@ -259,8 +301,7 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
         return;
     }
 
-    // Parse the mapname
-    MapObject = (new class'JSONParser').ParseObject(MapList[MapIndex].MapName);
+    MapObject = MapObjects[MapIndex];
 
     if (MapObject != none && MapObject.Get("MapName") != none)
     {
@@ -387,8 +428,7 @@ function bool IsValidVote(int MapIndex, int GameIndex)
     // Check if the maps prefix is one listed for the gametype
     Split(GameConfig[GameIndex].Prefix, ",", PrefixList);
 
-    // Parse the mapname
-    MapObject = (new class'JSONParser').ParseObject(MapList[MapIndex].MapName);
+    MapObject = MapObjects[MapIndex];
 
     if (MapObject != none && MapObject.Get("MapName") != none)
     {
@@ -442,8 +482,7 @@ function string SetupGameMap(MapVoteMapList MapInfo, int GameIndex, MapHistoryIn
         OptionString = OptionString $ "?" $ MapHistoryInfo.G;
     }
 
-    // Parse the mapname
-    MapObject = (new class'JSONParser').ParseObject(MapInfo.MapName);
+    MapObject = MapObjects[GetMapIndex(MapInfo.MapName)];
 
     if (MapObject != none && MapObject.Get("MapName") != none)
     {
@@ -705,8 +744,7 @@ function TallyVotes(bool bForceMapSwitch)
         }
     }
 
-    // Parse the mapname
-    MapObject = (new class'JSONParser').ParseObject(MapList[TopMap - TopMap / MapCount * MapCount].MapName);
+    MapObject = MapObjects[TopMap - TopMap / MapCount * MapCount];
 
     if (MapObject != none && MapObject.Get("MapName") != none)
     {
@@ -949,7 +987,7 @@ function MidGameVote()
         return;
     }
 
-    Level.Game.Broadcast(self, lmsgMidGameVote);
+    Level.Game.Broadcast(self, lmsgMidGameVote);//
     bMidGameVote = true;
     TimeLeft = VoteTimeLimit;
     ScoreBoardTime = 1;

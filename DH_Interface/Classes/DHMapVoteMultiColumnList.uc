@@ -8,14 +8,32 @@ class DHMapVoteMultiColumnList extends MapVoteMultiColumnList;
 var(Style) string                RedListStyleName; // name of the style to use for when current player is out of recommended player range
 var(Style) noexport GUIStyles    RedListStyle;
 
+var TreeMap_string_int  MapNameIndices;
+
+var() editconst noexport DHVotingReplicationInfo    DHMVRI;
+
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
+    DHMVRI = DHVotingReplicationInfo(PlayerOwner().VoteReplicationInfo);
+
     super.InitComponent(MyController,MyOwner);
 
     if (RedListStyleName != "" && RedListStyle == none)
     {
         RedListStyle = MyController.GetStyle(RedListStyleName, FontScale);
     }
+}
+
+function int GetMapIndex(string MapName)
+{
+    local int Index;
+
+    if (MapNameIndices != none && MapNameIndices.Get(MapName, Index))
+    {
+        return Index;
+    }
+
+    return -1;
 }
 
 // Override to support json objects
@@ -34,8 +52,8 @@ function LoadList(VotingReplicationInfo LoadVRI, int GameTypeIndex)
     {
         for (p = 0; p < PreFixList.Length; ++p)
         {
-            // Parse the JSON object
-            MapObject = (new class'JSONParser').ParseObject(VRI.MapList[m].MapName);
+            // Set the MapObject from DHVotingReplicationInfo
+            MapObject = DHMVRI.MapListObjects[GetMapIndex(VRI.MapList[m].MapName)];
 
             if (MapObject != none && MapObject.Get("MapName") != none)
             {
@@ -113,9 +131,8 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
         MState = MenuState;
     }
 
-    // Parse the JSON object
-    // -----------------------------------
-    MapObject = (new class'JSONParser').ParseObject(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName);
+    // Set the MapObject from DHVotingReplicationInfo
+    MapObject = DHMVRI.MapListObjects[GetMapIndex(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName)];
 
     // Set the local MapNameString as it is reused
     if (MapObject != none && MapObject.Get("MapName") != none)
@@ -195,8 +212,8 @@ function string GetSortString(int i)
     local JSONObject    MapObject;
     local string        MapNameString;
 
-    // Parse the JSON object
-    MapObject = (new class'JSONParser').ParseObject(VRI.MapList[i].MapName);
+    // Set the MapObject from DHVotingReplicationInfo
+    MapObject = DHMVRI.MapListObjects[GetMapIndex(VRI.MapList[i].MapName)];
 
     if (MapObject != none && MapObject.Get("MapName") != none)
     {
