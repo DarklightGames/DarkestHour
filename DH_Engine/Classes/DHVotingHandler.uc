@@ -154,8 +154,8 @@ function AddMap(string MapName, string Mutators, string GameOptions)
 
     if (MapInfo.M == "")
     {
-        MapInfo.M = MapName;
-        bUpdate = true;
+        //MapInfo.M = MapName;
+        //bUpdate = true;
     }
 
     if (bUpdate)
@@ -277,7 +277,7 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
 {
     local MapHistoryInfo MapInfo;
     local DHPlayer       P;
-    local int            Index, VoteCount, PrevMapVote, PrevGameVote;
+    local int            Index, VoteCount, PrevMapVote, PrevGameVote, CalcIndex;
     local string         MapNameString;
     local JSONObject     MapObject;
 
@@ -306,7 +306,12 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
         return;
     }
 
-    MapObject = MapObjects[MapIndex];
+    CalcIndex = MapIndex;
+
+    if (CalcIndex >= 0 && CalcIndex < MapObjects.Length)
+    {
+        MapObject = MapObjects[CalcIndex];
+    }
 
     if (MapObject != none && MapObject.Get("MapName") != none)
     {
@@ -425,7 +430,7 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
 // Overridden to handle consolidated MapName
 function bool IsValidVote(int MapIndex, int GameIndex)
 {
-    local int               i;
+    local int               i, CalcIndex;
     local array<string>     PrefixList;
     local JSONObject        MapObject;
     local string            MapNameString;
@@ -433,7 +438,12 @@ function bool IsValidVote(int MapIndex, int GameIndex)
     // Check if the maps prefix is one listed for the gametype
     Split(GameConfig[GameIndex].Prefix, ",", PrefixList);
 
-    MapObject = MapObjects[MapIndex];
+    CalcIndex = MapIndex;
+
+    if(CalcIndex >= 0 && CalcIndex < MapObjects.Length)
+    {
+        MapObject = MapObjects[CalcIndex];
+    }
 
     if (MapObject != none && MapObject.Get("MapName") != none)
     {
@@ -460,7 +470,7 @@ function string SetupGameMap(MapVoteMapList MapInfo, int GameIndex, MapHistoryIn
 {
     local string            ReturnString, MutatorString, OptionString, MapNameString;
     local array<string>     MapsInRotation;
-    local int               i;
+    local int               i, CalcIndex;
     local JSONObject        MapObject;
 
     // Add Per-GameType Mutators
@@ -487,7 +497,12 @@ function string SetupGameMap(MapVoteMapList MapInfo, int GameIndex, MapHistoryIn
         OptionString = OptionString $ "?" $ MapHistoryInfo.G;
     }
 
-    MapObject = MapObjects[GetMapIndex(MapInfo.MapName)];
+    CalcIndex = GetMapIndex(MapInfo.MapName);
+
+    if (CalcIndex >= 0 && CalcIndex < MapObjects.Length)
+    {
+        MapObject = MapObjects[CalcIndex];
+    }
 
     if (MapObject != none && MapObject.Get("MapName") != none)
     {

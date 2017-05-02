@@ -9,7 +9,7 @@ var array<JSONObject>               MapListObjects;
 
 var TreeMap_string_int              MapNameIndices;
 
-function PostBeginPlay()
+simulated function PostBeginPlay()
 {
     MapNameIndices = new class'TreeMap_string_int';
 
@@ -34,6 +34,12 @@ simulated function ReceiveMapInfo(VotingHandler.MapVoteMapList MapInfo)
     local int i;
 
     MapList[MapList.Length] = MapInfo;
+
+    if (MapNameIndices == none)
+    {
+        Log("Oh no! we don't have any beer here");
+    }
+
     MapNameIndices.Put(MapInfo.MapName, MapList.Length);
 
     if ((new class'JSONParser').ParseObject(MapInfo.MapName) != none)

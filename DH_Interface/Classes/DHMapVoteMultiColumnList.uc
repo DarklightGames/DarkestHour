@@ -123,15 +123,19 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
 
     CalcIndex = DHMVRI.GetMapIndex(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName); //GetMapIndex(VRI.MapList[MapVoteData[SortData[i].SortItem]].MapName);
 
+    Log("CalcIndex is:" @ CalcIndex);
+
     // Set the MapObject from DHVotingReplicationInfo
     if (CalcIndex > 0 && CalcIndex < DHMVRI.MapListObjects.Length)
     {
+        Log("Are we trying to set MapObject?");
         MapObject = DHMVRI.MapListObjects[CalcIndex];
     }
 
     // Set the local MapNameString as it is reused
     if (MapObject != none && MapObject.Get("MapName") != none)
     {
+        Log("Ive just assigned mapnamestring to get MapName");
         MapNameString = MapObject.Get("MapName").AsString();
     }
     else
