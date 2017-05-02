@@ -235,11 +235,19 @@ function Tick(float DeltaTime)
     SetLocation(L);
     SetRotation(R);
 
-    NewProxyError = GetPositionError();
+    NewProxyError = ConstructionClass.static.GetPlayerError(PlayerOwner);
 
     if (NewProxyError == ERROR_None)
     {
-        // Location was determined to be okay, now do another pass.
+        NewProxyError = GetPositionError();
+    }
+
+    if (NewProxyError == ERROR_None)
+    {
+        // All other checks passed, set new proxy error to be the provisional
+        // position error. The order is important so that we prioritize return
+        // other more critical errors other than minor errors like "not enough
+        // room" etc.
         NewProxyError = ProvisionalPositionError;
     }
 

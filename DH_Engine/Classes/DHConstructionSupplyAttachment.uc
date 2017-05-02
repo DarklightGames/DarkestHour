@@ -7,11 +7,13 @@ class DHConstructionSupplyAttachment extends RODummyAttachment
     notplaceable;
 
 var bool                bCanBeResupplied;
-var int                 SupplyCount;
+var private int         SupplyCount;
 var int                 TeamIndex;
 
 var ArrayList_Object    TouchingPawns;
 var ArrayList_Object    NewTouchingPawns;
+
+var float               TouchDistanceInMeters;  // The distance, in meters, a player must be within to have access to these supplies.
 
 replication
 {
@@ -19,22 +21,68 @@ replication
         TeamIndex, SupplyCount;
 }
 
+delegate OnSuppliesDepleted(DHConstructionSupplyAttachment CSA);
+
 simulated function PostBeginPlay()
 {
     super(Actor).PostBeginPlay();
 
-    TouchingPawns = new class'ArrayList_Object';
-    NewTouchingPawns = new class'ArrayList_Object';
-
     if (Role == ROLE_Authority)
     {
+        TouchingPawns = new class'ArrayList_Object';
+        NewTouchingPawns = new class'ArrayList_Object';
+
         SetTimer(1.0, true);
     }
+}
+
+function int GetSupplyCount()
+{
+    return SupplyCount;
 }
 
 function bool HasSupplies()
 {
     return SupplyCount > 0;
+}
+
+// Uses supplies.
+function bool UseSupplies(int Amount)
+{
+    if (SupplyCount < Amount)
+    {
+        return false;
+    }
+
+    SupplyCount -= Amount;
+
+    if (SupplyCount == 0)
+    {
+        OnSuppliesDepleted(self);
+    }
+
+    if (!bCanBeResupplied)
+    {
+        Destroy();
+    }
+}
+
+function Destroyed()
+{
+    local int i;
+    local DHPawn P;
+
+    super.Destroyed();
+
+    for (i = 0; i < TouchingPawns.Size(); ++i)
+    {
+        P = DHPawn(TouchingPawns.Get(i));
+
+        if (P != none && P.TouchingSupplyAttachments != none)
+        {
+            P.TouchingSupplyAttachments.Remove(self);
+        }
+    }
 }
 
 function Timer()
@@ -44,11 +92,28 @@ function Timer()
 
     NewTouchingPawns.Clear();
 
-    foreach VisibleCollidingActors(class'DHPawn', P, CollisionRadius)
+    // Gather all relevant pawns within the radius.
+    foreach CollidingActors(class'DHPawn', P, CollisionRadius)
     {
         if (P != none && P.GetTeamNum() == TeamIndex)
         {
             NewTouchingPawns.Add(P);
+        }
+    }
+
+    for (i = 0; i < NewTouchingPawns.Size(); ++i)
+    {
+        Index = TouchingPawns.IndexOf(NewTouchingPawns.Get(i));
+
+        if (Index == -1)
+        {
+            // Pawn is now being touched, add ourselves to their touching list.
+            P = DHPawn(NewTouchingPawns.Get(i));
+
+            if (P != none && P.TouchingSupplyAttachments != none)
+            {
+                P.TouchingSupplyAttachments.Add(self);
+            }
         }
     }
 
@@ -58,7 +123,8 @@ function Timer()
 
         if (Index == -1)
         {
-            // TODO: pawn is no longer in touching pawns, remove it!
+            // Pawn is no longer being touched, remove ourselves from their
+            // touching list.
             P = DHPawn(TouchingPawns.Get(i));
 
             if (P != none && P.TouchingSupplyAttachments != none)
@@ -70,11 +136,6 @@ function Timer()
 
     TouchingPawns.Clear();
     TouchingPawns.Concatenate(NewTouchingPawns);
-
-/*
-    foreach TouchingActors(class'DHPawn', P)
-    {
-    }*/
 }
 
 // TODO: logic for getting this resupplied; some sort of hook that things can
@@ -84,8 +145,6 @@ defaultproperties
 {
     bCanBeResupplied=true
     SupplyCount=1000
-    bUseCylinderCollision=true
-    CollisionRadius=1500
-    CollisionHeight=100
+    TouchDistanceInMeters=50
     RemoteRole=ROLE_DumbProxy
 }

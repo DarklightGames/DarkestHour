@@ -10,18 +10,22 @@ class DHConstruction extends Actor
 enum EConstructionError
 {
     ERROR_None,
-    ERROR_Fatal,            // Some fatal error occurred, usually a case of unexpected values
-    ERROR_NoGround,         // No solid ground was able to be found
-    ERROR_TooSteep,         // The ground slope exceeded the allowable maximum
-    ERROR_InWater,          // The construction is in water and the construction type disallows this
-    ERROR_Restricted,       // Construction overlaps a restriction volume
-    ERROR_NoRoom,           // No room to place this construction
-    ERROR_NotOnTerrain,     // Construction is not on terrain
-    ERROR_TooClose,         // Too close to an identical construction
-    ERROR_InMinefield,      // Cannot be in a minefield!
-    ERROR_NearSpawnPoint,   // Cannot be so close to a spawn point (or location hint)
-    ERROR_Indoors,          // Cannot be placed indoors
-    ERROR_InObjective,
+    ERROR_Fatal,                // Some fatal error occurred, usually a case of unexpected values
+    ERROR_NoGround,             // No solid ground was able to be found
+    ERROR_TooSteep,             // The ground slope exceeded the allowable maximum
+    ERROR_InWater,              // The construction is in water and the construction type disallows this
+    ERROR_Restricted,           // Construction overlaps a restriction volume
+    ERROR_NoRoom,               // No room to place this construction
+    ERROR_NotOnTerrain,         // Construction is not on terrain
+    ERROR_TooClose,             // Too close to an identical construction
+    ERROR_InMinefield,          // Cannot be in a minefield!
+    ERROR_NearSpawnPoint,       // Cannot be so close to a spawn point (or location hint)
+    ERROR_Indoors,              // Cannot be placed indoors
+    ERROR_InObjective,          // Cannot be placed inside an objective area
+    ERROR_TeamLimit,            // Limit reached for this type of construction
+    ERROR_NoSupplies,           // Not within range of any supply caches
+    ERROR_InsufficientSupply,   // Not enough supplies to build this construction
+    ERROR_RestrictedType,       // Restricted construction type (can't build on this map!)
     ERROR_Other
 };
 
@@ -38,6 +42,9 @@ var name StateName, OldStateName;
 var() ETeamOwner TeamOwner;     // This enum is for the levelers' convenience only.
 var private int TeamIndex;
 var int TeamLimit;              // The amount of this type of construction that is allowed, per team.
+
+// Manager
+var     DHConstructionManager   Manager;
 
 // Placement
 var     float   ProxyDistanceInMeters;          // The distance at which the proxy object will be away from the player when
@@ -66,6 +73,7 @@ var     int     SupplyCost;                     // The amount of supply points t
 var     bool    bDestroyOnConstruction;         // If true, this actor will be destroyed after being fully constructed
 var     int     Progress;                       // The current count of progress
 var     int     ProgressMax;                    // The amount of construction points required to be built
+var     bool    bCanBeTornDown;                 // Whether or not players can
 
 // Broken
 var     int             BrokenLifespan;             // How long does the actor stay around after it's been killed?
@@ -82,6 +90,7 @@ struct DamageTypeScale
     var float               Scale;
 };
 
+var int                         MinDamagetoHurt;    // The minimum amount of damage required to actually harm the construction
 var array<DamageTypeScale>      DamageTypeScales;
 var array<class<DamageType> >   HarmfulDamageTypes;
 
@@ -154,12 +163,25 @@ simulated function PostBeginPlay()
 
     super.PostBeginPlay();
 
+    // TODO: find the GRI or whatever, constructionmanager
+
     if (Role == ROLE_Authority)
     {
         foreach AllActors(class'DH_LevelInfo', LI)
         {
             LevelInfo = LI;
             break;
+        }
+
+        foreach AllActors(class'DHConstructionManager', Manager)
+        {
+            break;
+        }
+
+        if (Manager == none)
+        {
+            Warn("Construction created without a manager object, destroying construction!");
+            Destroy();
         }
 
         SetTeamIndex(int(TeamOwner));
@@ -373,26 +395,40 @@ function static bool ShouldShowOnMenu(DHPlayer PC)
 // This function is used for determining if a player is able to build this type
 // of construction. You can override this if you want to have a team or
 // role-specific constructions, for example.
-function static bool CanPlayerBuild(DHPlayer PC)
+function static EConstructionError GetPlayerError(DHPlayer PC, optional out Object OptionalObject)
 {
     local int Count;
     local Actor A;
     local DHConstruction C;
     local DH_LevelInfo LI;
+    local DHPawn P;
 
     if (PC == none)
     {
-        return false;
+        return ERROR_Fatal;
     }
 
     LI = PC.GetLevelInfo();
 
     if (LI != none && LI.IsConstructionRestricted(default.Class))
     {
-        return false;
+        return ERROR_RestrictedType;
     }
 
-    // TODO: this is massively inefficient
+    P = DHPawn(PC.Pawn);
+
+    if (P == none)
+    {
+        return ERROR_Fatal;
+    }
+
+    if (P.SupplyCount < default.SupplyCost)
+    {
+        return ERROR_InsufficientSupply;
+    }
+
+    // NOTE: This is massively inefficient. Do not use this frequently on the
+    // server.
     foreach PC.AllActors(default.Class, A)
     {
         C = DHConstruction(A);
@@ -405,10 +441,10 @@ function static bool CanPlayerBuild(DHPlayer PC)
 
     if (default.TeamLimit > 0 && Count >= default.TeamLimit)
     {
-        return false;
+        return ERROR_TeamLimit;
     }
 
-    return true;
+    return ERROR_None;
 }
 
 function Reset()
@@ -470,7 +506,12 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Mo
         return;
     }
 
-    Health -= GetScaledDamage(DamageType, Damage);
+    Damage = GetScaledDamage(DamageType, Damage);
+
+    if (Damage >= MinDamagetoHurt)
+    {
+        Health -= GetScaledDamage(DamageType, Damage);
+    }
 
     if (Health <= 0)
     {

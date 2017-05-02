@@ -39,5 +39,12 @@ defaultproperties
     ErrorMessages(10)="You cannot construct a {0} near a spawn point."
     ErrorMessages(11)="You cannot construct a {0} indoors."
     ErrorMessages(12)="You cannot construct a {0} inside an objective."
+    ErrorMessages(13)="Your team cannot construct any more {0} (limit reached)."
+    ErrorMessages(14)="There are no supply caches within {2} meters."
+    ErrorMessages(15)="There are insufficient supplies to create this construction."
+        ERROR_TeamLimit,            // Limit reached for this type of construction
+    ERROR_NoSupplies,           // Not within range of any supply caches
+    ERROR_InsufficientSupply,   // Not enough supplies to build this construction
+    ERROR_RestrictedType,       // Restricted construction type (can't build on this map!)
 }
 

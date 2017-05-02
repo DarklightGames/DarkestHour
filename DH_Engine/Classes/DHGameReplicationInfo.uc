@@ -5,15 +5,23 @@
 
 class DHGameReplicationInfo extends ROGameReplicationInfo;
 
+const RADIOS_MAX = 10;
+const ROLES_MAX = 16;
+const MORTAR_TARGETS_MAX = 2;
+const VEHICLE_POOLS_MAX = 32;
+const SPAWN_POINTS_MAX = 63;
+const OBJECTIVES_MAX = 32;
+const CONSTRUCTION_CLASSES_MAX = 32;
+
 struct ArtilleryTarget
 {
-    var bool                    bIsActive;
-    var DHPlayer                Controller;
-    var byte                    TeamIndex;
-    var vector                  Location;
-    var vector                  HitLocation;
-    var float                   Time;
-    var bool                    bIsSmoke;   // TODO: convert to enum
+    var bool            bIsActive;
+    var DHPlayer        Controller;
+    var byte            TeamIndex;
+    var vector          Location;
+    var vector          HitLocation;
+    var float           Time;
+    var bool            bIsSmoke;   // TODO: convert to enum
 };
 
 struct SpawnVehicle
@@ -22,8 +30,6 @@ struct SpawnVehicle
     var int             VehiclePoolIndex;
     var Vehicle         Vehicle;
 };
-
-const RADIOS_MAX = 10;
 
 var string              CurrentGameType;
 
@@ -37,8 +43,6 @@ var int                 AxisVictoryMusicIndex;
 var int                 RoundEndTime;  // Length of a round in seconds (this can be modified at real time unlike RoundDuration, which it replaces)
 var int                 SpawningEnableTime; // When spawning for the round should be enabled (default: 0)
 
-const ROLES_MAX = 16;
-
 var DHRoleInfo          DHAxisRoles[ROLES_MAX];
 var DHRoleInfo          DHAlliesRoles[ROLES_MAX];
 
@@ -49,21 +53,16 @@ var byte                DHAxisRoleLimit[ROLES_MAX];
 var byte                DHAxisRoleBotCount[ROLES_MAX];
 var byte                DHAxisRoleCount[ROLES_MAX];
 
-const MORTAR_TARGETS_MAX = 2;
-
 // The maximum distance an artillery strike can be away from a marked target for
 // a hit indicator to show on the map
-var float ArtilleryTargetDistanceThreshold;
+var float               ArtilleryTargetDistanceThreshold;
 
-var ArtilleryTarget        AlliedArtilleryTargets[MORTAR_TARGETS_MAX];
-var ArtilleryTarget        GermanArtilleryTargets[MORTAR_TARGETS_MAX];
+var ArtilleryTarget     AlliedArtilleryTargets[MORTAR_TARGETS_MAX];
+var ArtilleryTarget     GermanArtilleryTargets[MORTAR_TARGETS_MAX];
 
 var int                 SpawnsRemaining[2];
 var float               AttritionRate[2];
 var float               CurrentAlliedToAxisRatio;
-
-// NOTE: Vehicle pool and spawn point info is heavily fragmented due to the arbitrary variable size limit (255 bytes) that exists in UnrealScript
-const VEHICLE_POOLS_MAX = 32;
 
 // TODO: vehicle classes should have been made available in static data for client and server to read
 var class<ROVehicle>    VehiclePoolVehicleClasses[VEHICLE_POOLS_MAX];
@@ -80,11 +79,7 @@ var int                 VehiclePoolIgnoreMaxTeamVehiclesFlags;
 var byte                MaxTeamVehicles[2];
 var byte                TeamVehicleCounts[2];
 
-const SPAWN_POINTS_MAX = 63;
-
-var DHSpawnPointBase   SpawnPoints[SPAWN_POINTS_MAX];
-
-const OBJECTIVES_MAX = 32;
+var DHSpawnPointBase    SpawnPoints[SPAWN_POINTS_MAX];
 
 var DHObjective         DHObjectives[OBJECTIVES_MAX];
 
@@ -96,10 +91,9 @@ var localized string    ForceScaleText;
 var localized string    ReinforcementsInfiniteText;
 var localized string    DeathPenaltyText;
 
-const CONSTRUCTION_CLASSES_MAX = 32;
-
 var private array<string>   ConstructionClassNames;
 var class<DHConstruction>   ConstructionClasses[CONSTRUCTION_CLASSES_MAX];
+var DHConstructionManager   ConstructionManager;
 
 replication
 {

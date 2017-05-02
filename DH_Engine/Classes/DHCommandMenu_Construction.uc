@@ -87,12 +87,18 @@ function OnSelect(int OptionIndex, vector Location)
 function bool IsOptionDisabled(int OptionIndex)
 {
     local class<DHConstruction> C;
+    local DHConstruction.EConstructionError Error;
 
     C = class<DHConstruction>(Options[OptionIndex].OptionalObject);
 
-    if (C == none || !C.static.CanPlayerBuild(DHPlayer(Interaction.ViewportOwner.Actor)))
+    if (C != none)
     {
-        return true;
+        Error = C.static.GetPlayerError(DHPlayer(Interaction.ViewportOwner.Actor));
+
+        if (Error != ERROR_None)
+        {
+            return true;
+        }
     }
 
     return false;

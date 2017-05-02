@@ -108,12 +108,16 @@ var     DHSpawnPointBase    SpawnPoint;                     // the spawn point t
 // Construction
 var     DHConstructionProxy ConstructionProxy;
 var     ArrayList_Object    TouchingSupplyAttachments;
+var     int                 SupplyCount;
 
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
     reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
         PackedSkinIndexes;
+
+    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
+        SupplyCount;
 
     // Variables the server will replicate to all clients except the one that owns this actor
     reliable if (!bNetOwner && bNetDirty && Role == ROLE_Authority)
@@ -247,6 +251,7 @@ simulated function PostNetReceive()
 // We also enable burning effects when he first catches fire, or stop them if he's no longer on fire
 simulated function Tick(float DeltaTime)
 {
+    local int i;
     local DHConstructionSupplyAttachment CSA;
 
     super.Tick(DeltaTime);
@@ -283,9 +288,25 @@ simulated function Tick(float DeltaTime)
 
     if (Role == ROLE_Authority)
     {
-        foreach TouchingActors(class'DHConstructionSupplyAttachment', CSA)
+        // Recalculate the total supply count for our pawn, or -1 if there are
+        // no supplies around.
+        if (TouchingSupplyAttachments.Size() == 0)
         {
-            Log(CSA);
+            SupplyCount = -1;
+        }
+        else
+        {
+            SupplyCount = 0;
+
+            for (i = 0; i < TouchingSupplyAttachments.Size(); ++i)
+            {
+                CSA = DHConstructionSupplyAttachment(TouchingSupplyAttachments.Get(i));
+
+                if (CSA != none)
+                {
+                    SupplyCount += CSA.GetSupplyCount();
+                }
+            }
         }
     }
 }
@@ -6052,9 +6073,12 @@ function SetConstructionProxy(class<DHConstruction> ConstructionClass)
 
 function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vector L, rotator R)
 {
+    local int i;
     local DHConstruction C;
     local DHPlayer PC;
     local DH_LevelInfo LI;
+    local DHConstructionSupplyAttachment CSA;
+    local int TotalSupplyCount;
 
     PC = DHPlayer(Controller);
 
@@ -6068,6 +6092,17 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vecto
     if (LI == none || !LI.bAreConstructionsEnabled || LI.IsConstructionRestricted(ConstructionClass))
     {
         return;
+    }
+
+    // TODO: get the touchng
+    for (i = 0; i < TouchingSupplyAttachments.Size(); ++i)
+    {
+        CSA = DHConstructionSupplyAttachment(TouchingSupplyAttachments.Get(i));
+
+        if (CSA != none)
+        {
+            TotalSupplyCount += CSA.GetSupplyCount();
+        }
     }
 
     C = Spawn(ConstructionClass, Controller,, L, R);

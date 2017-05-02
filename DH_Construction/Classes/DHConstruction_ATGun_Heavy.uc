@@ -29,19 +29,16 @@ function UpdateAppearance()
     SetCollisionSize(VehicleClass.default.CollisionRadius, VehicleClass.default.CollisionHeight);
 }
 
-function static bool CanPlayerBuild(DHPlayer PC)
+function static EConstructionError GetPlayerError(DHPlayer PC, optional out Object OptionalObject)
 {
-    if (!super.CanPlayerBuild(PC))
-    {
-        return false;
-    }
+    local EConstructionError Error;
 
     if (GetVehicleClass(PC.GetTeamNum(), PC.GetLevelInfo()) == none)
     {
-        return false;
+        return ERROR_Fatal;
     }
 
-    return true;
+    return super.GetPlayerError(PC, OptionalObject);
 }
 
 defaultproperties
