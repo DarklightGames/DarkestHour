@@ -16,6 +16,7 @@ var automated       GUIImage                i_DHTextLogo;
 var automated       DHGUIScrollTextBox      tb_MOTDContent;
 var automated       GUIImage                i_MOTDLoading;
 var automated       ROGUIProportionalContainerNoSkin c_MOTD;
+var automated       ROGUIProportionalContainerNoSkin c_MOTD_Background;
 
 var     HTTPRequest             QuickPlayRequest;
 var     HTTPRequest             MOTDRequest;
@@ -62,6 +63,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     sb_Social.ManageComponent(b_SteamCommunity);
     sb_Social.ManageComponent(b_Patreon);
 
+    c_MOTD.ManageComponent(c_MOTD_Background);
     c_MOTD.ManageComponent(tb_MOTDContent);
     c_MOTD.ManageComponent(b_MOTDTitle);
     c_MOTD.ManageComponent(i_MOTDLoading);
@@ -475,31 +477,31 @@ defaultproperties
     i_Announcement=FloatingImage'DH_Interface.DHMainMenu.AnnouncementImage'
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection1
-        WinTop=0.25
-        WinLeft=0.025
-        WinWidth=0.2
-        WinHeight=0.75
+        WinTop=0.5
+        WinLeft=0.02
+        WinWidth=0.175
+        WinHeight=0.49
         OnPreDraw=sbSection1.InternalPreDraw
     End Object
     sb_MainMenu=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection1'
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=SocialSection
-        WinTop=0.9125
-        WinLeft=0.55
-        WinWidth=0.4
-        WinHeight=0.0875
+        WinTop=0.6
+        WinLeft=0.94
+        WinWidth=0.06
+        WinHeight=0.4
         OnPreDraw=sbSection1.InternalPreDraw
-        NumColumns=4
+        NumColumns=1
     End Object
     sb_Social=SocialSection
 
     Begin Object class=GUIButton Name=QuickPlayButton
         CaptionAlign=TXTA_Left
         Caption="Quick Join"
-        bAutoShrink=false
+        bAutoShrink=true
         bUseCaptionHeight=true
-        FontScale=FNS_Large
-        StyleName="DHMenuTextButtonWhiteStyleHuge"
+        FontScale=FNS_Medium
+        StyleName="DHMenuTextButtonStyleHuge"
         TabOrder=1
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
@@ -510,10 +512,10 @@ defaultproperties
     Begin Object Class=GUIButton Name=ServerButton
         CaptionAlign=TXTA_Left
         Caption="Server Browser"
-        bAutoShrink=false
+        bAutoShrink=true
         bUseCaptionHeight=true
-        FontScale=FNS_Large
-        StyleName="DHMenuTextButtonWhiteStyleHuge"
+        FontScale=FNS_Medium
+        StyleName="DHMenuTextButtonStyleHuge"
         TabOrder=2
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
@@ -524,10 +526,10 @@ defaultproperties
     Begin Object Class=GUIButton Name=InstantActionButton
         CaptionAlign=TXTA_Left
         Caption="Practice"
-        bAutoShrink=false
+        bAutoShrink=true
         bUseCaptionHeight=true
-        FontScale=FNS_Large
-        StyleName="DHMenuTextButtonWhiteStyleHuge"
+        FontScale=FNS_Medium
+        StyleName="DHMenuTextButtonStyleHuge"
         TabOrder=3
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
@@ -538,10 +540,10 @@ defaultproperties
     Begin Object Class=GUIButton Name=SettingsButton
         CaptionAlign=TXTA_Left
         Caption="Settings"
-        bAutoShrink=false
+        bAutoShrink=true
         bUseCaptionHeight=true
-        FontScale=FNS_Large
-        StyleName="DHMenuTextButtonWhiteStyleHuge"
+        FontScale=FNS_Medium
+        StyleName="DHMenuTextButtonStyleHuge"
         TabOrder=4
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
@@ -552,10 +554,10 @@ defaultproperties
     Begin Object Class=GUIButton Name=CreditsButton
         CaptionAlign=TXTA_Left
         Caption="Credits"
-        bAutoShrink=false
+        bAutoShrink=true
         bUseCaptionHeight=true
-        FontScale=FNS_Large
-        StyleName="DHMenuTextButtonWhiteStyleHuge"
+        FontScale=FNS_Medium
+        StyleName="DHMenuTextButtonStyleHuge"
         TabOrder=5
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
@@ -566,10 +568,10 @@ defaultproperties
     Begin Object Class=GUIButton Name=QuitButton
         CaptionAlign=TXTA_Left
         Caption="Exit"
-        bAutoShrink=false
+        bAutoShrink=true
         bUseCaptionHeight=true
-        FontScale=FNS_Large
-        StyleName="DHMenuTextButtonWhiteStyleHuge"
+        FontScale=FNS_Medium
+        StyleName="DHMenuTextButtonStyleHuge"
         TabOrder=6
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
@@ -599,8 +601,8 @@ defaultproperties
         OnKeyEvent=MOTDTitleButton.InternalOnKeyEvent
         WinWidth=1.0
         WinHeight=0.1
-        WinLeft=0.0
-        WinTop=0.0
+        WinLeft=0.02
+        WinTop=0.015
     End Object
     b_MOTDTitle=MOTDTitleButton
 
@@ -668,8 +670,8 @@ defaultproperties
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection3
         WinWidth=0.261250
         WinHeight=0.026563
-        WinLeft=0.712799
-        WinTop=0.185657
+        WinLeft=0.73875
+        WinTop=0.973437
         OnPreDraw=sbSection3.InternalPreDraw
     End Object
     sb_ShowVersion=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection3'
@@ -690,10 +692,10 @@ defaultproperties
         ImageColor=(R=255,G=255,B=255,A=255)
         ImageRenderStyle=MSTY_Alpha
         ImageStyle=ISTY_Justified
-        ImageAlign=IMGA_BottomRight
-        WinWidth=0.867656
-        WinHeight=0.197539
-        WinLeft=0.130391
+        ImageAlign=IMGA_BottomLeft
+        WinWidth=0.5
+        WinHeight=0.25
+        WinLeft=0.5
         WinTop=0.0
     End Object
     i_DHTextLogo=LogoImage
@@ -729,13 +731,24 @@ defaultproperties
     tb_MOTDContent=DHGUIScrollTextBox'DH_Interface.DHMainMenu.MyMOTDText'
 
     Begin Object Class=ROGUIProportionalContainerNoSkin Name=sbSection4
-        WinTop=0.25
-        WinLeft=0.55
-        WinWidth=0.4
-        WinHeight=0.65
+        WinTop=0.0
+        WinLeft=0.0
+        WinWidth=0.5
+        WinHeight=0.5
         OnPreDraw=sbSection4.InternalPreDraw
     End Object
     c_MOTD=sbSection4
+
+    Begin Object Class=ROGUIProportionalContainerNoSkin Name=MOTD_Background
+        Image=texture'DH_GUI_Tex.MainMenu.MOTD_Background'
+        ImageStyle=ISTY_Scaled
+        WinTop=0.0
+        WinLeft=0.0
+        WinWidth=1.0
+        WinHeight=1.0
+        OnPreDraw=MOTD_Background.InternalPreDraw
+    End Object
+    c_MOTD_Background=MOTD_Background
 
     SteamMustBeRunningText="Steam must be running and you must have an active internet connection to play multiplayer"
     SinglePlayerDisabledText="Practice mode is only available in the full version."

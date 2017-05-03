@@ -179,7 +179,7 @@ defaultproperties
     DefaultStyleNames(85)="DH_Interface.DHStyle_SpawnVehicleButton"
     DefaultStyleNames(86)="DH_Interface.DHStyle_SpawnVehicleBlockedButton"
     DefaultStyleNames(87)="DH_Interface.DHStyle_MenuTextButtonWhite"
-    DefaultStyleNames(88)="DH_Interface.DHStyle_MenuTextButtonWhiteHuge"
+    DefaultStyleNames(88)="DH_Interface.DHStyle_MenuTextButtonHuge"
     DefaultStyleNames(89)="DH_Interface.DHStyle_LargeEditBox"
     DefaultStyleNames(90)="DH_Interface.DHStyle_ServerBrowserGridRed"
     DefaultStyleNames(91)="DH_Interface.DHStyle_RallyPointButton"
