@@ -104,6 +104,13 @@ var     SkyZoneInfo         SavedSkyZone;           // saves original SkyZone fo
 var     SpriteWidget        SquadOrderAttackIcon;
 var     SpriteWidget        SquadOrderDefendIcon;
 
+// Squads
+var     color               VehiclePositionIsSquadmateColor;
+
+// Construction
+var     SpriteWidget        VehicleSuppliesIcon;
+var     TextWidget          VehicleSuppliesText;
+
 // Disabled as the only functionality was in HudBase re the DamageTime array, but that became redundant in RO (no longer gets set in function DisplayHit)
 simulated function Tick(float deltaTime)
 {
@@ -1096,7 +1103,8 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             }
             else if (Vehicle.Driver != none || Vehicle.bDriving) // added bDriving as net client doesn't have Driver pawn if he's hidden because bDrawDriverInTP=false
             {
-                VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsOccupiedColor;
+                VehicleOccupants.Tints[TeamIndex] = GetPlayerColor(Vehicle.Driver.PlayerReplicationInfo);
+                VehicleOccupants.Tints[TeamIndex].A = 128;
             }
             else
             {
@@ -1491,6 +1499,15 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             VehicleOccupantsText.OffsetY -= YL;
         }
     }
+
+    //////////////////////////////////
+    // Draw vehicle supply information
+    //////////////////////////////////
+    if (V != none && V.SupplyAttachment != none)    // TODO: make this work for clients as well
+    {
+        DrawSpriteWidget(Canvas, VehicleSuppliesIcon);
+//        DrawTextWidgetClipped(
+    }
 }
 
 function color GetPlayerColor(PlayerReplicationInfo PRI)
@@ -1506,14 +1523,7 @@ function color GetPlayerColor(PlayerReplicationInfo PRI)
 
     if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, OtherPRI))
     {
-        if (OtherPRI.IsSquadLeader())
-        {
-            return class'DHColor'.default.SquadLeaderColor;
-        }
-        else
-        {
-            return class'DHColor'.default.SquadColor;
-        }
+        return class'DHColor'.default.SquadColor;
     }
     else if (PRI != none && PRI.Team != none)
     {
@@ -5351,11 +5361,18 @@ defaultproperties
     SquadNameIcon=(WidgetTexture=FinalBlend'DH_InterfaceArt_tex.HUD.SquadNameIcon',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.45,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
 
     // Vehicle HUD
-    VehicleOccupantsText=(PosX=0.78,OffsetX=0)
-    VehicleAmmoTypeText=(Text="",PosX=0.24,PosY=1.0,WrapWidth=0.0,WrapHeight=1,OffsetX=8,OffsetY=-4,DrawPivot=DP_LowerLeft,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=false)
+    VehicleOccupantsText=(PosX=0.78,OffsetX=0,bDrawShadow=true)
+    VehicleAmmoTypeText=(Text="",PosX=0.24,PosY=1.0,WrapWidth=0.0,WrapHeight=1,OffsetX=8,OffsetY=-4,DrawPivot=DP_LowerLeft,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=true)
     VehicleAltAmmoIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.2,DrawPivot=DP_LowerLeft,PosX=0.30,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     VehicleAltAmmoAmount=(TextureScale=0.2,MinDigitCount=1,DrawPivot=DP_LowerLeft,PosX=0.30,PosY=1.0,OffsetX=135,OffsetY=-40,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     VehicleAltAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.2,DrawPivot=DP_LowerLeft,PosX=0.30,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=80),Tints[1]=(R=255,G=0,B=0,A=80))
     VehicleMGAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.3,DrawPivot=DP_LowerLeft,PosX=0.15,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Up,Scale=0.75,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=80),Tints[1]=(R=255,G=0,B=0,A=80))
     VehicleAmmoReloadIcon=(Tints[0]=(A=80),Tints[1]=(A=80)) // override to make RO's red cannon ammo reload overlay slightly less bright (reduced alpha from 128)
+
+    // Squads
+    VehiclePositionIsSquadmateColor=(R=0,G=255,B=0,A=255)   // TODO: remove
+
+    // Construction
+    VehicleSuppliesIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.HUD.supplies',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.30,DrawPivot=DP_LowerLeft,PosX=0.5,PosY=1.0,OffsetX=0,OffsetY=-16,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    VehicleSuppliesText=(Text="1000",PosX=0,PosY=0,WrapWidth=0,WrapHeight=0,OffsetX=0,OffsetY=0,DrawPivot=DP_UpperMiddle,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=true)
 }

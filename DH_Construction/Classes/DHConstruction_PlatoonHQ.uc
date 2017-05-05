@@ -186,5 +186,7 @@ defaultproperties
     // Health
     HealthMax=250
 
+    SupplyCost=750
+
     RainSound=Sound'Amb_Weather01.Rain.Krasnyi_Rain_Inside_Heavy'
 }

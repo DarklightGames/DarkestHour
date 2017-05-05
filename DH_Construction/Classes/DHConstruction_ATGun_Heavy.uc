@@ -31,8 +31,6 @@ function UpdateAppearance()
 
 function static EConstructionError GetPlayerError(DHPlayer PC, optional out Object OptionalObject)
 {
-    local EConstructionError Error;
-
     if (GetVehicleClass(PC.GetTeamNum(), PC.GetLevelInfo()) == none)
     {
         return ERROR_Fatal;
@@ -46,5 +44,6 @@ defaultproperties
     Stages(0)=(Progress=0)
     ProgressMax=18
     PlacementOffset=(Z=30.0)
+    SupplyCost=750
 }
 

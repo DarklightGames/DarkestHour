@@ -10,6 +10,11 @@ var bool                bCanBeResupplied;
 var private int         SupplyCount;
 var int                 TeamIndex;
 
+// Used to resolve the order in which supplies will be drawn from in the case
+// where the the player is near multiple supply attachments when placing
+// constructions.
+var int                 SortPriority;
+
 var ArrayList_Object    TouchingPawns;
 var ArrayList_Object    NewTouchingPawns;
 
@@ -72,17 +77,17 @@ function Destroyed()
     local int i;
     local DHPawn P;
 
-    super.Destroyed();
-
     for (i = 0; i < TouchingPawns.Size(); ++i)
     {
         P = DHPawn(TouchingPawns.Get(i));
 
-        if (P != none && P.TouchingSupplyAttachments != none)
+        if (P != none)
         {
-            P.TouchingSupplyAttachments.Remove(self);
+            class'UArray'.static.Erase(P.TouchingSupplyAttachments, self);
         }
     }
+
+    super.Destroyed();
 }
 
 function Timer()
@@ -93,7 +98,7 @@ function Timer()
     NewTouchingPawns.Clear();
 
     // Gather all relevant pawns within the radius.
-    foreach CollidingActors(class'DHPawn', P, CollisionRadius)
+    foreach CollidingActors(class'DHPawn', P, class'DHUnits'.static.MetersToUnreal(TouchDistanceInMeters))
     {
         if (P != none && P.GetTeamNum() == TeamIndex)
         {
@@ -110,9 +115,9 @@ function Timer()
             // Pawn is now being touched, add ourselves to their touching list.
             P = DHPawn(NewTouchingPawns.Get(i));
 
-            if (P != none && P.TouchingSupplyAttachments != none)
+            if (P != none)
             {
-                P.TouchingSupplyAttachments.Add(self);
+                P.TouchingSupplyAttachments[P.TouchingSupplyAttachments.Length] = self;
             }
         }
     }
@@ -127,9 +132,9 @@ function Timer()
             // touching list.
             P = DHPawn(TouchingPawns.Get(i));
 
-            if (P != none && P.TouchingSupplyAttachments != none)
+            if (P != none)
             {
-                P.TouchingSupplyAttachments.Remove(self);
+                class'UArray'.static.Erase(P.TouchingSupplyAttachments, self);
             }
         }
     }

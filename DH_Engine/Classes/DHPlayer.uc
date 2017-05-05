@@ -15,6 +15,7 @@ const SQUAD_SIGNAL_DURATION = 15.0;
 var     DHHintManager           DHHintManager;
 var     float                   MapVoteTime;
 var     DH_LevelInfo            ClientLevelInfo;
+var     DHConstructionManager   ConstructionManager;    // Client only!
 
 // DH sway values
 var     float                   DHSwayElasticFactor;
@@ -145,6 +146,9 @@ simulated event PostBeginPlay()
         {
             break;
         }
+
+        // This creates the construction manager on the client only
+        ConstructionManager = new class'DHConstructionManager';
     }
 }
 

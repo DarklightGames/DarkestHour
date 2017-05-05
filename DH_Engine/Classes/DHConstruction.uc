@@ -163,36 +163,70 @@ simulated function PostBeginPlay()
 
     super.PostBeginPlay();
 
-    // TODO: find the GRI or whatever, constructionmanager
-
     if (Role == ROLE_Authority)
     {
+        SetTeamIndex(int(TeamOwner));
+        Health = HealthMax;
+
         foreach AllActors(class'DH_LevelInfo', LI)
         {
             LevelInfo = LI;
             break;
         }
-
-        foreach AllActors(class'DHConstructionManager', Manager)
-        {
-            break;
-        }
-
-        if (Manager == none)
-        {
-            Warn("Construction created without a manager object, destroying construction!");
-            Destroy();
-        }
-
-        SetTeamIndex(int(TeamOwner));
-
-        Health = HealthMax;
     }
+
+    Manager = FindConstructionManager(Level);
+
+    if (Manager != none)
+    {
+        Warn("Unable to locate manager!");
+    }
+    else
+    {
+        Manager.Register(self);
+    }
+}
+
+simulated static function DHConstructionManager FindConstructionManager(LevelInfo Level)
+{
+    local DarkestHourGame G;
+    local DHPlayer PC;
+
+    if (Level == none)
+    {
+        return none;
+    }
+
+    if (Level.Role == ROLE_Authority)
+    {
+        G = DarkestHourGame(Level.Game);
+
+        if (G != none)
+        {
+            return G.ConstructionManager;
+        }
+    }
+    else
+    {
+        PC = DHPlayer(Level.GetLocalPlayerController());
+
+        if (PC != none)
+        {
+            return PC.ConstructionManager;
+        }
+    }
+
+    return none;
 }
 
 simulated event Destroyed()
 {
     super.Destroyed();
+
+    if (Manager != none)
+    {
+        Manager.Unregister(self);
+    }
 }
 
 auto simulated state Constructing
@@ -397,11 +431,9 @@ function static bool ShouldShowOnMenu(DHPlayer PC)
 // role-specific constructions, for example.
 function static EConstructionError GetPlayerError(DHPlayer PC, optional out Object OptionalObject)
 {
-    local int Count;
-    local Actor A;
-    local DHConstruction C;
     local DH_LevelInfo LI;
     local DHPawn P;
+    local DHConstructionManager CM;
 
     if (PC == none)
     {
@@ -427,19 +459,14 @@ function static EConstructionError GetPlayerError(DHPlayer PC, optional out Obje
         return ERROR_InsufficientSupply;
     }
 
-    // NOTE: This is massively inefficient. Do not use this frequently on the
-    // server.
-    foreach PC.AllActors(default.Class, A)
-    {
-        C = DHConstruction(A);
+    CM = FindConstructionManager(PC.Level);
 
-        if (C != none && C.TeamIndex == PC.GetTeamNum())
-        {
-            ++Count;
-        }
+    if (CM == none)
+    {
+        return ERROR_Fatal;
     }
 
-    if (default.TeamLimit > 0 && Count >= default.TeamLimit)
+    if (default.TeamLimit > 0 && CM.CountOf(PC.GetTeamNum(), default.Class) >= default.TeamLimit)
     {
         return ERROR_TeamLimit;
     }

@@ -22,6 +22,7 @@ var     DHObjective                 DHObjectives[OBJECTIVES_MAX];
 
 var     DHSpawnManager              SpawnManager;
 var     DHObstacleManager           ObstacleManager;
+var     DHConstructionManager       ConstructionManager;
 
 var     array<string>               FFViolationIDs;                         // Array of ROIDs that have been kicked once this session
 var()   config bool                 bSessionKickOnSecondFFViolation;
@@ -403,6 +404,7 @@ function PostBeginPlay()
     }
 
     PlayerSessions = class'Hashtable_string_Object'.static.Create(128);
+    ConstructionManager = new class'DHConstructionManager';
 }
 
 // Modified to remove any return on # of bots

@@ -104,6 +104,20 @@ function bool IsOptionDisabled(int OptionIndex)
     return false;
 }
 
+function GetOptionText(int OptionIndex, out string ActionText, out string SubjectText)
+{
+    local class<DHConstruction> ConstructionClass;
+
+    super.GetOptionText(OptionIndex, ActionText, SubjectText);
+
+    ConstructionClass = class<DHConstruction>(Options[OptionIndex].OptionalObject);
+
+    if (ConstructionClass != none)
+    {
+        SubjectText = string(ConstructionClass.default.SupplyCost);
+    }
+}
+
 function bool ShouldHideMenu()
 {
     return Interaction == none ||

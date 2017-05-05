@@ -107,7 +107,7 @@ var     DHSpawnPointBase    SpawnPoint;                     // the spawn point t
 
 // Construction
 var     DHConstructionProxy ConstructionProxy;
-var     ArrayList_Object    TouchingSupplyAttachments;
+var     array<DHConstructionSupplyAttachment> TouchingSupplyAttachments;
 var     int                 SupplyCount;
 
 replication
@@ -139,11 +139,6 @@ replication
 // Also removes needlessly setting some variables to what will be default values anyway for a spawning actor
 simulated function PostBeginPlay()
 {
-    if (Role == ROLE_Authority)
-    {
-        TouchingSupplyAttachments = new class'ArrayList_Object';
-    }
-
     super(Pawn).PostBeginPlay();
 
     if (Level.bStartup && !bNoDefaultInventory)
@@ -252,7 +247,6 @@ simulated function PostNetReceive()
 simulated function Tick(float DeltaTime)
 {
     local int i;
-    local DHConstructionSupplyAttachment CSA;
 
     super.Tick(DeltaTime);
 
@@ -290,7 +284,7 @@ simulated function Tick(float DeltaTime)
     {
         // Recalculate the total supply count for our pawn, or -1 if there are
         // no supplies around.
-        if (TouchingSupplyAttachments.Size() == 0)
+        if (TouchingSupplyAttachments.Length == 0)
         {
             SupplyCount = -1;
         }
@@ -298,13 +292,11 @@ simulated function Tick(float DeltaTime)
         {
             SupplyCount = 0;
 
-            for (i = 0; i < TouchingSupplyAttachments.Size(); ++i)
+            for (i = 0; i < TouchingSupplyAttachments.Length; ++i)
             {
-                CSA = DHConstructionSupplyAttachment(TouchingSupplyAttachments.Get(i));
-
-                if (CSA != none)
+                if (TouchingSupplyAttachments[i] != none)
                 {
-                    SupplyCount += CSA.GetSupplyCount();
+                    SupplyCount += TouchingSupplyAttachments[i].GetSupplyCount();
                 }
             }
         }
@@ -6071,14 +6063,21 @@ function SetConstructionProxy(class<DHConstruction> ConstructionClass)
     }
 }
 
+static function bool SupplyAttachmentCompareFunction(Object LHS, Object RHS)
+{
+    return DHConstructionSupplyAttachment(LHS).SortPriority > DHConstructionSupplyAttachment(RHS).SortPriority;
+}
+
 function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vector L, rotator R)
 {
     local int i;
     local DHConstruction C;
     local DHPlayer PC;
     local DH_LevelInfo LI;
-    local DHConstructionSupplyAttachment CSA;
     local int TotalSupplyCount;
+    local int SupplyCost, SuppliesToUse;
+    local UComparator SupplyAttachmentComparator;
+    local array<DHConstructionSupplyAttachment> SortedSupplyAttachments;
 
     PC = DHPlayer(Controller);
 
@@ -6094,15 +6093,43 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vecto
         return;
     }
 
-    // TODO: get the touchng
-    for (i = 0; i < TouchingSupplyAttachments.Size(); ++i)
+    for (i = 0; i < TouchingSupplyAttachments.Length; ++i)
     {
-        CSA = DHConstructionSupplyAttachment(TouchingSupplyAttachments.Get(i));
-
-        if (CSA != none)
+        if (TouchingSupplyAttachments[i] != none)
         {
-            TotalSupplyCount += CSA.GetSupplyCount();
+            TotalSupplyCount += TouchingSupplyAttachments[i].GetSupplyCount();
         }
+    }
+
+    SupplyCost = ConstructionClass.default.SupplyCost;
+
+    if (TotalSupplyCount < SupplyCost)
+    {
+        return;
+    }
+
+    // Sort the supply attachments by priority.
+    SortedSupplyAttachments = TouchingSupplyAttachments;
+    SupplyAttachmentComparator = new class'UComparator';
+    SupplyAttachmentComparator.CompareFunction = SupplyAttachmentCompareFunction;
+    class'USort'.static.Sort(SortedSupplyAttachments, SupplyAttachmentComparator);
+
+    // Use supplies from the sorted supply attachments, in order, until costs are met.
+    for (i = 0; i < SortedSupplyAttachments.Length; ++i)
+    {
+        if (SupplyCost == 0)
+        {
+            break;
+        }
+
+        SuppliesToUse = Min(SupplyCost, SortedSupplyAttachments[i].GetSupplyCount());
+
+        if (!SortedSupplyAttachments[i].UseSupplies(SuppliesToUse))
+        {
+            Warn("Something went horribly wrong!");
+        }
+
+        SupplyCost -= SuppliesToUse;
     }
 
     C = Spawn(ConstructionClass, Controller,, L, R);

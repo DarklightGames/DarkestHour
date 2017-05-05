@@ -275,6 +275,7 @@ function PostRender(Canvas C)
     local float CenterX, CenterY, X, Y, XL, YL, U, V;
     local DHCommandMenu Menu;
     local string ActionText, SubjectText;
+    local bool bIsOptionDisabled;
 
     if (C == none)
     {
@@ -304,10 +305,20 @@ function PostRender(Canvas C)
         // Draw all the options.
         for (i = 0; i < Menu.Options.Length; ++i)
         {
-            if (Menu.IsOptionDisabled(i))
+            bIsOptionDisabled = Menu.IsOptionDisabled(i);
+
+            if (bIsOptionDisabled)
             {
                 C.DrawColor = default.DisabledColor;
-                C.DrawColor.A = byte(255 * (MenuAlpha * 0.5));
+
+                if (SelectedIndex == i)
+                {
+                    C.DrawColor.A = byte(255 * (MenuAlpha));
+                }
+                else
+                {
+                    C.DrawColor.A = byte(255 * (MenuAlpha * 0.5));
+                }
             }
             else
             {
@@ -352,8 +363,25 @@ function PostRender(Canvas C)
                 X = CenterX  + (Cos(Theta) * 144) - (U / 2);
                 Y = CenterY + (Sin(Theta) * 144) - (V / 2);
 
-                C.DrawColor = class'UColor'.default.White;
-                C.DrawColor.A = byte(255 * MenuAlpha);
+                if (bIsOptionDisabled)
+                {
+                    C.DrawColor = DisabledColor;
+
+                    if (SelectedIndex == i)
+                    {
+                        C.DrawColor.A = byte(255 * MenuAlpha);
+                    }
+                    else
+                    {
+                        C.DrawColor.A = byte(255 * (MenuAlpha * 0.5));
+                    }
+                }
+                else
+                {
+                    C.DrawColor = class'UColor'.default.White;
+                    C.DrawColor.A = byte(255 * MenuAlpha);
+                }
+
                 C.SetPos(X, Y);
                 C.DrawTileClipped(Menu.Options[i].Material, U, V, 0, 0, U, V);
             }
@@ -367,14 +395,22 @@ function PostRender(Canvas C)
     {
         Menu.GetOptionText(SelectedIndex, ActionText, SubjectText);
 
-        // Draw action text
-        C.DrawColor = class'UColor'.default.White;
         C.TextSize(ActionText, XL, YL);
+
+        // Draw action text (include shadow)
+        C.DrawColor = class'UColor'.default.Black;
+        C.SetPos(CenterX - (XL / 2) + 1, CenterY + 33);
+        C.DrawText(ActionText);
+        C.DrawColor = class'UColor'.default.White;
         C.SetPos(CenterX - (XL / 2), CenterY + 32);
         C.DrawText(ActionText);
 
         // Draw subject text
         C.TextSize(SubjectText, XL, YL);
+        C.DrawColor = class'UColor'.default.Black;
+        C.SetPos(CenterX - (XL / 2) + 1, CenterY - 31 -  YL);
+        C.DrawText(SubjectText);
+        C.DrawColor = class'UColor'.default.White;
         C.SetPos(CenterX - (XL / 2), CenterY - 32-  YL);
         C.DrawText(SubjectText);
     }
