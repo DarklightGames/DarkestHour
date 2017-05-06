@@ -1174,6 +1174,23 @@ function Trigger(Actor Other, Pawn EventInstigator)
     }
 }
 
+simulated function bool WithinArea(Actor A)
+{
+    if (AttachedVolume != none)
+    {
+        if (AttachedVolume.Encompasses(A))
+        {
+            return true;
+        }
+    }
+    else if (VSize(A.Location - Location) < Radius)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 defaultproperties
 {
     bDoNotUseLabelShiftingOnSituationMap=true
