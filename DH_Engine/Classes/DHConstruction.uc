@@ -179,11 +179,11 @@ simulated function PostBeginPlay()
 
     if (Manager != none)
     {
-        Warn("Unable to locate manager!");
+        Manager.Register(self);
     }
     else
     {
-        Manager.Register(self);
+        Warn("Unable to locate manager!");
     }
 }
 

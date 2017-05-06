@@ -66,10 +66,7 @@ function bool UseSupplies(int Amount)
         OnSuppliesDepleted(self);
     }
 
-    if (!bCanBeResupplied)
-    {
-        Destroy();
-    }
+    return true;
 }
 
 function Destroyed()
