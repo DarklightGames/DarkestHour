@@ -2224,6 +2224,7 @@ simulated function SpawnVehicleAttachments()
             if (SupplyAttachment != none)
             {
                 SupplyAttachment.TeamIndex = VehicleTeam;
+                SupplyAttachment.bCanBeResupplied = true;
             }
         }
 
@@ -3116,6 +3117,20 @@ exec function SetRumbleVol(float NewValue)
 simulated function bool IsSpawnVehicle()
 {
     return SpawnPointAttachment != none;
+}
+
+function bool ResupplyAmmo()
+{
+    local bool bDidResupply;
+
+    bDidResupply = super.ResupplyAmmo();
+
+    if (SupplyAttachment != none && SupplyAttachment.Resupply())
+    {
+        bDidResupply = true;
+    }
+
+    return bDidResupply;
 }
 
 defaultproperties

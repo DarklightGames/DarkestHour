@@ -8,6 +8,7 @@ class DHConstructionSupplyAttachment extends RODummyAttachment
 
 var bool                bCanBeResupplied;
 var private int         SupplyCount;
+var int                 SupplyCountMax;
 var int                 TeamIndex;
 
 // Used to resolve the order in which supplies will be drawn from in the case
@@ -26,6 +27,7 @@ replication
         TeamIndex, SupplyCount;
 }
 
+delegate OnSupplyCountChanged(DHConstructionSupplyAttachment CSA);
 delegate OnSuppliesDepleted(DHConstructionSupplyAttachment CSA);
 
 simulated function PostBeginPlay()
@@ -36,6 +38,8 @@ simulated function PostBeginPlay()
     {
         TouchingPawns = new class'ArrayList_Object';
         NewTouchingPawns = new class'ArrayList_Object';
+
+        SupplyCount = SupplyCountMax;
 
         SetTimer(1.0, true);
     }
@@ -51,6 +55,11 @@ function bool HasSupplies()
     return SupplyCount > 0;
 }
 
+function bool IsFull()
+{
+    return SupplyCount == SupplyCountMax;
+}
+
 // Uses supplies.
 function bool UseSupplies(int Amount)
 {
@@ -60,6 +69,8 @@ function bool UseSupplies(int Amount)
     }
 
     SupplyCount -= Amount;
+
+    OnSupplyCountChanged(self);
 
     if (SupplyCount == 0)
     {
@@ -140,13 +151,27 @@ function Timer()
     TouchingPawns.Concatenate(NewTouchingPawns);
 }
 
+function bool Resupply()
+{
+    if (bCanBeResupplied || IsFull())
+    {
+        return false;
+    }
+
+    SupplyCount = Min(SupplyCountMax, SupplyCount + 100); // TODO: magic number
+
+    OnSupplyCountChanged(self);
+
+    return true;
+}
+
 // TODO: logic for getting this resupplied; some sort of hook that things can
 // put on it for getting notified (OnResupplied)
 
 defaultproperties
 {
-    bCanBeResupplied=true
     SupplyCount=1000
+    SupplyCountMax=1000
     TouchDistanceInMeters=50
     RemoteRole=ROLE_DumbProxy
 }
