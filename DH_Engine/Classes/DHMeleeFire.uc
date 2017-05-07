@@ -118,7 +118,7 @@ function DoTrace(vector Start, rotator Dir)
     HitPawn = ROPawn(Other);
 
     // Calculate damage if it's something we could hurt (no damage to world geometry unless it's a destroyable mesh)
-    if (!Other.bWorldGeometry || Other.IsA('RODestroyableStaticMesh'))
+    if (!Other.bWorldGeometry || Other.IsA('RODestroyableStaticMesh') || Other.IsA('DHConstruction'))
     {
         Scale = (FClamp(HoldTime, MinHoldTime, FullHeldTime) - MinHoldTime) / (FullHeldTime - MinHoldTime);
 
@@ -171,7 +171,7 @@ function DoTrace(vector Start, rotator Dir)
     // Hit something other than a player
     else
     {
-        if (!Other.bWorldGeometry || Other.IsA('RODestroyableStaticMesh')) // no damage to world geometry unless it's a destroyable mesh
+        if (!Other.bWorldGeometry || Other.IsA('RODestroyableStaticMesh') || Other.IsA('DHConstruction')) // no damage to world geometry unless it's a destroyable mesh
         {
             Other.TakeDamage(int(Damage), Instigator, HitLocation, MomentumTransfer * X, ThisDamageType);
         }

@@ -88,7 +88,7 @@ function OnConstructed()
     }
 }
 
-function DestroyAttachments()
+simulated function DestroyAttachments()
 {
     if (SpawnPoint != none)
     {
@@ -101,7 +101,7 @@ function DestroyAttachments()
     }
 }
 
-event Destroyed()
+simulated event Destroyed()
 {
     DestroyAttachments();
 }

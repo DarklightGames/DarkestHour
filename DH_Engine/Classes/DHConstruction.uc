@@ -73,7 +73,11 @@ var     int     SupplyCost;                     // The amount of supply points t
 var     bool    bDestroyOnConstruction;         // If true, this actor will be destroyed after being fully constructed
 var     int     Progress;                       // The current count of progress
 var     int     ProgressMax;                    // The amount of construction points required to be built
+
+// Tear-down
 var     bool    bCanBeTornDown;                 // Whether or not players can
+var     int     TearDownProgress;
+var     int     TearDownProgressMax;
 
 // Broken
 var     int             BrokenLifespan;             // How long does the actor stay around after it's been killed?
@@ -122,7 +126,7 @@ replication
     reliable if (bNetDirty && Role == ROLE_Authority)
         TeamIndex, StateName;
     reliable if (Role < ROLE_Authority)
-        ServerDecrementProgress, ServerIncrementProgress;
+        ServerIncrementProgress;
 }
 
 function OnConstructed();
@@ -143,12 +147,6 @@ final function SetTeamIndex(int TeamIndex)
 {
     self.TeamIndex = TeamIndex;
     OnTeamIndexChanged();
-}
-
-function ServerDecrementProgress()
-{
-    Progress -= 1;
-    OnProgressChanged();
 }
 
 function ServerIncrementProgress()
@@ -236,6 +234,13 @@ auto simulated state Constructing
         return true;
     }
 
+    function TakeTearDownDamage()
+    {
+        Progress -= 1;
+
+        OnProgressChanged();
+    }
+
     function OnProgressChanged()
     {
         local int i;
@@ -308,6 +313,24 @@ simulated state Constructed
         return true;
     }
 
+    function TakeTearDownDamage()
+    {
+        TearDownProgress += 1;
+
+        if (TearDownProgress >= TearDownProgressMax)
+        {
+            if (default.Stages.Length == 0)
+            {
+                Destroy();
+            }
+            else
+            {
+                Progress = ProgressMax - 1;
+                GotoState('Constructing');
+            }
+        }
+    }
+
 Begin:
     if (Role == ROLE_Authority)
     {
@@ -319,6 +342,8 @@ Begin:
         }
         else
         {
+            StageIndex = default.StageIndex;
+            TearDownProgress = 0;
             UpdateAppearance();
             StateName = GetStateName();
             NetUpdateTime = Level.TimeSeconds - 1.0;
@@ -526,8 +551,22 @@ function bool ShouldTakeDamageFromDamageType(class<DamageType> DamageType)
     return false;
 }
 
+function TakeTearDownDamage();
+
 function TakeDamage(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
+    local class<DamageType> TearDownDamageType;
+
+    if (bCanBeTornDown)
+    {
+        TearDownDamageType = class<DamageType>(DynamicLoadObject("DH_Equipment.DHShovelBashDamageType", class'class'));
+
+        if (DamageType == TearDownDamageType)
+        {
+            TakeTearDownDamage();
+        }
+    }
+
     if (!ShouldTakeDamageFromDamageType(DamageType))
     {
         return;
@@ -622,11 +661,14 @@ defaultproperties
 
     // Death
     BrokenLifespan=15.0
+    bCanBeTornDown=true
 
     // Progress
     StageIndex=-1
     Progress=0
     ProgressMax=8
+
+    TearDownProgressMax=4
 
     // Damage
     HarmfulDamageTypes(0)=class'ROArtilleryDamType'
