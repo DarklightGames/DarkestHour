@@ -6,7 +6,8 @@
 class DHConstruction_Vehicle extends DHConstruction
     abstract;
 
-var class<ROVehicle> VehicleClass;
+var class<ROVehicle>    VehicleClass;
+var ROVehicle           Vehicle;
 
 function OnTeamIndexChanged()
 {
@@ -19,7 +20,25 @@ function OnConstructed()
 {
     if (VehicleClass != none)
     {
-        Spawn(VehicleClass,,, Location, Rotation);
+        Vehicle = Spawn(VehicleClass,,, Location, Rotation);
+
+        GotoState('Dummy');
+    }
+}
+
+simulated state Dummy
+{
+    function BeginState()
+    {
+        SetTimer(1.0, true);
+    }
+
+    function Timer()
+    {
+        if (Vehicle == none || Vehicle.bVehicleDestroyed)
+        {
+            Destroy();
+        }
     }
 }
 
@@ -106,7 +125,7 @@ function static class<ROVehicle> GetVehicleClass(int TeamIndex, DH_LevelInfo LI)
 defaultproperties
 {
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_02'
-    bDestroyOnConstruction=true
+    bDestroyOnConstruction=false
     bShouldAlignToGround=true
     BrokenLifespan=0.0
 }

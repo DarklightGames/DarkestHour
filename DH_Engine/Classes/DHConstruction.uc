@@ -217,6 +217,23 @@ simulated static function DHConstructionManager FindConstructionManager(LevelInf
     return none;
 }
 
+// A dummy state, use this when you want this actor to stay around but be
+// completely uninteractive with the world. Useful if you want another actor to
+// govern the lifetime of this actor, for example.
+simulated state Dummy
+{
+    // Take no damage.
+    function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex);
+
+Begin:
+    if (Role == ROLE_Authority)
+    {
+        StateName = GetStateName();
+        SetCollision(false, false, false);
+        SetDrawType(DT_None);
+    }
+}
+
 simulated event Destroyed()
 {
     super.Destroyed();
