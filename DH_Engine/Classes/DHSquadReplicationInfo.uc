@@ -349,6 +349,7 @@ function int CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
             if (VRI != none)
             {
                 VRI.JoinSquadChannel(PRI, TeamIndex, i);
+                PC.Speak("SQUAD");
             }
 
             // "You have created a squad."
@@ -710,6 +711,7 @@ function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadInd
             if (VRI != none)
             {
                 VRI.JoinSquadChannel(PRI, TeamIndex, SquadIndex);
+                PC.Speak("SQUAD");
             }
 
             PC.ClientJoinSquadResult(SE_None);
