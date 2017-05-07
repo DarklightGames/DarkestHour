@@ -10,7 +10,6 @@ argparser = argparse.ArgumentParser()
 argparser.add_argument('dir', default='.', help='root directory')
 argparser.add_argument('-mod', required=True, help='mod name')
 argparser.add_argument('-username', required=True, help='steam username')
-argparser.add_argument('-password', required=True, help='steam password')
 args = argparser.parse_args()
 
 args.dir = os.path.abspath(args.dir)
@@ -88,7 +87,7 @@ for root, dirs, filenames in os.walk(content_path):
             f.write(c)
 
 # actually do the thing!
-args = ['steamcmd.exe', '+login', args.username, args.password, '+run_app_build', '../scripts/app_build_1280.vdf', '+run_app_build', '../scripts/app_build_1290.vdf', '+quit']
+args = ['steamcmd.exe', '+login', args.username, '+run_app_build', '../scripts/app_build_1280.vdf', '+run_app_build', '../scripts/app_build_1290.vdf', '+quit']
 
 p = subprocess.Popen(args, executable=steamcmd_path)
 p.wait()
