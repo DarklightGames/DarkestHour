@@ -75,7 +75,7 @@ static final function UVersion FromString(string S)
     return V;
 }
 
-// Returns a string in the format "v<Major>.<Minor>.<Patch>[-<Prerelease]".
+// Returns a string in the format "v<Major>.<Minor>.<Patch>[-<Prerelease][+<Metadata>]".
 final function string ToString()
 {
     local string S;
@@ -93,6 +93,45 @@ final function string ToString()
     }
 
     return S;
+}
+
+// Returns 0 if they are identical, -1 if the version is < other, 1 if version is > other.
+final function int Compare(UVersion Other)
+{
+    if (Major == Other.Major)
+    {
+        if (Minor == Other.Minor)
+        {
+            if (Patch == Other.Patch)
+            {
+                return 0;
+            }
+            else if (Patch < Other.Patch)
+            {
+                return -1;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+        else if (Minor < Other.Minor)
+        {
+            return -1;
+        }
+        else
+        {
+            return 1;
+        }
+    }
+    else if (Major < Other.Major)
+    {
+        return -1;
+    }
+    else
+    {
+        return 1;
+    }
 }
 
 function bool IsPrerelease()
