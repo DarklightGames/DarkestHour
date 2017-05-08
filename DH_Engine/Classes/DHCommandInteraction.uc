@@ -123,6 +123,8 @@ function DHCommandMenu PushMenu(string ClassName, optional Object OptionalObject
     Menu.OnPush();
     Menu.OnActive();
 
+    Cursor = vect(0, 0, 0);
+
     return Menu;
 }
 
@@ -146,6 +148,8 @@ function DHCommandMenu PopMenu()
 
         NewMenu.OnActive();
     }
+
+    Cursor = vect(0, 0, 0);
 
     return Menu;
 }
