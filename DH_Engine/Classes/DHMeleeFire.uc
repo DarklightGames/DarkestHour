@@ -409,7 +409,7 @@ function float GetTraceRangeSquared()
 {
     if (Weapon.bBayonetMounted)
     {
-        return BayonetTraceRange*BayonetTraceRange;
+        return BayonetTraceRange * BayonetTraceRange;
     }
 
     return TraceRange * TraceRange;
