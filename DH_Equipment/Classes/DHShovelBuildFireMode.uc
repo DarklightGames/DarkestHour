@@ -47,6 +47,8 @@ event ModeDoFire()
         // TODO: get the exact construction we're lookin' at
 
         GotoState('Building');
+
+        Weapon.IncrementFlashCount(0);
     }
 }
 
