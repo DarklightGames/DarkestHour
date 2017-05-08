@@ -99,15 +99,24 @@ function OnControlsChangedButtonClicked(byte bButton)
 
 function InternalOnOpen()
 {
-    local string CurrentVersion;
+    local UVersion SavedVersionObject;
 
     PlayerOwner().ClientSetInitialMusic(MenuSong, MTRAN_Segue);
 
-    CurrentVersion = class'DarkestHourGame'.default.Version.ToString();
-
-    if (SavedVersion != CurrentVersion)
+    if (SavedVersion != class'DarkestHourGame'.default.Version.ToString())
     {
-        //ShowAnnouncement();
+        SavedVersionObject = class'UVersion'.static.FromString(SavedVersion);
+
+        if (SavedVersionObject == none || SavedVersionObject.Major < 8)
+        {
+            // To make a long story short, we can't force the client to delete
+            // their configuration file at will, so we need to forcibly create
+            // control bindings for the new commands added in 8.0;
+            PlayerOwner().ConsoleCommand("set input i SquadTalk");
+            PlayerOwner().ConsoleCommand("set input insert Speak Squad");
+            PlayerOwner().ConsoleCommand("set input capslock ShowOrderMenu | OnRelease HideOrderMenu");
+            // TODO: fetch the defaults programmatically, this is sloppy!
+        }
 
         SavedVersion = class'DarkestHourGame'.default.Version.ToString();
         SaveConfig();

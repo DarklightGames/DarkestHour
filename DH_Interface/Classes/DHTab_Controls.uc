@@ -93,6 +93,15 @@ defaultproperties
     ControlProfiles(2)="Contemporary"
     ControlProfiles(3)="Recommended"
 
+    bindings_comm(9)="SquadTalk"
+    captions_comm(9)="Squad Say"
+
+    bindings_comm(10)="Speak Squad"
+    captions_comm(10)="Switch to Squad Voice Channel"
+
+    bindings_interface(5)="ShowOrderMenu | OnRelease HideOrderMenu"
+    captions_interface(5)="Squad Orders Menu"
+
     Begin Object Class=DHGUIProportionalContainer Name=InputBK1
         HeaderBase=texture'DH_GUI_Tex.Menu.DHDisplay_withcaption'
         Caption="Bindings"
@@ -155,9 +164,10 @@ defaultproperties
     // Profile Bindings
     //****************
     // default (With DH fixes)
-    ControlProfileBindings(1)=(KeyNames=("Tab","GreyMinus","F2","F3","Minus","Equals"),KeyValues=("ScoreToggle","CommunicationMenu","ShowVoteMenu","CommunicationMenu","",""))
+    ControlProfileBindings(1)=(KeyNames=("Tab","GreyMinus","F2","F3","Minus","Equals","I","Insert","Capslock"),KeyValues=("ScoreToggle","CommunicationMenu","ShowVoteMenu","CommunicationMenu","","","SquadTalk","Speak Squad","ShowOrderMenu | OnRelease HideOrderMenu"))
     // Contemporary
     ControlProfileBindings(2)=(KeyNames=("F","Z","V","RightMouse","MiddleMouse"),KeyValues=("Use","Prone","Deploy","ROIronSights","AltFire"))
     // Recommended
     ControlProfileBindings(3)=(KeyNames=("V","Z","G","H","T","Y","U","I","N","M","J","K","L","Semicolon","SingleQuote","RightMouse","MiddleMouse","Ctrl","Alt","Comma","Period","Backslash","Slash","Backspace","MouseX","MouseY","LeftBracket","RightBracket","ScrollLock"),KeyValues=("Use","Prone","ThrowWeapon","ThrowMGAmmo","VoiceTalk","Talk","TeamTalk","VehicleTalk","speech ALERT 0","ShowObjectives","speech SUPPORT 2","teamsay np","speech ACK 3","speech ACK 2","speech ALERT 3","ROIronSights","AltFire","SpeechMenuToggle","Walking","","","speech ALERT 2","","","Count bXAxis | Axis aMouseX Speed=1.0","Count bYAxis | Axis aMouseY Speed=1.0","","",""))
 }
+
