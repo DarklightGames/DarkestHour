@@ -231,6 +231,7 @@ Begin:
         StateName = GetStateName();
         SetCollision(false, false, false);
         SetDrawType(DT_None);
+        NetUpdateTime = Level.TimeSeconds - 1.0;
     }
 }
 
