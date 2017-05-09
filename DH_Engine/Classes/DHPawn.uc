@@ -306,10 +306,11 @@ simulated function Tick(float DeltaTime)
 // PossessedBy - figure out what dummy attachments are needed
 function PossessedBy(Controller C)
 {
+    local ROPlayerReplicationInfo    PRI;
+    local DHRoleInfo                 DHRI;
     local array<class<ROAmmoPouch> > AmmoClasses;
-    local int i, Prim, Sec, Gren;
-    local DHRoleInfo DHRI;
-    local ROPlayerReplicationInfo PRI;
+    local class<DHMortarWeapon>      MortarClass;
+    local int                        Prim, Sec, Gren, i;
 
     super(Pawn).PossessedBy(C);
 
@@ -387,18 +388,23 @@ function PossessedBy(Controller C)
             bHasBeenPossessed = true;
             bUsedCarriedMGAmmo = false;
 
-            // Give default mortar ammunition. (TODO: this is horrible!)
+            // Give default mortar ammunition
+            // Don't have weapons yet, so have to get mortar class from role's GivenItems array
             if (DHRI.bCanUseMortars)
             {
-                if (C.GetTeamNum() == 0) // axis
+                for (i = 0; i < DHRI.GivenItems.Length; ++i)
                 {
-                    MortarHEAmmo = 16;
-                    MortarSmokeAmmo = 4;
-                }
-                else // allies
-                {
-                    MortarHEAmmo = 24;
-                    MortarSmokeAmmo = 4;
+                    if (DHRI.GivenItems[i] != "")
+                    {
+                        MortarClass = class<DHMortarWeapon>(Level.Game.BaseMutator.GetInventoryClass(DHRI.GivenItems[i]));
+
+                        if (MortarClass != none)
+                        {
+                            MortarHEAmmo = MortarClass.default.HighExplosiveMaximum;
+                            MortarSmokeAmmo = MortarClass.default.SmokeMaximum;
+                            break;
+                        }
+                    }
                 }
             }
         }
