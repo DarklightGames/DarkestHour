@@ -22,7 +22,7 @@ var()   int                 RandomPercent;          // percentage chance of modi
 var()   bool                bRepairIfNotFullHealth; // extra option to restore DSM to full health if it's been damaged but not destroyed (used with DSM_Repair option)
 var     DHDestroyableSM     DSMReference;           // our actor reference to the DSM we are to modify, found from matching our specified DSMToModify with the DSM's Tag
 
-// Modified to find our paired DSM by matching our specified DSMToModify to its Tag name
+// Implemented to find our paired DSM by matching our specified DSMToModify to its Tag name
 function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -42,7 +42,7 @@ function PostBeginPlay()
     }
 }
 
-// Modified to
+// Implemented to modify our paired DSM when this modify actor gets triggered by an event
 event Trigger(Actor Other, Pawn EventInstigator)
 {
     local int RandomNum;

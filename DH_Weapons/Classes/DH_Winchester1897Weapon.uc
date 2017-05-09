@@ -32,7 +32,7 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_Winchester1897_1st.Winchester1897'
 
-    DisplayFOV=80
+    DisplayFOV=80.0
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=50.0
     BobModifyFactor=0.4

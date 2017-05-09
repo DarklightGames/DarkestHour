@@ -44,4 +44,3 @@ defaultproperties
     PlacementOffset=(Z=24.0)
     SupplyCost=500
 }
-

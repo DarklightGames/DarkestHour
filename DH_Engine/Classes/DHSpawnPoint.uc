@@ -223,7 +223,7 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
     LocationHintIndices = class'UArray'.static.Range(0, LocationHints.Length - 1);
     class'UArray'.static.IShuffle(LocationHintIndices);
 
-    // TODO: make this functionality generic so it applied toall spawn point types?
+    // TODO: make this functionality generic so it applied to all spawn point types?
 
     // Put location hints with enemies nearby at the end of the array to be evaluated last
     if (LocationHintIndices.Length > 1)

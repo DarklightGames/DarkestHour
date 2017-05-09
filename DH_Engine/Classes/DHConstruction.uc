@@ -125,6 +125,7 @@ replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
         TeamIndex, StateName;
+
     reliable if (Role < ROLE_Authority)
         ServerIncrementProgress;
 }
@@ -693,5 +694,3 @@ defaultproperties
 //    HarmfulDamageTypes(1)=class'DH_SatchelDamType'
     HarmfulDamageTypes(2)=class'ROTankShellExplosionDamage'
 }
-
-

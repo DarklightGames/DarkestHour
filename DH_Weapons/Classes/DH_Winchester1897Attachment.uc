@@ -55,11 +55,11 @@ defaultproperties
     // Remove inherited player bolting anims as they look completely wrong for shotgun's pump action
     // Ideally we would have player anims working the pump action, but better to play no anim than an obviously bad one
     // Note we can't specify neutral idle anims here as they're too long & cause problems, e.g. their AnimEnd() triggers AnimBlendTimer() mid reload, screwing it up
-	PA_StandBoltActionAnim=""
-	PA_StandIronBoltActionAnim=""
-	PA_CrouchBoltActionAnim=""
-	PA_CrouchIronBoltActionAnim=""
-	PA_ProneBoltActionAnim=""
+    PA_StandBoltActionAnim=""
+    PA_StandIronBoltActionAnim=""
+    PA_CrouchBoltActionAnim=""
+    PA_CrouchIronBoltActionAnim=""
+    PA_ProneBoltActionAnim=""
 
     // Also don't have any specific player anims for reloading, so having to use single round reload player anims for sniper rifle
     // Round insert doesn't look too bad, but pre & post reload anims have the player working an invisible bolt

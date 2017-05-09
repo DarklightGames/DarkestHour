@@ -42,7 +42,6 @@ simulated function PostBeginPlay()
     Acceleration = 0.5 * PhysicsVolume.Gravity;
 }
 
-
 // Modified to skip over Super in DHAntiVehicleProjectile, so we simply destroy the actor
 // This is a net temporary, torn off projectile, so it doesn't need the delayed destruction stuff used by a fully replicated cannon shell
 simulated function HandleDestruction()

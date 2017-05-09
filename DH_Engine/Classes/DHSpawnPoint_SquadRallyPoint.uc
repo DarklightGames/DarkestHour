@@ -220,7 +220,6 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
     return true;
 }
 
-
 function GetPlayerCountsWithinRadius(float RadiusInMeters, optional out int SquadmateCount, optional out int EnemyCount)
 {
     local Pawn P;

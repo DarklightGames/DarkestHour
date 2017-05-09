@@ -65,7 +65,7 @@ var     int                     DeathPenaltyCount;          // number of deaths 
 
 // Weapon locking (punishment for spawn killing)
 var     int                     WeaponUnlockTime;           // the time at which the player's weapons will be unlocked (being the round's future ElapsedTime in whole seconds)
-var     int                     PendingWeaponLockSeconds ;  // fix for problem where player re-joins server with saved weapon lock, but client doesn't yet have GRI
+var     int                     PendingWeaponLockSeconds;   // fix for problem where player re-joins server with saved weapon lock, but client doesn't yet have GRI
 var     int                     WeaponLockViolations;       // the number of violations this player has, used to increase the locked period for multiple offences
 var     bool                    bWeaponsAreLocked;          // flag only used so we know an unlock message needs to be displayed locally after the locked time expires
 

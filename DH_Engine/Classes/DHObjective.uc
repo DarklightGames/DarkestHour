@@ -74,7 +74,6 @@ var(DHObjectiveCapture) bool        bNeutralOnActivation;       // Should this c
 var(DHObjectiveCapture) array<int>  AxisRequiredObjForCapture;  // Objectives which are required to progress capture bar towards "capture" (obj can still be neutralized)
 var(DHObjectiveCapture) array<int>  AlliesRequiredObjForCapture;
 
-
 // Clear variables
 var(DHObjectiveClear) bool          bSetInactiveOnClear;        // Sets the objective inactive when cleared
 var(DHObjectiveClear) bool          bDisableWhenAlliesClearObj;

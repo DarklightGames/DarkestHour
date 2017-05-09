@@ -58,7 +58,6 @@ simulated state Constructed
     }
 }
 
-
 function OnConstructed()
 {
     local vector HitLocation, HitNormal, TraceEnd, TraceStart;

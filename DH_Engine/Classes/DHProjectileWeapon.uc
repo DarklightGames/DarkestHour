@@ -198,7 +198,7 @@ simulated event RenderOverlays(Canvas Canvas)
     }
 
     // Draw muzzle flashes/smoke for all fire modes so idle state won't cause emitters to just disappear
-    Canvas.DrawActor(none, false, true);
+    Canvas.DrawActor(none, false, true); // clear the z-buffer here
 
     for (i = 0; i < NUM_FIRE_MODES; ++i)
     {
@@ -226,7 +226,7 @@ simulated event RenderOverlays(Canvas Canvas)
 
     if (bUsesFreeAim && !bUsingSights && Playa != none)
     {
-        if (!IsCrawling())
+        if (!IsCrawling()) // note DH has added this restriction to prevent pitch adjustment if player is crawling
         {
             RollMod.Pitch += Playa.WeaponBufferRotation.Pitch;
         }
@@ -234,7 +234,7 @@ simulated event RenderOverlays(Canvas Canvas)
         RollMod.Yaw += Playa.WeaponBufferRotation.Yaw;
     }
 
-    SetRotation(RollMod);
+    SetRotation(RollMod); // note DH always calls this, where in RO it was only called if player was not ironsighted (which made setting RollMod pointless when sighted)
 
     bDrawingFirstPerson = true;
 

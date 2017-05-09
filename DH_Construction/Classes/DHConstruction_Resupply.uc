@@ -87,4 +87,3 @@ defaultproperties
     SupplyCost=300
     bCanPlaceIndoors=true
 }
-

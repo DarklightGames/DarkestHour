@@ -1985,9 +1985,8 @@ defaultproperties
     TPCamLookat=(X=0.0,Y=0.0,Z=0.0)
     TPCamWorldOffset=(X=0.0,Y=0.0,Z=100.0)
 
-    // Vew shake
-    bEnableProximityViewShake=false // TODO - this is default false anyway, but interesting to test enabling this, as could be a good feature for heavy vehicles
-    ViewShakeRadius=50.0   // was 600 in RO
+    // View shake
+    ViewShakeRadius=50.0 // was 600 in RO
     ViewShakeOffsetMag=(X=0.0,Y=0.0,Z=0.0) // was X=0.5,Z=2 in RO
     ViewShakeOffsetFreq=0.0 // was 7 in RO
 

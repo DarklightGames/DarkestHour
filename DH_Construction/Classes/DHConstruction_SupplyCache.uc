@@ -30,4 +30,3 @@ defaultproperties
     DuplicateDistanceInMeters=100   // NOTE: 2x the supply attachment radius
     bCanPlaceIndoors=true
 }
-

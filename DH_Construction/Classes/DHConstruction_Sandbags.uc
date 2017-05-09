@@ -22,4 +22,3 @@ defaultproperties
 //    UV2Texture=Texture'DH_Construction_tex.Sandbags.sandbags_01_AO'
     BrokenEmitterClass=class'DHConstruction_Sandbags_BrokenEmitter'
 }
-
