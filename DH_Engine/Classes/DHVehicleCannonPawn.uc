@@ -440,12 +440,12 @@ function float GetAltAmmoReloadState()
         {
             return 0.0;
         }
-        else if (Cannon.AltReloadState == RL_Waiting || Cannon.AltReloadState == RL_Empty)
+        else if (Cannon.AltReloadState == RL_Waiting || Cannon.AltReloadState == RL_ReloadingPart1)
         {
             return 1.0;
         }
 
-        return Cannon.AltReloadStages[Cannon.AltReloadState - 1].HUDProportion;
+        return Cannon.AltReloadStages[Cannon.AltReloadState].HUDProportion;
     }
 
     return 0.0;
@@ -597,15 +597,43 @@ simulated state ViewTransition
     }
 }
 
-// Modified so listen server host player records currently loaded ammo type on exiting, so if he re-enters this cannon he will know if another player has since loaded different ammo
+// Modified to pause any coaxial MG reload if player exits
+function DriverLeft()
+{
+    local DHVehicleCannon Cannon;
+
+    super.DriverLeft();
+
+    Cannon = DHVehicleCannon(Gun);
+
+    if (Cannon != none && Cannon.AltReloadState < RL_ReadyToFire && !Cannon.bAltReloadPaused && Cannon.bMultiStageReload)
+    {
+        Cannon.PauseAltReload();
+    }
+}
+
+// Modified to pause any coaxial MG reload if player exits
+// Also so listen server host player records currently loaded ammo type on exiting, so if he re-enters this cannon he will know if another player has since loaded different ammo
 // If loaded ammo changes, any previous choice of pending ammo to load will probably no longer make sense & have to be discarded
 simulated function ClientKDriverLeave(PlayerController PC)
 {
+    local DHVehicleCannon Cannon;
+
     super.ClientKDriverLeave(PC);
 
-    if (Level.NetMode == NM_ListenServer && DHVehicleCannon(VehWep) != none)
+    Cannon = DHVehicleCannon(Gun);
+
+    if (Cannon != none)
     {
-        DHVehicleCannon(VehWep).SavedProjectileClass = VehWep.ProjectileClass;
+        if (Cannon.AltReloadState < RL_ReadyToFire && !Cannon.bAltReloadPaused && Cannon.bMultiStageReload && Role < ROLE_Authority)
+        {
+            Cannon.PauseAltReload();
+        }
+
+        if (Level.NetMode == NM_ListenServer)
+        {
+            Cannon.SavedProjectileClass = Cannon.ProjectileClass;
+        }
     }
 }
 

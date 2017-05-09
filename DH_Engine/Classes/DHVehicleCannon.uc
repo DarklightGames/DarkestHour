@@ -38,6 +38,7 @@ var     float               AltFireSpawnOffsetX;     // optional extra forward o
 var     EReloadState        AltReloadState;          // the stage of coaxial MG reload or readiness
 var     array<ReloadStage>  AltReloadStages;         // stages for multi-part coaxial MG reload, including sounds, durations & HUD reload icon proportions
 var     bool                bAltReloadPaused;        // a coaxial MG reload has started but was paused, as no longer had a player in a valid reloading position
+var     bool                bNewOrResumedAltReload;  // tells Timer() that we're starting new coaxial MG reload or resuming paused reload, stopping it from advancing to next reload stage
 
 // Firing effects
 var     sound               CannonFireSound[3];      // sound of the cannon firing (selected randomly)
@@ -89,7 +90,7 @@ simulated function PostNetReceive()
 // Modified to handle multi-stage coaxial MG reload in the same way as cannon, with cannon reload taking precedence over any coax reload & putting it on hold
 simulated function Timer()
 {
-    // Cannon reload
+    // CANNON RELOAD
     if (ReloadState < RL_ReadyToFire)
     {
         super.Timer(); // standard reload process for main weapon
@@ -106,49 +107,68 @@ simulated function Timer()
         // Or if cannon is reloading, pause any active coaxial MG reload as the cannon reload takes precedence
         else if (AltReloadState < RL_ReadyToFire && !bAltReloadPaused && !bReloadPaused)
         {
-            bAltReloadPaused = true;
+            PauseAltReload();
         }
     }
-    // Coaxial MG reload - finish reload if already reached final reload stage, regardless of circumstances (final reload sound will have played, so confusing if player can't fire)
-    else if (AltReloadState == AltReloadStages.Length)
+    // COAXIAL MG RELOAD
+    else
     {
-        AltReloadState = RL_ReadyToFire;
-        bAltReloadPaused = false;
-
-        if (Role == ROLE_Authority)
+        if (bAltReloadPaused || AltReloadState >= AltReloadStages.Length) // invalid reload timer
         {
-            AltAmmoCharge = InitialAltAmmo;
+            Log(Name @ ": invalid reload timer call, with bReloadPaused =" @ bReloadPaused $ ", ReloadState =" @ GetEnum(enum'EReloadState', ReloadState)
+                @ "bAltReloadPaused =" @ bAltReloadPaused $ ", AltReloadState =" @ GetEnum(enum'EReloadState', AltReloadState));
+
+            return;
         }
-    }
-    // Coaxial MG reload in progress
-    else if (AltReloadState < AltReloadStages.Length && !bAltReloadPaused)
-    {
-        // Check we have a player to do the reload
-        if (WeaponPawn != none && WeaponPawn.Occupied() && WeaponPawn.CanReload())
+
+        // If we don't have a player in a position to reload, pause the coax MG reload
+        // This is just a fallback & shouldn't happen, as a reload gets actively paused if player exits or moves to position where he can't continue reloading
+        if (WeaponPawn == none || !WeaponPawn.Occupied() || !WeaponPawn.CanReload())
         {
-            // Play reloading sound for this stage
-            if (AltReloadStages[AltReloadState].Sound != none)
-            {
-                PlayOwnedSound(AltReloadStages[AltReloadState].Sound, SLOT_Misc, 2.0,, 25.0,, true);
-            }
+            Log(Name @ ": reload timer pausing coax MG reload as no player in valid position - SHOULD NOT HAPPEN!!  Occupied() =" @ WeaponPawn.Occupied() @ " CanReload() =" @ WeaponPawn.CanReload());
+            PauseAltReload();
 
-            // Set next timer based on duration of current reload sound (use reload duration if specified, otherwise try & get the sound duration)
-            if (AltReloadStages[AltReloadState].Duration > 0.0)
-            {
-                SetTimer(AltReloadStages[AltReloadState].Duration, false);
-            }
-            else
-            {
-                SetTimer(FMax(0.1, GetSoundDuration(AltReloadStages[AltReloadState].Sound)), false); // FMax is just a fail-safe in case GetSoundDuration somehow returns zero
-            }
-
-            // Move to next reload state
-            AltReloadState = EReloadState(AltReloadState + 1);
+            return;
         }
-        // Otherwise pause the reload as no player to do it
+
+        // If we're starting a new coax MG reload or resuming a paused reload, we just reset that flag & don't advance the reload state
+        if (bNewOrResumedAltReload)
+        {
+            bNewOrResumedAltReload = false;
+        }
+        // Otherwise it means we've just we've completed a reload stage, so we progress to next reload state
         else
         {
-            bAltReloadPaused = true;
+            AltReloadState = EReloadState(AltReloadState + 1);
+
+            // If just completed the final reload stage, complete the coax MG reload
+            if (AltReloadState >= AltReloadStages.Length)
+            {
+                AltReloadState = RL_ReadyToFire;
+
+                if (Role == ROLE_Authority)
+                {
+                    AltAmmoCharge = InitialAltAmmo;
+                }
+
+                return;
+            }
+        }
+
+        // Play reloading sound for current stage, if there is one (some MGs use a HUD reload animation that plays its own sound through anim notifies)
+        if (AltReloadStages[AltReloadState].Sound != none)
+        {
+            PlayOwnedSound(AltReloadStages[AltReloadState].Sound, SLOT_Misc, 2.0,, 25.0,, true);
+        }
+
+        // Set next timer based on duration of current reload sound (use reload duration if specified, otherwise try & get the sound duration)
+        if (AltReloadStages[AltReloadState].Duration > 0.0)
+        {
+            SetTimer(AltReloadStages[AltReloadState].Duration, false);
+        }
+        else
+        {
+            SetTimer(FMax(0.1, GetSoundDuration(AltReloadStages[AltReloadState].Sound)), false); // FMax is just a fail-safe in case GetSoundDuration somehow returns zero
         }
     }
 }
@@ -804,9 +824,7 @@ simulated function AttemptAltReload()
             // Start a reload if we have a spare mag & the cannon is not reloading (that takes precedence & makes coax wait to reload)
             if (HasAmmoToReload(ALTFIRE_AMMO_INDEX) && ReloadState >= RL_ReadyToFire && WeaponPawn != none && WeaponPawn.CanReload())
             {
-                NumMGMags--;
-                AltReloadState = RL_Empty;
-                StartAltReloadTimer();
+                StartAltReload();
             }
             // Otherwise make sure loading state is waiting (for a player or an ammo resupply or for cannon to finish reloading)
             else if (AltReloadState != RL_Waiting)
@@ -829,20 +847,37 @@ simulated function AttemptAltReload()
     // In any event the timer makes sure we have a player anyway & the slight delay before timer gets called should mean we have the Controller by then
     else if (ReloadState >= RL_ReadyToFire && WeaponPawn != none && WeaponPawn.CanReload())
     {
-        StartAltReloadTimer();
+        StartAltReload(true);
     }
     else if (!bAltReloadPaused)
     {
-        bAltReloadPaused = true;
+        PauseAltReload();
     }
 }
 
-// New function to start a coaxial MG reload timer, either when a new reload starts or when a paused reload resumes (separate function to avoid code repetition elsewhere)
-// 0.1 sec delay instead of 0.01 to allow a little longer for net client to receive weapon pawn's Controller actor, so check for player doesn't fail due to network timing issues
-simulated function StartAltReloadTimer()
+// New function to start a new coaxial MG reload or resume a paused reload
+simulated function StartAltReload(optional bool bResumingPausedReload)
 {
+    if (!bResumingPausedReload)
+    {
+        NumMGMags--;
+        AltReloadState = RL_ReloadingPart1;
+    }
+
+    bNewOrResumedAltReload = true; // stops Timer() from moving on to next stage
     bAltReloadPaused = false;
-    SetTimer(0.1, false);
+    SetTimer(0.1, false); // 0.1 sec delay instead of 0.01 to allow bit longer for net client to receive Controller actor, so check for player doesn't fail due to network delay
+}
+
+// New function to pause a coaxial MG reload
+simulated function PauseAltReload()
+{
+    bAltReloadPaused = true;
+
+    if (ReloadState == RL_ReadyToFire || ReloadState == RL_Waiting || bReloadPaused)
+    {
+        SetTimer(0.0, false); // clear any timer, but only if cannon is not reloading (if so, must leave timer running for that)
+    }
 }
 
 // Modified to pack both cannon & coaxial MG reload states into a single byte, for efficient replication to owning net client
@@ -1355,7 +1390,7 @@ defaultproperties
     ReloadStages(2)=(HUDProportion=0.5)
     ReloadStages(3)=(HUDProportion=0.25)
     AltReloadState=RL_ReadyToFire
-    AltReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden01',Duration=1.105,HUDProportion=1.0) // MG34 reload sounds are used by most vehicles, even allies
+    AltReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden01',Duration=1.105) // MG34 reload sound acts as generic belt-fed coax MG reload
     AltReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden02',Duration=2.413,HUDProportion=0.75)
     AltReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden03',Duration=1.843,HUDProportion=0.5)
     AltReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden04',Duration=1.314,HUDProportion=0.25)

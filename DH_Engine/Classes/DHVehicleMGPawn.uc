@@ -228,10 +228,16 @@ simulated state ViewTransition
                 VehWep.AmbientEffectEmitter.bHidden = true;
             }
 
-            // If player was loading externally mounted MG but now moving to invalid reloading position, show hint he must unbutton (or stop using binocs) to continue reload
-            if (bMustUnbuttonToReload && VehWep.ReloadState < RL_ReadyToFire && !VehWep.bReloadPaused && IsLocallyControlled() && !CanReload() && DHPlayer(Controller) != none)
+            // If player was reloading MG but can't continue in the new position, interrupt the reload
+            if (VehWep.ReloadState < RL_ReadyToFire && !VehWep.bReloadPaused && !CanReload() && VehWep.bMultiStageReload)
             {
-                DHPlayer(Controller).QueueHint(48, true);
+                VehWep.PauseReload();
+
+                // If player was loading externally mounted MG, show a hint he must unbutton (or stop using binocs) to continue the reload
+                if (bMustUnbuttonToReload && IsLocallyControlled() && DHPlayer(Controller) != none)
+                {
+                    DHPlayer(Controller).QueueHint(48, true);
+                }
             }
         }
     }

@@ -354,12 +354,12 @@ function float GetAmmoReloadState()
         {
             return 0.0;
         }
-        else if (VehWep.ReloadState == RL_Waiting || VehWep.ReloadState == RL_Empty)
+        else if (VehWep.ReloadState == RL_Waiting || VehWep.ReloadState == RL_ReloadingPart1)
         {
             return 1.0;
         }
 
-        return VehWep.ReloadStages[VehWep.ReloadState - 1].HUDProportion;
+        return VehWep.ReloadStages[VehWep.ReloadState].HUDProportion;
     }
 
     return 0.0;
@@ -1043,8 +1043,9 @@ function DriverDied()
 }
 
 // Modified to add common features from KDriverLeave() & DriverDied(), which both call this function, & to reset to InitialPositionIndex instead of zero
-// Moving the 'Gun' section here fixes a major bug caused because before it was only being run in KDriverLeave() and not in DriverDied()
+// Moving the VehWep section here fixes a major bug caused because before it was only being run in KDriverLeave() and not in DriverDied()
 // If player died in vehicle weapon, next player who entered would find weapon rotating wildly to remain facing towards a fixed point (resetting Gun.bActive is key)
+// Also modified to pause any reload if player exits (authority roles get this here; owning net client gets it in ClientKDriverLeave())
 function DriverLeft()
 {
     if (bMultiPosition)
@@ -1053,12 +1054,17 @@ function DriverLeft()
         LastPositionIndex = InitialPositionIndex;
     }
 
-    if (Gun != none)
+    if (VehWep != none)
     {
-        Gun.bActive = false;
-        Gun.FlashCount = 0;
-        Gun.NetUpdateFrequency = Gun.default.NetUpdateFrequency;
-        Gun.NetPriority = Gun.default.NetPriority;
+        VehWep.bActive = false;
+        VehWep.FlashCount = 0;
+        VehWep.NetUpdateFrequency = VehWep.default.NetUpdateFrequency;
+        VehWep.NetPriority = VehWep.default.NetPriority;
+
+        if (VehWep.ReloadState < RL_ReadyToFire && !VehWep.bReloadPaused && VehWep.bMultiStageReload)
+        {
+            VehWep.PauseReload();
+        }
     }
 
     SetRotatingStatus(0); // stop playing any turret rotation sound
@@ -1072,6 +1078,18 @@ function DriverLeft()
     Driver = none;
     bDriving = false;
     DrivingStatusChanged();
+}
+
+// Modified to pause any reload if player exits
+// Only applies to owning net client, as authority roles get this is DriverLeft() & reloading status isn't relevant to other net clients
+simulated function ClientKDriverLeave(PlayerController PC)
+{
+    super.ClientKDriverLeave(PC);
+
+    if (VehWep != none && VehWep.ReloadState < RL_ReadyToFire && !VehWep.bReloadPaused && VehWep.bMultiStageReload && Role < ROLE_Authority)
+    {
+        VehWep.PauseReload();
+    }
 }
 
 // Modified to remove playing BeginningIdleAnim as that now gets done for all net modes in DrivingStatusChanged()

@@ -79,14 +79,14 @@ function Fire(Controller C)
 }
 
 // Modified so if we're loading a new mixed mag, we reset the 1st shot to be the default AP or HE round
-simulated function AttemptReload()
+simulated function StartReload(optional bool bResumingPausedReload)
 {
-    super.AttemptReload();
-
-    if (ReloadState == RL_Empty && ProjectileClass == PrimaryProjectileClass && Role == ROLE_Authority)
+    if (!bResumingPausedReload && ProjectileClass == PrimaryProjectileClass && Role == ROLE_Authority)
     {
         bMixedMagFireAP = default.bMixedMagFireAP;
     }
+
+    super.StartReload(bResumingPausedReload);
 }
 
 defaultproperties

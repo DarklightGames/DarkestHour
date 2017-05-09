@@ -263,10 +263,11 @@ simulated function FlashMuzzleFlash(bool bWasAltFire);
 function CeaseFire(Controller C, bool bWasAltFire);
 simulated function bool ReadyToFire(bool bAltFire) { return true; }
 simulated function AttemptReload();
-simulated function StartReloadTimer();
+simulated function StartReload(optional bool bResumingPausedReload);
 simulated function Timer();
 function PassReloadStateToClient();
 simulated function ClientSetReloadState(byte NewState);
+simulated function PauseReload();
 simulated function bool HasAmmoToReload(byte AmmoIndex) { return false; }
 simulated function StartHatchFire();
 
