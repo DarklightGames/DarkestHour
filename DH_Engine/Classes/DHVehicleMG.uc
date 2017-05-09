@@ -9,17 +9,6 @@ class DHVehicleMG extends DHVehicleWeapon
 var     bool    bMatchSkinToVehicle;  // option to automatically match MG skin zero to vehicle skin zero (e.g. for gunshield), avoiding need for separate MG pawn & MG classes
 var     name    HUDOverlayReloadAnim; // reload animation to play if the MG uses a HUDOverlay
 
-// Modified to stop any HUD reload animation if reload ends up paused
-simulated function Timer()
-{
-    super.Timer();
-
-    if (bReloadPaused && HUDOverlayReloadAnim != '' && WeaponPawn != none && WeaponPawn.HUDOverlay != none && ReloadState < RL_ReadyToFire)
-    {
-        WeaponPawn.HUDOverlay.StopAnimating();
-    }
-}
-
 // Modified to incrementally resupply MG mags (only resupplies spare mags; doesn't reload the MG)
 function bool ResupplyAmmo()
 {
@@ -52,20 +41,20 @@ simulated function AttemptReload()
 }
 
 // Modified to play any HUD overlay reload animation, if necessary starting from the point where it was previously paused
-simulated function StartReloadTimer()
+simulated function StartReload(optional bool bResumingPausedReload)
 {
     local float ReloadSecondsElapsed, TotalReloadDuration;
     local int   i;
 
-    super.StartReloadTimer();
+    super.StartReload(bResumingPausedReload);
 
     // If weapon uses a HUD reload animation, play it
     if (WeaponPawn != none && WeaponPawn.HUDOverlay != none && WeaponPawn.HUDOverlay.HasAnim(HUDOverlayReloadAnim))
     {
         WeaponPawn.HUDOverlay.PlayAnim(HUDOverlayReloadAnim);
 
-        // If we're resuming a paused reload, move the animation to where it left off (add up the previous stage durations)
-        if (ReloadState > RL_Empty)
+        // If we're resuming a paused reload that was part way through, move the animation to where it left off (add up previous stage durations)
+        if (ReloadState > RL_ReloadingPart1)
         {
             for (i = 0; i < ReloadStages.Length; ++i)
             {
@@ -82,6 +71,17 @@ simulated function StartReloadTimer()
                 WeaponPawn.HUDOverlay.SetAnimFrame(ReloadSecondsElapsed / TotalReloadDuration);
             }
         }
+    }
+}
+
+// Modified to to stop any HUD reload animation
+simulated function PauseReload()
+{
+    super.PauseReload();
+
+    if (HUDOverlayReloadAnim != '' && WeaponPawn != none && WeaponPawn.HUDOverlay != none)
+    {
+        WeaponPawn.HUDOverlay.StopAnimating();
     }
 }
 
@@ -142,7 +142,7 @@ defaultproperties
     bIsRepeatingFF=true
 
     // Reload (default is MG34 reload sounds as is used by most vehicles, even allies)
-    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden01',Duration=1.105,HUDProportion=1.0)
+    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden01',Duration=1.105)
     ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden02',Duration=2.413,HUDProportion=0.75)
     ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden03',Duration=1.843,HUDProportion=0.5)
     ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden04',Duration=1.314,HUDProportion=0.25)
