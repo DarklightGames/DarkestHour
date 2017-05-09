@@ -16,8 +16,7 @@ var int                 TeamIndex;
 // constructions.
 var int                 SortPriority;
 
-var ArrayList_Object    TouchingPawns;
-var ArrayList_Object    NewTouchingPawns;
+var array<DHPawn>       TouchingPawns;
 
 var float               TouchDistanceInMeters;  // The distance, in meters, a player must be within to have access to these supplies.
 
@@ -36,9 +35,6 @@ simulated function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        TouchingPawns = new class'ArrayList_Object';
-        NewTouchingPawns = new class'ArrayList_Object';
-
         SupplyCount = SupplyCountMax;
 
         SetTimer(1.0, true);
@@ -85,9 +81,9 @@ function Destroyed()
     local int i;
     local DHPawn P;
 
-    for (i = 0; i < TouchingPawns.Size(); ++i)
+    for (i = 0; i < TouchingPawns.Length; ++i)
     {
-        P = DHPawn(TouchingPawns.Get(i));
+        P = TouchingPawns[i];
 
         if (P != none)
         {
@@ -102,26 +98,27 @@ function Timer()
 {
     local DHPawn P;
     local int i, Index;
+    local array<DHPawn> NewTouchingPawns;
 
-    NewTouchingPawns.Clear();
+    NewTouchingPawns.Length = 0;
 
     // Gather all relevant pawns within the radius.
     foreach CollidingActors(class'DHPawn', P, class'DHUnits'.static.MetersToUnreal(TouchDistanceInMeters))
     {
         if (P != none && P.GetTeamNum() == TeamIndex)
         {
-            NewTouchingPawns.Add(P);
+            NewTouchingPawns[NewTouchingPawns.Length] = P;
         }
     }
 
-    for (i = 0; i < NewTouchingPawns.Size(); ++i)
+    for (i = 0; i < NewTouchingPawns.Length; ++i)
     {
-        Index = TouchingPawns.IndexOf(NewTouchingPawns.Get(i));
+        Index = class'UArray'.static.IndexOf(TouchingPawns, NewTouchingPawns[i]);
 
         if (Index == -1)
         {
             // Pawn is now being touched, add ourselves to their touching list.
-            P = DHPawn(NewTouchingPawns.Get(i));
+            P = NewTouchingPawns[i];
 
             if (P != none)
             {
@@ -130,15 +127,15 @@ function Timer()
         }
     }
 
-    for (i = 0; i < TouchingPawns.Size(); ++i)
+    for (i = 0; i < TouchingPawns.Length; ++i)
     {
-        Index = NewTouchingPawns.IndexOf(TouchingPawns.Get(i));
+        Index = class'UArray'.static.IndexOf(NewTouchingPawns, TouchingPawns[i]);
 
         if (Index == -1)
         {
             // Pawn is no longer being touched, remove ourselves from their
             // touching list.
-            P = DHPawn(TouchingPawns.Get(i));
+            P = TouchingPawns[i];
 
             if (P != none)
             {
@@ -147,8 +144,7 @@ function Timer()
         }
     }
 
-    TouchingPawns.Clear();
-    TouchingPawns.Concatenate(NewTouchingPawns);
+    TouchingPawns = NewTouchingPawns;
 }
 
 function bool Resupply()
