@@ -547,28 +547,23 @@ simulated function DrawHUD(Canvas C)
     }
 }
 
-// Modified so we don't limit view yaw if in behind view
+// Modified so if player is transitioning to a different driver position, we restrict view yaw to the lowest of the old & new positions
+// Prevents screwed up views through the inside of vehicle while transitioning, e.g. unbuttoning in a tank,
+// where player suddenly has much wider view limits from new position & can see through unmodelled tank interior
+// Also so we don't limit view yaw if player is in behind view
 simulated function int LimitYaw(int yaw)
 {
-    local int NewYaw;
-
     if (!bLimitYaw || (IsHumanControlled() && PlayerController(Controller).bBehindView))
     {
         return yaw;
     }
 
-    NewYaw = yaw;
-
-    if (yaw > DriverPositions[DriverPositionIndex].ViewPositiveYawLimit)
+    if (IsInState('ViewTransition')) // if transitioning, first clamp yaw to the limits of the old position, then clamp to new position as usual
     {
-        NewYaw = DriverPositions[DriverPositionIndex].ViewPositiveYawLimit;
-    }
-    else if (yaw < DriverPositions[DriverPositionIndex].ViewNegativeYawLimit)
-    {
-        NewYaw = DriverPositions[DriverPositionIndex].ViewNegativeYawLimit;
+        yaw = Clamp(yaw, DriverPositions[PreviousPositionIndex].ViewNegativeYawLimit, DriverPositions[PreviousPositionIndex].ViewPositiveYawLimit);
     }
 
-    return NewYaw;
+    return Clamp(yaw, DriverPositions[DriverPositionIndex].ViewNegativeYawLimit, DriverPositions[DriverPositionIndex].ViewPositiveYawLimit);
 }
 
 // Modified so we don't limit view pitch if in behind view
