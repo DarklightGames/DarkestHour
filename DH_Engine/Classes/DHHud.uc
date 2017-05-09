@@ -1380,12 +1380,16 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                             Lines[i] = ">" $ Lines[i]; // add indicator prefix for currently ammo type (adjust drawing position to suit)
                             Canvas.TextSize(">", StrX, StrY);
                             VehicleAmmoTypeText.OffsetX -= StrX;
-                            VehicleAmmoTypeText.Tints[TeamIndex] = default.VehicleAmmoTypeText.Tints[TeamIndex]; // default bold text for current ammo type
                         }
-                        else if (Cannon.HasAmmoToReload(i))
+
+                        if (Cannon.HasAmmoToReload(i))
                         {
                             VehicleAmmoTypeText.Tints[TeamIndex] = default.VehicleAmmoTypeText.Tints[TeamIndex];
-                            VehicleAmmoTypeText.Tints[TeamIndex].A /= 2; // pale text for other available ammo types
+
+                            if (i != Current)
+                            {
+                                VehicleAmmoTypeText.Tints[TeamIndex].A /= 2; // pale text for non-selected available ammo types (leave as default bold for current type)
+                            }
                         }
                         else
                         {
