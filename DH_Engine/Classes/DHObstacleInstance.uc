@@ -56,16 +56,22 @@ simulated state Intact
     {
         local DarkestHourGame G;
 
-        if (Role == ROLE_Authority &&
-            Info.CanBeDestroyedByExplosives() &&
-            !DamageType.default.bLocationalHit &&
-            Damage >= Info.GetExplosionDamageThreshold())
+        if (Role == ROLE_Authority)
         {
-            G = DarkestHourGame(Level.Game);
-
-            if (G != none && G.ObstacleManager != none)
+            // Determine if the obstacle can be destroyed by explosives or weapons and make sure the damage meets the threshold for destruction
+            if ((Info.CanBeDestroyedByExplosives() &&
+                !DamageType.default.bLocationalHit &&
+                Damage >= Info.GetExplosionDamageThreshold()) ||
+                (Info.CanBeDestroyedByWeapons() &&
+                DamageType.default.bLocationalHit &&
+                Damage >= Info.GetDamageThreshold()))
             {
-                G.ObstacleManager.SetCleared(self, true);
+                G = DarkestHourGame(Level.Game);
+
+                if (G != none && G.ObstacleManager != none)
+                {
+                    G.ObstacleManager.SetCleared(self, true);
+                }
             }
         }
     }

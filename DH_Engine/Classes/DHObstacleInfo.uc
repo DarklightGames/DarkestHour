@@ -17,7 +17,9 @@ struct Type
     var()   bool                    bCanBeMantled;
     var()   bool                    bCanBeCrushed;
     var()   bool                    bCanBeDestroyedByExplosives;
+    var()   bool                    bCanBeDestroyedByWeapons;
     var()   int                     ExplosionDamageThreshold;
+    var()   int                     DamageThreshold;
     var()   float                   CutDuration;
 };
 

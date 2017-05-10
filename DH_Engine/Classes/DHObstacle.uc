@@ -112,9 +112,19 @@ simulated function bool CanBeDestroyedByExplosives()
     return Info.Types[TypeIndex].bCanBeDestroyedByExplosives;
 }
 
+simulated function bool CanBeDestroyedByWeapons()
+{
+    return Info.Types[TypeIndex].bCanBeDestroyedByWeapons;
+}
+
 simulated function int GetExplosionDamageThreshold()
 {
     return Info.Types[TypeIndex].ExplosionDamageThreshold;
+}
+
+simulated function int GetDamageThreshold()
+{
+    return Info.Types[TypeIndex].DamageThreshold;
 }
 
 simulated function sound GetClearSound()
