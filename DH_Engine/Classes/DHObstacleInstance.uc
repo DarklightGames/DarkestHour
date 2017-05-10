@@ -58,13 +58,12 @@ simulated state Intact
 
         if (Role == ROLE_Authority)
         {
-            // Determine if the obstacle can be destroyed by explosives or weapons and make sure the damage meets the threshold for destruction
-            if ((Info.CanBeDestroyedByExplosives() &&
-                !DamageType.default.bLocationalHit &&
-                Damage >= Info.GetExplosionDamageThreshold()) ||
-                (Info.CanBeDestroyedByWeapons() &&
-                DamageType.default.bLocationalHit &&
-                Damage >= Info.GetDamageThreshold()))
+            // Determine if the obstacle can be destroyed by explosives or
+            // weapons and make sure the damage meets the threshold for
+            // destruction
+            if (Damage >= Info.GetDamageThreshold() &&
+                ((Info.CanBeDestroyedByExplosives() && !DamageType.default.bLocationalHit) ||
+                 (Info.CanBeDestroyedByWeapons() && DamageType.default.bLocationalHit)))
             {
                 G = DarkestHourGame(Level.Game);
 
