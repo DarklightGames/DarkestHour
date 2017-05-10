@@ -23,7 +23,7 @@ defaultproperties
     FontNames(12)="DHButtonFont"
     FontNames(13)="DHButtonFont"
     FontNames(14)="DHButtonFont"
-    FontColors(0)=(B=192,G=192,R=192)
+    FontColors(0)=(B=0,G=0,R=0)
     FontColors(1)=(B=255,G=255,R=255)
     FontColors(2)=(B=255,G=255,R=255)
     BorderOffsets(0)=0

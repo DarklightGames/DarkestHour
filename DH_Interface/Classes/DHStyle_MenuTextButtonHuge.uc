@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHStyle_MenuTextButtonWhiteHuge extends GUIStyles;
+class DHStyle_MenuTextButtonHuge extends GUIStyles;
 
 defaultproperties
 {
-    KeyName="DHMenuTextButtonWhiteStyleHuge"
+    KeyName="DHMenuTextButtonStyleHuge"
     FontNames(0)="DHHugeButtonFont"
     FontNames(1)="DHHugeButtonFont"
     FontNames(2)="DHHugeButtonFont"
@@ -23,7 +23,7 @@ defaultproperties
     FontNames(12)="DHHugeButtonFont"
     FontNames(13)="DHHugeButtonFont"
     FontNames(14)="DHHugeButtonFont"
-    FontColors(0)=(B=192,G=192,R=192)
+    FontColors(0)=(B=0,G=0,R=0)
     FontColors(1)=(B=255,G=255,R=255)
     FontColors(2)=(B=255,G=255,R=255)
     BorderOffsets(0)=0
