@@ -74,16 +74,16 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     {
         if (bOnTheGun)
         {
-            CameraLocation = CameraLocation + (FPCamPos >> CameraRotation);
+            CameraLocation += (FPCamPos >> CameraRotation);
         }
         else
         {
-            CameraLocation = CameraLocation + (FPCamPos >> Gun.Rotation);
+            CameraLocation += (FPCamPos >> Gun.Rotation);
         }
     }
 
     // Finalise the camera with any shake
-    CameraLocation = CameraLocation + (PC.ShakeOffset >> PC.Rotation);
+    CameraLocation += (PC.ShakeOffset >> PC.Rotation);
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
 }
 
@@ -127,7 +127,7 @@ simulated function DrawHUD(Canvas C)
                     }
                     else
                     {
-                        CameraLocation = CameraLocation + (PC.ShakeOffset.X * x) + (PC.ShakeOffset.Y * y) + (PC.ShakeOffset.Z * z);
+                        CameraLocation += (PC.ShakeOffset.X * x) + (PC.ShakeOffset.Y * y) + (PC.ShakeOffset.Z * z);
                         HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
                         HUDOverlay.SetRotation(CameraRotation);
                         C.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);

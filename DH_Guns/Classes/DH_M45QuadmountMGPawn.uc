@@ -77,11 +77,11 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 
     if (FPCamPos != vect(0.0, 0.0, 0.0))
     {
-        CameraLocation = CameraLocation + (FPCamPos >> CameraRotation);
+        CameraLocation += (FPCamPos >> CameraRotation);
     }
 
     // Finalise the camera with any shake
-    CameraLocation = CameraLocation + (PC.ShakeOffset >> PC.Rotation);
+    CameraLocation += (PC.ShakeOffset >> PC.Rotation);
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
 }
 

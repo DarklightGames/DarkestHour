@@ -509,13 +509,13 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 
     // Get camera location & adjust for any offset positioning
     CameraLocation = GetBoneCoords(PlayerCameraBone).Origin;
-    CameraLocation = CameraLocation + (FPCamPos >> Rotation);
+    CameraLocation += (FPCamPos >> Rotation);
 
     // Finalise the camera with any shake
     if (PC != none)
     {
         CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
-        CameraLocation = CameraLocation + (PC.ShakeOffset >> PC.Rotation);
+        CameraLocation += (PC.ShakeOffset >> PC.Rotation);
     }
 }
 
