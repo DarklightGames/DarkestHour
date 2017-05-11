@@ -68,13 +68,11 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     l_Version.Caption = class'DarkestHourGame'.default.Version.ToString();
 
-    if (class'DarkestHourGame'.default.Version.IsPrerelease())
+    b_QuickPlay.Caption = default.JoinTestServerString;
+
+    if (!class'DarkestHourGame'.default.Version.IsPrerelease())
     {
-        b_QuickPlay.Caption = default.JoinTestServerString;
-    }
-    else
-    {
-        b_QuickPlay.Caption = default.QuickPlayString;
+        b_QuickPlay.Hide();
     }
 }
 
@@ -321,14 +319,7 @@ function OnQuickPlayResponse(int Status, TreeMap_string_string Headers, string C
         Log("OnQuickPlayResponse failed:" @ Status @ Content);
     }
 
-    if (class'DarkestHourGame'.default.Version.IsPrerelease())
-    {
-        b_QuickPlay.Caption = default.JoinTestServerString;
-    }
-    else
-    {
-        b_QuickPlay.Caption = default.QuickPlayString;
-    }
+    b_QuickPlay.Caption = default.JoinTestServerString;
 
     QuickPlayRequest = none;
 }
@@ -504,7 +495,7 @@ defaultproperties
 
     Begin Object class=GUIButton Name=QuickPlayButton
         CaptionAlign=TXTA_Left
-        Caption="Quick Join"
+        Caption="Join Test Server"
         bAutoShrink=false
         bUseCaptionHeight=true
         FontScale=FNS_Large
