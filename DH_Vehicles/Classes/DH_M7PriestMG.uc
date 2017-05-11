@@ -45,8 +45,8 @@ defaultproperties
 
     // Reload
     HUDOverlayReloadAnim="Reload"
-    ReloadStages(0)=(Sound=none,Duration=1.44) // no sounds because HUD overlay reload anim plays them (durations matched to anim notifies)
+    ReloadStages(0)=(Sound=none,Duration=1.44) // no sounds because HUD overlay reload animation plays them
     ReloadStages(1)=(Sound=none,Duration=1.52)
-    ReloadStages(2)=(Sound=none,Duration=2.40)
-    ReloadStages(3)=(Sound=none,Duration=1.70)
+    ReloadStages(2)=(Sound=none,Duration=2.05)
+    ReloadStages(3)=(Sound=none,Duration=2.05)
 }

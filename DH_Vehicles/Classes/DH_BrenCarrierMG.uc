@@ -44,8 +44,8 @@ defaultproperties
 
     // Reload (HUDProportion overrides to better suit the curved magazine of the bren gun)
     HUDOverlayReloadAnim="reload_empty"
-    ReloadStages(0)=(Sound=none,Duration=1.83) // no sounds because HUD overlay reload animation plays them
-    ReloadStages(1)=(Sound=none,Duration=1.83,HUDProportion=0.67)
-    ReloadStages(2)=(Sound=none,Duration=1.67)
-    ReloadStages(3)=(Sound=none,Duration=1.67,HUDProportion=0.35)
+    ReloadStages(0)=(Sound=none,Duration=1.6) // no sounds because HUD overlay reload animation plays them
+    ReloadStages(1)=(Sound=none,Duration=1.6,HUDProportion=0.67)
+    ReloadStages(2)=(Sound=none,Duration=1.9)
+    ReloadStages(3)=(Sound=none,Duration=1.9,HUDProportion=0.35)
 }
