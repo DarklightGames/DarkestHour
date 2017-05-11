@@ -21,10 +21,7 @@ var     DHDecoAttachment    BinocsAttachment;    // decorative actor spawned loc
 
 // Gunsight overlay
 var     texture     GunsightOverlay;             // texture overlay for gunsight
-var     float       OverlayCenterSize;           // size of the gunsight overlay (1.0 means full screen width, 0.5 means half screen width, etc)
-var     float       OverlayCenterScale;          // scale for the gunsight overlay (calculated from OverlayCenterSize)
-var     float       OverlayCenterTexStart;       // calculated for use in positioning gunsight overlay
-var     float       OverlayCenterTexSize;        // calculated for use in positioning gunsight overlay
+var     float       GunsightSize;                // size of the gunsight overlay (1.0 means full screen width, 0.5 means half screen width, etc)
 var     float       OverlayCorrectionX;          // scope center correction in pixels, in case an overlay is off-center by pixel or two
 var     float       OverlayCorrectionY;
 
@@ -46,7 +43,6 @@ replication
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified so if InitialPositionIndex is not zero, we match position indexes now so when a player gets in, we don't trigger an up transition by changing DriverPositionIndex
-// Also to calculate & set texture gunsight overlay variables once instead of every DrawHUD
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -55,13 +51,6 @@ simulated function PostBeginPlay()
     {
         DriverPositionIndex = InitialPositionIndex;
         LastPositionIndex = InitialPositionIndex;
-    }
-
-    if (Level.NetMode != NM_DedicatedServer && GunsightOverlay != none)
-    {
-        OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
-        OverlayCenterTexStart = (1.0 - OverlayCenterScale) * float(GunsightOverlay.USize) / 2.0;
-        OverlayCenterTexSize = float(GunsightOverlay.USize) * OverlayCenterScale;
     }
 }
 
@@ -160,14 +149,20 @@ simulated function PostNetReceive()
 //  *******************************  VIEW/DISPLAY  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to simply draw the BinocsOverlay, without additional drawing
+// Modified (from deprecated ROTankCannonPawn) to simply draw the BinocsOverlay, without additional drawing
 simulated function DrawBinocsOverlay(Canvas C)
 {
     local float ScreenRatio;
 
-    ScreenRatio = float(C.SizeY) / float(C.SizeX);
-    C.SetPos(0.0, 0.0);
-    C.DrawTile(BinocsOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
+    if (BinocsOverlay != none)
+    {
+        ScreenRatio = float(C.SizeY) / float(C.SizeX);
+        C.SetPos(0.0, 0.0);
+
+        C.DrawTile(BinocsOverlay, C.SizeX, C.SizeY,                         // screen drawing area (to fill screen)
+            0.0, (1.0 - ScreenRatio) * float(BinocsOverlay.VSize) / 2.0,    // position in texture to begin drawing tile (from left edge, with vertical position to suit screen aspect ratio)
+            BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio); // width & height of tile within texture
+    }
 }
 
 // Modified to switch to external mesh & unzoomed FOV for behind view, plus handling of any relative/non-relative turret rotation

@@ -13,7 +13,6 @@ defaultproperties
     ManualMaxRotateThreshold=3.0
     ManualRotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     ManualRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    bShowRangeText=true
     RangeText="meters"
     DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.Sf14z_periscope'

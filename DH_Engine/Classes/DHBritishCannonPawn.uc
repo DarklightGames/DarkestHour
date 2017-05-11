@@ -8,7 +8,6 @@ class DHBritishCannonPawn extends DHVehicleCannonPawn
 
 defaultproperties
 {
-    bShowRangeText=true
     RangeText="yards"
     RangePositionX=0.1
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'

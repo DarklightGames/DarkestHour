@@ -16,8 +16,8 @@ defaultproperties
     DrivePos=(X=2.0,Y=0.0,Z=0.0)
     DriveAnim="VPanzer3_com_idle_close"
     CannonScopeCenter=texture'DH_VehicleOptics_tex.German.PZ3_sight_graticule'
-    OverlayCenterSize=0.83
-    RangeRingScale=0.635
+    GunsightSize=0.83
+    RangeRingScale=0.499
     RangeRingRotator=TexRotator'DH_VehicleOptics_tex.German.PZ3_Sight_Center'
     RangeRingRotationFactor=985
     DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.PZ3_sight_destroyed'

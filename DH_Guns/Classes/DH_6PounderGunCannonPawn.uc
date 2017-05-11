@@ -10,6 +10,5 @@ defaultproperties
     GunClass=class'DH_Guns.DH_6PounderGunCannon'
     GunsightOverlay=texture'DH_VehicleOptics_tex.Artillery.17Pdr_sight_background'
     CannonScopeCenter=texture'DH_VehicleOptics_tex.Artillery.17pdr_sight_mover'
-    bShowRangeText=true
     RangeText="Yards"
 }

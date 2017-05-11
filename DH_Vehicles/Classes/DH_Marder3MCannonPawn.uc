@@ -19,7 +19,7 @@ defaultproperties
     DriveAnim="VSU76_com_idle_close"
     bHasAltFire=false
     GunsightOverlay=texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
-    OverlayCenterSize=0.555
+    GunsightSize=0.555
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell_reload'
 }

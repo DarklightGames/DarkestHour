@@ -19,7 +19,7 @@ defaultproperties
     DriveAnim="VSU76_com_idle_close"
     bManualTraverseOnly=true
     GunsightOverlay=texture'DH_VehicleOptics_tex.Allied.Stuart_sight_background'
-    OverlayCenterSize=0.542
+    GunsightSize=0.542
     DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Stuart_sight_destroyed'
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.StuartShell'
     AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.StuartShell_reload'

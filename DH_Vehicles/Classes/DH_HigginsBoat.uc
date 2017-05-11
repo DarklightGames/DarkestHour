@@ -37,22 +37,16 @@ simulated function PostNetBeginPlay()
     }
 }
 
-// Modified to handle binoculars overlay
+// Modified to handle binoculars overlay (same as in a vehicle weapon pawn)
 simulated function DrawHUD(Canvas C)
 {
     local PlayerController PC;
-    local float            SavedOpacity;
+    local float            SavedOpacity, ScreenRatio;
 
     PC = PlayerController(Controller);
 
     if (PC != none && !PC.bBehindView)
     {
-        // Draw vehicle, turret, ammo count, passenger list
-        if (ROHud(PC.myHUD) != none)
-        {
-            ROHud(PC.myHUD).DrawVehicleIcon(C, self);
-        }
-
         // Draw binoculars overlay
         if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
         {
@@ -60,22 +54,22 @@ simulated function DrawHUD(Canvas C)
             C.ColorModulate.W = 1.0;
             C.DrawColor.A = 255;
             C.Style = ERenderStyle.STY_Alpha;
+            ScreenRatio = float(C.SizeY) / float(C.SizeX);
+            C.SetPos(0.0, 0.0);
 
-            DrawBinocsOverlay(C);
+            C.DrawTile(BinocsOverlay, C.SizeX, C.SizeY,                         // screen drawing area (to fill screen)
+                0.0, (1.0 - ScreenRatio) * float(BinocsOverlay.VSize) / 2.0,    // position in texture to begin drawing tile (from left edge, with vertical position to suit screen aspect ratio)
+                BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio); // width & height of tile within texture
 
             C.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
         }
+
+        // Draw vehicle & passenger list
+        if (ROHud(PC.myHUD) != none)
+        {
+            ROHud(PC.myHUD).DrawVehicleIcon(C, self);
+        }
     }
-}
-
-// New function, same as tank cannon pawn
-simulated function DrawBinocsOverlay(Canvas C)
-{
-    local float ScreenRatio;
-
-    ScreenRatio = float(C.SizeY) / float(C.SizeX);
-    C.SetPos(0.0, 0.0);
-    C.DrawTile(BinocsOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * float(BinocsOverlay.VSize) / 2.0, BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio);
 }
 
 // Modified to avoid resetting position indexes, as we need to keep the ramp in its current up/down position

@@ -18,7 +18,7 @@ defaultproperties
     DriveAnim="VSU76_com_idle_close"
     bHasAltFire=false
     GunsightOverlay=texture'DH_VehicleOptics_tex.Allied.Jackson_sight_background'
-    OverlayCenterSize=0.895
+    GunsightSize=0.895
     DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Wolverine_sight_destroyed'
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.IS2shell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.IS2shell_reload'

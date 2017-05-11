@@ -14,7 +14,7 @@ defaultproperties
     DrivePos=(X=-25.0,Y=7.0,Z=-27.0)
     DriveAnim="crouch_idle_binoc"
     GunsightOverlay=texture'DH_Artillery_Tex.ATGun_Hud.57mmGun_sight_background'
-    OverlayCenterSize=0.542
+    GunsightSize=0.542
     BinocsOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.Panzer3shell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'

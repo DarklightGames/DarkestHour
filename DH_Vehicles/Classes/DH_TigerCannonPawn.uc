@@ -14,8 +14,8 @@ defaultproperties
     DriverPositions(3)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Tiger_anm.Tiger_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
     DriveAnim="VTiger_com_idle_close"
     CannonScopeCenter=texture'DH_VehicleOptics_tex.German.tiger_sight_graticule'
-    OverlayCenterSize=0.87
-    RangeRingScale=0.68
+    GunsightSize=0.87
+    RangeRingScale=0.534
     RangeRingRotator=TexRotator'DH_VehicleOptics_tex.German.tiger_sight_center'
     RangeRingRotationFactor=820
     DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.tiger_sight_destroyed'

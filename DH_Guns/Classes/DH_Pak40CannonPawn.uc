@@ -14,8 +14,7 @@ defaultproperties
     DrivePos=(X=-50.0,Y=1.0,Z=-37.0)
     DriveAnim="crouch_idlehold_bayo"
     GunsightOverlay=texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
-    OverlayCenterSize=0.57
-    bShowRangeText=true
+    GunsightSize=0.57
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell_reload'
 }

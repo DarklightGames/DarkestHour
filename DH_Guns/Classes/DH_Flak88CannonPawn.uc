@@ -14,10 +14,9 @@ defaultproperties
     DrivePos=(X=18.0,Y=-4.0,Z=-11.0)
     DriveAnim="VHalftrack_Rider6_idle"
     GunsightOverlay=texture'DH_VehicleOptics_tex.Artillery.Flak36_sight_background'
-    OverlayCenterSize=0.961
+    GunsightSize=0.961
     OverlayCorrectionX=-3
     RangePositionX=0.02
-    bShowRangeText=true
     AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.Tigershell'
     AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.Tigershell_reload'
 }

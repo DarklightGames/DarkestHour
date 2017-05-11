@@ -7,10 +7,10 @@ class DH_Sdkfz2341CannonPawn extends DHGermanCannonPawn;
 
 defaultproperties
 {
-    RangeRingScale=0.635
+    RangeRingScale=0.499
     RangeRingRotator=TexRotator'DH_VehicleOptics_tex.German.20mmFlak_sight_center'
     RangeRingRotationFactor=2048
-    OverlayCenterSize=0.73333
+    GunsightSize=0.73333
     UnbuttonedPositionIndex=2
     DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed'
     bManualTraverseOnly=true

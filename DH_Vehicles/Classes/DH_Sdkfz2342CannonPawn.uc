@@ -18,8 +18,8 @@ defaultproperties
     DriveAnim="stand_idlehip_binoc"
     bLockCameraDuringTransition=true
     CannonScopeCenter=texture'DH_VehicleOptics_tex.German.PZ3_sight_graticule'
-    OverlayCenterSize=0.83
-    RangeRingScale=0.635
+    GunsightSize=0.83
+    RangeRingScale=0.499
     RangeRingRotator=TexRotator'DH_VehicleOptics_tex.German.PZ3_Sight_Center'
     RangeRingRotationFactor=985
     DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.PZ3_sight_destroyed'

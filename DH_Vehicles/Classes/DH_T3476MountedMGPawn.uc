@@ -9,7 +9,7 @@ defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_T3476MountedMG'
     GunsightOverlay=texture'DH_VehicleOptics_tex.Common.MG_sight'
-    OverlayCenterSize=0.5
+    GunsightSize=0.5
     WeaponFOV=72.0
     CameraBone="MG_pivot"
     FPCamPos=(X=4.0,Y=0.0,Z=2.0)

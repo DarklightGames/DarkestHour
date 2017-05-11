@@ -314,21 +314,18 @@ simulated function DrawHUD(Canvas C)
         // Player is in a position where an overlay should be drawn
         if (DriverPositions[DriverPositionIndex].bDrawOverlays && (!IsInState('ViewTransition') || DriverPositions[PreviousPositionIndex].bDrawOverlays))
         {
+            // Draw periscope overlay
             if (HUDOverlay == none)
             {
-                // Draw periscope overlay
-                if (PeriscopeOverlay != none)
-                {
-                    // Save current HUD opacity & then set up for drawing overlays
-                    SavedOpacity = C.ColorModulate.W;
-                    C.ColorModulate.W = 1.0;
-                    C.DrawColor.A = 255;
-                    C.Style = ERenderStyle.STY_Alpha;
+                // Save current HUD opacity & then set up for drawing overlays
+                SavedOpacity = C.ColorModulate.W;
+                C.ColorModulate.W = 1.0;
+                C.DrawColor.A = 255;
+                C.Style = ERenderStyle.STY_Alpha;
 
-                    DrawPeriscopeOverlay(C);
+                DrawPeriscopeOverlay(C);
 
-                    C.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
-                }
+                C.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
             }
             // Draw any HUD overlay
             else if (!Level.IsSoftwareRendering())
@@ -352,9 +349,15 @@ simulated function DrawPeriscopeOverlay(Canvas C)
 {
     local float ScreenRatio;
 
-    ScreenRatio = float(C.SizeY) / float(C.SizeX);
-    C.SetPos(0.0, 0.0);
-    C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2.0, PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio);
+    if (PeriscopeOverlay != none)
+    {
+        ScreenRatio = float(C.SizeY) / float(C.SizeX);
+        C.SetPos(0.0, 0.0);
+
+        C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY,                            // screen drawing area (to fill screen)
+            0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2.0,       // position in texture to begin drawing tile (from left edge, with vertical position to suit screen aspect ratio)
+            PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio); // width & height of tile within texture
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////

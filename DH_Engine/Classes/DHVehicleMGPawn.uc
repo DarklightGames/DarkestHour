@@ -87,7 +87,7 @@ simulated function DrawHUD(Canvas C)
     local PlayerController PC;
     local vector           CameraLocation, GunOffset, x, y, z;
     local rotator          CameraRotation;
-    local float            SavedOpacity, ScreenRatio;
+    local float            SavedOpacity;
 
     PC = PlayerController(Controller);
 
@@ -96,13 +96,8 @@ simulated function DrawHUD(Canvas C)
         // Player is in a position where an overlay should be drawn
         if (!bMultiPosition || (DriverPositions[DriverPositionIndex].bDrawOverlays && (!IsInState('ViewTransition') || DriverPositions[LastPositionIndex].bDrawOverlays)))
         {
-            // Draw binoculars overlay
-            if (DriverPositionIndex == BinocPositionIndex && BinocsOverlay != none)
-            {
-                DrawBinocsOverlay(C);
-            }
-            // Draw any HUD overlay
-            else if (HUDOverlay != none)
+            // Draw any gun HUD overlay
+            if (HUDOverlay != none && DriverPositionIndex != BinocPositionIndex)
             {
                 if (!Level.IsSoftwareRendering())
                 {
@@ -127,8 +122,8 @@ simulated function DrawHUD(Canvas C)
                     }
                 }
             }
-            // Draw gunsight overlay
-            else if (GunsightOverlay != none)
+            // Draw any texture overlay
+            else
             {
                 // Save current HUD opacity & then set up for drawing overlays
                 SavedOpacity = C.ColorModulate.W;
@@ -136,11 +131,16 @@ simulated function DrawHUD(Canvas C)
                 C.DrawColor.A = 255;
                 C.Style = ERenderStyle.STY_Alpha;
 
-                ScreenRatio = float(C.SizeY) / float(C.SizeX);
-                C.SetPos(0.0, 0.0);
-
-                C.DrawTile(GunsightOverlay, C.SizeX, C.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
-                    OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0, OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
+                // Draw binoculars overlay
+                if (DriverPositionIndex == BinocPositionIndex)
+                {
+                    DrawBinocsOverlay(C);
+                }
+                // Draw gunsight overlay
+                else
+                {
+                    DrawGunsightOverlay(C);
+                }
 
                 C.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
             }
@@ -151,6 +151,25 @@ simulated function DrawHUD(Canvas C)
         {
             ROHud(PC.myHUD).DrawVehicleIcon(C, VehicleBase, self);
         }
+    }
+}
+
+// New function to draw a gunsight overlay
+// Basis is same as a cannon pawn (see notes there), but without the extra cannon stuff)
+simulated function DrawGunsightOverlay(Canvas C)
+{
+    local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
+
+    if (GunsightOverlay != none)
+    {
+        TextureSize = float(GunsightOverlay.USize);
+        TilePixelWidth = TextureSize / GunsightSize * 0.955;
+        TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX);
+        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
+        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
+        C.SetPos(0.0, 0.0);
+
+        C.DrawTile(GunsightOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
     }
 }
 
@@ -495,7 +514,7 @@ defaultproperties
     bDrawDriverInTP=false
     bZeroPCRotOnEntry=false // we're now calling MatchRotationToGunAim() on entering, so no point zeroing rotation
     CameraBone="mg_yaw"
-    OverlayCenterSize=1.0
+    GunsightSize=1.0
     FirstPersonGunShakeScale=1.0
     VehicleMGReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
     HudName="MG"

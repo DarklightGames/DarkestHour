@@ -16,7 +16,7 @@ defaultproperties
     DrivePos=(X=3.0,Y=2.0,Z=-17.0)
     DriveAnim="stand_idlehip_binoc"
     GunsightOverlay=texture'DH_VehicleOptics_tex.Allied.Sherman76mm_sight_background'
-    OverlayCenterSize=0.972
+    GunsightSize=0.972
     DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Wolverine_sight_destroyed'
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell'
     AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell_reload'

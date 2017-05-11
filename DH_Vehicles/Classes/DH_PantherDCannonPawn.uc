@@ -14,8 +14,8 @@ defaultproperties
     DriverPositions(3)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Panther_anm.Panther_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
     DriveAnim="VPanther_com_idle_close"
     CannonScopeCenter=texture'DH_VehicleOptics_tex.German.Panther_sight_graticule'
-    OverlayCenterSize=0.972
-    RangeRingScale=0.715
+    GunsightSize=0.972
+    RangeRingScale=0.562
     RangeRingRotator=TexRotator'DH_VehicleOptics_tex.German.Panther_sight_center'
     RangeRingRotationFactor=502
     DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.Panther_sight_destroyed'

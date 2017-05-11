@@ -20,15 +20,10 @@ var     texture     PeriscopeOverlay;            // overlay for commander's peri
 var     texture     AltAmmoReloadTexture;        // used to show coaxial MG reload progress on the HUD, like the cannon reload
 
 // Gunsight overlay
-var     texture     CannonScopeCenter;           // gunsight reticle overlay (really only for sights with moving range indicator, but some DH sights use as pretty pointless 2nd sight overlay)
-var     bool        bShowRangeText;              // show current range setting text
-var localized string    RangeText;               // metres or yards (can be localised for other languages)
-var     float       RangePositionX;              // adjusts positioning of range text
+var     texture     CannonScopeCenter;           // gunsight reticle overlay (really only for a moving range indicator, but many DH sights use a pretty pointless 2nd static overlay)
+var     float       RangePositionX;              // X & Y positioning of range text (0.0 to 1.0)
 var     float       RangePositionY;
-var     bool        bShowRangeRing;              // show range ring (used in German tank sights)
-var     TexRotator  RangeRingRotator;            // overlay for range ring (renamed from RO's ScopeCenterRotator)
-var     int         RangeRingRotationFactor;     // scales the rotation of the range ring, so it correctly aligns the range markings (renamed from RO's CenterRotationFactor)
-var     float       RangeRingScale;              // scale of the range ring (renamed from RO's ScopeCenterScale)
+var localized string    RangeText;               // metres or yards (can be localised for other languages)
 
 // Manual & powered turret movement
 var     bool        bManualTraverseOnly;
@@ -169,8 +164,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 simulated function DrawHUD(Canvas C)
 {
     local PlayerController PC;
-    local float            SavedOpacity, PosX, PosY, ScreenRatio, XL, YL, MapX, MapY;
-    local int              RotationFactor;
+    local float            SavedOpacity, PosX, PosY, XL, YL, MapX, MapY;
     local color            SavedColor, WhiteColor;
 
     PC = PlayerController(Controller);
@@ -188,10 +182,29 @@ simulated function DrawHUD(Canvas C)
                 C.DrawColor.A = 255;
                 C.Style = ERenderStyle.STY_Alpha;
 
-                // Draw gunsights
+                // Player on the gunsight
                 if (DriverPositionIndex < GunsightPositions)
                 {
-                    // Debug - draw cross on the center of the screen
+                    // Draw the gunsight overlay
+                    DrawGunsightOverlay(C);
+
+                    // Draw range setting in text, if cannon has range settings
+                    if (DHVehicleCannon(Gun) != none && DHVehicleCannon(Gun).RangeSettings.Length > 0)
+                    {
+                        C.Style = ERenderStyle.STY_Normal;
+                        SavedColor = C.DrawColor;
+                        WhiteColor = class'Canvas'.static.MakeColor(255, 255, 255, 175);
+                        C.DrawColor = WhiteColor;
+                        MapX = RangePositionX * C.ClipX;
+                        MapY = RangePositionY * C.ClipY;
+                        C.SetPos(MapX, MapY);
+                        C.Font = class'ROHUD'.static.GetSmallMenuFont(C);
+                        C.StrLen(Gun.GetRange() @ RangeText, XL, YL);
+                        C.DrawTextJustified(Gun.GetRange() @ RangeText, 2, MapX, MapY, MapX + XL, MapY + YL);
+                        C.DrawColor = SavedColor;
+                    }
+
+                    // Debug - draw cross on center of screen to check sight overlay is properly centred
                     if (bDebugSights)
                     {
                         PosX = C.SizeX / 2.0;
@@ -208,68 +221,6 @@ simulated function DrawHUD(Canvas C)
                         C.SetPos(PosX + 3.0, 0.0);
                         C.DrawHorizontal(PosY - 1.0, PosX - 3.0);
                         C.DrawHorizontal(PosY, PosX - 3.0);
-                    }
-
-                    // Draw the gunsight overlay
-                    if (GunsightOverlay != none)
-                    {
-                        ScreenRatio = float(C.SizeY) / float(C.SizeX);
-                        C.SetPos(0.0, 0.0);
-
-                        C.DrawTile(GunsightOverlay, C.SizeX, C.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
-                            OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0, OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
-                    }
-
-                    if (Gun != none)
-                    {
-                        // Draw the gunsight aiming reticle
-                        if (CannonScopeCenter != none && Gun.ProjectileClass != none)
-                        {
-                            // Vertical adjustment of reticle position for cannons with optical (not mechanically linked) range setting, e.g. some Soviet cannons
-                            C.SetPos(0.0, Gun.ProjectileClass.static.GetYAdjustForRange(Gun.GetRange()) * C.ClipY);
-
-                            C.DrawTile(CannonScopeCenter, C.SizeX, C.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
-                                OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0, OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
-                        }
-
-                        // Draw any range ring
-                        if (bShowRangeRing)
-                        {
-                            PosX = (float(C.SizeX) - float(C.SizeY) * 4.0 / OverlayCenterScale / 3.0) / 2.0;
-                            PosY = (float(C.SizeY) - float(C.SizeY) * 4.0 / OverlayCenterScale / 3.0) / 2.0;
-
-                            C.SetPos(OverlayCorrectionX + PosX + (C.SizeY * (1.0 - RangeRingScale) * 4.0 / OverlayCenterScale / 3.0 / 2.0),
-                                OverlayCorrectionY + C.SizeY * (1.0 - RangeRingScale * 4.0 / OverlayCenterScale / 3.0) / 2.0);
-
-                            if (Gun.CurrentRangeIndex < 20)
-                            {
-                               RotationFactor = Gun.CurrentRangeIndex * RangeRingRotationFactor;
-                            }
-                            else
-                            {
-                               RotationFactor = (RangeRingRotationFactor * 20) + (((Gun.CurrentRangeIndex - 20) * 2) * RangeRingRotationFactor);
-                            }
-
-                            RangeRingRotator.Rotation.Yaw = RotationFactor;
-
-                            C.DrawTileScaled(RangeRingRotator, C.SizeY / 512.0 * RangeRingScale * 4.0 / OverlayCenterScale / 3.0, C.SizeY / 512.0 * RangeRingScale * 4.0 / OverlayCenterScale / 3.0);
-                        }
-
-                        // Draw any range setting
-                        if (bShowRangeText)
-                        {
-                            C.Style = ERenderStyle.STY_Normal;
-                            SavedColor = C.DrawColor;
-                            WhiteColor = class'Canvas'.static.MakeColor(255, 255, 255, 175);
-                            C.DrawColor = WhiteColor;
-                            MapX = RangePositionX * C.ClipX;
-                            MapY = RangePositionY * C.ClipY;
-                            C.SetPos(MapX, MapY);
-                            C.Font = class'ROHUD'.static.GetSmallMenuFont(C);
-                            C.StrLen(Gun.GetRange() @ RangeText, XL, YL);
-                            C.DrawTextJustified(Gun.GetRange() @ RangeText, 2, MapX, MapY, MapX + XL, MapY + YL);
-                            C.DrawColor = SavedColor;
-                        }
                     }
                 }
                 // Draw periscope overlay
@@ -302,16 +253,54 @@ simulated function DrawHUD(Canvas C)
     }
 }
 
+// New function to draw the gunsight overlay plus any additional overlay for aiming reticle - using a different drawing method to RO
+// The setting for GunsightSize is used to calculate how much of the gunsight texture to draw, with 1.0 meaning it's expanded to fill the screen width
+// The DrawTile arguments are manipulated so whole screen gets drawn over, without need for separately drawing black rectangles to fill the edges, as in RO
+// This reduces drawing the gunsight overlay to one draw, & tests show this is much faster
+simulated function DrawGunsightOverlay(Canvas C)
+{
+    local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
+
+    if (GunsightOverlay != none)
+    {
+        // The drawn portion of the gunsight texture is 'zoomed' in or out to suit the desired scaling
+        // This is inverse to the specified GunsightSize, i.e. the drawn portion is reduced to 'zoom in', so sight is drawn bigger on screen
+        // The draw start position (in the texture, not the screen position) is often negative, meaning it starts drawing from outside of the texture edges
+        // Draw areas outside the texture edges are drawn black, so this handily blacks out all the edges around the scaled gunsight, in 1 draw operation
+        TextureSize = float(GunsightOverlay.USize);
+        TilePixelWidth = TextureSize / GunsightSize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
+        TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
+        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
+        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
+
+        // Draw the gunsight overlay
+        C.SetPos(0.0, 0.0);
+
+        C.DrawTile(GunsightOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
+
+        // Draw any gunsight aiming reticle
+        if (CannonScopeCenter != none)
+        {
+            C.SetPos(0.0, 0.0);
+            C.DrawTile(CannonScopeCenter, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
+        }
+    }
+}
+
 // New function to draw any textured commander's periscope overlay
 simulated function DrawPeriscopeOverlay(Canvas C)
 {
     local float ScreenRatio;
 
-    ScreenRatio = float(C.SizeY) / float(C.SizeX);
-    C.SetPos(0.0, 0.0);
+    if (PeriscopeOverlay != none)
+    {
+        ScreenRatio = float(C.SizeY) / float(C.SizeX);
+        C.SetPos(0.0, 0.0);
 
-    C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2.0,
-        PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio);
+        C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY,                            // screen drawing area (to fill screen)
+            0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2.0,       // position in texture to begin drawing tile (from left edge, with vertical position to suit screen aspect ratio)
+            PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio); // width & height of tile within texture
+    }
 }
 
 // Modified so player faces forwards if he's on the gunsight when switching to behind view
@@ -644,11 +633,6 @@ static function StaticPrecache(LevelInfo L)
         L.AddPrecacheMaterial(default.CannonScopeCenter);
     }
 
-    if (default.RangeRingRotator != none)
-    {
-        L.AddPrecacheMaterial(default.RangeRingRotator);
-    }
-
     if (default.DestroyedGunsightOverlay != none)
     {
         L.AddPrecacheMaterial(default.DestroyedGunsightOverlay);
@@ -681,7 +665,6 @@ simulated function UpdatePrecacheMaterials()
     super.UpdatePrecacheMaterials();
 
     Level.AddPrecacheMaterial(CannonScopeCenter);
-    Level.AddPrecacheMaterial(RangeRingRotator);
     Level.AddPrecacheMaterial(DestroyedGunsightOverlay);
     Level.AddPrecacheMaterial(PeriscopeOverlay);
     Level.AddPrecacheMaterial(AmmoShellTexture);
@@ -954,7 +937,7 @@ defaultproperties
     HudName="Cmdr"
 
     // Gunsight overlay
-    OverlayCenterSize=0.9
+    GunsightSize=0.9
     RangeText="Meters"
     RangePositionX=0.16
     RangePositionY=0.2

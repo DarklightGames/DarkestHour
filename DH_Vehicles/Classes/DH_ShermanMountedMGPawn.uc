@@ -9,7 +9,7 @@ defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_ShermanMountedMG'
     GunsightOverlay=texture'DH_VehicleOptics_tex.Common.MG_sight'
-    OverlayCenterSize=0.7
+    GunsightSize=0.7
     WeaponFOV=72.0
     FPCamPos=(X=-0.5,Y=0.0,Z=3.5)
     PitchUpLimit=3000

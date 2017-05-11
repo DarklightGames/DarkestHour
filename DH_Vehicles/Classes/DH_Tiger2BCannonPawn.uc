@@ -19,8 +19,8 @@ defaultproperties
     DrivePos=(X=1.0,Y=6.0,Z=6.0)
     DriveAnim="VPanther_com_idle_close"
     CannonScopeCenter=texture'DH_VehicleOptics_tex.German.tiger_sight_graticule'
-    OverlayCenterSize=0.87
-    RangeRingScale=0.715
+    GunsightSize=0.87
+    RangeRingScale=0.562
     RangeRingRotator=TexRotator'DH_VehicleOptics_tex.German.tiger2B_sight_center'
     RangeRingRotationFactor=502
     DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.tiger_sight_destroyed'

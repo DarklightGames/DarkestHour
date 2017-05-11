@@ -18,7 +18,7 @@ defaultproperties
     DriveAnim="stand_idlehip_binoc"
     bHasAltFire=false
     GunsightOverlay=texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
-    OverlayCenterSize=0.83333
+    GunsightSize=0.83333
     RangePositionX=0.02
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.JagdTiger_shell'
     AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.JagdTiger_shell_reload'
