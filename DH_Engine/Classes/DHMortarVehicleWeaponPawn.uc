@@ -93,13 +93,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
         WeaponAimRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
         WeaponAimRot.Roll = Gun.Rotation.Roll;
 
-        // Custom aim update
-        if (PC != none)
-        {
-            PC.WeaponBufferRotation.Yaw = WeaponAimRot.Yaw;
-            PC.WeaponBufferRotation.Pitch = WeaponAimRot.Pitch;
-        }
-
         // Set camera location & rotation
         CameraLocation = Gun.GetBoneCoords(CameraBone).Origin + (FPCamPos >> WeaponAimRot);
         CameraRotation = rotator(Gun.GetBoneCoords(CameraBone).XAxis);

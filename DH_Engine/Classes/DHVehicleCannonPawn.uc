@@ -133,13 +133,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
         }
     }
 
-    // Custom aim update
-    if (bOnGunsight)
-    {
-        PC.WeaponBufferRotation.Yaw = CameraRotation.Yaw;
-        PC.WeaponBufferRotation.Pitch = CameraRotation.Pitch;
-    }
-
     // Adjust camera location for any offset positioning (FPCamPos is set from any ViewLocation in DriverPositions)
     if (FPCamPos != vect(0.0, 0.0, 0.0))
     {

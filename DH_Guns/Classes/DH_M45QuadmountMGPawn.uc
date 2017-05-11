@@ -58,10 +58,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
         return;
     }
 
-    // Get camera rotation, based on rotation of weapon's aim, & update custom aim
+    // Get camera rotation from weapon's aimed direction
     CameraRotation = Gun.GetBoneRotation(CameraBone);
-    PC.WeaponBufferRotation.Yaw = CameraRotation.Yaw;
-    PC.WeaponBufferRotation.Pitch = CameraRotation.Pitch;
 
     // Player has his head raised above the reflector sight & can look around, so factor in the PlayerController's relative rotation
     if (DriverPositionIndex > 0 || IsInState('ViewTransition'))

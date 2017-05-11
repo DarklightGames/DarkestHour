@@ -52,13 +52,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
     CameraRotation = Normalize(QuatToRotator(NonRelativeQuat));
 
-    // Custom aim update
-    if (bOnTheGun)
-    {
-        PC.WeaponBufferRotation.Yaw = CameraRotation.Yaw;
-        PC.WeaponBufferRotation.Pitch = CameraRotation.Pitch;
-    }
-
     // Get camera location - use GunsightCameraBone if there is one & player is one the gun, otherwise use normal CameraBone
     if (GunsightCameraBone != '' && bOnTheGun)
     {
