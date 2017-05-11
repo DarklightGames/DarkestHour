@@ -281,6 +281,7 @@ function float ModifyThreat(float Current, Pawn Threat)
 // Functions emptied out as a passenger pawn has no VehicleWeapon:
 function BeginPlay(); // the Super only tries to spawn the GunClass, which is none
 simulated function InitializeVehicleWeapon();
+simulated function InitializeVehicleAndWeapon();
 function Fire(optional float F); // prevents unnecessary replicated VehicleFire() function calls to server
 function VehicleFire(bool bWasAltFire);
 event FiredPendingPrimary();
