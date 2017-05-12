@@ -8,6 +8,8 @@ class DHConstruction_PlatoonHQ extends DHConstruction;
 var DHSpawnPointBase    SpawnPoint;
 var ROSoundAttachment   RainSoundAttachment;
 
+var int                 FlagSkinIndex;
+
 var sound               RainSound;
 
 simulated function PostBeginPlay()
@@ -159,6 +161,59 @@ function static StaticMesh GetProxyStaticMesh(DHConstructionProxy CP)
     }
 }
 
+function StaticMesh GetTatteredStaticMesh()
+{
+    switch (GetTeamIndex())
+    {
+        case AXIS_TEAM_INDEX:
+            return StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent_light_destro';
+        case ALLIES_TEAM_INDEX:
+            return StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent_light_destro';
+    }
+}
+
+function OnTeamIndexChanged()
+{
+    local Material FlagMaterial;
+
+    super.OnTeamIndexChanged();
+
+    if (FlagSkinIndex != -1)
+    {
+        FlagMaterial = GetFlagMaterial();
+
+        if (FlagMaterial != none)
+        {
+            Skins[FlagSkinIndex] = FlagMaterial;
+        }
+    }
+}
+
+// TODO: fill this in with the correct flag materials
+function Material GetFlagMaterial()
+{
+    switch (GetTeamIndex())
+    {
+    case AXIS_TEAM_INDEX:
+        break;
+    case ALLIES_TEAM_INDEX:
+        switch (LevelInfo.AlliedNation)
+        {
+        case NATION_USA:
+            break;
+        case NATION_Canada:
+            break;
+        case NATION_Britain:
+            break;
+        case NATION_USSR:
+            break;
+        }
+        break;
+    }
+
+    return none;
+}
+
 defaultproperties
 {
     MenuName="Platoon HQ"
@@ -184,8 +239,11 @@ defaultproperties
 
     // Health
     HealthMax=250
+    TatteredHealthThreshold=125
 
     SupplyCost=750
 
     RainSound=Sound'Amb_Weather01.Rain.Krasnyi_Rain_Inside_Heavy'
+
+    FlagSkinIndex=-1
 }

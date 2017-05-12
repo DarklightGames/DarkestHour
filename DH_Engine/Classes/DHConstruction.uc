@@ -98,6 +98,9 @@ var int                         MinDamagetoHurt;    // The minimum amount of dam
 var array<DamageTypeScale>      DamageTypeScales;
 var array<class<DamageType> >   HarmfulDamageTypes;
 
+// Tattered
+var int                         TatteredHealthThreshold;    // The health below which the construction is considered "tattered". -1 for no tattering
+
 // Health
 var private int     Health;
 var     int         HealthMax;
@@ -134,9 +137,11 @@ function OnConstructed();
 function OnStageIndexChanged(int OldIndex);
 function OnTeamIndexChanged();
 function OnProgressChanged();
+function OnHealthChanged();
 
 simulated function bool IsBroken() { return false; }
 simulated function bool IsConstructed() { return false; }
+simulated function bool IsTattered() { return false; }
 simulated function bool CanBeBuilt() { return false; }
 
 final simulated function int GetTeamIndex()
@@ -350,6 +355,18 @@ simulated state Constructed
         }
     }
 
+    function OnHealthChanged()
+    {
+        if (TatteredHealthThreshold != -1)
+        {
+            if (Health <= TatteredHealthThreshold)
+            {
+                SetStaticMesh(GetTatteredStaticMesh());
+                NetUpdateTime = Level.TimeSeconds - 1.0;
+            }
+        }
+    }
+
 Begin:
     if (Role == ROLE_Authority)
     {
@@ -424,6 +441,8 @@ function UpdateAppearance()
         KSetBlockKarma(true);
     }
 }
+
+function StaticMesh GetTatteredStaticMesh();
 
 function StaticMesh GetConstructedStaticMesh()
 {
@@ -583,6 +602,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Mo
         if (DamageType == TearDownDamageType)
         {
             TakeTearDownDamage();
+            return;
         }
     }
 
@@ -597,6 +617,8 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Mo
     {
         Health -= GetScaledDamage(DamageType, Damage);
     }
+
+    OnHealthChanged();
 
     if (Health <= 0)
     {
@@ -686,11 +708,11 @@ defaultproperties
     StageIndex=-1
     Progress=0
     ProgressMax=8
-
     TearDownProgressMax=4
 
     // Damage
     HarmfulDamageTypes(0)=class'ROArtilleryDamType'
 //    HarmfulDamageTypes(1)=class'DH_SatchelDamType'
     HarmfulDamageTypes(2)=class'ROTankShellExplosionDamage'
+    TatteredHealthThreshold=-1
 }
