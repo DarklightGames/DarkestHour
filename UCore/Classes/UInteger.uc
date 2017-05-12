@@ -46,7 +46,7 @@ static final function int FromHex(string S)
     local int i, j, R;
     local int Factor;
 
-    // Possible remove the '#' character
+    // Remove the leading '#' character, if it exists
     if (InStr(S, "#") == 0)
     {
         S = Mid(S, 1);
