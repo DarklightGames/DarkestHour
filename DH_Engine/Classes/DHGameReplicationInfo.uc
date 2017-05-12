@@ -95,6 +95,8 @@ var private array<string>   ConstructionClassNames;
 var class<DHConstruction>   ConstructionClasses[CONSTRUCTION_CLASSES_MAX];
 var DHConstructionManager   ConstructionManager;
 
+var bool                bAreConstructionsEnabled;
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -134,7 +136,8 @@ replication
         SpawningEnableTime,
         bIsInSetupPhase,
         bRoundIsOver,
-        ConstructionClasses;
+        ConstructionClasses,
+        bAreConstructionsEnabled;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))
         AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex;
@@ -145,9 +148,10 @@ replication
 // Another problem is a big splash effect was being played for every ejected bullet shell case that hit water, looking totally wrong for such a small, relatively slow object
 simulated function PostBeginPlay()
 {
-    local WaterVolume      WV;
-    local FluidSurfaceInfo FSI;
-    local int              i;
+    local WaterVolume       WV;
+    local FluidSurfaceInfo  FSI;
+    local int               i;
+    local DH_LevelInfo      LI;
 
     super.PostBeginPlay();
 
@@ -174,6 +178,12 @@ simulated function PostBeginPlay()
         for (i = 0; i < ConstructionClassNames.Length; ++i)
         {
             AddConstructionClass(class<DHConstruction>(DynamicLoadObject(ConstructionClassNames[i], class'class')));
+        }
+
+        foreach AllActors(class'DH_LevelInfo', LI)
+        {
+            bAreConstructionsEnabled = LI.bAreConstructionsEnabled;
+            break;
         }
     }
 }

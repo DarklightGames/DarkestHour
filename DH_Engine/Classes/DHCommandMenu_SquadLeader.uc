@@ -72,17 +72,25 @@ function GetOptionText(int OptionIndex, out string ActionText, out string Subjec
 function bool IsOptionDisabled(int OptionIndex)
 {
     local DHPlayer PC;
+    local DHGameReplicationInfo GRI;
 
     PC = DHPlayer(Interaction.ViewportOwner.Actor);
+
+    if (PC == none)
+    {
+        return true;
+    }
+
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
 
     switch (OptionIndex)
     {
     case 1: // Rally Point
-        return PC == none || DHPawn(Pc.Pawn) == none || !PC.GetLevelInfo().bAreRallyPointsEnabled;
+        return DHPawn(PC.Pawn) == none || PC.SquadReplicationInfo == none || !PC.SquadReplicationInfo.bAreRallyPointsEnabled;
     case 2: // Construction
-        return PC == none || DHPawn(PC.Pawn) == none || !PC.GetLevelInfo().bAreConstructionsEnabled;
+        return DHPawn(PC.Pawn) == none || GRI == none || !GRI.bAreConstructionsEnabled;
     case 4:
-        return PC == none || DHPawn(MenuObject) == none || DHPawn(MenuObject).Health <= 0 || PC.GetTeamNum() != DHPawn(MenuObject).GetTeamNum();
+        return DHPawn(MenuObject) == none || DHPawn(MenuObject).Health <= 0 || PC.GetTeamNum() != DHPawn(MenuObject).GetTeamNum();
     default:
         return false;
     }

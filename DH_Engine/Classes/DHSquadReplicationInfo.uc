@@ -77,9 +77,10 @@ var globalconfig private int        AlliesSquadSize;
 
 var class<LocalMessage>             SquadMessageClass;
 
-var TreeMap_Object_float            InvitationExpirations;
+var TreeMap_string_int              InvitationExpirations;
 
 var int                             NextRallyPointInterval;
+var bool                            bAreRallyPointsEnabled;
 
 replication
 {
@@ -90,20 +91,29 @@ replication
         AxisMembers, AxisNames, AxisLocked,
         AlliesMembers, AlliesNames, AlliesLocked,
         AxisOrderTypes, AxisOrderLocations,
-        AlliesOrderTypes, AlliesOrderLocations;
+        AlliesOrderTypes, AlliesOrderLocations,
+        bAreRallyPointsEnabled;
 }
 
 function PostBeginPlay()
 {
+    local DH_LevelInfo LI;
+
     super.PostBeginPlay();
 
     if (Role == ROLE_Authority)
     {
         // TODO: make sure invitations can't be sent so damned frequently!
-        InvitationExpirations = new class'TreeMap_Object_float';
+        InvitationExpirations = new class'TreeMap_string_int';
 
         AxisSquadSize = Clamp(AxisSquadSize, SQUAD_SIZE_MIN, SQUAD_SIZE_MAX);
         AlliesSquadSize = Clamp(AlliesSquadSize, SQUAD_SIZE_MIN, SQUAD_SIZE_MAX);
+
+        foreach AllActors(class'DH_LevelInfo', LI)
+        {
+            bAreRallyPointsEnabled = LI.bAreRallyPointsEnabled;
+            break;
+        }
     }
 }
 
@@ -330,8 +340,6 @@ function int CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
 
     if (PRI.SquadIndex != -1)
     {
-        PC.ClientCreateSquadResult(SE_AlreadyInSquad);
-
         return -1;
     }
 
@@ -355,8 +363,6 @@ function int CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
             // "You have created a squad."
             PC.ReceiveLocalizedMessage(SquadMessageClass, 43);
 
-            PC.ClientCreateSquadResult(SE_None);
-
             // Unlock the squad.
             SetSquadLockedInternal(TeamIndex, i, false);
 
@@ -367,8 +373,6 @@ function int CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
             return i;
         }
     }
-
-    PC.ClientCreateSquadResult(SE_TooManySquads);
 
     return -1;
 }
@@ -394,26 +398,21 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
     if (!IsSquadLeader(PRI, TeamIndex, SquadIndex))
     {
         // Player is not a squad leader.
-        PC.ClientChangeSquadLeaderResult(SE_NotSquadLeader);
         return false;
     }
 
     if (!class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, NewSquadLeader))
     {
-        PC.ClientChangeSquadLeaderResult(SE_InvalidArgument);
         return false;
     }
 
     if (!SwapSquadMembers(PRI, NewSquadLeader))
     {
-        PC.ClientChangeSquadLeaderResult(SE_InvalidArgument);
         return false;
     }
 
     // "You are no longer the squad leader"
     PC.ReceiveLocalizedMessage(SquadMessageClass, 33);
-
-    PC.ClientChangeSquadLeaderResult(SE_None);
 
     OtherPC = DHPlayer(NewSquadLeader.Owner);
 
@@ -459,22 +458,11 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
 
     if (PRI.SquadIndex == -1)
     {
-        if (PC != none)
-        {
-            PC.ClientLeaveSquadResult(SE_NotInSquad);
-        }
-
         return false;
     }
 
     if (GetMember(TeamIndex, PRI.SquadIndex, PRI.SquadMemberIndex) != PRI)
     {
-        if (PC != none)
-        {
-            // Invalid state (should never happen)
-            PC.ClientLeaveSquadResult(SE_InvalidState);
-        }
-
         return false;
     }
 
@@ -537,11 +525,6 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
 
     PRI.SquadIndex = -1;
     PRI.SquadMemberIndex = -1;
-
-    if (PC != none)
-    {
-        PC.ClientLeaveSquadResult(SE_None);
-    }
 
     return true;
 }
@@ -667,21 +650,11 @@ function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadInd
 
     if (!IsSquadActive(TeamIndex, SquadIndex) || IsInSquad(PRI, TeamIndex, SquadIndex))
     {
-        if (PC != none)
-        {
-            PC.ClientJoinSquadResult(SE_BadSquad);
-        }
-
         return -1;
     }
 
     if (!bWasInvited && IsSquadLocked(TeamIndex, SquadIndex))
     {
-        if (PC != none)
-        {
-            PC.ClientJoinSquadResult(SE_Locked);
-        }
-
         return -1;
     }
 
@@ -713,8 +686,6 @@ function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadInd
                 VRI.JoinSquadChannel(PRI, TeamIndex, SquadIndex);
                 PC.Speak("SQUAD");
             }
-
-            PC.ClientJoinSquadResult(SE_None);
         }
     }
 }
@@ -1314,7 +1285,7 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
     local DHRestrictionVolume RV;
     local float D, ClosestBlockingRallyPointDistance;
 
-    if (PC == none)
+    if (PC == none || !bAreRallyPointsEnabled)
     {
         return none;
     }

@@ -4462,22 +4462,6 @@ simulated function ClientSquadInvite(string SenderName, string SquadName, int Te
     }
 }
 
-simulated function ClientJoinSquadResult(DHSquadReplicationInfo.ESquadError Error)
-{
-}
-
-simulated function ClientLeaveSquadResult(DHSquadReplicationInfo.ESquadError Error)
-{
-}
-
-simulated function ClientChangeSquadLeaderResult(DHSquadReplicationInfo.ESquadError Error)
-{
-}
-
-simulated function ClientCreateSquadResult(DHSquadReplicationInfo.ESquadError Error)
-{
-}
-
 exec function Speak(string ChannelTitle)
 {
     local VoiceChatRoom VCR;
