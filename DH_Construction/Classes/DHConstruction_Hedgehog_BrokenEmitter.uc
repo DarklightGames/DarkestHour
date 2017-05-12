@@ -3,13 +3,13 @@
 // Darklight Games (c) 2008-2016
 //==============================================================================
 
-class DHConstruction_Sandbags_BrokenEmitter extends Emitter;
+class DHConstruction_Hedgehog_BrokenEmitter extends Emitter;
 
 defaultproperties
 {
     Begin Object Class=MeshEmitter Name=MeshEmitter0
-        StaticMesh=StaticMesh'DH_Construction_stc.Sandbags.sandbags_single_01'
-        UseCollision=true
+        StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.hedgehog_01_destro_element'
+        UseCollision=false
         RespawnDeadParticles=false
         SpinParticles=true
         DampRotation=true
@@ -19,7 +19,7 @@ defaultproperties
         MaxCollisions=(Max=2.0)
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.0,Color=(B=255,G=255,R=255,A=255))
-        MaxParticles=16
+        MaxParticles=3
         Name="MeshEmitter0"
         SpinsPerSecondRange=(X=(Min=-1.0,Max=1.0),Y=(Min=-1.0,Max=1.0),Z=(Min=-1.0,Max=1.0))
         StartSpinRange=(X=(Min=-1.0,Max=1.0),Y=(Min=-1.0,Max=1.0),Z=(Min=-1.0,Max=1.0))
