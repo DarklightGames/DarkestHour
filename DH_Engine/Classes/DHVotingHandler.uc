@@ -99,6 +99,8 @@ function AddMap(string MapName, string Mutators, string GameOptions)
         }
     }
 
+    Log("What is this map's name?" @ MapName);
+
     MapInfo = History.GetMapHistory(MapName);
 
     MapList.Length = MapCount + 1;

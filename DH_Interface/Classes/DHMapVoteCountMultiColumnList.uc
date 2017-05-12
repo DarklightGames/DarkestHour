@@ -63,7 +63,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
     CalcIndex = VRI.MapVoteCount[SortData[i].SortItem].MapIndex;
 
     // Set the MapObject from DHVotingReplicationInfo
-    if (CalcIndex > 0 && CalcIndex < DHMVRI.MapListObjects.Length)
+    if (CalcIndex >= 0 && CalcIndex < DHMVRI.MapListObjects.Length)
     {
         MapObject = DHMVRI.MapListObjects[CalcIndex];
     }

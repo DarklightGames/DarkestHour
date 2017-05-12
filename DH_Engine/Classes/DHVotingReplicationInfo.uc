@@ -6,7 +6,6 @@
 class DHVotingReplicationInfo extends VotingReplicationInfo;
 
 var array<JSONObject>               MapListObjects;
-
 var TreeMap_string_int              MapNameIndices;
 
 simulated function PostBeginPlay()
@@ -31,26 +30,23 @@ simulated function int GetMapIndex(string MapName)
 // Once the client has received the map info, have them parse the string into JSON object and save into array
 simulated function ReceiveMapInfo(VotingHandler.MapVoteMapList MapInfo)
 {
-    local int i;
+    local int i, m;
 
-    MapList[MapList.Length] = MapInfo;
+    m = MapList.Length;
 
-    if (MapNameIndices == none)
-    {
-        Log("Oh no! we don't have any beer here");
-    }
-
-    MapNameIndices.Put(MapInfo.MapName, MapList.Length);
-
+    // Parse and assign the MapListObjects if the string is parseable
     if ((new class'JSONParser').ParseObject(MapInfo.MapName) != none)
     {
         i = MapListObjects.Length;
         MapListObjects[i] = (new class'JSONParser').ParseObject(MapInfo.MapName);
+
+        // Update the map info
         MapInfo.MapName = MapListObjects[i].Get("MapName").AsString();
-        Log("Adding this map to MapListObjects:" @ MapInfo.MapName);
     }
 
-    Log("MapNames:" @ MapInfo.MapName);
+    // Update the MapList and assign index in MapNameIndices
+    MapList[m] = MapInfo;
+    MapNameIndices.Put(MapInfo.MapName, m);
 
     DebugLog("___Receiving - " $ MapInfo.MapName);
     ReplicationReply();
