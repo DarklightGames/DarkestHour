@@ -48,7 +48,7 @@ function Setup()
             ++j;
         }
 
-        if (ConstructionClasses.Length - i > 1)
+        if (ConstructionClasses.Length - i >= 1)
         {
             // More options are available, so let's make a submenu option.
             Options[j].OptionalObject = class'UInteger'.static.Create(i);
@@ -87,18 +87,17 @@ function OnSelect(int OptionIndex, vector Location)
 function bool IsOptionDisabled(int OptionIndex)
 {
     local class<DHConstruction> C;
-    local DHConstruction.EConstructionError Error;
+
+    if (Options[OptionIndex].OptionalObject == none)
+    {
+        return true;
+    }
 
     C = class<DHConstruction>(Options[OptionIndex].OptionalObject);
 
     if (C != none)
     {
-        Error = C.static.GetPlayerError(DHPlayer(Interaction.ViewportOwner.Actor));
-
-        if (Error != ERROR_None)
-        {
-            return true;
-        }
+        return C.static.GetPlayerError(DHPlayer(Interaction.ViewportOwner.Actor)) != ERROR_None;
     }
 
     return false;
