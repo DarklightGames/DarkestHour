@@ -4404,13 +4404,13 @@ function Logout(Controller Exiting)
 function int GetNumObjectives()
 {
     local int i;
-    local int count;
+    local int Count;
 
     for (i = 0; i < arraycount(DHObjectives); ++i)
     {
         if (DHObjectives[i] != none)
         {
-            ++count;
+            ++Count;
         }
     }
 
@@ -4420,8 +4420,6 @@ function int GetNumObjectives()
 function BroadcastSquad(Controller Sender, coerce string Msg, optional name Type)
 {
     local DHBroadcastHandler BH;
-
-    Log("BroadcastSquad" @ Sender @ Msg @ Type);
 
     BH = DHBroadcastHandler(BroadcastHandler);
 
