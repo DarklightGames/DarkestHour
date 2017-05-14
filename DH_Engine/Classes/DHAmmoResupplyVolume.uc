@@ -20,21 +20,22 @@ enum EResupplyType
     RT_Mortars
 };
 
-var()   EOwningTeam     Team;            //Team this volume resupplies
-var()   bool            bUsesSpawnAreas; //Activated/Deactivated based on a spawn area associated with a tag
-var()   EResupplyType   ResupplyType;    //Who this volume will resupply
+var()   EOwningTeam     Team;                    // team this volume resupplies
+var()   bool            bUsesSpawnAreas;         // is activated/deactivated based on a spawn area associated with a tag
+var()   EResupplyType   ResupplyType;            // who this volume will resupply
 
-var     float           UpdateTime;      //How often this thing needs to do it's business
-var     bool            bActive;         // Whether this ammo resupply volume is active
+var     float           UpdateTime;              // how often this thing needs to do it's business
+var     bool            bActive;                 // whether this ammo resupply volume is active
+var     bool            bControlledBySpawnPoint; // flags that this resupply is activated or deactivated by a spawn point, based on whether that spawn is active (set by SP)
 
+// Modified so doesn't activate if controlled by a DH spawn point, as well as if linked to an RO spawn area
 function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    // Force UpdateTime to be default (no overriding it in the editor)
-    UpdateTime = default.UpdateTime;
+    UpdateTime = default.UpdateTime; // force UpdateTime to be default (no overriding it in the editor)
 
-    if (!bUsesSpawnAreas)
+    if (!bUsesSpawnAreas && !bControlledBySpawnPoint)
     {
         bActive = true;
     }
@@ -42,6 +43,15 @@ function PostBeginPlay()
     if (Role == ROLE_Authority)
     {
         SetTimer(1.0, true);
+    }
+}
+
+// Modified so doesn't activate if controlled by a DH spawn point, as well as if linked to an RO spawn area
+function Reset()
+{
+    if (!bUsesSpawnAreas && !bControlledBySpawnPoint)
+    {
+        bActive = true;
     }
 }
 
@@ -197,14 +207,6 @@ event UnTouch(Actor Other)
     if (V != none)
     {
         V.LeftResupply();
-    }
-}
-
-function Reset()
-{
-    if (!bUsesSpawnAreas)
-    {
-        bActive = true;
     }
 }
 

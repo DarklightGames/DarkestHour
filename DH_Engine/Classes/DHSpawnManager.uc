@@ -477,9 +477,7 @@ private function GetSpawnPointIndicesByTag(name SpawnPointTag, out array<byte> S
 
 private function SetSpawnPointIsActive(int SpawnPointIndex, bool bIsActive)
 {
-    local DHSpawnPoint     SP;
-    local DHVehicleFactory Factory;
-    local int              i;
+    local DHSpawnPoint SP;
 
     SP = DHSpawnPoint(GRI.GetSpawnPoint(SpawnPointIndex));
 
@@ -489,37 +487,6 @@ private function SetSpawnPointIsActive(int SpawnPointIndex, bool bIsActive)
     }
 
     SP.SetIsActive(bIsActive);
-
-    // Activate/deactivate any linked mine volume protecting the spawn point
-    if (SP.MineVolumeProtectionRef != none)
-    {
-        if (bIsActive)
-        {
-            SP.MineVolumeProtectionRef.Activate();
-        }
-        else
-        {
-            SP.MineVolumeProtectionRef.Deactivate();
-        }
-    }
-
-    // Activate/deactivate any linked vehicle factories
-    for (i = 0; i < SP.LinkedVehicleFactories.Length; ++i)
-    {
-        Factory = SP.LinkedVehicleFactories[i];
-
-        if (Factory != none)
-        {
-            if (bIsActive)
-            {
-                Factory.ActivatedBySpawn(Factory.TeamNum);
-            }
-            else
-            {
-                Factory.Deactivate();
-            }
-        }
-    }
 }
 
 function SetSpawnPointIsActiveByTag(name SpawnPointTag, bool bIsActive)

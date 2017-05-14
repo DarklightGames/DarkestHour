@@ -333,7 +333,7 @@ function PostBeginPlay()
         DHResupplyAreas[m] = ARV;
         GRI.ResupplyAreas[m].ResupplyVolumeLocation = ARV.Location;
         GRI.ResupplyAreas[m].Team = ARV.Team;
-        GRI.ResupplyAreas[m].bActive = !ARV.bUsesSpawnAreas;
+        GRI.ResupplyAreas[m].bActive = ARV.bActive;
 
         if (ARV.ResupplyType == RT_Players)
         {
@@ -460,61 +460,6 @@ function HandleReinforceIntervalInflation()
     {
         DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval;
         DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval;
-    }
-}
-
-function CheckResupplyVolumes()
-{
-    local DHGameReplicationInfo GRI;
-    local int i;
-
-    // Activate any resupply areas that are activated based on spawn areas
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    for (i = 0; i < arraycount(DHResupplyAreas); ++i)
-    {
-        if (DHResupplyAreas[i] == none)
-        {
-            continue;
-        }
-
-        if (DHResupplyAreas[i].bUsesSpawnAreas)
-        {
-            if (DHResupplyAreas[i].Team == AXIS_TEAM_INDEX)
-            {
-                if ((CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag)
-                    || CurrentSpawnArea[AXIS_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag)
-                {
-                    GRI.ResupplyAreas[i].bActive = true;
-                    DHResupplyAreas[i].bActive = true;
-                }
-                else
-                {
-                    GRI.ResupplyAreas[i].bActive = false;
-                    DHResupplyAreas[i].bActive = false;
-                }
-            }
-
-            if (DHResupplyAreas[i].Team == ALLIES_TEAM_INDEX)
-            {
-                if ((CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag)
-                    || CurrentSpawnArea[ALLIES_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag)
-                {
-                    GRI.ResupplyAreas[i].bActive = true;
-                    DHResupplyAreas[i].bActive = true;
-                }
-                else
-                {
-                    GRI.ResupplyAreas[i].bActive = false;
-                    DHResupplyAreas[i].bActive = false;
-                }
-            }
-        }
-        else
-        {
-            GRI.ResupplyAreas[i].bActive = true;
-            DHResupplyAreas[i].bActive = true;
-        }
     }
 }
 
@@ -4052,6 +3997,39 @@ function CheckTankCrewSpawnAreas()
 
     // Check mortar spawns areas (No longer used?)
     CheckMortarmanSpawnAreas();
+}
+
+// Modified so we only activate/deactivate resupply volumes if their status actually needs to change, based on any current spawn areas (if the level even has them)
+// Note that the newer DHSpawnPoint system that replaces spawn areas does not use this, & instead the spawn point itself activates/deactivates any linked resupply
+// So this override is necessary to stop CheckResupplyVolumes() functionality from screwing up the new DH functionality (& also to use the new DHResupplyAreas array)
+// Do nothing if resupply flagged as controlled by a DH spawn point even if bUseSpawnAreas=true (leveller may misunderstand bUseSpawnAreas & assume means spawn point)
+function CheckResupplyVolumes()
+{
+    local DHGameReplicationInfo GRI;
+    local int  TeamIndex, i;
+    local bool bShouldBeActive;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI != none)
+    {
+        for (i = 0; i < arraycount(DHResupplyAreas); ++i)
+        {
+            if (DHResupplyAreas[i] != none && DHResupplyAreas[i].bUsesSpawnAreas && !DHResupplyAreas[i].bControlledBySpawnPoint)
+            {
+                TeamIndex = DHResupplyAreas[i].Team;
+
+                if (TeamIndex == AXIS_TEAM_INDEX || TeamIndex == ALLIES_TEAM_INDEX)
+                {
+                    bShouldBeActive = CurrentSpawnArea[TeamIndex].Tag == DHResupplyAreas[i].Tag ||
+                        (CurrentTankCrewSpawnArea[TeamIndex] != none && CurrentTankCrewSpawnArea[TeamIndex].Tag == DHResupplyAreas[i].Tag);
+
+                    DHResupplyAreas[i].bActive = bShouldBeActive;
+                    GRI.ResupplyAreas[i].bActive = bShouldBeActive;
+                }
+            }
+        }
+    }
 }
 
 function NotifyLogout(Controller Exiting)

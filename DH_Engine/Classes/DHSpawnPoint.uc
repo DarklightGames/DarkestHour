@@ -17,33 +17,37 @@ enum ESpawnPointType
 };
 
 var()   ESpawnPointType Type;
-var()   bool            bIsInitiallyActive;          // whether or not the SP is active at the start of the round (or waits to be activated later)
-var()   name            InfantryLocationHintTag;     // the Tag for associated LocationHint actors used to spawn players on foot
-var()   name            VehicleLocationHintTag;      // the Tag for associated LocationHint actors used to spawn players in vehicles
-var()   name            MineVolumeProtectionTag;     // optional Tag for associated mine volume that protects this SP only when the SP is active
-var()   name            NoArtyVolumeProtectionTag;   // optional Tag for associated no arty volume that protects this SP only when the SP is active
-var()   name            LinkedVehicleFactoriesTag;   // optional Tag for vehicle factories that are only active when this SP is active
+var()   bool            bIsInitiallyActive;            // whether or not the SP is active at the start of the round (or waits to be activated later)
+var()   bool            bIsInitiallyLocked;            // whether or not the SP is locked at the start of the round
 
-// Colin: The spawn manager will defer evaluation of any location hints that
-// have enemies within this distance. In layman's terms, the spawn manager will
-// prefer to spawn players at location hints where there are not enemies nearby.
-var()   float                   LocationHintDeferDistance;
+var     bool            bIsLocked;                     // locked spawn points will not be affected by enable or disable commands
 
-// Colin: Locked spawn points will not be affected by enable or disable commands.
-var()   bool                    bIsInitiallyLocked;
-var     bool                    bIsLocked;
-
-var     array<DHLocationHint>   InfantryLocationHints;
+// Location hints - placed actors used for locations for spawning players
+var()   name            InfantryLocationHintTag;       // the Tag for associated LocationHint actors used to spawn players on foot
+var()   name            VehicleLocationHintTag;        // the Tag for associated LocationHint actors used to spawn players in vehicles
+var     array<DHLocationHint>   InfantryLocationHints; // saved references to linked location hint actors
 var     array<DHLocationHint>   VehicleLocationHints;
+var()   float           LocationHintDeferDistance;     // the spawn manager will try to avoid spawning players at location hints where there are enemies within this distance
+                                                       // (it will defer evaluation of any location hints that have enemies nearby)
+
+// Options to link various types of actors to this SP, so they are only active when the SP is active
+var()   name                    MineVolumeProtectionTag;
+var()   name                    NoArtyVolumeProtectionTag;
+var()   name                    LinkedAmmoResupplyTag;
+var()   name                    LinkedVehicleFactoriesTag;
 var     ROMineVolume            MineVolumeProtectionRef;
+var     DHAmmoResupplyVolume    LinkedAmmoResupplyRef;
 var     array<DHVehicleFactory> LinkedVehicleFactories;
 
-function PostBeginPlay()
+// Modified to find associated location hint actors, used as positions to spawn players or vehicles, & build arrays of actor references
+// Also to find any actors that are linked to this spawn point, so they are only active when the SP is active, & save actor references
+simulated function PostBeginPlay()
 {
     local DHLocationHint   LH;
     local RONoArtyVolume   NAV;
     local DHVehicleFactory VF;
 
+    // Find associated location hint actors & build arrays of actor references
     foreach AllActors(class'DHLocationHint', LH)
     {
         if (LH.Tag != '')
@@ -59,7 +63,7 @@ function PostBeginPlay()
         }
     }
 
-    // Find any associated mine volume (that will only protect this spawn point only if the spawn is active)
+    // Find any linked mine volume (that will only protect this spawn point only if the spawn is active)
     if (MineVolumeProtectionTag != '')
     {
         foreach AllActors(class'ROMineVolume', MineVolumeProtectionRef, MineVolumeProtectionTag)
@@ -68,7 +72,18 @@ function PostBeginPlay()
         }
     }
 
-    // Find any associated no arty volume (that will only protect this spawn point if the spawn is active)
+    // Find any linked ammo resupply volume (that will only be activated if this spawn point is active)
+    // And tell it that it will be controlled by a spawn point, so it does not activate itself
+    if (LinkedAmmoResupplyTag != '')
+    {
+        foreach DynamicActors(class'DHAmmoResupplyVolume', LinkedAmmoResupplyRef, LinkedAmmoResupplyTag)
+        {
+            LinkedAmmoResupplyRef.bControlledBySpawnPoint = true;
+            break;
+        }
+    }
+
+    // Find any linked no arty volume (that will only protect this spawn point if the spawn is active)
     // Note that we don't need to record a reference to the no arty volume actor, we only need to set its AssociatedActor reference to be this spawn point
     if (NoArtyVolumeProtectionTag != '')
     {
@@ -93,6 +108,71 @@ function PostBeginPlay()
     super.PostBeginPlay();
 }
 
+function Reset()
+{
+    super.Reset();
+
+    bIsLocked = bIsInitiallyLocked;
+}
+
+// Modified to activate/deactivate any linked mine volume, resupply volume or vehicle factories, that get activated/deactivated with this spawn point
+function SetIsActive(bool bIsActive)
+{
+    local DarkestHourGame  DHG;
+    local DHVehicleFactory Factory;
+    local int              i;
+
+    super.SetIsActive(bIsActive);
+
+    if (MineVolumeProtectionRef != none)
+    {
+        if (bIsActive)
+        {
+            MineVolumeProtectionRef.Activate();
+        }
+        else
+        {
+            MineVolumeProtectionRef.Deactivate();
+        }
+    }
+
+    if (LinkedAmmoResupplyRef != none)
+    {
+        LinkedAmmoResupplyRef.bActive = bIsActive;
+
+        DHG = DarkestHourGame(Level.Game);
+
+        if (DHG != none)
+        {
+            for (i = 0; i < arraycount(DHG.DHResupplyAreas); ++i)
+            {
+                if (DHG.DHResupplyAreas[i] == LinkedAmmoResupplyRef)
+                {
+                    GRI.ResupplyAreas[i].bActive = bIsActive; // also match bActive in GRI's replicated ResupplyAreas array, used by HUD to display resupplies on the map
+                    break;
+                }
+            }
+        }
+    }
+
+    for (i = 0; i < LinkedVehicleFactories.Length; ++i)
+    {
+        Factory = LinkedVehicleFactories[i];
+
+        if (Factory != none)
+        {
+            if (bIsActive)
+            {
+                Factory.ActivatedBySpawn(Factory.TeamNum);
+            }
+            else
+            {
+                Factory.Deactivate();
+            }
+        }
+    }
+}
+
 simulated function bool CanSpawnInfantry()
 {
     return Type == ESPT_Infantry || Type == ESPT_InfantryVehicles || Type == ESPT_All;
@@ -115,13 +195,6 @@ simulated function bool CanSpawnInfantryVehicles()
 simulated function bool CanSpawnMortars()
 {
     return Type == ESPT_Mortars || Type == ESPT_All;
-}
-
-function Reset()
-{
-    super.Reset();
-
-    bIsLocked = bIsInitiallyLocked;
 }
 
 simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
