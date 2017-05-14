@@ -1441,4 +1441,6 @@ defaultproperties
     Description="Screen menu options allowing an admin greater control over players, a realism match or during testing"
     bAddToServerPackages=true // this is necessary for the Replicator to be spawned on a client
     WarningSound=sound'DH_AdminMenuMutator.Klaxon' // can be overridden in server DarkestHour.ini file
+    bParaDropPlayerAllowed=true
+    bShowRealismMenu=true
 }
