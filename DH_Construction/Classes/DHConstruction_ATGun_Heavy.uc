@@ -20,7 +20,13 @@ function static class<ROVehicle> GetVehicleClass(int TeamIndex, DH_LevelInfo LI)
                     case NATION_Canada:
                         return class'DH_Guns.DH_17PounderGun';
                     case NATION_USA:
-                        return class'DH_Guns.DH_M5Gun';
+                        switch (LI.Weather)
+                        {
+                            case WEATHER_Snowy:
+                                return class'DH_Guns.DH_M5Gun_Snow';
+                            default:
+                                return class'DH_Guns.DH_M5Gun';
+                        }
                     default:
                         break;
                 }

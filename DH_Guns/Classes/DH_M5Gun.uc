@@ -14,10 +14,10 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_M5GunCannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_M5Gun_anm.m5_body'
     Skins(0)=texture'DH_M5Gun_tex.m5.m5'
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.17pounder.17Pounder_dest'  // TODO: replace with custom destroy SM
-    VehicleHudImage=texture'DH_Artillery_Tex.ATGun_Hud.pak43_body'  // TODO: replace with new hud images
-    VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak43_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak43_turret_look'
+    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.m5.m5_destroyed'
+    VehicleHudImage=texture'DH_M5Gun_tex.HUD.m5_body'
+    VehicleHudTurret=TexRotator'DH_M5Gun_tex.HUD.m5_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_M5Gun_tex.HUD.m5_turret_look'
     VehicleHudOccupantsX(1)=0.47
     VehicleHudOccupantsY(1)=0.6
     ExitPositions(0)=(X=-120.00,Y=-60.00,Z=65.00)
