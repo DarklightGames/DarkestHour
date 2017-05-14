@@ -86,6 +86,7 @@ var localized   string                      DeployInTimeText;
 var localized   string                      DeployNowText;
 var localized   string                      ReservedString;
 var localized   string                      ChangeTeamConfirmText;
+var localized   string                      FreeChangeTeamConfirmText;
 var localized   string                      CantChangeTeamYetText;
 
 var localized   string                      LockText;
@@ -739,7 +740,25 @@ function bool OnClick(GUIComponent Sender)
             if (CurrentTeam != 0 && PC.NextChangeTeamTime < GRI.ElapsedTime)
             {
                 Controller.OpenMenu(Controller.QuestionMenuClass);
-                GUIQuestionPage(Controller.TopPage()).SetupQuestion(Repl(default.ChangeTeamConfirmText, "{s}", class'DarkestHourGame'.default.ChangeTeamInterval), QBTN_YesNo);
+
+                // If solo then never warn
+                if (PlayerOwner().Level.NetMode == NM_Standalone)
+                {
+                    GUIQuestionPage(Controller.TopPage()).SetupQuestion(FreeChangeTeamConfirmText, QBTN_YesNo);
+                }
+                else
+                {
+                    // If we are not with in the first ChangeTeamInterval seconds of the round, then warn
+                    if (GRI.ElapsedTime > class'DarkestHourGame'.default.ChangeTeamInterval)
+                    {
+                        GUIQuestionPage(Controller.TopPage()).SetupQuestion(Repl(default.ChangeTeamConfirmText, "{s}", class'DarkestHourGame'.default.ChangeTeamInterval), QBTN_YesNo);
+                    }
+                    else
+                    {
+                        GUIQuestionPage(Controller.TopPage()).SetupQuestion(FreeChangeTeamConfirmText, QBTN_YesNo);
+                    }
+                }
+
                 GUIQuestionPage(Controller.TopPage()).NewOnButtonClick = ChangeToAxisChoice;
             }
             else if (CurrentTeam != 0)
@@ -754,7 +773,25 @@ function bool OnClick(GUIComponent Sender)
             if (CurrentTeam != 1 && PC.NextChangeTeamTime < GRI.ElapsedTime)
             {
                 Controller.OpenMenu(Controller.QuestionMenuClass);
-                GUIQuestionPage(Controller.TopPage()).SetupQuestion(Repl(default.ChangeTeamConfirmText, "{s}", class'DarkestHourGame'.default.ChangeTeamInterval), QBTN_YesNo);
+
+                // If solo then never warn
+                if (PlayerOwner().Level.NetMode == NM_Standalone)
+                {
+                    GUIQuestionPage(Controller.TopPage()).SetupQuestion(FreeChangeTeamConfirmText, QBTN_YesNo);
+                }
+                else
+                {
+                    // If we are not with in the first ChangeTeamInterval seconds of the round, then warn
+                    if (GRI.ElapsedTime > class'DarkestHourGame'.default.ChangeTeamInterval)
+                    {
+                        GUIQuestionPage(Controller.TopPage()).SetupQuestion(Repl(default.ChangeTeamConfirmText, "{s}", class'DarkestHourGame'.default.ChangeTeamInterval), QBTN_YesNo);
+                    }
+                    else
+                    {
+                        GUIQuestionPage(Controller.TopPage()).SetupQuestion(FreeChangeTeamConfirmText, QBTN_YesNo);
+                    }
+                }
+
                 GUIQuestionPage(Controller.TopPage()).NewOnButtonClick = ChangeToAlliesChoice;
             }
             else if (CurrentTeam != 1)
@@ -2377,6 +2414,7 @@ defaultproperties
     DeployInTimeText="Press Continue to deploy ({0})"
     DeployNowText="Press Continue to deploy now!"
     ChangeTeamConfirmText="Are you sure you want to change teams? (you will not be able to change back for {s} seconds)"
+    FreeChangeTeamConfirmText="Are you sure you want to change teams?"
     CantChangeTeamYetText="You have {s} seconds before you can change teams"
     bButtonsEnabled=true
     VehicleNoneMaterial=material'DH_GUI_tex.DeployMenu.vehicle_none'

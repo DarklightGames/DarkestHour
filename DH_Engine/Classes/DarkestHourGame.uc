@@ -3282,9 +3282,13 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
         GRI.ClearArtilleryTarget(DHPlayer(Other));
     }
 
-    // If we changed team and we aren't in standalone then set the NextChangeTeamTime
-    if (PC != none && bNewTeam && Level.NetMode != NM_Standalone)
+    // If we changed team, and if elapsed time hasn't gone past the change team interval, and we aren't in standalone then set the NextChangeTeamTime
+    // The reason why we compare ElapsedTime to ChangeTeamInterval is we want to allow players to change teams freely for a duration from the start
+    // The duration desired is roughly 120 seconds which is what ChangeTeamInterval is currently set to, so if that changes, this if statement (might) need changed as well
+    if (PC != none && bNewTeam && GRI.ElapsedTime > ChangeTeamInterval && Level.NetMode != NM_Standalone)
     {
+        // This sets the DHPlayer NextChangeTeamTime which determines when a player can change team next
+        // If the player leaves, it is stored in a player session and restored if they rejoin
         PC.NextChangeTeamTime = GRI.ElapsedTime + default.ChangeTeamInterval;
     }
 
