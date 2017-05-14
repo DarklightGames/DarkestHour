@@ -463,149 +463,6 @@ function HandleReinforceIntervalInflation()
     }
 }
 
-// Modified to use more efficient DynamicActors iteration instead of AllActors (vehicle factories aren't static actors), & re-factored to generally optimise
-function CheckVehicleFactories()
-{
-    local ROVehicleFactory VehFact;
-    local int              TeamIndex;
-
-    foreach DynamicActors(class'ROVehicleFactory', VehFact)
-    {
-        if (VehFact.bUsesSpawnAreas)
-        {
-            if (class<ROVehicle>(VehFact.VehicleClass) != none)
-            {
-                TeamIndex = class<ROVehicle>(VehFact.VehicleClass).default.VehicleTeam;
-
-                if ((TeamIndex == AXIS_TEAM_INDEX || TeamIndex == ALLIES_TEAM_INDEX) &&
-                    ((CurrentTankCrewSpawnArea[TeamIndex] != none && CurrentTankCrewSpawnArea[TeamIndex].Tag == VehFact.Tag) ||
-                    (CurrentSpawnArea[TeamIndex] != none && CurrentSpawnArea[TeamIndex].Tag == VehFact.Tag)))
-                {
-                    VehFact.ActivatedBySpawn(TeamIndex);
-                }
-                else
-                {
-                    VehFact.Deactivate();
-                }
-            }
-        }
-    }
-}
-
-function CheckMortarmanSpawnAreas()
-{
-    local DHSpawnArea Best[2];
-    local bool        bReqsMet, bSomeReqsMet;
-    local int         i, j, h, k;
-
-    for (i = 0; i < DHMortarSpawnAreas.Length; ++i)
-    {
-        if (!DHMortarSpawnAreas[i].bEnabled)
-        {
-            continue;
-        }
-
-        // Axis plus: either no best or this one has higher precedence
-        if (DHMortarSpawnAreas[i].bAxisSpawn && (Best[AXIS_TEAM_INDEX] == none || DHMortarSpawnAreas[i].AxisPrecedence > Best[AXIS_TEAM_INDEX].AxisPrecedence))
-        {
-            bReqsMet = true;
-            bSomeReqsMet = false;
-
-            for (j = 0; j < DHMortarSpawnAreas[i].AxisRequiredObjectives.Length; ++j)
-            {
-                if (DHObjectives[DHMortarSpawnAreas[i].AxisRequiredObjectives[j]].ObjState != OBJ_Axis)
-                {
-                    bReqsMet = false;
-                    break;
-                }
-            }
-
-            for (h = 0; h < DHMortarSpawnAreas[i].AxisRequiredObjectives.Length; ++h)
-            {
-                if (DHObjectives[DHMortarSpawnAreas[i].AxisRequiredObjectives[h]].ObjState == OBJ_Axis)
-                {
-                    bSomeReqsMet = true;
-                    break;
-                }
-            }
-
-            if (DHMortarSpawnAreas[i].bIncludeNeutralObjectives)
-            {
-                for (k = 0; k < DHMortarSpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
-                {
-                    if (DHObjectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
-                    {
-                        bSomeReqsMet = true;
-                        break;
-                    }
-                }
-            }
-
-            if (bReqsMet)
-            {
-                Best[AXIS_TEAM_INDEX] = DHMortarSpawnAreas[i];
-            }
-            else if (bSomeReqsMet && DHMortarSpawnAreas[i].TeamMustLoseAllRequired == SPN_Axis)
-            {
-                Best[AXIS_TEAM_INDEX] = DHMortarSpawnAreas[i];
-            }
-        }
-
-        // Allies plus: either no best or this one has higher precedence
-        if (DHMortarSpawnAreas[i].bAlliesSpawn && (Best[ALLIES_TEAM_INDEX] == none || DHMortarSpawnAreas[i].AlliesPrecedence > Best[ALLIES_TEAM_INDEX].AlliesPrecedence))
-        {
-            bReqsMet = true;
-            bSomeReqsMet = false;
-
-            for (j = 0; j < DHMortarSpawnAreas[i].AlliesRequiredObjectives.Length; ++j)
-            {
-                if (DHObjectives[DHMortarSpawnAreas[i].AlliesRequiredObjectives[j]].ObjState != OBJ_Allies)
-                {
-                    bReqsMet = false;
-                    break;
-                }
-            }
-
-            // Added in conjunction with TeamMustLoseAllRequired enum in SpawnAreas
-            // Allows Mappers to force all objectives to be lost/won before moving spawns, instead of just one
-            for (h = 0; h < DHMortarSpawnAreas[i].AlliesRequiredObjectives.Length; ++h)
-            {
-                if (DHObjectives[DHMortarSpawnAreas[i].AlliesRequiredObjectives[h]].ObjState == OBJ_Allies)
-                {
-                    bSomeReqsMet = true;
-                    break;
-                }
-            }
-
-            // Added in conjunction with bIncludeNeutralObjectives in SpawnAreas
-            // Allows mappers to have spawns be used when objectives are neutral, not just captured
-            if (DHMortarSpawnAreas[i].bIncludeNeutralObjectives)
-            {
-                for (k = 0; k < DHMortarSpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
-                {
-                    if (DHObjectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
-                    {
-                        bSomeReqsMet = true;
-                        break;
-                    }
-                }
-            }
-
-            if (bReqsMet)
-            {
-                Best[ALLIES_TEAM_INDEX] = DHMortarSpawnAreas[i];
-            }
-            else if (bSomeReqsMet && DHMortarSpawnAreas[i].TeamMustLoseAllRequired == SPN_Allies)
-            {
-                Best[ALLIES_TEAM_INDEX] = DHMortarSpawnAreas[i];
-            }
-        }
-    }
-
-    DHCurrentMortarSpawnArea[AXIS_TEAM_INDEX] = Best[AXIS_TEAM_INDEX];
-    DHCurrentMortarSpawnArea[ALLIES_TEAM_INDEX] = Best[ALLIES_TEAM_INDEX];
-}
-
 // Modified to avoid logging a misleading warning every time ("Warning - PATHS NOT DEFINED or NO PLAYERSTART with positive rating")
 // Also removed associated redundancy as game only accepts PlayerStart actors, which aren't in NavigationPointList (checking that is root cause of misleading warning)
 function NavigationPoint FindPlayerStart(Controller Player, optional byte InTeam, optional string IncomingName)
@@ -2862,34 +2719,6 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
     }
 }
 
-// Modified so we only activate/deactivate mine volumes if their status actually needs to change, based on any current spawn areas (if the level even has them)
-// Note that the newer DHSpawnPoint system that replaces spawn areas does not use this, & instead the spawn point itself activates/deactivates any linked MV
-// DHMineVolumes may also be controlled by modify actors in the level, triggered by specified events during player
-// The new MV functionality also uses an bInitiallyActive setting (subject to subsequent activation/deactivation by a spawn point or modify actor)
-// So this override is necessary to stop CheckMineVolumes() functionality from screwing up the new DH functionality
-function CheckMineVolumes()
-{
-    local int i;
-
-    for (i = 0; i < MineVolumes.Length; ++i)
-    {
-        if (MineVolumes[i] != none && MineVolumes[i].bUsesSpawnAreas && MineVolumes[i].Tag != '')
-        {
-            if ((CurrentSpawnArea[AXIS_TEAM_INDEX] != none && CurrentSpawnArea[AXIS_TEAM_INDEX].Tag == MineVolumes[i].Tag) ||
-                (CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX].Tag == MineVolumes[i].Tag) ||
-                (CurrentSpawnArea[ALLIES_TEAM_INDEX] != none && CurrentSpawnArea[ALLIES_TEAM_INDEX].Tag == MineVolumes[i].Tag) ||
-                (CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX].Tag == MineVolumes[i].Tag))
-            {
-                MineVolumes[i].Activate();
-            }
-            else
-            {
-                MineVolumes[i].Deactivate();
-            }
-        }
-    }
-}
-
 function ResetArtilleryTargets()
 {
     local DHGameReplicationInfo GRI;
@@ -3999,6 +3828,150 @@ function CheckTankCrewSpawnAreas()
     CheckMortarmanSpawnAreas();
 }
 
+function CheckMortarmanSpawnAreas()
+{
+    local DHSpawnArea Best[2];
+    local bool        bReqsMet, bSomeReqsMet;
+    local int         i, j, h, k;
+
+    for (i = 0; i < DHMortarSpawnAreas.Length; ++i)
+    {
+        if (!DHMortarSpawnAreas[i].bEnabled)
+        {
+            continue;
+        }
+
+        // Axis plus: either no best or this one has higher precedence
+        if (DHMortarSpawnAreas[i].bAxisSpawn && (Best[AXIS_TEAM_INDEX] == none || DHMortarSpawnAreas[i].AxisPrecedence > Best[AXIS_TEAM_INDEX].AxisPrecedence))
+        {
+            bReqsMet = true;
+            bSomeReqsMet = false;
+
+            for (j = 0; j < DHMortarSpawnAreas[i].AxisRequiredObjectives.Length; ++j)
+            {
+                if (DHObjectives[DHMortarSpawnAreas[i].AxisRequiredObjectives[j]].ObjState != OBJ_Axis)
+                {
+                    bReqsMet = false;
+                    break;
+                }
+            }
+
+            for (h = 0; h < DHMortarSpawnAreas[i].AxisRequiredObjectives.Length; ++h)
+            {
+                if (DHObjectives[DHMortarSpawnAreas[i].AxisRequiredObjectives[h]].ObjState == OBJ_Axis)
+                {
+                    bSomeReqsMet = true;
+                    break;
+                }
+            }
+
+            if (DHMortarSpawnAreas[i].bIncludeNeutralObjectives)
+            {
+                for (k = 0; k < DHMortarSpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
+                {
+                    if (DHObjectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
+                    {
+                        bSomeReqsMet = true;
+                        break;
+                    }
+                }
+            }
+
+            if (bReqsMet)
+            {
+                Best[AXIS_TEAM_INDEX] = DHMortarSpawnAreas[i];
+            }
+            else if (bSomeReqsMet && DHMortarSpawnAreas[i].TeamMustLoseAllRequired == SPN_Axis)
+            {
+                Best[AXIS_TEAM_INDEX] = DHMortarSpawnAreas[i];
+            }
+        }
+
+        // Allies plus: either no best or this one has higher precedence
+        if (DHMortarSpawnAreas[i].bAlliesSpawn && (Best[ALLIES_TEAM_INDEX] == none || DHMortarSpawnAreas[i].AlliesPrecedence > Best[ALLIES_TEAM_INDEX].AlliesPrecedence))
+        {
+            bReqsMet = true;
+            bSomeReqsMet = false;
+
+            for (j = 0; j < DHMortarSpawnAreas[i].AlliesRequiredObjectives.Length; ++j)
+            {
+                if (DHObjectives[DHMortarSpawnAreas[i].AlliesRequiredObjectives[j]].ObjState != OBJ_Allies)
+                {
+                    bReqsMet = false;
+                    break;
+                }
+            }
+
+            // Added in conjunction with TeamMustLoseAllRequired enum in SpawnAreas
+            // Allows Mappers to force all objectives to be lost/won before moving spawns, instead of just one
+            for (h = 0; h < DHMortarSpawnAreas[i].AlliesRequiredObjectives.Length; ++h)
+            {
+                if (DHObjectives[DHMortarSpawnAreas[i].AlliesRequiredObjectives[h]].ObjState == OBJ_Allies)
+                {
+                    bSomeReqsMet = true;
+                    break;
+                }
+            }
+
+            // Added in conjunction with bIncludeNeutralObjectives in SpawnAreas
+            // Allows mappers to have spawns be used when objectives are neutral, not just captured
+            if (DHMortarSpawnAreas[i].bIncludeNeutralObjectives)
+            {
+                for (k = 0; k < DHMortarSpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
+                {
+                    if (DHObjectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
+                    {
+                        bSomeReqsMet = true;
+                        break;
+                    }
+                }
+            }
+
+            if (bReqsMet)
+            {
+                Best[ALLIES_TEAM_INDEX] = DHMortarSpawnAreas[i];
+            }
+            else if (bSomeReqsMet && DHMortarSpawnAreas[i].TeamMustLoseAllRequired == SPN_Allies)
+            {
+                Best[ALLIES_TEAM_INDEX] = DHMortarSpawnAreas[i];
+            }
+        }
+    }
+
+    DHCurrentMortarSpawnArea[AXIS_TEAM_INDEX] = Best[AXIS_TEAM_INDEX];
+    DHCurrentMortarSpawnArea[ALLIES_TEAM_INDEX] = Best[ALLIES_TEAM_INDEX];
+}
+
+// Modified to use more efficient DynamicActors iteration instead of AllActors (vehicle factories aren't static actors), & re-factored to generally optimise
+// Do nothing if factory flagged as controlled by a DH spawn point even if bUseSpawnAreas=true (leveller may misunderstand bUseSpawnAreas & assume means spawn point)
+function CheckVehicleFactories()
+{
+    local DHVehicleFactory VehFact;
+    local int              TeamIndex;
+
+    foreach DynamicActors(class'DHVehicleFactory', VehFact)
+    {
+        if (VehFact.bUsesSpawnAreas && !VehFact.bControlledBySpawnPoint)
+        {
+            if (class<ROVehicle>(VehFact.VehicleClass) != none)
+            {
+                TeamIndex = class<ROVehicle>(VehFact.VehicleClass).default.VehicleTeam;
+
+                if ((TeamIndex == AXIS_TEAM_INDEX || TeamIndex == ALLIES_TEAM_INDEX) &&
+                    ((CurrentTankCrewSpawnArea[TeamIndex] != none && CurrentTankCrewSpawnArea[TeamIndex].Tag == VehFact.Tag) ||
+                    (CurrentSpawnArea[TeamIndex] != none && CurrentSpawnArea[TeamIndex].Tag == VehFact.Tag)))
+                {
+                    VehFact.ActivatedBySpawn(TeamIndex);
+                }
+                else
+                {
+                    VehFact.Deactivate();
+                }
+            }
+        }
+    }
+}
+
 // Modified so we only activate/deactivate resupply volumes if their status actually needs to change, based on any current spawn areas (if the level even has them)
 // Note that the newer DHSpawnPoint system that replaces spawn areas does not use this, & instead the spawn point itself activates/deactivates any linked resupply
 // So this override is necessary to stop CheckResupplyVolumes() functionality from screwing up the new DH functionality (& also to use the new DHResupplyAreas array)
@@ -4027,6 +4000,34 @@ function CheckResupplyVolumes()
                     DHResupplyAreas[i].bActive = bShouldBeActive;
                     GRI.ResupplyAreas[i].bActive = bShouldBeActive;
                 }
+            }
+        }
+    }
+}
+
+// Modified so we only activate/deactivate mine volumes if their status actually needs to change, based on any current spawn areas (if the level even has them)
+// Note that the newer DHSpawnPoint system that replaces spawn areas does not use this, & instead the spawn point itself activates/deactivates any linked MV
+// DHMineVolumes may also be controlled by modify actors in the level, triggered by specified events during player
+// The new MV functionality also uses an bInitiallyActive setting (subject to subsequent activation/deactivation by a spawn point or modify actor)
+// So this override is necessary to stop CheckMineVolumes() functionality from screwing up the new DH functionality
+function CheckMineVolumes()
+{
+    local int i;
+
+    for (i = 0; i < MineVolumes.Length; ++i)
+    {
+        if (MineVolumes[i] != none && MineVolumes[i].bUsesSpawnAreas && MineVolumes[i].Tag != '')
+        {
+            if ((CurrentSpawnArea[AXIS_TEAM_INDEX] != none && CurrentSpawnArea[AXIS_TEAM_INDEX].Tag == MineVolumes[i].Tag) ||
+                (CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX].Tag == MineVolumes[i].Tag) ||
+                (CurrentSpawnArea[ALLIES_TEAM_INDEX] != none && CurrentSpawnArea[ALLIES_TEAM_INDEX].Tag == MineVolumes[i].Tag) ||
+                (CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX].Tag == MineVolumes[i].Tag))
+            {
+                MineVolumes[i].Activate();
+            }
+            else
+            {
+                MineVolumes[i].Deactivate();
             }
         }
     }
