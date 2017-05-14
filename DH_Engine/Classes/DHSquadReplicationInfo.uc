@@ -530,7 +530,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
 }
 
 // Attempts to make the specified player the leader of the specified squad.
-// Returns true if the specified play is now the new squad leader.
+// Returns true if the specified player is now the new squad leader.
 function bool CommandeerSquad(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex)
 {
     local DHPlayer PC;
@@ -561,7 +561,7 @@ function bool CommandeerSquad(DHPlayerReplicationInfo PRI, int TeamIndex, int Sq
     return bResult;
 }
 
-// Returns true if the specified play is a member of the specified squad.
+// Returns true if the specified player is a member of the specified squad.
 simulated function bool IsInSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex)
 {
     return PRI != none && PRI.Team != none && PRI.Team.TeamIndex == TeamIndex && PRI.SquadIndex == SquadIndex;
