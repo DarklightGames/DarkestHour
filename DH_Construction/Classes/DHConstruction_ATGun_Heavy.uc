@@ -12,9 +12,18 @@ function static class<ROVehicle> GetVehicleClass(int TeamIndex, DH_LevelInfo LI)
         case AXIS_TEAM_INDEX:
             return class'DH_Guns.DH_Pak43ATGun';
         case ALLIES_TEAM_INDEX:
-            if (LI != none && (LI.AlliedNation == NATION_Britain || LI.AlliedNation == NATION_Canada))
+            if (LI != none)
             {
-                return class'DH_Guns.DH_17PounderGun';
+                switch (LI.AlliedNation)
+                {
+                    case NATION_Britain:
+                    case NATION_Canada:
+                        return class'DH_Guns.DH_17PounderGun';
+                    case NATION_USA:
+                        return class'DH_Guns.DH_M5Gun';
+                    default:
+                        break;
+                }
             }
             break;
     }
@@ -31,7 +40,7 @@ function UpdateAppearance()
 
 function static EConstructionError GetPlayerError(DHPlayer PC, optional out Object OptionalObject)
 {
-    if (GetVehicleClass(PC.GetTeamNum(), PC.GetLevelInfo()) == none)
+    if (GetVehicleClass(PC.GetTeamNum(),  PC.GetLevelInfo()) == none)
     {
         return ERROR_Fatal;
     }
