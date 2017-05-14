@@ -58,6 +58,126 @@ function Timer()
     }
 }
 
+// Modified to allow for specific repeat limit
+function AddMap(string MapName, string Mutators, string GameOptions) // called from the MapListLoader
+{
+    local MapHistoryInfo MapInfo;
+    local bool bUpdate;
+    local int i;
+    local int RepeatLimitInstance;
+
+    for (i = 0; i < MapList.Length; i++)  // dont add duplicate map names
+    {
+        if (MapName ~= MapList[i].MapName)
+        {
+            return;
+        }
+    }
+
+    // Get the MapInfo (important to have above other stuff)
+    MapInfo = History.GetMapHistory(MapName);
+
+    RepeatLimitInstance = RepeatLimit;
+
+    if (MapInfo.G != "" && int(MapInfo.G) >= 0)
+    {
+        Log("Changing RepeatLimitInstance to: " $ int(MapInfo.G));
+        RepeatLimitInstance = int(MapInfo.G);
+    }
+
+    MapList.Length = MapCount + 1;
+    MapList[MapCount].MapName = MapName;
+    MapList[MapCount].PlayCount = MapInfo.P;
+    MapList[MapCount].Sequence = MapInfo.S;
+    MapList[MapCount].bEnabled = MapInfo.S == 0 || MapInfo.S > RepeatLimitInstance;
+
+    MapCount++;
+
+    if(Mutators != "" && Mutators != MapInfo.U)
+    {
+        MapInfo.U = Mutators;
+        bUpdate = True;
+    }
+
+    if(GameOptions != "" && GameOptions != MapInfo.G)
+    {
+        MapInfo.G = GameOptions;
+        bUpdate = True;
+    }
+
+    if(MapInfo.M == "") // if map not found in MapVoteHistory then add it
+    {
+        MapInfo.M = MapName;
+        bUpdate = True;
+    }
+
+    if(bUpdate)
+    {
+        History.AddMap(MapInfo);
+    }
+}
+
+// Modified to not include per-map game options in the URL string (so we can instead use it for a level's specific repeat limit for voting)
+function string SetupGameMap(MapVoteMapList MapInfo, int GameIndex, MapHistoryInfo MapHistoryInfo)
+{
+    local string            ReturnString, MutatorString, OptionString;
+    local array<string>     MapsInRotation;
+    local int               i;
+
+    // Add Per-GameType Mutators
+    if (GameConfig[GameIndex].Mutators != "")
+    {
+        MutatorString = MutatorString $ GameConfig[GameIndex].Mutators;
+    }
+
+    // Add Per-Map Mutators
+    if (MapHistoryInfo.U != "")
+    {
+        MutatorString = MutatorString $ "," $ MapHistoryInfo.U;
+    }
+
+    // Add Per-GameType Game Options
+    if(GameConfig[GameIndex].Options != "")
+    {
+        OptionString = OptionString $ Repl(Repl(GameConfig[GameIndex].Options,",","?")," ","");
+    }
+
+    // Remove the .rom off of the map name, if it exists
+    if (Right(MapInfo.MapName, 4) == ".rom")
+    {
+        ReturnString = Left(MapInfo.MapName, Len(MapInfo.MapName) - 4);
+    }
+    else
+    {
+        ReturnString = MapInfo.MapName;
+    }
+
+    MapsInRotation = Level.Game.MaplistHandler.GetCurrentMapRotation();
+
+    for (i = 0; i < MapsInRotation.Length; ++i)
+    {
+        if (InStr(MapsInRotation[i], ReturnString) != -1)
+        {
+            ReturnString = MapsInRotation[i];
+            break;
+        }
+    }
+
+    ReturnString = ReturnString $ "?Game=" $ GameConfig[GameIndex].GameClass;
+
+    if (MutatorString != "")
+    {
+        ReturnString = ReturnString $ "?Mutator=" $ MutatorString;
+    }
+
+    if (OptionString != "")
+    {
+        ReturnString = ReturnString $ "?" $ OptionString;
+    }
+
+    return ReturnString;
+}
+
 // NOTE: overridden to fix vote 'duplication' bug
 function PlayerExit(Controller Exiting)
 {
