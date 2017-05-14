@@ -32,6 +32,8 @@ var     float           OverlayCorrectionX;
 var     float           OverlayCorrectionY;
 var     bool            bInitializedScope;       // set to true when the scope has been initialized
 
+var     bool            bDebugSights;            // shows centering cross in scope overlay for testing purposes
+
 // From ROSniperWeapon, but referencing the DHWeapon class
 simulated function PostBeginPlay()
 {
@@ -74,7 +76,7 @@ simulated event RenderOverlays(Canvas Canvas)
     local ROPlayer Playa;
     local ROPawn   RPawn;
     local rotator  RollMod;
-    local float    TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
+    local float    TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight, PosX, PosY;
     local int      LeanAngle, i;
 
     if (Instigator == none)
@@ -144,6 +146,25 @@ simulated event RenderOverlays(Canvas Canvas)
         TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
 
         Canvas.DrawTile(TexturedScopeTexture, Canvas.SizeX, Canvas.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
+
+        // Debug - draw cross on center of screen to check scope overlay is properly centred
+        if (bDebugSights)
+        {
+            PosX = Canvas.SizeX / 2.0;
+            PosY = Canvas.SizeY / 2.0;
+            Canvas.SetPos(0.0, 0.0);
+            Canvas.DrawVertical(PosX - 1.0, PosY - 3.0);
+            Canvas.DrawVertical(PosX, PosY - 3.0);
+            Canvas.SetPos(0.0, PosY + 3.0);
+            Canvas.DrawVertical(PosX - 1.0, PosY - 3.0);
+            Canvas.DrawVertical(PosX, PosY - 3.0);
+            Canvas.SetPos(0.0, 0.0);
+            Canvas.DrawHorizontal(PosY - 1.0, PosX - 3.0);
+            Canvas.DrawHorizontal(PosY, PosX - 3.0);
+            Canvas.SetPos(PosX + 3.0, 0.0);
+            Canvas.DrawHorizontal(PosY - 1.0, PosX - 3.0);
+            Canvas.DrawHorizontal(PosY, PosX - 3.0);
+        }
     }
     else
     {
@@ -268,6 +289,23 @@ simulated function ClearScopeObjects()
         Level.ObjectPool.FreeObject(ScopeScriptedShader);
         ScopeScriptedShader = none;
     }
+}
+
+// Debug execs to enable sight debugging and calibration, to make sure textured sight overlay is exactly centred
+exec function DebugSights()
+{
+    bDebugSights = !bDebugSights;
+}
+
+exec function CorrectX(float NewValue)
+{
+    Log(Name @ "OverlayCorrectionX =" @ NewValue @ "(was" @ OverlayCorrectionX $ ")");
+    OverlayCorrectionX = NewValue;
+}
+exec function CorrectY(float NewValue)
+{
+    Log(Name @ "OverlayCorrectionY =" @ NewValue @ "(was" @ OverlayCorrectionY $ ")");
+    OverlayCorrectionY = NewValue;
 }
 
 defaultproperties
