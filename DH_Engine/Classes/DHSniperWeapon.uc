@@ -27,28 +27,18 @@ var     material        ScriptedTextureFallback; // the texture to render if the
 // New scope vars
 var     Combiner        ScriptedScopeCombiner;
 var     texture         TexturedScopeTexture;
-var     float           OverlayCenterScale;
-var     float           OverlayCenterSize;       // size of the scope overlay (1.0 means full screen width, 0.5 means half screen width, etc)
-var     float           OverlayCenterTexStart;
-var     float           OverlayCenterTexSize;
+var     float           ScopeOverlaySize;        // size of the scope overlay (1.0 means full screen width, 0.5 means half screen width, etc)
 var     float           OverlayCorrectionX;
 var     float           OverlayCorrectionY;
 var     bool            bInitializedScope;       // set to true when the scope has been initialized
 
-// Modified to get new scope detail value from ROWeapon & to set scope overlay variables once instead of every DrawHUD
+// From ROSniperWeapon, but referencing the DHWeapon class
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
     ScopeDetail = class'DH_Engine.DHWeapon'.default.ScopeDetail;
     UpdateScopeMode();
-
-    if (Level.NetMode != NM_DedicatedServer && TexturedScopeTexture != none)
-    {
-        OverlayCenterScale = 0.955 / OverlayCenterSize; // 0.955 factor widens visible FOV to full screen width = OverlaySize 1.0
-        OverlayCenterTexStart = (1.0 - OverlayCenterScale) * float(TexturedScopeTexture.USize) / 2.0;
-        OverlayCenterTexSize = float(TexturedScopeTexture.USize) * OverlayCenterScale;
-    }
 }
 
 // Modified to clear scope objects
@@ -84,8 +74,8 @@ simulated event RenderOverlays(Canvas Canvas)
     local ROPlayer Playa;
     local ROPawn   RPawn;
     local rotator  RollMod;
+    local float    TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
     local int      LeanAngle, i;
-    local float    ScreenRatio;
 
     if (Instigator == none)
     {
@@ -140,16 +130,20 @@ simulated event RenderOverlays(Canvas Canvas)
 
     Skins[LensMaterialID] = ScriptedTextureFallback;
 
-    // Draw scope overlay
+    // Draw scope overlay (method is different from RO & is same as DrawGunsightOverlay() in DHVehicleCannonPawn - see notes there)
     if (bPlayerViewIsZoomed && bUsingSights)
     {
         Canvas.DrawColor.A = 255;
         Canvas.Style = ERenderStyle.STY_Alpha;
-        ScreenRatio = float(Canvas.SizeY) / float(Canvas.SizeX);
         Canvas.SetPos(0.0, 0.0);
 
-        Canvas.DrawTile(TexturedScopeTexture, Canvas.SizeX, Canvas.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
-            OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0, OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
+        TextureSize = float(TexturedScopeTexture.USize);
+        TilePixelWidth = TextureSize / ScopeOverlaySize * 0.955; // width based on weapon's ScopeOverlaySize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
+        TilePixelHeight = TilePixelWidth * float(Canvas.SizeY) / float(Canvas.SizeX); // height proportional to width, maintaining screen aspect ratio
+        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
+        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
+
+        Canvas.DrawTile(TexturedScopeTexture, Canvas.SizeX, Canvas.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
     }
     else
     {
@@ -280,7 +274,7 @@ defaultproperties
 {
     bIsSniper=true
     bPlusOneLoading=true
-    OverlayCenterSize=0.7
+    ScopeOverlaySize=0.7
     ScriptedTextureFallback=shader'Weapons1st_tex.Zoomscope.LensShader'
 
     PlayerIronsightFOV=90.0
