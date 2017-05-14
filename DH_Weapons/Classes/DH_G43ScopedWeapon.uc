@@ -20,17 +20,10 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
+    ScopeOverlay=texture'DH_Weapon_tex.AxisSmallArms.Ger_sniperscope_overlay'
     IronSightDisplayFOV=45.0
     PlayerFOVZoom=22.5
-
     ScopePortalFOV=7.0
-    ScopePortalFOVHigh=13.0
-    IronSightDisplayFOVHigh=25.0
-    ScopePitch=-10
-    ScopeYaw=40
-    ScopeYawHigh=35
-    TexturedScopeTexture=texture'DH_Weapon_tex.AxisSmallArms.Ger_sniperscope_overlay'
-    LensMaterialID=4
 
     MaxNumPrimaryMags=8
     InitialNumPrimaryMags=8

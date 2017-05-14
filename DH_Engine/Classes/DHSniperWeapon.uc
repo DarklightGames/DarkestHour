@@ -10,29 +10,15 @@ class DHSniperWeapon extends DHProjectileWeapon
 #exec OBJ LOAD FILE=..\Textures\ScopeShaders.utx
 #exec OBJ LOAD FILE=InterfaceArt_tex.utx
 
-var     int             LensMaterialID;          // used since material IDs seem to change a lot
-var     float           ScopePortalFOVHigh;      // the FOV to zoom the scope portal by
 var     float           ScopePortalFOV;          // the FOV to zoom the scope portal by
-
-var     int             ScopePitch;              // tweaks the pitch of the scope firing angle
-var     int             ScopeYaw;                // tweaks the yaw of the scope firing angle
-var     int             ScopePitchHigh;          // tweaks the pitch of the scope firing angle high detail scope
-var     int             ScopeYawHigh;            // tweaks the yaw of the scope firing angle high detail scope
-
-// 3d Scope vars
-var     ScriptedTexture ScopeScriptedTexture;    // scripted texture for 3d scopes
-var     Shader          ScopeScriptedShader;     // the shader that combines the scripted texture with the sight overlay
-var     material        ScriptedTextureFallback; // the texture to render if the users system doesn't support shaders
-
-// New scope vars
-var     Combiner        ScriptedScopeCombiner;
-var     texture         TexturedScopeTexture;
-var     float           ScopeOverlaySize;        // size of the scope overlay (1.0 means full screen width, 0.5 means half screen width, etc)
-var     float           OverlayCorrectionX;
-var     float           OverlayCorrectionY;
 var     bool            bInitializedScope;       // set to true when the scope has been initialized
-
 var     bool            bDebugSights;            // shows centering cross in scope overlay for testing purposes
+
+// Texture scope overlay
+var     texture         ScopeOverlay;            // texture overlay for scope
+var     float           ScopeOverlaySize;        // size of the scope overlay (1.0 means full screen width, 0.5 means half screen width, etc)
+var     float           OverlayCorrectionX;      // scope center correction in pixels, in case an overlay is off-center by pixel or two
+var     float           OverlayCorrectionY;
 
 // From ROSniperWeapon, but referencing the DHWeapon class
 simulated function PostBeginPlay()
@@ -43,21 +29,8 @@ simulated function PostBeginPlay()
     UpdateScopeMode();
 }
 
-// Modified to clear scope objects
-simulated event Destroyed()
-{
-    super.Destroyed();
-
-    ClearScopeObjects();
-}
-
-// Modified to clear scope objects
-simulated function PreTravelCleanUp()
-{
-    ClearScopeObjects();
-}
-
-// Handles initializing & switching between different scope modes
+// In ROSniperWeapon this handled initializing & switching between different scope modes
+// DH only uses RO_TextureScope mode, so it's stripped down to just that
 simulated function UpdateScopeMode()
 {
     if (Level.NetMode != NM_DedicatedServer && InstigatorIsLocalHuman())
@@ -92,7 +65,7 @@ simulated event RenderOverlays(Canvas Canvas)
     }
 
     // Draw muzzle flashes/smoke for all fire modes so idle state won't cause emitters to just disappear
-    Canvas.DrawActor(none, false, true);
+    Canvas.DrawActor(none, false, true); // clear the z-buffer here
 
     for (i = 0; i < NUM_FIRE_MODES; ++i)
     {
@@ -130,8 +103,6 @@ simulated event RenderOverlays(Canvas Canvas)
 
     SetRotation(RollMod);
 
-    Skins[LensMaterialID] = ScriptedTextureFallback;
-
     // Draw scope overlay (method is different from RO & is same as DrawGunsightOverlay() in DHVehicleCannonPawn - see notes there)
     if (bPlayerViewIsZoomed && bUsingSights)
     {
@@ -139,13 +110,13 @@ simulated event RenderOverlays(Canvas Canvas)
         Canvas.Style = ERenderStyle.STY_Alpha;
         Canvas.SetPos(0.0, 0.0);
 
-        TextureSize = float(TexturedScopeTexture.USize);
+        TextureSize = float(ScopeOverlay.USize);
         TilePixelWidth = TextureSize / ScopeOverlaySize * 0.955; // width based on weapon's ScopeOverlaySize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
         TilePixelHeight = TilePixelWidth * float(Canvas.SizeY) / float(Canvas.SizeX); // height proportional to width, maintaining screen aspect ratio
         TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
         TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
 
-        Canvas.DrawTile(TexturedScopeTexture, Canvas.SizeX, Canvas.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
+        Canvas.DrawTile(ScopeOverlay, Canvas.SizeX, Canvas.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
 
         // Debug - draw cross on center of screen to check scope overlay is properly centred
         if (bDebugSights)
@@ -174,6 +145,7 @@ simulated event RenderOverlays(Canvas Canvas)
     }
 }
 
+// From ROSniperWeapon
 simulated event RenderTexture(ScriptedTexture Tex)
 {
     local rotator RollMod;
@@ -194,16 +166,12 @@ simulated event RenderTexture(ScriptedTexture Tex)
     }
 }
 
-// Helper function for the scope system - the scope system checks here to see when it should draw the portal
-// If you want to limit any times the portal should/shouldn't be drawn, add them here
+// From ROSniperWeapon, but removed check that literal animation 'scope_shoot_last' isn't playing
+// No weapon in RO or DH has such an animation & it's clearly doing nothing
+// Even when you fire your last shot you should stay scoped & only come off the scope when you begin to bolt or reload
 simulated function bool ShouldDrawPortal()
 {
-    local name  ThisAnim;
-    local float AnimFrame, AnimRate;
-
-    GetAnimParams(0, ThisAnim, AnimFrame, AnimRate);
-
-    return bUsingSights && (IsInState('Idle') || IsInState('PostFiring')) && ThisAnim != 'scope_shoot_last';
+    return bUsingSights && (IsInState('Idle') || IsInState('PostFiring'));
 }
 
 // Modified to prevent the exploit of freezing your animations after firing
@@ -265,32 +233,6 @@ simulated event StopFire(int Mode)
     }
 }
 
-// New function to clear up the scope objects
-simulated function ClearScopeObjects()
-{
-    if (ScopeScriptedTexture != none)
-    {
-        ScopeScriptedTexture.Client = none;
-        Level.ObjectPool.FreeObject(ScopeScriptedTexture);
-        ScopeScriptedTexture = none;
-    }
-
-    if (ScriptedScopeCombiner != none)
-    {
-        ScriptedScopeCombiner.Material2 = none;
-        Level.ObjectPool.FreeObject(ScriptedScopeCombiner);
-        ScriptedScopeCombiner = none;
-    }
-
-    if (ScopeScriptedShader != none)
-    {
-        ScopeScriptedShader.Diffuse = none;
-        ScopeScriptedShader.SelfIllumination = none;
-        Level.ObjectPool.FreeObject(ScopeScriptedShader);
-        ScopeScriptedShader = none;
-    }
-}
-
 // Debug execs to enable sight debugging and calibration, to make sure textured sight overlay is exactly centred
 exec function DebugSights()
 {
@@ -313,7 +255,6 @@ defaultproperties
     bIsSniper=true
     bPlusOneLoading=true
     ScopeOverlaySize=0.7
-    ScriptedTextureFallback=shader'Weapons1st_tex.Zoomscope.LensShader'
 
     PlayerIronsightFOV=90.0
     FreeAimRotationSpeed=6.0

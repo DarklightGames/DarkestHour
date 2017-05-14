@@ -55,5 +55,4 @@ defaultproperties
     // Revert unwanted inherited values from DHSniperWeapon:
     bIsSniper=false
     bSniping=false
-    ScriptedTextureFallback=none
 }
