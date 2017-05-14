@@ -6,6 +6,7 @@
 class DHLib extends Object
     abstract;
 
+
 // Returns current map name, stripping any ".rom" suffix to the name
 // The map name returned by the native GetURLMap() function includes the suffix on a server, but not in single player mode or on a net client
 static final function string GetMapName(LevelInfo L)
