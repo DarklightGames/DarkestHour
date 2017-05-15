@@ -95,7 +95,7 @@ replication
         NextSpawnTime, SpawnPointIndex, VehiclePoolIndex,
         DHPrimaryWeapon, DHSecondaryWeapon, bSpawnPointInvalidated,
         NextVehicleSpawnTime, LastKilledTime, DeathPenaltyCount,
-        WeaponUnlockTime, SquadReplicationInfo, SquadMemberLocations, NextChangeTeamTime;
+        SquadReplicationInfo, SquadMemberLocations, NextChangeTeamTime;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -117,8 +117,8 @@ replication
     reliable if (Role == ROLE_Authority)
         ClientCopyToClipboard, ClientProposeMenu, ClientSaveROIDHash,
         ClientProne, ClientToggleDuck, ClientConsoleCommand,
-        ClientFadeFromBlack, ClientAddHudDeathMessage, ClientSquadInvite,
-        ClientSquadSignal;
+        ClientFadeFromBlack, ClientAddHudDeathMessage, ClientLockWeapons,
+        ClientSquadInvite, ClientSquadSignal;
 
     // Functions the owning client will call on the server
     reliable if (Role < ROLE_Authority)
@@ -2868,7 +2868,7 @@ simulated function LockWeapons(int Seconds)
 }
 
 // New server-to-client replicated function to put owning net player into 'weapon lock' for a specified number of seconds, during which time he won't be allowed to fire
-simulated function ClientLockWeapons(int Seconds)
+simulated function ClientLockWeapons(byte Seconds)
 {
     if (Role < ROLE_Authority)
     {
