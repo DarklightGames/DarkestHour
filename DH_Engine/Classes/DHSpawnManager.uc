@@ -532,12 +532,9 @@ function ToggleSpawnPointIsActiveByTag(name SpawnPointTag)
     {
         SP = DHSpawnPoint(GRI.GetSpawnPoint(i));
 
-        // TEST (Matt, May 2017): the SetIsActive() below doesn't appear to toggle SP's activation & looks like it needs correcting as it won't change anything
-        // If so, would probably be be better to use existing function in this class, like this: SetSpawnPointIsActive(SpawnPointIndices[i], !SP.IsActive());
-        // Also the SetIsActive() below doesn't check whether the SP is locked, as SetSpawnPointIsActive() does, & it would presumably need checking here too
         if (SP != none)
         {
-            SP.SetIsActive(SP.IsActive());
+            SetSpawnPointIsActive(SpawnPointIndices[i], !SP.IsActive());
         }
     }
 }
