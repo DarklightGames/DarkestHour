@@ -9,6 +9,16 @@ class DHConstruction_Vehicle extends DHConstruction
 var class<ROVehicle>    VehicleClass;
 var ROVehicle           Vehicle;
 
+function Destroyed()
+{
+    super.Destroyed();
+
+    if (Vehicle != none)
+    {
+        Vehicle.Destroy();
+    }
+}
+
 function OnTeamIndexChanged()
 {
     super.OnTeamIndexChanged();
