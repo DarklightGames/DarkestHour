@@ -3285,7 +3285,7 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
     // If we changed team, and if elapsed time hasn't gone past the change team interval, and we aren't in standalone then set the NextChangeTeamTime
     // The reason why we compare ElapsedTime to ChangeTeamInterval is we want to allow players to change teams freely for a duration from the start
     // The duration desired is roughly 120 seconds which is what ChangeTeamInterval is currently set to, so if that changes, this if statement (might) need changed as well
-    if (PC != none && bNewTeam && GRI.ElapsedTime > ChangeTeamInterval && Level.NetMode != NM_Standalone)
+    if (PC != none && bNewTeam && GRI.ElapsedTime > ChangeTeamInterval && Level.NetMode != NM_Standalone && class'DH_LevelInfo'.static.DHDebugMode())
     {
         // This sets the DHPlayer NextChangeTeamTime which determines when a player can change team next
         // If the player leaves, it is stored in a player session and restored if they rejoin
