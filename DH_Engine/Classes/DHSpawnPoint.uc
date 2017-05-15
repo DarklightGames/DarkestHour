@@ -13,7 +13,6 @@ enum ESpawnPointType
     ESPT_Vehicles,
     ESPT_Mortars,
     ESPT_All,
-    ESPT_InfantryVehicles,
 };
 
 var()   ESpawnPointType Type;
@@ -21,6 +20,7 @@ var()   bool            bIsInitiallyActive;            // whether or not the SP 
 var()   bool            bIsInitiallyLocked;            // whether or not the SP is locked at the start of the round
 
 var     bool            bIsLocked;                     // locked spawn points will not be affected by enable or disable commands
+var     bool            bCanOnlySpawnInfantryVehicles; // players can spawn into infantry vehicles (as well as on foot) but can't spawn armoured fighting vehicles
 
 // Location hints - placed actors used for locations for spawning players
 var()   name            InfantryLocationHintTag;       // the Tag for associated LocationHint actors used to spawn players on foot
@@ -41,11 +41,30 @@ var     array<DHVehicleFactory> LinkedVehicleFactories;
 
 // Modified to find associated location hint actors, used as positions to spawn players or vehicles, & build arrays of actor references
 // Also to find any actors that are linked to this spawn point, so they are only active when the SP is active, & save actor references
+// And to check whether an infantry spawn point should also allow players to spawn into infantry vehicles, as well as on foot
+// That means cars, trucks or APCs, but not tanks or any vehicle that requires the player to be tank crew
+// For that to be allowed, the leveller must have included some VehicleLocationHints linked to the infantry spawn point
 simulated function PostBeginPlay()
 {
     local DHLocationHint   LH;
     local RONoArtyVolume   NAV;
     local DHVehicleFactory VF;
+
+    // On net client we only need to do 1 check in this function & only if spawn point is for infantry who are allowed to spawn in infantry vehicles
+    // Client doesn't build or use arrays of location hints, so we just need to verify there is at least 1 valid vehicle location hint
+    if (Role < ROLE_Authority)
+    {
+        if (Type == ESPT_Infantry && VehicleLocationHintTag != '')
+        {
+            foreach AllActors(class'DHLocationHint', LH, VehicleLocationHintTag)
+            {
+                bCanOnlySpawnInfantryVehicles = true;
+                break; // no need to check for more, we only need to verify there is at least 1
+            }
+        }
+
+        return; // net client doesn't need to do anything else - this function would otherwise be non-simulated & execute on server only
+    }
 
     // Find associated location hint actors & build arrays of actor references
     foreach AllActors(class'DHLocationHint', LH)
@@ -61,6 +80,12 @@ simulated function PostBeginPlay()
                 VehicleLocationHints[VehicleLocationHints.Length] = LH;
             }
         }
+    }
+
+    // Check whether an infantry spawn point should also allow players to spawn into infantry vehicles, as well as on foot (this is where server flags it)
+    if (Type == ESPT_Infantry && VehicleLocationHints.Length > 0)
+    {
+        bCanOnlySpawnInfantryVehicles = true;
     }
 
     // Find any linked mine volume (that will only protect this spawn point only if the spawn is active)
@@ -175,21 +200,12 @@ function SetIsActive(bool bIsActive)
 
 simulated function bool CanSpawnInfantry()
 {
-    return Type == ESPT_Infantry || Type == ESPT_InfantryVehicles || Type == ESPT_All;
+    return Type == ESPT_Infantry || Type == ESPT_All;
 }
 
-// TODO: this actually means TANKS
 simulated function bool CanSpawnVehicles()
 {
     return Type == ESPT_Vehicles || Type == ESPT_All;
-}
-
-// Special check that allows the option for an infantry spawn point to be set up allow players to spawn into infantry vehicles, as well as on foot
-// That means cars, trucks or APCs, but not tanks or any vehicle that requires the player to be tank crew (prevented by checks elsewhere, when this function is called)
-// For this to be allowed, the leveller must have included some VehicleLocationHints linked to the infantry spawn
-simulated function bool CanSpawnInfantryVehicles()
-{
-    return Type == ESPT_InfantryVehicles || Type == ESPT_Vehicles || Type == ESPT_All;
 }
 
 simulated function bool CanSpawnMortars()
@@ -226,7 +242,7 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
     }
     else
     {
-        return CanSpawnInfantryVehicles() || (RI.default.bCanBeTankCrew && CanSpawnVehicle(GRI, VehiclePoolIndex));
+        return CanSpawnVehicle(GRI, VehiclePoolIndex);
     }
 }
 
@@ -237,9 +253,9 @@ simulated function bool CanSpawnVehicle(DHGameReplicationInfo GRI, int VehiclePo
     VehicleClass = class<ROVehicle>(GRI.GetVehiclePoolVehicleClass(VehiclePoolIndex));
 
     return VehicleClass != none &&
-           TeamIndex == VehicleClass.default.VehicleTeam &&
-           (CanSpawnVehicles() || (!VehicleClass.default.bMustBeTankCommander && CanSpawnInfantryVehicles())) &&
-           GRI.CanSpawnVehicle(VehiclePoolIndex);
+           TeamIndex == VehicleClass.default.VehicleTeam &&                                                         // check vehicle belongs to player's team
+           (CanSpawnVehicles() || (bCanOnlySpawnInfantryVehicles && !VehicleClass.default.bMustBeTankCommander)) && // check SP can spawn vehicles
+           GRI.CanSpawnVehicle(VehiclePoolIndex);                                                                   // check one of these vehicles is available at the current time
 }
 
 function bool PerformSpawn(DHPlayer PC)
