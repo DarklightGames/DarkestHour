@@ -2549,6 +2549,7 @@ function AddDefaultInventory()
     local DHPlayerReplicationInfo PRI;
     local string     S;
     local int        i;
+    local DHGameReplicationInfo GRI;
 
     if (Controller == none)
     {
@@ -2557,6 +2558,7 @@ function AddDefaultInventory()
 
     P = DHPlayer(Controller);
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
     if (IsLocallyControlled())
     {
@@ -2576,7 +2578,10 @@ function AddDefaultInventory()
                 CreateInventory(S);
             }
 
-            CreateInventory("DH_Equipment.DHShovelItem");
+            if (GRI != none && GRI.bAreConstructionsEnabled)
+            {
+                CreateInventory("DH_Equipment.DHShovelItem");
+            }
 
             RI = P.GetRoleInfo();
 
@@ -2681,7 +2686,10 @@ function AddDefaultInventory()
                 CreateInventory(S);
             }
 
-            CreateInventory("DH_Equipment.DHShovelItem");
+            if (GRI != none && GRI.bAreConstructionsEnabled)
+            {
+                CreateInventory("DH_Equipment.DHShovelItem");
+            }
         }
     }
 
