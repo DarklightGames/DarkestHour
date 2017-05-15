@@ -16,6 +16,7 @@ enum ESpawnPointType
 };
 
 var()   ESpawnPointType Type;
+var()   bool            bNoSpawnVehicles;              // option to prevent SP from spawning spawn vehicles
 var()   bool            bIsInitiallyActive;            // whether or not the SP is active at the start of the round (or waits to be activated later)
 var()   bool            bIsInitiallyLocked;            // whether or not the SP is locked at the start of the round
 
@@ -255,6 +256,7 @@ simulated function bool CanSpawnVehicle(DHGameReplicationInfo GRI, int VehiclePo
     return VehicleClass != none &&
            TeamIndex == VehicleClass.default.VehicleTeam &&                                                         // check vehicle belongs to player's team
            (CanSpawnVehicles() || (bCanOnlySpawnInfantryVehicles && !VehicleClass.default.bMustBeTankCommander)) && // check SP can spawn vehicles
+           !(bNoSpawnVehicles && GRI.VehiclePoolIsSpawnVehicles[VehiclePoolIndex] != 0) &&                          // if it's a spawn vehicle, make sure SP doesn't prohibit those
            GRI.CanSpawnVehicle(VehiclePoolIndex);                                                                   // check one of these vehicles is available at the current time
 }
 
