@@ -105,13 +105,13 @@ replication
     reliable if (Role < ROLE_Authority)
         ServerLoadATAmmo, ServerThrowMortarAmmo,
         ServerSaveArtilleryTarget, ServerSetPlayerInfo, ServerClearObstacle,
-        // these ones in debug mode only
-        ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog,
         ServerMetricsDump, ServerLockWeapons,
         ServerSquadCreate, ServerSquadLeave, ServerSquadJoin, ServerSquadSay,
         ServerSquadJoinAuto, ServerSquadInvite, ServerSquadKick, ServerSquadPromote,
         ServerSquadCommandeer, ServerSquadLock, ServerSquadOrder, ServerSquadSignal,
-        ServerSquadRename, ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint;
+        ServerSquadRename, ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint,
+        // these ones in debug mode only:
+        ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)

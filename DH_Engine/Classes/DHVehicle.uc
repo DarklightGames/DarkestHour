@@ -137,7 +137,6 @@ var     bool        bIsArtilleryVehicle;
 
 // Debugging
 var     bool        bDebuggingText;
-var     bool        bDebugTreadText;
 
 replication
 {
