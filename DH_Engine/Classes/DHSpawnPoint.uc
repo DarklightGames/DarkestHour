@@ -247,6 +247,9 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
     }
 }
 
+// TODO (Matt): think best to remove this separate function & put the logic in CanSpawnWithParameters() in this class, which is the only place it's called
+// I can't see it being subclassed or used elsewhere, so it doesn't need defining in the parent DHSpawnPointBase
+// And we pass in the VehiclePoolIndex and use it to get the required VehicleClass, but the calling function has already got the VehicleClass
 simulated function bool CanSpawnVehicle(DHGameReplicationInfo GRI, int VehiclePoolIndex)
 {
     local class<ROVehicle> VehicleClass;
@@ -389,9 +392,7 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
 defaultproperties
 {
     bDirectional=true
-    bHidden=true
     bStatic=true
-    RemoteRole=ROLE_SimulatedProxy
     DrawScale=1.5
     bCollideWhenPlacing=true
     CollisionRadius=+00040.0

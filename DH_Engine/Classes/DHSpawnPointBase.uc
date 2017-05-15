@@ -21,7 +21,7 @@ var int TeamIndex;
 var ESpawnPointBlockReason BlockReason;
 var private bool bIsActive;
 
-var protected DHGameReplicationInfo GRI;
+var protected DHGameReplicationInfo GRI; // TODO (Matt): as GRI is now an instance variable we can remove all the GRI function parameters in this & subclasses?
 
 // The amount of time, in seconds, that a player will be invulnerable after
 // spawning on this spawn point.
