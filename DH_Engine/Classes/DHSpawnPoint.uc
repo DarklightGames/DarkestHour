@@ -243,14 +243,14 @@ simulated function bool CanSpawnWithParameters(int TeamIndex, int RoleIndex, int
     }
     else
     {
-        return CanSpawnVehicle(GRI, VehiclePoolIndex);
+        return CanSpawnVehicle(VehiclePoolIndex);
     }
 }
 
 // TODO (Matt): think best to remove this separate function & put the logic in CanSpawnWithParameters() in this class, which is the only place it's called
 // I can't see it being subclassed or used elsewhere, so it doesn't need defining in the parent DHSpawnPointBase
 // And we pass in the VehiclePoolIndex and use it to get the required VehicleClass, but the calling function has already got the VehicleClass
-simulated function bool CanSpawnVehicle(DHGameReplicationInfo GRI, int VehiclePoolIndex)
+simulated function bool CanSpawnVehicle(int VehiclePoolIndex)
 {
     local class<ROVehicle> VehicleClass;
 
