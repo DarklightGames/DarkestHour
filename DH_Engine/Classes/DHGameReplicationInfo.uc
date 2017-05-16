@@ -283,7 +283,7 @@ simulated function bool CanSpawnWithParameters(int SpawnPointIndex, int TeamInde
         return false;
     }
 
-    return SP.CanSpawnWithParameters(self, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex);
+    return SP.CanSpawnWithParameters(TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex);
 }
 
 simulated function bool CanSpawnVehicle(int VehiclePoolIndex)

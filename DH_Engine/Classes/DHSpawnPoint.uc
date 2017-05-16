@@ -214,12 +214,12 @@ simulated function bool CanSpawnMortars()
     return Type == ESPT_Mortars || Type == ESPT_All;
 }
 
-simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
+simulated function bool CanSpawnWithParameters(int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
 {
     local class<ROVehicle>  VehicleClass;
     local DHRoleInfo        RI;
 
-    if (!super.CanSpawnWithParameters(GRI, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex))
+    if (!super.CanSpawnWithParameters(TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex))
     {
         return false;
     }
@@ -271,7 +271,7 @@ function bool PerformSpawn(DHPlayer PC)
 
     G = DarkestHourGame(Level.Game);
 
-    if (CanSpawnWithParameters(GRI, PC.GetTeamNum(), Pc.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex) &&
+    if (CanSpawnWithParameters(PC.GetTeamNum(), Pc.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex) &&
         GetSpawnPosition(SpawnLocation, SpawnRotation, PC.VehiclePoolIndex))
     {
         if (PC.VehiclePoolIndex >= 0)

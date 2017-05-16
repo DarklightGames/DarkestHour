@@ -200,9 +200,9 @@ function SetIsActive(bool bIsActive)
     }
 }
 
-simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
+simulated function bool CanSpawnWithParameters(int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
 {
-    if (!super.CanSpawnWithParameters(GRI, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex))
+    if (!super.CanSpawnWithParameters(TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex))
     {
         return false;
     }
@@ -284,7 +284,7 @@ function bool PerformSpawn(DHPlayer PC)
         return false;
     }
 
-    if (CanSpawnWithParameters(GRI, PC.GetTeamNum(), PC.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex) &&
+    if (CanSpawnWithParameters(PC.GetTeamNum(), PC.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex) &&
         GetSpawnPosition(SpawnLocation, SpawnRotation, PC.VehiclePoolIndex))
     {
         if (G.SpawnPawn(PC, SpawnLocation, SpawnRotation, self) == none)
