@@ -58,7 +58,7 @@ function bool PerformSpawn(DHPlayer PC)
         return false;
     }
 
-    if (CanSpawnWithParameters(GRI, PC.GetTeamNum(), PC.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex) &&
+    if (CanSpawnWithParameters(PC.GetTeamNum(), PC.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex) &&
         GetSpawnPosition(SpawnLocation, SpawnRotation, PC.VehiclePoolIndex))
     {
         if (G.SpawnPawn(PC, SpawnLocation, SpawnRotation, self) == none)
