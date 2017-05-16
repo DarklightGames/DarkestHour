@@ -112,7 +112,7 @@ simulated function bool CanSpawnWithParameters(int TeamIndex, int RoleIndex, int
         return false;
     }
 
-    if (VehiclePoolIndex >= 0 && !CanSpawnVehicle(GRI, VehiclePoolIndex))
+    if (VehiclePoolIndex >= 0 && !CanSpawnVehicle(VehiclePoolIndex))
     {
         return false;
     }
