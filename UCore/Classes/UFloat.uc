@@ -16,6 +16,11 @@ static final function UFloat Create(optional float Value)
     return F;
 }
 
+static final function float RandomRange(float Min, float Max)
+{
+    return Min + (FRand() * (Max - Min));
+}
+
 static final function float Infinity()
 {
     return 1.0 / 0.0;
