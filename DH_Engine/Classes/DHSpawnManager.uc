@@ -253,7 +253,7 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
                 if (DHV.SpawnPointAttachment != none)
                 {
                     DHV.SpawnPointAttachment.Vehicle = DHV;
-                    DHV.SpawnPointAttachment.TeamIndex = V.default.VehicleTeam;
+                    DHV.SpawnPointAttachment.SetTeamIndex(V.default.VehicleTeam);
                     DHV.SpawnPointAttachment.SetIsActive(true);
                 }
             }

@@ -5,12 +5,12 @@
 
 class DHConstruction_PlatoonHQ extends DHConstruction;
 
-var DHSpawnPointBase    SpawnPoint;
-var ROSoundAttachment   RainSoundAttachment;
+#exec OBJ LOAD FILE=..\Textures\DH_Construction_tex.utx
 
-var int                 FlagSkinIndex;
-
-var sound               RainSound;
+var DHSpawnPoint_PlatoonHQ  SpawnPoint;
+var ROSoundAttachment       RainSoundAttachment;
+var int                     FlagSkinIndex;
+var sound                   RainSound;
 
 simulated function PostBeginPlay()
 {
@@ -83,8 +83,9 @@ function OnConstructed()
 
         HitLocation.Z += class'DHPawn'.default.CollisionHeight / 2;
 
+        SpawnPoint.Construction = self;
         SpawnPoint.SetLocation(HitLocation);
-        SpawnPoint.TeamIndex = GetTeamIndex();
+        SpawnPoint.SetTeamIndex(GetTeamIndex());
         SpawnPoint.SetIsActive(true);
     }
 }
@@ -112,6 +113,12 @@ simulated state Broken
     simulated function BeginState()
     {
         super.BeginState();
+
+        if (SpawnPoint != none)
+        {
+            // "A Platoon HQ has been destroyed."
+            SpawnPoint.BroadcastTeamLocalizedMessage(GetTeamIndex(), class'DHPlatoonHQMessage', 3);
+        }
 
         DestroyAttachments();
     }
@@ -195,12 +202,12 @@ function Material GetFlagMaterial()
     switch (GetTeamIndex())
     {
     case AXIS_TEAM_INDEX:
-        break;
+        return Texture'DH_Construction_tex.Base.GER_flag_01';
     case ALLIES_TEAM_INDEX:
         switch (LevelInfo.AlliedNation)
         {
         case NATION_USA:
-            break;
+            return Texture'DH_Construction_tex.Base.USA_flag_01';
         case NATION_Canada:
             break;
         case NATION_Britain:
@@ -211,7 +218,7 @@ function Material GetFlagMaterial()
         break;
     }
 
-    return none;
+    return Texture'DH_Construction_tex.Base.flags_01_blank';
 }
 
 defaultproperties
@@ -245,5 +252,5 @@ defaultproperties
 
     RainSound=Sound'Amb_Weather01.Rain.Krasnyi_Rain_Inside_Heavy'
 
-    FlagSkinIndex=-1
+    FlagSkinIndex=1
 }

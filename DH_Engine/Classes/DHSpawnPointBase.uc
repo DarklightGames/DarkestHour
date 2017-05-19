@@ -17,7 +17,7 @@ enum ESpawnPointBlockReason
 
 var bool bCombatSpawn;
 var int SpawnPointIndex;
-var int TeamIndex;
+var private int TeamIndex;
 var ESpawnPointBlockReason BlockReason;
 var private bool bIsActive;
 
@@ -172,6 +172,54 @@ simulated function string GetMapStyleName()
 
 // Override to change the text displayed overtop of the spawn point icon on the map.
 simulated function string GetMapText();
+
+// TODO: I don't like this one bit! SEPARATE OUT INTO DIFFERENT FUNCTIONS
+function GetPlayerCountsWithinRadius(float RadiusInMeters, optional int SquadIndex, optional out int SquadmateCount, optional out int EnemyCount, optional out int TeammateCount)
+{
+    local Pawn P;
+    local DHPlayerReplicationInfo OtherPRI;
+
+    foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(RadiusInMeters))
+    {
+        if (P != none && !P.bDeleteMe && P.Health > 0 && P.PlayerReplicationInfo != none)
+        {
+            if (P.GetTeamNum() == TeamIndex)
+            {
+                TeammateCount += 1;
+
+                OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+
+                if (OtherPRI != none && OtherPRI.SquadIndex == SquadIndex)
+                {
+                    SquadmateCount += 1;
+                }
+            }
+            else
+            {
+                Log("Enemy" @ P);
+
+                EnemyCount += 1;
+            }
+        }
+    }
+}
+
+final function int GetTeamIndex()
+{
+    return TeamIndex;
+}
+
+final function SetTeamIndex(int TeamIndex)
+{
+    if (self.TeamIndex != TeamIndex)
+    {
+        self.TeamIndex = TeamIndex;
+
+        OnTeamIndexChanged();
+    }
+}
+
+function OnTeamIndexChanged();
 
 defaultproperties
 {

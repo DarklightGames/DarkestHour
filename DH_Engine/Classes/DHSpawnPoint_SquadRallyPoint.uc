@@ -9,27 +9,31 @@ class DHSpawnPoint_SquadRallyPoint extends DHSpawnPointBase
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_Construction_stc.usx
 
 var DHSquadReplicationInfo SRI;                 // Convenience variable to access the SquadReplicationInfo.
-
-var float CreatedTimeSeconds;                   //  The time (in relation to Level.TimeSeconds) that this rally point was created
-
 var int SquadIndex;                             // The squad index of the squad that owns this rally point.
 var int RallyPointIndex;                        // The index into SRI.RallyPoints.
 var int SpawnsRemaining;                        // The amount of spawns remaining on the rally point.
+
+// Creation
+var float CreatedTimeSeconds;                   // The time (relative to Level.TimeSeconds) that this rally point was created
 var sound CreationSound;                        // Sound that is played when the squad rally point is first placed.
 
-var int EstablishmentRadiusInMeters;            // The distance, in meters, that squadmates and enemies must be within to influence the EstablishmentCounter.
-var int OverrunRadiusInMeters;                  // The distance, in meters, that enemies must be within to immediately overrun a rally point.
+// Encroachment
 var int EncroachmentRadiusInMeters;             // The distance, in meters, that enemies must be within to affect the EncroachmentPenaltyCounter
 var int EncroachmentPenaltyBlockThreshold;      // The value that EncroachmentPenaltyCounter must reach for the rally point to be "blocked".
 var int EncroachmentPenaltyOverrunThreshold;    // The value that EncroachmentPenaltyCounter must reach for the rally point to be "overrun".
 var int EncroachmentPenaltyCounter;             // Running counter of encroachment penalty.
 
+// Establishment
+var int EstablishmentRadiusInMeters;            // The distance, in meters, that squadmates and enemies must be within to influence the EstablishmentCounter.
+var float EstablishmentStartTimeSeconds;        // The value of Level.TimeSeconds when this rally point began Establishment.
 var float EstablishmentCounter;                 // Running counter to keep track of Establishment status.
 var float EstablishmentCounterThreshold;        // The value that EstablishmentCounter must reach for the rally point to be "established".
 
-var float EstablishmentStartTimeSeconds;        // The value of Level.TimeSeconds when this rally point began Establishment.
+// Overrun
+var int OverrunRadiusInMeters;                  // The distance, in meters, that enemies must be within to immediately overrun a rally point.
 var float OverrunMinimumTimeSeconds;            // The number of seconds a rally point must be "alive" for in order to be overrun by enemies. (To stop squad rally points being used as "enemy radar".
 
+// Abandonment
 var bool bCanSendAbandonmentWarningMessage;     // Whether or not we should send the abandonment message the next time the squad rally point has no teammates nearby while constructing
 
 replication
@@ -68,7 +72,7 @@ auto state Constructing
 
         global.Timer();
 
-        GetPlayerCountsWithinRadius(default.EstablishmentRadiusInMeters, SquadmateCount, EnemyCount);
+        GetPlayerCountsWithinRadius(default.EstablishmentRadiusInMeters, SquadIndex, SquadmateCount, EnemyCount);
 
         EstablishmentCounter -= EnemyCount;
         EstablishmentCounter += SquadmateCount;
@@ -119,14 +123,14 @@ function Timer()
 {
     local int OverrunningEnemiesCount;
 
-    GetPlayerCountsWithinRadius(default.OverrunRadiusInMeters,, OverrunningEnemiesCount);
+    GetPlayerCountsWithinRadius(OverrunRadiusInMeters,,, OverrunningEnemiesCount);
 
     // Destroy the rally point immediately if there are enemies within a
     // very short distance.
     if (OverrunningEnemiesCount >= 1)
     {
         // "A squad rally point has been overrun by enemies."
-        SRI.BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SRI.SquadMessageClass, 54);
+        SRI.BroadcastSquadLocalizedMessage(GetTeamIndex(), SquadIndex, SRI.SquadMessageClass, 54);
 
         Destroy();
     }
@@ -141,7 +145,7 @@ state Active
         global.Timer();
 
         // TODO: 3-strike rule for spawn kills on the rally point
-        GetPlayerCountsWithinRadius(default.EncroachmentRadiusInMeters,, EncroachingEnemiesCount);
+        GetPlayerCountsWithinRadius(default.EncroachmentRadiusInMeters,,, EncroachingEnemiesCount);
 
         if (EncroachingEnemiesCount > 0)
         {
@@ -172,7 +176,7 @@ state Active
         else
         {
             // "A squad rally point has been overrun by enemies."
-            SRI.BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SRI.SquadMessageClass, 54);
+            SRI.BroadcastSquadLocalizedMessage(GetTeamIndex(), SquadIndex, SRI.SquadMessageClass, 54);
 
             Destroy();
         }
@@ -218,32 +222,6 @@ simulated function bool CanSpawnWithParameters(int TeamIndex, int RoleIndex, int
     }
 
     return true;
-}
-
-function GetPlayerCountsWithinRadius(float RadiusInMeters, optional out int SquadmateCount, optional out int EnemyCount)
-{
-    local Pawn P;
-    local DHPlayerReplicationInfo OtherPRI;
-
-    foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(RadiusInMeters))
-    {
-        if (P != none && !P.bDeleteMe && P.Health > 0 && P.PlayerReplicationInfo != none)
-        {
-            if (P.GetTeamNum() == TeamIndex)
-            {
-                OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
-
-                if (OtherPRI != none && OtherPRI.SquadIndex == SquadIndex)
-                {
-                    SquadmateCount += 1;
-                }
-            }
-            else
-            {
-                EnemyCount += 1;
-            }
-        }
-    }
 }
 
 function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, int VehiclePoolIndex)
@@ -297,7 +275,7 @@ function bool PerformSpawn(DHPlayer PC)
         if (SpawnsRemaining <= 0)
         {
             // "A squad rally point has been exhausted."
-            SRI.BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SRI.SquadMessageClass, 46);
+            SRI.BroadcastSquadLocalizedMessage(GetTeamIndex(), SquadIndex, SRI.SquadMessageClass, 46);
 
             Destroy();
         }
@@ -310,10 +288,10 @@ function bool PerformSpawn(DHPlayer PC)
 
 function OnSpawnKill(Pawn VictimPawn, Controller KillerController)
 {
-    if (KillerController != none && KillerController.GetTeamNum() != TeamIndex)
+    if (KillerController != none && KillerController.GetTeamNum() != GetTeamIndex())
     {
         // "A squad rally point has been overrun by enemies."
-        SRI.BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SRI.SquadMessageClass, 54);
+        SRI.BroadcastSquadLocalizedMessage(GetTeamIndex(), SquadIndex, SRI.SquadMessageClass, 54);
 
         Destroy();
     }
@@ -344,7 +322,7 @@ function UpdateAppearance()
         AlliedNation = G.DHLevelInfo.AlliedNation;
     }
 
-    switch (TeamIndex)
+    switch (GetTeamIndex())
     {
     case AXIS_TEAM_INDEX:
         NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.GER_backpack';
@@ -369,10 +347,8 @@ function UpdateAppearance()
     SetStaticMesh(NewStaticMesh);
 }
 
-function SetTeamIndex(int TeamIndex)
+function OnTeamIndexChanged()
 {
-    self.TeamIndex = TeamIndex;
-
     UpdateAppearance();
 }
 

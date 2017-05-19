@@ -151,7 +151,7 @@ function bool MyContextOpen(GUIContextMenu Sender)
         SRP = DHSpawnPoint_SquadRallyPoint(GRI.SpawnPoints[Sender.Tag]);
     }
 
-    if (SRP == none || SRP.TeamIndex != PC.GetTeamNum() || SRP.SquadIndex != PRI.SquadIndex || !SRP.IsActive())
+    if (SRP == none || SRP.GetTeamIndex() != PC.GetTeamNum() || SRP.SquadIndex != PRI.SquadIndex || !SRP.IsActive())
     {
         return false;
     }

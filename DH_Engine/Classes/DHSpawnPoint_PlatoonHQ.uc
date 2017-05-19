@@ -2,34 +2,121 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2016
 //==============================================================================
-// This is a generic spawn point. When squads were added, there was a di
-//==============================================================================
 
 class DHSpawnPoint_PlatoonHQ extends DHSpawnPointBase
     notplaceable;
 
 var float SpawnRadius;
+var DHConstruction Construction;
 
-auto state Establishing
+var bool    bIsActivated;
+var int     ActivationCounter;
+var int     ActivationCounterThreshold;
+
+var float   EncroachmentRadiusInMeters;
+var int     EncroachmentPenaltyBlockThreshold;
+var int     EncroachmentPenaltyCounter;
+
+var float   CaptureRadiusInMeters;
+var int     CaptureCounter;
+var int     CaptureCounterThreshold;
+
+function PostBeginPlay()
 {
-    function Timer()
-    {
-        GotoState('Established');
-    }
+    super.PostBeginPlay();
 
-Begin:
-    BlockReason = SPBR_Constructing;
-    SetTimer(60.0, true);   // TODO: magic number
+    SetTimer(1.0, true);
 }
 
-state Established
+function Timer()
 {
-    function Timer()
-    {
-        // TODO: check if we are being captured?
-    }
-Begin:
+    local int EncroachingEnemiesCount;
+    local int CapturingEnemiesCount;
+
     BlockReason = SPBR_None;
+
+    // Activation
+    if (!bIsActivated)
+    {
+        ActivationCounter = Clamp(ActivationCounter + 1, 0, ActivationCounterThreshold);
+
+        if (ActivationCounter < ActivationCounterThreshold)
+        {
+            BlockReason = SPBR_Constructing;
+        }
+        else
+        {
+            bIsActivated = true;
+
+            // "A Platoon HQ has been established."
+            BroadcastTeamLocalizedMessage(GetTeamIndex(), class'DHPlatoonHQMessage', 0);
+        }
+    }
+
+    // Encroachment logic
+    GetPlayerCountsWithinRadius(EncroachmentRadiusInMeters,,, EncroachingEnemiesCount);
+
+    if (EncroachingEnemiesCount > 0)
+    {
+        EncroachmentPenaltyCounter = Clamp(EncroachmentPenaltyCounter + EncroachingEnemiesCount, 0, EncroachmentPenaltyBlockThreshold);
+    }
+    else
+    {
+        EncroachmentPenaltyCounter = 0;
+    }
+
+    if (EncroachmentPenaltyCounter >= EncroachmentPenaltyBlockThreshold)
+    {
+        BlockReason = SPBR_EnemiesNearby;
+    }
+
+    GetPlayerCountsWithinRadius(CaptureRadiusInMeters,,, CapturingEnemiesCount);
+
+    if (CapturingEnemiesCount >= 1)
+    {
+        // Increment capture counter
+        CaptureCounter += CapturingEnemiesCount;
+
+        // If any enemies are capturing, spawning must be disabled.
+        BlockReason = SPBR_EnemiesNearby;
+    }
+    else
+    {
+        // No enemies capturing, decrement the counter
+        CaptureCounter -= 1;
+    }
+
+    CaptureCounter = Max(0, CaptureCounter);
+
+    if (CaptureCounter >= CaptureCounterThreshold)
+    {
+        // "A Platoon HQ has been captured by the enemy."
+        BroadcastTeamLocalizedMessage(GetTeamIndex(), class'DHPlatoonHQMessage', 2);
+
+        if (GetTeamIndex() == AXIS_TEAM_INDEX)
+        {
+            SetTeamIndex(ALLIES_TEAM_INDEX);
+        }
+        else if (GetTeamIndex() == ALLIES_TEAM_INDEX)
+        {
+            SetTeamIndex(AXIS_TEAM_INDEX);
+        }
+
+        // "An enemy Platoon HQ has been captured."
+        BroadcastTeamLocalizedMessage(GetTeamIndex(), class'DHPlatoonHQMessage', 1);
+    }
+}
+
+function OnTeamIndexChanged()
+{
+    // Reset activation state and timer
+    bIsActivated = false;
+    ActivationCounter = 0;
+
+    if (Construction != none)
+    {
+        Construction.SetTeamIndex(GetTeamIndex());
+    }
 }
 
 // TODO: Override with different style
@@ -85,6 +172,7 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
 
     j = Rand(SEGMENT_COUNT);
 
+    // TODO: move this radial functionality into a parent class
     for (i = 0; i < SEGMENT_COUNT; ++i)
     {
         L = Location;
@@ -111,8 +199,34 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
     return false;
 }
 
+function BroadcastTeamLocalizedMessage(byte Team, class<LocalMessage> MessageClass, int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
+{
+    local PlayerController PC;
+    local Controller       C;
+
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        if (C.GetTeamNum() == Team)
+        {
+            PC = PlayerController(C);
+
+            if (PC != none)
+            {
+                PC.ReceiveLocalizedMessage(MessageClass, Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);
+            }
+        }
+    }
+}
+
 defaultproperties
 {
     SpawnRadius=60.0
     bCombatSpawn=true
+
+    ActivationCounterThreshold=60
+    EncroachmentRadiusInMeters=50
+    EncroachmentPenaltyBlockThreshold=30
+
+    CaptureRadiusInMeters=5
+    CaptureCounterThreshold=30
 }

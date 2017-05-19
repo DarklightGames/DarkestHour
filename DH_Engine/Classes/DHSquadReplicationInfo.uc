@@ -513,7 +513,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
         for (i = 0; i < arraycount(RallyPoints); ++i)
         {
             if (RallyPoints[i] != none &&
-                RallyPoints[i].TeamIndex == TeamIndex &&
+                RallyPoints[i].GetTeamIndex() == TeamIndex &&
                 RallyPoints[i].SquadIndex == PRI.SquadIndex)
             {
                 RallyPoints[i].Destroy();
@@ -1210,7 +1210,7 @@ function DHSpawnPoint_SquadRallyPoint GetRallyPoint(int TeamIndex, int SquadInde
     for (i = 0; i < arraycount(RallyPoints); ++i)
     {
         if (RallyPoints[i] != none &&
-            RallyPoints[i].TeamIndex == TeamIndex &&
+            RallyPoints[i].GetTeamIndex() == TeamIndex &&
             RallyPoints[i].SquadIndex == SquadIndex)
         {
             return RallyPoints[i];
@@ -1254,7 +1254,7 @@ function array<DHSpawnPoint_SquadRallyPoint> GetActiveSquadRallyPoints(int TeamI
     for (i = 0; i < arraycount(RallyPoints); ++i)
     {
         if (RallyPoints[i] != none &&
-            RallyPoints[i].TeamIndex == TeamIndex &&
+            RallyPoints[i].GetTeamIndex() == TeamIndex &&
             RallyPoints[i].SquadIndex == SquadIndex &&
             RallyPoints[i].IsActive())
         {
@@ -1314,7 +1314,7 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
     // Cannot be too close to another rally point.
     for (i = 0; i < arraycount(RallyPoints); ++i)
     {
-        if (RallyPoints[i] != none && RallyPoints[i].TeamIndex == PC.GetTeamNum() && RallyPoints[i].SquadIndex == PC.GetSquadIndex())
+        if (RallyPoints[i] != none && RallyPoints[i].GetTeamIndex() == PC.GetTeamNum() && RallyPoints[i].SquadIndex == PC.GetSquadIndex())
         {
             D = VSize(RallyPoints[i].Location - P.Location);
 
@@ -1489,20 +1489,20 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
     // "You have create a squad rally point. Secure the area with your squad to establish this rally point."
     PC.ReceiveLocalizedMessage(SquadMessageClass, 48);
 
-    SetSquadNextRallyPointTime(RP.TeamIndex, RP.SquadIndex, Level.TimeSeconds + default.NextRallyPointInterval);
+    SetSquadNextRallyPointTime(RP.GetTeamIndex(), RP.SquadIndex, Level.TimeSeconds + default.NextRallyPointInterval);
 
     return RP;
 }
 
 function DestroySquadRallyPoint(DHPlayerReplicationInfo PRI, DHSpawnPoint_SquadRallyPoint SRP)
 {
-    if (PRI == none || SRP == none || !PRI.IsSquadLeader() || PRI.Team.TeamIndex != SRP.TeamIndex || PRI.SquadIndex != SRP.SquadIndex || !SRP.IsActive())
+    if (PRI == none || SRP == none || !PRI.IsSquadLeader() || PRI.Team.TeamIndex != SRP.GetTeamIndex() || PRI.SquadIndex != SRP.SquadIndex || !SRP.IsActive())
     {
         return;
     }
 
     // "The squad leader has forcibly destroyed a rally point."
-    BroadcastSquadLocalizedMessage(SRP.TeamIndex, SRP.SquadIndex, SquadMessageClass, 57);
+    BroadcastSquadLocalizedMessage(SRP.GetTeamIndex(), SRP.SquadIndex, SquadMessageClass, 57);
 
     SRP.Destroy();
 }
@@ -1514,11 +1514,11 @@ function OnSquadRallyPointActivated(DHSpawnPoint_SquadRallyPoint SRP)
     local array<DHSpawnPoint_SquadRallyPoint> ActiveSquadRallyPoints;
 
     // "The squad has established a new rally point."
-    BroadcastSquadLocalizedMessage(SRP.TeamIndex, SRP.SquadIndex, SquadMessageClass, 44);
+    BroadcastSquadLocalizedMessage(SRP.GetTeamIndex(), SRP.SquadIndex, SquadMessageClass, 44);
 
     // Check if this squad already has more than the maximum rally points.
     // If so, forcibly delete the oldest one.
-    ActiveSquadRallyPoints = GetActiveSquadRallyPoints(SRP.TeamIndex, SRP.SquadIndex);
+    ActiveSquadRallyPoints = GetActiveSquadRallyPoints(SRP.GetTeamIndex(), SRP.SquadIndex);
 
     if (ActiveSquadRallyPoints.Length > SQUAD_RALLY_POINTS_MAX)
     {

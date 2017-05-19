@@ -257,7 +257,7 @@ simulated function bool CanSpawnVehicle(int VehiclePoolIndex)
     VehicleClass = class<ROVehicle>(GRI.GetVehiclePoolVehicleClass(VehiclePoolIndex));
 
     return VehicleClass != none &&
-           TeamIndex == VehicleClass.default.VehicleTeam &&                                                         // check vehicle belongs to player's team
+           GetTeamIndex() == VehicleClass.default.VehicleTeam &&                                                         // check vehicle belongs to player's team
            (CanSpawnVehicles() || (bCanOnlySpawnInfantryVehicles && !VehicleClass.default.bMustBeTankCommander)) && // check SP can spawn vehicles
            !(bNoSpawnVehicles && GRI.VehiclePoolIsSpawnVehicles[VehiclePoolIndex] != 0) &&                          // if it's a spawn vehicle, make sure SP doesn't prohibit those
            GRI.CanSpawnVehicle(VehiclePoolIndex);                                                                   // check one of these vehicles is available at the current time
@@ -325,7 +325,7 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
         // Get all enemy locations
         for (C = Level.ControllerList; C != none; C = C.NextController)
         {
-            if (C.Pawn != none && C.GetTeamNum() != TeamIndex)
+            if (C.Pawn != none && C.GetTeamNum() != GetTeamIndex())
             {
                 EnemyLocations[EnemyLocations.Length] = C.Pawn.Location;
             }

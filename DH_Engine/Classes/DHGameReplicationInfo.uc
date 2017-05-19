@@ -264,7 +264,7 @@ simulated function bool IsRallyPointIndexValid(DHPlayer PC, byte RallyPointIndex
 
     RP = PC.SquadReplicationInfo.RallyPoints[RallyPointIndex];
 
-    if (RP == none || PRI == none || PRI.Team.TeamIndex != RP.TeamIndex || PRI.SquadIndex != RP.SquadIndex)
+    if (RP == none || PRI == none || PRI.Team.TeamIndex != RP.GetTeamIndex() || PRI.SquadIndex != RP.SquadIndex)
     {
         return false;
     }
