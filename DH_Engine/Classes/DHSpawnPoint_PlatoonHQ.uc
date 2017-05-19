@@ -21,6 +21,9 @@ var float   CaptureRadiusInMeters;
 var int     CaptureCounter;
 var int     CaptureCounterThreshold;
 
+var int     SpawnKillPenalty;
+var int     SpawnKillPenaltyCounter;
+
 function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -34,6 +37,14 @@ function Timer()
     local int CapturingEnemiesCount;
 
     BlockReason = SPBR_None;
+
+    // Spawn kill penalty
+    SpawnKillPenaltyCounter = Max(0, SpawnKillPenaltyCounter - 1);
+
+    if (SpawnKillPenaltyCounter > 0)
+    {
+        BlockReason = SPBR_EnemiesNearby;
+    }
 
     // Activation
     if (!bIsActivated)
@@ -53,7 +64,7 @@ function Timer()
         }
     }
 
-    // Encroachment logic
+    // Encroachment
     GetPlayerCountsWithinRadius(EncroachmentRadiusInMeters,,, EncroachingEnemiesCount);
 
     if (EncroachingEnemiesCount > 0)
@@ -70,6 +81,7 @@ function Timer()
         BlockReason = SPBR_EnemiesNearby;
     }
 
+    // Capturing
     GetPlayerCountsWithinRadius(CaptureRadiusInMeters,,, CapturingEnemiesCount);
 
     if (CapturingEnemiesCount >= 1)
@@ -112,6 +124,9 @@ function OnTeamIndexChanged()
     // Reset activation state and timer
     bIsActivated = false;
     ActivationCounter = 0;
+
+    // Reset spawn kill penalty counter
+    SpawnKillPenaltyCounter = 0;
 
     if (Construction != none)
     {
@@ -218,6 +233,11 @@ function BroadcastTeamLocalizedMessage(byte Team, class<LocalMessage> MessageCla
     }
 }
 
+function OnSpawnKill(Pawn VictimPawn, Controller KillerController)
+{
+    SpawnKillPenaltyCounter += SpawnKillPenalty;  // TODO: magic number
+}
+
 defaultproperties
 {
     SpawnRadius=60.0
@@ -229,4 +249,6 @@ defaultproperties
 
     CaptureRadiusInMeters=5
     CaptureCounterThreshold=30
+
+    SpawnKillPenalty=15
 }

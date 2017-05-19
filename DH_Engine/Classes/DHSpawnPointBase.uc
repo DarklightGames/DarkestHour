@@ -196,8 +196,6 @@ function GetPlayerCountsWithinRadius(float RadiusInMeters, optional int SquadInd
             }
             else
             {
-                Log("Enemy" @ P);
-
                 EnemyCount += 1;
             }
         }
