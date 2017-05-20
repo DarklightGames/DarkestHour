@@ -5,10 +5,12 @@
 
 class DHTab_GameSettings extends ROTab_GameSettings;
 
+var automated moNumericEdit nu_ConfigViewFOV;
 var automated moComboBox    co_PurgeCacheDays;
 var automated GUILabel      l_ID;
 var automated DHGUIButton   b_CopyID;
 
+var     int                 ViewFOV;
 var     int                 PurgeCacheDaysValues[3];
 var     localized string    PurgeCacheDaysText[3];
 var     localized string    HashReqText, IDText;
@@ -19,9 +21,10 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     super.InitComponent(MyController, MyOwner);
 
-    i_BG1.ManageComponent(co_PurgeCacheDays);
+    i_BG1.ManageComponent(nu_ConfigViewFOV);
     i_BG2.ManageComponent(l_ID);
     i_BG2.ManageComponent(b_CopyID);
+    i_BG2.ManageComponent(co_PurgeCacheDays);
 
     for (i = 0; i < arraycount(PurgeCacheDaysText); ++i)
     {
@@ -40,6 +43,11 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
 
     switch (Sender)
     {
+        case nu_ConfigViewFOV:
+            ViewFOV = class'DH_Engine.DHPlayer'.default.ConfigViewFOV;
+            nu_ConfigViewFOV.SetComponentValue(ViewFOV, true);
+            break;
+
         case co_PurgeCacheDays:
             PurgeCacheDays = int(PlayerOwner().ConsoleCommand("get Core.System PurgeCacheDays", false));
 
@@ -78,6 +86,18 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
     }
 }
 
+function InternalOnChange(GUIComponent Sender)
+{
+    super.InternalOnChange(Sender);
+
+    switch (Sender)
+    {
+        case nu_ConfigViewFOV:
+            ViewFOV = nu_ConfigViewFOV.GetValue();
+            break;
+    }
+}
+
 function bool OnClick(GUIComponent Sender)
 {
     switch (Sender)
@@ -94,6 +114,9 @@ function SaveSettings()
 {
     local int PurgeCacheDaysIndex;
 
+    class'DHPlayer'.static.SetDefaultViewFOV(ViewFOV);
+    PlayerOwner().FixFOV(); // switch to new default FOV setting
+
     PurgeCacheDaysIndex = co_PurgeCacheDays.GetIndex();
     PlayerOwner().ConsoleCommand("set Core.System PurgeCacheDays" @ PurgeCacheDaysValues[PurgeCacheDaysIndex]);
 
@@ -107,6 +130,7 @@ function ResetClicked()
 
     super.ResetClicked();
 
+    class'DHPlayer'.static.ResetConfig("ConfigViewFOV");
     PlayerOwner().ConsoleCommand("set Core.System PurgeCacheDays" @ PurgeCacheDaysValues[0]);
     class'ROPlayer'.static.ResetConfig("bManualTankShellReloading"); // added as this reset was missing in RO parent class
 
@@ -168,6 +192,20 @@ defaultproperties
     End Object
     ed_PlayerName=DHmoEditBox'DH_Interface.DHTab_GameSettings.OnlineStatsName'
 
+    Begin Object Class=DHmoNumericEdit Name=ConfigViewFOV
+        MinValue=80
+        MaxValue=90
+        ComponentJustification=TXTA_Left
+        Caption="Normal View FOV"
+        Hint="Lower for more zoomed view, higher for wider field of view"
+        OnCreateComponent=ConfigViewFOV.InternalOnCreateComponent
+        IniOption="@Internal"
+        TabOrder=2
+        OnChange=DHTab_GameSettings.InternalOnChange
+        OnLoadINI=DHTab_GameSettings.InternalOnLoadINI
+    End Object
+    nu_ConfigViewFOV=DHmoNumericEdit'DH_Interface.DHTab_GameSettings.ConfigViewFOV'
+
     Begin Object Class=DHmoComboBox Name=GameGoreLevel
         bReadOnly=true
         Caption="Gore Level"
@@ -177,26 +215,11 @@ defaultproperties
         WinLeft=0.05
         WinWidth=0.4
         RenderWeight=1.04
-        TabOrder=2
-        OnChange=DHTab_GameSettings.InternalOnChange
-        OnLoadINI=DHTab_GameSettings.InternalOnLoadINI
-    End Object
-    co_GoreLevel=DHmoComboBox'DH_Interface.DHTab_GameSettings.GameGoreLevel'
-
-    Begin Object Class=DHmoComboBox Name=PurgeCacheDaysComboBox
-        bReadOnly=true
-        ComponentJustification=TXTA_Left
-        Caption="Purge Cache"
-        OnCreateComponent=PurgeCacheDaysComboBox.InternalOnCreateComponent
-        IniOption="@Internal"
-        WinTop=0.122944
-        WinLeft=0.528997
-        WinWidth=0.419297
         TabOrder=3
         OnChange=DHTab_GameSettings.InternalOnChange
         OnLoadINI=DHTab_GameSettings.InternalOnLoadINI
     End Object
-    co_PurgeCacheDays=DHmoComboBox'DH_Interface.DHTab_GameSettings.PurgeCacheDaysComboBox'
+    co_GoreLevel=DHmoComboBox'DH_Interface.DHTab_GameSettings.GameGoreLevel'
 
     // Network options
     Begin Object Class=DHGUISectionBackground Name=GameBK2
@@ -266,6 +289,21 @@ defaultproperties
     End Object
     co_Netspeed=DHmoComboBox'DH_Interface.DHTab_GameSettings.OnlineNetSpeed'
 
+    Begin Object Class=DHmoComboBox Name=PurgeCacheDaysComboBox
+        bReadOnly=true
+        ComponentJustification=TXTA_Left
+        Caption="Purge Cache"
+        OnCreateComponent=PurgeCacheDaysComboBox.InternalOnCreateComponent
+        IniOption="@Internal"
+        WinTop=0.122944
+        WinLeft=0.528997
+        WinWidth=0.419297
+        TabOrder=6
+        OnChange=DHTab_GameSettings.InternalOnChange
+        OnLoadINI=DHTab_GameSettings.InternalOnLoadINI
+    End Object
+    co_PurgeCacheDays=DHmoComboBox'DH_Interface.DHTab_GameSettings.PurgeCacheDaysComboBox'
+
     // Simulation realism options
     Begin Object Class=DHGUISectionBackground Name=GameBK3
         Caption="Simulation Realism"
@@ -287,7 +325,7 @@ defaultproperties
         WinTop=0.166017
         WinLeft=0.528997
         WinWidth=0.419297
-        TabOrder=6
+        TabOrder=7
         OnChange=DHTab_GameSettings.InternalOnChange
         OnLoadINI=DHTab_GameSettings.InternalOnLoadINI
     End Object
@@ -302,7 +340,7 @@ defaultproperties
         WinTop=0.166017
         WinLeft=0.528997
         WinWidth=0.419297
-        TabOrder=7
+        TabOrder=8
         OnChange=DHTab_GameSettings.InternalOnChange
         OnLoadINI=DHTab_GameSettings.InternalOnLoadINI
     End Object
@@ -317,7 +355,7 @@ defaultproperties
         WinTop=0.166017
         WinLeft=0.528997
         WinWidth=0.419297
-        TabOrder=8
+        TabOrder=9
         OnChange=DHTab_GameSettings.InternalOnChange
         OnLoadINI=DHTab_GameSettings.InternalOnLoadINI
     End Object

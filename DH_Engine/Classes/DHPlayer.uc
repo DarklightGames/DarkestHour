@@ -15,21 +15,21 @@ const SQUAD_SIGNAL_DURATION = 15.0;
 var     DHHintManager           DHHintManager;
 var     float                   MapVoteTime;
 var     DH_LevelInfo            ClientLevelInfo;
-var     DHConstructionManager   ConstructionManager;    // Client only!
+var     DHConstructionManager   ConstructionManager; // client only!
+var     globalconfig string     ROIDHash;            // client ROID hash (this gets set/updated when a player joins a server)
+var     globalconfig float      ConfigViewFOV;       // allows player to set their own preferred view FOV, within acceptable limits (80 to 90)
 
-// DH sway values
+// Sway
 var     float                   DHSwayElasticFactor;
 var     float                   DHSwayDampingFactor;
 
-// Rotation clamp values
+// Mouse sensitivity
 var     float                   DHStandardTurnSpeedFactor;
 var     float                   DHHalfTurnSpeedFactor;
 var     globalconfig float      DHISTurnSpeedFactor;        // 0.0 to 1.0
 var     globalconfig float      DHScopeTurnSpeedFactor;     // 0.0 to 1.0
 
-// Client ROID hash (this gets set/updated when a player joins a server)
-var     globalconfig string     ROIDHash;
-
+// Player flinch
 var     vector                  FlinchRotMag;
 var     vector                  FlinchRotRate;
 var     float                   FlinchRotTime;
@@ -38,6 +38,7 @@ var     vector                  FlinchOffsetRate;
 var     float                   FlinchOffsetTime;
 var     float                   FlinchMaxOffset;
 
+// Mantling
 var     float                   MantleCheckTimer;           // makes sure client doesn't try to start mantling without the server
 var     float                   MantleFailTimer;            // makes sure we don't get stuck floating in an object unable to end a mantle
 var     bool                    bDidMantle;                 // is the mantle complete?
@@ -134,8 +135,14 @@ event InitInputSystem()
 }
 
 // Modified to have client setup access to DH_LevelInfo so it can get info from it
+// Also to set the default view FOV from the player's own setting for ConfigViewFOV
 simulated event PostBeginPlay()
 {
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        SetDefaultViewFOV(); // do this before calling the Super, then other FOV settings get matched to it when the super calls FixFOV()
+    }
+
     super.PostBeginPlay();
 
     // Make this only run by the owning client
@@ -149,6 +156,29 @@ simulated event PostBeginPlay()
 
         // This creates the construction manager on the client only
         ConstructionManager = new class'DHConstructionManager';
+    }
+}
+
+// New function to set the normal view VOF for this player, based on their own config setting
+// Option to pass in new FOV value, otherwise we just use the existing ConfigViewFOV
+// We only accept valid values of 80 to 90, otherwise we reset to the default value (stops players manually editing their .ini file to invalid values)
+// Note we only ever use the class default.ConfigViewFOV value, as that allows us to use it in static functions where there may not be a DHPlayer instance
+simulated static function SetDefaultViewFOV(optional float NewFOV)
+{
+    if (NewFOV > 0.0 && NewFOV != default.ConfigViewFOV)
+    {
+        default.ConfigViewFOV = NewFOV;
+        StaticSaveConfig();
+    }
+
+    if (default.ConfigViewFOV < 80.0 || default.ConfigViewFOV > 90.0)
+    {
+        ResetConfig("ConfigViewFOV"); // in an invalid value, reset to the default
+    }
+
+    if (default.ConfigViewFOV != default.DefaultFOV)
+    {
+        default.DefaultFOV = default.ConfigViewFOV;
     }
 }
 
@@ -4917,8 +4947,7 @@ defaultproperties
     NextSpawnTime=15
     ROMidGameMenuClass="DH_Interface.DHDeployMenu"
     GlobalDetailLevel=5
-    DesiredFOV=90.0
-    DefaultFOV=90.0
+    ConfigViewFOV=85.0
     PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'
     InputClass=class'DH_Engine.DHPlayerInput'
     PawnClass=class'DH_Engine.DHPawn'
