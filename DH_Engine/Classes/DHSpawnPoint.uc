@@ -214,12 +214,12 @@ simulated function bool CanSpawnMortars()
     return Type == ESPT_Mortars || Type == ESPT_All;
 }
 
-simulated function bool CanSpawnWithParameters(int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
+simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
 {
     local class<ROVehicle>  VehicleClass;
     local DHRoleInfo        RI;
 
-    if (!super.CanSpawnWithParameters(TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex))
+    if (!super.CanSpawnWithParameters(GRI, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex))
     {
         return false;
     }
@@ -243,14 +243,14 @@ simulated function bool CanSpawnWithParameters(int TeamIndex, int RoleIndex, int
     }
     else
     {
-        return CanSpawnVehicle(VehiclePoolIndex);
+        return CanSpawnVehicle(GRI, VehiclePoolIndex);
     }
 }
 
 // TODO (Matt): think best to remove this separate function & put the logic in CanSpawnWithParameters() in this class, which is the only place it's called
 // I can't see it being subclassed or used elsewhere, so it doesn't need defining in the parent DHSpawnPointBase
 // And we pass in the VehiclePoolIndex and use it to get the required VehicleClass, but the calling function has already got the VehicleClass
-simulated function bool CanSpawnVehicle(int VehiclePoolIndex)
+simulated function bool CanSpawnVehicle(DHGameReplicationInfo GRI, int VehiclePoolIndex)
 {
     local class<ROVehicle> VehicleClass;
 
@@ -271,7 +271,7 @@ function bool PerformSpawn(DHPlayer PC)
 
     G = DarkestHourGame(Level.Game);
 
-    if (CanSpawnWithParameters(PC.GetTeamNum(), Pc.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex) &&
+    if (CanSpawnWithParameters(GRI, PC.GetTeamNum(), Pc.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex) &&
         GetSpawnPosition(SpawnLocation, SpawnRotation, PC.VehiclePoolIndex))
     {
         if (PC.VehiclePoolIndex >= 0)

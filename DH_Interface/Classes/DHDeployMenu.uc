@@ -442,7 +442,7 @@ function UpdateSpawnPoints()
             p_Map.b_SpawnPoints[i].SetVisibility(true);
             p_Map.b_SpawnPoints[i].CenterText = GRI.SpawnPoints[i].GetMapText();
 
-            if (GRI.SpawnPoints[i].CanSpawnWithParameters(CurrentTeam, RoleIndex, SquadIndex, GetSelectedVehiclePoolIndex()))
+            if (GRI.SpawnPoints[i].CanSpawnWithParameters(GRI, CurrentTeam, RoleIndex, SquadIndex, GetSelectedVehiclePoolIndex()))
             {
                 p_Map.b_SpawnPoints[i].MenuStateChange(MSAT_Blurry);
             }
@@ -977,10 +977,10 @@ function UpdateButtons()
         // that our pending parameters are valid.
         if (PC.ClientLevelInfo.SpawnMode == ESM_RedOrchestra ||
             (li_Vehicles.Index >= 0 && GRI.CanSpawnWithParameters(SpawnPointIndex,
-                                                                  CurrentTeam,
-                                                                  GRI.GetRoleIndexAndTeam(DHRoleInfo(li_Roles.GetObject()), Team),
-                                                                  SquadIndex,
-                                                                  GetSelectedVehiclePoolIndex())))
+                                                                 CurrentTeam,
+                                                                 GRI.GetRoleIndexAndTeam(DHRoleInfo(li_Roles.GetObject()), Team),
+                                                                 SquadIndex,
+                                                                 GetSelectedVehiclePoolIndex())))
         {
             bContinueEnabled = true;
         }

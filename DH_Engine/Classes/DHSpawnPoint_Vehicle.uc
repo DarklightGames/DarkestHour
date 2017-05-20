@@ -65,9 +65,9 @@ function Timer()
     }
 }
 
-simulated function bool CanSpawnWithParameters(int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
+simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
 {
-    if (!super.CanSpawnWithParameters(TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex))
+    if (!super.CanSpawnWithParameters(GRI, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex))
     {
         return false;
     }
@@ -168,7 +168,7 @@ function bool PerformSpawn(DHPlayer PC)
     RoleIndex = GRI.GetRoleIndexAndTeam(PC.GetRoleInfo(), Team);
 
     // Check if we can deploy into or near the vehicle
-    if (CanSpawnWithParameters(PC.GetTeamNum(), RoleIndex, PC.GetSquadIndex(), PC.VehiclePoolIndex))
+    if (CanSpawnWithParameters(GRI, PC.GetTeamNum(), RoleIndex, PC.GetSquadIndex(), PC.VehiclePoolIndex))
     {
         // Randomise exit locations
         ExitPositionIndices = class'UArray'.static.Range(0, Vehicle.ExitPositions.Length - 1);
