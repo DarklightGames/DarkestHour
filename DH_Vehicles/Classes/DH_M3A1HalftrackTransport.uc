@@ -109,9 +109,9 @@ defaultproperties
     DamagedEffectOffset=(Y=10.0,Z=80.0)
     VehicleTeam=1
     BeginningIdleAnim="driver_hatch_idle_close"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.M3A1Halftrack_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=5300,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true,ViewFOV=90.0)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.M3A1Halftrack_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=5300,ViewPitchDownLimit=61000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.M3A1Halftrack_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=5300,ViewPitchDownLimit=61000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.M3A1Halftrack_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=5300,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.M3A1Halftrack_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=5300,ViewPitchDownLimit=61000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.M3A1Halftrack_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=5300,ViewPitchDownLimit=61000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.M3A1Halftrack_body'
     VehicleHudOccupantsX(0)=0.45
     VehicleHudOccupantsX(1)=0.55

@@ -175,8 +175,8 @@ defaultproperties
     bMustBeTankCrew=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     bMultiPosition=true
-    DriverPositions(0)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_M45_anm.m45_turret',TransitionUpAnim="sights_out",bExposed=true)
-    DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_M45_anm.m45_turret',TransitionDownAnim="sights_in",ViewPitchUpLimit=6000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_M45_anm.m45_turret',TransitionUpAnim="sights_out",bExposed=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_M45_anm.m45_turret',TransitionDownAnim="sights_in",ViewPitchUpLimit=6000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
     DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_M45_anm.m45_turret',ViewPitchUpLimit=6000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
     UnbuttonedPositionIndex=0
     BinocPositionIndex=2

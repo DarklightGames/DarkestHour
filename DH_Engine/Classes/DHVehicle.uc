@@ -623,7 +623,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
         if (bBehindViewChanged && DriverPositions.Length > 0)
         {
             SwitchMesh(DriverPositionIndex, true);
-            PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+            SetViewFOV(DriverPositionIndex, PC);
         }
 
         bOwnerNoSee = !bDrawMeshInFP;
@@ -637,6 +637,37 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
         {
             ActivateOverlay(true);
         }
+    }
+}
+
+// New helper functions that get or set the appropriate ViewFOV for the given position in the DriverPositions array
+// If no ViewFOV is specified for the given position it uses the player's default view FOV (i.e. player's normal FOV when on foot)
+// This avoids having to hard code the default FOV for nearly all vehicle positions, & it also facilitates the player having a customisable view FOV
+simulated function float GetViewFOV(int PositionIndex)
+{
+    if (PositionIndex >= 0 && PositionIndex < DriverPositions.Length && DriverPositions[PositionIndex].ViewFOV > 0.0)
+    {
+        return DriverPositions[PositionIndex].ViewFOV;
+    }
+
+    if (IsHumanControlled())
+    {
+        return PlayerController(Controller).DefaultFOV;
+    }
+
+    return class'DHPlayer'.default.DefaultFOV;
+}
+
+simulated function SetViewFOV(int PositionIndex, optional PlayerController PC)
+{
+    if (PC == none)
+    {
+        PC = PlayerController(Controller);
+    }
+
+    if (PC != none)
+    {
+        PC.SetFOV(GetViewFOV(PositionIndex));
     }
 }
 
@@ -881,10 +912,7 @@ simulated state EnteringVehicle
             PlayAnim(BeginningIdleAnim); // shouldn't actually be necessary, but a reasonable fail-safe
         }
 
-        if (IsHumanControlled())
-        {
-            PlayerController(Controller).SetFOV(DriverPositions[InitialPositionIndex].ViewFOV);
-        }
+        SetViewFOV(InitialPositionIndex);
     }
 }
 
@@ -975,15 +1003,15 @@ simulated state ViewTransition
             SwitchMesh(DriverPositionIndex);
 
             // If moving to a less zoomed position, we zoom out now, otherwise we wait until end of transition to zoom in
-            if (DriverPositions[DriverPositionIndex].ViewFOV > DriverPositions[PreviousPositionIndex].ViewFOV)
+            if (GetViewFOV(DriverPositionIndex) > GetViewFOV(PreviousPositionIndex))
             {
                 if (DriverPositions[DriverPositionIndex].bDrawOverlays)
                 {
-                    PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+                    SetViewFOV(DriverPositionIndex);
                 }
                 else
                 {
-                    PlayerController(Controller).DesiredFOV = DriverPositions[DriverPositionIndex].ViewFOV; // WV was doing this if not an OL position - AV was not
+                    PlayerController(Controller).DesiredFOV = GetViewFOV(DriverPositionIndex);
                 }
             }
         }
@@ -1037,9 +1065,9 @@ simulated state ViewTransition
         if (Level.NetMode != NM_DedicatedServer && IsHumanControlled() && !PlayerController(Controller).bBehindView)
         {
             // If we have moved to a more zoomed position, we zoom in now, because we didn't do it earlier
-            if (DriverPositions[DriverPositionIndex].ViewFOV < DriverPositions[PreviousPositionIndex].ViewFOV)
+            if (GetViewFOV(DriverPositionIndex) < GetViewFOV(PreviousPositionIndex))
             {
-                PlayerController(Controller).SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+                SetViewFOV(DriverPositionIndex);
             }
 
             // If camera was locked to PlayerCameraBone during transition, match rotation to that now, so the view can't snap to another rotation
@@ -3139,6 +3167,8 @@ defaultproperties
     ResupplyAttachmentClass=class'DHResupplyAttachment'
     PlayerCameraBone="Camera_driver"
     FirstRiderPositionIndex=255 // unless overridden in subclass, 255 means the value is set automatically when PassengerPawns array is added to the PassengerWeapons
+    DriverPositions(0)=(ViewFOV=0.0) // override inherited FOV values from ROWheeledVehicle - zero just means it uses player's default view FOV (unless overridden in subclass)
+    DriverPositions(1)=(ViewFOV=0.0)
     MinRunOverSpeed=300 // increased from 0 to roughly 20km/h so that players don't get killed by slow moving (probably friendly) vehicles
     ObjectiveGetOutDist=1500.0
     bReplicateAnimations=false // override strange inherited property from ROWheeledVehicle - no reason for server to replicate anims & now we play transition anims on

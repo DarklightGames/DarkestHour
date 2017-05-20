@@ -251,7 +251,7 @@ function KDriverEnter(Pawn P)
     GotoState('Idle');
 }
 
-// Modified to start in idle state, & to add mortar hints
+// Modified to start in idle state, & to add a range of hints on how to use mortars
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     local DHPlayer DHP;
@@ -260,20 +260,14 @@ simulated function ClientKDriverEnter(PlayerController PC)
 
     GotoState('Idle');
 
-    if (PC != none)
+    DHP = DHPlayer(PC);
+
+    if (DHP != none)
     {
-        PC.SetFOV(WeaponFOV);
-
-        DHP = DHPlayer(PC);
-
-        // A range of hints on how to use mortars
-        if (DHP != none)
-        {
-            DHP.QueueHint(7, false);
-            DHP.QueueHint(8, false);
-            DHP.QueueHint(9, false);
-            DHP.QueueHint(10, false);
-        }
+        DHP.QueueHint(7, false);
+        DHP.QueueHint(8, false);
+        DHP.QueueHint(9, false);
+        DHP.QueueHint(10, false);
     }
 }
 
@@ -355,17 +349,12 @@ simulated function ClientKDriverLeave(PlayerController PC)
 
     super.ClientKDriverLeave(PC);
 
-    if (PC != none)
+    if (PC != none && PC.Pawn != none && Gun != none && Gun.WeaponFireAttachmentBone != '')
     {
-        if (Gun != none && Gun.WeaponFireAttachmentBone != '' && PC.Pawn != none)
-        {
-            NewRotation = Gun.GetBoneRotation(Gun.WeaponFireAttachmentBone);
-            NewRotation.Pitch = 0;
-            NewRotation.Roll = 0;
-            PC.Pawn.SetRotation(NewRotation);
-        }
-
-        PC.FixFOV();
+        NewRotation = Gun.GetBoneRotation(Gun.WeaponFireAttachmentBone);
+        NewRotation.Pitch = 0;
+        NewRotation.Roll = 0;
+        PC.Pawn.SetRotation(NewRotation);
     }
 
     // If undeploying, owning net client now tells server to destroy mortar vehicle (& so all associated actors), as we've completed vehicle exit/unpossess process
@@ -898,7 +887,6 @@ defaultproperties
     // View & display
     bDrawMeshInFP=false
     CameraBone="Camera"
-    WeaponFOV=90.0
     HUDOverlayFOV=90.0
     HUDArrowTexture=TexRotator'DH_Mortars_tex.HUD.ArrowRotator'
     Digits=(DigitTexture=texture'InterfaceArt_tex.HUD.numbers',TextureCoords[0]=(X1=15,X2=47,Y2=63),TextureCoords[1]=(X1=79,X2=111,Y2=63),TextureCoords[2]=(X1=143,X2=175,Y2=63),TextureCoords[3]=(X1=207,X2=239,Y2=63),TextureCoords[4]=(X1=15,Y1=64,X2=47,Y2=127),TextureCoords[5]=(X1=79,Y1=64,X2=111,Y2=127),TextureCoords[6]=(X1=143,Y1=64,X2=175,Y2=127),TextureCoords[7]=(X1=207,Y1=64,X2=239,Y2=127),TextureCoords[8]=(X1=15,Y1=128,X2=47,Y2=191),TextureCoords[9]=(X1=79,Y1=128,X2=111,Y2=191),TextureCoords[10]=(X1=143,Y1=128,X2=175,Y2=191))

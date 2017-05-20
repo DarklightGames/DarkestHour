@@ -301,7 +301,6 @@ defaultproperties
     bSinglePositionExposed=true
     bZeroPCRotOnEntry=false // no point, as on entering we're now setting rotation to match the way the rider is facing
     bUseDriverHeadBoneCam=true
-    WeaponFOV=90.0
     HudName="Rider"
 
     PassengerClasses(0)=class'DH_Engine.DHPassengerPawnZero'

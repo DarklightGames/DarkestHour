@@ -140,6 +140,8 @@ function DrawDebugInformation(Canvas C)
 
     S @= class'DarkestHourGame'.default.Version.ToString();
 
+    S @= "FOV =" @ int(PC.FovAngle); // TEMPDEBUG (Matt, prior to V8.0 release)
+
     C.Style = ERenderStyle.STY_Alpha;
     C.Font = C.TinyFont;
 

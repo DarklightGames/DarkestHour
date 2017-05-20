@@ -108,8 +108,8 @@ defaultproperties
     DamagedEffectScale=0.75
     DamagedEffectOffset=(X=90.0,Y=0.0,Z=15.0)
     BeginningIdleAnim="Driver_idle_out"
-    DriverPositions(0)=(ViewPitchUpLimit=10000,ViewPitchDownLimit=50000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
-    DriverPositions(1)=(ViewPitchUpLimit=10000,ViewPitchDownLimit=50000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
+    DriverPositions(0)=(ViewPitchUpLimit=10000,ViewPitchDownLimit=50000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
+    DriverPositions(1)=(ViewPitchUpLimit=10000,ViewPitchDownLimit=50000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.sdkfz105_body'
     VehicleHudOccupantsX(0)=0.45
     VehicleHudOccupantsY(0)=0.42

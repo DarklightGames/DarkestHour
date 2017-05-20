@@ -223,7 +223,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
             if (DriverPositions.Length > 0)
             {
                 SwitchMesh(DriverPositionIndex, true);
-                PC.SetFOV(DriverPositions[DriverPositionIndex].ViewFOV);
+                PC.SetFOV(GetViewFOV(DriverPositionIndex));
                 FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
             }
             else
@@ -522,6 +522,11 @@ simulated function ClientKDriverEnter(PlayerController PC)
     }
     else if (PC != none)
     {
+        if (default.WeaponFOV <= 0.0) // if no WeaponFOV is set, we just use the player's default view FOV (i.e. player's normal FOV when on foot)
+        {
+            WeaponFOV = PC.DefaultFOV;
+        }
+
         PC.SetFOV(WeaponFOV); // not needed if bMultiPosition, as gets set in EnteringVehicle
     }
 
@@ -552,7 +557,7 @@ simulated state EnteringVehicle
         }
 
         FPCamPos = DriverPositions[InitialPositionIndex].ViewLocation;
-        WeaponFOV = DriverPositions[InitialPositionIndex].ViewFOV;
+        WeaponFOV = GetViewFOV(InitialPositionIndex);
 
         if (IsHumanControlled())
         {
@@ -651,9 +656,9 @@ simulated state ViewTransition
             SwitchMesh(DriverPositionIndex);
 
             // Set any zoom & camera offset for new position - but only if moving to less zoomed position, otherwise we wait until end of transition to do it
-            WeaponFOV = DriverPositions[DriverPositionIndex].ViewFOV;
+            WeaponFOV = GetViewFOV(DriverPositionIndex);
 
-            if (WeaponFOV > DriverPositions[LastPositionIndex].ViewFOV)
+            if (WeaponFOV > GetViewFOV(LastPositionIndex))
             {
                 PlayerController(Controller).SetFOV(WeaponFOV);
                 FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
@@ -718,7 +723,7 @@ simulated state ViewTransition
         if (Level.NetMode != NM_DedicatedServer)
         {
             // Set any zoom & camera offset for new position, if we've moved to a more (or equal) zoomed position (if not, we already did this at start of transition)
-            if (WeaponFOV <= DriverPositions[LastPositionIndex].ViewFOV && IsHumanControlled() && !PlayerController(Controller).bBehindView)
+            if (WeaponFOV <= GetViewFOV(LastPositionIndex) && IsHumanControlled() && !PlayerController(Controller).bBehindView)
             {
                 PlayerController(Controller).SetFOV(WeaponFOV);
                 FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
@@ -1476,6 +1481,25 @@ simulated function Vehicle GetVehicleBase()
     return VehicleBase;
 }
 
+// New helper function to get the appropriate ViewFOV for the given position in the DriverPositions array
+// If no ViewFOV is specified for the given position it uses the player's default view FOV (i.e. player's normal FOV when on foot)
+// This avoids having to hard code the default FOV for most vehicle positions (except gunsights and binoculars)
+// It also facilitates the player having a customisable view FOV
+simulated function float GetViewFOV(int PositionIndex)
+{
+    if (PositionIndex >= 0 && PositionIndex < DriverPositions.Length && DriverPositions[PositionIndex].ViewFOV > 0.0)
+    {
+        return DriverPositions[PositionIndex].ViewFOV;
+    }
+
+    if (IsHumanControlled())
+    {
+        return PlayerController(Controller).DefaultFOV;
+    }
+
+    return class'DHPlayer'.default.DefaultFOV;
+}
+
 // Modified to handle switching between external & internal mesh, including copying weapon's aimed direction to new mesh
 simulated function SwitchMesh(int PositionIndex, optional bool bUpdateAnimations)
 {
@@ -1832,6 +1856,7 @@ defaultproperties
     bCustomAiming=true
     bHasAltFire=false
     BinocPositionIndex=-1 // none by default, so set an invalid position
+    WeaponFOV=0.0 // neutralise inherited RO value, so unless overridden in subclass we will use the player's default view FOV (i.e. player's normal FOV when on foot)
     DriveAnim=""
     TPCamDistance=300.0
     TPCamLookat=(X=-25.0,Y=0.0,Z=0.0)

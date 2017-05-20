@@ -40,7 +40,6 @@ defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_ShermanMountedMG'
     GunsightOverlay=texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied' // not actually a gunsight, but this MG is aimed using co-driver's periscope
-    WeaponFOV=90.0
 
 //  This bow MG did not have a sight or even a peephole to aim through, & was instead aimed using co-driver's overhead periscope
 //  Looking through that view (or while unbuttoned but that's not modelled in game), co-driver had to aim by walking tracers or round impacts onto target
