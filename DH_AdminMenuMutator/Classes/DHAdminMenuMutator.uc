@@ -76,6 +76,13 @@ function SetInitialVariables()
         Log("DHAdminMenu ERROR: an AccessControl actor wasn't found on the server - it won't be possible to kick a player with a message");
     }
 
+    // If we're in single player or DH debug mode (i.e. the development branch), always enable the extra menu options for convenience
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        bParaDropPlayerAllowed = true;
+        bShowRealismMenu = true;
+    }
+
     // If the paradrop or realism/testing menu options are enabled, we set the necessary paradrop variables for this map
     if (bParaDropPlayerAllowed || bShowRealismMenu)
     {
@@ -957,6 +964,7 @@ function bool IsLoggedInAsAdmin(optional bool bEnforceAdminLogin)
     }
 
     ErrorMessageToSelf(1); // must be an admin
+
     return false;
 }
 
