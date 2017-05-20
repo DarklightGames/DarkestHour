@@ -116,6 +116,24 @@ simulated function SetPlayerFOV(float PlayerFOV)
     }
 }
 
+// Modified to remove resetting DefaultFOV to hard coded RO value of 85
+simulated function PlayerViewZoom(bool ZoomDirection)
+{
+    bPlayerViewIsZoomed = ZoomDirection;
+
+    if (InstigatorIsHumanControlled())
+    {
+        if (bPlayerViewIsZoomed)
+        {
+            PlayerController(Instigator.Controller).SetFOV(PlayerFOVZoom);
+        }
+        else
+        {
+            PlayerController(Instigator.Controller).ResetFOV();
+        }
+    }
+}
+
 // State for player mantling over obstacle
 simulated state StartMantle extends Busy
 {

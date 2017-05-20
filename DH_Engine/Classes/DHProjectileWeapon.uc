@@ -980,23 +980,6 @@ function ServerZoomOut()
     ZoomOut(true);
 }
 
-simulated function PlayerViewZoom(bool ZoomDirection)
-{
-    bPlayerViewIsZoomed = ZoomDirection;
-
-    if (InstigatorIsHumanControlled())
-    {
-        if (bPlayerViewIsZoomed)
-        {
-            PlayerController(Instigator.Controller).SetFOV(PlayerFOVZoom);
-        }
-        else
-        {
-            PlayerController(Instigator.Controller).ResetFOV();
-        }
-    }
-}
-
 simulated state IronSightZoomIn extends WeaponBusy
 {
     simulated function bool CanStartCrawlMoving()
