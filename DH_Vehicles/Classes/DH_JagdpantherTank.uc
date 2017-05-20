@@ -61,16 +61,7 @@ defaultproperties
 
     FrontRightAngle=27.0
     RearRightAngle=153.0
-/*
-    UFrontArmorFactor=8.2
-    URightArmorFactor=5.0
-    ULeftArmorFactor=5.0
-    URearArmorFactor=4.0
-    UFrontArmorSlope=55.0
-    URightArmorSlope=30.0
-    ULeftArmorSlope=30.0
-    URearArmorSlope=-25.0
-*/
+
     // Movement
     GearRatios(4)=0.8
     TransRatio=0.1

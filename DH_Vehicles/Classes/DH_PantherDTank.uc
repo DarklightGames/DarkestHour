@@ -64,25 +64,7 @@ defaultproperties
     FrontRightAngle=26.0
     RearRightAngle=154.0
     RearLeftAngle=206.0
-/*
-    UFrontArmorFactor=8.5
-    UFrontArmorSlope=55.0
-    LFrontArmorFactor=6.5
-    LFrontArmorSlope=-35.0
-    LFrontArmorHeight=-8.0
-    URightArmorFactor=4.0
-    URightArmorSlope=40.0
-    LRightArmorFactor=4.0
-    LRightArmorSlope=0.0
-    LRightArmorHeight=23.0
-    ULeftArmorFactor=4.0
-    ULeftArmorSlope=40.0
-    LLeftArmorFactor=4.0
-    LLeftArmorSlope=0.0
-    LLeftArmorHeight=23.0
-    URearArmorFactor=4.0
-    URearArmorSlope=-30.0
-*/
+
     // Movement
     bTurnInPlace=true // don't think this affects panther's ability to turn, i.e. to neutral turn; think it's just a bot property
     GearRatios(4)=0.8

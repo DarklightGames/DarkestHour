@@ -56,14 +56,7 @@ defaultproperties
     FrontRightAngle=30.0
     RearRightAngle=150.0
     RearLeftAngle=210.0
-/*
-    UFrontArmorFactor=8.2
-    URightArmorFactor=3.1
-    ULeftArmorFactor=3.1
-    URearArmorFactor=5.0
-    UFrontArmorSlope=20.0
-    URearArmorSlope=10.0
-*/
+
     // Movement
     MaxCriticalSpeed=729.0 // 43 kph
 

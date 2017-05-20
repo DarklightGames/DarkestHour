@@ -26,13 +26,7 @@ defaultproperties
     FrontArmor(2)=(Thickness=2.0,Slope=72.0)
     FrontArmor(3)=(Thickness=8.5)
     RearArmor(1)=(Slope=11.0)
-/*
-    UFrontArmorFactor=8.0
-    URightArmorFactor=3.1
-    ULeftArmorFactor=3.1
-    URearArmorFactor=2.0
-    UFrontArmorSlope=14.0
-*/
+
     MaxCriticalSpeed=693.0 // 43 kph
     ExhaustPipes(0)=(ExhaustPosition=(X=-170.0,Y=13.0,Z=35.0))
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.panzer4h_body'
