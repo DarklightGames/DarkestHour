@@ -247,9 +247,6 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
     }
 }
 
-// TODO (Matt): think best to remove this separate function & put the logic in CanSpawnWithParameters() in this class, which is the only place it's called
-// I can't see it being subclassed or used elsewhere, so it doesn't need defining in the parent DHSpawnPointBase
-// And we pass in the VehiclePoolIndex and use it to get the required VehicleClass, but the calling function has already got the VehicleClass
 simulated function bool CanSpawnVehicle(DHGameReplicationInfo GRI, int VehiclePoolIndex)
 {
     local class<ROVehicle> VehicleClass;
@@ -257,7 +254,7 @@ simulated function bool CanSpawnVehicle(DHGameReplicationInfo GRI, int VehiclePo
     VehicleClass = class<ROVehicle>(GRI.GetVehiclePoolVehicleClass(VehiclePoolIndex));
 
     return VehicleClass != none &&
-           GetTeamIndex() == VehicleClass.default.VehicleTeam &&                                                         // check vehicle belongs to player's team
+           GetTeamIndex() == VehicleClass.default.VehicleTeam &&                                                    // check vehicle belongs to player's team
            (CanSpawnVehicles() || (bCanOnlySpawnInfantryVehicles && !VehicleClass.default.bMustBeTankCommander)) && // check SP can spawn vehicles
            !(bNoSpawnVehicles && GRI.VehiclePoolIsSpawnVehicles[VehiclePoolIndex] != 0) &&                          // if it's a spawn vehicle, make sure SP doesn't prohibit those
            GRI.CanSpawnVehicle(VehiclePoolIndex);                                                                   // check one of these vehicles is available at the current time
