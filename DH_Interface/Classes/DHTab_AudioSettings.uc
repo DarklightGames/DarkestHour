@@ -20,8 +20,6 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
 {
     local PlayerController PC;
 
-    super.InternalOnLoadINI(Sender, s);
-
     PC = PlayerOwner();
 
     switch (Sender)
@@ -30,6 +28,9 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             NumberOfChannels = int(PC.ConsoleCommand("get ini:Engine.Engine.AudioDevice Channels"));
             nu_AudioChannels.SetComponentValue(NumberOfChannels,true);
             break;
+
+        default:
+            super.InternalOnLoadINI(Sender, s); // no need to call the Super if the passed GUIComponent is the option above
     }
 }
 
