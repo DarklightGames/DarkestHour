@@ -2647,6 +2647,21 @@ simulated function DestroyAttachments()
 //  *******************************  MISCELLANEOUS ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+// Modified to include any SupplyAttachment
+function bool ResupplyAmmo()
+{
+    local bool bDidResupply;
+
+    bDidResupply = super.ResupplyAmmo();
+
+    if (SupplyAttachment != none && SupplyAttachment.Resupply())
+    {
+        bDidResupply = true;
+    }
+
+    return bDidResupply;
+}
+
 // New function to handle switching between external & internal mesh (just saves code repetition)
 simulated function SwitchMesh(int PositionIndex, optional bool bUpdateAnimations)
 {
@@ -2872,6 +2887,12 @@ function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool
     {
         P.ReceiveLocalizedMessage(class'DHVehicleMessage', MessageNumber);
     }
+}
+
+// New helper function to check whether vehicle is a spawn vehicle
+simulated function bool IsSpawnVehicle()
+{
+    return SpawnPointAttachment != none;
 }
 
 // Modified so vehicle is treated as disabled if it suffers a range of damage that renders it of very limited use, as well as if the engine is dead
@@ -3106,25 +3127,6 @@ exec function SetRumbleVol(float NewValue)
 {
     Log(VehicleNameString @ "RumbleSoundVolumeModifier =" @ NewValue @ "(was" @ RumbleSoundVolumeModifier $ ")");
     RumbleSoundVolumeModifier = NewValue;
-}
-
-simulated function bool IsSpawnVehicle()
-{
-    return SpawnPointAttachment != none;
-}
-
-function bool ResupplyAmmo()
-{
-    local bool bDidResupply;
-
-    bDidResupply = super.ResupplyAmmo();
-
-    if (SupplyAttachment != none && SupplyAttachment.Resupply())
-    {
-        bDidResupply = true;
-    }
-
-    return bDidResupply;
 }
 
 defaultproperties
