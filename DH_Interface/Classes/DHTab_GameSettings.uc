@@ -102,6 +102,33 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
     co_PurgeCacheDays.SetIndex(PurgeCacheDaysIndex);
 }
 
+function ResetClicked()
+{
+    local ROPlayer ROP;
+    local int      i;
+
+    super.ResetClicked();
+
+    PlayerOwner().ConsoleCommand("set Core.System PurgeCacheDays" @ PurgeCacheDaysValues[0]);
+    class'ROPlayer'.static.ResetConfig("bManualTankShellReloading"); // added as this reset was missing in RO parent class
+
+    ROP = ROPlayer(PlayerOwner());
+
+    // Added so reset values for the vehicle properties actually get reset immediately if reset in game
+    // Before they didn't take effect until the player had exited the game
+    if (ROP != none)
+    {
+        ROP.bInterpolatedTankThrottle = class'ROPlayer'.default.bInterpolatedTankThrottle;
+        ROP.bInterpolatedVehicleThrottle = class'ROPlayer'.default.bInterpolatedVehicleThrottle;
+        ROP.bManualTankShellReloading = class'ROPlayer'.default.bManualTankShellReloading;
+    }
+
+    for (i = 0; i < Components.Length; ++i)
+    {
+        Components[i].LoadINI();
+    }
+}
+
 defaultproperties
 {
     PurgeCacheDaysValues(0)=0
