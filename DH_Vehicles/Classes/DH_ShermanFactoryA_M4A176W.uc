@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_ShermanFactoryA_M4A176W extends DH_ShermanFactory; // later version with HVAP instead of smoke rounds (but still without muzzle brake or sandbags)

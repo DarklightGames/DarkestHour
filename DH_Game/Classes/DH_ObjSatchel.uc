@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_ObjSatchel extends DHObjective // Matt: was ROObjSatchel, but had to extend from DHObjective so can be part of new DHObjectives arrays

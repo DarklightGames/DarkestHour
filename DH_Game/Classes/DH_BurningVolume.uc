@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_BurningVolume extends DHBurningVolume // just a legacy class for backwards compatibility, as DHBurningVolume is now in DH_Engine code package

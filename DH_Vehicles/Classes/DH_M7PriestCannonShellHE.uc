@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 // This is a 105mm shell with the "base" charge, which has a significantly lower
 // muzzle velocity than a fully charged round. This allows the Priest to be used

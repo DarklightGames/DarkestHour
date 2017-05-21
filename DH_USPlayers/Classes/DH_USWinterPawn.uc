@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_USWinterPawn extends DHPawn; // extending DHPawn instead of DH_AmericanPawn so we don't inherit the unwanted FaceSkins array that is longer than our own

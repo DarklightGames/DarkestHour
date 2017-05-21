@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 // A 'helper' actor that is spawned by the actual mutator on the server (very similar to a ReplicationInfo actor)

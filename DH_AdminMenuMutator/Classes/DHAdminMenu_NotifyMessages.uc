@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 // Messages to notify a player that an admin has done something to them (e.g. killed, switched or dropped) - displayed as large red text in the centre of the screen

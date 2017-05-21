@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 // This is now largely unused, but was heavily used in pre-6.0 "spawn rooms"
 // where players would walk through ethereal portals to teleport to the battle.
