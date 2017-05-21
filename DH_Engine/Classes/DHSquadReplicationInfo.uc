@@ -20,22 +20,6 @@ const SQUAD_LEADER_INDEX = 0;
 
 const DEBUG = true;
 
-// TODO: remove once we have sufficiently debugged the system.
-enum ESquadError
-{
-    SE_None,
-    SE_AlreadyInSquad,
-    SE_InvalidName,
-    SE_TooManySquads,
-    SE_MustBeOnTeam,
-    SE_NotSquadLeader,
-    SE_NotInSquad,
-    SE_InvalidArgument,
-    SE_BadSquad,
-    SE_Locked,
-    SE_InvalidState
-};
-
 enum ESquadOrderType
 {
     ORDER_None,
@@ -428,18 +412,25 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
     return true;
 }
 
+function bool ScoreComparatorFunction(Object LHS, Object RHS)
+{
+    return DHPlayerReplicationInfo(LHS).Score < DHPlayerReplicationInfo(RHS).Score;
+}
+
 // Makes the specified player leave their squad, if it exists.
 // Returns true if player successfully leaves his squad.
 // The player is guaranteed to not be a member of a squad after this
 // call, regardless of the return value.
 function bool LeaveSquad(DHPlayerReplicationInfo PRI)
 {
-    local int TeamIndex;
+    local int TeamIndex, SquadIndex, SquadMemberIndex;
     local DHPlayer PC;
     local DHBot Bot;
     local DHVoiceReplicationInfo VRI;
     local VoiceChatRoom SquadVCR, TeamVCR;
     local int i;
+    local array<DHPlayerReplicationInfo> Members;
+    local UComparator ScoreComparator;
 
     if (PRI == none)
     {
@@ -455,34 +446,43 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
     }
 
     TeamIndex = PRI.Team.TeamIndex;
+    SquadIndex = PRI.SquadIndex;
+    SquadMemberIndex = PRI.SquadMemberIndex;
 
-    if (PRI.SquadIndex == -1)
+    if (GetMember(TeamIndex, SquadIndex, SquadMemberIndex) != PRI)
     {
         return false;
     }
 
-    if (GetMember(TeamIndex, PRI.SquadIndex, PRI.SquadMemberIndex) != PRI)
-    {
-        return false;
-    }
+    // Remove squad member.
+    SetMember(TeamIndex, SquadIndex, SquadMemberIndex, none);
 
     // "{0} has left the squad."
-    BroadcastSquadLocalizedMessage(TeamIndex, PRI.SquadIndex, SquadMessageClass, 31, PRI);
+    BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 31, PRI);
 
-    if (PRI.SquadMemberIndex == SQUAD_LEADER_INDEX)
+    if (SquadMemberIndex == SQUAD_LEADER_INDEX)
     {
         // "The leader has left the squad."
-        BroadcastSquadLocalizedMessage(TeamIndex, PRI.SquadMemberIndex, SquadMessageClass, 40);
-    }
+        BroadcastSquadLocalizedMessage(TeamIndex, SquadMemberIndex, SquadMessageClass, 40);
 
-    SetMember(TeamIndex, PRI.SquadIndex, PRI.SquadMemberIndex, none);
+        // Squad no longer has a leader. Automatically set a new based on who has the highest score.
+        GetMembers(TeamIndex, SquadIndex, Members);
+        ScoreComparator = new class'UComparator';
+        ScoreComparator.CompareFunction = ScoreComparatorFunction;
+        class'USort'.static.Sort(Members, ScoreComparator);
+
+        if (Members.Length > 0)
+        {
+            CommandeerSquad(Members[0], TeamIndex, SquadIndex);
+        }
+    }
 
     // Leave the squad voice channel
     VRI = DHVoiceReplicationInfo(PRI.VoiceInfo);
 
     if (VRI != none)
     {
-        SquadVCR = VRI.GetSquadChannel(TeamIndex, PRI.SquadIndex);
+        SquadVCR = VRI.GetSquadChannel(TeamIndex, SquadIndex);
 
         if (SquadVCR != none)
         {
@@ -503,24 +503,24 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
         }
     }
 
-    if (!IsSquadActive(TeamIndex, PRI.SquadIndex))
+    if (!IsSquadActive(TeamIndex, SquadIndex))
     {
         // Squad is now empty, so clear the orders so that if the squad becomes
         // active again, there aren't leftover orders sitting around.
-        InternalSetSquadOrder(TeamIndex, PRI.SquadIndex, ORDER_None, vect(0, 0, 0));
+        InternalSetSquadOrder(TeamIndex, SquadIndex, ORDER_None, vect(0, 0, 0));
 
         // Destroy all rally points.
         for (i = 0; i < arraycount(RallyPoints); ++i)
         {
             if (RallyPoints[i] != none &&
                 RallyPoints[i].GetTeamIndex() == TeamIndex &&
-                RallyPoints[i].SquadIndex == PRI.SquadIndex)
+                RallyPoints[i].SquadIndex == SquadIndex)
             {
                 RallyPoints[i].Destroy();
             }
         }
 
-        SetSquadNextRallyPointTime(TeamIndex, PRI.SquadIndex, 0.0);
+        SetSquadNextRallyPointTime(TeamIndex, SquadIndex, 0.0);
     }
 
     PRI.SquadIndex = -1;
