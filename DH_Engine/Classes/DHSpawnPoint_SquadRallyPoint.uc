@@ -58,19 +58,17 @@ function PostBeginPlay()
         }
 
         PlaySound(CreationSound, SLOT_None, 4.0,, 60.0,, true);
-
-        SetTimer(1.0, true);
     }
 }
 
 auto state Constructing
 {
-    function Timer()
+    function Step()
     {
         local int SquadmateCount;
         local int EnemyCount;
 
-        global.Timer();
+        global.Step();
 
         GetPlayerCountsWithinRadius(default.EstablishmentRadiusInMeters, SquadIndex, SquadmateCount, EnemyCount);
 
@@ -116,10 +114,9 @@ auto state Constructing
 
 Begin:
     EstablishmentStartTimeSeconds = Level.TimeSeconds;
-    SetTimer(1.0, true);
 }
 
-function Timer()
+function Step()
 {
     local int OverrunningEnemiesCount;
 
@@ -138,13 +135,12 @@ function Timer()
 
 state Active
 {
-    function Timer()
+    function Step()
     {
         local int EncroachingEnemiesCount;
 
-        global.Timer();
+        global.Step();
 
-        // TODO: 3-strike rule for spawn kills on the rally point
         GetPlayerCountsWithinRadius(default.EncroachmentRadiusInMeters,,, EncroachingEnemiesCount);
 
         if (EncroachingEnemiesCount > 0)
@@ -179,12 +175,6 @@ state Active
             SRI.BroadcastSquadLocalizedMessage(GetTeamIndex(), SquadIndex, SRI.SquadMessageClass, 54);
 
             Destroy();
-        }
-
-        // TODO: we need a way to 'reactivate' the previous squad rally point if
-        // this one is blocked.
-        if (IsBlocked())
-        {
         }
     }
 

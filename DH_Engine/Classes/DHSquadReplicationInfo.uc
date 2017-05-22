@@ -7,7 +7,8 @@ class DHSquadReplicationInfo extends ReplicationInfo;
 
 const SQUAD_SIZE_MIN = 8;
 const SQUAD_SIZE_MAX = 12;
-const SQUAD_RALLY_POINTS_MAX = 2;
+const SQUAD_RALLY_POINTS_MAX = 2;           // The number of squad rally points that can be exist at one time.
+const SQUAD_RALLY_POINTS_ACTIVE_MAX = 1;    // The number of squad rally points that are "active" at one time.
 const TEAM_SQUAD_MEMBERS_MAX = 64;
 const TEAM_SQUADS_MAX = 8;  // SQUAD_SIZE_MIN / TEAM_SQUAD_MEMBERS_MAX
 
@@ -107,7 +108,7 @@ function PostNetBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        SetTimer(2.0, true);
+        SetTimer(1.0, true);
     }
 }
 
@@ -117,7 +118,9 @@ function Timer()
     local DHPlayer OtherPC;
     local DHPlayerReplicationInfo PRI, OtherPRI;
     local Controller C;
-    local int i;
+    local int i, TeamIndex, SquadIndex, UnblockedCount;
+    local array<DHSpawnPoint_SquadRallyPoint> SquadRallyPoints, ActiveSquadRallyPoints;
+    local UComparator Comparator;
 
     // We want our player to know where his squadmates are at all times by
     // looking at the situation map. However, since the player may not have
@@ -161,6 +164,55 @@ function Timer()
             }
 
             PC.SquadMemberLocations[i] = vect(0, 0, 0);
+        }
+    }
+
+    // Rally point logic.
+    for (TeamIndex = AXIS_TEAM_INDEX; TeamIndex <= ALLIES_TEAM_INDEX; ++TeamIndex)
+    {
+        for (SquadIndex = 0; SquadIndex < GetTeamSquadLimit(TeamIndex); ++SquadIndex)
+        {
+            if (!IsSquadActive(TeamIndex, SquadIndex))
+            {
+                continue;
+            }
+
+            SquadRallyPoints = GetSquadRallyPoints(TeamIndex, SquadIndex);
+
+            for (i = 0; i < SquadRallyPoints.Length; ++i)
+            {
+                SquadRallyPoints[i].Step();
+            }
+
+            // Sort active rally point list by creation time, oldest first.
+            ActiveSquadRallyPoints = GetActiveSquadRallyPoints(TeamIndex, SquadIndex);
+            Comparator = new class'UComparator';
+            Comparator.CompareFunction = RallyPointSortFunction;
+            class'USort'.static.Sort(ActiveSquadRallyPoints, Comparator);
+
+            // Check if this squad already has more than the maximum rally points.
+            // If so, forcibly delete the oldest ones.
+            while (ActiveSquadRallyPoints.Length > SQUAD_RALLY_POINTS_MAX)
+            {
+                RallyPoints[ActiveSquadRallyPoints[0].RallyPointIndex].Destroy();
+                ActiveSquadRallyPoints.Remove(0, 1);
+            }
+
+            // Count how many active are non-blocked, if it's more than
+            // the maximum allowed, block the oldest ones (their block-state
+            // will be overwritten by Step on the next timer pop)
+            for (i = ActiveSquadRallyPoints.Length - 1; i >= 0; --i)
+            {
+                if (!ActiveSquadRallyPoints[i].IsBlocked())
+                {
+                    ++UnblockedCount;
+                }
+
+                if (UnblockedCount > SQUAD_RALLY_POINTS_ACTIVE_MAX)
+                {
+                    ActiveSquadRallyPoints[i].BlockReason = SPBR_Full;
+                }
+            }
         }
     }
 }
@@ -1255,6 +1307,24 @@ function SetSquadNextRallyPointTime(int TeamIndex, int SquadIndex, float TimeSec
     }
 }
 
+function array<DHSpawnPoint_SquadRallyPoint> GetSquadRallyPoints(int TeamIndex, int SquadIndex)
+{
+    local array<DHSpawnPoint_SquadRallyPoint> SquadRallyPoints;
+    local int i;
+
+    for (i = 0; i < arraycount(RallyPoints); ++i)
+    {
+        if (RallyPoints[i] != none &&
+            RallyPoints[i].GetTeamIndex() == TeamIndex &&
+            RallyPoints[i].SquadIndex == SquadIndex)
+        {
+            SquadRallyPoints[SquadRallyPoints.Length] = RallyPoints[i];
+        }
+    }
+
+    return SquadRallyPoints;
+}
+
 function array<DHSpawnPoint_SquadRallyPoint> GetActiveSquadRallyPoints(int TeamIndex, int SquadIndex)
 {
     local array<DHSpawnPoint_SquadRallyPoint> ActiveSquadRallyPoints;
@@ -1516,37 +1586,15 @@ function DestroySquadRallyPoint(DHPlayerReplicationInfo PRI, DHSpawnPoint_SquadR
     SRP.Destroy();
 }
 
+function bool RallyPointSortFunction(Object LHS, Object RHS)
+{
+    return DHSpawnPoint_SquadRallyPoint(LHS).CreatedTimeSeconds > DHSpawnPoint_SquadRallyPoint(RHS).CreatedTimeSeconds;
+}
+
 function OnSquadRallyPointActivated(DHSpawnPoint_SquadRallyPoint SRP)
 {
-    local int i;
-    local int RallyPointIndex;
-    local array<DHSpawnPoint_SquadRallyPoint> ActiveSquadRallyPoints;
-
     // "The squad has established a new rally point."
     BroadcastSquadLocalizedMessage(SRP.GetTeamIndex(), SRP.SquadIndex, SquadMessageClass, 44);
-
-    // Check if this squad already has more than the maximum rally points.
-    // If so, forcibly delete the oldest one.
-    ActiveSquadRallyPoints = GetActiveSquadRallyPoints(SRP.GetTeamIndex(), SRP.SquadIndex);
-
-    if (ActiveSquadRallyPoints.Length > SQUAD_RALLY_POINTS_MAX)
-    {
-        RallyPointIndex = -1;
-
-        for (i = 0; i < ActiveSquadRallyPoints.Length; ++i)
-        {
-            if (RallyPointIndex == -1 || ActiveSquadRallyPoints[i].CreatedTimeSeconds < RallyPoints[RallyPointIndex].CreatedTimeSeconds)
-            {
-                RallyPointIndex = ActiveSquadRallyPoints[i].RallyPointIndex;
-            }
-        }
-
-        if (RallyPointIndex >= 0)
-        {
-            RallyPoints[RallyPointIndex].Destroy();
-            RallyPoints[RallyPointIndex] = none;
-        }
-    }
 }
 
 defaultproperties
