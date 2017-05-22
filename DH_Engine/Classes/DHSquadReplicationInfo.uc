@@ -903,12 +903,21 @@ simulated function string GetSquadName(int TeamIndex, int SquadIndex)
 // Returns the member of the specified squad at the specified member index.
 simulated function DHPlayerReplicationInfo GetMember(int TeamIndex, int SquadIndex, int MemberIndex)
 {
+    local int i;
+
+    i = SquadIndex * GetTeamSquadSize(TeamIndex) + MemberIndex;
+
+    if (i < 0 || i >= arraycount(AxisMembers))
+    {
+        return none;
+    }
+
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            return AxisMembers[SquadIndex * GetTeamSquadSize(TeamIndex) + MemberIndex];
+            return AxisMembers[i];
         case ALLIES_TEAM_INDEX:
-            return AlliesMembers[SquadIndex * GetTeamSquadSize(TeamIndex) + MemberIndex];
+            return AlliesMembers[i];
     }
 
     return none;
