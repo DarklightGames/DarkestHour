@@ -463,6 +463,7 @@ function UpdateSpawnPoints()
             // If spawn point that was previously selected is now hidden,
             // deselect it.
             p_Map.b_SpawnPoints[i].SetVisibility(false);
+            p_Map.b_SpawnPoints[i].CenterText = "";
 
             if (SpawnPointIndex == p_Map.b_SpawnPoints[i].Tag)
             {
