@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHShovelBuildFireMode extends WeaponFire;
+class DHShovelBuildFireMode extends DHWeaponFire;
 
 var DHConstruction Construction;
 var float TraceDistanceInMeters;
@@ -27,27 +27,19 @@ simulated function bool AllowFire()
 
     Construction = DHConstruction(HitActor);
 
-    if (Construction != none &&
-        (Construction.GetTeamIndex() == NEUTRAL_TEAM_INDEX || Construction.GetTeamIndex() == Instigator.GetTeamNum()) &&
-        Construction.CanBeBuilt() &&
-        Instigator != none &&
-        !Instigator.IsProneTransitioning() &&
-        Instigator.Velocity == vect(0.0, 0.0, 0.0))
-    {
-        return true;
-    }
-
-    return false;
+    return Construction != none &&
+           (Construction.GetTeamIndex() == NEUTRAL_TEAM_INDEX || Construction.GetTeamIndex() == Instigator.GetTeamNum()) &&
+           Construction.CanBeBuilt() &&
+           Instigator != none &&
+           !Instigator.IsProneTransitioning() &&
+           Instigator.Velocity == vect(0.0, 0.0, 0.0);
 }
 
 event ModeDoFire()
 {
     if (AllowFire())
     {
-        // TODO: get the exact construction we're lookin' at
-
         GotoState('Building');
-
         Weapon.IncrementFlashCount(0);
     }
 }

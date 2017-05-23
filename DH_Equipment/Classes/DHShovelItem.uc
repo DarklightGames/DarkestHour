@@ -22,7 +22,7 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_USA_shovel_1st.USA_shovel'
 
-    DisplayFOV=70.0
+    DisplayFOV=80.0
     IronSightDisplayFOV=70.0
     PlayerFOVZoom=10.0
     bPlayerFOVZooms=true
@@ -33,8 +33,8 @@ defaultproperties
 
     CrawlForwardAnim="crawlF"
     CrawlBackwardAnim="crawlB"
-    CrawlStartAnim="crawlIn"
-    CrawlEndAnim="crawlOut"
+    CrawlStartAnim="crawlF" // TODO: get a proper "crawlIn" animation
+    CrawlEndAnim="crawlF" // TODO: get a proper "crawlOut" animation
     SprintStartAnim="sprint_Start"
     SprintLoopAnim="sprint_Middle"
     SprintEndAnim="sprint_End"
