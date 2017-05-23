@@ -55,7 +55,7 @@ state Building
     {
         if (Weapon != none && Weapon.HasAnim(FireAnim))
         {
-            Weapon.PlayAnim(FireAnim, FireAnimRate);
+            Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
 
             SetTimer(Weapon.GetAnimDuration(FireAnim), false);
         }
@@ -88,5 +88,7 @@ defaultproperties
     bFireOnRelease=false
 
     FireAnim="dig"
+    FireAnimRate=1.0
+    FireTweenTime=0.2
 }
 
