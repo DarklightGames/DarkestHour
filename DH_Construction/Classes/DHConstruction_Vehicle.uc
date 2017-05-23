@@ -19,7 +19,7 @@ function Destroyed()
     }
 }
 
-function OnTeamIndexChanged()
+simulated function OnTeamIndexChanged()
 {
     super.OnTeamIndexChanged();
 

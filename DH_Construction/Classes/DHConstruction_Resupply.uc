@@ -29,7 +29,7 @@ function PostBeginPlay()
     }
 }
 
-function OnTeamIndexChanged()
+simulated function OnTeamIndexChanged()
 {
     if (ResupplyAttachment != none)
     {

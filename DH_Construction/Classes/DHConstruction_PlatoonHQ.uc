@@ -179,7 +179,7 @@ function StaticMesh GetTatteredStaticMesh()
     }
 }
 
-function OnTeamIndexChanged()
+simulated function OnTeamIndexChanged()
 {
     local Material FlagMaterial;
 
@@ -197,7 +197,7 @@ function OnTeamIndexChanged()
 }
 
 // TODO: fill this in with the correct flag materials
-function Material GetFlagMaterial()
+simulated function Material GetFlagMaterial()
 {
     switch (GetTeamIndex())
     {

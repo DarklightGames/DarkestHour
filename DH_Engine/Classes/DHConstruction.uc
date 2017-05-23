@@ -40,6 +40,7 @@ enum ETeamOwner
 var name StateName, OldStateName;
 
 var() ETeamOwner TeamOwner;     // This enum is for the levelers' convenience only.
+var private int OldTeamIndex;   // Used by the client to fire off an event when the team index changes.
 var private int TeamIndex;
 var int TeamLimit;              // The amount of this type of construction that is allowed, per team.
 
@@ -135,7 +136,7 @@ replication
 
 function OnConstructed();
 function OnStageIndexChanged(int OldIndex);
-function OnTeamIndexChanged();
+simulated function OnTeamIndexChanged();
 function OnProgressChanged();
 function OnHealthChanged();
 
@@ -644,15 +645,25 @@ function int GetScaledDamage(class<DamageType> DamageType, int Damage)
 
 simulated function PostNetReceive()
 {
+    super.PostNetReceive();
+
     if (StateName != GetStateName())
     {
         GotoState(StateName);
+    }
+
+    if (TeamIndex != OldTeamIndex)
+    {
+        OnTeamIndexChanged();
+
+        OldTeamIndex = TeamIndex;
     }
 }
 
 defaultproperties
 {
-    TeamIndex=NEUTRAL_TEAM_INDEX
+    OldTeamIndex=2  // NEUTRAL_TEAM_INDEX
+    TeamIndex=2     // NEUTRAL_TEAM_INDEX
     RemoteRole=ROLE_SimulatedProxy
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.hedgehog_01'
