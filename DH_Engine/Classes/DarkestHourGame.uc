@@ -33,7 +33,9 @@ var     bool                        bSkipPreStartTime;                      // W
 
 var     class<DHObstacleManager>    ObstacleManagerClass;
 
-var     int                         ChangeTeamInterval;
+var()   config int                  ChangeTeamInterval;                     // Server setting determines how long before a player can change teams again after doing so
+                                                                            // Also currently is the length of time for which a player can change teams for free at the beginning of a round
+                                                                            // Note: if bPlayersBalanceTeams is false, players will still be able to change teams
 
 var     array<float>                ReinforcementMessagePercentages;
 var     int                         TeamReinforcementMessageIndices[2];
@@ -3219,7 +3221,7 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
     }
 
     // Do a check to see if we can change teams yet
-    if (PC != none && PC.NextChangeTeamTime >= GRI.ElapsedTime)
+    if (bPlayersBalanceTeams && PC != none && PC.NextChangeTeamTime >= GRI.ElapsedTime)
     {
         return false;
     }
