@@ -40,7 +40,7 @@ function Setup()
 
     if (GRI != none)
     {
-        for (i = StartIndex; i < ConstructionClasses.Length && j < Options.Length - 1; ++i)
+        for (i = StartIndex; i < ConstructionClasses.Length && j < Options.Length; ++i)
         {
             Options[j].OptionalObject = ConstructionClasses[i];
             Options[j].ActionText = ConstructionClasses[i].static.GetMenuName(PC);
@@ -51,9 +51,9 @@ function Setup()
         if (ConstructionClasses.Length - i >= 1)
         {
             // More options are available, so let's make a submenu option.
-            Options[j].OptionalObject = class'UInteger'.static.Create(i);
-            Options[j].ActionText = "...";
-            Options[j].Material = none; // TODO: some sort of ellipses icon?
+            Options[Options.Length - 1].OptionalObject = class'UInteger'.static.Create(i - 1);
+            Options[Options.Length - 1].ActionText = "...";
+            Options[Options.Length - 1].Material = none; // TODO: some sort of ellipses icon?
         }
     }
 }
@@ -62,16 +62,16 @@ function OnSelect(int OptionIndex, vector Location)
 {
     local DHPawn P;
 
-    if (Interaction == none || Interaction.ViewportOwner == none || OptionIndex < 0 || OptionIndex >= Options.Length)
+    if (Interaction == none || Interaction.ViewportOwner == none || OptionIndex < 0 || OptionIndex >= Options.Length || Options[OptionIndex].OptionalObject == none)
     {
         return;
     }
 
-    if (OptionIndex == Options.Length - 1)
+    if (Options[OptionIndex].OptionalObject.IsA('UInteger'))
     {
         Interaction.PushMenu("DH_Engine.DHCommandMenu_Construction", Options[OptionIndex].OptionalObject);
     }
-    else
+    else if (Options[OptionIndex].OptionalObject.IsA('Class'))
     {
         P = DHPawn(Interaction.ViewportOwner.Actor.Pawn);
 
