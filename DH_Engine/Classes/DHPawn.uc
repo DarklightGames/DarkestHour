@@ -493,7 +493,7 @@ simulated event AnimEnd(int Channel)
                     {
                         WeaponAttachment.LoopAnim(WeaponAttachment.WA_IdleEmpty);
                     }
-                    else
+                    else if (WeaponAttachment.WA_Idle != '')
                     {
                         WeaponAttachment.LoopAnim(WeaponAttachment.WA_Idle);
                     }
@@ -6193,6 +6193,183 @@ simulated function NextWeapon()
     {
         Weapon.PutDown();
     }
+}
+
+// Overriden from ROPawn to fix "sequence not found" bugs when a weapon simply
+// does not have a WA_Idle or WA_IdleEmpty.
+simulated function StartFiring(bool bAltFire, bool bRapid)
+{
+    local name FireAnim;
+    local bool bIsMoving;
+
+    if (Physics == PHYS_Swimming || WeaponAttachment == none)
+    {
+        return;
+    }
+
+    bIsMoving = VSizeSquared(Velocity) > 25;
+
+    if (bAltFire)
+    {
+        if (WeaponAttachment.bBayonetAttached)
+        {
+            if (bIsCrawling)
+            {
+                FireAnim = WeaponAttachment.PA_ProneBayonetAltFire;
+            }
+            else if (bIsCrouched)
+            {
+                FireAnim = WeaponAttachment.PA_CrouchBayonetAltFire;
+            }
+            else
+            {
+                FireAnim = WeaponAttachment.PA_BayonetAltFire;
+            }
+        }
+        else
+        {
+            if (bIsCrawling)
+            {
+                FireAnim = WeaponAttachment.PA_ProneAltFire;
+            }
+            else if (bIsCrouched)
+            {
+                FireAnim = WeaponAttachment.PA_CrouchAltFire;
+            }
+            else if (bBipodDeployed)
+            {
+                FireAnim = WeaponAttachment.PA_DeployedAltFire;
+            }
+            else
+            {
+                FireAnim = WeaponAttachment.PA_AltFire;
+            }
+        }
+    }
+    // Regular fire
+    else
+    {
+        if (bBipodDeployed)
+        {
+            if (bIsCrouched)
+            {
+                FireAnim = WeaponAttachment.PA_CrouchDeployedFire;
+            }
+            else if (bIsCrawling)
+            {
+                FireAnim = WeaponAttachment.PA_ProneDeployedFire;
+            }
+            else
+            {
+                FireAnim = WeaponAttachment.PA_DeployedFire;
+            }
+        }
+        else if (bIsCrawling)
+        {
+            FireAnim = WeaponAttachment.PA_ProneFire;
+        }
+        else if (bIsCrouched)
+        {
+            if (bIsMoving)
+            {
+                FireAnim = WeaponAttachment.PA_MoveCrouchFire[Get8WayDirection()];
+            }
+            else
+            {
+                if (bIronSights)
+                {
+                    FireAnim = WeaponAttachment.PA_CrouchIronFire;
+                }
+                else
+                {
+                    FireAnim = WeaponAttachment.PA_CrouchFire;
+                }
+            }
+        }
+        else if (bIronSights)
+        {
+            if (bIsMoving)
+            {
+                FireAnim = WeaponAttachment.PA_MoveStandIronFire[Get8WayDirection()];
+            }
+            else
+            {
+                FireAnim = WeaponAttachment.PA_IronFire;
+            }
+        }
+        else
+        {
+            if (bIsMoving)
+            {
+                if (bIsWalking)
+                {
+                    FireAnim = WeaponAttachment.PA_MoveWalkFire[Get8WayDirection()];
+                }
+                else
+                {
+                    FireAnim = WeaponAttachment.PA_MoveStandFire[Get8WayDirection()];
+
+                }
+            }
+            else
+            {
+                FireAnim = WeaponAttachment.PA_Fire;
+            }
+        }
+    }
+
+    // Blend the fire animation a bit so the standard player movement animations still play
+    AnimBlendParams(1, 0.25, 0.0, 0.2, FireRootBone);
+
+    if (bRapid)
+    {
+        if (WeaponState != GS_FireLooped)
+        {
+            LoopAnim(FireAnim,, 0.0, 1);
+            WeaponState = GS_FireLooped;
+
+            if (!bAltFire)
+            {
+                if (WeaponAttachment.bBayonetAttached && WeaponAttachment.WA_BayonetFire != '')
+                {
+                    WeaponAttachment.LoopAnim(WeaponAttachment.WA_BayonetFire);
+                }
+                else if (WeaponAttachment.WA_Fire != '')
+                {
+                    WeaponAttachment.LoopAnim(WeaponAttachment.WA_Fire);
+                }
+            }
+        }
+    }
+    else
+    {
+        PlayAnim(FireAnim,, 0.0, 1);
+        WeaponState = GS_FireSingle;
+
+        if (!bAltFire)
+        {
+            if (WeaponAttachment.bBayonetAttached)
+            {
+                if (WeaponAttachment.WA_BayonetFire != '')
+                {
+                    Log("okay" @ WeaponAttachment.WA_Fire);
+
+                    WeaponAttachment.PlayAnim(WeaponAttachment.WA_BayonetFire);
+                }
+            }
+            else
+            {
+                if (WeaponAttachment.WA_Fire != '')
+                {
+                    Log("cool" @ WeaponAttachment.WA_Fire);
+
+                    WeaponAttachment.PlayAnim(WeaponAttachment.WA_Fire);
+                }
+            }
+        }
+    }
+
+    IdleTime = Level.TimeSeconds;
 }
 
 defaultproperties
