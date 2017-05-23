@@ -2002,7 +2002,7 @@ simulated state ChangingBarrels extends WeaponBusy
         {
             bCallBarrelChangeTimer = false;
             PerformBarrelChange();
-            SetTimer(FMin(0.5 * BarrelChangeDuration, 0.1), false); // minimum of 0.1 secs just in case something has gone wrong - guarantees we set another Timer & exit state
+            SetTimer(FMax(0.5 * BarrelChangeDuration, 0.1), false); // minimum of 0.1 secs just in case something has gone wrong - guarantees we set another Timer & exit state
         }
         // Otherwise we just exit the state as normal, as we've completed the barrel change process
         else
