@@ -4,7 +4,7 @@
 //==============================================================================
 // For some silly reason, there's no way to just simply switch to having no
 // weapon without dropping a current weapon. This weapon can be given to a
-// player when they want
+// player you want them to have no weapon without dropping their current weapon.
 //==============================================================================
 
 class DH_EmptyWeapon extends DHWeapon;
