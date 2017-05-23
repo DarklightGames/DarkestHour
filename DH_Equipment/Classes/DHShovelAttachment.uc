@@ -8,16 +8,13 @@ class DHShovelAttachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.usa_spade_3rd'
-//    Skins(0)=texture'DH_Equipment_tex.wirecutter.Wirecutters_3rdP'
-    CullDistance=4096.0 // 68m - undo the increase added in DHWeaponAttachment, as cutters don't have a muzzle flash & are also small
+    CullDistance=4096
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Drautschere_icon'
     bRapidFire=false
     LightType=LT_None
     LightEffect=LE_None
-
-    WA_Idle="idle_wirecutters"
-    WA_Fire="cut_wirecutters"
-
+    WA_Idle=""
+    WA_Fire=""
     PA_MovementAnims(0)="stand_jogF_nade"
     PA_MovementAnims(1)="stand_jogB_nade"
     PA_MovementAnims(2)="stand_jogL_nade"
@@ -215,4 +212,7 @@ defaultproperties
     PA_DodgeAnims(1)="jumpB_mid_nade"
     PA_DodgeAnims(2)="jumpL_mid_nade"
     PA_DodgeAnims(3)="jumpR_mid_nade"
+    PA_ProneAltFire="prone_throw_nade"
+    PA_CrouchAltFire="crouch_throw_nade"
+    PA_AltFire="stand_throw_nade"
 }
