@@ -52,6 +52,7 @@ var     byte                TracerFrequency;       // how often a tracer is load
 // Matt: new col mesh actor allows us to use a col static mesh with VehicleWeapon - just specify a valid CollisionStaticMesh in default props & col static mesh is automatically used
 var     DHCollisionMeshActor    CollisionMeshActor;
 var     StaticMesh              CollisionStaticMesh;
+var     bool                    bAttachColMeshToPitchBone; // option to attach to pitch bone instead of default yaw bone, e.g. for gun mantlet
 
 // Hatch fire effects - Ch!cKeN
 var     VehicleDamagedEffect        HatchFireEffect;
@@ -81,11 +82,24 @@ replication
 // Modified to attach any collision static mesh actor
 simulated function PostBeginPlay()
 {
+    local name AttachBone;
+
     super.PostBeginPlay();
 
     if (CollisionStaticMesh != none)
     {
-        CollisionMeshActor = class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, CollisionStaticMesh, YawBone); // attach to yaw bone, so col mesh turns with weapon
+        // Default is to attach to yaw bone, so col mesh turns sideways with the weapon
+        // But there's an option to attach to pitch bone instead, so col mesh rotates up & down with the weapon, e.g. for gun mantlet
+        if (bAttachColMeshToPitchBone)
+        {
+            AttachBone = PitchBone;
+        }
+        else
+        {
+            AttachBone = YawBone;
+        }
+
+        CollisionMeshActor = class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, CollisionStaticMesh, AttachBone);
 
         if (CollisionMeshActor != none)
         {
