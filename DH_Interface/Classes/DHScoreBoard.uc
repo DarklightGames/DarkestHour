@@ -192,7 +192,7 @@ simulated function UpdateScoreBoard(Canvas C)
 
     //////////// DRAW SCOREBOARD HEADER ////////////
 
-    // Draw scoreboard banner along top of screen
+    // Draw scoreboard banner along top of screen, with server name instead of TitleText "SCORES" (a DH change)
     C.DrawColor = HUD.default.WhiteColor;
     C.SetPos(0.0, 0.0);
     Y = CalcY(1.0, C);
@@ -270,6 +270,7 @@ simulated function UpdateScoreBoard(Canvas C)
 
     Y += LineHeight;
 
+    // Draw reinforcements remaining
     if (DHGRI.SpawnsRemaining[TeamIndex] >= 0)
     {
         DrawCell(C, ReinforcementsText @ ":" @ DHGRI.SpawnsRemaining[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
@@ -284,6 +285,7 @@ simulated function UpdateScoreBoard(Canvas C)
         DrawCell(C, DHGRI.ForceScaleText @ ":" @ DHGRI.GetTeamScaleString(TeamIndex), 0, BaseXPos[TeamIndex] + NameLength, Y, MaxTeamWidth, LineHeight, false, TeamColor);
     }
 
+    // Draw rounds won/remaining for the team if not limited to 1 round
     if (GRI.RoundLimit > 1)
     {
         s = RoundsWonText @ ":" @ int(GRI.Teams[TeamIndex].Score);
@@ -450,7 +452,7 @@ simulated function UpdateScoreBoard(Canvas C)
 
     Y += LineHeight;
 
-    // Draw reinforcement remaining
+    // Draw reinforcements remaining
     if (DHGRI.SpawnsRemaining[TeamIndex] >= 0)
     {
         DrawCell(C, ReinforcementsText @ ":" @ DHGRI.SpawnsRemaining[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
@@ -482,6 +484,7 @@ simulated function UpdateScoreBoard(Canvas C)
 
     Y += LineHeight;
 
+    // Draw objectives held
     if (SecondaryObjCount[TeamIndex] > 0)
     {
         DrawCell(C, RequiredObjHeldText @ ":" @ RequiredObjCount[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);

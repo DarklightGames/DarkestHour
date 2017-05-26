@@ -1614,7 +1614,7 @@ function DrawSignals(Canvas C)
     }
 }
 
-// Modified to show the names of friendly players within 25m if they are talking, or if we can resupply them or assist them with loading a rocket
+// Modified to show names of friendly players within 25m if they are talking, are in our squad, or if we can resupply them or assist them with loading a rocket
 // This is as well as any player we are looking directly at (within a longer distance of 50m)
 // We also show a relevant icon above a drawn name if the player is talking or if we can resupply or assist reload them
 function DrawPlayerNames(Canvas C)
@@ -3263,14 +3263,11 @@ simulated function DrawObjectives(Canvas C)
         CurrentTime = Max(0, DHGRI.RoundEndTime - DHGRI.ElapsedTime);
     }
 
-    // Get player
+    // Get actor references
     Player = DHPlayer(PlayerOwner);
-
-    // Get PRI
     PRI = DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo);
 
-    // Get Role info
-    if (PRI != none && PRI.RoleInfo != none)
+    if (PRI != none)
     {
         RI = DHRoleInfo(PRI.RoleInfo);
     }

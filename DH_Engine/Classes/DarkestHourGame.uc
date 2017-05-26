@@ -2655,7 +2655,7 @@ state RoundOver
 // Extended to inform GRI that the round is over so the time remaining can "pause" on the second the round ended (instead of continuing to count down)
 function EndGame(PlayerReplicationInfo Winner, string Reason)
 {
-    if (GameReplicationInfo != none && DHGameReplicationInfo(GameReplicationInfo) != none)
+    if (DHGameReplicationInfo(GameReplicationInfo) != none)
     {
         DHGameReplicationInfo(GameReplicationInfo).bRoundIsOver = true;
     }
