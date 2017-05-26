@@ -46,9 +46,8 @@ defaultproperties
 
     // Hull armor
     FrontArmor(0)=(Thickness=5.0,Slope=-20.0,MaxRelativeHeight=5.7,LocationName="lower nose")
-    FrontArmor(1)=(Thickness=5.0,Slope=50.0,MaxRelativeHeight=22.2,LocationName="upper nose")
-    FrontArmor(2)=(Thickness=2.5,Slope=84.0,MaxRelativeHeight=27.0,LocationName="glacis")
-    FrontArmor(3)=(Thickness=7.0,Slope=9.0,LocationName="upper")
+    FrontArmor(1)=(Thickness=5.0,Slope=50.0,MaxRelativeHeight=23.5,LocationName="upper nose")
+    FrontArmor(2)=(Thickness=7.0,Slope=9.0,LocationName="upper")
     RightArmor(0)=(Thickness=3.0)
     LeftArmor(0)=(Thickness=3.0)
     RearArmor(0)=(Thickness=5.0,Slope=-9.0,MaxRelativeHeight=4.6,LocationName="lower")

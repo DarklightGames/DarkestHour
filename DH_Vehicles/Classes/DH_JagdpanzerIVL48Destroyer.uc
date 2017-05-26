@@ -41,9 +41,8 @@ defaultproperties
 
     // Hull armor
     FrontArmor(0)=(Thickness=5.0,Slope=-57.0,MaxRelativeHeight=-12.2,LocationName="lower nose")
-    FrontArmor(1)=(Thickness=8.0,Slope=45.0,MaxRelativeHeight=12.5,LocationName="upper nose") // later model with this armor plate increased from 60mm to 80mm
-    FrontArmor(2)=(Thickness=2.0,Slope=86.0,MaxRelativeHeight=21.7,LocationName="glacis")
-    FrontArmor(3)=(Thickness=8.0,Slope=50.0,LocationName="superstructure")
+    FrontArmor(1)=(Thickness=8.0,Slope=45.0,MaxRelativeHeight=13.5,LocationName="upper nose") // later model with this armor plate increased from 60mm to 80mm
+    FrontArmor(2)=(Thickness=8.0,Slope=50.0,LocationName="superstructure")
     RightArmor(0)=(Thickness=3.0,MaxRelativeHeight=18.7,LocationName="lower")
     RightArmor(1)=(Thickness=4.0,Slope=30.0,LocationName="superstructure") // TODO: Bird & Livingston says this plate was reduced to 30mm in this later model?
     LeftArmor(0)=(Thickness=3.0,MaxRelativeHeight=18.7,LocationName="lower")
