@@ -198,7 +198,6 @@ simulated function UpdateScoreBoard(Canvas C)
     Y = CalcY(1.0, C);
     C.DrawTile(HeaderImage, C.ClipX, Y, 0.0, 0.0, 2048.0, 64.0);
 
-    C.DrawColor = HUD.default.WhiteColor;
     C.Font = HUD.static.GetSmallMenuFont(C);
     C.DrawTextJustified(Left(DHGRI.ServerName, 64), 1, 0.0, 0.0, C.ClipX, Y);
 
@@ -250,14 +249,14 @@ simulated function UpdateScoreBoard(Canvas C)
     s $= HUD.default.SpacingText $ HUD.default.MapGameTypeText $ DHGRI.CurrentGameType;
 
     // Draw our round/server info line, with a drop shadow
-    C.DrawColor.A = 128; // DrawColor is already black for shadow
+    C.SetDrawColor(0, 0, 0, 128);
     X = BaseXPos[AXIS_TEAM_INDEX];
     C.SetPos(X + 1, Y + 1);
-    C.DrawTextClipped(s);
+    C.DrawTextClipped(s); // this is the dark 'drop shadow' text, slightly offset from the actual text
 
     C.DrawColor = HUD.default.WhiteColor;
     C.SetPos(X, Y);
-    C.DrawTextClipped(s);
+    C.DrawTextClipped(s); // this is the actual text, drawn over the drop shadow
 
     //////////////// DRAW AXIS TEAM ////////////////
 
