@@ -5931,14 +5931,18 @@ exec function DebugSpawnVehicle(string VehicleString, int Distance, optional boo
     }
 }
 
-// New debug exec that makes player's current weapon fire 20mm AP rounds, which is very useful for testing hits on vehicle armour, e.g. angle and side calcs
-// Calling it again will toggle back to the normal ammo
-// By default it also enables/disables penetration debug settings, but adding "true" after the console command will ignore those settings
-exec function DebugFire20mm(optional bool bIgnorePenetrationDebug)
+// New debug exec to make player's current weapon fire dummy AP shells, which is very useful for checking vehicle armour is set up correctly
+// It also enables penetration debug, which shows on screen text & lines
+// Entering this console command again will toggle your weapon back to using its normal ammo & disable penetration debug
+// The dummy AP shells do no damage & have no spread & a minimum ballistic drop (for accurate aiming to check certain armour locations)
+// By default, dummy shells will be 75mm calibre & never penetrate - you just use the debug info on screen to check the armour is set up ok
+// But you can specify a specific shell class (from DH_Vehicles package) & then dummy shells will use its calibre & penetration properties
+exec function DebugShootAP(optional string APProjectileClassName)
 {
-    local class<Projectile> AP20mmClass;
-    local DHProjectileFire  FireMode;
-    local bool              bDebugFireEnabled;
+    local class<DHAntiVehicleProjectile> DebugProjectileClass, APProjectileClass;
+    local DHProjectileFire               FireMode;
+    local bool                           bDebugAPEnabled;
+    local int                            i;
 
     if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Weapon != none)
     {
@@ -5946,25 +5950,60 @@ exec function DebugFire20mm(optional bool bIgnorePenetrationDebug)
 
         if (FireMode != none)
         {
-            AP20mmClass = class<Projectile>(DynamicLoadObject("DH_Vehicles.DH_Sdkfz2341CannonShell", class'Class'));
+            DebugProjectileClass = class'DH_Engine.DHDummyDebugAPShell'; // just avoids lots of literals
 
-            // Switch current weapon to fire 20mm AP rounds (or toggle back to using normal ammo)
-            if (FireMode.ProjectileClass != AP20mmClass)
+            if (APProjectileClassName != "") // get projectile class from any specified class name
             {
-                bDebugFireEnabled = true;
-                FireMode.ProjectileClass = AP20mmClass;
-                FireMode.bUsePreLaunchTrace = false; // have to disable PLT otherwise it stops projectiles even being spawned for close range shots
+                APProjectileClass = class<DHAntiVehicleProjectile>(DynamicLoadObject("DH_Vehicles." $ APProjectileClassName, class'Class'));
             }
+
+            // Switch current weapon to fire dummy (non-damaging) debug AP rounds
+            // If a valid projectile class has been specified, we'll keep the debug enabled, as player may have just switched projectile class
+            if (FireMode.ProjectileClass != DebugProjectileClass || APProjectileClass != none)
+            {
+                bDebugAPEnabled = true;
+                FireMode.ProjectileClass = DebugProjectileClass;
+                FireMode.bUsePreLaunchTrace = false; // have to disable PLT otherwise it stops projectiles even being spawned for close range shots
+                FireMode.SpreadStyle = SS_None;
+
+                // If specific AP projectile class name has been specified, we'll use that to set properties for the debug shell class
+                if (APProjectileClass != none)
+                {
+                    DebugProjectileClass.default.RoundType = APProjectileClass.default.RoundType;
+                    DebugProjectileClass.default.ShellDiameter = APProjectileClass.default.ShellDiameter;
+                    DebugProjectileClass.default.bShatterProne = APProjectileClass.default.bShatterProne;
+
+                    for (i = 0; i < arraycount(DebugProjectileClass.default.DHPenetrationTable); ++i)
+                    {
+                        DebugProjectileClass.default.DHPenetrationTable[i] = APProjectileClass.default.DHPenetrationTable[i];
+                    }
+                }
+                // Otherwise use a default 75mm shell calibre with zero penetration for debug shell class
+                // Have to hard code literals here, as debug shell class defaults may have been changed by earlier debugging
+                else
+                {
+                    DebugProjectileClass.default.RoundType = RT_APC;
+                    DebugProjectileClass.default.ShellDiameter = 7.5;
+                    DebugProjectileClass.default.bShatterProne = false;
+
+                    for (i = 0; i < arraycount(DebugProjectileClass.default.DHPenetrationTable); ++i)
+                    {
+                        DebugProjectileClass.default.DHPenetrationTable[i] = 0;
+                    }
+                }
+            }
+            // Or toggle back to using normal weapon ammo (if debug AP is already enabled & a projectile class hasn't been specified)
             else
             {
                 FireMode.ProjectileClass = FireMode.default.ProjectileClass;
                 FireMode.bUsePreLaunchTrace = FireMode.default.bUsePreLaunchTrace;
+                FireMode.SpreadStyle = FireMode.default.SpreadStyle;
             }
 
-            // Enable penetration debugging (or toggle back to off) - with option to ignore this
-            if (!bIgnorePenetrationDebug && DHPlayer(Controller) != none)
+            // Enable penetration debugging (or toggle back to off)
+            if (DHPlayer(Controller) != none)
             {
-                DHPlayer(Controller).DebugPenetration(bDebugFireEnabled);
+                DHPlayer(Controller).DebugPenetration(bDebugAPEnabled);
             }
         }
     }
