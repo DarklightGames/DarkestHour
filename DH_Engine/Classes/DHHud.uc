@@ -3251,15 +3251,8 @@ simulated function DrawObjectives(Canvas C)
         return;
     }
 
-    // Update time
-    if (!DHGRI.bMatchHasBegun)
-    {
-        CurrentTime = Max(0, DHGRI.RoundStartTime + DHGRI.PreStartTime - DHGRI.ElapsedTime);
-    }
-    else
-    {
-        CurrentTime = Max(0, DHGRI.RoundEndTime - DHGRI.ElapsedTime);
-    }
+    // Update remaining round time
+    CurrentTime = class'DHGameReplicationInfo'.static.GetRoundTimeRemaining(DHGRI);
 
     // Get actor references
     Player = DHPlayer(PlayerOwner);
@@ -4451,21 +4444,10 @@ simulated function DrawSpectatingHud(Canvas C)
     C.Style = ERenderStyle.STY_Alpha;
     DrawFadeEffect(C);
 
-    if (DHGRI != none && DHGRI.bMatchHasBegun)
+    if (DHGRI != none)
     {
         // Update & draw round timer
-        if (!DHGRI.bMatchHasBegun)
-        {
-            CurrentTime = DHGRI.RoundStartTime + DHGRI.PreStartTime - DHGRI.ElapsedTime;
-        }
-        else if (DHGRI.bRoundIsOver)
-        {
-            CurrentTime = DHGRI.RoundEndTime;
-        }
-        else
-        {
-            CurrentTime = DHGRI.RoundEndTime - DHGRI.ElapsedTime;
-        }
+        CurrentTime = class'DHGameReplicationInfo'.static.GetRoundTimeRemaining(DHGRI);
 
         if (DHGRI.RoundDuration == 0)
         {
@@ -4473,7 +4455,7 @@ simulated function DrawSpectatingHud(Canvas C)
         }
         else
         {
-            s = default.TimeRemainingText $ class'TimeSpan'.static.ToString(Max(0, CurrentTime));
+            s = default.TimeRemainingText $ class'TimeSpan'.static.ToString(CurrentTime);
         }
 
         X = 8.0 * Scale;

@@ -116,7 +116,7 @@ simulated function UpdateScoreBoard(Canvas C)
     C.Style = ERenderStyle.STY_Alpha;
     C.SetDrawColor(0, 0, 0, 128);
     C.SetPos(0.0, 0.0);
-    C.DrawRect(texture'WhiteSquaretexture', C.ClipX, C.ClipY);
+    C.DrawRect(texture'WhiteSquareTexture', C.ClipX, C.ClipY);
 
     if (float(C.SizeX) / float(C.SizeY) >= 1.6)
     {
@@ -213,17 +213,9 @@ simulated function UpdateScoreBoard(Canvas C)
     {
         s $= HUD.default.NoTimeLimitText;
     }
-    else if (DHGRI.bMatchHasBegun && !DHGRI.bRoundIsOver)
-    {
-        s $= class'TimeSpan'.static.ToString(Max(0, DHGRI.RoundEndTime - GRI.ElapsedTime));
-    }
-    else if (DHGRI.bRoundIsOver)
-    {
-        s $= class'TimeSpan'.static.ToString(DHGRI.RoundEndTime);
-    }
     else
     {
-        s $= class'TimeSpan'.static.ToString(Max(0, DHGRI.RoundStartTime + DHGRI.PreStartTime - GRI.ElapsedTime));
+        s $= class'TimeSpan'.static.ToString(class'DHGameReplicationInfo'.static.GetRoundTimeRemaining(DHGRI));
     }
 
     // Add time elapsed (extra in DH)
@@ -301,6 +293,7 @@ simulated function UpdateScoreBoard(Canvas C)
 
     Y += LineHeight;
 
+    // Draw objectives held
     if (SecondaryObjCount[TeamIndex] > 0)
     {
         DrawCell(C, RequiredObjHeldText @ ":" @ RequiredObjCount[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);

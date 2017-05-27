@@ -312,8 +312,6 @@ function Timer()
 
 function UpdateRoundStatus()
 {
-    local int RoundTime;
-
     if (GRI != none)
     {
         if (GRI.AttritionRate[CurrentTeam] > 0.0)
@@ -348,26 +346,13 @@ function UpdateRoundStatus()
             i_SizeAdvantage.Hide();
         }
 
-        if (!GRI.bMatchHasBegun)
-        {
-            RoundTime = Max(0, GRI.RoundStartTime + GRI.PreStartTime - GRI.ElapsedTime);
-        }
-        else if (GRI.bRoundIsOver)
-        {
-            RoundTime = GRI.RoundEndTime;
-        }
-        else
-        {
-            RoundTime = Max(0, GRI.RoundEndTime - GRI.ElapsedTime);
-        }
-
         if (GRI.RoundDuration == 0 && GRI.bMatchHasBegun)
         {
             l_RoundTime.Caption = class'DHHud'.default.NoTimeLimitText;
         }
         else
         {
-            l_RoundTime.Caption = class'TimeSpan'.static.ToString(Max(0, RoundTime));
+            l_RoundTime.Caption = class'TimeSpan'.static.ToString(class'DHGameReplicationInfo'.static.GetRoundTimeRemaining(GRI));
         }
     }
 }
