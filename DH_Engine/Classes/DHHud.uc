@@ -1627,7 +1627,6 @@ function DrawPlayerNames(Canvas C)
     local Pawn                    LookedAtPawn, PawnForLocation, P;
     local array<Pawn>             Pawns;
     local material                IconMaterial;
-    local color                   TeamColor;
     local vector                  ViewLocation, DrawLocation, HitLocation, HitNormal, TextSize, PlayerDirection;
     local string                  PlayerName;
     local float                   Now, NameFadeTime, HighestFadeInReached;
@@ -1849,7 +1848,6 @@ function DrawPlayerNames(Canvas C)
     if (NamedPawns.Length > 0)
     {
         C.Font = GetPlayerNameFont(C);
-        TeamColor = GetPlayerColor(OtherPRI);
     }
 
     for (i = NamedPawns.Length - 1; i >= 0; --i)
@@ -1961,7 +1959,7 @@ function DrawPlayerNames(Canvas C)
             }
         }
 
-        // Set to draw the name & name icon in our team's color
+        // Set to draw the name & name icon in the color of our team, or of our squad if it's a squad member
         // And if player's name is fading in or out, lower the drawing alpha value accordingly
         C.DrawColor = GetPlayerColor(OtherPRI);
 
