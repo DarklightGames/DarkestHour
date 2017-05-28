@@ -3,10 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHSquadInviteInteraction extends DHInteraction;
-
-var localized string InvitationText;
-var localized string PromptText;
+class DHSquadInviteInteraction extends DHPromptInteraction;
 
 var string SenderName;
 var string SquadName;
@@ -17,92 +14,38 @@ function Initialized()
 {
     super.Initialized();
 
-    InvitationText = Repl(InvitationText, "{0}", class'GameInfo'.static.MakeColorCode(class'DHColor'.default.SquadColor) $ default.SenderName $ class'GameInfo'.static.MakeColorCode(class'UColor'.default.White));
-    InvitationText = Repl(InvitationText, "{1}", class'GameInfo'.static.MakeColorCode(class'DHColor'.default.SquadColor) $ default.SquadName $ class'GameInfo'.static.MakeColorCode(class'UColor'.default.White));
-
-    PromptText = Repl(PromptText, "[", class'GameInfo'.static.MakeColorCode(class'DHColor'.default.InputPromptColor) $ "[");
-    PromptText = Repl(PromptText, "]", "]" $ class'GameInfo'.static.MakeColorCode(class'UColor'.default.White));
+    PromptText = Repl(PromptText, "{0}", class'GameInfo'.static.MakeColorCode(class'DHColor'.default.SquadColor) $ default.SenderName $ class'GameInfo'.static.MakeColorCode(class'UColor'.default.White));
+    PromptText = Repl(PromptText, "{1}", class'GameInfo'.static.MakeColorCode(class'DHColor'.default.SquadColor) $ default.SquadName $ class'GameInfo'.static.MakeColorCode(class'UColor'.default.White));
 }
 
-function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
+function OnOptionSelected(int Index)
 {
     local DHPlayer PC;
 
     PC = DHPlayer(ViewportOwner.Actor);
 
-    if (PC == none)
+    if (PC != none)
     {
-        return false;
-    }
-
-    if (Action == IST_Press)
-    {
-        if (Key == IK_F1)       // Accept
+        switch (Index)
         {
-            PC.ServerSquadJoin(default.TeamIndex, default.SquadIndex, true);
-
-            Master.RemoveInteraction(self);
-
-            return true;
-        }
-        else if (Key == IK_F2)  // Decline
-        {
-            Master.RemoveInteraction(self);
-
-            return true;
-        }
-        else if (Key == IK_F3)  // Ignore All
-        {
-            PC.bIgnoreSquadInvitations = true;
-
-            Master.RemoveInteraction(self);
-
-            return true;
+            case 0: // Accept
+                PC.ServerSquadJoin(default.TeamIndex, default.SquadIndex, true);
+                break;
+            case 1: // Decline
+                break;
+            case 2: // Ignore All
+                PC.bIgnoreSquadInvitations = true;
+                break;
         }
     }
-
-    return false;
-}
-
-simulated function PostRender(Canvas C)
-{
-    local float X, Y, XL, YL;
-
-    X = 8;
-
-    super.PostRender(C);
-
-    C.DrawColor = class'UColor'.default.White;
-    C.Font = class'DHHud'.static.GetConsoleFont(C);
-
-    // "{0} has invited you to join {1} squad."
-    C.TextSize(InvitationText, XL, YL);
-
-    Y = (C.ClipY * (2.0 / 3.0)) - (YL / 2);
-
-    C.SetPos(X, Y);
-    C.DrawText(InvitationText, true);
-
-    // "[F1] Accept [F2] Decline [F3] Ignore All"
-    C.TextSize(PromptText, XL, YL);
-
-    Y = (C.ClipY * (2.0 / 3.0)) - (YL / 2) + YL;
-
-    C.SetPos(X, Y);
-    C.DrawText(PromptText, true);
-}
-
-function NotifyLevelChange()
-{
-    super.NotifyLevelChange();
 
     Master.RemoveInteraction(self);
 }
 
 defaultproperties
 {
-    InvitationText="{0} has invited you to join {1} squad."
-    PromptText="[F1] Accept [F2] Decline [F3] Ignore All"
-    bActive=true
-    bVisible=true
+    PromptText="{0} has invited you to join {1} squad."
+    Options(0)=(Key=IK_F1,Text="Accept")
+    Options(1)=(Key=IK_F2,Text="Decline")
+    Options(2)=(Key=IK_F3,Text="Ignore All")
 }
