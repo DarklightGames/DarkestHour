@@ -289,14 +289,7 @@ function OnSpawnKill(Pawn VictimPawn, Controller KillerController)
 
 simulated function string GetMapStyleName()
 {
-    if (IsBlocked())
-    {
-        return "DHRallyPointBlockedButtonStyle";
-    }
-    else
-    {
-        return "DHRallyPointButtonStyle";
-    }
+    return "DHRallyPointButtonStyle";
 }
 
 function UpdateAppearance()

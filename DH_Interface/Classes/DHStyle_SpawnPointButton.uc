@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHStyle_SpawnPointBlockedButton extends GUIStyles;
+class DHStyle_SpawnPointButton extends GUIStyles
+    abstract;
 
 defaultproperties
 {
-    KeyName="DHSpawnPointBlockedButtonStyle"
     FontNames(0)="DHMenuFont"
     FontNames(1)="DHMenuFont"
     FontNames(2)="DHMenuFont"
@@ -35,12 +35,6 @@ defaultproperties
     ImgStyle(2)=ISTY_Scaled
     ImgStyle(3)=ISTY_Scaled
     ImgStyle(4)=ISTY_Scaled
-
-    Images(0)=material'DH_GUI_Tex.DeployMenu.SpawnPointBlocked'
-    Images(1)=material'DH_GUI_Tex.DeployMenu.SpawnPointBlocked'
-    Images(2)=material'DH_GUI_Tex.DeployMenu.SpawnPointBlocked'
-    Images(3)=material'DH_GUI_Tex.DeployMenu.SpawnPointBlocked'
-    Images(4)=material'DH_GUI_Tex.DeployMenu.SpawnPointBlocked'
 
     ImgColors(0)=(R=255,G=255,B=255,A=255)
     ImgColors(1)=(R=255,G=255,B=255,A=255)

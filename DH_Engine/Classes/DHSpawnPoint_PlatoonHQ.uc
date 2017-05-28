@@ -134,17 +134,9 @@ function OnTeamIndexChanged()
     }
 }
 
-// TODO: Override with different style
 simulated function string GetMapStyleName()
 {
-    if (IsBlocked())
-    {
-        return "DHSpawnPointBlockedButtonStyle";
-    }
-    else
-    {
-        return "DHSpawnButtonStyle";
-    }
+    return "DHPlatoonHQButtonStyle";
 }
 
 function bool PerformSpawn(DHPlayer PC)

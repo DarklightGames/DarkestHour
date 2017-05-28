@@ -160,14 +160,7 @@ function SetIsActive(bool bIsActive)
 // Override to change the button style for display on the deploy menu.
 simulated function string GetMapStyleName()
 {
-    if (IsBlocked())
-    {
-        return "DHSpawnPointBlockedButtonStyle";
-    }
-    else
-    {
-        return "DHSpawnButtonStyle";
-    }
+    return "DHSpawnButtonStyle";
 }
 
 // Override to change the text displayed overtop of the spawn point icon on the map.

@@ -224,6 +224,7 @@ simulated function Material GetFlagMaterial()
 defaultproperties
 {
     MenuName="Platoon HQ"
+    MenuIcon=Texture'DH_GUI_tex.DeployMenu.PlatoonHQ'
     Stages(0)=()
     ProgressMax=4
 

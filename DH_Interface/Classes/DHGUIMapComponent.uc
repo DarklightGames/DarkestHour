@@ -17,6 +17,7 @@ var             DHPlayer                    PC;
 var             DHPlayerReplicationInfo     PRI;
 
 var             GUIContextMenu              SquadRallyPointContextMenu;
+var             Material                    SpawnPointBlockedOverlay;
 
 delegate OnSpawnPointChanged(int SpawnPointIndex, optional bool bDoubleClick);
 
@@ -183,8 +184,29 @@ function MyContextSelect(GUIContextMenu Sender, int Index)
     return;
 }
 
+function Material MyGetOverlayMaterial(GUIComponent Sender)
+{
+    local DHSpawnPointBase SP;
+
+    if (Sender == none || GRI == none)
+    {
+        return none;
+    }
+
+    SP = GRI.SpawnPoints[Sender.Tag];
+
+    if (SP != none && SP.IsBlocked())
+    {
+        return SpawnPointBlockedOverlay;
+    }
+
+    return none;
+}
+
 defaultproperties
 {
+    SpawnPointBlockedOverlay=Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled'
+
     OnDraw=InternalOnDraw
 
     Begin Object Class=GUIContextMenu Name=SRPContextMenu
@@ -211,6 +233,7 @@ defaultproperties
         OnCheckChanged=InternalOnCheckChanged
         bCanClickUncheck=false
         ContextMenu=SRPContextMenu
+        GetOverlayMaterial=MyGetOverlayMaterial
     End Object
 
     //TODO: This is begging to be put into a loop somewhere

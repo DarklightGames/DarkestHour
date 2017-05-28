@@ -219,14 +219,7 @@ function bool PerformSpawn(DHPlayer PC)
 
 simulated function string GetMapStyleName()
 {
-    if (IsBlocked())
-    {
-        return "DHSpawnVehicleBlockedButtonStyle";
-    }
-    else
-    {
-        return "DHSpawnVehicleButtonStyle";
-    }
+    return "DHSpawnVehicleButtonStyle";
 }
 
 defaultproperties
