@@ -16,7 +16,7 @@ defaultproperties
 
     ItemName="Shovel"
     AttachmentClass=class'DHShovelAttachment'
-    InventoryGroup=8    // TODO: figure out best one!
+    InventoryGroup=9
     Priority=1
     bCanThrow=false
 
