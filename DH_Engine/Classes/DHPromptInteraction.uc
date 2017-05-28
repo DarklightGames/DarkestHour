@@ -20,7 +20,10 @@ struct Option
 var array<Option> Options;
 var string OptionsText;
 
-function OnOptionSelected(int Index);
+function OnOptionSelected(int Index)
+{
+    Master.RemoveInteraction(self);
+}
 
 function Initialize()
 {
