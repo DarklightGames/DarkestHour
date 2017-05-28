@@ -347,6 +347,8 @@ Begin:
             SmoothZoom(false);
         }
 
+        ResetPlayerFOV();
+
         if (AmmoAmount(0) < 1 && HasAnim(MagEmptyReloadAnim))
         {
             Sleep(GetAnimDuration(MagEmptyReloadAnim, 1.0) - default.ZoomInTime - default.ZoomOutTime);
