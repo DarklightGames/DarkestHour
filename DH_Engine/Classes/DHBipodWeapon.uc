@@ -338,6 +338,13 @@ simulated state Reloading
         return false;
     }
 
+    simulated function BeginState()
+    {
+        super.BeginState();
+
+        ResetPlayerFOV();
+    }
+
 // Take the player out of zoom & then zoom them back in
 Begin:
     if (InstigatorIsLocalHuman())
@@ -346,8 +353,6 @@ Begin:
         {
             SmoothZoom(false);
         }
-
-        ResetPlayerFOV();
 
         if (AmmoAmount(0) < 1 && HasAnim(MagEmptyReloadAnim))
         {
