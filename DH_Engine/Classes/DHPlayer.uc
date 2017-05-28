@@ -17,6 +17,9 @@ var     float                   MapVoteTime;
 var     DH_LevelInfo            ClientLevelInfo;
 var     DHConstructionManager   ConstructionManager; // client only!
 var     globalconfig string     ROIDHash;            // client ROID hash (this gets set/updated when a player joins a server)
+
+var     float                   ViewFOVMin;
+var     float                   ViewFOVMax;
 var     globalconfig float      ConfigViewFOV;       // allows player to set their own preferred view FOV, within acceptable limits (80 to 90)
 
 // Sway
@@ -171,7 +174,7 @@ simulated static function SetDefaultViewFOV(optional float NewFOV)
         StaticSaveConfig();
     }
 
-    if (default.ConfigViewFOV < 80.0 || default.ConfigViewFOV > 90.0)
+    if (default.ConfigViewFOV < default.ViewFOVMin || default.ConfigViewFOV > default.ViewFOVMax)
     {
         ResetConfig("ConfigViewFOV"); // in an invalid value, reset to the default
     }
@@ -4943,11 +4946,15 @@ defaultproperties
     FlinchOffsetRate=(X=1000.0,Y=0.0,Z=1000.0)
     FlinchOffsetTime=1.0
 
+    // FOV
+    ViewFOVMin=80.0
+    ViewFOVMax=100.0
+    ConfigViewFOV=85.0
+
     // Other values
     NextSpawnTime=15
     ROMidGameMenuClass="DH_Interface.DHDeployMenu"
     GlobalDetailLevel=5
-    ConfigViewFOV=85.0
     PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'
     InputClass=class'DH_Engine.DHPlayerInput'
     PawnClass=class'DH_Engine.DHPawn'

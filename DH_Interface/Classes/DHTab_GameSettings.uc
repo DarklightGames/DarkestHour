@@ -5,7 +5,7 @@
 
 class DHTab_GameSettings extends ROTab_GameSettings;
 
-var automated moNumericEdit nu_ConfigViewFOV;
+var automated moComboBox    co_ConfigViewFOV;
 var automated moComboBox    co_PurgeCacheDays;
 var automated GUILabel      l_ID;
 var automated DHGUIButton   b_CopyID;
@@ -18,10 +18,11 @@ var     localized string    HashReqText, IDText;
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     local int i;
+    local int FOV;
 
     super.InitComponent(MyController, MyOwner);
 
-    i_BG1.ManageComponent(nu_ConfigViewFOV);
+    i_BG1.ManageComponent(co_ConfigViewFOV);
     i_BG2.ManageComponent(l_ID);
     i_BG2.ManageComponent(b_CopyID);
     i_BG2.ManageComponent(co_PurgeCacheDays);
@@ -29,6 +30,11 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     for (i = 0; i < arraycount(PurgeCacheDaysText); ++i)
     {
         co_PurgeCacheDays.AddItem(PurgeCacheDaysText[i]);
+    }
+
+    for (FOV = class'DHPlayer'.default.ViewFOVMin; FOV <= class'DHPlayer'.default.ViewFOVMax; FOV += 5.0)
+    {
+        co_ConfigViewFOV.AddItem(string(FOV));
     }
 
     ed_PlayerName.MyEditBox.bConvertSpaces = false;
@@ -43,9 +49,9 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
 
     switch (Sender)
     {
-        case nu_ConfigViewFOV:
+        case co_ConfigViewFOV:
             ViewFOV = class'DH_Engine.DHPlayer'.default.ConfigViewFOV;
-            nu_ConfigViewFOV.SetComponentValue(ViewFOV, true);
+            co_ConfigViewFOV.SetComponentValue(ViewFOV, true);
             break;
 
         case co_PurgeCacheDays:
@@ -92,8 +98,8 @@ function InternalOnChange(GUIComponent Sender)
 
     switch (Sender)
     {
-        case nu_ConfigViewFOV:
-            ViewFOV = nu_ConfigViewFOV.GetValue();
+        case co_ConfigViewFOV:
+            ViewFOV = int(co_ConfigViewFOV.GetItem(co_ConfigViewFOV.GetIndex()));
             break;
     }
 }
@@ -192,19 +198,18 @@ defaultproperties
     End Object
     ed_PlayerName=DHmoEditBox'DH_Interface.DHTab_GameSettings.OnlineStatsName'
 
-    Begin Object Class=DHmoNumericEdit Name=ConfigViewFOV
-        MinValue=80
-        MaxValue=90
+    Begin Object Class=DHmoComboBox Name=ConfigViewFOV
         ComponentJustification=TXTA_Left
         Caption="Normal View FOV"
-        Hint="Lower for more zoomed view, higher for wider field of view"
+        Hint="Lower for a more zoomed view, raise for a wider field of view"
         OnCreateComponent=ConfigViewFOV.InternalOnCreateComponent
         IniOption="@Internal"
         TabOrder=2
         OnChange=DHTab_GameSettings.InternalOnChange
         OnLoadINI=DHTab_GameSettings.InternalOnLoadINI
+        bReadOnly=true
     End Object
-    nu_ConfigViewFOV=DHmoNumericEdit'DH_Interface.DHTab_GameSettings.ConfigViewFOV'
+    co_ConfigViewFOV=DHmoComboBox'DH_Interface.DHTab_GameSettings.ConfigViewFOV'
 
     Begin Object Class=DHmoComboBox Name=GameGoreLevel
         bReadOnly=true
