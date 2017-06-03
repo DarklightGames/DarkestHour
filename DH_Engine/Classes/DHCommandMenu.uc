@@ -16,6 +16,7 @@ struct Option
 {
     var localized string ActionText;
     var localized string SubjectText;
+    var Material ActionIcon;
     var Material Material;
     var EOptionType Type;
     var Object OptionalObject;

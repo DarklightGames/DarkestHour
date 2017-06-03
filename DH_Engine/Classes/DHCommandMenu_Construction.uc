@@ -5,6 +5,8 @@
 
 class DHCommandMenu_Construction extends DHCommandMenu;
 
+var Material SuppliesIcon;
+
 function Setup()
 {
     local int i, j, StartIndex;
@@ -45,6 +47,7 @@ function Setup()
             Options[j].OptionalObject = ConstructionClasses[i];
             Options[j].ActionText = ConstructionClasses[i].static.GetMenuName(PC);
             Options[j].Material = ConstructionClasses[i].static.GetMenuIcon(PC);
+            Options[j].ActionIcon = SuppliesIcon;
             ++j;
         }
 
@@ -127,5 +130,6 @@ function bool ShouldHideMenu()
 
 defaultproperties
 {
+    SuppliesIcon=Texture'DH_InterfaceArt_tex.HUD.supplies'
 }
 

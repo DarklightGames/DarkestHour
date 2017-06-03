@@ -401,7 +401,7 @@ function PostRender(Canvas C)
 
         C.TextSize(ActionText, XL, YL);
 
-        // Draw action text (include shadow)
+        // Draw action text
         C.DrawColor = class'UColor'.default.Black;
         C.SetPos(CenterX - (XL / 2) + 1, CenterY + 33);
         C.DrawText(ActionText);
@@ -415,8 +415,15 @@ function PostRender(Canvas C)
         C.SetPos(CenterX - (XL / 2) + 1, CenterY - 31 -  YL);
         C.DrawText(SubjectText);
         C.DrawColor = class'UColor'.default.White;
-        C.SetPos(CenterX - (XL / 2), CenterY - 32-  YL);
+        C.SetPos(CenterX - (XL / 2), CenterY - 32 - YL);
         C.DrawText(SubjectText);
+
+        if (Menu.Options[SelectedIndex].ActionIcon != none)
+        {
+            C.DrawColor = class'UColor'.default.White;
+            C.SetPos(CenterX - (XL / 2) - 32, CenterY - 32 - YL - 8);
+            C.DrawTile(Menu.Options[SelectedIndex].ActionIcon, 32, 32, 0, 0, 31, 31);
+        }
     }
 
 //    // debug rendering for cursor
