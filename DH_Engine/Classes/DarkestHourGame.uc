@@ -57,6 +57,7 @@ var     bool                        bSwapTeams;
 var     bool                        bUseReinforcementWarning;
 var     bool                        bTimeChangesAtZeroReinf;
 var     float                       AlliesToAxisRatio;
+var     int                         ObscureReinfNum;                        // Reinforcements higher than this number are hidden as long as bObscureReinforcements = true
 
 var     class<DHMetrics>            MetricsClass;
 var     DHMetrics                   Metrics;
@@ -207,7 +208,6 @@ function PostBeginPlay()
 
         case GT_Advance:
             GRI.CurrentGameType = "Advance";
-            //GRI.bUseDeathPenaltyCount = true; // disable for now, as this feature is likely to be removed
             bUseReinforcementWarning = false;
             break;
 
@@ -4516,6 +4516,8 @@ defaultproperties
 
     bShowServerIPOnScoreboard=true
     bShowTimeOnScoreboard=true
+
+    ObscureReinfNum=50
 
     // Strings/hints
     ROHints(1)="You can 'cook' a Mk II grenade by pressing %FIRE3% while holding the grenade back."

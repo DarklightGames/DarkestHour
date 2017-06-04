@@ -22,8 +22,9 @@ var() name              PhaseBoundaryTag;                   // Tag of Destroyabl
 var() array<name>       InitialSpawnPointTags;              // Tags of spawn points that should only be active while in setup phase
 
 var() bool              bScaleStartingReinforcements;       // Scales starting reinforcements to current number of players
-var() bool              bSkipPreStart;                   // If true will override the game's default PreStartTime, making it zero
+var() bool              bSkipPreStart;                      // If true will override the game's default PreStartTime, making it zero
 var() bool              bResetRoundTimer;                   // If true will reset the round's timer to the proper value when phase is over
+var() bool              bObscureReinforcements;             // Sets bObscureReinforcements (DHGRI) to true (will then hide reinforcements for a team if > ObscureReinfNum (DHGame)
 var() TeamReinf         PhaseEndReinforcements;             // What to set reinforcements to at the end of the phase (0 means no change, -1 set to zero)
 var() bool              bPreventTimeChangeAtZeroReinf;      // bTimeChangesAtZeroReinf will be set to false for this match
 var() int               SpawningEnabledTime;                // Round time at which players can spawn
@@ -89,6 +90,12 @@ auto state Timing
 
         // Tell GRI that we are in setup phase (to prevent player mantling)
         GRI.bIsInSetupPhase = true;
+
+        // Obscure reinforcements if desired
+        if (bObscureReinforcements)
+        {
+            GRI.bObscureReinforcements = true;
+        }
 
         SetTimer(1.0, true);
     }
@@ -214,7 +221,7 @@ auto state Timing
 
             if (PC != none)
             {
-                PC.ClientMessage(PhaseEndMessage, 'CriticalEvent');
+                PC.ClientMessage(Repl(PhaseEndMessage, "{0}", GRI.SpawnsRemaining[PC.GetTeamNum()]), 'CriticalEvent');
                 PC.PlayAnnouncement(PhaseEndSound, 1, true);
             }
         }
@@ -232,9 +239,10 @@ defaultproperties
     PhaseEndReinforcements=(AxisReinforcements=-1,AlliesReinforcements=-1)
     PhaseEndSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01'
     PhaseMessage="Round Begins In: {0} seconds"
-    PhaseEndMessage="Round Has Started!"
+    PhaseEndMessage="Round Has Started! Your team begins with {0} reinforcements."
     bSkipPreStart=true
     bScaleStartingReinforcements=true
+    bObscureReinforcements=true
     SetupPhaseDuration=60
     SpawningEnabledTime=30
     Texture=texture'DHEngine_Tex.LevelActor'
