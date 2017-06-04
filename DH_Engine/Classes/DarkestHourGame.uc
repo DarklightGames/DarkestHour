@@ -2336,6 +2336,10 @@ state RoundInPlay
             // Calculate attrition rates
             GRI.AttritionRate[ALLIES_TEAM_INDEX] = InterpCurveEval(DHLevelInfo.AttritionRateCurve, (float(Max(0, Num[AXIS_TEAM_INDEX]   - Num[ALLIES_TEAM_INDEX])) / NumObj)) / 60.0;
             GRI.AttritionRate[AXIS_TEAM_INDEX]   = InterpCurveEval(DHLevelInfo.AttritionRateCurve, (float(Max(0, Num[ALLIES_TEAM_INDEX] - Num[AXIS_TEAM_INDEX]))   / NumObj)) / 60.0;
+
+            // Offset the attrion rate based on num players vs max (the 0.1 is so attrition still exists even when 1/64)
+            GRI.AttritionRate[ALLIES_TEAM_INDEX] *= FMax(0.1, (NumPlayers / MaxPlayers));
+            GRI.AttritionRate[AXIS_TEAM_INDEX]   *= FMax(0.1, (NumPlayers / MaxPlayers));
         }
 
         if (LevelInfo.NumObjectiveWin == 0)
