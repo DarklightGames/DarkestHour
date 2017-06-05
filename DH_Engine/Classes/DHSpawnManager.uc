@@ -237,6 +237,9 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
 
         DHV = DHVehicle(V);
 
+        // Store the vehicle pool index in the vehicle
+        DHV.VehiclePoolIndex = PC.VehiclePoolIndex;
+
         // Start engine
         if (DHV != none && DHV.bEngineOff)
         {
@@ -260,8 +263,6 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
         }
 
         // Increment vehicle counts
-        ++GRI.TeamVehicleCounts[V.default.VehicleTeam];
-
         if (!VehiclePools[PC.VehiclePoolIndex].bIgnoreMaxTeamVehicles)
         {
             --GRI.MaxTeamVehicles[V.default.VehicleTeam];
@@ -333,6 +334,9 @@ event VehicleDestroyed(Vehicle V)
 
     super.VehicleDestroyed(V);
 
+    // Removes the destroyed vehicle from the managed Vehicles array
+    class'UArray'.static.Erase(Vehicles, V);
+
     DHV = DHVehicle(V);
 
     if (DHV != none)
@@ -353,28 +357,11 @@ event VehicleDestroyed(Vehicle V)
         {
             DHV.SpawnPointAttachment.Destroy();
         }
-    }
 
-    // Removes the destroyed vehicle from the managed Vehicles array
-    for (i = Vehicles.Length - 1; i >= 0; --i)
-    {
-        if (V == Vehicles[i])
+        if (DHV.VehiclePoolIndex != -1)
         {
-            --GRI.TeamVehicleCounts[Vehicles[i].VehicleTeam];
+            i = DHV.VehiclePoolIndex;
 
-            Vehicles.Remove(i, 1);
-
-            break;
-        }
-    }
-
-    // Updates the destroyed vehicle in the VehiclePools array
-    for (i = 0; i < VehiclePools.Length; ++i)
-    {
-        // Find the matching VehicleClass but also check the bIsSpawnVehicle setting also matches
-        // Vital as same VehicleClass may well be in the vehicles list twice, with one being a spawn vehicle & the other the ordinary version, e.g. a half-track & a spawn vehicle HT
-        if (V.class == VehiclePools[i].VehicleClass && !(DHVehicle(V) != none && DHVehicle(V).IsSpawnVehicle() != VehiclePools[i].bIsSpawnVehicle))
-        {
             // Updates due to vehicle being destroyed
             GRI.VehiclePoolActiveCounts[i] -= 1;
 
@@ -394,7 +381,7 @@ event VehicleDestroyed(Vehicle V)
             }
 
             // If we've used up all of these vehicles
-            if (GRI.GetVehiclePoolSpawnsRemaining(i) <= 0)
+            if (GRI.GetVehiclePoolSpawnsRemaining(DHV.VehiclePoolIndex) <= 0)
             {
                 if (VehiclePools[i].OnDepletedEvent != '')
                 {
@@ -452,8 +439,6 @@ event VehicleDestroyed(Vehicle V)
 
                 GRI.VehiclePoolNextAvailableTimes[i] = NextAvailableTime;
             }
-
-            break;
         }
     }
 }

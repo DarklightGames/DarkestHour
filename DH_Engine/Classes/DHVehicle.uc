@@ -35,6 +35,9 @@ struct RandomAttachOption
     var byte        PercentChance; // the % chance of this attachment being the one spawned
 };
 
+// Spawn manager
+var int VehiclePoolIndex;   // The vehicle pool index that this was spawned from
+
 // General
 var DHVehicleCannon Cannon;                      // reference to the vehicle's cannon weapon
 var DHVehicleMG     MGun;                        // reference to the vehicle's mounted MG weapon

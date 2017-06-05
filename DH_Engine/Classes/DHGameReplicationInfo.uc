@@ -77,7 +77,6 @@ var byte                VehiclePoolReservationCount[VEHICLE_POOLS_MAX];
 var int                 VehiclePoolIgnoreMaxTeamVehiclesFlags;
 
 var byte                MaxTeamVehicles[2];
-var byte                TeamVehicleCounts[2];
 
 var DHSpawnPointBase    SpawnPoints[SPAWN_POINTS_MAX];
 
@@ -157,7 +156,6 @@ replication
         bUseDeathPenaltyCount,
         CurrentGameType,
         CurrentAlliedToAxisRatio,
-        TeamVehicleCounts,
         SpawnPoints,
         SpawningEnableTime,
         bIsInSetupPhase,
@@ -324,8 +322,7 @@ simulated function bool CanSpawnVehicle(int VehiclePoolIndex)
 
     VC = VehiclePoolVehicleClasses[VehiclePoolIndex];
 
-    if (!IgnoresMaxTeamVehiclesFlags(VehiclePoolIndex) &&
-        TeamVehicleCounts[VC.default.VehicleTeam] >= MaxTeamVehicles[VC.default.VehicleTeam])
+    if (!IgnoresMaxTeamVehiclesFlags(VehiclePoolIndex) && MaxTeamVehicles[VC.default.VehicleTeam] <= 0)
     {
         return false;
     }
@@ -512,26 +509,6 @@ function UnreserveVehicle(DHPlayer PC)
     }
 
     PC.VehiclePoolIndex = -1;
-}
-
-// Finds the matching VehicleClass but also check the bIsSpawnVehicle setting also matches
-// Vital as same VehicleClass may well be in the vehicles list twice, with one being a spawn vehicle & the other the ordinary version, e.g. a half-track & a spawn vehicle HT
-simulated function byte GetVehiclePoolIndex(Vehicle V)
-{
-    local int i;
-
-    if (V != none)
-    {
-        for (i = 0; i < arraycount(VehiclePoolVehicleClasses); ++i)
-        {
-            if (V.Class == VehiclePoolVehicleClasses[i] && !(DHVehicle(V) != none && DHVehicle(V).IsSpawnVehicle() != bool(VehiclePoolIsSpawnVehicles[i])))
-            {
-                return i;
-            }
-        }
-    }
-
-    return 255;
 }
 
 simulated function bool IgnoresMaxTeamVehiclesFlags(int VehiclePoolIndex)
