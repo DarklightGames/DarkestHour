@@ -1847,7 +1847,7 @@ defaultproperties
     ShakeOffsetMag=(X=0.0,Y=0.0,Z=1.0)
     ShakeOffsetRate=(X=0.0,Y=0.0,Z=100.0)
     ShakeOffsetTime=10.0
-    AltShakeRotMag=(X=1.0,Y=1.0,Z=1.0)
+    AltShakeRotMag=(X=1.0,Y=1.0,Z=1.0) // TODO: delete all AltShake as the functionality is removed from coaxial MGs anyway, in ShakeView() override (they have no shake!)
     AltShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
     AltShakeRotTime=2.0
     AltShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)

@@ -116,7 +116,7 @@ simulated static function float GetYAdjustForRange(int Range)
 
     if (!default.bOpticalAiming)
     {
-        return 0;
+        return 0.0;
     }
 
     for (i = 0; i < default.OpticalRanges.Length; ++i)
@@ -127,7 +127,7 @@ simulated static function float GetYAdjustForRange(int Range)
         }
     }
 
-    return 0;
+    return 0.0;
 }
 
 simulated function Landed(vector HitNormal)
