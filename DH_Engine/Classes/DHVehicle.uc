@@ -2865,7 +2865,6 @@ function bool IsFactorysLastVehicle()
 {
     local DHGameReplicationInfo GRI;
     local ROVehicleFactory      VF;
-    local byte                  VehiclePoolIndex;
 
     if (ParentFactory == none)
     {
@@ -2875,11 +2874,6 @@ function bool IsFactorysLastVehicle()
     if (ParentFactory.IsA('DHSpawnManager'))
     {
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-        if (GRI != none)
-        {
-            VehiclePoolIndex = GRI.GetVehiclePoolIndex(self);
-        }
 
         return GRI != none && VehiclePoolIndex < arraycount(GRI.VehiclePoolMaxSpawns) && GRI.GetVehiclePoolSpawnsRemaining(VehiclePoolIndex) <= 0; // if spawn manager's last vehicle
     }
@@ -3162,6 +3156,8 @@ exec function SetRumbleVol(float NewValue)
 
 defaultproperties
 {
+    VehiclePoolIndex=-1
+
     // Miscellaneous
     VehicleMass=3.0
     PointValue=1.0
