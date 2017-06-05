@@ -30,8 +30,6 @@ enum    EReloadState
     RL_ReloadingPart2,
     RL_ReloadingPart3,
     RL_ReloadingPart4,
-    RL_ReloadingPart5, // extra options for up to 6 part reload, although the standard is 4 parts
-    RL_ReloadingPart6,
     RL_ReadyToFire,
     RL_Waiting, // put waiting at end as ReloadStages array then matches ReloadState numbering, & also "ReloadState < RL_ReadyToFire" conveniently signifies weapon is reloading
 };
@@ -40,7 +38,7 @@ var     bool                bMultiStageReload;    // this weapon uses a multi-st
 var     EReloadState        ReloadState;          // the stage of weapon reload or readiness
 var     array<ReloadStage>  ReloadStages;         // stages for multi-part reload, including sounds, durations & HUD reload icon proportions
 var     bool                bReloadPaused;        // a reload has started but was paused, as no longer had a player in a valid reloading position
-var     bool                bNewOrResumedReload;  // tells Timer() that we're starting new reload or resuming paused reload, stopping it from advancing to next reload stage
+var     bool                bNewOrResumedReload;  // tells Timer we're starting new reload or resuming paused reload, stopping it from advancing to next reload stage
 
 // MG weapon (hull mounted or coaxial)
 const   ALTFIRE_AMMO_INDEX = 3;                    // ammo index for alt fire (coaxial MG)
@@ -153,14 +151,13 @@ simulated function PostNetReceive()
 // Implemented here to handle multi-stage reload
 simulated function Timer()
 {
-    if (!bMultiStageReload || bReloadPaused || ReloadState >= ReloadStages.Length) // invalid reload timer
+    if (ReloadState >= RL_ReadyToFire || bReloadPaused)
     {
-        Log(Name @ ": invalid reload timer call, with bReloadPaused =" @ bReloadPaused $ ", ReloadState =" @ GetEnum(enum'EReloadState', ReloadState));
         return;
     }
 
     // If we don't have a player in a position to reload, pause the reload
-    // This is just a fallback & shouldn't happen, as a reload gets actively paused if player exits or moves to position where he can't continue reloading
+    // Just a fallback & shouldn't happen, as reload gets actively paused if player exits or moves to position where he can't continue reloading
     if (WeaponPawn == none || !WeaponPawn.Occupied() || !WeaponPawn.CanReload())
     {
         Log(Name @ ": reload timer pausing reload as no player in valid position - SHOULD NOT HAPPEN!!  Occupied() =" @ WeaponPawn.Occupied() @ " CanReload() =" @ WeaponPawn.CanReload());
@@ -178,35 +175,34 @@ simulated function Timer()
     else
     {
         ReloadState = EReloadState(ReloadState + 1);
+    }
 
-        // If just completed the final reload stage, complete the reload
-        if (ReloadState >= ReloadStages.Length)
+    // If we just completed the final reload stage, complete the reload
+    if (ReloadState >= ReloadStages.Length)
+    {
+        ReloadState = RL_ReadyToFire;
+
+        if (bUsesMags && Role == ROLE_Authority)
         {
-            ReloadState = RL_ReadyToFire;
-
-            if (bUsesMags && Role == ROLE_Authority)
-            {
-                FinishMagReload();
-            }
-
-            return;
+            FinishMagReload();
         }
     }
-
-    // Play reloading sound for current stage, if there is one (some MGs use a HUD reload animation that plays its own sound through anim notifies)
-    if (ReloadStages[ReloadState].Sound != none)
-    {
-        PlayStageReloadSound();
-    }
-
-    // Set next timer based on duration of current reload sound (use reload duration if specified, otherwise try & get the sound duration)
-    if (ReloadStages[ReloadState].Duration > 0.0)
-    {
-        SetTimer(ReloadStages[ReloadState].Duration, false);
-    }
+    // Otherwise play the reloading sound for the next stage & set the next timer
     else
     {
-        SetTimer(FMax(0.1, GetSoundDuration(ReloadStages[ReloadState].Sound)), false); // FMax is just a fail-safe in case GetSoundDuration somehow returns zero
+        if (ReloadStages[ReloadState].Sound != none)
+        {
+            PlayStageReloadSound(); // note there may not be a sound as some MGs use a HUD reload animation that plays its own sound through anim notifies
+        }
+
+        if (ReloadStages[ReloadState].Duration > 0.0) // use reload duration if specified, otherwise get the sound duration
+        {
+            SetTimer(ReloadStages[ReloadState].Duration, false);
+        }
+        else
+        {
+            SetTimer(FMax(0.1, GetSoundDuration(ReloadStages[ReloadState].Sound)), false); // FMax is just a fail-safe in case GetSoundDuration somehow returns zero
+        }
     }
 }
 
@@ -683,6 +679,16 @@ simulated function PauseReload()
 {
     bReloadPaused = true;
     SetTimer(0.0, false); // clear any timer
+}
+
+// New helper function to pause any vehicle weapon reloads that are in progress when the player exits
+// Can be subclassed to handle different types of vehicle weapons
+simulated function PauseAnyReloads()
+{
+    if (ReloadState < RL_ReadyToFire && !bReloadPaused && bMultiStageReload)
+    {
+        PauseReload();
+    }
 }
 
 // New function for a server to replicate weapon's reload state to the owning net client

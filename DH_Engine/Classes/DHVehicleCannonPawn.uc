@@ -373,6 +373,33 @@ function AltFire(optional float F)
     }
 }
 
+// Implemented unused (in a vehicle) 'Deploy' keybind command to fire a smoke launcher
+// Checks that player is in a valid firing position & his weapons aren't locked due to spawn killing
+exec function Deploy()
+{
+    if (CanFire() && !ArePlayersWeaponsLocked() && DHVehicleCannon(Gun) != none)
+    {
+        DHVehicleCannon(Gun).AttemptFireSmokeLauncher();
+    }
+}
+
+// Implemented unused (in a vehicle) HUD keybind commands to adjust either the rotation or range setting of any adjustable smoke launcher
+simulated function GrowHUD()
+{
+    if (DHVehicleCannon(Gun) != none)
+    {
+        DHVehicleCannon(Gun).AdjustSmokeLauncher(true);
+    }
+}
+
+simulated function ShrinkHUD()
+{
+    if (DHVehicleCannon(Gun) != none)
+    {
+        DHVehicleCannon(Gun).AdjustSmokeLauncher(false);
+    }
+}
+
 // Modified to prevent firing while player is on, or transitioning away from, periscope or binoculars
 function bool CanFire()
 {
@@ -433,16 +460,49 @@ function float GetAltAmmoReloadState()
     return 0.0;
 }
 
+// New function, used by HUD to show smoke launcher reload progress, like a cannon reload
+function float GetSmokeLauncherAmmoReloadState()
+{
+    local DHVehicleCannon Cannon;
+
+    Cannon = DHVehicleCannon(Gun);
+
+    if (Cannon != none && Cannon.SmokeLauncherClass != none)
+    {
+        if (Cannon.SmokeLauncherClass.default.bCanBeReloaded)
+        {
+            if (Cannon.SmokeLauncherReloadState == RL_ReadyToFire)
+            {
+                return 0.0;
+            }
+            else if (Cannon.SmokeLauncherReloadState == RL_Waiting || Cannon.SmokeLauncherReloadState == RL_ReloadingPart1)
+            {
+                return 1.0;
+            }
+
+            return Cannon.SmokeLauncherClass.static.GetReloadHUDProportion(Cannon.SmokeLauncherReloadState);
+        }
+        // If smoke launcher(s) are a type that can't be reloaded, the reload state never changes
+        // So check if out of smoke launcher ammo & if so then show in red, as with other weapons
+        else if (!Cannon.HasAmmo(Cannon.SMOKELAUNCHER_AMMO_INDEX))
+        {
+            return 1.0;
+        }
+    }
+
+    return 0.0;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ************************* ENTRY, CHANGING VIEW & EXIT  ************************* //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to try to start a coaxial MG reload or resume any previously paused reload if MG is not loaded
-// And to replicate combined cannon & coax reload states to net client, & also to show any damaged gunsight
+// Modified so if coaxial MG or smoke launcher is not loaded, we try to start a reload or resume any previously paused reload
+// And to replicate combined cannon, coax & smoke launcher reload states to net client, & also to show any damaged gunsight
 function KDriverEnter(Pawn P)
 {
     local DHVehicleCannon Cannon;
-    local byte            OldReloadState, OldAltReloadState;
+    local byte            OldReloadState, OldAltReloadState, OldSmokeLauncherReloadState;
 
     if (bMultiPosition)
     {
@@ -464,6 +524,7 @@ function KDriverEnter(Pawn P)
         // Save current reload states so we can tell if they are changed by attempted reloading
         OldReloadState = Cannon.ReloadState;
         OldAltReloadState = Cannon.AltReloadState;
+        OldSmokeLauncherReloadState = Cannon.SmokeLauncherReloadState;
 
         // Try to resume any paused cannon reload, or start a new reload if in waiting state & the player does not use manual reloading
         if (Cannon.ReloadState < RL_ReadyToFire || (Cannon.ReloadState == RL_Waiting && !Cannon.PlayerUsesManualReloading()))
@@ -477,8 +538,14 @@ function KDriverEnter(Pawn P)
             Cannon.AttemptAltReload();
         }
 
+        // If smoke launcher isn't loaded then try to start/resume a reload
+        if (Cannon.SmokeLauncherClass != none && Cannon.SmokeLauncherReloadState != RL_ReadyToFire)
+        {
+            Cannon.AttemptSmokeLauncherReload();
+        }
+
         // Replicate the weapon's current reload state, unless attempted reloading changed the state, in which case it will have already done this
-        if (Cannon.ReloadState == OldReloadState && Cannon.AltReloadState == OldAltReloadState)
+        if (Cannon.ReloadState == OldReloadState && Cannon.AltReloadState == OldAltReloadState && Cannon.SmokeLauncherReloadState == OldSmokeLauncherReloadState)
         {
             Cannon.PassReloadStateToClient();
         }
@@ -579,43 +646,16 @@ simulated state ViewTransition
     }
 }
 
-// Modified to pause any coaxial MG reload if player exits
-function DriverLeft()
-{
-    local DHVehicleCannon Cannon;
-
-    super.DriverLeft();
-
-    Cannon = DHVehicleCannon(Gun);
-
-    if (Cannon != none && Cannon.AltReloadState < RL_ReadyToFire && !Cannon.bAltReloadPaused && Cannon.bMultiStageReload)
-    {
-        Cannon.PauseAltReload();
-    }
-}
-
-// Modified to pause any coaxial MG reload if player exits
-// Also so listen server host player records currently loaded ammo type on exiting, so if he re-enters this cannon he will know if another player has since loaded different ammo
+// Modified so listen server host player records currently loaded ammo type on exiting
+// This is so if host player re-enters this cannon he will know if another player has since loaded different ammo
 // If loaded ammo changes, any previous choice of pending ammo to load will probably no longer make sense & have to be discarded
 simulated function ClientKDriverLeave(PlayerController PC)
 {
-    local DHVehicleCannon Cannon;
-
     super.ClientKDriverLeave(PC);
 
-    Cannon = DHVehicleCannon(Gun);
-
-    if (Cannon != none)
+    if (Level.NetMode == NM_ListenServer && DHVehicleCannon(Gun) != none)
     {
-        if (Cannon.AltReloadState < RL_ReadyToFire && !Cannon.bAltReloadPaused && Cannon.bMultiStageReload && Role < ROLE_Authority)
-        {
-            Cannon.PauseAltReload();
-        }
-
-        if (Level.NetMode == NM_ListenServer)
-        {
-            Cannon.SavedProjectileClass = Cannon.ProjectileClass;
-        }
+        DHVehicleCannon(Gun).SavedProjectileClass = DHVehicleCannon(Gun).ProjectileClass;
     }
 }
 
@@ -901,19 +941,29 @@ exec function SetGunsight()
     }
 }
 
-exec function LogCannon() // DEBUG (Matt: please use & report if you ever find you can't fire cannon or coax, or do a reload, when you should be able to)
+exec function LogCannon() // DEBUG (Matt: please use & report the logged result if you ever find you can't fire cannon, coax or SL, or do a reload, when you should be able to)
 {
+    local DHVehicleCannon Cannon;
+
+    Cannon = DHVehicleCannon(Gun);
+
     Log("LOGCANNON: Gun =" @ Gun.Tag @ " VehWep =" @ VehWep.Tag @ " VehWep.WeaponPawn =" @ VehWep.WeaponPawn.Tag @ " Gun.Owner =" @ Gun.Owner.Tag);
-    Log("Controller =" @ Controller.Tag @ " ViewTransition =" @ IsInState('ViewTransition') @ " DriverPositionIndex =" @ DriverPositionIndex);
+    Log("Controller =" @ Controller.Tag @ " DriverPositionIndex =" @ DriverPositionIndex @ " ViewTransition =" @ IsInState('ViewTransition'));
     Log("ReloadState =" @ GetEnum(enum'EReloadState', VehWep.ReloadState) @ " bReloadPaused =" @ VehWep.bReloadPaused
         @ " ProjectileClass =" @ VehWep.ProjectileClass @ " HasAmmoToReload() =" @ VehWep.HasAmmoToReload(VehWep.GetAmmoIndex()));
-    Log("AmmoIndex =" @ VehWep.GetAmmoIndex() @ " LocalPendingAmmoIndex =" @ DHVehicleCannon(VehWep).LocalPendingAmmoIndex
-        @ " ServerPendingAmmoIndex =" @ DHVehicleCannon(VehWep).ServerPendingAmmoIndex @ " PrimaryAmmoCount() =" @ VehWep.PrimaryAmmoCount());
+    Log("AmmoIndex =" @ VehWep.GetAmmoIndex() @ " LocalPendingAmmoIndex =" @ Cannon.LocalPendingAmmoIndex
+        @ " ServerPendingAmmoIndex =" @ Cannon.ServerPendingAmmoIndex @ " PrimaryAmmoCount() =" @ VehWep.PrimaryAmmoCount());
 
     if (bHasAltFire)
     {
-        Log("AltReloadState =" @ GetEnum(enum'EReloadState', DHVehicleCannon(VehWep).AltReloadState)
-            @ " bAltReloadPaused =" @ DHVehicleCannon(VehWep).bAltReloadPaused @ " AltAmmoCharge =" @ VehWep.AltAmmoCharge @ " NumMGMags =" @ VehWep.NumMGMags);
+        Log("AltReloadState =" @ GetEnum(enum'EReloadState', Cannon.AltReloadState) @ " bAltReloadPaused =" @ Cannon.bAltReloadPaused
+            @ " AltAmmoCharge =" @ VehWep.AltAmmoCharge @ " NumMGMags =" @ VehWep.NumMGMags);
+    }
+
+    if (Cannon.SmokeLauncherClass != none)
+    {
+        Log("SmokeLauncherReloadState =" @ GetEnum(enum'EReloadState', Cannon.SmokeLauncherReloadState) @ " bSmokeLauncherReloadPaused =" @ Cannon.bSmokeLauncherReloadPaused
+            @ " NumSmokeLauncherRounds =" @ Cannon.NumSmokeLauncherRounds);
     }
 }
 

@@ -29,6 +29,10 @@ simulated function SwitchWeapon(byte F);
 simulated function DrawPeriscopeOverlay(Canvas C);
 function AltFire(optional float F);
 function float GetAltAmmoReloadState() { return 0.0; }
+function float GetSmokeLauncherAmmoReloadState() { return 0.0; }
+exec function Deploy();
+simulated function GrowHUD();
+simulated function ShrinkHUD();
 exec function SetAltFireOffset(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth);
 exec function SetAltFireSpawnOffset(float NewValue);
 

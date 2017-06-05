@@ -16,7 +16,7 @@ var     float               GunMantletArmorFactor;  // used for mantlet hits for
 var     float               GunMantletSlope;
 var     bool                bHasAddedSideArmor;     // has side skirts that will make a hit by a HEAT projectile ineffective
 
-// Ammo (with variables for up to three cannon ammo types, including shot dispersion customized by round type)
+// Cannon ammo (with variables for up to three cannon ammo types, including shot dispersion customized by round type)
 var     byte                MainAmmoChargeExtra[3];  // current quantity of each round type (using byte for more efficient replication)
 var     class<Projectile>   TertiaryProjectileClass; // new option for a 3rd type of cannon ammo
 var localized array<string> ProjectileDescriptions;  // text for each round type to display on HUD
@@ -30,16 +30,6 @@ var     byte                LocalPendingAmmoIndex;   // next ammo type we want t
 var     byte                ServerPendingAmmoIndex;  // on authority role this is authoritative setting for next ammo type to load; on client it records last setting updated to server
 var     class<Projectile>   SavedProjectileClass;    // client & listen server record last ammo when in cannon, so if another player changes ammo, any local pending choice becomes invalid
 
-// Firing & reloading
-var     array<int>          RangeSettings;           // for cannons with range adjustment
-var     int                 AddedPitch;              // option for global adjustment to cannon's pitch aim
-var     bool                bCanisterIsFiring;       // canister is spawning separate projectiles - until done it stops firing effects playing or switch to different round type
-var     float               AltFireSpawnOffsetX;     // optional extra forward offset when spawning coaxial MG bullets, allowing them to clear potential collision with driver's head
-var     EReloadState        AltReloadState;          // the stage of coaxial MG reload or readiness
-var     array<ReloadStage>  AltReloadStages;         // stages for multi-part coaxial MG reload, including sounds, durations & HUD reload icon proportions
-var     bool                bAltReloadPaused;        // a coaxial MG reload has started but was paused, as no longer had a player in a valid reloading position
-var     bool                bNewOrResumedAltReload;  // tells Timer() that we're starting new coaxial MG reload or resuming paused reload, stopping it from advancing to next reload stage
-
 // Firing effects
 var     sound               CannonFireSound[3];      // sound of the cannon firing (selected randomly)
 var     name                ShootLoweredAnim;        // firing animation if player is in a lowered or closed animation position, i.e. buttoned up or crouching
@@ -47,10 +37,30 @@ var     name                ShootIntermediateAnim;   // firing animation if play
 var     name                ShootRaisedAnim;         // firing animation if player is in a raised or open animation position, i.e. unbuttoned or standing
 var     class<Emitter>      CannonDustEmitterClass;  // emitter class for dust kicked up by the cannon firing
 var     Emitter             CannonDustEmitter;
+var     bool                bCanisterIsFiring;       // canister is spawning separate projectiles - until done it stops firing effects playing or switch to different round type
 
-// Turret & movement
+// Coaxial MG
+var     float               AltFireSpawnOffsetX;     // optional extra forward offset when spawning coaxial MG bullets, allowing them to clear potential collision with driver's head
+var     EReloadState        AltReloadState;          // the stage of coaxial MG reload or readiness
+var     array<ReloadStage>  AltReloadStages;         // stages for multi-part coaxial MG reload, including sounds, durations & HUD reload icon proportions
+var     bool                bAltReloadPaused;        // a coaxial MG reload has started but was paused
+var     bool                bNewOrResumedAltReload;  // tells Timer we're starting new coaxial MG reload or resuming paused reload, stopping it from advancing to next reload stage
+
+// Smoke launcher
+const   SMOKELAUNCHER_AMMO_INDEX = 4;                         // ammo index for smoke launcher fire
+var     class<DHVehicleSmokeLauncher>   SmokeLauncherClass;   // class containing the properties of the smoke launcher
+var     byte                NumSmokeLauncherRounds;           // no. of current smoke rounds
+var     array<vector>       SmokeLauncherFireOffset;          // positional offset(s) for spawning smoke projectiles - can be multiple for external launchers
+var     byte                SmokeLauncherAdjustmentSetting;   // current setting for either the rotation or range setting of smoke launcher
+var     EReloadState        SmokeLauncherReloadState;         // the stage of smoke launcher reload or readiness
+var     bool                bSmokeLauncherReloadPaused;       // a smoke launcher reload has started but was paused, as no longer had a player in a valid reloading position
+var     bool                bNewOrResumedSmokeLauncherReload; // tells Timer we're starting new smoke launcher reload or resuming paused reload, stopping it from advancing to next reload stage
+
+// Aiming & movement
 var     float               ManualRotationsPerSecond;  // turret/cannon rotation speed when turned by hand
 var     float               PoweredRotationsPerSecond; // faster rotation speed with powered assistance (engine must be running)
+var     array<int>          RangeSettings;             // for cannons with range adjustment
+var     int                 AddedPitch;                // option for global adjustment to cannon's pitch aim
 
 // Debugging & calibration
 var     bool                bDebugPenetration;    // debug lines & text on screen, relating to turret hits & penetration calculations
@@ -61,16 +71,29 @@ replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        MainAmmoChargeExtra, NumPrimaryMags, NumSecondaryMags, NumTertiaryMags;
+        MainAmmoChargeExtra, NumPrimaryMags, NumSecondaryMags, NumTertiaryMags, NumSmokeLauncherRounds, SmokeLauncherAdjustmentSetting;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerManualReload, ServerSetPendingAmmo;
+        ServerManualReload, ServerSetPendingAmmo, ServerFireSmokeLauncher, ServerAdjustSmokeLauncher;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *********** ACTOR INITIALISATION & DESTRUCTION & KEY ENGINE EVENTS  ***********  //
 ///////////////////////////////////////////////////////////////////////////////////////
+
+// Modified so a cannon with smoke launcher with range adjustment sets its initial range setting to maximum
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    if (SmokeLauncherClass != none && SmokeLauncherClass.static.CanAdjustRange())
+    {
+        SmokeLauncherAdjustmentSetting = SmokeLauncherClass.static.GetMaxRangeSetting();
+        default.SmokeLauncherAdjustmentSetting = SmokeLauncherAdjustmentSetting; // avoids unnecessary replication of SmokeLauncherAdjustmentSetting for subsequently spawned vehicles
+
+    }
+}
 
 // Modified so client matches its pending ammo type to new ammo type received from server, avoiding need for server to separately replicate changed PendingAmmoIndex to client
 // An ammo change means either a reload has started (so now ammo type is same as pending), or this actor just replicated to us & we're simply matching our initial values to current ammo,
@@ -87,50 +110,62 @@ simulated function PostNetReceive()
     }
 }
 
-// Modified to handle multi-stage coaxial MG reload in the same way as cannon, with cannon reload taking precedence over any coax reload & putting it on hold
+// Modified to handle multi-stage coaxial MG or smoke launcher reload in the same way as cannon
+// Higher ranked weapon (cannon then coax then launcher) reload takes precedence over other weapon reload & puts that on hold
 simulated function Timer()
 {
+    local sound ReloadSound;
+
     // CANNON RELOAD
-    if (ReloadState < RL_ReadyToFire)
+    if (ReloadState < RL_ReadyToFire && !bReloadPaused)
     {
         super.Timer(); // standard reload process for main weapon
 
-        // If cannon just finished reloading & coaxial MG isn't loaded, try to start/resume a coax reload
-        // Note owning net client runs this independently from server & may resume a paused coax reload (but not start a new reload)
-        if (ReloadState == RL_ReadyToFire)
+        // If cannon just finished reloading & coaxial MG or smoke launcher isn't loaded, try to start/resume a reload
+        // Note owning net client runs this independently from server & may resume a paused reload (but not start a new one)
+        if (ReloadState >= RL_ReadyToFire)
         {
             if (AltReloadState != RL_ReadyToFire)
             {
                 AttemptAltReload();
             }
+
+            if (SmokeLauncherReloadState != RL_ReadyToFire && AltReloadState >= RL_ReadyToFire)
+            {
+                AttemptSmokeLauncherReload();
+            }
         }
-        // Or if cannon is reloading, pause any active coaxial MG reload as the cannon reload takes precedence
-        else if (AltReloadState < RL_ReadyToFire && !bAltReloadPaused && !bReloadPaused)
+        // Or if cannon is reloading, pause any active coaxial MG or smoke launcher reload as the cannon reload takes precedence
+        else if (!bReloadPaused)
         {
-            PauseAltReload();
+            if (AltReloadState < RL_ReadyToFire && !bAltReloadPaused)
+            {
+                PauseAltReload();
+            }
+
+            if (SmokeLauncherReloadState < RL_ReadyToFire && !bSmokeLauncherReloadPaused)
+            {
+                PauseSmokeLauncherReload();
+            }
         }
+
+        return;
     }
-    // COAXIAL MG RELOAD
-    else
+
+    // If we don't have a player in a position to reload, pause any the coax MG or smoke launcher reload
+    // Just a fallback & shouldn't happen, as reload gets actively paused if player exits or moves to position where he can't continue reloading
+    if (WeaponPawn == none || !WeaponPawn.Occupied() || !WeaponPawn.CanReload())
     {
-        if (bAltReloadPaused || AltReloadState >= AltReloadStages.Length) // invalid reload timer
-        {
-            Log(Name @ ": invalid reload timer call, with bReloadPaused =" @ bReloadPaused $ ", ReloadState =" @ GetEnum(enum'EReloadState', ReloadState)
-                @ "bAltReloadPaused =" @ bAltReloadPaused $ ", AltReloadState =" @ GetEnum(enum'EReloadState', AltReloadState));
+        Log(Name @ ": reload timer pausing reload as no player in valid position - SHOULD NOT HAPPEN!!  Occupied() =" @ WeaponPawn.Occupied() @ " CanReload() =" @ WeaponPawn.CanReload());
+        PauseAltReload();
+        PauseSmokeLauncherReload();
 
-            return;
-        }
+        return;
+    }
 
-        // If we don't have a player in a position to reload, pause the coax MG reload
-        // This is just a fallback & shouldn't happen, as a reload gets actively paused if player exits or moves to position where he can't continue reloading
-        if (WeaponPawn == none || !WeaponPawn.Occupied() || !WeaponPawn.CanReload())
-        {
-            Log(Name @ ": reload timer pausing coax MG reload as no player in valid position - SHOULD NOT HAPPEN!!  Occupied() =" @ WeaponPawn.Occupied() @ " CanReload() =" @ WeaponPawn.CanReload());
-            PauseAltReload();
-
-            return;
-        }
-
+    // COAXIAL MG RELOAD
+    if (AltReloadState < RL_ReadyToFire && !bAltReloadPaused)
+    {
         // If we're starting a new coax MG reload or resuming a paused reload, we just reset that flag & don't advance the reload state
         if (bNewOrResumedAltReload)
         {
@@ -140,35 +175,91 @@ simulated function Timer()
         else
         {
             AltReloadState = EReloadState(AltReloadState + 1);
+        }
 
-            // If just completed the final reload stage, complete the coax MG reload
-            if (AltReloadState >= AltReloadStages.Length)
+        // If we just completed the final reload stage, complete the coax MG reload
+        if (AltReloadState >= AltReloadStages.Length)
+        {
+            AltReloadState = RL_ReadyToFire;
+
+            if (Role == ROLE_Authority)
             {
-                AltReloadState = RL_ReadyToFire;
+                AltAmmoCharge = InitialAltAmmo;
+            }
 
-                if (Role == ROLE_Authority)
-                {
-                    AltAmmoCharge = InitialAltAmmo;
-                }
+            // If smoke launcher isn't loaded, try to start/resume a reload
+            // Note owning net client runs this independently from server & may resume a paused reload (but not start a new one)
+            if (SmokeLauncherReloadState != RL_ReadyToFire)
+            {
+                AttemptSmokeLauncherReload();
+            }
+        }
+        // Otherwise play the reloading sound for the next stage & set the next timer
+        else
+        {
+            ReloadSound = AltReloadStages[AltReloadState].Sound;
 
-                return;
+            if (ReloadSound != none)
+            {
+                PlayOwnedSound(ReloadSound, SLOT_Misc, 2.0,, 25.0,, true);
+            }
+
+            if (AltReloadStages[AltReloadState].Duration > 0.0) // use reload duration if specified, otherwise get the sound duration
+            {
+                SetTimer(AltReloadStages[AltReloadState].Duration, false);
+            }
+            else
+            {
+                SetTimer(FMax(0.1, GetSoundDuration(ReloadSound)), false); // FMax is just a fail-safe in case GetSoundDuration somehow returns zero
+            }
+
+            // Pause any active smoke launcher reload as the coax MG reload takes precedence
+            if (SmokeLauncherReloadState < RL_ReadyToFire && !bSmokeLauncherReloadPaused)
+            {
+                PauseSmokeLauncherReload();
             }
         }
 
-        // Play reloading sound for current stage, if there is one (some MGs use a HUD reload animation that plays its own sound through anim notifies)
-        if (AltReloadStages[AltReloadState].Sound != none)
-        {
-            PlayOwnedSound(AltReloadStages[AltReloadState].Sound, SLOT_Misc, 2.0,, 25.0,, true);
-        }
+        return;
+    }
 
-        // Set next timer based on duration of current reload sound (use reload duration if specified, otherwise try & get the sound duration)
-        if (AltReloadStages[AltReloadState].Duration > 0.0)
+    // SMOKE LAUNCHER RELOAD
+    if (SmokeLauncherReloadState < RL_ReadyToFire && !bSmokeLauncherReloadPaused && SmokeLauncherClass != none && SmokeLauncherClass.default.bCanBeReloaded)
+    {
+        // If we're starting a new smoke launcher reload or resuming a paused reload, we just reset that flag & don't advance the reload state
+        if (bNewOrResumedSmokeLauncherReload)
         {
-            SetTimer(AltReloadStages[AltReloadState].Duration, false);
+            bNewOrResumedSmokeLauncherReload = false;
         }
+        // Otherwise it means we've just we've completed a reload stage, so we progress to next reload state
         else
         {
-            SetTimer(FMax(0.1, GetSoundDuration(AltReloadStages[AltReloadState].Sound)), false); // FMax is just a fail-safe in case GetSoundDuration somehow returns zero
+            SmokeLauncherReloadState = EReloadState(SmokeLauncherReloadState + 1);
+        }
+
+        // If we just completed the final reload stage, complete the smoke launcher reload
+        if (SmokeLauncherReloadState >= SmokeLauncherClass.default.ReloadStages.Length)
+        {
+            SmokeLauncherReloadState = RL_ReadyToFire;
+        }
+        // Otherwise play the reloading sound for the next stage & set the next timer
+        else
+        {
+            ReloadSound = SmokeLauncherClass.static.GetReloadStageSound(SmokeLauncherReloadState);
+
+            if (ReloadSound != none)
+            {
+                PlayOwnedSound(ReloadSound, SLOT_Misc, 2.0,, 25.0,, true);
+            }
+
+            if (SmokeLauncherClass.static.GetReloadStageDuration(SmokeLauncherReloadState) > 0.0)
+            {
+                SetTimer(SmokeLauncherClass.static.GetReloadStageDuration(SmokeLauncherReloadState), false);
+            }
+            else
+            {
+                SetTimer(FMax(0.1, GetSoundDuration(ReloadSound)), false);
+            }
         }
     }
 }
@@ -354,6 +445,12 @@ simulated function InitEffects()
     }
 }
 
+// Modified to use random cannon fire sounds
+simulated function sound GetFireSound()
+{
+    return CannonFireSound[Rand(3)];
+}
+
 // Modified to remove shake from coaxial MGs
 simulated function ShakeView(bool bWasAltFire)
 {
@@ -363,14 +460,103 @@ simulated function ShakeView(bool bWasAltFire)
     }
 }
 
-// Modified to use random cannon fire sounds
-simulated function sound GetFireSound()
+// New function to attempt to fire the turret smoke launcher - called from the keybound Deploy function in cannon pawn class & clientside firing checks are done here
+simulated function AttemptFireSmokeLauncher()
 {
-    return CannonFireSound[Rand(3)];
+    if (SmokeLauncherClass != none)
+    {
+        if (SmokeLauncherReloadState == RL_ReadyToFire && HasAmmo(SMOKELAUNCHER_AMMO_INDEX))
+        {
+            ServerFireSmokeLauncher();
+        }
+        else if (SmokeLauncherReloadState >= RL_ReadyToFire || bSmokeLauncherReloadPaused)
+        {
+            PlaySound(sound'Inf_Weapons_Foley.Misc.dryfire_rifle', SLOT_None, 1.5,, 25.0,, true); // dry fire click for empty smoke launcher, unless it is reloading
+        }
+    }
+}
+
+// New serverside function to fire the turret smoke launcher & start a reload
+// In effect, this is a cross between a normal weapon's native AttemptFire() event & the SpawnProjectile() function, which are all serverside
+function ServerFireSmokeLauncher()
+{
+    local Projectile Projectile;
+    local vector     FireLocation;
+    local rotator    VehicleRotation, FireRotation;
+    local int        LauncherIndex, i;
+    local bool       bSpawnedProjectile;
+
+    if (SmokeLauncherClass == none || SmokeLauncherReloadState != RL_ReadyToFire || Role != ROLE_Authority)
+    {
+        return;
+    }
+
+    // Get the world rotation of the turret, or the vehicle base (for vehicles without a turret)
+    if (bHasTurret)
+    {
+        VehicleRotation = GetBoneRotation(YawBone);
+    }
+    else
+    {
+        VehicleRotation = Rotation;
+    }
+
+    // Spawn the smoke projectile(s)
+    for (i = 0; i < SmokeLauncherClass.default.ProjectilesPerFire && HasAmmo(SMOKELAUNCHER_AMMO_INDEX); ++i)
+    {
+        // If external smoke launchers with multiple tubes, get the current tube index number
+        // For a single internal launcher the index no. remains default zero
+        if (SmokeLauncherClass.static.GetNumberOfLauncherTubes() > 1)
+        {
+            LauncherIndex = SmokeLauncherClass.static.GetNumberOfLauncherTubes() - NumSmokeLauncherRounds;
+        }
+
+        // Get the launch location, applying the positional offset adjusted for turret/vehicle rotation
+        FireLocation = Location + (SmokeLauncherFireOffset[LauncherIndex] >> VehicleRotation);
+
+        // Get the launch rotation, including any current rotation adjustment if launcher can be rotated to aim it
+        // Rotation starts relative to vehicle, then we convert to world rotation, with random spread
+        FireRotation = SmokeLauncherClass.static.GetFireRotation(LauncherIndex);
+
+        if (SmokeLauncherClass.static.CanRotate() && SmokeLauncherAdjustmentSetting > 0)
+        {
+            FireRotation.Yaw += (float(SmokeLauncherAdjustmentSetting) / float(SmokeLauncherClass.default.NumRotationSettings) * 65536);
+        }
+
+        FireRotation = rotator((vector(FireRotation) >> VehicleRotation) + (VRand() * FRand() * SmokeLauncherClass.default.Spread));
+
+        // Spawn the smoke projectile
+        Projectile = Spawn(SmokeLauncherClass.default.ProjectileClass, none,, FireLocation, FireRotation);
+
+        if (Projectile != none)
+        {
+            bSpawnedProjectile = true;
+
+            // If launcher is range adjustable, decrease the projectile's launch speed if the range setting is less than maximum
+            if (SmokeLauncherClass.static.CanAdjustRange() && SmokeLauncherAdjustmentSetting < SmokeLauncherClass.static.GetMaxRangeSetting())
+            {
+                Projectile.Velocity *= SmokeLauncherClass.static.GetLaunchSpeedModifier(SmokeLauncherAdjustmentSetting);
+            }
+
+            ConsumeAmmo(SMOKELAUNCHER_AMMO_INDEX);
+        }
+    }
+
+    // Play fire sound (we only want to do this once even if we fired more than one projectile)
+    // And if possible, attempt to start a smoke launcher reload
+    if (bSpawnedProjectile)
+    {
+        PlaySound(SmokeLauncherClass.default.FireSound, SLOT_None, 1.0);
+
+        if (SmokeLauncherClass.default.bCanBeReloaded)
+        {
+            AttemptSmokeLauncherReload();
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
-//  ******************************* RANGE SETTING  ********************************  //
+//  *************************** RANGE & OTHER SETTINGS  ***************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified (from ROTankCannon) to network optimise by clientside check before replicating function call to server, & also playing click clientside, not replicating it back
@@ -486,6 +672,85 @@ simulated function int GetRange()
     return 0;
 }
 
+// New clientside function to adjust either the rotation or range setting of smoke launcher
+simulated function AdjustSmokeLauncher(bool bIncrease)
+{
+    local bool bValidAdjustment;
+
+    if (SmokeLauncherClass == none)
+    {
+        return;
+    }
+
+    if (SmokeLauncherClass.static.CanRotate())
+    {
+        bValidAdjustment = true;
+    }
+    else if (SmokeLauncherClass.static.CanAdjustRange())
+    {
+        if (bIncrease)
+        {
+            bValidAdjustment = SmokeLauncherAdjustmentSetting < SmokeLauncherClass.static.GetMaxRangeSetting();
+        }
+        else
+        {
+            bValidAdjustment = SmokeLauncherAdjustmentSetting > 0;}
+    }
+
+    if (bValidAdjustment)
+    {
+        ServerAdjustSmokeLauncher(bIncrease);
+        PlayClickSound();
+    }
+}
+
+// New serverside function to adjust either the rotation or range setting of smoke launcher
+function ServerAdjustSmokeLauncher(bool bIncrease)
+{
+    if (SmokeLauncherClass != none && Role == ROLE_Authority)
+    {
+        if (SmokeLauncherClass.static.CanRotate())
+        {
+            if (bIncrease)
+            {
+                if (SmokeLauncherAdjustmentSetting >= SmokeLauncherClass.default.NumRotationSettings - 1)
+                {
+                    SmokeLauncherAdjustmentSetting = 0;
+                }
+                else
+                {
+                    SmokeLauncherAdjustmentSetting++;
+                }
+            }
+            else
+            {
+                if (SmokeLauncherAdjustmentSetting == 0)
+                {
+                    SmokeLauncherAdjustmentSetting = SmokeLauncherClass.default.NumRotationSettings - 1;
+                }
+                else if (SmokeLauncherAdjustmentSetting > 0)
+                {
+                    SmokeLauncherAdjustmentSetting--;
+                }
+            }
+        }
+        else if (SmokeLauncherClass.static.CanAdjustRange())
+        {
+            if (bIncrease)
+            {
+                if (SmokeLauncherAdjustmentSetting < SmokeLauncherClass.static.GetMaxRangeSetting())
+                {
+                    SmokeLauncherAdjustmentSetting++;
+                }
+            }
+            else if (SmokeLauncherAdjustmentSetting > 0)
+            {
+                SmokeLauncherAdjustmentSetting--;
+            }
+        }
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ************************************* AMMO ************************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -495,7 +760,8 @@ function bool GiveInitialAmmo()
 {
     if (MainAmmoChargeExtra[0] != InitialPrimaryAmmo || MainAmmoChargeExtra[1] != InitialSecondaryAmmo || MainAmmoChargeExtra[2] != InitialTertiaryAmmo
         || AltAmmoCharge != InitialAltAmmo || NumMGMags != default.NumMGMags
-        || (bUsesMags && (NumPrimaryMags != default.NumPrimaryMags || NumSecondaryMags != default.NumSecondaryMags || NumTertiaryMags != default.NumTertiaryMags)))
+        || (bUsesMags && (NumPrimaryMags != default.NumPrimaryMags || NumSecondaryMags != default.NumSecondaryMags || NumTertiaryMags != default.NumTertiaryMags))
+        || (SmokeLauncherClass != none && NumSmokeLauncherRounds != SmokeLauncherClass.default.InitialAmmo))
     {
         MainAmmoChargeExtra[0] = InitialPrimaryAmmo;
         MainAmmoChargeExtra[1] = InitialSecondaryAmmo;
@@ -510,17 +776,23 @@ function bool GiveInitialAmmo()
             NumTertiaryMags = default.NumTertiaryMags;
         }
 
+        if (SmokeLauncherClass != none)
+        {
+            NumSmokeLauncherRounds = SmokeLauncherClass.default.InitialAmmo;
+        }
+
         return true;
     }
 
     return false;
 }
 
-// Modified to incrementally resupply all cannon & coaxial MG ammo (only resupplies spare rounds & mags; doesn't reload the cannon or MG)
+// Modified to incrementally resupply all extended ammo types (only resupplies spare rounds & mags; doesn't reload the weapons)
 function bool ResupplyAmmo()
 {
     local bool bDidResupply;
 
+    // Autocannon
     if (bUsesMags)
     {
         if (NumPrimaryMags < default.NumPrimaryMags)
@@ -541,6 +813,7 @@ function bool ResupplyAmmo()
             bDidResupply = true;
         }
     }
+    // Cannon
     else
     {
         if (MainAmmoChargeExtra[0] < InitialPrimaryAmmo)
@@ -568,6 +841,7 @@ function bool ResupplyAmmo()
         AttemptReload();
     }
 
+    // Coaxial MG
     if (NumMGMags < default.NumMGMags)
     {
         ++NumMGMags;
@@ -577,6 +851,19 @@ function bool ResupplyAmmo()
         if (AltReloadState == RL_Waiting && !HasAmmo(ALTFIRE_AMMO_INDEX) && WeaponPawn != none && WeaponPawn.Occupied())
         {
             AttemptAltReload();
+        }
+    }
+
+    // Smoke launcher
+    if (SmokeLauncherClass != none && NumSmokeLauncherRounds < SmokeLauncherClass.default.InitialAmmo)
+    {
+        ++NumSmokeLauncherRounds;
+        bDidResupply = true;
+
+        // If smoke launcher is out of ammo & waiting to reload & we have a player, try to start a reload
+        if (SmokeLauncherReloadState == RL_Waiting && WeaponPawn != none && WeaponPawn.Occupied())
+        {
+            AttemptSmokeLauncherReload();
         }
     }
 
@@ -636,7 +923,7 @@ function ServerSetPendingAmmo(byte NewPendingAmmoIndex)
 // Modified to use extended ammo types
 simulated function bool ConsumeAmmo(int AmmoIndex)
 {
-    if (AmmoIndex < 0 || AmmoIndex > ALTFIRE_AMMO_INDEX || !HasAmmo(AmmoIndex))
+    if (AmmoIndex < 0 || AmmoIndex > SMOKELAUNCHER_AMMO_INDEX || !HasAmmo(AmmoIndex))
     {
         return false;
     }
@@ -644,6 +931,10 @@ simulated function bool ConsumeAmmo(int AmmoIndex)
     if (AmmoIndex == ALTFIRE_AMMO_INDEX)
     {
          AltAmmoCharge--;
+    }
+    else if (AmmoIndex == SMOKELAUNCHER_AMMO_INDEX)
+    {
+        NumSmokeLauncherRounds--;
     }
     else
     {
@@ -653,12 +944,34 @@ simulated function bool ConsumeAmmo(int AmmoIndex)
     return true;
 }
 
+// Modified to handle autocannon's multiple mag types
+function ConsumeMag()
+{
+    if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
+    {
+        NumPrimaryMags--;
+    }
+    else if (ProjectileClass == SecondaryProjectileClass)
+    {
+        NumSecondaryMags--;
+    }
+    else if (ProjectileClass == TertiaryProjectileClass)
+    {
+        NumTertiaryMags--;
+    }
+}
+
 // Modified to use extended ammo types
 simulated function bool HasAmmo(int AmmoIndex)
 {
     if (AmmoIndex == ALTFIRE_AMMO_INDEX)
     {
          return AltAmmoCharge > 0;
+    }
+
+    if (AmmoIndex == SMOKELAUNCHER_AMMO_INDEX)
+    {
+         return NumSmokeLauncherRounds > 0;
     }
 
     return AmmoIndex >= 0 && AmmoIndex < arraycount(MainAmmoChargeExtra) && MainAmmoChargeExtra[AmmoIndex] > 0;
@@ -855,6 +1168,57 @@ simulated function AttemptAltReload()
     }
 }
 
+// New function to start a smoke launcher reload or resume a previously paused reload, using a multi-stage reload process like a cannon
+simulated function AttemptSmokeLauncherReload()
+{
+    local EReloadState OldReloadState;
+
+    if (SmokeLauncherClass == none || !SmokeLauncherClass.default.bCanBeReloaded)
+    {
+        return;
+    }
+
+    // Try to start a new reload, as smoke launcher either just fired (still in ready to fire state) or is waiting
+    if (SmokeLauncherReloadState == RL_ReadyToFire || SmokeLauncherReloadState == RL_Waiting)
+    {
+        if (Role == ROLE_Authority)
+        {
+            OldReloadState = SmokeLauncherReloadState; // so we can tell if SmokeLauncherReloadState changes
+
+            // Start a reload if we have spare ammo & the cannon & coaxial MG aren't reloading (they takes precedence & makes smoke launcher wait to reload)
+            if (HasAmmoToReload(SMOKELAUNCHER_AMMO_INDEX) && ReloadState >= RL_ReadyToFire && AltReloadState >= RL_ReadyToFire && WeaponPawn != none && WeaponPawn.CanReload())
+            {
+                StartSmokeLauncherReload();
+            }
+            // Otherwise make sure loading state is waiting (for a player or an ammo resupply or for cannon or coax MG to finish reloading)
+            else if (SmokeLauncherReloadState != RL_Waiting)
+            {
+                SmokeLauncherReloadState = RL_Waiting;
+                bSmokeLauncherReloadPaused = false; // just make sure this isn't set, as only relevant to a started reload
+            }
+
+            // Server replicates any changed reload state to net client
+            if (SmokeLauncherReloadState != OldReloadState)
+            {
+                PassReloadStateToClient();
+            }
+        }
+    }
+    // Smoke launcher has started reloading so try to progress/resume it providing cannon or coax MG is not reloading
+    // Note we musn't check we have a player here as net client may not yet have received weapon pawn's Controller if reload is starting/resuming on entering vehicle
+    // But generally we can assume we do have a player because either server has triggered this to start new reload (& it will have checked for player if necessary),
+    // or player has just entered vehicle & triggered this (so even if we don't yet have the Controller, he's in the entering/possession process)
+    // In any event the timer makes sure we have a player anyway & the slight delay before timer gets called should mean we have the Controller by then
+    else if (ReloadState >= RL_ReadyToFire && AltReloadState >= RL_ReadyToFire && WeaponPawn != none && WeaponPawn.CanReload())
+    {
+        StartSmokeLauncherReload(true);
+    }
+    else if (!bSmokeLauncherReloadPaused)
+    {
+        PauseSmokeLauncherReload();
+    }
+}
+
 // New function to start a new coaxial MG reload or resume a paused reload
 simulated function StartAltReload(optional bool bResumingPausedReload)
 {
@@ -869,52 +1233,111 @@ simulated function StartAltReload(optional bool bResumingPausedReload)
     SetTimer(0.1, false); // 0.1 sec delay instead of 0.01 to allow bit longer for net client to receive Controller actor, so check for player doesn't fail due to network delay
 }
 
+// New function to start a new smoke launcher reload or resume a paused reload
+simulated function StartSmokeLauncherReload(optional bool bResumingPausedReload)
+{
+    if (!bResumingPausedReload)
+    {
+        SmokeLauncherReloadState = RL_ReloadingPart1;
+    }
+
+    bNewOrResumedSmokeLauncherReload = true; // stops Timer() from moving on to next stage
+    bSmokeLauncherReloadPaused = false;
+    SetTimer(0.1, false); // 0.1 sec delay instead of 0.01 to allow bit longer for net client to receive Controller actor, so check for player doesn't fail due to network delay
+}
+
 // New function to pause a coaxial MG reload
 simulated function PauseAltReload()
 {
     bAltReloadPaused = true;
 
-    if (ReloadState == RL_ReadyToFire || ReloadState == RL_Waiting || bReloadPaused)
+    if (ReloadState >= RL_ReadyToFire || bReloadPaused)
     {
         SetTimer(0.0, false); // clear any timer, but only if cannon is not reloading (if so, must leave timer running for that)
     }
 }
 
-// Modified to pack both cannon & coaxial MG reload states into a single byte, for efficient replication to owning net client
-function PassReloadStateToClient()
+// New function to pause a smoke launcher reload
+simulated function PauseSmokeLauncherReload()
 {
-    if (WeaponPawn != none && !WeaponPawn.IsLocallyControlled()) // dedicated server or non-owning listen server
+    bSmokeLauncherReloadPaused = true;
+
+    if ((ReloadState >= RL_ReadyToFire || bReloadPaused) && (AltReloadState >= RL_ReadyToFire || bAltReloadPaused))
     {
-        if (AltFireProjectileClass != none)
+        SetTimer(0.0, false); // clear any timer, but only if cannon & coaxial MG are not reloading (if so, must leave timer running for that)
+    }
+}
+
+// Modified to include any coaxial MG or smoke launcher reload
+simulated function PauseAnyReloads()
+{
+    super.PauseAnyReloads();
+
+    if (bMultiStageReload)
+    {
+        if (AltReloadState < RL_ReadyToFire && !bAltReloadPaused)
         {
-            ClientSetReloadState((AltReloadState * 10) + ReloadState);
+            PauseAltReload();
         }
-        else
+
+        if (SmokeLauncherReloadState < RL_ReadyToFire && !bSmokeLauncherReloadPaused)
         {
-            ClientSetReloadState(ReloadState);
+            PauseSmokeLauncherReload();
         }
     }
 }
 
-// Modified to unpack combined cannon & coaxial MG reload states from a single replicated byte & to handle a passed coaxial MG reload
+// Modified to pack cannon, coaxial MG & smoke launcher reload states into a single byte, for efficient replication to owning net client
+function PassReloadStateToClient()
+{
+    local byte PackedReloadState;
+
+    if (WeaponPawn != none && !WeaponPawn.IsLocallyControlled()) // dedicated server or non-owning listen server
+    {
+        if (SmokeLauncherClass != none && SmokeLauncherClass.default.bCanBeReloaded)
+        {
+            PackedReloadState += SmokeLauncherReloadState * 36;
+        }
+
+        if (AltFireProjectileClass != none)
+        {
+            PackedReloadState += AltReloadState * 6;
+        }
+
+        PackedReloadState += ReloadState;
+
+        ClientSetReloadState(PackedReloadState);
+    }
+}
+
+// Modified to unpack combined cannon, coaxial MG & smoke launcher reload states from a single replicated byte & to handle a passed smoke launcher reload
 simulated function ClientSetReloadState(byte NewState)
 {
     if (Role < ROLE_Authority)
     {
-        // Unpack replicated byte & update cannon & coax reload states
-        // Note we only need to unpack if cannon has a coax, otherwise just the cannon's reload state will have been passed
+        // Unpack smoke launcher reload state from replicated byte & update its reload status
+        // Then adjust replicated byte to leave just the cannon & coax MG  status
+        // Note we only do this if vehicle has a smoke launcher, otherwise just the cannon & coax reload states will have been passed
+        if (SmokeLauncherClass != none && SmokeLauncherClass.default.bCanBeReloaded)
+        {
+            SmokeLauncherReloadState = EReloadState(NewState / 36);
+            NewState -= SmokeLauncherReloadState * 36;
+        }
+
+        // Unpack coaxial MG reload state (if vehicle has one) from replicated byte & update its reload status
+        // Then adjust replicated byte to leave just the cannon status
         if (AltFireProjectileClass != none)
         {
-            AltReloadState = EReloadState(NewState / 10);
-            NewState = NewState - (AltReloadState * 10);
+            AltReloadState = EReloadState(NewState / 6);
+            NewState -= AltReloadState * 6;
         }
 
         // Now call the Super to handle any cannon reload, passing the unpacked NewState for the cannon's reload state
         super.ClientSetReloadState(NewState);
 
-        // If a coax reload has started, try to progress it
         if (AltFireProjectileClass != none)
         {
+            // Coax MG is mid-reload, so try to progress it
             if (AltReloadState < RL_ReadyToFire)
             {
                 AttemptAltReload();
@@ -926,6 +1349,21 @@ simulated function ClientSetReloadState(byte NewState)
                 bAltReloadPaused = false;
             }
         }
+
+        if (SmokeLauncherClass != none && SmokeLauncherClass.default.bCanBeReloaded)
+        {
+            // Smoke launcher is mid-reload, so try to progress it
+            if (SmokeLauncherReloadState < RL_ReadyToFire)
+            {
+                AttemptSmokeLauncherReload();
+            }
+            // Smoke launcher isn't reloading (it's either ready to fire or waiting to start a reload)
+            // So just just make sure it isn't set to paused, which is only relevant if it's mid-reload
+            else if (bSmokeLauncherReloadPaused)
+            {
+                bAltReloadPaused = false;
+            }
+        }
     }
 }
 
@@ -933,23 +1371,6 @@ simulated function ClientSetReloadState(byte NewState)
 simulated function PlayStageReloadSound()
 {
     PlayOwnedSound(ReloadStages[ReloadState].Sound, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
-}
-
-// Modified to handle autocannon's multiple mag types
-function ConsumeMag()
-{
-    if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
-    {
-        NumPrimaryMags--;
-    }
-    else if (ProjectileClass == SecondaryProjectileClass)
-    {
-        NumSecondaryMags--;
-    }
-    else if (ProjectileClass == TertiaryProjectileClass)
-    {
-        NumTertiaryMags--;
-    }
 }
 
 // Modified to handle autocannon's multiple mag types
@@ -969,7 +1390,7 @@ function FinishMagReload()
     }
 }
 
-// New function to check whether we can start a reload for a specified ammo type, accommodating either normal cannon shells or mags
+// Modified to include a coaxial MG or an autocannon's multiple mag types
 simulated function bool HasAmmoToReload(byte AmmoIndex)
 {
     if (AmmoIndex == ALTFIRE_AMMO_INDEX) // coaxial MG
@@ -990,7 +1411,7 @@ simulated function bool HasAmmoToReload(byte AmmoIndex)
         }
     }
 
-    return HasAmmo(AmmoIndex); // normal cannon
+    return HasAmmo(AmmoIndex); // normal cannon or smoke launcher
 }
 
 // Implemented to handle cannon's manual reloading option
@@ -1000,7 +1421,7 @@ simulated function bool PlayerUsesManualReloading()
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
-//  ********************  HIT DETECTION, PENETRATION & DAMAGE  ********************  //
+//  ****************************  PENETRATION & DAMAGE  ***************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // New generic function to handle turret penetration calcs for any shell type
@@ -1266,6 +1687,17 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 //  *************************  SETUP, UPDATE, CLEAN UP  ***************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+// Modified to call StaticPrecache() on any smoke launcher class
+static function StaticPrecache(LevelInfo L)
+{
+    super.StaticPrecache(L);
+
+    if (default.SmokeLauncherClass != none)
+    {
+        default.SmokeLauncherClass.static.StaticPrecache(L);
+    }
+}
+
 // Modified to add TertiaryProjectileClass
 simulated function UpdatePrecacheStaticMeshes()
 {
@@ -1394,6 +1826,7 @@ defaultproperties
     AltReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden02',Duration=2.413,HUDProportion=0.75)
     AltReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden03',Duration=1.843,HUDProportion=0.5)
     AltReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden04',Duration=1.314,HUDProportion=0.25)
+    SmokeLauncherReloadState=RL_ReadyToFire
 
     // Sounds
     FireSoundVolume=512.0

@@ -48,9 +48,15 @@ var     SpriteWidget        CanCutWireIcon;
 var     SpriteWidget        DeployOkayIcon;
 var     SpriteWidget        DeployEnemiesNearbyIcon;
 var     SpriteWidget        DeployInObjectiveIcon;
+var     SpriteWidget        ExtraAmmoIcon; // extra ammo icon appears if the player has extra ammo to give out
 var     SpriteWidget        VehicleAltAmmoReloadIcon; // ammo reload icon for a coax MG, so reload progress can be shown on HUD like a tank cannon reload
 var     SpriteWidget        VehicleMGAmmoReloadIcon;  // ammo reload icon for a vehicle mounted MG position
-var     SpriteWidget        ExtraAmmoIcon; // extra ammo icon appears if the player has extra ammo to give out
+var     SpriteWidget        VehicleSmokeLauncherAmmoIcon;       // ammo icon for a vehicle mounted smoke launcher
+var     TextWidget          VehicleSmokeLauncherAmmoAmount;     // ammo quantity display for vehicle smoke launcher
+var     SpriteWidget        VehicleSmokeLauncherAmmoReloadIcon; // ammo reload icon for vehicle smoke launcher
+var     SpriteWidget        VehicleSmokeLauncherAimIcon;        // aim indicator icon for a vehicle smoke launcher that can be rotated
+var     SpriteWidget        VehicleSmokeLauncherRangeBarIcon;   // range indicator icon for a range-adjustable vehicle smoke launcher
+var     SpriteWidget        VehicleSmokeLauncherRangeInfill;    // infill bar to show current range setting for a range-adjustable vehicle smoke launcher
 
 // Map or screen text that can be localized for different languages
 var     localized string    MapNameText;
@@ -139,8 +145,6 @@ function DrawDebugInformation(Canvas C)
     }
 
     S @= class'DarkestHourGame'.default.Version.ToString();
-
-    S @= "FOV =" @ int(PC.FovAngle); // TEMPDEBUG (Matt, prior to V8.0 release)
 
     C.Style = ERenderStyle.STY_Alpha;
     C.Font = C.TinyFont;
@@ -240,6 +244,10 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(TexRotator'InterfaceArt_tex.Tank_Hud.Rus_needle_rot');
     Level.AddPrecacheMaterial(TexRotator'InterfaceArt_tex.Tank_Hud.Ger_needle_rpm_rot');
     Level.AddPrecacheMaterial(TexRotator'InterfaceArt_tex.Tank_Hud.Rus_needle_rpm_rot');
+    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.Tank_Hud.clock_face');
+    Level.AddPrecacheMaterial(TexRotator'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_aim_pointer_rot');
+    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_rangebar');
+    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_rangebar_infill');
 
     // Damage icons
     Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.artkill');
@@ -967,11 +975,13 @@ simulated function DrawHudPassC(Canvas C)
 // Overridden to handle new system where rider pawns won't exist on clients unless occupied (& generally prevent spammed log errors)
 function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWeaponPawn Passenger)
 {
+    local class<DHVehicleSmokeLauncher> SL;
     local DHVehicle          V;
     local DHVehicleCannon    Cannon;
     local VehicleWeaponPawn  WP;
     local AbsoluteCoordsInfo Coords, Coords2;
     local SpriteWidget       Widget;
+    local TexRotator         AimIndicator;
     local rotator            MyRot;
     local float              XL, YL, Y_one, StrX, StrY, Team, MaxChange, ProportionOfReloadRemaining, f;
     local int                Current, Pending, i;
@@ -1341,6 +1351,11 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 
             if (Cannon != none)
             {
+                // Set font size, used for drawing cannon ammo descriptions & also ammo quantity for any vehicle smoke laucnher
+                // Different from RO, which used GetConsoleFont() for smaller HudScale settings & could result in odd font sizes based on player's ConsoleFontSize setting
+                // Now we use a common base font size with GetFontSizeIndex(), which scales the font to screen size, & we adjust that by the HudScale
+                Canvas.Font = GetFontSizeIndex(Canvas, Round(-2.0 / HudScale));
+
                 // Draw cannon ammo count
                 VehicleAmmoAmount.Value = Cannon.PrimaryAmmoCount();
                 DrawNumericWidget(Canvas, VehicleAmmoAmount, Digits);
@@ -1348,7 +1363,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                 // Draw different cannon ammo types
                 if (Cannon.bMultipleRoundTypes)
                 {
-                    // Get ammo types text, font & position
+                    // Get cannon ammo types text & draw position
                     // GetAmmoIndex() & LocalPendingAmmoIndex replace deprecated GetRoundsDescription(Lines) & GetPendingRoundIndex(), with Lines array constructed directly by for loop below
                     Current = Cannon.GetAmmoIndex();
                     Pending = Cannon.LocalPendingAmmoIndex;
@@ -1359,15 +1374,6 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                     }
 
                     VehicleAmmoTypeText.OffsetY = default.VehicleAmmoTypeText.OffsetY * HudScale;
-
-                    if (HudScale < 0.85)
-                    {
-                        Canvas.Font = GetConsoleFont(Canvas);
-                    }
-                    else
-                    {
-                        Canvas.Font = GetSmallMenuFont(Canvas);
-                    }
 
                     // Draw ammo types (from last, upwards on the screen)
                     for (i = Lines.Length - 1; i >= 0; --i)
@@ -1435,6 +1441,55 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                     // Draw coaxial MG ammo amount
                     VehicleAltAmmoAmount.Value = Cannon.GetNumMags();
                     DrawNumericWidget(Canvas, VehicleAltAmmoAmount, Digits);
+                }
+
+                // Draw smoke launcher ammo info (if present & displays ammo info on HUD)
+                SL = Cannon.SmokeLauncherClass;
+
+                if (SL != none && SL.default.bShowHUDInfo)
+                {
+                    // Draw smoke launcher ammo icon
+                    VehicleSmokeLauncherAmmoIcon.WidgetTexture = SL.default.HUDAmmoIcon;
+                    DrawSpriteWidget(Canvas, VehicleSmokeLauncherAmmoIcon);
+
+                    // Draw smoke launcher reload progress (if needed)
+                    if (SL.default.HUDAmmoReloadTexture != none)
+                    {
+                        ProportionOfReloadRemaining = DHVehicleCannonPawn(Passenger).GetSmokeLauncherAmmoReloadState();
+
+                        if (ProportionOfReloadRemaining > 0.0)
+                        {
+                            VehicleSmokeLauncherAmmoReloadIcon.WidgetTexture = SL.default.HUDAmmoReloadTexture;
+                            VehicleSmokeLauncherAmmoReloadIcon.Scale = ProportionOfReloadRemaining;
+                            DrawSpriteWidget(Canvas, VehicleSmokeLauncherAmmoReloadIcon);
+                        }
+                    }
+
+                    // Draw smoke launcher ammo amount
+                    // Note have to scale OffsetY for HudScale & screen height (compared to base setting for a 1080 screen), as DrawTextWidgetClipped does not
+                    VehicleSmokeLauncherAmmoAmount.Text = "x" @ Cannon.NumSmokeLauncherRounds;
+                    VehicleSmokeLauncherAmmoAmount.OffsetY = default.VehicleSmokeLauncherAmmoAmount.OffsetY * (HudScale * Canvas.SizeY / 1080.0);
+                    DrawTextWidgetClipped(Canvas, VehicleSmokeLauncherAmmoAmount, Coords2);
+
+                    // If smoke launcher can be rotated, draw the rotation indicator
+                    if (SL.static.CanRotate())
+                    {
+                        DrawSpriteWidgetClipped(Canvas, VehicleSmokeLauncherAimIcon, Coords2, true,,, false, true, true); // background clockface icon
+
+                        Widget = VehicleSmokeLauncherAimIcon;
+                        AimIndicator = TexRotator'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_aim_pointer_rot'; // TODO: replace this placeholder with better texture
+                        AimIndicator.Rotation.Yaw = -float(Cannon.SmokeLauncherAdjustmentSetting) / float(SL.default.NumRotationSettings) * 65536.0;
+                        Widget.WidgetTexture = AimIndicator;
+                        DrawSpriteWidgetClipped(Canvas, Widget, Coords2, true,,, false, true, true); // arrowhead, rotated to show aim direction
+
+                    }
+                    // If smoke launcher has range adjustment, draw the range indicator
+                    else if (SL.static.CanAdjustRange())
+                    {
+                        VehicleSmokeLauncherRangeInfill.Scale = float(Cannon.SmokeLauncherAdjustmentSetting + 1) / float(SL.static.GetMaxRangeSetting() + 1);
+                        DrawSpriteWidget(Canvas, VehicleSmokeLauncherRangeBarIcon);
+                        DrawSpriteWidget(Canvas, VehicleSmokeLauncherRangeInfill);
+                    }
                 }
             }
         }
@@ -5345,12 +5400,19 @@ defaultproperties
 
     // Vehicle HUD
     VehicleOccupantsText=(PosX=0.78,OffsetX=0,bDrawShadow=true)
+    VehicleAmmoReloadIcon=(Tints[0]=(A=80),Tints[1]=(A=80)) // override to make RO's red cannon ammo reload overlay slightly less bright (reduced alpha from 128)
     VehicleAmmoTypeText=(Text="",PosX=0.24,PosY=1.0,WrapWidth=0.0,WrapHeight=1,OffsetX=8,OffsetY=-4,DrawPivot=DP_LowerLeft,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=true)
     VehicleAltAmmoIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.2,DrawPivot=DP_LowerLeft,PosX=0.30,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     VehicleAltAmmoAmount=(TextureScale=0.2,MinDigitCount=1,DrawPivot=DP_LowerLeft,PosX=0.30,PosY=1.0,OffsetX=135,OffsetY=-40,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     VehicleAltAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.2,DrawPivot=DP_LowerLeft,PosX=0.30,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=80),Tints[1]=(R=255,G=0,B=0,A=80))
     VehicleMGAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.3,DrawPivot=DP_LowerLeft,PosX=0.15,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Up,Scale=0.75,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=80),Tints[1]=(R=255,G=0,B=0,A=80))
-    VehicleAmmoReloadIcon=(Tints[0]=(A=80),Tints[1]=(A=80)) // override to make RO's red cannon ammo reload overlay slightly less bright (reduced alpha from 128)
+    VehicleSmokeLauncherAmmoIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=255),TextureScale=0.12,DrawPivot=DP_LowerMiddle,PosX=0.697,PosY=1.0,OffsetX=0,OffsetY=-38,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    VehicleSmokeLauncherAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=255),TextureScale=0.12,DrawPivot=DP_LowerMiddle,PosX=0.697,PosY=1.0,OffsetX=0,OffsetY=-38,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=80),Tints[1]=(R=255,G=0,B=0,A=80))
+    VehicleSmokeLauncherAmmoAmount=(Text="",PosX=0.697,PosY=1.0,WrapWidth=0.0,WrapHeight=1.0,OffsetX=45,OffsetY=-30,DrawPivot=DP_LowerLeft,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    VehicleSmokeLauncherAimIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.Tank_Hud.clock_face',TextureCoords=(X1=0,Y1=0,X2=255,Y2=255),TextureScale=0.089,DrawPivot=DP_LowerMiddle,PosX=0.697,PosY=1.0,OffsetX=0,OffsetY=32,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    // TODO: get proper smoke launcher range indicator icons made to replace placeholder textures below:
+    VehicleSmokeLauncherRangeBarIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_rangebar',TextureCoords=(X1=0,Y1=0,X2=63,Y2=255),TextureScale=0.12,DrawPivot=DP_LowerMiddle,PosX=0.697,PosY=1.0,OffsetX=75,OffsetY=-32,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    VehicleSmokeLauncherRangeInfill=(WidgetTexture=texture'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_rangebar_infill',TextureCoords=(X1=0,Y1=0,X2=63,Y2=255),TextureScale=0.12,DrawPivot=DP_LowerMiddle,PosX=0.697,PosY=1.0,OffsetX=75,OffsetY=-32,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Squads
     VehiclePositionIsSquadmateColor=(R=0,G=255,B=0,A=255)   // TODO: remove

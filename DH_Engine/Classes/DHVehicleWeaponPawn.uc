@@ -1060,11 +1060,7 @@ function DriverLeft()
         VehWep.FlashCount = 0;
         VehWep.NetUpdateFrequency = VehWep.default.NetUpdateFrequency;
         VehWep.NetPriority = VehWep.default.NetPriority;
-
-        if (VehWep.ReloadState < RL_ReadyToFire && !VehWep.bReloadPaused && VehWep.bMultiStageReload)
-        {
-            VehWep.PauseReload();
-        }
+        VehWep.PauseAnyReloads();
     }
 
     SetRotatingStatus(0); // stop playing any turret rotation sound
@@ -1086,9 +1082,9 @@ simulated function ClientKDriverLeave(PlayerController PC)
 {
     super.ClientKDriverLeave(PC);
 
-    if (VehWep != none && VehWep.ReloadState < RL_ReadyToFire && !VehWep.bReloadPaused && VehWep.bMultiStageReload && Role < ROLE_Authority)
+    if (Role < ROLE_Authority && VehWep != none)
     {
-        VehWep.PauseReload();
+        VehWep.PauseAnyReloads();
     }
 }
 
