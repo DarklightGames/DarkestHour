@@ -26,7 +26,7 @@ simulated state ViewTransition // TEMP to fake camera position changes until ani
     }
 }
 
-exec function SetTex(int Slot) // TEMP
+exec function SetTex(int Slot) // TEMP to allow switching between different sized versions of the vehicle skins, to compare them & look for detail loss
 {
     Switch(Slot)
     {
