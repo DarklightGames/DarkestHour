@@ -60,7 +60,6 @@ defaultproperties
     // Weapon fire
     WeaponFireOffset=-2.0
     AltFireOffset=(X=-155.0,Y=17.0,Z=2.0)
-    AltShakeOffsetMag=(X=0.1,Y=0.1,Z=0.1)
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire01'

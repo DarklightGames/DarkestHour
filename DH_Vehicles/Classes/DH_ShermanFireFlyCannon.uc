@@ -58,8 +58,6 @@ defaultproperties
     WeaponFireOffset=6.0
     AltFireOffset=(X=-181.0,Y=-23.0,Z=0.0)
     AltFireSpawnOffsetX=48.0
-    AltShakeRotMag=(X=0.01,Y=0.01,Z=0.01)
-    AltShakeRotRate=(X=1000.0,Y=1000.0,Z=1000.0)
 
     // Sounds
     CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'

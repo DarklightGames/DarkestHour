@@ -58,8 +58,6 @@ defaultproperties
     ShakeRotRate=(Z=600.0)
     ShakeOffsetMag=(Z=5.0)
     ShakeOffsetTime=6.0
-    AltShakeRotMag=(X=0.01,Y=0.01,Z=0.01)
-    AltShakeRotRate=(X=1000.0,Y=1000.0,Z=1000.0)
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire01'

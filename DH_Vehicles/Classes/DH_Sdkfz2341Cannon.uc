@@ -163,8 +163,6 @@ defaultproperties
     ShakeOffsetMag=(Z=0.5)
     ShakeOffsetRate=(Z=10.0)
     ShakeOffsetTime=2.0
-    AltShakeRotMag=(X=0.01,Y=0.01,Z=0.01)
-    AltShakeRotRate=(X=1000.0,Y=1000.0,Z=1000.0)
 
     // Sounds (HUDProportion overrides to better suit the magazine reload)
     CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.20mm.DH20mmFire01G'

@@ -58,7 +58,6 @@ defaultproperties
     // Weapon fire
     AltFireOffset=(X=-109.5,Y=-11.5,Z=1.0)
     AltFireSpawnOffsetX=23.0
-    AltShakeRotMag=(X=10.0,Y=10.0,Z=10.0)
 
     // Sounds
     CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'

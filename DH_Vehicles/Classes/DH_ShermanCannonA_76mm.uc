@@ -75,8 +75,6 @@ defaultproperties
     AddedPitch=52
     AltFireOffset=(X=-178.0,Y=-21.0,Z=2.0)
     AltFireSpawnOffsetX=17.0
-    AltShakeRotMag=(X=0.01,Y=0.01,Z=0.01)
-    AltShakeRotRate=(X=1000.0,Y=1000.0,Z=1000.0)
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire01'

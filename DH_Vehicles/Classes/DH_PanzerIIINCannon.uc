@@ -42,7 +42,6 @@ defaultproperties
     WeaponFireOffset=10.0
     AltFireOffset=(X=-56.0,Y=19.0,Z=6.5)
     AltFireSpawnOffsetX=0.0
-    AltShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F1.75mm_S_fire01'
