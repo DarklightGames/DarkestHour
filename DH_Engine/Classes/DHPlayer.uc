@@ -4528,6 +4528,28 @@ exec function Speak(string ChannelTitle)
             }
         }
     }
+    else if (ChannelTitle ~= "LOCAL")
+    {
+        VRI = DHVoiceReplicationInfo(VoiceReplicationInfo);
+
+        // Hack, instead of speaking in local channel, lets speak in our own private channel (which acts as local)
+        VCR = VRI.GetPrivateChannel(PRI);
+
+        if (VCR == none)
+        {
+            return;
+        }
+    }
+    else if (ChannelTitle ~= "UNASSIGNED" && PRI.IsInSquad())
+    {
+        // If we are trying to speak in unassigned and we are in a squad, then return out
+        return;
+    }
+    else if (ChannelTitle ~= "COMMAND" && !PRI.IsSquadLeader())
+    {
+        // Don't let non squad leaders speak in command
+        return;
+    }
     else
     {
         // Check that we are a member of this room.

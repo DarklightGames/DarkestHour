@@ -12,6 +12,7 @@ const VEHICLE_POOLS_MAX = 32;
 const SPAWN_POINTS_MAX = 63;
 const OBJECTIVES_MAX = 32;
 const CONSTRUCTION_CLASSES_MAX = 32;
+const VOICEID_MAX = 100;
 
 struct ArtilleryTarget
 {
@@ -790,6 +791,35 @@ simulated function string GetTeamScaleString(int Team)
    {
        return string(i) $ "%";
    }
+}
+
+// Modified to allow VoiceID to be greater than 32
+simulated function AddPRI(PlayerReplicationInfo PRI)
+{
+    local byte      NewVoiceID;
+    local int       i;
+
+    if (Level.NetMode == NM_ListenServer || Level.NetMode == NM_DedicatedServer)
+    {
+        for (i = 0; i < PRIArray.Length; i++)
+        {
+            if (PRIArray[i].VoiceID == NewVoiceID)
+            {
+                i = -1;
+                NewVoiceID++;
+                continue;
+            }
+        }
+
+        if (NewVoiceID >= VOICEID_MAX)
+        {
+            NewVoiceID = 0;
+        }
+
+        PRI.VoiceID = NewVoiceID;
+    }
+
+    PRIArray[PRIArray.Length] = PRI;
 }
 
 defaultproperties
