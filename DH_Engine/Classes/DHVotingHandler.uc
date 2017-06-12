@@ -81,7 +81,6 @@ function AddMap(string MapName, string Mutators, string GameOptions) // called f
 
     if (MapInfo.G != "" && int(MapInfo.G) >= 0)
     {
-        Log("Changing RepeatLimitInstance to: " $ int(MapInfo.G));
         RepeatLimitInstance = int(MapInfo.G);
     }
 
