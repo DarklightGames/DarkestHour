@@ -202,6 +202,6 @@ defaultproperties
     PublicChannelNames(18)="Squad"
     PublicChannelNames(19)="Squad"
 
-    LocalBroadcastRange=1500
+    LocalBroadcastRange=1500 // Distance in UUs
 }
 
