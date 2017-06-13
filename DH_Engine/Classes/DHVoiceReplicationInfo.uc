@@ -16,11 +16,6 @@ replication
         AxisSquadChannels, AlliesSquadChannels;
 }
 
-simulated function VoiceChatRoom GetPrivateChannel(PlayerReplicationInfo PRI)
-{
-    return GetChannel(PRI.PlayerName, PRI.Team.TeamIndex);
-}
-
 simulated function VoiceChatRoom GetSquadChannel(int TeamIndex, int SquadIndex)
 {
     if (SquadIndex < 0 || SquadIndex >= SQUAD_CHANNELS_MAX)
@@ -119,7 +114,6 @@ function JoinSquadChannel(PlayerReplicationInfo PRI, int TeamIndex, int SquadInd
         VCR.AddMember(PRI);
     }
 
-    // Leave UNASSIGNED Channel
     LeaveUnassignedChannel(PRI, TeamIndex);
 }
 
@@ -136,9 +130,13 @@ function VerifyTeamChatters()
     for (P = Level.ControllerList; P != none; P = P.NextController)
     {
         PC = PlayerController(P);
-        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
-        if (PC != none && P.PlayerReplicationInfo != none && P.PlayerReplicationInfo.Team != none && PRI != none)
+        if (PC != none)
+        {
+            PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+        }
+
+        if (PRI != none && P.PlayerReplicationInfo != none && P.PlayerReplicationInfo.Team != none)
         {
             if (P.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
             {
@@ -203,5 +201,7 @@ defaultproperties
     PublicChannelNames(17)="Squad"
     PublicChannelNames(18)="Squad"
     PublicChannelNames(19)="Squad"
+
+    LocalBroadcastRange=1500
 }
 

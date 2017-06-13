@@ -65,7 +65,7 @@ simulated event bool IsMember(PlayerReplicationInfo PRI, optional bool bNoCascad
                     CheckPawn = PlayerController(MyPRI.Owner).Pawn;
                 }
 
-                if (OwnerPawn != none && CheckPawn != none && VSizeSquared(OwnerPawn.Location - CheckPawn.Location) < class'DHUnits'.static.MetersToUnreal(20))
+                if (OwnerPawn != none && CheckPawn != none && VSizeSquared(OwnerPawn.Location - CheckPawn.Location) < Square(class'DHVoiceReplicationInfo'.default.LocalBroadcastRange))
                 {
                     Log ("This channel's index is: " $ ChannelIndex);
                     return true;
@@ -102,15 +102,11 @@ simulated function array<PlayerReplicationInfo> GetMembers()
 
     if (GRI != none && ValidMask())
     {
-        for (i = 0; i < GRI.PRIArray.length; ++i)
+        for (i = 0; i < GRI.PRIArray.Length; ++i)
         {
-            if (IsMember(GRI.PRIArray[i]))
+            if (IsMember(GRI.PRIArray[i]) || (IsPrivateChannel() && GRI.PRIArray[i].Team != none && GRI.PRIArray[i].Team.TeamIndex == GetTeam()))
             {
-                PRIArray[PRIArray.length] = GRI.PRIArray[i];
-            }
-            else if (IsPrivateChannel() && GRI.PRIArray[i].Team != none && GRI.PRIArray[i].Team.TeamIndex == GetTeam())
-            {
-                PRIArray[PRIArray.length] = GRI.PRIArray[i];
+                PRIArray[PRIArray.Length] = GRI.PRIArray[i];
             }
         }
     }

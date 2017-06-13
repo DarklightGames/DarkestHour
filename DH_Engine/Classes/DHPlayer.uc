@@ -4518,7 +4518,7 @@ exec function Speak(string ChannelTitle)
     {
         VRI = DHVoiceReplicationInfo(VoiceReplicationInfo);
 
-        if (VRI != none)
+        if (VRI != none && PRI != none)
         {
             VCR = VRI.GetSquadChannel(GetTeamNum(), PRI.SquadIndex);
 
@@ -4533,11 +4533,14 @@ exec function Speak(string ChannelTitle)
         VRI = DHVoiceReplicationInfo(VoiceReplicationInfo);
 
         // Hack, instead of speaking in local channel, lets speak in our own private channel (which acts as local)
-        VCR = VRI.GetPrivateChannel(PRI);
-
-        if (VCR == none)
+        if (VRI != none && PRI != none)
         {
-            return;
+            VCR = VRI.GetChannel(PRI.PlayerName, PRI.Team.TeamIndex);
+
+            if (VCR == none)
+            {
+                return;
+            }
         }
     }
     else if (ChannelTitle ~= "UNASSIGNED" && PRI.IsInSquad())

@@ -2445,7 +2445,7 @@ function SetTeamNum(byte NewTeam)
         TeamChanged();
     }
 
-    for (i = 0; i < WeaponPawns.length; ++i)
+    for (i = 0; i < WeaponPawns.Length; ++i)
     {
         if (WeaponPawns[i] != none)
         {

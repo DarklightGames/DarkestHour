@@ -801,7 +801,7 @@ simulated function AddPRI(PlayerReplicationInfo PRI)
 
     if (Level.NetMode == NM_ListenServer || Level.NetMode == NM_DedicatedServer)
     {
-        for (i = 0; i < PRIArray.Length; i++)
+        for (i = 0; i < PRIArray.Length; ++i)
         {
             if (PRIArray[i].VoiceID == NewVoiceID)
             {
