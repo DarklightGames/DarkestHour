@@ -4603,6 +4603,8 @@ defaultproperties
     bTimeChangesAtZeroReinf=true
     bPublicPlay=true
 
+    DefaultVoiceChannel="Unassigned"
+
     WeaponLockTimes(0)=0
     WeaponLockTimes(1)=2
     WeaponLockTimes(2)=5

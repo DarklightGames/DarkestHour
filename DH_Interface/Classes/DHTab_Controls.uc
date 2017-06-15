@@ -93,6 +93,12 @@ defaultproperties
     ControlProfiles(2)="Contemporary"
     ControlProfiles(3)="Recommended"
 
+    bindings_comm(6)="Speak Command"
+    captions_comm(6)="Switch to Command Voice Channel"
+    bindings_comm(7)="Speak Local"
+    captions_comm(7)="Switch to Local Voice Channel"
+    bindings_comm(8)="Speak Unassigned"
+    captions_comm(8)="Switch to Unassigned Voice Channel"
     bindings_comm(9)="SquadTalk"
     captions_comm(9)="Squad Say"
 
@@ -164,7 +170,7 @@ defaultproperties
     // Profile Bindings
     //****************
     // default (With DH fixes) this always gets applied before another profile
-    ControlProfileBindings(1)=(KeyNames=("Tab","GreyMinus","F2","F3","Minus","Equals","I","Insert","Capslock"),KeyValues=("ScoreToggle","CommunicationMenu","ShowVoteMenu","CommunicationMenu","","","SquadTalk","Speak Squad","ShowOrderMenu | OnRelease HideOrderMenu"))
+    ControlProfileBindings(1)=(KeyNames=("Tab","GreyMinus","F2","F3","Minus","Equals","I","Insert","Capslock","Home","End"),KeyValues=("ScoreToggle","CommunicationMenu","ShowVoteMenu","CommunicationMenu","","","SquadTalk","Speak Squad","ShowOrderMenu | OnRelease HideOrderMenu","Speak Command","Speak Unassigned"))
     // Contemporary
     ControlProfileBindings(2)=(KeyNames=("F","Z","V","RightMouse","MiddleMouse"),KeyValues=("Use","Prone","Deploy","ROIronSights","AltFire"))
     // Recommended

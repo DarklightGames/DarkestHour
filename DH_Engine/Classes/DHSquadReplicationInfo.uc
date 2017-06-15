@@ -538,7 +538,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
 
         if (SquadVCR != none)
         {
-            TeamVCR = VRI.GetChannel("Team", TeamIndex);
+            TeamVCR = VRI.GetChannel("Unassigned", TeamIndex);
 
             // Change the player's voice channel to the "team" channel.
             Level.Game.ChangeVoiceChannel(PRI, TeamVCR.ChannelIndex, SquadVCR.ChannelIndex);

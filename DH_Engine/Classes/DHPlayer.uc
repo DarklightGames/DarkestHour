@@ -4518,7 +4518,7 @@ exec function Speak(string ChannelTitle)
     {
         VRI = DHVoiceReplicationInfo(VoiceReplicationInfo);
 
-        if (VRI != none)
+        if (VRI != none && PRI != none)
         {
             VCR = VRI.GetSquadChannel(GetTeamNum(), PRI.SquadIndex);
 
@@ -4527,6 +4527,31 @@ exec function Speak(string ChannelTitle)
                 return;
             }
         }
+    }
+    else if (ChannelTitle ~= "LOCAL")
+    {
+        VRI = DHVoiceReplicationInfo(VoiceReplicationInfo);
+
+        // Hack, instead of speaking in local channel, lets speak in our own private channel (which acts as local)
+        if (VRI != none && PRI != none)
+        {
+            VCR = VRI.GetChannel(PRI.PlayerName, PRI.Team.TeamIndex);
+
+            if (VCR == none)
+            {
+                return;
+            }
+        }
+    }
+    else if (ChannelTitle ~= "UNASSIGNED" && PRI.IsInSquad())
+    {
+        // If we are trying to speak in unassigned and we are in a squad, then return out
+        return;
+    }
+    else if (ChannelTitle ~= "COMMAND" && !PRI.IsSquadLeader())
+    {
+        // Don't let non squad leaders speak in command
+        return;
     }
     else
     {
@@ -4918,6 +4943,78 @@ function bool TeleportPlayer(vector SpawnLocation, rotator SpawnRotation)
     }
 
     return false;
+}
+
+// Modified to allow for switching to a channel the user is already a member of (for private channels)
+function ServerSpeak(int ChannelIndex, optional string ChannelPassword)
+{
+    local VoiceChatRoom VCR;
+    local int Index;
+
+    if (VoiceReplicationInfo == none)
+    {
+        return;
+    }
+
+    VCR = VoiceReplicationInfo.GetChannelAt(ChannelIndex);
+
+    if (VCR == none)
+    {
+        if (VoiceReplicationInfo.bEnableVoiceChat)
+        {
+            ChatRoomMessage(0, ChannelIndex);
+        }
+        else
+        {
+            ChatRoomMessage(15, ChannelIndex);
+        }
+
+        return;
+    }
+
+    if (!VCR.IsMember(PlayerReplicationInfo) && VCR.IsPublicChannel())
+    {
+        if (ServerJoinVoiceChannel(ChannelIndex, ChannelPassword) != JCR_Success)
+        {
+            return;
+        }
+    }
+
+    Index = -1;
+    ActiveRoom = VCR;
+    Log(PlayerReplicationInfo.PlayerName@"speaking on"@VCR.GetTitle(),'VoiceChat');
+    ChatRoomMessage(9, ChannelIndex);
+    ClientSetActiveRoom(VCR.ChannelIndex);
+    Index = VCR.ChannelIndex;
+
+    if (PlayerReplicationInfo != none)
+    {
+        PlayerReplicationinfo.ActiveChannel = Index;
+    }
+}
+
+simulated event ChatRoomMessage(byte Result, int ChannelIndex, optional PlayerReplicationInfo RelatedPRI)
+{
+    local VoiceChatRoom     VCR;
+
+    if (VoiceReplicationInfo != none && ChatRoomMessageClass != none)
+    {
+        VCR = VoiceReplicationInfo.GetChannelAt(ChannelIndex);
+
+        if (VCR == none)
+        {
+            return;
+        }
+
+        if (!VCR.IsPrivateChannel())
+        {
+            ClientMessage(ChatRoomMessageClass.static.AssembleMessage(Result, VCR.GetTitle(), RelatedPRI));
+        }
+        else
+        {
+            ClientMessage(ChatRoomMessageClass.static.AssembleMessage(Result, class'DHVoiceReplicationInfo'.default.PublicChannelNames[1], RelatedPRI));
+        }
+    }
 }
 
 defaultproperties

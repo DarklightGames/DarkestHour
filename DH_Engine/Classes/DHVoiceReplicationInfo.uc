@@ -91,6 +91,18 @@ function LeaveSquadChannel(PlayerReplicationInfo PRI, int TeamIndex, int SquadIn
     VCR.RemoveMember(PRI);
 }
 
+function LeaveUnassignedChannel(PlayerReplicationInfo PRI, int TeamIndex)
+{
+    local VoiceChatRoom VCR;
+
+    VCR = GetChannel("Unassigned", TeamIndex);
+
+    if (VCR != none)
+    {
+        VCR.RemoveMember(PRI);
+    }
+}
+
 function JoinSquadChannel(PlayerReplicationInfo PRI, int TeamIndex, int SquadIndex)
 {
     local VoiceChatRoom VCR;
@@ -101,6 +113,8 @@ function JoinSquadChannel(PlayerReplicationInfo PRI, int TeamIndex, int SquadInd
     {
         VCR.AddMember(PRI);
     }
+
+    LeaveUnassignedChannel(PRI, TeamIndex);
 }
 
 // Colin: Modified to remove the annoying log that would be called whenever
@@ -111,12 +125,18 @@ function VerifyTeamChatters()
     local VoiceChatRoom ChatChannel, FixedChannel;
     local int OpposingIndex;
     local PlayerController PC;
+    local DHPlayerReplicationInfo PRI;
 
     for (P = Level.ControllerList; P != none; P = P.NextController)
     {
         PC = PlayerController(P);
 
-        if (PC != none && P.PlayerReplicationInfo != none && P.PlayerReplicationInfo.Team != none)
+        if (PC != none)
+        {
+            PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+        }
+
+        if (PRI != none && P.PlayerReplicationInfo != none && P.PlayerReplicationInfo.Team != none)
         {
             if (P.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
             {
@@ -131,11 +151,17 @@ function VerifyTeamChatters()
                 continue;
             }
 
-            ChatChannel = GetChannel("Team", OpposingIndex);
+            ChatChannel = GetChannel("Unassigned", OpposingIndex);
+
+            // If player is already in a squad, then ignore
+            if (PRI.IsInSquad())
+            {
+                continue;
+            }
 
             if (ChatChannel.IsMember(P.PlayerReplicationInfo))
             {
-                FixedChannel = GetChannel("Team", P.PlayerReplicationInfo.Team.TeamIndex);
+                FixedChannel = GetChannel("Unassigned", P.PlayerReplicationInfo.Team.TeamIndex);
 
                 Level.Game.ChangeVoiceChannel(P.PlayerReplicationInfo, FixedChannel.ChannelIndex, ChatChannel.ChannelIndex);
 
@@ -155,7 +181,10 @@ defaultproperties
 {
     ChatRoomClass=class'DH_Engine.DHVoiceChatRoom'
     ChatBroadcastClass=class'DH_Engine.DHChatHandler'
-    PublicChannelNames(3)="Team"
+    PublicChannelNames(0)="Command"
+    PublicChannelNames(1)="Local"
+    PublicChannelNames(2)="Unassigned" //Axis
+    PublicChannelNames(3)="Unassigned" //Allies
     PublicChannelNames(4)="Squad"
     PublicChannelNames(5)="Squad"
     PublicChannelNames(6)="Squad"
@@ -172,5 +201,7 @@ defaultproperties
     PublicChannelNames(17)="Squad"
     PublicChannelNames(18)="Squad"
     PublicChannelNames(19)="Squad"
+
+    LocalBroadcastRange=1500 // Distance in UUs
 }
 
