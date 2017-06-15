@@ -67,7 +67,6 @@ simulated event bool IsMember(PlayerReplicationInfo PRI, optional bool bNoCascad
 
                 if (OwnerPawn != none && CheckPawn != none && VSizeSquared(OwnerPawn.Location - CheckPawn.Location) < Square(class'DHVoiceReplicationInfo'.default.LocalBroadcastRange))
                 {
-                    Log ("This channel's index is: " $ ChannelIndex);
                     return true;
                 }
                 else

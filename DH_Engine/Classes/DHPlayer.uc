@@ -4945,6 +4945,54 @@ function bool TeleportPlayer(vector SpawnLocation, rotator SpawnRotation)
     return false;
 }
 
+// Modified to allow for switching to a channel the user is already a member of (for private channels)
+function ServerSpeak(int ChannelIndex, optional string ChannelPassword)
+{
+    local VoiceChatRoom VCR;
+    local int Index;
+
+    if (VoiceReplicationInfo == none)
+    {
+        return;
+    }
+
+    VCR = VoiceReplicationInfo.GetChannelAt(ChannelIndex);
+
+    if (VCR == none)
+    {
+        if (VoiceReplicationInfo.bEnableVoiceChat)
+        {
+            ChatRoomMessage(0, ChannelIndex);
+        }
+        else
+        {
+            ChatRoomMessage(15, ChannelIndex);
+        }
+
+        return;
+    }
+
+    if (!VCR.IsMember(PlayerReplicationInfo) && VCR.IsPublicChannel())
+    {
+        if (ServerJoinVoiceChannel(ChannelIndex, ChannelPassword) != JCR_Success)
+        {
+            return;
+        }
+    }
+
+    Index = -1;
+    ActiveRoom = VCR;
+    Log(PlayerReplicationInfo.PlayerName@"speaking on"@VCR.GetTitle(),'VoiceChat');
+    ChatRoomMessage(9, ChannelIndex);
+    ClientSetActiveRoom(VCR.ChannelIndex);
+    Index = VCR.ChannelIndex;
+
+    if (PlayerReplicationInfo != none)
+    {
+        PlayerReplicationinfo.ActiveChannel = Index;
+    }
+}
+
 defaultproperties
 {
     // Sway values
