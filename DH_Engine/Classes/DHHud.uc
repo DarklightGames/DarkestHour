@@ -912,7 +912,15 @@ simulated function DrawHudPassC(Canvas C)
             // Draw second line of text
             if (VCR != none)
             {
-                PortraitText[1].Text = "(" @ VCR.GetTitle() @ ")";
+                // If it is a public channel display its title normally
+                if (!VCR.IsPrivateChannel())
+                {
+                    PortraitText[1].Text = "(" @ VCR.GetTitle() @ ")";
+                }
+                else // Private channels will be displayed as "Local" (way to make private channels look like a single local channel)
+                {
+                    PortraitText[1].Text = "(" @ class'DHVoiceReplicationInfo'.default.PublicChannelNames[1] @ ")";
+                }
             }
             else
             {
@@ -5061,14 +5069,20 @@ function DisplayVoiceGain(Canvas C)
 
         if (VCR != none)
         {
-            ActiveName = VCR.GetTitle();
+            // If it is a public channel display its title normally
+            if (!VCR.IsPrivateChannel())
+            {
+                ActiveName = VCR.GetTitle();
+            }
+            else // Private channels will be displayed as "Local" (way to make private channels look like a single local channel)
+            {
+                ActiveName = class'DHVoiceReplicationInfo'.default.PublicChannelNames[1];
+            }
         }
-    }
-
-    // Display name of currently active channel
-    if (PlayerOwner != none && PlayerOwner.ActiveRoom != none)
-    {
-        ActiveName = PlayerOwner.ActiveRoom.GetTitle();
+        else if (PlayerOwner.ActiveRoom != none)
+        {
+            ActiveName = PlayerOwner.ActiveRoom.GetTitle();
+        }
     }
 
     // Remove for release

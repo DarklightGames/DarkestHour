@@ -4993,6 +4993,30 @@ function ServerSpeak(int ChannelIndex, optional string ChannelPassword)
     }
 }
 
+simulated event ChatRoomMessage(byte Result, int ChannelIndex, optional PlayerReplicationInfo RelatedPRI)
+{
+    local VoiceChatRoom     VCR;
+
+    if (VoiceReplicationInfo != none && ChatRoomMessageClass != none)
+    {
+        VCR = VoiceReplicationInfo.GetChannelAt(ChannelIndex);
+
+        if (VCR == none)
+        {
+            return;
+        }
+
+        if (!VCR.IsPrivateChannel())
+        {
+            ClientMessage(ChatRoomMessageClass.static.AssembleMessage(Result, VCR.GetTitle(), RelatedPRI));
+        }
+        else
+        {
+            ClientMessage(ChatRoomMessageClass.static.AssembleMessage(Result, class'DHVoiceReplicationInfo'.default.PublicChannelNames[1], RelatedPRI));
+        }
+    }
+}
+
 defaultproperties
 {
     // Sway values
