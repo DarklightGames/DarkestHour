@@ -4592,7 +4592,7 @@ defaultproperties
         Major=8
         Minor=0
         Patch=0
-        Prerelease="dev"
+        Prerelease="alpha"
     End Object
     Version=VersionObject
 
