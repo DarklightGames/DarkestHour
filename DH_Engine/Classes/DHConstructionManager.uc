@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHConstructionManager extends Object;
+class DHConstructionManager extends Actor
+    notplaceable;
 
 var private array<DHConstruction> Constructions;
 
@@ -59,3 +60,8 @@ function array<DHConstruction> GetConstructions()
     return Constructions;
 }
 
+defaultproperties
+{
+    RemoteRole=ROLE_None
+    bHidden=true
+}
