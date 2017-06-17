@@ -5006,6 +5006,12 @@ simulated event ChatRoomMessage(byte Result, int ChannelIndex, optional PlayerRe
             return;
         }
 
+        // Do not send client message globally for each player (probably should be in the AssembleMessage() function, but want to avoid overriding that)
+        if (Result == 11)
+        {
+            return;
+        }
+
         if (!VCR.IsPrivateChannel())
         {
             ClientMessage(ChatRoomMessageClass.static.AssembleMessage(Result, VCR.GetTitle(), RelatedPRI));
