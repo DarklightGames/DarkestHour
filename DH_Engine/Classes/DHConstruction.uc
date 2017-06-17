@@ -244,12 +244,12 @@ Begin:
 
 simulated event Destroyed()
 {
-    super.Destroyed();
-
     if (Manager != none)
     {
         Manager.Unregister(self);
     }
+
+    super.Destroyed();
 }
 
 auto simulated state Constructing

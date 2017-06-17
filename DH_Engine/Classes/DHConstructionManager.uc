@@ -9,12 +9,30 @@ var private array<DHConstruction> Constructions;
 
 function Register(DHConstruction C)
 {
+    local int i;
+
+    for (i = 0; i < Constructions.Length; ++i)
+    {
+        if (Constructions[i] == C)
+        {
+            return;
+        }
+    }
+
     Constructions[Constructions.Length] = C;
 }
 
 function Unregister(DHConstruction C)
 {
-    class'UArray'.static.Erase(Constructions, C);
+    local int i;
+
+    for (i = Constructions.Length - 1; i >= 0; --i)
+    {
+        if (Constructions[i] == C)
+        {
+            Constructions.Remove(i, 1);
+        }
+    }
 }
 
 function int CountOf(int TeamIndex, class<DHConstruction> ConstructionClass)
@@ -40,5 +58,4 @@ function array<DHConstruction> GetConstructions()
 {
     return Constructions;
 }
-
 
