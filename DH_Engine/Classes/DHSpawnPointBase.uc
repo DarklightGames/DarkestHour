@@ -195,7 +195,7 @@ function GetPlayerCountsWithinRadius(float RadiusInMeters, optional int SquadInd
     }
 }
 
-final function int GetTeamIndex()
+simulated final function int GetTeamIndex()
 {
     return TeamIndex;
 }
