@@ -35,49 +35,46 @@ simulated event bool IsMember(PlayerReplicationInfo PRI, optional bool bNoCascad
 
     MyPRI = DHPlayerReplicationInfo(PRI);
 
-    if (Level.Game != none)
+    if (PRI.Team != none && PRI.Team.TeamIndex == GetTeam())
     {
-        if (PRI.Team != none && PRI.Team.TeamIndex == GetTeam())
+        if (IsSquadChannel())
         {
-            if (IsSquadChannel())
+            return MyPRI != none && MyPRI.SquadIndex == SquadIndex;
+        }
+        else if (IsCommandChannel() && MyPRI.IsSquadLeader())
+        {
+            return true;
+        }
+        else if (!IsSquadChannel() && MyPRI.IsInSquad())
+        {
+            return false;
+        }
+        else if (IsPrivateChannel())
+        {
+            // Get owner pawn
+            if (PlayerReplicationInfo(Owner) != none && PlayerReplicationInfo(Owner).Owner != none && PlayerController(PlayerReplicationInfo(Owner).Owner).Pawn != none)
             {
-                return MyPRI != none && MyPRI.SquadIndex == SquadIndex;
+                OwnerPawn = PlayerController(PlayerReplicationInfo(Owner).Owner).Pawn;
             }
-            else if (IsCommandChannel() && MyPRI.IsSquadLeader())
+
+            // Get CheckPawn
+            if (MyPRI != none && MyPRI.Owner != none && PlayerController(MyPRI.Owner).Pawn != none)
+            {
+                CheckPawn = PlayerController(MyPRI.Owner).Pawn;
+            }
+
+            if (OwnerPawn != none && CheckPawn != none && VSizeSquared(OwnerPawn.Location - CheckPawn.Location) < Square(class'DHVoiceReplicationInfo'.default.LocalBroadcastRange))
             {
                 return true;
-            }
-            else if (!IsSquadChannel() && MyPRI.IsInSquad())
-            {
-                return false;
-            }
-            else if (IsPrivateChannel())
-            {
-                // Get owner pawn
-                if (PlayerReplicationInfo(Owner) != none && PlayerReplicationInfo(Owner).Owner != none && PlayerController(PlayerReplicationInfo(Owner).Owner).Pawn != none)
-                {
-                    OwnerPawn = PlayerController(PlayerReplicationInfo(Owner).Owner).Pawn;
-                }
-
-                // Get CheckPawn
-                if (MyPRI != none && MyPRI.Owner != none && PlayerController(MyPRI.Owner).Pawn != none)
-                {
-                    CheckPawn = PlayerController(MyPRI.Owner).Pawn;
-                }
-
-                if (OwnerPawn != none && CheckPawn != none && VSizeSquared(OwnerPawn.Location - CheckPawn.Location) < Square(class'DHVoiceReplicationInfo'.default.LocalBroadcastRange))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
             }
             else
             {
-                return true;
+                return false;
             }
+        }
+        else
+        {
+            return true;
         }
     }
 
@@ -99,7 +96,7 @@ simulated function array<PlayerReplicationInfo> GetMembers()
     local array<PlayerReplicationInfo>      PRIArray;
     local int                               i;
 
-    if (GRI != none && ValidMask())
+    if (GRI != none)
     {
         for (i = 0; i < GRI.PRIArray.Length; ++i)
         {
