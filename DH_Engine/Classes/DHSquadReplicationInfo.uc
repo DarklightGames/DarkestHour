@@ -201,6 +201,8 @@ function Timer()
             // Count how many active are non-blocked, if it's more than
             // the maximum allowed, block the oldest ones (their block-state
             // will be overwritten by Step on the next timer pop)
+            UnblockedCount = 0;
+
             for (i = ActiveSquadRallyPoints.Length - 1; i >= 0; --i)
             {
                 if (!ActiveSquadRallyPoints[i].IsBlocked())
