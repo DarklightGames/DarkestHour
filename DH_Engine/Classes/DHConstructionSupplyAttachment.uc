@@ -166,8 +166,8 @@ function bool Resupply()
 
 defaultproperties
 {
-    SupplyCount=1000
-    SupplyCountMax=1000
+    SupplyCount=2000
+    SupplyCountMax=2000
     TouchDistanceInMeters=50
     RemoteRole=ROLE_DumbProxy
 }
