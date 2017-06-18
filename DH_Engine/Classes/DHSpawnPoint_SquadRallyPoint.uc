@@ -42,6 +42,11 @@ replication
         SquadIndex, RallyPointIndex, SpawnsRemaining;
 }
 
+function Reset()
+{
+    Destroy();
+}
+
 function PostBeginPlay()
 {
     super.PostBeginPlay();
