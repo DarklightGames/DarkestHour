@@ -4510,7 +4510,7 @@ exec function Speak(string ChannelTitle)
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
     VRI = DHVoiceReplicationInfo(VoiceReplicationInfo);
 
-    if (VRI != none && PRI != none)
+    if (VRI == none && PRI == none)
     {
         return;
     }
