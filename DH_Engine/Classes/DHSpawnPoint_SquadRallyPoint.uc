@@ -352,14 +352,14 @@ defaultproperties
     TeamIndex=-1
     SquadIndex=-1
     RallyPointIndex=-1
-    SpawnsRemaining=9
+    SpawnsRemaining=15
     CreationSound=Sound'Inf_Player.Gibimpact.Gibimpact'
     EncroachmentRadiusInMeters=25
     EncroachmentPenaltyBlockThreshold=10
     EncroachmentPenaltyOverrunThreshold=30
     OverrunRadiusInMeters=10
     EstablishmentRadiusInMeters=25
-    EstablishmentCounterThreshold=60
+    EstablishmentCounterThreshold=30
     OverrunMinimumTimeSeconds=15
     bHidden=false
     bCanSendAbandonmentWarningMessage=true

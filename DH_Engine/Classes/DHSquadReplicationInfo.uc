@@ -1620,5 +1620,5 @@ defaultproperties
     AxisDefaultSquadNames(6)="Gustav"
     AxisDefaultSquadNames(7)="Heinrich"
     SquadMessageClass=class'DHSquadMessage'
-    NextRallyPointInterval=120
+    NextRallyPointInterval=60
 }
