@@ -6,6 +6,8 @@
 class DHVoiceChatRoom extends UnrealChatRoom;
 
 var int SquadIndex;
+var float LocalBroadcastRangeSquared;
+
 
 // Called after LeaveChannel, or when player exits the server
 // NOTE: overridden to eliminate "has left channel" chat messages
@@ -22,73 +24,92 @@ simulated function bool IsSquadChannel()
     return SquadIndex >= 0;
 }
 
-simulated function bool IsCommandChannel()
+simulated function bool IsAxisCommandChannel()
 {
     return ChannelIndex == 0;
+}
+
+simulated function bool IsAlliesCommandChannel()
+{
+    return ChannelIndex == 1;
+}
+
+simulated function bool IsUnassignedChannel()
+{
+    return ChannelIndex == 2 || ChannelIndex == 3;
 }
 
 simulated event bool IsMember(PlayerReplicationInfo PRI, optional bool bNoCascade)
 {
     local DHPlayerReplicationInfo   MyPRI;
     local Pawn                      OwnerPawn, CheckPawn;
-    //local DHPlayer                  PC;
+    local PlayerController          OwnerPC;
+    local PlayerReplicationInfo     OwnerPRI;
 
-    MyPRI = DHPlayerReplicationInfo(PRI);
-
-    if (PRI.Team != none && PRI.Team.TeamIndex == GetTeam())
+    if (PRI != none)
     {
-        if (IsSquadChannel())
+        MyPRI = DHPlayerReplicationInfo(PRI);
+    }
+
+    if (MyPRI != none && MyPRI.Team != none && MyPRI.Team.TeamIndex == GetTeam())
+    {
+        if (IsSquadChannel() && MyPRI.SquadIndex == SquadIndex)
         {
-            return MyPRI != none && MyPRI.SquadIndex == SquadIndex;
-        }
-        else if (IsCommandChannel() && MyPRI.IsSquadLeader())
-        {
+            // If the channel is squad and is the right squad index, then return true
             return true;
         }
-        else if (!IsSquadChannel() && MyPRI.IsInSquad())
+        else if (IsAlliesCommandChannel() && MyPRI.IsSquadLeader() && MyPRI.Team.TeamIndex == ALLIES_TEAM_INDEX)
         {
-            return false;
+            // If its the Allied command channel and player is a SL and player is on Allies, then return true
+            return true;
+        }
+        else if (IsAxisCommandChannel() && MyPRI.IsSquadLeader() && MyPRI.Team.TeamIndex == AXIS_TEAM_INDEX)
+        {
+            // If its the Axis command channel and player is a SL and player is on Axis, then return true
+            return true;
         }
         else if (IsPrivateChannel())
         {
-            // Get owner pawn
-            if (PlayerReplicationInfo(Owner) != none && PlayerReplicationInfo(Owner).Owner != none && PlayerController(PlayerReplicationInfo(Owner).Owner).Pawn != none)
+            // Okay this channel is a private channel, which means it has an owner, which then we can compare team with
+            // Then we can compare distance between pawns (and that they have pawns)
+
+            // Begin establishing the Owner variables and do null checks
+            OwnerPRI = PlayerReplicationInfo(Owner);
+
+            if (OwnerPRI != none && PlayerController(OwnerPRI.Owner) != none)
             {
-                OwnerPawn = PlayerController(PlayerReplicationInfo(Owner).Owner).Pawn;
+                OwnerPC = PlayerController(OwnerPRI.Owner);
             }
 
-            // Get CheckPawn
-            if (MyPRI != none && MyPRI.Owner != none && PlayerController(MyPRI.Owner).Pawn != none)
+            if (OwnerPC != none)
+            {
+                OwnerPawn = OwnerPC.Pawn;
+            }
+
+            // Check for null variables
+            if (OwnerPRI == none || OwnerPC == none || OwnerPawn == none)
+            {
+                return false;
+            }
+
+            // Get the checked player's pawn
+            if (MyPRI != none && PlayerController(MyPRI.Owner) != none)
             {
                 CheckPawn = PlayerController(MyPRI.Owner).Pawn;
             }
 
-            if (OwnerPawn != none && CheckPawn != none && VSizeSquared(OwnerPawn.Location - CheckPawn.Location) < Square(class'DHVoiceReplicationInfo'.default.LocalBroadcastRange))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            // Now do a check on the pawn distance and return results
+            return CheckPawn != none && VSizeSquared(OwnerPawn.Location - CheckPawn.Location) < LocalBroadcastRangeSquared;
         }
-        else
+        else if (IsUnassignedChannel() && !MyPRI.IsInSquad())
         {
+            // If this is an unassigned channel and we are NOT in a squad, then return true
             return true;
         }
     }
 
-    if (super(VoiceChatRoom).IsMember(PRI, bNoCascade))
-    {
-        return true;
-    }
-
-    if (!ValidMask() || PRI == none || PRI.VoiceID == 255)
-    {
-        return false;
-    }
-
-    return bool(GetMask() & (1 << PRI.VoiceID));
+    // Any other case, return false
+    return false;
 }
 
 simulated function array<PlayerReplicationInfo> GetMembers()
@@ -113,5 +134,6 @@ simulated function array<PlayerReplicationInfo> GetMembers()
 defaultproperties
 {
     SquadIndex=-1
+    LocalBroadcastRangeSquared=4000000.0
 }
 

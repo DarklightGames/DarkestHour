@@ -919,7 +919,7 @@ simulated function DrawHudPassC(Canvas C)
                 }
                 else // Private channels will be displayed as "Local" (way to make private channels look like a single local channel)
                 {
-                    PortraitText[1].Text = "(" @ class'DHVoiceReplicationInfo'.default.PublicChannelNames[1] @ ")";
+                    PortraitText[1].Text = "(" @ class'DHVoiceReplicationInfo'.default.LocalChannelText @ ")";
                 }
             }
             else
@@ -5076,7 +5076,7 @@ function DisplayVoiceGain(Canvas C)
             }
             else // Private channels will be displayed as "Local" (way to make private channels look like a single local channel)
             {
-                ActiveName = class'DHVoiceReplicationInfo'.default.PublicChannelNames[1];
+                ActiveName = class'DHVoiceReplicationInfo'.default.LocalChannelText;
             }
         }
         else if (PlayerOwner.ActiveRoom != none)

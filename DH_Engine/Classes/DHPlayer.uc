@@ -5018,7 +5018,7 @@ simulated event ChatRoomMessage(byte Result, int ChannelIndex, optional PlayerRe
         }
         else
         {
-            ClientMessage(ChatRoomMessageClass.static.AssembleMessage(Result, class'DHVoiceReplicationInfo'.default.PublicChannelNames[1], RelatedPRI));
+            ClientMessage(ChatRoomMessageClass.static.AssembleMessage(Result, class'DHVoiceReplicationInfo'.default.LocalChannelText, RelatedPRI));
         }
     }
 }

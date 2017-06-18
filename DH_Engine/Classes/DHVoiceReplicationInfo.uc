@@ -10,6 +10,8 @@ const SQUAD_CHANNELS_MAX = 8;
 var     VoiceChatRoom   AxisSquadChannels[SQUAD_CHANNELS_MAX];
 var     VoiceChatRoom   AlliesSquadChannels[SQUAD_CHANNELS_MAX];
 
+var localized string        LocalChannelText;
+
 replication
 {
     reliable if ((bNetDirty || bNetInitial) && Role == ROLE_Authority)
@@ -37,9 +39,37 @@ simulated function VoiceChatRoom GetSquadChannel(int TeamIndex, int SquadIndex)
 simulated event InitChannels()
 {
     local int i;
+    local VoiceChatRoom VCR;
 
-    super.InitChannels();
+    // Axis Command Channel
+    VCR = AddVoiceChannel();
+    if (VCR != none)
+    {
+        VCR.SetTeam(AXIS_TEAM_INDEX);
+    }
 
+    // Allied Command Channel
+    VCR = AddVoiceChannel();
+    if (VCR != none)
+    {
+        VCR.SetTeam(ALLIES_TEAM_INDEX);
+    }
+
+    // Axis Unassigned Channel
+    VCR = AddVoiceChannel();
+    if (VCR != none)
+    {
+        VCR.SetTeam(AXIS_TEAM_INDEX);
+    }
+
+    // Allied Unassigned Channel
+    VCR = AddVoiceChannel();
+    if (VCR != none)
+    {
+        VCR.SetTeam(ALLIES_TEAM_INDEX);
+    }
+
+    // Squad Channels
     for (i = 0; i < arraycount(AxisSquadChannels); ++i)
     {
         AddSquadChannel(AXIS_TEAM_INDEX, i);
@@ -181,8 +211,9 @@ defaultproperties
 {
     ChatRoomClass=class'DH_Engine.DHVoiceChatRoom'
     ChatBroadcastClass=class'DH_Engine.DHChatHandler'
-    PublicChannelNames(0)="Command"
-    PublicChannelNames(1)="Local"
+    LocalChannelText="Local"
+    PublicChannelNames(0)="Command" //Axis
+    PublicChannelNames(1)="Command" //Allies
     PublicChannelNames(2)="Unassigned" //Axis
     PublicChannelNames(3)="Unassigned" //Allies
     PublicChannelNames(4)="Squad"
@@ -201,7 +232,5 @@ defaultproperties
     PublicChannelNames(17)="Squad"
     PublicChannelNames(18)="Squad"
     PublicChannelNames(19)="Squad"
-
-    LocalBroadcastRange=1500 // Distance in UUs
 }
 
