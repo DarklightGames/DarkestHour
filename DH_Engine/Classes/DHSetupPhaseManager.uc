@@ -201,8 +201,10 @@ auto state Timing
         // Now scale the reinforcements if desired
         if (bScaleStartingReinforcements)
         {
-            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = G.LevelInfo.Allies.SpawnLimit * FMax(0.1, (G.NumPlayers / G.MaxPlayers));
-            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = G.LevelInfo.Axis.SpawnLimit * FMax(0.1, (G.NumPlayers / G.MaxPlayers));
+            // Theel: Work in progress (this will need tweaked and probably put on a curve)
+            // We want to reduce reinforcements for when there are only 5-6 players quite a bit, but with 20-40 not reduce much and none at all with 50+
+            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = G.LevelInfo.Allies.SpawnLimit * FMax(0.1, (Min(G.NumPlayers + 20, G.MaxPlayers) / G.MaxPlayers));
+            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = G.LevelInfo.Axis.SpawnLimit * FMax(0.1, (Min(G.NumPlayers + 20, G.MaxPlayers) / G.MaxPlayers));
         }
 
         // Deactivate any initial spawn points
