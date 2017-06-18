@@ -4508,6 +4508,12 @@ exec function Speak(string ChannelTitle)
     }
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    VRI = DHVoiceReplicationInfo(VoiceReplicationInfo);
+
+    if (VRI != none && PRI != none)
+    {
+        return;
+    }
 
     // Colin: Hard-coding this, unfortunately, because we need to have the
     // player be able to join just by executing "Speak Squad". We can't
@@ -4516,41 +4522,20 @@ exec function Speak(string ChannelTitle)
     // put in a sneaky little hack.
     if (ChannelTitle ~= "SQUAD")
     {
-        VRI = DHVoiceReplicationInfo(VoiceReplicationInfo);
-
-        if (VRI != none && PRI != none)
-        {
-            VCR = VRI.GetSquadChannel(GetTeamNum(), PRI.SquadIndex);
-
-            if (VCR == none)
-            {
-                return;
-            }
-        }
+        VCR = VRI.GetSquadChannel(GetTeamNum(), PRI.SquadIndex);
     }
     else if (ChannelTitle ~= "LOCAL")
     {
-        VRI = DHVoiceReplicationInfo(VoiceReplicationInfo);
-
-        // Hack, instead of speaking in local channel, lets speak in our own private channel (which acts as local)
-        if (VRI != none && PRI != none)
-        {
-            VCR = VRI.GetChannel(PRI.PlayerName, PRI.Team.TeamIndex);
-
-            if (VCR == none)
-            {
-                return;
-            }
-        }
+        VCR = VRI.GetChannel(PRI.PlayerName, PRI.Team.TeamIndex);
     }
     else if (ChannelTitle ~= "UNASSIGNED" && PRI.IsInSquad())
     {
-        // If we are trying to speak in unassigned and we are in a squad, then return out
+        // If we are trying to speak in unassigned but we are in a squad, then return out
         return;
     }
     else if (ChannelTitle ~= "COMMAND" && !PRI.IsSquadLeader())
     {
-        // Don't let non squad leaders speak in command
+        // If we are trying to speak in command but we aren't a SL, then return out
         return;
     }
     else
@@ -4562,14 +4547,12 @@ exec function Speak(string ChannelTitle)
     if (VCR == none && ChatRoomMessageClass != none)
     {
         ClientMessage(ChatRoomMessageClass.static.AssembleMessage(0, ChannelTitle));
-
         return;
     }
 
     if (VCR.ChannelIndex >= 0)
     {
         ChanPwd = FindChannelPassword(ChannelTitle);
-
         ServerSpeak(VCR.ChannelIndex, ChanPwd);
     }
     else if (ChatRoomMessageClass != none)
