@@ -88,9 +88,9 @@ simulated function float DrawHeaders(Canvas C) { return 0.0;}
 // Also adds some extra information in the scoreboard header
 simulated function UpdateScoreBoard(Canvas C)
 {
-    local array<ROPlayerReplicationInfo> AxisPRI, AlliesPRI, UnassignedPRI;
-    local ROPlayerReplicationInfo        PRI;
-    local PlayerReplicationInfo          MyPRI;
+    local array<DHPlayerReplicationInfo> AxisPRI, AlliesPRI, UnassignedPRI;
+    local DHPlayerReplicationInfo        PRI;
+    local DHPlayerReplicationInfo        MyPRI;
     local DHGameReplicationInfo          DHGRI;
     local class<DHHud>                   HUD;
     local color  TeamColor, PlayerNameColor;
@@ -103,7 +103,7 @@ simulated function UpdateScoreBoard(Canvas C)
 
     if (PlayerController(Owner) != none)
     {
-        MyPRI = PlayerController(Owner).PlayerReplicationInfo;
+        MyPRI = DHPlayerReplicationInfo(PlayerController(Owner).PlayerReplicationInfo);
         DHGRI = DHGameReplicationInfo(GRI);
         HUD = class<DHHud>(HudClass);
     }
@@ -133,7 +133,7 @@ simulated function UpdateScoreBoard(Canvas C)
     // Assign all players to relevant array of PRIs for their team or unassigned/spectators
     for (i = 0; i < GRI.PRIArray.Length; ++i)
     {
-        PRI = ROPlayerReplicationInfo(GRI.PRIArray[i]);
+        PRI = DHPlayerReplicationInfo(GRI.PRIArray[i]);
 
         if (PRI != none)
         {
@@ -373,7 +373,15 @@ simulated function UpdateScoreBoard(Canvas C)
         }
         else
         {
-            PlayerNameColor = TeamColor;
+            if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, AxisPRI[i]))
+            {
+                PlayerNameColor = class'DHColor'.default.SquadColor;
+            }
+            else
+            {
+                PlayerNameColor = TeamColor;
+            }
+
             NameSuffix = "";
         }
 
@@ -560,7 +568,15 @@ simulated function UpdateScoreBoard(Canvas C)
         }
         else
         {
-            PlayerNameColor = TeamColor;
+            if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, AlliesPRI[i]))
+            {
+                PlayerNameColor = class'DHColor'.default.SquadColor;
+            }
+            else
+            {
+                PlayerNameColor = TeamColor;
+            }
+
             NameSuffix = "";
         }
 
