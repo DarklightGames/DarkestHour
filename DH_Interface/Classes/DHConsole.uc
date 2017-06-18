@@ -348,6 +348,13 @@ exec function VehicleTalk()
     }
 }
 
+exec function SquadTalk()
+{
+    TypedStr = "SquadSay ";
+    TypedStrPos = Len(TypedStr);
+    TypingOpen();
+}
+
 // Modified to fix reconnect command bug
 exec function ConsoleClose()
 {
