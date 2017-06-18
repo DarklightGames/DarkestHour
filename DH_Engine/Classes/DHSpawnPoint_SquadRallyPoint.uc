@@ -83,7 +83,7 @@ auto state Constructing
         if (bCanSendAbandonmentWarningMessage && SquadmateCount == 0)
         {
             // "A newly created squad rally point is being abandoned!"
-            SRI.BroadcastLocalizedMessage(SRI.SquadMessageClass, 58);
+            SRI.BroadcastSquadLocalizedMessage(GetTeamIndex(), SquadIndex, SRI.SquadMessageClass, 58);
 
             bCanSendAbandonmentWarningMessage = false;
         }
@@ -110,7 +110,7 @@ auto state Constructing
             if (Level.TimeSeconds - EstablishmentStartTimeSeconds > default.OverrunMinimumTimeSeconds)
             {
                 // "A squad rally point failed to be established."
-                SRI.BroadcastLocalizedMessage(SRI.SquadMessageClass, 55);
+                SRI.BroadcastSquadLocalizedMessage(GetTeamIndex(), SquadIndex, SRI.SquadMessageClass, 55);
 
                 Destroy();
             }
