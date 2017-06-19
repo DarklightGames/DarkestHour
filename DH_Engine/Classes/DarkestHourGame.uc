@@ -55,6 +55,7 @@ var     float                       TeamAttritionCounter[2];
 
 var     bool                        bSwapTeams;
 var     bool                        bUseReinforcementWarning;
+var     bool                        bRoundEndsAtZeroReinf;
 var     bool                        bTimeChangesAtZeroReinf;
 var     float                       AlliesToAxisRatio;
 var     int                         ObscureReinfNum;                        // Reinforcements higher than this number are hidden as long as bObscureReinforcements = true
@@ -204,15 +205,18 @@ function PostBeginPlay()
 
         case GT_Attrition:
             GRI.CurrentGameType = "Attrition";
+            bRoundEndsAtZeroReinf = true;
             break;
 
         case GT_Advance:
             GRI.CurrentGameType = "Advance";
+            bRoundEndsAtZeroReinf = true;
             bUseReinforcementWarning = false;
             break;
 
-        case GT_SearchAndDestroy:
-            GRI.CurrentGameType = "SearchAndDestroy";
+        case GT_Cutoff:
+            GRI.CurrentGameType = "GT_Cutoff";
+            bUseReinforcementWarning = false;
             break;
 
         default:
@@ -2717,9 +2721,9 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
             {
                 // Colin: if this team is attacking OR there is no defending side
                 // set the round time to 60 seconds, Theel: added special case to choosewinner if Atrrition is used
-                if (RoundDuration == 0 && DHLevelInfo.AttritionRateCurve.Points.Length > 0.0)
+                if (bRoundEndsAtZeroReinf)
                 {
-                    Level.Game.Broadcast(self, "The battle ended because a team's reinforcements reached zero by attrition", 'Say');
+                    Level.Game.Broadcast(self, "The battle ended because a team's reinforcements reached zero", 'Say');
                     Choosewinner();
                 }
                 else if (bTimeChangesAtZeroReinf)
@@ -3431,30 +3435,26 @@ function ChooseWinner()
     AxisReinforcementsPercent = (float(GRI.SpawnsRemaining[AXIS_TEAM_INDEX]) / LevelInfo.Axis.SpawnLimit) * 100;
     AlliedReinforcementsPercent = (float(GRI.SpawnsRemaining[ALLIES_TEAM_INDEX]) / LevelInfo.Allies.SpawnLimit) * 100;
 
-    // Attrition check
-    // Check to see who has more reinforcements
-    if (DHLevelInfo.AttritionRateCurve.Points.Length > 0.0)
+    // Check to see who has more reinforcements when bRoundEndsAtZeroReinf
+    if (bRoundEndsAtZeroReinf)
     {
-        // This game is using attrition; therefore, the winner is the one with higher reinforcements (no concern over objective counts)
+        // The winner is the one with higher reinforcements (no concern over objective counts)
         if (AxisReinforcementsPercent > AlliedReinforcementsPercent)
         {
             Level.Game.Broadcast(self, "The Axis won the battle because they have more reinforcements", 'Say');
             EndRound(AXIS_TEAM_INDEX);
-
             return;
         }
         else if (AlliedReinforcementsPercent > AxisReinforcementsPercent)
         {
             Level.Game.Broadcast(self, "The Allies won the battle because they have more reinforcements", 'Say');
             EndRound(ALLIES_TEAM_INDEX);
-
             return;
         }
         else // Both teams have same reinforcements so its a tie "No Decisive Victory"
         {
             Level.Game.Broadcast(self, "Neither side won the battle because they have equal reinforcements", 'Say');
             EndRound(2);
-
             return;
         }
     }

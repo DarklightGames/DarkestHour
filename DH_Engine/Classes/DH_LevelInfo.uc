@@ -30,7 +30,6 @@ enum EGameType
     GT_Push,
     GT_Attrition,
     GT_Advance,
-    GT_SearchAndDestroy,
     GT_Cutoff
 };
 
