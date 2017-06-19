@@ -1956,7 +1956,13 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                     DHKiller.LockWeapons(WeaponLockTimes[Min(DHKiller.WeaponLockViolations, arraycount(WeaponLockTimes) - 1)]); // TODO: probably add 1 second as we are 'mid second' in game time
                     DHKiller.PlayerReplicationInfo.Score -= 2;
                 }
+
+                if (DHPawn(KilledPawn) != none && DHPawn(KilledPawn).SpawnPoint != none)
+                {
+                    DHPawn(KilledPawn).SpawnPoint.OnSpawnKill(KilledPawn, Killer);
+                }
             }
+
         }
 
         BroadcastDeathMessage(Killer, Killed, DamageType);
