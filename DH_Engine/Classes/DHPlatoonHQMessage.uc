@@ -35,6 +35,7 @@ static function string GetString(
 
 defaultproperties
 {
+    DrawColor=(R=252,G=0,B=126,A=255)
     ActivatedMessage="A Platoon HQ has been established."
     TeamCapturedMessage="An enemy Platoon HQ has been captured."
     EnemyCapturedMessage="A Platoon HQ has been captured by the enemy."
