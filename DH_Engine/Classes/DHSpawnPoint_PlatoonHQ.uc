@@ -102,6 +102,9 @@ function Timer()
 
     if (CaptureCounter >= CaptureCounterThreshold)
     {
+        // Reset capture counter
+        CaptureCounter = 0;
+
         // "A Platoon HQ has been captured by the enemy."
         BroadcastTeamLocalizedMessage(GetTeamIndex(), class'DHPlatoonHQMessage', 2);
 
