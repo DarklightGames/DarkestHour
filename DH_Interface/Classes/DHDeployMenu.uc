@@ -63,6 +63,7 @@ var automated   GUIImage                        i_SecondaryWeapon;
 var automated   GUIImage                        i_Vehicle;
 var automated   GUIGFXButton                    i_SpawnVehicle;
 var automated   GUIGFXButton                    i_ArtilleryVehicle;
+var automated   GUIGFXButton                    i_SupplyVehicle;
 var automated   DHmoComboBox                cb_PrimaryWeapon;
 var automated   DHmoComboBox                cb_SecondaryWeapon;
 var automated   GUIImage                    i_GivenItems[5];
@@ -179,6 +180,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     c_Vehicle.ManageComponent(i_Vehicle);
     c_Vehicle.ManageComponent(i_SpawnVehicle);
     c_Vehicle.ManageComponent(i_ArtilleryVehicle);
+    c_Vehicle.ManageComponent(i_SupplyVehicle);
     c_Vehicle.ManageComponent(lb_Vehicles);
 
     c_Roles.ManageComponent(lb_Roles);
@@ -218,6 +220,7 @@ function SetLoadoutMode(ELoadoutMode Mode)
             b_VehicleButton.EnableMe();
             i_SpawnVehicle.SetVisibility(false);
             i_ArtilleryVehicle.SetVisibility(false);
+            i_SupplyVehicle.SetVisibility(false);
 
             break;
         case LM_Vehicle:
@@ -1415,12 +1418,22 @@ function UpdateVehicleImage()
         {
             i_ArtilleryVehicle.Hide();
         }
+
+        if (DHVC != none && DHVC.default.SupplyAttachmentClass != none)
+        {
+            i_SupplyVehicle.Show();
+        }
+        else
+        {
+            i_SupplyVehicle.Hide();
+        }
     }
     else
     {
         i_Vehicle.Image = default.VehicleNoneMaterial;
         i_SpawnVehicle.Hide();
         i_ArtilleryVehicle.Hide();
+        i_SupplyVehicle.Hide();
     }
 }
 
@@ -2366,6 +2379,19 @@ defaultproperties
         StyleName="TextLabel"
     End Object
     i_ArtilleryVehicle=ArtilleryVehicleImageObject
+
+    Begin Object Class=GUIGFXButton Name=SupplyVehicleImageObject
+        WinWidth=0.25
+        WinHeight=0.125
+        WinLeft=0.75
+        WinTop=0.0
+        Position=ICP_Center
+        Graphic=material'DH_InterfaceArt_tex.HUD.supplies'
+        bVisible=false
+        Hint="Construction Supply Vehicle"
+        StyleName="TextLabel"
+    End Object
+    i_SupplyVehicle=SupplyVehicleImageObject
 
     Begin Object Class=GUILabel Name=StatusLabelObject
         WinWidth=0.26
