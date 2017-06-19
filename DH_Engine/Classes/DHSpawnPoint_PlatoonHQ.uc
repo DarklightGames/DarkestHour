@@ -227,7 +227,7 @@ function BroadcastTeamLocalizedMessage(byte Team, class<LocalMessage> MessageCla
 
 function OnSpawnKill(Pawn VictimPawn, Controller KillerController)
 {
-    SpawnKillPenaltyCounter += SpawnKillPenalty;  // TODO: magic number
+    SpawnKillPenaltyCounter += SpawnKillPenalty;
 }
 
 defaultproperties
