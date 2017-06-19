@@ -111,6 +111,7 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
 
 defaultproperties
 {
+    DrawColor=(R=0,G=252,B=126,A=255)
     SquadJoinedMessage="{0} has joined the squad."
     SquadLeftMessage="{0} has left the squad."
     SquadKickedMessage="You have been kicked from the squad."
