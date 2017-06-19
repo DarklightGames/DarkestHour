@@ -325,7 +325,7 @@ function bool SwapSquadMembers(DHPlayerReplicationInfo A, DHPlayerReplicationInf
 {
     local int T, U;
 
-    if (!class'DHPlayerReplicationInfo'.static.IsInSameSquad(A, B))
+    if (A == B || !class'DHPlayerReplicationInfo'.static.IsInSameSquad(A, B))
     {
         return false;
     }
@@ -439,7 +439,7 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
         return false;
     }
 
-    if (!class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, NewSquadLeader))
+    if (PRI == NewSquadLeader || !class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, NewSquadLeader))
     {
         return false;
     }
