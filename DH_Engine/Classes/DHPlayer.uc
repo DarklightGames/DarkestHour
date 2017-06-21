@@ -2613,6 +2613,7 @@ function Reset()
     NextSpawnTime = default.NextSpawnTime;
     SpawnPointIndex = default.SpawnPointIndex;
     VehiclePoolIndex = default.VehiclePoolIndex;
+    NextChangeTeamTime = default.NextChangeTeamTime;
     LastKilledTime = default.LastKilledTime;
     NextVehicleSpawnTime = default.NextVehicleSpawnTime;
     DeathPenaltyCount = default.DeathPenaltyCount;
