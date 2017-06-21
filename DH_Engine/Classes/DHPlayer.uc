@@ -79,7 +79,6 @@ var     int                     DeathPenaltyCount;          // number of deaths 
 var     int                     WeaponUnlockTime;           // the time at which the player's weapons will be unlocked (being the round's future ElapsedTime in whole seconds)
 var     int                     PendingWeaponLockSeconds;   // fix for problem where player re-joins server with saved weapon lock, but client doesn't yet have GRI
 var     int                     WeaponLockViolations;       // the number of violations this player has, used to increase the locked period for multiple offences
-var     bool                    bWeaponsAreLocked;          // flag only used so we know an unlock message needs to be displayed locally after the locked time expires
 
 // Squads
 var     DHSquadReplicationInfo  SquadReplicationInfo;
@@ -218,7 +217,7 @@ simulated function DH_LevelInfo GetLevelInfo()
 
 // Modified to add hacky fix for problem where player re-joins a server with an active weapon lock saved in his DHPlayerSession
 // When that happens the weapon lock is passed to the client, but it doesn't yet have a GRI reference so it all goes wrong
-// In that situation we record a PendingWeaponLockSeconds  on client, then here we use it to set the weapon lock on client as soon as it receives the GRI
+// In that situation we record a PendingWeaponLockSeconds on client, then here we use it to set the weapon lock on client as soon as it receives the GRI
 simulated function PostNetReceive()
 {
     if (PendingWeaponLockSeconds > 0 && GameReplicationInfo != none)
@@ -2610,6 +2609,7 @@ function Reset()
     super.Reset();
 
     WeaponUnlockTime = default.WeaponUnlockTime;
+    WeaponLockViolations = default.WeaponLockViolations;
     NextSpawnTime = default.NextSpawnTime;
     SpawnPointIndex = default.SpawnPointIndex;
     VehiclePoolIndex = default.VehiclePoolIndex;
@@ -2888,14 +2888,10 @@ simulated function LockWeapons(int Seconds)
     {
         WeaponUnlockTime = GameReplicationInfo.ElapsedTime + Seconds;
 
-        // If this is the local player, flag him as weapon locked & show him a warning screen message
-        // Note bWeaponsAreLocked is only used so we know an unlock message needs to be displayed locally after the locked time expires
-        // Setting a future WeaponUnlockTime is what actually prevents weapons being used
+        // If this is the local player, show him a warning screen message & release his fire buttons
         if (Viewport(Player) != none)
         {
-            bWeaponsAreLocked = true;
             ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 0); // "Your weapons have been locked due to excessive spawn killing!"
-
             bFire = 0; // 'releases' fire button if being held down, which stops automatic weapon fire from continuing & avoids spamming repeated messages & buzz sounds
             bAltFire = 0;
         }
@@ -2926,9 +2922,9 @@ simulated function ClientLockWeapons(byte Seconds)
 // Called from the 1 second timer running continually in the GameInfo & GRI actors (GRI for net clients)
 simulated function CheckUnlockWeapons()
 {
-    if (bWeaponsAreLocked && GameReplicationInfo != none && GameReplicationInfo.ElapsedTime >= WeaponUnlockTime)
+    if (WeaponUnlockTime > 0 && GameReplicationInfo != none && GameReplicationInfo.ElapsedTime >= WeaponUnlockTime)
     {
-        bWeaponsAreLocked = false;
+        WeaponUnlockTime = 0; // reset this now, as when set it effectively acts as a flag that weapons are locked
         ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 2); // "Your weapons are now unlocked"
     }
 }
