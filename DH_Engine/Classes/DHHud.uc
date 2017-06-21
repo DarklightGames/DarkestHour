@@ -117,6 +117,18 @@ var     color               VehiclePositionIsSquadmateColor;
 var     SpriteWidget        VehicleSuppliesIcon;
 var     TextWidget          VehicleSuppliesText;
 
+/*
+// Modified to replace RO compass texture with DH one // TODO: was this accidentally deleted in bad merge of squad branch on 27th Feb 2017? (if so, also wiped out the new compass texture)
+simulated event PostBeginPlay()
+{
+    super(HudBase).PostBeginPlay(); // skip over the Super in ROHud
+
+    TexRotator'InterfaceArt_tex.HUD.TexRotator0'.Material = texture'DH_InterfaceArt_tex.HUD.DHCompassBackground';
+    TexRotator'InterfaceArt_tex.HUD.TexRotator0'.UOffset = 128;
+    TexRotator'InterfaceArt_tex.HUD.TexRotator0'.VOffset = 128;
+}
+*/
+
 // Disabled as the only functionality was in HudBase re the DamageTime array, but that became redundant in RO (no longer gets set in function DisplayHit)
 simulated function Tick(float deltaTime)
 {
