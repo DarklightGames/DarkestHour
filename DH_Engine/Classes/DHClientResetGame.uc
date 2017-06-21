@@ -38,7 +38,8 @@ simulated function PostBeginPlay()
 defaultproperties
 {
     bAlwaysRelevant=true
+    bNetTemporary=true // client actor gets torn off as soon as it replicates, as all it needs to do is reach the client to do its stuff
+    LifeSpan=5.0       // means server version of this actor will be auto-destroyed after a few seconds, giving it time to replicate to clients
     bSkipActorPropertyReplication=true
-    LifeSpan=5.0 // means server version of this actor will be auto-destroyed after a few seconds, giving it time to replicate to clients
     bHidden=true
 }
