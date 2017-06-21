@@ -233,6 +233,17 @@ function int AddConstructionClass(class<DHConstruction> ConstructionClass)
     return -1;
 }
 
+// Modified for net client to check whether local local player has his weapons locked & it's now time to unlock them
+simulated event Timer()
+{
+    super.Timer();
+
+    if (Role < ROLE_Authority && DHPlayer(Level.GetLocalPlayerController()) != none)
+    {
+        DHPlayer(Level.GetLocalPlayerController()).CheckUnlockWeapons();
+    }
+}
+
 //------------------------------------------------------------------------------
 // Spawn Point Functions
 //------------------------------------------------------------------------------
