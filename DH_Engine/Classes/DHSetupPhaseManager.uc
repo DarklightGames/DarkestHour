@@ -18,7 +18,6 @@ var() int               SetupPhaseDuration;                 // How long should t
 
 var() name              PhaseMineFieldTag;                  // Tag of minefield volumes to disable once setup phase is over
 var() name              PhaseBoundaryTag;                   // Tag of DestroyableStaticMeshes to disable once phase is over
-
 var() array<name>       InitialSpawnPointTags;              // Tags of spawn points that should only be active while in setup phase
 
 var() bool              bScaleStartingReinforcements;       // Scales starting reinforcements to current number of players

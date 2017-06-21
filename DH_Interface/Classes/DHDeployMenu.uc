@@ -185,7 +185,14 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     c_Roles.ManageComponent(lb_Roles);
 
-    SetMapMode(MODE_Map);
+    if (PC != none)
+    {
+        SetMapMode(EMapMode(PC.DeployMenuStartMode));
+    }
+    else
+    {
+        SetMapMode(MODE_Map);
+    }
 }
 
 function SetLoadoutMode(ELoadoutMode Mode)

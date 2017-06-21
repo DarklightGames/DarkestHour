@@ -3116,6 +3116,7 @@ function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, 
 
         if (PC != none)
         {
+            PC.DeployMenuStartMode = MODE_Map;
             PC.ClientProposeMenu("DH_Interface.DHDeployMenu");
         }
     }
@@ -4160,6 +4161,7 @@ function OpenPlayerMenus()
     {
         if (P.bIsPlayer && P.PlayerReplicationInfo.Team != none && P.PlayerReplicationInfo.Team.TeamIndex != 2)
         {
+            DHPlayer(P).DeployMenuStartMode = MODE_Map;
             DHPlayer(P).ClientProposeMenu("DH_Interface.DHDeployMenu");
         }
     }

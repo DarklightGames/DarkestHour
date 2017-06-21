@@ -12,6 +12,14 @@ const DEATH_PENALTY_FACTOR = 10;
 const SQUAD_SIGNALS_MAX = 3;
 const SQUAD_SIGNAL_DURATION = 15.0;
 
+enum EMapMode
+{
+    MODE_Map,
+    MODE_Squads
+};
+
+var     EMapMode                DeployMenuStartMode; // What the deploy menu is supposed to start out on
+
 var     DHHintManager           DHHintManager;
 var     float                   MapVoteTime;
 var     DH_LevelInfo            ClientLevelInfo;
@@ -425,6 +433,7 @@ exec function PlayerMenu(optional int Tab)
     }
     else
     {
+        DeployMenuStartMode = MODE_Map;
         ClientReplaceMenu("DH_Interface.DHDeployMenu");
     }
 }
@@ -452,7 +461,8 @@ function ShowMidGameMenu(bool bPause)
         }
         else
         {
-            ClientReplaceMenu(ROMidGameMenuClass);
+            DeployMenuStartMode = MODE_Map;
+            ClientReplaceMenu("DH_Interface.DHDeployMenu");
         }
     }
 }
@@ -2097,6 +2107,7 @@ simulated function ClientForcedTeamChange(int NewTeamIndex, int NewRoleIndex)
     ForcedTeamSelectOnRoleSelectPage = NewTeamIndex;
     DesiredRole = NewRoleIndex;
 
+    DeployMenuStartMode = MODE_Map;
     ClientReplaceMenu("DH_Interface.DHDeployMenu");
 }
 
@@ -2626,6 +2637,7 @@ state DeadSpectating
 
         if (!PlayerReplicationInfo.bOnlySpectator && bSpawnPointInvalidated)
         {
+            DeployMenuStartMode = MODE_Map;
             ClientProposeMenu("DH_Interface.DHDeployMenu");
         }
     }
@@ -4842,6 +4854,16 @@ function ServerSquadSay(string Msg)
     {
         G.BroadcastSquad(self, Level.Game.ParseMessageString(Level.Game.BaseMutator, self, Msg) , 'SquadSay');
     }
+}
+
+exec function SquadMenu()
+{
+    // Open deploy menu with squad tab active
+    bPendingMapDisplay = false;
+
+    // Tell the deploy menu to start up in squad mode
+    DeployMenuStartMode = MODE_Squads;
+    ClientReplaceMenu("DH_Interface.DHDeployMenu");
 }
 
 exec function ShowOrderMenu()

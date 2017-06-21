@@ -113,7 +113,7 @@ function SelectTeamSuccessfull()
     if (SelectedTeam != -1)
     {
         PC.ForcedTeamSelectOnRoleSelectPage = SelectedTeam;
-
+        PC.DeployMenuStartMode = MODE_Map;
         Controller.ReplaceMenu("DH_Interface.DHDeployMenu");
     }
     else
