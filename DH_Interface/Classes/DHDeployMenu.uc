@@ -373,7 +373,7 @@ function UpdateRoundStatus()
 
 function GetMapCoords(vector Location, out float X, out float Y, optional float Width, optional float Height)
 {
-    local float MapScale;
+    local float  MapScale;
     local vector MapCenter;
 
     MapScale = FMax(1.0, Abs((GRI.SouthWestBounds - GRI.NorthEastBounds).X));
@@ -405,10 +405,10 @@ function int GetSelectedVehiclePoolIndex()
 
 function UpdateSpawnPoints()
 {
-    local int i, RoleIndex, SquadIndex;
-    local float X, Y;
-    local byte Team;
     local GUI.eFontScale FS;
+    local float          X, Y;
+    local int            RoleIndex, SquadIndex, i;
+    local byte           Team;
 
     if (GRI != none)
     {
@@ -497,7 +497,7 @@ function UpdateStatus()
 function string GetStatusText()
 {
     local DHRoleInfo RI;
-    local int SpawnTime;
+    local int        SpawnTime;
 
     RI = DHRoleInfo(li_Roles.GetObject());
 
@@ -547,13 +547,13 @@ function PopulateVehicles()
 
 function UpdateVehicles(optional bool bShowAlert)
 {
-    local int i, j;
     local class<ROVehicle> VehicleClass;
-    local DHRoleInfo RI;
-    local bool bDisabled;
-    local string S;
-    local float RespawnTime;
-    local GUIQuestionPage ConfirmWindow;
+    local DHRoleInfo       RI;
+    local GUIQuestionPage  ConfirmWindow;
+    local bool             bDisabled;
+    local float            RespawnTime;
+    local int              i, j;
+    local string           S;
 
     if (GRI == none)
     {
@@ -575,7 +575,7 @@ function UpdateVehicles(optional bool bShowAlert)
 
         PC = DHPlayer(PlayerOwner());
 
-        //TODO: have team max be indicated in another part of this control (ie. don't obfuscate meaning)
+        // TODO: have team max be indicated in another part of this control (ie. don't obfuscate meaning)
         bDisabled = VehicleClass != none &&
                     ((VehicleClass.default.bMustBeTankCommander && RI != none && !RI.default.bCanBeTankCrew) ||
                     (!GRI.IgnoresMaxTeamVehiclesFlags(j) && GRI.MaxTeamVehicles[CurrentTeam] <= 0) ||
@@ -639,12 +639,9 @@ function OnOKButtonClick(byte Button)
 
 function UpdateRoles()
 {
-    local int i;
     local RORoleInfo RI;
-    local int Count;
-    local int BotCount;
-    local int Limit;
-    local string S;
+    local int        Count, BotCount, Limit, i;
+    local string     S;
 
     for (i = 0; i < li_Roles.ItemCount; ++i)
     {
@@ -707,12 +704,12 @@ function bool OnClick(GUIComponent Sender)
             PlayerOwner().ConsoleCommand("SUICIDE");
             break;
 
-        // Kick Vote
+        // Kick vote
         case b_MenuOptions[2]:
             Controller.OpenMenu(Controller.KickVotingMenu);
             break;
 
-        // Map Vote
+        // Map vote
         case b_MenuOptions[3]:
             Controller.OpenMenu(Controller.MapVotingMenu);
             break;
@@ -722,22 +719,41 @@ function bool OnClick(GUIComponent Sender)
             Controller.OpenMenu("ROInterface.ROCommunicationPage");
             break;
 
-        // Server Browser
+        // Server browser
         case b_MenuOptions[5]:
             Controller.OpenMenu("DH_Interface.DHServerBrowser");
             break;
 
-        // Options
+        // Settings
         case b_MenuOptions[6]:
             Controller.OpenMenu("DH_Interface.DHSettingsPage_new");
             break;
 
-        // Continue
+        // Continue button
         case b_MenuOptions[7]:
             Apply();
             break;
 
-        //Axis
+        // Weapons/equipment
+        case b_EquipmentButton:
+            SetLoadoutMode(LM_Equipment);
+            break;
+
+        // Vehicle
+        case b_VehicleButton:
+            SetLoadoutMode(LM_Vehicle);
+            break;
+
+        // Map
+        case b_MapButton:
+            SetMapMode(MODE_Map);
+            break;
+
+        // Squads
+        case b_SquadsButton:
+            SetMapMode(MODE_Squads);
+            break;
+
         // Changing team (most of this functionality is common, with only minor changes depending on team selected)
         case b_Axis:
         case b_Allies:
@@ -786,26 +802,6 @@ function bool OnClick(GUIComponent Sender)
 
             break;
 
-        //Equipment
-        case b_EquipmentButton:
-            SetLoadoutMode(LM_Equipment);
-            break;
-
-        //Vehicle
-        case b_VehicleButton:
-            SetLoadoutMode(LM_Vehicle);
-            break;
-
-        // Map
-        case b_MapButton:
-            SetMapMode(MODE_Map);
-            break;
-
-        // Squads
-        case b_SquadsButton:
-            SetMapMode(MODE_Squads);
-            break;
-
         default:
             break;
     }
@@ -846,8 +842,8 @@ function bool ChangeToSpectateChoice(byte Button)
 function Apply()
 {
     local RORoleInfo RI;
-    local int RoleIndex;
-    local byte Team;
+    local int        RoleIndex;
+    local byte       Team;
 
     if (b_MenuOptions[7].MenuState == MSAT_Disabled)
     {
@@ -893,7 +889,7 @@ function SetButtonsEnabled(bool bEnable)
 function UpdateButtons()
 {
     local bool bContinueEnabled;
-    local int SquadIndex;
+    local int  SquadIndex;
     local byte Team;
 
     if (PRI != none)
@@ -970,8 +966,8 @@ function UpdateButtons()
 
 function PopulateRoles()
 {
-    local int i;
     local string RoleName;
+    local int    i;
 
     li_Roles.Clear();
     li_Roles.SetIndex(-1);
@@ -1074,8 +1070,8 @@ function AutoSelectRole()
 // selected, by default.
 function AutoSelectVehicle()
 {
-    local int i;
     local UInteger Integer;
+    local int      i;
 
     if (PC.VehiclePoolIndex < 0)
     {
@@ -1095,7 +1091,7 @@ function AutoSelectVehicle()
 
 function InternalOnMessage(coerce string Msg, float MsgLife)
 {
-    local int Result;
+    local int    Result;
     local string ErrorMessage;
 
     if (Msg ~= "NOTIFY_GUI_ROLE_SELECTION_PAGE")
@@ -1104,25 +1100,24 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
 
         switch (Result)
         {
-            //Spectator
+            // Spectator
             case 96:
                 CloseMenu();
                 break;
 
-            //Axis
+            // Axis
             case 97:
-                //Axis
                 OnTeamChanged(AXIS_TEAM_INDEX);
                 p_Map.SelectSpawnPoint(-1);
                 break;
 
-            //Allies
+            // Allies
             case 98:
                 OnTeamChanged(ALLIES_TEAM_INDEX);
                 p_Map.SelectSpawnPoint(-1);
                 break;
 
-            //Success
+            // Success
             case 0:
                 CloseMenu();
                 break;
@@ -1153,9 +1148,7 @@ function OnOpen()
     super.OnOpen();
 
     PC.ServerSetIsInSpawnMenu(true);
-
     Timer();
-
     SetTimer(1.0, true);
 }
 
@@ -1192,10 +1185,10 @@ function bool MapContainerPreDraw(Canvas C)
 
 function InternalOnChange(GUIComponent Sender)
 {
-    local int i, j;
-    local RORoleInfo RI;
     local class<Inventory> InventoryClass;
-    local Material InventoryMaterial;
+    local RORoleInfo       RI;
+    local material         InventoryMaterial;
+    local int              i, j;
 
     switch (Sender)
     {
@@ -1345,9 +1338,9 @@ function InternalOnChange(GUIComponent Sender)
 
 function UpdateVehicleImage()
 {
-    local class<Vehicle> VehicleClass;
+    local class<Vehicle>   VehicleClass;
     local class<DHVehicle> DHVC;
-    local int VehiclePoolIndex;
+    local int              VehiclePoolIndex;
 
     VehiclePoolIndex = GetSelectedVehiclePoolIndex();
 
@@ -1396,8 +1389,7 @@ function UpdateVehicleImage()
 
 function ChangeTeam(byte Team)
 {
-    // Confirm that we are actually changing teams
-    if (Team != CurrentTeam)
+    if (Team != CurrentTeam) // confirm that we are actually changing teams
     {
         SetButtonsEnabled(false);
 
@@ -1481,6 +1473,7 @@ function SetMapMode(EMapMode Mode)
             p_Squads.DisableMe();
             UpdateSpawnPoints();
             break;
+
         case MODE_Squads:
             b_MapButton.EnableMe();
             b_SquadsButton.DisableMe();
@@ -1488,6 +1481,7 @@ function SetMapMode(EMapMode Mode)
             c_Squads.SetVisibility(true);
             p_Squads.EnableMe();
             break;
+
         default:
             Warn("Unhandled map mode");
             break;
@@ -1498,7 +1492,7 @@ function SetMapMode(EMapMode Mode)
 
 function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
 {
-    local Interactions.EInputKey K;
+    local Interactions.EInputKey    K;
     local Interactions.EInputAction A;
 
     K = EInputKey(Key);
@@ -1507,6 +1501,7 @@ function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
     if (K == IK_F1 && A == IST_Release)
     {
         ToggleMapMode();
+
         return true;
     }
 
@@ -1515,17 +1510,11 @@ function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
 
 function UpdateSquads()
 {
-    local int i, j, k;
-    local int TeamIndex;
-    local bool bIsInSquad;
-    local bool bIsInASquad;
-    local bool bIsSquadLeader;
-    local bool bIsSquadFull;
-    local bool bIsSquadLocked;
-    local bool bCanJoinSquad;
     local array<DHPlayerReplicationInfo> Members;
-    local DHGUISquadComponent C;
-    local DHPlayerReplicationInfo SavedPRI;
+    local DHPlayerReplicationInfo        SavedPRI;
+    local DHGUISquadComponent            C;
+    local int  TeamIndex, i, j, k;
+    local bool bIsInSquad, bIsInASquad, bIsSquadLeader, bIsSquadFull, bIsSquadLocked, bCanJoinSquad;
 
     super.Timer();
 
@@ -1679,7 +1668,6 @@ function UpdateSquads()
     while (j < p_Squads.SquadComponents.Length)
     {
         SetVisible(p_Squads.SquadComponents[j], false);
-
         ++j;
     }
 }
@@ -1725,10 +1713,27 @@ function OpenConfirmationWindow(string Message, optional bool bOKConfirmationOnl
 
 defaultproperties
 {
-    SpawnPointIndex=-1
+    SelectRoleText="Select a role"
+    SelectSpawnPointText="Select a spawn point"
+    DeployInTimeText="Press Continue to deploy ({0})"
+    DeployNowText="Press Continue to deploy now!"
+    ChangeTeamConfirmText="Are you sure you want to change teams? (you will not be able to change back for {s} seconds)"
+    FreeChangeTeamConfirmText="Are you sure you want to change teams?"
+    CantChangeTeamYetText="You have {s} seconds before you can change teams"
+    ReservedString="Reserved"
+    VehicleUnavailableString="The vehicle you had selected is no longer available."
+    LockText="Lock"
+    UnlockText="Unlock"
+    NoneText="None"
 
-    // GUI Components
+    MapMode=MODE_Map
+    bButtonsEnabled=true
+    SpawnPointIndex=-1
+    VehicleNoneMaterial=material'DH_GUI_tex.DeployMenu.vehicle_none'
+
     OnMessage=InternalOnMessage
+    OnPreDraw=InternalOnPreDraw
+    OnKeyEvent=InternalOnKeyEvent
     bRenderWorld=true
     bAllowedAsLast=true
     WinTop=0.0
@@ -2114,7 +2119,6 @@ defaultproperties
     End Object
     b_MenuOptions(0)=DisconnectButtonObject
 
-    //Suicide Button
     Begin Object Class=DHGUIButton Name=SuicideButtonObject
         Caption="Suicide"
         CaptionAlign=TXTA_Center
@@ -2125,7 +2129,6 @@ defaultproperties
     End Object
     b_MenuOptions(1)=SuicideButtonObject
 
-    //Kick Vote Button
     Begin Object Class=DHGUIButton Name=KickVoteButtonObject
         Caption="Kick Vote"
         CaptionAlign=TXTA_Center
@@ -2136,7 +2139,6 @@ defaultproperties
     End Object
     b_MenuOptions(2)=KickVoteButtonObject
 
-    //Map Vote Button
     Begin Object Class=DHGUIButton Name=MapVoteButtonObject
         Caption="Map Vote"
         CaptionAlign=TXTA_Center
@@ -2147,7 +2149,6 @@ defaultproperties
     End Object
     b_MenuOptions(3)=MapVoteButtonObject
 
-    //CommunicationButton
     Begin Object Class=DHGUIButton Name=CommunicationButtonObject
         Caption="Communication"
         CaptionAlign=TXTA_Center
@@ -2158,7 +2159,6 @@ defaultproperties
     End Object
     b_MenuOptions(4)=CommunicationButtonObject
 
-    //Servers Button
     Begin Object Class=DHGUIButton Name=ServersButtonObject
         Caption="Servers"
         CaptionAlign=TXTA_Center
@@ -2169,7 +2169,6 @@ defaultproperties
     End Object
     b_MenuOptions(5)=ServersButtonObject
 
-    //Settings Button
     Begin Object Class=DHGUIButton Name=SettingsButtonObject
         Caption="Settings"
         CaptionAlign=TXTA_Center
@@ -2180,7 +2179,6 @@ defaultproperties
     End Object
     b_MenuOptions(6)=SettingsButtonObject
 
-    //Continue Button
     Begin Object Class=DHGUIButton Name=ContinueButtonObject
         Caption="Continue"
         CaptionAlign=TXTA_Center
@@ -2401,23 +2399,5 @@ defaultproperties
         bNeverFocus=true
     End Object
     p_Squads=SquadsComponentObject
-
-    NoneText="None"
-    SelectRoleText="Select a role"
-    SelectSpawnPointText="Select a spawn point"
-    DeployInTimeText="Press Continue to deploy ({0})"
-    DeployNowText="Press Continue to deploy now!"
-    ChangeTeamConfirmText="Are you sure you want to change teams? (you will not be able to change back for {s} seconds)"
-    FreeChangeTeamConfirmText="Are you sure you want to change teams?"
-    CantChangeTeamYetText="You have {s} seconds before you can change teams"
-    bButtonsEnabled=true
-    VehicleNoneMaterial=material'DH_GUI_tex.DeployMenu.vehicle_none'
-    OnPreDraw=InternalOnPreDraw
-    ReservedString="Reserved"
-    OnKeyEvent=InternalOnKeyEvent
-    MapMode=MODE_Map
-    LockText="Lock"
-    UnlockText="Unlock"
-    VehicleUnavailableString="The vehicle you had selected is no longer available."
 }
 
