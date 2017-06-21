@@ -805,6 +805,7 @@ function bool OnClick(GUIComponent Sender)
             if (PC.NextChangeTeamTime < GRI.ElapsedTime)
             {
                 Controller.OpenMenu(Controller.QuestionMenuClass);
+                GUIQuestionPage(Controller.TopPage()).bAllowedAsLast = true; // when prompt window gets closed, this stops it from defaulting to opening the main menu (only required for spectate)
                 GUIQuestionPage(Controller.TopPage()).SetupQuestion(Repl(default.ChangeTeamConfirmText, "{s}", class'DarkestHourGame'.default.ChangeTeamInterval), QBTN_YesNo);
                 GUIQuestionPage(Controller.TopPage()).NewOnButtonClick = ChangeToSpectateChoice;
             }
