@@ -553,6 +553,7 @@ function UpdateVehicles(optional bool bShowAlert)
     local bool bDisabled;
     local string S;
     local float RespawnTime;
+    local GUIQuestionPage ConfirmWindow;
 
     if (GRI == none)
     {
@@ -622,9 +623,8 @@ function UpdateVehicles(optional bool bShowAlert)
         {
             if (bShowAlert)
             {
-                Controller.OpenMenu("GUI2K4.GUI2K4QuestionPage");
-                GUIQuestionPage(Controller.TopPage()).SetupQuestion(default.VehicleUnavailableString, QBTN_OK, QBTN_OK);
-                GUIQuestionPage(Controller.TopPage()).OnButtonClick = OnOKButtonClick;
+                OpenConfirmationWindow(default.VehicleUnavailableString, true, ConfirmWindow); // just an 'ok' to close this message window
+                ConfirmWindow.OnButtonClick = OnOKButtonClick;
             }
 
             li_Vehicles.SetIndex(0);
@@ -691,6 +691,9 @@ function UpdateRoles()
 
 function bool OnClick(GUIComponent Sender)
 {
+    local GUIQuestionPage ConfirmWindow;
+    local string          ConfirmMessage;
+
     switch (Sender)
     {
         // Disconnect
@@ -735,85 +738,52 @@ function bool OnClick(GUIComponent Sender)
             break;
 
         //Axis
+        // Changing team (most of this functionality is common, with only minor changes depending on team selected)
         case b_Axis:
-            if (CurrentTeam != 0 && PC.NextChangeTeamTime < GRI.ElapsedTime)
-            {
-                Controller.OpenMenu(Controller.QuestionMenuClass);
-
-                // If solo then never warn
-                if (PlayerOwner().Level.NetMode == NM_Standalone)
-                {
-                    GUIQuestionPage(Controller.TopPage()).SetupQuestion(FreeChangeTeamConfirmText, QBTN_YesNo);
-                }
-                else
-                {
-                    // If we are not with in the first ChangeTeamInterval seconds of the round, then warn
-                    if (GRI.ElapsedTime > class'DarkestHourGame'.default.ChangeTeamInterval)
-                    {
-                        GUIQuestionPage(Controller.TopPage()).SetupQuestion(Repl(default.ChangeTeamConfirmText, "{s}", class'DarkestHourGame'.default.ChangeTeamInterval), QBTN_YesNo);
-                    }
-                    else
-                    {
-                        GUIQuestionPage(Controller.TopPage()).SetupQuestion(FreeChangeTeamConfirmText, QBTN_YesNo);
-                    }
-                }
-
-                GUIQuestionPage(Controller.TopPage()).NewOnButtonClick = ChangeToAxisChoice;
-            }
-            else if (CurrentTeam != 0)
-            {
-                Controller.OpenMenu(Controller.QuestionMenuClass);
-                GUIQuestionPage(Controller.TopPage()).SetupQuestion(Repl(default.CantChangeTeamYetText, "{s}", PC.NextChangeTeamTime - GRI.ElapsedTime), QBTN_Ok);
-            }
-            break;
-
-        //Allies
         case b_Allies:
-            if (CurrentTeam != 1 && PC.NextChangeTeamTime < GRI.ElapsedTime)
+        case b_Spectate:
+            if (!(Sender == b_Axis && CurrentTeam == AXIS_TEAM_INDEX) && !(Sender == b_Allies && CurrentTeam == ALLIES_TEAM_INDEX)) // make sure player is actually changing team
             {
-                Controller.OpenMenu(Controller.QuestionMenuClass);
-
-                // If solo then never warn
-                if (PlayerOwner().Level.NetMode == NM_Standalone)
+                // Player is prevented from changing team as he switched recently
+                if (PC.NextChangeTeamTime >= GRI.ElapsedTime)
                 {
-                    GUIQuestionPage(Controller.TopPage()).SetupQuestion(FreeChangeTeamConfirmText, QBTN_YesNo);
+                    ConfirmMessage = Repl(default.CantChangeTeamYetText, "{s}", PC.NextChangeTeamTime - GRI.ElapsedTime);
+                    OpenConfirmationWindow(ConfirmMessage, true); // just an 'ok' to close this message window
                 }
+                // Player can change team, but give him a screen prompt & ask him to confirm the change
                 else
                 {
-                    // If we are not with in the first ChangeTeamInterval seconds of the round, then warn
-                    if (GRI.ElapsedTime > class'DarkestHourGame'.default.ChangeTeamInterval)
+                    // Player can switch freely in single player mode, or within the first ChangeTeamInterval seconds of the round
+                    // So this is just a simple confirmation prompt, without any warning
+                    if (PlayerOwner().Level.NetMode == NM_Standalone || GRI.ElapsedTime <= class'DarkestHourGame'.default.ChangeTeamInterval)
                     {
-                        GUIQuestionPage(Controller.TopPage()).SetupQuestion(Repl(default.ChangeTeamConfirmText, "{s}", class'DarkestHourGame'.default.ChangeTeamInterval), QBTN_YesNo);
+                        ConfirmMessage = FreeChangeTeamConfirmText;
                     }
+                    // Otherwise warn the player that if he changes team, he'll have to wait a certain time before being allowed to switch again
                     else
                     {
-                        GUIQuestionPage(Controller.TopPage()).SetupQuestion(FreeChangeTeamConfirmText, QBTN_YesNo);
+                        ConfirmMessage = Repl(default.ChangeTeamConfirmText, "{s}", class'DarkestHourGame'.default.ChangeTeamInterval);
+                    }
+
+                    OpenConfirmationWindow(ConfirmMessage,, ConfirmWindow); // requires a yes/no answer
+
+                    // Set the function to call when the player presses 'yes' or 'no'
+                    if (Sender == b_Axis)
+                    {
+                        ConfirmWindow.NewOnButtonClick = ChangeToAxisChoice;
+                    }
+                    else if (Sender == b_Allies)
+                    {
+                        ConfirmWindow.NewOnButtonClick = ChangeToAlliesChoice;
+                    }
+                    else if (Sender == b_Spectate)
+                    {
+                        ConfirmWindow.bAllowedAsLast = true; // when the confirmation window gets closed, this stops it from defaulting to opening the main menu
+                        ConfirmWindow.NewOnButtonClick = ChangeToSpectateChoice;
                     }
                 }
+            }
 
-                GUIQuestionPage(Controller.TopPage()).NewOnButtonClick = ChangeToAlliesChoice;
-            }
-            else if (CurrentTeam != 1)
-            {
-                Controller.OpenMenu(Controller.QuestionMenuClass);
-                GUIQuestionPage(Controller.TopPage()).SetupQuestion(Repl(default.CantChangeTeamYetText, "{s}", PC.NextChangeTeamTime - GRI.ElapsedTime), QBTN_Ok);
-            }
-            break;
-
-        //Spectate
-        case b_Spectate:
-            if (PC.NextChangeTeamTime < GRI.ElapsedTime)
-            {
-                Controller.OpenMenu(Controller.QuestionMenuClass);
-                GUIQuestionPage(Controller.TopPage()).bAllowedAsLast = true; // when prompt window gets closed, this stops it from defaulting to opening the main menu (only required for spectate)
-                GUIQuestionPage(Controller.TopPage()).SetupQuestion(Repl(default.ChangeTeamConfirmText, "{s}", class'DarkestHourGame'.default.ChangeTeamInterval), QBTN_YesNo);
-                GUIQuestionPage(Controller.TopPage()).NewOnButtonClick = ChangeToSpectateChoice;
-            }
-            else
-            {
-                Controller.OpenMenu(Controller.QuestionMenuClass);
-                GUIQuestionPage(Controller.TopPage()).SetupQuestion(Repl(default.CantChangeTeamYetText, "{s}", PC.NextChangeTeamTime - GRI.ElapsedTime), QBTN_Ok);
-            }
             break;
 
         //Equipment
@@ -845,47 +815,32 @@ function bool OnClick(GUIComponent Sender)
 
 function bool ChangeToAxisChoice(byte Button)
 {
-    switch (Button)
+    if (Button == 16) // player has clicked 'yes' to confirm change
     {
-        // Yes
-        case 16:
-            ChangeTeam(AXIS_TEAM_INDEX);
-            return true;
-            break;
-        default:
-            return true;
-            break;
+        ChangeTeam(AXIS_TEAM_INDEX);
     }
+
+    return true;
 }
 
 function bool ChangeToAlliesChoice(byte Button)
 {
-    switch (Button)
+    if (Button == 16) // player has clicked 'yes' to confirm change
     {
-        // Yes
-        case 16:
-            ChangeTeam(ALLIES_TEAM_INDEX);
-            return true;
-            break;
-        default:
-            return true;
-            break;
+        ChangeTeam(ALLIES_TEAM_INDEX);
     }
+
+    return true;
 }
 
 function bool ChangeToSpectateChoice(byte Button)
 {
-    switch (Button)
+    if (Button == 16) // player has clicked 'yes' to confirm change
     {
-        // Yes
-        case 16:
-            ChangeTeam(254); // Spectate
-            return true;
-            break;
-        default:
-            return true;
-            break;
+        ChangeTeam(254); // to spectator
     }
+
+    return true;
 }
 
 function Apply()
@@ -1174,13 +1129,7 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
 
             default:
                 ErrorMessage = class'ROGUIRoleSelection'.static.GetErrorMessageForID(Result);
-
-                if (Controller != none)
-                {
-                    Controller.OpenMenu(Controller.QuestionMenuClass);
-                    GUIQuestionPage(Controller.TopPage()).SetupQuestion(ErrorMessage, QBTN_Ok, QBTN_Ok);
-                }
-
+                OpenConfirmationWindow(ErrorMessage, true); // just an 'ok' to close this error message window
                 break;
         }
     }
@@ -1748,6 +1697,28 @@ function static SetVisible(GUIComponent C, bool bVisible)
         else
         {
             C.DisableMe();
+        }
+    }
+}
+
+// New helper function to open a confirmation, or yes/no window on the player's screen
+function OpenConfirmationWindow(string Message, optional bool bOKConfirmationOnly, optional out GUIQuestionPage ConfirmWindow)
+{
+    if (Message != "" && Controller != none)
+    {
+        Controller.OpenMenu(Controller.QuestionMenuClass);
+        ConfirmWindow = GUIQuestionPage(Controller.TopPage()); // option for GUI page reference to be passed back as an out value
+
+        if (ConfirmWindow != none)
+        {
+            if (bOKConfirmationOnly)
+            {
+                ConfirmWindow.SetupQuestion(Message, QBTN_OK, QBTN_OK); // just requires an 'ok' to close message window
+            }
+            else
+            {
+                ConfirmWindow.SetupQuestion(Message, QBTN_YesNo); // offers player a yes/no choice
+            }
         }
     }
 }
