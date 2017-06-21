@@ -98,31 +98,6 @@ var DHConstructionManager   ConstructionManager;
 
 var bool                bAreConstructionsEnabled;
 
-// New helper function to calculate the round time remaining
-// Avoids re-stating this logic in various functionality that display time remaining, e.g. scoreboard, overhead map, deploy screen & spectator HUD
-static function int GetRoundTimeRemaining(DHGameReplicationInfo GRI)
-{
-    local int SecondsRemaining;
-
-    if (GRI != none)
-    {
-        if (GRI.bRoundIsOver)
-        {
-            SecondsRemaining = GRI.RoundEndTime;
-        }
-        else if (GRI.bMatchHasBegun)
-        {
-            SecondsRemaining = GRI.RoundEndTime - GRI.ElapsedTime;
-        }
-        else
-        {
-            SecondsRemaining = GRI.RoundStartTime + GRI.PreStartTime - GRI.ElapsedTime;
-        }
-    }
-
-    return Max(0, SecondsRemaining);
-}
-
 replication
 {
     // Variables the server will replicate to all clients
@@ -611,6 +586,10 @@ simulated function GetRoleCounts(RORoleInfo RI, out int Count, out int BotCount,
     }
 }
 
+//------------------------------------------------------------------------------
+// Artillery Functions
+//------------------------------------------------------------------------------
+
 function ClearAllArtilleryTargets()
 {
     local int i;
@@ -722,6 +701,10 @@ function RemoveCarriedRadioTrigger(ROArtilleryTrigger AT)
     }
 }
 
+//------------------------------------------------------------------------------
+// Overhead Map Help Request Functions
+//------------------------------------------------------------------------------
+
 // Modified to avoid "accessed none" errors on PRI.Team
 function AddRallyPoint(PlayerReplicationInfo PRI, vector NewLoc, optional bool bRemoveFromList)
 {
@@ -775,6 +758,35 @@ function RemoveMGResupplyRequestFor(PlayerReplicationInfo PRI)
             }
         }
     }
+}
+
+//------------------------------------------------------------------------------
+// Miscellaneous Functions
+//------------------------------------------------------------------------------
+
+// New helper function to calculate the round time remaining
+// Avoids re-stating this logic in various functionality that display time remaining, e.g. scoreboard, overhead map, deploy screen & spectator HUD
+static function int GetRoundTimeRemaining(DHGameReplicationInfo GRI)
+{
+    local int SecondsRemaining;
+
+    if (GRI != none)
+    {
+        if (GRI.bRoundIsOver)
+        {
+            SecondsRemaining = GRI.RoundEndTime;
+        }
+        else if (GRI.bMatchHasBegun)
+        {
+            SecondsRemaining = GRI.RoundEndTime - GRI.ElapsedTime;
+        }
+        else
+        {
+            SecondsRemaining = GRI.RoundStartTime + GRI.PreStartTime - GRI.ElapsedTime;
+        }
+    }
+
+    return Max(0, SecondsRemaining);
 }
 
 simulated function string GetTeamScaleString(int Team)
