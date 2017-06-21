@@ -841,16 +841,17 @@ function bool TryToDrive(Pawn P)
     return true;
 }
 
-// Modified to avoid playing engine start sound when entering vehicle
+// Modified to avoid playing engine start sound when entering vehicle, but to get a bot to start the engine on entering
+// Also to set bDriverAlreadyEntered as a much simpler alternative to the Timer() in ROWheeledVehicle, & to remove some redundancy from the Supers
 function KDriverEnter(Pawn P)
 {
-    bDriverAlreadyEntered = true; // added here as a much simpler alternative to the Timer() in ROWheeledVehicle
+    bDriverAlreadyEntered = true;
     DriverPositionIndex = InitialPositionIndex;
     PreviousPositionIndex = InitialPositionIndex;
     Instigator = self;
     ResetTime = Level.TimeSeconds - 1.0;
 
-    if (bEngineOff && !P.IsHumanControlled()) // lets bots start vehicle
+    if (bEngineOff && !P.IsHumanControlled()) // bot starts engine
     {
         ServerStartEngine();
     }
@@ -938,7 +939,7 @@ simulated event DrivingStatusChanged()
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
-//  ***************************** DRIVER VIEW POINTS  ****************************** //
+//  *************************** CHANGING DRIVER POSITION *************************** //
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to avoid wasting network resources by calling ServerChangeViewPoint on the server when it isn't valid

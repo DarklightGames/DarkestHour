@@ -9,8 +9,8 @@ class DHPawn extends ROPawn
 #exec OBJ LOAD FILE=ProjectileSounds.uax
 
 // General
-var     float   SpawnProtEnds;            // is set when a player spawns/teleports for "spawn" protection in selectable spawn maps
-var     float   SpawnKillTimeEnds;        // is set when a player spawns
+var     ROArtilleryTrigger  CarriedRadioTrigger; // for storing the trigger on a radioman each spawn, for the purpose of deleting it on death
+var     bool    bWeaponNeedsReload;       // whether an AT weapon is loaded or not
 var     float   StanceChangeStaminaDrain; // how much stamina is lost by changing stance
 var     float   MinHurtSpeed;             // when a moving player lands, if they're moving faster than this speed they'll take damage
 var     vector  LastWhizLocation;         // last whiz sound location on pawn (basically a non-replicated version of Pawn's mWhizSoundLocation, as we no longer want it to replicate)
@@ -18,7 +18,6 @@ var     bool    bHasBeenPossessed;        // fixes players getting new ammunitio
 var     bool    bNeedToAttachDriver;      // flags that net client was unable to attach Driver to VehicleWeapon, as hasn't yet received VW actor (tells vehicle to do it instead)
 var     bool    bClientSkipDriveAnim;     // set by vehicle replicated to net client that's already played correct initial driver anim, so DriveAnim doesn't override that
 var     bool    bClientPlayedDriveAnim;   // flags that net client already played DriveAnim on entering vehicle, so replicated vehicle knows not to set bClientSkipDriveAnim
-var     bool    bCombatSpawned;           // Indicates the pawn was spawned in combat
 
 // Player model
 var     array<material> FaceSkins;        // list of body & face skins to be randomly selected for pawn
@@ -28,21 +27,32 @@ var     bool    bReversedSkinsSlots;      // some player meshes have the typical
                                           // TODO: fix the reversed skins indexing in player meshes to standardise with body is 0 & face is 1 (as in RO), then delete this
 var     bool    bHatShotOff;              // records that player's helmet/headgear has been knocked off by a bullet impact
 
-// Resupply
-var     bool    bWeaponNeedsReload;       // whether an AT weapon is loaded or not
-var     int     MortarHEAmmo;
-var     int     MortarSmokeAmmo;
-
 // Mortars
 var     Actor   OwnedMortar;              // mortar vehicle associated with this actor, used to destroy mortar when player dies
 var     bool    bIsDeployingMortar;       // whether or not the pawn is deploying his mortar - used for disabling movement
 var     bool    bMortarCanBeResupplied;
+var     int     MortarHEAmmo;
+var     int     MortarSmokeAmmo;
 var     bool    bLockViewRotation;
 var     rotator LockViewRotation;
 
 // Obstacle clearing
 var     bool    bCanCutWire;
 var     bool    bIsCuttingWire;
+
+// Spawning
+var     DHSpawnPointBase    SpawnPoint;        // the spawn point that was used to spawn this vehicle
+var     float               SpawnProtEnds;     // is set when a player spawns/teleports for "spawn" protection in selectable spawn maps
+var     float               SpawnKillTimeEnds; // is set when a player spawns
+var     bool                bCombatSpawned;    // indicates the pawn was spawned in combat
+
+// Construction
+var     DHConstructionProxy ConstructionProxy;
+var     array<DHConstructionSupplyAttachment> TouchingSupplyAttachments;
+var     int                 SupplyCount;
+// Touch messages
+var     class<LocalMessage> TouchMessageClass;
+var     float               LastNotifyTime;
 
 // Ironsight bob
 var     float   IronsightBobTime;
@@ -51,12 +61,9 @@ var     float   IronsightBobAmplitude;
 var     float   IronsightBobFrequency;
 var     float   IronsightBobDecay;
 
-// Radioman
-var     ROArtilleryTrigger  CarriedRadioTrigger; // for storing the trigger on a radioman each spawn, for the purpose of deleting it on death
-
-// Sounds
-var()   array<sound>    PlayerHitSounds;
-var()   array<sound>    HelmetHitSounds;
+// Hit sounds
+var     array<sound>    PlayerHitSounds;
+var     array<sound>    HelmetHitSounds;
 
 // Mantling
 var     vector  MantleEndPoint;      // player's final location after mantle
@@ -82,7 +89,8 @@ var(ROAnimations)   name        MantleAnim_40C, MantleAnim_44C, MantleAnim_48C, 
 
 var(ROAnimations)   name        MantleAnim_40S, MantleAnim_44S, MantleAnim_48S, MantleAnim_52S, MantleAnim_56S, MantleAnim_60S, MantleAnim_64S,
                                 MantleAnim_68S, MantleAnim_72S, MantleAnim_76S, MantleAnim_80S, MantleAnim_84S, MantleAnim_88S;
-// Burning
+
+// Burning player
 var     bool                bOnFire;                       // whether Pawn is on fire or not
 var     bool                bBurnFXOn;                     // whether Fire FX are enabled or not
 var     bool                bCharred;                      // for switching in a charred overlay after the fire goes out
@@ -98,24 +106,13 @@ var     int                 BurnTimeLeft;                  // number of seconds 
 var     float               LastBurnTime;                  // last time we did fire damage to the Pawn
 var     Pawn                FireStarter;                   // who set a player on fire
 
-// Touch messages
-var     class<LocalMessage> TouchMessageClass;
-var     float               LastNotifyTime;
-
-// Spawning
-var     DHSpawnPointBase    SpawnPoint;                     // the spawn point that was used to spawn this vehicle
-
-// Construction
-var     DHConstructionProxy ConstructionProxy;
-var     array<DHConstructionSupplyAttachment> TouchingSupplyAttachments;
-var     int                 SupplyCount;
-
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
     reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
         PackedSkinIndexes;
 
+    // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
         SupplyCount;
 
@@ -127,12 +124,13 @@ replication
     reliable if (bNetDirty && Role == ROLE_Authority)
         bOnFire, bCrouchMantle, MantleHeight;
 
+    // Functions a client can call on the server
+    reliable if (Role < ROLE_Authority)
+        ServerCreateConstruction;
+
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
         ClientPawnWhizzed;
-
-    reliable if (Role < ROLE_Authority)
-        ServerCreateConstruction;
 }
 
 // Modified to use DH version of bullet whip attachment, & to remove its SavedAuxCollision (deprecated as now we simply enable/disable collision in ToggleAuxCollision function)

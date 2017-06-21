@@ -181,7 +181,7 @@ simulated function PostBeginPlay()
             AddConstructionClass(class<DHConstruction>(DynamicLoadObject(ConstructionClassNames[i], class'class')));
         }
 
-        foreach AllActors(class'DH_LevelInfo', LI)
+        foreach AllActors(class'DH_LevelInfo', LI) // note can't use DHGame's DHLevelInfo reference as hasn't been set when GRI is spawning
         {
             bAreConstructionsEnabled = LI.bAreConstructionsEnabled;
             break;

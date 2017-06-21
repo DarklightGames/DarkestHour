@@ -18,17 +18,17 @@ enum EMapMode
     MODE_Squads
 };
 
-var     EMapMode                DeployMenuStartMode; // What the deploy menu is supposed to start out on
-
-var     DHHintManager           DHHintManager;
-var     float                   MapVoteTime;
+var     EMapMode                DeployMenuStartMode; // what the deploy menu is supposed to start out on
 var     DH_LevelInfo            ClientLevelInfo;
+var     DHHintManager           DHHintManager;
 var     DHConstructionManager   ConstructionManager; // client only!
+var     float                   MapVoteTime;
 var     globalconfig string     ROIDHash;            // client ROID hash (this gets set/updated when a player joins a server)
 
+// View FOV
+var     globalconfig float      ConfigViewFOV;       // allows player to set their own preferred view FOV, within acceptable limits
 var     float                   ViewFOVMin;
 var     float                   ViewFOVMax;
-var     globalconfig float      ConfigViewFOV;       // allows player to set their own preferred view FOV, within acceptable limits (80 to 90)
 
 // Sway
 var     float                   DHSwayElasticFactor;
@@ -74,7 +74,6 @@ var     bool                    bSpawnPointInvalidated;
 var     int                     NextChangeTeamTime;         // the time at which a player can change teams next
 var     int                     DeathPenaltyCount;          // number of deaths accumulated that affects respawn time (only increases if bUseDeathPenalty is enabled)
                                                             // it resets whenever an objective is taken
-
 // Weapon locking (punishment for spawn killing)
 var     int                     WeaponUnlockTime;           // the time at which the player's weapons will be unlocked (being the round's future ElapsedTime in whole seconds)
 var     int                     PendingWeaponLockSeconds;   // fix for problem where player re-joins server with saved weapon lock, but client doesn't yet have GRI

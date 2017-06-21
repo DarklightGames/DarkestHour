@@ -7,8 +7,7 @@
 
 class DarkestHourGame extends ROTeamGame;
 
-// When a player leaves the server this info is stored for the session so if they return these values won't reset
-var     Hashtable_string_Object     PlayerSessions;
+var     Hashtable_string_Object     PlayerSessions; // When a player leaves the server this info is stored for the session so if they return these values won't reset
 
 var     DH_LevelInfo                DHLevelInfo;
 
@@ -825,6 +824,7 @@ function CalculateTeamBalanceValues(out int TeamSizes[2], out int IdealTeamSizes
     {
         Log("AlliesToAxisRatio for this level is out of bounds, please make sure it is between 0.0 and 1.0");
         Level.Game.Broadcast(self, "AlliesToAxisRatio for this level is out of bounds, please make sure it is between 0.0 and 1.0", 'Say');
+
         return;
     }
 
@@ -1111,7 +1111,7 @@ event PlayerController Login(string Portal, string Options, out string Error)
     local DHPlayer          PC;
     local Controller        C;
     local NavigationPoint   StartSpot;
-    local string            InName, InAdminName, InPassword, InChecksum, InCharacter,InSex;
+    local string            InName, InAdminName, InPassword, InChecksum, InCharacter, InSex;
     local byte              InTeam;
     local bool              bSpectator, bAdmin;
     local class<Security>   MySecurityClass;
@@ -1226,7 +1226,7 @@ event PlayerController Login(string Portal, string Options, out string Error)
     NewPlayer.GameReplicationInfo = GameReplicationInfo;
 
     // Apply security to this controller
-    MySecurityClass=class<Security>(DynamicLoadObject(SecurityClass,class'class'));
+    MySecurityClass=class<Security>(DynamicLoadObject(SecurityClass, class'class'));
 
     if (MySecurityClass != none)
     {

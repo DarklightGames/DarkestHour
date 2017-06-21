@@ -567,7 +567,7 @@ simulated state EnteringVehicle
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
-//  ****************************** PLAYER VIEW POINTS  ***************************** //
+//  ************************** CHANGING 'DRIVER' POSITION ************************** //
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to avoid wasting network resources by calling ServerChangeViewPoint on the server when it isn't valid

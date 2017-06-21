@@ -104,8 +104,8 @@ function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool
     }
 }
 
-// Modified to use APCDamageModifier, & to remove code preventing players damaging own team's vehicles that haven't been entered (should only protect vehicle in spawn)
-// Also removes some other irrelevant stuff not relevant to a static AT gun (code that stops 'vehicle' giving itself impact damage & check for engine hit point)
+// Modified to use APCDamageModifier, & to remove code preventing players damaging own team's gun that hasn't been entered (only designed to protect vehicles in spawn)
+// Also removes other stuff not relevant to a static AT gun (engine & tread stuff & stopping 'vehicle' giving itself impact damage)
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     local float VehicleDamageMod;
@@ -138,7 +138,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         return;
     }
 
-    // Check RO VehHitpoints, but only for any ammo store (AT gun has no driver or engine)
+    // Check RO VehHitpoints, but only for any ammo store (AT gun has no engine)
     for (i = 0; i < VehHitpoints.Length; ++i)
     {
         if (VehHitpoints[i].HitPointType == HP_AmmoStore && IsPointShot(HitLocation, Momentum, 1.0, i))

@@ -228,14 +228,13 @@ function SetLoadoutMode(ELoadoutMode Mode)
             i_SpawnVehicle.SetVisibility(false);
             i_ArtilleryVehicle.SetVisibility(false);
             i_SupplyVehicle.SetVisibility(false);
-
             break;
+
         case LM_Vehicle:
             b_EquipmentButton.EnableMe();
             b_VehicleButton.DisableMe();
             i_VehiclesButton.Image = material'DH_GUI_Tex.DeployMenu.vehicles';
             UpdateVehicleImage();
-
             break;
     }
 
@@ -1392,7 +1391,6 @@ function ChangeTeam(byte Team)
     if (Team != CurrentTeam) // confirm that we are actually changing teams
     {
         SetButtonsEnabled(false);
-
         PC.ServerSetPlayerInfo(Team, 255, 0, 0, -1, -1);
     }
 }

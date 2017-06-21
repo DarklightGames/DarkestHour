@@ -208,7 +208,7 @@ simulated exec function ROManualReload()
 {
     if (bMustUnbuttonToReload && !CanReload() && VehWep != none && VehWep.ReloadState != RL_ReadyToFire)
     {
-        DisplayVehicleMessage(12,, true);
+        DisplayVehicleMessage(12,, true); // "You must unbutton the hatch [KEYBIND] to reload"
     }
 }
 

@@ -30,7 +30,7 @@ var DHGameReplicationInfo   DHGRI;
 
 var     int                 AlliedNationID; // US = 0, Britain = 1, Canada = 2, Soviet Union = 3
 
-// Map or screen icons/legends
+// Map icons/legends
 var     SpriteWidget        MapLevelOverlay;
 var     TextWidget          MapScaleText;
 var     SpriteWidget        MapIconCarriedRadio;
@@ -41,22 +41,49 @@ var     SpriteWidget        MapIconMortarSmokeTarget;
 var     SpriteWidget        MapIconMortarArrow;
 var     SpriteWidget        MapIconMortarHit;
 var     SpriteWidget        MapPlayerNumberIcon;
-var     array<texture>      PlayerNumberIconTextures;
-var     SpriteWidget        SquadNameIcon;
+
+// Screen icons
 var     SpriteWidget        CanMantleIcon;
 var     SpriteWidget        CanCutWireIcon;
+var     SpriteWidget        ExtraAmmoIcon; // extra ammo icon appears if the player has extra ammo to give out
 var     SpriteWidget        DeployOkayIcon;
 var     SpriteWidget        DeployEnemiesNearbyIcon;
 var     SpriteWidget        DeployInObjectiveIcon;
-var     SpriteWidget        ExtraAmmoIcon; // extra ammo icon appears if the player has extra ammo to give out
-var     SpriteWidget        VehicleAltAmmoReloadIcon; // ammo reload icon for a coax MG, so reload progress can be shown on HUD like a tank cannon reload
-var     SpriteWidget        VehicleMGAmmoReloadIcon;  // ammo reload icon for a vehicle mounted MG position
+
+// Displayed player name & icons
+var     array<Pawn>         NamedPawns;             // a list of all pawns whose names are currently being rendered
+var     float               HUDLastNameDrawTime;    // the last time we called DrawPlayerNames() function, used so we can tell if a player has just become valid for name drawing
+var     material            PlayerNameIconMaterial;
+var     material            SpeakerIconMaterial;
+var     material            NeedAssistIconMaterial;
+var     material            NeedAmmoIconMaterial;
+
+// Vehicle HUD
+var     SpriteWidget        VehicleAltAmmoReloadIcon;           // ammo reload icon for a coax MG, so reload progress can be shown on HUD like a tank cannon reload
+var     SpriteWidget        VehicleMGAmmoReloadIcon;            // ammo reload icon for a vehicle mounted MG position
 var     SpriteWidget        VehicleSmokeLauncherAmmoIcon;       // ammo icon for a vehicle mounted smoke launcher
 var     TextWidget          VehicleSmokeLauncherAmmoAmount;     // ammo quantity display for vehicle smoke launcher
 var     SpriteWidget        VehicleSmokeLauncherAmmoReloadIcon; // ammo reload icon for vehicle smoke launcher
 var     SpriteWidget        VehicleSmokeLauncherAimIcon;        // aim indicator icon for a vehicle smoke launcher that can be rotated
 var     SpriteWidget        VehicleSmokeLauncherRangeBarIcon;   // range indicator icon for a range-adjustable vehicle smoke launcher
 var     SpriteWidget        VehicleSmokeLauncherRangeInfill;    // infill bar to show current range setting for a range-adjustable vehicle smoke launcher
+
+// Squads
+var     SpriteWidget        SquadNameIcon;
+var     SpriteWidget        SquadOrderAttackIcon;
+var     SpriteWidget        SquadOrderDefendIcon;
+var     array<texture>      PlayerNumberIconTextures;
+var     color               VehiclePositionIsSquadmateColor;
+
+// Construction
+var     SpriteWidget        VehicleSuppliesIcon;
+var     TextWidget          VehicleSuppliesText;
+
+// Death messages
+var     array<string>       ConsoleDeathMessages;   // paired with DHObituaries array & holds accompanying console death messages
+var     array<DHObituary>   DHObituaries;           // replaced RO's Obituaries static array, so we can have more than 4 death messages
+var     float               ObituaryFadeInTime;     // for some added suspense:
+var     float               ObituaryDelayTime;
 
 // Map or screen text that can be localized for different languages
 var     localized string    MapNameText;
@@ -79,20 +106,6 @@ var     localized string    CanReloadText;
 var     localized string    DeathPenaltyText;
 var     localized string    CaptureBarUnlockText;
 
-// Death messages
-var     array<string>       ConsoleDeathMessages;   // paired with DHObituaries array & holds accompanying console death messages
-var     array<DHObituary>   DHObituaries;           // replaced RO's Obituaries static array, so we can have more than 4 death messages
-var     float               ObituaryFadeInTime;     // for some added suspense:
-var     float               ObituaryDelayTime;
-
-// Displayed player & voice icon
-var     array<Pawn>         NamedPawns;             // a list of all pawns whose names are currently being rendered
-var     float               HUDLastNameDrawTime;    // the last time we called DrawPlayerNames() function, used so we can tell if a player has just become valid for name drawing
-var     material            PlayerNameIconMaterial;
-var     material            SpeakerIconMaterial;
-var     material            NeedAssistIconMaterial;
-var     material            NeedAmmoIconMaterial;
-
 // User-configurable HUD settings
 var     globalconfig bool   bSimpleColours;         // for colourblind setting, i.e. red and blue only
 var     globalconfig bool   bShowDeathMessages;     // whether or not to show the death messages
@@ -106,16 +119,6 @@ var     bool                bDebugVehicleHitPoints; // show all vehicle's specia
 var     bool                bDebugVehicleWheels;    // show all vehicle's physics wheels (the Wheels array of invisible wheels that drive & steer vehicle, even ones with treads)
 var     bool                bDebugCamera;           // in behind view, draws a red dot & white sphere to show current camera location, with a red line showing camera rotation
 var     SkyZoneInfo         SavedSkyZone;           // saves original SkyZone for player's current ZoneInfo if sky is turned off for debugging, so can be restored when sky is turned back on
-
-var     SpriteWidget        SquadOrderAttackIcon;
-var     SpriteWidget        SquadOrderDefendIcon;
-
-// Squads
-var     color               VehiclePositionIsSquadmateColor;
-
-// Construction
-var     SpriteWidget        VehicleSuppliesIcon;
-var     TextWidget          VehicleSuppliesText;
 
 /*
 // Modified to replace RO compass texture with DH one // TODO: was this accidentally deleted in bad merge of squad branch on 27th Feb 2017? (if so, also wiped out the new compass texture)
@@ -1057,7 +1060,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         Widget.WidgetTexture = Vehicle.VehicleHudImage;
         Widget.TextureCoords.X2 = Vehicle.VehicleHudImage.MaterialUSize() - 1;
         Widget.TextureCoords.Y2 = Vehicle.VehicleHudImage.MaterialVSize() - 1;
-        Widget.TextureScale = Vehicle.VehicleHudImage.MaterialUSize() / 256;
+        Widget.TextureScale = Vehicle.VehicleHudImage.MaterialUSize() / 256.0;
         DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
     }
 
@@ -1113,7 +1116,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             Widget.WidgetTexture = V.VehicleHudTurret;
             Widget.TextureCoords.X2 = V.VehicleHudTurret.MaterialUSize() - 1;
             Widget.TextureCoords.Y2 = V.VehicleHudTurret.MaterialVSize() - 1;
-            Widget.TextureScale = V.VehicleHudTurret.MaterialUSize() / 256;
+            Widget.TextureScale = V.VehicleHudTurret.MaterialUSize() / 256.0;
             DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
         }
     }
@@ -1249,7 +1252,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             VehicleLastSpeedRotation = Min(f, VehicleLastSpeedRotation + MaxChange);
         }
 
-        // Draw the speed guage
+        // Draw the speed gauge
         VehicleSpeedIndicator.WidgetTexture = VehicleSpeedTextures[Team];
         DrawSpriteWidgetClipped(Canvas, VehicleSpeedIndicator, Coords, true, XL, YL, false, true); // background
 
@@ -1274,7 +1277,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             }
         }
 
-        // Draw the RPM guage
+        // Draw the RPM gauge
         VehicleRPMIndicator.WidgetTexture = VehicleRPMTextures[Team];
         DrawSpriteWidgetClipped(Canvas, VehicleRPMIndicator, Coords, true, XL, YL, false, true);
 
@@ -5248,7 +5251,7 @@ simulated function DrawFadeEffect(Canvas C)
         FadeColor.R = 255;
         FadeColor.G = 255;
         FadeColor.B = 255;
-        FadeColor.A = 64 * (1 - (FMax(FadeTime - Level.TimeSeconds - 5.0 - WhiteFlashTime, 0.0) / WhiteFlashTime));
+        FadeColor.A = 64 * (1.0 - (FMax(FadeTime - Level.TimeSeconds - 5.0 - WhiteFlashTime, 0.0) / WhiteFlashTime));
         C.DrawColor = FadeColor;
     }
     else if (FadeTime - Level.TimeSeconds - 5.0 > 0.0)
