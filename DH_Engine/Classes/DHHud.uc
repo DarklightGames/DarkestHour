@@ -1500,7 +1500,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                         DrawSpriteWidgetClipped(Canvas, VehicleSmokeLauncherAimIcon, Coords2, true,,, false, true, true); // background clockface icon
 
                         Widget = VehicleSmokeLauncherAimIcon;
-                        AimIndicator = TexRotator'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_aim_pointer_rot'; // TODO: replace this placeholder with better texture
+                        AimIndicator = TexRotator'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_aim_pointer_rot';
                         AimIndicator.Rotation.Yaw = -float(Cannon.SmokeLauncherAdjustmentSetting) / float(SL.default.NumRotationSettings) * 65536.0;
                         Widget.WidgetTexture = AimIndicator;
                         DrawSpriteWidgetClipped(Canvas, Widget, Coords2, true,,, false, true, true); // arrowhead, rotated to show aim direction
@@ -5439,7 +5439,6 @@ defaultproperties
     VehicleSmokeLauncherAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=255),TextureScale=0.12,DrawPivot=DP_LowerMiddle,PosX=0.697,PosY=1.0,OffsetX=0,OffsetY=-38,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=80),Tints[1]=(R=255,G=0,B=0,A=80))
     VehicleSmokeLauncherAmmoAmount=(Text="",PosX=0.697,PosY=1.0,WrapWidth=0.0,WrapHeight=1.0,OffsetX=45,OffsetY=-30,DrawPivot=DP_LowerLeft,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     VehicleSmokeLauncherAimIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.Tank_Hud.clock_face',TextureCoords=(X1=0,Y1=0,X2=255,Y2=255),TextureScale=0.089,DrawPivot=DP_LowerMiddle,PosX=0.697,PosY=1.0,OffsetX=0,OffsetY=32,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    // TODO: get proper smoke launcher range indicator icons made to replace placeholder textures below:
     VehicleSmokeLauncherRangeBarIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_rangebar',TextureCoords=(X1=0,Y1=0,X2=63,Y2=255),TextureScale=0.12,DrawPivot=DP_LowerMiddle,PosX=0.697,PosY=1.0,OffsetX=75,OffsetY=-32,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     VehicleSmokeLauncherRangeInfill=(WidgetTexture=texture'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_rangebar_infill',TextureCoords=(X1=0,Y1=0,X2=63,Y2=255),TextureScale=0.12,DrawPivot=DP_LowerMiddle,PosX=0.697,PosY=1.0,OffsetX=75,OffsetY=-32,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
