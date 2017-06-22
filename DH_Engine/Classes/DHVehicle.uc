@@ -1865,16 +1865,13 @@ function DriverRadiusDamage(float DamageAmount, float DamageRadius, Controller E
 // The Driver is dead now so Destroyed_HandleDriver() is one of those things, but it isn't included
 state VehicleDestroyed
 {
-Begin:
-    if (Driver != none)
+    function BeginState()
     {
-        Destroyed_HandleDriver();
+        if (Driver != none)
+        {
+            Destroyed_HandleDriver();
+        }
     }
-
-    DestroyAppearance();
-    VehicleExplosion(vect(0.0, 0.0, 1.0), 1.0);
-    Sleep(TimeTilDissapear);
-    CallDestroy();
 }
 
 // Modified to randomise explosion damage (except for resupply vehicles) & to add DestroyedBurningSound
