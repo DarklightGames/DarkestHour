@@ -100,12 +100,15 @@ var     SquadSignal             SquadSignals[2];
 
 replication
 {
+    unreliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
+        SquadMemberLocations;
+
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
         NextSpawnTime, SpawnPointIndex, VehiclePoolIndex,
         DHPrimaryWeapon, DHSecondaryWeapon, bSpawnPointInvalidated,
         NextVehicleSpawnTime, LastKilledTime, DeathPenaltyCount,
-        SquadReplicationInfo, SquadMemberLocations, NextChangeTeamTime;
+        SquadReplicationInfo, NextChangeTeamTime;
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
