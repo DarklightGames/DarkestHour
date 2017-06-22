@@ -106,17 +106,22 @@ function bool IsOptionDisabled(int OptionIndex)
     return false;
 }
 
-function GetOptionText(int OptionIndex, out string ActionText, out string SubjectText)
+function GetOptionText(int OptionIndex, out string ActionText, out string SubjectText, optional out color TextColor)
 {
     local class<DHConstruction> ConstructionClass;
 
-    super.GetOptionText(OptionIndex, ActionText, SubjectText);
+    super.GetOptionText(OptionIndex, ActionText, SubjectText, TextColor);
 
     ConstructionClass = class<DHConstruction>(Options[OptionIndex].OptionalObject);
 
     if (ConstructionClass != none)
     {
         SubjectText = string(ConstructionClass.default.SupplyCost);
+    }
+
+    if (IsOptionDisabled(OptionIndex))
+    {
+        TextColor = class'UColor'.default.Red;
     }
 }
 

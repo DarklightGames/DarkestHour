@@ -280,6 +280,7 @@ function PostRender(Canvas C)
     local DHCommandMenu Menu;
     local string ActionText, SubjectText;
     local bool bIsOptionDisabled;
+    local color TextColor;
 
     if (C == none)
     {
@@ -397,7 +398,7 @@ function PostRender(Canvas C)
     // Display text of selection
     if (SelectedIndex >= 0)
     {
-        Menu.GetOptionText(SelectedIndex, ActionText, SubjectText);
+        Menu.GetOptionText(SelectedIndex, ActionText, SubjectText, TextColor);
 
         C.TextSize(ActionText, XL, YL);
 
@@ -414,13 +415,14 @@ function PostRender(Canvas C)
         C.DrawColor = class'UColor'.default.Black;
         C.SetPos(CenterX - (XL / 2) + 1, CenterY - 31 -  YL);
         C.DrawText(SubjectText);
-        C.DrawColor = class'UColor'.default.White;
+        C.DrawColor = TextColor;
         C.SetPos(CenterX - (XL / 2), CenterY - 32 - YL);
         C.DrawText(SubjectText);
 
+        // Draw action icon
         if (Menu.Options[SelectedIndex].ActionIcon != none)
         {
-            C.DrawColor = class'UColor'.default.White;
+            C.DrawColor = TextColor;
             C.SetPos(CenterX - (XL / 2) - 32, CenterY - 32 - YL - 8);
             C.DrawTile(Menu.Options[SelectedIndex].ActionIcon, 32, 32, 0, 0, 31, 31);
         }

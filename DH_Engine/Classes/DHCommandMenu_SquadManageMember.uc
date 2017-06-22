@@ -131,12 +131,12 @@ function bool IsOptionDisabled(int OptionIndex)
     }
 }
 
-function GetOptionText(int OptionIndex, out string ActionText, out string SubjectText)
+function GetOptionText(int OptionIndex, out string ActionText, out string SubjectText, optional out color TextColor)
 {
     local DHPlayerReplicationInfo OtherPRI;
     local Pawn P;
 
-    super.GetOptionText(OptionIndex, ActionText, SubjectText);
+    super.GetOptionText(OptionIndex, ActionText, SubjectText, TextColor);
 
     P = Pawn(MenuObject);
 

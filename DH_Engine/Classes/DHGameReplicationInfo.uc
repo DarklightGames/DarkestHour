@@ -858,8 +858,10 @@ defaultproperties
     ConstructionClassNames(2)="DH_Construction.DHConstruction_Hedgehog"
     ConstructionClassNames(3)="DH_Construction.DHConstruction_PlatoonHQ"
     ConstructionClassNames(4)="DH_Construction.DHConstruction_Resupply"
-    ConstructionClassNames(5)="DH_Construction.DHConstruction_Sandbags"
-    ConstructionClassNames(6)="DH_Construction.DHConstruction_ATGun_Medium"
-    ConstructionClassNames(7)="DH_Construction.DHConstruction_ATGun_Heavy"
+    ConstructionClassNames(5)="DH_Construction.DHConstruction_Sandbags_Line"
+    ConstructionClassNames(6)="DH_Construction.DHConstruction_Sandbags_Crescent"
+    ConstructionClassNames(7)="DH_Construction.DHConstruction_Sandbags_Bunker"
+    ConstructionClassNames(8)="DH_Construction.DHConstruction_ATGun_Medium"
+    ConstructionClassNames(9)="DH_Construction.DHConstruction_ATGun_Heavy"
 }
 

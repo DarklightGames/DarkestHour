@@ -31,7 +31,7 @@ var Object                  MenuObject;
 
 function Setup();   // Called before pushed onto the stack
 
-function GetOptionText(int OptionIndex, out string ActionText, out string SubjectText)
+function GetOptionText(int OptionIndex, out string ActionText, out string SubjectText, optional out color TextColor)
 {
     if (OptionIndex < 0 || OptionIndex >= Options.Length)
     {
@@ -40,6 +40,7 @@ function GetOptionText(int OptionIndex, out string ActionText, out string Subjec
 
     ActionText = Options[OptionIndex].ActionText;
     SubjectText = Options[OptionIndex].SubjectText;
+    TextColor = class'UColor'.default.White;
 }
 
 function bool IsOptionDisabled(int OptionIndex);

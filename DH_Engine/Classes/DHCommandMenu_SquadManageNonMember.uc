@@ -79,11 +79,11 @@ function OnSelect(int OptionIndex, vector Location)
     Interaction.Hide();
 }
 
-function GetOptionText(int OptionIndex, out string ActionText, out string SubjectText)
+function GetOptionText(int OptionIndex, out string ActionText, out string SubjectText, optional out color TextColor)
 {
     local DHPlayerReplicationInfo OtherPRI;
 
-    super.GetOptionText(OptionIndex, ActionText, SubjectText);
+    super.GetOptionText(OptionIndex, ActionText, SubjectText, TextColor);
 
     OtherPRI = DHPlayerReplicationInfo(MenuObject);
 
