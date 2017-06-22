@@ -53,7 +53,6 @@ var     float                   FlinchMaxOffset;
 var     float                   MantleCheckTimer;           // makes sure client doesn't try to start mantling without the server
 var     float                   MantleFailTimer;            // makes sure we don't get stuck floating in an object unable to end a mantle
 var     bool                    bDidMantle;                 // is the mantle complete?
-var     bool                    bIsInStateMantling;         // stop the client from exiting state until server has exited to avoid desync
 var     bool                    bDidCrouchCheck;
 var     bool                    bWaitingToMantle;
 var     bool                    bLockJump;
@@ -109,10 +108,6 @@ replication
         DHPrimaryWeapon, DHSecondaryWeapon, bSpawnPointInvalidated,
         NextVehicleSpawnTime, LastKilledTime, DeathPenaltyCount,
         SquadReplicationInfo, NextChangeTeamTime;
-
-    // Variables the server will replicate to all clients
-    reliable if (bNetDirty && Role == ROLE_Authority)
-        bIsInStateMantling;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
