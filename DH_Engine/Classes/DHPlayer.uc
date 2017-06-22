@@ -1220,7 +1220,7 @@ state PlayerWalking
         NewAccel = aForward * X + aStrafe * Y;
         NewAccel.Z = 0.0;
 
-        if (VSize(NewAccel) < 1.0 || bWaitingToMantle || P.bIsDeployingMortar || P.bIsCuttingWire)
+        if (VSizeSquared(NewAccel) < 1.0 || bWaitingToMantle || P.bIsDeployingMortar || P.bIsCuttingWire) // using VSizeSquared instead of VSize for more efficient processing
         {
             NewAccel = vect(0.0, 0.0, 0.0);
         }
