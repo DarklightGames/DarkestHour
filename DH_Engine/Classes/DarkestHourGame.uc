@@ -178,7 +178,7 @@ function PostBeginPlay()
     }
 
     RoundDuration = LevelInfo.RoundDuration * 60;
-    AlliesToAxisRatio = DH_LevelInfo(LevelInfo).AlliesToAxisRatio;
+    AlliesToAxisRatio = DHLevelInfo.AlliesToAxisRatio;
 
     // Stored the level's original ReinforcementIntervals so we can reset to it when round restarts (in case the level edits it)
     OriginalReinforcementIntervals[AXIS_TEAM_INDEX] = LevelInfo.Axis.ReinforcementInterval;
@@ -816,7 +816,7 @@ function CalculateTeamBalanceValues(out int TeamSizes[2], out int IdealTeamSizes
     local float TeamSizeFactor;
 
     // Do some integral checks
-    if (DH_LevelInfo(LevelInfo) == none)
+    if (DHLevelInfo == none)
     {
         return;
     }
@@ -832,7 +832,7 @@ function CalculateTeamBalanceValues(out int TeamSizes[2], out int IdealTeamSizes
     GetTeamSizes(TeamSizes);
 
     // If HardRatio then TeamSizeFactor should be 0.5
-    if (DH_LevelInfo(LevelInfo).bHardTeamRatio)
+    if (DHLevelInfo.bHardTeamRatio)
     {
         TeamRatios[0] = AlliesToAxisRatio;
         TeamRatios[1] = 1.0 - AlliesToAxisRatio;
@@ -2917,7 +2917,7 @@ exec function SetAlliesToAxisRatio(float Value)
     // Pass -1 to reset
     if (Value == -1.0)
     {
-        AlliesToAxisRatio = DH_LevelInfo(LevelInfo).AlliesToAxisRatio;
+        AlliesToAxisRatio = DHLevelInfo.AlliesToAxisRatio;
     }
 
     // Prevent values outside of range
@@ -2935,7 +2935,7 @@ exec function SetAlliesToAxisRatio(float Value)
 // Function for changing bHardTeamRatio at real time
 exec function SetHardTeamRatio(bool bNewHardTeamRatio)
 {
-    DH_LevelInfo(LevelInfo).bHardTeamRatio = bNewHardTeamRatio;
+    DHLevelInfo.bHardTeamRatio = bNewHardTeamRatio;
 }
 
 // Function for changing a team's ReinforcementInterval
