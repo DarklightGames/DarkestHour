@@ -120,17 +120,12 @@ var     bool                bDebugVehicleWheels;    // show all vehicle's physic
 var     bool                bDebugCamera;           // in behind view, draws a red dot & white sphere to show current camera location, with a red line showing camera rotation
 var     SkyZoneInfo         SavedSkyZone;           // saves original SkyZone for player's current ZoneInfo if sky is turned off for debugging, so can be restored when sky is turned back on
 
-/*
-// Modified to replace RO compass texture with DH one // TODO: was this accidentally deleted in bad merge of squad branch on 27th Feb 2017? (if so, also wiped out the new compass texture)
-simulated event PostBeginPlay()
+// Modified to ignore the Super in ROHud, which added a hacky way of changing the compass rotating texture
+// We now use a DH version of the compass texture, with a proper TexRotator set up for it
+simulated function PostBeginPlay()
 {
-    super(HudBase).PostBeginPlay(); // skip over the Super in ROHud
-
-    TexRotator'InterfaceArt_tex.HUD.TexRotator0'.Material = texture'DH_InterfaceArt_tex.HUD.DHCompassBackground';
-    TexRotator'InterfaceArt_tex.HUD.TexRotator0'.UOffset = 128;
-    TexRotator'InterfaceArt_tex.HUD.TexRotator0'.VOffset = 128;
+    super(HudBase).PostBeginPlay();
 }
-*/
 
 // Disabled as the only functionality was in HudBase re the DamageTime array, but that became redundant in RO (no longer gets set in function DisplayHit)
 simulated function Tick(float deltaTime)
@@ -5322,7 +5317,8 @@ defaultproperties
     DeathPenaltyText="Death Penalty Count: {0} (+{1} second respawn time)"
     NotReadyToSpawnText="Spawning will enable in {s} seconds (Use this time to organize squads and plan)"
 
-    // Screen indicator icons
+    // Screen indicator icons & player HUD
+    CompassNeedle=(WidgetTexture=TexRotator'DH_InterfaceArt_tex.HUD.Compass_rotator') // using DH version of compass background texture
     PlayerNameIconMaterial=material'DH_InterfaceArt_tex.HUD.player_icon_world'
     SpeakerIconMaterial=texture'DH_InterfaceArt_tex.Communication.speaker_icon'
     NeedAssistIconMaterial=texture'DH_InterfaceArt_tex.Communication.need_assist_icon'
