@@ -164,8 +164,6 @@ function ServerIncrementProgress()
 
 simulated function PostBeginPlay()
 {
-    local DH_LevelInfo LI;
-
     super.PostBeginPlay();
 
     if (Role == ROLE_Authority)
@@ -173,9 +171,8 @@ simulated function PostBeginPlay()
         SetTeamIndex(int(TeamOwner));
         Health = HealthMax;
 
-        foreach AllActors(class'DH_LevelInfo', LI)
+        foreach AllActors(class'DH_LevelInfo', LevelInfo)
         {
-            LevelInfo = LI;
             break;
         }
     }
