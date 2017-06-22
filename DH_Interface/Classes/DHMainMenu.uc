@@ -78,9 +78,10 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 function ShowControlsChangedMessage()
 {
-    Controller.OpenMenu("GUI2K4.GUI2K4QuestionPage");
-    GUIQuestionPage(Controller.TopPage()).SetupQuestion(ControlsChangedMessage, QBTN_No | QBTN_Yes, QBTN_Yes);
-    GUIQuestionPage(Controller.TopPage()).OnButtonClick = OnControlsChangedButtonClicked;
+    local GUIQuestionPage ConfirmWindow;
+
+    ConfirmWindow = Controller.ShowQuestionDialog(ControlsChangedMessage, QBTN_YesNo, QBTN_Yes);
+    ConfirmWindow.OnButtonClick = OnControlsChangedButtonClicked;
 }
 
 function OnControlsChangedButtonClicked(byte bButton)
@@ -162,8 +163,7 @@ function bool ButtonClick(GUIComponent Sender)
         case b_QuickPlay:
             if (!Controller.CheckSteam())
             {
-                Controller.OpenMenu(Controller.QuestionMenuClass);
-                GUIQuestionPage(Controller.TopPage()).SetupQuestion(SteamMustBeRunningText, QBTN_Ok, QBTN_Ok);
+                Controller.ShowQuestionDialog(SteamMustBeRunningText, QBTN_Ok, QBTN_Ok);
             }
             else
             {
@@ -174,8 +174,7 @@ function bool ButtonClick(GUIComponent Sender)
         case b_Practice:
             if (class'LevelInfo'.static.IsDemoBuild())
             {
-                Controller.OpenMenu(Controller.QuestionMenuClass);
-                GUIQuestionPage(Controller.TopPage()).SetupQuestion(SinglePlayerDisabledText, QBTN_Ok, QBTN_Ok);
+                Controller.ShowQuestionDialog(SinglePlayerDisabledText, QBTN_Ok, QBTN_Ok);
             }
             else
             {
@@ -188,8 +187,7 @@ function bool ButtonClick(GUIComponent Sender)
         case b_MultiPlayer:
             if (!Controller.CheckSteam())
             {
-                Controller.OpenMenu(Controller.QuestionMenuClass);
-                GUIQuestionPage(Controller.TopPage()).SetupQuestion(SteamMustBeRunningText, QBTN_Ok, QBTN_Ok);
+                Controller.ShowQuestionDialog(SteamMustBeRunningText, QBTN_Ok, QBTN_Ok);
             }
             else
             {
@@ -202,8 +200,7 @@ function bool ButtonClick(GUIComponent Sender)
         case b_Host:
             if (!Controller.CheckSteam())
             {
-                Controller.OpenMenu(Controller.QuestionMenuClass);
-                GUIQuestionPage(Controller.TopPage()).SetupQuestion(SteamMustBeRunningText, QBTN_Ok, QBTN_Ok);
+                Controller.ShowQuestionDialog(SteamMustBeRunningText, QBTN_Ok, QBTN_Ok);
             }
             else
             {
@@ -753,4 +750,3 @@ defaultproperties
     PatreonURL="http://www.patreon.com/darkesthourgame"
     ControlsChangedMessage="New controls have been added to the game. As a result, your previous control bindings may have been changed.||Do you want to review your control settings?"
 }
-

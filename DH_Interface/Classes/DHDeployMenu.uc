@@ -622,7 +622,7 @@ function UpdateVehicles(optional bool bShowAlert)
         {
             if (bShowAlert)
             {
-                OpenConfirmationWindow(default.VehicleUnavailableString, true, ConfirmWindow); // just an 'ok' to close this message window
+                ConfirmWindow = Controller.ShowQuestionDialog(default.VehicleUnavailableString, QBTN_OK, QBTN_OK);
                 ConfirmWindow.OnButtonClick = OnOKButtonClick;
             }
 
@@ -763,7 +763,7 @@ function bool OnClick(GUIComponent Sender)
                 if (PC.NextChangeTeamTime >= GRI.ElapsedTime)
                 {
                     ConfirmMessage = Repl(default.CantChangeTeamYetText, "{s}", PC.NextChangeTeamTime - GRI.ElapsedTime);
-                    OpenConfirmationWindow(ConfirmMessage, true); // just an 'ok' to close this message window
+                    Controller.ShowQuestionDialog(ConfirmMessage, QBTN_OK, QBTN_OK);
                 }
                 // Player can change team, but give him a screen prompt & ask him to confirm the change
                 else
@@ -780,7 +780,7 @@ function bool OnClick(GUIComponent Sender)
                         ConfirmMessage = Repl(default.ChangeTeamConfirmText, "{s}", class'DarkestHourGame'.default.ChangeTeamInterval);
                     }
 
-                    OpenConfirmationWindow(ConfirmMessage,, ConfirmWindow); // requires a yes/no answer
+                    ConfirmWindow = Controller.ShowQuestionDialog(ConfirmMessage, QBTN_YesNo);
 
                     // Set the function to call when the player presses 'yes' or 'no'
                     if (Sender == b_Axis)
@@ -1123,7 +1123,7 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
 
             default:
                 ErrorMessage = class'ROGUIRoleSelection'.static.GetErrorMessageForID(Result);
-                OpenConfirmationWindow(ErrorMessage, true); // just an 'ok' to close this error message window
+                Controller.ShowQuestionDialog(ErrorMessage, QBTN_OK, QBTN_OK);
                 break;
         }
     }
@@ -1683,28 +1683,6 @@ function static SetVisible(GUIComponent C, bool bVisible)
         else
         {
             C.DisableMe();
-        }
-    }
-}
-
-// New helper function to open a confirmation, or yes/no window on the player's screen
-function OpenConfirmationWindow(string Message, optional bool bOKConfirmationOnly, optional out GUIQuestionPage ConfirmWindow)
-{
-    if (Message != "" && Controller != none)
-    {
-        Controller.OpenMenu(Controller.QuestionMenuClass);
-        ConfirmWindow = GUIQuestionPage(Controller.TopPage()); // option for GUI page reference to be passed back as an out value
-
-        if (ConfirmWindow != none)
-        {
-            if (bOKConfirmationOnly)
-            {
-                ConfirmWindow.SetupQuestion(Message, QBTN_OK, QBTN_OK); // just requires an 'ok' to close message window
-            }
-            else
-            {
-                ConfirmWindow.SetupQuestion(Message, QBTN_YesNo); // offers player a yes/no choice
-            }
         }
     }
 }

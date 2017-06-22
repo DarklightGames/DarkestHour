@@ -170,8 +170,8 @@ function SelectTeam(int Team)
         PC.NextChangeTeamTime >= GRI.ElapsedTime)
     {
         // Trying to change teams, but recently did (give an error)
-        Controller.OpenMenu(Controller.QuestionMenuClass);
-        GUIQuestionPage(Controller.TopPage()).SetupQuestion(Repl(class'DHDeployMenu'.default.CantChangeTeamYetText, "{s}", PC.NextChangeTeamTime - GRI.ElapsedTime), QBTN_Ok);
+        Controller.ShowQuestionDialog(Repl(class'DHDeployMenu'.default.CantChangeTeamYetText, "{s}", PC.NextChangeTeamTime - GRI.ElapsedTime), QBTN_OK);
+
         return;
     }
 
@@ -227,11 +227,7 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
 
         SetButtonsState(false);
 
-        if (Controller != none)
-        {
-            Controller.OpenMenu(Controller.QuestionMenuClass);
-            GUIQuestionPage(Controller.TopPage()).SetupQuestion(ErrorMessage, QBTN_Ok, QBTN_Ok);
-        }
+        Controller.ShowQuestionDialog(ErrorMessage, QBTN_OK, QBTN_OK);
     }
 }
 
