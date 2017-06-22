@@ -1155,7 +1155,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             }
             else if (Vehicle.Driver != none || Vehicle.bDriving) // added bDriving as net client doesn't have Driver pawn if he's hidden because bDrawDriverInTP=false
             {
-                VehicleOccupants.Tints[TeamIndex] = GetPlayerColor(Vehicle.Driver.PlayerReplicationInfo);
+                VehicleOccupants.Tints[TeamIndex] = GetPlayerColor(Vehicle.PlayerReplicationInfo);
                 VehicleOccupants.Tints[TeamIndex].A = 128;
             }
             else
