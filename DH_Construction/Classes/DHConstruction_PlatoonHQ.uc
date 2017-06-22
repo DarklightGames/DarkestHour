@@ -209,11 +209,11 @@ simulated function Material GetFlagMaterial()
         case NATION_USA:
             return Texture'DH_Construction_tex.Base.USA_flag_01';
         case NATION_Canada:
-            break;
+            return Texture'DH_Construction_tex.Base.CAN_flag_01';
         case NATION_Britain:
-            break;
+            return Texture'DH_Construction_tex.Base.BRIT_flag_01';
         case NATION_USSR:
-            break;
+            return Texture'DH_Construction_tex.Base.SOVIET_flag_01';
         }
         break;
     }
