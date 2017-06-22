@@ -1562,9 +1562,24 @@ state PlayerDriving
         local Vehicle          CurrentVehicle;
         local DHArmoredVehicle AV;
         local float            NewPing, AppliedThrottle;
+        local bool             bIncrementalThrottle;
 
         CurrentVehicle = Vehicle(Pawn);
-        AV = DHArmoredVehicle(Pawn);
+
+        if (CurrentVehicle != none)
+        {
+            AV = DHArmoredVehicle(Pawn);
+
+            // Check whether player is using an incremental throttle, based on his settings & the type of vehicle
+            if (AV != none)
+            {
+                bIncrementalThrottle = bInterpolatedTankThrottle;
+            }
+            else
+            {
+                bIncrementalThrottle = bInterpolatedVehicleThrottle;
+            }
+        }
 
         if (bHudCapturesMouseInputs)
         {
@@ -1621,7 +1636,7 @@ state PlayerDriving
                 aLastForward = aForward;
                 aLastStrafe = aStrafe;
 
-                if (CurrentVehicle != none && (bInterpolatedVehicleThrottle || (AV != none && bInterpolatedTankThrottle)))
+                if (bIncrementalThrottle)
                 {
                     if (aForward > 0.0)
                     {
@@ -1669,7 +1684,7 @@ state PlayerDriving
         }
         else
         {
-            if (CurrentVehicle != none && (bInterpolatedVehicleThrottle || (AV != none && bInterpolatedTankThrottle)))
+            if (bIncrementalThrottle)
             {
                 if (aForward > 0.0)
                 {

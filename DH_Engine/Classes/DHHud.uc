@@ -1027,6 +1027,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     local color              VehicleColor;
     local array<color>       Colors;
     local array<string>      Lines;
+    local bool               bDrawThrottleGauge;
 
     if (bHideHud)
     {
@@ -1301,9 +1302,21 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         VehicleRPMIndicator.WidgetTexture = VehicleRPMNeedlesTextures[Team];
         DrawSpriteWidgetClipped(Canvas, VehicleRPMIndicator, Coords, true, XL, YL, false, true);
 
-        // Check if we should draw a throttle gauge
-        if (ROPlayer(Vehicle.Controller) != none && ((ROPlayer(Vehicle.Controller).bInterpolatedTankThrottle && Vehicle.IsA('DHArmoredVehicle'))
-            || (ROPlayer(Vehicle.Controller).bInterpolatedVehicleThrottle && !Vehicle.IsA('DHArmoredVehicle'))))
+        // Check whether we need to draw a throttle gauge (if player is using an incremental throttle, based on his settings & the type of vehicle)
+        if (ROPlayer(Vehicle.Controller) != none)
+        {
+            if (Vehicle.IsA('DHArmoredVehicle'))
+            {
+                bDrawThrottleGauge = ROPlayer(Vehicle.Controller).bInterpolatedTankThrottle;
+            }
+            else
+            {
+                bDrawThrottleGauge = ROPlayer(Vehicle.Controller).bInterpolatedVehicleThrottle;
+            }
+        }
+
+        // Draw a throttle gauge (if player is using an incremental throttle)
+        if (bDrawThrottleGauge)
         {
             Y_one = YL; // save YL for use later
 
