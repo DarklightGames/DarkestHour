@@ -291,11 +291,13 @@ simulated state LeavingViewTransition
 // Modified to handle different 'can't exit' messages if MG doesn't have a hatch, so player has to exit through driver's and/or commander's hatch
 simulated function bool CanExit()
 {
+    local DHArmoredVehicle AV;
+
     if (!super.CanExit())
     {
         if (DriverPositions.Length <= UnbuttonedPositionIndex) // means it is impossible to unbutton
         {
-            if (DHArmoredVehicle(VehicleBase) != none && DHArmoredVehicle(VehicleBase).DriverPositions.Length > DHArmoredVehicle(VehicleBase).UnbuttonedPositionIndex) // means driver has hatch
+            if (GetArmoredVehicleBase(AV) && AV.DriverPositions.Length > AV.UnbuttonedPositionIndex) // means driver has hatch
             {
                 DisplayVehicleMessage(10); // must exit through driver's or commander's hatch
             }
