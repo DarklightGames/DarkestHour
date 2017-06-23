@@ -71,18 +71,18 @@ function bool TryToDrive(Pawn P)
 // Overridden to bypass attaching as a driver and go straight to the gun
 function KDriverEnter(Pawn P)
 {
-    if (WeaponPawns.Length > 0)
+    if (Cannon != none && Cannon.WeaponPawn != none)
     {
-        WeaponPawns[0].KDriverEnter(P); // attach to the first WeaponPawn, do not pass "Go" :-)
+        Cannon.WeaponPawn.KDriverEnter(P);
     }
 }
 
 // Overridden to bypass attaching as a driver and go straight to the gun
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-    if (WeaponPawns.Length > 0)
+    if (Cannon != none && Cannon.WeaponPawn != none)
     {
-        WeaponPawns[0].ClientKDriverEnter(PC); // attach to the first WeaponPawn, do not pass "Go" :-)
+        Cannon.WeaponPawn.ClientKDriverEnter(PC);
     }
 }
 
