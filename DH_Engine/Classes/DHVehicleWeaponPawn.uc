@@ -340,6 +340,29 @@ function bool ResupplyAmmo()
     return VehWep != none && VehWep.ResupplyAmmo();
 }
 
+// New function to try to start a reload or resume any previously paused reload if weapon isn't loaded
+function CheckResumeReloadingOnEntry()
+{
+    local byte OldReloadState;
+
+    if (VehWep != none && VehWep.bMultiStageReload)
+    {
+        OldReloadState = VehWep.ReloadState;
+
+        // Try to resume any paused reload, or start a new reload if in waiting state & the player does not use manual reloading
+        if (VehWep.ReloadState < RL_ReadyToFire || (VehWep.ReloadState == RL_Waiting && !VehWep.PlayerUsesManualReloading()))
+        {
+            VehWep.AttemptReload();
+        }
+
+        // Replicate the weapon's current reload state, unless AttemptReload() changed the state, in which case it will have already done this
+        if (VehWep.ReloadState == OldReloadState)
+        {
+            VehWep.PassReloadStateToClient();
+        }
+    }
+}
+
 // Modified to make generic, for any vehicle weapon (not just cannon) & returning part reloaded values based on ReloadStages array
 function float GetAmmoReloadState()
 {
@@ -422,13 +445,10 @@ function bool TryToDrive(Pawn P)
     return true;
 }
 
-// Modified to try to start a reload or resume any previously paused reload if weapon isn't loaded,
-// to use InitialPositionIndex instead of assuming start in position zero, to record whether player has binoculars,
-// and to cancel any CheckReset timer for vehicle as it is now occupied
+// Modified to try to start a reload or resume any previously paused reload if weapon isn't loaded, & to cancel any CheckReset timer as vehicle is no longer empty
+// Also to use InitialPositionIndex instead of assuming start position zero, & to record if player has binoculars
 function KDriverEnter(Pawn P)
 {
-    local byte OldReloadState;
-
     if (bMultiPosition)
     {
         DriverPositionIndex = InitialPositionIndex;
@@ -442,22 +462,7 @@ function KDriverEnter(Pawn P)
         VehicleBase.ResetTime = Level.TimeSeconds - 1.0; // cancel any CheckReset timer as vehicle now occupied
     }
 
-    if (VehWep != none && VehWep.bMultiStageReload)
-    {
-        OldReloadState = VehWep.ReloadState;
-
-        // Try to resume any paused reload, or start a new reload if in waiting state & the player does not use manual reloading
-        if (VehWep.ReloadState < RL_ReadyToFire || (VehWep.ReloadState == RL_Waiting && !VehWep.PlayerUsesManualReloading()))
-        {
-            VehWep.AttemptReload();
-        }
-
-        // Replicate the weapon's current reload state, unless AttemptReload() changed the state, in which case it will have already done this
-        if (VehWep.ReloadState == OldReloadState)
-        {
-            VehWep.PassReloadStateToClient();
-        }
-    }
+    CheckResumeReloadingOnEntry();
 
     if (BinocPositionIndex >= 0 && BinocPositionIndex < DriverPositions.Length)
     {

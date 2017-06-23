@@ -290,6 +290,7 @@ function VehicleCeaseFire(bool bWasAltFire);
 function ClientVehicleCeaseFire(bool bWasAltFire);
 function ClientOnlyVehicleCeaseFire(bool bWasAltFire);
 function bool StopWeaponFiring() { return false; }
+function CheckResumeReloadingOnEntry();
 function float GetAmmoReloadState() { return 0.0; }
 simulated event SetRotatingStatus(byte NewRotationStatus);
 simulated function ServerSetRotatingStatus(byte NewRotatingStatus);

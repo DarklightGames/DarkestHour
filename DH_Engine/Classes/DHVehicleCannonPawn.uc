@@ -434,6 +434,45 @@ simulated exec function ROManualReload()
     }
 }
 
+// Modified to include coaxial MG & smoke launcher, packing the combined cannon, coax & smoke launcher reload states for replication to net client
+function CheckResumeReloadingOnEntry()
+{
+    local byte OldReloadState, OldAltReloadState, OldSmokeLauncherReloadState;
+
+    // Reloading
+    if (Cannon != none && Cannon.bMultiStageReload)
+    {
+        // Save current reload states so we can tell if they are changed by attempted reloading
+        OldReloadState = Cannon.ReloadState;
+        OldAltReloadState = Cannon.AltReloadState;
+        OldSmokeLauncherReloadState = Cannon.SmokeLauncherReloadState;
+
+        // Try to resume any paused cannon reload, or start a new reload if in waiting state & the player does not use manual reloading
+        if (Cannon.ReloadState < RL_ReadyToFire || (Cannon.ReloadState == RL_Waiting && !Cannon.PlayerUsesManualReloading()))
+        {
+            Cannon.AttemptReload();
+        }
+
+        // If coaxial MG isn't loaded then try to start/resume a reload
+        if (bHasAltFire && Cannon.AltReloadState != RL_ReadyToFire)
+        {
+            Cannon.AttemptAltReload();
+        }
+
+        // If smoke launcher isn't loaded then try to start/resume a reload
+        if (Cannon.SmokeLauncherClass != none && Cannon.SmokeLauncherReloadState != RL_ReadyToFire)
+        {
+            Cannon.AttemptSmokeLauncherReload();
+        }
+
+        // Replicate the weapon's current reload state, unless attempted reloading changed the state, in which case it will have already done this
+        if (Cannon.ReloadState == OldReloadState && Cannon.AltReloadState == OldAltReloadState && Cannon.SmokeLauncherReloadState == OldSmokeLauncherReloadState)
+        {
+            Cannon.PassReloadStateToClient();
+        }
+    }
+}
+
 // New function, used by HUD to show coaxial MG reload progress, like a cannon reload
 function float GetAltAmmoReloadState()
 {
@@ -487,61 +526,10 @@ function float GetSmokeLauncherAmmoReloadState()
 //  ************************* ENTRY, CHANGING VIEW & EXIT  ************************* //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified so if coaxial MG or smoke launcher is not loaded, we try to start a reload or resume any previously paused reload
-// And to replicate combined cannon, coax & smoke launcher reload states to net client, & also to show any damaged gunsight
+// Modified to set a damaged gunsight
 function KDriverEnter(Pawn P)
 {
-    local byte OldReloadState, OldAltReloadState, OldSmokeLauncherReloadState;
-
-    if (bMultiPosition)
-    {
-        DriverPositionIndex = InitialPositionIndex;
-        LastPositionIndex = InitialPositionIndex;
-    }
-
-    super(VehicleWeaponPawn).KDriverEnter(P); // skip over the Super in DHVehicleWeaponPawn, as it's re-stated here
-
-    if (VehicleBase != none)
-    {
-        VehicleBase.ResetTime = Level.TimeSeconds - 1.0; // cancel any CheckReset timer as vehicle now occupied
-    }
-
-    if (Cannon != none && Cannon.bMultiStageReload)
-    {
-        // Save current reload states so we can tell if they are changed by attempted reloading
-        OldReloadState = Cannon.ReloadState;
-        OldAltReloadState = Cannon.AltReloadState;
-        OldSmokeLauncherReloadState = Cannon.SmokeLauncherReloadState;
-
-        // Try to resume any paused cannon reload, or start a new reload if in waiting state & the player does not use manual reloading
-        if (Cannon.ReloadState < RL_ReadyToFire || (Cannon.ReloadState == RL_Waiting && !Cannon.PlayerUsesManualReloading()))
-        {
-            Cannon.AttemptReload();
-        }
-
-        // If coaxial MG isn't loaded then try to start/resume a reload
-        if (bHasAltFire && Cannon.AltReloadState != RL_ReadyToFire)
-        {
-            Cannon.AttemptAltReload();
-        }
-
-        // If smoke launcher isn't loaded then try to start/resume a reload
-        if (Cannon.SmokeLauncherClass != none && Cannon.SmokeLauncherReloadState != RL_ReadyToFire)
-        {
-            Cannon.AttemptSmokeLauncherReload();
-        }
-
-        // Replicate the weapon's current reload state, unless attempted reloading changed the state, in which case it will have already done this
-        if (Cannon.ReloadState == OldReloadState && Cannon.AltReloadState == OldAltReloadState && Cannon.SmokeLauncherReloadState == OldSmokeLauncherReloadState)
-        {
-            Cannon.PassReloadStateToClient();
-        }
-    }
-
-    if (BinocPositionIndex >= 0 && BinocPositionIndex < DriverPositions.Length)
-    {
-        bPlayerHasBinocs = P.FindInventoryType(class<Inventory>(DynamicLoadObject("DH_Equipment.DHBinocularsItem", class'class'))) != none;
-    }
+    super.KDriverEnter(P);
 
     if (bOpticsDamaged)
     {
