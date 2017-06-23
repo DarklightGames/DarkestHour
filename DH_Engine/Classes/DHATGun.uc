@@ -178,12 +178,13 @@ function ServerChangeViewPoint(bool bForward);
 simulated function NextViewPoint();
 simulated function SwitchWeapon(byte F);
 function ServerChangeDriverPosition(byte F);
-function bool KDriverLeave(bool bForceLeave);
+function bool KDriverLeave(bool bForceLeave) { return false; }
 function DriverDied();
 function DriverLeft();
 simulated function bool CanExit() { return false; }
 simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex) { return false; }
 function bool PlaceExitingDriver() { return false; }
+simulated function Destroyed_HandleDriver();
 simulated function SetPlayerPosition();
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation);
 simulated function DrawHUD(Canvas C);
@@ -191,7 +192,10 @@ simulated function DrawPeriscopeOverlay(Canvas C);
 simulated function POVChanged(PlayerController PC, bool bBehindViewChanged);
 simulated function int LimitYaw(int yaw) { return yaw; }
 function int LimitPawnPitch(int pitch) { return pitch; }
+simulated function float GetViewFOV(int PositionIndex) { return 0.0; }
+simulated function SetViewFOV(int PositionIndex, optional PlayerController PC);
 event CheckReset();
+function bool ResupplyAmmo() { return false; }
 
 defaultproperties
 {

@@ -282,6 +282,8 @@ function float ModifyThreat(float Current, Pawn Threat)
 function BeginPlay(); // the Super only tries to spawn the GunClass, which is none
 simulated function InitializeVehicleWeapon();
 simulated function InitializeVehicleAndWeapon();
+function bool CanFire() { return false; }
+function bool ArePlayersWeaponsLocked(optional bool bNoScreenMessage) { return false; }
 function Fire(optional float F); // prevents unnecessary replicated VehicleFire() function calls to server
 function VehicleFire(bool bWasAltFire);
 event FiredPendingPrimary();
@@ -290,11 +292,14 @@ function VehicleCeaseFire(bool bWasAltFire);
 function ClientVehicleCeaseFire(bool bWasAltFire);
 function ClientOnlyVehicleCeaseFire(bool bWasAltFire);
 function bool StopWeaponFiring() { return false; }
+simulated function IncrementRange();
+simulated function DecrementRange();
+simulated function bool CanReload() { return false; }
 function CheckResumeReloadingOnEntry();
 function float GetAmmoReloadState() { return 0.0; }
+function bool ResupplyAmmo() { return false; }
 simulated event SetRotatingStatus(byte NewRotationStatus);
 simulated function ServerSetRotatingStatus(byte NewRotatingStatus);
-function bool ResupplyAmmo() { return false; }
 
 defaultproperties
 {

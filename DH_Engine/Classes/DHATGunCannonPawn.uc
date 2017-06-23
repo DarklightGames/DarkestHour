@@ -24,17 +24,18 @@ simulated function SetManualTurret(bool bManual)
 {
 }
 
-// Functions emptied out as not relevant to an AT gun:
+// Functions emptied out as not relevant to an AT gun as can't switch position & has no weapons other than cannon:
 simulated function SwitchWeapon(byte F);
+function ServerChangeDriverPosition(byte F);
 simulated function DrawPeriscopeOverlay(Canvas C);
 function AltFire(optional float F);
 function float GetAltAmmoReloadState() { return 0.0; }
-function float GetSmokeLauncherAmmoReloadState() { return 0.0; }
-exec function Deploy();
-simulated function GrowHUD();
-simulated function ShrinkHUD();
 exec function SetAltFireOffset(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth);
 exec function SetAltFireSpawnOffset(float NewValue);
+exec function Deploy();
+function float GetSmokeLauncherAmmoReloadState() { return 0.0; }
+simulated function GrowHUD();
+simulated function ShrinkHUD();
 
 defaultproperties
 {

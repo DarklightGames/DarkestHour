@@ -304,15 +304,6 @@ function Undeploy()
     }
 }
 
-// Emptied out as can't switch positions
-simulated function SwitchWeapon(byte F)
-{
-}
-
-function ServerChangeDriverPosition(byte F)
-{
-}
-
 // Modified to transfer ammo from mortar to player, to update player's mortar ammo resupply status, to force player to exit in crouched stance, & to reset to idle state
 function bool KDriverLeave(bool bForceLeave)
 {
@@ -877,6 +868,9 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Digits.DigitTexture);
 }
 
+// Functions emptied out as not relevant to a mortar:
+simulated function SwitchWeapon(byte F);
+function ServerChangeDriverPosition(byte F);
 defaultproperties
 {
     // Mortar operator, aiming & undeploying
