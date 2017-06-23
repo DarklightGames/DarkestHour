@@ -442,60 +442,6 @@ simulated function bool CanExit()
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
-//  ************************* ENGINE START/STOP & EFFECTS ************************** //
-///////////////////////////////////////////////////////////////////////////////////////
-
-// Modified to handle extended vehicle fire system, plus setting manual/powered turret
-simulated function SetEngine()
-{
-    if (bEngineOff || Health <= 0 || EngineHealth <= 0)
-    {
-        TurnDamping = 0.0;
-
-        if (bOnFire || bEngineOnFire)
-        {
-            AmbientSound = VehicleBurningSound;
-            SoundVolume = 255;
-            SoundRadius = 200.0;
-        }
-        else if (EngineHealth <= 0)
-        {
-            AmbientSound = SmokingEngineSound;
-            SoundVolume = 64;
-            SoundRadius = 200.0;
-        }
-        else
-        {
-            AmbientSound = none;
-        }
-
-        if (bEmittersOn)
-        {
-            StopEmitters();
-        }
-    }
-    else
-    {
-        if (IdleSound != none)
-        {
-            AmbientSound = IdleSound;
-            SoundVolume = default.SoundVolume;
-            SoundRadius = default.SoundRadius;
-        }
-
-        if (!bEmittersOn)
-        {
-            StartEmitters();
-        }
-    }
-
-    if (Cannon != none && DHVehicleCannonPawn(Cannon.WeaponPawn) != none)
-    {
-        DHVehicleCannonPawn(Cannon.WeaponPawn).SetManualTurret(bEngineOff);
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////////////////
 //  ******************************** VEHICLE FIRES  ******************************** //
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -1717,6 +1663,56 @@ simulated function DestroyAttachments()
     if (DriverHatchFireEffect != none)
     {
         DriverHatchFireEffect.Kill();
+    }
+}
+
+// Modified to handle extended vehicle fire system, plus setting manual/powered turret
+simulated function SetEngine()
+{
+    if (bEngineOff || Health <= 0 || EngineHealth <= 0)
+    {
+        TurnDamping = 0.0;
+
+        if (bOnFire || bEngineOnFire)
+        {
+            AmbientSound = VehicleBurningSound;
+            SoundVolume = 255;
+            SoundRadius = 200.0;
+        }
+        else if (EngineHealth <= 0)
+        {
+            AmbientSound = SmokingEngineSound;
+            SoundVolume = 64;
+            SoundRadius = 200.0;
+        }
+        else
+        {
+            AmbientSound = none;
+        }
+
+        if (bEmittersOn)
+        {
+            StopEmitters();
+        }
+    }
+    else
+    {
+        if (IdleSound != none)
+        {
+            AmbientSound = IdleSound;
+            SoundVolume = default.SoundVolume;
+            SoundRadius = default.SoundRadius;
+        }
+
+        if (!bEmittersOn)
+        {
+            StartEmitters();
+        }
+    }
+
+    if (Cannon != none && DHVehicleCannonPawn(Cannon.WeaponPawn) != none)
+    {
+        DHVehicleCannonPawn(Cannon.WeaponPawn).SetManualTurret(bEngineOff);
     }
 }
 
