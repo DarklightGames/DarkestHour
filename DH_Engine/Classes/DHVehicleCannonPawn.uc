@@ -6,6 +6,8 @@
 class DHVehicleCannonPawn extends DHVehicleWeaponPawn
     abstract;
 
+var DHVehicleCannon Cannon;                      // just a convenience to save an awful lot of casts
+
 // Player view positions
 var     int         GunsightPositions;           // the number of gunsight positions - 1 for normal optics or 2 for dual-magnification optics
 var     int         PeriscopePositionIndex;      // index position of commander's periscope
@@ -189,7 +191,7 @@ simulated function DrawHUD(Canvas C)
                     DrawGunsightOverlay(C);
 
                     // Draw range setting in text, if cannon has range settings
-                    if (DHVehicleCannon(Gun) != none && DHVehicleCannon(Gun).RangeSettings.Length > 0)
+                    if (Cannon != none && Cannon.RangeSettings.Length > 0)
                     {
                         C.Style = ERenderStyle.STY_Normal;
                         SavedColor = C.DrawColor;
@@ -199,8 +201,8 @@ simulated function DrawHUD(Canvas C)
                         MapY = RangePositionY * C.ClipY;
                         C.SetPos(MapX, MapY);
                         C.Font = class'ROHUD'.static.GetSmallMenuFont(C);
-                        C.StrLen(Gun.GetRange() @ RangeText, XL, YL);
-                        C.DrawTextJustified(Gun.GetRange() @ RangeText, 2, MapX, MapY, MapX + XL, MapY + YL);
+                        C.StrLen(Cannon.GetRange() @ RangeText, XL, YL);
+                        C.DrawTextJustified(Cannon.GetRange() @ RangeText, 2, MapX, MapY, MapX + XL, MapY + YL);
                         C.DrawColor = SavedColor;
                     }
 
@@ -322,23 +324,23 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 // Also so fire button triggers a manual cannon reload if players uses the manual reloading option & the cannon is waiting to start reloading
 function Fire(optional float F)
 {
-    if (!CanFire() || ArePlayersWeaponsLocked() || VehWep == none)
+    if (!CanFire() || ArePlayersWeaponsLocked() || Cannon == none)
     {
         return;
     }
 
-    if (VehWep.ReadyToFire(false))
+    if (Cannon.ReadyToFire(false))
     {
-        if (Role < ROLE_Authority && !VehWep.PlayerUsesManualReloading() && DHVehicleCannon(VehWep) != none) // no update if manual reloading (update on manual reload instead)
+        if (Role < ROLE_Authority && !Cannon.PlayerUsesManualReloading()) // no update if manual reloading (update on manual reload instead)
         {
-            DHVehicleCannon(VehWep).CheckUpdatePendingAmmo();
+            Cannon.CheckUpdatePendingAmmo();
         }
 
         super(Vehicle).Fire(F);
 
         if (IsHumanControlled())
         {
-            VehWep.ClientStartFire(Controller, false);
+            Cannon.ClientStartFire(Controller, false);
         }
     }
     else
@@ -351,25 +353,25 @@ function Fire(optional float F)
 // Checks that player is in a valid firing position & his weapons aren't locked due to spawn killing
 function AltFire(optional float F)
 {
-    if (!bHasAltFire || !CanFire() || ArePlayersWeaponsLocked() || VehWep == none)
+    if (!bHasAltFire || !CanFire() || ArePlayersWeaponsLocked() || Cannon == none)
     {
         return;
     }
 
-    if (VehWep.ReadyToFire(true))
+    if (Cannon.ReadyToFire(true))
     {
         VehicleFire(true);
         bWeaponIsAltFiring = true;
 
         if (!bWeaponIsFiring && IsHumanControlled())
         {
-            VehWep.ClientStartFire(Controller, true);
+            Cannon.ClientStartFire(Controller, true);
         }
     }
     // Dry fire effect for empty coax, unless it is reloading
-    else if (DHVehicleCannon(VehWep) != none && (DHVehicleCannon(VehWep).AltReloadState == RL_Waiting || DHVehicleCannon(VehWep).bAltReloadPaused))
+    else if (Cannon.AltReloadState == RL_Waiting || Cannon.bAltReloadPaused)
     {
-        VehWep.DryFireEffects(true);
+        Cannon.DryFireEffects(true);
     }
 }
 
@@ -377,26 +379,26 @@ function AltFire(optional float F)
 // Checks that player is in a valid firing position & his weapons aren't locked due to spawn killing
 exec function Deploy()
 {
-    if (CanFire() && !ArePlayersWeaponsLocked() && DHVehicleCannon(Gun) != none)
+    if (CanFire() && !ArePlayersWeaponsLocked() && Cannon != none)
     {
-        DHVehicleCannon(Gun).AttemptFireSmokeLauncher();
+        Cannon.AttemptFireSmokeLauncher();
     }
 }
 
 // Implemented unused (in a vehicle) HUD keybind commands to adjust either the rotation or range setting of any adjustable smoke launcher
 simulated function GrowHUD()
 {
-    if (DHVehicleCannon(Gun) != none)
+    if (Cannon != none)
     {
-        DHVehicleCannon(Gun).AdjustSmokeLauncher(true);
+        Cannon.AdjustSmokeLauncher(true);
     }
 }
 
 simulated function ShrinkHUD()
 {
-    if (DHVehicleCannon(Gun) != none)
+    if (Cannon != none)
     {
-        DHVehicleCannon(Gun).AdjustSmokeLauncher(false);
+        Cannon.AdjustSmokeLauncher(false);
     }
 }
 
@@ -411,9 +413,9 @@ function bool CanFire()
 // Modified (from deprecated ROTankCannonPawn) to keep ammo changes clientside as a network optimisation (only pass to server when it needs the change, not every key press)
 exec function SwitchFireMode()
 {
-    if (DHVehicleCannon(Gun) != none && Gun.bMultipleRoundTypes)
+    if (Cannon != none && Cannon.bMultipleRoundTypes)
     {
-        DHVehicleCannon(Gun).ToggleRoundType();
+        Cannon.ToggleRoundType();
     }
 }
 
@@ -421,10 +423,6 @@ exec function SwitchFireMode()
 // Also for net client to pass any changed pending ammo type to server (optimises network as avoids update to server each time player toggles ammo, doing it only when needed)
 simulated exec function ROManualReload()
 {
-    local DHVehicleCannon Cannon;
-
-    Cannon = DHVehicleCannon(Gun);
-
     if (Cannon != none && Cannon.ReloadState == RL_Waiting && Cannon.PlayerUsesManualReloading() && Cannon.HasAmmoToReload(Cannon.LocalPendingAmmoIndex))
     {
         if (Role < ROLE_Authority)
@@ -439,10 +437,6 @@ simulated exec function ROManualReload()
 // New function, used by HUD to show coaxial MG reload progress, like a cannon reload
 function float GetAltAmmoReloadState()
 {
-    local DHVehicleCannon Cannon;
-
-    Cannon = DHVehicleCannon(Gun);
-
     if (Cannon != none)
     {
         if (Cannon.AltReloadState == RL_ReadyToFire)
@@ -463,10 +457,6 @@ function float GetAltAmmoReloadState()
 // New function, used by HUD to show smoke launcher reload progress, like a cannon reload
 function float GetSmokeLauncherAmmoReloadState()
 {
-    local DHVehicleCannon Cannon;
-
-    Cannon = DHVehicleCannon(Gun);
-
     if (Cannon != none && Cannon.SmokeLauncherClass != none)
     {
         if (Cannon.SmokeLauncherClass.default.bCanBeReloaded)
@@ -501,8 +491,7 @@ function float GetSmokeLauncherAmmoReloadState()
 // And to replicate combined cannon, coax & smoke launcher reload states to net client, & also to show any damaged gunsight
 function KDriverEnter(Pawn P)
 {
-    local DHVehicleCannon Cannon;
-    local byte            OldReloadState, OldAltReloadState, OldSmokeLauncherReloadState;
+    local byte OldReloadState, OldAltReloadState, OldSmokeLauncherReloadState;
 
     if (bMultiPosition)
     {
@@ -516,8 +505,6 @@ function KDriverEnter(Pawn P)
     {
         VehicleBase.ResetTime = Level.TimeSeconds - 1.0; // cancel any CheckReset timer as vehicle now occupied
     }
-
-    Cannon = DHVehicleCannon(Gun);
 
     if (Cannon != none && Cannon.bMultiStageReload)
     {
@@ -563,32 +550,30 @@ function KDriverEnter(Pawn P)
 }
 
 // Modified so player starts facing forwards, so listen server re-sets pending ammo if another player has changed loaded ammo type since host player was last in this cannon,
-// and so autocannon always goes to state 'EnteringVehicle' even for a single position cannon, which makes certain pending ammo settings are correct
+// and so net client autocannon always goes to state 'EnteringVehicle' even for a single position cannon, which makes certain pending ammo settings are correct
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-    local DHVehicleCannon Cannon;
-
     super.ClientKDriverEnter(PC);
 
     PlayerFaceForwards(PC);
 
-    // Listen server host player re-sets pending ammo settings if another player has changed the loaded ammo type since he was last in this cannon
-    // If current ammo has changed, any previous choice of pending ammo to load probably no longer makes sense & needs to be discarded (similar to net client in PostNetReceive)
-    if (Level.NetMode == NM_ListenServer)
+    if (Cannon != none)
     {
-        Cannon = DHVehicleCannon(VehWep);
-
-        if (Cannon != none && Cannon.ProjectileClass != Cannon.SavedProjectileClass)
+        // Listen server host player re-sets pending ammo settings if another player has changed the loaded ammo type since he was last in this cannon
+        // If current ammo has changed, any previous choice of pending ammo probably no longer makes sense & needs to be discarded (similar to net client in PostNetReceive)
+        if (Level.NetMode == NM_ListenServer)
         {
-            Cannon.LocalPendingAmmoIndex = Cannon.GetAmmoIndex();
-            Cannon.ServerPendingAmmoIndex = Cannon.LocalPendingAmmoIndex;
+            if (Cannon.ProjectileClass != Cannon.SavedProjectileClass)
+            {
+                Cannon.LocalPendingAmmoIndex = Cannon.GetAmmoIndex();
+                Cannon.ServerPendingAmmoIndex = Cannon.LocalPendingAmmoIndex;
+            }
         }
-    }
-
-    // A single position autocannon goes to state 'EnteringVehicle' - very obscure but avoids potential problem if another player has changed pending ammo - see notes in 'EnteringVehicle'
-    if (!bMultiPosition && Role < ROLE_Authority && VehWep != none && VehWep.bUsesMags)
-    {
-        GotoState('EnteringVehicle');
+        // A single position autocannon goes to state 'EnteringVehicle' - really obscure but avoids problem if another player has changed pending ammo (see notes in 'EnteringVehicle')
+        else if (!bMultiPosition && Role < ROLE_Authority && Cannon.bUsesMags)
+        {
+            GotoState('EnteringVehicle');
+        }
     }
 }
 
@@ -608,9 +593,9 @@ Begin:
 
     Sleep(0.2);
 
-    if (Role < ROLE_Authority && DHVehicleCannon(VehWep) != none && VehWep.bUsesMags) // added for autocannon to always replicate its LocalPendingAmmoIndex to server
+    if (Role < ROLE_Authority && Cannon != none && Cannon.bUsesMags) // added for autocannon to always replicate its LocalPendingAmmoIndex to server
     {
-        DHVehicleCannon(VehWep).CheckUpdatePendingAmmo(true);
+        Cannon.CheckUpdatePendingAmmo(true);
     }
 
     GotoState('');
@@ -653,9 +638,9 @@ simulated function ClientKDriverLeave(PlayerController PC)
 {
     super.ClientKDriverLeave(PC);
 
-    if (Level.NetMode == NM_ListenServer && DHVehicleCannon(Gun) != none)
+    if (Level.NetMode == NM_ListenServer && Cannon != none)
     {
-        DHVehicleCannon(Gun).SavedProjectileClass = DHVehicleCannon(Gun).ProjectileClass;
+        Cannon.SavedProjectileClass = Cannon.ProjectileClass;
     }
 }
 
@@ -723,6 +708,19 @@ function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
     }
 }
 
+// Modified to set a convenient reference to our DHVehicleCannon actor, just to save lots of casting in this class
+simulated function InitializeVehicleWeapon()
+{
+    Cannon = DHVehicleCannon(Gun);
+
+    if (Cannon == none)
+    {
+        Warn("ERROR:" @ Tag @ "somehow spawned without an owned DHVehicleCannon, so lots of things are not going to work!");
+    }
+
+    super.InitializeVehicleWeapon();
+}
+
 // Modified to reliably initialize the manual/powered turret settings when vehicle spawns
 simulated function InitializeVehicleAndWeapon()
 {
@@ -749,9 +747,9 @@ simulated function SetManualTurret(bool bManual)
         MinRotateThreshold = ManualMinRotateThreshold;
         MaxRotateThreshold = ManualMaxRotateThreshold;
 
-        if (DHVehicleCannon(Gun) != none)
+        if (Cannon != none)
         {
-            Gun.RotationsPerSecond = DHVehicleCannon(Gun).ManualRotationsPerSecond;
+            Cannon.RotationsPerSecond = Cannon.ManualRotationsPerSecond;
         }
     }
     else
@@ -762,9 +760,9 @@ simulated function SetManualTurret(bool bManual)
         MinRotateThreshold = PoweredMinRotateThreshold;
         MaxRotateThreshold = PoweredMaxRotateThreshold;
 
-        if (DHVehicleCannon(Gun) != none)
+        if (Cannon != none)
         {
-            Gun.RotationsPerSecond = DHVehicleCannon(Gun).PoweredRotationsPerSecond;
+            Cannon.RotationsPerSecond = Cannon.PoweredRotationsPerSecond;
         }
     }
 }
@@ -924,29 +922,25 @@ exec function SetAltFireOffset(int NewX, int NewY, int NewZ, optional bool bScal
 // New debug exec to set the coaxial MG's launch position optional X offset
 exec function SetAltFireSpawnOffset(float NewValue)
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DHVehicleCannon(Gun) != none)
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Cannon != none)
     {
-        Log(Gun.Tag @ "AltFireSpawnOffsetX =" @ NewValue @ "(was" @ DHVehicleCannon(Gun).AltFireSpawnOffsetX $ ")");
-        DHVehicleCannon(Gun).AltFireSpawnOffsetX = NewValue;
+        Log(Cannon.Tag @ "AltFireSpawnOffsetX =" @ NewValue @ "(was" @ Cannon.AltFireSpawnOffsetX $ ")");
+        Cannon.AltFireSpawnOffsetX = NewValue;
     }
 }
 
 // New debug exec to toggle bGunsightSettingMode, allowing calibration of range settings
 exec function SetGunsight()
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DHVehicleCannon(Gun) != none)
+    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Cannon != none)
     {
-        DHVehicleCannon(Gun).bGunsightSettingMode = !DHVehicleCannon(Gun).bGunsightSettingMode;
-        Log(Gun.Tag @ "bGunsightSettingMode =" @ DHVehicleCannon(Gun).bGunsightSettingMode);
+        Cannon.bGunsightSettingMode = !Cannon.bGunsightSettingMode;
+        Log(Cannon.Tag @ "bGunsightSettingMode =" @ Cannon.bGunsightSettingMode);
     }
 }
 
 exec function LogCannon() // DEBUG (Matt: please use & report the logged result if you ever find you can't fire cannon, coax or SL, or do a reload, when you should be able to)
 {
-    local DHVehicleCannon Cannon;
-
-    Cannon = DHVehicleCannon(Gun);
-
     Log("LOGCANNON: Gun =" @ Gun.Tag @ " VehWep =" @ VehWep.Tag @ " VehWep.WeaponPawn =" @ VehWep.WeaponPawn.Tag @ " Gun.Owner =" @ Gun.Owner.Tag);
     Log("Controller =" @ Controller.Tag @ " DriverPositionIndex =" @ DriverPositionIndex @ " ViewTransition =" @ IsInState('ViewTransition'));
     Log("ReloadState =" @ GetEnum(enum'EReloadState', VehWep.ReloadState) @ " bReloadPaused =" @ VehWep.bReloadPaused

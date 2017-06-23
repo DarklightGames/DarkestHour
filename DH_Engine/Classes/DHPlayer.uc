@@ -2869,7 +2869,7 @@ simulated function SetManualTankShellReloading(bool bUseManualReloading)
 
     if (Role < ROLE_Authority && !bUseManualReloading && DHVehicleCannonPawn(Pawn) != none)
     {
-        Cannon = DHVehicleCannon(DHVehicleCannonPawn(Pawn).Gun);
+        Cannon = DHVehicleCannonPawn(Pawn).Cannon;
 
         if (Cannon != none && Cannon.ReloadState == RL_Waiting)
         {
@@ -2883,12 +2883,19 @@ simulated function SetManualTankShellReloading(bool bUseManualReloading)
 // Modified to use DH cannon class & AttemptReload() function, instead of deprecated ROTankCannon & ServerManualReload()
 function ServerSetManualTankShellReloading(bool bUseManualReloading)
 {
+    local DHVehicleCannon Cannon;
+
     bManualTankShellReloading = bUseManualReloading;
 
     // If we just switched off manual reloading & player is in a cannon that is waiting to reload, try to start a reload
-    if (!bUseManualReloading && DHVehicleCannonPawn(Pawn) != none && DHVehicleCannonPawn(Pawn).VehWep != none && DHVehicleCannonPawn(Pawn).VehWep.ReloadState == RL_Waiting)
+    if (!bManualTankShellReloading && DHVehicleCannonPawn(Pawn) != none)
     {
-        DHVehicleCannonPawn(Pawn).VehWep.AttemptReload();
+        Cannon = DHVehicleCannonPawn(Pawn).Cannon;
+
+        if (Cannon != none && Cannon.ReloadState == RL_Waiting)
+        {
+            Cannon.AttemptReload();
+        }
     }
 }
 
@@ -4336,9 +4343,9 @@ exec function DebugAngles(optional string Option, optional float NewAngle)
     {
         DestroyPlaneAttachments(V); // remove any existing angle plane attachments
 
-        if (VehicleWeaponPawn(Pawn) != none &&  DHVehicleCannon(VehicleWeaponPawn(Pawn).Gun) != none)
+        if (DHVehicleCannonPawn(Pawn) != none && DHVehicleCannonPawn(Pawn).Cannon != none)
         {
-            Cannon = DHVehicleCannon(VehicleWeaponPawn(Pawn).Gun);
+            Cannon = DHVehicleCannonPawn(Pawn).Cannon;
             BaseActor = Cannon;
         }
         else

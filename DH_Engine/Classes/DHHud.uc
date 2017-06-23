@@ -1015,19 +1015,20 @@ simulated function DrawHudPassC(Canvas C)
 function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWeaponPawn Passenger)
 {
     local class<DHVehicleSmokeLauncher> SL;
-    local DHVehicle          V;
-    local DHVehicleCannon    Cannon;
-    local VehicleWeaponPawn  WP;
-    local AbsoluteCoordsInfo Coords, Coords2;
-    local SpriteWidget       Widget;
-    local TexRotator         AimIndicator;
-    local rotator            MyRot;
-    local float              XL, YL, Y_one, StrX, StrY, Team, MaxChange, ProportionOfReloadRemaining, f;
-    local int                Current, Pending, i;
-    local color              VehicleColor;
-    local array<color>       Colors;
-    local array<string>      Lines;
-    local bool               bDrawThrottleGauge;
+    local DHVehicle           V;
+    local DHVehicleCannonPawn CannonPawn;
+    local DHVehicleCannon     Cannon;
+    local VehicleWeaponPawn   WP;
+    local AbsoluteCoordsInfo  Coords, Coords2;
+    local SpriteWidget        Widget;
+    local TexRotator          AimIndicator;
+    local rotator             MyRot;
+    local float               XL, YL, Y_one, StrX, StrY, Team, MaxChange, ProportionOfReloadRemaining, f;
+    local int                 Current, Pending, i;
+    local bool                bDrawThrottleGauge;
+    local color               VehicleColor;
+    local array<color>        Colors;
+    local array<string>       Lines;
 
     if (bHideHud)
     {
@@ -1373,6 +1374,8 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 
     else if (DHVehicleCannonPawn(Passenger) != none)
     {
+        CannonPawn = DHVehicleCannonPawn(Passenger);
+
         // Update & draw look turret, with current turret rotation
         if (V != none && V.VehicleHudTurretLook != none)
         {
@@ -1399,7 +1402,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                 DrawSpriteWidget(Canvas, VehicleAmmoReloadIcon);
             }
 
-            Cannon = DHVehicleCannon(Passenger.Gun);
+            Cannon = CannonPawn.Cannon;
 
             if (Cannon != none)
             {
@@ -1481,11 +1484,11 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                     DrawSpriteWidget(Canvas, VehicleAltAmmoIcon);
 
                     // Draw coaxial MG reload progress (if needed) // added to show reload progress in red, like a tank cannon reload
-                    ProportionOfReloadRemaining = DHVehicleCannonPawn(Passenger).GetAltAmmoReloadState();
+                    ProportionOfReloadRemaining = CannonPawn.GetAltAmmoReloadState();
 
                     if (ProportionOfReloadRemaining > 0.0)
                     {
-                        VehicleAltAmmoReloadIcon.WidgetTexture = DHVehicleCannonPawn(Passenger).AltAmmoReloadTexture;
+                        VehicleAltAmmoReloadIcon.WidgetTexture = CannonPawn.AltAmmoReloadTexture;
                         VehicleAltAmmoReloadIcon.Scale = ProportionOfReloadRemaining;
                         DrawSpriteWidget(Canvas, VehicleAltAmmoReloadIcon);
                     }
@@ -1507,7 +1510,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                     // Draw smoke launcher reload progress (if needed)
                     if (SL.default.HUDAmmoReloadTexture != none)
                     {
-                        ProportionOfReloadRemaining = DHVehicleCannonPawn(Passenger).GetSmokeLauncherAmmoReloadState();
+                        ProportionOfReloadRemaining = CannonPawn.GetSmokeLauncherAmmoReloadState();
 
                         if (ProportionOfReloadRemaining > 0.0)
                         {
