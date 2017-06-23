@@ -828,7 +828,8 @@ function bool TryToDrive(Pawn P)
 
     // TODO: these checks on a tank crew position are perhaps unnecessary duplication, as they will have been reliably checked on the server in either:
     // (1) FindEntryVehicle() - if player pressed 'use' to try to enter a vehicle, or
-    // (2) ServerChangeDriverPosition()/CanSwitchToVehiclePosition() - if player tried to switch positions in a vehicle
+    // (2) ServerChangeDriverPosition()/CanSwitchToVehiclePosition() - if player tried to switch positions in a vehicle, or
+    // (3) DHSpawnManager.SpawnVehicle() - if player spawns into a vehicle from the DH deploy scrren
     // And there shouldn't be any other way of getting to this function
     if (bMustBeTankCommander)
     {
@@ -2882,9 +2883,8 @@ event CheckReset()
         for (C = Level.ControllerList; C != none; C = C.NextController)
         {
             // Found friendly player who could use this vehicle, so now do distance check
-            if (C != Controller && C.GetTeamNum() == GetTeamNum() && C.Pawn != none && C.Pawn.Health > 0
-                && (!bMustBeTankCommander || (ROPlayerReplicationInfo(C.PlayerReplicationInfo) != none
-                && ROPlayerReplicationInfo(C.PlayerReplicationInfo).RoleInfo != none && ROPlayerReplicationInfo(C.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew)))
+            if (C != Controller && C.GetTeamNum() == GetTeamNum()&& C.Pawn != none && C.Pawn.Health > 0
+                && (!bMustBeTankCommander || class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(C.Pawn)))
             {
                 Distance = VSize(C.Pawn.Location - Location);
 
