@@ -3,18 +3,17 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHShovelAttachment extends DHWeaponAttachment;
+class DHShovelAttachment extends DHWeaponAttachment
+    abstract;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.usa_spade_3rd'
-    CullDistance=4096
+    CullDistance=4096.0 // 68m - undo the increase added in DHWeaponAttachment, as cutters don't have a muzzle flash & are also small
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Drautschere_icon'
     bRapidFire=false
     LightType=LT_None
     LightEffect=LE_None
-    WA_Idle=""
-    WA_Fire=""
+
     PA_MovementAnims(0)="stand_jogF_nade"
     PA_MovementAnims(1)="stand_jogB_nade"
     PA_MovementAnims(2)="stand_jogL_nade"

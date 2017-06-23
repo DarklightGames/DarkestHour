@@ -2538,16 +2538,16 @@ function DestroyRadioTrigger()
 }
 
 // Modified to allow player to carry more than 1 type of grenade
-// Also to add != "none" (string) checks before calling CreateInventory yo avoid calling GetInventoryClass("none") on base mutator & the log errors created each time a player spawns
+// And to automatically give all players a shovel if constructions are enabled in the map
+// Also to add != "none" (string) checks before calling CreateInventory to avoid calling GetInventoryClass("none") on base mutator & the log errors created each time a player spawns
 function AddDefaultInventory()
 {
+    local DHPlayerReplicationInfo PRI;
     local DHPlayer   P;
     local DHBot      B;
     local RORoleInfo RI;
-    local DHPlayerReplicationInfo PRI;
     local string     S;
     local int        i;
-    local DHGameReplicationInfo GRI;
 
     if (Controller == none)
     {
@@ -2556,7 +2556,6 @@ function AddDefaultInventory()
 
     P = DHPlayer(Controller);
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
     if (IsLocallyControlled())
     {
@@ -2576,10 +2575,7 @@ function AddDefaultInventory()
                 CreateInventory(S);
             }
 
-            if (GRI != none && GRI.bAreConstructionsEnabled)
-            {
-                CreateInventory("DH_Equipment.DHShovelItem");
-            }
+            CheckGiveShovel(P);
 
             RI = P.GetRoleInfo();
 
@@ -2684,10 +2680,7 @@ function AddDefaultInventory()
                 CreateInventory(S);
             }
 
-            if (GRI != none && GRI.bAreConstructionsEnabled)
-            {
-                CreateInventory("DH_Equipment.DHShovelItem");
-            }
+            CheckGiveShovel(P);
         }
     }
 
@@ -2711,6 +2704,29 @@ function CreateInventory(string InventoryClassName)
     if (InventoryClassName != "None" && InventoryClassName != "")
     {
         super.CreateInventory(InventoryClassName);
+    }
+}
+
+// New function used to give all players a shovel if constructions are enabled in the map (the appropriate shovel for their nationality)
+function CheckGiveShovel(DHPlayer PC)
+{
+    local DHGameReplicationInfo GRI;
+    local int                   TeamIndex;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI != none && GRI.bAreConstructionsEnabled && PC != none)
+    {
+        TeamIndex = PC.GetTeamNum();
+
+        if (TeamIndex == ALLIES_TEAM_INDEX)
+        {
+            CreateInventory("DH_Equipment.DHShovelItem_US");
+        }
+        else if (TeamIndex == AXIS_TEAM_INDEX)
+        {
+            CreateInventory("DH_Equipment.DHShovelItem_German");
+        }
     }
 }
 

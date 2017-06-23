@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHShovelItem extends DHWeapon;
+class DHShovelItem extends DHWeapon
+    abstract;
 
 function bool FillAmmo() { return false; }
 function bool ResupplyAmmo() { return false; }
@@ -15,31 +16,23 @@ defaultproperties
     FireModeClass(1)=class'DH_Equipment.DHShovelMeleeFire'
 
     ItemName="Shovel"
-    AttachmentClass=class'DHShovelAttachment'
     InventoryGroup=9
     Priority=1
     bCanThrow=false
 
-    Mesh=SkeletalMesh'DH_USA_shovel_1st.USA_shovel'
-
     DisplayFOV=80.0
-    IronSightDisplayFOV=70.0
-    PlayerFOVZoom=10.0
-    bPlayerFOVZooms=true
+    IronSightDisplayFOV=70.0 // TODO: not sure these FOVs settings are relevant? (query, Matt, June 2017)
+    PlayerFOVZoom=10.0       //
+    bPlayerFOVZooms=true     //
     ZoomInTime=0.4
     ZoomOutTime=0.2
-    bUsesFreeAim=false
     bCanSway=false
 
     CrawlForwardAnim="crawlF"
     CrawlBackwardAnim="crawlB"
     CrawlStartAnim="crawlF" // TODO: get a proper "crawlIn" animation
-    CrawlEndAnim="crawlF" // TODO: get a proper "crawlOut" animation
-    SprintStartAnim="sprint_Start"
-    SprintLoopAnim="sprint_Middle"
-    SprintEndAnim="sprint_End"
+    CrawlEndAnim="crawlF"   // TODO: get a proper "crawlOut" animation
 
     AIRating=0.0
     CurrentRating=0.0
 }
-
