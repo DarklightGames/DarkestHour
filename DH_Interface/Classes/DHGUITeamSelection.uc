@@ -139,7 +139,7 @@ function bool InternalOnClick(GUIComponent Sender)
             break;
 
         case b_Settings:
-            Controller.OpenMenu("DH_Interface.DHSettingsPage_new");
+            Controller.OpenMenu("DH_Interface.DHSettingsPage");
             break;
 
         case b_TeamSelect[AXIS_TEAM_INDEX]:

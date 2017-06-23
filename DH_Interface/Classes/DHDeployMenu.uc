@@ -725,7 +725,7 @@ function bool OnClick(GUIComponent Sender)
 
         // Settings
         case b_MenuOptions[6]:
-            Controller.OpenMenu("DH_Interface.DHSettingsPage_new");
+            Controller.OpenMenu("DH_Interface.DHSettingsPage");
             break;
 
         // Continue button

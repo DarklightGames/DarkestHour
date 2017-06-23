@@ -3,30 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHSettings_Footer extends ButtonFooter;
-
-var automated GUIButton b_Back, b_Defaults;
-var DHSettingsPage SettingsPage;
-
-function InitComponent(GUIController MyController, GUIComponent MyOwner)
-{
-    super.InitComponent(MyController,MyOwner);
-        SettingsPage = DHSettingsPage(MyOwner);
-}
-
-function bool InternalOnClick(GUIComponent Sender)
-{
-    if (Sender == b_Back)
-    {
-        SettingsPage.BackButtonClicked();
-    }
-    else if (Sender==b_Defaults)
-    {
-        SettingsPage.DefaultsButtonClicked();
-    }
-
-    return true;
-}
+class DHSettings_Footer extends UT2K4Settings_Footer;
 
 defaultproperties
 {
@@ -42,6 +19,7 @@ defaultproperties
         OnKeyEvent=BackB.InternalOnKeyEvent
     End Object
     b_Back=GUIButton'DH_Interface.DHSettings_Footer.BackB'
+
     Begin Object Class=GUIButton Name=DefaultB
         Caption="Defaults"
         StyleName="DHSmallTextButtonStyle"
