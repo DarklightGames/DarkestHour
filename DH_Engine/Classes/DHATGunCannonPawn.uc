@@ -24,9 +24,7 @@ simulated function SetManualTurret(bool bManual)
 {
 }
 
-// Functions emptied out as not relevant to an AT gun as can't switch position & has no weapons other than cannon:
-simulated function SwitchWeapon(byte F);
-function ServerChangeDriverPosition(byte F);
+// Functions emptied out as not relevant to an AT gun:
 simulated function DrawPeriscopeOverlay(Canvas C);
 function AltFire(optional float F);
 function float GetAltAmmoReloadState() { return 0.0; }
