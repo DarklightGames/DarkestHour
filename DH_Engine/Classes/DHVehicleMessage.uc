@@ -6,14 +6,14 @@
 class DHVehicleMessage extends ROVehicleMessage
     abstract;
 
-var localized string CannotRide;
 var localized string VehicleFull;
+var localized string CannotRide;
+var localized string VehicleBurning;
+
 var localized string OpenHatch;
 var localized string ExitCommandersHatch;
 var localized string ExitDriverOrComHatch;
 var localized string ExitCommandersOrMGHatch;
-var localized string OverSpeed;
-var localized string VehicleBurning;
 var localized string UnbuttonToReload;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
@@ -39,9 +39,6 @@ static function string GetString(optional int Switch, optional PlayerReplication
             break;
         case 5:
             S = default.ExitCommandersHatch;
-            break;
-        case 7:
-            S = default.OverSpeed;
             break;
         case 8:
             S = default.VehicleFull;
@@ -74,14 +71,13 @@ defaultproperties
 {
     NotQualified="Not qualified to operate this vehicle"
     VehicleIsEnemy="Cannot use an enemy vehicle"
-    CannotEnter="Cannot enter this vehicle"
-    CannotRide="Cannot ride this vehicle"
+    CannotEnter="Vehicle is full"
+    CannotRide="Cannot ride on this vehicle"
     VehicleFull="All rider positions are occupied"
+    VehicleBurning="Vehicle is on fire!"
     OpenHatch="You must unbutton the hatch [%NEXTWEAPON%] to exit"
     ExitCommandersHatch="You must exit through commander's hatch"
     ExitDriverOrComHatch="Exit through driver's or commander's hatch"
     ExitCommandersOrMGHatch="Exit through commander's or MG hatch"
-    OverSpeed="Slow down!"
-    Vehicleburning="Vehicle is on fire!"
     UnbuttonToReload="You must unbutton the hatch [%NEXTWEAPON%] to reload"
 }

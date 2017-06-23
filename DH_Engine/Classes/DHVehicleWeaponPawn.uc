@@ -393,48 +393,80 @@ simulated function bool CanReload()
 //  ******************************** VEHICLE ENTRY  ******************************** //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to remove obsolete stuff & duplication from the Supers, & to use the vehicle's VehicleTeam to determine the team
+// Modified to match entry requirements to the vehicle base, to use vehicle's VehicleTeam for owning team, & to remove obsolete stuff & duplication from the Supers
 function bool TryToDrive(Pawn P)
 {
-    // Deny entry if vehicle has driver or is dead, or if player is crouching or on fire or reloading a weapon (plus several very obscure other reasons)
-    if (Driver != none || Health <= 0 || P == none || (DHPawn(P) != none && DHPawn(P).bOnFire) || (P.Weapon != none && P.Weapon.IsInState('Reloading')) ||
+    local bool bEnemyVehicle;
+    local int  i;
+
+    // Deny entry if vehicle is destroyed, or if player is on fire or reloading a weapon (plus several very obscure other reasons)
+    if (Health <= 0 || P == none || (DHPawn(P) != none && DHPawn(P).bOnFire) || (P.Weapon != none && P.Weapon.IsInState('Reloading')) ||
         P.Controller == none || !P.Controller.bIsPlayer || P.DrivenVehicle != none || P.IsA('Vehicle') || bNonHumanControl || !Level.Game.CanEnterVehicle(self, P))
     {
         return false;
     }
 
+    // Check whether trying to enter a vehicle that doesn't belong to our team
     if (VehicleBase != none)
     {
-        // Trying to enter a vehicle that isn't on our team
-        if (P.GetTeamNum() != VehicleBase.VehicleTeam) // VehicleTeam reliably gives the team, even if vehicle hasn't yet been entered
+        // If vehicle is team locked, i.e. can only be used by one team (the normal setting), it's a simple check against the VehicleTeam
+        if (bTeamLocked)
         {
-            if (VehicleBase.Driver == none)
+            bEnemyVehicle = P.GetTeamNum() != VehicleBase.VehicleTeam;
+        }
+        // But if vehicle isn't team locked & can be used by either team, we need to check if already has an enemy occupant (enemies can't share!)
+        else
+        {
+            if (VehicleBase.Driver != none && P.GetTeamNum() != VehicleBase.Driver.GetTeamNum())
             {
-                return VehicleBase.TryToDrive(P);
+                bEnemyVehicle = true;
             }
+            else
+            {
+                for (i = 0; i < VehicleBase.WeaponPawns.Length; ++i)
+                {
+                    if (VehicleBase.WeaponPawns[i] != none && VehicleBase.WeaponPawns[i].Driver != none && P.GetTeamNum() != VehicleBase.WeaponPawns[i].Driver.GetTeamNum())
+                    {
+                        bEnemyVehicle = true;
+                        break;
+                    }
+                }
+            }
+        }
 
+        // Deny entry if it's an enemy vehicle
+        if (bEnemyVehicle)
+        {
             DisplayVehicleMessage(1, P); // can't use enemy vehicle
 
             return false;
         }
+    }
 
-        // Bot tries to enter the VehicleBase if it has no driver
-        if (!P.IsHumanControlled() && VehicleBase.Driver == none)
+    // TODO: these checks on a tank crew position are perhaps unnecessary duplication, as they will have been reliably checked on the server in either:
+    // (1) FindEntryVehicle() - if player pressed 'use' to try to enter a vehicle, or
+    // (2) ServerChangeDriverPosition()/CanSwitchToVehiclePosition() - if player tried to switch positions in a vehicle
+    // And there shouldn't be any other way of getting to this function
+    if (bMustBeTankCrew)
+    {
+        // Deny entry to a tank crew position if player isn't a tank crew role
+        if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(P) && P.IsHumanControlled())
         {
-            return VehicleBase.TryToDrive(P);
+            DisplayVehicleMessage(0, P); // not qualified to operate vehicle
+
+            return false;
         }
     }
 
-    // Deny entry if player is not a tanker role & weapon can only be used by tank crew
-    if (bMustBeTankCrew && !(ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo) != none && ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo != none
-        && ROPlayerReplicationInfo(P.Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew) && P.IsHumanControlled())
+    // Deny entry if this position is already occupied
+    // Note this comes after other checks because if the player can't enter it anyway (e.g. enemy vehicle or tank crew only),
+    // he should get a 'can't use' message regardless of whether it happens to be currently occupied
+    if (Driver != none)
     {
-        DisplayVehicleMessage(0, P); // not qualified to operate vehicle
-
         return false;
     }
 
-    // Passed all checks, so allow player to enter the vehicle
+    // Passed all checks, so allow player to enter this vehicle position
     if (bEnterringUnlocks && bTeamLocked)
     {
         bTeamLocked = false;
@@ -813,90 +845,69 @@ simulated function AnimateTransition()
 //  ******************************** VEHICLE EXIT  ********************************* //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to add clientside checks before sending the function call to the server
+// Modified to add clientside pre-checks before sending the function call to the server
 // Optimises network performance generally & specifically avoids a rider camera bug when unsuccessfully trying to switch to another vehicle position
 simulated function SwitchWeapon(byte F)
 {
-    local VehicleWeaponPawn WeaponPawn;
-    local bool              bMustBeTankerToSwitch;
-    local byte              ChosenWeaponPawnIndex;
-
-    if (Role < ROLE_Authority) // only do these clientside checks on a net client
+    if (Role == ROLE_Authority || CanSwitchToVehiclePosition(F))
     {
-        if (VehicleBase == none)
-        {
-            return;
-        }
-
-        // Trying to switch to driver position
-        if (F == 1)
-        {
-            // Stop call to server as there is already a human driver
-            if (VehicleBase.PlayerReplicationInfo != none && !VehicleBase.PlayerReplicationInfo.bBot)
-            {
-                return;
-            }
-
-            if (VehicleBase.bMustBeTankCommander)
-            {
-                bMustBeTankerToSwitch = true;
-            }
-        }
-        // Trying to switch to non-driver position
-        else
-        {
-            ChosenWeaponPawnIndex = F - 2;
-
-            // Stop call to server if player has selected an invalid weapon position or the current position
-            // Note that if player presses 0, which is invalid choice, the byte index will end up as 254 & so will still fail this test (which is what we want)
-            if (ChosenWeaponPawnIndex >= VehicleBase.PassengerWeapons.Length || ChosenWeaponPawnIndex == PositionInArray)
-            {
-                return;
-            }
-
-            // Stop call to server if player selected a rider position but is buttoned up (no 'teleporting' outside to external rider position)
-            if (StopExitToRiderPosition(ChosenWeaponPawnIndex))
-            {
-                return;
-            }
-
-            // Stop call to server if weapon position already has a human player
-            // Note we don't try to stop server call if weapon pawn doesn't exist, as it may not on net client, but will get replicated if player enters position on server
-            if (ChosenWeaponPawnIndex < VehicleBase.WeaponPawns.Length)
-            {
-                WeaponPawn = VehicleBase.WeaponPawns[ChosenWeaponPawnIndex];
-
-                if (WeaponPawn != none && WeaponPawn.PlayerReplicationInfo != none && !WeaponPawn.PlayerReplicationInfo.bBot)
-                {
-                    return;
-                }
-            }
-
-            if (class<ROVehicleWeaponPawn>(VehicleBase.PassengerWeapons[ChosenWeaponPawnIndex].WeaponPawnClass).default.bMustBeTankCrew)
-            {
-                bMustBeTankerToSwitch = true;
-            }
-        }
-
-        // Stop call to server if player has selected a tank crew role but isn't a tanker
-        if (bMustBeTankerToSwitch && !(Controller != none && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo) != none
-            && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo != none && ROPlayerReplicationInfo(Controller.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew))
-        {
-            DisplayVehicleMessage(0); // not qualified to operate vehicle
-
-            return;
-        }
+        ServerChangeDriverPosition(F);
     }
-
-    ServerChangeDriverPosition(F);
 }
 
-// Modified to prevent 'teleporting' outside to external rider position while buttoned up inside vehicle
+// Modified to add checks before calling trying to switch player, to make sure the player isn't going to be prevented from switching to new position
+// This avoids player exiting vehicle, briefly re-possessing his player pawn, then trying unsuccessfully to enter new vehicle position, then having to re-enter this position
+// The Super (from VehicleWeaponPawn) is re-factored here, to avoid repeating any of the same checks & to reduce repetition & make clearer
 function ServerChangeDriverPosition(byte F)
 {
-    if (!StopExitToRiderPosition(F - 2)) // pressing 1 to switch to driver's position means F-2 becomes 255 (as a byte), which doesn't count as a blocked rider position
+    local Vehicle NewVehiclePosition;
+    local Pawn    SwitchingPlayer, Bot;
+
+    if (!CanSwitchToVehiclePosition(F))
     {
-        super.ServerChangeDriverPosition(F);
+        return; // can't switch if fails any of these checks
+    }
+
+    if (F == 1)
+    {
+        NewVehiclePosition = VehicleBase; // switching to driver's position
+    }
+    else
+    {
+        NewVehiclePosition = VehicleBase.WeaponPawns[F - 2]; // switching to a vehicle weapon position
+    }
+
+    if (NewVehiclePosition != none)
+    {
+        SwitchingPlayer = Driver; // record player in case he can't switch somehow & we need to put him back in this vehicle position
+
+        // If human player wants to switch to a bot's position, make the bot swap with him
+        if (AIController(NewVehiclePosition.Controller) != none)
+        {
+            Bot = NewVehiclePosition.Driver;
+            NewVehiclePosition.KDriverLeave(true); // kicks bot out
+        }
+
+        KDriverLeave(true); // player exits this position
+
+        // Switch player to new vehicle position
+        if (NewVehiclePosition.TryToDrive(SwitchingPlayer))
+        {
+            if (Bot != none)
+            {
+                TryToDrive(Bot); // if we kicked a bot out of the target position, now switch it into this position
+            }
+        }
+        // But if for some reason he couldn't switch, return the player to this vehicle position
+        else
+        {
+            KDriverEnter(SwitchingPlayer);
+
+            if (Bot != none)
+            {
+                NewVehiclePosition.KDriverEnter(Bot); // if we kicked a bot out of the target position, try to put it back where it was
+            }
+        }
     }
 }
 
@@ -1135,6 +1146,73 @@ simulated function Destroyed_HandleDriver()
     super.Destroyed_HandleDriver();
 }
 
+// New helper function to check whether player is able to switch to new vehicle position
+// Avoids (1) net client sending unnecessary replicated function calls to server, & (2) player exiting current position to unsuccessfully try to enter new position
+// We make sure player isn't trying to 'teleport' outside to external rider position while buttoned up,
+// or to enter a tank crew position he can't use, or any position already occupied by another human player
+simulated function bool CanSwitchToVehiclePosition(byte F)
+{
+    local DHArmoredVehicle AV;
+    local Vehicle          NewVehiclePosition;
+    local byte             NewWeaponPawnIndex;
+    local bool             bMustBeTankerToSwitch;
+
+    if (F == 0 || VehicleBase == none) // pressing zero is an invalid switch choice
+    {
+        return false;
+    }
+
+    // Trying to switch to driver position (for now just get vehicle variables for later checks)
+    if (F == 1)
+    {
+        NewVehiclePosition = VehicleBase;
+        bMustBeTankerToSwitch = VehicleBase.bMustBeTankCommander;
+    }
+    // Trying to switch to non-driver position
+    else
+    {
+        NewWeaponPawnIndex = F - 2;
+
+        // Can't switch if player has selected an invalid weapon position or the current position
+        if (NewWeaponPawnIndex >= VehicleBase.WeaponPawns.Length || NewWeaponPawnIndex == PositionInArray)
+        {
+            return false;
+        }
+
+        // Can't switch if player selected a rider position on an armored vehicle, but is buttoned up (no 'teleporting' outside to external rider position) - gives message
+        if (GetArmoredVehicleBase(AV) && NewWeaponPawnIndex >= AV.FirstRiderPositionIndex && !CanExit())
+        {
+            return false;
+        }
+
+        // Get weapon pawn variables for later checks
+        // Note on a net client we probably won't get a weapon pawn reference for an unoccupied rider pawn, as actor doesn't usually exist on a client
+        // But that's fine because there's nothing we need to check for an unoccupied rider pawn & we can always switch to it if we got here
+        // If we let the switch go ahead, the rider pawn will get replicated to the owning net client as the player enters it on the server
+        NewVehiclePosition = VehicleBase.WeaponPawns[NewWeaponPawnIndex];
+        bMustBeTankerToSwitch = ROVehicleWeaponPawn(NewVehiclePosition) != none && ROVehicleWeaponPawn(NewVehiclePosition).bMustBeTankCrew;
+    }
+
+    if (bMustBeTankerToSwitch)
+    {
+        // Can't switch if player has selected a tank crew position but isn't a tank crew role
+        if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(self))
+        {
+            DisplayVehicleMessage(0); // not qualified to operate vehicle
+
+            return false;
+        }
+    }
+
+    // Can't switch if new vehicle position already has a human occupant
+    if (NewVehiclePosition != none && NewVehiclePosition.PlayerReplicationInfo != none && !NewVehiclePosition.PlayerReplicationInfo.bBot)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 // New function to check if player can exit, displaying an "unbutton hatch" message if he can't (just saves repeating code in different functions)
 simulated function bool CanExit()
 {
@@ -1149,16 +1227,6 @@ simulated function bool CanExit()
     }
 
     return true;
-}
-
-// New function to check if player is trying to 'teleport' outside to external rider position while buttoned up (just saves repeating code in different functions)
-simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex)
-{
-    local DHArmoredVehicle AV;
-
-    AV = DHArmoredVehicle(VehicleBase);
-
-    return AV != none && ChosenWeaponPawnIndex >= AV.FirstRiderPositionIndex && ChosenWeaponPawnIndex < AV.PassengerWeapons.Length && AV.bMustUnbuttonToSwitchToRider && !CanExit();
 }
 
 // Modified to use new, simplified system with exit positions for all vehicle positions included in the vehicle class default properties
@@ -1480,6 +1548,14 @@ function int LocalLimitPitch(int pitch)
 simulated function Vehicle GetVehicleBase()
 {
     return VehicleBase;
+}
+
+// New helper function to check whether the base vehicle is an armored vehicle class & to populate an actor reference if it is
+simulated function bool GetArmoredVehicleBase(out DHArmoredVehicle AV)
+{
+    AV = DHArmoredVehicle(VehicleBase);
+
+    return AV != none;
 }
 
 // New helper function to get the appropriate ViewFOV for the given position in the DriverPositions array

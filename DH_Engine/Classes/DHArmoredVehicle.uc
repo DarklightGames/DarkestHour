@@ -44,7 +44,6 @@ struct NewHitpoint
 
 // General
 var     int         UnbuttonedPositionIndex;    // lowest DriverPositions index where driver is unbuttoned & exposed
-var     bool        bMustUnbuttonToSwitchToRider; // stops driver 'teleporting' outside to rider position if buttoned up
 var     vector      OverlayFPCamPos;            // optional camera offset for overlay position, so can snap to exterior view position, avoiding camera anims passing through hull
 var     texture     PeriscopeOverlay;           // driver's periscope overlay texture
 var     texture     DamagedPeriscopeOverlay;    // gunsight overlay to show if optics have been broken
@@ -361,40 +360,23 @@ simulated function DrawPeriscopeOverlay(Canvas C)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
-//  ******************************** VEHICLE ENTRY  ******************************** //
+//  ******************* VEHICLE ENTRY, EXIT & SWITCHING POSITIONS ****************** //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to add an extra section from deprecated ROTreadCraft class that was commented "code to get the bots using tanks better"
+// Modified to prevent entry if either vehicle or engine is on fire (with message if own team's vehicle)
 function Vehicle FindEntryVehicle(Pawn P)
 {
-    local int i;
-
-    if (P != none && Bot(P.Controller) != none && WeaponPawns.Length > 0 && IsVehicleEmpty())
+    if (bOnFire || bEngineOnFire)
     {
-        for (i = WeaponPawns.Length - 1; i >= 0; --i)
+        if (P != none && (P.GetTeamNum() == VehicleTeam || !bTeamLocked))
         {
-            if (WeaponPawns[i] != none && WeaponPawns[i].Driver == none)
-            {
-                return WeaponPawns[i];
-            }
+            DisplayVehicleMessage(9, P); // vehicle is on fire
         }
+
+        return none;
     }
 
     return super.FindEntryVehicle(P);
-}
-
-// Modified to prevent entry if either vehicle is on fire
-function bool TryToDrive(Pawn P)
-{
-    // Don't allow entry to burning vehicle (with message)
-    if (bOnFire || bEngineOnFire)
-    {
-        DisplayVehicleMessage(9, P); // vehicle is on fire
-
-        return false;
-    }
-
-    return super.TryToDrive(P);
 }
 
 // Modified to handle optional camera offset for initial overlay position
@@ -408,10 +390,6 @@ simulated function ClientKDriverEnter(PlayerController PC)
         FPCamPos = OverlayFPCamPos;
     }
 }
-
-///////////////////////////////////////////////////////////////////////////////////////
-//  ***************************** DRIVER VIEW POINTS  ****************************** //
-///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to handle optional camera offset for initial overlay position
 simulated state ViewTransition
@@ -437,36 +415,6 @@ simulated state ViewTransition
             FPCamPos = OverlayFPCamPos; // if moving into overlay, apply offset at end of transition
         }
     }
-}
-
-///////////////////////////////////////////////////////////////////////////////////////
-//  ******************************** VEHICLE EXIT  ********************************* //
-///////////////////////////////////////////////////////////////////////////////////////
-
-// Modified to add clientside check to stop call to server if player selected a rider position but is buttoned up (no 'teleporting' outside to external rider position)
-simulated function SwitchWeapon(byte F)
-{
-    if (Role < ROLE_Authority && StopExitToRiderPosition(F - 2))
-    {
-        return;
-    }
-
-    super.SwitchWeapon(F);
-}
-
-// Modified to prevent 'teleporting' outside to external rider position while buttoned up inside vehicle
-function ServerChangeDriverPosition(byte F)
-{
-    if (!StopExitToRiderPosition(F - 2))
-    {
-        super.ServerChangeDriverPosition(F);
-    }
-}
-
-// New function to check if player is trying to 'teleport' outside to external rider position while buttoned up (just saves repeating code in different functions)
-simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex)
-{
-    return ChosenWeaponPawnIndex >= FirstRiderPositionIndex && ChosenWeaponPawnIndex < PassengerWeapons.Length && bMustUnbuttonToSwitchToRider && !CanExit();
 }
 
 // Implemented to prevent exit if player is buttoned up, displaying an appropriate "unbutton the hatch" message if he can't
@@ -1893,7 +1841,6 @@ defaultproperties
     // Driver & positions
     bMustBeTankCommander=true
     UnbuttonedPositionIndex=2
-    bMustUnbuttonToSwitchToRider=true
     DriverAttachmentBone="Driver_attachment"
     BeginningIdleAnim="driver_hatch_idle_close"
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'

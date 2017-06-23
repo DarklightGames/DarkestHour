@@ -871,6 +871,7 @@ simulated function UpdatePrecacheMaterials()
 // Functions emptied out as not relevant to a mortar:
 simulated function SwitchWeapon(byte F);
 function ServerChangeDriverPosition(byte F);
+simulated function bool CanSwitchToVehiclePosition(byte F) { return false; }
 defaultproperties
 {
     // Mortar operator, aiming & undeploying

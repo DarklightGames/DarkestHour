@@ -36,6 +36,13 @@ simulated static function bool IsInSameSquad(DHPlayerReplicationInfo A, DHPlayer
            A.SquadIndex >= 0 && A.SquadIndex == B.SquadIndex;
 }
 
+// New helper function to check whether a player can be tank crew
+simulated static function bool IsPlayerTankCrew(Pawn P)
+{
+    return P != none && ROPlayerReplicationInfo(P.PlayerReplicationInfo) != none && ROPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo != none
+        && ROPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew;
+}
+
 defaultproperties
 {
     SquadIndex=-1
