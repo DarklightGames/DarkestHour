@@ -69,7 +69,7 @@ function SetUpProfileControls(int Index)
         // DH Defaults
         for (i = 0; i < ControlProfileBindings[1].KeyNames.Length; ++i)
         {
-            PlayerOwner().ConsoleCommand("set input" @ ControlProfileBindings[1].KeyNames[i] @ ControlProfileBindings[1].KeyValues[i]);
+            Controller.SetKeyBind(ControlProfileBindings[1].KeyNames[i], ControlProfileBindings[1].KeyValues[i]);
         }
     }
 
@@ -78,7 +78,7 @@ function SetUpProfileControls(int Index)
     {
         for (i = 0; i < ControlProfileBindings[Index].KeyNames.Length; ++i)
         {
-            PlayerOwner().ConsoleCommand("set input" @ ControlProfileBindings[Index].KeyNames[i] @ ControlProfileBindings[Index].KeyValues[i]);
+            Controller.SetKeyBind(ControlProfileBindings[Index].KeyNames[i], ControlProfileBindings[Index].KeyValues[i]);
         }
     }
 
