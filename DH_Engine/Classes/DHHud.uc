@@ -3184,6 +3184,7 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
     local Pawn P, OtherPawn;
     local color SquadMemberColor, SelfColor;
     local int i;
+    local array<DHPlayerReplicationInfo> SquadMembers;
 
     PC = DHPlayer(PlayerOwner);
 
@@ -3196,9 +3197,11 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
     // Draw squad members on map
     if (PRI != none && PRI.IsInSquad() && SRI != none)
     {
-        for (i = 0; i < SRI.GetTeamSquadSize(PC.GetTeamNum()); ++i)
+        SRI.GetMembers(PC.GetTeamNum(), PRI.SquadIndex, SquadMembers);
+
+        for (i = 0; i < SquadMembers.Length; ++i)
         {
-            OtherPRI = SRI.GetMember(PC.GetTeamNum(), PRI.SquadIndex, i);
+            OtherPRI = SquadMembers[i];
 
             if (OtherPRI == none || OtherPRI == PRI)
             {
@@ -3207,7 +3210,7 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
 
             // PERFORMANCE: this is totally inefficient, but will be run on
             // the client so we can get away with it...for now.
-            // TODO: only run this once and map Pawns to PRIs.
+            // TODO: Run this periodically, not every frame.
             foreach DynamicActors(class'Pawn', P)
             {
                 if (P.PlayerReplicationInfo == OtherPRI)
