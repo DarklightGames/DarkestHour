@@ -66,7 +66,7 @@ function SetUpProfileControls(int Index)
             Warn("A control profile doesn't have the same number of keys to commands and may not work as expected!!!");
         }
 
-        // DH Defaults
+        // DH defaults
         for (i = 0; i < ControlProfileBindings[1].KeyNames.Length; ++i)
         {
             Controller.SetKeyBind(ControlProfileBindings[1].KeyNames[i], ControlProfileBindings[1].KeyValues[i]);
@@ -88,21 +88,32 @@ function SetUpProfileControls(int Index)
 
 defaultproperties
 {
+    SectionStyleName="DHListSection"
+    PanelCaption="Controls"
+
     ControlProfiles(0)="Current"
     ControlProfiles(1)="Defaults (Reset)"
     ControlProfiles(2)="Contemporary"
     ControlProfiles(3)="Recommended"
 
-    bindings_comm(6)="Speak Command"
-    captions_comm(6)="Switch to Command Voice Channel"
-    bindings_comm(7)="Speak Local"
-    captions_comm(7)="Switch to Local Voice Channel"
-    bindings_comm(8)="Speak Unassigned"
-    captions_comm(8)="Switch to Unassigned Voice Channel"
-    bindings_comm(9)="SquadTalk"
-    captions_comm(9)="Squad Say"
 
-    bindings_comm(10)="Speak Squad"
+    captions_weapons(9)="Deploy MG / Attach Bayonet / Fire Vehicle Smoke Launcher" // added fire smoke launcher to key description
+
+    bindings_comm(3)="SquadTalk" // inserted
+    captions_comm(3)="Squad Say"
+    bindings_comm(4)="SpeechMenuToggle"
+    captions_comm(4)="Voice Command Menu"
+    bindings_comm(5)="InGameChat"
+    captions_comm(5)="View In-game Chat"
+    bindings_comm(6)="VoiceTalk"
+    captions_comm(6)="Activate Microphone"
+    bindings_comm(7)="Speak Command" // replaces "Speak Public" ("Switch to Public Voice Channel")
+    captions_comm(7)="Switch to Command Voice Channel"
+    bindings_comm(8)="Speak Local"
+    captions_comm(8)="Switch to Local Voice Channel"
+    bindings_comm(9)="Speak Unassigned"  // effectively replaces "Speak Team" ("Switch to Team Voice Channel")?
+    captions_comm(9)="Switch to Unassigned Voice Channel"
+    bindings_comm(10)="Speak Squad" // added
     captions_comm(10)="Switch to Squad Voice Channel"
 
     captions_interface(3)="Increase HUD Size / Vehicle Smoke Launcher Setting" // added adjust smoke launcher to key descriptions
@@ -125,6 +136,7 @@ defaultproperties
         OnPreDraw=InputBK1.InternalPreDraw
     End Object
     i_BG1=DHGUIProportionalContainer'DH_Interface.DHTab_Controls.InputBK1'
+
     Begin Object Class=GUILabel Name=HintLabel
         TextAlign=TXTA_Center
         bMultiLine=true
@@ -137,6 +149,7 @@ defaultproperties
         bScaleToParent=true
     End Object
     l_Hint=GUILabel'DH_Interface.DHTab_Controls.HintLabel'
+
     Begin Object Class=DHGUIMultiColumnListBox Name=BindListBox
         HeaderColumnPerc(0)=0.5
         HeaderColumnPerc(1)=0.25
@@ -151,6 +164,7 @@ defaultproperties
         bScaleToParent=true
     End Object
     lb_Binds=DHGUIMultiColumnListBox'DH_Interface.DHTab_Controls.BindListBox'
+
     Begin Object Class=DHmoComboBox Name=ControlProfilesComboBox
         bReadOnly=true
         ComponentJustification=TXTA_Left
@@ -165,17 +179,17 @@ defaultproperties
         OnChange=DHTab_Controls.InternalOnChange
     End Object
     co_ControlProfiles=DHmoComboBox'DH_Interface.DHTab_Controls.ControlProfilesComboBox'
-    SectionStyleName="DHListSection"
-    PanelCaption="Controls"
 
-    //****************
+    //******************
     // Profile Bindings
-    //****************
-    // default (With DH fixes) this always gets applied before another profile
+    //******************
+
+    // Default (with extra DH standard keys) - this always gets applied before another profile
     ControlProfileBindings(1)=(KeyNames=("Tab","GreyMinus","F2","F3","Minus","Equals","I","Insert","CapsLock","Home","End"),KeyValues=("ScoreToggle","CommunicationMenu","ShowVoteMenu","CommunicationMenu","ShrinkHUD","GrowHUD","SquadTalk","Speak Squad","ShowOrderMenu | OnRelease HideOrderMenu","Speak Command","Speak Unassigned"))
+
     // Contemporary
     ControlProfileBindings(2)=(KeyNames=("F","Z","V","RightMouse","MiddleMouse"),KeyValues=("Use","Prone","Deploy","ROIronSights","AltFire"))
+
     // Recommended
     ControlProfileBindings(3)=(KeyNames=("V","Z","G","H","T","Y","U","O","P","N","M","J","K","L","Semicolon","SingleQuote","RightMouse","MiddleMouse","Ctrl","Alt","Comma","Period","Backslash","Slash","Backspace","MouseX","MouseY","LeftBracket","RightBracket","ScrollLock"),KeyValues=("Use","Prone","ThrowWeapon","ThrowMGAmmo","VoiceTalk","Talk","TeamTalk","VehicleTalk","SquadMenu","speech ALERT 0","ShowObjectives","speech SUPPORT 2","teamsay np","speech ACK 3","speech ACK 2","speech ALERT 3","ROIronSights","AltFire","SpeechMenuToggle","Walking","","","speech ALERT 2","","","Count bXAxis | Axis aMouseX Speed=1.0","Count bYAxis | Axis aMouseY Speed=1.0","","",""))
 }
-
