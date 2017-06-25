@@ -34,6 +34,8 @@ exec function Deploy();
 function float GetSmokeLauncherAmmoReloadState() { return 0.0; }
 simulated function GrowHUD();
 simulated function ShrinkHUD();
+simulated exec function ToggleVehicleLock();
+function ServerToggleVehicleLock();
 
 defaultproperties
 {

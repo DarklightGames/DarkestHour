@@ -116,12 +116,14 @@ function InternalOnOpen()
             SetKeyBindIfAvailable("I", "SquadTalk"); // Matt: suggested alternative, using SetKeyBindIfAvailable() new function below
             SetKeyBindIfAvailable("Insert", "Speak Squad");
             SetKeyBindIfAvailable("CapsLock", "ShowOrderMenu | OnRelease HideOrderMenu");
+            SetKeyBindIfAvailable("L", "ToggleVehicleLock");
             SetKeyBindIfAvailable("Minus", "ShrinkHUD");
             SetKeyBindIfAvailable("Equals", "GrowHUD");
 */
             Controller.SetKeyBind("I", "SquadTalk");
             Controller.SetKeyBind("Insert", "Speak Squad");
             Controller.SetKeyBind("CapsLock", "ShowOrderMenu | OnRelease HideOrderMenu");
+            //Controller.SetKeyBind("L", "ToggleVehicleLock"); // Matt: want to add, but this clashes with 'recommended' set up
             Controller.SetKeyBind("Minus", "ShrinkHUD");
             Controller.SetKeyBind("Equals", "GrowHUD");
             // TODO: fetch the defaults programmatically, this is sloppy!

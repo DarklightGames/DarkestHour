@@ -36,6 +36,10 @@ replication
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
         bPlayerHasBinocs;
+
+    // Functions a client can call on the server
+    reliable if (Role < ROLE_Authority)
+        ServerToggleVehicleLock;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -457,10 +461,16 @@ function bool TryToDrive(Pawn P)
 
             return false;
         }
+
+        // Deny entry to a tank crew position in an armored vehicle if it's been locked & player isn't an allowed crewman (gives message)
+        if (DHArmoredVehicle(VehicleBase) != none && DHArmoredVehicle(VehicleBase).AreCrewPositionsLockedForPlayer(P))
+        {
+            return false;
+        }
     }
 
     // Deny entry if this position is already occupied
-    // Note this comes after other checks because if the player can't enter it anyway (e.g. enemy vehicle or tank crew only),
+    // Note this comes after other checks because if the player can't enter it anyway (e.g. enemy or locked vehicle or tank crew only),
     // he should get a 'can't use' message regardless of whether it happens to be currently occupied
     if (Driver != none)
     {
@@ -480,6 +490,7 @@ function bool TryToDrive(Pawn P)
 
 // Modified to try to start a reload or resume any previously paused reload if weapon isn't loaded, & to cancel any CheckReset timer as vehicle is no longer empty
 // Also to use InitialPositionIndex instead of assuming start position zero, & to record if player has binoculars
+// And if weapon is on an armored vehicle, we tell that vehicle to check vehicle lock setup as a new player has entered
 function KDriverEnter(Pawn P)
 {
     if (bMultiPosition)
@@ -493,6 +504,11 @@ function KDriverEnter(Pawn P)
     if (VehicleBase != none)
     {
         VehicleBase.ResetTime = Level.TimeSeconds - 1.0; // cancel any CheckReset timer as vehicle now occupied
+
+        if (DHArmoredVehicle(VehicleBase) != none)
+        {
+            DHArmoredVehicle(VehicleBase).CheckVehicleLockOnPlayerEntering(self);
+        }
     }
 
     CheckResumeReloadingOnEntry();
@@ -914,10 +930,13 @@ function ServerChangeDriverPosition(byte F)
 
 // Modified to remove overlap with DriverDied(), moving common features into DriverLeft(), which gets called by both functions, & to remove some redundancy
 // Also to prevent exit if player is buttoned up & to give player the same momentum as the vehicle when exiting
+// And so if an 'allowed' crewman exits a locked armored vehicle, we check whether we need to set an unlock timer
 function bool KDriverLeave(bool bForceLeave)
 {
-    local Controller SavedController;
-    local vector     ExitVelocity;
+    local DHArmoredVehicle AV;
+    local Controller       SavedController;
+    local vector           ExitVelocity;
+    local bool             bAllowedCrewmanExitingLockedVehicle;
 
     // Prevent exit from vehicle if player is buttoned up (or if game type or mutator prevents exit)
     // Only if bForceLeave is false, meaning player is trying to exit vehicle & not just switch to another vehicle position
@@ -1017,7 +1036,16 @@ function bool KDriverLeave(bool bForceLeave)
         }
     }
 
+    // If an an 'allowed' crewman is exiting a locked armored vehicle, check whether need to set an unlock timer
+    // Note bForceLeave would mean player is only switching to different vehicle position, which we ignore
+    bAllowedCrewmanExitingLockedVehicle = !bForceLeave && GetArmoredVehicleBase(AV) && AV.bVehicleLocked && AV.IsAnAllowedCrewman(Driver);
+
     DriverLeft();
+
+    if (bAllowedCrewmanExitingLockedVehicle)
+    {
+        AV.CheckSetUnlockTimer(); // note this has to be called after DriverLeft(), otherwise exiting player will still be registered as the occupant
+    }
 
     return true;
 }
@@ -1150,7 +1178,7 @@ simulated function Destroyed_HandleDriver()
 // New helper function to check whether player is able to switch to new vehicle position
 // Avoids (1) net client sending unnecessary replicated function calls to server, & (2) player exiting current position to unsuccessfully try to enter new position
 // We make sure player isn't trying to 'teleport' outside to external rider position while buttoned up,
-// or to enter a tank crew position he can't use, or any position already occupied by another human player
+// or to enter a tank crew position he can't use (including in an armored vehicle that he's locked out of), or any position already occupied by another human player
 simulated function bool CanSwitchToVehiclePosition(byte F)
 {
     local DHArmoredVehicle AV;
@@ -1201,6 +1229,13 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
         {
             DisplayVehicleMessage(0); // not qualified to operate vehicle
 
+            return false;
+        }
+
+        // Can't switch to a tank crew position in an armored vehicle if it's been locked & player isn't an allowed crewman (gives message)
+        // We DO NOT apply this check to a net client, as it doesn't have the required variables (bVehicleLocked & CrewedLockedVehicle)
+        if (Role == ROLE_Authority && (AV != none || GetArmoredVehicleBase(AV)) && AV.AreCrewPositionsLockedForPlayer(self))
+        {
             return false;
         }
     }
@@ -1543,6 +1578,29 @@ function int LocalLimitPitch(int pitch)
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *******************************  MISCELLANEOUS ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
+
+// New keybind function to toggle whether an armored vehicle is locked, stopping new players from entering tank crew positions
+// CanPlayerLockVehicle() is pre-checked by net client for network efficiency, by avoiding sending invalid replicated function calls to server
+simulated exec function ToggleVehicleLock()
+{
+    local DHArmoredVehicle AV;
+
+    if (bMustBeTankCrew && GetArmoredVehicleBase(AV) && (Role == ROLE_Authority || AV.CanPlayerLockVehicle(self)))
+    {
+        ServerToggleVehicleLock();
+    }
+}
+
+// New client-to-server function to toggle whether an armored vehicle is locked
+function ServerToggleVehicleLock()
+{
+    local DHArmoredVehicle AV;
+
+    if (bMustBeTankCrew && GetArmoredVehicleBase(AV) && AV.CanPlayerLockVehicle(self) && Role == ROLE_Authority)
+    {
+        AV.SetVehicleLocked(!AV.bVehicleLocked);
+    }
+}
 
 // Modified to make simulated, so can be used on a net client
 // Especially as simulated function GetTeamNum() relies on this!

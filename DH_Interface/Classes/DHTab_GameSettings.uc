@@ -10,7 +10,7 @@ var automated GUISectionBackground i_BG1, i_BG2, i_BG3;
 var automated DHmoEditBox   ed_PlayerName;
 var automated DHmoComboBox  co_ViewFOV;
 var automated DHmoCheckBox  ch_NoGore;
-var automated DHmoCheckBox  ch_TankThrottle, ch_VehicleThrottle, ch_ManualReloading;
+var automated DHmoCheckBox  ch_TankThrottle, ch_VehicleThrottle, ch_ManualReloading, ch_LockTankOnEntry;
 var automated GUILabel      l_PlayerROID;     // label showing player's unique ROID
 var automated DHGUIButton   b_CopyPlayerROID; // button to copy player's ROID to clipboard
 var automated DHmoCheckBox  ch_DynamicNetSpeed;
@@ -36,6 +36,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     i_BG2.ManageComponent(ch_TankThrottle);
     i_BG2.ManageComponent(ch_VehicleThrottle);
     i_BG2.ManageComponent(ch_ManualReloading);
+    i_BG2.ManageComponent(ch_LockTankOnEntry);
 
     i_BG3.ManageComponent(l_PlayerROID);
     i_BG3.ManageComponent(b_CopyPlayerROID);
@@ -138,6 +139,19 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             ch_ManualReloading.Checked(bOptionEnabled);
             break;
 
+        case ch_LockTankOnEntry:
+            if (DHPlayer(PC) != none)
+            {
+                bOptionEnabled = DHPlayer(PC).bLockTankOnEntry;
+            }
+            else
+            {
+                bOptionEnabled = class'DHPlayer'.default.bLockTankOnEntry;
+            }
+
+            ch_LockTankOnEntry.Checked(bOptionEnabled);
+            break;
+
         // Player's ROID
         case l_PlayerROID:
             s = PlayerOwner().ConsoleCommand("get DH_Engine.DHPlayer ROIDHash", false);
@@ -222,6 +236,7 @@ function SaveSettings()
     local float            ViewFOV;
     local int              GoreLevel, NetSpeed, PurgeCacheDays;
     local bool             bTankThrottle, bVehicleThrottle, bManualReloading, bDynamicNetSpeed, bSaveConfig, bStaticSaveConfig;
+    local bool             bLockTankOnEntry;
 
     PC = PlayerOwner();
 
@@ -268,6 +283,7 @@ function SaveSettings()
     bTankThrottle    = ch_TankThrottle.IsChecked();
     bVehicleThrottle = ch_VehicleThrottle.IsChecked();
     bManualReloading = ch_ManualReloading.IsChecked();
+    bLockTankOnEntry = ch_LockTankOnEntry.IsChecked();
 
     if (DHP != none)
     {
@@ -288,6 +304,12 @@ function SaveSettings()
             DHP.SetManualTankShellReloading(bManualReloading);
             bSaveConfig = true;
         }
+
+        if (DHP.bLockTankOnEntry != bLockTankOnEntry)
+        {
+            DHP.SetLockTankOnEntry(bLockTankOnEntry);
+            bSaveConfig = true;
+        }
     }
     else
     {
@@ -306,6 +328,12 @@ function SaveSettings()
         if (class'DHPlayer'.default.bManualTankShellReloading != bManualReloading)
         {
             class'DHPlayer'.default.bManualTankShellReloading = bManualReloading;
+            bStaticSaveConfig = true;
+        }
+
+        if (class'DHPlayer'.default.bLockTankOnEntry != bLockTankOnEntry)
+        {
+            class'DHPlayer'.default.bLockTankOnEntry = bLockTankOnEntry;
             bStaticSaveConfig = true;
         }
 
@@ -380,6 +408,7 @@ function ResetClicked()
     class'DHPlayer'.static.ResetConfig("bInterpolatedTankThrottle");
     class'DHPlayer'.static.ResetConfig("bInterpolatedVehicleThrottle");
     class'DHPlayer'.static.ResetConfig("bManualTankShellReloading"); // note this reset was missing in the original RO parent class
+    class'DHPlayer'.static.ResetConfig("bLockTankOnEntry");
     class'PlayerController'.static.ResetConfig("bDynamicNetSpeed");
     class'Player'.static.ResetConfig("ConfiguredInternetSpeed");
     PlayerOwner().ConsoleCommand("set Core.System PurgeCacheDays" @ PurgeCacheDaysValues[0]);
@@ -393,6 +422,7 @@ function ResetClicked()
         DHP.bInterpolatedTankThrottle = class'DHPlayer'.default.bInterpolatedTankThrottle;
         DHP.bInterpolatedVehicleThrottle = class'DHPlayer'.default.bInterpolatedVehicleThrottle;
         DHP.bManualTankShellReloading = class'DHPlayer'.default.bManualTankShellReloading;
+        DHP.bLockTankOnEntry = class'DHPlayer'.default.bLockTankOnEntry;
     }
 
     for (i = 0; i < Components.Length; ++i)
@@ -511,6 +541,17 @@ defaultproperties
         OnLoadINI=InternalOnLoadINI
     End Object
     ch_ManualReloading=DHmoCheckBox'ManualReloading'
+
+    Begin Object Class=DHmoCheckBox Name=LockTankOnEntry
+        Caption="Automatically Lock Tank To Stop Other Players Entering"
+        Hint="Automatically lock a tank (or other armored vehicle) as you enter it, which stops other players from entering and using the tank crew positions. Only works if the tank is empty when you enter."
+        CaptionWidth=0.959
+        ComponentJustification=TXTA_Left
+        IniOption="@Internal"
+        OnChange=InternalOnChange
+        OnLoadINI=InternalOnLoadINI
+    End Object
+    ch_LockTankOnEntry=DHmoCheckBox'LockTankOnEntry'
 
     // Network options
     Begin Object Class=DHGUISectionBackground Name=GameBK3

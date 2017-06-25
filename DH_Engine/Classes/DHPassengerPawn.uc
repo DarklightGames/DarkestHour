@@ -183,6 +183,11 @@ function KDriverEnter(Pawn P)
     if (VehicleBase != none)
     {
         VehicleBase.ResetTime = Level.TimeSeconds - 1.0; // cancel any CheckReset timer as vehicle now occupied
+
+        if (DHArmoredVehicle(VehicleBase) != none)
+        {
+            DHArmoredVehicle(VehicleBase).CheckVehicleLockOnPlayerEntering(self);
+        }
     }
 }
 
@@ -298,6 +303,8 @@ simulated function bool CanReload() { return false; }
 function CheckResumeReloadingOnEntry();
 function float GetAmmoReloadState() { return 0.0; }
 function bool ResupplyAmmo() { return false; }
+simulated exec function ToggleVehicleLock();
+function ServerToggleVehicleLock();
 simulated event SetRotatingStatus(byte NewRotationStatus);
 simulated function ServerSetRotatingStatus(byte NewRotatingStatus);
 

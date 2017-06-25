@@ -50,6 +50,11 @@ var     bool                bCombatSpawned;    // indicates the pawn was spawned
 var     DHConstructionProxy ConstructionProxy;
 var     array<DHConstructionSupplyAttachment> TouchingSupplyAttachments;
 var     int                 SupplyCount;
+
+// Armored vehicle locking
+var     DHArmoredVehicle    CrewedLockedVehicle; // a locked armored vehicle that this player is allowed to enter
+var     bool                bInLockedVehicle;    // player is in a locked vehicle (only to replicate to net client to display locked icon on vehicle HUD)
+
 // Touch messages
 var     class<LocalMessage> TouchMessageClass;
 var     float               LastNotifyTime;
@@ -114,7 +119,7 @@ replication
 
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        SupplyCount;
+        SupplyCount, bInLockedVehicle;
 
     // Variables the server will replicate to all clients except the one that owns this actor
     reliable if (!bNetOwner && bNetDirty && Role == ROLE_Authority)
@@ -950,6 +955,70 @@ simulated function StopDriving(Vehicle V)
 
     ToggleAuxCollision(true);
     SetAnimAction('ClearAnims');
+}
+
+// New function to set a player's reference to a locked vehicle that this player is allowed to enter, or to clear it passing 'none'
+function SetCrewedLockedVehicle(DHArmoredVehicle NewLockedVehicleRef)
+{
+    local DHArmoredVehicle OldLockedVehicle;
+
+    // Update player's locked vehicle reference, but first save the old vehicle
+    OldLockedVehicle = CrewedLockedVehicle;
+    CrewedLockedVehicle = NewLockedVehicleRef;
+
+    // Player has stopped being registered as an allowed crewman in a vehicle that hasn't been destroyed
+    if (OldLockedVehicle != none && CrewedLockedVehicle != OldLockedVehicle && OldLockedVehicle.Health > 0)
+    {
+        // Player is no longer relevant to the old vehicle, so get it to check whether it should now be unlocked or set an unlock timer
+        // Means player has either died, or has now become an allowed crewman in a different locked vehicle (can only be registered in one locked vehicle)
+        if (OldLockedVehicle.bVehicleLocked)
+        {
+            OldLockedVehicle.CheckUnlockVehicle();
+        }
+        // Player's locked vehicle just became unlocked as it was left without tank crew for too long, so flag we need to notify the player
+        else if (OldLockedVehicle.UnlockVehicleTime != 0.0 && Level.TimeSeconds > OldLockedVehicle.UnlockVehicleTime)
+        {
+            if (DrivenVehicle != none)
+            {
+                DrivenVehicle.ReceiveLocalizedMessage(class'DHVehicleMessage', 7); // "You left your locked vehicle for too long and it's now unlocked"
+            }
+            else
+            {
+                ReceiveLocalizedMessage(class'DHVehicleMessage', 7); // "You left your locked vehicle for too long and it's now unlocked"
+            }
+        }
+    }
+
+    // If player is in a vehicle, update the bInLockedVehicle flag, which just tells a net client to display a locked vehicle icon on the vehicle HUD
+    // We don't waste replication updating this to false if player isn't in a vehicle as it's only used by a vehicle HUD & when on foot it's irrelevant
+    // So all we need to do is make sure it's updated if the player enters a vehicle (any vehicle), & also if the vehicle's lock is toggled
+    if (DrivenVehicle != none)
+    {
+        SetInLockedVehicle();
+    }
+}
+
+// New function to set player's bInLockedVehicle flag, which replicates to net clients so their vehicle HUD knows whether to display a locked vehicle icon
+// Can determine the value, but can also be passed a known value using bUsePassedNewStatus option, e.g. when player's existing vehicle becomes locked/unlocked
+function SetInLockedVehicle(optional bool bUsePassedNewStatus, optional bool bNewStatus)
+{
+    local DHArmoredVehicle AV;
+
+    if (!bUsePassedNewStatus)
+    {
+        if (VehicleWeaponPawn(DrivenVehicle) != none)
+        {
+            AV = DHArmoredVehicle(VehicleWeaponPawn(DrivenVehicle).VehicleBase);
+        }
+        else
+        {
+            AV = DHArmoredVehicle(DrivenVehicle);
+        }
+
+        bNewStatus = AV != none && AV.bVehicleLocked;
+    }
+
+    bInLockedVehicle = bNewStatus;
 }
 
 // Modified to deprecate SavedAuxCollision & simply enable or disable collision based on passed bool
@@ -2201,9 +2270,9 @@ function PlayTakeHit(vector HitLocation, int Damage, class<DamageType> DamageTyp
     PlayOwnedSound(SoundGroupClass.static.GetHitSound(DamageType), SLOT_Pain, 3.0 * TransientSoundVolume,, RandRange(30, 90),, true); // added randomized radius
 }
 
-// A few minor additions
-// DH added removal of radioman arty triggers on death - PsYcH0_Ch!cKeN
-// No longer disable collision on player's bullet whip attachment as we may as well simply destroy that actor
+// Modified to add removal of radioman arty triggers on death
+// And so if player was registered as an allowed crewman in a locked vehicle, we notify that vehicle this player is no longer valid
+// We no longer disable collision on player's bullet whip attachment as we may as well simply destroy that actor
 // But we now do that in state 'Dying' as that happens on both server & client, while this function is server only
 // Also omit possible call to ClientDying() at end of this function as ClientDying() is redundant & emptied out in ROPawn, so it's pointless replication
 function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
@@ -2281,6 +2350,11 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     {
         Velocity = DrivenVehicle.Velocity; // give dead driver the vehicle's velocity
         DrivenVehicle.DriverDied();
+    }
+
+    if (CrewedLockedVehicle != none)
+    {
+        SetCrewedLockedVehicle(none); // if player was registered as an allowed crewman in a locked vehicle, this will notify vehicle this player is no longer valid
     }
 
     if (Controller != none)
@@ -2465,6 +2539,8 @@ simulated function SpawnGibs(rotator HitRotation, float ChunkPerterbation)
     super.SpawnGibs(HitRotation, ChunkPerterbation);
 }
 
+// Modified to destroy burning player effects
+// Also so if player was registered as an allowed crewman in a locked vehicle, we notify that vehicle this player is no longer valid
 simulated event Destroyed()
 {
     if (FlameFX != none)
@@ -2473,6 +2549,11 @@ simulated event Destroyed()
         FlameFX.Emitters[1].SkeletalMeshActor = none;
         FlameFX.Emitters[2].SkeletalMeshActor = none;
         FlameFX.Kill();
+    }
+
+    if (CrewedLockedVehicle != none)
+    {
+        SetCrewedLockedVehicle(none); // if player was registered as an allowed crewman in a locked vehicle, this will notify vehicle this player is no longer valid
     }
 
     super.Destroyed();

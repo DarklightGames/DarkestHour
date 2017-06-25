@@ -679,7 +679,7 @@ simulated function SetViewFOV(int PositionIndex, optional PlayerController PC)
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Re-written so this function checks & picks a vehicle position the player can use, if there is one
-// It ignores any positions already occupied by another player, & any tank crew positions the player can't use
+// It ignores any positions already occupied by another player, & any tank crew positions the player can't use (including in an armored vehicle that he's locked out of)
 // Also simplified by removing the check on player distance vs EntryRadius & the ClosestWeaponPawn stuff (it really doesn't matter which is closest)
 // If player is close enough to see the 'enter vehicle' message, he should always be able to enter, otherwise it's confusing & contradictory
 function Vehicle FindEntryVehicle(Pawn P)
@@ -698,8 +698,8 @@ function Vehicle FindEntryVehicle(Pawn P)
     {
         bPlayerIsTankCrew = class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(P);
 
-        // Select driver position if it's empty & player isn't barred by tank crew restriction
-        if (Driver == none && (!bMustBeTankCommander || bPlayerIsTankCrew))
+        // Select driver position if it's empty, & player isn't barred by tank crew restriction, & it isn't a locked armored vehicle that player can't enter
+        if (Driver == none && (!bMustBeTankCommander || (bPlayerIsTankCrew && !AreCrewPositionsLockedForPlayer(P, true))))
         {
             return self;
         }
@@ -711,8 +711,8 @@ function Vehicle FindEntryVehicle(Pawn P)
         {
             WP = DHVehicleWeaponPawn(WeaponPawns[i]);
 
-            // Select weapon pawn if it's empty & player isn't barred by tank crew restriction
-            if (WP != none && WP.Driver == none && (!WP.bMustBeTankCrew || bPlayerIsTankCrew))
+            // Select weapon pawn if it's empty, & player isn't barred by tank crew restriction, & this isn't a locked armored vehicle that player can't enter
+            if (WP != none && WP.Driver == none && (!WP.bMustBeTankCrew || (bPlayerIsTankCrew && !AreCrewPositionsLockedForPlayer(P, true))))
             {
                 return WP;
             }
@@ -748,7 +748,7 @@ function Vehicle FindEntryVehicle(Pawn P)
 
     if (VehicleGoal == self)
     {
-        if (Driver == none)
+        if (Driver == none && !(bMustBeTankCommander && AreCrewPositionsLockedForPlayer(P)))
         {
             return self;
         }
@@ -761,12 +761,12 @@ function Vehicle FindEntryVehicle(Pawn P)
 
             if (VehicleGoal == WP)
             {
-                if (WP.Driver == none)
+                if (WP.Driver == none && !(WP.bMustBeTankCrew && AreCrewPositionsLockedForPlayer(P)))
                 {
                     return WP;
                 }
 
-                if (Driver == none) // bot tries to enter driver's position if can't use its weapon pawn goal
+                if (Driver == none && !(bMustBeTankCommander && AreCrewPositionsLockedForPlayer(P))) // bot tries to enter driver's position if can't use its weapon pawn goal
                 {
                     return self;
                 }
@@ -779,7 +779,7 @@ function Vehicle FindEntryVehicle(Pawn P)
     return none;
 }
 
-// Modified to prevent entry if player is on fire
+// Modified to prevent entry if player is on fire, or if it's a crew position in an armored vehicle has been locked by its crew
 function bool TryToDrive(Pawn P)
 {
     local bool bEnemyVehicle;
@@ -840,10 +840,16 @@ function bool TryToDrive(Pawn P)
 
             return false;
         }
+
+        // Deny entry to a tank crew position in an armored vehicle if it's been locked & player isn't an allowed crewman (gives message)
+        if (AreCrewPositionsLockedForPlayer(P))
+        {
+            return false;
+        }
     }
 
     // Deny entry if vehicle has a driver
-    // Note this comes after other checks because if the player can't enter it anyway (e.g. enemy vehicle or tank crew only),
+    // Note this comes after other checks because if the player can't enter it anyway (e.g. enemy or locked vehicle or tank crew only),
     // he should get a 'can't use' message regardless of whether it happens to be currently occupied
     if (Driver != none)
     {
@@ -1180,7 +1186,7 @@ function ServerChangeDriverPosition(byte F)
 // New helper function to check whether player is able to switch to new vehicle position
 // Avoids (1) net client sending unnecessary replicated function calls to server, & (2) player exiting current position to unsuccessfully try to enter new position
 // We make sure player isn't trying to 'teleport' outside to external rider position while buttoned up, or to enter any position already occupied by another human player,
-// or a tank crew position he can't use (although shouldn't be an issue as he's already in the driver position)
+// or a tank crew position he can't use, including in an armored vehicle that he's locked out of (although shouldn't be an issue as he's already in the driver position)
 simulated function bool CanSwitchToVehiclePosition(byte F)
 {
     local DHVehicleWeaponPawn WeaponPawn;
@@ -1214,6 +1220,13 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
             {
                 DisplayVehicleMessage(0); // not qualified to operate vehicle
 
+                return false;
+            }
+
+            // Can't switch to a tank crew position in an armored vehicle if it's been locked & player isn't an allowed crewman (gives message)
+            // We DO NOT apply this check to a net client, as it doesn't have the required variables (bVehicleLocked & CrewedLockedVehicle)
+            if (Role == ROLE_Authority && AreCrewPositionsLockedForPlayer(self))
+            {
                 return false;
             }
         }
@@ -2960,6 +2973,13 @@ function bool IsFactorysLastVehicle()
     VF = ROVehicleFactory(ParentFactory);
 
     return VF != none && (!VF.bAllowVehicleRespawn || VF.TotalSpawnedVehicles >= VF.VehicleRespawnLimit); // if vehicle factory's last vehicle
+}
+
+// New helper function to check whether tank crew positions in this vehicle have been locked, preventing a player from entering them
+// Implemented in armored vehicle subclass, but useful here to facilitate a generic entry functions in this class
+function bool AreCrewPositionsLockedForPlayer(Pawn P, optional bool bNoMessageToPlayer)
+{
+    return false;
 }
 
 // Modified to prevent "enter vehicle" screen messages if vehicle is destroyed or if it's an enemy vehicle

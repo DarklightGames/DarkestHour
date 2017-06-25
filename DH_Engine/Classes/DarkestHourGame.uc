@@ -69,6 +69,8 @@ var     bool                        bPublicPlay;                            // V
 var     UVersion                    Version;
 var     DHSquadReplicationInfo      SquadReplicationInfo;
 
+var()   config int                  EmptyTankUnlockTime;                    // Server config option for how long (secs) before unlocking a locked armored vehicle if abandoned by its crew
+
 // Overridden to make new clamp of MaxPlayers
 event InitGame(string Options, out string Error)
 {
@@ -4526,6 +4528,8 @@ defaultproperties
     bShowTimeOnScoreboard=true
 
     ObscureReinfNum=50
+
+    EmptyTankUnlockTime=60
 
     // Strings/hints
     ROHints(1)="You can 'cook' a Mk II grenade by pressing %FIRE3% while holding the grenade back."

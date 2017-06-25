@@ -59,6 +59,7 @@ var     material            NeedAssistIconMaterial;
 var     material            NeedAmmoIconMaterial;
 
 // Vehicle HUD
+var     SpriteWidget        VehicleLockedIcon;                  // icon showing that an armored vehicle has been locked, stopping any new players entering tank crew positions
 var     SpriteWidget        VehicleAltAmmoReloadIcon;           // ammo reload icon for a coax MG, so reload progress can be shown on HUD like a tank cannon reload
 var     SpriteWidget        VehicleMGAmmoReloadIcon;            // ammo reload icon for a vehicle mounted MG position
 var     SpriteWidget        VehicleSmokeLauncherAmmoIcon;       // ammo icon for a vehicle mounted smoke launcher
@@ -262,6 +263,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(VehicleRPMNeedlesTextures[1]);
 
     // Other vehicle HUD icons
+    Level.AddPrecacheMaterial(VehicleLockedIcon.WidgetTexture);
     Level.AddPrecacheMaterial(VehicleOccupants.WidgetTexture);
     Level.AddPrecacheMaterial(VehicleEngineDamagedTexture);
     Level.AddPrecacheMaterial(VehicleEngineCriticalTexture);
@@ -1137,6 +1139,12 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             Widget.TextureScale = V.VehicleHudTurret.MaterialUSize() / 256.0;
             DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
         }
+    }
+
+    // If player is in a locked armored vehicle, draw the locked vehicle icon
+    if (Vehicle(PawnOwner) != none && DHPawn(Vehicle(PawnOwner).Driver) != none && DHPawn(Vehicle(PawnOwner).Driver).bInLockedVehicle)
+    {
+        DrawSpriteWidgetClipped(Canvas, VehicleLockedIcon, Coords, true);
     }
 
     // Draw vehicle occupant dots
@@ -5459,6 +5467,7 @@ defaultproperties
 
     // Vehicle HUD
     VehicleOccupantsText=(PosX=0.78,OffsetX=0,bDrawShadow=true)
+    VehicleLockedIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.Tank_Hud.VehicleLockedIcon',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.25,DrawPivot=DP_MiddleMiddle,PosX=0.982,PosY=0.86,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     VehicleAmmoReloadIcon=(Tints[0]=(A=80),Tints[1]=(A=80)) // override to make RO's red cannon ammo reload overlay slightly less bright (reduced alpha from 128)
     VehicleAmmoTypeText=(Text="",PosX=0.24,PosY=1.0,WrapWidth=0.0,WrapHeight=1,OffsetX=8,OffsetY=-4,DrawPivot=DP_LowerLeft,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=true)
     VehicleAltAmmoIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.2,DrawPivot=DP_LowerLeft,PosX=0.30,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))

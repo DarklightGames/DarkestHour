@@ -96,6 +96,8 @@ defaultproperties
     ControlProfiles(2)="Contemporary"
     ControlProfiles(3)="Recommended"
 
+    bindings_game(4)="ToggleVehicleLock"
+    captions_game(4)="Lock/Unlock Armored Vehicle"
 
     captions_weapons(9)="Deploy MG / Attach Bayonet / Fire Vehicle Smoke Launcher" // added fire smoke launcher to key description
 
@@ -184,7 +186,8 @@ defaultproperties
     // Profile Bindings
     //******************
 
-    // Default (with extra DH standard keys) - this always gets applied before another profile
+    // Default (with extra DH standard keys) - this always gets applied before another profile // Matt: want to add'L' key for lock/unlock tank, but currently clashes with recommended profile
+//  ControlProfileBindings(1)=(KeyNames=("Tab","GreyMinus","F2","F3","Minus","Equals","I","Insert","CapsLock","Home","End","L"),KeyValues=("ScoreToggle","CommunicationMenu","ShowVoteMenu","CommunicationMenu","ShrinkHUD","GrowHUD","SquadTalk","Speak Squad","ShowOrderMenu | OnRelease HideOrderMenu","Speak Command","Speak Unassigned","ToggleVehicleLock"))
     ControlProfileBindings(1)=(KeyNames=("Tab","GreyMinus","F2","F3","Minus","Equals","I","Insert","CapsLock","Home","End"),KeyValues=("ScoreToggle","CommunicationMenu","ShowVoteMenu","CommunicationMenu","ShrinkHUD","GrowHUD","SquadTalk","Speak Squad","ShowOrderMenu | OnRelease HideOrderMenu","Speak Command","Speak Unassigned"))
 
     // Contemporary

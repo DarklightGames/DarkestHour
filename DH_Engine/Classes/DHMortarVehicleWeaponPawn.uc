@@ -872,6 +872,9 @@ simulated function UpdatePrecacheMaterials()
 simulated function SwitchWeapon(byte F);
 function ServerChangeDriverPosition(byte F);
 simulated function bool CanSwitchToVehiclePosition(byte F) { return false; }
+simulated exec function ToggleVehicleLock();
+function ServerToggleVehicleLock();
+
 defaultproperties
 {
     // Mortar operator, aiming & undeploying

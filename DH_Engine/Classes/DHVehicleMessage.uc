@@ -16,6 +16,9 @@ var localized string ExitDriverOrComHatch;
 var localized string ExitCommandersOrMGHatch;
 var localized string UnbuttonToReload;
 
+var localized string VehicleLocked;
+var localized string AbandonedVehicleUnlocked;
+
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     local string S;
@@ -39,6 +42,12 @@ static function string GetString(optional int Switch, optional PlayerReplication
             break;
         case 5:
             S = default.ExitCommandersHatch;
+            break;
+        case 6:
+            S = default.VehicleLocked;
+            break;
+        case 7:
+            S = default.AbandonedVehicleUnlocked;
             break;
         case 8:
             S = default.VehicleFull;
@@ -80,4 +89,6 @@ defaultproperties
     ExitDriverOrComHatch="Exit through driver's or commander's hatch"
     ExitCommandersOrMGHatch="Exit through commander's or MG hatch"
     UnbuttonToReload="You must unbutton the hatch [%NEXTWEAPON%] to reload"
+    VehicleLocked="This vehicle has been locked by its crew"
+    AbandonedVehicleUnlocked="You left your locked vehicle for too long and it's now unlocked"
 }

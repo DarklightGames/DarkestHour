@@ -48,6 +48,10 @@ var     vector      OverlayFPCamPos;            // optional camera offset for ov
 var     texture     PeriscopeOverlay;           // driver's periscope overlay texture
 var     texture     DamagedPeriscopeOverlay;    // gunsight overlay to show if optics have been broken
 
+// Vehicle locking
+var     bool        bVehicleLocked;             // vehicle has been locked by a player, stopping new players from entering tank crew positions
+var     float       UnlockVehicleTime;          // the next time to check whether to unlock a locked vehicle that its crew may have abandoned
+
 // Armor penetration
 var     array<ArmorSection> FrontArmor;        // array of armor properties (divided into horizontal bands) for each side of vehicle
 var     array<ArmorSection> RightArmor;
@@ -114,6 +118,10 @@ replication
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bOnFire, bEngineOnFire;
+
+    // Functions a client can call on the server
+    reliable if (Role < ROLE_Authority)
+        ServerToggleVehicleLock;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -130,6 +138,17 @@ simulated function PostBeginPlay()
         // Set fire damage rates
         HullFireDamagePer2Secs = HealthMax * 0.02;             // so approx 100 seconds from full vehicle health to detonation due to fire
         EngineFireDamagePer3Secs = default.EngineHealth * 0.1; // so approx 30 seconds engine fire until engine destroyed
+    }
+}
+
+// Modified to unlock a locked vehicle (unlocking isn't directly necessary, but unlocking it finds & clears any references to the now destroyed vehicle)
+simulated function Destroyed()
+{
+    super.Destroyed();
+
+    if (bVehicleLocked && Role == ROLE_Authority)
+    {
+        SetVehicleLocked(false);
     }
 }
 
@@ -203,6 +222,17 @@ simulated function Timer()
                 bSpikedVehicle = false; // cancel spike timer if vehicle is now occupied or burning (just let the fire destroy it)
             }
         }
+
+        // Unlock a locked vehicle that has been abandoned by its crew
+        if (UnlockVehicleTime != 0.0 && Now >= UnlockVehicleTime)
+        {
+            if (bVehicleLocked && Health > 0)
+            {
+                SetVehicleLocked(false);
+            }
+
+            UnlockVehicleTime = 0.0; // note this must come after unlocking vehicle, as when DHPawns get notified they need to be able to tell it's from this unlock timer
+        }
     }
 
     // Vehicle is burning, so check if we need to spawn any hatch fire effects
@@ -268,6 +298,11 @@ simulated function SetNextTimer(optional float Now)
         if (bSpikedVehicle && (SpikeTime < NextTimerTime || NextTimerTime == 0.0) && SpikeTime > Now)
         {
             NextTimerTime = SpikeTime;
+        }
+
+        if (bVehicleLocked && (UnlockVehicleTime < NextTimerTime || NextTimerTime == 0.0) && UnlockVehicleTime > Now)
+        {
+            NextTimerTime = UnlockVehicleTime;
         }
     }
 
@@ -379,6 +414,14 @@ function Vehicle FindEntryVehicle(Pawn P)
     return super.FindEntryVehicle(P);
 }
 
+// Modified to call handles vehicle locking functionality when a player enters
+function KDriverEnter(Pawn P)
+{
+    super.KDriverEnter(P);
+
+    CheckVehicleLockOnPlayerEntering(self);
+}
+
 // Modified to handle optional camera offset for initial overlay position
 simulated function ClientKDriverEnter(PlayerController PC)
 {
@@ -417,6 +460,26 @@ simulated state ViewTransition
     }
 }
 
+// Modified so if an 'allowed' crewman exits a locked vehicle, we check whether we need to set an unlock timer
+function bool KDriverLeave(bool bForceLeave)
+{
+    local bool bAllowedCrewmanExitingLockedVehicle;
+
+    bAllowedCrewmanExitingLockedVehicle = bVehicleLocked && !bForceLeave && IsAnAllowedCrewman(Driver); // bForceLeave would mean player is only switching to different vehicle position
+
+    if (super.KDriverLeave(bForceLeave))
+    {
+        if (bAllowedCrewmanExitingLockedVehicle)
+        {
+            CheckSetUnlockTimer(); // note this has to be called after the Super, otherwise exiting player will still be registered as the driver
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
 // Implemented to prevent exit if player is buttoned up, displaying an appropriate "unbutton the hatch" message if he can't
 simulated function bool CanExit()
 {
@@ -439,6 +502,318 @@ simulated function bool CanExit()
     }
 
     return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  ******************************** VEHICLE LOCKING ******************************* //
+///////////////////////////////////////////////////////////////////////////////////////
+
+// New keybind function to toggle whether an armored vehicle is locked, stopping new players from entering tank crew positions
+// CanPlayerLockVehicle() is pre-checked by net client for network efficiency, by avoiding sending invalid replicated function calls to server
+simulated exec function ToggleVehicleLock()
+{
+    if (Role == ROLE_Authority || CanPlayerLockVehicle(self))
+    {
+        ServerToggleVehicleLock();
+    }
+}
+
+// New client-to-server function to toggle whether an armored vehicle is locked
+function ServerToggleVehicleLock()
+{
+    if (CanPlayerLockVehicle(self) && Role == ROLE_Authority)
+    {
+        SetVehicleLocked(!bVehicleLocked);
+    }
+}
+
+// New function to set whether an armored vehicle is locked (stopping new players from entering tank crew positions) or is unlocked
+function SetVehicleLocked(bool bNewLockedStatus)
+{
+    local VehicleWeaponPawn WP;
+    local DHPawn            DHP;
+    local Controller        C;
+    local int               i;
+
+    bVehicleLocked = bNewLockedStatus;
+
+    // If vehicle has been locked, go through all vehicle positions & register any tank crew as allowed crewmen (even if they are currently in non-tank crew positions)
+    if (bVehicleLocked)
+    {
+        if (DHPawn(Driver) != none)
+        {
+            DHPawn(Driver).SetCrewedLockedVehicle(self);
+        }
+
+        for (i = 0; i < WeaponPawns.Length; ++i)
+        {
+            WP = WeaponPawns[i];
+
+            if (WP != none && class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(WP) && DHPawn(WP.Driver) != none)
+            {
+                DHPawn(WP.Driver).SetCrewedLockedVehicle(self);
+            }
+        }
+    }
+    // Or if vehicle has been unlocked, find all 'allowed' crew & clear their locked vehicle reference
+    // This has to check players outside the vehicle, as they could just be temporarily out scouting etc
+    else
+    {
+        for (C = Level.ControllerList; C != none; C = C.NextController)
+        {
+            if (IsAnAllowedCrewman(C.Pawn, DHP))
+            {
+                DHP.SetCrewedLockedVehicle(none);
+            }
+        }
+    }
+}
+
+// New function triggered when a player enters an armored vehicle, so it can check if any changes are required to its vehicle locked status
+// If vehicle is locked & the new player has entered a tank position, it makes sure he is registered as allowed to use the vehicle
+// If vehicle is locked but has an unlock timer running, meaning its crew had exited, if new player is an allowed crewman the timer is cancelled
+// If vehicle isn't locked but new crewman has the 'lock tank on entry' option enabled & is a tanker, it attempts to lock the vehicle automatically
+function CheckVehicleLockOnPlayerEntering(Vehicle EntryPosition)
+{
+    local DHPawn            Player;
+    local VehicleWeaponPawn WP;
+    local bool              bEnteredTankCrewPosition, bFoundCrewman;
+    local int               i;
+
+    if (EntryPosition != none)
+    {
+        Player = DHPawn(EntryPosition.Driver);
+    }
+
+    if (Player == none)
+    {
+         return;
+    }
+
+    if (EntryPosition == self)
+    {
+        bEnteredTankCrewPosition = bMustBeTankCommander;
+    }
+    else
+    {
+        bEnteredTankCrewPosition = EntryPosition.IsA('ROVehicleWeaponPawn') && ROVehicleWeaponPawn(EntryPosition).bMustBeTankCrew;
+    }
+
+    if (bVehicleLocked)
+    {
+        // If player isn't registered as allowed crew, but was allowed to enter entered a locked crew position, then register him as allowed crew
+        // This can happen if he was allowed in because he's in same squad as one of the allowed crew
+        if (bEnteredTankCrewPosition && !IsAnAllowedCrewman(Player))
+        {
+            Player.SetCrewedLockedVehicle(self);
+        }
+
+        // If an allowed crewman just entered (any vehicle position), cancel any unlock timer that's been set
+        if (IsAnAllowedCrewman(Player))
+        {
+            CancelAnyVehicleUnlockTimer();
+        }
+    }
+    // If player has the 'lock tank on entry' option enabled & he's a tank crewman, he attempts to lock the vehicle automatically
+    // This only works if there are no other tank crew in the vehicle (& the vehicle must be for tank crew only)
+    else if (bEnteredTankCrewPosition && DHPlayer(EntryPosition.Controller) != none && DHPlayer(EntryPosition.Controller).bLockTankOnEntry
+        && class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(EntryPosition) && bMustBeTankCommander)
+    {
+        // Check through vehicle positions to see if if there is a tank crewman already in the vehicle
+        if (Driver != none && Driver != Player && class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(self))
+        {
+            bFoundCrewman = true;
+        }
+        else
+        {
+            for (i = 0; i < WeaponPawns.Length; ++i)
+            {
+                WP = WeaponPawns[i];
+
+                if (WP != none && WP.Driver != none && WP.Driver != Player && class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(WP))
+                {
+                    bFoundCrewman = true;
+                    break;
+                }
+            }
+        }
+
+        // If we didn't find any tank crew, the entering player locks the vehicle automatically
+        if (!bFoundCrewman)
+        {
+            SetVehicleLocked(true);
+        }
+    }
+
+    // Update DHPawn's bInLockedVehicle, so a net client's vehicle HUD knows whether to display a locked vehicle icon
+    Player.SetInLockedVehicle(true, bVehicleLocked);
+}
+
+// New function to check whether we need to set a timer to unlock a locked armored vehicle after a set period
+// This happens if the 'allowed' crew have left the vehicle & it may be abandoned
+function CheckSetUnlockTimer()
+{
+    local int i;
+
+    if (IsAnAllowedCrewman(Driver))
+    {
+        return;
+    }
+
+    for (i = 0; i < WeaponPawns.Length; ++i)
+    {
+        if (IsAnAllowedCrewman(WeaponPawns[i]))
+        {
+            return;
+        }
+    }
+
+    // No allowed crew left in the vehicle, so we set an unlock timer
+    SetVehicleUnlockTimer();
+}
+
+// New function to check whether we need to either (1) unlock the vehicle now (if no 'allowed' crew remain alive)
+// Or (2) set a timer to unlock it after a set period (if there are still allowed crew, but none currently in the vehicle, e.g. they may be outside scouting etc)
+// Makes sure that if all tank crew members are killed or abandon a locked vehicle, it doesn't stay locked forever
+function CheckUnlockVehicle()
+{
+    local Controller C;
+    local bool       bFoundAllowedCrewmanOutOfVehicle;
+
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        // Found an allowed crewman
+        if (IsAnAllowedCrewman(C.Pawn))
+        {
+            // Do nothing if any 'allowed' crewman is still in this vehicle
+            if (C.Pawn == self || (C.Pawn.IsA('VehicleWeaponPawn') && VehicleWeaponPawn(C.Pawn).VehicleBase == self))
+            {
+                return;
+            }
+
+            // This allowed crewman is not currently in the vehicle, so for now we just record that we've found at least one such crewman
+            bFoundAllowedCrewmanOutOfVehicle = true;
+        }
+    }
+
+    // No allowed crewman left in the vehicle but we did find one away from it, so it remains locked, but we set an unlock timer
+    if (bFoundAllowedCrewmanOutOfVehicle)
+    {
+        SetVehicleUnlockTimer();
+    }
+    // No allowed crew remain alive, so unlock the vehicle now, & cancel any unlock timer
+    else
+    {
+        SetVehicleLocked(false);
+        CancelAnyVehicleUnlockTimer();
+    }
+}
+
+// New function to set a timer to unlock a locked armored vehicle after a set period
+// Triggered when all 'allowed' crew exit a locked vehicle, so it may be abandoned
+function SetVehicleUnlockTimer()
+{
+    UnlockVehicleTime = Level.TimeSeconds + class'DarkestHourGame'.default.EmptyTankUnlockTime;
+    SetNextTimer();
+}
+
+// New function to check whether an unlock timer has been set & to cancel it if so
+function CancelAnyVehicleUnlockTimer()
+{
+    if (UnlockVehicleTime != 0.0)
+    {
+        UnlockVehicleTime = 0.0;
+        SetNextTimer(); // checks whether some other event now requires a timer setting
+    }
+}
+
+// New helper function to check whether a player is allowed to lock or unlock an armored vehicle
+// Allowed if player is a tank crew role, he is the sole or most senior crewman (based on position in vehicle), & the vehicle can only be used by tank crew
+// Note we use bDriving instead of Driver != none checks, as net client may not have Driver pawn if Driver is hidden because bDrawDriverInTP=false
+simulated function bool CanPlayerLockVehicle(Vehicle PlayersVehiclePosition)
+{
+    if (class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(PlayersVehiclePosition) && bMustBeTankCommander) // player must be tank crew & vehicle must be tank crew only
+    {
+        if (Cannon != none && Cannon.WeaponPawn != none && Cannon.WeaponPawn.bDriving) // vehicle has a commander, so player can only lock if he is that commander
+        {
+            return PlayersVehiclePosition == Cannon.WeaponPawn;
+        }
+        else if (bDriving) // vehicle has a driver, so player can only lock if he is that driver
+        {
+            return PlayersVehiclePosition == self;
+        }
+        else if (MGun != none && MGun.WeaponPawn != none && MGun.WeaponPawn.bDriving) // vehicle has an MG operator, so player can only lock if he is that MG operator
+        {
+            return PlayersVehiclePosition == MGun.WeaponPawn;
+        }
+    }
+
+    return false;
+}
+
+// Implemented here to check whether a player is prevented from entering a tank crew position in an armored vehicle that has been locked
+// If vehicle is locked, entry is allowed if player is registered as an 'allowed' crewman, i.e. they were in it when it was locked
+// Also allowed if player is in the same squad as one of the allowed crew in the vehicle
+// Displays a screen message if player isn't allowed in, unless that is flagged to be avoided
+function bool AreCrewPositionsLockedForPlayer(Pawn P, optional bool bNoMessageToPlayer)
+{
+    local DHPlayerReplicationInfo EnteringPlayerPRI;
+    local int                     i;
+
+    if (bVehicleLocked && P != none)
+    {
+        // Player is one of the allowed crew, so allow him in
+        if (IsAnAllowedCrewman(P))
+        {
+            return false;
+        }
+
+        EnteringPlayerPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+
+        // Player is in a squad, so check whether he's in the same squad as one of the allowed crew present in the vehicle - if he is, allow him in
+        if (EnteringPlayerPRI != none && EnteringPlayerPRI.IsInSquad())
+        {
+            if (IsAnAllowedCrewman(Driver) && class'DHPlayerReplicationInfo'.static.IsInSameSquad(EnteringPlayerPRI, DHPlayerReplicationInfo(PlayerReplicationInfo)))
+            {
+                return false;
+            }
+            else
+            {
+                for (i = 0; i < WeaponPawns.Length; ++i)
+                {
+                    if (IsAnAllowedCrewman(WeaponPawns[i]) &&
+                        class'DHPlayerReplicationInfo'.static.IsInSameSquad(EnteringPlayerPRI, DHPlayerReplicationInfo(WeaponPawns[i].PlayerReplicationInfo)))
+                    {
+                        return false;
+
+                    }
+                }
+            }
+        }
+
+        // PLayer is locked out of this vehicle's crew positions, so display screen message to notify him (unless flagged not to show message)
+        if (!bNoMessageToPlayer)
+        {
+            P.ReceiveLocalizedMessage(class'DHVehicleMessage', 6); // this vehicle has been locked by its crew
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+// New helper function to check whether a pawn is 'allowed' crewman for this vehicle, if it is locked
+function bool IsAnAllowedCrewman(Pawn P, optional out DHPawn DHP)
+{
+    if (Vehicle(P) != none) // if pawn is a vehicle position, switch pawn to be its occupant
+    {
+        P = Vehicle(P).Driver;
+    }
+
+    DHP = DHPawn(P);
+
+    return DHP != none && DHP.CrewedLockedVehicle == self;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1629,6 +2004,20 @@ function TakeEngineFireDamage()
         else if (!bOnFire)
         {
             bEngineOnFire = false;
+        }
+    }
+}
+
+// Modified to unlock a locked vehicle (unlocking isn't directly necessary, but unlocking it finds & clears any references to the now destroyed vehicle)
+state VehicleDestroyed
+{
+    function BeginState()
+    {
+        super.BeginState();
+
+        if (bVehicleLocked)
+        {
+            SetVehicleLocked(false);
         }
     }
 }

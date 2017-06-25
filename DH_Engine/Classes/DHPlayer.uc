@@ -23,6 +23,7 @@ var     DH_LevelInfo            ClientLevelInfo;
 var     DHHintManager           DHHintManager;
 var     DHConstructionManager   ConstructionManager; // client only!
 var     float                   MapVoteTime;
+var     globalconfig bool       bLockTankOnEntry;    // option to automatically lock an armored vehicle on entering, providing it contains no other tank crew
 var     globalconfig string     ROIDHash;            // client ROID hash (this gets set/updated when a player joins a server)
 
 // View FOV
@@ -128,9 +129,9 @@ replication
         ClientFadeFromBlack, ClientAddHudDeathMessage, ClientLockWeapons,
         ClientSquadInvite, ClientSquadSignal;
 
-    // Functions the owning client will call on the server
+    // Functions the owning client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerSetIsInSpawnMenu;
+        ServerSetIsInSpawnMenu, ServerSetLockTankOnEntry;
 }
 
 function ServerChangePlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2) { } // no longer used
@@ -2897,6 +2898,53 @@ function ServerSetManualTankShellReloading(bool bUseManualReloading)
             Cannon.AttemptReload();
         }
     }
+}
+
+// New function to set the bLockTankOnEntry option, which is enabled/disabled from the game settings menu
+simulated function SetLockTankOnEntry(bool bEnabled)
+{
+    local DHArmoredVehicle    AV;
+    local DHVehicleWeaponPawn WP;
+
+    bLockTankOnEntry = bEnabled;
+
+    // If the option has just been enabled & the player is in a tank crew position in an armored vehicle, try to automatically lock it now
+    if (Role == ROLE_Authority)
+    {
+        if (bLockTankOnEntry && Vehicle(Pawn) != none)
+        {
+            if (Pawn.IsA('DHArmoredVehicle'))
+            {
+                AV = DHArmoredVehicle(Pawn);
+            }
+            else if (Pawn.IsA('DHVehicleWeaponPawn'))
+            {
+                WP = DHVehicleWeaponPawn(Pawn);
+
+                if (WP.bMustBeTankCrew)
+                {
+                    WP.GetArmoredVehicleBase(AV);
+                }
+            }
+
+            // Player hasn't just entered vehicle, but the functionality is identical & CheckVehicleLockOnPlayerEntering() will do what we need
+            if (AV != none && !AV.bVehicleLocked)
+            {
+                AV.CheckVehicleLockOnPlayerEntering(Vehicle(Pawn));
+            }
+        }
+    }
+    // Or of we're a net client, pass the new setting to the server
+    else
+    {
+        ServerSetLockTankOnEntry(bLockTankOnEntry);
+    }
+}
+
+// New client-to-server replicated function to set the bLockTankOnEntry option on a server
+function ServerSetLockTankOnEntry(bool bEnabled)
+{
+    SetLockTankOnEntry(bEnabled);
 }
 
 // New function to put player into 'weapon lock' for a specified number of seconds, during which time he won't be allowed to fire
