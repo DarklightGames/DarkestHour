@@ -106,11 +106,19 @@ function InternalOnOpen()
     {
         SavedVersionObject = class'UVersion'.static.FromString(SavedVersion);
 
-        if (SavedVersionObject == none || SavedVersionObject.Major < 8)
+        // Matt: suggest add "alpha" so ppl using the dev build or who have played the v8-alpha test version will get the new smoke launcher and vehicle lock keys
+        if (SavedVersionObject == none || SavedVersionObject.Major < 8) // || SavedVersionObject.Prerelease == "alpha")
         {
             // To make a long story short, we can't force the client to delete
             // their configuration file at will, so we need to forcibly create
             // control bindings for the new commands added in 8.0;
+/*
+            SetKeyBindIfAvailable("I", "SquadTalk"); // Matt: suggested alternative, using SetKeyBindIfAvailable() new function below
+            SetKeyBindIfAvailable("Insert", "Speak Squad");
+            SetKeyBindIfAvailable("CapsLock", "ShowOrderMenu | OnRelease HideOrderMenu");
+            SetKeyBindIfAvailable("Minus", "ShrinkHUD");
+            SetKeyBindIfAvailable("Equals", "GrowHUD");
+*/
             Controller.SetKeyBind("I", "SquadTalk");
             Controller.SetKeyBind("Insert", "Speak Squad");
             Controller.SetKeyBind("CapsLock", "ShowOrderMenu | OnRelease HideOrderMenu");
@@ -122,6 +130,30 @@ function InternalOnOpen()
         SavedVersion = class'DarkestHourGame'.default.Version.ToString();
         SaveConfig();
     }
+}
+
+// New function to bind a key to a command, but first checking it's safe to do so without messing up the player's controls config
+// First checks whether our new key is already assigned to something - if it is then we don't make any changes
+// Means the key is either already bound to what we want (so no need to change) or the player is using it for something else (so don't mess up his config)
+// Secondly checks whether our new command is already bound to another key or keys - if it is bound to two keys then we don't make any changes
+// But if the command is already bound to only one key, we'll also bound it to the new key, as the config menu can handle two key assignments
+function SetKeyBindIfAvailable(string BindKeyName, string BindKeyValue)
+{
+    local array<string> ExistingAssignedKeys, s;
+    local string        t;
+
+    if (!Controller.GetCurrentBind(BindKeyName, t)) // checks whether our key is already assigned to a command - only proceed if not
+    {
+        Controller.GetAssignedKeys(BindKeyValue, ExistingAssignedKeys, s); // finds any other keys already assigned to our command
+
+        if (ExistingAssignedKeys.Length < 2) // only proceed if no more than one other key is already assigned to our command (we can add a 2nd if a slot is free)
+        {
+            log("BINDING" @ BindKeyValue @ "TO" @ BindKeyName @ "KEY"); // TEMPDEBUG
+            Controller.SetKeyBind(BindKeyName, BindKeyValue);
+        }
+        else log(BindKeyValue @ "is already bound to" @ ExistingAssignedKeys[0] @ "and" @ ExistingAssignedKeys[1] @ "keys"); // TEMPDEBUG
+    }
+    else log(BindKeyName @ "is already assigned to" @ t); // TEMPDEBUG
 }
 
 function OnClose(optional bool bCanceled)
