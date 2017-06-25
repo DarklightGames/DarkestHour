@@ -114,6 +114,8 @@ function InternalOnOpen()
             Controller.SetKeyBind("I", "SquadTalk");
             Controller.SetKeyBind("Insert", "Speak Squad");
             Controller.SetKeyBind("CapsLock", "ShowOrderMenu | OnRelease HideOrderMenu");
+            Controller.SetKeyBind("Minus", "ShrinkHUD");
+            Controller.SetKeyBind("Equals", "GrowHUD");
             // TODO: fetch the defaults programmatically, this is sloppy!
         }
 

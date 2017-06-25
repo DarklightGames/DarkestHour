@@ -105,6 +105,8 @@ defaultproperties
     bindings_comm(10)="Speak Squad"
     captions_comm(10)="Switch to Squad Voice Channel"
 
+    captions_interface(3)="Increase HUD Size / Vehicle Smoke Launcher Setting" // added adjust smoke launcher to key descriptions
+    captions_interface(4)="Decrease HUD Size / Vehicle Smoke Launcher Setting"
     bindings_interface(5)="ShowOrderMenu | OnRelease HideOrderMenu"
     captions_interface(5)="Squad Orders Menu"
 
@@ -170,7 +172,7 @@ defaultproperties
     // Profile Bindings
     //****************
     // default (With DH fixes) this always gets applied before another profile
-    ControlProfileBindings(1)=(KeyNames=("Tab","GreyMinus","F2","F3","Minus","Equals","I","Insert","Capslock","Home","End"),KeyValues=("ScoreToggle","CommunicationMenu","ShowVoteMenu","CommunicationMenu","","","SquadTalk","Speak Squad","ShowOrderMenu | OnRelease HideOrderMenu","Speak Command","Speak Unassigned"))
+    ControlProfileBindings(1)=(KeyNames=("Tab","GreyMinus","F2","F3","Minus","Equals","I","Insert","CapsLock","Home","End"),KeyValues=("ScoreToggle","CommunicationMenu","ShowVoteMenu","CommunicationMenu","ShrinkHUD","GrowHUD","SquadTalk","Speak Squad","ShowOrderMenu | OnRelease HideOrderMenu","Speak Command","Speak Unassigned"))
     // Contemporary
     ControlProfileBindings(2)=(KeyNames=("F","Z","V","RightMouse","MiddleMouse"),KeyValues=("Use","Prone","Deploy","ROIronSights","AltFire"))
     // Recommended
