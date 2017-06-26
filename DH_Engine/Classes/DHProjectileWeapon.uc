@@ -101,6 +101,22 @@ replication
 // Server won't be in sync with net client's weapon position when ironsighted or bipod deployed, but doesn't matter as sighted calculations don't use weapon's position
 simulated function PostBeginPlay()
 {
+    local DHPlayer PC;
+
+    // Pre-apply bayonet based on user setting (the user setting gets updated when client connects or changes the setting)
+    // If this is a bayonet weapon & is the server and client wants a bayonet attached at spawn, then set the bayonet mounted and update status
+    if (bHasBayonet && Role == ROLE_Authority && Instigator != none && Instigator.Controller != none)
+    {
+        PC = DHPlayer(Instigator.Controller);
+
+        if (PC != none && PC.bSpawnWithBayonet)
+        {
+            bBayonetMounted = true;
+            UpdateBayonet();
+        }
+    }
+
+    // Now call the super (after the server handles the bayonet)
     super.PostBeginPlay();
 
     if (Role == ROLE_Authority && !InstigatorIsLocallyControlled() && HasAnim(IdleAnim))

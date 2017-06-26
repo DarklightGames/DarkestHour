@@ -10,6 +10,7 @@ var automated GUISectionBackground i_BG1, i_BG2, i_BG3;
 var automated DHmoEditBox   ed_PlayerName;
 var automated DHmoComboBox  co_ViewFOV;
 var automated DHmoCheckBox  ch_NoGore;
+var automated DHmoCheckBox  ch_BayonetAtStart;
 var automated DHmoCheckBox  ch_TankThrottle, ch_VehicleThrottle, ch_ManualReloading, ch_LockTankOnEntry;
 var automated GUILabel      l_PlayerROID;     // label showing player's unique ROID
 var automated DHGUIButton   b_CopyPlayerROID; // button to copy player's ROID to clipboard
@@ -32,6 +33,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     i_BG1.ManageComponent(ed_PlayerName);
     i_BG1.ManageComponent(co_ViewFOV);
     i_BG1.ManageComponent(ch_NoGore);
+    i_BG1.ManageComponent(ch_BayonetAtStart);
 
     i_BG2.ManageComponent(ch_TankThrottle);
     i_BG2.ManageComponent(ch_VehicleThrottle);
@@ -97,6 +99,11 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
 
             ch_NoGore.Checked(bOptionEnabled);
+            break;
+
+        // Spawn with bayonet
+        case ch_BayonetAtStart:
+            ch_BayonetAtStart.Checked(PlayerOwner().ConsoleCommand("get DH_Engine.DHPlayer bSpawnWithBayonet"));
             break;
 
         // Vehicle settings
@@ -236,9 +243,10 @@ function SaveSettings()
     local float            ViewFOV;
     local int              GoreLevel, NetSpeed, PurgeCacheDays;
     local bool             bTankThrottle, bVehicleThrottle, bManualReloading, bDynamicNetSpeed, bSaveConfig, bStaticSaveConfig;
-    local bool             bLockTankOnEntry;
+    local bool             bSpawnWithBayonet, bLockTankOnEntry;
 
     PC = PlayerOwner();
+    DHP = DHPlayer(PC);
 
     // Player name
     PlayerName = ed_PlayerName.GetText();
@@ -278,8 +286,17 @@ function SaveSettings()
         class'GameInfo'.static.StaticSaveConfig();
     }
 
+    // Spawn with bayonet
+    bSpawnWithBayonet = ch_BayonetAtStart.IsChecked();
+
+    if (DHP != none && DHP.bSpawnWithBayonet != bSpawnWithBayonet)
+    {
+        DHP.bSpawnWithBayonet = bSpawnWithBayonet;
+        DHP.ServerSetBayonetAtSpawn(bSpawnWithBayonet);
+        bSaveConfig = true;
+    }
+
     // Vehicle settings
-    DHP = DHPlayer(PC);
     bTankThrottle    = ch_TankThrottle.IsChecked();
     bVehicleThrottle = ch_VehicleThrottle.IsChecked();
     bManualReloading = ch_ManualReloading.IsChecked();
@@ -405,6 +422,7 @@ function ResetClicked()
 
     class'DHPlayer'.static.ResetConfig("ConfigViewFOV");
     class'GameInfo'.static.ResetConfig("GoreLevel");
+    class'DHPlayer'.static.ResetConfig("bSpawnWithBayonet");
     class'DHPlayer'.static.ResetConfig("bInterpolatedTankThrottle");
     class'DHPlayer'.static.ResetConfig("bInterpolatedVehicleThrottle");
     class'DHPlayer'.static.ResetConfig("bManualTankShellReloading"); // note this reset was missing in the original RO parent class
@@ -499,6 +517,16 @@ defaultproperties
         OnLoadINI=InternalOnLoadINI
     End Object
     ch_NoGore=DHmoCheckBox'NoGore'
+
+    Begin Object Class=DHmoCheckBox Name=BayonetSpawn
+        Caption="Spawn with bayonet attached"
+        CaptionWidth=0.959
+        ComponentJustification=TXTA_Left
+        IniOption="@Internal"
+        OnChange=InternalOnChange
+        OnLoadINI=InternalOnLoadINI
+    End Object
+    ch_BayonetAtStart=DHmoCheckBox'BayonetSpawn'
 
     // Vehicle options
     Begin Object Class=DHGUISectionBackground Name=GameBK2

@@ -24,6 +24,7 @@ var     DHHintManager           DHHintManager;
 var     DHConstructionManager   ConstructionManager; // client only!
 var     float                   MapVoteTime;
 var     globalconfig bool       bLockTankOnEntry;    // option to automatically lock an armored vehicle on entering, providing it contains no other tank crew
+var     globalconfig bool       bSpawnWithBayonet;   // option to automatically spawn with a bayonet attached if applicable
 var     globalconfig string     ROIDHash;            // client ROID hash (this gets set/updated when a player joins a server)
 
 // View FOV
@@ -114,7 +115,7 @@ replication
     reliable if (Role < ROLE_Authority)
         ServerLoadATAmmo, ServerThrowMortarAmmo,
         ServerSaveArtilleryTarget, ServerSetPlayerInfo, ServerClearObstacle,
-        ServerMetricsDump, ServerLockWeapons,
+        ServerMetricsDump, ServerLockWeapons, ServerSetBayonetAtSpawn,
         ServerSquadCreate, ServerSquadLeave, ServerSquadJoin, ServerSquadSay,
         ServerSquadJoinAuto, ServerSquadInvite, ServerSquadKick, ServerSquadPromote,
         ServerSquadCommandeer, ServerSquadLock, ServerSquadOrder, ServerSquadSignal,
@@ -165,6 +166,23 @@ simulated event PostBeginPlay()
         // This creates the construction manager on the client only
         ConstructionManager = Spawn(class'DHConstructionManager', self);
     }
+}
+
+simulated event PostNetBeginPlay()
+{
+    super.PostNetBeginPlay();
+
+    // Make this only run by the owning client
+    if ( Role < ROLE_Authority )
+    {
+        ServerSetBayonetAtSpawn(bSpawnWithBayonet);
+    }
+}
+
+// Client to server function which tells the server the user's setting (also gets called from DHTab_GameSettings, if the user changes the setting
+function ServerSetBayonetAtSpawn(bool bBayonetAtSpawn)
+{
+    bSpawnWithBayonet = bBayonetAtSpawn;
 }
 
 // New function to set the normal view VOF for this player, based on their own config setting
