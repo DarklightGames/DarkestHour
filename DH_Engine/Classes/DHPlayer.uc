@@ -5110,6 +5110,23 @@ simulated event ChatRoomMessage(byte Result, int ChannelIndex, optional PlayerRe
     }
 }
 
+// Modified to get the default channel as the player's personal local channel
+simulated function string GetDefaultActiveChannel()
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (PRI != none)
+    {
+        return PRI.PlayerName;
+    }
+    else
+    {
+        return super.GetDefaultActiveChannel();
+    }
+}
+
 defaultproperties
 {
     // Sway values
