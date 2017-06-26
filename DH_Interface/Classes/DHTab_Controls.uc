@@ -118,8 +118,6 @@ defaultproperties
     bindings_comm(10)="Speak Squad" // added
     captions_comm(10)="Switch to Squad Voice Channel"
 
-    captions_interface(3)="Increase HUD Size / Vehicle Smoke Launcher Setting" // added adjust smoke launcher to key descriptions
-    captions_interface(4)="Decrease HUD Size / Vehicle Smoke Launcher Setting"
     bindings_interface(5)="ShowOrderMenu | OnRelease HideOrderMenu"
     captions_interface(5)="Squad Orders Menu"
 
@@ -186,9 +184,8 @@ defaultproperties
     // Profile Bindings
     //******************
 
-    // Default (with extra DH standard keys) - this always gets applied before another profile // Matt: want to add'L' key for lock/unlock tank, but currently clashes with recommended profile
-//  ControlProfileBindings(1)=(KeyNames=("Tab","GreyMinus","F2","F3","Minus","Equals","I","Insert","CapsLock","Home","End","L"),KeyValues=("ScoreToggle","CommunicationMenu","ShowVoteMenu","CommunicationMenu","ShrinkHUD","GrowHUD","SquadTalk","Speak Squad","ShowOrderMenu | OnRelease HideOrderMenu","Speak Command","Speak Unassigned","ToggleVehicleLock"))
-    ControlProfileBindings(1)=(KeyNames=("Tab","GreyMinus","F2","F3","Minus","Equals","I","Insert","CapsLock","Home","End"),KeyValues=("ScoreToggle","CommunicationMenu","ShowVoteMenu","CommunicationMenu","ShrinkHUD","GrowHUD","SquadTalk","Speak Squad","ShowOrderMenu | OnRelease HideOrderMenu","Speak Command","Speak Unassigned"))
+    // Default (with extra DH standard keys) - this always gets applied before another profile
+    ControlProfileBindings(1)=(KeyNames=("Tab","GreyMinus","F2","F3","Minus","Equals","I","Insert","CapsLock","Home","End"),KeyValues=("ScoreToggle","CommunicationMenu","ShowVoteMenu","CommunicationMenu","","","SquadTalk","Speak Squad","ShowOrderMenu | OnRelease HideOrderMenu","Speak Command","Speak Unassigned"))
 
     // Contemporary
     ControlProfileBindings(2)=(KeyNames=("F","Z","V","RightMouse","MiddleMouse"),KeyValues=("Use","Prone","Deploy","ROIronSights","AltFire"))

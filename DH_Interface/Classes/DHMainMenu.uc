@@ -136,8 +136,9 @@ function InternalOnOpen()
             Controller.SetKeyBind("Insert", "Speak Squad");
             Controller.SetKeyBind("CapsLock", "ShowOrderMenu | OnRelease HideOrderMenu");
             //Controller.SetKeyBind("L", "ToggleVehicleLock"); // Matt: want to add, but this clashes with 'recommended' set up
-            Controller.SetKeyBind("Minus", "ShrinkHUD");
-            Controller.SetKeyBind("Equals", "GrowHUD");
+            //Controller.SetKeyBind("Minus", "ShrinkHUD"); Do not use ShrikeHUD or bind it for the smoke launcher controls
+            //Controller.SetKeyBind("Equals", "GrowHUD"); Do not use GrowHUD or bind it for the smoke launcher controls
+            // There is a good reason those were unbound and should not be bound by default
             // TODO: fetch the defaults programmatically, this is sloppy!
         }
 
