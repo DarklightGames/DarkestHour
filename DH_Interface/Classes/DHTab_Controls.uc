@@ -50,7 +50,8 @@ function SetUpProfileControls(int Index)
 {
     local int i;
 
-    if (Index < 1)
+    // If "Current" was selected, do nothing
+    if (Index == 0)
     {
         return;
     }
@@ -58,7 +59,7 @@ function SetUpProfileControls(int Index)
     // Always rebuild & set common controls (defaults)
     if (Controller != none)
     {
-        Controller.ResetKeyboard(); // UT/RO defaults
+        Controller.ResetKeyboard(); // UT/RO defaults (not DH defaults!)
 
         // Integrity check
         if (ControlProfileBindings[Index].KeyNames.Length != ControlProfileBindings[Index].KeyValues.Length)
@@ -66,19 +67,33 @@ function SetUpProfileControls(int Index)
             Warn("A control profile doesn't have the same number of keys to commands and may not work as expected!!!");
         }
 
-        // DH defaults
+        // DH Basic Defaults (always apply)
+        for (i = 0; i < ControlProfileBindings[0].KeyNames.Length; ++i)
+        {
+            Controller.SetKeyBind(ControlProfileBindings[0].KeyNames[i], ControlProfileBindings[0].KeyValues[i]);
+        }
+
+        // If this is the RO Classic profile, set it up and then return out
+        if (Index == 2)
+        {
+            MapBindings();
+            Initialize();
+            return;
+        }
+
+        // DH Filled Defaults (always applies unless the RO classic profile was selected)
         for (i = 0; i < ControlProfileBindings[1].KeyNames.Length; ++i)
         {
             Controller.SetKeyBind(ControlProfileBindings[1].KeyNames[i], ControlProfileBindings[1].KeyValues[i]);
         }
-    }
 
-    // If profile is not 0 or 1, add in controls
-    if (Index > 1)
-    {
-        for (i = 0; i < ControlProfileBindings[Index].KeyNames.Length; ++i)
+        // Fill out additional profiles if selected
+        if (Index > 2)
         {
-            Controller.SetKeyBind(ControlProfileBindings[Index].KeyNames[i], ControlProfileBindings[Index].KeyValues[i]);
+            for (i = 0; i < ControlProfileBindings[Index].KeyNames.Length; ++i)
+            {
+                Controller.SetKeyBind(ControlProfileBindings[Index].KeyNames[i], ControlProfileBindings[Index].KeyValues[i]);
+            }
         }
     }
 
@@ -93,15 +108,16 @@ defaultproperties
 
     ControlProfiles(0)="Current"
     ControlProfiles(1)="Defaults (Reset)"
-    ControlProfiles(2)="Contemporary"
-    ControlProfiles(3)="Recommended"
+    ControlProfiles(2)="RO Classic"
+    ControlProfiles(3)="Pro 104"
+    ControlProfiles(4)="Pro 105"
 
     bindings_game(4)="ToggleVehicleLock"
     captions_game(4)="Lock/Unlock Armored Vehicle"
 
     captions_weapons(9)="Deploy MG / Attach Bayonet / Fire Vehicle Smoke Launcher" // added fire smoke launcher to key description
 
-    bindings_comm(3)="SquadTalk" // inserted
+    bindings_comm(3)="SquadTalk"
     captions_comm(3)="Squad Say"
     bindings_comm(4)="SpeechMenuToggle"
     captions_comm(4)="Voice Command Menu"
@@ -109,13 +125,13 @@ defaultproperties
     captions_comm(5)="View In-game Chat"
     bindings_comm(6)="VoiceTalk"
     captions_comm(6)="Activate Microphone"
-    bindings_comm(7)="Speak Command" // replaces "Speak Public" ("Switch to Public Voice Channel")
+    bindings_comm(7)="Speak Command"
     captions_comm(7)="Switch to Command Voice Channel"
     bindings_comm(8)="Speak Local"
     captions_comm(8)="Switch to Local Voice Channel"
-    bindings_comm(9)="Speak Unassigned"  // effectively replaces "Speak Team" ("Switch to Team Voice Channel")?
+    bindings_comm(9)="Speak Unassigned"
     captions_comm(9)="Switch to Unassigned Voice Channel"
-    bindings_comm(10)="Speak Squad" // added
+    bindings_comm(10)="Speak Squad"
     captions_comm(10)="Switch to Squad Voice Channel"
 
     bindings_interface(5)="ShowOrderMenu | OnRelease HideOrderMenu"
@@ -184,12 +200,18 @@ defaultproperties
     // Profile Bindings
     //******************
 
-    // Default (with extra DH standard keys) - this always gets applied before another profile
-    ControlProfileBindings(1)=(KeyNames=("Tab","GreyMinus","F2","F3","Minus","Equals","I","Insert","CapsLock","Home","End"),KeyValues=("ScoreToggle","CommunicationMenu","ShowVoteMenu","CommunicationMenu","","","SquadTalk","Speak Squad","ShowOrderMenu | OnRelease HideOrderMenu","Speak Command","Speak Unassigned"))
+    // Defaults Basic (this always gets applied before every profile)
+    ControlProfileBindings(0)=(KeyNames=("Tab","GreyMinus","F2","F3","Insert","CapsLock","Home","End","Minus","Equals"),KeyValues=("ScoreToggle","CommunicationMenu","ShowVoteMenu","CommunicationMenu","Speak Squad","ShowOrderMenu | OnRelease HideOrderMenu","Speak Command","Speak Unassigned","",""))
 
-    // Contemporary
-    ControlProfileBindings(2)=(KeyNames=("F","Z","V","RightMouse","MiddleMouse"),KeyValues=("Use","Prone","Deploy","ROIronSights","AltFire"))
+    // Defaults Filled (this always gets applied EXCEPT for when RO Classic is selected)
+    ControlProfileBindings(1)=(KeyNames=("T","Y","U","I","O","P","F","G","H","N","GreySlash","NumPadPeriod","NumPad3","NumPad9","GreyPlus","RightMouse","MiddleMouse","M","J","K","L","Comma","Period","LeftBracket","RightBracket","Backslash","Slash","Semicolon","SingleQuote","BackSpace","PageUp","PageDown","Up","Down","Left","Right","ScrollLock"),KeyValues=("VoiceTalk","Talk","TeamTalk","VehicleTalk","SquadTalk","SquadMenu","ShowObjectives","ThrowWeapon","ThrowMGAmmo","Deploy","speech VEH_ORDERS 0","speech VEH_ORDERS 7","speech VEH_ORDERS 6","speech VEH_ORDERS 9","speech VEH_ALERTS 9","ROIronSights","AltFire","","","","","","","","","","","","","","","","","","","",""))
 
-    // Recommended
-    ControlProfileBindings(3)=(KeyNames=("V","Z","G","H","T","Y","U","O","P","N","M","J","K","L","Semicolon","SingleQuote","RightMouse","MiddleMouse","Ctrl","Alt","Comma","Period","Backslash","Slash","Backspace","MouseX","MouseY","LeftBracket","RightBracket","ScrollLock"),KeyValues=("Use","Prone","ThrowWeapon","ThrowMGAmmo","VoiceTalk","Talk","TeamTalk","VehicleTalk","SquadMenu","speech ALERT 0","ShowObjectives","speech SUPPORT 2","teamsay np","speech ACK 3","speech ACK 2","speech ALERT 3","ROIronSights","AltFire","SpeechMenuToggle","Walking","","","speech ALERT 2","","","Count bXAxis | Axis aMouseX Speed=1.0","Count bYAxis | Axis aMouseY Speed=1.0","","",""))
+    // RO Classic
+    ControlProfileBindings(2)=(KeyNames=(),KeyValues=())
+
+    // Pro 104
+    ControlProfileBindings(3)=(KeyNames=("V","Z","B","N","J","K","L","Semicolon","SingleQuote","Ctrl","Alt","Backslash","MouseX","MouseY"),KeyValues=("Use","Prone","ROMGOperation || Deploy","speech ALERT 0","speech SUPPORT 2","teamsay np","speech ACK 3","speech ACK 2","speech ALERT 3","SpeechMenuToggle","Walking","speech ALERT 2","Count bXAxis | Axis aMouseX Speed=1.0","Count bYAxis | Axis aMouseY Speed=1.0"))
+
+    // Pro 105
+    ControlProfileBindings(4)=(KeyNames=("Z","BackSlash","Alt","Ctrl","X","C","B","N","M","F","G","H","T","Y","U","I","O","L","Semicolon","Comma","Period","F1","MiddleMouse"),KeyValues=("ToggleDuck","Prone","","Walking","ThrowMGAmmo","Use","AltFire","SwitchFireMode","ROMGOperation","VoiceTalk","ShowObjectives","ThrowWeapon","Talk","TeamTalk","SquadTalk","VehicleTalk","speech ORDER 2","speech ORDER 6","speech ORDER 7","speech ORDER 4","speech ALERT 7","Deploy",""))
 }
