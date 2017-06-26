@@ -70,9 +70,21 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     b_QuickPlay.Caption = default.JoinTestServerString;
 
+    // Only show the quick-play button in pre-release builds (for easy joining of test server)
     if (!class'DarkestHourGame'.default.Version.IsPrerelease())
     {
         b_QuickPlay.Hide();
+    }
+
+    // If they have not changed their name from the default, change their
+    // name to their Steam name!
+    if (PlayerOwner() != none &&
+        PlayerOwner().GetUrlOption("Name") ~= "DHPlayer" &&
+        Controller != none &&
+        Controller.SteamGetUserName() != "")
+    {
+        // This converts an underscore to a non-breaking space (0xA0)
+        PlayerOwner().ConsoleCommand("SetName" @ Repl(Controller.SteamGetUserName(), "_", " "));
     }
 }
 
