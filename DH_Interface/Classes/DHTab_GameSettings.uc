@@ -73,6 +73,11 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
 
     PC = PlayerOwner();
 
+    if (PC == none)
+    {
+        return;
+    }
+
     switch (Sender)
     {
         // Player name
@@ -82,7 +87,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
 
         // View FOV
         case co_ViewFOV:
-            ViewFOV = class'DH_Engine.DHPlayer'.default.ConfigViewFOV;
+            ViewFOV = float(PC.ConsoleCommand("get DH_Engine.DHPlayer ConfigViewFOV"));
             ViewFOV = Round(ViewFOV / 5.0) * 5.0;  // round existing config setting to nearest 5 degrees
             co_ViewFOV.Find(string(int(ViewFOV)) @ DegreesText); // finds current FOV in the list array & sets the list's index position
             break;
