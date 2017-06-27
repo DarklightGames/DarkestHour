@@ -10,6 +10,18 @@ function bool FillAmmo() { return false; }
 function bool ResupplyAmmo() { return false; }
 simulated exec function ROManualReload() { return; }
 
+simulated function Fire(float F)
+{
+    if (Instigator != none && Instigator.bIsCrawling)
+    {
+        class'DHShovelWarningMessage'.static.ClientReceive(PlayerController(Instigator.Controller), 0);
+    }
+    else
+    {
+        super.Fire(F);
+    }
+}
+
 defaultproperties
 {
     FireModeClass(0)=class'DH_Equipment.DHShovelBuildFireMode'
