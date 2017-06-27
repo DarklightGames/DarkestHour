@@ -40,7 +40,7 @@ function UpdateAppearance()
 defaultproperties
 {
     Stages(0)=(Progress=0)
-    ProgressMax=4
+    ProgressMax=12
     PlacementOffset=(Z=24.0)
     SupplyCost=500
 }
