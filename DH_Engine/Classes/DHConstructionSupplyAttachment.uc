@@ -6,19 +6,22 @@
 class DHConstructionSupplyAttachment extends RODummyAttachment
     notplaceable;
 
-var bool                bCanBeResupplied;
 var private int         SupplyCount;
 var int                 SupplyCountMax;
 var int                 TeamIndex;
 
+// Whether or not this supply attachment can be resupplied from a static resupply point.
+var bool                bCanBeResupplied;
+
 // Used to resolve the order in which supplies will be drawn from in the case
 // where the the player is near multiple supply attachments when placing
-// constructions.
+// constructions. A higher value means it will be drawn from first.
 var int                 SortPriority;
 
 var array<DHPawn>       TouchingPawns;
 
-var float               TouchDistanceInMeters;  // The distance, in meters, a player must be within to have access to these supplies.
+// The distance, in meters, a player must be within to have access to these supplies.
+var float               TouchDistanceInMeters;
 
 replication
 {
@@ -27,7 +30,6 @@ replication
 }
 
 delegate OnSupplyCountChanged(DHConstructionSupplyAttachment CSA);
-delegate OnSuppliesDepleted(DHConstructionSupplyAttachment CSA);
 
 simulated function PostBeginPlay()
 {
@@ -56,6 +58,16 @@ function bool IsFull()
     return SupplyCount == SupplyCountMax;
 }
 
+function SetSupplyCount(int Amount)
+{
+    if (SupplyCount != Amount)
+    {
+        SupplyCount = Clamp(Amount, 0, SupplyCountMax);
+
+        OnSupplyCountChanged(self);
+    }
+}
+
 // Uses supplies.
 function bool UseSupplies(int Amount)
 {
@@ -67,11 +79,6 @@ function bool UseSupplies(int Amount)
     SupplyCount -= Amount;
 
     OnSupplyCountChanged(self);
-
-    if (SupplyCount == 0)
-    {
-        OnSuppliesDepleted(self);
-    }
 
     return true;
 }
