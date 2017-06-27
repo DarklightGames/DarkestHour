@@ -59,6 +59,9 @@ function OnConstructed()
 
     if (SpawnPoint != none)
     {
+        // "A Platoon HQ has been constructed and will be established in N seconds."
+        SpawnPoint.BroadcastTeamLocalizedMessage(GetTeamIndex(), class'DHPlatoonHQMessage', 4);
+
         TraceStart = Location + vect(0, 0, 32);
         TraceEnd = Location - vect(0, 0, 32);
 

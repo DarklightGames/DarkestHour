@@ -10,6 +10,7 @@ var localized string ActivatedMessage;
 var localized string TeamCapturedMessage;
 var localized string EnemyCapturedMessage;
 var localized string DestroyedMessage;
+var localized string ConstructedMessage;
 
 static function string GetString(
     optional int Switch,
@@ -28,6 +29,8 @@ static function string GetString(
             return default.EnemyCapturedMessage;
         case 3:
             return default.DestroyedMessage;
+        case 4:
+            return Repl(default.ConstructedMessage, "{0}", class'DHSpawnPoint_PlatoonHQ'.default.ActivationCounterThreshold);
     }
 
     return "";
@@ -40,5 +43,6 @@ defaultproperties
     TeamCapturedMessage="An enemy Platoon HQ has been captured."
     EnemyCapturedMessage="A Platoon HQ has been captured by the enemy."
     DestroyedMessage="A Platoon HQ has been destroyed."
+    ConstructedMessage="A Platoon HQ has been constructed and will be established in {0} seconds."
 }
 
