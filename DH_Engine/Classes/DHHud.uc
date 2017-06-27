@@ -966,6 +966,9 @@ simulated function DrawHudPassC(Canvas C)
         }
     }
 
+    // Draw the currently available supply count.
+    DrawSupplyCount(C);
+
     // Debug option - draw actors on the HUD to help debugging network relevancy (toggle using console command: ShowNetDebugOverlay)
     if (bShowRelevancyDebugOverlay && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode() || (DHGRI != none && DHGRI.bAllowNetDebug)))
     {
@@ -1009,6 +1012,36 @@ simulated function DrawHudPassC(Canvas C)
         }
 
         DrawDebugInformation(C);
+    }
+}
+
+function DrawSupplyCount(Canvas C)
+{
+    local DHPawn P;
+    local DHPlayerReplicationInfo PRI;
+    local string S;
+    local float XL, YL;
+
+    P = DHPawn(PawnOwner);
+
+    if (P != none)
+    {
+        PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+    }
+
+    if (PRI == none)
+    {
+        return;
+    }
+
+    if (PRI.IsInSquad() && P.IsInRangeOfSupplyCache())
+    {
+        S = P.SupplyCount @ "Supplies";
+        C.TextSize(S, XL, YL);
+        C.SetDrawColor(255, 255, 255, 255);
+        C.Font = C.TinyFont;
+        C.SetPos((C.SizeX - XL) / 2, 0);
+        C.DrawText(S);
     }
 }
 
