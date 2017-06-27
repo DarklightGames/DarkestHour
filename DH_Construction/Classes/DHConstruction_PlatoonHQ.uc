@@ -226,7 +226,7 @@ defaultproperties
     MenuName="Platoon HQ"
     MenuIcon=Texture'DH_GUI_tex.DeployMenu.PlatoonHQ'
     Stages(0)=()
-    ProgressMax=4
+    ProgressMax=12
 
     // Placement
     bShouldAlignToGround=true
@@ -249,7 +249,7 @@ defaultproperties
     HealthMax=250
     TatteredHealthThreshold=125
 
-    SupplyCost=750
+    SupplyCost=1000
 
     RainSound=Sound'Amb_Weather01.Rain.Krasnyi_Rain_Inside_Heavy'
 
