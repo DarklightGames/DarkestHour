@@ -23,11 +23,6 @@ simulated state Constructed
     {
         super.BeginState();
 
-        if (Role == ROLE_Authority)
-        {
-            SetTimer(1.0, true);
-        }
-
         if (Level.NetMode < NM_DedicatedServer)
         {
             if (RainSoundAttachment != none)
@@ -51,12 +46,6 @@ simulated state Constructed
                 }
             }
         }
-    }
-
-    function Timer()
-    {
-        // TODO: get nearby enemy count within a certain radius (defined somewhere)
-        // TODO: check for enemies nearby, allow them to capture the area!
     }
 }
 
