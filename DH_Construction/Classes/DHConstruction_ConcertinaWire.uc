@@ -16,5 +16,5 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_02'
     bShouldAlignToGround=true
     MenuName="Concertina Wire"
-    SupplyCost=100
+    SupplyCost=50
 }
