@@ -134,19 +134,6 @@ var(DH_GroupedActions)      array<VehiclePoolAction>    AxisGroupVehiclePoolActi
 var(DH_GroupedActions)      array<name>                 AlliesGroupCaptureEvents;
 var(DH_GroupedActions)      array<name>                 AxisGroupCaptureEvents;
 
-// Timed operations (timer starts when the objective is activated)
-// It will trigger even if this obj is deactivated
-// It will cancel only if this obj is disabled or the timer is over
-var(DH_TimedActions)        int                         TimedActionsTime;
-var                         float                       TimedActionsTimeRemaining;
-var(DH_TimedActions)        bool                        bTimedActionsFireOnce;
-var                         bool                        bTimedActionsFired;
-var                         bool                        bTimedActionsRunning;
-var(DH_TimedActions)        array<ObjOperationAction>   TimedObjActions;
-var(DH_TimedActions)        array<SpawnPointAction>     TimedSpawnPointActions;
-var(DH_TimedActions)        array<VehiclePoolAction>    TimedVehiclePoolActions;
-var(DH_TimedActions)        array<name>                 TimedEvents;
-
 replication
 {
     // Variables the server will replicate to all clients
@@ -205,10 +192,7 @@ function Reset()
     super.Reset();
 
     NoCapProgressTimeRemaining = 0;
-    TimedActionsTimeRemaining = 0.0;
     NoCapTimeRemainingFloat = 0.0;
-    bTimedActionsFired = false;
-    bTimedActionsRunning = false;
     SetActive(bIsInitiallyActive);
 
     bCheckIfAxisCleared = false;
@@ -222,13 +206,6 @@ function SetActive(bool bActiveStatus)
 
     if (bActiveStatus)
     {
-        // Instigate timed actions if a timer value was set
-        if (TimedActionsTime > 0)
-        {
-            bTimedActionsRunning = true;
-            TimedActionsTimeRemaining = TimedActionsTime;
-        }
-
         NoCapTimeRemainingFloat = float(PreventCaptureTime);
 
         // Make neutral if desired
@@ -433,40 +410,6 @@ function HandleGroupActions(int Team)
         }
     }
 
-}
-
-function HandleTimedActions()
-{
-    local int i;
-
-    // If this is only supposed to fire once and already fired, don't
-    if (bTimedActionsFireOnce && bTimedActionsFired)
-    {
-        return;
-    }
-
-    // Actions
-    for (i = 0; i < TimedObjActions.Length; ++i)
-    {
-        DoObjectiveAction(TimedObjActions[i]);
-    }
-
-    for (i = 0; i < TimedSpawnPointActions.Length; ++i)
-    {
-        DoSpawnPointAction(TimedSpawnPointActions[i]);
-    }
-
-    for (i = 0; i < TimedVehiclePoolActions.Length; ++i)
-    {
-        DoVehiclePoolAction(TimedVehiclePoolActions[i]);
-    }
-
-    for (i = 0; i < TimedEvents.Length; ++i)
-    {
-        TriggerEvent(TimedEvents[i], none, none);
-    }
-
-    bTimedActionsFired = true;
 }
 
 function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
@@ -733,17 +676,6 @@ function Timer()
             // Update total nums
             NumTotal[C.PlayerReplicationInfo.Team.TeamIndex]++;
         }
-    }
-
-    // Check if we should trigger timed actions
-    if (TimedActionsTimeRemaining > 0.0)
-    {
-        TimedActionsTimeRemaining = FMax(0.0, TimedActionsTimeRemaining - 0.25);
-    }
-    else if (bTimedActionsRunning)
-    {
-        HandleTimedActions();
-        bTimedActionsRunning = false; // Stop checking as timed actions should be handled
     }
 
     // Now that we calculated how many of each team is in the objective, lets do the bUsePostCaptureOperations checks
