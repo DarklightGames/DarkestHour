@@ -6,6 +6,24 @@
 class DHShovelItem extends DHWeapon
     abstract;
 
+exec function SetOffset(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth) // TEMPDEBUG to adjust positioning of 3rd person shovel attachment in player's hand
+{
+    local vector OldOffset, NewOffset;
+
+    OldOffset = RelativeLocation;
+    NewOffset.X = NewX;
+    NewOffset.Y = NewY;
+    NewOffset.Z = NewZ;
+
+    if (bScaleOneTenth)
+    {
+        NewOffset /= 10.0;
+    }
+
+    ThirdPersonActor.SetRelativeLocation(NewOffset);
+    Log(Name @ ": new RelativeLocation =" @ ThirdPersonActor.RelativeLocation @ "(was" @ OldOffset $ ")");
+}
+
 function bool FillAmmo() { return false; }
 function bool ResupplyAmmo() { return false; }
 simulated exec function ROManualReload() { return; }
