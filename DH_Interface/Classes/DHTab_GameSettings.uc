@@ -483,10 +483,10 @@ defaultproperties
     // Gameplay options
     Begin Object Class=DHGUISectionBackground Name=GameBK1
         Caption="Gameplay"
-        WinTop=0.05
+        WinTop=0.03
         WinLeft=0.25
         WinWidth=0.5
-        WinHeight=0.25
+        WinHeight=0.23
         RenderWeight=0.1
         OnPreDraw=GameBK1.InternalPreDraw
     End Object
@@ -536,10 +536,10 @@ defaultproperties
     // Vehicle options
     Begin Object Class=DHGUISectionBackground Name=GameBK2
         Caption="Vehicles"
-        WinTop=0.35
+        WinTop=0.3
         WinLeft=0.25
         WinWidth=0.5
-        WinHeight=0.25
+        WinHeight=0.3
         RenderWeight=0.1
         OnPreDraw=GameBK2.InternalPreDraw
     End Object
@@ -589,7 +589,7 @@ defaultproperties
     // Network options
     Begin Object Class=DHGUISectionBackground Name=GameBK3
         Caption="Network"
-        WinTop=0.65
+        WinTop=0.64
         WinLeft=0.25
         WinWidth=0.5
         WinHeight=0.3
