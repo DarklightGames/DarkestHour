@@ -7,7 +7,6 @@ class DHWireCuttersItem extends DHWeapon;
 
 var     float               CutDistance;
 var     DHObstacleInstance  ObstacleBeingCut;
-var     name                CutAnim;
 
 // Functions emptied out or returning false, as wire cutters aren't a real weapon
 simulated function bool IsFiring(){return false;}
@@ -26,7 +25,7 @@ simulated state Cutting
             DHPawn(Instigator).SetIsCuttingWire(true);
         }
 
-        PlayAnim(CutAnim);
+        PlayAnim('cutStart');
 
         SetTimer(ObstacleBeingCut.Info.GetCutDuration(), false);
     }
@@ -166,14 +165,13 @@ defaultproperties
     bUsesFreeAim=false
     bCanSway=false
 
-    SelectAnim="Draw"
+    SelectAnim="Draw" // TODO: rename anims to standard, inherited names & then delete these properties
     PutDownAnim="putaway"
     CrawlStartAnim="crawlIn"
     CrawlEndAnim="crawlOut"
     SprintStartAnim="sprintStart"
     SprintLoopAnim="sprintMiddle"
     SprintEndAnim="sprintEnd"
-    CutAnim="cutStart"
 
     AIRating=0.0
     CurrentRating=0.0
