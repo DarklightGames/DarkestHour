@@ -1244,7 +1244,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                 else // another player is in this vehicle position
                 {
                     VehicleOccupants.Tints[TeamIndex] = GetPlayerColor(WP.PlayerReplicationInfo); // now using GetPlayerColor() to handle different colors for team or squad members
-                    VehicleOccupants.Tints[TeamIndex].A = 128; // TEST added and was VehiclePositionIsOccupiedColor above
+                    VehicleOccupants.Tints[TeamIndex].A = 128;
                 }
             }
             else
