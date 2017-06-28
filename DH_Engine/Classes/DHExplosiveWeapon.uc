@@ -459,10 +459,6 @@ defaultproperties
 
     SelectAnim="Draw"
     PutDownAnim="Put_away"
-    CrawlForwardAnim="crawlF"
-    CrawlBackwardAnim="crawlB"
-    CrawlStartAnim="crawl_in"
-    CrawlEndAnim="crawl_out"
 
     AIRating=0.4
     CurrentRating=0.4

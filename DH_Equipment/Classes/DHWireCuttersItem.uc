@@ -168,8 +168,6 @@ defaultproperties
 
     SelectAnim="Draw"
     PutDownAnim="putaway"
-    CrawlForwardAnim="crawlF"
-    CrawlBackwardAnim="crawlB"
     CrawlStartAnim="crawlIn"
     CrawlEndAnim="crawlOut"
     SprintStartAnim="sprintStart"

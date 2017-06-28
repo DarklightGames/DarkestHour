@@ -2302,8 +2302,4 @@ defaultproperties
     PutDownAnim="Put_away"
     IronBringUp="iron_in"
     IronPutDown="iron_out"
-    CrawlStartAnim="crawl_in"
-    CrawlEndAnim="crawl_out"
-    CrawlForwardAnim="crawlF"
-    CrawlBackwardAnim="crawlB"
 }

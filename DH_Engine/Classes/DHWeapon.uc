@@ -644,4 +644,8 @@ defaultproperties
     ScopeDetail=RO_TextureScope
     FireModeClass(0)=class'ROInventory.ROEmptyFireclass'
     FireModeClass(1)=class'ROInventory.ROEmptyFireclass'
+    CrawlStartAnim="crawl_in"
+    CrawlEndAnim="crawl_out"
+    CrawlForwardAnim="crawlF"
+    CrawlBackwardAnim="crawlB"
 }

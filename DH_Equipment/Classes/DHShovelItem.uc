@@ -40,8 +40,6 @@ defaultproperties
     ZoomOutTime=0.2
     bCanSway=false
 
-    CrawlForwardAnim="crawlF"
-    CrawlBackwardAnim="crawlB"
     CrawlStartAnim="crawlF" // TODO: get a proper "crawlIn" animation
     CrawlEndAnim="crawlF"   // TODO: get a proper "crawlOut" animation
 
