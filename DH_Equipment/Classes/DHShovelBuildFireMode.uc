@@ -5,19 +5,24 @@
 
 class DHShovelBuildFireMode extends DHWeaponFire;
 
-var DHConstruction Construction;
-var float TraceDistanceInMeters;
+var     DHConstruction  Construction;          // reference to the Construction actor we're building
+var     float           TraceDistanceInMeters; // player has to be within this distance of a construction to build it
 
 // Modified to check (via a trace) that player is facing an obstacle that can be cut & that player is stationary & not diving to prone
 simulated function bool AllowFire()
 {
+    local Actor  HitActor;
     local vector TraceStart, TraceEnd, HitLocation, HitNormal;
-    local Actor HitActor;
+
+    if (Instigator == none || Instigator.IsProneTransitioning() || Instigator.Velocity != vect(0.0, 0.0, 0.0))
+    {
+        return false;
+    }
 
     TraceStart = Weapon.Location;
     TraceEnd = TraceStart + (class'DHUnits'.static.MetersToUnreal(default.TraceDistanceInMeters) * vector(Weapon.Rotation));
 
-    foreach Weapon.TraceActors(class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart, vect(32, 32, 0))
+    foreach Weapon.TraceActors(class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart, vect(32.0, 32.0, 0.0))
     {
         if (HitActor.bStatic && !HitActor.IsA('Volume') && !HitActor.IsA('ROBulletWhipAttachment') || HitActor.IsA('DHConstruction'))
         {
@@ -29,10 +34,7 @@ simulated function bool AllowFire()
 
     return Construction != none &&
            (Construction.GetTeamIndex() == NEUTRAL_TEAM_INDEX || Construction.GetTeamIndex() == Instigator.GetTeamNum()) &&
-           Construction.CanBeBuilt() &&
-           Instigator != none &&
-           !Instigator.IsProneTransitioning() &&
-           Instigator.Velocity == vect(0.0, 0.0, 0.0);
+           Construction.CanBeBuilt();
 }
 
 event ModeDoFire()
@@ -91,4 +93,3 @@ defaultproperties
     FireAnimRate=1.0
     FireTweenTime=0.2
 }
-
