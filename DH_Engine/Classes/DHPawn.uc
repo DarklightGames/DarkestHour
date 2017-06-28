@@ -25,6 +25,7 @@ var     array<material> BodySkins;
 var     byte    PackedSkinIndexes;        // server packs selected index numbers for body & face skins into a single byte for most efficient replication to net clients
 var     bool    bReversedSkinsSlots;      // some player meshes have the typical body & face skin slots reversed, so this allows it to be assigned per pawn class
                                           // TODO: fix the reversed skins indexing in player meshes to standardise with body is 0 & face is 1 (as in RO), then delete this
+var     string  ShovelClassName;          // name of shovel class, so can be set for different nations (string name not class, due to build order)
 var     bool    bHatShotOff;              // records that player's helmet/headgear has been knocked off by a bullet impact
 
 // Mortars
@@ -2656,7 +2657,7 @@ function AddDefaultInventory()
                 CreateInventory(S);
             }
 
-            CheckGiveShovel(P);
+            CheckGiveShovel();
 
             RI = P.GetRoleInfo();
 
@@ -2761,7 +2762,7 @@ function AddDefaultInventory()
                 CreateInventory(S);
             }
 
-            CheckGiveShovel(P);
+            CheckGiveShovel();
         }
     }
 
@@ -2789,24 +2790,17 @@ function CreateInventory(string InventoryClassName)
 }
 
 // New function used to give all players a shovel if constructions are enabled in the map (the appropriate shovel for their nationality)
-function CheckGiveShovel(DHPlayer PC)
+function CheckGiveShovel()
 {
     local DHGameReplicationInfo GRI;
-    local int                   TeamIndex;
 
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-    if (GRI != none && GRI.bAreConstructionsEnabled && PC != none)
+    if (ShovelClassName != "" && Level.Game != none)
     {
-        TeamIndex = PC.GetTeamNum();
+        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-        if (TeamIndex == ALLIES_TEAM_INDEX)
+        if (GRI != none && GRI.bAreConstructionsEnabled)
         {
-            CreateInventory("DH_Equipment.DHShovelItem_US");
-        }
-        else if (TeamIndex == AXIS_TEAM_INDEX)
-        {
-            CreateInventory("DH_Equipment.DHShovelItem_German");
+            CreateInventory(ShovelClassName);
         }
     }
 }

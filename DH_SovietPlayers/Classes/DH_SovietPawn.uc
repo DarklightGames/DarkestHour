@@ -28,4 +28,6 @@ defaultproperties
     FaceSkins(12)=texture'Characters_tex.rus_heads.rus_face13'
     FaceSkins(13)=texture'Characters_tex.rus_heads.rus_face14'
     FaceSkins(14)=texture'Characters_tex.rus_heads.rus_face15'
+
+    ShovelClassName="DH_Equipment.DHShovelItem_US" // TODO: make Soviet shovel
 }

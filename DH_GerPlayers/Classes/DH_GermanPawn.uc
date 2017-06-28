@@ -30,4 +30,6 @@ defaultproperties
     FaceSkins(12)=texture'Characters_tex.ger_heads.ger_face13'
     FaceSkins(13)=texture'Characters_tex.ger_heads.ger_face14'
     FaceSkins(14)=texture'Characters_tex.ger_heads.ger_face15'
+
+    ShovelClassName="DH_Equipment.DHShovelItem_German"
 }

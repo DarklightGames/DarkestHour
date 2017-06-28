@@ -20,4 +20,6 @@ defaultproperties
     FaceSkins(2)=texture'DHUSCharactersTex.us_heads.US_AB_Face3'
     FaceSkins(3)=texture'DHUSCharactersTex.us_heads.US_AB_Face4'
     FaceSkins(4)=texture'DHUSCharactersTex.us_heads.US_AB_Face5'
+
+    ShovelClassName="DH_Equipment.DHShovelItem_US"
 }

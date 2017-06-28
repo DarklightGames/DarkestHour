@@ -16,4 +16,6 @@ defaultproperties
     FaceSkins(0)=texture'DHBritishCharactersTex.Faces.BritParaFace1'
     FaceSkins(1)=texture'DHBritishCharactersTex.Faces.BritParaFace2'
     FaceSkins(2)=texture'DHBritishCharactersTex.Faces.BritParaFace3'
+
+    ShovelClassName="DH_Equipment.DHShovelItem_US" // TODO: make British shovel
 }
