@@ -8,7 +8,7 @@ class DHSPECIES_Human extends ROSPECIES_Human
 
 // Modified to fix bug where VoiceType & VoiceClass were sometimes not set up on net client (if player is in vehicle when he spawns so DHPawn has no PRI)
 // Also to avoid "accessed none" errors when don't have a PlayerRecord (handling new DH system of player models defined in DHPawn classes instead of PlayerRecords)
-// (Matt) TODO: after release of DH 7.1, strip out deprecated PlayerRecord stuff (everywhere) & consolidate this, DHPawn.Setup() & LoadResources() into new DHPawn setup function
+// (Matt) TODO: strip out deprecated PlayerRecord stuff (everywhere) & consolidate this, DHPawn.Setup() & LoadResources() into new DHPawn setup function
 // Without PlayerRecords virtually all that's left is voice stuff that doesn't vary, certainly not within same nation, & it's in the pawn classes or can be
 static function bool Setup(Pawn P, xUtil.PlayerRecord Rec)
 {

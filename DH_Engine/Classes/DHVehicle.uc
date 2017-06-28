@@ -2896,7 +2896,7 @@ event CheckReset()
         for (C = Level.ControllerList; C != none; C = C.NextController)
         {
             // Found friendly player who could use this vehicle, so now do distance check
-            if (C != Controller && C.GetTeamNum() == GetTeamNum()&& C.Pawn != none && C.Pawn.Health > 0
+            if (C != Controller && C.GetTeamNum() == GetTeamNum() && C.Pawn != none && C.Pawn.Health > 0
                 && (!bMustBeTankCommander || class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(C.Pawn)))
             {
                 Distance = VSize(C.Pawn.Location - Location);

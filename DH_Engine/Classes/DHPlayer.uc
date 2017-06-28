@@ -2552,18 +2552,20 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
     // Set weapons
     ChangeWeapons(NewWeapon1, NewWeapon2, 0);
 
-    // return result to client
+    // Return result to client
     if (NewTeam == AXIS_TEAM_INDEX)
     {
-        ClientChangePlayerInfoResult(97);   // successfully picked axis team
+        ClientChangePlayerInfoResult(97); // successfully picked axis team
     }
     else if (NewTeam == ALLIES_TEAM_INDEX)
     {
-        ClientChangePlayerInfoResult(98);   // successfully picked allies team
+        ClientChangePlayerInfoResult(98); // successfully picked allies team
     }
+    // TODO: doesn't appear necessary or useful to pass this new 96 success code for switching to a spectator (Matt, June 2017)
+    // Only appears to require an override in DHGUITeamSelection.InternalOnMessage() to make it do exactly the same as if we just passed no.0 (as in RO for a spectator)
     else if (NewTeam == 254)
     {
-        ClientChangePlayerInfoResult(96);   // successfully picked spectator team
+        ClientChangePlayerInfoResult(96); // successfully picked spectator team
     }
     else
     {

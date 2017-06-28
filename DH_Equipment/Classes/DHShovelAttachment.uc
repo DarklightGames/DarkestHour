@@ -8,7 +8,7 @@ class DHShovelAttachment extends DHWeaponAttachment
 
 defaultproperties
 {
-    CullDistance=4096.0 // 68m - undo the increase added in DHWeaponAttachment, as cutters don't have a muzzle flash & are also small
+    CullDistance=4096.0 // 68m - undo the increase added in DHWeaponAttachment, which was only to show muzzle flashes at greater distances
     MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Drautschere_icon'
     bRapidFire=false
     LightType=LT_None

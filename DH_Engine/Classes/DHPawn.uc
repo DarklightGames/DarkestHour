@@ -6339,7 +6339,7 @@ simulated function NextWeapon()
     }
 }
 
-// Overriden from ROPawn to fix "sequence not found" bugs when a weapon simply
+// Overridden from ROPawn to fix "sequence not found" bugs when a weapon simply
 // does not have a WA_Idle or WA_IdleEmpty.
 simulated function StartFiring(bool bAltFire, bool bRapid)
 {
