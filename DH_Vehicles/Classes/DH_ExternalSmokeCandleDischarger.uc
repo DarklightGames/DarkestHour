@@ -10,7 +10,7 @@ defaultproperties
     ProjectileClass=class'DH_Vehicles.DH_GermanSmokeCandleProjectile'
     InitialAmmo=6
     ProjectilesPerFire=2
-    FireSound=SoundGroup'DH_WeaponSounds.SmokeLaunchers.8cmFireSG' // TODO: probably better to have specific sound made, without mortar's 'plop' sound as round is dropped down tube
+    FireSound=SoundGroup'DH_WeaponSounds.SmokeLaunchers.8cmFireSG'
     bCanBeReloaded=false
     bShowHUDInfo=false // no HUD info as these are external launchers & crew have no indication how many are remaining - they have to remember
     FireRotation(0)=(Pitch=7200,Yaw=1150)
