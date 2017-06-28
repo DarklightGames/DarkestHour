@@ -153,7 +153,7 @@ defaultproperties
     CreditLines(47)="Captain Obvious"
     CreditLines(48)="piotrlukasik"
     CreditLines(49)="Theel"
-    CreditLines(50)="Groundy"
+    CreditLines(50)="Groundwaffe"
     CreditLines(51)=""
     CreditLines(52)="Art:"
     CreditLines(53)=""
