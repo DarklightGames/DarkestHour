@@ -5089,7 +5089,7 @@ simulated function float BobFunction(float T, float Amplitude, float Frequency, 
 
 simulated exec function BobAmplitude(optional float F)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         if (F == 0)
         {
@@ -5104,7 +5104,7 @@ simulated exec function BobAmplitude(optional float F)
 
 simulated exec function BobFrequency(optional float F)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         if (F == 0)
         {
@@ -5119,7 +5119,7 @@ simulated exec function BobFrequency(optional float F)
 
 simulated exec function BobDecay(optional float F)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         if (F == 0)
         {
@@ -5783,6 +5783,12 @@ simulated function NotifySelected(Pawn User)
     }
 }
 
+// New helper function to check whether debug execs can be run
+simulated function bool IsDebugModeAllowed()
+{
+    return Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode();
+}
+
 // New debug exec to spawn player pawns with all possible permutations of body & face skins that can be randomly selected
 // Works with either a DHRoleInfo class (includes all of its specified RolePawns classes) or a single DHPawn class
 // Use "DebugPlayerModels kill" to just remove all existing debug pawns that have been spawned
@@ -5797,7 +5803,7 @@ exec function DebugPlayerModels(string ClassName, optional bool bShowAllFaceComb
     local int               i;
 
     // Don't run this on client as resulting pawns only exist clientside & work badly, e.g. can't be shot (use 'admin' console command if you need to use in multiplayer)
-    if (Role < ROLE_Authority || (Level.NetMode != NM_Standalone && !class'DH_LevelInfo'.static.DHDebugMode()))
+    if (Role < ROLE_Authority || !IsDebugModeAllowed())
     {
         return;
     }
@@ -5968,7 +5974,7 @@ function SpawnDebugPawns(class<DHPawn> PawnClass, out vector SpawnLocation, opti
 // Debug exec to set own player on fire
 exec function BurnPlayer()
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         bOnFire = true;
         FireDamage = 1;
@@ -5978,7 +5984,7 @@ exec function BurnPlayer()
 // Debug exec to increase fly speed
 exec function SetFlySpeed(float NewSpeed)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         if (NewSpeed != -1.0)
         {
@@ -6000,7 +6006,7 @@ exec function DebugSpawnVehicle(string VehicleString, int Distance, optional boo
     local vector         SpawnLocation;
     local rotator        SpawnDirection;
 
-    if (VehicleString != "" && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode() || (PlayerReplicationInfo != none && PlayerReplicationInfo.bAdmin)))
+    if (VehicleString != "" && (IsDebugModeAllowed() || (PlayerReplicationInfo != none && PlayerReplicationInfo.bAdmin)))
     {
         VehicleClass = class<Vehicle>(DynamicLoadObject(VehicleString, class'class'));
 
@@ -6038,7 +6044,7 @@ exec function DebugShootAP(optional string APProjectileClassName)
     local bool                           bDebugAPEnabled;
     local int                            i;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Weapon != none)
+    if (IsDebugModeAllowed() && Weapon != none)
     {
         FireMode = DHProjectileFire(Weapon.GetFireMode(0));
 
@@ -6110,7 +6116,7 @@ exec function LogWepAttach(optional bool bLogAllWeaponAttachments)
     local WeaponAttachment WA;
     local int              i;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         P = ROPawn(AutoTraceActor);
 

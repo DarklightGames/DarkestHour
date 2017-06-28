@@ -874,7 +874,7 @@ function float ModifyThreat(float Current, Pawn Threat)
 // Debug exec from deprecated ROTankCannonPawn
 exec function SetRange(byte NewRange)
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Gun != none)
+    if (IsDebugModeAllowed() && Gun != none)
     {
         Log("Switching range from" @ Gun.CurrentRangeIndex @ "to" @ NewRange);
         Gun.CurrentRangeIndex = NewRange;
@@ -886,7 +886,7 @@ exec function SetAltFireOffset(int NewX, int NewY, int NewZ, optional bool bScal
 {
     local vector OldAltFireOffset;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Gun != none)
+    if (IsDebugModeAllowed() && Gun != none)
     {
         OldAltFireOffset = Gun.AltFireOffset;
         Gun.AltFireOffset.X = NewX;
@@ -910,7 +910,7 @@ exec function SetAltFireOffset(int NewX, int NewY, int NewZ, optional bool bScal
 // New debug exec to set the coaxial MG's launch position optional X offset
 exec function SetAltFireSpawnOffset(float NewValue)
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Cannon != none)
+    if (IsDebugModeAllowed() && Cannon != none)
     {
         Log(Cannon.Tag @ "AltFireSpawnOffsetX =" @ NewValue @ "(was" @ Cannon.AltFireSpawnOffsetX $ ")");
         Cannon.AltFireSpawnOffsetX = NewValue;
@@ -920,7 +920,7 @@ exec function SetAltFireSpawnOffset(float NewValue)
 // New debug exec to toggle bGunsightSettingMode, allowing calibration of range settings
 exec function SetGunsight()
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Cannon != none)
+    if (IsDebugModeAllowed() && Cannon != none)
     {
         Cannon.bGunsightSettingMode = !Cannon.bGunsightSettingMode;
         Log(Cannon.Tag @ "bGunsightSettingMode =" @ Cannon.bGunsightSettingMode);

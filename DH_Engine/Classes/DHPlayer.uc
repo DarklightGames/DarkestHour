@@ -3034,10 +3034,16 @@ simulated function bool AreWeaponsLocked(optional bool bNoScreenMessage)
 //  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+// New helper function to check whether debug execs can be run
+simulated function bool IsDebugModeAllowed()
+{
+    return Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode();
+}
+
 // New debug exec to put self into 'weapon lock' for specified number of seconds
 exec function DebugLockWeapons(int Seconds)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         ServerLockWeapons(Seconds);
     }
@@ -3051,7 +3057,7 @@ function ServerLockWeapons(int Seconds)
 // Modified to work in debug mode, as well as in single player
 exec function FOV(float F)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         DefaultFOV = FClamp(F, 1.0, 170.0);
         DesiredFOV = DefaultFOV;
@@ -3061,7 +3067,7 @@ exec function FOV(float F)
 // New debug exec for an easy way to write to log in-game, on both server & client in multi-player
 exec function DoLog(string LogMessage)
 {
-    if (LogMessage != "" && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode() || (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin)))
+    if (LogMessage != "" && (IsDebugModeAllowed() || (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin)))
     {
         Log(GetHumanReadableName() @ ":" @ LogMessage);
 
@@ -3074,7 +3080,7 @@ exec function DoLog(string LogMessage)
 
 function ServerDoLog(string LogMessage)
 {
-    if (LogMessage != "" && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode() || (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin)))
+    if (LogMessage != "" && (IsDebugModeAllowed() || (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin)))
     {
         Log(GetHumanReadableName() @ ":" @ LogMessage);
     }
@@ -3084,7 +3090,7 @@ exec function DebugObstacles(optional int Option)
 {
     local DHObstacleInfo OI;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         foreach AllActors(class'DHObstacleInfo', OI)
         {
@@ -3099,7 +3105,10 @@ exec function DebugObstacles(optional int Option)
 
 function ServerDebugObstacles(optional int Option)
 {
-    DarkestHourGame(Level.Game).ObstacleManager.DebugObstacles(Option);
+    if (IsDebugModeAllowed() && DarkestHourGame(Level.Game) != none)
+    {
+        DarkestHourGame(Level.Game).ObstacleManager.DebugObstacles(Option);
+    }
 }
 
 // New debug exec to make bots spawn
@@ -3116,7 +3125,7 @@ exec function DebugSpawnBots(int Team, optional int Num, optional int Distance)
 
     DHG = DarkestHourGame(Level.Game);
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DHG != none && Pawn != none)
+    if (IsDebugModeAllowed() && DHG != none && Pawn != none)
     {
         TargetLocation = Pawn.Location;
 
@@ -3169,7 +3178,7 @@ exec function DebugHints()
     local DHHintManager.HintInfo Hint;
     local int i;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         if (DHHintManager != none)
         {
@@ -3201,7 +3210,7 @@ exec function SoundPlay(string SoundName, optional float Volume)
 {
     local sound SoundToPlay;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && SoundName != "")
+    if (IsDebugModeAllowed() && SoundName != "")
     {
         SoundToPlay = sound(DynamicLoadObject(SoundName, class'Sound'));
 
@@ -3225,7 +3234,7 @@ exec function PlayerCollisionDebug()
 // Modified to use DH version of debug mode
 exec function ClearLines()
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         ClearStayingDebugLines();
     }
@@ -3236,7 +3245,7 @@ exec function ClearArrows()
 {
     local RODebugTracer Tracer;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         foreach DynamicActors(class'RODebugTracer', Tracer)
         {
@@ -3256,7 +3265,7 @@ exec function LeaveBody(optional bool bKeepPRI)
     local DHVehicle           V;
     local Pawn                OldPawn;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Pawn != none)
+    if (IsDebugModeAllowed() && Pawn != none)
     {
         // If player is in vehicle with an interior mesh, switch to default exterior mesh & play the appropriate animations to put vehicle & player in correct position
         V = DHVehicle(Pawn);
@@ -3296,7 +3305,7 @@ function ServerLeaveBody(optional bool bKeepPRI)
     local Vehicle           V;
     local VehicleWeaponPawn WP;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Pawn != none)
+    if (IsDebugModeAllowed() && Pawn != none)
     {
         Pawn.UnPossessed();
 
@@ -3340,7 +3349,7 @@ exec function FixPinHead()
 {
     local ROPawn TargetPawn;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && ROPawn(Pawn) != none)
+    if (IsDebugModeAllowed() && ROPawn(Pawn) != none)
     {
         TargetPawn = ROPawn(ROPawn(Pawn).AutoTraceActor);
 
@@ -3356,7 +3365,7 @@ exec function PossessBody()
 {
     local Pawn   TargetPawn;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && ROPawn(Pawn) != none)
+    if (IsDebugModeAllowed() && ROPawn(Pawn) != none)
     {
         TargetPawn = ROPawn(ROPawn(Pawn).AutoTraceActor);
 
@@ -3375,7 +3384,7 @@ exec function PossessBody()
 
 function ServerPossessBody(Pawn NewPawn)
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && NewPawn != none)
+    if (IsDebugModeAllowed() && NewPawn != none)
     {
         // If the pawn body is already associated with the player (shares PRI) then possess it & kill off current pawn
         if (NewPawn.PlayerReplicationInfo == PlayerReplicationInfo)
@@ -3417,7 +3426,7 @@ exec function URL(string S)
 // New debug exec to trigger or un-trigger a specified event
 exec function DebugEvent(name EventToTrigger, optional bool bUntrigger)
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && EventToTrigger != '')
+    if (IsDebugModeAllowed() && EventToTrigger != '')
     {
         if (bUntrigger)
         {
@@ -3436,7 +3445,7 @@ exec function GetMyLocation()
 {
     local string s;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         s = "(X=" $ ViewTarget.Location.X $ ",Y=" $ ViewTarget.Location.Y $ ",Z=" $ ViewTarget.Location.Z $ ")";
         player.console.Message(s, 1.0);
@@ -3448,7 +3457,7 @@ exec function GetMyRotation()
 {
     local string s;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         s = "(Pitch=" $ Rotation.Pitch $ ",Yaw=" $ Rotation.Yaw $ ",Roll=" $ Rotation.Roll $ ")";
         player.console.Message(s, 1.0);
@@ -3458,7 +3467,7 @@ exec function GetMyRotation()
 
 exec function SetMyLocation(vector NewLocation)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         ViewTarget.SetLocation(NewLocation);
     }
@@ -3466,7 +3475,7 @@ exec function SetMyLocation(vector NewLocation)
 
 exec function SetMyRotation(rotator NewRotation)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         SetRotation(NewRotation);
     }
@@ -3495,14 +3504,19 @@ function ServerMetricsDump()
 //  *********************** VEHICLE DEBUG EXEC FUNCTIONS  *************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// New helper function just to avoid code repetition & nesting in lots of vehicle-related debug execs
-simulated function bool GetVehicleBase(out DHVehicle V)
+// New helper function to check whether debug execs can be run on a vehicle that we are in
+// For convenience it also returns a reference to our DHVehicle base
+// Avoids code repetition & nesting in lots of vehicle-related debug execs
+simulated function bool IsVehicleDebugModeAllowed(out DHVehicle V)
 {
-    V = DHVehicle(Pawn);
-
-    if (V == none && VehicleWeaponPawn(Pawn) != none)
+    if (IsDebugModeAllowed())
     {
-        V = DHVehicle(VehicleWeaponPawn(Pawn).VehicleBase);
+        V = DHVehicle(Pawn);
+
+        if (V == none && VehicleWeaponPawn(Pawn) != none)
+        {
+            V = DHVehicle(VehicleWeaponPawn(Pawn).VehicleBase);
+        }
     }
 
     return V != none;
@@ -3514,7 +3528,7 @@ exec function LogVehDamage()
     local DHVehicle V;
     local string    DamageText;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    if (IsVehicleDebugModeAllowed(V))
     {
         DamageText = V.VehicleNameString @ "Health =" @ V.Health @ " EngineHealth =" @ V.EngineHealth
             @ " bLeftTrackDamaged =" @ V.bLeftTrackDamaged @ " bRightTrackDamaged =" @ V.bRightTrackDamaged @ " IsDisabled =" @ V.IsDisabled();
@@ -3530,7 +3544,7 @@ exec function LogVehAttach(optional bool bIncludeAttachedArray)
     local DHVehicle V;
     local int       i;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    if (IsVehicleDebugModeAllowed(V))
     {
         Log("-----------------------------------------------------------");
         Log(Caps(V.VehicleNameString) @ "ATTACHMENTS:");
@@ -3589,7 +3603,7 @@ exec function SetGearRatio(byte Index, float NewValue)
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && Index < arraycount(V.GearRatios))
+    if (IsVehicleDebugModeAllowed(V) && Index < arraycount(V.GearRatios))
     {
         Log(V.VehicleNameString @ "GearRatios[" $ Index $ "] =" @ NewValue @ "(was" @ V.GearRatios[Index] $ ")");
         V.GearRatios[Index] = NewValue;
@@ -3601,7 +3615,7 @@ exec function SetTransRatio(float NewValue)
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    if (IsVehicleDebugModeAllowed(V))
     {
         Log(V.VehicleNameString @ "TransRatio =" @ NewValue @ "(was" @ V.TransRatio $ ")");
         V.TransRatio = NewValue;
@@ -3613,7 +3627,7 @@ exec function SetExitPos(byte Index, int NewX, int NewY, int NewZ)
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && Index < V.ExitPositions.Length)
+    if (IsVehicleDebugModeAllowed(V) && Index < V.ExitPositions.Length)
     {
         Log(V.VehicleNameString @ "ExitPositions[" $ Index $ "] =" @ NewX @ NewY @ NewZ @ "(was" @ V.ExitPositions[Index] $ ")");
         V.ExitPositions[Index].X = NewX;
@@ -3628,7 +3642,7 @@ exec function ExitPosTool()
     local ROVehicle NearbyVeh;
     local vector    Offset;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         foreach RadiusActors(class'ROVehicle', NearbyVeh, 300.0, Pawn.Location)
         {
@@ -3646,47 +3660,44 @@ exec function DrawExits(optional bool bClearScreen)
     local color     C;
     local int       i;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    ClearLines();
+
+    if (!bClearScreen && IsVehicleDebugModeAllowed(V))
     {
-        ClearStayingDebugLines();
+        ZOffset = class'DHPawn'.default.CollisionHeight * vect(0.0, 0.0, 0.5);
+        GetAxes(V.Rotation, X, Y, Z);
 
-        if (!bClearScreen && GetVehicleBase(V))
+        for (i = V.ExitPositions.Length - 1; i >= 0; --i)
         {
-            ZOffset = class'DHPawn'.default.CollisionHeight * vect(0.0, 0.0, 0.5);
-            GetAxes(V.Rotation, X, Y, Z);
-
-            for (i = V.ExitPositions.Length - 1; i >= 0; --i)
+            if (i == 0)
             {
-                if (i == 0)
+                C = class'HUD'.default.BlueColor; // driver
+            }
+            else
+            {
+                if (i - 1 < V.WeaponPawns.Length)
                 {
-                    C = class'HUD'.default.BlueColor; // driver
-                }
-                else
-                {
-                    if (i - 1 < V.WeaponPawns.Length)
+                    if (DHVehicleCannonPawn(V.WeaponPawns[i - 1]) != none)
                     {
-                        if (DHVehicleCannonPawn(V.WeaponPawns[i - 1]) != none)
-                        {
-                            C = class'HUD'.default.RedColor; // commander
-                        }
-                        else if (DHVehicleMGPawn(V.WeaponPawns[i - 1]) != none)
-                        {
-                            C = class'HUD'.default.GoldColor; // machine gunner
-                        }
-                        else
-                        {
-                            C = class'HUD'.default.WhiteColor; // rider
-                        }
+                        C = class'HUD'.default.RedColor; // commander
+                    }
+                    else if (DHVehicleMGPawn(V.WeaponPawns[i - 1]) != none)
+                    {
+                        C = class'HUD'.default.GoldColor; // machine gunner
                     }
                     else
                     {
-                        C = class'HUD'.default.GrayColor; // something outside of WeaponPawns array, so not representing a particular vehicle position
+                        C = class'HUD'.default.WhiteColor; // rider
                     }
                 }
-
-                ExitPosition = V.Location + (V.ExitPositions[i] >> V.Rotation) + ZOffset;
-                class'DHLib'.static.DrawStayingDebugCylinder(V, ExitPosition, X, Y, Z, class'DHPawn'.default.CollisionRadius, class'DHPawn'.default.CollisionHeight, 10, C.R, C.G, C.B);
+                else
+                {
+                    C = class'HUD'.default.GrayColor; // something outside of WeaponPawns array, so not representing a particular vehicle position
+                }
             }
+
+            ExitPosition = V.Location + (V.ExitPositions[i] >> V.Rotation) + ZOffset;
+            class'DHLib'.static.DrawStayingDebugCylinder(V, ExitPosition, X, Y, Z, class'DHPawn'.default.CollisionRadius, class'DHPawn'.default.CollisionHeight, 10, C.R, C.G, C.B);
         }
     }
 }
@@ -3697,7 +3708,7 @@ exec function SetDrivePos(int NewX, int NewY, int NewZ, optional bool bScaleOneT
     local Vehicle V;
     local vector  OldDrivePos;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         V = Vehicle(Pawn);
 
@@ -3726,7 +3737,7 @@ exec function SetDriveRot(int NewPitch, int NewYaw, int NewRoll)
     local Vehicle V;
     local rotator OldDriveRot;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         V = Vehicle(Pawn);
 
@@ -3750,7 +3761,7 @@ exec function SetCamPos(int NewX, int NewY, int NewZ, optional bool bScaleOneTen
     local ROVehicleWeaponPawn WP;
     local vector              OldCamPos;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         V = Vehicle(Pawn);
 
@@ -3786,7 +3797,7 @@ exec function VehCamDist(int NewDistance)
 {
     local Vehicle V;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         V = Vehicle(Pawn);
 
@@ -3819,7 +3830,7 @@ exec function DebugPenetration(bool bEnable)
     local DHGameReplicationInfo   GRI;
     local int                     i;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         if (!bEnable)
         {
@@ -3879,7 +3890,7 @@ exec function SetTreadDir(int NewPitch, int NewYaw, int NewRoll)
     local DHVehicle V;
     local rotator   NewPanDirection;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && V.bHasTreads)
+    if (IsVehicleDebugModeAllowed(V) && V.bHasTreads)
     {
         Log(V.VehicleNameString @ "TreadPanDirection =" @ NewPitch @ NewYaw @ NewRoll @ "(was" @ V.LeftTreadPanDirection $ ")");
         NewPanDirection.Pitch = NewPitch;
@@ -3895,7 +3906,7 @@ exec function SetTreadSpeed(int NewValue, optional bool bAddToCurrentSpeed)
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && V.bHasTreads)
+    if (IsVehicleDebugModeAllowed(V) && V.bHasTreads)
     {
         if (NewValue == 0) // entering zero resets tread speed to vehicle's default value
         {
@@ -3916,7 +3927,7 @@ exec function SetWheelSpeed(int NewValue, optional bool bAddToCurrentSpeed)
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && V.bHasTreads)
+    if (IsVehicleDebugModeAllowed(V) && V.bHasTreads)
     {
         if (NewValue == 0) // entering zero resets wheel speed to vehicle's default value
         {
@@ -3939,7 +3950,7 @@ exec function SetOccPos(byte Index, int NewX, int NewY)
     local DHVehicle V;
     local float     X, Y;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && Index < V.VehicleHudOccupantsX.Length)
+    if (IsVehicleDebugModeAllowed(V) && Index < V.VehicleHudOccupantsX.Length)
     {
         X = float(NewX) / 1000.0;
         Y = float(NewY) / 1000.0;
@@ -3955,7 +3966,7 @@ exec function SetHUDTreads(int NewPosX0, int NewPosX1, int NewPosY, int NewScale
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    if (IsVehicleDebugModeAllowed(V))
     {
         Log(V.VehicleNameString @ "VehicleHudTreadsPosX[0] =" @ string(float(NewPosX0) / 1000.0) @ "VehicleHudTreadsPosX[1] =" @ float(NewPosX1) / 1000.0
             @ "VehicleHudTreadsPosY =" @ float(NewPosY) / 1000.0 @ "VehicleHudTreadsScale =" @ float(NewScale) / 1000.0
@@ -3973,7 +3984,7 @@ exec function SetExhPos(int Index, int NewX, int NewY, int NewZ)
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && Index < V.ExhaustPipes.Length)
+    if (IsVehicleDebugModeAllowed(V) && Index < V.ExhaustPipes.Length)
     {
         Log(V.VehicleNameString @ "ExhaustPipes[" $ Index $ "].ExhaustPosition =" @ NewX @ NewY @ NewZ @ "(was" @ V.ExhaustPipes[Index].ExhaustPosition $ ")");
         V.ExhaustPipes[Index].ExhaustPosition.X = NewX;
@@ -3993,7 +4004,7 @@ exec function SetExhRot(int Index, int NewPitch, int NewYaw, int NewRoll)
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && Index < V.ExhaustPipes.Length)
+    if (IsVehicleDebugModeAllowed(V) && Index < V.ExhaustPipes.Length)
     {
         Log(V.VehicleNameString @ "ExhaustPipes[" $ Index $ "].ExhaustRotation =" @ NewPitch @ NewYaw @ NewRoll @ "(was" @ V.ExhaustPipes[Index].ExhaustRotation $ ")");
         V.ExhaustPipes[Index].ExhaustRotation.Pitch = NewPitch;
@@ -4015,7 +4026,7 @@ exec function SetWheelRad(int NewValue, optional bool bScaleOneTenth, optional b
     local float     NewRadius;
     local int       i;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && FirstWheelIndex < V.Wheels.Length)
+    if (IsVehicleDebugModeAllowed(V) && FirstWheelIndex < V.Wheels.Length)
     {
         NewRadius = float(NewValue);
 
@@ -4045,7 +4056,7 @@ exec function SetWheelOffset(int NewX, int NewY, int NewZ, optional bool bScaleO
     local vector    NewBoneOffset;
     local int       i;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && FirstWheelIndex < V.Wheels.Length)
+    if (IsVehicleDebugModeAllowed(V) && FirstWheelIndex < V.Wheels.Length)
     {
         NewBoneOffset.X = NewX;
         NewBoneOffset.Y = NewY;
@@ -4079,7 +4090,7 @@ exec function SetSuspTravel(int NewValue, optional byte FirstWheelIndex, optiona
     local float     OldTravel, OldRenderTravel;
     local int       i;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && FirstWheelIndex < V.Wheels.Length)
+    if (IsVehicleDebugModeAllowed(V) && FirstWheelIndex < V.Wheels.Length)
     {
         if (!bDontSetSuspensionTravel)
         {
@@ -4126,7 +4137,7 @@ exec function SetSuspOffset(int NewValue, optional bool bScaleOneTenth, optional
     local float     NewOffset;
     local int       i;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && FirstWheelIndex < V.Wheels.Length)
+    if (IsVehicleDebugModeAllowed(V) && FirstWheelIndex < V.Wheels.Length)
     {
         NewOffset = float(NewValue);
 
@@ -4155,7 +4166,7 @@ exec function SetMass(float NewValue)
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    if (IsVehicleDebugModeAllowed(V))
     {
         Log(V.VehicleNameString @ "VehicleMass =" @ NewValue @ "(old was" @ V.VehicleMass $ ")");
         V.VehicleMass = NewValue;
@@ -4169,18 +4180,15 @@ exec function DrawCOM(optional bool bClearScreen)
     local DHVehicle V;
     local vector    COM, X, Y, Z;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        ClearStayingDebugLines();
+    ClearLines();
 
-        if (!bClearScreen && GetVehicleBase(V))
-        {
-            GetAxes(V.Rotation, X, Y, Z);
-            V.KGetCOMPosition(COM);
-            DrawStayingDebugLine(COM - (200.0 * X), COM + (200.0 * X), 255, 0, 0);
-            DrawStayingDebugLine(COM - (200.0 * Y), COM + (200.0 * Y), 0, 255, 0);
-            DrawStayingDebugLine(COM - (200.0 * Z), COM + (200.0 * Z), 0, 0, 255);
-        }
+    if (!bClearScreen && IsVehicleDebugModeAllowed(V))
+    {
+        GetAxes(V.Rotation, X, Y, Z);
+        V.KGetCOMPosition(COM);
+        DrawStayingDebugLine(COM - (200.0 * X), COM + (200.0 * X), 255, 0, 0);
+        DrawStayingDebugLine(COM - (200.0 * Y), COM + (200.0 * Y), 0, 255, 0);
+        DrawStayingDebugLine(COM - (200.0 * Z), COM + (200.0 * Z), 0, 0, 255);
     }
 }
 
@@ -4190,7 +4198,7 @@ exec function SetCOM(int NewX, int NewY, int NewZ)
     local DHVehicle V;
     local vector    COM, OldCOM;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    if (IsVehicleDebugModeAllowed(V))
     {
         V.KGetCOMOffset(OldCOM);
         COM.X = float(NewX) / 10.0;
@@ -4209,7 +4217,7 @@ exec function SetMaxAngSpeed(float NewValue)
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && KarmaParams(V.KParams) != none)
+    if (IsVehicleDebugModeAllowed(V) && KarmaParams(V.KParams) != none)
     {
         Log(V.VehicleNameString @ "KMaxAngularSpeed =" @ NewValue @ "(old was" @ KarmaParams(V.KParams).KMaxAngularSpeed $ ")");
         KarmaParams(V.KParams).KMaxAngularSpeed = NewValue;
@@ -4223,7 +4231,7 @@ exec function SetAngDamp(float NewValue)
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && KarmaParams(V.KParams) != none)
+    if (IsVehicleDebugModeAllowed(V) && KarmaParams(V.KParams) != none)
     {
         Log(V.VehicleNameString @ "KAngularDamping =" @ NewValue @ "(old was" @ KarmaParams(V.KParams).KAngularDamping $ ")");
         KarmaParams(V.KParams).KAngularDamping = NewValue;
@@ -4237,7 +4245,7 @@ exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFir
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || (class'DH_LevelInfo'.static.DHDebugMode() && Level.NetMode != NM_DedicatedServer)) && GetVehicleBase(V))
+    if (IsVehicleDebugModeAllowed(V) && Level.NetMode != NM_DedicatedServer)
     {
         // Only update offset if something has been entered (otherwise just entering "DEOffset" is quick way of triggering smoke/fire at current position)
         if (NewX != 0 || NewY != 0 || NewZ != 0)
@@ -4301,7 +4309,7 @@ exec function SetArmorHeight(optional string Side, optional byte Index, optional
     local DHArmoredVehicle AV;
     local bool             bDontChangeValue;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && V.IsA('DHArmoredVehicle'))
+    if (IsVehicleDebugModeAllowed(V) && V.IsA('DHArmoredVehicle'))
     {
         AV = DHArmoredVehicle(V);
         DestroyPlaneAttachments(AV); // remove any existing angle plane attachments
@@ -4380,7 +4388,7 @@ exec function SetTreadHeight(float NewValue)
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    if (IsVehicleDebugModeAllowed(V))
     {
         Log(V.VehicleNameString @ "TreadHitMaxHeight =" @ NewValue @ "(was" @ V.TreadHitMaxHeight $ ")");
         DestroyPlaneAttachments(V); // remove any existing angle plane attachments
@@ -4405,7 +4413,7 @@ exec function DebugAngles(optional string Option, optional float NewAngle)
     local rotator         NewRotation;
     local string          AnglesList;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    if (IsVehicleDebugModeAllowed(V))
     {
         DestroyPlaneAttachments(V); // remove any existing angle plane attachments
 

@@ -2181,7 +2181,7 @@ function float ModifyThreat(float Current, Pawn Threat)
 // New debug exec for testing hull fire damage & effects
 exec function HullFire()
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && !bOnFire)
+    if (IsDebugModeAllowed() && !bOnFire)
     {
         StartHullFire(none);
     }
@@ -2190,7 +2190,7 @@ exec function HullFire()
 // New debug exec for testing engine fire damage & effects
 exec function EngineFire()
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && !bEngineOnFire)
+    if (IsDebugModeAllowed() && !bEngineOnFire)
     {
         StartEngineFire(none);
     }
@@ -2199,7 +2199,7 @@ exec function EngineFire()
 // New debug exec to adjust location of driver's hatch fire position
 exec function SetFEOffset(int NewX, int NewY, int NewZ)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         if (NewX != 0 || NewY != 0 || NewZ != 0)
         {

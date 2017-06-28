@@ -975,8 +975,7 @@ simulated function DrawHudPassC(Canvas C)
         DrawNetworkActors(C);
     }
 
-    // Debug options - slow !
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         // Draw all player's body part hit points & bullet whip attachment
         if (bDebugPlayerCollision)
@@ -2316,13 +2315,8 @@ function DrawNetworkActors(Canvas C)
     local float  StrX, StrY;
     local int    Pos;
 
-    if (Level.NetMode != NM_Standalone && !class'DH_LevelInfo'.static.DHDebugMode()
-        && !(ROGameReplicationInfo(PlayerOwner.GameReplicationInfo) != none && ROGameReplicationInfo(PlayerOwner.GameReplicationInfo).bAllowNetDebug))
-    {
-        return;
-    }
-
-    if (PlayerOwner == none)
+    if (PlayerOwner == none ||
+        (!IsDebugModeAllowed() && !(ROGameReplicationInfo(PlayerOwner.GameReplicationInfo) != none && ROGameReplicationInfo(PlayerOwner.GameReplicationInfo).bAllowNetDebug)))
     {
         return;
     }
@@ -3057,7 +3051,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
     DrawSquadOrderOnMap(C, SubCoords, MyMapScale, MapCenter);
     DrawPlayerIconsOnMap(C, SubCoords, MyMapScale, MapCenter);
 
-/////////////////////////  DEBUGGING ///////////////////////////////////////////////////
+    // DEBUG:
 
     // Show map's north-east & south-west bounds - toggle using console command: ShowDebugMap (formerly enabled by LevelInfo.bDebugOverhead)
     if (bShowDebugInfoOnMap && Level.NetMode == NM_Standalone)
@@ -5230,10 +5224,16 @@ function DisplayVoiceGain(Canvas C)
 //  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+// New helper function to check whether debug execs can be run
+simulated function bool IsDebugModeAllowed()
+{
+    return Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode();
+}
+
 // Modified to use DHDebugMode
 exec function ShowDebug()
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         bShowDebugInfo = !bShowDebugInfo;
     }
@@ -5242,7 +5242,7 @@ exec function ShowDebug()
 // A debug exec transferred from ROHud class & modified to include hiding the sky, which is necessary to allow the crucial debug spheres to get drawn
 simulated function PlayerCollisionDebug()
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         bDebugPlayerCollision = !bDebugPlayerCollision;
         SetSkyOff(bDebugPlayerCollision);
@@ -5253,7 +5253,7 @@ simulated function PlayerCollisionDebug()
 // Note this is effectively redundant now as from DH 6.0 the system of using coded hit points for vehicle occupants has been abandoned
 simulated function DriverCollisionDebug()
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         bDebugDriverCollision = !bDebugDriverCollision;
         SetSkyOff(bDebugDriverCollision);
@@ -5263,7 +5263,7 @@ simulated function DriverCollisionDebug()
 // New debug exec showing all vehicles' special hit points for engine (blue), ammo stores (red), & DHArmoredVehicle's extra hit points (gold for gun traverse/pivot, pink for periscopes)
 exec function VehicleHitPointDebug()
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         bDebugVehicleHitPoints = !bDebugVehicleHitPoints;
         SetSkyOff(bDebugVehicleHitPoints);
@@ -5273,7 +5273,7 @@ exec function VehicleHitPointDebug()
 // New debug exec showing all vehicle's physics wheels (the Wheels array of invisible wheels that drive & steer vehicle, even ones with treads)
 exec function VehicleWheelDebug()
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         bDebugVehicleWheels = !bDebugVehicleWheels;
         SetSkyOff(bDebugVehicleWheels);
@@ -5283,7 +5283,7 @@ exec function VehicleWheelDebug()
 // New debug exec to toggle camera debug (location & rotation) for any vehicle position
 exec function CameraDebug()
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         bDebugCamera = !bDebugCamera;
         SetSkyOff(bDebugCamera);

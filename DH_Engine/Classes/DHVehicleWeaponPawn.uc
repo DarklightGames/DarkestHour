@@ -1795,12 +1795,18 @@ simulated function Weapon GetDemoRecordingWeapon() { return none; }
 //  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+// New helper function to check whether debug execs can be run
+simulated function bool IsDebugModeAllowed()
+{
+    return Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode();
+}
+
 // New exec function to toggle between external & internal meshes (mostly useful with behind view if want to see internal mesh)
 exec function ToggleMesh()
 {
     local int i;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DriverPositions.Length > 0)
+    if (IsDebugModeAllowed() && DriverPositions.Length > 0)
     {
         if (Gun.Mesh == default.DriverPositions[DriverPositionIndex].PositionMesh)
         {
@@ -1826,7 +1832,7 @@ exec function ToggleViewLimit()
 {
     local int i;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Gun != none) // removed requirement to be in single player mode, as valid in multi-player if in DHDebugMode
+    if (IsDebugModeAllowed() && Gun != none) // removed requirement to be in single player mode, as valid in multi-player if in DHDebugMode
     {
         if (Gun.bLimitYaw == Gun.default.bLimitYaw && PitchUpLimit == default.PitchUpLimit && PitchDownLimit == default.PitchDownLimit)
         {
@@ -1876,7 +1882,7 @@ exec function ToggleViewLimit()
 // New debug exec to toggles showing any collision static mesh actor
 exec function ShowColMesh()
 {
-    if (VehWep != none && VehWep.CollisionMeshActor != none && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Level.NetMode != NM_DedicatedServer)
+    if (VehWep != none && VehWep.CollisionMeshActor != none && IsDebugModeAllowed() && Level.NetMode != NM_DedicatedServer)
     {
         // If in normal mode, with CSM hidden, we toggle the CSM to be visible
         if (VehWep.CollisionMeshActor.bHidden)
@@ -1900,7 +1906,7 @@ exec function ShowColMesh()
 // New debug exec to set the projectile's launch position offset in the X axis
 exec function SetWeaponFireOffset(float NewValue)
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Gun != none)
+    if (IsDebugModeAllowed() && Gun != none)
     {
         Log(Gun.Tag @ "WeaponFireOffset =" @ NewValue @ "(was" @ Gun.WeaponFireOffset $ ")");
         Gun.WeaponFireOffset = NewValue;
@@ -1922,7 +1928,7 @@ exec function SetAttachOffset(int NewX, int NewY, int NewZ, optional bool bScale
 {
     local vector OldOffset;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && VehWep != none)
+    if (IsDebugModeAllowed() && VehWep != none)
     {
         OldOffset = VehWep.WeaponAttachOffset;
         VehWep.WeaponAttachOffset.X = NewX;
@@ -1942,7 +1948,7 @@ exec function SetAttachOffset(int NewX, int NewY, int NewZ, optional bool bScale
 // New debug exec to adjust location of hatch fire position
 exec function SetFEOffset(int NewX, int NewY, int NewZ, optional int NewScaleInOneTenths)
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && VehWep != none)
+    if (IsDebugModeAllowed() && VehWep != none)
     {
         if (NewX != 0 || NewY != 0 || NewZ != 0)
         {
@@ -1972,7 +1978,7 @@ exec function SetSightSize(float NewValue)
 // New debug exec to adjust ambient sound radius
 exec function SetSoundRadius(float NewValue)
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Gun != none)
+    if (IsDebugModeAllowed() && Gun != none)
     {
         if (bHasAltFire)
         {

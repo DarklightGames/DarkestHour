@@ -478,7 +478,7 @@ exec function SetBinocsDrivePos(int NewX, int NewY, int NewZ, optional bool bSca
 {
     local vector OldBinocsDrivePos;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         OldBinocsDrivePos = BinocsDrivePos;
         BinocsDrivePos.X = NewX;

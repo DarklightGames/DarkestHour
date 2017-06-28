@@ -3138,12 +3138,18 @@ simulated function Weapon GetDemoRecordingWeapon() { return none; }
 //  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+// New helper function to check whether debug execs can be run
+simulated function bool IsDebugModeAllowed()
+{
+    return Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode();
+}
+
 // New debug exec to toggle between external & internal meshes (mostly useful with behind view if want to see internal mesh)
 exec function ToggleMesh()
 {
     local int i;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DriverPositions.Length > 0)
+    if (IsDebugModeAllowed() && DriverPositions.Length > 0)
     {
         if (Mesh == default.DriverPositions[DriverPositionIndex].PositionMesh)
         {
@@ -3167,7 +3173,7 @@ exec function ToggleMesh()
 // Modified to work with DHDebugMode & restricted to changing view limits & nothing to do with behind view (which is handled by exec functions BehindView & ToggleBehindView)
 exec function ToggleViewLimit()
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) // removed requirement to be in single player mode, as valid in multi-player if in DHDebugMode
+    if (IsDebugModeAllowed()) // removed requirement to be in single player mode, as valid in multi-player if in DHDebugMode
     {
         if (bLimitYaw == default.bLimitYaw && bLimitPitch == default.bLimitPitch)
         {
@@ -3185,7 +3191,7 @@ exec function ToggleViewLimit()
 // New debug exec to quickly damage the vehicle
 exec function DamageVehicle(optional bool bDestroyVehicle)
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Role == ROLE_Authority)
+    if (IsDebugModeAllowed() && Role == ROLE_Authority)
     {
         if (bDestroyVehicle)
         {
@@ -3202,7 +3208,7 @@ exec function DamageVehicle(optional bool bDestroyVehicle)
 // New debug exec for testing engine damage
 exec function KillEngine()
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && EngineHealth > 0)
+    if (IsDebugModeAllowed() && EngineHealth > 0)
     {
         DamageEngine(EngineHealth, none, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), none);
     }
@@ -3211,7 +3217,7 @@ exec function KillEngine()
 // New debug exec for testing track damage
 exec function DamTrack(string Track)
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && bHasTreads)
+    if (IsDebugModeAllowed() && bHasTreads)
     {
         if (Track ~= "L" || Track ~= "Left")
         {
@@ -3234,7 +3240,7 @@ exec function ShowColMesh()
 {
     local int i;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         for (i = 0; i < CollisionAttachments.Length; ++i)
         {
