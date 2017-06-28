@@ -22,4 +22,5 @@ defaultproperties
     FaceSkins(4)=texture'DHUSCharactersTex.us_heads.US_AB_Face5'
 
     ShovelClassName="DH_Equipment.DHShovelItem_US"
+    bShovelHangsOnLeftHip=false // US shovel goes on the player's backpack
 }

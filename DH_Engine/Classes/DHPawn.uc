@@ -26,6 +26,7 @@ var     byte    PackedSkinIndexes;        // server packs selected index numbers
 var     bool    bReversedSkinsSlots;      // some player meshes have the typical body & face skin slots reversed, so this allows it to be assigned per pawn class
                                           // TODO: fix the reversed skins indexing in player meshes to standardise with body is 0 & face is 1 (as in RO), then delete this
 var     string  ShovelClassName;          // name of shovel class, so can be set for different nations (string name not class, due to build order)
+var     bool    bShovelHangsOnLeftHip;    // shovel hangs on player's left hip, which is the default position - otherwise it goes on player's backpack (e.g. US shovel)
 var     bool    bHatShotOff;              // records that player's helmet/headgear has been knocked off by a bullet impact
 
 // Mortars
@@ -2954,8 +2955,8 @@ state PutWeaponAway
                     Anim = 'stand_putaway_nade';
                 }
             }
-            // Putting away a pistol
-            else if (Weapon.IsA('DHPistolWeapon'))
+            // Putting away a pistol, or a shovel that hangs on the player's left hip
+            else if (Weapon.IsA('DHPistolWeapon') || (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
             {
                 if (bIsCrawling)
                 {
@@ -3071,8 +3072,8 @@ state PutWeaponAway
         {
             if (SwapWeapon.IsA('DHExplosiveWeapon') || SwapWeapon.IsA('DHBinocularsItem'))
             {
-                // From grenade or binocs to pistol
-                if (Weapon.IsA('DHPistolWeapon'))
+                // From grenade or binocs, to pistol or shovel from left hip
+                if (Weapon.IsA('DHPistolWeapon') || (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
                 {
                     if (bIsCrawling)
                     {
@@ -3095,7 +3096,7 @@ state PutWeaponAway
                         Anim = 'stand_draw_nade';
                     }
                 }
-                // From grenade or binocs to any other weapon (generic anim to draw new weapon from player's back)
+                // From grenade or binocs, to any other weapon (generic anim to draw new weapon from player's back)
                 else
                 {
                     if (bIsCrawling)
@@ -3108,9 +3109,9 @@ state PutWeaponAway
                     }
                 }
             }
-            else if (SwapWeapon.IsA('DHPistolWeapon'))
+            else if (SwapWeapon.IsA('DHPistolWeapon') || (SwapWeapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
             {
-                // From pistol to grenade or binocs
+                // From pistol or shovel that goes on left hip, to grenade or binocs
                 if (Weapon.IsA('DHExplosiveWeapon') || Weapon.IsA('DHBinocularsItem'))
                 {
                     if (bIsCrawling)
@@ -3122,7 +3123,19 @@ state PutWeaponAway
                         Anim = 'stand_nadefrompistol';
                     }
                 }
-                // From pistol to any other weapon (generic anim to draw new weapon from player's back)
+                // From pistol or shovel that goes on left hip, to pistol or shovel from left hip
+                else if (Weapon.IsA('DHPistolWeapon') ||(Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
+                {
+                    if (bIsCrawling)
+                    {
+                        Anim = 'prone_draw_pistol';
+                    }
+                    else
+                    {
+                        Anim = 'stand_draw_pistol';
+                    }
+                }
+                // From pistol or shovel that goes on left hip, to any other weapon (generic anim to draw new weapon from player's back)
                 else
                 {
                     if (bIsCrawling)
@@ -3149,8 +3162,8 @@ state PutWeaponAway
                         Anim = 'stand_nadefromrifle';
                     }
                 }
-                // From any other weapon to pistol
-                else if (Weapon.IsA('DHPistolWeapon'))
+                // From any other weapon, to pistol or shovel from left hip
+                else if (Weapon.IsA('DHPistolWeapon') || (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
                 {
                     if (bIsCrawling)
                     {
@@ -6559,6 +6572,8 @@ defaultproperties
     BurnedHeadgearOverlayMaterial=Combiner'DH_FX_Tex.Fire.HeadgearBurnedOverlay'
 
     // Third person player animations
+    bShovelHangsOnLeftHip=true
+
     DodgeAnims(0)="jumpF_mid_nade"
     DodgeAnims(1)="jumpB_mid_nade"
     DodgeAnims(2)="jumpL_mid_nade"
