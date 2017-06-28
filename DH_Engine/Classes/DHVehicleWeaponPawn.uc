@@ -90,7 +90,7 @@ simulated function Destroyed()
     }
 }
 
-// Matt: modified to call set up functionality that requires the Vehicle, VehicleWeapon and/or player pawn actors (just after vehicle spawns via replication)
+// Modified to call set up functionality that requires the Vehicle, VehicleWeapon and/or player pawn actors (just after vehicle spawns via replication)
 // This controls common and sometimes critical problems caused by unpredictability of when & in which order a net client receives replicated actor references
 // Functionality is moved to series of Initialize-X functions, for clarity & to allow easy subclassing for anything that is vehicle-specific
 simulated function PostNetReceive()
@@ -584,7 +584,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
         PC.SetFOV(WeaponFOV); // not needed if bMultiPosition, as gets set in EnteringVehicle
     }
 
-    // Matt: StoredVehicleRotation appears redundant as not used anywhere in UScript, but must be used by native code as if removed we get unwanted camera swivelling effect on entering
+    // StoredVehicleRotation appears redundant as not used anywhere in UScript, but must be used by native code as if removed we get unwanted camera swivelling effect on entering
     // It's also in HandleTransition(), but I can't see it's having an effect there
     if (VehicleBase != none)
     {
@@ -1367,7 +1367,7 @@ function AttachToVehicle(ROVehicle VehiclePawn, name WeaponBone)
     }
 }
 
-// Matt: new function to do set up that requires the 'Gun' reference to the VehicleWeapon actor
+// New function to do set up that requires the 'Gun' reference to the VehicleWeapon actor
 // Using it to set a convenient VehWep reference & to send net client to state 'EnteringVehicle' if replication timing issues stopped that happening in ClientKDriverEnter()
 simulated function InitializeVehicleWeapon()
 {
@@ -1396,7 +1396,7 @@ simulated function InitializeVehicleWeapon()
     }
 }
 
-// Matt: new function to do set up that requires the 'VehicleBase' reference to the Vehicle actor
+// New function to do set up that requires the 'VehicleBase' reference to the Vehicle actor
 // Using it to set StoredVehicleRotation on net client if replication timing issues stopped that happening in ClientKDriverEnter()
 // And to give the VehicleBase a reference to this actor in its WeaponPawns array, each time we spawn on a net client (previously in PostNetReceive)
 simulated function InitializeVehicleBase()
@@ -1442,7 +1442,7 @@ simulated function InitializeVehicleBase()
     }
 }
 
-// Matt: new function to do any set up that requires both 'VehicleBase' & 'Gun' references to Vehicle & VehicleWeapon actors - implement functionality in subclasses
+// New function to do any set up that requires both 'VehicleBase' & 'Gun' references to Vehicle & VehicleWeapon actors - implement functionality in subclasses
 simulated function InitializeVehicleAndWeapon()
 {
     bInitializedVehicleAndGun = true;
@@ -1754,7 +1754,7 @@ simulated function HandleBinoculars(bool bMovingOntoBinocs)
     }
 }
 
-// Matt: added as when player is in a vehicle, the HUD keybinds to GrowHUD & ShrinkHUD will now call these same named functions in the vehicle classes
+// Added as when player is in a vehicle, the HUD keybinds to GrowHUD & ShrinkHUD will now call these same named functions in the vehicle classes
 // When player is in a vehicle, these functions do nothing to the HUD, but they can be used to add useful vehicle functionality in subclasses, especially as keys are -/+ by default
 simulated function GrowHUD();
 simulated function ShrinkHUD();
@@ -2004,5 +2004,5 @@ defaultproperties
     FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0) // always use FPCamPos for any camera offset, including for single position weapon pawns
     bAllowViewChange=false
     bDesiredBehindView=false
-    bKeepDriverAuxCollision=true // Matt: necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
+    bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
 }

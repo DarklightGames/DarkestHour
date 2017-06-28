@@ -11,7 +11,7 @@ var         bool        bCanFireFromHip;            // if true this weapon has a
 
 // Ammo/magazines
 var         array<int>  PrimaryAmmoArray;           // the array of magazines and their ammo amounts this weapon has
-var         byte        CurrentMagCount;            // current number of magazines, this should be replicated to the client // Matt: changed from int to byte for more efficient replication
+var         byte        CurrentMagCount;            // current number of magazines, this should be replicated to the client (changed from int to byte for more efficient replication)
 var         int         MaxNumPrimaryMags;          // the maximum number of mags a solder can carry for this weapon, should move to the role info
 var         int         InitialNumPrimaryMags;      // the number of mags the soldier starts with, should move to the role info
 var         int         CurrentMagIndex;            // the index of the magazine currently in use

@@ -274,7 +274,7 @@ simulated function StartHatchFire();
 defaultproperties
 {
     // Mesh & animation
-    bForceSkelUpdate=true // Matt: necessary for new player hit detection system, as makes server update mortar mesh skeleton (wouldn't otherwise as server doesn't draw mesh)
+    bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update mortar mesh skeleton (wouldn't otherwise as server doesn't draw mesh)
     bOwnerNoSee=true
     BeginningIdleAnim="deploy_idle"
     GunnerAttachmentBone="com_player"

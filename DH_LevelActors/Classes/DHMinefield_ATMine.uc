@@ -8,7 +8,7 @@ class DHMinefield_ATMine extends ROMine;
 var     Vehicle     HurtVehicle; // records the vehicle that triggered the mine & has already been damaged, so we can avoid HurtRadius() from damaging it again
 
 // Overridden to explode on vehicles only
-// Matt: also to handle new collision mesh actor - if touched by a CM we switch touching actor to be CM's owner & proceed as if we'd been touched by that actor instead
+// Also to handle new collision mesh actor - if touched by a CM we switch touching actor to be CM's owner & proceed as if we'd been touched by that actor instead
 singular function Touch(Actor Other)
 {
     local int RandomNum;
@@ -59,7 +59,7 @@ singular function Touch(Actor Other)
 }
 
 // Modified to avoid re-damaging the vehicle that triggered the mine, & to check whether a vehicle is shielding a hit actor from the blast
-// Matt: also to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
+// Also to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
 // Also to call CheckVehicleOccupantsRadiusDamage() instead of DriverRadiusDamage() on a hit vehicle, to properly handle blast damage to any exposed vehicle occupants
 // And to fix problem affecting many vehicles with hull mesh modelled with origin on the ground, where even a slight ground bump could block all blast damage
 function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> DamageType, float Momentum, vector HitLocation)

@@ -1774,7 +1774,7 @@ simulated function DestroyEffects()
 defaultproperties
 {
     // General
-    bForceSkelUpdate=true // Matt: necessary for new player hit detection system, as makes server update cannon mesh skeleton (wouldn't otherwise as server doesn't draw mesh)
+    bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update cannon mesh skeleton (wouldn't otherwise as server doesn't draw mesh)
     bHasTurret=true
     FireAttachBone="com_player"
 

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_ObjSatchel extends DHObjective // Matt: was ROObjSatchel, but had to extend from DHObjective so can be part of new DHObjectives arrays
+class DH_ObjSatchel extends DHObjective // was ROObjSatchel, but had to extend from DHObjective so can be part of new DHObjectives arrays
     hidecategories(DHObjective,ROObjTerritory,DH_CaptureActions,DH_ClearedActions,DH_GroupedActions,DH_ContestedActions,DH_ContestEndActions);
 
 // Empty out unwanted/irrelevant functions inherited from DHObjective & ROObjTerritory
@@ -38,7 +38,7 @@ function Timer()
     SetTimer(0.0, false);
 }
 
-// Matt: modified to use cast to DHThrowableExplosiveProjectile instead of ROSatchelChargeProjectile
+// Modified to use cast to DHThrowableExplosiveProjectile instead of ROSatchelChargeProjectile
 // DH_SatchelCharge10lb10sProjectile no longer extends ROSatchelChargeProjectile, so wouldn't be recognised here
 // And we can't simply cast to DH_SatchelCharge10lb10sProjectile, because of compiler build order & dependencies
 // So have moved SavedInstigator & SavedPRI variables from satchel projectile into DHThrowableExplosiveProjectile

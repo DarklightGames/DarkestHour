@@ -6,7 +6,7 @@
 class DHSmokeEffect_Grenade extends DHSmokeEffectBase;
 
 /*
-// Matt March 2015: this was some testing work done by Theel on functionality to modify smoke brightness & wind direction/speed based on settings in DHLevelInfo
+// March 2015: this was some testing work done by Theel on functionality to modify smoke brightness & wind direction/speed based on settings in DHLevelInfo
 // This class wouldn't compile if it were left in DH_Effects (it's natural package), as DH_Effects is compiled before DH_Engine & it would be dependant on DH_Engine.DH_LevelInfo
 // So if implemented it would need moving, say to either DH_Engine or to DH_Equipment (which is where Theel had it)
 simulated function PostBeginPlay()

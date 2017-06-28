@@ -166,7 +166,7 @@ simulated function Tick(float DeltaTime)
     }
 }
 
-// Matt: modified to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
+// Modified to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
 // Also to call CheckVehicleOccupantsRadiusDamage() instead of DriverRadiusDamage() on a hit vehicle, to properly handle blast damage to any exposed vehicle occupants
 // And to fix problem affecting many vehicles with hull mesh modelled with origin on the ground, where even a slight ground bump could block all blast damage
 // Also to update Instigator, so HurtRadius attributes damage to the player's current pawn
@@ -501,7 +501,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     }
 }
 
-// Matt: modified to handle new collision mesh actor - if we hit a CM we switch hit actor to CM's owner & proceed as if we'd hit that actor
+// Modified to handle new collision mesh actor - if we hit a CM we switch hit actor to CM's owner & proceed as if we'd hit that actor
 // Also to do splash effects if projectile hits a fluid surface, which wasn't previously handled
 // Removed call to ClientSideTouch() as produces unwanted impact effects on a ragdoll body, i.e. grenade impact makes dead bodies jump around
 // Also re-factored generally to optimise, but original functionality unchanged

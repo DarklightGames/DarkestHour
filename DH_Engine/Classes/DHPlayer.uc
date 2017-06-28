@@ -251,7 +251,7 @@ simulated function bool NeedNetNotify()
     return super.NeedNetNotify() || GameReplicationInfo == none;
 }
 
-// Matt: modified to avoid "accessed none" error
+// Modified to avoid "accessed none" error
 event ClientReset()
 {
     local Actor A;
@@ -1066,7 +1066,7 @@ function ServerLoadATAmmo(Pawn Gunner)
     }
 }
 
-// Matt: modified to avoid unnecessary Pawn.SaveConfig(), which saved block of pointless vehicle config variables to user.ini file every time player used behind view in a vehicle
+// Modified to avoid unnecessary Pawn.SaveConfig(), which saved block of pointless vehicle config variables to user.ini file every time player used behind view in a vehicle
 // Including TPCamDistance, which once saved in the .ini file will override any changes made in vehicle default properties
 // Also bDesiredBehindView=true was saved in .ini if player exited game while in a vehicle in behind view, which then screwed up their rotation when entering that vehicle in future
 // Instead we ResetConfig() for the vehicle class, in practice meaning clearing all saved config if no default config exists, so we always use the class default values in behind view
@@ -1252,7 +1252,7 @@ state PlayerWalking
             // Take the bipod weapon out of deployed if the player tries to move
             if (Pawn.bBipodDeployed && NewAccel != vect(0.0, 0.0, 0.0) && Pawn.Weapon != none)
             {
-//              ROBipodWeapon(Pawn.Weapon).ForceUndeploy(); // Matt: replaced by if/else below so it actually works with DH weapons
+//              ROBipodWeapon(Pawn.Weapon).ForceUndeploy(); // replaced by if/else below so it actually works with DH weapons
                 if (DHBipodWeapon(Pawn.Weapon) != none)
                 {
                     DHBipodWeapon(Pawn.Weapon).ForceUndeploy();
@@ -1996,7 +1996,7 @@ function ClientToggleDuck()
     ToggleDuck();
 }
 
-// Matt: modified to network optimise by removing automatic call to replicated server function in a VehicleWeaponPawn
+// Modified to network optimise by removing automatic call to replicated server function in a VehicleWeaponPawn
 // Instead we let WVP's clientside IncrementRange() check that it's a valid operation before sending server call
 exec function LeanRight()
 {
@@ -2655,7 +2655,7 @@ function ServerSetIsInSpawnMenu(bool bIsInSpawnMenu)
     self.bIsInSpawnMenu = bIsInSpawnMenu;
 }
 
-// Matt: just added Begin: label, to avoid "label not found" error on ClientGotoState calls to send client to state 'Spectating' or 'PlayerWaiting' (both child states of this)
+// Modified to add 'Begin:' label, to avoid "label not found" error on ClientGotoState calls to send client to state 'Spectating' or 'PlayerWaiting' (both child states of this)
 state BaseSpectating
 {
 Begin:

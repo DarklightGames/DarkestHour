@@ -47,7 +47,7 @@ var     class<Projectile>   TracerProjectileClass; // replaces DummyTracerClass 
 var     byte                TracerFrequency;       // how often a tracer is loaded in, as in 1 in X (deprecates mTracerInterval & mLastTracerTime)
 
 // Turret/MG collision static mesh
-// Matt: new col mesh actor allows us to use a col static mesh with VehicleWeapon - just specify a valid CollisionStaticMesh in default props & col static mesh is automatically used
+// New col mesh actor allows us to use a col static mesh with VehicleWeapon - just specify a valid CollisionStaticMesh in default props & col static mesh is automatically used
 var     DHCollisionMeshActor    CollisionMeshActor;
 var     StaticMesh              CollisionStaticMesh;
 var     bool                    bAttachColMeshToPitchBone; // option to attach to pitch bone instead of default yaw bone, e.g. for gun mantlet
@@ -126,7 +126,7 @@ simulated function Tick(float DeltaTime)
     Disable('Tick');
 }
 
-// Matt: modified to call set up functionality that requires the Vehicle actor (just after vehicle spawns via replication)
+// Modified to call set up functionality that requires the Vehicle actor (just after vehicle spawns via replication)
 // This controls common and sometimes critical problems caused by unpredictability of when & in which order a net client receives replicated actor references
 // Functionality is moved to series of InitializeX functions, for clarity & to allow easy subclassing for anything that is vehicle-specific
 simulated function PostNetReceive()
@@ -775,7 +775,7 @@ simulated function bool PlayerUsesManualReloading()
 //  **************************  HIT DETECTION & DAMAGE  ***************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Matt: emptied out as suicide stuff is irrelevant & never called here, & because as shell & bullet's ProcessTouch now call TakeDamage directly on 'Driver' if he was hit
+// Emptied out as suicide stuff is irrelevant & never called here, & because as shell & bullet's ProcessTouch now call TakeDamage directly on 'Driver' if he was hit
 // Note that shell's ProcessTouch also now calls TakeDamage on VehicleWeapon instead of Vehicle itself, so this function decides what to do with that damage
 // Add here if want to pass damage on to vehicle (& if DamageType is bDelayedDamage, need to call SetDelayedDamageInstigatorController(InstigatedBy.Controller) on relevant pawn)
 // Can also add any desired functionality in subclasses, e.g. a shell impact could wreck an exposed MG
@@ -864,7 +864,7 @@ simulated function UpdatePrecacheStaticMeshes()
     }
 }
 
-// Matt: New function to do set up that requires the 'Gun' reference to the VehicleWeaponPawn actor (called from VehicleWeaponPawn when it receives a reference to this actor)
+// New function to do set up that requires the 'Gun' reference to the VehicleWeaponPawn actor (called from VehicleWeaponPawn when it receives a reference to this actor)
 // Using it to set a convenient WeaponPawn reference & our Owner & Instigator variables
 simulated function InitializeWeaponPawn(DHVehicleWeaponPawn WeaponPwn)
 {

@@ -11,11 +11,6 @@ var  sound          SmokeIgniteSound;
 var  sound          SmokeLoopSound;
 var  float          SmokeSoundDuration;
 
-// Matt: removed as unnecessary:
-// var()  float      DestroyTimer;
-// var    bool       bCalledDestroy;
-// var    Emitter    SmokeEmitter;
-
 // Modified to add smoke effects
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
@@ -34,7 +29,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
     }
 }
 
-// Matt: modified so actor is torn off & then destroyed on server, but persists for its LifeSpan on clients to play the smoke sound
+// Modified so actor is torn off & then destroyed on server, but persists for its LifeSpan on clients to play the smoke sound
 simulated function HandleDestruction()
 {
     bCollided = true;
@@ -71,9 +66,9 @@ defaultproperties
     MyDamageType=class'DH_Engine.DHShellSmokeDamageType'
     LifeSpan=12.0
     AmbientGlow=50
-//  SoundVolume=175 // Matt: removed as affects shell's flight 'whistle' & smoke sounds (i.e. AmbientSound), not the explosion sound volume (same with radius below)
+//  SoundVolume=175 // removed as affects shell's flight 'whistle' & smoke sounds (i.e. AmbientSound), not the explosion sound volume (same with radius below)
 //  SoundRadius=500.0
-//  TransientSoundVolume=0.75 // Matt: removed as sound effects are the same as for other shells, except the explosion volume that we now control with ExplosionSoundVolume
+//  TransientSoundVolume=0.75 // removed as sound effects are the same as for other shells, except the explosion volume that we now control with ExplosionSoundVolume
 //  TransientSoundRadius=750.0
     ExplosionSoundVolume=0.75
 }

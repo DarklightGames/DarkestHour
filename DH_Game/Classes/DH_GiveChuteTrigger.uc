@@ -68,5 +68,5 @@ function Touch(Actor Other)
 
 defaultproperties
 {
-    ReTriggerDelay=0.5 // Matt: added to prevent spamming calls to pawn's GiveChute, each of which checks through inventory
+    ReTriggerDelay=0.5 // added to prevent spamming calls to pawn's GiveChute, each of which checks through inventory
 }

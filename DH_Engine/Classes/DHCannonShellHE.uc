@@ -6,7 +6,7 @@
 class DHCannonShellHE extends DHCannonShell
     abstract;
 
-// Modified to move karma ragdolls around when HE round explodes (Matt: moved here from Destroyed)
+// Modified to move karma ragdolls around when HE round explodes (moved here from Destroyed)
 simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, optional float ActualLocationAdjustment)
 {
     local vector Start, Direction;
@@ -66,6 +66,6 @@ defaultproperties
     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
     ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
     LifeSpan=10.0
-//  SoundRadius=1000.0 // Matt: removed as affects shell's flight 'whistle' (i.e. AmbientSound), not the explosion sound radius
+//  SoundRadius=1000.0 // removed as affects shell's flight 'whistle' (i.e. AmbientSound), not the explosion sound radius
     ExplosionSoundVolume=2.0
 }

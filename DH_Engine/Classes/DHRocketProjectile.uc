@@ -3,8 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-// Matt: originally extended DHAntiVehicleProjectile, but has so much in common with a HEAT shell it's simpler & cleaner to extend that
-class DHRocketProjectile extends DHCannonShellHEAT
+class DHRocketProjectile extends DHCannonShellHEAT // originally extended DHAntiVehicleProjectile, but has so much in common with HEAT shell it's simpler & cleaner to extend that
     abstract;
 
 #exec OBJ LOAD FILE=Inf_Weapons.uax

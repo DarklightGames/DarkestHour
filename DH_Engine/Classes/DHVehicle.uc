@@ -203,7 +203,7 @@ simulated function PostBeginPlay()
             PreviousPositionIndex = InitialPositionIndex;
         }
     }
-    // Matt: on net client, force length of WeaponPawns array to normal length so it works with our new passenger pawn system
+    // On net client, force length of WeaponPawns array to normal length so it works with our new passenger pawn system
     // Passenger pawns won't now exist on client unless occupied, so although passenger slots may be empty in array we still see grey passenger position dots on HUD vehicle icon
     else
     {
@@ -291,7 +291,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 //  ***************************** KEY ENGINE EVENTS  ******************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Matt: modified to handle engine on/off (including dust/exhaust emitters), damaged tracks & fire effects, instead of constantly checking in Tick
+// Modified to handle engine on/off (including dust/exhaust emitters), damaged tracks & fire effects, instead of constantly checking in Tick
 // Also to initialize driver-related stuff when we receive the Driver actor
 simulated function PostNetReceive()
 {
@@ -888,7 +888,7 @@ function KDriverEnter(Pawn P)
 }
 
 // Modified to add an engine start/stop hint & to enforce bDesiredBehindView = false (avoids a view rotation bug)
-// Matt: also to work around various net client problems caused by replication timing issues
+// Also to work around various net client problems caused by replication timing issues
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     local DHPlayer P;
@@ -2644,7 +2644,7 @@ simulated function SetDamagedTracks()
             LeftTreadSoundAttach.AmbientSound = TrackDamagedSound;
         }
 
-        // Matt: added support for spawning damaged track model as decorative static mesh
+        // Added support for spawning damaged track model as decorative static mesh
         if (DamagedTrackStaticMeshLeft != none && DamagedTrackLeft == none)
         {
             DamagedTrackLeft = SpawnAttachment(class'DHDecoAttachment',, DamagedTrackStaticMeshLeft);
@@ -3046,7 +3046,7 @@ simulated function bool IsDisabled()
     return false;
 }
 
-// Modified to eliminate "Waiting for additional crew members" message (Matt: now only used by bots)
+// Modified to eliminate "Waiting for additional crew members" message (this is now only used by bots)
 function bool CheckForCrew()
 {
     return true;
@@ -3346,6 +3346,6 @@ defaultproperties
     FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0)
     bDesiredBehindView=false
     bDisableThrottle=false
-    bKeepDriverAuxCollision=true // Matt: necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
+    bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
 //  EntryRadius=375.0 // deprecated
 }

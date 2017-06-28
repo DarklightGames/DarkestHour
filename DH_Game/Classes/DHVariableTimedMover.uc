@@ -32,7 +32,8 @@ function PostBeginPlay()
     }
 }
 
-// Matt: removed "simulated" as PostBeginPlay isn't called on net client, so nothing gets set & we get "array out of bounds" log errors - looks like this function isn't meant to run on clients
+// Removed "simulated" as PostBeginPlay isn't simulated & so doesn't run on a net client, so nothing gets set upper_bound
+// If this function is simulated it runs on a client & we get "array out of bounds" log errors - looks like this function isn't meant to run clientside
 event KeyFrameReached()
 {
     if (KeyNum < KeyMoveSpeed.Length)

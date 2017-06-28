@@ -14,7 +14,7 @@ defaultproperties
 //  CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Flak8.Flak88_turret_coll' // TODO - make 'turret' col mesh - although this one is tricky as so much 'turret' pitches up & down
 
     // Turret movement
-    bHasTurret=true // Matt: not really a turret, but this is an easy way of making the player's view turn with the rotating gun
+    bHasTurret=true // not really a turret, but this is an easy way of making the player's view turn with the rotating gun
     bLimitYaw=false
     CustomPitchUpLimit=15474
     CustomPitchDownLimit=64990

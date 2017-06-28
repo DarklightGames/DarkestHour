@@ -64,11 +64,11 @@ function BlowUp(vector HitLocation)
 
 defaultproperties
 {
-    FuzeLengthTimer=4.5 // Matt: changed from 4.0 as all but M1 grenade use 4.5
-    Speed=1100.0 // Matt: changed from 1000 as all but M1 grenade use 1100
+    FuzeLengthTimer=4.5
+    Speed=1100.0
     MyDamageType=class'DHThrowableExplosiveDamageType'
     ExplodeDirtEffectClass=class'GrenadeExplosion'
-    ExplodeSnowEffectClass=class'GrenadeExplosionSnow' // Matt: added instead of using same as ExplodeDirtEffectClass, as there is an RO snow effect available
+    ExplodeSnowEffectClass=class'GrenadeExplosionSnow' // added instead of using same as ExplodeDirtEffectClass, as there is an RO snow effect available
     ExplodeMidAirEffectClass=class'GrenadeExplosion_midair'
     CollisionHeight=2.0
     CollisionRadius=4.0

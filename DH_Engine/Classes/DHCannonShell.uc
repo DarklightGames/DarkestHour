@@ -147,7 +147,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
         if (bDebugBallistics)
         {
-            HandleShellDebug(HitLocation); // Matt: simpler to call this here than in the tank cannon class, as we have saved TraceHitLoc in PostBeginPlay if bDebugBallistics is true
+            HandleShellDebug(HitLocation); // simpler to call this here than in the tank cannon class, as we have saved TraceHitLoc in PostBeginPlay if bDebugBallistics is true
         }
 
         super.Explode(HitLocation, HitNormal);
@@ -228,7 +228,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
                 break;
 
             case EST_Water:
-                HitSound = WaterHitSound; // Matt: added as can't see why not (no duplication with CheckForSplash water effects as here we aren't in a WaterVolume)
+                HitSound = WaterHitSound; // added as can't see why not (no duplication with CheckForSplash water effects as here we aren't in a WaterVolume)
                 HitEmitterClass = ShellHitWaterEffectClass;
                 break;
 

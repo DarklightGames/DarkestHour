@@ -121,21 +121,21 @@ simulated function PostNetBeginPlay()
     }
 }
 
-// Matt: new function, called by DHFastAutoFire's SpawnProjectile function to set this as a server bullet, meaning won't be replicated as a separate client bullet will be spawned on client
+// New function, called by DHFastAutoFire's SpawnProjectile function to set this as a server bullet, meaning won't be replicated as a separate client bullet will be spawned on client
 // RemoteRole = none was the only change in DH_ServerBullet that had any effect, so simply doing this means server bullet classes can be deprecated
 function SetAsServerBullet()
 {
     RemoteRole = ROLE_None;
 }
 
-// Matt: disabled as function is now emptied out, as don't want delayed destruction stuff from ROBullet - far cleaner just to set short LifeSpan on a server
+// Disabled as function is now emptied out, as don't want delayed destruction stuff from ROBullet - far cleaner just to set short LifeSpan on a server
 // And for a tracer bullet, we don't need to keep setting its rotation to match its direction - simply setting bOrientToVelocity handles this natively
 simulated function Tick(float DeltaTime)
 {
     Disable('Tick');
 }
 
-// Matt: modified to handle new collision mesh actor - if we hit a CM we switch hit actor to CM's owner & proceed as if we'd hit that actor
+// Modified to handle new collision mesh actor - if we hit a CM we switch hit actor to CM's owner & proceed as if we'd hit that actor
 // Also to do splash effects if projectile hits a fluid surface, which wasn't previously handled
 // Also re-factored generally to optimise, but original functionality unchanged
 simulated singular function Touch(Actor Other)
@@ -208,7 +208,7 @@ simulated singular function Touch(Actor Other)
     bHitBulletProofColMesh = false; // guarantees reset
 }
 
-// Matt: modified to handle tracer bullet clientside effects, as well as normal bullet functionality, plus handling of hit on a vehicle weapon similar to a shell
+// Modified to handle tracer bullet clientside effects, as well as normal bullet functionality, plus handling of hit on a vehicle weapon similar to a shell
 simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
     local DHPawn       HitPlayer, WhizzedPlayer;
@@ -442,7 +442,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     Destroy();
 }
 
-// Matt: modified to remove delayed destruction of bullet on a server, as serves no purpose for a bullet
+// Modified to remove delayed destruction of bullet on a server, as serves no purpose for a bullet
 // Bullet is bNetTemporary, meaning it gets torn off on client as soon as it replicates, receiving no further input from server, so delaying destruction on server has no effect
 // Also to handle tracer bullet clientside effects, as well as normal bullet functionality
 // Note this gets called when bullet collides with an ROVehicle (not a VehicleWeapon), as well as world geometry

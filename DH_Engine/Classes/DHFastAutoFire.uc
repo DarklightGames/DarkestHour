@@ -320,7 +320,7 @@ state FireLoop
     }
 }
 
-// Matt: modified to disable bullet replication, so actor won't be replicated to clients (was the only difference in the server bullet class)
+// Modified to disable bullet replication, so actor won't be replicated to clients (was the only difference in the server bullet class)
 function Projectile SpawnProjectile(vector Start, rotator Dir)
 {
     local Projectile SpawnedProjectile;

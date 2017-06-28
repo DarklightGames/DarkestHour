@@ -36,7 +36,7 @@ simulated function Landed(vector HitNormal)
 }
 
 // Modified to add smoke effects & to remove actor destruction on client
-// Matt: actor is torn off & then destroyed on server, but persists for its LifeSpan on clients so grenade is still visible on ground & makes the smoke sound
+// Actor is torn off & then destroyed on server, but persists for its LifeSpan on clients so grenade is still visible on ground & makes the smoke sound
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
     local Emitter SmokeEmitter;

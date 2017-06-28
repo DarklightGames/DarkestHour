@@ -167,7 +167,7 @@ simulated function PostNetBeginPlay()
     SetBodyAndFaceSkins();
 }
 
-// Matt 2016: modified to fix 'uniform bug' where player on net client would sometimes spawn with wrong player model (most commonly an allied player spawning as a German)
+// Modified to fix 'uniform bug' where player on net client would sometimes spawn with wrong player model (most commonly an allied player spawning as a German)
 // The functionality is now in a new SetUpPlayerModel() function to avoid code duplication, so see that function for explanatory comments
 simulated function PostNetReceive()
 {
@@ -732,14 +732,14 @@ simulated function ClientPawnWhizzed(vector WhizLocation, byte WhizType)
 }
 
 // Emptied out to prevent playing old whiz sounds over the top of the new
-// Matt: this event is called by native code when net client receives a changed replicated value of SpawnWhizCount,
+// This event is called by native code when net client receives a changed replicated value of SpawnWhizCount,
 // but should no longer be called as I've stopped PawnWhizzed from replicating whiz variables
 simulated event HandleWhizSound()
 {
 }
 
 // Modified so player pawn's AuxCollisionCylinder (the bullet whip attachment) only retains its collision if player is entering a VehicleWeaponPawn in an exposed position
-// Matt: part of new vehicle occupant hit detection system, which basically keeps normal hit detection as for an infantry player pawn, if the player is exposed
+// Part of new vehicle occupant hit detection system, which basically keeps normal hit detection as for an infantry player pawn, if the player is exposed
 // Also so player's CullDistance isn't set to 5000 (83m) when in vehicle, as caused players to disappear at quite close ranges when often should be highly visible, e.g. AT gunner
 // And some fixes where vehicle is replicating to net client, which may not have received all relevant actors yet (e.g. Driver, Gun)
 // Flags for vehicle to attach Driver when it receives Gun, & stops DriveAnim overriding a correct driver anim just played by vehicle's SetPlayerPosition()
@@ -1996,7 +1996,7 @@ state Dying
                 }
             }
 
-            if (VSizeSquared(Momentum) < 100.0) // Matt: was (VSize(Momentum) < 10.0) but it's more efficient to use VSizeSquared < 100
+            if (VSizeSquared(Momentum) < 100.0) // was VSize(Momentum) < 10 but it's more efficient to use VSizeSquared < 100
             {
                 Momentum = - Normal(SelfToInstigator) * Damage * 1000.0;
                 Momentum.Z = Abs(Momentum.Z);
@@ -3197,7 +3197,7 @@ state PutWeaponAway
             // Unhide the weapon now
             if (Weapon.ThirdPersonActor != none)
             {
-                if (DrivenVehicle == none) // Matt: added 'if' so we don't make the 3rd person weapon attachment visible again if player just got into a vehicle
+                if (DrivenVehicle == none) // added 'if' so we don't make the 3rd person weapon attachment visible again if player just got into a vehicle
                 {
                     Weapon.ThirdPersonActor.bHidden = false;
                 }
@@ -3378,10 +3378,9 @@ simulated function PlayMantle()
     LockRootMotion(1); // lock the rendering of the root bone to where it is (it will still translate for calculation purposes)
     bLocallyControlled = IsLocallyControlled();
 
-    // Matt: was PlayOwnedSound but that's only relevant to server & this plays on client - same below & in PlayEndMantle
     if (bLocallyControlled)
     {
-        PlaySound(MantleSound, SLOT_Interact, 1.0,, 10.0);
+        PlaySound(MantleSound, SLOT_Interact, 1.0,, 10.0); // was PlayOwnedSound but that's only relevant to server & this plays on client - same below & in PlayEndMantle
     }
 
     Anim = SetMantleAnim();
