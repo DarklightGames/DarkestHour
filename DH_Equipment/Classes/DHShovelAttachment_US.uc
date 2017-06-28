@@ -8,5 +8,5 @@ class DHShovelAttachment_US extends DHShovelAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Shovel_US_3rd'
-    Skins(0)=shader'DH_USA_shovel.Textures.USA_shovel_shine'
+    Skins(0)=texture'DH_Equipment_tex.Shovels.US_shovel'
 }

@@ -9,7 +9,8 @@ defaultproperties
 {
     AttachmentClass=class'DHShovelAttachment_US'
     Mesh=SkeletalMesh'DH_Shovel_1st.Shovel_US'
-    Skins(0)=texture'Weapons1st_tex.Arms.hands'
-    Skins(1)=texture'DHUSCharactersTex.Sleeves.US_sleeves'
-    Skins(2)=shader'DH_USA_shovel.Textures.USA_shovel_shine'
+    Skins(2)=texture'DH_Equipment_tex.Shovels.US_shovel'
+    HighDetailOverlay=shader'DH_Equipment_tex.Shovels.US_shovel_s'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=2
 }
