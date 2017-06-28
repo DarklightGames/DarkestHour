@@ -28,6 +28,8 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
 // Modified to prevent firing if player's weapons are locked due to spawn killing, with screen message if the local player
 // Gets called on both client & server, so includes server verification that player's weapons aren't locked (belt & braces as clientside check stops it reaching server)
+// Also modified to set the proper player animations for melee attacks
+// Originally in the projectile weapon class, but moved here as it's possible for non-projectile weapons to be used for bash attacks, e.g. shovels
 simulated function bool StartFire(int Mode)
 {
     if (Instigator != none && DHPlayer(Instigator.Controller) != none && DHPlayer(Instigator.Controller).AreWeaponsLocked())
@@ -35,7 +37,17 @@ simulated function bool StartFire(int Mode)
         return false;
     }
 
-    return super.StartFire(Mode);
+    if (super.StartFire(Mode))
+    {
+        if (FireMode[Mode].bMeleeMode && ROPawn(Instigator) != none)
+        {
+            ROPawn(Instigator).SetMeleeHoldAnims(true);
+        }
+
+        return true;
+    }
+
+    return false;
 }
 
 // Modified to take player out of ironsights if necessary, & to allow for multiple copies of weapon to drop with spread (so they aren't inside each other)

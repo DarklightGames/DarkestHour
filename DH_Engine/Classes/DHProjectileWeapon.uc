@@ -588,11 +588,6 @@ simulated function bool StartFire(int Mode)
         // Take the weapon out of ironsights if we're trying to do a melee attack in ironsights
         if (FireMode[Mode].bMeleeMode)
         {
-            if (ROPawn(Instigator) != none)
-            {
-                ROPawn(Instigator).SetMeleeHoldAnims(true);
-            }
-
             GotoState('UnZoomImmediately');
         }
 
