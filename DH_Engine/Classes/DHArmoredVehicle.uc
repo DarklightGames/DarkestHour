@@ -729,26 +729,46 @@ function CancelAnyVehicleUnlockTimer()
 
 // New helper function to check whether a player is allowed to lock or unlock an armored vehicle
 // Allowed if player is a tank crew role, he is the sole or most senior crewman (based on position in vehicle), & the vehicle can only be used by tank crew
+// He must also be in a tank crew position at the time, but this has already been checked elsewhere before calling this function, so we don't need to repeat
 // Note we use bDriving instead of Driver != none checks, as net client may not have Driver pawn if Driver is hidden because bDrawDriverInTP=false
 simulated function bool CanPlayerLockVehicle(Vehicle PlayersVehiclePosition)
 {
-    if (class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(PlayersVehiclePosition) && bMustBeTankCommander) // player must be tank crew & vehicle must be tank crew only
+    local DHPlayer     PC;
+    local DH_LevelInfo LI;
+
+    // Not if the player isn't a tank crew role, or if the vehicle isn't for tank crew only
+    if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(PlayersVehiclePosition) || !bMustBeTankCommander)
     {
-        if (Cannon != none && Cannon.WeaponPawn != none && Cannon.WeaponPawn.bDriving) // vehicle has a commander, so player can only lock if he is that commander
+        return false;
+    }
+
+    // Not if the map has been set to disallow tank locking
+    PC = DHPlayer(PlayersVehiclePosition.Controller);
+
+    if (PC != none)
+    {
+        LI = PC.GetLevelInfo();
+
+        if (LI != none && LI.bDisableTankLocking)
         {
-            return PlayersVehiclePosition == Cannon.WeaponPawn;
-        }
-        else if (bDriving) // vehicle has a driver, so player can only lock if he is that driver
-        {
-            return PlayersVehiclePosition == self;
-        }
-        else if (MGun != none && MGun.WeaponPawn != none && MGun.WeaponPawn.bDriving) // vehicle has an MG operator, so player can only lock if he is that MG operator
-        {
-            return PlayersVehiclePosition == MGun.WeaponPawn;
+            return false;
         }
     }
 
-    return false;
+    // If the vehicle has a commander, the player can only lock if he is that commander
+    if (Cannon != none && Cannon.WeaponPawn != none && Cannon.WeaponPawn.bDriving)
+    {
+        return PlayersVehiclePosition == Cannon.WeaponPawn;
+    }
+    // Or if the vehicle has a driver, the player can only lock if he is that driver
+    else if (bDriving)
+    {
+        return PlayersVehiclePosition == self;
+    }
+
+    // Yes, because the player is a tank crewman in a crew position & there are no other crewmen who rank above him
+    // This should mean the player is in an MG position & there are no other crewmen in crew positions
+    return true;
 }
 
 // Implemented here to check whether a player is prevented from entering a tank crew position in an armored vehicle that has been locked

@@ -77,6 +77,8 @@ var() array<class<DHConstruction> > RestrictedConstructions;
 // objectives, while Team B has 4.)
 var() InterpCurve           AttritionRateCurve;
 
+var() bool                  bDisableTankLocking;     // option to disallow players from locking tanks & other armored vehicles, stopping other players from entering
+
 var() material              LoadingScreenRef;        // Used to stop loading screen image from being removed on save (not otherwise used)
                                                      // Must be set to myLevel.GUI.LoadingScreen to work!
 
