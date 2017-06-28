@@ -1189,21 +1189,21 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             continue;
         }
 
+        // Draw driver dot
         if (i == 0)
         {
-            // Draw driver
-            if (Passenger == none) // we're the driver
+            if (Passenger == none)
             {
-                VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsPlayerColor;
+                VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsPlayerColor; // we are the driver
             }
-            else if (Vehicle.Driver != none || Vehicle.bDriving) // added bDriving as net client doesn't have Driver pawn if he's hidden because bDrawDriverInTP=false
+            else if (Vehicle.Driver != none || Vehicle.bDriving) // another player is the driver (added bDriving as net client doesn't have Driver pawn if he's hidden because bDrawDriverInTP=false)
             {
-                VehicleOccupants.Tints[TeamIndex] = GetPlayerColor(Vehicle.PlayerReplicationInfo);
+                VehicleOccupants.Tints[TeamIndex] = GetPlayerColor(Vehicle.PlayerReplicationInfo); // now using GetPlayerColor() to handle different colors for team or squad members
                 VehicleOccupants.Tints[TeamIndex].A = 128;
             }
             else
             {
-                VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsVacantColor;
+                VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsVacantColor; // no one is driving
             }
 
             VehicleOccupants.PosX = Vehicle.VehicleHudOccupantsX[0];
@@ -1227,23 +1227,24 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 
             WP = Vehicle.WeaponPawns[i - 1];
 
-            if (WP == none) // added to show missing rider/passenger pawns, as now they won't exist on clients unless occupied
+            if (WP == none) // added to show missing rider/passenger pawns, as now they won't exist on net clients unless occupied
             {
                 VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsVacantColor;
             }
-            else if (WP == Passenger)
+            else if (WP == Passenger) // we are in this vehicle position
             {
                 VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsPlayerColor;
             }
             else if (WP.PlayerReplicationInfo != none)
             {
-                if (Passenger != none && Passenger.PlayerReplicationInfo != none && WP.PlayerReplicationInfo == Passenger.PlayerReplicationInfo)
+                if (Passenger != none && WP.PlayerReplicationInfo == Passenger.PlayerReplicationInfo) // we are in this vehicle position
                 {
                     VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsPlayerColor;
                 }
-                else
+                else // another player is in this vehicle position
                 {
-                    VehicleOccupants.Tints[TeamIndex] = VehiclePositionIsOccupiedColor;
+                    VehicleOccupants.Tints[TeamIndex] = GetPlayerColor(WP.PlayerReplicationInfo); // now using GetPlayerColor() to handle different colors for team or squad members
+                    VehicleOccupants.Tints[TeamIndex].A = 128; // TEST added and was VehiclePositionIsOccupiedColor above
                 }
             }
             else
