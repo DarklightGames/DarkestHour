@@ -1189,11 +1189,9 @@ function ServerChangeDriverPosition(byte F)
 // or a tank crew position he can't use, including in an armored vehicle that he's locked out of (although shouldn't be an issue as he's already in the driver position)
 simulated function bool CanSwitchToVehiclePosition(byte F)
 {
-    local DHVehicleWeaponPawn WeaponPawn;
-
     F -= 2; // adjust passed F to selected weapon pawn index (e.g. pressing 2 for turret position ends up with F=0 for weapon pawn no.0)
 
-    // Can't switch if player has selected an invalid weapon position
+    // Can't switch if player has selected an invalid weapon pawn position
     // Note if player presses 0 or 1, which are invalid choices, the F byte ends up as 254 or 255 & so fails this check (which is what we want)
     if (F >= WeaponPawns.Length)
     {
@@ -1209,11 +1207,9 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
     // Note on a net client we probably won't get a weapon pawn reference for an unoccupied rider pawn, as actor doesn't usually exist on a client
     // But that's fine because there's nothing we need to check for an unoccupied rider pawn & we can always switch to it if we got here
     // If we let the switch go ahead, the rider pawn will get replicated to the owning net client as the player enters it on the server
-    WeaponPawn = DHVehicleWeaponPawn(WeaponPawns[F]);
-
-    if (WeaponPawn != none)
+    if (WeaponPawns[F] != none)
     {
-        if (WeaponPawn.bMustBeTankCrew)
+        if (WeaponPawns[F].IsA('ROVehicleWeaponPawn') && ROVehicleWeaponPawn(WeaponPawns[F]).bMustBeTankCrew)
         {
             // Can't switch if player has selected a tank crew position but isn't a tank crew role
             if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(self))
@@ -1232,7 +1228,7 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
         }
 
         // Can't switch if new vehicle position already has a human occupant
-        if (WeaponPawn.PlayerReplicationInfo != none && !WeaponPawn.PlayerReplicationInfo.bBot)
+        if (WeaponPawns[F].PlayerReplicationInfo != none && !WeaponPawns[F].PlayerReplicationInfo.bBot)
         {
             return false;
         }

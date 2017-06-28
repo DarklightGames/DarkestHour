@@ -1183,7 +1183,6 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
 {
     local DHArmoredVehicle AV;
     local Vehicle          NewVehiclePosition;
-    local byte             NewWeaponPawnIndex;
     local bool             bMustBeTankerToSwitch;
 
     if (F == 0 || VehicleBase == none) // pressing zero is an invalid switch choice
@@ -1200,16 +1199,16 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
     // Trying to switch to non-driver position
     else
     {
-        NewWeaponPawnIndex = F - 2;
+        F -= 2; // adjust passed F to selected weapon pawn index (e.g. pressing 2 for turret position ends up with F=0 for weapon pawn no.0)
 
-        // Can't switch if player has selected an invalid weapon position or the current position
-        if (NewWeaponPawnIndex >= VehicleBase.WeaponPawns.Length || NewWeaponPawnIndex == PositionInArray)
+        // Can't switch if player has selected an invalid weapon pawn position or the current position
+        if (F >= VehicleBase.WeaponPawns.Length || F == PositionInArray)
         {
             return false;
         }
 
         // Can't switch if player selected a rider position on an armored vehicle, but is buttoned up (no 'teleporting' outside to external rider position) - gives message
-        if (GetArmoredVehicleBase(AV) && NewWeaponPawnIndex >= AV.FirstRiderPositionIndex && !CanExit())
+        if (GetArmoredVehicleBase(AV) && F >= AV.FirstRiderPositionIndex && !CanExit())
         {
             return false;
         }
@@ -1218,7 +1217,7 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
         // Note on a net client we probably won't get a weapon pawn reference for an unoccupied rider pawn, as actor doesn't usually exist on a client
         // But that's fine because there's nothing we need to check for an unoccupied rider pawn & we can always switch to it if we got here
         // If we let the switch go ahead, the rider pawn will get replicated to the owning net client as the player enters it on the server
-        NewVehiclePosition = VehicleBase.WeaponPawns[NewWeaponPawnIndex];
+        NewVehiclePosition = VehicleBase.WeaponPawns[F];
         bMustBeTankerToSwitch = ROVehicleWeaponPawn(NewVehiclePosition) != none && ROVehicleWeaponPawn(NewVehiclePosition).bMustBeTankCrew;
     }
 
