@@ -17,8 +17,6 @@ var DHPlayer                PlayerOwner;
 var rotator                 LocalRotation;
 var rotator                 LocalRotationRate;
 
-var Actor                   Surface;
-
 // Projector
 var DHConstructionProxyProjector            Projector;
 
@@ -245,8 +243,8 @@ function Tick(float DeltaTime)
     if (NewProxyError == ERROR_None)
     {
         // All other checks passed, set new proxy error to be the provisional
-        // position error. The order is important so that we prioritize return
-        // other more critical errors other than minor errors like "not enough
+        // position error. The order is important so that we prioritize
+        // other more critical errors rather than minor errors like "not enough
         // room" etc.
         NewProxyError = ProvisionalPositionError;
     }
@@ -280,6 +278,7 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
     local float GroundSlopeDegrees, AngleRadians, SquareLength;
     local DHConstruction.EConstructionError Error;
     local int i;
+    local TerrainInfo TI;
 
     if (PawnOwner == none || PlayerOwner == none || ConstructionClass == none)
     {
@@ -304,7 +303,7 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
         // We didn't hit anything, trace down to the ground in hopes of finding
         // something solid to rest on
         TraceStart = TraceEnd;
-        TraceEnd = TraceStart + vect(0, 0, -1) * class'DHUnits'.static.MetersToUnreal(2.0);; // TODO: get rid of magic number
+        TraceEnd = TraceStart + vect(0, 0, -1) * class'DHUnits'.static.MetersToUnreal(2.0); // TODO: get rid of magic number
 
         foreach TraceActors(class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
         {
@@ -336,6 +335,41 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
             Error = ERROR_NotOnTerrain;
         }
 
+        // Terrain alignment steps.
+        // Get the terrain info that's hit
+        if (ConstructionClass.default.bSnapToTerrain && HitActor.IsA('TerrainInfo'))
+        {
+            TI = TerrainInfo(HitActor);
+
+            // Transform location into the terrain's local space.
+            BaseLocation -= TI.Location;
+
+            // Snap X and Y to nearest vertex.
+            BaseLocation.X = Round(BaseLocation.X / TI.TerrainScale.X) * TI.TerrainScale.X;
+            BaseLocation.Y = Round(BaseLocation.Y / TI.TerrainScale.Y) * TI.TerrainScale.Y;
+
+            // Transform location back to world-space.
+            BaseLocation += TI.Location;
+
+            // Trace down to get the height at this vertex (no other way to query the height!)
+            TraceStart = BaseLocation;
+            TraceStart.Z += 100.0;    // TODO: Magic number used for now, in future find out the maximum terrain z-height programmatically.
+
+            TraceEnd = BaseLocation;
+            TraceEnd.Z -= 100.0;
+
+            TI = TerrainInfo(Trace(HitLocation, HitNormal, TraceEnd, TraceStart, false));
+
+            if (TI != none)
+            {
+                BaseLocation = HitLocation;
+            }
+            else
+            {
+                Error = ERROR_NoGround;
+            }
+        }
+
         if (!ConstructionClass.default.bShouldAlignToGround)
         {
             // Not aligning to ground, just use world up vector as the hit normal.
@@ -357,7 +391,6 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
 
         if (Error == ERROR_None)
         {
-            // TODO: test the anchor points
             // TODO: enable or disable this check
             GetAxes(rotator(Forward), X, Y, Z);
 
@@ -424,9 +457,16 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
             Error = ERROR_TooSteep;
         }
 
-        Forward = Normal(vector(PlayerOwner.CalcViewRotation));
-        Left = Forward cross HitNormalSum;
-        Forward = HitNormalSum cross Left;
+        if (ConstructionClass.default.bInheritsOwnerRotation)
+        {
+            Forward = Normal(vector(PlayerOwner.CalcViewRotation));
+            Left = Forward cross HitNormalSum;
+            Forward = HitNormalSum cross Left;
+        }
+        else
+        {
+            Forward = vect(1, 0, 0);
+        }
     }
 
     OutLocation = BaseLocation + (ConstructionClass.static.GetPlacementOffset() << rotator(Forward));

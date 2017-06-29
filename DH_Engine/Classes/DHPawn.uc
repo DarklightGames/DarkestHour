@@ -50,8 +50,10 @@ var     bool                bCombatSpawned;    // indicates the pawn was spawned
 
 // Construction
 var     DHConstructionProxy ConstructionProxy;
+
+// Supply
 var     array<DHConstructionSupplyAttachment> TouchingSupplyAttachments;
-var     int                 SupplyCount;
+var     int                 TouchingSupplyCount;
 
 // Armored vehicle locking
 var     DHArmoredVehicle    CrewedLockedVehicle; // a locked armored vehicle that this player is allowed to enter
@@ -113,6 +115,9 @@ var     int                 BurnTimeLeft;                  // number of seconds 
 var     float               LastBurnTime;                  // last time we did fire damage to the Pawn
 var     Pawn                FireStarter;                   // who set a player on fire
 
+var     float   PokeTerrainRadius;
+var     float   PokeTerrainDepth;
+
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -121,7 +126,7 @@ replication
 
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        SupplyCount, bInLockedVehicle;
+        TouchingSupplyCount, bInLockedVehicle;
 
     // Variables the server will replicate to all clients except the one that owns this actor
     reliable if (!bNetOwner && bNetDirty && Role == ROLE_Authority)
@@ -291,17 +296,17 @@ simulated function Tick(float DeltaTime)
         // no supplies around.
         if (TouchingSupplyAttachments.Length == 0)
         {
-            SupplyCount = -1;
+            TouchingSupplyCount = -1;
         }
         else
         {
-            SupplyCount = 0;
+            TouchingSupplyCount = 0;
 
             for (i = 0; i < TouchingSupplyAttachments.Length; ++i)
             {
                 if (TouchingSupplyAttachments[i] != none)
                 {
-                    SupplyCount += TouchingSupplyAttachments[i].GetSupplyCount();
+                    TouchingSupplyCount += TouchingSupplyAttachments[i].GetSupplyCount();
                 }
             }
         }
@@ -4740,9 +4745,16 @@ simulated function bool CanCrouchTransition()
 
 simulated function LeanRight()
 {
-    if (ConstructionProxy != none)
+    if (Level.NetMode != NM_DedicatedServer && ConstructionProxy != none)
     {
-        ConstructionProxy.LocalRotationRate.Yaw = ConstructionProxy.ConstructionClass.default.LocalRotationRate;
+        if (ConstructionProxy.ConstructionClass.default.bSnapRotation)
+        {
+            ConstructionProxy.LocalRotation.Yaw += ConstructionProxy.ConstructionClass.default.RotationSnapAngle;
+        }
+        else
+        {
+            ConstructionProxy.LocalRotationRate.Yaw = ConstructionProxy.ConstructionClass.default.LocalRotationRate;
+        }
     }
     else if (TraceWall(16384, 64.0) || bLeaningLeft || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
     {
@@ -4770,7 +4782,14 @@ simulated function LeanLeft()
 {
     if (Level.NetMode != NM_DedicatedServer && ConstructionProxy != none)
     {
-        ConstructionProxy.LocalRotationRate.Yaw = -ConstructionProxy.ConstructionClass.default.LocalRotationRate;
+        if (ConstructionProxy.ConstructionClass.default.bSnapRotation)
+        {
+            ConstructionProxy.LocalRotation.Yaw -= ConstructionProxy.ConstructionClass.default.RotationSnapAngle;
+        }
+        else
+        {
+            ConstructionProxy.LocalRotationRate.Yaw = -ConstructionProxy.ConstructionClass.default.LocalRotationRate;
+        }
     }
     else if (TraceWall(-16384, 64.0) || bLeaningRight || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
     {
@@ -6292,6 +6311,8 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vecto
         SupplyCost -= SuppliesToUse;
     }
 
+    // TODO: the controller shouldn't own the spawn, it should be whatever it's "attached" to!
+
     C = Spawn(ConstructionClass, Controller,, L, R);
 
     if (C != none)
@@ -6304,7 +6325,7 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vecto
 
 simulated function bool IsInRangeOfSupplyCache()
 {
-    return SupplyCount >= 0;
+    return TouchingSupplyCount >= 0;
 }
 
 // Overridden to fix an accessed none that could happen if Weapon was none.
@@ -6503,8 +6524,6 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
             {
                 if (WeaponAttachment.WA_BayonetFire != '')
                 {
-                    Log("okay" @ WeaponAttachment.WA_Fire);
-
                     WeaponAttachment.PlayAnim(WeaponAttachment.WA_BayonetFire);
                 }
             }
@@ -6512,8 +6531,6 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
             {
                 if (WeaponAttachment.WA_Fire != '')
                 {
-                    Log("cool" @ WeaponAttachment.WA_Fire);
-
                     WeaponAttachment.PlayAnim(WeaponAttachment.WA_Fire);
                 }
             }
@@ -6521,6 +6538,16 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
     }
 
     IdleTime = Level.TimeSeconds;
+}
+
+exec function PokeRadius(int R)
+{
+    PokeTerrainRadius = R;
+}
+
+exec function PokeDepth(int D)
+{
+    PokeTerrainDepth = D;
 }
 
 defaultproperties
@@ -6648,4 +6675,7 @@ defaultproperties
     LimpAnims(5)=""
     LimpAnims(6)=""
     LimpAnims(7)=""
+
+    PokeTerrainRadius=8
+    PokeTerrainDepth=32
 }

@@ -16,9 +16,7 @@ defaultproperties
     bShouldAlignToGround=false
     MenuName="Sandbags (Crescent)"
     CollisionHeight=100
-    CollisionRadius=90
-    SupplyCost=150
-//    UV2Mode=UVM_MacroTexture
-//    UV2Texture=Texture'DH_Construction_tex.Sandbags.sandbags_01_AO'
+    CollisionRadius=150
+    SupplyCost=200
     BrokenEmitterClass=class'DHConstruction_Sandbags_BrokenEmitter'
 }

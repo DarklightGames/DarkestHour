@@ -25,6 +25,7 @@ enum EConstructionError
     ERROR_TeamLimit,            // Limit reached for this type of construction
     ERROR_NoSupplies,           // Not within range of any supply caches
     ERROR_InsufficientSupply,   // Not enough supplies to build this construction
+    ERROR_BadSurface,           // Cannot construct on this surface type
     ERROR_RestrictedType,       // Restricted construction type (can't build on this map!)
     ERROR_Other
 };
@@ -55,10 +56,21 @@ var     bool    bCanPlaceIndoors;
 var     float   IndoorsCeilingHeightInMeters;
 var     bool    bCanOnlyPlaceOnTerrain;
 var     float   GroundSlopeMaxInDegrees;
+var     bool    bSnapRotation;
+var     int     RotationSnapAngle;
 var     rotator StartRotationMin;
 var     rotator StartRotationMax;
 var     int     LocalRotationRate;
+var     bool    bInheritsOwnerRotation;         // If true, the base rotation of the placement (prior to local rotation) will be inherited from the owner.
 var     bool    bCanPlaceInObjective;
+var     bool    bSnapToTerrain;                 // If true, the origin of the placement (prior to the PlacementOffset) will coincide with the nearest terrain vertex during placement.
+var     bool    bPokesTerrain;                  // If true, terrain is poked when placed on terrain.
+
+var     bool                    bLimitSurfaceTypes; // If true, only allow placement on surfaces types in the SurfaceTypes array
+var     array<ESurfaceTypes>    SurfaceTypes;
+
+var     int     PokeTerrainRadius;
+var     int     PokeTerrainDepth;
 
 var     vector          PlacementOffset;        // 3D offset in the proxy's local-space during placement
 var     sound           PlacementSound;         // Sound to play when construction is first placed down
@@ -74,6 +86,10 @@ var     int     SupplyCost;                     // The amount of supply points t
 var     bool    bDestroyOnConstruction;         // If true, this actor will be destroyed after being fully constructed
 var     int     Progress;                       // The current count of progress
 var     int     ProgressMax;                    // The amount of construction points required to be built
+
+// Stagnation
+var     bool    bCanDieOfStagnation;            // If true, this construction will automatically destroy if no progress has been made for the amount of seconds specified in StagnationLifespan
+var     float   StagnationLifespan;
 
 // Tear-down
 var     bool    bCanBeTornDown;                 // Whether or not players can
@@ -187,6 +203,29 @@ simulated function PostBeginPlay()
     {
         Warn("Unable to locate manager!");
     }
+
+    if (bPokesTerrain)
+    {
+        PokeTerrain(PokeTerrainRadius, PokeTerrainDepth);
+    }
+}
+
+simulated function PokeTerrain(float Radius, float Depth)
+{
+    local TerrainInfo TI;
+    local vector HitLocation, HitNormal, TraceEnd, TraceStart;
+
+    // TODO: trace down, where we at boy
+    TraceStart = Location;
+    TraceStart.Z += 1000.0;
+
+    TraceEnd = Location;
+    TraceEnd.Z -= 1000.0;
+
+    foreach TraceActors(class'TerrainInfo', TI, HitLocation, HitNormal, TraceEnd, TraceStart)
+    {
+        TI.PokeTerrain(HitLocation, Radius, Depth);
+    }
 }
 
 simulated static function DHConstructionManager FindConstructionManager(LevelInfo Level)
@@ -246,6 +285,12 @@ simulated event Destroyed()
         Manager.Unregister(self);
     }
 
+    if (bPokesTerrain)
+    {
+        // TODO: unpoke terrain
+        PokeTerrain(PokeTerrainRadius, -PokeTerrainDepth);
+    }
+
     super.Destroyed();
 }
 
@@ -295,6 +340,11 @@ auto simulated state Constructing
                     break;
                 }
             }
+        }
+
+        if (bCanDieOfStagnation)
+        {
+            Lifespan = StagnationLifespan;
         }
     }
 
@@ -368,6 +418,9 @@ simulated state Constructed
 Begin:
     if (Role == ROLE_Authority)
     {
+        // Reset lifespan (so that we don't die of stagnation)
+        Lifespan = 0;
+
         OnConstructed();
 
         if (bDestroyOnConstruction)
@@ -515,7 +568,7 @@ function static EConstructionError GetPlayerError(DHPlayer PC, optional out Obje
         return ERROR_Fatal;
     }
 
-    if (P.SupplyCount < default.SupplyCost)
+    if (default.SupplyCost > 0 && P.TouchingSupplyCount < default.SupplyCost)
     {
         return ERROR_InsufficientSupply;
     }
@@ -705,6 +758,14 @@ defaultproperties
     PlacementSoundRadius=60.0
     PlacementSoundVolume=4.0
     IndoorsCeilingHeightInMeters=10.0
+    PokeTerrainRadius=1
+    PokeTerrainDepth=32
+    RotationSnapAngle=16384
+    bInheritsOwnerRotation=true
+
+    // Stagnation
+    bCanDieOfStagnation=true
+    StagnationLifespan=120
 
     LocalRotationRate=32768
 

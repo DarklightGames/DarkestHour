@@ -37,27 +37,10 @@ function static class<ROVehicle> GetVehicleClass(int TeamIndex, DH_LevelInfo LI)
     return none;
 }
 
-function UpdateAppearance()
-{
-    SetDrawType(DT_Mesh);
-    LinkMesh(VehicleClass.default.Mesh);
-    SetCollisionSize(VehicleClass.default.CollisionRadius, VehicleClass.default.CollisionHeight);
-}
-
-function static EConstructionError GetPlayerError(DHPlayer PC, optional out Object OptionalObject)
-{
-    if (GetVehicleClass(PC.GetTeamNum(),  PC.GetLevelInfo()) == none)
-    {
-        return ERROR_Fatal;
-    }
-
-    return super.GetPlayerError(PC, OptionalObject);
-}
-
 defaultproperties
 {
     Stages(0)=(Progress=0)
     ProgressMax=18
     PlacementOffset=(Z=30.0)
-    SupplyCost=750
+    SupplyCost=1000
 }

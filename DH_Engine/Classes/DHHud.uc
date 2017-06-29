@@ -1037,7 +1037,7 @@ function DrawSupplyCount(Canvas C)
 
     if (PRI.IsInSquad() && P.IsInRangeOfSupplyCache())
     {
-        S = P.SupplyCount @ "Supplies";
+        S = P.TouchingSupplyCount @ "Supplies";
         C.TextSize(S, XL, YL);
         C.SetDrawColor(255, 255, 255, 255);
         C.Font = C.TinyFont;

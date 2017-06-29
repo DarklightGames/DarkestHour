@@ -104,9 +104,9 @@ function static string GetMenuName(DHPlayer PC)
 
 function UpdateAppearance()
 {
-    // TODO: set the appearance to whatever the base of the vehicle is
     SetDrawType(DT_Mesh);
     LinkMesh(VehicleClass.default.Mesh);
+    SetCollisionSize(VehicleClass.default.CollisionRadius, VehicleClass.default.CollisionHeight);
 }
 
 function static GetCollisionSize(int TeamIndex, DH_LevelInfo LI, out float NewRadius, out float NewHeight)
@@ -130,6 +130,16 @@ function static GetCollisionSize(int TeamIndex, DH_LevelInfo LI, out float NewRa
 function static class<ROVehicle> GetVehicleClass(int TeamIndex, DH_LevelInfo LI)
 {
     return default.VehicleClass;
+}
+
+function static EConstructionError GetPlayerError(DHPlayer PC, optional out Object OptionalObject)
+{
+    if (GetVehicleClass(PC.GetTeamNum(), PC.GetLevelInfo()) == none)
+    {
+        return ERROR_Fatal;
+    }
+
+    return super.GetPlayerError(PC, OptionalObject);
 }
 
 defaultproperties

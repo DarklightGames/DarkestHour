@@ -30,17 +30,10 @@ function static class<ROVehicle> GetVehicleClass(int TeamIndex, DH_LevelInfo LI)
     }
 }
 
-function UpdateAppearance()
-{
-    SetDrawType(DT_Mesh);
-    LinkMesh(VehicleClass.default.Mesh);
-    SetCollisionSize(VehicleClass.default.CollisionRadius, VehicleClass.default.CollisionHeight);
-}
-
 defaultproperties
 {
     Stages(0)=(Progress=0)
     ProgressMax=12
     PlacementOffset=(Z=24.0)
-    SupplyCost=500
+    SupplyCost=750
 }

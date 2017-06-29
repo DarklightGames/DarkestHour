@@ -60,7 +60,7 @@ defaultproperties
 {
     MenuName="Supply Cache"
     SupplyCost=250
-    StaticMesh=StaticMesh'DH_Military_stc.Ammo.cratepile1'
+    StaticMesh=StaticMesh'DH_Military_stc.Ammo.cratepile3'
     StaticMeshes(0)=StaticMesh'DH_Military_stc.Ammo.cratepile1'
     StaticMeshes(1)=StaticMesh'DH_Military_stc.Ammo.cratepile2'
     StaticMeshes(2)=StaticMesh'DH_Military_stc.Ammo.cratepile3'

@@ -863,5 +863,8 @@ defaultproperties
     ConstructionClassNames(7)="DH_Construction.DHConstruction_Sandbags_Bunker"
     ConstructionClassNames(8)="DH_Construction.DHConstruction_ATGun_Medium"
     ConstructionClassNames(9)="DH_Construction.DHConstruction_ATGun_Heavy"
+    ConstructionClassNames(10)="DH_Construction.DHConstruction_AAGun_Light"
+    ConstructionClassNames(11)="DH_Construction.DHConstruction_Foxhole"
 }
+
 
