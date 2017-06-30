@@ -148,7 +148,7 @@ defaultproperties
     ExitPositions(0)=(X=57.0,Y=-132.0,Z=25.0)  // driver
     ExitPositions(1)=(X=65.0,Y=137.0,Z=25.0)   // front passenger
     CenterSpringForce="SpringONSSRV"
-    VehicleNameString="GMC 2.5 Ton Truck"
+    VehicleNameString="GMC CCKW"
     MaxDesireability=0.12
     FlagBone="Mg_placement"
     FlagRotation=(Yaw=32768)

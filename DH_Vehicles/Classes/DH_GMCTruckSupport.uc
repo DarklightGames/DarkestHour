@@ -7,6 +7,7 @@ class DH_GMCTruckSupport extends DH_GMCTruck;
 
 defaultproperties
 {
+    VehicleNameString="Supply GMC CCKW"
     ResupplyAttachBone="supply"
     VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_Military_stc.Ammo.CratePile3_Dark',AttachBone="Deco") // decorative only representation of resupply crates
     PassengerPawns(1)=(AttachBone="passenger_l_5",DrivePos=(X=8.0,Y=0.0,Z=5.0),DriveAnim="VHalftrack_Rider4_idle")

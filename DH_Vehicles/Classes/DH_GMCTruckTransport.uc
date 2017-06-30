@@ -7,6 +7,7 @@ class DH_GMCTruckTransport extends DH_GMCTruck;
 
 defaultproperties
 {
+    VehicleNameString="Transport GMC CCKW"
     PassengerPawns(1)=(AttachBone="passenger_l_1",DrivePos=(X=8.0,Y=0.0,Z=5.0),DriveAnim="VHalftrack_Rider2_idle")
     PassengerPawns(2)=(AttachBone="passenger_l_3",DrivePos=(X=8.0,Y=0.0,Z=5.0),DriveAnim="VHalftrack_Rider3_idle")
     PassengerPawns(3)=(AttachBone="passenger_l_5",DrivePos=(X=8.0,Y=0.0,Z=5.0),DriveAnim="VHalftrack_Rider4_idle")
