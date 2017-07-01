@@ -18,21 +18,17 @@ simulated function Tick(float DeltaTime)
 // Modified to allow human to kick bot off a gun (also removes stuff not relevant to an AT gun)
 function bool TryToDrive(Pawn P)
 {
-    local VehicleWeaponPawn CannonPawn;
-
     // Deny entry if gun is destroyed, or if player is on fire or reloading a weapon (plus several very obscure other reasons)
     if (Health <= 0 || P == none || (DHPawn(P) != none && DHPawn(P).bOnFire) || (P.Weapon != none && P.Weapon.IsInState('Reloading')) ||
         P.Controller == none || !P.Controller.bIsPlayer || P.DrivenVehicle != none || P.IsA('Vehicle') || bNonHumanControl || !Level.Game.CanEnterVehicle(self, P) ||
-        Cannon == none || Cannon.WeaponPawn == none) // added to ensure we can get a CannonPawn reference
+        WeaponPawns.Length == 0 || WeaponPawns[0] == none)
     {
         return false;
     }
 
-    CannonPawn = Cannon.WeaponPawn;
-
     // Deny entry to enemy gun
     if ((bTeamLocked && P.GetTeamNum() != VehicleTeam) ||
-        (!bTeamLocked && CannonPawn.Driver != none && P.GetTeamNum() != CannonPawn.Driver.GetTeamNum())) // if gun not team locked, check enemy player isn't already manning it
+        (!bTeamLocked && WeaponPawns[0].Driver != none && P.GetTeamNum() != WeaponPawns[0].Driver.GetTeamNum())) // if gun not team locked, check enemy player isn't already manning it
     {
         DisplayVehicleMessage(1, P); // can't use enemy gun
 
@@ -40,12 +36,12 @@ function bool TryToDrive(Pawn P)
     }
 
     // The gun is already manned
-    if (CannonPawn.Driver != none)
+    if (WeaponPawns[0].Driver != none)
     {
         // If a human player wants to enter a gun manned by a bot, kick the bot off the gun
-        if (!CannonPawn.IsHumanControlled() && P.IsHumanControlled())
+        if (!WeaponPawns[0].IsHumanControlled() && P.IsHumanControlled())
         {
-            CannonPawn.KDriverLeave(true);
+            WeaponPawns[0].KDriverLeave(true);
         }
         // Otherwise deny entry to gun that's already manned
         else
@@ -70,18 +66,18 @@ function bool TryToDrive(Pawn P)
 // Overridden to bypass attaching as a driver and go straight to the gun
 function KDriverEnter(Pawn P)
 {
-    if (Cannon != none && Cannon.WeaponPawn != none)
+    if (WeaponPawns.Length > 0 && WeaponPawns[0] != none)
     {
-        Cannon.WeaponPawn.KDriverEnter(P);
+        WeaponPawns[0].KDriverEnter(P);
     }
 }
 
 // Overridden to bypass attaching as a driver and go straight to the gun
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-    if (Cannon != none && Cannon.WeaponPawn != none)
+    if (WeaponPawns.Length > 0 && WeaponPawns[0] != none)
     {
-        Cannon.WeaponPawn.ClientKDriverEnter(PC);
+        WeaponPawns[0].ClientKDriverEnter(PC);
     }
 }
 
