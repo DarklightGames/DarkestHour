@@ -39,10 +39,15 @@ var     bool    bUseDriverHeadBoneCam; // use the driver's head bone for the cam
 //  ************ ACTOR INITIALISATION, DESTRUCTION & KEY ENGINE EVENTS  ***********  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+// Emptied out as the Super in ROVehicleWeaponPawn only tries to spawn a non-existent GunClass
+function BeginPlay()
+{
+}
+
 // Modified to set bTearOff to true on a server, which stops this rider pawn being replicated to clients (until entered, when we unset bTearOff)
 simulated function PostBeginPlay()
 {
-    super(Vehicle).PostBeginPlay(); // skip over Super in DHVehicleWeaponPawn as it contains nothing relevant to a passenger
+    super.PostBeginPlay();
 
     if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
     {
@@ -284,7 +289,6 @@ function float ModifyThreat(float Current, Pawn Threat)
 }
 
 // Functions emptied out as a passenger pawn has no VehicleWeapon:
-function BeginPlay(); // the Super only tries to spawn the GunClass, which is none
 simulated function InitializeVehicleWeapon();
 simulated function InitializeVehicleAndWeapon();
 function bool CanFire() { return false; }
