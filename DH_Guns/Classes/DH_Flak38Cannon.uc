@@ -102,8 +102,8 @@ defaultproperties
     CustomPitchDownLimit=64990
 
     // Cannon ammo
-    SecondaryProjectileClass=class'DH_Vehicles.DH_Flak38CannonShellAP'
-    TertiaryProjectileClass=class'DH_Vehicles.DH_Flak38CannonShellHE'
+    SecondaryProjectileClass=class'DH_Guns.DH_Flak38CannonShellAP'
+    TertiaryProjectileClass=class'DH_Guns.DH_Flak38CannonShellHE'
     AltFireProjectileClass=none
     NumPrimaryMags=12
     NumSecondaryMags=4

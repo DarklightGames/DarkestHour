@@ -8,6 +8,14 @@ class DH_Sdkfz105Transport extends DHVehicle;
 #exec OBJ LOAD FILE=..\Animations\DH_SdKfz10_5_anm.ukx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc4.usx
 
+// Modified to set cannon pawn class, as can't be done in default properties, since as DH_Guns code package isn't compiled until after this package
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    PassengerWeapons[1].WeaponPawnClass = class<VehicleWeaponPawn>(DynamicLoadObject("DH_Guns.DH_Sdkfz105CannonPawn", class'Class'));
+}
+
 // Modified to match the windscreen camo to vehicle's 'cabin' texture
 simulated function SpawnVehicleAttachments()
 {
@@ -96,7 +104,7 @@ defaultproperties
     RevMeterScale=4000.0
     ExhaustPipes(0)=(ExhaustPosition=(X=70.0,Y=-65.0,Z=-5.0),ExhaustRotation=(Pitch=-7000,Yaw=-16364))
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz105PassengerPawn',WeaponBone="Body")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz105CannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponBone="Turret_placement")
     FirstRiderPositionIndex=0
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
     StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'

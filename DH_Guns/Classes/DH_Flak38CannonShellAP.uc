@@ -3,10 +3,9 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_Flak38CannonShellHE extends DH_Sdkfz2341CannonShellHE;
+class DH_Flak38CannonShellAP extends DH_Sdkfz2341CannonShell;
 
 defaultproperties
 {
-    ShellImpactDamage=class'DH_Vehicles.DH_Flak38CannonShellDamageAP'
-    MyDamageType=class'DH_Engine.DHShellHE20mmATDamageType'
+    ShellImpactDamage=class'DH_Guns.DH_Flak38CannonShellDamageAP'
 }

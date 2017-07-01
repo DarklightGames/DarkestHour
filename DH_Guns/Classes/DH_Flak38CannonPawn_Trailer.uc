@@ -3,9 +3,9 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_Flak38CannonShellAP extends DH_Sdkfz2341CannonShell;
+class DH_Flak38CannonPawn_Trailer extends DH_Flak38CannonPawn;
 
 defaultproperties
 {
-    ShellImpactDamage=class'DH_Vehicles.DH_Flak38CannonShellDamageAP'
+    GunClass=class'DH_Guns.DH_Flak38Cannon_Trailer'
 }

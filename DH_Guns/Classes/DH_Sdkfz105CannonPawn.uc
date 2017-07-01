@@ -13,6 +13,6 @@ simulated function SwitchWeapon(byte F)
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_Sdkfz105Cannon'
-    PositionInArray=1
+    GunClass=class'DH_Guns.DH_Sdkfz105Cannon'
+    PositionInArray=1 // because front seat passenger is passenger pawn zero in this vehicle
 }
