@@ -490,7 +490,7 @@ function bool TryToDrive(Pawn P)
 
 // Modified to try to start a reload or resume any previously paused reload if weapon isn't loaded, & to cancel any CheckReset timer as vehicle is no longer empty
 // Also to use InitialPositionIndex instead of assuming start position zero, & to record if player has binoculars
-// And if weapon is on an armored vehicle, we tell that vehicle to check vehicle lock setup as a new player has entered
+// And we tell our vehicle base to check & update any vehicle lock settings as a new player has entered
 function KDriverEnter(Pawn P)
 {
     if (bMultiPosition)
@@ -505,9 +505,9 @@ function KDriverEnter(Pawn P)
     {
         VehicleBase.ResetTime = Level.TimeSeconds - 1.0; // cancel any CheckReset timer as vehicle now occupied
 
-        if (DHArmoredVehicle(VehicleBase) != none)
+        if (VehicleBase.IsA('DHVehicle'))
         {
-            DHArmoredVehicle(VehicleBase).CheckVehicleLockOnPlayerEntering(self);
+            DHVehicle(VehicleBase).UpdateVehicleLockOnPlayerEntering(self);
         }
     }
 

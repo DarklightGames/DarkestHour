@@ -878,6 +878,7 @@ function bool TryToDrive(Pawn P)
 
 // Modified to avoid playing engine start sound when entering vehicle, but to get a bot to start the engine on entering
 // Also to set bDriverAlreadyEntered as a much simpler alternative to the Timer() in ROWheeledVehicle, & to remove some redundancy from the Supers
+// And to check & update any vehicle lock settings as a new player has entered
 function KDriverEnter(Pawn P)
 {
     bDriverAlreadyEntered = true;
@@ -894,6 +895,8 @@ function KDriverEnter(Pawn P)
     super(Vehicle).KDriverEnter(P); // need to skip over Super from ROVehicle
 
     Driver.bSetPCRotOnPossess = false; // so when player gets out he'll be facing the same direction as he was inside the vehicle
+
+    UpdateVehicleLockOnPlayerEntering(self);
 }
 
 // Modified to add an engine start/stop hint & to enforce bDesiredBehindView = false (avoids a view rotation bug)
@@ -970,6 +973,24 @@ simulated event DrivingStatusChanged()
     else if (Level.NetMode != NM_DedicatedServer && HasAnim(BeginningIdleAnim))
     {
         PlayAnim(BeginningIdleAnim);
+    }
+}
+
+// New function triggered when a player enters a vehicle, to check & update any vehicle locked settings
+// Here we just make sure the player's bInLockedVehicle flag is false, so his vehicle HUD doesn't display a locked vehicle icon
+// The real vehicle locking functionality is implemented in the DHArmoredVehicle subclass
+function UpdateVehicleLockOnPlayerEntering(Vehicle EntryPosition)
+{
+    local DHPawn Player;
+
+    if (EntryPosition != none)
+    {
+        Player = DHPawn(EntryPosition.Driver);
+
+        if (Player != none)
+        {
+            Player.SetInLockedVehicle(false);
+        }
     }
 }
 

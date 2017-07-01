@@ -82,6 +82,8 @@ function KDriverEnter(Pawn P)
     super(Vehicle).KDriverEnter(P);
 
     Driver.bSetPCRotOnPossess = false;
+
+    UpdateVehicleLockOnPlayerEntering(self);
 }
 
 // Modified to set PPI to match DPI instead of usual InitialPositionIndex, because we enter in the position the boat has been left, i.e. ramp up or down

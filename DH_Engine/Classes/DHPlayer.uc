@@ -2947,10 +2947,10 @@ simulated function SetLockTankOnEntry(bool bEnabled)
                 }
             }
 
-            // Player hasn't just entered vehicle, but the functionality is identical & CheckVehicleLockOnPlayerEntering() will do what we need
+            // Player hasn't just entered vehicle, but the functionality is identical & UpdateVehicleLockOnPlayerEntering() will do what we need
             if (AV != none && !AV.bVehicleLocked)
             {
-                AV.CheckVehicleLockOnPlayerEntering(Vehicle(Pawn));
+                AV.UpdateVehicleLockOnPlayerEntering(Vehicle(Pawn));
             }
         }
     }

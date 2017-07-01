@@ -414,14 +414,6 @@ function Vehicle FindEntryVehicle(Pawn P)
     return super.FindEntryVehicle(P);
 }
 
-// Modified to call handles vehicle locking functionality when a player enters
-function KDriverEnter(Pawn P)
-{
-    super.KDriverEnter(P);
-
-    CheckVehicleLockOnPlayerEntering(self);
-}
-
 // Modified to handle optional camera offset for initial overlay position
 simulated function ClientKDriverEnter(PlayerController PC)
 {
@@ -599,11 +591,11 @@ function UpdatePlayersLockedVehicleSettings(Vehicle PlayersVehiclePosition)
     }
 }
 
-// New function triggered when a player enters an armored vehicle, so it can check if any changes are required to its vehicle locked status
+// Modified to handle vehicle locking functionality for a tank or similar armored vehicle
 // If vehicle is locked & the new player has entered a tank position, it makes sure he is registered as allowed to use the vehicle
 // If vehicle is locked but has an unlock timer running, meaning its crew had exited, if new player is an allowed crewman the timer is cancelled
 // If vehicle isn't locked but new crewman has the 'lock tank on entry' option enabled & is a tanker, it attempts to lock the vehicle automatically
-function CheckVehicleLockOnPlayerEntering(Vehicle EntryPosition)
+function UpdateVehicleLockOnPlayerEntering(Vehicle EntryPosition)
 {
     local DHPawn            Player;
     local VehicleWeaponPawn WP;

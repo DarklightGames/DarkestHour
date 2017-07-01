@@ -189,9 +189,9 @@ function KDriverEnter(Pawn P)
     {
         VehicleBase.ResetTime = Level.TimeSeconds - 1.0; // cancel any CheckReset timer as vehicle now occupied
 
-        if (DHArmoredVehicle(VehicleBase) != none)
+        if (VehicleBase.IsA('DHVehicle'))
         {
-            DHArmoredVehicle(VehicleBase).CheckVehicleLockOnPlayerEntering(self);
+            DHVehicle(VehicleBase).UpdateVehicleLockOnPlayerEntering(self);
         }
     }
 }
