@@ -15,6 +15,12 @@ simulated function Tick(float DeltaTime)
     Disable('Tick');
 }
 
+// Modified so we always use this actor & rely on its modified TryToDrive() function to control entry to the gun
+function Vehicle FindEntryVehicle(Pawn P)
+{
+    return self;
+}
+
 // Modified to allow human to kick bot off a gun (also removes stuff not relevant to an AT gun)
 function bool TryToDrive(Pawn P)
 {
