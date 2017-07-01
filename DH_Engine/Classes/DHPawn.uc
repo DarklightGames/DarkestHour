@@ -982,49 +982,26 @@ function SetCrewedLockedVehicle(DHArmoredVehicle NewLockedVehicleRef)
         {
             OldLockedVehicle.CheckUnlockVehicle();
         }
-        // Player's locked vehicle just became unlocked as it was left without tank crew for too long, so flag we need to notify the player
+        // Player's locked vehicle just became unlocked as it was left without tank crew for too long, so notify the player
         else if (OldLockedVehicle.UnlockVehicleTime != 0.0 && Level.TimeSeconds > OldLockedVehicle.UnlockVehicleTime)
         {
             if (DrivenVehicle != none)
             {
-                DrivenVehicle.ReceiveLocalizedMessage(class'DHVehicleMessage', 7); // "You left your locked vehicle for too long and it's now unlocked"
+                DrivenVehicle.ReceiveLocalizedMessage(class'DHVehicleMessage', 23); // "You left your locked vehicle for too long and it's now unlocked"
             }
             else
             {
-                ReceiveLocalizedMessage(class'DHVehicleMessage', 7); // "You left your locked vehicle for too long and it's now unlocked"
+                ReceiveLocalizedMessage(class'DHVehicleMessage', 23); // "You left your locked vehicle for too long and it's now unlocked"
             }
         }
-    }
-
-    // If player is in a vehicle, update the bInLockedVehicle flag, which just tells a net client to display a locked vehicle icon on the vehicle HUD
-    // We don't waste replication updating this to false if player isn't in a vehicle as it's only used by a vehicle HUD & when on foot it's irrelevant
-    // So all we need to do is make sure it's updated if the player enters a vehicle (any vehicle), & also if the vehicle's lock is toggled
-    if (DrivenVehicle != none)
-    {
-        SetInLockedVehicle();
     }
 }
 
 // New function to set player's bInLockedVehicle flag, which replicates to net clients so their vehicle HUD knows whether to display a locked vehicle icon
-// Can determine the value, but can also be passed a known value using bUsePassedNewStatus option, e.g. when player's existing vehicle becomes locked/unlocked
-function SetInLockedVehicle(optional bool bUsePassedNewStatus, optional bool bNewStatus)
+// Note we don't waste replication updating this to false if player isn't in a vehicle as it's only used by a vehicle HUD & when on foot it's irrelevant
+// So all we need to do is make sure it's updated if the player enters a vehicle (any vehicle), & also if the vehicle's lock is toggled
+function SetInLockedVehicle(bool bNewStatus)
 {
-    local DHArmoredVehicle AV;
-
-    if (!bUsePassedNewStatus)
-    {
-        if (VehicleWeaponPawn(DrivenVehicle) != none)
-        {
-            AV = DHArmoredVehicle(VehicleWeaponPawn(DrivenVehicle).VehicleBase);
-        }
-        else
-        {
-            AV = DHArmoredVehicle(DrivenVehicle);
-        }
-
-        bNewStatus = AV != none && AV.bVehicleLocked;
-    }
-
     bInLockedVehicle = bNewStatus;
 }
 

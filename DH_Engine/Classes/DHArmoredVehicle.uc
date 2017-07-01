@@ -405,7 +405,7 @@ function Vehicle FindEntryVehicle(Pawn P)
     {
         if (P != none && (P.GetTeamNum() == VehicleTeam || !bTeamLocked))
         {
-            DisplayVehicleMessage(9, P); // vehicle is on fire
+            DisplayVehicleMessage(5, P); // vehicle is on fire
         }
 
         return none;
@@ -487,15 +487,15 @@ simulated function bool CanExit()
     {
         if (DriverPositions.Length > UnbuttonedPositionIndex) // means it is possible to unbutton
         {
-            DisplayVehicleMessage(4,, true); // must unbutton the hatch
+            DisplayVehicleMessage(9,, true); // must unbutton the hatch
         }
         else if (MGun != none && MGun.WeaponPawn != none && MGun.WeaponPawn.DriverPositions.Length > MGun.WeaponPawn.UnbuttonedPositionIndex) // means it's possible to exit MG position
         {
-            DisplayVehicleMessage(11); // must exit through commander's or MG hatch
+            DisplayVehicleMessage(12); // must exit through commander's or MG hatch
         }
         else
         {
-            DisplayVehicleMessage(5); // must exit through commander's hatch
+            DisplayVehicleMessage(10); // must exit through commander's hatch
         }
 
         return false;
@@ -530,41 +530,71 @@ function ServerToggleVehicleLock()
 // New function to set whether an armored vehicle is locked (stopping new players from entering tank crew positions) or is unlocked
 function SetVehicleLocked(bool bNewLockedStatus)
 {
-    local VehicleWeaponPawn WP;
-    local DHPawn            DHP;
-    local Controller        C;
-    local int               i;
+    local Controller C;
+    local DHPawn     P;
+    local int        i;
 
     bVehicleLocked = bNewLockedStatus;
 
-    // If vehicle has been locked, go through all vehicle positions & register any tank crew as allowed crewmen (even if they are currently in non-tank crew positions)
-    if (bVehicleLocked)
+    // Go through all vehicle positions & update the locked vehicle settings for all occupants
+    UpdatePlayersLockedVehicleSettings(self);
+
+    for (i = 0; i < WeaponPawns.Length; ++i)
     {
-        if (DHPawn(Driver) != none)
-        {
-            DHPawn(Driver).SetCrewedLockedVehicle(self);
-        }
-
-        for (i = 0; i < WeaponPawns.Length; ++i)
-        {
-            WP = WeaponPawns[i];
-
-            if (WP != none && class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(WP) && DHPawn(WP.Driver) != none)
-            {
-                DHPawn(WP.Driver).SetCrewedLockedVehicle(self);
-            }
-        }
+        UpdatePlayersLockedVehicleSettings(WeaponPawns[i]);
     }
-    // Or if vehicle has been unlocked, find all 'allowed' crew & clear their locked vehicle reference
-    // This has to check players outside the vehicle, as they could just be temporarily out scouting etc
-    else
+
+    // If vehicle has been unlocked, we also need to check for any remaining 'allowed' crew who may be outside the vehicle & clear their locked vehicle reference
+    // Any players we find who are still registered as allowed crew must be out of the vehicle, as we've just cleared it for anyone in one of our vehicle positions
+    if (!bVehicleLocked)
     {
         for (C = Level.ControllerList; C != none; C = C.NextController)
         {
-            if (IsAnAllowedCrewman(C.Pawn, DHP))
+            if (IsAnAllowedCrewman(C.Pawn, P))
             {
-                DHP.SetCrewedLockedVehicle(none);
+                P.SetCrewedLockedVehicle(none);
             }
+        }
+    }
+}
+
+// New helper function to set a player's locked vehicle settings, base on whether their vehicle is locked or unlocked
+// Includes message to player to tell them that their vehicle has been locked/unlocked
+function UpdatePlayersLockedVehicleSettings(Vehicle PlayersVehiclePosition)
+{
+    local DHPawn P;
+
+    if (PlayersVehiclePosition != none)
+    {
+        P = DHPawn(PlayersVehiclePosition.Driver);
+    }
+
+    if (P != none)
+    {
+        // If player is a tank crew role, either set or clear the player's CrewedLockedVehicle reference
+        if (class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(PlayersVehiclePosition))
+        {
+            if (bVehicleLocked)
+            {
+                P.SetCrewedLockedVehicle(self);
+            }
+            else
+            {
+                P.SetCrewedLockedVehicle(none);
+            }
+        }
+
+        // Update player's bInLockedVehicle flag, so net client's vehicle HUD displays the locked vehicle icon correctly
+        P.SetInLockedVehicle(bVehicleLocked);
+
+        // Notify the player that the vehicle was just locked or unlocked
+        if (bVehicleLocked)
+        {
+            DisplayVehicleMessage(20, PlayersVehiclePosition); // "tank crew positions in this vehicle have now been locked"
+        }
+        else
+        {
+            DisplayVehicleMessage(21, PlayersVehiclePosition); // "tank crew positions in this vehicle have now been unlocked"
         }
     }
 }
@@ -645,8 +675,8 @@ function CheckVehicleLockOnPlayerEntering(Vehicle EntryPosition)
         }
     }
 
-    // Update DHPawn's bInLockedVehicle, so a net client's vehicle HUD knows whether to display a locked vehicle icon
-    Player.SetInLockedVehicle(true, bVehicleLocked);
+    // Update player's bInLockedVehicle flag, so a net client's vehicle HUD displays the locked vehicle icon correctly
+    Player.SetInLockedVehicle(bVehicleLocked);
 }
 
 // New function to check whether we need to set a timer to unlock a locked armored vehicle after a set period
@@ -728,46 +758,66 @@ function CancelAnyVehicleUnlockTimer()
 }
 
 // New helper function to check whether a player is allowed to lock or unlock an armored vehicle
-// Allowed if player is a tank crew role, he is the sole or most senior crewman (based on position in vehicle), & the vehicle can only be used by tank crew
-// He must also be in a tank crew position at the time, but this has already been checked elsewhere before calling this function, so we don't need to repeat
-// Note we use bDriving instead of Driver != none checks, as net client may not have Driver pawn if Driver is hidden because bDrawDriverInTP=false
+// If there is more than one human player in a tank crew position, only the most senior crewman is allowed to lock/unlock the vehicle
+// This is based on their position in the vehicle - any commander is most senior, then any driver, then any other crew (i.e. MG position)
 simulated function bool CanPlayerLockVehicle(Vehicle PlayersVehiclePosition)
 {
     local DHPlayer     PC;
     local DH_LevelInfo LI;
+    local int          FailMessageNumber;
 
-    // Not if the player isn't a tank crew role, or if the vehicle isn't for tank crew only
-    if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(PlayersVehiclePosition) || !bMustBeTankCommander)
-    {
-        return false;
-    }
+    FailMessageNumber = -1; // start with an invalid number, so later we know if a genuine failure has occured
 
-    // Not if the map has been set to disallow tank locking
     PC = DHPlayer(PlayersVehiclePosition.Controller);
 
     if (PC != none)
     {
         LI = PC.GetLevelInfo();
+    }
 
-        if (LI != none && LI.bDisableTankLocking)
+    // Not if the map has been set to disallow tank locking
+    if (LI != none && LI.bDisableTankLocking)
+    {
+        FailMessageNumber = 24; // this map doesn't allow vehicles to be locked
+    }
+    // Not if this armored vehicle isn't for tank crew only (very unlikely for an armored vehicle, but possible - perhaps for a scenario map)
+    else if (!bMustBeTankCommander)
+    {
+        FailMessageNumber = 25; // can't lock vehicle as it can be driven by non-tank crew roles
+    }
+    // Not if the player isn't a tank crew role
+    else if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(PlayersVehiclePosition))
+    {
+        FailMessageNumber = 26; // only tank crew roles can lock or unlock vehicle
+    }
+    // Not if the player isn't a tank crew role
+    else if (PlayersVehiclePosition.IsA('ROVehicleWeaponPawn') && !ROVehicleWeaponPawn(PlayersVehiclePosition).bMustBeTankCrew)
+    {
+        FailMessageNumber = 27; // can only lock or unlock vehicle if you are in a tank crew position
+    }
+    // Not if another human player is in the vehicle commander's position
+    else if (Cannon != none && Cannon.WeaponPawn != none && Cannon.WeaponPawn.PlayerReplicationInfo != none && !Cannon.WeaponPawn.PlayerReplicationInfo.bBot)
+    {
+        if (PlayersVehiclePosition != Cannon.WeaponPawn)
         {
-            return false;
+            FailMessageNumber = 28; // only the most senior crew position can lock or unlock vehicle
         }
     }
-
-    // If the vehicle has a commander, the player can only lock if he is that commander
-    if (Cannon != none && Cannon.WeaponPawn != none && Cannon.WeaponPawn.bDriving)
+    // Not if another human player is in the driver's 's position (& we already know our player isn't the commander)
+    else if (PlayerReplicationInfo != none && !PlayerReplicationInfo.bBot && PlayersVehiclePosition != self)
     {
-        return PlayersVehiclePosition == Cannon.WeaponPawn;
-    }
-    // Or if the vehicle has a driver, the player can only lock if he is that driver
-    else if (bDriving)
-    {
-        return PlayersVehiclePosition == self;
+        FailMessageNumber = 28; // only the most senior crew position can lock or unlock vehicle
     }
 
-    // Yes, because the player is a tank crewman in a crew position & there are no other crewmen who rank above him
-    // This should mean the player is in an MG position & there are no other crewmen in crew positions
+    // Player cannot lock/unlock vehicle, so give him a screen message to say why not
+    if (FailMessageNumber >= 0)
+    {
+        DisplayVehicleMessage(FailMessageNumber, PlayersVehiclePosition);
+
+        return false;
+    }
+
+    // Player can lock/unlock this vehicle -  he's a tank crewman in a crew position & there are no other crewmen who rank above him
     return true;
 }
 
@@ -814,7 +864,7 @@ function bool AreCrewPositionsLockedForPlayer(Pawn P, optional bool bNoMessageTo
         // PLayer is locked out of this vehicle's crew positions, so display screen message to notify him (unless flagged not to show message)
         if (!bNoMessageToPlayer)
         {
-            P.ReceiveLocalizedMessage(class'DHVehicleMessage', 6); // this vehicle has been locked by its crew
+            DisplayVehicleMessage(22, P); // this vehicle has been locked by its crew
         }
 
         return true;

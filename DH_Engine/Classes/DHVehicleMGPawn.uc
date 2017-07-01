@@ -208,7 +208,7 @@ simulated exec function ROManualReload()
 {
     if (bMustUnbuttonToReload && !CanReload() && VehWep != none && VehWep.ReloadState != RL_ReadyToFire)
     {
-        DisplayVehicleMessage(12,, true); // "You must unbutton the hatch [KEYBIND] to reload"
+        DisplayVehicleMessage(16,, true); // "You must unbutton the hatch [KEYBIND] to reload"
     }
 }
 
@@ -299,11 +299,11 @@ simulated function bool CanExit()
         {
             if (GetArmoredVehicleBase(AV) && AV.DriverPositions.Length > AV.UnbuttonedPositionIndex) // means driver has hatch
             {
-                DisplayVehicleMessage(10); // must exit through driver's or commander's hatch
+                DisplayVehicleMessage(11); // must exit through driver's or commander's hatch
             }
             else
             {
-                DisplayVehicleMessage(5); // must exit through commander's hatch
+                DisplayVehicleMessage(10); // must exit through commander's hatch
             }
         }
 

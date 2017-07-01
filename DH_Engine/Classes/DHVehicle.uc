@@ -738,11 +738,11 @@ function Vehicle FindEntryVehicle(Pawn P)
             }
             else if (FirstRiderPositionIndex < WeaponPawns.Length)
             {
-                DisplayVehicleMessage(8, P); // all rider positions full (if non-tanker tries to enter a tank that has rider positions)
+                DisplayVehicleMessage(3, P); // all rider positions full (if non-tanker tries to enter a tank that has rider positions)
             }
             else
             {
-                DisplayVehicleMessage(3, P); // can't ride on this vehicle (if non-tanker tries to enter a tank that doesn't have rider positions)
+                DisplayVehicleMessage(4, P); // can't ride on this vehicle (if non-tanker tries to enter a tank that doesn't have rider positions)
             }
         }
 
@@ -3049,7 +3049,7 @@ simulated event NotifySelected(Pawn User)
 }
 
 // New function, replacing RO's DenyEntry() function so we use the DH message class (also re-factored slightly to makes passed Pawn optional)
-function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool bPassController)
+simulated function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool bPassController)
 {
     if (P == none)
     {

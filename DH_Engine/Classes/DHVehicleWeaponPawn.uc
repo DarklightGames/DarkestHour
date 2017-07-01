@@ -1258,7 +1258,7 @@ simulated function bool CanExit()
     {
         if (DriverPositions.Length > UnbuttonedPositionIndex) // means it is possible to unbutton
         {
-            DisplayVehicleMessage(4,, true); // must unbutton the hatch
+            DisplayVehicleMessage(9,, true); // must unbutton the hatch
         }
 
         return false;
@@ -1587,7 +1587,7 @@ simulated exec function ToggleVehicleLock()
 {
     local DHArmoredVehicle AV;
 
-    if (bMustBeTankCrew && GetArmoredVehicleBase(AV) && (Role == ROLE_Authority || AV.CanPlayerLockVehicle(self)))
+    if (GetArmoredVehicleBase(AV) && (Role == ROLE_Authority || AV.CanPlayerLockVehicle(self)))
     {
         ServerToggleVehicleLock();
     }
@@ -1598,7 +1598,7 @@ function ServerToggleVehicleLock()
 {
     local DHArmoredVehicle AV;
 
-    if (bMustBeTankCrew && GetArmoredVehicleBase(AV) && AV.CanPlayerLockVehicle(self) && Role == ROLE_Authority)
+    if (GetArmoredVehicleBase(AV) && AV.CanPlayerLockVehicle(self) && Role == ROLE_Authority)
     {
         AV.SetVehicleLocked(!AV.bVehicleLocked);
     }
@@ -1706,7 +1706,7 @@ simulated function FixPCRotation(PlayerController PC)
 }
 
 // New function, replacing RO's DenyEntry() function so we use the DH message class (also re-factored slightly to makes passed Pawn optional)
-function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool bPassController)
+simulated function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool bPassController)
 {
     if (P == none)
     {

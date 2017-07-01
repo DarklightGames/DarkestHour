@@ -81,8 +81,8 @@ simulated function ClientKDriverEnter(PlayerController PC)
     }
 }
 
-function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool bPassController)
 // Modified to use a different AT cannon message class with some messages that are more appropriate to a gun
+simulated function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool bPassController)
 {
     if (P == none)
     {

@@ -303,8 +303,6 @@ simulated function bool CanReload() { return false; }
 function CheckResumeReloadingOnEntry();
 function float GetAmmoReloadState() { return 0.0; }
 function bool ResupplyAmmo() { return false; }
-simulated exec function ToggleVehicleLock();
-function ServerToggleVehicleLock();
 simulated event SetRotatingStatus(byte NewRotationStatus);
 simulated function ServerSetRotatingStatus(byte NewRotatingStatus);
 
