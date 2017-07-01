@@ -15,6 +15,7 @@ var localized string ExitCommandersHatch;
 var localized string ExitDriverOrComHatch;
 var localized string ExitCommandersOrMGHatch;
 var localized string UnbuttonToReload;
+var localized string CantFindExitPosition;
 
 var localized string VehicleLocked;
 var localized string AbandonedVehicleUnlocked;
@@ -64,6 +65,9 @@ static function string GetString(optional int Switch, optional PlayerReplication
         case 12:
             S = default.UnbuttonToReload;
             break;
+        case 13:
+            S = default.CantFindExitPosition;
+            break;
         default:
             break;
     }
@@ -88,6 +92,7 @@ defaultproperties
     ExitCommandersHatch="You must exit through commander's hatch"
     ExitDriverOrComHatch="Exit through driver's or commander's hatch"
     ExitCommandersOrMGHatch="Exit through commander's or MG hatch"
+    CantFindExitPosition="No exit location can be found"
     UnbuttonToReload="You must unbutton the hatch [%NEXTWEAPON%] to reload"
     VehicleLocked="This vehicle has been locked by its crew"
     AbandonedVehicleUnlocked="You left your locked vehicle for too long and it's now unlocked"

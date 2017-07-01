@@ -6,19 +6,6 @@
 class DHATGunCannonPawn extends DHVehicleCannonPawn
     abstract;
 
-// Modified to show player a message if no valid exit can be found
-function bool KDriverLeave(bool bForceLeave)
-{
-    if (super.KDriverLeave(bForceLeave))
-    {
-        return true;
-    }
-
-    ReceiveLocalizedMessage(class'DHATCannonMessage', 4); // no exit can be found
-
-    return false;
-}
-
 // Emptied out so we just use plain RO rotate/pitch sounds & ignore DHVehicleCannonPawn's manual/powered sounds
 simulated function SetManualTurret(bool bManual)
 {

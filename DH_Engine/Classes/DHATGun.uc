@@ -46,7 +46,7 @@ function bool TryToDrive(Pawn P)
         // Otherwise deny entry to gun that's already manned
         else
         {
-            DisplayVehicleMessage(3, P); // gun is crewed
+            DisplayVehicleMessage(2, P); // gun is already manned
 
             return false;
         }
@@ -81,8 +81,8 @@ simulated function ClientKDriverEnter(PlayerController PC)
     }
 }
 
-// Modified to use a different AT cannon message class
 function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool bPassController)
+// Modified to use a different AT cannon message class with some messages that are more appropriate to a gun
 {
     if (P == none)
     {

@@ -3,11 +3,8 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHATCannonMessage extends ROVehicleMessage
+class DHATCannonMessage extends DHVehicleMessage
     abstract;
-
-var localized string GunManned;
-var localized string NoExit;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -19,10 +16,8 @@ static function string GetString(optional int Switch, optional PlayerReplication
             return default.VehicleIsEnemy;
         case 2:
             return default.CannotEnter;
-        case 3:
-            return default.GunManned;
-        case 4:
-            return default.NoExit;
+        case 13:
+            return default.CantFindExitPosition;
         default:
             return "";
     }
@@ -30,9 +25,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
 
 defaultproperties
 {
-    NotQualified="You are not qualified to operate this gun"
+    NotQualified="Not qualified to operate this gun"
     VehicleIsEnemy="Cannot use an enemy gun"
-    CannotEnter="Cannot use this gun"
-    GunManned="The gun is fully crewed"
-    NoExit="No exit location can be found"
+    CannotEnter="The gun is already manned"
 }

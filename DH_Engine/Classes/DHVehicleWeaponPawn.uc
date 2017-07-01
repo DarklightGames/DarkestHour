@@ -931,6 +931,7 @@ function ServerChangeDriverPosition(byte F)
 // Modified to remove overlap with DriverDied(), moving common features into DriverLeft(), which gets called by both functions, & to remove some redundancy
 // Also to prevent exit if player is buttoned up & to give player the same momentum as the vehicle when exiting
 // And so if an 'allowed' crewman exits a locked armored vehicle, we check whether we need to set an unlock timer
+// Also to show player a message if no valid exit can be found
 function bool KDriverLeave(bool bForceLeave)
 {
     local DHArmoredVehicle AV;
@@ -968,6 +969,8 @@ function bool KDriverLeave(bool bForceLeave)
             {
                 ServerChangeDriverPosition(1);
             }
+
+            DisplayVehicleMessage(13); // no exit can be found (added)
 
             return false;
         }
