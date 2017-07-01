@@ -68,7 +68,7 @@ defaultproperties
     // Movement
     MaxCriticalSpeed=638.0 // 38 kph
     GearRatios(4)=0.72
-    TransRatio=0.1 // TODO: may want to review ratios as a result of reduced VehicleMass & increased physics wheel size - currently max speed is 31kph on the flat
+    TransRatio=0.1
 
     // Damage
     VehHitpoints(0)=(PointRadius=30.0,PointScale=1.0,PointBone="hp_engine")

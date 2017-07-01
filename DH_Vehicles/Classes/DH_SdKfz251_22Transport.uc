@@ -5,7 +5,7 @@
 
 class DH_SdKfz251_22Transport extends DH_Sdkfz251Transport;
 
-// Modified to set PassengerWeapons class, as can't be done in default properties, since as DH_Guns code package isn't compiled until after this package
+// Modified to set cannon pawn class, as can't be done in default properties, since as DH_Guns code package isn't compiled until after this package
 // Also to remove the MG position & void the PassengerPawns array, as we inherit unwanted positions that can't be used due to the mounted Pak 40
 simulated function PostBeginPlay()
 {
@@ -22,17 +22,17 @@ simulated function PostBeginPlay()
 
 defaultproperties
 {
-    VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_rot'
-    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_look'
-    PassengerWeapons(0)=(WeaponBone="body")
+    VehicleNameString="Sd.Kfz.251/22 'pakwagen'"
+    PassengerWeapons(0)=(WeaponBone="body") // cannon pawn class has to be set in PostBeginPlay() due to build order
+    Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.Sdkfz251_22_body_ext'
+    Skins(0)=texture'DH_VehiclesGE_tex.ext_vehicles.Halftrack_body_camo2'
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.SdKfz251_22_Destroyed'
     DriverPositions(1)=(ViewPitchUpLimit=5000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=11700,ViewNegativeYawLimit=-15000) // reduced limits so driver can't look behind & see wrong interior without Pak40
     DriverPositions(2)=(ViewPitchUpLimit=5000,ViewPitchDownLimit=55500,ViewPositiveYawLimit=12800,ViewNegativeYawLimit=-16000)
+    ExitPositions(1)=(X=-240.0,Y=-30.0,Z=5.0) // pak gunner (same as driver - rear door, left side)
+    VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_look'
     VehicleHudOccupantsX(1)=0.45
     VehicleHudOccupantsY(1)=0.65
-    ExitPositions(1)=(X=-240.0,Y=-30.0,Z=5.0) // pak gunner (same as driver - rear door, left side)
-    VehicleNameString="Sd.Kfz.251/22 'pakwagen'"
-    Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.Sdkfz251_22_body_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex.ext_vehicles.Halftrack_body_camo2'
 //  SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.hanomag' // TODO - make overlay for this variant
 }
