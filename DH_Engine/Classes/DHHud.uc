@@ -1042,7 +1042,7 @@ function DrawSupplyCount(Canvas C)
         C.SetDrawColor(255, 255, 255, 255);
         C.Font = C.TinyFont;
         C.SetPos((C.SizeX - XL) / 2, 0);
-        C.DrawText(S);
+        DrawShadowedTextClipped(C, S);
     }
 }
 

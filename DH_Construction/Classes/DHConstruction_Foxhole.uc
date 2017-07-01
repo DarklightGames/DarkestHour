@@ -5,6 +5,23 @@
 
 class DHConstruction_Foxhole extends DHConstruction;
 
+var Projector DirtProjector;
+
+simulated function OnConstructed()
+{
+    super.OnConstructed();
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        DirtProjector = Spawn(class'Projector', self,, Location);
+
+        if (DirtProjector != none)
+        {
+
+        }
+    }
+}
+
 defaultproperties
 {
     bPokesTerrain=true
@@ -12,7 +29,6 @@ defaultproperties
     bSnapToTerrain=true
     bShouldAlignToGround=false
     bCanBeTornDown=false
-//    bInheritsOwnerRotation=false
     ProxyDistanceInMeters=10
     CollisionRadius=200.0
     StaticMesh=StaticMesh'DH_Military_stc.Foxholes.GUP-Foxhole'
@@ -20,10 +36,9 @@ defaultproperties
     SupplyCost=0
     PlacementOffset=(Z=-12.0)
     MenuName="Foxhole"
-    bLimitSurfaceTypes=true
-//    bSnapRotation=true
     bAlwaysRelevant=true            // This is so that the terrain poking doesn't get applied more than once.
     DuplicateDistanceInMeters=15.0  // TODO: just something to stop rampant construction
+    bLimitSurfaceTypes=true
     SurfaceTypes(0)=EST_Default
     SurfaceTypes(1)=EST_Dirt
     SurfaceTypes(2)=EST_Snow

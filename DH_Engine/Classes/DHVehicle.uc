@@ -127,9 +127,14 @@ var     class<DHResupplyAttachment> ResupplyAttachmentClass; // option for a fun
 var     name                        ResupplyAttachBone;      // bone name for attaching resupply attachment
 var     DHResupplyAttachment        ResupplyAttachment;      // reference to any resupply actor
 
+// Supply
 var     class<DHConstructionSupplyAttachment>   SupplyAttachmentClass;
 var     name                                    SupplyAttachBone;
 var     DHConstructionSupplyAttachment          SupplyAttachment;
+var     int                                     SupplyDropInterval;         // The amount of seconds that must transpire between supply drops.
+var     int                                     SupplyDropCountMax;          // How many supplies this vehicle can drop at a time
+var     array<DHConstructionSupplyAttachment>   TouchingSupplyAttachments;  // List of supply attachments we are in range of
+var     int                                     TouchingSupplyCount;        // Sum of all supplies in attachments we are in range of
 
 // Spawning
 var     DHSpawnPoint_Vehicle    SpawnPointAttachment;
@@ -153,7 +158,11 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerStartEngine;
+        ServerStartEngine, ServerDropSupplies;
+
+    // Variables the server will replicate to the client that owns this actor
+    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
+        TouchingSupplyCount;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1131,6 +1140,52 @@ simulated function SwitchWeapon(byte F)
     if (Role == ROLE_Authority || CanSwitchToVehiclePosition(F))
     {
         ServerChangeDriverPosition(F);
+    }
+}
+
+simulated exec function ROManualReload()
+{
+    if (SupplyAttachment != none && SupplyAttachment.HasSupplies())
+    {
+        ServerDropSupplies();
+    }
+}
+
+function ServerDropSupplies()
+{
+    local int i;
+    local DHConstructionSupplyAttachment CSA;
+    local int SupplyDropCount;
+
+    if (SupplyAttachment == none)
+    {
+        // No supply attachment to drop from!
+        return;
+    }
+
+    SupplyDropCount = Min(SupplyDropCountMax, SupplyAttachment.GetSupplyCount());
+
+    if (SupplyDropCount <= 0)
+    {
+        // No supplies left!
+        return;
+    }
+
+    for (i = 0; i < TouchingSupplyAttachments.Length; ++i)
+    {
+        CSA = TouchingSupplyAttachments[i];
+
+        if (CSA != none && CSA.bCanReceiveSupplyDrops && CSA.TeamIndex == GetTeamNum() && !CSA.IsFull())
+        {
+            SupplyDropCount = Min(SupplyDropCount, CSA.SupplyCountMax - CSA.GetSupplyCount());
+
+            // Add supplies to the nearby supply attachment.
+            CSA.SetSupplyCount(CSA.GetSupplyCount() + SupplyDropCount);
+            SupplyAttachment.SetSupplyCount(SupplyAttachment.GetSupplyCount() - SupplyDropCount);
+
+            // TODO: Send some sort of client message so that the driver can be notified that it worked!
+            break;
+        }
     }
 }
 
@@ -3258,6 +3313,10 @@ exec function SetRumbleVol(float NewValue)
 defaultproperties
 {
     VehiclePoolIndex=-1
+
+    // Supply
+    SupplyDropCountMax=2000 // TODO: make lower in the future!
+    SupplyDropInterval=5
 
     // Miscellaneous
     VehicleMass=3.0

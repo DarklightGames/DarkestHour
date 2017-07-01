@@ -101,7 +101,6 @@ auto state Timing
 
     function Timer()
     {
-        local string s;
         local Controller C;
         local PlayerController PC;
 
@@ -116,8 +115,7 @@ auto state Timing
 
                     if (PC != none)
                     {
-                        s = Repl(PhaseMessage, "{0}", SetupPhaseDurationActual - TimerCount);
-                        PC.ClientMessage(s,'CriticalEvent');
+                        PC.ClientMessage(Repl(PhaseMessage, "{0}", SetupPhaseDurationActual - TimerCount), 'CriticalEvent');
                     }
                 }
             }
@@ -156,12 +154,12 @@ auto state Timing
         }
 
         // Allow weapon dropping
-        Level.Game.bAllowWeaponThrowing = true;
+        G.bAllowWeaponThrowing = true;
 
         // Tell GRI that we are no longer in setup phase (to allow player mantling)
         GRI.bIsInSetupPhase = false;
 
-        // Disable phase minefields (volumes are static so use AllActors)
+        // Disable phase minefields (volumes are static, so use AllActors)
         if (PhaseMineFieldTag != '')
         {
             foreach AllActors(class'ROMineVolume', V, PhaseMineFieldTag)
@@ -185,13 +183,13 @@ auto state Timing
             G.ModifyRoundTime(G.LevelInfo.RoundDuration * 60, 2);
         }
 
-        // Handle Axis reinforcement changes if any
+        // Handle Axis reinforcement changes, if any
         if (PhaseEndReinforcements.AxisReinforcements >= 0)
         {
             GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = PhaseEndReinforcements.AxisReinforcements;
         }
 
-        // Handle  Allied reinforcement changes if any
+        // Handle  Allied reinforcement changes, if any
         if (PhaseEndReinforcements.AlliesReinforcements >= 0)
         {
             GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = PhaseEndReinforcements.AlliesReinforcements;

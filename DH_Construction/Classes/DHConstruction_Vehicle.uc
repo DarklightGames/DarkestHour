@@ -26,13 +26,16 @@ simulated function OnTeamIndexChanged()
     VehicleClass = GetVehicleClass(GetTeamIndex(), LevelInfo);
 }
 
-function OnConstructed()
+simulated function OnConstructed()
 {
-    if (VehicleClass != none)
+    if (Role == ROLE_Authority)
     {
-        Vehicle = Spawn(VehicleClass,,, Location, Rotation);
+        if (VehicleClass != none)
+        {
+            Vehicle = Spawn(VehicleClass,,, Location, Rotation);
 
-        GotoState('Dummy');
+            GotoState('Dummy');
+        }
     }
 }
 

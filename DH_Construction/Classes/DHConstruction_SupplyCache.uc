@@ -21,7 +21,7 @@ function PostBeginPlay()
     }
 
     SupplyAttachment.SetBase(self);
-    SupplyAttachment.bCanBeResupplied = true;
+    SupplyAttachment.bCanReceiveSupplyDrops = true;
     SupplyAttachment.OnSupplyCountChanged = MyOnSupplyCountChanged;
     SupplyAttachment.SetSupplyCount(default.SupplyCost);
 }
@@ -41,9 +41,14 @@ function UpdateAppearance()
         Destroy();
     }
 
-    SupplyPercent = (SupplyAttachment.GetSupplyCount() / SupplyAttachment.default.SupplyCountMax);
+    SupplyPercent = (SupplyAttachment.GetSupplyCount() / SupplyAttachment.SupplyCountMax);
+    Log("SupplyPercent" @ SupplyPercent);
+
     StaticMeshIndex = Clamp(SupplyPercent * StaticMeshes.Length, 0, StaticMeshes.Length - 1);
+    Log("StaticMeshIndex" @ StaticMeshIndex);
+
     SetStaticMesh(StaticMeshes[StaticMeshIndex]);
+    NetUpdateTime = Level.TimeSeconds - 1.0;
 }
 
 simulated function OnTeamIndexChanged()
@@ -67,5 +72,6 @@ defaultproperties
     DuplicateDistanceInMeters=100   // NOTE: 2x the supply attachment radius
     bCanPlaceIndoors=true
     bCanBeTornDown=false
+    bCanDieOfStagnation=false   // TODO; should be necessary, really?
 }
 

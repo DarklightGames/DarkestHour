@@ -6303,10 +6303,7 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vecto
 
         SuppliesToUse = Min(SupplyCost, SortedSupplyAttachments[i].GetSupplyCount());
 
-        if (!SortedSupplyAttachments[i].UseSupplies(SuppliesToUse))
-        {
-            Warn("Something went horribly wrong!");
-        }
+        SortedSupplyAttachments[i].SetSupplyCount(SortedSupplyAttachments[i].GetSupplyCount() - SuppliesToUse);
 
         SupplyCost -= SuppliesToUse;
     }

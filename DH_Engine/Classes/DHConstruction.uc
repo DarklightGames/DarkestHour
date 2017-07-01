@@ -150,7 +150,7 @@ replication
         ServerIncrementProgress;
 }
 
-function OnConstructed();
+simulated function OnConstructed();
 function OnStageIndexChanged(int OldIndex);
 simulated function OnTeamIndexChanged();
 function OnProgressChanged();
@@ -287,7 +287,7 @@ simulated event Destroyed()
 
     if (bPokesTerrain)
     {
-        // TODO: unpoke terrain
+        // TODO: "unpoke" terrain (experimental)
         PokeTerrain(PokeTerrainRadius, -PokeTerrainDepth);
     }
 
@@ -312,6 +312,11 @@ auto simulated state Constructing
     {
         local int i;
         local int OldStageIndex;
+
+        if (bCanDieOfStagnation)
+        {
+            Lifespan = StagnationLifespan;
+        }
 
         if (Progress < 0)
         {
@@ -340,11 +345,6 @@ auto simulated state Constructing
                     break;
                 }
             }
-        }
-
-        if (bCanDieOfStagnation)
-        {
-            Lifespan = StagnationLifespan;
         }
     }
 
@@ -380,6 +380,30 @@ Begin:
 
 simulated state Constructed
 {
+    simulated function BeginState()
+    {
+        if (Role == ROLE_Authority)
+        {
+            // Reset lifespan so that we don't die of stagnation.
+            Lifespan = 0;
+
+            if (bDestroyOnConstruction)
+            {
+                Destroy();
+            }
+            else
+            {
+                StageIndex = default.StageIndex;
+                TearDownProgress = 0;
+                UpdateAppearance();
+                StateName = GetStateName();
+                NetUpdateTime = Level.TimeSeconds - 1.0;
+            }
+        }
+
+        OnConstructed();
+    }
+
     simulated function bool IsConstructed()
     {
         return true;
@@ -412,28 +436,6 @@ simulated state Constructed
                 SetStaticMesh(GetTatteredStaticMesh());
                 NetUpdateTime = Level.TimeSeconds - 1.0;
             }
-        }
-    }
-
-Begin:
-    if (Role == ROLE_Authority)
-    {
-        // Reset lifespan (so that we don't die of stagnation)
-        Lifespan = 0;
-
-        OnConstructed();
-
-        if (bDestroyOnConstruction)
-        {
-            Destroy();
-        }
-        else
-        {
-            StageIndex = default.StageIndex;
-            TearDownProgress = 0;
-            UpdateAppearance();
-            StateName = GetStateName();
-            NetUpdateTime = Level.TimeSeconds - 1.0;
         }
     }
 }

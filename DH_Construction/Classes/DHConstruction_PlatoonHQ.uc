@@ -49,37 +49,41 @@ simulated state Constructed
     }
 }
 
-function OnConstructed()
+simulated function OnConstructed()
 {
     local vector HitLocation, HitNormal, TraceEnd, TraceStart;
 
     super.OnConstructed();
 
-    SpawnPoint = Spawn(class'DHSpawnPoint_PlatoonHQ', self);
-
-    if (SpawnPoint != none)
+    if (Role == ROLE_Authority)
     {
-        // "A Platoon HQ has been constructed and will be established in N seconds."
-        SpawnPoint.BroadcastTeamLocalizedMessage(GetTeamIndex(), class'DHPlatoonHQMessage', 4);
+        SpawnPoint = Spawn(class'DHSpawnPoint_PlatoonHQ', self);
 
-        TraceStart = Location + vect(0, 0, 32);
-        TraceEnd = Location - vect(0, 0, 32);
-
-        HitLocation = Location;
-
-        if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart) == none)
+        if (SpawnPoint != none)
         {
-            Warn("Hey yo something done fucked up, bad spawn locations afoot");
-            Destroy();
+            // "A Platoon HQ has been constructed and will be established in N seconds."
+            SpawnPoint.BroadcastTeamLocalizedMessage(GetTeamIndex(), class'DHPlatoonHQMessage', 4);
+
+            TraceStart = Location + vect(0, 0, 32);
+            TraceEnd = Location - vect(0, 0, 32);
+
+            HitLocation = Location;
+
+            if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart) == none)
+            {
+                Warn("Hey yo something done fucked up, bad spawn locations afoot");
+                Destroy();
+            }
+
+            HitLocation.Z += class'DHPawn'.default.CollisionHeight / 2;
+
+            SpawnPoint.Construction = self;
+            SpawnPoint.SetLocation(HitLocation);
+            SpawnPoint.SetTeamIndex(GetTeamIndex());
+            SpawnPoint.SetIsActive(true);
         }
-
-        HitLocation.Z += class'DHPawn'.default.CollisionHeight / 2;
-
-        SpawnPoint.Construction = self;
-        SpawnPoint.SetLocation(HitLocation);
-        SpawnPoint.SetTeamIndex(GetTeamIndex());
-        SpawnPoint.SetIsActive(true);
     }
+
 }
 
 simulated function DestroyAttachments()
@@ -188,7 +192,6 @@ simulated function OnTeamIndexChanged()
     }
 }
 
-// TODO: fill this in with the correct flag materials
 simulated function Material GetFlagMaterial()
 {
     switch (GetTeamIndex())

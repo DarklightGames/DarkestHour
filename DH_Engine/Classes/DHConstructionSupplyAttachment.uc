@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHConstructionSupplyAttachment extends RODummyAttachment
+class DHConstructionSupplyAttachment extends Actor
     notplaceable;
 
 var private int         SupplyCount;
@@ -13,12 +13,15 @@ var int                 TeamIndex;
 // Whether or not this supply attachment can be resupplied from a static resupply point.
 var bool                bCanBeResupplied;
 
+// Whether or not this supply attachment can receive supply drops from a vehicle.
+var bool                bCanReceiveSupplyDrops;
+
 // Used to resolve the order in which supplies will be drawn from in the case
 // where the the player is near multiple supply attachments when placing
 // constructions. A higher value means it will be drawn from first.
 var int                 SortPriority;
 
-var array<DHPawn>       TouchingPawns;
+var array<Pawn>         TouchingPawns;
 
 // The distance, in meters, a player must be within to have access to these supplies.
 var float               TouchDistanceInMeters;
@@ -29,11 +32,13 @@ replication
         TeamIndex, SupplyCount;
 }
 
+// This delegate will be called whenever the SupplyCount changes.
 delegate OnSupplyCountChanged(DHConstructionSupplyAttachment CSA);
 
+// Overridden to bypass bizarre logic that necessitated the Owner be a Pawn.
 simulated function PostBeginPlay()
 {
-    super(Actor).PostBeginPlay();
+    super.PostBeginPlay();
 
     if (Role == ROLE_Authority)
     {
@@ -43,19 +48,19 @@ simulated function PostBeginPlay()
     }
 }
 
-function int GetSupplyCount()
-{
-    return SupplyCount;
-}
-
-function bool HasSupplies()
+simulated function bool HasSupplies()
 {
     return SupplyCount > 0;
 }
 
-function bool IsFull()
+simulated function bool IsFull()
 {
     return SupplyCount == SupplyCountMax;
+}
+
+simulated function int GetSupplyCount()
+{
+    return SupplyCount;
 }
 
 function SetSupplyCount(int Amount)
@@ -68,33 +73,26 @@ function SetSupplyCount(int Amount)
     }
 }
 
-// Uses supplies.
-function bool UseSupplies(int Amount)
-{
-    if (SupplyCount < Amount)
-    {
-        return false;
-    }
-
-    SupplyCount -= Amount;
-
-    OnSupplyCountChanged(self);
-
-    return true;
-}
-
 function Destroyed()
 {
     local int i;
     local DHPawn P;
+    local DHVehicle V;
 
     for (i = 0; i < TouchingPawns.Length; ++i)
     {
-        P = TouchingPawns[i];
+        P = DHPawn(TouchingPawns[i]);
 
         if (P != none)
         {
             class'UArray'.static.Erase(P.TouchingSupplyAttachments, self);
+        }
+
+        V = DHVehicle(TouchingPawns[i]);
+
+        if (V != none)
+        {
+            class'UArray'.static.Erase(V.TouchingSupplyAttachments, self);
         }
     }
 
@@ -103,18 +101,20 @@ function Destroyed()
 
 function Timer()
 {
+    local Pawn Pawn;
     local DHPawn P;
+    local DHVehicle V;
     local int i, Index;
-    local array<DHPawn> NewTouchingPawns;
+    local array<Pawn> NewTouchingPawns;
 
     NewTouchingPawns.Length = 0;
 
     // Gather all relevant pawns within the radius.
-    foreach CollidingActors(class'DHPawn', P, class'DHUnits'.static.MetersToUnreal(TouchDistanceInMeters))
+    foreach CollidingActors(class'Pawn', Pawn, class'DHUnits'.static.MetersToUnreal(TouchDistanceInMeters))
     {
-        if (P != none && P.GetTeamNum() == TeamIndex)
+        if (Pawn != none && Pawn.GetTeamNum() == TeamIndex)
         {
-            NewTouchingPawns[NewTouchingPawns.Length] = P;
+            NewTouchingPawns[NewTouchingPawns.Length] = Pawn;
         }
     }
 
@@ -125,11 +125,16 @@ function Timer()
         if (Index == -1)
         {
             // Pawn is now being touched, add ourselves to their touching list.
-            P = NewTouchingPawns[i];
+            P = DHPawn(NewTouchingPawns[i]);
+            V = DHVehicle(NewTouchingPawns[i]);
 
             if (P != none)
             {
                 P.TouchingSupplyAttachments[P.TouchingSupplyAttachments.Length] = self;
+            }
+            else if (V != none)
+            {
+                V.TouchingSupplyAttachments[V.TouchingSupplyAttachments.Length] = self;
             }
         }
     }
@@ -142,11 +147,16 @@ function Timer()
         {
             // Pawn is no longer being touched, remove ourselves from their
             // touching list.
-            P = TouchingPawns[i];
+            P = DHPawn(TouchingPawns[i]);
+            V = DHVehicle(TouchingPawns[i]);
 
             if (P != none)
             {
                 class'UArray'.static.Erase(P.TouchingSupplyAttachments, self);
+            }
+            else if (V != none)
+            {
+                class'UArray'.static.Erase(V.TouchingSupplyAttachments, self);
             }
         }
     }
@@ -154,6 +164,7 @@ function Timer()
     TouchingPawns = NewTouchingPawns;
 }
 
+// This function is called by static resupply volumes on their timer.
 function bool Resupply()
 {
     if (bCanBeResupplied || IsFull())
@@ -177,4 +188,8 @@ defaultproperties
     SupplyCountMax=2000
     TouchDistanceInMeters=50
     RemoteRole=ROLE_DumbProxy
+    bOnlyDrawIfAttached=true
+    DrawType=DT_StaticMesh
+    bAcceptsProjectors=true
+    bUseLightingFromBase=true
 }

@@ -7,11 +7,11 @@ class DHConstruction_Sandbags_Bunker extends DHConstruction;
 
 defaultproperties
 {
-    Stages(0)=(Progress=0,StaticMesh=StaticMesh'DH_Construction_stc.Sandbags.sandbags_01_unpacked')
-    Stages(1)=(Progress=4,StaticMesh=StaticMesh'DH_Construction_stc.Sandbags.sandbags_01_intermediate')
+    Stages(0)=(Progress=0,StaticMesh=StaticMesh'DH_Construction_stc.Sandbags.sandbags_03_unpacked')
+    Stages(1)=(Progress=5,StaticMesh=StaticMesh'DH_Construction_stc.Sandbags.sandbags_03_intermediate')
     StartRotationMin=(Yaw=16384)
     StartRotationMax=(Yaw=16384)
-    ProgressMax=8
+    ProgressMax=10
     StaticMesh=StaticMesh'DH_Construction_stc.Sandbags.sandbags_03'
     bShouldAlignToGround=false
     MenuName="Sandbags (Bunker)"
