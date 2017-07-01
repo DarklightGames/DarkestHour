@@ -6,6 +6,13 @@
 class DHATGunCannonPawn extends DHVehicleCannonPawn
     abstract;
 
+// Modified to prevent any switch for a normal AT gun
+// But if the gun is mounted on a mobile vehicle base, player switches positions as normal
+simulated function bool CanSwitchToVehiclePosition(byte F)
+{
+    return DHATGun(VehicleBase) == none && super.CanSwitchToVehiclePosition(F);
+}
+
 // Emptied out so we just use plain RO rotate/pitch sounds & ignore DHVehicleCannonPawn's manual/powered sounds
 simulated function SetManualTurret(bool bManual)
 {

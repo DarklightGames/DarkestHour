@@ -5,12 +5,6 @@
 
 class DH_Sdkfz105CannonPawn extends DH_Flak38CannonPawn;
 
-// Modified to skip over the Super in DHATGunCannonPawn, so gunner can switch positions
-simulated function SwitchWeapon(byte F)
-{
-    super(DHVehicleCannonPawn).SwitchWeapon(F);
-}
-
 defaultproperties
 {
     GunClass=class'DH_Guns.DH_Sdkfz105Cannon'
