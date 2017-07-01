@@ -1031,7 +1031,7 @@ function bool KDriverLeave(bool bForceLeave)
         Driver.StopDriving(self);
 
         // Give a player exiting the vehicle the same momentum as vehicle, with a little added height kick
-        if (!bForceLeave && Driver.Health > 0 && VehicleBase != none)
+        if (!bForceLeave && VehicleBase != none)
         {
             ExitVelocity = VehicleBase.Velocity;
             ExitVelocity.Z += 60.0;
