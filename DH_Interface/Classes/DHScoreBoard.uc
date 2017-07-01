@@ -262,7 +262,7 @@ simulated function UpdateScoreBoard(Canvas C)
     Y += LineHeight;
 
     // Draw reinforcements remaining
-    if (DHGRI.SpawnsRemaining[TeamIndex] > class'DarkestHourGame'.default.ObscureReinfNum && DHGRI.bObscureReinforcements)
+    if (DHGRI.SpawnsRemaining[TeamIndex] > class'DarkestHourGame'.default.ObscureReinfNum && DHGRI.bObscureReinforcements && !MyPRI.bAdmin)
     {
         DrawCell(C, ReinforcementsText @ ":" @ "???", 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
     }
@@ -457,7 +457,7 @@ simulated function UpdateScoreBoard(Canvas C)
     Y += LineHeight;
 
     // Draw reinforcements remaining
-    if (DHGRI.SpawnsRemaining[TeamIndex] > class'DarkestHourGame'.default.ObscureReinfNum && DHGRI.bObscureReinforcements)
+    if (DHGRI.SpawnsRemaining[TeamIndex] > class'DarkestHourGame'.default.ObscureReinfNum && DHGRI.bObscureReinforcements && !MyPRI.bAdmin)
     {
         DrawCell(C, ReinforcementsText @ ":" @ "???", 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
     }
