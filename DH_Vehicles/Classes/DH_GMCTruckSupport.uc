@@ -19,7 +19,7 @@ defaultproperties
 
     SupplyAttachmentClass=class'DHConstructionSupplyAttachment'
     SupplyAttachBone="Deco"
-    ResupplyAttachBone="supply" // TODO: appears no longer relevant as ResupplyAttachmentClass has been removed (this vehicle will no longer resupply ammo?)
+    ResupplyAttachBone="supply"
     VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_Military_stc.Ammo.CratePile3_Dark',AttachBone="Deco") // decorative only representation of resupply crates
     VehHitpoints(3)=(PointRadius=40.0,PointScale=1.0,PointBone="body",PointOffset=(X=-80.0,Y=0.0,Z=90.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
 }
