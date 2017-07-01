@@ -5,14 +5,6 @@
 
 class DH_SdKfz251_22CannonPawn extends DH_Pak40CannonPawn;
 
-// Modified to remove excess Pak40 AT gun exit positions
-simulated function PostBeginPlay()
-{
-    super.PostBeginPlay();
-
-    ExitPositions.Length = 2;
-}
-
 // Modified to skip over the Super in DHATGunCannonPawn, as that prevents any switching position
 simulated function SwitchWeapon(byte F)
 {
