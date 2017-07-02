@@ -517,7 +517,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
     if (SquadMemberIndex == SQUAD_LEADER_INDEX)
     {
         // "The leader has left the squad."
-        BroadcastSquadLocalizedMessage(TeamIndex, SquadMemberIndex, SquadMessageClass, 40);
+        BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 40);
 
         // Squad no longer has a leader. Automatically set a new based on who has the highest score.
         GetMembers(TeamIndex, SquadIndex, Members);
