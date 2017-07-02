@@ -4527,7 +4527,7 @@ defaultproperties
     bShowServerIPOnScoreboard=true
     bShowTimeOnScoreboard=true
 
-    ObscureReinfNum=50
+    ObscureReinfNum=100
 
     EmptyTankUnlockTime=60
 
