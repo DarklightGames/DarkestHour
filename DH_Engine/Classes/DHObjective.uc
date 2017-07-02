@@ -90,6 +90,8 @@ var(DHObjectiveAwards) bool         bResetDeathPenalties;        // will reset a
 var(DHObjectiveAwards) int          AlliedAwardedReinforcements; // Amount of reinforcement to award for allies if the obj is captured
 var(DHObjectiveAwards) int          AxisAwardedReinforcements;   // Amount of reinforcement to award for axis if the obj is captured
 var(DHObjectiveAwards) int          MinutesAwarded;              // Time in minutes awarded to round time when objective is captured
+var(DHObjectiveAwards) int          AlliedOwnedAttritionRate;    // Rate of Axis Attrition when Allies control this objective
+var(DHObjectiveAwards) int          AxisOwnedAttritionRate;      // Rate of Allies Attrition when Axis control this objective
 
 // Other variables
 var(DHObjectiveOther) bool          bAlliesFinalObjective;
