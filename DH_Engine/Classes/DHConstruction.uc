@@ -170,6 +170,7 @@ final function SetTeamIndex(int TeamIndex)
 {
     self.TeamIndex = TeamIndex;
     OnTeamIndexChanged();
+    NetUpdateTime = Level.TimeSeconds - 1.0;
 }
 
 function ServerIncrementProgress()
