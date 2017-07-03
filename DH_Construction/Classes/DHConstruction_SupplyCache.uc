@@ -13,7 +13,7 @@ function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    SupplyAttachment = Spawn(class'DHConstructionSupplyAttachment', self);
+    SupplyAttachment = Spawn(class'DHConstructionSupplyAttachment_SupplyCache', self);
 
     if (SupplyAttachment == none)
     {
@@ -21,7 +21,6 @@ function PostBeginPlay()
     }
 
     SupplyAttachment.SetBase(self);
-    SupplyAttachment.bCanReceiveSupplyDrops = true;
     SupplyAttachment.OnSupplyCountChanged = MyOnSupplyCountChanged;
     SupplyAttachment.SetSupplyCount(default.SupplyCost);
 }
@@ -41,11 +40,8 @@ function UpdateAppearance()
         Destroy();
     }
 
-    SupplyPercent = (SupplyAttachment.GetSupplyCount() / SupplyAttachment.SupplyCountMax);
-    Log("SupplyPercent" @ SupplyPercent);
-
+    SupplyPercent = (float(SupplyAttachment.GetSupplyCount()) / SupplyAttachment.SupplyCountMax);
     StaticMeshIndex = Clamp(SupplyPercent * StaticMeshes.Length, 0, StaticMeshes.Length - 1);
-    Log("StaticMeshIndex" @ StaticMeshIndex);
 
     SetStaticMesh(StaticMeshes[StaticMeshIndex]);
     NetUpdateTime = Level.TimeSeconds - 1.0;
@@ -72,6 +68,6 @@ defaultproperties
     DuplicateDistanceInMeters=100   // NOTE: 2x the supply attachment radius
     bCanPlaceIndoors=true
     bCanBeTornDown=false
-    bCanDieOfStagnation=false   // TODO; should be necessary, really?
+    bCanDieOfStagnation=false   // TODO: should be necessary, really?
 }
 

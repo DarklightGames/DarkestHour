@@ -26,6 +26,14 @@ var array<Pawn>         TouchingPawns;
 // The distance, in meters, a player must be within to have access to these supplies.
 var float               TouchDistanceInMeters;
 
+//==============================================================================
+// Supply Generation
+//==============================================================================
+var bool                bCanGenerateSupplies;               // Whether or not this supply attachment is able to generate supplies.
+var int                 SupplyDepositInterval;              // The amount of seconds before generated supplies are deposited into the supply count.
+var int                 SupplyDepositCounter;               // The next time that generated supplies will be deposited.
+var int                 SupplyGenerationRate;               // The amount of supplies that are able to be generated every minute.
+
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -104,7 +112,7 @@ function Timer()
     local Pawn Pawn;
     local DHPawn P;
     local DHVehicle V;
-    local int i, Index;
+    local int i, Index, SuppliesToDeposit;
     local array<Pawn> NewTouchingPawns;
 
     NewTouchingPawns.Length = 0;
@@ -162,6 +170,21 @@ function Timer()
     }
 
     TouchingPawns = NewTouchingPawns;
+
+    if (bCanGenerateSupplies)
+    {
+        ++SupplyDepositCounter;
+
+        if (SupplyDepositCounter >= SupplyDepositInterval)
+        {
+            // Deposit the supplies.
+            SuppliesToDeposit = float(SupplyGenerationRate) / 60.0 * SupplyDepositInterval;
+            SetSupplyCount(GetSupplyCount() + SuppliesToDeposit);
+
+            // Reset counter
+            SupplyDepositCounter = 0;
+        }
+    }
 }
 
 // This function is called by static resupply volumes on their timer.
