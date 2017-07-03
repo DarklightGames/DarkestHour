@@ -2417,6 +2417,9 @@ simulated function SpawnVehicleAttachments()
             {
                 SupplyAttachment.TeamIndex = VehicleTeam;
                 SupplyAttachment.bCanBeResupplied = true;
+                SupplyAttachment.bCanGenerateSupplies = true;
+                SupplyAttachment.SupplyDepositInterval = 15;    // TODO: magic numbers
+                SupplyAttachment.SupplyGenerationRate = 100;
             }
         }
 

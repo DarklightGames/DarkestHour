@@ -13,7 +13,7 @@ function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    SupplyAttachment = Spawn(class'DHConstructionSupplyAttachment_SupplyCache', self);
+    SupplyAttachment = Spawn(class'DHConstructionSupplyAttachment', self);
 
     if (SupplyAttachment == none)
     {
@@ -23,6 +23,7 @@ function PostBeginPlay()
     SupplyAttachment.SetBase(self);
     SupplyAttachment.OnSupplyCountChanged = MyOnSupplyCountChanged;
     SupplyAttachment.SetSupplyCount(default.SupplyCost);
+    SupplyAttachment.bCanReceiveSupplyDrops = true;
 }
 
 function MyOnSupplyCountChanged(DHConstructionSupplyAttachment CSA)
