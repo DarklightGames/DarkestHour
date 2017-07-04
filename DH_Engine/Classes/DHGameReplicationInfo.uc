@@ -86,7 +86,6 @@ var DHObjective         DHObjectives[OBJECTIVES_MAX];
 var bool                bUseDeathPenaltyCount;
 var bool                bIsInSetupPhase;
 var bool                bRoundIsOver;
-var bool                bObscureReinforcements;
 
 var localized string    ForceScaleText;
 var localized string    ReinforcementsInfiniteText;
@@ -137,8 +136,7 @@ replication
         bIsInSetupPhase,
         bRoundIsOver,
         ConstructionClasses,
-        bAreConstructionsEnabled,
-        bObscureReinforcements;
+        bAreConstructionsEnabled;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))
         AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex;

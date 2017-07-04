@@ -57,7 +57,6 @@ var     bool                        bUseReinforcementWarning;
 var     bool                        bRoundEndsAtZeroReinf;
 var     bool                        bTimeChangesAtZeroReinf;
 var     float                       AlliesToAxisRatio;
-var     int                         ObscureReinfNum;                        // Reinforcements higher than this number are hidden as long as bObscureReinforcements = true
 
 var     class<DHMetrics>            MetricsClass;
 var     DHMetrics                   Metrics;
@@ -4533,8 +4532,6 @@ defaultproperties
 
     bShowServerIPOnScoreboard=true
     bShowTimeOnScoreboard=true
-
-    ObscureReinfNum=100
 
     EmptyTankUnlockTime=60
 
