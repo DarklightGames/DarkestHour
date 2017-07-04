@@ -16,21 +16,21 @@ defaultproperties
     WheelPenOffset=0.01
     WheelRestitution=0.1
     WheelInertia=0.1
-    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=100.0,OutVal=1.0),(InVal=400.0,OutVal=0.15),(InVal=10000000000.0,OutVal=0.0)))
+    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.2),(InVal=400.0,OutVal=0.001),(InVal=10000000000.0,OutVal=0.0)))
     WheelLongSlip=0.001
     WheelLongFrictionScale=1.1
     WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=45.0,OutVal=0.09),(InVal=10000000000.0,OutVal=0.9)))
     WheelLatFrictionScale=1.35
-    WheelHandbrakeSlip=1.1
+    WheelHandbrakeSlip=1.5
     WheelHandbrakeFriction=0.1
     WheelSuspensionTravel=15.0
     WheelSuspensionMaxRenderTravel=15.0
     FTScale=0.03
     ChassisTorqueScale=0.4
-    MinBrakeFriction=4.0
+    MinBrakeFriction=3.0
     MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=45.0),(InVal=200.0,OutVal=35.0),(InVal=800.0,OutVal=6.0),(InVal=1000000000.0,OutVal=0.0)))
-    TorqueCurve=(Points=((InVal=0.0,OutVal=15.0),(InVal=200.0,OutVal=10.0),(InVal=600.0,OutVal=8.0),(InVal=1200.0,OutVal=2.0),(InVal=2000.0,OutVal=0.5)))
-    GearRatios(0)=-0.2
+    TorqueCurve=(Points=((InVal=0.0,OutVal=15.0),(InVal=200.0,OutVal=10.0),(InVal=600.0,OutVal=8.0),(InVal=1200.0,OutVal=3.0),(InVal=2000.0,OutVal=0.5)))
+    GearRatios(0)=-0.3
     GearRatios(1)=0.2
     GearRatios(2)=0.35
     GearRatios(3)=0.55
@@ -41,11 +41,11 @@ defaultproperties
     LSDFactor=1.0
     EngineBrakeFactor=0.0001
     EngineBrakeRPMScale=0.1
-    MaxBrakeTorque=20.0
+    MaxBrakeTorque=10.0
     SteerSpeed=70.0
     TurnDamping=25.0
     StopThreshold=100.0
-    HandbrakeThresh=200.0
+    HandbrakeThresh=100.0
     EngineInertia=0.1
     IdleRPM=500.0
     EngineRPMSoundRange=5000.0
@@ -102,7 +102,7 @@ defaultproperties
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_GMCTruck.LFWheel'
     Begin Object Class=SVehicleWheel Name=MRWheel
         bPoweredWheel=true
-        bHandbrakeWheel=true
+        bHandbrakeWheel=false
         BoneName="wheel_MR"
         BoneRollAxis=AXIS_Y
         WheelRadius=26.0
@@ -112,7 +112,7 @@ defaultproperties
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_GMCTruck.MRWheel'
     Begin Object Class=SVehicleWheel Name=MLWheel
         bPoweredWheel=true
-        bHandbrakeWheel=true
+        bHandbrakeWheel=false
         BoneName="wheel_ML"
         BoneRollAxis=AXIS_Y
         WheelRadius=26.0
