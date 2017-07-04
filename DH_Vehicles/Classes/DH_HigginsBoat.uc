@@ -198,11 +198,6 @@ function ServerStartEngine();
 // Functions emptied so we don't damage things we run into:
 event RanInto(Actor Other);
 
-function bool EncroachingOn(Actor Other)
-{
-    return false;
-}
-
 defaultproperties
 {
     bIsApc=true

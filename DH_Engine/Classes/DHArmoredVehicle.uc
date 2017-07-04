@@ -2284,6 +2284,7 @@ defaultproperties
     PointValue=3.0
     MaxDesireability=1.9
     EngineRestartFailChance=0.1
+    MinRunOverSpeed=200 // Players should be easier to run over with armored vehicles
 
     // Driver & positions
     bMustBeTankCommander=true

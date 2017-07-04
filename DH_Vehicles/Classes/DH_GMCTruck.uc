@@ -16,10 +16,10 @@ defaultproperties
     WheelPenOffset=0.01
     WheelRestitution=0.1
     WheelInertia=0.1
-    WheelLongFrictionFunc=(Points=(,(InVal=100.0,OutVal=0.1),(InVal=200.0,OutVal=0.5),(InVal=10000000000.0,OutVal=0.2)))
+    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=100.0,OutVal=1.0),(InVal=400.0,OutVal=0.15),(InVal=10000000000.0,OutVal=0.0)))
     WheelLongSlip=0.001
-    WheelLatSlipFunc=(Points=(,(InVal=30.0,OutVal=0.009),(InVal=45.0),(InVal=10000000000.0)))
     WheelLongFrictionScale=1.1
+    WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=45.0,OutVal=0.09),(InVal=10000000000.0,OutVal=0.9)))
     WheelLatFrictionScale=1.35
     WheelHandbrakeSlip=1.1
     WheelHandbrakeFriction=0.1
@@ -28,22 +28,22 @@ defaultproperties
     FTScale=0.03
     ChassisTorqueScale=0.4
     MinBrakeFriction=4.0
-    MaxSteerAngleCurve=(Points=((OutVal=35.0),(InVal=1500.0,OutVal=20.0),(InVal=1000000000.0,OutVal=15.0)))
-    TorqueCurve=(Points=((OutVal=1.0),(InVal=200.0,OutVal=0.75),(InVal=1500.0,OutVal=2.0),(InVal=2200.0)))
-    GearRatios(0)=-0.3
+    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=45.0),(InVal=200.0,OutVal=35.0),(InVal=800.0,OutVal=4.0),(InVal=1000000000.0,OutVal=0.0)))
+    TorqueCurve=(Points=((InVal=0.0,OutVal=15.0),(InVal=200.0,OutVal=10.0),(InVal=600.0,OutVal=8.0),(InVal=1200.0,OutVal=2.0),(InVal=2000.0,OutVal=0.5)))
+    GearRatios(0)=-0.2
     GearRatios(1)=0.2
     GearRatios(2)=0.35
-    GearRatios(3)=0.65
-    GearRatios(4)=0.85
-    TransRatio=0.15
+    GearRatios(3)=0.55
+    GearRatios(4)=0.98
+    TransRatio=0.18
     ChangeUpPoint=1990.0
     ChangeDownPoint=1000.0
     LSDFactor=1.0
     EngineBrakeFactor=0.0001
     EngineBrakeRPMScale=0.1
     MaxBrakeTorque=20.0
-    SteerSpeed=60.0
-    TurnDamping=35.0
+    SteerSpeed=70.0
+    TurnDamping=25.0
     StopThreshold=100.0
     HandbrakeThresh=200.0
     EngineInertia=0.1
@@ -140,7 +140,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_GMCTruck.LRWheel'
-    VehicleMass=3.5
+    VehicleMass=2.5
     bHasHandbrake=true
     bFPNoZFromCameraPitch=true
     DrivePos=(X=6.0,Z=2.0)

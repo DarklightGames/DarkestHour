@@ -262,6 +262,14 @@ simulated function PostNetBeginPlay()
     SpawnVehicleAttachments();
 }
 
+// Modified to prevent players from dieing so easily when near a slightly moving vehicle
+// Supposively the system tries to move the pawn over slightly and if it fails it calls this function
+// Which before just slayed the player into full gibs (10000 damage), lets not do that...
+function bool EncroachingOn(Actor Other)
+{
+    return false;
+}
+
 // Modified to destroy extra attachments & effects - including the DestructionEffect emitter
 // That's because if an already exploded vehicle replicates to a net client, the vehicle gets Destroyed() before the natural LifeSpan of the emitter
 // That left the DestructionEffect burning away in mid air after the vehicle has disappeared (the Super calls Kill() on the emitter, but it doesn't seem to work)
@@ -3354,7 +3362,7 @@ defaultproperties
     FirstRiderPositionIndex=255 // unless overridden in subclass, 255 means the value is set automatically when PassengerPawns array is added to the PassengerWeapons
     DriverPositions(0)=(ViewFOV=0.0) // override inherited FOV values from ROWheeledVehicle - zero just means it uses player's default view FOV (unless overridden in subclass)
     DriverPositions(1)=(ViewFOV=0.0)
-    MinRunOverSpeed=300 // increased from 0 to roughly 20km/h so that players don't get killed by slow moving (probably friendly) vehicles
+    MinRunOverSpeed=600 // increased from 0 to roughly 35km/h so that players don't get killed so easily by vehicles
     ObjectiveGetOutDist=1500.0
     bReplicateAnimations=false // override strange inherited property from ROWheeledVehicle - no reason for server to replicate anims & now we play transition anims on
                                // server it seems to sometimes override the client's anim & leave it 1 frame short of its end position, glitching the camera view
