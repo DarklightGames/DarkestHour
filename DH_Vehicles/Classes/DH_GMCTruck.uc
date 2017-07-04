@@ -28,7 +28,7 @@ defaultproperties
     FTScale=0.03
     ChassisTorqueScale=0.4
     MinBrakeFriction=4.0
-    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=45.0),(InVal=200.0,OutVal=35.0),(InVal=800.0,OutVal=4.0),(InVal=1000000000.0,OutVal=0.0)))
+    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=45.0),(InVal=200.0,OutVal=35.0),(InVal=800.0,OutVal=6.0),(InVal=1000000000.0,OutVal=0.0)))
     TorqueCurve=(Points=((InVal=0.0,OutVal=15.0),(InVal=200.0,OutVal=10.0),(InVal=600.0,OutVal=8.0),(InVal=1200.0,OutVal=2.0),(InVal=2000.0,OutVal=0.5)))
     GearRatios(0)=-0.2
     GearRatios(1)=0.2
