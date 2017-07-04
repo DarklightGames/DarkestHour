@@ -9,11 +9,11 @@ class DHRoleInfo extends RORoleInfo
 
 struct RolePawn
 {
-    var class<Pawn>     PawnClass; // possible pawn class for this role
-    var float           Weight;    // weighting to be assigned to this choice if randomly selected from a list
+    var() class<Pawn>       PawnClass;              // possible pawn class for this role
+    var() float             Weight;                 // weighting to be assigned to this choice if randomly selected from a list
 };
 
-var     array<RolePawn>     RolePawns;              // list of possible pawn classes for this role, selected randomly (with weighting) if more than 1
+var()   array<RolePawn>     RolePawns;              // list of possible pawn classes for this role, selected randomly (with weighting) if more than 1
 var     array<float>        HeadgearProbabilities;  // chance of each Headgear type being randomly selected (linked to Headgear array in RORoleInfo)
 
 var     bool                bIsArtilleryOfficer;    // role has functionality of an artillery officer
