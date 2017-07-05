@@ -4620,13 +4620,13 @@ defaultproperties
     bPublicPlay=true
 
     WeaponLockTimes(0)=0
-    WeaponLockTimes(1)=2
-    WeaponLockTimes(2)=5
-    WeaponLockTimes(3)=10
-    WeaponLockTimes(4)=15
-    WeaponLockTimes(5)=20
-    WeaponLockTimes(6)=30
-    WeaponLockTimes(7)=30
-    WeaponLockTimes(8)=45
-    WeaponLockTimes(9)=60
+    WeaponLockTimes(1)=3
+    WeaponLockTimes(2)=8
+    WeaponLockTimes(3)=16
+    WeaponLockTimes(4)=24
+    WeaponLockTimes(5)=32
+    WeaponLockTimes(6)=32
+    WeaponLockTimes(7)=45
+    WeaponLockTimes(8)=60
+    WeaponLockTimes(9)=120
 }
