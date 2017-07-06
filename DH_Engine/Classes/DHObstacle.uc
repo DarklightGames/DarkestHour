@@ -66,6 +66,7 @@ simulated function PostBeginPlay()
     Instance.SetDrawScale3D(DrawScale3D);
     Instance.Skins = Skins;
     Instance.AmbientGlow = AmbientGlow;
+    Instance.CullDistance = CullDistance;
 
     for (i = 0; i < Skins.Length; ++i)
     {
