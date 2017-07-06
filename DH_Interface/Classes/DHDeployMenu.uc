@@ -334,7 +334,11 @@ function UpdateRoundStatus()
             i_Reinforcements.ImageColor = class'UColor'.default.White;
         }
 
-        if (GRI.SpawnsRemaining[CurrentTeam] == -1)
+        if (GRI.bIsInSetupPhase)
+        {
+            l_Reinforcements.Caption = "???";
+        }
+        else if (GRI.SpawnsRemaining[CurrentTeam] == -1)
         {
             l_Reinforcements.Caption = GRI.ReinforcementsInfiniteText;
         }
