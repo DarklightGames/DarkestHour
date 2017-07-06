@@ -24,28 +24,19 @@ function PostBeginPlay()
     SupplyAttachment.OnSupplyCountChanged = MyOnSupplyCountChanged;
     SupplyAttachment.SetSupplyCount(default.SupplyCost);
     SupplyAttachment.bCanReceiveSupplyDrops = true;
+
+    // We hide the supply attachment since we are going to handle the visualization through the the construction.
+    SupplyAttachment.bHidden = true;
 }
 
 function MyOnSupplyCountChanged(DHConstructionSupplyAttachment CSA)
 {
-    UpdateAppearance();
-}
-
-function UpdateAppearance()
-{
-    local float SupplyPercent;
-    local int StaticMeshIndex;
-
-    if (SupplyAttachment == none)
+    if (CSA != none)
     {
-        Destroy();
+        SetStaticMesh(CSA.StaticMesh);
+
+        NetUpdateTime = Level.TimeSeconds - 1.0;
     }
-
-    SupplyPercent = (float(SupplyAttachment.GetSupplyCount()) / SupplyAttachment.SupplyCountMax);
-    StaticMeshIndex = Clamp(SupplyPercent * StaticMeshes.Length, 0, StaticMeshes.Length - 1);
-
-    SetStaticMesh(StaticMeshes[StaticMeshIndex]);
-    NetUpdateTime = Level.TimeSeconds - 1.0;
 }
 
 simulated function OnTeamIndexChanged()
@@ -62,13 +53,11 @@ defaultproperties
 {
     MenuName="Supply Cache"
     SupplyCost=250
-    StaticMesh=StaticMesh'DH_Military_stc.Ammo.cratepile3'
-    StaticMeshes(0)=StaticMesh'DH_Military_stc.Ammo.cratepile1'
-    StaticMeshes(1)=StaticMesh'DH_Military_stc.Ammo.cratepile2'
-    StaticMeshes(2)=StaticMesh'DH_Military_stc.Ammo.cratepile3'
+    StaticMesh=StaticMesh'DH_Military_stc.Ammo.cratepile1'
+    DrawType=DT_StaticMesh
     DuplicateDistanceInMeters=100   // NOTE: 2x the supply attachment radius
     bCanPlaceIndoors=true
     bCanBeTornDown=false
-    bCanDieOfStagnation=false   // TODO: should be necessary, really?
+    bCanDieOfStagnation=false   // TODO: this shouldn't be necessary, right?
 }
 

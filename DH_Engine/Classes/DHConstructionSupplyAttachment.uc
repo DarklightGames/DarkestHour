@@ -26,6 +26,8 @@ var array<Pawn>         TouchingPawns;
 // The distance, in meters, a player must be within to have access to these supplies.
 var float               TouchDistanceInMeters;
 
+var array<StaticMesh>   StaticMeshes;
+
 //==============================================================================
 // Supply Generation
 //==============================================================================
@@ -73,9 +75,18 @@ simulated function int GetSupplyCount()
 
 function SetSupplyCount(int Amount)
 {
+    local float SupplyPercent;
+    local int StaticMeshIndex;
+
     if (SupplyCount != Amount)
     {
         SupplyCount = Clamp(Amount, 0, SupplyCountMax);
+
+        // Update visualization
+        SupplyPercent = (float(SupplyCount) / SupplyCountMax);
+        StaticMeshIndex = Clamp(SupplyPercent * StaticMeshes.Length, 0, StaticMeshes.Length - 1);
+        SetStaticMesh(StaticMeshes[StaticMeshIndex]);
+        NetUpdateTime = Level.TimeSeconds - 1.0;
 
         OnSupplyCountChanged(self);
     }
@@ -215,4 +226,7 @@ defaultproperties
     DrawType=DT_StaticMesh
     bAcceptsProjectors=true
     bUseLightingFromBase=true
+    StaticMeshes(0)=StaticMesh'DH_Military_stc.Ammo.cratepile1'
+    StaticMeshes(1)=StaticMesh'DH_Military_stc.Ammo.cratepile2'
+    StaticMeshes(2)=StaticMesh'DH_Military_stc.Ammo.cratepile3'
 }
