@@ -60,6 +60,7 @@ var     bool        bLockCameraDuringTransition; // lock the camera's rotation t
 // Damage
 var     float       FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle; // used by the hit detection system to determine which side of the vehicle was hit
 var     float       HeavyEngineDamageThreshold;  // proportion of remaining engine health below which the engine is so badly damaged it limits speed
+var     float       ImpactWorldDamageMult;       // multiplier for world geometry impact damage when vehicle bCanCrash
 var array<material> DestroyedMeshSkins;          // option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
 var     sound       DamagedStartUpSound;         // sound played when trying to start a damaged engine
 var     sound       DamagedShutDownSound;        // sound played when damaged engine shuts down
@@ -67,6 +68,7 @@ var     sound       VehicleBurningSound;         // ambient sound when vehicle's
 var     sound       DestroyedBurningSound;       // ambient sound when vehicle is destroyed and burning
 var     float       SpawnProtEnds;               // is set when a player spawns the vehicle for damage protection in DarkestHour spawn type maps
 var     float       SpawnKillTimeEnds;           // is set when a player spawns the vehicle for spawn kill protection in DarkestHour spawn type maps
+var     bool        bCanCrash;                   // vehicle can be damaged by static geometry during impacts (damages the engine)
 
 // Engine
 var     bool        bEngineOff;                  // vehicle engine is simply switched off
@@ -1967,10 +1969,17 @@ function CheckTreadDamage(vector HitLocation, vector Momentum)
 // Modified to tone down the sounds played when the vehicle impacts on something, as often caused constant 'bottoming out' sounds on the ground
 event TakeImpactDamage(float AccelMag)
 {
-    local int Damage;
+    local int Damage, EngineDamage;
 
     Damage = int(AccelMag * ImpactDamageModifier());
     TakeDamage(Damage, self, ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DHVehicleCollisionDamageType');
+
+    // Handle damage to engine if impact damage is past threshold and the vehicle bCanCrash
+    if (bCanCrash && Damage > ImpactDamageThreshold)
+    {
+        EngineDamage = Damage * ImpactWorldDamageMult;
+        DamageEngine(EngineDamage, self, ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DHVehicleCollisionDamageType');
+    }
 
     // Play impact sound (often vehicle 'bottoming out' on ground)
     // Modified to reduce sound radius so doesn't play across level, & limited sound occurrence to every second
@@ -3381,6 +3390,7 @@ defaultproperties
     VehHitpoints(1)=(PointRadius=0.0,PointScale=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
     TreadDamageThreshold=0.3
     ImpactDamageThreshold=20.0
+    ImpactWorldDamageMult=0.001
     ImpactDamageMult=0.5
     DriverDamageMult=1.0
     DamagedTreadPanner=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'

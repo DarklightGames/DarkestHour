@@ -12,7 +12,8 @@ class DH_WillysJeep extends DHVehicle;
 
 defaultproperties
 {
-    MaxPitchSpeed=250.0
+    bCanCrash=true
+    MaxPitchSpeed=350.0
     RumbleSound=sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
     RumbleSoundBone="body"
     WheelSoftness=0.025
@@ -20,34 +21,34 @@ defaultproperties
     WheelPenOffset=0.01
     WheelRestitution=0.1
     WheelInertia=0.1
-    WheelLongFrictionFunc=(Points=(,(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
+    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=100.0,OutVal=1.0),(InVal=400.0,OutVal=0.2),(InVal=800.0,OutVal=0.001),(InVal=10000000000.0,OutVal=0.0)))
     WheelLongSlip=0.001
-    WheelLatSlipFunc=(Points=(,(InVal=30.0,OutVal=0.009),(InVal=45.0),(InVal=10000000000.0)))
     WheelLongFrictionScale=1.1
+    WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=45.0,OutVal=0.09),(InVal=10000000000.0,OutVal=0.9)))
     WheelLatFrictionScale=1.55
     WheelHandbrakeSlip=0.01
-    WheelHandbrakeFriction=0.1
+    WheelHandbrakeFriction=0.33
     WheelSuspensionTravel=10.0
     WheelSuspensionMaxRenderTravel=5.0
     FTScale=0.03
-    ChassisTorqueScale=0.095
-    MinBrakeFriction=4.0
-    MaxSteerAngleCurve=(Points=((OutVal=45.0),(InVal=300.0,OutVal=30.0),(InVal=500.0,OutVal=20.0),(InVal=600.0,OutVal=15.0),(InVal=1000000000.0,OutVal=10.0)))
-    TorqueCurve=(Points=((OutVal=10.0),(InVal=200.0,OutVal=0.75),(InVal=1500.0,OutVal=2.0),(InVal=2200.0)))
-    GearRatios(0)=-0.2
-    GearRatios(1)=0.2
-    GearRatios(2)=0.35
-    GearRatios(3)=0.55
-    GearRatios(4)=0.8
-    TransRatio=0.17
+    ChassisTorqueScale=0.1
+    MinBrakeFriction=2.0
+    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=52.0),(InVal=200.0,OutVal=24.0),(InVal=900.0,OutVal=3.0),(InVal=1000000000.0,OutVal=0.0)))
+    TorqueCurve=(Points=((InVal=0.0,OutVal=10.0),(InVal=200.0,OutVal=7.0),(InVal=600.0,OutVal=4.0),(InVal=1200.0,OutVal=2.0),(InVal=2000.0,OutVal=1.0)))
+    GearRatios(0)=-0.3
+    GearRatios(1)=0.3
+    GearRatios(2)=0.5
+    GearRatios(3)=0.8
+    GearRatios(4)=1.25
+    TransRatio=0.18
     LSDFactor=1.0
-    EngineBrakeFactor=0.0001
+    EngineBrakeFactor=0.0002
     EngineBrakeRPMScale=0.1
-    MaxBrakeTorque=20.0
-    SteerSpeed=160.0
-    TurnDamping=35.0
+    MaxBrakeTorque=10.0
+    SteerSpeed=100.0
+    TurnDamping=5.0
     StopThreshold=100.0
-    HandbrakeThresh=200.0
+    HandbrakeThresh=100.0
     EngineInertia=0.1
     IdleRPM=500.0
     EngineRPMSoundRange=6000.0
@@ -85,7 +86,6 @@ defaultproperties
     VehHitpoints(2)=(PointRadius=18.0,PointScale=1.0,PointBone="RightFrontWheel",DamageMultiplier=1.0,HitPointType=HP_Engine)
     VehHitpoints(3)=(PointRadius=18.0,PointScale=1.0,PointBone="LeftRearWheel",DamageMultiplier=1.0,HitPointType=HP_Engine)
     VehHitpoints(4)=(PointRadius=18.0,PointScale=1.0,PointBone="RightRearWheel",DamageMultiplier=1.0,HitPointType=HP_Engine)
-    EngineHealth=25
     bMultiPosition=false
     DriverAttachmentBone="driver_attachment"
     Begin Object Class=SVehicleWheel Name=LFWheel
@@ -130,7 +130,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_WillysJeep.RRWheel'
-    VehicleMass=3.0
+    VehicleMass=1.0
     bHasHandbrake=true
     bFPNoZFromCameraPitch=true
     DrivePos=(X=3.0,Y=0.0,Z=15.0)
@@ -144,6 +144,8 @@ defaultproperties
     GroundSpeed=325.0
     PitchUpLimit=500
     PitchDownLimit=58000
+    ImpactWorldDamageMult=0.008
+    HeavyEngineDamageThreshold=0.33
     HealthMax=125.0
     Health=125
     Mesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body_ext'
