@@ -2352,12 +2352,12 @@ state RoundInPlay
         if (GRI != none)
         {
             // Add attrition rates from the AttritionRateCurve to the already established specific objective attrition rates (look above in this function)
-            AttRateAllies += InterpCurveEval(DHLevelInfo.AttritionRateCurve, (float(Max(0, Num[AXIS_TEAM_INDEX]   - Num[ALLIES_TEAM_INDEX])) / NumObj)) / 60.0;
-            AttRateAxis   += InterpCurveEval(DHLevelInfo.AttritionRateCurve, (float(Max(0, Num[ALLIES_TEAM_INDEX] - Num[AXIS_TEAM_INDEX]))   / NumObj)) / 60.0;
+            AttRateAllies += InterpCurveEval(DHLevelInfo.AttritionRateCurve, (float(Max(0, Num[AXIS_TEAM_INDEX]   - Num[ALLIES_TEAM_INDEX])) / NumObj));
+            AttRateAxis   += InterpCurveEval(DHLevelInfo.AttritionRateCurve, (float(Max(0, Num[ALLIES_TEAM_INDEX] - Num[AXIS_TEAM_INDEX]))   / NumObj));
 
             // Set the attrition rate to the calculated attrition, but scaled to numplayers / maxplayers (0.1 is so attrition always exists)
-            GRI.AttritionRate[ALLIES_TEAM_INDEX] = AttRateAllies * FMax(0.1, (NumPlayers / MaxPlayers));
-            GRI.AttritionRate[AXIS_TEAM_INDEX]   = AttRateAxis   * FMax(0.1, (NumPlayers / MaxPlayers));
+            GRI.AttritionRate[ALLIES_TEAM_INDEX] = AttRateAllies / 60 * FMax(0.1, (NumPlayers / MaxPlayers));
+            GRI.AttritionRate[AXIS_TEAM_INDEX]   = AttRateAxis   / 60 * FMax(0.1, (NumPlayers / MaxPlayers));
         }
 
         if (LevelInfo.NumObjectiveWin == 0)
