@@ -75,6 +75,10 @@ event InitGame(string Options, out string Error)
 {
     super.InitGame(Options, Error);
 
+    // Change AccessControl to DHAccessControl
+    AccessControl.Destroy();
+    AccessControl = Spawn(class<AccessControl>(DynamicLoadObject("DH_Engine.DHAccessControl", class'Class')));
+
     if (bIgnore32PlayerLimit)
     {
         MaxPlayers = Clamp(GetIntOption(Options, "MaxPlayers", MaxPlayers), 0, 64);
@@ -4580,6 +4584,7 @@ defaultproperties
     GameName="DarkestHourGame"
 
     // Class references
+    AccessControlClass="DH_Engine.DHAccessControl"
     LoginMenuClass="DH_Interface.DHPlayerSetupPage"
     DefaultPlayerClassName="DH_Engine.DHPawn"
     ScoreBoardType="DH_Interface.DHScoreBoard"
