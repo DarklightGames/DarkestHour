@@ -54,9 +54,12 @@ function Setup()
         if (ConstructionClasses.Length - i >= 1)
         {
             // More options are available, so let's make a submenu option.
-            Options[Options.Length - 1].OptionalObject = class'UInteger'.static.Create(i - 1);
-            Options[Options.Length - 1].ActionText = "...";
-            Options[Options.Length - 1].Material = none; // TODO: some sort of ellipses icon?
+            // Insert the "more options" option in the first position.
+            Options.Length = Options.Length - 1;
+            Options.Insert(0, 1);
+            Options[0].OptionalObject = class'UInteger'.static.Create(i - 1);
+            Options[0].ActionText = "...";
+            Options[0].Material = none; // TODO: some sort of ellipses icon?
         }
     }
 }
