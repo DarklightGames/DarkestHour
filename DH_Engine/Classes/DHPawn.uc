@@ -2054,7 +2054,8 @@ state Dying
             bOnFire = false;
         }
 
-        super.Timer();
+        // No longer call the super, just rerun the timer
+        SetTimer(1.0, false);
     }
 
 Begin:
@@ -2065,6 +2066,207 @@ Begin:
     {
         PlayDyingSound();
     }
+}
+
+// Modified to remove native functionality which limited ragdolls to 4
+function PlayDyingAnimation(class<DamageType> DamageType, vector HitLoc)
+{
+    local vector            ShotDir, HitLocRel, DeathAngVel, ShotStrength;
+    local float             MaxDim;
+    local string            RagSkelName;
+    local KarmaParamsSkel   SkelParams;
+    local bool              PlayersRagdoll;
+    local PlayerController  PC;
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        if (OldController != none)
+        {
+            PC = PlayerController(OldController);
+        }
+
+        // Is this the local player's ragdoll?
+        if (PC != none && PC.ViewTarget == self)
+        {
+            PlayersRagdoll = true;
+        }
+
+        if (FRand() < 0.3)
+        {
+            HelmetShotOff(rotator(Normal(GetTearOffMomemtum())));
+        }
+
+        // In low physics detail, if we were not just controlling this pawn,
+        // and it has not been rendered in 3 seconds, just destroy it.
+        if ((Level.PhysicsDetailLevel != PDL_High) && !PlayersRagdoll && (Level.TimeSeconds - LastRenderTime > 3))
+        {
+            Destroy();
+            return;
+        }
+
+        // Get the ragdoll name
+        if( RagdollOverride != "")
+        {
+            RagSkelName = RagdollOverride;
+        }
+        else if(Species != none)
+        {
+            RagSkelName = Species.static.GetRagSkelName( GetMeshName() );
+        }
+        else
+        {
+            Log("xPawn.PlayDying: No Species");
+        }
+
+        // Handle the pawn to ragdoll switch
+        if (RagSkelName != "")
+        {
+            SkelParams = KarmaParamsSkel(KParams);
+            SkelParams.KSkeleton = RagSkelName;
+
+            StopAnimating(true);
+
+            if (DamageType != none)
+            {
+                if (DamageType.default.bLeaveBodyEffect)
+                {
+                    TearOffMomentum = vect(0,0,0);
+                }
+
+                if (DamageType.default.bKUseOwnDeathVel)
+                {
+                    RagDeathVel = DamageType.default.KDeathVel;
+                    RagDeathUpKick = DamageType.default.KDeathUpKick;
+                    RagShootStrength = DamageType.default.KDamageImpulse;
+                }
+            }
+
+            // Set the dude moving in direction he was shot in general
+            ShotDir = Normal(GetTearOffMomemtum());
+            ShotStrength = RagDeathVel * ShotDir;
+
+            // Calculate angular velocity to impart, based on shot location.
+            HitLocRel = TakeHitLocation - Location;
+
+            if (DamageType.default.bLocationalHit)
+            {
+                HitLocRel.X *= RagSpinScale;
+                HitLocRel.Y *= RagSpinScale;
+
+                if (Abs(HitLocRel.X) > RagMaxSpinAmount)
+                {
+                    if (HitLocRel.X < 0)
+                    {
+                        HitLocRel.X = FMax((HitLocRel.X * RagSpinScale), (RagMaxSpinAmount * -1));
+                    }
+                    else
+                    {
+                        HitLocRel.X = FMin((HitLocRel.X * RagSpinScale), RagMaxSpinAmount);
+                    }
+                }
+
+                if (Abs(hitLocRel.Y) > RagMaxSpinAmount)
+                {
+                    if (HitLocRel.Y < 0)
+                    {
+                        HitLocRel.Y = FMax((HitLocRel.Y * RagSpinScale), (RagMaxSpinAmount * -1));
+                    }
+                    else
+                    {
+                        HitLocRel.Y = FMin((HitLocRel.Y * RagSpinScale), RagMaxSpinAmount);
+                    }
+                }
+            }
+            else
+            {
+                // We scale the hit location out sideways a bit, to get more spin around Z.
+                HitLocRel.X *= RagSpinScale;
+                HitLocRel.Y *= RagSpinScale;
+            }
+
+            // If the tear off momentum was very small for some reason, make up some angular velocity for the pawn
+            if (VSize(GetTearOffMomemtum()) < 0.01)
+            {
+                DeathAngVel = VRand() * 18000.0;
+            }
+            else
+            {
+                DeathAngVel = RagInvInertia * (HitLocRel cross ShotStrength);
+            }
+
+            // Set initial angular and linear velocity for ragdoll.
+            // Scale horizontal velocity for characters - they run really fast!
+            if (DamageType.Default.bRubbery)
+            {
+                SkelParams.KStartLinVel = vect(0,0,0);
+            }
+
+            if (Damagetype.default.bKUseTearOffMomentum)
+            {
+                SkelParams.KStartLinVel = GetTearOffMomemtum() + Velocity;
+            }
+            else
+            {
+                SkelParams.KStartLinVel.X = 0.6 * Velocity.X;
+                SkelParams.KStartLinVel.Y = 0.6 * Velocity.Y;
+                SkelParams.KStartLinVel.Z = 1.0 * Velocity.Z;
+                SkelParams.KStartLinVel += ShotStrength;
+            }
+
+            // If not moving downwards - give extra upward kick
+            if (!DamageType.default.bLeaveBodyEffect && !DamageType.Default.bRubbery && (Velocity.Z > -10))
+            {
+                SkelParams.KStartLinVel.Z += RagDeathUpKick;
+            }
+
+            if (DamageType.Default.bRubbery)
+            {
+                Velocity = vect(0,0,0);
+                SkelParams.KStartAngVel = vect(0,0,0);
+            }
+            else
+            {
+                SkelParams.KStartAngVel = DeathAngVel;
+
+                // Set up deferred shot-bone impulse
+                MaxDim = Max(CollisionRadius, CollisionHeight);
+
+                SkelParams.KShotStart = TakeHitLocation - (1 * ShotDir);
+                SkelParams.KShotEnd = TakeHitLocation + (2 * MaxDim * ShotDir);
+                SkelParams.KShotStrength = RagShootStrength;
+            }
+
+            // If this damage type causes convulsions, turn them on here.
+            if (DamageType != none && DamageType.default.bCauseConvulsions)
+            {
+                RagConvulseMaterial = DamageType.default.DamageOverlayMaterial;
+                SkelParams.bKDoConvulsions = true;
+            }
+
+            // Turn on Karma collision for ragdoll.
+            KSetBlockKarma(true);
+
+            // Set physics mode to ragdoll.
+            // This doesn't actaully start it straight away, it's deferred to the first tick.
+            SetPhysics(PHYS_KarmaRagdoll);
+
+            // If viewing this ragdoll, set the flag to indicate that it is 'important'
+            if (PlayersRagdoll)
+            {
+                SkelParams.bKImportantRagdoll = true;
+            }
+
+            SkelParams.KActorGravScale = RagGravScale;
+
+            return;
+        }
+    }
+
+    // Non-Ragdoll death fallback
+    Velocity += GetTearOffMomemtum();
+    BaseEyeHeight = default.BaseEyeHeight;
+    SetTwistLook(0,0);
+    SetPhysics(PHYS_Falling);
 }
 
 // Prevented damage overlay from overriding burning overlay
@@ -2428,6 +2630,8 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 // Stop damage overlay from overriding burning overlay if necessary
 simulated function PlayDying(class<DamageType> DamageType, vector HitLoc)
 {
+    local DHPlayer PC;
+
     WeaponState = GS_None;
 
     if (IsHumanControlled())
@@ -2458,7 +2662,28 @@ simulated function PlayDying(class<DamageType> DamageType, vector HitLoc)
     // Stop shooting
     AnimBlendParams(1, 0.0);
 
-    LifeSpan = RagdollLifeSpan;
+    // Set LifeSpan
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        // Set PC
+        if (Level.GetLocalPlayerController() != none)
+        {
+            PC = DHPlayer(Level.GetLocalPlayerController());
+        }
+
+        if (PC != none)
+        {
+            LifeSpan = Clamp(PC.CorpseStayTime, 15, 90);
+        }
+        else
+        {
+            LifeSpan = RagdollLifeSpan; // Default (30 seconds)
+        }
+    }
+    else
+    {
+        LifeSpan = 10; // TODO: figure out if this matters and what value best to set to (before the server would have set it to 30)
+    }
 
     GotoState('Dying');
 
