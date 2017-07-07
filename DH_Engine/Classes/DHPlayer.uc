@@ -3127,7 +3127,7 @@ exec function DebugSpawnBots(int Team, optional int Num, optional int Distance)
 
     DHG = DarkestHourGame(Level.Game);
 
-    if (IsDebugModeAllowed() && DHG != none && Pawn != none)
+    if ((PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin || IsDebugModeAllowed()) && DHG != none && Pawn != none)
     {
         TargetLocation = Pawn.Location;
 
