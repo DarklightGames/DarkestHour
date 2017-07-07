@@ -535,7 +535,7 @@ defaultproperties
 
     // Vehicle options
     Begin Object Class=DHGUISectionBackground Name=GameBK2
-        Caption="Vehicles"
+        Caption="Vehicle"
         WinTop=0.3
         WinLeft=0.25
         WinWidth=0.5
