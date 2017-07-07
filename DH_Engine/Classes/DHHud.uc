@@ -111,7 +111,6 @@ var     localized string    CaptureBarUnlockText;
 var     globalconfig bool   bSimpleColours;         // for colourblind setting, i.e. red and blue only
 var     globalconfig bool   bShowDeathMessages;     // whether or not to show the death messages
 var     globalconfig int    PlayerNameFontSize;     // the size of the name you see when you mouseover a player
-var     globalconfig bool   bShowSquadMembers;      // whether or not to show the squad members list
 var     globalconfig bool   bAlwaysShowSquadIcons;  // whether or not to show squadmate icons when not looking at them
 var     globalconfig bool   bAlwaysShowSquadNames;  // whether or not to show squadmate names when not directly looking at them
 
@@ -3276,11 +3275,11 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
                 PlayerLocation = OtherPawn.Location;
                 PlayerYaw = OtherPawn.Rotation.Yaw;
             }
-            else if (PC.SquadMemberLocations[i] != vect(0, 0, 0))
+            else if (PC.SquadMemberLocations[OtherPRI.SquadMemberIndex] != vect(0, 0, 0))
             {
-                PlayerLocation.X = PC.SquadMemberLocations[i].X;
-                PlayerLocation.Y = PC.SquadMemberLocations[i].Y;
-                PlayerYaw = PC.SquadMemberLocations[i].Z;
+                PlayerLocation.X = PC.SquadMemberLocations[OtherPRI.SquadMemberIndex].X;
+                PlayerLocation.Y = PC.SquadMemberLocations[OtherPRI.SquadMemberIndex].Y;
+                PlayerYaw = PC.SquadMemberLocations[OtherPRI.SquadMemberIndex].Z;
             }
             else
             {
@@ -3290,7 +3289,7 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
             SquadMemberColor = class'DHColor'.default.SquadColor;
             SquadMemberColor.A = 160;
 
-            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, PlayerYaw, i, SquadMemberColor, 0.03);
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, PlayerYaw, OtherPRI.SquadMemberIndex, SquadMemberColor, 0.03);
         }
     }
 
@@ -5381,7 +5380,6 @@ defaultproperties
     PlayerNameFontSize=1
     OverrideConsoleFontName="DHFonts.DHFont14"
     SpacingText="        "
-    bShowSquadMembers=true
 
     // Death messages
     bShowDeathMessages=true

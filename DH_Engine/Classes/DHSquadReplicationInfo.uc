@@ -145,7 +145,7 @@ function Timer()
             continue;
         }
 
-        for (i = 0; i < GetTeamSquadSize(C.GetTeamNum()); ++i)
+        for (i = 0; i < GetTeamSquadSize(PC.GetTeamNum()); ++i)
         {
             OtherPRI = GetMember(PC.GetTeamNum(), PRI.SquadIndex, i);
 
