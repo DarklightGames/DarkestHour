@@ -19,6 +19,9 @@ var             DHPlayerReplicationInfo     PRI;
 var             GUIContextMenu              SquadRallyPointContextMenu;
 var             Material                    SpawnPointBlockedOverlay;
 
+var localized string        SquadRallyPointDestroyText;
+var localized string        SquadRallyPointSetAsSecondaryText;
+
 delegate OnSpawnPointChanged(int SpawnPointIndex, optional bool bDoubleClick);
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
@@ -141,20 +144,29 @@ function bool OnDblClick(GUIComponent Sender)
 function bool MyContextOpen(GUIContextMenu Sender)
 {
     local DHSpawnPoint_SquadRallyPoint SRP;
+    local array<DHSpawnPoint_SquadRallyPoint> RallyPoints;
 
-    if (PRI == none || !PRI.IsSquadLeader())
+    if (Sender == none || PRI == none || GRI == none || PC == none || PC.SquadReplicationInfo == none || !PRI.IsSquadLeader())
     {
         return false;
     }
 
-    if (GRI != none)
-    {
-        SRP = DHSpawnPoint_SquadRallyPoint(GRI.SpawnPoints[Sender.Tag]);
-    }
+    SRP = DHSpawnPoint_SquadRallyPoint(GRI.SpawnPoints[Sender.Tag]);
 
     if (SRP == none || SRP.GetTeamIndex() != PC.GetTeamNum() || SRP.SquadIndex != PRI.SquadIndex || !SRP.IsActive())
     {
         return false;
+    }
+
+    Sender.ContextItems.Length = 0;
+    Sender.AddItem(default.SquadRallyPointDestroyText);
+
+    RallyPoints = PC.SquadReplicationInfo.GetActiveSquadRallyPoints(SRP.GetTeamIndex(), SRP.SquadIndex);
+
+    if (RallyPoints.Length > 1)
+    {
+        Sender.AddItem("-");
+        Sender.AddItem(default.SquadRallyPointSetAsSecondaryText);
     }
 
     return true;
@@ -179,9 +191,15 @@ function MyContextSelect(GUIContextMenu Sender, int Index)
         SRP = DHSpawnPoint_SquadRallyPoint(GRI.SpawnPoints[Sender.Tag]);
     }
 
-    PC.ServerSquadDestroyRallyPoint(SRP);
-
-    return;
+    switch (Index)
+    {
+        case 0:  // Destroy
+            PC.ServerSquadDestroyRallyPoint(SRP);
+            break;
+        case 2:  // Set as secondary
+            PC.ServerSquadSwapRallyPoints();
+            break;
+    }
 }
 
 function Material MyGetOverlayMaterial(GUIComponent Sender)
@@ -205,12 +223,14 @@ function Material MyGetOverlayMaterial(GUIComponent Sender)
 
 defaultproperties
 {
+    SquadRallyPointDestroyText="Destroy"
+    SquadRallyPointSetAsSecondaryText="Set as Secondary"
+
     SpawnPointBlockedOverlay=Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled'
 
     OnDraw=InternalOnDraw
 
     Begin Object Class=GUIContextMenu Name=SRPContextMenu
-        ContextItems(0)="Destroy"
         OnOpen=DHGUIMapComponent.MyContextOpen
         OnClose=DHGUIMapComponent.MyContextClose
         OnSelect=DHGUIMapComponent.MyContextSelect

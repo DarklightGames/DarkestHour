@@ -19,8 +19,6 @@ const SQUAD_NAME_LENGTH_MAX = 16;
 
 const SQUAD_LEADER_INDEX = 0;
 
-const DEBUG = true;
-
 enum ESquadOrderType
 {
     ORDER_None,
@@ -73,11 +71,9 @@ replication
         AxisSquadSize, AlliesSquadSize;
 
     reliable if (bNetDirty && Role == ROLE_Authority)
-        AxisMembers, AxisNames, AxisLocked,
-        AlliesMembers, AlliesNames, AlliesLocked,
-        AxisOrderTypes, AxisOrderLocations,
-        AlliesOrderTypes, AlliesOrderLocations,
-        bAreRallyPointsEnabled;
+        AxisMembers, AxisNames, AxisLocked, AlliesMembers, AlliesNames,
+        AlliesLocked, AxisOrderTypes, AxisOrderLocations, AlliesOrderTypes,
+        AlliesOrderLocations, bAreRallyPointsEnabled, RallyPoints;
 }
 
 function PostBeginPlay()
@@ -1309,7 +1305,7 @@ function SetSquadNextRallyPointTime(int TeamIndex, int SquadIndex, float TimeSec
     }
 }
 
-function array<DHSpawnPoint_SquadRallyPoint> GetSquadRallyPoints(int TeamIndex, int SquadIndex)
+simulated function array<DHSpawnPoint_SquadRallyPoint> GetSquadRallyPoints(int TeamIndex, int SquadIndex)
 {
     local array<DHSpawnPoint_SquadRallyPoint> SquadRallyPoints;
     local int i;
@@ -1327,7 +1323,7 @@ function array<DHSpawnPoint_SquadRallyPoint> GetSquadRallyPoints(int TeamIndex, 
     return SquadRallyPoints;
 }
 
-function array<DHSpawnPoint_SquadRallyPoint> GetActiveSquadRallyPoints(int TeamIndex, int SquadIndex)
+simulated function array<DHSpawnPoint_SquadRallyPoint> GetActiveSquadRallyPoints(int TeamIndex, int SquadIndex)
 {
     local array<DHSpawnPoint_SquadRallyPoint> ActiveSquadRallyPoints;
     local int i;
@@ -1586,6 +1582,31 @@ function DestroySquadRallyPoint(DHPlayerReplicationInfo PRI, DHSpawnPoint_SquadR
     BroadcastSquadLocalizedMessage(SRP.GetTeamIndex(), SRP.SquadIndex, SquadMessageClass, 57);
 
     SRP.Destroy();
+}
+
+function SwapRallyPoints(DHPlayerReplicationInfo PRI)
+{
+    local UComparator Comparator;
+    local array<DHSpawnPoint_SquadRallyPoint> ActiveSquadRallyPoints;
+
+    if (PRI != none && PRI.IsSquadLeader())
+    {
+        ActiveSquadRallyPoints = GetActiveSquadRallyPoints(PRI.Team.TeamIndex, PRI.SquadIndex);
+
+        if (ActiveSquadRallyPoints.Length > 1)
+        {
+            // Sort active squad rally points, oldest first.
+            Comparator = new class'UComparator';
+            Comparator.CompareFunction = RallyPointSortFunction;
+            class'USort'.static.Sort(ActiveSquadRallyPoints, Comparator);
+
+            // Set the oldest squad rally point to now be the newest (block status will be updated next Timer pop!)
+            ActiveSquadRallyPoints[0].CreatedTimeSeconds = Level.TimeSeconds;
+
+            // "The squad leader has forcibly changes the currently active rally point."
+            BroadcastSquadLocalizedMessage(PRI.Team.TeamIndex, PRI.SquadIndex, SquadMessageClass, 59);
+        }
+    }
 }
 
 function bool RallyPointSortFunction(Object LHS, Object RHS)

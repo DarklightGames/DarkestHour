@@ -35,6 +35,7 @@ var localized string SquadRallyPointAbandoned;
 var localized string SquadRallyPointBadLocation;
 var localized string SquadRallyPointDestroyed;
 var localized string SquadRallyPointAbandonmentWarning;
+var localized string SquadRallyPointSwapped;
 
 static function string GetString(optional int S, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -102,6 +103,8 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
             return default.SquadRallyPointDestroyed;
         case 58:
             return default.SquadRallyPointAbandonmentWarning;
+        case 59:
+            return default.SquadRallyPointSwapped;
         default:
             break;
     }
@@ -141,5 +144,6 @@ defaultproperties
     SquadRallyPointBadLocation="A squad rally point cannot be created at this location."
     SquadRallyPointDestroyed="The squad leader has forcibly destroyed a rally point."
     SquadRallyPointAbandonmentWarning="A newly created squad rally point is being abandoned!"
+    SquadRallyPointSwapped="The squad leader has forcibly changed the currently active rally point."
 }
 

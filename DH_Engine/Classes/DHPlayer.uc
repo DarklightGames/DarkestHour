@@ -121,6 +121,7 @@ replication
         ServerSquadJoinAuto, ServerSquadInvite, ServerSquadKick, ServerSquadPromote,
         ServerSquadCommandeer, ServerSquadLock, ServerSquadOrder, ServerSquadSignal,
         ServerSquadRename, ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint,
+        ServerSquadSwapRallyPoints,
         // these ones in debug mode only:
         ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog;
 
@@ -4918,6 +4919,15 @@ function ServerSquadDestroyRallyPoint(DHSpawnPoint_SquadRallyPoint SRP)
     if (SquadReplicationInfo != none)
     {
         SquadReplicationInfo.DestroySquadRallyPoint(PRI, SRP);
+    }
+}
+
+// TODO: this should be an RPC in SRI
+function ServerSquadSwapRallyPoints()
+{
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.SwapRallyPoints(DHPlayerReplicationInfo(PlayerReplicationInfo));
     }
 }
 
