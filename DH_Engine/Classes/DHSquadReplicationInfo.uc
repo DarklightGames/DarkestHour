@@ -1433,7 +1433,7 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
             {
                 OtherPRI = DHPlayerReplicationInfo(OtherPawn.PlayerReplicationInfo);
 
-                if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, OtherPRI))
+                if (PRI != OtherPRI && class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, OtherPRI))
                 {
                     bIsNearSquadmate = true;
                 }
