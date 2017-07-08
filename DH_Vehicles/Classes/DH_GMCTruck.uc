@@ -11,6 +11,7 @@ class DH_GMCTruck extends DHVehicle
 
 defaultproperties
 {
+    bCanCrash=true
     WheelSoftness=0.025
     WheelPenScale=1.2
     WheelPenOffset=0.01
@@ -65,8 +66,6 @@ defaultproperties
     DestructionAngularMomentum=(Max=150.0)
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=135.0,Z=65.0)
-    ImpactDamageThreshold=5000.0
-    ImpactDamageMult=0.001
     VehicleTeam=1
     BeginningIdleAnim=""
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_GMCTruck_anm.GMCTruck_body',ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
@@ -79,7 +78,6 @@ defaultproperties
     VehicleHudOccupantsY(1)=0.4
     VehHitpoints(1)=(PointRadius=18.0,PointScale=1.0,PointBone="wheel_FL",DamageMultiplier=1.0,HitPointType=HP_Engine) // note VHP(0) is inherited default for engine
     VehHitpoints(2)=(PointRadius=18.0,PointScale=1.0,PointBone="wheel_FR",DamageMultiplier=1.0,HitPointType=HP_Engine)
-    EngineHealth=35
     bMultiPosition=false
     DriverAttachmentBone="driver_player"
     Begin Object Class=SVehicleWheel Name=RFWheel
@@ -155,6 +153,11 @@ defaultproperties
     GroundSpeed=325.0
     PitchUpLimit=5000
     PitchDownLimit=49000
+    ImpactDamageThreshold=20.0
+    ImpactDamageMult=0.001
+    ImpactWorldDamageMult=1.0
+    HeavyEngineDamageThreshold=0.33
+    EngineHealth=35
     HealthMax=150.0
     Health=150
     Mesh=SkeletalMesh'DH_GMCTruck_anm.GMCTruck_body'

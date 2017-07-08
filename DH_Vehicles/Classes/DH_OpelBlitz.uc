@@ -11,6 +11,7 @@ class DH_OpelBlitz extends DHVehicle
 
 defaultproperties
 {
+    bCanCrash=true
     WheelSoftness=0.025
     WheelPenScale=1.2
     WheelPenOffset=0.01
@@ -64,8 +65,6 @@ defaultproperties
     DestructionAngularMomentum=(Max=150.0)
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=115.0,Z=70.0)
-    ImpactDamageThreshold=5000.0
-    ImpactDamageMult=0.001
     BeginningIdleAnim="Overlay_Idle"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_int',TransitionUpAnim="Overlay_In",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_int',TransitionDownAnim="Overlay_Out",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
@@ -77,7 +76,6 @@ defaultproperties
     VehicleHudOccupantsX(1)=0.55
     VehicleHudOccupantsY(1)=0.35
     VehHitpoints(0)=(PointOffset=(X=16.0)) // engine
-    EngineHealth=35
     DriverAttachmentBone="driver_player"
     Begin Object Class=SVehicleWheel Name=RFWheel
         SteerType=VST_Steered
@@ -131,6 +129,11 @@ defaultproperties
     GroundSpeed=325.0
     PitchUpLimit=5000
     PitchDownLimit=49000
+    ImpactDamageThreshold=20.0
+    ImpactDamageMult=0.001
+    ImpactWorldDamageMult=1.0
+    HeavyEngineDamageThreshold=0.33
+    EngineHealth=35
     HealthMax=150.0
     Health=150
     Mesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_ext'
@@ -143,8 +146,8 @@ defaultproperties
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KLinearDamping=0.5
-        KAngularDamping=0.5
+        KLinearDamping=0.05
+        KAngularDamping=0.05
         KStartEnabled=true
         bKNonSphericalInertia=true
         bHighDetailOnly=false
