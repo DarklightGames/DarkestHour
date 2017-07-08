@@ -241,8 +241,8 @@ defaultproperties
     CollisionRadius=250
 
     // Health
-    HealthMax=250
-    TatteredHealthThreshold=125
+    HealthMax=500
+    TatteredHealthThreshold=250
 
     SupplyCost=1000
 
@@ -250,3 +250,4 @@ defaultproperties
 
     FlagSkinIndex=1
 }
+
