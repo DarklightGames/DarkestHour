@@ -12,6 +12,7 @@ class DH_KubelwagenCar_WH extends DHVehicle;
 
 defaultproperties
 {
+    bCanCrash=true
     MaxPitchSpeed=250.0
     RumbleSound=sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
     RumbleSoundBone="body"
@@ -20,37 +21,37 @@ defaultproperties
     WheelPenOffset=0.01
     WheelRestitution=0.1
     WheelInertia=0.1
-    WheelLongFrictionFunc=(Points=(,(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
+    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=100.0,OutVal=1.0),(InVal=300.0,OutVal=0.15),(InVal=800.0,OutVal=0.0001),(InVal=10000000000.0,OutVal=0.0)))
     WheelLongSlip=0.001
-    WheelLatSlipFunc=(Points=(,(InVal=30.0,OutVal=0.009),(InVal=45.0),(InVal=10000000000.0)))
     WheelLongFrictionScale=1.1
+    WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=45.0,OutVal=0.09),(InVal=10000000000.0,OutVal=0.9)))
     WheelLatFrictionScale=1.55
     WheelHandbrakeSlip=0.01
-    WheelHandbrakeFriction=0.1
+    WheelHandbrakeFriction=0.33
     WheelSuspensionTravel=15.0
     WheelSuspensionMaxRenderTravel=5.0
     FTScale=0.03
     ChassisTorqueScale=0.095
-    MinBrakeFriction=4.0
-    MaxSteerAngleCurve=(Points=((OutVal=45.0),(InVal=300.0,OutVal=30.0),(InVal=500.0,OutVal=20.0),(InVal=600.0,OutVal=15.0),(InVal=1000000000.0,OutVal=10.0)))
-    TorqueCurve=(Points=((OutVal=10.0),(InVal=200.0,OutVal=0.75),(InVal=1500.0,OutVal=2.0),(InVal=2200.0)))
-    GearRatios(0)=-0.2
-    GearRatios(1)=0.2
-    GearRatios(2)=0.35
-    GearRatios(3)=0.55
-    GearRatios(4)=0.8
-    TransRatio=0.17
+    MinBrakeFriction=1.5
+    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=52.0),(InVal=200.0,OutVal=24.0),(InVal=900.0,OutVal=3.0),(InVal=1000000000.0,OutVal=0.0)))
+    TorqueCurve=(Points=((InVal=0.0,OutVal=10.0),(InVal=200.0,OutVal=7.0),(InVal=600.0,OutVal=4.0),(InVal=1200.0,OutVal=2.0),(InVal=2000.0,OutVal=1.0)))
+    GearRatios(0)=-0.3
+    GearRatios(1)=0.3
+    GearRatios(2)=0.5
+    GearRatios(3)=0.8
+    GearRatios(4)=1.32
+    TransRatio=0.18
     LSDFactor=1.0
-    EngineBrakeFactor=0.0001
+    EngineBrakeFactor=0.0003
     EngineBrakeRPMScale=0.1
-    MaxBrakeTorque=20.0
-    SteerSpeed=75.0
-    TurnDamping=100.0
+    MaxBrakeTorque=10.0
+    SteerSpeed=85.0
+    TurnDamping=5.0
     StopThreshold=100.0
     HandbrakeThresh=200.0
     EngineInertia=0.1
     IdleRPM=700.0
-    EngineRPMSoundRange=6000.0
+    EngineRPMSoundRange=8000.0 //was 6000
     SteerBoneName="Steer_Wheel"
     RevMeterScale=4000.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-140.0,Y=45.0),ExhaustRotation=(Pitch=34000,Roll=-5000))
@@ -85,10 +86,11 @@ defaultproperties
     VehHitpoints(3)=(PointRadius=8.0,PointScale=1.0,PointBone="RightFrontWheel",DamageMultiplier=5.0,HitPointType=HP_Engine)
     VehHitpoints(4)=(PointRadius=8.0,PointScale=1.0,PointBone="LeftRearWheel",DamageMultiplier=5.0,HitPointType=HP_Engine)
     VehHitpoints(5)=(PointRadius=8.0,PointScale=1.0,PointBone="RightRearWheel",DamageMultiplier=5.0,HitPointType=HP_Engine)
-    EngineHealth=25
     bMultiPosition=false
     DriverAttachmentBone="driver_attachment"
     Begin Object Class=SVehicleWheel Name=LFWheel
+        bPoweredWheel=true
+        bHandbrakeWheel=true
         SteerType=VST_Steered
         BoneName="LeftFrontWheel"
         BoneRollAxis=AXIS_Y
@@ -98,6 +100,7 @@ defaultproperties
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_KubelwagenCar_WH.LFWheel'
     Begin Object Class=SVehicleWheel Name=RFWheel
+        bPoweredWheel=true
         SteerType=VST_Steered
         BoneName="RightFrontWheel"
         BoneRollAxis=AXIS_Y
@@ -107,7 +110,7 @@ defaultproperties
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_KubelwagenCar_WH.RFWheel'
     Begin Object Class=SVehicleWheel Name=LRWheel
-        bPoweredWheel=true
+        bHandbrakeWheel=true
         BoneName="LeftRearWheel"
         BoneRollAxis=AXIS_Y
         WheelRadius=23.0
@@ -116,7 +119,7 @@ defaultproperties
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_KubelwagenCar_WH.LRWheel'
     Begin Object Class=SVehicleWheel Name=RRWheel
-        bPoweredWheel=true
+        bHandbrakeWheel=true
         BoneName="RightRearWheel"
         BoneRollAxis=AXIS_Y
         WheelRadius=23.0
@@ -124,7 +127,7 @@ defaultproperties
         SupportBoneAxis=AXIS_X
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_KubelwagenCar_WH.RRWheel'
-    VehicleMass=2.0
+    VehicleMass=1.0
     bHasHandbrake=true
     bFPNoZFromCameraPitch=true
     DrivePos=(X=-2.0,Y=6.5,Z=-10.0)
@@ -139,6 +142,8 @@ defaultproperties
     GroundSpeed=325.0
     PitchUpLimit=500
     PitchDownLimit=58000
+    ImpactWorldDamageMult=0.008
+    HeavyEngineDamageThreshold=0.33
     HealthMax=125.0
     Health=125
     Mesh=SkeletalMesh'DH_Kubelwagen_anm.kubelwagen_body_ext'
