@@ -1018,25 +1018,39 @@ simulated function DrawHudPassC(Canvas C)
 function DrawSupplyCount(Canvas C)
 {
     local DHPawn P;
+    local DHVehicle V;
     local DHPlayerReplicationInfo PRI;
     local string S;
     local float XL, YL;
+    local int TouchingSupplyCount;
 
-    P = DHPawn(PawnOwner);
-
-    if (P != none)
+    if (PawnOwner == none)
     {
-        PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+        return;
     }
+
+    PRI = DHPlayerReplicationInfo(PawnOwner.PlayerReplicationInfo);
 
     if (PRI == none)
     {
         return;
     }
 
-    if (PRI.IsInSquad() && P.IsInRangeOfSupplyCache())
+    P = DHPawn(PawnOwner);
+    V = DHVehicle(PawnOwner);
+
+    if (P != none)
     {
-        S = P.TouchingSupplyCount @ "Supplies";
+        TouchingSupplyCount = P.TouchingSupplyCount;
+    }
+    else if (V != none)
+    {
+        TouchingSupplyCount = V.TouchingSupplyCount;
+    }
+
+    if (PRI.IsInSquad() && TouchingSupplyCount >= 0)
+    {
+        S = TouchingSupplyCount @ "Supplies";
         C.TextSize(S, XL, YL);
         C.SetDrawColor(255, 255, 255, 255);
         C.Font = C.TinyFont;

@@ -6522,11 +6522,6 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vecto
     }
 }
 
-simulated function bool IsInRangeOfSupplyCache()
-{
-    return TouchingSupplyCount >= 0;
-}
-
 // Overridden to fix an accessed none that could happen if Weapon was none.
 simulated function NextWeapon()
 {

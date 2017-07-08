@@ -484,6 +484,28 @@ simulated function Tick(float DeltaTime)
     {
         Disable('Tick');
     }
+
+    if (Role == ROLE_Authority)
+    {
+        // Recalculate the total supply count for our pawn, or -1 if there are
+        // no supplies around.
+        if (TouchingSupplyAttachments.Length == 0)
+        {
+            TouchingSupplyCount = -1;
+        }
+        else
+        {
+            TouchingSupplyCount = 0;
+
+            for (i = 0; i < TouchingSupplyAttachments.Length; ++i)
+            {
+                if (TouchingSupplyAttachments[i] != none)
+                {
+                    TouchingSupplyCount += TouchingSupplyAttachments[i].GetSupplyCount();
+                }
+            }
+        }
+    }
 }
 
 // Modified to remove RO stuff about bDriverAlreadyEntered, bDisableThrottle & CheckForCrew, as DH doesn't wait for crew anyway - so just set bDriverAlreadyEntered in KDriverEnter()
