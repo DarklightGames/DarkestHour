@@ -131,7 +131,7 @@ function bool MembersListContextMenuOpen(GUIContextMenu Sender)
     MyPRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
     OtherPRI = DHPlayerReplicationInfo(li_Members.GetObject());
 
-    if (MyPRI == none || OtherPRI == none || MyPRI == OtherPRI || !MyPRI.IsSquadLeader())
+    if (MyPRI == none || OtherPRI == none || MyPRI == OtherPRI || MyPRI.SquadIndex != SquadIndex || !MyPRI.IsSquadLeader())
     {
         return false;
     }
