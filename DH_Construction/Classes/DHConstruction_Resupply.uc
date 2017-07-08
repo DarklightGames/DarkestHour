@@ -8,6 +8,7 @@ class DHConstruction_Resupply extends DHConstruction;
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_Construction_stc.usx
 
 var DHResupplyAttachment ResupplyAttachment;
+var int ResupplyCount;
 
 function PostBeginPlay()
 {
@@ -21,11 +22,23 @@ function PostBeginPlay()
         {
             ResupplyAttachment.ResupplyType = RT_Players;
             ResupplyAttachment.SetBase(self);
+            ResupplyAttachment.OnPawnResupplied = MyOnPawnResupplied;
         }
         else
         {
             Warn("Failed to spawn resupply attachment!");
         }
+    }
+}
+
+function MyOnPawnResupplied(Pawn P)
+{
+    --ResupplyCount;
+
+    if (ResupplyCount <= 0)
+    {
+        // TODO: Have a different appearance for different supply levels.
+        Destroy();
     }
 }
 
@@ -86,4 +99,5 @@ defaultproperties
     CollisionHeight=30.0
     SupplyCost=300
     bCanPlaceIndoors=true
+    ResupplyCount=25
 }

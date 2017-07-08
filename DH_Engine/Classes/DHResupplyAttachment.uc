@@ -19,12 +19,29 @@ var     EResupplyType   ResupplyType;   //Who this volume will resupply
 var     array<Pawn>     ResupplyActors;
 var     float           UpdateTime;     // How often this thing needs to do it's business
 
+delegate OnPawnResupplied(Pawn P);            // Called for every pawn that is resupplied
+
+function OnTeamIndexChanged();
+
 simulated function PostBeginPlay()
 {
     super(Actor).PostBeginPlay();
 
     SetTimer(1.0, true);
 }
+
+function int GetTeamIndex()
+{
+    return TeamIndex;
+}
+
+final function SetTeamIndex(int TeamIndex)
+{
+    self.TeamIndex = TeamIndex;
+
+    OnTeamIndexChanged();
+}
+
 
 function ProcessActorLeave()
 {
@@ -185,6 +202,8 @@ function Timer()
                 {
                     recvr.LastResupplyTime = Level.TimeSeconds;
                     recvr.ClientResupplied();
+
+                    OnPawnResupplied(recvr);
                 }
             }
         }
@@ -276,20 +295,6 @@ event UnTouch(Actor Other)
         V.LeftResupply();
     }
 }
-
-function int GetTeamIndex()
-{
-    return TeamIndex;
-}
-
-final function SetTeamIndex(int TeamIndex)
-{
-    self.TeamIndex = TeamIndex;
-
-    OnTeamIndexChanged();
-}
-
-function OnTeamIndexChanged();
 
 defaultproperties
 {
