@@ -179,6 +179,33 @@ function ServerIncrementProgress()
     OnProgressChanged();
 }
 
+simulated function DH_LevelInfo GetLevelInfo()
+{
+    local DarkestHourGame G;
+    local DHPlayer PC;
+
+    if (Role == ROLE_Authority)
+    {
+        G = DarkestHourGame(Level.Game);
+
+        if (G != none)
+        {
+            return DH_LevelInfo(G.LevelInfo);
+        }
+    }
+    else
+    {
+        PC = DHPlayer(Level.GetLocalPlayerController());
+
+        if (PC != none)
+        {
+            return PC.ClientLevelInfo;
+        }
+    }
+
+    return none;
+}
+
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -187,13 +214,9 @@ simulated function PostBeginPlay()
     {
         SetTeamIndex(int(TeamOwner));
         Health = HealthMax;
-
-        foreach AllActors(class'DH_LevelInfo', LevelInfo)
-        {
-            break;
-        }
     }
 
+    LevelInfo = GetLevelInfo();
     Manager = FindConstructionManager(Level);
 
     if (Manager != none)
