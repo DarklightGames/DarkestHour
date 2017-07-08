@@ -16,10 +16,12 @@ var int     ActivationCounterThreshold;
 var float   EncroachmentRadiusInMeters;
 var int     EncroachmentPenaltyBlockThreshold;
 var int     EncroachmentPenaltyCounter;
+var int     EnemiesNeededToBlock;
 
 var float   CaptureRadiusInMeters;
 var int     CaptureCounter;
 var int     CaptureCounterThreshold;
+var int     EnemiesNeededToCapture;
 
 var int     SpawnKillPenalty;
 var int     SpawnKillPenaltyCounter;
@@ -67,7 +69,7 @@ function Timer()
     // Encroachment
     GetPlayerCountsWithinRadius(EncroachmentRadiusInMeters,,, EncroachingEnemiesCount);
 
-    if (EncroachingEnemiesCount > 0)
+    if (EncroachingEnemiesCount >= EnemiesNeededToBlock)
     {
         EncroachmentPenaltyCounter = Clamp(EncroachmentPenaltyCounter + EncroachingEnemiesCount, 0, EncroachmentPenaltyBlockThreshold);
     }
@@ -86,11 +88,14 @@ function Timer()
 
     if (CapturingEnemiesCount >= 1)
     {
-        // Increment capture counter
-        CaptureCounter += CapturingEnemiesCount;
-
         // If any enemies are capturing, spawning must be disabled.
         BlockReason = SPBR_EnemiesNearby;
+
+        if (CapturingEnemiesCount >= EnemiesNeededToCapture)
+        {
+            // Increment capture counter
+            CaptureCounter += CapturingEnemiesCount;
+        }
     }
     else
     {
@@ -241,9 +246,11 @@ defaultproperties
     ActivationCounterThreshold=60
     EncroachmentRadiusInMeters=50
     EncroachmentPenaltyBlockThreshold=30
+    EnemiesNeededToBlock=3
 
     CaptureRadiusInMeters=5
     CaptureCounterThreshold=30
+    EnemiesNeededToCapture=3
 
     SpawnKillPenalty=15
 }
