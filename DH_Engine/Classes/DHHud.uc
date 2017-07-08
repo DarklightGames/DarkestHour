@@ -3257,6 +3257,8 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
             // PERFORMANCE: this is totally inefficient, but will be run on
             // the client so we can get away with it...for now.
             // TODO: Run this periodically, not every frame.
+            OtherPawn = none;
+
             foreach DynamicActors(class'Pawn', P)
             {
                 if (P.PlayerReplicationInfo == OtherPRI)
