@@ -26,7 +26,7 @@ var() bool              bResetRoundTimer;                   // If true will rese
 var() TeamReinf         PhaseEndReinforcements;             // What to set reinforcements to at the end of the phase (0 means no change, -1 set to zero)
 var() bool              bPreventTimeChangeAtZeroReinf;      // bTimeChangesAtZeroReinf will be set to false for this match
 var() int               SpawningEnabledTime;                // Round time at which players can spawn
-var() sound             PhaseEndSound;
+var() sound             PhaseEndSounds[2];                  // Axis and Allies Round Begin Sound
 
 var int                 TimerCount;
 var int                 SetupPhaseDurationActual;
@@ -217,7 +217,7 @@ auto state Timing
             if (PC != none)
             {
                 PC.ClientMessage(Repl(PhaseEndMessage, "{0}", GRI.SpawnsRemaining[PC.GetTeamNum()]), 'CriticalEvent');
-                PC.PlayAnnouncement(PhaseEndSound, 1, true);
+                PC.PlayAnnouncement(PhaseEndSounds[PC.GetTeamNum()], 1, true);
             }
         }
 
@@ -232,7 +232,8 @@ state Done
 defaultproperties
 {
     PhaseEndReinforcements=(AxisReinforcements=-1,AlliesReinforcements=-1)
-    PhaseEndSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01'
+    PhaseEndSounds(0)=sound'DH_SundrySounds.RoundBeginSounds.Axis_Start'
+    PhaseEndSounds(1)=sound'DH_SundrySounds.RoundBeginSounds.US_Start'
     PhaseMessage="Round Begins In: {0} seconds"
     PhaseEndMessage="Round Has Started! Your team begins with {0} reinforcements."
     bSkipPreStart=true
