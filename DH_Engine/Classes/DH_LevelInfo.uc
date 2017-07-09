@@ -106,7 +106,7 @@ simulated function bool IsConstructionRestricted(class<DHConstruction> Construct
 
 defaultproperties
 {
-    bDHDebugMode=true // TEMPDEBUG - revert to false before any release
+    bDHDebugMode=false // TEMPDEBUG - revert to false before any release
 
     AlliesToAxisRatio=0.5
     Texture=texture'DHEngine_Tex.LevelInfo'
