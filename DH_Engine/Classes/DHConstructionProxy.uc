@@ -358,7 +358,22 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
             TraceEnd = BaseLocation;
             TraceEnd.Z -= 100.0;
 
-            TI = TerrainInfo(Trace(HitLocation, HitNormal, TraceEnd, TraceStart, false));
+            // An explanation is in order. For some reason, this trace can fail
+            // for no discernible reason. I can only assume this it's some sort
+            // floating point limitation or perhaps a bug in the engine.
+            // This can be remedied by making this an extents trace, but then
+            // the hit location is not actually going to be at the same location
+            // as the vertex we are trying to align to, which in turn can create
+            // problems with the super unreliable terrain poking functionality.
+            // To keep things as reliable as possible, we disallow placement
+            // if this trace fails and report it as a "bad surface", for lack
+            // of a better error message.
+            TI = none;
+
+            foreach TraceActors(class'TerrainInfo', TI, HitLocation, HitNormal, TraceEnd, TraceStart)
+            {
+                break;
+            }
 
             if (TI != none)
             {
@@ -366,7 +381,7 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
             }
             else
             {
-                Error = ERROR_NoGround;
+                Error = ERROR_BadSurface;
             }
         }
 

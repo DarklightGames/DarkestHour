@@ -234,16 +234,21 @@ simulated function PostBeginPlay()
     }
 }
 
+// Terrain poking is wacky. Here's a few things you should know before using
+// this system. First off, it's incredibly finicky. For starts, if the Radius
+// is too low, it decreases the chance of a PokeTerrain success. Secondly,
+// for some reason, PlacementOffsets play havoc with the ability to successfully
+// poke the terrain. Even when it should realistically have no effect whatsoever.
 simulated function PokeTerrain(float Radius, float Depth)
 {
     local TerrainInfo TI;
     local vector HitLocation, HitNormal, TraceEnd, TraceStart;
 
-    // TODO: trace down, where we at boy
-    TraceStart = Location;
+    // Trace to get the terrain height at this location.
+    TraceStart = Location - GetPlacementOffset();
     TraceStart.Z += 1000.0;
 
-    TraceEnd = Location;
+    TraceEnd = Location - GetPlacementOffset();
     TraceEnd.Z -= 1000.0;
 
     foreach TraceActors(class'TerrainInfo', TI, HitLocation, HitNormal, TraceEnd, TraceStart)
@@ -311,7 +316,10 @@ simulated event Destroyed()
 
     if (bPokesTerrain)
     {
-        // TODO: "unpoke" terrain (experimental)
+        // NOTE: This attempts to "unpoke" the terrain, if it was poked upon
+        // construction. Unforunately, this seems to only have a less than 100%
+        // success rate due to some underlying bug in the native PokeTerrain
+        // functionality.
         PokeTerrain(PokeTerrainRadius, -PokeTerrainDepth);
     }
 
@@ -770,8 +778,6 @@ defaultproperties
     bBlockNonZeroExtentTraces=true
     bBlockProjectiles=true
     bProjTarget=true
-
-    // Temp to prevent bots from bunching up at Destroyable statics
     bPathColliding=true
     bWorldGeometry=true
 
@@ -784,7 +790,7 @@ defaultproperties
     PlacementSoundRadius=60.0
     PlacementSoundVolume=4.0
     IndoorsCeilingHeightInMeters=10.0
-    PokeTerrainRadius=1
+    PokeTerrainRadius=32
     PokeTerrainDepth=32
     RotationSnapAngle=16384
     bInheritsOwnerRotation=true
