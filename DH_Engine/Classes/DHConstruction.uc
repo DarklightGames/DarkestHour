@@ -791,7 +791,7 @@ defaultproperties
 
     // Stagnation
     bCanDieOfStagnation=true
-    StagnationLifespan=120
+    StagnationLifespan=300
 
     LocalRotationRate=32768
 
