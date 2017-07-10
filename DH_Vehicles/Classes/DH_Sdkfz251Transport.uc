@@ -10,6 +10,7 @@ class DH_Sdkfz251Transport extends DHVehicle;
 
 defaultproperties
 {
+    ReinforcementCost=4
     bIsApc=true
     bHasTreads=true
     TreadHitMaxHeight=-5.0

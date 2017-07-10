@@ -16,6 +16,7 @@ defaultproperties
     VehicleTeam=1
     VehicleMass=11.5
     MaxDesireability=0.1
+    ReinforcementCost=12
 
     // Artillery
     bIsArtilleryVehicle=true

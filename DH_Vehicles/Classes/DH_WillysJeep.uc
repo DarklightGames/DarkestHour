@@ -12,6 +12,7 @@ class DH_WillysJeep extends DHVehicle;
 
 defaultproperties
 {
+    ReinforcementCost=2
     bCanCrash=true
     MaxPitchSpeed=350.0
     RumbleSound=sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'

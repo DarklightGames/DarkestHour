@@ -16,6 +16,7 @@ defaultproperties
     VehicleNameString="Panzer VI 'King Tiger' Ausf.B"
     VehicleMass=16.0
     PointValue=5.0
+    ReinforcementCost=23
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_body_ext'

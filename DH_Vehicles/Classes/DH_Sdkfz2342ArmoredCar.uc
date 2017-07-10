@@ -7,6 +7,7 @@ class DH_Sdkfz2342ArmoredCar extends DH_Sdkfz2341ArmoredCar;
 
 defaultproperties
 {
+    ReinforcementCost=11
     VehicleNameString="Sd.Kfz.234/2 Armored Car"
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz2342CannonPawn')
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.Puma.Puma_dest'

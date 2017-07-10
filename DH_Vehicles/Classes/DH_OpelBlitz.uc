@@ -11,6 +11,7 @@ class DH_OpelBlitz extends DHVehicle
 
 defaultproperties
 {
+    ReinforcementCost=5
     bCanCrash=true
     WheelSoftness=0.025
     WheelPenScale=1.2

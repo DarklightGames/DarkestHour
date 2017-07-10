@@ -11,6 +11,7 @@ class DH_M3A1HalftrackTransport extends DHVehicle;
 
 defaultproperties
 {
+    ReinforcementCost=4
     bIsApc=true
     bHasTreads=true
     TreadHitMaxHeight=2.5

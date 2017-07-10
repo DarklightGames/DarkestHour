@@ -15,6 +15,7 @@ defaultproperties
     VehicleNameString="M10 Wolverine"
     VehicleTeam=1
     VehicleMass=13.0
+    ReinforcementCost=13
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Wolverine_anm.M10_body_ext'

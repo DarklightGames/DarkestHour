@@ -15,6 +15,7 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="Jagdpanzer IV/48"
     VehicleMass=12.0
+    ReinforcementCost=18
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_body_ext'

@@ -17,6 +17,7 @@ defaultproperties
     VehicleNameString="Jagdpanzer VI 'Jagdtiger' Ausf.B"
     VehicleMass=16.5
     PointValue=5.0
+    ReinforcementCost=25
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Jagdtiger_anm.JagdTiger_body_ext'

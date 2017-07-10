@@ -77,6 +77,7 @@ defaultproperties
     VehicleTeam=1
     VehicleMass=5.0
     PointValue=2.0
+    ReinforcementCost=10
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Locust_anm.Locust_body'

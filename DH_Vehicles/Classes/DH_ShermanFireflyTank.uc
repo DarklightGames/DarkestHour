@@ -16,6 +16,7 @@ defaultproperties
     VehicleNameString="Sherman Mk.VC 'Firefly'"
     VehicleTeam=1
     VehicleMass=13.5
+    ReinforcementCost=18
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_body_ext'

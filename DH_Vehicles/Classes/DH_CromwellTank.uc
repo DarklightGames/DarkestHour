@@ -24,6 +24,7 @@ defaultproperties
     VehicleNameString="Cromwell Mk.IV"
     VehicleTeam=1
     VehicleMass=13.0
+    ReinforcementCost=10
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_body_ext'

@@ -13,6 +13,7 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="StuG III Ausf.G"
     VehicleMass=12.0
+    ReinforcementCost=10
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Stug3G_anm.Stug3g_body_ext'

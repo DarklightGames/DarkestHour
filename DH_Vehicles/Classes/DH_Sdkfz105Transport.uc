@@ -29,6 +29,7 @@ simulated function SpawnVehicleAttachments()
 
 defaultproperties
 {
+    ReinforcementCost=6
     VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc4.Sdkfz10_5.SdKfz10_5_windscreen',AttachBone="Body") // windscreen on non-armoured version
     bHasTreads=true
     TreadHitMaxHeight=-5.0

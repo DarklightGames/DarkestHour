@@ -19,6 +19,7 @@ defaultproperties
     bSpecialTankTurning=false
     VehicleMass=5.0
     PointValue=2.0
+    ReinforcementCost=8
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_body_ext'

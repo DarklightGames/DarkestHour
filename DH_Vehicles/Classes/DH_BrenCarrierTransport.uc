@@ -12,6 +12,7 @@ class DH_BrenCarrierTransport extends DHVehicle;
 
 defaultproperties
 {
+    ReinforcementCost=3
     bIsApc=true
     bHasTreads=true
     bSpecialTankTurning=true
