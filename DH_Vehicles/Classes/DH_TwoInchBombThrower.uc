@@ -14,6 +14,6 @@ defaultproperties
     RangeSettingSpeedModifier(0)=0.55; // lowest setting of gas regulator - reduces range to approx 35 yards
     RangeSettingSpeedModifier(1)=0.82; // mid setting - reduces to approx 75 yards
     RangeSettingSpeedModifier(2)=1.0;  // max range (approx 110 yards)
-    HUDAmmoIcon=texture'DH_Mortars_tex.60mmMortarM2.M302-WP' // TODO: get ammo & reload icons made to replace these placeholders
-    HUDAmmoReloadTexture=texture'DH_Mortars_tex.60mmMortarM2.M302-WP'
+    HUDAmmoIcon=texture'DH_InterfaceArt_tex.Tank_Hud.2InchSmokeBomb_PLACEHOLDER' // TODO: get ammo & reload icons made to replace these placeholders
+    HUDAmmoReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.2InchSmokeBomb_reload_PLACEHOLDER'
 }

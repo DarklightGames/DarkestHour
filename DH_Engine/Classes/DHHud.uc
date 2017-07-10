@@ -63,8 +63,8 @@ var     SpriteWidget        VehicleLockedIcon;                  // icon showing 
 var     SpriteWidget        VehicleAltAmmoReloadIcon;           // ammo reload icon for a coax MG, so reload progress can be shown on HUD like a tank cannon reload
 var     SpriteWidget        VehicleMGAmmoReloadIcon;            // ammo reload icon for a vehicle mounted MG position
 var     SpriteWidget        VehicleSmokeLauncherAmmoIcon;       // ammo icon for a vehicle mounted smoke launcher
-var     TextWidget          VehicleSmokeLauncherAmmoAmount;     // ammo quantity display for vehicle smoke launcher
 var     SpriteWidget        VehicleSmokeLauncherAmmoReloadIcon; // ammo reload icon for vehicle smoke launcher
+var     NumericWidget       VehicleSmokeLauncherAmmoAmount;     // ammo quantity display for vehicle smoke launcher
 var     SpriteWidget        VehicleSmokeLauncherAimIcon;        // aim indicator icon for a vehicle smoke launcher that can be rotated
 var     SpriteWidget        VehicleSmokeLauncherRangeBarIcon;   // range indicator icon for a range-adjustable vehicle smoke launcher
 var     SpriteWidget        VehicleSmokeLauncherRangeInfill;    // infill bar to show current range setting for a range-adjustable vehicle smoke launcher
@@ -275,7 +275,6 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(VehicleSmokeLauncherRangeBarIcon.WidgetTexture);
     Level.AddPrecacheMaterial(VehicleSmokeLauncherRangeInfill.WidgetTexture);
     Level.AddPrecacheMaterial(VehicleSmokeLauncherAimIcon.WidgetTexture);
-    Level.AddPrecacheMaterial(TexRotator'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_aim_pointer_rot');
 
     // Death message icons
     Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.Generic');
@@ -1070,7 +1069,6 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     local VehicleWeaponPawn   WP;
     local AbsoluteCoordsInfo  Coords, Coords2;
     local SpriteWidget        Widget;
-    local TexRotator          AimIndicator;
     local rotator             MyRot;
     local float               XL, YL, Y_one, StrX, StrY, Team, MaxChange, ProportionOfReloadRemaining, f;
     local int                 Current, Pending, i;
@@ -1577,22 +1575,16 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
                     }
 
                     // Draw smoke launcher ammo amount
-                    // Note have to scale OffsetY for HudScale & screen height (compared to base setting for a 1080 screen), as DrawTextWidgetClipped does not
-                    VehicleSmokeLauncherAmmoAmount.Text = "x" @ Cannon.NumSmokeLauncherRounds;
-                    VehicleSmokeLauncherAmmoAmount.OffsetY = default.VehicleSmokeLauncherAmmoAmount.OffsetY * (HudScale * Canvas.SizeY / 1080.0);
-                    DrawTextWidgetClipped(Canvas, VehicleSmokeLauncherAmmoAmount, Coords2);
+                    VehicleSmokeLauncherAmmoAmount.Value = Cannon.NumSmokeLauncherRounds;
+                    DrawNumericWidget(Canvas, VehicleSmokeLauncherAmmoAmount, Digits);
 
-                    // If smoke launcher can be rotated, draw the rotation indicator
+                    // If smoke launcher can be rotated to aim it, draw the aim indicator
                     if (SL.static.CanRotate())
                     {
-                        DrawSpriteWidgetClipped(Canvas, VehicleSmokeLauncherAimIcon, Coords2, true,,, false, true, true); // background clockface icon
+                        TexRotator(FinalBlend(VehicleSmokeLauncherAimIcon.WidgetTexture).Material).Rotation.Yaw
+                            = -float(Cannon.SmokeLauncherAdjustmentSetting) / float(SL.default.NumRotationSettings) * 65536.0;
 
-                        Widget = VehicleSmokeLauncherAimIcon;
-                        AimIndicator = TexRotator'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_aim_pointer_rot';
-                        AimIndicator.Rotation.Yaw = -float(Cannon.SmokeLauncherAdjustmentSetting) / float(SL.default.NumRotationSettings) * 65536.0;
-                        Widget.WidgetTexture = AimIndicator;
-                        DrawSpriteWidgetClipped(Canvas, Widget, Coords2, true,,, false, true, true); // arrowhead, rotated to show aim direction
-
+                        DrawSpriteWidget(Canvas, VehicleSmokeLauncherAimIcon);
                     }
                     // If smoke launcher has range adjustment, draw the range indicator
                     else if (SL.static.CanAdjustRange())
@@ -5539,17 +5531,18 @@ defaultproperties
     VehicleOccupantsText=(PosX=0.78,OffsetX=0,bDrawShadow=true)
     VehicleLockedIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.Tank_Hud.VehicleLockedIcon',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.21,DrawPivot=DP_MiddleMiddle,PosX=0.98,PosY=0.85,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=128,G=128,B=128,A=255),Tints[1]=(R=128,G=128,B=128,A=255))
     VehicleAmmoReloadIcon=(Tints[0]=(A=80),Tints[1]=(A=80)) // override to make RO's red cannon ammo reload overlay slightly less bright (reduced alpha from 128)
-    VehicleAmmoTypeText=(Text="",PosX=0.24,PosY=1.0,WrapWidth=0.0,WrapHeight=1,OffsetX=8,OffsetY=-4,DrawPivot=DP_LowerLeft,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=true)
-    VehicleAltAmmoIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.2,DrawPivot=DP_LowerLeft,PosX=0.30,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    VehicleAltAmmoAmount=(TextureScale=0.2,MinDigitCount=1,DrawPivot=DP_LowerLeft,PosX=0.30,PosY=1.0,OffsetX=135,OffsetY=-40,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    VehicleAmmoAmount=(OffsetX=125)
+    VehicleAmmoTypeText=(PosX=0.24)
+    VehicleAltAmmoIcon=(PosX=0.3)
+    VehicleAltAmmoAmount=(PosX=0.3,OffsetX=125,OffsetY=-43)
     VehicleAltAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.2,DrawPivot=DP_LowerLeft,PosX=0.30,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=80),Tints[1]=(R=255,G=0,B=0,A=80))
     VehicleMGAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.3,DrawPivot=DP_LowerLeft,PosX=0.15,PosY=1.0,OffsetX=0,OffsetY=-8,ScaleMode=SM_Up,Scale=0.75,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=80),Tints[1]=(R=255,G=0,B=0,A=80))
-    VehicleSmokeLauncherAmmoIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=255),TextureScale=0.12,DrawPivot=DP_LowerMiddle,PosX=0.697,PosY=1.0,OffsetX=0,OffsetY=-38,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    VehicleSmokeLauncherAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=255),TextureScale=0.12,DrawPivot=DP_LowerMiddle,PosX=0.697,PosY=1.0,OffsetX=0,OffsetY=-38,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=80),Tints[1]=(R=255,G=0,B=0,A=80))
-    VehicleSmokeLauncherAmmoAmount=(Text="",PosX=0.697,PosY=1.0,WrapWidth=0.0,WrapHeight=1.0,OffsetX=45,OffsetY=-30,DrawPivot=DP_LowerLeft,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    VehicleSmokeLauncherAimIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.Tank_Hud.clock_face',TextureCoords=(X1=0,Y1=0,X2=255,Y2=255),TextureScale=0.089,DrawPivot=DP_LowerMiddle,PosX=0.697,PosY=1.0,OffsetX=0,OffsetY=32,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    VehicleSmokeLauncherRangeBarIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_rangebar',TextureCoords=(X1=0,Y1=0,X2=63,Y2=255),TextureScale=0.12,DrawPivot=DP_LowerMiddle,PosX=0.697,PosY=1.0,OffsetX=75,OffsetY=-32,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    VehicleSmokeLauncherRangeInfill=(WidgetTexture=texture'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_rangebar_infill',TextureCoords=(X1=0,Y1=0,X2=63,Y2=255),TextureScale=0.12,DrawPivot=DP_LowerMiddle,PosX=0.697,PosY=1.0,OffsetX=75,OffsetY=-32,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    VehicleSmokeLauncherAmmoIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.19,DrawPivot=DP_LowerLeft,PosX=0.37,PosY=1.0,OffsetX=0,OffsetY=-9,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    VehicleSmokeLauncherAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.19,DrawPivot=DP_LowerLeft,PosX=0.37,PosY=1.0,OffsetX=0,OffsetY=-9,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=80),Tints[1]=(R=255,G=0,B=0,A=80))
+    VehicleSmokeLauncherAmmoAmount=(TextureScale=0.19,MinDigitCount=1,DrawPivot=DP_LowerLeft,PosX=0.37,PosY=1.0,OffsetX=125,OffsetY=-43,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    VehicleSmokeLauncherAimIcon=(WidgetTexture=FinalBlend'InterfaceArt_tex.OverheadMap.arrowhead_final',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.17,DrawPivot=DP_LowerLeft,PosX=0.37,PosY=1.0,OffsetX=-45,OffsetY=-50,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=128,G=128,B=128,A=255),Tints[1]=(R=128,G=128,B=128,A=255))
+    VehicleSmokeLauncherRangeBarIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_rangebar',TextureCoords=(X1=0,Y1=0,X2=63,Y2=255),TextureScale=0.096,DrawPivot=DP_LowerLeft,PosX=0.37,PosY=1.0,OffsetX=-10,OffsetY=-18,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    VehicleSmokeLauncherRangeInfill=(WidgetTexture=texture'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_rangebar_infill',TextureCoords=(X1=0,Y1=0,X2=63,Y2=255),TextureScale=0.096,DrawPivot=DP_LowerLeft,PosX=0.37,PosY=1.0,OffsetX=-10,OffsetY=-18,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Squads
     VehiclePositionIsSquadmateColor=(R=0,G=255,B=0,A=255)   // TODO: remove
