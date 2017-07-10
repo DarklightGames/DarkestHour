@@ -6244,6 +6244,11 @@ exec function DebugSpawnVehicle(string VehicleString, int Distance, optional boo
 
     if (VehicleString != "" && (IsDebugModeAllowed() || (PlayerReplicationInfo != none && PlayerReplicationInfo.bAdmin)))
     {
+        if (InStr(VehicleString, ".") == -1) // saves typing in "DH_Vehicles." in front of almost all vehicles spawned (but still allows a package name to be specified)
+        {
+            VehicleString = "DH_Vehicles." $ VehicleString;
+        }
+
         VehicleClass = class<Vehicle>(DynamicLoadObject(VehicleString, class'class'));
 
         if (VehicleClass != none)
