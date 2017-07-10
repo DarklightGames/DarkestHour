@@ -10,9 +10,9 @@ class DH_Stug3GDestroyer_Snow extends DH_Stug3GDestroyer;
 defaultproperties
 {
     bHasAddedSideArmor=true
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Stug3.stug3g_dest3'
     Skins(0)=texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_body_snow'
     Skins(1)=texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_armor_snow'
     // TODO: get snow treads made for StuG & add here (same in factory class & other StuG/StuH winter variants)
     CannonSkins(0)=texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_body_snow'
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Stug3.stug3g_dest3'
 }

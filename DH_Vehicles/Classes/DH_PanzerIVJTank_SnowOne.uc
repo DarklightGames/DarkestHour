@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_PanzerIVJTank_SnowOne extends DH_PanzerIVJTank; // snow topped version of non-camo tank
+class DH_PanzerIVJTank_SnowOne extends DH_PanzerIVJTank; // snow topped version of DH_PanzerIVJTank
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex5.utx
 

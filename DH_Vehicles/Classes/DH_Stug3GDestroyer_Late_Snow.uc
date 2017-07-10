@@ -11,7 +11,7 @@ defaultproperties
 {
     Skins(0)=texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_body_snow'
     Skins(1)=texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_armor_snow'
-    DestroyedMeshSkins(0)=combiner'DH_VehiclesGE_tex3.Destroyed.stug3g_snow_dest' // don't have a destroyed mesh for whitewashed late StuG, so just re-skin the summer camo model
-    DestroyedMeshSkins(1)=combiner'DH_VehiclesGE_tex3.Destroyed.stug3g_snowarmor_dest'
     CannonSkins(0)=texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_body_snow'
+    DestroyedMeshSkins(0)=combiner'DH_VehiclesGE_tex3.Destroyed.stug3g_snow_dest'
+    DestroyedMeshSkins(1)=combiner'DH_VehiclesGE_tex3.Destroyed.stug3g_snowarmor_dest'
 }

@@ -9,8 +9,8 @@ class DH_StuH42Destroyer_Snow extends DH_StuH42Destroyer;
 
 defaultproperties
 {
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.StuH.Stuh_destsnow'
     Skins(0)=texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_body_snow'
     Skins(1)=texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_armor_snow'
     CannonSkins(0)=texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_body_snow'
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.StuH.Stuh_destsnow'
 }

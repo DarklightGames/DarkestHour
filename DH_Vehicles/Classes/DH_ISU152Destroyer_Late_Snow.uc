@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_ISU152Destroyer_Late_Snow extends DH_ISU152Destroyer_Snow;
+class DH_ISU152Destroyer_Late_Snow extends DH_ISU152Destroyer_Snow; // late war tank with APBC rounds instead of AP
 
 defaultproperties
 {

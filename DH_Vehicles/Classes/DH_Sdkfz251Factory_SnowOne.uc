@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_Sdkfz251Factory_SnowOne extends DH_Sdkfz251Factory;
+class DH_Sdkfz251Factory_SnowOne extends DH_Sdkfz251Factory; // snow topped version of CamoOne
 
 defaultproperties
 {

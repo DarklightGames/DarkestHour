@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_Sdkfz251Transport_SnowOne extends DH_Sdkfz251Transport;
+class DH_Sdkfz251Transport_SnowOne extends DH_Sdkfz251Transport; // snow topped version of CamoOne
 
 defaultproperties
 {

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_PantherGFactory_SnowTwo extends DH_PantherGFactory;
+class DH_PantherGFactory_SnowTwo extends DH_PantherGFactory; // snow topped version of ArdennesTwo
 
 defaultproperties
 {

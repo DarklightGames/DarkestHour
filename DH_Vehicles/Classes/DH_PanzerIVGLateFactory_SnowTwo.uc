@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_PanzerIVGLateFactory_SnowTwo extends DH_PanzerIVGLateFactory;
+class DH_PanzerIVGLateFactory_SnowTwo extends DH_PanzerIVGLateFactory; // snow topped version of CamoTwo
 
 defaultproperties
 {

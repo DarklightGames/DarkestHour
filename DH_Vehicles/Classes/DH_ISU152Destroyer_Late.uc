@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_ISU152Destroyer_Late extends DH_ISU152Destroyer;
+class DH_ISU152Destroyer_Late extends DH_ISU152Destroyer; // late war tank with APBC rounds instead of AP
 
 defaultproperties
 {

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_Sdkfz251Factory_SnowTwo extends DH_Sdkfz251Factory;
+class DH_Sdkfz251Factory_SnowTwo extends DH_Sdkfz251Factory; // snow topped version of camo pattern very similar to CamoFour
 
 defaultproperties
 {
