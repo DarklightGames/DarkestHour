@@ -89,6 +89,7 @@ var localized   string                      ReservedString;
 var localized   string                      ChangeTeamConfirmText;
 var localized   string                      FreeChangeTeamConfirmText;
 var localized   string                      CantChangeTeamYetText;
+var localized   string                      ReinforcementCostText;
 
 var localized   string                      LockText;
 var localized   string                      UnlockText;
@@ -596,6 +597,12 @@ function UpdateVehicles(optional bool bShowAlert)
             if (GRI.VehiclePoolMaxActives[j] != 255)
             {
                 S @= "{" $ GRI.VehiclePoolActiveCounts[j] $ "/" $ GRI.VehiclePoolMaxActives[j] $ "}";
+            }
+
+            // Only show vehicle reinforcement cost if reinforcements are not infinite
+            if (class<DHVehicle>(VehicleClass) != none && GRI.SpawnsRemaining[class<DHVehicle>(VehicleClass).default.VehicleTeam] != -1)
+            {
+                S @= "|" $ default.ReinforcementCostText $ class<DHVehicle>(VehicleClass).default.ReinforcementCost $ "|";
             }
 
             RespawnTime = GRI.VehiclePoolNextAvailableTimes[j] - GRI.ElapsedTime;
@@ -1701,6 +1708,7 @@ defaultproperties
     LockText="Lock"
     UnlockText="Unlock"
     NoneText="None"
+    ReinforcementCostText="Cost: "
 
     MapMode=MODE_Map
     bButtonsEnabled=true
