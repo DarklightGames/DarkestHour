@@ -54,6 +54,7 @@ var     float                       TeamAttritionCounter[2];
 
 var     bool                        bSwapTeams;
 var     bool                        bUseReinforcementWarning;
+var     bool                        bUseInfiniteReinforcements;             // Level should have infinite reinforcements regardless of the setting
 var     bool                        bRoundEndsAtZeroReinf;
 var     bool                        bTimeChangesAtZeroReinf;
 var     float                       AlliesToAxisRatio;
@@ -205,6 +206,8 @@ function PostBeginPlay()
     {
         case GT_Push:
             GRI.CurrentGameType = "Push";
+            bUseInfiniteReinforcements = true;
+            bUseReinforcementWarning = false;
             break;
 
         case GT_Attrition:
@@ -446,7 +449,7 @@ event Tick(float DeltaTime)
     super.Tick(DeltaTime);
 }
 
-// Raises the reinforcement interval used in the level if the server is performing poorly, otherwise it sets it to default
+// Raises the reinforcement interval used in GRI if the server is performing poorly, otherwise it sets it to default
 function HandleReinforceIntervalInflation()
 {
     local float TickRatio;
@@ -2279,8 +2282,17 @@ state RoundInPlay
 
         ResetArtilleryTargets();
 
-        GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = LevelInfo.Allies.SpawnLimit;
-        GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = LevelInfo.Axis.SpawnLimit;
+        // Set reinforcements
+        if (bUseInfiniteReinforcements)
+        {
+            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = -1;
+            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = -1;
+        }
+        else
+        {
+            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = LevelInfo.Allies.SpawnLimit;
+            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = LevelInfo.Axis.SpawnLimit;
+        }
 
         // Set ReinforcementsComing
         if (!SpawnLimitReached(AXIS_TEAM_INDEX))
