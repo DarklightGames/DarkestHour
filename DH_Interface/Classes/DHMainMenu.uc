@@ -124,17 +124,21 @@ function InternalOnOpen()
             // To make a long story short, we can't force the client to delete
             // their configuration file at will, so we need to forcibly create
             // control bindings for the new commands added in 8.0;
-/*
-            SetKeyBindIfAvailable("I", "SquadTalk"); // Matt: suggested alternative, using SetKeyBindIfAvailable() new function below
-            SetKeyBindIfAvailable("Insert", "Speak Squad");
-            SetKeyBindIfAvailable("CapsLock", "ShowOrderMenu | OnRelease HideOrderMenu");
-            SetKeyBindIfAvailable("L", "ToggleVehicleLock");
-*/
             Controller.SetKeyBind("I", "SquadTalk");
             Controller.SetKeyBind("Insert", "Speak Squad");
             Controller.SetKeyBind("CapsLock", "ShowOrderMenu | OnRelease HideOrderMenu");
-            //Controller.SetKeyBind("L", "ToggleVehicleLock"); // Matt: want to add, but this clashes with 'recommended' set up
+            //Controller.SetKeyBind("L", "ToggleVehicleLock"); // Matt: want to add
+            Controller.SetKeyBind("Minus", "DecreaseSmokeLauncherSetting");
+            Controller.SetKeyBind("Equals", "IncreaseSmokeLauncherSetting");
             // TODO: fetch the defaults programmatically, this is sloppy!
+            // Matt: suggested alternative below, using new SetKeyBindIfAvailable() function:
+/*
+            SetKeyBindIfAvailable("I", "SquadTalk");
+            SetKeyBindIfAvailable("Insert", "Speak Squad");
+            SetKeyBindIfAvailable("CapsLock", "ShowOrderMenu | OnRelease HideOrderMenu");
+            SetKeyBindIfAvailable("L", "ToggleVehicleLock");
+            SetKeyBindIfAvailable("Minus", "DecreaseSmokeLauncherSetting", "ShrinkHUD"); // optional 3rd argument means it will override a current binding to the ShrinkHUD command
+            SetKeyBindIfAvailable("Equals", "IncreaseSmokeLauncherSetting", "GrowHUD"); */
         }
 
         SavedVersion = class'DarkestHourGame'.default.Version.ToString();

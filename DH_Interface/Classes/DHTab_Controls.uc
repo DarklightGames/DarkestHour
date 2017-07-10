@@ -210,7 +210,7 @@ defaultproperties
     //******************
 
     // Defaults Basic (this always gets applied before every profile)
-    ControlProfileBindings(0)=(KeyNames=("Tab","GreyMinus","F2","F3","Insert","CapsLock","Home","End","Minus","Equals"),KeyValues=("ScoreToggle","CommunicationMenu","ShowVoteMenu","CommunicationMenu","Speak Squad","ShowOrderMenu | OnRelease HideOrderMenu","Speak Command","Speak Unassigned","",""))
+    ControlProfileBindings(0)=(KeyNames=("Tab","GreyMinus","F2","F3","Insert","CapsLock","Home","End","Minus","Equals"),KeyValues=("ScoreToggle","CommunicationMenu","ShowVoteMenu","CommunicationMenu","Speak Squad","ShowOrderMenu | OnRelease HideOrderMenu","Speak Command","Speak Unassigned","IncreaseSmokeLauncherSetting","DecreaseSmokeLauncherSetting"))
 
     // Defaults Filled (this always gets applied EXCEPT for when RO Classic is selected)
     ControlProfileBindings(1)=(KeyNames=("T","Y","U","I","O","P","F","G","H","N","GreySlash","NumPadPeriod","NumPad3","NumPad9","GreyPlus","RightMouse","MiddleMouse","M","J","K","L","Comma","Period","LeftBracket","RightBracket","Backslash","Slash","Semicolon","SingleQuote","BackSpace","PageUp","PageDown","Up","Down","Left","Right","ScrollLock"),KeyValues=("VoiceTalk","Talk","TeamTalk","VehicleTalk","SquadTalk","SquadMenu","ShowObjectives","ThrowWeapon","ThrowMGAmmo","Deploy","speech VEH_ORDERS 0","speech VEH_ORDERS 7","speech VEH_ORDERS 6","speech VEH_ORDERS 9","speech VEH_ALERTS 9","ROIronSights","AltFire","","","","","","","","","","","","","","","","","","","",""))
