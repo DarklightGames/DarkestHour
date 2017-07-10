@@ -13,4 +13,5 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_UniversalCarrierMGPawn')
     Skins(0)=texture'allies_vehicles_tex2.ext_vehicles.universal_carrier'
     DestroyedMeshSkins(0)=combiner'DH_VehiclesSOV_tex.Destroyed.universal_carrier_dest'
+    DestroyedMeshSkins(1)=combiner'DH_VehiclesSOV_tex.Destroyed.T60_treads_dest'
 }

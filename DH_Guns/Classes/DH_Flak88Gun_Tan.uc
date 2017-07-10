@@ -9,4 +9,5 @@ defaultproperties
 {
     Skins(0)=texture'MilitaryAxisSMT.Artillery.flak_88_tanpaint'
     CannonSkins(0)=texture'MilitaryAxisSMT.Artillery.flak_88_tanpaint'
+    DestroyedMeshSkins(0)=combiner'DH_Artillery_tex.88mmFlak36.flak_88_tanpaint_dest'
 }

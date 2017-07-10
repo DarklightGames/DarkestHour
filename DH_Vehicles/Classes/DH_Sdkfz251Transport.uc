@@ -102,7 +102,7 @@ defaultproperties
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
     StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
     ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
-    DestroyedVehicleMesh=StaticMesh'axis_vehicles_stc.Halftrack.Halftrack_Destoyed'
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.Halftrack0_Destroyed'
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DisintegrationHealth=-10000.0
     DestructionLinearMomentum=(Min=100.0,Max=350.0)

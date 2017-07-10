@@ -63,7 +63,9 @@ defaultproperties
     TreadHitMaxHeight=14.0
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-110.0,Y=0.0,Z=95.0)
-    DestroyedVehicleMesh=StaticMesh'axis_vehicles_stc.Panzer4G.Panzer4G_destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4H_NoSkirts_Destroyed'
+    DestroyedMeshSkins(0)=combiner'DH_VehiclesGE_tex.Destroyed.PanzerIV_body_dest'
+    DestroyedMeshSkins(2)=combiner'DH_VehiclesGE_tex.Destroyed.PanzerIV_armor_dest'
 
     // Exit
     ExitPositions(0)=(X=91.0,Y=-38.0,Z=110.0)  // driver

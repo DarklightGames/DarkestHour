@@ -8,5 +8,6 @@ class DH_JacksonTank_Early extends DH_JacksonTank; // earlier version without HV
 defaultproperties
 {
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JacksonCannonPawn_Early')
+    DestroyedMeshSkins(5)=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha' // hides the muzzle brake in the DestroyedVehicleMesh
     SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.m36_jackson_early'
 }

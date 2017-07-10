@@ -74,7 +74,7 @@ defaultproperties
     TreadHitMaxHeight=-2.0
     TreadDamageThreshold=1.0
     DamagedEffectOffset=(X=-100.0,Y=20.0,Z=26.0)
-    DestroyedVehicleMesh=StaticMesh'axis_vehicles_stc.Tiger1.Tiger1_Destroyed'
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Tiger1.Tiger1_Destroyed0'
 
     // Exit
     ExitPositions(0)=(X=122.0,Y=-56.0,Z=115.0) // driver's hatch

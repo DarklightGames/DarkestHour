@@ -71,7 +71,7 @@ defaultproperties
     VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=62.0
     DamagedEffectOffset=(X=-100.0,Y=0.0,Z=95.0)
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.M10.M10_Dest' // TODO: make destroyed combiner & add as DestroyedVehicleSkins(0)
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.M10.M10_Dest'
 
     // Exit
     ExitPositions(0)=(X=150.0,Y=-35.0,Z=175.0)  // driver

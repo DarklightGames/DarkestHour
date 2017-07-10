@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_PanzerIVGLateTank_SnowOne extends DH_PanzerIVGLateTank;
+class DH_PanzerIVGLateTank_SnowOne extends DH_PanzerIVGLateTank_CamoOne; // snow topped version of CamoOne
 
 defaultproperties
 {

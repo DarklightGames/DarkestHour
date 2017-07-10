@@ -87,6 +87,7 @@ defaultproperties
     DamagedEffectOffset=(X=-135.0,Y=20.0,Z=108.0)
     FireEffectOffset=(X=50.0,Y=0.0,Z=-20.0)
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Jagdpanther.Jagdpanther_dest'
+    DestroyedMeshSkins(0)=combiner'DH_VehiclesGE_tex3.Destroyed.Jagdpanther_body_goodwood_dest' // 'Jagdpanther_dest' SM has been set up with Ardennes camo skin, so this corrects it
 
     // Exit
     ExitPositions(0)=(X=-33.0,Y=36.0,Z=210.0)   // driver

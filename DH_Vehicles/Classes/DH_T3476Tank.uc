@@ -76,6 +76,7 @@ defaultproperties
     FireEffectOffset=(X=127.0,Y=-18.0,Z=25.0)
     DestroyedVehicleMesh=StaticMesh'allies_vehicles_stc.T3476_Destroyed'
     DestroyedMeshSkins(0)=combiner'DH_VehiclesSOV_tex.Destroyed.T3476_ext_dest'
+    DestroyedMeshSkins(1)=combiner'DH_VehiclesSOV_tex.Destroyed.T3476_treads_dest'
 
     // Exit positions
     ExitPositions(0)=(X=215.0,Y=-14.0,Z=50.0)  // driver

@@ -14,4 +14,5 @@ defaultproperties
     CannonSkins(0)=texture'DH_VehiclesUS_tex5.ext_vehicles.M36_turretsnow_ext'
     DestroyedMeshSkins(0)=combiner'DH_VehiclesUS_tex5.Destroyed.M36_Bodysnow_ext_dest'
     DestroyedMeshSkins(1)=combiner'DH_VehiclesUS_tex5.Destroyed.M36_turretsnow_ext_dest'
+    DestroyedMeshSkins(5)=combiner'DH_VehiclesUS_tex5.Destroyed.M36_turretsnow_ext_dest'
 }

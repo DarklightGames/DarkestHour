@@ -82,7 +82,7 @@ defaultproperties
     TreadHitMaxHeight=0.0
     TreadDamageThreshold=0.85
     DamagedEffectOffset=(X=-100.0,Y=20.0,Z=26.0)
-    DestroyedVehicleMesh=StaticMesh'axis_vehicles_stc.PantherG.PantherG_Destoyed' // TODO: make destroyed combiner & add as DestroyedMeshSkins(0)
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherG_Destroyed0'
 
     // Exit
     ExitPositions(0)=(X=123.0,Y=-28.0,Z=105.0) // driver

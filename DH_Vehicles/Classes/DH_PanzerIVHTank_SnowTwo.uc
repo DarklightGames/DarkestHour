@@ -3,12 +3,10 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_PanzerIVHTank_SnowTwo extends DH_PanzerIVHTank; // snow topped version of CamoOne
+class DH_PanzerIVHTank_SnowTwo extends DH_PanzerIVHTank_CamoOne; // snow topped version of CamoOne
 
 defaultproperties
 {
-    bHasAddedSideArmor=true
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4H_Destroyed2'
     Skins(0)=texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_body_snow2'
     Skins(1)=texture'axis_vehicles_tex.Treads.panzer4F2_treadsnow'
     Skins(2)=texture'axis_vehicles_tex.Treads.panzer4F2_treadsnow'

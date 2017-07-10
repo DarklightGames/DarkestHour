@@ -16,6 +16,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Flak88_anm.flak88_base'
     Skins(0)=texture'MilitaryAxisSMT.Artillery.flak_88'
     DestroyedVehicleMesh=StaticMesh'MilitaryAxisSM.Artillery.Flak88_destroyed'
+    DestroyedMeshSkins(0)=combiner'DH_Artillery_tex.88mmFlak36.flak_88_dest'
     VehicleHudImage=texture'DH_Artillery_Tex.ATGun_Hud.flak88_body'
     VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.flak88_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.flak88_turret_look'

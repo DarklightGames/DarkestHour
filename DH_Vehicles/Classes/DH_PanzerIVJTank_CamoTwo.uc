@@ -11,4 +11,6 @@ defaultproperties
     Skins(7)=texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_armor_camo2'
     CannonSkins(0)=texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_body_camo2'
     CannonSkins(1)=texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_armor_camo2'
+    DestroyedMeshSkins(0)=combiner'DH_VehiclesGE_tex3.Destroyed.Panzer4J_body_camo2_dest'
+    DestroyedMeshSkins(6)=FinalBlend'DH_VehiclesGE_tex3.Destroyed.Panzer4J_armor_camo2_dest_final'
 }
