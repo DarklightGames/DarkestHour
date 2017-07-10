@@ -3213,11 +3213,6 @@ simulated function int NumPassengers()
     return Num;
 }
 
-// Added as when player is in a vehicle, the HUD keybinds to GrowHUD & ShrinkHUD will now call these same named functions in the vehicle classes
-// When player is in a vehicle, these functions do nothing to the HUD, but they can be used to add useful vehicle functionality in subclasses, especially as keys are -/+ by default
-simulated function GrowHUD();
-simulated function ShrinkHUD();
-
 // Functions emptied out as not relevant to a vehicle in RO/DH (that doesn't have any DriverWeapons):
 simulated event StartDriving(Vehicle V);
 simulated event StopDriving(Vehicle V);

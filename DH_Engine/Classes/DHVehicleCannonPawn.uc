@@ -385,8 +385,8 @@ exec function Deploy()
     }
 }
 
-// Implemented unused (in a vehicle) HUD keybind commands to adjust either the rotation or range setting of any adjustable smoke launcher
-simulated function GrowHUD()
+// New functions to adjust either the rotation or range setting of any adjustable smoke launcher
+exec function IncreaseSmokeLauncherSetting()
 {
     if (Cannon != none)
     {
@@ -394,7 +394,7 @@ simulated function GrowHUD()
     }
 }
 
-simulated function ShrinkHUD()
+exec function DecreaseSmokeLauncherSetting()
 {
     if (Cannon != none)
     {

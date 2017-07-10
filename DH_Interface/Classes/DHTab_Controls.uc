@@ -115,7 +115,16 @@ defaultproperties
     bindings_game(4)="ToggleVehicleLock"
     captions_game(4)="Lock/Unlock Armored Vehicle"
 
-    captions_weapons(9)="Deploy MG / Attach Bayonet / Fire Vehicle Smoke Launcher" // added fire smoke launcher to key description
+    bindings_weapons(9)="ROMGOperation" // renumbered from here so the new vehicle smoke launcher controls are grouped together at the end of the weapons section
+    captions_weapons(9)="Change MG Barrel"
+    bindings_weapons(10)="SwitchFireMode"
+    captions_weapons(10)="Switch Fire Mode"
+    bindings_weapons(11)="Deploy"
+    captions_weapons(11)="Deploy MG / Attach Bayonet / Fire Vehicle Smoke Launcher" // added fire smoke launcher to key description
+    bindings_weapons(12)="IncreaseSmokeLauncherSetting"
+    captions_weapons(12)="Increase Vehicle Smoke Launcher Range/Rotation Setting"
+    bindings_weapons(13)="DecreaseSmokeLauncherSetting"
+    captions_weapons(13)="Decrease Vehicle Smoke Launcher Range/Rotation Setting"
 
     bindings_comm(3)="SquadTalk"
     captions_comm(3)="Squad Say"

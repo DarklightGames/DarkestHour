@@ -26,8 +26,6 @@ exec function SetAltFireOffset(int NewX, int NewY, int NewZ, optional bool bScal
 exec function SetAltFireSpawnOffset(float NewValue);
 exec function Deploy();
 function float GetSmokeLauncherAmmoReloadState() { return 0.0; }
-simulated function GrowHUD();
-simulated function ShrinkHUD();
 simulated exec function ToggleVehicleLock();
 function ServerToggleVehicleLock();
 

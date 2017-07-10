@@ -4555,46 +4555,6 @@ simulated function UpdateMapIconLabelCoords(FloatBox LabelCoords, ROGameReplicat
     DHGRI.DHObjectives[CurrentObj].LabelCoords = LabelCoords;
 }
 
-// Modified so if player is in a vehicle, the keybinds to GrowHUD & ShrinkHUD will call same named functions in the vehicle classes
-// When player is in a vehicle these functions do nothing to the HUD, but they can be used to add useful custom functionality to vehicles, especially as keys are -/+ by default
-exec function GrowHUD()
-{
-    if (PawnOwner != none && PawnOwner.IsA('Vehicle'))
-    {
-        if (PawnOwner.IsA('DHVehicle'))
-        {
-            DHVehicle(PawnOwner).GrowHUD();
-        }
-        else if (PawnOwner.IsA('DHVehicleWeaponPawn'))
-        {
-            DHVehicleWeaponPawn(PawnOwner).GrowHUD();
-        }
-    }
-    else
-    {
-        super.GrowHUD();
-    }
-}
-
-exec function ShrinkHUD()
-{
-    if (PawnOwner != none && PawnOwner.IsA('Vehicle'))
-    {
-        if (PawnOwner.IsA('DHVehicle'))
-        {
-            DHVehicle(PawnOwner).ShrinkHUD();
-        }
-        else if (PawnOwner.IsA('DHVehicleWeaponPawn'))
-        {
-            DHVehicleWeaponPawn(PawnOwner).ShrinkHUD();
-        }
-    }
-    else
-    {
-        super.ShrinkHUD();
-    }
-}
-
 // Modified to show respawn time for deploy system
 simulated function DrawSpectatingHud(Canvas C)
 {
