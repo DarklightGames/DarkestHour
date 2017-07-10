@@ -12,11 +12,11 @@ function static class<ROVehicle> GetVehicleClass(int TeamIndex, DH_LevelInfo LI)
         case AXIS_TEAM_INDEX:
             if (LI != none && LI.Season == SEASON_Winter)
             {
-                return class'DH_Guns.DH_Flak38Gun_Trailer_Snow';
+                return class'DH_Guns.DH_Flak38Gun_Snow';
             }
             else
             {
-                return class'DH_Guns.DH_Flak38Gun_Trailer';
+                return class'DH_Guns.DH_Flak38Gun';
             }
         case ALLIES_TEAM_INDEX:
             if (LI != none && LI.AlliedNation == NATION_USA)
