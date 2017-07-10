@@ -147,23 +147,27 @@ function InternalOnOpen()
 // Means the key is either already bound to what we want (so no need to change) or the player is using it for something else (so don't mess up his config)
 // Secondly checks whether our new command is already bound to another key or keys - if it is bound to two keys then we don't make any changes
 // But if the command is already bound to only one key, we'll also bound it to the new key, as the config menu can handle two key assignments
-function SetKeyBindIfAvailable(string BindKeyName, string BindKeyValue)
+function SetKeyBindIfAvailable(string BindKeyName, string NewBoundCommand, optional string ExistingCommandCanBeOverriden)
 {
     local array<string> ExistingAssignedKeys, s;
-    local string        t;
+    local string        ExistingBoundCommand;
 
-    if (!Controller.GetCurrentBind(BindKeyName, t)) // checks whether our key is already assigned to a command - only proceed if not
+    Controller.GetCurrentBind(BindKeyName, ExistingBoundCommand); // finds any command that our key is already assigned to
+
+    if (ExistingBoundCommand == "" || ExistingBoundCommand ~= ExistingCommandCanBeOverriden) // only proceed if our key isn't already bound or is bound to a command we want to override
     {
-        Controller.GetAssignedKeys(BindKeyValue, ExistingAssignedKeys, s); // finds any other keys already assigned to our command
+        Controller.GetAssignedKeys(NewBoundCommand, ExistingAssignedKeys, s); // finds any other keys already assigned to our command
 
         if (ExistingAssignedKeys.Length < 2) // only proceed if no more than one other key is already assigned to our command (we can add a 2nd if a slot is free)
         {
-            log("BINDING" @ BindKeyValue @ "TO" @ BindKeyName @ "KEY"); // TEMPDEBUG
-            Controller.SetKeyBind(BindKeyName, BindKeyValue);
+            if (ExistingBoundCommand != "") log("BINDING" @ NewBoundCommand @ "TO" @ BindKeyName @ "KEY, overriding existing command" @ ExistingBoundCommand);
+            else log("BINDING" @ NewBoundCommand @ "TO" @ BindKeyName @ "KEY"); // TEMPDEBUG
+
+            Controller.SetKeyBind(BindKeyName, NewBoundCommand);
         }
-        else log(BindKeyValue @ "is already bound to" @ ExistingAssignedKeys[0] @ "and" @ ExistingAssignedKeys[1] @ "keys"); // TEMPDEBUG
+        else log(NewBoundCommand @ "is already bound to" @ ExistingAssignedKeys[0] @ "and" @ ExistingAssignedKeys[1] @ "keys"); // TEMPDEBUG
     }
-    else log(BindKeyName @ "is already assigned to" @ t); // TEMPDEBUG
+    else log(BindKeyName @ "is already assigned to" @ ExistingBoundCommand); // TEMPDEBUG
 }
 
 function OnClose(optional bool bCanceled)
