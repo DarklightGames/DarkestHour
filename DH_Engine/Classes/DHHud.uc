@@ -185,8 +185,8 @@ simulated function UpdatePrecacheMaterials()
 
     // Overhead map
     Level.AddPrecacheMaterial(MapBackground.WidgetTexture);
-    Level.AddPrecacheMaterial(material'DH_GUI_Tex.GUI.overheadmap_Icons');
-    Level.AddPrecacheMaterial(material'InterfaceArt_tex.OverheadMap.overheadmap_Icons');
+    Level.AddPrecacheMaterial(texture'DH_GUI_Tex.GUI.overheadmap_Icons');
+    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons');
     Level.AddPrecacheMaterial(texture'DH_GUI_Tex.overheadmap_flags');
     Level.AddPrecacheMaterial(MapPlayerIcon.WidgetTexture);
     Level.AddPrecacheMaterial(MapIconsFlash);
@@ -199,6 +199,8 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(SquadNameIcon.WidgetTexture);
     Level.AddPrecacheMaterial(SquadOrderAttackIcon.WidgetTexture);
     Level.AddPrecacheMaterial(SquadOrderDefendIcon.WidgetTexture);
+    Level.AddPrecacheMaterial(material'DH_InterfaceArt_tex.HUD.squad_signal_fire_world');
+    Level.AddPrecacheMaterial(material'DH_InterfaceArt_tex.HUD.squad_signal_move_world');
 
     for (i = 0; i < PlayerNumberIconTextures.Length; ++i)
     {
@@ -262,6 +264,8 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(VehicleRPMNeedlesTextures[1]);
 
     // Other vehicle HUD icons
+    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.Tank_Hud.clock_face');
+    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.Tank_Hud.clock_numbers');
     Level.AddPrecacheMaterial(VehicleLockedIcon.WidgetTexture);
     Level.AddPrecacheMaterial(VehicleOccupants.WidgetTexture);
     Level.AddPrecacheMaterial(VehicleEngineDamagedTexture);
