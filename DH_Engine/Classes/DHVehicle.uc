@@ -45,6 +45,7 @@ var array<material> CannonSkins;                 // option to specify cannon's c
 var     array<PassengerPawn> PassengerPawns;     // array with properties usually specified in separate passenger pawn classes, just to avoid need for lots of classes
 var     byte        FirstRiderPositionIndex;     // used by passenger pawn to find its position in PassengerPawns array
 var     float       PointValue;                  // used for scoring
+var     int         ReinforcementCost;           // reinforcement loss for losing this vehicle
 var     float       FriendlyResetDistance;       // used in CheckReset() as maximum range to check for friendly pawns, to avoid re-spawning empty vehicle
 var     bool        bClientInitialized;          // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                                  // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
@@ -299,6 +300,9 @@ simulated function Destroyed()
 function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
 {
     super.Died(Killer, DamageType, HitLocation);
+
+    // Subtract the vehicle's reinforcement cost for the loss
+    DarkestHourGame(Level.Game).ModifyReinforcements(VehicleTeam, -ReinforcementCost);
 
     if (Killer != none)
     {
