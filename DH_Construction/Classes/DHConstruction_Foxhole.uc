@@ -61,6 +61,7 @@ defaultproperties
     bSnapToTerrain=true
     bShouldAlignToGround=false
     bCanBeTornDown=false
+    bCanBeMantled=true
     ProxyDistanceInMeters=10
     CollisionRadius=200.0
     StaticMesh=StaticMesh'DH_Military_stc.Foxholes.GUP-Foxhole'

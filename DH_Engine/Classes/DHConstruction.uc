@@ -141,6 +141,9 @@ struct Stage
 var int StageIndex;
 var array<Stage> Stages;
 
+// Mantling
+var bool bCanBeMantled;
+
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
