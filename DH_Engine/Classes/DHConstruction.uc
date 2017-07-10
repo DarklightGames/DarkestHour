@@ -26,6 +26,7 @@ enum EConstructionError
     ERROR_NoSupplies,           // Not within range of any supply caches
     ERROR_InsufficientSupply,   // Not enough supplies to build this construction
     ERROR_BadSurface,           // Cannot construct on this surface type
+    ERROR_GroundTooHard,        // This is used when something needs to snap to the terrain, but the engine's native trace functionality isn't cooperating!
     ERROR_RestrictedType,       // Restricted construction type (can't build on this map!)
     ERROR_Other
 };

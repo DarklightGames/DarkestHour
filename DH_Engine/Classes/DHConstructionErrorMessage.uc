@@ -43,5 +43,6 @@ defaultproperties
     ErrorMessages(14)="There are no supply caches within {2} meters."
     ErrorMessages(15)="There are insufficient supplies to create this construction."
     ErrorMessages(16)="You cannot construct a {0} on this surface."
+    ErrorMessages(17)="The ground is too hard at this location."
 }
 

@@ -366,8 +366,7 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
             // as the vertex we are trying to align to, which in turn can create
             // problems with the super unreliable terrain poking functionality.
             // To keep things as reliable as possible, we disallow placement
-            // if this trace fails and report it as a "bad surface", for lack
-            // of a better error message.
+            // if this trace fails and report it as "ground too hard".
             TI = none;
 
             foreach TraceActors(class'TerrainInfo', TI, HitLocation, HitNormal, TraceEnd, TraceStart)
@@ -381,7 +380,9 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
             }
             else
             {
-                Error = ERROR_BadSurface;
+                Log("TOO HARD!");
+
+                Error = ERROR_GroundTooHard;
             }
         }
 
