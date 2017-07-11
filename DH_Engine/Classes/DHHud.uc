@@ -474,7 +474,7 @@ simulated function ExtraLayoutMessage(out HudLocalizedMessage Message, out HudLo
     local  int            InitialNumLines, i, j;
 
     // Hackish for ROCriticalMessages
-    if (class'Object'.static.ClassIsChildOf(Message.Message, class'ROCriticalMessage'))
+    if (ClassIsChildOf(Message.Message, class'ROCriticalMessage'))
     {
         // Set a random background type
         MessageExtra.background_type = Rand(4);
@@ -4932,7 +4932,7 @@ simulated function LocalizedMessage(class<LocalMessage> Message, optional int Sw
     local int i, Count;
     local PlayerReplicationInfo PRI;
 
-    if (Message == none || (bIsCinematic && !ClassIsChildOf(Message,class'ActionMessage')))
+    if (Message == none || (bIsCinematic && !ClassIsChildOf(Message, class'ActionMessage')))
     {
         return;
     }
@@ -4986,7 +4986,7 @@ simulated function LocalizedMessage(class<LocalMessage> Message, optional int Sw
         return;
     }
 
-    if (class'Object'.static.ClassIsChildOf(Message, class'ROCriticalMessage') &&
+    if (ClassIsChildOf(Message, class'ROCriticalMessage') &&
         class'ROCriticalMessage'.default.MaxMessagesOnScreen > 0)
     {
         // Check if we have too many critical messages in stack
@@ -4994,7 +4994,7 @@ simulated function LocalizedMessage(class<LocalMessage> Message, optional int Sw
 
         for (i = 0; i < arraycount(LocalMessages); ++i)
         {
-            if (class'Object'.static.ClassIsChildOf(LocalMessages[i].Message, class'ROCriticalMessage'))
+            if (ClassIsChildOf(LocalMessages[i].Message, class'ROCriticalMessage'))
             {
                 Count++;
             }
@@ -5005,7 +5005,7 @@ simulated function LocalizedMessage(class<LocalMessage> Message, optional int Sw
             // We have too many critical messages -- delete oldest one
             for (i = 0; i < arraycount(LocalMessages); ++i)
             {
-                if (class'Object'.static.ClassIsChildOf(LocalMessages[i].Message, class'ROCriticalMessage'))
+                if (ClassIsChildOf(LocalMessages[i].Message, class'ROCriticalMessage'))
                 {
                     break;
                 }
@@ -5083,7 +5083,7 @@ simulated function LocalizedMessage(class<LocalMessage> Message, optional int Sw
     LocalMessages[i].OptionalObject = OptionalObject;
 
     // Hackish for ROCriticalMessages
-    if (class'Object'.static.ClassIsChildOf(Message, class'ROCriticalMessage') &&
+    if (ClassIsChildOf(Message, class'ROCriticalMessage') &&
         class<ROCriticalMessage>(Message).default.bQuickFade)
     {
          LocalMessages[i].LifeTime = Message.static.GetLifetime(Switch) + class<ROCriticalMessage>(Message).default.QuickFadeTime;
@@ -5092,7 +5092,7 @@ simulated function LocalizedMessage(class<LocalMessage> Message, optional int Sw
          // Mild hax: used to show hints when an obj is captured
          // This was simpliest way of doing it without having server call another
          // server-to-client function
-         if (class'Object'.static.ClassIsChildOf(Message, class'ROObjectiveMsg') &&
+         if (ClassIsChildOf(Message, class'ROObjectiveMsg') &&
             (Switch == 0 || Switch == 1) &&
             ROPlayer(PlayerOwner) != none)
          {
