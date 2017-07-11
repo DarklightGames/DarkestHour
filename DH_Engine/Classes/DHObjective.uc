@@ -520,8 +520,8 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     }
 
     // Award reinforcements
-    G.ModifyReinforcements(AXIS_TEAM_INDEX, AxisAwardedReinforcements * FMax(0.1, (G.NumPlayers / G.MaxPlayers)));
-    G.ModifyReinforcements(ALLIES_TEAM_INDEX, AlliedAwardedReinforcements * FMax(0.1, (G.NumPlayers / G.MaxPlayers)));
+    G.ModifyReinforcements(AXIS_TEAM_INDEX, AxisAwardedReinforcements);
+    G.ModifyReinforcements(ALLIES_TEAM_INDEX, AlliedAwardedReinforcements);
 
     // Award round time
     if (MinutesAwarded != 0 && !bUsePostCaptureOperations)
