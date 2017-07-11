@@ -6242,7 +6242,7 @@ exec function DebugSpawnVehicle(string VehicleString, int Distance, optional boo
     local vector         SpawnLocation;
     local rotator        SpawnDirection;
 
-    if (VehicleString != "" && (IsDebugModeAllowed() || (PlayerReplicationInfo != none && PlayerReplicationInfo.bAdmin)))
+    if (VehicleString != "" && (IsDebugModeAllowed() || (PlayerReplicationInfo != none && PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin)))
     {
         if (InStr(VehicleString, ".") == -1) // saves typing in "DH_Vehicles." in front of almost all vehicles spawned (but still allows a package name to be specified)
         {
