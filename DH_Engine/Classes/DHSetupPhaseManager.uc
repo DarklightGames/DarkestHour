@@ -20,10 +20,9 @@ var() name              PhaseMineFieldTag;                  // Tag of minefield 
 var() name              PhaseBoundaryTag;                   // Tag of DestroyableStaticMeshes to disable once phase is over
 var() array<name>       InitialSpawnPointTags;              // Tags of spawn points that should only be active while in setup phase
 
-var() bool              bScaleStartingReinforcements;       // Scales starting reinforcements to current number of players
 var() bool              bSkipPreStart;                      // If true will override the game's default PreStartTime, making it zero
 var() bool              bResetRoundTimer;                   // If true will reset the round's timer to the proper value when phase is over
-var() TeamReinf         PhaseEndReinforcements;             // What to set reinforcements to at the end of the phase (0 means no change, -1 set to zero)
+var() TeamReinf         PhaseEndReinforcements;             // What to set reinforcements to at the end of the phase (-1 means no change)
 var() bool              bPreventTimeChangeAtZeroReinf;      // bTimeChangesAtZeroReinf will be set to false for this match
 var() int               SpawningEnabledTime;                // Round time at which players can spawn
 var() sound             PhaseEndSounds[2];                  // Axis and Allies Round Begin Sound
@@ -188,18 +187,6 @@ auto state Timing
             GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = PhaseEndReinforcements.AlliesReinforcements;
         }
 
-        // Now scale the reinforcements if desired
-        if (bScaleStartingReinforcements)
-        {
-            // Scale reinforcements based on NumPlayers / Maxplayers, but only by a factor of 66.6%
-            // Example: 400 is base reinf
-            // = 400 - ((400 / 1.5) * (1.0 - 22 / 64))
-            // = 400 - (266.66 * 0.6562)
-            // with 22/64 players the reinf would be: 225
-            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = G.LevelInfo.Allies.SpawnLimit - ((G.LevelInfo.Allies.SpawnLimit / 1.5) * (1.0 - G.NumPlayers / G.MaxPlayers));
-            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = G.LevelInfo.Axis.SpawnLimit - ((G.LevelInfo.Axis.SpawnLimit / 1.5) * (1.0 - G.NumPlayers / G.MaxPlayers));
-        }
-
         // Deactivate any initial spawn points
         if (G.SpawnManager != none)
         {
@@ -237,7 +224,6 @@ defaultproperties
     PhaseMessage="Round Begins In: {0} seconds"
     PhaseEndMessage="Round Has Started! Your team begins with {0} reinforcements."
     bSkipPreStart=true
-    bScaleStartingReinforcements=true
     SetupPhaseDuration=60
     SpawningEnabledTime=30
     Texture=texture'DHEngine_Tex.LevelActor'
