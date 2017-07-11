@@ -6,8 +6,9 @@
 class DHVehicleFactory extends ROVehicleFactory
     abstract;
 
-var(ROVehicleFactory)   name    FactoryDepletedEvent; // option for specified event to be triggered if factory reaches its vehicle limit (i.e. won't spawn any more)
+var(ROVehicleFactory)   name    FactoryDepletedEvent; // option for specified event to be triggered if the last vehicle the factory can spawn is killed/destroyed
 
+var     bool    bLastVehicle; // on the last vehicle this factory is meant to spawn
 var     bool    bControlledBySpawnPoint; // flags that this factory is activated or deactivated by a spawn point, based on whether that spawn is active (set by SP)
 
 // Modified to call UpdatePrecacheMaterials(), allowing any subclassed factory materials to be cached
@@ -33,6 +34,16 @@ function Reset()
     else
     {
         Deactivate();
+    }
+}
+
+event VehicleDestroyed(Vehicle V)
+{
+    Super.VehicleDestroyed(V);
+
+    if (bLastVehicle)
+    {
+        TriggerEvent(FactoryDepletedEvent, self, none);
     }
 }
 
@@ -89,7 +100,7 @@ function SpawnVehicle()
             // Trigger any FactoryDepletedEvent if factory has reached its vehicle limit
             if (FactoryDepletedEvent != '' && TotalSpawnedVehicles >= VehicleRespawnLimit)
             {
-                TriggerEvent(FactoryDepletedEvent, self, none);
+                bLastVehicle = true;
             }
         }
         else
