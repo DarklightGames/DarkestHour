@@ -30,6 +30,7 @@ var     array<DHLocationHint>   InfantryLocationHints; // saved references to li
 var     array<DHLocationHint>   VehicleLocationHints;
 var()   float           LocationHintDeferDistance;     // the spawn manager will try to avoid spawning players at location hints where there are enemies within this distance
                                                        // (it will defer evaluation of any location hints that have enemies nearby)
+var()   bool            bUseLocationAsFallback;        // If true, then use the location of this actor as a fallback location in the event that all location hints are blocked
 
 // Options to link various types of actors to this SP, so they are only active when the SP is active
 var()   name                    MineVolumeProtectionTag;
@@ -370,18 +371,20 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
         }
     }
 
-    // Found a usable location hint
-    if (LocationHintIndex != -1)
+    if (LocationHintIndex == -1)
     {
-        SpawnLocation = LocationHints[LocationHintIndex].Location;
-        SpawnRotation = LocationHints[LocationHintIndex].Rotation;
+        if (bUseLocationAsFallback)
+        {
+            SpawnLocation = Location;
+            SpawnRotation = Rotation;
+            return true;
+        }
+
+        LocationHintIndex = Rand(LocationHints.Length);
     }
-    // Otherwise use spawn point itself
-    else
-    {
-        SpawnLocation = Location;
-        SpawnRotation = Rotation;
-    }
+
+    SpawnLocation = LocationHints[LocationHintIndex].Location;
+    SpawnRotation = LocationHints[LocationHintIndex].Rotation;
 
     return true;
 }
