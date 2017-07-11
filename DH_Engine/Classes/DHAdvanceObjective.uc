@@ -15,8 +15,8 @@ defaultproperties
     bRecaptureable=true
     bSetInactiveOnClear=true
     bUseHardBaseRate=true
-    AlliedAwardedReinforcements=20
-    AxisAwardedReinforcements=20
+    AlliedAwardedReinforcements=30
+    AxisAwardedReinforcements=30
     bUsePostCaptureOperations=true
     bHideCaptureBarRatio=true
 }
