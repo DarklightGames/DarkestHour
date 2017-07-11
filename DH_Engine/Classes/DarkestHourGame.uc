@@ -50,6 +50,7 @@ var     float                       ServerTickRateAverage;                  // T
 var     float                       ServerTickRateConsolidated;             // Keeps track of tick rates over time, used to calculate average
 var     int                         ServerTickFrameCount;                   // Keeps track of how many frames are between ServerTickRateConsolidated
 
+var     float                       CalculatedAttritionRate[2];
 var     float                       TeamAttritionCounter[2];
 
 var     bool                        bSwapTeams;
@@ -57,6 +58,12 @@ var     bool                        bUseReinforcementWarning;
 var     bool                        bUseInfiniteReinforcements;             // Level should have infinite reinforcements regardless of the setting
 var     bool                        bRoundEndsAtZeroReinf;
 var     bool                        bTimeChangesAtZeroReinf;
+var     bool                        bUseAttritionCurve;                     // Attrition will set in and change to the curve over time
+
+var     InterpCurve                 ElapsedTimeAttritionCurve;              // Curve which inputs elapsed time and outputs attrition amount
+                                                                            // used to setup a pseudo time limit for Advance/Attrition game modes
+                                                                            // this way if there are not many players on, the round will eventually end
+
 var     float                       AlliesToAxisRatio;
 
 var     class<DHMetrics>            MetricsClass;
@@ -212,11 +219,13 @@ function PostBeginPlay()
 
         case GT_Attrition:
             GRI.CurrentGameType = "Attrition";
+            bUseAttritionCurve = true;
             bRoundEndsAtZeroReinf = true;
             break;
 
         case GT_Advance:
             GRI.CurrentGameType = "Advance";
+            bUseAttritionCurve = true;
             bRoundEndsAtZeroReinf = true;
             bUseReinforcementWarning = false;
             break;
@@ -2368,12 +2377,12 @@ state RoundInPlay
         if (GRI != none)
         {
             // Add attrition rates from the AttritionRateCurve to the already established specific objective attrition rates (look above in this function)
-            AttRateAllies += InterpCurveEval(DHLevelInfo.AttritionRateCurve, (float(Max(0, Num[AXIS_TEAM_INDEX]   - Num[ALLIES_TEAM_INDEX])) / NumObj));
-            AttRateAxis   += InterpCurveEval(DHLevelInfo.AttritionRateCurve, (float(Max(0, Num[ALLIES_TEAM_INDEX] - Num[AXIS_TEAM_INDEX]))   / NumObj));
+            AttRateAxis   += InterpCurveEval(DHLevelInfo.AttritionRateCurve, float(Max(0, Num[ALLIES_TEAM_INDEX] - Num[AXIS_TEAM_INDEX]))   / NumObj);
+            AttRateAllies += InterpCurveEval(DHLevelInfo.AttritionRateCurve, float(Max(0, Num[AXIS_TEAM_INDEX]   - Num[ALLIES_TEAM_INDEX])) / NumObj);
 
-            // Set the attrition rate to the calculated attrition, but scaled to numplayers / maxplayers (0.1 is so attrition always exists)
-            GRI.AttritionRate[ALLIES_TEAM_INDEX] = AttRateAllies / 60 * FMax(0.1, (NumPlayers / MaxPlayers));
-            GRI.AttritionRate[AXIS_TEAM_INDEX]   = AttRateAxis   / 60 * FMax(0.1, (NumPlayers / MaxPlayers));
+            // Update the calculated attrition rate
+            CalculatedAttritionRate[AXIS_TEAM_INDEX]   = AttRateAxis;
+            CalculatedAttritionRate[ALLIES_TEAM_INDEX] = AttRateAllies;
         }
 
         if (LevelInfo.NumObjectiveWin == 0)
@@ -2539,9 +2548,12 @@ state RoundInPlay
             }
         }
 
-        // If team is taking attrition losses, decrement their reinforcements
+        // Attrition calculation, set, and reinforcement modification
         for (i = 0; i < 2; ++i)
         {
+            // Combine attrition values and set GRI
+            GRI.AttritionRate[i] = (InterpCurveEval(ElapsedTimeAttritionCurve, float(GRI.ElapsedTime)) + CalculatedAttritionRate[i]) / 60;
+
             TeamAttritionCounter[i] += GRI.AttritionRate[i];
 
             if (TeamAttritionCounter[i] >= 1.0)
@@ -4532,6 +4544,8 @@ defaultproperties
     // Default settings based on common used server settings in DH
     bIgnore32PlayerLimit=true // allows more than 32 players
     bVACSecured=true
+
+    ElapsedTimeAttritionCurve=(Points=((InVal=0.0,OutVal=0.0),(InVal=3600.0,OutVal=0.0),(InVal=7200.0,OutVal=500.0),(InVal=10800.0,OutVal=1000.0)))
 
     bSessionKickOnSecondFFViolation=true
     FFDamageLimit=0       // this stops the FF damage system from kicking based on FF damage
