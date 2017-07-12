@@ -233,6 +233,8 @@ function PostBeginPlay()
         case GT_Cutoff:
             GRI.CurrentGameType = "GT_Cutoff";
             bUseReinforcementWarning = false;
+            bTimeChangesAtZeroReinf = false;
+            bRoundEndsAtZeroReinf = false;
             break;
 
         default:
@@ -1934,7 +1936,8 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
     local DHPlayer   DHKilled, DHKiller;
     local Controller P;
     local float      FFPenalty;
-    local int        Num, i;
+    local int        i;
+    local bool       bHasAPlayerAlive;
 
     if (Killed == none)
     {
@@ -2062,22 +2065,22 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
     DiscardInventory(KilledPawn);
     NotifyKilled(Killer, Killed, KilledPawn);
 
-    // Check whether we need to end the round because neither team has any reinforcements left
+    // Check whether we need to end the round because a team has 0 reinforcements and no one alive
+    // If this logic is ever duplicated or resused, it needs to be made a function instead
     for (i = 0; i < 2; ++i)
     {
         if (SpawnLimitReached(i))
         {
-            Num = 0;
-
             for (P = Level.ControllerList; P != none; P = P.NextController)
             {
                 if (P.bIsPlayer && P.Pawn != none && P.Pawn.Health > 0 && P.PlayerReplicationInfo.Team.TeamIndex == i)
                 {
-                    ++Num;
+                    bHasAPlayerAlive = true;
+                    break;
                 }
             }
 
-            if (Num == 0)
+            if (!bHasAPlayerAlive)
             {
                 EndRound(int(!bool(i))); // it looks like a hack, but hey, it's the easiest way to find the opposite team :)
             }
