@@ -3431,7 +3431,7 @@ simulated function DrawObjectives(Canvas C)
     }
 
     // Update remaining round time
-    CurrentTime = class'DHGameReplicationInfo'.static.GetRoundTimeRemaining(DHGRI);
+    CurrentTime = DHGRI.GetRoundTimeRemaining();
 
     // Get actor references
     Player = DHPlayer(PlayerOwner);
@@ -4586,7 +4586,7 @@ simulated function DrawSpectatingHud(Canvas C)
     if (DHGRI != none)
     {
         // Update & draw round timer
-        CurrentTime = class'DHGameReplicationInfo'.static.GetRoundTimeRemaining(DHGRI);
+        CurrentTime = DHGRI.GetRoundTimeRemaining();
 
         if (DHGRI.RoundDuration == 0)
         {

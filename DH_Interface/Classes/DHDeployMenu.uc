@@ -366,7 +366,7 @@ function UpdateRoundStatus()
         }
         else
         {
-            l_RoundTime.Caption = class'TimeSpan'.static.ToString(class'DHGameReplicationInfo'.static.GetRoundTimeRemaining(GRI));
+            l_RoundTime.Caption = class'TimeSpan'.static.ToString(GRI.GetRoundTimeRemaining());
         }
     }
 }
@@ -427,6 +427,8 @@ function UpdateSpawnPoints()
     {
         SquadIndex = -1;
     }
+
+    // TODO: move this inside map component so that it's self contained
 
     // Spawn points
     for (i = 0; i < arraycount(p_Map.b_SpawnPoints); ++i)

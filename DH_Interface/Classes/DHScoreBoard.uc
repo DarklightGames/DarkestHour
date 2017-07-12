@@ -215,7 +215,7 @@ simulated function UpdateScoreBoard(Canvas C)
     }
     else
     {
-        s $= class'TimeSpan'.static.ToString(class'DHGameReplicationInfo'.static.GetRoundTimeRemaining(DHGRI));
+        s $= class'TimeSpan'.static.ToString(DHGRI.GetRoundTimeRemaining());
     }
 
     // Add time elapsed (extra in DH)

@@ -761,27 +761,23 @@ function RemoveMGResupplyRequestFor(PlayerReplicationInfo PRI)
 //------------------------------------------------------------------------------
 // Miscellaneous Functions
 //------------------------------------------------------------------------------
-
 // New helper function to calculate the round time remaining
 // Avoids re-stating this logic in various functionality that display time remaining, e.g. scoreboard, overhead map, deploy screen & spectator HUD
-static function int GetRoundTimeRemaining(DHGameReplicationInfo GRI)
+function int GetRoundTimeRemaining()
 {
     local int SecondsRemaining;
 
-    if (GRI != none)
+    if (bRoundIsOver)
     {
-        if (GRI.bRoundIsOver)
-        {
-            SecondsRemaining = GRI.RoundEndTime;
-        }
-        else if (GRI.bMatchHasBegun)
-        {
-            SecondsRemaining = GRI.RoundEndTime - GRI.ElapsedTime;
-        }
-        else
-        {
-            SecondsRemaining = GRI.RoundStartTime + GRI.PreStartTime - GRI.ElapsedTime;
-        }
+        SecondsRemaining = RoundEndTime;
+    }
+    else if (bMatchHasBegun)
+    {
+        SecondsRemaining = RoundEndTime - ElapsedTime;
+    }
+    else
+    {
+        SecondsRemaining = RoundStartTime + PreStartTime - ElapsedTime;
     }
 
     return Max(0, SecondsRemaining);
@@ -827,7 +823,7 @@ simulated function AddPRI(PlayerReplicationInfo PRI)
             if (PRIArray[i].VoiceID == NewVoiceID)
             {
                 i = -1;
-                NewVoiceID++;
+                ++NewVoiceID;
                 continue;
             }
         }
