@@ -373,7 +373,7 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
 
     if (LocationHintIndex == -1)
     {
-        if (bUseLocationAsFallback)
+        if (LocationHints.Length == 0 || bUseLocationAsFallback)
         {
             SpawnLocation = Location;
             SpawnRotation = Rotation;
