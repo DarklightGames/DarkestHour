@@ -9,36 +9,27 @@ var DynamicProjector DirtProjector;
 
 simulated function OnConstructed()
 {
-    local vector RL;
-
     super.OnConstructed();
-
-    Log("OnConstructed");
 
     if (Level.NetMode != NM_DedicatedServer)
     {
         DirtProjector = Spawn(class'DynamicProjector', self);
 
-        Log("DirtProjector" @ DirtProjector);
-
-        RL.Z = 100.0;
-
         if (DirtProjector != none)
         {
             DirtProjector.SetBase(self);
-            DirtProjector.bHidden = false;
             DirtProjector.bNoProjectOnOwner = true;
             DirtProjector.bProjectActor = false;
             DirtProjector.bProjectOnAlpha = true;
             DirtProjector.bProjectParticles = false;
             DirtProjector.bProjectBSP = true;
             DirtProjector.MaterialBlendingOp = PB_AlphaBlend;
-            DirtProjector.ProjTexture = texture'DH_Construction_tex.ui.construction_aura';
+            DirtProjector.ProjTexture = Material'DH_Construction_tex.Foxholes.foxhole_01_projector';
             DirtProjector.FrameBufferBlendingOp = PB_AlphaBlend;
             DirtProjector.FOV = 1;
-            DirtProjector.MaxTraceDistance = 1000.0;
+            DirtProjector.MaxTraceDistance = 512.0;
             DirtProjector.SetDrawScale((default.CollisionRadius * 2) / DirtProjector.ProjTexture.MaterialUSize());
-            DirtProjector.SetRelativeLocation(RL);
+            DirtProjector.SetRelativeLocation(vect(0.0, 0.0, 100.0));
             DirtProjector.SetRelativeRotation(rot(-16384, 0, 0));
         }
     }
@@ -63,17 +54,18 @@ defaultproperties
     bCanBeTornDown=false
     bCanBeMantled=true
     ProxyDistanceInMeters=10
-    CollisionRadius=200.0
-    StaticMesh=StaticMesh'DH_Military_stc.Foxholes.GUP-Foxhole'
+    CollisionRadius=256.0
+    StaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_01'
     PokeTerrainDepth=128
     SupplyCost=0
     PlacementOffset=(Z=0.0)
     MenuName="Foxhole"
     bAlwaysRelevant=true            // This is so that the terrain poking doesn't get applied more than once.
     DuplicateDistanceInMeters=15.0
-    bLimitSurfaceTypes=true
-    SurfaceTypes(0)=EST_Default
-    SurfaceTypes(1)=EST_Dirt
-    SurfaceTypes(2)=EST_Snow
-    SurfaceTypes(3)=EST_Mud
+    bLimitTerrainSurfaceTypes=true
+    TerrainSurfaceTypes(0)=EST_Default
+    TerrainSurfaceTypes(1)=EST_Dirt
+    TerrainSurfaceTypes(2)=EST_Snow
+    TerrainSurfaceTypes(3)=EST_Mud
+    TerrainSurfaceTypes(4)=EST_Plant
 }

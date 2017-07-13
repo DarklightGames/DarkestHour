@@ -91,6 +91,8 @@ final function SetConstructionClass(class<DHConstruction> ConstructionClass)
     SetCollisionSize(NewRadius, NewHeight);
 
     DestroyAttachments();
+
+    // Update ourselves using the function in the construction class
     ConstructionClass.static.UpdateProxy(self);
 
     // Initialize the local rotation based on the parameters in the new construction class
@@ -279,6 +281,8 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
     local DHConstruction.EConstructionError Error;
     local int i;
     local TerrainInfo TI;
+    local Material HitMaterial;
+    local bool bIsTerrainSurfaceTypeAllowed;
 
     if (PawnOwner == none || PlayerOwner == none || ConstructionClass == none)
     {
@@ -367,21 +371,33 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
             // problems with the super unreliable terrain poking functionality.
             // To keep things as reliable as possible, we disallow placement
             // if this trace fails and report it as "ground too hard".
-            TI = none;
-
-            foreach TraceActors(class'TerrainInfo', TI, HitLocation, HitNormal, TraceEnd, TraceStart)
-            {
-                break;
-            }
+            TI = TerrainInfo(Trace(HitLocation, HitNormal, TraceEnd, TraceStart, false,, HitMaterial));
 
             if (TI != none)
             {
                 BaseLocation = HitLocation;
+
+                if (ConstructionClass.default.bLimitTerrainSurfaceTypes)
+                {
+                    // Search for the surface type in the allowed surface types array.
+                    for (i = 0; i < ConstructionClass.default.TerrainSurfaceTypes.Length; ++i)
+                    {
+                        if (HitMaterial.SurfaceType == ConstructionClass.default.TerrainSurfaceTypes[i])
+                        {
+                            bIsTerrainSurfaceTypeAllowed = true;
+                            break;
+                        }
+                    }
+
+                    if (!bIsTerrainSurfaceTypeAllowed)
+                    {
+                        // Surface type is not allowed.
+                        Error = ERROR_BadSurface;
+                    }
+                }
             }
             else
             {
-                Log("TOO HARD!");
-
                 Error = ERROR_GroundTooHard;
             }
         }

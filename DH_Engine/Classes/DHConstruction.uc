@@ -50,7 +50,7 @@ var int TeamLimit;              // The amount of this type of construction that 
 var     DHConstructionManager   Manager;
 
 // Placement
-var     float   ProxyDistanceInMeters;          // The distance at which the proxy object will be away from the player when
+var     float   ProxyDistanceInMeters;          // The distance at which the proxy object will be away from the player when being placed
 var     bool    bShouldAlignToGround;
 var     bool    bCanPlaceInWater;
 var     bool    bCanPlaceIndoors;
@@ -64,14 +64,14 @@ var     rotator StartRotationMax;
 var     int     LocalRotationRate;
 var     bool    bInheritsOwnerRotation;         // If true, the base rotation of the placement (prior to local rotation) will be inherited from the owner.
 var     bool    bCanPlaceInObjective;
+
+// Terrain placement
 var     bool    bSnapToTerrain;                 // If true, the origin of the placement (prior to the PlacementOffset) will coincide with the nearest terrain vertex during placement.
 var     bool    bPokesTerrain;                  // If true, terrain is poked when placed on terrain.
-
-var     bool                    bLimitSurfaceTypes; // If true, only allow placement on surfaces types in the SurfaceTypes array
-var     array<ESurfaceTypes>    SurfaceTypes;
-
 var     int     PokeTerrainRadius;
 var     int     PokeTerrainDepth;
+var     bool    bLimitTerrainSurfaceTypes;      // If true, only allow placement on terrain surfaces types in the SurfaceTypes array
+var     array<ESurfaceTypes> TerrainSurfaceTypes;
 
 var     vector          PlacementOffset;        // 3D offset in the proxy's local-space during placement
 var     sound           PlacementSound;         // Sound to play when construction is first placed down
@@ -214,6 +214,8 @@ simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
+    Disable('Tick');
+
     if (Role == ROLE_Authority)
     {
         SetTeamIndex(int(TeamOwner));
@@ -241,8 +243,9 @@ simulated function PostBeginPlay()
 // Terrain poking is wacky. Here's a few things you should know before using
 // this system. First off, it's incredibly finicky. For starts, if the Radius
 // is too low, it decreases the chance of a PokeTerrain success. Secondly,
-// for some reason, PlacementOffsets play havoc with the ability to successfully
-// poke the terrain. Even when it should realistically have no effect whatsoever.
+// for some reason, non-zero PlacementOffset values play havoc with the ability
+// to successfully poke the terrain. Even when it should realistically have no
+// effect whatsoever.
 simulated function PokeTerrain(float Radius, float Depth)
 {
     local TerrainInfo TI;
