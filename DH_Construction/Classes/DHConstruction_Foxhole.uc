@@ -11,8 +11,6 @@ simulated function OnConstructed()
 {
     super.OnConstructed();
 
-    PokeTerrain(PokeTerrainRadius, PokeTerrainDepth);
-
     if (Level.NetMode != NM_DedicatedServer)
     {
         DirtProjector = Spawn(class'DynamicProjector', self);

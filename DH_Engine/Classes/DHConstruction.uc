@@ -231,12 +231,7 @@ simulated function PostBeginPlay()
     }
     else
     {
-        Warn("Unable to locate manager!");
-    }
-
-    if (bPokesTerrain)
-    {
-        PokeTerrain(PokeTerrainRadius, PokeTerrainDepth);
+        Warn("Unable to find construction manager!");
     }
 }
 
@@ -438,6 +433,11 @@ simulated state Constructed
                 StateName = GetStateName();
                 NetUpdateTime = Level.TimeSeconds - 1.0;
             }
+        }
+
+        if (bPokesTerrain)
+        {
+            PokeTerrain(PokeTerrainRadius, PokeTerrainDepth);
         }
 
         OnConstructed();
