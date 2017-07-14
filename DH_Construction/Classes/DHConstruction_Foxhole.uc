@@ -11,6 +11,8 @@ simulated function OnConstructed()
 {
     super.OnConstructed();
 
+    PokeTerrain(PokeTerrainRadius, PokeTerrainDepth);
+
     if (Level.NetMode != NM_DedicatedServer)
     {
         DirtProjector = Spawn(class'DynamicProjector', self);
@@ -47,6 +49,8 @@ simulated event Destroyed()
 
 defaultproperties
 {
+    Stages(0)=(StaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_01_unpackedJU')
+    ProgressMax=4   // TODO: increase later
     bPokesTerrain=true
     bCanOnlyPlaceOnTerrain=true
     bSnapToTerrain=true
