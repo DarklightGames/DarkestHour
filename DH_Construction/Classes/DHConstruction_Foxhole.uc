@@ -49,7 +49,7 @@ simulated event Destroyed()
 
 defaultproperties
 {
-    Stages(0)=(StaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_01_unpackedJU')
+    Stages(0)=(StaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_01_unpacked')
     ProgressMax=4   // TODO: increase later
     bPokesTerrain=true
     bCanOnlyPlaceOnTerrain=true
