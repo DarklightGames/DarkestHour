@@ -5,9 +5,9 @@
 
 class DHAccessControl extends AccessControl;
 
-var private array<string>              DeveloperIDs;
+var private array<string> DeveloperIDs;
 
-// Modified for dev admin
+// Modified for developer admin login
 function bool AdminLoginSilent(PlayerController P, string Username, string Password)
 {
     local int   i;
@@ -18,11 +18,12 @@ function bool AdminLoginSilent(PlayerController P, string Username, string Passw
         return false;
     }
 
-    for (i = 0; i < DeveloperIDs.length; ++i)
+    for (i = 0; i < DeveloperIDs.Length; ++i)
     {
         if (P.GetPlayerIDHash() ~= DeveloperIDs[i])
         {
             bIsDeveloper = true;
+            break;
         }
     }
 
