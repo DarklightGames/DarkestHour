@@ -17,7 +17,8 @@ enum EConstructionError
     ERROR_Restricted,           // Construction overlaps a restriction volume
     ERROR_NoRoom,               // No room to place this construction
     ERROR_NotOnTerrain,         // Construction is not on terrain
-    ERROR_TooClose,             // Too close to an identical construction
+    ERROR_TooCloseFriendly,     // Too close to an identical friendly construction
+    ERROR_TooCloseEnemy,        // Too close to an identical enemy construction
     ERROR_InMinefield,          // Cannot be in a minefield!
     ERROR_NearSpawnPoint,       // Cannot be so close to a spawn point (or location hint)
     ERROR_Indoors,              // Cannot be placed indoors
@@ -79,8 +80,9 @@ var     float           PlacementSoundRadius;
 var     float           PlacementSoundVolume;
 var     class<Emitter>  PlacementEmitterClass;  // Emitter to spawn when the construction is first placed down
 
-var     float   FloatToleranceInMeters;         // The distance the construction is allowed to "float" off of the ground at any given point along it's circumfrence
-var     float   DuplicateDistanceInMeters;      // The distance required between identical constructions of the same type
+var     float   FloatToleranceInMeters;             // The distance the construction is allowed to "float" off of the ground at any given point along it's circumfrence
+var     float   DuplicateFriendlyDistanceInMeters;  // The distance required between identical constructions of the same type for FRIENDLY constructions.
+var     float   DuplicateEnemyDistanceInMeters;     // The distance required between identical constructions of the same type for ENEMY constructions.
 
 // Construction
 var     int     SupplyCost;                     // The amount of supply points this construction costs

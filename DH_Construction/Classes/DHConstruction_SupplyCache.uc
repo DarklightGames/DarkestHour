@@ -55,7 +55,7 @@ defaultproperties
     SupplyCost=250
     StaticMesh=StaticMesh'DH_Military_stc.Ammo.cratepile1'
     DrawType=DT_StaticMesh
-    DuplicateDistanceInMeters=100   // NOTE: 2x the supply attachment radius
+    DuplicateFriendlyDistanceInMeters=100   // NOTE: 2x the supply attachment radius
     bCanPlaceIndoors=true
     bCanBeTornDown=false
     bCanDieOfStagnation=false   // TODO: this shouldn't be necessary, right?

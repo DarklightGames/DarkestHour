@@ -649,15 +649,28 @@ function DHConstruction.EConstructionError GetPositionError()
 
     // If a duplicate distance is specified, don't allow the construction to be
     // placed if is within the duplicate distance.
-    if (ConstructionClass.default.DuplicateDistanceInMeters > 0.0)
+    if (ConstructionClass.default.DuplicateFriendlyDistanceInMeters > 0.0)
     {
-        foreach RadiusActors(ConstructionClass, A, class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.DuplicateDistanceInMeters))
+        foreach RadiusActors(ConstructionClass, A, class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.DuplicateFriendlyDistanceInMeters))
         {
             C = DHConstruction(A);
 
             if (C != none && C.GetTeamIndex() == PawnOwner.GetTeamNum())
             {
-                return ERROR_TooClose;
+                return ERROR_TooCloseFriendly;
+            }
+        }
+    }
+
+    if (ConstructionClass.default.DuplicateEnemyDistanceInMeters > 0.0)
+    {
+        foreach RadiusActors(ConstructionClass, A, class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.DuplicateEnemyDistanceInMeters))
+        {
+            C = DHConstruction(A);
+
+            if (C != none && C.GetTeamIndex() != NEUTRAL_TEAM_INDEX && C.GetTeamIndex() != PawnOwner.GetTeamNum())
+            {
+                return ERROR_TooCloseEnemy;
             }
         }
     }

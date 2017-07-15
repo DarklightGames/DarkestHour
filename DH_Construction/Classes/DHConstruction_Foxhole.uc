@@ -63,7 +63,7 @@ defaultproperties
     PlacementOffset=(Z=0.0)
     MenuName="Foxhole"
     bAlwaysRelevant=true            // This is so that the terrain poking doesn't get applied more than once.
-    DuplicateDistanceInMeters=15.0
+    DuplicateFriendlyDistanceInMeters=15.0
     bLimitTerrainSurfaceTypes=true
     TerrainSurfaceTypes(0)=EST_Default
     TerrainSurfaceTypes(1)=EST_Dirt

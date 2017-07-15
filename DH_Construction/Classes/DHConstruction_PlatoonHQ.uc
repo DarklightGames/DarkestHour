@@ -227,7 +227,8 @@ defaultproperties
     bShouldAlignToGround=true
     bCanPlaceIndoors=false
     bCanPlaceInObjective=false
-    DuplicateDistanceInMeters=250
+    DuplicateFriendlyDistanceInMeters=250
+    DuplicateEnemyDistanceInMeters=50
     ProxyDistanceInMeters=10.0
     bCanOnlyPlaceOnTerrain=true
     bCanPlaceInWater=false
