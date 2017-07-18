@@ -12,21 +12,23 @@ struct TeamReinf
     var() int AxisReinforcements, AlliesReinforcements;
 };
 
-var() localized string  PhaseMessage;                       // Message to send periodically when phase is current
-var() localized string  PhaseEndMessage;                    // Message to send to team when end is reached
 var() int               SetupPhaseDuration;                 // How long should the setup phase be in seconds
+var() int               SpawningEnabledTime;                // Round time at which players can spawn
 
 var() name              PhaseMineFieldTag;                  // Tag of minefield volumes to disable once setup phase is over
 var() name              PhaseBoundaryTag;                   // Tag of DestroyableStaticMeshes to disable once phase is over
 var() array<name>       InitialSpawnPointTags;              // Tags of spawn points that should only be active while in setup phase
 
-var() bool              bSkipPreStart;                      // If true will override the game's default PreStartTime, making it zero
 var() bool              bResetRoundTimer;                   // If true will reset the round's timer to the proper value when phase is over
-var() TeamReinf         PhaseEndReinforcements;             // What to set reinforcements to at the end of the phase (-1 means no change)
 var() bool              bPreventTimeChangeAtZeroReinf;      // bTimeChangesAtZeroReinf will be set to false for this match
-var() int               SpawningEnabledTime;                // Round time at which players can spawn
+
+var() TeamReinf         PhaseEndReinforcements;             // What to set reinforcements to at the end of the phase (-1 means no change)
+
 var() sound             PhaseEndSounds[2];                  // Axis and Allies Round Begin Sound
 
+var localized string    PhaseMessage;                       // Message to send periodically when phase is current
+var localized string    PhaseEndMessage;                    // Message to send to team when end is reached
+var bool                bSkipPreStart;                      // If true will override the game's default PreStartTime, making it zero
 var int                 TimerCount;
 var int                 SetupPhaseDurationActual;
 var int                 SpawningEnabledTimeActual;
@@ -180,11 +182,19 @@ auto state Timing
         {
             GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = PhaseEndReinforcements.AxisReinforcements;
         }
+        else
+        {
+            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = G.LevelInfo.Axis.SpawnLimit;
+        }
 
         // Handle  Allied reinforcement changes, if any
         if (PhaseEndReinforcements.AlliesReinforcements >= 0)
         {
             GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = PhaseEndReinforcements.AlliesReinforcements;
+        }
+        else
+        {
+            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = G.LevelInfo.Allies.SpawnLimit;
         }
 
         // Deactivate any initial spawn points
@@ -218,6 +228,7 @@ state Done
 
 defaultproperties
 {
+    PhaseBoundaryTag='SetupBoundaries'
     PhaseEndReinforcements=(AxisReinforcements=-1,AlliesReinforcements=-1)
     PhaseEndSounds(0)=sound'DH_SundrySounds.RoundBeginSounds.Axis_Start'
     PhaseEndSounds(1)=sound'DH_SundrySounds.RoundBeginSounds.US_Start'
