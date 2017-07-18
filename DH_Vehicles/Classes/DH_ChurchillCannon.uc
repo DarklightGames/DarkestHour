@@ -9,12 +9,12 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_Churchill_anm.ext_turret'
-    Skins(0)=Texture'DH_Churchill_tex.churchill.churchill_body'
-    Skins(1)=Texture'DH_Churchill_tex.churchill.churchill_turret'
-    Skins(2)=Texture'DH_Churchill_tex.churchill.churchill_turret'
+    Skins(0)=Texture'DH_Churchill_tex.churchill.churchill_turret'
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell.Cromwell_turret_Coll'
-    FireAttachBone="muzzle"
+    FireAttachBone="turret_placement"
 //    FireEffectOffset=(X=-3.0,Y=-30.0,Z=50.0)
+
+    WeaponFireAttachmentBone="muzzle"
 
     // Turret armor
     FrontArmorFactor=7.6

@@ -26,18 +26,18 @@ defaultproperties
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ChurchillCannonPawn',WeaponBone="turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_ChurchillMountedMGPawn',WeaponBone="mg_placement")
-    //PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-82.0,Y=-65.0,Z=45.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider1_idle")
-    //PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-151.0,Y=-65.0,Z=45.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider3_idle")
-    //PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-151.0,Y=66.0,Z=45.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider5_idle")
-    //PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-82.0,Y=66.0,Z=45.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider6_idle")
+    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-82.0,Y=-65.0,Z=45.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider1_idle")
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-151.0,Y=-65.0,Z=45.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider3_idle")
+    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-151.0,Y=66.0,Z=45.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider5_idle")
+    PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-82.0,Y=66.0,Z=45.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider6_idle")
 
     // Driver
     InitialPositionIndex=2
     UnbuttonedPositionIndex=3
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_body_int',TransitionUpAnim="Vision_hatch_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=59000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_body_int',TransitionUpAnim="Overlay_Out",TransitionDownAnim="Vision_hatch_open",ViewPitchUpLimit=0,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0,bDrawOverlays=true)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VUC_driver_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=59000,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000)
-    DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VUC_driver_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=59000,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000,bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Churchill_anm.ext_body',TransitionUpAnim="Vision_hatch_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=59000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Churchill_anm.ext_body',TransitionUpAnim="overlay_Out",TransitionDownAnim="Vision_hatch_open",ViewPitchUpLimit=0,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0,bDrawOverlays=true)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Churchill_anm.ext_body',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="overlay_in",DriverTransitionAnim="VUC_driver_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=59000,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000)
+    DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_Churchill_anm.ext_body',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VUC_driver_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=59000,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000,bExposed=true)
     DriveAnim="VUC_driver_idle_close"
     OverlayFPCamPos=(X=9.0,Y=0.0,Z=0.0)
 
@@ -69,7 +69,7 @@ defaultproperties
     TreadHitMaxHeight=58.0
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-130.0,Y=0.0,Z=85.0)
-    FireAttachBone="Body"
+    FireAttachBone="body"
     FireEffectOffset=(X=110.0,Y=35.0,Z=25.0)
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell.Crommy_wrecked'
 
@@ -189,7 +189,7 @@ defaultproperties
     Wheels(3)=RR_Steering
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
-        BoneName="driver_wheel_L"
+        BoneName="drive_wheel_L"
         BoneRollAxis=AXIS_Y
         WheelRadius=35.0
     End Object
