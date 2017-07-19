@@ -43,6 +43,10 @@ defaultproperties
     SecondarySpread=0.00127
     TertiarySpread=0.00357
 
+    // Smoke launcher
+    SmokeLauncherClass=class'DH_Vehicles.DH_Nahverteidigungswaffe'
+    SmokeLauncherFireOffset(0)=(X=-157.0,Y=-6.0,Z=22.0)
+
     // Weapon fire
     WeaponFireAttachmentBone="barrel001"
     WeaponFireOffset=9.0

@@ -13,6 +13,7 @@ Includes a variety of self-descriptive static functions, giving user-friendly ac
 class DHVehicleSmokeLauncher extends Object;
 
 var     class<Projectile>   ProjectileClass;              // the smoke projectile class
+// TODO: probably delete InitialAmmo here & set NumSmokeLauncherRounds in cannon's def props, as no. of rounds carried is likely to vary from vehicle to vehicle
 var     byte                InitialAmmo;                  // the initial & maximum no. of smoke rounds carried
 var     byte                ProjectilesPerFire;           // no. of projectiles launched each time fire button is pressed (external launchers are often paired)
 var     array<rotator>      FireRotation;                 // the firing rotation to launch the projectile(s), relative to vehicle - may be multiple for external launchers

@@ -24,6 +24,10 @@ defaultproperties
     SecondarySpread=0.00357
     TertiarySpread=0.00275
 
+    // Smoke launcher
+    SmokeLauncherClass=class'DH_Vehicles.DH_Nahverteidigungswaffe'
+    SmokeLauncherFireOffset(0)=(X=-18.0,Y=23.0,Z=30.0)
+
     // Weapon fire & sounds
     WeaponFireOffset=-53.5
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire01'

@@ -53,6 +53,10 @@ defaultproperties
     TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
     TracerFrequency=5
 
+    // Smoke launcher
+    SmokeLauncherClass=class'DH_Vehicles.DH_TwoInchBombThrower'
+    SmokeLauncherFireOffset(0)=(X=22.0,Y=-39.0,Z=38.0)
+
     // Weapon fire
     WeaponFireOffset=8.5
     AddedPitch=340

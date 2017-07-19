@@ -16,4 +16,7 @@ defaultproperties
     InitialPrimaryAmmo=56
     WeaponFireOffset=0.0
     AltFireOffset=(X=-200.0,Y=20.0,Z=0.0)
+
+    SmokeLauncherClass=class'DH_Vehicles.DH_Nahverteidigungswaffe'
+    SmokeLauncherFireOffset(0)=(X=18.5,Y=34.5,Z=39.0)
 }

@@ -50,6 +50,10 @@ defaultproperties
     TracerProjectileClass=class'DH_Weapons.DH_MG34TracerBullet'
     TracerFrequency=7
 
+    // Smoke launcher
+    SmokeLauncherClass=class'DH_Vehicles.DH_Nahverteidigungswaffe'
+    SmokeLauncherFireOffset(0)=(X=16.0,Y=43.0,Z=66.0)
+
     // Weapon fire
     AddedPitch=15
     WeaponFireOffset=0.0

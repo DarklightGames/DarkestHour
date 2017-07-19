@@ -59,6 +59,10 @@ defaultproperties
     AltFireOffset=(X=-181.0,Y=-23.0,Z=0.0)
     AltFireSpawnOffsetX=48.0
 
+    // Smoke launcher
+    SmokeLauncherClass=class'DH_Vehicles.DH_TwoInchBombThrower'
+    SmokeLauncherFireOffset(0)=(X=24.0,Y=-42.0,Z=41.0)
+
     // Sounds
     CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
     CannonFireSound(1)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'

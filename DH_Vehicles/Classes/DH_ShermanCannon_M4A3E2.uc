@@ -52,6 +52,10 @@ defaultproperties
     TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
     TracerFrequency=5
 
+    // Smoke launcher
+    SmokeLauncherClass=class'DH_Vehicles.DH_TwoInchBombThrower'
+    SmokeLauncherFireOffset(0)=(X=44.0,Y=-37.0,Z=51.5)
+
     // Weapon fire
     WeaponFireAttachmentBone="Gun" // can't use 'Barrel' bone as it's rolled in the mesh, which screws up offsets
     WeaponFireOffset=106.0
