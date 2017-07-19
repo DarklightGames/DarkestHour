@@ -26,18 +26,18 @@ defaultproperties
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ChurchillCannonPawn',WeaponBone="turret_placement")
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_ChurchillMountedMGPawn',WeaponBone="mg_placement")
-    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-82.0,Y=-65.0,Z=45.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider1_idle")
-    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-151.0,Y=-65.0,Z=45.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider3_idle")
-    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-151.0,Y=66.0,Z=45.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider5_idle")
-    PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-82.0,Y=66.0,Z=45.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider6_idle")
+    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-80.0,Y=-100.0,Z=100.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider1_idle")
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-190.0,Y=-75.0,Z=105.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider3_idle")
+    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-190.0,Y=75.0,Z=105.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")
+    PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-80.0,Y=100.0,Z=100.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider6_idle")
 
     // Driver
     InitialPositionIndex=2
     UnbuttonedPositionIndex=3
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Churchill_anm.ext_body',TransitionUpAnim="Vision_hatch_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=59000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Churchill_anm.ext_body',TransitionUpAnim="overlay_Out",TransitionDownAnim="Vision_hatch_open",ViewPitchUpLimit=0,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0,bDrawOverlays=true)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Churchill_anm.ext_body',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="overlay_in",DriverTransitionAnim="VUC_driver_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=59000,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000)
-    DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_Churchill_anm.ext_body',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VUC_driver_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=59000,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000,bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Churchill_anm.int_body',TransitionUpAnim="Vision_hatch_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=59000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Churchill_anm.int_body',TransitionUpAnim="overlay_Out",TransitionDownAnim="Vision_hatch_open",ViewPitchUpLimit=0,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Churchill_anm.int_body',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="overlay_in",DriverTransitionAnim="VUC_driver_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=59000,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000)
+    DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_Churchill_anm.int_body',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VUC_driver_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=59000,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000,bExposed=true)
     DriveAnim="VUC_driver_idle_close"
     OverlayFPCamPos=(X=9.0,Y=0.0,Z=0.0)
 
@@ -52,17 +52,19 @@ defaultproperties
     LeftArmor(1)=(Thickness=4.13,LocationName="upper")
     RearArmor(0)=(Thickness=3.18)
 
-    FrontRightAngle=27.0
-    RearRightAngle=153.0
+    FrontLeftAngle=338.0
+    FrontRightAngle=22.0
+    RearRightAngle=157.0
+    RearLeftAngle=203.0
 
     // Movement
     MaxCriticalSpeed=948.0 // 57 kph
     GearRatios(3)=0.6
     GearRatios(4)=0.8
-    TransRatio=0.14
+    TransRatio=0.14a
 
     // Damage
-    VehHitpoints(0)=(PointRadius=35.0,PointOffset=(X=-95.0,Z=2.0)) // engine
+    VehHitpoints(0)=(PointRadius=35.0,PointBone="engine")
     VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=-20.0,Y=40.0,Z=3.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=-20.0,Y=-40.0,Z=3.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=40.0,Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
@@ -95,11 +97,10 @@ defaultproperties
     RightTreadIndex=3
     LeftTreadPanDirection=(Pitch=0,Yaw=-16384,Roll=0)
     RightTreadPanDirection=(Pitch=0,Yaw=-16384,Roll=0)
-    TreadVelocityScale=78.0
-    WheelRotationScale=24375.0
-    ExhaustPipes(0)=(ExhaustPosition=(X=-195.0,Y=30.0,Z=95.0),ExhaustRotation=(Pitch=36000))
-    ExhaustPipes(1)=(ExhaustPosition=(X=-195.0,Y=-30.0,Z=95.0),ExhaustRotation=(Pitch=36000))
-    LeftLeverBoneName="Lever_L"
+    TreadVelocityScale=130.0
+    WheelRotationScale=50000.0
+    ExhaustPipes(0)=(ExhaustPosition=(X=-160.0,Y=0.0,Z=105.0),ExhaustRotation=(Pitch=30000))
+    LeftLeverBoneName="Lever_L" // TODO: not sure if we want to even bother ehre
     RightLeverBoneName="Lever_R"
     SteeringScaleFactor=1.0
 
@@ -160,7 +161,7 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="steer_wheel_LF"
         BoneRollAxis=AXIS_Y
-        WheelRadius=35.0
+        WheelRadius=40.0
     End Object
     Wheels(0)=LF_Steering
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -168,7 +169,7 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="steer_wheel_RF"
         BoneRollAxis=AXIS_Y
-        WheelRadius=35.0
+        WheelRadius=40.0
     End Object
     Wheels(1)=RF_Steering
     Begin Object Class=SVehicleWheel Name=LR_Steering
@@ -176,7 +177,7 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer_wheel_LR"
         BoneRollAxis=AXIS_Y
-        WheelRadius=35.0
+        WheelRadius=40.0
     End Object
     Wheels(2)=LR_Steering
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -184,21 +185,21 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer_wheel_RR"i t
         BoneRollAxis=AXIS_Y
-        WheelRadius=35.0
+        WheelRadius=40.0
     End Object
     Wheels(3)=RR_Steering
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_L"
         BoneRollAxis=AXIS_Y
-        WheelRadius=35.0
+        WheelRadius=40.0
     End Object
     Wheels(4)=Left_Drive_Wheel
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive_wheel_R"
         BoneRollAxis=AXIS_Y
-        WheelRadius=35.0
+        WheelRadius=40.0
     End Object
     Wheels(5)=Right_Drive_Wheel
 
