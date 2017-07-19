@@ -176,6 +176,8 @@ simulated function Depress()
     }
 }
 
+// Modified to make sure the mortar base's bCanBeResupplied is set to true after we fire, as mortar must then be eligible for resupply
+// Also to add a bDebugCalibrate option that instantaneously fires a mortar shell at each elevation setting
 function Fire(Controller C)
 {
     if (bDebugCalibrate)

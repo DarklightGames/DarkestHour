@@ -86,7 +86,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     return LastProjectile;
 }
 
-// Modified to handle fire effects & animations from alternating pairs of barrels
+// Modified to handle fire effects & animations from alternating pairs of barrels (& EffectEmitter & CannonDustEmitterClass stuff omitted as not relevant to weapon)
 simulated function FlashMuzzleFlash(bool bWasAltFire)
 {
     local DHVehicleCannonPawn CannonPawn;
@@ -95,12 +95,12 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
     if (Role == ROLE_Authority)
     {
         FiringMode = byte(bWasAltFire);
-        FlashCount++;
+        ++FlashCount;
         NetUpdateTime = Level.TimeSeconds - 1.0;
     }
     else
     {
-        CalcWeaponFire(bWasAltFire);
+        CalcWeaponFire(bWasAltFire); // doubt net client needs this as only gets used to spawn EffectEmitter, which flakvierling doesn't have
     }
 
     if (Level.NetMode != NM_DedicatedServer && !bWasAltFire)
@@ -137,7 +137,7 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
 
         if (bSecondGunPairFiring)
         {
-            ++FireAnimationIndex; // no. 1/3/5 if 2nd pair firing
+            ++FireAnimationIndex; // shift anim index to no. 1/3/5 if 2nd barrel pair (barrels 2 & 3) are firing
         }
 
         if (FireAnimationIndex >= 0 && FireAnimationIndex < arraycount(FireAnimations) && HasAnim(FireAnimations[FireAnimationIndex]))
@@ -149,7 +149,7 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
     bSecondGunPairFiring = !bSecondGunPairFiring; // toggle for next time (all net modes)
 }
 
-// Modified to handle four barrels
+// Modified to spawn a FlashEmitters for each of the barrels (& AmbientEffectEmitter stuff omitted as not relevant to weapon)
 simulated function InitEffects()
 {
     local int i;
@@ -186,6 +186,8 @@ defaultproperties
     BarrelBones(2)="Barrel_TL"
     BarrelBones(3)="Barrel_BR"
     WeaponFireAttachmentBone="Barrel_TR" // a dummy really, replaced by individual BarrelBones - only used in CalcWeaponFire() to calc a nominal WeaponFireLocation
+    // TODO: change something resulting in WeaponFireLocation being set to a central location between the barrels, instead of its current off-centre position on the top right barrel
+    // This is becuase WeaponFireLocation is used by ApplyFireImpulse(), which gets called natively every Fire(), & is currently applying an off-centre karma impulse
     WeaponFireOffset=0.0
     FireAnimations(0)="shoot_opticA"     // on gun optics, 1st gun pair
     FireAnimations(1)="shoot_opticB"     // on gun optics, 2nd gun pair

@@ -296,12 +296,11 @@ simulated function Destroyed()
     }
 }
 
-// Modified to score the vehicle kill
+// Modified to score the vehicle kill, & to subtract the vehicle's reinforcement cost for the loss
 function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
 {
     super.Died(Killer, DamageType, HitLocation);
 
-    // Subtract the vehicle's reinforcement cost for the loss
     DarkestHourGame(Level.Game).ModifyReinforcements(VehicleTeam, -ReinforcementCost);
 
     if (Killer != none)

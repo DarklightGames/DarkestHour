@@ -483,7 +483,7 @@ function ShowMidGameMenu(bool bPause)
     else
     {
         // If we haven't picked a team or is a spectator... open the team pick menu
-        if (PlayerReplicationInfo.Team == none ||
+        if (PlayerReplicationInfo == none || PlayerReplicationInfo.Team == none ||
             PlayerReplicationInfo.Team.TeamIndex == 254)
         {
             ClientReplaceMenu("DH_Interface.DHGUITeamSelection");

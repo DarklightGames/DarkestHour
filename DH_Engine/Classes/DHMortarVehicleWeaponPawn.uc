@@ -636,6 +636,7 @@ Begin:
 }
 
 // New state where mortar is being fired
+// Fires mortar after firing animation has played (there's a delay firing mortar, as round is dropped down the tube)
 simulated state Firing extends Busy
 {
 Begin:

@@ -369,7 +369,7 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
     }
     else
     {
-        CalcWeaponFire(bWasAltFire);
+        CalcWeaponFire(bWasAltFire); // net client calculates & records fire location & rotation, used to spawn EffectEmitter
     }
 
     if (Level.NetMode != NM_DedicatedServer && !bWasAltFire)
@@ -379,7 +379,7 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
             FlashEmitter.Trigger(self, Instigator);
         }
 
-        if (EffectIsRelevant(Location, false))
+        if ((EffectEmitterClass != none|| CannonDustEmitterClass != none) && EffectIsRelevant(Location, false))
         {
             if (EffectEmitterClass != none)
             {

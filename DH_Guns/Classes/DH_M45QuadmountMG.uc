@@ -86,10 +86,10 @@ simulated function InitEffects()
 {
     local int i;
 
+    super.InitEffects();
+
     if (Level.NetMode != NM_DedicatedServer)
     {
-        super.InitEffects();
-
         for (i = 0; i < arraycount(BarrelBones); ++i)
         {
             if (BarrelEffectEmitter[i] == none && BarrelEffectEmitterClass != none)
@@ -101,7 +101,7 @@ simulated function InitEffects()
                     AttachToBone(BarrelEffectEmitter[i], BarrelBones[i]);
                     BarrelEffectEmitter[i].SetRelativeLocation(WeaponFireOffset * vect(1.0, 0.0, 0.0));
 
-                    // Hacky, but set the shell case emitter properties to suit this weapon, avoiding the need for separate classes
+                    // A little hacky, but set the shell case emitter properties to suit this weapon, avoiding the need for separate classes
                     if (i == 0 || i == 2) // left side guns
                     {
                         BarrelEffectEmitter[i].Emitters[0].StartLocationOffset = vect(-77.0, 4.0, 2.0);

@@ -256,7 +256,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
         }
     }
 
-    // Decrement our round count (note we've already done a 'have ammo' check in the earlier ReadyToFire() test, so we don't need to check that ConsumeAmmo() returns true)
+    // Decrement our round count (note we've already done a 'have ammo' check in the earlier ReadyToFire() check, so we don't need to check that ConsumeAmmo() returns true)
     AmmoIndex = GetAmmoIndex(bAltFire);
     ConsumeAmmo(AmmoIndex);
 
@@ -519,7 +519,7 @@ Begin:
     GotoState('');
 }
 
-// New function to play the main weapon firing sound (allows easy subclassing)
+// New helper function to get the main weapon firing sound (allows easy subclassing)
 simulated function sound GetFireSound()
 {
     return FireSoundClass;

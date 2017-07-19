@@ -18,7 +18,7 @@ simulated function InitializeVehicleBase()
     }
 }
 
-// From ROTankCannonPawn, so the turret movement keys control the weapon
+// From DHVehicleCannonPawn so the turret movement keys control the weapon (just omitting the gun damage checks)
 function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
 {
     UpdateTurretRotation(DeltaTime, YawChange, PitchChange);
@@ -92,7 +92,7 @@ simulated function DrawHUD(Canvas C)
     local ROHud            HUD;
     local DHVehicle        V;
     local color            VehicleColor;
-    local float            VehicleHealthScale;
+    local float            VehicleHealthProportion;
     local rotator          MyRot;
 
     super.DrawHUD(C);
@@ -104,7 +104,7 @@ simulated function DrawHUD(Canvas C)
         HUD = ROHud(PC.myHUD);
         V = DHVehicle(VehicleBase);
 
-        if (HUD != none && !HUD.bHideHud && V != none && V.VehicleHudTurretLook != none && V.VehicleHudTurret != none)
+        if (HUD != none && !HUD.bHideHud && V != none)
         {
             // Figure where to draw
             Coords.PosX = C.ClipX * HUD.VehicleIconCoords.X;
@@ -113,13 +113,13 @@ simulated function DrawHUD(Canvas C)
             Coords.Width = Coords.Height;
 
             // Set turret color based on any damage
-            VehicleHealthScale = V.Health / V.HealthMax;
+            VehicleHealthProportion = V.Health / V.HealthMax;
 
-            if (VehicleHealthScale > 0.75)
+            if (VehicleHealthProportion > 0.75)
             {
                 VehicleColor = class'DHHud'.default.VehicleNormalColor;
             }
-            else if (VehicleHealthScale > 0.35)
+            else if (VehicleHealthProportion > 0.35)
             {
                 VehicleColor = class'DHHud'.default.VehicleDamagedColor;
             }
