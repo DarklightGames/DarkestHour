@@ -115,7 +115,7 @@ defaultproperties
     // Weapon fire
     WeaponFireOffset=5.0
     AddedPitch=50
-    ShellCaseEmitterClass=class'DH_Vehicles.DH_20mmShellCaseEmitter'
+    ShellCaseEmitterClass=class'DH_Guns.DH_20mmShellCaseEmitter'
 
     // Animations
     BeginningIdleAnim="optic_idle"
