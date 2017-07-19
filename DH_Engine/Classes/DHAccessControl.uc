@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHAccessControl extends AccessControl;
+class DHAccessControl extends AccessControlIni;
 
 var private array<string> DeveloperIDs;
 
