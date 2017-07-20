@@ -4536,6 +4536,26 @@ function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation,
     return C.Pawn;
 }
 
+// Modified so a silent admin can also pause a game when bAdminCanPause is true
+function bool SetPause(bool bPause, PlayerController P)
+{
+    if (P != none && (Level.Netmode == NM_Standalone || (bAdminCanPause && (IsAdmin(P) || P.IsA('Admin'))) || bPauseable))
+    {
+        if (bPause)
+        {
+            Level.Pauser = P.PlayerReplicationInfo;
+        }
+        else
+        {
+            Level.Pauser = none;
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
 defaultproperties
 {
     ServerTickForInflation=20.0
