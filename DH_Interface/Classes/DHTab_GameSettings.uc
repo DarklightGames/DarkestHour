@@ -7,22 +7,22 @@ class DHTab_GameSettings extends Settings_Tabs;
 
 var automated GUISectionBackground i_BG1, i_BG2, i_BG3;
 
-var automated DHmoEditBox   ed_PlayerName;
-var automated DHmoComboBox  co_ViewFOV;
-var automated DHmoCheckBox  ch_NoGore;
-var automated DHmoCheckBox  ch_BayonetAtStart;
-var automated DHmoCheckBox  ch_TankThrottle, ch_VehicleThrottle, ch_ManualReloading, ch_LockTankOnEntry;
-var automated GUILabel      l_PlayerROID;     // label showing player's unique ROID
-var automated DHGUIButton   b_CopyPlayerROID; // button to copy player's ROID to clipboard
-var automated DHmoCheckBox  ch_DynamicNetSpeed;
-var automated DHmoComboBox  co_Netspeed, co_PurgeCacheDays;
+var automated DHmoEditBox       ed_PlayerName;
+var automated DHmoComboBox      co_ViewFOV;
+var automated DHmoCheckBox      ch_NoGore;
+var automated DHmoCheckBox      ch_BayonetAtStart;
+var automated DHmoCheckBox      ch_TankThrottle, ch_VehicleThrottle, ch_ManualReloading, ch_LockTankOnEntry;
+var automated GUILabel          l_PlayerROID;     // label showing player's unique ROID
+var automated DHGUIButton       b_CopyPlayerROID; // button to copy player's ROID to clipboard
+var automated DHmoCheckBox      ch_DynamicNetSpeed;
+var automated DHmoComboBox      co_Netspeed, co_PurgeCacheDays;
 
-var     int                 OriginalNetSpeed, OriginalPurgeCacheDays; // save initial values so can tell later if they have changed & need to be saved
-var     int                 PurgeCacheDaysValues[3]; // deliberately one less than PurgeCacheDaysText array size, as highest text in list is for possible custom value
+var     int                     OriginalNetSpeed, OriginalPurgeCacheDays; // save initial values so can tell later if they have changed & need to be saved
+var     int                     PurgeCacheDaysValues[3]; // deliberately one less than PurgeCacheDaysText array size, as highest text in list is for possible custom value
 
-var     localized string    NetSpeedText[4], PurgeCacheDaysText[4];
-var     localized string    IDText, NoROIDText;
-var     localized string    DegreesText;
+var     localized string        NetSpeedText[4], PurgeCacheDaysText[4];
+var     localized string        IDText, NoROIDText;
+var     localized string        DegreesText;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -483,10 +483,10 @@ defaultproperties
     // Gameplay options
     Begin Object Class=DHGUISectionBackground Name=GameBK1
         Caption="Gameplay"
-        WinTop=0.03
-        WinLeft=0.25
-        WinWidth=0.5
-        WinHeight=0.23
+        WinTop=0.0
+        WinLeft=0.225
+        WinWidth=0.55
+        WinHeight=0.5
         RenderWeight=0.1
         OnPreDraw=GameBK1.InternalPreDraw
     End Object
@@ -536,10 +536,10 @@ defaultproperties
     // Vehicle options
     Begin Object Class=DHGUISectionBackground Name=GameBK2
         Caption="Vehicle"
-        WinTop=0.3
-        WinLeft=0.25
-        WinWidth=0.5
-        WinHeight=0.3
+        WinTop=0.525
+        WinLeft=0.05
+        WinWidth=0.425
+        WinHeight=0.45
         RenderWeight=0.1
         OnPreDraw=GameBK2.InternalPreDraw
     End Object
@@ -576,8 +576,8 @@ defaultproperties
     ch_ManualReloading=DHmoCheckBox'ManualReloading'
 
     Begin Object Class=DHmoCheckBox Name=LockTankOnEntry
-        Caption="Automatically Lock Tank To Stop Other Players Entering"
-        Hint="Automatically lock a tank (or other armored vehicle) as you enter it, which stops other players from entering and using the tank crew positions. Only works if the tank is empty when you enter."
+        Caption="Spawn with vehicle locked"
+        Hint="Automatically lock a vehicle as you enter it, which stops other players from entering. Only works if the vehicle is empty when you enter."
         CaptionWidth=0.959
         ComponentJustification=TXTA_Left
         IniOption="@Internal"
@@ -589,10 +589,10 @@ defaultproperties
     // Network options
     Begin Object Class=DHGUISectionBackground Name=GameBK3
         Caption="Network"
-        WinTop=0.64
-        WinLeft=0.25
-        WinWidth=0.5
-        WinHeight=0.3
+        WinTop=0.525
+        WinLeft=0.525
+        WinWidth=0.425
+        WinHeight=0.45
         RenderWeight=0.1
         OnPreDraw=GameBK3.InternalPreDraw
     End Object

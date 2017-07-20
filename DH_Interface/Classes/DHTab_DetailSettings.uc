@@ -5,11 +5,15 @@
 
 class DHTab_DetailSettings extends ROTab_DetailSettings;
 
+var automated moSlider   sl_CorpseStayTime;
+var int                  CorpseStayNum;
+
 function SetupPositions()
 {
     super.SetupPositions();
 
     sb_Section2.ManageComponent(sl_DistanceLOD);
+    sb_Section2.ManageComponent(sl_CorpseStayTime);
     sb_Section2.UnmanageComponent(co_ScopeDetail);
 }
 
@@ -119,6 +123,11 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
 
             iShadowD = iShadow;
             co_Shadows.SilentSetIndex(iShadow);
+            break;
+
+        case sl_CorpseStayTime:
+            CorpseStayNum = class'DHPlayer'.default.CorpseStayTime;
+            sl_CorpseStayTime.SetComponentValue(CorpseStayNum, true);
             break;
 
         default:
@@ -232,6 +241,11 @@ function InternalOnChange(GUIComponent Sender)
                 co_GlobalDetails.SilentSetIndex(iGlobalDetails);
             }
             UpdateGlobalDetailsVisibility();
+            break;
+
+        case sl_CorpseStayTime:
+            CorpseStayNum = int(sl_CorpseStayTime.GetComponentValue());
+            PlayerOwner().ConsoleCommand("set DH_Engine.DHPlayer CorpseStayTime" @ CorpseStayNum);
             break;
     }
 
@@ -525,6 +539,12 @@ function SaveSettings()
         UpdateVehicleShadows(iShadow > 0);
     }
 
+    if (int(PC.ConsoleCommand("get ini:DH_Engine.DHPlayer CorpseStayTime")) != CorpseStayNum)
+    {
+        PC.ConsoleCommand("set ini:DH_Engine.DHPlayer CorpseStayTime" @ CorpseStayNum);
+        bSavePlayerConfig = true;
+    }
+
     if (bSavePlayerConfig)
        class'ROEngine.ROPlayer'.static.StaticSaveConfig();
 }
@@ -627,7 +647,7 @@ defaultproperties
         WinTop=0.004
         WinLeft=0.53
         WinWidth=0.452751
-        WinHeight=0.875228
+        WinHeight=0.969928
         RenderWeight=0.01
         OnPreDraw=sbSection2.InternalPreDraw
     End Object
@@ -1047,7 +1067,6 @@ defaultproperties
         LabelStyleName="DHLargeText"
         OnCreateComponent=DistanceLODSlider.InternalOnCreateComponent
         IniOption="@Internal"
-        WinTop=0.91
         WinLeft=0.56
         WinWidth=0.4
         TabOrder=22
@@ -1055,4 +1074,22 @@ defaultproperties
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
     sl_DistanceLOD=moSlider'DH_Interface.DHTab_DetailSettings.DistanceLODSlider'
+    Begin Object Class=moSlider Name=CorpseStayTime
+        Value=30.0
+        MinValue=15.0
+        MaxValue=90.0
+        bIntSlider=true
+        SliderCaptionStyleName="DHLargeText"
+        CaptionWidth=0.65
+        Caption="Corpse Stay Time (Seconds)"
+        LabelStyleName="DHLargeText"
+        OnCreateComponent=DistanceLODSlider.InternalOnCreateComponent
+        IniOption="@Internal"
+        WinLeft=0.56
+        WinWidth=0.4
+        TabOrder=22
+        OnChange=DHTab_DetailSettings.InternalOnChange
+        OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
+    End Object
+    sl_CorpseStayTime=moSlider'CorpseStayTime'
 }
