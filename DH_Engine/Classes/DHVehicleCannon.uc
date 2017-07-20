@@ -40,6 +40,7 @@ var     Emitter             CannonDustEmitter;
 var     bool                bCanisterIsFiring;       // canister is spawning separate projectiles - until done it stops firing effects playing or switch to different round type
 
 // Coaxial MG
+var     name                AltFireAttachmentBone;   // optional bone to position coaxial MG projectiles & firing effects (defaults to WeaponFireAttachmentBone if not specified)
 var     float               AltFireSpawnOffsetX;     // optional extra forward offset when spawning coaxial MG bullets, allowing them to clear potential collision with driver's head
 var     EReloadState        AltReloadState;          // the stage of coaxial MG reload or readiness
 var     array<ReloadStage>  AltReloadStages;         // stages for multi-part coaxial MG reload, including sounds, durations & HUD reload icon proportions
@@ -83,6 +84,8 @@ replication
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified so a cannon with smoke launcher with range adjustment sets its initial range setting to maximum
+// Also to make sure we have an AltFireAttachmentBone for a coaxial MG
+// If our mesh doesn't have a dedicated alt fire bone, we just use the WeaponFireAttachmentBone for the cannon & offset heavily from that (as before)
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -92,6 +95,11 @@ simulated function PostBeginPlay()
         SmokeLauncherAdjustmentSetting = SmokeLauncherClass.static.GetMaxRangeSetting();
         default.SmokeLauncherAdjustmentSetting = SmokeLauncherAdjustmentSetting; // avoids unnecessary replication of SmokeLauncherAdjustmentSetting for subsequently spawned vehicles
 
+    }
+
+    if (AltFireProjectileClass != none && AltFireAttachmentBone == '')
+    {
+        AltFireAttachmentBone = WeaponFireAttachmentBone;
     }
 }
 
@@ -416,11 +424,12 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
 }
 
 // Modified to only spawn AmbientEffectEmitter if cannon has a coaxial MG (as we now specify a generic AmbientEffectEmitterClass, so no longer sufficient to check that)
+// And to use the new AltFireAttachmentBone to position the coax MG emitter
 simulated function InitEffects()
 {
-    if (Level.NetMode != NM_DedicatedServer && WeaponFireAttachmentBone != '') // WeaponFireAttachmentBone is now required
+    if (Level.NetMode != NM_DedicatedServer)
     {
-        if (FlashEmitterClass != none && FlashEmitter == none)
+        if (FlashEmitterClass != none && FlashEmitter == none && WeaponFireAttachmentBone != '') // a WeaponFireAttachmentBone is now required
         {
             FlashEmitter = Spawn(FlashEmitterClass);
 
@@ -432,13 +441,13 @@ simulated function InitEffects()
             }
         }
 
-        if (AltFireProjectileClass != none && AmbientEffectEmitterClass != none && AmbientEffectEmitter == none)
+        if (AltFireProjectileClass != none && AmbientEffectEmitterClass != none && AmbientEffectEmitter == none && AltFireAttachmentBone != '')
         {
             AmbientEffectEmitter = Spawn(AmbientEffectEmitterClass, self,, WeaponFireLocation, WeaponFireRotation);
 
             if (AmbientEffectEmitter != none)
             {
-                AttachToBone(AmbientEffectEmitter, WeaponFireAttachmentBone);
+                AttachToBone(AmbientEffectEmitter, AltFireAttachmentBone);
                 AmbientEffectEmitter.SetRelativeLocation(AltFireOffset);
             }
         }
@@ -1737,27 +1746,35 @@ simulated function InitializeVehicleBase()
     super.InitializeVehicleBase();
 }
 
-// Modified to use optional AltFireSpawnOffsetX for coaxial MG fire, instead of irrelevant WeaponFireOffset for cannon
-// Also removes redundant dual fire stuff
+// Modified to use the new optional AltFireSpawnOffsetX for coaxial MG fire, instead of irrelevant WeaponFireOffset for cannon
+// And to use the new AltFireAttachmentBone to get the location for coax MG fire
+// Generally re-factored a little & removed redundant dual fire stuff
 simulated function CalcWeaponFire(bool bWasAltFire)
 {
-    local coords WeaponBoneCoords;
+    local name   WeaponFireAttachBone;
     local vector CurrentFireOffset;
 
-    // Calculate fire position offset
+    // Get attachment bone & positional offset
     if (bWasAltFire)
     {
-        CurrentFireOffset = AltFireOffset + (AltFireSpawnOffsetX * vect(1.0, 0.0, 0.0));
+        WeaponFireAttachBone = AltFireAttachmentBone;
+        CurrentFireOffset = AltFireOffset;
+        CurrentFireOffset.X += AltFireSpawnOffsetX;
     }
     else
     {
-        CurrentFireOffset = WeaponFireOffset * vect(1.0, 0.0, 0.0);
+        WeaponFireAttachBone = WeaponFireAttachmentBone;
+        CurrentFireOffset.X = WeaponFireOffset;
     }
 
-    // Calculate the rotation of the cannon's aim, & the location to spawn a projectile
-    WeaponBoneCoords = GetBoneCoords(WeaponFireAttachmentBone);
+    // Calculate the world location & rotation to spawn a projectile
     WeaponFireRotation = rotator(vector(CurrentAim) >> Rotation);
-    WeaponFireLocation = WeaponBoneCoords.Origin + (CurrentFireOffset >> WeaponFireRotation);
+    WeaponFireLocation = GetBoneCoords(WeaponFireAttachBone).Origin;
+
+    if (CurrentFireOffset != vect(0.0, 0.0, 0.0))
+    {
+        WeaponFireLocation += (CurrentFireOffset >> WeaponFireRotation);
+    }
 }
 
 // Modified to add CannonDustEmitter (from ROTankCannon)
