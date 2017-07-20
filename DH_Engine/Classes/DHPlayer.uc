@@ -442,7 +442,7 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
 // Developer login
 exec function DevLogin()
 {
-    if (Level.TimeSeconds < NextLoginTime)
+    if (Level.TimeSeconds < NextLoginTime) // TODO: doesn't appear to work as for some reason LoginDelay seems to be zero on net client, even though it's replicated?
     {
         return;
     }
