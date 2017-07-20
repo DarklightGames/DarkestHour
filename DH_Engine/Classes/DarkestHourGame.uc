@@ -83,14 +83,6 @@ event InitGame(string Options, out string Error)
 {
     super.InitGame(Options, Error);
 
-    // Change AccessControl to DHAccessControl
-    if (AccessControl != none)
-    {
-        AccessControl.Destroy();
-    }
-
-    AccessControl = Spawn(class<AccessControl>(DynamicLoadObject("DH_Engine.DHAccessControl", class'Class')));
-
     if (bIgnore32PlayerLimit)
     {
         MaxPlayers = Clamp(GetIntOption(Options, "MaxPlayers", MaxPlayers), 0, 64);
