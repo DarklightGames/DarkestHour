@@ -29,6 +29,7 @@ enum EConstructionError
     ERROR_BadSurface,           // Cannot construct on this surface type
     ERROR_GroundTooHard,        // This is used when something needs to snap to the terrain, but the engine's native trace functionality isn't cooperating!
     ERROR_RestrictedType,       // Restricted construction type (can't build on this map!)
+    ERROR_SquadTooSmall,        // Not enough players in the squad!
     ERROR_Other
 };
 
@@ -65,6 +66,7 @@ var     rotator StartRotationMax;
 var     int     LocalRotationRate;
 var     bool    bInheritsOwnerRotation;         // If true, the base rotation of the placement (prior to local rotation) will be inherited from the owner.
 var     bool    bCanPlaceInObjective;
+var     int     SquadMemberCountMinimum;        // The number of members you must have in your squad to create this.
 
 // Terrain placement
 var     bool    bSnapToTerrain;                 // If true, the origin of the placement (prior to the PlacementOffset) will coincide with the nearest terrain vertex during placement.
@@ -591,6 +593,8 @@ function static EConstructionError GetPlayerError(DHPlayer PC, optional out Obje
     local DH_LevelInfo LI;
     local DHPawn P;
     local DHConstructionManager CM;
+    local DHPlayerReplicationInfo PRI;
+    local DHSquadReplicationInfo SRI;
 
     if (PC == none)
     {
@@ -626,6 +630,20 @@ function static EConstructionError GetPlayerError(DHPlayer PC, optional out Obje
     if (default.TeamLimit > 0 && CM.CountOf(PC.GetTeamNum(), default.Class) >= default.TeamLimit)
     {
         return ERROR_TeamLimit;
+    }
+
+    SRI = PC.SquadReplicationInfo;
+    PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+
+    // TODO: in future we may allow non-squad leaders to make constructions.
+    if (PRI == none || SRI == none || !PRI.IsSquadLeader())
+    {
+        return ERROR_Fatal;
+    }
+
+    if (SRI.GetMemberCount(P.GetTeamNum(), PRI.SquadIndex) < default.SquadMemberCountMinimum)
+    {
+        return ERROR_SquadTooSmall;
     }
 
     return ERROR_None;
@@ -825,4 +843,7 @@ defaultproperties
 //    HarmfulDamageTypes(1)=class'DH_SatchelDamType'
     HarmfulDamageTypes(2)=class'ROTankShellExplosionDamage'
     TatteredHealthThreshold=-1
+
+    // Squad
+    SquadMemberCountMinimum=0
 }

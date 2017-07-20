@@ -22,6 +22,7 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
         Result = Repl(Result, "{0}", CP.ConstructionClass.static.GetMenuName(CP.PlayerOwner));
         Result = Repl(Result, "{1}", int(CP.ConstructionClass.default.DuplicateFriendlyDistanceInMeters));
         Result = Repl(Result, "{2}", int(CP.ConstructionClass.default.DuplicateEnemyDistanceInMeters));
+        Result = Repl(Result, "{3}", CP.ConstructionClass.default.SquadMemberCountMinimum);
     }
 
     return Result;
@@ -46,5 +47,6 @@ defaultproperties
     ErrorMessages(16)="There are insufficient supplies to create this construction."
     ErrorMessages(17)="You cannot construct a {0} on this surface."
     ErrorMessages(18)="The ground is too hard at this location."
+    ErrorMessages(19)="You must have {3} members in your squad to construct a {0}."
 }
 
