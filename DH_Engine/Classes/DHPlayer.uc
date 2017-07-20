@@ -3127,67 +3127,6 @@ function ServerDebugObstacles(optional int Option)
     }
 }
 
-// New debug exec to make bots spawn
-// Team is 0 for axis, 1 for allies, 2 for both
-// Num is optional & limits the number of bots that will be spawned (if not entered, zero is passed & gets used to signify no limit on numbers)
-exec function DebugSpawnBots(int Team, optional int Num, optional int Distance)
-{
-    local DarkestHourGame DHG;
-    local Controller      C;
-    local ROBot           B;
-    local vector          TargetLocation, RandomOffset;
-    local rotator         Direction;
-    local int             i;
-
-    DHG = DarkestHourGame(Level.Game);
-
-    if ((PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin || IsDebugModeAllowed()) && DHG != none && Pawn != none)
-    {
-        TargetLocation = Pawn.Location;
-
-        // If a Distance has been specified, move the target spawn location that many metres away from the player's location, in the yaw direction he is facing
-        if (Distance > 0)
-        {
-            Direction.Yaw = Pawn.Rotation.Yaw;
-            TargetLocation = TargetLocation + (vector(Direction) * class'DHUnits'.static.MetersToUnreal(Distance));
-        }
-
-        for (C = Level.ControllerList; C != none; C = C.NextController)
-        {
-            B = ROBot(C);
-
-            // Look for bots that aren't in game & are on the the specified team (Team 2 signifies to spawn bots of both teams)
-            if (B != none && B.Pawn == none && (Team == 2 || B.GetTeamNum() == Team))
-            {
-                // Spawn bot
-                DHG.DeployRestartPlayer(B, false, true);
-
-                if (B != none && B.Pawn != none)
-                {
-                    // Randomise location a little, so bots don't all spawn on top of each other
-                    RandomOffset = VRand() * 120.0;
-                    RandomOffset.Z = 0.0;
-
-                    // Move bot to target location
-                    if (B.Pawn.SetLocation(TargetLocation + RandomOffset))
-                    {
-                        // If spawn & move successful, check if we've reached any specified number of bots to spawn (NumBots zero signifies no limit, so skip this check)
-                        if (Num > 0 && ++i >= Num)
-                        {
-                            break;
-                        }
-                    }
-                    // But if we couldn't move the bot to the target, kill the pawn
-                    else
-                    {
-                        B.Pawn.Suicide();
-                    }
-                }
-            }
-        }
-    }
-}
-
 // Debug exec for queued hints
 exec function DebugHints()
 {
