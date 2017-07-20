@@ -43,7 +43,10 @@ var private ESquadOrderType         AxisOrderTypes[TEAM_SQUADS_MAX];
 var private vector                  AxisOrderLocations[TEAM_SQUADS_MAX];
 var private float                   AxisNextRallyPointTimes[TEAM_SQUADS_MAX];   // Stores the next time (in relation to Level.TimeSeconds) that a squad can place a new rally point.
 
+// Rally points
 var DHSpawnPoint_SquadRallyPoint    RallyPoints[RALLY_POINTS_MAX];
+var float                           RallyPointInitialDelaySeconds;
+var float                           RallyPointChangeLeaderDelaySeconds;
 
 var private DHPlayerReplicationInfo AlliesMembers[TEAM_SQUAD_MEMBERS_MAX];
 var private string                  AlliesNames[TEAM_SQUADS_MAX];
@@ -402,7 +405,7 @@ function int CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
 
             // Have a slight delay in placing rally points to dissuade players
             // from trying to exploit the system.
-            SetSquadNextRallyPointTime(TeamIndex, i, Level.TimeSeconds + 15.0);
+            SetSquadNextRallyPointTime(TeamIndex, i, Level.TimeSeconds + RallyPointInitialDelaySeconds);
 
             return i;
         }
@@ -458,6 +461,10 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
 
     // "{0} has become the squad leader"
     BroadcastSquadLocalizedMessage(PRI.Team.TeamIndex, PRI.SquadIndex, SquadMessageClass, 35, NewSquadLeader);
+
+    // Have a slight delay in placing rally points to dissuade players
+    // from trying to exploit the system.
+    SetSquadNextRallyPointTime(TeamIndex, SquadIndex, Level.TimeSeconds + RallyPointChangeLeaderDelaySeconds);
 
     return true;
 }
@@ -1624,6 +1631,8 @@ defaultproperties
 {
     AlliesSquadSize=12
     AxisSquadSize=9
+    RallyPointInitialDelaySeconds=15.0
+    RallyPointChangeLeaderDelaySeconds=30.0
     AlliesDefaultSquadNames(0)="Able"
     AlliesDefaultSquadNames(1)="Baker"
     AlliesDefaultSquadNames(2)="Charlie"
