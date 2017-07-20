@@ -76,13 +76,13 @@ defaultproperties
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell.Crommy_wrecked'
 
     // Exit
-    ExitPositions(0)=(X=125.0,Y=35.0,Z=175.0)   // driver
-    ExitPositions(1)=(X=25.0,Y=-35.0,Z=250.0)   // commander
-    ExitPositions(2)=(X=125.0,Y=35.0,Z=175.0)   // hull MG
-    ExitPositions(3)=(X=-77.0,Y=-160.0,Z=75.0)  // riders
-    ExitPositions(4)=(X=-142.0,Y=-160.0,Z=75.0)
-    ExitPositions(6)=(X=-142.0,Y=160.0,Z=75.0)
-    ExitPositions(5)=(X=-77.0,Y=160.0,Z=75.0)
+    ExitPositions(0)=(X=95.0,Y=30.0,Z=175.0)     // driver
+    ExitPositions(1)=(X=0.0,Y=0.0,Z=210.0)       // commander
+    ExitPositions(2)=(X=95.0,Y=-30.0,Z=175.0)    // hull MG
+    ExitPositions(3)=(X=-85.0,Y=-160.0,Z=75.0)   // riders
+    ExitPositions(4)=(X=-300.0,Y=-70.0,Z=75.0)
+    ExitPositions(5)=(X=-300.0,Y=70.0,Z=75.0)
+    ExitPositions(6)=(X=-85.0,Y=160.0,Z=75.0)
 
     // Sounds
     IdleSound=SoundGroup'Vehicle_Engines.T34.t34_engine_loop'
@@ -97,6 +97,8 @@ defaultproperties
     RightTreadIndex=3
     LeftTreadPanDirection=(Pitch=0,Yaw=-16384,Roll=0)
     RightTreadPanDirection=(Pitch=0,Yaw=-16384,Roll=0)
+    LeftTrackSoundBone="drive_wheel_L"
+    RightTrackSoundBone="drive_wheel_R"
     TreadVelocityScale=130.0
     WheelRotationScale=50000.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-160.0,Y=0.0,Z=105.0),ExhaustRotation=(Pitch=30000))
