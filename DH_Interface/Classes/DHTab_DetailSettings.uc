@@ -41,6 +41,16 @@ function MyGetComboOptions(moComboBox Combo, out array<GUIListElem> Options)
                 Options[i].Item = DetailOptions[i];
             }
             break;
+
+        case co_Decal:
+            Options.Length = 6;
+            Options[0].Item = DetailLevels[3];
+            Options[1].Item = DetailLevels[4];
+            Options[2].Item = DetailLevels[5];
+            Options[3].Item = DetailLevels[6];
+            Options[4].Item = DetailLevels[7];
+            Options[5].Item = DetailLevels[8];
+            break;
     }
 
     if (Options.Length == 0)
@@ -118,6 +128,35 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
     // Post-super checks
     switch (Sender)
     {
+        case co_Decal:
+            switch (class'LevelInfo'.default.DecalStayScale)
+            {
+                case 0.0:
+                    iDecal = 0;
+                    break;
+                case 1.0:
+                    iDecal = 1;
+                    break;
+                case 2.0:
+                    iDecal = 2;
+                    break;
+                case 4.0:
+                    iDecal = 3;
+                    break;
+                case 8.0:
+                    iDecal = 4;
+                    break;
+                case 16.0:
+                    iDecal = 5;
+                    break;
+                default:
+                    iDecal = 2;
+                    break;
+            }
+            iDecalD = iDecal;
+            co_Decal.SilentSetIndex(iDecal);
+            break;
+
         case co_RenderDevice:
             DisableHDRControlIfNeeded();
 
@@ -162,6 +201,30 @@ function InternalOnChange(GUIComponent Sender)
             bGoingUp = bHDR && bHDR != bHDRD;
             break;
 
+        case co_Decal:
+            switch (co_Decal.GetIndex())
+            {
+                case 0:
+                    iDecal = 0.0;
+                    break;
+                case 1:
+                    iDecal = 1.0;
+                    break;
+                case 2:
+                    iDecal = 2.0;
+                    break;
+                case 3:
+                    iDecal = 4.0;
+                    break;
+                case 4:
+                    iDecal = 8.0;
+                    break;
+                case 5:
+                    iDecal = 16.0;
+                    break;
+            }
+            break;
+
         case ch_Advanced:
             if (ch_Advanced.IsChecked())
             {
@@ -195,7 +258,7 @@ function UpdateGlobalDetails()
             co_Char.SetIndex(0);            // Range = 0 - 8
             co_World.SetIndex(0);           // Range = 0 - 2
             co_Physics.setindex(0);         // Range = 0 - 2
-            co_Decal.setindex(0);           // Range = 0 - 2
+            co_Decal.setindex(0);           // Range = 0 - 5
             co_Shadows.setindex(0);         // Range = 0 - 2 (0 - 1 sometimes -- check that!)
             co_MeshLOD.setindex(0);         // Range = 0 - 3
             co_MultiSamples.setindex(0);
@@ -221,7 +284,7 @@ function UpdateGlobalDetails()
             co_Char.SetIndex(3);            // Range = 0 - 8
             co_World.SetIndex(0);           // Range = 0 - 2
             co_Physics.setindex(0);         // Range = 0 - 2
-            co_Decal.setindex(1);           // Range = 0 - 2
+            co_Decal.setindex(1);           // Range = 0 - 5
             co_Shadows.setindex(1);         // Range = 0 - 2 (0 - 1 sometimes -- check that!)
             co_MeshLOD.setindex(1);         // Range = 0 - 3
             co_MultiSamples.setindex(0);
@@ -251,7 +314,7 @@ function UpdateGlobalDetails()
             co_Char.SetIndex(5);            // Range = 0 - 8
             co_World.SetIndex(1);           // Range = 0 - 2
             co_Physics.setindex(1);         // Range = 0 - 2
-            co_Decal.setindex(1);           // Range = 0 - 2
+            co_Decal.setindex(2);           // Range = 0 - 5
             co_Shadows.setindex(1);         // Range = 0 - 2 (0 - 1 sometimes -- check that!)
             co_MeshLOD.setindex(2);         // Range = 0 - 3
             co_MultiSamples.setindex(0);
@@ -283,7 +346,7 @@ function UpdateGlobalDetails()
             co_Char.SetIndex(6);            // Range = 0 - 8
             co_World.SetIndex(2);           // Range = 0 - 2
             co_Physics.setindex(1);         // Range = 0 - 2
-            co_Decal.setindex(2);           // Range = 0 - 2
+            co_Decal.setindex(3);           // Range = 0 - 5
             co_Shadows.setindex(1);         // Range = 0 - 2 (0 - 1 sometimes -- check that!)
             co_MeshLOD.setindex(2);         // Range = 0 - 3
             co_MultiSamples.setindex(0);
@@ -322,7 +385,7 @@ function UpdateGlobalDetails()
             co_Char.SetIndex(7);            // Range = 0 - 8
             co_World.SetIndex(2);           // Range = 0 - 2
             co_Physics.setindex(1);         // Range = 0 - 2
-            co_Decal.setindex(2);           // Range = 0 - 2
+            co_Decal.setindex(4);           // Range = 0 - 5
             co_Shadows.setindex(min(co_Shadows.ItemCount() - 1, 3));  // Range = 0 - 2 (0 - 1 sometimes -- check that!)
             co_MeshLOD.setindex(2);         // Range = 0 - 3
 
@@ -362,7 +425,7 @@ function UpdateGlobalDetails()
             co_Char.SetIndex(8);            // Range = 0 - 8
             co_World.SetIndex(2);           // Range = 0 - 2
             co_Physics.setindex(2);         // Range = 0 - 2
-            co_Decal.setindex(2);           // Range = 0 - 2
+            co_Decal.setindex(5);           // Range = 0 - 5
             co_Shadows.setindex(min(co_Shadows.ItemCount() - 1, 3));  // Range = 0 - 2 (0 - 1 sometimes -- check that!)
             co_MeshLOD.setindex(3);         // Range = 0 - 3
 
