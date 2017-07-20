@@ -284,7 +284,7 @@ function BuildCommandString(out string CommandString, out int SelectionIndex, ou
     }
 }
 
-// Executes console command, logging in as admin first if necessary
+// Executes console command, logging in 'silently' as a admin first, if necessary
 // Note we cannot do admin logout here as the menus leave typing open & the Mutate command won't have been sent yet - instead we log out in the Mutate function
 simulated function ExecuteCommand(string CommandString, coerce bool bDoAdminLogin)
 {
@@ -294,7 +294,7 @@ simulated function ExecuteCommand(string CommandString, coerce bool bDoAdminLogi
         {
             if (AdminName != "" && AdminPassword != "")
             {
-                PC.AdminLogin(AdminName @ AdminPassword); // note: would far prefer to use AdminLoginSilent but it doesn't work with the webadmin system
+                PC.AdminLoginSilent(AdminName @ AdminPassword);
                 bMenuDidAdminLogin = true; // if the menu has automatically logged in the admin, this flags that we need to log them out again afterwards
             }                              // note: would like to check here if admin login was successful but bIsAdmin won't have had time to replicate (in PC.PRI)
             else
@@ -354,8 +354,10 @@ function AdminLogoutIfNecessary()
 }
 
 // Toggles admin login if admin credentials are set in their own DarkestHour.ini file
-// Note not used in this mutator but a very useful console command to have bound to one key, just for general admin use
-exec function AdminLoginToggle()
+// This isn't used in this mutator package but it's a very useful console command to have bound to one key, just for general admin use
+// Note the silent login option won't work properly - it logs in ok, but the toggle then fails on logout & you have to do it manually with the "AdminLogout" command
+// This is because PRI's bSilentAdmin bool isn't replicated (unlike bAdmin), so net client can't detect that player is already logged in as silent admin & always tries to log in
+exec function AdminLoginToggle(optional bool bSilentLogin)
 {
     if (IsLoggedInAsAdmin())
     {
@@ -365,7 +367,14 @@ exec function AdminLoginToggle()
     {
         if (AdminName != "" && AdminPassword != "")
         {
-            PC.AdminLogin(AdminName @ AdminPassword);
+            if (bSilentLogin)
+            {
+                PC.AdminLoginSilent(AdminName @ AdminPassword);
+            }
+            else
+            {
+                PC.AdminLogin(AdminName @ AdminPassword);
+            }
         }
         else
         {
@@ -374,6 +383,7 @@ exec function AdminLoginToggle()
     }
 }
 
+// Note bSilentAdmin won't work on a net client as bSilentAdmin isn't replicated (unlike bAdmin), so client can't tell that player is logged in
 function bool IsLoggedInAsAdmin()
 {
     return PC.PlayerReplicationInfo.bAdmin || PC.PlayerReplicationInfo.bSilentAdmin;
