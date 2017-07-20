@@ -3083,6 +3083,7 @@ exec function FOV(float F)
 // New debug exec for an easy way to write to log in-game, on both server & client in multi-player
 exec function DoLog(string LogMessage)
 {
+    // Note bSilentAdmin won't work on a net client as bSilentAdmin isn't replicated (unlike bAdmin), so client can't tell that player is logged in
     if (LogMessage != "" && (IsDebugModeAllowed() || (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin)))
     {
         Log(GetHumanReadableName() @ ":" @ LogMessage);
