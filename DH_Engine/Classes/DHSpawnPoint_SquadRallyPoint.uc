@@ -324,6 +324,9 @@ function UpdateAppearance()
         case NATION_Canada:
             NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.CAN_backpack';
             break;
+        case NATION_USSR:
+            NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.RUS_backpack';
+            break;
         default:
             NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.USA_backpack';
             break;
