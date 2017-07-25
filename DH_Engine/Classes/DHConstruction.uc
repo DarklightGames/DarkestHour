@@ -244,7 +244,10 @@ simulated function PostBeginPlay()
 // is too low, it decreases the chance of a PokeTerrain success. Secondly,
 // for some reason, non-zero PlacementOffset values play havoc with the ability
 // to successfully poke the terrain. Even when it should realistically have no
-// effect whatsoever.
+// effect whatsoever. Additionally, in order to ensure that the Terrain can be
+// reliably poked, it's recommended to have the TerrainInfo's Location be at
+// world origin, or it increases the likelihood of failure (or in some cases,
+// makes it impossible!)
 simulated function PokeTerrain(float Radius, float Depth)
 {
     local TerrainInfo TI;
