@@ -1022,6 +1022,7 @@ function DrawSupplyCount(Canvas C)
 {
     local DHPawn P;
     local DHVehicle V;
+    local DHVehicleWeaponPawn VWP;
     local DHPlayerReplicationInfo PRI;
     local string S;
     local float XL, YL;
@@ -1041,6 +1042,9 @@ function DrawSupplyCount(Canvas C)
 
     P = DHPawn(PawnOwner);
     V = DHVehicle(PawnOwner);
+    VWP = DHVehicleWeaponPawn(PawnOwner);
+
+    TouchingSupplyCount = -1;
 
     if (P != none)
     {
@@ -1048,7 +1052,17 @@ function DrawSupplyCount(Canvas C)
     }
     else if (V != none)
     {
+        // TODO: get the BASE vehicle?
         TouchingSupplyCount = V.TouchingSupplyCount;
+    }
+    else if (VWP != none)
+    {
+        V = DHVehicle(VWP.VehicleBase);
+
+        if (V != none)
+        {
+            TouchingSupplyCount = V.TouchingSupplyCount;
+        }
     }
 
     if (PRI.IsInSquad() && TouchingSupplyCount >= 0)
