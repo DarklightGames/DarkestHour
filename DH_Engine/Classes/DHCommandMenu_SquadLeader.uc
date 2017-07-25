@@ -49,20 +49,20 @@ function OnSelect(int Index, vector Location)
     Interaction.Hide();
 }
 
-function GetOptionText(int OptionIndex, out string ActionText, out string SubjectText, optional out color TextColor)
+function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 {
     local DHPawn OtherPawn;
 
     OtherPawn = DHPawn(MenuObject);
 
-    super.GetOptionText(OptionIndex, ActionText, SubjectText, TextColor);
+    super.GetOptionRenderInfo(OptionIndex, ORI);
 
     switch (OptionIndex)
     {
         case 4:
             if (OtherPawn != none && OtherPawn.PlayerReplicationInfo != none)
             {
-                SubjectText = OtherPawn.PlayerReplicationInfo.PlayerName;
+                ORI.OptionName = OtherPawn.PlayerReplicationInfo.PlayerName;
             }
         default:
             break;

@@ -79,17 +79,17 @@ function OnSelect(int OptionIndex, vector Location)
     Interaction.Hide();
 }
 
-function GetOptionText(int OptionIndex, out string ActionText, out string SubjectText, optional out color TextColor)
+function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 {
     local DHPlayerReplicationInfo OtherPRI;
 
-    super.GetOptionText(OptionIndex, ActionText, SubjectText, TextColor);
+    super.GetOptionRenderInfo(OptionIndex, ORI);
 
     OtherPRI = DHPlayerReplicationInfo(MenuObject);
 
     if (OtherPRI != none)
     {
-        SubjectText = OtherPRI.PlayerName;
+        ORI.OptionName = OtherPRI.PlayerName;
     }
 }
 

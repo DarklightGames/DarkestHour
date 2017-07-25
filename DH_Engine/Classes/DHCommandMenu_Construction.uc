@@ -3,9 +3,13 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHCommandMenu_Construction extends DHCommandMenu;
+class DHCommandMenu_Construction extends DHCommandMenu
+    dependson(DHConstruction);
 
 var Material SuppliesIcon;
+
+var localized string NotAvailableText;
+var localized string TeamLimitText;
 
 function Setup()
 {
@@ -109,22 +113,59 @@ function bool IsOptionDisabled(int OptionIndex)
     return false;
 }
 
-function GetOptionText(int OptionIndex, out string ActionText, out string SubjectText, optional out color TextColor)
+function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 {
     local class<DHConstruction> ConstructionClass;
+    local DHConstruction.EConstructionError Error;
+    local DHPlayer PC;
+    local int SquadMemberCount;
 
-    super.GetOptionText(OptionIndex, ActionText, SubjectText, TextColor);
+    super.GetOptionRenderInfo(OptionIndex, ORI);
 
     ConstructionClass = class<DHConstruction>(Options[OptionIndex].OptionalObject);
 
     if (ConstructionClass != none)
     {
-        SubjectText = string(ConstructionClass.default.SupplyCost);
-    }
+        Error = ConstructionClass.static.GetPlayerError(DHPlayer(Interaction.ViewportOwner.Actor));
 
-    if (IsOptionDisabled(OptionIndex))
-    {
-        TextColor = class'UColor'.default.Red;
+        ORI.OptionName = ConstructionClass.default.MenuName;
+
+        if (Error != ERROR_None)
+        {
+            ORI.InfoColor = class'UColor'.default.Red;
+        }
+        else
+        {
+            ORI.InfoColor = class'UColor'.default.White;
+        }
+
+        switch (Error)
+        {
+            case ERROR_RestrictedType:
+            case ERROR_Fatal:
+                ORI.InfoIcon = texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+                ORI.InfoText = default.NotAvailableText;
+                break;
+            case ERROR_TeamLimit:
+                ORI.InfoIcon = texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+                ORI.InfoText = default.TeamLimitText;
+                break;
+            case ERROR_SquadTooSmall:
+                PC = DHPlayer(Interaction.ViewportOwner.Actor);
+
+                if (PC != none && PC.SquadReplicationInfo != none)
+                {
+                    SquadMemberCount = PC.SquadReplicationInfo.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
+                }
+
+                ORI.InfoIcon = texture'DH_GUI_Tex.DeployMenu.Squads';
+                ORI.InfoText = string(SquadMemberCount) $ "/" $ string(ConstructionClass.default.SquadMemberCountMinimum);
+                break;
+            default:
+                ORI.InfoIcon = texture'DH_InterfaceArt_tex.HUD.supplies';
+                ORI.InfoText = string(ConstructionClass.default.SupplyCost);
+                break;
+        }
     }
 }
 
@@ -139,5 +180,7 @@ function bool ShouldHideMenu()
 defaultproperties
 {
     SuppliesIcon=Texture'DH_InterfaceArt_tex.HUD.supplies'
+    NotAvailableText="Not Available"
+    TeamLimitText="Limit Reached"
 }
 

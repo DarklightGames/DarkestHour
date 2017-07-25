@@ -6,7 +6,8 @@
 // 8 different options.
 //==============================================================================
 
-class DHCommandInteraction extends DHInteraction;
+class DHCommandInteraction extends DHInteraction
+    dependson(DHCommandMenu);
 
 const FADE_DURATION = 0.25;
 const INNER_RADIUS = 16.0;
@@ -276,11 +277,10 @@ function PostRender(Canvas C)
 {
     local int i;
     local float Theta, ArcLength;
-    local float CenterX, CenterY, X, Y, XL, YL, U, V;
+    local float CenterX, CenterY, X, Y, XL, YL, U, V, AspectRatio, XL2, YL2;
     local DHCommandMenu Menu;
-    local string ActionText, SubjectText;
     local bool bIsOptionDisabled;
-    local color TextColor;
+    local DHCommandMenu.OptionRenderInfo ORI;
 
     if (C == none)
     {
@@ -398,33 +398,37 @@ function PostRender(Canvas C)
     // Display text of selection
     if (SelectedIndex >= 0)
     {
-        Menu.GetOptionText(SelectedIndex, ActionText, SubjectText, TextColor);
-
-        C.TextSize(ActionText, XL, YL);
+        Menu.GetOptionRenderInfo(SelectedIndex, ORI);
 
         // Draw action text
+        C.TextSize(ORI.OptionName, XL, YL);
         C.DrawColor = class'UColor'.default.Black;
         C.SetPos(CenterX - (XL / 2) + 1, CenterY + 33);
-        C.DrawText(ActionText);
+        C.DrawText(ORI.OptionName);
         C.DrawColor = class'UColor'.default.White;
         C.SetPos(CenterX - (XL / 2), CenterY + 32);
-        C.DrawText(ActionText);
+        C.DrawText(ORI.OptionName);
 
         // Draw subject text
-        C.TextSize(SubjectText, XL, YL);
+        C.TextSize(ORI.InfoText, XL, YL);
         C.DrawColor = class'UColor'.default.Black;
         C.SetPos(CenterX - (XL / 2) + 1, CenterY - 31 -  YL);
-        C.DrawText(SubjectText);
-        C.DrawColor = TextColor;
+        C.DrawText(ORI.InfoText);
+        C.DrawColor = ORI.InfoColor;
         C.SetPos(CenterX - (XL / 2), CenterY - 32 - YL);
-        C.DrawText(SubjectText);
+        C.DrawText(ORI.InfoText);
 
         // Draw action icon
-        if (Menu.Options[SelectedIndex].ActionIcon != none)
+        if (ORI.InfoIcon != none)
         {
-            C.DrawColor = TextColor;
-            C.SetPos(CenterX - (XL / 2) - 32, CenterY - 32 - YL - 8);
-            C.DrawTile(Menu.Options[SelectedIndex].ActionIcon, 32, 32, 0, 0, 31, 31);
+            AspectRatio = ORI.InfoIcon.MaterialUSize() / ORI.InfoIcon.MaterialVSize();
+
+            YL2 = 32;
+            XL2 = (YL2 * AspectRatio);
+
+            C.DrawColor = ORI.InfoColor;
+            C.SetPos(CenterX - (XL / 2) - XL2, CenterY - YL2 - YL - 8);
+            C.DrawTile(ORI.InfoIcon, XL2, YL2, 0, 0, ORI.InfoIcon.MaterialUSize() - 1, ORI.InfoIcon.MaterialVSize() - 1);
         }
     }
 

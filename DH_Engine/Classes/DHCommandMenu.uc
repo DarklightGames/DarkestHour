@@ -6,10 +6,19 @@
 class DHCommandMenu extends Object
     abstract;
 
+// TODO: this is kind of ugly, don't like it!
 enum EOptionType
 {
     TYPE_Normal,
     TYPE_Submenu
+};
+
+struct OptionRenderInfo
+{
+    var string      OptionName;
+    var string      InfoText;
+    var Material    InfoIcon;
+    var color       InfoColor;
 };
 
 struct Option
@@ -31,16 +40,16 @@ var Object                  MenuObject;
 
 function Setup();   // Called before pushed onto the stack
 
-function GetOptionText(int OptionIndex, out string ActionText, out string SubjectText, optional out color TextColor)
+function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 {
     if (OptionIndex < 0 || OptionIndex >= Options.Length)
     {
         return;
     }
 
-    ActionText = Options[OptionIndex].ActionText;
-    SubjectText = Options[OptionIndex].SubjectText;
-    TextColor = class'UColor'.default.White;
+    ORI.OptionName = Options[OptionIndex].ActionText;
+    ORI.InfoText = Options[OptionIndex].SubjectText;
+    ORI.InfoColor = class'UColor'.default.White;
 }
 
 function bool IsOptionDisabled(int OptionIndex);

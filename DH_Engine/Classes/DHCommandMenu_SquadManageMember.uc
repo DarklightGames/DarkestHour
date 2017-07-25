@@ -131,12 +131,12 @@ function bool IsOptionDisabled(int OptionIndex)
     }
 }
 
-function GetOptionText(int OptionIndex, out string ActionText, out string SubjectText, optional out color TextColor)
+function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 {
     local DHPlayerReplicationInfo OtherPRI;
     local Pawn P;
 
-    super.GetOptionText(OptionIndex, ActionText, SubjectText, TextColor);
+    super.GetOptionRenderInfo(OptionIndex, ORI);
 
     P = Pawn(MenuObject);
 
@@ -146,7 +146,7 @@ function GetOptionText(int OptionIndex, out string ActionText, out string Subjec
 
         if (OtherPRI != none)
         {
-            SubjectText = OtherPRI.PlayerName;
+            ORI.OptionName = OtherPRI.PlayerName;
         }
     }
 }
