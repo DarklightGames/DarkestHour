@@ -57,8 +57,7 @@ defaultproperties
     SmokeLauncherFireOffset(0)=(X=37.0,Y=40.0,Z=42.0)
 
     // Weapon fire
-    AltFireOffset=(X=-109.5,Y=-11.5,Z=1.0)
-    AltFireSpawnOffsetX=23.0
+    AltFireAttachmentBone="coax_muzzle"
 
     // Sounds
     CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
