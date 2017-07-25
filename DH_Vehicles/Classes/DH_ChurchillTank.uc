@@ -68,9 +68,9 @@ defaultproperties
     VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=-20.0,Y=40.0,Z=3.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=-20.0,Y=-40.0,Z=3.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=40.0,Z=-8.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    TreadHitMaxHeight=58.0
+    TreadHitMaxHeight=10.0
     DamagedEffectScale=0.9
-    DamagedEffectOffset=(X=-130.0,Y=0.0,Z=85.0)
+    DamagedEffectOffset=(X=-110.0,Y=0.0,Z=60.0)
     FireAttachBone="body"
     FireEffectOffset=(X=110.0,Y=35.0,Z=25.0)
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell.Crommy_wrecked'
