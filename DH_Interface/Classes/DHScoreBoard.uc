@@ -10,6 +10,11 @@ const DHMAXPERSIDEWIDE = 35;
 
 var UComparator PRIComparator;
 
+var DHGameReplicationInfo   DHGRI;
+var DHPlayerReplicationInfo MyPRI;
+var float BaseXPos[2], BaseLineHeight, MaxAxisYPos, MaxTeamWidth;
+var int MaxPlayersListedPerSide;
+
 // Modified to create a special 'PRIComparator' object that is used to efficiently sort each team array, with variable methods of sorting
 // Note the bAlphaSortScoreBoard option can only be enabled by changing the config file before playing, not during the game, so no need to check which option after this
 simulated function PostBeginPlay()
@@ -90,14 +95,10 @@ simulated function UpdateScoreBoard(Canvas C)
 {
     local array<DHPlayerReplicationInfo> AxisPRI, AlliesPRI, UnassignedPRI;
     local DHPlayerReplicationInfo        PRI;
-    local DHPlayerReplicationInfo        MyPRI;
-    local DHGameReplicationInfo          DHGRI;
     local class<DHHud>                   HUD;
-    local color  TeamColor, PlayerNameColor;
-    local string NameSuffix, RoleName, s;
-    local float  BaseLineHeight, LineHeight, MaxAxisYPos, BaseXPos[2], MaxTeamWidth, X, Y, XL, YL;
-    local int    MaxPlayersListedPerSide, RequiredObjCount[2], SecondaryObjCount[2], TeamIndex, TeamTotalScore, i;
-    local bool   bHighLight, bOwnerDrawn;
+    local string s;
+    local float LineHeight, X, Y, XL, YL;
+    local int i;
 
     //////////////////// SET UP ////////////////////
 
@@ -157,26 +158,6 @@ simulated function UpdateScoreBoard(Canvas C)
 
                 // Temporarily build AvgPing into a total ping total for the team, so later we can calculate an average team ping
                 AvgPing[PRI.Team.TeamIndex] += PRI.Ping;
-            }
-        }
-    }
-
-    // Sort the team arrays by whatever method has been specified (by default this is primarily by score, but there is an option to sort alphabetically by name)
-    class'USort'.static.Sort(AxisPRI, PRIComparator);
-    class'USort'.static.Sort(AlliesPRI, PRIComparator);
-
-    // Count up how many objectives each team holds
-    for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
-    {
-        if (DHGRI.DHObjectives[i] != none && DHGRI.DHObjectives[i].ObjState != OBJ_Neutral)
-        {
-            if (DHGRI.DHObjectives[i].bRequired)
-            {
-                RequiredObjCount[DHGRI.DHObjectives[i].ObjState]++;
-            }
-            else
-            {
-                SecondaryObjCount[DHGRI.DHObjectives[i].ObjState]++;
             }
         }
     }
@@ -251,395 +232,12 @@ simulated function UpdateScoreBoard(Canvas C)
     C.DrawTextClipped(s); // this is the actual text, drawn over the drop shadow
 
     //////////////// DRAW AXIS TEAM ////////////////
-
-    TeamIndex = AXIS_TEAM_INDEX;
-    TeamColor = class'DHColor'.default.TeamColors[TeamIndex];
-
-    // Draw axis team header info
-    Y += LineHeight;
-    DrawCell(C, TeamNameAxis @ "-" @ DHGRI.UnitName[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
-
-    Y += LineHeight;
-
-    // Draw reinforcements remaining if on Axis
-    if (MyPRI.Team != none && MyPRI.Team.TeamIndex == AXIS_TEAM_INDEX)
-    {
-        if (DHGRI.bIsInSetupPhase)
-        {
-            DrawCell(C, ReinforcementsText @ ":" @ "???", 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
-        }
-        else if (DHGRI.SpawnsRemaining[TeamIndex] >= 0)
-        {
-            DrawCell(C, ReinforcementsText @ ":" @ DHGRI.SpawnsRemaining[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
-        }
-        else
-        {
-            DrawCell(C, ReinforcementsText @ ":" @ DHGRI.ReinforcementsInfiniteText, 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
-        }
-    }
-
-    if (DHGRI.CurrentAlliedToAxisRatio != 0.5)
-    {
-        DrawCell(C, DHGRI.ForceScaleText @ ":" @ DHGRI.GetTeamScaleString(TeamIndex), 0, BaseXPos[TeamIndex] + NameLength, Y, MaxTeamWidth, LineHeight, false, TeamColor);
-    }
-
-    // Draw rounds won/remaining for the team if not limited to 1 round
-    if (GRI.RoundLimit > 1)
-    {
-        s = RoundsWonText @ ":" @ int(GRI.Teams[TeamIndex].Score);
-
-        if (GRI.RoundLimit != 0) // add round limit, if more than 1 round is specified
-        {
-            S  $= "/" $ GRI.RoundLimit;
-        }
-
-        Y += LineHeight;
-
-        DrawCell(C, s, 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
-    }
-
-    Y += LineHeight;
-
-    // Draw objectives held
-    if (SecondaryObjCount[TeamIndex] > 0)
-    {
-        DrawCell(C, RequiredObjHeldText @ ":" @ RequiredObjCount[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
-        DrawCell(C, SecondaryObjHeldText @ ":" @ SecondaryObjCount[TeamIndex], 0, BaseXPos[TeamIndex] + NameLength, Y, MaxTeamWidth, LineHeight, false, TeamColor);
-    }
-    else
-    {
-        DrawCell(C, ObjectivesHeldText @ ":" @ RequiredObjCount[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
-    }
-
-    // Draw axis column headers for players
-    Y += LineHeight;
-    DrawCell(C, PlayerText @ "(" $ AxisPRI.Length $ ")", 0, X, Y, NameLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
-    DrawCell(C, RoleText, 0, X += NameLength, Y, RoleLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
-    DrawCell(C, ScoreText, 1, X += RoleLength, Y, ScoreLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
-    DrawCell(C, PingText, 1, X += ScoreLength, Y, PingLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
-
-    // Loop through axis players & draw names, role, score & ping
-    Y += LineHeight;
-    LineHeight = BaseLineHeight * 0.9; // smaller lines to fit more players on the scoreboard
-
-    for (i = 0; i < AxisPRI.Length; ++i)
-    {
-        if (AxisPRI[i] == none)
-        {
-            continue;
-        }
-
-        // If we're on the last available line for our own team & we haven't yet drawn our own player, then reserve the last slot for him
-        if (i >= MaxPlayersListedPerSide - 1 && MyPRI.Team != none && MyPRI.Team.TeamIndex == TeamIndex && !bOwnerDrawn)
-        {
-            if (AxisPRI[i] != MyPRI)
-            {
-                continue;
-            }
-        }
-        // If we've filled all available lines for this team, draw a final "..." to indicate there are more players not listed & exit the loop
-        else if (i >= MaxPlayersListedPerSide)
-        {
-            DrawCell(C,"...", 0, BaseXPos[TeamIndex], Y, NameLength, LineHeight, false, HUD.default.WhiteColor, HighLightColor);
-            break;
-        }
-
-        // If this is our own player, set it to draw highlighted & record that we've drawn him
-        if (AxisPRI[i] == MyPRI)
-        {
-            bHighlight = true;
-            bOwnerDrawn = true;
-        }
-        else
-        {
-            bHighlight = false;
-        }
-
-        // Set drawing color & any name suffix text
-        if (DHGRI.bPlayerMustReady && !AxisPRI[i].bReadyToPlay && !AxisPRI[i].bBot && Level.NetMode != NM_Standalone)
-        {
-            PlayerNameColor = HUD.default.GrayColor;
-
-            if (AxisPRI[i].bAdmin)
-            {
-                NameSuffix = AdminWaitingText;
-            }
-            else
-            {
-                NameSuffix = WaitingText;
-            }
-        }
-        else if (AxisPRI[i].bAdmin)
-        {
-            PlayerNameColor = HUD.default.WhiteColor;
-            NameSuffix = AdminText;
-        }
-        else
-        {
-            if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, AxisPRI[i]))
-            {
-                PlayerNameColor = class'DHColor'.default.SquadColor;
-            }
-            else
-            {
-                PlayerNameColor = TeamColor;
-            }
-
-            NameSuffix = "";
-        }
-
-        // Get role name
-        if (AxisPRI[i].RoleInfo != none)
-        {
-            if (ROPlayer(Owner) != none && ROPlayer(Owner).bUseNativeRoleNames)
-            {
-                RoleName = AxisPRI[i].RoleInfo.default.AltName;
-            }
-            else
-            {
-                RoleName = AxisPRI[i].RoleInfo.default.MyName;
-            }
-        }
-        else
-        {
-            RoleName = "";
-        }
-
-        // Draw axis player's name, role, score & ping
-        X = BaseXPos[TeamIndex];
-        DrawCell(C, AxisPRI[i].PlayerName $ NameSuffix, 0, X, Y, NameLength, LineHeight, bHighlight, PlayerNameColor, HighLightColor);
-        DrawCell(C, RoleName, 0, X += NameLength, Y, RoleLength, LineHeight, bHighlight, TeamColor, HighLightColor);
-        DrawCell(C, int(AxisPRI[i].Score), 1, X += RoleLength, Y, ScoreLength, LineHeight, bHighLight, TeamColor, HighLightColor);
-        DrawCell(C, 4 * AxisPRI[i].Ping, 1, X += ScoreLength, Y, PingLength, LineHeight, bHighLight, TeamColor, HighLightColor);
-
-        // Update axis team's total score
-        TeamTotalScore += AxisPRI[i].Score;
-
-        // Move to next drawing line (exit drawing axis players if this takes us off the bottom of the screen)
-        Y += LineHeight;
-
-        if (Y + LineHeight > C.ClipY)
-        {
-            break;
-        }
-    }
-
-    // Calculate average ping for axis team
-    // Need to multiply by 4 because ping gets divided by 4 before replication to net clients (so higher pings fit into one byte)
-    if (AxisPRI.Length > 0)
-    {
-        AvgPing[TeamIndex] *= 4 / AxisPRI.Length;
-    }
-    else
-    {
-        AvgPing[TeamIndex] = 0;
-    }
-
-    // Draw axis team totals
-    X = BaseXPos[TeamIndex];
-    LineHeight = BaseLineHeight * 1.25;
-    Y += LineHeight;
-    DrawCell(C, TotalsText @ ": ", 0, X, Y, NameLength + RoleLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
-    DrawCell(C, TeamTotalScore, 1, X += NameLength + RoleLength, Y, ScoreLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
-    DrawCell(C, AvgPing[TeamIndex], 1, X += ScoreLength, Y, PingLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
+    DHDrawTeam(C, AXIS_TEAM_INDEX, AxisPRI, X, Y, LineHeight);
 
     MaxAxisYPos = Y; // record lowest drawing position of axis team, so later we can work out where to start drawing a spectator line
 
     /////////////// DRAW ALLIES TEAM ///////////////
-
-    TeamIndex = ALLIES_TEAM_INDEX;
-    TeamColor = class'DHColor'.default.TeamColors[TeamIndex];
-    TeamTotalScore = 0;
-    X = BaseXPos[TeamIndex];
-    Y = CalcY(1.0, C);
-
-    // Draw allies team header info
-    Y += LineHeight;
-    DrawCell(C, TeamNameAllies @ "-" @ DHGRI.UnitName[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
-
-    Y += LineHeight;
-
-    // Draw reinforcements remaining if on Allies
-    if (MyPRI.Team != none && MyPRI.Team.TeamIndex == ALLIES_TEAM_INDEX)
-    {
-        if (DHGRI.bIsInSetupPhase)
-        {
-            DrawCell(C, ReinforcementsText @ ":" @ "???", 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
-        }
-        else if (DHGRI.SpawnsRemaining[TeamIndex] >= 0)
-        {
-            DrawCell(C, ReinforcementsText @ ":" @ DHGRI.SpawnsRemaining[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
-        }
-        else
-        {
-            DrawCell(C, ReinforcementsText @ ":" @ DHGRI.ReinforcementsInfiniteText, 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
-        }
-    }
-
-    if (DHGRI.CurrentAlliedToAxisRatio != 0.5)
-    {
-        DrawCell(C, DHGRI.ForceScaleText @ ":" @ DHGRI.GetTeamScaleString(TeamIndex), 0, BaseXPos[TeamIndex] + NameLength, Y, MaxTeamWidth, LineHeight, false, TeamColor);
-    }
-
-    // Draw rounds won/remaining for the team if not limited to 1 round
-    if (GRI.RoundLimit > 1)
-    {
-        s = RoundsWonText @ ":" @ int(GRI.Teams[TeamIndex].Score);
-
-        if (GRI.RoundLimit != 0) // add round limit, if more than 1 round is specified
-        {
-            S  $= "/" $ GRI.RoundLimit;
-        }
-
-        Y += LineHeight;
-
-        DrawCell(C, s, 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
-    }
-
-    Y += LineHeight;
-
-    // Draw objectives held
-    if (SecondaryObjCount[TeamIndex] > 0)
-    {
-        DrawCell(C, RequiredObjHeldText @ ":" @ RequiredObjCount[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
-        DrawCell(C, SecondaryObjHeldText @ ":" @ SecondaryObjCount[TeamIndex], 0, BaseXPos[TeamIndex] + NameLength, Y, MaxTeamWidth, LineHeight, false, TeamColor);
-    }
-    else
-    {
-        DrawCell(C, ObjectivesHeldText @ ":" @ RequiredObjCount[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
-    }
-
-    // Draw allies column headers for players
-    Y += LineHeight;
-    DrawCell(C, PlayerText @ "(" $ AlliesPRI.Length $ ")", 0, X, Y, NameLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
-    DrawCell(C, RoleText, 0, X += NameLength, Y, RoleLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
-    DrawCell(C, ScoreText, 1, X += RoleLength, Y, ScoreLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
-    DrawCell(C, PingText, 1, X += ScoreLength, Y, PingLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
-
-    // Loop through allies players & draw names, role, score & ping
-    Y += LineHeight;
-    LineHeight = BaseLineHeight * 0.9; // smaller lines to fit more players on the scoreboard
-
-    for (i = 0; i < AlliesPRI.Length; ++i)
-    {
-        if (AlliesPRI[i] == none)
-        {
-            continue;
-        }
-
-        // If we're on the last available line for our own team & we haven't yet drawn our own player, then reserve the last slot for him
-        if (i >= MaxPlayersListedPerSide - 1 && MyPRI.Team != none && MyPRI.Team.TeamIndex == TeamIndex && !bOwnerDrawn)
-        {
-            if (AlliesPRI[i] != MyPRI)
-            {
-                continue;
-            }
-        }
-        // If we've filled all available lines for this team, draw a final "..." to indicate there are more players not listed & exit the loop
-        else if (i >= MaxPlayersListedPerSide)
-        {
-            DrawCell(C,"...", 0, BaseXPos[TeamIndex], Y, NameLength, LineHeight, false, HUD.default.WhiteColor, HighLightColor);
-            break;
-        }
-
-        // If this is our own player, set it to draw highlighted & record that we've drawn him
-        if (AlliesPRI[i] == MyPRI)
-        {
-            bHighlight = true;
-            bOwnerDrawn = true;
-        }
-        else
-        {
-            bHighlight = false;
-        }
-
-        // Set drawing color & any name suffix text
-        if (DHGRI.bPlayerMustReady && !AlliesPRI[i].bReadyToPlay && !AlliesPRI[i].bBot && Level.NetMode != NM_Standalone)
-        {
-            PlayerNameColor = HUD.default.GrayColor;
-
-            if (AlliesPRI[i].bAdmin)
-            {
-                NameSuffix = AdminWaitingText;
-            }
-            else
-            {
-                NameSuffix = WaitingText;
-            }
-        }
-        else if (AlliesPRI[i].bAdmin)
-        {
-            PlayerNameColor = HUD.default.WhiteColor;
-            NameSuffix = AdminText;
-        }
-        else
-        {
-            if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, AlliesPRI[i]))
-            {
-                PlayerNameColor = class'DHColor'.default.SquadColor;
-            }
-            else
-            {
-                PlayerNameColor = TeamColor;
-            }
-
-            NameSuffix = "";
-        }
-
-        // Get role name
-        if (AlliesPRI[i].RoleInfo != none)
-        {
-            if (ROPlayer(Owner) != none && ROPlayer(Owner).bUseNativeRoleNames)
-            {
-                RoleName = AlliesPRI[i].RoleInfo.default.AltName;
-            }
-            else
-            {
-                RoleName = AlliesPRI[i].RoleInfo.default.MyName;
-            }
-        }
-        else
-        {
-            RoleName = "";
-        }
-
-        // Draw allies player's name, role, score & ping
-        X = BaseXPos[TeamIndex];
-        DrawCell(C, AlliesPRI[i].PlayerName $ NameSuffix, 0, X, Y, NameLength, LineHeight, bHighlight, PlayerNameColor, HighLightColor);
-        DrawCell(C, RoleName, 0, X += NameLength, Y, RoleLength, LineHeight, bHighlight, TeamColor, HighLightColor);
-        DrawCell(C, int(AlliesPRI[i].Score), 1, X += RoleLength, Y, ScoreLength, LineHeight, bHighLight, TeamColor, HighLightColor);
-        DrawCell(C, 4 * AlliesPRI[i].Ping, 1, X += ScoreLength, Y, PingLength, LineHeight, bHighLight, TeamColor, HighLightColor);
-
-        // Update allies team's total score
-        TeamTotalScore += AlliesPRI[i].Score;
-
-        // Move to next drawing line (exit drawing allies players if this takes us off the bottom of the screen)
-        Y += LineHeight;
-
-        if (Y + LineHeight > C.ClipY)
-        {
-            break;
-        }
-    }
-
-    // Calculate average ping for allies team
-    // Need to multiply by 4 because ping gets divided by 4 before replication to net clients (so higher pings fit into one byte)
-    if (AlliesPRI.Length > 0)
-    {
-        AvgPing[TeamIndex] *= 4 / AlliesPRI.Length;
-    }
-    else
-    {
-        AvgPing[TeamIndex] = 0;
-    }
-
-    // Draw allies team totals
-    LineHeight = BaseLineHeight * 1.25;
-    X = BaseXPos[TeamIndex];
-    Y += LineHeight;
-    DrawCell(C, TotalsText @ ": ", 0, X, Y, NameLength + RoleLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
-    DrawCell(C, TeamTotalScore, 1, X += NameLength + RoleLength, Y, ScoreLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
-    DrawCell(C, AvgPing[TeamIndex], 1, X += ScoreLength, Y, PingLength, LineHeight, true, HUD.default.WhiteColor, TeamColor);
+    DHDrawTeam(C, ALLIES_TEAM_INDEX, AlliesPRI, X, Y, LineHeight);
 
     //////////////// DRAW SPECTATORS ///////////////
 
@@ -659,7 +257,7 @@ simulated function UpdateScoreBoard(Canvas C)
     }
 
     // Construct a spectator line
-    s = SpectatorTeamName @ "&" @ UnassignedTeamName @ "(" $ UnassignedPRI.Length $ ") : ";
+    S = SpectatorTeamName @ "&" @ UnassignedTeamName @ "(" $ UnassignedPRI.Length $ ") : ";
 
     for (i = 0; i < UnassignedPRI.Length; ++i)
     {
@@ -689,7 +287,211 @@ simulated function UpdateScoreBoard(Canvas C)
     DrawCell(C, s, 0, X, Y, BaseXPos[ALLIES_TEAM_INDEX] + MaxTeamWidth, LineHeight, false, HUD.default.WhiteColor);
 }
 
-// Colin: modified to add a drop shadow to the text drawing (& also to remove unused variables)
+simulated function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> TeamPRI, out float X, out float Y, out float LineHeight)
+{
+    local string S, TeamName, NameSuffix, RoleName;
+    local color  TeamColor, PlayerNameColor;
+    local bool bHighLight, bOwnerDrawn;
+    local int i, TeamTotalScore;
+
+    TeamColor = class'DHColor'.default.TeamColors[TeamIndex];
+
+    // Sort the team arrays by whatever method has been specified (by default this is primarily by score, but there is an option to sort alphabetically by name)
+    class'USort'.static.Sort(TeamPRI, PRIComparator);
+
+    X = BaseXPos[TeamIndex];
+    Y = CalcY(1.0, C);
+
+    // Draw team header info
+    Y += LineHeight;
+
+    // Get the correct name name
+    if (TeamIndex == AXIS_TEAM_INDEX)
+    {
+        TeamName = TeamNameAxis;
+    }
+    else if (TeamIndex == ALLIES_TEAM_INDEX)
+    {
+        TeamName = TeamNameAllies;
+    }
+
+    DrawCell(C, TeamName @ "-" @ DHGRI.UnitName[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+
+    Y += LineHeight;
+
+    // Draw reinforcements remaining if on team
+    if (MyPRI.Team != none && MyPRI.Team.TeamIndex == TeamIndex)
+    {
+        if (DHGRI.bIsInSetupPhase)
+        {
+            DrawCell(C, ReinforcementsText @ ":" @ "???", 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+        }
+        else if (DHGRI.SpawnsRemaining[TeamIndex] >= 0)
+        {
+            DrawCell(C, ReinforcementsText @ ":" @ DHGRI.SpawnsRemaining[TeamIndex], 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+        }
+        else
+        {
+            DrawCell(C, ReinforcementsText @ ":" @ DHGRI.ReinforcementsInfiniteText, 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+        }
+    }
+
+    if (DHGRI.CurrentAlliedToAxisRatio != 0.5)
+    {
+        DrawCell(C, DHGRI.ForceScaleText @ ":" @ DHGRI.GetTeamScaleString(TeamIndex), 0, BaseXPos[TeamIndex] + NameLength, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+    }
+
+    // Draw rounds won/remaining for the team if not limited to 1 round
+    if (GRI.RoundLimit > 1)
+    {
+        S = RoundsWonText @ ":" @ int(GRI.Teams[TeamIndex].Score);
+
+        if (GRI.RoundLimit != 0) // add round limit, if more than 1 round is specified
+        {
+            S $= "/" $ GRI.RoundLimit;
+        }
+
+        Y += LineHeight;
+
+        DrawCell(C, S, 0, X, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+    }
+
+    Y += LineHeight;
+
+    // Draw team column headers for players
+    Y += LineHeight;
+    DrawCell(C, PlayerText @ "(" $ TeamPRI.Length $ ")", 0, X, Y, NameLength, LineHeight, true, class'UColor'.default.White, TeamColor);
+    DrawCell(C, RoleText, 0, X += NameLength, Y, RoleLength, LineHeight, true, class'UColor'.default.White, TeamColor);
+    DrawCell(C, ScoreText, 1, X += RoleLength, Y, ScoreLength, LineHeight, true, class'UColor'.default.White, TeamColor);
+    DrawCell(C, PingText, 1, X += ScoreLength, Y, PingLength, LineHeight, true, class'UColor'.default.White, TeamColor);
+
+    // Loop through players & draw names, role, score & ping
+    Y += LineHeight;
+    LineHeight = BaseLineHeight * 0.9; // smaller lines to fit more players on the scoreboard
+
+    for (i = 0; i < TeamPRI.Length; ++i)
+    {
+        if (TeamPRI[i] == none)
+        {
+            continue;
+        }
+
+        // If we're on the last available line for our own team & we haven't yet drawn our own player, then reserve the last slot for him
+        if (i >= MaxPlayersListedPerSide - 1 && MyPRI.Team != none && MyPRI.Team.TeamIndex == TeamIndex && !bOwnerDrawn)
+        {
+            if (TeamPRI[i] != MyPRI)
+            {
+                continue;
+            }
+        }
+        // If we've filled all available lines for this team, draw a final "..." to indicate there are more players not listed & exit the loop
+        else if (i >= MaxPlayersListedPerSide)
+        {
+            DrawCell(C,"...", 0, BaseXPos[TeamIndex], Y, NameLength, LineHeight, false, class'UColor'.default.White, HighLightColor);
+            break;
+        }
+
+        // If this is our own player, set it to draw highlighted & record that we've drawn him
+        if (TeamPRI[i] == MyPRI)
+        {
+            bHighlight = true;
+            bOwnerDrawn = true;
+        }
+        else
+        {
+            bHighlight = false;
+        }
+
+        // Set drawing color & any name suffix text
+        if (DHGRI.bPlayerMustReady && !TeamPRI[i].bReadyToPlay && !TeamPRI[i].bBot && Level.NetMode != NM_Standalone)
+        {
+            PlayerNameColor = class'UColor'.default.Gray;
+
+            if (TeamPRI[i].bAdmin)
+            {
+                NameSuffix = AdminWaitingText;
+            }
+            else
+            {
+                NameSuffix = WaitingText;
+            }
+        }
+        else if (TeamPRI[i].bAdmin)
+        {
+            PlayerNameColor = class'UColor'.default.White;
+            NameSuffix = AdminText;
+        }
+        else
+        {
+            if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, TeamPRI[i]))
+            {
+                PlayerNameColor = class'DHColor'.default.SquadColor;
+            }
+            else
+            {
+                PlayerNameColor = TeamColor;
+            }
+
+            NameSuffix = "";
+        }
+
+        // Get role name
+        if (TeamPRI[i].RoleInfo != none)
+        {
+            if (ROPlayer(Owner) != none && ROPlayer(Owner).bUseNativeRoleNames)
+            {
+                RoleName = TeamPRI[i].RoleInfo.default.AltName;
+            }
+            else
+            {
+                RoleName = TeamPRI[i].RoleInfo.default.MyName;
+            }
+        }
+        else
+        {
+            RoleName = "";
+        }
+
+        // Draw axis player's name, role, score & ping
+        X = BaseXPos[TeamIndex];
+        DrawCell(C, TeamPRI[i].PlayerName $ NameSuffix, 0, X, Y, NameLength, LineHeight, bHighlight, PlayerNameColor, HighLightColor);
+        DrawCell(C, RoleName, 0, X += NameLength, Y, RoleLength, LineHeight, bHighlight, TeamColor, HighLightColor);
+        DrawCell(C, int(TeamPRI[i].Score), 1, X += RoleLength, Y, ScoreLength, LineHeight, bHighLight, TeamColor, HighLightColor);
+        DrawCell(C, 4 * TeamPRI[i].Ping, 1, X += ScoreLength, Y, PingLength, LineHeight, bHighLight, TeamColor, HighLightColor);
+
+        // Update axis team's total score
+        TeamTotalScore += TeamPRI[i].Score;
+
+        // Move to next drawing line (exit drawing axis players if this takes us off the bottom of the screen)
+        Y += LineHeight;
+
+        if (Y + LineHeight > C.ClipY)
+        {
+            break;
+        }
+    }
+
+    // Calculate average ping for axis team
+    // Need to multiply by 4 because ping gets divided by 4 before replication to net clients (so higher pings fit into one byte)
+    if (TeamPRI.Length > 0)
+    {
+        AvgPing[TeamIndex] *= 4 / TeamPRI.Length;
+    }
+    else
+    {
+        AvgPing[TeamIndex] = 0;
+    }
+
+    // Draw axis team totals
+    X = BaseXPos[TeamIndex];
+    LineHeight = BaseLineHeight * 1.25;
+    Y += LineHeight;
+    DrawCell(C, TotalsText @ ": ", 0, X, Y, NameLength + RoleLength, LineHeight, true, class'UColor'.default.White, TeamColor);
+    DrawCell(C, TeamTotalScore, 1, X += NameLength + RoleLength, Y, ScoreLength, LineHeight, true, class'UColor'.default.White, TeamColor);
+    DrawCell(C, AvgPing[TeamIndex], 1, X += ScoreLength, Y, PingLength, LineHeight, true, class'UColor'.default.White, TeamColor);
+}
+
+// Modified to add a drop shadow to the text drawing (& also to remove unused variables)
 simulated function DrawCell(Canvas C, coerce string Text, byte Align, float XPos, float YPos, float Width, float Height, bool bDrawBacking, Color F, optional Color B)
 {
     if (Text != "")
