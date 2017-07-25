@@ -233,6 +233,7 @@ defaultproperties
     bCanOnlyPlaceOnTerrain=true
     bCanPlaceInWater=false
     GroundSlopeMaxInDegrees=5
+    SquadMemberCountMinimum=3
 
     StartRotationMin=(Yaw=32768)
     StartRotationMax=(Yaw=32768)
