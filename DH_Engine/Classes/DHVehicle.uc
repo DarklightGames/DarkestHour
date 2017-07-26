@@ -3391,7 +3391,7 @@ defaultproperties
     FirstRiderPositionIndex=255 // unless overridden in subclass, 255 means the value is set automatically when PassengerPawns array is added to the PassengerWeapons
     DriverPositions(0)=(ViewFOV=0.0) // override inherited FOV values from ROWheeledVehicle - zero just means it uses player's default view FOV (unless overridden in subclass)
     DriverPositions(1)=(ViewFOV=0.0)
-    MinRunOverSpeed=600 // increased from 0 to roughly 35km/h so that players don't get killed so easily by vehicles
+    MinRunOverSpeed=503 // * 0.05965 = 30 kph (so players don't get run over so easily by vehicles)
     ObjectiveGetOutDist=1500.0
     bReplicateAnimations=false // override strange inherited property from ROWheeledVehicle - no reason for server to replicate anims & now we play transition anims on
                                // server it seems to sometimes override the client's anim & leave it 1 frame short of its end position, glitching the camera view
