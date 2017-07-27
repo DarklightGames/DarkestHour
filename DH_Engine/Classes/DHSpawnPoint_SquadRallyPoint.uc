@@ -362,7 +362,7 @@ defaultproperties
     EncroachmentPenaltyOverrunThreshold=30
     OverrunRadiusInMeters=10
     EstablishmentRadiusInMeters=25
-    EstablishmentCounterThreshold=30
+    EstablishmentCounterThreshold=45
     OverrunMinimumTimeSeconds=15
     bHidden=false
     bCanSendAbandonmentWarningMessage=true
