@@ -68,6 +68,8 @@ var TreeMap_string_int              InvitationExpirations;
 var int                             NextRallyPointInterval;
 var bool                            bAreRallyPointsEnabled;
 
+var int                             SquadLockMemberCountMin;    // The amount of squad member required to be able to lock a squad and keep it locked.
+
 replication
 {
     reliable if (bNetInitial && Role == ROLE_Authority)
@@ -560,6 +562,16 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
         }
     }
 
+    if (IsSquadLocked(TeamIndex, SquadIndex) && GetMemberCount(TeamIndex, SquadIndex) < SquadLockMemberCountMin)
+    {
+        // Forcibly unlock a previously locked squad if the member count has
+        // dropped below the required minimum.
+        SetSquadLockedInternal(TeamIndex, SquadIndex, false);
+
+        // "The squad has been unlocked."
+        BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 42);
+    }
+
     if (!IsSquadActive(TeamIndex, SquadIndex))
     {
         // Squad is now empty, so clear the orders so that if the squad becomes
@@ -882,27 +894,41 @@ function bool SetSquadLocked(DHPlayerReplicationInfo PC, int TeamIndex, int Squa
         return false;
     }
 
-    SetSquadLockedInternal(TeamIndex, SquadIndex, bLocked);
-
-    if (bLocked)
+    if (SetSquadLockedInternal(TeamIndex, SquadIndex, bLocked))
     {
-        // "The squad has been locked."
-        BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 41);
-    }
-    else
-    {
-        // "The squad has been unlocked."
-        BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 42);
+        if (bLocked)
+        {
+            // "The squad has been locked."
+            BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 41);
+        }
+        else
+        {
+            // "The squad has been unlocked."
+            BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 42);
+        }
+
+        return true;
     }
 
-    return true;
+    return false;
 }
 
-private function SetSquadLockedInternal(int TeamIndex, int SquadIndex, bool bLocked)
+simulated function bool CanSquadBeLocked(int TeamIndex, int SquadIndex)
+{
+    // Do not allow locking if the member count is below the required minimum.
+    return GetMemberCount(TeamIndex, SquadIndex) >= SquadLockMemberCountMin;
+}
+
+private function bool SetSquadLockedInternal(int TeamIndex, int SquadIndex, bool bLocked)
 {
     if (SquadIndex < 0 || SquadIndex >= GetTeamSquadLimit(TeamIndex))
     {
-        return;
+        return false;
+    }
+
+    if (bLocked && !CanSquadBeLocked(TeamIndex, SquadIndex))
+    {
+        return false;
     }
 
     switch (TeamIndex)
@@ -916,6 +942,8 @@ private function SetSquadLockedInternal(int TeamIndex, int SquadIndex, bool bLoc
         default:
             break;
     }
+
+    return true;
 }
 
 function BroadcastSquadLocalizedMessage(byte TeamIndex, int SquadIndex, class<LocalMessage> MessageClass, int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
@@ -1651,4 +1679,5 @@ defaultproperties
     AxisDefaultSquadNames(7)="Heinrich"
     SquadMessageClass=class'DHSquadMessage'
     NextRallyPointInterval=60
+    SquadLockMemberCountMin=3
 }
