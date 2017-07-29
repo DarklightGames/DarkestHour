@@ -71,6 +71,7 @@ var     int     SquadMemberCountMinimum;        // The number of members you mus
 // Terrain placement
 var     bool    bSnapToTerrain;                 // If true, the origin of the placement (prior to the PlacementOffset) will coincide with the nearest terrain vertex during placement.
 var     bool    bPokesTerrain;                  // If true, terrain is poked when placed on terrain.
+var     bool    bDidPokeTerrain;
 var     int     PokeTerrainRadius;
 var     int     PokeTerrainDepth;
 var     bool    bLimitTerrainSurfaceTypes;      // If true, only allow placement on terrain surfaces types in the SurfaceTypes array
@@ -323,7 +324,7 @@ simulated event Destroyed()
         Manager.Unregister(self);
     }
 
-    if (bPokesTerrain)
+    if (bPokesTerrain && bDidPokeTerrain)
     {
         // NOTE: This attempts to "unpoke" the terrain, if it was poked upon
         // construction. Unforunately, this seems to only have a less than 100%
@@ -445,6 +446,8 @@ simulated state Constructed
         if (bPokesTerrain)
         {
             PokeTerrain(PokeTerrainRadius, PokeTerrainDepth);
+
+            bDidPokeTerrain = true;
         }
 
         OnConstructed();
