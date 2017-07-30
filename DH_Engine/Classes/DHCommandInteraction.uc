@@ -330,30 +330,19 @@ function PostRender(Canvas C)
                 if (SelectedIndex == i)
                 {
                     // TODO: also do some sort of "push out" with some sort of offset thing?
-
                     C.DrawColor = default.SelectedColor;
                     C.DrawColor.A = byte(255 * (MenuAlpha * 0.9));
                 }
                 else
                 {
-                    switch (Menu.Options[i].Type)
-                    {
-                        case TYPE_Normal:
-                            C.DrawColor = class'UColor'.default.White;
-                            break;
-                        case TYPE_Submenu:
-                            C.DrawColor = default.SubmenuColor;
-                            break;
-                    }
-
+                    C.DrawColor = class'UColor'.default.White;
                     C.DrawColor.A = byte(255 * (MenuAlpha * 0.5));
                 }
             }
 
             if (SelectedIndex == i)
             {
-                // indent the position just slightly
-                //(0.5 / MenuOptions.Length)
+                // TODO: indent the position just slightly
             }
 
             C.SetPos(CenterX - 256, CenterY - 256);
@@ -365,27 +354,19 @@ function PostRender(Canvas C)
                 U = Menu.Options[i].Material.MaterialUSize();
                 V = Menu.Options[i].Material.MaterialVSize();
 
-                X = CenterX  + (Cos(Theta) * 144) - (U / 2);
+                X = CenterX + (Cos(Theta) * 144) - (U / 2);
                 Y = CenterY + (Sin(Theta) * 144) - (V / 2);
 
                 if (bIsOptionDisabled)
                 {
                     C.DrawColor = DisabledColor;
-
-                    if (SelectedIndex == i)
-                    {
-                        C.DrawColor.A = byte(255 * MenuAlpha);
-                    }
-                    else
-                    {
-                        C.DrawColor.A = byte(255 * (MenuAlpha * 0.5));
-                    }
                 }
                 else
                 {
                     C.DrawColor = class'UColor'.default.White;
-                    C.DrawColor.A = byte(255 * MenuAlpha);
                 }
+
+                C.DrawColor.A = byte(255 * MenuAlpha);
 
                 C.SetPos(X, Y);
                 C.DrawTileClipped(Menu.Options[i].Material, U, V, 0, 0, U, V);

@@ -6,13 +6,6 @@
 class DHCommandMenu extends Object
     abstract;
 
-// TODO: this is kind of ugly, don't like it!
-enum EOptionType
-{
-    TYPE_Normal,
-    TYPE_Submenu
-};
-
 struct OptionRenderInfo
 {
     var string      OptionName;
@@ -27,7 +20,6 @@ struct Option
     var localized string SubjectText;
     var Material ActionIcon;
     var Material Material;
-    var EOptionType Type;
     var Object OptionalObject;
 };
 

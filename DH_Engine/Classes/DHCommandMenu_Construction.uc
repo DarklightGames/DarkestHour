@@ -123,12 +123,13 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     super.GetOptionRenderInfo(OptionIndex, ORI);
 
     ConstructionClass = class<DHConstruction>(Options[OptionIndex].OptionalObject);
+    PC = DHPlayer(Interaction.ViewportOwner.Actor);
 
-    if (ConstructionClass != none)
+    if (ConstructionClass != none && PC != none)
     {
-        Error = ConstructionClass.static.GetPlayerError(DHPlayer(Interaction.ViewportOwner.Actor));
+        Error = ConstructionClass.static.GetPlayerError(PC);
 
-        ORI.OptionName = ConstructionClass.default.MenuName;
+        ORI.OptionName = ConstructionClass.static.GetMenuName(PC);
 
         if (Error != ERROR_None)
         {
@@ -151,8 +152,6 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
                 ORI.InfoText = default.TeamLimitText;
                 break;
             case ERROR_SquadTooSmall:
-                PC = DHPlayer(Interaction.ViewportOwner.Actor);
-
                 if (PC != none && PC.SquadReplicationInfo != none)
                 {
                     SquadMemberCount = PC.SquadReplicationInfo.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());

@@ -42,6 +42,9 @@ function OnSelect(int Index, vector Location)
         case 4:
             Interaction.PushMenu("DH_Engine.DHCommandMenu_SquadManageMember", MenuObject);
             return;
+        case 5:
+            Interaction.PushMenu("DH_Engine.DHCommandMenu_SquadManage", MenuObject);
+            return;
         default:
             break;
     }
@@ -52,8 +55,10 @@ function OnSelect(int Index, vector Location)
 function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 {
     local DHPawn OtherPawn;
+    local DHPlayer PC;
 
     OtherPawn = DHPawn(MenuObject);
+    PC = DHPlayer(Interaction.ViewportOwner.Actor);
 
     super.GetOptionRenderInfo(OptionIndex, ORI);
 
@@ -98,9 +103,10 @@ function bool IsOptionDisabled(int OptionIndex)
 
 defaultproperties
 {
-    Options(0)=(ActionText="Fire",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
-    Options(1)=(ActionText="Create Rally Point",Material=Material'DH_GUI_Tex.DeployMenu.RallyPointDiffuse')
-    Options(2)=(ActionText="Construction",Material=Material'DH_InterfaceArt_tex.HUD.supplies',Type=TYPE_Submenu)
-    Options(3)=(ActionText="Move",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_move')
-    Options(4)=(ActionText="...",Type=TYPE_Submenu)
+    Options(0)=(ActionText="Fire",Material=texture'DH_InterfaceArt_tex.HUD.squad_signal_fire')
+    Options(1)=(ActionText="Create Rally Point",Material=texture'DH_GUI_Tex.DeployMenu.RallyPointDiffuse')
+    Options(2)=(ActionText="Construction",Material=texture'DH_InterfaceArt_tex.HUD.supplies')
+    Options(3)=(ActionText="Move",Material=texture'DH_InterfaceArt_tex.HUD.squad_signal_move')
+    Options(4)=(ActionText="Player",Material=texture'DH_GUI_tex.DeployMenu.reinforcements')
+    Options(5)=(ActionText="Squad",Material=texture'DH_GUI_tex.DeployMenu.squads')
 }

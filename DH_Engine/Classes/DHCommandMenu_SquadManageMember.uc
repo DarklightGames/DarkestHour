@@ -153,9 +153,9 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
 defaultproperties
 {
-    Options(0)=(ActionText="Invite to squad",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
-    Options(1)=(ActionText="Kick from squad",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
-    Options(2)=(ActionText="Promote to squad leader",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
-    Options(3)=(ActionText="Ban from squad",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
+    Options(0)=(SubjectText="Invite to squad",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
+    Options(1)=(SubjectText="Kick from squad",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
+    Options(2)=(SubjectText="Promote to squad leader",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
+    Options(3)=(SubjectText="Ban from squad",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
 }
 

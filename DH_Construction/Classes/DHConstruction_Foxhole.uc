@@ -48,7 +48,7 @@ simulated event Destroyed()
 defaultproperties
 {
     Stages(0)=(StaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_01_unpacked')
-    ProgressMax=12   // TODO: increase later
+    ProgressMax=12
     bPokesTerrain=true
     bCanOnlyPlaceOnTerrain=true
     bSnapToTerrain=true
@@ -62,7 +62,7 @@ defaultproperties
     SupplyCost=0
     PlacementOffset=(Z=0.0)
     MenuName="Foxhole"
-    bAlwaysRelevant=true            // This is so that the terrain poking doesn't get applied more than once.
+    bAlwaysRelevant=true            // This is so that the terrain poking gets applied for everyone and also doesn't get applied more than once.
     DuplicateFriendlyDistanceInMeters=15.0
     bLimitTerrainSurfaceTypes=true
     TerrainSurfaceTypes(0)=EST_Default

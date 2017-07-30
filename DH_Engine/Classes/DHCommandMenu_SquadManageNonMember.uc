@@ -95,6 +95,6 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
 defaultproperties
 {
-    Options(0)=(ActionText="Invite to squad",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
+    Options(0)=(ActionText="Invite to Squad",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
 }
 
