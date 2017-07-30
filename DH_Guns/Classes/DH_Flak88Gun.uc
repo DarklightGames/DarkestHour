@@ -22,7 +22,7 @@ defaultproperties
     VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.flak88_turret_look'
     VehicleHudOccupantsX(1)=0.5 // should be slightly to the right, but the red dot doesn't rotate with the cannon, so when traversed it would go wrong
     VehicleHudOccupantsY(1)=0.5
-    ExitPositions(1)=(X=-50.0,Y=50.0,Z=50.0)
+    ExitPositions(1)=(X=-50.0,Y=75.0,Z=50.0)
     VehicleMass=20.0
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
