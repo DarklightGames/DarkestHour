@@ -1242,7 +1242,7 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
     if (bMustBeTankerToSwitch)
     {
         // Can't switch if player has selected a tank crew position but isn't a tank crew role
-        if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(self))
+        if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(self) && IsHumanControlled())
         {
             DisplayVehicleMessage(0); // not qualified to operate vehicle
 
