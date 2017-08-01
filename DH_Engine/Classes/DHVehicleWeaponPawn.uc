@@ -283,9 +283,24 @@ function VehicleFire(bool bWasAltFire)
     }
 }
 
+// Modified to optimise the network, by avoiding sending the replicated VehicleCeaseFire() function call to a server for single shot weapons
+// Normal cannons & mortars will fire one shot & then the server will do its own cease fire process anyway
+// But for MGs or autocannons we run the normal function, so when player releases the fire button the client tells the server to stop firing
+function ClientVehicleCeaseFire(bool bWasAltFire)
+{
+    if ((VehWep != none && VehWep.bUsesMags) || bWasAltFire) // MG or autocannon gets the normal function
+    {
+        super.ClientVehicleCeaseFire(bWasAltFire);
+    }
+    else // single shot cannons or mortars get the same apart from VehicleCeaseFire()
+    {
+        ClientOnlyVehicleCeaseFire(bWasAltFire);
+    }
+}
+
 // New function to do what ClientVehicleCeaseFire() does, except skipping the replicated VehicleCeaseFire() function call to a server
-// A network optimisation, avoiding replication when it's unnecessary
-// Used where we need to cease fire on net client, but no point telling server to do same as it will do it's own cease fire, e.g. when running out of ammo or starting a reload
+// A network optimisation, avoiding replication when it's unnecessary, when there's no point client telling server to cease fire because server will do it anyway
+// Examples are when a single shot weapon fires, or when player/weapon is no longer able to fire (including when an automatic weapon runs out of ammo)
 function ClientOnlyVehicleCeaseFire(bool bWasAltFire)
 {
     if (bWasAltFire)
