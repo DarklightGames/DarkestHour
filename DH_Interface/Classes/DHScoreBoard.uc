@@ -216,7 +216,7 @@ simulated function UpdateScoreBoard(Canvas C)
     }
 
     // Add level name (extra in DH)
-    s $= HUD.default.SpacingText $ HUD.default.MapNameText $ Left(Level, InStr(Level, "."));
+    s $= HUD.default.SpacingText $ HUD.default.MapNameText $ class'DHLib'.static.GetMapName(Level);
 
     // Add game type
     s $= HUD.default.SpacingText $ HUD.default.MapGameTypeText $ DHGRI.CurrentGameType;
