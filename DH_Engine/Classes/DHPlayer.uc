@@ -442,6 +442,29 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
     return NewPlayerRotation;
 }
 
+// Modified to optimise by usually avoiding lots of pointless tracing & calculations every time a human player fires, as this functionality is only relevant to bots
+// bAimingHelp is false for humans, so so the complicated parent function always returns the Controller's rotation (or pawn's rotation if in behind view)
+// But if we're aiming at a bot with certain types of weapons, the Super can be relevant because it results in the bot receiving a warning
+// Nearly all the time though, that isn't the case and so there's no point doing traces & calcs to get a target for a warning that won't happen
+function rotator AdjustAim(FireProperties FiredAmmunition, vector ProjStart, int AimError)
+{
+    // These are the rare situations where we call the Super as we may be aiming at a bot with a relevant weapon that could result in it receiving a warning
+    if (Level.Game.NumBots > 0 &&       // only need to consider this if there are some bots in the game
+        (FiredAmmunition.bInstantHit || // if we're using an instant hit weapon (very rare in DH), a targeted bot will get a warning when InstantWarnTarget() gets called
+        (FiredAmmunition.ProjectileClass != none && class<ROBallisticProjectile>(FiredAmmunition.ProjectileClass) == none))) // a non-ballistic projectile warns a bot that gets
+    {                                                                                                                        // recorded as the ShotTarget pawn in the Super
+        return super.AdjustAim(FiredAmmunition, ProjStart, AimError);
+    }
+
+    // Otherwise just return the standard rotation, without traces or calcs
+    if (bBehindView && Pawn != none)
+    {
+        return Pawn.Rotation;
+    }
+
+    return Rotation;
+}
+
 // Developer login
 exec function DevLogin()
 {

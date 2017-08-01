@@ -241,7 +241,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
     // Calculate the starting WeaponFireRotation & apply any random spread
     CalcWeaponFire(bAltFire);
 
-    if (bCorrectAim)
+    if (bCorrectAim && Instigator != none && !Instigator.IsHumanControlled()) // added human controlled check as in this class AdjustAim() is only relevant to bots
     {
         WeaponFireRotation = AdjustAim(bAltFire);
     }
