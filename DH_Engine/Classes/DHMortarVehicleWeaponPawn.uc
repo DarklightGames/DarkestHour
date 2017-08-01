@@ -147,7 +147,7 @@ simulated function DrawHUD(Canvas C)
                 Traverse -= 360.0;
             }
 
-            Traverse = -Traverse; // Matt: all the yaw stuff seems back to front !
+            Traverse = -Traverse; // all the yaw/traverse for mortars has to be reversed (screwed up mesh rigging)
 
             TraverseString = "T: ";
 
@@ -540,12 +540,12 @@ simulated state KnobRaised
         {
             CurrentYaw = Gun.CurrentAim.Yaw;
 
-            if (CurrentYaw > 32768) // convert to negative yaw format
+            if (CurrentYaw > 32768) // convert to +/- yaw format
             {
                 CurrentYaw -= 65536;
             }
 
-            CurrentYaw = -CurrentYaw; // Matt: I'm sure this is because the vehicle base skeletal mesh is upside down !
+            CurrentYaw = -CurrentYaw; // yaw/traverse has to be reversed because in the mortar skeletal meshes the root bone rotation is screwed up, so weapon aim ends up reversed!
 
             // Block traverse if within 10 rotational units of yaw limit - a fudge factor, as sometimes Gun stops slightly short of limit
             if (YawChange > 0.0)
@@ -575,7 +575,7 @@ simulated state KnobRaised
                 PlayFirstPersonAnimation(OverlayKnobTurnLeftAnim, true, OverlayKnobTurnAnimRate, 0.125);
             }
 
-            global.HandleTurretRotation(DeltaTime, -YawChange, 0);
+            global.HandleTurretRotation(DeltaTime, -YawChange, 0); // all the yaw/traverse for mortars has to be reversed (screwed up mesh rigging)
 
         }
         // We've stopped adjusting traverse
