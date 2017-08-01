@@ -84,18 +84,29 @@ simulated function PostNetReceive()
 
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor ViewActor, out vector CameraLocation, out rotator CameraRotation)
 {
+    local coords  CameraCoords;
     local rotator WeaponAimRot;
 
     ViewActor = self;
 
     if (Gun != none)
     {
-        WeaponAimRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
-        WeaponAimRot.Roll = Gun.Rotation.Roll;
+        CameraCoords = Gun.GetBoneCoords(CameraBone);
 
-        // Set camera location & rotation
-        CameraLocation = Gun.GetBoneCoords(CameraBone).Origin + (FPCamPos >> WeaponAimRot);
-        CameraRotation = rotator(Gun.GetBoneCoords(CameraBone).XAxis);
+        // Get camera location & adjust for any offset positioning
+        CameraLocation = CameraCoords.Origin;
+
+        if (FPCamPos != vect(0.0, 0.0, 0.0))
+        {
+            WeaponAimRot = Gun.CurrentAim;
+            WeaponAimRot.Yaw = -WeaponAimRot.Yaw; // all the yaw/traverse for mortars has to be reversed (screwed up mesh rigging)
+            WeaponAimRot = rotator(vector(WeaponAimRot) >> Gun.Rotation);
+            WeaponAimRot.Roll = Gun.Rotation.Roll;
+            CameraLocation += (FPCamPos >> WeaponAimRot);
+        }
+
+        // Set camera rotation
+        CameraRotation = rotator(CameraCoords.XAxis);
         CameraRotation.Roll = 0; // make the mortar view have no roll
 
         // Finalise the camera with any shake
