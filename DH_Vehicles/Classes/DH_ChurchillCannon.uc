@@ -54,7 +54,7 @@ defaultproperties
 
     // Smoke launcher
     SmokeLauncherClass=class'DH_Vehicles.DH_TwoInchBombThrower'
-    SmokeLauncherFireOffset(0)=(X=37.0,Y=40.0,Z=42.0)
+    SmokeLauncherFireOffset(0)=(X=32.0,Y=37.5.0,Z=42.5)
 
     // Weapon fire
     AltFireAttachmentBone="coax_muzzle"
