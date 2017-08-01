@@ -139,9 +139,12 @@ replication
 
 function ServerChangePlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2) { } // no longer used
 
-// Modified to bypass RO design
+// Modified to use DH's InputClass instead of the RO version
+// Class is enforced here because InputClass is a config variable & so can easily be changed in the player's .ini file
 event InitInputSystem()
 {
+    InputClass = class'DH_Engine.DHPlayerInput';
+
     super(UnrealPlayer).InitInputSystem();
 }
 
