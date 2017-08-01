@@ -2103,7 +2103,7 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
     HurtRadius(ExplosionDamage * ExplosionModifier, ExplosionRadius * ExplosionModifier, ExplosionDamageType, ExplosionMomentum, Location);
     AmbientSound = DestroyedBurningSound;
     SoundVolume = 255;
-    SoundRadius = 600.0;
+    SoundRadius = 300.0;
 
     if (!bDisintegrateVehicle)
     {

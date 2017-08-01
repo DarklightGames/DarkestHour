@@ -907,14 +907,13 @@ function StartHullFire(Pawn InstigatedBy)
     // Set the 1st hull damage due in 2 seconds
     NextHullFireDamageTime = Level.TimeSeconds + 2.0;
 
-    // Fire effects, including timers for delayed hatch fires
-    if (Level.NetMode != NM_DedicatedServer)
+    // Start fire effects, including timers for delayed hatch fires
+    SetFireEffects();
+
+    // Set timer for damage only on dedicated server (other authority modes get this in SetFireEffects)
+    if (Level.NetMode == NM_DedicatedServer)
     {
-        SetFireEffects();
-    }
-    else
-    {
-        SetNextTimer(); // for damage only on server
+        SetNextTimer();
     }
 }
 
@@ -2128,7 +2127,7 @@ simulated function SetEngine()
         {
             AmbientSound = VehicleBurningSound;
             SoundVolume = 255;
-            SoundRadius = 200.0;
+            SoundRadius = 300.0;
         }
         else if (EngineHealth <= 0)
         {
