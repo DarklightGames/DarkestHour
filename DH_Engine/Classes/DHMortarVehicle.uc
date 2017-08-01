@@ -52,45 +52,51 @@ simulated function PostBeginPlay()
 // Modified to handle special requirements to use mortar, with custom messages, & to put player into mortar's VehicleWeaponPawn
 function bool TryToDrive(Pawn P)
 {
-    local DHPawn                  DHP;
-    local DHPlayerReplicationInfo PRI;
-    local DHRoleInfo              RI;
+    local DHPawn     DHP;
+    local DHRoleInfo RI;
 
     DHP = DHPawn(P);
-    PRI = DHPlayerReplicationInfo(DHP.PlayerReplicationInfo);
-    RI = DHRoleInfo(PRI.RoleInfo);
 
-    if (DHP == none || PRI == none || RI == none || !RI.bCanUseMortars)
-    {
-        P.ReceiveLocalizedMessage(class'DHMortarMessage', 8); // not qualified to operate mortar
-
-        return false;
-    }
-
-    if (DHP.bIsCrawling)
+    // Deny entry if player is on fire, or is crawling, or reloading a weapon (plus several very obscure other reasons)
+    if (Health <= 0 || DHP == none || DHP.bOnFire || DHP.bIsCrawling || (DHP.Weapon != none && DHP.Weapon.IsInState('Reloading')) ||
+        DHP.Controller == none || !DHP.Controller.bIsPlayer || DHP.DrivenVehicle != none || DHP.IsA('Vehicle') || bNonHumanControl || !Level.Game.CanEnterVehicle(self, DHP) ||
+        WeaponPawns.Length == 0 || WeaponPawns[0] == none)
     {
         return false;
     }
 
+    // Deny entry to enemy mortar
+    if (DHP.GetTeamNum() != VehicleTeam)
+    {
+        DHP.ReceiveLocalizedMessage(class'DHMortarMessage', 10); // can't use enemy mortar
+
+        return false;
+    }
+
+    // Deny entry if not a mortar operator
+    RI = DHP.GetRoleInfo();
+
+    if (RI == none || !RI.bCanUseMortars)
+    {
+        DHP.ReceiveLocalizedMessage(class'DHMortarMessage', 8); // not qualified to operate mortar
+
+        return false;
+    }
+
+    // Deny entry to mortar that's already manned
     if (WeaponPawns[0].Driver != none)
     {
-        P.ReceiveLocalizedMessage(class'DHMortarMessage', 9); // mortar already being used
+        DHP.ReceiveLocalizedMessage(class'DHMortarMessage', 9); // mortar already being used
 
         return false;
     }
 
-    if (VehicleTeam != P.GetTeamNum())
-    {
-        P.ReceiveLocalizedMessage(class'DHMortarMessage', 10); // can't use enemy mortar
-
-        return false;
-    }
-
+    // No entry if the player is holding an undeployed mortar
     if (bEnteredOnce)
     {
         if (DHMortarWeapon(DHP.Weapon) != none)
         {
-            return false; // no entry if player is holding an undeployed mortar
+            return false;
         }
     }
     else
@@ -98,6 +104,7 @@ function bool TryToDrive(Pawn P)
         bEnteredOnce = true;
     }
 
+    // Passed all checks, so allow player to man the mortar
     WeaponPawns[0].KDriverEnter(DHP);
     SetMortarOwner(DHP);
 
