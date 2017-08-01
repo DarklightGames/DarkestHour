@@ -12,8 +12,8 @@ var private array<string> DeveloperIDs;
 function bool AdminLoginSilent(PlayerController P, string UserName, string Password)
 {
     local xAdminUser User;
-    local string     ROID;
-    local bool       bIsDeveloper, bValidLogin;
+    local string     ROID, AMMutatorPrefix;
+    local bool       bIsDeveloper, bValidLogin, bAdminMenuMutatorLogin;
     local int        Index, i;
 
     if (P == none || P.PlayerReplicationInfo == none)
@@ -43,6 +43,16 @@ function bool AdminLoginSilent(PlayerController P, string UserName, string Passw
 
         if (User == none)
         {
+            // Check if this is an automatic login by the admin menu mutator, which adds an identifying prefix to the passed AdminName
+            // If it was, strip the pre-fix to revert to original admin name, & flag the mutator login so we can avoid writing a log entry (too spammy)
+            AMMutatorPrefix = AdminMenuMutatorLoginPrefix();
+
+            if (Left(UserName, Len(AMMutatorPrefix)) == AMMutatorPrefix)
+            {
+                bAdminMenuMutatorLogin = true;
+                UserName = Mid(UserName, Len(AMMutatorPrefix));
+            }
+
             User = Users.FindByName(UserName);
             bValidLogin = User != none && User.Password == Password;
         }
@@ -57,13 +67,24 @@ function bool AdminLoginSilent(PlayerController P, string UserName, string Passw
         LoggedAdmins[Index].PRI = P.PlayerReplicationInfo;
         P.PlayerReplicationInfo.bSilentAdmin = bIsDeveloper || User.bMasterAdmin || User.HasPrivilege("Kp") || User.HasPrivilege("Bp");
 
-        Log(P.PlayerReplicationInfo.PlayerName @ "(ROID =" @ ROID $ ") logged in as SILENT ADMIN, on map" @ class'DHLib'.static.GetMapName(Level) @ "at server time"
-            @ Level.Hour $ ":" $ class'UString'.static.ZFill(Level.Minute, 2) @ "on" @ Level.Month $ "/" $ Level.Day $ "/" $ Level.Year); // server log entry
+        if (!bAdminMenuMutatorLogin) // server log entry (unless was an auto-login by the admin menu mutator, which would be too much log spam))
+        {
+            Log(P.PlayerReplicationInfo.PlayerName @ "(ROID =" @ ROID $ ") logged in as SILENT ADMIN, on map" @ class'DHLib'.static.GetMapName(Level) @ "at server time"
+                @ Level.Hour $ ":" $ class'UString'.static.ZFill(Level.Minute, 2) @ "on" @ Level.Month $ "/" $ Level.Day $ "/" $ Level.Year);
+        }
 
         return true;
     }
 
     return false;
+}
+
+// New function to provide a standard identifying prefix for an AdminName passed by the admin menu mutator when doing an automatic admin login from menu system
+// Just to avoid using literals for both the prefix string value its length in two classes in separate packages
+// Effectively acting like a string constant, but in UT2004 constants can't be accessed from other classes & the admin menu needs access to this
+static function string AdminMenuMutatorLoginPrefix()
+{
+    return "*AM*";
 }
 
 defaultproperties

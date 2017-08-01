@@ -294,6 +294,7 @@ simulated function ExecuteCommand(string CommandString, coerce bool bDoAdminLogi
         {
             if (AdminName != "" && AdminPassword != "")
             {
+                AdminName = class'DHAccessControl'.static.AdminMenuMutatorLoginPrefix() $ AdminName; // add identifying prefix to AdminName (used to avoid spammy silent admin log entries)
                 PC.AdminLoginSilent(AdminName @ AdminPassword);
                 bMenuDidAdminLogin = true; // if the menu has automatically logged in the admin, this flags that we need to log them out again afterwards
             }                              // note: would like to check here if admin login was successful but bIsAdmin won't have had time to replicate (in PC.PRI)
