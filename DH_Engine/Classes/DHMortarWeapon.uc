@@ -36,263 +36,7 @@ simulated function Tick(float DeltaTime)
     }
 }
 
-simulated function bool HasAmmo()
-{
-    return true;
-}
-
-simulated function bool WeaponCanSwitch()
-{
-    //-------------------------------------------------
-    //No weapon switching, these  things are too heavy.
-    return false;
-}
-
-simulated function bool WeaponAllowCrouchChange()
-{
-    //-------------------------------------------------
-    //Not if we're deploying, homie.
-    if (bDeploying)
-    {
-        return false;
-    }
-
-    return super.WeaponAllowCrouchChange();
-}
-
-simulated function bool WeaponAllowProneChange()
-{
-    //---------------------------------------------------
-    //You won't be dragging these things through the mud.
-    return false;
-}
-
-simulated function bool WeaponAllowMantle()
-{
-    //--------------------------------------------------------------------
-    //You can barely get yourself over the wall let alone this thing, too.
-    return false;
-}
-
-simulated event AnimEnd(int Channel)
-{
-    local DHPawn P;
-
-    P = DHPawn(Instigator);
-
-    //-----------------------------------------------------------------------
-    //If the deploy animation ended, then let's let the server know about it.
-    if (bDeploying)
-    {
-        P.bIsDeployingMortar = false;
-        P.SetLockViewRotation(false);
-
-        ServerDeployEnd();
-    }
-}
-
-simulated function Fire(float F) { return; }
-simulated function AltFire(float F) { return; }
-simulated function bool WeaponAllowSprint() { return false; }
-simulated function ROIronSights() { return; }
-simulated event ClientStartFire(int Mode) { return; }
-simulated event StopFire(int Mode) { return; }
-simulated exec function ROManualReload() { return; }
-
-simulated exec function Deploy()
-{
-    if (!bDeploying)
-    {
-        ClientDeploy();
-    }
-}
-
-//------------------------------
-//Client side attempt to deploy.
-simulated function ClientDeploy()
-{
-    local DHPawn P;
-    local rotator R;
-
-    P = DHPawn(Instigator);
-
-    if (IsBusy() || !CanDeploy() || P == none)
-    {
-        return;
-    }
-
-    PlayAnim(DeployAnimation);
-    bDeploying = true;
-
-    //-------------------------------------------------
-    //This is so the pawn knows to limit pitch and yaw.
-    R = P.Rotation;
-    R.Pitch = 0;
-
-    P.bIsDeployingMortar = true;
-    P.SetLockViewRotation(true, R);
-}
-
-function ServerDeployEnd()
-{
-    local DHMortarVehicle V;
-    local vector          TraceStart, TraceEnd, HitLocation, HitNormal;
-    local rotator         SpawnRotation;
-
-    TraceStart = Instigator.Location + (vect(0.0, 0.0, 1.0) * Instigator.CollisionHeight);
-    TraceEnd = TraceStart + vect(0.0, 0.0, -128.0);
-
-    if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) == none)
-    {
-        GotoState('Idle');
-
-        return;
-    }
-
-    SpawnRotation.Yaw = Instigator.Rotation.Yaw;
-    V = Spawn(VehicleClass, Instigator,, HitLocation, SpawnRotation);
-    V.SetTeamNum(VehicleClass.default.VehicleTeam);
-    V.KDriverEnter(Instigator); // note we don't bother with the typical TryToDrive() here as we can always enter
-
-    Destroy();
-}
-
-simulated function bool CanDeploy()
-{
-    local DHPawn P;
-    local Actor HitActor;
-    local vector HitLocation, HitNormal, TraceEnd, TraceStart;
-    local material Material;
-    local rotator TraceRotation;
-    local DHVolumeTest VolumeTest;
-
-    P = DHPawn(Instigator);
-
-    VolumeTest = Spawn(class'DHVolumeTest',,, P.Location);
-
-    if (VolumeTest.IsInNoArtyVolume())
-    {
-        Instigator.ReceiveLocalizedMessage(class'DHMortarMessage', 11);
-        VolumeTest.Destroy();
-        return false;
-    }
-
-    VolumeTest.Destroy();
-
-    //-----------------------------
-    //If we're busy, don't bother.  Check 'RaisingWeapon' state.  Before this,
-    //not checking this state was allowing the player to almost instantaneously
-    //redeploy a mortar after undeploying.
-    if (IsBusy() || IsInState('RaisingWeapon'))
-    {
-        return false;
-    }
-
-    //-----------------------------
-    //Check that we're not in water
-    if (Instigator.PhysicsVolume.bWaterVolume || Instigator.PhysicsVolume.bPainCausing)
-    {
-        Instigator.ReceiveLocalizedMessage(class'DHMortarMessage', 7);
-        return false;
-    }
-
-    //---------------------------
-    //Check that we're crouching.
-    if (!P.bIsCrouched)
-    {
-        Instigator.ReceiveLocalizedMessage(class'DHMortarMessage', 1);
-        return false;
-    }
-
-    //---------------------------
-    //Check that we're not moving
-    if (P.Velocity != vect(0.0, 0.0, 0.0))
-    {
-        Instigator.ReceiveLocalizedMessage(class'DHMortarMessage', 3);
-        return false;
-    }
-
-    //----------------------------
-    //Check that we're not leaning
-    if (P.bLeaningLeft || P.bLeaningRight)
-    {
-        Instigator.ReceiveLocalizedMessage(class'DHMortarMessage', 6);
-        return false;
-    }
-
-    //-------------------------------------------------------
-    //Trace straight downwards and see what we're standing on
-    TraceStart = P.Location;
-    TraceEnd = TraceStart - vect(0.0, 0.0, 128.0);
-
-    HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true,, Material);
-
-    //----------------------------------------------
-    //Check that our surface exists and it is static
-    if (HitActor == none || !HitActor.bStatic)
-    {
-        Instigator.ReceiveLocalizedMessage(class'DHMortarMessage', 4);
-        return false;
-    }
-
-    //------------------------------------------------------------------
-    //Check that the surface angle is less than our deploy angle maximum
-    if (Acos(HitNormal dot vect(0.0, 0.0, 1.0)) > DeployAngleMaximum)
-    {
-        Instigator.ReceiveLocalizedMessage(class'DHMortarMessage', 4);
-        return false;
-    }
-
-    //-----------------------
-    //Now check all around us
-    for (TraceRotation.Yaw = 0; TraceRotation.Yaw < 65535; TraceRotation.Yaw += 8192)
-    {
-        //----------------------------------
-        //Trace outwards along the X/Y plane
-        TraceEnd = P.Location + vector(TraceRotation) * DeployRadius;
-
-        HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
-
-        //-----------------------------------------------------------
-        //Check that we haven't hit anything static along this trace.
-        if (HitActor != none && HitActor.bStatic)
-        {
-            //--------------------------
-            //Not enough toom to deploy.
-            Instigator.ReceiveLocalizedMessage(class'DHMortarMessage', 5);
-            return false;
-        }
-
-        //-----------------------------------------------------------
-        //Now trace downwards from the end point of our previous trace
-        TraceStart = TraceEnd;
-        TraceEnd = TraceStart - (vect(0.0, 0.0, 128.0));
-
-        HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
-
-        //----------------------------------------------
-        //Check that our surface exists and it is static
-        if (HitActor == none || !HitActor.bStatic)
-        {
-            //------------------------------
-            //Cannot deploy on this surface.
-            Instigator.ReceiveLocalizedMessage(class'DHMortarMessage', 4);
-            return false;
-        }
-        //------------------------------------------------------------------
-        //Check that the surface angle is less than our deploy angle maximum
-        if (Acos(HitNormal dot vect(0.0, 0.0, 1.0)) > DeployAngleMaximum)
-        {
-            //------------------------------
-            //Cannot deploy on this surface.
-            Instigator.ReceiveLocalizedMessage(class'DHMortarMessage', 4);
-            return false;
-        }
-    }
-
-    return true;
-}
-
+// Modified to add a hint when carrying a mortar
 simulated function BringUp(optional Weapon PrevWeapon)
 {
     super.BringUp(PrevWeapon);
@@ -303,25 +47,249 @@ simulated function BringUp(optional Weapon PrevWeapon)
     }
 }
 
-function bool ResupplyAmmo()
+// Functions always returning false as carried mortar is too heavy & bulky to put away, or to sprint, crawl, or mantle with
+simulated function bool WeaponCanSwitch()
 {
-    local DHPawn P;
+    return false;
+}
 
-    P = DHPawn(Instigator);
+simulated function bool WeaponAllowSprint()
+{
+    return false;
+}
 
-    if (P == none)
+simulated function bool WeaponAllowProneChange()
+{
+    return false;
+}
+
+simulated function bool WeaponAllowMantle()
+{
+    return false;
+}
+
+// Implemented so pressing the deploy key will attempt to deploy a carried mortar
+simulated exec function Deploy()
+{
+    local DHPawn  P;
+    local rotator LockedViewRotation;
+
+    if (!bDeploying)
+    {
+        P = DHPawn(Instigator);
+
+        if (CanDeploy(P))
+        {
+            PlayAnim(DeployAnimation);
+            bDeploying = true;
+            P.bIsDeployingMortar = true;
+
+            LockedViewRotation = P.Rotation;
+            LockedViewRotation.Pitch = 0;
+            P.SetLockViewRotation(true, LockedViewRotation); // makes the pawn lock view pitch & yaw
+        }
+    }
+}
+
+// New function to check whether the player can deploy the mortar where he is, with explanatory screen messages if he can't
+simulated function bool CanDeploy(DHPawn P)
+{
+    local Actor        HitActor;
+    local DHVolumeTest VolumeTest;
+    local bool         bIsInNoArtyVolume;
+    local vector       HitLocation, HitNormal, TraceEnd, TraceStart;
+    local rotator      TraceRotation;
+    local int          CannotDeployError;
+
+    // Can't deploy if we're busy, raising the weapon, on fire or somehow crawling
+    // If we don't check state RaisingWeapon, it allows the player to almost instantaneously redeploy a mortar after undeploying
+    if (P == none || IsBusy() || IsInState('RaisingWeapon') || P.bOnFire || P.bIsCrawling)
     {
         return false;
     }
 
-    return P.ResupplyMortarAmmunition();
+    CannotDeployError = -1;
+
+    // Can't deploy if we're in a no arty volume
+    VolumeTest = Spawn(class'DHVolumeTest',,, P.Location);
+    bIsInNoArtyVolume = VolumeTest != none && VolumeTest.IsInNoArtyVolume();
+    VolumeTest.Destroy();
+
+    if (bIsInNoArtyVolume)
+    {
+        CannotDeployError = 11;
+    }
+    // Can't deploy if we're in water
+    else if (P.PhysicsVolume.bWaterVolume || P.PhysicsVolume.bPainCausing)
+    {
+        CannotDeployError = 7;
+    }
+    // Can't deploy if we're not crouching
+    else if (!P.bIsCrouched)
+    {
+        CannotDeployError = 1;
+    }
+    // Can't deploy if we're moving
+    else if (P.Velocity != vect(0.0, 0.0, 0.0))
+    {
+        CannotDeployError = 3;
+    }
+    // Can't deploy if we're leaning
+    else if (P.bLeaningLeft || P.bLeaningRight)
+    {
+        CannotDeployError = 6;
+    }
+    else
+    {
+        // Check we're standing on a level, static surface, by tracing straight downwards to see what we're standing on
+        TraceStart = P.Location;
+        TraceEnd = TraceStart - vect(0.0, 0.0, 128.0);
+        HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
+
+        // Can't deploy if we're not standing on a static surface
+        if (HitActor == none || !HitActor.bStatic)
+        {
+            CannotDeployError = 4; // "You cannot deploy your mortar on this surface"
+        }
+        // Can't deploy if the surface angle is too steep
+        else if (Acos(HitNormal dot vect(0.0, 0.0, 1.0)) > DeployAngleMaximum)
+        {
+            CannotDeployError = 4;
+        }
+        else
+        {
+            // Ok, we're standing on a level, static surface, but now check we also have a clear, level surface all around us
+            // Trace in 8 directions around us in the X/Y plane, within our DeployRadius
+            for (TraceRotation.Yaw = 0; TraceRotation.Yaw < 65535; TraceRotation.Yaw += 8192)
+            {
+                TraceEnd = P.Location + (DeployRadius * vector(TraceRotation));
+                HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
+
+                // Can't deploy if there's anything static around us
+                if (HitActor != none && HitActor.bStatic)
+                {
+                    CannotDeployError = 5; // "You do not have enough room to deploy your mortar here"
+                    break;
+                }
+
+                // Now trace downwards from the end point of our previous trace, to make sure there's a level surface there
+                TraceStart = TraceEnd;
+                TraceEnd = TraceStart - (vect(0.0, 0.0, 128.0));
+                HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
+
+                // Can't deploy if there isn't a static surface there
+                if (HitActor == none || !HitActor.bStatic)
+                {
+                    CannotDeployError = 4;
+                    break;
+                }
+                // Can't deploy if the surface angle is too steep
+                else if (Acos(HitNormal dot vect(0.0, 0.0, 1.0)) > DeployAngleMaximum)
+                {
+                    CannotDeployError = 4;
+                    break;
+                }
+            }
+        }
+    }
+
+    // We can't deploy the mortar if we registered an error in any of the checks above
+    // Display a screen message to the player saying why he can't deploy
+    if (CannotDeployError >= 0)
+    {
+        P.ReceiveLocalizedMessage(class'DHMortarMessage', CannotDeployError);
+
+        return false;
+    }
+
+    // Passed all tests so mortar can be deployed
+    return true;
 }
 
-// Emptied out as mortar's use a different system in an ammo resupply area, based on DHPawn.ResupplyMortarAmmunition(), with a check whether the resupply is set up to resupply mortars
+// Modified to prevent player from changing stance while he is crouched & deploying the mortar
+simulated function bool WeaponAllowCrouchChange()
+{
+    return !bDeploying && super.WeaponAllowCrouchChange();
+}
+
+// Modified so when the deploy animation ends, we update the DHPawn & notify the server that mortar is now deployed
+simulated event AnimEnd(int Channel)
+{
+    local DHPawn P;
+
+    if (bDeploying)
+    {
+        P = DHPawn(Instigator);
+
+        if (P != none)
+        {
+            P.bIsDeployingMortar = false;
+            P.SetLockViewRotation(false);
+        }
+
+        ServerDeployEnd();
+    }
+}
+
+// New function to spawn the deployed mortar, which is a Vehicle actor, & to destroy this carried Weapon version of the mortar
+function ServerDeployEnd()
+{
+    local DHMortarVehicle DeployedMortar;
+    local vector          TraceStart, TraceEnd, HitLocation, HitNormal;
+    local rotator         SpawnRotation;
+
+    TraceStart = Instigator.Location + (vect(0.0, 0.0, 1.0) * Instigator.CollisionHeight);
+    TraceEnd = TraceStart + vect(0.0, 0.0, -128.0);
+
+    if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) != none)
+    {
+        SpawnRotation.Yaw = Instigator.Rotation.Yaw;
+        DeployedMortar = Spawn(VehicleClass, Instigator,, HitLocation, SpawnRotation);
+
+        if (DeployedMortar != none)
+        {
+            DeployedMortar.SetTeamNum(VehicleClass.default.VehicleTeam);
+            DeployedMortar.KDriverEnter(Instigator); // note we don't bother with the typical TryToDrive() here as we can always enter
+            Destroy(); // destroy this carried weapon version of the mortar, as it's been replaced by the deployed Vehicle version
+
+            return;
+        }
+    }
+
+    GotoState('Idle'); // either failed to trace a location to spawn the mortar, or somehow failed to spawn it
+}
+
+// Modified to always return true so any HasAmmo() checks are effectively bypassed
+simulated function bool HasAmmo()
+{
+    return true;
+}
+
+// Implemented to check the DHPawn's ResupplyMortarAmmunition() function when another player tries to give ammo to the mortar carrier
+function bool ResupplyAmmo()
+{
+    return DHPawn(Instigator) != none && DHPawn(Instigator).ResupplyMortarAmmunition();
+}
+
+// Emptied out as mortar uses a different system in ammo resupply area, based on DHPawn.ResupplyMortarAmmunition(), with check whether the resupply area can resupply mortars
 function bool FillAmmo()
 {
     return false;
 }
+
+// Functions emptied out as carried mortar weapons cannot be fired, ironsighted or reloaded:
+simulated function Fire(float F);
+simulated function AltFire(float F);
+simulated function WeaponFire GetFireMode(byte Mode);
+simulated event ClientStartFire(int Mode);
+simulated event ClientStopFire(int Mode);
+event ServerStartFire(byte Mode);
+function ServerStopFire(byte Mode);
+simulated function bool StartFire(int Mode) { return false; }
+simulated event StopFire(int Mode);
+simulated function ImmediateStopFire();
+simulated function ROIronSights();
+simulated exec function ROManualReload();
 
 defaultproperties
 {
