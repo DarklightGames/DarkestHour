@@ -107,12 +107,14 @@ function DoFireEffect()
         StartProj = HitLocation;
     }
 
-    Aim = AdjustAim(StartProj, AimError);
-
     // For free-aim, just use where the muzzle bone is pointing
     if (Instigator != none && !Instigator.Weapon.bUsingSights && !Instigator.bBipodDeployed && Instigator.IsHumanControlled() && Instigator.Weapon.bUsesFreeAim)
     {
         Aim = rotator(MuzzlePosition.XAxis);
+    }
+    else
+    {
+        Aim = AdjustAim(StartProj, AimError);
     }
 
     SpawnCount = Max(1, ProjPerFire * int(Load));
