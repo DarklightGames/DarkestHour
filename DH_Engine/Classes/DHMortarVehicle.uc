@@ -23,7 +23,7 @@ replication
 }
 
 // New state called from DHPawn.Died() to let us know the mortar owner is dead & we should destroy the mortar actors
-simulated state PendingDestroy
+state PendingDestroy // TODO: perhaps use native ResetTime to do the same thing, deprecating this & related stuff?
 {
 Begin:
     Sleep(5.0);
@@ -206,7 +206,6 @@ defaultproperties
     CollisionRadius=20.0
     CollisionHeight=10.0
     Mesh=SkeletalMesh'DH_Mortars_3rd.MortarBase_generic' // not visible, just a 1 bone mesh to attach VehicleWeapon to, so don't need separate models for different mortars
-    Physics=PHYS_None // stops karma log error as mortar base has no karma collision (i.e. pink collision boxes for mesh) or KarmaParams
 
     // Exit positions
     ExitPositions(0)=(Y=48.0)
@@ -214,4 +213,9 @@ defaultproperties
     ExitPositions(2)=(X=-48.0,Y=-48.0)
     ExitPositions(3)=(X=-48.0,Y=48.0)
     ExitPositions(4)=(Y=-48.0)
+
+    // Karma properties - minimal, just to stop "KInitActorDynamics: No Model" log error every time actor spawns (also had to add a small karma collision box to mesh)
+    Begin Object Class=KarmaParamsRBFull Name=KParams0
+    End Object
+    KParams=KarmaParamsRBFull'KParams0'
 }
