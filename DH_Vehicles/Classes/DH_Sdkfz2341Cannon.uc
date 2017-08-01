@@ -7,8 +7,6 @@ class DH_Sdkfz2341Cannon extends DHVehicleCannon;
 
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc3.usx
 
-var     bool    bMixedMagFireAP; // flags that a mixed AP/HE mag is due to fire an AP round
-
 // Extra collision static mesh actors for the mesh covers over turret, which open & close like a hatch:
 var     DHCollisionMeshActor  TurretCoverColMeshLeft;
 var     DHCollisionMeshActor  TurretCoverColMeshRight;
@@ -61,7 +59,7 @@ function Fire(Controller C)
 {
     if (ProjectileClass == PrimaryProjectileClass)
     {
-        if (bMixedMagFireAP)
+        if ((InitialPrimaryAmmo - MainAmmoChargeExtra[0]) % 2.0 == 0.0) // fires AP on event numbered shots, HE on odd
         {
             SpawnProjectile(SecondaryProjectileClass, false);
         }
@@ -69,24 +67,11 @@ function Fire(Controller C)
         {
             SpawnProjectile(TertiaryProjectileClass, false);
         }
-
-        bMixedMagFireAP = !bMixedMagFireAP;
     }
     else
     {
         SpawnProjectile(ProjectileClass, false);
     }
-}
-
-// Modified so if we're loading a new mixed mag, we reset the 1st shot to be the default AP or HE round
-simulated function StartReload(optional bool bResumingPausedReload)
-{
-    if (!bResumingPausedReload && ProjectileClass == PrimaryProjectileClass && Role == ROLE_Authority)
-    {
-        bMixedMagFireAP = default.bMixedMagFireAP;
-    }
-
-    super.StartReload(bResumingPausedReload);
 }
 
 defaultproperties
