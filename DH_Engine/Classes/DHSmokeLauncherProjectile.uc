@@ -44,6 +44,30 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     Explode(Location, HitNormal);
 }
 
+// Modified to get smoke launcher's firing location, as the usual WeaponFireLocation doesn't apply to a smoke launcher
+simulated function SpawnFiringEffect()
+{
+    local DHVehicleCannon Cannon;
+    local vector          FireLocation;
+
+    if (DHVehicleCannonPawn(Instigator) != none)
+    {
+        Cannon = DHVehicleCannonPawn(Instigator).Cannon;
+
+        // Can't handle more than one tube firing at once, so have to fall back to using the projectile's location to spawn the firing effect
+        if (Cannon == none || Cannon.SmokeLauncherClass.default.ProjectilesPerFire > 1)
+        {
+            FireLocation = Location;
+        }
+        else
+        {
+            FireLocation = Cannon.GetSmokeLauncherFireLocation();
+        }
+
+        Spawn(FireEmitterClass,,, FireLocation, Rotation);
+    }
+}
+
 defaultproperties
 {
     bUseCollisionStaticMesh=true // mostly for accurate detection of collision with own vehicle, preventing unwanted impacts

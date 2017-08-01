@@ -484,28 +484,11 @@ function ServerFireSmokeLauncher()
         return;
     }
 
-    // Get the world rotation of the turret, or the vehicle base (for vehicles without a turret)
-    if (bHasTurret)
-    {
-        VehicleRotation = GetBoneRotation(YawBone);
-    }
-    else
-    {
-        VehicleRotation = Rotation;
-    }
-
     // Spawn the smoke projectile(s)
     for (i = 0; i < SmokeLauncherClass.default.ProjectilesPerFire && HasAmmo(SMOKELAUNCHER_AMMO_INDEX); ++i)
     {
-        // If external smoke launchers with multiple tubes, get the current tube index number
-        // For a single internal launcher the index no. remains default zero
-        if (SmokeLauncherClass.static.GetNumberOfLauncherTubes() > 1)
-        {
-            LauncherIndex = SmokeLauncherClass.static.GetNumberOfLauncherTubes() - NumSmokeLauncherRounds;
-        }
-
-        // Get the launch location, applying the positional offset adjusted for turret/vehicle rotation
-        FireLocation = Location + (SmokeLauncherFireOffset[LauncherIndex] >> VehicleRotation);
+        // Get the launch location (passes back the LauncherIndex & VehicleRotation to use to calculate firing rotation)
+        FireLocation = GetSmokeLauncherFireLocation(LauncherIndex, VehicleRotation);
 
         // Get the launch rotation, including any current rotation adjustment if launcher can be rotated to aim it
         // Rotation starts relative to vehicle, then we convert to world rotation, with random spread
@@ -546,6 +529,31 @@ function ServerFireSmokeLauncher()
             AttemptSmokeLauncherReload();
         }
     }
+}
+
+// New function to calculate the firing location for a smoke launcher projectile
+// Also used by the projectile to work out where to spawn the firing effect
+// That's because the vehicle location can differ between server & net client, so client is better working out its own local location so effect looks right
+simulated function vector GetSmokeLauncherFireLocation(optional out int LauncherIndex, optional out rotator VehicleRotation)
+{
+    // Get the world rotation of the turret, or the vehicle base (for vehicles without a turret)
+    if (bHasTurret)
+    {
+        VehicleRotation = GetBoneRotation(YawBone);
+    }
+    else
+    {
+        VehicleRotation = Rotation;
+    }
+
+    // If external smoke launchers with multiple tubes, get the current tube index number
+    // For a single internal launcher the index no. remains default zero
+    if (SmokeLauncherClass.static.GetNumberOfLauncherTubes() > 1)
+    {
+        LauncherIndex = SmokeLauncherClass.static.GetNumberOfLauncherTubes() - NumSmokeLauncherRounds;
+    }
+
+    return Location + (SmokeLauncherFireOffset[LauncherIndex] >> VehicleRotation);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
