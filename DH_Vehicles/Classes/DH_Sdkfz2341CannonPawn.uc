@@ -5,6 +5,58 @@
 
 class DH_Sdkfz2341CannonPawn extends DHGermanCannonPawn;
 
+// Modified to include extra collision meshes for the turret covers
+exec function ShowColMesh()
+{
+    local DHCollisionMeshActor LeftCover, RightCover;
+
+    if (VehWep != none && VehWep.CollisionMeshActor != none && IsDebugModeAllowed() && Level.NetMode != NM_DedicatedServer)
+    {
+        if (VehWep.IsA('DH_Sdkfz2341Cannon'))
+        {
+            LeftCover = DH_Sdkfz2341Cannon(VehWep).TurretCoverColMeshLeft;
+            RightCover = DH_Sdkfz2341Cannon(VehWep).TurretCoverColMeshRight;
+        }
+
+        // If in normal mode, with CSM hidden, we toggle the CSM to be visible
+        if (VehWep.CollisionMeshActor.bHidden)
+        {
+            VehWep.CollisionMeshActor.bHidden = false;
+
+            if (LeftCover != none && RightCover != none)
+            {
+                LeftCover.bHidden = false;
+                RightCover.bHidden = false;
+            }
+        }
+        // Or if CSM has already been made visible & so is the weapon, we next toggle the weapon to be hidden
+        else if (VehWep.Skins[0] != texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha')
+        {
+            VehWep.CollisionMeshActor.HideOwner(true); // can't simply make weapon bHidden, as that also hides all attached actors, including col mesh & player
+
+            if (LeftCover != none && RightCover != none)
+            {
+                LeftCover.HideOwner(true);
+                RightCover.HideOwner(true);
+            }
+        }
+        // Or if CSM has already been made visible & the weapon has been hidden, we now go back to normal mode, by toggling weapon back to visible & CSM to hidden
+        else
+        {
+            VehWep.CollisionMeshActor.HideOwner(false);
+            VehWep.CollisionMeshActor.bHidden = true;
+
+            if (LeftCover != none && RightCover != none)
+            {
+                LeftCover.HideOwner(false);
+                LeftCover.bHidden = true;
+                RightCover.HideOwner(false);
+                RightCover.bHidden = true;
+            }
+        }
+    }
+}
+
 defaultproperties
 {
     RangeRingScale=0.499
