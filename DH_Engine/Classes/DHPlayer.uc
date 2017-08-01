@@ -3056,6 +3056,19 @@ simulated function bool IsDebugModeAllowed()
     return Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode();
 }
 
+// Modified to ignore the Super in ROPlayer, which mostly added repeated info (player name & our state), plus pretty useless bCrawl, all badly formatted
+// And to also show the PlayerController's rotation & location
+simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
+{
+    super(UnrealPlayer).DisplayDebug(Canvas, YL, YPos);
+
+    Canvas.SetPos(4.0, YPos);
+    Canvas.SetDrawColor(255, 0, 0);
+    Canvas.DrawText("     Location:" @ Location @ " Rotation:" @ Rotation);
+    YPos += YL;
+    Canvas.SetPos(4.0, YPos);
+}
+
 // New debug exec to put self into 'weapon lock' for specified number of seconds
 exec function DebugLockWeapons(int Seconds)
 {

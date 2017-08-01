@@ -43,6 +43,26 @@ simulated static function bool IsPlayerTankCrew(Pawn P)
         && ROPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew;
 }
 
+// Modified to fix bug where the last line was being drawn at top of screen, instead of in vertical sequence, so overwriting info in the 1st screen line
+simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
+{
+    if (Team != none)
+    {
+        Canvas.DrawText("     PlayerName" @ PlayerName @ "Team" @ Team.GetHumanReadableName() $ "(" $ Team.TeamIndex $ ") has flag" @ HasFlag);
+    }
+    else
+    {
+        Canvas.DrawText("     PlayerName" @ PlayerName @ "NO Team");
+    }
+
+    if (!bBot)
+    {
+        YPos += YL;
+        Canvas.SetPos(4.0, YPos); // bug was here, as it was setting Y draw position to YL not YPos
+        Canvas.DrawText("     bIsSpec:" $ bIsSpectator @ "OnlySpec:" $ bOnlySpectator @ "Waiting:" $ bWaitingPlayer @ "Ready:" $ bReadyToPlay @ "OutOfLives:" $ bOutOfLives);
+    }
+}
+
 defaultproperties
 {
     SquadIndex=-1

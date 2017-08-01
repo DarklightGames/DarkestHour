@@ -1990,6 +1990,40 @@ exec function SetSoundRadius(float NewValue)
     }
 }
 
+// Modified to use a small font so the extensive vehicle debug info fits on the screen (before a lot of it was missing at the bottom of the screen)
+// Also re-stating & slightly modifying the Super from VehicleWeaponPawn to improve the formatting
+simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
+{
+    Canvas.Font = Canvas.SmallFont;
+
+    super(Vehicle).DisplayDebug(Canvas, YL, YPos);
+
+    YPos += YL;
+    Canvas.SetPos(0.0, YPos);
+    Canvas.SetDrawColor(0, 64, 192);
+
+    if (Gun != none)
+    {
+        Canvas.DrawText("-- GUN:" @ GetItemName(string(Gun)));
+        YPos += YL;
+        Canvas.SetPos(4.0, YPos);
+        Gun.DisplayDebug(Canvas, YL, YPos);
+    }
+    else
+    {
+        Canvas.DrawText("-- NO GUN");
+    }
+
+    if (DebugInfo != "")
+    {
+        YPos += YL;
+        Canvas.SetPos(0.0, YPos);
+        Canvas.SetDrawColor(255, 0, 0);
+        Canvas.DrawText(DebugInfo);
+        DebugInfo = "";
+    }
+}
+
 defaultproperties
 {
     bCustomAiming=true

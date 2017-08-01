@@ -3373,6 +3373,14 @@ exec function SetRumbleVol(float NewValue)
     RumbleSoundVolumeModifier = NewValue;
 }
 
+// Modified to use a small font so the extensive vehicle debug info fits on the screen (before a lot of it was missing at the bottom of the screen)
+simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
+{
+    Canvas.Font = Canvas.SmallFont;
+
+    super.DisplayDebug(Canvas, YL, YPos);
+}
+
 defaultproperties
 {
     VehiclePoolIndex=-1

@@ -1051,6 +1051,29 @@ simulated function PlayClickSound()
     }
 }
 
+// Modified to add location & various weapon rotation variables
+simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
+{
+    local string s;
+
+    super.DisplayDebug(Canvas, YL, YPos);
+
+    YPos += YL;
+    Canvas.SetPos(4.0, YPos);
+    Canvas.DrawText("Location:" @ Location @ " Rotation:" @ Rotation);
+
+    YPos += YL;
+    Canvas.SetPos(4.0, YPos);
+    s = "CurrentAim =" @ CurrentAim;
+
+    if (WeaponPawn != none && WeaponPawn.bCustomAiming)
+    {
+        s @= " CustomAim =" @ WeaponPawn.CustomAim;
+    }
+
+    Canvas.DrawText(s);
+}
+
 // State 'emptied out' as is deprecated as unnecessary in DH and should never be entered
 // Fire functions now work out of state, so projectile fire is effectively the default, non-state condition for all DHVehicleWeapon
 state ProjectileFireMode

@@ -645,6 +645,17 @@ simulated function PlayAnimAndSetTimer(name Anim, float AnimRate, optional float
     }
 }
 
+// Modified to remove the RODebugMode check in ROWeapon, which prevented this from running at all in DHPlayer
+// Don't need to replace that with an equivalent DHDebugMode check because that's already checked in the ShowDebug() exec function that enables this
+simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
+{
+    super(Weapon).DisplayDebug(Canvas, YL, YPos);
+
+    Canvas.DrawText("DisplayFOV =" @ DisplayFOV @ " Default =" @ default.DisplayFOV @ "Zoomed default =" @ IronSightDisplayFOV);
+    YPos += YL;
+    Canvas.SetPos(4.0, YPos);
+}
+
 defaultproperties
 {
     PlayerIronsightFOV=60.0
