@@ -950,7 +950,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
         SetOwner(PC);
         Role = ROLE_AutonomousProxy;
 
-        // Fix for possible camera problem when deploying into spawn vehicle (see notes in DHVehicleMGPawn.ClientKDriverEnter)
+        // Fix for possible camera problem when deploying into spawn vehicle (see notes in DHVehicleWeaponPawn.ClientKDriverEnter)
         if (PC.IsInState('Spectating'))
         {
             PC.GotoState('PlayerWalking');

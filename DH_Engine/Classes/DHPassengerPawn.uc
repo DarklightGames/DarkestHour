@@ -237,7 +237,7 @@ function DriverLeft()
     }
 }
 
-// Modified to remove need to have specified CameraBone, which is irrelevant (in conjunction with modified AttachDriver)
+// Modified (from deprecated ROPassengerPawn) to remove need to have specified CameraBone, which is irrelevant (in conjunction with modified AttachDriver)
 simulated function DetachDriver(Pawn P)
 {
     P.PrePivot = P.default.PrePivot;
@@ -277,7 +277,7 @@ simulated function InitializeVehicleBase()
     super.InitializeVehicleBase();
 }
 
-// From ROPassengerPawn
+// From deprecated ROPassengerPawn
 function float ModifyThreat(float Current, Pawn Threat)
 {
     if (Vehicle(Threat) != none)

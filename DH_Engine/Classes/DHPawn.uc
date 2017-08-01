@@ -747,7 +747,7 @@ simulated event HandleWhizSound()
 
 // Modified so player pawn's AuxCollisionCylinder (the bullet whip attachment) only retains its collision if player is entering a VehicleWeaponPawn in an exposed position
 // Part of new vehicle occupant hit detection system, which basically keeps normal hit detection as for an infantry player pawn, if the player is exposed
-// Also so player's CullDistance isn't set to 5000 (83m) when in vehicle, as caused players to disappear at quite close ranges when often should be highly visible, e.g. AT gunner
+// Also so player's CullDistance isn't set to 5000 (83m) when in vehicle, as caused exposed players to disappear at quite close ranges when often should be highly visible
 // And some fixes where vehicle is replicating to net client, which may not have received all relevant actors yet (e.g. Driver, Gun)
 // Flags for vehicle to attach Driver when it receives Gun, & stops DriveAnim overriding a correct driver anim just played by vehicle's SetPlayerPosition()
 simulated event StartDriving(Vehicle V)
@@ -889,7 +889,7 @@ simulated function StopDriving(Vehicle V)
 {
     if (Role == ROLE_Authority && IsHumanControlled() && V != none)
     {
-        V.PlayerStartTime = Level.TimeSeconds + 12.0;
+        V.PlayerStartTime = Level.TimeSeconds + 12.0; // tells bots not to enter this vehicle position for a little while
     }
 
     CullDistance = default.CullDistance;

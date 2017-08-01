@@ -1122,26 +1122,26 @@ function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector Hi
 // This function has a lot of code that probably isn't needed, but kept in case it is (may need cleaned up at some point)
 event PlayerController Login(string Portal, string Options, out string Error)
 {
-    local PlayerController  NewPlayer, TestPlayer;
-    local DHPlayer          PC;
-    local Controller        C;
-    local NavigationPoint   StartSpot;
-    local string            InName, InAdminName, InPassword, InChecksum, InCharacter, InSex;
-    local byte              InTeam;
-    local bool              bSpectator, bAdmin;
-    local class<Security>   MySecurityClass;
-    local pawn              TestPawn;
+    local PlayerController NewPlayer, TestPlayer;
+    local DHPlayer         PC;
+    local Controller       C;
+    local NavigationPoint  StartSpot;
+    local string           InName, InAdminName, InPassword, InChecksum, InCharacter, InSex;
+    local byte             InTeam;
+    local bool             bSpectator, bAdmin;
+    local class<Security>  MySecurityClass;
+    local Pawn             TestPawn;
 
     // Stop the game from automatically trimming longer names
     InName = Left(ParseOption(Options, "Name"), 32);
 
     if (MaxLives > 0)
     {
-        // Check that game isn't too far along (ancient unreal code dealing with NumLives and LateEntryLives
+        // Check that game isn't too far along (ancient Unreal code dealing with NumLives and LateEntryLives
         // This could probably be removed
         for (C = Level.ControllerList; C != none; C = C.NextController)
         {
-            if ((C.PlayerReplicationInfo != none) && (C.PlayerReplicationInfo.NumLives > LateEntryLives))
+            if (C.PlayerReplicationInfo != none && C.PlayerReplicationInfo.NumLives > LateEntryLives)
             {
                 Options = "?SpectatorOnly=1" $ Options;
                 break;
@@ -1149,23 +1149,21 @@ event PlayerController Login(string Portal, string Options, out string Error)
         }
     }
 
-    Options = StripColor(Options);  // Strip out color Codes
+    Options = StripColor(Options); // strip out color codes
 
     BaseMutator.ModifyLogin(Portal, Options);
 
-    // Get URL options.
-    InName     = Left(ParseOption ( Options, "Name"), 20);
-    InTeam     = GetIntOption( Options, "Team", 255 ); // default to "no team"
-    InAdminName= ParseOption ( Options, "AdminName");
-    InPassword = ParseOption ( Options, "Password" );
-    InChecksum = ParseOption ( Options, "Checksum" );
+    // Get URL options
+    InName      = Left(ParseOption(Options, "Name"), 20);
+    InTeam      = GetIntOption(Options, "Team", 255); // default to "no team"
+    InAdminName = ParseOption(Options, "AdminName");
+    InPassword  = ParseOption(Options, "Password");
+    InChecksum  = ParseOption(Options, "Checksum");
 
-    // Todo:
-    // We don't support save games, this could probably go bye bye also
+    // TODO: we don't support save games, this could probably go bye bye also
     if (HasOption(Options, "Load"))
     {
-        log("Loading Savegame");
-
+        Log("Loading Savegame");
         InitSavedLevel();
         bIsSaveGame = true;
 
@@ -1173,33 +1171,34 @@ event PlayerController Login(string Portal, string Options, out string Error)
         // for savegames - also needed coop level switching.
         foreach DynamicActors(class'PlayerController', TestPlayer)
         {
-            if ((TestPlayer.Player == none) && (TestPlayer.PlayerOwnerName ~= InName))
+            if (TestPlayer.Player == none && TestPlayer.PlayerOwnerName ~= InName)
             {
                 TestPawn = TestPlayer.Pawn;
 
                 if (TestPawn != none)
                 {
                     TestPawn.SetRotation(TestPawn.Controller.Rotation);
-                    log("FOUND "$TestPlayer@TestPlayer.PlayerReplicationInfo.PlayerName);
+                    Log("FOUND" @ TestPlayer @ TestPlayer.PlayerReplicationInfo.PlayerName);
                 }
 
-                return TestPlayer;
+                return TestPlayer; // TEST - no, the Super from GameInfo would return here, but this function still needs to do stuff from other parent classes!
             }
         }
     }
 
-    bSpectator = (ParseOption( Options, "SpectatorOnly" ) ~= "1");
+    bSpectator = (ParseOption(Options, "SpectatorOnly") ~= "1");
 
     if (AccessControl != none)
     {
         bAdmin = AccessControl.CheckOptionsAdmin(Options);
     }
 
-    // Make sure there is capacity except for admins. (This might have changed since the PreLogin call).
+    // Make sure there is capacity except for admins (this might have changed since the PreLogin call)
     if (!bAdmin && AtCapacity(bSpectator))
     {
         Error = GameMessageClass.default.MaxedOutMessage;
-        return none;
+
+        return none; // TEST - no, the Super from GameInfo would return here, but this function still needs to do stuff from other parent classes!
     }
 
     // If admin, force spectate mode if the server already full of reg. players
@@ -1211,13 +1210,14 @@ event PlayerController Login(string Portal, string Options, out string Error)
     // Pick a team (if need teams)
     InTeam = PickTeam(InTeam, none);
 
-    // Find a start spot.
+    // Find a start spot
     StartSpot = FindPlayerStart(none, InTeam, Portal);
 
-    if(StartSpot == none)
+    if (StartSpot == none)
     {
         Error = GameMessageClass.default.FailedPlaceMessage;
-        return none;
+
+        return none; // TEST - no, the Super from GameInfo would return here, but this function still needs to do stuff from other parent classes!
     }
 
     if (PlayerControllerClass == none)
@@ -1225,14 +1225,15 @@ event PlayerController Login(string Portal, string Options, out string Error)
         PlayerControllerClass = class<PlayerController>(DynamicLoadObject(PlayerControllerClassName, class'Class'));
     }
 
-    NewPlayer = spawn(PlayerControllerClass,,,StartSpot.Location,StartSpot.Rotation);
+    NewPlayer = Spawn(PlayerControllerClass,,, StartSpot.Location, StartSpot.Rotation);
 
-    // Handle spawn failure.
+    // Handle spawn failure
     if (NewPlayer == none)
     {
-        log("Couldn't spawn player controller of class "$PlayerControllerClass);
+        Log("Couldn't spawn player controller of class" @ PlayerControllerClass);
         Error = GameMessageClass.default.FailedSpawnMessage;
-        return none;
+
+        return none; // TEST - no, the Super from GameInfo would return here, but this function still needs to do stuff from other parent classes!
     }
 
     NewPlayer.StartSpot = StartSpot;
@@ -1245,20 +1246,20 @@ event PlayerController Login(string Portal, string Options, out string Error)
 
     if (MySecurityClass != none)
     {
-        NewPlayer.PlayerSecurity = spawn(MySecurityClass,NewPlayer);
+        NewPlayer.PlayerSecurity = Spawn(MySecurityClass, NewPlayer);
 
         if (NewPlayer.PlayerSecurity == none)
         {
-            log("Could not spawn security for player "$NewPlayer,'Security');
+            Log("Could not spawn security for player" @ NewPlayer, 'Security');
         }
     }
     else if (SecurityClass == "")
     {
-        log("No value for Engine.GameInfo.SecurityClass -- System is not secure.",'Security');
+        Log("No value for Engine.GameInfo.SecurityClass -- system is not secure.", 'Security');
     }
     else
     {
-        log("Unknown security class ["$SecurityClass$"] -- System is not secure.",'Security');
+        Log("Unknown security class [" $ SecurityClass $ "] -- system is not secure.", 'Security');
     }
 
     if (bAttractCam)
@@ -1273,7 +1274,7 @@ event PlayerController Login(string Portal, string Options, out string Error)
     // Init player's name
     if (InName == "")
     {
-        InName=DefaultPlayerName;
+        InName = DefaultPlayerName;
     }
     if (Level.NetMode != NM_Standalone || NewPlayer.PlayerReplicationInfo.PlayerName == DefaultPlayerName)
     {
@@ -1281,7 +1282,7 @@ event PlayerController Login(string Portal, string Options, out string Error)
     }
 
     // Custom voicepack (Theel: this probably doesn't work, but might be needed)
-    NewPlayer.PlayerReplicationInfo.VoiceTypeName = ParseOption ( Options, "Voice");
+    NewPlayer.PlayerReplicationInfo.VoiceTypeName = ParseOption(Options, "Voice");
 
     InCharacter = ParseOption(Options, "Character");
     NewPlayer.SetPawnClass(DefaultPlayerClassName, InCharacter);
@@ -1290,26 +1291,26 @@ event PlayerController Login(string Portal, string Options, out string Error)
     // Look at this garbage
     if (Left(InSex,3) ~= "F")
     {
-        NewPlayer.SetPawnFemale();  // only effective if character not valid
+        NewPlayer.SetPawnFemale(); // only effective if character not valid
     }
 
-    // Set the player's ID.
+    // Set the player's ID
     NewPlayer.PlayerReplicationInfo.PlayerID = CurrentID++;
 
     // Here is where the ChangeTeam() call was removed
-    if (bSpectator || NewPlayer.PlayerReplicationInfo.bOnlySpectator) // || !ChangeTeam(newPlayer, InTeam, false) )
+    if (bSpectator || NewPlayer.PlayerReplicationInfo.bOnlySpectator) // || !ChangeTeam(NewPlayer, InTeam, false) )
     {
         NewPlayer.PlayerReplicationInfo.bOnlySpectator = true;
         NewPlayer.PlayerReplicationInfo.bIsSpectator = true;
         NewPlayer.PlayerReplicationInfo.bOutOfLives = true;
         NumSpectators++;
 
-        return NewPlayer;
+        return NewPlayer; // TEST - no, the Super from GameInfo would return here, but this function still needs to do stuff from other parent classes!
     }
 
-    newPlayer.StartSpot = StartSpot;
+    NewPlayer.StartSpot = StartSpot;
 
-    // Init player's administrative privileges and log it
+    // Init player's administrative privileges & log it
     if (AccessControl != none && AccessControl.AdminLogin(NewPlayer, InAdminName, InPassword))
     {
         AccessControl.AdminEntered(NewPlayer, InAdminName);
@@ -1336,12 +1337,13 @@ event PlayerController Login(string Portal, string Options, out string Error)
     {
         NewPlayer.GotoState('PlayerWaiting');
     }
-
+//////////////////////////////////////////////////////////////////////////////////////////// THIS STUFF NEEDS TO RUN EVEN IF GameInfo.Super would RETURN before the end
     // Init voice chat if we are in a MP environment
     if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
     {
         NewPlayer.VoiceReplicationInfo = VoiceReplicationInfo;
-        if (Level.NetMode == NM_ListenServer && Level.GetLocalPlayerController() == PC)
+
+        if (Level.NetMode == NM_ListenServer && Level.GetLocalPlayerController() == PC) // TEST - PC local hasn't even been set here - in the Super it was the return value from the higher Super (NewPlayer here)!
         {
             NewPlayer.InitializeVoiceChat();
         }
@@ -1357,7 +1359,7 @@ event PlayerController Login(string Portal, string Options, out string Error)
         if (NewPlayer.PlayerReplicationInfo.bOnlySpectator)
         {
             // Compensate for the space left for the player
-            if (!bCustomBots && (bAutoNumBots || (bTeamGame && (InitialBots%2 == 1))))
+            if (!bCustomBots && (bAutoNumBots || (bTeamGame && (InitialBots % 2 == 1))))
             {
                 InitialBots++;
             }

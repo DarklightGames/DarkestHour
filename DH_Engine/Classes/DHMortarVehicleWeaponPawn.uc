@@ -466,9 +466,7 @@ simulated state Idle
 
             return;
         }
-        else
-
-        if (PitchChange != 0.0 && (Level.TimeSeconds - LastElevationTime) > ElevationAdjustmentDelay && DHMortarVehicleWeapon(Gun) != none)
+        else if (PitchChange != 0.0 && (Level.TimeSeconds - LastElevationTime) > ElevationAdjustmentDelay && DHMortarVehicleWeapon(Gun) != none)
         {
             LastElevationTime = Level.TimeSeconds;
 
@@ -502,8 +500,12 @@ simulated state Busy
 simulated state KnobRaising extends Busy
 {
 Begin:
-    PlayFirstPersonAnimation(OverlayKnobRaisingAnim, false, OverlayKnobRaisingAnimRate);
-    Sleep(HUDOverlay.GetAnimDuration(OverlayKnobRaisingAnim, OverlayKnobRaisingAnimRate));
+    if (HUDOverlay != none)
+    {
+        PlayFirstPersonAnimation(OverlayKnobRaisingAnim, false, OverlayKnobRaisingAnimRate);
+        Sleep(HUDOverlay.GetAnimDuration(OverlayKnobRaisingAnim, OverlayKnobRaisingAnimRate));
+    }
+
     GotoState('KnobRaised');
 }
 
@@ -590,7 +592,11 @@ simulated state KnobRaised
         else if (bTraversing)
         {
             bTraversing = false;
-            HUDOverlay.StopAnimating(true);
+
+            if (HUDOverlay != none)
+            {
+                HUDOverlay.StopAnimating(true);
+            }
 
             return;
         }

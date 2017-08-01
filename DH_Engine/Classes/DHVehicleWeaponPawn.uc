@@ -184,7 +184,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
         if (bBehindViewChanged)
         {
             // Switching to behind view, so make rotation non-relative to vehicle
-            FixPCRotation(PC); // orig uses wep pawn's rotation, not vehicle's rotation
+            FixPCRotation(PC);
             SetRotation(PC.Rotation);
 
             // Switch to external vehicle mesh & unzoomed view
@@ -250,7 +250,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
     }
 }
 
-// From deprecated ROTankCannonPawn
+// Modified so when player possesses a weapon pawn, he never starts in behind view (used in PC's Possess/Restart functions)
 simulated function bool PointOfView()
 {
     return false;
@@ -450,7 +450,7 @@ function bool TryToDrive(Pawn P)
     // TODO: these checks on a tank crew position are perhaps unnecessary duplication, as they will have been reliably checked on the server in either:
     // (1) FindEntryVehicle() - if player pressed 'use' to try to enter a vehicle, or
     // (2) ServerChangeDriverPosition()/CanSwitchToVehiclePosition() - if player tried to switch positions in a vehicle, or
-    // (3) DHSpawnManager.SpawnVehicle() - if player spawns into a vehicle from the DH deploy scrren
+    // (3) DHSpawnManager.SpawnVehicle() - if player spawns into a vehicle from the DH deploy screen
     // And there shouldn't be any other way of getting to this function
     if (bMustBeTankCrew)
     {

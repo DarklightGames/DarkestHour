@@ -308,7 +308,7 @@ simulated function DrawPeriscopeOverlay(Canvas C)
 // Modified so player faces forwards if he's on the gunsight when switching to behind view
 simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 {
-    if (PC.bBehindView && bBehindViewChanged && DriverPositionIndex < GunsightPositions)
+    if (PC != none && PC.bBehindView && bBehindViewChanged && DriverPositionIndex < GunsightPositions)
     {
         PlayerFaceForwards();
     }

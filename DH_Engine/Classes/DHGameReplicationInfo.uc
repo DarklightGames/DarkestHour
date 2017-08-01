@@ -860,5 +860,3 @@ defaultproperties
     ConstructionClassNames(10)="DH_Construction.DHConstruction_AAGun_Light"
     ConstructionClassNames(11)="DH_Construction.DHConstruction_Foxhole"
 }
-
-

@@ -10,7 +10,7 @@ function GetOutOfVehicle()
 {
     if (Vehicle(Pawn) != none)
     {
-        Vehicle(Pawn).PlayerStartTime = Level.TimeSeconds + 20.0;
+        Vehicle(Pawn).PlayerStartTime = Level.TimeSeconds + 20.0; // tells bots not to re-enter this vehicle position for a while
         Vehicle(Pawn).KDriverLeave(true);
     }
 }

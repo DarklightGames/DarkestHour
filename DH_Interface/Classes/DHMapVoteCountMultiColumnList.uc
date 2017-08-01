@@ -5,12 +5,12 @@
 
 class DHMapVoteCountMultiColumnList extends MapVoteCountMultiColumnList;
 
-var(Style) string                RedListStyleName; // Name of the style to use for when current player is out of recommended player range
+var(Style) string                RedListStyleName; // name of the style to use for when current player is out of recommended player range
 var(Style) noexport GUIStyles    RedListStyle;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    Super.InitComponent(MyController,MyOwner);
+    super.InitComponent(MyController,MyOwner);
 
     if (RedListStyleName != "" && RedListStyle == none)
     {
@@ -20,12 +20,12 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
 function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool bSelected, bool bPending)
 {
-    local float CellLeft, CellWidth;
-    local GUIStyles DrawStyle, OldDrawTyle;
-    local array<string> Parts;
     local DHGameReplicationInfo GRI;
-    local int Min, Max;
-    local string PlayerRangeString;
+    local GUIStyles             DrawStyle, OldDrawTyle;
+    local array<string>         Parts;
+    local string                PlayerRangeString;
+    local float                 CellLeft, CellWidth;
+    local int                   Min, Max;
 
     GRI = DHGameReplicationInfo(PlayerOwner().GameReplicationInfo);
 
@@ -45,7 +45,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
         DrawStyle = Style;
     }
 
-    // Split the mapname string, which may be consolitated with other variables
+    // Split the MapName string, which may be consolidated with other variables
     Split(VRI.MapList[VRI.MapVoteCount[SortData[i].SortItem].MapIndex].MapName, ";", Parts);
 
     // Map Name
@@ -118,12 +118,12 @@ defaultproperties
     ColumnHeadings(0)="Nominated Maps"
     ColumnHeadings(1)="Votes"
     ColumnHeadings(2)="Player Range"
-    InitColumnPerc(0)=0.4
-    InitColumnPerc(1)=0.3
-    InitColumnPerc(2)=0.3
     ColumnHeadingHints(0)="The map's name."
     ColumnHeadingHints(1)="Number of votes registered for this map."
     ColumnHeadingHints(2)="Recommended players for the map."
+    InitColumnPerc(0)=0.4
+    InitColumnPerc(1)=0.3
+    InitColumnPerc(2)=0.3
     SortColumn=1
     RedListStyleName="DHListRed"
 }

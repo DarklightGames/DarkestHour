@@ -1771,7 +1771,7 @@ simulated function CalcWeaponFire(bool bWasAltFire)
     WeaponFireRotation = rotator(vector(CurrentAim) >> Rotation);
     WeaponFireLocation = GetBoneCoords(WeaponFireAttachBone).Origin;
 
-    if (CurrentFireOffset != vect(0.0, 0.0, 0.0))
+    if (CurrentFireOffset != vect(0.0, 0.0, 0.0)) // apply any positional offset
     {
         WeaponFireLocation += (CurrentFireOffset >> WeaponFireRotation);
     }

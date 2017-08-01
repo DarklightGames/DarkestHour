@@ -9,7 +9,7 @@ var private array<string> DeveloperIDs;
 
 // Modified to make this work with the AccessControlIni class multi-admin functionality, merging in extra features from its AdminLogin() function
 // Also to add a special developer admin login, & to add a server log entry to improve security for server admins, as otherwise a silent admin login is undetectable
-function bool AdminLoginSilent(PlayerController P, string Username, string Password)
+function bool AdminLoginSilent(PlayerController P, string UserName, string Password)
 {
     local xAdminUser User;
     local string     ROID;
