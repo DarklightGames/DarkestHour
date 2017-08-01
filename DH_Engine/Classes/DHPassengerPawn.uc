@@ -126,12 +126,12 @@ simulated function DrawHUD(Canvas C)
     }
 }
 
-// From deprecated ROPassengerPawn
+// Modified (from deprecated ROPassengerPawn) to use the vehicle's WeaponBone we now use to attach this passenger, instead of the confusing CameraBone
 simulated function vector GetCameraLocationStart()
 {
     if (VehicleBase != none)
     {
-        return VehicleBase.GetBoneCoords(CameraBone).Origin;
+        return VehicleBase.GetBoneCoords(VehicleBase.PassengerWeapons[PositionInArray].WeaponBone).Origin;
     }
 
     return Location;
