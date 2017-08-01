@@ -1203,51 +1203,6 @@ simulated function SwitchWeapon(byte F)
     }
 }
 
-simulated exec function ROManualReload()
-{
-    if (SupplyAttachment != none && SupplyAttachment.HasSupplies())
-    {
-        ServerDropSupplies();
-    }
-}
-
-function ServerDropSupplies()
-{
-    local int i;
-    local DHConstructionSupplyAttachment CSA;
-    local int SupplyDropCount;
-
-    if (SupplyAttachment == none)
-    {
-        // No supply attachment to drop from!
-        return;
-    }
-
-    SupplyDropCount = Min(SupplyDropCountMax, SupplyAttachment.GetSupplyCount());
-
-    if (SupplyDropCount <= 0)
-    {
-        // No supplies left!
-        return;
-    }
-
-    for (i = 0; i < TouchingSupplyAttachments.Length; ++i)
-    {
-        CSA = TouchingSupplyAttachments[i];
-
-        if (CSA != none && CSA.bCanReceiveSupplyDrops && CSA.TeamIndex == GetTeamNum() && !CSA.IsFull())
-        {
-            SupplyDropCount = Min(SupplyDropCount, CSA.SupplyCountMax - CSA.GetSupplyCount());
-
-            // Add supplies to the nearby supply attachment.
-            CSA.SetSupplyCount(CSA.GetSupplyCount() + SupplyDropCount);
-            SupplyAttachment.SetSupplyCount(SupplyAttachment.GetSupplyCount() - SupplyDropCount);
-
-            // TODO: Send some sort of client message so that the driver can be notified that it worked!
-            break;
-        }
-    }
-}
 
 // Modified to add checks before calling trying to switch player, to make sure the player isn't going to be prevented from switching to new position
 // This avoids player exiting vehicle, briefly re-possessing his player pawn, then trying unsuccessfully to enter new vehicle position, then having to re-enter this position
@@ -2893,6 +2848,53 @@ simulated function DestroyAttachments()
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *******************************  MISCELLANEOUS ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
+
+// Implemented in this class for a supply vehicle to drop supplies
+simulated exec function ROManualReload()
+{
+    if (SupplyAttachment != none && SupplyAttachment.HasSupplies())
+    {
+        ServerDropSupplies();
+    }
+}
+
+// New function for a supply vehicle to drop supplies
+function ServerDropSupplies()
+{
+    local DHConstructionSupplyAttachment CSA;
+    local int SupplyDropCount, i;
+
+    if (SupplyAttachment == none)
+    {
+        // No supply attachment to drop from!
+        return;
+    }
+
+    SupplyDropCount = Min(SupplyDropCountMax, SupplyAttachment.GetSupplyCount());
+
+    if (SupplyDropCount <= 0)
+    {
+        // No supplies left!
+        return;
+    }
+
+    for (i = 0; i < TouchingSupplyAttachments.Length; ++i)
+    {
+        CSA = TouchingSupplyAttachments[i];
+
+        if (CSA != none && CSA.bCanReceiveSupplyDrops && CSA.TeamIndex == GetTeamNum() && !CSA.IsFull())
+        {
+            SupplyDropCount = Min(SupplyDropCount, CSA.SupplyCountMax - CSA.GetSupplyCount());
+
+            // Add supplies to the nearby supply attachment.
+            CSA.SetSupplyCount(CSA.GetSupplyCount() + SupplyDropCount);
+            SupplyAttachment.SetSupplyCount(SupplyAttachment.GetSupplyCount() - SupplyDropCount);
+
+            // TODO: Send some sort of client message so that the driver can be notified that it worked!
+            break;
+        }
+    }
+}
 
 // Modified to include any SupplyAttachment
 function bool ResupplyAmmo()
