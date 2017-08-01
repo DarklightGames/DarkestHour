@@ -7,7 +7,6 @@ class DHMortarVehicle extends ROVehicle
     abstract;
 
 var     DHPawn      OwningPawn;       // reference to the player pawn that owns this mortar (the current operator or the last player to man it)
-var     bool        bEnteredOnce;     // flags that mortar has been deployed & entered - stops TryToDrive() rejecting player when deploying as he still has a mortar weapon actor
 var     bool        bCanBeResupplied; // flags that the mortar doesn't have full ammo & so can receive passed ammo
 var     TreeMap_string_Object   NotifyParameters; // an object that can hold references to several other objects, which can be used by messages to build a tailored message
 
@@ -49,7 +48,7 @@ simulated function PostBeginPlay()
     }
 }
 
-// Modified to handle special requirements to use mortar, with custom messages, & to put player into mortar's VehicleWeaponPawn
+// Modified to handle special requirements to use mortar, with custom messages
 function bool TryToDrive(Pawn P)
 {
     local DHPawn     DHP;
@@ -92,44 +91,41 @@ function bool TryToDrive(Pawn P)
     }
 
     // No entry if the player is holding an undeployed mortar
-    if (bEnteredOnce)
+    if (DHMortarWeapon(DHP.Weapon) != none)
     {
-        if (DHMortarWeapon(DHP.Weapon) != none)
-        {
-            return false;
-        }
-    }
-    else
-    {
-        bEnteredOnce = true;
+        return false;
     }
 
     // Passed all checks, so allow player to man the mortar
-    WeaponPawns[0].KDriverEnter(DHP);
-    SetMortarOwner(DHP);
+    KDriverEnter(P);
 
     return true;
 }
 
-// Record the player manning the mortar, including to clear any previous owner & cancel any pending mortar destruction (if previous owner has been killed)
-simulated function SetMortarOwner(DHPawn P)
+// Modified to put the player straight into the mortar weapon pawn position, & to cancel any pending destruction (if a previous owner has been killed)
+// Also for the new owning player & the mortar to register each other
+function KDriverEnter(Pawn P)
 {
-    if (P != none)
+    local DHPawn DHP;
+
+    DHP = DHPawn(P);
+
+    if (DHP != none && WeaponPawns.Length >= 0 && WeaponPawns[0] != none)
     {
-        // A new player is manning the mortar, so remove any previously recorded ownership
-        if (OwningPawn != none && OwningPawn != P)
-        {
-            OwningPawn.OwnedMortar = none;
-        }
-
-        OwningPawn = P;
-        P.OwnedMortar = self;
-
-        // Cancel any pending destruction
         if (IsInState('PendingDestroy'))
         {
             GotoState('');
         }
+
+        WeaponPawns[0].KDriverEnter(DHP);
+
+        if (OwningPawn != DHP && OwningPawn != none)
+        {
+            OwningPawn.OwnedMortar = none; // clear a previously recorded owner
+        }
+
+        OwningPawn = DHP;
+        DHP.OwnedMortar = self;
     }
 }
 
@@ -178,7 +174,6 @@ simulated event NotifySelected(Pawn User)
 }
 
 // Functions emptied out as mortar bases cannot be occupied:
-function KDriverEnter(Pawn P);
 simulated function ClientKDriverEnter(PlayerController PC);
 simulated event DrivingStatusChanged();
 simulated function NextWeapon();
@@ -186,7 +181,7 @@ simulated function PrevWeapon();
 function ServerChangeViewPoint(bool bForward);
 simulated function SwitchWeapon(byte F);
 function ServerChangeDriverPosition(byte F);
-function bool KDriverLeave(bool bForceLeave);
+function bool KDriverLeave(bool bForceLeave) { return false; }
 function DriverDied();
 function DriverLeft();
 function bool PlaceExitingDriver() { return false; }

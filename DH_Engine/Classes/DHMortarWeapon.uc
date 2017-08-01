@@ -152,7 +152,7 @@ function ServerDeployEnd()
     SpawnRotation.Yaw = Instigator.Rotation.Yaw;
     V = Spawn(VehicleClass, Instigator,, HitLocation, SpawnRotation);
     V.SetTeamNum(VehicleClass.default.VehicleTeam);
-    V.TryToDrive(Instigator);
+    V.KDriverEnter(Instigator); // note we don't bother with the typical TryToDrive() here as we can always enter
 
     Destroy();
 }
