@@ -6,15 +6,30 @@
 class DHVehicleWeapon extends ROVehicleWeapon
     abstract;
 
-// General
+// Vehicle weapon & weapon pawn
 var     DHVehicleWeaponPawn WeaponPawn;         // convenient reference to VehicleWeaponPawn actor
 var     vector              WeaponAttachOffset; // optional positional offset when attaching VehicleWeapon to the hull
 var     bool                bHasTurret;         // this weapon is in a fully rotating turret
-var     bool                bUsesMags;          // main weapon uses magazines or similar (e.g. ammo belts), not single shot shells
 
-// Clientside flags to do certain things when certain actors are received, to fix problems caused by replication timing issues
-var     bool           bInitializedVehicleBase;          // done set up after receiving the (vehicle) Base actor
-var     bool           bInitializedVehicleAndWeaponPawn; // done set up after receiving both the (vehicle) Base & VehicleWeaponPawn actors
+// Clientside flags to do set up when key actors are received, to fix problems caused by replication timing issues
+var     bool                bInitializedVehicleBase;          // done set up after receiving the (vehicle) Base actor
+var     bool                bInitializedVehicleAndWeaponPawn; // done set up after receiving both the (vehicle) Base & VehicleWeaponPawn actors
+
+// Turret/MG collision static mesh - new DHCollisionMeshActor allows us to use a collision static mesh with VehicleWeapon
+var     StaticMesh          CollisionStaticMesh;       // specify a valid CollisionStaticMesh in default props & collision static mesh is automatically used
+var     bool                bAttachColMeshToPitchBone; // option to attach to pitch bone instead of default yaw bone, e.g. for gun mantlet
+var   DHCollisionMeshActor  CollisionMeshActor;        // reference to the spawned DHCollisionMeshActor
+
+// Weapon fire
+var     bool                bUsesMags;          // main weapon uses magazines or similar (e.g. ammo belts), not single shot shells
+var     bool                bIsArtillery;       // report our hits to be tracked on artillery targets // TODO: put this in vehicle itself?
+var     bool                bSkipFiringEffects; // stops SpawnProjectile() playing firing effects; used to prevent multiple effects for weapons that fire multiple projectiles
+
+// MG weapon (hull mounted or coaxial)
+const   ALTFIRE_AMMO_INDEX = 3;                    // ammo index for alt fire (coaxial MG)
+var     byte                NumMGMags;             // number of mags/belts for an MG (using byte for more efficient replication)
+var     class<Projectile>   TracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so old name was misleading
+var     byte                TracerFrequency;       // how often a tracer is loaded in, as in 1 in X (deprecates mTracerInterval & mLastTracerTime)
 
 // Reloading
 struct ReloadStage
@@ -40,27 +55,12 @@ var     array<ReloadStage>  ReloadStages;         // stages for multi-part reloa
 var     bool                bReloadPaused;        // a reload has started but was paused, as no longer had a player in a valid reloading position
 var     bool                bNewOrResumedReload;  // tells Timer we're starting new reload or resuming paused reload, stopping it from advancing to next reload stage
 
-// MG weapon (hull mounted or coaxial)
-const   ALTFIRE_AMMO_INDEX = 3;                    // ammo index for alt fire (coaxial MG)
-var     byte                NumMGMags;             // number of mags/belts for an MG (using byte for more efficient replication)
-var     class<Projectile>   TracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so old name was misleading
-var     byte                TracerFrequency;       // how often a tracer is loaded in, as in 1 in X (deprecates mTracerInterval & mLastTracerTime)
-
-// Turret/MG collision static mesh
-// New col mesh actor allows us to use a col static mesh with VehicleWeapon - just specify a valid CollisionStaticMesh in default props & col static mesh is automatically used
-var     DHCollisionMeshActor    CollisionMeshActor;
-var     StaticMesh              CollisionStaticMesh;
-var     bool                    bAttachColMeshToPitchBone; // option to attach to pitch bone instead of default yaw bone, e.g. for gun mantlet
-
 // Hatch fire effects - Ch!cKeN
 var     VehicleDamagedEffect        HatchFireEffect;
 var     class<VehicleDamagedEffect> FireEffectClass;
 var     name                        FireAttachBone;
 var     vector                      FireEffectOffset;
 var     float                       FireEffectScale;
-
-// Artillery
-var     bool                        bIsArtillery;   // TODO: put this in vehicle itself?
 
 replication
 {
@@ -211,10 +211,10 @@ simulated function Timer()
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to handle DH's extended ammo system & re-factored to reduce lots of code repetition & make some functionality improvement
+// Random projectile spread is moved to SpawnProjectile() as that allows weapons that fire more than one projectile to calculate random spread for each one
 event bool AttemptFire(Controller C, bool bAltFire)
 {
     local byte  AmmoIndex;
-    local float ProjectileSpread;
 
     if (Role < ROLE_Authority)
     {
@@ -238,22 +238,12 @@ event bool AttemptFire(Controller C, bool bAltFire)
          return false;
     }
 
-    // Calculate the starting WeaponFireRotation & apply any random spread
+    // Calculate & record weapon's firing location & rotation
     CalcWeaponFire(bAltFire);
 
     if (bCorrectAim && Instigator != none && !Instigator.IsHumanControlled()) // added human controlled check as in this class AdjustAim() is only relevant to bots
     {
         WeaponFireRotation = AdjustAim(bAltFire);
-    }
-
-    if (class<DHCannonShellCanister>(ProjectileClass) == none || bAltFire) // no spread for canister shot, as it gets calculated for each separate projectile
-    {
-        ProjectileSpread = GetSpread(bAltFire);
-
-        if (ProjectileSpread > 0.0)
-        {
-            WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * ProjectileSpread);
-        }
     }
 
     // Decrement our round count (note we've already done a 'have ammo' check in the earlier ReadyToFire() check, so we don't need to check that ConsumeAmmo() returns true)
@@ -334,6 +324,106 @@ function AltFire(Controller C)
     {
         SpawnProjectile(AltFireProjectileClass, true);
     }
+}
+
+// Modified to calculate weapon's firing location & direction, including any random spread, instead of doing it in AttemptFire()
+// Advantages are that spread can be applied separately for each projectile for weapons that fire multiple projectiles,
+// and also WeaponFireRotation is preserved as the direction the weapon is aimed (spread is only relevant to one specific projectile, not the weapon's aim)
+function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
+{
+    local Projectile P;
+
+    P = Spawn(ProjClass, none,, GetProjectileFireLocation(ProjClass), GetProjectileFireRotation(bAltFire));
+
+    if (P != none)
+    {
+        if (bIsArtillery && P.IsA('DHBallisticProjectile'))
+        {
+            DHBallisticProjectile(P).bIsArtilleryProjectile = true;
+        }
+
+        // Play firing effect & sound (unless flagged not to because we're firing multiple projectiles & only want to do this once)
+        if (!bSkipFiringEffects)
+        {
+            FlashMuzzleFlash(bAltFire);
+
+            if (bAltFire)
+            {
+                if (bAmbientAltFireSound)
+                {
+                    AmbientSound = AltFireSoundClass;
+                    SoundVolume = AltFireSoundVolume;
+                    SoundRadius = AltFireSoundRadius;
+                    AmbientSoundScaling = AltFireSoundScaling;
+                }
+                else
+                {
+                    PlayOwnedSound(AltFireSoundClass, SLOT_None, FireSoundVolume / 255.0,, AltFireSoundRadius,, false);
+                }
+            }
+            else
+            {
+                if (bAmbientFireSound)
+                {
+                    AmbientSound = FireSoundClass;
+                }
+                else
+                {
+                    PlayOwnedSound(GetFireSound(), SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
+                }
+            }
+        }
+    }
+
+    return P;
+}
+
+// New function to calculate the firing location for a projectile (allows easy subclassing)
+function vector GetProjectileFireLocation(class<Projectile> ProjClass)
+{
+    local vector Extent, HitLocation, HitNormal;
+
+    // bDoOffsetTrace option to make sure we don't try to spawn projectile inside weapon's own vehicle (re-factored from VehicleWeapon to simplify)
+    // Traces from outside vehicle's collision back towards planned spawn location, & if it hits our vehicle we adjust spawn location
+    if (bDoOffsetTrace && ProjClass != none && WeaponPawn.VehicleBase != none)
+    {
+        Extent = ProjClass.default.CollisionRadius * vect(1.0, 1.0, 0.0);
+        Extent.Z = ProjClass.default.CollisionHeight;
+
+        if (!WeaponPawn.VehicleBase.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation,
+                WeaponFireLocation + (vector(WeaponFireRotation) * (WeaponPawn.VehicleBase.CollisionRadius * 1.5)), Extent))
+        {
+            return HitLocation;
+        }
+        else
+        {
+            return WeaponFireLocation + (vector(WeaponFireRotation) * (ProjClass.default.CollisionRadius * 1.1));
+        }
+    }
+
+    return WeaponFireLocation;
+}
+
+// New function to calculate the firing direction for a projectile, including any random spread (allows easy subclassing)
+function rotator GetProjectileFireRotation(optional bool bAltFire)
+{
+    local float ProjectileSpread;
+
+    if (bAltFire)
+    {
+        ProjectileSpread = AltFireSpread;
+    }
+    else
+    {
+        ProjectileSpread = Spread;
+    }
+
+    if (ProjectileSpread > 0.0)
+    {
+        return rotator(vector(WeaponFireRotation) + (VRand() * FRand() * ProjectileSpread));
+    }
+
+    return WeaponFireRotation;
 }
 
 // Modified to prevent firing if weapon uses a multi-stage reload & is not loaded, & to only apply FireCountdown check to automatic weapons
@@ -1114,4 +1204,5 @@ defaultproperties
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & may be hard coded into functionality:
     FireIntervalAimLock=0.0 // also means AimLockReleaseTime is deprecated
     bShowAimCrosshair=false
+    bInheritVelocity=false
 }

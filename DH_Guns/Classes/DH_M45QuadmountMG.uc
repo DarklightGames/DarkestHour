@@ -5,64 +5,43 @@
 
 class DH_M45QuadmountMG extends DHVehicleMG;
 
+var     byte                        FiringBarrelIndex;        // barrel no. that is due to fire next, so SpawnProjectile() can get location of barrel bone
 var     name                        BarrelBones[4];           // bone names for 4 barrels
-var     class<WeaponAmbientEmitter> BarrelEffectEmitterClass; // class for the barrel firing effect emitters
 var     WeaponAmbientEmitter        BarrelEffectEmitter[4];   // separate emitter for each barrel, for muzzle flash & ejected shell cases
+var     class<WeaponAmbientEmitter> BarrelEffectEmitterClass; // class for the barrel firing effect emitters
 
-// Modified to avoid the Super in DHVehicleWeapon, which calculates whether to fire a tracer
-// Because we have multiple barrels, we let SpawnProjectile handle tracers instead
+// Modified to handle multiple barrels firing
 function Fire(Controller C)
 {
-    SpawnProjectile(ProjectileClass, false);
-}
+    local int VolleysFired, TracerBarrelIndex;
 
-// Modified to handle multiple barrel fire
-function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
-{
-    local Projectile P, LastProjectile;
-    local vector     StartLocation, FireOffset, WeaponFireDirection;
-    local rotator    FireRot;
-    local int        VolleysFired, TracerIndex, i;
-
-    // Just to avoid multiple calcs
-    WeaponFireDirection = vector(WeaponFireRotation);
-    FireOffset = (WeaponFireOffset * vect(1.0, 0.0, 0.0)) >> WeaponFireRotation;
-
-    // Work out which barrel is due to fire a tracer
+    // Work out which barrel (if any) is due to fire a tracer
     // With 4 barrels & 1 in 5 tracer loading, it effectively rotates through each barrel & skips a tracer every 5th volley
     VolleysFired = InitialPrimaryAmmo - PrimaryAmmoCount() - 1;
-    TracerIndex = VolleysFired % TracerFrequency;
+    TracerBarrelIndex = VolleysFired % TracerFrequency;
 
     // Spawn a projectile from each barrel
-    for (i = 0; i < arraycount(BarrelBones); ++i)
+    for (FiringBarrelIndex = 0; FiringBarrelIndex < arraycount(BarrelBones); ++FiringBarrelIndex)
     {
-        StartLocation = GetBoneCoords(BarrelBones[i]).Origin + FireOffset;
-        FireRot = rotator(WeaponFireDirection + (VRand() * FRand() * Spread));
-
-        // Switch to tracer class if this barrel matches the current TracerIndex for this volley
-        if (i == TracerIndex && TracerProjectileClass != none)
+        if (FiringBarrelIndex == TracerBarrelIndex) // spawn tracer bullet if this barrel is the one that's due to fire a tracer
         {
-            P = Spawn(TracerProjectileClass, none,, StartLocation, FireRot);
+            SpawnProjectile(TracerProjectileClass, false);
         }
         else
         {
-            P = Spawn(ProjClass, none,, StartLocation, FireRot);
+            SpawnProjectile(ProjectileClass, false);
         }
 
-        if (P != none)
-        {
-            LastProjectile = P;
-        }
+        bSkipFiringEffects = true; // so we don't repeat firing effects after the 1st projectile
     }
 
-    // Play fire effects if we spawned a projectile (only play fire effects once)
-    if (LastProjectile != none)
-    {
-        FlashMuzzleFlash(bAltFire);
-        AmbientSound = FireSoundClass;
-    }
+    bSkipFiringEffects = false; // reset
+}
 
-    return LastProjectile;
+// Modified to get the firing location for the barrel that is next to fire
+function vector GetProjectileFireLocation(class<Projectile> ProjClass)
+{
+    return GetBoneCoords(BarrelBones[FiringBarrelIndex]).Origin + ((WeaponFireOffset * vect(1.0, 0.0, 0.0)) >> WeaponFireRotation);
 }
 
 // Modified to pass damage on to vehicle base, same as a vehicle cannon

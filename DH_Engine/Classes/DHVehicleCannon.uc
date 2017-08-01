@@ -37,7 +37,6 @@ var     name                ShootIntermediateAnim;   // firing animation if play
 var     name                ShootRaisedAnim;         // firing animation if player is in a raised or open animation position, i.e. unbuttoned or standing
 var     class<Emitter>      CannonDustEmitterClass;  // emitter class for dust kicked up by the cannon firing
 var     Emitter             CannonDustEmitter;
-var     bool                bCanisterIsFiring;       // canister is spawning separate projectiles - until done it stops firing effects playing or switch to different round type
 
 // Coaxial MG
 var     name                AltFireAttachmentBone;   // optional bone to position coaxial MG projectiles & firing effects (defaults to WeaponFireAttachmentBone if not specified)
@@ -279,27 +278,20 @@ simulated function Timer()
 // Modified to handle canister shot
 function Fire(Controller C)
 {
-    local vector  WeaponFireVector;
-    local int     ProjectilesToFire, i;
+    local int ProjectilesToFire, i;
 
     // Special handling for canister shot
     if (class<DHCannonShellCanister>(ProjectileClass) != none)
     {
-        bCanisterIsFiring = true;
         ProjectilesToFire = class<DHCannonShellCanister>(ProjectileClass).default.NumberOfProjectilesPerShot;
-        WeaponFireVector = vector(WeaponFireRotation);
 
         for (i = 1; i <= ProjectilesToFire; ++i)
         {
-            WeaponFireRotation = rotator(WeaponFireVector + (VRand() * (FRand() * TertiarySpread)));
-
-            if (i >= ProjectilesToFire)
-            {
-                bCanisterIsFiring = false;
-            }
-
             SpawnProjectile(ProjectileClass, false);
+            bSkipFiringEffects = true; // so after the 1st projectile spawns, we don't repeat the firing effects
         }
+
+        bSkipFiringEffects = false; // reset
     }
     else
     {
@@ -307,58 +299,50 @@ function Fire(Controller C)
     }
 }
 
-// Modified (from ROTankCannon) to handle autocannons & canister shot, & to remove switching to pending ammo type (now always handled in AttemptReload)
-// Stripped down a little by removing all the unused/deprecated bDoOffsetTrace, bInheritVelocity, bCannonShellDebugging & some firing sound stuff
-function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
+// Modified to handle any pitch adjustments for human players, & any secondary or tertiary projectile spread properties
+function rotator GetProjectileFireRotation(optional bool bAltFire)
 {
-    local Projectile P;
-    local DHBallisticProjectile BP;
-    local rotator    FireRot;
+    local rotator FireRotation;
+    local float   ProjectileSpread;
 
-    // Calculate projectile's direction & then spawn the projectile
-    FireRot = WeaponFireRotation;
+    // Get base firing direction, including any pitch adjustments for human players
+    FireRotation = WeaponFireRotation;
 
     if (Instigator != none && Instigator.IsHumanControlled())
     {
-        FireRot.Pitch += AddedPitch; // used only for human players - lets cannons with non-centered aim points have a different aiming location
-    }
+        FireRotation.Pitch += AddedPitch; // lets cannons with non-centred aim points have a different aiming location
 
-    if (!bAltFire && RangeSettings.Length > 0)
-    {
-        FireRot.Pitch += ProjClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]); // pitch adjustment for cannons with mechanically linked gunsight range setting
-    }
-
-    P = Spawn(ProjClass, none,, WeaponFireLocation, FireRot);
-
-    if (bIsArtillery)
-    {
-        BP = DHBallisticProjectile(P);
-
-        if (BP != none)
+        if (!bAltFire && RangeSettings.Length > 0) // pitch adjustment for cannons with mechanically linked gunsight range setting
         {
-            BP.bIsArtilleryProjectile = true;
+            FireRotation.Pitch += ProjectileClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
         }
     }
 
-    // Play firing effects (unless it's canister shot still spawning separate projectiles, in which case we only play firing effects once, at the end)
-    if (!bCanisterIsFiring && P != none)
+    // Get projectile spread, with handling for secondary & tertiary projectile spread properties
+    if (bAltFire)
     {
-        FlashMuzzleFlash(bAltFire);
-
-        if (bAltFire) // bAmbientAltFireSound is now assumed
-        {
-            AmbientSound = AltFireSoundClass;
-            SoundVolume = AltFireSoundVolume;
-            SoundRadius = AltFireSoundRadius;
-            AmbientSoundScaling = AltFireSoundScaling;
-        }
-        else
-        {
-            PlayOwnedSound(GetFireSound(), SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false); // !bAmbientFireSound is now assumed
-        }
+        ProjectileSpread = AltFireSpread;
+    }
+    else if (ProjectileClass == SecondaryProjectileClass && SecondarySpread > 0.0)
+    {
+        ProjectileSpread = SecondarySpread;
+    }
+    else if (ProjectileClass == TertiaryProjectileClass && TertiarySpread > 0.0)
+    {
+        ProjectileSpread = TertiarySpread;
+    }
+    else
+    {
+        ProjectileSpread = Spread;
     }
 
-    return P;
+    // Return direction to fire projectile, including any random spread
+    if (ProjectileSpread > 0.0)
+    {
+        return rotator(vector(FireRotation) + (VRand() * FRand() * ProjectileSpread));
+    }
+
+    return FireRotation;
 }
 
 // Modified (from ROTankCannon) to remove call to UpdateTracer (now we spawn either normal bullet OR tracer when we fire), & also to expand & improve cannon firing anims
@@ -1867,6 +1851,5 @@ defaultproperties
 
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & hard coded into functionality:
     bDoOffsetTrace=false
-    bInheritVelocity=false
     bAmbientAltFireSound=true
 }
