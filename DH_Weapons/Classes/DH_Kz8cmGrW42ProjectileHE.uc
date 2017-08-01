@@ -10,6 +10,7 @@ class DH_Kz8cmGrW42ProjectileHE extends DHMortarProjectileHE;
 
 defaultproperties
 {
+    Speed=3936.0
     MaxSpeed=3936.0
     Damage=300.0
     DamageRadius=720.0

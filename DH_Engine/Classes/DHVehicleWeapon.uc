@@ -705,6 +705,11 @@ simulated function AttemptReload()
 {
     local EReloadState OldReloadState;
 
+    if (!bMultiStageReload)
+    {
+        return;
+    }
+
     // Try to start a new reload, as either just fired & needs to load (still in ready to fire state) or is waiting to reload - authority role only
     if (ReloadState == RL_ReadyToFire || ReloadState == RL_Waiting)
     {

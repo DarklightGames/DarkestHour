@@ -58,7 +58,7 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerFire, ServerSetCurrentAnimationIndex, ServerUndeploying;
+        ServerSetCurrentAnimationIndex, ServerUndeploying;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -364,16 +364,6 @@ simulated function ClientKDriverLeave(PlayerController PC)
 //  ******************************* FIRING & AMMO  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// New replicated client-to-server function to fire mortar, after firing animation has played (there's a delay firing mortar, as round is dropped down the tube)
-// Includes server verification that player's weapons aren't locked due to spawn killing (belt & braces as similar clientside check stops it reaching this point anyway)
-function ServerFire()
-{
-    if (!ArePlayersWeaponsLocked() && Gun != none)
-    {
-        Gun.Fire(Controller);
-    }
-}
-
 // New keybound function to toggle the selected ammo type
 exec function SwitchFireMode()
 {
@@ -447,7 +437,7 @@ simulated state Idle
 
     simulated function Fire(optional float F)
     {
-        if (!ArePlayersWeaponsLocked() && VehWep != none && VehWep.HasAmmo(VehWep.GetAmmoIndex()))
+        if (!ArePlayersWeaponsLocked() && Gun != none && Gun.ReadyToFire(false))
         {
             GotoState('Firing');
         }
@@ -519,7 +509,7 @@ simulated state KnobRaised
 
     simulated function Fire(optional float F)
     {
-        if (!ArePlayersWeaponsLocked() && VehWep != none && VehWep.HasAmmo(VehWep.GetAmmoIndex()))
+        if (!ArePlayersWeaponsLocked() && Gun != none && Gun.ReadyToFire(false))
         {
             GotoState('KnobRaisedToFire');
         }
@@ -631,7 +621,7 @@ Begin:
         ClientMessage("Missing animation: DriverUnflinchAnim" @ DriverUnflinchAnim);
     }
 
-    if (bPendingFire && VehWep != none && VehWep.HasAmmo(VehWep.GetAmmoIndex()))
+    if (bPendingFire && Gun != none && Gun.ReadyToFire(false))
     {
         GotoState('Firing');
     }
@@ -645,6 +635,21 @@ Begin:
 // Fires mortar after firing animation has played (there's a delay firing mortar, as round is dropped down the tube)
 simulated state Firing extends Busy
 {
+    simulated function FireMortar()
+    {
+        if (Role < ROLE_Authority && DHMortarVehicleWeapon(Gun) != none)
+        {
+            DHMortarVehicleWeapon(Gun).CheckUpdateFiringSettings();
+        }
+
+        super(Vehicle).Fire(); // this triggers the native firing process on the server, but we skip the 'able to fire' checks in the weapon pawn Supers as we've already done them
+
+        if (IsHumanControlled() && Gun != none)
+        {
+            Gun.ClientStartFire(Controller, false); // from the skipped over VehicleWeaponPawn.Fire() & it calls OwnerEffects() for an owning net client
+        }
+    }
+
 Begin:
     PlayFirstPersonAnimation(OverlayFiringAnim);
     SetCurrentAnimationIndex(FiringAnimIndex);
@@ -654,18 +659,7 @@ Begin:
         Sleep(HUDOverlay.GetAnimDuration(OverlayFiringAnim));
     }
 
-    if (Role < ROLE_Authority && DHMortarVehicleWeapon(Gun) != none)
-    {
-        DHMortarVehicleWeapon(Gun).CheckUpdateFiringSettings();
-    }
-
-    ServerFire();
-
-    if (Gun != none)
-    {
-        Gun.ShakeView(false);
-    }
-
+    FireMortar();
     GotoState('FireToIdle');
 }
 

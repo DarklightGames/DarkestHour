@@ -83,29 +83,47 @@ function ServerSetFiringSettings(byte PackedSettings)
     }
 }
 
-// Modified for unique handling of mortar elevation/range
+// Modified to handle random pitch/distance spread by adjusting the projectile's initial velocity, instead of adjusting the firing pitch
+// After careful consideration, it was determined that universal pitch adjustments did not work for spread,
+// because at lower elevations the differences in pitch angles becomes nearly undetectable, while at high elevations they were overly dramatic
+// In the end, I opted to go with a slight velocity adjustment, as this scales fairly nicely at all ranges -Basnett
+// Also adds a debug option that logs info when projectile explodes
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
     local Projectile P;
-    local DHBallisticProjectile BP;
-    local DHMortarProjectile MP;
-    local vector     SpawnLocation, X, Y, Z;
-    local rotator    SpawnRotation, R;
-    local float      SpreadYaw;
+    local rotator    R;
 
-    R = Rotation - CurrentAim;
-    GetAxes(R, X, Y, Z);
+    P = super.SpawnProjectile(ProjClass, bAltFire);
 
-    R.Pitch = 0;
+    if (P != none)
+    {
+        // Adjust projectile's velocity to apply some random distance spread
+        if (!bDebugNoSpread)
+        {
+            P.Velocity *= (1.0 + ((FRand() - 0.5) * 0.1)); // scale velocity by +/- 5%
+        }
 
-    X.Z = 0.0;
-    X = Normal(X);
+        // Debug option
+        if (bDebug && P.IsA('DHMortarProjectile'))
+        {
+            R = Rotation - CurrentAim;
+            R.Pitch = 0;
+            DHMortarProjectile(P).DebugForward = vector(R);
+            DHMortarProjectile(P).DebugRight = vect(0.0, 0.0, 1.0) cross vector(R);
+        }
+    }
 
-    Y.Z = 0.0;
-    Y = Normal(Y);
+    return P;
+}
 
-    SpawnLocation = GetBoneCoords(WeaponFireAttachmentBone).Origin;
-    SpawnRotation = rotator(QuatRotatevector(QuatFromAxisAndAngle(Y, class'UUnits'.static.DegreesToRadians(-Elevation)), X));
+// Modified for unique handling of mortar projectile's random spread
+// Spread is only applied to yaw, as pitch/distance spread is represented by a velocity adjustment in SpawnProjectile()
+function rotator GetProjectileFireRotation(optional bool bAltFire)
+{
+    local rotator FireRotation;
+    local float   SpreadYaw;
+
+    FireRotation = WeaponFireRotation;
 
     if (!bDebugNoSpread)
     {
@@ -113,48 +131,38 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         SpreadYaw = SpreadYawMin + ((SpreadYawMax - SpreadYawMin) * SpreadYaw);
         SpreadYaw *= (FRand() - 0.5) * 2.0;
 
-        SpawnRotation.Yaw += SpreadYaw;
+        FireRotation.Yaw += SpreadYaw;
     }
 
-    P = Spawn(ProjClass, none,, SpawnLocation, SpawnRotation);
+    return FireRotation;
+}
 
-    if (bIsArtillery)
+// Modified for unique handling of mortar's elevation setting
+simulated function CalcWeaponFire(bool bWasAltFire)
+{
+    local vector  CurrentFireOffset, X, Y, Z;
+    local rotator R;
+
+    // Calculate WeaponFireRotation
+    R = Rotation - CurrentAim;
+    GetAxes(R, X, Y, Z);
+    R.Pitch = 0;
+
+    X.Z = 0.0;
+    X = Normal(X);
+    Y.Z = 0.0;
+    Y = Normal(Y);
+
+    WeaponFireRotation = rotator(QuatRotatevector(QuatFromAxisAndAngle(Y, class'UUnits'.static.DegreesToRadians(-Elevation)), X));
+
+    // Calculate WeaponFireLocation
+    WeaponFireLocation = GetBoneCoords(WeaponFireAttachmentBone).Origin;
+
+    if (WeaponFireOffset != 0.0) // apply any positional offset
     {
-        BP = DHBallisticProjectile(P);
-
-        if (BP != none)
-        {
-            BP.bIsArtilleryProjectile = true;
-        }
+        CurrentFireOffset.X = WeaponFireOffset;
+        WeaponFireLocation += (CurrentFireOffset >> WeaponFireRotation);
     }
-
-    // After careful consideration, it was determined that universal pitch adjustments did not work,
-    // because at lower elevations the differences in pitch angles becomes nearly undetectable, while at high elevations they were overly dramatic.
-    // In the end, I opted to go with a slight velocity adjustment, as this scales fairly nicely at all ranges. -Basnett
-
-    if (!bDebugNoSpread)
-    {
-        P.Velocity = vector(P.Rotation) * ((ProjClass.default.MaxSpeed) + ((FRand() - 0.5) * 2.0 * (ProjClass.default.MaxSpeed * 0.05)));
-    }
-    else
-    {
-        P.Velocity = vector(P.Rotation) * ProjClass.default.MaxSpeed;
-    }
-
-    if (bDebug)
-    {
-        MP = DHMortarProjectile(P);
-
-        if (MP != none)
-        {
-            MP.DebugForward = vector(R);
-            MP.DebugRight = vect(0.0, 0.0, 1.0) cross vector(R);
-        }
-    }
-
-    PlaySound(GetFireSound(),, 4.0);
-
-    return P;
 }
 
 // New functions to handle elevation & depression of mortar's firing angle
@@ -180,24 +188,25 @@ simulated function Depress()
 // Also to add a bDebugCalibrate option that instantaneously fires a mortar shell at each elevation setting
 function Fire(Controller C)
 {
-    if (bDebugCalibrate)
+    if (ProjectileClass != none)
     {
-        for (Elevation = ElevationMinimum; Elevation <= ElevationMaximum; Elevation += ElevationStride)
+        // Normal mortar fire
+        if (!bDebugCalibrate)
         {
             SpawnProjectile(ProjectileClass, false);
-        }
-    }
-    else
-    {
-        if (HasAmmo(GetAmmoIndex()))
-        {
-            SpawnProjectile(ProjectileClass, false);
-            --MainAmmoCharge[GetAmmoIndex()];
 
-            // We fired one off, so we are now eligible for resupply
             if (DHMortarVehicle(Base) != none)
             {
                 DHMortarVehicle(Base).bCanBeResupplied = true;
+            }
+        }
+        // Debugging option
+        else
+        {
+            for (Elevation = ElevationMinimum; Elevation <= ElevationMaximum; Elevation += ElevationStride)
+            {
+                CalcWeaponFire(false); // need to update fire rotation for each debug projectile
+                SpawnProjectile(ProjectileClass, false);
             }
         }
     }
@@ -212,6 +221,17 @@ simulated function ShakeView(bool bWasAltFire)
     }
 
     super.ShakeView(bWasAltFire);
+}
+
+// Emptied out as mortar doesn't use FlashCount to trigger firing effects on all net clients, nor does it use any of the effects functionality
+simulated function FlashMuzzleFlash(bool bWasAltFire)
+{
+}
+
+// Emptied out as mortar doesn't use FlashCount to trigger firing effects on all net clients, so there's no point briefly sending a server into state ServerCeaseFire
+// And mortar doesn't use any of the other effects functionality
+function CeaseFire(Controller C, bool bWasAltFire)
+{
 }
 
 // New function to toggle current ammo type, with click sound
@@ -256,14 +276,7 @@ function bool ResupplyAmmo()
     return false;
 }
 
-// Functions emptied out as not relevant to a mortar, which uses a custom firing system that ignores most usual firing functions
-// Also it doesn't use a multi-stage reload or have fire (burning) effects
-event bool AttemptFire(Controller C, bool bAltFire) { return false; } // this native event is not triggered by mortar's the custom firing system
-simulated function ClientStartFire(Controller C, bool bAltFire);
-simulated function OwnerEffects();
-simulated function FlashMuzzleFlash(bool bWasAltFire);
-function CeaseFire(Controller C, bool bWasAltFire);
-simulated function bool ReadyToFire(bool bAltFire) { return true; }
+// Functions emptied out as not relevant to a mortar as it doesn't reload or have burning effects
 simulated function AttemptReload();
 simulated function StartReload(optional bool bResumingPausedReload);
 simulated function Timer();
@@ -297,6 +310,8 @@ defaultproperties
     // Ammo & firing
     bMultipleRoundTypes=true
     bMultiStageReload=false
+    bPrimaryIgnoreFireCountdown=true // necessary to prevent net client from sometimes sending instruction to server to cease fire before server has had time to fire
+    FireSoundVolume=512.0
     BlurTime=0.5
     BlurEffectScalar=1.35
     AIInfo(0)=(AimError=0.0,WarnTargetPct=0.0)
