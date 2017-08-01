@@ -1282,7 +1282,7 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
         if (WeaponPawns[F].IsA('ROVehicleWeaponPawn') && ROVehicleWeaponPawn(WeaponPawns[F]).bMustBeTankCrew)
         {
             // Can't switch if player has selected a tank crew position but isn't a tank crew role
-            if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(self))
+            if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(self) && IsHumanControlled())
             {
                 DisplayVehicleMessage(0); // not qualified to operate vehicle
 
@@ -1405,6 +1405,8 @@ function bool KDriverLeave(bool bForceLeave)
     return true;
 }
 
+// Modified to remove overlap with KDriverLeave(), moving common features into DriverLeft(), which gets called by both functions, & to remove some redundancy
+// Also made it so function progresses to call DriverLeft() even if has no Controller, which specifically works with the LeaveBody() debug exec
 function DriverDied()
 {
     local Controller SavedController;
