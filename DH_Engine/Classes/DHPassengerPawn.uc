@@ -328,4 +328,5 @@ defaultproperties
     PassengerClasses(7)=class'DH_Engine.DHPassengerPawnSeven'
     PassengerClasses(8)=class'DH_Engine.DHPassengerPawnEight'
     PassengerClasses(9)=class'DH_Engine.DHPassengerPawnNine'
+    PassengerClasses(10)=class'DH_Engine.DHPassengerPawnTen'
 }
