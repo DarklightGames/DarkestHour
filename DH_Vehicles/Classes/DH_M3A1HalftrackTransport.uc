@@ -5,8 +5,7 @@
 
 class DH_M3A1HalftrackTransport extends DHVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_M3A1Halftrack_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
+#exec OBJ LOAD FILE=..\Animations\DH_M3Halftrack_anm.ukx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc.usx
 
 defaultproperties
@@ -36,23 +35,23 @@ defaultproperties
     LeftTrackSoundBone="steer_wheel_L_F"
     RightTrackSoundBone="steer_wheel_R_F"
     RumbleSoundBone="body"
-    LeftTreadIndex=6
-    RightTreadIndex=5
+    LeftTreadIndex=2
+    RightTreadIndex=3
     MaxCriticalSpeed=674.0 // 40 kph
-    LeftWheelBones(0)="SRWL02"
-    LeftWheelBones(1)="SRWL2"
-    LeftWheelBones(2)="SRWL3"
-    LeftWheelBones(3)="SRWL4"
-    LeftWheelBones(4)="RWLF"
-    LeftWheelBones(5)="RWRL"
-    LeftWheelBones(6)="RL1"
-    RightWheelBones(0)="SRWR1"
-    RightWheelBones(1)="SRWR2"
-    RightWheelBones(2)="SRWR3"
-    RightWheelBones(3)="SRWR4"
-    RightWheelBones(4)="RWFR"
-    RightWheelBones(5)="RWRR"
-    RightWheelBones(6)="RR1"
+    LeftWheelBones(0)="wheel_L_2"
+    LeftWheelBones(1)="wheel_L_3"
+    LeftWheelBones(2)="wheel_L_4"
+    LeftWheelBones(3)="wheel_L_5"
+    LeftWheelBones(4)="wheel_L_6"
+    LeftWheelBones(5)="wheel_L_7"
+    LeftWheelBones(6)="wheel_L_8"
+    RightWheelBones(0)="wheel_R_2"
+    RightWheelBones(1)="wheel_R_3"
+    RightWheelBones(2)="wheel_R_4"
+    RightWheelBones(3)="wheel_R_5"
+    RightWheelBones(4)="wheel_R_6"
+    RightWheelBones(5)="wheel_R_7"
+    RightWheelBones(6)="wheel_R_8"
     WheelSoftness=0.025
     WheelPenScale=1.2
     WheelPenOffset=0.01
@@ -89,16 +88,21 @@ defaultproperties
     EngineInertia=0.1
     IdleRPM=500.0
     EngineRPMSoundRange=5000.0
-    SteerBoneName="Steering"
+    SteerBoneName="steering_wheel"
+    SteerBoneAxis=AXIS_Z
     RevMeterScale=4000.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-100.0,Y=60.0,Z=-10.0),ExhaustRotation=(Pitch=36000,Yaw=-5000))
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_M3A1HalftrackMGPawn',WeaponBone="mg_base")
-    PassengerPawns(0)=(AttachBone="passenger_l_1",DrivePos=(X=2.0,Y=0.0,Z=1.0),DriveAnim="VHalftrack_Rider1_idle")
-    PassengerPawns(1)=(AttachBone="passenger_l_3",DrivePos=(X=2.0,Y=0.0,Z=1.0),DriveAnim="VHalftrack_Rider2_idle")
-    PassengerPawns(2)=(AttachBone="passenger_l_5",DrivePos=(X=2.0,Y=0.0,Z=1.0),DriveAnim="VHalftrack_Rider3_idle")
-    PassengerPawns(3)=(AttachBone="passenger_r_2",DrivePos=(X=2.0,Y=0.0,Z=1.0),DriveAnim="VHalftrack_Rider4_idle")
-    PassengerPawns(4)=(AttachBone="passenger_r_3",DrivePos=(X=2.0,Y=0.0,Z=1.0),DriveAnim="VHalftrack_Rider5_idle")
-    PassengerPawns(5)=(AttachBone="passenger_r_5",DrivePos=(X=2.0,Y=0.0,Z=1.0),DriveAnim="VHalftrack_Rider6_idle")
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_M3HalftrackMGPawn',WeaponBone="turret_placement")
+    PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-10,Y=-30,Z=85),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider1_idle")
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-45,Y=-30,Z=85),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider2_idle")
+    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-80,Y=-30,Z=85),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
+    PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-120,Y=-30,Z=85),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider4_idle")
+    PassengerPawns(4)=(AttachBone="body",DrivePos=(X=-155,Y=-30,Z=85),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider5_idle")
+    PassengerPawns(5)=(AttachBone="body",DrivePos=(X=-10,Y=30,Z=85),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider6_idle")
+    PassengerPawns(6)=(AttachBone="body",DrivePos=(X=-45,Y=30,Z=85),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider1_idle")
+    PassengerPawns(7)=(AttachBone="body",DrivePos=(X=-80,Y=30,Z=85),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider2_idle")
+    PassengerPawns(8)=(AttachBone="body",DrivePos=(X=-120,Y=30,Z=85),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider3_idle")
+    PassengerPawns(9)=(AttachBone="body",DrivePos=(X=-155,Y=30,Z=85),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
     StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
     ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
@@ -110,9 +114,9 @@ defaultproperties
     DamagedEffectOffset=(Y=10.0,Z=80.0)
     VehicleTeam=1
     BeginningIdleAnim="driver_hatch_idle_close"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.M3A1Halftrack_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=5300,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.M3A1Halftrack_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=5300,ViewPitchDownLimit=61000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_M3A1Halftrack_anm.M3A1Halftrack_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=5300,ViewPitchDownLimit=61000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_M3Halftrack_anm.m3_body',TransitionUpAnim="overlay_out",ViewPitchUpLimit=5300,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_M3Halftrack_anm.m3_body',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="overlay_in",ViewPitchUpLimit=5300,ViewPitchDownLimit=61000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_M3Halftrack_anm.m3_body',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=5300,ViewPitchDownLimit=61000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.M3A1Halftrack_body'
     VehicleHudOccupantsX(0)=0.45
     VehicleHudOccupantsX(1)=0.55
@@ -136,57 +140,58 @@ defaultproperties
 
     Begin Object Class=SVehicleWheel Name=RFWheel
         SteerType=VST_Steered
-        BoneName="Wheel_F_R"
+        BoneName="wheel_R_1"
         BoneRollAxis=AXIS_Y
-        WheelRadius=29.0
-        SupportBoneName="Axle_F_R"
-        SupportBoneAxis=AXIS_Z
+        WheelRadius=30.0
+        SupportBoneName="axle_F_R"
+        SupportBoneAxis=AXIS_X
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.RFWheel'
+
     Begin Object Class=SVehicleWheel Name=LFWheel
         SteerType=VST_Steered
-        BoneName="Wheel_F_L"
+        BoneName="wheel_L_1"
         BoneRollAxis=AXIS_Y
-        WheelRadius=29.0
-        SupportBoneName="Axle_F_L"
-        SupportBoneAxis=AXIS_Z
+        WheelRadius=30.0
+        SupportBoneName="axle_F_L"
+        SupportBoneAxis=AXIS_X
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.LFWheel'
+
     Begin Object Class=SVehicleWheel Name=FLeft_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_L_F"
         BoneRollAxis=AXIS_Z
-        BoneOffset=(Y=-3.0,Z=-12.0)
-        WheelRadius=31.0
+        WheelRadius=35.0
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.FLeft_Drive_Wheel'
+
     Begin Object Class=SVehicleWheel Name=FRight_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_R_F"
         BoneRollAxis=AXIS_Z
-        BoneOffset=(Y=-3.0,Z=12.0)
-        WheelRadius=31.0
+        WheelRadius=35.0
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.FRight_Drive_Wheel'
+
     Begin Object Class=SVehicleWheel Name=RLeft_Drive_Wheel
         bPoweredWheel=true
-        BoneName="steer_wheel_L_F"
+        BoneName="steer_wheel_L_R"
         BoneRollAxis=AXIS_Z
-        BoneOffset=(X=-120.0,Y=-3.0,Z=-12.0)
-        WheelRadius=30.0
+        WheelRadius=35.0
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.RLeft_Drive_Wheel'
+
     Begin Object Class=SVehicleWheel Name=RRight_Drive_Wheel
         bPoweredWheel=true
-        BoneName="steer_wheel_R_F"
+        BoneName="steer_wheel_R_R"
         BoneRollAxis=AXIS_Z
-        BoneOffset=(X=-120.0,Y=-3.0,Z=12.0)
-        WheelRadius=30.0
+        WheelRadius=35.0
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.RRight_Drive_Wheel'
 
     VehicleMass=8.5
-    DrivePos=(X=5.0,Y=3.0,Z=-5.0)
+    DrivePos=(X=10.0,Y=-1.0,Z=4.0)
     DriveAnim="VUC_driver_idle_close"
     ExitPositions(0)=(X=-242.0,Y=0.0,Z=10.0)    // Back 1 Driver
     ExitPositions(1)=(X=-266.0,Y=28.0,Z=10.0)   // Back 2 MG
@@ -208,14 +213,11 @@ defaultproperties
     PitchDownLimit=49000
     HealthMax=325.0
     Health=325
-    Mesh=SkeletalMesh'DH_M3A1Halftrack_anm.M3A1Halftrack_body_ext'
-    Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.M3A1Halftrack_body_ext'
-    Skins(1)=texture'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_body_int'
-    Skins(2)=texture'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_seats_int'
-    Skins(3)=texture'DH_VehiclesUS_tex.ext_vehicles.Green'
-    Skins(4)=texture'DH_VehiclesUS_tex.int_vehicles.M3A1Halftrack_details_int'
-    Skins(5)=texture'DH_VehiclesUS_tex.Treads.M3A1Halftrack_treads'
-    Skins(6)=texture'DH_VehiclesUS_tex.Treads.M3A1Halftrack_treads'
+    Mesh=SkeletalMesh'DH_M3Halftrack_anm.m3_body'
+    Skins(0)=Texture'DH_M3Halftrack_tex.m3.Halftrack'
+    Skins(1)=Texture'DH_M3Halftrack_tex.m3.Halftrack_2'
+    Skins(2)=Texture'DH_M3Halftrack_tex.m3.Halfrack_tracks'
+    Skins(3)=Texture'DH_M3Halftrack_tex.m3.Halfrack_tracks'
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc.M3A1Halftrack.M3A1Halftrack_visor_coll',AttachBone="Drivers_Hatch") // collision attachment for driver's armoured visor
     CollisionRadius=175.0
     CollisionHeight=40.0
@@ -223,7 +225,7 @@ defaultproperties
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(Z=-1.0) // default is zero
+        KCOMOffset=(Z=0.0) // default is zero
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
@@ -237,7 +239,7 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_M3A1HalftrackTransport.KParams0'
-    LeftTreadPanDirection=(Pitch=0,Yaw=32768,Roll=-16384)
-    RightTreadPanDirection=(Pitch=0,Yaw=32768,Roll=-16384)
+    LeftTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
+    RightTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
     SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.m3a1_halftrack'
 }
