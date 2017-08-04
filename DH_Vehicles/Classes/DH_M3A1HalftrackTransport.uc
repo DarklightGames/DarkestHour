@@ -64,8 +64,9 @@ defaultproperties
     WheelLatFrictionScale=2.0
     WheelHandbrakeSlip=0.01
     WheelHandbrakeFriction=0.1
-    WheelSuspensionTravel=15.0
-    WheelSuspensionMaxRenderTravel=15.0
+    WheelSuspensionTravel=10.0
+    WheelSuspensionOffset=-5.0
+    WheelSuspensionMaxRenderTravel=10.0
     FTScale=0.03
     ChassisTorqueScale=0.4
     MinBrakeFriction=4.0
