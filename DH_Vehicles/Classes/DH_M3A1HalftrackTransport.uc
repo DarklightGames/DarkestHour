@@ -27,8 +27,8 @@ defaultproperties
     IdleTimeBeforeReset=300.0
     VehicleSpikeTime=60.0
     MaxPitchSpeed=350.0
-    TreadVelocityScale=400.0
-    WheelRotationScale=195000.0
+    TreadVelocityScale=100.0
+    WheelRotationScale=60000.0
     LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L02'
     RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R02'
     RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble03'
@@ -111,7 +111,7 @@ defaultproperties
     DestructionLinearMomentum=(Min=100.0,Max=350.0)
     DestructionAngularMomentum=(Max=150.0)
     DamagedEffectScale=0.75
-    DamagedEffectOffset=(Y=10.0,Z=80.0)
+    DamagedEffectOffset=(X=120.0,Y=0.0,Z=60.0)
     VehicleTeam=1
     BeginningIdleAnim="driver_hatch_idle_close"
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_M3Halftrack_anm.m3_body',TransitionUpAnim="overlay_out",ViewPitchUpLimit=5300,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
@@ -137,7 +137,6 @@ defaultproperties
     VehHitpoints(0)=(PointRadius=35.0,PointOffset=(Z=-20.0)) // engine
     EngineHealth=125
     DriverAttachmentBone="driver_player"
-
     Begin Object Class=SVehicleWheel Name=RFWheel
         SteerType=VST_Steered
         BoneName="wheel_R_1"
@@ -147,7 +146,6 @@ defaultproperties
         SupportBoneAxis=AXIS_X
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.RFWheel'
-
     Begin Object Class=SVehicleWheel Name=LFWheel
         SteerType=VST_Steered
         BoneName="wheel_L_1"
@@ -157,7 +155,6 @@ defaultproperties
         SupportBoneAxis=AXIS_X
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.LFWheel'
-
     Begin Object Class=SVehicleWheel Name=FLeft_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_L_F"
@@ -165,7 +162,6 @@ defaultproperties
         WheelRadius=35.0
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.FLeft_Drive_Wheel'
-
     Begin Object Class=SVehicleWheel Name=FRight_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_R_F"
@@ -173,7 +169,6 @@ defaultproperties
         WheelRadius=35.0
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.FRight_Drive_Wheel'
-
     Begin Object Class=SVehicleWheel Name=RLeft_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_L_R"
@@ -181,7 +176,6 @@ defaultproperties
         WheelRadius=35.0
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.RLeft_Drive_Wheel'
-
     Begin Object Class=SVehicleWheel Name=RRight_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_R_R"
@@ -189,7 +183,6 @@ defaultproperties
         WheelRadius=35.0
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_M3A1HalftrackTransport.RRight_Drive_Wheel'
-
     VehicleMass=8.5
     DrivePos=(X=10.0,Y=-1.0,Z=4.0)
     DriveAnim="VUC_driver_idle_close"
@@ -218,8 +211,8 @@ defaultproperties
     Skins(1)=Texture'DH_M3Halftrack_tex.m3.Halftrack_2'
     Skins(2)=Texture'DH_M3Halftrack_tex.m3.Halfrack_tracks'
     Skins(3)=Texture'DH_M3Halftrack_tex.m3.Halfrack_tracks'
-    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc.M3A1Halftrack.M3A1Halftrack_visor_coll',AttachBone="Drivers_Hatch") // collision attachment for driver's armoured visor
-    CollisionRadius=175.0
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_hatch',AttachBone="hatch") // collision attachment for driver's armoured visor
+    CollisionRadius=10.0
     CollisionHeight=40.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
@@ -242,4 +235,9 @@ defaultproperties
     LeftTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
     RightTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
     SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.m3a1_halftrack'
+
+    // Random attachment
+    RandomAttachment=(AttachBone="body")
+    RandomAttachOptions(0)=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_bumper_01',PercentChance=50)
+    RandomAttachOptions(1)=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_bumper_02',PercentChance=50)
 }
