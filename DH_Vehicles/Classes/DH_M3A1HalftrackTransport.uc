@@ -6,7 +6,6 @@
 class DH_M3A1HalftrackTransport extends DHVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_M3Halftrack_anm.ukx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc.usx
 
 defaultproperties
 {

@@ -170,7 +170,7 @@ function bool CanFire()
 
 defaultproperties
 {
-    GunClass=class'DH_Guns.DH_M45QuadmountMG'
+    GunClass=class'DH_Vehicles.DH_M45QuadmountMG'
     PositionInArray=0
     bMustBeTankCrew=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn

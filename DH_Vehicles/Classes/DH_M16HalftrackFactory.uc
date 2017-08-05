@@ -3,9 +3,11 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_M45QuadmountMGPawn_Snow extends DH_M45QuadmountMGPawn;
+class DH_M16HalftrackFactory extends DH_USVehicles;
 
 defaultproperties
 {
-    GunClass=class'DH_Guns.DH_M45QuadmountMG_Snow'
+    VehicleClass=class'DH_Vehicles.DH_M16Halftrack'
+    Mesh=SkeletalMesh'DH_M3Halftrack_anm.m16_body'
 }
+
