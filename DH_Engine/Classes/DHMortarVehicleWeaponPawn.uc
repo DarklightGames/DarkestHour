@@ -294,23 +294,26 @@ function ServerUndeploying()
 // New function to exit mortar, give player back his mortar inventory item, & maybe destroy mortar vehicle actors (some server modes have to wait until client finishes exiting)
 function Undeploy()
 {
-    local DHMortarWeapon W;
-    local PlayerController PC;
+    local DHMortarWeapon CarriedMortar;
+    local Pawn           MortarOperator;
+    local bool           bLocallyControlled;
 
-    if (Role == ROLE_Authority && IsInState('Undeploying'))
+    if (Role == ROLE_Authority && IsInState('Undeploying') && Driver != none)
     {
-        PC = PlayerController(Controller);
-        W = Spawn(WeaponClass, PC.Pawn);
+        bLocallyControlled = IsLocallyControlled(); // save this as it will have changed when we need to check it later
+        MortarOperator = Driver;
+        CarriedMortar = Spawn(WeaponClass, MortarOperator);
 
-        global.KDriverLeave(true); // normally an empty function in any state derived from state Busy, so call the normal, non-state function instead
-
-        W.GiveTo(PC.Pawn);
-
-        // Standalone or owning listen server destroys mortar vehicle (& so all associated actors) immediately, as ClientKDriverLeave() will already have executed locally
-        // Dedicated server or non-owning listen server instead waits until owning net client executes ClientKDriverLeave() & calls ServerDestroyMortar() on server
-        if (IsLocallyControlled() && DHMortarVehicle(VehicleBase) != none)
+        if (CarriedMortar != none && global.KDriverLeave(false)) // KDriverLeave normally an empty function in a 'Busy' state, so call the normal, non-state function instead
         {
-            DHMortarVehicle(VehicleBase).ServerDestroyMortar();
+            CarriedMortar.GiveTo(MortarOperator);
+
+            // Standalone or owning listen server destroys mortar vehicle (& all associated actors) immediately, as ClientKDriverLeave() will already have executed locally
+            // Dedicated server or non-owning listen server instead waits until owning net client executes ClientKDriverLeave() & calls ServerDestroyMortar() on server
+            if (bLocallyControlled && DHMortarVehicle(VehicleBase) != none)
+            {
+                DHMortarVehicle(VehicleBase).ServerDestroyMortar();
+            }
         }
     }
 }

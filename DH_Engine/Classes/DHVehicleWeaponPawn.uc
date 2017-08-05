@@ -429,7 +429,7 @@ function bool TryToDrive(Pawn P)
     if (VehicleBase != none)
     {
         // If vehicle is team locked, i.e. can only be used by one team (the normal setting), it's a simple check against the VehicleTeam
-        if (bTeamLocked)
+        if (VehicleBase.bTeamLocked)
         {
             bEnemyVehicle = P.GetTeamNum() != VehicleBase.VehicleTeam;
         }
@@ -493,42 +493,100 @@ function bool TryToDrive(Pawn P)
     }
 
     // Passed all checks, so allow player to enter this vehicle position
-    if (bEnterringUnlocks && bTeamLocked)
-    {
-        bTeamLocked = false;
-    }
-
     KDriverEnter(P);
 
     return true;
 }
 
-// Modified to try to start a reload or resume any previously paused reload if weapon isn't loaded, & to cancel any CheckReset timer as vehicle is no longer empty
-// Also to use InitialPositionIndex instead of assuming start position zero, & to record if player has binoculars
-// And we tell our vehicle base to check & update any vehicle lock settings as a new player has entered
+// Modified to handle passed in pawn being a vehicle, which now happens when player switches vehicle position (no longer briefly repossesses & unpossesses his player pawn)
+// Also to try to start a reload or resume any previously paused reload if weapon isn't loaded, to cancel any CheckReset timer as vehicle is no longer empty,
+// to use InitialPositionIndex instead of assuming start position zero, to record if player has binoculars,
+// And to tell our vehicle base to check & update any vehicle lock settings as a new player has entered
+// Generally optimised & re-ordered a little, with some redundancy from the Supers removed
 function KDriverEnter(Pawn P)
 {
-    if (bMultiPosition)
+    local Controller C;
+
+    // Get a controller reference
+    // If the entering player has a controller we need to save it because the pawn will lose it when unpossessed
+    // And if player is switching from another vehicle position, his player pawn will no longer have a controller, so we need to use the new DHPawn.SwitchingController
+    if (P != none)
+    {
+        if (P.Controller != none)
+        {
+            C = P.Controller;
+        }
+        else if (P.IsA('DHPawn') && DHPawn(P).SwitchingController != none)
+        {
+            C = DHPawn(P).SwitchingController;
+        }
+    }
+
+    if (C == none)
+    {
+        return;
+    }
+
+    // Make the player our 'Driver'
+    if (bMultiPosition) // added to make sure the driver position is the initial one
     {
         DriverPositionIndex = InitialPositionIndex;
         LastPositionIndex = InitialPositionIndex;
     }
 
-    super.KDriverEnter(P);
+    bDriving = true;
+    Driver = P;
+    Driver.StartDriving(self);
 
+    // Make the player unpossess its current pawn & possess this vehicle pawn
+    if (C.Pawn != none) // added this check because if only switching vehicle position, controller will no longer have any player pawn to Unpossess()
+    {
+        C.Unpossess();
+    }
+
+    Driver.SetOwner(self); // this keeps the driver net relevant
+    C.bVehicleTransition = true; // to stop bots from doing Restart() during possession
+    C.Possess(self);
+    C.bVehicleTransition = false;
+    DrivingStatusChanged();
+    Level.Game.DriverEnteredVehicle(self, P);
+    Driver.bSetPCRotOnPossess = false; // so when player gets out, he'll be facing the same direction as he was in the vehicle
+
+    // Activate vehicle weapon & increase it's network priority
+    if (Gun != none)
+    {
+        Gun.bActive = true;
+        Gun.NetPriority = 2.0;
+        Gun.NetUpdateFrequency = 10.0;
+    }
+
+    // Bot code
+    StuckCount = 0;
+
+    if (IsHumanControlled())
+    {
+        VehicleLostTime = 0.0;
+    }
+
+    // Various DH added functionality, with some standard VehicleBase updates because a player has entered
     if (VehicleBase != none)
     {
-        VehicleBase.ResetTime = Level.TimeSeconds - 1.0; // cancel any CheckReset timer as vehicle now occupied
+        VehicleBase.ResetTime = Level.TimeSeconds - 1.0; // cancel any CheckReset timer as vehicle now occupied (same as ROVehicle, was missing in weapon pawn)
+
+        if (VehicleBase.bEnterringUnlocks && VehicleBase.bTeamLocked) // moved here from TryToDrive()
+        {
+            VehicleBase.bTeamLocked = false;
+        }
 
         if (VehicleBase.IsA('DHVehicle'))
         {
-            DHVehicle(VehicleBase).UpdateVehicleLockOnPlayerEntering(self);
+            DHVehicle(VehicleBase).UpdateVehicleLockOnPlayerEntering(self); // tell our vehicle to check & update any vehicle lock settings as new player has entered
         }
     }
 
-    CheckResumeReloadingOnEntry();
+    CheckResumeReloadingOnEntry(); // try to start a reload or resume any previously paused reload if weapon isn't loaded
 
-    if (BinocPositionIndex >= 0 && BinocPositionIndex < DriverPositions.Length)
+    if (BinocPositionIndex >= 0 && BinocPositionIndex < DriverPositions.Length) // record whether player has binoculars
     {
         bPlayerHasBinocs = P.FindInventoryType(class<Inventory>(DynamicLoadObject("DH_Equipment.DHBinocularsItem", class'class'))) != none;
     }
@@ -887,15 +945,20 @@ simulated function SwitchWeapon(byte F)
     }
 }
 
-// Modified to add checks before calling trying to switch player, to make sure the player isn't going to be prevented from switching to new position
-// This avoids player exiting vehicle, briefly re-possessing his player pawn, then trying unsuccessfully to enter new vehicle position, then having to re-enter this position
-// The Super (from VehicleWeaponPawn) is re-factored here, to avoid repeating any of the same checks & to reduce repetition & make clearer
+// Modified to add checks before trying to switch position, to make sure the player isn't going to be prevented from entering the new position
+// Also to record the controller in the DHPawn (as SwitchingController), which is now now required by the new vehicle position's KDriverEnter()
+// Exiting player no longer briefly re-possesses player pawn before trying to enter new vehicle position, so DHPawn passed in to KDriverEnter() has no Controller
+// And we now call KDriverEnter() directly, instead of TryToDrive(), as we've already checked & verified the player can switch
+// Generally re-factored to avoid repeating any of the same checks & to reduce repetition & make clearer
 function ServerChangeDriverPosition(byte F)
 {
+    local DHPawn  SwitchingPlayer;
     local Vehicle NewVehiclePosition;
-    local Pawn    SwitchingPlayer, Bot;
+    local Pawn    Bot;
 
-    if (!CanSwitchToVehiclePosition(F))
+    SwitchingPlayer = DHPawn(Driver);
+
+    if (SwitchingPlayer == none || !CanSwitchToVehiclePosition(F))
     {
         return; // can't switch if fails any of these checks
     }
@@ -911,8 +974,6 @@ function ServerChangeDriverPosition(byte F)
 
     if (NewVehiclePosition != none)
     {
-        SwitchingPlayer = Driver; // record player in case he can't switch somehow & we need to put him back in this vehicle position
-
         // If human player wants to switch to a bot's position, make the bot swap with him
         if (AIController(NewVehiclePosition.Controller) != none)
         {
@@ -920,33 +981,25 @@ function ServerChangeDriverPosition(byte F)
             NewVehiclePosition.KDriverLeave(true); // kicks bot out
         }
 
-        KDriverLeave(true); // player exits this position
-
         // Switch player to new vehicle position
-        if (NewVehiclePosition.TryToDrive(SwitchingPlayer))
-        {
-            if (Bot != none)
-            {
-                TryToDrive(Bot); // if we kicked a bot out of the target position, now switch it into this position
-            }
-        }
-        // But if for some reason he couldn't switch, return the player to this vehicle position
-        else
-        {
-            KDriverEnter(SwitchingPlayer);
+        // We record our controller as the SwitchingController, which is now required by the new vehicle position's KDriverEnter()
+        // And we now call KDriverEnter() directly, instead of TryToDrive(), as we've already checked & verified the player can switch
+        SwitchingPlayer.SetSwitchingController(Controller);
+        KDriverLeave(true);
+        NewVehiclePosition.KDriverEnter(SwitchingPlayer);
+        SwitchingPlayer.SetSwitchingController(none); // reset
 
-            if (Bot != none)
-            {
-                NewVehiclePosition.KDriverEnter(Bot); // if we kicked a bot out of the target position, try to put it back where it was
-            }
+        if (Bot != none)
+        {
+            KDriverEnter(Bot); // if we kicked a bot out of the target position, now switch it into this position
         }
     }
 }
 
-// Modified to remove overlap with DriverDied(), moving common features into DriverLeft(), which gets called by both functions, & to remove some redundancy
-// Also to prevent exit if player is buttoned up & to give player the same momentum as the vehicle when exiting
+// Modified so if player is only switching vehicle positions, he no longer briefly re-possesses his player pawn before trying to enter the new vehicle position
+// And to remove overlap with DriverDied(), moving common features into DriverLeft(), which gets called by both functions, & to remove some redundancy
+// Also to prevent exit if player is buttoned up, to show a message if no valid exit can be found, & to give player the same momentum as the vehicle when exiting
 // And so if an 'allowed' crewman exits a locked armored vehicle, we check whether we need to set an unlock timer
-// Also to show player a message if no valid exit can be found
 function bool KDriverLeave(bool bForceLeave)
 {
     local DHArmoredVehicle AV;
@@ -954,44 +1007,47 @@ function bool KDriverLeave(bool bForceLeave)
     local vector           ExitVelocity;
     local bool             bAllowedCrewmanExitingLockedVehicle;
 
-    // Prevent exit from vehicle if player is buttoned up (or if game type or mutator prevents exit)
-    // Only if bForceLeave is false, meaning player is trying to exit vehicle & not just switch to another vehicle position
-    if (!bForceLeave && (!CanExit() || (Level.Game != none && !Level.Game.CanLeaveVehicle(self, Driver))))
+    // The player is actually trying to exit vehicle, not just switching to another vehicle position (bForceLeave is true when only switching)
+    if (!bForceLeave)
     {
-        if (Bot(Controller) != none && VehicleBase != none && VehicleBase.Driver == none)
+        // Prevent exit if player is buttoned up (or if game type or mutator prevents exit)
+        if (!CanExit() || (Level.Game != none && !Level.Game.CanLeaveVehicle(self, Driver)))
         {
-            ServerChangeDriverPosition(1); // if bot tries & fails to exit, it tries switching to vehicle driver's position (added in VWPawn, it's not in Vehicle)
-        }
-
-        return false;
-    }
-
-    // Find an exit location for place to exiting player
-    if (Driver != none && (!bRemoteControlled || bHideRemoteDriver))
-    {
-        Driver.bHardAttach = false;
-        Driver.bCollideWorld = true;
-        Driver.SetCollision(true, true);
-
-        // If we couldn't find a place to put exiting player, leave him inside (restoring his attachment & collision properties)
-        if (!PlaceExitingDriver() && !bForceLeave)
-        {
-            Driver.bHardAttach = true;
-            Driver.bCollideWorld = false;
-            Driver.SetCollision(false, false);
-
             if (Bot(Controller) != none && VehicleBase != none && VehicleBase.Driver == none)
             {
-                ServerChangeDriverPosition(1);
+                ServerChangeDriverPosition(1); // if bot tries & fails to exit, it tries switching to vehicle driver's position
             }
-
-            DisplayVehicleMessage(13); // no exit can be found (added)
 
             return false;
         }
+
+        // Find an exit location for the player & try to move him there
+        // ADDED !bForceLeave check to this block so we don't bother trying to move the player if he's only switching vehicle positions
+        if (Driver != none && (!bRemoteControlled || bHideRemoteDriver))
+        {
+            Driver.bHardAttach = false;
+            Driver.bCollideWorld = true;
+            Driver.SetCollision(true, true);
+
+            // If we couldn't move player to an exit location, leave him inside (restoring his attachment & collision properties)
+            if (!PlaceExitingDriver())
+            {
+                Driver.bHardAttach = true;
+                Driver.bCollideWorld = false;
+                Driver.SetCollision(false, false);
+                DisplayVehicleMessage(13); // no exit can be found (ADDED)
+
+                if (Bot(Controller) != none && VehicleBase != none && VehicleBase.Driver == none)
+                {
+                    ServerChangeDriverPosition(1);
+                }
+
+                return false;
+            }
+        }
     }
 
-    // Stop controlling this VehicleWeaponPawn
+    // Stop controlling this vehicle pawn
     if (Controller != none)
     {
         if (Controller.RouteGoal == self)
@@ -1004,16 +1060,17 @@ function bool KDriverLeave(bool bForceLeave)
             Controller.MoveTarget = none;
         }
 
-        Controller.bVehicleTransition = true; // to keep Bots from doing Restart() in Possess()
-
         SavedController = Controller; // save because Unpossess() will clear our reference
         Controller.UnPossess();
 
-        // Take control of the exiting player pawn (our 'Driver')
-        if (Driver != none && Driver.Health > 0)
+        // If player is actually exiting the vehicle, not just switching positions, take control of the exiting player pawn
+        // ADDED !bForceLeave check so we no longer briefly re-possess the player pawn
+        if (!bForceLeave && Driver != none && Driver.Health > 0)
         {
 //          Driver.SetOwner(SavedController); // removed as gets set anyway in the possession process
+            SavedController.bVehicleTransition = true; // to stop bots from doing Restart() during possession
             SavedController.Possess(Driver);
+            SavedController.bVehicleTransition = false; // reset
 
             if (SavedController.IsA('PlayerController'))
             {
@@ -1021,36 +1078,38 @@ function bool KDriverLeave(bool bForceLeave)
             }
         }
 
-        SavedController.bVehicleTransition = false; // reset
-
-        if (Controller == SavedController) // if our Controller didn't change, clear it
+        if (Controller == SavedController) // if our Controller somehow didn't change, clear it
         {
             Controller = none;
         }
 
         if (SavedController.IsA('Bot'))
         {
-            Bot(SavedController).ClearTemporaryOrders(); // added in VWPawn, it's not in Vehicle
+            Bot(SavedController).ClearTemporaryOrders(); // note this is added in VWPawn, it's not in Vehicle
         }
     }
-    else if (Driver != none && Driver.Controller == self) // if we somehow didn't have a Controller, clear the owner of the exiting player
-    {
-        Driver.SetOwner(none);
-    }
 
-    // Update exiting player pawn as he has now left the vehicle
     if (Driver != none)
     {
-        Driver.bSetPCRotOnPossess = Driver.default.bSetPCRotOnPossess; // undo temporary change made when entering vehicle
-
-        Driver.StopDriving(self);
-
-        // Give a player exiting the vehicle the same momentum as vehicle, with a little added height kick
-        if (!bForceLeave && VehicleBase != none)
+        // Update exiting player pawn if he has actually left the vehicle
+        if (!bForceLeave)
         {
-            ExitVelocity = VehicleBase.Velocity;
-            ExitVelocity.Z += 60.0;
-            Driver.Velocity = ExitVelocity;
+            Driver.bSetPCRotOnPossess = Driver.default.bSetPCRotOnPossess; // undo temporary change made when entering vehicle
+            Driver.StopDriving(self); // ADDED !bForceLeave check here so we don't call StopDriving() if only switching vehicle positions
+
+            // Give a player exiting the vehicle the same momentum as vehicle, with a little added height kick
+            if (VehicleBase != none)
+            {
+                ExitVelocity = VehicleBase.Velocity;
+                ExitVelocity.Z += 60.0;
+                Driver.Velocity = ExitVelocity;
+            }
+        }
+        // Or if human player has only switched vehicle position, we just set PlayerStartTime, telling bots not to enter this vehicle position for a little while
+        // ADDED this alternative, with the only line that's relevant from StopDriving(), as we're no longer calling that
+        else if (PlayerController(SavedController) != none)
+        {
+            PlayerStartTime = Level.TimeSeconds + 12.0;
         }
     }
 

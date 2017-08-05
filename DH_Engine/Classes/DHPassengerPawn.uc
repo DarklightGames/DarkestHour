@@ -141,70 +141,21 @@ simulated function vector GetCameraLocationStart()
 //  ***************************** VEHICLE ENTRY & EXIT ***************************** //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// From deprecated ROPassengerPawn, which removed all 'Gun' references from the Supers
-// Modified to unset bTearOff on a server, which makes this rider pawn potentially relevant to clients & always to the one entering the rider position
-// Also to set rotation to match the way the rider is facing, so his view starts facing the same way, & to remove redundancy & optimise the ordering of the function
+// Modified to unset bTearOff on a server, which makes this rider pawn potentially relevant to net clients & always to the one entering the rider position
 function KDriverEnter(Pawn P)
 {
-    local Controller C;
-    local rotator    NewRotation;
-
-    // On a server, disable bTearOff so this occupied rider pawn actor replicates to relevant net clients
-    // We clear any timer, so we don't risk setting bTearOff to true again just after we enter
-    // Note we don't need to force a quick net update of bTearOff, as normal possession functionality does it
     if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
     {
-        SetTimer(0.0, false);
-        bTearOff = false;
-    }
-
-    bDriving = true;
-    StuckCount = 0;
-
-    // Set player's current controller to control this vehicle pawn instead & make the player our 'Driver'
-    C = P.Controller;
-    Driver = P;
-    Driver.StartDriving(self);
-
-    // Make the player unpossess its DHPawn body & possess this vehicle pawn
-    C.bVehicleTransition = true; // to keep Bots from doing Restart()
-    C.Unpossess();
-    Driver.SetOwner(self); // this keeps the driver relevant
-    C.Possess(self);
-    C.bVehicleTransition = false;
-    DrivingStatusChanged();
-    Level.Game.DriverEnteredVehicle(self, P);
-
-    // Match player's rotation to match the way the rider is facing, so his view starts facing the same way
-    NewRotation.Yaw = DriveRot.Yaw;
-    SetRotation(NewRotation);
-    Driver.bSetPCRotOnPossess = false; // so when player gets out, he'll be facing the same direction as he was in the vehicle
-
-    if (PlayerController(C) != none)
-    {
-        VehicleLostTime = 0.0;
-    }
-
-    if (VehicleBase != none)
-    {
-        VehicleBase.ResetTime = Level.TimeSeconds - 1.0; // cancel any CheckReset timer as vehicle now occupied
-
-        if (VehicleBase.IsA('DHVehicle'))
+        if (P == none || (P.Controller == none && !(P.IsA('DHPawn') && DHPawn(P).SwitchingController != none)))
         {
-            DHVehicle(VehicleBase).UpdateVehicleLockOnPlayerEntering(self);
+            return; // shouldn't happen, but the Super will fail if it can't get a pawn & controller, so this safeguard stops us tearing off if nothing is going to happen
         }
+
+        SetTimer(0.0, false); // clear any timer, so we don't risk setting bTearOff to true again just after we enter
+        bTearOff = false;     // note we don't need to force a quick net update of bTearOff, as normal possession functionality does it
     }
-}
 
-// Modified to set rotation to match the way the rider is facing, so his view starts facing the same way
-simulated function ClientKDriverEnter(PlayerController PC)
-{
-    local rotator NewRotation;
-
-    super.ClientKDriverEnter(PC);
-
-    NewRotation.Yaw = DriveRot.Yaw;
-    SetRotation(NewRotation);
+    super.KDriverEnter(P);
 }
 
 // Modified (from deprecated ROPassengerPawn) to avoid confusing attachment to CameraBone & instead use the usual WeaponBone specified in the vehicle's PassengerWeapons array

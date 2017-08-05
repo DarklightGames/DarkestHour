@@ -59,11 +59,6 @@ function bool TryToDrive(Pawn P)
     }
 
     // Passed all checks, so allow player to man the gun
-    if (bEnterringUnlocks && bTeamLocked)
-    {
-        bTeamLocked = false;
-    }
-
     KDriverEnter(P);
 
     return true;

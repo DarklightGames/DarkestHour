@@ -73,51 +73,25 @@ simulated function DrawHUD(Canvas C)
 }
 
 // Modified to avoid resetting position indexes, as we need to keep the ramp in its current up/down position
+// To avoid re-stating the Super, we temporarily hack InitialPositionIndex to match current DriverPositionIndex, which effectively stops the Super from changing the position indexes
+// But if player was on the binoculars, we need to reset the position indexes, so the next player in doesn't find himself with a drawn binocs overlay
 function KDriverEnter(Pawn P)
 {
-    bDriverAlreadyEntered = true;
-    Instigator = self;
-    ResetTime = Level.TimeSeconds - 1.0;
+    InitialPositionIndex = DriverPositionIndex;
 
-    super(Vehicle).KDriverEnter(P);
+    super.KDriverEnter(P);
 
-    Driver.bSetPCRotOnPossess = false;
-
-    UpdateVehicleLockOnPlayerEntering(self);
+    InitialPositionIndex = default.InitialPositionIndex; // restore normal value now we've done
 }
 
-// Modified to set PPI to match DPI instead of usual InitialPositionIndex, because we enter in the position the boat has been left, i.e. ramp up or down
-// Also to add Higgins boat hint instead of usual vehicle hints
+// Modified to avoid resetting position indexes, as we need to keep the ramp in its current up/down position (using same method as KDriverEnter)
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-    // Fix possible replication timing problems on a net client
-    if (Role < ROLE_Authority && PC != none)
-    {
-        // Server passed the PC with this function, so we can safely set new Controller here, even though may take a little longer for new Controller value to replicate
-        // And we know new Owner will also be the PC & new net Role will AutonomousProxy, so we can set those too, avoiding problems caused by variable replication delay
-        // e.g. DrawHUD() can be called before Controller is replicated; SwitchMesh() may fail because new Role isn't received until later
-        Controller = PC;
-        SetOwner(PC);
-        Role = ROLE_AutonomousProxy;
+    InitialPositionIndex = DriverPositionIndex;
 
-        // Fix for possible camera problem when deploying into spawn vehicle (see notes in DHVehicleMGPawn.ClientKDriverEnter)
-        if (PC.IsInState('Spectating'))
-        {
-            PC.GotoState('PlayerWalking');
-        }
-    }
+    super.ClientKDriverEnter(PC);
 
-    bDesiredBehindView = false;
-    FPCamPos = default.FPCamPos;
-    GotoState('EnteringVehicle');
-    PendingPositionIndex = DriverPositionIndex;
-
-    super(ROVehicle).ClientKDriverEnter(PC); // skip over Super in ROWheeledVehicle as it sets PPI to match IPI
-
-    if (DHPlayer(PC) != none)
-    {
-        DHPlayer(PC).QueueHint(42, true);
-    }
+    InitialPositionIndex = default.InitialPositionIndex; // restore normal value now we've done
 }
 
 // Modified to to add ramp sounds // Matt: alternative would be to add these as notifies to the ramp animations
@@ -139,9 +113,110 @@ simulated state ViewTransition
 }
 
 // Modified to avoid adding vehicle momentum from the Super, as can kill or injure the driver & he's only stepping away from the controls, not actually jumping out
+// TODO: perhaps add a bExitVelocity bool in DHVehicle, so we can simply set that to false in our defprops & won't need to re-state this long function
 function bool KDriverLeave(bool bForceLeave)
 {
-    return super(ROVehicle).KDriverLeave(bForceLeave);
+    local Controller SavedController;
+
+    // The player is actually trying to exit vehicle, not just switching to another vehicle position (bForceLeave is true when only switching)
+    if (!bForceLeave)
+    {
+        // Prevent exit from vehicle if player is buttoned up (or if game type or mutator prevents exit)
+        if (!CanExit() || (Level.Game != none && !Level.Game.CanLeaveVehicle(self, Driver)))
+        {
+            if (Bot(Controller) != none && WeaponPawns.Length > 0 && WeaponPawns[0] != none && WeaponPawns[0].Driver == none)
+            {
+                ServerChangeDriverPosition(2); // if bot tries & fails to exit, it tries switching to 1st weapon pawn position
+            }
+
+            return false;
+        }
+
+        // Find an exit location for the player & try to move him there
+        if (Driver != none && (!bRemoteControlled || bHideRemoteDriver))
+        {
+            Driver.bHardAttach = false;
+            Driver.bCollideWorld = true;
+            Driver.SetCollision(true, true);
+
+            // If we couldn't move player to an exit location, leave him inside (restoring his attachment & collision properties)
+            if (!PlaceExitingDriver())
+            {
+                Driver.bHardAttach = true;
+                Driver.bCollideWorld = false;
+                Driver.SetCollision(false, false);
+                DisplayVehicleMessage(13); // no exit can be found
+
+                if (Bot(Controller) != none && WeaponPawns.Length > 0 && WeaponPawns[0] != none && WeaponPawns[0].Driver == none)
+                {
+                    ServerChangeDriverPosition(2);
+                }
+
+                return false;
+            }
+        }
+    }
+
+    // Exit is successful, so stop controlling this vehicle pawn
+    if (Controller != none)
+    {
+        if (Controller.RouteGoal == self)
+        {
+            Controller.RouteGoal = none;
+        }
+
+        if (Controller.MoveTarget == self)
+        {
+            Controller.MoveTarget = none;
+        }
+
+        SavedController = Controller; // save because Unpossess() will clear our reference
+        Controller.UnPossess();
+
+        // If player is actually exiting the vehicle, not just switching positions, take control of the exiting player pawn
+        if (!bForceLeave && Driver != none && Driver.Health > 0)
+        {
+            SavedController.bVehicleTransition = true; // to stop bots from doing Restart() during possession
+            SavedController.Possess(Driver);
+            SavedController.bVehicleTransition = false;
+
+            if (SavedController.IsA('PlayerController'))
+            {
+                PlayerController(SavedController).ClientSetViewTarget(Driver); // set PlayerController to view the person that got out
+            }
+        }
+
+        if (Controller == SavedController) // if our Controller somehow didn't change, clear it
+        {
+            Controller = none;
+        }
+    }
+
+    if (Driver != none)
+    {
+        Instigator = Driver; // so if vehicle continues on & hits something, the old driver is responsible for any damage caused
+
+        // Update exiting player pawn if he has actually left the vehicle
+        if (!bForceLeave)
+        {
+            Driver.bSetPCRotOnPossess = Driver.default.bSetPCRotOnPossess; // undo temporary change made when entering vehicle
+            Driver.StopDriving(self);
+/*
+            // Give a player exiting the vehicle the same momentum as vehicle, with a little added height kick // REMOVED
+            ExitVelocity = Velocity;
+            ExitVelocity.Z += 60.0;
+            Driver.Velocity = ExitVelocity; */
+        }
+        // Or if human player has only switched vehicle position, we just set PlayerStartTime, telling bots not to enter this vehicle position for a little while
+        else if (PlayerController(SavedController) != none)
+        {
+            PlayerStartTime = Level.TimeSeconds + 12.0;
+        }
+    }
+
+    DriverLeft();
+
+    return true;
 }
 
 // Modified to avoid resetting position indexes, as we need to keep the ramp in its current up/down position

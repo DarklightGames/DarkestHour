@@ -9,6 +9,8 @@ class DHPawn extends ROPawn
 #exec OBJ LOAD FILE=ProjectileSounds.uax
 
 // General
+// TODO: I'm sure we can just use existing OldController ref instead of adding SwitchingController, but want to make certain 1st (Matt)
+var     Controller          SwitchingController; // needed by KDriverEnter() when switched vehicle position, as player no longer briefly re-possesses DHPawn before entering new position
 var     ROArtilleryTrigger  CarriedRadioTrigger; // for storing the trigger on a radioman each spawn, for the purpose of deleting it on death
 var     bool    bWeaponNeedsReload;       // whether an AT weapon is loaded or not
 var     float   StanceChangeStaminaDrain; // how much stamina is lost by changing stance
@@ -791,14 +793,10 @@ simulated event StartDriving(Vehicle V)
             bNeedToAttachDriver = false;
         }
 
-        if (V.bDrawDriverinTP)
-        {
-//          CullDistance = 5000.0;
-        }
-        else
-        {
-            bHidden = true;
-        }
+        // Set driver visibility - slight change so now we always set whether or not the driver is hidden, based on vehicle's bDrawDriverinTP setting
+        // When switching vehicle positions, we no longer briefly repossess the player pawn & receive StopDriving(), so bHidden won't have been reset to default false
+        // Also we no longer set a visible player's CullDistance to 5000 (83m), as caused exposed players to disappear at quite close ranges
+        bHidden = !V.bDrawDriverinTP;
     }
 
     // Set animation
@@ -962,6 +960,13 @@ simulated function StopDriving(Vehicle V)
 
     ToggleAuxCollision(true);
     SetAnimAction('ClearAnims');
+}
+
+// New function used by vehicle pawns to record their Controller (as SwitchingController) before a player switches vehicle position
+// SwitchingController is now needed by KDriverEnter() when switched positions, as the player no longer briefly re-possesses his DHPawn before entering the new position
+function SetSwitchingController(Controller C)
+{
+    SwitchingController = C;
 }
 
 // New function to set a player's reference to a locked vehicle that this player is allowed to enter, or to clear it passing 'none'
