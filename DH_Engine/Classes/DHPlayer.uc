@@ -2064,7 +2064,13 @@ function Possess(Pawn aPawn)
     ServerSetAutoTaunt(bAutoTaunt); // this function has been emptied out in RO anyway
     Restart(); // this calls the replicated ClientRestart() function on the owning client
     StopViewShaking();
-    ClientResetMovement();
+
+    // Stopped this replicated function being called when exiting a vehicle position, as it only resets bDuck & bCrawl, which aren't relevant in a vehicle
+    // I'm sure we could optimise the network further by calling this from ClientRestart(), which is already being called on the owning client
+    if (Vehicle(OldPawn) == none)
+    {
+        ClientResetMovement();
+    }
 
     if (ROPawn(aPawn) != none)
     {
