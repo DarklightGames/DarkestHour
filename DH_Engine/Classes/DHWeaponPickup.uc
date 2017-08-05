@@ -193,4 +193,5 @@ defaultproperties
     CollisionHeight=3.0
     BarrelSteamEmitterClass=class'DH_Effects.DHMGSteam'
     TouchMessageClass=class'DHWeaponPickupTouchMessage'
+    bAcceptsProjectors=false
 }
