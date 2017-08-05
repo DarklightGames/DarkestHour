@@ -2024,6 +2024,54 @@ function AdjustView(float DeltaTime)
     }
 }
 
+// Modified to avoid calling ResetFOV() if player is possessing a vehicle, because the vehicle will always set the FOV correctly anyway
+// Fixes occasional network bug where ResetFOV() was received by a client AFTER vehicle had correctly set FOV, resulting in incorrect unmagnified view on a vehicle weapon
+// Also a network optimisation as avoids a pointless replicated function call
+function Possess(Pawn aPawn)
+{
+    local Pawn    OldPawn;
+    local Vehicle V;
+
+    if (PlayerReplicationInfo == none || PlayerReplicationInfo.bOnlySpectator || aPawn == none)
+    {
+        return;
+    }
+
+    OldPawn = Pawn;
+    V = Vehicle(aPawn);
+
+    if (V == none) // added this check to fix a bug & as a network optimisation
+    {
+        ResetFOV();
+    }
+
+    aPawn.PossessedBy(self); // if possessing vehicle, PossessedBy() calls ClientKDriverEnter() on owning client, so could use that to do other client stuff, avoiding further replicated functions?
+    Pawn = aPawn;
+    Pawn.bStasis = false;
+    ResetTimeMargin(); // this gets called in Restart(), just after this, so appears unnecessary to have it here
+    CleanOutSavedMoves(); // avoids replaying any moves prior to possession
+
+    if (V != none && V.Driver != none)
+    {
+        PlayerReplicationInfo.bIsFemale = V.Driver.bIsFemale;
+    }
+    else
+    {
+        PlayerReplicationInfo.bIsFemale = Pawn.bIsFemale;
+    }
+
+    ServerSetHandedness(Handedness);
+    ServerSetAutoTaunt(bAutoTaunt); // this function has been emptied out in RO anyway
+    Restart(); // this calls the replicated ClientRestart() function on the owning client
+    StopViewShaking();
+    ClientResetMovement();
+
+    if (ROPawn(aPawn) != none)
+    {
+        ROPawn(aPawn).Setup(PawnSetupRecord, true);
+    }
+}
+
 // Server call to client to force prone
 function ClientProne()
 {
