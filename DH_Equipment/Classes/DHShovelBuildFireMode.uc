@@ -14,7 +14,7 @@ simulated function bool AllowFire()
     local Actor  HitActor;
     local vector TraceStart, TraceEnd, HitLocation, HitNormal;
 
-    if (Instigator == none || Instigator.IsProneTransitioning() || Instigator.Velocity != vect(0.0, 0.0, 0.0))
+    if (Instigator == none || Instigator.bIsCrawling || Instigator.IsProneTransitioning() || Instigator.Velocity != vect(0.0, 0.0, 0.0))
     {
         return false;
     }
