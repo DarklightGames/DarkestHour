@@ -2834,6 +2834,11 @@ simulated function DestroyAttachments()
         ResupplyAttachment.Destroy();
     }
 
+    if (SupplyAttachment != none && Role == ROLE_Authority)
+    {
+        SupplyAttachment.Destroy();
+    }
+
     for (i = 0; i < VehicleAttachments.Length; ++i)
     {
         if (VehicleAttachments[i].Actor != none)
