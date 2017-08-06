@@ -2717,7 +2717,7 @@ function EndGame(PlayerReplicationInfo Winner, string Reason)
 function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcements, optional bool bOnlyIfNotZero)
 {
     local DHGameReplicationInfo GRI;
-    local bool                  bIsDefendingTeam;
+    local bool                  bIsDefendingTeam, bIsInfinite, bOutOfReinf;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
@@ -2726,26 +2726,30 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
         return;
     }
 
-    // Don't change if value is infinite
     if (GRI.SpawnsRemaining[Team] == -1)
     {
-        return;
+        bIsInfinite = true;
+    }
+    else if (GRI.SpawnsRemaining[Team] == 0)
+    {
+        bOutOfReinf = true;
     }
 
-    // Don't increase if value is zero and bOnlyIfNotZero
-    if (GRI.SpawnsRemaining[Team] == 0 && bOnlyIfNotZero)
+    // If we are NOT setting reinforcements & if reinf is infinite, then return
+    // Also if reinf is zero (out) and we are to only modify if NOT zero, then return
+    if ((!bSetReinforcements && bIsInfinite) || (bOutOfReinf && bOnlyIfNotZero))
     {
         return;
     }
 
     // Update GRI with the new value
-    if (!bSetReinforcements && GRI.SpawnsRemaining[Team] != -1)
+    if (bSetReinforcements)
     {
-        GRI.SpawnsRemaining[Team] = Max(0, GRI.SpawnsRemaining[Team] += Amount);
+        GRI.SpawnsRemaining[Team] = Max(-1, Amount);
     }
     else
     {
-        GRI.SpawnsRemaining[Team] = Max(-1, Amount);
+        GRI.SpawnsRemaining[Team] = Max(0, GRI.SpawnsRemaining[Team] + Amount);
     }
 
     // Check for zero reinforcements
