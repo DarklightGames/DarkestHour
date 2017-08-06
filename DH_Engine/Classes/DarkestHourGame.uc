@@ -2721,19 +2721,13 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (GRI == none)
+    if (GRI == none || (Team != AXIS_TEAM_INDEX && Team != ALLIES_TEAM_INDEX))
     {
         return;
     }
 
-    if (GRI.SpawnsRemaining[Team] == -1)
-    {
-        bIsInfinite = true;
-    }
-    else if (GRI.SpawnsRemaining[Team] == 0)
-    {
-        bOutOfReinf = true;
-    }
+    bIsInfinite = GRI.SpawnsRemaining[Team] == -1;
+    bOutOfReinf = GRI.SpawnsRemaining[Team] == 0;
 
     // If we are NOT setting reinforcements & if reinf is infinite, then return
     // Also if reinf is zero (out) and we are to only modify if NOT zero, then return
@@ -2766,10 +2760,11 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
         if (bRoundEndsAtZeroReinf)
         {
             Level.Game.Broadcast(self, "The battle ended because a team's reinforcements reached zero", 'Say');
-            Choosewinner();
+            ChooseWinner();
             return; // Leave function as we don't want to change round time as round is over
         }
-        else if (bTimeChangesAtZeroReinf && (LevelInfo.DefendingSide != SIDE_None && !bIsDefendingTeam) || LevelInfo.DefendingSide == SIDE_none)
+
+        else if (bTimeChangesAtZeroReinf && (LevelInfo.DefendingSide != SIDE_None && !bIsDefendingTeam) || LevelInfo.DefendingSide == SIDE_None)
         {
             // If the time is meant to change when a team runs out of reinf
             // AND the player killed was an Attacker (with a defending side)
