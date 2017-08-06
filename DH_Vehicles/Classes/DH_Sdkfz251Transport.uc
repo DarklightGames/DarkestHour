@@ -11,6 +11,7 @@ class DH_Sdkfz251Transport extends DHVehicle;
 defaultproperties
 {
     ReinforcementCost=4
+    bCanCrash=true
     bIsApc=true
     bHasTreads=true
     TreadHitMaxHeight=-5.0
@@ -35,7 +36,7 @@ defaultproperties
     LeftTrackSoundBone="steer_wheel_LF"
     RightTrackSoundBone="steer_wheel_RF"
     RumbleSoundBone="body"
-    MaxCriticalSpeed=674.0 // 40 kph
+    MaxCriticalSpeed=875.0 // 52 kph
     LeftTreadIndex=1
     RightTreadIndex=2
     LeftWheelBones(0)="Wheel_T_L_1"
@@ -59,10 +60,10 @@ defaultproperties
     WheelPenOffset=0.01
     WheelRestitution=0.1
     WheelInertia=0.1
-    WheelLongFrictionFunc=(Points=(,(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
+    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.2),(InVal=600.0,OutVal=0.001),(InVal=10000000000.0,OutVal=0.0)))
     WheelLongSlip=0.001
-    WheelLatSlipFunc=(Points=(,(InVal=30.0,OutVal=0.009),(InVal=45.0),(InVal=10000000000.0)))
     WheelLongFrictionScale=1.1
+    WheelLatSlipFunc=(Points=(,(InVal=30.0,OutVal=0.009),(InVal=45.0),(InVal=10000000000.0)))
     WheelLatFrictionScale=2.0
     WheelHandbrakeSlip=0.01
     WheelHandbrakeFriction=0.1
@@ -71,19 +72,19 @@ defaultproperties
     FTScale=0.03
     ChassisTorqueScale=0.4
     MinBrakeFriction=4.0
-    MaxSteerAngleCurve=(Points=((OutVal=35.0),(InVal=1500.0,OutVal=10.0),(InVal=1000000000.0,OutVal=15.0)))
-    TorqueCurve=(Points=((OutVal=10.0),(InVal=200.0,OutVal=1.0),(InVal=1500.0,OutVal=2.5),(InVal=2200.0)))
-    GearRatios(0)=-0.25
+    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=48.0),(InVal=200.0,OutVal=35.0),(InVal=600.0,OutVal=6.0),(InVal=1000000000.0,OutVal=0.0)))
+    TorqueCurve=(Points=((InVal=0.0,OutVal=18.0),(InVal=200.0,OutVal=12.0),(InVal=600.0,OutVal=9.0),(InVal=1200.0,OutVal=4.0),(InVal=2000.0,OutVal=0.5)))
+    GearRatios(0)=-0.3
     GearRatios(1)=0.2
     GearRatios(2)=0.35
-    GearRatios(3)=0.5
-    GearRatios(4)=0.72
+    GearRatios(3)=0.55
+    GearRatios(4)=1.15
     TransRatio=0.12
     LSDFactor=1.0
     EngineBrakeFactor=0.0001
     EngineBrakeRPMScale=0.1
     MaxBrakeTorque=20.0
-    SteerSpeed=50.0
+    SteerSpeed=65.0
     TurnDamping=35.0
     StopThreshold=100.0
     HandbrakeThresh=200.0
@@ -115,35 +116,24 @@ defaultproperties
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=500,ViewPitchDownLimit=49000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=500,ViewPitchDownLimit=49000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.sdkfz251_body'
-
     VehicleHudOccupantsX(0)=0.45
     VehicleHudOccupantsY(0)=0.4
-
     VehicleHudOccupantsX(1)=0.5
     VehicleHudOccupantsY(1)=0.5
-
     VehicleHudOccupantsX(2)=0.45
     VehicleHudOccupantsY(2)=0.6
-
     VehicleHudOccupantsX(3)=0.45
     VehicleHudOccupantsY(3)=0.7
-
     VehicleHudOccupantsX(4)=0.45
     VehicleHudOccupantsY(4)=0.8
-
     VehicleHudOccupantsX(5)=0.55
     VehicleHudOccupantsY(5)=0.6
-
     VehicleHudOccupantsX(6)=0.55
     VehicleHudOccupantsY(6)=0.7
-
     VehicleHudOccupantsX(7)=0.55
     VehicleHudOccupantsY(7)=0.8
-
     VehicleHudEngineY=0.3
-
     VehHitpoints(0)=(PointRadius=30.0,PointOffset=(X=15.0,Z=-15.0)) // engine
-    EngineHealth=150
     DriverAttachmentBone="driver_player"
     Begin Object Class=SVehicleWheel Name=RFWheel
         SteerType=VST_Steered
@@ -198,7 +188,6 @@ defaultproperties
     VehicleMass=8.5
     DrivePos=(X=2.0,Y=2.0,Z=3.5)
     DriveAnim="Vhalftrack_driver_idle"
-
     ExitPositions(0)=(X=-240.0,Y=-30.0,Z=5.0)   // Back 1 Driver
     ExitPositions(1)=(X=-240.0,Y=30.0,Z=5.0)    // Back 2 MG
     ExitPositions(2)=(X=-285.0,Y=0.0,Z=5.0)     // Back 3 Passenger 1
@@ -210,9 +199,7 @@ defaultproperties
     ExitPositions(8)=(X=-35.0,Y=-125.0,Z=5.0)   // Left Side Extra
     ExitPositions(9)=(X=-35.0,Y=117.0,Z=5.0)    // Right Side Extra
     ExitPositions(10)=(X=-111.0,Y=36.0,Z=112.0) // Top Extra
-
     CenterSpringForce="SpringONSSRV"
-    ImpactDamageMult=0.001
     VehicleNameString="Sd.Kfz.251 Halftrack"
     MaxDesireability=1.2
     HUDOverlayClass=class'ROVehicles.Sdkfz251DriverOverlay'
@@ -221,6 +208,10 @@ defaultproperties
     GroundSpeed=325.0
     PitchUpLimit=500
     PitchDownLimit=49000
+    ImpactDamageThreshold=15.0
+    ImpactDamageMult=0.001
+    ImpactWorldDamageMult=3.0
+    EngineHealth=150
     HealthMax=325.0
     Health=325
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_ext'
