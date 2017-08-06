@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_USWinterPawn extends DHPawn;
+class DH_USWinterPawn extends DH_AmericanPawn;
 
 // Modified to remove unwanted inherited FaceSkins
 simulated function PostBeginPlay()
