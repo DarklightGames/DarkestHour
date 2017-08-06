@@ -263,7 +263,10 @@ simulated function PokeTerrain(float Radius, float Depth)
 
     foreach TraceActors(class'TerrainInfo', TI, HitLocation, HitNormal, TraceEnd, TraceStart)
     {
-        TI.PokeTerrain(HitLocation, Radius, Depth);
+        if (TI != none)
+        {
+            TI.PokeTerrain(HitLocation, Radius, Depth);
+        }
     }
 }
 
