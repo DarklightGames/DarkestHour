@@ -211,7 +211,7 @@ auto state Timing
         {
             PC = PlayerController(C);
 
-            if (PC != none)
+            if (PC != none && (PC.GetTeamNum() == AXIS_TEAM_INDEX || PC.GetTeamNum() == ALLIES_TEAM_INDEX))
             {
                 PC.ClientMessage(Repl(PhaseEndMessage, "{0}", GRI.SpawnsRemaining[PC.GetTeamNum()]), 'CriticalEvent');
                 PC.PlayAnnouncement(PhaseEndSounds[PC.GetTeamNum()], 1, true);
