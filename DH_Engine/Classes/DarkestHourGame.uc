@@ -2726,6 +2726,12 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
         return;
     }
 
+    // Don't change if value is infinite
+    if (GRI.SpawnsRemaining[Team] == -1)
+    {
+        return;
+    }
+
     // Don't increase if value is zero and bOnlyIfNotZero
     if (GRI.SpawnsRemaining[Team] == 0 && bOnlyIfNotZero)
     {
