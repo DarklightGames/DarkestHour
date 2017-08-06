@@ -397,6 +397,8 @@ simulated function UpdateScoreBoard(Canvas C)
     // Add game type
     S $= HUD.default.SpacingText $ HUD.default.MapGameTypeText $ DHGRI.CurrentGameType;
 
+    Y = CalcY(0.25, C);
+
     // Draw our round/server info line, with a drop shadow
     C.SetDrawColor(0, 0, 0, 128);
     X = BaseXPos[0];
@@ -675,6 +677,7 @@ simulated function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplication
     // Draw team totals
     X = BaseXPos[TeamIndex];
     LineHeight = BaseLineHeight * 1.25;
+
     DrawCell(C, "", 0, X, Y, CalcX(GetScoreboardTeamWidth(TeamIndex), C), LineHeight, true, class'UColor'.default.White, TeamColor);
 
     MaxTeamYPos = FMax(MaxTeamYPos, Y);
@@ -709,10 +712,10 @@ defaultproperties
     ScoreboardColumns(0)=(Title="#",Type=COLUMN_SquadMemberIndex,Width=1.5,Justification=1,bFriendlyOnly=true)
     ScoreboardColumns(1)=(Title="Name",Type=COLUMN_PlayerName,Width=6.0)
     ScoreboardColumns(2)=(Title="Role",Type=COLUMN_Role,Width=4.0,bFriendlyOnly=true)
-    ScoreboardColumns(3)=(Title="K",Type=COLUMN_Kills,Width=0.75,Justification=1,bFriendlyOnly=true)
-    ScoreboardColumns(4)=(Title="D",Type=COLUMN_Deaths,Width=0.75,Justification=1,bFriendlyOnly=true)
-    ScoreboardColumns(5)=(Title="Score",Type=COLUMN_Score,Width=1.5,Justification=1)
-    ScoreboardColumns(6)=(Title="Ping",Type=COLUMN_Ping,Width=1.0,Justification=1)
+//    ScoreboardColumns(3)=(Title="K",Type=COLUMN_Kills,Width=0.75,Justification=1,bFriendlyOnly=true)
+//    ScoreboardColumns(4)=(Title="D",Type=COLUMN_Deaths,Width=0.75,Justification=1,bFriendlyOnly=true)
+    ScoreboardColumns(3)=(Title="Score",Type=COLUMN_Score,Width=1.5,Justification=1)
+    ScoreboardColumns(4)=(Title="Ping",Type=COLUMN_Ping,Width=1.0,Justification=1)
 
     SquadHeaderColor=(R=64,G=64,B=64,A=192)
     PlayerBackgroundColor=(R=0,G=0,B=0,A=192)
