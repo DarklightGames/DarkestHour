@@ -1085,6 +1085,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     local DHVehicleCannonPawn CannonPawn;
     local DHVehicleCannon     Cannon;
     local VehicleWeaponPawn   WP;
+    local VehicleWeapon       Gun;
     local AbsoluteCoordsInfo  Coords, Coords2;
     local SpriteWidget        Widget;
     local rotator             MyRot;
@@ -1191,16 +1192,28 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
             DrawSpriteWidgetClipped(Canvas, VehicleThreads[1], Coords, true, XL, YL, false, true);
         }
 
-        // Draw any turret icon, with current turret rotation
-        if (V.Cannon != none && V.VehicleHudTurret != none)
+        // Draw any turret icon, with current turret rotation (applies to any turret-mounted MG as well as cannons)
+        if (V.VehicleHudTurret != none)
         {
-            MyRot = rotator(vector(V.Cannon.CurrentAim) >> V.Cannon.Rotation);
-            V.VehicleHudTurret.Rotation.Yaw = V.Rotation.Yaw - MyRot.Yaw;
-            Widget.WidgetTexture = V.VehicleHudTurret;
-            Widget.TextureCoords.X2 = V.VehicleHudTurret.MaterialUSize() - 1;
-            Widget.TextureCoords.Y2 = V.VehicleHudTurret.MaterialVSize() - 1;
-            Widget.TextureScale = V.VehicleHudTurret.MaterialUSize() / 256.0;
-            DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
+            if (V.Cannon != none)
+            {
+                Gun = V.Cannon;
+            }
+            else if (V.MGun != none)
+            {
+                Gun = V.MGun;
+            }
+
+            if (Gun != none)
+            {
+                MyRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
+                V.VehicleHudTurret.Rotation.Yaw = V.Rotation.Yaw - MyRot.Yaw;
+                Widget.WidgetTexture = V.VehicleHudTurret;
+                Widget.TextureCoords.X2 = V.VehicleHudTurret.MaterialUSize() - 1;
+                Widget.TextureCoords.Y2 = V.VehicleHudTurret.MaterialVSize() - 1;
+                Widget.TextureScale = V.VehicleHudTurret.MaterialUSize() / 256.0;
+                DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
+            }
         }
     }
 
