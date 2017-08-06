@@ -133,7 +133,6 @@ simulated function array<PlayerReplicationInfo> GetMembers()
 
 defaultproperties
 {
-    bLocal=true
     SquadIndex=-1
     LocalBroadcastRangeSquared=4000000.0
 }
