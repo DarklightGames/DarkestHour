@@ -10,6 +10,7 @@ class DH_M3A1HalftrackTransport extends DHVehicle;
 defaultproperties
 {
     ReinforcementCost=4
+    bCanCrash=true
     bIsApc=true
     bHasTreads=true
     TreadHitMaxHeight=2.5
@@ -36,7 +37,7 @@ defaultproperties
     RumbleSoundBone="body"
     LeftTreadIndex=2
     RightTreadIndex=3
-    MaxCriticalSpeed=674.0 // 40 kph
+    MaxCriticalSpeed=1077.0 // 64 kph
     LeftWheelBones(0)="wheel_L_2"
     LeftWheelBones(1)="wheel_L_3"
     LeftWheelBones(2)="wheel_L_4"
@@ -56,10 +57,10 @@ defaultproperties
     WheelPenOffset=0.01
     WheelRestitution=0.1
     WheelInertia=0.1
-    WheelLongFrictionFunc=(Points=(,(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
+    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.2),(InVal=600.0,OutVal=0.001),(InVal=10000000000.0,OutVal=0.0)))
     WheelLongSlip=0.001
-    WheelLatSlipFunc=(Points=(,(InVal=30.0,OutVal=0.009),(InVal=45.0),(InVal=10000000000.0)))
     WheelLongFrictionScale=1.1
+    WheelLatSlipFunc=(Points=(,(InVal=30.0,OutVal=0.009),(InVal=45.0),(InVal=10000000000.0)))
     WheelLatFrictionScale=2.0
     WheelHandbrakeSlip=0.01
     WheelHandbrakeFriction=0.1
@@ -69,19 +70,19 @@ defaultproperties
     FTScale=0.03
     ChassisTorqueScale=0.4
     MinBrakeFriction=4.0
-    MaxSteerAngleCurve=(Points=((OutVal=20.0),(InVal=1500.0,OutVal=10.0),(InVal=1000000000.0,OutVal=8.0)))
-    TorqueCurve=(Points=((OutVal=10.0),(InVal=200.0,OutVal=1.0),(InVal=1500.0,OutVal=2.5),(InVal=2200.0)))
-    GearRatios(0)=-0.25
+    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=48.0),(InVal=200.0,OutVal=35.0),(InVal=600.0,OutVal=6.0),(InVal=1000000000.0,OutVal=0.0)))
+    TorqueCurve=(Points=((InVal=0.0,OutVal=18.0),(InVal=200.0,OutVal=12.0),(InVal=600.0,OutVal=9.0),(InVal=1200.0,OutVal=4.0),(InVal=2000.0,OutVal=0.5)))
+    GearRatios(0)=-0.3
     GearRatios(1)=0.2
     GearRatios(2)=0.35
-    GearRatios(3)=0.5
-    GearRatios(4)=0.69
+    GearRatios(3)=0.55
+    GearRatios(4)=1.15
     TransRatio=0.12
     LSDFactor=1.0
     EngineBrakeFactor=0.0001
     EngineBrakeRPMScale=0.1
     MaxBrakeTorque=20.0
-    SteerSpeed=50.0
+    SteerSpeed=65.0
     TurnDamping=35.0
     StopThreshold=100.0
     HandbrakeThresh=200.0
@@ -144,7 +145,6 @@ defaultproperties
     VehicleHudOccupantsY(11)=0.8
     VehicleHudEngineY=0.25
     VehHitpoints(0)=(PointRadius=35.0,PointOffset=(Z=-20.0)) // engine
-    EngineHealth=125
     DriverAttachmentBone="driver_player"
     Begin Object Class=SVehicleWheel Name=RFWheel
         SteerType=VST_Steered
@@ -207,12 +207,15 @@ defaultproperties
     ExitPositions(9)=(X=9.0,Y=122.0,Z=10.0)     // Right Side Extra
     ExitPositions(10)=(X=-107.0,Y=-33.0,Z=116.0)// Top Extra
     CenterSpringForce="SpringONSSRV"
-    ImpactDamageMult=0.001
     VehicleNameString="M3A1 Halftrack"
     MaxDesireability=1.5
     GroundSpeed=325.0
     PitchUpLimit=500
     PitchDownLimit=49000
+    ImpactDamageThreshold=15.0
+    ImpactDamageMult=0.001
+    ImpactWorldDamageMult=3.0
+    EngineHealth=125
     HealthMax=325.0
     Health=325
     Mesh=SkeletalMesh'DH_M3Halftrack_anm.m3_body'
