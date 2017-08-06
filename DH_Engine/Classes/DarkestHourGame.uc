@@ -2752,32 +2752,30 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
         GRI.SpawnsRemaining[Team] = Max(0, GRI.SpawnsRemaining[Team] + Amount);
     }
 
-    // Check for zero reinforcements
-    if (GRI.SpawnsRemaining[Team] == 0)
+    // If out of reinforcements, then handle checks to end the round
+    if (bOutOfReinf && bTeamOutOfReinforcements[Team] == 0)
     {
-        if (bTeamOutOfReinforcements[Team] == 0)
+        // Determine if player's team is defending
+        bIsDefendingTeam = (Team == AXIS_TEAM_INDEX && LevelInfo.DefendingSide == SIDE_Axis) ||
+                           (Team == ALLIES_TEAM_INDEX && LevelInfo.DefendingSide == SIDE_Allies);
+
+        // Team is now out of reinforcements
+        bTeamOutOfReinforcements[Team] = 1;
+
+        // If the round is meant to end when a team runs out of reinforcements, then end it (and exit function)
+        if (bRoundEndsAtZeroReinf)
         {
-            // Colin: Determine if player's team is defending
-            bIsDefendingTeam = (Team == AXIS_TEAM_INDEX && LevelInfo.DefendingSide == SIDE_Axis) ||
-                               (Team == ALLIES_TEAM_INDEX && LevelInfo.DefendingSide == SIDE_Allies);
-
-            // Colin: Team is just now out of reinforcements.
-            bTeamOutOfReinforcements[Team] = 1;
-
-            if ((LevelInfo.DefendingSide != SIDE_none && !bIsDefendingTeam) || LevelInfo.DefendingSide == SIDE_none)
-            {
-                // Colin: if this team is attacking OR there is no defending side
-                // set the round time to 60 seconds, Theel: added special case to choosewinner if Atrrition is used
-                if (bRoundEndsAtZeroReinf)
-                {
-                    Level.Game.Broadcast(self, "The battle ended because a team's reinforcements reached zero", 'Say');
-                    Choosewinner();
-                }
-                else if (bTimeChangesAtZeroReinf)
-                {
-                    ModifyRoundTime(Min(GetRoundTime(), 90), 2); //Set time remaining to 90 seconds
-                }
-            }
+            Level.Game.Broadcast(self, "The battle ended because a team's reinforcements reached zero", 'Say');
+            Choosewinner();
+            return; // Leave function as we don't want to change round time as round is over
+        }
+        else if (bTimeChangesAtZeroReinf && (LevelInfo.DefendingSide != SIDE_None && !bIsDefendingTeam) || LevelInfo.DefendingSide == SIDE_none)
+        {
+            // If the time is meant to change when a team runs out of reinf
+            // AND the player killed was an Attacker (with a defending side)
+            // OR the defending side is none
+            // THEN modify the round time
+            ModifyRoundTime(Min(GetRoundTime(), 90), 2); // Set time remaining to 90 seconds, if greater than 90 seconds
         }
     }
 }
