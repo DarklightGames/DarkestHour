@@ -2873,6 +2873,22 @@ static function string ParseChatPercVar(Mutator BaseMutator, Controller Who, str
         return Str;
     }
 
+    if (cmd ~= "%h")
+    {
+        if (Who != none && DHVehicle(Who.Pawn) != none && DHVehicle(Who.Pawn).Driver != none)
+        {
+            return "[Vehicle HP:" @ Who.Pawn.Health $ "] [Engine HP:" @ DHVehicle(Who.Pawn).EngineHealth $ "] [Player HP:" @ DHVehicle(Who.Pawn).Driver.Health $ "]";
+        }
+        else if (Who.Pawn != none)
+        {
+            return Who.Pawn.Health $ " Health";
+        }
+        else
+        {
+            return "No Pawn";
+        }
+    }
+
     return super.ParseChatPercVar(BaseMutator, Who, Cmd);
 }
 
