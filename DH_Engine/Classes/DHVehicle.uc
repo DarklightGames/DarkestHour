@@ -1044,18 +1044,16 @@ simulated state EnteringVehicle
 }
 
 // Modified to avoid starting exhaust & dust effects just because we got in - now we need to wait until the engine is started
-// Also to play idle animation for other net clients (not just owning client), so we reset visuals like hatches
+// Also to play neutral idle animation for all modes, so players see things like closed hatches & also any collision stuff is re-set (including on server)
 // We no longer disable Tick when driver exits, as vehicle may still be moving & dust effects need updating as vehicle slows
 // Instead we disable Tick at the end of Tick itself, if vehicle isn't moving & has no driver
 simulated event DrivingStatusChanged()
 {
-    // Enable Tick if we have a driver (necessary even if engine is off, to prevent vehicle from being driven)
     if (bDriving)
     {
-        Enable('Tick');
+        Enable('Tick'); // necessary even if engine is off, if we have a driver, to prevent vehicle from being driven
     }
-    // Play neutral idle animation if player has exited, but not on a server
-    else if (Level.NetMode != NM_DedicatedServer && HasAnim(BeginningIdleAnim))
+    else if (HasAnim(BeginningIdleAnim))
     {
         PlayAnim(BeginningIdleAnim);
     }
