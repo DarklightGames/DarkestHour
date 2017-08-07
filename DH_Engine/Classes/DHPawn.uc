@@ -5988,6 +5988,32 @@ function SetMovementPhysics()
     }
 }
 
+// Modified to use DHShadowProjector class (unlike vehicle shadows, this has no functional change, but the projector's tick functionality is optimised)
+simulated function UpdateShadow()
+{
+    if (PlayerShadow != none) // shouldn't already have a shadow, so destroy any that somehow exists
+    {
+        PlayerShadow.Destroy();
+        PlayerShadow = none;
+    }
+
+    if (Level.NetMode != NM_DedicatedServer && bPlayerShadows && bActorShadows)
+    {
+        PlayerShadow = Spawn(class'DHShadowProjector', self, '', Location);
+
+        if (PlayerShadow != none)
+        {
+            PlayerShadow.ShadowActor = self;
+            PlayerShadow.bBlobShadow = bBlobShadow;
+            PlayerShadow.LightDirection = Normal(vect(1.0, 1.0, 3.0));
+            PlayerShadow.LightDistance = 320.0;
+            PlayerShadow.MaxTraceDistance = 350;
+
+            PlayerShadow.InitShadow();
+        }
+    }
+}
+
 // Colin: This is a bit of a half-measure, since we need to retain support for
 // "using" the radio trigger normally. Unfortunately, the Pawns is consuming the
 // use requests when players are looking directly at the player and trying to

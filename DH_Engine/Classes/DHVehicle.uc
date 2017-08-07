@@ -129,6 +129,7 @@ var     byte                        RandomAttachmentIndex;   // the attachment i
 var     class<DHResupplyAttachment> ResupplyAttachmentClass; // option for a functioning (not decorative) resupply actor attachment
 var     name                        ResupplyAttachBone;      // bone name for attaching resupply attachment
 var     DHResupplyAttachment        ResupplyAttachment;      // reference to any resupply actor
+var     float                       ShadowZOffset;           // vertical position offset for shadow, allowing shadow to be tuned (origin position in hull mesh affects shadow location)
 
 // Supply
 var     class<DHConstructionSupplyAttachment>   SupplyAttachmentClass;
@@ -2803,6 +2804,36 @@ simulated function SetDamagedTracks()
     }
 }
 
+// Modified to use DHShadowProjector class, which uses this vehicle's ShadowZOffset to position its shadow, instead of a hard-coded literal value
+// Allows shadow position to be tuned to look right, as hull mesh origin position affects vehicle actor location relative to the ground, affecting shadow location
+simulated function UpdateShadow()
+{
+    if (VehicleShadow != none) // shouldn't already have a vehicle shadow, so destroy any that somehow exists
+    {
+        VehicleShadow.Destroy();
+        VehicleShadow = none;
+    }
+
+    if (Level.NetMode != NM_DedicatedServer && bVehicleShadows && bDrawVehicleShadow)
+    {
+        VehicleShadow = Spawn(class'DHShadowProjector', self, '', Location);
+
+        if (VehicleShadow != none)
+        {
+            VehicleShadow.ShadowActor      = self;
+            VehicleShadow.bBlobShadow      = false;
+            VehicleShadow.LightDirection   = Normal(vect(1.0, 1.0, 6.0));
+            VehicleShadow.LightDistance    = 1200.0;
+            VehicleShadow.MaxTraceDistance = ShadowMaxTraceDist;
+            VehicleShadow.CullDistance     = ShadowCullDistance;
+
+            DHShadowProjector(VehicleShadow).ShadowZOffset = ShadowZOffset; // added
+
+            VehicleShadow.InitShadow();
+        }
+    }
+}
+
 // Modified to destroy extra attachments & effects, & to add option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
 simulated event DestroyAppearance()
 {
@@ -3533,6 +3564,7 @@ defaultproperties
     SparkEffectClass=none // removes the odd spark effects when vehicle drags bottom on ground
     SteeringScaleFactor=4.0
     RandomAttachmentIndex=255 // an invalid starting value, so will only get changed & replicated if a valid selection is made for a random decorative attachment
+    ShadowZOffset=5.0 // the literal value used in the ShadowProjector class
 
     // HUD
     VehicleHudTreadsPosX(0)=0.35

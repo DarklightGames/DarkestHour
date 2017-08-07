@@ -4347,6 +4347,19 @@ exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFir
     }
 }
 
+// New debug exec to adjust the position of a vehicle's shadow so it looks right by adjusting the vertical position offset (ShadowZOffset) of attached ShadowProjector
+exec function SetVehShadowHeight(float NewValue)
+{
+    local DHVehicle V;
+
+    if (IsVehicleDebugModeAllowed(V) && DHShadowProjector(V.VehicleShadow) != none)
+    {
+        Log(V.VehicleNameString @ "ShadowZOffset =" @ NewValue @ "(was" @ V.ShadowZOffset $ ")");
+        V.ShadowZOffset = NewValue;
+        DHShadowProjector(V.VehicleShadow).ShadowZOffset = NewValue;
+    }
+}
+
 // New debug exec to show & adjust the height bands of an armoured vehicle's hull armour sections, i.e. highest relative point (above mesh origin) for that armour section
 // Spawns an angle plane attachment representing the height setting (run again with no side specified to remove this)
 exec function SetArmorHeight(optional string Side, optional byte Index, optional float NewValue)
