@@ -603,18 +603,24 @@ simulated state ViewTransition
         }
     }
 
+    // Modified so if camera was locked to PlayerCameraBone during transition animation, we now match rotation to that bone's final rotation
     simulated function EndState()
     {
+        local rotator NewRotation;
+
         super.EndState();
 
-        // If camera was locked to PlayerCameraBone during button/unbutton transition, match rotation to that now, so the view can't snap to another rotation
-        if (bLockCameraDuringTransition && Level.NetMode != NM_DedicatedServer &&
-            ((DriverPositionIndex == UnbuttonedPositionIndex && LastPositionIndex < UnbuttonedPositionIndex)
-            || (LastPositionIndex == UnbuttonedPositionIndex && DriverPositionIndex < UnbuttonedPositionIndex))
-            && ViewTransitionDuration > 0.0 && IsHumanControlled() && !PlayerController(Controller).bBehindView)
+        if (bLockCameraDuringTransition && ViewTransitionDuration > 0.0 && IsFirstPerson())
         {
-            SetRotation(rot(0, 0, 0));
-            Controller.SetRotation(Rotation);
+            NewRotation = rotator(vector(VehWep.GetBoneRotation(PlayerCameraBone)) << VehWep.Rotation); // get camera bone rotation, made relative to vehicle
+
+            if (VehWep.bHasTurret) // if vehicle has a turret, remove turret's yaw from relative rotation
+            {
+                NewRotation.Yaw -= VehWep.CurrentAim.Yaw;
+            }
+
+            SetRotation(NewRotation); // note that an owning net client will update this back to the server
+            Controller.SetRotation(NewRotation); // also set controller rotation as that's what's relevant if player exited mid-transition & that caused us to leave this state
         }
     }
 }
