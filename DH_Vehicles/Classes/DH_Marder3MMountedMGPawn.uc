@@ -11,6 +11,22 @@ function bool CanFire()
     return DriverPositionIndex != BinocPositionIndex || !IsHumanControlled();
 }
 
+// Modified so if player moves off binoculars (where he could look around) & back onto the MG, we match rotation back to the direction MG is facing
+// Otherwise rotation becomes de-synced & he can have the wrong view rotation if he moves back onto binocs or exits
+// Note we do this from state LeavingViewTransition instead of ViewTransition so that a CanFire() check in SetInitialViewRotation() works properly
+simulated state LeavingViewTransition
+{
+    simulated function EndState()
+    {
+        super.EndState();
+
+        if (LastPositionIndex == BinocPositionIndex && IsFirstPerson())
+        {
+            SetInitialViewRotation();
+        }
+    }
+}
+
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_Marder3MMountedMG'

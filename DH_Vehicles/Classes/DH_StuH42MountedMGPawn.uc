@@ -24,14 +24,16 @@ simulated function ClientKDriverEnter(PlayerController PC)
     }
 }
 
-// Modified so if player buttons up & is now on the gun, rotation is set to match the direction MG is facing (after looking around while unbuttoned)
-simulated state ViewTransition
+// Modified so if player buttons up & is back on the MG (after looking around unbuttoned), we match rotation back to the direction MG is facing
+// Otherwise rotation becomes de-synced & he can have the wrong view rotation when unbuttoning again
+// Note we do this from state LeavingViewTransition instead of ViewTransition so that a CanFire() check in SetInitialViewRotation() works properly
+simulated state LeavingViewTransition
 {
     simulated function EndState()
     {
         super.EndState();
 
-        if (DriverPositionIndex < UnbuttonedPositionIndex)
+        if (DriverPositionIndex < UnbuttonedPositionIndex && IsFirstPerson())
         {
             SetInitialViewRotation();
         }

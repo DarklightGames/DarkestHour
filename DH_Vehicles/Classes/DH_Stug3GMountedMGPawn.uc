@@ -24,6 +24,22 @@ simulated function ClientKDriverEnter(PlayerController PC)
     }
 }
 
+// Modified so if player moves back onto the MG from a position where he could look around freely, we match rotation back to the direction MG is facing
+// Otherwise rotation becomes de-synced & he can have the wrong view rotation if he moves off the gun again or exits
+// Note we do this from state LeavingViewTransition instead of ViewTransition so that a CanFire() check in SetInitialViewRotation() works properly
+simulated state LeavingViewTransition
+{
+    simulated function EndState()
+    {
+        super.EndState();
+
+        if ((LastPositionIndex < UnbuttonedPositionIndex || LastPositionIndex == BinocPositionIndex) && IsFirstPerson()) // has either unbuttoned or moved off binoculars
+        {
+            SetInitialViewRotation();
+        }
+    }
+}
+
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_Stug3GMountedMG'
