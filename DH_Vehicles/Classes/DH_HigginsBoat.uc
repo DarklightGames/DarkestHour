@@ -222,18 +222,18 @@ function bool KDriverLeave(bool bForceLeave)
     return true;
 }
 
-// Modified to avoid resetting position indexes, as we need to keep the ramp in its current up/down position
-// But if player was on the binoculars, we need to change the position indexes back to 1, so the next player in doesn't find himself with a drawn binocs overlay
+// Modified to avoid resetting position indexes, as we need to keep the ramp in its current up/down position (using same method as KDriverEnter)
+// But if player was on the binoculars, we do need to reset the position indexes, so the next player in doesn't find himself with a drawn binocs overlay
 function DriverLeft()
 {
-    if (DriverPositionIndex == BinocPositionIndex)
+    if (DriverPositionIndex != BinocPositionIndex)
     {
-        DriverPositionIndex = InitialPositionIndex;
-        PreviousPositionIndex = InitialPositionIndex;
+        InitialPositionIndex = DriverPositionIndex;
     }
 
-    MaybeDestroyVehicle();
-    DrivingStatusChanged();
+    super.DriverLeft();
+
+    InitialPositionIndex = default.InitialPositionIndex; // restore normal value now we've done
 }
 
 // Called by notifies from the animation
