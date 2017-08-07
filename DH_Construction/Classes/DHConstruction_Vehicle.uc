@@ -48,7 +48,7 @@ simulated state Dummy
 
     function Timer()
     {
-        if (Vehicle == none || Vehicle.bVehicleDestroyed)
+        if (Vehicle == none)
         {
             Destroy();
         }
