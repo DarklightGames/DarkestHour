@@ -189,7 +189,7 @@ defaultproperties
     EngineHealth=125
     HealthMax=325.0
     Health=325
-    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_hatch',AttachBone="hatch") // collision attachment for driver's armoured visor
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_visor_collision',AttachBone="hatch") // collision attachment for driver's armoured visor
     CollisionRadius=10.0
     CollisionHeight=40.0
     Begin Object Class=KarmaParamsRBFull Name=KParams0
@@ -214,7 +214,7 @@ defaultproperties
     RightTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
 
     // Random attachment
-    RandomAttachment=(AttachBone="body")
+    RandomAttachment=(AttachBone="body",bHasCollision=true)
     RandomAttachOptions(0)=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_bumper_01',PercentChance=50)
     RandomAttachOptions(1)=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_bumper_02',PercentChance=50)
 }
