@@ -101,13 +101,16 @@ simulated state ViewTransition
     {
         super.HandleTransition();
 
-        if (DriverPositionIndex < InitialPositionIndex && PreviousPositionIndex == InitialPositionIndex)
+        if (Level.NetMode != NM_DedicatedServer)
         {
-            PlayOwnedSound(RampDownSound, SLOT_Misc, RampSoundVolume / 255.0,, 150.0,, false);
-        }
-        else if (DriverPositionIndex == InitialPositionIndex && PreviousPositionIndex < DriverPositionIndex)
-        {
-            PlayOwnedSound(RampUpSound, SLOT_Misc, RampSoundVolume / 255.0,, 150.0,, false);
+            if (DriverPositionIndex < InitialPositionIndex && PreviousPositionIndex == InitialPositionIndex)
+            {
+                PlaySound(RampDownSound, SLOT_Misc, RampSoundVolume / 255.0,, 150.0,, false);
+            }
+            else if (DriverPositionIndex == InitialPositionIndex && PreviousPositionIndex < DriverPositionIndex)
+            {
+                PlaySound(RampUpSound, SLOT_Misc, RampSoundVolume / 255.0,, 150.0,, false);
+            }
         }
     }
 }
