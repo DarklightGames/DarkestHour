@@ -29,6 +29,16 @@ function PostBeginPlay()
     SupplyAttachment.bHidden = true;
 }
 
+simulated function Destroyed()
+{
+    super.Destroyed();
+
+    if (SupplyAttachment != none)
+    {
+        SupplyAttachment.Destroy();
+    }
+}
+
 function MyOnSupplyCountChanged(DHConstructionSupplyAttachment CSA)
 {
     if (CSA != none)
