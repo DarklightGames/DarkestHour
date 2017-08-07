@@ -147,10 +147,15 @@ function bool SpawnPlayer(DHPlayer PC)
     local DHSpawnPointBase SP;
     local bool bResult;
     local DHPawn P;
+    local bool bCombatSpawn;
 
     if (PC != none)
     {
         SP = GRI.GetSpawnPoint(PC.SpawnPointIndex);
+
+        // We store this value because the spawn point may destroy itself when
+        // calling PerformSpawn, which would invalidate the SP reference here.
+        bCombatSpawn = SP.bCombatSpawn;
 
         if (SP != none)
         {
@@ -163,7 +168,7 @@ function bool SpawnPlayer(DHPlayer PC)
                 if (P != none)
                 {
                     P.SpawnPoint = SP;
-                    P.bCombatSpawned = SP.bCombatSpawn;
+                    P.bCombatSpawned = bCombatSpawn;
                 }
             }
 
