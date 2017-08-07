@@ -1317,7 +1317,8 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
     }
 
     // Can't switch if new vehicle position already has a human occupant
-    if (NewVehiclePosition != none && NewVehiclePosition.PlayerReplicationInfo != none && !NewVehiclePosition.PlayerReplicationInfo.bBot)
+    // bDriving check is there to also catch 'LeaveBody' debug pawns, which won't have a PRI, stopping player switching into same position as one
+    if (NewVehiclePosition != none && NewVehiclePosition.bDriving && !(NewVehiclePosition.PlayerReplicationInfo != none && NewVehiclePosition.PlayerReplicationInfo.bBot))
     {
         return false;
     }
