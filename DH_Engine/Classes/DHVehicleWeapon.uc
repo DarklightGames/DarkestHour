@@ -302,6 +302,7 @@ event bool AttemptFire(Controller C, bool bAltFire)
 // Projectile fire is now effectively the default, non-state condition for all DHVehicleWeapon
 // Modified to spawn either normal bullet OR tracer, based on proper shot count, not simply time elapsed since last shot
 // Modulo operator (%) divides rounds previously fired by tracer frequency & returns the remainder - if it divides evenly then it's time to fire a tracer
+// Also added a fix for bug where listen server host watching another player fire didn't see the firing effects from any AmbientEffectEmitter
 function Fire(Controller C)
 {
     if (bUsesTracers && !bAltFireTracersOnly && ((InitialPrimaryAmmo - PrimaryAmmoCount() - 1) % TracerFrequency == 0.0) && TracerProjectileClass != none)
@@ -311,6 +312,11 @@ function Fire(Controller C)
     else if (ProjectileClass != none)
     {
         SpawnProjectile(ProjectileClass, false);
+    }
+
+    if (Level.NetMode == NM_ListenServer && AmbientEffectEmitter != none && !(Instigator != none && Instigator.IsLocallyControlled()))
+    {
+        AmbientEffectEmitter.SetEmitterStatus(true); // non-owning listen server doesn't get OwnerEffects() & no native code handles this emitter (unlike a non-owning net client)
     }
 }
 
