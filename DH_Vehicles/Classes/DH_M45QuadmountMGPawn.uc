@@ -89,6 +89,17 @@ simulated function SetInitialViewRotation()
     super(DHVehicleWeaponPawn).SetInitialViewRotation();
 }
 
+// Modified so player faces forwards if he's on the gunsight when switching to behind view (same as a cannon pawn)
+simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
+{
+    if (PC != none && PC.bBehindView && bBehindViewChanged && DriverPositionIndex == 0)
+    {
+        PC.SetRotation(rot(0, 0, 0));
+    }
+
+    super.POVChanged(PC, bBehindViewChanged);
+}
+
 // Modified so player faces forwards when he lifts his head up from the gunsight, as before his view was locked to the camera bone's rotation (similar to cannon pawn)
 // Stops camera snapping to a strange rotation as view rotation reverts to pawn/PC rotation, which has been redundant & could have wandered meaninglessly via mouse movement
 simulated state ViewTransition
