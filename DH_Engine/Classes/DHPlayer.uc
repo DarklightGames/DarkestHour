@@ -167,9 +167,6 @@ simulated event PostBeginPlay()
         {
             break;
         }
-
-        // This creates the construction manager on the client only
-        ConstructionManager = Spawn(class'DHConstructionManager', self);
     }
 }
 

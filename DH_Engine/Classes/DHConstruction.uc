@@ -228,7 +228,7 @@ simulated function PostBeginPlay()
     }
 
     LevelInfo = GetLevelInfo();
-    Manager = FindConstructionManager(Level);
+    Manager = class'DHConstructionManager'.static.GetInstance(Level);
 
     if (Manager != none)
     {
@@ -268,38 +268,6 @@ simulated function PokeTerrain(float Radius, float Depth)
             TI.PokeTerrain(HitLocation, Radius, Depth);
         }
     }
-}
-
-simulated static function DHConstructionManager FindConstructionManager(LevelInfo Level)
-{
-    local DarkestHourGame G;
-    local DHPlayer PC;
-
-    if (Level == none)
-    {
-        return none;
-    }
-
-    if (Level.Role == ROLE_Authority)
-    {
-        G = DarkestHourGame(Level.Game);
-
-        if (G != none)
-        {
-            return G.ConstructionManager;
-        }
-    }
-    else
-    {
-        PC = DHPlayer(Level.GetLocalPlayerController());
-
-        if (PC != none)
-        {
-            return PC.ConstructionManager;
-        }
-    }
-
-    return none;
 }
 
 // A dummy state, use this when you want this actor to stay around but be
@@ -629,7 +597,7 @@ function static EConstructionError GetPlayerError(DHPlayer PC, optional out Obje
         return ERROR_InsufficientSupply;
     }
 
-    CM = FindConstructionManager(PC.Level);
+    CM = class'DHConstructionManager'.static.GetInstance(PC.Level);
 
     if (CM == none)
     {

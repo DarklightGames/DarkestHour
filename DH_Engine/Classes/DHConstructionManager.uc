@@ -8,6 +8,48 @@ class DHConstructionManager extends Actor
 
 var private array<DHConstruction> Constructions;
 
+static simulated function DHConstructionManager GetInstance(LevelInfo Level)
+{
+    local DarkestHourGame G;
+    local DHPlayer PC;
+
+    if (Level == none)
+    {
+        return none;
+    }
+
+    if (Level.Role == ROLE_Authority)
+    {
+        G = DarkestHourGame(Level.Game);
+
+        if (G != none)
+        {
+            if (G.ConstructionManager == none)
+            {
+                G.ConstructionManager = G.Spawn(class'DHConstructionManager', G);
+            }
+
+            return G.ConstructionManager;
+        }
+    }
+    else
+    {
+        PC = DHPlayer(Level.GetLocalPlayerController());
+
+        if (PC != none)
+        {
+            if (PC.ConstructionManager == none)
+            {
+                PC.ConstructionManager = PC.Spawn(class'DHConstructionManager', PC);
+            }
+
+            return PC.ConstructionManager;
+        }
+    }
+
+    return none;
+}
+
 function Register(DHConstruction C)
 {
     local int i;

@@ -424,7 +424,6 @@ function PostBeginPlay()
     }
 
     PlayerSessions = class'Hashtable_string_Object'.static.Create(128);
-    ConstructionManager = Spawn(class'DHConstructionManager', self);
 }
 
 // Modified to remove any return on # of bots
