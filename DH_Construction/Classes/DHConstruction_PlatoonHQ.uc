@@ -8,45 +8,12 @@ class DHConstruction_PlatoonHQ extends DHConstruction;
 #exec OBJ LOAD FILE=..\Textures\DH_Construction_tex.utx
 
 var DHSpawnPoint_PlatoonHQ  SpawnPoint;
-var ROSoundAttachment       RainSoundAttachment;
 var int                     FlagSkinIndex;
 var sound                   RainSound;
 
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
-}
-
-simulated state Constructed
-{
-    simulated function BeginState()
-    {
-        super.BeginState();
-
-        if (Level.NetMode < NM_DedicatedServer)
-        {
-            if (RainSoundAttachment != none)
-            {
-                RainSoundAttachment.Destroy();
-            }
-
-            if (LevelInfo != none && LevelInfo.Weather == WEATHER_Rainy)
-            {
-                RainSoundAttachment = Spawn(class'ROSoundAttachment');
-
-                if (RainSoundAttachment != none)
-                {
-                    RainSoundAttachment.SetBase(self);
-                    RainSoundAttachment.SetRelativeLocation(vect(0, 0, 250));
-                    RainSoundAttachment.AmbientSound = RainSound;
-                    RainSoundAttachment.SoundVolume = 100;
-                    RainSoundAttachment.SoundRadius = 100;
-                    RainSoundAttachment.TransientSoundRadius=100;
-                    RainSoundAttachment.TransientSoundVolume=100;
-                }
-            }
-        }
-    }
 }
 
 simulated function OnConstructed()
@@ -92,14 +59,9 @@ simulated function DestroyAttachments()
     {
         SpawnPoint.Destroy();
     }
-
-    if (RainSoundAttachment != none)
-    {
-        RainSoundAttachment.Destroy();
-    }
 }
 
-simulated event Destroyed()
+simulated function Destroyed()
 {
     DestroyAttachments();
 }
