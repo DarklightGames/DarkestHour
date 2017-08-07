@@ -137,6 +137,23 @@ simulated function vector GetCameraLocationStart()
     return Location;
 }
 
+// Modified so the player's view starts facing the same way his attached pawn is facing, which feels natural
+simulated function SetInitialViewRotation()
+{
+    local name    AttachBone;
+    local vector  FacingDirection;
+    local rotator NewRotation;
+
+    if (VehicleBase != none)
+    {
+        AttachBone = VehicleBase.PassengerWeapons[PositionInArray].WeaponBone;
+        FacingDirection = vector(VehicleBase.GetBoneRotation(AttachBone)) >> DriveRot; // apply DriveRot to attachment bone's rotation to get player's initial world facing direction
+        NewRotation = rotator(FacingDirection << VehicleBase.Rotation);                // now make that relative to vehicle's rotation (standard in weapon pawns)
+        NewRotation.Pitch = LimitPitch(NewRotation.Pitch);
+        SetRotation(NewRotation);
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ***************************** VEHICLE ENTRY & EXIT ***************************** //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -265,7 +282,6 @@ defaultproperties
 {
     bPassengerOnly=true
     bSinglePositionExposed=true
-    bZeroPCRotOnEntry=false // no point, as on entering we're now setting rotation to match the way the rider is facing
     bUseDriverHeadBoneCam=true
     HudName="Rider"
 

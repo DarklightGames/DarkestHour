@@ -310,7 +310,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 {
     if (PC != none && PC.bBehindView && bBehindViewChanged && DriverPositionIndex < GunsightPositions)
     {
-        PlayerFaceForwards();
+        PC.SetRotation(rot(0, 0, 0));
     }
 
     super.POVChanged(PC, bBehindViewChanged);
@@ -537,13 +537,11 @@ function KDriverEnter(Pawn P)
     }
 }
 
-// Modified so player starts facing forwards, so listen server re-sets pending ammo if another player has changed loaded ammo type since host player was last in this cannon,
+// Modified so listen server re-sets pending ammo if another player has changed loaded ammo type since host player was last in this cannon,
 // and so net client autocannon always goes to state 'EnteringVehicle' even for a single position cannon, which makes certain pending ammo settings are correct
 simulated function ClientKDriverEnter(PlayerController PC)
 {
     super.ClientKDriverEnter(PC);
-
-    PlayerFaceForwards(PC);
 
     if (Cannon != none)
     {
@@ -589,9 +587,11 @@ Begin:
     GotoState('');
 }
 
-// Modified so player faces forwards when coming up off the gunsight (feels more natural), & to add better handling of locked camera,
+// Modified so set view rotation when player moves away from a position where his view was locked to a bone's rotation
+// Stops camera snapping to a strange rotation as view rotation reverts to pawn/PC rotation, which has been redundant & could have wandered meaninglessly via mouse movement
 simulated state ViewTransition
 {
+    // Modified so player faces forwards when coming up off the gunsight
     simulated function HandleTransition()
     {
         super.HandleTransition();
@@ -599,7 +599,7 @@ simulated state ViewTransition
         if (Level.NetMode != NM_DedicatedServer && LastPositionIndex < GunsightPositions && DriverPositionIndex >= GunsightPositions
             && IsHumanControlled() && !PlayerController(Controller).bBehindView)
         {
-            PlayerFaceForwards();
+            SetInitialViewRotation();
         }
     }
 
@@ -810,22 +810,6 @@ function DamageCannonOverlay()
 simulated function ClientDamageCannonOverlay()
 {
     GunsightOverlay = DestroyedGunsightOverlay;
-}
-
-// New function to make player face forwards, relative to any turret rotation - we simply zero rotation, as any turret rotation gets added in SpecialCalcFirstPersonView()
-simulated function PlayerFaceForwards(optional Controller C)
-{
-    if (C == none)
-    {
-        C = Controller;
-    }
-
-    SetRotation(rot(0, 0, 0));
-
-    if (C != none)
-    {
-        C.SetRotation(Rotation); // owning net client will update rotation back to server
-    }
 }
 
 // Modified to use DHArmoredVehicle instead of deprecated ROTreadCraft

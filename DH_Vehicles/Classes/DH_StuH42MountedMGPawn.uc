@@ -33,7 +33,7 @@ simulated state ViewTransition
 
         if (DriverPositionIndex < UnbuttonedPositionIndex)
         {
-            MatchRotationToGunAim();
+            SetInitialViewRotation();
         }
     }
 }

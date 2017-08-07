@@ -173,6 +173,19 @@ simulated function DrawGunsightOverlay(Canvas C)
     }
 }
 
+// Modified so if player starts on the MG, we match his view rotation to its current aim
+simulated function SetInitialViewRotation()
+{
+    if (CanFire() && Gun != none)
+    {
+        SetRotation(Gun.CurrentAim);
+    }
+    else
+    {
+        super.SetInitialViewRotation();
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ****************************** FIRING & RELOAD  *******************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -216,13 +229,6 @@ simulated exec function ROManualReload()
 //  ************************* ENTRY, CHANGING VIEW & EXIT  ************************* //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to match starting rotation to MG's aim
-simulated function ClientKDriverEnter(PlayerController PC)
-{
-    super.ClientKDriverEnter(PC);
-
-    MatchRotationToGunAim(PC);
-}
 
 // Modified to exit to added state LeavingViewTransition, just to allow CanReload() functionality to work correctly
 // Also to add a workaround (hack really) to turn off muzzle flash in 1st person when player raises head above sights as it sometimes looks wrong, & a reloading hint
@@ -443,25 +449,6 @@ function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchC
 //  *******************************  MISCELLANEOUS ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// New function to match rotation to MG's current aim (note owning net client will update rotation back to server)
-simulated function MatchRotationToGunAim(optional Controller C)
-{
-    if (Gun != none)
-    {
-        if (C == none)
-        {
-            C = Controller;
-        }
-
-        SetRotation(Gun.CurrentAim);
-
-        if (C != none)
-        {
-            C.SetRotation(Rotation);
-        }
-    }
-}
-
 // From deprecated ROMountedTankMGPawn
 function float ModifyThreat(float Current, Pawn Threat)
 {
@@ -514,7 +501,6 @@ defaultproperties
     PositionInArray=1
     UnbuttonedPositionIndex=1
     bDrawDriverInTP=false
-    bZeroPCRotOnEntry=false // we're now calling MatchRotationToGunAim() on entering, so no point zeroing rotation
     CameraBone="mg_yaw"
     GunsightSize=1.0
     FirstPersonGunShakeScale=1.0

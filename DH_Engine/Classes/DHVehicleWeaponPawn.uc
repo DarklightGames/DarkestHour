@@ -153,6 +153,15 @@ simulated function PostNetReceive()
 //  *******************************  VIEW/DISPLAY  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+// New helper function to set the player's initial view rotation when entering the vehicle position
+// Allows easy subclassing without re-stating long driver enter functions
+// Default is to make player face forwards on entering (zeroed as we now assume/hard-code that controller's & pawn's rotation is relative to vehicle or turret)
+// Note this differs from what was originally in KDriverEnter() & ClientKDriverEnter(), which matched weapon pawn's rotation to controller
+simulated function SetInitialViewRotation()
+{
+    SetRotation(rot(0, 0, 0)); // note that an owning net client will update this back to the server
+}
+
 // Modified (from deprecated ROTankCannonPawn) to simply draw the BinocsOverlay, without additional drawing
 simulated function DrawBinocsOverlay(Canvas C)
 {
@@ -552,6 +561,10 @@ function KDriverEnter(Pawn P)
     Level.Game.DriverEnteredVehicle(self, P);
     Driver.bSetPCRotOnPossess = false; // so when player gets out, he'll be facing the same direction as he was in the vehicle
 
+    // No point setting rotation here (as in the Super), because single player mode or a listen server host get it anyway in ClientKDriverEnter()
+    // And it's of no relevance to dedicated server or non-owning listen server, which receive rotation from owning player's client (autonomous proxy role)
+//  SetInitialViewRotation();
+
     // Activate vehicle weapon & increase it's network priority
     if (Gun != none)
     {
@@ -632,6 +645,8 @@ simulated function ClientKDriverEnter(PlayerController PC)
             PC.GotoState('PlayerWalking');
         }
     }
+
+    SetInitialViewRotation(); // new helper function that just allows easy subclassing without needing to re-state this long function
 
     if (bMultiPosition)
     {
@@ -2112,6 +2127,7 @@ defaultproperties
 
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & may be hard coded into functionality:
     bPCRelativeFPRotation=true
+    bZeroPCRotOnEntry=false // no point, as on entering we now call SetInitialViewRotation() to set weapon pawn's rotation & PC rotation gets matched to that
     bFPNoZFromCameraPitch=false
     FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0) // always use FPCamPos for any camera offset, including for single position weapon pawns
     bAllowViewChange=false

@@ -83,7 +83,14 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
 }
 
-// Modified so when player lifts head away from sights, view rotation is initially zeroed so the view doesn't snap to another rotation
+// Modified to skip over the Super in DHVehicleMGPawn so we use the same zeroed initial view rotation as a cannon pawn, since we control this MG like a turret
+simulated function SetInitialViewRotation()
+{
+    super(DHVehicleWeaponPawn).SetInitialViewRotation();
+}
+
+// Modified so player faces forwards when he lifts his head up from the gunsight, as before his view was locked to the camera bone's rotation (similar to cannon pawn)
+// Stops camera snapping to a strange rotation as view rotation reverts to pawn/PC rotation, which has been redundant & could have wandered meaninglessly via mouse movement
 simulated state ViewTransition
 {
     simulated function HandleTransition()
@@ -92,8 +99,7 @@ simulated state ViewTransition
 
         if (Level.NetMode != NM_DedicatedServer && LastPositionIndex == 0 && IsHumanControlled() && !PlayerController(Controller).bBehindView)
         {
-            SetRotation(rot(0, 0, 0));
-            Controller.SetRotation(Rotation);
+            SetInitialViewRotation();
         }
     }
 }
