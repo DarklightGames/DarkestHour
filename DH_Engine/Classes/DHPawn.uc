@@ -2871,6 +2871,7 @@ function AddDefaultInventory()
             }
 
             CheckGiveShovel();
+            CheckGiveBinocs();
 
             RI = P.GetRoleInfo();
 
@@ -3002,7 +3003,7 @@ function CreateInventory(string InventoryClassName)
     }
 }
 
-// New function used to give all players a shovel if constructions are enabled in the map (the appropriate shovel for their nationality)
+// New function used to give all players a shovel (the appropriate shovel for their nationality)
 function CheckGiveShovel()
 {
     local DHGameReplicationInfo GRI;
@@ -3011,9 +3012,27 @@ function CheckGiveShovel()
     {
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-        if (GRI != none && GRI.bAreConstructionsEnabled)
+        if (GRI != none)
         {
             CreateInventory(ShovelClassName);
+        }
+    }
+}
+
+// Function used to give binoculars to Squad Leaders
+function CheckGiveBinocs()
+{
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
+
+    if (Level.Game != none)
+    {
+        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+        PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+        if (GRI != none && PRI != none && PRI.IsSquadLeader())
+        {
+            CreateInventory("DH_Equipment.DHBinocularsItem");
         }
     }
 }
