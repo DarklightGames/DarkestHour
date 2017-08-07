@@ -107,23 +107,13 @@ function Timer()
 
     if (CaptureCounter >= CaptureCounterThreshold)
     {
-        // Reset capture counter
-        CaptureCounter = 0;
-
-        // "A Platoon HQ has been captured by the enemy."
+        // "A Platoon HQ has been overrun by the enemy."
         BroadcastTeamLocalizedMessage(GetTeamIndex(), class'DHPlatoonHQMessage', 2);
 
-        if (GetTeamIndex() == AXIS_TEAM_INDEX)
+        if (Construction != none)
         {
-            SetTeamIndex(ALLIES_TEAM_INDEX);
+            Construction.GotoState('Broken');
         }
-        else if (GetTeamIndex() == ALLIES_TEAM_INDEX)
-        {
-            SetTeamIndex(AXIS_TEAM_INDEX);
-        }
-
-        // "An enemy Platoon HQ has been captured."
-        BroadcastTeamLocalizedMessage(GetTeamIndex(), class'DHPlatoonHQMessage', 1);
     }
 }
 

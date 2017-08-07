@@ -7,8 +7,7 @@ class DHPlatoonHQMessage extends ROGameMessage
     abstract;
 
 var localized string ActivatedMessage;
-var localized string TeamCapturedMessage;
-var localized string EnemyCapturedMessage;
+var localized string OverrunMessage;
 var localized string DestroyedMessage;
 var localized string ConstructedMessage;
 
@@ -23,10 +22,8 @@ static function string GetString(
     {
         case 0:
             return default.ActivatedMessage;
-        case 1:
-            return default.TeamCapturedMessage;
         case 2:
-            return default.EnemyCapturedMessage;
+            return default.OverrunMessage;
         case 3:
             return default.DestroyedMessage;
         case 4:
@@ -40,8 +37,7 @@ defaultproperties
 {
     DrawColor=(R=252,G=0,B=126,A=255)
     ActivatedMessage="A Platoon HQ has been established."
-    TeamCapturedMessage="An enemy Platoon HQ has been captured."
-    EnemyCapturedMessage="A Platoon HQ has been captured by the enemy."
+    OverrunMessage="A Platoon HQ has been overrun by the enemy."
     DestroyedMessage="A Platoon HQ has been destroyed."
     ConstructedMessage="A Platoon HQ has been constructed and will be established in {0} seconds."
 }
