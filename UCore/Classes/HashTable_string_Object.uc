@@ -67,7 +67,10 @@ private function Resize(int Capacity)
 
     for (i = 0; i < Keys.Length; ++i)
     {
-        T.Put(Keys[i], Values[i]);
+        if (Keys[i] != "")
+        {
+            T.Put(Keys[i], Values[i]);
+        }
     }
 
     Keys = T.Keys;
