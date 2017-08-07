@@ -138,6 +138,7 @@ defaultproperties
     bBlockZeroExtentTraces=true
 
     // Movement
+    bHasTurret=true
     bUseTankTurretRotation=true
     bRotateSoundFromPawn=true
     RotateSoundThreshold=750

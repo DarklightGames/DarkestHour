@@ -104,6 +104,18 @@ simulated state ViewTransition
     }
 }
 
+// Modified so if player exits while on the gunsight, his view rotation is zeroed so he exits facing forwards (similar to cannon pawn)
+// Necessary because while on gunsight his view rotation is locked to camera bone, but pawn/PC rotation can wander meaninglessly via mouse movement
+simulated function ClientKDriverLeave(PlayerController PC)
+{
+    if (DriverPositionIndex == 0 && !IsInState('ViewTransition') && PC != none)
+    {
+        PC.SetRotation(rot(0, 0, 0)); // note that an owning net client will update this back to the server
+    }
+
+    super.ClientKDriverLeave(PC);
+}
+
 // Can't fire if using binoculars
 function bool CanFire()
 {

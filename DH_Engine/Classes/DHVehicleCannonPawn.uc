@@ -625,11 +625,18 @@ simulated state ViewTransition
     }
 }
 
-// Modified so listen server host player records currently loaded ammo type on exiting
+// Modified so if player exits while on the gunsight, his view rotation is zeroed so he exits facing forwards
+// Necessary because while on gunsight his view rotation is locked to gunsight camera bone, but pawn/PC rotation can wander meaninglessly via mouse movement
+// Also so listen server host player records currently loaded ammo type on exiting
 // This is so if host player re-enters this cannon he will know if another player has since loaded different ammo
 // If loaded ammo changes, any previous choice of pending ammo to load will probably no longer make sense & have to be discarded
 simulated function ClientKDriverLeave(PlayerController PC)
 {
+    if (DriverPositionIndex < GunsightPositions && !IsInState('ViewTransition') && PC != none)
+    {
+        PC.SetRotation(rot(0, 0, 0)); // note that an owning net client will update this back to the server
+    }
+
     super.ClientKDriverLeave(PC);
 
     if (Level.NetMode == NM_ListenServer && Cannon != none)
