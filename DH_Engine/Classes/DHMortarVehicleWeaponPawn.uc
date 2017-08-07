@@ -347,20 +347,20 @@ function bool KDriverLeave(bool bForceLeave)
     return false;
 }
 
-// Modified to match player's rotation to where mortar is aimed, & to destroy mortar if player just undeployed
+// Modified to match rotation to mortar's aimed direction, so player exits facing the same way as the mortar
+// Necessary because while on mortar, his view rotation is locked but his pawn/PC rotation can wander meaninglessly via mouse movement
+// Also to destroy the mortar if player just un-deployed it
 simulated function ClientKDriverLeave(PlayerController PC)
 {
     local rotator NewRotation;
 
-    super.ClientKDriverLeave(PC);
-
-    if (PC != none && PC.Pawn != none && Gun != none && Gun.WeaponFireAttachmentBone != '')
+    if (PC != none && Gun != none)
     {
-        NewRotation = Gun.GetBoneRotation(Gun.WeaponFireAttachmentBone);
-        NewRotation.Pitch = 0;
-        NewRotation.Roll = 0;
-        PC.Pawn.SetRotation(NewRotation);
+        NewRotation.Yaw = -Gun.CurrentAim.Yaw; // all the yaw/traverse for mortars has to be reversed (screwed up mesh rigging)
+        PC.SetRotation(NewRotation);
     }
+
+    super.ClientKDriverLeave(PC);
 
     // If undeploying, owning net client now tells server to destroy mortar vehicle (& so all associated actors), as we've completed vehicle exit/unpossess process
     if (Role < ROLE_Authority && IsInState('Undeploying') && DHMortarVehicle(VehicleBase) != none)
