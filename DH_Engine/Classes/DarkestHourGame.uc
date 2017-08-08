@@ -1170,6 +1170,16 @@ function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector Hi
     return Damage;
 }
 
+/**
+// TODO: this override has somewhat scrambled this function as returns from the Super in GameInfo are being treated as returns from the function here
+// That means this override can ignore functionality in other, closer Super classes (UnrealMPGameInfo & DeathMatch)
+// A return from the Super in GameInfo would return 'control' to the Super class that called it (UnrealMPGameInfo)
+// Functionality in the closer Supers would & should still execute - so this override needs re-working
+// Suggest best way may be to re-state the long GameInfo Super as a separate function (called say Login_GameInfo or whatever), modified as required
+// That could be called from here & return as it normally would, & this function could handle the closer Supers & any extra DH code
+// Re-factoring this as one function could be done but would end up overly complicated, with lots of extra nested bracketing and/or local bools based on 'soft return' results
+// Matt, Aug 2017
+*/
 // Modified for Squad system and so it doesn't call ChangeTeam() when a player "Logins" to the server
 // Will also make it so when a player joins the server it doesn't say they joined Axis before they actually pick their team
 // This function has a lot of code that probably isn't needed, but kept in case it is (may need cleaned up at some point)
@@ -1234,7 +1244,7 @@ event PlayerController Login(string Portal, string Options, out string Error)
                     Log("FOUND" @ TestPlayer @ TestPlayer.PlayerReplicationInfo.PlayerName);
                 }
 
-                return TestPlayer; // TEST - no, the Super from GameInfo would return here, but this function still needs to do stuff from other parent classes!
+                return TestPlayer;
             }
         }
     }
@@ -1251,7 +1261,7 @@ event PlayerController Login(string Portal, string Options, out string Error)
     {
         Error = GameMessageClass.default.MaxedOutMessage;
 
-        return none; // TEST - no, the Super from GameInfo would return here, but this function still needs to do stuff from other parent classes!
+        return none;
     }
 
     // If admin, force spectate mode if the server already full of reg. players
@@ -1270,7 +1280,7 @@ event PlayerController Login(string Portal, string Options, out string Error)
     {
         Error = GameMessageClass.default.FailedPlaceMessage;
 
-        return none; // TEST - no, the Super from GameInfo would return here, but this function still needs to do stuff from other parent classes!
+        return none;
     }
 
     if (PlayerControllerClass == none)
@@ -1286,7 +1296,7 @@ event PlayerController Login(string Portal, string Options, out string Error)
         Log("Couldn't spawn player controller of class" @ PlayerControllerClass);
         Error = GameMessageClass.default.FailedSpawnMessage;
 
-        return none; // TEST - no, the Super from GameInfo would return here, but this function still needs to do stuff from other parent classes!
+        return none;
     }
 
     NewPlayer.StartSpot = StartSpot;
@@ -1358,7 +1368,7 @@ event PlayerController Login(string Portal, string Options, out string Error)
         NewPlayer.PlayerReplicationInfo.bOutOfLives = true;
         NumSpectators++;
 
-        return NewPlayer; // TEST - no, the Super from GameInfo would return here, but this function still needs to do stuff from other parent classes!
+        return NewPlayer;
     }
 
     NewPlayer.StartSpot = StartSpot;
@@ -1390,13 +1400,13 @@ event PlayerController Login(string Portal, string Options, out string Error)
     {
         NewPlayer.GotoState('PlayerWaiting');
     }
-//////////////////////////////////////////////////////////////////////////////////////////// THIS STUFF NEEDS TO RUN EVEN IF GameInfo.Super would RETURN before the end
+
     // Init voice chat if we are in a MP environment
     if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
     {
         NewPlayer.VoiceReplicationInfo = VoiceReplicationInfo;
 
-        if (Level.NetMode == NM_ListenServer && Level.GetLocalPlayerController() == PC) // TEST - PC local hasn't even been set here - in the Super it was the return value from the higher Super (NewPlayer here)!
+        if (Level.NetMode == NM_ListenServer && Level.GetLocalPlayerController() == PC)
         {
             NewPlayer.InitializeVoiceChat();
         }
