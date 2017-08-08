@@ -99,102 +99,89 @@ simulated function bool ShouldSpawnTracer()
 }
 
 // Handles unpacking and spawning the correct client side hit effect rounds
+// Modified (from deprecated ROHighROFWeaponAttachment) to correctly handle adjustment of the tracer direction (in 3rd person view) for a sky shot or similar
+// Without this any sky shots in a burst are seen by other players to come from player's head & travel in a significantly different direction to shots that hit something
+// All we do differently is if the trace hits nothing, we just use its end location for the direction adjustment & spawn tracer from 3rd person muzzle bone as usual
+// Also some re-factoring to optimise & make clearer, by removing repetition & redundancy
 simulated function SpawnClientRounds(bool bFirstRoundOnly)
 {
-    local vector  Start, HitLocation, TestHitLocation, HitNormal;
-    local rotator ProjectileDir, R;
-    local Actor   Other;
+    local vector  ProjectileLoc, HitLocation, TestHitLocation, HitNormal, TraceEnd, MuzzleLocation;
+    local rotator ProjectileDir;
 
     // First shot, or single shot
+    // Get replicated start location & direction for this shot
+    ProjectileLoc = SavedDualShot.FirstShot.ShotLocation;
+    Int2Rot(SavedDualShot.FirstShot.ShotRotation, ProjectileDir);
+
     if (ShouldSpawnTracer())
     {
-        Start = SavedDualShot.FirstShot.ShotLocation;
-
-        Int2Rot(SavedDualShot.FirstShot.ShotRotation, ProjectileDir);
-
-        if (Instigator != none && Instigator.IsFirstPerson()) // removed IsLocallyControlled() check as IsFirstPerson() covers that (same below)
+        // If looking at someone else firing (or firing in behind view), spawn the tracer from the tip of the third person weapon attachment
+        if (Instigator == none || !Instigator.IsFirstPerson()) // removed !IsLocallyControlled() check as !IsFirstPerson() covers that
         {
-            // do nothing
-        }
-        // Spawn the tracer from the tip of the third person weapon
-        else
-        {
-            Other = Trace(HitLocation, HitNormal, Start + vector(ProjectileDir) * 65525.0, Start, true);
+            MuzzleLocation = GetBoneCoords(MuzzleBoneName).Origin;
 
-            if (Other != none)
+            // As we're adjusting tracer's start location, we also adjust its direction a little so it hits approx the same place it would have
+            // We trace to get location it would hit in a straight line along its original replicated direction
+            TraceEnd = ProjectileLoc + (65525.0 * vector(ProjectileDir));
+
+            // If trace didn't hit anything, e.g. it's a sky shot, we'll just use trace's end location for tracer direction adjustment
+            // Added this to fix bug where sky shots were seen to come from player's head, because they weren't adjusted to spawn from the muzzle
+            if (Trace(HitLocation, HitNormal, TraceEnd, ProjectileLoc, true) == none)
             {
-                Other = none;
+                HitLocation = TraceEnd;
+            }
 
-                // Make sure tracer wouldn't spawn inside of something
-                Other = Trace(TestHitLocation, HitNormal, GetBoneCoords(MuzzleBoneName).Origin + vector(ProjectileDir) * 15.0, GetBoneCoords(MuzzleBoneName).Origin, true);
-
-                if (Other == none)
-                {
-                    Start = GetBoneCoords(MuzzleBoneName).Origin;
-                    ProjectileDir = rotator(Normal(HitLocation - Start));
-                }
-                else
-                {
-                    Other = none;
-                }
+            // Switch the spawn location to the muzzle location & adjust tracer direction based on our hit location
+            // But first just make sure the tracer wouldn't spawn inside something if we spawn it from the 3rd person weapon's muzzle
+            // So do another very short trace forwards from our hit location to make sure there's nothing right in front of it
+            if (Trace(TestHitLocation, HitNormal, MuzzleLocation + (vector(ProjectileDir) * 15.0), MuzzleLocation, true) == none)
+            {
+                ProjectileDir = rotator(Normal(HitLocation - ProjectileLoc));
+                ProjectileLoc = MuzzleLocation;
             }
         }
 
-        Spawn(ClientTracerClass,,, Start, ProjectileDir);
+        Spawn(ClientTracerClass,,, ProjectileLoc, ProjectileDir);
     }
     else
     {
-        Int2Rot(SavedDualShot.FirstShot.ShotRotation, R);
-
-        Spawn(ClientProjectileClass,,, SavedDualShot.FirstShot.ShotLocation, R);
+        Spawn(ClientProjectileClass,,, ProjectileLoc, ProjectileDir);
     }
 
     // Second shot
     if (!bFirstRoundOnly)
     {
+        // Get replicated start location & direction for this shot
+        ProjectileLoc = SavedDualShot.Secondshot.ShotLocation;
+        Int2Rot(SavedDualShot.Secondshot.ShotRotation, ProjectileDir);
+
         if (ShouldSpawnTracer())
         {
-            Start = SavedDualShot.Secondshot.ShotLocation;
-            Int2Rot(SavedDualShot.Secondshot.ShotRotation, ProjectileDir);
-
-            if (Instigator != none && Instigator.IsFirstPerson())
+            // If looking at someone else firing (or firing in behind view), spawn the tracer from the tip of the third person weapon attachment
+            if (Instigator == none || !Instigator.IsFirstPerson())
             {
-                // do nothing
-            }
-            // Spawn the tracer from the tip of the third person weapon
-            else
-            {
-                Other = Trace(HitLocation, HitNormal, Start + vector(ProjectileDir) * 65525.0, Start, true);
+                MuzzleLocation = GetBoneCoords(MuzzleBoneName).Origin;
+                TraceEnd = ProjectileLoc + (65525.0 * vector(ProjectileDir));
 
-                if (Other != none)
+                if (Trace(HitLocation, HitNormal, TraceEnd, ProjectileLoc, true) == none)
                 {
-                    Other = none;
+                    HitLocation = TraceEnd;
+                }
 
-                    // Make sure tracer wouldn't spawn inside of something
-                    Other = Trace(TestHitLocation, HitNormal, GetBoneCoords(MuzzleBoneName).Origin + vector(ProjectileDir) * 15.0, GetBoneCoords(MuzzleBoneName).Origin, true);
-
-                    if (Other == none)
-                    {
-                        Start = GetBoneCoords(MuzzleBoneName).Origin;
-                        ProjectileDir = rotator(Normal(HitLocation - Start));
-                    }
-                    else
-                    {
-                        Other = none;
-                    }
+                if (Trace(TestHitLocation, HitNormal, MuzzleLocation + (vector(ProjectileDir) * 15.0), MuzzleLocation, true) == none)
+                {
+                    ProjectileDir = rotator(Normal(HitLocation - ProjectileLoc));
+                    ProjectileLoc = MuzzleLocation;
                 }
             }
 
-            Spawn(ClientTracerClass,,, Start, ProjectileDir);
+            Spawn(ClientTracerClass,,, ProjectileLoc, ProjectileDir);
         }
         else
         {
-            Int2Rot(SavedDualShot.Secondshot.ShotRotation, R);
-
-            Spawn(ClientProjectileClass,,, SavedDualShot.Secondshot.ShotLocation, R);
+            Spawn(ClientProjectileClass,,, ProjectileLoc, ProjectileDir);
         }
     }
-
 }
 
 // This function will take the information about a shot and turn it into a shotinfo struct
