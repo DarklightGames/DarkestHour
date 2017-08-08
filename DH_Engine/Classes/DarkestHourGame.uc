@@ -936,11 +936,11 @@ function ScoreVehicleKill(Controller Killer, ROVehicle Vehicle, float Points)
     // Decide to reward or punish score based on spawn kill
     if (DHVehicle(Vehicle) != none && DHVehicle(Vehicle).IsSpawnProtected())
     {
-        Killer.PlayerReplicationInfo.Score -= Points;
+        DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).StashedScore -= Points;
     }
     else
     {
-        Killer.PlayerReplicationInfo.Score += Points;
+        DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).StashedScore += Points;
     }
 
     ScoreEvent(Killer.PlayerReplicationInfo, Points, "Vehicle_kill");
@@ -958,7 +958,7 @@ function ScoreMGResupply(Controller Dropper, Controller Gunner)
     else if (DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).RoleInfo != none)
     {
         ResupplyAward = 5;
-        Dropper.PlayerReplicationInfo.Score += ResupplyAward;
+        DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).StashedScore += ResupplyAward;
 
         ScoreEvent(Dropper.PlayerReplicationInfo, ResupplyAward, "MG_resupply");
     }
@@ -976,7 +976,7 @@ function ScoreATResupply(Controller Dropper, Controller Gunner)
     else if (DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).RoleInfo != none)
     {
         ResupplyAward = 2;
-        Dropper.PlayerReplicationInfo.Score += ResupplyAward;
+        DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).StashedScore += ResupplyAward;
 
         ScoreEvent(Dropper.PlayerReplicationInfo, ResupplyAward, "AT_resupply");
     }
@@ -994,7 +994,7 @@ function ScoreATReload(Controller Loader, Controller Gunner)
     else if (DHPlayerReplicationInfo(Loader.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(Loader.PlayerReplicationInfo).RoleInfo != none)
     {
         LoadAward = 1;
-        Loader.PlayerReplicationInfo.Score += LoadAward;
+        DHPlayerReplicationInfo(Loader.PlayerReplicationInfo).StashedScore += LoadAward;
 
         ScoreEvent(Loader.PlayerReplicationInfo, LoadAward, "AT_reload");
     }
@@ -1008,7 +1008,7 @@ function ScoreRadioUsed(Controller Radioman)
     if (DHPlayerReplicationInfo(Radioman.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(Radioman.PlayerReplicationInfo).RoleInfo != none)
     {
         RadioUsedAward = 5;
-        Radioman.PlayerReplicationInfo.Score += RadioUsedAward;
+        DHPlayerReplicationInfo(Radioman.PlayerReplicationInfo).StashedScore += RadioUsedAward;
 
         ScoreEvent(Radioman.PlayerReplicationInfo, RadioUsedAward, "Radioman_used");
     }
@@ -1024,7 +1024,7 @@ function ScoreMortarResupply(Controller Dropper, Controller Gunner)
         return;
     }
 
-    Dropper.PlayerReplicationInfo.Score += 2;
+    DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).StashedScore += 2;
     ScoreEvent(Dropper.PlayerReplicationInfo, ResupplyAward, "Mortar_resupply");
 }
 
@@ -1036,9 +1036,63 @@ function ScoreMortarSpotAssist(Controller Spotter, Controller Mortarman)
         return;
     }
 
-    Spotter.PlayerReplicationInfo.Score += 2;
-    Mortarman.PlayerReplicationInfo.Score += 1;
+    DHPlayerReplicationInfo(Spotter.PlayerReplicationInfo).StashedScore += 2;
+    DHPlayerReplicationInfo(Mortarman.PlayerReplicationInfo).StashedScore += 1;
 }
+
+// Modified to handle StashedScore and prevent fellow vehicle crewman from getting kills and score for yours
+function ScoreKill(Controller Killer, Controller Other)
+{
+    local float                         Amount;
+    local DHPlayerReplicationInfo       PRI;
+
+    if (Killer == Other || Killer == none)
+    {
+        Other.PlayerReplicationInfo.Score -= 1;
+        ScoreEvent(Other.PlayerReplicationInfo, -1, "self_frag");
+    }
+    else if (Other.bIsPlayer && Killer.bIsPlayer && Killer.PlayerReplicationInfo.Team == Other.PlayerReplicationInfo.Team)
+    {
+        if (ROPlayerReplicationInfo(Other.PlayerReplicationInfo) != none && ROPlayerReplicationInfo(Other.PlayerReplicationInfo).RoleInfo != none)
+        {
+            Amount = -2 * ROPlayerReplicationInfo(Other.PlayerReplicationInfo).RoleInfo.default.PointValue;
+            DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).StashedScore += Amount;
+        }
+        else
+        {
+            Amount = -2;
+            DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).StashedScore += Amount;
+        }
+
+        ScoreEvent(Killer.PlayerReplicationInfo, Amount, "team_frag");
+    }
+    else if (Killer.PlayerReplicationInfo != none)
+    {
+        PRI = DHPlayerReplicationInfo(Other.PlayerReplicationInfo);
+
+        if (PRI != none && PRI.RoleInfo != none)
+        {
+            Amount = PRI.RoleInfo.default.PointValue;
+        }
+        else
+        {
+            Amount = 1;
+        }
+
+        // TODO: When implementing the new scoring system, look at the RO version of this function and add back the killer's occupants logic
+        // giving other crewman a reduced score sounds like a good idea (not riders though), but not kills
+        DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).StashedScore += Amount;
+        Killer.PlayerReplicationInfo.Kills++;
+
+        ScoreEvent(Killer.PlayerReplicationInfo, Amount, "frag");
+    }
+
+    if (GameRulesModifiers != none)
+    {
+        GameRulesModifiers.ScoreKill(Killer, Other);
+    }
+}
+
 
 // Modified to check if the player has just used a select-a-spawn teleport and should be protected from damage
 // Also if the old spawn area system is used, it only checks spawn damage protection for the spawn that is relevant to the player, including any mortar crew spawn
@@ -1280,7 +1334,7 @@ event PlayerController Login(string Portal, string Options, out string Error)
         ChangeName(NewPlayer, InName, false);
     }
 
-    // Custom voicepack (Theel: this probably doesn't work, but might be needed)
+    // Custom voicepack (this probably doesn't work, but might be needed)
     NewPlayer.PlayerReplicationInfo.VoiceTypeName = ParseOption(Options, "Voice");
 
     InCharacter = ParseOption(Options, "Character");
@@ -1975,7 +2029,11 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                 {
                     DHKiller.WeaponLockViolations++;
                     DHKiller.LockWeapons(WeaponLockTimes[Min(DHKiller.WeaponLockViolations, arraycount(WeaponLockTimes) - 1)]); // TODO: probably add 1 second as we are 'mid second' in game time
-                    DHKiller.PlayerReplicationInfo.Score -= 2;
+
+                    if (DHPlayerReplicationInfo(DHKiller.PlayerReplicationInfo) != none)
+                    {
+                        DHPlayerReplicationInfo(DHKiller.PlayerReplicationInfo).StashedScore -= 2;
+                    }
                 }
 
                 if (DHPawn(KilledPawn) != none && DHPawn(KilledPawn).SpawnPoint != none)
@@ -2082,6 +2140,39 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                 EndRound(int(!bool(i))); // it looks like a hack, but hey, it's the easiest way to find the opposite team :)
             }
         }
+    }
+
+    // Update the killed player's score
+    UpdatePlayerScore(Killed);
+}
+
+function UpdateAllPlayerScores()
+{
+    local DHPlayerReplicationInfo   PRI;
+    local Controller                C;
+
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        if (DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none)
+        {
+            PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
+
+            PRI.Score += PRI.StashedScore;
+            PRI.StashedScore = 0;
+        }
+    }
+}
+
+function UpdatePlayerScore(controller C)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    if (C != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none)
+    {
+        PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
+
+        PRI.Score += PRI.StashedScore;
+        PRI.StashedScore = 0;
     }
 }
 
@@ -2483,6 +2574,8 @@ state RoundInPlay
 
         RoundCount++;
 
+        UpdateAllPlayerScores();
+
         if (RoundLimit != 0 && RoundCount >= RoundLimit)
         {
             EndGame(none, "RoundLimit");
@@ -2505,12 +2598,18 @@ state RoundInPlay
     function EndState()
     {
         local Pawn P;
+        local Inventory Inv;
 
         super.EndState();
 
         foreach DynamicActors(class'Pawn', P)
         {
             P.StopWeaponFiring();
+        }
+
+        foreach DynamicActors(class'Inventory', Inv)
+        {
+            Inv.Destroy();
         }
     }
 
@@ -2645,6 +2744,32 @@ state ResetGameCountdown
         }
     }
 }
+
+// Modified to reset stashed score in addition to score
+function ResetScores()
+{
+    local DHPlayerReplicationInfo   PRI;
+    local Controller                C;
+
+    RemainingTime = 60 * TimeLimit;
+    ElapsedTime = 0;
+    GameReplicationInfo.ElapsedTime = 0;
+    GameReplicationInfo.ElapsedQuarterMinute = 1;
+    RoundCount = 0;
+    Teams[AXIS_TEAM_INDEX].Score = 0;
+    Teams[ALLIES_TEAM_INDEX].Score = 0;
+
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        if (DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none)
+        {
+            PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
+            PRI.Score = 0;
+            PRI.StashedScore = 0;
+        }
+    }
+}
+
 
 state RoundOver
 {
@@ -3653,7 +3778,6 @@ function ChooseWinner()
     EndRound(2);
 }
 
-//Theel: Convert to use DHObjectives, though this isn't supposed to be used
 function CheckSpawnAreas()
 {
     local ROSpawnArea Best[2];
@@ -3780,7 +3904,7 @@ function CheckSpawnAreas()
     }
 }
 
-// Theel: This function is no longer used, but I converted to use DHObjectives just in case we make use of it
+// This function is no longer used officially, but is converted to use DHObjectives just in case some map is using SpawnAreas
 function CheckTankCrewSpawnAreas()
 {
     local int i, j, h, k;
@@ -4327,7 +4451,7 @@ event PostLogin(PlayerController NewPlayer)
     }
 
     // Set player's spectator properties, copied from the GameInfo's properties
-    // Theel: Please use the desired settings for public play, overriding may result in further steps to enforce these settings
+    // Server Admins please use the desired settings for public play, overriding may result in further steps to enforce these settings on your server
     if (bPublicPlay)
     {
         NewPlayer.bLockedBehindView = true;
@@ -4439,7 +4563,7 @@ function Logout(Controller Exiting)
     {
         S.Deaths = PRI.Deaths;
         S.Kills = PRI.Kills;
-        S.Score = PRI.Score;
+        S.Score = PRI.Score; // No need to add StashedScore here, because it is done on the pawn's death (which it does die)
         S.LastKilledTime = PC.LastKilledTime;
         S.WeaponUnlockTime = PC.WeaponUnlockTime;
         S.WeaponLockViolations = PC.WeaponLockViolations;

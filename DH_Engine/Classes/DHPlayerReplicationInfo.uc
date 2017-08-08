@@ -10,6 +10,7 @@ var     int                     SquadMemberIndex;
 
 var     float                   NameDrawStartTime;
 var     float                   LastNameDrawTime;
+var     float                   StashedScore;
 
 replication
 {
