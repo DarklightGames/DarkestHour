@@ -3043,7 +3043,7 @@ function ServerChangedWeapon(Weapon OldWeapon, Weapon NewWeapon)
 {
     // If single player mode or a hosting listen server player, & in 1st person view, then just switch the attachment
     // Don't worry about playing all the third person player stuff (that was borking up the first person weapon switches)
-    if (Level.Netmode != NM_DedicatedServer && IsLocallyControlled() && IsHumanControlled() && !PlayerController(Controller).bBehindView)
+    if (IsFirstPerson()) // replacing following checks as does same thing quicker: if (IsLocallyControlled() && IsHumanControlled() && !PlayerController(Controller).bBehindView)
     {
         Weapon = NewWeapon;
 

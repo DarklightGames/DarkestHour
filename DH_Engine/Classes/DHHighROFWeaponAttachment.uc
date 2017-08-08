@@ -112,7 +112,7 @@ simulated function SpawnClientRounds(bool bFirstRoundOnly)
 
         Int2Rot(SavedDualShot.FirstShot.ShotRotation, ProjectileDir);
 
-        if (Instigator != none && Instigator.IsLocallyControlled() && Instigator.IsFirstPerson())
+        if (Instigator != none && Instigator.IsFirstPerson()) // removed IsLocallyControlled() check as IsFirstPerson() covers that (same below)
         {
             // do nothing
         }
@@ -157,7 +157,7 @@ simulated function SpawnClientRounds(bool bFirstRoundOnly)
             Start = SavedDualShot.Secondshot.ShotLocation;
             Int2Rot(SavedDualShot.Secondshot.ShotRotation, ProjectileDir);
 
-            if (Instigator != none && Instigator.IsLocallyControlled() && Instigator.IsFirstPerson())
+            if (Instigator != none && Instigator.IsFirstPerson())
             {
                 // do nothing
             }
