@@ -108,7 +108,7 @@ simulated state ViewTransition
     {
         super.HandleTransition();
 
-        if (Level.NetMode != NM_DedicatedServer && LastPositionIndex == 0 && IsHumanControlled() && !PlayerController(Controller).bBehindView)
+        if (LastPositionIndex == 0 && IsFirstPerson())
         {
             SetInitialViewRotation();
         }

@@ -792,9 +792,10 @@ simulated state ViewTransition
             StoredVehicleRotation = VehicleBase.Rotation;
         }
 
-        if (Level.NetMode != NM_DedicatedServer && IsHumanControlled() && !PlayerController(Controller).bBehindView)
+        if (IsFirstPerson())
         {
             // Switch to mesh for new position as may be different
+            // Note the added IsFirstPerson() check stops this happening on a listen server host that isn't controlling this vehicle
             SwitchMesh(DriverPositionIndex);
 
             // Set any zoom & camera offset for new position - but only if moving to less zoomed position, otherwise we wait until end of transition to do it
@@ -862,20 +863,17 @@ simulated state ViewTransition
 
     simulated function EndState()
     {
-        if (Level.NetMode != NM_DedicatedServer)
+        // Set any zoom & camera offset for new position, if we've moved to a more (or equal) zoomed position (if not, we already did this at start of transition)
+        if (WeaponFOV <= GetViewFOV(LastPositionIndex) && IsFirstPerson())
         {
-            // Set any zoom & camera offset for new position, if we've moved to a more (or equal) zoomed position (if not, we already did this at start of transition)
-            if (WeaponFOV <= GetViewFOV(LastPositionIndex) && IsHumanControlled() && !PlayerController(Controller).bBehindView)
-            {
-                PlayerController(Controller).SetFOV(WeaponFOV);
-                FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
-            }
+            PlayerController(Controller).SetFOV(WeaponFOV);
+            FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
+        }
 
-            // If moving off binoculars, destroy binocs attachment & any other setup stuff
-            if (LastPositionIndex == BinocPositionIndex)
-            {
-                HandleBinoculars(false);
-            }
+        // If moving off binoculars, destroy binocs attachment & any other setup stuff
+        if (LastPositionIndex == BinocPositionIndex)
+        {
+            HandleBinoculars(false);
         }
 
         // If moving to an unexposed position, disable the player's hit detection

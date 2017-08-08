@@ -1140,9 +1140,10 @@ simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
-        if (Level.NetMode != NM_DedicatedServer && IsHumanControlled() && !PlayerController(Controller).bBehindView)
+        if (IsFirstPerson())
         {
             // Switch to mesh for new position as may be different
+            // Note the added IsFirstPerson() check stops this happening on a listen server host that isn't controlling this vehicle
             SwitchMesh(DriverPositionIndex);
 
             // If moving to a less zoomed position, we zoom out now, otherwise we wait until end of transition to zoom in
@@ -1205,7 +1206,7 @@ simulated state ViewTransition
 
     simulated function EndState()
     {
-        if (Level.NetMode != NM_DedicatedServer && IsHumanControlled() && !PlayerController(Controller).bBehindView)
+        if (IsFirstPerson())
         {
             // If we have moved to a more zoomed position, we zoom in now, because we didn't do it earlier
             if (GetViewFOV(DriverPositionIndex) < GetViewFOV(PreviousPositionIndex))

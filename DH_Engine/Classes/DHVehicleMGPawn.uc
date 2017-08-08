@@ -241,7 +241,7 @@ simulated state ViewTransition
         if (VehWep != none)
         {
             // If the option is flagged, turn off muzzle flash if player has raised head above sights
-            if (bHideMuzzleFlashAboveSights && DriverPositionIndex > 0 && VehWep.AmbientEffectEmitter != none && IsHumanControlled() && !PlayerController(Controller).bBehindView)
+            if (bHideMuzzleFlashAboveSights && DriverPositionIndex > 0 && IsFirstPerson() && VehWep.AmbientEffectEmitter != none)
             {
                 VehWep.AmbientEffectEmitter.bHidden = true;
             }

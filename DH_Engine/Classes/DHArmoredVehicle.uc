@@ -433,8 +433,7 @@ simulated state ViewTransition
     {
         super.HandleTransition();
 
-        if (Level.NetMode != NM_DedicatedServer && OverlayFPCamPos != vect(0.0, 0.0, 0.0) && DriverPositions[PreviousPositionIndex].bDrawOverlays
-            && IsHumanControlled() && !PlayerController(Controller).bBehindView)
+        if (OverlayFPCamPos != vect(0.0, 0.0, 0.0) && DriverPositions[PreviousPositionIndex].bDrawOverlays && IsFirstPerson())
         {
             FPCamPos = default.FPCamPos; // if moving away from overlay, remove offset immediately
         }
@@ -444,8 +443,7 @@ simulated state ViewTransition
     {
         super.EndState();
 
-        if (Level.NetMode != NM_DedicatedServer && OverlayFPCamPos != vect(0.0, 0.0, 0.0) && DriverPositions[DriverPositionIndex].bDrawOverlays
-            && IsHumanControlled() && !PlayerController(Controller).bBehindView)
+        if (OverlayFPCamPos != vect(0.0, 0.0, 0.0) && DriverPositions[DriverPositionIndex].bDrawOverlays && IsFirstPerson())
         {
             FPCamPos = OverlayFPCamPos; // if moving into overlay, apply offset at end of transition
         }

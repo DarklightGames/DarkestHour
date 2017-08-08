@@ -596,8 +596,7 @@ simulated state ViewTransition
     {
         super.HandleTransition();
 
-        if (Level.NetMode != NM_DedicatedServer && LastPositionIndex < GunsightPositions && DriverPositionIndex >= GunsightPositions
-            && IsHumanControlled() && !PlayerController(Controller).bBehindView)
+        if (LastPositionIndex < GunsightPositions && DriverPositionIndex >= GunsightPositions && IsFirstPerson())
         {
             SetInitialViewRotation();
         }
