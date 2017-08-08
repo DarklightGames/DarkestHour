@@ -53,7 +53,6 @@ function ResetClicked()
     super.ResetClicked();
 }
 
-// Theel: TODO the save config stuff here might be able to be moved to SaveSettings() (but not really worth the hassle)
 function OnInputChange(GUIComponent Sender)
 {
     local PlayerController PC;

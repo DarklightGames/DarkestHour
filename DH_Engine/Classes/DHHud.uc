@@ -3908,7 +3908,7 @@ simulated function DrawObjectives(Canvas C)
         ObjCount++;
     }
 
-    // Theel: should secondary objectives even be listed (they shouldn't be important enough!)
+    // List secondary objectives if any
     if (bHasSecondaryObjectives)
     {
         MapObjectivesTexts.OffsetY += YL + YL_one * 0.5;

@@ -826,7 +826,7 @@ function Timer()
         NoCapProgressTimeRemaining = 0; // Make sure this value gets zeroed
     }
 
-    // Theel: TODO need to indicate to the player that they cannot capture this obj until they control the required obj
+    // TODO: need to indicate to the player that they cannot capture this obj until they control the required obj
     // Determine if we can progress on the capture (will set rate to 0.0 to prevent it)
     // If the objective is bNeutralizeBeforeCapture & if we are capturing (not neutralizing)
     if (bNeutralizeBeforeCapture && ObjState == OBJ_Neutral)

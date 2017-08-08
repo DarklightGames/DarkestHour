@@ -32,7 +32,7 @@ static simulated function ClientReceive(PlayerController P, optional int Switch,
     }
     // End super code
 
-    // Theel: Pausesounds before we begin playing music (another likely failed attempt at preventing MGs from firing continuously after the round ends)
+    // Have client pausesounds before the music begins (can help prevent very loud level sounds from drowning out music)
     if (DHPlayer(P) != none)
     {
         DHPlayer(P).ClientConsoleCommand("pausesounds", false);
