@@ -2671,10 +2671,7 @@ simulated function PlayDying(class<DamageType> DamageType, vector HitLoc)
     if (Level.NetMode != NM_DedicatedServer)
     {
         // Set PC
-        if (Level.GetLocalPlayerController() != none)
-        {
-            PC = DHPlayer(Level.GetLocalPlayerController());
-        }
+        PC = DHPlayer(Level.GetLocalPlayerController());
 
         if (PC != none)
         {
@@ -2682,12 +2679,12 @@ simulated function PlayDying(class<DamageType> DamageType, vector HitLoc)
         }
         else
         {
-            LifeSpan = RagdollLifeSpan; // Default (30 seconds)
+            LifeSpan = RagdollLifeSpan; // default (30 seconds)
         }
     }
     else
     {
-        LifeSpan = 10; // TODO: figure out if this matters and what value best to set to (before the server would have set it to 30)
+        LifeSpan = 10.0; // TODO: figure out if this matters and what value best to set to (before the server would have set it to 30)
     }
 
     GotoState('Dying');
@@ -3658,7 +3655,7 @@ simulated function PlayMantle()
     }
 }
 
-simulated function PlayEndMantle()
+simulated function PlayEndMantle() // TODO: perhaps ought to play these anims on a dedicated server to put player's hit boxes in correct position? (server hit boxes must match client)
 {
     if (Weapon != none && WeaponAttachment != none)
     {

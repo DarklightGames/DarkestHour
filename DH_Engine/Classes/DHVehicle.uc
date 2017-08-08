@@ -877,7 +877,7 @@ function bool TryToDrive(Pawn P)
 
     // TODO: these checks on a tank crew position are perhaps unnecessary duplication, as they will have been reliably checked on the server in either:
     // (1) FindEntryVehicle() - if player pressed 'use' to try to enter a vehicle, or
-    // (2) ServerChangeDriverPosition()/CanSwitchToVehiclePosition() - if player tried to switch positions in a vehicle, or
+    // (2) ServerChangeDriverPosition()/CanSwitchToVehiclePosition() - if player tried to switch vehicle position [EDIT - no longer applies, now goes straight to KDriverEnter], or
     // (3) DHSpawnManager.SpawnVehicle() - if player spawns into a vehicle from the DH deploy scrren
     // And there shouldn't be any other way of getting to this function
     if (bMustBeTankCommander)
@@ -1217,7 +1217,7 @@ simulated state ViewTransition
             // If camera was locked to PlayerCameraBone during transition, match rotation to that now, so the view can't snap to another rotation
             if (bLockCameraDuringTransition && ViewTransitionDuration > 0.0)
             {
-                Controller.SetRotation(rotator(vector(GetBoneRotation(PlayerCameraBone)) << Rotation));
+                Controller.SetRotation(rotator(vector(GetBoneRotation(PlayerCameraBone)) << Rotation)); // camera bone rotation, made relative to vehicle
             }
         }
 

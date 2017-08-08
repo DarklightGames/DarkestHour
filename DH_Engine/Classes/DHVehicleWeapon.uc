@@ -464,7 +464,7 @@ simulated function ClientStartFire(Controller C, bool bAltFire)
 
 // Modified to add generic support for weapons that use magazines or similar, to add generic support for different fire sounds,
 // to stop 'phantom' coaxial firing effects (flash & tracers) from continuing if player has moved to ineligible firing position while holding down fire button,
-// and to enable MG muzzle flash when hosting a listen server, which the original code misses out
+// and to enable MG muzzle flash (AmbientEffectEmitter) for listen server host firing own weapon, which the original code misses out
 simulated function OwnerEffects()
 {
     if (Role < ROLE_Authority)
@@ -518,7 +518,7 @@ simulated function OwnerEffects()
 
         if ((bIsAltFire || !bAmbientEmitterAltFireOnly) && AmbientEffectEmitter != none)
         {
-            AmbientEffectEmitter.SetEmitterStatus(true); // consolidated here instead of having it in 3 places for 3 net modes (listen server now included, so fixes bug)
+            AmbientEffectEmitter.SetEmitterStatus(true); // consolidated here instead of having it in 3 places for 3 net modes (owning listen server now included, so fixes bug)
         }
 
         if (!bIsRepeatingFF)
