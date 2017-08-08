@@ -236,8 +236,9 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
         return none;
     }
 
-    // Spawn a tracer projectile if one is due (but not on a net client if our weapon uses a DHHighROFWeaponAttachment, as that handles tracers independently on clients)
-    if (bUsesTracers && (Level.NetMode == NM_Standalone || DHHighROFWeaponAttachment(Weapon.ThirdPersonActor) == none) && TracerProjectileClass != none)
+    // Spawn a tracer projectile if one is due
+    // But don't bother on a dedicated server if weapon uses the 'high ROF' system, as net clients will handle tracers independently
+    if (bUsesTracers && !(Level.NetMode == NM_DedicatedServer && DHHighROFWeaponAttachment(Weapon.ThirdPersonActor) != none) && TracerProjectileClass != none)
     {
         NextTracerCounter++;
 
