@@ -24,7 +24,10 @@ simulated function OnConstructed()
 
     if (Role == ROLE_Authority)
     {
-        SpawnPoint = Spawn(class'DHSpawnPoint_PlatoonHQ', self);
+        if (SpawnPoint == none)
+        {
+            SpawnPoint = Spawn(class'DHSpawnPoint_PlatoonHQ', self);
+        }
 
         if (SpawnPoint != none)
         {
@@ -48,9 +51,9 @@ simulated function OnConstructed()
             SpawnPoint.SetLocation(HitLocation);
             SpawnPoint.SetTeamIndex(GetTeamIndex());
             SpawnPoint.SetIsActive(true);
+            SpawnPoint.ResetActivationTimer();
         }
     }
-
 }
 
 simulated function DestroyAttachments()

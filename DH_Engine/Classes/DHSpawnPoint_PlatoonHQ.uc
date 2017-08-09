@@ -33,6 +33,12 @@ function PostBeginPlay()
     SetTimer(1.0, true);
 }
 
+function ResetActivationTimer()
+{
+    bIsActivated = false;
+    ActivationCounter = 0;
+}
+
 function Timer()
 {
     local int EncroachingEnemiesCount;
@@ -49,7 +55,7 @@ function Timer()
     }
 
     // Activation
-    if (!bIsActivated)
+    if (Construction != none && Construction.IsConstructed() && !bIsActivated)
     {
         ActivationCounter = Clamp(ActivationCounter + 1, 0, ActivationCounterThreshold);
 
@@ -115,13 +121,18 @@ function Timer()
             Construction.GotoState('Broken');
         }
     }
+
+    // If the construction is being deconstructed, block spawning.
+    if (Construction != none && !Construction.IsConstructed())
+    {
+        BlockReason = SPBR_Constructing;
+    }
 }
 
 function OnTeamIndexChanged()
 {
     // Reset activation state and timer
-    bIsActivated = false;
-    ActivationCounter = 0;
+    ResetActivationTimer();
 
     // Reset spawn kill penalty counter
     SpawnKillPenaltyCounter = 0;
