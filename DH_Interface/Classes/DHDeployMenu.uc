@@ -601,12 +601,6 @@ function UpdateVehicles(optional bool bShowAlert)
                 S @= "{" $ GRI.VehiclePoolActiveCounts[j] $ "/" $ GRI.VehiclePoolMaxActives[j] $ "}";
             }
 
-            // Only show vehicle reinforcement cost if reinforcements are not infinite
-            if (class<DHVehicle>(VehicleClass) != none && GRI.SpawnsRemaining[class<DHVehicle>(VehicleClass).default.VehicleTeam] != -1)
-            {
-                S @= "|" $ default.ReinforcementCostText $ class<DHVehicle>(VehicleClass).default.ReinforcementCost $ "|";
-            }
-
             RespawnTime = GRI.VehiclePoolNextAvailableTimes[j] - GRI.ElapsedTime;
             RespawnTime = Max(RespawnTime, PC.NextVehicleSpawnTime - GRI.ElapsedTime);
 
