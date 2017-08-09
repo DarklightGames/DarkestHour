@@ -578,14 +578,8 @@ function UpdateVehicles(optional bool bShowAlert)
         PC = DHPlayer(PlayerOwner());
 
         // TODO: have team max be indicated in another part of this control (ie. don't obfuscate meaning)
-        bDisabled = VehicleClass != none &&
-                    ((VehicleClass.default.bMustBeTankCommander && RI != none && !RI.default.bCanBeTankCrew) ||
-                    (!GRI.IgnoresMaxTeamVehiclesFlags(j) && GRI.MaxTeamVehicles[CurrentTeam] <= 0) ||
-                    GRI.GetVehiclePoolSpawnsRemaining(j) <= 0 ||
-                    !GRI.IsVehiclePoolActive(j) ||
-                    GRI.VehiclePoolActiveCounts[j] >= GRI.VehiclePoolMaxActives[j] ||
-                    (PC.Pawn != none && PC.Pawn.Health > 0) ||
-                    (PC.VehiclePoolIndex != j && !GRI.IsVehiclePoolReservable(PC, RI, j)));
+        // TODO: this is an inpenetrable MESS
+        bDisabled = PC.VehiclePoolIndex != j && !GRI.CanPlayerReserveVehicleWithRole(PC, RI, CurrentTeam, j);
 
         if (VehicleClass != none)
         {
@@ -925,15 +919,16 @@ function UpdateButtons()
 
         b_Spectate.EnableMe();
 
-        // Colin: Continue button should always be clickable if we're using the old
-        // spawning system. If we're using the new spawning system, we have to check
-        // that our pending parameters are valid.
+        // Continue button should always be clickable if we're using the old
+        // spawning system. If we're using the new spawning system, we have to
+        // check that our pending parameters are valid.
         if (PC.ClientLevelInfo.SpawnMode == ESM_RedOrchestra ||
             (li_Vehicles.Index >= 0 && GRI.CanSpawnWithParameters(SpawnPointIndex,
                                                                  CurrentTeam,
                                                                  GRI.GetRoleIndexAndTeam(DHRoleInfo(li_Roles.GetObject()), Team),
                                                                  SquadIndex,
-                                                                 GetSelectedVehiclePoolIndex())))
+                                                                 GetSelectedVehiclePoolIndex(),
+                                                                 true)))
         {
             bContinueEnabled = true;
         }

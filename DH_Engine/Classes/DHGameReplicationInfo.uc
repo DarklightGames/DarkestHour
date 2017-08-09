@@ -282,21 +282,16 @@ simulated function bool IsRallyPointIndexValid(DHPlayer PC, byte RallyPointIndex
     return true;
 }
 
-simulated function bool CanSpawnWithParameters(int SpawnPointIndex, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
+simulated function bool CanSpawnWithParameters(int SpawnPointIndex, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck)
 {
     local DHSpawnPointBase SP;
 
     SP = GetSpawnPoint(SpawnPointIndex);
 
-    if (SP == none)
-    {
-        return false;
-    }
-
-    return SP.CanSpawnWithParameters(self, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex);
+    return SP != none && SP.CanSpawnWithParameters(self, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex, bSkipTimeCheck);
 }
 
-simulated function bool CanSpawnVehicle(int VehiclePoolIndex)
+simulated function bool CanSpawnVehicle(int VehiclePoolIndex, optional bool bSkipTimeCheck)
 {
     local class<ROVehicle> VC;
 
@@ -317,7 +312,7 @@ simulated function bool CanSpawnVehicle(int VehiclePoolIndex)
         return false;
     }
 
-    if (ElapsedTime < VehiclePoolNextAvailableTimes[VehiclePoolIndex])
+    if (!bSkipTimeCheck && ElapsedTime < VehiclePoolNextAvailableTimes[VehiclePoolIndex])
     {
         return false;
     }
@@ -375,45 +370,6 @@ simulated function bool IsVehiclePoolActive(byte VehiclePoolIndex)
     return VehiclePoolIsActives[VehiclePoolIndex] != 0;
 }
 
-simulated function bool IsVehiclePoolIndexValid(RORoleInfo RI, byte VehiclePoolIndex)
-{
-    local class<ROVehicle> VehicleClass;
-
-    if (RI == none)
-    {
-        return false;
-    }
-
-    if (VehiclePoolIndex >= arraycount(VehiclePoolVehicleClasses))
-    {
-        return false;
-    }
-
-    if (!IsVehiclePoolActive(VehiclePoolIndex))
-    {
-        return false;
-    }
-
-    VehicleClass = VehiclePoolVehicleClasses[VehiclePoolIndex];
-
-    if (VehicleClass == none)
-    {
-        return false;
-    }
-
-    if (VehicleClass.default.bMustBeTankCommander && !RI.bCanBeTankCrew)
-    {
-        return false;
-    }
-
-    if (VehicleClass.default.VehicleTeam != RI.Side)
-    {
-        return false;
-    }
-
-    return true;
-}
-
 simulated function byte GetVehiclePoolSpawnsRemaining(byte VehiclePoolIndex)
 {
     if (IsVehiclePoolInfinite(VehiclePoolIndex))
@@ -446,32 +402,9 @@ simulated function byte GetVehiclePoolAvailableReservationCount(int VehiclePoolI
     return Min(VehiclePoolSpawnsRemaning, (MaxActive - Active) - ReservationCount);
 }
 
-simulated function bool IsVehiclePoolReservable(DHPlayer PC, DHRoleInfo RI, int VehiclePoolIndex)
-{
-    if (PC == none || (PC.Pawn != none && PC.Pawn.Health > 0))
-    {
-        // Alive players cannot reserve vehicles
-        return false;
-    }
-
-    if (!IsVehiclePoolIndexValid(RI, VehiclePoolIndex))
-    {
-        // Invalid vehicle pool specified
-        return false;
-    }
-
-    if (GetVehiclePoolAvailableReservationCount(VehiclePoolIndex) <= 0)
-    {
-        // All available vehicles have been reserved
-        return false;
-    }
-
-    return true;
-}
-
 function bool ReserveVehicle(DHPlayer PC, int VehiclePoolIndex)
 {
-    if (VehiclePoolIndex != -1 && !IsVehiclePoolReservable(PC, DHRoleInfo(PC.GetRoleInfo()), VehiclePoolIndex))
+    if (PC == none || VehiclePoolIndex != -1 && !CanPlayerReserveVehicleWithRole(PC, DHRoleInfo(PC.GetRoleInfo()), PC.GetTeamNum(), VehiclePoolIndex))
     {
         return false;
     }
@@ -837,6 +770,27 @@ simulated function AddPRI(PlayerReplicationInfo PRI)
     }
 
     PRIArray[PRIArray.Length] = PRI;
+}
+
+simulated function bool CanPlayerReserveVehicleWithRole(DHPlayer PC, DHRoleInfo RI, int TeamIndex, int VehiclePoolIndex)
+{
+    local class<ROVehicle> VC;
+
+    VC = class<ROVehicle>(GetVehiclePoolVehicleClass(VehiclePoolIndex));
+
+    if (PC == none || RI == none || VC == none || (TeamIndex != AXIS_TEAM_INDEX && TeamIndex != ALLIES_TEAM_INDEX))
+    {
+        return false;
+    }
+
+    return (RI.default.bCanBeTankCrew || !VC.default.bMustBeTankCommander) &&
+            (IgnoresMaxTeamVehiclesFlags(VehiclePoolIndex) || MaxTeamVehicles[TeamIndex] > 0) &&
+            GetVehiclePoolSpawnsRemaining(VehiclePoolIndex) > 0 &&
+            IsVehiclePoolActive(VehiclePoolIndex) &&
+            VehiclePoolActiveCounts[VehiclePoolIndex] < VehiclePoolMaxActives[VehiclePoolIndex] &&
+            (PC.Pawn == none || PC.Pawn.Health <= 0) &&
+            VC.default.VehicleTeam == RI.Side &&
+            GetVehiclePoolAvailableReservationCount(VehiclePoolIndex) > 0;
 }
 
 defaultproperties

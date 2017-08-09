@@ -215,7 +215,7 @@ simulated function bool CanSpawnMortars()
     return Type == ESPT_Mortars || Type == ESPT_All;
 }
 
-simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
+simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck)
 {
     local class<ROVehicle>  VehicleClass;
     local DHRoleInfo        RI;
@@ -244,11 +244,11 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
     }
     else
     {
-        return CanSpawnVehicle(GRI, VehiclePoolIndex);
+        return CanSpawnVehicle(GRI, VehiclePoolIndex, bSkipTimeCheck);
     }
 }
 
-simulated function bool CanSpawnVehicle(DHGameReplicationInfo GRI, int VehiclePoolIndex)
+simulated function bool CanSpawnVehicle(DHGameReplicationInfo GRI, int VehiclePoolIndex, optional bool bSkipTimeCheck)
 {
     local class<ROVehicle> VehicleClass;
 
@@ -258,7 +258,7 @@ simulated function bool CanSpawnVehicle(DHGameReplicationInfo GRI, int VehiclePo
            GetTeamIndex() == VehicleClass.default.VehicleTeam &&                                                    // check vehicle belongs to player's team
            (CanSpawnVehicles() || (bCanOnlySpawnInfantryVehicles && !VehicleClass.default.bMustBeTankCommander)) && // check SP can spawn vehicles
            !(bNoSpawnVehicles && GRI.VehiclePoolIsSpawnVehicles[VehiclePoolIndex] != 0) &&                          // if it's a spawn vehicle, make sure SP doesn't prohibit those
-           GRI.CanSpawnVehicle(VehiclePoolIndex);                                                                   // check one of these vehicles is available at the current time
+           GRI.CanSpawnVehicle(VehiclePoolIndex, bSkipTimeCheck);                                                   // check one of these vehicles is available at the current time
 }
 
 function bool PerformSpawn(DHPlayer PC)

@@ -62,7 +62,7 @@ function bool PerformSpawn(DHPlayer PC);
 function OnSpawnKill(Pawn VictimPawn, Controller KillerController);
 
 // Override to specify which vehicles can spawn at this spawn point.
-simulated function bool CanSpawnVehicle(DHGameReplicationInfo GRI, int VehiclePoolIndex);
+simulated function bool CanSpawnVehicle(DHGameReplicationInfo GRI, int VehiclePoolIndex, optional bool bSkipTimeCheck);
 
 // Override to limit certain roles from using this spawn point.
 simulated function bool CanSpawnRole(DHRoleInfo RI)
@@ -100,7 +100,7 @@ simulated function bool IsBlocked()
 
 // Returns true if the given arguments are satisfactory for spawning on this
 // spawn point.
-simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
+simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck)
 {
     if (GRI == none || self.TeamIndex != TeamIndex || !bIsActive || IsBlocked())
     {
@@ -112,7 +112,7 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
         return false;
     }
 
-    if (VehiclePoolIndex >= 0 && !CanSpawnVehicle(GRI, VehiclePoolIndex))
+    if (VehiclePoolIndex >= 0 && !CanSpawnVehicle(GRI, VehiclePoolIndex, bSkipTimeCheck))
     {
         return false;
     }
