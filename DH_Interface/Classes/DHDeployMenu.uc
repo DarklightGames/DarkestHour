@@ -1651,6 +1651,7 @@ function UpdateSquads()
     {
         C = p_Squads.SquadComponents[j++];
 
+        SetVisible(C, true);
         SetVisible(C.lb_Members, false);
         SetVisible(C.li_Members, false);
         SetVisible(C.l_SquadName, false);
