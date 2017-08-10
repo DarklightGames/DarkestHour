@@ -1567,6 +1567,7 @@ function UpdateSquads()
         }
 
         C = p_Squads.SquadComponents[j];
+        C.SquadIndex = i;
 
         SetVisible(C, true);
 

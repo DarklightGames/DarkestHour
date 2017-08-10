@@ -7,18 +7,6 @@ class DHGUISquadsComponent extends GUIPanel;
 
 var automated array<DHGUISquadComponent> SquadComponents;
 
-function InitComponent(GUIController MyController, GUIComponent MyOwner)
-{
-    local int i;
-
-    super.InitComponent(MyController, MyOwner);
-
-    for (i = 0; i < SquadComponents.Length; ++i)
-    {
-        SquadComponents[i].SquadIndex = i;
-    }
-}
-
 function InternalOnShow()
 {
     local int i;
