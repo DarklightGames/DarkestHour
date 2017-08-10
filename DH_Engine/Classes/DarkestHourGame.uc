@@ -85,8 +85,8 @@ event InitGame(string Options, out string Error)
 
     if (bIgnore32PlayerLimit)
     {
-        MaxPlayers = Clamp(GetIntOption(Options, "MaxPlayers", MaxPlayers), 0, 64);
-        default.MaxPlayers = Clamp(default.MaxPlayers, 0, 64);
+        MaxPlayers = Clamp(GetIntOption(Options, "MaxPlayers", MaxPlayers), 0, 128);
+        default.MaxPlayers = Clamp(default.MaxPlayers, 0, 128);
     }
 }
 
@@ -3903,14 +3903,20 @@ function CheckSpawnAreas()
     CurrentSpawnArea[AXIS_TEAM_INDEX] = Best[AXIS_TEAM_INDEX];
     CurrentSpawnArea[ALLIES_TEAM_INDEX] = Best[ALLIES_TEAM_INDEX];
 
-    if (CurrentSpawnArea[AXIS_TEAM_INDEX] == none)
+    // Run this check for levelers, if they set DH_LevelInfo to use spawn areas, but don't put any on the map, we should inform them
+    if (CurrentSpawnArea[AXIS_TEAM_INDEX] == none || CurrentSpawnArea[ALLIES_TEAM_INDEX] == none)
     {
-        Log("ROTeamGame: no valid Axis spawn area found!");
-    }
+        bReqsMet = false;
 
-    if (CurrentSpawnArea[ALLIES_TEAM_INDEX] == none)
-    {
-        Log("ROTeamGame: no valid Allied spawn area found!");
+        foreach DynamicActors(class'ROSpawnArea', Best[0])
+        {
+            bReqsMet = true;
+        }
+
+        if (!bReqsMet)
+        {
+            Warn("No SpawnAreas found in the level when DarkestHourGame is expecting them!");
+        }
     }
 }
 
