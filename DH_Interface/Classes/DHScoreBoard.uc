@@ -469,6 +469,7 @@ simulated function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplication
     local CellRenderInfo CRI;
     local array<DHPlayerReplicationInfo> SquadMembers;
     local float TeamWidth;
+    local bool bHasUnassigned;
 
     TeamColor = class'DHColor'.default.TeamColors[TeamIndex];
 
@@ -622,58 +623,70 @@ simulated function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplication
             }
         }
 
-        // Reset the base line height
-        LineHeight = BaseLineHeight * 1.25;
-
-//        if (Y + LineHeight > C.ClipY)
-//        {
-//            break;
-//        }
-
-        // Reset the X position
-        X = BaseXPos[TeamIndex];
-
-        // Draw the squad header
-        DrawCell(C, "    " $ UnassignedTeamName, 0, X, Y, TeamWidth, LineHeight, true, class'UColor'.default.White, SquadHeaderColor);
-
-        // Increment the Y value
-        Y += LineHeight;
-
         for (i = 0; i < TeamPRI.Length; ++i)
         {
-            if (TeamPRI[i].SquadIndex != -1)
+            if (TeamPRI[i].SquadIndex == -1)
             {
-                continue;
-            }
-
-            if (Y + LineHeight > C.ClipY)
-            {
+                bHasUnassigned = true;
                 break;
             }
+        }
 
-            // If we've filled all available lines for this team, draw a final "..." to indicate there are more players not listed & exit the loop
-            if (i >= MaxPlayersListedPerSide)
-            {
-                DrawCell(C, "...", 0, BaseXPos[TeamIndex], Y, NameLength, LineHeight, false, class'UColor'.default.White, HighLightColor);
-                break;
-            }
+        if (bHasUnassigned)
+        {
+            // Reset the base line height
+            LineHeight = BaseLineHeight * 1.25;
 
+    //        if (Y + LineHeight > C.ClipY)
+    //        {
+    //            break;
+    //        }
+
+            // Reset the X position
             X = BaseXPos[TeamIndex];
 
-            for (j = 0; j < ScoreboardColumnIndices.Length; ++j)
-            {
-                GetScoreboardColumnRenderInfo(ScoreboardColumnIndices[j], TeamPRI[i], CRI);
+            // Draw the squad header
+            DrawCell(C, "    " $ UnassignedTeamName, 0, X, Y, TeamWidth, LineHeight, true, class'UColor'.default.White, SquadHeaderColor);
 
-                DrawCell(C, CRI.Text, CRI.Justification, X, Y, CalcX(ScoreboardColumns[ScoreboardColumnIndices[j]].Width, C), LineHeight, CRI.bDrawBacking, CRI.TextColor, CRI.BackingColor);
-                X += CalcX(ScoreboardColumns[ScoreboardColumnIndices[j]].Width, C);
-            }
-
-            // TODO: remove this??
-            // Update axis team's total score
-            TeamTotalScore += TeamPRI[i].Score;
-
-            // Move to next drawing line (exit drawing axis players if this takes us off the bottom of the screen)
+            // Increment the Y value
             Y += LineHeight;
+
+            for (i = 0; i < TeamPRI.Length; ++i)
+            {
+                if (TeamPRI[i].SquadIndex != -1)
+                {
+                    continue;
+                }
+
+                if (Y + LineHeight > C.ClipY)
+                {
+                    break;
+                }
+
+                // If we've filled all available lines for this team, draw a final "..." to indicate there are more players not listed & exit the loop
+                if (i >= MaxPlayersListedPerSide)
+                {
+                    DrawCell(C, "...", 0, BaseXPos[TeamIndex], Y, NameLength, LineHeight, false, class'UColor'.default.White, HighLightColor);
+                    break;
+                }
+
+                X = BaseXPos[TeamIndex];
+
+                for (j = 0; j < ScoreboardColumnIndices.Length; ++j)
+                {
+                    GetScoreboardColumnRenderInfo(ScoreboardColumnIndices[j], TeamPRI[i], CRI);
+
+                    DrawCell(C, CRI.Text, CRI.Justification, X, Y, CalcX(ScoreboardColumns[ScoreboardColumnIndices[j]].Width, C), LineHeight, CRI.bDrawBacking, CRI.TextColor, CRI.BackingColor);
+                    X += CalcX(ScoreboardColumns[ScoreboardColumnIndices[j]].Width, C);
+                }
+
+                // TODO: remove this??
+                // Update axis team's total score
+                TeamTotalScore += TeamPRI[i].Score;
+
+                // Move to next drawing line (exit drawing axis players if this takes us off the bottom of the screen)
+                Y += LineHeight;
+            }
         }
     }
     else
