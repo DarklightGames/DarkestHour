@@ -20,14 +20,10 @@ simulated function OnConstructed()
 
     if (Role == ROLE_Authority)
     {
-        Log("Trying to spawn spawn point");
-
         if (SpawnPoint == none)
         {
             SpawnPoint = Spawn(class'DHSpawnPoint_PlatoonHQ', self);
         }
-
-        Log("SPAWN POINT" @ SpawnPoint);
 
         if (SpawnPoint != none)
         {
@@ -52,8 +48,6 @@ simulated function OnConstructed()
             SpawnPoint.SetTeamIndex(GetTeamIndex());
             SpawnPoint.SetIsActive(true);
             SpawnPoint.ResetActivationTimer();
-
-            Log("SpawnPoint.Location" @ SpawnPoint.Location);
         }
     }
 }
