@@ -3509,8 +3509,8 @@ defaultproperties
     RearLeftAngle=207.0
 
     // Damage
-    Health=175
-    HealthMax=175.0
+    Health=800
+    HealthMax=800.0
     EngineHealth=30
     VehHitpoints(0)=(PointRadius=25.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // no.0 becomes engine instead of driver
     VehHitpoints(1)=(PointRadius=0.0,PointScale=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
@@ -3529,12 +3529,18 @@ defaultproperties
     DamagedEffectHealthFireFactor=0.15
 
     // Vehicle destruction
-    DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
-    DestructionEffectLowClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
-    DisintegrationEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
-    DisintegrationEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
-    ExplosionDamage=325.0
-    ExplosionRadius=700.0
+    //DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
+    //DestructionEffectLowClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
+    //DisintegrationEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
+    //DisintegrationEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+
+    DestructionEffectClass=class'DH_Effects.DHVehicleAmmoCookEffect'
+    DestructionEffectLowClass=class'DH_Effects.DHVehicleAmmoCookEffect'
+    DisintegrationEffectClass=class'DH_Effects.DHVehicleAmmoCookEffect'
+    DisintegrationEffectLowClass=class'DH_Effects.DHVehicleAmmoCookEffect'
+
+    ExplosionDamage=100.0
+    ExplosionRadius=100.0
     ExplosionSoundRadius=750.0
 
     // Vehicle reset/respawn

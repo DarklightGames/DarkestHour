@@ -423,8 +423,6 @@ defaultproperties
     MaxDesireability=1.9
     GroundSpeed=80.0
     WaterSpeed=80.0
-    HealthMax=800.0
-    Health=800
     Mesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat'
     Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.HigginsBoat'
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc.higgins.HigginsBoat_ramp_coll',AttachBone="Master2z00",Offset=(X=0.0,Y=-252.0,Z=-36.0)) // col mesh for bow ramp

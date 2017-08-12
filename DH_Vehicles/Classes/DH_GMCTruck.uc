@@ -159,8 +159,6 @@ defaultproperties
     ImpactWorldDamageMult=1.0
     HeavyEngineDamageThreshold=0.33
     EngineHealth=35
-    HealthMax=150.0
-    Health=150
     Mesh=SkeletalMesh'DH_GMCTruck_anm.GMCTruck_body'
     Skins(0)=texture'DH_Allied_MilitarySM.American.GMC'
     CollisionRadius=175.0

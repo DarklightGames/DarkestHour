@@ -187,8 +187,6 @@ defaultproperties
     ImpactDamageMult=0.001
     ImpactWorldDamageMult=3.0
     EngineHealth=125
-    HealthMax=325.0
-    Health=325
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_visor_collision',AttachBone="hatch") // collision attachment for driver's armoured visor
     CollisionRadius=10.0
     CollisionHeight=40.0

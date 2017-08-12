@@ -64,8 +64,6 @@ defaultproperties
     GearRatios(4)=0.65
 
     // Damage
-    Health=475
-    HealthMax=475.0
     VehHitpoints(0)=(PointRadius=30.0,PointHeight=32.0,PointOffset=(X=-70.0,Z=6.0)) // engine
     VehHitpoints(1)=(PointRadius=10.0,PointHeight=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=-25.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=10.0,PointHeight=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=50.0,Y=25.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

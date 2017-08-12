@@ -147,8 +147,6 @@ defaultproperties
     PitchDownLimit=58000
     ImpactWorldDamageMult=0.008
     HeavyEngineDamageThreshold=0.33
-    HealthMax=125.0
-    Health=125
     Mesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body_ext'
     Skins(0)=texture'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep'
     CollisionRadius=175.0

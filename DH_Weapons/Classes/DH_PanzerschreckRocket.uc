@@ -17,7 +17,7 @@ defaultproperties
     DHPenetrationTable(6)=17.5
     bIsAlliedShell=false
     ShellImpactDamage=class'DH_Weapons.DH_PanzerschreckImpactDamType'
-    ImpactDamage=625
+    ImpactDamage=400
     Speed=6337.0
     MaxSpeed=6337.0
     MyDamageType=class'DH_Weapons.DH_PanzerschreckDamType'

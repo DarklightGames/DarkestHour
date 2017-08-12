@@ -2291,8 +2291,8 @@ defaultproperties
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
 
     // Damage
-    Health=525
-    HealthMax=525.0
+    Health=800
+    HealthMax=800.0
     EngineHealth=300
     VehHitpoints(0)=(PointBone="Body") // default engine hit point bone
     GunOpticsHitPointIndex=-1 // set in subclass if vehicle has exposed gunsight optics
@@ -2334,15 +2334,22 @@ defaultproperties
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
 
     // Vehicle destruction
-    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
-    DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
-    DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
-    DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
+    //DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
+    //DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+    //DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
+    //DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
+
+    DestructionEffectClass=class'DH_Effects.DHVehicleAmmoCookEffect'
+    DestructionEffectLowClass=class'DH_Effects.DHVehicleAmmoCookEffect'
+    DisintegrationEffectClass=class'DH_Effects.DHVehicleAmmoCookEffect'
+    DisintegrationEffectLowClass=class'DH_Effects.DHVehicleAmmoCookEffect'
+
+
     DisintegrationHealth=-10000.0 // -10000 default to make classes enable disintegration
     DestructionLinearMomentum=(Min=100.0,Max=350.0)
     DestructionAngularMomentum=(Min=50.0,Max=150.0)
-    ExplosionDamage=575.0
-    ExplosionRadius=900.0
+    ExplosionDamage=200.0
+    ExplosionRadius=200.0
     ExplosionSoundRadius=1000.0
 
     // Vehicle reset/respawn

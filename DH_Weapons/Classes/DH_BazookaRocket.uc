@@ -16,7 +16,7 @@ defaultproperties
     DHPenetrationTable(5)=9.8
     DHPenetrationTable(6)=9.8
     ShellImpactDamage=class'DH_Weapons.DH_BazookaImpactDamType'
-    ImpactDamage=575
+    ImpactDamage=350
     BallisticCoefficient=0.0475
     Speed=4967.0
     MaxSpeed=4967.0

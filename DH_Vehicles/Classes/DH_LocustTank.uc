@@ -124,8 +124,6 @@ defaultproperties
     TransRatio=0.14
 
     // Damage
-    Health=200
-    HealthMax=200.0
     EngineHealth=100
     VehHitpoints(0)=(PointRadius=20.0,PointOffset=(X=-72.0,Y=13.5,Z=3.5)) // engine
     VehHitpoints(1)=(PointRadius=9.0,PointScale=1.0,PointBone="body",PointOffset=(X=-17.0,Y=0.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

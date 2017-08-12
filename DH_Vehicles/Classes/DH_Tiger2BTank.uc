@@ -62,8 +62,6 @@ defaultproperties
     SteerSpeed=50.0
 
     // Damage
-    Health=700
-    HealthMax=700.0
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-115.0,Z=-22.0)) // engine
     VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-55.0,Y=-65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-55.0,Y=65.0,Z=4.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
