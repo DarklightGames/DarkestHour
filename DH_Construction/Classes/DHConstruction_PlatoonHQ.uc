@@ -3,18 +3,14 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHConstruction_PlatoonHQ extends DHConstruction;
+class DHConstruction_PlatoonHQ extends DHConstruction
+    notplaceable;
 
 #exec OBJ LOAD FILE=..\Textures\DH_Construction_tex.utx
 
 var DHSpawnPoint_PlatoonHQ  SpawnPoint;
 var int                     FlagSkinIndex;
 var sound                   RainSound;
-
-simulated function PostBeginPlay()
-{
-    super.PostBeginPlay();
-}
 
 simulated function OnConstructed()
 {
@@ -24,10 +20,14 @@ simulated function OnConstructed()
 
     if (Role == ROLE_Authority)
     {
+        Log("Trying to spawn spawn point");
+
         if (SpawnPoint == none)
         {
             SpawnPoint = Spawn(class'DHSpawnPoint_PlatoonHQ', self);
         }
+
+        Log("SPAWN POINT" @ SpawnPoint);
 
         if (SpawnPoint != none)
         {
@@ -52,6 +52,8 @@ simulated function OnConstructed()
             SpawnPoint.SetTeamIndex(GetTeamIndex());
             SpawnPoint.SetIsActive(true);
             SpawnPoint.ResetActivationTimer();
+
+            Log("SpawnPoint.Location" @ SpawnPoint.Location);
         }
     }
 }

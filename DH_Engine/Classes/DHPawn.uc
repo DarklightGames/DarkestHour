@@ -6545,24 +6545,22 @@ function SetConstructionProxy(class<DHConstruction> ConstructionClass)
         if (ConstructionProxy != none)
         {
             ConstructionProxy.Destroy();
+            return;
         }
     }
-    else
+
+    if (ConstructionProxy == none)
     {
-        if (ConstructionProxy == none)
-        {
-            ConstructionProxy = Spawn(class'DHConstructionProxy', self);
-        }
+        ConstructionProxy = Spawn(class'DHConstructionProxy', self);
+    }
 
-        ConstructionProxy.SetConstructionClass(ConstructionClass);
+    ConstructionProxy.SetConstructionClass(ConstructionClass);
+    GiveWeapon("DH_Weapons.DH_EmptyWeapon");
+    PendingWeapon = Weapon(FindInventoryType(class<Weapon>(DynamicLoadObject("DH_Weapons.DH_EmptyWeapon", class'class'))));
 
-        GiveWeapon("DH_Weapons.DH_EmptyWeapon");
-        PendingWeapon = Weapon(FindInventoryType(class<Weapon>(DynamicLoadObject("DH_Weapons.DH_EmptyWeapon", class'class'))));
-
-        if (PendingWeapon != none)
-        {
-            ChangedWeapon();
-        }
+    if (PendingWeapon != none)
+    {
+        ChangedWeapon();
     }
 }
 
@@ -6634,13 +6632,12 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vecto
 
     // TODO: the controller shouldn't own the spawn, it should be whatever it's "attached" to!
 
-    C = Spawn(ConstructionClass, Controller,, L, R);
+    C = Spawn(ConstructionClass, Level,, L, R);
 
     if (C != none)
     {
         C.SetTeamIndex(GetTeamNum());
         C.UpdateAppearance();
-        C.SetCollisionSize(0.0, 0.0);
     }
 }
 

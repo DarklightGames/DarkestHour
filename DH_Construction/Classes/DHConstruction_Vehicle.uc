@@ -4,7 +4,8 @@
 //==============================================================================
 
 class DHConstruction_Vehicle extends DHConstruction
-    abstract;
+    abstract
+    notplaceable;
 
 var class<ROVehicle>    VehicleClass;
 var ROVehicle           Vehicle;
