@@ -41,6 +41,7 @@ var     SpriteWidget        MapIconMortarSmokeTarget;
 var     SpriteWidget        MapIconMortarArrow;
 var     SpriteWidget        MapIconMortarHit;
 var     SpriteWidget        MapPlayerNumberIcon;
+var     float               PlayerIconScale, PlayerIconLargeScale;
 
 // Screen icons
 var     SpriteWidget        CanMantleIcon;
@@ -3268,6 +3269,7 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
     local color SquadMemberColor, SelfColor;
     local int i;
     local array<DHPlayerReplicationInfo> SquadMembers;
+    local float IconScale;
 
     PC = DHPlayer(PlayerOwner);
 
@@ -3282,7 +3284,7 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
     {
         SRI.GetMembers(PC.GetTeamNum(), PRI.SquadIndex, SquadMembers);
 
-        for (i = 0; i < SquadMembers.Length; ++i)
+        for (i = SquadMembers.Length - 1; i >= 0; --i)
         {
             OtherPRI = SquadMembers[i];
 
@@ -3328,7 +3330,16 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
             SquadMemberColor = class'DHColor'.default.SquadColor;
             SquadMemberColor.A = 160;
 
-            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, PlayerYaw, OtherPRI.SquadMemberIndex, SquadMemberColor, 0.03);
+            if (i == 0)
+            {
+                IconScale = PlayerIconLargeScale;
+            }
+            else
+            {
+                IconScale = PlayerIconScale;
+            }
+
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, PlayerYaw, OtherPRI.SquadMemberIndex, SquadMemberColor, IconScale);
         }
     }
 
@@ -3366,7 +3377,7 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
         {
             SelfColor = class'UColor'.default.OrangeRed;
             SelfColor.A = 160;
-            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, PlayerYaw, PRI.SquadMemberIndex, SelfColor, 0.05);
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, PlayerYaw, PRI.SquadMemberIndex, SelfColor, 0.05); // TODO: magic number
         }
     }
 }
@@ -5517,6 +5528,8 @@ defaultproperties
     PlayerNumberIconTextures(10)=texture'DH_InterfaceArt_tex.HUD.player_number_11'
     PlayerNumberIconTextures(11)=texture'DH_InterfaceArt_tex.HUD.player_number_12'
     SquadNameIcon=(WidgetTexture=FinalBlend'DH_InterfaceArt_tex.HUD.SquadNameIcon',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.45,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
+    PlayerIconScale=0.03
+    PlayerIconLargeScale=0.05
 
     // Vehicle HUD
     VehicleOccupantsText=(PosX=0.78,OffsetX=0,bDrawShadow=true)
