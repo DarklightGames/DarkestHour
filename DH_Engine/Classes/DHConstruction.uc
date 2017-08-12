@@ -74,6 +74,7 @@ var     bool    bPokesTerrain;                  // If true, terrain is poked whe
 var     bool    bDidPokeTerrain;
 var     int     PokeTerrainRadius;
 var     int     PokeTerrainDepth;
+var     float   TerrainScaleMax;                // The maximum terrain scale allowable
 var     bool    bLimitTerrainSurfaceTypes;      // If true, only allow placement on terrain surfaces types in the SurfaceTypes array
 var     array<ESurfaceTypes> TerrainSurfaceTypes;
 
@@ -824,6 +825,7 @@ defaultproperties
     IndoorsCeilingHeightInMeters=10.0
     PokeTerrainRadius=32
     PokeTerrainDepth=32
+    TerrainScaleMax=256.0
     RotationSnapAngle=16384
     bInheritsOwnerRotation=true
 

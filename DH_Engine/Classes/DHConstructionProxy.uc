@@ -375,6 +375,12 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
 
             if (TI != none)
             {
+                if (TI.TerrainScale.X > ConstructionClass.default.TerrainScaleMax ||
+                    TI.TerrainScale.Y > ConstructionClass.default.TerrainScaleMax)
+                {
+                    Error = ERROR_GroundTooHard;
+                }
+
                 BaseLocation = HitLocation;
 
                 if (ConstructionClass.default.bLimitTerrainSurfaceTypes)
