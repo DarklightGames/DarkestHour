@@ -6630,9 +6630,7 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vecto
         SupplyCost -= SuppliesToUse;
     }
 
-    // TODO: the controller shouldn't own the spawn, it should be whatever it's "attached" to!
-
-    C = Spawn(ConstructionClass, Level,, L, R);
+    C = Spawn(ConstructionClass, Controller,, L, R);
 
     if (C != none)
     {
