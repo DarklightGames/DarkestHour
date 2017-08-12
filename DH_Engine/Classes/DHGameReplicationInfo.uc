@@ -696,7 +696,7 @@ function RemoveMGResupplyRequestFor(PlayerReplicationInfo PRI)
 //------------------------------------------------------------------------------
 // New helper function to calculate the round time remaining
 // Avoids re-stating this logic in various functionality that display time remaining, e.g. scoreboard, overhead map, deploy screen & spectator HUD
-function int GetRoundTimeRemaining()
+simulated function int GetRoundTimeRemaining()
 {
     local int SecondsRemaining;
 
