@@ -71,4 +71,5 @@ defaultproperties
     TerrainSurfaceTypes(2)=EST_Snow
     TerrainSurfaceTypes(3)=EST_Mud
     TerrainSurfaceTypes(4)=EST_Plant
+    bShouldBlockSquadRallyPoints=true
 }
