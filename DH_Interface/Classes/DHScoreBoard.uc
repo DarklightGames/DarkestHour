@@ -501,7 +501,7 @@ simulated function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplication
     Y += LineHeight;
 
     // Draw reinforcements remaining, if on team
-    if (MyTeamIndex == TeamIndex)
+    if (MyTeamIndex == TeamIndex || DHGRI.bRoundIsOver)
     {
         if (DHGRI.bIsInSetupPhase)
         {
