@@ -154,6 +154,9 @@ var array<Stage> Stages;
 // Mantling
 var bool bCanBeMantled;
 
+// Squad rally points
+var bool bShouldBlockSquadRallyPoints;
+
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
