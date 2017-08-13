@@ -91,7 +91,6 @@ event AllowBroadcastLocalized(
         {
             if (P == none ||
                 P.Pawn == none ||
-                P.Pawn.PlayerReplicationInfo == none ||
                 DHPlayerReplicationInfo(P.Pawn.PlayerReplicationInfo) == none ||
                 DHPlayerReplicationInfo(P.Pawn.PlayerReplicationInfo).RoleInfo == none)
             {
