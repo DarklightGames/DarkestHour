@@ -651,6 +651,9 @@ simulated function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplication
             // Increment the Y value
             Y += LineHeight;
 
+            // Rest the base line height
+            LineHeight = BaseLineHeight;
+
             for (i = 0; i < TeamPRI.Length; ++i)
             {
                 if (TeamPRI[i].SquadIndex != -1)
