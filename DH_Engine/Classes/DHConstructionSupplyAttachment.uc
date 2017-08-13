@@ -73,23 +73,28 @@ simulated function int GetSupplyCount()
     return SupplyCount;
 }
 
-function SetSupplyCount(int Amount)
+function StaticMesh GetStaticMeshForSupplyCount(int SupplyCount)
 {
     local float SupplyPercent;
     local int StaticMeshIndex;
 
-    if (SupplyCount != Amount)
-    {
-        SupplyCount = Clamp(Amount, 0, SupplyCountMax);
+    SupplyPercent = (float(SupplyCount) / SupplyCountMax);
+    StaticMeshIndex = Clamp(SupplyPercent * StaticMeshes.Length, 0, StaticMeshes.Length - 1);
 
-        // Update visualization
-        SupplyPercent = (float(SupplyCount) / SupplyCountMax);
-        StaticMeshIndex = Clamp(SupplyPercent * StaticMeshes.Length, 0, StaticMeshes.Length - 1);
-        SetStaticMesh(StaticMeshes[StaticMeshIndex]);
-        NetUpdateTime = Level.TimeSeconds - 1.0;
+    return StaticMeshes[StaticMeshIndex];
+}
 
-        OnSupplyCountChanged(self);
-    }
+function SetSupplyCount(int Amount)
+{
+    local int StaticMeshIndex;
+
+    SupplyCount = Clamp(Amount, 0, SupplyCountMax);
+
+    // Update visualization
+    SetStaticMesh(GetStaticMeshForSupplyCount(SupplyCount));
+    NetUpdateTime = Level.TimeSeconds - 1.0;
+
+    OnSupplyCountChanged(self);
 }
 
 function Destroyed()
