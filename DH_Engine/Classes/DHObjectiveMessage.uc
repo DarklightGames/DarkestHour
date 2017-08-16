@@ -13,74 +13,6 @@ var(Messages) localized string TeamStrings[2];
 var(Messages) localized string NotificationTypes[3];
 var(Messages) localized string  NotificationMessage;
 
-// Modified for DH msg background image
-/*
-static function RenderComplexMessageExtra(
-    Canvas Canvas,
-    out float XL,
-    out float YL,
-    out float YL_temp,
-    optional int Switch,
-    optional PlayerReplicationInfo RelatedPRI_1,
-    optional PlayerReplicationInfo RelatedPRI_2,
-    optional Object OptionalObject,
-    optional array<string> lines,
-    optional int background_type
-    )
-{
-    local color oldColor;
-    local float totalXL;
-    local float tileX, tileY, tileXL, tileYL, iconSize;
-    local float textX, textY;
-    local float myXL, myYL;
-    local int i, iconID;
-
-    oldColor = Canvas.DrawColor;
-    iconSize = YL / lines.length;
-    totalXL = XL + (iconSize * 1.4);
-
-    tileX = Canvas.CurX;
-    tileY = Canvas.CurY;
-    tileXL = totalXL * (float(512) / (512 - 60));
-    tileYL = YL * (float(128) / (128 - 40));
-    textX = tileX + totalXL * (float(30) / (512 - 60));
-    textY = tileY + YL * (float(20) / (128 - 40));
-
-    Canvas.SetPos(tileX, tileY);
-    Canvas.Style =  ERenderStyle.STY_Normal;
-    Canvas.SetDrawColor(255, 255, 255, oldColor.A);
-    if (oldColor.A != 0) // fix: for some reason, alpha of 0 is considered the same as alpha of 255 for images
-    {
-        // Draw background
-        Canvas.DrawTile(Texture'DH_GUI_Tex.GUI.ObjectiveMsgBackground',
-            tileXL, tileYL, 0, background_type * 128, 512, 128);
-
-        // Draw icon
-        if (lines.length == 1)
-            Canvas.SetPos(textX, textY);
-        else
-            Canvas.SetPos(textX, textY + iconSize / 2);
-
-        iconID = GetIconID(Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);
-
-        Canvas.DrawTile(default.iconTexture, iconSize, iconSize, (iconID % 4) * 64, (iconID / 4) * 64, 64, 64);
-    }
-
-    // Draw all lines of text iteratively
-    Canvas.DrawColor = oldColor;
-    Canvas.DrawColor.A = float(Canvas.DrawColor.A) * default.TextAlpha;
-    for (i = 0; i < lines.length; i++)
-    {
-        Canvas.SetPos(textX + totalXL - XL, textY);
-        Canvas.DrawText(lines[i]);
-        Canvas.TextSize(lines[i], myXL, myYL);
-        textY += myYL;
-    }
-
-    // To let ROHud how large a gap it should give between messages
-    YL_temp = (tileYL + iconSize * 0.2) / Canvas.ClipY;
-}*/
-
 // Modified to handle more sounds (ran by client)
 static simulated function ClientReceive(
     PlayerController P,
@@ -142,6 +74,32 @@ static function string GetString(optional int Type, optional PlayerReplicationIn
     }
 
     return "";
+}
+
+// Todo will need to override the draw function and setup flag stuff
+static function int getIconID(
+    optional int Switch,
+    optional PlayerReplicationInfo RelatedPRI_1,
+    optional PlayerReplicationInfo RelatedPRI_2,
+    optional Object OptionalObject)
+{
+    local int Type, Team;
+
+    class'UInteger'.static.ToShorts(Switch, Type, Team);
+
+    switch (Team)
+    {
+        case 0:
+            return default.iconID; // Axis
+        case 1:
+            return default.altIconID; // Allies
+        case 2:
+            return default.iconID; // Axis
+        case 3:
+            return default.altIconID; // Allies
+        default:
+            return default.errorIconID; // Error
+    }
 }
 
 defaultproperties

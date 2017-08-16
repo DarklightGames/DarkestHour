@@ -609,13 +609,24 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
         // If the obj is set to disable when a team clears it, then check to make sure its not the opposite team
         if (HasEnemiesPresent() || (bDisableWhenAxisClearObj && Team == ALLIES_TEAM_INDEX) || (bDisableWhenAlliesClearObj && Team == AXIS_TEAM_INDEX))
         {
-            BroadcastLocalizedMessage(class'DHObjectiveMessage', Team, none, none, self);
+            BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(1, Team), none, none, self);
         }
         // Otherwise don't inform that it was captured, as timer will inform that it was secured!
     }
     else
     {
-        BroadcastLocalizedMessage(class'DHObjectiveMessage', Team, none, none, self);
+        if (bActive && ObjState == OBJ_Neutral)
+        {
+            BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(0, Team), none, none, self);
+        }
+        else if (bActive)
+        {
+            BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(1, Team), none, none, self);
+        }
+        else
+        {
+            BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(2, Team), none, none, self);
+        }
     }
 }
 
@@ -751,7 +762,7 @@ function bool HandleClearedLogic(int NumForCheck[2])
                 CurrentCapProgress = 0.0;
                 SetActive(false);
                 DisableCapBarsForThisObj();
-                BroadcastLocalizedMessage(class'DHObjectiveMessage', int(ObjState), none, none, self);
+                BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(2, int(ObjState)), none, none, self);
 
                 // Award time as the objective was cleared and objective is inactive
                 if (MinutesAwarded != 0)
@@ -767,7 +778,7 @@ function bool HandleClearedLogic(int NumForCheck[2])
                 SetActive(false);
                 SetTimer(0.0, false); // Disable the objective (not just set inactive, it is not meant to be enabled again until reset)
                 DisableCapBarsForThisObj();
-                BroadcastLocalizedMessage(class'DHObjectiveMessage', int(ObjState), none, none, self);
+                BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(2, int(ObjState)), none, none, self);
 
                 // Award time as the objective was cleared and objective is disabled
                 if (MinutesAwarded != 0)
@@ -780,12 +791,8 @@ function bool HandleClearedLogic(int NumForCheck[2])
             else if (!bRecaptureable)
             {
                 SetTimer(0.0, false);
-                BroadcastLocalizedMessage(class'DHObjectiveMessage', int(ObjState), none, none, self);
+                BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(2, int(ObjState)), none, none, self);
                 return true;
-            }
-            else
-            {
-                BroadcastLocalizedMessage(class'DHObjectiveMessage', int(ObjState), none, none, self);
             }
         }
     }
@@ -1116,7 +1123,7 @@ function ObjectiveNeutralized(int Team)
     ROTeamGame(Level.Game).NotifyObjStateChanged();
 
     // Notify players
-    BroadcastLocalizedMessage(class'DHObjectiveMessage', Team + 4, none, none, self);
+    BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(0, Team), none, none, self);
 }
 
 // Overridden to the fix a console warning that would display when EventInstigator was none
