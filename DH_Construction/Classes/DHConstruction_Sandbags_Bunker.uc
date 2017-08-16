@@ -19,8 +19,6 @@ defaultproperties
     CollisionHeight=100
     CollisionRadius=90
     SupplyCost=500
-//    UV2Mode=UVM_MacroTexture
-//    UV2Texture=Texture'DH_Construction_tex.Sandbags.sandbags_01_AO'
     BrokenEmitterClass=class'DHConstruction_Sandbags_BrokenEmitter'
     HealthMax=400
 }
