@@ -86,8 +86,6 @@ function StaticMesh GetStaticMeshForSupplyCount(int SupplyCount)
 
 function SetSupplyCount(int Amount)
 {
-    local int StaticMeshIndex;
-
     SupplyCount = Clamp(Amount, 0, SupplyCountMax);
 
     // Update visualization
