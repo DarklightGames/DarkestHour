@@ -14,6 +14,7 @@ var(Messages) localized string NotificationTypes[3];
 var(Messages) localized string  NotificationMessage;
 
 // Modified for DH msg background image
+/*
 static function RenderComplexMessageExtra(
     Canvas Canvas,
     out float XL,
@@ -78,7 +79,7 @@ static function RenderComplexMessageExtra(
 
     // To let ROHud how large a gap it should give between messages
     YL_temp = (tileYL + iconSize * 0.2) / Canvas.ClipY;
-}
+}*/
 
 // Modified to handle more sounds (ran by client)
 static simulated function ClientReceive(
