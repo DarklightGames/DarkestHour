@@ -14,7 +14,7 @@ defaultproperties
     ProgressMax=8
     StaticMesh=StaticMesh'DH_Construction_stc.Sandbags.sandbags_01'
     bShouldAlignToGround=false
-    MenuName="Sandbags"
+    MenuName="Sandbags (Line)"
     CollisionHeight=100
     CollisionRadius=90
     SupplyCost=100
