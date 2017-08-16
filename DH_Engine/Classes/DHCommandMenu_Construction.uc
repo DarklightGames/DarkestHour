@@ -63,7 +63,7 @@ function Setup()
             Options.Insert(0, 1);
             Options[0].OptionalObject = class'UInteger'.static.Create(i - 1);
             Options[0].ActionText = "...";
-            Options[0].Material = none; // TODO: some sort of ellipses icon?
+            Options[0].Material = Texture'DH_GUI_tex.ConstructionMenu.Construction_More'; // TODO: some sort of ellipses icon?
         }
     }
 }

@@ -62,6 +62,7 @@ simulated function OnTeamIndexChanged()
 defaultproperties
 {
     MenuName="Supply Cache"
+    MenuIcon=Texture'DH_GUI_tex.ConstructionMenu.Construction_Supply'
     SupplyCost=250
     InitialSupplyCount=250
     StaticMesh=StaticMesh'DH_Military_stc.Ammo.cratepile1'

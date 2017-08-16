@@ -63,6 +63,7 @@ defaultproperties
     SupplyCost=0
     PlacementOffset=(Z=0.0)
     MenuName="Foxhole"
+    MenuIcon=Texture'DH_GUI_tex.ConstructionMenu.Construction_Foxhole'
     bAlwaysRelevant=true            // This is so that the terrain poking gets applied for everyone and also doesn't get applied more than once.
     DuplicateFriendlyDistanceInMeters=15.0
     bLimitTerrainSurfaceTypes=true
