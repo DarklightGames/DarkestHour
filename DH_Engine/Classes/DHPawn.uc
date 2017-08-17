@@ -3959,7 +3959,7 @@ simulated function HUDCheckMantle()
 // Check whether there's anything in front of the player that can be built with the shovel
 simulated function bool CanDig()
 {
-    return Weapon.IsA('DHShovelItem') && Weapon.GetFireMode(0).AllowFire();
+    return Weapon != none && Weapon.IsA('DHShovelItem') && Weapon.GetFireMode(0) != none && Weapon.GetFireMode(0).AllowFire();
 }
 
 simulated function bool CanMantleActor(Actor A)
