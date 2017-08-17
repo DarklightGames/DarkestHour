@@ -1270,6 +1270,8 @@ state PlayerWalking
             MantleCheckTimer = Level.TimeSeconds;
         }
 
+        P.HUDCheckDig();
+
         GetAxes(Pawn.Rotation, X, Y, Z);
 
         // Update acceleration
