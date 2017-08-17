@@ -551,6 +551,13 @@ function SaveSettings()
 
 defaultproperties
 {
+    RenderModeText(0)="Direct3D 9.0 (Recommended)"
+    RenderModeText(1)="Direct3D 8.0 (Rendering Issues)"
+    RenderModeText(2)="OpenGL (Unstable)"
+    RenderMode(0)="D3D9Drv.D3D9RenderDevice"
+    RenderMode(1)="D3DDrv.D3DRenderDevice"
+    RenderMode(2)="OpenGLDrv.OpenGLRenderDevice"
+
     DisplayModes(0)=(Width=1280,Height=720)
     DisplayModes(1)=(Width=1024,Height=768)
     DisplayModes(2)=(Width=1280,Height=768)
