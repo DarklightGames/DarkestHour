@@ -3502,11 +3502,15 @@ function PlayerLeftTeam(PlayerController P)
         PC.DesiredRole = -1;
         PC.CurrentRole = -1;
         PC.PrimaryWeapon = -1;
+        PC.DesiredPrimary = 0;
         PC.SecondaryWeapon = -1;
+        PC.DesiredSecondary = 0;
         PC.GrenadeWeapon = -1;
+        PC.DesiredGrenade = 0;
         PC.bWeaponsSelected = false;
         PC.SavedArtilleryCoords = vect(0.0, 0.0, 0.0);
         PC.SpawnPointIndex = -1;
+        PC.bSpawnPointInvalidated = true;
 
         ClearSavedRequestsAndRallyPoints(PC, false);
     }
