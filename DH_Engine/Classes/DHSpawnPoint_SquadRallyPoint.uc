@@ -186,6 +186,8 @@ state Active
     event BeginState()
     {
         SetIsActive(true);
+
+        UpdateAppearance();
     }
 }
 
@@ -310,29 +312,59 @@ function UpdateAppearance()
         AlliedNation = G.DHLevelInfo.AlliedNation;
     }
 
-    switch (GetTeamIndex())
+    if (IsActive())
     {
-    case AXIS_TEAM_INDEX:
-        NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.GER_backpack';
-        break;
-    case ALLIES_TEAM_INDEX:
-        switch (AlliedNation)
+        switch (GetTeamIndex())
         {
-        case NATION_Britain:
-            NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.BRIT_backpack';
+        case AXIS_TEAM_INDEX:
+            NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.GER_backpack_established';
             break;
-        case NATION_Canada:
-            NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.CAN_backpack';
-            break;
-        case NATION_USSR:
-            NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.RUS_backpack';
-            break;
+        case ALLIES_TEAM_INDEX:
+            switch (AlliedNation)
+            {
+            case NATION_Britain:
+                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.BRIT_backpack_established';
+                break;
+            case NATION_Canada:
+                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.CAN_backpack_established';
+                break;
+            case NATION_USSR:
+                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.RUS_backpack_established';
+                break;
+            default:
+                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.USA_backpack_established';
+                break;
+            }
         default:
-            NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.USA_backpack';
             break;
         }
-    default:
-        break;
+    }
+    else
+    {
+        switch (GetTeamIndex())
+        {
+        case AXIS_TEAM_INDEX:
+            NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.GER_backpack';
+            break;
+        case ALLIES_TEAM_INDEX:
+            switch (AlliedNation)
+            {
+            case NATION_Britain:
+                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.BRIT_backpack';
+                break;
+            case NATION_Canada:
+                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.CAN_backpack';
+                break;
+            case NATION_USSR:
+                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.RUS_backpack';
+                break;
+            default:
+                NewStaticMesh = StaticMesh'DH_Construction_stc.Backpacks.USA_backpack';
+                break;
+            }
+        default:
+            break;
+        }
     }
 
     SetStaticMesh(NewStaticMesh);
