@@ -4653,7 +4653,7 @@ simulated function DrawSpectatingHud(Canvas C)
         s = "";
 
         // Draw deploy text
-        if (PRI == none || PRI.Team == none || PRI.bOnlySpectator)
+        if (PRI == none || PRI.Team == none)
         {
             s = default.JoinTeamText; // Press ESC to join a team
         }
@@ -5427,7 +5427,7 @@ defaultproperties
     SpawnVehicleText="You will deploy as a {0} driving a {3} in {2} | Press [ESC] to change"
     SpawnAtVehicleText="You will deploy as a {0} at a {1} in {2} | Press [ESC] to change"
     SpawnRallyPointText="You will deploy as a {0} at your squad rally point in {2} | Press [ESC] to change"
-    SpawnNoRoleText="You will deploy in {2} | Press [ESC] to change"
+    SpawnNoRoleText="Press [ESC] to select a role"
     ReinforcementsDepletedText="Reinforcements depleted!"
     DeathPenaltyText="Death Penalty Count: {0} (+{1} second respawn time)"
     NotReadyToSpawnText="Spawning will enable in {s} seconds (Use this time to organize squads and plan)"

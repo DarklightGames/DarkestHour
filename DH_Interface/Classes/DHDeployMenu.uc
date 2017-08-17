@@ -475,18 +475,16 @@ function UpdateSpawnPoints()
 
 function UpdateStatus()
 {
-    if (GRI == none)
+    if (GRI != none)
     {
-        return;
+        l_Axis.Caption = string(GRI.Teams[AXIS_TEAM_INDEX].Size);
+        l_Allies.Caption = string(GRI.Teams[ALLIES_TEAM_INDEX].Size);
     }
-
-    l_Axis.Caption = string(class'ROGUITeamSelection'.static.getTeamCountStatic(GRI, PlayerOwner(), AXIS_TEAM_INDEX));
-    l_Allies.Caption = string(class'ROGUITeamSelection'.static.getTeamCountStatic(GRI, PlayerOwner(), ALLIES_TEAM_INDEX));
 
     l_Status.Caption = GetStatusText();
 
     // Suicide button status
-    if (PC.Pawn != none)
+    if (PC != none && PC.Pawn != none)
     {
         b_MenuOptions[1].MenuStateChange(MSAT_Blurry);
     }

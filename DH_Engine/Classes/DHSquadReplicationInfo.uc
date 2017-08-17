@@ -491,7 +491,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
     local array<DHPlayerReplicationInfo> Members;
     local UComparator ScoreComparator;
 
-    if (PRI == none)
+    if (PRI == none || PRI.Team == none)
     {
         return false;
     }

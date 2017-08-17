@@ -213,7 +213,7 @@ function Timer()
 
         if (PRI != none)
         {
-            if (PRI.bOnlySpectator || PRI.RoleInfo == none || PRI.Team == none)
+            if (PRI.Team == none)
             {
                 UnassignedPRI[UnassignedPRI.Length] = PRI;
             }

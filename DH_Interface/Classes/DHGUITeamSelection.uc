@@ -83,8 +83,8 @@ function UpdateTeamCounts()
         AlliedStr = " (" $ DHGRI.GetTeamScaleString(ALLIES_TEAM_INDEX) @ SizeBonusText $ ")";
     }
 
-    l_TeamCount[AXIS_TEAM_INDEX].Caption = "" $ getTeamCount(AXIS_TEAM_INDEX) $ UnitsText $ AxisStr;
-    l_TeamCount[ALLIES_TEAM_INDEX].Caption = "" $ getTeamCount(ALLIES_TEAM_INDEX) $ UnitsText $ AlliedStr;
+    l_TeamCount[AXIS_TEAM_INDEX].Caption = "" $ GRI.Teams[AXIS_TEAM_INDEX].Size $ UnitsText $ AxisStr;
+    l_TeamCount[ALLIES_TEAM_INDEX].Caption = "" $ GRI.Teams[ALLIES_TEAM_INDEX].Size $ UnitsText $ AlliedStr;
 }
 
 function SetBackground()

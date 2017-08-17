@@ -479,7 +479,7 @@ exec function PlayerMenu(optional int Tab)
 {
     bPendingMapDisplay = false;
 
-    if (PlayerReplicationInfo.Team == none || PlayerReplicationInfo.Team.TeamIndex == 254)
+    if (PlayerReplicationInfo == none || PlayerReplicationInfo.Team == none)
     {
         ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
     }
@@ -506,8 +506,7 @@ function ShowMidGameMenu(bool bPause)
     else
     {
         // If we haven't picked a team or is a spectator... open the team pick menu
-        if (PlayerReplicationInfo == none || PlayerReplicationInfo.Team == none ||
-            PlayerReplicationInfo.Team.TeamIndex == 254)
+        if (PlayerReplicationInfo == none || PlayerReplicationInfo.Team == none)
         {
             ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
         }
@@ -939,7 +938,6 @@ function ServerSaveArtilleryTarget(bool bIsSmoke)
     if (!bValidTarget)
     {
         ReceiveLocalizedMessage(class'DHArtilleryTargetMessage', 0); // "Invalid artillery target"
-
         return;
     }
 
@@ -2478,9 +2476,15 @@ exec function SwitchTeam() { }
 exec function ChangeTeam(int N) { }
 
 // Modified to not join the opposite team if it fails to join the one passed (fixes a nasty exploit)
-// Colin: This function verifies the spawn parameters (spawn point et al.) that
+// This function verifies the spawn parameters (spawn point et al.) that
 // are passed in, and sets them if they check out. If they don't check out, an
 // error is thrown.
+//
+// TODO: This function is a fucking nightmare and needs to be refactored.
+// Namely, the team selection should *not* be rolled into this function.
+// It would be useful to roll up the "spawning parameters" (role, weapons,
+// spawn point etc.) into a struct so that it's easier to understand what's
+// going on.
 function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2, int NewSpawnPointIndex, int NewVehiclePoolIndex)
 {
     local bool bDidFail;
@@ -2551,17 +2555,6 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
                 }
 
                 ServerChangeTeam(newTeam);
-
-                // Because we switched teams we should reset current role, desired role, etc.
-                ROPlayerReplicationInfo(PlayerReplicationInfo).RoleInfo = none;
-                DesiredRole = -1;
-                CurrentRole = -1;
-                SpawnPointIndex = -1;
-                GRI.UnreserveVehicle(self);
-                DesiredPrimary = 0;
-                DesiredSecondary = 0;
-                DesiredGrenade = 0;
-                bSpawnPointInvalidated = false;
             }
 
             // Check if change failed and output results
@@ -2674,8 +2667,6 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
             {
                 RI = DHRoleInfo(Game.GetRoleInfo(PlayerReplicationInfo.Team.TeamIndex, DesiredRole));
             }
-
-            //Log("Can Spawn With Parameters: " $ GRI.CanSpawnWithParameters(NewSpawnPointIndex, GetTeamNum(), DesiredRole, PRI.SquadIndex, NewVehiclePoolIndex));
 
             if (GRI != none && GRI.CanSpawnWithParameters(NewSpawnPointIndex, GetTeamNum(), DesiredRole, PRI.SquadIndex, NewVehiclePoolIndex))
             {

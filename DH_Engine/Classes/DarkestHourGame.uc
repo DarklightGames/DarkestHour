@@ -3441,28 +3441,7 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
 
     Other.StartSpot = none;
 
-    if (Other.PlayerReplicationInfo.Team != none)
-    {
-        Other.PlayerReplicationInfo.Team.RemoveFromTeam(Other);
-
-        if (PC != none)
-        {
-            PC.DesiredRole = -1;
-            PC.CurrentRole = -1;
-            PC.PrimaryWeapon = -1;
-            PC.SecondaryWeapon = -1;
-            PC.GrenadeWeapon = -1;
-            PC.bWeaponsSelected = false;
-            PC.SavedArtilleryCoords = vect(0.0, 0.0, 0.0);
-
-            // DARKEST HOUR
-            PC.SpawnPointIndex = -1;
-
-            GRI.UnreserveVehicle(PC);
-
-            SquadReplicationInfo.LeaveSquad(DHPlayerReplicationInfo(PC.PlayerReplicationInfo));
-        }
-    }
+    PlayerLeftTeam(PC);
 
     if (NewTeam.AddToTeam(Other))
     {
@@ -3481,14 +3460,6 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
         }
     }
 
-    // Since we're changing teams, remove all rally points/help requests/etc
-    ClearSavedRequestsAndRallyPoints(ROPlayer(Other), false);
-
-    if (GRI != none)
-    {
-        GRI.ClearArtilleryTarget(DHPlayer(Other));
-    }
-
     // If we changed team, and if elapsed time hasn't gone past the change team interval, and we aren't in standalone then set the NextChangeTeamTime
     // The reason why we compare ElapsedTime to ChangeTeamInterval is we want to allow players to change teams freely for a duration from the start
     // The duration desired is roughly 120 seconds which is what ChangeTeamInterval is currently set to, so if that changes, this if statement (might) need changed as well
@@ -3500,6 +3471,66 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
     }
 
     return true;
+}
+
+function bool BecomeSpectator(PlayerController P)
+{
+    if (!super.BecomeSpectator(P))
+    {
+        return false;
+    }
+
+    PlayerLeftTeam(P);
+
+    P.PlayerReplicationInfo.Team = none;
+    P.PlayerReplicationInfo.bIsSpectator = true;
+    P.PlayerReplicationInfo.bOnlySpectator = true;
+}
+
+function PlayerLeftTeam(PlayerController P)
+{
+    local DHPlayer PC;
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
+
+    PC = DHPlayer(P);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+    PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+
+    if (PC != none)
+    {
+        PC.DesiredRole = -1;
+        PC.CurrentRole = -1;
+        PC.PrimaryWeapon = -1;
+        PC.SecondaryWeapon = -1;
+        PC.GrenadeWeapon = -1;
+        PC.bWeaponsSelected = false;
+        PC.SavedArtilleryCoords = vect(0.0, 0.0, 0.0);
+        PC.SpawnPointIndex = -1;
+
+        ClearSavedRequestsAndRallyPoints(PC, false);
+    }
+
+    if (PRI != none)
+    {
+        if (PRI.Team != none)
+        {
+            PRI.Team.RemoveFromTeam(P);
+        }
+
+        PRI.RoleInfo = none;
+    }
+
+    if (GRI != none)
+    {
+        GRI.UnreserveVehicle(PC);
+        GRI.ClearArtilleryTarget(PC);
+    }
+
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.LeaveSquad(PRI);
+    }
 }
 
 // Modified to support one normal kick, then session kick for FF violation
@@ -4714,6 +4745,21 @@ function bool SetPause(bool bPause, PlayerController P)
     }
 
     return false;
+}
+
+// Overridden to undo the exclusion of players who hadn't yet selected a role.
+function GetTeamSizes(out int TeamSizes[2])
+{
+    local int i;
+
+    TeamSizes[AXIS_TEAM_INDEX] = 0;
+    TeamSizes[ALLIES_TEAM_INDEX] = 0;
+
+    if (GameReplicationInfo != none)
+    {
+        TeamSizes[AXIS_TEAM_INDEX] = GameReplicationInfo.Teams[AXIS_TEAM_INDEX].Size;
+        TeamSizes[ALLIES_TEAM_INDEX] = GameReplicationInfo.Teams[ALLIES_TEAM_INDEX].Size;
+    }
 }
 
 defaultproperties
