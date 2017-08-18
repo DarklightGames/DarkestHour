@@ -549,6 +549,25 @@ function SaveSettings()
        class'ROEngine.ROPlayer'.static.StaticSaveConfig();
 }
 
+function bool RenderDeviceClick(byte Btn)
+{
+    switch (Btn)
+    {
+    case QBTN_Yes:
+        SaveSettings();
+        Console(Controller.Master.Console).DelayedConsoleCommand("relaunch -mod=DarkestHour");
+        break;
+
+    case QBTN_Cancel:
+        sRenDev = sRenDevD;
+        co_RenderDevice.Find(sRenDev);
+        co_RenderDevice.SetComponentValue(sRenDev, true);
+        break;
+    }
+
+    return true;
+}
+
 defaultproperties
 {
     RenderModeText(0)="Direct3D 9.0 (Recommended)"
@@ -557,6 +576,8 @@ defaultproperties
     RenderMode(0)="D3D9Drv.D3D9RenderDevice"
     RenderMode(1)="D3DDrv.D3DRenderDevice"
     RenderMode(2)="OpenGLDrv.OpenGLRenderDevice"
+
+    RelaunchQuestion="The graphics mode has been successfully changed.  However, it will not take effect until the next time the game is started.  Would you like to restart the game right now?"
 
     DisplayModes(0)=(Width=1280,Height=720)
     DisplayModes(1)=(Width=1024,Height=768)
