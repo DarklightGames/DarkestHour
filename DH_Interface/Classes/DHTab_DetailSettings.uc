@@ -488,7 +488,9 @@ function SaveSettings()
         bSavePlayerConfig = true;
 
         if (ROPlayer(PC) != none)
+        {
             ROPlayer(PC).bUseBlurEffect = bMotionBlur;
+        }
 
         bMotionBlurD = bMotionBlur;
     }
@@ -525,9 +527,13 @@ function SaveSettings()
         iShadowD = iShadow;
 
         if (PC.Pawn != none && ROPawn(PC.Pawn) != none)
+        {
             ROPawn(PC.Pawn).SaveConfig();
+        }
         else
+        {
             class'ROPawn'.static.StaticSaveConfig();
+        }
 
         UpdateShadows(iShadow == 1, iShadow > 0);
     }
