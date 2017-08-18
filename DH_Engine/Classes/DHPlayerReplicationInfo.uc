@@ -12,10 +12,12 @@ var     float                   NameDrawStartTime;
 var     float                   LastNameDrawTime;
 var     float                   StashedScore;
 
+var     bool                    bIsPatron;
+
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
-        SquadIndex, SquadMemberIndex;
+        SquadIndex, SquadMemberIndex, bIsPatron;
 }
 
 simulated function bool IsSquadLeader()
