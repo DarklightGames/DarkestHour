@@ -475,10 +475,14 @@ function UpdateSpawnPoints()
 
 function UpdateStatus()
 {
+    local int TeamSizes[2];
+
     if (GRI != none)
     {
-        l_Axis.Caption = string(GRI.Teams[AXIS_TEAM_INDEX].Size);
-        l_Allies.Caption = string(GRI.Teams[ALLIES_TEAM_INDEX].Size);
+        GRI.GetTeamSizes(TeamSizes);
+
+        l_Axis.Caption = string(TeamSizes[AXIS_TEAM_INDEX]);
+        l_Allies.Caption = string(TeamSizes[ALLIES_TEAM_INDEX]);
     }
 
     l_Status.Caption = GetStatusText();

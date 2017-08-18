@@ -793,6 +793,28 @@ simulated function bool CanPlayerReserveVehicleWithRole(DHPlayer PC, DHRoleInfo 
             GetVehiclePoolAvailableReservationCount(VehiclePoolIndex) > 0;
 }
 
+// Overridden to undo the exclusion of players who hadn't yet selected a role.
+simulated function GetTeamSizes(out int TeamSizes[2])
+{
+    local int i;
+    local PlayerReplicationInfo PRI;
+
+    TeamSizes[AXIS_TEAM_INDEX] = 0;
+    TeamSizes[ALLIES_TEAM_INDEX] = 0;
+
+    for (i = 0; i < PRIArray.Length; ++i)
+    {
+        PRI = PRIArray[i];
+
+        if (PRI != none &&
+            PRI.Team != none &&
+            (PRI.Team.TeamIndex == AXIS_TEAM_INDEX || PRI.Team.TeamIndex == ALLIES_TEAM_INDEX))
+        {
+            ++TeamSizes[PRI.Team.TeamIndex];
+        }
+    }
+}
+
 defaultproperties
 {
     AlliesVictoryMusicIndex=-1

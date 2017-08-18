@@ -4754,15 +4754,9 @@ function bool SetPause(bool bPause, PlayerController P)
 // Overridden to undo the exclusion of players who hadn't yet selected a role.
 function GetTeamSizes(out int TeamSizes[2])
 {
-    local int i;
-
-    TeamSizes[AXIS_TEAM_INDEX] = 0;
-    TeamSizes[ALLIES_TEAM_INDEX] = 0;
-
-    if (GameReplicationInfo != none)
+    if (DHGameReplicationInfo(GameReplicationInfo) != none)
     {
-        TeamSizes[AXIS_TEAM_INDEX] = GameReplicationInfo.Teams[AXIS_TEAM_INDEX].Size;
-        TeamSizes[ALLIES_TEAM_INDEX] = GameReplicationInfo.Teams[ALLIES_TEAM_INDEX].Size;
+        DHGameReplicationInfo(GameReplicationInfo).GetTeamSizes(TeamSizes);
     }
 }
 

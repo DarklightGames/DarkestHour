@@ -71,20 +71,23 @@ function UpdateTeamCounts()
 {
     local DHGameReplicationInfo DHGRI;
     local string AlliedStr, AxisStr;
+    local int TeamSizes[2];
 
-    if (GRI != none)
+    DHGRI = DHGameReplicationInfo(GRI);
+
+    if (DHGRI != none)
     {
-        DHGRI = DHGameReplicationInfo(GRI);
+        DHGRI.GetTeamSizes(TeamSizes);
+
+        if (DHGRI.CurrentAlliedToAxisRatio != 0.5)
+        {
+            AxisStr = " (" $ DHGRI.GetTeamScaleString(AXIS_TEAM_INDEX) @ SizeBonusText $ ")";
+            AlliedStr = " (" $ DHGRI.GetTeamScaleString(ALLIES_TEAM_INDEX) @ SizeBonusText $ ")";
+        }
     }
 
-    if (DHGRI != none && DHGRI.CurrentAlliedToAxisRatio != 0.5)
-    {
-        AxisStr = " (" $ DHGRI.GetTeamScaleString(AXIS_TEAM_INDEX) @ SizeBonusText $ ")";
-        AlliedStr = " (" $ DHGRI.GetTeamScaleString(ALLIES_TEAM_INDEX) @ SizeBonusText $ ")";
-    }
-
-    l_TeamCount[AXIS_TEAM_INDEX].Caption = "" $ GRI.Teams[AXIS_TEAM_INDEX].Size $ UnitsText $ AxisStr;
-    l_TeamCount[ALLIES_TEAM_INDEX].Caption = "" $ GRI.Teams[ALLIES_TEAM_INDEX].Size $ UnitsText $ AlliedStr;
+    l_TeamCount[AXIS_TEAM_INDEX].Caption = "" $ TeamSizes[AXIS_TEAM_INDEX] $ UnitsText $ AxisStr;
+    l_TeamCount[ALLIES_TEAM_INDEX].Caption = "" $ TeamSizes[ALLIES_TEAM_INDEX] $ UnitsText $ AlliedStr;
 }
 
 function SetBackground()
