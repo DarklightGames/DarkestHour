@@ -155,7 +155,7 @@ simulated function SpawnRocketAttachment()
 // Default is to prevent firing (with message) if player is prone or not ironsighted, but allows easy subclassing for different weapon requirements
 simulated function bool CanFire(optional bool bShowFailureMessage)
 {
-    if (!bUsingSights)
+    if (InstigatorIsLocallyControlled() && !bUsingSights)
     {
         if (bShowFailureMessage && InstigatorIsHumanControlled())
         {
