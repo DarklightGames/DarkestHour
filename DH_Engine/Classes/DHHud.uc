@@ -652,7 +652,7 @@ simulated function DrawHudPassC(Canvas C)
     }
 
     // MG deploy icon if the weapon can be deployed
-    if (PawnOwner.bCanBipodDeploy)
+    if (PawnOwner.Weapon != none && PawnOwner.bCanBipodDeploy)
     {
         DrawSpriteWidget(C, MGDeployIcon);
     }
