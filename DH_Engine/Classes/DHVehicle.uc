@@ -31,8 +31,9 @@ struct VehicleAttachment
 
 struct RandomAttachOption
 {
-    var StaticMesh  StaticMesh;    // a possible random decorative attachment mesh
-    var byte        PercentChance; // the % chance of this attachment being the one spawned
+    var StaticMesh      StaticMesh;     // a possible random decorative attachment mesh
+    var Material        Skin;
+    var byte            PercentChance;  // the % chance of this attachment being the one spawned
 };
 
 // Spawn manager
@@ -2327,6 +2328,8 @@ static function StaticPrecache(LevelInfo L)
         {
             L.AddPrecacheStaticMesh(default.RandomAttachOptions[i].StaticMesh);
         }
+
+        L.AddPrecacheMaterial(default.RandomAttachOptions[i].Skin);
     }
 
     for (i = 0; i < default.CollisionAttachments.Length; ++i)
@@ -2503,6 +2506,12 @@ simulated function SpawnVehicleAttachments()
     if (RandomAttachmentIndex < RandomAttachOptions.Length && RandomAttachOptions[RandomAttachmentIndex].StaticMesh != none)
     {
         RandomAttachment.StaticMesh = RandomAttachOptions[RandomAttachmentIndex].StaticMesh;
+
+        if (RandomAttachOptions[RandomAttachmentIndex].Skin != none)
+        {
+            RandomAttachment.Skin = RandomAttachOptions[RandomAttachmentIndex].Skin;
+        }
+
         VehicleAttachments[VehicleAttachments.Length] = RandomAttachment;
     }
 
