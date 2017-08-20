@@ -3,18 +3,14 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHConstruction_PlatoonHQ extends DHConstruction;
+class DHConstruction_PlatoonHQ extends DHConstruction
+    notplaceable;
 
 #exec OBJ LOAD FILE=..\Textures\DH_Construction_tex.utx
 
 var DHSpawnPoint_PlatoonHQ  SpawnPoint;
 var int                     FlagSkinIndex;
 var sound                   RainSound;
-
-simulated function PostBeginPlay()
-{
-    super.PostBeginPlay();
-}
 
 simulated function OnConstructed()
 {

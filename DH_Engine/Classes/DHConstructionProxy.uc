@@ -108,6 +108,15 @@ function static Material CreateProxyMaterial(Material M)
     local FadeColor FC;
     local FinalBlend FB;
 
+    // HACK: Material cannot be a Combiner, since it doesn't play nice with
+    // the processing we are doing below (Combiners using Combiners I suppose is
+    // a bad thing). To fix this, we'll just use the combiner's fallback
+    // material as the material to work with.
+    if (M.IsA('Combiner') && M.FallbackMaterial != none)
+    {
+        M = M.FallbackMaterial;
+    }
+
     FC = new class'FadeColor';
     FC.Color1 = class'UColor'.default.White;
     FC.Color1.A = 64;
@@ -130,6 +139,7 @@ function static Material CreateProxyMaterial(Material M)
     FB.AlphaTest = true;
     FB.TwoSided = true;
     FB.Material = C;
+    FB.FallbackMaterial = M;
 
     return FB;
 }
@@ -375,6 +385,12 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
 
             if (TI != none)
             {
+                if (TI.TerrainScale.X > ConstructionClass.default.TerrainScaleMax ||
+                    TI.TerrainScale.Y > ConstructionClass.default.TerrainScaleMax)
+                {
+                    Error = ERROR_GroundTooHard;
+                }
+
                 BaseLocation = HitLocation;
 
                 if (ConstructionClass.default.bLimitTerrainSurfaceTypes)

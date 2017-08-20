@@ -41,9 +41,11 @@ var     SpriteWidget        MapIconMortarSmokeTarget;
 var     SpriteWidget        MapIconMortarArrow;
 var     SpriteWidget        MapIconMortarHit;
 var     SpriteWidget        MapPlayerNumberIcon;
+var     float               PlayerIconScale, PlayerIconLargeScale;
 
 // Screen icons
 var     SpriteWidget        CanMantleIcon;
+var     SpriteWidget        CanDigIcon;
 var     SpriteWidget        CanCutWireIcon;
 var     SpriteWidget        ExtraAmmoIcon; // extra ammo icon appears if the player has extra ammo to give out
 var     SpriteWidget        DeployOkayIcon;
@@ -210,6 +212,7 @@ simulated function UpdatePrecacheMaterials()
     // On screen indicator icons
     Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.HUD.DeployIcon');
     Level.AddPrecacheMaterial(CanMantleIcon.WidgetTexture);
+    Level.AddPrecacheMaterial(CanDigIcon.WidgetTexture);
     Level.AddPrecacheMaterial(CanCutWireIcon.WidgetTexture);
     Level.AddPrecacheMaterial(PlayerNameIconMaterial);
     Level.AddPrecacheMaterial(SpeakerIconMaterial);
@@ -649,7 +652,7 @@ simulated function DrawHudPassC(Canvas C)
     }
 
     // MG deploy icon if the weapon can be deployed
-    if (PawnOwner.bCanBipodDeploy)
+    if (PawnOwner.Weapon != none && PawnOwner.bCanBipodDeploy)
     {
         DrawSpriteWidget(C, MGDeployIcon);
     }
@@ -660,6 +663,10 @@ simulated function DrawHudPassC(Canvas C)
         if (P.bCanMantle)
         {
             DrawSpriteWidget(C, CanMantleIcon);
+        }
+        else if (P.bCanDig)
+        {
+            DrawSpriteWidget(C, CanDigIcon);
         }
         // Wire cutting icon if an object can be cut
         else if (P.bCanCutWire)
@@ -3268,6 +3275,7 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
     local color SquadMemberColor, SelfColor;
     local int i;
     local array<DHPlayerReplicationInfo> SquadMembers;
+    local float IconScale;
 
     PC = DHPlayer(PlayerOwner);
 
@@ -3282,7 +3290,7 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
     {
         SRI.GetMembers(PC.GetTeamNum(), PRI.SquadIndex, SquadMembers);
 
-        for (i = 0; i < SquadMembers.Length; ++i)
+        for (i = SquadMembers.Length - 1; i >= 0; --i)
         {
             OtherPRI = SquadMembers[i];
 
@@ -3328,7 +3336,16 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
             SquadMemberColor = class'DHColor'.default.SquadColor;
             SquadMemberColor.A = 160;
 
-            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, PlayerYaw, OtherPRI.SquadMemberIndex, SquadMemberColor, 0.03);
+            if (i == 0)
+            {
+                IconScale = PlayerIconLargeScale;
+            }
+            else
+            {
+                IconScale = PlayerIconScale;
+            }
+
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, PlayerYaw, OtherPRI.SquadMemberIndex, SquadMemberColor, IconScale);
         }
     }
 
@@ -3366,7 +3383,7 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
         {
             SelfColor = class'UColor'.default.OrangeRed;
             SelfColor.A = 160;
-            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, PlayerYaw, PRI.SquadMemberIndex, SelfColor, 0.05);
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, PlayerYaw, PRI.SquadMemberIndex, SelfColor, 0.05); // TODO: magic number
         }
     }
 }
@@ -4636,7 +4653,7 @@ simulated function DrawSpectatingHud(Canvas C)
         s = "";
 
         // Draw deploy text
-        if (PRI == none || PRI.Team == none || PRI.bOnlySpectator)
+        if (PRI == none || PRI.Team == none)
         {
             s = default.JoinTeamText; // Press ESC to join a team
         }
@@ -5410,7 +5427,7 @@ defaultproperties
     SpawnVehicleText="You will deploy as a {0} driving a {3} in {2} | Press [ESC] to change"
     SpawnAtVehicleText="You will deploy as a {0} at a {1} in {2} | Press [ESC] to change"
     SpawnRallyPointText="You will deploy as a {0} at your squad rally point in {2} | Press [ESC] to change"
-    SpawnNoRoleText="You will deploy in {2} | Press [ESC] to change"
+    SpawnNoRoleText="Press [ESC] to select a role"
     ReinforcementsDepletedText="Reinforcements depleted!"
     DeathPenaltyText="Death Penalty Count: {0} (+{1} second respawn time)"
     NotReadyToSpawnText="Spawning will enable in {s} seconds (Use this time to organize squads and plan)"
@@ -5423,6 +5440,7 @@ defaultproperties
     NeedAmmoIconMaterial=texture'DH_InterfaceArt_tex.Communication.need_ammo_icon'
     ExtraAmmoIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.Communication.need_ammo_icon',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.33,DrawPivot=DP_LowerRight,PosX=0.0,PosY=1.0,OffsetX=130,OffsetY=-35,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     CanMantleIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.CanMantle',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+    CanDigIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.CanDig',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
     CanCutWireIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.CanCut',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
     DeployOkayIcon=(WidgetTexture=material'DH_GUI_tex.GUI.deploy_status',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
     DeployEnemiesNearbyIcon=(WidgetTexture=material'DH_GUI_tex.GUI.deploy_status_finalblend',TextureCoords=(X1=64,Y1=0,X2=127,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
@@ -5517,6 +5535,8 @@ defaultproperties
     PlayerNumberIconTextures(10)=texture'DH_InterfaceArt_tex.HUD.player_number_11'
     PlayerNumberIconTextures(11)=texture'DH_InterfaceArt_tex.HUD.player_number_12'
     SquadNameIcon=(WidgetTexture=FinalBlend'DH_InterfaceArt_tex.HUD.SquadNameIcon',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.45,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
+    PlayerIconScale=0.03
+    PlayerIconLargeScale=0.05
 
     // Vehicle HUD
     VehicleOccupantsText=(PosX=0.78,OffsetX=0,bDrawShadow=true)

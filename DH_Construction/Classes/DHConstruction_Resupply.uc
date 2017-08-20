@@ -93,6 +93,7 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box'
     bShouldAlignToGround=true
     MenuName="Resupply Box"
+    MenuIcon=Texture'DH_GUI_tex.ConstructionMenu.Construction_Ammo'
     ProxyDistanceInMeters=3.0
     DuplicateFriendlyDistanceInMeters=100.0
     CollisionRadius=50.0

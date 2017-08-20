@@ -55,6 +55,7 @@ defaultproperties
     bShouldAlignToGround=false
     bCanBeTornDown=false
     bCanBeMantled=true
+    bCanBeDamaged=false
     ProxyDistanceInMeters=10
     CollisionRadius=256.0
     StaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_01'
@@ -62,6 +63,7 @@ defaultproperties
     SupplyCost=0
     PlacementOffset=(Z=0.0)
     MenuName="Foxhole"
+    MenuIcon=Texture'DH_GUI_tex.ConstructionMenu.Construction_Foxhole'
     bAlwaysRelevant=true            // This is so that the terrain poking gets applied for everyone and also doesn't get applied more than once.
     DuplicateFriendlyDistanceInMeters=15.0
     bLimitTerrainSurfaceTypes=true
@@ -70,4 +72,5 @@ defaultproperties
     TerrainSurfaceTypes(2)=EST_Snow
     TerrainSurfaceTypes(3)=EST_Mud
     TerrainSurfaceTypes(4)=EST_Plant
+    bShouldBlockSquadRallyPoints=true
 }

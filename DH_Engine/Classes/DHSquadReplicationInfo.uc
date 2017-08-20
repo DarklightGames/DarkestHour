@@ -491,7 +491,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
     local array<DHPlayerReplicationInfo> Members;
     local UComparator ScoreComparator;
 
-    if (PRI == none)
+    if (PRI == none || PRI.Team == none)
     {
         return false;
     }
@@ -1396,6 +1396,8 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
     local vector L;
     local DHRestrictionVolume RV;
     local float D, ClosestBlockingRallyPointDistance;
+    local DHConstructionManager CM;
+    local array<DHConstruction> Constructions;
 
     if (PC == none || !bAreRallyPointsEnabled)
     {
@@ -1484,6 +1486,7 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
         }
     }
 
+    // Must not be touching a restriction volume.
     foreach P.TouchingActors(class'DHRestrictionVolume', RV)
     {
         if (RV != none && RV.bNoSquadRallyPoints)
@@ -1492,6 +1495,28 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
             PC.ReceiveLocalizedMessage(SquadMessageClass, 56);
 
             return none;
+        }
+    }
+
+    // Must not be near a construction that blocks the creation of squad rally points.
+    CM = class'DHConstructionManager'.static.GetInstance(Level);
+
+    if (CM != none)
+    {
+        Constructions = CM.GetConstructions();
+
+        for (i = 0; i < Constructions.Length; ++i)
+        {
+            if (Constructions[i] != none && Constructions[i].bShouldBlockSquadRallyPoints)
+            {
+                if (VSize(P.Location - Constructions[i].Location) - P.CollisionRadius - Constructions[i].default.CollisionRadius < 0.0)
+                {
+                    // "You cannot create a squad rally point at this location."
+                    PC.ReceiveLocalizedMessage(SquadMessageClass, 60,,, Constructions[i]);
+
+                    return none;
+                }
+            }
         }
     }
 

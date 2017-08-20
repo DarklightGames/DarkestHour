@@ -78,6 +78,10 @@ var     DHSquadReplicationInfo      SquadReplicationInfo;
 
 var()   config int                  EmptyTankUnlockTime;                    // Server config option for how long (secs) before unlocking a locked armored vehicle if abandoned by its crew
 
+// Patreon
+var     array<string>   PatronROIDs;
+var     HTTPRequest     PatronsRequest;
+
 // Overridden to make new clamp of MaxPlayers
 event InitGame(string Options, out string Error)
 {
@@ -88,6 +92,17 @@ event InitGame(string Options, out string Error)
         MaxPlayers = Clamp(GetIntOption(Options, "MaxPlayers", MaxPlayers), 0, 128);
         default.MaxPlayers = Clamp(default.MaxPlayers, 0, 128);
     }
+
+    if (Level.NetMode == NM_DedicatedServer)
+    {
+        // Send a request to get a list of all the patron ROIDs
+        PatronsRequest = Spawn(class'HTTPRequest');
+        PatronsRequest.Method = "GET";
+        PatronsRequest.Host = "darkesthour.darklightgames.com";
+        PatronsRequest.Path = "/client/patrons.php";
+        PatronsRequest.OnResponse = PatronsRequestOnResponse;
+        PatronsRequest.Send();
+    }
 }
 
 function PreBeginPlay()
@@ -95,6 +110,64 @@ function PreBeginPlay()
     super.PreBeginPlay();
 
     SquadReplicationInfo = Spawn(class'DHSquadReplicationInfo');
+}
+
+function PatronsRequestOnResponse(int Status, TreeMap_string_string Headers, string Content)
+{
+    local JSONParser Parser;
+    local JSONArray A;
+    local int i;
+    local Controller C;
+    local DHPlayer PC;
+    local DHPlayerReplicationInfo PRI;
+
+    if (Status == 200)
+    {
+        Parser = new class'JSONParser';
+        A = Parser.ParseArray(Content);
+
+        if (A != none)
+        {
+            // Clear old patron list
+            PatronROIDs.Length = 0;
+
+            for (i = 0 ; i < A.Size(); ++i)
+            {
+                PatronROIDs[PatronROIDs.Length] = A.Get(i).AsString();
+            }
+
+            // Go through existing controllers and assign their patron status
+            for (C = Level.ControllerList; C != none; C = C.nextController)
+            {
+                PC = DHPlayer(C);
+                PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
+
+                if (PC != none && PRI != none)
+                {
+                    PRI.bIsPatron = IsPatron(PC.ROIDHash);
+                }
+            }
+        }
+    }
+    else
+    {
+        Warn("Failed to fetch patron list!");
+    }
+}
+
+function bool IsPatron(string ROIDHash)
+{
+    local int i;
+
+    for (i = 0; i < PatronROIDs.Length; ++i)
+    {
+        if (ROIDHash ~= PatronROIDs[i])
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 function PostBeginPlay()
@@ -3441,28 +3514,7 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
 
     Other.StartSpot = none;
 
-    if (Other.PlayerReplicationInfo.Team != none)
-    {
-        Other.PlayerReplicationInfo.Team.RemoveFromTeam(Other);
-
-        if (PC != none)
-        {
-            PC.DesiredRole = -1;
-            PC.CurrentRole = -1;
-            PC.PrimaryWeapon = -1;
-            PC.SecondaryWeapon = -1;
-            PC.GrenadeWeapon = -1;
-            PC.bWeaponsSelected = false;
-            PC.SavedArtilleryCoords = vect(0.0, 0.0, 0.0);
-
-            // DARKEST HOUR
-            PC.SpawnPointIndex = -1;
-
-            GRI.UnreserveVehicle(PC);
-
-            SquadReplicationInfo.LeaveSquad(DHPlayerReplicationInfo(PC.PlayerReplicationInfo));
-        }
-    }
+    PlayerLeftTeam(PC);
 
     if (NewTeam.AddToTeam(Other))
     {
@@ -3481,14 +3533,6 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
         }
     }
 
-    // Since we're changing teams, remove all rally points/help requests/etc
-    ClearSavedRequestsAndRallyPoints(ROPlayer(Other), false);
-
-    if (GRI != none)
-    {
-        GRI.ClearArtilleryTarget(DHPlayer(Other));
-    }
-
     // If we changed team, and if elapsed time hasn't gone past the change team interval, and we aren't in standalone then set the NextChangeTeamTime
     // The reason why we compare ElapsedTime to ChangeTeamInterval is we want to allow players to change teams freely for a duration from the start
     // The duration desired is roughly 120 seconds which is what ChangeTeamInterval is currently set to, so if that changes, this if statement (might) need changed as well
@@ -3500,6 +3544,70 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
     }
 
     return true;
+}
+
+function bool BecomeSpectator(PlayerController P)
+{
+    if (!super.BecomeSpectator(P))
+    {
+        return false;
+    }
+
+    PlayerLeftTeam(P);
+
+    P.PlayerReplicationInfo.Team = none;
+    P.PlayerReplicationInfo.bIsSpectator = true;
+    P.PlayerReplicationInfo.bOnlySpectator = true;
+}
+
+function PlayerLeftTeam(PlayerController P)
+{
+    local DHPlayer PC;
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
+
+    PC = DHPlayer(P);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+    PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+
+    if (PC != none)
+    {
+        PC.DesiredRole = -1;
+        PC.CurrentRole = -1;
+        PC.PrimaryWeapon = -1;
+        PC.DesiredPrimary = 0;
+        PC.SecondaryWeapon = -1;
+        PC.DesiredSecondary = 0;
+        PC.GrenadeWeapon = -1;
+        PC.DesiredGrenade = 0;
+        PC.bWeaponsSelected = false;
+        PC.SavedArtilleryCoords = vect(0.0, 0.0, 0.0);
+        PC.SpawnPointIndex = -1;
+        PC.bSpawnPointInvalidated = true;
+
+        ClearSavedRequestsAndRallyPoints(PC, false);
+    }
+
+    if (PRI != none)
+    {
+        if (PRI.Team != none)
+        {
+            PRI.Team.RemoveFromTeam(P);
+        }
+
+        PRI.RoleInfo = none;
+    }
+
+    if (GRI != none)
+    {
+        GRI.UnreserveVehicle(PC);
+        GRI.ClearArtilleryTarget(PC);
+    }
+
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.LeaveSquad(PRI);
+    }
 }
 
 // Modified to support one normal kick, then session kick for FF violation
@@ -4540,6 +4648,9 @@ event PostLogin(PlayerController NewPlayer)
                 }
             }
         }
+
+        // Patron status look-up
+        PRI.bIsPatron = IsPatron(ROIDHash);
     }
 }
 
@@ -4714,6 +4825,15 @@ function bool SetPause(bool bPause, PlayerController P)
     }
 
     return false;
+}
+
+// Overridden to undo the exclusion of players who hadn't yet selected a role.
+function GetTeamSizes(out int TeamSizes[2])
+{
+    if (DHGameReplicationInfo(GameReplicationInfo) != none)
+    {
+        DHGameReplicationInfo(GameReplicationInfo).GetTeamSizes(TeamSizes);
+    }
 }
 
 defaultproperties

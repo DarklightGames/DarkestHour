@@ -12,6 +12,7 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.hedgehog_01'
     bShouldAlignToGround=true
     MenuName="Hedgehog"
+    MenuIcon=Texture'DH_GUI_tex.ConstructionMenu.Construction_Hedgehog'
     StartRotationMin=(Yaw=-16384)
     StartRotationMax=(Yaw=16384)
     CollisionHeight=60

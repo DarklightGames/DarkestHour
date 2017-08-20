@@ -6,13 +6,14 @@
 class DHConstruction_SupplyCache extends DHConstruction;
 
 var array<StaticMesh> StaticMeshes;
-
 var DHConstructionSupplyAttachment SupplyAttachment;
+
+var() int InitialSupplyCount;
 
 function PostBeginPlay()
 {
-    super.PostBeginPlay();
-
+    // Spawn the supply attachment and set up the delegates.
+    // We hide the supply attachment since we are going to handle the visualization through the the construction.
     SupplyAttachment = Spawn(class'DHConstructionSupplyAttachment', self);
 
     if (SupplyAttachment == none)
@@ -22,11 +23,11 @@ function PostBeginPlay()
 
     SupplyAttachment.SetBase(self);
     SupplyAttachment.OnSupplyCountChanged = MyOnSupplyCountChanged;
-    SupplyAttachment.SetSupplyCount(default.SupplyCost);
+    SupplyAttachment.SetSupplyCount(InitialSupplyCount);
     SupplyAttachment.bCanReceiveSupplyDrops = true;
-
-    // We hide the supply attachment since we are going to handle the visualization through the the construction.
     SupplyAttachment.bHidden = true;
+
+    super.PostBeginPlay();
 }
 
 simulated function Destroyed()
@@ -44,7 +45,6 @@ function MyOnSupplyCountChanged(DHConstructionSupplyAttachment CSA)
     if (CSA != none)
     {
         SetStaticMesh(CSA.StaticMesh);
-
         NetUpdateTime = Level.TimeSeconds - 1.0;
     }
 }
@@ -62,7 +62,9 @@ simulated function OnTeamIndexChanged()
 defaultproperties
 {
     MenuName="Supply Cache"
+    MenuIcon=Texture'DH_GUI_tex.ConstructionMenu.Construction_Supply'
     SupplyCost=250
+    InitialSupplyCount=250
     StaticMesh=StaticMesh'DH_Military_stc.Ammo.cratepile1'
     DrawType=DT_StaticMesh
     DuplicateFriendlyDistanceInMeters=100   // NOTE: 2x the supply attachment radius

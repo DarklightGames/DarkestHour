@@ -36,10 +36,12 @@ var localized string SquadRallyPointBadLocation;
 var localized string SquadRallyPointDestroyed;
 var localized string SquadRallyPointAbandonmentWarning;
 var localized string SquadRallyPointSwapped;
+var localized string SquadRallyPointTooCloseToConstruction;
 
 static function string GetString(optional int S, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     local int ExtraValue;
+    local DHConstruction C;
 
     class'UInteger'.static.ToShorts(S, S, ExtraValue);
 
@@ -105,6 +107,16 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
             return default.SquadRallyPointAbandonmentWarning;
         case 59:
             return default.SquadRallyPointSwapped;
+        case 60:
+            C = DHConstruction(OptionalObject);
+            if (C != none)
+            {
+                return Repl(default.SquadRallyPointTooCloseToConstruction, "{0}", C.MenuName);
+            }
+            else
+            {
+                return default.SquadRallyPointBadLocation;
+            }
         default:
             break;
     }
@@ -145,5 +157,6 @@ defaultproperties
     SquadRallyPointDestroyed="The squad leader has forcibly destroyed a rally point."
     SquadRallyPointAbandonmentWarning="A newly created squad rally point is being abandoned!"
     SquadRallyPointSwapped="The squad leader has forcibly changed the currently active rally point."
+    SquadRallyPointTooCloseToConstruction="You cannot create a squad rally point so close to a {0}."
 }
 

@@ -104,6 +104,42 @@ simulated function bool IsConstructionRestricted(class<DHConstruction> Construct
     return false;
 }
 
+static simulated function DH_LevelInfo GetInstance(LevelInfo Level)
+{
+    local DarkestHourGame G;
+    local DHPlayer PC;
+    local DH_LevelInfo LI;
+
+    if (Level.Role == ROLE_Authority)
+    {
+        G = DarkestHourGame(Level.Game);
+
+        if (G != none)
+        {
+            LI = G.DHLevelInfo;
+        }
+    }
+    else
+    {
+        PC = DHPlayer(Level.GetLocalPlayerController());
+
+        if (PC != none)
+        {
+            LI = PC.ClientLevelInfo;
+        }
+    }
+
+    if (LI == none)
+    {
+        foreach Level.AllActors(class'DH_LevelInfo', LI)
+        {
+            break;
+        }
+    }
+
+    return LI;
+}
+
 defaultproperties
 {
     bDHDebugMode=true // TEMPDEBUG - revert to false before any release

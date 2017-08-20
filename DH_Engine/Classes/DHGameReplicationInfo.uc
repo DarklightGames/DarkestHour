@@ -696,7 +696,7 @@ function RemoveMGResupplyRequestFor(PlayerReplicationInfo PRI)
 //------------------------------------------------------------------------------
 // New helper function to calculate the round time remaining
 // Avoids re-stating this logic in various functionality that display time remaining, e.g. scoreboard, overhead map, deploy screen & spectator HUD
-function int GetRoundTimeRemaining()
+simulated function int GetRoundTimeRemaining()
 {
     local int SecondsRemaining;
 
@@ -791,6 +791,28 @@ simulated function bool CanPlayerReserveVehicleWithRole(DHPlayer PC, DHRoleInfo 
             (PC.Pawn == none || PC.Pawn.Health <= 0) &&
             VC.default.VehicleTeam == RI.Side &&
             GetVehiclePoolAvailableReservationCount(VehiclePoolIndex) > 0;
+}
+
+// Overridden to undo the exclusion of players who hadn't yet selected a role.
+simulated function GetTeamSizes(out int TeamSizes[2])
+{
+    local int i;
+    local PlayerReplicationInfo PRI;
+
+    TeamSizes[AXIS_TEAM_INDEX] = 0;
+    TeamSizes[ALLIES_TEAM_INDEX] = 0;
+
+    for (i = 0; i < PRIArray.Length; ++i)
+    {
+        PRI = PRIArray[i];
+
+        if (PRI != none &&
+            PRI.Team != none &&
+            (PRI.Team.TeamIndex == AXIS_TEAM_INDEX || PRI.Team.TeamIndex == ALLIES_TEAM_INDEX))
+        {
+            ++TeamSizes[PRI.Team.TeamIndex];
+        }
+    }
 }
 
 defaultproperties

@@ -95,6 +95,9 @@ var     vector  NewAcceleration;     // acceleration which is checked by PlayerM
 var     bool    bEndMantleBob;       // initiates the pre mantle head bob up motion
 var     sound   MantleSound;
 
+// Diggin
+var     bool    bCanDig;
+
 var(ROAnimations)   name        MantleAnim_40C, MantleAnim_44C, MantleAnim_48C, MantleAnim_52C, MantleAnim_56C, MantleAnim_60C, MantleAnim_64C,
                                 MantleAnim_68C, MantleAnim_72C, MantleAnim_76C, MantleAnim_80C, MantleAnim_84C, MantleAnim_88C;
 
@@ -3932,6 +3935,14 @@ simulated event SetAnimAction(name NewAction)
     }
 }
 
+simulated function HUDCheckDig()
+{
+    if (IsLocallyControlled())
+    {
+        bCanDig = CanDig();
+    }
+}
+
 //------------------------
 // Mantling Functions
 //------------------------
@@ -3943,6 +3954,12 @@ simulated function HUDCheckMantle()
     {
         bCanMantle = CanMantle();
     }
+}
+
+// Check whether there's anything in front of the player that can be built with the shovel
+simulated function bool CanDig()
+{
+    return Weapon != none && Weapon.IsA('DHShovelItem') && Weapon.GetFireMode(0) != none && Weapon.GetFireMode(0).AllowFire();
 }
 
 simulated function bool CanMantleActor(Actor A)
@@ -6545,24 +6562,22 @@ function SetConstructionProxy(class<DHConstruction> ConstructionClass)
         if (ConstructionProxy != none)
         {
             ConstructionProxy.Destroy();
+            return;
         }
     }
-    else
+
+    if (ConstructionProxy == none)
     {
-        if (ConstructionProxy == none)
-        {
-            ConstructionProxy = Spawn(class'DHConstructionProxy', self);
-        }
+        ConstructionProxy = Spawn(class'DHConstructionProxy', self);
+    }
 
-        ConstructionProxy.SetConstructionClass(ConstructionClass);
+    ConstructionProxy.SetConstructionClass(ConstructionClass);
+    GiveWeapon("DH_Weapons.DH_EmptyWeapon");
+    PendingWeapon = Weapon(FindInventoryType(class<Weapon>(DynamicLoadObject("DH_Weapons.DH_EmptyWeapon", class'class'))));
 
-        GiveWeapon("DH_Weapons.DH_EmptyWeapon");
-        PendingWeapon = Weapon(FindInventoryType(class<Weapon>(DynamicLoadObject("DH_Weapons.DH_EmptyWeapon", class'class'))));
-
-        if (PendingWeapon != none)
-        {
-            ChangedWeapon();
-        }
+    if (PendingWeapon != none)
+    {
+        ChangedWeapon();
     }
 }
 
@@ -6632,15 +6647,12 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vecto
         SupplyCost -= SuppliesToUse;
     }
 
-    // TODO: the controller shouldn't own the spawn, it should be whatever it's "attached" to!
-
     C = Spawn(ConstructionClass, Controller,, L, R);
 
     if (C != none)
     {
         C.SetTeamIndex(GetTeamNum());
         C.UpdateAppearance();
-        C.SetCollisionSize(0.0, 0.0);
     }
 }
 

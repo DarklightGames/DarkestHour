@@ -195,3 +195,4 @@ defaultproperties
     MainMenuOptions(4)="DH_Interface.DHQuitPage"
     LCDLogo=texture'DH_G15LCD.Logos.DH_BWLogoRGB8A'
 }
+

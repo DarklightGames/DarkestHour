@@ -74,6 +74,7 @@ var     bool    bPokesTerrain;                  // If true, terrain is poked whe
 var     bool    bDidPokeTerrain;
 var     int     PokeTerrainRadius;
 var     int     PokeTerrainDepth;
+var     float   TerrainScaleMax;                // The maximum terrain scale allowable
 var     bool    bLimitTerrainSurfaceTypes;      // If true, only allow placement on terrain surfaces types in the SurfaceTypes array
 var     array<ESurfaceTypes> TerrainSurfaceTypes;
 
@@ -109,6 +110,9 @@ var     sound           BrokenSound;                // Sound to play when the co
 var     float           BrokenSoundRadius;
 var     float           BrokenSoundVolume;
 var     class<Emitter>  BrokenEmitterClass;         // Emitter to spawn when the construction is broken
+
+// Reset
+var     bool            bShouldDestroyOnReset;      // bShouldDestroyOnReset
 
 // Damage
 struct DamageTypeScale
@@ -150,6 +154,9 @@ var array<Stage> Stages;
 // Mantling
 var bool bCanBeMantled;
 
+// Squad rally points
+var bool bShouldBlockSquadRallyPoints;
+
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -188,38 +195,15 @@ function ServerIncrementProgress()
     OnProgressChanged();
 }
 
-simulated function DH_LevelInfo GetLevelInfo()
-{
-    local DarkestHourGame G;
-    local DHPlayer PC;
-
-    if (Role == ROLE_Authority)
-    {
-        G = DarkestHourGame(Level.Game);
-
-        if (G != none)
-        {
-            return DH_LevelInfo(G.LevelInfo);
-        }
-    }
-    else
-    {
-        PC = DHPlayer(Level.GetLocalPlayerController());
-
-        if (PC != none)
-        {
-            return PC.ClientLevelInfo;
-        }
-    }
-
-    return none;
-}
-
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
+    SetCollisionSize(0.0, 0.0);
+
     Disable('Tick');
+
+    LevelInfo = class'DH_LevelInfo'.static.GetInstance(Level);
 
     if (Role == ROLE_Authority)
     {
@@ -227,7 +211,6 @@ simulated function PostBeginPlay()
         Health = HealthMax;
     }
 
-    LevelInfo = GetLevelInfo();
     Manager = class'DHConstructionManager'.static.GetInstance(Level);
 
     if (Manager != none)
@@ -333,8 +316,14 @@ auto simulated state Constructing
 
         if (Progress < 0)
         {
-            // TODO: possibly refund supplies to nearby supply cache/vehicle?
-            Destroy();
+            if (Owner == none)
+            {
+                GotoState('Dummy');
+            }
+            else
+            {
+                Destroy();
+            }
         }
         else if (Progress >= ProgressMax)
         {
@@ -364,6 +353,15 @@ auto simulated state Constructing
 Begin:
     if (Role == ROLE_Authority)
     {
+        if (Owner == none)
+        {
+            Progress = ProgressMax;
+        }
+
+        // Reset the draw type to static mesh (this is to undo the Dummy state
+        // setting the draw type to none).
+        SetDrawType(DT_StaticMesh);
+
         StateName = GetStateName();
 
         if (default.Stages.Length == 0)
@@ -483,12 +481,27 @@ simulated state Broken
         return true;
     }
 
+    simulated function Timer()
+    {
+        if (Role == ROLE_Authority)
+        {
+            if (Owner == none)
+            {
+                GotoState('Dummy');
+            }
+            else
+            {
+                Lifespan = BrokenLifespan;
+            }
+        }
+    }
+
 Begin:
     if (Role == ROLE_Authority)
     {
         UpdateAppearance();
         StateName = GetStateName();
-        Lifespan = BrokenLifespan;
+        SetTimer(BrokenLifespan, false);
         NetUpdateTime = Level.TimeSeconds - 1.0;
     }
 }
@@ -618,7 +631,7 @@ function static EConstructionError GetPlayerError(DHPlayer PC, optional out Obje
         return ERROR_Fatal;
     }
 
-    if (SRI.GetMemberCount(P.GetTeamNum(), PRI.SquadIndex) < default.SquadMemberCountMinimum)
+    if (PC.Level.NetMode != NM_Standalone && SRI.GetMemberCount(P.GetTeamNum(), PRI.SquadIndex) < default.SquadMemberCountMinimum)
     {
         return ERROR_SquadTooSmall;
     }
@@ -626,9 +639,20 @@ function static EConstructionError GetPlayerError(DHPlayer PC, optional out Obje
     return ERROR_None;
 }
 
-function Reset()
+simulated function Reset()
 {
-    Destroy();
+    if (Role == ROLE_Authority)
+    {
+        if (ShouldDestroyOnReset())
+        {
+            Destroy();
+        }
+        else
+        {
+            Health = HealthMax;
+            GotoState('Constructing');
+        }
+    }
 }
 
 // Override to set a new proxy appearance if you require something more
@@ -748,6 +772,14 @@ simulated function PostNetReceive()
     }
 }
 
+simulated function bool ShouldDestroyOnReset()
+{
+    // Dynamically placed actors are owned by the LevelInfo. If it was placed
+    // in-editor, it will not have an owner. This is a nice implicit way of
+    // knowing if something was created in-editor or not.
+    return Owner != none;
+}
+
 defaultproperties
 {
     OldTeamIndex=2  // NEUTRAL_TEAM_INDEX
@@ -796,6 +828,7 @@ defaultproperties
     IndoorsCeilingHeightInMeters=10.0
     PokeTerrainRadius=32
     PokeTerrainDepth=32
+    TerrainScaleMax=256.0
     RotationSnapAngle=16384
     bInheritsOwnerRotation=true
 
@@ -824,3 +857,4 @@ defaultproperties
     // Squad
     SquadMemberCountMinimum=0
 }
+
