@@ -70,6 +70,9 @@ var     sound       DestroyedBurningSound;       // ambient sound when vehicle i
 var     float       SpawnProtEnds;               // is set when a player spawns the vehicle for damage protection in DarkestHour spawn type maps
 var     float       SpawnKillTimeEnds;           // is set when a player spawns the vehicle for spawn kill protection in DarkestHour spawn type maps
 var     bool        bCanCrash;                   // vehicle can be damaged by static geometry during impacts (damages the engine)
+var     bool        bShouldExplode;              // used to determine if the vehicle should explode on death
+var     bool        bIsExploded;                 // used to prevent additional explosions
+var     int         EngineDeadHPLossPerSecond;   // HP loss per second for having a dead engine
 
 // Engine
 var     bool        bEngineOff;                  // vehicle engine is simply switched off
@@ -515,6 +518,12 @@ simulated function Tick(float DeltaTime)
 // Modified to remove RO stuff about bDriverAlreadyEntered, bDisableThrottle & CheckForCrew, as DH doesn't wait for crew anyway - so just set bDriverAlreadyEntered in KDriverEnter()
 function Timer()
 {
+    // Engine is dead, lets begin taking damage overtime
+    if (EngineHealth <= 0 && default.EngineHealth > 0)
+    {
+        TakeDamage(EngineDeadHPLossPerSecond, none, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), class'DHVehicleBurningDamageType');
+    }
+
     // Check to see if we need to destroy a spiked, abandoned vehicle
     if (bSpikedVehicle)
     {
@@ -1791,7 +1800,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 {
     local Controller InstigatorController;
     local float      VehicleDamageMod, TreadDamageMod;
-    local int        InstigatorTeam, i;
+    local int        InstigatorTeam, i, ActualDamage;
 
     // Suicide/self-destruction
     if (DamageType == class'Suicided' || DamageType == class'ROSuicided')
@@ -1899,6 +1908,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 }
 
                 Damage *= VehHitpoints[i].DamageMultiplier;
+                bShouldExplode = true;
                 break;
             }
         }
@@ -1910,8 +1920,112 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         CheckTreadDamage(HitLocation, Momentum);
     }
 
-    // Call the Super from Vehicle (skip over others)
-    super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+    // Most of below is taken from the super in Vehicle
+    if (bSpawnProtected && InstigatedBy != none)
+    {
+        return;
+    }
+
+    NetUpdateTime = Level.TimeSeconds - 1; // Do a net update
+
+    if (DamageType != none)
+    {
+        if ((InstigatedBy == none || InstigatedBy.Controller == none) && DamageType.default.bDelayedDamage && DelayedDamageInstigatorController != none)
+        {
+            InstigatedBy = DelayedDamageInstigatorController.Pawn;
+        }
+
+        Damage *= DamageType.default.VehicleDamageScaling;
+        Momentum *= DamageType.default.VehicleMomentumScaling * MomentumMult;
+
+        if (bShowDamageOverlay && DamageType.default.DamageOverlayMaterial != None && Damage > 0 )
+        {
+            SetOverlayMaterial(DamageType.default.DamageOverlayMaterial, DamageType.default.DamageOverlayTime, false);
+        }
+    }
+
+    // Though nothing in DH is remote controlled, gonna leave this in case something is (golith!)
+    if (bRemoteControlled && Driver != none)
+    {
+        ActualDamage = Damage;
+
+        if (Weapon != none)
+        {
+            Weapon.AdjustPlayerDamage(ActualDamage, InstigatedBy, HitLocation, Momentum, DamageType);
+        }
+
+        ActualDamage = Level.Game.ReduceDamage(ActualDamage, self, InstigatedBy, HitLocation, Momentum, DamageType);
+
+        if (Health - ActualDamage <= 0)
+        {
+            KDriverLeave(false);
+        }
+    }
+
+    if (Physics != PHYS_Karma)
+    {
+        super.TakeDamage(Damage,InstigatedBy,HitLocation,Momentum,DamageType);
+        return;
+    }
+
+    if (Weapon != none)
+    {
+        Weapon.AdjustPlayerDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType );
+    }
+
+    ActualDamage = Level.Game.ReduceDamage(Damage, self, instigatedBy, HitLocation, Momentum, DamageType);
+    Health -= ActualDamage;
+
+    PlayHit(actualDamage, InstigatedBy, hitLocation, damageType, Momentum);
+
+    // If the vehicle is dead
+    if (Health <= 0)
+    {
+        if (!bShouldExplode)
+        {
+            ExitAllOccupants();
+        }
+
+        if (Driver != none && (bEjectDriver || bRemoteControlled))
+        {
+            if (bEjectDriver)
+            {
+                EjectDriver();
+            }
+            else
+            {
+                KDriverLeave(false);
+            }
+        }
+
+        if (InstigatedBy != none)
+        {
+            InstigatorController = InstigatedBy.GetKillerController();
+        }
+
+        if (InstigatorController == none && (DamageType != none) && DamageType.default.bDelayedDamage)
+        {
+            InstigatorController = DelayedDamageInstigatorController;
+        }
+
+        Died(InstigatorController, damageType, HitLocation);
+    }
+    else if (Controller != none)
+    {
+        Controller.NotifyTakeHit(instigatedBy, HitLocation, actualDamage, DamageType, Momentum);
+    }
+
+    MakeNoise(1.0);
+
+    if (!bDeleteMe)
+    {
+        if (Location.Z > Level.StallZ)
+        {
+            Momentum.Z = FMin(Momentum.Z, 0);
+        }
+
+        KAddImpulse(Momentum, hitlocation);
+    }
 
     // If an APC's health is very low, kill the engine (which will start an engine fire)
     if (bIsApc && Health <= (HealthMax / 3) && Health > 0)
@@ -2029,12 +2143,22 @@ event TakeImpactDamage(float AccelMag)
         PlaySound(ImpactDamageSounds[Rand(ImpactDamageSounds.Length - 1)], SLOT_None, TransientSoundVolume * 2.5, false, 120.0,, true);
         LastImpactSound = Level.TimeSeconds;
     }
+}
 
-    // Make vehicle explode if it's now dead
-    if (Health < 0 && (Level.TimeSeconds - LastImpactExplosionTime) > TimeBetweenImpactExplosions)
+function ExitAllOccupants()
+{
+    local int i;
+
+    // Exit driver
+    KDriverLeave(false);
+
+    // Loop through the weapon pawns to have them exit
+    for (i = 0; i < WeaponPawns.Length; ++i)
     {
-        VehicleExplosion(Normal(ImpactInfo.ImpactNorm), 0.5);
-        LastImpactExplosionTime = Level.TimeSeconds;
+        if (WeaponPawns[i] != none && WeaponPawns[i].Driver != none)
+        {
+            WeaponPawns[i].KDriverLeave(false);
+        }
     }
 }
 
@@ -2051,6 +2175,9 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
     // Kill the engine if its health has now fallen to zero
     if (EngineHealth <= 0)
     {
+        // Start timer as we should begin draining health!
+        SetTimer(1.0, true);
+
         if (bDebuggingText)
         {
             Level.Game.Broadcast(self, "Engine is dead");
@@ -2099,6 +2226,12 @@ state VehicleDestroyed
             Destroyed_HandleDriver();
         }
     }
+
+Begin:
+    DestroyAppearance();
+    //VehicleExplosion(vect(0,0,1), 1.0); Theel - removed as we need to be calling explosion elsewhere
+    sleep(9.0);
+    CallDestroy();
 }
 
 // Modified to randomise explosion damage (except for resupply vehicles) & to add DestroyedBurningSound
@@ -2106,6 +2239,13 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
 {
     local vector LinearImpulse, AngularImpulse;
     local float  ExplosionModifier;
+
+    if (bIsExploded)
+    {
+        return; // Already exploded
+    }
+
+    bIsExploded = true;
 
     if (ResupplyAttachment != none)
     {
@@ -3520,6 +3660,7 @@ defaultproperties
     ImpactDamageMult=0.5
     DriverDamageMult=1.0
     DamagedTreadPanner=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
+    EngineDeadHPLossPerSecond=20
 
     // Smoking/burning engine effect
     HeavyEngineDamageThreshold=0.25
@@ -3534,13 +3675,17 @@ defaultproperties
     //DisintegrationEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     //DisintegrationEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
 
+    //SafeDestructionEffectClass=none//class''
+    //SafeDestructionEffectLowClass=none//class''
+
     DestructionEffectClass=class'DH_Effects.DHVehicleAmmoCookEffect'
     DestructionEffectLowClass=class'DH_Effects.DHVehicleAmmoCookEffect'
+
     DisintegrationEffectClass=class'DH_Effects.DHVehicleAmmoCookEffect'
     DisintegrationEffectLowClass=class'DH_Effects.DHVehicleAmmoCookEffect'
 
-    ExplosionDamage=100.0
-    ExplosionRadius=100.0
+    ExplosionDamage=200.0
+    ExplosionRadius=300.0
     ExplosionSoundRadius=750.0
 
     // Vehicle reset/respawn
