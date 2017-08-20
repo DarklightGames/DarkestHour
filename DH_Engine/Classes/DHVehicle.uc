@@ -2230,9 +2230,74 @@ state VehicleDestroyed
 
 Begin:
     DestroyAppearance();
-    //VehicleExplosion(vect(0,0,1), 1.0); Theel - removed as we need to be calling explosion elsewhere
-    sleep(9.0);
+
+    // Theel TODO add a check here to determin if we should explode or not
+    // if not then create a new emitter for non-explosion destruction
+    //VehicleExplosion(vect(0,0,1), 1.0);
+
+    Sleep(TimeTilDissapear);
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        ClientPrepareForRemoval();
+    }
+
+    Sleep(10);
+
     CallDestroy();
+}
+
+// Give players visual warning that the vehicle is going to be removed and will no longer be viable for cover
+function ClientPrepareForRemoval()
+{
+    local PlayerController PC;
+    local float            Dist, Scale;
+
+    // On net client, only do these things if bClientInitialized, meaning we haven't just received this actor through replication, so it must have just blown up
+    if (bClientInitialized || Role == ROLE_Authority)
+    {
+        // View shake
+        PC = Level.GetLocalPlayerController();
+
+        if (PC != none && PC.ViewTarget != none)
+        {
+            Dist = VSize(Location - PC.ViewTarget.Location);
+
+            if (Dist < (ExplosionRadius * 2.5))
+            {
+                PC.ShakeView(ShakeRotMag * 0.1, ShakeRotRate, ShakeRotTime, ShakeOffsetMag * Scale, ShakeOffsetRate, ShakeOffsetTime);
+            }
+        }
+
+        // Explosion sound
+        if (ExplosionSounds.Length > 0)
+        {
+            PlaySound(ExplosionSounds[Rand(ExplosionSounds.Length)], SLOT_None, ExplosionSoundVolume * TransientSoundVolume,, ExplosionSoundRadius);
+        }
+    }
+
+    // Spawn destroyed vehicle effect
+    // If vehicle disintegrates (falls below DisintegrationHealth), this function gets called twice & two effects get spawned
+    // The 1st call spawns a normal effect, but this is followed by a 2nd disintegration call (with bFinal), which spawns a disintegration effect
+    // This is handled by native code so we can't change what happens - a fix is to destroy the 1st effect if a 2nd is going to be spawned
+    if (DestructionEffect != none)
+    {
+        DestructionEffect.Destroy();
+    }
+
+    // Low detail effect
+    if (Level.bDropDetail || Level.DetailMode == DM_Low)
+    {
+        DestructionEffect = Spawn(DestructionEffectLowClass, self);
+    }
+    // Standard detail effect
+    else
+    {
+        DestructionEffect = Spawn(DestructionEffectClass, self);
+    }
+
+    DestructionEffect.LifeSpan = TimeTilDissapear;
+    DestructionEffect.SetBase(self);
 }
 
 // Modified to randomise explosion damage (except for resupply vehicles) & to add DestroyedBurningSound
