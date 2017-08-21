@@ -36,6 +36,10 @@ var float OverrunMinimumTimeSeconds;            // The number of seconds a rally
 // Abandonment
 var bool bCanSendAbandonmentWarningMessage;     // Whether or not we should send the abandonment message the next time the squad rally point has no teammates nearby while constructing
 
+// Accrual timer (used for adding available spawns on
+var int SpawnAccrualTimer;
+var int SpawnAccrualThreshold;
+
 replication
 {
     reliable if (Role == ROLE_Authority)
@@ -396,6 +400,7 @@ defaultproperties
     EstablishmentRadiusInMeters=25
     EstablishmentCounterThreshold=30
     OverrunMinimumTimeSeconds=15
+    SpawnAccrualThreshold=30
     bHidden=false
     bCanSendAbandonmentWarningMessage=true
     bCombatSpawn=true
