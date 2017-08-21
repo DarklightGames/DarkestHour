@@ -676,11 +676,11 @@ simulated function DrawHudPassC(Canvas C)
     }
 
     // Weapon rest icon
-    if (PawnOwner.bRestingWeapon)
+    if (PawnOwner.Weapon != none && PawnOwner.bRestingWeapon)
     {
         DrawSpriteWidget(C, WeaponRestingIcon);
     }
-    else if (PawnOwner.bCanRestWeapon)
+    else if (PawnOwner.Weapon != none && PawnOwner.bCanRestWeapon)
     {
         DrawSpriteWidget(C, WeaponCanRestIcon);
     }
