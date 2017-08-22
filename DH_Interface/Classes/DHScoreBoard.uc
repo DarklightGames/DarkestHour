@@ -197,6 +197,7 @@ simulated function PostBeginPlay()
     Timer();
 }
 
+// TODO: this is actually kinda crap because the timer runs even when the scoreboard isn't visible.
 function Timer()
 {
     local int i;
@@ -205,6 +206,8 @@ function Timer()
     AxisPRI.Length = 0;
     AlliesPRI.Length = 0;
     UnassignedPRI.Length = 0;
+
+    UpdateGRI();
 
     // Assign all players to relevant array of PRIs for their team or unassigned/spectators
     for (i = 0; i < GRI.PRIArray.Length; ++i)
@@ -295,9 +298,9 @@ simulated function float DrawTeam(Canvas C, int TeamNum, float YPos, int PlayerC
 simulated function float DrawHeaders(Canvas C) { return 0.0;}
 
 // TODO: A lot of this doesn't need to happen every frame.
-
-// Modified to re-factor to substantially reduce repetition & use of literals, also simplifying, making clearer & removing some redundancy
-// Also adds some extra information in the scoreboard header
+// Modified to re-factor to substantially reduce repetition & use of literals,
+// also simplifying, making clearer & removing some redundancy.
+// Also adds some extra information in the scoreboard header.
 simulated function UpdateScoreBoard(Canvas C)
 {
     local class<DHHud> HUD;
