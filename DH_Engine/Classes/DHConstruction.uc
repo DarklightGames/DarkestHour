@@ -161,9 +161,6 @@ replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
         TeamIndex, StateName;
-
-    reliable if (Role < ROLE_Authority)
-        ServerIncrementProgress;
 }
 
 simulated function OnConstructed();
@@ -189,7 +186,7 @@ final function SetTeamIndex(int TeamIndex)
     NetUpdateTime = Level.TimeSeconds - 1.0;
 }
 
-function ServerIncrementProgress()
+function IncrementProgress()
 {
     Progress += 1;
     OnProgressChanged();
