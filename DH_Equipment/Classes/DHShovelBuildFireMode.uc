@@ -5,6 +5,8 @@
 
 class DHShovelBuildFireMode extends DHWeaponFire;
 
+const SoundRadius = 32.0;
+
 var     DHConstruction  Construction;          // reference to the Construction actor we're building
 var     float           TraceDistanceInMeters; // player has to be within this distance of a construction to build it
 
@@ -77,6 +79,14 @@ simulated state Building
             }
 
             SetTimer(Weapon.GetAnimDuration(FireAnim), false);
+
+            // Only play the shoveling sound on non-owning clients since we play
+            // the sound using animation events in the first-person weapon
+            // for the owning client.
+            if (!Instigator.IsLocallyControlled())
+            {
+                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,, SoundRadius, false);
+            }
         }
     }
 
@@ -108,5 +118,8 @@ defaultproperties
     FireAnim="dig"
     FireAnimRate=1.0
     FireTweenTime=0.25
+    FireSounds(0)=Sound'DH_WeaponSounds.Shovel.shovel_1'
+    FireSounds(1)=Sound'DH_WeaponSounds.Shovel.shovel_3'
+    FireSounds(2)=Sound'DH_WeaponSounds.Shovel.shovel_4'
 }
 
