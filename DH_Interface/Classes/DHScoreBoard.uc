@@ -611,7 +611,7 @@ simulated function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplication
 
                 // TODO: remove this??
                 // Update axis team's total score
-                TeamTotalScore += TeamPRI[i].Score;
+                TeamTotalScore += SquadMembers[i].Score;
 
                 // Move to next drawing line (exit drawing axis players if this takes us off the bottom of the screen)
                 Y += LineHeight;
