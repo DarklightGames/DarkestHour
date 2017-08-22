@@ -6868,16 +6868,6 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
     IdleTime = Level.TimeSeconds;
 }
 
-exec function PokeRadius(int R)
-{
-    PokeTerrainRadius = R;
-}
-
-exec function PokeDepth(int D)
-{
-    PokeTerrainDepth = D;
-}
-
 defaultproperties
 {
     // General class & interaction stuff
