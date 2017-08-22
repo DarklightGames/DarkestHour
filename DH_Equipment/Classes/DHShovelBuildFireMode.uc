@@ -85,7 +85,7 @@ simulated state Building
             // for the owning client.
             if (!Instigator.IsLocallyControlled())
             {
-                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,, SoundRadius, false);
+                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,, SoundRadius,, false);
             }
         }
     }
