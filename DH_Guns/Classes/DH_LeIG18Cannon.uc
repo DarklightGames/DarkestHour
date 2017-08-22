@@ -11,7 +11,6 @@ defaultproperties
     Mesh=SkeletalMesh'DH_LeIG18_anm.leig18_turret'
     Skins(0)=texture'DH_LeIG18_tex.LeIG18.IG18_1'
     Skins(1)=texture'DH_LeIG18_tex.LeIG18.IG18_2'
-    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.6pounder.6pounder_turret_coll'  // TODO: REPLACE
     BeginningIdleAnim="com_idle_close"
     GunnerAttachmentBone="com_player"
 
@@ -43,4 +42,6 @@ defaultproperties
     ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')  // TODO: REPLACE
     ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')  // TODO: REPLACE
     ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')  // TODO: REPLACE
+
+    bIsArtillery=true
 }
