@@ -5,8 +5,6 @@
 
 class DH_M16Halftrack extends DH_M3Halftrack;
 
-#exec OBJ LOAD FILE=..\Animations\DH_M3Halftrack_anm.ukx
-
 defaultproperties
 {
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_M3Halftrack_anm.m16_body')
@@ -42,5 +40,7 @@ defaultproperties
     VehicleNameString="M16 Halftrack"
     Mesh=SkeletalMesh'DH_M3Halftrack_anm.m16_body'
     SpawnOverlay(0)=material'DH_M3Halftrack_tex.hud.m16_menu'
+
+    DestroyedVehicleMesh=StaticMesh'DH_M3Halftrack_stc.m16.m16_destro'
 }
 
