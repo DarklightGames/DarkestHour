@@ -165,9 +165,9 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD // TODO: get 4 named HUD icons made
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.stuart_body' // locust_body
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Stuart_turret_rot' // Locust_turret_rot
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Stuart_turret_look' // Locust_turret_look
+    VehicleHudImage=texture'DH_Locust_tex.HUD.locust_body'
+    VehicleHudTurret=TexRotator'DH_Locust_tex.HUD.locust_turret_rot'
+    VehicleHudTurretLook=TexRotator'DH_Locust_tex.HUD.locust_turret_look'
     VehicleHudTreadsPosX(0)=0.37
     VehicleHudTreadsPosX(1)=0.63
     VehicleHudTreadsPosY=0.51
@@ -180,7 +180,7 @@ defaultproperties
     VehicleHudOccupantsY(2)=0.72
     VehicleHudOccupantsY(3)=0.78
     VehicleHudOccupantsY(4)=0.72
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.m5_stuart' // Locust
+    SpawnOverlay(0)=material'DH_Locust_tex.HUD.locust'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
