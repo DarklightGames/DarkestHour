@@ -3495,6 +3495,7 @@ defaultproperties
     // Supply
     SupplyDropCountMax=2000 // TODO: make lower in the future!
     SupplyDropInterval=5
+    TouchingSupplyCount=-1
 
     // Miscellaneous
     VehicleMass=3.0
