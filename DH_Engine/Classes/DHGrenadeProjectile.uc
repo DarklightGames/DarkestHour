@@ -15,6 +15,9 @@ simulated function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
+        // FuzeLengthTimer is set by the fire class after the projectile is spawned
+        // So though it randomizes the default here, it doesn't matter as the fireclass overrides it
+        // This means we will need to fireclass to handle the random fuze times
         FuzeLengthTimer += FRand();
     }
 
