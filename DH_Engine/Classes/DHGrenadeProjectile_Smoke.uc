@@ -78,6 +78,7 @@ function BlowUp(vector HitLocation)
 defaultproperties
 {
     bAlwaysRelevant=true // has to be always relevant so that the smoke effect always gets spawned
+    FailureRate=0.0 // don't have smoke grenades fail
     Damage=0.0
     DamageRadius=0.0
     SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_Grenade'
