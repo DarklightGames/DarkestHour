@@ -12,7 +12,7 @@ defaultproperties
     Article="a "
     PluralName="Riflemen"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
-    Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
+    Grenades(0)=(Item=class'DH_Weapons.DH_MillsBombWeapon')
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
     Headgear(2)=class'DH_BritishPlayers.DH_BritishTommyHelmet'

@@ -12,7 +12,7 @@ defaultproperties
     Article="a "
     PluralName="Combat Engineers"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
-    Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
+    Grenades(0)=(Item=class'DH_Weapons.DH_MillsBombWeapon')
     Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
     GivenItems(0)="DH_Equipment.DHWireCuttersItem"
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'

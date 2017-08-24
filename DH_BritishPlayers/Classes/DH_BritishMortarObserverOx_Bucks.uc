@@ -14,7 +14,7 @@ defaultproperties
     PluralName="Artillery Observers"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
-    Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
+    Grenades(0)=(Item=class'DH_Weapons.DH_MillsBombWeapon')
     GivenItems(0)="DH_Equipment.DHBinocularsItem"
     Headgear(0)=class'DH_BritishPlayers.DH_BritishParaHelmetOne'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishParaHelmetTwo'
