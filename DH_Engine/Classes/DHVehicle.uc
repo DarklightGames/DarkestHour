@@ -166,7 +166,7 @@ replication
         ServerStartEngine, ServerDropSupplies;
 
     // Variables the server will replicate to the client that owns this actor
-    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
+    reliable if (bNetDirty && Role == ROLE_Authority)
         TouchingSupplyCount;
 }
 
