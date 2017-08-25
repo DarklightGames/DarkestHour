@@ -21,6 +21,6 @@ defaultproperties
     GunsightOverlay=texture'DH_Artillery_Tex.ATGun_Hud.57mmGun_sight_background'    // TODO: REPLACE
     GunsightSize=0.542    // TODO: REPLACE
     BinocsOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
-    AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.Panzer3shell'    // TODO: REPLACE
-    AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'    // TODO: REPLACE
+    AmmoShellTexture=texture'DH_LeIG18_tex.HUD.leig18_he'
+    AmmoShellReloadTexture=texture'DH_LeIG18_tex.HUD.leig18_he_reload'
 }

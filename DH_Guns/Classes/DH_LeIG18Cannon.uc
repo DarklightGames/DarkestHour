@@ -23,6 +23,8 @@ defaultproperties
     CustomPitchDownLimit=63715
 
     // Cannon ammo
+    ProjectileDescriptions(0)="HE"
+    ProjectileDescriptions(1)="AP"
     ProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'
     PrimaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'
     SecondaryProjectileClass=class'DH_Guns.DH_AT57CannonShellHE'  // TODO: REPLACE
