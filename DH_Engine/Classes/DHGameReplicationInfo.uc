@@ -13,6 +13,7 @@ const SPAWN_POINTS_MAX = 63;
 const OBJECTIVES_MAX = 32;
 const CONSTRUCTION_CLASSES_MAX = 32;
 const VOICEID_MAX = 100;
+const SUPPLY_POINTS_MAX = 8;
 
 struct ArtilleryTarget
 {
@@ -32,7 +33,17 @@ struct SpawnVehicle
     var Vehicle         Vehicle;
 };
 
+struct SupplyPoint
+{
+    var bool    bIsActive;
+    var DHConstructionSupplyAttachment Actor;
+    var byte    TeamIndex;
+    var vector  Location;   // (X,Y) is world location, (Z) is the yaw rotation
+};
+
 var string              CurrentGameType;
+
+var SupplyPoint         SupplyPoints[SUPPLY_POINTS_MAX];
 
 var ROArtilleryTrigger  CarriedAlliedRadios[RADIOS_MAX];
 var ROArtilleryTrigger  CarriedAxisRadios[RADIOS_MAX];
@@ -136,7 +147,8 @@ replication
         bIsInSetupPhase,
         bRoundIsOver,
         ConstructionClasses,
-        bAreConstructionsEnabled;
+        bAreConstructionsEnabled,
+        SupplyPoints;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))
         AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex;
@@ -217,9 +229,55 @@ simulated event Timer()
     }
 }
 
-//------------------------------------------------------------------------------
-// Spawn Point Functions
-//------------------------------------------------------------------------------
+//==============================================================================
+// Supply Points
+//==============================================================================
+
+function int AddSupplyPoint(DHConstructionSupplyAttachment CSA)
+{
+    local int i;
+
+    if (CSA != none)
+    {
+        for (i = 0; i < arraycount(SupplyPoints); ++i)
+        {
+            if (SupplyPoints[i].Actor == none)
+            {
+                SupplyPoints[i].bIsActive = true;
+                SupplyPoints[i].Actor = CSA;
+                SupplyPoints[i].TeamIndex = CSA.TeamIndex;
+                SupplyPoints[i].Location.X = CSA.Location.X;
+                SupplyPoints[i].Location.Y = CSA.Location.Y;
+                SupplyPoints[i].Location.Z = CSA.Rotation.Yaw;
+                return i;
+            }
+        }
+    }
+
+    return -1;
+}
+
+function RemoveSupplyPoint(DHConstructionSupplyAttachment CSA)
+{
+    local int i;
+
+    if (CSA != none)
+    {
+        for (i = 0; i < arraycount(SupplyPoints); ++i)
+        {
+            if (SupplyPoints[i].Actor == CSA)
+            {
+                SupplyPoints[i].bIsActive = false;
+                SupplyPoints[i].Actor = none;
+                break;
+            }
+        }
+    }
+}
+
+//==============================================================================
+// Spawn Points
+//==============================================================================
 
 simulated function int AddSpawnPoint(DHSpawnPointBase SP)
 {

@@ -6,6 +6,7 @@
 class DHConstructionSupplyAttachment extends Actor
     notplaceable;
 
+var int                 SupplyPointIndex;
 var private int         SupplyCount;
 var int                 SupplyCountMax;
 var int                 TeamIndex;
@@ -48,11 +49,20 @@ delegate OnSupplyCountChanged(DHConstructionSupplyAttachment CSA);
 // Overridden to bypass bizarre logic that necessitated the Owner be a Pawn.
 simulated function PostBeginPlay()
 {
+    local DHGameReplicationInfo GRI;
+
     super.PostBeginPlay();
 
     if (Role == ROLE_Authority)
     {
         SupplyCount = SupplyCountMax;
+
+        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+        if (GRI != none)
+        {
+            SupplyPointIndex = GRI.AddSupplyPoint(self);
+        }
 
         SetTimer(1.0, true);
     }
@@ -100,6 +110,7 @@ function Destroyed()
     local int i;
     local DHPawn P;
     local DHVehicle V;
+    local DHGameReplicationInfo GRI;
 
     for (i = 0; i < TouchingPawns.Length; ++i)
     {
@@ -118,6 +129,13 @@ function Destroyed()
         }
     }
 
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI != none)
+    {
+        GRI.RemoveSupplyPoint(self);
+    }
+
     super.Destroyed();
 }
 
@@ -128,6 +146,18 @@ function Timer()
     local DHVehicle V;
     local int i, Index, SuppliesToDeposit;
     local array<Pawn> NewTouchingPawns;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI != none && SupplyPointIndex != -1)
+    {
+        // Update supply point information in game replication info.
+        GRI.SupplyPoints[SupplyPointIndex].TeamIndex = TeamIndex;
+        GRI.SupplyPoints[SupplyPointIndex].Location.X = Location.X;
+        GRI.SupplyPoints[SupplyPointIndex].Location.Y = Location.Y;
+        GRI.SupplyPoints[SupplyPointIndex].Location.Z = Rotation.Yaw;
+    }
 
     NewTouchingPawns.Length = 0;
 
@@ -221,6 +251,7 @@ function bool Resupply()
 
 defaultproperties
 {
+    SupplyPointIndex=-1
     SupplyCount=2000
     SupplyCountMax=2000
     TouchDistanceInMeters=50
