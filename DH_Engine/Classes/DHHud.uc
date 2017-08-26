@@ -1059,7 +1059,6 @@ function DrawSupplyCount(Canvas C)
     }
     else if (V != none)
     {
-        // TODO: get the BASE vehicle?
         TouchingSupplyCount = V.TouchingSupplyCount;
     }
     else if (VWP != none)
