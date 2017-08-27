@@ -4,6 +4,7 @@
 //==============================================================================
 
 class DHConstructionSupplyAttachment extends Actor
+    abstract
     notplaceable;
 
 #exec OBJ LOAD FILE=../StaticMeshes/DH_Construction_stc.usx
@@ -12,6 +13,8 @@ var int                 SupplyPointIndex;
 var private int         SupplyCount;
 var int                 SupplyCountMax;
 var int                 TeamIndex;
+
+var bool                bShouldShowOnMap;
 
 // Whether or not this supply attachment can be resupplied from a static resupply point.
 var bool                bCanBeResupplied;
@@ -28,8 +31,6 @@ var array<Pawn>         TouchingPawns;
 
 // The distance, in meters, a player must be within to have access to these supplies.
 var float               TouchDistanceInMeters;
-
-var array<StaticMesh>   StaticMeshes;
 
 //==============================================================================
 // Supply Generation
@@ -61,7 +62,7 @@ simulated function PostBeginPlay()
 
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-        if (GRI != none)
+        if (bShouldShowOnMap && GRI != none)
         {
             SupplyPointIndex = GRI.AddSupplyPoint(self);
         }
@@ -155,7 +156,7 @@ function Destroyed()
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-    if (GRI != none)
+    if (GRI != none && SupplyPointIndex != -1)
     {
         GRI.RemoveSupplyPoint(self);
     }
@@ -284,7 +285,4 @@ defaultproperties
     DrawType=DT_StaticMesh
     bAcceptsProjectors=true
     bUseLightingFromBase=true
-    StaticMeshes(0)=StaticMesh'DH_Military_stc.Ammo.cratepile1'
-    StaticMeshes(1)=StaticMesh'DH_Military_stc.Ammo.cratepile2'
-    StaticMeshes(2)=StaticMesh'DH_Military_stc.Ammo.cratepile3'
 }
