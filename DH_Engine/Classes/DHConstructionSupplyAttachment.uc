@@ -6,6 +6,8 @@
 class DHConstructionSupplyAttachment extends Actor
     notplaceable;
 
+#exec OBJ LOAD FILE=../StaticMeshes/DH_Construction_stc.usx
+
 var int                 SupplyPointIndex;
 var private int         SupplyCount;
 var int                 SupplyCountMax;
@@ -83,15 +85,37 @@ simulated function int GetSupplyCount()
     return SupplyCount;
 }
 
-function StaticMesh GetStaticMeshForSupplyCount(int SupplyCount)
+static function StaticMesh GetStaticMeshForSupplyCount(LevelInfo Level, int TeamIndex, int SupplyCount)
 {
-    local float SupplyPercent;
-    local int StaticMeshIndex;
+    //local float SupplyPercent;
+    //local int StaticMeshIndex;
+    local DH_LevelInfo LI;
 
-    SupplyPercent = (float(SupplyCount) / SupplyCountMax);
-    StaticMeshIndex = Clamp(SupplyPercent * StaticMeshes.Length, 0, StaticMeshes.Length - 1);
+    //SupplyPercent = (float(SupplyCount) / SupplyCountMax);
+    //StaticMeshIndex = Clamp(SupplyPercent * StaticMeshes.Length, 0, StaticMeshes.Length - 1);
+    if (TeamIndex == AXIS_TEAM_INDEX)
+    {
+        return StaticMesh'DH_Construction_stc.Supply_Cache.GER_Supply_cache_full';
+    }
+    else if (TeamIndex == ALLIES_TEAM_INDEX)
+    {
+        LI = class'DH_LevelInfo'.static.GetInstance(Level);
 
-    return StaticMeshes[StaticMeshIndex];
+        if (LI != none)
+        {
+            switch (LI.AlliedNation)
+            {
+                case NATION_USA:
+                    return StaticMesh'DH_Construction_stc.Supply_Cache.USA_Supply_cache_full';
+                case NATION_Britain:
+                case NATION_Canada:
+                case NATION_USSR:
+                    return StaticMesh'DH_Construction_stc.Supply_Cache.USA_Supply_cache_full';
+            }
+        }
+    }
+
+    return none;
 }
 
 function SetSupplyCount(int Amount)
@@ -99,7 +123,7 @@ function SetSupplyCount(int Amount)
     SupplyCount = Clamp(Amount, 0, SupplyCountMax);
 
     // Update visualization
-    SetStaticMesh(GetStaticMeshForSupplyCount(SupplyCount));
+    SetStaticMesh(GetStaticMeshForSupplyCount(Level, TeamIndex, SupplyCount));
     NetUpdateTime = Level.TimeSeconds - 1.0;
 
     OnSupplyCountChanged(self);
