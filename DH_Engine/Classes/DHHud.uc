@@ -60,6 +60,9 @@ var     material            SpeakerIconMaterial;
 var     material            NeedAssistIconMaterial;
 var     material            NeedAmmoIconMaterial;
 
+// Objective HUD
+var     SpriteWidget        EnemyPresentIcon;
+
 // Vehicle HUD
 var     SpriteWidget        VehicleLockedIcon;                  // icon showing that an armored vehicle has been locked, stopping any new players entering tank crew positions
 var     SpriteWidget        VehicleAltAmmoReloadIcon;           // ammo reload icon for a coax MG, so reload progress can be shown on HUD like a tank cannon reload
@@ -111,6 +114,7 @@ var     localized string    NeedReloadText;
 var     localized string    CanReloadText;
 var     localized string    DeathPenaltyText;
 var     localized string    CaptureBarUnlockText;
+var     localized string    NeedsClearedText;
 
 // User-configurable HUD settings
 var     globalconfig bool   bSimpleColours;         // for colourblind setting, i.e. red and blue only
@@ -228,7 +232,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(CaptureBarBackground.WidgetTexture);
     Level.AddPrecacheMaterial(CaptureBarOutline.WidgetTexture);
     Level.AddPrecacheMaterial(CaptureBarAttacker.WidgetTexture);
-    Level.AddPrecacheMaterial(CaptureBarAttackerRatio.WidgetTexture);
+    //Level.AddPrecacheMaterial(CaptureBarAttackerRatio.WidgetTexture);
     Level.AddPrecacheMaterial(CaptureBarTeamIcons[0]);
     Level.AddPrecacheMaterial(CaptureBarTeamIcons[1]);
 
@@ -3269,26 +3273,11 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
             DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 1, ObjLabel, DHGRI, i);
         }
 
-        // If the objective isn't completely captured, overlay a flashing icon from other team
-        if (DHGRI.DHObjectives[i].CompressedCapProgress != 0 && DHGRI.DHObjectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
+        // If both teams are present in the capture, then overlay a flashing (rifles crossing) icon
+        if (DHGRI.DHObjectives[i].bIsCritical)
         {
-            if (DHGRI.DHObjectives[i].CurrentCapTeam == ALLIES_TEAM_INDEX)
-            {
-                Widget = MapIconDispute[ALLIES_TEAM_INDEX];
-            }
-            else
-            {
-                Widget = MapIconDispute[AXIS_TEAM_INDEX];
-            }
-
-            if (DHGRI.DHObjectives[i].CompressedCapProgress == 1 || DHGRI.DHObjectives[i].CompressedCapProgress == 2)
-            {
-                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 4);
-            }
-            else if (DHGRI.DHObjectives[i].CompressedCapProgress == 3 || DHGRI.DHObjectives[i].CompressedCapProgress == 4)
-            {
-                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 5);
-            }
+            Widget = MapIconDispute[ALLIES_TEAM_INDEX];
+            DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 6);
         }
     }
 
@@ -3946,10 +3935,9 @@ simulated function DrawCaptureBar(Canvas Canvas)
     {
         AttackersProgress = AxisProgress;
         DefendersProgress = AlliesProgress;
-        CaptureBarAttacker.Tints[TeamIndex] = CaptureBarTeamColors[AXIS_TEAM_INDEX];
-        CaptureBarAttackerRatio.Tints[TeamIndex] = CaptureBarTeamColors[AXIS_TEAM_INDEX];
-        CaptureBarDefender.Tints[TeamIndex] = CaptureBarTeamColors[ALLIES_TEAM_INDEX];
-        CaptureBarDefenderRatio.Tints[TeamIndex] = CaptureBarTeamColors[ALLIES_TEAM_INDEX];
+        CaptureBarAttacker.Tints[TeamIndex] = class'DHColor'.default.TeamColors[0];
+        CaptureBarDefender.Tints[TeamIndex] = class'DHColor'.default.TeamColors[1];
+        CaptureBarDefenderRatio.Tints[TeamIndex] = class'DHColor'.default.TeamColors[1];
         CaptureBarIcons[0].WidgetTexture = MapAxisFlagIcon.WidgetTexture;
         CaptureBarIcons[0].TextureCoords = MapAxisFlagIcon.TextureCoords;
         CaptureBarIcons[1].WidgetTexture = MapAlliesFlagIcons[DHGRI.AlliedNationID].WidgetTexture;
@@ -3975,10 +3963,9 @@ simulated function DrawCaptureBar(Canvas Canvas)
     {
         AttackersProgress = AlliesProgress;
         DefendersProgress = AxisProgress;
-        CaptureBarAttacker.Tints[TeamIndex] = CaptureBarTeamColors[ALLIES_TEAM_INDEX];
-        CaptureBarAttackerRatio.Tints[TeamIndex] = CaptureBarTeamColors[ALLIES_TEAM_INDEX];
-        CaptureBarDefender.Tints[TeamIndex] = CaptureBarTeamColors[AXIS_TEAM_INDEX];
-        CaptureBarDefenderRatio.Tints[TeamIndex] = CaptureBarTeamColors[AXIS_TEAM_INDEX];
+        CaptureBarAttacker.Tints[TeamIndex] = class'DHColor'.default.TeamColors[1];
+        CaptureBarDefender.Tints[TeamIndex] = class'DHColor'.default.TeamColors[0];
+        CaptureBarDefenderRatio.Tints[TeamIndex] = class'DHColor'.default.TeamColors[0];
         CaptureBarIcons[0].WidgetTexture = MapAlliesFlagIcons[DHGRI.AlliedNationID].WidgetTexture;
         CaptureBarIcons[0].TextureCoords = MapAlliesFlagIcons[DHGRI.AlliedNationID].TextureCoords;
         CaptureBarIcons[1].WidgetTexture = MapAxisFlagIcon.WidgetTexture;
@@ -4012,10 +3999,6 @@ simulated function DrawCaptureBar(Canvas Canvas)
     CaptureBarAttacker.Scale = 150.0 / 256.0 * AttackersProgress + 53.0 / 256.0;
     CaptureBarDefender.Scale = 150.0 / 256.0 * DefendersProgress + 53.0 / 256.0;
 
-    // Convert attacker/defender ratios to widget scale (bar goes from 63 to 193, total width of texture is 256)
-    CaptureBarAttackerRatio.Scale = 130.0 / 256.0 * AttackersRatio + 63.0 / 256.0;
-    CaptureBarDefenderRatio.Scale = 130.0 / 256.0 * DefendersRatio + 63.0 / 256.0;
-
     // Check which icon to show on right side
     if (AttackersProgress ~= 1.0)
     {
@@ -4027,12 +4010,20 @@ simulated function DrawCaptureBar(Canvas Canvas)
     DrawSpriteWidget(Canvas, CaptureBarAttacker);
     DrawSpriteWidget(Canvas, CaptureBarDefender);
 
-    if (!DHGRI.DHObjectives[CurrentCapArea].bHideCaptureBarRatio)
+    // If both teams are present have the ratio bar area flash red
+    if (AttackersRatio > 0.0 && DefendersRatio > 0.0)
     {
-        DrawSpriteWidget(Canvas, CaptureBarAttackerRatio);
-        DrawSpriteWidget(Canvas, CaptureBarDefenderRatio);
+        EnemyPresentIcon.Tints[0].A = byte((Cos(2.0 * Pi * 1.0 * Level.TimeSeconds) * 128.0) + 128.0);
+        DrawSpriteWidget(Canvas, EnemyPresentIcon);
+
+        // Then display the capture bar (enemy present area as flashing red)
+        //CaptureBarAttackerRatio.Tints[TeamIndex] = EnemyPresentCaptureBarColor;
+        //CaptureBarAttackerRatio.Tints[TeamIndex].A = byte((Cos(2.0 * Pi * 1.0 * Level.TimeSeconds) * 128.0) + 128.0);
+        //CaptureBarAttackerRatio.Scale = 256.0; // Draw it 100% full
+        //DrawSpriteWidget(Canvas, CaptureBarAttackerRatio);
     }
 
+    // Overlay
     DrawSpriteWidget(Canvas, CaptureBarOutline);
 
     // Draw the left icon
@@ -4044,7 +4035,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
         DrawSpriteWidget(Canvas, CaptureBarIcons[1]);
     }
 
-    // Set up to draw the objective name
+    // Set up the objective name
     if (DHGRI.DHObjectives[CurrentCapArea].NoCapProgressTimeRemaining > 0)
     {
         // If the objective is preventing capture (no precap timer) show the duration instead of the objective name
@@ -4054,8 +4045,14 @@ simulated function DrawCaptureBar(Canvas Canvas)
     else
     {
         s = DHGRI.DHObjectives[CurrentCapArea].ObjName;
-        CurrentCapRequiredCappers = DHGRI.DHObjectives[CurrentCapArea].PlayersNeededToCapture;
+
+        if (AttackersRatio > 0.0 && DefendersRatio > 0.0)
+        {
+            s $= NeedsClearedText;
+        }
     }
+
+    CurrentCapRequiredCappers = DHGRI.DHObjectives[CurrentCapArea].PlayersNeededToCapture;
 
     // Add a display for the number of cappers in vs the amount needed to capture
     if (CurrentCapRequiredCappers > 1)
@@ -4445,6 +4442,10 @@ function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo LevelCoords, SpriteWidget Ic
         else if (FlashMode == 5)
         {
             Icon.WidgetTexture = MapIconsAltFastFlash;
+        }
+        else if (FlashMode == 6)
+        {
+            Icon.Tints[0].A = byte((Cos(2.0 * Pi * 1.0 * Level.TimeSeconds) * 128.0) + 128.0);
         }
     }
 
@@ -5011,13 +5012,17 @@ defaultproperties
     ResupplyZoneResupplyingVehicleIcon=(PosX=0.0,PosY=1.0,OffsetX=60,OffsetY=-220)
 
     // Capture bar variables
+    CaptureBarBackground=(WidgetTexture=Texture'DH_GUI_Tex.GUI.DH_CaptureBar_Background',TextureCoords=(X1=0,Y1=0,X2=255,Y2=63),TextureScale=0.5,DrawPivot=DP_LowerMiddle,PosX=0.5,PosY=0.98,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    CaptureBarOutline=(WidgetTexture=Texture'DH_GUI_Tex.GUI.DH_CaptureBar_Overlay',TextureCoords=(X1=0,Y1=0,X2=255,Y2=63),TextureScale=0.5,DrawPivot=DP_LowerMiddle,PosX=0.5,PosY=0.98,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    CaptureBarAttacker=(WidgetTexture=Texture'DH_GUI_Tex.GUI.DH_CaptureBar_Bar',TextureCoords=(X1=0,Y1=0,X2=255,Y2=63),TextureScale=0.5,DrawPivot=DP_LowerMiddle,PosX=0.5,PosY=0.98,OffsetX=0,OffsetY=0,ScaleMode=SM_Right,Scale=0.45,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    CaptureBarDefender=(WidgetTexture=Texture'DH_GUI_Tex.GUI.DH_CaptureBar_Bar',TextureCoords=(X1=0,Y1=0,X2=255,Y2=63),TextureScale=0.5,DrawPivot=DP_LowerMiddle,PosX=0.5,PosY=0.98,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=0.55,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     CaptureBarIcons[0]=(TextureScale=0.50,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=-100,OffsetY=-32,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     CaptureBarIcons[1]=(TextureScale=0.50,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=100,OffsetY=-32,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     CaptureBarTeamIcons(0)=texture'DH_GUI_Tex.GUI.GerCross'
     CaptureBarTeamIcons(1)=texture'DH_GUI_Tex.GUI.AlliedStar'
-    CaptureBarTeamColors(0)=(R=221,G=0,B=0)
-    CaptureBarTeamColors(1)=(R=49,G=57,B=223)
     CaptureBarUnlockText="Can be captured in: {0} seconds"
+    NeedsClearedText=" (Not Secured)"
+    EnemyPresentIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',TextureCoords=(X1=0,Y1=192,X2=63,Y2=255),TextureScale=0.3,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=166,OffsetY=-56,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Player figure/health icon
     NationHealthFigures(1)=texture'DH_GUI_Tex.GUI.US_player'
@@ -5045,6 +5050,8 @@ defaultproperties
     MapLevelOverlay=(RenderStyle=STY_Alpha,TextureCoords=(X2=511,Y2=511),TextureScale=1.0,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=125),Tints[1]=(B=255,G=255,R=255,A=255))
     MapScaleText=(RenderStyle=STY_Alpha,DrawPivot=DP_LowerRight,PosX=1.0,PosY=0.0375,WrapHeight=1.0,Tints[0]=(B=255,G=255,R=255,A=128),Tints[1]=(B=255,G=255,R=255,A=128))
     MapPlayerIcon=(WidgetTexture=FinalBlend'DH_InterfaceArt_tex.HUD.player_icon_map_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31))
+    MapIconDispute(0)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=128,Y1=192,X2=191,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapIconDispute(1)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=192,X2=63,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Map icons for team requests & markers
     MapIconMGResupplyRequest(0)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
