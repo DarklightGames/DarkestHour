@@ -6651,7 +6651,11 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vecto
 
     if (C != none)
     {
-        C.SetTeamIndex(GetTeamNum());
+        if (!C.bIsNeutral)
+        {
+            C.SetTeamIndex(GetTeamNum());
+        }
+
         C.UpdateAppearance();
     }
 }

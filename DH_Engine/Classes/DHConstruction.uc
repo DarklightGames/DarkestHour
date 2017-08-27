@@ -44,6 +44,7 @@ enum ETeamOwner
 var name StateName, OldStateName;
 
 var() ETeamOwner TeamOwner;     // This enum is for the levelers' convenience only.
+var bool bIsNeutral;            // If true, this construction is neutral (can be built by either team)
 var private int OldTeamIndex;   // Used by the client to fire off an event when the team index changes.
 var private int TeamIndex;
 var int TeamLimit;              // The amount of this type of construction that is allowed, per team.
@@ -850,8 +851,5 @@ defaultproperties
 //    HarmfulDamageTypes(1)=class'DH_SatchelDamType'
     HarmfulDamageTypes(2)=class'ROTankShellExplosionDamage'
     TatteredHealthThreshold=-1
-
-    // Squad
-    SquadMemberCountMinimum=0
 }
 
