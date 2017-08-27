@@ -105,7 +105,7 @@ var     int     TearDownProgress;
 var     int     TearDownProgressMax;
 
 // Broken
-var     int             BrokenLifespan;             // How long does the actor stay around after it's been killed?
+var     float           BrokenLifespan;             // How long does the actor stay around after it's been killed?
 var     StaticMesh      BrokenStaticMesh;           // Static mesh to use when the construction is broken
 var     sound           BrokenSound;                // Sound to play when the construction is broken
 var     float           BrokenSoundRadius;
@@ -460,6 +460,14 @@ simulated state Broken
 {
     simulated function BeginState()
     {
+        if (Role == ROLE_Authority)
+        {
+            UpdateAppearance();
+            StateName = GetStateName();
+            SetTimer(BrokenLifespan, false);
+            NetUpdateTime = Level.TimeSeconds - 1.0;
+        }
+
         if (Level.NetMode != NM_DedicatedServer)
         {
             if (BrokenEmitterClass != none)
@@ -489,18 +497,9 @@ simulated state Broken
             }
             else
             {
-                Lifespan = BrokenLifespan;
+                Destroy();
             }
         }
-    }
-
-Begin:
-    if (Role == ROLE_Authority)
-    {
-        UpdateAppearance();
-        StateName = GetStateName();
-        SetTimer(BrokenLifespan, false);
-        NetUpdateTime = Level.TimeSeconds - 1.0;
     }
 }
 

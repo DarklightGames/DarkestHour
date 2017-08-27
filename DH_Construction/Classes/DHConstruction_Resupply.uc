@@ -115,6 +115,9 @@ function static StaticMesh GetProxyStaticMesh(DHConstructionProxy CP)
 
 defaultproperties
 {
+    BrokenEmitterClass=class'DHShellShatterEffect'
+    bCanDieOfStagnation=false
+    BrokenLifespan=0.1
     StaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box'
     bShouldAlignToGround=true
     MenuName="Resupply Box"
@@ -126,4 +129,11 @@ defaultproperties
     SupplyCost=300
     bCanPlaceIndoors=true
     ResupplyCount=25
+    HealthMax=50
+    HarmfulDamageTypes(0)=class'ROArtilleryDamType'
+    HarmfulDamageTypes(1)=class'DHThrowableExplosiveDamageType'
+    HarmfulDamageTypes(2)=class'DHShellExplosionDamageType'
+    HarmfulDamageTypes(3)=class'DHShellImpactDamageType'
+    HarmfulDamageTypes(4)=class'DHMortarDamageType'
+    HarmfulDamageTypes(5)=class'DHBurningDamageType'
 }
