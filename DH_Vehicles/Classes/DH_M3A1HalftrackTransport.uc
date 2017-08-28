@@ -5,8 +5,6 @@
 
 class DH_M3A1HalftrackTransport extends DH_M3Halftrack;
 
-#exec OBJ LOAD FILE=..\Animations\DH_M3Halftrack_anm.ukx
-
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_M3Halftrack_anm.m3_body'
@@ -48,4 +46,5 @@ defaultproperties
     VehicleHudOccupantsY(11)=0.8
     VehicleNameString="M3A1 Halftrack"
     SpawnOverlay(0)=material'DH_M3Halftrack_tex.hud.m3a1_menu'
+    DestroyedVehicleMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_destro'
 }

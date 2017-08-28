@@ -26,7 +26,8 @@ var     DHConstructionManager       ConstructionManager;
 var     array<string>               FFViolationIDs;                         // Array of ROIDs that have been kicked once this session
 var()   config bool                 bSessionKickOnSecondFFViolation;
 var()   config bool                 bUseWeaponLocking;                      // Weapons can lock (preventing fire) for punishment
-var     int                         WeaponLockTimes[10];
+var     int                         WeaponLockTimeSecondsInterval;
+var     int                         WeaponLockTimeSecondsMaximum;
 
 var     bool                        bSkipPreStartTime;                      // Whether or not to skip the PreStartTime configured on the server
 
@@ -2111,7 +2112,7 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                 if (!DHPawn(KilledPawn).IsCombatSpawned())
                 {
                     DHKiller.WeaponLockViolations++;
-                    DHKiller.LockWeapons(WeaponLockTimes[Min(DHKiller.WeaponLockViolations, arraycount(WeaponLockTimes) - 1)]); // TODO: probably add 1 second as we are 'mid second' in game time
+                    DHKiller.LockWeapons(Min(WeaponLockTimeSecondsMaximum, DHKiller.WeaponLockViolations * WeaponLockTimeSecondsInterval)); // TODO: probably add 1 second as we are 'mid second' in game time
 
                     if (DHPlayerReplicationInfo(DHKiller.PlayerReplicationInfo) != none)
                     {
@@ -4949,14 +4950,6 @@ defaultproperties
     bTimeChangesAtZeroReinf=true
     bPublicPlay=true
 
-    WeaponLockTimes(0)=0
-    WeaponLockTimes(1)=3
-    WeaponLockTimes(2)=8
-    WeaponLockTimes(3)=16
-    WeaponLockTimes(4)=24
-    WeaponLockTimes(5)=32
-    WeaponLockTimes(6)=32
-    WeaponLockTimes(7)=45
-    WeaponLockTimes(8)=60
-    WeaponLockTimes(9)=120
+    WeaponLockTimeSecondsInterval=5
+    WeaponLockTimeSecondsMaximum=120
 }

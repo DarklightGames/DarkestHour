@@ -83,7 +83,6 @@ var(DHObjectiveClear) bool          bDisableWhenAxisClearObj;
 var(DHObjectiveVisual) bool         bHideOnMap;
 var(DHObjectiveVisual) bool         bHideOnMapWhenInactive;
 var(DHObjectiveVisual) bool         bHideLabelWhenInactive;
-var(DHObjectiveVisual) bool         bHideCaptureBarRatio;        // Hide the enemy/friendly player ratio on the capture bar for this objective
 
 // Award variables
 var(DHObjectiveAwards) bool         bResetDeathPenalties;        // will reset all players death penalty counts
@@ -824,6 +823,9 @@ function Timer()
     }
 
     GetPlayersInObjective(Num, NumTotal, NumForCheck);
+
+    // bIsCritical is used to determine if the objective has both teams present (repurposed as it is usually not used, but replicated anyways)
+    bIsCritical = Num[AXIS_TEAM_INDEX] > 0 && Num[ALLIES_TEAM_INDEX] > 0;
 
     // Handle is cleared logic and return if supposed to
     if (HandleClearedLogic(NumForCheck))

@@ -44,6 +44,7 @@ enum ETeamOwner
 var name StateName, OldStateName;
 
 var() ETeamOwner TeamOwner;     // This enum is for the levelers' convenience only.
+var bool bIsNeutral;            // If true, this construction is neutral (can be built by either team)
 var private int OldTeamIndex;   // Used by the client to fire off an event when the team index changes.
 var private int TeamIndex;
 var int TeamLimit;              // The amount of this type of construction that is allowed, per team.
@@ -104,7 +105,7 @@ var     int     TearDownProgress;
 var     int     TearDownProgressMax;
 
 // Broken
-var     int             BrokenLifespan;             // How long does the actor stay around after it's been killed?
+var     float           BrokenLifespan;             // How long does the actor stay around after it's been killed?
 var     StaticMesh      BrokenStaticMesh;           // Static mesh to use when the construction is broken
 var     sound           BrokenSound;                // Sound to play when the construction is broken
 var     float           BrokenSoundRadius;
@@ -161,9 +162,6 @@ replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
         TeamIndex, StateName;
-
-    reliable if (Role < ROLE_Authority)
-        ServerIncrementProgress;
 }
 
 simulated function OnConstructed();
@@ -189,7 +187,7 @@ final function SetTeamIndex(int TeamIndex)
     NetUpdateTime = Level.TimeSeconds - 1.0;
 }
 
-function ServerIncrementProgress()
+function IncrementProgress()
 {
     Progress += 1;
     OnProgressChanged();
@@ -462,6 +460,14 @@ simulated state Broken
 {
     simulated function BeginState()
     {
+        if (Role == ROLE_Authority)
+        {
+            UpdateAppearance();
+            StateName = GetStateName();
+            SetTimer(BrokenLifespan, false);
+            NetUpdateTime = Level.TimeSeconds - 1.0;
+        }
+
         if (Level.NetMode != NM_DedicatedServer)
         {
             if (BrokenEmitterClass != none)
@@ -491,18 +497,9 @@ simulated state Broken
             }
             else
             {
-                Lifespan = BrokenLifespan;
+                Destroy();
             }
         }
-    }
-
-Begin:
-    if (Role == ROLE_Authority)
-    {
-        UpdateAppearance();
-        StateName = GetStateName();
-        SetTimer(BrokenLifespan, false);
-        NetUpdateTime = Level.TimeSeconds - 1.0;
     }
 }
 
@@ -853,8 +850,5 @@ defaultproperties
 //    HarmfulDamageTypes(1)=class'DH_SatchelDamType'
     HarmfulDamageTypes(2)=class'ROTankShellExplosionDamage'
     TatteredHealthThreshold=-1
-
-    // Squad
-    SquadMemberCountMinimum=0
 }
 

@@ -30,8 +30,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     super.InitComponent(MyController, MyOwner);
 
-    PC = DHPlayer(PlayerOwner());
-
     for (i = 0; i < arraycount(b_SpawnPoints); ++i)
     {
         b_SpawnPoints[i].Tag = i;
@@ -41,30 +39,93 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         b_SpawnPoints[i].ContextMenu.OnSelect = MyContextSelect;
     }
 
-    if (PC == none)
+    if (Controller != none)
     {
-        return;
+        // "Hide" the mouse cursor by sticking it in a corner.
+        Controller.MouseX = 4096.0;
+        Controller.MouseY = 4096.0;
     }
 
-    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+    PC = DHPlayer(PlayerOwner());
 
-    if (PRI == none)
+    if (PC != none)
     {
-        return;
+        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+        GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+        MyHud = DHHud(PC.myHUD);
+    }
+}
+
+function GetMapCoords(vector Location, out float X, out float Y, optional float Width, optional float Height)
+{
+    local float  MapScale;
+    local vector MapCenter;
+
+    MapScale = FMax(1.0, Abs((GRI.SouthWestBounds - GRI.NorthEastBounds).X));
+    MapCenter = GRI.NorthEastBounds + ((GRI.SouthWestBounds - GRI.NorthEastBounds) * 0.5);
+    Location = DHHud(PlayerOwner().MyHud).GetAdjustedHudLocation(Location - MapCenter, false);
+
+    X = FClamp(0.5 + (Location.X / MapScale) - (Width / 2),
+               0.0,
+               1.0 - Width);
+
+    Y = FClamp(0.5 + (Location.Y / MapScale) - (Height / 2),
+               0.0,
+               1.0 - Height);
+}
+
+function UpdateSpawnPoints(int TeamIndex, int RoleIndex, int VehiclePoolIndex, int SpawnPointIndex)
+{
+    local GUI.eFontScale FS;
+    local float          X, Y;
+    local int            SquadIndex, i;
+
+    SquadIndex = -1;
+
+    if (PRI != none)
+    {
+        SquadIndex = PRI.SquadIndex;
     }
 
-    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
-
-    if (GRI == none)
+    // Spawn points
+    for (i = 0; i < arraycount(b_SpawnPoints); ++i)
     {
-        return;
-    }
+        if (GRI != none &&
+            GRI.SpawnPoints[i] != none &&
+            GRI.SpawnPoints[i].IsVisibleTo(TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex))
+        {
+            GetMapCoords(GRI.SpawnPoints[i].Location, X, Y, b_SpawnPoints[i].WinWidth, b_SpawnPoints[i].WinHeight);
 
-    MyHud = DHHud(PC.myHUD);
+            b_SpawnPoints[i].SetPosition(X, Y, b_SpawnPoints[i].WinWidth, b_SpawnPoints[i].WinHeight, true);
+            b_SpawnPoints[i].SetVisibility(true);
+            b_SpawnPoints[i].CenterText = GRI.SpawnPoints[i].GetMapText();
 
-    if (MyHud == none)
-    {
-        return;
+            if (GRI.SpawnPoints[i].CanSpawnWithParameters(GRI, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex, true))
+            {
+                b_SpawnPoints[i].MenuStateChange(MSAT_Blurry);
+            }
+            else
+            {
+                if (SpawnPointIndex != -1 && SpawnPointIndex == b_SpawnPoints[i].Tag)
+                {
+                    SelectSpawnPoint(-1);
+                }
+
+                b_SpawnPoints[i].MenuStateChange(MSAT_Disabled);
+            }
+
+            b_SpawnPoints[i].Style = Controller.GetStyle(GRI.SpawnPoints[i].GetMapStyleName(), FS);
+        }
+        else
+        {
+            // If spawn point that was previously selected is now hidden, deselect it.
+            b_SpawnPoints[i].SetVisibility(false);
+
+            if (SpawnPointIndex == b_SpawnPoints[i].Tag)
+            {
+                SelectSpawnPoint(-1);
+            }
+        }
     }
 }
 
@@ -72,19 +133,17 @@ function bool InternalOnDraw(Canvas C)
 {
     local ROHud.AbsoluteCoordsInfo SubCoords;
 
-    if (!bVisible)
+    if (bVisible)
     {
-        return false;
-    }
+        SubCoords.PosX = ActualLeft();
+        SubCoords.PosY = ActualTop();
+        SubCoords.Width = ActualWidth();
+        SubCoords.Height = ActualHeight();
 
-    SubCoords.PosX = ActualLeft();
-    SubCoords.PosY = ActualTop();
-    SubCoords.Width = ActualWidth();
-    SubCoords.Height = ActualHeight();
-
-    if (MyHud != none)
-    {
-        MyHud.DrawMap(C, SubCoords, PC);
+        if (MyHud != none)
+        {
+            MyHud.DrawMap(C, SubCoords, PC);
+        }
     }
 
     return false;
@@ -106,20 +165,18 @@ function InternalOnCheckChanged(GUIComponent Sender, bool bChecked)
 {
     local int i;
 
-    if (!bChecked)
+    if (bChecked)
     {
-        return;
-    }
-
-    for (i = 0; i < arraycount(b_SpawnPoints); ++i)
-    {
-        if (Sender == b_SpawnPoints[i])
+        for (i = 0; i < arraycount(b_SpawnPoints); ++i)
         {
-            OnSpawnPointChanged(b_SpawnPoints[i].Tag);
-        }
-        else
-        {
-            b_SpawnPoints[i].SetChecked(false);
+            if (Sender == b_SpawnPoints[i])
+            {
+                OnSpawnPointChanged(b_SpawnPoints[i].Tag);
+            }
+            else
+            {
+                b_SpawnPoints[i].SetChecked(false);
+            }
         }
     }
 }

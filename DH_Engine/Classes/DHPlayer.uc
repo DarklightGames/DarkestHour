@@ -100,6 +100,11 @@ struct SquadSignal
 
 var     SquadSignal             SquadSignals[2];
 
+// This is used to skip ResetInput calls in the GUIController.
+// Useful when you want to show a menu overtop of the game (eg. situation map)
+// without interrupting player input.
+var     bool                    bShouldSkipResetInput;
+
 replication
 {
     unreliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
@@ -2668,7 +2673,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
                 RI = DHRoleInfo(Game.GetRoleInfo(PlayerReplicationInfo.Team.TeamIndex, DesiredRole));
             }
 
-            if (GRI != none && GRI.CanSpawnWithParameters(NewSpawnPointIndex, GetTeamNum(), DesiredRole, PRI.SquadIndex, NewVehiclePoolIndex))
+            if (GRI != none && GRI.CanSpawnWithParameters(NewSpawnPointIndex, GetTeamNum(), DesiredRole, PRI.SquadIndex, NewVehiclePoolIndex, true))
             {
                 if (NewVehiclePoolIndex != VehiclePoolIndex)
                 {

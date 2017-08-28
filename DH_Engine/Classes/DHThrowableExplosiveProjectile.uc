@@ -26,7 +26,6 @@ var     float           FuzeLengthTimer;
 var     float           FailureRate;      // percentage of duds (expressed between 0.0 & 1.0)
 var     bool            bDud;
 var     bool            bAlreadyExploded; // this projectile already exploded & is waiting to be destroyed
-var     int             ShrapnelCount;
 var     sound           ExplosionSound[3];
 var     AvoidMarker     Fear;             // scares the bots away from this
 var     byte            Bounces;
@@ -48,7 +47,7 @@ replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
     reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
-        FuzeLengthTimer, Bounces;
+        FuzeLengthTimer, Bounces, bDud;
 }
 
 // From ROThrowableExplosiveProjectile & ROGrenadeProjectile, combined
@@ -63,6 +62,11 @@ simulated function PostBeginPlay()
         if (Instigator != none && Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)
         {
             Velocity = 0.25 * Velocity;
+        }
+
+        if (FRand() < FailureRate)
+        {
+            bDud = true;
         }
     }
 
@@ -82,21 +86,17 @@ simulated function Destroyed()
     local ROPawn        Victims;
     local vector        Start, Direction;
     local float         DamageScale, Distance;
-    local int           i;
+
+    if (bDud)
+    {
+        return;
+    }
 
     WeaponLight();
 
     PlaySound(ExplosionSound[Rand(3)],, 5.0,, ExplosionSoundRadius, 1.0, true); // TODO: skip sounds on ded server as played locally anyway? (probably other stuff too)
 
     Start = Location + vect(0.0, 0.0, 32.0);
-
-    if (ShrapnelCount > 0 && Role == ROLE_Authority)
-    {
-        for (i = 0; i < ShrapnelCount; ++i)
-        {
-            Spawn(class'ROShrapnelChunk',, '', Start);
-        }
-    }
 
     DoShakeEffect();
 
@@ -157,7 +157,9 @@ simulated function Tick(float DeltaTime)
     {
         FuzeLengthTimer -= DeltaTime;
 
-        if (FuzeLengthTimer <= 0.0)
+        // If it is a dud, then "explode" 10 seconds late
+        // This will make it so the explosive doesn't disappear for some time instead of right away
+        if ((bDud && FuzeLengthTimer <= -10.0) || (FuzeLengthTimer <= 0.0 && !bDud))
         {
             bAlreadyExploded = true;
             Explode(Location, vect(0.0, 0.0, 1.0));
@@ -571,6 +573,12 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 // From ROGrenadeProjectile
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
+    if (bDud)
+    {
+        Destroy();
+        return;
+    }
+
     BlowUp(HitLocation);
     Destroy();
 }
@@ -578,24 +586,20 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 // From ROGrenadeProjectile & ROSatchelChargeProjectile, combined
 function BlowUp(vector HitLocation)
 {
-    local vector Start;
-    local int    i;
-
     if (Role == ROLE_Authority)
     {
-        DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
+        if (bBounce)
+        {
+            // If the grenade hasn't landed, do 1/3 less damage
+            // This isn't supposed to be realistic, its supposed to make airbursts less effective so players are more apt to through grenades more authentically
+            DelayedHurtRadius(Damage * 0.6666, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
+        }
+        else
+        {
+            DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
+        }
 
         MakeNoise(1.0);
-
-        if (ShrapnelCount > 0)
-        {
-            Start = Location + (32.0 * vect(0.0, 0.0, 1.0));
-
-            for (i = 0; i < ShrapnelCount; ++i)
-            {
-                Spawn(class'ROShrapnelChunk',, '', Start);
-            }
-        }
     }
 }
 
@@ -822,8 +826,7 @@ defaultproperties
     DampenFactor=0.05
     DampenFactorParallel=0.8
     bFixedRotationDir=true
-    FailureRate=0.01 // failure rate is default to 1 in 100
-    ShrapnelCount=0
+    FailureRate=0.001 // 1 in 1000
     ImpactSound=sound'Inf_Weapons_Foley.grenadeland'
     ExplosionSoundRadius=300.0
     ExplosionDecal=class'ROEffects.GrenadeMark'

@@ -4,11 +4,17 @@
 //==============================================================================
 
 class DHConstructionSupplyAttachment extends Actor
+    abstract
     notplaceable;
 
+#exec OBJ LOAD FILE=../StaticMeshes/DH_Construction_stc.usx
+
+var int                 SupplyPointIndex;
 var private int         SupplyCount;
 var int                 SupplyCountMax;
 var int                 TeamIndex;
+
+var bool                bShouldShowOnMap;
 
 // Whether or not this supply attachment can be resupplied from a static resupply point.
 var bool                bCanBeResupplied;
@@ -25,8 +31,6 @@ var array<Pawn>         TouchingPawns;
 
 // The distance, in meters, a player must be within to have access to these supplies.
 var float               TouchDistanceInMeters;
-
-var array<StaticMesh>   StaticMeshes;
 
 //==============================================================================
 // Supply Generation
@@ -48,11 +52,20 @@ delegate OnSupplyCountChanged(DHConstructionSupplyAttachment CSA);
 // Overridden to bypass bizarre logic that necessitated the Owner be a Pawn.
 simulated function PostBeginPlay()
 {
+    local DHGameReplicationInfo GRI;
+
     super.PostBeginPlay();
 
     if (Role == ROLE_Authority)
     {
         SupplyCount = SupplyCountMax;
+
+        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+        if (bShouldShowOnMap && GRI != none)
+        {
+            SupplyPointIndex = GRI.AddSupplyPoint(self);
+        }
 
         SetTimer(1.0, true);
     }
@@ -73,15 +86,37 @@ simulated function int GetSupplyCount()
     return SupplyCount;
 }
 
-function StaticMesh GetStaticMeshForSupplyCount(int SupplyCount)
+static function StaticMesh GetStaticMeshForSupplyCount(LevelInfo Level, int TeamIndex, int SupplyCount)
 {
-    local float SupplyPercent;
-    local int StaticMeshIndex;
+    //local float SupplyPercent;
+    //local int StaticMeshIndex;
+    local DH_LevelInfo LI;
 
-    SupplyPercent = (float(SupplyCount) / SupplyCountMax);
-    StaticMeshIndex = Clamp(SupplyPercent * StaticMeshes.Length, 0, StaticMeshes.Length - 1);
+    //SupplyPercent = (float(SupplyCount) / SupplyCountMax);
+    //StaticMeshIndex = Clamp(SupplyPercent * StaticMeshes.Length, 0, StaticMeshes.Length - 1);
+    if (TeamIndex == AXIS_TEAM_INDEX)
+    {
+        return StaticMesh'DH_Construction_stc.Supply_Cache.GER_Supply_cache_full';
+    }
+    else if (TeamIndex == ALLIES_TEAM_INDEX)
+    {
+        LI = class'DH_LevelInfo'.static.GetInstance(Level);
 
-    return StaticMeshes[StaticMeshIndex];
+        if (LI != none)
+        {
+            switch (LI.AlliedNation)
+            {
+                case NATION_USA:
+                    return StaticMesh'DH_Construction_stc.Supply_Cache.USA_Supply_cache_full';
+                case NATION_Britain:
+                case NATION_Canada:
+                case NATION_USSR:
+                    return StaticMesh'DH_Construction_stc.Supply_Cache.USA_Supply_cache_full';
+            }
+        }
+    }
+
+    return none;
 }
 
 function SetSupplyCount(int Amount)
@@ -89,7 +124,7 @@ function SetSupplyCount(int Amount)
     SupplyCount = Clamp(Amount, 0, SupplyCountMax);
 
     // Update visualization
-    SetStaticMesh(GetStaticMeshForSupplyCount(SupplyCount));
+    SetStaticMesh(GetStaticMeshForSupplyCount(Level, TeamIndex, SupplyCount));
     NetUpdateTime = Level.TimeSeconds - 1.0;
 
     OnSupplyCountChanged(self);
@@ -100,6 +135,7 @@ function Destroyed()
     local int i;
     local DHPawn P;
     local DHVehicle V;
+    local DHGameReplicationInfo GRI;
 
     for (i = 0; i < TouchingPawns.Length; ++i)
     {
@@ -118,6 +154,13 @@ function Destroyed()
         }
     }
 
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI != none && SupplyPointIndex != -1)
+    {
+        GRI.RemoveSupplyPoint(self);
+    }
+
     super.Destroyed();
 }
 
@@ -128,6 +171,18 @@ function Timer()
     local DHVehicle V;
     local int i, Index, SuppliesToDeposit;
     local array<Pawn> NewTouchingPawns;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI != none && SupplyPointIndex != -1)
+    {
+        // Update supply point information in game replication info.
+        GRI.SupplyPoints[SupplyPointIndex].TeamIndex = TeamIndex;
+        GRI.SupplyPoints[SupplyPointIndex].Location.X = Location.X;
+        GRI.SupplyPoints[SupplyPointIndex].Location.Y = Location.Y;
+        GRI.SupplyPoints[SupplyPointIndex].Location.Z = Rotation.Yaw;
+    }
 
     NewTouchingPawns.Length = 0;
 
@@ -221,6 +276,7 @@ function bool Resupply()
 
 defaultproperties
 {
+    SupplyPointIndex=-1
     SupplyCount=2000
     SupplyCountMax=2000
     TouchDistanceInMeters=50
@@ -229,7 +285,4 @@ defaultproperties
     DrawType=DT_StaticMesh
     bAcceptsProjectors=true
     bUseLightingFromBase=true
-    StaticMeshes(0)=StaticMesh'DH_Military_stc.Ammo.cratepile1'
-    StaticMeshes(1)=StaticMesh'DH_Military_stc.Ammo.cratepile2'
-    StaticMeshes(2)=StaticMesh'DH_Military_stc.Ammo.cratepile3'
 }

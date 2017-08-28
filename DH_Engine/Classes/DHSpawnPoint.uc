@@ -220,7 +220,7 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
     local class<ROVehicle>  VehicleClass;
     local DHRoleInfo        RI;
 
-    if (!super.CanSpawnWithParameters(GRI, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex))
+    if (!super.CanSpawnWithParameters(GRI, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex, bSkipTimeCheck))
     {
         return false;
     }

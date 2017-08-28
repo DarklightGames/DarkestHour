@@ -60,6 +60,9 @@ var     material            SpeakerIconMaterial;
 var     material            NeedAssistIconMaterial;
 var     material            NeedAmmoIconMaterial;
 
+// Objective HUD
+var     SpriteWidget        EnemyPresentIcon;
+
 // Vehicle HUD
 var     SpriteWidget        VehicleLockedIcon;                  // icon showing that an armored vehicle has been locked, stopping any new players entering tank crew positions
 var     SpriteWidget        VehicleAltAmmoReloadIcon;           // ammo reload icon for a coax MG, so reload progress can be shown on HUD like a tank cannon reload
@@ -77,6 +80,9 @@ var     SpriteWidget        SquadOrderAttackIcon;
 var     SpriteWidget        SquadOrderDefendIcon;
 var     array<texture>      PlayerNumberIconTextures;
 var     color               VehiclePositionIsSquadmateColor;
+
+// Supply Points
+var     SpriteWidget        SupplyPointIcon;
 
 // Construction
 var     SpriteWidget        VehicleSuppliesIcon;
@@ -108,6 +114,7 @@ var     localized string    NeedReloadText;
 var     localized string    CanReloadText;
 var     localized string    DeathPenaltyText;
 var     localized string    CaptureBarUnlockText;
+var     localized string    NeedsClearedText;
 
 // User-configurable HUD settings
 var     globalconfig bool   bSimpleColours;         // for colourblind setting, i.e. red and blue only
@@ -225,7 +232,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(CaptureBarBackground.WidgetTexture);
     Level.AddPrecacheMaterial(CaptureBarOutline.WidgetTexture);
     Level.AddPrecacheMaterial(CaptureBarAttacker.WidgetTexture);
-    Level.AddPrecacheMaterial(CaptureBarAttackerRatio.WidgetTexture);
+    //Level.AddPrecacheMaterial(CaptureBarAttackerRatio.WidgetTexture);
     Level.AddPrecacheMaterial(CaptureBarTeamIcons[0]);
     Level.AddPrecacheMaterial(CaptureBarTeamIcons[1]);
 
@@ -676,11 +683,11 @@ simulated function DrawHudPassC(Canvas C)
     }
 
     // Weapon rest icon
-    if (PawnOwner.bRestingWeapon)
+    if (PawnOwner.Weapon != none && PawnOwner.bRestingWeapon)
     {
         DrawSpriteWidget(C, WeaponRestingIcon);
     }
-    else if (PawnOwner.bCanRestWeapon)
+    else if (PawnOwner.Weapon != none && PawnOwner.bCanRestWeapon)
     {
         DrawSpriteWidget(C, WeaponCanRestIcon);
     }
@@ -1059,7 +1066,6 @@ function DrawSupplyCount(Canvas C)
     }
     else if (V != none)
     {
-        // TODO: get the BASE vehicle?
         TouchingSupplyCount = V.TouchingSupplyCount;
     }
     else if (VWP != none)
@@ -1808,6 +1814,71 @@ function DrawSignals(Canvas C)
         C.SetPos(ScreenLocation.X - 8, ScreenLocation.Y - 8);
         C.DrawTile(SignalMaterial, 24, 24, 0, 0, 31, 31);
     }
+}
+
+exec function ShowObjectives()
+{
+    local GUIController GUIController;
+    local int MenuIndex;
+    local DHPlayer PC;
+
+    if (PlayerOwner == none || PlayerOwner.Player == none)
+    {
+        return;
+    }
+
+    PC = DHPlayer(PlayerOwner);
+
+    MenuIndex = -1;
+    GUIController = GUIController(PlayerOwner.Player.GUIController);
+
+    if (GUIController != none)
+    {
+        MenuIndex = GUIController.FindMenuIndexByName("DH_Interface.DHSituationMapGUIPage");
+    }
+
+    if (MenuIndex != -1)
+    {
+        MouseInterfaceStopCapturing();
+        bShowObjectives = false;
+        GUIController.RemoveMenuAt(MenuIndex);
+
+        if (PC != none)
+        {
+            PC.bShouldSkipResetInput = false;
+        }
+    }
+    else
+    {
+        MouseInterfaceStartCapturing();
+        bShowObjectives = true;
+
+        if (PC != none)
+        {
+            PC.bShouldSkipResetInput = true;
+        }
+
+        PlayerOwner.ClientOpenMenu("DH_Interface.DHSituationMapGUIPage");
+    }
+}
+
+simulated function HideObjectives()
+{
+    ShowObjectives();
+}
+
+// Modified both of these to stop bCapturingMouse from being set, which would
+// draw a mouse cursor.
+function MouseInterfaceStartCapturing()
+{
+    bHaveAtLeastOneValidMouseUpdate = false;
+    ROPlayer(PlayerOwner).bHudCapturesMouseInputs = true;
+}
+
+function MouseInterfaceStopCapturing()
+{
+    ROPlayer(PlayerOwner).bHudCapturesMouseInputs = false;
+    MouseInterfaceUnlockPlayerRotation();
 }
 
 // Modified to show names of friendly players within 25m if they are talking, are in our squad, or if we can resupply them or assist them with loading a rocket
@@ -2819,6 +2890,25 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
         }
     }
 
+    // Draw supply points
+    for (i = 0; i < arraycount(DHGRI.SupplyPoints); ++i)
+    {
+        if (DHGRI.SupplyPoints[i].bIsActive &&
+            (DHGRI.SupplyPoints[i].TeamIndex == NEUTRAL_TEAM_INDEX || DHGRI.SupplyPoints[i].TeamIndex == OwnerTeam))
+        {
+            if (DHGRI.SupplyPoints[i].Actor != none)
+            {
+                Temp = DHGRI.SupplyPoints[i].Actor.Location;
+            }
+            else
+            {
+                Temp = DHGRI.SupplyPoints[i].Location;
+            }
+
+            DrawIconOnMap(C, SubCoords, SupplyPointIcon, MyMapScale, Temp, MapCenter);
+        }
+    }
+
     if (Player != none)
     {
         // Draw the marked arty strike
@@ -3183,26 +3273,11 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
             DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 1, ObjLabel, DHGRI, i);
         }
 
-        // If the objective isn't completely captured, overlay a flashing icon from other team
-        if (DHGRI.DHObjectives[i].CompressedCapProgress != 0 && DHGRI.DHObjectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
+        // If both teams are present in the capture, then overlay a flashing (rifles crossing) icon
+        if (DHGRI.DHObjectives[i].bIsCritical)
         {
-            if (DHGRI.DHObjectives[i].CurrentCapTeam == ALLIES_TEAM_INDEX)
-            {
-                Widget = MapIconDispute[ALLIES_TEAM_INDEX];
-            }
-            else
-            {
-                Widget = MapIconDispute[AXIS_TEAM_INDEX];
-            }
-
-            if (DHGRI.DHObjectives[i].CompressedCapProgress == 1 || DHGRI.DHObjectives[i].CompressedCapProgress == 2)
-            {
-                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 4);
-            }
-            else if (DHGRI.DHObjectives[i].CompressedCapProgress == 3 || DHGRI.DHObjectives[i].CompressedCapProgress == 4)
-            {
-                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 5);
-            }
+            Widget = MapIconDispute[ALLIES_TEAM_INDEX];
+            DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 6);
         }
     }
 
@@ -3442,537 +3517,6 @@ simulated function float GetMapIconYaw(float WorldYaw)
 // Renders the objectives on the HUD similar to the scoreboard
 simulated function DrawObjectives(Canvas C)
 {
-    local DHPlayerReplicationInfo PRI;
-    local AbsoluteCoordsInfo      MapCoords, SubCoords;
-    local SpriteWidget  Widget;
-    local DHPlayer      Player;
-    local int           i, j, OwnerTeam, ObjCount, SecondaryObjCount;
-//  local bool          bShowRally; // removed as rally points not used in 6.0, so no point checking - uncomment if rally functionality added back later
-    local bool          bShowArtillery;
-    local bool          bShowResupply;
-    local bool          bShowArtyCoords;
-    local bool          bShowNeutralObj;
-    local bool          bShowMGResupplyRequest;
-    local bool          bShowHelpRequest;
-    local bool          bShowAttackDefendRequest;
-    local bool          bShowArtyStrike;
-    local bool          bShowDestroyableItems;
-    local bool          bShowDestroyedItems;
-    local bool          bShowVehicleResupply;
-    local bool          bHasSecondaryObjectives;
-    local float         XL, YL, YL_one, Time;
-    // PSYONIX: DEBUG
-    local float         X, Y, StrX, StrY;
-    local string        s;
-    // AT Gun
-    local bool          bShowATGun;
-    local DHRoleInfo    RI;
-
-    // Avoid access none if DHGRI isn't set yet
-    if (DHGRI == none)
-    {
-        return;
-    }
-
-    // Update remaining round time
-    CurrentTime = DHGRI.GetRoundTimeRemaining();
-
-    // Get actor references
-    Player = DHPlayer(PlayerOwner);
-    PRI = DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo);
-
-    if (PRI != none)
-    {
-        RI = DHRoleInfo(PRI.RoleInfo);
-    }
-
-    // Get player team - if none, we won't draw team-specific information on the map
-    if (PlayerOwner != none)
-    {
-        OwnerTeam = PlayerOwner.GetTeamNum();
-    }
-    else
-    {
-        OwnerTeam = 255;
-    }
-
-    // Set map coords based on resolution - we want to keep a 4:3 aspect ratio for the map
-    MapCoords.Height = C.ClipY * 0.9;
-    MapCoords.PosY = C.ClipY * 0.05;
-    MapCoords.Width = MapCoords.Height * 4.0 / 3.0;
-    MapCoords.PosX = (C.ClipX - MapCoords.Width) / 2.0;
-
-    // Calculate map offset (for animation)
-    if (bAnimateMapIn)
-    {
-        AnimateMapCurrentPosition -= (Level.TimeSeconds - HudLastRenderTime) / AnimateMapSpeed;
-
-        if (AnimateMapCurrentPosition <= 0.0)
-        {
-            AnimateMapCurrentPosition = 0.0;
-            bAnimateMapIn = false;
-        }
-    }
-    else if (bAnimateMapOut)
-    {
-        AnimateMapCurrentPosition += (Level.TimeSeconds - HudLastRenderTime) / AnimateMapSpeed;
-
-        if (AnimateMapCurrentPosition >= default.AnimateMapCurrentPosition)
-        {
-            AnimateMapCurrentPosition = default.AnimateMapCurrentPosition;
-            bAnimateMapOut = false;
-        }
-    }
-
-    MapCoords.PosX += C.ClipX * AnimateMapCurrentPosition;
-
-    // Draw map background
-    DrawSpriteWidgetClipped(C, MapBackground, MapCoords, true);
-
-    // Calculate absolute coordinates of level map
-    GetAbsoluteCoordinatesAlt(MapCoords, MapLegendImageCoords, SubCoords);
-    MapLevelImageCoordinates = SubCoords; // save coordinates for use in menu page
-
-    // Draw coordinates text on sides of the map
-    for (i = 0; i < 9; ++i)
-    {
-        MapCoordTextXWidget.PosX = (float(i) + 0.5) / 9.0;
-        MapCoordTextXWidget.Text = MapCoordTextX[i];
-        DrawTextWidgetClipped(C, MapCoordTextXWidget, SubCoords);
-
-        MapCoordTextYWidget.PosY = MapCoordTextXWidget.PosX;
-        MapCoordTextYWidget.Text = MapCoordTextY[i];
-        DrawTextWidgetClipped(C, MapCoordTextYWidget, SubCoords);
-    }
-
-    // Draw the overhead map
-    DrawMap(C, SubCoords, Player);
-
-    // Draw the timer legend
-    DrawTextWidgetClipped(C, MapTimerTitle, MapCoords, XL, YL, YL_one);
-
-    // Calculate seconds & minutes
-    Time = CurrentTime;
-    MapTimerTexts[3].Text = string(int(Time % 10.0));
-    Time /= 10.0;
-    MapTimerTexts[2].Text = string(int(Time % 6.0));
-    Time /= 6.0;
-    MapTimerTexts[1].Text = string(int(Time % 10.0));
-    Time /= 10.0;
-    MapTimerTexts[0].Text = string(int(Time));
-
-    C.Font = GetFontSizeIndex(C, -2);
-
-    // Draw the time
-    for (i = 0; i < 4; ++i)
-    {
-        DrawTextWidgetClipped(C, MapTimerTexts[i], MapCoords, XL, YL, YL_one);
-    }
-
-    C.Font = GetSmallMenuFont(C);
-
-    // Calc legend coords
-    GetAbsoluteCoordinatesAlt(MapCoords, MapLegendCoords, SubCoords);
-
-    // Draw legend title
-    DrawTextWidgetClipped(C, MapLegendTitle, SubCoords, XL, YL, YL_one);
-
-    // Draw legend elements
-    LegendItemsIndex = 2; // no item at position #0 and #1 (reserved for title)
-
-    DrawLegendElement(C, SubCoords, MapAxisFlagIcon, LegendAxisObjectiveText);
-    DrawLegendElement(C, SubCoords, MapAlliesFlagIcons[DHGRI.AlliedNationID], LegendAlliesObjectiveText);
-
-    // Draw objectives
-    for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
-    {
-        if (DHGRI.DHObjectives[i] != none &&
-            DHGRI.DHObjectives[i].ObjState == OBJ_Neutral)
-        {
-            bShowNeutralObj = true;
-            break;
-        }
-    }
-
-    if (bShowNeutralObj || bShowAllItemsInMapLegend)
-    {
-        DrawLegendElement(C, SubCoords, MapIconNeutral, LegendNeutralObjectiveText);
-    }
-
-    // Artillery
-    if (OwnerTeam == AXIS_TEAM_INDEX)
-    {
-        for (i = 0; i < arraycount(DHGRI.AxisRadios); ++i)
-        {
-            if (DHGRI.AxisRadios[i] != none && (!DHGRI.AxisRadios[i].IsA('DHArtilleryTrigger') || DHArtilleryTrigger(DHGRI.AxisRadios[i]).bShouldShowOnSituationMap))
-            {
-                bShowArtillery = true;
-                break;
-            }
-        }
-    }
-    else if (OwnerTeam == ALLIES_TEAM_INDEX)
-    {
-        for (i = 0; i < arraycount(DHGRI.AlliedRadios); ++i)
-        {
-            if (DHGRI.AlliedRadios[i] != none && (!DHGRI.AlliedRadios[i].IsA('DHArtilleryTrigger') || DHArtilleryTrigger(DHGRI.AlliedRadios[i]).bShouldShowOnSituationMap))
-            {
-                bShowArtillery = true;
-                break;
-            }
-        }
-    }
-
-    // Draw player-carried Artillery radio icons if player is an artillery officer
-    if (RI != none && RI.bIsArtilleryOfficer)
-    {
-        if (OwnerTeam == AXIS_TEAM_INDEX)
-        {
-            for (i = 0; i < arraycount(DHGRI.CarriedAxisRadios); ++i)
-            {
-                if (DHGRI.CarriedAxisRadios[i] != none)
-                {
-                    bShowArtillery = true;
-                    break;
-                }
-
-            }
-        }
-        else if (OwnerTeam == ALLIES_TEAM_INDEX)
-        {
-            for (i = 0; i < arraycount(DHGRI.CarriedAlliedRadios); ++i)
-            {
-                if (DHGRI.CarriedAlliedRadios[i] != none)
-                {
-                    bShowArtillery = true;
-                    break;
-                }
-            }
-        }
-    }
-
-    if (bShowArtillery || bShowAllItemsInMapLegend)
-    {
-        DrawLegendElement(C, SubCoords, MapIconRadio, LegendArtilleryRadioText);
-    }
-
-    if ((bShowArtillery || bShowAllItemsInMapLegend) && RI.bIsArtilleryOfficer)
-    {
-        DrawLegendElement(C, SubCoords, MapIconCarriedRadio, LegendCarriedArtilleryRadioText);
-    }
-
-    if (bShowResupply || bShowAllItemsInMapLegend)
-    {
-        DrawLegendElement(C, SubCoords, MapIconResupply, LegendResupplyAreaText);
-    }
-
-    // Resupply
-    for (i = 0; i < arraycount(DHGRI.ResupplyAreas); ++i)
-    {
-        if (DHGRI.ResupplyAreas[i].bActive && (DHGRI.ResupplyAreas[i].Team == OwnerTeam || DHGRI.ResupplyAreas[i].Team == NEUTRAL_TEAM_INDEX))
-        {
-            if (DHGRI.ResupplyAreas[i].ResupplyType == 1)
-            {
-                // Tank resupply icon
-                bShowVehicleResupply = true;
-            }
-            else
-            {
-                // Player resupply icon
-                bShowResupply = true;
-            }
-        }
-    }
-
-    if (bShowVehicleResupply)
-    {
-        DrawLegendElement(C, SubCoords, MapIconVehicleResupply, LegendResupplyAreaText);
-    }
-/*
-    // Rally Points // removed as rally points not used in 6.0, so no point checking - uncomment if rally functionality added back later
-    for (i = 0; i < arraycount(DHGRI.AxisRallyPoints); ++i)
-    {
-        if ((OwnerTeam == AXIS_TEAM_INDEX && DHGRI.AxisRallyPoints[i].RallyPointLocation != vect(0.0, 0.0, 0.0)) ||
-            (OwnerTeam == ALLIES_TEAM_INDEX && DHGRI.AlliedRallyPoints[i].RallyPointLocation != vect(0.0, 0.0, 0.0)))
-        {
-            bShowRally = true;
-            break;
-        }
-    }
-
-    if ((bShowRally || bShowAllItemsInMapLegend) && OwnerTeam != 255)
-    {
-        DrawLegendElement(C, SubCoords, MapIconRally[OwnerTeam], LegendRallyPointText);
-    }
-*/
-    // Artillery coords & destroyable items [?]
-    if (Player != none)
-    {
-        // Draw the marked arty strike
-        if (Player.SavedArtilleryCoords != vect(0.0, 0.0, 0.0))
-        {
-            bShowArtyCoords = true;
-        }
-
-        // Draw the destroyable/destroyed targets
-        if (Player.Destroyables.Length != 0)
-        {
-            for (i = 0; i < Player.Destroyables.Length; ++i)
-            {
-                if (Player.Destroyables[i] == none || (Player.Destroyables[i].IsA('DHDestroyableSM') && !DHDestroyableSM(Player.Destroyables[i]).bActive))
-                {
-                    continue;
-                }
-
-                if (Player.Destroyables[i].bHidden || Player.Destroyables[i].bDamaged)
-                {
-                    bShowDestroyedItems = true;
-                }
-                else
-                {
-                    bShowDestroyableItems = true;
-                }
-            }
-        }
-    }
-
-    if (bShowArtyCoords || bShowAllItemsInMapLegend)
-    {
-        Widget = MapIconArtyStrike;
-        Widget.Tints[TeamIndex].A = 64;
-        DrawLegendElement(C, SubCoords, Widget, LegendSavedArtilleryText);
-        Widget.Tints[TeamIndex].A = 255;
-    }
-
-    // Artillery strike
-    if ((OwnerTeam == AXIS_TEAM_INDEX || OwnerTeam == ALLIES_TEAM_INDEX) && DHGRI.ArtyStrikeLocation[OwnerTeam] != vect(0.0, 0.0, 0.0))
-    {
-        bShowArtyStrike = true;
-    }
-
-    if (bShowArtyStrike || bShowAllItemsInMapLegend)
-    {
-        DrawLegendElement(C, SubCoords, MapIconArtyStrike, LegendArtyStrikeText);
-    }
-
-    if ((bShowMGResupplyRequest || bShowAllItemsInMapLegend) && OwnerTeam != 255)
-    {
-        DrawLegendElement(C, SubCoords, MapIconMGResupplyRequest[OwnerTeam], LegendMGResupplyText);
-    }
-
-    // Requests
-    if (OwnerTeam == AXIS_TEAM_INDEX)
-    {
-        for (i = 0; i < arraycount(DHGRI.AxisHelpRequests); ++i)
-        {
-            switch (DHGRI.AxisHelpRequests[i].RequestType)
-            {
-                case 0: // help request at objective
-                    bShowHelpRequest = true;
-                    break;
-
-                case 1: // attack request
-                case 2: // defend request
-                    bShowAttackDefendRequest = true;
-                    break;
-
-                case 3: // MG resupply requests
-                    bShowMGResupplyRequest = true;
-                    break;
-
-                case 4: // help request at coords
-                    bShowHelpRequest = true;
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    }
-    else if (OwnerTeam == ALLIES_TEAM_INDEX)
-    {
-        for (i = 0; i < arraycount(DHGRI.AlliedHelpRequests); ++i)
-        {
-            switch (DHGRI.AlliedHelpRequests[i].RequestType)
-            {
-                case 0: // help request at objective
-                    bShowHelpRequest = true;
-                    break;
-
-                case 1: // attack request
-                case 2: // defend request
-                    bShowAttackDefendRequest = true;
-                    break;
-
-                case 3: // MG resupply requests
-                    bShowMGResupplyRequest = true;
-                    break;
-
-                case 4: // help request at coords
-                    bShowHelpRequest = true;
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    }
-
-    if (bShowHelpRequest || bShowAllItemsInMapLegend)
-    {
-        DrawLegendElement(C, SubCoords, MapIconHelpRequest, LegendHelpRequestText);
-    }
-
-    if (bShowAttackDefendRequest || bShowAllItemsInMapLegend)
-    {
-        DrawLegendElement(C, SubCoords, MapIconAttackDefendRequest, LegendOrderTargetText);
-    }
-
-    if (bShowDestroyableItems || bShowAllItemsInMapLegend)
-    {
-        DrawLegendElement(C, SubCoords, MapIconDestroyableItem, LegendDestroyableItemText);
-    }
-
-    if (bShowDestroyedItems || bShowAllItemsInMapLegend)
-    {
-        DrawLegendElement(C, SubCoords, MapIconDestroyedItem, LegendDestroyedItemText);
-    }
-
-    if (bShowATGun)
-    {
-        DrawLegendElement(C, SubCoords, MapIconATGun, LegendATGunText);
-    }
-
-    // Calc objective text box coords
-    GetAbsoluteCoordinatesAlt(MapCoords, MapObjectivesCoords, SubCoords);
-
-    // See if there are any secondary objectives
-    for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
-    {
-        if (DHGRI.DHObjectives[i] == none || !DHGRI.DHObjectives[i].bActive)
-        {
-            continue;
-        }
-
-        if (!DHGRI.DHObjectives[i].bRequired)
-        {
-            bHasSecondaryObjectives = true;
-            break;
-        }
-    }
-
-    // Draw objective text box header
-    if (bHasSecondaryObjectives)
-    {
-        DrawTextWidgetClipped(C, MapRequiredObjectivesTitle, SubCoords, XL, YL, YL_one);
-    }
-    else
-    {
-        DrawTextWidgetClipped(C, MapObjectivesTitle, SubCoords, XL, YL, YL_one);
-    }
-
-    MapObjectivesTexts.OffsetY = 0;
-
-    // Draw objective texts
-    ObjCount = 1;
-    C.Font = GetSmallMenuFont(C);
-
-    // Modified so objectives don't draw off the situational map, it will show "and more..." if there are too many active
-    for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
-    {
-        if (DHGRI.DHObjectives[i] == none || !DHGRI.DHObjectives[i].bActive || !DHGRI.DHObjectives[i].bRequired)
-        {
-            continue;
-        }
-
-        if (DHGRI.DHObjectives[i].ObjState != OwnerTeam)
-        {
-            if (DHGRI.DHObjectives[i].AttackerDescription == "")
-            {
-                MapObjectivesTexts.Text = ObjCount $ "." @ "Attack" @ DHGRI.DHObjectives[i].ObjName;
-            }
-            else
-            {
-                MapObjectivesTexts.Text = ObjCount $ "." @ DHGRI.DHObjectives[i].AttackerDescription;
-            }
-        }
-        else
-        {
-            if (DHGRI.DHObjectives[i].DefenderDescription == "")
-            {
-                MapObjectivesTexts.Text = ObjCount $ "." @ "Defend" @ DHGRI.DHObjectives[i].ObjName;
-            }
-            else
-            {
-                MapObjectivesTexts.Text = ObjCount $ "." @ DHGRI.DHObjectives[i].DefenderDescription;
-            }
-        }
-
-        // Can only show so many objectives before they draw off map, so lets leave the last spot to indicate there are more...
-        if (j == MAX_OBJ_ON_SIT - 1)
-        {
-            MapObjectivesTexts.Text = AndMoreText;
-        }
-
-        // Don't draw anymore objective text as it would be off the situational map
-        if (j < MAX_OBJ_ON_SIT)
-        {
-            DrawTextWidgetClipped(C, MapObjectivesTexts, SubCoords, XL, YL, YL_one);
-            MapObjectivesTexts.OffsetY += YL + YL_one * 0.5;
-            ++j;
-        }
-
-        ObjCount++;
-    }
-
-    // List secondary objectives if any
-    if (bHasSecondaryObjectives)
-    {
-        MapObjectivesTexts.OffsetY += YL + YL_one * 0.5;
-        MapObjectivesTexts.OffsetY += YL + YL_one * 0.5;
-        MapSecondaryObjectivesTitle.OffsetY = MapObjectivesTexts.OffsetY;
-        DrawTextWidgetClipped(C, MapSecondaryObjectivesTitle, SubCoords, XL, YL, YL_one);
-
-        for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
-        {
-            if (DHGRI.DHObjectives[i] == none || !DHGRI.DHObjectives[i].bActive || DHGRI.DHObjectives[i].bRequired)
-            {
-                continue;
-            }
-
-            if (DHGRI.DHObjectives[i].ObjState != OwnerTeam)
-            {
-                MapObjectivesTexts.Text = (SecondaryObjCount + 1) $ "." @ DHGRI.DHObjectives[i].AttackerDescription;
-            }
-            else
-            {
-                MapObjectivesTexts.Text = (SecondaryObjCount + 1) $ "." @ DHGRI.DHObjectives[i].DefenderDescription;
-            }
-
-            DrawTextWidgetClipped(C, MapObjectivesTexts, SubCoords, XL, YL, YL_one);
-            MapObjectivesTexts.OffsetY += YL + YL_one * 0.5;
-            SecondaryObjCount++;
-        }
-    }
-
-    // Draw 'objectives missing' if no objectives found - for debug only
-    if (ObjCount == 1)
-    {
-        MapObjectivesTexts.Text = "(OBJECTIVES MISSING)";
-        DrawTextWidgetClipped(C, MapObjectivesTexts, SubCoords, XL, YL, YL_one);
-    }
-
-    // Draw the instruction header
-    s = class'ROTeamGame'.static.ParseLoadingHintNoColor(SituationMapInstructionsText, PlayerController(Owner));
-    C.DrawColor = WhiteColor;
-    C.Font = GetLargeMenuFont(C);
-
-    X = C.ClipX * 0.5;
-    Y = C.ClipY * 0.01;
-
-    C.TextSize(s, StrX, StrY);
-    C.SetPos(X - StrX / 2.0, Y);
-    C.DrawTextClipped(s);
 }
 
 simulated function DrawLocationHits(Canvas C, ROPawn P)
@@ -4391,10 +3935,9 @@ simulated function DrawCaptureBar(Canvas Canvas)
     {
         AttackersProgress = AxisProgress;
         DefendersProgress = AlliesProgress;
-        CaptureBarAttacker.Tints[TeamIndex] = CaptureBarTeamColors[AXIS_TEAM_INDEX];
-        CaptureBarAttackerRatio.Tints[TeamIndex] = CaptureBarTeamColors[AXIS_TEAM_INDEX];
-        CaptureBarDefender.Tints[TeamIndex] = CaptureBarTeamColors[ALLIES_TEAM_INDEX];
-        CaptureBarDefenderRatio.Tints[TeamIndex] = CaptureBarTeamColors[ALLIES_TEAM_INDEX];
+        CaptureBarAttacker.Tints[TeamIndex] = class'DHColor'.default.TeamColors[0];
+        CaptureBarDefender.Tints[TeamIndex] = class'DHColor'.default.TeamColors[1];
+        CaptureBarDefenderRatio.Tints[TeamIndex] = class'DHColor'.default.TeamColors[1];
         CaptureBarIcons[0].WidgetTexture = MapAxisFlagIcon.WidgetTexture;
         CaptureBarIcons[0].TextureCoords = MapAxisFlagIcon.TextureCoords;
         CaptureBarIcons[1].WidgetTexture = MapAlliesFlagIcons[DHGRI.AlliedNationID].WidgetTexture;
@@ -4420,10 +3963,9 @@ simulated function DrawCaptureBar(Canvas Canvas)
     {
         AttackersProgress = AlliesProgress;
         DefendersProgress = AxisProgress;
-        CaptureBarAttacker.Tints[TeamIndex] = CaptureBarTeamColors[ALLIES_TEAM_INDEX];
-        CaptureBarAttackerRatio.Tints[TeamIndex] = CaptureBarTeamColors[ALLIES_TEAM_INDEX];
-        CaptureBarDefender.Tints[TeamIndex] = CaptureBarTeamColors[AXIS_TEAM_INDEX];
-        CaptureBarDefenderRatio.Tints[TeamIndex] = CaptureBarTeamColors[AXIS_TEAM_INDEX];
+        CaptureBarAttacker.Tints[TeamIndex] = class'DHColor'.default.TeamColors[1];
+        CaptureBarDefender.Tints[TeamIndex] = class'DHColor'.default.TeamColors[0];
+        CaptureBarDefenderRatio.Tints[TeamIndex] = class'DHColor'.default.TeamColors[0];
         CaptureBarIcons[0].WidgetTexture = MapAlliesFlagIcons[DHGRI.AlliedNationID].WidgetTexture;
         CaptureBarIcons[0].TextureCoords = MapAlliesFlagIcons[DHGRI.AlliedNationID].TextureCoords;
         CaptureBarIcons[1].WidgetTexture = MapAxisFlagIcon.WidgetTexture;
@@ -4457,10 +3999,6 @@ simulated function DrawCaptureBar(Canvas Canvas)
     CaptureBarAttacker.Scale = 150.0 / 256.0 * AttackersProgress + 53.0 / 256.0;
     CaptureBarDefender.Scale = 150.0 / 256.0 * DefendersProgress + 53.0 / 256.0;
 
-    // Convert attacker/defender ratios to widget scale (bar goes from 63 to 193, total width of texture is 256)
-    CaptureBarAttackerRatio.Scale = 130.0 / 256.0 * AttackersRatio + 63.0 / 256.0;
-    CaptureBarDefenderRatio.Scale = 130.0 / 256.0 * DefendersRatio + 63.0 / 256.0;
-
     // Check which icon to show on right side
     if (AttackersProgress ~= 1.0)
     {
@@ -4472,12 +4010,20 @@ simulated function DrawCaptureBar(Canvas Canvas)
     DrawSpriteWidget(Canvas, CaptureBarAttacker);
     DrawSpriteWidget(Canvas, CaptureBarDefender);
 
-    if (!DHGRI.DHObjectives[CurrentCapArea].bHideCaptureBarRatio)
+    // If both teams are present have the ratio bar area flash red
+    if (AttackersRatio > 0.0 && DefendersRatio > 0.0)
     {
-        DrawSpriteWidget(Canvas, CaptureBarAttackerRatio);
-        DrawSpriteWidget(Canvas, CaptureBarDefenderRatio);
+        EnemyPresentIcon.Tints[0].A = byte((Cos(2.0 * Pi * 1.0 * Level.TimeSeconds) * 128.0) + 128.0);
+        DrawSpriteWidget(Canvas, EnemyPresentIcon);
+
+        // Then display the capture bar (enemy present area as flashing red)
+        //CaptureBarAttackerRatio.Tints[TeamIndex] = EnemyPresentCaptureBarColor;
+        //CaptureBarAttackerRatio.Tints[TeamIndex].A = byte((Cos(2.0 * Pi * 1.0 * Level.TimeSeconds) * 128.0) + 128.0);
+        //CaptureBarAttackerRatio.Scale = 256.0; // Draw it 100% full
+        //DrawSpriteWidget(Canvas, CaptureBarAttackerRatio);
     }
 
+    // Overlay
     DrawSpriteWidget(Canvas, CaptureBarOutline);
 
     // Draw the left icon
@@ -4489,7 +4035,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
         DrawSpriteWidget(Canvas, CaptureBarIcons[1]);
     }
 
-    // Set up to draw the objective name
+    // Set up the objective name
     if (DHGRI.DHObjectives[CurrentCapArea].NoCapProgressTimeRemaining > 0)
     {
         // If the objective is preventing capture (no precap timer) show the duration instead of the objective name
@@ -4499,8 +4045,14 @@ simulated function DrawCaptureBar(Canvas Canvas)
     else
     {
         s = DHGRI.DHObjectives[CurrentCapArea].ObjName;
-        CurrentCapRequiredCappers = DHGRI.DHObjectives[CurrentCapArea].PlayersNeededToCapture;
+
+        if (AttackersRatio > 0.0 && DefendersRatio > 0.0)
+        {
+            s $= NeedsClearedText;
+        }
     }
+
+    CurrentCapRequiredCappers = DHGRI.DHObjectives[CurrentCapArea].PlayersNeededToCapture;
 
     // Add a display for the number of cappers in vs the amount needed to capture
     if (CurrentCapRequiredCappers > 1)
@@ -4890,6 +4442,10 @@ function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo LevelCoords, SpriteWidget Ic
         else if (FlashMode == 5)
         {
             Icon.WidgetTexture = MapIconsAltFastFlash;
+        }
+        else if (FlashMode == 6)
+        {
+            Icon.Tints[0].A = byte((Cos(2.0 * Pi * 1.0 * Level.TimeSeconds) * 128.0) + 128.0);
         }
     }
 
@@ -5456,13 +5012,17 @@ defaultproperties
     ResupplyZoneResupplyingVehicleIcon=(PosX=0.0,PosY=1.0,OffsetX=60,OffsetY=-220)
 
     // Capture bar variables
+    CaptureBarBackground=(WidgetTexture=Texture'DH_GUI_Tex.GUI.DH_CaptureBar_Background',TextureCoords=(X1=0,Y1=0,X2=255,Y2=63),TextureScale=0.5,DrawPivot=DP_LowerMiddle,PosX=0.5,PosY=0.98,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    CaptureBarOutline=(WidgetTexture=Texture'DH_GUI_Tex.GUI.DH_CaptureBar_Overlay',TextureCoords=(X1=0,Y1=0,X2=255,Y2=63),TextureScale=0.5,DrawPivot=DP_LowerMiddle,PosX=0.5,PosY=0.98,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    CaptureBarAttacker=(WidgetTexture=Texture'DH_GUI_Tex.GUI.DH_CaptureBar_Bar',TextureCoords=(X1=0,Y1=0,X2=255,Y2=63),TextureScale=0.5,DrawPivot=DP_LowerMiddle,PosX=0.5,PosY=0.98,OffsetX=0,OffsetY=0,ScaleMode=SM_Right,Scale=0.45,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    CaptureBarDefender=(WidgetTexture=Texture'DH_GUI_Tex.GUI.DH_CaptureBar_Bar',TextureCoords=(X1=0,Y1=0,X2=255,Y2=63),TextureScale=0.5,DrawPivot=DP_LowerMiddle,PosX=0.5,PosY=0.98,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=0.55,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     CaptureBarIcons[0]=(TextureScale=0.50,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=-100,OffsetY=-32,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     CaptureBarIcons[1]=(TextureScale=0.50,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=100,OffsetY=-32,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     CaptureBarTeamIcons(0)=texture'DH_GUI_Tex.GUI.GerCross'
     CaptureBarTeamIcons(1)=texture'DH_GUI_Tex.GUI.AlliedStar'
-    CaptureBarTeamColors(0)=(R=221,G=0,B=0)
-    CaptureBarTeamColors(1)=(R=49,G=57,B=223)
     CaptureBarUnlockText="Can be captured in: {0} seconds"
+    NeedsClearedText=" (Not Secured)"
+    EnemyPresentIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',TextureCoords=(X1=0,Y1=192,X2=63,Y2=255),TextureScale=0.3,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=166,OffsetY=-56,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Player figure/health icon
     NationHealthFigures(1)=texture'DH_GUI_Tex.GUI.US_player'
@@ -5490,6 +5050,8 @@ defaultproperties
     MapLevelOverlay=(RenderStyle=STY_Alpha,TextureCoords=(X2=511,Y2=511),TextureScale=1.0,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=125),Tints[1]=(B=255,G=255,R=255,A=255))
     MapScaleText=(RenderStyle=STY_Alpha,DrawPivot=DP_LowerRight,PosX=1.0,PosY=0.0375,WrapHeight=1.0,Tints[0]=(B=255,G=255,R=255,A=128),Tints[1]=(B=255,G=255,R=255,A=128))
     MapPlayerIcon=(WidgetTexture=FinalBlend'DH_InterfaceArt_tex.HUD.player_icon_map_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31))
+    MapIconDispute(0)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=128,Y1=192,X2=191,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapIconDispute(1)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=192,X2=63,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Map icons for team requests & markers
     MapIconMGResupplyRequest(0)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
@@ -5501,6 +5063,8 @@ defaultproperties
     MapIconMortarSmokeTarget=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=191,Y1=0,X2=255,Y2=64),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconMortarArrow=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.mortar-arrow-final',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.1,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconMortarHit=(WidgetTexture=texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(Y1=64,X2=63,Y2=127),TextureScale=0.05,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+
+    SupplyPointIcon=(WidgetTexture=texture'DH_GUI_tex.GUI.supply_point',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Map icons for squad orders
     SquadOrderAttackIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.HUD.squad_order_attack',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.03,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=0,B=0,A=255),Tints[1]=(R=255,G=0,B=0,A=255))

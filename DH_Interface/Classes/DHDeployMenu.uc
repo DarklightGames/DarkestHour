@@ -249,7 +249,7 @@ function Timer()
     // opens it very quickly. This timer will sit and wait until the GRI is
     // confirmed to be present before populating any lists or running any
     // regular timer logic.
-    local byte Team;
+    local int TeamIndex;
 
     if (GRI == none)
     {
@@ -279,15 +279,15 @@ function Timer()
             // fact we can't send initialization parameters to the menu.
             if (PC.ForcedTeamSelectOnRoleSelectPage != -5)
             {
-                Team = PC.ForcedTeamSelectOnRoleSelectPage;
+                TeamIndex = PC.ForcedTeamSelectOnRoleSelectPage;
                 PC.ForcedTeamSelectOnRoleSelectPage = -5;
             }
             else
             {
-                Team = PC.GetTeamNum();
+                TeamIndex = PC.GetTeamNum();
             }
 
-            OnTeamChanged(Team);
+            OnTeamChanged(TeamIndex);
 
             // Colin: Automatically select the player's spawn point.
             p_Map.SelectSpawnPoint(PC.SpawnPointIndex);
@@ -371,24 +371,6 @@ function UpdateRoundStatus()
     }
 }
 
-function GetMapCoords(vector Location, out float X, out float Y, optional float Width, optional float Height)
-{
-    local float  MapScale;
-    local vector MapCenter;
-
-    MapScale = FMax(1.0, Abs((GRI.SouthWestBounds - GRI.NorthEastBounds).X));
-    MapCenter = GRI.NorthEastBounds + ((GRI.SouthWestBounds - GRI.NorthEastBounds) * 0.5);
-    Location = DHHud(PlayerOwner().MyHud).GetAdjustedHudLocation(Location - MapCenter, false);
-
-    X = FClamp(0.5 + (Location.X / MapScale) - (Width / 2),
-               0.0,
-               1.0 - Width);
-
-    Y = FClamp(0.5 + (Location.Y / MapScale) - (Height / 2),
-               0.0,
-               1.0 - Height);
-}
-
 function int GetSelectedVehiclePoolIndex()
 {
     local UInteger Index;
@@ -405,72 +387,19 @@ function int GetSelectedVehiclePoolIndex()
 
 function UpdateSpawnPoints()
 {
-    local GUI.eFontScale FS;
-    local float          X, Y;
-    local int            RoleIndex, SquadIndex, i;
-    local byte           Team;
+    local int RoleIndex;
+    local byte TeamIndex;
 
     if (GRI != none)
     {
-        RoleIndex = GRI.GetRoleIndexAndTeam(DHRoleInfo(li_Roles.GetObject()), Team);
+        RoleIndex = GRI.GetRoleIndexAndTeam(DHRoleInfo(li_Roles.GetObject()), TeamIndex);
     }
     else
     {
         RoleIndex = -1;
     }
 
-    if (PRI != none)
-    {
-        SquadIndex = PRI.SquadIndex;
-    }
-    else
-    {
-        SquadIndex = -1;
-    }
-
-    // TODO: move this inside map component so that it's self contained
-
-    // Spawn points
-    for (i = 0; i < arraycount(p_Map.b_SpawnPoints); ++i)
-    {
-        if (GRI != none &&
-            GRI.SpawnPoints[i] != none &&
-            GRI.SpawnPoints[i].IsVisibleTo(CurrentTeam, RoleIndex, SquadIndex, GetSelectedVehiclePoolIndex()))
-        {
-            GetMapCoords(GRI.SpawnPoints[i].Location, X, Y, p_Map.b_SpawnPoints[i].WinWidth, p_Map.b_SpawnPoints[i].WinHeight);
-
-            p_Map.b_SpawnPoints[i].SetPosition(X, Y, p_Map.b_SpawnPoints[i].WinWidth, p_Map.b_SpawnPoints[i].WinHeight, true);
-            p_Map.b_SpawnPoints[i].SetVisibility(true);
-            p_Map.b_SpawnPoints[i].CenterText = GRI.SpawnPoints[i].GetMapText();
-
-            if (GRI.SpawnPoints[i].CanSpawnWithParameters(GRI, CurrentTeam, RoleIndex, SquadIndex, GetSelectedVehiclePoolIndex()))
-            {
-                p_Map.b_SpawnPoints[i].MenuStateChange(MSAT_Blurry);
-            }
-            else
-            {
-                if (SpawnPointIndex != -1 && SpawnPointIndex == p_Map.b_SpawnPoints[i].Tag)
-                {
-                    p_Map.SelectSpawnPoint(-1);
-                }
-
-                p_Map.b_SpawnPoints[i].MenuStateChange(MSAT_Disabled);
-            }
-
-            p_Map.b_SpawnPoints[i].Style = Controller.GetStyle(GRI.SpawnPoints[i].GetMapStyleName(), FS);
-        }
-        else
-        {
-            // If spawn point that was previously selected is now hidden,
-            // deselect it.
-            p_Map.b_SpawnPoints[i].SetVisibility(false);
-
-            if (SpawnPointIndex == p_Map.b_SpawnPoints[i].Tag)
-            {
-                p_Map.SelectSpawnPoint(-1);
-            }
-        }
-    }
+    p_Map.UpdateSpawnPoints(TeamIndex, RoleIndex, GetSelectedVehiclePoolIndex(), SpawnPointIndex);
 }
 
 function UpdateStatus()
@@ -1386,18 +1315,18 @@ function UpdateVehicleImage()
     }
 }
 
-function ChangeTeam(byte Team)
+function ChangeTeam(int TeamIndex)
 {
-    if (Team != CurrentTeam) // confirm that we are actually changing teams
+    if (TeamIndex != CurrentTeam) // confirm that we are actually changing teams
     {
         SetButtonsEnabled(false);
-        PC.ServerSetPlayerInfo(Team, 255, 0, 0, -1, -1);
+        PC.ServerSetPlayerInfo(TeamIndex, 255, 0, 0, -1, -1);
     }
 }
 
-function OnTeamChanged(byte Team)
+function OnTeamChanged(int TeamIndex)
 {
-    CurrentTeam = Team;
+    CurrentTeam = TeamIndex;
 
     PopulateRoles();
     PopulateVehicles();

@@ -214,6 +214,21 @@ function Timer()
                 if (UnblockedCount > SQUAD_RALLY_POINTS_ACTIVE_MAX)
                 {
                     ActiveSquadRallyPoints[i].BlockReason = SPBR_Full;
+
+                    // If a squad rally point is blocked because it isn't the
+                    // primary squad rally point at the moment, let's award an
+                    // additional spawn every 30 seconds.
+                    ActiveSquadRallyPoints[i].SpawnAccrualTimer += 1;
+
+                    if (ActiveSquadRallyPoints[i].SpawnAccrualTimer >= ActiveSquadRallyPoints[i].SpawnAccrualThreshold)
+                    {
+                        ActiveSquadRallyPoints[i].SpawnAccrualTimer = 0;
+                        ActiveSquadRallyPoints[i].SpawnsRemaining = Min(ActiveSquadRallyPoints[i].SpawnsRemaining + 1, class'DHSpawnPoint_SquadRallyPoint'.default.SpawnsRemaining);
+                    }
+                }
+                else
+                {
+                    ActiveSquadRallyPoints[i].SpawnAccrualTimer = 0;
                 }
             }
         }

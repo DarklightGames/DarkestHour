@@ -6,6 +6,8 @@
 class DHThrownExplosiveFire extends DHProjectileFire
     abstract;
 
+const   RANDOM_FUSE_TIME = 0.5;
+
 var     float   MinimumThrowSpeed;      // minimum speed the explosive will have if just clicking, with no hold time
 var     float   MaximumThrowSpeed;      // the maximum speed an explosive can have with holding (not including pawn speed)
 var     float   SpeedFromHoldingPerSec; // speed increase projectile will have for each second the fire button is held
@@ -267,7 +269,7 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
             // The grenade was active & we'll need to set the remaining fuze length
             if (DHThrowableExplosiveProjectile(SpawnedProjectile) != none)
             {
-                DHThrowableExplosiveProjectile(SpawnedProjectile).FuzeLengthTimer = FMax(0.1, DHExplosiveWeapon(Weapon).CurrentFuzeTime);
+                DHThrowableExplosiveProjectile(SpawnedProjectile).FuzeLengthTimer = FMax(0.1, DHExplosiveWeapon(Weapon).CurrentFuzeTime) + RandRange(0.0, RANDOM_FUSE_TIME);
             }
 
             // Have the grenade go in the direction the instigator was going
@@ -297,6 +299,8 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
         {
             SetFuseTime += AddedFuseTime;
         }
+
+        SetFuseTime += RandRange(0.0, RANDOM_FUSE_TIME);
 
         DHThrowableExplosiveProjectile(SpawnedProjectile).FuzeLengthTimer = SetFuseTime;
     }

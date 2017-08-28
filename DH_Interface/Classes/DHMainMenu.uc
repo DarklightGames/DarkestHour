@@ -10,7 +10,7 @@ var()   config string           MenuSong;
 var automated       FloatingImage           i_background, i_Overlay, i_Announcement;
 var automated       GUIButton               b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Host, b_Quit;
 var automated       GUISectionBackground    sb_MainMenu, sb_HelpMenu, sb_ConfigFixMenu, sb_ShowVersion, sb_Social;
-var automated       GUIButton               b_Credits, b_Manual, b_Demos, b_Website, b_Back, b_MOTDTitle, b_Facebook, b_GitHub, b_SteamCommunity, b_Patreon;
+var automated       GUIButton               b_Credits, b_Manual, b_Demos, b_Website, b_Back, b_MOTDTitle, b_Facebook, b_GitHub, b_SteamCommunity, b_Patreon, b_Discord;
 var automated       GUILabel                l_Version;
 var automated       GUIImage                i_DHTextLogo;
 var automated       DHGUIScrollTextBox      tb_MOTDContent;
@@ -26,6 +26,7 @@ var     string                  FacebookURL;
 var     string                  GitHubURL;
 var     string                  SteamCommunityURL;
 var     string                  PatreonURL;
+var     string                  DiscordURL;
 
 var     localized string        QuickPlayString;
 var     localized string        JoinTestServerString;
@@ -61,6 +62,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     sb_Social.ManageComponent(b_GitHub);
     sb_Social.ManageComponent(b_SteamCommunity);
     sb_Social.ManageComponent(b_Patreon);
+    sb_Social.ManageComponent(b_Discord);
 
     c_MOTD.ManageComponent(tb_MOTDContent);
     c_MOTD.ManageComponent(b_MOTDTitle);
@@ -296,6 +298,10 @@ function bool ButtonClick(GUIComponent Sender)
 
         case b_Patreon:
             PlayerOwner().ConsoleCommand("START" @ default.PatreonURL);
+            break;
+
+        case b_Discord:
+            PlayerOwner().ConsoleCommand("START" @ default.DiscordURL);
             break;
 
         case i_Overlay:
@@ -538,7 +544,7 @@ defaultproperties
         WinWidth=0.4
         WinHeight=0.0875
         OnPreDraw=sbSection1.InternalPreDraw
-        NumColumns=4
+        NumColumns=5
     End Object
     sb_Social=SocialSection
 
@@ -654,7 +660,7 @@ defaultproperties
     b_MOTDTitle=MOTDTitleButton
 
     Begin Object Class=GUIGFXButton Name=FacebookButton
-        WinWidth=0.05
+        WinWidth=0.04
         WinHeight=0.075
         WinLeft=0.875
         WinTop=0.925
@@ -670,7 +676,7 @@ defaultproperties
     b_Facebook=FacebookButton
 
     Begin Object Class=GUIGFXButton Name=GitHubButton
-        WinWidth=0.05
+        WinWidth=0.04
         WinHeight=0.075
         WinLeft=0.875
         WinTop=0.925
@@ -685,7 +691,7 @@ defaultproperties
     b_GitHub=GitHubButton
 
     Begin Object Class=GUIGFXButton Name=SteamCommunityButton
-        WinWidth=0.05
+        WinWidth=0.04
         WinHeight=0.075
         WinLeft=0.875
         WinTop=0.925
@@ -700,7 +706,7 @@ defaultproperties
     b_SteamCommunity=SteamCommunityButton
 
     Begin Object Class=GUIGFXButton Name=PatreonButton
-        WinWidth=0.05
+        WinWidth=0.04
         WinHeight=0.075
         WinLeft=0.875
         WinTop=0.925
@@ -713,6 +719,21 @@ defaultproperties
         StyleName="TextLabel"
     End Object
     b_Patreon=PatreonButton
+
+    Begin Object Class=GUIGFXButton Name=DiscordButton
+        WinWidth=0.04
+        WinHeight=0.075
+        WinLeft=0.875
+        WinTop=0.925
+        OnClick=DHMainMenu.ButtonClick
+        Graphic=texture'DH_GUI_Tex.MainMenu.discord'
+        bTabStop=true
+        Position=ICP_Center
+        Hint="Join us in Discord!"
+        bRepeatClick=false
+        StyleName="TextLabel"
+    End Object
+    b_Discord=DiscordButton
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection3
         WinWidth=0.261250
@@ -800,5 +821,6 @@ defaultproperties
     FacebookURL="http://www.facebook.com/darkesthourgame"
     SteamCommunityURL="http://steamcommunity.com/app/1280"
     PatreonURL="http://www.patreon.com/darkesthourgame"
+    DiscordURL="http://discord.gg/EEwFhtk"
     ControlsChangedMessage="New controls have been added to the game. As a result, your previous control bindings may have been changed.||Do you want to review your control settings?"
 }

@@ -215,5 +215,7 @@ defaultproperties
     RandomAttachment=(AttachBone="body",bHasCollision=true)
     RandomAttachOptions(0)=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_bumper_01',PercentChance=50)
     RandomAttachOptions(1)=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_bumper_02',PercentChance=50)
+
+    ShadowZOffset=32.0
 }
 

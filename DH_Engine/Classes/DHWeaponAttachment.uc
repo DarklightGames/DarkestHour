@@ -41,7 +41,7 @@ simulated function PostNetBeginPlay()
     }
 }
 
-// Modified to we spawn the hit effects from a replicated pre-launch trace, when a changed value of mHitLocation is received
+// Modified so we spawn the hit effects from a replicated pre-launch trace, when a changed value of mHitLocation is received
 // Now doing this here instead of letting ThirdPersonEffects() do it, as it does for other net modes, to solve a bug
 // Net client gets ThirdPersonEffects() called by native code before we have the new mHitLocation, so the effect used to spawn at the location of the last hit!
 // Also modified so non-owning net clients pick up changed value of bBarrelSteamActive here & it triggers toggling the steam emitter on/off

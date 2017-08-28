@@ -169,7 +169,7 @@ replication
         ServerStartEngine, ServerDropSupplies;
 
     // Variables the server will replicate to the client that owns this actor
-    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
+    reliable if (bNetDirty && Role == ROLE_Authority)
         TouchingSupplyCount;
 }
 
@@ -2682,10 +2682,6 @@ simulated function SpawnVehicleAttachments()
             if (SupplyAttachment != none)
             {
                 SupplyAttachment.TeamIndex = VehicleTeam;
-                SupplyAttachment.bCanBeResupplied = true;
-                SupplyAttachment.bCanGenerateSupplies = true;
-                SupplyAttachment.SupplyDepositInterval = 15;    // TODO: magic numbers
-                SupplyAttachment.SupplyGenerationRate = 100;
             }
         }
 
@@ -3700,6 +3696,7 @@ defaultproperties
     // Supply
     SupplyDropCountMax=2000 // TODO: make lower in the future!
     SupplyDropInterval=5
+    TouchingSupplyCount=-1
 
     // Miscellaneous
     VehicleMass=3.0

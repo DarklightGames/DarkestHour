@@ -51,11 +51,6 @@ defaultproperties
     bCanThrow=false
 
     DisplayFOV=80.0
-    IronSightDisplayFOV=70.0 // TODO: not sure these FOVs settings are relevant? (query, Matt, June 2017)
-    PlayerFOVZoom=10.0       //
-    bPlayerFOVZooms=true     //
-    ZoomInTime=0.4
-    ZoomOutTime=0.2
     bCanSway=false
 
     CrawlStartAnim="crawlF" // TODO: get a proper "crawlIn" animation

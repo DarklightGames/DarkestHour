@@ -6651,7 +6651,11 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vecto
 
     if (C != none)
     {
-        C.SetTeamIndex(GetTeamNum());
+        if (!C.bIsNeutral)
+        {
+            C.SetTeamIndex(GetTeamNum());
+        }
+
         C.UpdateAppearance();
     }
 }
@@ -6866,16 +6870,6 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
     }
 
     IdleTime = Level.TimeSeconds;
-}
-
-exec function PokeRadius(int R)
-{
-    PokeTerrainRadius = R;
-}
-
-exec function PokeDepth(int D)
-{
-    PokeTerrainDepth = D;
 }
 
 defaultproperties
