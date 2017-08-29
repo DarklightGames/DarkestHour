@@ -128,14 +128,16 @@ var     VehicleAttachment           RandomAttachment;        // option for a vis
 var     array<RandomAttachOption>   RandomAttachOptions;     // possible static meshes to use with the random decorative attachment
 var     byte                        RandomAttachmentIndex;   // the attachment index number selected randomly to be spawned for this vehicle
 var     class<DHResupplyAttachment> ResupplyAttachmentClass; // option for a functioning (not decorative) resupply actor attachment
-var     name                        ResupplyAttachBone;      // bone name for attaching resupply attachment
+var     name                        ResupplyAttachmentBone;      // bone name for attaching resupply attachment
 var     DHResupplyAttachment        ResupplyAttachment;      // reference to any resupply actor
 var     float                       ShadowZOffset;           // vertical position offset for shadow, allowing shadow to be tuned (origin position in hull mesh affects shadow location)
 
 // Supply
 var     class<DHConstructionSupplyAttachment>   SupplyAttachmentClass;
-var     name                                    SupplyAttachBone;
+var     name                                    SupplyAttachmentBone;
 var     DHConstructionSupplyAttachment          SupplyAttachment;
+var     vector                                  SupplyAttachmentOffset;
+var     rotator                                 SupplyAttachmentRotation;
 var     int                                     SupplyDropInterval;         // The amount of seconds that must transpire between supply drops.
 var     int                                     SupplyDropCountMax;          // How many supplies this vehicle can drop at a time
 var     array<DHConstructionSupplyAttachment>   TouchingSupplyAttachments;  // List of supply attachments we are in range of
@@ -2460,9 +2462,9 @@ simulated function SpawnVehicleAttachments()
 
     if (Role == ROLE_Authority)
     {
-        if (ResupplyAttachmentClass != none && ResupplyAttachBone != '' && ResupplyAttachment == none)
+        if (ResupplyAttachmentClass != none && ResupplyAttachmentBone != '' && ResupplyAttachment == none)
         {
-            ResupplyAttachment = DHResupplyAttachment(SpawnAttachment(ResupplyAttachmentClass, ResupplyAttachBone));
+            ResupplyAttachment = DHResupplyAttachment(SpawnAttachment(ResupplyAttachmentClass, ResupplyAttachmentBone));
 
             if (ResupplyAttachment != none)
             {
@@ -2470,9 +2472,9 @@ simulated function SpawnVehicleAttachments()
             }
         }
 
-        if (SupplyAttachmentClass != none && SupplyAttachBone != '' && SupplyAttachment == none)
+        if (SupplyAttachmentClass != none && SupplyAttachmentBone != '' && SupplyAttachment == none)
         {
-            SupplyAttachment = DHConstructionSupplyAttachment(SpawnAttachment(SupplyAttachmentClass, SupplyAttachBone));
+            SupplyAttachment = DHConstructionSupplyAttachment(SpawnAttachment(SupplyAttachmentClass, SupplyAttachmentBone,, SupplyAttachmentOffset, SupplyAttachmentRotation));
 
             if (SupplyAttachment != none)
             {
@@ -2560,7 +2562,7 @@ simulated function SpawnVehicleAttachments()
 }
 
 // New helper function to handle spawning an actor to attach to this vehicle, just to avoid code repetition
-simulated function Actor SpawnAttachment(class<Actor> AttachClass, optional name AttachBone, optional StaticMesh AttachStaticMesh, optional vector AttachOffset)
+simulated function Actor SpawnAttachment(class<Actor> AttachClass, optional name AttachBone, optional StaticMesh AttachStaticMesh, optional vector AttachOffset, optional rotator AttachRotation)
 {
     local Actor A;
 
@@ -2582,6 +2584,11 @@ simulated function Actor SpawnAttachment(class<Actor> AttachClass, optional name
             else
             {
                 A.SetBase(self);
+            }
+
+            if (AttachRotation != rot(0, 0, 0))
+            {
+                A.SetRelativeRotation(AttachRotation);
             }
 
             if (AttachOffset != vect(0.0, 0.0, 0.0))
