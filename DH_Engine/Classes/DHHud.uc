@@ -1867,6 +1867,19 @@ simulated function HideObjectives()
     ShowObjectives();
 }
 
+// Function to toggle the hud essentials
+exec function ToggleHudOptions()
+{
+    bSmallWeaponBar = !bSmallWeaponBar;
+    bShowWeaponBar = !bShowWeaponBar;
+    bShowPoints = !bShowPoints;
+    bShowPersonalInfo = !bShowPersonalInfo;
+    bShowWeaponInfo = !bShowWeaponInfo;
+    bShowCompass = !bShowCompass;
+    bShowPortrait = !bShowPortrait;
+    bShowMapUpdatedIcon = !bShowMapUpdatedIcon;
+}
+
 // Modified both of these to stop bCapturingMouse from being set, which would
 // draw a mouse cursor.
 function MouseInterfaceStartCapturing()
