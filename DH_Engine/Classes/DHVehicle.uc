@@ -75,6 +75,11 @@ var     bool        bShouldExplode;              // used to determine if the veh
 var     bool        bIsExploded;                 // used to prevent additional explosions
 var     int         EngineDeadHPLossPerSecond;   // HP loss per second for having a dead engine
 
+// Desturction Effects
+var()   class<Emitter>                           StableDestructionEffectClass;
+var()   class<Emitter>                           VehicleRemovalWarningEffectClass;
+var()   array<sound>                             StableDestructionSounds;
+
 // Engine
 var     bool        bEngineOff;                  // vehicle engine is simply switched off
 var     bool        bSavedEngineOff;             // clientside record of current value, so PostNetReceive can tell if a new value has been replicated
@@ -2229,22 +2234,75 @@ state VehicleDestroyed
     }
 
 Begin:
+
+    // Swap skins and model
     DestroyAppearance();
 
     // Theel TODO add a check here to determin if we should explode or not
     // if not then create a new emitter for non-explosion destruction
-    //VehicleExplosion(vect(0,0,1), 1.0);
+    if (false)
+    {
+        VehicleExplosion(vect(0,0,1), 1.0);
+    }
+    else
+    {
+        VehicleNoExplosionEffects();
+    }
+    //
 
+    // Wait the time until it should begin to dissapear
     Sleep(TimeTilDissapear);
 
+    // Have client show another effect, which will indicate the vehicle is about to disappear
     if (Level.NetMode != NM_DedicatedServer)
     {
         ClientPrepareForRemoval();
     }
 
+    // Wait 10 seconds
     Sleep(10);
 
+    // Show a final emitter (give some concealment to those around the vehicle)
+
+
+    // Disappear
     CallDestroy();
+}
+
+// Handle effects for a vehicle being destroyed, but with no explosion
+function VehicleNoExplosionEffects()
+{
+    local PlayerController PC;
+    local float            Dist, Scale;
+
+    if (bClientInitialized || Role == ROLE_Authority)
+    {
+        PC = Level.GetLocalPlayerController();
+
+        if (PC != none && PC.ViewTarget != none)
+        {
+            Dist = VSize(Location - PC.ViewTarget.Location);
+
+            if (Dist < (ExplosionRadius * 2.5))
+            {
+                PC.ShakeView(ShakeRotMag * 0.1, ShakeRotRate, ShakeRotTime, ShakeOffsetMag * Scale, ShakeOffsetRate, ShakeOffsetTime);
+            }
+        }
+
+        if (StableDestructionSounds.Length > 0)
+        {
+            PlaySound(StableDestructionSounds[Rand(StableDestructionSounds.Length)], SLOT_None, ExplosionSoundVolume * TransientSoundVolume,, ExplosionSoundRadius);
+        }
+    }
+
+    if (DestructionEffect != none)
+    {
+        DestructionEffect.Destroy();
+    }
+
+    DestructionEffect = Spawn(StableDestructionEffectClass, self);
+    DestructionEffect.LifeSpan = TimeTilDissapear;
+    DestructionEffect.SetBase(self);
 }
 
 // Give players visual warning that the vehicle is going to be removed and will no longer be viable for cover
@@ -2272,7 +2330,7 @@ function ClientPrepareForRemoval()
         // Explosion sound
         if (ExplosionSounds.Length > 0)
         {
-            PlaySound(ExplosionSounds[Rand(ExplosionSounds.Length)], SLOT_None, ExplosionSoundVolume * TransientSoundVolume,, ExplosionSoundRadius);
+            //PlaySound(ExplosionSounds[Rand(ExplosionSounds.Length)], SLOT_None, ExplosionSoundVolume * TransientSoundVolume,, ExplosionSoundRadius);
         }
     }
 
@@ -2288,12 +2346,12 @@ function ClientPrepareForRemoval()
     // Low detail effect
     if (Level.bDropDetail || Level.DetailMode == DM_Low)
     {
-        DestructionEffect = Spawn(DestructionEffectLowClass, self);
+        DestructionEffect = Spawn(VehicleRemovalWarningEffectClass, self);
     }
     // Standard detail effect
     else
     {
-        DestructionEffect = Spawn(DestructionEffectClass, self);
+        DestructionEffect = Spawn(VehicleRemovalWarningEffectClass, self);
     }
 
     DestructionEffect.LifeSpan = TimeTilDissapear;
@@ -3741,19 +3799,22 @@ defaultproperties
     DamagedEffectHealthFireFactor=0.15
 
     // Vehicle destruction
-    //DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
+    //DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     //DestructionEffectLowClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
+
     //DisintegrationEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     //DisintegrationEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
 
-    //SafeDestructionEffectClass=none//class''
-    //SafeDestructionEffectLowClass=none//class''
+    VehicleRemovalWarningEffectClass=class'DH_Effects.DHVehicleWarningEmitter'
+
+    StableDestructionEffectClass=class'DH_Effects.DHVehicleStableDeathEmitter'
+    //StableDestructionEffectLowClass=none//class''
 
     DestructionEffectClass=class'DH_Effects.DHVehicleAmmoCookEffect'
     DestructionEffectLowClass=class'DH_Effects.DHVehicleAmmoCookEffect'
 
-    DisintegrationEffectClass=class'DH_Effects.DHVehicleAmmoCookEffect'
-    DisintegrationEffectLowClass=class'DH_Effects.DHVehicleAmmoCookEffect'
+    DisintegrationEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
+    DisintegrationEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter'
 
     ExplosionDamage=200.0
     ExplosionRadius=300.0
@@ -3779,6 +3840,7 @@ defaultproperties
     DamagedShutDownSound=sound'DH_AlliedVehicleSounds.Damaged.engine_stop_damaged'
     VehicleBurningSound=sound'Amb_Destruction.Fire.Krasnyi_Fire_House02'
     DestroyedBurningSound=sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
+    StableDestructionSounds=sound'DH_ArmoredBeasts2_Sounds.Reload.APPenetrationMed'
 
     // Visual effects
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
