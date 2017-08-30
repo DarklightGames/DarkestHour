@@ -111,10 +111,18 @@ function static Material CreateProxyMaterial(Material M)
     // HACK: Material cannot be a Combiner, since it doesn't play nice with
     // the processing we are doing below (Combiners using Combiners I suppose is
     // a bad thing). To fix this, we'll just use the combiner's fallback
-    // material as the material to work with.
-    if (M.IsA('Combiner') && M.FallbackMaterial != none)
+    // material as the material to work with. If there's no FallbackMaterial,
+    // we'll use the combiner's Material1.
+    C = Combiner(M);
+
+    if (C != none)
     {
-        M = M.FallbackMaterial;
+        if (C.FallbackMaterial != none)
+        {
+            M = C.FallbackMaterial;
+        }
+
+        M = C.Material1;
     }
 
     FC = new class'FadeColor';
