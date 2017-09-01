@@ -771,12 +771,6 @@ function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadInd
         {
             return -1;
         }
-
-        if (Level.TimeSeconds <= PC.SquadSwapTimeSeconds)
-        {
-            // TODO: send a message to a buddy saying he couldn't join and has to wait like a good boy
-            return -1;
-        }
     }
 
     for (i = 0; i < GetTeamSquadSize(TeamIndex); ++i)
