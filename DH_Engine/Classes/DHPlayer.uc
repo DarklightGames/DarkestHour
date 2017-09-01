@@ -126,7 +126,7 @@ replication
         ServerSquadJoinAuto, ServerSquadInvite, ServerSquadKick, ServerSquadPromote,
         ServerSquadCommandeer, ServerSquadLock, ServerSquadOrder, ServerSquadSignal,
         ServerSquadRename, ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint,
-        ServerSquadSwapRallyPoints,
+        ServerSquadSwapRallyPoints, ServerSquadBan,
         // these ones in debug mode only:
         ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog;
 
@@ -4843,6 +4843,18 @@ function ServerSquadKick(DHPlayerReplicationInfo MemberToKick)
     if (SquadReplicationInfo != none && PRI != none)
     {
         SquadReplicationInfo.KickFromSquad(PRI, GetTeamNum(), PRI.SquadIndex, MemberToKick);
+    }
+}
+
+function ServerSquadBan(DHPlayerReplicationInfo PlayerToBan)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (SquadReplicationInfo != none && PRI != none)
+    {
+        SquadReplicationInfo.BanFromSquad(PRI, GetTeamNum(), PRI.SquadIndex, PlayerToBan);
     }
 }
 

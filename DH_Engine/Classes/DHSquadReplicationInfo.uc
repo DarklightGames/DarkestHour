@@ -801,15 +801,6 @@ function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadInd
                 VRI.JoinSquadChannel(PRI, TeamIndex, SquadIndex);
                 PC.Speak("SQUAD");
             }
-
-            if (!bWasInvited)
-            {
-                // If this player wasn't accepting an invite, this was a manual
-                // squad join. Let's make sure they can't change squads
-                // for a short period of time (to dissuade hopping squads for
-                // more advantageous spawn points).
-                PC.SquadSwapTimeSeconds = Level.TimeSeconds + 15.0;
-            }
         }
 
         // Clear the squad ban, if it exists.
