@@ -8,6 +8,8 @@ class DHCommandMenu_SquadLeader extends DHCommandMenu;
 function OnSelect(int Index, vector Location)
 {
     local DHPlayer PC;
+    local DHPawn P;
+    local DHPlayerReplicationInfo PRI, OtherPRI;
 
     if (Interaction == none || Interaction.ViewportOwner == none || Index < 0 || Index >= Options.Length)
     {
@@ -15,6 +17,7 @@ function OnSelect(int Index, vector Location)
     }
 
     PC = DHPlayer(Interaction.ViewportOwner.Actor);
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
     switch (Index)
     {
@@ -40,7 +43,21 @@ function OnSelect(int Index, vector Location)
             PC.ServerSquadSignal(SIGNAL_Move, Location);
             break;
         case 4:
-            Interaction.PushMenu("DH_Engine.DHCommandMenu_SquadManageMember", MenuObject);
+            P = DHPawn(MenuObject);
+
+            if (P != none)
+            {
+                OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+
+                if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, OtherPRI))
+                {
+                    Interaction.PushMenu("DH_Engine.DHCommandMenu_SquadManageMember", MenuObject);
+                }
+                else
+                {
+                    Interaction.PushMenu("DH_Engine.DHCommandMenu_SquadManageNonMember", MenuObject);
+                }
+            }
             return;
         case 5:
             Interaction.PushMenu("DH_Engine.DHCommandMenu_SquadManage", MenuObject);

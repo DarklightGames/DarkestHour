@@ -37,6 +37,8 @@ var localized string SquadRallyPointDestroyed;
 var localized string SquadRallyPointAbandonmentWarning;
 var localized string SquadRallyPointSwapped;
 var localized string SquadRallyPointTooCloseToConstruction;
+var localized string SquadBannedPlayer;
+var localized string SquadBannedCannotJoin;
 
 static function string GetString(optional int S, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -117,6 +119,10 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
             {
                 return default.SquadRallyPointBadLocation;
             }
+        case 61:
+            return Repl(default.SquadBannedPlayer, "{0}", RelatedPRI_1.PlayerName);
+        case 62:
+            return default.SquadBannedCannotJoin;
         default:
             break;
     }
@@ -158,5 +164,7 @@ defaultproperties
     SquadRallyPointAbandonmentWarning="A newly created squad rally point is being abandoned!"
     SquadRallyPointSwapped="The squad leader has forcibly changed the currently active rally point."
     SquadRallyPointTooCloseToConstruction="You cannot create a squad rally point so close to a {0}."
+    SquadBannedPlayer="{0} has been banned from the squad."
+    SquadBannedCannotJoin="You are unable to join this squad as you have been banned."
 }
 

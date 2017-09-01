@@ -70,6 +70,14 @@ var bool                            bAreRallyPointsEnabled;
 
 var int                             SquadLockMemberCountMin;    // The amount of squad member required to be able to lock a squad and keep it locked.
 
+struct SquadBan
+{
+    var int TeamIndex;
+    var int SquadIndex;
+    var string ROID;
+};
+var array<SquadBan>                 SquadBans;
+
 replication
 {
     reliable if (bNetInitial && Role == ROLE_Authority)
@@ -605,6 +613,9 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
         }
 
         SetSquadNextRallyPointTime(TeamIndex, SquadIndex, 0.0);
+
+        // Clear all bans.
+        ClearSquadBans(TeamIndex, SquadIndex);
     }
 
     PRI.SquadIndex = -1;
@@ -686,7 +697,8 @@ function int JoinSquadAuto(DHPlayerReplicationInfo PRI)
 
     for (i = 0; i < GetTeamSquadLimit(PRI.Team.TeamIndex); ++i)
     {
-        if (!IsSquadJoinable(PRI.Team.TeamIndex, i))
+        if (!IsSquadJoinable(PRI.Team.TeamIndex, i) ||
+            IsPlayerBannedFromSquad(PRI, PRI.Team.TeamIndex, i))
         {
             continue;
         }
@@ -737,9 +749,25 @@ function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadInd
         return -1;
     }
 
-    if (!bWasInvited && IsSquadLocked(TeamIndex, SquadIndex))
+    if (!bWasInvited)
     {
-        return -1;
+        if (IsPlayerBannedFromSquad(PRI, TeamIndex, SquadIndex))
+        {
+            // "You are unable to join this squad as you have been banned."
+            PC.ReceiveLocalizedMessage(class'DHSquadMessage', 62);
+            return -1;
+        }
+
+        if (IsSquadLocked(TeamIndex, SquadIndex))
+        {
+            return -1;
+        }
+
+        if (Level.TimeSeconds <= PC.SquadSwapTimeSeconds)
+        {
+            // TODO: send a message to a buddy saying he couldn't join and has to wait like a good boy
+            return -1;
+        }
     }
 
     for (i = 0; i < GetTeamSquadSize(TeamIndex); ++i)
@@ -770,7 +798,19 @@ function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadInd
                 VRI.JoinSquadChannel(PRI, TeamIndex, SquadIndex);
                 PC.Speak("SQUAD");
             }
+
+            if (!bWasInvited)
+            {
+                // If this player wasn't accepting an invite, this was a manual
+                // squad join. Let's make sure they can't change squads
+                // for a short period of time (to dissuade hopping squads for
+                // more advantageous spawn points).
+                PC.SquadSwapTimeSeconds = Level.TimeSeconds + 15.0;
+            }
         }
+
+        // Clear the squad ban, if it exists.
+        ClearSquadBan(TeamIndex, SquadIndex, PRI);
     }
 }
 
@@ -798,6 +838,122 @@ function bool KickFromSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int Squ
     {
         // "You have been kicked from your squad."
         OtherPC.ReceiveLocalizedMessage(SquadMessageClass, 32);
+    }
+
+    return true;
+}
+
+//==============================================================================
+// Banning
+//==============================================================================
+
+function bool IsPlayerBannedFromSquad(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex)
+{
+    local int i;
+    local DHPlayer PC;
+
+    if (PRI == none)
+    {
+        return false;
+    }
+
+    PC = DHPlayer(PRI.Owner);
+
+    if (PC == none)
+    {
+        return false;
+    }
+
+    for (i = 0; i < SquadBans.Length; ++i)
+    {
+        if (SquadBans[i].TeamIndex == TeamIndex &&
+            SquadBans[i].SquadIndex == SquadIndex &&
+            SquadBans[i].ROID == PC.ROIDHash)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function bool ClearSquadBan(int TeamIndex, int SquadIndex, DHPlayerReplicationInfo PRI)
+{
+    local int i;
+    local DHPlayer PC;
+
+    if (PRI == none)
+    {
+        return false;
+    }
+
+    PC = DHPlayer(PRI.Owner);
+
+    if (PC == none)
+    {
+        return false;
+    }
+
+    for (i = SquadBans.Length - 1; i >= 0; --i)
+    {
+        if (SquadBans[i].TeamIndex == TeamIndex &&
+            SquadBans[i].SquadIndex == SquadIndex &&
+            SquadBans[i].ROID == PC.ROIDHash)
+        {
+            SquadBans.Remove(i, 1);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function ClearSquadBans(int TeamIndex, int SquadIndex)
+{
+    local int i;
+
+    for (i = SquadBans.Length - 1; i >= 0; --i)
+    {
+        if (SquadBans[i].TeamIndex == TeamIndex && SquadBans[i].SquadIndex == SquadIndex)
+        {
+            SquadBans.Remove(i, 1);
+        }
+    }
+}
+
+// Kicks and bans the specified player from the squad.
+// Returns true if the player was kicked and is now banned from the squad.
+function bool BanFromSquad(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, DHPlayerReplicationInfo PlayerToBan)
+{
+    local DHPlayer PC, OtherPC;
+    local SquadBan Ban;
+
+    if (!KickFromSquad(PRI, TeamIndex, SquadIndex, PlayerToBan))
+    {
+        return false;
+    }
+
+    if (!IsPlayerBannedFromSquad(PlayerToBan, TeamIndex, SquadIndex))
+    {
+        OtherPC = DHPlayer(PlayerToBan.Owner);
+
+        if (OtherPC == none)
+        {
+            return false;
+        }
+
+        Ban.TeamIndex = TeamIndex;
+        Ban.SquadIndex = SquadIndex;
+        Ban.ROID = OtherPC.ROIDHash;
+        SquadBans[SquadBans.Length] = Ban;
+
+        PC = DHPlayer(PRI.Owner);
+
+        if (PC != none)
+        {
+            // "{0} has been banned from the squad."
+            PC.ReceiveLocalizedMessage(SquadMessageClass, 61, PlayerToBan);
+        }
     }
 
     return true;
