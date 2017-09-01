@@ -4792,7 +4792,7 @@ function ServerSquadLeave()
 
     G = DarkestHourGame(Level.Game);
 
-    G.SquadReplicationInfo.LeaveSquad(DHPlayerReplicationInfo(PlayerReplicationInfo));
+    G.SquadReplicationInfo.LeaveSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), true);
 }
 
 simulated exec function SquadJoin(int SquadIndex)

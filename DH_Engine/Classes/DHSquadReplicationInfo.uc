@@ -503,7 +503,7 @@ function bool ScoreComparatorFunction(Object LHS, Object RHS)
 // Returns true if player successfully leaves his squad.
 // The player is guaranteed to not be a member of a squad after this
 // call, regardless of the return value.
-function bool LeaveSquad(DHPlayerReplicationInfo PRI)
+function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bIsVoluntary)
 {
     local int TeamIndex, SquadIndex, SquadMemberIndex;
     local DHPlayer PC;
@@ -541,6 +541,12 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI)
 
     // "{0} has left the squad."
     BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 31, PRI);
+
+    if (bIsVoluntary)
+    {
+        // "You have left the squad."
+        PC.ReceiveLocalizedMessage(SquadMessageClass, 64);
+    }
 
     if (SquadMemberIndex == SQUAD_LEADER_INDEX)
     {

@@ -40,6 +40,7 @@ var localized string SquadRallyPointTooCloseToConstruction;
 var localized string SquadBannedPlayer;
 var localized string SquadBannedCannotJoin;
 var localized string SquadAutoJoinFailed;
+var localized string SquadYouLeft;
 
 static function string GetString(optional int S, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -126,6 +127,8 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
             return default.SquadBannedCannotJoin;
         case 63:
             return default.SquadAutoJoinFailed;
+        case 64:
+            return default.SquadYouLeft;
         default:
             break;
     }
@@ -170,5 +173,6 @@ defaultproperties
     SquadBannedPlayer="{0} has been banned from the squad."
     SquadBannedCannotJoin="You are unable to join this squad as you have been banned."
     SquadAutoJoinFailed="There are no squads that you are eligible to join."
+    SquadYouLeft="You have left the squad."
 }
 
