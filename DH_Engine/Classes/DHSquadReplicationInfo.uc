@@ -687,6 +687,7 @@ simulated function bool IsAnySquadJoinable(int TeamIndex)
 function int JoinSquadAuto(DHPlayerReplicationInfo PRI)
 {
     local int i, SquadIndex, MaxMemberCount, MemberCount;
+    local DHPlayer PC;
 
     if (PRI == none || PRI.Team == none || PRI.IsInSquad())
     {
@@ -715,6 +716,14 @@ function int JoinSquadAuto(DHPlayerReplicationInfo PRI)
     if (SquadIndex >= 0)
     {
         return JoinSquad(PRI, PRI.Team.TeamIndex, SquadIndex);
+    }
+
+    PC = DHPlayer(PRI.Owner);
+
+    if (PC != none)
+    {
+        // "There are no squads that you are eligible to join."
+        PC.ReceiveLocalizedMessage(SquadMessageClass, 63);
     }
 
     return -1;
@@ -927,6 +936,7 @@ function bool BanFromSquad(DHPlayerReplicationInfo PRI, int TeamIndex, int Squad
 {
     local DHPlayer PC, OtherPC;
     local SquadBan Ban;
+    local DHBot Bot;
 
     if (!KickFromSquad(PRI, TeamIndex, SquadIndex, PlayerToBan))
     {
@@ -948,6 +958,7 @@ function bool BanFromSquad(DHPlayerReplicationInfo PRI, int TeamIndex, int Squad
         SquadBans[SquadBans.Length] = Ban;
 
         PC = DHPlayer(PRI.Owner);
+        Bot = DHBot(PRI.Owner);
 
         if (PC != none)
         {
