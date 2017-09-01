@@ -73,13 +73,18 @@ auto state Timing
     function BeginState()
     {
         local DHGameReplicationInfo GRI;
+        local DarkestHourGame G;
 
+        G = DarkestHourGame(Level.Game);
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-        if (GRI == none)
+        if (GRI == none || G == none)
         {
             return;
         }
+
+        // Have everyone open their deploy menu
+        G.OpenPlayerMenus();
 
         // Prevent weapon dropping
         Level.Game.bAllowWeaponThrowing = false;
@@ -123,7 +128,7 @@ auto state Timing
 
     function PhaseEnded()
     {
-        local int i;
+        local int i, UnspawnedPlayers[2];
         local Controller C;
         local PlayerController PC;
         local ROMineVolume V;
@@ -171,30 +176,42 @@ auto state Timing
             }
         }
 
+        // Get number of unspawned players
+        for (C = Level.ControllerList; C != none; C = C.NextController)
+        {
+            PC = PlayerController(C);
+
+            // Get the number of players not spawned on each team, we are going to add the number to the final reinforcement pool
+            if (PC != none && PC.Pawn == none && PC.GetTeamNum() < arraycount(UnspawnedPlayers))
+            {
+                ++UnspawnedPlayers[PC.GetTeamNum()];
+            }
+        }
+
+        // Handle Axis reinforcement changes
+        if (PhaseEndReinforcements.AxisReinforcements >= 0)
+        {
+            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = PhaseEndReinforcements.AxisReinforcements + UnspawnedPlayers[AXIS_TEAM_INDEX];
+        }
+        else
+        {
+            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = G.LevelInfo.Axis.SpawnLimit + UnspawnedPlayers[AXIS_TEAM_INDEX];
+        }
+
+        // Handle Allied reinforcement changes
+        if (PhaseEndReinforcements.AlliesReinforcements >= 0)
+        {
+            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = PhaseEndReinforcements.AlliesReinforcements + UnspawnedPlayers[ALLIES_TEAM_INDEX];
+        }
+        else
+        {
+            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = G.LevelInfo.Allies.SpawnLimit + UnspawnedPlayers[ALLIES_TEAM_INDEX];
+        }
+
         // Reset round time if desired
         if (bResetRoundTimer)
         {
             G.ModifyRoundTime(G.LevelInfo.RoundDuration * 60, 2);
-        }
-
-        // Handle Axis reinforcement changes, if any
-        if (PhaseEndReinforcements.AxisReinforcements >= 0)
-        {
-            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = PhaseEndReinforcements.AxisReinforcements;
-        }
-        else
-        {
-            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = G.LevelInfo.Axis.SpawnLimit;
-        }
-
-        // Handle  Allied reinforcement changes, if any
-        if (PhaseEndReinforcements.AlliesReinforcements >= 0)
-        {
-            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = PhaseEndReinforcements.AlliesReinforcements;
-        }
-        else
-        {
-            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = G.LevelInfo.Allies.SpawnLimit;
         }
 
         // Deactivate any initial spawn points
