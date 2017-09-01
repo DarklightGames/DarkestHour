@@ -5,6 +5,8 @@
 
 class DHCommandMenu_SquadManageNonMember extends DHCommandMenu;
 
+var localized string AlreadyInASquad;
+
 function OnActive()
 {
     local DHPlayer PC;
@@ -79,22 +81,45 @@ function OnSelect(int OptionIndex, vector Location)
     Interaction.Hide();
 }
 
+function bool IsOptionDisabled(int OptionIndex)
+{
+    local DHPawn P;
+    local DHPlayerReplicationInfo OtherPRI;
+
+    P = DHPawn(MenuObject);
+
+    if (P != none)
+    {
+        OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+    }
+
+    return OtherPRI == none || OtherPRI.IsInSquad();
+}
+
 function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 {
+    local DHPawn P;
     local DHPlayerReplicationInfo OtherPRI;
 
     super.GetOptionRenderInfo(OptionIndex, ORI);
 
-    OtherPRI = DHPlayerReplicationInfo(MenuObject);
+    P = DHPawn(MenuObject);
 
-    if (OtherPRI != none)
+    if (P != none)
     {
-        ORI.OptionName = OtherPRI.PlayerName;
+        OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+    }
+
+    if (OtherPRI != none && OtherPRI.IsInSquad() && Interaction != none && !Interaction.IsFadingOut())
+    {
+        ORI.InfoText = AlreadyInASquad;
+        ORI.InfoColor = class'UColor'.default.Red;
     }
 }
 
 defaultproperties
 {
+    AlreadyInASquad="Already in a squad"
     Options(0)=(ActionText="Invite to Squad",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
 }
 

@@ -521,6 +521,10 @@ function OnSelect(int OptionIndex, optional vector Location)
     Menu.OnSelect(OptionIndex, Location);
 }
 
+function bool IsFadingIn() { return IsInState('FadeIn'); }
+function bool IsFadingOut() { return IsInState('FadeOut'); }
+function bool IsFadingInOrOut() { return IsFadingIn() || IsFadingOut(); }
+
 defaultproperties
 {
     bActive=true

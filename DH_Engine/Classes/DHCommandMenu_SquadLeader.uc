@@ -5,6 +5,8 @@
 
 class DHCommandMenu_SquadLeader extends DHCommandMenu;
 
+var localized string NoPlayerInLineOfSight;
+
 function OnSelect(int Index, vector Location)
 {
     local DHPlayer PC;
@@ -86,6 +88,12 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             {
                 ORI.OptionName = OtherPawn.PlayerReplicationInfo.PlayerName;
             }
+            else
+            {
+                ORI.OptionName = "";
+                ORI.InfoText = default.NoPlayerInLineOfSight;
+                ORI.InfoColor = class'UColor'.default.Yellow;
+            }
         default:
             break;
     }
@@ -120,10 +128,11 @@ function bool IsOptionDisabled(int OptionIndex)
 
 defaultproperties
 {
+    NoPlayerInLineOfSight="No teammate selected"
     Options(0)=(ActionText="Fire",Material=texture'DH_InterfaceArt_tex.HUD.squad_signal_fire')
     Options(1)=(ActionText="Create Rally Point",Material=texture'DH_GUI_Tex.DeployMenu.RallyPointDiffuse')
     Options(2)=(ActionText="Construction",Material=texture'DH_InterfaceArt_tex.HUD.supplies')
     Options(3)=(ActionText="Move",Material=texture'DH_InterfaceArt_tex.HUD.squad_signal_move')
-    Options(4)=(ActionText="Player",Material=texture'DH_GUI_tex.DeployMenu.reinforcements')
+    Options(4)=(ActionText="No Player ",Material=texture'DH_GUI_tex.DeployMenu.reinforcements')
     Options(5)=(ActionText="Squad",Material=texture'DH_GUI_tex.DeployMenu.squads')
 }
