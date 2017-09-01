@@ -21,6 +21,7 @@ var automated   DHGUIEditBox        eb_SquadName;
 var automated   GUIImage            i_Background;
 
 var localized string    KickText;
+var localized string    BanText;
 var localized string    PromoteText;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
@@ -138,6 +139,7 @@ function bool MembersListContextMenuOpen(GUIContextMenu Sender)
 
     Sender.ContextItems.Length = 0;
     Sender.AddItem(Repl(default.KickText, "{0}", OtherPRI.PlayerName));
+    Sender.AddItem(Repl(default.BanText, "{0}", OtherPRI.PlayerName));
     Sender.AddItem("-");
     Sender.AddItem(Repl(default.PromoteText, "{0}", OtherPRI.PlayerName));
 
@@ -156,19 +158,12 @@ function MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex)
 
     PC = DHPlayer(PlayerOwner());
 
-    if (PC == none)
-    {
-        return;
-    }
-
-    if (PC.SquadReplicationInfo == none)
+    if (PC == none || PC.SquadReplicationInfo == none)
     {
         return;
     }
 
     PRI = DHPlayerReplicationInfo(li_Members.GetObject());
-
-    Log(PRI);
 
     if (PRI == none)
     {
@@ -180,7 +175,10 @@ function MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex)
         case 0: // Kick
             PC.ServerSquadKick(PRI);
             break;
-        case 2: // Promote
+        case 1: // Ban
+            PC.ServerSquadBan(PRI);
+            break;
+        case 3: // Promote
             PC.ServerSquadPromote(PRI);
             break;
     }
@@ -318,5 +316,6 @@ defaultproperties
     OnShow=InternalOnShow
 
     KickText="Kick {0}"
+    BanText="Ban {0}"
     PromoteText="Promote {0} to leader"
 }
