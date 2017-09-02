@@ -28,8 +28,9 @@ simulated function OnConstructed()
             DirtProjector.FrameBufferBlendingOp = PB_AlphaBlend;
             DirtProjector.FOV = 1;
             DirtProjector.MaxTraceDistance = 512.0;
+            DirtProjector.bGradient = true;
             DirtProjector.SetDrawScale((default.CollisionRadius * 2) / DirtProjector.ProjTexture.MaterialUSize());
-            DirtProjector.SetRelativeLocation(vect(0.0, 0.0, 100.0));
+            DirtProjector.SetRelativeLocation(vect(0.0, 0.0, 256.0));
             DirtProjector.SetRelativeRotation(rot(-16384, 0, 0));
         }
     }
