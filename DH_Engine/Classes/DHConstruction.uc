@@ -851,5 +851,7 @@ defaultproperties
 //    HarmfulDamageTypes(1)=class'DH_SatchelDamType'
     HarmfulDamageTypes(2)=class'ROTankShellExplosionDamage'
     TatteredHealthThreshold=-1
+
+    SquadMemberCountMinimum=2
 }
 
