@@ -823,7 +823,7 @@ defaultproperties
     PlacementEmitterClass=class'DH_Effects.DHConstructionEffect'
     PlacementSoundRadius=60.0
     PlacementSoundVolume=4.0
-    IndoorsCeilingHeightInMeters=10.0
+    IndoorsCeilingHeightInMeters=25.0
     PokeTerrainRadius=32
     PokeTerrainDepth=32
     TerrainScaleMax=256.0
