@@ -18,4 +18,5 @@ defaultproperties
     MenuName="Concertina Wire"
     MenuIcon=Texture'DH_GUI_tex.ConstructionMenu.Construction_WireBarricade'
     SupplyCost=50
+    bCanBeMantled=false
 }

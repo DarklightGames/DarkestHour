@@ -55,7 +55,6 @@ defaultproperties
     bSnapToTerrain=true
     bShouldAlignToGround=false
     bCanBeTornDown=false
-    bCanBeMantled=true
     bCanBeDamaged=false
     ProxyDistanceInMeters=10
     CollisionRadius=256.0

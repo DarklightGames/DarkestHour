@@ -853,5 +853,6 @@ defaultproperties
     TatteredHealthThreshold=-1
 
     SquadMemberCountMinimum=2
+    bCanBeMantled=true
 }
 
