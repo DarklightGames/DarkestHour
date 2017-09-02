@@ -13,12 +13,13 @@ function OnSelect(int Index, vector Location)
     local DHPawn P;
     local DHPlayerReplicationInfo PRI, OtherPRI;
 
-    if (Interaction == none || Interaction.ViewportOwner == none || Index < 0 || Index >= Options.Length)
+    PC = GetPlayerController();
+
+    if (PC == none || Index < 0 || Index >= Options.Length)
     {
         return;
     }
 
-    PC = DHPlayer(Interaction.ViewportOwner.Actor);
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
     switch (Index)
@@ -62,7 +63,7 @@ function OnSelect(int Index, vector Location)
             }
             return;
         case 5:
-            Interaction.PushMenu("DH_Engine.DHCommandMenu_SquadManage", MenuObject);
+            Interaction.PushMenu("DH_Engine.DHCommandMenu_SquadMenu", MenuObject);
             return;
         default:
             break;
@@ -77,7 +78,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     local DHPlayer PC;
 
     OtherPawn = DHPawn(MenuObject);
-    PC = DHPlayer(Interaction.ViewportOwner.Actor);
+    PC = GetPlayerController();
 
     super.GetOptionRenderInfo(OptionIndex, ORI);
 
@@ -104,7 +105,7 @@ function bool IsOptionDisabled(int OptionIndex)
     local DHPlayer PC;
     local DHGameReplicationInfo GRI;
 
-    PC = DHPlayer(Interaction.ViewportOwner.Actor);
+    PC = GetPlayerController();
 
     if (PC == none)
     {
@@ -128,7 +129,7 @@ function bool IsOptionDisabled(int OptionIndex)
 
 defaultproperties
 {
-    NoPlayerInLineOfSight="No teammate selected"
+    NoPlayerInLineOfSight="No player in sights"
     Options(0)=(ActionText="Fire",Material=texture'DH_InterfaceArt_tex.HUD.squad_signal_fire')
     Options(1)=(ActionText="Create Rally Point",Material=texture'DH_GUI_Tex.DeployMenu.RallyPointDiffuse')
     Options(2)=(ActionText="Construction",Material=texture'DH_InterfaceArt_tex.HUD.supplies')

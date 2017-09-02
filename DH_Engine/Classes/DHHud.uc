@@ -2827,13 +2827,14 @@ simulated function DrawVehiclePhysiscsWheels()
 // shorten a very length DrawObjectives function)
 simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
 {
-    local DHPlayerReplicationInfo PRI;
-    local DHRoleInfo              RI;
-    local SpriteWidget            Widget;
-    local vector                  Temp, MapCenter;
-    local string                  DistanceString, ObjLabel;
-    local float                   MyMapScale, ArrowRotation;
-    local int                     OwnerTeam, Distance, i;
+    local DHPlayerReplicationInfo   PRI;
+    local DHRoleInfo                RI;
+    local SpriteWidget              Widget;
+    local vector                    Temp, MapCenter;
+    local string                    DistanceString, ObjLabel;
+    local float                     MyMapScale, ArrowRotation;
+    local int                       OwnerTeam, Distance, i;
+    local float                     Yaw;
 
     if (DHGRI == none)
     {
@@ -2912,11 +2913,15 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
             if (DHGRI.SupplyPoints[i].Actor != none)
             {
                 Temp = DHGRI.SupplyPoints[i].Actor.Location;
+                Yaw = DHGRI.SupplyPoints[i].Actor.Rotation.Yaw;
             }
             else
             {
                 Temp = DHGRI.SupplyPoints[i].Location;
+                Yaw = DHGRI.SupplyPoints[i].Location.Z;
             }
+
+            TexRotator(FinalBlend(SupplyPointIcon.WidgetTexture).Material).Rotation.Yaw = GetMapIconYaw(Yaw);
 
             DrawIconOnMap(C, SubCoords, SupplyPointIcon, MyMapScale, Temp, MapCenter);
         }
@@ -5077,7 +5082,7 @@ defaultproperties
     MapIconMortarArrow=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.mortar-arrow-final',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.1,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconMortarHit=(WidgetTexture=texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(Y1=64,X2=63,Y2=127),TextureScale=0.05,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
 
-    SupplyPointIcon=(WidgetTexture=texture'DH_GUI_tex.GUI.supply_point',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    SupplyPointIcon=(WidgetTexture=FinalBlend'DH_GUI_tex.GUI.supply_point_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.04,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Map icons for squad orders
     SquadOrderAttackIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.HUD.squad_order_attack',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.03,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=0,B=0,A=255),Tints[1]=(R=255,G=0,B=0,A=255))

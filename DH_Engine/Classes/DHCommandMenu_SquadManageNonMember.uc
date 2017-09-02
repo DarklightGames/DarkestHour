@@ -11,14 +11,11 @@ function OnActive()
 {
     local DHPlayer PC;
 
-    if (Interaction != none && Interaction.ViewportOwner != none)
-    {
-        PC = DHPlayer(Interaction.ViewportOwner.Actor);
+    PC = GetPlayerController();
 
-        if (PC != none)
-        {
-            PC.LookTarget = Actor(MenuObject);
-        }
+    if (PC != none)
+    {
+        PC.LookTarget = Actor(MenuObject);
     }
 }
 
@@ -26,14 +23,11 @@ function OnPop()
 {
     local DHPlayer PC;
 
-    if (Interaction != none && Interaction.ViewportOwner != none)
-    {
-        PC = DHPlayer(Interaction.ViewportOwner.Actor);
+    PC = GetPlayerController();
 
-        if (PC != none)
-        {
-            PC.LookTarget = none;
-        }
+    if (PC != none)
+    {
+        PC.LookTarget = none;
     }
 }
 
@@ -52,7 +46,7 @@ function OnSelect(int OptionIndex, vector Location)
     local Pawn P;
     local DHPlayerReplicationInfo OtherPRI;
 
-    if (Interaction == none || Interaction.ViewportOwner == none || OptionIndex < 0 || OptionIndex >= Options.Length)
+    if (OptionIndex < 0 || OptionIndex >= Options.Length)
     {
         return;
     }
@@ -64,7 +58,7 @@ function OnSelect(int OptionIndex, vector Location)
         OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
     }
 
-    PC = DHPlayer(Interaction.ViewportOwner.Actor);
+    PC = GetPlayerController();
 
     if (PC != none && OtherPRI != none)
     {
@@ -120,6 +114,6 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 defaultproperties
 {
     AlreadyInASquad="Already in a squad"
-    Options(0)=(ActionText="Invite to Squad",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
+    Options(0)=(ActionText="Invite to Squad",Material=Material'DH_GUI_Tex.ConstructionMenu.invite_icon')
 }
 

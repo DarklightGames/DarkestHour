@@ -9,14 +9,11 @@ function OnActive()
 {
     local DHPlayer PC;
 
-    if (Interaction != none && Interaction.ViewportOwner != none)
-    {
-        PC = DHPlayer(Interaction.ViewportOwner.Actor);
+    PC = GetPlayerController();
 
-        if (PC != none)
-        {
-            PC.LookTarget = Pawn(MenuObject);
-        }
+    if (PC != none)
+    {
+        PC.LookTarget = Pawn(MenuObject);
     }
 }
 
@@ -24,14 +21,11 @@ function OnPop()
 {
     local DHPlayer PC;
 
-    if (Interaction != none && Interaction.ViewportOwner != none)
-    {
-        PC = DHPlayer(Interaction.ViewportOwner.Actor);
+    PC = GetPlayerController();
 
-        if (PC != none)
-        {
-            PC.LookTarget = none;
-        }
+    if (PC != none)
+    {
+        PC.LookTarget = none;
     }
 }
 
@@ -50,12 +44,12 @@ function OnSelect(int OptionIndex, vector Location)
     local DHPlayerReplicationInfo PRI, OtherPRI;
     local Pawn P;
 
-    if (Interaction == none || Interaction.ViewportOwner == none || OptionIndex < 0 || OptionIndex >= Options.Length)
+    if (OptionIndex < 0 || OptionIndex >= Options.Length)
     {
         return;
     }
 
-    PC = DHPlayer(Interaction.ViewportOwner.Actor);
+    PC = GetPlayerController();
     P = Pawn(MenuObject);
 
     if (PC != none && P != none)
@@ -91,12 +85,12 @@ function bool IsOptionDisabled(int OptionIndex)
     local DHPlayerReplicationInfo PRI, OtherPRI;
     local Pawn P;
 
-    if (Interaction == none || Interaction.ViewportOwner == none || OptionIndex < 0 || OptionIndex >= Options.Length)
+    if (OptionIndex < 0 || OptionIndex >= Options.Length)
     {
         return true;
     }
 
-    PC = DHPlayer(Interaction.ViewportOwner.Actor);
+    PC = GetPlayerController();
 
     if (PC != none)
     {
@@ -148,8 +142,8 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
 defaultproperties
 {
-    Options(0)=(SubjectText="Kick from squad",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')         // TODO: use a "boot" icon
+    Options(0)=(SubjectText="Kick from squad",Material=Material'DH_GUI_Tex.ConstructionMenu.kick_icon')
     Options(1)=(SubjectText="Promote to squad leader",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire') // TODO: use squad leader icon
-    Options(2)=(SubjectText="Ban from squad",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')          // TODO: use a "hammer" icon
+    Options(2)=(SubjectText="Ban from squad",Material=Material'DH_GUI_Tex.ConstructionMenu.ban_icon')
 }
 

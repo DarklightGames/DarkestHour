@@ -25,10 +25,7 @@ function Setup()
         StartIndex = UInteger(MenuObject).Value;
     }
 
-    if (Interaction != none && Interaction.ViewportOwner != none)
-    {
-        PC = DHPlayer(Interaction.ViewportOwner.Actor);
-    }
+    PC = GetPlayerController();
 
     // For simplicity's sake, we'll map the static array to a dynamic array so
     // we can know how many classes we have to deal upfront and not have to deal
@@ -42,12 +39,12 @@ function Setup()
         }
     }
 
-    Options.Length = 8;
-
     if (GRI != none)
     {
-        for (i = StartIndex; i < ConstructionClasses.Length && j < Options.Length; ++i)
+        // TODO: magic number
+        for (i = StartIndex; i < ConstructionClasses.Length && j < 8; ++i)
         {
+            Options.Insert(j, 1);
             Options[j].OptionalObject = ConstructionClasses[i];
             Options[j].ActionText = ConstructionClasses[i].static.GetMenuName(PC);
             Options[j].Material = ConstructionClasses[i].static.GetMenuIcon(PC);
@@ -66,6 +63,8 @@ function Setup()
             Options[0].Material = Texture'DH_GUI_tex.ConstructionMenu.Construction_More'; // TODO: some sort of ellipses icon?
         }
     }
+
+    super.Setup();
 }
 
 function OnSelect(int OptionIndex, vector Location)
@@ -123,7 +122,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     super.GetOptionRenderInfo(OptionIndex, ORI);
 
     ConstructionClass = class<DHConstruction>(Options[OptionIndex].OptionalObject);
-    PC = DHPlayer(Interaction.ViewportOwner.Actor);
+    PC = GetPlayerController();
 
     if (ConstructionClass != none && PC != none)
     {
@@ -181,5 +180,6 @@ defaultproperties
     SuppliesIcon=Texture'DH_InterfaceArt_tex.HUD.supplies'
     NotAvailableText="Not Available"
     TeamLimitText="Limit Reached"
+    SlotCountOverride=8
 }
 
