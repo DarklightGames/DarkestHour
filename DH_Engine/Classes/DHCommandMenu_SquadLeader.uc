@@ -24,7 +24,10 @@ function OnSelect(int Index, vector Location)
 
     switch (Index)
     {
-        case 0: // Fire
+        case 0: // Rally Point
+            PC.ServerSquadSpawnRallyPoint();
+            break;
+        case 1: // Fire
             if (Rand(2) == 0)
             {
                 PC.ConsoleCommand("SPEECH ORDER 6");
@@ -35,17 +38,10 @@ function OnSelect(int Index, vector Location)
             }
             PC.ServerSquadSignal(SIGNAL_Fire, Location);
             break;
-        case 1: // Rally Point
-            PC.ServerSquadSpawnRallyPoint();
-            break;
         case 2: // Construction
             Interaction.PushMenu("DH_Engine.DHCommandMenu_Construction");
             return;
-        case 3: // Move
-            PC.ConsoleCommand("SPEECH ALERT 1");
-            PC.ServerSquadSignal(SIGNAL_Move, Location);
-            break;
-        case 4:
+        case 3:
             P = DHPawn(MenuObject);
 
             if (P != none)
@@ -62,9 +58,13 @@ function OnSelect(int Index, vector Location)
                 }
             }
             return;
-        case 5:
+        case 4:
             Interaction.PushMenu("DH_Engine.DHCommandMenu_SquadMenu", MenuObject);
             return;
+        case 5: // Move
+            PC.ConsoleCommand("SPEECH ALERT 1");
+            PC.ServerSquadSignal(SIGNAL_Move, Location);
+            break;
         default:
             break;
     }
@@ -84,7 +84,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
     switch (OptionIndex)
     {
-        case 4:
+        case 3: // Player Menu
             if (OtherPawn != none && OtherPawn.PlayerReplicationInfo != none)
             {
                 ORI.OptionName = OtherPawn.PlayerReplicationInfo.PlayerName;
@@ -116,11 +116,11 @@ function bool IsOptionDisabled(int OptionIndex)
 
     switch (OptionIndex)
     {
-    case 1: // Rally Point
+    case 0: // Rally Point
         return DHPawn(PC.Pawn) == none || PC.SquadReplicationInfo == none || !PC.SquadReplicationInfo.bAreRallyPointsEnabled;
     case 2: // Construction
         return DHPawn(PC.Pawn) == none || GRI == none || !GRI.bAreConstructionsEnabled;
-    case 4:
+    case 3:
         return DHPawn(MenuObject) == none || DHPawn(MenuObject).Health <= 0 || PC.GetTeamNum() != DHPawn(MenuObject).GetTeamNum();
     default:
         return false;
@@ -130,10 +130,11 @@ function bool IsOptionDisabled(int OptionIndex)
 defaultproperties
 {
     NoPlayerInLineOfSight="No player in sights"
-    Options(0)=(ActionText="Fire",Material=texture'DH_InterfaceArt_tex.HUD.squad_signal_fire')
-    Options(1)=(ActionText="Create Rally Point",Material=texture'DH_GUI_Tex.DeployMenu.RallyPointDiffuse')
+    Options(0)=(ActionText="Create Rally Point",Material=texture'DH_GUI_Tex.DeployMenu.RallyPointDiffuse')
+    Options(1)=(ActionText="Fire",Material=texture'DH_InterfaceArt_tex.HUD.squad_signal_fire')
     Options(2)=(ActionText="Construction",Material=texture'DH_InterfaceArt_tex.HUD.supplies')
-    Options(3)=(ActionText="Move",Material=texture'DH_InterfaceArt_tex.HUD.squad_signal_move')
-    Options(4)=(ActionText="No Player ",Material=texture'DH_GUI_tex.DeployMenu.reinforcements')
-    Options(5)=(ActionText="Squad",Material=texture'DH_GUI_tex.DeployMenu.squads')
+    Options(3)=(ActionText="No Player ",Material=texture'DH_GUI_tex.DeployMenu.reinforcements')
+    Options(4)=(ActionText="Squad",Material=texture'DH_GUI_tex.DeployMenu.squads')
+    Options(5)=(ActionText="Move",Material=texture'DH_InterfaceArt_tex.HUD.squad_signal_move')
 }
+
