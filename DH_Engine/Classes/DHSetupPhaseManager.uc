@@ -29,6 +29,7 @@ var() sound             PhaseEndSounds[2];                  // Axis and Allies R
 var localized string    PhaseMessage;                       // Message to send periodically when phase is current
 var localized string    PhaseEndMessage;                    // Message to send to team when end is reached
 var bool                bSkipPreStart;                      // If true will override the game's default PreStartTime, making it zero
+var bool                bPlayersOpenedMenus;
 var int                 TimerCount;
 var int                 SetupPhaseDurationActual;
 var int                 SpawningEnabledTimeActual;
@@ -65,6 +66,7 @@ event PreBeginPlay()
 function Reset()
 {
     TimerCount = 0;
+    bPlayersOpenedMenus = false;
     GotoState('Timing');
 }
 
@@ -73,18 +75,16 @@ auto state Timing
     function BeginState()
     {
         local DHGameReplicationInfo GRI;
-        local DarkestHourGame G;
 
-        G = DarkestHourGame(Level.Game);
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-        if (GRI == none || G == none)
+        if (GRI == none)
         {
             return;
         }
 
-        // Have everyone open their deploy menu
-        G.OpenPlayerMenus();
+        // Reset
+        bPlayersOpenedMenus = false;
 
         // Prevent weapon dropping
         Level.Game.bAllowWeaponThrowing = false;
@@ -102,6 +102,13 @@ auto state Timing
     {
         local Controller C;
         local PlayerController PC;
+
+        // Have everyone open their deploy menu
+        if (!bPlayersOpenedMenus && DarkestHourGame(Level.Game) != none)
+        {
+            DarkestHourGame(Level.Game).OpenPlayerMenus();
+            bPlayersOpenedMenus = true;
+        }
 
         if (TimerCount < SetupPhaseDurationActual)
         {
