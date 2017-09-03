@@ -1506,8 +1506,10 @@ function SetSquadNextRallyPointTime(int TeamIndex, int SquadIndex, float TimeSec
     {
         case AXIS_TEAM_INDEX:
             AxisNextRallyPointTimes[SquadIndex] = TimeSeconds;
+            break;
         case ALLIES_TEAM_INDEX:
             AlliesNextRallyPointTimes[SquadIndex] = TimeSeconds;
+            break;
         default:
             break;
     }
