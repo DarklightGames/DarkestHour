@@ -2685,18 +2685,12 @@ state RoundInPlay
     function EndState()
     {
         local Pawn P;
-        local Inventory Inv;
 
         super.EndState();
 
         foreach DynamicActors(class'Pawn', P)
         {
             P.StopWeaponFiring();
-        }
-
-        foreach DynamicActors(class'Inventory', Inv)
-        {
-            Inv.Destroy();
         }
     }
 
@@ -2917,9 +2911,17 @@ state RoundOver
 // Extended to inform GRI that the round is over so the time remaining can "pause" on the second the round ended (instead of continuing to count down)
 function EndGame(PlayerReplicationInfo Winner, string Reason)
 {
+    local Inventory Inv;
+
     if (DHGameReplicationInfo(GameReplicationInfo) != none)
     {
         DHGameReplicationInfo(GameReplicationInfo).bRoundIsOver = true;
+    }
+
+    // Destroy all Inventory (hopeful fix to the constant MG firing)
+    foreach DynamicActors(class'Inventory', Inv)
+    {
+        Inv.Destroy();
     }
 
     super.EndGame(Winner, Reason);
@@ -3014,8 +3016,7 @@ function HandleReinforcements(Controller C)
         return;
     }
 
-    //TODO: look into improving or rewriting this, as this is garbage looking
-    if (PC.GetTeamNum() == ALLIES_TEAM_INDEX && LevelInfo.Allies.SpawnLimit > 0 && GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] != -1)
+    if (PC.GetTeamNum() == ALLIES_TEAM_INDEX && GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] != -1)
     {
         ModifyReinforcements(ALLIES_TEAM_INDEX, -1);
 
@@ -3033,7 +3034,7 @@ function HandleReinforcements(Controller C)
             }
         }
     }
-    else if (PC.GetTeamNum() == AXIS_TEAM_INDEX && LevelInfo.Axis.SpawnLimit > 0 && GRI.SpawnsRemaining[AXIS_TEAM_INDEX] != -1)
+    else if (PC.GetTeamNum() == AXIS_TEAM_INDEX && GRI.SpawnsRemaining[AXIS_TEAM_INDEX] != -1)
     {
         ModifyReinforcements(AXIS_TEAM_INDEX, -1);
 
@@ -4463,13 +4464,16 @@ function ChangeSides()
 function OpenPlayerMenus()
 {
     local Controller P;
+    local DHPlayer PC;
 
     for (P = Level.ControllerList; P != none; P = P.NextController)
     {
-        if (P.bIsPlayer && P.PlayerReplicationInfo.Team != none && P.PlayerReplicationInfo.Team.TeamIndex != 2)
+        PC = DHPlayer(P);
+
+        if (PC != none && PC.bIsPlayer && PC.GetTeamNum() != 255)
         {
-            DHPlayer(P).DeployMenuStartMode = MODE_Map;
-            DHPlayer(P).ClientProposeMenu("DH_Interface.DHDeployMenu");
+            PC.DeployMenuStartMode = MODE_Map;
+            PC.ClientProposeMenu("DH_Interface.DHDeployMenu");
         }
     }
 }
