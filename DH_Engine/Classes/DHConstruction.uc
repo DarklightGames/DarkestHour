@@ -716,23 +716,21 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Mo
         }
     }
 
-    if (!ShouldTakeDamageFromDamageType(DamageType))
+    if (bCanBeDamaged && ShouldTakeDamageFromDamageType(DamageType))
     {
-        return;
-    }
+        Damage = GetScaledDamage(DamageType, Damage);
 
-    Damage = GetScaledDamage(DamageType, Damage);
+        if (Damage >= MinDamagetoHurt)
+        {
+            Health -= GetScaledDamage(DamageType, Damage);
+        }
 
-    if (Damage >= MinDamagetoHurt)
-    {
-        Health -= GetScaledDamage(DamageType, Damage);
-    }
+        OnHealthChanged();
 
-    OnHealthChanged();
-
-    if (Health <= 0)
-    {
-        GotoState('Broken');
+        if (Health <= 0)
+        {
+            GotoState('Broken');
+        }
     }
 }
 
