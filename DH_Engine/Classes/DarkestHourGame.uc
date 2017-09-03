@@ -481,17 +481,6 @@ function PostBeginPlay()
         Warn("DHSpawnManager could not be found");
     }
 
-    // Here we see if the victory music is set to a sound group and pick an index to replicate to the clients
-    if (DHLevelInfo.AlliesWinsMusic != none && DHLevelInfo.AlliesWinsMusic.IsA('SoundGroup'))
-    {
-        GRI.AlliesVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AlliesWinsMusic).Sounds.Length);
-    }
-
-    if (DHLevelInfo.AxisWinsMusic != none && DHLevelInfo.AxisWinsMusic.IsA('SoundGroup'))
-    {
-        GRI.AxisVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AxisWinsMusic).Sounds.Length);
-    }
-
     if (bEnableMetrics && MetricsClass != none)
     {
         Metrics = Spawn(MetricsClass);
@@ -2208,6 +2197,9 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
     // If this logic is ever duplicated or resused, it needs to be made a function instead
     for (i = 0; i < 2; ++i)
     {
+        // Make this false for now, because we are going to check and set it to true if we do find someone alive, and it needs to reset for each team we check!
+        bHasAPlayerAlive = false;
+
         if (SpawnLimitReached(i))
         {
             for (P = Level.ControllerList; P != none; P = P.NextController)
@@ -2364,6 +2356,17 @@ state RoundInPlay
         GRI.RoundEndTime = RoundStartTime + RoundDuration;
         GRI.AttritionRate[AXIS_TEAM_INDEX] = 0;
         GRI.AttritionRate[ALLIES_TEAM_INDEX] = 0;
+
+        // Here we see if the victory music is set to a sound group and pick an index to replicate to the clients
+        if (DHLevelInfo.AlliesWinsMusic != none && DHLevelInfo.AlliesWinsMusic.IsA('SoundGroup'))
+        {
+            GRI.AlliesVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AlliesWinsMusic).Sounds.Length);
+        }
+
+        if (DHLevelInfo.AxisWinsMusic != none && DHLevelInfo.AxisWinsMusic.IsA('SoundGroup'))
+        {
+            GRI.AxisVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AxisWinsMusic).Sounds.Length);
+        }
 
         TeamAttritionCounter[AXIS_TEAM_INDEX] = 0;
         TeamAttritionCounter[ALLIES_TEAM_INDEX] = 0;
