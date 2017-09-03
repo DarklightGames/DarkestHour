@@ -164,6 +164,8 @@ simulated event PostBeginPlay()
 
     super.PostBeginPlay();
 
+    VoiceChatCodec = "CODEC_96WB";
+
     // Make this only run by the owning client
     if (Level.NetMode != NM_DedicatedServer)
     {
@@ -5261,4 +5263,7 @@ defaultproperties
 
     DHPrimaryWeapon=-1
     DHSecondaryWeapon=-1
+
+    VoiceChatCodec="CODEC_96WB"
+    VoiceChatLANCodec="CODEC_96WB"
 }

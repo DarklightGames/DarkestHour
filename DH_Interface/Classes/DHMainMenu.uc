@@ -110,42 +110,10 @@ function OnControlsChangedButtonClicked(byte bButton)
     }
 }
 
+// Override to remove EULA confirmation
 function InternalOnOpen()
 {
-    local UVersion SavedVersionObject;
-
     PlayerOwner().ClientSetInitialMusic(MenuSong, MTRAN_Segue);
-
-    if (SavedVersion != class'DarkestHourGame'.default.Version.ToString())
-    {
-        SavedVersionObject = class'UVersion'.static.FromString(SavedVersion);
-
-        // Matt: suggest add "alpha" so ppl using the dev build or who have played the v8-alpha test version will get the new smoke launcher and vehicle lock keys
-        if (SavedVersionObject == none || SavedVersionObject.Major < 8) // || SavedVersionObject.Prerelease == "alpha")
-        {
-            // To make a long story short, we can't force the client to delete
-            // their configuration file at will, so we need to forcibly create
-            // control bindings for the new commands added in 8.0;
-            Controller.SetKeyBind("I", "SquadTalk");
-            Controller.SetKeyBind("Insert", "Speak Squad");
-            Controller.SetKeyBind("CapsLock", "ShowOrderMenu | OnRelease HideOrderMenu");
-            //Controller.SetKeyBind("L", "ToggleVehicleLock"); // Matt: want to add
-            Controller.SetKeyBind("Minus", "DecreaseSmokeLauncherSetting");
-            Controller.SetKeyBind("Equals", "IncreaseSmokeLauncherSetting");
-            // TODO: fetch the defaults programmatically, this is sloppy!
-            // Matt: suggested alternative below, using new SetKeyBindIfAvailable() function:
-/*
-            SetKeyBindIfAvailable("I", "SquadTalk");
-            SetKeyBindIfAvailable("Insert", "Speak Squad");
-            SetKeyBindIfAvailable("CapsLock", "ShowOrderMenu | OnRelease HideOrderMenu");
-            SetKeyBindIfAvailable("L", "ToggleVehicleLock");
-            SetKeyBindIfAvailable("Minus", "DecreaseSmokeLauncherSetting", "ShrinkHUD"); // optional 3rd argument means it will override a current binding to the ShrinkHUD command
-            SetKeyBindIfAvailable("Equals", "IncreaseSmokeLauncherSetting", "GrowHUD"); */
-        }
-
-        SavedVersion = class'DarkestHourGame'.default.Version.ToString();
-        SaveConfig();
-    }
 }
 
 // New function to bind a key to a command, but first checking it's safe to do so without messing up the player's controls config
@@ -333,6 +301,8 @@ function HideAnnouncement()
 
 event Opened(GUIComponent Sender)
 {
+    local UVersion SavedVersionObject;
+
     sb_ShowVersion.SetVisibility(true);
 
     if (bDebugging)
@@ -343,6 +313,48 @@ event Opened(GUIComponent Sender)
     if (Sender != none && PlayerOwner().Level.IsPendingConnection())
     {
         PlayerOwner().ConsoleCommand("CANCEL");
+    }
+
+    if (SavedVersion != class'DarkestHourGame'.default.Version.ToString())
+    {
+        SavedVersionObject = class'UVersion'.static.FromString(SavedVersion);
+
+        // Matt: suggest add "alpha" so ppl using the dev build or who have played the v8-alpha test version will get the new smoke launcher and vehicle lock keys
+        if (SavedVersionObject == none || SavedVersionObject.Major < 8) // || SavedVersionObject.Prerelease == "alpha")
+        {
+            // To make a long story short, we can't force the client to delete
+            // their configuration file at will, so we need to forcibly create
+            // control bindings for the new commands added in 8.0;
+            Controller.SetKeyBind("I", "SquadTalk");
+            Controller.SetKeyBind("Insert", "Speak Squad");
+            Controller.SetKeyBind("CapsLock", "ShowOrderMenu | OnRelease HideOrderMenu");
+            //Controller.SetKeyBind("L", "ToggleVehicleLock"); // Matt: want to add
+            Controller.SetKeyBind("Minus", "DecreaseSmokeLauncherSetting");
+            Controller.SetKeyBind("Equals", "IncreaseSmokeLauncherSetting");
+            // TODO: fetch the defaults programmatically, this is sloppy!
+            // Matt: suggested alternative below, using new SetKeyBindIfAvailable() function:
+            /*
+            SetKeyBindIfAvailable("I", "SquadTalk");
+            SetKeyBindIfAvailable("Insert", "Speak Squad");
+            SetKeyBindIfAvailable("CapsLock", "ShowOrderMenu | OnRelease HideOrderMenu");
+            SetKeyBindIfAvailable("L", "ToggleVehicleLock");
+            SetKeyBindIfAvailable("Minus", "DecreaseSmokeLauncherSetting", "ShrinkHUD"); // optional 3rd argument means it will override a current binding to the ShrinkHUD command
+            SetKeyBindIfAvailable("Equals", "IncreaseSmokeLauncherSetting", "GrowHUD"); */
+        }
+
+        SavedVersion = class'DarkestHourGame'.default.Version.ToString();
+        SaveConfig();
+    }
+
+    // Force voice quality to higher quality
+    if (PlayerOwner().VoiceChatCodec != "CODEC_96WB" || PlayerOwner().ConsoleCommand("get Engine.PlayerController VoiceChatCodec") != "CODEC_96WB")
+    {
+        Log("Forcing codec to 96WB...");
+        PlayerOwner().VoiceChatCodec = "CODEC_96WB";
+        PlayerOwner().VoiceChatLANCodec = "CODEC_96WB";
+        PlayerOwner().ConsoleCommand("set Engine.PlayerController VoiceChatCodec CODEC_96WB");
+        PlayerOwner().ConsoleCommand("set Engine.PlayerController VoiceChatLANCodec CODEC_96WB");
+        PlayerOwner().SaveConfig();
     }
 
     super.Opened(Sender);
