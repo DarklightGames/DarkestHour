@@ -286,7 +286,6 @@ function bool PerformSpawn(DHPlayer PC)
     return false;
 }
 
-// TODO: not sure what to do with this
 function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, int VehiclePoolIndex)
 {
     local Controller    C;
@@ -363,9 +362,9 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
             break;
         }
 
-        // Location hint isn't blocked, so we'll use it & exit the for loop
         if (!bIsBlocked)
         {
+            // Location hint isn't blocked, so we'll use it & exit the for loop
             LocationHintIndex = LocationHintIndices[i];
             break;
         }
@@ -375,14 +374,13 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
     {
         if (LocationHints.Length == 0 || bUseLocationAsFallback)
         {
-            SpawnLocation = Location;
-            SpawnRotation = Rotation;
-            return true;
+            return super.GetSpawnPosition(SpawnLocation, SpawnRotation, VehiclePoolIndex);
         }
 
         LocationHintIndex = Rand(LocationHints.Length);
     }
 
+    // TODO: Add in the ability to spawn infantry in a radius around the location hints.
     SpawnLocation = LocationHints[LocationHintIndex].Location;
     SpawnRotation = LocationHints[LocationHintIndex].Rotation;
 

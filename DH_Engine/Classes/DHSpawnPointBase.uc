@@ -21,6 +21,11 @@ var private int TeamIndex;
 var ESpawnPointBlockReason BlockReason;
 var private bool bIsActive;
 
+// Parameters for spawning in a radius (NOTE: currently only works for infantry!)
+var vector  SpawnLocationOffset;
+var float   SpawnRadius;
+var int     SpawnRadiusSegmentCount;
+
 var protected DHGameReplicationInfo GRI;
 
 // The amount of time, in seconds, that a player will be invulnerable after
@@ -73,7 +78,49 @@ simulated function bool CanSpawnRole(DHRoleInfo RI)
 // Override to specify a different spawn pose, otherwise it just uses the spawn point's pose.
 function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, int VehiclePoolIndex)
 {
-    SpawnLocation = Location;
+    local int i, j, k;
+    local DHPawnCollisionTest CT;
+    local vector L;
+    local float Angle, AngleInterval;
+
+    // TODO: The spawn radius only works for infantry spawns; in future it would
+    // be handy to use a radius for vehicle spawns. Unfortunately this is less
+    // reliable since the vehicle radii would ahve to be much considerably larger
+    // due to their larger and varied sizes.
+    if (VehiclePoolIndex == -1 && SpawnRadius != 0.0)
+    {
+        // Calculate the arclength of the
+        AngleInterval = (Pi * 2) / SpawnRadiusSegmentCount;
+        j = Rand(SpawnRadiusSegmentCount);
+
+        for (i = 0; i < SpawnRadiusSegmentCount; ++i)
+        {
+            k = (i + j) % SpawnRadiusSegmentCount;
+            Angle = AngleInterval * k;
+
+            L = Location;
+            L.X += Cos(Angle) * SpawnRadius;
+            L.Y += Sin(Angle) * SpawnRadius;
+            L.Z += 10.0 + class'DHPawn'.default.CollisionHeight / 2;
+
+            CT = Spawn(class'DHPawnCollisionTest',,, L);
+
+            if (CT != none)
+            {
+                break;
+            }
+        }
+
+        if (CT != none)
+        {
+            SpawnLocation = L + SpawnLocationOffset;
+            SpawnRotation = Rotation;
+            CT.Destroy();
+            return true;
+        }
+    }
+
+    SpawnLocation = Location + SpawnLocationOffset;
     SpawnRotation = Rotation;
 
     return true;
@@ -221,5 +268,6 @@ defaultproperties
     RemoteRole=ROLE_SimulatedProxy
     bIsActive=false
     bHidden=true
+    SpawnRadiusSegmentCount=8
 }
 

@@ -6,7 +6,6 @@
 class DHSpawnPoint_PlatoonHQ extends DHSpawnPointBase
     notplaceable;
 
-var float SpawnRadius;
 var DHConstruction Construction;
 
 var bool    bIsActivated;
@@ -169,46 +168,6 @@ function bool PerformSpawn(DHPlayer PC)
             return false;
         }
 
-        return true;
-    }
-
-    return false;
-}
-
-function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, int VehiclePoolIndex)
-{
-    local int i, j;
-    local DHPawnCollisionTest CT;
-    local vector L;
-    local float ArcLength;
-
-    const SEGMENT_COUNT = 8;
-
-    ArcLength = (Pi * 2) / SEGMENT_COUNT;
-
-    j = Rand(SEGMENT_COUNT);
-
-    // TODO: move this radial functionality into a parent class
-    for (i = 0; i < SEGMENT_COUNT; ++i)
-    {
-        L = Location;
-        L.X += Cos(ArcLength * (i + j) % SEGMENT_COUNT) * SpawnRadius;
-        L.Y += Sin(ArcLength * (i + j) % SEGMENT_COUNT) * SpawnRadius;
-        L.Z += 10.0 + class'DHPawn'.default.CollisionHeight / 2;
-
-        CT = Spawn(class'DHPawnCollisionTest',,, L);
-
-        if (CT != none)
-        {
-            break;
-        }
-    }
-
-    if (CT != none)
-    {
-        SpawnLocation = L;
-        SpawnRotation = Rotation;
-        CT.Destroy();
         return true;
     }
 

@@ -225,26 +225,6 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
     return true;
 }
 
-function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, int VehiclePoolIndex)
-{
-    local vector HitLocation, HitNormal;
-
-    if (Trace(HitLocation, HitNormal, Location - vect(0, 0, 32), Location + vect(0, 0, 32)) != none)
-    {
-        SpawnLocation = HitLocation;
-        SpawnLocation.Z += class'DHPawn'.default.CollisionHeight / 2;
-    }
-    else
-    {
-        SpawnLocation = Location;
-        SpawnLocation.Z += class'DHPawn'.default.CollisionHeight / 2;
-    }
-
-    SpawnRotation = Rotation;
-
-    return true;
-}
-
 simulated function bool IsVisibleTo(int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
 {
     return super.IsVisibleTo(TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex) && self.SquadIndex == SquadIndex;
@@ -404,5 +384,7 @@ defaultproperties
     bHidden=false
     bCanSendAbandonmentWarningMessage=true
     bCombatSpawn=true
+    SpawnRadius=60.0
+    SpawnLocationOffset=(Z=52)
 }
 
