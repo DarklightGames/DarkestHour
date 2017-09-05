@@ -19,6 +19,7 @@ var int MaxPlayersListedPerSide;
 var int MyTeamIndex;
 
 var localized string SquadLeaderAbbreviation;
+var localized string PlayersText;
 
 var color SquadHeaderColor;
 var color PlayerBackgroundColor;
@@ -463,6 +464,20 @@ simulated function UpdateScoreBoard(Canvas C)
     DrawCell(C, S, 0, X, Y, BaseXPos[0] + CalcX(GetScoreboardTeamWidth(AXIS_TEAM_INDEX) + GetScoreboardTeamWidth(ALLIES_TEAM_INDEX) + 0.75, C), LineHeight, false, HUD.default.WhiteColor);
 }
 
+simulated function string GetColumnTitle(int TeamIndex, int ColumnIndex)
+{
+    local int TeamSizes[2];
+
+    switch (ColumnIndex)
+    {
+        case 1: // Name
+            DHGRI.GetTeamSizes(TeamSizes);
+            return PlayersText @ "(" $ TeamSizes[TeamIndex] $ ")";
+        default:
+            return ScoreboardColumns[ColumnIndex].Title;
+    }
+}
+
 simulated function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> TeamPRI, out float X, out float Y, out float LineHeight)
 {
     local string S, TeamName;
@@ -549,7 +564,7 @@ simulated function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplication
 
     for (i = 0; i < ScoreboardColumnIndices.Length; ++i)
     {
-        DrawCell(C, ScoreboardColumns[ScoreboardColumnIndices[i]].Title, ScoreboardColumns[ScoreboardColumnIndices[i]].Justification, X, Y, CalcX(ScoreboardColumns[ScoreboardColumnIndices[i]].Width, C), LineHeight, true, class'UColor'.default.White, TeamColor);
+        DrawCell(C, GetColumnTitle(TeamIndex, ScoreboardColumnIndices[i]), ScoreboardColumns[ScoreboardColumnIndices[i]].Justification, X, Y, CalcX(ScoreboardColumns[ScoreboardColumnIndices[i]].Width, C), LineHeight, true, class'UColor'.default.White, TeamColor);
         X += CalcX(ScoreboardColumns[ScoreboardColumnIndices[i]].Width, C);
     }
 
@@ -781,7 +796,7 @@ simulated function DrawCell(Canvas C, coerce string Text, byte Align, float XPos
 defaultproperties
 {
     ScoreboardColumns(0)=(Title="#",Type=COLUMN_SquadMemberIndex,Width=1.5,Justification=1,bFriendlyOnly=true)
-    ScoreboardColumns(1)=(Title="Name",Type=COLUMN_PlayerName,Width=6.0)
+    ScoreboardColumns(1)=(Type=COLUMN_PlayerName,Width=6.0)
     ScoreboardColumns(2)=(Title="Role",Type=COLUMN_Role,Width=4.0,bFriendlyOnly=true)
 //    ScoreboardColumns(3)=(Title="K",Type=COLUMN_Kills,Width=0.75,Justification=1,bFriendlyOnly=true)
 //    ScoreboardColumns(4)=(Title="D",Type=COLUMN_Deaths,Width=0.75,Justification=1,bFriendlyOnly=true)
@@ -802,4 +817,5 @@ defaultproperties
     PingLength=1.5
     MyTeamIndex=2
     SquadLeaderAbbreviation="SL"
+    PlayersText="Players"
 }
