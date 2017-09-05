@@ -121,10 +121,10 @@ replication
     reliable if (Role < ROLE_Authority)
         ServerLoadATAmmo, ServerThrowMortarAmmo,
         ServerSaveArtilleryTarget, ServerSetPlayerInfo, ServerClearObstacle,
-        ServerMetricsDump, ServerLockWeapons, ServerSetBayonetAtSpawn,
+        ServerLockWeapons, ServerSetBayonetAtSpawn,
         ServerSquadCreate, ServerSquadLeave, ServerSquadJoin, ServerSquadSay,
         ServerSquadJoinAuto, ServerSquadInvite, ServerSquadKick, ServerSquadPromote,
-        ServerSquadCommandeer, ServerSquadLock, ServerSquadOrder, ServerSquadSignal,
+        ServerSquadLock, ServerSquadOrder, ServerSquadSignal,
         ServerSquadRename, ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint,
         ServerSquadSwapRallyPoints, ServerSquadBan,
         // these ones in debug mode only:
@@ -4729,11 +4729,6 @@ simulated function int GetRoleIndex()
 // START SQUAD DEBUG FUNCTIONS
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-simulated exec function SquadCreate()
-{
-    ServerSquadCreate();
-}
-
 function ServerSquadCreate()
 {
     local DarkestHourGame G;
@@ -4741,11 +4736,6 @@ function ServerSquadCreate()
     G = DarkestHourGame(Level.Game);
 
     G.SquadReplicationInfo.CreateSquad(DHPlayerReplicationInfo(PlayerReplicationInfo));
-}
-
-simulated exec function SquadLeave()
-{
-    ServerSquadLeave();
 }
 
 function ServerSquadLeave()
@@ -4757,11 +4747,6 @@ function ServerSquadLeave()
     G.SquadReplicationInfo.LeaveSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), true);
 }
 
-simulated exec function SquadJoin(int SquadIndex)
-{
-    ServerSquadJoin(GetTeamNum(), SquadIndex);
-}
-
 function ServerSquadJoin(int TeamIndex, int SquadIndex, optional bool bWasInvited)
 {
     local DarkestHourGame G;
@@ -4769,11 +4754,6 @@ function ServerSquadJoin(int TeamIndex, int SquadIndex, optional bool bWasInvite
     G = DarkestHourGame(Level.Game);
 
     G.SquadReplicationInfo.JoinSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), TeamIndex, SquadIndex, bWasInvited);
-}
-
-simulated exec function SquadJoinAuto()
-{
-    ServerSquadJoinAuto();
 }
 
 function ServerSquadJoinAuto()
@@ -4820,11 +4800,6 @@ function ServerSquadBan(DHPlayerReplicationInfo PlayerToBan)
     }
 }
 
-simulated exec function SquadLock(bool bIsLocked)
-{
-    ServerSquadLock(bIsLocked);
-}
-
 function ServerSquadLock(bool bIsLocked)
 {
     local DHPlayerReplicationInfo PRI;
@@ -4834,23 +4809,6 @@ function ServerSquadLock(bool bIsLocked)
     if (SquadReplicationInfo != none && PRI != none)
     {
         SquadReplicationInfo.SetSquadLocked(PRI, GetTeamNum(), PRI.SquadIndex, bIsLocked);
-    }
-}
-
-simulated exec function SquadCommandeer()
-{
-    ServerSquadCommandeer();
-}
-
-function ServerSquadCommandeer()
-{
-    local DHPlayerReplicationInfo PRI;
-
-    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-
-    if (SquadReplicationInfo != none && PRI != none)
-    {
-        SquadReplicationInfo.CommandeerSquad(PRI, GetTeamNum(), PRI.SquadIndex);
     }
 }
 
