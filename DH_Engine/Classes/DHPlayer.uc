@@ -3448,27 +3448,6 @@ function ServerPossessBody(Pawn NewPawn)
     }
 }
 
-exec function URL(string S)
-{
-    local URL U;
-
-    U = class'URL'.static.FromString(S);
-
-    Log(U);
-
-    if (U != none)
-    {
-        Log("Scheme" @ U.Scheme);
-        Log("User" @ U.Username);
-        Log("Pass" @ U.Password);
-        Log("Host" @ U.Host);
-        Log("Path" @ U.Path);
-        Log("Query" @ U.Query);
-        Log("Fragment" @ U.Fragment);
-        Log("Port" @ U.Port);
-    }
-}
-
 // New debug exec to trigger or un-trigger a specified event
 exec function DebugEvent(name EventToTrigger, optional bool bUntrigger)
 {
@@ -3524,25 +3503,6 @@ exec function SetMyRotation(rotator NewRotation)
     if (IsDebugModeAllowed())
     {
         SetRotation(NewRotation);
-    }
-}
-
-exec function MetricsDump()
-{
-    ServerMetricsDump();
-}
-
-function ServerMetricsDump()
-{
-    local DarkestHourGame G;
-
-    G = DarkestHourGame(Level.Game);
-
-    if (G.Metrics != none)
-    {
-        G.Broadcast(self, G.Metrics.Dump());
-
-        Log(G.Metrics.Dump());
     }
 }
 
