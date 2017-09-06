@@ -1627,7 +1627,7 @@ defaultproperties
     DeployNowText="Press Continue to deploy now!"
     ChangeTeamConfirmText="Are you sure you want to change teams? (you will not be able to change back for {s} seconds)"
     FreeChangeTeamConfirmText="Are you sure you want to change teams?"
-    CantChangeTeamYetText="You have {s} seconds before you can change teams"
+    CantChangeTeamYetText="You must wait {s} seconds before you can change teams"
     ReservedString="Reserved"
     VehicleUnavailableString="The vehicle you had selected is no longer available."
     LockText="Lock"
