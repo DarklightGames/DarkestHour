@@ -5015,11 +5015,9 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
 
 exec function HideOrderMenu()
 {
-    // TODO: on death, hide order menu
     if (CommandInteraction != none)
     {
         CommandInteraction.Hide();
-
         CommandInteraction = none;
     }
 }
@@ -5075,7 +5073,7 @@ function ServerSpeak(int ChannelIndex, optional string ChannelPassword)
 
     Index = -1;
     ActiveRoom = VCR;
-    Log(PlayerReplicationInfo.PlayerName@"speaking on"@VCR.GetTitle(),'VoiceChat');
+    Log(PlayerReplicationInfo.PlayerName @ "speaking on" @ VCR.GetTitle(), 'VoiceChat');
     ChatRoomMessage(9, ChannelIndex);
     ClientSetActiveRoom(VCR.ChannelIndex);
     Index = VCR.ChannelIndex;
