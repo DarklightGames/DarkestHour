@@ -263,7 +263,7 @@ defaultproperties
 {
     TeamIndex=-1
     SpawnProtectionTime=2.0
-    SpawnKillProtectionTime=6.0
+    SpawnKillProtectionTime=7.0
     bAlwaysRelevant=true
     RemoteRole=ROLE_SimulatedProxy
     bIsActive=false

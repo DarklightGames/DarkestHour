@@ -386,5 +386,7 @@ defaultproperties
     bCombatSpawn=true
     SpawnRadius=60.0
     SpawnLocationOffset=(Z=52)
+    SpawnProtectionTime=1.0
+    SpawnKillProtectionTime=8.0
 }
 
