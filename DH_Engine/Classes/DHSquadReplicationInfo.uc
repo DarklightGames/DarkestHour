@@ -47,6 +47,7 @@ var private float                   AxisNextRallyPointTimes[TEAM_SQUADS_MAX];   
 var DHSpawnPoint_SquadRallyPoint    RallyPoints[RALLY_POINTS_MAX];
 var float                           RallyPointInitialDelaySeconds;
 var float                           RallyPointChangeLeaderDelaySeconds;
+var float                           RallyPointRadiusInMeters;
 
 var private DHPlayerReplicationInfo AlliesMembers[TEAM_SQUAD_MEMBERS_MAX];
 var private string                  AlliesNames[TEAM_SQUADS_MAX];
@@ -1552,8 +1553,6 @@ simulated function array<DHSpawnPoint_SquadRallyPoint> GetActiveSquadRallyPoints
     return ActiveSquadRallyPoints;
 }
 
-const RALLY_POINT_RADIUS_IN_METERS = 100;
-
 function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
 {
     local DHSpawnPoint_SquadRallyPoint RP;
@@ -1607,7 +1606,7 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
         {
             D = VSize(RallyPoints[i].Location - P.Location);
 
-            if (D < class'DHUnits'.static.MetersToUnreal(RALLY_POINT_RADIUS_IN_METERS))
+            if (D < class'DHUnits'.static.MetersToUnreal(RallyPointRadiusInMeters))
             {
                 if (D < ClosestBlockingRallyPointDistance)
                 {
@@ -1620,7 +1619,7 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
     if (ClosestBlockingRallyPointDistance != class'UFloat'.static.Infinity())
     {
         // "You must be an additional {0} meters away from your squad's other rally point."
-        PC.ReceiveLocalizedMessage(SquadMessageClass, class'UInteger'.static.FromShorts(45, Max(1, RALLY_POINT_RADIUS_IN_METERS - class'DHUnits'.static.UnrealToMeters(ClosestBlockingRallyPointDistance))));
+        PC.ReceiveLocalizedMessage(SquadMessageClass, class'UInteger'.static.FromShorts(45, Max(1, RallyPointRadiusInMeters - class'DHUnits'.static.UnrealToMeters(ClosestBlockingRallyPointDistance))));
 
         return none;
     }
@@ -1861,6 +1860,7 @@ defaultproperties
     AxisSquadSize=8
     RallyPointInitialDelaySeconds=15.0
     RallyPointChangeLeaderDelaySeconds=30.0
+    RallyPointRadiusInMeters=100.0
     AlliesDefaultSquadNames(0)="Able"
     AlliesDefaultSquadNames(1)="Baker"
     AlliesDefaultSquadNames(2)="Charlie"
