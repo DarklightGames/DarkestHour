@@ -268,6 +268,14 @@ function Mutate(string MutateString, PlayerController Sender)
             {
                 DestroyActorInSights();
             }
+            else if (MutateOption ~= "ChangeAlliesSquadSize")
+            {
+                ChangeAlliesSquadSize(int(Words[2]));
+            }
+            else if (MutateOption ~= "ChangeAxisSquadSize")
+            {
+                ChangeAxisSquadSize(int(Words[2]));
+            }
         }
 
         // If a menu passed "logout" as the 1st Mutate string word it means the menu logged us in as an admin, so we now log out after the selected task is completed
@@ -905,6 +913,32 @@ function DestroyActorInSights()
                 Log("DHAdminMenu: admin" @ GetAdminName() @ "used DestroyActorInSights to remove actor" @ HitActor);
             }
         }
+    }
+}
+
+function ChangeAlliesSquadSize(int SquadSize)
+{
+    local DHPlayer PC;
+
+    PC = DHPlayer(Admin);
+
+    if (PC != none && PC.SquadReplicationInfo != none)
+    {
+        PC.SquadReplicationInfo.SetTeamSquadSize(ALLIES_TEAM_INDEX, SquadSize);
+        BroadcastMessageToAll(15);
+    }
+}
+
+function ChangeAxisSquadSize(int SquadSize)
+{
+    local DHPlayer PC;
+
+    PC = DHPlayer(Admin);
+
+    if (PC != none && PC.SquadReplicationInfo != none)
+    {
+        PC.SquadReplicationInfo.SetTeamSquadSize(AXIS_TEAM_INDEX, SquadSize);
+        BroadcastMessageToAll(16);
     }
 }
 

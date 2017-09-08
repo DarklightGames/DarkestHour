@@ -112,6 +112,16 @@ exec function DestroyActorInSights()
     BuildMutateCommand("DestroyActorInSights", 27);
 }
 
+exec function ChangeAlliesSquadSize()
+{
+    BuildMutateCommand("ChangeAlliesSquadSize", 28);
+}
+
+exec function ChangeAxisSquadSize()
+{
+    BuildMutateCommand("ChangeAxisSquadSize", 29);
+}
+
 // Checks if our mutator's Replicator actor has flagged that the realism match mutator is present on the server - gives a message & logout if it is not
 function bool RealismMutatorIsPresent()
 {
@@ -151,6 +161,9 @@ defaultproperties
     MenuText(17)="Toggle whether admin can pause game"
     MenuText(18)="Destroy actor in your sights"
 
+    MenuText(19)="Change allies squad size"
+    MenuText(20)="Change axis squad size"
+
     MenuCommand(1)="*EnableRealismMatch"
     MenuCommand(2)="*DisableRealismMatch"
     MenuCommand(3)="*ForceRealismMatchLive"
@@ -169,4 +182,7 @@ defaultproperties
     MenuCommand(16)="*SetRoundMinutesRemaining"
     MenuCommand(17)="*ToggleAdminCanPauseGame"
     MenuCommand(18)="*DestroyActorInSights"
+
+    MenuCommand(19)="*ChangeAlliesSquadSize"
+    MenuCommand(20)="*ChangeAxisSquadSize"
 }

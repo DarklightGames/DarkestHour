@@ -81,7 +81,7 @@ var array<SquadBan>                 SquadBans;
 
 replication
 {
-    reliable if (bNetInitial && Role == ROLE_Authority)
+    reliable if (bNetDirty && Role == ROLE_Authority)
         AxisSquadSize, AlliesSquadSize;
 
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -101,8 +101,8 @@ function PostBeginPlay()
         // TODO: make sure invitations can't be sent so damned frequently!
         InvitationExpirations = new class'TreeMap_string_int';
 
-        AxisSquadSize = Clamp(AxisSquadSize, SQUAD_SIZE_MIN, SQUAD_SIZE_MAX);
-        AlliesSquadSize = Clamp(AlliesSquadSize, SQUAD_SIZE_MIN, SQUAD_SIZE_MAX);
+        SetTeamSquadSize(AXIS_TEAM_INDEX, AxisSquadSize);
+        SetTeamSquadSize(ALLIES_TEAM_INDEX, AlliesSquadSize);
 
         foreach AllActors(class'DH_LevelInfo', LI)
         {
@@ -504,7 +504,7 @@ function bool ScoreComparatorFunction(Object LHS, Object RHS)
 // Returns true if player successfully leaves his squad.
 // The player is guaranteed to not be a member of a squad after this
 // call, regardless of the return value.
-function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bIsVoluntary)
+function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowLeftMessage)
 {
     local int TeamIndex, SquadIndex, SquadMemberIndex;
     local DHPlayer PC;
@@ -543,7 +543,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bIsVoluntary
     // "{0} has left the squad."
     BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 31, PRI);
 
-    if (bIsVoluntary)
+    if (bShouldShowLeftMessage && PC != none)
     {
         // "You have left the squad."
         PC.ReceiveLocalizedMessage(SquadMessageClass, 64);
@@ -1852,6 +1852,59 @@ function OnSquadRallyPointActivated(DHSpawnPoint_SquadRallyPoint SRP)
 {
     // "The squad has established a new rally point."
     BroadcastSquadLocalizedMessage(SRP.GetTeamIndex(), SRP.SquadIndex, SquadMessageClass, 44);
+}
+
+function SetTeamSquadSize(int TeamIndex, int SquadSize)
+{
+    local int OldTeamSquadSize, i;
+    local array<DHPlayerReplicationInfo> Members;
+
+    if (SquadSize == 0)
+    {
+        // If a zero is passed, reset squad sizes back to the default.
+        switch (TeamIndex)
+        {
+            case AXIS_TEAM_INDEX:
+                SquadSize = default.AxisSquadSize;
+                break;
+            case ALLIES_TEAM_INDEX:
+                SquadSize = default.AlliesSquadSize;
+                break;
+            default:
+                break;
+        }
+    }
+
+    OldTeamSquadSize = GetTeamSquadSize(TeamIndex);
+    SquadSize = Clamp(SquadSize, SQUAD_SIZE_MIN, SQUAD_SIZE_MAX);
+
+    if (SquadSize < OldTeamSquadSize)
+    {
+        // The squad size is now less than it was previously!
+        // Let's do a check to make sure that existing squads on this team
+        // do not exceed the size limit. If they do, we will kick the players
+        // from the squads until they are all within the size limit.
+        for (i = 0; i < GetTeamSquadLimit(TeamIndex); ++i)
+        {
+            GetMembers(TeamIndex, i, Members);
+
+            while (Members.Length > SquadSize)
+            {
+                LeaveSquad(Members[Members.Length - 1], true);
+                Members.Remove(Members.Length - 1, 1);
+            }
+        }
+    }
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            AxisSquadSize = SquadSize;
+            break;
+        case ALLIES_TEAM_INDEX:
+            AlliesSquadSize = SquadSize;
+            break;
+    }
 }
 
 defaultproperties
