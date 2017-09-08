@@ -1857,8 +1857,8 @@ function OnSquadRallyPointActivated(DHSpawnPoint_SquadRallyPoint SRP)
 
 defaultproperties
 {
-    AlliesSquadSize=12
-    AxisSquadSize=9
+    AlliesSquadSize=10
+    AxisSquadSize=8
     RallyPointInitialDelaySeconds=15.0
     RallyPointChangeLeaderDelaySeconds=30.0
     AlliesDefaultSquadNames(0)="Able"
