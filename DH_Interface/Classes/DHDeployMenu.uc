@@ -89,7 +89,6 @@ var localized   string                      ReservedString;
 var localized   string                      ChangeTeamConfirmText;
 var localized   string                      FreeChangeTeamConfirmText;
 var localized   string                      CantChangeTeamYetText;
-var localized   string                      ReinforcementCostText;
 
 var localized   string                      LockText;
 var localized   string                      UnlockText;
@@ -1633,7 +1632,6 @@ defaultproperties
     LockText="Lock"
     UnlockText="Unlock"
     NoneText="None"
-    ReinforcementCostText="Cost: "
 
     MapMode=MODE_Map
     bButtonsEnabled=true
