@@ -95,7 +95,7 @@ var localized   string                      VehicleUnavailableString;
 var localized   string                      LockedText;
 var localized   string                      BotsText;
 
-// Colin: The reason this variable is needed is because the PlayerController's
+// NOTE: The reason this variable is needed is because the PlayerController's
 // GetTeamNum function is not reliable after receiving a successful team change
 // signal from InternalOnMessage.
 var             byte                        CurrentTeam;
@@ -201,7 +201,7 @@ function SetLoadoutMode(ELoadoutMode Mode)
 
     LoadoutMode = Mode;
 
-    // Colin: GUIComponent visibility is not properly hierarchical, so we
+    // GUIComponent visibility is not properly hierarchical, so we
     // need to hide and show elements individually.
     i_Vehicle.SetVisibility(Mode == LM_Vehicle);
     lb_Vehicles.SetVisibility(Mode == LM_Vehicle);
@@ -244,7 +244,7 @@ function SetLoadoutMode(ELoadoutMode Mode)
 
 function Timer()
 {
-    // Colin: The GRI might not be set when we first open the menu if the player
+    // The GRI might not be set when we first open the menu if the player
     // opens it very quickly. This timer will sit and wait until the GRI is
     // confirmed to be present before populating any lists or running any
     // regular timer logic.
@@ -256,7 +256,7 @@ function Timer()
 
         if (GRI != none)
         {
-            // Colin: Now that we have the GRI, we can set the Allied flag on
+            // Now that we have the GRI, we can set the Allied flag on
             // the team button.
             switch (GRI.AlliedNationID)
             {
@@ -274,8 +274,9 @@ function Timer()
                     break;
             }
 
-            // Colin: This bullshit is used by RO code to circumvent the
+            // This bullshit is used by RO code to circumvent the
             // fact we can't send initialization parameters to the menu.
+            // SHOCKING: we actually can, but they never used it!
             if (PC.ForcedTeamSelectOnRoleSelectPage != -5)
             {
                 TeamIndex = PC.ForcedTeamSelectOnRoleSelectPage;
@@ -288,7 +289,7 @@ function Timer()
 
             OnTeamChanged(TeamIndex);
 
-            // Colin: Automatically select the player's spawn point.
+            // Automatically select the player's spawn point.
             p_Map.SelectSpawnPoint(PC.SpawnPointIndex);
         }
     }
