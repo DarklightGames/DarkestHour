@@ -89,11 +89,11 @@ var localized   string                      ReservedString;
 var localized   string                      ChangeTeamConfirmText;
 var localized   string                      FreeChangeTeamConfirmText;
 var localized   string                      CantChangeTeamYetText;
-
 var localized   string                      LockText;
 var localized   string                      UnlockText;
-
 var localized   string                      VehicleUnavailableString;
+var localized   string                      LockedText;
+var localized   string                      BotsText;
 
 // Colin: The reason this variable is needed is because the PlayerController's
 // GetTeamNum function is not reliable after receiving a successful team change
@@ -591,7 +591,7 @@ function UpdateRoles()
 
         if (Limit == 0)
         {
-            S @= "[Locked]";
+            S @= "[" $ LockedText $ "]";
         }
         else if (Limit == 255)
         {
@@ -604,7 +604,7 @@ function UpdateRoles()
 
         if (BotCount > 0)
         {
-            S @= "*BOTS*";
+            S @= "*" $ BotsText $ "*";
         }
 
         li_Roles.SetItemAtIndex(i, S);
@@ -1632,6 +1632,8 @@ defaultproperties
     LockText="Lock"
     UnlockText="Unlock"
     NoneText="None"
+    LockedText="Locked"
+    BotsText="BOTS"
 
     MapMode=MODE_Map
     bButtonsEnabled=true
