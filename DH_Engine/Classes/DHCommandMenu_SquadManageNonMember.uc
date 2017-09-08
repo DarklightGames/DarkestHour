@@ -5,7 +5,8 @@
 
 class DHCommandMenu_SquadManageNonMember extends DHCommandMenu;
 
-var localized string AlreadyInASquad;
+var localized string AlreadyInASquadText;
+var localized string SquadIsFullText;
 
 function OnActive()
 {
@@ -78,7 +79,15 @@ function OnSelect(int OptionIndex, vector Location)
 function bool IsOptionDisabled(int OptionIndex)
 {
     local DHPawn P;
+    local DHPlayer PC;
     local DHPlayerReplicationInfo OtherPRI;
+
+    PC = GetPlayerController();
+
+    if (PC == none)
+    {
+        return true;
+    }
 
     P = DHPawn(MenuObject);
 
@@ -87,33 +96,44 @@ function bool IsOptionDisabled(int OptionIndex)
         OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
     }
 
-    return OtherPRI == none || OtherPRI.IsInSquad();
+    return OtherPRI == none || OtherPRI.IsInSquad() || PC.SquadReplicationInfo == none || PC.SquadReplicationInfo.IsSquadFull(PC.GetTeamNum(), PC.GetSquadIndex());
 }
 
 function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 {
     local DHPawn P;
     local DHPlayerReplicationInfo OtherPRI;
+    local DHPlayer PC;
 
     super.GetOptionRenderInfo(OptionIndex, ORI);
 
     P = DHPawn(MenuObject);
+    PC = GetPlayerController();
 
     if (P != none)
     {
         OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
     }
 
-    if (OtherPRI != none && OtherPRI.IsInSquad() && Interaction != none && !Interaction.IsFadingOut())
+    if (OtherPRI != none && Interaction != none && !Interaction.IsFadingOut())
     {
-        ORI.InfoText = AlreadyInASquad;
-        ORI.InfoColor = class'UColor'.default.Red;
+        if (OtherPRI.IsInSquad())
+        {
+            ORI.InfoText = default.AlreadyInASquadText;
+            ORI.InfoColor = class'UColor'.default.Red;
+        }
+        else if (PC != none && PC.SquadReplicationInfo != none && PC.SquadReplicationInfo.IsSquadFull(PC.GetTeamNum(), PC.GetSquadIndex()))
+        {
+            ORI.InfoText = default.SquadIsFullText;
+            ORI.InfoColor = class'UColor'.default.Red;
+        }
     }
 }
 
 defaultproperties
 {
-    AlreadyInASquad="Already in a squad"
+    AlreadyInASquadText="Already in a squad"
+    SquadIsFullText="Squad is full"
     Options(0)=(ActionText="Invite to Squad",Material=Material'DH_GUI_Tex.ConstructionMenu.invite_icon')
 }
 
