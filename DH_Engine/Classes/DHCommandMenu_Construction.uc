@@ -106,7 +106,7 @@ function bool IsOptionDisabled(int OptionIndex)
 
     if (C != none)
     {
-        return C.static.GetPlayerError(DHPlayer(Interaction.ViewportOwner.Actor)) != ERROR_None;
+        return C.static.GetPlayerError(DHPlayer(Interaction.ViewportOwner.Actor)).Type != ERROR_None;
     }
 
     return false;
@@ -115,7 +115,7 @@ function bool IsOptionDisabled(int OptionIndex)
 function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 {
     local class<DHConstruction> ConstructionClass;
-    local DHConstruction.EConstructionError Error;
+    local DHConstruction.ConstructionError E;
     local DHPlayer PC;
     local int SquadMemberCount;
 
@@ -126,11 +126,11 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
     if (ConstructionClass != none && PC != none)
     {
-        Error = ConstructionClass.static.GetPlayerError(PC);
+        E = ConstructionClass.static.GetPlayerError(PC);
 
         ORI.OptionName = ConstructionClass.static.GetMenuName(PC);
 
-        if (Error != ERROR_None)
+        if (E.Type != ERROR_None)
         {
             ORI.InfoColor = class'UColor'.default.Red;
         }
@@ -139,7 +139,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
             ORI.InfoColor = class'UColor'.default.White;
         }
 
-        switch (Error)
+        switch (E.Type)
         {
             case ERROR_RestrictedType:
             case ERROR_Fatal:

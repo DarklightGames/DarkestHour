@@ -6538,7 +6538,7 @@ simulated function Fire(optional float F)
 {
     if (Level.NetMode != NM_DedicatedServer && ConstructionProxy != none)
     {
-        if (ConstructionProxy.ProxyError == ERROR_None)
+        if (ConstructionProxy.ProxyError.Type == ERROR_None)
         {
             ServerCreateConstruction(ConstructionProxy.ConstructionClass, ConstructionProxy.Location, ConstructionProxy.Rotation);
             ConstructionProxy.Destroy();
@@ -6546,7 +6546,7 @@ simulated function Fire(optional float F)
         }
         else
         {
-            ReceiveLocalizedMessage(class'DHConstructionErrorMessage', int(ConstructionProxy.ProxyError),,, ConstructionProxy);
+            ReceiveLocalizedMessage(class'DHConstructionErrorMessage',,,, ConstructionProxy);
         }
     }
     else

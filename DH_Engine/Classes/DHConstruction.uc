@@ -7,7 +7,7 @@ class DHConstruction extends Actor
     abstract
     placeable;
 
-enum EConstructionError
+enum EConstructionErrorType
 {
     ERROR_None,
     ERROR_Fatal,                // Some fatal error occurred, usually a case of unexpected values
@@ -32,6 +32,14 @@ enum EConstructionError
     ERROR_SquadTooSmall,        // Not enough players in the squad!
     ERROR_Other
 };
+
+var struct ConstructionError
+{
+    var EConstructionErrorType  Type;
+    var int                     OptionalInteger;
+    var Object                  OptionalObject;
+    var string                  OptionalString;
+} ProxyError;
 
 enum ETeamOwner
 {
@@ -575,48 +583,55 @@ function static bool ShouldShowOnMenu(DHPlayer PC)
 // This function is used for determining if a player is able to build this type
 // of construction. You can override this if you want to have a team or
 // role-specific constructions, for example.
-function static EConstructionError GetPlayerError(DHPlayer PC, optional out Object OptionalObject)
+function static ConstructionError GetPlayerError(DHPlayer PC)
 {
     local DH_LevelInfo LI;
     local DHPawn P;
     local DHConstructionManager CM;
     local DHPlayerReplicationInfo PRI;
     local DHSquadReplicationInfo SRI;
+    local ConstructionError E;
 
     if (PC == none)
     {
-        return ERROR_Fatal;
+        E.Type = ERROR_Fatal;
+        return E;
     }
 
     LI = PC.GetLevelInfo();
 
     if (LI != none && LI.IsConstructionRestricted(default.Class))
     {
-        return ERROR_RestrictedType;
+        E.Type = ERROR_RestrictedType;
+        return E;
     }
 
     P = DHPawn(PC.Pawn);
 
     if (P == none)
     {
-        return ERROR_Fatal;
+        E.Type = ERROR_Fatal;
+        return E;
     }
 
     if (default.SupplyCost > 0 && P.TouchingSupplyCount < default.SupplyCost)
     {
-        return ERROR_InsufficientSupply;
+        E.Type = ERROR_InsufficientSupply;
+        return E;
     }
 
     CM = class'DHConstructionManager'.static.GetInstance(PC.Level);
 
     if (CM == none)
     {
-        return ERROR_Fatal;
+        E.Type = ERROR_Fatal;
+        return E;
     }
 
     if (default.TeamLimit > 0 && CM.CountOf(PC.GetTeamNum(), default.Class) >= default.TeamLimit)
     {
-        return ERROR_TeamLimit;
+        E.Type = ERROR_TeamLimit;
+        return E;
     }
 
     SRI = PC.SquadReplicationInfo;
@@ -625,15 +640,18 @@ function static EConstructionError GetPlayerError(DHPlayer PC, optional out Obje
     // TODO: in future we may allow non-squad leaders to make constructions.
     if (PRI == none || SRI == none || !PRI.IsSquadLeader())
     {
-        return ERROR_Fatal;
+        E.Type = ERROR_Fatal;
+        return E;
     }
 
     if (PC.Level.NetMode != NM_Standalone && SRI.GetMemberCount(P.GetTeamNum(), PRI.SquadIndex) < default.SquadMemberCountMinimum)
     {
-        return ERROR_SquadTooSmall;
+        E.Type = ERROR_SquadTooSmall;
+        E.OptionalInteger = default.SquadMemberCountMinimum;
+        return E;
     }
 
-    return ERROR_None;
+    return E;
 }
 
 simulated function Reset()

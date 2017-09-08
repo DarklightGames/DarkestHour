@@ -136,14 +136,17 @@ function static class<ROVehicle> GetVehicleClass(int TeamIndex, DH_LevelInfo LI)
     return default.VehicleClass;
 }
 
-function static EConstructionError GetPlayerError(DHPlayer PC, optional out Object OptionalObject)
+function static DHConstruction.ConstructionError GetPlayerError(DHPlayer PC)
 {
+    local DHConstruction.ConstructionError E;
+
     if (GetVehicleClass(PC.GetTeamNum(), PC.GetLevelInfo()) == none)
     {
-        return ERROR_Fatal;
+        E.Type = ERROR_Fatal;
+        return E;
     }
 
-    return super.GetPlayerError(PC, OptionalObject);
+    return super.GetPlayerError(PC);
 }
 
 defaultproperties
