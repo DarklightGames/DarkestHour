@@ -124,7 +124,7 @@ function Timer()
         }
 
         //Mortar specific resupplying.
-        if (ResupplyType == RT_Mortars || ResupplyType == RT_All)
+        if (ResupplyType == RT_Players || ResupplyType == RT_Mortars || ResupplyType == RT_All)
         {
             // Resupply player carrying a mortar
             if (DHP != none)
