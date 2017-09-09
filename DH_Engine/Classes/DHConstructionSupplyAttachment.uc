@@ -32,6 +32,8 @@ var array<Pawn>         TouchingPawns;
 // The distance, in meters, a player must be within to have access to these supplies.
 var float               TouchDistanceInMeters;
 
+var bool                bIsBaseInitialized;
+
 //==============================================================================
 // Supply Generation
 //==============================================================================
@@ -271,6 +273,34 @@ function bool Resupply()
     return true;
 }
 
+simulated function PostNetReceive()
+{
+    local DHVehicle V;
+
+    // HACK: This is a workaround for an engine bug where the rotation and
+    // location offsets are not re-applied if the actors are not replicated in
+    // the "correct" order.
+    if (!bIsBaseInitialized)
+    {
+        if (Base != none)
+        {
+            V = DHVehicle(Base);
+
+            if (V != none)
+            {
+                SetRelativeRotation(V.SupplyAttachmentRotation);
+                SetRelativeLocation(V.SupplyAttachmentOffset);
+            }
+
+            bIsBaseInitialized = true;
+        }
+    }
+    else if (Base == none)
+    {
+        bIsBaseInitialized = false;
+    }
+}
+
 // TODO: logic for getting this resupplied; some sort of hook that things can
 // put on it for getting notified (OnResupplied)
 
@@ -285,4 +315,5 @@ defaultproperties
     DrawType=DT_StaticMesh
     bAcceptsProjectors=true
     bUseLightingFromBase=true
+    bNetNotify=true
 }
