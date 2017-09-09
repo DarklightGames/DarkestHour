@@ -210,6 +210,11 @@ function Timer()
 
     UpdateGRI();
 
+    if (GRI == none)
+    {
+        return;
+    }
+
     // Assign all players to relevant array of PRIs for their team or unassigned/spectators
     for (i = 0; i < GRI.PRIArray.Length; ++i)
     {
