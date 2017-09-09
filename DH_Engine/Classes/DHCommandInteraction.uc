@@ -469,8 +469,6 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
                         break;
                     }
 
-                    Log(HitActor);
-
                     if (HitActor == none)
                     {
                         HitLocation = TraceEnd;
