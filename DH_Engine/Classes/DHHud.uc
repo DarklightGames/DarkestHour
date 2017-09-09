@@ -56,6 +56,8 @@ var     SpriteWidget        DeployInObjectiveIcon;
 var     array<Pawn>         NamedPawns;             // a list of all pawns whose names are currently being rendered
 var     float               HUDLastNameDrawTime;    // the last time we called DrawPlayerNames() function, used so we can tell if a player has just become valid for name drawing
 var     material            PlayerNameIconMaterial;
+var     material            PlayerNameFilledIconMaterial;
+var     material            SquadLeaderIconMaterial;
 var     material            SpeakerIconMaterial;
 var     material            NeedAssistIconMaterial;
 var     material            NeedAmmoIconMaterial;
@@ -75,7 +77,6 @@ var     SpriteWidget        VehicleSmokeLauncherRangeBarIcon;   // range indicat
 var     SpriteWidget        VehicleSmokeLauncherRangeInfill;    // infill bar to show current range setting for a range-adjustable vehicle smoke launcher
 
 // Squads
-var     SpriteWidget        SquadNameIcon;
 var     SpriteWidget        SquadOrderAttackIcon;
 var     SpriteWidget        SquadOrderDefendIcon;
 var     array<texture>      PlayerNumberIconTextures;
@@ -205,7 +206,6 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(MapIconMortarArrow.WidgetTexture);
 
     // Squad icons
-    Level.AddPrecacheMaterial(SquadNameIcon.WidgetTexture);
     Level.AddPrecacheMaterial(SquadOrderAttackIcon.WidgetTexture);
     Level.AddPrecacheMaterial(SquadOrderDefendIcon.WidgetTexture);
     Level.AddPrecacheMaterial(material'DH_InterfaceArt_tex.HUD.squad_signal_fire_world');
@@ -222,6 +222,8 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(CanDigIcon.WidgetTexture);
     Level.AddPrecacheMaterial(CanCutWireIcon.WidgetTexture);
     Level.AddPrecacheMaterial(PlayerNameIconMaterial);
+    Level.AddPrecacheMaterial(PlayerNameFilledIconMaterial);
+    Level.AddPrecacheMaterial(SquadLeaderIconMaterial);
     Level.AddPrecacheMaterial(SpeakerIconMaterial);
     Level.AddPrecacheMaterial(NeedAssistIconMaterial);
     Level.AddPrecacheMaterial(NeedAmmoIconMaterial);
@@ -724,17 +726,16 @@ simulated function DrawHudPassC(Canvas C)
     // Spawn vehicle deploy icon
     if (V != none && V.SpawnPointAttachment != none)
     {
-        if (V.SpawnPointAttachment.BlockReason == SPBR_None)
+        switch (V.SpawnPointAttachment.BlockReason)
         {
-            DrawSpriteWidget(C, DeployOkayIcon);
-        }
-        else if (V.SpawnPointAttachment.BlockReason == SPBR_InObjective)
-        {
-            DrawSpriteWidget(C, DeployInObjectiveIcon);
-        }
-        else if (V.SpawnPointAttachment.BlockReason == SPBR_EnemiesNearby)
-        {
-            DrawSpriteWidget(C, DeployEnemiesNearbyIcon);
+            case SPBR_None:
+                DrawSpriteWidget(C, DeployOkayIcon); break;
+            case SPBR_InObjective:
+                DrawSpriteWidget(C, DeployInObjectiveIcon); break;
+            case SPBR_EnemiesNearby:
+                DrawSpriteWidget(C, DeployEnemiesNearbyIcon); break;
+            default:
+                break;
         }
     }
 
@@ -1913,6 +1914,7 @@ function DrawPlayerNames(Canvas C)
     local int                     NumOtherOccupants, i, j;
     local byte                    Alpha;
     local bool                    bMayBeValid, bCurrentlyValid, bFoundMatch;
+    local color                   IconMaterialColor;
 
     if (PawnOwner == none || PlayerOwner == none)
     {
@@ -2269,15 +2271,31 @@ function DrawPlayerNames(Canvas C)
         // Now draw the player name, with a generic name icon below it
         C.TextSize(PlayerName, TextSize.X, TextSize.Y);
         C.SetPos(DrawLocation.X - 8.0, DrawLocation.Y - (TextSize.Y * 0.5));
-        C.DrawTile(PlayerNameIconMaterial, 16.0, 16.0, 0.0, 0.0, PlayerNameIconMaterial.MaterialUSize(), PlayerNameIconMaterial.MaterialVSize());
+
+        if (OtherPRI.IsInSquad())
+        {
+            C.DrawTile(PlayerNameFilledIconMaterial, 16.0, 16.0, 0.0, 0.0, PlayerNameIconMaterial.MaterialUSize(), PlayerNameIconMaterial.MaterialVSize());
+        }
+        else
+        {
+            C.DrawTile(PlayerNameIconMaterial, 16.0, 16.0, 0.0, 0.0, PlayerNameIconMaterial.MaterialUSize(), PlayerNameIconMaterial.MaterialVSize());
+        }
 
         C.SetPos(DrawLocation.X - TextSize.X * 0.5, DrawLocation.Y - 32.0);
         DrawShadowedTextClipped(C, PlayerName);
 
+        // TODO: SL icon!
+
         // Check whether we need to draw an icon above the player's name, if he's talking or needs resupply or assisted reload
         IconMaterial = none;
+        IconMaterialColor = class'UColor'.default.White;
 
-        if (OtherPRI == PortraitPRI)
+        if (OtherPRI.IsSquadLeader())
+        {
+            IconMaterial = SquadLeaderIconMaterial;
+            IconMaterialColor = GetPlayerColor(OtherPRI);
+        }
+        else if (OtherPRI == PortraitPRI)
         {
             IconMaterial = SpeakerIconMaterial;
         }
@@ -2305,7 +2323,7 @@ function DrawPlayerNames(Canvas C)
         // Now draw any relevant icon above the player's name, in white to make it more noticeable (instead of the team color)
         if (IconMaterial != none)
         {
-            C.DrawColor = class'UColor'.default.White;
+            C.DrawColor = IconMaterialColor;
             C.DrawColor.A = Alpha;
             C.SetPos(DrawLocation.X - 12.0, DrawLocation.Y - 56.0);
             C.DrawTile(IconMaterial, 24.0, 24.0, 0.0, 0.0, IconMaterial.MaterialUSize(), IconMaterial.MaterialVSize());
@@ -5009,6 +5027,8 @@ defaultproperties
     // Screen indicator icons & player HUD
     CompassNeedle=(WidgetTexture=TexRotator'DH_InterfaceArt_tex.HUD.Compass_rotator') // using DH version of compass background texture
     PlayerNameIconMaterial=material'DH_InterfaceArt_tex.HUD.player_icon_world'
+    PlayerNameFilledIconMaterial=material'DH_InterfaceArt_tex.HUD.player_icon_world_filled'
+    SquadLeaderIconMaterial=material'DH_InterfaceArt_tex.HUD.squad_leader'
     SpeakerIconMaterial=texture'DH_InterfaceArt_tex.Communication.speaker_icon'
     NeedAssistIconMaterial=texture'DH_InterfaceArt_tex.Communication.need_assist_icon'
     NeedAmmoIconMaterial=texture'DH_InterfaceArt_tex.Communication.need_ammo_icon'
@@ -5116,7 +5136,6 @@ defaultproperties
     PlayerNumberIconTextures(9)=texture'DH_InterfaceArt_tex.HUD.player_number_10'
     PlayerNumberIconTextures(10)=texture'DH_InterfaceArt_tex.HUD.player_number_11'
     PlayerNumberIconTextures(11)=texture'DH_InterfaceArt_tex.HUD.player_number_12'
-    SquadNameIcon=(WidgetTexture=FinalBlend'DH_InterfaceArt_tex.HUD.SquadNameIcon',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.45,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
     PlayerIconScale=0.03
     PlayerIconLargeScale=0.05
 
