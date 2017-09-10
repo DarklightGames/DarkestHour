@@ -108,7 +108,7 @@ var     bool    bCanDieOfStagnation;            // If true, this construction wi
 var     float   StagnationLifespan;
 
 // Tear-down
-var     bool    bCanBeTornDown;                 // Whether or not players can
+var     bool    bCanBeTornDownWhenConstructed; // Whether or not players can tear down the construction after it has been constructed.
 var     int     TearDownProgress;
 var     int     TearDownProgressMax;
 
@@ -121,7 +121,7 @@ var     float           BrokenSoundVolume;
 var     class<Emitter>  BrokenEmitterClass;         // Emitter to spawn when the construction is broken
 
 // Reset
-var     bool            bShouldDestroyOnReset;      // bShouldDestroyOnReset
+var     bool            bShouldDestroyOnReset;
 
 // Damage
 struct DamageTypeScale
@@ -492,6 +492,11 @@ simulated state Constructed
         }
     }
 
+    simulated function bool CanBeTornDown()
+    {
+        return bCanBeTornDownWhenConstructed;
+    }
+
 // This is required because we cannot call TakeDamage within the KImpact
 // function, because down the line is disables karma collision after going into
 // the broken state, causing a crash in native code. Delaying the damage until
@@ -759,13 +764,18 @@ function bool ShouldTakeDamageFromDamageType(class<DamageType> DamageType)
     return false;
 }
 
+simulated function bool CanBeTornDown()
+{
+    return true;
+}
+
 function TakeTearDownDamage();
 
 function TakeDamage(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     local class<DamageType> TearDownDamageType;
 
-    if (bCanBeTornDown)
+    if (CanBeTornDown())
     {
         TearDownDamageType = class<DamageType>(DynamicLoadObject("DH_Equipment.DHShovelBashDamageType", class'class'));
 
@@ -918,7 +928,7 @@ defaultproperties
 
     // Death
     BrokenLifespan=15.0
-    bCanBeTornDown=true
+    bCanBeTornDownWhenConstructed=true
 
     // Progress
     StageIndex=-1

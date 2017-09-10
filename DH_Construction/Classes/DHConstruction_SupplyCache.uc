@@ -80,7 +80,7 @@ defaultproperties
     DuplicateFriendlyDistanceInMeters=100   // NOTE: 2x the supply attachment radius
     CollisionRadius=128
     bCanPlaceIndoors=true
-    bCanBeTornDown=false
+    bCanBeTornDownWhenConstructed=false
     bCanDieOfStagnation=false   // TODO: this shouldn't be necessary, right?
     SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Static'
 }
