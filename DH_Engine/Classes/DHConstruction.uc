@@ -441,22 +441,20 @@ simulated state Constructed
     function KImpact(Actor Other, vector Pos, vector ImpactVel, vector ImpactNorm)
     {
         local float Momentum;
-        local int Damage;
 
-        if (Level.TimeSeconds - LastImpactTimeSeconds < 1.0)
+        if (Level.TimeSeconds - LastImpactTimeSeconds >= 1.0)
         {
-            return;
+            LastImpactTimeSeconds = Level.TimeSeconds;
+
+            if (bCanTakeImpactDamage && Role == ROLE_Authority)
+            {
+                Momentum = Other.KGetMass() * VSize(ImpactVel);
+                DelayedDamage = int(Momentum * ImpactDamageModifier);
+                DelayedDamageType = ImpactDamageType;
+                GotoState(GetStateName(), 'DelayedDamage');
+            }
         }
 
-        LastImpactTimeSeconds = Level.TimeSeconds;
-
-        if (bCanTakeImpactDamage && Role == ROLE_Authority)
-        {
-            Momentum = Other.KGetMass() * VSize(ImpactVel);
-            DelayedDamage = int(Momentum * ImpactDamageModifier);
-            DelayedDamageType = ImpactDamageType;
-            GotoState(GetStateName(), 'DelayedDamage');
-        }
     }
 
     simulated function bool IsConstructed()
