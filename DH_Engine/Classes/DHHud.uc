@@ -1732,7 +1732,14 @@ function color GetPlayerColor(PlayerReplicationInfo PRI)
 
     if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(MyPRI, OtherPRI))
     {
-        return class'DHColor'.default.SquadColor;
+        if (OtherPRI.IsSquadLeader())
+        {
+            return class'DHColor'.default.SquadLeaderColor;
+        }
+        else
+        {
+            return class'DHColor'.default.SquadColor;
+        }
     }
     else if (PRI != none && PRI.Team != none)
     {
