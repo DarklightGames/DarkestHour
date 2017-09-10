@@ -691,7 +691,7 @@ function DHConstruction.ConstructionError GetPositionError()
         {
             C = DHConstruction(A);
 
-            if (C != none && C.GetTeamIndex() == PawnOwner.GetTeamNum())
+            if (C != none && (C.GetTeamIndex() == NEUTRAL_TEAM_INDEX || C.GetTeamIndex() == PawnOwner.GetTeamNum()))
             {
                 E.Type = ERROR_TooCloseFriendly;
                 E.OptionalInteger = int(Ceil(ConstructionClass.default.DuplicateFriendlyDistanceInMeters - class'DHUnits'.static.UnrealToMeters(VSize(C.Location - Location))));
