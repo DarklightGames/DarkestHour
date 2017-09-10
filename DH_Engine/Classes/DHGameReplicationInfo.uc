@@ -245,7 +245,7 @@ function int AddSupplyPoint(DHConstructionSupplyAttachment CSA)
             {
                 SupplyPoints[i].bIsActive = true;
                 SupplyPoints[i].Actor = CSA;
-                SupplyPoints[i].TeamIndex = CSA.TeamIndex;
+                SupplyPoints[i].TeamIndex = CSA.GetTeamIndex();
                 SupplyPoints[i].Location.X = CSA.Location.X;
                 SupplyPoints[i].Location.Y = CSA.Location.Y;
                 SupplyPoints[i].Location.Z = CSA.Rotation.Yaw;

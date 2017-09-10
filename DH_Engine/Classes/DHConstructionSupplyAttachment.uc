@@ -12,7 +12,7 @@ class DHConstructionSupplyAttachment extends Actor
 var int                 SupplyPointIndex;
 var private int         SupplyCount;
 var int                 SupplyCountMax;
-var int                 TeamIndex;
+var private int         TeamIndex;
 
 var bool                bShouldShowOnMap;
 
@@ -121,14 +121,16 @@ static function StaticMesh GetStaticMeshForSupplyCount(LevelInfo Level, int Team
     return none;
 }
 
+function UpdateAppearance()
+{
+    SetStaticMesh(GetStaticMeshForSupplyCount(Level, TeamIndex, SupplyCount));
+    NetUpdateTime = Level.TimeSeconds - 1.0;
+}
+
 function SetSupplyCount(int Amount)
 {
     SupplyCount = Clamp(Amount, 0, SupplyCountMax);
-
-    // Update visualization
-    SetStaticMesh(GetStaticMeshForSupplyCount(Level, TeamIndex, SupplyCount));
-    NetUpdateTime = Level.TimeSeconds - 1.0;
-
+    UpdateAppearance();
     OnSupplyCountChanged(self);
 }
 
@@ -299,6 +301,17 @@ simulated function PostNetReceive()
     {
         bIsBaseInitialized = false;
     }
+}
+
+simulated function int GetTeamIndex()
+{
+    return TeamIndex;
+}
+
+function SetTeamIndex(int TeamIndex)
+{
+    self.TeamIndex = TeamIndex;
+    UpdateAppearance();
 }
 
 // TODO: logic for getting this resupplied; some sort of hook that things can

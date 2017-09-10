@@ -2478,7 +2478,7 @@ simulated function SpawnVehicleAttachments()
 
             if (SupplyAttachment != none)
             {
-                SupplyAttachment.TeamIndex = VehicleTeam;
+                SupplyAttachment.SetTeamIndex(VehicleTeam);
             }
         }
 
@@ -2986,7 +2986,7 @@ function ServerDropSupplies()
     {
         CSA = TouchingSupplyAttachments[i];
 
-        if (CSA != none && CSA.bCanReceiveSupplyDrops && CSA.TeamIndex == GetTeamNum() && !CSA.IsFull())
+        if (CSA != none && CSA.bCanReceiveSupplyDrops && CSA.GetTeamIndex() == GetTeamNum() && !CSA.IsFull())
         {
             SupplyDropCount = Min(SupplyDropCount, CSA.SupplyCountMax - CSA.GetSupplyCount());
 

@@ -55,7 +55,7 @@ simulated function OnTeamIndexChanged()
 
     if (Role == ROLE_Authority && SupplyAttachment != none)
     {
-        SupplyAttachment.TeamIndex = GetTeamIndex();
+        SupplyAttachment.SetTeamIndex(GetTeamIndex());
     }
 }
 
