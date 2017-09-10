@@ -4372,7 +4372,7 @@ simulated function DrawSpectatingHud(Canvas C)
         C.DrawTextClipped(S);
 
         // Draw line 1
-        S = SpectateInstructionText1;
+        S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(SpectateInstructionText1, PC);
         C.Font = GetConsoleFont(C);
 
         X = C.ClipX * 0.5;
@@ -4383,7 +4383,7 @@ simulated function DrawSpectatingHud(Canvas C)
         C.DrawTextClipped(S);
 
         // Draw line 2
-        S = SpectateInstructionText2;
+        S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(SpectateInstructionText2, PC);
         X = C.ClipX * 0.5;
         Y += strY + (3.0 * Scale);
 
@@ -4392,7 +4392,7 @@ simulated function DrawSpectatingHud(Canvas C)
         C.DrawTextClipped(S);
 
         // Draw line 3
-        S = SpectateInstructionText3;
+        S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(SpectateInstructionText3, PC);
         X = C.ClipX * 0.5;
         Y += strY + (3.0 * Scale);
 
@@ -4401,7 +4401,7 @@ simulated function DrawSpectatingHud(Canvas C)
         C.DrawTextClipped(S);
 
         // Draw line 4
-        S = SpectateInstructionText4;
+        S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(SpectateInstructionText4, PC);
         X = C.ClipX * 0.5;
         Y += strY + (3.0 * Scale);
 
@@ -5162,4 +5162,10 @@ defaultproperties
     // Construction
     VehicleSuppliesIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.HUD.supplies',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.30,DrawPivot=DP_LowerLeft,PosX=0.5,PosY=1.0,OffsetX=0,OffsetY=-16,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     VehicleSuppliesText=(Text="1000",PosX=0,PosY=0,WrapWidth=0,WrapHeight=0,OffsetX=0,OffsetY=0,DrawPivot=DP_UpperMiddle,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=true)
+
+    // Specate
+    SpectateInstructionText1="Press [%FIRE%] to switch Viewpoint/Players"
+    SpectateInstructionText2="Press [%ALTFIRE%] to switch Spectating Modes"
+    SpectateInstructionText3="Press [%ROIRONSIGHTS%] to toggle First/Third Person View"
+    SpectateInstructionText4="Press [%JUMP%] to return to viewing yourself"
 }
