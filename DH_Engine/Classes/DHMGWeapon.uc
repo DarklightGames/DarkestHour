@@ -80,7 +80,7 @@ simulated function ROIronSights()
 
     if (Instigator != none && (Instigator.bBipodDeployed || Instigator.bCanBipodDeploy))
     {
-        if (Role < ROLE_Authority)
+        if (Instigator.IsLocallyControlled())
         {
             PC = DHPlayer(Instigator.Controller);
 

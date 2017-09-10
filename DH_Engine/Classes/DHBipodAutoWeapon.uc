@@ -218,7 +218,7 @@ simulated exec function Deploy()
     // Bipod is either deployed or player can deploy the bipod
     if (!IsBusy() && Instigator != none && (Instigator.bBipodDeployed || Instigator.bCanBipodDeploy))
     {
-        if (Role < ROLE_Authority)
+        if (Instigator.IsLocallyControlled())
         {
             PC = DHPlayer(Instigator.Controller);
 
