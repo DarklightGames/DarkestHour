@@ -212,11 +212,22 @@ simulated function PlayReload()
 // Modified to deploy/undeploy bipod, instead of the usual bayonet stuff
 simulated exec function Deploy()
 {
+    local DHPlayer PC;
     local bool bNewDeployedStatus;
 
     // Bipod is either deployed or player can deploy the bipod
     if (!IsBusy() && Instigator != none && (Instigator.bBipodDeployed || Instigator.bCanBipodDeploy))
     {
+        if (Role < ROLE_Authority)
+        {
+            PC = DHPlayer(Instigator.Controller);
+
+            if (PC == none || Level.TimeSeconds < PC.NextToggleDuckTimeSeconds)
+            {
+                return;
+            }
+        }
+
         bNewDeployedStatus = !Instigator.bBipodDeployed;
 
         BipodDeploy(bNewDeployedStatus); // toggle whether bipod is deployed

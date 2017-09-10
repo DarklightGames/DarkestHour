@@ -105,6 +105,10 @@ var     SquadSignal             SquadSignals[2];
 // without interrupting player input.
 var     bool                    bShouldSkipResetInput;
 
+// Toggle Duck timing
+var     float                   ToggleDuckIntervalSeconds;
+var     float                   NextToggleDuckTimeSeconds;
+
 replication
 {
     unreliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
@@ -2086,6 +2090,20 @@ function Possess(Pawn aPawn)
 function ClientProne()
 {
     Prone();
+}
+
+// Modified to disallow this from being spammed without limits.
+// As an added bonus, this solves a particular bug where players would end up
+// in an odd state where their bipodded machine-guns would appear to be shooting
+// blanks, likely as a result of a client-server state mismatch.
+exec function ToggleDuck()
+{
+    if (Level.TimeSeconds >= NextToggleDuckTimeSeconds)
+    {
+        NextToggleDuckTimeSeconds = Level.TimeSeconds + ToggleDuckIntervalSeconds;
+
+        super.ToggleDuck();
+    }
 }
 
 // Server call to client to toggle duck
@@ -5182,4 +5200,6 @@ defaultproperties
 
     VoiceChatCodec="CODEC_96WB"
     VoiceChatLANCodec="CODEC_96WB"
+
+    ToggleDuckIntervalSeconds=0.5
 }
