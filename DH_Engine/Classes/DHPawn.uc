@@ -2977,6 +2977,7 @@ function AddDefaultInventory()
             }
 
             CheckGiveShovel();
+            CheckGiveBinocs();
         }
     }
 
