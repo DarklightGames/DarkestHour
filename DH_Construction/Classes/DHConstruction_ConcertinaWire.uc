@@ -19,4 +19,5 @@ defaultproperties
     MenuIcon=Texture'DH_GUI_tex.ConstructionMenu.Construction_WireBarricade'
     SupplyCost=50
     bCanBeMantled=false
+    bCanTakeImpactDamage=true
 }

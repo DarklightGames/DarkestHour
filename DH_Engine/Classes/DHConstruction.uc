@@ -134,6 +134,12 @@ var int                         MinDamagetoHurt;    // The minimum amount of dam
 var array<DamageTypeScale>      DamageTypeScales;
 var array<class<DamageType> >   HarmfulDamageTypes;
 
+// Impact Damage
+var bool                        bCanTakeImpactDamage;
+var class<DamageType>           ImpactDamageType;
+var float                       ImpactDamageModifier;
+var float                       LastImpactTimeSeconds;
+
 // Tattered
 var int                         TatteredHealthThreshold;    // The health below which the construction is considered "tattered". -1 for no tattering
 
@@ -165,6 +171,10 @@ var bool bCanBeMantled;
 
 // Squad rally points
 var bool bShouldBlockSquadRallyPoints;
+
+// Delayed damage
+var int DelayedDamage;
+var class<DamageType> DelayedDamageType;
 
 replication
 {
@@ -428,6 +438,27 @@ simulated state Constructed
         OnConstructed();
     }
 
+    function KImpact(Actor Other, vector Pos, vector ImpactVel, vector ImpactNorm)
+    {
+        local float Momentum;
+        local int Damage;
+
+        if (Level.TimeSeconds - LastImpactTimeSeconds < 1.0)
+        {
+            return;
+        }
+
+        LastImpactTimeSeconds = Level.TimeSeconds;
+
+        if (bCanTakeImpactDamage && Role == ROLE_Authority)
+        {
+            Momentum = Other.KGetMass() * VSize(ImpactVel);
+            DelayedDamage = int(Momentum * ImpactDamageModifier);
+            DelayedDamageType = ImpactDamageType;
+            GotoState(GetStateName(), 'DelayedDamage');
+        }
+    }
+
     simulated function bool IsConstructed()
     {
         return true;
@@ -462,6 +493,14 @@ simulated state Constructed
             }
         }
     }
+
+// This is required because we cannot call TakeDamage within the KImpact
+// function, because down the line is disables karma collision after going into
+// the broken state, causing a crash in native code. Delaying the damage until
+// the next frame works to avoid the crash!
+DelayedDamage:
+    Sleep(0.1);
+    TakeDamage(DelayedDamage, none, vect(0, 0, 0), vect(0, 0, 0), DelayedDamageType);
 }
 
 simulated state Broken
@@ -706,6 +745,11 @@ function bool ShouldTakeDamageFromDamageType(class<DamageType> DamageType)
 {
     local int i;
 
+    if (bCanTakeImpactDamage && DamageType == ImpactDamageType)
+    {
+        return true;
+    }
+
     for (i = 0; i < HarmfulDamageTypes.Length; ++i)
     {
         if (DamageType == HarmfulDamageTypes[i] || ClassIsChildOf(DamageType, HarmfulDamageTypes[i]))
@@ -816,6 +860,28 @@ defaultproperties
     bBlockKarma=true
     bCanPlaceInObjective=true
 
+    // Karma params
+    Begin Object Class=KarmaParamsRBFull Name=KParams0
+        KInertiaTensor(0)=1.000000
+        KInertiaTensor(3)=3.000000
+        KInertiaTensor(5)=3.000000
+        KCOMOffset=(X=0,Y=0,Z=0)
+        KLinearDamping=1.0
+        KAngularDamping=1.0
+        KStartEnabled=true
+        bKNonSphericalInertia=true
+        bHighDetailOnly=false
+        bClientOnly=false
+        bKDoubleTickRate=false
+        bDestroyOnWorldPenetrate=false
+        bDoSafetime=true
+        KFriction=0.500000
+        KImpactThreshold=100.000000
+        KMaxAngularSpeed=1.0
+        KMass=0.0
+    End Object
+    KParams=KParams0
+
     CollisionHeight=30.0
     CollisionRadius=60.0
 
@@ -835,7 +901,7 @@ defaultproperties
     bCanPlaceInWater=false
     bCanPlaceIndoors=false
     FloatToleranceInMeters=0.5
-    PlacementSound=Sound'Inf_Player.Gibimpact.Gibimpact' // TODO: placeholder
+    PlacementSound=Sound'Inf_Player.Gibimpact.Gibimpact'
     PlacementEmitterClass=class'DH_Effects.DHConstructionEffect'
     PlacementSoundRadius=60.0
     PlacementSoundVolume=4.0
@@ -870,5 +936,10 @@ defaultproperties
 
     SquadMemberCountMinimum=2
     bCanBeMantled=true
+
+    // Impact
+    bCanTakeImpactDamage=false
+    ImpactDamageType=class'Crushed'
+    ImpactDamageModifier=0.1
 }
 
