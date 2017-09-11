@@ -5154,16 +5154,13 @@ simulated exec function DebugRaptor()
 {
     local Actor A;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    foreach AllActors(class'Actor', A)
     {
-        foreach AllActors(class'Actor', A)
+        if (A.Location == vect(0, 0, 0) &&
+            A.DrawType == DT_Sprite &&
+            !A.bHidden)
         {
-            if (A.Location == vect(0, 0, 0) &&
-                A.DrawType == DT_Sprite &&
-                !A.bHidden)
-            {
-                Log(A);
-            }
+            Log(A);
         }
     }
 }
