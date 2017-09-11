@@ -3433,7 +3433,7 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
                 PlayerLocation = OtherPawn.Location;
                 PlayerYaw = OtherPawn.Rotation.Yaw;
             }
-            else if (PC.SquadMemberLocations[OtherPRI.SquadMemberIndex] != vect(0, 0, 0))
+            else if (OtherPRI.SquadMemberIndex != -1 && PC.SquadMemberLocations[OtherPRI.SquadMemberIndex] != vect(0, 0, 0))
             {
                 PlayerLocation.X = PC.SquadMemberLocations[OtherPRI.SquadMemberIndex].X;
                 PlayerLocation.Y = PC.SquadMemberLocations[OtherPRI.SquadMemberIndex].Y;
