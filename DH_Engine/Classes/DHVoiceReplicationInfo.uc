@@ -147,8 +147,8 @@ function JoinSquadChannel(PlayerReplicationInfo PRI, int TeamIndex, int SquadInd
     LeaveUnassignedChannel(PRI, TeamIndex);
 }
 
-// Colin: Modified to remove the annoying log that would be called whenever
-// a player changed teams.
+// Modified to remove the annoying log that would be called whenever a player
+// changed teams.
 function VerifyTeamChatters()
 {
     local Controller P;
