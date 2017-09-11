@@ -60,6 +60,7 @@ defaultproperties
     CollisionRadius=256.0
     StaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_01'
     PokeTerrainDepth=128
+    PokeTerrainRadius=128.0
     SupplyCost=0
     PlacementOffset=(Z=0.0)
     MenuName="Foxhole"
