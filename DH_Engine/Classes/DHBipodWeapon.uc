@@ -154,6 +154,11 @@ simulated state DeployingBipod extends WeaponBusy
         return false;
     }
 
+    simulated function bool WeaponAllowCrouchChange()
+    {
+        return false;
+    }
+
     simulated function BeginState()
     {
         local name Anim;
