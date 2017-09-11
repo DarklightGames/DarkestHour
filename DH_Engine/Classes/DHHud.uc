@@ -2290,12 +2290,7 @@ function DrawPlayerNames(Canvas C)
         IconMaterial = none;
         IconMaterialColor = class'UColor'.default.White;
 
-        if (OtherPRI.IsSquadLeader())
-        {
-            IconMaterial = SquadLeaderIconMaterial;
-            IconMaterialColor = GetPlayerColor(OtherPRI);
-        }
-        else if (OtherPRI == PortraitPRI)
+        if (OtherPRI == PortraitPRI)
         {
             IconMaterial = SpeakerIconMaterial;
         }
@@ -2318,6 +2313,11 @@ function DrawPlayerNames(Canvas C)
             {
                 IconMaterial = NeedAssistIconMaterial;
             }
+        }
+        else if (OtherPRI.IsSquadLeader())
+        {
+            IconMaterial = SquadLeaderIconMaterial;
+            IconMaterialColor = GetPlayerColor(OtherPRI);
         }
 
         // Now draw any relevant icon above the player's name, in white to make it more noticeable (instead of the team color)
