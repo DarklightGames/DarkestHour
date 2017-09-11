@@ -940,7 +940,9 @@ simulated function DrawHudPassC(Canvas C)
                     PortraitText[0].Tints[TeamIndex] = default.PortraitText[0].Tints[TeamIndex];
                 }
 
-                if (VCR.IsSquadChannel() && class'DHPlayerReplicationInfo'.static.IsInSameSquad(DHPlayerReplicationInfo(PortraitPRI), DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo)))
+                if (VCR != none &&
+                    VCR.IsSquadChannel() &&
+                    class'DHPlayerReplicationInfo'.static.IsInSameSquad(DHPlayerReplicationInfo(PortraitPRI), DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo)))
                 {
                     PortraitText[0].Tints[TeamIndex] = class'DHColor'.default.SquadColor;
                 }
