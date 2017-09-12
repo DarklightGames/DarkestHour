@@ -8,5 +8,6 @@ class DHConstructionSupplyAttachment_Static extends DHConstructionSupplyAttachme
 defaultproperties
 {
     bCanReceiveSupplyDrops=true
+    HumanReadableName="Supply Cache"
 }
 

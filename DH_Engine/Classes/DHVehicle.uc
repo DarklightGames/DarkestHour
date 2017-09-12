@@ -143,6 +143,10 @@ var     int                                     SupplyDropCountMax;          // 
 var     array<DHConstructionSupplyAttachment>   TouchingSupplyAttachments;  // List of supply attachments we are in range of
 var     int                                     TouchingSupplyCount;        // Sum of all supplies in attachments we are in range of
 
+var     sound                                   SupplyDropSound;
+var     float                                   SupplyDropSoundRadius;
+var     float                                   SupplyDropSoundVolume;
+
 // Spawning
 var     DHSpawnPoint_Vehicle    SpawnPointAttachment;
 var     DHSpawnPointBase        SpawnPoint;                 // The spawn point that was used to spawn this vehicle.
@@ -2953,7 +2957,6 @@ simulated function DestroyAttachments()
 //  *******************************  MISCELLANEOUS ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Implemented in this class for a supply vehicle to drop supplies
 simulated exec function ROManualReload()
 {
     if (SupplyAttachment != none && SupplyAttachment.HasSupplies())
@@ -2967,6 +2970,7 @@ function ServerDropSupplies()
 {
     local DHConstructionSupplyAttachment CSA;
     local int SupplyDropCount, i;
+    local DHPlayer PC;
 
     if (SupplyAttachment == none)
     {
@@ -2994,7 +2998,17 @@ function ServerDropSupplies()
             CSA.SetSupplyCount(CSA.GetSupplyCount() + SupplyDropCount);
             SupplyAttachment.SetSupplyCount(SupplyAttachment.GetSupplyCount() - SupplyDropCount);
 
-            // TODO: Send some sort of client message so that the driver can be notified that it worked!
+            // Play a sound to let everybody know a supply drop happened.
+            PlaySound(SupplyDropSound, SLOT_None, SupplyDropSoundVolume, true, SupplyDropSoundRadius, 1.0, true);
+
+            // Send a message to the driver and tell them that the supply drop was successful.
+            PC = DHPlayer(Controller);
+
+            if (PC != none)
+            {
+                PC.ReceiveLocalizedMessage(class'DHSupplyMessage', class'UInteger'.static.FromShorts(0, SupplyDropCount),,, CSA);
+            }
+
             break;
         }
     }
@@ -3496,9 +3510,12 @@ defaultproperties
     VehiclePoolIndex=-1
 
     // Supply
-    SupplyDropCountMax=2000 // TODO: make lower in the future!
+    SupplyDropCountMax=250
     SupplyDropInterval=5
     TouchingSupplyCount=-1
+    SupplyDropSound=sound'Inf_Weapons_Foley.AmmoPickup'
+    SupplyDropSoundRadius=10.0
+    SupplyDropSoundVolume=1.0
 
     // Miscellaneous
     VehicleMass=3.0
@@ -3592,5 +3609,7 @@ defaultproperties
     bDesiredBehindView=false
     bDisableThrottle=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
+
+
 //  EntryRadius=375.0 // deprecated
 }

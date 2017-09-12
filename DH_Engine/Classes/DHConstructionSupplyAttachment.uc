@@ -16,6 +16,8 @@ var private int         TeamIndex;
 
 var bool                bShouldShowOnMap;
 
+var private localized string    HumanReadableName;
+
 // Whether or not this supply attachment can be resupplied from a static resupply point.
 var bool                bCanBeResupplied;
 
@@ -32,6 +34,7 @@ var array<Pawn>         TouchingPawns;
 // The distance, in meters, a player must be within to have access to these supplies.
 var float               TouchDistanceInMeters;
 
+// Used to circumvent an engine bug (see PostNetReceive below)
 var bool                bIsBaseInitialized;
 
 //==============================================================================
@@ -314,6 +317,11 @@ function SetTeamIndex(int TeamIndex)
     UpdateAppearance();
 }
 
+simulated function string GetHumanReadableName()
+{
+    return HumanReadableName;
+}
+
 // TODO: logic for getting this resupplied; some sort of hook that things can
 // put on it for getting notified (OnResupplied)
 
@@ -329,4 +337,6 @@ defaultproperties
     bAcceptsProjectors=true
     bUseLightingFromBase=true
     bNetNotify=true
+    HumanReadableName="Supply Cache"
 }
+

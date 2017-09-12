@@ -454,7 +454,6 @@ simulated state Constructed
                 GotoState(GetStateName(), 'DelayedDamage');
             }
         }
-
     }
 
     simulated function bool IsConstructed()
