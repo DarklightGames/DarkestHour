@@ -7,7 +7,7 @@ class DH_OpelBlitzSupport extends DH_OpelBlitz;
 
 defaultproperties
 {
-    VehicleNameString="Supply Opel Blitz"
+    VehicleNameString="Opel Blitz (Logistics)"
     PassengerPawns(1)=(AttachBone="passenger_l_3",DrivePos=(X=-1.0,Y=0.0,Z=-4.0),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(2)=(AttachBone="passenger_r_3",DrivePos=(X=-1.0,Y=0.0,Z=-4.0),DriveAnim="VHalftrack_Rider1_idle")
     ExitPositions(2)=(X=-255.0,Y=-30.0,Z=60.0)
