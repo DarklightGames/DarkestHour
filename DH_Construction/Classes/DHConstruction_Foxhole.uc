@@ -57,7 +57,7 @@ defaultproperties
     bCanBeTornDownWhenConstructed=false
     bCanBeDamaged=false
     ProxyDistanceInMeters=10
-    CollisionRadius=256.0
+    CollisionRadius=192.0
     StaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_01'
     PokeTerrainDepth=128
     PokeTerrainRadius=128.0
