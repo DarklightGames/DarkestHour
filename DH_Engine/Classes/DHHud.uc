@@ -3318,11 +3318,11 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
         }
 
         // Set up icon info
-        if (DHGRI.DHObjectives[i].ObjState == OBJ_Axis)
+        if (DHGRI.DHObjectives[i].IsAxis())
         {
             Widget = MapAxisFlagIcon;
         }
-        else if (DHGRI.DHObjectives[i].ObjState == OBJ_Allies)
+        else if (DHGRI.DHObjectives[i].IsAllies())
         {
             Widget = MapAlliesFlagIcons[DHGRI.AlliedNationID];
         }
@@ -3996,12 +3996,12 @@ simulated function DrawCaptureBar(Canvas Canvas)
     // Get cap progress on a 0-1 scale for each team
     if (CurrentCapProgress == 0)
     {
-        if (DHGRI.DHObjectives[CurrentCapArea].ObjState == NEUTRAL_TEAM_INDEX)
+        if (DHGRI.DHObjectives[CurrentCapArea].IsNeutral())
         {
             AlliesProgress = 0.0;
             AxisProgress = 0.0;
         }
-        else if (DHGRI.DHObjectives[CurrentCapArea].ObjState == AXIS_TEAM_INDEX)
+        else if (DHGRI.DHObjectives[CurrentCapArea].IsAxis())
         {
             AlliesProgress = 0.0;
             AxisProgress = 1.0;
@@ -4016,7 +4016,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
     {
         AlliesProgress = float(CurrentCapProgress - 100) / 100.0;
 
-        if (DHGRI.DHObjectives[CurrentCapArea].ObjState != NEUTRAL_TEAM_INDEX)
+        if (!DHGRI.DHObjectives[CurrentCapArea].IsNeutral())
         {
             AxisProgress = 1.0 - AlliesProgress;
         }
@@ -4025,7 +4025,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
     {
         AxisProgress = float(CurrentCapProgress) / 100.0;
 
-        if (DHGRI.DHObjectives[CurrentCapArea].ObjState != NEUTRAL_TEAM_INDEX)
+        if (!DHGRI.DHObjectives[CurrentCapArea].IsNeutral())
         {
             AlliesProgress = 1.0 - AxisProgress;
         }
@@ -4159,7 +4159,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
     if (CurrentCapRequiredCappers > 1)
     {
         // Displayed when the cap is neutral, the other team completely owns the cap, or there are enemy capturers
-        if (Team == AXIS_TEAM_INDEX && (DHGRI.DHObjectives[CurrentCapArea].ObjState == 2 || AxisProgress != 1.0 || CurrentCapAlliesCappers != 0))
+        if (Team == AXIS_TEAM_INDEX && (DHGRI.DHObjectives[CurrentCapArea].IsNeutral() || AxisProgress != 1.0 || CurrentCapAlliesCappers != 0))
         {
             if (CurrentCapAxisCappers < CurrentCapRequiredCappers)
             {
@@ -4169,7 +4169,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
 
             s @= "(" $ CurrentCapAxisCappers @ "/" @ CurrentCapRequiredCappers $ ")";
         }
-        else if (Team == ALLIES_TEAM_INDEX && (DHGRI.DHObjectives[CurrentCapArea].ObjState == 2 || AlliesProgress != 1.0 || CurrentCapAxisCappers != 0))
+        else if (Team == ALLIES_TEAM_INDEX && (DHGRI.DHObjectives[CurrentCapArea].IsNeutral() || AlliesProgress != 1.0 || CurrentCapAxisCappers != 0))
         {
             if (CurrentCapAlliesCappers < CurrentCapRequiredCappers)
             {

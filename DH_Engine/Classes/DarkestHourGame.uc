@@ -2516,7 +2516,7 @@ state RoundInPlay
             {
                 break;
             }
-            else if (DHObjectives[i].ObjState == OBJ_Axis)
+            else if (DHObjectives[i].IsAxis())
             {
                 Num[AXIS_TEAM_INDEX]++;
 
@@ -2528,7 +2528,7 @@ state RoundInPlay
                 // Add up objective based attrition
                 AttRateAllies += DHObjectives[i].AxisOwnedAttritionRate;
             }
-            else if (DHObjectives[i].ObjState == OBJ_Allies)
+            else if (DHObjectives[i].IsAllies())
             {
                 Num[ALLIES_TEAM_INDEX]++;
 
@@ -3780,7 +3780,7 @@ function ChooseWinner()
         {
             break;
         }
-        else if (DHObjectives[i].ObjState == OBJ_Axis)
+        else if (DHObjectives[i].IsAxis())
         {
             Num[AXIS_TEAM_INDEX]++;
 
@@ -3789,7 +3789,7 @@ function ChooseWinner()
                 NumReq[AXIS_TEAM_INDEX]++;
             }
         }
-        else if (DHObjectives[i].ObjState == OBJ_Allies)
+        else if (DHObjectives[i].IsAllies())
         {
             Num[ALLIES_TEAM_INDEX]++;
 
@@ -3915,7 +3915,7 @@ function CheckSpawnAreas()
 
             for (j = 0; j < SpawnAreas[i].AxisRequiredObjectives.Length; ++j)
             {
-                if (DHObjectives[SpawnAreas[i].AxisRequiredObjectives[j]] != none && DHObjectives[SpawnAreas[i].AxisRequiredObjectives[j]].ObjState != OBJ_Axis)
+                if (DHObjectives[SpawnAreas[i].AxisRequiredObjectives[j]] != none && !DHObjectives[SpawnAreas[i].AxisRequiredObjectives[j]].IsAxis())
                 {
                     bReqsMet = false;
                     break;
@@ -3926,7 +3926,7 @@ function CheckSpawnAreas()
             // Allows mappers to force all objectives to be lost/won before moving spawns, instead of just one - Ramm
             for (h = 0; h < SpawnAreas[i].AxisRequiredObjectives.Length; ++h)
             {
-                if (DHObjectives[SpawnAreas[i].AxisRequiredObjectives[h]] != none && DHObjectives[SpawnAreas[i].AxisRequiredObjectives[h]].ObjState == OBJ_Axis)
+                if (DHObjectives[SpawnAreas[i].AxisRequiredObjectives[h]] != none && DHObjectives[SpawnAreas[i].AxisRequiredObjectives[h]].IsAxis())
                 {
                     bSomeReqsMet = true;
                     break;
@@ -3939,7 +3939,7 @@ function CheckSpawnAreas()
             {
                 for (k = 0; k < SpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
                 {
-                    if (DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]] != none && DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
+                    if (DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]] != none && DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]].IsNeutral())
                     {
                         bSomeReqsMet = true;
                         break;
@@ -3964,7 +3964,7 @@ function CheckSpawnAreas()
 
             for (j = 0; j < SpawnAreas[i].AlliesRequiredObjectives.Length; ++j)
             {
-                if (DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[j]] != none && DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[j]].ObjState != OBJ_Allies)
+                if (DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[j]] != none && !DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[j]].IsAllies())
                 {
                     bReqsMet = false;
                     break;
@@ -3975,7 +3975,7 @@ function CheckSpawnAreas()
             // Allows mappers to force all objectives to be lost/won before moving spawns, instead of just one - Ramm
             for (h = 0; h < SpawnAreas[i].AlliesRequiredObjectives.Length; ++h)
             {
-                if (DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[h]] != none && DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[h]].ObjState == OBJ_Allies)
+                if (DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[h]] != none && DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[h]].IsAllies())
                 {
                     bSomeReqsMet = true;
                     break;
@@ -3988,7 +3988,7 @@ function CheckSpawnAreas()
             {
                 for (k = 0; k < SpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
                 {
-                    if (DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]] != none && DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
+                    if (DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]] != none && DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]].IsNeutral())
                     {
                         bSomeReqsMet = true;
                         break;
@@ -4048,7 +4048,7 @@ function CheckTankCrewSpawnAreas()
 
             for (j = 0; j < TankCrewSpawnAreas[i].AxisRequiredObjectives.Length; ++j)
             {
-                if (DHObjectives[TankCrewSpawnAreas[i].AxisRequiredObjectives[j]].ObjState != OBJ_Axis)
+                if (!DHObjectives[TankCrewSpawnAreas[i].AxisRequiredObjectives[j]].IsAxis())
                 {
                     bReqsMet = false;
                     break;
@@ -4059,7 +4059,7 @@ function CheckTankCrewSpawnAreas()
             // Allows Mappers to force all objectives to be lost/won before moving spawns, instead of just one - Ramm
             for (h = 0; h < TankCrewSpawnAreas[i].AxisRequiredObjectives.Length; ++h)
             {
-                if (DHObjectives[TankCrewSpawnAreas[i].AxisRequiredObjectives[h]].ObjState == OBJ_Axis)
+                if (DHObjectives[TankCrewSpawnAreas[i].AxisRequiredObjectives[h]].IsAxis())
                 {
                     bSomeReqsMet = true;
                     break;
@@ -4072,7 +4072,7 @@ function CheckTankCrewSpawnAreas()
             {
                 for (k = 0; k < TankCrewSpawnAreas[i].NeutralRequiredObjectives.Length; k++)
                 {
-                    if (DHObjectives[TankCrewSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
+                    if (DHObjectives[TankCrewSpawnAreas[i].NeutralRequiredObjectives[k]].IsNeutral())
                     {
                         bSomeReqsMet = true;
                         break;
@@ -4097,7 +4097,7 @@ function CheckTankCrewSpawnAreas()
 
             for (j = 0; j < TankCrewSpawnAreas[i].AlliesRequiredObjectives.Length; ++j)
             {
-                if (DHObjectives[TankCrewSpawnAreas[i].AlliesRequiredObjectives[j]].ObjState != OBJ_Allies)
+                if (!DHObjectives[TankCrewSpawnAreas[i].AlliesRequiredObjectives[j]].IsAllies())
                 {
                     bReqsMet = false;
                     break;
@@ -4108,7 +4108,7 @@ function CheckTankCrewSpawnAreas()
             // Allows Mappers to force all objectives to be lost/won before moving spawns, instead of just one - Ramm
             for (h = 0; h < TankCrewSpawnAreas[i].AlliesRequiredObjectives.Length; ++h)
             {
-                if (DHObjectives[TankCrewSpawnAreas[i].AlliesRequiredObjectives[h]].ObjState == OBJ_Allies)
+                if (DHObjectives[TankCrewSpawnAreas[i].AlliesRequiredObjectives[h]].IsAllies())
                 {
                     bSomeReqsMet = true;
                     break;
@@ -4121,7 +4121,7 @@ function CheckTankCrewSpawnAreas()
             {
                 for (k = 0; k < TankCrewSpawnAreas[i].NeutralRequiredObjectives.Length; k++)
                 {
-                    if (DHObjectives[TankCrewSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
+                    if (DHObjectives[TankCrewSpawnAreas[i].NeutralRequiredObjectives[k]].IsNeutral())
                     {
                         bSomeReqsMet = true;
                         break;
@@ -4168,7 +4168,7 @@ function CheckMortarmanSpawnAreas()
 
             for (j = 0; j < DHMortarSpawnAreas[i].AxisRequiredObjectives.Length; ++j)
             {
-                if (DHObjectives[DHMortarSpawnAreas[i].AxisRequiredObjectives[j]].ObjState != OBJ_Axis)
+                if (!DHObjectives[DHMortarSpawnAreas[i].AxisRequiredObjectives[j]].IsAxis())
                 {
                     bReqsMet = false;
                     break;
@@ -4177,7 +4177,7 @@ function CheckMortarmanSpawnAreas()
 
             for (h = 0; h < DHMortarSpawnAreas[i].AxisRequiredObjectives.Length; ++h)
             {
-                if (DHObjectives[DHMortarSpawnAreas[i].AxisRequiredObjectives[h]].ObjState == OBJ_Axis)
+                if (DHObjectives[DHMortarSpawnAreas[i].AxisRequiredObjectives[h]].IsAxis())
                 {
                     bSomeReqsMet = true;
                     break;
@@ -4188,7 +4188,7 @@ function CheckMortarmanSpawnAreas()
             {
                 for (k = 0; k < DHMortarSpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
                 {
-                    if (DHObjectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
+                    if (DHObjectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].IsNeutral())
                     {
                         bSomeReqsMet = true;
                         break;
@@ -4214,7 +4214,7 @@ function CheckMortarmanSpawnAreas()
 
             for (j = 0; j < DHMortarSpawnAreas[i].AlliesRequiredObjectives.Length; ++j)
             {
-                if (DHObjectives[DHMortarSpawnAreas[i].AlliesRequiredObjectives[j]].ObjState != OBJ_Allies)
+                if (!DHObjectives[DHMortarSpawnAreas[i].AlliesRequiredObjectives[j]].IsAllies())
                 {
                     bReqsMet = false;
                     break;
@@ -4225,7 +4225,7 @@ function CheckMortarmanSpawnAreas()
             // Allows Mappers to force all objectives to be lost/won before moving spawns, instead of just one
             for (h = 0; h < DHMortarSpawnAreas[i].AlliesRequiredObjectives.Length; ++h)
             {
-                if (DHObjectives[DHMortarSpawnAreas[i].AlliesRequiredObjectives[h]].ObjState == OBJ_Allies)
+                if (DHObjectives[DHMortarSpawnAreas[i].AlliesRequiredObjectives[h]].IsAllies())
                 {
                     bSomeReqsMet = true;
                     break;
@@ -4238,7 +4238,7 @@ function CheckMortarmanSpawnAreas()
             {
                 for (k = 0; k < DHMortarSpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
                 {
-                    if (DHObjectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
+                    if (DHObjectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].IsNeutral())
                     {
                         bSomeReqsMet = true;
                         break;

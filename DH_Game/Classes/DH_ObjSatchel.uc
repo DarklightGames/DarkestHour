@@ -62,15 +62,15 @@ function Trigger(Actor Other, Pawn EventInstigator)
 
     if (SavedPRI != none)
     {
-        if (ObjState == OBJ_Axis)
+        if (IsAxis())
         {
             ObjectiveCompleted(SavedPRI, ALLIES_TEAM_INDEX);
         }
-        else if (ObjState == OBJ_Allies)
+        else if (IsAllies())
         {
             ObjectiveCompleted(SavedPRI, AXIS_TEAM_INDEX);
         }
-        else if (ObjState== OBJ_Neutral && SavedPRI.Team != none)
+        else if (IsNeutral() && SavedPRI.Team != none)
         {
             ObjectiveCompleted(SavedPRI, SavedPRI.Team.TeamIndex);
         }
