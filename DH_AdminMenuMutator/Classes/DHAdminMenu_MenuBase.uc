@@ -292,12 +292,15 @@ simulated function ExecuteCommand(string CommandString, coerce bool bDoAdminLogi
     {
         if (!IsLoggedInAsAdmin())
         {
+            // Attempt automatic admin login if we have a user name & password from player's config file, & if player not already logged in
+            // We add an identifying prefix to the passed user name, which is used to avoid spammy log entries for silent admin logins from here
+            // Also flag that we need to log the player out again afterwards
+            // Note: would like to check here if admin login was successful, but bIsAdmin won't have had time to replicate
             if (AdminName != "" && AdminPassword != "")
             {
-                AdminName = class'DHAccessControl'.static.AdminMenuMutatorLoginPrefix() $ AdminName; // add identifying prefix to AdminName (used to avoid spammy silent admin log entries)
-                PC.AdminLoginSilent(AdminName @ AdminPassword);
-                bMenuDidAdminLogin = true; // if the menu has automatically logged in the admin, this flags that we need to log them out again afterwards
-            }                              // note: would like to check here if admin login was successful but bIsAdmin won't have had time to replicate (in PC.PRI)
+                PC.AdminLoginSilent(class'DHAccessControl'.static.AdminMenuMutatorLoginPrefix() $ AdminName @ AdminPassword);
+                bMenuDidAdminLogin = true;
+            }
             else
             {
                 ErrorMessageToSelf(1); // must be an admin
