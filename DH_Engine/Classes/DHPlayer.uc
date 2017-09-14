@@ -101,7 +101,7 @@ struct SquadSignal
 var     SquadSignal             SquadSignals[2];
 
 // This is used to skip ResetInput calls in the GUIController.
-// Useful when you want to show a menu overtop of the game (eg. situation map)
+// Useful when you want to show a menu over top of the game (e.g. situation map)
 // without interrupting player input.
 var     bool                    bShouldSkipResetInput;
 
@@ -126,6 +126,7 @@ replication
         ServerLoadATAmmo, ServerThrowMortarAmmo,
         ServerSaveArtilleryTarget, ServerSetPlayerInfo, ServerClearObstacle,
         ServerLockWeapons, ServerSetBayonetAtSpawn,
+        ServerSetIsInSpawnMenu, ServerSetLockTankOnEntry,
         ServerSquadCreate, ServerSquadLeave, ServerSquadJoin, ServerSquadSay,
         ServerSquadJoinAuto, ServerSquadInvite, ServerSquadKick, ServerSquadPromote,
         ServerSquadLock, ServerSquadOrder, ServerSquadSignal,
@@ -140,10 +141,6 @@ replication
         ClientProne, ClientToggleDuck, ClientConsoleCommand,
         ClientFadeFromBlack, ClientAddHudDeathMessage, ClientLockWeapons,
         ClientSquadInvite, ClientSquadSignal;
-
-    // Functions the owning client can call on the server
-    reliable if (Role < ROLE_Authority)
-        ServerSetIsInSpawnMenu, ServerSetLockTankOnEntry;
 }
 
 function ServerChangePlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2) { } // no longer used

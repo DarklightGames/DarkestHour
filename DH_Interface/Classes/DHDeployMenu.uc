@@ -509,7 +509,7 @@ function UpdateVehicles(optional bool bShowAlert)
         PC = DHPlayer(PlayerOwner());
 
         // TODO: have team max be indicated in another part of this control (ie. don't obfuscate meaning)
-        // TODO: this is an inpenetrable MESS
+        // TODO: this is an impenetrable MESS
         bDisabled = PC.VehiclePoolIndex != j && !GRI.CanPlayerReserveVehicleWithRole(PC, RI, CurrentTeam, j);
 
         if (VehicleClass != none)

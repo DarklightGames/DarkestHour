@@ -13,7 +13,7 @@ const  ITEMS_PER_PAGE = 10; // how many menu items are to be displayed on one pa
 var  localized array<string>  MenuText;             // array of the menu option description to be displayed
 var  array<string>            MenuCommand;          // array of the actual command lines to be executed when we choose a menu option
 
-var  DHAdminMenu_Replicator  Replicator;           // reference to the mutator's 'helper' replicated actor, which replicates some variables used by the menus on the client
+var  DHAdminMenu_Replicator   Replicator;           // reference to the mutator's 'helper' replicated actor, which replicates some variables used by the menus on the client
 var  PlayerController         PC;                   // reference to the local PlayerController, just to simplify lots of ViewportOwner.Actor references
 var  int                      MenuPage;             // for menu lists that run over into more than 1 page, this records the current page number
 var  string                   PreviousMenu;         // saves the command to open the previous menu, so that 'previous menu' key can operate correctly

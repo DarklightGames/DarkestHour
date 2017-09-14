@@ -57,9 +57,9 @@ simulated function DestroyEffects()
 // Modified to alternate between AP & HE rounds if firing a mixed mag (the tertiary ammo type)
 function Fire(Controller C)
 {
-    if (ProjectileClass == PrimaryProjectileClass)
+    if (ProjectileClass == PrimaryProjectileClass) // firing from mixed mag
     {
-        if ((InitialPrimaryAmmo - MainAmmoChargeExtra[0]) % 2.0 == 0.0) // fires AP on event numbered shots, HE on odd
+        if ((InitialPrimaryAmmo - MainAmmoChargeExtra[0]) % 2.0 == 0.0) // fires AP on even numbered shots, HE on odd
         {
             SpawnProjectile(SecondaryProjectileClass, false);
         }

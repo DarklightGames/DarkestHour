@@ -62,6 +62,7 @@ var     bool        bLockCameraDuringTransition; // lock the camera's rotation t
 // Damage
 var     float       FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle; // used by the hit detection system to determine which side of the vehicle was hit
 var     float       HeavyEngineDamageThreshold;  // proportion of remaining engine health below which the engine is so badly damaged it limits speed
+var     bool        bCanCrash;                   // vehicle can be damaged by static geometry during impacts (damages the engine)
 var     float       ImpactWorldDamageMult;       // multiplier for world geometry impact damage when vehicle bCanCrash
 var array<material> DestroyedMeshSkins;          // option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
 var     sound       DamagedStartUpSound;         // sound played when trying to start a damaged engine
@@ -70,7 +71,6 @@ var     sound       VehicleBurningSound;         // ambient sound when vehicle's
 var     sound       DestroyedBurningSound;       // ambient sound when vehicle is destroyed and burning
 var     float       SpawnProtEnds;               // is set when a player spawns the vehicle for damage protection in DarkestHour spawn type maps
 var     float       SpawnKillTimeEnds;           // is set when a player spawns the vehicle for spawn kill protection in DarkestHour spawn type maps
-var     bool        bCanCrash;                   // vehicle can be damaged by static geometry during impacts (damages the engine)
 
 // Engine
 var     bool        bEngineOff;                  // vehicle engine is simply switched off
@@ -159,21 +159,21 @@ var     bool        bDebuggingText;
 
 replication
 {
-    // Variables the server will replicate to all clients
-    reliable if (bNetDirty && Role == ROLE_Authority)
-        bEngineOff, bRightTrackDamaged, bLeftTrackDamaged, SpawnPointAttachment, SupplyAttachment;
-
     // Variables the server will replicate to clients when this actor is 1st replicated
     reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
         RandomAttachmentIndex;
 
-    // Functions a client can call on the server
-    reliable if (Role < ROLE_Authority)
-        ServerStartEngine, ServerDropSupplies;
+    // Variables the server will replicate to all clients
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        bEngineOff, bRightTrackDamaged, bLeftTrackDamaged, SpawnPointAttachment, SupplyAttachment;
 
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetDirty && Role == ROLE_Authority)
         TouchingSupplyCount;
+
+    // Functions a client can call on the server
+    reliable if (Role < ROLE_Authority)
+        ServerStartEngine, ServerDropSupplies;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -325,7 +325,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 // Also to initialize driver-related stuff when we receive the Driver actor
 simulated function PostNetReceive()
 {
-    // Driver has changed position
+    // Player has changed view position
     // Checking bClientInitialized means we do nothing until PostNetBeginPlay() has matched position indexes, meaning we leave SetPlayerPosition() to handle any initial anims
     if (DriverPositionIndex != SavedPositionIndex && bClientInitialized)
     {
@@ -649,8 +649,15 @@ function int LimitPawnPitch(int pitch)
 }
 
 // Modified to switch to external mesh & unzoomed FOV for behind view
+// Also to only adjust PC's rotation to make it relative to vehicle if we've just switched back from behind view into 1st person view
+// This is because when we enter a vehicle we now zero the PC's rotation on entering, so it's already relative & we start facing the same way as the vehicle
 simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 {
+    if (PC == none)
+    {
+        return;
+    }
+
     if (PC.bBehindView)
     {
         if (bBehindViewChanged)
@@ -781,7 +788,7 @@ function Vehicle FindEntryVehicle(Pawn P)
         {
             if (!bHasTankCrewPositions || bPlayerIsTankCrew)
             {
-                DisplayVehicleMessage(2, P); // vehicle is full (this simple message if vehicle isn't a tank or or if player is a tank crewman)
+                DisplayVehicleMessage(2, P); // vehicle is full (this simple message if vehicle isn't a tank or if player is a tank crewman)
             }
             else if (FirstRiderPositionIndex < WeaponPawns.Length)
             {
@@ -885,7 +892,8 @@ function bool TryToDrive(Pawn P)
     // TODO: these checks on a tank crew position are perhaps unnecessary duplication, as they will have been reliably checked on the server in either:
     // (1) FindEntryVehicle() - if player pressed 'use' to try to enter a vehicle, or
     // (2) ServerChangeDriverPosition()/CanSwitchToVehiclePosition() - if player tried to switch vehicle position [EDIT - no longer applies, now goes straight to KDriverEnter], or
-    // (3) DHSpawnManager.SpawnVehicle() - if player spawns into a vehicle from the DH deploy scrren
+    // (3) DHSpawnManager.SpawnVehicle() - if player spawns into a new vehicle from the DH deploy screen
+    // (4) DHSpawnPoint_Vehicle.FindEntryVehicle() - if player deploys into an existing spawn vehicle from the DH deploy screen
     // And there shouldn't be any other way of getting to this function
     if (bMustBeTankCommander)
     {
@@ -1132,7 +1140,8 @@ function ServerChangeViewPoint(bool bForward)
     }
 }
 
-// Modified to enter state ViewTransition for all modes except dedicated server where player is only moving between unexposed positions (so can't be shot & server doesn't need anims)
+// Modified so dedicated server doesn't go to state ViewTransition if player is only moving between unexposed positions
+// This is because player can't be shot & so server doesn't need to play transition anims (note this wouldn't even be called on dedicated server in original RO)
 simulated function NextViewPoint()
 {
     if (Level.NetMode != NM_DedicatedServer || DriverPositions[DriverPositionIndex].bExposed || DriverPositions[PreviousPositionIndex].bExposed)
@@ -1548,9 +1557,9 @@ function bool PlaceExitingDriver()
     Extent.X = Driver.default.DrivingRadius;
     Extent.Y = Driver.default.DrivingRadius;
     Extent.Z = Driver.default.DrivingHeight;
-    ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
+    ZOffset.Z = Driver.default.CollisionHeight * 0.5;
 
-    // Check whether player can be moved to each exit position & use the 1st valid one we find
+    // Check through exit positions to see if player can be moved there, using the 1st valid one we find
     for (i = 0; i < ExitPositions.Length; ++i)
     {
         ExitPosition = Location + (ExitPositions[i] >> Rotation) + ZOffset;
@@ -2014,19 +2023,19 @@ function CheckTreadDamage(vector HitLocation, vector Momentum)
     }
 }
 
-// Modified to tone down the sounds played when the vehicle impacts on something, as often caused constant 'bottoming out' sounds on the ground
+// Modified to damage engine if the vehicle bCanCrash & the impact damage exceeds its threshold
+// Also to tone down the sounds played when the vehicle impacts on something, as often caused constant 'bottoming out' sounds on the ground
 event TakeImpactDamage(float AccelMag)
 {
-    local int Damage, EngineDamage;
+    local int Damage;
 
     Damage = int(AccelMag * ImpactDamageModifier());
     TakeDamage(Damage, self, ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DHVehicleCollisionDamageType');
 
-    // Handle damage to engine if impact damage is past threshold and the vehicle bCanCrash
+    // Handle damage to engine if impact damage is past threshold & the vehicle bCanCrash
     if (bCanCrash && Damage > ImpactDamageThreshold)
     {
-        EngineDamage = Damage * ImpactWorldDamageMult;
-        DamageEngine(EngineDamage, self, ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DHVehicleCollisionDamageType');
+        DamageEngine(Damage * ImpactWorldDamageMult, self, ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DHVehicleCollisionDamageType');
     }
 
     // Play impact sound (often vehicle 'bottoming out' on ground)

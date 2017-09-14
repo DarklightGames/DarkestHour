@@ -931,15 +931,15 @@ simulated function DrawHudPassC(Canvas C)
 
             if (PortraitPRI.Team != none)
             {
-                if (PortraitPRI.Team.TeamIndex == 0)
+                if (PortraitPRI.Team.TeamIndex == AXIS_TEAM_INDEX)
                 {
-                    PortraitIcon.WidgetTexture = CaptureBarTeamIcons[0];
-                    PortraitText[0].Tints[TeamIndex] = class'DHColor'.default.TeamColors[0];
+                    PortraitIcon.WidgetTexture = CaptureBarTeamIcons[AXIS_TEAM_INDEX];
+                    PortraitText[0].Tints[TeamIndex] = class'DHColor'.default.TeamColors[AXIS_TEAM_INDEX];
                 }
-                else if (PortraitPRI.Team.TeamIndex == 1)
+                else if (PortraitPRI.Team.TeamIndex == ALLIES_TEAM_INDEX)
                 {
-                    PortraitIcon.WidgetTexture = CaptureBarTeamIcons[1];
-                    PortraitText[0].Tints[TeamIndex] = class'DHColor'.default.TeamColors[1];
+                    PortraitIcon.WidgetTexture = CaptureBarTeamIcons[ALLIES_TEAM_INDEX];
+                    PortraitText[0].Tints[TeamIndex] = class'DHColor'.default.TeamColors[ALLIES_TEAM_INDEX];
                 }
                 else
                 {
@@ -4159,7 +4159,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
     if (CurrentCapRequiredCappers > 1)
     {
         // Displayed when the cap is neutral, the other team completely owns the cap, or there are enemy capturers
-        if (Team == 0 && (DHGRI.DHObjectives[CurrentCapArea].ObjState == 2 || AxisProgress != 1.0 || CurrentCapAlliesCappers != 0))
+        if (Team == AXIS_TEAM_INDEX && (DHGRI.DHObjectives[CurrentCapArea].ObjState == 2 || AxisProgress != 1.0 || CurrentCapAlliesCappers != 0))
         {
             if (CurrentCapAxisCappers < CurrentCapRequiredCappers)
             {
@@ -4169,7 +4169,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
 
             s @= "(" $ CurrentCapAxisCappers @ "/" @ CurrentCapRequiredCappers $ ")";
         }
-        else if (Team == 1 && (DHGRI.DHObjectives[CurrentCapArea].ObjState == 2 || AlliesProgress != 1.0 || CurrentCapAxisCappers != 0))
+        else if (Team == ALLIES_TEAM_INDEX && (DHGRI.DHObjectives[CurrentCapArea].ObjState == 2 || AlliesProgress != 1.0 || CurrentCapAxisCappers != 0))
         {
             if (CurrentCapAlliesCappers < CurrentCapRequiredCappers)
             {
@@ -4895,13 +4895,13 @@ function DisplayVoiceGain(Canvas C)
         {
             if (PlayerOwner.PlayerReplicationInfo.Team != none)
             {
-                if (PlayerOwner.PlayerReplicationInfo.Team.TeamIndex == 0)
+                if (PlayerOwner.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
                 {
-                    C.DrawColor = class'DHColor'.default.TeamColors[0];
+                    C.DrawColor = class'DHColor'.default.TeamColors[AXIS_TEAM_INDEX];
                 }
                 else
                 {
-                    C.DrawColor = class'DHColor'.default.TeamColors[1];
+                    C.DrawColor = class'DHColor'.default.TeamColors[ALLIES_TEAM_INDEX];
                 }
             }
         }

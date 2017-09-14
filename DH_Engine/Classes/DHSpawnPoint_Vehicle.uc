@@ -11,8 +11,9 @@ class DHSpawnPoint_Vehicle extends DHSpawnPointBase
 
 const SPAWN_VEHICLES_BLOCK_RADIUS = 2048.0;
 
-var DHVehicle Vehicle;
+var     DHVehicle   Vehicle;
 
+// Modified to start a repeating timer to keep checking whether this spawn vehicle can be deployed into
 function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -20,11 +21,12 @@ function PostBeginPlay()
     SetTimer(1.0, true);
 }
 
+// Implemented to regularly check & update whether this spawn vehicle can be deployed into
 function Timer()
 {
     local Pawn        P;
     local DHObjective O;
-    local int         j;
+    local int         i;
 
     if (Role == ROLE_Authority)
     {
@@ -45,9 +47,9 @@ function Timer()
         }
 
         // Check whether this spawn vehicle is inside an active objective
-        for (j = 0; j < arraycount(GRI.DHObjectives); ++j)
+        for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
         {
-            O = GRI.DHObjectives[j];
+            O = GRI.DHObjectives[i];
 
             if (O != none && O.bActive && O.WithinArea(Vehicle))
             {
@@ -57,7 +59,7 @@ function Timer()
             }
         }
 
-        // Check if a suitable entry vehicle is available for non-crew
+        // Check if a suitable vehicle position is available for non-crew to enter
         if (FindEntryVehicle(false) == none)
         {
             BlockReason = SPBR_Full;
@@ -65,6 +67,7 @@ function Timer()
     }
 }
 
+// Modified to make sure we have a vehicle & it's on the same team
 simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck)
 {
     if (!super.CanSpawnWithParameters(GRI, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex, bSkipTimeCheck))
@@ -83,29 +86,30 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
     return true;
 }
 
-// Similar to FindEntryVehicle() function in a Vehicle class, it checks for a suitable vehicle position to enter, before we call TryToDrive() on the vehicle
-// We need to do this, otherwise if we TryToDrive() a vehicle that already has a driver, we fail to enter that vehicle, so here we try to find an empty, valid weapon pawn to enter
-// Deliberately ignores driver position, to discourage players from deploying into a spawn vehicle, which may be carefully positioned by the team, & immediately driving off in it
-// Prioritises passenger positions over real weapon positions (MGs or cannons), so players deploying into spawn vehicle are less likely to be exposed & have a moment to orient themselves
 private function Vehicle FindEntryVehicle(bool bCanBeTankCrew)
+// Similar to FindEntryVehicle() function in a Vehicle class, it tries to find a suitable, valid vehicle position for player to enter
+// We need to do this, otherwise if we TryToDrive() a vehicle that already has a driver, we'll fail to enter it at all, so here we try to find an empty, valid weapon pawn
+// Deliberately ignores driver position, to discourage players from deploying into a spawn vehicle (often carefully positioned by the team) & immediately driving off in it
+// Prioritises passenger positions over real weapons (MGs or cannons), so player deploying into spawn vehicle is less likely to be exposed & will have a moment to orient themselves
 {
-    local VehicleWeaponPawn        WP;
     local array<VehicleWeaponPawn> RealWeaponPawns;
-    local int  i;
+    local VehicleWeaponPawn        WP;
+    local int                      i;
 
     if (Vehicle == none)
     {
         return none;
     }
 
-    // Loop through the weapon pawns to check if we can enter one (but skip real weapon positions, like MGs & cannons, on this 1st pass, so we prioritise passenger slots)
+    // First loop through the weapon pawns to try to find an empty passenger position to enter
+    // For now we ignore real weapon positions, like MGs & cannons, so we prioritise entering passenger slots
     for (i = 0; i < Vehicle.WeaponPawns.Length; ++i)
     {
         WP = Vehicle.WeaponPawns[i];
 
         if (WP != none)
         {
-            // If weapon pawn is not a passenger slot (i.e. it's an MG or cannon), skip it on this 1st pass, but record it to check later if we don't find a valid passenger slot
+            // If weapon pawn isn't a passenger position, skip it on this 1st pass, but record it to check later if we don't find a valid passenger slot
             if (!WP.IsA('DHPassengerPawn'))
             {
                 RealWeaponPawns[RealWeaponPawns.Length] = WP;
@@ -120,7 +124,7 @@ private function Vehicle FindEntryVehicle(bool bCanBeTankCrew)
         }
     }
 
-    // We didn't find a valid passenger slot, so now try any real weapon positions that we skipped on the 1st pass
+    // We didn't find an empty passenger slot, so now try to find an empty, valid real weapon position to enter (which we skipped on the 1st pass)
     for (i = 0; i < RealWeaponPawns.Length; ++i)
     {
         WP = RealWeaponPawns[i];
@@ -135,6 +139,7 @@ private function Vehicle FindEntryVehicle(bool bCanBeTankCrew)
     return none; // there are no empty, usable vehicle positions
 }
 
+// Implemented to handle spawning the player into, or near to, our spawn vehicle
 function bool PerformSpawn(DHPlayer PC)
 {
     local Pawn       P;
@@ -174,10 +179,9 @@ function bool PerformSpawn(DHPlayer PC)
         ExitPositionIndices = class'UArray'.static.Range(0, Vehicle.ExitPositions.Length - 1);
         class'UArray'.static.IShuffle(ExitPositionIndices);
 
-        // Spawn vehicle is the type that requires its engine to be off to allow players to deploy to it, so it will be stationary
+        // Its engine is off & it will be stationary, so attempt to deploy next to vehicle, at a random exit position
         if (Vehicle.bEngineOff)
         {
-            // Attempt to deploy at an exit position
             for (i = 0; i < ExitPositionIndices.Length; ++i)
             {
                 if (PC.TeleportPlayer(Vehicle.Location + (Vehicle.ExitPositions[ExitPositionIndices[i]] >> Vehicle.Rotation) + Offset, Vehicle.Rotation))
@@ -186,6 +190,7 @@ function bool PerformSpawn(DHPlayer PC)
                 }
             }
         }
+        // Otherwise vehicle may be moving, so attempt to deploy into the vehicle
         else
         {
             // Attempt to deploy into the vehicle
@@ -198,20 +203,19 @@ function bool PerformSpawn(DHPlayer PC)
         }
     }
 
-    // Invalidate spawn point, reset spawn vehicle index, and zero out next
-    // spawn time. Since next spawn time is set when player is reset above,
-    // without this, the player would be forced to wait to spawn timer again.
+    // We failed to deploy, so invalidate spawn point & reset spawn vehicle index & next spawn time
+    // Since next spawn time is set when player is reset above, without this the player would be forced to wait to spawn timer again
     PC.bSpawnPointInvalidated = true;
     PC.SpawnPointIndex = -1;
     PC.NextSpawnTime = 0;
 
-    // Attempting to deploy into or near the vehicle failed, so kill the player pawn we spawned earlier
+    // Kill the player pawn we spawned earlier
     P = PC.Pawn;
     PC.UnPossess();
     P.Suicide();
 
-    // This makes sure the player doesn't watch and hear himself die. A
-    // dirty hack, but the alternative is much worse.
+    // This makes sure the player doesn't watch and hear himself die
+    // A dirty hack, but the alternative is much worse
     PC.ServerNextViewPoint();
 
     return false;
@@ -226,4 +230,3 @@ defaultproperties
 {
     bCombatSpawn=true
 }
-

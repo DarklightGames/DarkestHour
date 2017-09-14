@@ -1156,7 +1156,6 @@ function ScoreKill(Controller Killer, Controller Other)
     }
 }
 
-
 // Modified to check if the player has just used a select-a-spawn teleport and should be protected from damage
 // Also if the old spawn area system is used, it only checks spawn damage protection for the spawn that is relevant to the player, including any mortar crew spawn
 function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector HitLocation, out vector Momentum, class<DamageType> DamageType)
@@ -2304,12 +2303,12 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
 
 function bool RoleExists(byte TeamID, DHRoleInfo RI)
 {
-    local int i;
     local DHGameReplicationInfo GRI;
+    local int                   i;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (TeamID == 0)
+    if (TeamID == AXIS_TEAM_INDEX)
     {
         for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
         {
@@ -2319,7 +2318,7 @@ function bool RoleExists(byte TeamID, DHRoleInfo RI)
             }
         }
     }
-    else if (TeamID == 1)
+    else if (TeamID == ALLIES_TEAM_INDEX)
     {
         for (i = 0; i < arraycount(GRI.DHAlliesRoles); ++i)
         {
@@ -2851,7 +2850,6 @@ function ResetScores()
     }
 }
 
-
 state RoundOver
 {
     // Modified to replace ROArtillerySpawner with DHArtillerySpawner
@@ -3121,17 +3119,13 @@ exec function DebugDestroyConstructions()
     }
 }
 
-// Quick test function to change a role's limit (Allied only)
-// function doesn't support bots
+// Quick test function to change a role's limit (doesn't support bots)
 exec function DebugSetRoleLimit(int Team, int Index, int NewLimit)
 {
-    local Controller C;
-    local DHPlayer PC;
     local DHGameReplicationInfo GRI;
-    local int i;
-    local int RoleLimit;
-    local int RoleBotCount;
-    local int RoleCount;
+    local Controller            C;
+    local DHPlayer              PC;
+    local int                   RoleCount, RoleBotCount, RoleLimit, i;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
@@ -3140,12 +3134,12 @@ exec function DebugSetRoleLimit(int Team, int Index, int NewLimit)
         return;
     }
 
-    if (Team == 0)
+    if (Team == AXIS_TEAM_INDEX)
     {
         GRI.DHAxisRoleLimit[Index] = NewLimit;
         GRI.GetRoleCounts(GRI.DHAxisRoles[Index], RoleCount, RoleBotCount, RoleLimit);
     }
-    else if (Team == 1)
+    else if (Team == ALLIES_TEAM_INDEX)
     {
         GRI.DHAlliesRoleLimit[Index] = NewLimit;
         GRI.GetRoleCounts(GRI.DHAlliesRoles[Index], RoleCount, RoleBotCount, RoleLimit);

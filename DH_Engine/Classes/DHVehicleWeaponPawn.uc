@@ -153,10 +153,10 @@ simulated function PostNetReceive()
 //  *******************************  VIEW/DISPLAY  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// New helper function to set the player's initial view rotation when entering the vehicle position
-// Allows easy subclassing without re-stating long driver enter functions
-// Default is to make player face forwards on entering (zeroed as we now assume/hard-code that controller's & pawn's rotation is relative to vehicle or turret)
+// New helper function to set the player's initial view rotation when entering the vehicle position, allowing easy subclassing
+// Default is to make player face forwards on entering (zeroed as PC rotation as now always relative to vehicle or turret)
 // Note this differs from what was originally in KDriverEnter() & ClientKDriverEnter(), which matched weapon pawn's rotation to controller
+// But in POVChanged() we no longer alter rotation to make it relative to vehicle, so we just set a relative rotation here & no need for adjustment
 simulated function SetInitialViewRotation()
 {
     SetRotation(rot(0, 0, 0)); // note that an owning net client will update this back to the server
@@ -179,6 +179,8 @@ simulated function DrawBinocsOverlay(Canvas C)
 }
 
 // Modified to switch to external mesh & unzoomed FOV for behind view, plus handling of any relative/non-relative turret rotation
+// Also to only adjust PC's rotation to make it relative to vehicle if we've just switched back from behind view into 1st person view
+// This is because when we enter a vehicle we now call SetInitialViewRotation(), which is already relative to vehicle
 simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 {
     local rotator ViewRelativeRotation;
@@ -219,8 +221,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
         {
             if (VehicleBase != none)
             {
-                // Switching back from behind view, so make rotation relative to vehicle again
-                ViewRelativeRotation = PC.Rotation;
+                ViewRelativeRotation = PC.Rotation; // make rotation relative to vehicle again (changed so only if switching back from behind view)
 
                 // If the vehicle has a turret, remove turret yaw from player's rotation, as SpecialCalcFirstPersonView() adds turret yaw
                 if (VehWep != none && VehWep.bHasTurret)
@@ -471,11 +472,8 @@ function bool TryToDrive(Pawn P)
         }
     }
 
-    // TODO: these checks on a tank crew position are perhaps unnecessary duplication, as they will have been reliably checked on the server in either:
-    // (1) FindEntryVehicle() - if player pressed 'use' to try to enter a vehicle, or
-    // (2) ServerChangeDriverPosition()/CanSwitchToVehiclePosition() - if player tried to switch vehicle position [EDIT - no longer applies, now goes straight to KDriverEnter], or
-    // (3) DHSpawnManager.SpawnVehicle() - if player spawns into a vehicle from the DH deploy screen
-    // And there shouldn't be any other way of getting to this function
+    // TODO: these checks on a tank crew position are perhaps unnecessary duplication, as they will have been reliably checked on the server in earlier functions
+    // See notes in same function in DHVehicle for details
     if (bMustBeTankCrew)
     {
         // Deny entry to a tank crew position if player isn't a tank crew role
@@ -1224,7 +1222,6 @@ simulated function ClientKDriverLeave(PlayerController PC)
 }
 
 // Modified to remove playing BeginningIdleAnim as that now gets done for all net modes in DrivingStatusChanged()
-// Also to use new SwitchMesh() function, including to match mesh rotation in all net modes, not just standalone as in the RO original (not sure why they did that)
 simulated state LeavingVehicle
 {
     simulated function HandleExit()
@@ -1373,7 +1370,8 @@ function bool PlaceExitingDriver()
     Extent.Z = Driver.default.DrivingHeight;
     ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
 
-    // Check whether player can be moved to each exit position & use the 1st valid one we find
+    // Check through exit positions to see if player can be moved there, using the 1st valid one we find
+    // Start with the exit position for this weapon pawn, & if necessary loop back to position zero to find a valid exit
     i = Clamp(PositionInArray + 1, 0, VehicleBase.ExitPositions.Length - 1);
     StartIndex = i;
 
