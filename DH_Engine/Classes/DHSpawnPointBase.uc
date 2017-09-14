@@ -58,6 +58,14 @@ simulated event PostBeginPlay()
     }
 }
 
+// Modified to deactivate spawn point so any players' spawns get invalidated if they are set to spawn here
+event Destroyed()
+{
+    super.Destroyed();
+
+    SetIsActive(false);
+}
+
 // Override to provide the business logic that does the spawning
 function bool PerformSpawn(DHPlayer PC);
 
@@ -167,15 +175,6 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
 simulated function bool IsActive()
 {
     return bIsActive;
-}
-
-event Destroyed()
-{
-    super.Destroyed();
-
-    // We call this so that players' spawns get invalidated if they are set
-    // to spawn on this spawn point.
-    SetIsActive(false);
 }
 
 function SetIsActive(bool bIsActive)

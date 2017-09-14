@@ -273,14 +273,6 @@ simulated function PostNetBeginPlay()
     SpawnVehicleAttachments();
 }
 
-// Modified to prevent players from dieing so easily when near a slightly moving vehicle
-// Supposively the system tries to move the pawn over slightly and if it fails it calls this function
-// Which before just slayed the player into full gibs (10000 damage), lets not do that...
-function bool EncroachingOn(Actor Other)
-{
-    return false;
-}
-
 // Modified to destroy extra attachments & effects - including the DestructionEffect emitter
 // That's because if an already exploded vehicle replicates to a net client, the vehicle gets Destroyed() before the natural LifeSpan of the emitter
 // That left the DestructionEffect burning away in mid air after the vehicle has disappeared (the Super calls Kill() on the emitter, but it doesn't seem to work)
@@ -1071,24 +1063,6 @@ simulated event DrivingStatusChanged()
     else if (HasAnim(BeginningIdleAnim))
     {
         PlayAnim(BeginningIdleAnim);
-    }
-}
-
-// New function triggered when a player enters a vehicle, to check & update any vehicle locked settings
-// Here we just make sure the player's bInLockedVehicle flag is false, so his vehicle HUD doesn't display a locked vehicle icon
-// The real vehicle locking functionality is implemented in the DHArmoredVehicle subclass
-function UpdateVehicleLockOnPlayerEntering(Vehicle EntryPosition)
-{
-    local DHPawn Player;
-
-    if (EntryPosition != none)
-    {
-        Player = DHPawn(EntryPosition.Driver);
-
-        if (Player != none)
-        {
-            Player.SetInLockedVehicle(false);
-        }
     }
 }
 
@@ -2859,6 +2833,24 @@ simulated function UpdateShadow()
     }
 }
 
+// New function triggered when a player enters a vehicle, to check & update any vehicle locked settings
+// Here we just make sure the player's bInLockedVehicle flag is false, so his vehicle HUD doesn't display a locked vehicle icon
+// The real vehicle locking functionality is implemented in the DHArmoredVehicle subclass
+function UpdateVehicleLockOnPlayerEntering(Vehicle EntryPosition)
+{
+    local DHPawn Player;
+
+    if (EntryPosition != none)
+    {
+        Player = DHPawn(EntryPosition.Driver);
+
+        if (Player != none)
+        {
+            Player.SetInLockedVehicle(false);
+        }
+    }
+}
+
 // Modified to destroy extra attachments & effects, & to add option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
 simulated event DestroyAppearance()
 {
@@ -3036,6 +3028,14 @@ function bool ResupplyAmmo()
     }
 
     return bDidResupply;
+}
+
+// Modified to prevent players from dying so easily when near a slightly moving vehicle
+// Supposedly the system tries to move the pawn over slightly & if it fails it calls this function
+// Which before just slayed the player into full gibs (10000 damage) - let's not do that
+function bool EncroachingOn(Actor Other)
+{
+    return false;
 }
 
 // New function to handle switching between external & internal mesh (just saves code repetition)

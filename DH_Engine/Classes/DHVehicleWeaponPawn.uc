@@ -260,6 +260,25 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
     }
 }
 
+// New helper function to get the appropriate ViewFOV for the given position in the DriverPositions array
+// If no ViewFOV is specified for the given position it uses the player's default view FOV (i.e. player's normal FOV when on foot)
+// This avoids having to hard code the default FOV for most vehicle positions (except gunsights and binoculars)
+// It also facilitates the player having a customisable view FOV
+simulated function float GetViewFOV(int PositionIndex)
+{
+    if (PositionIndex >= 0 && PositionIndex < DriverPositions.Length && DriverPositions[PositionIndex].ViewFOV > 0.0)
+    {
+        return DriverPositions[PositionIndex].ViewFOV;
+    }
+
+    if (IsHumanControlled())
+    {
+        return PlayerController(Controller).DefaultFOV;
+    }
+
+    return class'DHPlayer'.default.DefaultFOV;
+}
+
 // Modified so when player possesses a weapon pawn, he never starts in behind view (used in PC's Possess/Restart functions)
 simulated function bool PointOfView()
 {
@@ -1007,6 +1026,80 @@ function ServerChangeDriverPosition(byte F)
     }
 }
 
+// New helper function to check whether player is able to switch to new vehicle position
+// Avoids (1) net client sending unnecessary replicated function calls to server, & (2) player exiting current position to unsuccessfully try to enter new position
+// We make sure player isn't trying to 'teleport' outside to external rider position while buttoned up,
+// or to enter a tank crew position he can't use (including in an armored vehicle that he's locked out of), or any position already occupied by another human player
+simulated function bool CanSwitchToVehiclePosition(byte F)
+{
+    local DHArmoredVehicle AV;
+    local Vehicle          NewVehiclePosition;
+    local bool             bMustBeTankerToSwitch;
+
+    if (F == 0 || VehicleBase == none) // pressing zero is an invalid switch choice
+    {
+        return false;
+    }
+
+    // Trying to switch to driver position (for now just get vehicle variables for later checks)
+    if (F == 1)
+    {
+        NewVehiclePosition = VehicleBase;
+        bMustBeTankerToSwitch = VehicleBase.bMustBeTankCommander;
+    }
+    // Trying to switch to non-driver position
+    else
+    {
+        F -= 2; // adjust passed F to selected weapon pawn index (e.g. pressing 2 for turret position ends up with F=0 for weapon pawn no.0)
+
+        // Can't switch if player has selected an invalid weapon pawn position or the current position
+        if (F >= VehicleBase.WeaponPawns.Length || F == PositionInArray)
+        {
+            return false;
+        }
+
+        // Can't switch if player selected a rider position on an armored vehicle, but is buttoned up (no 'teleporting' outside to external rider position) - gives message
+        if (GetArmoredVehicleBase(AV) && F >= AV.FirstRiderPositionIndex && !CanExit())
+        {
+            return false;
+        }
+
+        // Get weapon pawn variables for later checks
+        // Note on a net client we probably won't get a weapon pawn reference for an unoccupied rider pawn, as actor doesn't usually exist on a client
+        // But that's fine because there's nothing we need to check for an unoccupied rider pawn & we can always switch to it if we got here
+        // If we let the switch go ahead, the rider pawn will get replicated to the owning net client as the player enters it on the server
+        NewVehiclePosition = VehicleBase.WeaponPawns[F];
+        bMustBeTankerToSwitch = ROVehicleWeaponPawn(NewVehiclePosition) != none && ROVehicleWeaponPawn(NewVehiclePosition).bMustBeTankCrew;
+    }
+
+    if (bMustBeTankerToSwitch)
+    {
+        // Can't switch if player has selected a tank crew position but isn't a tank crew role
+        if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(self) && IsHumanControlled())
+        {
+            DisplayVehicleMessage(0); // not qualified to operate vehicle
+
+            return false;
+        }
+
+        // Can't switch to a tank crew position in an armored vehicle if it's been locked & player isn't an allowed crewman (gives message)
+        // We DO NOT apply this check to a net client, as it doesn't have the required variables (bVehicleLocked & CrewedLockedVehicle)
+        if (Role == ROLE_Authority && (AV != none || GetArmoredVehicleBase(AV)) && AV.AreCrewPositionsLockedForPlayer(self))
+        {
+            return false;
+        }
+    }
+
+    // Can't switch if new vehicle position already has a human occupant
+    // bDriving check is there to also catch 'LeaveBody' debug pawns, which won't have a PRI, stopping player switching into same position as one
+    if (NewVehiclePosition != none && NewVehiclePosition.bDriving && !(NewVehiclePosition.PlayerReplicationInfo != none && NewVehiclePosition.PlayerReplicationInfo.bBot))
+    {
+        return false;
+    }
+
+    return true;
+}
+
 // Modified so if player is only switching vehicle positions, he no longer briefly re-possesses his player pawn before trying to enter the new vehicle position
 // And to remove overlap with DriverDied(), moving common features into DriverLeft(), which gets called by both functions, & to remove some redundancy
 // Also to prevent exit if player is buttoned up, to show a message if no valid exit can be found, & to give player the same momentum as the vehicle when exiting
@@ -1260,80 +1353,6 @@ simulated function Destroyed_HandleDriver()
     }
 
     super.Destroyed_HandleDriver();
-}
-
-// New helper function to check whether player is able to switch to new vehicle position
-// Avoids (1) net client sending unnecessary replicated function calls to server, & (2) player exiting current position to unsuccessfully try to enter new position
-// We make sure player isn't trying to 'teleport' outside to external rider position while buttoned up,
-// or to enter a tank crew position he can't use (including in an armored vehicle that he's locked out of), or any position already occupied by another human player
-simulated function bool CanSwitchToVehiclePosition(byte F)
-{
-    local DHArmoredVehicle AV;
-    local Vehicle          NewVehiclePosition;
-    local bool             bMustBeTankerToSwitch;
-
-    if (F == 0 || VehicleBase == none) // pressing zero is an invalid switch choice
-    {
-        return false;
-    }
-
-    // Trying to switch to driver position (for now just get vehicle variables for later checks)
-    if (F == 1)
-    {
-        NewVehiclePosition = VehicleBase;
-        bMustBeTankerToSwitch = VehicleBase.bMustBeTankCommander;
-    }
-    // Trying to switch to non-driver position
-    else
-    {
-        F -= 2; // adjust passed F to selected weapon pawn index (e.g. pressing 2 for turret position ends up with F=0 for weapon pawn no.0)
-
-        // Can't switch if player has selected an invalid weapon pawn position or the current position
-        if (F >= VehicleBase.WeaponPawns.Length || F == PositionInArray)
-        {
-            return false;
-        }
-
-        // Can't switch if player selected a rider position on an armored vehicle, but is buttoned up (no 'teleporting' outside to external rider position) - gives message
-        if (GetArmoredVehicleBase(AV) && F >= AV.FirstRiderPositionIndex && !CanExit())
-        {
-            return false;
-        }
-
-        // Get weapon pawn variables for later checks
-        // Note on a net client we probably won't get a weapon pawn reference for an unoccupied rider pawn, as actor doesn't usually exist on a client
-        // But that's fine because there's nothing we need to check for an unoccupied rider pawn & we can always switch to it if we got here
-        // If we let the switch go ahead, the rider pawn will get replicated to the owning net client as the player enters it on the server
-        NewVehiclePosition = VehicleBase.WeaponPawns[F];
-        bMustBeTankerToSwitch = ROVehicleWeaponPawn(NewVehiclePosition) != none && ROVehicleWeaponPawn(NewVehiclePosition).bMustBeTankCrew;
-    }
-
-    if (bMustBeTankerToSwitch)
-    {
-        // Can't switch if player has selected a tank crew position but isn't a tank crew role
-        if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(self) && IsHumanControlled())
-        {
-            DisplayVehicleMessage(0); // not qualified to operate vehicle
-
-            return false;
-        }
-
-        // Can't switch to a tank crew position in an armored vehicle if it's been locked & player isn't an allowed crewman (gives message)
-        // We DO NOT apply this check to a net client, as it doesn't have the required variables (bVehicleLocked & CrewedLockedVehicle)
-        if (Role == ROLE_Authority && (AV != none || GetArmoredVehicleBase(AV)) && AV.AreCrewPositionsLockedForPlayer(self))
-        {
-            return false;
-        }
-    }
-
-    // Can't switch if new vehicle position already has a human occupant
-    // bDriving check is there to also catch 'LeaveBody' debug pawns, which won't have a PRI, stopping player switching into same position as one
-    if (NewVehiclePosition != none && NewVehiclePosition.bDriving && !(NewVehiclePosition.PlayerReplicationInfo != none && NewVehiclePosition.PlayerReplicationInfo.bBot))
-    {
-        return false;
-    }
-
-    return true;
 }
 
 // New function to check if player can exit, displaying an "unbutton hatch" message if he can't (just saves repeating code in different functions)
@@ -1703,25 +1722,6 @@ simulated function bool GetArmoredVehicleBase(out DHArmoredVehicle AV)
     AV = DHArmoredVehicle(VehicleBase);
 
     return AV != none;
-}
-
-// New helper function to get the appropriate ViewFOV for the given position in the DriverPositions array
-// If no ViewFOV is specified for the given position it uses the player's default view FOV (i.e. player's normal FOV when on foot)
-// This avoids having to hard code the default FOV for most vehicle positions (except gunsights and binoculars)
-// It also facilitates the player having a customisable view FOV
-simulated function float GetViewFOV(int PositionIndex)
-{
-    if (PositionIndex >= 0 && PositionIndex < DriverPositions.Length && DriverPositions[PositionIndex].ViewFOV > 0.0)
-    {
-        return DriverPositions[PositionIndex].ViewFOV;
-    }
-
-    if (IsHumanControlled())
-    {
-        return PlayerController(Controller).DefaultFOV;
-    }
-
-    return class'DHPlayer'.default.DefaultFOV;
 }
 
 // Modified to handle switching between external & internal mesh, including copying weapon's aimed direction to new mesh
