@@ -2896,6 +2896,11 @@ function PawnDied(Pawn P)
     }
 }
 
+// Emptied out as irrelevant to RO/DH (concerns UT2004 PowerUps) & can just cause "accessed none" log errors if keybound & used (if player in vehicle or has no inventory)
+exec function PrevItem()
+{
+}
+
 // Emptied out so human player doesn't receive "you picked up the [weapon name]" messages when they pick up a weapon
 function HandlePickup(Pickup pick)
 {

@@ -6698,6 +6698,11 @@ simulated function NextWeapon()
     }
 }
 
+// Emptied out as irrelevant to RO/DH (concerns UT2004 PowerUps) & can just cause "accessed none" log errors if keybound & used (if player has no inventory)
+exec function NextItem()
+{
+}
+
 // Overridden from ROPawn to fix "sequence not found" bugs when a weapon simply
 // does not have a WA_Idle or WA_IdleEmpty.
 simulated function StartFiring(bool bAltFire, bool bRapid)

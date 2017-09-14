@@ -1873,6 +1873,7 @@ function bool AddInventory(Inventory NewItem) { return false; }
 function DeleteInventory(Inventory Item);
 function Inventory FindInventoryType(class DesiredClass) { return none; }
 simulated function Weapon GetDemoRecordingWeapon() { return none; }
+exec function NextItem(); // only concerns UT2004 PowerUps) & just causes "accessed none" log errors if keybound & used
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
