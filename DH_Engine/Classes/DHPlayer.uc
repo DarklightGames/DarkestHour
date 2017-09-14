@@ -3486,6 +3486,22 @@ exec function DebugEvent(name EventToTrigger, optional bool bUntrigger)
     }
 }
 
+// Used for finding pesky "raptor" actors sitting at world origin.
+simulated exec function DebugRaptor()
+{
+    local Actor A;
+
+    foreach AllActors(class'Actor', A)
+    {
+        if (A.Location == vect(0, 0, 0) &&
+            A.DrawType == DT_Sprite &&
+            !A.bHidden)
+        {
+            Log(A);
+        }
+    }
+}
+
 exec function GetMyLocation()
 {
     local string s;
@@ -5148,22 +5164,6 @@ simulated function string GetDefaultActiveChannel()
     else
     {
         return super.GetDefaultActiveChannel();
-    }
-}
-
-// Used for finding pesky "raptor" actors sitting at world origin.
-simulated exec function DebugRaptor()
-{
-    local Actor A;
-
-    foreach AllActors(class'Actor', A)
-    {
-        if (A.Location == vect(0, 0, 0) &&
-            A.DrawType == DT_Sprite &&
-            !A.bHidden)
-        {
-            Log(A);
-        }
     }
 }
 
