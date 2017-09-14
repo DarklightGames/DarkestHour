@@ -89,6 +89,13 @@ var     SpriteWidget        SupplyPointIcon;
 var     SpriteWidget        VehicleSuppliesIcon;
 var     TextWidget          VehicleSuppliesText;
 
+// Signals
+var     float               SignalNewTimeSeconds;
+var     int                 SignalDistanceIntervalMeters;
+var     float               SignalIconSizeStart;
+var     float               SignalIconSizeEnd;
+var     int                 SignalShrinkTimeSeconds;
+
 // Death messages
 var     array<string>       ConsoleDeathMessages;   // paired with DHObituaries array & holds accompanying console death messages
 var     array<DHObituary>   DHObituaries;           // replaced RO's Obituaries static array, so we can have more than 4 death messages
@@ -1746,21 +1753,28 @@ function color GetPlayerColor(PlayerReplicationInfo PRI)
 
 function DrawSignals(Canvas C)
 {
-    local int i;
+    local int i, Distance;
     local DHPlayer PC;
     local vector    Direction;
     local vector    TraceStart, TraceEnd;
     local vector    ScreenLocation;
     local material  SignalMaterial;
-    local float     Angle;
-    local bool      bHasLOS;
+    local float     Angle, XL, YL, X, Y, SignalIconSize, T;
+    local bool      bHasLOS, bIsNew;
+    local string    DistanceText, LabelText;
+    local color     SignalColor;
+    local bool      bShouldShowLabel;
+    local bool      bShouldShowDistance;
 
     PC = DHPlayer(PlayerOwner);
 
-    if (PawnOwner == none || PC == none)
+    if (PawnOwner == none || PC == none || PC.Pawn == none)
     {
         return;
     }
+
+    bShouldShowLabel = true;
+    bShouldShowDistance = !PC.Pawn.IsA('VehicleCannonPawn');
 
     TraceStart = PawnOwner.Location + PawnOwner.EyePosition();
 
@@ -1772,7 +1786,6 @@ function DrawSignals(Canvas C)
         }
 
         TraceEnd = PC.SquadSignals[i].Location;
-
         Direction = Normal(TraceEnd - TraceStart);
         Angle = Direction dot vector(PlayerOwner.CalcViewRotation);
 
@@ -1781,41 +1794,91 @@ function DrawSignals(Canvas C)
             continue;
         }
 
+        // TODO: Might make more sense to have the signals be classes rather
+        // than a type enum! Would be much better for modding!
         switch (i)
         {
             case 0: // SIGNAL_Fire
-                C.DrawColor = class'DHColor'.default.SquadSignalFireColor;
+                SignalColor = class'DHColor'.default.SquadSignalFireColor;
                 SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_fire_world';
+                LabelText="Fire";
                 break;
             case 1: // SIGNAL_Move
-                C.DrawColor = class'DHColor'.default.SquadSignalMoveColor;
+                SignalColor = class'DHColor'.default.SquadSignalMoveColor;
                 SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_move_world';
+                LabelText="Move";
                 break;
             default:
                 break;
         }
 
+        bIsNew = Level.TimeSeconds - PC.SquadSignals[i].TimeSeconds < SignalNewTimeSeconds;
         bHasLOS = FastTrace(TraceEnd, TraceStart);
 
-        if (bHasLOS)
+        if (!bIsNew && Angle >= 0.99)
         {
-            C.DrawColor.A = 255;
+            SignalColor.A = 48;
+        }
+        else if (bHasLOS || bIsNew)
+        {
+            SignalColor.A = 255;
         }
         else
         {
-            C.DrawColor.A = 64;
+            SignalColor.A = 48;
         }
 
-        if (Angle >= 0.99)
-        {
-            C.DrawColor.A = 32;
-        }
+        C.DrawColor = SignalColor;
 
         ScreenLocation = C.WorldToScreen(TraceEnd);
 
-        // TODO: convert to spritewidget
-        C.SetPos(ScreenLocation.X - 8, ScreenLocation.Y - 8);
-        C.DrawTile(SignalMaterial, 24, 24, 0, 0, 31, 31);
+        // Determine icon size
+        if (Level.TimeSeconds - PC.SquadSignals[i].TimeSeconds < SignalShrinkTimeSeconds)
+        {
+            T = Level.TimeSeconds - PC.SquadSignals[i].TimeSeconds / SignalShrinkTimeSeconds;
+            SignalIconSize = class'UInterp'.static.SmoothStep(T, SignalIconSizeStart, SignalIconSizeEnd);
+        }
+        else
+        {
+            SignalIconSize = SignalIconSizeEnd;
+        }
+
+        C.SetPos(ScreenLocation.X - (SignalIconSize / 2), ScreenLocation.Y - (SignalIconSize / 2));
+        C.DrawTile(SignalMaterial, SignalIconSize, SignalIconSize, 0, 0, SignalMaterial.MaterialUSize() - 1, SignalMaterial.MaterialVSize() - 1);
+
+        C.Font = C.TinyFont;
+
+        if (bShouldShowLabel)
+        {
+            // Draw label text
+            C.TextSize(LabelText, XL, YL);
+            X = ScreenLocation.X - (XL / 2);
+            Y = ScreenLocation.Y - (SignalIconSize / 2) - YL;
+            C.DrawColor = class'UColor'.default.Black;
+            C.DrawColor.A = SignalColor.A;
+            C.SetPos(X + 1, Y + 1);
+            C.DrawText(LabelText);
+            C.DrawColor = SignalColor;
+            C.SetPos(X, Y);
+            C.DrawText(LabelText);
+        }
+
+        if (bShouldShowDistance)
+        {
+            // Draw distance text (with drop shadow)
+            Distance = (int(class'DHUnits'.static.UnrealToMeters(VSize(TraceEnd - TraceStart))) / SignalDistanceIntervalMeters) * SignalDistanceIntervalMeters;
+            DistanceText = string(Distance) @ "m";
+            C.TextSize(DistanceText, XL, YL);
+            X = ScreenLocation.X - (XL / 2);
+            Y = ScreenLocation.Y + (SignalIconSize / 2);
+            C.DrawColor = class'UColor'.default.Black;
+            C.DrawColor.A = SignalColor.A;
+            C.SetPos(X + 1, Y + 1);
+            C.DrawText(DistanceText);
+            C.DrawColor = SignalColor;
+            C.SetPos(X, Y);
+            C.DrawText(DistanceText);
+        }
     }
 }
 
@@ -5164,6 +5227,13 @@ defaultproperties
     // Construction
     VehicleSuppliesIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.HUD.supplies',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.30,DrawPivot=DP_LowerLeft,PosX=0.5,PosY=1.0,OffsetX=0,OffsetY=-16,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     VehicleSuppliesText=(Text="1000",PosX=0,PosY=0,WrapWidth=0,WrapHeight=0,OffsetX=0,OffsetY=0,DrawPivot=DP_UpperMiddle,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=true)
+
+    // Signals
+    SignalNewTimeSeconds=2.0
+    SignalDistanceIntervalMeters=5
+    SignalIconSizeStart=64
+    SignalIconSizeEnd=32
+    SignalShrinkTimeSeconds=1.0
 
     // Specate
     SpectateInstructionText1="Press [%FIRE%] to switch Viewpoint/Players"
