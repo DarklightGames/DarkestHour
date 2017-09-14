@@ -81,8 +81,8 @@ defaultproperties
     ExitPositions(0)=(X=80.0,Y=-115.0,Z=125.0)   // driver's hatch (exit to side)
     ExitPositions(1)=(X=-12.0,Y=25.0,Z=235.0)    // commander's hatch
     ExitPositions(2)=(X=-144.0,Y=-115.0,Z=105.0) // passenger (l)
-    ExitPositions(3)=(X=-230.0,Y=-29.0,Z=105.0)  // passenger (bl)
-    ExitPositions(4)=(X=-230.0,Y=29.0,Z=105.0)   // passenger (br)
+    ExitPositions(3)=(X=-235.0,Y=-29.0,Z=105.0)  // passenger (bl)
+    ExitPositions(4)=(X=-235.0,Y=29.0,Z=105.0)   // passenger (br)
     ExitPositions(5)=(X=-119.0,Y=115.0,Z=105.0)  // passenger (r)
     ExitPositions(6)=(X=80.0,Y=115.0,Z=125.0)    // co-driver's hatch (a fallback)
 
