@@ -4159,7 +4159,7 @@ exec function SetSuspTravel(int NewValue, optional byte FirstWheelIndex, optiona
                 V.Wheels[i].SuspensionTravel = NewValue;
             }
 
-            if (bDontSetMaxRenderTravel)
+            if (!bDontSetMaxRenderTravel)
             {
                 V.Wheels[i].SuspensionMaxRenderTravel = NewValue;
             }
