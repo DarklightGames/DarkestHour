@@ -100,13 +100,29 @@ var bool                bRoundIsOver;
 
 var localized string    ForceScaleText;
 var localized string    ReinforcementsInfiniteText;
-var localized string    DeathPenaltyText;
 
-var private array<string>   ConstructionClassNames;
+var private globalconfig array<string>   ConstructionClassNames;
 var class<DHConstruction>   ConstructionClasses[CONSTRUCTION_CLASSES_MAX];
 var DHConstructionManager   ConstructionManager;
 
 var bool                bAreConstructionsEnabled;
+
+// Map markers
+const MAP_MARKERS_MAX = 12;
+
+// TODO: Reduce the size of this even more so we can have more markers per team
+struct MapMarker
+{
+    var class<DHMapMarker> MapMarkerClass;
+    var float LocationX;
+    var float LocationY;
+    var byte SquadIndex;    // The squad index that owns the marker, or -1 if team-wide
+    var int ExpiryTime;     // The expiry time, relative to ElapsedTime in GRI
+};
+
+var class<DHMapMarker>                  MapMarkerClasses[8];
+var MapMarker                           AxisMapMarkers[MAP_MARKERS_MAX];
+var MapMarker                           AlliesMapMarkers[MAP_MARKERS_MAX];
 
 replication
 {
@@ -146,12 +162,14 @@ replication
         SpawningEnableTime,
         bIsInSetupPhase,
         bRoundIsOver,
-        ConstructionClasses,
         bAreConstructionsEnabled,
-        SupplyPoints;
+        SupplyPoints,
+        AxisMapMarkers,
+        AlliesMapMarkers;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))
-        AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex;
+        AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex,
+        ConstructionClasses, MapMarkerClasses;
 }
 
 // Modified to build SpawnPoints array
@@ -873,6 +891,226 @@ simulated function GetTeamSizes(out int TeamSizes[2])
     }
 }
 
+//==============================================================================
+// MAP MARKERS
+//==============================================================================
+
+simulated function array<MapMarker> GetMapMarkers(int TeamIndex, int SquadIndex)
+{
+    local int i;
+    local array<MapMarker> MapMarkers;
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            for (i = 0; i < arraycount(AxisMapMarkers); ++i)
+            {
+                if (AxisMapMarkers[i].MapMarkerClass != none &&
+                    (AxisMapMarkers[i].ExpiryTime == -1 || AxisMapMarkers[i].ExpiryTime > ElapsedTime) &&
+                    (AxisMapMarkers[i].SquadIndex == 255 || AxisMapMarkers[i].SquadIndex == SquadIndex))
+                {
+                    MapMarkers[MapMarkers.Length] = AxisMapMarkers[i];
+                }
+            }
+            break;
+        case ALLIES_TEAM_INDEX:
+            for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
+            {
+                if (AlliesMapMarkers[i].MapMarkerClass != none &&
+                    (AlliesMapMarkers[i].ExpiryTime == -1 || AlliesMapMarkers[i].ExpiryTime > ElapsedTime) &&
+                    (AlliesMapMarkers[i].SquadIndex == 255 || AlliesMapMarkers[i].SquadIndex == SquadIndex))
+                {
+                    MapMarkers[MapMarkers.Length] = AlliesMapMarkers[i];
+                }
+            }
+            break;
+    }
+
+    return MapMarkers;
+}
+
+function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMarkerClass, vector WorldLocation)
+{
+    local int i;
+    local MapMarker M;
+
+    if (PRI == none || PRI.Team == none || !PRI.IsSquadLeader() || MapMarkerClass == none)
+    {
+        return -1;
+    }
+
+    M.MapMarkerClass = MapMarkerClass;
+    M.LocationX = WorldLocation.X;
+    M.LocationY = WorldLocation.Y;
+
+    if (MapMarkerClass.default.bIsSquadSpecific)
+    {
+        M.SquadIndex = PRI.SquadIndex;
+    }
+    else
+    {
+        M.SquadIndex = -1;
+    }
+
+    if (MapMarkerClass.default.LifetimeSeconds != -1)
+    {
+        M.ExpiryTime = ElapsedTime + MapMarkerClass.default.LifetimeSeconds;
+    }
+    else
+    {
+        M.ExpiryTime = -1;
+    }
+
+    switch (PRI.Team.TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            if (MapMarkerClass.default.bShouldOverwriteGroup)
+            {
+                for (i = 0; i < arraycount(AxisMapMarkers); ++i)
+                {
+                    if (AxisMapMarkers[i].MapMarkerClass != none &&
+                        AxisMapMarkers[i].MapMarkerClass.default.GroupIndex == MapMarkerClass.default.GroupIndex &&
+                        AxisMapMarkers[i].SquadIndex == -1 || AxisMapMarkers[i].SquadIndex == PRI.SquadIndex)
+                    {
+                        AxisMapMarkers[i] = M;
+                        return i;
+                    }
+                }
+            }
+
+            if (MapMarkerClass.default.bIsUnique)
+            {
+                for (i = 0; i < arraycount(AxisMapMarkers); ++i)
+                {
+                    if (AxisMapMarkers[i].MapMarkerClass == MapMarkerClass &&
+                        (!MapMarkerClass.default.bIsSquadSpecific ||
+                         (MapMarkerClass.default.bIsSquadSpecific && AxisMapMarkers[i].SquadIndex == PRI.SquadIndex)))
+                    {
+                        AxisMapMarkers[i] = M;
+                        return i;
+                    }
+                }
+            }
+
+            for (i = 0; i < arraycount(AxisMapMarkers); ++i)
+            {
+                if (AxisMapMarkers[i].MapMarkerClass == none ||
+                    (AxisMapMarkers[i].ExpiryTime != -1 &&
+                     AxisMapMarkers[i].ExpiryTime <= ElapsedTime))
+                {
+                    AxisMapMarkers[i] = M;
+                    return i;
+                }
+            }
+            break;
+
+        case ALLIES_TEAM_INDEX:
+            if (MapMarkerClass.default.bShouldOverwriteGroup)
+            {
+                for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
+                {
+                    if (AlliesMapMarkers[i].MapMarkerClass != none &&
+                        AlliesMapMarkers[i].MapMarkerClass.default.GroupIndex == MapMarkerClass.default.GroupIndex &&
+                        AlliesMapMarkers[i].SquadIndex == -1 || AlliesMapMarkers[i].SquadIndex == PRI.SquadIndex)
+                    {
+                        AlliesMapMarkers[i] = M;
+                        return i;
+                    }
+                }
+            }
+
+            if (MapMarkerClass.default.bIsUnique)
+            {
+                for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
+                {
+                    if (AlliesMapMarkers[i].MapMarkerClass == MapMarkerClass &&
+                        (!MapMarkerClass.default.bIsSquadSpecific ||
+                         (MapMarkerClass.default.bIsSquadSpecific && AlliesMapMarkers[i].SquadIndex == PRI.SquadIndex)))
+                    {
+                        AlliesMapMarkers[i] = M;
+                        return i;
+                    }
+                }
+            }
+
+            for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
+            {
+                if (AlliesMapMarkers[i].MapMarkerClass == none ||
+                    (AlliesMapMarkers[i].ExpiryTime != -1 &&
+                     AlliesMapMarkers[i].ExpiryTime <= ElapsedTime))
+                {
+                    AlliesMapMarkers[i] = M;
+                    return i;
+                }
+            }
+            break;
+    }
+
+    return -1;
+}
+
+function RemoveMapMarker(int TeamIndex, int MapMarkerIndex)
+{
+    if (MapMarkerIndex < 0 || MapMarkerIndex >= MAP_MARKERS_MAX)
+    {
+        return;
+    }
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            AxisMapMarkers[MapMarkerIndex].MapMarkerClass = none;
+            break;
+        case ALLIES_TEAM_INDEX:
+            AlliesMapMarkers[MapMarkerIndex].MapMarkerClass = none;
+            break;
+        default:
+            break;
+    }
+}
+
+function ClearSquadMapMarkers(int TeamIndex, int SquadIndex)
+{
+    local int i;
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            for (i = 0; i < arraycount(AxisMapMarkers); ++i)
+            {
+                if (AxisMapMarkers[i].SquadIndex == SquadIndex)
+                {
+                    AxisMapMarkers[i].MapMarkerClass = none;
+                }
+            }
+            break;
+        case ALLIES_TEAM_INDEX:
+            for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
+            {
+                if (AlliesMapMarkers[i].SquadIndex == SquadIndex)
+                {
+                    AlliesMapMarkers[i].MapMarkerClass = none;
+                }
+            }
+            break;
+    }
+}
+
+function ClearMapMarkers()
+{
+    local int i;
+
+    for (i = 0; i < arraycount(AxisMapMarkers); ++i)
+    {
+        AxisMapMarkers[i].MapMarkerClass = none;
+    }
+
+    for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
+    {
+        AlliesMapMarkers[i].MapMarkerClass = none;
+    }
+}
+
 defaultproperties
 {
     AlliesVictoryMusicIndex=-1
@@ -880,7 +1118,6 @@ defaultproperties
     ArtilleryTargetDistanceThreshold=15088 //250 meters in UU
     ForceScaleText="Size"
     ReinforcementsInfiniteText="Infinite"
-    DeathPenaltyText="Death Penalty"
     ConstructionClassNames(0)="DH_Construction.DHConstruction_SupplyCache"
     ConstructionClassNames(1)="DH_Construction.DHConstruction_ConcertinaWire"
     ConstructionClassNames(2)="DH_Construction.DHConstruction_Hedgehog"
@@ -893,4 +1130,9 @@ defaultproperties
     ConstructionClassNames(9)="DH_Construction.DHConstruction_ATGun_Heavy"
     ConstructionClassNames(10)="DH_Construction.DHConstruction_AAGun_Light"
     ConstructionClassNames(11)="DH_Construction.DHConstruction_Foxhole"
+
+    MapMarkerClasses(0)=class'DH_Engine.DHMapMarker_Squad_Attack'
+    MapMarkerClasses(1)=class'DH_Engine.DHMapMarker_Squad_Defend'
+    MapMarkerClasses(2)=class'DH_Engine.DHMapMarker_Enemy_PlatoonHQ'
+    MapMarkerClasses(3)=class'DH_Engine.DHMapMarker_Enemy_Tank'
 }

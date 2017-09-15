@@ -129,9 +129,10 @@ replication
         ServerSetIsInSpawnMenu, ServerSetLockTankOnEntry,
         ServerSquadCreate, ServerSquadLeave, ServerSquadJoin, ServerSquadSay,
         ServerSquadJoinAuto, ServerSquadInvite, ServerSquadKick, ServerSquadPromote,
-        ServerSquadLock, ServerSquadOrder, ServerSquadSignal,
+        ServerSquadLock, ServerSquadSignal,
         ServerSquadRename, ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint,
         ServerSquadSwapRallyPoints, ServerSquadBan,
+        ServerAddMapMarker, ServerRemoveMapMarker,
         // these ones in debug mode only:
         ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog;
 
@@ -4860,18 +4861,6 @@ function ServerSquadPromote(DHPlayerReplicationInfo NewSquadLeader)
     }
 }
 
-function ServerSquadOrder(DHSquadReplicationInfo.ESquadOrderType Type, optional vector Location)
-{
-    local DHPlayerReplicationInfo PRI;
-
-    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-
-    if (SquadReplicationInfo != none && PRI != none)
-    {
-        SquadReplicationInfo.SetSquadOrder(PRI, GetTeamNum(), PRI.SquadIndex, Type, Location);
-    }
-}
-
 function ServerSquadSignal(DHSquadReplicationInfo.ESquadSignalType Type, vector Location)
 {
     local DHPlayerReplicationInfo PRI;
@@ -4893,6 +4882,34 @@ function ServerSquadRename(string Name)
     if (SquadReplicationInfo != none && PRI != none)
     {
         SquadReplicationInfo.SetName(GetTeamNum(), PRI.SquadIndex, Name);
+    }
+}
+
+function ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, vector Location)
+{
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI != none)
+    {
+        GRI.AddMapMarker(PRI, MapMarkerClass, Location);
+    }
+}
+
+function ServerRemoveMapMarker(int MapMarkerIndex)
+{
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI != none && PRI != none && PRI.IsSquadLeader())
+    {
+        GRI.RemoveMapMarker(GetTeamNum(), MapMarkerIndex);
     }
 }
 

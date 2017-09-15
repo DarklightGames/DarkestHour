@@ -19,6 +19,9 @@ var             DHPlayerReplicationInfo     PRI;
 var             GUIContextMenu              SquadRallyPointContextMenu;
 var             Material                    SpawnPointBlockedOverlay;
 
+var             vector                      MapClickLocation;
+var             array<class<DHMapMarker> >  MenuItemObjects;
+
 var localized string        SquadRallyPointDestroyText;
 var localized string        SquadRallyPointSetAsSecondaryText;
 
@@ -72,6 +75,20 @@ function GetMapCoords(vector Location, out float X, out float Y, optional float 
     Y = FClamp(0.5 + (Location.Y / MapScale) - (Height / 2),
                0.0,
                1.0 - Height);
+}
+
+function vector GetWorldCoords(float X, float Y)
+{
+    local float MapScale;
+    local vector MapCenter, Location;
+
+    MapScale = FMax(1.0, Abs((GRI.SouthWestBounds - GRI.NorthEastBounds).X));
+    MapCenter = GRI.NorthEastBounds + ((GRI.SouthWestBounds - GRI.NorthEastBounds) * 0.5);
+    Location.X = ((0.5 - X) * MapScale);
+    Location.Y = ((0.5 - Y) * MapScale);
+    Location = DHHud(PlayerOwner().myHUD).GetAdjustedHudLocation(Location);
+    Location += MapCenter;
+    return Location;
 }
 
 function UpdateSpawnPoints(int TeamIndex, int RoleIndex, int VehiclePoolIndex, int SpawnPointIndex)
@@ -278,6 +295,94 @@ function Material MyGetOverlayMaterial(GUIComponent Sender)
     return none;
 }
 
+// Sort by linear insertion based on the group index!
+function SortMapMarkerClasses(out array<class<DHMapMarker> > MapMarkerClasses)
+{
+    local int i, j;
+    local class<DHMapMarker> Temp;
+
+    for (i = 1; i < MapMarkerClasses.Length; ++i)
+    {
+        for (j = i; j > 0 && MapMarkerClasses[j - 1].default.GroupIndex > MapMarkerClasses[j].default.GroupIndex; j -= 1)
+        {
+            Temp = MapMarkerClasses[j - 1];
+            MapMarkerClasses[j - 1] = MapMarkerClasses[j];
+            MapMarkerClasses[j] = Temp;
+        }
+    }
+}
+
+function bool InternalOnOpen(GUIContextMenu Sender)
+{
+    local int i;
+    local float L, T, W, H, X, Y;
+    local array<class<DHMapMarker> > MapMarkerClasses;
+    local int GroupIndex;
+
+    if (Sender == none || PC == none || PRI == none || GRI == none || !PRI.IsSquadLeader())
+    {
+        return false;
+    }
+
+    L = ActualLeft(WinLeft);
+    T = ActualTop(WinTop);
+    W = ActualWidth(WinWidth);
+    H = ActualHeight(WinHeight);
+
+    X = 1.0 - ((Controller.MouseX - L) / W);
+    Y = 1.0 - ((Controller.MouseY - T) / H);
+
+    MapClickLocation = GetWorldCoords(X, Y);
+
+    Sender.ContextItems.Length = 0;
+
+    for (i = 0; i < arraycount(GRI.MapMarkerClasses); ++i)
+    {
+        if (GRI.MapMarkerClasses[i] != none)
+        {
+            MapMarkerClasses[MapMarkerClasses.Length] = GRI.MapMarkerClasses[i];
+        }
+    }
+
+    SortMapMarkerClasses(MapMarkerClasses);
+
+    GroupIndex = -1;
+
+    for (i = 0; i < MapMarkerClasses.Length; ++i)
+    {
+        if (GroupIndex != -1 && MapMarkerClasses[i].default.GroupIndex != GroupIndex)
+        {
+            Sender.AddItem("-");
+            MenuItemObjects[MenuItemObjects.Length] = none;
+        }
+
+        Sender.AddItem(MapMarkerClasses[i].default.MarkerName);
+        MenuItemObjects[MenuItemObjects.Length] = MapMarkerClasses[i];
+        GroupIndex = MapMarkerClasses[i].default.GroupIndex;
+    }
+
+    // TODO: ehhhyyy
+    // TODO: get the screen-space bbox for each marker and check the mouse cursor against it
+    GRI.GetMapMarkers(PC.GetTeamNum(), PC.GetSquadIndex());
+
+    return true;
+}
+
+function bool InternalOnClose(GUIContextMenu Sender)
+{
+    return true;
+}
+
+function InternalOnSelect(GUIContextMenu Sender, int ClickIndex)
+{
+    if (PC == none || ClickIndex < 0 || ClickIndex >= MenuItemObjects.Length || MenuItemObjects[ClickIndex] == none)
+    {
+        return;
+    }
+
+    PC.ServerAddMapMarker(MenuItemObjects[ClickIndex], MapClickLocation);
+}
+
 defaultproperties
 {
     SquadRallyPointDestroyText="Destroy"
@@ -312,6 +417,18 @@ defaultproperties
         ContextMenu=SRPContextMenu
         GetOverlayMaterial=MyGetOverlayMaterial
     End Object
+
+    // TODO: build this based on a list of markers (defined in GRI [like constructions], maybe?)
+    Begin Object Class=GUIContextMenu Name=MapMarkerMenu
+        ContextItems(0)="Attack"
+        ContextItems(1)="Defend"
+        ContextItems(2)="Clear"
+        ContextItems(3)="Enemy HQ"
+        OnOpen=InternalOnOpen
+        OnClose=InternalOnClose
+        OnSelect=InternalOnSelect
+    End Object
+    ContextMenu=MapMarkerMenu
 
     //TODO: This is begging to be put into a loop somewhere
     b_SpawnPoints(0)=SpawnPointButton
@@ -377,5 +494,7 @@ defaultproperties
     b_SpawnPoints(60)=SpawnPointButton
     b_SpawnPoints(61)=SpawnPointButton
     b_SpawnPoints(62)=SpawnPointButton
+
+    bAcceptsInput=true
 }
 
