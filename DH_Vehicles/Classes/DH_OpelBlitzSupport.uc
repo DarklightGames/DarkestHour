@@ -7,7 +7,7 @@ class DH_OpelBlitzSupport extends DH_OpelBlitz;
 
 defaultproperties
 {
-    VehicleNameString="Supply Opel Blitz"
+    VehicleNameString="Opel Blitz (Logistics)"
     PassengerPawns(1)=(AttachBone="passenger_l_3",DrivePos=(X=-1.0,Y=0.0,Z=-4.0),DriveAnim="VHalftrack_Rider4_idle")
     PassengerPawns(2)=(AttachBone="passenger_r_3",DrivePos=(X=-1.0,Y=0.0,Z=-4.0),DriveAnim="VHalftrack_Rider1_idle")
     ExitPositions(2)=(X=-255.0,Y=-30.0,Z=60.0)
@@ -18,7 +18,9 @@ defaultproperties
     VehicleHudOccupantsY(3)=0.8
 
     SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Vehicle'
-    SupplyAttachBone="Deco"
-    ResupplyAttachBone="supply"
+    SupplyAttachmentBone="body"
+    SupplyAttachmentRotation=(Yaw=-16384)
+    SupplyAttachmentOffset=(Y=55,Z=-10)
+    ResupplyAttachmentBone="body"
     VehHitpoints(2)=(PointRadius=40.0,PointScale=1.0,PointBone="body",PointOffset=(X=0.0,Y=50.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
 }

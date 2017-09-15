@@ -136,18 +136,24 @@ var     VehicleAttachment           RandomAttachment;        // option for a vis
 var     array<RandomAttachOption>   RandomAttachOptions;     // possible static meshes to use with the random decorative attachment
 var     byte                        RandomAttachmentIndex;   // the attachment index number selected randomly to be spawned for this vehicle
 var     class<DHResupplyAttachment> ResupplyAttachmentClass; // option for a functioning (not decorative) resupply actor attachment
-var     name                        ResupplyAttachBone;      // bone name for attaching resupply attachment
+var     name                        ResupplyAttachmentBone;      // bone name for attaching resupply attachment
 var     DHResupplyAttachment        ResupplyAttachment;      // reference to any resupply actor
 var     float                       ShadowZOffset;           // vertical position offset for shadow, allowing shadow to be tuned (origin position in hull mesh affects shadow location)
 
 // Supply
 var     class<DHConstructionSupplyAttachment>   SupplyAttachmentClass;
-var     name                                    SupplyAttachBone;
+var     name                                    SupplyAttachmentBone;
 var     DHConstructionSupplyAttachment          SupplyAttachment;
+var     vector                                  SupplyAttachmentOffset;
+var     rotator                                 SupplyAttachmentRotation;
 var     int                                     SupplyDropInterval;         // The amount of seconds that must transpire between supply drops.
 var     int                                     SupplyDropCountMax;          // How many supplies this vehicle can drop at a time
 var     array<DHConstructionSupplyAttachment>   TouchingSupplyAttachments;  // List of supply attachments we are in range of
 var     int                                     TouchingSupplyCount;        // Sum of all supplies in attachments we are in range of
+
+var     sound                                   SupplyDropSound;
+var     float                                   SupplyDropSoundRadius;
+var     float                                   SupplyDropSoundVolume;
 
 // Spawning
 var     DHSpawnPoint_Vehicle    SpawnPointAttachment;
@@ -161,21 +167,21 @@ var     bool        bDebuggingText;
 
 replication
 {
-    // Variables the server will replicate to all clients
-    reliable if (bNetDirty && Role == ROLE_Authority)
-        bEngineOff, bRightTrackDamaged, bLeftTrackDamaged, SpawnPointAttachment, SupplyAttachment;
-
     // Variables the server will replicate to clients when this actor is 1st replicated
     reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
         RandomAttachmentIndex;
 
-    // Functions a client can call on the server
-    reliable if (Role < ROLE_Authority)
-        ServerStartEngine, ServerDropSupplies;
+    // Variables the server will replicate to all clients
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        bEngineOff, bRightTrackDamaged, bLeftTrackDamaged, SpawnPointAttachment, SupplyAttachment;
 
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetDirty && Role == ROLE_Authority)
         TouchingSupplyCount;
+
+    // Functions a client can call on the server
+    reliable if (Role < ROLE_Authority)
+        ServerStartEngine, ServerDropSupplies;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -275,14 +281,6 @@ simulated function PostNetBeginPlay()
     SpawnVehicleAttachments();
 }
 
-// Modified to prevent players from dieing so easily when near a slightly moving vehicle
-// Supposively the system tries to move the pawn over slightly and if it fails it calls this function
-// Which before just slayed the player into full gibs (10000 damage), lets not do that...
-function bool EncroachingOn(Actor Other)
-{
-    return false;
-}
-
 // Modified to destroy extra attachments & effects - including the DestructionEffect emitter
 // That's because if an already exploded vehicle replicates to a net client, the vehicle gets Destroyed() before the natural LifeSpan of the emitter
 // That left the DestructionEffect burning away in mid air after the vehicle has disappeared (the Super calls Kill() on the emitter, but it doesn't seem to work)
@@ -327,7 +325,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 // Also to initialize driver-related stuff when we receive the Driver actor
 simulated function PostNetReceive()
 {
-    // Driver has changed position
+    // Player has changed view position
     // Checking bClientInitialized means we do nothing until PostNetBeginPlay() has matched position indexes, meaning we leave SetPlayerPosition() to handle any initial anims
     if (DriverPositionIndex != SavedPositionIndex && bClientInitialized)
     {
@@ -657,8 +655,15 @@ function int LimitPawnPitch(int pitch)
 }
 
 // Modified to switch to external mesh & unzoomed FOV for behind view
+// Also to only adjust PC's rotation to make it relative to vehicle if we've just switched back from behind view into 1st person view
+// This is because when we enter a vehicle we now zero the PC's rotation on entering, so it's already relative & we start facing the same way as the vehicle
 simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 {
+    if (PC == none)
+    {
+        return;
+    }
+
     if (PC.bBehindView)
     {
         if (bBehindViewChanged)
@@ -789,7 +794,7 @@ function Vehicle FindEntryVehicle(Pawn P)
         {
             if (!bHasTankCrewPositions || bPlayerIsTankCrew)
             {
-                DisplayVehicleMessage(2, P); // vehicle is full (this simple message if vehicle isn't a tank or or if player is a tank crewman)
+                DisplayVehicleMessage(2, P); // vehicle is full (this simple message if vehicle isn't a tank or if player is a tank crewman)
             }
             else if (FirstRiderPositionIndex < WeaponPawns.Length)
             {
@@ -893,7 +898,8 @@ function bool TryToDrive(Pawn P)
     // TODO: these checks on a tank crew position are perhaps unnecessary duplication, as they will have been reliably checked on the server in either:
     // (1) FindEntryVehicle() - if player pressed 'use' to try to enter a vehicle, or
     // (2) ServerChangeDriverPosition()/CanSwitchToVehiclePosition() - if player tried to switch vehicle position [EDIT - no longer applies, now goes straight to KDriverEnter], or
-    // (3) DHSpawnManager.SpawnVehicle() - if player spawns into a vehicle from the DH deploy scrren
+    // (3) DHSpawnManager.SpawnVehicle() - if player spawns into a new vehicle from the DH deploy screen
+    // (4) DHSpawnPoint_Vehicle.FindEntryVehicle() - if player deploys into an existing spawn vehicle from the DH deploy screen
     // And there shouldn't be any other way of getting to this function
     if (bMustBeTankCommander)
     {
@@ -1074,24 +1080,6 @@ simulated event DrivingStatusChanged()
     }
 }
 
-// New function triggered when a player enters a vehicle, to check & update any vehicle locked settings
-// Here we just make sure the player's bInLockedVehicle flag is false, so his vehicle HUD doesn't display a locked vehicle icon
-// The real vehicle locking functionality is implemented in the DHArmoredVehicle subclass
-function UpdateVehicleLockOnPlayerEntering(Vehicle EntryPosition)
-{
-    local DHPawn Player;
-
-    if (EntryPosition != none)
-    {
-        Player = DHPawn(EntryPosition.Driver);
-
-        if (Player != none)
-        {
-            Player.SetInLockedVehicle(false);
-        }
-    }
-}
-
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *************************** CHANGING DRIVER POSITION *************************** //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1140,7 +1128,8 @@ function ServerChangeViewPoint(bool bForward)
     }
 }
 
-// Modified to enter state ViewTransition for all modes except dedicated server where player is only moving between unexposed positions (so can't be shot & server doesn't need anims)
+// Modified so dedicated server doesn't go to state ViewTransition if player is only moving between unexposed positions
+// This is because player can't be shot & so server doesn't need to play transition anims (note this wouldn't even be called on dedicated server in original RO)
 simulated function NextViewPoint()
 {
     if (Level.NetMode != NM_DedicatedServer || DriverPositions[DriverPositionIndex].bExposed || DriverPositions[PreviousPositionIndex].bExposed)
@@ -1556,9 +1545,9 @@ function bool PlaceExitingDriver()
     Extent.X = Driver.default.DrivingRadius;
     Extent.Y = Driver.default.DrivingRadius;
     Extent.Z = Driver.default.DrivingHeight;
-    ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
+    ZOffset.Z = Driver.default.CollisionHeight * 0.5;
 
-    // Check whether player can be moved to each exit position & use the 1st valid one we find
+    // Check through exit positions to see if player can be moved there, using the 1st valid one we find
     for (i = 0; i < ExitPositions.Length; ++i)
     {
         ExitPosition = Location + (ExitPositions[i] >> Rotation) + ZOffset;
@@ -2127,19 +2116,19 @@ function CheckTreadDamage(vector HitLocation, vector Momentum)
     }
 }
 
-// Modified to tone down the sounds played when the vehicle impacts on something, as often caused constant 'bottoming out' sounds on the ground
+// Modified to damage engine if the vehicle bCanCrash & the impact damage exceeds its threshold
+// Also to tone down the sounds played when the vehicle impacts on something, as often caused constant 'bottoming out' sounds on the ground
 event TakeImpactDamage(float AccelMag)
 {
-    local int Damage, EngineDamage;
+    local int Damage;
 
     Damage = int(AccelMag * ImpactDamageModifier());
     TakeDamage(Damage, self, ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DHVehicleCollisionDamageType');
 
-    // Handle damage to engine if impact damage is past threshold and the vehicle bCanCrash
+    // Handle damage to engine if impact damage is past threshold & the vehicle bCanCrash
     if (bCanCrash && Damage > ImpactDamageThreshold)
     {
-        EngineDamage = Damage * ImpactWorldDamageMult;
-        DamageEngine(EngineDamage, self, ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DHVehicleCollisionDamageType');
+        DamageEngine(Damage * ImpactWorldDamageMult, self, ImpactInfo.Pos, vect(0.0, 0.0, 0.0), class'DHVehicleCollisionDamageType');
     }
 
     // Play impact sound (often vehicle 'bottoming out' on ground)
@@ -2723,9 +2712,9 @@ simulated function SpawnVehicleAttachments()
 
     if (Role == ROLE_Authority)
     {
-        if (ResupplyAttachmentClass != none && ResupplyAttachBone != '' && ResupplyAttachment == none)
+        if (ResupplyAttachmentClass != none && ResupplyAttachmentBone != '' && ResupplyAttachment == none)
         {
-            ResupplyAttachment = DHResupplyAttachment(SpawnAttachment(ResupplyAttachmentClass, ResupplyAttachBone));
+            ResupplyAttachment = DHResupplyAttachment(SpawnAttachment(ResupplyAttachmentClass, ResupplyAttachmentBone));
 
             if (ResupplyAttachment != none)
             {
@@ -2733,13 +2722,13 @@ simulated function SpawnVehicleAttachments()
             }
         }
 
-        if (SupplyAttachmentClass != none && SupplyAttachBone != '' && SupplyAttachment == none)
+        if (SupplyAttachmentClass != none && SupplyAttachmentBone != '' && SupplyAttachment == none)
         {
-            SupplyAttachment = DHConstructionSupplyAttachment(SpawnAttachment(SupplyAttachmentClass, SupplyAttachBone));
+            SupplyAttachment = DHConstructionSupplyAttachment(SpawnAttachment(SupplyAttachmentClass, SupplyAttachmentBone,, SupplyAttachmentOffset, SupplyAttachmentRotation));
 
             if (SupplyAttachment != none)
             {
-                SupplyAttachment.TeamIndex = VehicleTeam;
+                SupplyAttachment.SetTeamIndex(VehicleTeam);
             }
         }
 
@@ -2823,7 +2812,7 @@ simulated function SpawnVehicleAttachments()
 }
 
 // New helper function to handle spawning an actor to attach to this vehicle, just to avoid code repetition
-simulated function Actor SpawnAttachment(class<Actor> AttachClass, optional name AttachBone, optional StaticMesh AttachStaticMesh, optional vector AttachOffset)
+simulated function Actor SpawnAttachment(class<Actor> AttachClass, optional name AttachBone, optional StaticMesh AttachStaticMesh, optional vector AttachOffset, optional rotator AttachRotation)
 {
     local Actor A;
 
@@ -2845,6 +2834,11 @@ simulated function Actor SpawnAttachment(class<Actor> AttachClass, optional name
             else
             {
                 A.SetBase(self);
+            }
+
+            if (AttachRotation != rot(0, 0, 0))
+            {
+                A.SetRelativeRotation(AttachRotation);
             }
 
             if (AttachOffset != vect(0.0, 0.0, 0.0))
@@ -3102,6 +3096,24 @@ simulated function UpdateShadow()
     }
 }
 
+// New function triggered when a player enters a vehicle, to check & update any vehicle locked settings
+// Here we just make sure the player's bInLockedVehicle flag is false, so his vehicle HUD doesn't display a locked vehicle icon
+// The real vehicle locking functionality is implemented in the DHArmoredVehicle subclass
+function UpdateVehicleLockOnPlayerEntering(Vehicle EntryPosition)
+{
+    local DHPawn Player;
+
+    if (EntryPosition != none)
+    {
+        Player = DHPawn(EntryPosition.Driver);
+
+        if (Player != none)
+        {
+            Player.SetInLockedVehicle(false);
+        }
+    }
+}
+
 // Modified to destroy extra attachments & effects, & to add option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
 simulated event DestroyAppearance()
 {
@@ -3209,7 +3221,6 @@ simulated function DestroyAttachments()
 //  *******************************  MISCELLANEOUS ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Implemented in this class for a supply vehicle to drop supplies
 simulated exec function ROManualReload()
 {
     if (SupplyAttachment != none && SupplyAttachment.HasSupplies())
@@ -3223,6 +3234,7 @@ function ServerDropSupplies()
 {
     local DHConstructionSupplyAttachment CSA;
     local int SupplyDropCount, i;
+    local DHPlayer PC;
 
     if (SupplyAttachment == none)
     {
@@ -3242,7 +3254,7 @@ function ServerDropSupplies()
     {
         CSA = TouchingSupplyAttachments[i];
 
-        if (CSA != none && CSA.bCanReceiveSupplyDrops && CSA.TeamIndex == GetTeamNum() && !CSA.IsFull())
+        if (CSA != none && CSA.bCanReceiveSupplyDrops && CSA.GetTeamIndex() == GetTeamNum() && !CSA.IsFull())
         {
             SupplyDropCount = Min(SupplyDropCount, CSA.SupplyCountMax - CSA.GetSupplyCount());
 
@@ -3250,7 +3262,17 @@ function ServerDropSupplies()
             CSA.SetSupplyCount(CSA.GetSupplyCount() + SupplyDropCount);
             SupplyAttachment.SetSupplyCount(SupplyAttachment.GetSupplyCount() - SupplyDropCount);
 
-            // TODO: Send some sort of client message so that the driver can be notified that it worked!
+            // Play a sound to let everybody know a supply drop happened.
+            PlaySound(SupplyDropSound, SLOT_None, SupplyDropSoundVolume, true, SupplyDropSoundRadius, 1.0, true);
+
+            // Send a message to the driver and tell them that the supply drop was successful.
+            PC = DHPlayer(Controller);
+
+            if (PC != none)
+            {
+                PC.ReceiveLocalizedMessage(class'DHSupplyMessage', class'UInteger'.static.FromShorts(0, SupplyDropCount),,, CSA);
+            }
+
             break;
         }
     }
@@ -3269,6 +3291,14 @@ function bool ResupplyAmmo()
     }
 
     return bDidResupply;
+}
+
+// Modified to prevent players from dying so easily when near a slightly moving vehicle
+// Supposedly the system tries to move the pawn over slightly & if it fails it calls this function
+// Which before just slayed the player into full gibs (10000 damage) - let's not do that
+function bool EncroachingOn(Actor Other)
+{
+    return false;
 }
 
 // New function to handle switching between external & internal mesh (just saves code repetition)
@@ -3613,6 +3643,7 @@ function bool AddInventory(Inventory NewItem) { return false; }
 function DeleteInventory(Inventory Item);
 function Inventory FindInventoryType(class DesiredClass) { return none; }
 simulated function Weapon GetDemoRecordingWeapon() { return none; }
+exec function NextItem(); // only concerns UT2004 PowerUps) & just causes "accessed none" log errors if keybound & used
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
@@ -3752,9 +3783,12 @@ defaultproperties
     VehiclePoolIndex=-1
 
     // Supply
-    SupplyDropCountMax=2000 // TODO: make lower in the future!
+    SupplyDropCountMax=250
     SupplyDropInterval=5
     TouchingSupplyCount=-1
+    SupplyDropSound=sound'Inf_Weapons_Foley.AmmoPickup'
+    SupplyDropSoundRadius=10.0
+    SupplyDropSoundVolume=1.0
 
     // Miscellaneous
     VehicleMass=3.0
@@ -3863,5 +3897,7 @@ defaultproperties
     bDesiredBehindView=false
     bDisableThrottle=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
+
+
 //  EntryRadius=375.0 // deprecated
 }

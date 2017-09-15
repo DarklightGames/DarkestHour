@@ -56,6 +56,8 @@ var     SpriteWidget        DeployInObjectiveIcon;
 var     array<Pawn>         NamedPawns;             // a list of all pawns whose names are currently being rendered
 var     float               HUDLastNameDrawTime;    // the last time we called DrawPlayerNames() function, used so we can tell if a player has just become valid for name drawing
 var     material            PlayerNameIconMaterial;
+var     material            PlayerNameFilledIconMaterial;
+var     material            SquadLeaderIconMaterial;
 var     material            SpeakerIconMaterial;
 var     material            NeedAssistIconMaterial;
 var     material            NeedAmmoIconMaterial;
@@ -75,7 +77,6 @@ var     SpriteWidget        VehicleSmokeLauncherRangeBarIcon;   // range indicat
 var     SpriteWidget        VehicleSmokeLauncherRangeInfill;    // infill bar to show current range setting for a range-adjustable vehicle smoke launcher
 
 // Squads
-var     SpriteWidget        SquadNameIcon;
 var     SpriteWidget        SquadOrderAttackIcon;
 var     SpriteWidget        SquadOrderDefendIcon;
 var     array<texture>      PlayerNumberIconTextures;
@@ -87,6 +88,16 @@ var     SpriteWidget        SupplyPointIcon;
 // Construction
 var     SpriteWidget        VehicleSuppliesIcon;
 var     TextWidget          VehicleSuppliesText;
+
+// Signals
+var     float               SignalNewTimeSeconds;
+var     int                 SignalDistanceIntervalMeters;
+var     float               SignalIconSizeStart;
+var     float               SignalIconSizeEnd;
+var     int                 SignalShrinkTimeSeconds;
+
+// Map Markers
+var     SpriteWidget        MapMarkerIcon;
 
 // Death messages
 var     array<string>       ConsoleDeathMessages;   // paired with DHObituaries array & holds accompanying console death messages
@@ -205,7 +216,6 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(MapIconMortarArrow.WidgetTexture);
 
     // Squad icons
-    Level.AddPrecacheMaterial(SquadNameIcon.WidgetTexture);
     Level.AddPrecacheMaterial(SquadOrderAttackIcon.WidgetTexture);
     Level.AddPrecacheMaterial(SquadOrderDefendIcon.WidgetTexture);
     Level.AddPrecacheMaterial(material'DH_InterfaceArt_tex.HUD.squad_signal_fire_world');
@@ -222,6 +232,8 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(CanDigIcon.WidgetTexture);
     Level.AddPrecacheMaterial(CanCutWireIcon.WidgetTexture);
     Level.AddPrecacheMaterial(PlayerNameIconMaterial);
+    Level.AddPrecacheMaterial(PlayerNameFilledIconMaterial);
+    Level.AddPrecacheMaterial(SquadLeaderIconMaterial);
     Level.AddPrecacheMaterial(SpeakerIconMaterial);
     Level.AddPrecacheMaterial(NeedAssistIconMaterial);
     Level.AddPrecacheMaterial(NeedAmmoIconMaterial);
@@ -724,17 +736,16 @@ simulated function DrawHudPassC(Canvas C)
     // Spawn vehicle deploy icon
     if (V != none && V.SpawnPointAttachment != none)
     {
-        if (V.SpawnPointAttachment.BlockReason == SPBR_None)
+        switch (V.SpawnPointAttachment.BlockReason)
         {
-            DrawSpriteWidget(C, DeployOkayIcon);
-        }
-        else if (V.SpawnPointAttachment.BlockReason == SPBR_InObjective)
-        {
-            DrawSpriteWidget(C, DeployInObjectiveIcon);
-        }
-        else if (V.SpawnPointAttachment.BlockReason == SPBR_EnemiesNearby)
-        {
-            DrawSpriteWidget(C, DeployEnemiesNearbyIcon);
+            case SPBR_None:
+                DrawSpriteWidget(C, DeployOkayIcon); break;
+            case SPBR_InObjective:
+                DrawSpriteWidget(C, DeployInObjectiveIcon); break;
+            case SPBR_EnemiesNearby:
+                DrawSpriteWidget(C, DeployEnemiesNearbyIcon); break;
+            default:
+                break;
         }
     }
 
@@ -923,15 +934,15 @@ simulated function DrawHudPassC(Canvas C)
 
             if (PortraitPRI.Team != none)
             {
-                if (PortraitPRI.Team.TeamIndex == 0)
+                if (PortraitPRI.Team.TeamIndex == AXIS_TEAM_INDEX)
                 {
-                    PortraitIcon.WidgetTexture = CaptureBarTeamIcons[0];
-                    PortraitText[0].Tints[TeamIndex] = class'DHColor'.default.TeamColors[0];
+                    PortraitIcon.WidgetTexture = CaptureBarTeamIcons[AXIS_TEAM_INDEX];
+                    PortraitText[0].Tints[TeamIndex] = class'DHColor'.default.TeamColors[AXIS_TEAM_INDEX];
                 }
-                else if (PortraitPRI.Team.TeamIndex == 1)
+                else if (PortraitPRI.Team.TeamIndex == ALLIES_TEAM_INDEX)
                 {
-                    PortraitIcon.WidgetTexture = CaptureBarTeamIcons[1];
-                    PortraitText[0].Tints[TeamIndex] = class'DHColor'.default.TeamColors[1];
+                    PortraitIcon.WidgetTexture = CaptureBarTeamIcons[ALLIES_TEAM_INDEX];
+                    PortraitText[0].Tints[TeamIndex] = class'DHColor'.default.TeamColors[ALLIES_TEAM_INDEX];
                 }
                 else
                 {
@@ -939,7 +950,9 @@ simulated function DrawHudPassC(Canvas C)
                     PortraitText[0].Tints[TeamIndex] = default.PortraitText[0].Tints[TeamIndex];
                 }
 
-                if (VCR.IsSquadChannel() && class'DHPlayerReplicationInfo'.static.IsInSameSquad(DHPlayerReplicationInfo(PortraitPRI), DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo)))
+                if (VCR != none &&
+                    VCR.IsSquadChannel() &&
+                    class'DHPlayerReplicationInfo'.static.IsInSameSquad(DHPlayerReplicationInfo(PortraitPRI), DHPlayerReplicationInfo(PlayerOwner.PlayerReplicationInfo)))
                 {
                     PortraitText[0].Tints[TeamIndex] = class'DHColor'.default.SquadColor;
                 }
@@ -1743,21 +1756,28 @@ function color GetPlayerColor(PlayerReplicationInfo PRI)
 
 function DrawSignals(Canvas C)
 {
-    local int i;
+    local int i, Distance;
     local DHPlayer PC;
     local vector    Direction;
     local vector    TraceStart, TraceEnd;
     local vector    ScreenLocation;
     local material  SignalMaterial;
-    local float     Angle;
-    local bool      bHasLOS;
+    local float     Angle, XL, YL, X, Y, SignalIconSize, T;
+    local bool      bHasLOS, bIsNew;
+    local string    DistanceText, LabelText;
+    local color     SignalColor;
+    local bool      bShouldShowLabel;
+    local bool      bShouldShowDistance;
 
     PC = DHPlayer(PlayerOwner);
 
-    if (PawnOwner == none || PC == none)
+    if (PawnOwner == none || PC == none || PC.Pawn == none)
     {
         return;
     }
+
+    bShouldShowLabel = true;
+    bShouldShowDistance = !PC.Pawn.IsA('VehicleCannonPawn');
 
     TraceStart = PawnOwner.Location + PawnOwner.EyePosition();
 
@@ -1769,7 +1789,6 @@ function DrawSignals(Canvas C)
         }
 
         TraceEnd = PC.SquadSignals[i].Location;
-
         Direction = Normal(TraceEnd - TraceStart);
         Angle = Direction dot vector(PlayerOwner.CalcViewRotation);
 
@@ -1778,41 +1797,91 @@ function DrawSignals(Canvas C)
             continue;
         }
 
+        // TODO: Might make more sense to have the signals be classes rather
+        // than a type enum! Would be much better for modding!
         switch (i)
         {
             case 0: // SIGNAL_Fire
-                C.DrawColor = class'DHColor'.default.SquadSignalFireColor;
+                SignalColor = class'DHColor'.default.SquadSignalFireColor;
                 SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_fire_world';
+                LabelText="Fire";
                 break;
             case 1: // SIGNAL_Move
-                C.DrawColor = class'DHColor'.default.SquadSignalMoveColor;
+                SignalColor = class'DHColor'.default.SquadSignalMoveColor;
                 SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_move_world';
+                LabelText="Move";
                 break;
             default:
                 break;
         }
 
+        bIsNew = Level.TimeSeconds - PC.SquadSignals[i].TimeSeconds < SignalNewTimeSeconds;
         bHasLOS = FastTrace(TraceEnd, TraceStart);
 
-        if (bHasLOS)
+        if (!bIsNew && Angle >= 0.99)
         {
-            C.DrawColor.A = 255;
+            SignalColor.A = 48;
+        }
+        else if (bHasLOS || bIsNew)
+        {
+            SignalColor.A = 255;
         }
         else
         {
-            C.DrawColor.A = 64;
+            SignalColor.A = 48;
         }
 
-        if (Angle >= 0.99)
-        {
-            C.DrawColor.A = 32;
-        }
+        C.DrawColor = SignalColor;
 
         ScreenLocation = C.WorldToScreen(TraceEnd);
 
-        // TODO: convert to spritewidget
-        C.SetPos(ScreenLocation.X - 8, ScreenLocation.Y - 8);
-        C.DrawTile(SignalMaterial, 24, 24, 0, 0, 31, 31);
+        // Determine icon size
+        if (Level.TimeSeconds - PC.SquadSignals[i].TimeSeconds < SignalShrinkTimeSeconds)
+        {
+            T = Level.TimeSeconds - PC.SquadSignals[i].TimeSeconds / SignalShrinkTimeSeconds;
+            SignalIconSize = class'UInterp'.static.SmoothStep(T, SignalIconSizeStart, SignalIconSizeEnd);
+        }
+        else
+        {
+            SignalIconSize = SignalIconSizeEnd;
+        }
+
+        C.SetPos(ScreenLocation.X - (SignalIconSize / 2), ScreenLocation.Y - (SignalIconSize / 2));
+        C.DrawTile(SignalMaterial, SignalIconSize, SignalIconSize, 0, 0, SignalMaterial.MaterialUSize() - 1, SignalMaterial.MaterialVSize() - 1);
+
+        C.Font = C.TinyFont;
+
+        if (bShouldShowLabel)
+        {
+            // Draw label text
+            C.TextSize(LabelText, XL, YL);
+            X = ScreenLocation.X - (XL / 2);
+            Y = ScreenLocation.Y - (SignalIconSize / 2) - YL;
+            C.DrawColor = class'UColor'.default.Black;
+            C.DrawColor.A = SignalColor.A;
+            C.SetPos(X + 1, Y + 1);
+            C.DrawText(LabelText);
+            C.DrawColor = SignalColor;
+            C.SetPos(X, Y);
+            C.DrawText(LabelText);
+        }
+
+        if (bShouldShowDistance)
+        {
+            // Draw distance text (with drop shadow)
+            Distance = (int(class'DHUnits'.static.UnrealToMeters(VSize(TraceEnd - TraceStart))) / SignalDistanceIntervalMeters) * SignalDistanceIntervalMeters;
+            DistanceText = string(Distance) @ "m";
+            C.TextSize(DistanceText, XL, YL);
+            X = ScreenLocation.X - (XL / 2);
+            Y = ScreenLocation.Y + (SignalIconSize / 2);
+            C.DrawColor = class'UColor'.default.Black;
+            C.DrawColor.A = SignalColor.A;
+            C.SetPos(X + 1, Y + 1);
+            C.DrawText(DistanceText);
+            C.DrawColor = SignalColor;
+            C.SetPos(X, Y);
+            C.DrawText(DistanceText);
+        }
     }
 }
 
@@ -1867,6 +1936,19 @@ simulated function HideObjectives()
     ShowObjectives();
 }
 
+// Function to toggle the hud essentials
+exec function ToggleHudOptions()
+{
+    bSmallWeaponBar = !bSmallWeaponBar;
+    bShowWeaponBar = !bShowWeaponBar;
+    bShowPoints = !bShowPoints;
+    bShowPersonalInfo = !bShowPersonalInfo;
+    bShowWeaponInfo = !bShowWeaponInfo;
+    bShowCompass = !bShowCompass;
+    bShowPortrait = !bShowPortrait;
+    bShowMapUpdatedIcon = !bShowMapUpdatedIcon;
+}
+
 // Modified both of these to stop bCapturingMouse from being set, which would
 // draw a mouse cursor.
 function MouseInterfaceStartCapturing()
@@ -1900,6 +1982,7 @@ function DrawPlayerNames(Canvas C)
     local int                     NumOtherOccupants, i, j;
     local byte                    Alpha;
     local bool                    bMayBeValid, bCurrentlyValid, bFoundMatch;
+    local color                   IconMaterialColor;
 
     if (PawnOwner == none || PlayerOwner == none)
     {
@@ -2256,13 +2339,24 @@ function DrawPlayerNames(Canvas C)
         // Now draw the player name, with a generic name icon below it
         C.TextSize(PlayerName, TextSize.X, TextSize.Y);
         C.SetPos(DrawLocation.X - 8.0, DrawLocation.Y - (TextSize.Y * 0.5));
-        C.DrawTile(PlayerNameIconMaterial, 16.0, 16.0, 0.0, 0.0, PlayerNameIconMaterial.MaterialUSize(), PlayerNameIconMaterial.MaterialVSize());
+
+        if (OtherPRI.IsInSquad())
+        {
+            C.DrawTile(PlayerNameFilledIconMaterial, 16.0, 16.0, 0.0, 0.0, PlayerNameIconMaterial.MaterialUSize(), PlayerNameIconMaterial.MaterialVSize());
+        }
+        else
+        {
+            C.DrawTile(PlayerNameIconMaterial, 16.0, 16.0, 0.0, 0.0, PlayerNameIconMaterial.MaterialUSize(), PlayerNameIconMaterial.MaterialVSize());
+        }
 
         C.SetPos(DrawLocation.X - TextSize.X * 0.5, DrawLocation.Y - 32.0);
         DrawShadowedTextClipped(C, PlayerName);
 
+        // TODO: SL icon!
+
         // Check whether we need to draw an icon above the player's name, if he's talking or needs resupply or assisted reload
         IconMaterial = none;
+        IconMaterialColor = class'UColor'.default.White;
 
         if (OtherPRI == PortraitPRI)
         {
@@ -2288,11 +2382,16 @@ function DrawPlayerNames(Canvas C)
                 IconMaterial = NeedAssistIconMaterial;
             }
         }
+        else if (OtherPRI.IsSquadLeader())
+        {
+            IconMaterial = SquadLeaderIconMaterial;
+            IconMaterialColor = GetPlayerColor(OtherPRI);
+        }
 
         // Now draw any relevant icon above the player's name, in white to make it more noticeable (instead of the team color)
         if (IconMaterial != none)
         {
-            C.DrawColor = class'UColor'.default.White;
+            C.DrawColor = IconMaterialColor;
             C.DrawColor.A = Alpha;
             C.SetPos(DrawLocation.X - 12.0, DrawLocation.Y - 56.0);
             C.DrawTile(IconMaterial, 24.0, 24.0, 0.0, 0.0, IconMaterial.MaterialUSize(), IconMaterial.MaterialVSize());
@@ -2421,6 +2520,209 @@ simulated function DrawCompass(Canvas C)
 
     // Bring back the correct HudScale
     HudScale = HudScaleTemp;
+}
+
+simulated function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, float RotationCompensation, Actor viewer, AbsoluteCoordsInfo GlobalCoords)
+{
+    local vector Target, Current;
+    local int i, Team, Id, Count, TempTeam;
+    local ROGameReplicationInfo GRI;
+    local float angle, XL, YL;
+    local rotator rotAngle;
+    local array<DHGameReplicationInfo.MapMarker> MapMarkers;
+    local DHPlayer PC;
+
+    CompassIcons.WidgetTexture = default.CompassIcons.WidgetTexture;
+
+    // Decrement opacity if needed, increment if needed
+    if (bShowObjectives)
+    {
+        CompassIconsOpacity = Fmin(1.0, CompassIconsOpacity + CompassIconsRefreshSpeed * (Level.TimeSeconds - HudLastRenderTime));
+    }
+    else
+    {
+        CompassIconsOpacity -= CompassIconsFadeSpeed * (Level.TimeSeconds - HudLastRenderTime);
+    }
+
+    // Get user's team & position
+    if (Pawn(Viewer) != none)
+    {
+        if (Pawn(viewer).Controller != none)
+        {
+            Team = Pawn(Viewer).Controller.PlayerReplicationInfo.Team.TeamIndex;
+        }
+        else
+        {
+            Team = 255;
+        }
+    }
+    else
+    {
+        if (Controller(Viewer) != none)
+        {
+            Team = Controller(Viewer).PlayerReplicationInfo.Team.TeamIndex;
+        }
+        else
+        {
+            Team = 255;
+        }
+    }
+
+    Current = Viewer.Location;
+
+    // Get GRI
+    GRI = ROGameReplicationInfo(PlayerOwner.GameReplicationInfo);
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    // Update waypoints array if needed
+    if (bShowObjectives)
+    {
+        TempTeam = Clamp(Team, 0, 1);
+        Count = 0;
+
+        // Clear old array
+        for (i = 0; i < arraycount(CompassIconsTargetsActive); ++i)
+        {
+            CompassIconsTargetsActive[i] = 0;
+        }
+
+        if (Team == AXIS_TEAM_INDEX || Team == ALLIES_TEAM_INDEX)
+        {
+            // Add all rally points
+            for (i = 0; i < arraycount(GRI.AxisRallyPoints); i++)
+            {
+                // if array is full, stop adding waypoints
+                if (Count >= arraycount(CompassIconsTargetsActive))
+                {
+                    break;
+                }
+
+                if (Team == AXIS_TEAM_INDEX)
+                {
+                    Target = GRI.AxisRallyPoints[i].RallyPointLocation;
+                }
+                else
+                {
+                    Target = GRI.AlliedRallyPoints[i].RallyPointLocation;
+                }
+
+                CompassIconsTargetsWidgetCoords[Count] = MapIconRally[TempTeam].TextureCoords;
+
+                if (Target != vect(0, 0, 0))
+                {
+                    CompassIconsTargets[Count] = Target;
+                    CompassIconsTargetsActive[Count] = 1;
+                    ++Count;
+                }
+            }
+
+            // Add all help requests
+            for (i = 0; i < arraycount(GRI.AxisHelpRequests); i++)
+            {
+                // if array is full, stop adding waypoints
+                if (Count >= arraycount(CompassIconsTargetsActive))
+                {
+                    break;
+                }
+
+                if (Team == AXIS_TEAM_INDEX)
+                {
+                    Target = GRI.AxisHelpRequestsLocs[i];
+                    Id = GRI.AxisHelpRequests[i].RequestType;
+                }
+                else
+                {
+                    Target = GRI.AlliedHelpRequestsLocs[i];
+                    Id = GRI.AlliedHelpRequests[i].RequestType;
+                }
+
+                if (Id != 255)
+                {
+                    if (Id == 3) // MG resupply
+                    {
+                        CompassIconsTargetsWidgetCoords[Count] = MapIconMGResupplyRequest[TempTeam].TextureCoords;
+                    }
+                    else if (Id == 0 || Id == 4) // Help request at coords or at obj
+                    {
+                        CompassIconsTargetsWidgetCoords[Count] = MapIconHelpRequest.TextureCoords;
+                    }
+                    else if (Id == 1 || Id == 2) // Attack/defend obj
+                    {
+                        CompassIconsTargetsWidgetCoords[Count] = MapIconAttackDefendRequest.TextureCoords;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+
+                    CompassIconsTargets[Count] =  Target;
+                    CompassIconsTargetsActive[Count] = 1;
+                    ++Count;
+                }
+            }
+        }
+    }
+
+    // Go through waypoint array and draw the icons
+    for (i = 0; i < arraycount(CompassIconsTargetsActive); i++)
+    {
+        if (CompassIconsTargetsActive[i] == 1)
+        {
+            // Update widget color & texture
+            CompassIcons.TextureCoords = CompassIconsTargetsWidgetCoords[i];
+            CompassIcons.Tints[TeamIndex].A = float(default.CompassIcons.Tints[TeamIndex].A) * CompassIconsOpacity;
+
+            // Calculate rotation
+            RotAngle = rotator(CompassIconsTargets[i] - Current);
+            Angle = (RotAngle.Yaw + RotationCompensation) * Pi / 32768;
+
+            // Update widget offset
+            CompassIcons.OffsetX = CenterX + Radius * Cos(Angle);
+            CompassIcons.OffsetY = CenterY + Radius * Sin(Angle);
+
+            // Draw waypoint image
+            DrawSpriteWidgetClipped(C, CompassIcons, GlobalCoords, true, XL, YL, true, true, true);
+        }
+    }
+
+    PC = DHPlayer(PlayerOwner);
+
+    if (PC != none)
+    {
+        MapMarkers = DHGRI.GetMapMarkers(PC.GetTeamNum(), PC.GetSquadIndex());
+
+        for (i = 0; i < MapMarkers.Length; ++i)
+        {
+            if (!MapMarkers[i].MapMarkerClass.default.bShouldShowOnCompass)
+            {
+                continue;
+            }
+
+            Target.X = MapMarkers[i].LocationX;
+            Target.Y = MapMarkers[i].LocationY;
+
+            // Update widget color & texture
+            CompassIcons.WidgetTexture = MapMarkers[i].MapMarkerClass.default.IconMaterial;
+            CompassIcons.TextureCoords = MapMarkers[i].MapMarkerClass.default.IconCoords;
+            CompassIcons.Tints[TeamIndex] = MapMarkers[i].MapMarkerClass.default.IconColor;
+            CompassIcons.Tints[TeamIndex].A = float(default.CompassIcons.Tints[TeamIndex].A) * CompassIconsOpacity;
+
+            // Calculate rotation
+            RotAngle = rotator(Target - Current);
+            Angle = (RotAngle.Yaw + RotationCompensation) * Pi / 32768;
+
+            // Update widget offset
+            CompassIcons.OffsetX = CenterX + Radius * Cos(Angle);
+            CompassIcons.OffsetY = CenterY + Radius * Sin(Angle);
+
+            // Draw waypoint image
+            DrawSpriteWidgetClipped(C, CompassIcons, GlobalCoords, true, XL, YL, true, true, true);
+        }
+    }
 }
 
 // Modified so will work in DHDebugMode, & also to show all network actors & not just pawns (colour coded based on actor type)
@@ -2814,13 +3116,14 @@ simulated function DrawVehiclePhysiscsWheels()
 // shorten a very length DrawObjectives function)
 simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
 {
-    local DHPlayerReplicationInfo PRI;
-    local DHRoleInfo              RI;
-    local SpriteWidget            Widget;
-    local vector                  Temp, MapCenter;
-    local string                  DistanceString, ObjLabel;
-    local float                   MyMapScale, ArrowRotation;
-    local int                     OwnerTeam, Distance, i;
+    local DHPlayerReplicationInfo   PRI;
+    local DHRoleInfo                RI;
+    local SpriteWidget              Widget;
+    local vector                    Temp, MapCenter;
+    local string                    DistanceString, ObjLabel;
+    local float                     MyMapScale, ArrowRotation;
+    local int                       OwnerTeam, Distance, i;
+    local float                     Yaw;
 
     if (DHGRI == none)
     {
@@ -2899,11 +3202,15 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
             if (DHGRI.SupplyPoints[i].Actor != none)
             {
                 Temp = DHGRI.SupplyPoints[i].Actor.Location;
+                Yaw = DHGRI.SupplyPoints[i].Actor.Rotation.Yaw;
             }
             else
             {
                 Temp = DHGRI.SupplyPoints[i].Location;
+                Yaw = DHGRI.SupplyPoints[i].Location.Z;
             }
+
+            TexRotator(FinalBlend(SupplyPointIcon.WidgetTexture).Material).Rotation.Yaw = GetMapIconYaw(Yaw);
 
             DrawIconOnMap(C, SubCoords, SupplyPointIcon, MyMapScale, Temp, MapCenter);
         }
@@ -3217,11 +3524,11 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
         }
 
         // Set up icon info
-        if (DHGRI.DHObjectives[i].ObjState == OBJ_Axis)
+        if (DHGRI.DHObjectives[i].IsAxis())
         {
             Widget = MapAxisFlagIcon;
         }
-        else if (DHGRI.DHObjectives[i].ObjState == OBJ_Allies)
+        else if (DHGRI.DHObjectives[i].IsAllies())
         {
             Widget = MapAlliesFlagIcons[DHGRI.AlliedNationID];
         }
@@ -3281,7 +3588,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
         }
     }
 
-    DrawSquadOrderOnMap(C, SubCoords, MyMapScale, MapCenter);
+    DrawMapMarkersOnMap(C, Subcoords, MyMapScale, MapCenter);
     DrawPlayerIconsOnMap(C, SubCoords, MyMapScale, MapCenter);
 
     // DEBUG:
@@ -3300,41 +3607,32 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
     }
 }
 
-simulated function DrawSquadOrderOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter)
+simulated function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter)
 {
     local DHPlayer PC;
-    local DHSquadReplicationInfo SRI;
-    local DHPlayerReplicationInfo PRI;
-    local DHSquadReplicationInfo.ESquadOrderType OrderType;
-    local vector OrderLocation;
+    local int i;
+    local vector L;
+    local array<DHGameReplicationInfo.MapMarker> MapMarkers;
 
     PC = DHPlayer(PlayerOwner);
 
-    if (PC == none)
+    if (DHGRI == none || PC == none)
     {
         return;
     }
 
-    SRI = PC.SquadReplicationInfo;
-    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+    MapMarkers = DHGRI.GetMapMarkers(PC.GetTeamNum(), PC.GetSquadIndex());
 
-    if (SRI == none || !PRI.IsInSquad())
+    for (i = 0; i < MapMarkers.Length; ++i)
     {
-        return;
-    }
+        L.X = MapMarkers[i].LocationX;
+        L.Y = MapMarkers[i].LocationY;
 
-    SRI.GetSquadOrder(PC.GetTeamNum(), PRI.SquadIndex, OrderType, OrderLocation);
+        MapMarkerIcon.WidgetTexture = MapMarkers[i].MapMarkerClass.default.IconMaterial;
+        MapMarkerIcon.TextureCoords = MapMarkers[i].MapMarkerClass.default.IconCoords;
+        MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = MapMarkers[i].MapMarkerClass.default.IconColor;
 
-    switch (OrderType)
-    {
-        case ORDER_Attack:
-            DrawIconOnMap(C, SubCoords, SquadOrderAttackIcon, MyMapScale, OrderLocation, MapCenter);
-            break;
-        case ORDER_Defend:
-            DrawIconOnMap(C, SubCoords, SquadOrderDefendIcon, MyMapScale, OrderLocation, MapCenter);
-            break;
-        default:
-            break;
+        DrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, L, MapCenter);
     }
 }
 
@@ -3397,7 +3695,7 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
                 PlayerLocation = OtherPawn.Location;
                 PlayerYaw = OtherPawn.Rotation.Yaw;
             }
-            else if (PC.SquadMemberLocations[OtherPRI.SquadMemberIndex] != vect(0, 0, 0))
+            else if (OtherPRI.SquadMemberIndex != -1 && PC.SquadMemberLocations[OtherPRI.SquadMemberIndex] != vect(0, 0, 0))
             {
                 PlayerLocation.X = PC.SquadMemberLocations[OtherPRI.SquadMemberIndex].X;
                 PlayerLocation.Y = PC.SquadMemberLocations[OtherPRI.SquadMemberIndex].Y;
@@ -3895,12 +4193,12 @@ simulated function DrawCaptureBar(Canvas Canvas)
     // Get cap progress on a 0-1 scale for each team
     if (CurrentCapProgress == 0)
     {
-        if (DHGRI.DHObjectives[CurrentCapArea].ObjState == NEUTRAL_TEAM_INDEX)
+        if (DHGRI.DHObjectives[CurrentCapArea].IsNeutral())
         {
             AlliesProgress = 0.0;
             AxisProgress = 0.0;
         }
-        else if (DHGRI.DHObjectives[CurrentCapArea].ObjState == AXIS_TEAM_INDEX)
+        else if (DHGRI.DHObjectives[CurrentCapArea].IsAxis())
         {
             AlliesProgress = 0.0;
             AxisProgress = 1.0;
@@ -3915,7 +4213,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
     {
         AlliesProgress = float(CurrentCapProgress - 100) / 100.0;
 
-        if (DHGRI.DHObjectives[CurrentCapArea].ObjState != NEUTRAL_TEAM_INDEX)
+        if (!DHGRI.DHObjectives[CurrentCapArea].IsNeutral())
         {
             AxisProgress = 1.0 - AlliesProgress;
         }
@@ -3924,7 +4222,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
     {
         AxisProgress = float(CurrentCapProgress) / 100.0;
 
-        if (DHGRI.DHObjectives[CurrentCapArea].ObjState != NEUTRAL_TEAM_INDEX)
+        if (!DHGRI.DHObjectives[CurrentCapArea].IsNeutral())
         {
             AlliesProgress = 1.0 - AxisProgress;
         }
@@ -4058,7 +4356,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
     if (CurrentCapRequiredCappers > 1)
     {
         // Displayed when the cap is neutral, the other team completely owns the cap, or there are enemy capturers
-        if (Team == 0 && (DHGRI.DHObjectives[CurrentCapArea].ObjState == 2 || AxisProgress != 1.0 || CurrentCapAlliesCappers != 0))
+        if (Team == AXIS_TEAM_INDEX && (DHGRI.DHObjectives[CurrentCapArea].IsNeutral() || AxisProgress != 1.0 || CurrentCapAlliesCappers != 0))
         {
             if (CurrentCapAxisCappers < CurrentCapRequiredCappers)
             {
@@ -4068,7 +4366,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
 
             s @= "(" $ CurrentCapAxisCappers @ "/" @ CurrentCapRequiredCappers $ ")";
         }
-        else if (Team == 1 && (DHGRI.DHObjectives[CurrentCapArea].ObjState == 2 || AlliesProgress != 1.0 || CurrentCapAxisCappers != 0))
+        else if (Team == ALLIES_TEAM_INDEX && (DHGRI.DHObjectives[CurrentCapArea].IsNeutral() || AlliesProgress != 1.0 || CurrentCapAxisCappers != 0))
         {
             if (CurrentCapAlliesCappers < CurrentCapRequiredCappers)
             {
@@ -4336,7 +4634,7 @@ simulated function DrawSpectatingHud(Canvas C)
         C.DrawTextClipped(S);
 
         // Draw line 1
-        S = SpectateInstructionText1;
+        S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(SpectateInstructionText1, PC);
         C.Font = GetConsoleFont(C);
 
         X = C.ClipX * 0.5;
@@ -4347,7 +4645,7 @@ simulated function DrawSpectatingHud(Canvas C)
         C.DrawTextClipped(S);
 
         // Draw line 2
-        S = SpectateInstructionText2;
+        S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(SpectateInstructionText2, PC);
         X = C.ClipX * 0.5;
         Y += strY + (3.0 * Scale);
 
@@ -4356,7 +4654,7 @@ simulated function DrawSpectatingHud(Canvas C)
         C.DrawTextClipped(S);
 
         // Draw line 3
-        S = SpectateInstructionText3;
+        S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(SpectateInstructionText3, PC);
         X = C.ClipX * 0.5;
         Y += strY + (3.0 * Scale);
 
@@ -4365,7 +4663,7 @@ simulated function DrawSpectatingHud(Canvas C)
         C.DrawTextClipped(S);
 
         // Draw line 4
-        S = SpectateInstructionText4;
+        S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(SpectateInstructionText4, PC);
         X = C.ClipX * 0.5;
         Y += strY + (3.0 * Scale);
 
@@ -4794,13 +5092,13 @@ function DisplayVoiceGain(Canvas C)
         {
             if (PlayerOwner.PlayerReplicationInfo.Team != none)
             {
-                if (PlayerOwner.PlayerReplicationInfo.Team.TeamIndex == 0)
+                if (PlayerOwner.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
                 {
-                    C.DrawColor = class'DHColor'.default.TeamColors[0];
+                    C.DrawColor = class'DHColor'.default.TeamColors[AXIS_TEAM_INDEX];
                 }
                 else
                 {
-                    C.DrawColor = class'DHColor'.default.TeamColors[1];
+                    C.DrawColor = class'DHColor'.default.TeamColors[ALLIES_TEAM_INDEX];
                 }
             }
         }
@@ -4991,6 +5289,8 @@ defaultproperties
     // Screen indicator icons & player HUD
     CompassNeedle=(WidgetTexture=TexRotator'DH_InterfaceArt_tex.HUD.Compass_rotator') // using DH version of compass background texture
     PlayerNameIconMaterial=material'DH_InterfaceArt_tex.HUD.player_icon_world'
+    PlayerNameFilledIconMaterial=material'DH_InterfaceArt_tex.HUD.player_icon_world_filled'
+    SquadLeaderIconMaterial=material'DH_InterfaceArt_tex.HUD.squad_leader'
     SpeakerIconMaterial=texture'DH_InterfaceArt_tex.Communication.speaker_icon'
     NeedAssistIconMaterial=texture'DH_InterfaceArt_tex.Communication.need_assist_icon'
     NeedAmmoIconMaterial=texture'DH_InterfaceArt_tex.Communication.need_ammo_icon'
@@ -5064,11 +5364,15 @@ defaultproperties
     MapIconMortarArrow=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.mortar-arrow-final',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.1,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconMortarHit=(WidgetTexture=texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(Y1=64,X2=63,Y2=127),TextureScale=0.05,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
 
-    SupplyPointIcon=(WidgetTexture=texture'DH_GUI_tex.GUI.supply_point',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    SupplyPointIcon=(WidgetTexture=FinalBlend'DH_GUI_tex.GUI.supply_point_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.04,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Map icons for squad orders
-    SquadOrderAttackIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.HUD.squad_order_attack',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.03,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=0,B=0,A=255),Tints[1]=(R=255,G=0,B=0,A=255))
-    SquadOrderDefendIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.HUD.squad_order_defend',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.03,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=0,G=0,B=255,A=255),Tints[1]=(R=0,G=0,B=255,A=255))
+    SquadOrderAttackIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.HUD.squad_order_attack',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=0,B=0,A=255),Tints[1]=(R=255,G=0,B=0,A=255))
+    SquadOrderDefendIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.HUD.squad_order_defend',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=0,G=0,B=255,A=255),Tints[1]=(R=0,G=0,B=255,A=255))
+
+
+    // Map markers
+    MapMarkerIcon=(WidgetTexture=none,RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.04,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=0,G=0,B=255,A=255),Tints[1]=(R=0,G=0,B=255,A=255))
 
     // Map flag icons
     MapIconNeutral=(WidgetTexture=texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
@@ -5098,7 +5402,6 @@ defaultproperties
     PlayerNumberIconTextures(9)=texture'DH_InterfaceArt_tex.HUD.player_number_10'
     PlayerNumberIconTextures(10)=texture'DH_InterfaceArt_tex.HUD.player_number_11'
     PlayerNumberIconTextures(11)=texture'DH_InterfaceArt_tex.HUD.player_number_12'
-    SquadNameIcon=(WidgetTexture=FinalBlend'DH_InterfaceArt_tex.HUD.SquadNameIcon',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.45,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
     PlayerIconScale=0.03
     PlayerIconLargeScale=0.05
 
@@ -5125,4 +5428,17 @@ defaultproperties
     // Construction
     VehicleSuppliesIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.HUD.supplies',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.30,DrawPivot=DP_LowerLeft,PosX=0.5,PosY=1.0,OffsetX=0,OffsetY=-16,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     VehicleSuppliesText=(Text="1000",PosX=0,PosY=0,WrapWidth=0,WrapHeight=0,OffsetX=0,OffsetY=0,DrawPivot=DP_UpperMiddle,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=true)
+
+    // Signals
+    SignalNewTimeSeconds=2.0
+    SignalDistanceIntervalMeters=5
+    SignalIconSizeStart=64
+    SignalIconSizeEnd=32
+    SignalShrinkTimeSeconds=1.0
+
+    // Specate
+    SpectateInstructionText1="Press [%FIRE%] to switch Viewpoint/Players"
+    SpectateInstructionText2="Press [%ALTFIRE%] to switch Spectating Modes"
+    SpectateInstructionText3="Press [%ROIRONSIGHTS%] to toggle First/Third Person View"
+    SpectateInstructionText4="Press [%JUMP%] to return to viewing yourself"
 }

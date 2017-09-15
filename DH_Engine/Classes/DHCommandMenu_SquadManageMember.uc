@@ -9,14 +9,11 @@ function OnActive()
 {
     local DHPlayer PC;
 
-    if (Interaction != none && Interaction.ViewportOwner != none)
-    {
-        PC = DHPlayer(Interaction.ViewportOwner.Actor);
+    PC = GetPlayerController();
 
-        if (PC != none)
-        {
-            PC.LookTarget = Pawn(MenuObject);
-        }
+    if (PC != none)
+    {
+        PC.LookTarget = Pawn(MenuObject);
     }
 }
 
@@ -24,14 +21,11 @@ function OnPop()
 {
     local DHPlayer PC;
 
-    if (Interaction != none && Interaction.ViewportOwner != none)
-    {
-        PC = DHPlayer(Interaction.ViewportOwner.Actor);
+    PC = GetPlayerController();
 
-        if (PC != none)
-        {
-            PC.LookTarget = none;
-        }
+    if (PC != none)
+    {
+        PC.LookTarget = none;
     }
 }
 
@@ -50,12 +44,12 @@ function OnSelect(int OptionIndex, vector Location)
     local DHPlayerReplicationInfo PRI, OtherPRI;
     local Pawn P;
 
-    if (Interaction == none || Interaction.ViewportOwner == none || OptionIndex < 0 || OptionIndex >= Options.Length)
+    if (OptionIndex < 0 || OptionIndex >= Options.Length)
     {
         return;
     }
 
-    PC = DHPlayer(Interaction.ViewportOwner.Actor);
+    PC = GetPlayerController();
     P = Pawn(MenuObject);
 
     if (PC != none && P != none)
@@ -67,17 +61,14 @@ function OnSelect(int OptionIndex, vector Location)
         {
             switch (OptionIndex)
             {
-                case 0: // Invite
-                    PC.ServerSquadInvite(OtherPRI);
-                    break;
-                case 1: // Kick
+                case 0: // Kick
                     PC.ServerSquadKick(OtherPRI);
                     break;
-                case 2: // Promote to leader
+                case 1: // Promote to leader
                     PC.ServerSquadPromote(OtherPRI);
                     break;
-                case 3: // Ban
-                    // TODO: we don't have banning yet!
+                case 2: // Ban
+                    PC.ServerSquadBan(OtherPRI);
                     break;
                 default:
                     break;
@@ -94,12 +85,12 @@ function bool IsOptionDisabled(int OptionIndex)
     local DHPlayerReplicationInfo PRI, OtherPRI;
     local Pawn P;
 
-    if (Interaction == none || Interaction.ViewportOwner == none || OptionIndex < 0 || OptionIndex >= Options.Length)
+    if (OptionIndex < 0 || OptionIndex >= Options.Length)
     {
         return true;
     }
 
-    PC = DHPlayer(Interaction.ViewportOwner.Actor);
+    PC = GetPlayerController();
 
     if (PC != none)
     {
@@ -120,11 +111,9 @@ function bool IsOptionDisabled(int OptionIndex)
 
     switch (OptionIndex)
     {
-        case 0: // Invite
-            return OtherPRI.IsInSquad();
-        case 1: // Kick from squad
-        case 2: // Promote to squad leader
-        case 3: // Ban from squad
+        case 0: // Kick from squad
+        case 1: // Promote to squad leader
+        case 2: // Ban from squad
             return !OtherPRI.IsInSameSquad(PRI, OtherPRI);
         default:
             return true;
@@ -153,9 +142,8 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
 defaultproperties
 {
-    Options(0)=(SubjectText="Invite to squad",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
-    Options(1)=(SubjectText="Kick from squad",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
-    Options(2)=(SubjectText="Promote to squad leader",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
-    Options(3)=(SubjectText="Ban from squad",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire')
+    Options(0)=(SubjectText="Kick from squad",Material=Material'DH_GUI_Tex.ConstructionMenu.kick_icon')
+    Options(1)=(SubjectText="Promote to squad leader",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire') // TODO: use squad leader icon
+    Options(2)=(SubjectText="Ban from squad",Material=Material'DH_GUI_Tex.ConstructionMenu.ban_icon')
 }
 

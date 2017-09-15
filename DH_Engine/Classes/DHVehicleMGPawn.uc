@@ -173,7 +173,7 @@ simulated function DrawGunsightOverlay(Canvas C)
     }
 }
 
-// Modified so if player starts on the MG, we match his view rotation to its current aim
+// Modified so if player starts on the MG, we match his view rotation to its current aim (which is always relative to vehicle)
 simulated function SetInitialViewRotation()
 {
     if (CanFire() && Gun != none)
@@ -228,7 +228,6 @@ simulated exec function ROManualReload()
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ************************* ENTRY, CHANGING VIEW & EXIT  ************************* //
 ///////////////////////////////////////////////////////////////////////////////////////
-
 
 // Modified to exit to added state LeavingViewTransition, just to allow CanReload() functionality to work correctly
 // Also to add a workaround (hack really) to turn off muzzle flash in 1st person when player raises head above sights as it sometimes looks wrong, & a reloading hint

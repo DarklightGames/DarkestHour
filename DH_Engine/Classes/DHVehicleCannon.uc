@@ -310,9 +310,9 @@ function rotator GetProjectileFireRotation(optional bool bAltFire)
 
     if (Instigator != none && Instigator.IsHumanControlled())
     {
-        FireRotation.Pitch += AddedPitch; // lets cannons with non-centred aim points have a different aiming location
+        FireRotation.Pitch += AddedPitch; // fixes vertical aiming adjustment that allows correction of cannons with non-centred aim points
 
-        if (!bAltFire && RangeSettings.Length > 0) // pitch adjustment for cannons with mechanically linked gunsight range setting
+        if (!bAltFire && RangeSettings.Length > 0) // range-based pitch adjustment for cannons with mechanically linked gunsight range setting
         {
             FireRotation.Pitch += ProjectileClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
         }

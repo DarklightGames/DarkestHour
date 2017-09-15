@@ -210,7 +210,7 @@ function SetActive(bool bActiveStatus)
         NoCapTimeRemainingFloat = float(PreventCaptureTime);
 
         // Make neutral if desired
-        if (bNeutralOnActivation && !bDisabled && ObjState != OBJ_Neutral)
+        if (bNeutralOnActivation && !bDisabled && !IsNeutral())
         {
             ObjState = OBJ_Neutral;
 
@@ -614,7 +614,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     }
     else
     {
-        if (bActive && ObjState == OBJ_Neutral)
+        if (bActive && IsNeutral())
         {
             BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(0, Team), none, none, self);
         }
@@ -756,7 +756,7 @@ function bool HandleClearedLogic(int NumForCheck[2])
             }
 
             // Handle common is cleared logic
-            if (bSetInactiveOnClear && !(bAlliesFinalObjective && ObjState == OBJ_Axis) && !(bAxisFinalObjective && ObjState == OBJ_Allies))
+            if (bSetInactiveOnClear && !(bAlliesFinalObjective && IsAxis()) && !(bAxisFinalObjective && IsAllies()))
             {
                 CurrentCapProgress = 0.0;
                 SetActive(false);
@@ -771,7 +771,7 @@ function bool HandleClearedLogic(int NumForCheck[2])
 
                 return true;
             }
-            else if (bDisableWhenAxisClearObj && ObjState == OBJ_Axis || bDisableWhenAlliesClearObj && ObjState == OBJ_Allies)
+            else if (bDisableWhenAxisClearObj && IsAxis() || bDisableWhenAlliesClearObj && IsAllies())
             {
                 CurrentCapProgress = 0.0;
                 SetActive(false);
@@ -875,7 +875,7 @@ function Timer()
     // TODO: need to indicate to the player that they cannot capture this obj until they control the required obj
     // Determine if we can progress on the capture (will set rate to 0.0 to prevent it)
     // If the objective is bNeutralizeBeforeCapture & if we are capturing (not neutralizing)
-    if (bNeutralizeBeforeCapture && ObjState == OBJ_Neutral)
+    if (bNeutralizeBeforeCapture && IsNeutral())
     {
         // Check if Axis are trying to capture
         if (CurrentCapTeam == AXIS_TEAM_INDEX)
@@ -883,7 +883,7 @@ function Timer()
             // Then check if Axis have required objectives controlled
             for (i = 0; i < AxisRequiredObjForCapture.Length; ++i)
             {
-                if (DHGRI.DHObjectives[AxisRequiredObjForCapture[i]].ObjState != AXIS_TEAM_INDEX)
+                if (!DHGRI.DHObjectives[AxisRequiredObjForCapture[i]].IsAxis())
                 {
                     // We don't have required objectives controlled, no progress allowed
                     Rate[AXIS_TEAM_INDEX] = 0.0;
@@ -895,7 +895,7 @@ function Timer()
         {
             for (i = 0; i < AlliesRequiredObjForCapture.Length; ++i)
             {
-                if (DHGRI.DHObjectives[AlliesRequiredObjForCapture[i]].ObjState != ALLIES_TEAM_INDEX)
+                if (!DHGRI.DHObjectives[AlliesRequiredObjForCapture[i]].IsAllies())
                 {
                     Rate[ALLIES_TEAM_INDEX] = 0.0;
                 }
@@ -907,7 +907,7 @@ function Timer()
     CurrentCapAlliesCappers = NumForCheck[ALLIES_TEAM_INDEX];
 
     // Note: Comparing number of players as opposed to rates to decide which side has advantage for the capture, for fear that rates could be abused in this instance
-    if (ObjState != OBJ_Axis && NumForCheck[AXIS_TEAM_INDEX] > NumForCheck[ALLIES_TEAM_INDEX])
+    if (!IsAxis() && NumForCheck[AXIS_TEAM_INDEX] > NumForCheck[ALLIES_TEAM_INDEX])
     {
         // Have to work down the progress the other team made first, but this is quickened since the fall off rate still occurs
         if (CurrentCapTeam == ALLIES_TEAM_INDEX)
@@ -920,7 +920,7 @@ function Timer()
             CurrentCapProgress += 0.25 * Rate[AXIS_TEAM_INDEX];
         }
     }
-    else if (ObjState != OBJ_Allies && NumForCheck[ALLIES_TEAM_INDEX] > NumForCheck[AXIS_TEAM_INDEX])
+    else if (!IsAllies() && NumForCheck[ALLIES_TEAM_INDEX] > NumForCheck[AXIS_TEAM_INDEX])
     {
         if (CurrentCapTeam == AXIS_TEAM_INDEX)
         {
@@ -947,7 +947,7 @@ function Timer()
     {
         CurrentCapTeam = NEUTRAL_TEAM_INDEX;
     }
-    else if (ObjState != OBJ_Neutral && CurrentCapProgress == 1.0 && bNeutralizeBeforeCapture)
+    else if (!IsNeutral() && CurrentCapProgress == 1.0 && bNeutralizeBeforeCapture)
     {
         // If the objective is not neutral, has completed progress, & is set to bNeutralizedBeforeCaptured
         // Then we call different logic which will neutralize the objective without "completing" it
@@ -1143,11 +1143,11 @@ function Trigger(Actor Other, Pawn EventInstigator)
         PRI = EventInstigator.PlayerReplicationInfo;
     }
 
-    if (ObjState == OBJ_Axis)
+    if (IsAxis())
     {
         ObjectiveCompleted(PRI, ALLIES_TEAM_INDEX);
     }
-    else if (ObjState == OBJ_Allies)
+    else if (IsAllies())
     {
         ObjectiveCompleted(PRI, AXIS_TEAM_INDEX);
     }
@@ -1168,6 +1168,22 @@ simulated function bool WithinArea(Actor A)
     }
 
     return false;
+}
+
+// Overridden to make simulated functions, so can be used by the HUD, for example
+simulated function bool IsAxis()
+{
+    return ObjState == OBJ_Axis;
+}
+
+simulated function bool IsAllies()
+{
+    return ObjState == OBJ_Allies;
+}
+
+simulated function bool IsNeutral()
+{
+    return ObjState == OBJ_Neutral;
 }
 
 defaultproperties

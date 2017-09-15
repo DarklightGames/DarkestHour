@@ -21,4 +21,5 @@ defaultproperties
     SupplyCost=200
     BrokenEmitterClass=class'DHConstruction_Sandbags_BrokenEmitter'
     HealthMax=300
+    bCanTakeImpactDamage=true
 }

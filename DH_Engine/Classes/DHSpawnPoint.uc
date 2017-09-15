@@ -200,6 +200,7 @@ function SetIsActive(bool bIsActive)
     }
 }
 
+// New helper functions to check whether spawn point can spawn infantry, vehicles, or mortar crew
 simulated function bool CanSpawnInfantry()
 {
     return Type == ESPT_Infantry || Type == ESPT_All;
@@ -215,10 +216,11 @@ simulated function bool CanSpawnMortars()
     return Type == ESPT_Mortars || Type == ESPT_All;
 }
 
+// Modified to check whether spawn point allows player to use it, depending on role & type of vehicle (if any)
 simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck)
 {
-    local class<ROVehicle>  VehicleClass;
-    local DHRoleInfo        RI;
+    local class<ROVehicle> VehicleClass;
+    local DHRoleInfo       RI;
 
     if (!super.CanSpawnWithParameters(GRI, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex, bSkipTimeCheck))
     {
@@ -248,6 +250,7 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
     }
 }
 
+// Implemented to check whether spawn point can be used to spawn into a vehicle of a certain type
 simulated function bool CanSpawnVehicle(DHGameReplicationInfo GRI, int VehiclePoolIndex, optional bool bSkipTimeCheck)
 {
     local class<ROVehicle> VehicleClass;
@@ -261,16 +264,17 @@ simulated function bool CanSpawnVehicle(DHGameReplicationInfo GRI, int VehiclePo
            GRI.CanSpawnVehicle(VehiclePoolIndex, bSkipTimeCheck);                                                   // check one of these vehicles is available at the current time
 }
 
+// Implemented to check whether spawn point can be used to spawn into a vehicle of a certain type
 function bool PerformSpawn(DHPlayer PC)
 {
-    local vector SpawnLocation;
-    local rotator SpawnRotation;
     local DarkestHourGame G;
+    local vector          SpawnLocation;
+    local rotator         SpawnRotation;
 
     G = DarkestHourGame(Level.Game);
 
     if (CanSpawnWithParameters(GRI, PC.GetTeamNum(), Pc.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex) &&
-        GetSpawnPosition(SpawnLocation, SpawnRotation, PC.VehiclePoolIndex))
+        GetSpawnPosition(SpawnLocation, SpawnRotation, PC.VehiclePoolIndex) && G != none)
     {
         if (PC.VehiclePoolIndex >= 0)
         {
@@ -278,26 +282,26 @@ function bool PerformSpawn(DHPlayer PC)
         }
         else
         {
-            // spawn infantry
-            return G.SpawnPawn(PC, SpawnLocation, SpawnRotation, self) != none;
+            return G.SpawnPawn(PC, SpawnLocation, SpawnRotation, self) != none; // spawn infantry
         }
     }
 
     return false;
 }
 
-// TODO: not sure what to do with this
+// Modified to try to use one of the spawn point's linked LocationHint actors for the spawn location & rotation
+// A random selection, ignoring any locations that have enemy nearby, or that are blocked by another pawn
 function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, int VehiclePoolIndex)
 {
-    local Controller    C;
-    local Pawn          P;
-    local array<vector> EnemyLocations;
     local array<DHLocationHint> LocationHints;
-    local array<int>    LocationHintIndices;
-    local int           LocationHintIndex, i, j, k;
-    local bool          bIsBlocked;
-    local class<ROVehicle>  VehicleClass;
-    local float         TestCollisionRadius;
+    local array<vector>         EnemyLocations;
+    local array<int>            LocationHintIndices;
+    local int                   LocationHintIndex, i, j, k;
+    local class<ROVehicle>      VehicleClass;
+    local Controller            C;
+    local Pawn                  P;
+    local bool                  bIsBlocked;
+    local float                 TestCollisionRadius;
 
     if (VehiclePoolIndex >= 0)
     {
@@ -323,7 +327,7 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
         // Get all enemy locations
         for (C = Level.ControllerList; C != none; C = C.NextController)
         {
-            if (C.Pawn != none && C.GetTeamNum() != GetTeamIndex())
+            if (C.Pawn != none && C.GetTeamNum() != GetTeamIndex() && C.Pawn.Health > 0)
             {
                 EnemyLocations[EnemyLocations.Length] = C.Pawn.Location;
             }
@@ -363,9 +367,9 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
             break;
         }
 
-        // Location hint isn't blocked, so we'll use it & exit the for loop
         if (!bIsBlocked)
         {
+            // Location hint isn't blocked, so we'll use it & exit the for loop
             LocationHintIndex = LocationHintIndices[i];
             break;
         }
@@ -375,14 +379,13 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
     {
         if (LocationHints.Length == 0 || bUseLocationAsFallback)
         {
-            SpawnLocation = Location;
-            SpawnRotation = Rotation;
-            return true;
+            return super.GetSpawnPosition(SpawnLocation, SpawnRotation, VehiclePoolIndex);
         }
 
         LocationHintIndex = Rand(LocationHints.Length);
     }
 
+    // TODO: Add in the ability to spawn infantry in a radius around the location hints.
     SpawnLocation = LocationHints[LocationHintIndex].Location;
     SpawnRotation = LocationHints[LocationHintIndex].Rotation;
 

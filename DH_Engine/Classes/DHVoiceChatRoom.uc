@@ -8,7 +8,6 @@ class DHVoiceChatRoom extends UnrealChatRoom;
 var int SquadIndex;
 var float LocalBroadcastRangeSquared;
 
-
 // Called after LeaveChannel, or when player exits the server
 // NOTE: overridden to eliminate "has left channel" chat messages
 function RemoveMember(PlayerReplicationInfo PRI)
@@ -136,4 +135,3 @@ defaultproperties
     SquadIndex=-1
     LocalBroadcastRangeSquared=4000000.0
 }
-

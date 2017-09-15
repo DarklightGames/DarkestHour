@@ -221,7 +221,7 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
 
     if (PC.Pawn == none)
     {
-        return none;
+        return none; // exit if we somehow failed to spawn a player to drive the vehicle
     }
 
     // Now spawn the vehicle (& make sure it was successful)

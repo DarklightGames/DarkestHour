@@ -481,17 +481,6 @@ function PostBeginPlay()
         Warn("DHSpawnManager could not be found");
     }
 
-    // Here we see if the victory music is set to a sound group and pick an index to replicate to the clients
-    if (DHLevelInfo.AlliesWinsMusic != none && DHLevelInfo.AlliesWinsMusic.IsA('SoundGroup'))
-    {
-        GRI.AlliesVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AlliesWinsMusic).Sounds.Length);
-    }
-
-    if (DHLevelInfo.AxisWinsMusic != none && DHLevelInfo.AxisWinsMusic.IsA('SoundGroup'))
-    {
-        GRI.AxisVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AxisWinsMusic).Sounds.Length);
-    }
-
     if (bEnableMetrics && MetricsClass != none)
     {
         Metrics = Spawn(MetricsClass);
@@ -1166,7 +1155,6 @@ function ScoreKill(Controller Killer, Controller Other)
         GameRulesModifiers.ScoreKill(Killer, Other);
     }
 }
-
 
 // Modified to check if the player has just used a select-a-spawn teleport and should be protected from damage
 // Also if the old spawn area system is used, it only checks spawn damage protection for the spawn that is relevant to the player, including any mortar crew spawn
@@ -2208,6 +2196,9 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
     // If this logic is ever duplicated or resused, it needs to be made a function instead
     for (i = 0; i < 2; ++i)
     {
+        // Make this false for now, because we are going to check and set it to true if we do find someone alive, and it needs to reset for each team we check!
+        bHasAPlayerAlive = false;
+
         if (SpawnLimitReached(i))
         {
             for (P = Level.ControllerList; P != none; P = P.NextController)
@@ -2312,12 +2303,12 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
 
 function bool RoleExists(byte TeamID, DHRoleInfo RI)
 {
-    local int i;
     local DHGameReplicationInfo GRI;
+    local int                   i;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (TeamID == 0)
+    if (TeamID == AXIS_TEAM_INDEX)
     {
         for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
         {
@@ -2327,7 +2318,7 @@ function bool RoleExists(byte TeamID, DHRoleInfo RI)
             }
         }
     }
-    else if (TeamID == 1)
+    else if (TeamID == ALLIES_TEAM_INDEX)
     {
         for (i = 0; i < arraycount(GRI.DHAlliesRoles); ++i)
         {
@@ -2364,6 +2355,17 @@ state RoundInPlay
         GRI.RoundEndTime = RoundStartTime + RoundDuration;
         GRI.AttritionRate[AXIS_TEAM_INDEX] = 0;
         GRI.AttritionRate[ALLIES_TEAM_INDEX] = 0;
+
+        // Here we see if the victory music is set to a sound group and pick an index to replicate to the clients
+        if (DHLevelInfo.AlliesWinsMusic != none && DHLevelInfo.AlliesWinsMusic.IsA('SoundGroup'))
+        {
+            GRI.AlliesVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AlliesWinsMusic).Sounds.Length);
+        }
+
+        if (DHLevelInfo.AxisWinsMusic != none && DHLevelInfo.AxisWinsMusic.IsA('SoundGroup'))
+        {
+            GRI.AxisVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AxisWinsMusic).Sounds.Length);
+        }
 
         TeamAttritionCounter[AXIS_TEAM_INDEX] = 0;
         TeamAttritionCounter[ALLIES_TEAM_INDEX] = 0;
@@ -2514,7 +2516,7 @@ state RoundInPlay
             {
                 break;
             }
-            else if (DHObjectives[i].ObjState == OBJ_Axis)
+            else if (DHObjectives[i].IsAxis())
             {
                 Num[AXIS_TEAM_INDEX]++;
 
@@ -2526,7 +2528,7 @@ state RoundInPlay
                 // Add up objective based attrition
                 AttRateAllies += DHObjectives[i].AxisOwnedAttritionRate;
             }
-            else if (DHObjectives[i].ObjState == OBJ_Allies)
+            else if (DHObjectives[i].IsAllies())
             {
                 Num[ALLIES_TEAM_INDEX]++;
 
@@ -2682,18 +2684,12 @@ state RoundInPlay
     function EndState()
     {
         local Pawn P;
-        local Inventory Inv;
 
         super.EndState();
 
         foreach DynamicActors(class'Pawn', P)
         {
             P.StopWeaponFiring();
-        }
-
-        foreach DynamicActors(class'Inventory', Inv)
-        {
-            Inv.Destroy();
         }
     }
 
@@ -2854,7 +2850,6 @@ function ResetScores()
     }
 }
 
-
 state RoundOver
 {
     // Modified to replace ROArtillerySpawner with DHArtillerySpawner
@@ -2914,9 +2909,17 @@ state RoundOver
 // Extended to inform GRI that the round is over so the time remaining can "pause" on the second the round ended (instead of continuing to count down)
 function EndGame(PlayerReplicationInfo Winner, string Reason)
 {
+    local Inventory Inv;
+
     if (DHGameReplicationInfo(GameReplicationInfo) != none)
     {
         DHGameReplicationInfo(GameReplicationInfo).bRoundIsOver = true;
+    }
+
+    // Destroy all Inventory (hopeful fix to the constant MG firing)
+    foreach DynamicActors(class'Inventory', Inv)
+    {
+        Inv.Destroy();
     }
 
     super.EndGame(Winner, Reason);
@@ -3011,8 +3014,7 @@ function HandleReinforcements(Controller C)
         return;
     }
 
-    //TODO: look into improving or rewriting this, as this is garbage looking
-    if (PC.GetTeamNum() == ALLIES_TEAM_INDEX && LevelInfo.Allies.SpawnLimit > 0 && GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] != -1)
+    if (PC.GetTeamNum() == ALLIES_TEAM_INDEX && GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] != -1)
     {
         ModifyReinforcements(ALLIES_TEAM_INDEX, -1);
 
@@ -3030,7 +3032,7 @@ function HandleReinforcements(Controller C)
             }
         }
     }
-    else if (PC.GetTeamNum() == AXIS_TEAM_INDEX && LevelInfo.Axis.SpawnLimit > 0 && GRI.SpawnsRemaining[AXIS_TEAM_INDEX] != -1)
+    else if (PC.GetTeamNum() == AXIS_TEAM_INDEX && GRI.SpawnsRemaining[AXIS_TEAM_INDEX] != -1)
     {
         ModifyReinforcements(AXIS_TEAM_INDEX, -1);
 
@@ -3117,17 +3119,13 @@ exec function DebugDestroyConstructions()
     }
 }
 
-// Quick test function to change a role's limit (Allied only)
-// function doesn't support bots
+// Quick test function to change a role's limit (doesn't support bots)
 exec function DebugSetRoleLimit(int Team, int Index, int NewLimit)
 {
-    local Controller C;
-    local DHPlayer PC;
     local DHGameReplicationInfo GRI;
-    local int i;
-    local int RoleLimit;
-    local int RoleBotCount;
-    local int RoleCount;
+    local Controller            C;
+    local DHPlayer              PC;
+    local int                   RoleCount, RoleBotCount, RoleLimit, i;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
@@ -3136,12 +3134,12 @@ exec function DebugSetRoleLimit(int Team, int Index, int NewLimit)
         return;
     }
 
-    if (Team == 0)
+    if (Team == AXIS_TEAM_INDEX)
     {
         GRI.DHAxisRoleLimit[Index] = NewLimit;
         GRI.GetRoleCounts(GRI.DHAxisRoles[Index], RoleCount, RoleBotCount, RoleLimit);
     }
-    else if (Team == 1)
+    else if (Team == ALLIES_TEAM_INDEX)
     {
         GRI.DHAlliesRoleLimit[Index] = NewLimit;
         GRI.GetRoleCounts(GRI.DHAlliesRoles[Index], RoleCount, RoleBotCount, RoleLimit);
@@ -3782,7 +3780,7 @@ function ChooseWinner()
         {
             break;
         }
-        else if (DHObjectives[i].ObjState == OBJ_Axis)
+        else if (DHObjectives[i].IsAxis())
         {
             Num[AXIS_TEAM_INDEX]++;
 
@@ -3791,7 +3789,7 @@ function ChooseWinner()
                 NumReq[AXIS_TEAM_INDEX]++;
             }
         }
-        else if (DHObjectives[i].ObjState == OBJ_Allies)
+        else if (DHObjectives[i].IsAllies())
         {
             Num[ALLIES_TEAM_INDEX]++;
 
@@ -3917,7 +3915,7 @@ function CheckSpawnAreas()
 
             for (j = 0; j < SpawnAreas[i].AxisRequiredObjectives.Length; ++j)
             {
-                if (DHObjectives[SpawnAreas[i].AxisRequiredObjectives[j]] != none && DHObjectives[SpawnAreas[i].AxisRequiredObjectives[j]].ObjState != OBJ_Axis)
+                if (DHObjectives[SpawnAreas[i].AxisRequiredObjectives[j]] != none && !DHObjectives[SpawnAreas[i].AxisRequiredObjectives[j]].IsAxis())
                 {
                     bReqsMet = false;
                     break;
@@ -3928,7 +3926,7 @@ function CheckSpawnAreas()
             // Allows mappers to force all objectives to be lost/won before moving spawns, instead of just one - Ramm
             for (h = 0; h < SpawnAreas[i].AxisRequiredObjectives.Length; ++h)
             {
-                if (DHObjectives[SpawnAreas[i].AxisRequiredObjectives[h]] != none && DHObjectives[SpawnAreas[i].AxisRequiredObjectives[h]].ObjState == OBJ_Axis)
+                if (DHObjectives[SpawnAreas[i].AxisRequiredObjectives[h]] != none && DHObjectives[SpawnAreas[i].AxisRequiredObjectives[h]].IsAxis())
                 {
                     bSomeReqsMet = true;
                     break;
@@ -3941,7 +3939,7 @@ function CheckSpawnAreas()
             {
                 for (k = 0; k < SpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
                 {
-                    if (DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]] != none && DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
+                    if (DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]] != none && DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]].IsNeutral())
                     {
                         bSomeReqsMet = true;
                         break;
@@ -3966,7 +3964,7 @@ function CheckSpawnAreas()
 
             for (j = 0; j < SpawnAreas[i].AlliesRequiredObjectives.Length; ++j)
             {
-                if (DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[j]] != none && DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[j]].ObjState != OBJ_Allies)
+                if (DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[j]] != none && !DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[j]].IsAllies())
                 {
                     bReqsMet = false;
                     break;
@@ -3977,7 +3975,7 @@ function CheckSpawnAreas()
             // Allows mappers to force all objectives to be lost/won before moving spawns, instead of just one - Ramm
             for (h = 0; h < SpawnAreas[i].AlliesRequiredObjectives.Length; ++h)
             {
-                if (DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[h]] != none && DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[h]].ObjState == OBJ_Allies)
+                if (DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[h]] != none && DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[h]].IsAllies())
                 {
                     bSomeReqsMet = true;
                     break;
@@ -3990,7 +3988,7 @@ function CheckSpawnAreas()
             {
                 for (k = 0; k < SpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
                 {
-                    if (DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]] != none && DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
+                    if (DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]] != none && DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]].IsNeutral())
                     {
                         bSomeReqsMet = true;
                         break;
@@ -4050,7 +4048,7 @@ function CheckTankCrewSpawnAreas()
 
             for (j = 0; j < TankCrewSpawnAreas[i].AxisRequiredObjectives.Length; ++j)
             {
-                if (DHObjectives[TankCrewSpawnAreas[i].AxisRequiredObjectives[j]].ObjState != OBJ_Axis)
+                if (!DHObjectives[TankCrewSpawnAreas[i].AxisRequiredObjectives[j]].IsAxis())
                 {
                     bReqsMet = false;
                     break;
@@ -4061,7 +4059,7 @@ function CheckTankCrewSpawnAreas()
             // Allows Mappers to force all objectives to be lost/won before moving spawns, instead of just one - Ramm
             for (h = 0; h < TankCrewSpawnAreas[i].AxisRequiredObjectives.Length; ++h)
             {
-                if (DHObjectives[TankCrewSpawnAreas[i].AxisRequiredObjectives[h]].ObjState == OBJ_Axis)
+                if (DHObjectives[TankCrewSpawnAreas[i].AxisRequiredObjectives[h]].IsAxis())
                 {
                     bSomeReqsMet = true;
                     break;
@@ -4074,7 +4072,7 @@ function CheckTankCrewSpawnAreas()
             {
                 for (k = 0; k < TankCrewSpawnAreas[i].NeutralRequiredObjectives.Length; k++)
                 {
-                    if (DHObjectives[TankCrewSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
+                    if (DHObjectives[TankCrewSpawnAreas[i].NeutralRequiredObjectives[k]].IsNeutral())
                     {
                         bSomeReqsMet = true;
                         break;
@@ -4099,7 +4097,7 @@ function CheckTankCrewSpawnAreas()
 
             for (j = 0; j < TankCrewSpawnAreas[i].AlliesRequiredObjectives.Length; ++j)
             {
-                if (DHObjectives[TankCrewSpawnAreas[i].AlliesRequiredObjectives[j]].ObjState != OBJ_Allies)
+                if (!DHObjectives[TankCrewSpawnAreas[i].AlliesRequiredObjectives[j]].IsAllies())
                 {
                     bReqsMet = false;
                     break;
@@ -4110,7 +4108,7 @@ function CheckTankCrewSpawnAreas()
             // Allows Mappers to force all objectives to be lost/won before moving spawns, instead of just one - Ramm
             for (h = 0; h < TankCrewSpawnAreas[i].AlliesRequiredObjectives.Length; ++h)
             {
-                if (DHObjectives[TankCrewSpawnAreas[i].AlliesRequiredObjectives[h]].ObjState == OBJ_Allies)
+                if (DHObjectives[TankCrewSpawnAreas[i].AlliesRequiredObjectives[h]].IsAllies())
                 {
                     bSomeReqsMet = true;
                     break;
@@ -4123,7 +4121,7 @@ function CheckTankCrewSpawnAreas()
             {
                 for (k = 0; k < TankCrewSpawnAreas[i].NeutralRequiredObjectives.Length; k++)
                 {
-                    if (DHObjectives[TankCrewSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
+                    if (DHObjectives[TankCrewSpawnAreas[i].NeutralRequiredObjectives[k]].IsNeutral())
                     {
                         bSomeReqsMet = true;
                         break;
@@ -4170,7 +4168,7 @@ function CheckMortarmanSpawnAreas()
 
             for (j = 0; j < DHMortarSpawnAreas[i].AxisRequiredObjectives.Length; ++j)
             {
-                if (DHObjectives[DHMortarSpawnAreas[i].AxisRequiredObjectives[j]].ObjState != OBJ_Axis)
+                if (!DHObjectives[DHMortarSpawnAreas[i].AxisRequiredObjectives[j]].IsAxis())
                 {
                     bReqsMet = false;
                     break;
@@ -4179,7 +4177,7 @@ function CheckMortarmanSpawnAreas()
 
             for (h = 0; h < DHMortarSpawnAreas[i].AxisRequiredObjectives.Length; ++h)
             {
-                if (DHObjectives[DHMortarSpawnAreas[i].AxisRequiredObjectives[h]].ObjState == OBJ_Axis)
+                if (DHObjectives[DHMortarSpawnAreas[i].AxisRequiredObjectives[h]].IsAxis())
                 {
                     bSomeReqsMet = true;
                     break;
@@ -4190,7 +4188,7 @@ function CheckMortarmanSpawnAreas()
             {
                 for (k = 0; k < DHMortarSpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
                 {
-                    if (DHObjectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
+                    if (DHObjectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].IsNeutral())
                     {
                         bSomeReqsMet = true;
                         break;
@@ -4216,7 +4214,7 @@ function CheckMortarmanSpawnAreas()
 
             for (j = 0; j < DHMortarSpawnAreas[i].AlliesRequiredObjectives.Length; ++j)
             {
-                if (DHObjectives[DHMortarSpawnAreas[i].AlliesRequiredObjectives[j]].ObjState != OBJ_Allies)
+                if (!DHObjectives[DHMortarSpawnAreas[i].AlliesRequiredObjectives[j]].IsAllies())
                 {
                     bReqsMet = false;
                     break;
@@ -4227,7 +4225,7 @@ function CheckMortarmanSpawnAreas()
             // Allows Mappers to force all objectives to be lost/won before moving spawns, instead of just one
             for (h = 0; h < DHMortarSpawnAreas[i].AlliesRequiredObjectives.Length; ++h)
             {
-                if (DHObjectives[DHMortarSpawnAreas[i].AlliesRequiredObjectives[h]].ObjState == OBJ_Allies)
+                if (DHObjectives[DHMortarSpawnAreas[i].AlliesRequiredObjectives[h]].IsAllies())
                 {
                     bSomeReqsMet = true;
                     break;
@@ -4240,7 +4238,7 @@ function CheckMortarmanSpawnAreas()
             {
                 for (k = 0; k < DHMortarSpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
                 {
-                    if (DHObjectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
+                    if (DHObjectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].IsNeutral())
                     {
                         bSomeReqsMet = true;
                         break;
@@ -4460,13 +4458,16 @@ function ChangeSides()
 function OpenPlayerMenus()
 {
     local Controller P;
+    local DHPlayer PC;
 
     for (P = Level.ControllerList; P != none; P = P.NextController)
     {
-        if (P.bIsPlayer && P.PlayerReplicationInfo.Team != none && P.PlayerReplicationInfo.Team.TeamIndex != 2)
+        PC = DHPlayer(P);
+
+        if (PC != none && PC.bIsPlayer && PC.GetTeamNum() != 255)
         {
-            DHPlayer(P).DeployMenuStartMode = MODE_Map;
-            DHPlayer(P).ClientProposeMenu("DH_Interface.DHDeployMenu");
+            PC.DeployMenuStartMode = MODE_Map;
+            PC.ClientProposeMenu("DH_Interface.DHDeployMenu");
         }
     }
 }

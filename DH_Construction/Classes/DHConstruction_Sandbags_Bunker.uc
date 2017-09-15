@@ -18,8 +18,9 @@ defaultproperties
     MenuName="Sandbags (Bunker)"
     MenuIcon=Texture'DH_GUI_tex.ConstructionMenu.Construction_Sandbag_Bunker'
     CollisionHeight=100
-    CollisionRadius=90
+    CollisionRadius=125
     SupplyCost=500
     BrokenEmitterClass=class'DHConstruction_Sandbags_BrokenEmitter'
     HealthMax=400
+    bCanTakeImpactDamage=true
 }

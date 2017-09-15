@@ -1,10 +1,13 @@
+//==============================================================================
+// Darklight Games (c) 2008-2017
+//==============================================================================
+// https://wiki.beyondunreal.com/Legacy:Dynamicly_Accessing_Original_Static_Mesh_Textures
+//==============================================================================
+
 class UStaticMesh extends Object;
 
 var class sClassPlaceholder;
 
-//==============================================================================
-// https://wiki.beyondunreal.com/Legacy:Dynamicly_Accessing_Original_Static_Mesh_Textures
-//==============================================================================
 // This function can be used to directly transfer to the Skins array in Engine.Actor
 simulated function array<Material> FindStaticMeshSkins(StaticMesh SubjectMesh)
 {

@@ -8,7 +8,7 @@ class DHConstructionProxy extends Actor
 
 var class<DHConstruction>   ConstructionClass;
 
-var DHConstruction.EConstructionError   ProxyError;
+var DHConstruction.ConstructionError    ProxyError;
 
 var DHPawn                  PawnOwner;
 var DHPlayer                PlayerOwner;
@@ -77,6 +77,7 @@ final function SetConstructionClass(class<DHConstruction> ConstructionClass)
 {
     local float NewRadius;
     local float NewHeight;
+    local DHConstruction.ConstructionError E;
 
     if (ConstructionClass == none)
     {
@@ -99,7 +100,8 @@ final function SetConstructionClass(class<DHConstruction> ConstructionClass)
     LocalRotation = class'URotator'.static.RandomRange(ConstructionClass.default.StartRotationMin, ConstructionClass.default.StartRotationMax);
 
     // Set the error to none so that our material colors get initialized properly
-    SetProxyError(ERROR_None);
+    E.Type = ERROR_None;
+    SetProxyError(E);
 }
 
 function static Material CreateProxyMaterial(Material M)
@@ -111,10 +113,18 @@ function static Material CreateProxyMaterial(Material M)
     // HACK: Material cannot be a Combiner, since it doesn't play nice with
     // the processing we are doing below (Combiners using Combiners I suppose is
     // a bad thing). To fix this, we'll just use the combiner's fallback
-    // material as the material to work with.
-    if (M.IsA('Combiner') && M.FallbackMaterial != none)
+    // material as the material to work with. If there's no FallbackMaterial,
+    // we'll use the combiner's Material1.
+    C = Combiner(M);
+
+    if (C != none)
     {
-        M = M.FallbackMaterial;
+        if (C.FallbackMaterial != none)
+        {
+            M = C.FallbackMaterial;
+        }
+
+        M = C.Material1;
     }
 
     FC = new class'FadeColor';
@@ -176,7 +186,7 @@ function static UpdateProxyMaterialColors(Actor A, color Color)
     }
 }
 
-function SetProxyError(DHConstruction.EConstructionError NewProxyError)
+function SetProxyError(DHConstruction.ConstructionError NewProxyError)
 {
     local int i;
     local color ProxyColor;
@@ -185,7 +195,7 @@ function SetProxyError(DHConstruction.EConstructionError NewProxyError)
 
     if (Projector != none)
     {
-        switch (ProxyError)
+        switch (ProxyError.Type)
         {
         case ERROR_None:
             Projector.ProjTexture = Projector.GreenTexture;
@@ -196,7 +206,7 @@ function SetProxyError(DHConstruction.EConstructionError NewProxyError)
         }
     }
 
-    ProxyColor = GetProxyErrorColor(ProxyError);
+    ProxyColor = GetProxyErrorColor(ProxyError.Type);
 
     UpdateProxyMaterialColors(self, ProxyColor);
 
@@ -209,7 +219,7 @@ function SetProxyError(DHConstruction.EConstructionError NewProxyError)
     }
 }
 
-function static color GetProxyErrorColor(DHConstruction.EConstructionError ProxyError)
+function static color GetProxyErrorColor(DHConstruction.EConstructionErrorType ProxyError)
 {
     switch (ProxyError)
     {
@@ -224,7 +234,7 @@ function Tick(float DeltaTime)
 {
     local vector L, RL;
     local rotator R;
-    local DHConstruction.EConstructionError ProvisionalPositionError, NewProxyError;
+    local DHConstruction.ConstructionError ProvisionalPositionError, NewProxyError;
 
     super.Tick(DeltaTime);
 
@@ -247,12 +257,12 @@ function Tick(float DeltaTime)
 
     NewProxyError = ConstructionClass.static.GetPlayerError(PlayerOwner);
 
-    if (NewProxyError == ERROR_None)
+    if (NewProxyError.Type == ERROR_None)
     {
         NewProxyError = GetPositionError();
     }
 
-    if (NewProxyError == ERROR_None)
+    if (NewProxyError.Type == ERROR_None)
     {
         // All other checks passed, set new proxy error to be the provisional
         // position error. The order is important so that we prioritize
@@ -282,13 +292,13 @@ function Tick(float DeltaTime)
 }
 
 // This function gets the provisional location and rotation of the construction.
-function DHConstruction.EConstructionError GetProvisionalPosition(out vector OutLocation, out rotator OutRotation)
+function DHConstruction.ConstructionError GetProvisionalPosition(out vector OutLocation, out rotator OutRotation)
 {
     local vector TraceStart, TraceEnd, HitLocation, HitNormal, Left, Forward, X, Y, Z, HitNormalSum, BaseLocation, CeilingHitLocation, CeilingHitNormal;
     local Actor TempHitActor, HitActor;
     local rotator R;
     local float GroundSlopeDegrees, AngleRadians, SquareLength;
-    local DHConstruction.EConstructionError Error;
+    local DHConstruction.ConstructionError E;
     local int i;
     local TerrainInfo TI;
     local Material HitMaterial;
@@ -296,7 +306,8 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
 
     if (PawnOwner == none || PlayerOwner == none || ConstructionClass == none)
     {
-        return ERROR_Fatal;
+        E.Type = ERROR_SquadTooSmall;
+        return E;
     }
 
     // Trace out into the world and try and hit something static.
@@ -332,7 +343,7 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
     if (HitActor == none)
     {
         // Didn't hit anything!
-        Error = ERROR_NoGround;
+        E.Type = ERROR_NoGround;
         // TODO: verify correctness
         BaseLocation = TraceStart;
         R = PlayerOwner.CalcViewRotation;
@@ -346,7 +357,7 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
 
         if (ConstructionClass.default.bCanOnlyPlaceOnTerrain && !HitActor.IsA('TerrainInfo'))
         {
-            Error = ERROR_NotOnTerrain;
+            E.Type = ERROR_NotOnTerrain;
         }
 
         // Terrain alignment steps.
@@ -388,7 +399,7 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
                 if (TI.TerrainScale.X > ConstructionClass.default.TerrainScaleMax ||
                     TI.TerrainScale.Y > ConstructionClass.default.TerrainScaleMax)
                 {
-                    Error = ERROR_GroundTooHard;
+                    E.Type = ERROR_GroundTooHard;
                 }
 
                 BaseLocation = HitLocation;
@@ -408,13 +419,13 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
                     if (!bIsTerrainSurfaceTypeAllowed)
                     {
                         // Surface type is not allowed.
-                        Error = ERROR_BadSurface;
+                        E.Type = ERROR_BadSurface;
                     }
                 }
             }
             else
             {
-                Error = ERROR_GroundTooHard;
+                E.Type = ERROR_GroundTooHard;
             }
         }
 
@@ -431,13 +442,13 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
         // Hit something static in the world.
         GroundSlopeDegrees = class'UUnits'.static.RadiansToDegrees(Acos(HitNormal dot vect(0, 0, 1)));
 
-        if (Error == ERROR_None && GroundSlopeDegrees >= ConstructionClass.default.GroundSlopeMaxInDegrees)
+        if (E.Type == ERROR_None && GroundSlopeDegrees >= ConstructionClass.default.GroundSlopeMaxInDegrees)
         {
             // Too steep!
-            Error = ERROR_TooSteep;
+            E.Type = ERROR_TooSteep;
         }
 
-        if (Error == ERROR_None)
+        if (E.Type == ERROR_None)
         {
             // TODO: enable or disable this check
             GetAxes(rotator(Forward), X, Y, Z);
@@ -464,7 +475,7 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
 
                 if (HitActor != none && !HitActor.IsA('ROBulletWhipAttachment') && !HitActor.IsA('Volume'))
                 {
-                    Error = ERROR_NoRoom;
+                    E.Type = ERROR_NoRoom;
                     break;
                 }
 
@@ -475,7 +486,7 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
 
                 if (HitActor == none)
                 {
-                    Error = ERROR_NoGround;
+                    E.Type = ERROR_NoGround;
                     break;
                 }
                 else
@@ -485,7 +496,7 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
             }
         }
 
-        if (Error == ERROR_None)
+        if (E.Type == ERROR_None)
         {
             HitNormalSum.X /= TRACE_RESOLUTION;
             HitNormalSum.Y /= TRACE_RESOLUTION;
@@ -499,10 +510,10 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
         // Now check the groundslope again.
         GroundSlopeDegrees = class'UUnits'.static.RadiansToDegrees(Acos(HitNormalSum dot vect(0, 0, 1)));
 
-        if (Error == ERROR_None && GroundSlopeDegrees >= ConstructionClass.default.GroundSlopeMaxInDegrees)
+        if (E.Type == ERROR_None && GroundSlopeDegrees >= ConstructionClass.default.GroundSlopeMaxInDegrees)
         {
             // Too steep!
-            Error = ERROR_TooSteep;
+            E.Type = ERROR_TooSteep;
         }
 
         if (ConstructionClass.default.bInheritsOwnerRotation)
@@ -520,7 +531,7 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
     OutLocation = BaseLocation + (ConstructionClass.static.GetPlacementOffset() << rotator(Forward));
     OutRotation = QuatToRotator(QuatProduct(QuatFromRotator(LocalRotation), QuatFromRotator(rotator(Forward))));
 
-    if (Error == ERROR_None && !ConstructionClass.default.bCanPlaceIndoors)
+    if (E.Type == ERROR_None && !ConstructionClass.default.bCanPlaceIndoors)
     {
         // Knowing whether or not we are "indoors" is somewhat subjective,
         // therefore, any attempt to systemize will not be 100% correct to all
@@ -563,17 +574,17 @@ function DHConstruction.EConstructionError GetProvisionalPosition(out vector Out
 
             if (Trace(CeilingHitLocation, CeilingHitNormal, TraceEnd, TraceStart,, vect(1.0, 1.0, 0.0) * SquareLength) != none)
             {
-                Error = ERROR_Indoors;
+                E.Type = ERROR_Indoors;
             }
         }
     }
 
-    return Error;
+    return E;
 }
 
 // We separate this function from GetProvisionalPosition because we need to have
 // the server do it's own check before attempting to spawn the construction.
-function DHConstruction.EConstructionError GetPositionError()
+function DHConstruction.ConstructionError GetPositionError()
 {
     local DHRestrictionVolume RV;
     local Actor A;
@@ -585,13 +596,15 @@ function DHConstruction.EConstructionError GetPositionError()
     local float OtherRadius, OtherHeight;
     local DHGameReplicationInfo GRI;
     local int i;
+    local DHConstruction.ConstructionError E;
 
     GRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
 
     // Don't allow the construction to be placed in water if this is disallowed.
     if (!ConstructionClass.default.bCanPlaceInWater && PhysicsVolume != none && PhysicsVolume.bWaterVolume)
     {
-        return ERROR_InWater;
+        E.Type = ERROR_InWater;
+        return E;
     }
 
     // Don't allow constructions to overlap restriction volumes that restrict constructions.
@@ -599,7 +612,8 @@ function DHConstruction.EConstructionError GetPositionError()
     {
         if (RV != none && RV.bNoConstructions)
         {
-            return ERROR_Restricted;
+            E.Type = ERROR_Restricted;
+            return E;
         }
     }
 
@@ -612,7 +626,8 @@ function DHConstruction.EConstructionError GetPositionError()
              (PawnOwner.GetTeamNum() == AXIS_TEAM_INDEX && MV.MineKillStyle == KS_Axis) ||
              (PawnOwner.GetTeamNum() == ALLIES_TEAM_INDEX && MV.MineKillStyle == KS_Allies)))
         {
-            return ERROR_InMinefield;
+            E.Type = ERROR_InMinefield;
+            return E;
         }
     }
 
@@ -621,7 +636,8 @@ function DHConstruction.EConstructionError GetPositionError()
     {
         if (TouchingActor != none && TouchingActor.bBlockActors)
         {
-            return ERROR_NoRoom;
+            E.Type = ERROR_NoRoom;
+            return E;
         }
     }
 
@@ -632,7 +648,8 @@ function DHConstruction.EConstructionError GetPositionError()
         {
             if (GRI.DHObjectives[i] != none && GRI.DHObjectives[i].WithinArea(self))
             {
-                return ERROR_InObjective;
+                E.Type = ERROR_InObjective;
+                return E;
             }
         }
     }
@@ -640,12 +657,14 @@ function DHConstruction.EConstructionError GetPositionError()
     // Don't allow constructions within 2 meters of spawn points or location hints.
     foreach RadiusActors(class'DHSpawnPointBase', SP, CollisionRadius + class'DHUnits'.static.MetersToUnreal(2.0))
     {
-        return ERROR_NearSpawnPoint;
+        E.Type = ERROR_NearSpawnPoint;
+        return E;
     }
 
     foreach RadiusActors(class'DHLocationHint', LH, CollisionRadius + class'DHUnits'.static.MetersToUnreal(2.0))
     {
-        return ERROR_NearSpawnPoint;
+        E.Type = ERROR_NearSpawnPoint;
+        return E;
     }
 
     // Don't allow constructions to have overlapping collision radii.
@@ -659,7 +678,8 @@ function DHConstruction.EConstructionError GetPositionError()
 
         if (VSize(Location - C.Location) < CollisionRadius + OtherRadius)
         {
-            return ERROR_NoRoom;
+            E.Type = ERROR_NoRoom;
+            return E;
         }
     }
 
@@ -671,9 +691,11 @@ function DHConstruction.EConstructionError GetPositionError()
         {
             C = DHConstruction(A);
 
-            if (C != none && C.GetTeamIndex() == PawnOwner.GetTeamNum())
+            if (C != none && (C.GetTeamIndex() == NEUTRAL_TEAM_INDEX || C.GetTeamIndex() == PawnOwner.GetTeamNum()))
             {
-                return ERROR_TooCloseFriendly;
+                E.Type = ERROR_TooCloseFriendly;
+                E.OptionalInteger = int(Ceil(ConstructionClass.default.DuplicateFriendlyDistanceInMeters - class'DHUnits'.static.UnrealToMeters(VSize(C.Location - Location))));
+                return E;
             }
         }
     }
@@ -686,12 +708,14 @@ function DHConstruction.EConstructionError GetPositionError()
 
             if (C != none && C.GetTeamIndex() != NEUTRAL_TEAM_INDEX && C.GetTeamIndex() != PawnOwner.GetTeamNum())
             {
-                return ERROR_TooCloseEnemy;
+                E.Type = ERROR_TooCloseEnemy;
+                E.OptionalInteger = int(Ceil(ConstructionClass.default.DuplicateEnemyDistanceInMeters - class'DHUnits'.static.UnrealToMeters(VSize(C.Location - Location))));
+                return E;
             }
         }
     }
 
-    return ERROR_None;
+    return E;
 }
 
 defaultproperties

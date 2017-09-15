@@ -147,8 +147,8 @@ function JoinSquadChannel(PlayerReplicationInfo PRI, int TeamIndex, int SquadInd
     LeaveUnassignedChannel(PRI, TeamIndex);
 }
 
-// Colin: Modified to remove the annoying log that would be called whenever
-// a player changed teams.
+// Modified to remove the annoying log that would be called whenever a player
+// changed teams.
 function VerifyTeamChatters()
 {
     local Controller P;
@@ -232,5 +232,12 @@ defaultproperties
     PublicChannelNames(17)="Squad"
     PublicChannelNames(18)="Squad"
     PublicChannelNames(19)="Squad"
+
+    InstalledCodec[0]=(Codec="CODEC_96WB",CodecName="Better Quality",CodecDescription="(9.6kbps) - Uses more bandwidth, but sound is much clearer.")
+    InstalledCodec[1]=(Codec="CODEC_96WB",CodecName="Better Quality",CodecDescription="(9.6kbps) - Uses more bandwidth, but sound is much clearer.")
+    VoIPInternetCodecs[0]="CODEC_96WB"
+    VoIPInternetCodecs[1]="CODEC_96WB"
+    VoIPLANCodecs[0]="CODEC_96WB"
+    VoIPLANCodecs[1]="CODEC_96WB"
 }
 

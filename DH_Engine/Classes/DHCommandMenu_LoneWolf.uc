@@ -5,16 +5,13 @@
 
 class DHCommandMenu_LoneWolf extends DHCommandMenu;
 
+var localized string AutoJoinSquadDisabledText;
+
 function OnSelect(int OptionIndex, vector Location)
 {
     local DHPlayer PC;
 
-    if (Interaction == none || Interaction.ViewportOwner == none || Interaction.ViewportOwner.Actor == none)
-    {
-        return;
-    }
-
-    PC = DHPlayer(Interaction.ViewportOwner.Actor);
+    PC = GetPlayerController();
 
     if (PC == none)
     {
@@ -38,12 +35,7 @@ function bool IsOptionDisabled(int OptionIndex)
 {
     local DHPlayer PC;
 
-    if (Interaction == none || Interaction.ViewportOwner == none || Interaction.ViewportOwner.Actor == none)
-    {
-        return true;
-    }
-
-    PC = DHPlayer(Interaction.ViewportOwner.Actor);
+    PC = GetPlayerController();
 
     switch (OptionIndex)
     {
@@ -58,7 +50,6 @@ function bool IsOptionDisabled(int OptionIndex)
 
 function bool ShouldHideMenu()
 {
-    // TODO: hide if no longer in a squad!
     local DHPlayerReplicationInfo PRI;
 
     if (Interaction == none || Interaction.ViewportOwner == none || Interaction.ViewportOwner.Actor == none)
@@ -71,8 +62,27 @@ function bool ShouldHideMenu()
     return PRI == none || PRI.IsInSquad();
 }
 
+function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
+{
+    super.GetOptionRenderInfo(OptionIndex, ORI);
+
+    switch (OptionIndex)
+    {
+        case 0: // Auto-Join Squad
+            if (IsOptionDisabled(OptionIndex))
+            {
+                ORI.InfoText = default.AutoJoinSquadDisabledText;
+                ORI.InfoColor = class'UColor'.default.Red;
+            }
+            break;
+        default:
+            break;
+    }
+}
+
 defaultproperties
 {
+    AutoJoinSquadDisabledText="No eligible squads"
     Options(0)=(ActionText="Auto-Join Squad")
     Options(1)=(ActionText="Create Squad")
 }

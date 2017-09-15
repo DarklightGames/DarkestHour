@@ -8,11 +8,8 @@ class DHColor extends Object
 
 var color TeamColors[2];
 var color SquadColor;
-var color InputPromptColor;
 var color SquadSignalFireColor;
 var color SquadSignalMoveColor;
-var color SquadOrderAttackColor;
-var color SquadOrderDefendColor;
 
 defaultproperties
 {
@@ -22,7 +19,5 @@ defaultproperties
 
     SquadSignalFireColor=(R=178,G=34,B=34,A=255)    // Firebrick
     SquadSignalMoveColor=(R=186,G=85,B=211,A=255)   // Medium Orchid
-    SquadOrderAttackColor=(R=238,G=232,B=170,A=255) // Pale Goldenrod
-    SquadOrderDefendColor=(R=173,G=216,B=230,A=255) // Light Blue
 }
 

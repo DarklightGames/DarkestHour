@@ -101,9 +101,13 @@ struct SquadSignal
 var     SquadSignal             SquadSignals[2];
 
 // This is used to skip ResetInput calls in the GUIController.
-// Useful when you want to show a menu overtop of the game (eg. situation map)
+// Useful when you want to show a menu over top of the game (e.g. situation map)
 // without interrupting player input.
 var     bool                    bShouldSkipResetInput;
+
+// Toggle Duck timing
+var     float                   ToggleDuckIntervalSeconds;
+var     float                   NextToggleDuckTimeSeconds;
 
 replication
 {
@@ -121,12 +125,14 @@ replication
     reliable if (Role < ROLE_Authority)
         ServerLoadATAmmo, ServerThrowMortarAmmo,
         ServerSaveArtilleryTarget, ServerSetPlayerInfo, ServerClearObstacle,
-        ServerMetricsDump, ServerLockWeapons, ServerSetBayonetAtSpawn,
+        ServerLockWeapons, ServerSetBayonetAtSpawn,
+        ServerSetIsInSpawnMenu, ServerSetLockTankOnEntry,
         ServerSquadCreate, ServerSquadLeave, ServerSquadJoin, ServerSquadSay,
         ServerSquadJoinAuto, ServerSquadInvite, ServerSquadKick, ServerSquadPromote,
-        ServerSquadCommandeer, ServerSquadLock, ServerSquadOrder, ServerSquadSignal,
+        ServerSquadLock, ServerSquadSignal,
         ServerSquadRename, ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint,
-        ServerSquadSwapRallyPoints,
+        ServerSquadSwapRallyPoints, ServerSquadBan,
+        ServerAddMapMarker, ServerRemoveMapMarker,
         // these ones in debug mode only:
         ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog;
 
@@ -136,10 +142,6 @@ replication
         ClientProne, ClientToggleDuck, ClientConsoleCommand,
         ClientFadeFromBlack, ClientAddHudDeathMessage, ClientLockWeapons,
         ClientSquadInvite, ClientSquadSignal;
-
-    // Functions the owning client can call on the server
-    reliable if (Role < ROLE_Authority)
-        ServerSetIsInSpawnMenu, ServerSetLockTankOnEntry;
 }
 
 function ServerChangePlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2) { } // no longer used
@@ -163,6 +165,8 @@ simulated event PostBeginPlay()
     }
 
     super.PostBeginPlay();
+
+    VoiceChatCodec = "CODEC_96WB";
 
     // Make this only run by the owning client
     if (Level.NetMode != NM_DedicatedServer)
@@ -2086,6 +2090,20 @@ function ClientProne()
     Prone();
 }
 
+// Modified to disallow this from being spammed without limits.
+// As an added bonus, this solves a particular bug where players would end up
+// in an odd state where their bipodded machine-guns would appear to be shooting
+// blanks, likely as a result of a client-server state mismatch.
+exec function ToggleDuck()
+{
+    if (Level.TimeSeconds >= NextToggleDuckTimeSeconds)
+    {
+        NextToggleDuckTimeSeconds = Level.TimeSeconds + ToggleDuckIntervalSeconds;
+
+        super.ToggleDuck();
+    }
+}
+
 // Server call to client to toggle duck
 function ClientToggleDuck()
 {
@@ -2879,6 +2897,11 @@ function PawnDied(Pawn P)
     }
 }
 
+// Emptied out as irrelevant to RO/DH (concerns UT2004 PowerUps) & can just cause "accessed none" log errors if keybound & used (if player in vehicle or has no inventory)
+exec function PrevItem()
+{
+}
+
 // Emptied out so human player doesn't receive "you picked up the [weapon name]" messages when they pick up a weapon
 function HandlePickup(Pickup pick)
 {
@@ -3446,27 +3469,6 @@ function ServerPossessBody(Pawn NewPawn)
     }
 }
 
-exec function URL(string S)
-{
-    local URL U;
-
-    U = class'URL'.static.FromString(S);
-
-    Log(U);
-
-    if (U != none)
-    {
-        Log("Scheme" @ U.Scheme);
-        Log("User" @ U.Username);
-        Log("Pass" @ U.Password);
-        Log("Host" @ U.Host);
-        Log("Path" @ U.Path);
-        Log("Query" @ U.Query);
-        Log("Fragment" @ U.Fragment);
-        Log("Port" @ U.Port);
-    }
-}
-
 // New debug exec to trigger or un-trigger a specified event
 exec function DebugEvent(name EventToTrigger, optional bool bUntrigger)
 {
@@ -3481,6 +3483,22 @@ exec function DebugEvent(name EventToTrigger, optional bool bUntrigger)
         {
             Log("DebugEvent: triggering event" @ EventToTrigger);
             TriggerEvent(EventToTrigger, none, none);
+        }
+    }
+}
+
+// Used for finding pesky "raptor" actors sitting at world origin.
+simulated exec function DebugRaptor()
+{
+    local Actor A;
+
+    foreach AllActors(class'Actor', A)
+    {
+        if (A.Location == vect(0, 0, 0) &&
+            A.DrawType == DT_Sprite &&
+            !A.bHidden)
+        {
+            Log(A);
         }
     }
 }
@@ -3522,25 +3540,6 @@ exec function SetMyRotation(rotator NewRotation)
     if (IsDebugModeAllowed())
     {
         SetRotation(NewRotation);
-    }
-}
-
-exec function MetricsDump()
-{
-    ServerMetricsDump();
-}
-
-function ServerMetricsDump()
-{
-    local DarkestHourGame G;
-
-    G = DarkestHourGame(Level.Game);
-
-    if (G.Metrics != none)
-    {
-        G.Broadcast(self, G.Metrics.Dump());
-
-        Log(G.Metrics.Dump());
     }
 }
 
@@ -4161,7 +4160,7 @@ exec function SetSuspTravel(int NewValue, optional byte FirstWheelIndex, optiona
                 V.Wheels[i].SuspensionTravel = NewValue;
             }
 
-            if (bDontSetMaxRenderTravel)
+            if (!bDontSetMaxRenderTravel)
             {
                 V.Wheels[i].SuspensionMaxRenderTravel = NewValue;
             }
@@ -4767,11 +4766,6 @@ simulated function int GetRoleIndex()
 // START SQUAD DEBUG FUNCTIONS
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-simulated exec function SquadCreate()
-{
-    ServerSquadCreate();
-}
-
 function ServerSquadCreate()
 {
     local DarkestHourGame G;
@@ -4781,23 +4775,13 @@ function ServerSquadCreate()
     G.SquadReplicationInfo.CreateSquad(DHPlayerReplicationInfo(PlayerReplicationInfo));
 }
 
-simulated exec function SquadLeave()
-{
-    ServerSquadLeave();
-}
-
 function ServerSquadLeave()
 {
     local DarkestHourGame G;
 
     G = DarkestHourGame(Level.Game);
 
-    G.SquadReplicationInfo.LeaveSquad(DHPlayerReplicationInfo(PlayerReplicationInfo));
-}
-
-simulated exec function SquadJoin(int SquadIndex)
-{
-    ServerSquadJoin(GetTeamNum(), SquadIndex);
+    G.SquadReplicationInfo.LeaveSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), true);
 }
 
 function ServerSquadJoin(int TeamIndex, int SquadIndex, optional bool bWasInvited)
@@ -4807,11 +4791,6 @@ function ServerSquadJoin(int TeamIndex, int SquadIndex, optional bool bWasInvite
     G = DarkestHourGame(Level.Game);
 
     G.SquadReplicationInfo.JoinSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), TeamIndex, SquadIndex, bWasInvited);
-}
-
-simulated exec function SquadJoinAuto()
-{
-    ServerSquadJoinAuto();
 }
 
 function ServerSquadJoinAuto()
@@ -4846,9 +4825,16 @@ function ServerSquadKick(DHPlayerReplicationInfo MemberToKick)
     }
 }
 
-simulated exec function SquadLock(bool bIsLocked)
+function ServerSquadBan(DHPlayerReplicationInfo PlayerToBan)
 {
-    ServerSquadLock(bIsLocked);
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (SquadReplicationInfo != none && PRI != none)
+    {
+        SquadReplicationInfo.BanFromSquad(PRI, GetTeamNum(), PRI.SquadIndex, PlayerToBan);
+    }
 }
 
 function ServerSquadLock(bool bIsLocked)
@@ -4863,23 +4849,6 @@ function ServerSquadLock(bool bIsLocked)
     }
 }
 
-simulated exec function SquadCommandeer()
-{
-    ServerSquadCommandeer();
-}
-
-function ServerSquadCommandeer()
-{
-    local DHPlayerReplicationInfo PRI;
-
-    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-
-    if (SquadReplicationInfo != none && PRI != none)
-    {
-        SquadReplicationInfo.CommandeerSquad(PRI, GetTeamNum(), PRI.SquadIndex);
-    }
-}
-
 function ServerSquadPromote(DHPlayerReplicationInfo NewSquadLeader)
 {
     local DHPlayerReplicationInfo PRI;
@@ -4889,18 +4858,6 @@ function ServerSquadPromote(DHPlayerReplicationInfo NewSquadLeader)
     if (SquadReplicationInfo != none && PRI != none)
     {
         SquadReplicationInfo.ChangeSquadLeader(PRI, GetTeamNum(), PRI.SquadIndex, NewSquadLeader);
-    }
-}
-
-function ServerSquadOrder(DHSquadReplicationInfo.ESquadOrderType Type, optional vector Location)
-{
-    local DHPlayerReplicationInfo PRI;
-
-    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-
-    if (SquadReplicationInfo != none && PRI != none)
-    {
-        SquadReplicationInfo.SetSquadOrder(PRI, GetTeamNum(), PRI.SquadIndex, Type, Location);
     }
 }
 
@@ -4925,6 +4882,34 @@ function ServerSquadRename(string Name)
     if (SquadReplicationInfo != none && PRI != none)
     {
         SquadReplicationInfo.SetName(GetTeamNum(), PRI.SquadIndex, Name);
+    }
+}
+
+function ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, vector Location)
+{
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI != none)
+    {
+        GRI.AddMapMarker(PRI, MapMarkerClass, Location);
+    }
+}
+
+function ServerRemoveMapMarker(int MapMarkerIndex)
+{
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI != none && PRI != none && PRI.IsSquadLeader())
+    {
+        GRI.RemoveMapMarker(GetTeamNum(), MapMarkerIndex);
     }
 }
 
@@ -5083,11 +5068,9 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
 
 exec function HideOrderMenu()
 {
-    // TODO: on death, hide order menu
     if (CommandInteraction != none)
     {
         CommandInteraction.Hide();
-
         CommandInteraction = none;
     }
 }
@@ -5143,7 +5126,7 @@ function ServerSpeak(int ChannelIndex, optional string ChannelPassword)
 
     Index = -1;
     ActiveRoom = VCR;
-    Log(PlayerReplicationInfo.PlayerName@"speaking on"@VCR.GetTitle(),'VoiceChat');
+    Log(PlayerReplicationInfo.PlayerName @ "speaking on" @ VCR.GetTitle(), 'VoiceChat');
     ChatRoomMessage(9, ChannelIndex);
     ClientSetActiveRoom(VCR.ChannelIndex);
     Index = VCR.ChannelIndex;
@@ -5249,4 +5232,9 @@ defaultproperties
 
     DHPrimaryWeapon=-1
     DHSecondaryWeapon=-1
+
+    VoiceChatCodec="CODEC_96WB"
+    VoiceChatLANCodec="CODEC_96WB"
+
+    ToggleDuckIntervalSeconds=0.5
 }

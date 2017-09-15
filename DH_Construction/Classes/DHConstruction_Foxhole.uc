@@ -28,8 +28,9 @@ simulated function OnConstructed()
             DirtProjector.FrameBufferBlendingOp = PB_AlphaBlend;
             DirtProjector.FOV = 1;
             DirtProjector.MaxTraceDistance = 512.0;
+            DirtProjector.bGradient = true;
             DirtProjector.SetDrawScale((default.CollisionRadius * 2) / DirtProjector.ProjTexture.MaterialUSize());
-            DirtProjector.SetRelativeLocation(vect(0.0, 0.0, 100.0));
+            DirtProjector.SetRelativeLocation(vect(0.0, 0.0, 256.0));
             DirtProjector.SetRelativeRotation(rot(-16384, 0, 0));
         }
     }
@@ -53,13 +54,13 @@ defaultproperties
     bCanOnlyPlaceOnTerrain=true
     bSnapToTerrain=true
     bShouldAlignToGround=false
-    bCanBeTornDown=false
-    bCanBeMantled=true
+    bCanBeTornDownWhenConstructed=false
     bCanBeDamaged=false
     ProxyDistanceInMeters=10
-    CollisionRadius=256.0
+    CollisionRadius=192.0
     StaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_01'
     PokeTerrainDepth=128
+    PokeTerrainRadius=128.0
     SupplyCost=0
     PlacementOffset=(Z=0.0)
     MenuName="Foxhole"

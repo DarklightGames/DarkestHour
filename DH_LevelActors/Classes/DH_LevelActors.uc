@@ -4,7 +4,7 @@
 //==============================================================================
 
 class DH_LevelActors extends Actor
-    hidecategories(Object,Movement,Collision,Lighting,LightColor,Karma,Force,Display,Advanced,Sound)
+    hidecategories(Collision,Lighting,LightColor,Karma,Force,Display,Advanced,Sound)
     placeable;
 
 //Setup some common enums used throughout the child actors

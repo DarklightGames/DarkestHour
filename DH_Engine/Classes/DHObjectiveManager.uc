@@ -30,7 +30,7 @@ function ObjectiveStateChanged()
 
             for (j = 0; j < ObjectiveManagers[i].AxisRequiredObjectives.Length; ++j)
             {
-                if (DHGame.DHObjectives[ObjectiveManagers[i].AxisRequiredObjectives[j]].ObjState != OBJ_Axis)
+                if (!DHGame.DHObjectives[ObjectiveManagers[i].AxisRequiredObjectives[j]].IsAxis())
                 {
                     bReadyToModify = false;
                     break;
@@ -39,7 +39,7 @@ function ObjectiveStateChanged()
 
             for (j = 0; j < ObjectiveManagers[i].AlliesRequiredObjectives.Length; ++j)
             {
-                if (DHGame.DHObjectives[ObjectiveManagers[i].AlliesRequiredObjectives[j]].ObjState != OBJ_Allies)
+                if (!DHGame.DHObjectives[ObjectiveManagers[i].AlliesRequiredObjectives[j]].IsAllies())
                 {
                     bReadyToModify = false;
                     break;

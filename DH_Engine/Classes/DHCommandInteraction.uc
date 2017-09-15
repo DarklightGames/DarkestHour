@@ -47,43 +47,32 @@ function Hide()
 }
 
 // Programmatically create the materials used for each option.
-function CreateOptionTexRotators(int OptionCount)
+function CreateOptionTexRotators(DHCommandMenu Menu)
 {
     local int i;
     local TexRotator TR;
-    local TexOscillator TO;
-    local float Angle;
-    local float Amplitude;
 
-    OptionTexRotators.Length = 0;
-
-    if (OptionCount <= 0 || OptionCount > MAX_OPTIONS)
+    if (Menu == none)
     {
-        Warn("Assertion error, option count must be between 1 and" @ MAX_OPTIONS @ "(found" @ OptionCount $ ")");
         return;
     }
 
-    Amplitude = 0.01;
-    Angle = (0.5 / OptionCount) * Tau;
+    OptionTexRotators.Length = 0;
 
-    for (i = 0; i < OptionCount; ++i)
+    if (Menu.Options.Length <= 0 || Menu.Options.Length > MAX_OPTIONS)
     {
-        TO = new class'Engine.TexOscillator';
-        TO.Material = OptionTextures[OptionCount - 1];
-        TO.UOscillationAmplitude = Sin(Angle) * Amplitude;
-        TO.UOscillationRate = 0.0;
-        TO.UOscillationPhase = 0.5;
-        TO.VOscillationAmplitude = Cos(Angle) * -Amplitude;
-        TO.VOscillationRate = 0.0;
-        TO.VOscillationPhase = 0.5;
+        Warn("Assertion error, option count must be between 1 and" @ MAX_OPTIONS @ "(found" @ Menu.Options.Length $ ")");
+        return;
+    }
 
+    for (i = 0; i < Menu.Options.Length; ++i)
+    {
         TR = new class'Engine.TexRotator';
-        TR.Material = TO;
+        TR.Rotation.Yaw = -(i * (65536 / Menu.SlotCount)) + ((0.5 / Menu.SlotCount) * 65536);
+        TR.Material = OptionTextures[Menu.SlotCount - 1];
         TR.TexRotationType = TR_FixedRotation;
         TR.UOffset = TR.Material.MaterialUSize() / 2;
         TR.VOffset = TR.Material.MaterialVSize() / 2;
-
-        TR.Rotation.Yaw = -(i * (65536 / OptionCount)) + ((0.5 / OptionCount) * 65536);
 
         OptionTexRotators[OptionTexRotators.Length] = TR;
     }
@@ -118,7 +107,7 @@ function DHCommandMenu PushMenu(string ClassName, optional Object OptionalObject
         OldMenu.OnPassive();
     }
 
-    CreateOptionTexRotators(Menu.Options.Length);
+    CreateOptionTexRotators(Menu);
 
     Menus.Push(Menu);
     Menu.OnPush();
@@ -145,7 +134,7 @@ function DHCommandMenu PopMenu()
 
     if (NewMenu != none)
     {
-        CreateOptionTexRotators(NewMenu.Options.Length);
+        CreateOptionTexRotators(NewMenu);
 
         NewMenu.OnActive();
     }
@@ -233,7 +222,7 @@ function Tick(float DeltaTime)
     if (Menu.Options.Length > 0 && Cursor != vect(0, 0, 0))
     {
         // Calculated the selected index
-        ArcLength = Tau / Menu.Options.Length;
+        ArcLength = Tau / Menu.SlotCount;
         Theta = Atan(Cursor.Y, Cursor.X) + (ArcLength / 2);
         Theta += class'UUnits'.static.DegreesToRadians(90);
 
@@ -249,7 +238,7 @@ function Tick(float DeltaTime)
         }
         else
         {
-            SelectedIndex = (Menu.Options.Length * (Theta / Tau));
+            SelectedIndex = Menu.GetOptionIndexFromSlotIndex(Menu.SlotCount * (Theta / Tau));
         }
     }
     else
@@ -305,7 +294,7 @@ function PostRender(Canvas C)
 
     if (Menu != none)
     {
-        ArcLength = Tau / Menu.Options.Length;
+        ArcLength = Tau / Menu.SlotCount;
 
         // Draw all the options.
         for (i = 0; i < Menu.Options.Length; ++i)
@@ -359,7 +348,7 @@ function PostRender(Canvas C)
 
                 if (bIsOptionDisabled)
                 {
-                    C.DrawColor = DisabledColor;
+                    C.DrawColor = class'UColor'.default.DarkGray;
                 }
                 else
                 {
@@ -413,10 +402,10 @@ function PostRender(Canvas C)
         }
     }
 
-//    // debug rendering for cursor
-//    C.SetPos(CenterX + Cursor.X, CenterY + Cursor.Y);
-//    C.DrawColor = class'UColor'.default.Red;
-//    C.DrawBox(C, 4, 4);
+    // debug rendering for cursor
+    C.SetPos(CenterX + Cursor.X, CenterY + Cursor.Y);
+    C.DrawColor = class'UColor'.default.Red;
+    C.DrawBox(C, 4, 4);
 }
 
 function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
@@ -480,8 +469,6 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
                         break;
                     }
 
-                    Log(HitActor);
-
                     if (HitActor == none)
                     {
                         HitLocation = TraceEnd;
@@ -520,6 +507,10 @@ function OnSelect(int OptionIndex, optional vector Location)
 
     Menu.OnSelect(OptionIndex, Location);
 }
+
+function bool IsFadingIn() { return IsInState('FadeIn'); }
+function bool IsFadingOut() { return IsInState('FadeOut'); }
+function bool IsFadingInOrOut() { return IsFadingIn() || IsFadingOut(); }
 
 defaultproperties
 {

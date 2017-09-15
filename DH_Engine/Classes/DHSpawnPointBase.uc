@@ -15,28 +15,31 @@ enum ESpawnPointBlockReason
     SPBR_Constructing
 };
 
-var bool bCombatSpawn;
-var int SpawnPointIndex;
-var private int TeamIndex;
-var ESpawnPointBlockReason BlockReason;
-var private bool bIsActive;
+var ESpawnPointBlockReason  BlockReason; // any reason why spawn point can't be used currently
 
-var protected DHGameReplicationInfo GRI;
+var protected DHGameReplicationInfo GRI; // just a convenient reference to the GRI actor
 
-// The amount of time, in seconds, that a player will be invulnerable after
-// spawning on this spawn point.
-var float SpawnProtectionTime;
+var     private bool    bIsActive;       // whether spawn point is currently active
+var     private int     TeamIndex;       // which team this spawn point belongs to
+var     int             SpawnPointIndex; // spawn point's index number in the GRI's SpawnPoints array
+var     bool            bCombatSpawn;    // is a combat spawn point (MDV, squad rally, HQ)
 
-// The amount of time, in seconds, that a player will be considered a spawn kill
-// after spawning on this spawn point.
-var float SpawnKillProtectionTime;
+var     float           SpawnProtectionTime;     // how many seconds a player will be invulnerable after spawning on this spawn point
+var     float           SpawnKillProtectionTime; // how many seconds a kill on a player will be considered a spawn kill after spawning on this spawn point
+
+// Parameters for spawning in a radius (NOTE: currently only works for infantry!)
+var     vector          SpawnLocationOffset;
+var     float           SpawnRadius;
+var     int             SpawnRadiusSegmentCount;
 
 replication
 {
-    reliable if (Role == ROLE_Authority)
+    // Variables the server will replicate to all clients
+    reliable if (bNetDirty && Role == ROLE_Authority)
         SpawnPointIndex, TeamIndex, BlockReason, bIsActive;
 }
 
+// Implemented to add this spawn point to the GRI's SpawnPoints array, setting the GRI reference & our index position in that array
 simulated event PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -55,32 +58,82 @@ simulated event PostBeginPlay()
     }
 }
 
-// Override to provide the business logic that does the spawning.
+// Modified to deactivate spawn point so any players' spawns get invalidated if they are set to spawn here
+event Destroyed()
+{
+    super.Destroyed();
+
+    SetIsActive(false);
+}
+
+// Override to provide the business logic that does the spawning
 function bool PerformSpawn(DHPlayer PC);
 
-// Called when a pawn is spawn killed from this spawn point. Override in child classes.
+// Called when a pawn is spawn killed from this spawn point - override in child classes
 function OnSpawnKill(Pawn VictimPawn, Controller KillerController);
 
-// Override to specify which vehicles can spawn at this spawn point.
+// Override to specify which vehicles can spawn at this spawn point
 simulated function bool CanSpawnVehicle(DHGameReplicationInfo GRI, int VehiclePoolIndex, optional bool bSkipTimeCheck);
 
-// Override to limit certain roles from using this spawn point.
+// Override to limit certain roles from using this spawn point
 simulated function bool CanSpawnRole(DHRoleInfo RI)
 {
     return RI != none;
 }
 
-// Override to specify a different spawn pose, otherwise it just uses the spawn point's pose.
+// Override to specify a different spawn pose, otherwise it just uses the spawn point's pose
 function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotation, int VehiclePoolIndex)
 {
-    SpawnLocation = Location;
+    local DHPawnCollisionTest CT;
+    local vector              L;
+    local float               Angle, AngleInterval;
+    local int                 i, j, k;
+
+    // TODO: The spawn radius only works for infantry spawns; in future it would
+    // be handy to use a radius for vehicle spawns. Unfortunately this is less
+    // reliable since the vehicle radii would have to be considerably larger
+    // due to their larger and varied sizes.
+    if (VehiclePoolIndex == -1 && SpawnRadius != 0.0)
+    {
+        // Calculate the arclength
+        AngleInterval = (Pi * 2) / SpawnRadiusSegmentCount;
+        j = Rand(SpawnRadiusSegmentCount);
+
+        for (i = 0; i < SpawnRadiusSegmentCount; ++i)
+        {
+            k = (i + j) % SpawnRadiusSegmentCount;
+            Angle = AngleInterval * k;
+
+            L = Location;
+            L.X += Cos(Angle) * SpawnRadius;
+            L.Y += Sin(Angle) * SpawnRadius;
+            L.Z += 10.0 + class'DHPawn'.default.CollisionHeight / 2;
+
+            CT = Spawn(class'DHPawnCollisionTest',,, L);
+
+            if (CT != none)
+            {
+                break;
+            }
+        }
+
+        if (CT != none)
+        {
+            SpawnLocation = L + SpawnLocationOffset;
+            SpawnRotation = Rotation;
+            CT.Destroy();
+
+            return true;
+        }
+    }
+
+    SpawnLocation = Location + SpawnLocationOffset;
     SpawnRotation = Rotation;
 
     return true;
 }
 
-// Returns true if the spawn point is "visible" to a player with the arguments
-// provided.
+// Returns true if the spawn point is "visible" to a player with the arguments provided
 simulated function bool IsVisibleTo(int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex)
 {
     if (self.TeamIndex != TeamIndex || !bIsActive)
@@ -92,14 +145,13 @@ simulated function bool IsVisibleTo(int TeamIndex, int RoleIndex, int SquadIndex
 }
 
 // A blocked spawn point is an active spawn point that, for whatever reason,
-// is not currently available to be spawned on.
+// is not currently available to be spawned on
 simulated function bool IsBlocked()
 {
     return BlockReason != SPBR_None;
 }
 
-// Returns true if the given arguments are satisfactory for spawning on this
-// spawn point.
+// Returns true if the given arguments are satisfactory for spawning on this spawn point
 simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck)
 {
     if (GRI == none || self.TeamIndex != TeamIndex || !bIsActive || IsBlocked())
@@ -123,15 +175,6 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
 simulated function bool IsActive()
 {
     return bIsActive;
-}
-
-event Destroyed()
-{
-    super.Destroyed();
-
-    // We call this so that players' spawns get invalidated if they are set
-    // to spawn on this spawn point.
-    SetIsActive(false);
 }
 
 function SetIsActive(bool bIsActive)
@@ -216,10 +259,11 @@ defaultproperties
 {
     TeamIndex=-1
     SpawnProtectionTime=2.0
-    SpawnKillProtectionTime=6.0
+    SpawnKillProtectionTime=7.0
     bAlwaysRelevant=true
     RemoteRole=ROLE_SimulatedProxy
     bIsActive=false
     bHidden=true
+    SpawnRadiusSegmentCount=8
 }
 

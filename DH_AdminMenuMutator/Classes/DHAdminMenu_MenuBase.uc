@@ -13,7 +13,7 @@ const  ITEMS_PER_PAGE = 10; // how many menu items are to be displayed on one pa
 var  localized array<string>  MenuText;             // array of the menu option description to be displayed
 var  array<string>            MenuCommand;          // array of the actual command lines to be executed when we choose a menu option
 
-var  DHAdminMenu_Replicator  Replicator;           // reference to the mutator's 'helper' replicated actor, which replicates some variables used by the menus on the client
+var  DHAdminMenu_Replicator   Replicator;           // reference to the mutator's 'helper' replicated actor, which replicates some variables used by the menus on the client
 var  PlayerController         PC;                   // reference to the local PlayerController, just to simplify lots of ViewportOwner.Actor references
 var  int                      MenuPage;             // for menu lists that run over into more than 1 page, this records the current page number
 var  string                   PreviousMenu;         // saves the command to open the previous menu, so that 'previous menu' key can operate correctly
@@ -292,12 +292,15 @@ simulated function ExecuteCommand(string CommandString, coerce bool bDoAdminLogi
     {
         if (!IsLoggedInAsAdmin())
         {
+            // Attempt automatic admin login if we have a user name & password from player's config file, & if player not already logged in
+            // We add an identifying prefix to the passed user name, which is used to avoid spammy log entries for silent admin logins from here
+            // Also flag that we need to log the player out again afterwards
+            // Note: would like to check here if admin login was successful, but bIsAdmin won't have had time to replicate
             if (AdminName != "" && AdminPassword != "")
             {
-                AdminName = class'DHAccessControl'.static.AdminMenuMutatorLoginPrefix() $ AdminName; // add identifying prefix to AdminName (used to avoid spammy silent admin log entries)
-                PC.AdminLoginSilent(AdminName @ AdminPassword);
-                bMenuDidAdminLogin = true; // if the menu has automatically logged in the admin, this flags that we need to log them out again afterwards
-            }                              // note: would like to check here if admin login was successful but bIsAdmin won't have had time to replicate (in PC.PRI)
+                PC.AdminLoginSilent(class'DHAccessControl'.static.AdminMenuMutatorLoginPrefix() $ AdminName @ AdminPassword);
+                bMenuDidAdminLogin = true;
+            }
             else
             {
                 ErrorMessageToSelf(1); // must be an admin

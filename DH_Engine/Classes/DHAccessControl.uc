@@ -24,7 +24,7 @@ function bool AdminLoginSilent(PlayerController P, string UserName, string Passw
     ROID = P.GetPlayerIDHash();
 
     // Special developer login functionality, triggered by DevLogin exec
-    if (Password ~= "Dev")
+    if (Password ~= "DEV")
     {
         for (i = 0; i < DeveloperIDs.Length; ++i)
         {

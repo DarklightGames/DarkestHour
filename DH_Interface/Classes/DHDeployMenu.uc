@@ -89,14 +89,13 @@ var localized   string                      ReservedString;
 var localized   string                      ChangeTeamConfirmText;
 var localized   string                      FreeChangeTeamConfirmText;
 var localized   string                      CantChangeTeamYetText;
-var localized   string                      ReinforcementCostText;
-
 var localized   string                      LockText;
 var localized   string                      UnlockText;
-
 var localized   string                      VehicleUnavailableString;
+var localized   string                      LockedText;
+var localized   string                      BotsText;
 
-// Colin: The reason this variable is needed is because the PlayerController's
+// NOTE: The reason this variable is needed is because the PlayerController's
 // GetTeamNum function is not reliable after receiving a successful team change
 // signal from InternalOnMessage.
 var             byte                        CurrentTeam;
@@ -202,7 +201,7 @@ function SetLoadoutMode(ELoadoutMode Mode)
 
     LoadoutMode = Mode;
 
-    // Colin: GUIComponent visibility is not properly hierarchical, so we
+    // GUIComponent visibility is not properly hierarchical, so we
     // need to hide and show elements individually.
     i_Vehicle.SetVisibility(Mode == LM_Vehicle);
     lb_Vehicles.SetVisibility(Mode == LM_Vehicle);
@@ -245,7 +244,7 @@ function SetLoadoutMode(ELoadoutMode Mode)
 
 function Timer()
 {
-    // Colin: The GRI might not be set when we first open the menu if the player
+    // The GRI might not be set when we first open the menu if the player
     // opens it very quickly. This timer will sit and wait until the GRI is
     // confirmed to be present before populating any lists or running any
     // regular timer logic.
@@ -257,7 +256,7 @@ function Timer()
 
         if (GRI != none)
         {
-            // Colin: Now that we have the GRI, we can set the Allied flag on
+            // Now that we have the GRI, we can set the Allied flag on
             // the team button.
             switch (GRI.AlliedNationID)
             {
@@ -275,8 +274,9 @@ function Timer()
                     break;
             }
 
-            // Colin: This bullshit is used by RO code to circumvent the
+            // This bullshit is used by RO code to circumvent the
             // fact we can't send initialization parameters to the menu.
+            // SHOCKING: we actually can, but they never used it!
             if (PC.ForcedTeamSelectOnRoleSelectPage != -5)
             {
                 TeamIndex = PC.ForcedTeamSelectOnRoleSelectPage;
@@ -289,7 +289,7 @@ function Timer()
 
             OnTeamChanged(TeamIndex);
 
-            // Colin: Automatically select the player's spawn point.
+            // Automatically select the player's spawn point.
             p_Map.SelectSpawnPoint(PC.SpawnPointIndex);
         }
     }
@@ -509,7 +509,7 @@ function UpdateVehicles(optional bool bShowAlert)
         PC = DHPlayer(PlayerOwner());
 
         // TODO: have team max be indicated in another part of this control (ie. don't obfuscate meaning)
-        // TODO: this is an inpenetrable MESS
+        // TODO: this is an impenetrable MESS
         bDisabled = PC.VehiclePoolIndex != j && !GRI.CanPlayerReserveVehicleWithRole(PC, RI, CurrentTeam, j);
 
         if (VehicleClass != none)
@@ -592,7 +592,7 @@ function UpdateRoles()
 
         if (Limit == 0)
         {
-            S @= "[Locked]";
+            S @= "[" $ LockedText $ "]";
         }
         else if (Limit == 255)
         {
@@ -605,7 +605,7 @@ function UpdateRoles()
 
         if (BotCount > 0)
         {
-            S @= "*BOTS*";
+            S @= "*" $ BotsText $ "*";
         }
 
         li_Roles.SetItemAtIndex(i, S);
@@ -1627,13 +1627,14 @@ defaultproperties
     DeployNowText="Press Continue to deploy now!"
     ChangeTeamConfirmText="Are you sure you want to change teams? (you will not be able to change back for {s} seconds)"
     FreeChangeTeamConfirmText="Are you sure you want to change teams?"
-    CantChangeTeamYetText="You have {s} seconds before you can change teams"
+    CantChangeTeamYetText="You must wait {s} seconds before you can change teams"
     ReservedString="Reserved"
     VehicleUnavailableString="The vehicle you had selected is no longer available."
     LockText="Lock"
     UnlockText="Unlock"
     NoneText="None"
-    ReinforcementCostText="Cost: "
+    LockedText="Locked"
+    BotsText="BOTS"
 
     MapMode=MODE_Map
     bButtonsEnabled=true

@@ -627,14 +627,14 @@ simulated event AnimEnd(int Channel)
 
 simulated function HelmetShotOff(rotator Rotation)
 {
-    local DroppedHeadGear Hat;
+    local DroppedHeadgear Hat;
 
-    if (HeadGear == none)
+    if (Headgear == none)
     {
         return;
     }
 
-    Hat = Spawn(class'DroppedHeadGear',,, HeadGear.Location, HeadGear.Rotation);
+    Hat = Spawn(class'DroppedHeadGear',,, Headgear.Location, Headgear.Rotation);
 
     if (Hat == none)
     {
@@ -1023,7 +1023,6 @@ simulated function ToggleAuxCollision(bool bEnabled)
 }
 
 // Added bullet impact sounds for helmets and players
-// MergeTODO: Replace this with realistic gibbing
 simulated function ProcessHitFX()
 {
     local Coords BoneCoords;
@@ -1247,8 +1246,6 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
     }
 }
 
-// Handle locational damage
-// MergeTODO: this function needs some work
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     local int        ActualDamage;
@@ -2277,7 +2274,7 @@ function PlayDyingAnimation(class<DamageType> DamageType, vector HitLoc)
     SetPhysics(PHYS_Falling);
 }
 
-// Prevented damage overlay from overriding burning overlay
+// Modified to prevent damage overlay from overriding burning overlay
 function PlayHit(float Damage, Pawn InstigatedBy, vector HitLocation, class<DamageType> DamageType, vector Momentum, optional int HitIndex)
 {
     local PlayerController     PC;
@@ -2290,7 +2287,7 @@ function PlayHit(float Damage, Pawn InstigatedBy, vector HitLocation, class<Dama
 
     bRecentHit = Level.TimeSeconds - LastPainTime < 0.2;
 
-    // Call the modified version of the original Pawn playhit
+    // Call the modified version of the original Pawn PlayHit()
     OldPlayHit(Damage, InstigatedBy, HitLocation, DamageType, Momentum);
 
     if (Damage <= 0)
@@ -2326,7 +2323,7 @@ function PlayHit(float Damage, Pawn InstigatedBy, vector HitLocation, class<Dama
 
     if (InstigatedBy != none)
     {
-        HitNormal = Normal(Normal(InstigatedBy.Location-HitLocation) + VRand() * 0.2 + vect(0.0, 0.0, 2.8));
+        HitNormal = Normal(Normal(InstigatedBy.Location - HitLocation) + VRand() * 0.2 + vect(0.0, 0.0, 2.8));
     }
     else
     {
@@ -2977,6 +2974,7 @@ function AddDefaultInventory()
             }
 
             CheckGiveShovel();
+            CheckGiveBinocs();
         }
     }
 
@@ -5085,9 +5083,9 @@ simulated function StartBurnFX()
 
     SetOverlayMaterial(BurningOverlayMaterial, 999.0, true);
 
-    if (HeadGear != none)
+    if (Headgear != none)
     {
-        HeadGear.SetOverlayMaterial(BurnedHeadgearOverlayMaterial, 999.0, true);
+        Headgear.SetOverlayMaterial(BurnedHeadgearOverlayMaterial, 999.0, true);
     }
 
     for (i = 0; i < AmmoPouches.Length; ++i)
@@ -6538,7 +6536,7 @@ simulated function Fire(optional float F)
 {
     if (Level.NetMode != NM_DedicatedServer && ConstructionProxy != none)
     {
-        if (ConstructionProxy.ProxyError == ERROR_None)
+        if (ConstructionProxy.ProxyError.Type == ERROR_None)
         {
             ServerCreateConstruction(ConstructionProxy.ConstructionClass, ConstructionProxy.Location, ConstructionProxy.Rotation);
             ConstructionProxy.Destroy();
@@ -6546,7 +6544,7 @@ simulated function Fire(optional float F)
         }
         else
         {
-            ReceiveLocalizedMessage(class'DHConstructionErrorMessage', int(ConstructionProxy.ProxyError),,, ConstructionProxy);
+            ReceiveLocalizedMessage(class'DHConstructionErrorMessage',,,, ConstructionProxy);
         }
     }
     else
@@ -6660,7 +6658,7 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vecto
     }
 }
 
-// Overridden to fix an accessed none that could happen if Weapon was none.
+// Modified to fix an accessed none that could happen if Weapon was none
 simulated function NextWeapon()
 {
     if (Level.Pauser != none)
@@ -6676,6 +6674,7 @@ simulated function NextWeapon()
     if (Weapon == none && Controller != none)
     {
         Controller.SwitchToBestWeapon();
+
         return;
     }
 
@@ -6697,6 +6696,11 @@ simulated function NextWeapon()
     {
         Weapon.PutDown();
     }
+}
+
+// Emptied out as irrelevant to RO/DH (concerns UT2004 PowerUps) & can just cause "accessed none" log errors if keybound & used (if player has no inventory)
+exec function NextItem()
+{
 }
 
 // Overridden from ROPawn to fix "sequence not found" bugs when a weapon simply

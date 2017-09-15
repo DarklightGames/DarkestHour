@@ -12,9 +12,11 @@ class DHConstructionSupplyAttachment extends Actor
 var int                 SupplyPointIndex;
 var private int         SupplyCount;
 var int                 SupplyCountMax;
-var int                 TeamIndex;
+var private int         TeamIndex;
 
 var bool                bShouldShowOnMap;
+
+var private localized string    HumanReadableName;
 
 // Whether or not this supply attachment can be resupplied from a static resupply point.
 var bool                bCanBeResupplied;
@@ -31,6 +33,9 @@ var array<Pawn>         TouchingPawns;
 
 // The distance, in meters, a player must be within to have access to these supplies.
 var float               TouchDistanceInMeters;
+
+// Used to circumvent an engine bug (see PostNetReceive below)
+var bool                bIsBaseInitialized;
 
 //==============================================================================
 // Supply Generation
@@ -119,14 +124,16 @@ static function StaticMesh GetStaticMeshForSupplyCount(LevelInfo Level, int Team
     return none;
 }
 
+function UpdateAppearance()
+{
+    SetStaticMesh(GetStaticMeshForSupplyCount(Level, TeamIndex, SupplyCount));
+    NetUpdateTime = Level.TimeSeconds - 1.0;
+}
+
 function SetSupplyCount(int Amount)
 {
     SupplyCount = Clamp(Amount, 0, SupplyCountMax);
-
-    // Update visualization
-    SetStaticMesh(GetStaticMeshForSupplyCount(Level, TeamIndex, SupplyCount));
-    NetUpdateTime = Level.TimeSeconds - 1.0;
-
+    UpdateAppearance();
     OnSupplyCountChanged(self);
 }
 
@@ -271,6 +278,50 @@ function bool Resupply()
     return true;
 }
 
+simulated function PostNetReceive()
+{
+    local DHVehicle V;
+
+    // HACK: This is a workaround for an engine bug where the rotation and
+    // location offsets are not re-applied if the actors are not replicated in
+    // the "correct" order.
+    if (!bIsBaseInitialized)
+    {
+        if (Base != none)
+        {
+            V = DHVehicle(Base);
+
+            if (V != none)
+            {
+                SetRelativeRotation(V.SupplyAttachmentRotation);
+                SetRelativeLocation(V.SupplyAttachmentOffset);
+            }
+
+            bIsBaseInitialized = true;
+        }
+    }
+    else if (Base == none)
+    {
+        bIsBaseInitialized = false;
+    }
+}
+
+simulated function int GetTeamIndex()
+{
+    return TeamIndex;
+}
+
+function SetTeamIndex(int TeamIndex)
+{
+    self.TeamIndex = TeamIndex;
+    UpdateAppearance();
+}
+
+simulated function string GetHumanReadableName()
+{
+    return HumanReadableName;
+}
+
 // TODO: logic for getting this resupplied; some sort of hook that things can
 // put on it for getting notified (OnResupplied)
 
@@ -285,4 +336,7 @@ defaultproperties
     DrawType=DT_StaticMesh
     bAcceptsProjectors=true
     bUseLightingFromBase=true
+    bNetNotify=true
+    HumanReadableName="Supply Cache"
 }
+

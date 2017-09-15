@@ -29,6 +29,7 @@ var() sound             PhaseEndSounds[2];                  // Axis and Allies R
 var localized string    PhaseMessage;                       // Message to send periodically when phase is current
 var localized string    PhaseEndMessage;                    // Message to send to team when end is reached
 var bool                bSkipPreStart;                      // If true will override the game's default PreStartTime, making it zero
+var bool                bPlayersOpenedMenus;
 var int                 TimerCount;
 var int                 SetupPhaseDurationActual;
 var int                 SpawningEnabledTimeActual;
@@ -65,6 +66,7 @@ event PreBeginPlay()
 function Reset()
 {
     TimerCount = 0;
+    bPlayersOpenedMenus = false;
     GotoState('Timing');
 }
 
@@ -80,6 +82,9 @@ auto state Timing
         {
             return;
         }
+
+        // Reset
+        bPlayersOpenedMenus = false;
 
         // Prevent weapon dropping
         Level.Game.bAllowWeaponThrowing = false;
@@ -97,6 +102,13 @@ auto state Timing
     {
         local Controller C;
         local PlayerController PC;
+
+        // Have everyone open their deploy menu
+        if (!bPlayersOpenedMenus && DarkestHourGame(Level.Game) != none)
+        {
+            DarkestHourGame(Level.Game).OpenPlayerMenus();
+            bPlayersOpenedMenus = true;
+        }
 
         if (TimerCount < SetupPhaseDurationActual)
         {
@@ -123,7 +135,7 @@ auto state Timing
 
     function PhaseEnded()
     {
-        local int i;
+        local int i, UnspawnedPlayers[2];
         local Controller C;
         local PlayerController PC;
         local ROMineVolume V;
@@ -171,30 +183,42 @@ auto state Timing
             }
         }
 
+        // Get number of unspawned players
+        for (C = Level.ControllerList; C != none; C = C.NextController)
+        {
+            PC = PlayerController(C);
+
+            // Get the number of players not spawned on each team, we are going to add the number to the final reinforcement pool
+            if (PC != none && PC.Pawn == none && PC.GetTeamNum() < arraycount(UnspawnedPlayers))
+            {
+                ++UnspawnedPlayers[PC.GetTeamNum()];
+            }
+        }
+
+        // Handle Axis reinforcement changes
+        if (PhaseEndReinforcements.AxisReinforcements >= 0)
+        {
+            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = PhaseEndReinforcements.AxisReinforcements + UnspawnedPlayers[AXIS_TEAM_INDEX];
+        }
+        else
+        {
+            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = G.LevelInfo.Axis.SpawnLimit + UnspawnedPlayers[AXIS_TEAM_INDEX];
+        }
+
+        // Handle Allied reinforcement changes
+        if (PhaseEndReinforcements.AlliesReinforcements >= 0)
+        {
+            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = PhaseEndReinforcements.AlliesReinforcements + UnspawnedPlayers[ALLIES_TEAM_INDEX];
+        }
+        else
+        {
+            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = G.LevelInfo.Allies.SpawnLimit + UnspawnedPlayers[ALLIES_TEAM_INDEX];
+        }
+
         // Reset round time if desired
         if (bResetRoundTimer)
         {
             G.ModifyRoundTime(G.LevelInfo.RoundDuration * 60, 2);
-        }
-
-        // Handle Axis reinforcement changes, if any
-        if (PhaseEndReinforcements.AxisReinforcements >= 0)
-        {
-            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = PhaseEndReinforcements.AxisReinforcements;
-        }
-        else
-        {
-            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = G.LevelInfo.Axis.SpawnLimit;
-        }
-
-        // Handle  Allied reinforcement changes, if any
-        if (PhaseEndReinforcements.AlliesReinforcements >= 0)
-        {
-            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = PhaseEndReinforcements.AlliesReinforcements;
-        }
-        else
-        {
-            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = G.LevelInfo.Allies.SpawnLimit;
         }
 
         // Deactivate any initial spawn points

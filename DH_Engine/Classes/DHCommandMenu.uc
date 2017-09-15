@@ -29,8 +29,43 @@ var DHCommandInteraction    Interaction;
 var DHCommandMenu           NextMenu;
 var DHCommandMenu           PreviousMenu;
 var Object                  MenuObject;
+var int                     SlotCount;
+var int                     SlotCountOverride;  // If non-zero, the amount of slots will always be at least this many.
 
-function Setup();   // Called before pushed onto the stack
+// Called before pushed onto the stack
+function Setup()
+{
+    SlotCount = Max(Options.Length, SlotCountOverride);
+}
+
+function int GetOptionIndexFromSlotIndex(int SlotIndex)
+{
+    local int i;
+
+    SlotIndex = SlotIndex % SlotCount;
+
+    for (i = 0; i < Options.Length; ++i)
+    {
+        if (SlotIndex <= 0)
+        {
+            return i;
+        }
+
+        SlotIndex -= 1;
+    }
+
+    return -1;
+}
+
+function DHPlayer GetPlayerController()
+{
+    if (Interaction != none && Interaction.ViewportOwner != none)
+    {
+        return DHPlayer(Interaction.ViewportOwner.Actor);
+    }
+
+    return none;
+}
 
 function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 {

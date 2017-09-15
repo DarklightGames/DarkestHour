@@ -7,7 +7,7 @@ class DHConstruction extends Actor
     abstract
     placeable;
 
-enum EConstructionError
+enum EConstructionErrorType
 {
     ERROR_None,
     ERROR_Fatal,                // Some fatal error occurred, usually a case of unexpected values
@@ -32,6 +32,14 @@ enum EConstructionError
     ERROR_SquadTooSmall,        // Not enough players in the squad!
     ERROR_Other
 };
+
+var struct ConstructionError
+{
+    var EConstructionErrorType  Type;
+    var int                     OptionalInteger;
+    var Object                  OptionalObject;
+    var string                  OptionalString;
+} ProxyError;
 
 enum ETeamOwner
 {
@@ -100,9 +108,8 @@ var     bool    bCanDieOfStagnation;            // If true, this construction wi
 var     float   StagnationLifespan;
 
 // Tear-down
-var     bool    bCanBeTornDown;                 // Whether or not players can
+var     bool    bCanBeTornDownWhenConstructed; // Whether or not players can tear down the construction after it has been constructed.
 var     int     TearDownProgress;
-var     int     TearDownProgressMax;
 
 // Broken
 var     float           BrokenLifespan;             // How long does the actor stay around after it's been killed?
@@ -113,7 +120,7 @@ var     float           BrokenSoundVolume;
 var     class<Emitter>  BrokenEmitterClass;         // Emitter to spawn when the construction is broken
 
 // Reset
-var     bool            bShouldDestroyOnReset;      // bShouldDestroyOnReset
+var     bool            bShouldDestroyOnReset;
 
 // Damage
 struct DamageTypeScale
@@ -125,6 +132,12 @@ struct DamageTypeScale
 var int                         MinDamagetoHurt;    // The minimum amount of damage required to actually harm the construction
 var array<DamageTypeScale>      DamageTypeScales;
 var array<class<DamageType> >   HarmfulDamageTypes;
+
+// Impact Damage
+var bool                        bCanTakeImpactDamage;
+var class<DamageType>           ImpactDamageType;
+var float                       ImpactDamageModifier;
+var float                       LastImpactTimeSeconds;
 
 // Tattered
 var int                         TatteredHealthThreshold;    // The health below which the construction is considered "tattered". -1 for no tattering
@@ -157,6 +170,10 @@ var bool bCanBeMantled;
 
 // Squad rally points
 var bool bShouldBlockSquadRallyPoints;
+
+// Delayed damage
+var int DelayedDamage;
+var class<DamageType> DelayedDamageType;
 
 replication
 {
@@ -420,6 +437,24 @@ simulated state Constructed
         OnConstructed();
     }
 
+    function KImpact(Actor Other, vector Pos, vector ImpactVel, vector ImpactNorm)
+    {
+        local float Momentum;
+
+        if (Level.TimeSeconds - LastImpactTimeSeconds >= 1.0)
+        {
+            LastImpactTimeSeconds = Level.TimeSeconds;
+
+            if (bCanTakeImpactDamage && Role == ROLE_Authority)
+            {
+                Momentum = Other.KGetMass() * VSize(ImpactVel);
+                DelayedDamage = int(Momentum * ImpactDamageModifier);
+                DelayedDamageType = ImpactDamageType;
+                GotoState(GetStateName(), 'DelayedDamage');
+            }
+        }
+    }
+
     simulated function bool IsConstructed()
     {
         return true;
@@ -429,7 +464,7 @@ simulated state Constructed
     {
         TearDownProgress += 1;
 
-        if (TearDownProgress >= TearDownProgressMax)
+        if (TearDownProgress >= ProgressMax)
         {
             if (default.Stages.Length == 0)
             {
@@ -454,6 +489,19 @@ simulated state Constructed
             }
         }
     }
+
+    simulated function bool CanBeTornDown()
+    {
+        return bCanBeTornDownWhenConstructed;
+    }
+
+// This is required because we cannot call TakeDamage within the KImpact
+// function, because down the line is disables karma collision after going into
+// the broken state, causing a crash in native code. Delaying the damage until
+// the next frame works to avoid the crash!
+DelayedDamage:
+    Sleep(0.1);
+    TakeDamage(DelayedDamage, none, vect(0, 0, 0), vect(0, 0, 0), DelayedDamageType);
 }
 
 simulated state Broken
@@ -575,48 +623,55 @@ function static bool ShouldShowOnMenu(DHPlayer PC)
 // This function is used for determining if a player is able to build this type
 // of construction. You can override this if you want to have a team or
 // role-specific constructions, for example.
-function static EConstructionError GetPlayerError(DHPlayer PC, optional out Object OptionalObject)
+function static ConstructionError GetPlayerError(DHPlayer PC)
 {
     local DH_LevelInfo LI;
     local DHPawn P;
     local DHConstructionManager CM;
     local DHPlayerReplicationInfo PRI;
     local DHSquadReplicationInfo SRI;
+    local ConstructionError E;
 
     if (PC == none)
     {
-        return ERROR_Fatal;
+        E.Type = ERROR_Fatal;
+        return E;
     }
 
     LI = PC.GetLevelInfo();
 
     if (LI != none && LI.IsConstructionRestricted(default.Class))
     {
-        return ERROR_RestrictedType;
+        E.Type = ERROR_RestrictedType;
+        return E;
     }
 
     P = DHPawn(PC.Pawn);
 
     if (P == none)
     {
-        return ERROR_Fatal;
+        E.Type = ERROR_Fatal;
+        return E;
     }
 
     if (default.SupplyCost > 0 && P.TouchingSupplyCount < default.SupplyCost)
     {
-        return ERROR_InsufficientSupply;
+        E.Type = ERROR_InsufficientSupply;
+        return E;
     }
 
     CM = class'DHConstructionManager'.static.GetInstance(PC.Level);
 
     if (CM == none)
     {
-        return ERROR_Fatal;
+        E.Type = ERROR_Fatal;
+        return E;
     }
 
     if (default.TeamLimit > 0 && CM.CountOf(PC.GetTeamNum(), default.Class) >= default.TeamLimit)
     {
-        return ERROR_TeamLimit;
+        E.Type = ERROR_TeamLimit;
+        return E;
     }
 
     SRI = PC.SquadReplicationInfo;
@@ -625,15 +680,18 @@ function static EConstructionError GetPlayerError(DHPlayer PC, optional out Obje
     // TODO: in future we may allow non-squad leaders to make constructions.
     if (PRI == none || SRI == none || !PRI.IsSquadLeader())
     {
-        return ERROR_Fatal;
+        E.Type = ERROR_Fatal;
+        return E;
     }
 
     if (PC.Level.NetMode != NM_Standalone && SRI.GetMemberCount(P.GetTeamNum(), PRI.SquadIndex) < default.SquadMemberCountMinimum)
     {
-        return ERROR_SquadTooSmall;
+        E.Type = ERROR_SquadTooSmall;
+        E.OptionalInteger = default.SquadMemberCountMinimum;
+        return E;
     }
 
-    return ERROR_None;
+    return E;
 }
 
 simulated function Reset()
@@ -688,6 +746,11 @@ function bool ShouldTakeDamageFromDamageType(class<DamageType> DamageType)
 {
     local int i;
 
+    if (bCanTakeImpactDamage && DamageType == ImpactDamageType)
+    {
+        return true;
+    }
+
     for (i = 0; i < HarmfulDamageTypes.Length; ++i)
     {
         if (DamageType == HarmfulDamageTypes[i] || ClassIsChildOf(DamageType, HarmfulDamageTypes[i]))
@@ -699,13 +762,18 @@ function bool ShouldTakeDamageFromDamageType(class<DamageType> DamageType)
     return false;
 }
 
+simulated function bool CanBeTornDown()
+{
+    return true;
+}
+
 function TakeTearDownDamage();
 
 function TakeDamage(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     local class<DamageType> TearDownDamageType;
 
-    if (bCanBeTornDown)
+    if (CanBeTornDown())
     {
         TearDownDamageType = class<DamageType>(DynamicLoadObject("DH_Equipment.DHShovelBashDamageType", class'class'));
 
@@ -716,23 +784,21 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Mo
         }
     }
 
-    if (!ShouldTakeDamageFromDamageType(DamageType))
+    if (bCanBeDamaged && ShouldTakeDamageFromDamageType(DamageType))
     {
-        return;
-    }
+        Damage = GetScaledDamage(DamageType, Damage);
 
-    Damage = GetScaledDamage(DamageType, Damage);
+        if (Damage >= MinDamagetoHurt)
+        {
+            Health -= GetScaledDamage(DamageType, Damage);
+        }
 
-    if (Damage >= MinDamagetoHurt)
-    {
-        Health -= GetScaledDamage(DamageType, Damage);
-    }
+        OnHealthChanged();
 
-    OnHealthChanged();
-
-    if (Health <= 0)
-    {
-        GotoState('Broken');
+        if (Health <= 0)
+        {
+            GotoState('Broken');
+        }
     }
 }
 
@@ -779,6 +845,7 @@ simulated function bool ShouldDestroyOnReset()
 
 defaultproperties
 {
+    TeamOwner=TEAM_Neutral
     OldTeamIndex=2  // NEUTRAL_TEAM_INDEX
     TeamIndex=2     // NEUTRAL_TEAM_INDEX
     RemoteRole=ROLE_SimulatedProxy
@@ -799,6 +866,28 @@ defaultproperties
     bBlockKarma=true
     bCanPlaceInObjective=true
 
+    // Karma params
+    Begin Object Class=KarmaParamsRBFull Name=KParams0
+        KInertiaTensor(0)=1.000000
+        KInertiaTensor(3)=3.000000
+        KInertiaTensor(5)=3.000000
+        KCOMOffset=(X=0,Y=0,Z=0)
+        KLinearDamping=1.0
+        KAngularDamping=1.0
+        KStartEnabled=true
+        bKNonSphericalInertia=true
+        bHighDetailOnly=false
+        bClientOnly=false
+        bKDoubleTickRate=false
+        bDestroyOnWorldPenetrate=false
+        bDoSafetime=true
+        KFriction=0.500000
+        KImpactThreshold=100.000000
+        KMaxAngularSpeed=1.0
+        KMass=0.0
+    End Object
+    KParams=KParams0
+
     CollisionHeight=30.0
     CollisionRadius=60.0
 
@@ -818,11 +907,11 @@ defaultproperties
     bCanPlaceInWater=false
     bCanPlaceIndoors=false
     FloatToleranceInMeters=0.5
-    PlacementSound=Sound'Inf_Player.Gibimpact.Gibimpact' // TODO: placeholder
+    PlacementSound=Sound'Inf_Player.Gibimpact.Gibimpact'
     PlacementEmitterClass=class'DH_Effects.DHConstructionEffect'
     PlacementSoundRadius=60.0
     PlacementSoundVolume=4.0
-    IndoorsCeilingHeightInMeters=10.0
+    IndoorsCeilingHeightInMeters=25.0
     PokeTerrainRadius=32
     PokeTerrainDepth=32
     TerrainScaleMax=256.0
@@ -837,18 +926,25 @@ defaultproperties
 
     // Death
     BrokenLifespan=15.0
-    bCanBeTornDown=true
+    bCanBeTornDownWhenConstructed=true
 
     // Progress
     StageIndex=-1
     Progress=0
     ProgressMax=8
-    TearDownProgressMax=4
 
     // Damage
     HarmfulDamageTypes(0)=class'ROArtilleryDamType'
 //    HarmfulDamageTypes(1)=class'DH_SatchelDamType'
     HarmfulDamageTypes(2)=class'ROTankShellExplosionDamage'
     TatteredHealthThreshold=-1
+
+    SquadMemberCountMinimum=2
+    bCanBeMantled=true
+
+    // Impact
+    bCanTakeImpactDamage=false
+    ImpactDamageType=class'Crushed'
+    ImpactDamageModifier=0.1
 }
 
