@@ -2702,8 +2702,9 @@ simulated function DrawCompassIcons(Canvas C, float CenterX, float CenterY, floa
                 continue;
             }
 
-            Target.X = MapMarkers[i].LocationX;
-            Target.Y = MapMarkers[i].LocationY;
+            Target.X = float(MapMarkers[i].LocationX) / 255.0;
+            Target.Y = float(MapMarkers[i].LocationY) / 255.0;
+            Target = DHGRI.GetWorldCoords(Target.X, Target.Y);
 
             // Update widget color & texture
             CompassIcons.WidgetTexture = MapMarkers[i].MapMarkerClass.default.IconMaterial;
@@ -3625,8 +3626,9 @@ simulated function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, f
 
     for (i = 0; i < MapMarkers.Length; ++i)
     {
-        L.X = MapMarkers[i].LocationX;
-        L.Y = MapMarkers[i].LocationY;
+        L.X = float(MapMarkers[i].LocationX) / 255.0;
+        L.Y = float(MapMarkers[i].LocationY) / 255.0;
+        L = DHGRI.GetWorldCoords(L.X, L.Y);
 
         MapMarkerIcon.WidgetTexture = MapMarkers[i].MapMarkerClass.default.IconMaterial;
         MapMarkerIcon.TextureCoords = MapMarkers[i].MapMarkerClass.default.IconCoords;

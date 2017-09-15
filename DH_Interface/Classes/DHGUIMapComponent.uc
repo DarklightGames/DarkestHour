@@ -59,38 +59,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     }
 }
 
-function GetMapCoords(vector Location, out float X, out float Y, optional float Width, optional float Height)
-{
-    local float  MapScale;
-    local vector MapCenter;
-
-    MapScale = FMax(1.0, Abs((GRI.SouthWestBounds - GRI.NorthEastBounds).X));
-    MapCenter = GRI.NorthEastBounds + ((GRI.SouthWestBounds - GRI.NorthEastBounds) * 0.5);
-    Location = DHHud(PlayerOwner().MyHud).GetAdjustedHudLocation(Location - MapCenter, false);
-
-    X = FClamp(0.5 + (Location.X / MapScale) - (Width / 2),
-               0.0,
-               1.0 - Width);
-
-    Y = FClamp(0.5 + (Location.Y / MapScale) - (Height / 2),
-               0.0,
-               1.0 - Height);
-}
-
-function vector GetWorldCoords(float X, float Y)
-{
-    local float MapScale;
-    local vector MapCenter, Location;
-
-    MapScale = FMax(1.0, Abs((GRI.SouthWestBounds - GRI.NorthEastBounds).X));
-    MapCenter = GRI.NorthEastBounds + ((GRI.SouthWestBounds - GRI.NorthEastBounds) * 0.5);
-    Location.X = ((0.5 - X) * MapScale);
-    Location.Y = ((0.5 - Y) * MapScale);
-    Location = DHHud(PlayerOwner().myHUD).GetAdjustedHudLocation(Location);
-    Location += MapCenter;
-    return Location;
-}
-
 function UpdateSpawnPoints(int TeamIndex, int RoleIndex, int VehiclePoolIndex, int SpawnPointIndex)
 {
     local GUI.eFontScale FS;
@@ -111,7 +79,7 @@ function UpdateSpawnPoints(int TeamIndex, int RoleIndex, int VehiclePoolIndex, i
             GRI.SpawnPoints[i] != none &&
             GRI.SpawnPoints[i].IsVisibleTo(TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex))
         {
-            GetMapCoords(GRI.SpawnPoints[i].Location, X, Y, b_SpawnPoints[i].WinWidth, b_SpawnPoints[i].WinHeight);
+            GRI.GetMapCoords(GRI.SpawnPoints[i].Location, X, Y, b_SpawnPoints[i].WinWidth, b_SpawnPoints[i].WinHeight);
 
             b_SpawnPoints[i].SetPosition(X, Y, b_SpawnPoints[i].WinWidth, b_SpawnPoints[i].WinHeight, true);
             b_SpawnPoints[i].SetVisibility(true);
@@ -315,7 +283,7 @@ function SortMapMarkerClasses(out array<class<DHMapMarker> > MapMarkerClasses)
 function bool InternalOnOpen(GUIContextMenu Sender)
 {
     local int i;
-    local float L, T, W, H, X, Y;
+    local float L, T, W, H;
     local array<class<DHMapMarker> > MapMarkerClasses;
     local int GroupIndex;
 
@@ -329,10 +297,8 @@ function bool InternalOnOpen(GUIContextMenu Sender)
     W = ActualWidth(WinWidth);
     H = ActualHeight(WinHeight);
 
-    X = 1.0 - ((Controller.MouseX - L) / W);
-    Y = 1.0 - ((Controller.MouseY - T) / H);
-
-    MapClickLocation = GetWorldCoords(X, Y);
+    MapClickLocation.X = 1.0 - ((Controller.MouseX - L) / W);
+    MapClickLocation.Y = 1.0 - ((Controller.MouseY - T) / H);
 
     Sender.ContextItems.Length = 0;
 
@@ -418,12 +384,7 @@ defaultproperties
         GetOverlayMaterial=MyGetOverlayMaterial
     End Object
 
-    // TODO: build this based on a list of markers (defined in GRI [like constructions], maybe?)
     Begin Object Class=GUIContextMenu Name=MapMarkerMenu
-        ContextItems(0)="Attack"
-        ContextItems(1)="Defend"
-        ContextItems(2)="Clear"
-        ContextItems(3)="Enemy HQ"
         OnOpen=InternalOnOpen
         OnClose=InternalOnClose
         OnSelect=InternalOnSelect

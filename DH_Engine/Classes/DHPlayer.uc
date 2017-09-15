@@ -4885,7 +4885,7 @@ function ServerSquadRename(string Name)
     }
 }
 
-function ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, vector Location)
+function ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, vector MapLocation)
 {
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
@@ -4895,7 +4895,7 @@ function ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, vector Location)
 
     if (GRI != none)
     {
-        GRI.AddMapMarker(PRI, MapMarkerClass, Location);
+        GRI.AddMapMarker(PRI, MapMarkerClass, MapLocation);
     }
 }
 

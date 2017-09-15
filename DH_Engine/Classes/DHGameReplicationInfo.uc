@@ -108,14 +108,14 @@ var DHConstructionManager   ConstructionManager;
 var bool                bAreConstructionsEnabled;
 
 // Map markers
-const MAP_MARKERS_MAX = 12;
+const MAP_MARKERS_MAX = 23;
 
 // TODO: Reduce the size of this even more so we can have more markers per team
 struct MapMarker
 {
     var class<DHMapMarker> MapMarkerClass;
-    var float LocationX;
-    var float LocationY;
+    var byte LocationX;     // Quantized representation of 0.0..1.0
+    var byte LocationY;
     var byte SquadIndex;    // The squad index that owns the marker, or -1 if team-wide
     var int ExpiryTime;     // The expiry time, relative to ElapsedTime in GRI
 };
@@ -929,7 +929,7 @@ simulated function array<MapMarker> GetMapMarkers(int TeamIndex, int SquadIndex)
     return MapMarkers;
 }
 
-function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMarkerClass, vector WorldLocation)
+function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMarkerClass, vector MapLocation)
 {
     local int i;
     local MapMarker M;
@@ -940,8 +940,8 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
     }
 
     M.MapMarkerClass = MapMarkerClass;
-    M.LocationX = WorldLocation.X;
-    M.LocationY = WorldLocation.Y;
+    M.LocationX = byte(255.0 * FClamp(MapLocation.X, 0.0, 1.0));
+    M.LocationY = byte(255.0 * FClamp(MapLocation.Y, 0.0, 1.0));
 
     if (MapMarkerClass.default.bIsSquadSpecific)
     {
@@ -1109,6 +1109,87 @@ function ClearMapMarkers()
     {
         AlliesMapMarkers[i].MapMarkerClass = none;
     }
+}
+
+// Gets the map coordindates (0..1) from a world location.
+simulated function GetMapCoords(vector WorldLocation, out float X, out float Y, optional float Width, optional float Height)
+{
+    local float  MapScale;
+    local vector MapCenter;
+
+    MapScale = FMax(1.0, Abs((SouthWestBounds - NorthEastBounds).X));
+    MapCenter = NorthEastBounds + ((SouthWestBounds - NorthEastBounds) * 0.5);
+    WorldLocation = GetAdjustedHudLocation(WorldLocation - MapCenter, false);
+
+    X = FClamp(0.5 + (WorldLocation.X / MapScale) - (Width / 2),
+               0.0,
+               1.0 - Width);
+
+    Y = FClamp(0.5 + (WorldLocation.Y / MapScale) - (Height / 2),
+               0.0,
+               1.0 - Height);
+}
+
+// Gets the world location from map coordinates.
+simulated function vector GetWorldCoords(float X, float Y)
+{
+    local float MapScale;
+    local vector MapCenter, WorldLocation;
+
+    MapScale = FMax(1.0, Abs((SouthWestBounds - NorthEastBounds).X));
+    MapCenter = NorthEastBounds + ((SouthWestBounds - NorthEastBounds) * 0.5);
+    WorldLocation.X = ((0.5 - X) * MapScale);
+    WorldLocation.Y = ((0.5 - Y) * MapScale);
+    WorldLocation = GetAdjustedHudLocation(WorldLocation);
+    WorldLocation += MapCenter;
+
+    return WorldLocation;
+}
+
+// This function will adjust a hud map location based on the rotation offset of
+// the overhead map.
+// NOTE: This is functionally identical to same function in ROHud. It has been
+// moved here because it had no business being in that class since it only
+// referenced things in the GRI class.
+simulated function vector GetAdjustedHudLocation(vector HudLoc, optional bool bInvert)
+{
+    local float SwapX, SwapY;
+
+    if (bInvert)
+    {
+        if (OverheadOffset == 90)
+        {
+            OverheadOffset = 270;
+        }
+        else if (OverheadOffset == 270)
+        {
+            OverheadOffset = 90;
+        }
+    }
+
+    if (OverheadOffset  == 90)
+    {
+        SwapX = HudLoc.Y * -1;
+        SwapY = HudLoc.X;
+        HudLoc.X = SwapX;
+        HudLoc.Y = SwapY;
+    }
+    else if (OverheadOffset == 180)
+    {
+        SwapX = HudLoc.X * -1;
+        SwapY = HudLoc.Y * -1;
+        HudLoc.X = SwapX;
+        HudLoc.Y = SwapY;
+    }
+    else if (OverheadOffset == 270)
+    {
+        SwapX = HudLoc.Y;
+        SwapY = HudLoc.X * -1;
+        HudLoc.X = SwapX;
+        HudLoc.Y = SwapY;
+    }
+
+    return HudLoc;
 }
 
 defaultproperties
