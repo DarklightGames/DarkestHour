@@ -110,7 +110,6 @@ var     float   StagnationLifespan;
 // Tear-down
 var     bool    bCanBeTornDownWhenConstructed; // Whether or not players can tear down the construction after it has been constructed.
 var     int     TearDownProgress;
-var     int     TearDownProgressMax;
 
 // Broken
 var     float           BrokenLifespan;             // How long does the actor stay around after it's been killed?
@@ -465,7 +464,7 @@ simulated state Constructed
     {
         TearDownProgress += 1;
 
-        if (TearDownProgress >= TearDownProgressMax)
+        if (TearDownProgress >= ProgressMax)
         {
             if (default.Stages.Length == 0)
             {
@@ -933,7 +932,6 @@ defaultproperties
     StageIndex=-1
     Progress=0
     ProgressMax=8
-    TearDownProgressMax=4
 
     // Damage
     HarmfulDamageTypes(0)=class'ROArtilleryDamType'
