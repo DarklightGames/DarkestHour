@@ -363,7 +363,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
 
     // TODO: ehhhyyy
     // TODO: get the screen-space bbox for each marker and check the mouse cursor against it
-    GRI.GetMapMarkers(PC.GetTeamNum(), PC.GetSquadIndex());
+    //GRI.GetMapMarkers(PC.GetTeamNum(), PC.GetSquadIndex());
 
     return true;
 }
