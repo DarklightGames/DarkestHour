@@ -14,6 +14,8 @@ const OBJECTIVES_MAX = 32;
 const CONSTRUCTION_CLASSES_MAX = 32;
 const VOICEID_MAX = 100;
 const SUPPLY_POINTS_MAX = 8;
+const MAP_MARKERS_MAX = 23; // sizeof(MapMarker) / 255
+const MAP_MARKERS_CLASSES_MAX = 16;
 
 struct ArtilleryTarget
 {
@@ -108,9 +110,6 @@ var DHConstructionManager   ConstructionManager;
 var bool                bAreConstructionsEnabled;
 
 // Map markers
-const MAP_MARKERS_MAX = 23;
-
-// TODO: Reduce the size of this even more so we can have more markers per team
 struct MapMarker
 {
     var class<DHMapMarker> MapMarkerClass;
@@ -120,7 +119,7 @@ struct MapMarker
     var int ExpiryTime;     // The expiry time, relative to ElapsedTime in GRI
 };
 
-var class<DHMapMarker>                  MapMarkerClasses[8];
+var class<DHMapMarker>                  MapMarkerClasses[MAP_MARKERS_CLASSES_MAX];
 var MapMarker                           AxisMapMarkers[MAP_MARKERS_MAX];
 var MapMarker                           AlliesMapMarkers[MAP_MARKERS_MAX];
 
