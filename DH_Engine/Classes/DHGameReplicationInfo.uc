@@ -909,10 +909,32 @@ simulated function GetTeamSizes(out int TeamSizes[2])
 // MAP MARKERS
 //==============================================================================
 
-simulated function array<MapMarker> GetMapMarkers(int TeamIndex, int SquadIndex)
+simulated function GetMapMarkers(out array<MapMarker> MapMarkers, out array<int> Indices, int TeamIndex, int SquadIndex)
 {
     local int i;
-    local array<MapMarker> MapMarkers;
+
+    GetMapMarkerIndices(Indices, TeamIndex, SquadIndex);
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            for (i = 0; i < Indices.Length; ++i)
+            {
+                MapMarkers[MapMarkers.Length] = AxisMapMarkers[Indices[i]];
+            }
+            break;
+        case ALLIES_TEAM_INDEX:
+            for (i = 0; i < Indices.Length; ++i)
+            {
+                MapMarkers[MapMarkers.Length] = AlliesMapMarkers[Indices[i]];
+            }
+            break;
+    }
+}
+
+simulated function GetMapMarkerIndices(out array<int> Indices, int TeamIndex, int SquadIndex)
+{
+    local int i;
 
     switch (TeamIndex)
     {
@@ -923,7 +945,7 @@ simulated function array<MapMarker> GetMapMarkers(int TeamIndex, int SquadIndex)
                     (AxisMapMarkers[i].ExpiryTime == -1 || AxisMapMarkers[i].ExpiryTime > ElapsedTime) &&
                     (AxisMapMarkers[i].SquadIndex == 255 || AxisMapMarkers[i].SquadIndex == SquadIndex))
                 {
-                    MapMarkers[MapMarkers.Length] = AxisMapMarkers[i];
+                    Indices[Indices.Length] = i;
                 }
             }
             break;
@@ -934,13 +956,11 @@ simulated function array<MapMarker> GetMapMarkers(int TeamIndex, int SquadIndex)
                     (AlliesMapMarkers[i].ExpiryTime == -1 || AlliesMapMarkers[i].ExpiryTime > ElapsedTime) &&
                     (AlliesMapMarkers[i].SquadIndex == 255 || AlliesMapMarkers[i].SquadIndex == SquadIndex))
                 {
-                    MapMarkers[MapMarkers.Length] = AlliesMapMarkers[i];
+                    Indices[Indices.Length] = i;
                 }
             }
             break;
     }
-
-    return MapMarkers;
 }
 
 function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMarkerClass, vector MapLocation)
@@ -1081,7 +1101,10 @@ function RemoveMapMarker(int TeamIndex, int MapMarkerIndex)
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
+            Log("AxisMapMarkers[" $ MapMarkerIndex $ "].MapMarkerClass" @ AxisMapMarkers[MapMarkerIndex].MapMarkerClass);
             AxisMapMarkers[MapMarkerIndex].MapMarkerClass = none;
+            Log("now....");
+            Log("AxisMapMarkers[" $ MapMarkerIndex $ "].MapMarkerClass" @ AxisMapMarkers[MapMarkerIndex].MapMarkerClass);
             break;
         case ALLIES_TEAM_INDEX:
             AlliesMapMarkers[MapMarkerIndex].MapMarkerClass = none;

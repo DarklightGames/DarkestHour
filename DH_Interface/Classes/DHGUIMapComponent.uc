@@ -21,9 +21,11 @@ var             Material                    SpawnPointBlockedOverlay;
 
 var             vector                      MapClickLocation;
 var             array<class<DHMapMarker> >  MenuItemObjects;
+var             int                         MapMarkerIndexToRemove;
 
 var localized string        SquadRallyPointDestroyText;
 var localized string        SquadRallyPointSetAsSecondaryText;
+var localized string        RemoveText;
 
 delegate OnSpawnPointChanged(int SpawnPointIndex, optional bool bDoubleClick);
 
@@ -283,9 +285,12 @@ function SortMapMarkerClasses(out array<class<DHMapMarker> > MapMarkerClasses)
 function bool InternalOnOpen(GUIContextMenu Sender)
 {
     local int i;
-    local float L, T, W, H;
+    local float L, T, W, H, D;
+    local array<DHGameReplicationInfo.MapMarker> MapMarkers;
+    local array<int> Indices;
     local array<class<DHMapMarker> > MapMarkerClasses;
     local int GroupIndex;
+    local float X, Y;
 
     if (Sender == none || PC == none || PRI == none || GRI == none || !PRI.IsSquadLeader())
     {
@@ -302,6 +307,29 @@ function bool InternalOnOpen(GUIContextMenu Sender)
 
     Sender.ContextItems.Length = 0;
 
+    // Iterate through existing map markers and check if any were clicked on.
+    GRI.GetMapMarkers(MapMarkers, Indices, PC.GetTeamNum(), PC.GetSquadIndex());
+
+    MenuItemObjects.Length = 0;
+    MapMarkerIndexToRemove = -1;
+
+    for (i = 0; i < MapMarkers.Length; ++i)
+    {
+        X = (float(MapMarkers[i].LocationX) / 255.0) - MapClickLocation.X;
+        Y = (float(MapMarkers[i].LocationY) / 255.0) - MapClickLocation.Y;
+        D = Sqrt(X * X + Y * Y);
+
+        if (D <= class'DHHud'.default.MapMarkerIcon.TextureScale / 2.0)
+        {
+            // Clicked on an existing map marker, add the "remove" option.
+            MapMarkerIndexToRemove = Indices[i];
+            Sender.AddItem(RemoveText);
+            MenuItemObjects[MenuItemObjects.Length] = none;
+            break;
+        }
+    }
+
+    // Fetch and sort map marker classes by group.
     for (i = 0; i < arraycount(GRI.MapMarkerClasses); ++i)
     {
         if (GRI.MapMarkerClasses[i] != none)
@@ -312,12 +340,21 @@ function bool InternalOnOpen(GUIContextMenu Sender)
 
     SortMapMarkerClasses(MapMarkerClasses);
 
+    // Add separator if any other items already exist.
+    if (Sender.ContextItems.Length > 0 && MapMarkerClasses.Length > 0)
+    {
+        Sender.AddItem("-");
+        MenuItemObjects[MenuItemObjects.Length] = none;
+    }
+
     GroupIndex = -1;
 
+    // Add an option for each map marker.
     for (i = 0; i < MapMarkerClasses.Length; ++i)
     {
         if (GroupIndex != -1 && MapMarkerClasses[i].default.GroupIndex != GroupIndex)
         {
+            // New group encountered, add a separator.
             Sender.AddItem("-");
             MenuItemObjects[MenuItemObjects.Length] = none;
         }
@@ -326,10 +363,6 @@ function bool InternalOnOpen(GUIContextMenu Sender)
         MenuItemObjects[MenuItemObjects.Length] = MapMarkerClasses[i];
         GroupIndex = MapMarkerClasses[i].default.GroupIndex;
     }
-
-    // TODO: ehhhyyy
-    // TODO: get the screen-space bbox for each marker and check the mouse cursor against it
-    //GRI.GetMapMarkers(PC.GetTeamNum(), PC.GetSquadIndex());
 
     return true;
 }
@@ -341,18 +374,29 @@ function bool InternalOnClose(GUIContextMenu Sender)
 
 function InternalOnSelect(GUIContextMenu Sender, int ClickIndex)
 {
-    if (PC == none || ClickIndex < 0 || ClickIndex >= MenuItemObjects.Length || MenuItemObjects[ClickIndex] == none)
+    if (PC == none || ClickIndex < 0 || ClickIndex >= MenuItemObjects.Length)
     {
         return;
     }
 
-    PC.ServerAddMapMarker(MenuItemObjects[ClickIndex], MapClickLocation.X, MapClickLocation.Y);
+    if (MenuItemObjects[ClickIndex] == none)
+    {
+        if (MapMarkerIndexToRemove != -1)
+        {
+            PC.ServerRemoveMapMarker(MapMarkerIndexToRemove);
+        }
+    }
+    else
+    {
+        PC.ServerAddMapMarker(MenuItemObjects[ClickIndex], MapClickLocation.X, MapClickLocation.Y);
+    }
 }
 
 defaultproperties
 {
     SquadRallyPointDestroyText="Destroy"
     SquadRallyPointSetAsSecondaryText="Set as Secondary"
+    RemoveText="Remove"
 
     SpawnPointBlockedOverlay=Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled'
 

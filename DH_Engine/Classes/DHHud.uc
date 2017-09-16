@@ -2531,6 +2531,7 @@ simulated function DrawCompassIcons(Canvas C, float CenterX, float CenterY, floa
     local rotator rotAngle;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local DHPlayer PC;
+    local array<int> Indices;
 
     CompassIcons.WidgetTexture = default.CompassIcons.WidgetTexture;
 
@@ -2693,7 +2694,7 @@ simulated function DrawCompassIcons(Canvas C, float CenterX, float CenterY, floa
 
     if (PC != none)
     {
-        MapMarkers = DHGRI.GetMapMarkers(PC.GetTeamNum(), PC.GetSquadIndex());
+        DHGRI.GetMapMarkers(MapMarkers, Indices, PC.GetTeamNum(), PC.GetSquadIndex());
 
         for (i = 0; i < MapMarkers.Length; ++i)
         {
@@ -3614,6 +3615,7 @@ simulated function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, f
     local int i;
     local vector L;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
+    local array<int> Indices;
 
     PC = DHPlayer(PlayerOwner);
 
@@ -3622,7 +3624,7 @@ simulated function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, f
         return;
     }
 
-    MapMarkers = DHGRI.GetMapMarkers(PC.GetTeamNum(), PC.GetSquadIndex());
+    DHGRI.GetMapMarkers(MapMarkers, Indices, PC.GetTeamNum(), PC.GetSquadIndex());
 
     for (i = 0; i < MapMarkers.Length; ++i)
     {
