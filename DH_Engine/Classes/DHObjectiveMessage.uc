@@ -115,11 +115,11 @@ defaultproperties
 
     NotificationMessage="The {0} have {1} {2}"
 
-    EnemyObjectiveSounds(0)=sound'Miscsounds.Music.notify_drum'                  // neutralized
-    EnemyObjectiveSounds(1)=sound'DH_SundrySounds.Objective.enemy_team_captured' // captured
-    EnemyObjectiveSounds(2)=sound'DH_SundrySounds.Objective.enemy_team_secured'  // secured
+    EnemyObjectiveSounds(0)=sound'DH_SundrySounds.Objective.Enemy_Neutralized_Obj'
+    EnemyObjectiveSounds(1)=sound'DH_SundrySounds.Objective.Enemy_Captured_Obj'
+    EnemyObjectiveSounds(2)=sound'DH_SundrySounds.Objective.Enemy_Secured_Obj'
 
-    TeamObjectiveSounds(0)=sound'Miscsounds.Music.notify_drum'                   // neutralized
-    TeamObjectiveSounds(1)=sound'DH_SundrySounds.Objective.your_team_captured'   // captured
-    TeamObjectiveSounds(2)=sound'DH_SundrySounds.Objective.your_team_secured'    // secured
+    TeamObjectiveSounds(0)=sound'DH_SundrySounds.Objective.Team_Neutralized_Obj'
+    TeamObjectiveSounds(1)=sound'DH_SundrySounds.Objective.Team_Captured_Obj'
+    TeamObjectiveSounds(2)=sound'DH_SundrySounds.Objective.Team_Secured_Obj'
 }
