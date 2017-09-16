@@ -71,7 +71,7 @@ defaultproperties
     bFadeMessage=true
     bIsConsoleMessage=false
     bIsUnique=true
-    Lifetime=2.5
+    Lifetime=5.0
     PosY=0.8
     LockedMessage="Your weapons have been locked due to excessive spawn killing!"
     LockedWithTimerMessage="Your weapons are locked for {0} seconds"
