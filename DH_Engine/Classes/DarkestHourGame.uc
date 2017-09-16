@@ -2467,6 +2467,7 @@ state RoundInPlay
         NotifyPlayersOfMapInfoChange(NEUTRAL_TEAM_INDEX, none, true);
 
         ResetArtilleryTargets();
+        GRI.ClearMapMarkers();
 
         // Set reinforcements
         if (bUseInfiniteReinforcements)
