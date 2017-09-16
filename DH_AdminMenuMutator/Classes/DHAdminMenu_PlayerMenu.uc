@@ -27,7 +27,7 @@ function GetAllPlayerNames()
 
     for (i = 0; i < AllPRI.Length; ++i)
     {
-        if (AllPRI[i] != none && AllPRI[i].PlayerName != "") // includes spectators & bots
+        if (ROPlayerReplicationInfo(AllPRI[i]) != none && AllPRI[i].PlayerName != "") // includes spectators & bots, but cast to ROPRI excluded "WebAdmin" & possible other phantom 'players'
         {
             MenuText[MenuText.Length] = AllPRI[i].PlayerName;
         }
