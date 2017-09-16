@@ -17,6 +17,13 @@ var int                 GroupIndex;             // Used for grouping map markers
 var bool                bShouldOverwriteGroup;  // If true, adding this map marker will overwrite any existing markers that are in the same group.
 var bool                bIsUnique;              // If true, only one of this type may be active for the team or squad (if squad specific)
 
+// Override this function to determine if this map marker can be used. This
+// function evaluated once at the beginning of the map.
+static function bool CanBeUsed(DHGameReplicationInfo GRI)
+{
+    return true;
+}
+
 defaultproperties
 {
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)

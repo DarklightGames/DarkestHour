@@ -119,6 +119,7 @@ struct MapMarker
     var int ExpiryTime;     // The expiry time, relative to ElapsedTime in GRI
 };
 
+var private globalconfig array<string>  MapMarkerClassNames;
 var class<DHMapMarker>                  MapMarkerClasses[MAP_MARKERS_CLASSES_MAX];
 var MapMarker                           AxisMapMarkers[MAP_MARKERS_MAX];
 var MapMarker                           AlliesMapMarkers[MAP_MARKERS_MAX];
@@ -178,8 +179,9 @@ simulated function PostBeginPlay()
 {
     local WaterVolume       WV;
     local FluidSurfaceInfo  FSI;
-    local int               i;
+    local int               i, j;
     local DH_LevelInfo      LI;
+    local class<DHMapMarker> MapMarkerClass;
 
     super.PostBeginPlay();
 
@@ -212,6 +214,19 @@ simulated function PostBeginPlay()
         {
             bAreConstructionsEnabled = LI.bAreConstructionsEnabled;
             break;
+        }
+
+        // Add usable map markers to the class list to be replicated!
+        j = 0;
+
+        for (i = 0; i < MapMarkerClassNames.Length; ++i)
+        {
+            MapMarkerClass = class<DHMapMarker>(DynamicLoadObject(MapMarkerClassNames[i], class'class'));
+
+            if (MapMarkerClass != none && MapMarkerClass.static.CanBeUsed(self))
+            {
+                MapMarkerClasses[j++] = MapMarkerClass;
+            }
         }
     }
 }
@@ -933,12 +948,14 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
     local int i;
     local MapMarker M;
 
-    if (PRI == none || PRI.Team == none || !PRI.IsSquadLeader() || MapMarkerClass == none)
+    if (PRI == none || PRI.Team == none || !PRI.IsSquadLeader() || MapMarkerClass == none || !MapMarkerClass.static.CanBeUsed(self))
     {
         return -1;
     }
 
     M.MapMarkerClass = MapMarkerClass;
+
+    // Quantize map-space coordinates for transmission.
     M.LocationX = byte(255.0 * FClamp(MapLocation.X, 0.0, 1.0));
     M.LocationY = byte(255.0 * FClamp(MapLocation.Y, 0.0, 1.0));
 
@@ -1211,8 +1228,8 @@ defaultproperties
     ConstructionClassNames(10)="DH_Construction.DHConstruction_AAGun_Light"
     ConstructionClassNames(11)="DH_Construction.DHConstruction_Foxhole"
 
-    MapMarkerClasses(0)=class'DH_Engine.DHMapMarker_Squad_Attack'
-    MapMarkerClasses(1)=class'DH_Engine.DHMapMarker_Squad_Defend'
-    MapMarkerClasses(2)=class'DH_Engine.DHMapMarker_Enemy_PlatoonHQ'
-    MapMarkerClasses(3)=class'DH_Engine.DHMapMarker_Enemy_Tank'
+    MapMarkerClassNames(0)="DH_Engine.DHMapMarker_Squad_Attack"
+    MapMarkerClassNames(1)="DH_Engine.DHMapMarker_Squad_Defend"
+    MapMarkerClassNames(2)="DH_Engine.DHMapMarker_Enemy_PlatoonHQ"
+    MapMarkerClassNames(3)="DH_Engine.DHMapMarker_Enemy_Tank"
 }

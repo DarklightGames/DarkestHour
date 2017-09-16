@@ -4885,13 +4885,17 @@ function ServerSquadRename(string Name)
     }
 }
 
-function ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, vector MapLocation)
+function ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY)
 {
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
+    local vector MapLocation;
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
     GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    MapLocation.X = MapLocationX;
+    MapLocation.Y = MapLocationY;
 
     if (GRI != none)
     {

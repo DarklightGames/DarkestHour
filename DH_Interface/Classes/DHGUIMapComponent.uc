@@ -346,7 +346,7 @@ function InternalOnSelect(GUIContextMenu Sender, int ClickIndex)
         return;
     }
 
-    PC.ServerAddMapMarker(MenuItemObjects[ClickIndex], MapClickLocation);
+    PC.ServerAddMapMarker(MenuItemObjects[ClickIndex], MapClickLocation.X, MapClickLocation.Y);
 }
 
 defaultproperties
