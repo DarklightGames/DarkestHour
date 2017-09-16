@@ -145,8 +145,6 @@ defaultproperties
     PitchDownLimit=58000
     ImpactWorldDamageMult=0.008
     HeavyEngineDamageThreshold=0.33
-    HealthMax=125.0
-    Health=125
     Mesh=SkeletalMesh'DH_Kubelwagen_anm.kubelwagen_body_ext'
     Skins(0)=FinalBlend'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_glass_FB'
     Skins(1)=texture'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_grau'

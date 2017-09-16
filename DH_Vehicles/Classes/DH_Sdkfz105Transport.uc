@@ -191,8 +191,6 @@ defaultproperties
     GroundSpeed=325.0
     PitchUpLimit=10000
     PitchDownLimit=50000
-    HealthMax=325.0
-    Health=275
     Mesh=SkeletalMesh'DH_SdKfz10_5_anm.SdKfz10_5_body_ext'
     Skins(0)=texture'DH_VehiclesGE_tex7.ext_vehicles.sdkfz10_5_body_ext'
     Skins(1)=texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_cabin'

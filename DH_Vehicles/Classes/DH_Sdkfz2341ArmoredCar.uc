@@ -82,8 +82,6 @@ defaultproperties
     TurnDamping=100.0
 
     // Damage
-    Health=300
-    HealthMax=300.0
     EngineHealth=100
     HeavyEngineDamageThreshold=0.25
     VehHitpoints(0)=(PointOffset=(X=-150.0,Z=52.0)) // engine

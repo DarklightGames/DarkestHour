@@ -72,8 +72,6 @@ defaultproperties
     TurnDamping=100.0
 
     // Damage
-    Health=300
-    HealthMax=300.0
     EngineHealth=100
     HeavyEngineDamageThreshold=0.25
     DisintegrationHealth=-100000.0

@@ -212,8 +212,6 @@ defaultproperties
     ImpactDamageMult=0.001
     ImpactWorldDamageMult=3.0
     EngineHealth=150
-    HealthMax=325.0
-    Health=325
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_ext'
     Skins(0)=texture'axis_vehicles_tex.ext_vehicles.halftrack_ext'
     Skins(1)=texture'axis_vehicles_tex.Treads.Halftrack_treads'

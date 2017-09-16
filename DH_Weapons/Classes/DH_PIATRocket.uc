@@ -17,7 +17,7 @@ defaultproperties
     DHPenetrationTable(6)=9.1
     bHasTracer=false
     ShellImpactDamage=class'DH_Weapons.DH_PIATImpactDamType'
-    ImpactDamage=650
+    ImpactDamage=350
     DamageRadius=300
     Speed=4526.0
     MaxSpeed=4526.0

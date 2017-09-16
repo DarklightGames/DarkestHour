@@ -66,8 +66,6 @@ defaultproperties
     TransRatio=0.09
 
     // Damage
-    Health=650 // was 800 but adjusted to more in line with similar DH vehicles
-    HealthMax=650.0
     DisintegrationHealth=-900.0
     VehHitpoints(0)=(PointRadius=35.0,PointBone="Engine",PointOffset=(X=-25.0,Y=0.0,Z=-5.0)) // engine
     VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-70.0,Y=50.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

@@ -135,8 +135,6 @@ defaultproperties
     ImpactWorldDamageMult=1.0
     HeavyEngineDamageThreshold=0.33
     EngineHealth=35
-    HealthMax=150.0
-    Health=150
     Mesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_ext'
     Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext'
     Skins(1)=texture'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext'

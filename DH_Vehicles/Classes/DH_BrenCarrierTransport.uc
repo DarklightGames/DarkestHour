@@ -182,8 +182,6 @@ defaultproperties
     HUDOverlayFOV=81.0
     PitchUpLimit=500
     PitchDownLimit=49000
-    HealthMax=275.0
-    Health=275
     Mesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_ext'
     Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.BrenCarrier_body_ext'
     Skins(1)=texture'allies_vehicles_tex.Treads.T60_treads'

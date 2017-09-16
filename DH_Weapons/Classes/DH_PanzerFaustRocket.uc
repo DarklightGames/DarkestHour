@@ -20,7 +20,7 @@ defaultproperties
     bIsAlliedShell=false
     bHasTracer=false
     ShellImpactDamage=class'DH_Weapons.DH_PanzerFaustImpactDamType'
-    ImpactDamage=650
+    ImpactDamage=425
     BallisticCoefficient=0.075
     Speed=2716.0
     MaxSpeed=2716.0
