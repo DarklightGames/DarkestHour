@@ -108,7 +108,8 @@ var     bool    bCanDieOfStagnation;            // If true, this construction wi
 var     float   StagnationLifespan;
 
 // Tear-down
-var     bool    bCanBeTornDownWhenConstructed; // Whether or not players can tear down the construction after it has been constructed.
+var     bool    bCanBeTornDownWhenConstructed;  // Whether or not players can tear down the construction after it has been constructed.
+var     bool    bCanBeTornDownByFriendlies;     // Whether or not friendly players can tear down the construction (e.g. to stop griefing of important constructions)
 var     int     TearDownProgress;
 
 // Broken
@@ -129,9 +130,10 @@ struct DamageTypeScale
     var float               Scale;
 };
 
-var int                         MinDamagetoHurt;    // The minimum amount of damage required to actually harm the construction
+var int                         MinDamagetoHurt;        // The minimum amount of damage required to actually harm the construction
 var array<DamageTypeScale>      DamageTypeScales;
 var array<class<DamageType> >   HarmfulDamageTypes;
+var float                       FriendlyFireDamageScale; // Set to 0.0 to disable friendly fire damage
 
 // Impact Damage
 var bool                        bCanTakeImpactDamage;
@@ -490,9 +492,9 @@ simulated state Constructed
         }
     }
 
-    simulated function bool CanBeTornDown()
+    simulated function bool CanTakeTearnDownDamageFromPawn(Pawn P)
     {
-        return bCanBeTornDownWhenConstructed;
+        return bCanBeTornDownWhenConstructed && (bCanBeTornDownByFriendlies || (P != none && P.GetTeamNum() != TeamIndex));
     }
 
 // This is required because we cannot call TakeDamage within the KImpact
@@ -762,7 +764,7 @@ function bool ShouldTakeDamageFromDamageType(class<DamageType> DamageType)
     return false;
 }
 
-simulated function bool CanBeTornDown()
+simulated function bool CanTakeTearnDownDamageFromPawn(Pawn P)
 {
     return true;
 }
@@ -773,7 +775,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Mo
 {
     local class<DamageType> TearDownDamageType;
 
-    if (CanBeTornDown())
+    if (CanTakeTearnDownDamageFromPawn(InstigatedBy))
     {
         TearDownDamageType = class<DamageType>(DynamicLoadObject("DH_Equipment.DHShovelBashDamageType", class'class'));
 
@@ -788,16 +790,21 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Mo
     {
         Damage = GetScaledDamage(DamageType, Damage);
 
-        if (Damage >= MinDamagetoHurt)
+        if (InstigatedBy != none && InstigatedBy.GetTeamNum() == TeamIndex)
         {
-            Health -= GetScaledDamage(DamageType, Damage);
+            Damage *= FriendlyFireDamageScale;
         }
 
-        OnHealthChanged();
-
-        if (Health <= 0)
+        if (Damage >= MinDamagetoHurt)
         {
-            GotoState('Broken');
+            Health -= Damage;
+
+            OnHealthChanged();
+
+            if (Health <= 0)
+            {
+                GotoState('Broken');
+            }
         }
     }
 }
@@ -946,5 +953,8 @@ defaultproperties
     bCanTakeImpactDamage=false
     ImpactDamageType=class'Crushed'
     ImpactDamageModifier=0.1
+
+    bCanBeTornDownByFriendlies=true
+    FriendlyFireDamageScale=1.0
 }
 

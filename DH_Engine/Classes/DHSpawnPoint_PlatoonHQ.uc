@@ -67,7 +67,7 @@ function Timer()
             bIsActivated = true;
 
             // "A Platoon HQ has been established."
-            BroadcastTeamLocalizedMessage(GetTeamIndex(), class'DHPlatoonHQMessage', 0);
+            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHPlatoonHQMessage', 0);
         }
     }
 
@@ -113,7 +113,7 @@ function Timer()
     if (CaptureCounter >= CaptureCounterThreshold)
     {
         // "A Platoon HQ has been overrun by the enemy."
-        BroadcastTeamLocalizedMessage(GetTeamIndex(), class'DHPlatoonHQMessage', 2);
+        class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHPlatoonHQMessage', 2);
 
         if (Construction != none)
         {
@@ -172,25 +172,6 @@ function bool PerformSpawn(DHPlayer PC)
     }
 
     return false;
-}
-
-function BroadcastTeamLocalizedMessage(byte Team, class<LocalMessage> MessageClass, int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
-{
-    local PlayerController PC;
-    local Controller       C;
-
-    for (C = Level.ControllerList; C != none; C = C.NextController)
-    {
-        if (C.GetTeamNum() == Team)
-        {
-            PC = PlayerController(C);
-
-            if (PC != none)
-            {
-                PC.ReceiveLocalizedMessage(MessageClass, Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);
-            }
-        }
-    }
 }
 
 function OnSpawnKill(Pawn VictimPawn, Controller KillerController)

@@ -8,9 +8,9 @@ class DHConstruction_PlatoonHQ extends DHConstruction
 
 #exec OBJ LOAD FILE=..\Textures\DH_Construction_tex.utx
 
-var DHSpawnPoint_PlatoonHQ  SpawnPoint;
-var int                     FlagSkinIndex;
-var sound                   RainSound;
+var DHSpawnPoint_PlatoonHQ          SpawnPoint;
+var int                             FlagSkinIndex;
+var class<DHSpawnPoint_PlatoonHQ>   SpawnPointClass;
 
 simulated function OnConstructed()
 {
@@ -22,13 +22,13 @@ simulated function OnConstructed()
     {
         if (SpawnPoint == none)
         {
-            SpawnPoint = Spawn(class'DHSpawnPoint_PlatoonHQ', self);
+            SpawnPoint = Spawn(SpawnPointClass, self);
         }
 
         if (SpawnPoint != none)
         {
             // "A Platoon HQ has been constructed and will be established in N seconds."
-            SpawnPoint.BroadcastTeamLocalizedMessage(GetTeamIndex(), class'DHPlatoonHQMessage', 4);
+            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHPlatoonHQMessage', 4);
 
             TraceStart = Location + vect(0, 0, 32);
             TraceEnd = Location - vect(0, 0, 32);
@@ -43,7 +43,7 @@ simulated function OnConstructed()
 
             HitLocation.Z += class'DHPawn'.default.CollisionHeight / 2;
 
-            SpawnPoint.Construction = self;
+            SpawnPoint.Construction = self; // TODO: could this be eliminated? The spawn point already has this construction set as the owner!
             SpawnPoint.SetLocation(HitLocation);
             SpawnPoint.SetTeamIndex(GetTeamIndex());
             SpawnPoint.SetIsActive(true);
@@ -74,7 +74,7 @@ simulated state Broken
         if (SpawnPoint != none)
         {
             // "A Platoon HQ has been destroyed."
-            SpawnPoint.BroadcastTeamLocalizedMessage(GetTeamIndex(), class'DHPlatoonHQMessage', 3);
+            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHPlatoonHQMessage', 3);
         }
 
         DestroyAttachments();
@@ -183,6 +183,7 @@ defaultproperties
     MenuIcon=Texture'DH_GUI_tex.DeployMenu.PlatoonHQ'
     Stages(0)=()
     ProgressMax=12
+    SupplyCost=1000
 
     // Placement
     bShouldAlignToGround=true
@@ -207,10 +208,10 @@ defaultproperties
     HealthMax=500
     TatteredHealthThreshold=250
 
-    SupplyCost=1000
-
-    RainSound=Sound'Amb_Weather01.Rain.Krasnyi_Rain_Inside_Heavy'
-
     FlagSkinIndex=1
+    SpawnPointClass=class'DHSpawnPoint_PlatoonHQ'
+
+    bCanBeTornDownByFriendlies=false
+    FriendlyFireDamageScale=0.0
 }
 

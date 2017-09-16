@@ -398,7 +398,7 @@ event VehicleDestroyed(Vehicle V)
                     SetVehiclePoolIsActiveByTag(VehiclePools[i].OnDepleteActivatePool, true);
                 }
 
-                BroadcastTeamLocalizedMessage(VehiclePools[i].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 200 + i,,, self); // vehicle reinforcements have been depleted
+                class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, VehiclePools[i].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 200 + i,,, self); // vehicle reinforcements have been depleted
             }
 
             // Find this vehicle's slot & set its re-spawn time
@@ -552,7 +552,7 @@ private function AddVehiclePoolMaxSpawns(byte VehiclePoolIndex, int Value)
         if (Value > 0)
         {
             // Send "vehicle reinforcements have arrived" message
-            BroadcastTeamLocalizedMessage(VehiclePools[VehiclePoolIndex].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 300 + VehiclePoolIndex,,, self);
+            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, VehiclePools[VehiclePoolIndex].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 300 + VehiclePoolIndex,,, self);
         }
 
         GRI.VehiclePoolMaxSpawns[VehiclePoolIndex] = Clamp(int(GRI.VehiclePoolMaxSpawns[VehiclePoolIndex]) + Value, 0, 254);
@@ -560,7 +560,7 @@ private function AddVehiclePoolMaxSpawns(byte VehiclePoolIndex, int Value)
         if (Value < 0 && GRI.VehiclePoolMaxSpawns[VehiclePoolIndex] == 0)
         {
             // Send "vehicle reinforcements have been cut off" message
-            BroadcastTeamLocalizedMessage(VehiclePools[VehiclePoolIndex].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 400 + VehiclePoolIndex,,, self);
+            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, VehiclePools[VehiclePoolIndex].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 400 + VehiclePoolIndex,,, self);
         }
     }
 }
@@ -633,14 +633,14 @@ function AddVehiclePoolMaxActiveByTag(name VehiclePoolTag, int Value)
         {
             if (Value > 0)
             {
-                BroadcastTeamLocalizedMessage(VehiclePools[VehiclePoolIndices[i]].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 300 + VehiclePoolIndices[i],,, self);
+                class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, VehiclePools[VehiclePoolIndices[i]].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 300 + VehiclePoolIndices[i],,, self);
             }
 
             GRI.VehiclePoolMaxActives[VehiclePoolIndices[i]] = Clamp(int(GRI.VehiclePoolMaxActives[VehiclePoolIndices[i]]) + Value, 0, 254);
 
             if (Value < 0 && GRI.VehiclePoolMaxActives[VehiclePoolIndices[i]] == 0)
             {
-                BroadcastTeamLocalizedMessage(VehiclePools[VehiclePoolIndices[i]].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 400 + VehiclePoolIndices[i],,, self);
+                class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, VehiclePools[VehiclePoolIndices[i]].VehicleClass.default.VehicleTeam, Level.Game.default.GameMessageClass, 400 + VehiclePoolIndices[i],,, self);
             }
         }
     }
@@ -685,25 +685,6 @@ function ToggleVehiclePoolIsActiveByTag(name VehiclePoolTag)
     for (i = 0; i < VehiclePoolIndices.Length; ++i)
     {
         SetVehiclePoolIsActive(VehiclePoolIndices[i], !GRI.IsVehiclePoolActive(VehiclePoolIndices[i]));
-    }
-}
-
-function BroadcastTeamLocalizedMessage(byte Team, class<LocalMessage> MessageClass, int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
-{
-    local PlayerController PC;
-    local Controller       C;
-
-    for (C = Level.ControllerList; C != none; C = C.NextController)
-    {
-        if (C.GetTeamNum() == Team)
-        {
-            PC = PlayerController(C);
-
-            if (PC != none)
-            {
-                PC.ReceiveLocalizedMessage(MessageClass, Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);
-            }
-        }
     }
 }
 

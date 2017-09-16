@@ -4838,6 +4838,26 @@ function GetTeamSizes(out int TeamSizes[2])
     }
 }
 
+// Moved this here so that we didn't have to restate this function in a variety of places.
+static function BroadcastTeamLocalizedMessage(LevelInfo Level, byte Team, class<LocalMessage> MessageClass, int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
+{
+    local PlayerController PC;
+    local Controller       C;
+
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        if (C.GetTeamNum() == Team)
+        {
+            PC = PlayerController(C);
+
+            if (PC != none)
+            {
+                PC.ReceiveLocalizedMessage(MessageClass, Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);
+            }
+        }
+    }
+}
+
 defaultproperties
 {
     ServerTickForInflation=20.0
