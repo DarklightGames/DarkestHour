@@ -435,11 +435,6 @@ function PossessedBy(Controller C)
     }
 }
 
-function UnPossessed()
-{
-    super.UnPossessed();
-}
-
 // Modified to remove trying to loop non-existent 'Vehicle_Driving' animation if vehicle doesn't have a DriveAnim (e.g. where driver is hidden)
 simulated function AssignInitialPose()
 {
