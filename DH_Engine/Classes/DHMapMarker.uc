@@ -24,6 +24,9 @@ static function bool CanBeUsed(DHGameReplicationInfo GRI)
     return true;
 }
 
+// Override to run specific logic when this marker is placed.
+static function OnMapMarkerPlaced(DHPlayer PC);
+
 defaultproperties
 {
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
