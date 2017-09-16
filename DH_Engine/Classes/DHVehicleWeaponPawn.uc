@@ -2008,43 +2008,28 @@ exec function SetWeaponFireOffset(float NewValue)
 }
 
 // New debug exec to adjust WeaponAttachOffset, to reposition weapon's attachment to vehicle base
-exec function SetAttachOffset(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
+exec function SetAttachOffset(string NewX, string NewY, string NewZ)
 {
-    local vector OldOffset;
-
     if (IsDebugModeAllowed() && VehWep != none)
     {
-        OldOffset = VehWep.WeaponAttachOffset;
-        VehWep.WeaponAttachOffset.X = NewX;
-        VehWep.WeaponAttachOffset.Y = NewY;
-        VehWep.WeaponAttachOffset.Z = NewZ;
-
-        if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
-        {
-            VehWep.WeaponAttachOffset /= 10.0;
-        }
-
+        Log(VehWep.Tag @ "WeaponAttachOffset =" @ float(NewX) @ float(NewY) @ float(NewZ) @ "(was" @ VehWep.WeaponAttachOffset $ ")");
+        VehWep.WeaponAttachOffset.X = float(NewX);
+        VehWep.WeaponAttachOffset.Y = float(NewY);
+        VehWep.WeaponAttachOffset.Z = float(NewZ);
         VehWep.SetRelativeLocation(VehWep.WeaponAttachOffset);
-        Log(VehWep.Tag @ "WeaponAttachOffset =" @ VehWep.WeaponAttachOffset @ "(was" @ OldOffset $ ")");
     }
 }
 
 // New debug exec to adjust location of hatch fire position
-exec function SetFEOffset(int NewX, int NewY, int NewZ, optional int NewScaleInOneTenths)
+exec function SetFEOffset(string NewX, string NewY, string NewZ)
 {
     if (IsDebugModeAllowed() && VehWep != none)
     {
-        if (NewX != 0 || NewY != 0 || NewZ != 0)
+        if (float(NewX) != 0 || float(NewY) != 0 || float(NewZ) != 0)
         {
-            VehWep.FireEffectOffset.X = NewX;
-            VehWep.FireEffectOffset.Y = NewY;
-            VehWep.FireEffectOffset.Z = NewZ;
-        }
-
-        // Option to re-scale effect (won't accept float as input so have to enter say 9 & convert that to 0.9)
-        if (NewScaleInOneTenths > 0.0)
-        {
-            VehWep.FireEffectScale = float(NewScaleInOneTenths) / 10.0;
+            VehWep.FireEffectOffset.X = float(NewX);
+            VehWep.FireEffectOffset.Y = float(NewY);
+            VehWep.FireEffectOffset.Z = float(NewZ);
         }
 
         VehWep.StartHatchFire();

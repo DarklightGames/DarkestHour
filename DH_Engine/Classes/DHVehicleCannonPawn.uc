@@ -878,28 +878,19 @@ exec function SetRange(byte NewRange)
 }
 
 // New debug exec to set the coaxial MG's positional offset vector
-exec function SetAltFireOffset(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
+exec function SetAltFireOffset(string NewX, string NewY, string NewZ)
 {
-    local vector OldAltFireOffset;
-
     if (IsDebugModeAllowed() && Gun != none)
     {
-        OldAltFireOffset = Gun.AltFireOffset;
-        Gun.AltFireOffset.X = NewX;
-        Gun.AltFireOffset.Y = NewY;
-        Gun.AltFireOffset.Z = NewZ;
-
-        if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
-        {
-            Gun.AltFireOffset /= 10.0;
-        }
+        Log(Gun.Tag @ "AltFireOffset =" @ float(NewX) @ float(NewY) @ float(NewZ) @ "(was" @ Gun.AltFireOffset $ ")");
+        Gun.AltFireOffset.X = float(NewX);
+        Gun.AltFireOffset.Y = float(NewY);
+        Gun.AltFireOffset.Z = float(NewZ);
 
         if (Gun.AmbientEffectEmitter != none)
         {
             Gun.AmbientEffectEmitter.SetRelativeLocation(Gun.AltFireOffset);
         }
-
-        Log(Gun.Tag @ "AltFireOffset =" @ Gun.AltFireOffset @ "(was" @ OldAltFireOffset $ ")");
     }
 }
 
@@ -924,12 +915,11 @@ exec function SetGunsight()
 }
 
 // New debug exec to set the launch position for a smoke launcher
-// bScaleOneTenth is an option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
-exec function SetSLFireOffset(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
+exec function SetSLFireOffset(string NewX, string NewY, string NewZ)
 {
     if (IsDebugModeAllowed() && Cannon != none)
     {
-        class'DHVehicleSmokeLauncher'.static.SetFireOffset(Cannon, NewX, NewY, NewZ, bScaleOneTenth);
+        class'DHVehicleSmokeLauncher'.static.SetFireOffset(Cannon, NewX, NewY, NewZ);
     }
 }
 

@@ -102,22 +102,17 @@ static function StaticPrecache(LevelInfo L)
 }
 
 // New debug function to set/adjust the firing offset (called from a debug exec in the cannon pawn class)
-static function SetFireOffset(DHVehicleCannon Cannon, int NewX, int NewY, int NewZ, bool bScaleOneTenth)
+static function SetFireOffset(DHVehicleCannon Cannon, string NewX, string NewY, string NewZ)
 {
-    local vector  OldFireOffset, FireLocation;
+    local vector  FireLocation;
     local rotator VehicleRotation;
 
     if (Cannon != none)
     {
-        OldFireOffset = Cannon.SmokeLauncherFireOffset[0];
-        Cannon.SmokeLauncherFireOffset[0].X = NewX;
-        Cannon.SmokeLauncherFireOffset[0].Y = NewY;
-        Cannon.SmokeLauncherFireOffset[0].Z = NewZ;
-
-        if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
-        {
-            Cannon.SmokeLauncherFireOffset[0] /= 10.0;
-        }
+        Cannon.Log(Cannon.Tag @ "SmokeLauncherFireOffset =" @ float(NewX) @ float(NewY) @ float(NewZ) @ "(was" @ Cannon.SmokeLauncherFireOffset[0] $ ")");
+        Cannon.SmokeLauncherFireOffset[0].X = float(NewX);
+        Cannon.SmokeLauncherFireOffset[0].Y = float(NewY);
+        Cannon.SmokeLauncherFireOffset[0].Z = float(NewZ);
 
         if (Cannon.bHasTurret)
         {
@@ -129,7 +124,6 @@ static function SetFireOffset(DHVehicleCannon Cannon, int NewX, int NewY, int Ne
         }
 
         FireLocation = Cannon.Location + (Cannon.SmokeLauncherFireOffset[0] >> VehicleRotation);
-        Cannon.Log(Cannon.Tag @ "SmokeLauncherFireOffset =" @ Cannon.SmokeLauncherFireOffset[0] @ "(was" @ OldFireOffset $ ")");
         Cannon.ClearStayingDebugLines();
         Cannon.DrawStayingDebugLine(FireLocation, FireLocation + (100.0 * vector(Cannon.SmokeLauncherClass.static.GetFireRotation(0)) >> VehicleRotation), 255, 0, 0);
         Cannon.DrawStayingDebugLine(FireLocation - (20.0 * vector(VehicleRotation)), FireLocation + (20.0 * vector(VehicleRotation)), 0, 255, 0);

@@ -22,7 +22,7 @@ simulated function SetManualTurret(bool bManual)
 simulated function DrawPeriscopeOverlay(Canvas C);
 function AltFire(optional float F);
 function float GetAltAmmoReloadState() { return 0.0; }
-exec function SetAltFireOffset(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth);
+exec function SetAltFireOffset(string NewX, string NewY, string NewZ);
 exec function SetAltFireSpawnOffset(float NewValue);
 exec function Deploy();
 function float GetSmokeLauncherAmmoReloadState() { return 0.0; }

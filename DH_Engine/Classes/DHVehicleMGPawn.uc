@@ -460,28 +460,19 @@ function float ModifyThreat(float Current, Pawn Threat)
 }
 
 // New debug exec to adjust BinocsDrivePos (in binoculars position, the option for a different player offset from attachment bone)
-exec function SetBinocsDrivePos(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
+exec function SetBinocsDrivePos(string NewX, string NewY, string NewZ)
 {
-    local vector OldBinocsDrivePos;
-
     if (IsDebugModeAllowed())
     {
-        OldBinocsDrivePos = BinocsDrivePos;
-        BinocsDrivePos.X = NewX;
-        BinocsDrivePos.Y = NewY;
-        BinocsDrivePos.Z = NewZ;
-
-        if (bScaleOneTenth) // option allowing accuracy to .1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
-        {
-            BinocsDrivePos /= 10.0;
-        }
+        Log(Tag @ "BinocsDrivePos =" @ float(NewX) @ float(NewY) @ float(NewZ) @ "(was" @ BinocsDrivePos $ ")");
+        BinocsDrivePos.X = float(NewX);
+        BinocsDrivePos.Y = float(NewY);
+        BinocsDrivePos.Z = float(NewZ);
 
         if (DriverPositionIndex == BinocPositionIndex && Driver != none)
         {
             Driver.SetRelativeLocation(BinocsDrivePos + Driver.default.PrePivot);
         }
-
-        Log(Tag @ " new BinocsDrivePos =" @ BinocsDrivePos @ "(was" @ OldBinocsDrivePos $ ")");
     }
 }
 

@@ -3746,10 +3746,9 @@ exec function DrawExits(optional bool bClearScreen)
 }
 
 // New debug exec to adjust a vehicle's DrivePos (vehicle occupant positional offset from attachment bone)
-exec function SetDrivePos(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
+exec function SetDrivePos(string NewX, string NewY, string NewZ)
 {
     local Vehicle V;
-    local vector  OldDrivePos;
 
     if (IsDebugModeAllowed())
     {
@@ -3757,19 +3756,12 @@ exec function SetDrivePos(int NewX, int NewY, int NewZ, optional bool bScaleOneT
 
         if (V != none && V.Driver != none)
         {
-            OldDrivePos = V.DrivePos;
-            V.DrivePos.X = NewX;
-            V.DrivePos.Y = NewY;
-            V.DrivePos.Z = NewZ;
-
-            if (bScaleOneTenth) // option allowing accuracy to .1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
-            {
-                V.DrivePos /= 10.0;
-            }
-
+            Log(V.VehicleNameString @ " new DrivePos =" @ float(NewX) @ float(NewY) @ float(NewZ) @ "(was" @ V.DrivePos $ ")");
+            V.DrivePos.X = float(NewX);
+            V.DrivePos.Y = float(NewY);
+            V.DrivePos.Z = float(NewZ);
             V.DetachDriver(V.Driver);
             V.AttachDriver(V.Driver);
-            Log(V.VehicleNameString @ " new DrivePos =" @ V.DrivePos @ "(was" @ OldDrivePos $ ")");
         }
     }
 }
@@ -3778,7 +3770,6 @@ exec function SetDrivePos(int NewX, int NewY, int NewZ, optional bool bScaleOneT
 exec function SetDriveRot(int NewPitch, int NewYaw, int NewRoll)
 {
     local Vehicle V;
-    local rotator OldDriveRot;
 
     if (IsDebugModeAllowed())
     {
@@ -3786,19 +3777,18 @@ exec function SetDriveRot(int NewPitch, int NewYaw, int NewRoll)
 
         if (V != none && V.Driver != none)
         {
-            OldDriveRot = V.DriveRot;
+            Log(V.VehicleNameString @ " new DriveRot =" @ NewPitch @ NewYaw @ NewRoll @ "(was" @ V.DriveRot $ ")");
             V.DriveRot.Pitch = NewPitch;
             V.DriveRot.Yaw = NewYaw;
             V.DriveRot.Roll = NewRoll;
             V.DetachDriver(V.Driver);
             V.AttachDriver(V.Driver);
-            Log(V.VehicleNameString @ " new DriveRot =" @ V.DriveRot @ "(was" @ OldDriveRot $ ")");
         }
     }
 }
 
 // New debug exec to set a vehicle position's 1st person camera position offset
-exec function SetCamPos(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
+exec function SetCamPos(string NewX, string NewY, string NewZ)
 {
     local Vehicle             V;
     local ROVehicleWeaponPawn WP;
@@ -3811,15 +3801,9 @@ exec function SetCamPos(int NewX, int NewY, int NewZ, optional bool bScaleOneTen
         if (V != none)
         {
             OldCamPos = V.FPCamPos;
-            V.FPCamPos.X = NewX;
-            V.FPCamPos.Y = NewY;
-            V.FPCamPos.Z = NewZ;
-
-            if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
-            {
-                V.FPCamPos /= 10.0;
-            }
-
+            V.FPCamPos.X = float(NewX);
+            V.FPCamPos.Y = float(NewY);
+            V.FPCamPos.Z = float(NewZ);
             WP = ROVehicleWeaponPawn(V);
 
             if (WP != none && WP.bMultiPosition)
@@ -3987,38 +3971,33 @@ exec function SetWheelSpeed(int NewValue, optional bool bAddToCurrentSpeed)
 }
 
 // New debug exec to adjust the occupant positions in a vehicle's HUD overlay (the red dots)
-// Pass new X & Y values scaled by 1000, which allows precision to 3 decimal places
-exec function SetOccPos(byte Index, int NewX, int NewY)
+exec function SetOccPos(byte Index, string NewX, string NewY)
 {
     local DHVehicle V;
-    local float     X, Y;
 
     if (IsVehicleDebugModeAllowed(V) && Index < V.VehicleHudOccupantsX.Length)
     {
-        X = float(NewX) / 1000.0;
-        Y = float(NewY) / 1000.0;
-        Log(V.VehicleNameString @ "VehicleHudOccupantsX[" $ Index $ "] =" @ X @ "Y =" @ Y @ "(was" @ V.VehicleHudOccupantsX[Index] @ V.VehicleHudOccupantsY[Index]);
-        V.VehicleHudOccupantsX[Index] = X;
-        V.VehicleHudOccupantsY[Index] = Y;
+        Log(V.VehicleNameString @ "VehicleHudOccupantsX[" $ Index $ "] =" @ float(NewX) @ "Y =" @ float(NewY) @ "(was" @ V.VehicleHudOccupantsX[Index] @ V.VehicleHudOccupantsY[Index]);
+        V.VehicleHudOccupantsX[Index] = float(NewX);
+        V.VehicleHudOccupantsY[Index] = float(NewY);
     }
 }
 
 // New debug exec to adjust the damaged tread indicators on a vehicle's HUD overlay
-// Pass new values scaled by 1000, which allows precision to 3 decimal places
-exec function SetHUDTreads(int NewPosX0, int NewPosX1, int NewPosY, int NewScale)
+exec function SetHUDTreads(string NewPosX0, string NewPosX1, string NewPosY, string NewScale)
 {
     local DHVehicle V;
 
     if (IsVehicleDebugModeAllowed(V))
     {
-        Log(V.VehicleNameString @ "VehicleHudTreadsPosX[0] =" @ string(float(NewPosX0) / 1000.0) @ "VehicleHudTreadsPosX[1] =" @ float(NewPosX1) / 1000.0
-            @ "VehicleHudTreadsPosY =" @ float(NewPosY) / 1000.0 @ "VehicleHudTreadsScale =" @ float(NewScale) / 1000.0
+        Log(V.VehicleNameString @ "VehicleHudTreadsPosX[0] =" @ float(NewPosX0) @ "VehicleHudTreadsPosX[1] =" @ float(NewPosX1)
+            @ "VehicleHudTreadsPosY =" @ float(NewPosY) @ "VehicleHudTreadsScale =" @ float(NewScale)
             @ "(was" @ V.VehicleHudTreadsPosX[0] @ V.VehicleHudTreadsPosX[1] @ V.VehicleHudTreadsPosY @ V.VehicleHudTreadsScale $ ")");
 
-        V.VehicleHudTreadsPosX[0] = float(NewPosX0) / 1000.0;
-        V.VehicleHudTreadsPosX[1] = float(NewPosX1) / 1000.0;
-        V.VehicleHudTreadsPosY = float(NewPosY) / 1000.0;
-        V.VehicleHudTreadsScale = float(NewScale) / 1000.0;
+        V.VehicleHudTreadsPosX[0] = float(NewPosX0);
+        V.VehicleHudTreadsPosX[1] = float(NewPosX1);
+        V.VehicleHudTreadsPosY = float(NewPosY);
+        V.VehicleHudTreadsScale = float(NewScale);
     }
 }
 
@@ -4063,21 +4042,13 @@ exec function SetExhRot(int Index, int NewPitch, int NewYaw, int NewRoll)
 
 // New debug exec to adjust the radius of a vehicle's physics wheels
 // Include no numbers to adjust all wheels, otherwise add index numbers of first & last wheels to adjust
-exec function SetWheelRad(int NewValue, optional bool bScaleOneTenth, optional byte FirstWheelIndex, optional byte LastWheelIndex)
+exec function SetWheelRad(string NewValue, optional byte FirstWheelIndex, optional byte LastWheelIndex)
 {
     local DHVehicle V;
-    local float     NewRadius;
     local int       i;
 
     if (IsVehicleDebugModeAllowed(V) && FirstWheelIndex < V.Wheels.Length)
     {
-        NewRadius = float(NewValue);
-
-        if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
-        {
-            NewRadius /= 10.0;
-        }
-
         if (LastWheelIndex == 0)
         {
             LastWheelIndex = V.Wheels.Length - 1;
@@ -4085,15 +4056,15 @@ exec function SetWheelRad(int NewValue, optional bool bScaleOneTenth, optional b
 
         for (i = FirstWheelIndex; i <= LastWheelIndex; ++i)
         {
-            Log(V.VehicleNameString @ "Wheels[" $ i $ "].WheelRadius =" @ NewRadius @ "(was" @ V.Wheels[i].WheelRadius $ ")");
-            V.Wheels[i].WheelRadius = NewRadius;
+            Log(V.VehicleNameString @ "Wheels[" $ i $ "].WheelRadius =" @ float(NewValue) @ "(was" @ V.Wheels[i].WheelRadius $ ")");
+            V.Wheels[i].WheelRadius = float(NewValue);
         }
     }
 }
 
 // New debug exec to adjust the attachment bone offset of a vehicle's physics wheels
 // Include no numbers to adjust all wheels, otherwise add index numbers of first & last wheels to adjust
-exec function SetWheelOffset(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth, optional byte FirstWheelIndex, optional byte LastWheelIndex)
+exec function SetWheelOffset(string NewX, string NewY, string NewZ, optional byte FirstWheelIndex, optional byte LastWheelIndex)
 {
     local DHVehicle V;
     local vector    NewBoneOffset;
@@ -4101,14 +4072,9 @@ exec function SetWheelOffset(int NewX, int NewY, int NewZ, optional bool bScaleO
 
     if (IsVehicleDebugModeAllowed(V) && FirstWheelIndex < V.Wheels.Length)
     {
-        NewBoneOffset.X = NewX;
-        NewBoneOffset.Y = NewY;
-        NewBoneOffset.Z = NewZ;
-
-        if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
-        {
-            NewBoneOffset /= 10.0;
-        }
+        NewBoneOffset.X = float(NewX);
+        NewBoneOffset.Y = float(NewY);
+        NewBoneOffset.Z = float(NewZ);
 
         if (LastWheelIndex == 0)
         {
@@ -4174,22 +4140,14 @@ exec function SetSuspTravel(int NewValue, optional byte FirstWheelIndex, optiona
 // New debug exec to adjust the positioning of a vehicle's suspension bones that support its physics wheels
 // Allows adjustment of individual wheels, but note that on entering a vehicle, native code calls SVehicleUpdateParams(), which will undo individual settings
 // Settings for all wheels get matched to values of WheelSuspensionOffset, so if individual settings are required, SVehicleUpdateParams must be overridden
-exec function SetSuspOffset(int NewValue, optional bool bScaleOneTenth, optional byte FirstWheelIndex, optional byte LastWheelIndex)
+exec function SetSuspOffset(string NewValue, optional byte FirstWheelIndex, optional byte LastWheelIndex)
 {
     local DHVehicle V;
-    local float     NewOffset;
     local int       i;
 
     if (IsVehicleDebugModeAllowed(V) && FirstWheelIndex < V.Wheels.Length)
     {
-        NewOffset = float(NewValue);
-
-        if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
-        {
-            NewOffset /= 10.0;
-        }
-
-        V.WheelSuspensionOffset = NewValue; // on re-entering the vehicle, all physics wheels will have this value set, undoing any individual settings
+        V.WheelSuspensionOffset = float(NewValue); // on re-entering the vehicle, all physics wheels get set to this property, undoing any individual settings
 
         if (LastWheelIndex == 0)
         {
@@ -4198,8 +4156,8 @@ exec function SetSuspOffset(int NewValue, optional bool bScaleOneTenth, optional
 
         for (i = FirstWheelIndex; i <= LastWheelIndex; ++i)
         {
-            Log(V.VehicleNameString @ "Wheels[" $ i $ "].SuspensionOffset =" @ NewOffset @ "(was" @ V.Wheels[i].SuspensionOffset $ ")");
-            V.Wheels[i].SuspensionOffset = NewOffset;
+            Log(V.VehicleNameString @ "Wheels[" $ i $ "].SuspensionOffset =" @ float(NewValue) @ "(was" @ V.Wheels[i].SuspensionOffset $ ")");
+            V.Wheels[i].SuspensionOffset = float(NewValue);
         }
     }
 }
@@ -4235,8 +4193,8 @@ exec function DrawCOM(optional bool bClearScreen)
     }
 }
 
-// New debug exec to adjust a vehicle's karma centre of mass (enter X, Y & Z offset values as one tenths)
-exec function SetCOM(int NewX, int NewY, int NewZ)
+// New debug exec to adjust a vehicle's karma centre of mass
+exec function SetCOM(string NewX, string NewY, string NewZ)
 {
     local DHVehicle V;
     local vector    COM, OldCOM;
@@ -4244,9 +4202,9 @@ exec function SetCOM(int NewX, int NewY, int NewZ)
     if (IsVehicleDebugModeAllowed(V))
     {
         V.KGetCOMOffset(OldCOM);
-        COM.X = float(NewX) / 10.0;
-        COM.Y = float(NewY) / 10.0;
-        COM.Z = float(NewZ) / 10.0;
+        COM.X = float(NewX);
+        COM.Y = float(NewY);
+        COM.Z = float(NewZ);
         V.KSetCOMOffset(COM);
         V.SetPhysics(PHYS_None);
         V.SetPhysics(PHYS_Karma);
@@ -4284,13 +4242,18 @@ exec function SetAngDamp(float NewValue)
 }
 
 // New debug exec to adjust location of engine smoke/fire position
-exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFire, optional int NewScaleInOneTenths)
+exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFire, optional string NewScale)
 {
     local DHVehicle V;
+    local vector    OldOffset;
+    local float     OldScale;
 
     if (IsVehicleDebugModeAllowed(V) && Level.NetMode != NM_DedicatedServer)
     {
-        // Only update offset if something has been entered (otherwise just entering "DEOffset" is quick way of triggering smoke/fire at current position)
+        OldOffset = V.DamagedEffectOffset;
+        OldScale = V.DamagedEffectScale;
+
+        // Only update offset if something has been entered (otherwise just entering "DEOffset" is quick way of triggering smoke effect at current position)
         if (NewX != 0 || NewY != 0 || NewZ != 0)
         {
             V.DamagedEffectOffset.X = NewX;
@@ -4298,7 +4261,21 @@ exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFir
             V.DamagedEffectOffset.Z = NewZ;
         }
 
-        Log(V.VehicleNameString @ "DamagedEffectOffset =" @ V.DamagedEffectOffset);
+        // Option to re-scale effect
+        if (float(NewScale) > 0.0)
+        {
+            V.DamagedEffectScale = float(NewScale);
+        }
+        
+        // Log settings
+        if (V.DamagedEffectOffset != OldOffset || V.DamagedEffectScale != OldScale)
+        {
+            Log(V.VehicleNameString @ "DamagedEffectOffset =" @ V.DamagedEffectOffset @ "scale =" @ V.DamagedEffectScale @ "(old was" @ OldOffset @ "scale =" @ OldScale $ ")");
+        }
+        else
+        {
+            Log(V.VehicleNameString @ "DamagedEffectOffset =" @ V.DamagedEffectOffset @ "scale =" @ V.DamagedEffectScale);
+        }
 
         // Appears necessary to get native code to spawn a DamagedEffect if it doesn't already exist
         if (V.DamagedEffect == none)
@@ -4325,12 +4302,6 @@ exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFir
             {
                 V.DamagedEffect.UpdateDamagedEffect(false, 0.0, false, false); // light smoke
             }
-        }
-
-        // Option to re-scale effect (won't accept float as input so have to enter say 9 & convert that to 0.9)
-        if (NewScaleInOneTenths > 0.0)
-        {
-            V.DamagedEffectScale = float(NewScaleInOneTenths) / 10.0;
         }
 
         // Reposition any existing effect
@@ -4618,7 +4589,7 @@ simulated function SpawnPlaneAttachment(DHVehicle V, rotator RelRotation, option
 simulated function DestroyPlaneAttachments(DHVehicle V)
 {
     local StaticMesh PlaneStaticMesh;
-    local int i;
+    local int        i;
 
     if (V != none)
     {
