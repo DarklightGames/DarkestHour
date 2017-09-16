@@ -26,8 +26,6 @@ var() TeamReinf         PhaseEndReinforcements;             // What to set reinf
 
 var() sound             PhaseEndSounds[2];                  // Axis and Allies Round Begin Sound
 
-var localized string    PhaseMessage;                       // Message to send periodically when phase is current
-var localized string    PhaseEndMessage;                    // Message to send to team when end is reached
 var bool                bSkipPreStart;                      // If true will override the game's default PreStartTime, making it zero
 var bool                bPlayersOpenedMenus;
 var int                 TimerCount;
@@ -112,7 +110,7 @@ auto state Timing
 
         if (TimerCount < SetupPhaseDurationActual)
         {
-            // Set the message out every x seconds (currently every 1 second)
+            // Set the message out every x seconds (currently every second)
             if (TimerCount > 0 && TimerCount % 1 == 0)
             {
                 for (C = Level.ControllerList; C != none; C = C.NextController)
@@ -121,7 +119,7 @@ auto state Timing
 
                     if (PC != none)
                     {
-                        PC.ClientMessage(Repl(PhaseMessage, "{0}", SetupPhaseDurationActual - TimerCount), 'CriticalEvent');
+                        PC.ReceiveLocalizedMessage(class'DHSetupPhaseMessage', class'UInteger'.static.FromShorts(0, SetupPhaseDurationActual - TimerCount));
                     }
                 }
             }
@@ -237,7 +235,7 @@ auto state Timing
 
             if (PC != none && (PC.GetTeamNum() == AXIS_TEAM_INDEX || PC.GetTeamNum() == ALLIES_TEAM_INDEX))
             {
-                PC.ClientMessage(Repl(PhaseEndMessage, "{0}", GRI.SpawnsRemaining[PC.GetTeamNum()]), 'CriticalEvent');
+                PC.ReceiveLocalizedMessage(class'DHSetupPhaseMessage', class'UInteger'.static.FromShorts(1, GRI.SpawnsRemaining[PC.GetTeamNum()]));
                 PC.PlayAnnouncement(PhaseEndSounds[PC.GetTeamNum()], 1, true);
             }
         }
@@ -256,8 +254,6 @@ defaultproperties
     PhaseEndReinforcements=(AxisReinforcements=-1,AlliesReinforcements=-1)
     PhaseEndSounds(0)=sound'DH_SundrySounds.RoundBeginSounds.Axis_Start'
     PhaseEndSounds(1)=sound'DH_SundrySounds.RoundBeginSounds.US_Start'
-    PhaseMessage="Round Begins In: {0} seconds"
-    PhaseEndMessage="Round Has Started! Your team begins with {0} reinforcements."
     bSkipPreStart=true
     SetupPhaseDuration=60
     SpawningEnabledTime=30
