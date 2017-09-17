@@ -855,7 +855,7 @@ defaultproperties
     TeamOwner=TEAM_Neutral
     OldTeamIndex=2  // NEUTRAL_TEAM_INDEX
     TeamIndex=2     // NEUTRAL_TEAM_INDEX
-    RemoteRole=ROLE_SimulatedProxy
+    RemoteRole=ROLE_DumbProxy
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.hedgehog_01'
     HealthMax=100
