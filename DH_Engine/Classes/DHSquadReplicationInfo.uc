@@ -112,7 +112,7 @@ function PostNetBeginPlay()
 function Timer()
 {
     local DHPlayer PC;
-    local DHPlayer OtherPC;
+    local Controller OtherController;
     local DHPlayerReplicationInfo PRI, OtherPRI;
     local Controller C;
     local int i, TeamIndex, SquadIndex, UnblockedCount;
@@ -148,14 +148,13 @@ function Timer()
 
             if (OtherPRI != none)
             {
-                OtherPC = DHPlayer(OtherPRI.Owner);
+                OtherController = Controller(OtherPRI.Owner);
 
-                if (OtherPC != none && OtherPC.Pawn != none)
+                if (OtherController != none && OtherController.Pawn != none)
                 {
-                    PC.SquadMemberLocations[i].X = OtherPC.Pawn.Location.X;
-                    PC.SquadMemberLocations[i].Y = OtherPC.Pawn.Location.Y;
-                    PC.SquadMemberLocations[i].Z = OtherPC.Pawn.Rotation.Yaw;
-
+                    PC.SquadMemberLocations[i].X = OtherController.Pawn.Location.X;
+                    PC.SquadMemberLocations[i].Y = OtherController.Pawn.Location.Y;
+                    PC.SquadMemberLocations[i].Z = OtherController.Pawn.Rotation.Yaw;
                     continue;
                 }
             }
