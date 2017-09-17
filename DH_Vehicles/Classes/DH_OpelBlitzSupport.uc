@@ -16,11 +16,10 @@ defaultproperties
     VehicleHudOccupantsY(2)=0.8
     VehicleHudOccupantsX(3)=0.55
     VehicleHudOccupantsY(3)=0.8
-
     SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Vehicle'
     SupplyAttachmentBone="body"
     SupplyAttachmentRotation=(Yaw=-16384)
-    SupplyAttachmentOffset=(Y=55,Z=-10)
+    SupplyAttachmentOffset=(X=0.0,Y=55.0,Z=-10.0)
     ResupplyAttachmentBone="body"
     VehHitpoints(2)=(PointRadius=40.0,PointScale=1.0,PointBone="body",PointOffset=(X=0.0,Y=50.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
 }

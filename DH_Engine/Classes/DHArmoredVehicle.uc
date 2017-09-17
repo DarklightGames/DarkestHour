@@ -2276,17 +2276,15 @@ defaultproperties
 {
     // Vehicle properties
     VehicleMass=12.5
-    CollisionRadius=175.0
     CollisionHeight=60.0
     PointValue=3.0
     MaxDesireability=1.9
     EngineRestartFailChance=0.1
-    MinRunOverSpeed=83.82 // * 0.05965 = ~5 kph (Players should be easier to run over with armored vehicles)
+    MinRunOverSpeed=83.82 // decreased to 5 kph, as players should be easier to run over with armored vehicles
 
     // Driver & positions
     bMustBeTankCommander=true
     UnbuttonedPositionIndex=2
-    DriverAttachmentBone="Driver_attachment"
     BeginningIdleAnim="driver_hatch_idle_close"
     PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
 
@@ -2297,8 +2295,8 @@ defaultproperties
     VehHitpoints(0)=(PointBone="Body") // default engine hit point bone
     GunOpticsHitPointIndex=-1 // set in subclass if vehicle has exposed gunsight optics
     TreadDamageThreshold=0.75
+    bCanCrash=false
     ImpactDamageThreshold=5000.0
-    ImpactDamageMult=0.001
     DamagedPeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.Destroyed'
 
     // Component damage probabilities
@@ -2338,9 +2336,6 @@ defaultproperties
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
     DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
-    DisintegrationHealth=-10000.0 // -10000 default to make classes enable disintegration
-    DestructionLinearMomentum=(Min=100.0,Max=350.0)
-    DestructionAngularMomentum=(Min=50.0,Max=150.0)
     ExplosionDamage=575.0
     ExplosionRadius=900.0
     ExplosionSoundRadius=1000.0
@@ -2365,30 +2360,24 @@ defaultproperties
     TrackDamagedSound=sound'Vehicle_Engines.track_broken'
     LeftTrackSoundBone="Track_L"
     RightTrackSoundBone="Track_R"
-    RumbleSoundBone="body"
     RumbleSoundVolumeModifier=1.0
 
-    // Visible effects
+    // Effects
     SparkEffectClass=class'ROEngine.VehicleImpactSparks' // reinstate from ROVehicle (removed for non-armoured DHVehicles)
     SteeringScaleFactor=0.75
     SteerBoneAxis=AXIS_X
     LeftLeverAxis=AXIS_Z
     RightLeverAxis=AXIS_Z
+    StartUpForce="TankStartUp"
+    ShutDownForce="TankShutDown"
 
-    // Camera
-    TPCamDistance=375.0
-    TPCamLookat=(X=0.0,Y=0.0,Z=0.0)
-    TPCamWorldOffset=(X=0.0,Y=0.0,Z=100.0)
-
-    // View shake
+    // Camera & view
     ViewShakeRadius=50.0 // was 600 in RO
     ViewShakeOffsetMag=(X=0.0,Y=0.0,Z=0.0) // was X=0.5,Z=2 in RO
     ViewShakeOffsetFreq=0.0 // was 7 in RO
-
-    // Force feedback
-    StartUpForce="TankStartUp"
-    ShutDownForce="TankShutDown"
-    CenterSpringForce="SpringONSSRV"
+    TPCamDistance=375.0
+    TPCamLookat=(X=0.0,Y=0.0,Z=0.0)
+    TPCamWorldOffset=(X=0.0,Y=0.0,Z=100.0)
 
     // Exit positions
     ExitPositions(0)=(X=0.0,Y=-165.0,Z=40.0)
@@ -2396,54 +2385,24 @@ defaultproperties
     ExitPositions(2)=(X=0.0,Y=-165.0,Z=-40.0)
     ExitPositions(3)=(X=0.0,Y=165.0,Z=-40.0)
 
-    // Driving & movement
+    // Driving & steering
     MaxCriticalSpeed=700.0 // approx 42 kph
-    GroundSpeed=325.0
-    TorqueCurve=(Points=((InVal=0,OutVal=12.0),(InVal=200,OutVal=3.0),(InVal=1500,OutVal=4.0),(InVal=2200,OutVal=0.0)))
-    GearRatios(0)=-0.2
-    GearRatios(1)=0.2
-    GearRatios(2)=0.35
-    GearRatios(3)=0.55
-    GearRatios(4)=0.6
-    TransRatio=0.12
+    TorqueCurve=(Points=((InVal=0.0,OutVal=12.0),(InVal=200.0,OutVal=3.0),(InVal=1500.0,OutVal=4.0),(InVal=2200.0,OutVal=0.0)))
     ChangeUpPoint=2050.0   // was 2000 in RO
     ChangeDownPoint=1100.0 // was 1000 in RO
-    LSDFactor=1.0
-    FTScale=0.03
     ChassisTorqueScale=0.9 // was 0.25 in RO
-    MinBrakeFriction=4.0
-    EngineBrakeFactor=0.0001
-    EngineBrakeRPMScale=0.1
-    EngineInertia=0.1
-    IdleRPM=500.0
-    EngineRPMSoundRange=5000
-    RevMeterScale=4000.0
-
-    // Steering & braking
     bSpecialTankTurning=true
-    MaxSteerAngleCurve=(Points=((OutVal=35.0),(InVal=1500.0,OutVal=20.0),(InVal=1000000000.0,OutVal=15.0)))
+    TurnDamping=50.0
     SteerSpeed=160.0
-    TurnDamping=50
+    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=35.0),(InVal=1500.0,OutVal=20.0),(InVal=1000000000.0,OutVal=15.0)))
     bHasHandbrake=true
-    HandbrakeThresh=200.0
-    StopThreshold=100.0
-    MaxBrakeTorque=20.0
 
     // Physics wheels properties
-    WheelSoftness=0.025
     WheelPenScale=2.0
-    WheelPenOffset=0.01
-    WheelRestitution=0.1
-    WheelInertia=0.1
-    WheelLongFrictionFunc=(Points=(,(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
-    WheelLongSlip=0.001
-    WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=10000000000.0,OutVal=0.00)))
+    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
     WheelLongFrictionScale=1.5
+    WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=10000000000.0,OutVal=0.00)))
     WheelLatFrictionScale=3.0
-    WheelHandbrakeSlip=0.01
-    WheelHandbrakeFriction=0.1
-    WheelSuspensionTravel=15.0
-    WheelSuspensionMaxRenderTravel=15.0
 
     // Karma properties
     Begin Object Class=KarmaParamsRBFull Name=KParams0

@@ -215,6 +215,7 @@ defaultproperties
     DisintegrationHealth=-1000000000.0
     DestructionLinearMomentum=(Min=0.0,Max=0.0)
     DestructionAngularMomentum=(Min=0.0,Max=0.0)
+    bCanCrash=false
 
     // Miscellaneous
     TouchMessage="Use the "

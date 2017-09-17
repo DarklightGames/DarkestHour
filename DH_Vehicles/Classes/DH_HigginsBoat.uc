@@ -278,63 +278,26 @@ event RanInto(Actor Other);
 
 defaultproperties
 {
+    // Vehicle properties
+    VehicleNameString="Higgins Boat"
+    VehicleTeam=1
     bIsApc=true
     bKeyVehicle=true // means we skip usual check for nearby friendly players before resetting empty vehicle & making it respawn
-    InitialPositionIndex=1
-    BinocPositionIndex=2
+    VehicleMass=6.0
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc.higgins.HigginsBoat_ramp_coll',AttachBone="Master2z00",Offset=(X=0.0,Y=-252.0,Z=-36.0)) // col mesh for bow ramp
+    CollisionAttachments(1)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc.higgins.HigginsBoat_coll',AttachBone="Master1z00",Offset=(X=0.0,Y=0.0,Z=0.01)) // col mesh for rest of the boat
     bEngineOff=false
     bSavedEngineOff=false
-    BinocsOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
-    RampDownSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01'
-    RampUpSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampClose01'
-    RampSoundVolume=180.0
+    MaxDesireability=1.9
+
+    // Hull mesh
+    Mesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat'
+    Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.HigginsBoat'
+    BeginningIdleAnim="" // easy way to stop unwanted BeginningIdleAnim being played in several functions without having to override them
     RampUpIdleAnim="Ramp_idle_raised"
     RampDownIdleAnim="Ramp_idle_dropped"
-    WashSound=sound'DH_AlliedVehicleSounds.higgins.wash01'
-    VehicleAttachments(0)=(AttachBone="Box01") // attachment bone for wash sound attachment
-    EngineSound=SoundGroup'DH_AlliedVehicleSounds.higgins.HigginsEngine_loop'
-    EngineSoundBone="Engine"
-    DestroyedAnimName="Ramp_idle_dropped"
-    WheelSoftness=0.025
-    WheelPenScale=1.2
-    WheelPenOffset=0.01
-    WheelRestitution=0.1
-    WheelInertia=0.1
-    WheelLongFrictionFunc=(Points=(,(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
-    WheelLongSlip=0.001
-    WheelLatSlipFunc=(Points=(,(InVal=30.0,OutVal=0.009),(InVal=45.0),(InVal=10000000000.0)))
-    WheelLongFrictionScale=1.1
-    WheelLatFrictionScale=1.55
-    WheelHandbrakeSlip=0.01
-    WheelHandbrakeFriction=0.1
-    WheelSuspensionTravel=10.0
-    WheelSuspensionMaxRenderTravel=5.0
-    FTScale=0.03
-    ChassisTorqueScale=0.095
-    MinBrakeFriction=4.0
-    MaxSteerAngleCurve=(Points=((OutVal=45.0),(InVal=300.0,OutVal=30.0),(InVal=500.0,OutVal=20.0),(InVal=600.0,OutVal=15.0),(InVal=1000000000.0,OutVal=10.0)))
-    TorqueCurve=(Points=((OutVal=1.0),(InVal=200.0,OutVal=0.75),(InVal=1500.0,OutVal=10.0),(InVal=2200.0)))
-    GearRatios(0)=-0.2
-    GearRatios(1)=0.2
-    GearRatios(2)=0.3
-    GearRatios(3)=0.45
-    GearRatios(4)=0.8
-    TransRatio=0.1
-    ChangeUpPoint=1990.0
-    LSDFactor=1.0
-    EngineBrakeFactor=0.0001
-    EngineBrakeRPMScale=0.1
-    MaxBrakeTorque=20.0
-    SteerSpeed=20.0
-    TurnDamping=50.0
-    StopThreshold=100.0
-    HandbrakeThresh=200.0
-    EngineInertia=0.1
-    SteerBoneName="Master3z00"
-    RevMeterScale=4000.0
-    ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
-    ExhaustPipes(0)=(ExhaustPosition=(X=-280.0,Y=-31.0,Z=99.0),ExhaustRotation=(Pitch=31000))
+
+    // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_HigginsBoatMGPawn',WeaponBone="mg_base")
     PassengerPawns(0)=(AttachBone="passenger_L1",DrivePos=(X=0.0,Y=0.0,Z=20.0),DriveAnim="higgins_rider1_idle")
     PassengerPawns(1)=(AttachBone="passenger_L2",DrivePos=(X=0.0,Y=0.0,Z=20.0),DriveAnim="higgins_rider2_idle")
@@ -342,18 +305,78 @@ defaultproperties
     PassengerPawns(3)=(AttachBone="passenger_R1",DrivePos=(X=0.0,Y=0.0,Z=20.0),DriveAnim="higgins_rider4_idle")
     PassengerPawns(4)=(AttachBone="passenger_R2",DrivePos=(X=0.0,Y=0.0,Z=20.0),DriveAnim="higgins_rider5_idle")
     PassengerPawns(5)=(AttachBone="passenger_R3",DrivePos=(X=0.0,Y=0.0,Z=20.0),DriveAnim="higgins_rider6_idle")
-    IdleSound=sound'DH_AlliedVehicleSounds.HigginsIdle01'
-    StartUpSound=sound'DH_AlliedVehicleSounds.higgins.HigginsStart01'
-    ShutDownSound=sound'DH_AlliedVehicleSounds.higgins.HigginsStop01'
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.higgins.HigginsBoat_destroyed'
-    DamagedEffectOffset=(X=-170.0,Y=20.0,Z=50.0)
-    VehicleTeam=1
-    SteeringScaleFactor=2.0
-    BeginningIdleAnim="" // easy way to stop unwanted BeginningIdleAnim being played in several functions without having to override them
+
+    // Driver
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',TransitionUpAnim="Ramp_Raise",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',TransitionDownAnim="Ramp_Drop",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true)
     DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true,bDrawOverlays=true)
+    BinocPositionIndex=2
+    BinocsOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
+    DriverAttachmentBone="driver_player"
+    DrivePos=(X=0.0,Y=0.0,Z=10.0)
+    DriveAnim="stand_idlehip_satchel"
+
+    // Movement
+    GearRatios(2)=0.3
+    GearRatios(3)=0.45
+    GearRatios(4)=0.8
+    TransRatio=0.1
+    ChangeUpPoint=1990.0
+    TorqueCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=200.0,OutVal=0.75),(InVal=1500.0,OutVal=10.0),(InVal=2200.0,OutVal=0.0)))
+    ChassisTorqueScale=0.095
+    WaterSpeed=80.0
+    GroundSpeed=80.0
+    SteerSpeed=20.0
+    TurnDamping=50.0
+    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=45.0),(InVal=300.0,OutVal=30.0),(InVal=500.0,OutVal=20.0),(InVal=600.0,OutVal=15.0),(InVal=1000000000.0,OutVal=10.0)))
+
+    // Physics wheels properties
+    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
+    WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=45.0,OutVal=0.0),(InVal=10000000000.0,OutVal=0.0)))
+    WheelLatFrictionScale=1.55
+    WheelSuspensionTravel=10.0
+    WheelSuspensionMaxRenderTravel=5.0
+
+    // Damage
+    HealthMax=800.0
+    Health=800
+    VehHitpoints(0)=(PointRadius=50.0,PointBone="Master1z00",PointOffset=(X=-160.0,Y=0.0,Z=60.0)) // engine
+    bCanCrash=false
+    DamagedEffectOffset=(X=-170.0,Y=20.0,Z=50.0)
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.higgins.HigginsBoat_destroyed'
+
+    // Exit
+    ExitPositions(0)=(X=-30.0,Y=-38.0,Z=100.0) // 'driver'
+    ExitPositions(1)=(X=-30.0,Y=38.0,Z=100.0)  // 30 cal gunner
+    ExitPositions(2)=(X=185.0,Y=-38.0,Z=100.0) // passengers
+    ExitPositions(3)=(X=115.0,Y=-38.0,Z=100.0)
+    ExitPositions(4)=(X=45.0,Y=-38.0,Z=100.0)
+    ExitPositions(5)=(X=185.0,Y=38.0,Z=100.0)
+    ExitPositions(6)=(X=115.0,Y=38.0,Z=100.0)
+    ExitPositions(7)=(X=45.0,Y=38.0,Z=100.0)
+
+    // Sounds
+    IdleSound=sound'DH_AlliedVehicleSounds.HigginsIdle01'
+    StartUpSound=sound'DH_AlliedVehicleSounds.higgins.HigginsStart01'
+    ShutDownSound=sound'DH_AlliedVehicleSounds.higgins.HigginsStop01'
+    EngineSound=SoundGroup'DH_AlliedVehicleSounds.higgins.HigginsEngine_loop'
+    EngineSoundBone="Engine"
+    WashSound=sound'DH_AlliedVehicleSounds.higgins.wash01'
+    VehicleAttachments(0)=(AttachBone="Box01") // attachment bone for wash sound attachment
+    RampDownSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01'
+    RampUpSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampClose01'
+    RampSoundVolume=180.0
+
+    // Visual effects
+    ExhaustPipes(0)=(ExhaustPosition=(X=-280.0,Y=-31.0,Z=99.0),ExhaustRotation=(Pitch=31000))
+    ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect'
+    ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
+    SteerBoneName="Master3z00"
+    SteeringScaleFactor=2.0
+
+    // HUD
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.higgins_body'
+    VehicleHudEngineY=0.0
     VehicleHudOccupantsX(0)=0.43
     VehicleHudOccupantsX(1)=0.57
     VehicleHudOccupantsX(2)=0.43
@@ -369,9 +392,9 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.3
     VehicleHudOccupantsY(6)=0.4
     VehicleHudOccupantsY(7)=0.5
-    VehicleHudEngineY=0.0
-    VehHitpoints(0)=(PointRadius=50.0,PointBone="Master1z00",PointOffset=(X=-160.0,Z=60.0)) // engine
-    DriverAttachmentBone="driver_player"
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.higgins'
+
+    // Physics wheels
     Begin Object Class=SVehicleWheel Name=LFWheel
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -408,28 +431,8 @@ defaultproperties
         WheelRadius=30.0
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_HigginsBoat.RRWheel'
-    VehicleMass=6.0
-    DrivePos=(Z=10.0)
-    DriveAnim="stand_idlehip_satchel"
-    ExitPositions(0)=(X=-30.0,Y=-38.0,Z=100.0)
-    ExitPositions(1)=(X=-30.0,Y=38.0,Z=100.0)
-    ExitPositions(2)=(X=185.0,Y=-38.0,Z=100.0)
-    ExitPositions(3)=(X=115.0,Y=-38.0,Z=100.0)
-    ExitPositions(4)=(X=45.0,Y=-38.0,Z=100.0)
-    ExitPositions(5)=(X=185.0,Y=38.0,Z=100.0)
-    ExitPositions(6)=(X=115.0,Y=38.0,Z=100.0)
-    ExitPositions(7)=(X=45.0,Y=38.0,Z=100.0)
-    VehicleNameString="Higgins Boat"
-    MaxDesireability=1.9
-    GroundSpeed=80.0
-    WaterSpeed=80.0
-    HealthMax=800.0
-    Health=800
-    Mesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat'
-    Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.HigginsBoat'
-    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc.higgins.HigginsBoat_ramp_coll',AttachBone="Master2z00",Offset=(X=0.0,Y=-252.0,Z=-36.0)) // col mesh for bow ramp
-    CollisionAttachments(1)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc.higgins.HigginsBoat_coll',AttachBone="Master1z00",Offset=(X=0.0,Y=0.0,Z=0.01)) // col mesh for rest of the boat
-    CollisionHeight=60.0
+
+    // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.3
         KInertiaTensor(3)=4.0
@@ -449,5 +452,4 @@ defaultproperties
         KImpactThreshold=850.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_HigginsBoat.KParams0'
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.higgins'
 }

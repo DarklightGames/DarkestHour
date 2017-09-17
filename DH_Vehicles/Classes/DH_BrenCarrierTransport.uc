@@ -12,103 +12,121 @@ class DH_BrenCarrierTransport extends DHVehicle;
 
 defaultproperties
 {
-    ReinforcementCost=3
+    // Vehicle properties
+    VehicleNameString="Bren Carrier Mk.I"
+    VehicleTeam=1
     bIsApc=true
     bHasTreads=true
-    bSpecialTankTurning=true
-    TreadHitMaxHeight=7.0
-    VehicleHudTreadsPosX(0)=0.37
-    VehicleHudTreadsPosX(1)=0.66
-    VehicleHudTreadsPosY=0.47
-    VehicleHudTreadsScale=0.65
-    FrontRightAngle=20.0 // angles set specifically for tread hits
-    RearRightAngle=157.0
-    RearLeftAngle=203.5
-    FrontLeftAngle=339.5
-    PointValue=2.0
+    bSpecialTankTurning=true // because Bren Carrier is fully tracked
+    VehicleMass=5.0
     VehicleSpikeTime=60.0
-    MaxPitchSpeed=125.0
-    TreadVelocityScale=80.0
-    LeftTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_L'
-    RightTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_R'
-    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble03'
-    LeftTrackSoundBone="Wheel_T_L_3"
-    RightTrackSoundBone="Wheel_T_R_3"
-    RumbleSoundBone="body"
-    MaxCriticalSpeed=875.0 // 52 kph
-    LeftTreadIndex=1
-    RightTreadIndex=2
-    LeftWheelBones(0)="Wheel_T_L_1"
-    LeftWheelBones(1)="Wheel_T_L_2"
-    LeftWheelBones(2)="Wheel_T_L_3"
-    LeftWheelBones(3)="Wheel_T_L_4"
-    LeftWheelBones(4)="Wheel_T_L_5"
-    RightWheelBones(0)="Wheel_T_R_1"
-    RightWheelBones(1)="Wheel_T_R_2"
-    RightWheelBones(2)="Wheel_T_R_3"
-    RightWheelBones(3)="Wheel_T_R_4"
-    RightWheelBones(4)="Wheel_T_R_5"
-    WheelRotationScale=40000.0
-    WheelSoftness=0.025
-    WheelPenScale=2.0
-    WheelPenOffset=0.01
-    WheelRestitution=0.1
-    WheelInertia=0.1
-    WheelLongFrictionFunc=(Points=(,(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
-    WheelLongSlip=0.001
-    WheelLatSlipFunc=(Points=(,(InVal=30.0,OutVal=0.009),(InVal=10000000000.0)))
-    WheelLongFrictionScale=1.5
-    WheelLatFrictionScale=3.0
-    WheelHandbrakeSlip=0.01
-    WheelHandbrakeFriction=0.1
-    WheelSuspensionTravel=15.0
-    FTScale=0.03
-    ChassisTorqueScale=0.25
-    MinBrakeFriction=4.0
-    MaxSteerAngleCurve=(Points=((OutVal=35.0),(InVal=1500.0,OutVal=20.0),(InVal=1000000000.0,OutVal=15.0)))
-    TorqueCurve=(Points=((OutVal=11.0),(InVal=200.0,OutVal=1.25),(InVal=1500.0,OutVal=2.5),(InVal=2200.0)))
-    GearRatios(0)=-0.2
-    GearRatios(1)=0.2
-    GearRatios(2)=0.35
-    GearRatios(3)=0.55
-    GearRatios(4)=0.6
-    TransRatio=0.145
-    LSDFactor=1.0
-    EngineBrakeFactor=0.0001
-    EngineBrakeRPMScale=0.1
-    MaxBrakeTorque=20.0
-    SteerSpeed=160.0
-    TurnDamping=50.0
-    StopThreshold=100.0
-    HandbrakeThresh=200.0
-    EngineInertia=0.1
-    IdleRPM=500.0
-    EngineRPMSoundRange=5000.0
-    SteerBoneName="Steering"
-    RevMeterScale=4000.0
-    ExhaustPipes(0)=(ExhaustPosition=(X=-105.0,Y=33.0,Z=13.0),ExhaustRotation=(Pitch=36000))
-    ExhaustPipes(1)=(ExhaustPosition=(X=-105.0,Y=-33.0,Z=13.0),ExhaustRotation=(Pitch=36000))
+    PointValue=2.0
+    ReinforcementCost=3
+    MaxDesireability=1.2
+
+    // Hull mesh
+    Mesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_ext'
+    Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.BrenCarrier_body_ext'
+    Skins(1)=texture'allies_vehicles_tex.Treads.T60_treads'
+    Skins(2)=texture'allies_vehicles_tex.Treads.T60_treads'
+    Skins(3)=texture'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int'
+    HighDetailOverlay=shader'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int_S'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=3
+    BeginningIdleAnim="driver_hatch_idle_close"
+
+    // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_BrenCarrierMGPawn',WeaponBone="mg_base")
     PassengerPawns(0)=(AttachBone="passenger_l_1",DriveAnim="VUC_rider1_idle")
     PassengerPawns(1)=(AttachBone="passenger_l_2",DriveAnim="VUC_rider1_idle")
     PassengerPawns(2)=(AttachBone="passenger_r_1",DriveAnim="VUC_rider1_idle")
     PassengerPawns(3)=(AttachBone="passenger_r_2",DriveAnim="VUC_rider1_idle")
-    IdleSound=SoundGroup'Vehicle_EnginesTwo.UC.UC_engine_loop'
-    StartUpSound=sound'Vehicle_EnginesTwo.UC.UC_engine_start'
-    ShutDownSound=sound'Vehicle_EnginesTwo.UC.UC_engine_stop'
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Carrier.Carrier_destroyed'
-    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
-    DisintegrationHealth=-1000.0
-    DestructionLinearMomentum=(Min=100.0,Max=350.0)
-    DestructionAngularMomentum=(Max=150.0)
-    DamagedEffectScale=0.75
-    DamagedEffectOffset=(X=-40.0,Y=10.0,Z=10.0)
-    VehicleTeam=1
-    BeginningIdleAnim="driver_hatch_idle_close"
+
+    // Driver
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,bExposed=true,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VUC_driver_close",ViewPitchUpLimit=14000,ViewPitchDownLimit=58000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VUC_driver_open",ViewPitchUpLimit=14000,ViewPitchDownLimit=62500,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
+    DriverAttachmentBone="driver_player"
+    DriveAnim="VUC_driver_idle_close"
+    HUDOverlayClass=class'ROVehicles.UniCarrierDriverOverlay'
+    HUDOverlayOffset=(X=0.0,Y=-0.8,Z=1.99)
+    HUDOverlayFOV=81.0
+
+    // Movement
+    MaxCriticalSpeed=875.0 // 52 kph
+    TransRatio=0.145
+    TorqueCurve=(Points=((InVal=0.0,OutVal=11.0),(InVal=200.0,OutVal=1.25),(InVal=1500.0,OutVal=2.5),(InVal=2200.0,OutVal=0.0)))
+    TurnDamping=50.0
+    SteerSpeed=160.0
+    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=35.0),(InVal=1500.0,OutVal=20.0),(InVal=1000000000.0,OutVal=15.0)))
+    ChassisTorqueScale=0.25
+
+    // Physics wheels properties
+    WheelPenScale=2.0
+    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
+    WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=10000000000.0,OutVal=0.0)))
+    WheelLongFrictionScale=1.5
+    WheelLatFrictionScale=3.0
+
+    // Damage
+    Health=275
+    HealthMax=275.0
+    EngineHealth=125
+    DisintegrationHealth=-1000.0
+    VehHitpoints(0)=(PointRadius=20.0,PointOffset=(X=-15.0,Y=0.0,Z=0.0)) // engine
+    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="Engine",PointOffset=(X=22.0,Y=0.0,Z=0.0),DamageMultiplier=1.0,HitPointType=HP_Engine)
+    VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="Engine",PointOffset=(X=0.0,Y=0.0,Z=30.0),DamageMultiplier=1.0,HitPointType=HP_Engine)
+    VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="Engine",PointOffset=(X=27.0,Y=0.0,Z=30.0),DamageMultiplier=1.0,HitPointType=HP_Engine)
+    VehHitpoints(4)=(PointRadius=15.0,PointHeight=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-83.0,Y=0.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    TreadHitMaxHeight=7.0
+    DamagedEffectScale=0.75
+    DamagedEffectOffset=(X=-40.0,Y=10.0,Z=10.0)
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Carrier.Carrier_destroyed'
+    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
+    DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+
+    FrontRightAngle=20.0 // angles set specifically for tread hits
+    RearRightAngle=157.0
+    RearLeftAngle=203.5
+    FrontLeftAngle=339.5
+
+    // Exit
+    ExitPositions(0)=(X=50.0,Y=100.0,Z=50.0)   // driver
+    ExitPositions(1)=(X=50.0,Y=-100.0,Z=50.0)  // MG
+    ExitPositions(2)=(X=5.0,Y=-100.0,Z=50.0)  // left front passenger
+    ExitPositions(3)=(X=-55.0,Y=-100.0,Z=50.0) // left rear passenger
+    ExitPositions(4)=(X=5.0,Y=100.0,Z=50.0)    // right front passenger
+    ExitPositions(5)=(X=-55.0,Y=100.0,Z=50.0)  // right rear passenger
+
+    // Sounds
+    MaxPitchSpeed=125.0
+    IdleSound=SoundGroup'Vehicle_EnginesTwo.UC.UC_engine_loop'
+    StartUpSound=sound'Vehicle_EnginesTwo.UC.UC_engine_start'
+    ShutDownSound=sound'Vehicle_EnginesTwo.UC.UC_engine_stop'
+    LeftTrackSoundBone="Wheel_T_L_3"
+    LeftTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_L'
+    RightTrackSoundBone="Wheel_T_R_3"
+    RightTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_R'
+    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble03'
+
+    // Visual effects
+    LeftTreadIndex=1
+    RightTreadIndex=2
+    LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
+    RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
+    TreadVelocityScale=80.0
+    WheelRotationScale=40000.0
+    ExhaustPipes(0)=(ExhaustPosition=(X=-105.0,Y=33.0,Z=13.0),ExhaustRotation=(Pitch=36000))
+    ExhaustPipes(1)=(ExhaustPosition=(X=-105.0,Y=-33.0,Z=13.0),ExhaustRotation=(Pitch=36000))
+    SteerBoneName="Steering"
+
+    // HUD
     VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.unicarrier_body'
+    VehicleHudEngineY=0.75
+    VehicleHudTreadsPosX(0)=0.37
+    VehicleHudTreadsPosX(1)=0.66
+    VehicleHudTreadsPosY=0.47
+    VehicleHudTreadsScale=0.65
     VehicleHudOccupantsX(0)=0.58
     VehicleHudOccupantsX(1)=0.46
     VehicleHudOccupantsX(2)=0.39
@@ -121,14 +139,21 @@ defaultproperties
     VehicleHudOccupantsY(3)=0.65
     VehicleHudOccupantsY(4)=0.5
     VehicleHudOccupantsY(5)=0.65
-    VehicleHudEngineY=0.75
-    VehHitpoints(0)=(PointRadius=20.0,PointOffset=(X=-15.0)) // engine
-    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="Engine",PointOffset=(X=22.0),DamageMultiplier=1.0,HitPointType=HP_Engine)
-    VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="Engine",PointOffset=(Z=30.0),DamageMultiplier=1.0,HitPointType=HP_Engine)
-    VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="Engine",PointOffset=(X=27.0,Z=30.0),DamageMultiplier=1.0,HitPointType=HP_Engine)
-    VehHitpoints(4)=(PointRadius=15.0,PointHeight=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-83.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    EngineHealth=125
-    DriverAttachmentBone="driver_player"
+    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.BrenCarrier'
+
+    // Visible wheels
+    LeftWheelBones(0)="Wheel_T_L_1"
+    LeftWheelBones(1)="Wheel_T_L_2"
+    LeftWheelBones(2)="Wheel_T_L_3"
+    LeftWheelBones(3)="Wheel_T_L_4"
+    LeftWheelBones(4)="Wheel_T_L_5"
+    RightWheelBones(0)="Wheel_T_R_1"
+    RightWheelBones(1)="Wheel_T_R_2"
+    RightWheelBones(2)="Wheel_T_R_3"
+    RightWheelBones(3)="Wheel_T_R_4"
+    RightWheelBones(4)="Wheel_T_R_5"
+
+    // Physics wheels
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -165,32 +190,8 @@ defaultproperties
         WheelRadius=28.0
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.RR_Steering'
-    VehicleMass=5.0
-    bHasHandbrake=true
-    DriveAnim="VUC_driver_idle_close"
-    ExitPositions(0)=(X=48.0,Y=117.0,Z=15.0)
-    ExitPositions(1)=(X=48.0,Y=-107.0,Z=15.0)
-    ExitPositions(2)=(X=52.0,Y=-119.0,Z=13.0)
-    ExitPositions(3)=(X=-45.0,Y=-118.0,Z=15.0)
-    ExitPositions(4)=(X=7.0,Y=110.0,Z=15.0)
-    ExitPositions(5)=(X=-48.0,Y=111.0,Z=15.0)
-    ImpactDamageMult=0.001
-    VehicleNameString="Bren Carrier Mk.I"
-    MaxDesireability=0.1
-    HUDOverlayClass=class'ROVehicles.UniCarrierDriverOverlay'
-    HUDOverlayOffset=(Y=-0.8,Z=1.99)
-    HUDOverlayFOV=81.0
-    PitchUpLimit=500
-    PitchDownLimit=49000
-    HealthMax=275.0
-    Health=275
-    Mesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_ext'
-    Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.BrenCarrier_body_ext'
-    Skins(1)=texture'allies_vehicles_tex.Treads.T60_treads'
-    Skins(2)=texture'allies_vehicles_tex.Treads.T60_treads'
-    Skins(3)=texture'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int'
-    CollisionRadius=175.0
-    CollisionHeight=40.0
+
+    // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
@@ -210,10 +211,4 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_BrenCarrierTransport.KParams0'
-    HighDetailOverlay=shader'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int_S'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=3
-    LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
-    RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.BrenCarrier'
 }

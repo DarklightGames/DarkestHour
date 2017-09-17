@@ -3508,7 +3508,26 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
 
 defaultproperties
 {
+    // Miscellaneous
+    VehicleMass=3.0
+    PointValue=1.0
+    CollisionRadius=175.0
+    CollisionHeight=40.0
+    VehicleNameString="ADD VehicleNameString !!"
+    TouchMessageClass=class'DHVehicleTouchMessage'
+    ResupplyAttachmentClass=class'DHResupplyAttachment'
+    FirstRiderPositionIndex=255 // unless overridden in subclass, 255 means the value is set automatically when PassengerPawns array is added to the PassengerWeapons
     VehiclePoolIndex=-1
+    MinRunOverSpeed=503.0 // increased from 0 to 30km/h so players don't get run over so easily by vehicles
+    ObjectiveGetOutDist=1500.0
+    CenterSpringForce="SpringONSSRV"
+    bReplicateAnimations=false // override strange inherited property from ROWheeledVehicle - no reason for server to replicate anims & now we play transition anims on
+                               // server it seems to sometimes override the client's anim & leave it 1 frame short of its end position, glitching the camera view
+    // Driver & positions
+    DriverAttachmentBone="Driver_attachment"
+    DriverPositions(0)=(ViewFOV=0.0) // override inherited FOV values from ROWheeledVehicle - zero just means it uses player's default view FOV (unless overridden in subclass)
+    DriverPositions(1)=(ViewFOV=0.0)
+    PlayerCameraBone="Camera_driver"
 
     // Supply
     SupplyDropCountMax=250
@@ -3518,22 +3537,7 @@ defaultproperties
     SupplyDropSoundRadius=10.0
     SupplyDropSoundVolume=1.0
 
-    // Miscellaneous
-    VehicleMass=3.0
-    PointValue=1.0
-    VehicleNameString="ADD VehicleNameString !!"
-    TouchMessageClass=class'DHVehicleTouchMessage'
-    ResupplyAttachmentClass=class'DHResupplyAttachment'
-    PlayerCameraBone="Camera_driver"
-    FirstRiderPositionIndex=255 // unless overridden in subclass, 255 means the value is set automatically when PassengerPawns array is added to the PassengerWeapons
-    DriverPositions(0)=(ViewFOV=0.0) // override inherited FOV values from ROWheeledVehicle - zero just means it uses player's default view FOV (unless overridden in subclass)
-    DriverPositions(1)=(ViewFOV=0.0)
-    MinRunOverSpeed=503.0 // * 0.05965 = ~30 kph (so players don't get run over so easily by vehicles)
-    ObjectiveGetOutDist=1500.0
-    bReplicateAnimations=false // override strange inherited property from ROWheeledVehicle - no reason for server to replicate anims & now we play transition anims on
-                               // server it seems to sometimes override the client's anim & leave it 1 frame short of its end position, glitching the camera view
-
-    // Hull corner angles (used to determine which side of vehicle wa shit for armour penetration calcs)
+    // Hull corner angles (used to determine which side of vehicle was hit for armour penetration calcs)
     FrontLeftAngle=333.0
     FrontRightAngle=28.0
     RearRightAngle=152.0
@@ -3546,9 +3550,10 @@ defaultproperties
     VehHitpoints(0)=(PointRadius=25.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // no.0 becomes engine instead of driver
     VehHitpoints(1)=(PointRadius=0.0,PointScale=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
     TreadDamageThreshold=0.3
+    bCanCrash=true
     ImpactDamageThreshold=20.0
+    ImpactDamageMult=0.001
     ImpactWorldDamageMult=0.001
-    ImpactDamageMult=0.5
     DriverDamageMult=1.0
     DamagedTreadPanner=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
 
@@ -3564,22 +3569,17 @@ defaultproperties
     DestructionEffectLowClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
     DisintegrationEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+    DisintegrationHealth=-10000.0 // -10000 default to make classes enable disintegration
     ExplosionDamage=325.0
     ExplosionRadius=700.0
     ExplosionSoundRadius=750.0
+    DestructionLinearMomentum=(Min=100.0,Max=350.0)
+    DestructionAngularMomentum=(Min=50.0,Max=150.0)
 
     // Vehicle reset/respawn
     VehicleSpikeTime=30.0    // if disabled
     IdleTimeBeforeReset=90.0 // if empty & no friendlies nearby
     FriendlyResetDistance=4000.0 // 66m
-
-    // Engine
-    bEngineOff=true
-    bSavedEngineOff=true
-    IgnitionSwitchInterval=4.0
-    EngineRestartFailChance=0.05
-    ChangeUpPoint=2000.0
-    ChangeDownPoint=1000.0
 
     // Sounds
     MaxPitchSpeed=150.0
@@ -3588,6 +3588,9 @@ defaultproperties
     DamagedShutDownSound=sound'DH_AlliedVehicleSounds.Damaged.engine_stop_damaged'
     VehicleBurningSound=sound'Amb_Destruction.Fire.Krasnyi_Fire_House02'
     DestroyedBurningSound=sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
+    RumbleSoundBone="body"
+    IdleRPM=500.0 // determines engine sound at idle, relative to EngineRPMSoundRange (note that behind the scenes the native EngineRPM will actually be zero at idle)
+    EngineRPMSoundRange=5000.0 // range of engine sound relative to current RPM (presumably max engine sound at IdleRPM + EngineRPMSoundRange)
 
     // Visual effects
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
@@ -3602,6 +3605,49 @@ defaultproperties
     VehicleHudTreadsPosX(1)=0.65
     VehicleHudTreadsPosY=0.5
     VehicleHudTreadsScale=0.65
+
+    // Engine
+    bEngineOff=true
+    bSavedEngineOff=true
+    IgnitionSwitchInterval=4.0
+    EngineRestartFailChance=0.05
+
+    // Driving, steering & braking
+    GearRatios(0)=-0.2
+    GearRatios(1)=0.2
+    GearRatios(2)=0.35
+    GearRatios(3)=0.55
+    GearRatios(4)=0.6
+    TransRatio=0.12
+    ChangeUpPoint=2000.0
+    ChangeDownPoint=1000.0
+    GroundSpeed=325.0
+    TurnDamping=35.0
+    SteerSpeed=50.0
+    StopThreshold=100.0
+    MinBrakeFriction=4.0
+    MaxBrakeTorque=20.0
+    HandbrakeThresh=200.0
+    EngineBrakeFactor=0.0001
+    EngineBrakeRPMScale=0.1
+    EngineInertia=0.1
+    ChassisTorqueScale=0.4
+    FTScale=0.03  // is force transmission scale?
+    LSDFactor=1.0 // is limited-slip differential?
+
+    // Physics wheels properties
+    WheelSoftness=0.025
+    WheelPenScale=1.2
+    WheelPenOffset=0.01
+    WheelRestitution=0.1
+    WheelInertia=0.1
+    WheelLongSlip=0.001
+    WheelLongFrictionScale=1.1
+    WheelLatFrictionScale=2.0
+    WheelHandbrakeSlip=0.01
+    WheelHandbrakeFriction=0.1
+    WheelSuspensionTravel=15.0
+    WheelSuspensionMaxRenderTravel=15.0
 
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & hard coded into functionality:
     bPCRelativeFPRotation=true

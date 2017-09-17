@@ -9,10 +9,9 @@ defaultproperties
 {
     Skins(0)=texture'DH_M3Halftrack_tex.m3.Halftrack_winter'
     Skins(1)=texture'DH_M3Halftrack_tex.m3.Halftrack_2_winter'
-//    DestroyedMeshSkins(0)=combiner'DH_VehiclesUS_tex2.Destroyed.M3A1Halftrack_dest_snow'
     RandomAttachment=(Skin=texture'DH_M3Halftrack_tex.m3.Halftrack_2_winter')
-    DestroyedMeshSkins(0)=Combiner'DH_M3Halftrack_tex.m3.Halftrack_winter_destroyed'
-    DestroyedMeshSkins(1)=Combiner'DH_M3Halftrack_tex.m3.Halftrack_2_winter_destroyed'
-    DestroyedMeshSkins(2)=Texture'DH_M3Halftrack_tex.m3.Halfrack_tracks'
-    DestroyedMeshSkins(3)=Texture'DH_M3Halftrack_tex.m3.Halfrack_tracks'
+    DestroyedMeshSkins(0)=combiner'DH_M3Halftrack_tex.m3.Halftrack_winter_destroyed'
+    DestroyedMeshSkins(1)=combiner'DH_M3Halftrack_tex.m3.Halftrack_2_winter_destroyed'
+    DestroyedMeshSkins(2)=texture'DH_M3Halftrack_tex.m3.Halfrack_tracks'
+    DestroyedMeshSkins(3)=texture'DH_M3Halftrack_tex.m3.Halfrack_tracks'
 }
