@@ -3593,7 +3593,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
         }
 
         // If both teams are present in the capture, then overlay a flashing (rifles crossing) icon
-        if (DHGRI.DHObjectives[i].bIsCritical)
+        if (DHGRI.DHObjectives[i].bActive && DHGRI.DHObjectives[i].bIsCritical)
         {
             Widget = MapIconDispute[ALLIES_TEAM_INDEX];
             DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 6);
