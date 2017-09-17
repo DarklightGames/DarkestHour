@@ -1272,7 +1272,7 @@ function UpdateVehicleImage()
 
     VehiclePoolIndex = GetSelectedVehiclePoolIndex();
 
-    if (VehiclePoolIndex >= 0)
+    if (LoadoutMode == LM_Vehicle && VehiclePoolIndex >= 0)
     {
         VehicleClass = GRI.VehiclePoolVehicleClasses[VehiclePoolIndex];
         i_Vehicle.Image = VehicleClass.default.SpawnOverlay[0];
