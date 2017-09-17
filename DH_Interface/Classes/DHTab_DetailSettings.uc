@@ -12,6 +12,8 @@ function SetupPositions()
 {
     super.SetupPositions();
 
+    sb_Section1.UnmanageComponent(ch_Advanced);
+
     sb_Section2.ManageComponent(sl_DistanceLOD);
     sb_Section2.ManageComponent(sl_CorpseStayTime);
     sb_Section2.UnmanageComponent(co_ScopeDetail);
@@ -22,6 +24,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     super(UT2K4Tab_DetailSettings).InitComponent(MyController, MyOwner);
 
     RemoveComponent(co_ScopeDetail);
+    RemoveComponent(ch_Advanced);
 }
 
 //Overrided to remove extra options for scope detail
@@ -77,7 +80,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             iGlobalDetails = class'ROPlayer'.default.GlobalDetailLevel;
             iGlobalDetailsD = iGlobalDetails;
             co_GlobalDetails.SilentSetIndex(iGlobalDetails);
-            ch_Advanced.SetComponentValue(iGlobalDetailsD == MAX_DETAIL_OPTIONS, true);
+//            ch_Advanced.SetComponentValue(iGlobalDetailsD == MAX_DETAIL_OPTIONS, true);
             break;
 
         case ch_MotionBlur:
@@ -196,7 +199,6 @@ function InternalOnChange(GUIComponent Sender)
             i = co_GlobalDetails.GetIndex();
             bGoingUp = i > iGlobalDetails && i != iGlobalDetailsD && (i != MAX_DETAIL_OPTIONS - 1);
             iGlobalDetails = i;
-            //ch_Advanced.SetComponentValue(i == MAX_DETAIL_OPTIONS, true);
             UpdateGlobalDetails();
             break;
 
@@ -473,6 +475,19 @@ function UpdateGlobalDetails()
     bShowPerfWarning = true;
 }
 
+// Modified to simply always show the advanced options.
+function UpdateGlobalDetailsVisibility()
+{
+    sb_Section2.EnableMe();
+    DisableHDRControlIfNeeded();
+
+    if (co_RenderDevice.GetExtra() != RenderMode[0])
+    {
+       co_MultiSamples.DisableMe();
+       ch_ForceFSAAScreenshotSupport.DisableMe();
+    }
+}
+
 function SaveSettings()
 {
     local PlayerController PC;
@@ -634,22 +649,6 @@ defaultproperties
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
     ch_HDR=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.HDRCheckbox'
-    Begin Object Class=DHmoCheckBox Name=Advanced
-        ComponentJustification=TXTA_Left
-        CaptionWidth=0.94
-        Caption="Show Advanced Options"
-        OnCreateComponent=Advanced.InternalOnCreateComponent
-        IniOption="@Internal"
-        IniDefault="true"
-        WinTop=0.479308
-        WinLeft=0.6
-        WinWidth=0.3
-        WinHeight=0.04
-        TabOrder=2
-        OnChange=DHTab_DetailSettings.InternalOnChange
-        OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
-    End Object
-    ch_Advanced=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.Advanced'
     Begin Object Class=DHmoCheckBox Name=MotionBlur
         ComponentJustification=TXTA_Left
         CaptionWidth=0.94
