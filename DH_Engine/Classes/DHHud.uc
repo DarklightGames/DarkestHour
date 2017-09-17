@@ -1832,7 +1832,7 @@ function DrawSignals(Canvas C)
 
         C.Font = C.TinyFont;
 
-        if (PC.SquadSignals[i].SignalClass.default.bShouldShowLabel)
+        if (PC.SquadSignals[i].SignalClass.default.bShouldShowLabel && bIsNew)
         {
             // Draw label text
             C.TextSize(LabelText, XL, YL);
