@@ -73,7 +73,6 @@ var     int                     DHPrimaryWeapon;            // Picking up RO's s
 var     int                     DHSecondaryWeapon;
 var     bool                    bSpawnPointInvalidated;
 var     int                     NextChangeTeamTime;         // the time at which a player can change teams next
-var     int                     DeathPenaltyCount;          // number of deaths accumulated that affects respawn time (only increases if bUseDeathPenalty is enabled)
                                                             // it resets whenever an objective is taken
 // Weapon locking (punishment for spawn killing)
 var     int                     WeaponUnlockTime;           // the time at which the player's weapons will be unlocked (being the round's future ElapsedTime in whole seconds)
@@ -116,7 +115,7 @@ replication
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
         NextSpawnTime, SpawnPointIndex, VehiclePoolIndex,
         DHPrimaryWeapon, DHSecondaryWeapon, bSpawnPointInvalidated,
-        NextVehicleSpawnTime, LastKilledTime, DeathPenaltyCount,
+        NextVehicleSpawnTime, LastKilledTime,
         SquadReplicationInfo, NextChangeTeamTime;
 
     // Functions a client can call on the server
@@ -2337,7 +2336,7 @@ simulated function int GetNextSpawnTime(DHRoleInfo RI, int VehiclePoolIndex)
     {
         // LastKilledTime is 0 the first time a player joins a server, but if he leaves, the time is stored (using the sessions thing)
         // this means the player can pretty much spawn right away the first time connecting, but from then on he will be subject to the respawn time factors
-        T = LastKilledTime + GRI.ReinforcementInterval[PlayerReplicationInfo.Team.TeamIndex] + RI.AddedReinforcementTime + (DeathPenaltyCount * DEATH_PENALTY_FACTOR);
+        T = LastKilledTime + GRI.ReinforcementInterval[PlayerReplicationInfo.Team.TeamIndex] + RI.AddedReinforcementTime;
     }
 
     if (VehiclePoolIndex != -1)
@@ -2754,7 +2753,6 @@ function Reset()
     NextChangeTeamTime = default.NextChangeTeamTime;
     LastKilledTime = default.LastKilledTime;
     NextVehicleSpawnTime = default.NextVehicleSpawnTime;
-    DeathPenaltyCount = default.DeathPenaltyCount;
 }
 
 function ServerSetIsInSpawnMenu(bool bIsInSpawnMenu)
@@ -2887,11 +2885,6 @@ function PawnDied(Pawn P)
         {
             NextSpawnTime = GetNextSpawnTime(RI, VehiclePoolIndex);
         }
-    }
-
-    if (GRI != none && GRI.bUseDeathPenaltyCount)
-    {
-        ++DeathPenaltyCount;
     }
 }
 

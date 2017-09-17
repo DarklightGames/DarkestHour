@@ -96,7 +96,6 @@ var DHSpawnPointBase    SpawnPoints[SPAWN_POINTS_MAX];
 
 var DHObjective         DHObjectives[OBJECTIVES_MAX];
 
-var bool                bUseDeathPenaltyCount;
 var bool                bIsInSetupPhase;
 var bool                bRoundIsOver;
 
@@ -155,7 +154,6 @@ replication
         MaxTeamVehicles,
         DHObjectives,
         AttritionRate,
-        bUseDeathPenaltyCount,
         CurrentGameType,
         CurrentAlliedToAxisRatio,
         SpawnPoints,

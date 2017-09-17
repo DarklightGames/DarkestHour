@@ -4642,7 +4642,6 @@ event PostLogin(PlayerController NewPlayer)
 
                 PC.LastKilledTime = S.LastKilledTime;
                 PC.WeaponLockViolations = S.WeaponLockViolations;
-                PC.DeathPenaltyCount = S.DeathPenaltyCount;
                 PC.NextChangeTeamTime = S.NextChangeTeamTime;
 
                 if (GameReplicationInfo != none && S.WeaponUnlockTime > GameReplicationInfo.ElapsedTime)
@@ -4697,7 +4696,6 @@ function Logout(Controller Exiting)
         S.LastKilledTime = PC.LastKilledTime;
         S.WeaponUnlockTime = PC.WeaponUnlockTime;
         S.WeaponLockViolations = PC.WeaponLockViolations;
-        S.DeathPenaltyCount = PC.DeathPenaltyCount;
         S.NextChangeTeamTime = PC.NextChangeTeamTime;
 
         if (PRI.Team != none)

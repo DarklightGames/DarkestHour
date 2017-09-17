@@ -479,12 +479,6 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
             }
         }
 
-        // If bUseDeathPenaltyCount, then reset everyone's count as an objective was captured!
-        if (bResetDeathPenalties && GRI.bUseDeathPenaltyCount && DHPlayer(C) != none)
-        {
-            DHPlayer(C).DeathPenaltyCount = DHPlayer(C).default.DeathPenaltyCount;
-        }
-
         PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
 
         if (PRI != none)

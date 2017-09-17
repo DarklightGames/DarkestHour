@@ -4606,20 +4606,6 @@ simulated function DrawSpectatingHud(Canvas C)
 
         C.SetPos(X, Y);
         C.DrawTextClipped(s);
-
-        // Draw death penalty count if > 0
-        if (PC.DeathPenaltyCount > 0)
-        {
-            Y += 4.0 * Scale + strY;
-
-            s = DeathPenaltyText;
-            s = Repl(s, "{0}", PC.DeathPenaltyCount);
-            s = Repl(s, "{1}", string((PC.DeathPenaltyCount - 1) * PC.DEATH_PENALTY_FACTOR));
-
-            C.DrawColor = WhiteColor;
-            C.SetPos(X, Y);
-            C.DrawTextClipped(s);
-        }
     }
 
     // Draw player's name
