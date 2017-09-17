@@ -17,7 +17,7 @@ var     float   MVKillTime;
 var     float   MVWarnInterval;
 };
 
-var DHAdminMenu_Replicator Replicator;             // a 'helper' actor that gets replicated to all clients to add menu interactions & replicate variables for client use
+var DHAdminMenu_Replicator  Replicator;             // a 'helper' actor that gets replicated to all clients to add menu interactions & replicate variables for client use
 var     ROTeamGame          ROTG;                   // reference to the ROTeamGame actor (which is RO's GameInfo class) - used by several functions
 var     AccessControl       AccessControl;          // reference to the AccessControl class actor, which handles kicks & bans - used by the kick with warning function
 var     PlayerController    Admin;                  // temporarily saves the admin performing the current action, which avoids passing it through lots & lots of functions
@@ -223,12 +223,11 @@ function Mutate(string MutateString, PlayerController Sender)
 
                 ParaDropAll(Words[2], Words[3], Words[4], Words[5]); // Words[2] is TeamName, Words[3] is TypeOfDropTarget, Words[4+] may be GridRef, Words[4] may be ObjName, Words[5] may be ObjNum
             }
-            // Disable minefields
+            // Disable or enable minefields
             else if (MutateOption ~= "DisableMinefields")
             {
                 DisableMinefields();
             }
-            // Enable minefields
             else if (MutateOption ~= "EnableMinefields")
             {
                 EnableMinefields();
@@ -253,7 +252,7 @@ function Mutate(string MutateString, PlayerController Sender)
             {
                 SetGameSpeed(float(Words[2]));
             }
-            // Set new time remaining
+            // Set new round time remaining
             else if (MutateOption ~= "SetRoundMinutesRemaining")
             {
                 SetRoundMinutesRemaining(float(Words[2]));
@@ -268,6 +267,7 @@ function Mutate(string MutateString, PlayerController Sender)
             {
                 DestroyActorInSights();
             }
+            // Set new maximum squad size foe either team
             else if (MutateOption ~= "ChangeAlliesSquadSize")
             {
                 ChangeAlliesSquadSize(int(Words[2]));
