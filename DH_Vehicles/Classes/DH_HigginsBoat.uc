@@ -8,32 +8,30 @@ class DH_HigginsBoat extends DHBoatVehicle;
 #exec OBJ LOAD FILE=..\Animations\DH_HigginsBoat_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
 
-var     texture     BinocsOverlay;
-var     int         BinocPositionIndex;
-
-var     sound       RampDownSound;
-var     sound       RampUpSound;
-var     float       RampSoundVolume;
-var     name        RampUpIdleAnim; // effectively a replacement for BeginningIdleAnim, which is set to null (just easier that overriding functions to stop unwanted BeginningIdleAnim)
+var     name        RampUpIdleAnim; // effectively replacements for BeginningIdleAnim, which is set to null (easier that overriding functions to stop unwanted BeginningIdleAnim)
 var     name        RampDownIdleAnim;
 
-// Modified to loop either the ramp up or down idle animation on a net client (also set a matching destroyed vehicle animation)
-// No benefit on a server as visuals aren't a factor, & in terms of collision the server & clients are going to out of synch whatever we do, so there's no point trying to match
+var     texture     BinocsOverlay;
+
+// Modified to loop either the ramp up or down idle animation based on current position index, & set the destroyed vehicle animation to be the same
+// But don't bother on dedicated server as (1) visuals aren't relevant & (2) due to continuous wave motion of animation, which starts at different times on server & net clients,
+// the position of the boat's collision is going to out of synch between server & clients whatever we do, so there's no point trying to match it
 simulated function PostNetBeginPlay()
 {
     super.PostNetBeginPlay();
 
-    if (Role < ROLE_Authority)
+    if (Level.NetMode != NM_DedicatedServer)
     {
         if (DriverPositionIndex >= InitialPositionIndex)
         {
-            LoopAnim(RampUpIdleAnim);
+            DestroyedAnimName = RampUpIdleAnim;
         }
         else
         {
-            LoopAnim(RampDownIdleAnim);
             DestroyedAnimName = RampDownIdleAnim;
         }
+
+        LoopAnim(DestroyedAnimName);
     }
 }
 
@@ -72,22 +70,27 @@ simulated function DrawHUD(Canvas C)
     }
 }
 
-// Modified to avoid resetting position indexes, as we need to keep the ramp in its current up/down position
-// To avoid re-stating the Super, we temporarily hack InitialPositionIndex to match current DriverPositionIndex, which effectively stops the Super from changing the position indexes
-// But if player was on the binoculars, we need to reset the position indexes, so the next player in doesn't find himself with a drawn binocs overlay
+// Modified so if the ramp is down, we stop the Super from resetting position indexes to the default ramp up position
+// Temporarily set InitialPositionIndex to ramp down position - a simple trick avoiding re-stating lengthy Super to stop it resetting position indexes to default ramp up position
 function KDriverEnter(Pawn P)
 {
-    InitialPositionIndex = DriverPositionIndex;
+    if (DriverPositionIndex == 0) // ramp is down, so temporarily make IPI the same
+    {
+        InitialPositionIndex = DriverPositionIndex;
+    }
 
     super.KDriverEnter(P);
 
     InitialPositionIndex = default.InitialPositionIndex; // restore normal value now we've done
 }
 
-// Modified to avoid resetting position indexes, as we need to keep the ramp in its current up/down position (using same method as KDriverEnter)
+// Modified so if the ramp is down, we stop the Super from resetting position indexes to the default ramp up position (same method as KDriverEnter)
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-    InitialPositionIndex = DriverPositionIndex;
+    if (DriverPositionIndex == 0) // ramp is down, so temporarily make IPI the same
+    {
+        InitialPositionIndex = DriverPositionIndex;
+    }
 
     super.ClientKDriverEnter(PC);
 
@@ -99,17 +102,24 @@ simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
+        local sound RampSound;
+
         super.HandleTransition();
 
         if (Level.NetMode != NM_DedicatedServer)
         {
-            if (DriverPositionIndex < InitialPositionIndex && PreviousPositionIndex == InitialPositionIndex)
+            if (DriverPositionIndex < InitialPositionIndex && PreviousPositionIndex == InitialPositionIndex) // ramp lowering
             {
-                PlaySound(RampDownSound, SLOT_Misc, RampSoundVolume / 255.0,, 150.0,, false);
+                RampSound = sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01';
             }
-            else if (DriverPositionIndex == InitialPositionIndex && PreviousPositionIndex < DriverPositionIndex)
+            else if (DriverPositionIndex == InitialPositionIndex && PreviousPositionIndex < DriverPositionIndex) // ramp raising
             {
-                PlaySound(RampUpSound, SLOT_Misc, RampSoundVolume / 255.0,, 150.0,, false);
+                RampSound = sound'DH_AlliedVehicleSounds.higgins.HigginsRampClose01';
+            }
+
+            if (RampSound != none)
+            {
+                PlayOwnedSound(RampSound, SLOT_Misc, 0.7,, 150.0,, false);
             }
         }
     }
@@ -222,11 +232,10 @@ function bool KDriverLeave(bool bForceLeave)
     return true;
 }
 
-// Modified to avoid resetting position indexes, as we need to keep the ramp in its current up/down position (using same method as KDriverEnter)
-// But if player was on the binoculars, we do need to reset the position indexes, so the next player in doesn't find himself with a drawn binocs overlay
+// Modified so if the ramp is down, we stop the Super from resetting position indexes to the default ramp up position (same method as KDriverEnter)
 function DriverLeft()
 {
-    if (DriverPositionIndex != BinocPositionIndex)
+    if (DriverPositionIndex == 0) // ramp is down, so temporarily make IPI the same
     {
         InitialPositionIndex = DriverPositionIndex;
     }
@@ -268,12 +277,11 @@ simulated function SpawnVehicleAttachments()
     bProjTarget = false;
 }
 
-// Functions emptied as they relate to start/stop engine, which we don't allow in the Higgins boat:
+// Emptied as Higgins boat can't stop/re-start its engine
 function Fire(optional float F);
-
 function ServerStartEngine();
 
-// Functions emptied so we don't damage things we run into:
+// Emptied out so we don't damage things we run into
 event RanInto(Actor Other);
 
 defaultproperties
@@ -310,7 +318,6 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',TransitionUpAnim="Ramp_Raise",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',TransitionDownAnim="Ramp_Drop",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true)
     DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true,bDrawOverlays=true)
-    BinocPositionIndex=2
     BinocsOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
     DriverAttachmentBone="driver_player"
     DrivePos=(X=0.0,Y=0.0,Z=10.0)
@@ -363,9 +370,6 @@ defaultproperties
     EngineSoundBone="Engine"
     WashSound=sound'DH_AlliedVehicleSounds.higgins.wash01'
     VehicleAttachments(0)=(AttachBone="Box01") // attachment bone for wash sound attachment
-    RampDownSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01'
-    RampUpSound=sound'DH_AlliedVehicleSounds.higgins.HigginsRampClose01'
-    RampSoundVolume=180.0
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-280.0,Y=-31.0,Z=99.0),ExhaustRotation=(Pitch=31000))
