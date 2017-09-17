@@ -235,7 +235,7 @@ auto state Timing
 
             if (PC != none && (PC.GetTeamNum() == AXIS_TEAM_INDEX || PC.GetTeamNum() == ALLIES_TEAM_INDEX))
             {
-                PC.ReceiveLocalizedMessage(class'DHSetupPhaseMessage', class'UInteger'.static.FromShorts(1, GRI.SpawnsRemaining[PC.GetTeamNum()]));
+                PC.ReceiveLocalizedMessage(class'DHSetupPhaseMessage', 1);
                 PC.PlayAnnouncement(PhaseEndSounds[PC.GetTeamNum()], 1, true);
             }
         }

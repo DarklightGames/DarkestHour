@@ -8,7 +8,6 @@ class DHSetupPhaseMessage extends LocalMessage;
 var localized string    PhaseMessage;       // Message to send periodically when phase is current
 var localized string    PhaseEndMessage;    // Message to send to team when end is reached
 
-
 static function string GetString(
     optional int Switch,
     optional PlayerReplicationInfo RelatedPRI_1,
@@ -25,7 +24,7 @@ static function string GetString(
         case 0:
             return Repl(default.PhaseMessage, "{0}", ExtraInteger);
         case 1:
-            return Repl(default.PhaseEndMessage, "{0}", ExtraInteger);
+            return default.PhaseEndMessage;
     }
 
     return "";
@@ -33,9 +32,8 @@ static function string GetString(
 
 defaultproperties
 {
-    PhaseMessage="Round Begins In: {0} seconds"
-    PhaseEndMessage="Round Has Started! Your team begins with {0} reinforcements."
-
+    PhaseMessage="The battle begins in {0} seconds"
+    PhaseEndMessage="The battle has begun!"
     bBeep=false
     bFadeMessage=true
     bIsUnique=true
