@@ -40,14 +40,14 @@ static simulated function ClientReceive(
     {
         if (Type >= 0 && Type < arraycount(default.TeamObjectiveSounds))
         {
-            P.PlayAnnouncement(default.TeamObjectiveSounds[Type],1,true);
+            P.PlayAnnouncement(default.TeamObjectiveSounds[Type], 1, true);
         }
     }
     else
     {
         if (Type >= 0 && Type < arraycount(default.EnemyObjectiveSounds))
         {
-            P.PlayAnnouncement(default.EnemyObjectiveSounds[Type],1,true);
+            P.PlayAnnouncement(default.EnemyObjectiveSounds[Type], 1, true);
         }
     }
 }

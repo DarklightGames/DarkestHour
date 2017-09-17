@@ -760,7 +760,7 @@ function bool HandleClearedLogic(int NumForCheck[2])
                 // Award time as the objective was cleared and objective is inactive
                 if (MinutesAwarded != 0)
                 {
-                    DarkestHourGame(Level.Game).ModifyRoundTime(MinutesAwarded*60, 0);
+                    DarkestHourGame(Level.Game).ModifyRoundTime(MinutesAwarded * 60, 0);
                 }
 
                 return true;
@@ -776,7 +776,7 @@ function bool HandleClearedLogic(int NumForCheck[2])
                 // Award time as the objective was cleared and objective is disabled
                 if (MinutesAwarded != 0)
                 {
-                    DarkestHourGame(Level.Game).ModifyRoundTime(MinutesAwarded*60, 0);
+                    DarkestHourGame(Level.Game).ModifyRoundTime(MinutesAwarded * 60, 0);
                 }
 
                 return true;
