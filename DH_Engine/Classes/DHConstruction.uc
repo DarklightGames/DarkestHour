@@ -177,6 +177,10 @@ var bool bShouldBlockSquadRallyPoints;
 var int DelayedDamage;
 var class<DamageType> DelayedDamageType;
 
+// When true, this construction will automatically be put this into the
+// Constructed state if it was placed via the SDK.
+var bool bShouldAutoConstruct;
+
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -370,8 +374,9 @@ auto simulated state Constructing
 Begin:
     if (Role == ROLE_Authority)
     {
-        if (Owner == none)
+        if (Owner == none && bShouldAutoConstruct)
         {
+            bShouldAutoConstruct = false;
             Progress = ProgressMax;
         }
 
@@ -707,6 +712,7 @@ simulated function Reset()
         else
         {
             Health = HealthMax;
+            bShouldAutoConstruct = true;
             GotoState('Constructing');
         }
     }
@@ -956,5 +962,6 @@ defaultproperties
 
     bCanBeTornDownByFriendlies=true
     FriendlyFireDamageScale=1.0
+    bShouldAutoConstruct=true
 }
 
