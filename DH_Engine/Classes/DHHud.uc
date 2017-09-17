@@ -3278,26 +3278,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
         {
             DrawIconOnMap(C, SubCoords, MapIconArtyStrike, MyMapScale, DHGRI.ArtyStrikeLocation[OwnerTeam], MapCenter);
         }
-/*
-        // Draw the rally points // removed as rally points not used in 6.0, so no point checking - uncomment if rally functionality added back later
-        for (i = 0; i < arraycount(DHGRI.AxisRallyPoints); ++i)
-        {
-            if (OwnerTeam == AXIS_TEAM_INDEX)
-            {
-                Temp = DHGRI.AxisRallyPoints[i].RallyPointLocation;
-            }
-            else if (OwnerTeam == ALLIES_TEAM_INDEX)
-            {
-                Temp = DHGRI.AlliedRallyPoints[i].RallyPointLocation;
-            }
 
-            // Draw the marked rally point
-            if (Temp != vect(0.0, 0.0, 0.0))
-            {
-                DrawIconOnMap(C, SubCoords, MapIconRally[OwnerTeam], MyMapScale, Temp, MapCenter);
-            }
-        }
-*/
         // Draw Artillery Radio Icons
         if (OwnerTeam == AXIS_TEAM_INDEX)
         {
