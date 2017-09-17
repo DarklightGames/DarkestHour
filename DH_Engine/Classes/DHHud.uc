@@ -2671,10 +2671,12 @@ simulated function DrawCompassIcons(Canvas C, float CenterX, float CenterY, floa
         }
     }
 
+    // TODO: this function/system ought to be refactored!
     PC = DHPlayer(PlayerOwner);
 
     if (PC != none)
     {
+        // Map markers
         DHGRI.GetMapMarkers(MapMarkers, Indices, PC.GetTeamNum(), PC.GetSquadIndex());
 
         for (i = 0; i < MapMarkers.Length; ++i)
@@ -2692,6 +2694,33 @@ simulated function DrawCompassIcons(Canvas C, float CenterX, float CenterY, floa
             CompassIcons.WidgetTexture = MapMarkers[i].MapMarkerClass.default.IconMaterial;
             CompassIcons.TextureCoords = MapMarkers[i].MapMarkerClass.default.IconCoords;
             CompassIcons.Tints[TeamIndex] = MapMarkers[i].MapMarkerClass.default.IconColor;
+            CompassIcons.Tints[TeamIndex].A = float(default.CompassIcons.Tints[TeamIndex].A) * CompassIconsOpacity;
+
+            // Calculate rotation
+            RotAngle = rotator(Target - Current);
+            Angle = (RotAngle.Yaw + RotationCompensation) * Pi / 32768;
+
+            // Update widget offset
+            CompassIcons.OffsetX = CenterX + Radius * Cos(Angle);
+            CompassIcons.OffsetY = CenterY + Radius * Sin(Angle);
+
+            // Draw marker image
+            DrawSpriteWidgetClipped(C, CompassIcons, GlobalCoords, true, XL, YL, true, true, true);
+        }
+
+        // Squad leader
+        if (PC.GetSquadIndex() != -1 && PC.GetSquadMemberIndex() != 0)
+        {
+            Target = PC.SquadMemberLocations[0];
+
+            // Update widget color & texture
+            CompassIcons.WidgetTexture = SquadLeaderIconMaterial;
+            CompassIcons.TextureCoords.X1 = 0;
+            CompassIcons.TextureCoords.Y1 = 0;
+            CompassIcons.TextureCoords.X2 = 31;
+            CompassIcons.TextureCoords.Y2 = 31;
+
+            CompassIcons.Tints[TeamIndex] = class'DHColor'.default.SquadColor;
             CompassIcons.Tints[TeamIndex].A = float(default.CompassIcons.Tints[TeamIndex].A) * CompassIconsOpacity;
 
             // Calculate rotation
