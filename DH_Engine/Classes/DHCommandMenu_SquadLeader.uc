@@ -28,6 +28,7 @@ function OnSelect(int Index, vector Location)
             PC.ServerSquadSpawnRallyPoint();
             break;
         case 1: // Fire
+            // TODO: make signals classes have a bit of logic that gets run when sent!
             if (Rand(2) == 0)
             {
                 PC.ConsoleCommand("SPEECH ORDER 6");
@@ -36,7 +37,8 @@ function OnSelect(int Index, vector Location)
             {
                 PC.ConsoleCommand("SPEECH ALERT 6");
             }
-            PC.ServerSquadSignal(SIGNAL_Fire, Location);
+
+            PC.ServerSquadSignal(class'DHSquadSignal_Fire', Location);  // TODO: project off of the location a bit
             break;
         case 2: // Construction
             Interaction.PushMenu("DH_Engine.DHCommandMenu_Construction");
@@ -63,7 +65,7 @@ function OnSelect(int Index, vector Location)
             return;
         case 5: // Move
             PC.ConsoleCommand("SPEECH ALERT 1");
-            PC.ServerSquadSignal(SIGNAL_Move, Location);
+            PC.ServerSquadSignal(class'DHSquadSignal_Move', Location);
             break;
         default:
             break;
@@ -130,11 +132,11 @@ function bool IsOptionDisabled(int OptionIndex)
 defaultproperties
 {
     NoPlayerInLineOfSight="No player in sights"
-    Options(0)=(ActionText="Create Rally Point",Material=texture'DH_GUI_Tex.DeployMenu.RallyPointDiffuse')
-    Options(1)=(ActionText="Fire",Material=texture'DH_InterfaceArt_tex.HUD.squad_signal_fire')
-    Options(2)=(ActionText="Construction",Material=texture'DH_InterfaceArt_tex.HUD.supplies')
-    Options(3)=(ActionText="No Player ",Material=texture'DH_GUI_tex.DeployMenu.reinforcements')
-    Options(4)=(ActionText="Squad",Material=texture'DH_GUI_tex.DeployMenu.squads')
-    Options(5)=(ActionText="Move",Material=texture'DH_InterfaceArt_tex.HUD.squad_signal_move')
+    Options(0)=(ActionText="Create Rally Point",Material=texture'DH_InterfaceArt2_tex.Icons.rally_point')
+    Options(1)=(ActionText="Fire",Material=texture'DH_InterfaceArt2_tex.Icons.fire')
+    Options(2)=(ActionText="Construction",Material=texture'DH_InterfaceArt2_tex.Icons.construction')
+    Options(3)=(ActionText="No Player ",Material=texture'DH_InterfaceArt2_tex.Icons.infantry')
+    Options(4)=(ActionText="Squad",Material=texture'DH_InterfaceArt2_tex.Icons.squad')
+    Options(5)=(ActionText="Move",Material=texture'DH_InterfaceArt2_tex.Icons.move')
 }
 

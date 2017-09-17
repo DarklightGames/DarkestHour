@@ -9,6 +9,7 @@ class DHHud extends ROHud
 #exec OBJ LOAD FILE=..\Textures\DH_GUI_Tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_Weapon_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
+#exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt2_tex.utx
 
 // Death messages
 struct DHObituary
@@ -77,8 +78,6 @@ var     SpriteWidget        VehicleSmokeLauncherRangeBarIcon;   // range indicat
 var     SpriteWidget        VehicleSmokeLauncherRangeInfill;    // infill bar to show current range setting for a range-adjustable vehicle smoke launcher
 
 // Squads
-var     SpriteWidget        SquadOrderAttackIcon;
-var     SpriteWidget        SquadOrderDefendIcon;
 var     array<texture>      PlayerNumberIconTextures;
 var     color               VehiclePositionIsSquadmateColor;
 
@@ -215,11 +214,9 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(MapIconsAltFastFlash);
     Level.AddPrecacheMaterial(MapIconMortarArrow.WidgetTexture);
 
-    // Squad icons
-    Level.AddPrecacheMaterial(SquadOrderAttackIcon.WidgetTexture);
-    Level.AddPrecacheMaterial(SquadOrderDefendIcon.WidgetTexture);
-    Level.AddPrecacheMaterial(material'DH_InterfaceArt_tex.HUD.squad_signal_fire_world');
-    Level.AddPrecacheMaterial(material'DH_InterfaceArt_tex.HUD.squad_signal_move_world');
+    // TODO: Remove this as it's not necessary
+    Level.AddPrecacheMaterial(material'DH_InterfaceArt2_tex.Icons.fire_pulse');
+    Level.AddPrecacheMaterial(material'DH_InterfaceArt2_tex.Icons.move_pulse');
 
     for (i = 0; i < PlayerNumberIconTextures.Length; ++i)
     {
@@ -1766,7 +1763,6 @@ function DrawSignals(Canvas C)
     local bool      bHasLOS, bIsNew;
     local string    DistanceText, LabelText;
     local color     SignalColor;
-    local bool      bShouldShowLabel;
     local bool      bShouldShowDistance;
 
     PC = DHPlayer(PlayerOwner);
@@ -1776,7 +1772,6 @@ function DrawSignals(Canvas C)
         return;
     }
 
-    bShouldShowLabel = true;
     bShouldShowDistance = !PC.Pawn.IsA('VehicleCannonPawn');
 
     TraceStart = PawnOwner.Location + PawnOwner.EyePosition();
@@ -1797,23 +1792,9 @@ function DrawSignals(Canvas C)
             continue;
         }
 
-        // TODO: Might make more sense to have the signals be classes rather
-        // than a type enum! Would be much better for modding!
-        switch (i)
-        {
-            case 0: // SIGNAL_Fire
-                SignalColor = class'DHColor'.default.SquadSignalFireColor;
-                SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_fire_world';
-                LabelText="Fire";
-                break;
-            case 1: // SIGNAL_Move
-                SignalColor = class'DHColor'.default.SquadSignalMoveColor;
-                SignalMaterial = material'DH_InterfaceArt_tex.HUD.squad_signal_move_world';
-                LabelText="Move";
-                break;
-            default:
-                break;
-        }
+        SignalColor = PC.SquadSignals[i].SignalClass.default.Color;
+        SignalMaterial = PC.SquadSignals[i].SignalClass.default.WorldIconMaterial;
+        LabelText = PC.SquadSignals[i].SignalClass.default.SignalName;
 
         bIsNew = Level.TimeSeconds - PC.SquadSignals[i].TimeSeconds < SignalNewTimeSeconds;
         bHasLOS = FastTrace(TraceEnd, TraceStart);
@@ -1851,7 +1832,7 @@ function DrawSignals(Canvas C)
 
         C.Font = C.TinyFont;
 
-        if (bShouldShowLabel)
+        if (PC.SquadSignals[i].SignalClass.default.bShouldShowLabel)
         {
             // Draw label text
             C.TextSize(LabelText, XL, YL);
@@ -1866,7 +1847,7 @@ function DrawSignals(Canvas C)
             C.DrawText(LabelText);
         }
 
-        if (bShouldShowDistance)
+        if (PC.SquadSignals[i].SignalClass.default.bShouldShowDistance)
         {
             // Draw distance text (with drop shadow)
             Distance = (int(class'DHUnits'.static.UnrealToMeters(VSize(TraceEnd - TraceStart))) / SignalDistanceIntervalMeters) * SignalDistanceIntervalMeters;
@@ -2381,11 +2362,11 @@ function DrawPlayerNames(Canvas C)
             {
                 IconMaterial = NeedAssistIconMaterial;
             }
-        }
-        else if (OtherPRI.IsSquadLeader())
-        {
-            IconMaterial = SquadLeaderIconMaterial;
-            IconMaterialColor = GetPlayerColor(OtherPRI);
+            else if (OtherPRI.IsSquadLeader())
+            {
+                IconMaterial = SquadLeaderIconMaterial;
+                IconMaterialColor = GetPlayerColor(OtherPRI);
+            }
         }
 
         // Now draw any relevant icon above the player's name, in white to make it more noticeable (instead of the team color)
@@ -5294,7 +5275,7 @@ defaultproperties
     CompassNeedle=(WidgetTexture=TexRotator'DH_InterfaceArt_tex.HUD.Compass_rotator') // using DH version of compass background texture
     PlayerNameIconMaterial=material'DH_InterfaceArt_tex.HUD.player_icon_world'
     PlayerNameFilledIconMaterial=material'DH_InterfaceArt_tex.HUD.player_icon_world_filled'
-    SquadLeaderIconMaterial=material'DH_InterfaceArt_tex.HUD.squad_leader'
+    SquadLeaderIconMaterial=material'DH_InterfaceArt2_tex.Icons.squad_leader'
     SpeakerIconMaterial=texture'DH_InterfaceArt_tex.Communication.speaker_icon'
     NeedAssistIconMaterial=texture'DH_InterfaceArt_tex.Communication.need_assist_icon'
     NeedAmmoIconMaterial=texture'DH_InterfaceArt_tex.Communication.need_ammo_icon'
@@ -5369,11 +5350,6 @@ defaultproperties
     MapIconMortarHit=(WidgetTexture=texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(Y1=64,X2=63,Y2=127),TextureScale=0.05,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
 
     SupplyPointIcon=(WidgetTexture=FinalBlend'DH_GUI_tex.GUI.supply_point_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.04,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-
-    // Map icons for squad orders
-    SquadOrderAttackIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.HUD.squad_order_attack',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=0,B=0,A=255),Tints[1]=(R=255,G=0,B=0,A=255))
-    SquadOrderDefendIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.HUD.squad_order_defend',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=0,G=0,B=255,A=255),Tints[1]=(R=0,G=0,B=255,A=255))
-
 
     // Map markers
     MapMarkerIcon=(WidgetTexture=none,RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.04,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=0,G=0,B=255,A=255),Tints[1]=(R=0,G=0,B=255,A=255))

@@ -142,8 +142,8 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
 defaultproperties
 {
-    Options(0)=(SubjectText="Kick from squad",Material=Material'DH_GUI_Tex.ConstructionMenu.kick_icon')
-    Options(1)=(SubjectText="Promote to squad leader",Material=Material'DH_InterfaceArt_tex.HUD.squad_signal_fire') // TODO: use squad leader icon
-    Options(2)=(SubjectText="Ban from squad",Material=Material'DH_GUI_Tex.ConstructionMenu.ban_icon')
+    Options(0)=(SubjectText="Kick from squad",Material=Material'DH_InterfaceArt2_tex.Icons.squad_kick')
+    Options(1)=(SubjectText="Promote to squad leader",Material=Material'DH_InterfaceArt2_tex.Icons.squad_leader')
+    Options(2)=(SubjectText="Ban from squad",Material=Material'DH_InterfaceArt2_tex.Icons.squad_ban')
 }
 

@@ -49,6 +49,8 @@ simulated function OnConstructed()
             SpawnPoint.SetIsActive(true);
             SpawnPoint.ResetActivationTimer();
         }
+
+        // TODO: Find any nearby friendly "Build Platoon HQ" icons within 50m and remove them.
     }
 }
 
@@ -180,7 +182,7 @@ simulated function Material GetFlagMaterial()
 defaultproperties
 {
     MenuName="Platoon HQ"
-    MenuIcon=Texture'DH_GUI_tex.DeployMenu.PlatoonHQ'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.platoon_hq'
     Stages(0)=()
     ProgressMax=12
     SupplyCost=1000

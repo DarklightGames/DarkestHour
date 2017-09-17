@@ -3,12 +3,12 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHMapMarker_Enemy_Tank extends DHMapMarker_Enemy
+class DHMapMarker_Friendly extends DHMapMarker
     abstract;
 
 defaultproperties
 {
-    // IconMaterial=Texture'DH_GUI_tex.DeployMenu.PlatoonHQ' // TODO: get an icon!
-    MarkerName="Enemy Tank"
-    LifetimeSeconds=120
+    IconColor=(R=0,G=255,B=0,A=255)
+    GroupIndex=2
 }
+

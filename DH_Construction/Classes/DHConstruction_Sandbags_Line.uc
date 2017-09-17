@@ -15,7 +15,7 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Construction_stc.Sandbags.sandbags_01'
     bShouldAlignToGround=false
     MenuName="Sandbags (Line)"
-    MenuIcon=Texture'DH_GUI_tex.ConstructionMenu.Construction_Sandbag_Line'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.icons.sandbags_line'
     CollisionHeight=100
     CollisionRadius=90
     SupplyCost=100

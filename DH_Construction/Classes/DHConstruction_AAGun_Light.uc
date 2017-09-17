@@ -39,7 +39,7 @@ function static class<ROVehicle> GetVehicleClass(int TeamIndex, DH_LevelInfo LI)
 
 defaultproperties
 {
-    MenuIcon=Texture'DH_GUI_tex.ConstructionMenu.Construction_AAGun1'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.aa_light'
     Stages(0)=(Progress=0)
     ProgressMax=10
     SupplyCost=750

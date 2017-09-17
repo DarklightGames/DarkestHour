@@ -16,8 +16,8 @@ static function OnMapMarkerPlaced(DHPlayer PC)
 
 defaultproperties
 {
-    IconMaterial=texture'DH_InterfaceArt_tex.HUD.squad_order_defend'
-    IconColor=(R=0,G=0,B=255,A=255)
+    IconMaterial=texture'DH_InterfaceArt2_tex.Icons.defend'
+    IconColor=(R=4,G=80,B=255,A=255)
     MarkerName="Defend"
 }
 

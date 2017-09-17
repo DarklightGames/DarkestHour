@@ -32,7 +32,7 @@ function static class<ROVehicle> GetVehicleClass(int TeamIndex, DH_LevelInfo LI)
 
 defaultproperties
 {
-    MenuIcon=Texture'DH_GUI_tex.ConstructionMenu.Construction_ATGun_Small'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.at_small'
     Stages(0)=(Progress=0)
     ProgressMax=12
     PlacementOffset=(Z=24.0)

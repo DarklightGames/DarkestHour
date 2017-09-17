@@ -14,7 +14,7 @@ const OBJECTIVES_MAX = 32;
 const CONSTRUCTION_CLASSES_MAX = 32;
 const VOICEID_MAX = 100;
 const SUPPLY_POINTS_MAX = 8;
-const MAP_MARKERS_MAX = 23; // sizeof(MapMarker) / 255
+const MAP_MARKERS_MAX = 20;
 const MAP_MARKERS_CLASSES_MAX = 16;
 
 struct ArtilleryTarget
@@ -103,7 +103,7 @@ var bool                bRoundIsOver;
 var localized string    ForceScaleText;
 var localized string    ReinforcementsInfiniteText;
 
-var private globalconfig array<string>   ConstructionClassNames;
+var private array<string>   ConstructionClassNames;
 var class<DHConstruction>   ConstructionClasses[CONSTRUCTION_CLASSES_MAX];
 var DHConstructionManager   ConstructionManager;
 
@@ -119,7 +119,7 @@ struct MapMarker
     var int ExpiryTime;     // The expiry time, relative to ElapsedTime in GRI
 };
 
-var private globalconfig array<string>  MapMarkerClassNames;
+var private array<string>               MapMarkerClassNames;
 var class<DHMapMarker>                  MapMarkerClasses[MAP_MARKERS_CLASSES_MAX];
 var MapMarker                           AxisMapMarkers[MAP_MARKERS_MAX];
 var MapMarker                           AlliesMapMarkers[MAP_MARKERS_MAX];
@@ -1257,8 +1257,12 @@ defaultproperties
     ConstructionClassNames(10)="DH_Construction.DHConstruction_AAGun_Light"
     ConstructionClassNames(11)="DH_Construction.DHConstruction_Foxhole"
 
-    MapMarkerClassNames(0)="DH_Engine.DHMapMarker_Squad_Attack"
-    MapMarkerClassNames(1)="DH_Engine.DHMapMarker_Squad_Defend"
-    MapMarkerClassNames(2)="DH_Engine.DHMapMarker_Enemy_PlatoonHQ"
-    MapMarkerClassNames(3)="DH_Engine.DHMapMarker_Enemy_Tank"
+    MapMarkerClassNames(0)="DH_Engine.DHMapMarker_Squad_Move"
+    MapMarkerClassNames(1)="DH_Engine.DHMapMarker_Squad_Attack"
+    MapMarkerClassNames(2)="DH_Engine.DHMapMarker_Squad_Defend"
+    MapMarkerClassNames(3)="DH_Engine.DHMapMarker_Enemy_PlatoonHQ"
+    MapMarkerClassNames(4)="DH_Engine.DHMapMarker_Enemy_Tank"
+    MapMarkerClassNames(5)="DH_Engine.DHMapMarker_Enemy_Infantry"
+    MapMarkerClassNames(6)="DH_Engine.DHMapMarker_Enemy_ATGun"
+    MapMarkerClassNames(7)="DH_Engine.DHMapMarker_Friendly_PlatoonHQ"
 }

@@ -16,7 +16,7 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Construction_stc.Sandbags.sandbags_03'
     bShouldAlignToGround=false
     MenuName="Sandbags (Bunker)"
-    MenuIcon=Texture'DH_GUI_tex.ConstructionMenu.Construction_Sandbag_Bunker'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.icons.sandbags_bunker'
     CollisionHeight=100
     CollisionRadius=125
     SupplyCost=500

@@ -1315,7 +1315,7 @@ function SetName(int TeamIndex, int SquadIndex, string Name)
 // SQUAD SIGNALS
 //==============================================================================
 
-function SendSquadSignal(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, ESquadSignalType Type, vector Location)
+function SendSquadSignal(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, class<DHSquadSignal> SignalClass, vector Location)
 {
     local int i;
     local array<DHPlayerReplicationInfo> Members;
@@ -1333,8 +1333,6 @@ function SendSquadSignal(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIn
         return;
     }
 
-    // TODO: make sure there's no spam?
-
     GetMembers(TeamIndex, SquadIndex, Members);
 
     for (i = 0; i < Members.Length; ++i)
@@ -1345,7 +1343,7 @@ function SendSquadSignal(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIn
             OtherPC.Pawn != none &&
             VSize(OtherPC.Pawn.Location - MyPC.Pawn.Location) < class'DHUnits'.static.MetersToUnreal(50))
         {
-            OtherPC.ClientSquadSignal(Type, Location);
+            OtherPC.ClientSquadSignal(SignalClass, Location);
         }
     }
 }

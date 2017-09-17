@@ -16,7 +16,7 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_02'
     bShouldAlignToGround=true
     MenuName="Concertina Wire"
-    MenuIcon=Texture'DH_GUI_tex.ConstructionMenu.Construction_WireBarricade'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.icons.barbed_wire'
     SupplyCost=50
     bCanBeMantled=false
     bCanTakeImpactDamage=true

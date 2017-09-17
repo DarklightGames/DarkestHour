@@ -3,12 +3,14 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHMapMarker_Enemy_Tank extends DHMapMarker_Enemy
+class DHSquadSignal_Move extends DHSquadSignal
     abstract;
 
 defaultproperties
 {
-    // IconMaterial=Texture'DH_GUI_tex.DeployMenu.PlatoonHQ' // TODO: get an icon!
-    MarkerName="Enemy Tank"
-    LifetimeSeconds=120
+    SignalName="Move"
+    MenuIconMaterial=Texture'DH_InterfaceArt2_tex.Icons.move'
+    WorldIconMaterial=TexOscillator'DH_InterfaceArt2_tex.Icons.move_pulse'
+    Color=(R=186,G=85,B=211,A=255)
+    bIsUnique=true
 }

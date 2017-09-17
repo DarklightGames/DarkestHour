@@ -10,6 +10,5 @@ defaultproperties
 {
     IconColor=(R=255,G=0,B=0,A=255)
     GroupIndex=1
-    LifetimeSeconds=600
 }
 

@@ -72,7 +72,7 @@ function static StaticMesh GetProxyStaticMesh(DHConstructionProxy CP)
 defaultproperties
 {
     MenuName="Supply Cache"
-    MenuIcon=Texture'DH_GUI_tex.ConstructionMenu.Construction_Supply'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.icons.supply_cache'
     SupplyCost=250
     InitialSupplyCount=250
     StaticMesh=StaticMesh'DH_Military_stc.Ammo.cratepile1'

@@ -60,7 +60,7 @@ function Setup()
             Options.Insert(0, 1);
             Options[0].OptionalObject = class'UInteger'.static.Create(i - 1);
             Options[0].ActionText = "...";
-            Options[0].Material = Texture'DH_GUI_tex.ConstructionMenu.Construction_More'; // TODO: some sort of ellipses icon?
+            Options[0].Material = Texture'DH_InterfaceArt2_tex.Icons.ellipses';
         }
     }
 
@@ -156,11 +156,11 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
                     SquadMemberCount = PC.SquadReplicationInfo.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
                 }
 
-                ORI.InfoIcon = texture'DH_GUI_Tex.DeployMenu.Squads';
+                ORI.InfoIcon = texture'DH_InterfaceArt2_tex.Icons.squad';
                 ORI.InfoText = string(SquadMemberCount) $ "/" $ string(ConstructionClass.default.SquadMemberCountMinimum);
                 break;
             default:
-                ORI.InfoIcon = texture'DH_InterfaceArt_tex.HUD.supplies';
+                ORI.InfoIcon = SuppliesIcon;
                 ORI.InfoText = string(ConstructionClass.default.SupplyCost);
                 break;
         }
@@ -177,7 +177,7 @@ function bool ShouldHideMenu()
 
 defaultproperties
 {
-    SuppliesIcon=Texture'DH_InterfaceArt_tex.HUD.supplies'
+    SuppliesIcon=Texture'DH_InterfaceArt2_tex.Icons.supply_cache'
     NotAvailableText="Not Available"
     TeamLimitText="Limit Reached"
     SlotCountOverride=8

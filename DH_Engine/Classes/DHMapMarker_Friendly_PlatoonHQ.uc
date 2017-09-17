@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHMapMarker_Enemy_PlatoonHQ extends DHMapMarker_Enemy
+class DHMapMarker_Friendly_PlatoonHQ extends DHMapMarker_Friendly
     abstract;
 
 static function bool CanBeUsed(DHGameReplicationInfo GRI)
@@ -14,7 +14,7 @@ static function bool CanBeUsed(DHGameReplicationInfo GRI)
 defaultproperties
 {
     IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.platoon_hq'
-    MarkerName="Enemy HQ"
+    MarkerName="Build HQ"
     LifetimeSeconds=600
 }
 

@@ -9,8 +9,7 @@ class DHPlayer extends ROPlayer
 const MORTAR_TARGET_TIME_INTERVAL = 5;
 const SPAWN_KILL_RESPAWN_TIME = 2;
 const DEATH_PENALTY_FACTOR = 10;
-const SQUAD_SIGNALS_MAX = 3;
-const SQUAD_SIGNAL_DURATION = 15.0;
+const SQUAD_SIGNALS_MAX = 4;
 
 enum EMapMode
 {
@@ -92,13 +91,12 @@ var     Actor                   LookTarget;
 
 struct SquadSignal
 {
+    var class<DHSquadSignal> SignalClass;
     var vector Location;
     var float TimeSeconds;
-    var float FirstDrawTime;
-    var float LastDrawTime;
 };
 
-var     SquadSignal             SquadSignals[2];
+var     SquadSignal             SquadSignals[SQUAD_SIGNALS_MAX];
 
 // This is used to skip ResetInput calls in the GUIController.
 // Useful when you want to show a menu over top of the game (e.g. situation map)
@@ -4266,7 +4264,7 @@ exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFir
         {
             V.DamagedEffectScale = float(NewScale);
         }
-        
+
         // Log settings
         if (V.DamagedEffectOffset != OldOffset || V.DamagedEffectScale != OldScale)
         {
@@ -4832,7 +4830,7 @@ function ServerSquadPromote(DHPlayerReplicationInfo NewSquadLeader)
     }
 }
 
-function ServerSquadSignal(DHSquadReplicationInfo.ESquadSignalType Type, vector Location)
+function ServerSquadSignal(class<DHSquadSignal> SignalClass, vector Location)
 {
     local DHPlayerReplicationInfo PRI;
 
@@ -4840,7 +4838,7 @@ function ServerSquadSignal(DHSquadReplicationInfo.ESquadSignalType Type, vector 
 
     if (SquadReplicationInfo != none && PRI != none)
     {
-        SquadReplicationInfo.SendSquadSignal(PRI, GetTeamNum(), PRI.SquadIndex, Type, Location);
+        SquadReplicationInfo.SendSquadSignal(PRI, GetTeamNum(), PRI.SquadIndex, SignalClass, Location);
     }
 }
 
@@ -4888,19 +4886,59 @@ function ServerRemoveMapMarker(int MapMarkerIndex)
     }
 }
 
-simulated function ClientSquadSignal(DHSquadReplicationInfo.ESquadSignalType Type, vector L)
+simulated function ClientSquadSignal(class<DHSquadSignal> SignalClass, vector L)
 {
     local int i;
+    local int Index;
 
-    i = int(Type);
+    Index = -1;
 
-    SquadSignals[i].Location = L;
-    SquadSignals[i].TimeSeconds = Level.TimeSeconds;
+    if (SignalClass == none)
+    {
+        return;
+    }
+
+    if (SignalClass.default.bIsUnique)
+    {
+        // Go through all of the existing signals and see if one already exist.
+        for (i = 0; i < arraycount(SquadSignals); ++i)
+        {
+            if (SquadSignals[i].SignalClass == SignalClass)
+            {
+                Index = i;
+                break;
+            }
+        }
+    }
+
+    if (Index == -1)
+    {
+        // Go through the rest of the existing signal slots and see if any are empty or expired.
+        for (i = 0; i < arraycount(SquadSignals); ++i)
+        {
+            if (!IsSquadSignalActive(i))
+            {
+                Index = i;
+                break;
+            }
+        }
+    }
+
+    if (Index != -1)
+    {
+        SquadSignals[Index].SignalClass = SignalClass;
+        SquadSignals[Index].Location = L;
+        SquadSignals[Index].TimeSeconds = Level.TimeSeconds;
+    }
 }
 
 simulated function bool IsSquadSignalActive(int i)
 {
-    return i >= 0 && i < arraycount(SquadSignals) && SquadSignals[i].Location != vect(0, 0, 0) && Level.TimeSeconds - SquadSignals[i].TimeSeconds < 15.0;
+    return i >= 0 &&
+           i < arraycount(SquadSignals) &&
+           SquadSignals[i].SignalClass != none &&
+           SquadSignals[i].Location != vect(0, 0, 0) &&
+           Level.TimeSeconds - SquadSignals[i].TimeSeconds < SquadSignals[i].SignalClass.default.DurationSeconds;
 }
 
 function ServerSquadSpawnRallyPoint()
