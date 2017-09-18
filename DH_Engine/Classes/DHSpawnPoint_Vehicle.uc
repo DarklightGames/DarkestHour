@@ -59,7 +59,10 @@ function Timer()
             }
         }
 
-        // Check if a suitable vehicle position is available for non-crew to enter
+        // Check if a suitable vehicle position is available
+        // The 'false' means we ignore positions that can only be used by tank crew - this is a global check, so we can only check positions that any player could use
+        // Rarely going to be an issue, as a tank used as a spawn vehicle is rare, perhaps never, but the functionality does allow for it
+        // But it does mean that if a tank is used as a spawn vehicle, it will only be shown as 'deployable' if there is a rider position free
         if (FindEntryVehicle(false) == none)
         {
             BlockReason = SPBR_Full;
@@ -75,19 +78,15 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
         return false;
     }
 
-    if (Role == ROLE_Authority)
+    if (Role == ROLE_Authority && (Vehicle == none || Vehicle.default.VehicleTeam != TeamIndex))
     {
-        if (Vehicle == none || Vehicle.default.VehicleTeam != TeamIndex)
-        {
-            return false;
-        }
+        return false;
     }
 
     return true;
 }
 
 // Similar to FindEntryVehicle() function in a Vehicle class, it tries to find a suitable, valid vehicle position for player to enter
-// We need to do this, otherwise if we TryToDrive() a vehicle that already has a driver, we'll fail to enter it at all, so here we try to find an empty, valid weapon pawn
 // Deliberately ignores driver position, to discourage players from deploying into a spawn vehicle (often carefully positioned by the team) & immediately driving off in it
 // Prioritises passenger positions over real weapons (MGs or cannons), so player deploying into spawn vehicle is less likely to be exposed & will have a moment to orient themselves
 private function Vehicle FindEntryVehicle(bool bCanEnterTankCrewPositions)
@@ -109,15 +108,13 @@ private function Vehicle FindEntryVehicle(bool bCanEnterTankCrewPositions)
 
         if (WP != none)
         {
-            // If weapon pawn isn't a passenger position, skip it on this 1st pass, but record it to check later if we don't find a valid passenger slot
+            // If weapon pawn isn't a passenger position, ignore it on this 1st pass, but record it to check later if we don't find a valid passenger slot
             if (!WP.IsA('DHPassengerPawn'))
             {
                 RealWeaponPawns[RealWeaponPawns.Length] = WP;
-                continue;
             }
-
-            // Enter weapon pawn position if it's empty & player isn't barred by tank crew restriction
-            if (WP.Driver == none && (bCanBeTankCrew || !WP.IsA('ROVehicleWeaponPawn') || !ROVehicleWeaponPawn(WP).bMustBeTankCrew))
+            // Enter a passenger position if it's empty
+            else if (WP.Driver == none)
             {
                 return WP;
             }
@@ -142,26 +139,24 @@ private function Vehicle FindEntryVehicle(bool bCanEnterTankCrewPositions)
 // Implemented to handle spawning the player into, or near to, our spawn vehicle
 function bool PerformSpawn(DHPlayer PC)
 {
+    local RORoleInfo RoleInfo;
+    local Vehicle    EntryVehiclePosition;
     local Pawn       P;
-    local Vehicle    EntryVehicle;
     local vector     Offset;
     local array<int> ExitPositionIndices;
-    local int        i, RoleIndex;
-    local DarkestHourGame G;
-    local byte Team;
+    local int        RoleIndex, i;
+    local byte       TeamIndex;
     local bool       bCanEnterTankCrewPositions;
 
-    G = DarkestHourGame(Level.Game);
-
-    if (PC == none || GRI == none || Vehicle == none || G == none)
+    if (PC == none || GRI == none || Vehicle == none)
     {
         return false;
     }
 
     // Spawn player pawn in black room & make sure it was successful
-    if (PC.Pawn == none)
+    if (PC.Pawn == none && DarkestHourGame(Level.Game) != none)
     {
-        G.DeployRestartPlayer(PC, false, true);
+        DarkestHourGame(Level.Game).DeployRestartPlayer(PC, false, true);
     }
 
     if (PC.Pawn == none)
@@ -169,20 +164,19 @@ function bool PerformSpawn(DHPlayer PC)
         return false;
     }
 
-    Offset = PC.PawnClass.default.CollisionHeight * vect(0.0, 0.0, 0.5);
-
-    RoleIndex = GRI.GetRoleIndexAndTeam(PC.GetRoleInfo(), Team);
+    RoleInfo = PC.GetRoleInfo();
+    RoleIndex = GRI.GetRoleIndexAndTeam(RoleInfo, TeamIndex);
 
     // Check if we can deploy into or near the vehicle
     if (CanSpawnWithParameters(GRI, PC.GetTeamNum(), RoleIndex, PC.GetSquadIndex(), PC.VehiclePoolIndex))
     {
-        // Randomise exit locations
-        ExitPositionIndices = class'UArray'.static.Range(0, Vehicle.ExitPositions.Length - 1);
-        class'UArray'.static.IShuffle(ExitPositionIndices);
-
         // Its engine is off & it will be stationary, so attempt to deploy next to vehicle, at a random exit position
         if (Vehicle.bEngineOff)
         {
+            ExitPositionIndices = class'UArray'.static.Range(0, Vehicle.ExitPositions.Length - 1);
+            class'UArray'.static.IShuffle(ExitPositionIndices); // randomise exit locations
+            Offset.Z = PC.PawnClass.default.CollisionHeight * 0.5;
+
             for (i = 0; i < ExitPositionIndices.Length; ++i)
             {
                 if (PC.TeleportPlayer(Vehicle.Location + (Vehicle.ExitPositions[ExitPositionIndices[i]] >> Vehicle.Rotation) + Offset, Vehicle.Rotation))
@@ -194,11 +188,10 @@ function bool PerformSpawn(DHPlayer PC)
         // Otherwise vehicle may be moving, so attempt to deploy into the vehicle
         else
         {
-            // Attempt to deploy into the vehicle
-            bCanEnterTankCrewPositions = PC.GetRoleInfo().bCanBeTankCrew && !Vehicle.AreCrewPositionsLockedForPlayer(PC.Pawn, true);
-            EntryVehicle = FindEntryVehicle(bCanEnterTankCrewPositions);
+            bCanEnterTankCrewPositions = RoleInfo.bCanBeTankCrew && !Vehicle.AreCrewPositionsLockedForPlayer(PC.Pawn, true);
+            EntryVehiclePosition = FindEntryVehicle(bCanEnterTankCrewPositions);
 
-            if (EntryVehicle != none && EntryVehicle.TryToDrive(PC.Pawn))
+            if (EntryVehiclePosition != none && EntryVehiclePosition.TryToDrive(PC.Pawn))
             {
                 return true;
             }
