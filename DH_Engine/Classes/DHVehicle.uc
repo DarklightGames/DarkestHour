@@ -739,9 +739,9 @@ simulated function SetViewFOV(int PositionIndex, optional PlayerController PC)
 // If player is close enough to see the 'enter vehicle' message, he should always be able to enter, otherwise it's confusing & contradictory
 function Vehicle FindEntryVehicle(Pawn P)
 {
-    local DHVehicleWeaponPawn WP;
+    local ROVehicleWeaponPawn WP;
     local Vehicle             VehicleGoal;
-    local bool                bPlayerIsTankCrew, bHasTankCrewPositions;
+    local bool                bPlayerIsTankCrew, bCanEnterTankCrewPositions, bHasTankCrewPositions;
     local int                 i;
 
     if (P == none)
@@ -751,10 +751,15 @@ function Vehicle FindEntryVehicle(Pawn P)
 
     if (P.IsHumanControlled())
     {
-        bPlayerIsTankCrew = class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(P);
+        // Check & save whether player is a tank crewman and, if so, whether he can enter tank crew positions (i.e. vehicle's crew haven't locked him out)
+        if (class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(P))
+        {
+            bPlayerIsTankCrew = true;
+            bCanEnterTankCrewPositions = !AreCrewPositionsLockedForPlayer(P, true);
+        }
 
         // Select driver position if it's empty, & player isn't barred by tank crew restriction, & it isn't a locked armored vehicle that player can't enter
-        if (Driver == none && (!bMustBeTankCommander || (bPlayerIsTankCrew && !AreCrewPositionsLockedForPlayer(P, true))))
+        if (Driver == none && (!bMustBeTankCommander || bCanEnterTankCrewPositions))
         {
             return self;
         }
@@ -764,10 +769,10 @@ function Vehicle FindEntryVehicle(Pawn P)
         // Otherwise loop through the weapon pawns to find the first the player can use
         for (i = 0; i < WeaponPawns.Length; ++i)
         {
-            WP = DHVehicleWeaponPawn(WeaponPawns[i]);
+            WP = ROVehicleWeaponPawn(WeaponPawns[i]);
 
             // Select weapon pawn if it's empty, & player isn't barred by tank crew restriction, & this isn't a locked armored vehicle that player can't enter
-            if (WP != none && WP.Driver == none && (!WP.bMustBeTankCrew || (bPlayerIsTankCrew && !AreCrewPositionsLockedForPlayer(P, true))))
+            if (WP != none && WP.Driver == none && (!WP.bMustBeTankCrew || bCanEnterTankCrewPositions))
             {
                 return WP;
             }
@@ -812,7 +817,7 @@ function Vehicle FindEntryVehicle(Pawn P)
     {
         for (i = 0; i < WeaponPawns.Length; ++i)
         {
-            WP = DHVehicleWeaponPawn(WeaponPawns[i]);
+            WP = ROVehicleWeaponPawn(WeaponPawns[i]);
 
             if (VehicleGoal == WP)
             {
