@@ -159,6 +159,8 @@ Begin:
 // Modified to enable replication as pickup is now inactive
 state Sleeping
 {
+ignores Touch;
+
 Begin:
     Sleep(1.0); // allow a little time for bHidden to replicate to clients, before switching off all further replication (by setting RemoteRole to none)
     RemoteRole = ROLE_None;

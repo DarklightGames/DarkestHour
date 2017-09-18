@@ -1817,6 +1817,8 @@ function HandleStamina(float DeltaTime)
 
 state Dying
 {
+ignores Trigger, Bump, HitWall, HeadVolumeChange, PhysicsVolumeChange, Falling, BreathTimer; // added (from Pawn) as don't believe 'ignores' specifier is inherited & it wasn't re-stated in ROPawn
+
     // Modified to destroy player's bullet whip attachment actor so that happens as soon as player dies, without waiting for pawn actor to be destroyed when ragdoll disappears
     // Also to avoid re-enabling bCollideActors as it can cause some vehicles to jump wildly when player is killed in vehicle with other occupants
     // Seems to be some sort of collision clash when player's collision is re-enabled & he's inside the vehicle's collision

@@ -2070,6 +2070,8 @@ function TakeEngineFireDamage()
 // Modified to unlock a locked vehicle (unlocking isn't directly necessary, but unlocking it finds & clears any references to the now destroyed vehicle)
 state VehicleDestroyed
 {
+ignores Tick;
+
     function BeginState()
     {
         super.BeginState();

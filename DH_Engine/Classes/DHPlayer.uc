@@ -1135,6 +1135,8 @@ function ClientSetBehindView(bool B)
 // Modified to edit an if state in Timer()
 auto state PlayerWaiting
 {
+ignores SeePlayer, HearNoise, NotifyBump, TakeDamage, PhysicsVolumeChange, SwitchToBestWeapon;
+
     // In the else if() statement, PRI != none was added so if the player isn't knowledgeable of their PRI yet it doesn't even open a menu
     // This actually works quite well because now players will actually see the server's MOTD text
     simulated function Timer()
@@ -1158,6 +1160,8 @@ auto state PlayerWaiting
 
 state PlayerWalking
 {
+ignores SeePlayer, HearNoise, Bump;
+
     // Modified to allow behind view, if server has called this (restrictions on use of behind view are handled in ServerToggleBehindView)
     function ClientSetBehindView(bool B)
     {
@@ -1597,6 +1601,8 @@ state Mantling
 
 state PlayerDriving
 {
+ignores SeePlayer, HearNoise, Bump;
+
     // Modified to ignore bDisableThrottle & bWantsToThrottle, which relate to waiting for crew & are now effectively deprecated
     function ProcessDrive(float InForward, float InStrafe, float InUp, bool InJump)
     {
@@ -1794,6 +1800,8 @@ state PlayerDriving
 
 state PlayerSwimming
 {
+ignores SeePlayer, HearNoise, Bump;
+
     // Modified so if player moves into a shallow water volume, they exit swimming state, same as if they move into a non-water volume
     function bool NotifyPhysicsVolumeChange(PhysicsVolume NewVolume)
     {
@@ -1932,6 +1940,8 @@ state PlayerSwimming
 
 state PlayerClimbing
 {
+ignores SeePlayer, HearNoise, Bump;
+
     // Modified so moving into a shallow water volume doesn't send player into swimming state
     function bool NotifyPhysicsVolumeChange(PhysicsVolume NewVolume)
     {
@@ -2768,7 +2778,9 @@ Begin:
 
 state DeadSpectating
 {
-    function BeginState()
+ignores SwitchWeapon, RestartLevel, ClientRestart, Suicide, ThrowWeapon, NotifyPhysicsVolumeChange, NotifyHeadVolumeChange;
+
+     function BeginState()
     {
         super.BeginState();
 
@@ -2782,6 +2794,8 @@ state DeadSpectating
 
 state Dead
 {
+ignores SeePlayer, HearNoise, KilledBy, SwitchWeapon, NextWeapon, PrevWeapon;
+
     function BeginState()
     {
         local DHGameReplicationInfo GRI;

@@ -2081,6 +2081,8 @@ function DriverRadiusDamage(float DamageAmount, float DamageRadius, Controller E
 // The Driver is dead now so Destroyed_HandleDriver() is one of those things, but it isn't included
 state VehicleDestroyed
 {
+ignores Tick;
+
     function BeginState()
     {
         if (Driver != none)

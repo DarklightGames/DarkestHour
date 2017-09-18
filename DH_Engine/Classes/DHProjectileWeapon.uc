@@ -1303,6 +1303,8 @@ simulated function PlayStartSprint()
 // Modified to handle empty anim
 simulated state WeaponSprinting
 {
+ignores PutDown, BringUp;
+
     simulated function PlayIdle()
     {
         local float LoopSpeed, Speed2d;
