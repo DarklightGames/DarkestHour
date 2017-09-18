@@ -5,16 +5,6 @@
 
 class DHBot extends ROBot;
 
-// Overridden to force bots out rather than being trapped by our "must be unbuttoned" requirement
-function GetOutOfVehicle()
-{
-    if (Vehicle(Pawn) != none)
-    {
-        Vehicle(Pawn).PlayerStartTime = Level.TimeSeconds + 20.0; // tells bots not to re-enter this vehicle position for a while
-        Vehicle(Pawn).KDriverLeave(true);
-    }
-}
-
 // Modified to avoid "accessed none" log spam errors on Weapon
 function ChooseAttackMode()
 {

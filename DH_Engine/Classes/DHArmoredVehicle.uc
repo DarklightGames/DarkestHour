@@ -473,7 +473,7 @@ function bool KDriverLeave(bool bForceLeave)
 // Implemented to prevent exit if player is buttoned up, displaying an appropriate "unbutton the hatch" message if he can't
 simulated function bool CanExit()
 {
-    if (DriverPositionIndex < UnbuttonedPositionIndex || (IsInState('ViewTransition') && DriverPositionIndex == UnbuttonedPositionIndex))
+    if ((DriverPositionIndex < UnbuttonedPositionIndex || (IsInState('ViewTransition') && DriverPositionIndex == UnbuttonedPositionIndex)) && IsHumanControlled())
     {
         if (DriverPositions.Length > UnbuttonedPositionIndex) // means it is possible to unbutton
         {
