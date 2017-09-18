@@ -8,7 +8,7 @@ class DHMapMarker_Enemy_Tank extends DHMapMarker_Enemy
 
 defaultproperties
 {
-    // IconMaterial=Texture'DH_GUI_tex.DeployMenu.PlatoonHQ' // TODO: get an icon!
+    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.tank'
     MarkerName="Enemy Tank"
     LifetimeSeconds=120
 }
