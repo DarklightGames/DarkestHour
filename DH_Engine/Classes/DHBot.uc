@@ -111,21 +111,7 @@ function ChooseAttackMode()
 
 state RangedAttack
 {
-    ignores HearNoise, Bump;
-
-    function NotifyIneffectiveAttack(optional Pawn Other)
-    {
-        if (VehicleWeaponPawn(Pawn) != none && VehicleWeaponPawn(Pawn).VehicleBase != none && DHBot(VehicleWeaponPawn(Pawn).VehicleBase.Controller) != none)
-        {
-            DHBot(VehicleWeaponPawn(Pawn).VehicleBase.Controller).NotifyIneffectiveAttack(Other);
-        }
-        else
-        {
-            Target = Enemy;
-            GoalString = "Position Myself";
-            GotoState('TacticalVehicleMove');
-        }
-    }
+ignores HearNoise, Bump;
 
     // Modified to fix logic flaw in the Super when making a bot switch to an empty vehicle weapon MG to engage enemy
     // Problem was it always called KDriverLeave() on the vehicle base, even if the bot was in another vehicle weapon position
