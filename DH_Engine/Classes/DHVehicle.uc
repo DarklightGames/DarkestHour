@@ -672,13 +672,16 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
     }
     else
     {
-        PC.SetRotation(rotator(vector(PC.Rotation) << Rotation)); // switching back from behind view, so make rotation relative to vehicle again
-
-        // Switch back to position's normal vehicle mesh & view FOV
-        if (bBehindViewChanged && DriverPositions.Length > 0)
+        if (bBehindViewChanged)
         {
-            SwitchMesh(DriverPositionIndex, true);
-            SetViewFOV(DriverPositionIndex, PC);
+            PC.SetRotation(rotator(vector(PC.Rotation) << Rotation)); // make rotation relative to vehicle again (changed so only if switching back from behind view)
+
+            // Switch back to position's normal vehicle mesh & view FOV
+            if (DriverPositions.Length > 0)
+            {
+                SwitchMesh(DriverPositionIndex, true);
+                SetViewFOV(DriverPositionIndex, PC);
+            }
         }
 
         bOwnerNoSee = !bDrawMeshInFP;
