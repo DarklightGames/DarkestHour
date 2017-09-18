@@ -109,7 +109,6 @@ function ChooseAttackMode()
     FightEnemy(true, EnemyStrength);
 }
 
-// Added code to get bots using ironsights in a rudimentary fashion (& uses DHVehicleCannonPawn instead of deprecated ROTankCannonPawn)
 state RangedAttack
 {
     ignores HearNoise, Bump;
@@ -128,11 +127,15 @@ state RangedAttack
         }
     }
 
+    // Modified to fix logic flaw in the Super when making a bot switch to an empty vehicle weapon MG to engage enemy
+    // Problem was it always called KDriverLeave() on the vehicle base, even if the bot was in another vehicle weapon position
+    // Also removed requirement for bot's vehicle to be an APC to allow him to switch to an MG to engage enemy infantry (type of vehicle is irrelevant)
+    // And now calling a switch function instead of KDriverLeave & KDriverEnter, to work properly with DH's modified vehicle switching system
     function BeginState()
     {
-        local ROVehicle V;
-        local Pawn      P;
-        local byte      i;
+        local VehicleWeaponPawn CurrentWP, WP;
+        local ROVehicle         V;
+        local int               i;
 
         StopStartTime = Level.TimeSeconds;
         bHasFired = false;
@@ -156,31 +159,48 @@ state RangedAttack
             Log(GetHumanReadableName() @ "no target in ranged attack");
         }
 
-        if (ROVehicle(Pawn) != none)
-        {
-            V = ROVehicle(Pawn);
-            P = V.Driver;
+        // Check whether bot should try to move to empty vehicle weapon position to engage enemy - either a cannon or an MG if target is infantry
+        V = ROVehicle(Pawn);
 
-            V.Steering = 0.0;
-            V.Throttle = 0.0;
-            V.Rise = 0.0;
-        }
-        else if (ROVehicleWeaponPawn(Pawn) != none)
+        if (V == none)
         {
-            V = VehicleWeaponPawn(Pawn).VehicleBase;
-            P = VehicleWeaponPawn(Pawn).Driver;
+            CurrentWP = VehicleWeaponPawn(Pawn);
+
+            // If bot is already in a vehicle weapon position, only consider switching if current position isn't a suitable weapon
+            if (CurrentWP != none && !CurrentWP.IsA('DHVehicleCannonPawn') && !(CurrentWP.IsA('DHVehicleMGPawn') && DHPawn(Target) != none))
+            {
+                V = CurrentWP.VehicleBase;
+            }
         }
 
-        // Check whether bot should move to empty vehicle weapon position to engage enemy - will do if either has a cannon or if has an MG & enemy is infantry
-        // Removed requirement for bot's vehicle to be an APC to use an MG, as MG will be effective against infantry regardless of the vehicle it's mounted on
+        // Bot isn't in a suitable weapon position, so check whether there is a suitable weapon that's empty
         if (V != none)
         {
             for (i = 0; i < V.WeaponPawns.Length; ++i)
             {
-                if (V.WeaponPawns[i] != none && V.WeaponPawns[i].Driver == none
-                    && (V.WeaponPawns[i].IsA('DHVehicleCannonPawn') || (V.WeaponPawns[i].IsA('DHVehicleMGPawn') && DHPawn(Enemy) != none/* && V.bIsApc*/)))
+                WP = V.WeaponPawns[i];
+
+                // Removed requirement for bot's vehicle to be an APC to be able to use an MG, as MG will be effective against infantry regardless of vehicle it's mounted on
+                if (WP != none && WP.Driver == none && (WP.IsA('DHVehicleCannonPawn') || (WP.IsA('DHVehicleMGPawn') && DHPawn(Target) != none/* && V.bIsApc*/)))
                 {
-                    V.ServerChangeDriverPosition(i + 2);
+                    // Fixed to call this on bot's current vehicle pawn (not always the vehicle base)
+                    // And also now calling a switch function instead of KDriverLeave & KDriverEnter, to work properly with DH's modified vehicle switching system
+                    if (CurrentWP != none)
+                    {
+                        CurrentWP.ServerChangeDriverPosition(i + 2); // +2 because function accepts 1 as driver, 2 as WeaponPawns[0], etc
+                    }
+                    else
+                    {
+                        V.ServerChangeDriverPosition(i + 2);
+                    }
+
+                    if (!V.IsHumanControlled()) // make the vehicle stop unless it has a human driver (moved this down here & added the human check)
+                    {
+                        V.Steering = 0.0;
+                        V.Throttle = 0.0;
+                        V.Rise = 0.0;
+                    }
+
                     break;
                 }
             }
