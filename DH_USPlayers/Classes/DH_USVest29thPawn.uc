@@ -7,8 +7,8 @@ class DH_USVest29thPawn extends DH_USVestPawn;
 
 defaultproperties
 {
-    Skins(1)=texture'DHUSCharactersTex.29thID.US_29thID_AssaultVest'
+    Skins(1)=Texture'DHUSCharactersTex.29thID.US_29thID_AssaultVest'
 
-    BodySkins(0)=texture'DHUSCharactersTex.29thID.US_29thID_AssaultVest'
-    BodySkins(1)=texture'DHUSCharactersTex.29thID.US_29thID_AssaultVest'
+    BodySkins(0)=Texture'DHUSCharactersTex.29thID.US_29thID_AssaultVest'
+    BodySkins(1)=Texture'DHUSCharactersTex.29thID.US_29thID_AssaultVest'
 }

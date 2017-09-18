@@ -636,14 +636,14 @@ defaultproperties
     LifeSpan=12.0    // was 1500 seconds but way too long & no reason for that
 //  bProjTarget=true // was in RO but removed as makes no sense for a shell be a target for other projectiles & no other projectiles have this
 
-    DistantSound=sound'Artillery.fire_distant'
-    CloseSound(0)=sound'Artillery.zoomin.zoom_in01'
-    CloseSound(1)=sound'Artillery.zoomin.zoom_in02'
-    CloseSound(2)=sound'Artillery.zoomin.zoom_in03'
-    ExplosionSound(0)=sound'Artillery.explosions.explo01'
-    ExplosionSound(1)=sound'Artillery.explosions.explo02'
-    ExplosionSound(2)=sound'Artillery.explosions.explo03'
-    ExplosionSound(3)=sound'Artillery.explosions.explo04'
+    DistantSound=Sound'Artillery.fire_distant'
+    CloseSound(0)=Sound'Artillery.zoomin.zoom_in01'
+    CloseSound(1)=Sound'Artillery.zoomin.zoom_in02'
+    CloseSound(2)=Sound'Artillery.zoomin.zoom_in03'
+    ExplosionSound(0)=Sound'Artillery.explosions.explo01'
+    ExplosionSound(1)=Sound'Artillery.explosions.explo02'
+    ExplosionSound(2)=Sound'Artillery.explosions.explo03'
+    ExplosionSound(3)=Sound'Artillery.explosions.explo04'
     TransientSoundVolume=1.0
 //  SoundVolume=255 // omitted as irrelevant as actor has no ambient sound
 //  SoundRadius=100.0

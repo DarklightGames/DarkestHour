@@ -16,8 +16,8 @@ defaultproperties
     MaxCriticalSpeed=638.0 // 38 kph
     ExhaustPipes(0)=(ExhaustPosition=(X=-190.0,Y=-10.0,Z=36.0),ExhaustRotation=(Pitch=32768,Yaw=0))
     ExhaustPipes(1)=(ExhaustPosition=(X=-190.0,Y=49.0,Z=36.0),ExhaustRotation=(Pitch=32768))
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.JPIVL70_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.JPIVL70_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.JPIVL70_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.JPIVL70_turret_look'
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.jagdpanzer_l70'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.jagdpanzer_l70'
 }

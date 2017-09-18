@@ -15,12 +15,12 @@ defaultproperties
     BinocPositionIndex=2
     DriveAnim="VT3476_com_idle_close"
     bLockCameraDuringTransition=true
-    GunsightOverlay=texture'Vehicle_Optic.T3476_sight_background'
-    CannonScopeCenter=texture'Vehicle_Optic.T3476_sight_mover'
-    DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed' // TODO: make one for T34 or generic Soviet
-    AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell'
-    AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell_reload'
-    PoweredRotateSound=sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
-    PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
+    GunsightOverlay=Texture'Vehicle_Optic.T3476_sight_background'
+    CannonScopeCenter=Texture'Vehicle_Optic.T3476_sight_mover'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed' // TODO: make one for T34 or generic Soviet
+    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell_reload'
+    PoweredRotateSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
+    PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
 }

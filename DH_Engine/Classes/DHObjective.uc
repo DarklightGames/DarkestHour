@@ -1183,7 +1183,7 @@ simulated function bool IsNeutral()
 defaultproperties
 {
     bDoNotUseLabelShiftingOnSituationMap=true
-    Texture=texture'DHEngine_Tex.Objective'
+    Texture=Texture'DHEngine_Tex.Objective'
     bVehiclesCanCapture=true
     bTankersCanCapture=true
     bResetDeathPenalties=true

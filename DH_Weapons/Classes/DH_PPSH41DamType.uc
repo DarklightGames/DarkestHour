@@ -9,7 +9,7 @@ class DH_PPSH41DamType extends DHWeaponProjectileDamageType
 defaultproperties
 {
     WeaponClass=class'DH_Weapons.DH_PPSH41Weapon'
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b762mm'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
     KDamageImpulse=1000.0
     KDeathVel=100.0
     KDeathUpKick=0.0

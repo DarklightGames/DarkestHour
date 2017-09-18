@@ -25,7 +25,7 @@ defaultproperties
     lb_Values=DHGUIMultiOptionListBox'DH_Interface.DHGUIDynArrayPage.ValueListBox'
     ButtonStyle="DHMenuTextButtonStyle"
     Begin Object Class=AltSectionBackground Name=Bk1
-        HeaderBase=texture'DH_GUI_Tex.Menu.DHDisplay'
+        HeaderBase=Texture'DH_GUI_Tex.Menu.DHDisplay'
         LeftPadding=0.01
         RightPadding=0.15
         WinTop=0.095833
@@ -85,7 +85,7 @@ defaultproperties
     End Object
     t_WindowTitle=DHGUIHeader'DH_Interface.DHGUIDynArrayPage.TitleBar'
     Begin Object Class=FloatingImage Name=FloatingFrameBackground
-        Image=texture'DH_GUI_Tex.Menu.DHDisplay_withcaption_noAlpha'
+        Image=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption_noAlpha'
         DropShadow=none
         ImageStyle=ISTY_Stretched
         ImageRenderStyle=MSTY_Normal

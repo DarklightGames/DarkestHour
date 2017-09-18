@@ -31,19 +31,19 @@ exec function SetTex(int Slot) // TEMP to allow switching between different size
     Switch(Slot)
     {
         case 0:
-            if (Skins[Slot] == default.Skins[Slot]) Skins[Slot] = texture'DH_Locust_tex.Locust_body_ext_2048'; // 2048 slightly sharper than 1024 but acceptable
+            if (Skins[Slot] == default.Skins[Slot]) Skins[Slot] = Texture'DH_Locust_tex.Locust_body_ext_2048'; // 2048 slightly sharper than 1024 but acceptable
             else Skins[Slot] = default.Skins[Slot];
             break;
         case 1:
-            if (Skins[Slot] == default.Skins[Slot]) Skins[Slot] = texture'DH_Locust_tex.Locust_wheels_1024'; // 1024 sharper than 512 (2048 no diff from 1024)
-            else if (Skins[Slot] == texture'DH_Locust_tex.Locust_wheels_1024') Skins[Slot] = texture'DH_Locust_tex.Locust_wheels_2048';
+            if (Skins[Slot] == default.Skins[Slot]) Skins[Slot] = Texture'DH_Locust_tex.Locust_wheels_1024'; // 1024 sharper than 512 (2048 no diff from 1024)
+            else if (Skins[Slot] == Texture'DH_Locust_tex.Locust_wheels_1024') Skins[Slot] = Texture'DH_Locust_tex.Locust_wheels_2048';
             else Skins[Slot] = default.Skins[Slot];
             break;
         case 2:
             if (Skins[Slot] == default.Skins[Slot]) // 2048 sharper than 1024 but acceptable
             {
-                Skins[Slot] = texture'DH_Locust_tex.Locust_int_2048';
-                Cannon.Skins[1] = texture'DH_Locust_tex.Locust_int_2048';
+                Skins[Slot] = Texture'DH_Locust_tex.Locust_int_2048';
+                Cannon.Skins[1] = Texture'DH_Locust_tex.Locust_int_2048';
             }
             else
             {
@@ -54,8 +54,8 @@ exec function SetTex(int Slot) // TEMP to allow switching between different size
         case 3:
             if (Skins[Slot] == default.Skins[Slot])
             {
-                Skins[Slot] = texture'DH_Locust_tex.Locust_turret_ext_2048'; // no difference, except turret ring guard looks slightly different
-                Cannon.Skins[0] = texture'DH_Locust_tex.Locust_turret_ext_2048';
+                Skins[Slot] = Texture'DH_Locust_tex.Locust_turret_ext_2048'; // no difference, except turret ring guard looks slightly different
+                Cannon.Skins[0] = Texture'DH_Locust_tex.Locust_turret_ext_2048';
             }
             else
             {
@@ -64,7 +64,7 @@ exec function SetTex(int Slot) // TEMP to allow switching between different size
             }
             break;
         case 4:
-            if (Skins[Slot] == default.Skins[Slot]) Skins[Slot] = texture'DH_Locust_tex.Locust_treads_1024'; // no difference
+            if (Skins[Slot] == default.Skins[Slot]) Skins[Slot] = Texture'DH_Locust_tex.Locust_treads_1024'; // no difference
             else Skins[Slot] = default.Skins[Slot];
             break;
     }
@@ -81,12 +81,12 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Locust_anm.Locust_body'
-    Skins(0)=texture'DH_Locust_tex.Locust_body_ext'
-    Skins(1)=texture'DH_Locust_tex.Locust_wheels'
-    Skins(2)=texture'DH_Locust_tex.Locust_int'
-    Skins(3)=texture'DH_Locust_tex.Locust_turret_ext'
-    Skins(4)=texture'DH_Locust_tex.Locust_treads'
-    Skins(5)=texture'DH_Locust_tex.Locust_treads'
+    Skins(0)=Texture'DH_Locust_tex.Locust_body_ext'
+    Skins(1)=Texture'DH_Locust_tex.Locust_wheels'
+    Skins(2)=Texture'DH_Locust_tex.Locust_int'
+    Skins(3)=Texture'DH_Locust_tex.Locust_turret_ext'
+    Skins(4)=Texture'DH_Locust_tex.Locust_treads'
+    Skins(5)=Texture'DH_Locust_tex.Locust_treads'
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc2.Locust.Locust_DriverHatch_col',AttachBone="driver_hatch") // collision attachment for driver's hatch
 
     // Vehicle weapons & passengers
@@ -146,11 +146,11 @@ defaultproperties
 
     // Sounds
     IdleSound=SoundGroup'DH_AlliedVehicleSounds.stuart.stuart_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.T60.t60_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.T60.t60_engine_stop'
-    LeftTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_L'
-    RightTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_R'
-    RumbleSound=sound'DH_AlliedVehicleSounds.stuart.stuart_inside_rumble'
+    StartUpSound=Sound'Vehicle_Engines.T60.t60_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.T60.t60_engine_stop'
+    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
+    RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
+    RumbleSound=Sound'DH_AlliedVehicleSounds.stuart.stuart_inside_rumble'
     SoundPitch=32
 
     // Visual effects
@@ -165,7 +165,7 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD // TODO: get 4 named HUD icons made
-    VehicleHudImage=texture'DH_Locust_tex.HUD.locust_body'
+    VehicleHudImage=Texture'DH_Locust_tex.HUD.locust_body'
     VehicleHudTurret=TexRotator'DH_Locust_tex.HUD.locust_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Locust_tex.HUD.locust_turret_look'
     VehicleHudTreadsPosX(0)=0.37
@@ -180,7 +180,7 @@ defaultproperties
     VehicleHudOccupantsY(2)=0.72
     VehicleHudOccupantsY(3)=0.78
     VehicleHudOccupantsY(4)=0.72
-    SpawnOverlay(0)=material'DH_Locust_tex.HUD.locust'
+    SpawnOverlay(0)=Material'DH_Locust_tex.HUD.locust'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

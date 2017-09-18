@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=3 // TODO: too many for DH I think?
     InitialAmount=3
-    IconMaterial=texture'DH_InterfaceArt_tex.weapon_icons.rpg43_ammo'
+    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.rpg43_ammo'
 }

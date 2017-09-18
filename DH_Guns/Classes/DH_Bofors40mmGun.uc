@@ -15,9 +15,9 @@ defaultproperties
     VehicleTeam=1
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Bofors40mmCannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_Bofors_anm.bofors_body'
-    Skins(0)=texture'DH_Bofors_tex.bofors.bofors_01'
+    Skins(0)=Texture'DH_Bofors_tex.bofors.bofors_01'
     DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Flak38.Flak38_static_dest'
-    VehicleHudImage=texture'DH_Bofors_tex.HUD.bofors_body'
+    VehicleHudImage=Texture'DH_Bofors_tex.HUD.bofors_body'
     VehicleHudTurret=TexRotator'DH_Bofors_tex.HUD.bofors_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Bofors_tex.HUD.bofors_turret_look'
     VehicleHudOccupantsX(0)=0.5 // should be slightly to the right, but the red dot doesn't rotate with the cannon, so when traversed it would go wrong

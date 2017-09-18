@@ -60,7 +60,7 @@ simulated function Tick(float DeltaTime)
                 }
 
                 AttachChute(Instigator);
-                Instigator.PlaySound(sound'DH_SundrySounds.Parachute.ParachuteDeploy', SLOT_Misc, 512.0, true, 128.0);
+                Instigator.PlaySound(Sound'DH_SundrySounds.Parachute.ParachuteDeploy', SLOT_Misc, 512.0, true, 128.0);
                 Instigator.AirControl = 1.0;
                 Instigator.AccelRate = 60.0;
                 Instigator.Velocity.Z = -400.0;

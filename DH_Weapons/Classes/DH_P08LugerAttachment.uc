@@ -8,7 +8,7 @@ class DH_P08LugerAttachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.luger'
-    MenuImage=texture'InterfaceArt_tex.Menu_weapons.luger'
+    MenuImage=Texture'InterfaceArt_tex.Menu_weapons.luger'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
     bRapidFire=false

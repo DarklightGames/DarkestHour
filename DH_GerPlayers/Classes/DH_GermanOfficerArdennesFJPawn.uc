@@ -7,7 +7,7 @@ class DH_GermanOfficerArdennesFJPawn extends DH_GermanOfficerFJPawn;
 
 defaultproperties
 {
-    Skins(0)=texture'DHGermanCharactersTex.Luftwaffe.FJ_Tan&Water'
+    Skins(0)=Texture'DHGermanCharactersTex.Luftwaffe.FJ_Tan&Water'
 
-    BodySkins(0)=texture'DHGermanCharactersTex.Luftwaffe.FJ_Tan&Water'
+    BodySkins(0)=Texture'DHGermanCharactersTex.Luftwaffe.FJ_Tan&Water'
 }

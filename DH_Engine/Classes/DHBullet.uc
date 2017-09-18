@@ -800,10 +800,10 @@ defaultproperties
     ImpactEffect=class'DH_Effects.DHBulletHitEffect'
     WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
     VehiclePenetrateEffectClass=class'ROEffects.ROBulletHitMetalArmorEffect'
-    VehiclePenetrateSound=sound'ProjectileSounds.Bullets.Impact_Metal'
+    VehiclePenetrateSound=Sound'ProjectileSounds.Bullets.Impact_Metal'
     VehiclePenetrateSoundVolume=3.0
     VehicleDeflectEffectClass=class'ROEffects.ROBulletHitMetalArmorEffect'
-    VehicleDeflectSound=sound'ProjectileSounds.Bullets.Impact_Metal'
+    VehicleDeflectSound=Sound'ProjectileSounds.Bullets.Impact_Metal'
     VehicleDeflectSoundVolume=3.0
 
     // Tracer properties (won't affect ordinary bullet):

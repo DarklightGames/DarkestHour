@@ -9,5 +9,5 @@ class DH_ColtM1911VehDamType extends DHVehicleDamageType
 defaultproperties
 {
     WeaponClass=class'DH_Weapons.DH_ColtM1911Weapon'
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b762mm'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
 }

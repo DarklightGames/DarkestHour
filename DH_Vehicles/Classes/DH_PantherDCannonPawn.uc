@@ -13,16 +13,16 @@ defaultproperties
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Panther_anm.Panther_turret_int',TransitionDownAnim="com_close",DriverTransitionAnim="VPanther_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bExposed=true)
     DriverPositions(3)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Panther_anm.Panther_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
     DriveAnim="VPanther_com_idle_close"
-    CannonScopeCenter=texture'DH_VehicleOptics_tex.German.Panther_sight_graticule'
+    CannonScopeCenter=Texture'DH_VehicleOptics_tex.German.Panther_sight_graticule'
     GunsightSize=0.972
     RangeRingScale=0.562
     RangeRingRotator=TexRotator'DH_VehicleOptics_tex.German.Panther_sight_center'
     RangeRingRotationFactor=502
-    DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.Panther_sight_destroyed'
-    AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.Panthershell'
-    AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.Panthershell_reload'
-    PoweredRotateSound=sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
-    PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.Panther_sight_destroyed'
+    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.Panthershell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.Panthershell_reload'
+    PoweredRotateSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
+    PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
     FireImpulse=(X=-110000.0)
 }

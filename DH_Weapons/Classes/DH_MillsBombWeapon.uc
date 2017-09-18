@@ -17,7 +17,7 @@ defaultproperties
     DisplayFOV=90.0
     FuzeLength=4.0
     bHasReleaseLever=true
-    LeverReleaseSound=sound'Inf_Weapons_Foley.F1.f1_handle'
+    LeverReleaseSound=Sound'Inf_Weapons_Foley.F1.f1_handle'
     LeverReleaseVolume=1.0
     LeverReleaseRadius=200.0
 }

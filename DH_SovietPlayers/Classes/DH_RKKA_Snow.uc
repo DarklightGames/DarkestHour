@@ -9,7 +9,7 @@ class DH_RKKA_Snow extends DH_Soviet_Units
 defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietSnowPawn',Weight=1.0)
-    SleeveTexture=texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
+    SleeveTexture=Texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
     DetachedArmClass=class'ROEffects.SeveredArmSovSnow'
     DetachedLegClass=class'ROEffects.SeveredLegSovSnow'
 }

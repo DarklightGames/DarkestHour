@@ -132,11 +132,11 @@ function bool IsOptionDisabled(int OptionIndex)
 defaultproperties
 {
     NoPlayerInLineOfSight="No player in sights"
-    Options(0)=(ActionText="Create Rally Point",Material=texture'DH_InterfaceArt2_tex.Icons.rally_point')
-    Options(1)=(ActionText="Fire",Material=texture'DH_InterfaceArt2_tex.Icons.fire')
-    Options(2)=(ActionText="Construction",Material=texture'DH_InterfaceArt2_tex.Icons.construction')
-    Options(3)=(ActionText="No Player ",Material=texture'DH_InterfaceArt2_tex.Icons.infantry')
-    Options(4)=(ActionText="Squad",Material=texture'DH_InterfaceArt2_tex.Icons.squad')
-    Options(5)=(ActionText="Move",Material=texture'DH_InterfaceArt2_tex.Icons.move')
+    Options(0)=(ActionText="Create Rally Point",Material=Texture'DH_InterfaceArt2_tex.Icons.rally_point')
+    Options(1)=(ActionText="Fire",Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
+    Options(2)=(ActionText="Construction",Material=Texture'DH_InterfaceArt2_tex.Icons.construction')
+    Options(3)=(ActionText="No Player ",Material=Texture'DH_InterfaceArt2_tex.Icons.infantry')
+    Options(4)=(ActionText="Squad",Material=Texture'DH_InterfaceArt2_tex.Icons.squad')
+    Options(5)=(ActionText="Move",Material=Texture'DH_InterfaceArt2_tex.Icons.move')
 }
 

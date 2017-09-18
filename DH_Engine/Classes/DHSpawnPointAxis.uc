@@ -8,6 +8,6 @@ class DHSpawnPointAxis extends DHSpawnPoint
 
 defaultproperties
 {
-    Texture=texture'DHEngine_Tex.Axis_Infantry'
+    Texture=Texture'DHEngine_Tex.Axis_Infantry'
     TeamIndex=0
 }

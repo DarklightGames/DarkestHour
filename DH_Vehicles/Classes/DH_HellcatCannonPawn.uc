@@ -18,13 +18,13 @@ defaultproperties
     DrivePos=(X=-2.0,Y=-1.0,Z=13.0)
     DriveAnim="VSU76_com_idle_close"
     bHasAltFire=false
-    GunsightOverlay=texture'DH_VehicleOptics_tex.Allied.Sherman76mm_sight_background'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.Allied.Sherman76mm_sight_background'
     GunsightSize=0.972
-    DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Wolverine_sight_destroyed'
-    AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell'
-    AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell_reload'
-    PoweredRotateSound=sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
-    PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Wolverine_sight_destroyed'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell_reload'
+    PoweredRotateSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
+    PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
     FireImpulse=(X=-95000.0)
 }

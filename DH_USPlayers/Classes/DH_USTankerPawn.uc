@@ -8,5 +8,5 @@ class DH_USTankerPawn extends DH_AmericanPawn;
 defaultproperties
 {
     Mesh=SkeletalMesh'DHCharacters_anm.us_tanker'
-    Skins(1)=texture'DHUSCharactersTex.743rdTank.US_743Armored_1'
+    Skins(1)=Texture'DHUSCharactersTex.743rdTank.US_743Armored_1'
 }

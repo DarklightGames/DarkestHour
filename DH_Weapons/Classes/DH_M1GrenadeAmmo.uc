@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=2
     InitialAmount=2
-    IconMaterial=texture'DH_InterfaceArt_tex.weapon_icons.M1Grenade_ammo'
+    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.M1Grenade_ammo'
 }

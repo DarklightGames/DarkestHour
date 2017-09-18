@@ -9,6 +9,6 @@ class DH_MN9130ScopedDamType extends DHWeaponProjectileDamageType
 defaultproperties
 {
     WeaponClass=class'DH_Weapons.DH_MN9130ScopedWeapon'
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b762mm'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
     KDamageImpulse=2500.0
 }

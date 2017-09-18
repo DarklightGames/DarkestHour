@@ -18,10 +18,10 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Churchill_anm.ext_body'
-    Skins(0)=texture'DH_Churchill_tex.churchill.churchill_body'
-    Skins(1)=texture'DH_Churchill_tex.churchill.churchill_turret'
-    Skins(2)=texture'DH_Churchill_tex.churchill.churchill_track'
-    Skins(3)=texture'DH_Churchill_tex.churchill.churchill_track'
+    Skins(0)=Texture'DH_Churchill_tex.churchill.churchill_body'
+    Skins(1)=Texture'DH_Churchill_tex.churchill.churchill_turret'
+    Skins(2)=Texture'DH_Churchill_tex.churchill.churchill_track'
+    Skins(3)=Texture'DH_Churchill_tex.churchill.churchill_track'
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ChurchillCannonPawn',WeaponBone="turret_placement")
@@ -86,11 +86,11 @@ defaultproperties
 
     // Sounds
     IdleSound=SoundGroup'Vehicle_Engines.T34.t34_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.T34.t34_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.T34.t34_engine_stop'
-    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L07'
-    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L07'
-    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
+    StartUpSound=Sound'Vehicle_Engines.T34.t34_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.T34.t34_engine_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L07'
+    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L07'
+    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02'
 
     // Visual effects
     LeftTreadIndex=2
@@ -107,7 +107,7 @@ defaultproperties
     SteeringScaleFactor=1.0
 
     // HUD
-    VehicleHudImage=texture'DH_Churchill_tex.hud.churchill_body'
+    VehicleHudImage=Texture'DH_Churchill_tex.hud.churchill_body'
     VehicleHudTurret=TexRotator'DH_Churchill_tex.hud.churchill_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Churchill_tex.hud.churchill_turret_look'
     VehicleHudEngineX=0.505

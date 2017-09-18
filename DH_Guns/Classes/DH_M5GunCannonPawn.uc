@@ -17,11 +17,11 @@ defaultproperties
     CameraBone="com_camera"
     AttachmentBone="com_player"
     // TODO: same as priest gunsight?
-    GunsightOverlay=texture'DH_VehicleOptics_tex.Artillery.17Pdr_sight_background'
-    CannonScopeCenter=texture'DH_VehicleOptics_tex.Artillery.17pdr_sight_mover'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.Artillery.17Pdr_sight_background'
+    CannonScopeCenter=Texture'DH_VehicleOptics_tex.Artillery.17pdr_sight_mover'
     GunsightSize=0.542
     RangeText="Yards"
-    BinocsOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
-    AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.T3485shell'
-    AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.T3485shell_reload'
+    BinocsOverlay=Texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
+    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.T3485shell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.T3485shell_reload'
 }

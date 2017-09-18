@@ -90,7 +90,7 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Bofors_anm.bofors_turret'
-    Skins(0)=texture'DH_Bofors_tex.bofors.bofors_01'
+    Skins(0)=Texture'DH_Bofors_tex.bofors.bofors_01'
     Skins(1)=none
     Skins(2)=none
     Skins(3)=none

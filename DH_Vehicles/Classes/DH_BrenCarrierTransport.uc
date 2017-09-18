@@ -26,10 +26,10 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_ext'
-    Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.BrenCarrier_body_ext'
-    Skins(1)=texture'allies_vehicles_tex.Treads.T60_treads'
-    Skins(2)=texture'allies_vehicles_tex.Treads.T60_treads'
-    Skins(3)=texture'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int'
+    Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.BrenCarrier_body_ext'
+    Skins(1)=Texture'allies_vehicles_tex.Treads.T60_treads'
+    Skins(2)=Texture'allies_vehicles_tex.Treads.T60_treads'
+    Skins(3)=Texture'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int'
     HighDetailOverlay=shader'allies_vehicles_tex2.int_vehicles.Universal_Carrier_Int_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
@@ -101,13 +101,13 @@ defaultproperties
     // Sounds
     MaxPitchSpeed=125.0
     IdleSound=SoundGroup'Vehicle_EnginesTwo.UC.UC_engine_loop'
-    StartUpSound=sound'Vehicle_EnginesTwo.UC.UC_engine_start'
-    ShutDownSound=sound'Vehicle_EnginesTwo.UC.UC_engine_stop'
+    StartUpSound=Sound'Vehicle_EnginesTwo.UC.UC_engine_start'
+    ShutDownSound=Sound'Vehicle_EnginesTwo.UC.UC_engine_stop'
     LeftTrackSoundBone="Wheel_T_L_3"
-    LeftTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_L'
+    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
     RightTrackSoundBone="Wheel_T_R_3"
-    RightTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_R'
-    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble03'
+    RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
+    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble03'
 
     // Visual effects
     LeftTreadIndex=1
@@ -121,7 +121,7 @@ defaultproperties
     SteerBoneName="Steering"
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.unicarrier_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.unicarrier_body'
     VehicleHudEngineY=0.75
     VehicleHudTreadsPosX(0)=0.37
     VehicleHudTreadsPosX(1)=0.66
@@ -139,7 +139,7 @@ defaultproperties
     VehicleHudOccupantsY(3)=0.65
     VehicleHudOccupantsY(4)=0.5
     VehicleHudOccupantsY(5)=0.65
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.BrenCarrier'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.BrenCarrier'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_T_L_1"

@@ -12,6 +12,6 @@ defaultproperties
     FireRotation(0)=(Pitch=9284) // 51 degrees from horizontal
     FireSound=SoundGroup'DH_WeaponSounds.SmokeLaunchers.8cmFireSG'
     NumRotationSettings=36
-    HUDAmmoIcon=texture'DH_InterfaceArt_tex.Tank_Hud.SmokeCandle_PLACEHOLDER' // TODO: get ammo & reload icons made to replace these placeholders
-    HUDAmmoReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.SmokeCandle_reload_PLACEHOLDER'
+    HUDAmmoIcon=Texture'DH_InterfaceArt_tex.Tank_Hud.SmokeCandle_PLACEHOLDER' // TODO: get ammo & reload icons made to replace these placeholders
+    HUDAmmoReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.SmokeCandle_reload_PLACEHOLDER'
 }

@@ -8,7 +8,7 @@ class DH_German_Units extends DHRoleInfo
 
 defaultproperties
 {
-    Texture=texture'DHEngine_Tex.Axis_RoleInfo'
+    Texture=Texture'DHEngine_Tex.Axis_RoleInfo'
     HeadgearProbabilities(0)=0.2
     HeadgearProbabilities(1)=0.8
     VoiceType="DH_GerPlayers.DHGerVoice"

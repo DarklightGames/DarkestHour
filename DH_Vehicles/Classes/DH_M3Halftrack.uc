@@ -25,10 +25,10 @@ defaultproperties
     MaxDesireability=1.2
 
     // Hull mesh
-    Skins(0)=texture'DH_M3Halftrack_tex.m3.Halftrack'
-    Skins(1)=texture'DH_M3Halftrack_tex.m3.Halftrack_2'
-    Skins(2)=texture'DH_M3Halftrack_tex.m3.Halfrack_tracks'
-    Skins(3)=texture'DH_M3Halftrack_tex.m3.Halfrack_tracks'
+    Skins(0)=Texture'DH_M3Halftrack_tex.m3.Halftrack'
+    Skins(1)=Texture'DH_M3Halftrack_tex.m3.Halftrack_2'
+    Skins(2)=Texture'DH_M3Halftrack_tex.m3.Halfrack_tracks'
+    Skins(3)=Texture'DH_M3Halftrack_tex.m3.Halfrack_tracks'
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_M3Halftrack_stc.m3.m3_visor_collision',AttachBone="hatch") // collision attachment for driver's armoured visor
     BeginningIdleAnim="driver_hatch_idle_close"
 
@@ -90,13 +90,13 @@ defaultproperties
     // Sounds
     MaxPitchSpeed=350.0
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
     LeftTrackSoundBone="steer_wheel_L_F"
-    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L02'
+    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L02'
     RightTrackSoundBone="steer_wheel_R_F"
-    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R02'
-    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble03'
+    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R02'
+    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble03'
 
     // Visual effects
     LeftTreadIndex=2
@@ -114,7 +114,7 @@ defaultproperties
     ShadowZOffset=32.0
 
     // HUD
-    VehicleHudImage=texture'DH_M3Halftrack_tex.hud.m3a1_body'
+    VehicleHudImage=Texture'DH_M3Halftrack_tex.hud.m3a1_body'
     VehicleHudEngineY=0.25
     VehicleHudTreadsPosX(0)=0.39
     VehicleHudTreadsPosX(1)=0.61

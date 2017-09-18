@@ -9,7 +9,7 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Colt45_3rd'
     DrawScale=1.25
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Colt45_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Colt45_icon'
     bRapidFire=false
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'

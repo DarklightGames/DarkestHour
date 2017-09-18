@@ -7,5 +7,5 @@ class DH_BritishSergeantWorcestersPawn extends DH_BritishWorcestersPawn;
 
 defaultproperties
 {
-    Skins(0)=texture'DHBritishCharactersTex.PBI.British_Worcesters_Sarg'
+    Skins(0)=Texture'DHBritishCharactersTex.PBI.British_Worcesters_Sarg'
 }

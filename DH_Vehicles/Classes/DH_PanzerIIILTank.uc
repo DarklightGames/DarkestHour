@@ -18,12 +18,12 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.panzer3_body_camo1'
-    Skins(1)=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
-    Skins(2)=texture'axis_vehicles_tex.Treads.Panzer3_treads'
-    Skins(3)=texture'axis_vehicles_tex.Treads.Panzer3_treads'
-    Skins(4)=texture'axis_vehicles_tex.int_vehicles.panzer3_int'
-    Skins(5)=texture'DH_VehiclesGE_tex2.ext_vehicles.gear_Stug'
+    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.panzer3_body_camo1'
+    Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
+    Skins(2)=Texture'axis_vehicles_tex.Treads.Panzer3_treads'
+    Skins(3)=Texture'axis_vehicles_tex.Treads.Panzer3_treads'
+    Skins(4)=Texture'axis_vehicles_tex.int_vehicles.panzer3_int'
+    Skins(5)=Texture'DH_VehiclesGE_tex2.ext_vehicles.gear_Stug'
     HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=4
@@ -43,7 +43,7 @@ defaultproperties
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionUpAnim="Overlay_In",TransitionDownAnim="Periscope_in",ViewPitchUpLimit=4000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionDownAnim="Overlay_Out",ViewPitchUpLimit=6000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000)
     bDrawDriverInTP=false
-    PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
 
     // Hull armor
     FrontArmor(0)=(Thickness=5.0,Slope=-20.0,MaxRelativeHeight=5.7,LocationName="lower nose")
@@ -87,11 +87,11 @@ defaultproperties
 
     // Sounds
     IdleSound=SoundGroup'Vehicle_Engines.Panzeriii.PanzerIII_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.Panzeriii.PanzerIII_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.Panzeriii.PanzerIII_engine_stop'
-    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L03'
-    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R03'
-    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble01'
+    StartUpSound=Sound'Vehicle_Engines.Panzeriii.PanzerIII_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.Panzeriii.PanzerIII_engine_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L03'
+    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R03'
+    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble01'
 
     // Visual effects
     LeftTreadIndex=2
@@ -103,7 +103,7 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.panzer3n_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.panzer3n_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panzer3l_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panzer3l_turret_look'
     VehicleHudOccupantsX(3)=0.375
@@ -114,7 +114,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.75
     VehicleHudOccupantsX(6)=0.625
     VehicleHudOccupantsY(6)=0.7
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.panzer3_l'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panzer3_l'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

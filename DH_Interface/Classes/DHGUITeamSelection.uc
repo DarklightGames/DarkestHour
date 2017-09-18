@@ -239,10 +239,10 @@ defaultproperties
     UnitsText=" players"
     SizeBonusText="army size"
 
-    BackgroundTextures(0)=texture'DH_GUI_Tex.Menu.Teamselect'
-    BackgroundTextures(1)=texture'DH_GUI_Tex.Menu.TeamselectB'
-    BackgroundTextures(2)=texture'DH_GUI_Tex.Menu.TeamselectC'
-    BackgroundTextures(3)=texture'DH_GUI_Tex.Menu.TeamselectD'
+    BackgroundTextures(0)=Texture'DH_GUI_Tex.Menu.Teamselect'
+    BackgroundTextures(1)=Texture'DH_GUI_Tex.Menu.TeamselectB'
+    BackgroundTextures(2)=Texture'DH_GUI_Tex.Menu.TeamselectC'
+    BackgroundTextures(3)=Texture'DH_GUI_Tex.Menu.TeamselectD'
 
     Begin Object Class=GUILabel Name=TeamsCount
         Caption="? players"
@@ -374,7 +374,7 @@ defaultproperties
 
     // Background
     Begin Object Class=BackgroundImage Name=PageBackground
-        Image=texture'DH_GUI_Tex.Menu.Teamselect'
+        Image=Texture'DH_GUI_Tex.Menu.Teamselect'
         ImageStyle=ISTY_Scaled
         ImageRenderStyle=MSTY_Alpha
         X1=0

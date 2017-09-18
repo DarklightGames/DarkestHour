@@ -10,8 +10,8 @@ class DH_VehHUDOverlay_MG34 extends VehicleHUDOverlay;
 defaultproperties
 {
     Mesh=SkeletalMesh'Axis_Mg34_1st.MG_34_Mesh'
-    Skins(0)=texture'Weapons1st_tex.Arms.hands'
-    Skins(1)=texture'Weapons1st_tex.Arms.GermanTankerSleeves'
+    Skins(0)=Texture'Weapons1st_tex.Arms.hands'
+    Skins(1)=Texture'Weapons1st_tex.Arms.GermanTankerSleeves'
     Skins(2)=shader'Weapons1st_tex.MG.mg34_s' // can't specify specularity shader as HighDetailOverlay as includes opacity mask, which doesn't seem to work with HDO system
-    Skins(3)=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha' // hides the bipod that shouldn't be there in a vehicle-mounted MG overlay
+    Skins(3)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha' // hides the bipod that shouldn't be there in a vehicle-mounted MG overlay
 }

@@ -24,10 +24,10 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_ext'
-    Skins(0)=texture'axis_vehicles_tex.ext_vehicles.halftrack_ext'
-    Skins(1)=texture'axis_vehicles_tex.Treads.Halftrack_treads'
-    Skins(2)=texture'axis_vehicles_tex.Treads.Halftrack_treads'
-    Skins(3)=texture'axis_vehicles_tex.int_vehicles.halftrack_int'
+    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.halftrack_ext'
+    Skins(1)=Texture'axis_vehicles_tex.Treads.Halftrack_treads'
+    Skins(2)=Texture'axis_vehicles_tex.Treads.Halftrack_treads'
+    Skins(3)=Texture'axis_vehicles_tex.int_vehicles.halftrack_int'
     HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.halftrack_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
@@ -100,13 +100,13 @@ defaultproperties
     // Sounds
     MaxPitchSpeed=350.0
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
     LeftTrackSoundBone="steer_wheel_LF"
-    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L02'
+    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L02'
     RightTrackSoundBone="steer_wheel_RF"
-    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R02'
-    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble03'
+    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R02'
+    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble03'
 
     // Visual effects
     LeftTreadIndex=1
@@ -119,7 +119,7 @@ defaultproperties
     SteerBoneName="Steering"
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.sdkfz251_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.sdkfz251_body'
     VehicleHudEngineY=0.3
     VehicleHudTreadsPosX(0)=0.4
     VehicleHudTreadsPosX(1)=0.6
@@ -141,7 +141,7 @@ defaultproperties
     VehicleHudOccupantsY(6)=0.7
     VehicleHudOccupantsX(7)=0.55
     VehicleHudOccupantsY(7)=0.8
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.hanomag'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.hanomag'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_T_L_1"

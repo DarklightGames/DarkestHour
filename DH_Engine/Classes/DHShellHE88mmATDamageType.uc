@@ -8,5 +8,5 @@ class DHShellHE88mmATDamageType extends DHShellHE88mmDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'DH_InterfaceArt_tex.deathicons.ATGunKill'
+    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.ATGunKill'
 }

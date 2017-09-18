@@ -7,8 +7,8 @@ class DH_GermanCamoHeerPawn extends DH_GermanPawn;
 
 defaultproperties
 {
-    Skins(1)=texture'DHGermanCharactersTex.Heer.WH_3'
+    Skins(1)=Texture'DHGermanCharactersTex.Heer.WH_3'
 
-    BodySkins(0)=texture'DHGermanCharactersTex.Heer.WH_3'
-    BodySkins(1)=texture'DHGermanCharactersTex.Heer.WH_4'
+    BodySkins(0)=Texture'DHGermanCharactersTex.Heer.WH_3'
+    BodySkins(1)=Texture'DHGermanCharactersTex.Heer.WH_4'
 }

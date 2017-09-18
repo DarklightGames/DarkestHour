@@ -17,13 +17,13 @@ defaultproperties
     BinocPositionIndex=3
     DriveAnim="VSU76_com_idle_close"
     bHasAltFire=false
-    GunsightOverlay=texture'DH_VehicleOptics_tex.Allied.Jackson_sight_background'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.Allied.Jackson_sight_background'
     GunsightSize=0.895
-    DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Wolverine_sight_destroyed'
-    AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.IS2shell'
-    AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.IS2shell_reload'
-    PoweredRotateSound=sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
-    PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    PoweredRotateAndPitchSound=sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Wolverine_sight_destroyed'
+    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.IS2shell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.IS2shell_reload'
+    PoweredRotateSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
+    PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
     FireImpulse=(X=-100000.0)
 }

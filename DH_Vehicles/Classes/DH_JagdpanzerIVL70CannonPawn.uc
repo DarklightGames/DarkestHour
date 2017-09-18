@@ -12,7 +12,7 @@ defaultproperties
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Jagdpanzer4_anm.Jagdpanzer4L70_turret_int')
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Jagdpanzer4_anm.Jagdpanzer4L70_turret_int')
     DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_Jagdpanzer4_anm.Jagdpanzer4L70_turret_int')
-    AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.Panthershell'
-    AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.Panthershell_reload'
+    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.Panthershell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.Panthershell_reload'
     FireImpulse=(X=-110000.0)
 }

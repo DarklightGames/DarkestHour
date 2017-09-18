@@ -12,7 +12,7 @@ simulated function ToggleFireMode()
 {
     super.ToggleFireMode();
 
-    PlaySound(sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01',, 2.0);
+    PlaySound(Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01',, 2.0);
 }
 
 defaultproperties

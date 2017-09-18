@@ -28,12 +28,12 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_body_ext'
-    Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_body_ext'
-    Skins(1)=texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_armor_ext'
-    Skins(2)=texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int'
-    Skins(3)=texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'
-    Skins(4)=texture'DH_VehiclesUK_tex.Treads.Cromwell_treads'
-    Skins(5)=texture'DH_VehiclesUK_tex.Treads.Cromwell_treads'
+    Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_body_ext'
+    Skins(1)=Texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_armor_ext'
+    Skins(2)=Texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int'
+    Skins(3)=Texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'
+    Skins(4)=Texture'DH_VehiclesUK_tex.Treads.Cromwell_treads'
+    Skins(5)=Texture'DH_VehiclesUK_tex.Treads.Cromwell_treads'
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_CromwellCannonPawn',WeaponBone="Turret_placement")
@@ -96,11 +96,11 @@ defaultproperties
 
     // Sounds
     IdleSound=SoundGroup'Vehicle_Engines.T34.t34_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.T34.t34_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.T34.t34_engine_stop'
-    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L07'
-    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L07'
-    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
+    StartUpSound=Sound'Vehicle_Engines.T34.t34_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.T34.t34_engine_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L07'
+    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L07'
+    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02'
 
     // Visual effects
     LeftTreadIndex=4
@@ -116,7 +116,7 @@ defaultproperties
     SteeringScaleFactor=1.0
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.cromwell_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.cromwell_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Cromwell_Turret_Rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Cromwell_Turret_Look'
     VehicleHudEngineX=0.505
@@ -138,7 +138,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.83
     VehicleHudOccupantsX(6)=0.60
     VehicleHudOccupantsY(6)=0.73
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.cromwell'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.cromwell'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

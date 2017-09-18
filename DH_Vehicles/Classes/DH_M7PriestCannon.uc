@@ -9,8 +9,8 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_M7Priest_anm.priest_turret'
-    Skins(0)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest'
-    Skins(1)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest2'
+    Skins(0)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest'
+    Skins(1)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest2'
     FireAttachBone="Turret_placement"
     FireEffectScale=2.5 // turret fire is larger & positioned in centre of open superstructure
     FireEffectOffset=(X=-55.0,Y=-15.0,Z=100.0)
@@ -52,8 +52,8 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire03'
-    ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_01')
-    ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_02')
-    ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_03')
-    ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_04')
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_01')
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_02')
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_04')
 }

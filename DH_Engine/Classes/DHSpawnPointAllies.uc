@@ -8,6 +8,6 @@ class DHSpawnPointAllies extends DHSpawnPoint
 
 defaultproperties
 {
-    Texture=texture'DHEngine_Tex.Allies_Infantry'
+    Texture=Texture'DHEngine_Tex.Allies_Infantry'
     TeamIndex=1
 }

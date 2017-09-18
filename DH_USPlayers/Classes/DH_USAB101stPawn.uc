@@ -8,8 +8,8 @@ class DH_USAB101stPawn extends DH_AmericanPawn;
 defaultproperties
 {
     Mesh=SkeletalMesh'DHCharacters_anm.US_Airborne'
-    Skins(1)=texture'DHUSCharactersTex.101stAB.US101AB_rifleman1'
+    Skins(1)=Texture'DHUSCharactersTex.101stAB.US101AB_rifleman1'
 
-    BodySkins(0)=texture'DHUSCharactersTex.101stAB.US101AB_rifleman1'
-    BodySkins(1)=texture'DHUSCharactersTex.101stAB.US101AB_rifleman2'
+    BodySkins(0)=Texture'DHUSCharactersTex.101stAB.US101AB_rifleman1'
+    BodySkins(1)=Texture'DHUSCharactersTex.101stAB.US101AB_rifleman2'
 }

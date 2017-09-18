@@ -333,7 +333,7 @@ simulated function UpdateScoreBoard(Canvas C)
     C.Style = ERenderStyle.STY_Alpha;
     C.SetDrawColor(0, 0, 0, 128);
     C.SetPos(0.0, 0.0);
-    C.DrawRect(texture'WhiteSquareTexture', C.ClipX, C.ClipY);
+    C.DrawRect(Texture'WhiteSquareTexture', C.ClipX, C.ClipY);
 
     if (float(C.SizeX) / float(C.SizeY) >= 1.6)
     {
@@ -784,7 +784,7 @@ simulated function DrawCell(Canvas C, coerce string Text, byte Align, float XPos
     if (bDrawBacking)
     {
         C.DrawColor = B;
-        C.DrawRect(texture'WhiteSquaretexture', C.ClipX - C.OrgX, C.ClipY - C.OrgY);
+        C.DrawRect(Texture'WhiteSquaretexture', C.ClipX - C.OrgX, C.ClipY - C.OrgY);
     }
 
     C.DrawColor = class'UColor'.default.Black;
@@ -812,7 +812,7 @@ defaultproperties
     PlayerBackgroundColor=(R=0,G=0,B=0,A=192)
     SelfBackgroundColor=(R=32,G=32,B=32,A=192)
 
-    HeaderImage=texture'DH_GUI_Tex.GUI.DH_Headerbar'
+    HeaderImage=Texture'DH_GUI_Tex.GUI.DH_Headerbar'
     TeamColors(0)=(B=80,G=80,R=200)
     TeamColors(1)=(B=75,G=150,R=80)
     HudClass=class'DH_Engine.DHHud'

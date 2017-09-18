@@ -135,5 +135,5 @@ defaultproperties
     bModifyIfDepleted=true
     bUseTeamMessage=true
     messagetype="CriticalEvent"
-    Sound=sound'Miscsounds.Music.notify_drum'
+    Sound=Sound'Miscsounds.Music.notify_drum'
 }

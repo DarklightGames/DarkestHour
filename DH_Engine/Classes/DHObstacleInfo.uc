@@ -29,6 +29,6 @@ var     array<DHObstacleInstance>   Obstacles;
 
 defaultproperties
 {
-    Texture=texture'DHEngine_Tex.ObstacleInfo'
+    Texture=Texture'DHEngine_Tex.ObstacleInfo'
     bStatic=true
 }

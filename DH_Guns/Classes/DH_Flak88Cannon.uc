@@ -9,8 +9,8 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Flak88_anm.flak88_turret'
-    Skins(0)=texture'MilitaryAxisSMT.Artillery.flak_88'
-    Skins(1)=texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
+    Skins(0)=Texture'MilitaryAxisSMT.Artillery.flak_88'
+    Skins(1)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
 //  CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Flak8.Flak88_turret_coll' // TODO - make 'turret' col mesh - although this one is tricky as so much 'turret' pitches up & down
 
     // Turret movement
@@ -34,10 +34,10 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire03'
-    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
-    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
 
     // Cannon range settings
     RangeSettings(1)=100

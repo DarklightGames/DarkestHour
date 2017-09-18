@@ -19,10 +19,10 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Tiger_anm.Tiger_body_ext'
-    Skins(0)=texture'axis_vehicles_tex.ext_vehicles.Tiger1_ext'
-    Skins(1)=texture'axis_vehicles_tex.Treads.Tiger1_treads'
-    Skins(2)=texture'axis_vehicles_tex.Treads.Tiger1_treads'
-    Skins(3)=texture'axis_vehicles_tex.int_vehicles.tiger1_int'
+    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.Tiger1_ext'
+    Skins(1)=Texture'axis_vehicles_tex.Treads.Tiger1_treads'
+    Skins(2)=Texture'axis_vehicles_tex.Treads.Tiger1_treads'
+    Skins(3)=Texture'axis_vehicles_tex.int_vehicles.tiger1_int'
     HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.tiger1_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
@@ -89,11 +89,11 @@ defaultproperties
     // Sounds
     SoundPitch=32
     IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.Tiger.tiger_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.Tiger.tiger_engine_stop'
-    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L04'
-    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R04'
-    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
+    StartUpSound=Sound'Vehicle_Engines.Tiger.tiger_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.Tiger.tiger_engine_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L04'
+    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R04'
+    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02'
 
     // Visual effects
     TreadVelocityScale=104.0
@@ -104,7 +104,7 @@ defaultproperties
     SteeringScaleFactor=2.0
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.tiger1_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.tiger1_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.tiger1_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.tiger1_turret_look'
     VehicleHudTreadsPosX(0)=0.34
@@ -119,7 +119,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.79
     VehicleHudOccupantsX(6)=0.625
     VehicleHudOccupantsY(6)=0.69
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.tiger'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.tiger'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

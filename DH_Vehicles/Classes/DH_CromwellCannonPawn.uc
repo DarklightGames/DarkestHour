@@ -14,12 +14,12 @@ defaultproperties
     DriverPositions(3)=(ViewFOV=12.0,DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
     PeriscopePositionIndex=1
     DriveAnim="stand_idlehip_binoc"
-    GunsightOverlay=texture'DH_VehicleOptics_tex.Allied.Cromwell_sight_background'
-    CannonScopeCenter=texture'DH_VehicleOptics_tex.Allied.British_sight_mover'
-    DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Cromwell_sight_destroyed'
-    AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell'
-    AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell_reload'
-    PoweredRotateSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
-    PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    PoweredRotateAndPitchSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.Allied.Cromwell_sight_background'
+    CannonScopeCenter=Texture'DH_VehicleOptics_tex.Allied.British_sight_mover'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Cromwell_sight_destroyed'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell_reload'
+    PoweredRotateSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
+    PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    PoweredRotateAndPitchSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
 }

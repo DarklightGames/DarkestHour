@@ -9,7 +9,7 @@ defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanSnowGreatCoatPawn',Weight=2.0)
     RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanSnowHeerPawn',Weight=1.0)
-    SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.snow_sleeves'
+    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.snow_sleeves'
 
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetSnowTwo'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetSnowThree'

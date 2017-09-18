@@ -23,9 +23,9 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_body_ext'
-    Skins(0)=texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_body_ext'
-    Skins(1)=texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext'
-    Skins(2)=texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_wheels'
+    Skins(0)=Texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_body_ext'
+    Skins(1)=Texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext'
+    Skins(2)=Texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_wheels'
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_GreyhoundCannonPawn',WeaponBone="Turret_placement")
@@ -97,8 +97,8 @@ defaultproperties
 
     // Sounds
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-180.0,Y=42.0,Z=54.0),ExhaustRotation=(Pitch=63000,Yaw=32768))
@@ -106,7 +106,7 @@ defaultproperties
     SteeringScaleFactor=2.0
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.greyhound_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.greyhound_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Greyhound_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Greyhound_turret_look'
     VehicleHudEngineX=0.51
@@ -122,7 +122,7 @@ defaultproperties
     VehicleHudOccupantsY(4)=0.8
     VehicleHudOccupantsX(5)=0.625
     VehicleHudOccupantsY(5)=0.75
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.m8_greyhound'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.m8_greyhound'
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=RFWheel

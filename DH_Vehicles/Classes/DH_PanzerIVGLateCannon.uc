@@ -9,9 +9,9 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_turret_ext'
-    Skins(0)=texture'axis_vehicles_tex.ext_vehicles.Panzer4F2_ext'
-    Skins(1)=texture'axis_vehicles_tex2.ext_vehicles.Panzer4H_Armor'
-    Skins(2)=texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
+    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.Panzer4F2_ext'
+    Skins(1)=Texture'axis_vehicles_tex2.ext_vehicles.Panzer4H_Armor'
+    Skins(2)=Texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
     CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4_turret_coll'
     HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
     bUseHighDetailOverlayIndex=true
@@ -69,10 +69,10 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire03'
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
-    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
 
     // Cannon range settings
     RangeSettings(1)=100

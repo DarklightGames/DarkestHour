@@ -20,7 +20,7 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body_ext'
-    Skins(0)=texture'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep'
+    Skins(0)=Texture'DH_VehiclesUS_tex2.ext_vehicles.WillysJeep'
     BeginningIdleAnim="driver_hatch_idle_close"
 
     // Passengers
@@ -88,16 +88,16 @@ defaultproperties
     // Sounds
     MaxPitchSpeed=350.0
     IdleSound=SoundGroup'DH_AlliedVehicleSounds.Jeep.jeep_engine_loop03'
-    StartUpSound=sound'DH_AlliedVehicleSounds.Jeep.jeep_engine_start'
-    ShutDownSound=sound'DH_AlliedVehicleSounds.Jeep.jeep_engine_stop'
-    RumbleSound=sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
+    StartUpSound=Sound'DH_AlliedVehicleSounds.Jeep.jeep_engine_start'
+    ShutDownSound=Sound'DH_AlliedVehicleSounds.Jeep.jeep_engine_stop'
+    RumbleSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-120.0,Y=30.0,Z=-5.0),ExhaustRotation=(Pitch=34000,Roll=-5000))
     SteerBoneName="Steer_Wheel"
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.Willys_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.Willys_body'
     VehicleHudEngineY=0.28
     VehicleHudOccupantsX(0)=0.44
     VehicleHudOccupantsX(1)=0.57
@@ -107,7 +107,7 @@ defaultproperties
     VehicleHudOccupantsY(1)=0.53
     VehicleHudOccupantsY(2)=0.66
     VehicleHudOccupantsY(3)=0.66
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.jeep'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.jeep'
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=LFWheel

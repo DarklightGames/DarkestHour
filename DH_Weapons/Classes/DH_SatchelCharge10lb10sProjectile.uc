@@ -81,9 +81,9 @@ defaultproperties
     MyDamageType=class'DH_Weapons.DH_SatchelDamType'
 
     ExplosionSoundRadius=4000.0
-    ExplosionSound(0)=sound'Inf_Weapons.satchel.satchel_explode01'
-    ExplosionSound(1)=sound'Inf_Weapons.satchel.satchel_explode02'
-    ExplosionSound(2)=sound'Inf_Weapons.satchel.satchel_explode03'
+    ExplosionSound(0)=Sound'Inf_Weapons.satchel.satchel_explode01'
+    ExplosionSound(1)=Sound'Inf_Weapons.satchel.satchel_explode02'
+    ExplosionSound(2)=Sound'Inf_Weapons.satchel.satchel_explode03'
     ExplodeDirtEffectClass=class'ROEffects.ROSatchelExplosion'
     ExplodeSnowEffectClass=class'ROEffects.ROSatchelExplosion'
     ExplodeMidAirEffectClass=class'ROEffects.ROSatchelExplosion'

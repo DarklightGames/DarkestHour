@@ -25,7 +25,7 @@ defaultproperties
     PassengerPawns(9)=(AttachBone="body",DrivePos=(X=-155.0,Y=30.0,Z=85.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
 
     // HUD
-    VehicleHudImage=texture'DH_M3Halftrack_tex.hud.m3a1_body'
+    VehicleHudImage=Texture'DH_M3Halftrack_tex.hud.m3a1_body'
     VehicleHudOccupantsX(1)=0.54 // 50 cal gunner
     VehicleHudOccupantsY(1)=0.45
     VehicleHudOccupantsX(2)=0.45 // rear left passengers
@@ -48,5 +48,5 @@ defaultproperties
     VehicleHudOccupantsY(10)=0.7375
     VehicleHudOccupantsX(11)=0.55
     VehicleHudOccupantsY(11)=0.8
-    SpawnOverlay(0)=material'DH_M3Halftrack_tex.hud.m3a1_menu'
+    SpawnOverlay(0)=Material'DH_M3Halftrack_tex.hud.m3a1_menu'
 }

@@ -201,7 +201,7 @@ defaultproperties
         WinHeight=0.05
         WinLeft=0.05
         WinTop=0.025
-        Image=texture'DH_GUI_tex.DeployMenu.lock'
+        Image=Texture'DH_GUI_tex.DeployMenu.lock'
         ImageColor=(R=255,G=255,B=255,A=255);
         ImageRenderStyle=MSTY_Alpha
         ImageStyle=ISTY_Justified
@@ -217,7 +217,7 @@ defaultproperties
         WinHeight=1.0
         WinLeft=0.0
         WinTop=0.0
-        Image=texture'DH_GUI_tex.DeployMenu.squad_panel'
+        Image=Texture'DH_GUI_tex.DeployMenu.squad_panel'
         ImageColor=(R=255,G=255,B=255,A=255);
         ImageRenderStyle=MSTY_Alpha
         ImageStyle=ISTY_Stretched

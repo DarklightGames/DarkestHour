@@ -9,8 +9,8 @@ defaultproperties
 {
     // MG mesh
     Mesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_ext'
-    Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'
-    Skins(2)=texture'Weapons3rd_tex.German.mg34_world'
+    Skins(1)=Texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'
+    Skins(2)=Texture'Weapons3rd_tex.German.mg34_world'
     bMatchSkinToVehicle=true
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     BeginningIdleAnim="loader_button_idle"

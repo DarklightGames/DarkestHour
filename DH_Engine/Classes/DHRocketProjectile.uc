@@ -145,7 +145,7 @@ defaultproperties
     ShakeRotMag=(Y=50.0,Z=200.0)
     ShakeRotRate=(Y=500.0,Z=1500.0)
     BlurEffectScalar=1.9
-    VehicleDeflectSound=sound'ProjectileSounds.cannon_rounds.AP_deflect'
+    VehicleDeflectSound=Sound'ProjectileSounds.cannon_rounds.AP_deflect'
     ShellDeflectEffectClass=none
     MyDamageType=class'DamageType'
     AmbientSound=none

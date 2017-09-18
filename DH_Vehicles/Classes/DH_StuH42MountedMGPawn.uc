@@ -56,7 +56,7 @@ defaultproperties
     DriveAnim="VPanzer3_com_idle_close"
     CameraBone="loader_cam"
     GunsightCameraBone="Gun"
-    GunsightOverlay=texture'DH_VehicleOptics_tex.German.KZF2_MGSight'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.German.KZF2_MGSight'
     GunsightSize=0.7
-    BinocsOverlay=texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
+    BinocsOverlay=Texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
 }

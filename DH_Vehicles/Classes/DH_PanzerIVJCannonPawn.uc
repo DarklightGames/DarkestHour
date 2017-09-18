@@ -15,12 +15,12 @@ defaultproperties
     bManualTraverseOnly=true
     DrivePos=(X=0.0,Y=2.0,Z=0.0)
     DriveAnim="VTiger_com_idle_close"
-    CannonScopeCenter=texture'DH_VehicleOptics_tex.German.PZ3_sight_graticule'
+    CannonScopeCenter=Texture'DH_VehicleOptics_tex.German.PZ3_sight_graticule'
     GunsightSize=0.87
     RangeRingScale=0.499
     RangeRingRotator=TexRotator'DH_VehicleOptics_tex.German.PZ4_sight_Center'
     RangeRingRotationFactor=985
-    DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed'
-    AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
-    AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell_reload'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed'
+    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell_reload'
 }

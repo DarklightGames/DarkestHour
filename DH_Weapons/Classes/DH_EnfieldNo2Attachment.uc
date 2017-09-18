@@ -8,7 +8,7 @@ class DH_EnfieldNo2Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.EnfieldNo2_3rd'
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo2_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo2_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
     MuzzleBoneName="Muzzle"
     ShellEjectionBoneName="Bullet1" // different from all other DH weapons, which use "ejector" (RO weapons use "weapon_eject") - this one seems appropriate

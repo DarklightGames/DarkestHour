@@ -78,10 +78,10 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_turret_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_body_dunk'
-    Skins(1)=texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_extras_dunk'
-    Skins(2)=texture'Weapons1st_tex.MG.mg42_barrel'
-    Skins(3)=texture'Weapons1st_tex.MG.mg42'
+    Skins(0)=Texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_body_dunk'
+    Skins(1)=Texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_extras_dunk'
+    Skins(2)=Texture'Weapons1st_tex.MG.mg42_barrel'
+    Skins(3)=Texture'Weapons1st_tex.MG.mg42'
     CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.234.234_turret_coll'
     TurretCoverColStaticMeshLeft=StaticMesh'DH_German_vehicles_stc3.234.234_TurretCoverLeft_coll'
     TurretCoverColStaticMeshRight=StaticMesh'DH_German_vehicles_stc3.234.234_TurretCoverRight_coll'
@@ -155,10 +155,10 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.20mm.DH20mmFire03G'
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
-    ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.T60_reload_01')
-    ReloadStages(1)=(Sound=sound'DH_GerVehicleSounds2.Reloads.234_reload_02',HUDProportion=0.6)
-    ReloadStages(2)=(Sound=sound'DH_GerVehicleSounds2.Reloads.234_reload_03')
-    ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.T60_reload_04',HUDProportion=0.4)
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.T60_reload_01')
+    ReloadStages(1)=(Sound=Sound'DH_GerVehicleSounds2.Reloads.234_reload_02',HUDProportion=0.6)
+    ReloadStages(2)=(Sound=Sound'DH_GerVehicleSounds2.Reloads.234_reload_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.T60_reload_04',HUDProportion=0.4)
 
     // Cannon range settings
     RangeSettings(1)=100

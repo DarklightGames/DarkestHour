@@ -9,5 +9,5 @@ class DH_PPS43VehDamType extends DHVehicleDamageType
 defaultproperties
 {
     WeaponClass=class'DH_Weapons.DH_PPS43Weapon'
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b762mm'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
 }

@@ -29,7 +29,7 @@ defaultproperties
     HighDetailOverlay=shader'Weapons1st_tex.MG.MG42_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
-    HandTex=texture'Weapons1st_tex.Arms.hands_gergloves'
+    HandTex=Texture'Weapons1st_tex.Arms.hands_gergloves'
 
     DisplayFOV=80.0
     IronSightDisplayFOV=40.0

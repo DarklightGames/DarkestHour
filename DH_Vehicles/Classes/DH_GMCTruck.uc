@@ -20,7 +20,7 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_GMCTruck_anm.GMCTruck_body'
-    Skins(0)=texture'DH_Allied_MilitarySM.American.GMC'
+    Skins(0)=Texture'DH_Allied_MilitarySM.American.GMC'
     BeginningIdleAnim="" // override unwanted inherited value, as GMC has no animations
 
     // Passengers
@@ -74,8 +74,8 @@ defaultproperties
 
     // Sounds
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-150.0,Y=-35.0,Z=-12.0),ExhaustRotation=(Pitch=36000,Yaw=5000))
@@ -83,13 +83,13 @@ defaultproperties
     SteerBoneName="WheelDrive"
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.GMC_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.GMC_body'
     VehicleHudEngineY=0.25
     VehicleHudOccupantsX(0)=0.45
     VehicleHudOccupantsY(0)=0.4
     VehicleHudOccupantsX(1)=0.55
     VehicleHudOccupantsY(1)=0.4
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.gmc'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.gmc'
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=RFWheel

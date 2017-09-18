@@ -9,8 +9,8 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_Panther_anm.Panther_turret_ext'
-    Skins(0)=texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
-    Skins(1)=texture'axis_vehicles_tex.int_vehicles.pantherg_int'
+    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
+    Skins(1)=Texture'axis_vehicles_tex.int_vehicles.pantherg_int'
     CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.Panther_turret_coll'
     HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'
     bUseHighDetailOverlayIndex=true
@@ -67,10 +67,10 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire03'
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-    ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_01')
-    ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_02')
-    ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_03')
-    ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_04')
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.STUG_III_reload_01')
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.STUG_III_reload_02')
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.STUG_III_reload_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.STUG_III_reload_04')
 
     // Cannon range settings
     RangeSettings(1)=100

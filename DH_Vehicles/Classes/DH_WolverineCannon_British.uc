@@ -37,5 +37,5 @@ simulated function DestroyEffects()
 
 defaultproperties
 {
-    Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Achilles_turret_ext'
+    Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.Achilles_turret_ext'
 }

@@ -8,6 +8,6 @@ class DH_Winchester1897VehDamType extends DHVehicleDamageType;
 defaultproperties
 {
     WeaponClass=class'DH_Weapons.DH_Winchester1897Weapon'
-    HUDIcon=texture'DH_InterfaceArt_tex.deathicons.canisterkill'
+    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.canisterkill'
     KDamageImpulse=2500.0
 }

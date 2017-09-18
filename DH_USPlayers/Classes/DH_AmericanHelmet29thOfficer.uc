@@ -7,11 +7,11 @@ class DH_AmericanHelmet29thOfficer extends DHHeadgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-//  L.AddPrecacheMaterial(material'DHUSCharactersTex.Gear.US_29thID_Headgear');
+//  L.AddPrecacheMaterial(Material'DHUSCharactersTex.Gear.US_29thID_Headgear');
 }
 
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.US_GI_Helmet'
-    Skins(0)=texture'DHUSCharactersTex.Gear.US29ID_Officer_headgear'
+    Skins(0)=Texture'DHUSCharactersTex.Gear.US29ID_Officer_headgear'
 }

@@ -104,7 +104,7 @@ static function int getIconID(
 
 defaultproperties
 {
-    IconTexture=texture'DH_GUI_Tex.GUI.criticalmessages_icons'
+    IconTexture=Texture'DH_GUI_Tex.GUI.criticalmessages_icons'
 
     TeamStrings(0)="Axis"
     TeamStrings(1)="Allies"
@@ -115,11 +115,11 @@ defaultproperties
 
     NotificationMessage="The {0} have {1} {2}"
 
-    EnemyObjectiveSounds(0)=sound'DH_SundrySounds.Objective.Enemy_Neutralized_Obj'
-    EnemyObjectiveSounds(1)=sound'DH_SundrySounds.Objective.Enemy_Captured_Obj'
-    EnemyObjectiveSounds(2)=sound'DH_SundrySounds.Objective.Enemy_Secured_Obj'
+    EnemyObjectiveSounds(0)=Sound'DH_SundrySounds.Objective.Enemy_Neutralized_Obj'
+    EnemyObjectiveSounds(1)=Sound'DH_SundrySounds.Objective.Enemy_Captured_Obj'
+    EnemyObjectiveSounds(2)=Sound'DH_SundrySounds.Objective.Enemy_Secured_Obj'
 
-    TeamObjectiveSounds(0)=sound'DH_SundrySounds.Objective.Team_Neutralized_Obj'
-    TeamObjectiveSounds(1)=sound'DH_SundrySounds.Objective.Team_Captured_Obj'
-    TeamObjectiveSounds(2)=sound'DH_SundrySounds.Objective.Team_Secured_Obj'
+    TeamObjectiveSounds(0)=Sound'DH_SundrySounds.Objective.Team_Neutralized_Obj'
+    TeamObjectiveSounds(1)=Sound'DH_SundrySounds.Objective.Team_Captured_Obj'
+    TeamObjectiveSounds(2)=Sound'DH_SundrySounds.Objective.Team_Secured_Obj'
 }

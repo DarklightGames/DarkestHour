@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=21
     InitialAmount=20
-    IconMaterial=texture'DH_InterfaceArt_tex.weapon_icons.FG42_ammo'
+    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.FG42_ammo'
 }

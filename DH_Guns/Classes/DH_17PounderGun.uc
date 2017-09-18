@@ -13,9 +13,9 @@ defaultproperties
     VehicleTeam=1
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_17PounderGunCannonPawn',WeaponBone="Turret_placement1")
     Mesh=SkeletalMesh'DH_17PounderGun_anm.17Pounder_body'
-    Skins(0)=texture'DH_Artillery_Tex.17pounder.17Pounder'
+    Skins(0)=Texture'DH_Artillery_Tex.17pounder.17Pounder'
     DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.17pounder.17Pounder_dest'
-    VehicleHudImage=texture'DH_Artillery_Tex.ATGun_Hud.pak43_body'
+    VehicleHudImage=Texture'DH_Artillery_Tex.ATGun_Hud.pak43_body'
     VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak43_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak43_turret_look'
     VehicleHudOccupantsX(1)=0.47

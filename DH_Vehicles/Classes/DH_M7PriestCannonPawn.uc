@@ -39,11 +39,11 @@ defaultproperties
     DriveAnim="crouch_idle_binoc"
     bManualTraverseOnly=true
     bHasAltFire=false
-    GunsightOverlay=texture'DH_VehicleOptics_tex.Allied.m12a7_sight_2'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.Allied.m12a7_sight_2'
     GunsightSize=0.542
-    DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed'
-    AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell'
-    AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell_reload'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell_reload'
     FireImpulse=(X=-110000.0)
 }
 

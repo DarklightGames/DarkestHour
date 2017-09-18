@@ -34,8 +34,8 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire03'
-    ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_01')
-    ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_02')
-    ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_03')
-    ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_04')
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.STUG_III_reload_01')
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.STUG_III_reload_02')
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.STUG_III_reload_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.STUG_III_reload_04')
 }

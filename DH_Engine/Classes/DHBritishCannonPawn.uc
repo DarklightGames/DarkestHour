@@ -10,6 +10,6 @@ defaultproperties
 {
     RangeText="yards"
     RangePositionX=0.1
-    PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
-    BinocsOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
+    BinocsOverlay=Texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
 }

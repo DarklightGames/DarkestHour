@@ -19,12 +19,12 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Wolverine_anm.M10_body_ext'
-    Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.M10_body_ext'
-    Skins(1)=texture'DH_VehiclesUS_tex.ext_vehicles.M10_turret_ext'
-    Skins(2)=texture'DH_VehiclesUS_tex.Treads.M10_treads'
-    Skins(3)=texture'DH_VehiclesUS_tex.Treads.M10_treads'
-    Skins(4)=texture'DH_VehiclesUS_tex.int_vehicles.M10_body_int'
-    Skins(5)=texture'DH_VehiclesUS_tex.int_vehicles.M10_body_int2'
+    Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.M10_body_ext'
+    Skins(1)=Texture'DH_VehiclesUS_tex.ext_vehicles.M10_turret_ext'
+    Skins(2)=Texture'DH_VehiclesUS_tex.Treads.M10_treads'
+    Skins(3)=Texture'DH_VehiclesUS_tex.Treads.M10_treads'
+    Skins(4)=Texture'DH_VehiclesUS_tex.int_vehicles.M10_body_int'
+    Skins(5)=Texture'DH_VehiclesUS_tex.int_vehicles.M10_body_int2'
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_WolverineCannonPawn',WeaponBone="Turret_placement")
@@ -84,12 +84,12 @@ defaultproperties
 
     // Sounds
     IdleSound=SoundGroup'Vehicle_Engines.SU76.SU76_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.SU76.SU76_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.SU76.SU76_engine_stop'
-    LeftTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_L'
-    RightTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_R'
+    StartUpSound=Sound'Vehicle_Engines.SU76.SU76_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.SU76.SU76_engine_stop'
+    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
+    RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
     RumbleSoundBone="placeholder_int"
-    RumbleSound=sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
+    RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
 
     // Visual effects
     LeftTreadIndex=3
@@ -104,7 +104,7 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.wolverine_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.wolverine_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Wolverine_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Wolverine_turret_look'
     VehicleHudEngineX=0.51
@@ -124,7 +124,7 @@ defaultproperties
     VehicleHudOccupantsY(4)=0.8
     VehicleHudOccupantsX(5)=0.6
     VehicleHudOccupantsY(5)=0.74
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.m10_wolverine'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.m10_wolverine'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

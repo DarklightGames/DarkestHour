@@ -9,7 +9,7 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Puma_turret_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex6.ext_vehicles.Puma_turret_dunk'
+    Skins(0)=Texture'DH_VehiclesGE_tex6.ext_vehicles.Puma_turret_dunk'
     CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc3.Puma.Puma_turret_coll'
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
 
@@ -67,10 +67,10 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panzeriii.50mm_fire03'
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
-    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
-    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
 
     // Cannon range settings
     RangeSettings(1)=100

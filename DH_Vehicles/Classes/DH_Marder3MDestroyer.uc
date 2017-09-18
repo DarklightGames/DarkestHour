@@ -18,11 +18,11 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Marder3M_anm.marder3_body_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext'
-    Skins(1)=texture'DH_VehiclesGE_tex7.ext_vehicles.marder_body_ext'
-    Skins(2)=texture'DH_VehiclesGE_tex7.Treads.marder_treads'
-    Skins(3)=texture'DH_VehiclesGE_tex7.Treads.marder_treads'
-    Skins(4)=texture'DH_VehiclesGE_tex7.int_vehicles.marder3m_body_int'
+    Skins(0)=Texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext'
+    Skins(1)=Texture'DH_VehiclesGE_tex7.ext_vehicles.marder_body_ext'
+    Skins(2)=Texture'DH_VehiclesGE_tex7.Treads.marder_treads'
+    Skins(3)=Texture'DH_VehiclesGE_tex7.Treads.marder_treads'
+    Skins(4)=Texture'DH_VehiclesGE_tex7.int_vehicles.marder3m_body_int'
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Marder3MCannonPawn',WeaponBone="Turret_placement")
@@ -83,11 +83,11 @@ defaultproperties
     // Sounds
     MaxPitchSpeed=450.0
     IdleSound=SoundGroup'Vehicle_Engines.Kv1s.KV1s_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.Kv1s.KV1s_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.Kv1s.KV1s_engine_stop'
-    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L03'
-    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R03'
-    RumbleSound=sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
+    StartUpSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.Kv1s.KV1s_engine_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L03'
+    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R03'
+    RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
 
     // Visual effects
     LeftTreadIndex=3
@@ -98,7 +98,7 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.MarderIII_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.MarderIII_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.MarderIII_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.MarderIII_turret_look'
     VehicleHudEngineX=0.51
@@ -115,7 +115,7 @@ defaultproperties
     VehicleHudOccupantsY(2)=0.71
     VehicleHudOccupantsX(3)=0.575
     VehicleHudOccupantsY(3)=0.5
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.marder3'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.marder3'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

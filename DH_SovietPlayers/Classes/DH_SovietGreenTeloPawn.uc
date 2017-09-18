@@ -7,5 +7,5 @@ class DH_SovietGreenTeloPawn extends DH_SovietPawn;
 
 defaultproperties
 {
-    Skins(0)=texture'DHSovietCharactersTex.RussianTunics.DH_rus_telogreika_green01'
+    Skins(0)=Texture'DHSovietCharactersTex.RussianTunics.DH_rus_telogreika_green01'
 }

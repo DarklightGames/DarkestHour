@@ -27,9 +27,9 @@ defaultproperties
     FireIronAnim="Iron_Shoot"
     FireLastAnim="shoot_empty"
     FireIronLastAnim="iron_shoot_empty"
-    FireSounds(0)=sound'Inf_Weapons.tt33.tt33_fire01'
-    FireSounds(1)=sound'Inf_Weapons.tt33.tt33_fire02'
-    FireSounds(2)=sound'Inf_Weapons.tt33.tt33_fire03'
+    FireSounds(0)=Sound'Inf_Weapons.tt33.tt33_fire01'
+    FireSounds(1)=Sound'Inf_Weapons.tt33.tt33_fire02'
+    FireSounds(2)=Sound'Inf_Weapons.tt33.tt33_fire03'
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x25mm'
     ShellRotOffsetIron=(Pitch=10000,Yaw=0,Roll=0)

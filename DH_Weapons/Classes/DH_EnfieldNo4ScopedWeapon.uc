@@ -21,7 +21,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    ScopeOverlay=texture'DH_Weapon_tex.Scopes.EnfieldNo4_Scope_Overlay'
+    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.EnfieldNo4_Scope_Overlay'
     OverlayCorrectionX=-8.0
     DisplayFOV=85.0
     IronSightDisplayFOV=40.0

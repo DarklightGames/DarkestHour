@@ -28,10 +28,10 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Panther_anm.Panther_body_ext'
-    Skins(0)=texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
-    Skins(1)=texture'axis_vehicles_tex.Treads.PantherG_treads'
-    Skins(2)=texture'axis_vehicles_tex.Treads.PantherG_treads'
-    Skins(3)=texture'axis_vehicles_tex.int_vehicles.pantherg_int'
+    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.pantherg_ext'
+    Skins(1)=Texture'axis_vehicles_tex.Treads.PantherG_treads'
+    Skins(2)=Texture'axis_vehicles_tex.Treads.PantherG_treads'
+    Skins(3)=Texture'axis_vehicles_tex.int_vehicles.pantherg_int'
     HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.pantherg_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
@@ -50,7 +50,7 @@ defaultproperties
     InitialPositionIndex=0
     UnbuttonedPositionIndex=1
     DriveAnim="VPanther_driver_idle_close"
-    PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
 
     // Hull armor
     FrontArmor(0)=(Thickness=6.5,Slope=-55.0,MaxRelativeHeight=-8.0,LocationName="lower")
@@ -98,11 +98,11 @@ defaultproperties
     SoundPitch=32
     MaxPitchSpeed=100.0
     IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.Tiger.tiger_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.Tiger.tiger_engine_stop'
-    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L05'
-    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R05'
-    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
+    StartUpSound=Sound'Vehicle_Engines.Tiger.tiger_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.Tiger.tiger_engine_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L05'
+    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R05'
+    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02'
     RumbleSoundBone="driver_attachment"
 
     // Visual effects
@@ -117,7 +117,7 @@ defaultproperties
     RandomAttachOptions(3)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen4',PercentChance=15) // most badly damaged, with 3 panels missing
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.panther_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.panther_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panther_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panther_turret_look'
     VehicleHudTreadsPosX(0)=0.38
@@ -136,7 +136,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.79
     VehicleHudOccupantsX(6)=0.605
     VehicleHudOccupantsY(6)=0.69
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.panther'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panther'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

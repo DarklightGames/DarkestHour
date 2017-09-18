@@ -47,11 +47,11 @@ defaultproperties
 {
     RangeText="meters"
     RangePositionX=0.1
-    PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
-    BinocsOverlay=texture'DH_VehicleOptics_tex.Soviet.AB_BINOC_overlay_7x50Sov'
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
+    BinocsOverlay=Texture'DH_VehicleOptics_tex.Soviet.AB_BINOC_overlay_7x50Sov'
     GunsightSize=0.5371875
     ScopeCenterPositionX=0.215
     ScopeCenterScaleX=1.35
     ScopeCenterScaleY=1.35
-    AltAmmoReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.DT_ammo_reload' // TODO: make a proper version of this, this texture is just a quick hack job (Oct 2016)
+    AltAmmoReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.DT_ammo_reload' // TODO: make a proper version of this, this texture is just a quick hack job (Oct 2016)
 }

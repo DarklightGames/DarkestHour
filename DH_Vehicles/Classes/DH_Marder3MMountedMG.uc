@@ -9,7 +9,7 @@ defaultproperties
 {
     // MG mesh
     Mesh=SkeletalMesh'DH_Marder3M_anm.marder_M34_ext'
-    Skins(0)=texture'Weapons3rd_tex.German.mg34_world'
+    Skins(0)=Texture'Weapons3rd_tex.German.mg34_world'
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     BeginningIdleAnim="loader_close_idle"
     GunnerAttachmentBone="loader_player"

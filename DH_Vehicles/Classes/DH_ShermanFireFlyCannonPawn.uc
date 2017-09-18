@@ -19,13 +19,13 @@ defaultproperties
     BinocPositionIndex=4
     DrivePos=(X=4.0,Y=0.0,Z=-5.0)
     DriveAnim="stand_idlehip_binoc"
-    GunsightOverlay=texture'DH_VehicleOptics_tex.Allied.17Pdr_sight_background'
-    CannonScopeCenter=texture'DH_VehicleOptics_tex.Allied.British_sight_mover'
-    DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.17pdr_sight_destroyed'
-    AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.T3485shell'
-    AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.T3485shell_reload'
-    PoweredRotateSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
-    PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    PoweredRotateAndPitchSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.Allied.17Pdr_sight_background'
+    CannonScopeCenter=Texture'DH_VehicleOptics_tex.Allied.British_sight_mover'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.17pdr_sight_destroyed'
+    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.T3485shell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.T3485shell_reload'
+    PoweredRotateSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
+    PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    PoweredRotateAndPitchSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
     FireImpulse=(X=-100000.0)
 }

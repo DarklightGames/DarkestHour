@@ -9,8 +9,8 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_turret_ext'
-    Skins(0)=texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext'
-    Skins(1)=texture'DH_VehiclesUS_tex4.int_vehicles.Greyhound_body_int'
+    Skins(0)=Texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext'
+    Skins(1)=Texture'DH_VehiclesUS_tex4.int_vehicles.Greyhound_body_int'
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.M8_Greyhound.Greyhound_turret_coll'
     FireEffectScale=1.25 // turret fire is larger & positioned in centre of open turret
     FireEffectOffset=(X=5.0,Y=20.0,Z=0.0)
@@ -65,8 +65,8 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire03'
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
-    ReloadStages(0)=(Sound=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload01')
-    ReloadStages(1)=(Sound=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload02')
-    ReloadStages(2)=(Sound=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload03')
-    ReloadStages(3)=(Sound=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload04')
+    ReloadStages(0)=(Sound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload01')
+    ReloadStages(1)=(Sound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload02')
+    ReloadStages(2)=(Sound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload03')
+    ReloadStages(3)=(Sound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload04')
 }

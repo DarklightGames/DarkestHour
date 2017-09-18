@@ -319,7 +319,7 @@ simulated function EjectShell()
 defaultproperties
 {
     PctHipMGPenalty=2.0
-    NoAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
+    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
     BlurTime=0.04
     BlurTimeIronsight=0.04
 }

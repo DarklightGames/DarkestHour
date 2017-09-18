@@ -43,7 +43,7 @@ defaultproperties
     HighDetailOverlay=shader'Weapons1st_tex.MG.MGBipod_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3 // can't specify MG34 specularity shader as HDO as includes opacity mask (doesn't seem to work with HDO system), so may as well specify bipod shader
-    HandTex=texture'Weapons1st_tex.Arms.hands_gergloves'
+    HandTex=Texture'Weapons1st_tex.Arms.hands_gergloves'
 
     PlayerIronsightFOV=90.0
     IronSightDisplayFOV=45.0

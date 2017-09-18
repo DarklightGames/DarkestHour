@@ -7,8 +7,8 @@ class DH_GermanRadioFJPawn extends DH_GermanRadioHeerPawn;
 
 defaultproperties
 {
-    Skins(1)=texture'DHGermanCharactersTex.Luftwaffe.LW_1'
+    Skins(1)=Texture'DHGermanCharactersTex.Luftwaffe.LW_1'
 
-    BodySkins(0)=texture'DHGermanCharactersTex.Luftwaffe.LW_1'
-    BodySkins(1)=texture'DHGermanCharactersTex.Luftwaffe.LW_2'
+    BodySkins(0)=Texture'DHGermanCharactersTex.Luftwaffe.LW_1'
+    BodySkins(1)=Texture'DHGermanCharactersTex.Luftwaffe.LW_2'
 }

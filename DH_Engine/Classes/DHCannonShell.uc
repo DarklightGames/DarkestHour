@@ -318,7 +318,7 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Tracers.shells.Allied_shell'
     bNetTemporary=false
     bUpdateSimulatedPosition=true
-    AmbientSound=sound'Vehicle_Weapons.Misc.projectile_whistle01'
+    AmbientSound=Sound'Vehicle_Weapons.Misc.projectile_whistle01'
     LifeSpan=7.5
     AmbientGlow=96
     FluidSurfaceShootStrengthMod=10.0

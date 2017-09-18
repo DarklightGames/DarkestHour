@@ -25,9 +25,9 @@ defaultproperties
     TweenTime=0.0
     FireAnim="Shoot"
     FireIronAnim="Iron_Shoot"
-    FireSounds(0)=sound'Inf_Weapons.svt40.svt40_fire01'
-    FireSounds(1)=sound'Inf_Weapons.svt40.svt40_fire02'
-    FireSounds(2)=sound'Inf_Weapons.svt40.svt40_fire03'
+    FireSounds(0)=Sound'Inf_Weapons.svt40.svt40_fire01'
+    FireSounds(1)=Sound'Inf_Weapons.svt40.svt40_fire02'
+    FireSounds(2)=Sound'Inf_Weapons.svt40.svt40_fire03'
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stSVT'
     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mmGreen'

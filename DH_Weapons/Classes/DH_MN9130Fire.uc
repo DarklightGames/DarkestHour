@@ -24,9 +24,9 @@ defaultproperties
     TweenTime=0.0
     FireAnim="shoot_last"
     FireIronAnim="iron_shootrest"
-    FireSounds(0)=sound'Inf_Weapons.nagant9130.nagant9130_fire01'
-    FireSounds(1)=sound'Inf_Weapons.nagant9130.nagant9130_fire02'
-    FireSounds(2)=sound'Inf_Weapons.nagant9130.nagant9130_fire03'
+    FireSounds(0)=Sound'Inf_Weapons.nagant9130.nagant9130_fire01'
+    FireSounds(1)=Sound'Inf_Weapons.nagant9130.nagant9130_fire02'
+    FireSounds(2)=Sound'Inf_Weapons.nagant9130.nagant9130_fire03'
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stNagant'
     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mmGreen'

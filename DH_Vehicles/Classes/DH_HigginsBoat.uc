@@ -110,11 +110,11 @@ simulated state ViewTransition
         {
             if (DriverPositionIndex < InitialPositionIndex && PreviousPositionIndex == InitialPositionIndex) // ramp lowering
             {
-                RampSound = sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01';
+                RampSound = Sound'DH_AlliedVehicleSounds.higgins.HigginsRampOpen01';
             }
             else if (DriverPositionIndex == InitialPositionIndex && PreviousPositionIndex < DriverPositionIndex) // ramp raising
             {
-                RampSound = sound'DH_AlliedVehicleSounds.higgins.HigginsRampClose01';
+                RampSound = Sound'DH_AlliedVehicleSounds.higgins.HigginsRampClose01';
             }
 
             if (RampSound != none)
@@ -289,7 +289,7 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat'
-    Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.HigginsBoat'
+    Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.HigginsBoat'
     BeginningIdleAnim="" // easy way to stop unwanted BeginningIdleAnim being played in several functions without having to override them
     RampUpIdleAnim="Ramp_idle_raised"
     RampDownIdleAnim="Ramp_idle_dropped"
@@ -307,7 +307,7 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',TransitionUpAnim="Ramp_Raise",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',TransitionDownAnim="Ramp_Drop",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true)
     DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_HigginsBoat_anm.HigginsBoat',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=32768,ViewNegativeYawLimit=-32768,bExposed=true,bDrawOverlays=true)
-    BinocsOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
+    BinocsOverlay=Texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
     DriverAttachmentBone="driver_player"
     DrivePos=(X=0.0,Y=0.0,Z=10.0)
     DriveAnim="stand_idlehip_satchel"
@@ -352,12 +352,12 @@ defaultproperties
     ExitPositions(7)=(X=45.0,Y=38.0,Z=100.0)
 
     // Sounds
-    IdleSound=sound'DH_AlliedVehicleSounds.HigginsIdle01'
-    StartUpSound=sound'DH_AlliedVehicleSounds.higgins.HigginsStart01'
-    ShutDownSound=sound'DH_AlliedVehicleSounds.higgins.HigginsStop01'
+    IdleSound=Sound'DH_AlliedVehicleSounds.HigginsIdle01'
+    StartUpSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsStart01'
+    ShutDownSound=Sound'DH_AlliedVehicleSounds.higgins.HigginsStop01'
     EngineSound=SoundGroup'DH_AlliedVehicleSounds.higgins.HigginsEngine_loop'
     EngineSoundBone="Engine"
-    WashSound=sound'DH_AlliedVehicleSounds.higgins.wash01'
+    WashSound=Sound'DH_AlliedVehicleSounds.higgins.wash01'
     VehicleAttachments(0)=(AttachBone="Box01") // attachment bone for wash sound attachment
 
     // Visual effects
@@ -368,7 +368,7 @@ defaultproperties
     SteeringScaleFactor=2.0
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.higgins_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.higgins_body'
     VehicleHudEngineY=0.0
     VehicleHudOccupantsX(0)=0.43
     VehicleHudOccupantsX(1)=0.57
@@ -385,7 +385,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.3
     VehicleHudOccupantsY(6)=0.4
     VehicleHudOccupantsY(7)=0.5
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.higgins'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.higgins'
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=LFWheel

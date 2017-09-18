@@ -30,7 +30,7 @@ defaultproperties
         UseRotationFrom=PTRS_Actor
         StartSizeRange=(X=(Min=200.0,Max=200.0),Y=(Min=200.0,Max=200.0),Z=(Min=200.0,Max=200.0))
         InitialParticlesPerSecond=65536.0
-        Texture=texture'Effects_Tex.BulletHits.sparkfinal2'
+        Texture=Texture'Effects_Tex.BulletHits.sparkfinal2'
         LifetimeRange=(Min=0.2,Max=0.5)
         StartVelocityRange=(X=(Min=-256.0,Max=256.0),Y=(Min=-1024.0,Max=1024.0),Z=(Min=-256.0,Max=256.0))
     End Object

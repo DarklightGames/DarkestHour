@@ -21,11 +21,11 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Jagdtiger_anm.JagdTiger_body_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.JagdTiger_body_ext'
-    Skins(1)=texture'DH_VehiclesGE_tex2.Treads.tiger2B_treads'
-    Skins(2)=texture'DH_VehiclesGE_tex2.Treads.tiger2B_treads'
-    Skins(3)=texture'DH_VehiclesGE_tex2.int_vehicles.tiger2B_body_int'
-    Skins(4)=texture'DH_VehiclesGE_tex2.ext_vehicles.JagdTiger_skirtdetails'
+    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.JagdTiger_body_ext'
+    Skins(1)=Texture'DH_VehiclesGE_tex2.Treads.tiger2B_treads'
+    Skins(2)=Texture'DH_VehiclesGE_tex2.Treads.tiger2B_treads'
+    Skins(3)=Texture'DH_VehiclesGE_tex2.int_vehicles.tiger2B_body_int'
+    Skins(4)=Texture'DH_VehiclesGE_tex2.ext_vehicles.JagdTiger_skirtdetails'
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdtigerCannonPawn',WeaponBone="Turret_placement")
@@ -96,11 +96,11 @@ defaultproperties
     SoundPitch=32
     MaxPitchSpeed=50.0
     IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.Tiger.tiger_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.Tiger.tiger_engine_stop'
-    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L04'
-    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R04'
-    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
+    StartUpSound=Sound'Vehicle_Engines.Tiger.tiger_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.Tiger.tiger_engine_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L04'
+    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R04'
+    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02'
     RumbleSoundBone="driver_attachment"
 
     // Visual effects
@@ -114,7 +114,7 @@ defaultproperties
     SteeringScaleFactor=2.0
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.JT_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.JT_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.JT_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.JT_turret_look'
     VehicleHudEngineY=0.75
@@ -132,7 +132,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.79
     VehicleHudOccupantsX(6)=0.605
     VehicleHudOccupantsY(6)=0.69
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.jagdtiger'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.jagdtiger'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

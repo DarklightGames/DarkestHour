@@ -20,12 +20,12 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_body_ext'
-    Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.FireFly_body_ext'
-    Skins(1)=texture'DH_VehiclesUK_tex.ext_vehicles.FireFly_armor_ext'
-    Skins(2)=texture'DH_VehiclesUS_tex.int_vehicles.Sherman_hatch_int'
-    Skins(3)=texture'DH_VehiclesUS_tex.int_vehicles.Sherman_body_int'
-    Skins(4)=texture'DH_VehiclesUK_tex.Treads.FireFly_treads'
-    Skins(5)=texture'DH_VehiclesUK_tex.Treads.FireFly_treads'
+    Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.FireFly_body_ext'
+    Skins(1)=Texture'DH_VehiclesUK_tex.ext_vehicles.FireFly_armor_ext'
+    Skins(2)=Texture'DH_VehiclesUS_tex.int_vehicles.Sherman_hatch_int'
+    Skins(3)=Texture'DH_VehiclesUS_tex.int_vehicles.Sherman_body_int'
+    Skins(4)=Texture'DH_VehiclesUK_tex.Treads.FireFly_treads'
+    Skins(5)=Texture'DH_VehiclesUK_tex.Treads.FireFly_treads'
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanFireFlyCannonPawn',WeaponBone="Turret_placement")
@@ -88,11 +88,11 @@ defaultproperties
 
     // Sounds
     IdleSound=SoundGroup'DH_AlliedVehicleSounds.Sherman.ShermanEngineLoop'
-    StartUpSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanStart'
-    ShutDownSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
-    LeftTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_L'
-    RightTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_R'
-    RumbleSound=sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
+    StartUpSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStart'
+    ShutDownSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
+    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
+    RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
+    RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
 
     // Visual effects
     LeftTreadIndex=5
@@ -105,7 +105,7 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.firefly_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.firefly_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.FireFly_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.FireFly_turret_look'
     VehicleHudTreadsPosX(0)=0.38
@@ -122,7 +122,7 @@ defaultproperties
     VehicleHudOccupantsY(4)=0.82
     VehicleHudOccupantsX(5)=0.625
     VehicleHudOccupantsY(5)=0.72
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.sherman_firefly'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sherman_firefly'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

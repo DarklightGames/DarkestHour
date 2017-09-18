@@ -9,5 +9,5 @@ class DH_P38VehDamType extends DHVehicleDamageType
 defaultproperties
 {
     WeaponClass=class'DH_Weapons.DH_P38Weapon'
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b9mm'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.b9mm'
 }

@@ -20,11 +20,11 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_body_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.tiger2B_body_normandy'
-    Skins(1)=texture'DH_VehiclesGE_tex2.Treads.tiger2B_treads'
-    Skins(2)=texture'DH_VehiclesGE_tex2.Treads.tiger2B_treads'
-    Skins(3)=texture'DH_VehiclesGE_tex2.int_vehicles.tiger2B_body_int'
-    Skins(4)=texture'DH_VehiclesGE_tex2.ext_vehicles.JagdTiger_skirtdetails'
+    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.tiger2B_body_normandy'
+    Skins(1)=Texture'DH_VehiclesGE_tex2.Treads.tiger2B_treads'
+    Skins(2)=Texture'DH_VehiclesGE_tex2.Treads.tiger2B_treads'
+    Skins(3)=Texture'DH_VehiclesGE_tex2.int_vehicles.tiger2B_body_int'
+    Skins(4)=Texture'DH_VehiclesGE_tex2.ext_vehicles.JagdTiger_skirtdetails'
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Tiger2BCannonPawn',WeaponBone="Turret_placement")
@@ -40,7 +40,7 @@ defaultproperties
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=15000,ViewPitchDownLimit=64500,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
     DrivePos=(X=3.0,Y=3.0,Z=-21.0)
     DriveAnim="VPanzer3_driver_idle_open"
-    PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
 
     // Hull armor
     FrontArmor(0)=(Thickness=10.0,Slope=-50.0,MaxRelativeHeight=-35.0,LocationName="lower")
@@ -88,13 +88,13 @@ defaultproperties
     SoundPitch=32
     MaxPitchSpeed=50.0
     IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.Tiger.tiger_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.Tiger.tiger_engine_stop'
-    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L04'
-    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R04'
+    StartUpSound=Sound'Vehicle_Engines.Tiger.tiger_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.Tiger.tiger_engine_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L04'
+    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R04'
     LeftTrackSoundBone="Tread_L"
     RightTrackSoundBone="Tread_R"
-    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
+    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02'
     RumbleSoundBone="driver_attachment"
 
     // Visual effects
@@ -106,7 +106,7 @@ defaultproperties
     SteeringScaleFactor=2.0
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.tiger2B_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.tiger2B_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.tiger2B_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.tiger2B_turret_look'
     VehicleHudTreadsPosX(1)=0.67
@@ -124,7 +124,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.8
     VehicleHudOccupantsX(6)=0.625
     VehicleHudOccupantsY(6)=0.75
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.tiger_2b'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.tiger_2b'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

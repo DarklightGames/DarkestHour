@@ -8,5 +8,5 @@ class DH_GermanRadioCamoSSPawn extends DH_GermanPawn; // not extending the obvio
 defaultproperties
 {
     Mesh=SkeletalMesh'DHCharacters_anm.Ger_SS_Radioman'
-    Skins(1)=texture'DHGermanCharactersTex.WSS.ger_camo'
+    Skins(1)=Texture'DHGermanCharactersTex.WSS.ger_camo'
 }

@@ -143,11 +143,11 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
         {
             case ERROR_RestrictedType:
             case ERROR_Fatal:
-                ORI.InfoIcon = texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+                ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
                 ORI.InfoText = default.NotAvailableText;
                 break;
             case ERROR_TeamLimit:
-                ORI.InfoIcon = texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+                ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
                 ORI.InfoText = default.TeamLimitText;
                 break;
             case ERROR_SquadTooSmall:
@@ -156,7 +156,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
                     SquadMemberCount = PC.SquadReplicationInfo.GetMemberCount(PC.GetTeamNum(), PC.GetSquadIndex());
                 }
 
-                ORI.InfoIcon = texture'DH_InterfaceArt2_tex.Icons.squad';
+                ORI.InfoIcon = Texture'DH_InterfaceArt2_tex.Icons.squad';
                 ORI.InfoText = string(SquadMemberCount) $ "/" $ string(ConstructionClass.default.SquadMemberCountMinimum);
                 break;
             default:

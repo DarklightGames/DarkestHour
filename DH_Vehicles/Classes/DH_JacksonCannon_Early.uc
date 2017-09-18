@@ -7,7 +7,7 @@ class DH_JacksonCannon_Early extends DH_JacksonCannon;
 
 defaultproperties
 {
-    Skins(3)=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha' // hides the muzzle brake
+    Skins(3)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha' // hides the muzzle brake
     ProjectileClass=class'DH_Vehicles.DH_JacksonCannonShell_Early'
     PrimaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShell_Early'
     SecondaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShellAP'

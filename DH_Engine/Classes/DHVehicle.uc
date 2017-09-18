@@ -3549,7 +3549,7 @@ defaultproperties
     SupplyDropCountMax=250
     SupplyDropInterval=5
     TouchingSupplyCount=-1
-    SupplyDropSound=sound'Inf_Weapons_Foley.AmmoPickup'
+    SupplyDropSound=Sound'Inf_Weapons_Foley.AmmoPickup'
     SupplyDropSoundRadius=10.0
     SupplyDropSoundVolume=1.0
 
@@ -3571,7 +3571,7 @@ defaultproperties
     ImpactDamageMult=0.001
     ImpactWorldDamageMult=0.001
     DriverDamageMult=1.0
-    DamagedTreadPanner=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
+    DamagedTreadPanner=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
 
     // Smoking/burning engine effect
     HeavyEngineDamageThreshold=0.25
@@ -3600,10 +3600,10 @@ defaultproperties
     // Sounds
     MaxPitchSpeed=150.0
     RumbleSoundVolumeModifier=2.5
-    DamagedStartUpSound=sound'DH_AlliedVehicleSounds.Damaged.engine_start_damaged'
-    DamagedShutDownSound=sound'DH_AlliedVehicleSounds.Damaged.engine_stop_damaged'
-    VehicleBurningSound=sound'Amb_Destruction.Fire.Krasnyi_Fire_House02'
-    DestroyedBurningSound=sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
+    DamagedStartUpSound=Sound'DH_AlliedVehicleSounds.Damaged.engine_start_damaged'
+    DamagedShutDownSound=Sound'DH_AlliedVehicleSounds.Damaged.engine_stop_damaged'
+    VehicleBurningSound=Sound'Amb_Destruction.Fire.Krasnyi_Fire_House02'
+    DestroyedBurningSound=Sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
     RumbleSoundBone="body"
     IdleRPM=500.0 // determines engine sound at idle, relative to EngineRPMSoundRange (note that behind the scenes the native EngineRPM will actually be zero at idle)
     EngineRPMSoundRange=5000.0 // range of engine sound relative to current RPM (presumably max engine sound at IdleRPM + EngineRPMSoundRange)

@@ -11,7 +11,7 @@ defaultproperties
     FireEffectScale=1.75 // turret fire is larger & positioned in centre of open superstructure
     FireEffectOffset=(X=-15.0,Y=15.0,Z=0.0)
     Mesh=SkeletalMesh'DH_Marder3M_anm.marder_turret_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext'
+    Skins(0)=Texture'DH_VehiclesGE_tex7.ext_vehicles.marder_turret_ext'
 
     // Cannon movement
 //  bHasTurret=false // not a proper turret, but has a floor that means commander moves with cannon, so this makes it work better (& no downside as there's no 'turret' collision)
@@ -39,10 +39,10 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire03'
-    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
-    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
 
     // Cannon range settings
     RangeSettings(1)=100

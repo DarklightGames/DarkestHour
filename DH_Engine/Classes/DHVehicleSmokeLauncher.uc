@@ -136,7 +136,7 @@ defaultproperties
     Spread=0.03
     bShowHUDInfo=true
     bCanBeReloaded=true
-    ReloadStages(0)=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload01_000',Duration=1.24) // TODO: get some suitable stage reload sounds to replace these placeholders
-    ReloadStages(1)=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload02_039',Duration=2.03,HUDProportion=0.7)
-    ReloadStages(2)=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload03_104',Duration=2.07,HUDProportion=0.4)
+    ReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.mg34.mg34_reload01_000',Duration=1.24) // TODO: get some suitable stage reload sounds to replace these placeholders
+    ReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.mg34.mg34_reload02_039',Duration=2.03,HUDProportion=0.7)
+    ReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.mg34.mg34_reload03_104',Duration=2.07,HUDProportion=0.4)
 }

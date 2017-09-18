@@ -17,10 +17,10 @@ defaultproperties
     DrivePos=(X=2.0,Y=6.0,Z=-3.0)
     DriveAnim="stand_idlehip_binoc"
     bHasAltFire=false
-    GunsightOverlay=texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
+    GunsightOverlay=Texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
     GunsightSize=0.83333
     RangePositionX=0.02
-    AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.JagdTiger_shell'
-    AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.JagdTiger_shell_reload'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.JagdTiger_shell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.JagdTiger_shell_reload'
     FireImpulse=(X=-110000.0)
 }

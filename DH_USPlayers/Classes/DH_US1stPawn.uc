@@ -7,9 +7,9 @@ class DH_US1stPawn extends DH_AmericanPawn;
 
 defaultproperties
 {
-    Skins(1)=texture'DHUSCharactersTex.1stID.US_1stID_1'
+    Skins(1)=Texture'DHUSCharactersTex.1stID.US_1stID_1'
 
-    BodySkins(0)=texture'DHUSCharactersTex.1stID.US_1stID_1'
-    BodySkins(1)=texture'DHUSCharactersTex.1stID.US_1stID_2'
+    BodySkins(0)=Texture'DHUSCharactersTex.1stID.US_1stID_1'
+    BodySkins(1)=Texture'DHUSCharactersTex.1stID.US_1stID_2'
 }
 

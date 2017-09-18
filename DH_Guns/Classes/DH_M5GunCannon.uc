@@ -9,7 +9,7 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_M5Gun_anm.m5_turret'
-    Skins(0)=texture'DH_M5Gun_tex.m5.m5'
+    Skins(0)=Texture'DH_M5Gun_tex.m5.m5'
     CollisionStaticMesh=StaticMesh'DH_Artillery_stc.17pounder.17pdr_turret_coll'
     BeginningIdleAnim="com_idle_close"
     GunnerAttachmentBone="com_player"
@@ -38,10 +38,10 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
     CannonFireSound(1)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
     CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
-    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
-    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
 
     // Cannon range settings
     RangeSettings(1)=100

@@ -18,10 +18,10 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_IS2_anm.IS2-body_ext'
-    Skins(0)=texture'allies_vehicles_tex.ext_vehicles.IS2_ext'
-    Skins(1)=texture'allies_vehicles_tex.Treads.IS2_treads'
-    Skins(2)=texture'allies_vehicles_tex.Treads.IS2_treads'
-    Skins(3)=texture'allies_vehicles_tex.int_vehicles.IS2_int'
+    Skins(0)=Texture'allies_vehicles_tex.ext_vehicles.IS2_ext'
+    Skins(1)=Texture'allies_vehicles_tex.Treads.IS2_treads'
+    Skins(2)=Texture'allies_vehicles_tex.Treads.IS2_treads'
+    Skins(3)=Texture'allies_vehicles_tex.int_vehicles.IS2_int'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
     HighDetailOverlay=shader'allies_vehicles_tex.int_vehicles.IS2_int_s'
@@ -88,12 +88,12 @@ defaultproperties
 
     // Sounds
     MaxPitchSpeed=450.0
-    IdleSound=sound'Vehicle_Engines.IS2.IS2_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.IS2.IS2_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.IS2.IS2_engine_stop'
-    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L03'
-    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R03'
-    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
+    IdleSound=Sound'Vehicle_Engines.IS2.IS2_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.IS2.IS2_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.IS2.IS2_engine_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L03'
+    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R03'
+    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02'
 
     // Visual effects
     TreadVelocityScale=125.0
@@ -106,7 +106,7 @@ defaultproperties
     RightLeverBoneName="Lever_R"
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.is2_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.is2_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.is2_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.is2_turret_look'
     VehicleHudTreadsPosX(0)=0.365 // some positions adjusted from original
@@ -122,7 +122,7 @@ defaultproperties
     VehicleHudOccupantsY(4)=0.65
     VehicleHudOccupantsX(5)=0.6
     VehicleHudOccupantsY(5)=0.75
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.IS2'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.IS2'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

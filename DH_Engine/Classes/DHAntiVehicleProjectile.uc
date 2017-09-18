@@ -1053,7 +1053,7 @@ defaultproperties
     PenetrationMag=100.0
 
     // From deprecated ROAntiVehicleProjectile class:
-    VehicleDeflectSound=sound'ProjectileSounds.cannon_rounds.AP_deflect'
+    VehicleDeflectSound=Sound'ProjectileSounds.cannon_rounds.AP_deflect'
     DampenFactor=0.5
     DampenFactorParallel=0.2
     DestroyTime=0.2

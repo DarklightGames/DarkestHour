@@ -7,5 +7,5 @@ class DH_GermanSPGunCrewPawn extends DH_GermanTankCrewPawn;
 
 defaultproperties
 {
-    Skins(0)=texture'DHGermanCharactersTex.Heer.WH_SP'
+    Skins(0)=Texture'DHGermanCharactersTex.Heer.WH_SP'
 }

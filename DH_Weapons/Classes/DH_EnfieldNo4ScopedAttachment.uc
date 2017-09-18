@@ -23,7 +23,7 @@ simulated function AnimEnd(int Channel) // TODO: re-factor into a parent as this
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.EnfieldNo4_Scoped_3rd'
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo4Scoped_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo4Scoped_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     MuzzleBoneName="Muzzle"

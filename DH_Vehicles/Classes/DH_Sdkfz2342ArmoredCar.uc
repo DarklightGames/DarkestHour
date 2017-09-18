@@ -13,5 +13,5 @@ defaultproperties
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.Puma.Puma_dest'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.2342_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.2342_turret_look'
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.sdkfz_234_2'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sdkfz_234_2'
 }

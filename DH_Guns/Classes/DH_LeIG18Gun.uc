@@ -11,10 +11,10 @@ defaultproperties
     VehicleTeam=0
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_LeIG18CannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_LeIG18_anm.leig18_body'
-    Skins(0)=texture'DH_LeIG18_tex.LeIG18.IG18_1'
-    Skins(1)=texture'DH_LeIG18_tex.LeIG18.IG18_2'
+    Skins(0)=Texture'DH_LeIG18_tex.LeIG18.IG18_1'
+    Skins(1)=Texture'DH_LeIG18_tex.LeIG18.IG18_2'
     DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.57mmGun.AT57mm_destroyed'  // TODO: replace
-    VehicleHudImage=texture'DH_LeIG18_tex.HUD.leig18_body'
+    VehicleHudImage=Texture'DH_LeIG18_tex.HUD.leig18_body'
     VehicleHudTurret=TexRotator'DH_LeIG18_tex.HUD.leig18_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_LeIG18_tex.HUD.leig18_turret_look'
     VehicleHudOccupantsX(1)=0.4

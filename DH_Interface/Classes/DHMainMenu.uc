@@ -497,7 +497,7 @@ defaultproperties
 
     // Menu variables
     Begin Object Class=FloatingImage Name=FloatingBackground
-        Image=material'DH_GUI_Tex.MainMenu.BackGround'
+        Image=Material'DH_GUI_Tex.MainMenu.BackGround'
         DropShadow=none
         ImageStyle=ISTY_Scaled
         WinTop=0.0
@@ -509,7 +509,7 @@ defaultproperties
     i_Background=FloatingImage'DH_Interface.DHMainMenu.FloatingBackground'
 
     Begin Object Class=FloatingImage Name=OverlayBackground
-        Image=texture'Engine.BlackTexture'
+        Image=Texture'Engine.BlackTexture'
         DropShadow=none
         ImageStyle=ISTY_Scaled
         WinTop=0.0
@@ -526,7 +526,7 @@ defaultproperties
     i_Overlay=FloatingImage'DH_Interface.DHMainMenu.OverlayBackground'
 
     Begin Object Class=FloatingImage Name=AnnouncementImage
-        Image=texture'DH_GUI_Tex.MainMenu.patreon_announce_image'
+        Image=Texture'DH_GUI_Tex.MainMenu.patreon_announce_image'
         DropShadow=none
         ImageStyle=ISTY_Justified
         WinTop=0.1
@@ -677,7 +677,7 @@ defaultproperties
         WinLeft=0.875
         WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
-        Graphic=texture'DH_GUI_Tex.MainMenu.facebook'
+        Graphic=Texture'DH_GUI_Tex.MainMenu.facebook'
         TabOrder=1
         bTabStop=true
         Position=ICP_Center
@@ -693,7 +693,7 @@ defaultproperties
         WinLeft=0.875
         WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
-        Graphic=texture'DH_GUI_Tex.MainMenu.github'
+        Graphic=Texture'DH_GUI_Tex.MainMenu.github'
         bTabStop=true
         Position=ICP_Center
         Hint="Join us on GitHub!"
@@ -708,7 +708,7 @@ defaultproperties
         WinLeft=0.875
         WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
-        Graphic=texture'DH_GUI_Tex.MainMenu.steam'
+        Graphic=Texture'DH_GUI_Tex.MainMenu.steam'
         bTabStop=true
         Position=ICP_Center
         Hint="Join the Steam Community!"
@@ -723,7 +723,7 @@ defaultproperties
         WinLeft=0.875
         WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
-        Graphic=texture'DH_GUI_Tex.MainMenu.patreon'
+        Graphic=Texture'DH_GUI_Tex.MainMenu.patreon'
         bTabStop=true
         Position=ICP_Center
         Hint="Support us on Patreon!"
@@ -738,7 +738,7 @@ defaultproperties
         WinLeft=0.875
         WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
-        Graphic=texture'DH_GUI_Tex.MainMenu.discord'
+        Graphic=Texture'DH_GUI_Tex.MainMenu.discord'
         bTabStop=true
         Position=ICP_Center
         Hint="Join us in Discord!"
@@ -768,7 +768,7 @@ defaultproperties
     l_Version=GUILabel'DH_Interface.DHMainMenu.VersionNum'
 
     Begin Object class=GUIImage Name=LogoImage
-        Image=texture'DH_GUI_Tex.Menu.DHTextLogo'
+        Image=Texture'DH_GUI_Tex.Menu.DHTextLogo'
         ImageColor=(R=255,G=255,B=255,A=255)
         ImageRenderStyle=MSTY_Alpha
         ImageStyle=ISTY_Justified

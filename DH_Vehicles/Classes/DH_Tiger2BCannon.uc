@@ -9,8 +9,8 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_turret_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.tiger2B_body_normandy'
-    Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.tiger2B_turret_int'
+    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.tiger2B_body_normandy'
+    Skins(1)=Texture'DH_VehiclesGE_tex2.int_vehicles.tiger2B_turret_int'
     CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.Tiger2B.Tiger2B_turret_col'
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
 
@@ -65,10 +65,10 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_03'
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-    ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_01')
-    ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_02')
-    ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_03')
-    ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_04')
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_01')
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_02')
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F1_Reload_04')
 
     // Cannon range settings
     RangeSettings(1)=100

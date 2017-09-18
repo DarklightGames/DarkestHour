@@ -17,11 +17,11 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Stug3G_anm.Stug3g_body_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_ext'
-    Skins(1)=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
-    Skins(2)=texture'DH_VehiclesGE_tex2.Treads.Stug3g_treads'
-    Skins(3)=texture'DH_VehiclesGE_tex2.Treads.Stug3g_treads'
-    Skins(4)=texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'
+    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_ext'
+    Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
+    Skins(2)=Texture'DH_VehiclesGE_tex2.Treads.Stug3g_treads'
+    Skins(3)=Texture'DH_VehiclesGE_tex2.Treads.Stug3g_treads'
+    Skins(4)=Texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'
     FireEffectOffset=(X=25.0,Y=0.0,Z=-25.0)
 
     // Vehicle weapons & passengers
@@ -85,12 +85,12 @@ defaultproperties
 
     // Sounds
     IdleSound=SoundGroup'Vehicle_Engines.STUGiii.stugiii_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.STUGiii.stugiii_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.STUGiii.stugiii_engine_stop'
-    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L08'
-    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R08'
+    StartUpSound=Sound'Vehicle_Engines.STUGiii.stugiii_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.STUGiii.stugiii_engine_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L08'
+    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R08'
     RumbleSoundBone="driver_attachment"
-    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble01'
+    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble01'
 
     // Visual effects
     LeftTreadIndex=3
@@ -102,7 +102,7 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.stug3g_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.stug3g_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Stug3g_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Stug3g_turret_look'
     VehicleHudTreadsPosX(0)=0.37
@@ -122,7 +122,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.7
     VehicleHudOccupantsX(6)=0.5
     VehicleHudOccupantsY(6)=0.75
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.stug3g'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.stug3g'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

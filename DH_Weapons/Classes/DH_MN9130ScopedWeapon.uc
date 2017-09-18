@@ -19,7 +19,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    ScopeOverlay=texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'
+    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'
     IronSightDisplayFOV=40.0
     PlayerFOVZoom=24.0
     ScopePortalFOV=7.0 // 3.5x

@@ -9,6 +9,6 @@ class DH_KubelwagenCar_Snow extends DH_KubelwagenCar_WH;
 
 defaultproperties
 {
-    Skins(1)=texture'DH_VehiclesGE_tex3.ext_vehicles.kubelwagen_body_snow'
+    Skins(1)=Texture'DH_VehiclesGE_tex3.ext_vehicles.kubelwagen_body_snow'
     DestroyedMeshSkins(0)=combiner'DH_VehiclesGE_tex3.Destroyed.kubelwagen_snow_dest'
 }

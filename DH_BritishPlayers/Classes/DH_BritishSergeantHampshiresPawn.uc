@@ -7,5 +7,5 @@ class DH_BritishSergeantHampshiresPawn extends DH_BritishHampshiresPawn;
 
 defaultproperties
 {
-    Skins(0)=texture'DHBritishCharactersTex.PBI.British_Hampshires_Sarg'
+    Skins(0)=Texture'DHBritishCharactersTex.PBI.British_Hampshires_Sarg'
 }

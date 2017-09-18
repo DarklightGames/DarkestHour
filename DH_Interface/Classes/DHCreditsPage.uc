@@ -91,7 +91,7 @@ defaultproperties
     t_WindowTitle=DHGUIHeader'DH_Interface.DHCreditsPage.TitleBar'
     WindowName="Credits"
     Begin Object Class=FloatingImage Name=FloatingFrameBackground
-        Image=texture'DH_GUI_Tex.Menu.DHDisplay_withcaption_noAlpha'
+        Image=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption_noAlpha'
         DropShadow=none
         ImageStyle=ISTY_Stretched
         ImageRenderStyle=MSTY_Normal

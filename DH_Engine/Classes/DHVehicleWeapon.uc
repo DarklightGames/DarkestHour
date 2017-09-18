@@ -625,7 +625,7 @@ simulated function sound GetFireSound()
 simulated function DryFireEffects(optional bool bAltFire)
 {
     ShakeView(bAltFire);
-    PlaySound(sound'Inf_Weapons_Foley.Misc.dryfire_rifle', SLOT_None, 1.5,, 25.0,, true);
+    PlaySound(Sound'Inf_Weapons_Foley.Misc.dryfire_rifle', SLOT_None, 1.5,, 25.0,, true);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1148,7 +1148,7 @@ simulated function PlayClickSound()
 {
     if (Instigator != none && Instigator.IsHumanControlled() && Instigator.IsLocallyControlled())
     {
-        PlayerController(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
+        PlayerController(Instigator.Controller).ClientPlaySound(Sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
     }
 }
 

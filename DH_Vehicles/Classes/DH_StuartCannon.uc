@@ -9,8 +9,8 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_Stuart_anm.Stuart_turret_ext'
-    Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.M5_body_ext'
-    Skins(1)=texture'DH_VehiclesUS_tex.int_vehicles.M5_turret_int'
+    Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.M5_body_ext'
+    Skins(1)=Texture'DH_VehiclesUS_tex.int_vehicles.M5_turret_int'
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.M5_Stuart.Stuart_turret_col'
 
     // Turret armor
@@ -65,8 +65,8 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire03'
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
-    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
-    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
 }

@@ -7,5 +7,5 @@ class DH_British7thArmouredPawn extends DH_BritishOfficerPawn; // not necessaril
 
 defaultproperties
 {
-    Skins(1)=texture'DHBritishCharactersTex.Armoured.BritishTanker'
+    Skins(1)=Texture'DHBritishCharactersTex.Armoured.BritishTanker'
 }

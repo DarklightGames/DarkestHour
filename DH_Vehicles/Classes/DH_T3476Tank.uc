@@ -17,13 +17,13 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_T34_anm.T34_body_ext'
-    Skins(0)=texture'allies_vehicles_tex.ext_vehicles.T3476_ext'
-    Skins(1)=texture'allies_vehicles_tex.Treads.T3476_treads'
-    Skins(2)=texture'allies_vehicles_tex.Treads.T3476_treads'
-    Skins(3)=texture'allies_vehicles_tex.int_vehicles.T3476_int'
+    Skins(0)=Texture'allies_vehicles_tex.ext_vehicles.T3476_ext'
+    Skins(1)=Texture'allies_vehicles_tex.Treads.T3476_treads'
+    Skins(2)=Texture'allies_vehicles_tex.Treads.T3476_treads'
+    Skins(3)=Texture'allies_vehicles_tex.int_vehicles.T3476_int'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
-    HighDetailOverlay=material'allies_vehicles_tex.int_vehicles.t3476_int_s'
+    HighDetailOverlay=Material'allies_vehicles_tex.int_vehicles.t3476_int_s'
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_T3476CannonPawn',WeaponBone="Turret_Placement")
@@ -92,11 +92,11 @@ defaultproperties
     SoundPitch=32 // half normal pitch = 1 octave lower
     MaxPitchSpeed=50.0
     IdleSound=SoundGroup'Vehicle_Engines.T34.t34_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.T34.t34_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.T34.t34_engine_stop'
-    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L07'
-    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L07'
-    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
+    StartUpSound=Sound'Vehicle_Engines.T34.t34_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.T34.t34_engine_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L07'
+    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L07'
+    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02'
 
     // Visual effects
     TreadVelocityScale=110.0
@@ -107,7 +107,7 @@ defaultproperties
     ExhaustPipes(1)=(ExhaustPosition=(X=-175,Y=-30,Z=10),ExhaustRotation=(Pitch=36000,Yaw=0,Roll=0))
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.t34_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.t34_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.t34_76_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.t34_76_turret_look'
     VehicleHudTreadsPosX(0)=0.36 // some positions adjusted from original
@@ -124,7 +124,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.73
     VehicleHudOccupantsX(6)=0.58
     VehicleHudOccupantsY(6)=0.62
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.T34_76'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.T34_76'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

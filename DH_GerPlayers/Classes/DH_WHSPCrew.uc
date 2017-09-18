@@ -12,7 +12,7 @@ defaultproperties
     AltName="Stugbesatzung"
     Article="a "
     PluralName="Assault Gun Crewmen"
-    SleeveTexture=texture'Weapons1st_tex.Arms.german_sleeves'
+    SleeveTexture=Texture'Weapons1st_tex.Arms.german_sleeves'
     DetachedArmClass=class'ROEffects.SeveredArmGerTanker'
     DetachedLegClass=class'ROEffects.SeveredLegGerTanker'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon')

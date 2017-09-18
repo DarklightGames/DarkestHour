@@ -12,7 +12,7 @@ defaultproperties
     VehicleMass=14.0
     PointValue=4.0
     Mesh=SkeletalMesh'DH_ShermanM4A3_anm.ShermanM4A3E2_body_ext'
-    Skins(0)=texture'DH_VehiclesUS_tex3.ext_vehicles.ShermanM4A3E2_ext'
+    Skins(0)=Texture'DH_VehiclesUS_tex3.ext_vehicles.ShermanM4A3E2_ext'
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3_anm.ShermanM4A3E2_body_int')
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3_anm.ShermanM4A3E2_body_int')
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3_anm.ShermanM4A3E2_body_int')
@@ -27,8 +27,8 @@ defaultproperties
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc3.ShermanM4A3.M4A3E2_dest'
     GearRatios(4)=0.67
     TransRatio=0.07
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.shermanm4a3e2_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.shermanm4a3e2_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.ShermanJumbo75_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.ShermanJumbo75_turret_look'
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.sherman_m4a3e2'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sherman_m4a3e2'
 }

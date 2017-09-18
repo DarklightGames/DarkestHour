@@ -2288,7 +2288,7 @@ defaultproperties
     bMustBeTankCommander=true
     UnbuttonedPositionIndex=2
     BeginningIdleAnim="driver_hatch_idle_close"
-    PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
 
     // Damage
     Health=525
@@ -2299,7 +2299,7 @@ defaultproperties
     TreadDamageThreshold=0.75
     bCanCrash=false
     ImpactDamageThreshold=5000.0
-    DamagedPeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.Destroyed'
+    DamagedPeriscopeOverlay=Texture'DH_VehicleOptics_tex.Allied.Destroyed'
 
     // Component damage probabilities
     DriverKillChance=1150.0
@@ -2358,8 +2358,8 @@ defaultproperties
     // Sounds
     SoundRadius=650.0
     TransientSoundRadius=700.0
-    SmokingEngineSound=sound'Amb_Constructions.steam.Krasnyi_Steam_Deep'
-    TrackDamagedSound=sound'Vehicle_Engines.track_broken'
+    SmokingEngineSound=Sound'Amb_Constructions.steam.Krasnyi_Steam_Deep'
+    TrackDamagedSound=Sound'Vehicle_Engines.track_broken'
     LeftTrackSoundBone="Track_L"
     RightTrackSoundBone="Track_R"
     RumbleSoundVolumeModifier=1.0

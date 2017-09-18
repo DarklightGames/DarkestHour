@@ -10,16 +10,16 @@ defaultproperties
     Species=class'DH_USPlayers.DH_American'
 
     Mesh=SkeletalMesh'DHCharacters_anm.US_GI'
-    Skins(0)=texture'DHUSCharactersTex.us_heads.US_AB_Face2'
-    Skins(1)=texture'DHUSCharactersTex.GI.GI_1'
+    Skins(0)=Texture'DHUSCharactersTex.us_heads.US_AB_Face2'
+    Skins(1)=Texture'DHUSCharactersTex.GI.GI_1'
 
     bReversedSkinsSlots=true
 
-    FaceSkins(0)=texture'DHUSCharactersTex.us_heads.US_AB_Face1'
-    FaceSkins(1)=texture'DHUSCharactersTex.us_heads.US_AB_Face2'
-    FaceSkins(2)=texture'DHUSCharactersTex.us_heads.US_AB_Face3'
-    FaceSkins(3)=texture'DHUSCharactersTex.us_heads.US_AB_Face4'
-    FaceSkins(4)=texture'DHUSCharactersTex.us_heads.US_AB_Face5'
+    FaceSkins(0)=Texture'DHUSCharactersTex.us_heads.US_AB_Face1'
+    FaceSkins(1)=Texture'DHUSCharactersTex.us_heads.US_AB_Face2'
+    FaceSkins(2)=Texture'DHUSCharactersTex.us_heads.US_AB_Face3'
+    FaceSkins(3)=Texture'DHUSCharactersTex.us_heads.US_AB_Face4'
+    FaceSkins(4)=Texture'DHUSCharactersTex.us_heads.US_AB_Face5'
 
     ShovelClassName="DH_Equipment.DHShovelItem_US"
     bShovelHangsOnLeftHip=false // US shovel goes on the player's backpack

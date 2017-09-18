@@ -145,9 +145,9 @@ defaultproperties
     bDHDebugMode=true // TEMPDEBUG - revert to false before any release
 
     AlliesToAxisRatio=0.5
-    Texture=texture'DHEngine_Tex.LevelInfo'
-    AlliesWinsMusic=sound'DH_win.Allies.DH_AlliesGroup'
-    AxisWinsMusic=sound'DH_win.German.DH_GermanGroup'
+    Texture=Texture'DHEngine_Tex.LevelInfo'
+    AlliesWinsMusic=Sound'DH_win.Allies.DH_AlliesGroup'
+    AxisWinsMusic=Sound'DH_win.German.DH_GermanGroup'
     SpawnMode=ESM_RedOrchestra
     Season=SEASON_Summer
 }

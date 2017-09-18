@@ -11,6 +11,6 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn_DDay')
     VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Dday_Sherman_DuctsAttachment',AttachBone="body",bHasCollision=true)
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.DDay_Sherman_Dest'
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.shermandd_body'
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.sherman_dd'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.shermandd_body'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sherman_dd'
 }

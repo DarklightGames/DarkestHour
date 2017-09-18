@@ -1453,7 +1453,7 @@ function TossAmmo(Pawn Gunner)
         }
     }
 
-    PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
+    PlayOwnedSound(Sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
 }
 
 function TossMortarAmmo(DHPawn P)
@@ -1487,7 +1487,7 @@ function TossMortarAmmo(DHPawn P)
         G.ScoreMortarResupply(Controller, P.Controller);
     }
 
-    PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
+    PlayOwnedSound(Sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
 }
 
 function TossMortarVehicleAmmo(DHMortarVehicle V)
@@ -1536,7 +1536,7 @@ function TossMortarVehicleAmmo(DHMortarVehicle V)
         G.ScoreMortarResupply(Controller, Recipient);
     }
 
-    PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
+    PlayOwnedSound(Sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
 }
 
 function bool ResupplyMortarVehicleWeapon(DHMortarVehicle V)
@@ -1577,7 +1577,7 @@ function LoadWeapon(Pawn Gunner)
             }
         }
 
-        PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
+        PlayOwnedSound(Sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
     }
     // Notify loader of failed attempt
     else
@@ -5671,7 +5671,7 @@ simulated function FootStepping(int Side)
     {
         if ((PhysicsVolume(Touching[i]) != none && PhysicsVolume(Touching[i]).bWaterVolume) || FluidSurfaceInfo(Touching[i]) != none)
         {
-            PlaySound(sound'Inf_Player.FootStepWaterDeep', SLOT_Interact, FootstepVolume * 2.0,, FootStepSoundRadius);
+            PlaySound(Sound'Inf_Player.FootStepWaterDeep', SLOT_Interact, FootstepVolume * 2.0,, FootStepSoundRadius);
 
             // Play a water ring effect as you walk through the water
             if (Level.NetMode != NM_DedicatedServer && !Level.bDropDetail && Level.DetailMode != DM_Low

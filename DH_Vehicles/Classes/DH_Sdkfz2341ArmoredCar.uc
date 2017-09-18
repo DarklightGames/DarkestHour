@@ -22,11 +22,11 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_body_dunk'
-    Skins(1)=texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_wheels_dunk'
-    Skins(2)=texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_extras_dunk'
-    Skins(3)=texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_accessories'
-    Skins(4)=texture'DH_VehiclesGE_tex6.int_vehicles.sdkfz2341_body_int'
+    Skins(0)=Texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_body_dunk'
+    Skins(1)=Texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_wheels_dunk'
+    Skins(2)=Texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_extras_dunk'
+    Skins(3)=Texture'DH_VehiclesGE_tex6.ext_vehicles.sdkfz2341_accessories'
+    Skins(4)=Texture'DH_VehiclesGE_tex6.int_vehicles.sdkfz2341_body_int'
     FireEffectOffset=(X=25.0,Y=0.0,Z=-10.0)
 
     // Vehicle weapons & passengers
@@ -107,8 +107,8 @@ defaultproperties
 
     // Sounds
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-230.0,Y=-68.0,Z=45.0),ExhaustRotation=(Pitch=36000))
@@ -117,7 +117,7 @@ defaultproperties
     SteeringScaleFactor=2.0
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.234_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.234_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.2341_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.2341_turret_look'
     VehicleHudEngineX=0.51
@@ -133,7 +133,7 @@ defaultproperties
     VehicleHudOccupantsY(4)=0.75
     VehicleHudOccupantsX(5)=0.5
     VehicleHudOccupantsY(5)=0.8
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.sdkfz_234_1'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sdkfz_234_1'
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=RFWheel

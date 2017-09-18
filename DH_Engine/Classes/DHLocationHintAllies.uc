@@ -7,5 +7,5 @@ class DHLocationHintAllies extends DHLocationHint
 
 defaultproperties
 {
-    Texture=texture'DHEngine_Tex.Allies_LocationHint'
+    Texture=Texture'DHEngine_Tex.Allies_LocationHint'
 }

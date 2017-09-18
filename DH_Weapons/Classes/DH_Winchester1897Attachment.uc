@@ -28,15 +28,15 @@ simulated function PlayThirdPersonPumpActionSound()
 {
     if (Instigator != none && !Instigator.IsFirstPerson())
     {
-        PlaySound(sound'DH_WeaponSounds.Winchester1897.Shotgun_PumpAction');
+        PlaySound(Sound'DH_WeaponSounds.Winchester1897.Shotgun_PumpAction');
     }
 }
 
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Winchester1897_3rd'
-    Skins(0)=texture'DH_Weapon_tex.AlliedSmallArms_3rdP.Winchester1897_3rdP'
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Winchester1897_icon'
+    Skins(0)=Texture'DH_Weapon_tex.AlliedSmallArms_3rdP.Winchester1897_3rdP'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Winchester1897_icon'
 
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
     MuzzleBoneName="Muzzle"

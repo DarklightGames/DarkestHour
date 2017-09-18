@@ -39,7 +39,7 @@ static simulated function ClientReceive(PlayerController P, optional int Switch,
 
 defaultproperties
 {
-    Sound=sound'Miscsounds.Music.notify_drum'
+    Sound=Sound'Miscsounds.Music.notify_drum'
     IncreasedText="increased"
     DecreasedText="decreased"
     ChangedText="changed"

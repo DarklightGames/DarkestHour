@@ -21,5 +21,5 @@ event Trigger(Actor Other, Pawn EventInstigator)
 defaultproperties
 {
     Seconds=60
-    Texture=texture'Engine.S_Trigger'
+    Texture=Texture'Engine.S_Trigger'
 }

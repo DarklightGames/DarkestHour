@@ -18,9 +18,9 @@ defaultproperties
     BinocPositionIndex=3
     DrivePos=(X=0,Y=0.0,Z=60.0)
     DriveAnim="crouch_idle_binoc"
-    GunsightOverlay=texture'DH_Artillery_Tex.ATGun_Hud.57mmGun_sight_background'    // TODO: REPLACE
+    GunsightOverlay=Texture'DH_Artillery_Tex.ATGun_Hud.57mmGun_sight_background'    // TODO: REPLACE
     GunsightSize=0.542    // TODO: REPLACE
-    BinocsOverlay=texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
-    AmmoShellTexture=texture'DH_LeIG18_tex.HUD.leig18_he'
-    AmmoShellReloadTexture=texture'DH_LeIG18_tex.HUD.leig18_he_reload'
+    BinocsOverlay=Texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
+    AmmoShellTexture=Texture'DH_LeIG18_tex.HUD.leig18_he'
+    AmmoShellReloadTexture=Texture'DH_LeIG18_tex.HUD.leig18_he_reload'
 }

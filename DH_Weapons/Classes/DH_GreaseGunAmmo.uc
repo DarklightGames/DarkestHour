@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=31
     InitialAmount=30
-    IconMaterial=texture'DH_InterfaceArt_tex.weapon_icons.GreaseGun_ammo'
+    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.GreaseGun_ammo'
 }

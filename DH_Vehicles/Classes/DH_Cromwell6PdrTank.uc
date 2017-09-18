@@ -16,5 +16,5 @@ defaultproperties
     ExhaustPipes(1)=(ExhaustPosition=(X=-185.0,Y=-30.0,Z=95.0),ExhaustRotation=(Pitch=20000))
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Cromwell_Turret_6pdr_Rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Cromwell_Turret_6pdr_Look'
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.cromwell_6pdr'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.cromwell_6pdr'
 }

@@ -252,12 +252,12 @@ defaultproperties
 {
     PhaseBoundaryTag='SetupBoundaries'
     PhaseEndReinforcements=(AxisReinforcements=-1,AlliesReinforcements=-1)
-    PhaseEndSounds(0)=sound'DH_SundrySounds.RoundBeginSounds.Axis_Start'
-    PhaseEndSounds(1)=sound'DH_SundrySounds.RoundBeginSounds.US_Start'
+    PhaseEndSounds(0)=Sound'DH_SundrySounds.RoundBeginSounds.Axis_Start'
+    PhaseEndSounds(1)=Sound'DH_SundrySounds.RoundBeginSounds.US_Start'
     bSkipPreStart=true
     SetupPhaseDuration=60
     SpawningEnabledTime=30
-    Texture=texture'DHEngine_Tex.LevelActor'
+    Texture=Texture'DHEngine_Tex.LevelActor'
     bHidden=true
     RemoteRole=ROLE_None
 }

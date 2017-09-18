@@ -11,7 +11,7 @@ defaultproperties
     AltName="SS Sturmpioniere"
     Article="a "
     PluralName="SS Combat Engineers"
-    SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
+    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
     GivenItems(0)="DH_Weapons.DH_SatchelCharge10lb10sWeapon"
     GivenItems(1)="DH_Equipment.DHWireCuttersItem"

@@ -565,10 +565,10 @@ defaultproperties
     WhizSoundEffect=class'DH_Effects.DHBulletWhiz'
     ImpactEffect=class'DH_Effects.DHBulletHitEffect'
     ShellHitVehicleEffectClass=class'DH_Effects.DHBulletPenetrateArmorEffect' // custom class with much smaller penetration effects than shell (PTRD uses 'TankAPHitPenetrateSmall')
-    VehicleHitSound=sound'ProjectileSounds.PTRD_penetrate'
+    VehicleHitSound=Sound'ProjectileSounds.PTRD_penetrate'
     VehiclePenetrateSoundVolume=5.5
     ShellDeflectEffectClass=class'ROEffects.ROBulletHitMetalArmorEffect'
-    VehicleDeflectSound=sound'PTRD_deflect'
+    VehicleDeflectSound=Sound'PTRD_deflect'
     VehicleDeflectSoundVolume=5.5
     ShellHitWaterEffectClass=class'ROEffects.ROBulletHitWaterEffect'
 

@@ -13,16 +13,16 @@ defaultproperties
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Tiger_anm.Tiger_turret_int',TransitionDownAnim="com_close",DriverTransitionAnim="VTiger_com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bExposed=true)
     DriverPositions(3)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Tiger_anm.Tiger_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
     DriveAnim="VTiger_com_idle_close"
-    CannonScopeCenter=texture'DH_VehicleOptics_tex.German.tiger_sight_graticule'
+    CannonScopeCenter=Texture'DH_VehicleOptics_tex.German.tiger_sight_graticule'
     GunsightSize=0.87
     RangeRingScale=0.534
     RangeRingRotator=TexRotator'DH_VehicleOptics_tex.German.tiger_sight_center'
     RangeRingRotationFactor=820
-    DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.German.tiger_sight_destroyed'
-    AmmoShellTexture=texture'InterfaceArt_tex.Tank_Hud.Tigershell'
-    AmmoShellReloadTexture=texture'InterfaceArt_tex.Tank_Hud.Tigershell_reload'
-    PoweredRotateSound=sound'DH_GerVehicleSounds2.Tiger2B.tiger2B_turret_traverse_loop'
-    PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_travelevate'
-    PoweredRotateAndPitchSound=sound'DH_GerVehicleSounds2.Tiger2B.tiger2B_turret_traverse_loop'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.tiger_sight_destroyed'
+    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.Tigershell'
+    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.Tigershell_reload'
+    PoweredRotateSound=Sound'DH_GerVehicleSounds2.Tiger2B.tiger2B_turret_traverse_loop'
+    PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_travelevate'
+    PoweredRotateAndPitchSound=Sound'DH_GerVehicleSounds2.Tiger2B.tiger2B_turret_traverse_loop'
     FireImpulse=(X=-110000.0)
 }

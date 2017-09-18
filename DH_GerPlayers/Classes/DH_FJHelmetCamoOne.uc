@@ -7,11 +7,11 @@ class DH_FJHelmetCamoOne extends DHHeadgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-//  L.AddPrecacheMaterial(material'DHGermanCharactersTex.GerHeadGear.FJ_HelmetCamo1');
+//  L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.FJ_HelmetCamo1');
 }
 
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.Ger_Fallsch_Helmet'
-    Skins(0)=texture'DHGermanCharactersTex.GerHeadgear.FJ_HelmetCamo1'
+    Skins(0)=Texture'DHGermanCharactersTex.GerHeadgear.FJ_HelmetCamo1'
 }

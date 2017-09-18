@@ -9,8 +9,8 @@ defaultproperties
 {
     // MG mesh
     Mesh=SkeletalMesh'DH_Stug3G_anm.StuH_mg_remote'
-    Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'
-    Skins(2)=texture'Weapons3rd_tex.German.mg34_world'
+    Skins(1)=Texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'
+    Skins(2)=Texture'Weapons3rd_tex.German.mg34_world'
     bMatchSkinToVehicle=true
     CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc2.StuH.StuH_remoteMG_coll'
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
@@ -55,8 +55,8 @@ defaultproperties
     ShakeOffsetTime=2.0
 
     // Reload
-    ReloadStages(0)=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload01_000',Duration=1.24) // differs from defaults because uses ammo drums & not belts
-    ReloadStages(1)=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload02_039',Duration=2.03)
-    ReloadStages(2)=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload03_104',Duration=2.07)
-    ReloadStages(3)=(Sound=sound'Inf_Weapons_Foley.mg34.mg34_reload04_170',Duration=1.34)
+    ReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.mg34.mg34_reload01_000',Duration=1.24) // differs from defaults because uses ammo drums & not belts
+    ReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.mg34.mg34_reload02_039',Duration=2.03)
+    ReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.mg34.mg34_reload03_104',Duration=2.07)
+    ReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.mg34.mg34_reload04_170',Duration=1.34)
 }

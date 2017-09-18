@@ -29,9 +29,9 @@ defaultproperties
     DriveAnim="VIS2_driver_idle_close"
     DrivePos=(X=-35.0,Y=26.0,Z=13.0)
     CameraBone="Camera_com"
-    GunsightOverlay=texture'DH_Artillery_tex.ATGun_Hud.Flakvierling38_sight'
+    GunsightOverlay=Texture'DH_Artillery_tex.ATGun_Hud.Flakvierling38_sight'
     GunsightSize=1.0
-    AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag'
-    AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag_reload'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag_reload'
     bHasFireImpulse=false
 }

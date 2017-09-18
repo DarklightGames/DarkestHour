@@ -8,7 +8,7 @@ class DH_G43ScopedAttachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.g43scope'
-    MenuImage=texture'InterfaceArt_tex.Menu_weapons.g43scope'
+    MenuImage=Texture'InterfaceArt_tex.Menu_weapons.g43scope'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bRapidFire=false

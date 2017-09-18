@@ -36,10 +36,10 @@ defaultproperties
     RaisedPositionIndex=1
     BinocPositionIndex=2
     bHasAltFire=false
-    RotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    PitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    RotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    BinocsOverlay=texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
+    RotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    PitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    RotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    BinocsOverlay=Texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
     HudName="Gunner"
     FireImpulse=(X=-1000.0)
 }

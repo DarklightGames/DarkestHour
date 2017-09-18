@@ -14,10 +14,10 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_PanzerIVHCannonPawn')
 
     Mesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4H_body_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_body_camo1'
-    Skins(3)=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha' // hides hull side skirts
-    Skins(4)=texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
-    Skins(5)=texture'DH_VehiclesGE_tex2.ext_vehicles.gear_Stug'
+    Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_body_camo1'
+    Skins(3)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha' // hides hull side skirts
+    Skins(4)=Texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
+    Skins(5)=Texture'DH_VehiclesGE_tex2.ext_vehicles.gear_Stug'
     HighDetailOverlayIndex=4
     DestroyedMeshSkins(0)=none // remove skins inherited from ausf G, as the inherited DestroyedVehicleMesh is correct for this vehicle & we don't want it changed
     DestroyedMeshSkins(2)=none
@@ -33,6 +33,6 @@ defaultproperties
 
     MaxCriticalSpeed=693.0 // 43 kph
     ExhaustPipes(0)=(ExhaustPosition=(X=-170.0,Y=13.0,Z=35.0))
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.panzer4h_body'
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.panzer4_h'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.panzer4h_body'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panzer4_h'
 }

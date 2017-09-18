@@ -8,8 +8,8 @@ class DH_SatchelCharge10lb10sAttachment extends DHThrowableExplosiveAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.satchel'
-    Skins(0)=texture'Weapons3rd_tex.German.satchel_world'
-    MenuImage=texture'InterfaceArt_tex.Menu_weapons.satchel'
+    Skins(0)=Texture'Weapons3rd_tex.German.satchel_world'
+    MenuImage=Texture'InterfaceArt_tex.Menu_weapons.satchel'
 
     WA_Idle="idle_satchel"
     WA_Fire="idle_satchel"

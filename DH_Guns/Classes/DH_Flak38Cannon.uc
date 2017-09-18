@@ -89,7 +89,7 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Flak38_anm.Flak38_turret'
-    Skins(0)=texture'DH_Artillery_tex.Flak38.Flak38_gun'
+    Skins(0)=Texture'DH_Artillery_tex.Flak38.Flak38_gun'
     Skins(1)=none
     Skins(2)=none
     Skins(3)=none

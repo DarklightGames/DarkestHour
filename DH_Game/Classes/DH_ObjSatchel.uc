@@ -121,5 +121,5 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
 
 defaultproperties
 {
-    Texture=texture'InterfaceArt_tex.OverheadMap.ROObjectiveSatchel'
+    Texture=Texture'InterfaceArt_tex.OverheadMap.ROObjectiveSatchel'
 }

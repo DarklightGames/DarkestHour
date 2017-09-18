@@ -14,9 +14,9 @@ defaultproperties
     VehicleNameString="2cm FlaK 38 gun"
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Flak38CannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_Flak38_anm.Flak38_base_static'
-    Skins(0)=texture'DH_Artillery_tex.Flak38.Flak38_gun'
+    Skins(0)=Texture'DH_Artillery_tex.Flak38.Flak38_gun'
     DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Flak38.Flak38_static_dest'
-    VehicleHudImage=texture'DH_Artillery_tex.ATGun_Hud.flak38_body_static'
+    VehicleHudImage=Texture'DH_Artillery_tex.ATGun_Hud.flak38_body_static'
     VehicleHudTurret=TexRotator'DH_Artillery_tex.ATGun_Hud.flak38_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Artillery_tex.ATGun_Hud.flak38_turret_look'
     VehicleHudOccupantsX(0)=0.5 // should be slightly to the right, but the red dot doesn't rotate with the cannon, so when traversed it would go wrong

@@ -347,5 +347,5 @@ defaultproperties
     LoopFireAnimRate=1.0
     IronLoopFireAnimRate=1.0
     PackingThresholdTime=0.1
-    NoAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_smg'
+    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_smg'
 }

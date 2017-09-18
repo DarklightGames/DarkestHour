@@ -29,7 +29,7 @@ defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.Binocs_ger'
     CullDistance=4096.0 // 68m - undo the increase added in DHWeaponAttachment, as binoculars don't have a muzzle flash & are also small
-    MenuImage=texture'InterfaceArt_tex.Menu_weapons.Binocs'
+    MenuImage=Texture'InterfaceArt_tex.Menu_weapons.Binocs'
     bRapidFire=false
     LightType=LT_None
     LightEffect=LE_None

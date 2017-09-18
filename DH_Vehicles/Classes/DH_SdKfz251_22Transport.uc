@@ -25,7 +25,7 @@ defaultproperties
     VehicleNameString="Sd.Kfz.251/22 'pakwagen'"
     PassengerWeapons(0)=(WeaponBone="body") // cannon pawn class has to be set in PostBeginPlay() due to build order
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.Sdkfz251_22_body_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex.ext_vehicles.Halftrack_body_camo2'
+    Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.Halftrack_body_camo2'
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Halftrack.SdKfz251_22_Destroyed'
     DriverPositions(1)=(ViewPitchUpLimit=5000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=11700,ViewNegativeYawLimit=-15000) // reduced limits so driver can't look behind & see wrong interior without Pak40
     DriverPositions(2)=(ViewPitchUpLimit=5000,ViewPitchDownLimit=55500,ViewPositiveYawLimit=12800,ViewNegativeYawLimit=-16000)
@@ -34,5 +34,5 @@ defaultproperties
     VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_look'
     VehicleHudOccupantsX(1)=0.45
     VehicleHudOccupantsY(1)=0.65
-//  SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.hanomag' // TODO - make overlay for this variant
+//  SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.hanomag' // TODO - make overlay for this variant
 }

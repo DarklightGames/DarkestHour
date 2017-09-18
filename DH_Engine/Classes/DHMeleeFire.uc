@@ -443,10 +443,10 @@ defaultproperties
     MaxHoldtime=0.0
     AmmoPerFire=0
     SpreadStyle=SS_Random
-    GroundStabSound=sound'Inf_Weapons_Foley.melee.bayo_hit_ground'
-    GroundBashSound=sound'Inf_Weapons_Foley.melee.butt_hit_ground'
-    PlayerStabSound=sound'Inf_Weapons_Foley.melee.bayo_hit'
-    PlayerBashSound=sound'Inf_Weapons_Foley.melee.butt_hit'
+    GroundStabSound=Sound'Inf_Weapons_Foley.melee.bayo_hit_ground'
+    GroundBashSound=Sound'Inf_Weapons_Foley.melee.butt_hit_ground'
+    PlayerStabSound=Sound'Inf_Weapons_Foley.melee.bayo_hit'
+    PlayerBashSound=Sound'Inf_Weapons_Foley.melee.butt_hit'
     FireEndAnim=none
     FireLoopAnim=none
 }

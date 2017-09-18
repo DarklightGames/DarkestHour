@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=1
     InitialAmount=1
-    IconMaterial=texture'InterfaceArt_tex.HUD.RDG1_ammo'
+    IconMaterial=Texture'InterfaceArt_tex.HUD.RDG1_ammo'
 }

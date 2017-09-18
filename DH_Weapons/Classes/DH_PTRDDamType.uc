@@ -9,7 +9,7 @@ class DH_PTRDDamType extends DHWeaponProjectileDamageType
 defaultproperties
 {
     WeaponClass=class'DH_Weapons.DH_PTRDWeapon'
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b762mm'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
 
     VehicleDamageModifier=0.75
     TankDamageModifier=0.75

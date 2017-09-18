@@ -8,9 +8,9 @@ class DH_PanzerFaustAttachment extends DHRocketWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.Panzerfaust'
-    Skins(0)=texture'Weapons3rd_tex.German.Panzerfaust_world'
+    Skins(0)=Texture'Weapons3rd_tex.German.Panzerfaust_world'
     EmptyMesh=SkeletalMesh'Weapons3rd_anm.Panzerfaust_empty'
-    MenuImage=texture'InterfaceArt_tex.Menu_weapons.PanzerFaust'
+    MenuImage=Texture'InterfaceArt_tex.Menu_weapons.PanzerFaust'
     mMuzFlashClass=class'ROEffects.RO3rdPersonPanzerfaustFX'
     MuzzleBoneName="tip"
 

@@ -41,7 +41,7 @@ defaultproperties
         ParticlesPerSecond=2.0
         InitialParticlesPerSecond=2.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=texture'Effects_Tex.explosions.DSmoke_1'
+        Texture=Texture'Effects_Tex.explosions.DSmoke_1'
         LifetimeRange=(Min=6.0,Max=8.0)
         StartVelocityRange=(X=(Min=-100.0,Max=100.0),Y=(Min=-100.0,Max=100.0),Z=(Min=25.0,Max=150.0))
         VelocityLossRange=(X=(Min=0.25,Max=1.0),Y=(Min=0.25,Max=1.0),Z=(Min=0.25,Max=1.0))
@@ -73,7 +73,7 @@ defaultproperties
         ParticlesPerSecond=5.0
         InitialParticlesPerSecond=5.0
         DrawStyle=PTDS_Brighten
-        Texture=texture'Effects_Tex.explosions.fire_16frame'
+        Texture=Texture'Effects_Tex.explosions.fire_16frame'
         TextureUSubdivisions=4
         TextureVSubdivisions=4
         LifetimeRange=(Min=1.0,Max=1.0)
@@ -112,7 +112,7 @@ defaultproperties
         StartSizeRange=(X=(Min=30.0,Max=60.0),Y=(Min=30.0,Max=60.0),Z=(Min=45.0,Max=50.0))
         InitialParticlesPerSecond=500.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=texture'Effects_Tex.explosions.LSmoke3'
+        Texture=Texture'Effects_Tex.explosions.LSmoke3'
         SecondsBeforeInactive=0.0
         LifetimeRange=(Min=2.0)
         StartVelocityRange=(X=(Min=-100.0,Max=100.0),Y=(Min=-100.0,Max=100.0),Z=(Min=50.0,Max=50.0))
@@ -147,7 +147,7 @@ defaultproperties
         StartSizeRange=(X=(Max=120.0),Y=(Max=120.0),Z=(Min=45.0,Max=50.0))
         InitialParticlesPerSecond=500.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=texture'Effects_Tex.explosions.DSmoke_2'
+        Texture=Texture'Effects_Tex.explosions.DSmoke_2'
         SecondsBeforeInactive=0.0
         LifetimeRange=(Min=2.0,Max=3.0)
         StartVelocityRange=(X=(Min=-300.0,Max=300.0),Y=(Min=-300.0,Max=300.0),Z=(Min=1000.0,Max=1500.0))
@@ -179,7 +179,7 @@ defaultproperties
         StartSizeRange=(X=(Min=200.0,Max=200.0),Y=(Min=200.0,Max=200.0),Z=(Min=200.0,Max=200.0))
         InitialParticlesPerSecond=30.0
         DrawStyle=PTDS_Brighten
-        Texture=texture'Effects_Tex.explosions.impact_2frame'
+        Texture=Texture'Effects_Tex.explosions.impact_2frame'
         TextureUSubdivisions=2
         TextureVSubdivisions=1
         LifetimeRange=(Min=0.5,Max=0.5)
@@ -207,7 +207,7 @@ defaultproperties
         StartSizeRange=(X=(Min=125.0,Max=125.0),Y=(Min=125.0,Max=125.0),Z=(Min=125.0,Max=125.0))
         InitialParticlesPerSecond=18.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=texture'Effects_Tex.explosions.explosion_1frame'
+        Texture=Texture'Effects_Tex.explosions.explosion_1frame'
         LifetimeRange=(Min=0.9,Max=1.15)
         StartVelocityRange=(Z=(Min=400.0,Max=500.0))
     End Object
@@ -234,7 +234,7 @@ defaultproperties
         StartSizeRange=(X=(Min=250.0,Max=250.0),Y=(Min=250.0,Max=250.0),Z=(Min=250.0,Max=250.0))
         InitialParticlesPerSecond=30.0
         DrawStyle=PTDS_Brighten
-        Texture=texture'Effects_Tex.explosions.impact_2frame'
+        Texture=Texture'Effects_Tex.explosions.impact_2frame'
         TextureUSubdivisions=2
         TextureVSubdivisions=1
         LifetimeRange=(Min=0.75,Max=0.75)
@@ -267,7 +267,7 @@ defaultproperties
         StartSizeRange=(X=(Min=10.0,Max=20.0),Y=(Min=10.0,Max=20.0),Z=(Min=10.0,Max=20.0))
         InitialParticlesPerSecond=1000.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=texture'Effects_Tex.explosions.DSmoke_2'
+        Texture=Texture'Effects_Tex.explosions.DSmoke_2'
         LifetimeRange=(Max=6.0)
         StartVelocityRange=(X=(Min=-1000.0,Max=1000.0),Y=(Min=-1000.0,Max=1000.0))
         VelocityLossRange=(X=(Min=1.0,Max=1.0),Y=(Min=1.0,Max=1.0),Z=(Min=1.0,Max=1.0))
@@ -297,7 +297,7 @@ defaultproperties
         StartSizeRange=(X=(Min=2.0,Max=6.0),Y=(Min=2.0,Max=6.0),Z=(Min=3.0,Max=5.0))
         InitialParticlesPerSecond=50.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=texture'Effects_Tex.explosions.shrapnel3'
+        Texture=Texture'Effects_Tex.explosions.shrapnel3'
         StartVelocityRange=(X=(Min=-500.0,Max=500.0),Y=(Min=-500.0,Max=500.0),Z=(Min=500.0,Max=1000.0))
     End Object
     Emitters(8)=SpriteEmitter'SpriteEmitter8'

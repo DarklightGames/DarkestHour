@@ -16,7 +16,7 @@ static function OnMapMarkerPlaced(DHPlayer PC)
 
 defaultproperties
 {
-    IconMaterial=texture'DH_InterfaceArt2_tex.Icons.attack'
+    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.attack'
     IconColor=(R=255,G=211,B=0,A=255)
     MarkerName="Attack"
     bIsUnique=true

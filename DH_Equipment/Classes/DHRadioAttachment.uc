@@ -7,5 +7,5 @@ class DHRadioAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.AlliedRadio'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.AlliedRadio'
 }

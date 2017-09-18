@@ -39,13 +39,13 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_SdKfz10_5_anm.SdKfz10_5_body_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex7.ext_vehicles.sdkfz10_5_body_ext'
-    Skins(1)=texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_cabin'
-    Skins(2)=texture'DH_Artillery_tex.Flak38.Flak38_gun'
-    Skins(3)=texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_meshpanels'
-    Skins(4)=texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_wheels'
-    Skins(5)=texture'DH_VehiclesGE_tex7.Treads.SdKfz10_5_treads'
-    Skins(6)=texture'DH_VehiclesGE_tex7.Treads.SdKfz10_5_treads'
+    Skins(0)=Texture'DH_VehiclesGE_tex7.ext_vehicles.sdkfz10_5_body_ext'
+    Skins(1)=Texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_cabin'
+    Skins(2)=Texture'DH_Artillery_tex.Flak38.Flak38_gun'
+    Skins(3)=Texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_meshpanels'
+    Skins(4)=Texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_wheels'
+    Skins(5)=Texture'DH_VehiclesGE_tex7.Treads.SdKfz10_5_treads'
+    Skins(6)=Texture'DH_VehiclesGE_tex7.Treads.SdKfz10_5_treads'
     VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc4.Sdkfz10_5.SdKfz10_5_windscreen',AttachBone="Body") // windscreen on non-armoured version
     BeginningIdleAnim="Driver_idle_out"
 
@@ -99,13 +99,13 @@ defaultproperties
     // Sounds
     MaxPitchSpeed=350.0
     IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
+    StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
     LeftTrackSoundBone="Tread_drive_wheel_F_L"
-    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L02'
+    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L02'
     RightTrackSoundBone="Tread_drive_wheel_F_R"
-    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R02'
-    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble03'
+    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R02'
+    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble03'
 
     // Visual effects
     LeftTreadIndex=5
@@ -118,7 +118,7 @@ defaultproperties
     SteerBoneName="Steering_wheel"
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.sdkfz105_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.sdkfz105_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.sdkfz105_turet_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.sdkfz105_turet_look'
     VehicleHudEngineY=0.2
@@ -132,7 +132,7 @@ defaultproperties
     VehicleHudOccupantsY(1)=0.42
     VehicleHudOccupantsX(2)=0.5
     VehicleHudOccupantsY(2)=0.6
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.sdkfz_105'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sdkfz_105'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_T_L_1"

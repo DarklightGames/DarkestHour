@@ -7,7 +7,7 @@ class DH_6PounderGunCannon extends DH_AT57Cannon;
 
 defaultproperties
 {
-    Skins(1)=texture'DH_Artillery_Tex.6pounder.6pounder' // show 6 pdr's muzzle brake
+    Skins(1)=Texture'DH_Artillery_Tex.6pounder.6pounder' // show 6 pdr's muzzle brake
     ProjectileClass=class'DH_Guns.DH_6PounderCannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_6PounderCannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_6PounderCannonShellAPDS'

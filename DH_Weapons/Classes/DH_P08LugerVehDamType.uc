@@ -9,5 +9,5 @@ class DH_P08LugerVehDamType extends DHVehicleDamageType
 defaultproperties
 {
     WeaponClass=class'DH_Weapons.DH_P08LugerWeapon'
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b9mm'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.b9mm'
 }

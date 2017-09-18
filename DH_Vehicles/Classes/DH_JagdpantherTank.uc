@@ -30,11 +30,11 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_body_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.Jagdpanther_body_goodwood'
-    Skins(1)=texture'DH_VehiclesGE_tex2.Treads.Jagdpanther_treads'
-    Skins(2)=texture'DH_VehiclesGE_tex2.Treads.Jagdpanther_treads'
-    Skins(3)=texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_walls_int'
-    Skins(4)=texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_body_int'
+    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Jagdpanther_body_goodwood'
+    Skins(1)=Texture'DH_VehiclesGE_tex2.Treads.Jagdpanther_treads'
+    Skins(2)=Texture'DH_VehiclesGE_tex2.Treads.Jagdpanther_treads'
+    Skins(3)=Texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_walls_int'
+    Skins(4)=Texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_body_int'
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_JagdpantherCannonPawn',WeaponBone="Turret_placement")
@@ -48,7 +48,7 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=5000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_body_int',TransitionDownAnim="Overlay_In",ViewPitchUpLimit=2300,ViewPitchDownLimit=64000,ViewPositiveYawLimit=7000,ViewNegativeYawLimit=-7000)
     bDrawDriverInTP=false
-    PeriscopeOverlay=texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
 
     // Hull armor
     FrontArmor(0)=(Thickness=6.5,Slope=-55.0,MaxRelativeHeight=56.8,LocationName="lower")
@@ -103,11 +103,11 @@ defaultproperties
     SoundPitch=32
     MaxPitchSpeed=80.0
     IdleSound=SoundGroup'Vehicle_Engines.Tiger.Tiger_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.Tiger.tiger_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.Tiger.tiger_engine_stop'
-    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L04'
-    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R04'
-    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
+    StartUpSound=Sound'Vehicle_Engines.Tiger.tiger_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.Tiger.tiger_engine_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L04'
+    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R04'
+    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02'
     LeftTrackSoundBone="Wheel_L_1"
     RightTrackSoundBone="Wheel_R_1"
 
@@ -119,14 +119,14 @@ defaultproperties
     ExhaustPipes(0)=(ExhaustPosition=(X=-230.0,Y=20.0,Z=109.592003),ExhaustRotation=(Pitch=22000))
     ExhaustPipes(1)=(ExhaustPosition=(X=-230.0,Y=-20.0,Z=109.592003),ExhaustRotation=(Pitch=22000))
     // TODO: ideally get better matching schurzen texture made for this camo variant, but for now this is passable match:
-    RandomAttachment=(AttachBone="body",Offset=(X=-18.0,Y=-1.65,Z=-14.0),Skin=texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_armor_camo2')
+    RandomAttachment=(AttachBone="body",Offset=(X=-18.0,Y=-1.65,Z=-14.0),Skin=Texture'DH_VehiclesGE_tex.ext_vehicles.PantherG_armor_camo2')
     RandomAttachOptions(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen1',PercentChance=30) // undamaged schurzen
     RandomAttachOptions(1)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen2',PercentChance=15) // missing front panel on right & middle panel on left
     RandomAttachOptions(2)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen3',PercentChance=10) // with front panels missing on both sides
     RandomAttachOptions(3)=(StaticMesh=StaticMesh'DH_German_vehicles_stc.PantherG.PantherSchurzen4',PercentChance=15) // most badly damaged, with 3 panels missing
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.jagdpanther_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.jagdpanther_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.jagdpanther_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.jagdpanther_turret_look'
     VehicleHudEngineX=0.51
@@ -148,7 +148,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.79
     VehicleHudOccupantsX(6)=0.605
     VehicleHudOccupantsY(6)=0.69
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.jagdpanther'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.jagdpanther'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

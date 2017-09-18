@@ -23,11 +23,11 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_M7Priest_anm.priest_body'
-    Skins(0)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest'
-    Skins(1)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest2'
-    Skins(2)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
-    Skins(3)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
-    Skins(4)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
+    Skins(0)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest'
+    Skins(1)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest2'
+    Skins(2)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
+    Skins(3)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
+    Skins(4)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest_tracks'
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc2.priest.priest_visor_coll',AttachBone="driver_hatch") // collision attachment for driver's armoured visor
 
     // Vehicle weapons & passengers
@@ -95,12 +95,12 @@ defaultproperties
 
     // Sounds
     IdleSound=SoundGroup'DH_AlliedVehicleSounds.Sherman.ShermanEngineLoop'
-    StartUpSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanStart'
-    ShutDownSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
-    LeftTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_L'
-    RightTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_R'
+    StartUpSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStart'
+    ShutDownSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
+    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
+    RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
     RumbleSoundBone="Camera_driver"
-    RumbleSound=sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
+    RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
 
     // Visual effects
     LeftTreadIndex=3
@@ -117,7 +117,7 @@ defaultproperties
     RightLeverAxis=AXIS_X
 
     // HUD
-    VehicleHudImage=texture'DH_M7Priest_tex.interface.priest_body'
+    VehicleHudImage=Texture'DH_M7Priest_tex.interface.priest_body'
     VehicleHudTurret=TexRotator'DH_M7Priest_tex.interface.priest_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_M7Priest_tex.interface.priest_turret_look'
     VehicleHudTreadsPosY=0.51
@@ -138,7 +138,7 @@ defaultproperties
     VehicleHudOccupantsY(6)=0.8
     VehicleHudOccupantsX(7)=0.63
     VehicleHudOccupantsY(7)=0.74
-    SpawnOverlay(0)=material'DH_M7Priest_tex.interface.priest'
+    SpawnOverlay(0)=Material'DH_M7Priest_tex.interface.priest'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

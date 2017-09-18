@@ -10,5 +10,5 @@ defaultproperties
 {
     VoiceType="DH_BritishPlayers.DHCanadianVoice"
     AltVoiceType="DH_BritishPlayers.DHCanadianVoice"
-    SleeveTexture=texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
+    SleeveTexture=Texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
 }

@@ -21,9 +21,9 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_ShermanM4A1_anm.Sherman76mm_turret_ext'
-    Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman76w_turret_ext'
-    Skins(1)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_body_ext' // TODO: merge this material slot for the pistol port into main turret material & re-map to 76mm turret texture
-    Skins(2)=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha' // hides the muzzle brake
+    Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.Sherman76w_turret_ext'
+    Skins(1)=Texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_body_ext' // TODO: merge this material slot for the pistol port into main turret material & re-map to 76mm turret texture
+    Skins(2)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha' // hides the muzzle brake
     WeaponAttachOffset=(X=-1.0,Y=-1.0,Z=0.0) // this is for M4A1; X=1 works better on M4A3 hull
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Sherman_turret_76mm_Coll'
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
@@ -86,8 +86,8 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire03'
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
-    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
-    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
 }

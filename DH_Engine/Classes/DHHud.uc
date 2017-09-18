@@ -204,9 +204,9 @@ simulated function UpdatePrecacheMaterials()
 
     // Overhead map
     Level.AddPrecacheMaterial(MapBackground.WidgetTexture);
-    Level.AddPrecacheMaterial(texture'DH_GUI_Tex.GUI.overheadmap_Icons');
-    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons');
-    Level.AddPrecacheMaterial(texture'DH_GUI_Tex.overheadmap_flags');
+    Level.AddPrecacheMaterial(Texture'DH_GUI_Tex.GUI.overheadmap_Icons');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons');
+    Level.AddPrecacheMaterial(Texture'DH_GUI_Tex.overheadmap_flags');
     Level.AddPrecacheMaterial(MapPlayerIcon.WidgetTexture);
     Level.AddPrecacheMaterial(MapIconsFlash);
     Level.AddPrecacheMaterial(MapIconsFastFlash);
@@ -215,8 +215,8 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(MapIconMortarArrow.WidgetTexture);
 
     // TODO: Remove this as it's not necessary
-    Level.AddPrecacheMaterial(material'DH_InterfaceArt2_tex.Icons.fire_pulse');
-    Level.AddPrecacheMaterial(material'DH_InterfaceArt2_tex.Icons.move_pulse');
+    Level.AddPrecacheMaterial(Material'DH_InterfaceArt2_tex.Icons.fire_pulse');
+    Level.AddPrecacheMaterial(Material'DH_InterfaceArt2_tex.Icons.move_pulse');
 
     for (i = 0; i < PlayerNumberIconTextures.Length; ++i)
     {
@@ -224,7 +224,7 @@ simulated function UpdatePrecacheMaterials()
     }
 
     // On screen indicator icons
-    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.HUD.DeployIcon');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.HUD.DeployIcon');
     Level.AddPrecacheMaterial(CanMantleIcon.WidgetTexture);
     Level.AddPrecacheMaterial(CanDigIcon.WidgetTexture);
     Level.AddPrecacheMaterial(CanCutWireIcon.WidgetTexture);
@@ -257,7 +257,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(StanceStanding);
     Level.AddPrecacheMaterial(StanceCrouch);
     Level.AddPrecacheMaterial(StanceProne);
-    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.HUD.DHCompassBackground');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.HUD.DHCompassBackground');
     Level.AddPrecacheMaterial(CompassBase.WidgetTexture);
     Level.AddPrecacheMaterial(CompassNeedle.WidgetTexture);
 
@@ -283,8 +283,8 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(VehicleRPMNeedlesTextures[1]);
 
     // Other vehicle HUD icons
-    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.Tank_Hud.clock_face');
-    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.Tank_Hud.clock_numbers');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.Tank_Hud.clock_face');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.Tank_Hud.clock_numbers');
     Level.AddPrecacheMaterial(VehicleLockedIcon.WidgetTexture);
     Level.AddPrecacheMaterial(VehicleOccupants.WidgetTexture);
     Level.AddPrecacheMaterial(VehicleEngineDamagedTexture);
@@ -300,32 +300,32 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(VehicleSmokeLauncherAimIcon.WidgetTexture);
 
     // Death message icons
-    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.Generic');
-    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.buttsmack');
-    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.knife');
-    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.Strike');
-    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.b9mm');
-    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.b762mm');
-    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.b792mm');
-    Level.AddPrecacheMaterial(texture'InterfaceArt2_tex.deathicons.sniperkill');
-    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.artkill');
-    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.mine');
-    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.satchel');
-    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.germgrenade');
-    Level.AddPrecacheMaterial(texture'InterfaceArt_tex.deathicons.rusgrenade');
-    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.weapon_icons.usgrenade');
-    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.deathicons.rpg43kill');
-    Level.AddPrecacheMaterial(texture'InterfaceArt2_tex.deathicons.faustkill');
-    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.deathicons.schreckkill');
-    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.deathicons.zookakill');
-    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.deathicons.piatkill');
-    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.deathicons.backblastkill');
-    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.deathicons.ATGunKill');
-    Level.AddPrecacheMaterial(texture'DH_Artillery_tex.ATGun_Hud.flakv38_deathicon');
-    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.deathicons.canisterkill');
-    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.deathicons.VehicleFireKill');
-    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.deathicons.PlayerFireKill');
-    Level.AddPrecacheMaterial(texture'DH_InterfaceArt_tex.deathicons.spawnkill');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.Generic');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.buttsmack');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.knife');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.Strike');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.b9mm');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.b762mm');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.b792mm');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt2_tex.deathicons.sniperkill');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.artkill');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.mine');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.satchel');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.germgrenade');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.deathicons.rusgrenade');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.weapon_icons.usgrenade');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.rpg43kill');
+    Level.AddPrecacheMaterial(Texture'InterfaceArt2_tex.deathicons.faustkill');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.schreckkill');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.zookakill');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.piatkill');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.backblastkill');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.ATGunKill');
+    Level.AddPrecacheMaterial(Texture'DH_Artillery_tex.ATGun_Hud.flakv38_deathicon');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.canisterkill');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.VehicleFireKill');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.PlayerFireKill');
+    Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.spawnkill');
 }
 
 simulated function Message(PlayerReplicationInfo PRI, coerce string Msg, name MsgType)
@@ -1171,10 +1171,10 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
     }
 
-    VehicleIcon.WidgetTexture = material'DH_InterfaceArt_tex.Tank_Hud.clock_face';
+    VehicleIcon.WidgetTexture = Material'DH_InterfaceArt_tex.Tank_Hud.clock_face';
     DrawSpriteWidgetClipped(Canvas, VehicleIcon, Coords, true);
 
-    VehicleIcon.WidgetTexture = material'DH_InterfaceArt_tex.Tank_Hud.clock_numbers';
+    VehicleIcon.WidgetTexture = Material'DH_InterfaceArt_tex.Tank_Hud.clock_numbers';
     DrawSpriteWidgetClipped(Canvas, VehicleIcon, Coords, true);
 
     V = DHVehicle(Vehicle);
@@ -3165,7 +3165,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
     }
 
     // Draw level map overlay
-    MapLevelOverlay.WidgetTexture = material'DH_GUI_Tex.GUI.GridOverlay';
+    MapLevelOverlay.WidgetTexture = Material'DH_GUI_Tex.GUI.GridOverlay';
 
     if (MapLevelOverlay.WidgetTexture != none)
     {
@@ -4800,7 +4800,7 @@ simulated function DrawFadeToBlack(Canvas Canvas)
         Canvas.DrawColor = BlackColor;
         Canvas.DrawColor.A = Alpha * 255;
         Canvas.ColorModulate.W = 1.0;
-        Canvas.DrawTile(texture'Engine.WhiteTexture', Canvas.ClipX, Canvas.ClipY, 0.0, 0.0, 4.0, 4.0);
+        Canvas.DrawTile(Texture'Engine.WhiteTexture', Canvas.ClipX, Canvas.ClipY, 0.0, 0.0, 4.0, 4.0);
         Canvas.ColorModulate.W = HudOpacity / 255.0;
     }
 }
@@ -5219,7 +5219,7 @@ simulated function DrawFadeEffect(Canvas C)
 
     C.ColorModulate.W = 1.0;
     C.SetPos(0.0, 0.0);
-    C.DrawTileStretched(material'Engine.WhiteSquareTexture', C.ClipX, C.ClipY);
+    C.DrawTileStretched(Material'Engine.WhiteSquareTexture', C.ClipX, C.ClipY);
     C.DrawColor = WhiteColor;
     C.ColorModulate.W = HudOpacity / 255.0;
 }
@@ -5227,7 +5227,7 @@ simulated function DrawFadeEffect(Canvas C)
 defaultproperties
 {
     // General
-    MouseInterfaceIcon=(WidgetTexture=texture'DH_GUI_Tex.Menu.DHPointer')
+    MouseInterfaceIcon=(WidgetTexture=Texture'DH_GUI_Tex.Menu.DHPointer')
     PlayerNameFontSize=1
     OverrideConsoleFontName="DHFonts.DHFont14"
     SpacingText="        "
@@ -5269,26 +5269,26 @@ defaultproperties
 
     // Screen indicator icons & player HUD
     CompassNeedle=(WidgetTexture=TexRotator'DH_InterfaceArt_tex.HUD.Compass_rotator') // using DH version of compass background texture
-    PlayerNameIconMaterial=material'DH_InterfaceArt_tex.HUD.player_icon_world'
-    PlayerNameFilledIconMaterial=material'DH_InterfaceArt_tex.HUD.player_icon_world_filled'
-    SquadLeaderIconMaterial=material'DH_InterfaceArt2_tex.Icons.squad_leader'
-    SpeakerIconMaterial=texture'DH_InterfaceArt_tex.Communication.speaker_icon'
-    NeedAssistIconMaterial=texture'DH_InterfaceArt_tex.Communication.need_assist_icon'
-    NeedAmmoIconMaterial=texture'DH_InterfaceArt_tex.Communication.need_ammo_icon'
-    ExtraAmmoIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.Communication.need_ammo_icon',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.33,DrawPivot=DP_LowerRight,PosX=0.0,PosY=1.0,OffsetX=130,OffsetY=-35,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    CanMantleIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.CanMantle',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
-    CanDigIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.CanDig',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
-    CanCutWireIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.CanCut',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
-    DeployOkayIcon=(WidgetTexture=material'DH_GUI_tex.GUI.deploy_status',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
-    DeployEnemiesNearbyIcon=(WidgetTexture=material'DH_GUI_tex.GUI.deploy_status_finalblend',TextureCoords=(X1=64,Y1=0,X2=127,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
-    DeployInObjectiveIcon=(WidgetTexture=material'DH_GUI_tex.GUI.deploy_status_finalblend',TextureCoords=(X1=0,Y1=64,X2=63,Y2=127),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
+    PlayerNameIconMaterial=Material'DH_InterfaceArt_tex.HUD.player_icon_world'
+    PlayerNameFilledIconMaterial=Material'DH_InterfaceArt_tex.HUD.player_icon_world_filled'
+    SquadLeaderIconMaterial=Material'DH_InterfaceArt2_tex.Icons.squad_leader'
+    SpeakerIconMaterial=Texture'DH_InterfaceArt_tex.Communication.speaker_icon'
+    NeedAssistIconMaterial=Texture'DH_InterfaceArt_tex.Communication.need_assist_icon'
+    NeedAmmoIconMaterial=Texture'DH_InterfaceArt_tex.Communication.need_ammo_icon'
+    ExtraAmmoIcon=(WidgetTexture=Texture'DH_InterfaceArt_tex.Communication.need_ammo_icon',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.33,DrawPivot=DP_LowerRight,PosX=0.0,PosY=1.0,OffsetX=130,OffsetY=-35,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    CanMantleIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.CanMantle',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+    CanDigIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.CanDig',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+    CanCutWireIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.CanCut',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=127),TextureScale=0.8,DrawPivot=DP_LowerMiddle,PosX=0.55,PosY=0.98,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+    DeployOkayIcon=(WidgetTexture=Material'DH_GUI_tex.GUI.deploy_status',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
+    DeployEnemiesNearbyIcon=(WidgetTexture=Material'DH_GUI_tex.GUI.deploy_status_finalblend',TextureCoords=(X1=64,Y1=0,X2=127,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
+    DeployInObjectiveIcon=(WidgetTexture=Material'DH_GUI_tex.GUI.deploy_status_finalblend',TextureCoords=(X1=0,Y1=64,X2=63,Y2=127),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255))
 
     // Screen weapon & ammo resupply icons
-    WeaponCanRestIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.HUD.DeployIcon',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=100,G=100,B=100,A=255),Tints[1]=(R=100,G=100,B=100,A=255))
-    WeaponRestingIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.HUD.DeployIcon',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MGDeployIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.HUD.DeployIcon',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    ResupplyZoneNormalPlayerIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',PosX=0.0,PosY=1.0,OffsetX=60,OffsetY=-175)
-    ResupplyZoneNormalVehicleIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',PosX=0.0,PosY=1.0,OffsetX=60,OffsetY=-220)
+    WeaponCanRestIcon=(WidgetTexture=Texture'DH_InterfaceArt_tex.HUD.DeployIcon',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=100,G=100,B=100,A=255),Tints[1]=(R=100,G=100,B=100,A=255))
+    WeaponRestingIcon=(WidgetTexture=Texture'DH_InterfaceArt_tex.HUD.DeployIcon',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MGDeployIcon=(WidgetTexture=Texture'DH_InterfaceArt_tex.HUD.DeployIcon',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.45,DrawPivot=DP_LowerRight,PosX=1.0,PosY=1.0,OffsetX=-8,OffsetY=-200,ScaleMode=SM_Left,scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    ResupplyZoneNormalPlayerIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',PosX=0.0,PosY=1.0,OffsetX=60,OffsetY=-175)
+    ResupplyZoneNormalVehicleIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',PosX=0.0,PosY=1.0,OffsetX=60,OffsetY=-220)
     ResupplyZoneResupplyingPlayerIcon=(PosX=0.0,PosY=1.0,OffsetX=60,OffsetY=-175)
     ResupplyZoneResupplyingVehicleIcon=(PosX=0.0,PosY=1.0,OffsetX=60,OffsetY=-220)
 
@@ -5299,51 +5299,51 @@ defaultproperties
     CaptureBarDefender=(WidgetTexture=Texture'DH_GUI_Tex.GUI.DH_CaptureBar_Bar',TextureCoords=(X1=0,Y1=0,X2=255,Y2=63),TextureScale=0.5,DrawPivot=DP_LowerMiddle,PosX=0.5,PosY=0.98,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=0.55,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     CaptureBarIcons[0]=(TextureScale=0.50,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=-100,OffsetY=-32,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     CaptureBarIcons[1]=(TextureScale=0.50,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=100,OffsetY=-32,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    CaptureBarTeamIcons(0)=texture'DH_GUI_Tex.GUI.GerCross'
-    CaptureBarTeamIcons(1)=texture'DH_GUI_Tex.GUI.AlliedStar'
+    CaptureBarTeamIcons(0)=Texture'DH_GUI_Tex.GUI.GerCross'
+    CaptureBarTeamIcons(1)=Texture'DH_GUI_Tex.GUI.AlliedStar'
     CaptureBarUnlockText="Can be captured in: {0} seconds"
     NeedsClearedText=" (Not Secured)"
-    EnemyPresentIcon=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',TextureCoords=(X1=0,Y1=192,X2=63,Y2=255),TextureScale=0.3,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=166,OffsetY=-56,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    EnemyPresentIcon=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',TextureCoords=(X1=0,Y1=192,X2=63,Y2=255),TextureScale=0.3,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.98,OffsetX=166,OffsetY=-56,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Player figure/health icon
-    NationHealthFigures(1)=texture'DH_GUI_Tex.GUI.US_player'
-    NationHealthFiguresBackground(1)=texture'DH_GUI_Tex.GUI.US_player_background'
-    NationHealthFiguresStamina(1)=texture'DH_GUI_Tex.GUI.US_player_Stamina'
+    NationHealthFigures(1)=Texture'DH_GUI_Tex.GUI.US_player'
+    NationHealthFiguresBackground(1)=Texture'DH_GUI_Tex.GUI.US_player_background'
+    NationHealthFiguresStamina(1)=Texture'DH_GUI_Tex.GUI.US_player_Stamina'
     NationHealthFiguresStaminaCritical(1)=FinalBlend'DH_GUI_Tex.GUI.US_player_Stamina_critical'
-    LocationHitAlliesImages(0)=texture'DH_GUI_Tex.Player_hits.US_hit_Head'
-    LocationHitAlliesImages(1)=texture'DH_GUI_Tex.Player_hits.US_hit_torso'
-    LocationHitAlliesImages(2)=texture'DH_GUI_Tex.Player_hits.US_hit_pelvis'
-    LocationHitAlliesImages(3)=texture'DH_GUI_Tex.Player_hits.US_hit_LupperLeg'
-    LocationHitAlliesImages(4)=texture'DH_GUI_Tex.Player_hits.US_hit_RupperLeg'
-    LocationHitAlliesImages(5)=texture'DH_GUI_Tex.Player_hits.US_hit_LupperArm'
-    LocationHitAlliesImages(6)=texture'DH_GUI_Tex.Player_hits.US_hit_RupperArm'
-    LocationHitAlliesImages(7)=texture'DH_GUI_Tex.Player_hits.US_hit_LlowerLeg'
-    LocationHitAlliesImages(8)=texture'DH_GUI_Tex.Player_hits.US_hit_RlowerLeg'
-    LocationHitAlliesImages(9)=texture'DH_GUI_Tex.Player_hits.US_hit_LlowerArm'
-    LocationHitAlliesImages(10)=texture'DH_GUI_Tex.Player_hits.US_hit_RlowerArm'
-    LocationHitAlliesImages(11)=texture'DH_GUI_Tex.Player_hits.US_hit_LHand'
-    LocationHitAlliesImages(12)=texture'DH_GUI_Tex.Player_hits.US_hit_RHand'
-    LocationHitAlliesImages(13)=texture'DH_GUI_Tex.Player_hits.US_hit_Lfoot'
-    LocationHitAlliesImages(14)=texture'DH_GUI_Tex.Player_hits.US_hit_Rfoot'
+    LocationHitAlliesImages(0)=Texture'DH_GUI_Tex.Player_hits.US_hit_Head'
+    LocationHitAlliesImages(1)=Texture'DH_GUI_Tex.Player_hits.US_hit_torso'
+    LocationHitAlliesImages(2)=Texture'DH_GUI_Tex.Player_hits.US_hit_pelvis'
+    LocationHitAlliesImages(3)=Texture'DH_GUI_Tex.Player_hits.US_hit_LupperLeg'
+    LocationHitAlliesImages(4)=Texture'DH_GUI_Tex.Player_hits.US_hit_RupperLeg'
+    LocationHitAlliesImages(5)=Texture'DH_GUI_Tex.Player_hits.US_hit_LupperArm'
+    LocationHitAlliesImages(6)=Texture'DH_GUI_Tex.Player_hits.US_hit_RupperArm'
+    LocationHitAlliesImages(7)=Texture'DH_GUI_Tex.Player_hits.US_hit_LlowerLeg'
+    LocationHitAlliesImages(8)=Texture'DH_GUI_Tex.Player_hits.US_hit_RlowerLeg'
+    LocationHitAlliesImages(9)=Texture'DH_GUI_Tex.Player_hits.US_hit_LlowerArm'
+    LocationHitAlliesImages(10)=Texture'DH_GUI_Tex.Player_hits.US_hit_RlowerArm'
+    LocationHitAlliesImages(11)=Texture'DH_GUI_Tex.Player_hits.US_hit_LHand'
+    LocationHitAlliesImages(12)=Texture'DH_GUI_Tex.Player_hits.US_hit_RHand'
+    LocationHitAlliesImages(13)=Texture'DH_GUI_Tex.Player_hits.US_hit_Lfoot'
+    LocationHitAlliesImages(14)=Texture'DH_GUI_Tex.Player_hits.US_hit_Rfoot'
 
     // Map general icons
-    MapBackground=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_background')
+    MapBackground=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_background')
     MapLevelOverlay=(RenderStyle=STY_Alpha,TextureCoords=(X2=511,Y2=511),TextureScale=1.0,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=125),Tints[1]=(B=255,G=255,R=255,A=255))
     MapScaleText=(RenderStyle=STY_Alpha,DrawPivot=DP_LowerRight,PosX=1.0,PosY=0.0375,WrapHeight=1.0,Tints[0]=(B=255,G=255,R=255,A=128),Tints[1]=(B=255,G=255,R=255,A=128))
     MapPlayerIcon=(WidgetTexture=FinalBlend'DH_InterfaceArt_tex.HUD.player_icon_map_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31))
-    MapIconDispute(0)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=128,Y1=192,X2=191,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapIconDispute(1)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=192,X2=63,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapIconDispute(0)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=128,Y1=192,X2=191,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapIconDispute(1)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=192,X2=63,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Map icons for team requests & markers
-    MapIconMGResupplyRequest(0)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
-    MapIconMGResupplyRequest(1)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
-    MapIconCarriedRadio=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=192,X2=127,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
-    MapIconRally(0)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
-    MapIconRally(1)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
-    MapIconMortarHETarget=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=127,Y1=0,X2=192,Y2=64),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapIconMortarSmokeTarget=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=191,Y1=0,X2=255,Y2=64),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapIconMGResupplyRequest(0)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
+    MapIconMGResupplyRequest(1)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
+    MapIconCarriedRadio=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=192,X2=127,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+    MapIconRally(0)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
+    MapIconRally(1)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
+    MapIconMortarHETarget=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=127,Y1=0,X2=192,Y2=64),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapIconMortarSmokeTarget=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=191,Y1=0,X2=255,Y2=64),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconMortarArrow=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.mortar-arrow-final',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.1,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapIconMortarHit=(WidgetTexture=texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(Y1=64,X2=63,Y2=127),TextureScale=0.05,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+    MapIconMortarHit=(WidgetTexture=Texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(Y1=64,X2=63,Y2=127),TextureScale=0.05,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
 
     SupplyPointIcon=(WidgetTexture=FinalBlend'DH_GUI_tex.GUI.supply_point_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.04,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
@@ -5351,39 +5351,39 @@ defaultproperties
     MapMarkerIcon=(WidgetTexture=none,RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.04,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=0,G=0,B=255,A=255),Tints[1]=(R=0,G=0,B=255,A=255))
 
     // Map flag icons
-    MapIconNeutral=(WidgetTexture=texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapAxisFlagIcon=(WidgetTexture=texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=32,X2=31,Y2=63),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapAlliesFlagIcons(0)=(WidgetTexture=texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=96,Y1=0,X2=127,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapAlliesFlagIcons(1)=(WidgetTexture=texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=0,X2=95,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapAlliesFlagIcons(2)=(WidgetTexture=texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=32,Y1=0,X2=63,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapAlliesFlagIcons(3)=(WidgetTexture=texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=32,Y1=32,X2=63,Y2=63),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapIconNeutral=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapAxisFlagIcon=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=32,X2=31,Y2=63),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapAlliesFlagIcons(0)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=96,Y1=0,X2=127,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapAlliesFlagIcons(1)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=64,Y1=0,X2=95,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapAlliesFlagIcons(2)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=32,Y1=0,X2=63,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapAlliesFlagIcons(3)=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=32,Y1=32,X2=63,Y2=63),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconsFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_flashing'
     MapIconsFastFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_fast_flash'
     MapIconsAltFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_alt_flashing'
     MapIconsAltFastFlash=FinalBlend'DH_GUI_Tex.GUI.overheadmap_flags_alt_fast_flash'
-    MapIconTeam(0)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
-    MapIconTeam(1)=(WidgetTexture=texture'DH_GUI_Tex.GUI.overheadmap_Icons')
+    MapIconTeam(0)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
+    MapIconTeam(1)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
 
     // Map player number icons
     MapPlayerNumberIcon=(TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,PosX=0,PosY=0,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=0,G=0,B=0,A=255),Tints[1]=(R=0,G=0,B=0,A=255))
-    PlayerNumberIconTextures(0)=texture'DH_InterfaceArt_tex.HUD.player_number_1'
-    PlayerNumberIconTextures(1)=texture'DH_InterfaceArt_tex.HUD.player_number_2'
-    PlayerNumberIconTextures(2)=texture'DH_InterfaceArt_tex.HUD.player_number_3'
-    PlayerNumberIconTextures(3)=texture'DH_InterfaceArt_tex.HUD.player_number_4'
-    PlayerNumberIconTextures(4)=texture'DH_InterfaceArt_tex.HUD.player_number_5'
-    PlayerNumberIconTextures(5)=texture'DH_InterfaceArt_tex.HUD.player_number_6'
-    PlayerNumberIconTextures(6)=texture'DH_InterfaceArt_tex.HUD.player_number_7'
-    PlayerNumberIconTextures(7)=texture'DH_InterfaceArt_tex.HUD.player_number_8'
-    PlayerNumberIconTextures(8)=texture'DH_InterfaceArt_tex.HUD.player_number_9'
-    PlayerNumberIconTextures(9)=texture'DH_InterfaceArt_tex.HUD.player_number_10'
-    PlayerNumberIconTextures(10)=texture'DH_InterfaceArt_tex.HUD.player_number_11'
-    PlayerNumberIconTextures(11)=texture'DH_InterfaceArt_tex.HUD.player_number_12'
+    PlayerNumberIconTextures(0)=Texture'DH_InterfaceArt_tex.HUD.player_number_1'
+    PlayerNumberIconTextures(1)=Texture'DH_InterfaceArt_tex.HUD.player_number_2'
+    PlayerNumberIconTextures(2)=Texture'DH_InterfaceArt_tex.HUD.player_number_3'
+    PlayerNumberIconTextures(3)=Texture'DH_InterfaceArt_tex.HUD.player_number_4'
+    PlayerNumberIconTextures(4)=Texture'DH_InterfaceArt_tex.HUD.player_number_5'
+    PlayerNumberIconTextures(5)=Texture'DH_InterfaceArt_tex.HUD.player_number_6'
+    PlayerNumberIconTextures(6)=Texture'DH_InterfaceArt_tex.HUD.player_number_7'
+    PlayerNumberIconTextures(7)=Texture'DH_InterfaceArt_tex.HUD.player_number_8'
+    PlayerNumberIconTextures(8)=Texture'DH_InterfaceArt_tex.HUD.player_number_9'
+    PlayerNumberIconTextures(9)=Texture'DH_InterfaceArt_tex.HUD.player_number_10'
+    PlayerNumberIconTextures(10)=Texture'DH_InterfaceArt_tex.HUD.player_number_11'
+    PlayerNumberIconTextures(11)=Texture'DH_InterfaceArt_tex.HUD.player_number_12'
     PlayerIconScale=0.03
     PlayerIconLargeScale=0.05
 
     // Vehicle HUD
     VehicleOccupantsText=(PosX=0.78,OffsetX=0,bDrawShadow=true)
-    VehicleLockedIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.Tank_Hud.VehicleLockedIcon',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.21,DrawPivot=DP_MiddleMiddle,PosX=0.98,PosY=0.85,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=128,G=128,B=128,A=255),Tints[1]=(R=128,G=128,B=128,A=255))
+    VehicleLockedIcon=(WidgetTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.VehicleLockedIcon',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.21,DrawPivot=DP_MiddleMiddle,PosX=0.98,PosY=0.85,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=128,G=128,B=128,A=255),Tints[1]=(R=128,G=128,B=128,A=255))
     VehicleAmmoReloadIcon=(Tints[0]=(A=80),Tints[1]=(A=80)) // override to make RO's red cannon ammo reload overlay slightly less bright (reduced alpha from 128)
     VehicleAmmoAmount=(OffsetX=125)
     VehicleAmmoTypeText=(PosX=0.24)
@@ -5395,14 +5395,14 @@ defaultproperties
     VehicleSmokeLauncherAmmoReloadIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.19,DrawPivot=DP_LowerLeft,PosX=0.37,PosY=1.0,OffsetX=0,OffsetY=-9,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=0,B=0,A=80),Tints[1]=(R=255,G=0,B=0,A=80))
     VehicleSmokeLauncherAmmoAmount=(TextureScale=0.19,MinDigitCount=1,DrawPivot=DP_LowerLeft,PosX=0.37,PosY=1.0,OffsetX=125,OffsetY=-43,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     VehicleSmokeLauncherAimIcon=(WidgetTexture=FinalBlend'InterfaceArt_tex.OverheadMap.arrowhead_final',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.17,DrawPivot=DP_LowerLeft,PosX=0.37,PosY=1.0,OffsetX=-45,OffsetY=-50,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=128,G=128,B=128,A=255),Tints[1]=(R=128,G=128,B=128,A=255))
-    VehicleSmokeLauncherRangeBarIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_rangebar',TextureCoords=(X1=0,Y1=0,X2=63,Y2=255),TextureScale=0.096,DrawPivot=DP_LowerLeft,PosX=0.37,PosY=1.0,OffsetX=-10,OffsetY=-18,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    VehicleSmokeLauncherRangeInfill=(WidgetTexture=texture'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_rangebar_infill',TextureCoords=(X1=0,Y1=0,X2=63,Y2=255),TextureScale=0.096,DrawPivot=DP_LowerLeft,PosX=0.37,PosY=1.0,OffsetX=-10,OffsetY=-18,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    VehicleSmokeLauncherRangeBarIcon=(WidgetTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_rangebar',TextureCoords=(X1=0,Y1=0,X2=63,Y2=255),TextureScale=0.096,DrawPivot=DP_LowerLeft,PosX=0.37,PosY=1.0,OffsetX=-10,OffsetY=-18,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    VehicleSmokeLauncherRangeInfill=(WidgetTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_rangebar_infill',TextureCoords=(X1=0,Y1=0,X2=63,Y2=255),TextureScale=0.096,DrawPivot=DP_LowerLeft,PosX=0.37,PosY=1.0,OffsetX=-10,OffsetY=-18,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Squads
     VehiclePositionIsSquadmateColor=(R=0,G=255,B=0,A=255)   // TODO: remove
 
     // Construction
-    VehicleSuppliesIcon=(WidgetTexture=texture'DH_InterfaceArt_tex.HUD.supplies',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.30,DrawPivot=DP_LowerLeft,PosX=0.5,PosY=1.0,OffsetX=0,OffsetY=-16,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    VehicleSuppliesIcon=(WidgetTexture=Texture'DH_InterfaceArt_tex.HUD.supplies',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.30,DrawPivot=DP_LowerLeft,PosX=0.5,PosY=1.0,OffsetX=0,OffsetY=-16,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     VehicleSuppliesText=(Text="1000",PosX=0,PosY=0,WrapWidth=0,WrapHeight=0,OffsetX=0,OffsetY=0,DrawPivot=DP_UpperMiddle,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=true)
 
     // Signals

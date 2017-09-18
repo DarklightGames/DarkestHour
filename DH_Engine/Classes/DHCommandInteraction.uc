@@ -255,7 +255,7 @@ function Tick(float DeltaTime)
 
         if (SelectedIndex != -1 && !Menu.IsOptionDisabled(SelectedIndex))
         {
-            PC.Pawn.PlayOwnedSound(sound'ROMenuSounds.msfxDown', SLOT_Interface, 1.0);
+            PC.Pawn.PlayOwnedSound(Sound'ROMenuSounds.msfxDown', SLOT_Interface, 1.0);
 
             Menu.OnHoverIn(SelectedIndex);
         }
@@ -284,7 +284,7 @@ function PostRender(Canvas C)
 
     // Draw menu crosshair
     C.DrawColor = class'UColor'.default.White;
-    C.DrawTile(material'DH_InterfaceArt_tex.Communication.menu_crosshair', 16, 16, 0, 0, 16, 16);
+    C.DrawTile(Material'DH_InterfaceArt_tex.Communication.menu_crosshair', 16, 16, 0, 0, 16, 16);
 
     C.Font = class'DHHud'.static.GetSmallerMenuFont(C);
 

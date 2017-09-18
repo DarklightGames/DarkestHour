@@ -12,5 +12,5 @@ defaultproperties
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Panzer3.Panzer3n_destroyed2'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panzer3n_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panzer3n_turret_look'
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.panzer3_n'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panzer3_n'
 }

@@ -9,8 +9,8 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_LeIG18_anm.leig18_turret'
-    Skins(0)=texture'DH_LeIG18_tex.LeIG18.IG18_1'
-    Skins(1)=texture'DH_LeIG18_tex.LeIG18.IG18_2'
+    Skins(0)=Texture'DH_LeIG18_tex.LeIG18.IG18_1'
+    Skins(1)=Texture'DH_LeIG18_tex.LeIG18.IG18_2'
     BeginningIdleAnim="com_idle_close"
     GunnerAttachmentBone="com_player"
 
@@ -40,10 +40,10 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire01'  // TODO: REPLACE
     CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire02'  // TODO: REPLACE
     CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.ATGun.57mm_fire03'  // TODO: REPLACE
-    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')  // TODO: REPLACE
-    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')  // TODO: REPLACE
-    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')  // TODO: REPLACE
-    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')  // TODO: REPLACE
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')  // TODO: REPLACE
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')  // TODO: REPLACE
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')  // TODO: REPLACE
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')  // TODO: REPLACE
 
     bIsArtillery=true
 }

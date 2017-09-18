@@ -3678,25 +3678,25 @@ static function PrecacheGameTextures(LevelInfo myLevel)
     super.PrecacheGameTextures(myLevel);
 
     // From ROWheeledVehicle:
-    myLevel.AddPrecacheMaterial(material'Effects_Tex.explosions.fire_16frame');
-    myLevel.AddPrecacheMaterial(material'Effects_Tex.Vehicles.DustCloud');
-    myLevel.AddPrecacheMaterial(material'Effects_Tex.Vehicles.Dust_KickUp');
-    myLevel.AddPrecacheMaterial(material'Effects_Tex.Vehicles.vehiclesparkhead');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.explosions.fire_16frame');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.Vehicles.DustCloud');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.Vehicles.Dust_KickUp');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.Vehicles.vehiclesparkhead');
 
     // From ROTreadCraft:
-    myLevel.AddPrecacheMaterial(material'Effects_Tex.explosions.aptankmark_dirt');
-    myLevel.AddPrecacheMaterial(material'Effects_Tex.explosions.aptankmark_snow');
-    myLevel.AddPrecacheMaterial(material'Effects_Tex.BulletHits.glowfinal');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.explosions.aptankmark_dirt');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.explosions.aptankmark_snow');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.glowfinal');
 
     // From DHArmoredVehicle:
-    myLevel.AddPrecacheMaterial(material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
+    myLevel.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
 
     // From ROTankCannon:
-    myLevel.AddPrecacheMaterial(material'Weapons3rd_tex.tank_shells.shell_122mm');
-    myLevel.AddPrecacheMaterial(material'Weapons3rd_tex.tank_shells.shell_76mm');
-    myLevel.AddPrecacheMaterial(material'Weapons3rd_tex.tank_shells.shell_85mm');
-    myLevel.AddPrecacheMaterial(material'Effects_Tex.fire_quad');
-    myLevel.AddPrecacheMaterial(material'ROEffects.SmokeAlphab_t');
+    myLevel.AddPrecacheMaterial(Material'Weapons3rd_tex.tank_shells.shell_122mm');
+    myLevel.AddPrecacheMaterial(Material'Weapons3rd_tex.tank_shells.shell_76mm');
+    myLevel.AddPrecacheMaterial(Material'Weapons3rd_tex.tank_shells.shell_85mm');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.fire_quad');
+    myLevel.AddPrecacheMaterial(Material'ROEffects.SmokeAlphab_t');
 }
 
 // Overridden so we can grab the primary and secondary weapons to feed to replication

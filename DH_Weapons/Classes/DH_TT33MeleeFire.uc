@@ -17,8 +17,8 @@ defaultproperties
     BashFinishAnim="bash_return"
     BashFinishEmptyAnim="bash_return_empty"
     TraceRange=75.0
-    GroundBashSound=sound'Inf_Weapons_Foley.melee.pistol_hit_ground'
-    PlayerBashSound=sound'Inf_Weapons_Foley.melee.pistol_hit'
+    GroundBashSound=Sound'Inf_Weapons_Foley.melee.pistol_hit_ground'
+    PlayerBashSound=Sound'Inf_Weapons_Foley.melee.pistol_hit'
     BotRefireRate=0.25
     AimError=800.0
 }

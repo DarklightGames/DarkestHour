@@ -9,12 +9,12 @@ class DH_KriegsmarineCap extends DHHeadgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-    L.AddPrecacheMaterial(material'DHGermanCharactersTex.GerHeadGear.WH_HG_1');
+    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.WH_HG_1');
 }
 
 defaultproperties
 {
     bIsHelmet=false
     Mesh=SkeletalMesh'gear_anm.ger_tankercap_cap'
-    Skins(0)=texture'DHGermanCharactersTex.GerHeadgear.WK_HG_1'
+    Skins(0)=Texture'DHGermanCharactersTex.GerHeadgear.WK_HG_1'
 }

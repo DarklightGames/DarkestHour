@@ -7,5 +7,5 @@ class DH_BritishSergeantRMCommandoPawn extends DH_BritishRMCommandoPawn;
 
 defaultproperties
 {
-    Skins(0)=texture'DHBritishCharactersTex.PBI.British_RMCommando_Sarg'
+    Skins(0)=Texture'DHBritishCharactersTex.PBI.British_RMCommando_Sarg'
 }

@@ -9,6 +9,6 @@ defaultproperties
 {
     VehicleClass=class'DH_Guns.DH_Bofors40mmGun'
     Mesh=SkeletalMesh'DH_Bofors_anm.bofors_body'
-    Skins(0)=texture'DH_Bofors_tex.bofors.bofors_01'
+    Skins(0)=Texture'DH_Bofors_tex.bofors.bofors_01'
 }
 

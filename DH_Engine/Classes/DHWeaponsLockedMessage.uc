@@ -17,7 +17,7 @@ static function ClientReceive(PlayerController P, optional int Switch, optional 
 {
     if ((Switch == 0 || Switch == 1) && P != none)
     {
-        P.ClientPlaySound(sound'DHMenuSounds.Buzz',,, SLOT_Interface);
+        P.ClientPlaySound(Sound'DHMenuSounds.Buzz',,, SLOT_Interface);
 
         P.bFire = 0; // 'releases' fire button if being held down, which avoids spamming repeated messages & buzz sounds
         P.bAltFire = 0;

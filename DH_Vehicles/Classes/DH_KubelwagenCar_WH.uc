@@ -20,7 +20,7 @@ defaultproperties
     // Hull mesh
     Mesh=SkeletalMesh'DH_Kubelwagen_anm.kubelwagen_body_ext'
     Skins(0)=FinalBlend'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_glass_FB'
-    Skins(1)=texture'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_grau'
+    Skins(1)=Texture'DH_VehiclesGE_tex.ext_vehicles.kubelwagen_body_grau'
     BeginningIdleAnim="driver_hatch_idle_close"
 
     // Passengers
@@ -86,10 +86,10 @@ defaultproperties
 
     // Sounds
     MaxPitchSpeed=250.0
-    IdleSound=sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_loop01'
-    StartUpSound=sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_start'
-    ShutDownSound=sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_stop'
-    RumbleSound=sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
+    IdleSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_loop01'
+    StartUpSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_start'
+    ShutDownSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_stop'
+    RumbleSound=Sound'DH_GerVehicleSounds2.Kubelwagen.kubelwagen_engine_interior'
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-140.0,Y=45.0,Z=0.0),ExhaustRotation=(Pitch=34000,Roll=-5000))
@@ -97,7 +97,7 @@ defaultproperties
     SteerBoneName="Steer_Wheel"
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.kubelwagen_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.kubelwagen_body'
     VehicleHudEngineY=0.69
     VehicleHudOccupantsX(0)=0.46
     VehicleHudOccupantsX(1)=0.54
@@ -107,7 +107,7 @@ defaultproperties
     VehicleHudOccupantsY(1)=0.49
     VehicleHudOccupantsY(2)=0.6
     VehicleHudOccupantsY(3)=0.6
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.kubelwagen'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.kubelwagen'
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=LFWheel

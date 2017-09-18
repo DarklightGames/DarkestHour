@@ -10,7 +10,7 @@ class DH_M1GarandAttachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Garand_3rd'
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.garand_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.garand_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     MuzzleBoneName="Muzzle"

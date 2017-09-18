@@ -19,9 +19,9 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext'
-    Skins(1)=texture'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext'
-    Skins(2)=texture'DH_VehiclesGE_tex2.int_vehicles.OpelBlitz_body_int'
+    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext'
+    Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.OpelBlitz_body_ext'
+    Skins(2)=Texture'DH_VehiclesGE_tex2.int_vehicles.OpelBlitz_body_int'
     BeginningIdleAnim="Overlay_Idle"
 
     // Passengers
@@ -75,21 +75,21 @@ defaultproperties
 
     // Sounds
     IdleSound=SoundGroup'Vehicle_Engines.BA64.ba64_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.BA64.BA64_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.BA64.BA64_engine_stop'
+    StartUpSound=Sound'Vehicle_Engines.BA64.BA64_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.BA64.BA64_engine_stop'
 
     // Visual effects
     ExhaustPipes(0)=(ExhaustPosition=(X=-30.0,Y=180.0,Z=-50.0),ExhaustRotation=(Pitch=36000,Yaw=5000))
     SteerBoneName="WheelDrive"
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.opelblitz_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.opelblitz_body'
     VehicleHudEngineY=0.25
     VehicleHudOccupantsX(0)=0.45
     VehicleHudOccupantsY(0)=0.35
     VehicleHudOccupantsX(1)=0.55
     VehicleHudOccupantsY(1)=0.35
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.opelblitz'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.opelblitz'
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=RFWheel

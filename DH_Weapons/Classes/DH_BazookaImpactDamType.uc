@@ -9,5 +9,5 @@ class DH_BazookaImpactDamType extends DHRocketImpactDamage
 defaultproperties
 {
     WeaponClass=class'DH_Weapons.DH_BazookaWeapon'
-    HUDIcon=texture'DH_InterfaceArt_tex.deathicons.zookakill'
+    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.zookakill'
 }

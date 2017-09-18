@@ -24,7 +24,7 @@ defaultproperties
     ShellRotOffsetIron=(Pitch=1000)
     FireAnim="Shoot_Loop"
     TweenTime=0.0
-    NoAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_smg'
+    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_smg'
     FireRate=0.15
     AmmoClass=class'DH_Weapons.DH_GreaseGunAmmo'
     ShakeRotMag=(X=50.0,Y=50.0,Z=150.0)

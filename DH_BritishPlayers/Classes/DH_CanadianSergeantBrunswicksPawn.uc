@@ -7,5 +7,5 @@ class DH_CanadianSergeantBrunswicksPawn extends DH_CanadianBrunswicksPawn;
 
 defaultproperties
 {
-    Skins(0)=texture'DHCanadianCharactersTex.Infantry.CanadianRoyalNewBrunswicks_Sarg'
+    Skins(0)=Texture'DHCanadianCharactersTex.Infantry.CanadianRoyalNewBrunswicks_Sarg'
 }

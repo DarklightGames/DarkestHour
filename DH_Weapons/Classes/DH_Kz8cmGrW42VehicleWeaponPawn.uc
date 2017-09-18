@@ -18,7 +18,7 @@ defaultproperties
     DriveAnim="deploy_idle_GrW42"
     DrivePos=(X=28.0,Z=34.0)
     UndeployingDuration=1.4
-    HUDHighExplosiveTexture=texture'DH_Mortars_tex.Kz8cmGrW42.Wgr34-HE'
-    HUDSmokeTexture=texture'DH_Mortars_tex.Kz8cmGrW42.Wgr34-Nb'
-    HUDArcTexture=texture'DH_Mortars_tex.HUD.ArcG'
+    HUDHighExplosiveTexture=Texture'DH_Mortars_tex.Kz8cmGrW42.Wgr34-HE'
+    HUDSmokeTexture=Texture'DH_Mortars_tex.Kz8cmGrW42.Wgr34-Nb'
+    HUDArcTexture=Texture'DH_Mortars_tex.HUD.ArcG'
 }

@@ -9,10 +9,10 @@ defaultproperties
 {
     // MG mesh
     Mesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun'
-    Skins(0)=texture'DH_Weapon_tex.AlliedSmallArms.30calMain'
-    Skins(1)=texture'DH_Weapon_tex.AlliedSmallArms.30calGrip'
-    Skins(2)=texture'DH_Weapon_tex.AmmoPouches.30CalAmmoTin'
-    Skins(3)=texture'DH_VehiclesUS_tex.ext_vehicles.Green'
+    Skins(0)=Texture'DH_Weapon_tex.AlliedSmallArms.30calMain'
+    Skins(1)=Texture'DH_Weapon_tex.AlliedSmallArms.30calGrip'
+    Skins(2)=Texture'DH_Weapon_tex.AmmoPouches.30CalAmmoTin'
+    Skins(3)=Texture'DH_VehiclesUS_tex.ext_vehicles.Green'
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     GunnerAttachmentBone="com_attachment"
 

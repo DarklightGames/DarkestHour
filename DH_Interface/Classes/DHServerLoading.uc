@@ -110,7 +110,7 @@ simulated function SetImage()
 {
     local Material M;
 
-    M = material'MenuBlack';
+    M = Material'MenuBlack';
 
     DrawOpImage(Operations[0]).Image = M;
 
@@ -145,16 +145,16 @@ defaultproperties
     AuthorText="Author: {0}"
     LegacyMapText="Legacy Map"
     OfficialMapText="Official Map"
-    OfficialMapIcon=texture'DH_GUI_Tex.Menu.OfficialMapLogo'
+    OfficialMapIcon=Texture'DH_GUI_Tex.Menu.OfficialMapLogo'
     CommunityMapText="Community Map"
-    CommunityMapIcon=texture'DH_GUI_Tex.Menu.CommunityMapLogo'
-    DHTextLogo=texture'DH_GUI_Tex.Menu.DHTextLogo'
+    CommunityMapIcon=Texture'DH_GUI_Tex.Menu.CommunityMapLogo'
+    DHTextLogo=Texture'DH_GUI_Tex.Menu.DHTextLogo'
 
     // The official backgrounds
     Backgrounds(0)="DH_GUI_Tex.LoadingScreen.Background_Default"
 
     Begin Object class=DrawOpImage Name=OpTopBorder
-        Image=texture'DH_GUI_Tex.Menu.DHSectionTopper'
+        Image=Texture'DH_GUI_Tex.Menu.DHSectionTopper'
         ImageStyle=0
         Top=0.0
         Lft=0.0
@@ -165,7 +165,7 @@ defaultproperties
     Operations(1)=OpTopBorder
 
     Begin Object class=DrawOpImage Name=OpBottomBorder
-        Image=texture'DH_GUI_Tex.Menu.DHSectionTopper'
+        Image=Texture'DH_GUI_Tex.Menu.DHSectionTopper'
         ImageStyle=0
         Top=0.91
         Lft=0.0
@@ -176,7 +176,7 @@ defaultproperties
     Operations(2)=OpBottomBorder
 
     Begin Object class=DrawOpImage Name=OpDHTextLogoImg
-        Image=texture'DH_GUI_Tex.Menu.DHTextLogo'
+        Image=Texture'DH_GUI_Tex.Menu.DHTextLogo'
         ImageStyle=0
         Top=0.1
         Lft=0.0

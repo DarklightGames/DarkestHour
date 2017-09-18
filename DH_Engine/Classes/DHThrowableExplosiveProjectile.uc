@@ -706,55 +706,55 @@ simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
         case EST_Default:
             DampenFactor = 0.15;
             DampenFactorParallel = 0.5;
-            ImpactSound = sound'Inf_Weapons_Foley.grenadeland';
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Rock:
             DampenFactor = 0.2;
             DampenFactorParallel = 0.5;
-            ImpactSound = sound'Inf_Weapons_Foley.grenadeland';
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Dirt:
             DampenFactor = 0.1;
             DampenFactorParallel = 0.45;
-            ImpactSound = sound'Inf_Weapons_Foley.grenadeland';
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Metal:
             DampenFactor = 0.2;
             DampenFactorParallel = 0.5;
-            ImpactSound = sound'Inf_Weapons_Foley.grenadeland';
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Wood:
             DampenFactor = 0.15;
             DampenFactorParallel = 0.4;
-            ImpactSound = sound'Inf_Weapons_Foley.grenadeland';
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Plant:
             DampenFactor = 0.1;
             DampenFactorParallel = 0.1;
-            ImpactSound = sound'Inf_Weapons_Foley.grenadeland';
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Flesh:
             DampenFactor = 0.1;
             DampenFactorParallel = 0.3;
-            ImpactSound = sound'Inf_Weapons_Foley.grenadeland';
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Ice:
             DampenFactor = 0.2;
             DampenFactorParallel = 0.55;
-            ImpactSound = sound'Inf_Weapons_Foley.grenadeland';
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Snow:
             DampenFactor = 0.0;
             DampenFactorParallel = 0.0;
-            ImpactSound = sound'Inf_Weapons_Foley.grenadeland';
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Water:
@@ -766,7 +766,7 @@ simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
         case EST_Glass:
             DampenFactor = 0.3;
             DampenFactorParallel = 0.55;
-            ImpactSound = sound'Inf_Weapons_Foley.grenadeland';
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
     }
 }
@@ -827,7 +827,7 @@ defaultproperties
     DampenFactorParallel=0.8
     bFixedRotationDir=true
     FailureRate=0.001 // 1 in 1000
-    ImpactSound=sound'Inf_Weapons_Foley.grenadeland'
+    ImpactSound=Sound'Inf_Weapons_Foley.grenadeland'
     ExplosionSoundRadius=300.0
     ExplosionDecal=class'ROEffects.GrenadeMark'
     ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'

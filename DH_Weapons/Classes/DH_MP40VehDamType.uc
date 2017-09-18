@@ -9,5 +9,5 @@ class DH_MP40VehDamType extends DHVehicleDamageType
 defaultproperties
 {
     WeaponClass=class'DH_Weapons.DH_MP40Weapon'
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b9mm'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.b9mm'
 }

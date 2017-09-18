@@ -23,13 +23,13 @@ defaultproperties
     DriveAnim="stand_idlehip_binoc"
     bLockCameraDuringTransition=true // stops player looking sideways & seeing through the vehicle
     bHasAltFire=false
-    GunsightOverlay=texture'DH_VehicleOptics_tex.Soviet.isu152_sight_background'
-    CannonScopeCenter=texture'Vehicle_Optic.Scopes.T3476_sight_mover'
-    DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed' // TODO: make one for ISU-152 or generic Soviet
-    PeriscopeOverlay=texture'DH_VehicleOptics_tex.Soviet.TNK-1_periscope' // TODO: maybe move this to DHSovietCannonPawn, if was widely used?
-    AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.ISU152_shell'
-    AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.ISU152_shell_reload'
-    ManualRotateSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
-    ManualRotateAndPitchSound=sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.Soviet.isu152_sight_background'
+    CannonScopeCenter=Texture'Vehicle_Optic.Scopes.T3476_sight_mover'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed' // TODO: make one for ISU-152 or generic Soviet
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.Soviet.TNK-1_periscope' // TODO: maybe move this to DHSovietCannonPawn, if was widely used?
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ISU152_shell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ISU152_shell_reload'
+    ManualRotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
+    ManualRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'
     FireImpulse=(X=-200000.0)
 }

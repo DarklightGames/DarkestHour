@@ -7,5 +7,5 @@ class DHShellTracer_Orange extends DHShellTracer;
 
 defaultproperties
 {
-    Texture=texture'DH_FX_Tex.Effects.FlareOrange'
+    Texture=Texture'DH_FX_Tex.Effects.FlareOrange'
 }

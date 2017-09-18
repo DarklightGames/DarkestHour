@@ -147,7 +147,7 @@ defaultproperties
     captions_interface(5)="Squad Orders Menu"
 
     Begin Object Class=DHGUIProportionalContainer Name=InputBK1
-        HeaderBase=texture'DH_GUI_Tex.Menu.DHDisplay_withcaption'
+        HeaderBase=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption'
         Caption="Bindings"
         LeftPadding=0.0
         RightPadding=0.0

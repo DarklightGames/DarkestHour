@@ -24,10 +24,10 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_ISU152_anm.ISU152-body_ext'
-    Skins(0)=texture'DH_VehiclesSOV_tex.ext_vehicles.isu152_body_ext'
-    Skins(1)=texture'DH_VehiclesSOV_tex.Treads.isu152_treads'
-    Skins(2)=texture'DH_VehiclesSOV_tex.Treads.isu152_treads'
-    Skins(3)=texture'DH_VehiclesSOV_tex.int_vehicles.isu152_body_int'
+    Skins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.isu152_body_ext'
+    Skins(1)=Texture'DH_VehiclesSOV_tex.Treads.isu152_treads'
+    Skins(2)=Texture'DH_VehiclesSOV_tex.Treads.isu152_treads'
+    Skins(3)=Texture'DH_VehiclesSOV_tex.int_vehicles.isu152_body_int'
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ISU152CannonPawn',WeaponBone="Turret_Placement")
@@ -89,14 +89,14 @@ defaultproperties
 
     // Sounds
     MaxPitchSpeed=100.0
-    IdleSound=sound'Vehicle_Engines.IS2.IS2_engine_loop' // was SU76 engine sound but vehicle is built off IS2 chassis & engine
-    StartUpSound=sound'Vehicle_Engines.IS2.IS2_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.IS2.IS2_engine_stop'
+    IdleSound=Sound'Vehicle_Engines.IS2.IS2_engine_loop' // was SU76 engine sound but vehicle is built off IS2 chassis & engine
+    StartUpSound=Sound'Vehicle_Engines.IS2.IS2_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.IS2.IS2_engine_stop'
     LeftTrackSoundBone="Tread_L"
     RightTrackSoundBone="Tread_R"
-    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L03'
-    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R03'
-    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02' // was custom 'ISU152_engine_loop', but using same as IS2 as same chassis & engine
+    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L03'
+    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R03'
+    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02' // was custom 'ISU152_engine_loop', but using same as IS2 as same chassis & engine
 
     // Visual effects
     TreadVelocityScale=125.0
@@ -109,7 +109,7 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.isu152_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.isu152_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.isu152_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.isu152_turret_look'
     VehicleHudTreadsPosX(0)=0.38 // some positions adjusted from original
@@ -125,7 +125,7 @@ defaultproperties
     VehicleHudOccupantsY(3)=0.625
     VehicleHudOccupantsX(4)=0.6
     VehicleHudOccupantsY(4)=0.6
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.ISU152'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.ISU152'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

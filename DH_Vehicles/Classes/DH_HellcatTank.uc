@@ -19,12 +19,12 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_ext'
-    Skins(0)=texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_body_ext'
-    Skins(1)=texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_armor_ext'
-    Skins(2)=texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_ext'
-    Skins(3)=texture'DH_VehiclesUS_tex5.Treads.hellcat_treads'
-    Skins(4)=texture'DH_VehiclesUS_tex5.Treads.hellcat_treads'
-    Skins(5)=texture'DH_VehiclesUS_tex5.int_vehicles.hellcat_body_int'
+    Skins(0)=Texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_body_ext'
+    Skins(1)=Texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_armor_ext'
+    Skins(2)=Texture'DH_VehiclesUS_tex5.ext_vehicles.hellcat_turret_ext'
+    Skins(3)=Texture'DH_VehiclesUS_tex5.Treads.hellcat_treads'
+    Skins(4)=Texture'DH_VehiclesUS_tex5.Treads.hellcat_treads'
+    Skins(5)=Texture'DH_VehiclesUS_tex5.int_vehicles.hellcat_body_int'
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_HellcatCannonPawn',WeaponBone="Turret_placement")
@@ -83,12 +83,12 @@ defaultproperties
 
     // Sounds
     IdleSound=SoundGroup'Vehicle_Engines.SU76.SU76_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.SU76.SU76_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.SU76.SU76_engine_stop'
-    LeftTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_L'
-    RightTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_R'
+    StartUpSound=Sound'Vehicle_Engines.SU76.SU76_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.SU76.SU76_engine_stop'
+    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
+    RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
     RumbleSoundBone="driver_attachment"
-    RumbleSound=sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
+    RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
 
     // Visual effects
     LeftTreadIndex=4
@@ -104,7 +104,7 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.M18_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.M18_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.M18_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.M18_turret_look'
     VehicleHudEngineX=0.51
@@ -123,7 +123,7 @@ defaultproperties
     VehicleHudOccupantsY(4)=0.8
     VehicleHudOccupantsX(5)=0.625
     VehicleHudOccupantsY(5)=0.75
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.m18_hellcat'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.m18_hellcat'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

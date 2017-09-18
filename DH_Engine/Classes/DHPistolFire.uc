@@ -168,7 +168,7 @@ event ModeDoFire()
 
 defaultproperties
 {
-    NoAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_pistol'
+    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_pistol'
     SmokeEmitterClass=class'ROEffects.ROPistolMuzzleSmoke'
 }
 

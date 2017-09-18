@@ -55,7 +55,7 @@ function BackButtonClicked()
 
 defaultproperties
 {
-    Background=texture'DH_GUI_Tex.Menu.Setupmenu'
+    Background=Texture'DH_GUI_Tex.Menu.Setupmenu'
 
     PanelCaption(0)="Game"
     PanelCaption(1)="Display"

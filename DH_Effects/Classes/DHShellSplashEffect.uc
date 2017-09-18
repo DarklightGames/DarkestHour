@@ -36,7 +36,7 @@ defaultproperties
         StartSizeRange=(X=(Min=35.0,Max=45.0),Y=(Min=35.0,Max=45.0),Z=(Min=35.0,Max=45.0))
         InitialParticlesPerSecond=100.0
         DrawStyle=PTDS_Brighten
-        Texture=texture'Effects_Tex.BulletHits.waterring_2frame'
+        Texture=Texture'Effects_Tex.BulletHits.waterring_2frame'
         TextureUSubdivisions=2
         TextureVSubdivisions=1
         SubdivisionScale(0)=0.5
@@ -68,7 +68,7 @@ defaultproperties
         StartSizeRange=(X=(Min=12.0,Max=12.0),Y=(Min=8.0,Max=10.0),Z=(Min=8.0,Max=10.0))
         InitialParticlesPerSecond=500.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=texture'Effects_Tex.BulletHits.watersplashcloud'
+        Texture=Texture'Effects_Tex.BulletHits.watersplashcloud'
         LifetimeRange=(Min=1.5,Max=1.5)
         StartVelocityRange=(X=(Min=450.0,Max=700.0),Y=(Min=-5.0,Max=5.0),Z=(Min=-5.0,Max=5.0))
         VelocityScale(0)=(RelativeVelocity=(X=1.0,Y=1.0,Z=1.0))
@@ -94,7 +94,7 @@ defaultproperties
         StartSizeRange=(X=(Min=3.0,Max=5.0))
         InitialParticlesPerSecond=300.0
         DrawStyle=PTDS_Brighten
-        Texture=texture'Effects_Tex.Smoke.Sparks'
+        Texture=Texture'Effects_Tex.Smoke.Sparks'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=2.0,Max=2.0)
@@ -120,7 +120,7 @@ defaultproperties
         StartSizeRange=(X=(Min=50.0,Max=60.0))
         InitialParticlesPerSecond=100.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=texture'Effects_Tex.BulletHits.watersplatter2'
+        Texture=Texture'Effects_Tex.BulletHits.watersplatter2'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=1.0,Max=1.0)
@@ -152,7 +152,7 @@ defaultproperties
         StartSizeRange=(X=(Min=12.0,Max=16.0))
         InitialParticlesPerSecond=500.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=texture'Effects_Tex.BulletHits.watersplashcloud'
+        Texture=Texture'Effects_Tex.BulletHits.watersplashcloud'
         LifetimeRange=(Min=1.5,Max=1.5)
         StartVelocityRange=(X=(Min=250.0,Max=300.0),Y=(Min=-10.0,Max=10.0),Z=(Min=-10.0,Max=10.0))
         VelocityScale(0)=(RelativeVelocity=(X=1.0,Y=1.0,Z=1.0))
@@ -183,7 +183,7 @@ defaultproperties
         StartSizeRange=(X=(Min=24.0,Max=32.0))
         InitialParticlesPerSecond=100.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=texture'Effects_Tex.BulletHits.watersplatter2'
+        Texture=Texture'Effects_Tex.BulletHits.watersplatter2'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.75,Max=0.75)
@@ -213,7 +213,7 @@ defaultproperties
         StartSizeRange=(X=(Min=5.0,Max=10.0),Y=(Min=5.0,Max=10.0),Z=(Min=5.0,Max=10.0))
         InitialParticlesPerSecond=100.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=texture'Effects_Tex.BulletHits.watersplatter2'
+        Texture=Texture'Effects_Tex.BulletHits.watersplatter2'
         LifetimeRange=(Min=2.0,Max=2.0)
         StartVelocityRange=(X=(Min=-100.0,Max=100.0),Y=(Min=-100.0,Max=100.0),Z=(Min=500.0,Max=800.0))
     End Object

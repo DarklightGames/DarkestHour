@@ -8,7 +8,7 @@ class DH_50CalVehDamType extends DHVehicleDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
     TankDamageModifier=0.1 // 0.15 in 234/1, 1.0 in PTRD
     APCDamageModifier=0.1 // 0.35 in 234/1, 0.5 in PTRD
     VehicleDamageModifier=0.1 // 0.75 in 234/1, 0.35 in PTRD, small arms veh damage are default 0.05

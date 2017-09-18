@@ -9,9 +9,9 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_turret_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo1'
-    Skins(1)=texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
-    Skins(2)=texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
+    Skins(0)=Texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_body_camo1'
+    Skins(1)=Texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
+    Skins(2)=Texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
     GunnerAttachmentBone="Commander_attachment"
     FireEffectOffset=(X=10.0,Y=0.0,Z=0.0)
 
@@ -55,10 +55,10 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire03'
-    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
-    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
 
     // Cannon range settings
     RangeSettings(1)=100

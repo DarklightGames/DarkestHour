@@ -19,12 +19,12 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_ShermanM4A1_anm.ShermanM4A1_body_ext'
-    Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_body_ext'
-    Skins(1)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman76w_turret_ext'
-    Skins(2)=texture'DH_VehiclesUS_tex.int_vehicles.Sherman_body_int'
-    Skins(3)=texture'DH_VehiclesUS_tex.int_vehicles.Sherman_hatch_int'
-    Skins(4)=texture'DH_VehiclesUS_tex.Treads.M10_treads'
-    Skins(5)=texture'DH_VehiclesUS_tex.Treads.M10_treads'
+    Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_body_ext'
+    Skins(1)=Texture'DH_VehiclesUS_tex.ext_vehicles.Sherman76w_turret_ext'
+    Skins(2)=Texture'DH_VehiclesUS_tex.int_vehicles.Sherman_body_int'
+    Skins(3)=Texture'DH_VehiclesUS_tex.int_vehicles.Sherman_hatch_int'
+    Skins(4)=Texture'DH_VehiclesUS_tex.Treads.M10_treads'
+    Skins(5)=Texture'DH_VehiclesUS_tex.Treads.M10_treads'
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn',WeaponBone="Turret_placement")
@@ -84,12 +84,12 @@ defaultproperties
 
     // Sounds
     IdleSound=SoundGroup'DH_AlliedVehicleSounds.Sherman.ShermanEngineLoop'
-    StartUpSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanStart'
-    ShutDownSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
-    LeftTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_L'
-    RightTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_R'
+    StartUpSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStart'
+    ShutDownSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
+    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
+    RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
     RumbleSoundBone="Camera_driver"
-    RumbleSound=sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
+    RumbleSound=Sound'DH_AlliedVehicleSounds.Sherman.inside_rumble01'
 
     // Visual effects
     LeftTreadIndex=5
@@ -103,7 +103,7 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.Sherman_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.Sherman_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Sherman_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Sherman_turret_look'
     VehicleHudEngineX=0.51
@@ -119,7 +119,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.8
     VehicleHudOccupantsX(6)=0.625
     VehicleHudOccupantsY(6)=0.75
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.sherman_m4a1_75'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sherman_m4a1_75'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

@@ -19,10 +19,10 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_ext'
-    Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.M5_body_ext'
-    Skins(1)=texture'DH_VehiclesUS_tex.int_vehicles.M5_body_int'
-    Skins(2)=texture'DH_VehiclesUS_tex.Treads.M5_treads'
-    Skins(3)=texture'DH_VehiclesUS_tex.Treads.M5_treads'
+    Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.M5_body_ext'
+    Skins(1)=Texture'DH_VehiclesUS_tex.int_vehicles.M5_body_int'
+    Skins(2)=Texture'DH_VehiclesUS_tex.Treads.M5_treads'
+    Skins(3)=Texture'DH_VehiclesUS_tex.Treads.M5_treads'
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_StuartCannonPawn',WeaponBone="Turret_placement")
@@ -83,12 +83,12 @@ defaultproperties
     // Sounds
     SoundPitch=32 // half normal pitch = 1 octave lower
     IdleSound=SoundGroup'DH_AlliedVehicleSounds.stuart.stuart_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.T60.t60_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.T60.t60_engine_stop'
-    LeftTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_L'
-    RightTreadSound=sound'Vehicle_EnginesTwo.UC.UC_tread_R'
+    StartUpSound=Sound'Vehicle_Engines.T60.t60_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.T60.t60_engine_stop'
+    LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
+    RightTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_R'
     RumbleSoundBone="placeholder_int"
-    RumbleSound=sound'DH_AlliedVehicleSounds.stuart.stuart_inside_rumble'
+    RumbleSound=Sound'DH_AlliedVehicleSounds.stuart.stuart_inside_rumble'
 
     // Visual effects
     LeftTreadIndex=3
@@ -102,7 +102,7 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.stuart_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.stuart_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Stuart_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Stuart_turret_look'
     VehicleHudEngineX=0.51
@@ -119,7 +119,7 @@ defaultproperties
     VehicleHudOccupantsY(4)=0.8
     VehicleHudOccupantsX(5)=0.65
     VehicleHudOccupantsY(5)=0.72
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.m5_stuart'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.m5_stuart'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

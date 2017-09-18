@@ -21,7 +21,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    ScopeOverlay=texture'DH_Weapon_tex.Scopes.Springfield_Scope_Overlay'
+    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Springfield_Scope_Overlay'
     OverlayCorrectionX=-0.5
     DisplayFOV=90.0
     IronSightDisplayFOV=40.0

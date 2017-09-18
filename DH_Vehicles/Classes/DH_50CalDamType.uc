@@ -8,7 +8,7 @@ class DH_50CalDamType extends DHWeaponProjectileDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt_tex.deathicons.b792mm'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
     TankDamageModifier=0.1
     APCDamageModifier=0.1
     VehicleDamageModifier=0.1

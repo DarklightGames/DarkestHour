@@ -9,9 +9,9 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_Wolverine_anm.Achilles_turret_ext'
-    Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Achilles_turret_ext'
-    Skins(1)=texture'DH_VehiclesUK_tex.int_vehicles.Achilles_turret_int'
-    Skins(2)=texture'DH_VehiclesUK_tex.int_vehicles.Achilles_turret_int'
+    Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.Achilles_turret_ext'
+    Skins(1)=Texture'DH_VehiclesUK_tex.int_vehicles.Achilles_turret_int'
+    Skins(2)=Texture'DH_VehiclesUK_tex.int_vehicles.Achilles_turret_int'
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.M10.M10_turret_coll'
     FireEffectScale=1.5 // turret fire is larger & positioned in centre of open turret
     FireEffectOffset=(X=0.0,Y=20.0,Z=10.0)
@@ -54,10 +54,10 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
     CannonFireSound(1)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
     CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
-    ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.SU_76_Reload_01')
-    ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.SU_76_Reload_02')
-    ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.SU_76_Reload_03')
-    ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.SU_76_Reload_04')
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_01')
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_02')
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_04')
 
     // Cannon range settings
     RangeSettings(1)=100

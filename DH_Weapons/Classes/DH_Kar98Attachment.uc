@@ -8,7 +8,7 @@ class DH_Kar98Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.kar98'
-    MenuImage=texture'InterfaceArt_tex.Menu_weapons.kar98'
+    MenuImage=Texture'InterfaceArt_tex.Menu_weapons.kar98'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdKar'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bAnimNotifiedShellEjects=true

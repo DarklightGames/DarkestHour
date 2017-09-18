@@ -7,5 +7,5 @@ class DH_BritishVestHampshiresPawn extends DH_BritishVestPawn;
 
 defaultproperties
 {
-    Skins(1)=texture'DHBritishCharactersTex.PBI.British_Hampshires_Vest'
+    Skins(1)=Texture'DHBritishCharactersTex.PBI.British_Hampshires_Vest'
 }

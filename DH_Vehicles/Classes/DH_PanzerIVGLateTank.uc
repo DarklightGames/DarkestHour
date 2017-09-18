@@ -17,10 +17,10 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_body_ext'
-    Skins(0)=texture'axis_vehicles_tex.ext_vehicles.Panzer4F2_ext'
-    Skins(1)=texture'axis_vehicles_tex.Treads.panzer4F2_treads'
-    Skins(2)=texture'axis_vehicles_tex.Treads.panzer4F2_treads'
-    Skins(3)=texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
+    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.Panzer4F2_ext'
+    Skins(1)=Texture'axis_vehicles_tex.Treads.panzer4F2_treads'
+    Skins(2)=Texture'axis_vehicles_tex.Treads.panzer4F2_treads'
+    Skins(3)=Texture'axis_vehicles_tex.int_vehicles.Panzer4F2_int'
     HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.Panzer4f2_int_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=3
@@ -79,11 +79,11 @@ defaultproperties
 
     // Sounds
     IdleSound=SoundGroup'Vehicle_Engines.PanzerIV.PanzerIV_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.PanzerIV.PanzerIV_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.PanzerIV.PanzerIV_engine_stop'
-    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L05'
-    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R05'
-    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble02'
+    StartUpSound=Sound'Vehicle_Engines.PanzerIV.PanzerIV_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.PanzerIV.PanzerIV_engine_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L05'
+    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R05'
+    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02'
 
     // Visual effects
     TreadVelocityScale=103.0
@@ -93,7 +93,7 @@ defaultproperties
     RightLeverBoneName="lever_R"
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.panzer4g_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.panzer4g_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panzer4h_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.panzer4h_turret_look'
     VehicleHudTreadsPosX(0)=0.36
@@ -109,7 +109,7 @@ defaultproperties
     VehicleHudOccupantsY(5)=0.75
     VehicleHudOccupantsX(6)=0.625
     VehicleHudOccupantsY(6)=0.7
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.panzer4_g'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.panzer4_g'
 
     // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"

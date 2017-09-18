@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=5
     InitialAmount=5
-    IconMaterial=texture'DH_InterfaceArt_tex.weapon_icons.SpringfieldSniper_ammo'
+    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.SpringfieldSniper_ammo'
 }

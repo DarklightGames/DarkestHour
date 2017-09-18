@@ -7,5 +7,5 @@ class DHLocationHintAxis extends DHLocationHint
 
 defaultproperties
 {
-    Texture=texture'DHEngine_Tex.Axis_LocationHint'
+    Texture=Texture'DHEngine_Tex.Axis_LocationHint'
 }
