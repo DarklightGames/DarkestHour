@@ -164,11 +164,7 @@ replication
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bEngineOff, bRightTrackDamaged, bLeftTrackDamaged, SpawnPointAttachment, SupplyAttachment;
-
-    // Variables the server will replicate to the client that owns this actor
-    reliable if (bNetDirty && Role == ROLE_Authority)
-        TouchingSupplyCount;
+        bEngineOff, bRightTrackDamaged, bLeftTrackDamaged, SpawnPointAttachment, SupplyAttachment, TouchingSupplyCount;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
