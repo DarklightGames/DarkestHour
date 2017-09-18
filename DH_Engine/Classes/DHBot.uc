@@ -180,8 +180,7 @@ state RangedAttack
                 if (V.WeaponPawns[i] != none && V.WeaponPawns[i].Driver == none
                     && (V.WeaponPawns[i].IsA('DHVehicleCannonPawn') || (V.WeaponPawns[i].IsA('DHVehicleMGPawn') && DHPawn(Enemy) != none/* && V.bIsApc*/)))
                 {
-                    V.KDriverLeave(true);
-                    V.WeaponPawns[i].KDriverEnter(P);
+                    V.ServerChangeDriverPosition(i + 2);
                     break;
                 }
             }
@@ -191,6 +190,19 @@ state RangedAttack
         if (Pawn != none && DHProjectileWeapon(Pawn.Weapon) != none)
         {
             DHProjectileWeapon(Pawn.Weapon).ZoomIn(false);
+        }
+    }
+
+    // Modified to call a switch function instead of KDriverLeave & KDriverEnter, to work properly with DH's modified vehicle switching system
+    function EndState()
+    {
+        local VehicleWeaponPawn WP;
+
+        WP = VehicleWeaponPawn(Pawn);
+
+        if (WP != none && WP.VehicleBase != none && WP.VehicleBase.Driver == none)
+        {
+            WP.ServerChangeDriverPosition(1);
         }
     }
 }
