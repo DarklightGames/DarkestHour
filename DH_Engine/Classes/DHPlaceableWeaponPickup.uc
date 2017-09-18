@@ -130,7 +130,7 @@ function InitPickup()
     }
 }
 
-// Modified to check whether player already has a weapon in the same inventory slot & to call SetRespawn()
+// Modified to call SetRespawn() instead of destroying the pickup
 auto state Pickup
 {
     function UsedBy(Pawn User)
@@ -147,24 +147,19 @@ auto state Pickup
             }
 
             AnnouncePickup(User);
-            SetRespawn(); // instead of Destroy() for normal, temporary weapon pickup
+            SetRespawn();
         }
     }
-
-// Modified to make sure replication is enabled, as will have been disabled if pickup has been used & is inactive
-Begin:
-    RemoteRole = default.RemoteRole;
 }
 
-// Modified to enable replication as pickup is now inactive
+// Modified so pickup only re-spawns if specified ReSpawnTime is not zero
+// Allows mapper to specify zero to signify the weapon pickup should never re-spawn
+// But even if it won't re-spawn we don't destroy the pickup, we just leave it sleeping, because if the round gets reset it can then be reactivated & the item re-spawned
 state Sleeping
 {
 ignores Touch;
 
 Begin:
-    Sleep(1.0); // allow a little time for bHidden to replicate to clients, before switching off all further replication (by setting RemoteRole to none)
-    RemoteRole = ROLE_None;
-
     if (GetReSpawnTime() > 0.0)
     {
         Sleep(GetReSpawnTime() - RespawnEffectTime - 1.0);
@@ -173,7 +168,7 @@ Begin:
 }
 
 // Modified to always go inactive instead of being destroyed
-// Even if pickup is set not to respawn, the Sleeping state still allows pickup to be rectivated if match is reset
+// Even if pickup is set not to respawn, the Sleeping state still allows pickup to be reactivated if match is reset
 function SetRespawn()
 {
     StartSleeping();
