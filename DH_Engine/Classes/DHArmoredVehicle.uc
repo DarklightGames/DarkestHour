@@ -455,7 +455,7 @@ function bool KDriverLeave(bool bForceLeave)
 {
     local bool bAllowedCrewmanExitingLockedVehicle;
 
-    bAllowedCrewmanExitingLockedVehicle = bVehicleLocked && !bForceLeave && IsAnAllowedCrewman(Driver); // bForceLeave would mean player is only switching to different vehicle position
+    bAllowedCrewmanExitingLockedVehicle = bVehicleLocked && IsAnAllowedCrewman(Driver) && !(bForceLeave && DHPawn(Driver).SwitchingController != none);
 
     if (super.KDriverLeave(bForceLeave))
     {

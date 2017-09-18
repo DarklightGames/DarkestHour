@@ -532,19 +532,28 @@ function bool TryToDrive(Pawn P)
 function KDriverEnter(Pawn P)
 {
     local Controller C;
+    local DHPawn     DHP;
 
     // Get a controller reference
     // If the entering player has a controller we need to save it because the pawn will lose it when unpossessed
     // And if player is switching from another vehicle position, his player pawn will no longer have a controller, so we need to use the new DHPawn.SwitchingController
     if (P != none)
     {
+        DHP = DHPawn(P);
+
         if (P.Controller != none)
         {
             C = P.Controller;
         }
-        else if (P.IsA('DHPawn') && DHPawn(P).SwitchingController != none)
+
+        if (DHP != none && DHP.SwitchingController != none)
         {
-            C = DHPawn(P).SwitchingController;
+            if (C == none)
+            {
+                C = DHP.SwitchingController;
+            }
+
+            DHP.SetSwitchingController(none); // reset this now we've used it
         }
     }
 
@@ -982,9 +991,8 @@ simulated function SwitchWeapon(byte F)
 // Generally re-factored to avoid repeating any of the same checks & to reduce repetition & make clearer
 function ServerChangeDriverPosition(byte F)
 {
-    local DHPawn  SwitchingPlayer;
+    local DHPawn  SwitchingPlayer, Bot;
     local Vehicle NewVehiclePosition;
-    local Pawn    Bot;
 
     SwitchingPlayer = DHPawn(Driver);
 
@@ -1007,8 +1015,13 @@ function ServerChangeDriverPosition(byte F)
         // If human player wants to switch to a bot's position, make the bot swap with him
         if (AIController(NewVehiclePosition.Controller) != none)
         {
-            Bot = NewVehiclePosition.Driver;
-            NewVehiclePosition.KDriverLeave(true); // kicks bot out
+            Bot = DHPawn(NewVehiclePosition.Driver);
+
+            if (Bot != none)
+            {
+                Bot.SetSwitchingController(NewVehiclePosition.Controller);
+                NewVehiclePosition.KDriverLeave(true); // kicks bot out
+            }
         }
 
         // Switch player to new vehicle position
@@ -1017,7 +1030,6 @@ function ServerChangeDriverPosition(byte F)
         SwitchingPlayer.SetSwitchingController(Controller);
         KDriverLeave(true);
         NewVehiclePosition.KDriverEnter(SwitchingPlayer);
-        SwitchingPlayer.SetSwitchingController(none); // reset
 
         if (Bot != none)
         {
@@ -1109,45 +1121,32 @@ function bool KDriverLeave(bool bForceLeave)
     local DHArmoredVehicle AV;
     local Controller       SavedController;
     local vector           ExitVelocity;
-    local bool             bAllowedCrewmanExitingLockedVehicle;
+    local bool             bSwitchingVehiclePosition, bAllowedCrewmanExitingLockedVehicle;
 
-    // The player is actually trying to exit vehicle, not just switching to another vehicle position (bForceLeave is true when only switching)
-    if (!bForceLeave)
+    // Prevent exit if player is buttoned up (or if game type or mutator prevents exit)
+    if (!bForceLeave && (!CanExit() || (Level.Game != none && !Level.Game.CanLeaveVehicle(self, Driver))))
     {
-        // Prevent exit if player is buttoned up (or if game type or mutator prevents exit)
-        if (!CanExit() || (Level.Game != none && !Level.Game.CanLeaveVehicle(self, Driver)))
+        return false;
+    }
+
+    bSwitchingVehiclePosition = bForceLeave && DHPawn(Driver) != none && DHPawn(Driver).SwitchingController != none;
+
+    // Find an exit location for the player & try to move him there, unless we're only switching vehicle position
+    if (!bSwitchingVehiclePosition && Driver != none && (!bRemoteControlled || bHideRemoteDriver))
+    {
+        Driver.bHardAttach = false;
+        Driver.bCollideWorld = true;
+        Driver.SetCollision(true, true);
+
+        // If we couldn't move player to an exit location & we're not forcing exit, leave him inside (restoring his attachment & collision properties)
+        if (!PlaceExitingDriver() && !bForceLeave)
         {
-            if (Bot(Controller) != none && VehicleBase != none && VehicleBase.Driver == none)
-            {
-                ServerChangeDriverPosition(1); // if bot tries & fails to exit, it tries switching to vehicle driver's position
-            }
+            Driver.bHardAttach = true;
+            Driver.bCollideWorld = false;
+            Driver.SetCollision(false, false);
+            DisplayVehicleMessage(13); // no exit can be found (added)
 
             return false;
-        }
-
-        // Find an exit location for the player & try to move him there
-        // ADDED !bForceLeave check to this block so we don't bother trying to move the player if he's only switching vehicle positions
-        if (Driver != none && (!bRemoteControlled || bHideRemoteDriver))
-        {
-            Driver.bHardAttach = false;
-            Driver.bCollideWorld = true;
-            Driver.SetCollision(true, true);
-
-            // If we couldn't move player to an exit location, leave him inside (restoring his attachment & collision properties)
-            if (!PlaceExitingDriver())
-            {
-                Driver.bHardAttach = true;
-                Driver.bCollideWorld = false;
-                Driver.SetCollision(false, false);
-                DisplayVehicleMessage(13); // no exit can be found (ADDED)
-
-                if (Bot(Controller) != none && VehicleBase != none && VehicleBase.Driver == none)
-                {
-                    ServerChangeDriverPosition(1);
-                }
-
-                return false;
-            }
         }
     }
 
@@ -1168,8 +1167,8 @@ function bool KDriverLeave(bool bForceLeave)
         Controller.UnPossess();
 
         // If player is actually exiting the vehicle, not just switching positions, take control of the exiting player pawn
-        // ADDED !bForceLeave check so we no longer briefly re-possess the player pawn
-        if (!bForceLeave && Driver != none && Driver.Health > 0)
+        // We now skip this block if only switching, so we no longer briefly re-possess the player pawn
+        if (!bSwitchingVehiclePosition && Driver != none && Driver.Health > 0)
         {
 //          Driver.SetOwner(SavedController); // removed as gets set anyway in the possession process
             SavedController.bVehicleTransition = true; // to stop bots from doing Restart() during possession
@@ -1196,10 +1195,10 @@ function bool KDriverLeave(bool bForceLeave)
     if (Driver != none)
     {
         // Update exiting player pawn if he has actually left the vehicle
-        if (!bForceLeave)
+        if (!bSwitchingVehiclePosition)
         {
             Driver.bSetPCRotOnPossess = Driver.default.bSetPCRotOnPossess; // undo temporary change made when entering vehicle
-            Driver.StopDriving(self); // ADDED !bForceLeave check here so we don't call StopDriving() if only switching vehicle positions
+            Driver.StopDriving(self);
 
             // Give a player exiting the vehicle the same momentum as vehicle, with a little added height kick
             if (VehicleBase != none)
@@ -1210,7 +1209,7 @@ function bool KDriverLeave(bool bForceLeave)
             }
         }
         // Or if human player has only switched vehicle position, we just set PlayerStartTime, telling bots not to enter this vehicle position for a little while
-        // ADDED this alternative, with the only line that's relevant from StopDriving(), as we're no longer calling that
+        // This is the only line that's relevant from StopDriving(), as we're no longer calling that if only switching position
         else if (PlayerController(SavedController) != none)
         {
             PlayerStartTime = Level.TimeSeconds + 12.0;
@@ -1218,8 +1217,7 @@ function bool KDriverLeave(bool bForceLeave)
     }
 
     // If an an 'allowed' crewman is exiting a locked armored vehicle, check whether need to set an unlock timer
-    // Note bForceLeave would mean player is only switching to different vehicle position, which we ignore
-    bAllowedCrewmanExitingLockedVehicle = !bForceLeave && GetArmoredVehicleBase(AV) && AV.bVehicleLocked && AV.IsAnAllowedCrewman(Driver);
+    bAllowedCrewmanExitingLockedVehicle = !bSwitchingVehiclePosition && GetArmoredVehicleBase(AV) && AV.bVehicleLocked && AV.IsAnAllowedCrewman(Driver);
 
     DriverLeft();
 
