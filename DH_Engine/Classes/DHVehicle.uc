@@ -286,13 +286,23 @@ simulated function Destroyed()
 // Modified to score the vehicle kill, & to subtract the vehicle's reinforcement cost for the loss
 function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
 {
+    local DarkestHourGame DHG;
+
     super.Died(Killer, DamageType, HitLocation);
 
-    DarkestHourGame(Level.Game).ModifyReinforcements(VehicleTeam, -ReinforcementCost);
+    DHG = DarkestHourGame(Level.Game);
 
-    if (Killer != none)
+    if (DHG != none)
     {
-        DarkestHourGame(Level.Game).ScoreVehicleKill(Killer, self, PointValue);
+        if (ReinforcementCost != 0)
+        {
+            DHG.ModifyReinforcements(VehicleTeam, -ReinforcementCost);
+        }
+
+        if (Killer != none)
+        {
+            DHG.ScoreVehicleKill(Killer, self, PointValue);
+        }
     }
 }
 
