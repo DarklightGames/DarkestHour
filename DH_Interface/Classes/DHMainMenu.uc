@@ -121,14 +121,14 @@ function InternalOnOpen()
 // Means the key is either already bound to what we want (so no need to change) or the player is using it for something else (so don't mess up his config)
 // Secondly checks whether our new command is already bound to another key or keys - if it is bound to two keys then we don't make any changes
 // But if the command is already bound to only one key, we'll also bound it to the new key, as the config menu can handle two key assignments
-function SetKeyBindIfAvailable(string BindKeyName, string NewBoundCommand, optional string ExistingCommandCanBeOverriden)
+function SetKeyBindIfAvailable(string BindKeyName, string NewBoundCommand, optional string ExistingCommandCanBeOverridden)
 {
     local array<string> ExistingAssignedKeys, s;
     local string        ExistingBoundCommand;
 
     Controller.GetCurrentBind(BindKeyName, ExistingBoundCommand); // finds any command that our key is already assigned to
 
-    if (ExistingBoundCommand == "" || ExistingBoundCommand ~= ExistingCommandCanBeOverriden) // only proceed if our key isn't already bound or is bound to a command we want to override
+    if (ExistingBoundCommand == "" || ExistingBoundCommand ~= ExistingCommandCanBeOverridden) // only proceed if our key isn't already bound or is bound to a command we want to override
     {
         Controller.GetAssignedKeys(NewBoundCommand, ExistingAssignedKeys, s); // finds any other keys already assigned to our command
 
