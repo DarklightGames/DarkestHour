@@ -2276,11 +2276,10 @@ function PlayHit(float Damage, Pawn InstigatedBy, vector HitLocation, class<Dama
 {
     local PlayerController     PC;
     local ProjectileBloodSplat BloodHit;
-    local vector  HitNormal;
-    local name    HitBone;
-    local float   HitBoneDist;
-    local rotator SplatRot;
-    local bool    bShowEffects, bRecentHit;
+    local name                 HitBone;
+    local vector               HitNormal;
+    local rotator              SplatRot;
+    local bool                 bShowEffects, bRecentHit;
 
     bRecentHit = Level.TimeSeconds - LastPainTime < 0.2;
 
@@ -2304,13 +2303,11 @@ function PlayHit(float Damage, Pawn InstigatedBy, vector HitLocation, class<Dama
     if (DamageType.default.bLocationalHit)
     {
         HitBone = GetHitBoneFromIndex(HitIndex);
-        HitBoneDist = 0.0;
     }
     else
     {
         HitLocation = Location;
         HitBone = 'none';
-        HitBoneDist = 0.0;
     }
 
     if (DamageType.default.bAlwaysSevers && DamageType.default.bSpecial)
@@ -2770,15 +2767,12 @@ simulated event Destroyed()
 // Called by DH_GiveChuteTrigger, adds parachute items to player's inventory
 singular function GiveChute()
 {
-    local RORoleInfo RI;
+    local DHRoleInfo RI;
     local int        i;
     local string     ItemString;
     local bool       bHasPSL, bHasPI;
 
-    if (DHPlayer(Controller) != none)
-    {
-        RI = DHPlayer(Controller).GetRoleInfo();
-    }
+    RI = GetRoleInfo();
 
     // Make sure player doesn't already have a parachute
     if (RI != none)
@@ -6658,12 +6652,7 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vecto
 // Modified to fix an accessed none that could happen if Weapon was none
 simulated function NextWeapon()
 {
-    if (Level.Pauser != none)
-    {
-        return;
-    }
-
-    if (!bRecievedInitialLoadout)
+    if (Level.Pauser != none || !bRecievedInitialLoadout)
     {
         return;
     }
@@ -6682,9 +6671,12 @@ simulated function NextWeapon()
             return;
         }
 
-        PendingWeapon = Inventory.NextWeapon(none, PendingWeapon);
+        if (Inventory != none)
+        {
+            PendingWeapon = Inventory.NextWeapon(none, PendingWeapon);
+        }
     }
-    else
+    else if (Inventory != none)
     {
         PendingWeapon = Inventory.NextWeapon(none, Weapon);
     }
