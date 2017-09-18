@@ -281,14 +281,6 @@ simulated function Destroyed()
     super.Destroyed();
 
     DestroyAttachments();
-
-    if (Role == ROLE_Authority)
-    {
-        if (SpawnPointAttachment != none)
-        {
-            SpawnPointAttachment.Destroy();
-        }
-    }
 }
 
 // Modified to score the vehicle kill, & to subtract the vehicle's reinforcement cost for the loss
@@ -2866,14 +2858,22 @@ simulated function DestroyAttachments()
 {
     local int i;
 
-    if (ResupplyAttachment != none && Role == ROLE_Authority)
+    if (Role == ROLE_Authority)
     {
-        ResupplyAttachment.Destroy();
-    }
+        if (SpawnPointAttachment != none)
+        {
+            SpawnPointAttachment.Destroy();
+        }
 
-    if (SupplyAttachment != none && Role == ROLE_Authority)
-    {
-        SupplyAttachment.Destroy();
+        if (ResupplyAttachment != none)
+        {
+            ResupplyAttachment.Destroy();
+        }
+
+        if (SupplyAttachment != none)
+        {
+            SupplyAttachment.Destroy();
+        }
     }
 
     for (i = 0; i < VehicleAttachments.Length; ++i)
