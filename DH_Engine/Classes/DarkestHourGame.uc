@@ -1160,7 +1160,7 @@ function ScoreKill(Controller Killer, Controller Other)
 // Also if the old spawn area system is used, it only checks spawn damage protection for the spawn that is relevant to the player, including any mortar crew spawn
 function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector HitLocation, out vector Momentum, class<DamageType> DamageType)
 {
-    local RORoleInfo  RoleInfo;
+    local DHRoleInfo  RoleInfo;
     local ROSpawnArea SpawnArea;
     local int         TeamIndex;
 
@@ -1189,7 +1189,7 @@ function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector Hi
         if (LevelInfo.bUseSpawnAreas && Injured.PlayerReplicationInfo.Team != none && ROPlayerReplicationInfo(Injured.PlayerReplicationInfo) != none)
         {
             TeamIndex = Injured.PlayerReplicationInfo.Team.TeamIndex;
-            RoleInfo = ROPlayerReplicationInfo(Injured.PlayerReplicationInfo).RoleInfo;
+            RoleInfo = DHRoleInfo(ROPlayerReplicationInfo(Injured.PlayerReplicationInfo).RoleInfo);
 
             if (RoleInfo != none)
             {
@@ -1197,7 +1197,7 @@ function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector Hi
                 {
                     SpawnArea = CurrentTankCrewSpawnArea[TeamIndex];
                 }
-                else if (DHRoleInfo(RoleInfo) != none && DHRoleInfo(RoleInfo).bCanUseMortars && DHCurrentMortarSpawnArea[TeamIndex] != none)
+                else if (RoleInfo.bCanUseMortars && DHCurrentMortarSpawnArea[TeamIndex] != none)
                 {
                     SpawnArea = DHCurrentMortarSpawnArea[TeamIndex];
                 }
