@@ -86,11 +86,11 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
     return true;
 }
 
-private function Vehicle FindEntryVehicle(bool bCanBeTankCrew)
 // Similar to FindEntryVehicle() function in a Vehicle class, it tries to find a suitable, valid vehicle position for player to enter
 // We need to do this, otherwise if we TryToDrive() a vehicle that already has a driver, we'll fail to enter it at all, so here we try to find an empty, valid weapon pawn
 // Deliberately ignores driver position, to discourage players from deploying into a spawn vehicle (often carefully positioned by the team) & immediately driving off in it
 // Prioritises passenger positions over real weapons (MGs or cannons), so player deploying into spawn vehicle is less likely to be exposed & will have a moment to orient themselves
+private function Vehicle FindEntryVehicle(bool bCanEnterTankCrewPositions)
 {
     local array<VehicleWeaponPawn> RealWeaponPawns;
     local VehicleWeaponPawn        WP;
@@ -130,7 +130,7 @@ private function Vehicle FindEntryVehicle(bool bCanBeTankCrew)
         WP = RealWeaponPawns[i];
 
         // Enter weapon pawn position if it's empty & player isn't barred by tank crew restriction
-        if (WP.Driver == none && (bCanBeTankCrew || !WP.IsA('ROVehicleWeaponPawn') || !ROVehicleWeaponPawn(WP).bMustBeTankCrew))
+        if (WP.Driver == none && (bCanEnterTankCrewPositions || !(WP.IsA('ROVehicleWeaponPawn') && ROVehicleWeaponPawn(WP).bMustBeTankCrew)))
         {
             return WP;
         }
@@ -149,6 +149,7 @@ function bool PerformSpawn(DHPlayer PC)
     local int        i, RoleIndex;
     local DarkestHourGame G;
     local byte Team;
+    local bool       bCanEnterTankCrewPositions;
 
     G = DarkestHourGame(Level.Game);
 
@@ -194,7 +195,8 @@ function bool PerformSpawn(DHPlayer PC)
         else
         {
             // Attempt to deploy into the vehicle
-            EntryVehicle = FindEntryVehicle(PC.GetRoleInfo().bCanBeTankCrew);
+            bCanEnterTankCrewPositions = PC.GetRoleInfo().bCanBeTankCrew && !Vehicle.AreCrewPositionsLockedForPlayer(PC.Pawn, true);
+            EntryVehicle = FindEntryVehicle(bCanEnterTankCrewPositions);
 
             if (EntryVehicle != none && EntryVehicle.TryToDrive(PC.Pawn))
             {
