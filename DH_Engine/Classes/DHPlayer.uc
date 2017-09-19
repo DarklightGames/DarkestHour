@@ -1958,6 +1958,90 @@ ignores SeePlayer, HearNoise, Bump;
     }
 }
 
+// Modified so player can enter vehicle if looking at one of its vehicle weapons (generally a turret), not just its hull/base
+// In particular this makes it much easier to enter AT guns, which can have a very small base & a large 'turret'
+function ServerUse()
+{
+    local Vehicle   EntryVehicle;
+    local Actor     LookedAtActor, A;
+
+    if (Role < ROLE_Authority)
+    {
+        return;
+    }
+
+    if (Level.Pauser == PlayerReplicationInfo)
+    {
+        SetPause(false);
+
+        return;
+    }
+
+    if (Pawn == none || !Pawn.bCanUse)
+    {
+        return;
+    }
+
+    // If player is in a vehicle, try to exit it
+    if (Vehicle(Pawn) != none)
+    {
+        Vehicle(Pawn).KDriverLeave(false);
+
+        return;
+    }
+
+    // Otherwise try to use any actor the player is looking at & is standing directly in front of
+    if (ROPawn(Pawn) != none)
+    {
+        LookedAtActor = ROPawn(Pawn).AutoTraceActor;
+
+        if (LookedAtActor != none)
+        {
+            if (LookedAtActor.IsA('DHCollisionMeshActor') && LookedAtActor.Owner != none)
+            {
+                LookedAtActor = LookedAtActor.Owner; // if looking at a collision static mesh actor, switch to the vehicle weapon or vehicle it represents
+            }
+
+            if (VehicleWeapon(LookedAtActor) != none && LookedAtActor.Base != none)
+            {
+                LookedAtActor = LookedAtActor.Base; // if looking at a vehicle weapon, switch to its vehicle base
+            }
+
+            // If player is looking at a vehicle, try to enter it
+            if (ROVehicle(LookedAtActor) != none)
+            {
+                EntryVehicle = ROVehicle(LookedAtActor).FindEntryVehicle(Pawn);
+
+                if (EntryVehicle != none && EntryVehicle.TryToDrive(Pawn))
+                {
+                    return;
+                }
+            }
+            // Otherwise try to use whatever other actor player is looking at
+            else
+            {
+                LookedAtActor.UsedBy(Pawn);
+
+                return;
+            }
+        }
+    }
+
+    // Send the 'UsedBy' event to each actor the player is touching, including its Base
+    foreach Pawn.TouchingActors(class'Actor', A)
+    {
+        if (!A.bCanAutoTraceSelect)
+        {
+            A.UsedBy(Pawn);
+        }
+    }
+
+    if (Pawn.Base != none)
+    {
+        Pawn.Base.UsedBy(Pawn);
+    }
+}
+
 // Reset bolt rifle sway values when we bolt it, since that's technically lowering it from the eye
 simulated function ResetSwayAfterBolt()
 {

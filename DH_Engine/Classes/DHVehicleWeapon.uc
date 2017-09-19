@@ -99,14 +99,17 @@ simulated function PostBeginPlay()
 
         CollisionMeshActor = class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, CollisionStaticMesh, AttachBone);
 
+        // Remove all collision from this VehicleWeapon class (instead let col mesh actor handle collision detection)
         if (CollisionMeshActor != none)
         {
-            // Remove all collision from this VehicleWeapon class (instead let col mesh actor handle collision detection)
-            SetCollision(false, false); // bCollideActors & bBlockActors both false
+            SetCollision(false, false);
             bBlockZeroExtentTraces = false;
             bBlockNonZeroExtentTraces = false;
             bBlockHitPointTraces = false;
             bProjTarget = false;
+
+            bCanAutoTraceSelect = false;
+            bAutoTraceNotify = false;
         }
     }
 }
@@ -1143,6 +1146,15 @@ simulated function DestroyEffects()
     }
 }
 
+// Implemented in vehicle weapon class so player gets an enter vehicle message when looking at a vehicle weapon, not just its hull or base
+simulated event NotifySelected(Pawn User)
+{
+    if (ROVehicle(Base) != none)
+    {
+        Base.NotifySelected(User);
+    }
+}
+
 // New helper function just to avoid code repetition elsewhere
 simulated function PlayClickSound()
 {
@@ -1210,6 +1222,8 @@ defaultproperties
     SoundRadius=272.7
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
     FireEffectScale=1.0
+    bCanAutoTraceSelect=true // so player gets enter vehicle message when looking at vehicle weapon, not just its hull or base (although will usually be col mesh actor that's traced)
+    bAutoTraceNotify=true
     AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.9)
 
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & may be hard coded into functionality:

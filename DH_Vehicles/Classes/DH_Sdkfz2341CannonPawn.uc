@@ -19,20 +19,20 @@ exec function ShowColMesh()
         }
 
         // If in normal mode, with CSM hidden, we toggle the CSM to be visible
-        if (VehWep.CollisionMeshActor.bHidden)
+        if (VehWep.CollisionMeshActor.DrawType == DT_None)
         {
-            VehWep.CollisionMeshActor.bHidden = false;
+            VehWep.CollisionMeshActor.ToggleVisible();
 
             if (LeftCover != none && RightCover != none)
             {
-                LeftCover.bHidden = false;
-                RightCover.bHidden = false;
+                LeftCover.ToggleVisible();
+                RightCover.ToggleVisible();
             }
         }
         // Or if CSM has already been made visible & so is the weapon, we next toggle the weapon to be hidden
         else if (VehWep.Skins[0] != Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha')
         {
-            VehWep.CollisionMeshActor.HideOwner(true); // can't simply make weapon bHidden, as that also hides all attached actors, including col mesh & player
+            VehWep.CollisionMeshActor.HideOwner(true); // can't simply make weapon DrawType=none or bHidden, as that also hides all attached actors, including col mesh & player
 
             if (LeftCover != none && RightCover != none)
             {
@@ -44,14 +44,14 @@ exec function ShowColMesh()
         else
         {
             VehWep.CollisionMeshActor.HideOwner(false);
-            VehWep.CollisionMeshActor.bHidden = true;
+            VehWep.CollisionMeshActor.ToggleVisible();
 
             if (LeftCover != none && RightCover != none)
             {
                 LeftCover.HideOwner(false);
-                LeftCover.bHidden = true;
+                LeftCover.ToggleVisible();
                 RightCover.HideOwner(false);
-                RightCover.bHidden = true;
+                RightCover.ToggleVisible();
             }
         }
     }

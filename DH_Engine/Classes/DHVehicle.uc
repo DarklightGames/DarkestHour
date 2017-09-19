@@ -3499,9 +3499,9 @@ exec function ShowColMesh()
     {
         for (i = 0; i < CollisionAttachments.Length; ++i)
         {
-            if (CollisionAttachments[i].Actor != none)
+            if (DHCollisionMeshActor(CollisionAttachments[i].Actor) != none)
             {
-                CollisionAttachments[i].Actor.bHidden = !CollisionAttachments[i].Actor.bHidden;
+                DHCollisionMeshActor(CollisionAttachments[i].Actor).ToggleVisible();
             }
         }
     }
