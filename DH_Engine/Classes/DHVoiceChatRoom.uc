@@ -45,10 +45,7 @@ simulated event bool IsMember(PlayerReplicationInfo PRI, optional bool bNoCascad
     local PlayerController          OwnerPC;
     local PlayerReplicationInfo     OwnerPRI;
 
-    if (PRI != none)
-    {
-        MyPRI = DHPlayerReplicationInfo(PRI);
-    }
+    MyPRI = DHPlayerReplicationInfo(PRI);
 
     if (MyPRI != none && MyPRI.Team != none && MyPRI.Team.TeamIndex == GetTeam())
     {
@@ -75,7 +72,7 @@ simulated event bool IsMember(PlayerReplicationInfo PRI, optional bool bNoCascad
             // Begin establishing the Owner variables and do null checks
             OwnerPRI = PlayerReplicationInfo(Owner);
 
-            if (OwnerPRI != none && PlayerController(OwnerPRI.Owner) != none)
+            if (OwnerPRI != none)
             {
                 OwnerPC = PlayerController(OwnerPRI.Owner);
             }
@@ -92,7 +89,7 @@ simulated event bool IsMember(PlayerReplicationInfo PRI, optional bool bNoCascad
             }
 
             // Get the checked player's pawn
-            if (MyPRI != none && PlayerController(MyPRI.Owner) != none)
+            if (PlayerController(MyPRI.Owner) != none)
             {
                 CheckPawn = PlayerController(MyPRI.Owner).Pawn;
             }
