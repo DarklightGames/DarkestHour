@@ -166,53 +166,56 @@ function DoFireEffect()
 
 function CalcSpreadModifiers()
 {
-    local ROPawn ROP;
+    local DHPawn P;
     local float  PlayerSpeed, MovementPctModifier;
 
-    ROP = ROPawn(Instigator);
+    P = DHPawn(Instigator);
 
-    if (ROP == none)
+    if (P == none)
     {
         return;
     }
 
     // Calc spread based on movement speed
-    PlayerSpeed = VSize(ROP.Velocity);
-    MovementPctModifier = PlayerSpeed / ROP.default.GroundSpeed;
+    PlayerSpeed = VSize(P.Velocity);
+    MovementPctModifier = PlayerSpeed / P.default.GroundSpeed;
     Spread = default.Spread + default.Spread * MovementPctModifier;
 
+    // Handle the Pawn's Spread Factor (do this before other modifiers!)
+    Spread *= P.PawnSpreadFactor;
+
     // Reduce the spread if player is crouched and not moving
-    if (ROP.bIsCrouched && PlayerSpeed == 0.0)
+    if (P.bIsCrouched && PlayerSpeed == 0.0)
     {
         Spread *= CrouchSpreadModifier;
     }
-    else if (ROP.bIsCrawling)
+    else if (P.bIsCrawling)
     {
         Spread *= ProneSpreadModifier;
     }
 
-    if (ROP.bRestingWeapon)
+    if (P.bRestingWeapon)
     {
         Spread *= RestDeploySpreadModifier;
     }
 
     // Make the spread crazy if you're jumping
-    if (ROP.Physics == PHYS_Falling)
+    if (P.Physics == PHYS_Falling)
     {
         Spread *= 500.0;
     }
 
-    if (!ROP.Weapon.bUsingSights && !ROP.bBipodDeployed)
+    if (!P.Weapon.bUsingSights && !P.bBipodDeployed)
     {
         Spread *= HipSpreadModifier;
     }
 
-    if (ROP.bBipodDeployed)
+    if (P.bBipodDeployed)
     {
         Spread *= BipodDeployedSpreadModifier;
     }
 
-    if (ROP.LeanAmount != 0.0)
+    if (P.LeanAmount != 0.0)
     {
         Spread *= LeanSpreadModifier;
     }

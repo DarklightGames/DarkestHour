@@ -33,6 +33,8 @@ var     bool                        bSkipPreStartTime;                      // W
 
 var     class<DHObstacleManager>    ObstacleManagerClass;
 
+var()   config float                AccuracyModifier;                       // 1.0 for normal weapon accuracy, raise for worse accuracy
+
 var()   config int                  ChangeTeamInterval;                     // Server setting determines how long before a player can change teams again after doing so
                                                                             // Also currently is the length of time for which a player can change teams for free at the beginning of a round
                                                                             // Note: if bPlayersBalanceTeams is false, players will still be able to change teams
@@ -4875,6 +4877,8 @@ defaultproperties
 
     WinLimit=1 // 1 round per map, server admins are able to customize win/rounds to the level in webadmin
     RoundLimit=1
+
+    AccuracyModifier=1.0
 
     MaxTeamDifference=2
     bAutoBalanceTeamsOnDeath=true // if teams become imbalanced it'll force the next player to die to the weaker team
