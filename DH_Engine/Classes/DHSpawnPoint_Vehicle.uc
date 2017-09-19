@@ -145,7 +145,6 @@ function bool PerformSpawn(DHPlayer PC)
     local vector     Offset;
     local array<int> ExitPositionIndices;
     local int        RoleIndex, i;
-    local byte       TeamIndex;
     local bool       bCanEnterTankCrewPositions;
 
     if (PC == none || GRI == none || Vehicle == none)
@@ -165,7 +164,7 @@ function bool PerformSpawn(DHPlayer PC)
     }
 
     RoleInfo = PC.GetRoleInfo();
-    RoleIndex = GRI.GetRoleIndexAndTeam(RoleInfo, TeamIndex);
+    RoleIndex = GRI.GetRoleIndexAndTeam(RoleInfo);
 
     // Check if we can deploy into or near the vehicle
     if (CanSpawnWithParameters(GRI, PC.GetTeamNum(), RoleIndex, PC.GetSquadIndex(), PC.VehiclePoolIndex))

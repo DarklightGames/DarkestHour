@@ -549,7 +549,7 @@ simulated function DHRoleInfo GetRole(int TeamIndex, int RoleIndex)
     return none;
 }
 
-simulated function int GetRoleIndexAndTeam(RORoleInfo RI, out byte Team)
+simulated function int GetRoleIndexAndTeam(RORoleInfo RI, optional out byte Team)
 {
     local int i;
 
