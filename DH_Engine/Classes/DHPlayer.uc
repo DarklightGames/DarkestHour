@@ -4738,20 +4738,20 @@ exec function Speak(string ChannelTitle)
     // depend on the name of the squad because it's not unique and is subject
     // to change, and we don't want to go passing around UUIDs when we can just
     // put in a sneaky little hack.
-    if (ChannelTitle ~= "SQUAD")
+    if (ChannelTitle ~= VRI.SquadChannelName)
     {
         VCR = VRI.GetSquadChannel(GetTeamNum(), PRI.SquadIndex);
     }
-    else if (ChannelTitle ~= "LOCAL")
+    else if (ChannelTitle ~= VRI.LocalChannelName)
     {
         VCR = VRI.GetChannel(PRI.PlayerName, PRI.Team.TeamIndex);
     }
-    else if (ChannelTitle ~= "UNASSIGNED" && PRI.IsInSquad())
+    else if (ChannelTitle ~= VRI.UnassignedChannelName && PRI.IsInSquad())
     {
         // If we are trying to speak in unassigned but we are in a squad, then return out
         return;
     }
-    else if (ChannelTitle ~= "COMMAND" && !PRI.IsSquadLeader())
+    else if (ChannelTitle ~= VRI.CommandChannelName && !PRI.IsSquadLeader())
     {
         // If we are trying to speak in command but we aren't a SL, then return out
         return;

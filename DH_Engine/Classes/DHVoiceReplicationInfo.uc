@@ -12,6 +12,11 @@ var VoiceChatRoom               AlliesSquadChannels[SQUAD_CHANNELS_MAX];
 
 var localized string            LocalChannelText;
 
+var string                      UnassignedChannelName;
+var string                      LocalChannelName;
+var string                      SquadChannelName;
+var string                      CommandChannelName;
+
 replication
 {
     reliable if ((bNetDirty || bNetInitial) && Role == ROLE_Authority)
@@ -125,7 +130,7 @@ function LeaveUnassignedChannel(PlayerReplicationInfo PRI, int TeamIndex)
 {
     local VoiceChatRoom VCR;
 
-    VCR = GetChannel("Unassigned", TeamIndex);
+    VCR = GetChannel(UnassignedChannelName, TeamIndex);
 
     if (VCR != none)
     {
@@ -181,7 +186,7 @@ function VerifyTeamChatters()
                 continue;
             }
 
-            ChatChannel = GetChannel("Unassigned", OpposingIndex);
+            ChatChannel = GetChannel(UnassignedChannelName, OpposingIndex);
 
             // If player is already in a squad, then ignore
             if (PRI.IsInSquad())
@@ -191,7 +196,7 @@ function VerifyTeamChatters()
 
             if (ChatChannel.IsMember(P.PlayerReplicationInfo))
             {
-                FixedChannel = GetChannel("Unassigned", P.PlayerReplicationInfo.Team.TeamIndex);
+                FixedChannel = GetChannel(UnassignedChannelName, P.PlayerReplicationInfo.Team.TeamIndex);
 
                 Level.Game.ChangeVoiceChannel(P.PlayerReplicationInfo, FixedChannel.ChannelIndex, ChatChannel.ChannelIndex);
 
@@ -239,5 +244,10 @@ defaultproperties
     VoIPInternetCodecs[1]="CODEC_96WB"
     VoIPLANCodecs[0]="CODEC_96WB"
     VoIPLANCodecs[1]="CODEC_96WB"
+
+    UnassignedChannelName="Unassigned"
+    LocalChannelName="Local"
+    SquadChannelName="Squad"
+    CommandChannelName="Command"
 }
 

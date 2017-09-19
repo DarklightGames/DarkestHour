@@ -497,7 +497,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
     local DHBot Bot;
     local DHVoiceReplicationInfo VRI;
     local DHGameReplicationInfo GRI;
-    local VoiceChatRoom SquadVCR, TeamVCR;
+    local VoiceChatRoom SquadVCR;
     local int i;
     local array<DHPlayerReplicationInfo> Members;
     local UComparator ScoreComparator;
@@ -567,21 +567,11 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
 
         if (SquadVCR != none)
         {
-            TeamVCR = VRI.GetChannel("Unassigned", TeamIndex);
-
-            // Change the player's voice channel to the "team" channel.
-            Level.Game.ChangeVoiceChannel(PRI, TeamVCR.ChannelIndex, SquadVCR.ChannelIndex);
-
-            if (PC != none && TeamVCR != none && TeamVCR.IsMember(PRI))
-            {
-                PC.ClientSetActiveRoom(TeamVCR.ChannelIndex);
-            }
-
-            if (PC != none)
-            {
-                PC.ServerLeaveVoiceChannel(SquadVCR.ChannelIndex);
-            }
+            PC.ServerLeaveVoiceChannel(SquadVCR.ChannelIndex);
         }
+
+        // Set active channel to the local channel
+        PC.Speak(VRI.LocalChannelName);
     }
 
     if (IsSquadLocked(TeamIndex, SquadIndex) && GetMemberCount(TeamIndex, SquadIndex) < SquadLockMemberCountMin)
@@ -799,7 +789,7 @@ function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadInd
             if (VRI != none)
             {
                 VRI.JoinSquadChannel(PRI, TeamIndex, SquadIndex);
-                PC.Speak("SQUAD");
+                PC.Speak(VRI.SquadChannelName);
             }
         }
 
