@@ -424,6 +424,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     local int                       i;
     local array<string>             PlayerIDs;
     local int                       RoundTime;
+    local int                       NumTotal[2], Num[2], NumForCheck[2];
 
     CurrentCapProgress = 0.0;
 
@@ -598,13 +599,24 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     // Broadcast the objective capture messages (sound + message)
     if (bUsePostCaptureOperations) //Is using clear system
     {
-        // If enemies are present in a clear objective, it will still be active, so broadcast capture
-        // If the obj is set to disable when a team clears it, then check to make sure its not the opposite team
         if (HasEnemiesPresent() || (bDisableWhenAxisClearObj && Team == ALLIES_TEAM_INDEX) || (bDisableWhenAlliesClearObj && Team == AXIS_TEAM_INDEX))
         {
+            // If enemies are present in a clear objective, it will still be active, so broadcast capture
+            // If the obj is set to disable when a team clears it, then check to make sure its not the opposite team
             BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(1, Team), none, none, self);
         }
-        // Otherwise don't inform that it was captured, as timer will inform that it was secured!
+        else if (!HasEnemiesPresent())
+        {
+            // If no enemies are present, then run a handle cleared logic immediately (don't wait for timer)
+            // If objective is still active and timer is still running, then notify capture
+            GetPlayersInObjective(Num, NumTotal, NumForCheck);
+
+            if (bActive && !HandleClearedLogic(NumForCheck))
+            {
+                BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(1, Team), none, none, self);
+            }
+        }
+        // Otherwise don't inform that it was captured, as timer will hangle notification from here
     }
     else
     {
