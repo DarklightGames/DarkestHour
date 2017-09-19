@@ -7,6 +7,7 @@ class DHConstructionProxy extends Actor
     dependson(DHConstruction);
 
 var class<DHConstruction>   ConstructionClass;
+var Actor                   GroundActor;
 
 var DHConstruction.ConstructionError    ProxyError;
 
@@ -339,6 +340,8 @@ function DHConstruction.ConstructionError GetProvisionalPosition(out vector OutL
             }
         }
     }
+
+    GroundActor = HitActor;
 
     if (HitActor == none)
     {

@@ -5,7 +5,8 @@
 
 class DHConstruction_Foxhole extends DHConstruction;
 
-var DynamicProjector DirtProjector;
+var StaticMesh          LargeTerrainScaleStaticMesh;
+var DynamicProjector    DirtProjector;
 
 simulated function OnConstructed()
 {
@@ -36,6 +37,26 @@ simulated function OnConstructed()
     }
 }
 
+function StaticMesh GetConstructedStaticMesh()
+{
+    local TerrainInfo TI;
+    local float TerrainScale;
+
+    TI = TerrainInfo(Owner);
+
+    if (TI != none)
+    {
+        TerrainScale = class'UVector'.static.MaxElement(TI.TerrainScale);
+
+        if (TerrainScale > 128.0)
+        {
+            return LargeTerrainScaleStaticMesh;
+        }
+    }
+
+    return super.GetConstructedStaticMesh();
+}
+
 simulated event Destroyed()
 {
     super.Destroyed();
@@ -59,6 +80,7 @@ defaultproperties
     ProxyDistanceInMeters=10
     CollisionRadius=192.0
     StaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_01'
+    LargeTerrainScaleStaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_02'
     PokeTerrainDepth=128
     PokeTerrainRadius=128.0
     SupplyCost=0

@@ -6538,7 +6538,7 @@ simulated function Fire(optional float F)
     {
         if (ConstructionProxy.ProxyError.Type == ERROR_None)
         {
-            ServerCreateConstruction(ConstructionProxy.ConstructionClass, ConstructionProxy.Location, ConstructionProxy.Rotation);
+            ServerCreateConstruction(ConstructionProxy.ConstructionClass, ConstructionProxy.GroundActor, ConstructionProxy.Location, ConstructionProxy.Rotation);
             ConstructionProxy.Destroy();
             SwitchToLastWeapon();
         }
@@ -6584,7 +6584,7 @@ static function bool SupplyAttachmentCompareFunction(Object LHS, Object RHS)
     return DHConstructionSupplyAttachment(LHS).SortPriority > DHConstructionSupplyAttachment(RHS).SortPriority;
 }
 
-function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vector L, rotator R)
+function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor Owner, vector L, rotator R)
 {
     local int i;
     local DHConstruction C;
@@ -6645,7 +6645,7 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, vecto
         SupplyCost -= SuppliesToUse;
     }
 
-    C = Spawn(ConstructionClass, Controller,, L, R);
+    C = Spawn(ConstructionClass, Owner,, L, R);
 
     if (C != none)
     {
