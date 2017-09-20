@@ -136,4 +136,5 @@ defaultproperties
     HarmfulDamageTypes(3)=class'DHShellImpactDamageType'
     HarmfulDamageTypes(4)=class'DHMortarDamageType'
     HarmfulDamageTypes(5)=class'DHBurningDamageType'
+    ConstructionVerb="drop"
 }

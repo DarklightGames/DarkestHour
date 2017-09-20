@@ -155,4 +155,5 @@ defaultproperties
     bDestroyOnConstruction=false
     bShouldAlignToGround=true
     BrokenLifespan=0.0
+    ConstructionVerb="emplace"
 }

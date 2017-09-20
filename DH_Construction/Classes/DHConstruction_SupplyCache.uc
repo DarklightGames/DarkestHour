@@ -83,5 +83,6 @@ defaultproperties
     bCanBeTornDownWhenConstructed=false
     bCanDieOfStagnation=false   // TODO: this shouldn't be necessary, right?
     SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Static'
+    ConstructionVerb="drop"
 }
 

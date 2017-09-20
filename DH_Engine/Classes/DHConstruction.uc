@@ -181,6 +181,8 @@ var class<DamageType> DelayedDamageType;
 // Constructed state if it was placed via the SDK.
 var bool bShouldAutoConstruct;
 
+var localized string ConstructionVerb;  // eg. dig, emplace, build etc.
+
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -964,5 +966,7 @@ defaultproperties
     bCanBeTornDownByFriendlies=true
     FriendlyFireDamageScale=1.0
     bShouldAutoConstruct=true
+
+    ConstructionVerb="build"
 }
 
