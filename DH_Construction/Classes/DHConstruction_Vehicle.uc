@@ -113,7 +113,7 @@ function UpdateAppearance()
     SetCollisionSize(VehicleClass.default.CollisionRadius, VehicleClass.default.CollisionHeight);
 }
 
-function static GetCollisionSize(int TeamIndex, DH_LevelInfo LI, out float NewRadius, out float NewHeight)
+function static GetCollisionSize(int TeamIndex, DH_LevelInfo LI, DHConstructionProxy CP, out float NewRadius, out float NewHeight)
 {
     local class<ROVehicle> VehicleClass;
 
@@ -127,7 +127,7 @@ function static GetCollisionSize(int TeamIndex, DH_LevelInfo LI, out float NewRa
     }
 
     // If we couldn't get the vehicle class, just fall back on to the original method.
-    super.GetCollisionSize(TeamIndex, LI, NewRadius, NewHeight);
+    super.GetCollisionSize(TeamIndex, LI, CP, NewRadius, NewHeight);
 }
 
 // Override to get a different vehicle class based on scenario (eg. snow camo etc.)

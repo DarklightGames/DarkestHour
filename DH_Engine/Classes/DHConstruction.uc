@@ -616,7 +616,8 @@ function static Material GetMenuIcon(DHPlayer PC)
     return default.MenuIcon;
 }
 
-function static GetCollisionSize(int TeamIndex, DH_LevelInfo LI, out float NewRadius, out float NewHeight)
+// TODO: this function signature is hideous
+function static GetCollisionSize(int TeamIndex, DH_LevelInfo LI, DHConstructionProxy CP, out float NewRadius, out float NewHeight)
 {
     NewRadius = default.CollisionRadius;
     NewHeight = default.CollisionHeight;

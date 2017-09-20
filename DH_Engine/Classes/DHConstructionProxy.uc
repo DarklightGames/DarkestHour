@@ -76,8 +76,6 @@ function DestroyAttachments()
 
 final function SetConstructionClass(class<DHConstruction> ConstructionClass)
 {
-    local float NewRadius;
-    local float NewHeight;
     local DHConstruction.ConstructionError E;
 
     if (ConstructionClass == none)
@@ -88,10 +86,7 @@ final function SetConstructionClass(class<DHConstruction> ConstructionClass)
 
     self.ConstructionClass = ConstructionClass;
 
-    // Determine the collision size to use given the current team and level info.
-    ConstructionClass.static.GetCollisionSize(PlayerOwner.GetTeamNum(), PlayerOwner.ClientLevelInfo, NewRadius, NewHeight);
-    SetCollisionSize(NewRadius, NewHeight);
-
+    UpdateCollisionSize();
     DestroyAttachments();
 
     // Update ourselves using the function in the construction class
@@ -103,6 +98,15 @@ final function SetConstructionClass(class<DHConstruction> ConstructionClass)
     // Set the error to none so that our material colors get initialized properly
     E.Type = ERROR_None;
     SetProxyError(E);
+}
+
+function UpdateCollisionSize()
+{
+    local float NewRadius, NewHeight;
+
+    // Determine the collision size to use given the current team and level info.
+    ConstructionClass.static.GetCollisionSize(PlayerOwner.GetTeamNum(), PlayerOwner.ClientLevelInfo, self, NewRadius, NewHeight);
+    SetCollisionSize(NewRadius, NewHeight);
 }
 
 function static Material CreateProxyMaterial(Material M)
@@ -341,7 +345,16 @@ function DHConstruction.ConstructionError GetProvisionalPosition(out vector OutL
         }
     }
 
-    GroundActor = HitActor;
+    if (GroundActor != HitActor)
+    {
+        GroundActor = HitActor;
+
+        // Ground actor changed so let's re-evaluate our collison size.
+        // TODO: we may want to do more than just re-evaluate the collision size
+        // in the future, so moving `UpdateCollisionSize` to `UpdateProxy` and
+        // calling `UpdateProxy` might be a more appropriate route.
+        UpdateCollisionSize();
+    }
 
     if (HitActor == none)
     {
@@ -677,7 +690,7 @@ function DHConstruction.ConstructionError GetPositionError()
     // mechanism would probably be a bad idea.
     foreach CollidingActors(class'DHConstruction', C, class'DHUnits'.static.MetersToUnreal(25.0))
     {
-        C.GetCollisionSize(C.GetTeamIndex(), PlayerOwner.ClientLevelInfo, OtherRadius, OtherHeight);
+        C.GetCollisionSize(C.GetTeamIndex(), PlayerOwner.ClientLevelInfo, none, OtherRadius, OtherHeight);
 
         if (VSize(Location - C.Location) < CollisionRadius + OtherRadius)
         {

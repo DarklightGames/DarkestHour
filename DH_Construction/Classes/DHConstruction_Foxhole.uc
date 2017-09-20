@@ -6,11 +6,12 @@
 class DHConstruction_Foxhole extends DHConstruction;
 
 var TerrainInfo         TerrainInfo;
+var DynamicProjector    DirtProjector;
 
+// Large terrain
 var float               LargeTerrainScaleThreshold;
 var StaticMesh          LargeTerrainScaleStaticMesh;
-
-var DynamicProjector    DirtProjector;
+var float               LargeTerrainScaleCollisionRadius;
 
 simulated function PostBeginPlay()
 {
@@ -53,24 +54,24 @@ simulated function OnConstructed()
     }
 }
 
-simulated function float GetTerrainScale()
+static function float GetTerrainScale(TerrainInfo TI)
 {
-    if (TerrainInfo != none)
+    if (TI != none)
     {
-        return class'UVector'.static.MaxElement(TerrainInfo.TerrainScale);
+        return class'UVector'.static.MaxElement(TI.TerrainScale);
     }
 
     return 0.0;
 }
 
-simulated function bool IsOnLargeTerrain()
+static function bool IsTerrainScaleLarge(TerrainInfo TI)
 {
-    return GetTerrainScale() > LargeTerrainScaleThreshold;
+    return GetTerrainScale(TI) > default.LargeTerrainScaleThreshold;
 }
 
 function StaticMesh GetConstructedStaticMesh()
 {
-    if (IsOnLargeTerrain())
+    if (IsTerrainScaleLarge(TerrainInfo))
     {
         return LargeTerrainScaleStaticMesh;
     }
@@ -85,6 +86,16 @@ simulated event Destroyed()
     if (DirtProjector != none)
     {
         DirtProjector.Destroy();
+    }
+}
+
+function static GetCollisionSize(int TeamIndex, DH_LevelInfo LI, DHConstructionProxy CP, out float NewRadius, out float NewHeight)
+{
+    super.GetCollisionSize(TeamIndex, LI, CP, NewRadius, NewHeight);
+
+    if (CP != none && GetTerrainScale(TerrainInfo(CP.GroundActor)) > default.LargeTerrainScaleThreshold)
+    {
+        NewRadius = default.LargeTerrainScaleCollisionRadius;
     }
 }
 
@@ -119,4 +130,5 @@ defaultproperties
     bShouldBlockSquadRallyPoints=true
     bIsNeutral=true
     LargeTerrainScaleThreshold=128.0
+    LargeTerrainScaleCollisionRadius=256.0
 }
