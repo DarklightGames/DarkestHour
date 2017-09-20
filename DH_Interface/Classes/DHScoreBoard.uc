@@ -28,6 +28,7 @@ var color SelfBackgroundColor;
 var array<DHPlayerReplicationInfo> AxisPRI, AlliesPRI, UnassignedPRI;
 
 var Material PatronIconMaterial;
+var Material DeveloperIconMaterial;
 
 enum EScoreboardColumnType
 {
@@ -149,7 +150,11 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
                 CRI.TextColor = class'DHColor'.default.SquadColor;
             }
 
-            if (PRI.bIsPatron)
+            if (PRI.bIsDeveloper)
+            {
+                CRI.Icon = default.DeveloperIconMaterial;
+            }
+            else if (PRI.bIsPatron)
             {
                 CRI.Icon = default.PatronIconMaterial;
             }
@@ -426,6 +431,8 @@ simulated function UpdateScoreBoard(Canvas C)
     C.DrawColor = HUD.default.WhiteColor;
     C.SetPos(X, Y);
     C.DrawTextClipped(S); // this is the actual text, drawn over the drop shadow
+
+    MaxTeamYPos = 0.0;
 
     //////////////// DRAW AXIS TEAM ////////////////
     DHDrawTeam(C, AXIS_TEAM_INDEX, AxisPRI, X, Y, LineHeight);
@@ -843,5 +850,5 @@ defaultproperties
     MyTeamIndex=2
     SquadLeaderAbbreviation="SL"
     PlayersText="Players"
-    PatronIconMaterial=Texture'DH_InterfaceArt2_tex.HUD.patron'
+    PatronIconMaterial=Texture'DH_InterfaceArt2_tex.HUD.developer'
 }

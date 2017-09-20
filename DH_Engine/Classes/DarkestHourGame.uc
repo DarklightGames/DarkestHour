@@ -4652,6 +4652,7 @@ event PostLogin(PlayerController NewPlayer)
 
         // Patron status look-up
         PRI.bIsPatron = IsPatron(ROIDHash);
+        PRI.bIsDeveloper = class'DHAccessControl'.static.IsDeveloper(ROIDHash);
     }
 }
 

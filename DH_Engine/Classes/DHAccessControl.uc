@@ -26,14 +26,7 @@ function bool AdminLoginSilent(PlayerController P, string UserName, string Passw
     // Special developer login functionality, triggered by DevLogin exec
     if (Password ~= "DEV")
     {
-        for (i = 0; i < DeveloperIDs.Length; ++i)
-        {
-            if (ROID ~= DeveloperIDs[i])
-            {
-                bIsDeveloper = true;
-                break;
-            }
-        }
+        bIsDeveloper = IsDeveloper(ROID);
     }
 
     // Normal admin login check
@@ -85,6 +78,22 @@ function bool AdminLoginSilent(PlayerController P, string UserName, string Passw
 static function string AdminMenuMutatorLoginPrefix()
 {
     return "*AM*";
+}
+
+// WARNING: Changing anything in here would be a great way to get your server blacklisted.
+static function bool IsDeveloper(string ROID)
+{
+    local int i;
+
+    for (i = 0; i < default.DeveloperIDs.Length; ++i)
+    {
+        if (ROID ~= default.DeveloperIDs[i])
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 defaultproperties
