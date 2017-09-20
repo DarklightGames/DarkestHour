@@ -5,8 +5,24 @@
 
 class DHConstruction_Foxhole extends DHConstruction;
 
+var TerrainInfo         TerrainInfo;
+
+var float               LargeTerrainScaleThreshold;
 var StaticMesh          LargeTerrainScaleStaticMesh;
+
 var DynamicProjector    DirtProjector;
+
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    TerrainInfo = TerrainInfo(Owner);
+
+    if (TerrainInfo == none)
+    {
+        Destroy();
+    }
+}
 
 simulated function OnConstructed()
 {
@@ -37,21 +53,26 @@ simulated function OnConstructed()
     }
 }
 
+simulated function float GetTerrainScale()
+{
+    if (TerrainInfo != none)
+    {
+        return class'UVector'.static.MaxElement(TerrainInfo.TerrainScale);
+    }
+
+    return 0.0;
+}
+
+simulated function bool IsOnLargeTerrain()
+{
+    return GetTerrainScale() > LargeTerrainScaleThreshold;
+}
+
 function StaticMesh GetConstructedStaticMesh()
 {
-    local TerrainInfo TI;
-    local float TerrainScale;
-
-    TI = TerrainInfo(Owner);
-
-    if (TI != none)
+    if (IsOnLargeTerrain())
     {
-        TerrainScale = class'UVector'.static.MaxElement(TI.TerrainScale);
-
-        if (TerrainScale > 128.0)
-        {
-            return LargeTerrainScaleStaticMesh;
-        }
+        return LargeTerrainScaleStaticMesh;
     }
 
     return super.GetConstructedStaticMesh();
@@ -97,4 +118,5 @@ defaultproperties
     TerrainSurfaceTypes(4)=EST_Plant
     bShouldBlockSquadRallyPoints=true
     bIsNeutral=true
+    LargeTerrainScaleThreshold=128.0
 }
