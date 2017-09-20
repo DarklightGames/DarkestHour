@@ -96,16 +96,13 @@ event InitGame(string Options, out string Error)
         default.MaxPlayers = Clamp(default.MaxPlayers, 0, 128);
     }
 
-    if (Level.NetMode == NM_DedicatedServer)
-    {
-        // Send a request to get a list of all the patron ROIDs
-        PatronsRequest = Spawn(class'HTTPRequest');
-        PatronsRequest.Method = "GET";
-        PatronsRequest.Host = "darkesthour.darklightgames.com";
-        PatronsRequest.Path = "/client/patrons.php";
-        PatronsRequest.OnResponse = PatronsRequestOnResponse;
-        PatronsRequest.Send();
-    }
+    // Send a request to get a list of all the patron ROIDs
+    PatronsRequest = Spawn(class'HTTPRequest');
+    PatronsRequest.Method = "GET";
+    PatronsRequest.Host = "darkesthour.darklightgames.com";
+    PatronsRequest.Path = "/client/patrons.php";
+    PatronsRequest.OnResponse = PatronsRequestOnResponse;
+    PatronsRequest.Send();
 }
 
 function PreBeginPlay()
