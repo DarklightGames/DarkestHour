@@ -47,7 +47,7 @@ simulated function OnConstructed()
             DirtProjector.ProjTexture = Material'DH_Construction_tex.Foxholes.foxhole_01_projector';
             DirtProjector.FrameBufferBlendingOp = PB_AlphaBlend;
             DirtProjector.FOV = 1;
-            DirtProjector.MaxTraceDistance = 256.0;
+            DirtProjector.MaxTraceDistance = 512.0;
             DirtProjector.bGradient = true;
             DirtProjector.SetDrawScale(GetDirtProjectorDrawScale() / DirtProjector.ProjTexture.MaterialUSize());
             DirtProjector.SetRelativeLocation(vect(0.0, 0.0, 128.0));
