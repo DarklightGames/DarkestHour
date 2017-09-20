@@ -6,6 +6,8 @@
 class DHConstruction_Foxhole extends DHConstruction;
 
 var TerrainInfo         TerrainInfo;
+
+// Dirt projector
 var DynamicProjector    DirtProjector;
 
 // Large terrain
@@ -45,12 +47,25 @@ simulated function OnConstructed()
             DirtProjector.ProjTexture = Material'DH_Construction_tex.Foxholes.foxhole_01_projector';
             DirtProjector.FrameBufferBlendingOp = PB_AlphaBlend;
             DirtProjector.FOV = 1;
-            DirtProjector.MaxTraceDistance = 512.0;
+            DirtProjector.MaxTraceDistance = 256.0;
             DirtProjector.bGradient = true;
-            DirtProjector.SetDrawScale((default.CollisionRadius * 2) / DirtProjector.ProjTexture.MaterialUSize());
-            DirtProjector.SetRelativeLocation(vect(0.0, 0.0, 256.0));
+            DirtProjector.SetDrawScale(GetDirtProjectorDrawScale() / DirtProjector.ProjTexture.MaterialUSize());
+            DirtProjector.SetRelativeLocation(vect(0.0, 0.0, 128.0));
             DirtProjector.SetRelativeRotation(rot(-16384, 0, 0));
         }
+    }
+}
+
+function float GetDirtProjectorDrawScale()
+{
+    // TODO: magic numbers
+    if (IsTerrainScaleLarge(TerrainInfo))
+    {
+        return 768.0;
+    }
+    else
+    {
+        return 384.0;
     }
 }
 
@@ -131,4 +146,5 @@ defaultproperties
     bIsNeutral=true
     LargeTerrainScaleThreshold=128.0
     LargeTerrainScaleCollisionRadius=256.0
+    ConstructionVerb="dig"
 }
