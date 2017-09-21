@@ -4857,6 +4857,13 @@ static function BroadcastTeamLocalizedMessage(LevelInfo Level, byte Team, class<
     }
 }
 
+function GetServerDetails(out ServerResponseLine ServerState)
+{
+    super.GetServerDetails(ServerState);
+
+    AddServerDetail(ServerState, "Version", Version.ToString());
+}
+
 defaultproperties
 {
     ServerTickForInflation=20.0
