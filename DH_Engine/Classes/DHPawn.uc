@@ -123,9 +123,6 @@ var     int                 BurnTimeLeft;                  // number of seconds 
 var     float               LastBurnTime;                  // last time we did fire damage to the Pawn
 var     Pawn                FireStarter;                   // who set a player on fire
 
-var     float   PokeTerrainRadius;
-var     float   PokeTerrainDepth;
-
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -6999,7 +6996,4 @@ defaultproperties
     LimpAnims(5)=""
     LimpAnims(6)=""
     LimpAnims(7)=""
-
-    PokeTerrainRadius=8
-    PokeTerrainDepth=32
 }
