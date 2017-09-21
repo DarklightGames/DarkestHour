@@ -81,8 +81,8 @@ var     int     SquadMemberCountMinimum;        // The number of members you mus
 var     bool    bSnapToTerrain;                 // If true, the origin of the placement (prior to the PlacementOffset) will coincide with the nearest terrain vertex during placement.
 var     bool    bPokesTerrain;                  // If true, terrain is poked when placed on terrain.
 var     bool    bDidPokeTerrain;
-var     int     PokeTerrainRadius;
-var     int     PokeTerrainDepth;
+var private int PokeTerrainRadius;
+var private int PokeTerrainDepth;
 var     float   TerrainScaleMax;                // The maximum terrain scale allowable
 var     bool    bLimitTerrainSurfaceTypes;      // If true, only allow placement on terrain surfaces types in the SurfaceTypes array
 var     array<ESurfaceTypes> TerrainSurfaceTypes;
@@ -304,9 +304,11 @@ simulated event Destroyed()
     if (bPokesTerrain && bDidPokeTerrain)
     {
         // NOTE: This attempts to "unpoke" the terrain, if it was poked upon
-        // construction. Unforunately, this seems to only have a less than 100%
+        // construction. Unforunately, this seems to have a less than 100%
         // success rate due to some underlying bug in the native PokeTerrain
         // functionality.
+        GetTerrainPokeParameters(PokeTerrainRadius, PokeTerrainDepth);
+
         PokeTerrain(PokeTerrainRadius, -PokeTerrainDepth);
     }
 
@@ -438,6 +440,7 @@ simulated state Constructed
 
         if (bPokesTerrain)
         {
+            GetTerrainPokeParameters(PokeTerrainRadius, PokeTerrainDepth);
             PokeTerrain(PokeTerrainRadius, PokeTerrainDepth);
 
             bDidPokeTerrain = true;
@@ -857,6 +860,12 @@ simulated function bool ShouldDestroyOnReset()
     // in-editor, it will not have an owner. This is a nice implicit way of
     // knowing if something was created in-editor or not.
     return Owner != none;
+}
+
+static function GetTerrainPokeParameters(out int Radius, out int Depth)
+{
+    Radius = default.PokeTerrainRadius;
+    Depth = default.PokeTerrainDepth;
 }
 
 defaultproperties
