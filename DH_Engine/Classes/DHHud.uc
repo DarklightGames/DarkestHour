@@ -141,13 +141,13 @@ var     SkyZoneInfo         SavedSkyZone;           // saves original SkyZone fo
 
 // Modified to ignore the Super in ROHud, which added a hacky way of changing the compass rotating texture
 // We now use a DH version of the compass texture, with a proper TexRotator set up for it
-simulated function PostBeginPlay()
+function PostBeginPlay()
 {
     super(HudBase).PostBeginPlay();
 }
 
 // Disabled as the only functionality was in HudBase re the DamageTime array, but that became redundant in RO (no longer gets set in function DisplayHit)
-simulated function Tick(float deltaTime)
+function Tick(float deltaTime)
 {
     Disable('Tick');
 }
@@ -193,7 +193,7 @@ function DrawDebugInformation(Canvas C)
     C.DrawTextClipped(S);
 }
 
-simulated function UpdatePrecacheMaterials()
+function UpdatePrecacheMaterials()
 {
     local int i;
 
@@ -328,7 +328,7 @@ simulated function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.spawnkill');
 }
 
-simulated function Message(PlayerReplicationInfo PRI, coerce string Msg, name MsgType)
+function Message(PlayerReplicationInfo PRI, coerce string Msg, name MsgType)
 {
     local DHPlayer PC;
     local class<LocalMessage>   MessageClassType;
@@ -486,7 +486,7 @@ function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Vic
 // Modified to correct bug that sometimes screwed up layout of critical message,
 // resulting in very long text lines going outside of message background
 // and  sometimes off screen
-simulated function ExtraLayoutMessage(out HudLocalizedMessage Message, out HudLocalizedMessageExtra MessageExtra, Canvas C)
+function ExtraLayoutMessage(out HudLocalizedMessage Message, out HudLocalizedMessageExtra MessageExtra, Canvas C)
 {
     local  array<string>  Lines;
     local  float          TempXL, TempYL, InitialXL, XL, YL;
@@ -608,7 +608,7 @@ static function Font GetPlayerNameFont(Canvas C)
 }
 
 // Modified to set a reference to the DHGRI, as soon as we can (can't do it in a BeginPlay event as net client won't yet have received GRI)
-simulated event PostRender(Canvas Canvas)
+event PostRender(Canvas Canvas)
 {
     if (DHGRI == none && PlayerOwner != none)
     {
@@ -620,7 +620,7 @@ simulated event PostRender(Canvas Canvas)
 
 // DrawHudPassC - Draw all the widgets here
 // Modified to add mantling icon - PsYcH0_Ch!cKeN
-simulated function DrawHudPassC(Canvas C)
+function DrawHudPassC(Canvas C)
 {
     local DHVoiceChatRoom       VCR;
     local float                 Y, XL, YL, Alpha;
@@ -1912,7 +1912,7 @@ exec function ShowObjectives()
     }
 }
 
-simulated function HideObjectives()
+function HideObjectives()
 {
     ShowObjectives();
 }
@@ -2383,7 +2383,7 @@ function DrawPlayerNames(Canvas C)
     HUDLastNameDrawTime = Now;
 }
 
-simulated function DrawShadowedTextClipped(Canvas C, string Text)
+function DrawShadowedTextClipped(Canvas C, string Text)
 {
     local color SavedDrawColor;
 
@@ -2408,7 +2408,7 @@ simulated function DrawShadowedTextClipped(Canvas C, string Text)
 
 // Modified to fix problem where compass failed to follow view rotation of player driving a vehicle
 // Also to increase size of compass & make sure it doesn't get too small if HudScale is very low
-simulated function DrawCompass(Canvas C)
+function DrawCompass(Canvas C)
 {
     local Actor              A;
     local AbsoluteCoordsInfo GlobalCoors;
@@ -2503,7 +2503,7 @@ simulated function DrawCompass(Canvas C)
     HudScale = HudScaleTemp;
 }
 
-simulated function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, float RotationCompensation, Actor viewer, AbsoluteCoordsInfo GlobalCoords)
+function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, float RotationCompensation, Actor viewer, AbsoluteCoordsInfo GlobalCoords)
 {
     local vector Target, Current;
     local int i, Team, Id, Count, TempTeam;
@@ -2944,7 +2944,7 @@ function DrawNetworkActorsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float My
 
 // Modified to only show the vehicle occupant ('Driver') hit points, not the vehicle's special hit points for engine & ammo stores
 // (Badly named, but is an inherited function - best thought of as DrawVehicleOccupantHitPoint)
-simulated function DrawDriverPointSphere()
+function DrawDriverPointSphere()
 {
     local ROVehicle       V;
     local ROVehicleWeapon VW;
@@ -2990,7 +2990,7 @@ simulated function DrawDriverPointSphere()
 // Modified to include DHArmoredVehicle's special hit points & to use different colours for different types of hit point
 // Engine is blue, ammo stores are red, gun traverse & pivot are gold, periscopes are pink, others are white
 // (Badly named, but is an inherited function - best thought of as DrawVehicleHitPoints)
-simulated function DrawVehiclePointSphere()
+function DrawVehiclePointSphere()
 {
     local ROVehicle        V;
     local DHArmoredVehicle AV;
@@ -3064,7 +3064,7 @@ simulated function DrawVehiclePointSphere()
 // Modified to avoid drawing the player's own collision in 1st person, as it screws up the view too much and serves no purpose
 // Also to draw pawn's AuxCollisionCylinder (DHBulletWhipAttachment), instead of unnecessary whole body cylinder (it's just an optimisation, not an actual hit point)
 // (Badly named, but is an inherited function - best thought of as DrawPlayerHitPoints)
-simulated function DrawPointSphere()
+function DrawPointSphere()
 {
     local ROPawn P;
     local coords CO;
@@ -3099,7 +3099,7 @@ simulated function DrawPointSphere()
 }
 
 // New function showing all vehicle's physics wheels (the Wheels array of invisible wheels that drive & steer vehicle, even ones with treads)
-simulated function DrawVehiclePhysiscsWheels()
+function DrawVehiclePhysiscsWheels()
 {
     local ROVehicle V;
     local Coords    CO;
@@ -3126,7 +3126,7 @@ simulated function DrawVehiclePhysiscsWheels()
 // New function to split out lengthy map drawing functionality from the DrawObjectives() function
 // As this is now called from the DHGUIMapComponent class as well as DrawObjectives (& also it helps
 // shorten a very length DrawObjectives function)
-simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
+function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
 {
     local DHPlayerReplicationInfo   PRI;
     local DHRoleInfo                RI;
@@ -3605,7 +3605,7 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
     }
 }
 
-simulated function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter)
+function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter)
 {
     local DHPlayer PC;
     local int i;
@@ -3636,7 +3636,7 @@ simulated function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, f
     }
 }
 
-simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter)
+function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter)
 {
     local Actor A;
     local DHPlayer PC;
@@ -3761,7 +3761,7 @@ simulated function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, 
     }
 }
 
-simulated function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector Location, vector MapCenter, float PlayerYaw, int Number, color Color, float TextureScale)
+function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector Location, vector MapCenter, float PlayerYaw, int Number, color Color, float TextureScale)
 {
     MapPlayerIcon.TextureScale = TextureScale;
 
@@ -3783,7 +3783,7 @@ simulated function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, f
     }
 }
 
-simulated function float GetMapIconYaw(float WorldYaw)
+function float GetMapIconYaw(float WorldYaw)
 {
     local float MapIconYaw;
 
@@ -3813,11 +3813,11 @@ simulated function float GetMapIconYaw(float WorldYaw)
 }
 
 // Renders the objectives on the HUD similar to the scoreboard
-simulated function DrawObjectives(Canvas C)
+function DrawObjectives(Canvas C)
 {
 }
 
-simulated function DrawLocationHits(Canvas C, ROPawn P)
+function DrawLocationHits(Canvas C, ROPawn P)
 {
     local int          Team, i;
     local bool         bNewDrawHits;
@@ -3872,7 +3872,7 @@ simulated function DrawLocationHits(Canvas C, ROPawn P)
     bDrawHits = bNewDrawHits;
 }
 
-simulated function UpdateHud()
+function UpdateHud()
 {
     local ROPawn P;
     local Weapon W;
@@ -4101,7 +4101,7 @@ function DisplayMessages(Canvas C)
     }
 }
 
-simulated function DrawCaptureBar(Canvas Canvas)
+function DrawCaptureBar(Canvas Canvas)
 {
     local DHPawn              P;
     local ROVehicle           Veh;
@@ -4392,7 +4392,7 @@ simulated function DrawCaptureBar(Canvas Canvas)
 }
 
 // Modified to fix a bug that spams thousands of "accessed none" errors to log, if there is a missing objective number in the array
-simulated function UpdateMapIconLabelCoords(FloatBox LabelCoords, ROGameReplicationInfo GRI, int CurrentObj)
+function UpdateMapIconLabelCoords(FloatBox LabelCoords, ROGameReplicationInfo GRI, int CurrentObj)
 {
     local float NewY;
     local int   Count, i;
@@ -4454,7 +4454,7 @@ simulated function UpdateMapIconLabelCoords(FloatBox LabelCoords, ROGameReplicat
 }
 
 // Modified to show respawn time for deploy system
-simulated function DrawSpectatingHud(Canvas C)
+function DrawSpectatingHud(Canvas C)
 {
     local DHPlayerReplicationInfo PRI;
     local DHSpawnPointBase   SP;
@@ -4776,7 +4776,7 @@ function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo LevelCoords, SpriteWidget Ic
 }
 
 // Modified to make fade to black work with lower HUD opacity values
-simulated function DrawFadeToBlack(Canvas Canvas)
+function DrawFadeToBlack(Canvas Canvas)
 {
     local float Alpha;
 
@@ -4811,7 +4811,7 @@ simulated function DrawFadeToBlack(Canvas Canvas)
 }
 
 // Modified to fix an accessed none error in ROHud.
-simulated function LocalizedMessage(class<LocalMessage> Message, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject, optional String CriticalString)
+function LocalizedMessage(class<LocalMessage> Message, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject, optional String CriticalString)
 {
     local int i, Count;
     local PlayerReplicationInfo PRI;
@@ -5100,7 +5100,7 @@ function DisplayVoiceGain(Canvas C)
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // New helper function to check whether debug execs can be run
-simulated function bool IsDebugModeAllowed()
+function bool IsDebugModeAllowed()
 {
     return Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode();
 }
@@ -5115,7 +5115,7 @@ exec function ShowDebug()
 }
 
 // A debug exec transferred from ROHud class & modified to include hiding the sky, which is necessary to allow the crucial debug spheres to get drawn
-simulated function PlayerCollisionDebug()
+function PlayerCollisionDebug()
 {
     if (IsDebugModeAllowed())
     {
@@ -5126,7 +5126,7 @@ simulated function PlayerCollisionDebug()
 
 // A debug exec transferred from ROHud class & modified to include hiding the sky, which is necessary to allow the crucial debug spheres to get drawn
 // Note this is effectively redundant now as from DH 6.0 the system of using coded hit points for vehicle occupants has been abandoned
-simulated function DriverCollisionDebug()
+function DriverCollisionDebug()
 {
     if (IsDebugModeAllowed())
     {
@@ -5167,7 +5167,7 @@ exec function CameraDebug()
 
 // New function to hide or restore the sky, used by debug functions that use DrawDebugX native functions, that won't draw unless the sky is off
 // Console command "show sky" toggles the sky on/off, but it only works in single player, so this allows these debug options to work in multiplayer
-simulated function SetSkyOff(bool bHideSky)
+function SetSkyOff(bool bHideSky)
 {
     if (PlayerOwner != none && PlayerOwner.PlayerReplicationInfo != none && PlayerOwner.PlayerReplicationInfo.PlayerZone != none)
     {
@@ -5190,7 +5190,7 @@ simulated function SetSkyOff(bool bHideSky)
 }
 
 // Overwritten to fix an issue where players could see through the fade to black effect
-simulated function DrawFadeEffect(Canvas C)
+function DrawFadeEffect(Canvas C)
 {
     if (FadeTime < 0.0)
     {
