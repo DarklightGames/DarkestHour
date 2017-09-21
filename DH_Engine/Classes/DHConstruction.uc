@@ -862,7 +862,7 @@ simulated function bool ShouldDestroyOnReset()
     return Owner != none;
 }
 
-static function GetTerrainPokeParameters(out int Radius, out int Depth)
+simulated function GetTerrainPokeParameters(out int Radius, out int Depth)
 {
     Radius = default.PokeTerrainRadius;
     Depth = default.PokeTerrainDepth;

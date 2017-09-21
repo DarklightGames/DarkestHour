@@ -114,7 +114,7 @@ function static GetCollisionSize(int TeamIndex, DH_LevelInfo LI, DHConstructionP
     }
 }
 
-simulated static function GetTerrainPokeParameters(out int Radius, out int Depth)
+simulated function GetTerrainPokeParameters(out int Radius, out int Depth)
 {
     // TODO: override depending on terrain size
     super.GetTerrainPokeParameters(Radius, Depth);
