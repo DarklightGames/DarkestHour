@@ -849,5 +849,6 @@ defaultproperties
     MyTeamIndex=2
     SquadLeaderAbbreviation="SL"
     PlayersText="Players"
-    PatronIconMaterial=Texture'DH_InterfaceArt2_tex.HUD.developer'
+    PatronIconMaterial=Texture'DH_InterfaceArt2_tex.HUD.patron'
+    DeveloperIconMaterial=Texture'DH_InterfaceArt2_tex.HUD.developer'
 }
