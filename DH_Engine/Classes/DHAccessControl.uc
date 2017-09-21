@@ -14,7 +14,7 @@ function bool AdminLoginSilent(PlayerController P, string UserName, string Passw
     local xAdminUser User;
     local string     ROID, AMMutatorPrefix;
     local bool       bIsDeveloper, bValidLogin, bAdminMenuMutatorLogin;
-    local int        Index, i;
+    local int        Index;
 
     if (P == none || P.PlayerReplicationInfo == none)
     {
