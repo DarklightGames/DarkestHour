@@ -34,7 +34,7 @@ simulated function bool IsInSquad()
 // Will return true if passed two players that are in the same squad.
 simulated static function bool IsInSameSquad(DHPlayerReplicationInfo A, DHPlayerReplicationInfo B)
 {
-    return A != none && B != none &&
+    return A != none && A.Team != none && B != none && B.Team != none &&
           (A.Team.TeamIndex == AXIS_TEAM_INDEX || A.Team.TeamIndex == ALLIES_TEAM_INDEX) &&
            A.Team.TeamIndex == B.Team.TeamIndex &&
            A.SquadIndex >= 0 && A.SquadIndex == B.SquadIndex;
