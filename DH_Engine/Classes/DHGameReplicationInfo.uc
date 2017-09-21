@@ -788,13 +788,14 @@ simulated function int GetRoundTimeRemaining()
 {
     local int SecondsRemaining;
 
-    if (bRoundIsOver)
-    {
-        SecondsRemaining = RoundEndTime;
-    }
-    else if (bMatchHasBegun)
+    if (bMatchHasBegun)
     {
         SecondsRemaining = RoundEndTime - ElapsedTime;
+
+        if (bRoundIsOver && SecondsRemaining > 0)
+        {
+            SecondsRemaining = RoundEndTime;
+        }
     }
     else
     {
