@@ -9,11 +9,17 @@ var TerrainInfo         TerrainInfo;
 
 // Dirt projector
 var DynamicProjector    DirtProjector;
+var float               DirtProjectorDrawScale;
+var float               DirtProjectorDrawScaleLarge;
 
 // Large terrain
 var float               LargeTerrainScaleThreshold;
 var StaticMesh          LargeTerrainScaleStaticMesh;
 var float               LargeTerrainScaleCollisionRadius;
+
+// Large foxhole
+var int                 PokeTerrainDepthLarge;
+var int                 PokeTerrainRadiusLarge;
 
 simulated function PostBeginPlay()
 {
@@ -29,6 +35,8 @@ simulated function PostBeginPlay()
 
 simulated function OnConstructed()
 {
+    local vector X, Y, Z;
+
     super.OnConstructed();
 
     if (Level.NetMode != NM_DedicatedServer)
@@ -47,10 +55,11 @@ simulated function OnConstructed()
             DirtProjector.ProjTexture = Material'DH_Construction_tex.Foxholes.foxhole_01_projector';
             DirtProjector.FrameBufferBlendingOp = PB_AlphaBlend;
             DirtProjector.FOV = 1;
-            DirtProjector.MaxTraceDistance = 512.0;
+            DirtProjector.MaxTraceDistance = 1024.0;
             DirtProjector.bGradient = true;
             DirtProjector.SetDrawScale(GetDirtProjectorDrawScale() / DirtProjector.ProjTexture.MaterialUSize());
-            DirtProjector.SetRelativeLocation(vect(0.0, 0.0, 128.0));
+            GetAxes(Rotation, X, Y, Z);
+            DirtProjector.SetRelativeLocation(Z * 128.0);
             DirtProjector.SetRelativeRotation(rot(-16384, 0, 0));
         }
     }
@@ -58,14 +67,13 @@ simulated function OnConstructed()
 
 function float GetDirtProjectorDrawScale()
 {
-    // TODO: magic numbers
     if (IsTerrainScaleLarge(TerrainInfo))
     {
-        return 768.0;
+        return DirtProjectorDrawScaleLarge;
     }
     else
     {
-        return 384.0;
+        return DirtProjectorDrawScale;
     }
 }
 
@@ -116,8 +124,15 @@ function static GetCollisionSize(int TeamIndex, DH_LevelInfo LI, DHConstructionP
 
 simulated function GetTerrainPokeParameters(out int Radius, out int Depth)
 {
-    // TODO: override depending on terrain size
-    super.GetTerrainPokeParameters(Radius, Depth);
+    if (IsTerrainScaleLarge(TerrainInfo))
+    {
+        Depth = PokeTerrainDepthLarge;
+        Radius = PokeTerrainRadiusLarge;
+    }
+    else
+    {
+        super.GetTerrainPokeParameters(Radius, Depth);
+    }
 }
 
 defaultproperties
@@ -135,7 +150,9 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_01'
     LargeTerrainScaleStaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_02'
     PokeTerrainDepth=128
-    PokeTerrainRadius=128.0
+    PokeTerrainRadius=128
+    PokeTerrainDepthLarge=82
+    PokeTerrainRadiusLarge=128
     SupplyCost=0
     PlacementOffset=(Z=0.0)
     MenuName="Foxhole"
@@ -153,4 +170,6 @@ defaultproperties
     LargeTerrainScaleThreshold=128.0
     LargeTerrainScaleCollisionRadius=256.0
     ConstructionVerb="dig"
+    DirtProjectorDrawScaleLarge=850.0
+    DirtProjectorDrawScale=550.0
 }
