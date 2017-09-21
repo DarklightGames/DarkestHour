@@ -53,8 +53,8 @@ defaultproperties
     DisplayFOV=80.0
     bCanSway=false
 
-    CrawlStartAnim="crawlF" // TODO: get a proper "crawlIn" animation
-    CrawlEndAnim="crawlF"   // TODO: get a proper "crawlOut" animation
+    CrawlStartAnim="crawl_in"
+    CrawlEndAnim="crawl_out"
 
     AIRating=0.0
     CurrentRating=0.0
