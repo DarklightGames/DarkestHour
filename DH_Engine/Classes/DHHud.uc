@@ -4686,7 +4686,7 @@ simulated function DrawSpectatingHud(Canvas C)
     }
 
     // Update & draw screen messages
-    DisplayLocalMessages(C);
+    DrawHudPassA(C);
 }
 
 // Modified to make objective title's smaller on the overview
