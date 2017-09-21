@@ -104,8 +104,12 @@ function UpdateCollisionSize()
 {
     local float NewRadius, NewHeight;
 
-    // Determine the collision size to use given the current team and level info.
-    ConstructionClass.static.GetCollisionSize(PlayerOwner.GetTeamNum(), PlayerOwner.ClientLevelInfo, self, NewRadius, NewHeight);
+    if (ConstructionClass != none)
+    {
+        // Determine the collision size to use given the current team and level info.
+        ConstructionClass.static.GetCollisionSize(PlayerOwner.GetTeamNum(), PlayerOwner.ClientLevelInfo, self, NewRadius, NewHeight);
+    }
+
     SetCollisionSize(NewRadius, NewHeight);
 }
 
