@@ -203,7 +203,6 @@ function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(HintBackground.WidgetTexture);
 
     // Overhead map
-    Level.AddPrecacheMaterial(MapBackground.WidgetTexture);
     Level.AddPrecacheMaterial(Texture'DH_GUI_Tex.GUI.overheadmap_Icons');
     Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons');
     Level.AddPrecacheMaterial(Texture'DH_GUI_Tex.overheadmap_flags');
@@ -5332,7 +5331,6 @@ defaultproperties
     LocationHitAlliesImages(14)=Texture'DH_GUI_Tex.Player_hits.US_hit_Rfoot'
 
     // Map general icons
-    MapBackground=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_background')
     MapLevelOverlay=(RenderStyle=STY_Alpha,TextureCoords=(X2=511,Y2=511),TextureScale=1.0,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=125),Tints[1]=(B=255,G=255,R=255,A=255))
     MapScaleText=(RenderStyle=STY_Alpha,DrawPivot=DP_LowerRight,PosX=1.0,PosY=0.0375,WrapHeight=1.0,Tints[0]=(B=255,G=255,R=255,A=128),Tints[1]=(B=255,G=255,R=255,A=128))
     MapPlayerIcon=(WidgetTexture=FinalBlend'DH_InterfaceArt_tex.HUD.player_icon_map_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31))
