@@ -3225,6 +3225,11 @@ simulated function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Play
             TexRotator(FinalBlend(SupplyPointIcon.WidgetTexture).Material).Rotation.Yaw = GetMapIconYaw(Yaw);
 
             DrawIconOnMap(C, SubCoords, SupplyPointIcon, MyMapScale, Temp, MapCenter);
+
+            // HACK: This stops the engine from "instancing" the texture,
+            // resulting in the bizarre bug where all the icons share the same
+            // rotation.
+            C.DrawVertical(0.0, 0.0);
         }
     }
 
