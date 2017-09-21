@@ -839,7 +839,6 @@ defaultproperties
     PlayerBackgroundColor=(R=0,G=0,B=0,A=192)
     SelfBackgroundColor=(R=32,G=32,B=32,A=192)
 
-    HeaderImage=Texture'DH_GUI_Tex.GUI.DH_Headerbar'
     TeamColors(0)=(B=80,G=80,R=200)
     TeamColors(1)=(B=75,G=150,R=80)
     HudClass=class'DH_Engine.DHHud'
