@@ -207,6 +207,7 @@ function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons');
     Level.AddPrecacheMaterial(Texture'DH_GUI_Tex.overheadmap_flags');
     Level.AddPrecacheMaterial(MapPlayerIcon.WidgetTexture);
+    Level.AddPrecacheMaterial(SupplyPointIcon.WidgetTexture);
     Level.AddPrecacheMaterial(MapIconsFlash);
     Level.AddPrecacheMaterial(MapIconsFastFlash);
     Level.AddPrecacheMaterial(MapIconsAltFlash);
