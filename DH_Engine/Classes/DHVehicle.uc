@@ -1531,6 +1531,17 @@ function DriverLeft()
     DrivingStatusChanged();
 }
 
+// Modified to stop any engine shut down force feedback if player exits just after switching off engine & the FF is still playing (he's exited so he shouldn't feel it)
+simulated function ClientKDriverLeave(PlayerController PC)
+{
+    super.ClientKDriverLeave(PC);
+
+    if (PC != none && PC.bEnableGUIForceFeedback)
+    {
+        PC.StopForceFeedback(ShutDownForce);
+    }
+}
+
 // New function to check if player can exit - implement in subclass as required
 simulated function bool CanExit()
 {
@@ -1626,9 +1637,10 @@ function ServerStartEngine()
     }
 }
 
-// New function to set up the engine properties
+// New function to set the engine properties & effects, based on whether engine is on & if it's damaged
 simulated function SetEngine()
 {
+    // Engine off
     if (bEngineOff || Health <= 0 || EngineHealth <= 0)
     {
         TurnDamping = 0.0;
@@ -1658,7 +1670,13 @@ simulated function SetEngine()
         {
             StopEmitters();
         }
+
+        if (ShutDownForce != "")
+        {
+            ClientPlayForceFeedback(ShutDownForce); // built in checks mean FF only plays for local player & only if he has it enabled
+        }
     }
+    // Engine on
     else
     {
         if (IdleSound != none)
@@ -1669,6 +1687,11 @@ simulated function SetEngine()
         if (!bEmittersOn)
         {
             StartEmitters();
+        }
+
+        if (StartUpForce != "")
+        {
+            ClientPlayForceFeedback(StartUpForce);
         }
     }
 }
