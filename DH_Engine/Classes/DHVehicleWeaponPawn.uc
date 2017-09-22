@@ -1393,7 +1393,7 @@ function bool PlaceExitingDriver()
     Extent.X = Driver.default.DrivingRadius;
     Extent.Y = Driver.default.DrivingRadius;
     Extent.Z = Driver.default.DrivingHeight;
-    ZOffset = Driver.default.CollisionHeight * vect(0.0, 0.0, 0.5);
+    ZOffset.Z = Driver.default.CollisionHeight * 0.5;
 
     // Check through exit positions to see if player can be moved there, using the 1st valid one we find
     // Start with the exit position for this weapon pawn, & if necessary loop back to position zero to find a valid exit
