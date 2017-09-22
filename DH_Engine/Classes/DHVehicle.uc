@@ -35,15 +35,13 @@ struct RandomAttachOption
     var byte        PercentChance;  // the % chance of this attachment being the one spawned
 };
 
-// Spawn manager
-var int VehiclePoolIndex;   // The vehicle pool index that this was spawned from
-
 // General
 var DHVehicleCannon Cannon;                      // reference to the vehicle's cannon weapon
 var DHVehicleMG     MGun;                        // reference to the vehicle's mounted MG weapon
 var array<material> CannonSkins;                 // option to specify cannon's camo skins in vehicle class, avoiding need for separate cannon pawn & cannon classes just for different camo
 var     array<PassengerPawn> PassengerPawns;     // array with properties usually specified in separate passenger pawn classes, just to avoid need for lots of classes
 var     byte        FirstRiderPositionIndex;     // used by passenger pawn to find its position in PassengerPawns array
+var     bool        bIsArtilleryVehicle;         // is an artillery support vehicle, where targets can be marked by an observer, with impacts showing on overhead map
 var     float       PointValue;                  // used for scoring
 var     int         ReinforcementCost;           // reinforcement loss for losing this vehicle
 var     float       FriendlyResetDistance;       // used in CheckReset() as maximum range to check for friendly pawns, to avoid re-spawning empty vehicle
@@ -127,7 +125,7 @@ var     VehicleAttachment           RandomAttachment;        // option for a vis
 var     array<RandomAttachOption>   RandomAttachOptions;     // possible static meshes to use with the random decorative attachment
 var     byte                        RandomAttachmentIndex;   // the attachment index number selected randomly to be spawned for this vehicle
 var     class<DHResupplyAttachment> ResupplyAttachmentClass; // option for a functioning (not decorative) resupply actor attachment
-var     name                        ResupplyAttachmentBone;      // bone name for attaching resupply attachment
+var     name                        ResupplyAttachmentBone;  // bone name for attaching resupply attachment
 var     DHResupplyAttachment        ResupplyAttachment;      // reference to any resupply actor
 var     float                       ShadowZOffset;           // vertical position offset for shadow, allowing shadow to be tuned (origin position in hull mesh affects shadow location)
 
@@ -137,21 +135,19 @@ var     name                                    SupplyAttachmentBone;
 var     DHConstructionSupplyAttachment          SupplyAttachment;
 var     vector                                  SupplyAttachmentOffset;
 var     rotator                                 SupplyAttachmentRotation;
-var     int                                     SupplyDropInterval;         // The amount of seconds that must transpire between supply drops.
-var     int                                     SupplyDropCountMax;          // How many supplies this vehicle can drop at a time
-var     array<DHConstructionSupplyAttachment>   TouchingSupplyAttachments;  // List of supply attachments we are in range of
-var     int                                     TouchingSupplyCount;        // Sum of all supplies in attachments we are in range of
+var     int                                     SupplyDropInterval;        // the amount of seconds that must elapse between supply drops
+var     int                                     SupplyDropCountMax;        // how many supplies this vehicle can drop at a time
+var     array<DHConstructionSupplyAttachment>   TouchingSupplyAttachments; // list of supply attachments we are in range of
+var     int                                     TouchingSupplyCount;       // sum of all supplies in attachments we are in range of
 
 var     sound                                   SupplyDropSound;
 var     float                                   SupplyDropSoundRadius;
 var     float                                   SupplyDropSoundVolume;
 
 // Spawning
-var     DHSpawnPoint_Vehicle    SpawnPointAttachment;
-var     DHSpawnPointBase        SpawnPoint;                 // The spawn point that was used to spawn this vehicle.
-
-// Artillery
-var     bool        bIsArtilleryVehicle;
+var     int                     VehiclePoolIndex;     // the vehicle pool index that this was spawned from
+var     DHSpawnPoint_Vehicle    SpawnPointAttachment; // a spawn vehicle's spawn point attachment
+var     DHSpawnPointBase        SpawnPoint;           // the spawn point that was used to spawn this vehicle
 
 // Debugging
 var     bool        bDebuggingText;
