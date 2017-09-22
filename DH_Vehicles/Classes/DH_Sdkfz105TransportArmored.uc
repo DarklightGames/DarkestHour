@@ -17,7 +17,7 @@ simulated function SpawnVehicleAttachments()
         if (Level.NetMode != NM_DedicatedServer)
         {
             CollisionAttachments[0].Actor.Skins[0] = Skins[1]; // match camo to vehicle's 'cabin' texture
-            CollisionAttachments[0].Actor.bHidden = false;
+            CollisionAttachments[0].Actor.SetDrawType(DT_StaticMesh);
         }
     }
 }
