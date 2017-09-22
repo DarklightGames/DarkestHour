@@ -216,7 +216,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     local Actor        A;
     local array<Actor> SavedHitActors;
     local vector       Direction, PawnHitLocation, TempHitLocation, HitNormal;
-    local bool         bPenetratedVehicle;
     local float        V;
     local array<int>   HitPoints;
     local int          TraceWhizType, i;
@@ -251,30 +250,24 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
     Direction = Normal(Velocity);
 
-    // Handle hit on a vehicle weapon
-    if (Other.IsA('ROVehicleWeapon'))
+    // Bullet never penetrates a vehicle weapon, so we just play hit effect & exit the function, destroying bullet unless it's a tracer deflection
+    if (Other.IsA('VehicleWeapon'))
     {
-        bPenetratedVehicle = !bHasDeflected && PenetrateVehicleWeapon(ROVehicleWeapon(Other));
+        PlayVehicleHitEffects(false, HitLocation, -Direction);
 
-        PlayVehicleHitEffects(bPenetratedVehicle, HitLocation, -Direction);
-
-        // Exit if failed to penetrate, destroying bullet unless it's a tracer deflection
-        if (!bPenetratedVehicle)
+        // Tracer deflects unless bullet speed is very low (approx 12 m/s)
+        // Added the trace to get a HitNormal, so ricochet is at correct angle (from shell's DeflectWithoutNormal function)
+        if (Level.NetMode != NM_DedicatedServer && bIsTracerBullet && VSizeSquared(Velocity) > 500000.0)
         {
-            // Tracer deflects unless bullet speed is very low (approx 12 m/s)
-            // Added the trace to get a HitNormal, so ricochet is at correct angle (from shell's DeflectWithoutNormal function)
-            if (Level.NetMode != NM_DedicatedServer && bIsTracerBullet && VSizeSquared(Velocity) > 500000.0)
-            {
-                Trace(HitLocation, HitNormal, HitLocation + (Direction * 50.0), HitLocation - (Direction * 50.0), true);
-                Deflect(HitNormal);
-            }
-            else
-            {
-                Destroy();
-            }
-
-            return;
+            Trace(HitLocation, HitNormal, HitLocation + (Direction * 50.0), HitLocation - (Direction * 50.0), true);
+            Deflect(HitNormal);
         }
+        else
+        {
+            Destroy();
+        }
+
+        return;
     }
 
     // Get the bullet's speed
@@ -480,7 +473,11 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     // Handle hit on a vehicle
     if (HitVehicle != none)
     {
-        bPenetratedVehicle = !bHasDeflected && PenetrateVehicle(HitVehicle);
+        if (!bHasDeflected)
+        {
+            AV = DHArmoredVehicle(HitVehicle);
+            bPenetratedVehicle = AV == none && !HitVehicle.bIsApc && !bHitBulletProofColMesh;
+        }
 
         PlayVehicleHitEffects(bPenetratedVehicle, Location, HitNormal);
     }
@@ -498,8 +495,6 @@ simulated function HitWall(vector HitNormal, Actor Wall)
             // Skip calling TakeDamage if we hit a vehicle but failed to penetrate - except check for possible hit on any exposed gunsight optics // TODO: resolve this more tidily (also AP bullet)
             if (HitVehicle != none && !bPenetratedVehicle)
             {
-                AV = DHArmoredVehicle(HitVehicle);
-
                 // Hit exposed gunsight optics
                 if (AV != none && AV.GunOpticsHitPointIndex >= 0 && AV.GunOpticsHitPointIndex < AV.NewVehHitpoints.Length
                     && AV.NewVehHitpoints[AV.GunOpticsHitPointIndex].NewHitPointType == NHP_GunOptics
@@ -566,18 +561,6 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     {
         Destroy();
     }
-}
-
-// New function to check whether we penetrated a vehicle weapon that we hit (default bullet won't penetrate damage any vehicle weapon)
-simulated function bool PenetrateVehicleWeapon(VehicleWeapon VW)
-{
-    return false;
-}
-
-// New function to check whether we penetrated a vehicle that we hit (default bullet will only penetrate soft skin vehicle, not an armored vehicle or APC)
-simulated function bool PenetrateVehicle(ROVehicle V)
-{
-    return !bHasDeflected && V != none && !V.IsA('DHArmoredVehicle') && !V.bIsApc && !bHitBulletProofColMesh;
 }
 
 // New function to handle hit effects for bullet hitting vehicle or vehicle weapon, depending on whether it penetrated (saves code repetition elsewhere)
