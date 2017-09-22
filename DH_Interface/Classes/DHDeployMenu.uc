@@ -770,7 +770,6 @@ function Apply()
 {
     local RORoleInfo RI;
     local int        RoleIndex;
-    local byte       Team;
 
     if (b_MenuOptions[7].MenuState == MSAT_Disabled)
     {
@@ -784,7 +783,7 @@ function Apply()
         return;
     }
 
-    RoleIndex = GRI.GetRoleIndexAndTeam(RI, Team);
+    RoleIndex = GRI.GetRoleIndexAndTeam(RI);
 
     if (RoleIndex == -1)
     {

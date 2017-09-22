@@ -4810,13 +4810,12 @@ simulated function int GetSquadMemberIndex()
 simulated function int GetRoleIndex()
 {
     local DHGameReplicationInfo GRI;
-    local byte TeamIndex;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     if (GRI != none)
     {
-        return GRI.GetRoleIndexAndTeam(GetRoleInfo(), TeamIndex);
+        return GRI.GetRoleIndexAndTeam(GetRoleInfo());
     }
 
     return -1;
