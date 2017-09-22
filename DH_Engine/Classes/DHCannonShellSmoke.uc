@@ -59,7 +59,6 @@ defaultproperties
     SmokeSoundDuration=33.0
     ImpactDamage=125
     BallisticCoefficient=0.6
-    SpeedFudgeScale=0.75
     MaxSpeed=500.0
     Damage=75.0
     DamageRadius=50.0

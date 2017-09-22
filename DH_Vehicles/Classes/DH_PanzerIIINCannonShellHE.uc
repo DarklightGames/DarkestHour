@@ -50,7 +50,6 @@ defaultproperties
     PenetrationMag=900.0
     ImpactDamage=455
     BallisticCoefficient=2.0
-    SpeedFudgeScale=0.7
     Speed=25348.0
     MaxSpeed=25348.0
     Damage=415.0

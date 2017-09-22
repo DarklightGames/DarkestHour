@@ -50,7 +50,6 @@ defaultproperties
     ShellHitWaterEffectClass=class'ROEffects.ROBulletHitWaterEffect'
     AmbientVolumeScale=2.0
     BallisticCoefficient=0.77
-    SpeedFudgeScale=0.75
     Speed=47075.0
     MaxSpeed=47075.0
     ExplosionDecal=class'ROEffects.BulletHoleConcrete'

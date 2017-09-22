@@ -21,7 +21,6 @@ defaultproperties
     ShellDiameter=10.5
     ImpactDamage=650
     BallisticCoefficient=2.96
-    SpeedFudgeScale=0.7
     Speed=22994.0
     MaxSpeed=22994.0
     Damage=415.0

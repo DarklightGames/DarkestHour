@@ -44,7 +44,6 @@ defaultproperties
     ShellHitWaterEffectClass=class'ROEffects.GrenadeExplosion'
     AmbientVolumeScale=2.0
     BallisticCoefficient=0.77
-    SpeedFudgeScale=0.75
     Speed=47075.0
     MaxSpeed=47075.0
     Damage=110.0
