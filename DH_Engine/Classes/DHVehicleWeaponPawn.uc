@@ -1364,7 +1364,7 @@ simulated function Destroyed_HandleDriver()
 // New function to check if player can exit, displaying an "unbutton hatch" message if he can't (just saves repeating code in different functions)
 simulated function bool CanExit()
 {
-    if (DriverPositionIndex < UnbuttonedPositionIndex || (IsInState('ViewTransition') && DriverPositionIndex == UnbuttonedPositionIndex))
+    if ((DriverPositionIndex < UnbuttonedPositionIndex || (IsInState('ViewTransition') && DriverPositionIndex == UnbuttonedPositionIndex)) && IsHumanControlled())
     {
         if (DriverPositions.Length > UnbuttonedPositionIndex) // means it is possible to unbutton
         {
