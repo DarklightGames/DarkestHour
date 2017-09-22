@@ -11,5 +11,5 @@ defaultproperties
     TracerEffectClass=class'ROEffects.RORussianGreenTracer'
     StaticMesh=StaticMesh'DH_Tracers.Soviet_Tracer'
     DeflectedMesh=StaticMesh'DH_Tracers.Soviet_Tracer_Ball'
-    SpeedFudgeScale=0.5
+    SpeedFudgeScale=0.75
 }
