@@ -763,10 +763,9 @@ simulated function PrevWeapon()
     }
 }
 
-// Modified to send dedicated server to state ViewTransition if player is moving to or from an exposed position
+// Modified to call NextViewPoint() for all modes, including dedicated server
 // New player hit detection system (basically using normal hit detection as for an infantry player pawn) relies on server playing same animations as net clients
-// But if player is only moving from one unexposed position to another, the server doesn't need to do this, as player can't be shot & server has no other need to play anims
-// Server also needs to be in state ViewTransition when player is unbuttoning to prevent player exiting until fully unbuttoned
+// Server also needs to be in state ViewTransition if player is unbuttoning to prevent player exiting until fully unbuttoned
 // Also to prevent player from moving to binoculars position if he doesn't have any binocs
 function ServerChangeViewPoint(bool bForward)
 {
@@ -781,12 +780,7 @@ function ServerChangeViewPoint(bool bForward)
 
             LastPositionIndex = DriverPositionIndex;
             DriverPositionIndex++;
-
-            if ((Level.NetMode == NM_DedicatedServer && (DriverPositions[DriverPositionIndex].bExposed || DriverPositions[LastPositionIndex].bExposed))
-                || Level.Netmode == NM_Standalone || Level.NetMode == NM_ListenServer)
-            {
-                GotoState('ViewTransition'); // originally called NextViewPoint(), but for any authority role that just goes to state ViewTransition anyway
-            }
+            NextViewPoint();
         }
     }
     else
@@ -795,13 +789,22 @@ function ServerChangeViewPoint(bool bForward)
         {
             LastPositionIndex = DriverPositionIndex;
             DriverPositionIndex--;
-
-            if ((Level.NetMode == NM_DedicatedServer && (DriverPositions[DriverPositionIndex].bExposed || DriverPositions[LastPositionIndex].bExposed))
-                || Level.Netmode == NM_Standalone || Level.NetMode == NM_ListenServer)
-            {
-                GotoState('ViewTransition');
-            }
+            NextViewPoint();
         }
+    }
+}
+
+// Modified so dedicated server doesn't go to state ViewTransition if player is only moving between unexposed positions
+// This is because player can't be shot & so server doesn't need to play transition anims (note this wouldn't even be called on dedicated server in original RO)
+simulated function NextViewPoint()
+{
+    if (Level.NetMode == NM_Client && !IsLocallyControlled())
+    {
+        AnimateTransition();
+    }
+    else if (Level.NetMode != NM_DedicatedServer || DriverPositions[DriverPositionIndex].bExposed || DriverPositions[LastPositionIndex].bExposed)
+    {
+        GotoState('ViewTransition');
     }
 }
 
