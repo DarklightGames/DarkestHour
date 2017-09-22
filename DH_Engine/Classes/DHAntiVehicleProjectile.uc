@@ -1036,6 +1036,8 @@ defaultproperties
     bUseCollisionStaticMesh=true
     bBotNotifyIneffective=true
     bIsAlliedShell=true
+    SpeedFudgeScale=0.5
+    InitialAccelerationTime=0.2
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect'
     ShatterVehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
     ShatterSound(0)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode01'

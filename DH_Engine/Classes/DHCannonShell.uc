@@ -304,8 +304,6 @@ defaultproperties
     ShellHitRockEffectClass=class'ROEffects.TankAPHitRockEffect'
     ShellHitWaterEffectClass=class'DH_Effects.DHShellSplashEffect'
     AmbientVolumeScale=5.0
-    SpeedFudgeScale=0.5
-    InitialAccelerationTime=0.2
     Speed=500.0
     MaxSpeed=22000.0
     Damage=100.0
