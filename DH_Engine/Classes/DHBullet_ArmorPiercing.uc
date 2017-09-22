@@ -118,7 +118,7 @@ simulated singular function Touch(Actor Other)
     }
 }
 
-// From DHBullet
+// From DHBullet, just with a penetration check if hit a vehicle weapon, & using differently named variables/functions from different class inheritance
 simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
     local DHPawn       HitPlayer, WhizzedPlayer;
@@ -164,7 +164,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     // Handle hit on a vehicle weapon
     if (Other.IsA('ROVehicleWeapon'))
     {
-        bPenetratedVehicle = !HasDeflected() && PenetrateVehicleWeapon(ROVehicleWeapon(Other));
+        bPenetratedVehicle = !HasDeflected() && (!Other.IsA('DHVehicleCannon') ||
+            DHVehicleCannon(Other).ShouldPenetrate(self, HitLocation, Direction, GetMaxPenetration(LaunchLocation, HitLocation)));
 
         PlayVehicleHitEffects(bPenetratedVehicle, HitLocation, -Direction);
 
@@ -354,7 +355,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     Destroy();
 }
 
-// From DHBullet
+// From DHBullet, just using different penetration check if hit a vehicle, & using differently named variables/functions from different class inheritance
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
     local ROVehicle        HitVehicle;
@@ -388,7 +389,11 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     // Handle hit on a vehicle
     if (HitVehicle != none)
     {
-        bPenetratedVehicle = !HasDeflected() && PenetrateVehicle(HitVehicle);
+        if (!HasDeflected())
+        {
+            AV = DHArmoredVehicle(HitVehicle);
+            bPenetratedVehicle = AV == none || AV.ShouldPenetrate(self, Location, Normal(Velocity), GetMaxPenetration(LaunchLocation, Location));
+        }
 
         PlayVehicleHitEffects(bPenetratedVehicle, Location, HitNormal);
     }
@@ -406,8 +411,6 @@ simulated function HitWall(vector HitNormal, Actor Wall)
             // Skip calling TakeDamage if we hit a vehicle but failed to penetrate - except check for possible hit on any exposed gunsight optics
             if (HitVehicle != none && !bPenetratedVehicle)
             {
-                AV = DHArmoredVehicle(HitVehicle);
-
                 // Hit exposed gunsight optics
                 if (AV != none && AV.GunOpticsHitPointIndex >= 0 && AV.GunOpticsHitPointIndex < AV.NewVehHitpoints.Length
                     && AV.NewVehHitpoints[AV.GunOpticsHitPointIndex].NewHitPointType == NHP_GunOptics
@@ -471,18 +474,6 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     {
         Destroy();
     }
-}
-
-// Modified to run penetration calculations on a vehicle cannon (e.g. turret), but damage any other vehicle weapon automatically
-simulated function bool PenetrateVehicleWeapon(VehicleWeapon VW)
-{
-    return DHVehicleCannon(VW) == none || DHVehicleCannon(VW).ShouldPenetrate(self, Location, Normal(Velocity), GetMaxPenetration(LaunchLocation, Location));
-}
-
-// Modified to run penetration calculations on an armored vehicle, but damage any other vehicle automatically
-simulated function bool PenetrateVehicle(ROVehicle V)
-{
-    return DHArmoredVehicle(V) == none || DHArmoredVehicle(V).ShouldPenetrate(self, Location, Normal(Velocity), GetMaxPenetration(LaunchLocation, Location));
 }
 
 // From DHBullet
