@@ -1005,11 +1005,12 @@ function KDriverEnter(Pawn P)
     }
 }
 
-// Modified to add an engine start/stop hint & to enforce bDesiredBehindView = false (avoids a view rotation bug)
-// Also to work around various net client problems caused by replication timing issues
+// Modified to work around various net client problems caused by replication timing issues
+// Also to avoid playing engine start up force feedback, as we don't start the engine when player enters
+// And to add engine start/stop hint, to enforce bDesiredBehindView=false (avoids a view rotation bug), & to cleanly handle player's initial view rotation
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-    local DHPlayer P;
+    local DHPlayer DHP;
 
     // Fix possible replication timing problems on a net client
     if (Role < ROLE_Authority && PC != none)
@@ -1028,24 +1029,40 @@ simulated function ClientKDriverEnter(PlayerController PC)
         }
     }
 
-    // bDesiredBehindView may be true in user.ini config file, if player exited game while in behind view in same vehicle (config values change class defaults)
-    bDesiredBehindView = false;
+    bDesiredBehindView = false; // may be true in user.ini config file if player exited game while in behind view in same vehicle (config values change class defaults)
+
+    FPCamPos = default.FPCamPos;
+
+    SavedPositionIndex = InitialPositionIndex; // ADDED
+    PendingPositionIndex = InitialPositionIndex;
+
+    if (!bDontUsePositionMesh)
+    {
+        GotoState('EnteringVehicle');
+    }
+
+    // REMOVED as player's rotation always gets zeroed in the Super so he starts facing forwards (due to bZeroPCRotOnEntry)
+    // Player's rotation is now always relative to the vehicle (& in POVChanged() we no longer alter his rotation to make it relative)
+//  if (!bDesiredBehindView)
+//      PC.SetRotation(Rotation);
+
+    StoredVehicleRotation = Rotation;
 
     // Hints re engine start/stop & use of deploy vehicles
-    P = DHPlayer(PC);
+    DHP = DHPlayer(PC);
 
-    if (P != none)
+    if (DHP != none)
     {
-        P.QueueHint(40, true);
+        DHP.QueueHint(40, true);
 
         if (IsSpawnVehicle())
         {
-            P.QueueHint(14, true);
-            P.QueueHint(16, true);
+            DHP.QueueHint(14, true);
+            DHP.QueueHint(16, true);
         }
     }
 
-    super.ClientKDriverEnter(PC);
+    super(Vehicle).ClientKDriverEnter(PC);
 }
 
 // Modified to use InitialPositionIndex & to play BeginningIdleAnim on internal mesh when entering vehicle
@@ -3667,6 +3684,7 @@ defaultproperties
 
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & hard coded into functionality:
     bPCRelativeFPRotation=true
+    bZeroPCRotOnEntry=true
     bFPNoZFromCameraPitch=false
     FPCamViewOffset=(X=0.0,Y=0.0,Z=0.0)
     bDesiredBehindView=false
