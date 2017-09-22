@@ -3672,7 +3672,5 @@ defaultproperties
     bDesiredBehindView=false
     bDisableThrottle=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
-
-
 //  EntryRadius=375.0 // deprecated
 }

@@ -201,9 +201,9 @@ simulated singular function Touch(Actor Other)
     }
 
     // We use TraceThisActor do a simple line check against the actor we've hit, to get an accurate HitLocation to pass to ProcessTouch()
-    // It's more accurate than using our current location as projectile has often travelled a little further by the time this event gets called
+    // It's more accurate than using our current location as projectile has often travelled further by the time this event gets called
     // But if that trace returns true then it somehow didn't hit the actor, so we fall back to using our current location as the HitLocation
-    // Also skip trace & use location as HitLocation if our velocity is somehow zero (collided immediately on launch?) or we hit a Mover actor
+    // Also skip trace & use our location if velocity is zero (touching actor when projectile spawns) or hit a Mover actor (legacy, don't know why)
     if (Velocity == vect(0.0, 0.0, 0.0) || Other.IsA('Mover')
         || Other.TraceThisActor(HitLocation, HitNormal, Location, Location - (2.0 * Velocity), GetCollisionExtent()))
     {

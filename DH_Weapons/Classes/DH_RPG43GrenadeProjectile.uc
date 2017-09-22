@@ -61,7 +61,6 @@ simulated singular function Touch(Actor Other)
 {
     local vector HitLocation, HitNormal;
 
-    // Added splash if projectile hits a fluid surface
     if (FluidSurfaceInfo(Other) != none)
     {
         CheckForSplash(Location);
@@ -72,29 +71,22 @@ simulated singular function Touch(Actor Other)
         return;
     }
 
-    // We use TraceThisActor do a simple line check against the actor we've hit, to get an accurate HitLocation to pass to ProcessTouch()
-    // It's more accurate than using our current location as projectile has often travelled a little further by the time this event gets called
-    // But if that trace returns true then it somehow didn't hit the actor, so we fall back to using our current location as the HitLocation
-    // Also skip trace & use location as HitLocation if our velocity is somehow zero (collided immediately on launch?) or we hit a Mover actor
     if (Velocity == vect(0.0, 0.0, 0.0) || Other.IsA('Mover')
         || Other.TraceThisActor(HitLocation, HitNormal, Location, Location - (2.0 * Velocity), GetCollisionExtent()))
     {
         HitLocation = Location;
     }
 
-    // Special handling for hit on a collision mesh actor - switch hit actor to CM's owner & proceed as if we'd hit that actor
     if (Other.IsA('DHCollisionMeshActor'))
     {
         if (DHCollisionMeshActor(Other).bWontStopThrownProjectile)
         {
-            return; // exit, doing nothing, if col mesh actor is set not to stop a thrown projectile, e.g. grenade or satchel
+            return;
         }
 
         Other = Other.Owner;
     }
 
-    // Now call ProcessTouch(), which is the where the class-specific Touch functionality gets handled
-    // Record LastTouched to make sure that if HurtRadius() gets called to give blast damage, it will always 'find' the hit actor
     LastTouched = Other;
     ProcessTouch(Other, HitLocation);
     LastTouched = none;
