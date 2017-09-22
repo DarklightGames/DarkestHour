@@ -65,7 +65,7 @@ simulated function OnConstructed()
     }
 }
 
-function float GetDirtProjectorDrawScale()
+simulated function float GetDirtProjectorDrawScale()
 {
     if (IsTerrainScaleLarge(TerrainInfo))
     {
