@@ -46,7 +46,6 @@ defaultproperties
     ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIILCannonShellDamageAPCR'
     ImpactDamage=325
     BallisticCoefficient=0.95
-    SpeedFudgeScale=0.4
     Speed=71313.0
     MaxSpeed=71313.0
     StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'

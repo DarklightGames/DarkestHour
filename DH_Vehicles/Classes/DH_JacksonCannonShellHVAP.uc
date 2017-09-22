@@ -21,7 +21,6 @@ defaultproperties
     ShellDiameter=9.0
     ImpactDamage=525
     BallisticCoefficient=1.564
-    SpeedFudgeScale=0.4
     Speed=61619.0
     MaxSpeed=61619.0
     Tag="M304 HVAP"

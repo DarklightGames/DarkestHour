@@ -38,7 +38,6 @@ defaultproperties
     ShellDiameter=5.7
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanFireFlyCannonShellDamageAPDS'
     BallisticCoefficient=1.47
-    SpeedFudgeScale=0.4
     Speed=77492.0
     MaxSpeed=77492.0
     Tag="Mk.I APDS"

@@ -10,6 +10,7 @@ defaultproperties
 {
     RoundType=RT_APDS
     bShatterProne=true
+    SpeedFudgeScale=0.4
     ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
     CoronaClass=class'DH_Effects.DHShellTracer_Red'
 }

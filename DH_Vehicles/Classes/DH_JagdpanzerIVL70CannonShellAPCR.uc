@@ -50,7 +50,6 @@ defaultproperties
     ShellImpactDamage=class'DH_Vehicles.DH_PantherCannonShellDamageAPCR'
     ImpactDamage=475
     BallisticCoefficient=1.52
-    SpeedFudgeScale=0.4
     Speed=67594.0
     MaxSpeed=67594.0
     StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'

@@ -44,7 +44,6 @@ defaultproperties
     ShellImpactDamage=class'DH_Guns.DH_6PounderCannonShellDamageAPDS'
     ImpactDamage=300
     BallisticCoefficient=1.15
-    SpeedFudgeScale=0.4
     Speed=73569.0
     MaxSpeed=73569.0
     Tag="Mk.I APDS"

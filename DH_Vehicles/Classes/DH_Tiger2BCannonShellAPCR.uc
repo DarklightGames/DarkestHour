@@ -55,7 +55,6 @@ defaultproperties
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
     ImpactDamage=545
     BallisticCoefficient=1.527
-    SpeedFudgeScale=0.4
     Speed=68198.0
     MaxSpeed=68198.0
     StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
