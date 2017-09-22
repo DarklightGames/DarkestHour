@@ -918,6 +918,11 @@ Begin:
     GotoState('');
 }
 
+/*
+// TODO: possibly deprecate this function & always use state ViewTransition for all net modes, same as in the ROVehicle class
+// Everything in VT that's relevant to a other 3rd person players gets done here, & everything that's not relevant is excluded in VT anyway
+// So this function no longer appears to offer any advantage, while the transition Sleep timer in VT offers better timed handling of player's hit detection & binocs attachments
+*/
 // Modified to enable or disable player's hit detection when moving to or from an exposed position
 // Also to spawn or destroy a binoculars attachment, & to add a workaround for an RO bug where player may player wrong animation when moving off binocs
 simulated function AnimateTransition()
