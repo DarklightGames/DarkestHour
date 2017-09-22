@@ -2119,6 +2119,7 @@ simulated function DestroyAttachments()
 // Modified to handle extended vehicle fire system, plus setting manual/powered turret
 simulated function SetEngine()
 {
+    // Engine off
     if (bEngineOff || Health <= 0 || EngineHealth <= 0)
     {
         TurnDamping = 0.0;
@@ -2144,7 +2145,13 @@ simulated function SetEngine()
         {
             StopEmitters();
         }
+
+        if (ShutDownForce != "")
+        {
+            ClientPlayForceFeedback(ShutDownForce);
+        }
     }
+    // Engine on
     else
     {
         if (IdleSound != none)
@@ -2157,6 +2164,11 @@ simulated function SetEngine()
         if (!bEmittersOn)
         {
             StartEmitters();
+        }
+
+        if (StartUpForce != "")
+        {
+            ClientPlayForceFeedback(StartUpForce);
         }
     }
 
