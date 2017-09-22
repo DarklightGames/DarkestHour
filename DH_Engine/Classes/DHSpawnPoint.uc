@@ -228,7 +228,6 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
     }
 
     RI = GRI.GetRole(TeamIndex, RoleIndex);
-    VehicleClass = class<ROVehicle>(GRI.GetVehiclePoolVehicleClass(VehiclePoolIndex));
 
     if (RI == none)
     {
@@ -239,6 +238,8 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
     {
         return true;
     }
+
+    VehicleClass = class<ROVehicle>(GRI.GetVehiclePoolVehicleClass(VehiclePoolIndex));
 
     if (VehicleClass == none)
     {
