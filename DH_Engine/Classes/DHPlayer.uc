@@ -2216,7 +2216,7 @@ exec function LeanRight()
             P.LeanRight();
         }
 
-        if (P.ConstructionProxy == none)
+        if (P.bLeanRight)
         {
             ServerLeanRight(true);
         }
@@ -2240,7 +2240,7 @@ exec function LeanLeft()
             P.LeanLeft();
         }
 
-        if (P.ConstructionProxy == none)
+        if (P.bLeanLeft)
         {
             ServerLeanLeft(true);
         }
@@ -2547,16 +2547,7 @@ simulated function SwayHandler(float DeltaTime)
 // Modified to not allow IronSighting when transitioning to/from prone
 simulated exec function ROIronSights()
 {
-    local DHPawn P;
-
-    P = DHPawn(Pawn);
-
-    if (P != none && P.ConstructionProxy != none)
-    {
-        P.ConstructionProxy.Destroy();
-        P.SwitchToLastWeapon();
-    }
-    else if (Pawn != none && Pawn.Weapon != none && !Pawn.IsProneTransitioning())
+    if (Pawn != none && Pawn.Weapon != none && !Pawn.IsProneTransitioning())
     {
         Pawn.Weapon.ROIronSights();
     }

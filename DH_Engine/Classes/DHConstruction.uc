@@ -30,6 +30,7 @@ enum EConstructionErrorType
     ERROR_GroundTooHard,        // This is used when something needs to snap to the terrain, but the engine's native trace functionality isn't cooperating!
     ERROR_RestrictedType,       // Restricted construction type (can't build on this map!)
     ERROR_SquadTooSmall,        // Not enough players in the squad!
+    ERROR_BadPlayerState,       // Player is in an undesireable state (e.g. MG deployed, crawling, prone transitioning or otherwise unable to switch weapons)
     ERROR_Other
 };
 
@@ -664,6 +665,12 @@ function static ConstructionError GetPlayerError(DHPlayer PC)
     if (P == none)
     {
         E.Type = ERROR_Fatal;
+        return E;
+    }
+
+    if (!P.CanSwitchWeapon())
+    {
+        E.Type = ERROR_BadPlayerState;
         return E;
     }
 

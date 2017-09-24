@@ -6,6 +6,8 @@
 class DHCommandMenu_Construction extends DHCommandMenu
     dependson(DHConstruction);
 
+#exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt2_tex.utx
+
 var Material SuppliesIcon;
 
 var localized string NotAvailableText;
@@ -70,23 +72,42 @@ function Setup()
 function OnSelect(int OptionIndex, vector Location)
 {
     local DHPawn P;
+    local DH_ConstructionWeapon CW;
+    local class<DHConstruction> ConstructionClass;
 
-    if (Interaction == none || Interaction.ViewportOwner == none || OptionIndex < 0 || OptionIndex >= Options.Length || Options[OptionIndex].OptionalObject == none)
+    P = DHPawn(Interaction.ViewportOwner.Actor.Pawn);
+
+    if (Interaction == none || Interaction.ViewportOwner == none || OptionIndex < 0 || OptionIndex >= Options.Length || Options[OptionIndex].OptionalObject == none || P == none)
     {
         return;
     }
 
     if (Options[OptionIndex].OptionalObject.IsA('UInteger'))
     {
-        Interaction.PushMenu("DH_Engine.DHCommandMenu_Construction", Options[OptionIndex].OptionalObject);
+        Interaction.PushMenu("DH_Construction.DHCommandMenu_Construction", Options[OptionIndex].OptionalObject);
     }
     else if (Options[OptionIndex].OptionalObject.IsA('Class'))
     {
-        P = DHPawn(Interaction.ViewportOwner.Actor.Pawn);
+        ConstructionClass = class<DHConstruction>(Options[OptionIndex].OptionalObject);
+        class'DH_ConstructionWeapon'.default.ConstructionClass = ConstructionClass;
+        CW = DH_ConstructionWeapon(P.FindInventoryType(class'DH_ConstructionWeapon'.default.Class));
 
-        if (P != none)
+        if (CW != none)
         {
-            P.SetConstructionProxy(class<DHConstruction>(Options[OptionIndex].OptionalObject));
+            if (CW.Proxy != none)
+            {
+                CW.Proxy.SetConstructionClass(ConstructionClass);
+            }
+        }
+        else
+        {
+            if (P.Weapon != none)
+            {
+                P.Weapon.PutDown();
+            }
+
+            P.PendingWeapon = none;
+            P.ServerGiveConstructionWeapon();
         }
 
         Interaction.Hide();
@@ -95,11 +116,26 @@ function OnSelect(int OptionIndex, vector Location)
 
 function bool IsOptionDisabled(int OptionIndex)
 {
+    local DHPlayer PC;
+    local ROWeapon ROW;
     local class<DHConstruction> C;
 
     if (Options[OptionIndex].OptionalObject == none)
     {
         return true;
+    }
+
+    // TODO: check what our pawn is doing, is the weapon busy or deployed??
+    PC = GetPlayerController();
+
+    if (PC != none && PC.Pawn != none)
+    {
+        ROW = ROWeapon(PC.Pawn.Weapon);
+
+        if (ROW != none && !ROW.WeaponCanSwitch())
+        {
+            return true;
+        }
     }
 
     C = class<DHConstruction>(Options[OptionIndex].OptionalObject);

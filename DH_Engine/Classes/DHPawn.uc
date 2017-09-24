@@ -53,9 +53,6 @@ var     float               SpawnProtEnds;     // is set when a player spawns/te
 var     float               SpawnKillTimeEnds; // is set when a player spawns
 var     bool                bCombatSpawned;    // indicates the pawn was spawned in combat
 
-// Construction
-var     DHConstructionProxy ConstructionProxy;
-
 // Supply
 var     array<DHConstructionSupplyAttachment> TouchingSupplyAttachments;
 var     int                 TouchingSupplyCount;
@@ -143,7 +140,7 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerCreateConstruction;
+        ServerGiveConstructionWeapon;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -4988,18 +4985,7 @@ simulated function bool CanCrouchTransition()
 
 simulated function LeanRight()
 {
-    if (Level.NetMode != NM_DedicatedServer && ConstructionProxy != none)
-    {
-        if (ConstructionProxy.ConstructionClass.default.bSnapRotation)
-        {
-            ConstructionProxy.LocalRotation.Yaw += ConstructionProxy.ConstructionClass.default.RotationSnapAngle;
-        }
-        else
-        {
-            ConstructionProxy.LocalRotationRate.Yaw = ConstructionProxy.ConstructionClass.default.LocalRotationRate;
-        }
-    }
-    else if (TraceWall(16384, 64.0) || bLeaningLeft || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
+    if (TraceWall(16384, 64.0) || bLeaningLeft || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire || (DHWeapon(Weapon) != none && DHWeapon(Weapon).WeaponLeanRight()))
     {
         bLeanRight = false;
     }
@@ -5011,30 +4997,17 @@ simulated function LeanRight()
 
 simulated function LeanRightReleased()
 {
-    if (ConstructionProxy != none)
+    if (DHWeapon(Weapon) != none)
     {
-        ConstructionProxy.LocalRotationRate.Yaw = 0;
+        DHWeapon(Weapon).WeaponLeanRightReleased();
     }
-    else
-    {
-        super.LeanRightReleased();
-    }
+
+    super.LeanRightReleased();
 }
 
 simulated function LeanLeft()
 {
-    if (Level.NetMode != NM_DedicatedServer && ConstructionProxy != none)
-    {
-        if (ConstructionProxy.ConstructionClass.default.bSnapRotation)
-        {
-            ConstructionProxy.LocalRotation.Yaw -= ConstructionProxy.ConstructionClass.default.RotationSnapAngle;
-        }
-        else
-        {
-            ConstructionProxy.LocalRotationRate.Yaw = -ConstructionProxy.ConstructionClass.default.LocalRotationRate;
-        }
-    }
-    else if (TraceWall(-16384, 64.0) || bLeaningRight || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
+    if (TraceWall(-16384, 64.0) || bLeaningRight || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire || (DHWeapon(Weapon) != none && DHWeapon(Weapon).WeaponLeanLeft()))
     {
         bLeanLeft = false;
     }
@@ -5046,14 +5019,12 @@ simulated function LeanLeft()
 
 simulated function LeanLeftReleased()
 {
-    if (ConstructionProxy != none)
+    if (DHWeapon(Weapon) != none)
     {
-        ConstructionProxy.LocalRotationRate.Yaw = 0;
+        DHWeapon(Weapon).WeaponLeanLeftReleased();
     }
-    else
-    {
-        super.LeanLeftReleased();
-    }
+
+    super.LeanLeftReleased();
 }
 
 //------------------------------
@@ -5115,13 +5086,13 @@ simulated function EndBurnFX()
 // Modified so a burning player can't switch weapons (he's forced to drop the one he's carrying in his hands & this stops him bringing up another weapon)
 simulated function bool CanSwitchWeapon()
 {
-    return !bOnFire && ConstructionProxy == none && super.CanSwitchWeapon();
+    return !bOnFire && super.CanSwitchWeapon();
 }
 
 // Modified so a burning player can't switch weapons
 simulated function bool CanBusySwitchWeapon()
 {
-    return !bOnFire && ConstructionProxy == none && super.CanBusySwitchWeapon();
+    return bOnFire && super.CanBusySwitchWeapon();
 }
 
 // New function to make a burning player drop the weapon he is holding
@@ -6529,129 +6500,16 @@ exec function LogWepAttach(optional bool bLogAllWeaponAttachments)
     }
 }
 
-simulated function Fire(optional float F)
+function ServerGiveConstructionWeapon()
 {
-    if (Level.NetMode != NM_DedicatedServer && ConstructionProxy != none)
+    local Weapon ConstructionWeapon;
+
+    GiveWeapon("DH_Construction.DH_ConstructionWeapon");
+    ConstructionWeapon = Weapon(FindInventoryType(class<Weapon>(DynamicLoadObject("DH_Construction.DH_ConstructionWeapon", class'class'))));
+
+    if (ConstructionWeapon != none)
     {
-        if (ConstructionProxy.ProxyError.Type == ERROR_None)
-        {
-            ServerCreateConstruction(ConstructionProxy.ConstructionClass, ConstructionProxy.GroundActor, ConstructionProxy.Location, ConstructionProxy.Rotation);
-            ConstructionProxy.Destroy();
-            SwitchToLastWeapon();
-        }
-        else
-        {
-            ReceiveLocalizedMessage(class'DHConstructionErrorMessage',,,, ConstructionProxy);
-        }
-    }
-    else
-    {
-        super.Fire(F);
-    }
-}
-
-function SetConstructionProxy(class<DHConstruction> ConstructionClass)
-{
-    if (ConstructionClass == none)
-    {
-        if (ConstructionProxy != none)
-        {
-            ConstructionProxy.Destroy();
-            return;
-        }
-    }
-
-    if (ConstructionProxy == none)
-    {
-        ConstructionProxy = Spawn(class'DHConstructionProxy', self);
-    }
-
-    ConstructionProxy.SetConstructionClass(ConstructionClass);
-    GiveWeapon("DH_Weapons.DH_EmptyWeapon");
-    PendingWeapon = Weapon(FindInventoryType(class<Weapon>(DynamicLoadObject("DH_Weapons.DH_EmptyWeapon", class'class'))));
-
-    if (PendingWeapon != none)
-    {
-        ChangedWeapon();
-    }
-}
-
-static function bool SupplyAttachmentCompareFunction(Object LHS, Object RHS)
-{
-    return DHConstructionSupplyAttachment(LHS).SortPriority > DHConstructionSupplyAttachment(RHS).SortPriority;
-}
-
-function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor Owner, vector L, rotator R)
-{
-    local int i;
-    local DHConstruction C;
-    local DHPlayer PC;
-    local DH_LevelInfo LI;
-    local int TotalSupplyCount;
-    local int SupplyCost, SuppliesToUse;
-    local UComparator SupplyAttachmentComparator;
-    local array<DHConstructionSupplyAttachment> SortedSupplyAttachments;
-
-    PC = DHPlayer(Controller);
-
-    if (PC == none)
-    {
-        return;
-    }
-
-    LI = PC.GetLevelInfo();
-
-    if (LI == none || !LI.bAreConstructionsEnabled || LI.IsConstructionRestricted(ConstructionClass))
-    {
-        return;
-    }
-
-    for (i = 0; i < TouchingSupplyAttachments.Length; ++i)
-    {
-        if (TouchingSupplyAttachments[i] != none)
-        {
-            TotalSupplyCount += TouchingSupplyAttachments[i].GetSupplyCount();
-        }
-    }
-
-    SupplyCost = ConstructionClass.default.SupplyCost;
-
-    if (TotalSupplyCount < SupplyCost)
-    {
-        return;
-    }
-
-    // Sort the supply attachments by priority.
-    SortedSupplyAttachments = TouchingSupplyAttachments;
-    SupplyAttachmentComparator = new class'UComparator';
-    SupplyAttachmentComparator.CompareFunction = SupplyAttachmentCompareFunction;
-    class'USort'.static.Sort(SortedSupplyAttachments, SupplyAttachmentComparator);
-
-    // Use supplies from the sorted supply attachments, in order, until costs are met.
-    for (i = 0; i < SortedSupplyAttachments.Length; ++i)
-    {
-        if (SupplyCost == 0)
-        {
-            break;
-        }
-
-        SuppliesToUse = Min(SupplyCost, SortedSupplyAttachments[i].GetSupplyCount());
-
-        SortedSupplyAttachments[i].SetSupplyCount(SortedSupplyAttachments[i].GetSupplyCount() - SuppliesToUse);
-
-        SupplyCost -= SuppliesToUse;
-    }
-
-    C = Spawn(ConstructionClass, Owner,, L, R);
-
-    if (C != none)
-    {
-        if (!C.bIsNeutral)
-        {
-            C.SetTeamIndex(GetTeamNum());
-        }
-
-        C.UpdateAppearance();
+        ConstructionWeapon.ClientWeaponSet(true);
     }
 }
 
@@ -6869,6 +6727,17 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
     }
 
     IdleTime = Level.TimeSeconds;
+}
+
+// Modified to remove the HasAmmo check since we really don't care if it has
+// ammo or not.
+exec function SwitchToLastWeapon()
+{
+    if (Weapon != none && Weapon.OldWeapon != none)
+    {
+        PendingWeapon = Weapon.OldWeapon;
+        Weapon.PutDown();
+    }
 }
 
 defaultproperties

@@ -47,5 +47,6 @@ defaultproperties
     ErrorMessages(17)="You cannot {verb} a {name} on this surface."
     ErrorMessages(18)="The ground is too hard at this location."
     ErrorMessages(19)="You must have {integer} members in your squad to construct a {name}."
+    ErrorMessages(20)=""
 }
 

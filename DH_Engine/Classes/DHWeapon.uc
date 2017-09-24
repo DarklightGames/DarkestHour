@@ -593,6 +593,13 @@ static function StaticPrecache(LevelInfo L)
     }
 }
 
+// New functions used by DHPawn to pass lean events to the weapon for
+// possible consumption. Return true to consume the lean event.
+simulated function bool WeaponLeanRight() { return false; }
+simulated function WeaponLeanRightReleased();
+simulated function bool WeaponLeanLeft() { return false; }
+simulated function WeaponLeanLeftReleased();
+
 /////////////////////////////////////////////////////////////
 // New functions to save code repetition in many functions //
 /////////////////////////////////////////////////////////////

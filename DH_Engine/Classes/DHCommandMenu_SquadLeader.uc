@@ -41,7 +41,7 @@ function OnSelect(int Index, vector Location)
             PC.ServerSquadSignal(class'DHSquadSignal_Fire', Location);  // TODO: project off of the location a bit
             break;
         case 2: // Construction
-            Interaction.PushMenu("DH_Engine.DHCommandMenu_Construction");
+            Interaction.PushMenu("DH_Construction.DHCommandMenu_Construction");
             return;
         case 3:
             P = DHPawn(MenuObject);
