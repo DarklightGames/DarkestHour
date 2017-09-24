@@ -22,4 +22,5 @@ defaultproperties
     BrokenEmitterClass=class'DHConstruction_Sandbags_BrokenEmitter'
     HealthMax=300
     bCanTakeImpactDamage=true
+    bIsNeutral=true
 }

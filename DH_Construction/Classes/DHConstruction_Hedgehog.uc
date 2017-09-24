@@ -19,4 +19,5 @@ defaultproperties
     CollisionRadius=60
     HealthMax=500
     SupplyCost=150
+    bIsNeutral=true
 }

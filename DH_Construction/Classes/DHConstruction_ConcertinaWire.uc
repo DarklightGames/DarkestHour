@@ -20,4 +20,5 @@ defaultproperties
     SupplyCost=50
     bCanBeMantled=false
     bCanTakeImpactDamage=true
+    bIsNeutral=true
 }
