@@ -373,18 +373,22 @@ function PostRender(Canvas C)
         // Draw action text
         C.TextSize(ORI.OptionName, XL, YL);
         C.DrawColor = class'UColor'.default.Black;
+        C.DrawColor.A = byte(255 * MenuAlpha);
         C.SetPos(CenterX - (XL / 2) + 1, CenterY + 33);
         C.DrawText(ORI.OptionName);
         C.DrawColor = class'UColor'.default.White;
+        C.DrawColor.A = byte(255 * MenuAlpha);
         C.SetPos(CenterX - (XL / 2), CenterY + 32);
         C.DrawText(ORI.OptionName);
 
         // Draw subject text
         C.TextSize(ORI.InfoText, XL, YL);
         C.DrawColor = class'UColor'.default.Black;
+        C.DrawColor.A = byte(255 * MenuAlpha);
         C.SetPos(CenterX - (XL / 2) + 1, CenterY - 31 -  YL);
         C.DrawText(ORI.InfoText);
         C.DrawColor = ORI.InfoColor;
+        C.DrawColor.A = byte(255 * MenuAlpha);
         C.SetPos(CenterX - (XL / 2), CenterY - 32 - YL);
         C.DrawText(ORI.InfoText);
 
@@ -397,15 +401,16 @@ function PostRender(Canvas C)
             XL2 = (YL2 * AspectRatio);
 
             C.DrawColor = ORI.InfoColor;
+            C.DrawColor.A = byte(255 * MenuAlpha);
             C.SetPos(CenterX - (XL / 2) - XL2, CenterY - YL2 - YL - 8);
             C.DrawTile(ORI.InfoIcon, XL2, YL2, 0, 0, ORI.InfoIcon.MaterialUSize() - 1, ORI.InfoIcon.MaterialVSize() - 1);
         }
     }
-
-    // debug rendering for cursor
-    C.SetPos(CenterX + Cursor.X, CenterY + Cursor.Y);
-    C.DrawColor = class'UColor'.default.Red;
-    C.DrawBox(C, 4, 4);
+//
+//    // debug rendering for cursor
+//    C.SetPos(CenterX + Cursor.X, CenterY + Cursor.Y);
+//    C.DrawColor = class'UColor'.default.Red;
+//    C.DrawBox(C, 4, 4);
 }
 
 function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
