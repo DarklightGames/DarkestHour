@@ -5,10 +5,6 @@
 
 class DH_Flak38Gun extends DHATGun;
 
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Artillery_stc.usx
-#exec OBJ LOAD FILE=..\Animations\DH_Flak38_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_Artillery_tex.utx
-
 defaultproperties
 {
     VehicleNameString="2cm FlaK 38 gun"
@@ -20,7 +16,7 @@ defaultproperties
     VehicleHudTurret=TexRotator'DH_Artillery_tex.ATGun_Hud.flak38_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Artillery_tex.ATGun_Hud.flak38_turret_look'
     VehicleHudOccupantsX(0)=0.5 // should be slightly to the right, but the red dot doesn't rotate with the cannon, so when traversed it would go wrong
-    VehicleHudOccupantsX(1)=0.5
+    VehicleHudOccupantsY(0)=0.5
     ExitPositions(1)=(X=-30.0,Y=70.0,Z=50.0)
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
