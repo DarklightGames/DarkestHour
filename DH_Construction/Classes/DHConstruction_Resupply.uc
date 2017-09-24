@@ -137,4 +137,6 @@ defaultproperties
     HarmfulDamageTypes(4)=class'DHMortarDamageType'
     HarmfulDamageTypes(5)=class'DHBurningDamageType'
     ConstructionVerb="drop"
+    StartRotationMin=(Yaw=-16384)
+    StartRotationMax=(Yaw=-16384)
 }
