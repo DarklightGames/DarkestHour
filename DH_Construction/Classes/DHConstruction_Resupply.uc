@@ -123,10 +123,10 @@ defaultproperties
     MenuName="Resupply Box"
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.resupply_box'
     ProxyDistanceInMeters=3.0
-    DuplicateFriendlyDistanceInMeters=100.0
+    DuplicateFriendlyDistanceInMeters=25.0
     CollisionRadius=50.0
     CollisionHeight=30.0
-    SupplyCost=300
+    SupplyCost=250
     bCanPlaceIndoors=true
     ResupplyCount=25
     HealthMax=50
@@ -140,4 +140,5 @@ defaultproperties
     StartRotationMin=(Yaw=-16384)
     StartRotationMax=(Yaw=-16384)
     bShouldRefundSuppliesOnTearDown=false
+    bCanBeTornDownByFriendlies=false
 }
