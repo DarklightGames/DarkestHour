@@ -6740,6 +6740,82 @@ exec function SwitchToLastWeapon()
     }
 }
 
+// Uses up the total supplies specified using the touching supply attachments.
+// Returns true if the supplies were used, or false if there were not enough
+// supplies nearby to perform the operation.
+function bool UseSupplies(int SupplyCost)
+{
+    local int i, SuppliesToUse, TotalSupplyCount;
+    local UComparator AttachmentComparator;
+    local array<DHConstructionSupplyAttachment> Attachments;
+
+    for (i = 0; i < TouchingSupplyAttachments.Length; ++i)
+    {
+        if (TouchingSupplyAttachments[i] != none)
+        {
+            TotalSupplyCount += TouchingSupplyAttachments[i].GetSupplyCount();
+        }
+    }
+
+    if (TotalSupplyCount < SupplyCost)
+    {
+        return false;
+    }
+
+    // Sort the supply attachments by priority.
+    Attachments = TouchingSupplyAttachments;
+    AttachmentComparator = new class'UComparator';
+    AttachmentComparator.CompareFunction = class'DHConstructionSupplyAttachment'.static.CompareFunction;
+    class'USort'.static.Sort(Attachments, AttachmentComparator);
+
+    // Use supplies from the sorted supply attachments, in order, until costs are met.
+    for (i = 0; i < Attachments.Length; ++i)
+    {
+        if (SupplyCost == 0)
+        {
+            break;
+        }
+
+        SuppliesToUse = Min(SupplyCost, Attachments[i].GetSupplyCount());
+
+        Attachments[i].SetSupplyCount(Attachments[i].GetSupplyCount() - SuppliesToUse);
+
+        SupplyCost -= SuppliesToUse;
+    }
+
+    return true;
+}
+
+// Attempts to refund supplies to nearby supply attachments. Returns the total
+// amount of supplies that were actually refunded.
+function int RefundSupplies(int SupplyCount)
+{
+    local int i, SuppliesToRefund, SuppliesRefunded;
+    local array<DHConstructionSupplyAttachment> Attachments;
+    local UComparator AttachmentComparator;
+
+    // Sort the supply attachments by priority.
+    Attachments = TouchingSupplyAttachments;
+    AttachmentComparator = new class'UComparator';
+    AttachmentComparator.CompareFunction = class'DHConstructionSupplyAttachment'.static.CompareFunction;
+    class'USort'.static.Sort(Attachments, AttachmentComparator);
+
+    for (i = 0; i < Attachments.Length; ++i)
+    {
+        if (SupplyCount == 0)
+        {
+            break;
+        }
+
+        SuppliesToRefund = Min(SupplyCount, Attachments[i].SupplyCountMax - Attachments[i].GetSupplyCount());
+        Attachments[i].SetSupplyCount(Attachments[i].GetSupplyCount() + SuppliesToRefund);
+        SuppliesRefunded += SuppliesToRefund;
+        SupplyCount -= SuppliesToRefund;
+    }
+
+    return SuppliesRefunded;
+}
+
 defaultproperties
 {
     // General class & interaction stuff

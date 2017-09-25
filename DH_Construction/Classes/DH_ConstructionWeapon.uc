@@ -248,13 +248,8 @@ simulated function WeaponLeanRightReleased()
 // extraction logic!
 function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor Owner, vector L, rotator R)
 {
-    local int i;
     local DHConstruction C;
     local DH_LevelInfo LI;
-    local int TotalSupplyCount;
-    local int SupplyCost, SuppliesToUse;
-    local UComparator SupplyAttachmentComparator;
-    local array<DHConstructionSupplyAttachment> SortedSupplyAttachments;
     local DHPawn P;
 
     P = DHPawn(Instigator);
@@ -265,40 +260,9 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
         return;
     }
 
-    for (i = 0; i < P.TouchingSupplyAttachments.Length; ++i)
-    {
-        if (P.TouchingSupplyAttachments[i] != none)
-        {
-            TotalSupplyCount += P.TouchingSupplyAttachments[i].GetSupplyCount();
-        }
-    }
-
-    SupplyCost = ConstructionClass.default.SupplyCost;
-
-    if (TotalSupplyCount < SupplyCost)
+    if (!P.UseSupplies(ConstructionClass.default.SupplyCost))
     {
         return;
-    }
-
-    // Sort the supply attachments by priority.
-    SortedSupplyAttachments = P.TouchingSupplyAttachments;
-    SupplyAttachmentComparator = new class'UComparator';
-    SupplyAttachmentComparator.CompareFunction = SupplyAttachmentCompareFunction;
-    class'USort'.static.Sort(SortedSupplyAttachments, SupplyAttachmentComparator);
-
-    // Use supplies from the sorted supply attachments, in order, until costs are met.
-    for (i = 0; i < SortedSupplyAttachments.Length; ++i)
-    {
-        if (SupplyCost == 0)
-        {
-            break;
-        }
-
-        SuppliesToUse = Min(SupplyCost, SortedSupplyAttachments[i].GetSupplyCount());
-
-        SortedSupplyAttachments[i].SetSupplyCount(SortedSupplyAttachments[i].GetSupplyCount() - SuppliesToUse);
-
-        SupplyCost -= SuppliesToUse;
     }
 
     C = Spawn(ConstructionClass, Owner,, L, R);
@@ -312,11 +276,6 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
 
         C.UpdateAppearance();
     }
-}
-
-static function bool SupplyAttachmentCompareFunction(Object LHS, Object RHS)
-{
-    return DHConstructionSupplyAttachment(LHS).SortPriority > DHConstructionSupplyAttachment(RHS).SortPriority;
 }
 
 defaultproperties

@@ -322,9 +322,13 @@ simulated function string GetHumanReadableName()
     return HumanReadableName;
 }
 
+static function bool CompareFunction(Object LHS, Object RHS)
+{
+    return DHConstructionSupplyAttachment(LHS).SortPriority > DHConstructionSupplyAttachment(RHS).SortPriority;
+}
+
 // TODO: logic for getting this resupplied; some sort of hook that things can
 // put on it for getting notified (OnResupplied)
-
 defaultproperties
 {
     SupplyPointIndex=-1

@@ -139,4 +139,5 @@ defaultproperties
     ConstructionVerb="drop"
     StartRotationMin=(Yaw=-16384)
     StartRotationMax=(Yaw=-16384)
+    bShouldRefundSuppliesOnTearDown=false
 }

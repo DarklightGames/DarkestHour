@@ -99,7 +99,7 @@ simulated state Building
     {
         if (Construction != none && Construction.Role == ROLE_Authority)
         {
-            Construction.IncrementProgress();
+            Construction.IncrementProgress(Instigator);
         }
     }
 

@@ -103,6 +103,7 @@ var     int     SupplyCost;                     // The amount of supply points t
 var     bool    bDestroyOnConstruction;         // If true, this actor will be destroyed after being fully constructed
 var     int     Progress;                       // The current count of progress
 var     int     ProgressMax;                    // The amount of construction points required to be built
+var     bool    bShouldRefundSuppliesOnTearDown;
 
 // Stagnation
 var     bool    bCanDieOfStagnation;            // If true, this construction will automatically destroy if no progress has been made for the amount of seconds specified in StagnationLifespan
@@ -193,7 +194,7 @@ replication
 simulated function OnConstructed();
 function OnStageIndexChanged(int OldIndex);
 simulated function OnTeamIndexChanged();
-function OnProgressChanged();
+function OnProgressChanged(Pawn InstigatedBy);
 function OnHealthChanged();
 
 simulated function bool IsBroken() { return false; }
@@ -213,10 +214,10 @@ final function SetTeamIndex(int TeamIndex)
     NetUpdateTime = Level.TimeSeconds - 1.0;
 }
 
-function IncrementProgress()
+function IncrementProgress(Pawn InstigatedBy)
 {
     Progress += 1;
-    OnProgressChanged();
+    OnProgressChanged(InstigatedBy);
 }
 
 simulated function PostBeginPlay()
@@ -323,17 +324,18 @@ auto simulated state Constructing
         return true;
     }
 
-    function TakeTearDownDamage()
+    function TakeTearDownDamage(Pawn InstigatedBy)
     {
         Progress -= 1;
 
-        OnProgressChanged();
+        OnProgressChanged(InstigatedBy);
     }
 
-    function OnProgressChanged()
+    function OnProgressChanged(Pawn InstigatedBy)
     {
         local int i;
         local int OldStageIndex;
+        local int SuppliesRefunded;
 
         if (bCanDieOfStagnation)
         {
@@ -342,6 +344,13 @@ auto simulated state Constructing
 
         if (Progress < 0)
         {
+            if (bShouldRefundSuppliesOnTearDown &&
+                DHPawn(Instigator) != none &&
+                (NEUTRAL_TEAM_INDEX == TeamIndex || Instigator.GetTeamNum() == TeamIndex))
+            {
+                SuppliesRefunded = DHPawn(Instigator).RefundSupplies(SupplyCost);
+            }
+
             if (Owner == none)
             {
                 GotoState('Dummy');
@@ -398,7 +407,7 @@ Begin:
             Progress = ProgressMax;
         }
 
-        OnProgressChanged();
+        OnProgressChanged(none);
     }
 
     // Client-side effects
@@ -473,7 +482,7 @@ simulated state Constructed
         return true;
     }
 
-    function TakeTearDownDamage()
+    function TakeTearDownDamage(Pawn InstigatedBy)
     {
         TearDownProgress += 1;
 
@@ -788,7 +797,7 @@ simulated function bool CanTakeTearnDownDamageFromPawn(Pawn P)
     return true;
 }
 
-function TakeTearDownDamage();
+function TakeTearDownDamage(Pawn InstigatedBy);
 
 function TakeDamage(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
@@ -800,7 +809,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Mo
 
         if (DamageType == TearDownDamageType)
         {
-            TakeTearDownDamage();
+            TakeTearDownDamage(InstigatedBy);
             return;
         }
     }
@@ -984,5 +993,7 @@ defaultproperties
     bShouldAutoConstruct=true
 
     ConstructionVerb="build"
+
+    bShouldRefundSuppliesOnTearDown=true
 }
 
