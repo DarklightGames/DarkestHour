@@ -2890,17 +2890,6 @@ state RoundOver
                 Spawn(class'DHClientResetGame');
             }
 
-            // Determine if teams needs swapped
-            if (DHLevelInfo != none && DHLevelInfo.bSwapTeamsOnRoundEnd)
-            {
-                ChangeSides();
-
-                // Swap team score as well
-                TempScore = GameReplicationInfo.Teams[0].Score;
-                GameReplicationInfo.Teams[0].Score = GameReplicationInfo.Teams[1].Score;
-                GameReplicationInfo.Teams[1].Score = TempScore;
-            }
-
             GotoState('RoundInPlay');
         }
     }
