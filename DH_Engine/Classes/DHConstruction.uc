@@ -933,8 +933,8 @@ defaultproperties
     CollisionRadius=60.0
 
     bNetNotify=true
-    NetUpdateFrequency=1.0
-    bAlwaysRelevant=false
+    NetUpdateFrequency=10.0
+    bAlwaysRelevant=true
     bOnlyDirtyReplication=true
 
     bBlockZeroExtentTraces=true
