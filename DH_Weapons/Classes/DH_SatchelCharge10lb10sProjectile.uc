@@ -76,8 +76,8 @@ defaultproperties
     CollisionHeight=4.0
 
     Speed=300.0
-    Damage=550.0 // was 600 in 5.1
-    DamageRadius=500.0 // was 725.0 in 5.1
+    Damage=600.0
+    DamageRadius=725.0
     MyDamageType=class'DH_Weapons.DH_SatchelDamType'
 
     ExplosionSoundRadius=4000.0
