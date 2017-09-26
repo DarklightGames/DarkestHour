@@ -17,7 +17,7 @@ defaultproperties
     StartRotationMax=(Yaw=16384)
     CollisionHeight=60
     CollisionRadius=60
-    HealthMax=500
+    HealthMax=400
     SupplyCost=150
     bIsNeutral=true
 }

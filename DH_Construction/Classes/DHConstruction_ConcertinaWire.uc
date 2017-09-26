@@ -18,6 +18,7 @@ defaultproperties
     MenuName="Concertina Wire"
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.barbed_wire'
     SupplyCost=50
+    HealthMax=250
     bCanBeMantled=false
     bCanTakeImpactDamage=true
     bIsNeutral=true
