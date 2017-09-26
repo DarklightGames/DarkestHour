@@ -42,6 +42,7 @@ function DoTrace(vector Start, rotator Dir)
     local array<int>        HitPoints;
     local array<int>        DamageHitPoint;
     local int               i;
+    local Material          HitMaterial;
 
     if (Instigator == none || Weapon == none)
     {
@@ -54,7 +55,7 @@ function DoTrace(vector Start, rotator Dir)
     End = Start + (10000.0 * X);
 
     // Do precision hit point trace to see if we hit a player or something else
-    Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start);
+    Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start,,, HitMaterial);
 
     // If we hit nothing or it was out of trace range, try tracing to the 4 extremes of our melee attack spread
     if (Other == none || VSizeSquared(Start - HitLocation) > GetTraceRangeSquared())
@@ -83,7 +84,7 @@ function DoTrace(vector Start, rotator Dir)
 
             End = TempVec + (10000.0 * X);
 
-            Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, TempVec);
+            Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, TempVec,,, HitMaterial);
 
             if (Other != none)
             {
@@ -101,7 +102,7 @@ function DoTrace(vector Start, rotator Dir)
     // Still hit nothing within trace range, so try a normal trace
     if (Other == none)
     {
-        Other = Instigator.Trace(HitLocation, HitNormal, End, Start, true);
+        Other = Instigator.Trace(HitLocation, HitNormal, End, Start, true,, HitMaterial);
 
         if (Other != none && VSizeSquared(Start - HitLocation) > GetTraceRangeSquared())
         {
@@ -178,13 +179,23 @@ function DoTrace(vector Start, rotator Dir)
 
         if (Weapon.bBayonetMounted)
         {
-            Weapon.PlaySound(GroundStabSound, SLOT_None, FireVolume,, SoundRadius,, true);
+            Weapon.PlaySound(GetGroundStabSound(Other, HitMaterial), SLOT_None, FireVolume,, SoundRadius,, true);
         }
         else
         {
-            Weapon.PlaySound(GroundBashSound, SLOT_None, FireVolume,, SoundRadius,, true);
+            Weapon.PlaySound(GetGroundBashSound(Other, HitMaterial), SLOT_None, FireVolume,, SoundRadius,, true);
         }
     }
+}
+
+function Sound GetGroundStabSound(Actor HitActor, Material HitMaterial)
+{
+    return default.GroundStabSound;
+}
+
+function Sound GetGroundBashSound(Actor HitActor, Material HitMaterial)
+{
+    return default.GroundBashSound;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
