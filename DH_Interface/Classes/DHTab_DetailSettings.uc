@@ -652,7 +652,7 @@ defaultproperties
     Begin Object Class=DHmoCheckBox Name=MotionBlur
         ComponentJustification=TXTA_Left
         CaptionWidth=0.94
-        Caption="Motion Blur"
+        Caption="Blur Effects"
         OnCreateComponent=MotionBlur.InternalOnCreateComponent
         IniOption="@Internal"
         IniDefault="true"
