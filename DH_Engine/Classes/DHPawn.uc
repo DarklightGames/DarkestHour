@@ -4985,7 +4985,7 @@ simulated function bool CanCrouchTransition()
 
 simulated function LeanRight()
 {
-    if (TraceWall(16384, 64.0) || bLeaningLeft || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire || (DHWeapon(Weapon) != none && DHWeapon(Weapon).WeaponLeanRight()))
+    if ((DHWeapon(Weapon) != none && DHWeapon(Weapon).WeaponLeanRight()) || TraceWall(16384, 64.0) || bLeaningLeft || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
     {
         bLeanRight = false;
     }
@@ -5007,7 +5007,7 @@ simulated function LeanRightReleased()
 
 simulated function LeanLeft()
 {
-    if (TraceWall(-16384, 64.0) || bLeaningRight || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire || (DHWeapon(Weapon) != none && DHWeapon(Weapon).WeaponLeanLeft()))
+    if ((DHWeapon(Weapon) != none && DHWeapon(Weapon).WeaponLeanLeft()) || TraceWall(-16384, 64.0) || bLeaningRight || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
     {
         bLeanLeft = false;
     }
