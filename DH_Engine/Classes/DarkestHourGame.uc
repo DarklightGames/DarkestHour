@@ -2879,8 +2879,6 @@ state RoundOver
     // Modified to spawn a DHClientResetGame actor on a server, which replicates to net clients to remove any temporary client-only actors, e.g. smoke effects
     function Timer()
     {
-        local float TempScore;
-
         global.Timer();
 
         if (ElapsedTime > RoundStartTime + 5.0)
