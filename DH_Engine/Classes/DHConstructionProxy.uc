@@ -234,6 +234,9 @@ function static color GetProxyErrorColor(DHConstruction.EConstructionErrorType P
     {
         case ERROR_None:
             return class'UColor'.default.Green;
+        case ERROR_Fatal:
+        case ERROR_BadPlayerState:
+            return class'UColor'.default.Black;
         default:
             return class'UColor'.default.Red;
     }

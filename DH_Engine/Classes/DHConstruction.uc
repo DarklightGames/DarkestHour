@@ -700,6 +700,7 @@ function static ConstructionError GetPlayerError(DHPlayer PC)
     if (default.TeamLimit > 0 && CM.CountOf(PC.GetTeamNum(), default.Class) >= default.TeamLimit)
     {
         E.Type = ERROR_TeamLimit;
+        E.OptionalInteger = default.TeamLimit;
         return E;
     }
 

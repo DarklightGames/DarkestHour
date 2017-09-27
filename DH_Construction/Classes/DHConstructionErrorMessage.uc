@@ -29,11 +29,11 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
 
 defaultproperties
 {
-    ErrorMessages(2)="No ground."
-    ErrorMessages(3)="The ground is too steep here."
+    ErrorMessages(2)="You must {verb} a {name} on solid ground."
+    ErrorMessages(3)="The ground is too steep here to {verb} a {name}."
     ErrorMessages(4)="You cannot {verb} a {name} in water."
     ErrorMessages(5)="You cannot {verb} a {name} at this location."
-    ErrorMessages(6)="Not enough room."
+    ErrorMessages(6)="Not enough room here to {verb} a {name}."
     ErrorMessages(7)="You must {verb} a {name} on earthen terrain."
     ErrorMessages(8)="Too close to an existing friendly {name}, it must be {integer}m further away."
     ErrorMessages(9)="Too close to an existing enemy {name}, it must be {integer}m further away."
@@ -41,12 +41,13 @@ defaultproperties
     ErrorMessages(11)="You cannot {verb} a {name} near a spawn point."
     ErrorMessages(12)="You cannot {verb} a {name} indoors."
     ErrorMessages(13)="You cannot {verb} a {name} inside an objective."
-    ErrorMessages(14)="Your team cannot {verb} any more {name} (limit reached)."
+    ErrorMessages(14)="Your team cannot {verb} any more {name} (limit reached: {integer})."
     ErrorMessages(15)="There are no supply caches within {integer} meters."   // TODO: this was never tested!
     ErrorMessages(16)="There are insufficient supplies to {verb} a {name}."
     ErrorMessages(17)="You cannot {verb} a {name} on this surface."
-    ErrorMessages(18)="The ground is too hard at this location."
-    ErrorMessages(19)="You must have {integer} members in your squad to construct a {name}."
-    ErrorMessages(20)=""
+    ErrorMessages(18)="The ground is too hard to {verb} a {name} at this location."
+    ErrorMessages(19)=""    // ERROR_RestrictedType (will never be used)
+    ErrorMessages(20)="You must have {integer} members in your squad to {verb} a {name}."
+    ErrorMessages(21)="You cannot {verb} a {name} while sprinting or crawling."
 }
 
