@@ -158,13 +158,40 @@ simulated function ToggleVisible()
 // Can't simply set owner as DrawType=none or bHidden, as that also hides all attached actors, including col mesh & player, so we skin with an alpha transparency texture
 simulated function HideOwner(bool bHide)
 {
-    local int i;
+    local DHVehicle V;
+    local bool      bUseCannonSkinsArray, bMatchMGSkinToVehicle;
+    local int       i;
+
+    if (!bHide)
+    {
+        V = DHVehicle(Owner.Base);
+
+        if (V != none)
+        {
+            if (Owner.IsA('DHVehicleCannon'))
+            {
+                bUseCannonSkinsArray = V.CannonSkins.Length > 0;
+            }
+            else if (Owner.IsA('DHVehicleMG'))
+            {
+                bMatchMGSkinToVehicle = DHVehicleMG(Owner).bMatchSkinToVehicle;
+            }
+        }
+    }
 
     for (i = 0; i < Owner.Skins.Length; ++i)
     {
         if (bHide)
         {
             Owner.Skins[i] = Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha';
+        }
+        else if (bUseCannonSkinsArray && i < V.CannonSkins.Length && V.CannonSkins[i] != none)
+        {
+            Owner.Skins[i] = V.CannonSkins[i];
+        }
+        else if (bMatchMGSkinToVehicle && i == 0)
+        {
+            Owner.Skins[i] = V.Skins[i];
         }
         else
         {
