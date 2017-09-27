@@ -4687,6 +4687,22 @@ simulated function DestroyPlaneAttachments(DHVehicle V)
     }
 }
 
+// TEMPDEBUG (Matt, v8.0): for problem where player in any vehicle position is visibly attached in the wrong position
+// The problem seems to be a net client very occasionally appears to get the player attached without the default PrePivot -42 Z adjustment to his RelativeLocation
+// This leaves him about 0.7m higher than he should be, e.g. a buttoned up tank commander appearing in an odd pose above the hatch, or can also affect vehicle driver
+exec function DebugDriverAttachment()
+{
+    local Vehicle V;
+
+    V = Vehicle(Pawn);
+
+    if (V != none && V.Driver != none)
+    {
+        Log(V.Name @ "DebugDriverAttachment: RelativeLocation =" @ V.Driver.RelativeLocation @ ", DrivePos =" @ V.DrivePos
+            @ ", PrePivot =" @ V.Driver.PrePivot @ ", default.PrePivot =" @ V.Driver.default.PrePivot);
+    }
+}
+
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 // START SQUAD FUNCTIONS
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
