@@ -3,44 +3,44 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHSquadMessage extends ROGameMessage
+class DHSquadMessage extends LocalMessage
     abstract;
 
-var localized string SquadJoinedMessage;
-var localized string SquadLeftMessage;
-var localized string SquadKickedMessage;
-var localized string SquadNoLongerLeaderMessage;
-var localized string SquadYouAreNowLeaderMessage;
-var localized string SquadNewLeaderMessage;
-var localized string SquadInviteAlreadyInSquadMessage;
-var localized string SquadFullMessage;
-var localized string SquadInvitePendingMessage;
-var localized string SquadInviteSentMessage;
-var localized string SquadNoLeaderMessage;
-var localized string SquadLockedMessage;
-var localized string SquadUnlockedMessage;
-var localized string SquadCreatedMessage;
-var localized string SquadRallyPointActiveMessage;
-var localized string SquadRallyPointTooCloseMessage;
-var localized string SquadRallyPointExhaustedMessage;
-var localized string SquadRallyPointNeedSquadmateNearby;
-var localized string SquadRallyPointCreatedMessage;
-var localized string SquadRallyPointOverrunMessage;
-var localized string SquadRallyPointGroundTooSteep;
-var localized string SquadRallyPointInMinefield;
-var localized string SquadRallyPointInWater;
-var localized string SquadRallyPointNotOnFoot;
-var localized string SquadRallyPointTooSoon;
-var localized string SquadRallyPointAbandoned;
-var localized string SquadRallyPointBadLocation;
-var localized string SquadRallyPointDestroyed;
-var localized string SquadRallyPointAbandonmentWarning;
-var localized string SquadRallyPointSwapped;
-var localized string SquadRallyPointTooCloseToConstruction;
-var localized string SquadBannedPlayer;
-var localized string SquadBannedCannotJoin;
-var localized string SquadAutoJoinFailed;
-var localized string SquadYouLeft;
+var localized string JoinedMessage;
+var localized string LeftMessage;
+var localized string KickedMessage;
+var localized string NoLongerLeaderMessage;
+var localized string YouAreNowLeaderMessage;
+var localized string NewLeaderMessage;
+var localized string InviteAlreadyInSquadMessage;
+var localized string FullMessage;
+var localized string InvitePendingMessage;
+var localized string InviteSentMessage;
+var localized string NoLeaderMessage;
+var localized string LockedMessage;
+var localized string UnlockedMessage;
+var localized string CreatedMessage;
+var localized string RallyPointActiveMessage;
+var localized string RallyPointTooCloseMessage;
+var localized string RallyPointExhaustedMessage;
+var localized string RallyPointNeedSquadmateNearby;
+var localized string RallyPointCreatedMessage;
+var localized string RallyPointOverrunMessage;
+var localized string RallyPointGroundTooSteep;
+var localized string RallyPointInMinefield;
+var localized string RallyPointInWater;
+var localized string RallyPointNotOnFoot;
+var localized string RallyPointTooSoon;
+var localized string RallyPointAbandoned;
+var localized string RallyPointBadLocation;
+var localized string RallyPointDestroyed;
+var localized string RallyPointAbandonmentWarning;
+var localized string RallyPointSwapped;
+var localized string RallyPointTooCloseToConstruction;
+var localized string BannedPlayer;
+var localized string BannedCannotJoin;
+var localized string AutoJoinFailed;
+var localized string YouLeft;
 
 static function string GetString(optional int S, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -52,83 +52,83 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
     switch (S)
     {
         case 30:
-            return Repl(default.SquadJoinedMessage, "{0}", RelatedPRI_1.PlayerName);
+            return Repl(default.JoinedMessage, "{0}", RelatedPRI_1.PlayerName);
         case 31:
-            return Repl(default.SquadLeftMessage, "{0}", RelatedPRI_1.PlayerName);
+            return Repl(default.LeftMessage, "{0}", RelatedPRI_1.PlayerName);
         case 32:
-            return default.SquadKickedMessage;
+            return default.KickedMessage;
         case 33:
-            return default.SquadNoLongerLeaderMessage;
+            return default.NoLongerLeaderMessage;
         case 34:
-            return default.SquadYouAreNowLeaderMessage;
+            return default.YouAreNowLeaderMessage;
         case 35:
-            return Repl(default.SquadNewLeaderMessage, "{0}", RelatedPRI_1.PlayerName);
+            return Repl(default.NewLeaderMessage, "{0}", RelatedPRI_1.PlayerName);
         case 36:
-            return Repl(default.SquadInviteAlreadyInSquadMessage, "{0}", RelatedPRI_1.PlayerName);
+            return Repl(default.InviteAlreadyInSquadMessage, "{0}", RelatedPRI_1.PlayerName);
         case 37:
-            return default.SquadFullMessage;
+            return default.FullMessage;
         case 38:
-            return Repl(default.SquadInvitePendingMessage, "{0}", RelatedPRI_1.PlayerName);
+            return Repl(default.InvitePendingMessage, "{0}", RelatedPRI_1.PlayerName);
         case 39:
-            return Repl(default.SquadInviteSentMessage, "{0}", RelatedPRI_1.PlayerName);
+            return Repl(default.InviteSentMessage, "{0}", RelatedPRI_1.PlayerName);
         case 40:
-            return default.SquadNoLeaderMessage;
+            return default.NoLeaderMessage;
         case 41:
-            return default.SquadLockedMessage;
+            return default.LockedMessage;
         case 42:
-            return default.SquadUnlockedMessage;
+            return default.UnlockedMessage;
         case 43:
-            return default.SquadCreatedMessage;
+            return default.CreatedMessage;
         case 44:
-            return default.SquadRallyPointActiveMessage;
+            return default.RallyPointActiveMessage;
         case 45:
-            return Repl(default.SquadRallyPointTooCloseMessage, "{0}", ExtraValue);
+            return Repl(default.RallyPointTooCloseMessage, "{0}", ExtraValue);
         case 46:
-            return default.SquadRallyPointExhaustedMessage;
+            return default.RallyPointExhaustedMessage;
         case 47:
-            return default.SquadRallyPointNeedSquadmateNearby;
+            return default.RallyPointNeedSquadmateNearby;
         case 48:
-            return Repl(default.SquadRallyPointCreatedMessage, "{0}", ExtraValue);
+            return Repl(default.RallyPointCreatedMessage, "{0}", ExtraValue);
         case 49:
-            return default.SquadRallyPointGroundTooSteep;
+            return default.RallyPointGroundTooSteep;
         case 50:
-            return default.SquadRallyPointInMinefield;
+            return default.RallyPointInMinefield;
         case 51:
-            return default.SquadRallyPointInWater;
+            return default.RallyPointInWater;
         case 52:
-            return default.SquadRallyPointNotOnFoot;
+            return default.RallyPointNotOnFoot;
         case 53:
-            return Repl(default.SquadRallyPointTooSoon, "{0}", ExtraValue);
+            return Repl(default.RallyPointTooSoon, "{0}", ExtraValue);
         case 54:
-            return default.SquadRallyPointOverrunMessage;
+            return default.RallyPointOverrunMessage;
         case 55:
-            return default.SquadRallyPointAbandoned;
+            return default.RallyPointAbandoned;
         case 56:
-            return default.SquadRallyPointBadLocation;
+            return default.RallyPointBadLocation;
         case 57:
-            return default.SquadRallyPointDestroyed;
+            return default.RallyPointDestroyed;
         case 58:
-            return default.SquadRallyPointAbandonmentWarning;
+            return default.RallyPointAbandonmentWarning;
         case 59:
-            return default.SquadRallyPointSwapped;
+            return default.RallyPointSwapped;
         case 60:
             C = DHConstruction(OptionalObject);
             if (C != none)
             {
-                return Repl(default.SquadRallyPointTooCloseToConstruction, "{0}", C.MenuName);
+                return Repl(default.RallyPointTooCloseToConstruction, "{0}", C.MenuName);
             }
             else
             {
-                return default.SquadRallyPointBadLocation;
+                return default.RallyPointBadLocation;
             }
         case 61:
-            return Repl(default.SquadBannedPlayer, "{0}", RelatedPRI_1.PlayerName);
+            return Repl(default.BannedPlayer, "{0}", RelatedPRI_1.PlayerName);
         case 62:
-            return default.SquadBannedCannotJoin;
+            return default.BannedCannotJoin;
         case 63:
-            return default.SquadAutoJoinFailed;
+            return default.AutoJoinFailed;
         case 64:
-            return default.SquadYouLeft;
+            return default.YouLeft;
         default:
             break;
     }
@@ -139,40 +139,43 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
 defaultproperties
 {
     DrawColor=(R=0,G=252,B=126,A=255)
-    SquadJoinedMessage="{0} has joined the squad."
-    SquadLeftMessage="{0} has left the squad."
-    SquadKickedMessage="You have been kicked from the squad."
-    SquadNoLongerLeaderMessage="You are no longer the squad leader."
-    SquadYouAreNowLeaderMessage="You are now the squad leader."
-    SquadNewLeaderMessage="{0} has become the squad leader."
-    SquadInviteAlreadyInSquadMessage="{0} is already in a squad."
-    SquadFullMessage="You cannot be send invitations because the squad is full."
-    SquadInvitePendingMessage="{0} has already been invited to join a squad. Please try again later."
-    SquadInviteSentMessage="{0} has been invited to join the squad."
-    SquadNoLeaderMessage="The squad leader has left the squad."
-    SquadLockedMessage="The squad has been locked."
-    SquadUnlockedMessage="The squad has been unlocked."
-    SquadCreatedMessage="You have created a squad."
-    SquadRallyPointActiveMessage="Your squad has established a new rally point."
-    SquadRallyPointTooCloseMessage="You cannot create a rally point so close to an existing one, you must be {0} meters further away."
-    SquadRallyPointExhaustedMessage="A squad rally point has been exhausted."
-    SquadRallyPointNeedSquadmateNearby="You must have at least one other squadmate nearby to create a squad rally point."
-    SquadRallyPointCreatedMessage="You have created a squad rally point. Secure the area with your squad to establish this rally point."
-    SquadRallyPointOverrunMessage="A squad rally point has been overrun by enemies."
-    SquadRallyPointGroundTooSteep="The ground is too steep to establish a rally point here."
-    SquadRallyPointInMinefield="You cannot create a squad rally point in a minefield."
-    SquadRallyPointInWater="You cannot create a squad rally point in water."
-    SquadRallyPointNotOnFoot="You must be on foot to create a rally point."
-    SquadRallyPointTooSoon="You must wait {0} seconds until your squad can create a rally point."
-    SquadRallyPointAbandoned="A squad rally point failed to be established because it was abandoned."
-    SquadRallyPointBadLocation="A squad rally point cannot be created at this location."
-    SquadRallyPointDestroyed="The squad leader has forcibly destroyed a rally point."
-    SquadRallyPointAbandonmentWarning="A newly created squad rally point is being abandoned!"
-    SquadRallyPointSwapped="The squad leader has forcibly changed the currently active rally point."
-    SquadRallyPointTooCloseToConstruction="You cannot create a squad rally point so close to a {0}."
-    SquadBannedPlayer="{0} has been banned from the squad."
-    SquadBannedCannotJoin="You are unable to join this squad as you have been banned."
-    SquadAutoJoinFailed="There are no squads that you are eligible to join."
-    SquadYouLeft="You have left the squad."
+    JoinedMessage="{0} has joined the squad."
+    LeftMessage="{0} has left the squad."
+    KickedMessage="You have been kicked from the squad."
+    NoLongerLeaderMessage="You are no longer the squad leader."
+    YouAreNowLeaderMessage="You are now the squad leader."
+    NewLeaderMessage="{0} has become the squad leader."
+    InviteAlreadyInSquadMessage="{0} is already in a squad."
+    FullMessage="You cannot be send invitations because the squad is full."
+    InvitePendingMessage="{0} has already been invited to join a squad. Please try again later."
+    InviteSentMessage="{0} has been invited to join the squad."
+    NoLeaderMessage="The squad leader has left the squad."
+    LockedMessage="The squad has been locked."
+    UnlockedMessage="The squad has been unlocked."
+    CreatedMessage="You have created a squad."
+    RallyPointActiveMessage="Your squad has established a new rally point."
+    RallyPointTooCloseMessage="You cannot create a rally point so close to an existing one, you must be {0} meters further away."
+    RallyPointExhaustedMessage="A squad rally point has been exhausted."
+    RallyPointNeedSquadmateNearby="You must have at least one other squadmate nearby to create a squad rally point."
+    RallyPointCreatedMessage="You have created a squad rally point. Secure the area with your squad to establish this rally point."
+    RallyPointOverrunMessage="A squad rally point has been overrun by enemies."
+    RallyPointGroundTooSteep="The ground is too steep to establish a rally point here."
+    RallyPointInMinefield="You cannot create a squad rally point in a minefield."
+    RallyPointInWater="You cannot create a squad rally point in water."
+    RallyPointNotOnFoot="You must be on foot to create a rally point."
+    RallyPointTooSoon="You must wait {0} seconds until your squad can create a rally point."
+    RallyPointAbandoned="A squad rally point failed to be established because it was abandoned."
+    RallyPointBadLocation="A squad rally point cannot be created at this location."
+    RallyPointDestroyed="The squad leader has forcibly destroyed a rally point."
+    RallyPointAbandonmentWarning="A newly created squad rally point is being abandoned!"
+    RallyPointSwapped="The squad leader has forcibly changed the currently active rally point."
+    RallyPointTooCloseToConstruction="You cannot create a squad rally point so close to a {0}."
+    BannedPlayer="{0} has been banned from the squad."
+    BannedCannotJoin="You are unable to join this squad as you have been banned."
+    AutoJoinFailed="There are no squads that you are eligible to join."
+    YouLeft="You have left the squad."
+    bIsSpecial=false
+    bIsConsoleMessage=true
+    LifeTime=8.0
 }
 
