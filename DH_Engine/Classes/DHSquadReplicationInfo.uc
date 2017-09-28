@@ -19,13 +19,6 @@ const SQUAD_NAME_LENGTH_MAX = 16;
 
 const SQUAD_LEADER_INDEX = 0;
 
-enum ESquadSignalType
-{
-    SIGNAL_Fire,
-    SIGNAL_Move,
-    SIGNAL_Count
-};
-
 // This nightmare is necessary because UnrealScript cannot replicate large
 // arrays of structs.
 var private DHPlayerReplicationInfo AxisMembers[TEAM_SQUAD_MEMBERS_MAX];
