@@ -201,7 +201,7 @@ defaultproperties
         WinHeight=0.05
         WinLeft=0.05
         WinTop=0.025
-        Image=Texture'DH_GUI_tex.DeployMenu.lock'
+        Image=Texture'DH_InterfaceArt2_tex.Icons.lock'
         ImageColor=(R=255,G=255,B=255,A=255);
         ImageRenderStyle=MSTY_Alpha
         ImageStyle=ISTY_Justified
@@ -235,7 +235,7 @@ defaultproperties
     Begin Object Class=DHGUIListBox Name=MembersList
         OutlineStyleName="ItemOutline"
         SectionStyleName="ListSection"
-        SelectedStyleName="DHItemOutline"
+        SelectedStyleName="DHItemLargeOutline"
         StyleName="DHLargeText"
         bVisibleWhenEmpty=false
         bSorted=false
@@ -317,5 +317,5 @@ defaultproperties
 
     KickText="Kick {0}"
     BanText="Ban {0}"
-    PromoteText="Promote {0} to leader"
+    PromoteText="Promote {0} to squad leader"
 }

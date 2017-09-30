@@ -111,6 +111,9 @@ var             material                    VehicleNoneMaterial;
 
 var             EMapMode                    MapMode;
 
+var Texture LockIcon;
+var Texture UnlockIcon;
+
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     local int i;
@@ -1521,12 +1524,12 @@ function UpdateSquads()
         {
             if (bIsSquadLocked)
             {
-                C.i_LockSquad.Image = Texture'DH_GUI_tex.DeployMenu.lock';
+                C.i_LockSquad.Image = LockIcon;
                 C.b_LockSquad.SetHint(default.UnlockText);
             }
             else
             {
-                C.i_LockSquad.Image = Texture'DH_GUI_tex.DeployMenu.unlock';
+                C.i_LockSquad.Image = UnlockIcon;
                 C.b_LockSquad.SetHint(default.LockText);
             }
         }
@@ -2308,5 +2311,8 @@ defaultproperties
         bNeverFocus=true
     End Object
     p_Squads=SquadsComponentObject
+
+    LockIcon=Texture'DH_InterfaceArt2_tex.Icons.lock'
+    UnlockIcon=Texture'DH_InterfaceArt2_tex.Icons.unlock'
 }
 

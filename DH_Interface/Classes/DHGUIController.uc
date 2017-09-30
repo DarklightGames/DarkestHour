@@ -417,6 +417,7 @@ defaultproperties
     DefaultStyleNames(89)="DH_Interface.DHStyle_ServerBrowserGridRed"
     DefaultStyleNames(90)="DH_Interface.DHStyle_RallyPointButton"
     DefaultStyleNames(91)="DH_Interface.DHStyle_PlatoonHQButton"
+    DefaultStyleNames(92)="DH_Interface.DHStyle_ListLargeHighlight"
     RequestDataMenu="DH_Interface.DHGetDataMenu"
     DynArrayPropertyMenu="DH_Interface.DHGUIDynArrayPage"
     FilterMenu="DH_Interface.DHFilterListPage"
