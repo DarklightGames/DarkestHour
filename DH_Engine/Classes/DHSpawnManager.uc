@@ -153,12 +153,12 @@ function bool SpawnPlayer(DHPlayer PC)
     {
         SP = GRI.GetSpawnPoint(PC.SpawnPointIndex);
 
-        // We store this value because the spawn point may destroy itself when
-        // calling PerformSpawn, which would invalidate the SP reference here.
-        bCombatSpawn = SP.bCombatSpawn;
-
         if (SP != none)
         {
+            // We store this value because the spawn point may destroy itself when
+            // calling PerformSpawn, which would invalidate the SP reference here.
+            bCombatSpawn = SP.bCombatSpawn;
+
             bResult = SP.PerformSpawn(PC);
 
             if (bResult)
