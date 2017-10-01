@@ -294,9 +294,9 @@ defaultproperties
         CaptionAlign=TXTA_Center
         StyleName="DHSmallTextButtonStyle"
         WinWidth=1.0
-        WinHeight=0.1
+        WinHeight=0.15
         WinLeft=0.0
-        WinTop=0.9
+        WinTop=0.85
         OnClick=OnClick
     End Object
     b_LeaveSquad=LeaveSquadButton
@@ -306,9 +306,9 @@ defaultproperties
         CaptionAlign=TXTA_Center
         StyleName="DHSmallTextButtonStyle"
         WinWidth=1.0
-        WinHeight=0.1
+        WinHeight=0.15
         WinLeft=0.0
-        WinTop=0.9
+        WinTop=0.85
         OnClick=OnClick
     End Object
     b_JoinSquad=JoinSquadButton
