@@ -240,9 +240,9 @@ defaultproperties
         bVisibleWhenEmpty=false
         bSorted=false
         //OnChange=none
-        WinWidth=0.9
+        WinWidth=0.8
         WinHeight=0.7
-        WinLeft=0.05
+        WinLeft=0.1
         WinTop=0.15
         bVisible=false
         ContextMenu=GUIContextMenu'DH_Interface.DHGUISquadComponent.MembersListContextMenu'
@@ -264,7 +264,7 @@ defaultproperties
     Begin Object Class=GUILabel Name=SquadNameLabel
         WinHeight=0.1
         WinWidth=1.0
-        WinTop=0.0
+        WinTop=0.05
         WinLeft=0.00
         TextAlign=TXTA_Center
         VertAlign=TXTA_Center
@@ -279,7 +279,7 @@ defaultproperties
         StyleName="DHLargeEditBox"
         WinTop=0.0
         WinLeft=0.2
-        WinHeight=0.1
+        WinHeight=0.15
         WinWidth=0.6
         TabOrder=0
         OnActivate=OnSquadNameEditBoxActivate
