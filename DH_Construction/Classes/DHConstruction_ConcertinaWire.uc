@@ -22,4 +22,5 @@ defaultproperties
     bCanBeMantled=false
     bCanTakeImpactDamage=true
     bIsNeutral=true
+    bAcceptsProjectors=false
 }

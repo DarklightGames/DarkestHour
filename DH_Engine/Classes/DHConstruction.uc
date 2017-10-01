@@ -591,7 +591,7 @@ function UpdateAppearance()
     {
         SetStaticMesh(GetStageStaticMesh(StageIndex));
         SetCollision(true, true, true);
-        KSetBlockKarma(true);
+        KSetBlockKarma(false);
     }
 }
 

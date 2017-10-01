@@ -23,4 +23,5 @@ defaultproperties
     HealthMax=250
     bCanTakeImpactDamage=true
     bIsNeutral=true
+    bAcceptsProjectors=false
 }

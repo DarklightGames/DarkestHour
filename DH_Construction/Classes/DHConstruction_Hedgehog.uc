@@ -20,4 +20,5 @@ defaultproperties
     HealthMax=400
     SupplyCost=150
     bIsNeutral=true
+    bAcceptsProjectors=false
 }
