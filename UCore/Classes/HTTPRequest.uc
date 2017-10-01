@@ -236,4 +236,5 @@ defaultproperties
     Method="GET"
     Timeout=30
     Protocol="HTTP/1.1"
+    bHidden=true
 }
