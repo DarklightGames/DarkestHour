@@ -633,10 +633,24 @@ function DHConstruction.ConstructionError GetPositionError()
     // Don't allow constructions to overlap restriction volumes that restrict constructions.
     foreach TouchingActors(class'DHRestrictionVolume', RV)
     {
-        if (RV != none && RV.bNoConstructions)
+        if (RV != none)
         {
-            E.Type = ERROR_Restricted;
-            return E;
+            if (RV.bNoConstructions)
+            {
+                E.Type = ERROR_Restricted;
+                return E;
+            }
+            else
+            {
+                for (i = 0; i < RV.ConstructionClasses.Length; ++i)
+                {
+                    if (ConstructionClass == RV.ConstructionClasses[i])
+                    {
+                        E.Type = ERROR_Restricted;
+                        return E;
+                    }
+                }
+            }
         }
     }
 
