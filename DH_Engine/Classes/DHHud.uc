@@ -240,7 +240,6 @@ function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(CaptureBarBackground.WidgetTexture);
     Level.AddPrecacheMaterial(CaptureBarOutline.WidgetTexture);
     Level.AddPrecacheMaterial(CaptureBarAttacker.WidgetTexture);
-    //Level.AddPrecacheMaterial(CaptureBarAttackerRatio.WidgetTexture);
     Level.AddPrecacheMaterial(CaptureBarTeamIcons[0]);
     Level.AddPrecacheMaterial(CaptureBarTeamIcons[1]);
 
@@ -4102,293 +4101,223 @@ function DisplayMessages(Canvas C)
 
 function DrawCaptureBar(Canvas Canvas)
 {
+    local DHObjective         Objective;
     local DHPawn              P;
     local ROVehicle           Veh;
     local ROVehicleWeaponPawn WpnPwn;
-    local int    Team;
-    local byte   CurrentCapArea, CurrentCapProgress, CurrentCapAxisCappers, CurrentCapAlliesCappers, CurrentCapRequiredCappers;
-    local float  AxisProgress, AlliesProgress, AttackersProgress, AttackersRatio, DefendersProgress, DefendersRatio, XL, YL, YPos;
-    local string s;
+    local int                 OwnTeam, EnemyTeam;
+    local byte                ObjectiveIndex, PawnCapProgress, PlayersInCap[2];
+    local float               CaptureProgress[2], XL, YL, YPos;
+    local string              ObjectiveNameText;
 
-    bDrawingCaptureBar = false;
-
-    // Don't draw if we have no associated pawn or DHGRI
-    if (PawnOwner == none || DHGRI == none)
+    if (DHGRI == none || PlayerOwner == none || PawnOwnerPRI == none || PawnOwnerPRI.Team == none)
     {
         return;
     }
 
-    // Get capture info from associated pawn
+    // Check whether player is in a cap zone, & if so what its capture status it
+    // We get this from replicated variables in the player's pawn (repetitive because RO put these variables in the 3 different pawn classes)
     P = DHPawn(PawnOwner);
 
-    // Pawn is a player pawn
     if (P != none)
     {
-        CurrentCapArea = P.CurrentCapArea;
+        ObjectiveIndex = P.CurrentCapArea;
 
-        if (CurrentCapArea != 255)
+        if (ObjectiveIndex != 255)
         {
-            CurrentCapProgress = P.CurrentCapProgress;
-            CurrentCapAxisCappers = P.CurrentCapAxisCappers;
-            CurrentCapAlliesCappers = P.CurrentCapAlliesCappers;
+            PawnCapProgress = P.CurrentCapProgress;
+            PlayersInCap[AXIS_TEAM_INDEX] = P.CurrentCapAxisCappers;
+            PlayersInCap[ALLIES_TEAM_INDEX] = P.CurrentCapAlliesCappers;
         }
     }
     else
     {
         Veh = ROVehicle(PawnOwner);
 
-        // Pawn is a vehicle
         if (Veh != none)
         {
-            CurrentCapArea = Veh.CurrentCapArea;
+            ObjectiveIndex = Veh.CurrentCapArea;
 
-            if (CurrentCapArea != 255)
+            if (ObjectiveIndex != 255)
             {
-                CurrentCapProgress = Veh.CurrentCapProgress;
-                CurrentCapAxisCappers = Veh.CurrentCapAxisCappers;
-                CurrentCapAlliesCappers = Veh.CurrentCapAlliesCappers;
+                PawnCapProgress = Veh.CurrentCapProgress;
+                PlayersInCap[AXIS_TEAM_INDEX] = Veh.CurrentCapAxisCappers;
+                PlayersInCap[ALLIES_TEAM_INDEX] = Veh.CurrentCapAlliesCappers;
             }
         }
         else
         {
             WpnPwn = ROVehicleWeaponPawn(PawnOwner);
 
-            // Pawn is a vehicle weapon pawn
             if (WpnPwn != none)
             {
-                CurrentCapArea = WpnPwn.CurrentCapArea;
+                ObjectiveIndex = WpnPwn.CurrentCapArea;
 
-                if (CurrentCapArea != 255)
+                if (ObjectiveIndex != 255)
                 {
-                    CurrentCapProgress = WpnPwn.CurrentCapProgress;
-                    CurrentCapAxisCappers = WpnPwn.CurrentCapAxisCappers;
-                    CurrentCapAlliesCappers = WpnPwn.CurrentCapAlliesCappers;
+                    PawnCapProgress = WpnPwn.CurrentCapProgress;
+                    PlayersInCap[AXIS_TEAM_INDEX] = WpnPwn.CurrentCapAxisCappers;
+                    PlayersInCap[ALLIES_TEAM_INDEX] = WpnPwn.CurrentCapAlliesCappers;
                 }
             }
-            // Unsupported pawn type - return
             else
             {
-                return;
+                return; // unsupported pawn type, so exit (shouldn't happen)
             }
         }
     }
 
-    // Don't render if we're not in a valid capture zone
-    if (CurrentCapArea >= arraycount(DHGRI.DHObjectives) || DHGRI.DHObjectives[CurrentCapArea] == none)
+    // If player is in a cap zone, get the objective reference, otherwise exit here
+    if (ObjectiveIndex < arraycount(DHGRI.DHObjectives))
+    {
+        Objective = DHGRI.DHObjectives[ObjectiveIndex];
+    }
+
+    if (Objective == none)
     {
         return;
     }
 
-    // Get current team
-    if (PawnOwner.PlayerReplicationInfo != none && PawnOwner.PlayerReplicationInfo.Team != none)
+    // Get our player's team index & make sure it's valid
+    OwnTeam = PawnOwnerPRI.Team.TeamIndex;
+
+    if (OwnTeam != AXIS_TEAM_INDEX && OwnTeam != ALLIES_TEAM_INDEX)
     {
-        Team = PawnOwner.PlayerReplicationInfo.Team.TeamIndex;
-    }
-    else
-    {
-        Team = 0;
+        return;
     }
 
-    // Get cap progress on a 0-1 scale for each team
-    if (CurrentCapProgress == 0)
+    // Get cap progress on a 0 - 1 scale for each team
+    if (PawnCapProgress == 0)
     {
-        if (DHGRI.DHObjectives[CurrentCapArea].IsNeutral())
+        if (Objective.IsAxis())
         {
-            AlliesProgress = 0.0;
-            AxisProgress = 0.0;
+            CaptureProgress[AXIS_TEAM_INDEX] = 1.0;
         }
-        else if (DHGRI.DHObjectives[CurrentCapArea].IsAxis())
+        else if (Objective.IsAllies())
         {
-            AlliesProgress = 0.0;
-            AxisProgress = 1.0;
-        }
-        else
-        {
-            AlliesProgress = 1.0;
-            AxisProgress = 0.0;
+            CaptureProgress[ALLIES_TEAM_INDEX] = 1.0;
         }
     }
-    else if (CurrentCapProgress > 100)
+    else if (PawnCapProgress > 100)
     {
-        AlliesProgress = float(CurrentCapProgress - 100) / 100.0;
+        CaptureProgress[ALLIES_TEAM_INDEX] = float(PawnCapProgress - 100) / 100.0;
 
-        if (!DHGRI.DHObjectives[CurrentCapArea].IsNeutral())
+        if (!Objective.IsNeutral())
         {
-            AxisProgress = 1.0 - AlliesProgress;
+            CaptureProgress[AXIS_TEAM_INDEX] = 1.0 - CaptureProgress[ALLIES_TEAM_INDEX];
         }
     }
     else
     {
-        AxisProgress = float(CurrentCapProgress) / 100.0;
+        CaptureProgress[AXIS_TEAM_INDEX] = float(PawnCapProgress) / 100.0;
 
-        if (!DHGRI.DHObjectives[CurrentCapArea].IsNeutral())
+        if (!Objective.IsNeutral())
         {
-            AlliesProgress = 1.0 - AxisProgress;
+            CaptureProgress[ALLIES_TEAM_INDEX] = 1.0 - CaptureProgress[AXIS_TEAM_INDEX];
         }
     }
 
-    // Assign those progress to defender or attacker, depending on current team
-    if (Team == AXIS_TEAM_INDEX)
+    // Assign attacker/defender properties based on player's team
+    if (OwnTeam == AXIS_TEAM_INDEX)
     {
-        AttackersProgress = AxisProgress;
-        DefendersProgress = AlliesProgress;
-        CaptureBarAttacker.Tints[TeamIndex] = class'DHColor'.default.TeamColors[0];
-        CaptureBarDefender.Tints[TeamIndex] = class'DHColor'.default.TeamColors[1];
-        CaptureBarDefenderRatio.Tints[TeamIndex] = class'DHColor'.default.TeamColors[1];
+        EnemyTeam = ALLIES_TEAM_INDEX;
         CaptureBarIcons[0].WidgetTexture = MapAxisFlagIcon.WidgetTexture;
-        CaptureBarIcons[0].TextureCoords = MapAxisFlagIcon.TextureCoords;
+        CaptureBarIcons[0].TextureCoords = MapAxisFlagIcon.TextureCoords; // left side flag
         CaptureBarIcons[1].WidgetTexture = MapAlliesFlagIcons[DHGRI.AlliedNationID].WidgetTexture;
-        CaptureBarIcons[1].TextureCoords = MapAlliesFlagIcons[DHGRI.AlliedNationID].TextureCoords;
-
-        // Figure ratios
-        if (CurrentCapAlliesCappers == 0)
-        {
-            AttackersRatio = 1.0;
-        }
-        else if (CurrentCapAxisCappers == 0)
-        {
-            AttackersRatio = 0.0;
-        }
-        else
-        {
-            AttackersRatio = float(CurrentCapAxisCappers) / (CurrentCapAxisCappers + CurrentCapAlliesCappers);
-        }
-
-        DefendersRatio = 1.0 - AttackersRatio;
+        CaptureBarIcons[1].TextureCoords = MapAlliesFlagIcons[DHGRI.AlliedNationID].TextureCoords; // right side flag
     }
     else
     {
-        AttackersProgress = AlliesProgress;
-        DefendersProgress = AxisProgress;
-        CaptureBarAttacker.Tints[TeamIndex] = class'DHColor'.default.TeamColors[1];
-        CaptureBarDefender.Tints[TeamIndex] = class'DHColor'.default.TeamColors[0];
-        CaptureBarDefenderRatio.Tints[TeamIndex] = class'DHColor'.default.TeamColors[0];
+        EnemyTeam = AXIS_TEAM_INDEX;
         CaptureBarIcons[0].WidgetTexture = MapAlliesFlagIcons[DHGRI.AlliedNationID].WidgetTexture;
         CaptureBarIcons[0].TextureCoords = MapAlliesFlagIcons[DHGRI.AlliedNationID].TextureCoords;
         CaptureBarIcons[1].WidgetTexture = MapAxisFlagIcon.WidgetTexture;
         CaptureBarIcons[1].TextureCoords = MapAxisFlagIcon.TextureCoords;
-
-        // Figure ratios
-        if (CurrentCapAxisCappers == 0)
-        {
-            AttackersRatio = 1.0;
-        }
-        else if (CurrentCapAlliesCappers == 0)
-        {
-            AttackersRatio = 0.0;
-        }
-        else
-        {
-            AttackersRatio = float(CurrentCapAlliesCappers) / (CurrentCapAxisCappers + CurrentCapAlliesCappers);
-        }
-
-        DefendersRatio = 1.0 - AttackersRatio;
     }
 
-    // Draw capture bar at 50% faded if we're at a stalemate
-    if (CurrentCapAxisCappers == CurrentCapAlliesCappers)
+    CaptureBarAttacker.Tints[TeamIndex] = class'DHColor'.default.TeamColors[OwnTeam];
+    CaptureBarDefender.Tints[TeamIndex] = class'DHColor'.default.TeamColors[EnemyTeam];
+
+    // Set capture bar to show 50% faded if teams are at a stalemate in the cap zone
+    if (PlayersInCap[AXIS_TEAM_INDEX] == PlayersInCap[ALLIES_TEAM_INDEX])
     {
         CaptureBarAttacker.Tints[TeamIndex].A /= 2;
         CaptureBarDefender.Tints[TeamIndex].A /= 2;
     }
 
     // Convert attacker/defender progress to widget scale (bar goes from 53 to 203, total width of texture is 256)
-    CaptureBarAttacker.Scale = 150.0 / 256.0 * AttackersProgress + 53.0 / 256.0;
-    CaptureBarDefender.Scale = 150.0 / 256.0 * DefendersProgress + 53.0 / 256.0;
+    CaptureBarAttacker.Scale = (150.0 / 256.0 * CaptureProgress[OwnTeam]  ) + (53.0 / 256.0);
+    CaptureBarDefender.Scale = (150.0 / 256.0 * CaptureProgress[EnemyTeam]) + (53.0 / 256.0);
 
-    // Check which icon to show on right side
-    if (AttackersProgress ~= 1.0)
+    // If objective can't be captured because it's in a timed pre-cap period, we'll show the pre-cap time remaining instead of the objective name
+    if (Objective.NoCapProgressTimeRemaining > 0)
     {
-        CaptureBarIcons[1].WidgetTexture = CaptureBarIcons[0].WidgetTexture;
-        CaptureBarIcons[1].TextureCoords = CaptureBarIcons[0].TextureCoords;
+        ObjectiveNameText = Repl(CaptureBarUnlockText, "{0}", Objective.NoCapProgressTimeRemaining);
     }
-
-    // Set up the objective name
-    if (DHGRI.DHObjectives[CurrentCapArea].NoCapProgressTimeRemaining > 0)
-    {
-        // If the objective is preventing capture (no precap timer) show the duration instead of the objective name
-        s = CaptureBarUnlockText;
-        s = Repl(s, "{0}", DHGRI.DHObjectives[CurrentCapArea].NoCapProgressTimeRemaining);
-    }
+    // Otherwise we'll show the objective name & if there are enemy present then add extra text to show that
     else
     {
-        s = DHGRI.DHObjectives[CurrentCapArea].ObjName;
+        ObjectiveNameText = Objective.ObjName;
 
-        if (AttackersRatio > 0.0 && DefendersRatio > 0.0)
+        if (PlayersInCap[EnemyTeam] > 0)
         {
-            s $= NeedsClearedText;
+            ObjectiveNameText $= NeedsClearedText;
         }
     }
 
-    CurrentCapRequiredCappers = DHGRI.DHObjectives[CurrentCapArea].PlayersNeededToCapture;
-
-    // Add a display for the number of cappers in vs the amount needed to capture
-    if (CurrentCapRequiredCappers > 1)
+    // If objective requires more than 1 player to capture, add current team players in cap vs required number in brackets after objective name
+    // But only if player's team doesn't completely own the cap or there are any enemy players in it
+    if (Objective.PlayersNeededToCapture > 1 && (CaptureProgress[OwnTeam] < 1.0 || PlayersInCap[EnemyTeam] > 0))
     {
-        // Displayed when the cap is neutral, the other team completely owns the cap, or there are enemy capturers
-        if (Team == AXIS_TEAM_INDEX && (DHGRI.DHObjectives[CurrentCapArea].IsNeutral() || AxisProgress != 1.0 || CurrentCapAlliesCappers != 0))
-        {
-            if (CurrentCapAxisCappers < CurrentCapRequiredCappers)
-            {
-                CaptureBarAttacker.Tints[TeamIndex].A /= 2;
-                CaptureBarDefender.Tints[TeamIndex].A /= 2;
-            }
+        ObjectiveNameText @= "(" $ PlayersInCap[OwnTeam] @ "/" @ Objective.PlayersNeededToCapture $ ")";
 
-            s @= "(" $ CurrentCapAxisCappers @ "/" @ CurrentCapRequiredCappers $ ")";
-        }
-        else if (Team == ALLIES_TEAM_INDEX && (DHGRI.DHObjectives[CurrentCapArea].IsNeutral() || AlliesProgress != 1.0 || CurrentCapAxisCappers != 0))
+        // If player's team don't have enough players in the cap, we'll draw the cap bar faded
+        if (PlayersInCap[OwnTeam] < Objective.PlayersNeededToCapture)
         {
-            if (CurrentCapAlliesCappers < CurrentCapRequiredCappers)
-            {
-                CaptureBarAttacker.Tints[TeamIndex].A /= 2;
-                CaptureBarDefender.Tints[TeamIndex].A /= 2;
-            }
-
-            s @= "(" $ CurrentCapAlliesCappers @ "/" @ CurrentCapRequiredCappers $ ")";
+            CaptureBarAttacker.Tints[TeamIndex].A /= 2;
+            CaptureBarDefender.Tints[TeamIndex].A /= 2;
         }
     }
 
-    // Begin drawing capture bar
+    // Draw the objective name text
+    Canvas.DrawColor = WhiteColor;
+    Canvas.Font = GetConsoleFont(Canvas);
+    Canvas.TextSize(ObjectiveNameText, XL, YL);
+    YPos = (Canvas.ClipY * CaptureBarBackground.PosY) - ((CaptureBarBackground.TextureCoords.Y2 + 5.0) * CaptureBarBackground.TextureScale * HudScale * ResScaleY);
+    Canvas.SetPos((Canvas.ClipX * CaptureBarBackground.PosX) - (XL / 2.0), YPos - YL);
+    Canvas.DrawText(ObjectiveNameText);
+
+    // Draw the capture bar below the objective name
     DrawSpriteWidget(Canvas, CaptureBarBackground);
+    DrawSpriteWidget(Canvas, CaptureBarOutline);
     DrawSpriteWidget(Canvas, CaptureBarAttacker);
     DrawSpriteWidget(Canvas, CaptureBarDefender);
+    DrawSpriteWidget(Canvas, CaptureBarIcons[0]); // always draw player's own team flag icon on the left side of the bar
 
-    // Overlay
-    DrawSpriteWidget(Canvas, CaptureBarOutline);
-
-    // Draw the left icon
-    DrawSpriteWidget(Canvas, CaptureBarIcons[0]);
-
-    // Only draw right icon if objective is capped already
-    if (!(DefendersProgress ~= 0.0) || (AttackersProgress ~= 1.0))
+    // Unless objective is neutral, draw another team flag icon on the right side of the bar
+    // If player's team hold the cap 100%, his team flag icon is shown on both sides of the bar
+    // But if the enemy have any progress in the cap, their opposing team flag icon is shown on the right
+    if (!Objective.IsNeutral())
     {
+        // If player's team hold cap 100%, match right side flag icon to the left
+        // Note we now have to match TextureCoords as well, as team flags share same texture & it's the co-ords position that's critical
+        if (CaptureProgress[OwnTeam] ~= 1.0)
+        {
+            CaptureBarIcons[1].WidgetTexture = CaptureBarIcons[0].WidgetTexture;
+            CaptureBarIcons[1].TextureCoords = CaptureBarIcons[0].TextureCoords;
+        }
+
         DrawSpriteWidget(Canvas, CaptureBarIcons[1]);
     }
 
-    // If both teams are present have the ratio bar area flash red
-    if (AttackersRatio > 0.0 && DefendersRatio > 0.0)
+    // If enemy are present in the cap zone, show an enemy present flashing icon over the right side of the bar (flashes on top of any flag there)
+    if (PlayersInCap[EnemyTeam] > 0)
     {
-        EnemyPresentIcon.Tints[0].A = byte((Cos(2.0 * Pi * 1.0 * Level.TimeSeconds) * 128.0) + 128.0);
+        EnemyPresentIcon.Tints[TeamIndex].A = byte((Cos(2.0 * Pi * Level.TimeSeconds) * 128.0) + 128.0);
         DrawSpriteWidget(Canvas, EnemyPresentIcon);
-
-        // Then display the capture bar (enemy present area as flashing red)
-        //CaptureBarAttackerRatio.Tints[TeamIndex] = EnemyPresentCaptureBarColor;
-        //CaptureBarAttackerRatio.Tints[TeamIndex].A = byte((Cos(2.0 * Pi * 1.0 * Level.TimeSeconds) * 128.0) + 128.0);
-        //CaptureBarAttackerRatio.Scale = 256.0; // Draw it 100% full
-        //DrawSpriteWidget(Canvas, CaptureBarAttackerRatio);
     }
 
-    // Draw the objective name
-    Canvas.Font = GetConsoleFont(Canvas);
-    Canvas.TextSize(s, XL, YL);
-    Canvas.DrawColor = WhiteColor;
-    YPos = Canvas.ClipY * CaptureBarBackground.PosY - (CaptureBarBackground.TextureCoords.Y2 + 1.0 + 4.0) * CaptureBarBackground.TextureScale * HudScale * ResScaleY;
-    Canvas.SetPos(Canvas.ClipX * CaptureBarBackground.PosX - XL / 2.0, YPos - YL);
-
-    Canvas.DrawText(s);
-
-    // Add signal so that vehicle passenger list knows to shift text up
-    bDrawingCaptureBar = true;
+//  bDrawingCaptureBar = true; // deprecated & no longer used when drawing vehicle occupant names
 }
 
 // Modified to fix a bug that spams thousands of "accessed none" errors to log, if there is a missing objective number in the array
