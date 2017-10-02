@@ -4308,6 +4308,18 @@ function DrawCaptureBar(Canvas Canvas)
     DrawSpriteWidget(Canvas, CaptureBarAttacker);
     DrawSpriteWidget(Canvas, CaptureBarDefender);
 
+    // Overlay
+    DrawSpriteWidget(Canvas, CaptureBarOutline);
+
+    // Draw the left icon
+    DrawSpriteWidget(Canvas, CaptureBarIcons[0]);
+
+    // Only draw right icon if objective is capped already
+    if (!(DefendersProgress ~= 0.0) || (AttackersProgress ~= 1.0))
+    {
+        DrawSpriteWidget(Canvas, CaptureBarIcons[1]);
+    }
+
     // If both teams are present have the ratio bar area flash red
     if (AttackersRatio > 0.0 && DefendersRatio > 0.0)
     {
@@ -4319,18 +4331,6 @@ function DrawCaptureBar(Canvas Canvas)
         //CaptureBarAttackerRatio.Tints[TeamIndex].A = byte((Cos(2.0 * Pi * 1.0 * Level.TimeSeconds) * 128.0) + 128.0);
         //CaptureBarAttackerRatio.Scale = 256.0; // Draw it 100% full
         //DrawSpriteWidget(Canvas, CaptureBarAttackerRatio);
-    }
-
-    // Overlay
-    DrawSpriteWidget(Canvas, CaptureBarOutline);
-
-    // Draw the left icon
-    DrawSpriteWidget(Canvas, CaptureBarIcons[0]);
-
-    // Only draw right icon if objective is capped already
-    if (!(DefendersProgress ~= 0.0) || (AttackersProgress ~= 1.0))
-    {
-        DrawSpriteWidget(Canvas, CaptureBarIcons[1]);
     }
 
     // Set up the objective name
