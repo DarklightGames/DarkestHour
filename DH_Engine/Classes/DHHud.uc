@@ -4300,6 +4300,7 @@ function DrawCaptureBar(Canvas Canvas)
     if (AttackersProgress ~= 1.0)
     {
         CaptureBarIcons[1].WidgetTexture = CaptureBarIcons[0].WidgetTexture;
+        CaptureBarIcons[1].TextureCoords = CaptureBarIcons[0].TextureCoords;
     }
 
     // Begin drawing capture bar
