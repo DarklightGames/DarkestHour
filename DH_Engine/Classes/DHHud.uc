@@ -728,7 +728,7 @@ function DrawHudPassC(Canvas C)
 
     V = DHVehicle(PawnOwner);
 
-    // Spawn vehicle deploy icon
+    // Spawn vehicle deploy icon // TODO: need to add an icon for when spawn vehicle is full (to indicate why can't deploy into it)?
     if (V != none && V.SpawnPointAttachment != none)
     {
         switch (V.SpawnPointAttachment.BlockReason)
