@@ -170,10 +170,6 @@ simulated function Fire(float F)
                 Instigator.Controller.SwitchToBestWeapon();
             }
         }
-        else
-        {
-            Instigator.ReceiveLocalizedMessage(class'DHConstructionErrorMessage',,,, Proxy);
-        }
     }
 }
 

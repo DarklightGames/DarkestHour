@@ -288,6 +288,11 @@ function Tick(float DeltaTime)
         SetProxyError(NewProxyError);
     }
 
+    if (ProxyError.Type != ERROR_None)
+    {
+        PawnOwner.ReceiveLocalizedMessage(class'DHConstructionErrorMessage', int(ProxyError.Type),,, self);
+    }
+
     // NOTE: The relative location and rotation needs to be set every tick.
     // Without it, the projector seems to "drift" away from the object it's
     // attached to. This is probably due to some sort of cumulative floating

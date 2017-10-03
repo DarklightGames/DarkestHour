@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHConstructionErrorMessage extends ROGameMessage
+class DHConstructionErrorMessage extends LocalMessage
     abstract;
 
 var localized array<string> ErrorMessages;
@@ -27,8 +27,41 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
     return Result;
 }
 
+static function RenderComplexMessage(
+    Canvas Canvas,
+    out float XL,
+    out float YL,
+    optional String MessageString,
+    optional int Switch,
+    optional PlayerReplicationInfo RelatedPRI_1,
+    optional PlayerReplicationInfo RelatedPRI_2,
+    optional Object OptionalObject
+    )
+{
+    local float X, Y;
+
+    X = Canvas.CurX;
+    Y = Canvas.CurY;
+
+    Canvas.DrawColor = class'UColor'.default.Black;
+    Canvas.SetPos(X + 1.0, Y + 1.0);
+    Canvas.DrawText(MessageString);
+
+    Canvas.DrawColor = default.DrawColor;
+    Canvas.SetPos(X, Y);
+    Canvas.DrawText(MessageString);
+}
+
 defaultproperties
 {
+    bFadeMessage=false
+    bIsUnique=true
+    bIsConsoleMessage=false
+    bComplexString=true
+    DrawColor=(R=255,G=255,B=255,A=255)
+    FontSize=0
+    Lifetime=0.25
+    PosY=0.80
     ErrorMessages(2)="You must {verb} a {name} on solid ground."
     ErrorMessages(3)="The ground is too steep here to {verb} a {name}."
     ErrorMessages(4)="You cannot {verb} a {name} in water."
