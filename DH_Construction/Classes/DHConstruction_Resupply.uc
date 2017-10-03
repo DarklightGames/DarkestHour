@@ -120,7 +120,7 @@ defaultproperties
     BrokenLifespan=0.1
     StaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box'
     bShouldAlignToGround=true
-    MenuName="Resupply Box"
+    MenuName="Ammo Crate"
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.resupply_box'
     ProxyDistanceInMeters=3.0
     DuplicateFriendlyDistanceInMeters=25.0
