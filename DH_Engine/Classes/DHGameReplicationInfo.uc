@@ -17,6 +17,18 @@ const SUPPLY_POINTS_MAX = 8;
 const MAP_MARKERS_MAX = 20;
 const MAP_MARKERS_CLASSES_MAX = 16;
 
+enum VehicleReservationError
+{
+    ERROR_None,
+    ERROR_Fatal,
+    ERROR_InvalidCredentials,
+    ERROR_TeamMaxActive,
+    ERROR_PoolOutOfSpawns,
+    ERROR_PoolInactive,
+    ERROR_PoolMaxActive,
+    ERROR_NoReservations
+};
+
 struct ArtilleryTarget
 {
     var bool            bIsActive;
@@ -492,7 +504,7 @@ simulated function byte GetVehiclePoolAvailableReservationCount(int VehiclePoolI
 
 function bool ReserveVehicle(DHPlayer PC, int VehiclePoolIndex)
 {
-    if (PC == none || VehiclePoolIndex != -1 && !CanPlayerReserveVehicleWithRole(PC, DHRoleInfo(PC.GetRoleInfo()), PC.GetTeamNum(), VehiclePoolIndex))
+    if (PC == none || VehiclePoolIndex != -1 && GetVehicleReservationError(PC, DHRoleInfo(PC.GetRoleInfo()), PC.GetTeamNum(), VehiclePoolIndex) != ERROR_None)
     {
         return false;
     }
@@ -861,25 +873,48 @@ simulated function AddPRI(PlayerReplicationInfo PRI)
     PRIArray[PRIArray.Length] = PRI;
 }
 
-simulated function bool CanPlayerReserveVehicleWithRole(DHPlayer PC, DHRoleInfo RI, int TeamIndex, int VehiclePoolIndex)
+simulated function VehicleReservationError GetVehicleReservationError(DHPlayer PC, DHRoleInfo RI, int TeamIndex, int VehiclePoolIndex)
 {
     local class<ROVehicle> VC;
 
     VC = class<ROVehicle>(GetVehiclePoolVehicleClass(VehiclePoolIndex));
 
-    if (PC == none || RI == none || VC == none || (TeamIndex != AXIS_TEAM_INDEX && TeamIndex != ALLIES_TEAM_INDEX))
+    if (PC == none || RI == none || VC == none || (TeamIndex != AXIS_TEAM_INDEX && TeamIndex != ALLIES_TEAM_INDEX) || (PC.Pawn != none && PC.Pawn.Health > 0) || VC.default.VehicleTeam != RI.Side)
     {
-        return false;
+        return ERROR_Fatal;
     }
 
-    return (RI.default.bCanBeTankCrew || !VC.default.bMustBeTankCommander) &&
-            (IgnoresMaxTeamVehiclesFlags(VehiclePoolIndex) || MaxTeamVehicles[TeamIndex] > 0) &&
-            GetVehiclePoolSpawnsRemaining(VehiclePoolIndex) > 0 &&
-            IsVehiclePoolActive(VehiclePoolIndex) &&
-            VehiclePoolActiveCounts[VehiclePoolIndex] < VehiclePoolMaxActives[VehiclePoolIndex] &&
-            (PC.Pawn == none || PC.Pawn.Health <= 0) &&
-            VC.default.VehicleTeam == RI.Side &&
-            GetVehiclePoolAvailableReservationCount(VehiclePoolIndex) > 0;
+    if (!RI.default.bCanBeTankCrew && VC.default.bMustBeTankCommander)
+    {
+        return ERROR_InvalidCredentials;
+    }
+
+    if (!IgnoresMaxTeamVehiclesFlags(VehiclePoolIndex) && MaxTeamVehicles[TeamIndex] <= 0)
+    {
+        return ERROR_TeamMaxActive;
+    }
+
+    if (GetVehiclePoolSpawnsRemaining(VehiclePoolIndex) <= 0)
+    {
+        return ERROR_PoolOutOfSpawns;
+    }
+
+    if (!IsVehiclePoolActive(VehiclePoolIndex))
+    {
+        return ERROR_PoolInactive;
+    }
+
+    if (VehiclePoolActiveCounts[VehiclePoolIndex] >= VehiclePoolMaxActives[VehiclePoolIndex])
+    {
+        return ERROR_PoolMaxActive;
+    }
+
+    if (GetVehiclePoolAvailableReservationCount(VehiclePoolIndex) <= 0)
+    {
+        return ERROR_NoReservations;
+    }
+
+    return ERROR_None;
 }
 
 // Overridden to undo the exclusion of players who hadn't yet selected a role.

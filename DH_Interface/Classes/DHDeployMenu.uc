@@ -64,6 +64,8 @@ var automated   GUIImage                        i_Vehicle;
 var automated   GUIGFXButton                    i_SpawnVehicle;
 var automated   GUIGFXButton                    i_ArtilleryVehicle;
 var automated   GUIGFXButton                    i_SupplyVehicle;
+var automated   GUIGFXButton                    i_MaxVehicles;
+var automated   GUILabel                        l_MaxVehicles;
 var automated   DHmoComboBox                cb_PrimaryWeapon;
 var automated   DHmoComboBox                cb_SecondaryWeapon;
 var automated   GUIImage                    i_GivenItems[5];
@@ -185,6 +187,8 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     c_Vehicle.ManageComponent(i_ArtilleryVehicle);
     c_Vehicle.ManageComponent(i_SupplyVehicle);
     c_Vehicle.ManageComponent(lb_Vehicles);
+    c_Vehicle.ManageComponent(i_MaxVehicles);
+    c_Vehicle.ManageComponent(l_MaxVehicles);
 
     c_Roles.ManageComponent(lb_Roles);
 
@@ -231,6 +235,8 @@ function SetLoadoutMode(ELoadoutMode Mode)
             i_SpawnVehicle.SetVisibility(false);
             i_ArtilleryVehicle.SetVisibility(false);
             i_SupplyVehicle.SetVisibility(false);
+            i_MaxVehicles.SetVisibility(false);
+            l_MaxVehicles.SetVisibility(false);
             break;
 
         case LM_Vehicle:
@@ -490,6 +496,7 @@ function UpdateVehicles(optional bool bShowAlert)
     local float            RespawnTime;
     local int              i, j;
     local string           S;
+    local DHGameReplicationInfo.VehicleReservationError VRE;
 
     if (GRI == none)
     {
@@ -506,14 +513,13 @@ function UpdateVehicles(optional bool bShowAlert)
         }
 
         j = UInteger(li_Vehicles.GetObjectAtIndex(i)).Value;
-
         VehicleClass = GRI.VehiclePoolVehicleClasses[j];
-
         PC = DHPlayer(PlayerOwner());
+        VRE = GRI.GetVehicleReservationError(PC, RI, CurrentTeam, j);
 
-        // TODO: have team max be indicated in another part of this control (ie. don't obfuscate meaning)
-        // TODO: this is an impenetrable MESS
-        bDisabled = PC.VehiclePoolIndex != j && !GRI.CanPlayerReserveVehicleWithRole(PC, RI, CurrentTeam, j);
+        // NOTE: Allow our user to select the vehicle if there's a way for us to
+        // display the reason for the error (e.g. team hit the max active limit)
+        bDisabled = PC.VehiclePoolIndex != j && (VRE != ERROR_None && VRE != ERROR_TeamMaxActive);
 
         if (VehicleClass != none)
         {
@@ -1307,6 +1313,27 @@ function UpdateVehicleImage()
         {
             i_SupplyVehicle.Hide();
         }
+
+        if (GRI.IgnoresMaxTeamVehiclesFlags(VehiclePoolIndex))
+        {
+            i_MaxVehicles.Hide();
+            l_MaxVehicles.Hide();
+        }
+        else
+        {
+            i_MaxVehicles.Show();
+            l_MaxVehicles.Show();
+            l_MaxVehicles.Caption = string(GRI.MaxTeamVehicles[CurrentTeam]);
+
+            if (GRI.MaxTeamVehicles[CurrentTeam] == 0)
+            {
+                l_MaxVehicles.TextColor = class'UColor'.default.Red;
+            }
+            else
+            {
+                l_MaxVehicles.TextColor = class'UColor'.default.White;
+            }
+        }
     }
     else
     {
@@ -1314,6 +1341,8 @@ function UpdateVehicleImage()
         i_SpawnVehicle.Hide();
         i_ArtilleryVehicle.Hide();
         i_SupplyVehicle.Hide();
+        i_MaxVehicles.Hide();
+        l_MaxVehicles.Hide();
     }
 }
 
@@ -2269,13 +2298,37 @@ defaultproperties
     End Object
     i_ArtilleryVehicle=ArtilleryVehicleImageObject
 
+    Begin Object Class=GUIGFXButton Name=MaxVehiclesImageObject
+        WinWidth=0.125
+        WinHeight=0.125
+        WinLeft=0.0
+        WinTop=0.0
+        Position=ICP_Center
+        Graphic=Material'DH_InterfaceArt2_tex.Icons.tank'
+        bVisible=false
+        Hint="Tanks Available"
+        StyleName="TextLabel"
+    End Object
+    i_MaxVehicles=MaxVehiclesImageObject
+
+    Begin Object Class=GUILabel Name=MaxVehiclesLabelObject
+        WinHeight=0.125
+        WinWidth=0.125
+        WinTop=0.0
+        WinLeft=0.125
+        TextAlign=TXTA_Center
+        TextColor=(R=255,G=255,B=255,A=255)
+        TextFont="DHMenuFont"
+    End Object
+    l_MaxVehicles=MaxVehiclesLabelObject
+
     Begin Object Class=GUIGFXButton Name=SupplyVehicleImageObject
         WinWidth=0.25
         WinHeight=0.125
         WinLeft=0.75
         WinTop=0.0
         Position=ICP_Center
-        Graphic=Material'DH_InterfaceArt_tex.HUD.supplies'
+        Graphic=Material'DH_InterfaceArt2_tex.Icons.supply_cache'
         bVisible=false
         Hint="Construction Supply Vehicle"
         StyleName="TextLabel"
