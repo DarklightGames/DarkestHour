@@ -8,7 +8,7 @@ class DHMeleeFire extends DHWeaponFire
 
 const SoundRadius = 32.0;
 
-var   protected float   BehindDamageFactor; // damage factor when player hits another from behind
+var   protected float   VulnerableDamageFactor; // damage factor when instigator hits victim from behind or if victim is crawling
 var   protected float   RearAngleArc;       // angle in Unreal rotational units for a player's rear (used to calculate rear melee hits)
 
 // From ROMeleeFire
@@ -140,12 +140,13 @@ function DoTrace(vector Start, rotator Dir)
     {
          if (!HitPawn.bDeleteMe)
          {
-            // Increase damage if striking from behind
+            // Calculate the rotational difference to determine if the instigator is behind the victim
             RotationDifference = Normalize(Other.Rotation) - Normalize(Instigator.Rotation);
 
-            if (Abs(RotationDifference.Yaw) <= RearAngleArc)
+            // If the victim is crawling or is being attacked from behind, apply larger damage factor
+            if (HitPawn.bIsCrawling || Abs(RotationDifference.Yaw) <= RearAngleArc)
             {
-                Damage *= BehindDamageFactor;
+                Damage *= VulnerableDamageFactor;
             }
 
             if (HitPoints.Length > 0)
@@ -157,6 +158,7 @@ function DoTrace(vector Start, rotator Dir)
                 DamageHitPoint[0] = 0;
             }
 
+            // Apply hit point multiplier (this can reduce damage on areas such as limbs, hands, etc.)
             HitPawn.ProcessLocationalDamage(int(Damage), Instigator, HitLocation, MomentumTransfer * X, ThisDamageType, DamageHitPoint);
 
             if (Weapon.bBayonetMounted)
@@ -433,13 +435,13 @@ function float MaxRange()
 
 defaultproperties
 {
-    BehindDamageFactor=3.0
+    VulnerableDamageFactor=3.0
     RearAngleArc=16000.0
 
     DamageMin=30
     DamageMax=40
-    BayonetDamageMin=35
-    BayonetDamageMax=50
+    BayonetDamageMin=38
+    BayonetDamageMax=52
     MinHoldtime=0.1
     FullHeldTime=0.3
     MeleeAttackSpread=8.0
