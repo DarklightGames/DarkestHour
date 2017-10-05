@@ -4859,7 +4859,7 @@ defaultproperties
     bIgnore32PlayerLimit=true // allows more than 32 players
     bVACSecured=true
 
-    ElapsedTimeAttritionCurve=(Points=((InVal=0.0,OutVal=0.0),(InVal=3600.0,OutVal=0.0),(InVal=7200.0,OutVal=500.0),(InVal=10800.0,OutVal=1000.0)))
+    ElapsedTimeAttritionCurve=(Points=((InVal=0.0,OutVal=0.0),(InVal=5400.0,OutVal=0.0),(InVal=7200.0,OutVal=500.0),(InVal=10800.0,OutVal=1000.0)))
 
     bSessionKickOnSecondFFViolation=true
     FFDamageLimit=0       // this stops the FF damage system from kicking based on FF damage
