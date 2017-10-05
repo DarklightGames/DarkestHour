@@ -560,7 +560,7 @@ function UpdateVehicles(optional bool bShowAlert)
             if (bShowAlert)
             {
                 ConfirmWindow = Controller.ShowQuestionDialog(default.VehicleUnavailableString, QBTN_OK, QBTN_OK);
-                ConfirmWindow.OnButtonClick = OnOKButtonClick;
+                ConfirmWindow.OnButtonClick = none;
             }
 
             li_Vehicles.SetIndex(0);
