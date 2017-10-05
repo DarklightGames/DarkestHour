@@ -19,6 +19,7 @@ var() name              PhaseMineFieldTag;                  // Tag of minefield 
 var() name              PhaseBoundaryTag;                   // Tag of DestroyableStaticMeshes to disable once phase is over
 var() array<name>       InitialSpawnPointTags;              // Tags of spawn points that should only be active while in setup phase
 
+var() bool              bScaleStartingReinforcements;       // Scales starting reinforcements to current number of players
 var() bool              bResetRoundTimer;                   // If true will reset the round's timer to the proper value when phase is over
 var() bool              bPreventTimeChangeAtZeroReinf;      // bTimeChangesAtZeroReinf will be set to false for this match
 
@@ -213,6 +214,18 @@ auto state Timing
             GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = G.LevelInfo.Allies.SpawnLimit + UnspawnedPlayers[ALLIES_TEAM_INDEX];
         }
 
+        // Now scale the reinforcements if desired
+        if (bScaleStartingReinforcements)
+        {
+            // Scale reinforcements based on NumPlayers / Maxplayers, but only by a factor of 50%
+            // Example: 400 is base reinf
+            // = 400 - ((400 / 2.0) * (1.0 - 22 / 64))
+            // = 400 - (200.0 * 0.6562)
+            // with 22/64 players the reinf would be 269 instead of 400
+            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = G.LevelInfo.Allies.SpawnLimit - ((G.LevelInfo.Allies.SpawnLimit / 2.0) * (1.0 - G.NumPlayers / G.MaxPlayers));
+            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = G.LevelInfo.Axis.SpawnLimit - ((G.LevelInfo.Axis.SpawnLimit / 2.0) * (1.0 - G.NumPlayers / G.MaxPlayers));
+        }
+
         // Reset round time if desired
         if (bResetRoundTimer)
         {
@@ -255,6 +268,7 @@ defaultproperties
     PhaseEndSounds(0)=Sound'DH_SundrySounds.RoundBeginSounds.Axis_Start'
     PhaseEndSounds(1)=Sound'DH_SundrySounds.RoundBeginSounds.US_Start'
     bSkipPreStart=true
+    bScaleStartingReinforcements=true
     SetupPhaseDuration=60
     SpawningEnabledTime=30
     Texture=Texture'DHEngine_Tex.LevelActor'
