@@ -3,11 +3,18 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_M3A1HalftrackFactory_British extends DH_BritishVehicles;
+// LEGACY class for backwards compatibility as there's no longer any separate vehicle skin with British markings
+// The new (from DH v8.0) M3 halftrack skin is generic, with allies markings but not nation or unit specific decals
+// TODO - this class should be removed in some future release when people have had time to convert maps to new actor
 
-defaultproperties
+class DH_M3A1HalftrackFactory_British extends DH_M3A1HalftrackFactory;
+
+simulated function PostBeginPlay()
 {
-    VehicleClass=class'DH_Vehicles.DH_M3A1HalftrackTransport_British'
-    Mesh=SkeletalMesh'DH_M3A1Halftrack_anm.M3A1Halftrack_body_ext'
-    Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.Brit_M3A1Halftrack_body_ext'
+    super.PostBeginPlay();
+
+    if (Role == ROLE_Authority)
+    {
+        Log("Leveller, please replace use of DH_M3A1HalftrackFactory_British with DH_M3A1HalftrackFactory, as this is a temporary legacy actor & in future the map will break", 'MAP WARNING');
+    }
 }
