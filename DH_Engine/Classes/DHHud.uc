@@ -1914,17 +1914,19 @@ function HideObjectives()
     ShowObjectives();
 }
 
-// Function to toggle the hud essentials
-exec function ToggleHudOptions()
+// Function to toggle the hud basics (not essentials) along with the overview map
+exec function HudOptionsWithOverview()
 {
-    bSmallWeaponBar = !bSmallWeaponBar;
-    bShowWeaponBar = !bShowWeaponBar;
-    bShowPoints = !bShowPoints;
-    bShowPersonalInfo = !bShowPersonalInfo;
-    bShowWeaponInfo = !bShowWeaponInfo;
-    bShowCompass = !bShowCompass;
-    bShowPortrait = !bShowPortrait;
-    bShowMapUpdatedIcon = !bShowMapUpdatedIcon;
+    ShowObjectives();
+
+    bSmallWeaponBar = bShowObjectives;
+    bShowWeaponBar = bShowObjectives;
+    bShowPoints = bShowObjectives;
+    bShowPersonalInfo = bShowObjectives;
+    bShowWeaponInfo = bShowObjectives;
+    bShowCompass = bShowObjectives;
+    bShowPortrait = bShowObjectives;
+    bShowMapUpdatedIcon = bShowObjectives;
 }
 
 // Modified both of these to stop bCapturingMouse from being set, which would

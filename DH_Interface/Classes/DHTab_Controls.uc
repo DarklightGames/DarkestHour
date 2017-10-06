@@ -219,7 +219,7 @@ defaultproperties
     ControlProfileBindings(2)=(KeyNames=(),KeyValues=())
 
     // Pro 104
-    ControlProfileBindings(3)=(KeyNames=("V","Z","B","N","J","K","L","Semicolon","SingleQuote","Ctrl","Alt","Backslash","MouseX","MouseY"),KeyValues=("Use","Prone","ROMGOperation || Deploy","speech ALERT 0","speech SUPPORT 2","teamsay np","speech ACK 3","speech ACK 2","speech ALERT 3","SpeechMenuToggle","Walking","speech ALERT 2","Count bXAxis | Axis aMouseX Speed=1.0","Count bYAxis | Axis aMouseY Speed=1.0"))
+    ControlProfileBindings(3)=(KeyNames=("V","Z","B","N","J","K","L","Semicolon","SingleQuote","Ctrl","Alt","Backslash","MouseX","MouseY","CapsLock","F"),KeyValues=("Use","Prone","ROMGOperation || Deploy","speech ALERT 0","speech SUPPORT 2","teamsay np","speech ACK 3","speech ACK 2","speech ALERT 3","SpeechMenuToggle","ShowOrderMenu | OnRelease HideOrderMenu","speech ALERT 2","Count bXAxis | Axis aMouseX Speed=1.0","Count bYAxis | Axis aMouseY Speed=1.0","Walking","HudOptionsWithOverview"))
 
     // Pro 105
     ControlProfileBindings(4)=(KeyNames=("Z","BackSlash","Alt","Ctrl","X","C","B","N","M","F","G","H","T","Y","U","I","O","L","Semicolon","Comma","Period","F1","MiddleMouse"),KeyValues=("ToggleDuck","Prone","","Walking","ThrowMGAmmo","Use","AltFire","SwitchFireMode","ROMGOperation","VoiceTalk","ShowObjectives","ThrowWeapon","Talk","TeamTalk","SquadTalk","VehicleTalk","speech ORDER 2","speech ORDER 6","speech ORDER 7","speech ORDER 4","speech ALERT 7","Deploy",""))
