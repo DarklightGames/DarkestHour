@@ -121,7 +121,6 @@ var     localized string    SpawnNoRoleText;
 var     localized string    ReinforcementsDepletedText;
 var     localized string    NeedReloadText;
 var     localized string    CanReloadText;
-var     localized string    DeathPenaltyText;
 var     localized string    CaptureBarUnlockText;
 var     localized string    NeedsClearedText;
 
@@ -5198,7 +5197,6 @@ defaultproperties
     SpawnRallyPointText="You will deploy as a {0} at your squad rally point in {2} | Press [ESC] to change"
     SpawnNoRoleText="Press [ESC] to select a role"
     ReinforcementsDepletedText="Reinforcements depleted!"
-    DeathPenaltyText="Death Penalty Count: {0} (+{1} second respawn time)"
     NotReadyToSpawnText="Spawning will enable in {s} seconds (Use this time to organize squads and plan)"
 
     // Screen indicator icons & player HUD
