@@ -137,7 +137,7 @@ defaultproperties
     SteamTemperature=180.0
     CriticalTemperature=230.0
     FailureTemperature=315.0
-    BarrelCoolingRate=1.0
+    BarrelCoolingRate=1.25
     FiringHeatIncrement=1.33
     BarrelTimerRate=3.0
     DrawType=DT_None
