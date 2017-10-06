@@ -28,25 +28,17 @@ function Timer()
     local DHObjective O;
     local int         i;
 
-    if (Role == ROLE_Authority)
+    if (Role == ROLE_Authority && Vehicle != none)
     {
-        BlockReason = SPBR_None;
-
-        // Check whether there is an enemy pawn within blocking distance of this spawn vehicle
-        foreach Vehicle.RadiusActors(class'Pawn', P, SPAWN_VEHICLES_BLOCK_RADIUS)
+        // 1. Check whether vehicle is burning, which prevents players from deploying
+        if (Vehicle.IsVehicleBurning())
         {
-            if (P != none && P.Controller != none)
-            {
-                if (Vehicle.GetTeamNum() != P.GetTeamNum())
-                {
-                    BlockReason = SPBR_EnemiesNearby;
+            BlockReason = SPBR_Burning;
 
-                    break;
-                }
-            }
+            return;
         }
 
-        // Check whether this spawn vehicle is inside an active objective
+        // 2. Check whether this spawn vehicle is inside an active objective
         for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
         {
             O = GRI.DHObjectives[i];
@@ -55,19 +47,34 @@ function Timer()
             {
                 BlockReason = SPBR_InObjective;
 
-                break;
+                return;
             }
         }
 
-        // Check if a suitable vehicle position is available
+        // 3. Check whether there is an enemy pawn within blocking distance of this spawn vehicle
+        foreach Vehicle.RadiusActors(class'Pawn', P, SPAWN_VEHICLES_BLOCK_RADIUS)
+        {
+            if (P.Controller != none && Vehicle.GetTeamNum() != P.GetTeamNum())
+            {
+                BlockReason = SPBR_EnemiesNearby;
+
+                return;
+            }
+        }
+
+        // 4. Check whether a suitable vehicle position is available
         // The 'false' means we ignore positions that can only be used by tank crew - this is a global check, so we can only check positions that any player could use
         // Rarely going to be an issue, as a tank used as a spawn vehicle is rare, perhaps never, but the functionality does allow for it
         // But it does mean that if a tank is used as a spawn vehicle, it will only be shown as 'deployable' if there is a rider position free
         if (FindEntryVehicle(false) == none)
         {
             BlockReason = SPBR_Full;
+
+            return;
         }
     }
+
+    BlockReason = SPBR_None; // if we got here then we didn't find any reason to prevent deployment
 }
 
 // Modified to make sure we have a vehicle & it's on the same team

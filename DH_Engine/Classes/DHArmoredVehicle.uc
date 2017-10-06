@@ -265,7 +265,7 @@ simulated function Timer()
     }
 
     // Engine is dead, but there's no fire, so make sure it is set to smoke instead of burn
-    if (EngineHealth <= 0 && !bEngineOnFire && !bOnFire && (DamagedEffectHealthFireFactor != 0.0 || DamagedEffectHealthHeavySmokeFactor != 1.0))
+    if (EngineHealth <= 0 && !IsVehicleBurning() && (DamagedEffectHealthFireFactor != 0.0 || DamagedEffectHealthHeavySmokeFactor != 1.0))
     {
         SetFireEffects();
     }
@@ -401,7 +401,7 @@ simulated function DrawPeriscopeOverlay(Canvas C)
 // Modified to prevent entry if either vehicle or engine is on fire (with message if own team's vehicle)
 function Vehicle FindEntryVehicle(Pawn P)
 {
-    if (bOnFire || bEngineOnFire)
+    if (IsVehicleBurning())
     {
         if (P != none && (P.GetTeamNum() == VehicleTeam || !bTeamLocked))
         {
@@ -954,7 +954,7 @@ simulated function SetFireEffects()
 {
     if (Level.NetMode != NM_DedicatedServer)
     {
-        if (bOnFire || bEngineOnFire)
+        if (IsVehicleBurning())
         {
             // Engine fire effect
             if (DamagedEffectHealthFireFactor != 1.0)
@@ -1050,6 +1050,12 @@ simulated function StartDriverHatchFire()
             DriverHatchFireEffect.SetEffectScale(DamagedEffectScale);
         }
     }
+}
+
+// Modified to use more sophisticated burning vehicle system for armored vehicles
+simulated function bool IsVehicleBurning()
+{
+    return bOnFire || bEngineOnFire;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -2124,7 +2130,7 @@ simulated function SetEngine()
     {
         TurnDamping = 0.0;
 
-        if (bOnFire || bEngineOnFire)
+        if (IsVehicleBurning())
         {
             AmbientSound = VehicleBurningSound;
             SoundVolume = 255;
@@ -2185,7 +2191,7 @@ simulated function SetEngine()
 // Modified to stop vehicle from prematurely destroying itself when on fire; instead just let the fire run its course
 function MaybeDestroyVehicle()
 {
-    if (!bOnFire && !bEngineOnFire)
+    if (!IsVehicleBurning())
     {
         super.MaybeDestroyVehicle();
     }

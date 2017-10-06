@@ -1642,7 +1642,7 @@ simulated function SetEngine()
         TurnDamping = 0.0;
 
         // If engine is dead then start a fire
-        if (EngineHealth <= 0)
+        if (IsVehicleBurning())
         {
             DamagedEffectHealthFireFactor = 1.0;
             DamagedEffectHealthSmokeFactor = 1.0; // appears necessary to get native code to spawn a DamagedEffect if it doesn't already exist
@@ -3339,6 +3339,12 @@ simulated function bool IsDisabled()
     }
 
     return false;
+}
+
+// New helper function to check whether vehicle is burning
+simulated function bool IsVehicleBurning()
+{
+    return EngineHealth <= 0;
 }
 
 // Modified to eliminate "Waiting for additional crew members" message (this is now only used by bots)

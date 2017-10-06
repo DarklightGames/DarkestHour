@@ -12,6 +12,7 @@ enum ESpawnPointBlockReason
     SPBR_EnemiesNearby,
     SPBR_InObjective,
     SPBR_Full,
+    SPBR_Burning,
     SPBR_Constructing
 };
 
