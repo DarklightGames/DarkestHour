@@ -54,6 +54,7 @@ defaultproperties
     WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=45.0,OutVal=0.09),(InVal=10000000000.0,OutVal=0.9)))
     WheelLatFrictionScale=1.35
     WheelHandbrakeSlip=1.5
+    WheelSuspensionMaxRenderTravel=4.5
 
     // Damage
     Health=150
