@@ -519,6 +519,12 @@ function DHConstruction.ConstructionError GetProvisionalPosition(out vector OutL
                 }
                 else
                 {
+                    if (ConstructionClass.default.bCanOnlyPlaceOnTerrain && !HitActor.IsA('TerrainInfo'))
+                    {
+                        E.Type = ERROR_NotOnTerrain;
+                        break;
+                    }
+
                     HitNormalSum += HitNormal;
                 }
             }
