@@ -21,7 +21,6 @@ var() array<name>       InitialSpawnPointTags;              // Tags of spawn poi
 
 var() bool              bScaleStartingReinforcements;       // Scales starting reinforcements to current number of players
 var() bool              bResetRoundTimer;                   // If true will reset the round's timer to the proper value when phase is over
-var() bool              bPreventTimeChangeAtZeroReinf;      // bTimeChangesAtZeroReinf will be set to false for this match
 
 var() TeamReinf         PhaseEndReinforcements;             // What to set reinforcements to at the end of the phase (-1 means no change)
 
@@ -48,11 +47,6 @@ event PreBeginPlay()
     if (bSkipPreStart)
     {
         G.bSkipPreStartTime = true;
-    }
-
-    if (bPreventTimeChangeAtZeroReinf)
-    {
-        G.bTimeChangesAtZeroReinf = false;
     }
 
     // Handle more detailed timer

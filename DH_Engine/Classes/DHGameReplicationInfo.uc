@@ -55,7 +55,7 @@ struct SupplyPoint
     var vector  Location;   // (X,Y) is world location, (Z) is the yaw rotation
 };
 
-var string              CurrentGameType;
+var class<DHGameType>   GameType;
 
 var SupplyPoint         SupplyPoints[SUPPLY_POINTS_MAX];
 
@@ -166,7 +166,7 @@ replication
         MaxTeamVehicles,
         DHObjectives,
         AttritionRate,
-        CurrentGameType,
+        GameType,
         CurrentAlliedToAxisRatio,
         SpawnPoints,
         SpawningEnableTime,

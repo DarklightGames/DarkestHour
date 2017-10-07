@@ -57,11 +57,6 @@ var     float                       CalculatedAttritionRate[2];
 var     float                       TeamAttritionCounter[2];
 
 var     bool                        bSwapTeams;
-var     bool                        bUseReinforcementWarning;
-var     bool                        bUseInfiniteReinforcements;             // Level should have infinite reinforcements regardless of the setting
-var     bool                        bRoundEndsAtZeroReinf;
-var     bool                        bTimeChangesAtZeroReinf;
-var     bool                        bUseAttritionCurve;                     // Attrition will set in and change to the curve over time
 
 var     InterpCurve                 ElapsedTimeAttritionCurve;              // Curve which inputs elapsed time and outputs attrition amount
                                                                             // used to setup a pseudo time limit for Advance/Attrition game modes
@@ -277,40 +272,7 @@ function PostBeginPlay()
     // Allow weapon dropping (this is here in case it is set to false and then the server changes map and saved as false)
     bAllowWeaponThrowing = true;
 
-    // Setup game type variables
-    switch (DHLevelInfo.GameType)
-    {
-        case GT_Push:
-            GRI.CurrentGameType = "Push";
-            bUseInfiniteReinforcements = true;
-            bUseReinforcementWarning = false;
-            break;
-
-        case GT_Attrition:
-            GRI.CurrentGameType = "Attrition";
-            bUseAttritionCurve = true;
-            bRoundEndsAtZeroReinf = true;
-            break;
-
-        case GT_Advance:
-            GRI.CurrentGameType = "Advance";
-            bUseAttritionCurve = true;
-            bRoundEndsAtZeroReinf = true;
-            bUseReinforcementWarning = false;
-            break;
-
-        case GT_Cutoff:
-            GRI.CurrentGameType = "GT_Cutoff";
-            bUseReinforcementWarning = false;
-            bTimeChangesAtZeroReinf = false;
-            bRoundEndsAtZeroReinf = false;
-            break;
-
-        default:
-            break; // do nothing
-    }
-
-    // General game type settings
+    GRI.GameType = DHLevelInfo.GameTypeClass;
     GRI.bAllowNetDebug = bAllowNetDebug;
 
     if (bSkipPreStartTime)
@@ -2469,7 +2431,7 @@ state RoundInPlay
         GRI.ClearMapMarkers();
 
         // Set reinforcements
-        if (bUseInfiniteReinforcements)
+        if (DHLevelInfo.GameTypeClass.default.bUseInfiniteReinforcements)
         {
             GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = -1;
             GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = -1;
@@ -2955,20 +2917,11 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
         bTeamOutOfReinforcements[Team] = 1;
 
         // If the round is meant to end when a team runs out of reinforcements, then end it (and exit function)
-        if (bRoundEndsAtZeroReinf)
+        if (DHLevelInfo.GameTypeClass.default.bRoundEndsAtZeroReinf)
         {
             Level.Game.Broadcast(self, "The battle ended because a team's reinforcements reached zero", 'Say');
             ChooseWinner();
             return; // Leave function as we don't want to change round time as round is over
-        }
-
-        else if (bTimeChangesAtZeroReinf && (LevelInfo.DefendingSide != SIDE_None && !bIsDefendingTeam) || LevelInfo.DefendingSide == SIDE_None)
-        {
-            // If the time is meant to change when a team runs out of reinf
-            // AND the player killed was an Attacker (with a defending side)
-            // OR the defending side is none
-            // THEN modify the round time
-            ModifyRoundTime(Min(GetRoundTime(), 90), 2); // Set time remaining to 90 seconds, if greater than 90 seconds
         }
     }
 }
@@ -3005,10 +2958,10 @@ function HandleReinforcements(Controller C)
     {
         ModifyReinforcements(ALLIES_TEAM_INDEX, -1);
 
-        ReinforcementPercent = float(GRI.SpawnsRemaining[ALLIES_TEAM_INDEX]) / float(LevelInfo.Allies.SpawnLimit);
+        ReinforcementPercent = float(GRI.SpawnsRemaining[ALLIES_TEAM_INDEX]) / LevelInfo.Allies.SpawnLimit;
 
         // Handle reinforcement % message
-        if (bUseReinforcementWarning)
+        if (DHLevelInfo.GameTypeClass.default.bUseReinforcementWarning)
         {
             while (TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX] < default.ReinforcementMessagePercentages.Length &&
                     ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX]])
@@ -3023,10 +2976,10 @@ function HandleReinforcements(Controller C)
     {
         ModifyReinforcements(AXIS_TEAM_INDEX, -1);
 
-        ReinforcementPercent = float(GRI.SpawnsRemaining[AXIS_TEAM_INDEX]) / float(LevelInfo.Axis.SpawnLimit);
+        ReinforcementPercent = float(GRI.SpawnsRemaining[AXIS_TEAM_INDEX]) / LevelInfo.Axis.SpawnLimit;
 
         // Handle reinforcement % message
-        if (bUseReinforcementWarning)
+        if (DHLevelInfo.GameTypeClass.default.bUseReinforcementWarning)
         {
             while (TeamReinforcementMessageIndices[AXIS_TEAM_INDEX] < default.ReinforcementMessagePercentages.Length &&
                     ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[AXIS_TEAM_INDEX]])
@@ -3721,7 +3674,7 @@ function ChooseWinner()
     AlliedReinforcementsPercent = (float(GRI.SpawnsRemaining[ALLIES_TEAM_INDEX]) / LevelInfo.Allies.SpawnLimit) * 100;
 
     // Check to see who has more reinforcements when bRoundEndsAtZeroReinf
-    if (bRoundEndsAtZeroReinf)
+    if (DHLevelInfo.GameTypeClass.default.bRoundEndsAtZeroReinf)
     {
         // The winner is the one with higher reinforcements (no concern over objective counts)
         if (AxisReinforcementsPercent > AlliedReinforcementsPercent)
@@ -4962,8 +4915,6 @@ defaultproperties
     MetricsClass=class'DHMetrics'
     bEnableMetrics=false
     bUseWeaponLocking=true
-    bUseReinforcementWarning=true
-    bTimeChangesAtZeroReinf=true
     bPublicPlay=true
 
     WeaponLockTimeSecondsInterval=5

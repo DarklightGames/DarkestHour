@@ -418,7 +418,7 @@ simulated function UpdateScoreBoard(Canvas C)
     s $= HUD.default.SpacingText $ HUD.default.MapNameText $ class'DHLib'.static.GetMapName(Level);
 
     // Add game type
-    S $= HUD.default.SpacingText $ HUD.default.MapGameTypeText $ DHGRI.CurrentGameType;
+    S $= HUD.default.SpacingText $ HUD.default.MapGameTypeText $ DHGRI.GameType.default.GameTypeName;
 
     Y = CalcY(0.25, C);
 

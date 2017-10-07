@@ -25,14 +25,6 @@ enum ESpawnMode
     ESM_DarkestHour
 };
 
-enum EGameType
-{
-    GT_Push,
-    GT_Attrition,
-    GT_Advance,
-    GT_Cutoff
-};
-
 enum ESeason
 {
     SEASON_Spring,
@@ -60,7 +52,7 @@ var() sound                 AxisWinsMusic;              // Optional override for
 var() EAlliedNation         AlliedNation;
 var() sound                 AlliesWinsMusic;            // Optional override for Allies victory music
 
-var() EGameType             GameType;
+var() class<DHGameType>     GameTypeClass;
 var() ESpawnMode            SpawnMode;
 
 var() bool                          bAreRallyPointsEnabled;
@@ -149,4 +141,6 @@ defaultproperties
     AxisWinsMusic=Sound'DH_win.German.DH_GermanGroup'
     SpawnMode=ESM_RedOrchestra
     Season=SEASON_Summer
+    GameTypeClass=class'DHGameType_Push'
 }
+
