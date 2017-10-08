@@ -1034,7 +1034,10 @@ function DrawHudPassC(Canvas C)
             DrawDebugSphere(CameraLocation, 10.0, 10, 255, 255, 255); // larger white sphere to make actual camera location more visible, especially if it's inside the mesh
             DrawDebugLine(CameraLocation, CameraLocation + (60.0 * vector(CameraRotation)), 255, 0, 0); // red line to show camera rotation
         }
+    }
 
+    if (IsDebugModeAllowed() || class'DarkestHourGame'.default.Version.IsPrerelease())
+    {
         DrawDebugInformation(C);
     }
 }
