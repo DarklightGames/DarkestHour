@@ -16,6 +16,20 @@ event PlayerInput(float DeltaTime)
         return;
     }
 
+    // Handle aBaseFire
+    if (bUsingController)
+    {
+        if (bFire == 0 && aBaseFire < -5.0)
+        {
+            bFire = 1;
+            Fire();
+        }
+        else if (bFire > 0 && aBaseFire > -5.0)
+        {
+            bFire = 0;
+        }
+    }
+
     // Check for Double click move
     // flag transitions
     bEdgeForward = (bWasForward ^^ (aBaseY > 0));

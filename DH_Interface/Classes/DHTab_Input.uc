@@ -106,10 +106,19 @@ function SaveSettings()
     }
 
     if (bool(PC.ConsoleCommand("get ini:Engine.Engine.ViewportManager UseJoystick")) != bJoystick)
+    {
         PC.ConsoleCommand("set ini:Engine.Engine.ViewportManager UseJoystick" @ bJoystick);
 
+        if (DHPlayer(PC) != none)
+        {
+            DHPlayer(PC).bUsingController = bJoystick;
+        }
+    }
+
     if (bool(PC.ConsoleCommand("get ini:Engine.Engine.RenderDevice ReduceMouseLag")) != bLag)
+    {
         PC.ConsoleCommand("set ini:Engine.Engine.RenderDevice ReduceMouseLag"@bLag);
+    }
 
     if (PC.bSnapToLevel != bSlope)
     {

@@ -5,15 +5,24 @@
 
 class DHTab_Controls extends ROTab_Controls;
 
-struct ControlProfileBinds
+const CONTROL_PROFILE_AMOUNT = 6;
+
+struct CPKeys
 {
-    var array<string> KeyNames;
-    var array<string> KeyValues;
+    var array<string> Keys;
 };
 
+struct CPCmds
+{
+    var array<string> Cmds;
+};
+
+var CPKeys                      ControlProfileKeys[CONTROL_PROFILE_AMOUNT];
+var CPCmds                      ControlProfileCommands[CONTROL_PROFILE_AMOUNT];
+var localized string            ControlProfiles[CONTROL_PROFILE_AMOUNT];
+
 var     automated moComboBox    co_ControlProfiles;
-var     localized string        ControlProfiles[6];
-var()   ControlProfileBinds     ControlProfileBindings[6];
+//var()   ControlProfileBinds     ControlProfileBindings[6];
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -62,15 +71,16 @@ function SetUpProfileControls(int Index)
         Controller.ResetKeyboard(); // UT/RO defaults (not DH defaults!)
 
         // Integrity check
-        if (ControlProfileBindings[Index].KeyNames.Length != ControlProfileBindings[Index].KeyValues.Length)
+        if (ControlProfileKeys[Index].Keys.Length != ControlProfileCommands[Index].Cmds.Length)
         {
-            Warn("A control profile doesn't have the same number of keys to commands and may not work as expected!!!");
+            Warn("A control profile doesn't have the same number of keys as commands, exiting control profile setup!!!");
+            return;
         }
 
         // DH Basic Defaults (always apply)
-        for (i = 0; i < ControlProfileBindings[0].KeyNames.Length; ++i)
+        for (i = 0; i < ControlProfileKeys[0].Keys.Length; ++i)
         {
-            Controller.SetKeyBind(ControlProfileBindings[0].KeyNames[i], ControlProfileBindings[0].KeyValues[i]);
+            Controller.SetKeyBind(ControlProfileKeys[0].Keys[i], ControlProfileCommands[0].Cmds[i]);
         }
 
         // If this is the RO Classic profile, set it up and then return out
@@ -82,17 +92,17 @@ function SetUpProfileControls(int Index)
         }
 
         // DH Filled Defaults (always applies unless the RO classic profile was selected)
-        for (i = 0; i < ControlProfileBindings[1].KeyNames.Length; ++i)
+        for (i = 0; i < ControlProfileKeys[1].Keys.Length; ++i)
         {
-            Controller.SetKeyBind(ControlProfileBindings[1].KeyNames[i], ControlProfileBindings[1].KeyValues[i]);
+            Controller.SetKeyBind(ControlProfileKeys[1].Keys[i], ControlProfileCommands[1].Cmds[i]);
         }
 
         // Fill out additional profiles if selected
         if (Index > 2)
         {
-            for (i = 0; i < ControlProfileBindings[Index].KeyNames.Length; ++i)
+            for (i = 0; i < ControlProfileKeys[Index].Keys.Length; ++i)
             {
-                Controller.SetKeyBind(ControlProfileBindings[Index].KeyNames[i], ControlProfileBindings[Index].KeyValues[i]);
+                Controller.SetKeyBind(ControlProfileKeys[Index].Keys[i], ControlProfileCommands[Index].Cmds[i]);
             }
         }
     }
@@ -111,6 +121,7 @@ defaultproperties
     ControlProfiles(2)="RO Classic"
     ControlProfiles(3)="Pro 104"
     ControlProfiles(4)="Pro 105"
+    ControlProfiles(5)="XBox 360 Controller"
 
     bindings_game(4)="ToggleVehicleLock"
     captions_game(4)="Lock/Unlock Armored Vehicle"
@@ -209,18 +220,32 @@ defaultproperties
     // Profile Bindings
     //******************
 
+    // DO NOT EDIT ANYTHING BELOW WITHOUT ASKING
+
     // Defaults Basic (this always gets applied before every profile)
-    ControlProfileBindings(0)=(KeyNames=("Tab","GreyMinus","F2","F3","Insert","CapsLock","Home","End","Minus","Equals"),KeyValues=("ScoreToggle","CommunicationMenu","ShowVoteMenu","CommunicationMenu","Speak Squad","ShowOrderMenu | OnRelease HideOrderMenu","Speak Command","Speak Unassigned","IncreaseSmokeLauncherSetting","DecreaseSmokeLauncherSetting"))
+    ControlProfileKeys(0)=    (Keys=("Tab",        "GreyMinus",        "F2",          "F3",               "Insert",     "CapsLock",                               "Home",         "End",             "Minus",                       "Equals"))
+    ControlProfileCommands(0)=(Cmds=("ScoreToggle","CommunicationMenu","ShowVoteMenu","CommunicationMenu","Speak Squad","ShowOrderMenu | OnRelease HideOrderMenu","Speak Command","Speak Unassigned","DecreaseSmokeLauncherSetting","IncreaseSmokeLauncherSetting"))
 
     // Defaults Filled (this always gets applied EXCEPT for when RO Classic is selected)
-    ControlProfileBindings(1)=(KeyNames=("T","Y","U","I","O","P","F","G","H","N","GreySlash","NumPadPeriod","NumPad3","NumPad9","GreyPlus","RightMouse","MiddleMouse","M","J","K","L","Comma","Period","LeftBracket","RightBracket","Backslash","Slash","Semicolon","SingleQuote","BackSpace","PageUp","PageDown","Up","Down","Left","Right","ScrollLock"),KeyValues=("VoiceTalk","Talk","TeamTalk","VehicleTalk","SquadTalk","SquadMenu","ShowObjectives","ThrowWeapon","ThrowMGAmmo","Deploy","speech VEH_ORDERS 0","speech VEH_ORDERS 7","speech VEH_ORDERS 6","speech VEH_ORDERS 9","speech VEH_ALERTS 9","ROIronSights","AltFire","","","","","","","","","","","","","","","","","","","",""))
+    ControlProfileKeys(1)=    (Keys=("T",        "Y",   "U",       "I",          "O",        "P",        "F",             "G",          "H",          "N",     "GreySlash",          "NumPadPeriod",       "NumPad3",            "NumPad9",            "GreyPlus",           "RightMouse",  "MiddleMouse","M","J","K","L",                "Comma","Period","LeftBracket","RightBracket","Backslash","Slash","Semicolon","SingleQuote","BackSpace","PageUp","PageDown","Up","Down","Left","Right","ScrollLock","JOY1","JOY2","JOY3","JOY5","JOY13","JOY14","JOY15","JOY16","F24"))
+    ControlProfileCommands(1)=(Cmds=("VoiceTalk","Talk","TeamTalk","VehicleTalk","SquadTalk","SquadMenu","ShowObjectives","ThrowWeapon","ThrowMGAmmo","Deploy","speech VEH_ORDERS 0","speech VEH_ORDERS 7","speech VEH_ORDERS 6","speech VEH_ORDERS 9","speech VEH_ALERTS 9","ROIronSights","AltFire",    "", "", "", "ToggleVehicleLock","",     "",      "",           "",            "",         "",     "",         "",           "",         "",      "",        "",  "",    "",    "",     "",          "",    "",    "",    "",    "",     "",     "",     "",     ""))
 
     // RO Classic
-    ControlProfileBindings(2)=(KeyNames=(),KeyValues=())
+    ControlProfileKeys(2)=    (Keys=())
+    ControlProfileCommands(2)=(Cmds=())
 
     // Pro 104
-    ControlProfileBindings(3)=(KeyNames=("V","Z","B","N","J","K","L","Semicolon","SingleQuote","Ctrl","Alt","Backslash","MouseX","MouseY","CapsLock","F"),KeyValues=("Use","Prone","ROMGOperation || Deploy","speech ALERT 0","speech SUPPORT 2","teamsay np","speech ACK 3","speech ACK 2","speech ALERT 3","SpeechMenuToggle","ShowOrderMenu | OnRelease HideOrderMenu","speech ALERT 2","Count bXAxis | Axis aMouseX Speed=1.0","Count bYAxis | Axis aMouseY Speed=1.0","Walking","HudOptionsWithOverview"))
+    ControlProfileKeys(3)=    (Keys=("V",  "Z",    "B",                      "N",             "J",               "K",         "L",           "Semicolon",   "SingleQuote",   "Ctrl",            "Alt",                                    "Backslash",     "MouseX",                               "MouseY",                               "CapsLock","F",                     "Backspace"))
+    ControlProfileCommands(3)=(Cmds=("Use","Prone","ROMGOperation | Deploy","speech ALERT 0","speech SUPPORT 2","teamsay np","speech ACK 3","speech ACK 2","speech ALERT 3","SpeechMenuToggle","ShowOrderMenu | OnRelease HideOrderMenu","speech ALERT 2","Count bXAxis | Axis aMouseX Speed=1.0","Count bYAxis | Axis aMouseY Speed=1.0","Walking", "HudOptionsWithOverview","ToggleVehicleLock"))
+    //Description:                                  Change Barrel or Deploy   Yell Grenade!	   Ask For Ammo!	 Forgive TK!   Say Sorry!	  Say Thanks!	 Yell Stop!						                                              Yell Take Cover!
 
     // Pro 105
-    ControlProfileBindings(4)=(KeyNames=("Z","BackSlash","Alt","Ctrl","X","C","B","N","M","F","G","H","T","Y","U","I","O","L","Semicolon","Comma","Period","F1","MiddleMouse"),KeyValues=("ToggleDuck","Prone","","Walking","ThrowMGAmmo","Use","AltFire","SwitchFireMode","ROMGOperation","VoiceTalk","ShowObjectives","ThrowWeapon","Talk","TeamTalk","SquadTalk","VehicleTalk","speech ORDER 2","speech ORDER 6","speech ORDER 7","speech ORDER 4","speech ALERT 7","Deploy",""))
+    ControlProfileKeys(4)=    (Keys=("Z",         "BackSlash","Alt","Ctrl",   "X",          "C",  "B",      "N",             "M",            "F",        "G",             "H",          "T",   "Y",       "U",        "I",          "O",             "L",             "Semicolon",     "Comma",         "Period",        "F1",    "MiddleMouse"))
+    ControlProfileCommands(4)=(Cmds=("ToggleDuck","Prone",    "",   "Walking","ThrowMGAmmo","Use","AltFire","SwitchFireMode","ROMGOperation","VoiceTalk","ShowObjectives","ThrowWeapon","Talk","TeamTalk","SquadTalk","VehicleTalk","speech ORDER 2","speech ORDER 6","speech ORDER 7","speech ORDER 4","speech ALERT 7","Deploy",""))
+    //Description:                                                                                                                                                                                                                  Hold Position!   Open Fire!       Cease Fire!      Attack/Move!     Friendly Fire!
+
+    // XBox 360 Controller
+    ControlProfileKeys(5)=    (Keys=("Joy1","Joy2",       "Joy3",          "Joy4",      "Joy5","Joy6",        "Joy7",      "Joy8",          "Joy9",          "Joy10",  "Joy11","Joy12","Joy13",    "Joy14",     "Joy15","Joy16",                                                "JoyX",                                     "JoyY",                                              "JoyZ",                        "JoyR",                                    "JoyU",                                               "JoyV","JoySlider1","JoySlider2"))
+    ControlProfileCommands(5)=(Cmds=("Use", "ThrowWeapon","ROManualReload","NextWeapon","Jump","ROIronSights","ShowScores","ShowObjectives","Button bSprint","AltFire","",     "",     "VoiceTalk","ToggleDuck","Prone","ThrowMGAmmo | ROMGOperation | Deploy | SwitchFireMode","Axis aStrafe SpeedBase=300.0 DeadZone=0.1","Axis aBaseY SpeedBase=300.0 DeadZone=0.1 Invert=-1","Axis aBaseFire DeadZone=0.25","Axis aBaseX SpeedBase=50.0 DeadZone=0.25","Axis aLookUp SpeedBase=50.0 DeadZone=0.25 Invert=-1","",    "",          ""))
+    //Description:                   A      B             X                Y            L Bmpr R Bmpr         Back         Start            LS Down          RS Down                   D-UP        D-Right      D-Down  D-Left
 }

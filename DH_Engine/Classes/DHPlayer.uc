@@ -17,6 +17,9 @@ enum EMapMode
     MODE_Squads
 };
 
+var     input float             aBaseFire;
+var     bool                    bUsingController;
+
 var     EMapMode                DeployMenuStartMode; // what the deploy menu is supposed to start out on
 var     DH_LevelInfo            ClientLevelInfo;
 var     DHHintManager           DHHintManager;
@@ -173,6 +176,9 @@ simulated event PostBeginPlay()
         {
             break;
         }
+
+        // Set bUsingController based on the UseJoystick setting
+        bUsingController = bool(ConsoleCommand("get ini:Engine.Engine.ViewportManager UseJoystick"));
     }
 }
 
