@@ -1041,7 +1041,7 @@ defaultproperties
     Begin Object Class=DHmoCheckBox Name=DetailDecoLayers
         ComponentJustification=TXTA_Left
         CaptionWidth=0.94
-        Caption="Foliage"
+        Caption="Ground Details"
         OnCreateComponent=DetailDecoLayers.InternalOnCreateComponent
         IniOption="@Internal"
         IniDefault="true"
