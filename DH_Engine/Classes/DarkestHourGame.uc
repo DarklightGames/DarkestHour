@@ -2693,7 +2693,7 @@ state RoundInPlay
         for (i = 0; i < 2; ++i)
         {
             // Combine attrition values and set GRI
-            GRI.AttritionRate[i] = (InterpCurveEval(ElapsedTimeAttritionCurve, float(GRI.ElapsedTime)) + CalculatedAttritionRate[i]) / 60;
+            GRI.AttritionRate[i] = (InterpCurveEval(ElapsedTimeAttritionCurve, float(GRI.ElapsedTime - GRI.RoundStartTime)) + CalculatedAttritionRate[i]) / 60;
 
             TeamAttritionCounter[i] += GRI.AttritionRate[i];
 
