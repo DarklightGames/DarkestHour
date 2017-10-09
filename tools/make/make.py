@@ -102,6 +102,9 @@ def main():
     except IOError:
         pass
 
+    # store the old CRCs before be overwrite them
+    old_package_crcs = package_crcs
+
     for package in packages:
         sys_package_path = os.path.join(sys_dir, package + '.u')
 
@@ -152,7 +155,7 @@ def main():
     os.chdir(sys_dir)
 
     # run ucc make
-    proc = subprocess.Popen(['ucc', 'make', '-mod=' + args.mod])
+    proc = subprocess.Popen(['ucc', 'make', '-mod=' + args.mod, '-silentbuild'])
     proc.communicate()
 
     # store contents of ucc.log before it's overwritten
@@ -160,18 +163,21 @@ def main():
     ucc_log_contents = ucc_log_file.read()
     ucc_log_file.close()
 
+    compiled_packages = []
+
     # move compiled packages to mod directory
     for root, dirs, filenames in os.walk(sys_dir):
         for filename in filenames:
             if filename in packages_to_compile:
                 shutil.copy(os.path.join(root, filename), mod_sys_dir)
                 os.remove(os.path.join(root, filename))
+                compiled_packages.append(filename)
 
     # run dumpint on compiled packages
     if args.dumpint:
         print 'running dumpint (note: output will be garbled due to ucc writing to stdout in parallel)'
         processes = []
-        for package in packages_to_compile:
+        for package in compiled_packages:
             processes.append(subprocess.Popen(['ucc', 'dumpint', package, '-mod=' + args.mod]))
 
         [p.wait() for p in processes]
@@ -189,17 +195,24 @@ def main():
     ucc_log_file.write(ucc_log_contents)
     ucc_log_file.close()
 
+    print 'Compiled ' + str(len(compiled_packages)) + ' of ' + str(len(packages_to_compile)) + ' package(s)'
+
     # search for success message in log
     # this is a better option than searching for the failure message since GPF errors don't generate this line
     did_build_fail = re.search('Success - \d+ error\(s\)', ucc_log_contents) is None
 
-    if did_build_fail:
-        sys.exit(1)
+    for package_name in compiled_packages:
+        package_name = os.path.splitext(package_name)[0]
+        old_package_crcs[package_name] = package_crcs[package_name]
+
+    for package_name in set(packages_to_compile).difference(compiled_packages):
+        package_name = os.path.splitext(package_name)[0]
+        del old_package_crcs[package_name]
 
     # write package manifest
     try:
         with open(manifest_path, 'w') as f:
-            json.dump(package_crcs, f)
+            json.dump(old_package_crcs, f)
     except OSError:
         print 'could not write mod make manifest'
 
