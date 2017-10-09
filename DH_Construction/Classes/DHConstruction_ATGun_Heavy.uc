@@ -61,8 +61,9 @@ function static class<ROVehicle> GetVehicleClass(DHConstruction.Context Context)
     return none;
 }
 
-// The Pak 43 is enormous and really isn't on the same level as the other guns,
-// so it's supply cost is higher.
+// The Flak 88 is very powerful due to the 360 degrees arc of fire and it's
+// ability to penetrate almost everything in the Allied arsenal, so it's cost
+// is higher.
 function static int GetSupplyCost(DHConstruction.Context Context)
 {
     if (Context.PlayerController != none)
