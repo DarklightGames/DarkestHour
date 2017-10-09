@@ -913,6 +913,11 @@ simulated function bool IsInArtilleryVehicle()
     return false;
 }
 
+simulated function bool IsInSquad()
+{
+    return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsInSquad();
+}
+
 // Modified to to spawn a DHArtillerySpawner at the strike co-ords instead of using level's NorthEastBoundsspawn to set its height
 // The spawner then simply spawns shell's a fixed height above strike location, & it doesn't need to record OriginalArtyLocation as can simply use its own location
 function ServerArtyStrike()
