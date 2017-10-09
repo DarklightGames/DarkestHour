@@ -85,7 +85,7 @@ function static vector GetPlacementOffset(DHConstruction.Context Context)
 {
     if (Context.TeamIndex == AXIS_TEAM_INDEX)
     {
-        return vect(0, 0, 0);
+        return vect(0, 0, 8);
     }
 
     return super.GetPlacementOffset(Context);
