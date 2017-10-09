@@ -64,9 +64,9 @@ function StaticMesh GetConstructedStaticMesh()
     return SupplyAttachment.GetStaticMeshForSupplyCount(Level, GetTeamIndex(), SupplyAttachment.GetSupplyCount());
 }
 
-function static StaticMesh GetProxyStaticMesh(DHConstructionProxy CP)
+function static StaticMesh GetProxyStaticMesh(DHConstruction.Context Context)
 {
-    return default.SupplyAttachmentClass.static.GetStaticMeshForSupplyCount(CP.Level, CP.PlayerOwner.GetTeamNum(), default.SupplyAttachmentClass.default.SupplyCountMax);
+    return default.SupplyAttachmentClass.static.GetStaticMeshForSupplyCount(Context.LevelInfo.Level, Context.TeamIndex, default.SupplyAttachmentClass.default.SupplyCountMax);
 }
 
 defaultproperties

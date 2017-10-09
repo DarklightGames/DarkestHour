@@ -112,11 +112,11 @@ simulated event Destroyed()
     }
 }
 
-function static GetCollisionSize(int TeamIndex, DH_LevelInfo LI, DHConstructionProxy CP, out float NewRadius, out float NewHeight)
+function static GetCollisionSize(DHConstruction.Context Context, out float NewRadius, out float NewHeight)
 {
-    super.GetCollisionSize(TeamIndex, LI, CP, NewRadius, NewHeight);
+    super.GetCollisionSize(Context, NewRadius, NewHeight);
 
-    if (CP != none && GetTerrainScale(TerrainInfo(CP.GroundActor)) > default.LargeTerrainScaleThreshold)
+    if (GetTerrainScale(TerrainInfo(Context.GroundActor)) > default.LargeTerrainScaleThreshold)
     {
         NewRadius = default.LargeTerrainScaleCollisionRadius;
     }

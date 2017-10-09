@@ -5,22 +5,46 @@
 
 class DHConstruction_ATGun_Heavy extends DHConstruction_Vehicle;
 
-function static class<ROVehicle> GetVehicleClass(int TeamIndex, DH_LevelInfo LI)
+function static class<ROVehicle> GetVehicleClass(DHConstruction.Context Context)
 {
-    switch (TeamIndex)
+    switch (Context.TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            return class'DH_Guns.DH_Pak43ATGun';
-        case ALLIES_TEAM_INDEX:
-            if (LI != none)
+            if (Context.LevelInfo != none)
             {
-                switch (LI.AlliedNation)
+                switch (Context.LevelInfo.Season)
+                {
+                    case SEASON_Spring:
+                        return class'DH_Guns.DH_Flak88Gun_Green';
+                    case SEASON_Autumn:
+                        return class'DH_Guns.DH_Flak88Gun_Tan';
+                    case SEASON_Winter:
+                        return class'DH_Guns.DH_Flak88Gun_Snow';
+                    default:
+                        break;
+                }
+
+                switch (Context.LevelInfo.Weather)
+                {
+                    case WEATHER_Snowy:
+                        return class'DH_Guns.DH_Flak88Gun';
+                    default:
+                        break;
+                }
+
+                return class'DH_Guns.DH_Flak88Gun';
+            }
+            return class'DH_Guns.DH_Flak88Gun';
+        case ALLIES_TEAM_INDEX:
+            if (Context.LevelInfo != none)
+            {
+                switch (Context.LevelInfo.AlliedNation)
                 {
                     case NATION_Britain:
                     case NATION_Canada:
                         return class'DH_Guns.DH_17PounderGun';
                     case NATION_USA:
-                        switch (LI.Weather)
+                        switch (Context.LevelInfo.Weather)
                         {
                             case WEATHER_Snowy:
                                 return class'DH_Guns.DH_M5Gun_Snow';
@@ -35,6 +59,36 @@ function static class<ROVehicle> GetVehicleClass(int TeamIndex, DH_LevelInfo LI)
     }
 
     return none;
+}
+
+// The Pak 43 is enormous and really isn't on the same level as the other guns,
+// so it's supply cost is higher.
+function static int GetSupplyCost(DHConstruction.Context Context)
+{
+    if (Context.PlayerController != none)
+    {
+        switch (Context.PlayerController.GetTeamNum())
+        {
+            case AXIS_TEAM_INDEX:
+                return 1750;
+            case ALLIES_TEAM_INDEX:
+                return 1500;
+            default:
+                break;
+        }
+    }
+
+    return 0;
+}
+
+function static vector GetPlacementOffset(DHConstruction.Context Context)
+{
+    if (Context.TeamIndex == AXIS_TEAM_INDEX)
+    {
+        return vect(0, 0, 0);
+    }
+
+    return super.GetPlacementOffset(Context);
 }
 
 defaultproperties

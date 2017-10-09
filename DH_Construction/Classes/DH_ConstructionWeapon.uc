@@ -247,6 +247,7 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
     local DHConstruction C;
     local DH_LevelInfo LI;
     local DHPawn P;
+    local DHConstruction.Context Context;
 
     P = DHPawn(Instigator);
     LI = class'DH_LevelInfo'.static.GetInstance(Level);
@@ -256,7 +257,11 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
         return;
     }
 
-    if (!P.UseSupplies(ConstructionClass.default.SupplyCost))
+    Context.TeamIndex = P.GetTeamNum();
+    Context.LevelInfo = LI;
+    Context.PlayerController = DHPlayer(P.Controller);
+
+    if (!P.UseSupplies(ConstructionClass.static.GetSupplyCost(Context)))
     {
         return;
     }

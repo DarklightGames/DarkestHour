@@ -34,6 +34,17 @@ enum EConstructionErrorType
     ERROR_Other
 };
 
+// A context object used for passing context-relevant values to functions that
+// determine various parameters of the construction.
+struct Context
+{
+    var int TeamIndex;
+    var DH_LevelInfo LevelInfo;
+    var DHPlayer PlayerController;
+    var Actor GroundActor;
+    var Object OptionalObject;
+};
+
 var struct ConstructionError
 {
     var EConstructionErrorType  Type;
@@ -88,7 +99,7 @@ var     float   TerrainScaleMax;                // The maximum terrain scale all
 var     bool    bLimitTerrainSurfaceTypes;      // If true, only allow placement on terrain surfaces types in the SurfaceTypes array
 var     array<ESurfaceTypes> TerrainSurfaceTypes;
 
-var     vector          PlacementOffset;        // 3D offset in the proxy's local-space during placement
+var private vector      PlacementOffset;        // 3D offset in the proxy's local-space during placement
 var     sound           PlacementSound;         // Sound to play when construction is first placed down
 var     float           PlacementSoundRadius;
 var     float           PlacementSoundVolume;
@@ -99,7 +110,7 @@ var     float   DuplicateFriendlyDistanceInMeters;  // The distance required bet
 var     float   DuplicateEnemyDistanceInMeters;     // The distance required between identical constructions of the same type for ENEMY constructions.
 
 // Construction
-var     int     SupplyCost;                     // The amount of supply points this construction costs
+var private int SupplyCost;                     // The amount of supply points this construction costs
 var     bool    bDestroyOnConstruction;         // If true, this actor will be destroyed after being fully constructed
 var     int     Progress;                       // The current count of progress
 var     int     ProgressMax;                    // The amount of construction points required to be built
@@ -260,13 +271,15 @@ simulated function PostBeginPlay()
 simulated function PokeTerrain(float Radius, float Depth)
 {
     local TerrainInfo TI;
-    local vector HitLocation, HitNormal, TraceEnd, TraceStart;
+    local vector HitLocation, HitNormal, TraceEnd, TraceStart, MyPlacementOffset;
+
+    MyPlacementOffset = GetPlacementOffset(GetContext());
 
     // Trace to get the terrain height at this location.
-    TraceStart = Location - GetPlacementOffset();
+    TraceStart = Location - MyPlacementOffset;
     TraceStart.Z += 1000.0;
 
-    TraceEnd = Location - GetPlacementOffset();
+    TraceEnd = Location - MyPlacementOffset;
     TraceEnd.Z -= 1000.0;
 
     foreach TraceActors(class'TerrainInfo', TI, HitLocation, HitNormal, TraceEnd, TraceStart)
@@ -630,18 +643,22 @@ function StaticMesh GetStageStaticMesh(int StageIndex)
     return none;
 }
 
-function static string GetMenuName(DHPlayer PC)
+function static string GetMenuName(DHConstruction.Context Context)
 {
     return default.MenuName;
 }
 
-function static Material GetMenuIcon(DHPlayer PC)
+function static Material GetMenuIcon(DHConstruction.Context Context)
 {
     return default.MenuIcon;
 }
 
-// TODO: this function signature is hideous
-function static GetCollisionSize(int TeamIndex, DH_LevelInfo LI, DHConstructionProxy CP, out float NewRadius, out float NewHeight)
+simulated static function int GetSupplyCost(DHConstruction.Context Context)
+{
+    return default.SupplyCost;
+}
+
+function static GetCollisionSize(DHConstruction.Context Context, out float NewRadius, out float NewHeight)
 {
     NewRadius = default.CollisionRadius;
     NewHeight = default.CollisionHeight;
@@ -655,30 +672,27 @@ function static bool ShouldShowOnMenu(DHPlayer PC)
 // This function is used for determining if a player is able to build this type
 // of construction. You can override this if you want to have a team or
 // role-specific constructions, for example.
-function static ConstructionError GetPlayerError(DHPlayer PC)
+function static ConstructionError GetPlayerError(DHConstruction.Context Context)
 {
-    local DH_LevelInfo LI;
     local DHPawn P;
     local DHConstructionManager CM;
     local DHPlayerReplicationInfo PRI;
     local DHSquadReplicationInfo SRI;
     local ConstructionError E;
 
-    if (PC == none)
+    if (Context.PlayerController == none)
     {
         E.Type = ERROR_Fatal;
         return E;
     }
 
-    LI = PC.GetLevelInfo();
-
-    if (LI != none && LI.IsConstructionRestricted(default.Class))
+    if (Context.LevelInfo != none && Context.LevelInfo.IsConstructionRestricted(default.Class))
     {
         E.Type = ERROR_RestrictedType;
         return E;
     }
 
-    P = DHPawn(PC.Pawn);
+    P = DHPawn(Context.PlayerController.Pawn);
 
     if (P == none)
     {
@@ -698,7 +712,7 @@ function static ConstructionError GetPlayerError(DHPlayer PC)
         return E;
     }
 
-    CM = class'DHConstructionManager'.static.GetInstance(PC.Level);
+    CM = class'DHConstructionManager'.static.GetInstance(P.Level);
 
     if (CM == none)
     {
@@ -706,14 +720,14 @@ function static ConstructionError GetPlayerError(DHPlayer PC)
         return E;
     }
 
-    if (default.TeamLimit > 0 && CM.CountOf(PC.GetTeamNum(), default.Class) >= default.TeamLimit)
+    if (default.TeamLimit > 0 && CM.CountOf(P.GetTeamNum(), default.Class) >= default.TeamLimit)
     {
         E.Type = ERROR_TeamLimit;
         E.OptionalInteger = default.TeamLimit;
         return E;
     }
 
-    SRI = PC.SquadReplicationInfo;
+    SRI = Context.PlayerController.SquadReplicationInfo;
     PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
 
     // TODO: in future we may allow non-squad leaders to make constructions.
@@ -723,7 +737,7 @@ function static ConstructionError GetPlayerError(DHPlayer PC)
         return E;
     }
 
-    if (PC.Level.NetMode != NM_Standalone && SRI.GetMemberCount(P.GetTeamNum(), PRI.SquadIndex) < default.SquadMemberCountMinimum)
+    if (P.Level.NetMode != NM_Standalone && SRI.GetMemberCount(P.GetTeamNum(), PRI.SquadIndex) < default.SquadMemberCountMinimum)
     {
         E.Type = ERROR_SquadTooSmall;
         E.OptionalInteger = default.SquadMemberCountMinimum;
@@ -758,7 +772,7 @@ function static UpdateProxy(DHConstructionProxy CP)
     local array<Material> StaticMeshSkins;
 
     CP.SetDrawType(DT_StaticMesh);
-    CP.SetStaticMesh(GetProxyStaticMesh(CP));
+    CP.SetStaticMesh(GetProxyStaticMesh(CP.GetContext()));
 
     StaticMeshSkins = (new class'UStaticMesh').FindStaticMeshSkins(CP.StaticMesh);
 
@@ -768,12 +782,12 @@ function static UpdateProxy(DHConstructionProxy CP)
     }
 }
 
-function static StaticMesh GetProxyStaticMesh(DHConstructionProxy CP)
+function static StaticMesh GetProxyStaticMesh(DHConstruction.Context Context)
 {
     return default.StaticMesh;
 }
 
-function static vector GetPlacementOffset()
+function static vector GetPlacementOffset(DHConstruction.Context Context)
 {
     return default.PlacementOffset;
 }
@@ -892,6 +906,30 @@ simulated function GetTerrainPokeParameters(out int Radius, out int Depth)
 {
     Radius = default.PokeTerrainRadius;
     Depth = default.PokeTerrainDepth;
+}
+
+simulated function Context GetContext()
+{
+    local DHConstruction.Context Context;
+
+    Context.TeamIndex = GetTeamIndex();
+    Context.LevelInfo = LevelInfo;
+
+    return Context;
+}
+
+static function DHConstruction.Context ContextFromPlayerController(DHPlayer PC)
+{
+    local DHConstruction.Context Context;
+
+    if (PC != none)
+    {
+        Context.TeamIndex = PC.GetTeamNum();
+        Context.LevelInfo = class'DH_LevelInfo'.static.GetInstance(PC.Level);
+        Context.PlayerController = PC;
+    }
+
+    return Context;
 }
 
 defaultproperties

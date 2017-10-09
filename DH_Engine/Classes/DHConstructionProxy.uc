@@ -50,6 +50,18 @@ function PostBeginPlay()
     }
 }
 
+function DHConstruction.Context GetContext()
+{
+    local DHConstruction.Context Context;
+
+    Context.TeamIndex = Instigator.GetTeamNum();
+    Context.LevelInfo = class'DH_LevelInfo'.static.GetInstance(Level);
+    Context.PlayerController = PlayerOwner;
+    Context.GroundActor = GroundActor;
+
+    return Context;
+}
+
 event Destroyed()
 {
     super.Destroyed();
@@ -107,7 +119,7 @@ function UpdateCollisionSize()
     if (ConstructionClass != none)
     {
         // Determine the collision size to use given the current team and level info.
-        ConstructionClass.static.GetCollisionSize(PlayerOwner.GetTeamNum(), PlayerOwner.ClientLevelInfo, self, NewRadius, NewHeight);
+        ConstructionClass.static.GetCollisionSize(GetContext(), NewRadius, NewHeight);
     }
 
     SetCollisionSize(NewRadius, NewHeight);
@@ -267,7 +279,7 @@ function Tick(float DeltaTime)
     SetLocation(L);
     SetRotation(R);
 
-    NewProxyError = ConstructionClass.static.GetPlayerError(PlayerOwner);
+    NewProxyError = ConstructionClass.static.GetPlayerError(GetContext());
 
     if (NewProxyError.Type == ERROR_None)
     {
@@ -562,7 +574,7 @@ function DHConstruction.ConstructionError GetProvisionalPosition(out vector OutL
         }
     }
 
-    OutLocation = BaseLocation + (ConstructionClass.static.GetPlacementOffset() << rotator(Forward));
+    OutLocation = BaseLocation + (ConstructionClass.static.GetPlacementOffset(GetContext()) << rotator(Forward));
     OutRotation = QuatToRotator(QuatProduct(QuatFromRotator(LocalRotation), QuatFromRotator(rotator(Forward))));
 
     if (E.Type == ERROR_None && !ConstructionClass.default.bCanPlaceIndoors)
@@ -722,7 +734,7 @@ function DHConstruction.ConstructionError GetPositionError()
     // mechanism would probably be a bad idea.
     foreach CollidingActors(class'DHConstruction', C, class'DHUnits'.static.MetersToUnreal(25.0))
     {
-        C.GetCollisionSize(C.GetTeamIndex(), PlayerOwner.ClientLevelInfo, none, OtherRadius, OtherHeight);
+        C.GetCollisionSize(C.GetContext(), OtherRadius, OtherHeight);
 
         if (VSize(Location - C.Location) < CollisionRadius + OtherRadius)
         {

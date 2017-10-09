@@ -85,18 +85,14 @@ function UpdateAppearance()
     }
 }
 
-function static StaticMesh GetProxyStaticMesh(DHConstructionProxy CP)
+function static StaticMesh GetProxyStaticMesh(DHConstruction.Context Context)
 {
-    local DH_LevelInfo LI;
-
-    LI = class'DH_LevelInfo'.static.GetInstance(CP.Level);
-
-    switch (CP.PlayerOwner.GetTeamNum())
+    switch (Context.TeamIndex)
     {
         case AXIS_TEAM_INDEX:
             return StaticMesh'DH_Construction_stc.Ammo.DH_Ger_ammo_box';
         case ALLIES_TEAM_INDEX:
-            switch (LI.AlliedNation)
+            switch (Context.LevelInfo.AlliedNation)
             {
             case NATION_USA:
                 return StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box';
@@ -110,7 +106,7 @@ function static StaticMesh GetProxyStaticMesh(DHConstructionProxy CP)
             break;
     }
 
-    return super.GetProxyStaticMesh(CP);
+    return super.GetProxyStaticMesh(Context);
 }
 
 defaultproperties

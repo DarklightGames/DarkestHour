@@ -5,12 +5,12 @@
 
 class DHConstruction_AAGun_Light extends DHConstruction_Vehicle;
 
-function static class<ROVehicle> GetVehicleClass(int TeamIndex, DH_LevelInfo LI)
+function static class<ROVehicle> GetVehicleClass(DHConstruction.Context Context)
 {
-    switch (TeamIndex)
+    switch (Context.TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            if (LI != none && LI.Season == SEASON_Winter)
+            if (Context.LevelInfo != none && Context.LevelInfo.Season == SEASON_Winter)
             {
                 return class'DH_Guns.DH_Flak38Gun_Snow';
             }
@@ -19,9 +19,9 @@ function static class<ROVehicle> GetVehicleClass(int TeamIndex, DH_LevelInfo LI)
                 return class'DH_Guns.DH_Flak38Gun';
             }
         case ALLIES_TEAM_INDEX:
-            if (LI != none && LI.AlliedNation == NATION_USA)
+            if (Context.LevelInfo != none && Context.LevelInfo.AlliedNation == NATION_USA)
             {
-                if (LI.Season == SEASON_Winter)
+                if (Context.LevelInfo.Season == SEASON_Winter)
                 {
                     return class'DH_Guns.DH_M45QuadmountGun_Snow';
                 }

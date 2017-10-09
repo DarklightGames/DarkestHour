@@ -24,7 +24,7 @@ simulated function OnTeamIndexChanged()
 {
     super.OnTeamIndexChanged();
 
-    VehicleClass = GetVehicleClass(GetTeamIndex(), LevelInfo);
+    VehicleClass = GetVehicleClass(GetContext());
 }
 
 simulated function OnConstructed()
@@ -62,7 +62,7 @@ function static UpdateProxy(DHConstructionProxy CP)
     local DHConstructionProxyAttachment CPA;
     local class<ROVehicle> VehicleClass;
 
-    VehicleClass = GetVehicleClass(CP.PlayerOwner.GetTeamNum(), CP.PlayerOwner.ClientLevelInfo);
+    VehicleClass = GetVehicleClass(CP.GetContext());
 
     CP.SetDrawType(DT_Mesh);
     CP.LinkMesh(VehicleClass.default.Mesh);
@@ -101,9 +101,9 @@ function static UpdateProxy(DHConstructionProxy CP)
     }
 }
 
-function static string GetMenuName(DHPlayer PC)
+function static string GetMenuName(DHConstruction.Context Context)
 {
-    return GetVehicleClass(PC.GetTeamNum(), PC.GetLevelInfo()).default.VehicleNameString;
+    return GetVehicleClass(Context).default.VehicleNameString;
 }
 
 function UpdateAppearance()
@@ -113,11 +113,11 @@ function UpdateAppearance()
     SetCollisionSize(VehicleClass.default.CollisionRadius, VehicleClass.default.CollisionHeight);
 }
 
-function static GetCollisionSize(int TeamIndex, DH_LevelInfo LI, DHConstructionProxy CP, out float NewRadius, out float NewHeight)
+function static GetCollisionSize(DHConstruction.Context Context, out float NewRadius, out float NewHeight)
 {
     local class<ROVehicle> VehicleClass;
 
-    VehicleClass = GetVehicleClass(TeamIndex, LI);
+    VehicleClass = GetVehicleClass(Context);
 
     if (VehicleClass != none)
     {
@@ -127,26 +127,26 @@ function static GetCollisionSize(int TeamIndex, DH_LevelInfo LI, DHConstructionP
     }
 
     // If we couldn't get the vehicle class, just fall back on to the original method.
-    super.GetCollisionSize(TeamIndex, LI, CP, NewRadius, NewHeight);
+    super.GetCollisionSize(Context, NewRadius, NewHeight);
 }
 
 // Override to get a different vehicle class based on scenario (eg. snow camo etc.)
-function static class<ROVehicle> GetVehicleClass(int TeamIndex, DH_LevelInfo LI)
+function static class<ROVehicle> GetVehicleClass(DHConstruction.Context Context)
 {
     return default.VehicleClass;
 }
 
-function static DHConstruction.ConstructionError GetPlayerError(DHPlayer PC)
+function static DHConstruction.ConstructionError GetPlayerError(DHConstruction.Context Context)
 {
     local DHConstruction.ConstructionError E;
 
-    if (GetVehicleClass(PC.GetTeamNum(), PC.GetLevelInfo()) == none)
+    if (GetVehicleClass(Context) == none)
     {
         E.Type = ERROR_Fatal;
         return E;
     }
 
-    return super.GetPlayerError(PC);
+    return super.GetPlayerError(Context);
 }
 
 defaultproperties

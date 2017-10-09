@@ -5,12 +5,12 @@
 
 class DHConstruction_ATGun_Medium extends DHConstruction_Vehicle;
 
-function static class<ROVehicle> GetVehicleClass(int TeamIndex, DH_LevelInfo LI)
+function static class<ROVehicle> GetVehicleClass(DHConstruction.Context Context)
 {
-    switch (TeamIndex)
+    switch (Context.TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            if (LI != none && LI.Season == SEASON_Autumn)
+            if (Context.LevelInfo != none && Context.LevelInfo.Season == SEASON_Autumn)
             {
                 return class'DH_Guns.DH_Pak40ATGun_CamoOne';
             }
@@ -19,7 +19,7 @@ function static class<ROVehicle> GetVehicleClass(int TeamIndex, DH_LevelInfo LI)
                 return class'DH_Guns.DH_Pak40ATGun';
             }
         case ALLIES_TEAM_INDEX:
-            if (LI != none && (LI.AlliedNation == NATION_Britain || LI.AlliedNation == NATION_Canada))
+            if (Context.LevelInfo != none && (Context.LevelInfo.AlliedNation == NATION_Britain || Context.LevelInfo.AlliedNation == NATION_Canada))
             {
                 return class'DH_Guns.DH_6PounderGun';
             }

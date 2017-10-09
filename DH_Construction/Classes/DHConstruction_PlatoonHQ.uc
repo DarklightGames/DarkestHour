@@ -116,9 +116,9 @@ function StaticMesh GetStageStaticMesh(int StageIndex)
     }
 }
 
-function static StaticMesh GetProxyStaticMesh(DHConstructionProxy CP)
+function static StaticMesh GetProxyStaticMesh(DHConstruction.Context Context)
 {
-    switch (CP.PlayerOwner.GetTeamNum())
+    switch (Context.TeamIndex)
     {
         case AXIS_TEAM_INDEX:
             return StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent';

@@ -13,6 +13,8 @@ var Material SuppliesIcon;
 var localized string NotAvailableText;
 var localized string TeamLimitText;
 
+var DHConstruction.Context Context;
+
 function Setup()
 {
     local int i, j, StartIndex;
@@ -41,6 +43,11 @@ function Setup()
         }
     }
 
+    // Establish context
+    Context.TeamIndex = PC.GetTeamNum();
+    Context.LevelInfo = class'DH_LevelInfo'.static.GetInstance(PC.Level);
+    Context.PlayerController = PC;
+
     if (GRI != none)
     {
         // TODO: magic number
@@ -48,8 +55,8 @@ function Setup()
         {
             Options.Insert(j, 1);
             Options[j].OptionalObject = ConstructionClasses[i];
-            Options[j].ActionText = ConstructionClasses[i].static.GetMenuName(PC);
-            Options[j].Material = ConstructionClasses[i].static.GetMenuIcon(PC);
+            Options[j].ActionText = ConstructionClasses[i].static.GetMenuName(Context);
+            Options[j].Material = ConstructionClasses[i].static.GetMenuIcon(Context);
             Options[j].ActionIcon = SuppliesIcon;
             ++j;
         }
@@ -125,7 +132,6 @@ function bool IsOptionDisabled(int OptionIndex)
         return true;
     }
 
-    // TODO: check what our pawn is doing, is the weapon busy or deployed??
     PC = GetPlayerController();
 
     if (PC != none && PC.Pawn != none)
@@ -142,7 +148,7 @@ function bool IsOptionDisabled(int OptionIndex)
 
     if (C != none)
     {
-        return C.static.GetPlayerError(DHPlayer(Interaction.ViewportOwner.Actor)).Type != ERROR_None;
+        return C.static.GetPlayerError(Context).Type != ERROR_None;
     }
 
     return false;
@@ -162,9 +168,9 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
     if (ConstructionClass != none && PC != none)
     {
-        E = ConstructionClass.static.GetPlayerError(PC);
+        E = ConstructionClass.static.GetPlayerError(Context);
 
-        ORI.OptionName = ConstructionClass.static.GetMenuName(PC);
+        ORI.OptionName = ConstructionClass.static.GetMenuName(Context);
 
         if (E.Type != ERROR_None)
         {
@@ -197,7 +203,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
                 break;
             default:
                 ORI.InfoIcon = SuppliesIcon;
-                ORI.InfoText = string(ConstructionClass.default.SupplyCost);
+                ORI.InfoText = string(ConstructionClass.static.GetSupplyCost(Context));
                 break;
         }
     }

@@ -18,7 +18,7 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
     if (CP != none)
     {
         Result = default.ErrorMessages[int(CP.ProxyError.Type)];
-        Result = Repl(Result, "{name}", CP.ConstructionClass.static.GetMenuName(CP.PlayerOwner));
+        Result = Repl(Result, "{name}", CP.ConstructionClass.static.GetMenuName(CP.GetContext()));
         Result = Repl(Result, "{verb}", CP.ConstructionClass.default.ConstructionVerb);
         Result = Repl(Result, "{integer}", CP.ProxyError.OptionalInteger);
         Result = Repl(Result, "{string}", CP.ProxyError.OptionalString);
