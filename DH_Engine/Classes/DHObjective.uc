@@ -85,7 +85,6 @@ var(DHObjectiveVisual) bool         bHideOnMapWhenInactive;
 var(DHObjectiveVisual) bool         bHideLabelWhenInactive;
 
 // Award variables
-var(DHObjectiveAwards) bool         bResetDeathPenalties;        // will reset all players death penalty counts
 var(DHObjectiveAwards) int          AlliedAwardedReinforcements; // Amount of reinforcement to award for allies if the obj is captured
 var(DHObjectiveAwards) int          AxisAwardedReinforcements;   // Amount of reinforcement to award for axis if the obj is captured
 var(DHObjectiveAwards) int          MinutesAwarded;              // Time in minutes awarded to round time when objective is captured
@@ -1198,6 +1197,5 @@ defaultproperties
     Texture=Texture'DHEngine_Tex.Objective'
     bVehiclesCanCapture=true
     bTankersCanCapture=true
-    bResetDeathPenalties=true
     PlayersNeededToCapture=1
 }
