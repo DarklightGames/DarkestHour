@@ -615,7 +615,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
                 BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(1, Team), none, none, self);
             }
         }
-        // Otherwise don't inform that it was captured, as timer will hangle notification from here
+        // Otherwise don't inform that it was captured, as timer will handle notification from here
     }
     else
     {
