@@ -188,21 +188,21 @@ defaultproperties
 {
     Begin Object Class=DHGUIButton Name=LockSquadButton
         StyleName="DHSmallTextButtonStyle"
-        WinWidth=0.2
-        WinHeight=0.1
-        WinLeft=0.0
-        WinTop=0.0
+        WinWidth=0.15
+        WinHeight=0.075
+        WinLeft=0.1
+        WinTop=0.05
         OnClick=OnClick
     End Object
     b_LockSquad=LockSquadButton
 
     Begin Object class=GUIImage Name=LockSquadImage
-        WinWidth=0.1
-        WinHeight=0.05
-        WinLeft=0.05
-        WinTop=0.025
+        WinWidth=0.15
+        WinHeight=0.075
+        WinLeft=0.1
+        WinTop=0.05
         Image=Texture'DH_InterfaceArt2_tex.Icons.lock'
-        ImageColor=(R=255,G=255,B=255,A=255);
+        ImageColor=(R=255,G=255,B=255,A=255)
         ImageRenderStyle=MSTY_Alpha
         ImageStyle=ISTY_Justified
         ImageAlign=ISTY_Center
@@ -296,7 +296,7 @@ defaultproperties
         WinWidth=1.0
         WinHeight=0.15
         WinLeft=0.0
-        WinTop=0.85
+        WinTop=0.80
         OnClick=OnClick
     End Object
     b_LeaveSquad=LeaveSquadButton
@@ -308,7 +308,7 @@ defaultproperties
         WinWidth=1.0
         WinHeight=0.15
         WinLeft=0.0
-        WinTop=0.85
+        WinTop=0.80
         OnClick=OnClick
     End Object
     b_JoinSquad=JoinSquadButton
