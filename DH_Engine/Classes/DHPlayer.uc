@@ -5305,6 +5305,11 @@ simulated function string GetDefaultActiveChannel()
     }
 }
 
+exec function GiveCamera()
+{
+    Pawn.GiveWeapon("DH_Construction.DHCameraWeapon");
+}
+
 defaultproperties
 {
     CorpseStayTime=32
