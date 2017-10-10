@@ -1563,18 +1563,15 @@ function UpdateSquads()
             }
         }
 
-        if (!bIsInSquad)
-        {
-            bCanJoinSquad = !bIsInSquad && (!bIsSquadFull && !bIsSquadLocked);
+        bCanJoinSquad = !bIsInASquad && (!bIsSquadFull && !bIsSquadLocked);
 
-            if (bCanJoinSquad)
-            {
-                C.b_JoinSquad.EnableMe();
-            }
-            else
-            {
-                C.b_JoinSquad.DisableMe();
-            }
+        if (bCanJoinSquad)
+        {
+            C.b_JoinSquad.EnableMe();
+        }
+        else
+        {
+            C.b_JoinSquad.DisableMe();
         }
 
         C.b_LockSquad.SetVisibility(bIsSquadLeader);
