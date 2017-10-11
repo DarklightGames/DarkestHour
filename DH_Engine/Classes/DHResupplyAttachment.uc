@@ -116,20 +116,12 @@ function Timer()
             {
                 //Add him into our resupply list.
                 ResupplyActors[ResupplyActors.Length] = P;
-
-                if (!P.bTouchingResupply)
-                {
-                    P.bTouchingResupply = true;
-                }
+                P.bTouchingResupply = true;
             }
-            else if (V != none && (ResupplyType == RT_Vehicles || ResupplyType == RT_All))
+            else if (V != none && V != Base && (ResupplyType == RT_Vehicles || ResupplyType == RT_All))
             {
                 ResupplyActors[ResupplyActors.Length] = V;
-
-                if (!V.bTouchingResupply)
-                {
-                    V.bTouchingResupply = true;
-                }
+                V.bTouchingResupply = true;
             }
 
             if (Level.TimeSeconds - recvr.LastResupplyTime >= UpdateTime)
@@ -237,32 +229,23 @@ event Touch(Actor Other)
     local ROPawn ROP;
     local Vehicle V;
 
-    ROP = ROPawn(Other);
-    V = Vehicle(Other);
-
     // This stops us from the vehicle resupplying itself.
     if (Base != none && Base == Other)
     {
         return;
     }
 
-    if (ROP != none)
+    ROP = ROPawn(Other);
+    V = Vehicle(Other);
+
+    if (ROP != none && (ROP.GetTeamNum() == TeamIndex || TeamIndex == NEUTRAL_TEAM_INDEX))
     {
-        if (TeamIndex == NEUTRAL_TEAM_INDEX ||
-           (ROP.PlayerReplicationInfo != none &&
-            ROP.PlayerReplicationInfo.Team != none &&
-            ROP.PlayerReplicationInfo.Team.TeamIndex == TeamIndex))
-        {
-            ROP.bTouchingResupply = true;
-        }
+        ROP.bTouchingResupply = true;
     }
 
-    if (V != none)
+    if (V != none && (V.GetTeamNum() == TeamIndex || TeamIndex == NEUTRAL_TEAM_INDEX))
     {
-        if (TeamIndex == NEUTRAL_TEAM_INDEX || V.GetTeamNum() == TeamIndex)
-        {
-            V.EnteredResupply();
-        }
+        V.EnteredResupply();
     }
 }
 
