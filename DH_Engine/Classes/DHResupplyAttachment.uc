@@ -219,11 +219,6 @@ event Destroyed()
 
     for (i = 0; i < ResupplyActors.Length; ++i)
     {
-        if (ResupplyActors[i] == none)
-        {
-            continue;
-        }
-
         P = ResupplyActors[i];
 
         if (DHPawn(P) != none)
