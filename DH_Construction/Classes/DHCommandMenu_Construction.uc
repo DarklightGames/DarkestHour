@@ -12,6 +12,7 @@ var Material SuppliesIcon;
 
 var localized string NotAvailableText;
 var localized string TeamLimitText;
+var localized string MoreText;
 
 var DHConstruction.Context Context;
 
@@ -68,7 +69,7 @@ function Setup()
             Options.Length = Options.Length - 1;
             Options.Insert(0, 1);
             Options[0].OptionalObject = class'UInteger'.static.Create(i - 1);
-            Options[0].ActionText = "...";
+            Options[0].ActionText = MoreText;
             Options[0].Material = Texture'DH_InterfaceArt2_tex.Icons.ellipses';
         }
     }
@@ -222,6 +223,7 @@ defaultproperties
     SuppliesIcon=Texture'DH_InterfaceArt2_tex.Icons.supply_cache'
     NotAvailableText="Not Available"
     TeamLimitText="Limit Reached"
+    MoreText="More..."
     SlotCountOverride=8
 }
 
