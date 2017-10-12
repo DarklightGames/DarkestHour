@@ -98,7 +98,7 @@ function Timer()
 
     ResupplyActors.Remove(0, ResupplyActors.Length);
 
-    foreach VisibleCollidingActors(class'Pawn', recvr, 300.0)
+    foreach RadiusActors(class'Pawn', recvr, CollisionRadius)
     {
         // This stops us from the vehicle resupplying itself.
         if (Base != none && Base == P)
