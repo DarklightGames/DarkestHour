@@ -123,6 +123,7 @@ var     localized string    NeedReloadText;
 var     localized string    CanReloadText;
 var     localized string    CaptureBarUnlockText;
 var     localized string    NeedsClearedText;
+var     localized string    BlackoutText;
 
 // User-configurable HUD settings
 var     globalconfig bool   bSimpleColours;         // for colourblind setting, i.e. red and blue only
@@ -604,15 +605,192 @@ static function Font GetPlayerNameFont(Canvas C)
     return LoadFontStatic(Min(8, FontSize));
 }
 
-// Modified to set a reference to the DHGRI, as soon as we can (can't do it in a BeginPlay event as net client won't yet have received GRI)
+// This is more or less just a re-stating of the ROHud function with a couple of
+// minor adjustments.
 event PostRender(Canvas Canvas)
 {
+    local float XPos, YPos;
+    local plane OldModulate,OM;
+    local color OldColor;
+    local int i;
+
+    // Modified to update the DHGRI instance
     if (DHGRI == none && PlayerOwner != none)
     {
         DHGRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
     }
 
-    super.PostRender(Canvas);
+    BuildMOTD();
+
+    OldModulate = Canvas.ColorModulate;
+    OldColor = Canvas.DrawColor;
+
+    Canvas.ColorModulate.X = 1;
+    Canvas.ColorModulate.Y = 1;
+    Canvas.ColorModulate.Z = 1;
+    Canvas.ColorModulate.W = HudOpacity / 255;
+
+    LinkActors();
+
+    ResScaleX = Canvas.SizeX / 640.0;
+    ResScaleY = Canvas.SizeY / 480.0;
+
+    CheckCountDown(PlayerOwner.GameReplicationInfo);
+
+    if (bFadeToBlack)
+    {
+        DrawFadeToBlack(Canvas);
+    }
+
+    if (PawnOwner != none && PawnOwner.bSpecialHUD)
+    {
+        PawnOwner.DrawHud(Canvas);
+    }
+
+    if (bShowDebugInfo)
+    {
+        Canvas.Font = GetConsoleFont(Canvas);
+        Canvas.Style = ERenderStyle.STY_Alpha;
+        Canvas.DrawColor = ConsoleColor;
+
+        PlayerOwner.ViewTarget.DisplayDebug(Canvas, XPos, YPos);
+
+        if (PlayerOwner.ViewTarget != PlayerOwner && (Pawn(PlayerOwner.ViewTarget) == none || Pawn(PlayerOwner.ViewTarget).Controller == none))
+        {
+            YPos += XPos * 2;
+            Canvas.SetPos(4, YPos);
+            Canvas.DrawText("----- VIEWER INFO -----");
+            YPos += XPos;
+            Canvas.SetPos(4, YPos);
+            PlayerOwner.DisplayDebug(Canvas, XPos, YPos);
+        }
+    }
+    else if (!bHideHud)
+    {
+        if (bShowScoreBoard)
+        {
+            DrawFadeEffect(Canvas);
+
+            if (ScoreBoard != none)
+            {
+                OM = Canvas.ColorModulate;
+                Canvas.ColorModulate = OldModulate;
+                ScoreBoard.DrawScoreboard(Canvas);
+
+                if (Scoreboard.bDisplayMessages)
+                {
+                    DisplayMessages(Canvas);
+                }
+
+                Canvas.ColorModulate = OM;
+            }
+        }
+        else
+        {
+            // Modified to only show the spectating HUD if we are actually
+            // spectating, not if we are dead and viewing from first-person.
+            if (PlayerOwner != none && PlayerOwner.IsSpectating())
+            {
+                DrawSpectatingHud(Canvas);
+            }
+            else if (PawnOwner != none && !PawnOwner.bHideRegularHUD)
+            {
+                DrawHud(Canvas);
+            }
+
+            for (i = 0; i < Overlays.Length; ++i)
+            {
+                Overlays[i].Render(Canvas);
+            }
+
+            if (!DrawLevelAction(Canvas))
+            {
+                if (PlayerOwner != none)
+                {
+                    if (PlayerOwner.ProgressTimeOut > Level.TimeSeconds)
+                    {
+                        DisplayProgressMessages(Canvas);
+                    }
+                    else if (MOTDState == 1)
+                    {
+                        MOTDState = 2;
+                    }
+                }
+           }
+
+            if (bShowBadConnectionAlert)
+            {
+                DisplayBadConnectionAlert(Canvas);
+            }
+
+            DisplayMessages(Canvas);
+
+        }
+
+        if (bShowVoteMenu && VoteMenu != none)
+        {
+            VoteMenu.RenderOverlays(Canvas);
+        }
+    }
+    else if (PawnOwner != none)
+    {
+        DrawInstructionGfx(Canvas);
+    }
+
+    // Draw fade effects even if the hud is hidden so poeple can't just turn off thier hud
+    if (bHideHud)
+    {
+        Canvas.Style = ERenderStyle.STY_Alpha;
+        DrawFadeEffect(Canvas);
+    }
+
+    // Render situation map on top of everything (so that
+    // it can anim in/out without looking like ass)
+    if (bShowObjectives || bAnimateMapIn || bAnimateMapOut)
+    {
+        DrawObjectives(Canvas);
+    }
+
+    PlayerOwner.RenderOverlays(Canvas);
+
+    if (PlayerOwner.bViewingMatineeCinematic)
+    {
+        DrawCinematicHUD(Canvas);
+    }
+
+    if (bDrawHint && !bHideHud)
+    {
+        DrawHint(Canvas);
+    }
+
+    if (Level.Pauser != none)
+    {
+        DrawPaused(Canvas);
+    }
+
+    if (PlayerConsole != none && PlayerConsole.bTyping)
+    {
+        DrawTypingPrompt(Canvas, PlayerConsole.TypedStr, PlayerConsole.TypedStrPos);
+    }
+
+    if (bCapturingMouse)
+    {
+        MouseInterfaceDrawCursor(Canvas);
+    }
+
+    Canvas.ColorModulate = OldModulate;
+    Canvas.DrawColor = OldColor;
+
+    HudLastRenderTime = Level.TimeSeconds;
+
+    if (GUIController(PlayerOwner.Player.GUIController).bLCDAvailable())
+    {
+        if (Level.TimeSeconds - LastLCDUpdateTime > LCDUpdateFreq)
+        {
+            LastLCDUpdateTime = Level.TimeSeconds;
+            DrawLCDUpdate(Canvas);
+        }
+    }
 }
 
 // DrawHudPassC - Draw all the widgets here
@@ -4386,13 +4564,18 @@ function UpdateMapIconLabelCoords(FloatBox LabelCoords, ROGameReplicationInfo GR
     DHGRI.DHObjectives[CurrentObj].LabelCoords = LabelCoords;
 }
 
+function bool IsBlackedOut()
+{
+    return FadeColor.R == 0 && FadeColor.G == 0 && FadeColor.B == 0 && FadeColor.A == 255 && FadeTime == 0;
+}
+
 // Modified to show respawn time for deploy system
 function DrawSpectatingHud(Canvas C)
 {
     local DHPlayerReplicationInfo PRI;
     local DHSpawnPointBase   SP;
     local DHPlayer                PC;
-    local float  Scale, X, Y, strX, strY, NameWidth, SmallH, XL;
+    local float  Scale, X, Y, StrX, StrY, NameWidth, SmallH, XL;
     local int    Time;
     local string s;
     local bool bShouldFlashText;
@@ -4429,7 +4612,7 @@ function DrawSpectatingHud(Canvas C)
 
         C.DrawColor = WhiteColor;
         C.Font = GetConsoleFont(C);
-        C.TextSize(s, strX, strY);
+        C.TextSize(s, StrX, StrY);
         C.SetPos(X, Y);
         C.DrawTextClipped(s);
 
@@ -4515,7 +4698,7 @@ function DrawSpectatingHud(Canvas C)
             }
         }
 
-        Y += 4.0 * Scale + strY;
+        Y += 4.0 * Scale + StrY;
 
         // Flash the "Press ESC to select a spawn point" message to make it more noticeable.
         if (bShouldFlashText)
@@ -4533,69 +4716,72 @@ function DrawSpectatingHud(Canvas C)
         S = ViewingText $ PawnOwner.PlayerReplicationInfo.PlayerName;
         C.DrawColor = WhiteColor;
         C.Font = GetConsoleFont(C);
-        C.TextSize(S, strX, strY);
-        C.SetPos(C.ClipX / 2.0 - strX / 2.0, C.ClipY - 8.0 * Scale - strY);
+        C.TextSize(S, StrX, StrY);
+        C.SetPos(C.ClipX / 2.0 - StrX / 2.0, C.ClipY - 8.0 * Scale - StrY);
         C.DrawTextClipped(S);
     }
 
-    // Rough spectate hud stuff // TODO: refine this so its not so plain
+    // Rough spectate hud stuff
     if (PC != none)
     {
-        S = PC.GetSpecModeDescription();
         C.DrawColor = WhiteColor;
         C.Font = GetLargeMenuFont(C);
-
         X = C.ClipX * 0.5;
         Y = C.ClipY * 0.1;
-
-        C.TextSize(S, strX, strY);
-        C.SetPos(X - strX / 2.0, Y  - strY);
+        S = PC.GetSpecModeDescription();
+        C.TextSize(S, StrX, StrY);
+        C.SetPos(X - StrX / 2.0, Y  - StrY);
         C.DrawTextClipped(S);
 
-        // Draw line 1
-        S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(SpectateInstructionText1, PC);
-        C.Font = GetConsoleFont(C);
+        if (IsBlackedOut())
+        {
+            // Indicate that the current view is being blacked out
+            Y += StrY;
+            C.Font = GetConsoleFont(C);
+            S = "(" $ Caps(BlackoutText) @ ")";
+            C.TextSize(S, StrX, StrY);
+            C.SetPos(X - StrX / 2.0, Y  - StrY);
+            C.DrawTextClipped(S);
+        }
 
         X = C.ClipX * 0.5;
         Y = C.ClipY * 0.9;
 
-        C.TextSize(S, strX, strY);
-        C.SetPos(X - strX / 2.0, Y  - strY);
-        C.DrawTextClipped(S);
+        C.Font = GetConsoleFont(C);
 
-        // Draw line 2
-        S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(SpectateInstructionText2, PC);
-        X = C.ClipX * 0.5;
-        Y += strY + (3.0 * Scale);
+        if (!IsBlackedOut() && (PC.SpecMode == SPEC_Players || PC.SpecMode == SPEC_ViewPoints))
+        {
+            S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(SpectateInstructionText1, PC);
+            C.TextSize(S, StrX, StrY);
+            C.SetPos(X - StrX / 2.0, Y - StrY);
+            C.DrawTextClipped(S);
+            Y += StrY + (3.0 * Scale);
+        }
 
-        C.TextSize(S, strX, strY);
-        C.SetPos(X - strX / 2.0, Y  - strY);
-        C.DrawTextClipped(S);
+        if (PC.GetValidSpecModeCount() > 1)
+        {
+            S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(SpectateInstructionText2, PC);
+            C.TextSize(S, StrX, StrY);
+            C.SetPos(X - StrX / 2.0, Y - StrY);
+            C.DrawTextClipped(S);
+            Y += StrY + (3.0 * Scale);
+        }
 
-        // Draw line 3
-        S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(SpectateInstructionText3, PC);
-        X = C.ClipX * 0.5;
-        Y += strY + (3.0 * Scale);
-
-        C.TextSize(S, strX, strY);
-        C.SetPos(X - strX / 2.0, Y  - strY);
-        C.DrawTextClipped(S);
-
-        // Draw line 4
-        S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(SpectateInstructionText4, PC);
-        X = C.ClipX * 0.5;
-        Y += strY + (3.0 * Scale);
-
-        C.TextSize(S, strX, strY);
-        C.SetPos(X - strX / 2.0, Y  - strY);
-        C.DrawTextClipped(S);
+        if (PC.SpecMode == SPEC_Players && !PC.bFirstPersonSpectateOnly)
+        {
+            S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(SpectateInstructionText3, PC);
+            C.TextSize(S, StrX, StrY);
+            C.SetPos(X - StrX / 2.0, Y - StrY);
+            C.DrawTextClipped(S);
+            Y += StrY + (3.0 * Scale);
+        }
     }
 
     // Draw the players name large if they are viewing someone else in first person
     if (PawnOwner != none && PawnOwner != PlayerOwner.Pawn && PawnOwner.PlayerReplicationInfo != none && !PlayerOwner.bBehindView)
     {
         C.Font = GetMediumFontFor(C);
-        C.SetDrawColor(255, 255, 0, 255);
+        C.DrawColor = GetPlayerColor(PawnOwner.PlayerReplicationInfo);
         C.StrLen(PawnOwner.PlayerReplicationInfo.PlayerName, NameWidth, SmallH);
         NameWidth = FMax(NameWidth, 0.15 * C.ClipX);
 
@@ -5350,4 +5536,5 @@ defaultproperties
     SpectateInstructionText2="Press [%ALTFIRE%] to switch Spectating Modes"
     SpectateInstructionText3="Press [%ROIRONSIGHTS%] to toggle First/Third Person View"
     SpectateInstructionText4="Press [%JUMP%] to return to viewing yourself"
+    BlackoutText="Blackout"
 }

@@ -180,6 +180,14 @@ simulated event PostBeginPlay()
         // Set bUsingController based on the UseJoystick setting
         bUsingController = bool(ConsoleCommand("get ini:Engine.Engine.ViewportManager UseJoystick"));
     }
+
+    // This forces the player to choose a valid spectator mode instead of
+    // immediately defaulting to "self" which has no contextual relevance when
+    // you are a brand new player.
+    if (Role == ROLE_Authority)
+    {
+        ServerChangeSpecMode();
+    }
 }
 
 simulated event PostNetBeginPlay()
@@ -1169,6 +1177,10 @@ ignores SeePlayer, HearNoise, NotifyBump, TakeDamage, PhysicsVolumeChange, Switc
             // initialized after the Player variables have been set
             UpdateHintManagement(bShowHints);
         }
+    }
+
+    exec function Jump( optional float F )
+    {
     }
 }
 
@@ -2867,9 +2879,9 @@ Begin:
 
 state DeadSpectating
 {
-ignores SwitchWeapon, RestartLevel, ClientRestart, Suicide, ThrowWeapon, NotifyPhysicsVolumeChange, NotifyHeadVolumeChange;
+    ignores SwitchWeapon, RestartLevel, ClientRestart, Suicide, ThrowWeapon, NotifyPhysicsVolumeChange, NotifyHeadVolumeChange;
 
-     function BeginState()
+    function BeginState()
     {
         super.BeginState();
 
@@ -2878,6 +2890,10 @@ ignores SwitchWeapon, RestartLevel, ClientRestart, Suicide, ThrowWeapon, NotifyP
             DeployMenuStartMode = MODE_Map;
             ClientProposeMenu("DH_Interface.DHDeployMenu");
         }
+    }
+
+    exec function Jump(optional float F)
+    {
     }
 }
 
@@ -5305,6 +5321,163 @@ simulated function string GetDefaultActiveChannel()
     else
     {
         return super.GetDefaultActiveChannel();
+    }
+}
+
+// Returns true if there are players to spectate.
+function bool PlayersToSpectate()
+{
+    local Controller C;
+
+    // Make sure there are players we can spectate. If not, leave the players
+    // looking at their corpse.
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        if (C != self && Level.Game.CanSpectate(self, PlayerReplicationInfo.bOnlySpectator, C))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// Modified to eliminate a bug where the user could spectate controllers that
+// didn't have pawns.
+function ServerViewNextPlayer()
+{
+    local Controller C, NewTarget;
+    local bool bFound, bRealSpec, bWasSpec;
+
+    bRealSpec = PlayerReplicationInfo.bOnlySpectator;
+    bWasSpec = !bBehindView && ViewTarget != Pawn && ViewTarget != self;
+    PlayerReplicationInfo.bOnlySpectator = true;
+
+    // This loop finds the next controller to view.
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        if (C.Pawn != none && Level.Game.CanSpectate(self, bRealSpec, C))
+        {
+            if (NewTarget == none)
+            {
+                // Set the new target to the first valid spectator thing that
+                // we find. This is necessary so that we can effectively "loop"
+                // once we've reached the end of the list.
+                NewTarget = C;
+            }
+
+            if (bFound)
+            {
+                // We found our previous view target last iteration, so this
+                // is the real deal now!
+                NewTarget = C;
+                break;
+            }
+            else
+            {
+                // Check if this controller is our current one, if it is, mark
+                // bFound as true so that we can get a new target after.
+                bFound = RealViewTarget == C || ViewTarget == C;
+            }
+        }
+    }
+
+    SetViewTarget(NewTarget);
+    ClientSetViewTarget(NewTarget);
+
+    if (Vehicle(ViewTarget) != none)
+    {
+        // First person view doesn't look right for these.
+        bBehindView = true;
+    }
+    else if (ViewTarget == self || bWasSpec || ROTeamGame(Level.Game).bSpectateFirstPersonOnly)
+    {
+        bBehindView = false;
+    }
+    else
+    {
+        bBehindView = true;
+    }
+
+    ClientSetBehindView(bBehindView);
+
+    PlayerReplicationInfo.bOnlySpectator = bRealSpec;
+}
+
+function int GetValidSpecModeCount()
+{
+    local ESpectatorMode Mode;
+    local int Count;
+
+    Mode = SPEC_Self;
+
+    do
+    {
+        if (IsSpecModeValid(Mode))
+        {
+            ++Count;
+        }
+
+        Mode = ESpectatorMode((int(Mode) + 1) % 4);
+    }
+    until (Mode == SPEC_Self);
+
+    return Count;
+}
+
+function bool IsSpecModeValid(ESpectatorMode Mode)
+{
+    local ROTeamGame ROG;
+
+    ROG = ROTeamGame(Level.Game);
+
+    if (Mode == SPEC_Self)
+    {
+        return !ROG.bSpectateBlackoutWhenNotViewingPlayers && Pawn != none && PlayerReplicationInfo != none && !PlayerReplicationInfo.bOnlySpectator;
+    }
+    else if (Mode == SPEC_Roaming)
+    {
+        return !ROG.bSpectateBlackoutWhenNotViewingPlayers && ROG.bSpectateAllowRoaming && (!IsDead() || (ROG.bSpectateAllowDeadRoaming && !ROG.bSpectateBlackoutWhenDead));
+    }
+    else if (Mode == SPEC_Players)
+    {
+        return PlayersToSpectate();
+    }
+    else if (Mode == SPEC_ViewPoints)
+    {
+        return !ROG.bSpectateBlackoutWhenNotViewingPlayers && ROG.bSpectateAllowViewPoints && ROG.ViewPoints.Length > 0;
+    }
+
+    return false;
+}
+
+// get the next valid spectator mode based on the servers settings
+function ESpectatorMode GetNextValidSpecMode()
+{
+    local ESpectatorMode NextSpecMode;
+
+    NextSpecMode = SpecMode;
+
+    do
+    {
+        NextSpecMode = ESpectatorMode((int(NextSpecMode) + 1) % 4);
+
+        if (IsSpecModeValid(NextSpecMode))
+        {
+            break;
+        }
+    }
+    until (NextSpecMode == SpecMode);
+
+    return NextSpecMode;
+}
+
+state Spectating
+{
+    ignores SwitchWeapon, RestartLevel, ClientRestart, Suicide, ThrowWeapon, NotifyPhysicsVolumeChange, NotifyHeadVolumeChange;
+
+    exec function Jump(optional float F)
+    {
     }
 }
 
