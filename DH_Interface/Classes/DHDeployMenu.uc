@@ -347,6 +347,8 @@ function UpdateRoundStatus()
         if (GRI.bIsInSetupPhase)
         {
             l_Reinforcements.Caption = "???";
+            l_Reinforcements.TextColor = class'UColor'.default.White;
+            i_Reinforcements.ImageColor = class'UColor'.default.White;
         }
         else if (GRI.SpawnsRemaining[CurrentTeam] == -1)
         {
@@ -1390,7 +1392,7 @@ function bool InternalOnPreDraw(Canvas C)
     {
         AttritionRate = GRI.AttritionRate[CurrentTeam];
 
-        if (AttritionRate > 0.0)
+        if (!GRI.bIsInSetupPhase && AttritionRate > 0.0)
         {
             // TODO: convert to a material so we don't have to
             // make the alpha calculations ourself in script.
