@@ -39,9 +39,12 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_StuartCannonShellHE'
     TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'
     ProjectileDescriptions(2)="Canister"
-    InitialPrimaryAmmo=20 // TODO: confirm loadout, but was 50 rounds total
-    InitialSecondaryAmmo=20
+    InitialPrimaryAmmo=20
+    InitialSecondaryAmmo=8
     InitialTertiaryAmmo=10
+    MaxPrimaryAmmo=24
+    MaxSecondaryAmmo=16
+    MaxTertiaryAmmo=10
     SecondarySpread=0.00145
     TertiarySpread=0.04
 

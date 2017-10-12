@@ -44,9 +44,12 @@ defaultproperties
     TertiaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShellHE'
     ProjectileDescriptions(1)="HVAP"
     ProjectileDescriptions(2)="HE"
-    InitialPrimaryAmmo=32
-    InitialSecondaryAmmo=6
-    InitialTertiaryAmmo=10
+    InitialPrimaryAmmo=30
+    InitialSecondaryAmmo=4
+    InitialTertiaryAmmo=5
+    MaxPrimaryAmmo=32
+    MaxSecondaryAmmo=6
+    MaxTertiaryAmmo=10
     SecondarySpread=0.0011
     TertiarySpread=0.00125
 

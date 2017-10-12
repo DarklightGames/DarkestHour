@@ -24,9 +24,12 @@ defaultproperties
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="Smoke"
     ProjectileDescriptions(2)="HEAT"
-    InitialPrimaryAmmo=23
-    InitialSecondaryAmmo=23
-    InitialTertiaryAmmo=5
+    InitialPrimaryAmmo=14
+    InitialSecondaryAmmo=8
+    InitialTertiaryAmmo=4
+    MaxPrimaryAmmo=23
+    MaxSecondaryAmmo=12
+    MaxTertiaryAmmo=5
     Spread=0.0036
     SecondarySpread=0.0036
     TertiarySpread=0.0036

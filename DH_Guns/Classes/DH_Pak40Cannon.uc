@@ -28,8 +28,10 @@ defaultproperties
     ProjectileClass=class'DH_Guns.DH_Pak40CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_Pak40CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_Pak40CannonShellHE'
-    InitialPrimaryAmmo=50
-    InitialSecondaryAmmo=42
+    InitialPrimaryAmmo=20
+    InitialSecondaryAmmo=10
+    MaxPrimaryAmmo=50
+    MaxSecondaryAmmo=42
     SecondarySpread=0.00127
 
     // Weapon fire

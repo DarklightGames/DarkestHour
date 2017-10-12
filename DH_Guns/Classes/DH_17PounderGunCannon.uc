@@ -29,8 +29,10 @@ defaultproperties
     ProjectileClass=class'DH_Guns.DH_17PounderCannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_17PounderCannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_17PounderCannonShellHE'
-    InitialPrimaryAmmo=60
-    InitialSecondaryAmmo=30
+    InitialPrimaryAmmo=20
+    InitialSecondaryAmmo=8
+    MaxPrimaryAmmo=60
+    MaxSecondaryAmmo=30
     SecondarySpread=0.00156
 
     // Weapon fire

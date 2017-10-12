@@ -20,9 +20,12 @@ defaultproperties
     TertiaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShellHE'
     ProjectileDescriptions(1)="APCR"
     ProjectileDescriptions(2)="HE"
-    InitialPrimaryAmmo=35
-    InitialSecondaryAmmo=5
-    InitialTertiaryAmmo=15
+    InitialPrimaryAmmo=30
+    InitialSecondaryAmmo=4
+    InitialTertiaryAmmo=7
+    MaxPrimaryAmmo=35
+    MaxSecondaryAmmo=5
+    MaxTertiaryAmmo=15
     SecondarySpread=0.00165
     TertiarySpread=0.0012
 

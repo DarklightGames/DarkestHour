@@ -30,6 +30,8 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Guns.DH_AT57CannonShellHE'  // TODO: REPLACE
     InitialPrimaryAmmo=60  // TODO: REPLACE
     InitialSecondaryAmmo=25  // TODO: REPLACE
+    MaxPrimaryAmmo=60
+    MaxSecondaryAmmo=25
     SecondarySpread=0.00125  // TODO: REPLACE
 
     // Weapon fire

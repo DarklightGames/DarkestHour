@@ -34,9 +34,12 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_Stug3GCannonShellHE'
     TertiaryProjectileClass=class'DH_Vehicles.DH_Stug3GCannonShellSmoke'
     ProjectileDescriptions(2)="Smoke"
-    InitialPrimaryAmmo=27
-    InitialSecondaryAmmo=23
-    InitialTertiaryAmmo=5
+    InitialPrimaryAmmo=25
+    InitialSecondaryAmmo=16
+    InitialTertiaryAmmo=4
+    MaxPrimaryAmmo=27
+    MaxSecondaryAmmo=23
+    MaxTertiaryAmmo=5
     SecondarySpread=0.00127
     TertiarySpread=0.00357
 

@@ -13,6 +13,8 @@ defaultproperties
     Skins(0)=Texture'DH_Artillery_Tex.Pak40.Pak40_camo'
     InitialPrimaryAmmo=12
     InitialSecondaryAmmo=10
+    MaxPrimaryAmmo=12
+    MaxSecondaryAmmo=10
     MaxPositiveYaw=2400
     MaxNegativeYaw=-5100
     YawStartConstraint=-5300

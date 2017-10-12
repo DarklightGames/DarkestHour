@@ -23,8 +23,10 @@ defaultproperties
     ProjectileClass=class'DH_Guns.DH_Flak88CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_Flak88CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_Flak88CannonShellHE'
-    InitialPrimaryAmmo=50
-    InitialSecondaryAmmo=42
+    InitialPrimaryAmmo=20
+    InitialSecondaryAmmo=10
+    MaxPrimaryAmmo=50
+    MaxSecondaryAmmo=42
     SecondarySpread=0.00125
 
     // Weapon fire

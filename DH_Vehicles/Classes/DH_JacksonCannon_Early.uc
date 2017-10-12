@@ -13,6 +13,8 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShellAP'
     ProjectileDescriptions(1)="AP"
     InitialPrimaryAmmo=25
-    InitialSecondaryAmmo=13
+    InitialSecondaryAmmo=12
+    MaxPrimaryAmmo=25
+    MaxSecondaryAmmo=13
     WeaponFireOffset=16.5
 }

@@ -40,8 +40,10 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShellHE'
     ProjectileDescriptions(0)="APBC"
-    InitialPrimaryAmmo=27
-    InitialSecondaryAmmo=50
+    InitialPrimaryAmmo=25
+    InitialSecondaryAmmo=25
+    MaxPrimaryAmmo=27
+    MaxSecondaryAmmo=50
     SecondarySpread=0.002
 
     // Coaxial MG ammo

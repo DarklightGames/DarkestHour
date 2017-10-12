@@ -55,9 +55,12 @@ defaultproperties
     TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellHE'
     ProjectileDescriptions(1)="HVAP"
     ProjectileDescriptions(2)="HE"
-    InitialPrimaryAmmo=43
+    InitialPrimaryAmmo=40
     InitialSecondaryAmmo=2
-    InitialTertiaryAmmo=26
+    InitialTertiaryAmmo=13
+    MaxPrimaryAmmo=43
+    MaxSecondaryAmmo=2
+    MaxTertiaryAmmo=26
     SecondarySpread=0.001
     TertiarySpread=0.00135
 

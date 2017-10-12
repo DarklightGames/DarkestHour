@@ -13,7 +13,8 @@ defaultproperties
     Skins(2)=Texture'axis_vehicles_tex.int_vehicles.panzer3_int'
     HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.panzer3_int_s'
 
-    InitialPrimaryAmmo=56
+    InitialPrimaryAmmo=44
+    MaxPrimaryAmmo=56
     WeaponFireOffset=0.0
     AltFireOffset=(X=-200.0,Y=20.0,Z=0.0)
 

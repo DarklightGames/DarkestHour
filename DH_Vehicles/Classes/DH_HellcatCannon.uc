@@ -43,8 +43,11 @@ defaultproperties
     ProjectileDescriptions(1)="HVAP"
     ProjectileDescriptions(2)="HE"
     InitialPrimaryAmmo=30
-    InitialSecondaryAmmo=5
-    InitialTertiaryAmmo=10
+    InitialSecondaryAmmo=4
+    InitialTertiaryAmmo=5
+    MaxPrimaryAmmo=30
+    MaxSecondaryAmmo=5
+    MaxTertiaryAmmo=10
     SecondarySpread=0.001
     TertiarySpread=0.00135
 

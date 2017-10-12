@@ -37,9 +37,12 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellHE'
     TertiaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellSmoke'
     ProjectileDescriptions(2)="Smoke"
-    InitialPrimaryAmmo=33
-    InitialSecondaryAmmo=26
-    InitialTertiaryAmmo=5
+    InitialPrimaryAmmo=25
+    InitialSecondaryAmmo=13
+    InitialTertiaryAmmo=4
+    MaxPrimaryAmmo=33
+    MaxSecondaryAmmo=26
+    MaxTertiaryAmmo=5
     SecondarySpread=0.00175
     TertiarySpread=0.0036
 

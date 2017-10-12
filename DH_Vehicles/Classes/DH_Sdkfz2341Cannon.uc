@@ -122,6 +122,9 @@ defaultproperties
     InitialPrimaryAmmo=10
     InitialSecondaryAmmo=10
     InitialTertiaryAmmo=10
+    MaxPrimaryAmmo=10
+    MaxSecondaryAmmo=10
+    MaxTertiaryAmmo=10
     Spread=0.003
 
     // Coaxial MG ammo

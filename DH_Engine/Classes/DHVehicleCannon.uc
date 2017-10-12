@@ -29,6 +29,9 @@ var     byte                NumTertiaryMags;
 var     byte                LocalPendingAmmoIndex;   // next ammo type we want to load - a local version on net client or listen server, updated to ServerPendingAmmoIndex when needed
 var     byte                ServerPendingAmmoIndex;  // on authority role this is authoritative setting for next ammo type to load; on client it records last setting updated to server
 var     class<Projectile>   SavedProjectileClass;    // client & listen server record last ammo when in cannon, so if another player changes ammo, any local pending choice becomes invalid
+var     int                 MaxPrimaryAmmo;          // max carrying capacity for this round type
+var     int                 MaxSecondaryAmmo;
+var     int                 MaxTertiaryAmmo;
 
 // Firing effects
 var     sound               CannonFireSound[3];      // sound of the cannon firing (selected randomly)
@@ -817,19 +820,19 @@ function bool ResupplyAmmo()
     // Cannon
     else
     {
-        if (MainAmmoChargeExtra[0] < InitialPrimaryAmmo)
+        if (MainAmmoChargeExtra[0] < MaxPrimaryAmmo)
         {
             ++MainAmmoChargeExtra[0];
             bDidResupply = true;
         }
 
-        if (MainAmmoChargeExtra[1] < InitialSecondaryAmmo)
+        if (MainAmmoChargeExtra[1] < MaxSecondaryAmmo)
         {
             ++MainAmmoChargeExtra[1];
             bDidResupply = true;
         }
 
-        if (MainAmmoChargeExtra[2] < InitialTertiaryAmmo)
+        if (MainAmmoChargeExtra[2] < MaxTertiaryAmmo)
         {
             ++MainAmmoChargeExtra[2];
             bDidResupply = true;

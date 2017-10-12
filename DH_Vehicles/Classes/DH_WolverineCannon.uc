@@ -41,9 +41,12 @@ defaultproperties
     TertiaryProjectileClass=class'DH_Vehicles.DH_WolverineCannonShellHE'
     ProjectileDescriptions(1)="HVAP"
     ProjectileDescriptions(2)="HE"
-    InitialPrimaryAmmo=25
-    InitialSecondaryAmmo=5
-    InitialTertiaryAmmo=24
+    InitialPrimaryAmmo=22
+    InitialSecondaryAmmo=4
+    InitialTertiaryAmmo=12
+    MaxPrimaryAmmo=25
+    MaxSecondaryAmmo=5
+    MaxTertiaryAmmo=24
     SecondarySpread=0.001
     TertiarySpread=0.00135
 

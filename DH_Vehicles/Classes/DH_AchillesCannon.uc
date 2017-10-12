@@ -41,9 +41,12 @@ defaultproperties
     TertiaryProjectileClass=class'DH_Vehicles.DH_AchillesCannonShellHE'
     ProjectileDescriptions(1)="APDS"
     ProjectileDescriptions(2)="HE"
-    InitialPrimaryAmmo=32
-    InitialSecondaryAmmo=4
-    InitialTertiaryAmmo=15
+    InitialPrimaryAmmo=20
+    InitialSecondaryAmmo=2
+    InitialTertiaryAmmo=8
+    MaxPrimaryAmmo=32
+    MaxSecondaryAmmo=4
+    MaxTertiaryAmmo=15
     SecondarySpread=0.006
     TertiarySpread=0.00156
 

@@ -29,8 +29,10 @@ defaultproperties
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="HEAT"
     ProjectileDescriptions(2)="Canister"
-    InitialPrimaryAmmo=40
+    InitialPrimaryAmmo=24
     InitialTertiaryAmmo=14
+    MaxPrimaryAmmo=40
+    MaxTertiaryAmmo=14
     Spread=0.00135
     SecondarySpread=0.0039
     TertiarySpread=0.04

@@ -43,9 +43,12 @@ defaultproperties
     TertiaryProjectileClass=class'DH_Vehicles.DH_PantherCannonShellHE'
     ProjectileDescriptions(1)="APCR"
     ProjectileDescriptions(2)="HE"
-    InitialPrimaryAmmo=44
-    InitialSecondaryAmmo=5
-    InitialTertiaryAmmo=35
+    InitialPrimaryAmmo=38
+    InitialSecondaryAmmo=4
+    InitialTertiaryAmmo=15
+    MaxPrimaryAmmo=44
+    MaxSecondaryAmmo=5
+    MaxTertiaryAmmo=35
     SecondarySpread=0.00165
     TertiarySpread=0.0012
 

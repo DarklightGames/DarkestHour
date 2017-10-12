@@ -14,4 +14,6 @@ defaultproperties
     bLimitYaw=true
     InitialPrimaryAmmo=35
     InitialSecondaryAmmo=50
+    MaxPrimaryAmmo=35
+    MaxSecondaryAmmo=50
 }

@@ -37,9 +37,12 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellHE'
     TertiaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellSmoke'
     ProjectileDescriptions(2)="Smoke"
-    InitialPrimaryAmmo=54
-    InitialSecondaryAmmo=20
-    InitialTertiaryAmmo=5
+    InitialPrimaryAmmo=44
+    InitialSecondaryAmmo=8
+    InitialTertiaryAmmo=4
+    MaxPrimaryAmmo=54
+    MaxSecondaryAmmo=20
+    MaxTertiaryAmmo=5
     SecondarySpread=0.00127
     TertiarySpread=0.00357
 

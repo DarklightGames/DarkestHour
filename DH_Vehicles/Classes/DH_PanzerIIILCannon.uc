@@ -43,9 +43,12 @@ defaultproperties
     TertiaryProjectileClass=class'DH_Vehicles.DH_PanzerIIILCannonShellHE'
     ProjectileDescriptions(1)="APCR"
     ProjectileDescriptions(2)="HE"
-    InitialPrimaryAmmo=55
-    InitialSecondaryAmmo=10
-    InitialTertiaryAmmo=30
+    InitialPrimaryAmmo=40
+    InitialSecondaryAmmo=6
+    InitialTertiaryAmmo=15
+    MaxPrimaryAmmo=55
+    MaxSecondaryAmmo=10
+    MaxTertiaryAmmo=30
     SecondarySpread=0.00165
     TertiarySpread=0.0013
 

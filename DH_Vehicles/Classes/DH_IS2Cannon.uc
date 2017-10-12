@@ -41,7 +41,9 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_IS2CannonShellHE'
     ProjectileDescriptions(0)="AP"
     InitialPrimaryAmmo=18
-    InitialSecondaryAmmo=10
+    InitialSecondaryAmmo=6
+    MaxPrimaryAmmo=18
+    MaxSecondaryAmmo=10
     SecondarySpread=0.002
 
     // Coaxial MG ammo

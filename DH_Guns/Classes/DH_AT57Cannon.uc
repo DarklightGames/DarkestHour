@@ -30,8 +30,10 @@ defaultproperties
     ProjectileClass=class'DH_Guns.DH_AT57CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_AT57CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_AT57CannonShellHE'
-    InitialPrimaryAmmo=60
-    InitialSecondaryAmmo=25
+    InitialPrimaryAmmo=20
+    InitialSecondaryAmmo=8
+    MaxPrimaryAmmo=60
+    MaxSecondaryAmmo=25
     SecondarySpread=0.00125
 
     // Weapon fire

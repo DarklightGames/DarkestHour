@@ -40,9 +40,12 @@ defaultproperties
     TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanFireFlyCannonShellHE'
     ProjectileDescriptions(1)="APDS"
     ProjectileDescriptions(2)="HE"
-    InitialPrimaryAmmo=48
+    InitialPrimaryAmmo=40
     InitialSecondaryAmmo=4
-    InitialTertiaryAmmo=25
+    InitialTertiaryAmmo=12
+    MaxPrimaryAmmo=48
+    MaxSecondaryAmmo=5
+    MaxTertiaryAmmo=24
     SecondarySpread=0.006
     TertiarySpread=0.00156
 

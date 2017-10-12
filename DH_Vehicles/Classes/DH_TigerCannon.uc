@@ -36,8 +36,10 @@ defaultproperties
     ProjectileClass=class'DH_Vehicles.DH_TigerCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_TigerCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_TigerCannonShellHE'
-    InitialPrimaryAmmo=48
-    InitialSecondaryAmmo=44
+    InitialPrimaryAmmo=40
+    InitialSecondaryAmmo=22
+    MaxPrimaryAmmo=48
+    MaxSecondaryAmmo=44
     SecondarySpread=0.00125
 
     // Coaxial MG ammo

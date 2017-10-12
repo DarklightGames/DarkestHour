@@ -36,9 +36,12 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShellHE'
     TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'
     ProjectileDescriptions(2)="Canister"
-    InitialPrimaryAmmo=24
-    InitialSecondaryAmmo=48
+    InitialPrimaryAmmo=20
+    InitialSecondaryAmmo=24
     InitialTertiaryAmmo=8
+    MaxPrimaryAmmo=24
+    MaxSecondaryAmmo=48
+    MaxTertiaryAmmo=8
     SecondarySpread=0.00145
     TertiarySpread=0.04
 

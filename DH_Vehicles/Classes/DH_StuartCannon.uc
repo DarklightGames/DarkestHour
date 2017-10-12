@@ -36,9 +36,12 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_StuartCannonShellHE'
     TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'
     ProjectileDescriptions(2)="Canister"
-    InitialPrimaryAmmo=64
-    InitialSecondaryAmmo=44
+    InitialPrimaryAmmo=60
+    InitialSecondaryAmmo=30
     InitialTertiaryAmmo=15
+    MaxPrimaryAmmo=64
+    MaxSecondaryAmmo=44
+    MaxTertiaryAmmo=20
     SecondarySpread=0.00145
     TertiarySpread=0.04
 
