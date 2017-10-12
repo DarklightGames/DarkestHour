@@ -744,7 +744,7 @@ defaultproperties
     End Object
     ch_MotionBlur=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.MotionBlur'
     Begin Object Class=DHGUISectionBackground Name=sbSection1
-        Caption="Resolution"
+        Caption="Basic Rendering"
         WinTop=0.004
         WinLeft=0.022
         WinWidth=0.485
@@ -754,7 +754,7 @@ defaultproperties
     End Object
     sb_Section1=DHGUISectionBackground'DH_Interface.DHTab_DetailSettings.sbSection1'
     Begin Object Class=DHGUISectionBackground Name=sbSection2
-        Caption="Options"
+        Caption="Game Details"
         WinTop=0.004
         WinLeft=0.53
         WinWidth=0.452751
