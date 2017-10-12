@@ -193,16 +193,19 @@ simulated event PostNetBeginPlay()
     }
 }
 
-// Client to server function which tells the server the user's setting (also gets called from DHTab_GameSettings, if the user changes the setting
+// Client to server function which tells the server the user's setting (also gets called from DHTab_GameSettings, if the user changes the setting mid-game)
 function ServerSetBayonetAtSpawn(bool bBayonetAtSpawn)
 {
     bSpawnWithBayonet = bBayonetAtSpawn;
 }
 
-// New function to set the normal view VOF for this player, based on their own config setting
-// Option to pass in new FOV value, otherwise we just use the existing ConfigViewFOV
-// We only accept valid values of 80 to 90, otherwise we reset to the default value (stops players manually editing their .ini file to invalid values)
-// Note we only ever use the class default.ConfigViewFOV value, as that allows us to use it in static functions where there may not be a DHPlayer instance
+// New function to set the normal view FOV for this player, based on their own
+// config setting ption to pass in new FOV value, otherwise we just use the
+// existing ConfigViewFOV. We only accept valid values of 80 to 100, otherwise
+// we reset to the default value (stops players manually editing their .ini file
+// to invalid values) Note we only ever use the class default.ConfigViewFOV
+// value, as that allows us to use it in static functions where there may not be
+// a DHPlayer instance
 simulated static function SetDefaultViewFOV(optional float NewFOV)
 {
     if (NewFOV > 0.0 && NewFOV != default.ConfigViewFOV)
