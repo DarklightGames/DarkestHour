@@ -84,7 +84,7 @@ function DoFireEffect()
     Weapon.GetViewAxes(X, Y, Z);
 
     // Check if projectile would spawn through something like a wall and adjust start location accordingly
-    if (Instigator != none && (Instigator.Weapon.bUsingSights || Instigator.bBipodDeployed))
+    if (!IsPlayerHipFiring() && Instigator != none)
     {
         StartTrace = Instigator.Location + Instigator.EyePosition();
         StartProj = StartTrace + X * ProjSpawnOffset.X;
@@ -108,7 +108,7 @@ function DoFireEffect()
     }
 
     // For free-aim, just use where the muzzle bone is pointing
-    if (Instigator != none && !Instigator.Weapon.bUsingSights && !Instigator.bBipodDeployed && Instigator.IsHumanControlled() && Instigator.Weapon.bUsesFreeAim)
+    if (IsPlayerHipFiring() && Instigator != none && Instigator.IsHumanControlled() && Instigator.Weapon != none && Instigator.Weapon.bUsesFreeAim)
     {
         Aim = rotator(MuzzlePosition.XAxis);
     }
@@ -162,6 +162,13 @@ function DoFireEffect()
         default:
             SpawnProjectile(StartProj, Aim);
     }
+}
+
+// New helper function to check whether player is hip firing
+// Allows easy subclassing, which avoids re-stating long functions just to change bUsingSights and/or bBipodDeployed
+simulated function bool IsPlayerHipFiring()
+{
+    return !(Weapon != none && Weapon.bUsingSights) && !(Instigator != none && Instigator.bBipodDeployed);
 }
 
 function CalcSpreadModifiers()
@@ -498,7 +505,7 @@ function PlayFiring()
         {
             if (FireCount > 0)
             {
-                if (Weapon.bUsingSights && Weapon.HasAnim(FireIronLoopAnim))
+                if (!IsPlayerHipFiring() && Weapon.HasAnim(FireIronLoopAnim))
                 {
                     Weapon.PlayAnim(FireIronLoopAnim, FireLoopAnimRate, 0.0);
                 }
@@ -511,7 +518,7 @@ function PlayFiring()
                     Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
                 }
             }
-            else if (Weapon.bUsingSights && Weapon.HasAnim(FireIronAnim))
+            else if (!IsPlayerHipFiring() && Weapon.HasAnim(FireIronAnim))
             {
                 Weapon.PlayAnim(FireIronAnim, FireAnimRate, FireTweenTime);
             }
@@ -536,7 +543,7 @@ function PlayFireEnd()
 {
     if (Weapon != none && Weapon.Mesh != none)
     {
-        if (Weapon.bUsingSights && Weapon.HasAnim(FireIronEndAnim))
+        if (!IsPlayerHipFiring() && Weapon.HasAnim(FireIronEndAnim))
         {
             Weapon.PlayAnim(FireIronEndAnim, FireEndAnimRate, FireTweenTime);
         }
@@ -561,6 +568,52 @@ simulated function HandleRecoil()
         {
             ROPlayer(Instigator.Controller).AddBlur(BlurTime, BlurScale);
         }
+    }
+}
+
+// Modified to use the IsPlayerHipFiring() helper function, which makes this function generic & avoids re-stating in subclasses to make minor changes
+simulated function EjectShell()
+{
+    local ROShellEject Shell;
+    local coords       EjectBoneCoords;
+    local vector       SpawnLocation, X, Y, Z;
+    local rotator      ShellRotation;
+
+    if (ShellEjectClass == none)
+    {
+        return;
+    }
+
+    // Get location & rotation to spawn ejected shell case
+    if (IsPlayerHipFiring())
+    {
+        // Have to calculate the the shell ejection bone offset & then scale it down 5 times, as the 1st person model is scaled up 5 times in the editor
+        EjectBoneCoords = Weapon.GetBoneCoords(ShellEmitBone);
+        SpawnLocation = Weapon.Location + (0.2 * (EjectBoneCoords.Origin - Weapon.Location));
+        SpawnLocation += (EjectBoneCoords.XAxis * ShellHipOffset.X) + (EjectBoneCoords.YAxis * ShellHipOffset.Y) +  (EjectBoneCoords.ZAxis * ShellHipOffset.Z);
+        ShellRotation = rotator(-EjectBoneCoords.YAxis);
+        Shell = Weapon.Spawn(ShellEjectClass, none,, SpawnLocation, ShellRotation);
+        ShellRotation = rotator(EjectBoneCoords.XAxis) + ShellRotOffsetHip;
+    }
+    else
+    {
+        Weapon.GetViewAxes(X, Y, Z);
+        SpawnLocation = Instigator.Location + Instigator.EyePosition();
+        SpawnLocation += (X * ShellIronSightOffset.X) + (Y * ShellIronSightOffset.Y) + (Z * ShellIronSightOffset.Z);
+        ShellRotation = rotator(Y);
+        ShellRotation.Yaw += 16384;
+        Shell = Weapon.Spawn(ShellEjectClass, none,, SpawnLocation, ShellRotation);
+        ShellRotation = rotator(Y) + ShellRotOffsetIron;
+    }
+
+    // Apply random direction & speed to ejected shell
+    if (Shell != none)
+    {
+        ShellRotation.Yaw += Shell.RandomYawRange - Rand(Shell.RandomYawRange * 2);
+        ShellRotation.Pitch += Shell.RandomPitchRange - Rand(Shell.RandomPitchRange * 2);
+        ShellRotation.Roll += Shell.RandomRollRange - Rand(Shell.RandomRollRange * 2);
+
+        Shell.Velocity = vector(ShellRotation) * (Shell.MinStartSpeed + (FRand() * (Shell.MaxStartSpeed - Shell.MinStartSpeed)));
     }
 }
 

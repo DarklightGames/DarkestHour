@@ -17,7 +17,7 @@ function PlayFiring()
     {
         if (Weapon.Mesh != none)
         {
-            if (Weapon.bUsingSights && Weapon.HasAnim(FireIronAnim))
+            if (!IsPlayerHipFiring() && Weapon.HasAnim(FireIronAnim))
             {
                 if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireIronLastAnim))
                 {

@@ -90,7 +90,7 @@ function PlayFiring()
     {
         if (Weapon.Mesh != none)
         {
-            if (Weapon.bUsingSights)
+            if (!IsPlayerHipFiring())
             {
                 RocketWeapon = DHRocketWeapon(Weapon);
 

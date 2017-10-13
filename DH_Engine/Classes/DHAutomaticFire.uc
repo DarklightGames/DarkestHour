@@ -49,7 +49,7 @@ function PlayFiring()
             // Weapon is auto-firing, so get an appropriate fire loop animation
             if (FireCount > 0)
             {
-                if (Weapon.bUsingSights || (Instigator != none && Instigator.bBipodDeployed))
+                if (!IsPlayerHipFiring())
                 {
                     if (Instigator != none && Instigator.bBipodDeployed && Weapon.HasAnim(BipodDeployFireLoopAnim))
                     {
@@ -75,7 +75,7 @@ function PlayFiring()
             // Otherwise get a suitable single fire anim
             else
             {
-                if (Weapon.bUsingSights || (Instigator != none && Instigator.bBipodDeployed))
+                if (!IsPlayerHipFiring())
                 {
                     if (Instigator != none && Instigator.bBipodDeployed && Weapon.HasAnim(BipodDeployFireAnim))
                     {
@@ -116,7 +116,7 @@ function PlayFireEnd()
 
     if (Weapon != none && Weapon.Mesh != none)
     {
-        if (Weapon.bUsingSights || (Instigator != none && Instigator.bBipodDeployed))
+        if (!IsPlayerHipFiring())
         {
             if (Instigator != none && Instigator.bBipodDeployed && Weapon.HasAnim(BipodDeployFireEndAnim))
             {
