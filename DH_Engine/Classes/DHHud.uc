@@ -82,6 +82,9 @@ var     array<texture>      PlayerNumberIconTextures;
 
 // Supply Points
 var     SpriteWidget        SupplyPointIcon;
+var     SpriteWidget        SupplyCountWidget;
+var     SpriteWidget        SupplyCountIconWidget;
+var     TextWidget          SupplyCountTextWidget;
 
 // Construction
 var     SpriteWidget        VehicleSuppliesIcon;
@@ -1226,9 +1229,8 @@ function DrawSupplyCount(Canvas C)
     local DHVehicle V;
     local DHVehicleWeaponPawn VWP;
     local DHPlayerReplicationInfo PRI;
-    local string S;
-    local float XL, YL;
     local int TouchingSupplyCount;
+    local AbsoluteCoordsInfo Coords;
 
     if (PawnOwner == none)
     {
@@ -1268,12 +1270,14 @@ function DrawSupplyCount(Canvas C)
 
     if (PRI.IsInSquad() && TouchingSupplyCount >= 0)
     {
-        S = TouchingSupplyCount @ "Supplies";
-        C.TextSize(S, XL, YL);
-        C.SetDrawColor(255, 255, 255, 255);
-        C.Font = C.TinyFont;
-        C.SetPos((C.SizeX - XL) / 2, 0);
-        DrawShadowedTextClipped(C, S);
+        Coords.Width = C.ClipX;
+        Coords.Height = C.ClipY;
+
+        DrawSpriteWidgetClipped(C, SupplyCountWidget, Coords, false);
+        DrawSpriteWidgetClipped(C, SupplyCountIconWidget, Coords, false);
+        SupplyCountTextWidget.Text = string(TouchingSupplyCount);
+        C.Font = GetSmallerMenuFont(C);
+        DrawTextWidgetClipped(C, SupplyCountTextWidget, Coords);
     }
 }
 
@@ -5537,4 +5541,9 @@ defaultproperties
     SpectateInstructionText3="Press [%ROIRONSIGHTS%] to toggle First/Third Person View"
     SpectateInstructionText4="Press [%JUMP%] to return to viewing yourself"
     BlackoutText="Blackout"
+
+    // Supply
+    SupplyCountWidget=(WidgetTexture=Texture'DH_GUI_Tex.GUI.supply_indicator',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=31),TextureScale=1.0,DrawPivot=DP_UpperMiddle,PosX=0.5,PosY=0.0,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255),OffsetY=8)
+    SupplyCountIconWidget=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.supply_cache',RenderStyle=STY_Alpha,TextureCoords=(X2=31,Y2=31),TextureScale=0.9,DrawPivot=DP_UpperMiddle,PosX=0.5,PosY=0.0,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255),OffsetX=51,OffsetY=8)
+    SupplyCountTextWidget=(PosX=0.5,PosY=0,WrapWidth=0,WrapHeight=0,OffsetX=0,OffsetY=0,DrawPivot=DP_MiddleRight,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=true,OffsetX=16,OffsetY=24)
 }
