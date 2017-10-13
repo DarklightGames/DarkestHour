@@ -22,155 +22,53 @@ var     byte                    AmbientFireVolume;      // The ambient fire soun
 // High ROF system
 var     float                   PackingThresholdTime;   // If the shots are closer than this amount, the dual shot will be used
 
-// Overridden to support packing two shots together to save net bandwidth
-function DoFireEffect()
+// Modified to support packing two shots together to save net bandwidth
+// The high rate of fire system packs shots together, replicates the shot info to net clients & then they spawn their own client bullets
+// Bullet actor replication is disabled
+function Projectile SpawnProjectile(vector Start, rotator Dir)
 {
-    local vector  StartProj, StartTrace, X, Y, Z;
-    local rotator R, Aim;
-    local vector  HitLocation, HitNormal;
-    local Actor   Other;
-    local int     ProjectileID;
-    local int     SpawnCount;
-    local float   theta;
-    local coords  MuzzlePosition;
+    local Projectile SpawnedProjectile;
 
-    Instigator.MakeNoise(1.0);
+    // Start by spawning the projectile as normal
+    SpawnedProjectile = super.SpawnProjectile(Start, Dir);
 
-    Weapon.GetViewAxes(X, Y, Z);
-
-    // if weapon in iron sights, spawn at eye position, otherwise spawn at muzzle tip
-    if (Instigator.Weapon.bUsingSights || Instigator.bBipodDeployed)
-    {
-        StartTrace = Instigator.Location + Instigator.EyePosition();
-        StartProj = StartTrace + X * ProjSpawnOffset.X;
-
-        // check if projectile would spawn through a wall and adjust start location accordingly
-        Other = Trace(HitLocation, HitNormal, StartProj, StartTrace, false);
-
-        if (Other != none)
-        {
-            StartProj = HitLocation;
-        }
-    }
-    else
-    {
-        MuzzlePosition = Weapon.GetMuzzleCoords();
-
-        // Get the muzzle position and scale it down 5 times (since the model is scaled up 5 times in the editor)
-        StartTrace = MuzzlePosition.Origin - Weapon.Location;
-        StartTrace = StartTrace * 0.2;
-        StartTrace = Weapon.Location + StartTrace;
-
-        StartProj = StartTrace + MuzzlePosition.XAxis * FAProjSpawnOffset.X;
-
-        Other = Trace(HitLocation, HitNormal, StartTrace, StartProj, true); // was false to only trace worldgeometry
-
-        if (Other != none)
-        {
-            StartProj = HitLocation;
-        }
-    }
-
-    // For free-aim, just use where the muzzlebone is pointing
-    if (!Instigator.Weapon.bUsingSights && !Instigator.bBipodDeployed && Instigator.Weapon.bUsesFreeAim && Instigator.IsHumanControlled())
-    {
-        Aim = rotator(MuzzlePosition.XAxis);
-    }
-    else
-    {
-        Aim = AdjustAim(StartProj, AimError);
-    }
-
-    SpawnCount = Max(1, ProjPerFire * int(Load));
-
-    CalcSpreadModifiers();
-
-    if (DHProjectileWeapon(Owner) != none && DHProjectileWeapon(Owner).bBarrelDamaged)
-    {
-        AppliedSpread = 4.0 * Spread;
-    }
-    else
-    {
-        AppliedSpread = Spread;
-    }
-
-    switch (SpreadStyle)
-    {
-        case SS_Random:
-
-            X = vector(Aim);
-
-            for (ProjectileID = 0; ProjectileID < SpawnCount; ++ProjectileID)
-            {
-                R.Yaw = AppliedSpread * ((FRand() - 0.5) / 1.5);
-                R.Pitch = AppliedSpread * (FRand() - 0.5);
-                R.Roll = AppliedSpread * (FRand() - 0.5);
-
-                HandleProjectileSpawning(StartProj, rotator(X >> R));
-            }
-
-            break;
-
-        case SS_Line:
-
-            for (ProjectileID = 0; ProjectileID < SpawnCount; ++ProjectileID)
-            {
-                theta = AppliedSpread * PI / 32768.0 * (ProjectileID - float(SpawnCount - 1) / 2.0);
-                X.X = Cos(theta);
-                X.Y = Sin(theta);
-                X.Z = 0.0;
-                HandleProjectileSpawning(StartProj, rotator(X >> Aim));
-            }
-
-            break;
-
-        default:
-            HandleProjectileSpawning(StartProj, Aim);
-    }
-}
-
-// This function handles combining the shots and when to replicate them
-function HandleProjectileSpawning(vector SpawnPoint, rotator SpawnAim)
-{
     if (Level.NetMode == NM_Standalone)
     {
-        super(DHProjectileFire).SpawnProjectile(SpawnPoint, SpawnAim);
-
-        return;
+        return SpawnedProjectile; // remaining network stuff isn't relevant to single player
     }
 
-    if (HiROFWeaponAttachment == none)
+    // Stop a server from replicating the bullet actor to net clients
+    if (DHBullet(SpawnedProjectile) != none)
+    {
+        DHBullet(SpawnedProjectile).SetAsServerBullet();
+    }
+
+    // Update the weapon attachment's packed shot info, which gets replicated to net clients, causing them to spawn their own bullets
+    if (HiROFWeaponAttachment == none && Weapon != none)
     {
         HiROFWeaponAttachment = DHHighROFWeaponAttachment(Weapon.ThirdPersonActor);
     }
 
-    SpawnProjectile(SpawnPoint, SpawnAim);
-
-    if (Level.NetMode == NM_Standalone)
+    if (HiROFWeaponAttachment != none)
     {
-        return;
-    }
-    else if ((Level.TimeSeconds - LastCalcTime) > PackingThresholdTime)
-    {
-        HiROFWeaponAttachment.LastShot = HiROFWeaponAttachment.MakeShotInfo(SpawnPoint, SpawnAim);
-        HiROFWeaponAttachment.bUnReplicatedShot = true;
-    }
-    else
-    {
-        if (HiROFWeaponAttachment.bFirstShot)
+        if (Level.TimeSeconds - LastCalcTime > PackingThresholdTime)
         {
-            HiROFWeaponAttachment.LastShot = HiROFWeaponAttachment.MakeShotInfo(SpawnPoint, SpawnAim);
+            HiROFWeaponAttachment.LastShot = HiROFWeaponAttachment.MakeShotInfo(Start, Dir);
+            HiROFWeaponAttachment.bUnReplicatedShot = true;
+        }
+        else if (HiROFWeaponAttachment.bFirstShot)
+        {
+            HiROFWeaponAttachment.LastShot = HiROFWeaponAttachment.MakeShotInfo(Start, Dir);
             HiROFWeaponAttachment.bFirstShot = false;
             HiROFWeaponAttachment.bUnReplicatedShot = true;
         }
         else
         {
             HiROFWeaponAttachment.SavedDualShot.FirstShot = HiROFWeaponAttachment.LastShot;
-            HiROFWeaponAttachment.SavedDualShot.Secondshot = HiROFWeaponAttachment.MakeShotInfo(SpawnPoint, SpawnAim);
+            HiROFWeaponAttachment.SavedDualShot.Secondshot = HiROFWeaponAttachment.MakeShotInfo(Start, Dir);
             HiROFWeaponAttachment.bFirstShot = true;
 
-            // Skip 255 as we will use it for a special trigger
-            if (HiROFWeaponAttachment.DualShotCount < 254)
+            if (HiROFWeaponAttachment.DualShotCount < 254) // skip 255 as we will use it for a special trigger
             {
                 HiROFWeaponAttachment.DualShotCount ++;
             }
@@ -186,6 +84,8 @@ function HandleProjectileSpawning(vector SpawnPoint, rotator SpawnAim)
     }
 
     LastCalcTime = Level.TimeSeconds;
+
+    return SpawnedProjectile;
 }
 
 // Implemented to send the fire class to the looping state
@@ -241,7 +141,7 @@ state FireLoop
 
         if (Weapon != none && Weapon.Mesh != none)
         {
-            if (Weapon.bUsingSights || (Instigator != none && Instigator.bBipodDeployed))
+            if (!IsPlayerHipFiring())
             {
                 if (Weapon.HasAnim(BipodDeployFireLoopAnim) && Instigator != none && Instigator.bBipodDeployed)
                 {
@@ -318,21 +218,6 @@ state FireLoop
             GotoState('');
         }
     }
-}
-
-// Modified to disable bullet replication, so actor won't be replicated to clients (was the only difference in the server bullet class)
-function Projectile SpawnProjectile(vector Start, rotator Dir)
-{
-    local Projectile SpawnedProjectile;
-
-    SpawnedProjectile = super.SpawnProjectile(Start, Dir);
-
-    if (DHBullet(SpawnedProjectile) != none)
-    {
-        DHBullet(SpawnedProjectile).SetAsServerBullet();
-    }
-
-    return SpawnedProjectile;
 }
 
 function float MaxRange()
