@@ -23,7 +23,6 @@ var     float           PreLaunchTraceLengthFactor;  // determines pre launch tr
 var     bool            bTraceHitBulletProofColMesh; // bullet has hit a collision mesh actor that is bullet proof, so we can handle vehicle hits accordingly
 
 // Weapon spread/inaccuracy
-var     float           AppliedSpread;               // spread applied to the projectile
 var     float           CrouchSpreadModifier;        // modifier applied when player is crouched
 var     float           ProneSpreadModifier;         // modifier applied when player is prone
 var     float           BipodDeployedSpreadModifier; // modifier applied when player is using a bipod deployed weapon
@@ -67,61 +66,63 @@ function float MaxRange()
 
 function DoFireEffect()
 {
-    local vector  StartProj, StartTrace, X, Y, Z;
-    local rotator R, Aim;
-    local vector  HitLocation, HitNormal;
-    local Actor   Other;
-    local int     ProjectileID;
-    local int     SpawnCount;
-    local float   Theta;
+    local Actor   TracedActor;
     local coords  MuzzlePosition;
+    local vector  StartTrace, FireLocation, HitLocation, HitNormal, FireDirection, X, Y, Z;
+    local rotator RandomSpread;
+    local float   AppliedSpread;
+    local int     NumProjectiles, i;
+
+    if (Weapon == none)
+    {
+        return;
+    }
 
     if (Instigator != none)
     {
         Instigator.MakeNoise(1.0);
     }
 
-    Weapon.GetViewAxes(X, Y, Z);
-
-    // Check if projectile would spawn through something like a wall and adjust start location accordingly
-    if (!IsPlayerHipFiring() && Instigator != none)
-    {
-        StartTrace = Instigator.Location + Instigator.EyePosition();
-        StartProj = StartTrace + X * ProjSpawnOffset.X;
-
-        Other = Trace(HitLocation, HitNormal, StartProj, StartTrace, false); // false means only trace world geometry
-    }
-    else
+    // Get FireLocation to spawn projectile, & do a trace to check if projectile would spawn through something like a wall (due to ProjSpawnOffset)
+    // If hip firing, spawn projectile at muzzle tip plus FAProjSpawnOffset
+    // Have to calculate the the muzzle offset & then scale it down 5 times, as the 1st person model is scaled up 5 times in the editor
+    if (Instigator != none && IsPlayerHipFiring())
     {
         MuzzlePosition = Weapon.GetMuzzleCoords();
-        StartTrace = MuzzlePosition.Origin - Weapon.Location;
-        StartTrace = StartTrace * 0.2; // scale the muzzle position down 5 times, since the model is scaled up 5 times in the editor
-        StartTrace = Weapon.Location + StartTrace;
-        StartProj = StartTrace + MuzzlePosition.XAxis * FAProjSpawnOffset.X;
-
-        Other = Trace(HitLocation, HitNormal, StartTrace, StartProj, true);
+        StartTrace = Weapon.Location + (0.2 * (MuzzlePosition.Origin - Weapon.Location));
+        FireLocation = StartTrace + (MuzzlePosition.XAxis * FAProjSpawnOffset.X);
+        TracedActor = Trace(HitLocation, HitNormal, StartTrace, FireLocation, true);
     }
-
-    if (Other != none)
-    {
-        StartProj = HitLocation;
-    }
-
-    // For free-aim, just use where the muzzle bone is pointing
-    if (IsPlayerHipFiring() && Instigator != none && Instigator.IsHumanControlled() && Instigator.Weapon != none && Instigator.Weapon.bUsesFreeAim)
-    {
-        Aim = rotator(MuzzlePosition.XAxis);
-    }
+    // Otherwise if weapon is iron sighted or bipod deployed, spawn at eye position plus ProjSpawnOffset
     else
     {
-        Aim = AdjustAim(StartProj, AimError);
+        Weapon.GetViewAxes(X, Y, Z);
+        StartTrace = Instigator.Location + Instigator.EyePosition();
+        FireLocation = StartTrace + (X * ProjSpawnOffset.X);
+        TracedActor = Trace(HitLocation, HitNormal, FireLocation, StartTrace, false); // false means only trace world geometry
     }
 
-    SpawnCount = Max(1, ProjPerFire * int(Load));
+    if (TracedActor != none)
+    {
+        FireLocation = HitLocation; // adjust spawn location to traced HitLocation if we traced something in the way
+    }
 
+    // Get the direction for the projectile
+    // If player is hip firing (& is the default free-aim type), use where the muzzle bone is pointing
+    if (IsPlayerHipFiring() && Instigator != none && Instigator.IsHumanControlled() && Weapon != none && Weapon.bUsesFreeAim)
+    {
+        FireDirection = MuzzlePosition.XAxis;
+    }
+    // Otherwise we call AdjustAim to confirm our aimed direction, but for human players that simply returns where the player is looking
+    else
+    {
+        FireDirection = vector(AdjustAim(FireLocation, AimError));
+    }
+
+    // Calculate random spread
     CalcSpreadModifiers();
 
-    if (DHProjectileWeapon(Owner) != none && DHProjectileWeapon(Owner).bBarrelDamaged)
+    if (Weapon.IsA('DHProjectileWeapon') && DHProjectileWeapon(Weapon).bBarrelDamaged)
     {
         AppliedSpread = 4.0 * Spread;
     }
@@ -130,37 +131,19 @@ function DoFireEffect()
         AppliedSpread = Spread;
     }
 
-    switch (SpreadStyle)
+    // Finally spawn the projectile (or multiple), applying random spread
+    NumProjectiles = Max(1, ProjPerFire * int(Load));
+
+    for (i = 0; i < NumProjectiles; ++i)
     {
-        case SS_Random:
+        if (SpreadStyle == SS_Random)
+        {
+            RandomSpread.Yaw = AppliedSpread * ((FRand() - 0.5) / 1.5);
+            RandomSpread.Pitch = AppliedSpread * (FRand() - 0.5);
+            RandomSpread.Roll = AppliedSpread * (FRand() - 0.5);
+        }
 
-            X = vector(Aim);
-
-            for (ProjectileID = 0; ProjectileID < SpawnCount; ++ProjectileID)
-            {
-                R.Yaw = AppliedSpread * ((FRand() - 0.5) / 1.5);
-                R.Pitch = AppliedSpread * (FRand() - 0.5);
-                R.Roll = AppliedSpread * (FRand() - 0.5);
-                SpawnProjectile(StartProj, rotator(X >> R));
-            }
-
-            break;
-
-        case SS_Line:
-
-            for (ProjectileID = 0; ProjectileID < SpawnCount; ++ProjectileID)
-            {
-                Theta = AppliedSpread * PI / 32768.0 * (ProjectileID - float(SpawnCount - 1) / 2.0);
-                X.X = Cos(Theta);
-                X.Y = Sin(Theta);
-                X.Z = 0.0;
-                SpawnProjectile(StartProj, rotator(X >> Aim));
-            }
-
-            break;
-
-        default:
-            SpawnProjectile(StartProj, Aim);
+        SpawnProjectile(FireLocation, rotator(FireDirection >> RandomSpread));
     }
 }
 
