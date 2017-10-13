@@ -45,104 +45,15 @@ function PlayFiring()
     FireCount++;
 }
 
-// Overridden to keep better track of ammo client side for pistol animations
+// Modified so if remaining ammo is low, we immediately consume ammo on a net client, without waiting for a reduced ammo count to replicate
+// This could be dangerous (old RO comment) but should ensure the proper anims play for pistol firing in laggy situations
 event ModeDoFire()
 {
-    if (!AllowFire())
-    {
-        return;
-    }
+    super.ModeDoFire();
 
-    if (MaxHoldTime > 0.0)
-    {
-        HoldTime = FMin(HoldTime, MaxHoldTime);
-    }
-
-    // server
-    if (Weapon.Role == ROLE_Authority)
+    if (Weapon != none && Weapon.Role < ROLE_Authority && Instigator != none && Instigator.IsLocallyControlled())
     {
         Weapon.ConsumeAmmo(ThisModeNum, Load);
-
-        DoFireEffect();
-
-        HoldTime = 0;   // if bot decides to stop firing, HoldTime must be reset first
-
-        if (Instigator == none || Instigator.Controller == none)
-        {
-            return;
-        }
-
-        if (AIController(Instigator.Controller) != none)
-        {
-            AIController(Instigator.Controller).WeaponFireAgain(BotRefireRate, true);
-        }
-
-        Instigator.DeactivateSpawnProtection();
-    }
-
-    // client
-    if (Instigator.IsLocallyControlled())
-    {
-        // This could be dangerous. if we are low on ammo, go ahead and
-        // decrement the ammo client side. This will ensure the proper
-        // anims play for weapon firing in laggy situations.
-        if (Weapon.Role < ROLE_Authority)
-        {
-            Weapon.ConsumeAmmo(ThisModeNum, Load);
-        }
-
-        if (!bDelayedRecoil)
-        {
-            HandleRecoil();
-        }
-
-        ShakeView();
-        PlayFiring();
-
-        if (!bMeleeMode)
-        {
-            if (Instigator.IsFirstPerson() && !bAnimNotifiedShellEjects)
-            {
-                EjectShell();
-            }
-
-            FlashMuzzleFlash();
-            StartMuzzleSmoke();
-        }
-    }
-    else // server
-    {
-        ServerPlayFiring();
-    }
-
-    Weapon.IncrementFlashCount(ThisModeNum);
-
-    // set the next firing time. must be careful here so client and server do not get out of sync
-    if (bFireOnRelease)
-    {
-        if (bIsFiring)
-        {
-            NextFireTime += MaxHoldTime + FireRate;
-        }
-        else
-        {
-            NextFireTime = Level.TimeSeconds + FireRate;
-        }
-    }
-    else
-    {
-        NextFireTime += FireRate;
-        NextFireTime = FMax(NextFireTime, Level.TimeSeconds);
-    }
-
-    Load = AmmoPerFire;
-    HoldTime = 0;
-
-    if (Instigator.PendingWeapon != Weapon && Instigator.PendingWeapon != none)
-    {
-        bIsFiring = false;
-
-        Weapon.PutDown();
     }
 }
 
