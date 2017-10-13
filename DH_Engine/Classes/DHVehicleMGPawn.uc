@@ -85,8 +85,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 simulated function DrawHUD(Canvas C)
 {
     local PlayerController PC;
-    local vector           CameraLocation, GunOffset, x, y, z;
-    local rotator          CameraRotation;
+    local vector           GunOffset;
     local float            SavedOpacity;
 
     PC = PlayerController(Controller);
@@ -101,25 +100,16 @@ simulated function DrawHUD(Canvas C)
             {
                 if (!Level.IsSoftwareRendering())
                 {
-                    CameraLocation = PC.CalcViewLocation;
-                    CameraRotation = Normalize(PC.CalcViewRotation + PC.ShakeRot);
+                    GunOffset = HUDOverlayOffset + (PC.ShakeOffset * FirstPersonGunShakeScale);
 
-                    // Make the first person gun appear lower when your sticking your head up
+                    // This makes the first person gun appear lower if player raises his head above the gun
                     if (FirstPersonGunRefBone != '' && Gun != none)
                     {
-                        GunOffset += PC.ShakeOffset * FirstPersonGunShakeScale;
-                        GunOffset.Z += (((Gun.GetBoneCoords(FirstPersonGunRefBone).Origin.Z - CameraLocation.Z) * FirstPersonOffsetZScale));
-                        GunOffset += HUDOverlayOffset;
-                        HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-                        C.DrawBoundActor(HUDOverlay, false, true, HUDOverlayFOV, CameraRotation, PC.ShakeRot * FirstPersonGunShakeScale, GunOffset * -1.0);
+                        GunOffset.Z += ((Gun.GetBoneCoords(FirstPersonGunRefBone).Origin.Z - PC.CalcViewLocation.Z) * FirstPersonOffsetZScale);
                     }
-                    else
-                    {
-                        CameraLocation += (PC.ShakeOffset.X * x) + (PC.ShakeOffset.Y * y) + (PC.ShakeOffset.Z * z);
-                        HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-                        HUDOverlay.SetRotation(CameraRotation);
-                        C.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
-                    }
+
+                    HUDOverlay.SetLocation(PC.CalcViewLocation);
+                    C.DrawBoundActor(HUDOverlay, false, true, HUDOverlayFOV, PC.CalcViewRotation, PC.ShakeRot * FirstPersonGunShakeScale, -GunOffset);
                 }
             }
             // Draw any texture overlay
