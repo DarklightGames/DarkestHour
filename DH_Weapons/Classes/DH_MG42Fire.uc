@@ -21,9 +21,9 @@ defaultproperties
     ShellIronSightOffset=(X=15.0,Y=0.0,Z=-6.0)
     ShellRotOffsetIron=(Pitch=-1500)
 
-    FireIronAnim="Shoot_Loop"
-    FireIronLoopAnim="Shoot_Loop"
-    FireIronEndAnim="Shoot_End"
+    BipodDeployFireAnim="Shoot_Loop"
+    BipodDeployFireLoopAnim="Shoot_Loop"
+    BipodDeployFireEndAnim="Shoot_End"
 
     ShakeOffsetMag=(X=4.0,Y=2.0,Z=4.0)
     ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
