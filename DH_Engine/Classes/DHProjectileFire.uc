@@ -171,6 +171,7 @@ simulated function bool IsPlayerHipFiring()
     return !(Weapon != none && Weapon.bUsingSights) && !(Instigator != none && Instigator.bBipodDeployed);
 }
 
+// Modified to add the PawnSpreadFactor, which is taken from the config setting AccuracyModifier in DarkestHourGame
 function CalcSpreadModifiers()
 {
     local DHPawn P;
@@ -183,22 +184,20 @@ function CalcSpreadModifiers()
         return;
     }
 
-    // Calc spread based on movement speed
+    // Calculate base spread based on movement speed
     PlayerSpeed = VSize(P.Velocity);
     MovementPctModifier = PlayerSpeed / P.default.GroundSpeed;
-    Spread = default.Spread + default.Spread * MovementPctModifier;
+    Spread = (1.0 + MovementPctModifier) * default.Spread;
 
-    // Handle the Pawn's Spread Factor (do this before other modifiers!)
-    Spread *= P.PawnSpreadFactor;
+    Spread *= P.PawnSpreadFactor; // added to handle the pawn's SpreadFactor
 
-    // Reduce the spread if player is crouched and not moving
-    if (P.bIsCrouched && PlayerSpeed == 0.0)
-    {
-        Spread *= CrouchSpreadModifier;
-    }
-    else if (P.bIsCrawling)
+    if (P.bIsCrawling)
     {
         Spread *= ProneSpreadModifier;
+    }
+    else if (P.bIsCrouched && PlayerSpeed == 0.0) // crouching reduction only applied if player isn't moving
+    {
+        Spread *= CrouchSpreadModifier;
     }
 
     if (P.bRestingWeapon)
@@ -206,25 +205,24 @@ function CalcSpreadModifiers()
         Spread *= RestDeploySpreadModifier;
     }
 
-    // Make the spread crazy if you're jumping
-    if (P.Physics == PHYS_Falling)
-    {
-        Spread *= 500.0;
-    }
-
-    if (!P.Weapon.bUsingSights && !P.bBipodDeployed)
-    {
-        Spread *= HipSpreadModifier;
-    }
-
     if (P.bBipodDeployed)
     {
         Spread *= BipodDeployedSpreadModifier;
+    }
+    else if (!P.Weapon.bUsingSights)
+    {
+        Spread *= HipSpreadModifier;
     }
 
     if (P.LeanAmount != 0.0)
     {
         Spread *= LeanSpreadModifier;
+    }
+
+    // Make the spread crazy if you're jumping // TODO: think Spread should be capped, as a really high spread could result in shots going off at impossible angles
+    if (P.Physics == PHYS_Falling)
+    {
+        Spread *= 500.0;
     }
 }
 

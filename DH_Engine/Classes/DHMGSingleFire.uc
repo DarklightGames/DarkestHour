@@ -37,30 +37,33 @@ simulated function HandleRecoil()
             NewRecoilRotation.Yaw *= -1;
         }
 
-        if (Instigator.Physics == PHYS_Falling)
+        if (ROPwn.Physics == PHYS_Falling)
         {
             NewRecoilRotation *= 3;
         }
 
-        if (Instigator.bIsCrouched)
+        if (ROPwn.bIsCrouched)
         {
             NewRecoilRotation *= PctCrouchRecoil;
         }
-        else if (Instigator.bIsCrawling)
+        else if (ROPwn.bIsCrawling)
         {
             NewRecoilRotation *= PctProneRecoil;
         }
 
-        // player is crouched and in iron sights
-        if (Weapon.bUsingSights)
+        // Added to apply PctHipMGPenalty if player is hip-firing the MG (bUsingSights signifies this)
+        // This replaces all recoil adjustments for bUsingSights in the Super
+        if (Weapon != none && Weapon.bUsingSights)
         {
             NewRecoilRotation *= PctHipMGPenalty;
         }
 
         if (ROPwn.bRestingWeapon)
+        {
             NewRecoilRotation *= PctRestDeployRecoil;
+        }
 
-        if (Instigator.bBipodDeployed)
+        if (ROPwn.bBipodDeployed)
         {
             NewRecoilRotation *= PctBipodDeployRecoil;
         }
@@ -73,15 +76,15 @@ simulated function HandleRecoil()
         ROP.SetRecoil(NewRecoilRotation, RecoilRate);
     }
 
-    if (Level.NetMode != NM_DedicatedServer && Instigator != none && ROPlayer(Instigator.Controller) != none)
+    if (Level.NetMode != NM_DedicatedServer && default.bShouldBlurOnFire)
     {
-        if (Weapon.bUsingSights)
+        if (Weapon != none && Weapon.bUsingSights)
         {
-            ROPlayer(Instigator.Controller).AddBlur(BlurTimeIronsight, BlurScaleIronsight);
+            ROP.AddBlur(BlurTimeIronsight, BlurScaleIronsight);
         }
         else
         {
-            ROPlayer(Instigator.Controller).AddBlur(BlurTime, BlurScale);
+            ROP.AddBlur(BlurTime, BlurScale);
         }
     }
 }
