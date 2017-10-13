@@ -565,12 +565,9 @@ simulated function HandleRecoil()
 
 defaultproperties
 {
-    bInstantHit=false
     bUsePreLaunchTrace=true
     PreLaunchTraceLengthFactor=0.1 // gives trace length of around 18m to 37m for pistol, 74m to 85m for full power rifle or MG
     ProjPerFire=1
-    ProjSpawnOffset=(X=25.0)
-
     CrouchSpreadModifier=0.85
     ProneSpreadModifier=0.7
     BipodDeployedSpreadModifier=0.5
@@ -578,22 +575,14 @@ defaultproperties
     HipSpreadModifier=3.5
     LeanSpreadModifier=1.35
     PctBipodDeployRecoil=0.05
-
+    bLeadTarget=true
+    bInstantHit=false
     NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
     FireForce="AssaultRifleFire"
-
-    FireAnim="Shoot"
-    FireIronAnim="Iron_Shoot"
-    TweenTime=0.0
-
+    WarnTargetPct=0.5
     bShouldBlurOnFire=true
     BlurTime=0.1
     BlurTimeIronsight=0.1
     BlurScale=0.01
     BlurScaleIronsight=0.1
-
-    // Bots
-    BotRefireRate=0.5
-    WarnTargetPct=0.9
-    bLeadTarget=true
 }

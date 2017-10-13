@@ -8,9 +8,14 @@ class DH_BazookaMeleeFire extends DHMeleeFire;
 defaultproperties
 {
     DamageType=class'DH_Weapons.DH_BazookaBashDamType'
-
-    // Adjustment of bazooka melee speed (slower) for animation problem:
-    FireRate=0.5
-    MinHoldTime=0.3
+    TraceRange=75.0
+    BashBackAnim="bash_pullback"
+    BashHoldAnim="bash_hold"
+    BashAnim="bash_attack"
+    BashFinishAnim="bash_return"
+    BotRefireRate=0.25
+    aimerror=800.0
+    MinHoldtime=0.3
     FullHeldTime=0.5
+    FireRate=0.5
 }

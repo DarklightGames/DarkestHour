@@ -318,25 +318,8 @@ simulated function EjectShell()
 
 defaultproperties
 {
-    PackingThresholdTime=0.12
-    bUsesTracers=true
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stMG'
+    PctHipMGPenalty=2.0
     NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
     BlurTime=0.04
     BlurTimeIronsight=0.04
-
-    Spread=65.0
-    CrouchSpreadModifier=1.0
-    ProneSpreadModifier=1.0
-    BipodDeployedSpreadModifier=1.0
-    RestDeploySpreadModifier=1.0
-    PctHipMGPenalty=2.0
-    MaxVerticalRecoilAngle=500
-    MaxHorizontalRecoilAngle=250
-    AimError=1800.0
-
-    PreFireAnim=""
-    BipodDeployFireAnim="Bipod_shoot_single"
-    BipodDeployFireLoopAnim="Bipod_Shoot_Loop"
-    BipodDeployFireEndAnim="Bipod_Shoot_End"
 }

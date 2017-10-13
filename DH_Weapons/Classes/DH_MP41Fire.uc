@@ -7,6 +7,6 @@ class DH_MP41Fire extends DH_MP40Fire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_MP41Bullet'
     MaxVerticalRecoilAngle=600
+    ProjectileClass=class'DH_Weapons.DH_MP41Bullet'
 }

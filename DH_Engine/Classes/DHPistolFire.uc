@@ -170,26 +170,7 @@ event ModeDoFire()
 
 defaultproperties
 {
-    bWaitForRelease=true
-    FireRate=0.25
-    FAProjSpawnOffset=(X=-15.0)
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'
-    SmokeEmitterClass=class'ROEffects.ROPistolMuzzleSmoke'
-    ShellIronSightOffset=(X=10.0,Y=0.0,Z=0.0)
     NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_pistol'
-
-    Spread=450.0
-    MaxVerticalRecoilAngle=600
-    MaxHorizontalRecoilAngle=75
-    AimError=800.0
-
-    FireLastAnim="shoot_empty"
-    FireIronLastAnim="iron_shoot_empty"
-
-    ShakeOffsetMag=(X=3.0,Y=1.0,Z=3.0)
-    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
-    ShakeOffsetTime=1.0
-    ShakeRotMag=(X=50.0,Y=50.0,Z=50.0)
-    ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
-    ShakeRotTime=1.0
+    SmokeEmitterClass=class'ROEffects.ROPistolMuzzleSmoke'
 }
+

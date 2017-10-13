@@ -91,34 +91,49 @@ function PlayFireEnd()
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_BrenBullet'
-    TracerProjectileClass=class'DH_Weapons.DH_BrenTracerBullet'
+    BipodDeployFireAnim="deploy_shoot_loop"
+    BipodDeployFireLoopAnim="deploy_shoot_loop"
+    BipodDeployFireEndAnim="deploy_shoot_end"
+    ProjSpawnOffset=(X=25.0)
+    FAProjSpawnOffset=(X=-28.0)
     bUsesTracers=true
     TracerFrequency=5
-    AmmoClass=class'DH_Weapons.DH_BrenAmmo'
-    FireRate=0.12
-    FAProjSpawnOffset=(X=-28.0)
-
-    Spread=125.0
-    RecoilRate=0.075
+    TracerProjectileClass=class'DH_Weapons.DH_BrenTracerBullet'
+    FireIronAnim="Iron_Shoot_Loop"
+    FireIronLoopAnim="Iron_Shoot_Loop"
+    FireIronEndAnim="Iron_Shoot_End"
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire01'
+    MaxVerticalRecoilAngle=950
+    MaxHorizontalRecoilAngle=120
     PctStandIronRecoil=0.8
     PctCrouchRecoil=0.65
     PctCrouchIronRecoil=0.45
     PctProneIronRecoil=0.25
     PctBipodDeployRecoil=0.01
     PctRestDeployRecoil=0.05
-    MaxVerticalRecoilAngle=950
-
-    FireSounds(0)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire01'
+    RecoilRate=0.075
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
-    ShellIronSightOffset=(X=10.0,Y=0.0,Z=-5.0)
+    ShellIronSightOffset=(X=10.0,Z=-5.0)
     ShellRotOffsetIron=(Pitch=-16200)
     bReverseShellSpawnDirection=true
-
-    BipodDeployFireAnim="deploy_shoot_loop"
-    BipodDeployFireLoopAnim="deploy_shoot_loop"
-    BipodDeployFireEndAnim="deploy_shoot_end"
-
+    FireAnim="Shoot_Loop"
+    FireLoopAnim="Shoot_Loop"
+    FireEndAnim="Shoot_End"
+    TweenTime=0.0
+    FireRate=0.12
+    AmmoClass=class'DH_Weapons.DH_BrenAmmo'
     ShakeRotMag=(X=50.0,Y=50.0,Z=175.0)
+    ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
     ShakeRotTime=0.75
+    ShakeOffsetMag=(X=3.0,Y=1.0,Z=3.0)
+    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
+    ShakeOffsetTime=1.0
+    ProjectileClass=class'DH_Weapons.DH_BrenBullet'
+    BotRefireRate=0.99
+    WarnTargetPct=0.9
+    FlashEmitterClass=class'ROEffects.MuzzleFlash1stSTG'
+    SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
+    AimError=1200.0
+    Spread=125.0
+    SpreadStyle=SS_Random
 }

@@ -89,24 +89,8 @@ event ModeDoFire()
 
 defaultproperties
 {
-    bWaitForRelease=true
-    FireRate=2.4
-    FAProjSpawnOffset=(X=-35.0)
-    SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
-    bAnimNotifiedShellEjects=true
-    ShellIronSightOffset=(X=10.0,Y=3.0,Z=-5.0)
-
+    PctRestDeployRecoil=0.65
     bDelayedRecoil=true
     DelayedRecoilTime=0.05
-    PctRestDeployRecoil=0.65
-    MaxVerticalRecoilAngle=1000
-    MaxHorizontalRecoilAngle=100
-    AimError=800.0
-
-    ShakeOffsetMag=(X=3.0,Y=1.0,Z=5.0)
-    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
-    ShakeOffsetTime=1.0
-    ShakeRotMag=(X=50.0,Y=50.0,Z=300.0)
-    ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
-    ShakeRotTime=2.0
+    bAnimNotifiedShellEjects=true
 }

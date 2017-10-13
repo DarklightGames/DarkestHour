@@ -435,38 +435,31 @@ function float MaxRange()
 
 defaultproperties
 {
-    bMeleeMode=true
-    bFireOnRelease=true
-    AmmoPerFire=0
-
-    FireRate=0.25
-    MinHoldtime=0.1
-    FullHeldTime=0.3
-    TraceRange=75.0
-    BayonetTraceRange=125.0
-    MeleeAttackSpread=8.0
+    VulnerableDamageFactor=3.0
     RearAngleArc=16000.0
-    MomentumTransfer=0.0 // was 100 in RO
 
     DamageMin=30
     DamageMax=40
     BayonetDamageMin=38
     BayonetDamageMax=52
-    VulnerableDamageFactor=3.0
+    MinHoldtime=0.1
+    FullHeldTime=0.3
+    MeleeAttackSpread=8.0
+    MomentumTransfer=0
 
-    PlayerBashSound=SoundGroup'Inf_Weapons_Foley.melee.butt_hit'
-    PlayerStabSound=SoundGroup'Inf_Weapons_Foley.melee.bayo_hit'
-    GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.butt_hit_ground'
-    GroundStabSound=SoundGroup'Inf_Weapons_Foley.melee.bayo_hit_ground'
+    FireRate=0.25
+    FireAnimRate=1.0
 
-    BashBackAnim="bash_pullback"
-    BashHoldAnim="bash_hold"
-    BashAnim="bash_attack"
-    BashFinishAnim="bash_return"
+    // From ROMeleeFire
+    bMeleeMode=true
+    bFireOnRelease=true
+    MaxHoldtime=0.0
+    AmmoPerFire=0
+    SpreadStyle=SS_Random
+    GroundStabSound=Sound'Inf_Weapons_Foley.melee.bayo_hit_ground'
+    GroundBashSound=Sound'Inf_Weapons_Foley.melee.butt_hit_ground'
+    PlayerStabSound=Sound'Inf_Weapons_Foley.melee.bayo_hit'
+    PlayerBashSound=Sound'Inf_Weapons_Foley.melee.butt_hit'
     FireEndAnim=none
     FireLoopAnim=none
-
-    // Bots
-    BotRefireRate=0.25
-    AimError=800.0
 }
