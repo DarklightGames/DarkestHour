@@ -195,7 +195,7 @@ simulated event PostNetBeginPlay()
     super.PostNetBeginPlay();
 
     // Make this only run by the owning client
-    if ( Role < ROLE_Authority )
+    if (Role < ROLE_Authority)
     {
         ServerSetBayonetAtSpawn(bSpawnWithBayonet);
     }

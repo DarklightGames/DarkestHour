@@ -25,12 +25,13 @@ function PlayFireEnd()
     }
 }
 
-// Overridden to support hip firing MGs
+// Modified to apply PctHipMGPenalty if player is hip-firing the MG (bUsingSights signifies this)
+// That replaces all recoil adjustments for bUsingSights in the Super
 simulated function HandleRecoil()
 {
-    local rotator NewRecoilRotation;
     local ROPlayer ROP;
-    local ROPawn ROPwn;
+    local ROPawn   ROPwn;
+    local rotator  NewRecoilRotation;
 
     if (Instigator != none)
     {
@@ -45,8 +46,8 @@ simulated function HandleRecoil()
 
     if (!ROP.bFreeCamera)
     {
-        NewRecoilRotation.Pitch = RandRange(maxVerticalRecoilAngle * 0.75, maxVerticalRecoilAngle);
-        NewRecoilRotation.Yaw = RandRange(maxHorizontalRecoilAngle * 0.75, maxHorizontalRecoilAngle);
+        NewRecoilRotation.Pitch = RandRange(MaxVerticalRecoilAngle * 0.75, MaxVerticalRecoilAngle);
+        NewRecoilRotation.Yaw = RandRange(MaxHorizontalRecoilAngle * 0.75, MaxHorizontalRecoilAngle);
 
         if (Rand(2) == 1)
         {
@@ -58,7 +59,6 @@ simulated function HandleRecoil()
             NewRecoilRotation *= 3;
         }
 
-        // WeaponTODO: Put bipod and resting modifiers in here
         if (Instigator.bIsCrouched)
         {
             NewRecoilRotation *= PctCrouchRecoil;
@@ -87,7 +87,6 @@ simulated function HandleRecoil()
             NewRecoilRotation *= PctLeanPenalty;
         }
 
-        // Need to set this value per weapon
         ROP.SetRecoil(NewRecoilRotation, RecoilRate);
     }
 
@@ -206,7 +205,7 @@ function DoFireEffect()
     }
 }
 
-// Increase spread when firing from the hip
+// Modified to support ironsight mode (bUsingSights) being hipped-fire mode for MGs
 function CalcSpreadModifiers()
 {
     super.CalcSpreadModifiers();

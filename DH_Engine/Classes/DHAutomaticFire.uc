@@ -20,6 +20,7 @@ simulated function bool AllowFire()
     return super.AllowFire();
 }
 
+// Implemented to stop weapon firing if it is no longer allowed to
 function ModeTick(float DeltaTime)
 {
     super.ModeTick(DeltaTime);

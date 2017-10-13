@@ -6,9 +6,11 @@
 class DHPistolFire extends DHProjectileFire
     abstract;
 
-var name FireLastAnim;      // anim for weapon firing last shot
-var name FireIronLastAnim;  // anim for weapon firing last shot
+// Different firing animations if pistol is firing its last round
+var     name    FireLastAnim;
+var     name    FireIronLastAnim;
 
+// Modified to use different firing animations if pistol is firing its last round
 function PlayFiring()
 {
     if (Weapon.Mesh != none)

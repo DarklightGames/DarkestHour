@@ -179,7 +179,7 @@ function HandleProjectileSpawning(vector SpawnPoint, rotator SpawnAim)
                 HiROFWeaponAttachment.DualShotCount = 1;
             }
 
-            HiROFWeaponAttachment.NetUpdateTime = Level.TimeSeconds - 1;
+            HiROFWeaponAttachment.NetUpdateTime = Level.TimeSeconds - 1.0;
 
             HiROFWeaponAttachment.bUnReplicatedShot = false;
         }
@@ -205,13 +205,13 @@ function PlayFireEnd()
     }
 }
 
-// Sends the fire class to the looping state
+// Implemented to send the fire class to the looping state
 function StartFiring()
 {
-   GotoState('FireLoop');
+    GotoState('FireLoop');
 }
 
-// Handles toggling the weapon attachment's ambient sound on and off
+// New function to handles toggling the weapon attachment's ambient sound on & off
 function PlayAmbientSound(sound aSound)
 {
     local WeaponAttachment WA;
@@ -246,7 +246,7 @@ event ModeDoFire()
     }
 }
 
-// This state handles looping the firing animations and ambient fire sounds as well as firing rounds.
+// New state to handle looping the firing animations & ambient fire sounds as well as firing rounds
 state FireLoop
 {
     function BeginState()
@@ -269,7 +269,7 @@ state FireLoop
         PlayAmbientSound(AmbientFireSound);
     }
 
-    // Overridden because we play an ambient fire sound
+    // Emptied out because we play an ambient fire sound
     function PlayFiring() { }
     function ServerPlayFiring() { }
 
@@ -302,17 +302,17 @@ state FireLoop
                 HiROFWeaponAttachment.DualShotCount = 255;
             }
 
-            HiROFWeaponAttachment.NetUpdateTime = Level.TimeSeconds - 1;
+            HiROFWeaponAttachment.NetUpdateTime = Level.TimeSeconds - 1.0;
         }
 
         GotoState('');
     }
 
+    // Modified to make sure we leave this state if weapon has stopped firing, or the magazine is empty, or barrel has failed due to overheating
     function ModeTick(float DeltaTime)
     {
         super(WeaponFire).ModeTick(DeltaTime);
 
-        // Stopped firing, magazine empty or barrel overheat // WeaponTODO: see how to properly reimplement this
         if (!bIsFiring || ROWeapon(Weapon).IsBusy() || !AllowFire() || (DHProjectileWeapon(Weapon) != none && DHProjectileWeapon(Weapon).bBarrelFailed))
         {
             GotoState('');

@@ -15,7 +15,7 @@ var     float   AddedFuseTime;          // additional fuse time to add to compen
 var     bool    bPullAnimCompensation;  // add time to the fuse time to compensate for the pin pull animation
 var     bool    bIsSmokeGrenade;        // is a smoke grenade, which will not harm the thrower
 
-// Modified to allow players to throw explosives while prone transitioning
+// Modified to allow player to throw explosive while prone transitioning (removes restriction in Super)
 simulated function bool AllowFire()
 {
     local DHExplosiveWeapon W;
@@ -245,6 +245,7 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
     local float      PawnSpeed, ThrowSpeed, SetFuseTime;
     local vector     X, Y, Z;
 
+    // Spawn the projectile
     Dir.Pitch += AddedPitch; // this will increase the angle the grenade is thrown at
 
     if (Instigator != none && Instigator.Health > 0)
@@ -263,34 +264,33 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
 
     if (Instigator != none)
     {
-        // Dead man drop area
+        // Dead 'nade (thrower died)
         if (Instigator.Health <= 0)
         {
-            // The grenade was active & we'll need to set the remaining fuze length
+            // Set the remaining fuze length
             if (DHThrowableExplosiveProjectile(SpawnedProjectile) != none)
             {
                 DHThrowableExplosiveProjectile(SpawnedProjectile).FuzeLengthTimer = FMax(0.1, DHExplosiveWeapon(Weapon).CurrentFuzeTime) + RandRange(0.0, RANDOM_FUSE_TIME);
             }
 
-            // Have the grenade go in the direction the instigator was going
+            // Have the grenade go in the direction the thrower was going, then exit
             SpawnedProjectile.Velocity = Instigator.Velocity;
 
             return SpawnedProjectile;
         }
 
+        // Get the thrower's movement speed (relative to the throw direction)
         Weapon.GetViewAxes(X, Y, Z);
         PawnSpeed = X dot Instigator.Velocity;
     }
 
-    // Calculate projectile velocity from the hold time
+    // Calculate projectile thrown speed from the hold time, then add the thrower's movement speed to the grenade
     ThrowSpeed = HoldTime * SpeedFromHoldingPerSec;
     SpawnedProjectile.Speed = FClamp(ThrowSpeed, MinimumThrowSpeed, MaximumThrowSpeed);
-
-    // Apply the pawn's speed to the grenade
     SpawnedProjectile.Speed += PawnSpeed;
     SpawnedProjectile.Velocity = SpawnedProjectile.Speed * vector(Dir);
 
-    // Set the fuse time
+    // Set the remaining fuse time
     if (DHThrowableExplosiveProjectile(SpawnedProjectile) != none)
     {
         SetFuseTime = FMax(0.1, DHExplosiveWeapon(Weapon).CurrentFuzeTime);
@@ -308,6 +308,7 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
     return SpawnedProjectile;
 }
 
+// Modified to prime the explosive weapon when thrown, & also to simply play the FireAnim
 function PlayFiring()
 {
     if (Weapon.Mesh != none)
@@ -323,6 +324,7 @@ function PlayFiring()
     ClientPlayForceFeedback(FireForce);
 }
 
+// Modified to prime the explosive weapon when thrown
 function ServerPlayFiring()
 {
     if (DHExplosiveWeapon(Weapon) != none)
@@ -331,7 +333,7 @@ function ServerPlayFiring()
     }
 }
 
-// Modified so a smoke grenade doesn't blows up in player's hand
+// Implemented so explosive will blow up in player's hand if he holds a primed weapon too long
 event ModeTick(float DeltaTime)
 {
     local DHExplosiveWeapon Exp;
@@ -350,7 +352,7 @@ event ModeTick(float DeltaTime)
             {
                 Exp.bAlreadyExploded = true;
 
-                if (!bIsSmokeGrenade)
+                if (!bIsSmokeGrenade) // added check so a smoke grenade doesn't blows up in player's hand
                 {
                     Weapon.ConsumeAmmo(ThisModeNum, Weapon.AmmoAmount(ThisModeNum));
                     DoFireEffect();
@@ -361,6 +363,8 @@ event ModeTick(float DeltaTime)
     }
 }
 
+// Modified to prime the explosive weapon when held before throwing, unless it has a lever that only primes weapon when thrown
+// Also to set the 'hold' animations on the player's pawn
 event ModeHoldFire()
 {
     if (Weapon != none && Weapon.Role == ROLE_Authority && !(DHExplosiveWeapon(Weapon) != none && DHExplosiveWeapon(Weapon).bHasReleaseLever))

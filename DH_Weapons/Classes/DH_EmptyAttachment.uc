@@ -7,9 +7,8 @@ class DH_EmptyAttachment extends DHThrowableExplosiveAttachment;
 
 defaultproperties
 {
-     menuImage=None
-     MenuDescription=""
-     Mesh=None
-//     Skins(0)=Texture'29thTextures.blank'
+    MenuImage=none
+    MenuDescription=""
+    Mesh=none
+//  Skins(0)=Texture'29thTextures.blank'
 }
-

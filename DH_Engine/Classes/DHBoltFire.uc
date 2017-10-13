@@ -24,7 +24,7 @@ event ModeDoFire()
     {
         Weapon.ConsumeAmmo(ThisModeNum, Load);
         DoFireEffect();
-        HoldTime = 0;   // if bot decides to stop firing, HoldTime must be reset first
+        HoldTime = 0.0; // if bot decides to stop firing, HoldTime must be reset first
 
         if (Instigator == none || Instigator.Controller == none)
         {
@@ -78,7 +78,7 @@ event ModeDoFire()
     Weapon.PostFire(); // ADDED here
 
     Load = AmmoPerFire;
-    HoldTime = 0;
+    HoldTime = 0.0;
 
     if (Instigator != none && Instigator.PendingWeapon != Weapon && Instigator.PendingWeapon != none)
     {

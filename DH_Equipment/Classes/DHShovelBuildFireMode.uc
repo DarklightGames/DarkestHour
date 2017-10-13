@@ -122,4 +122,3 @@ defaultproperties
     FireSounds(1)=Sound'DH_WeaponSounds.Shovel.shovel_3'
     FireSounds(2)=Sound'DH_WeaponSounds.Shovel.shovel_4'
 }
-

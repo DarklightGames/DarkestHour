@@ -10,7 +10,7 @@ var     name            FireLastAnim;     // last round animation
 var     name            FireIronlastAnim; // iron last round animation
 var     bool            NextShotIsLast;   // set on the second last shot to facilitate clip eject
 
-// Modified to add clip eject ping to firing sound after firing last round
+// Modified to play firing sound including a clip eject ping when firing last round
 function ServerPlayFiring()
 {
     if (DH_M1GarandWeapon(Weapon) != none && DH_M1GarandWeapon(Weapon).WasLastRound())
@@ -23,7 +23,7 @@ function ServerPlayFiring()
     }
 }
 
-// Modified to make last round eject clip & add audible ping
+// Modified to play firing sound including clip eject ping, & play firing animation including clip ejection, when firing last round
 function PlayFiring()
 {
     local DH_M1GarandWeapon Garand;
