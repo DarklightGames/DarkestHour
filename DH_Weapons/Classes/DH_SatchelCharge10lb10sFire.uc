@@ -15,8 +15,12 @@ event ModeDoFire()
     else
     {
         HoldTime = 0.0;
-        Weapon.PutDown();
-        Weapon.PostFire();
+
+        if (Weapon != none)
+        {
+            Weapon.PutDown();
+            Weapon.PostFire();
+        }
     }
 }
 

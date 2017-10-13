@@ -13,31 +13,13 @@ var     name    FireIronLastAnim;
 // Modified to use different firing animations if pistol is firing its last round
 function PlayFiring()
 {
-    if (Weapon.Mesh != none)
+    if (Weapon != none)
     {
-        if (FireCount > 0)
+        if (Weapon.Mesh != none)
         {
-            if (Weapon.bUsingSights && Weapon.HasAnim(FireIronLoopAnim))
+            if (Weapon.bUsingSights && Weapon.HasAnim(FireIronAnim))
             {
-                Weapon.PlayAnim(FireIronLoopAnim, FireAnimRate, 0.0);
-            }
-            else
-            {
-                if (Weapon.HasAnim(FireLoopAnim))
-                {
-                    Weapon.PlayAnim(FireLoopAnim, FireLoopAnimRate, 0.0);
-                }
-                else
-                {
-                    Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
-                }
-            }
-        }
-        else
-        {
-            if (Weapon.bUsingSights)
-            {
-                if (Weapon.AmmoAmount(ThisModeNum) < 1)
+                if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireIronLastAnim))
                 {
                     Weapon.PlayAnim(FireIronLastAnim, FireAnimRate, FireTweenTime);
                 }
@@ -46,24 +28,20 @@ function PlayFiring()
                     Weapon.PlayAnim(FireIronAnim, FireAnimRate, FireTweenTime);
                 }
             }
-            else
+            else if (Weapon.AmmoAmount(ThisModeNum) < 1 && Weapon.HasAnim(FireLastAnim))
             {
-                if (Weapon.AmmoAmount(ThisModeNum) < 1)
-                {
-                    Weapon.PlayAnim(FireLastAnim, FireAnimRate, FireTweenTime);
-                }
-                else
-                {
-                    Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
-                }
+                Weapon.PlayAnim(FireLastAnim, FireAnimRate, FireTweenTime);
+            }
+            else if (Weapon.HasAnim(FireAnim))
+            {
+                Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
             }
         }
+
+        Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
     }
 
-    Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
-
     ClientPlayForceFeedback(FireForce);
-
     FireCount++;
 }
 

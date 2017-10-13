@@ -489,60 +489,61 @@ function bool PreLaunchTrace(vector Start, vector Direction)
     return true;
 }
 
+// Modified to handle different firing animations when on sights
 function PlayFiring()
 {
-    if (Weapon.Mesh != none)
+    if (Weapon != none)
     {
-        if (FireCount > 0)
+        if (Weapon.Mesh != none)
         {
-            if (Weapon.bUsingSights && Weapon.HasAnim(FireIronLoopAnim))
+            if (FireCount > 0)
             {
-                Weapon.PlayAnim(FireIronLoopAnim, FireAnimRate, 0.0);
-            }
-            else
-            {
-                if (Weapon.HasAnim(FireLoopAnim))
+                if (Weapon.bUsingSights && Weapon.HasAnim(FireIronLoopAnim))
+                {
+                    Weapon.PlayAnim(FireIronLoopAnim, FireLoopAnimRate, 0.0);
+                }
+                else if (Weapon.HasAnim(FireLoopAnim))
                 {
                     Weapon.PlayAnim(FireLoopAnim, FireLoopAnimRate, 0.0);
                 }
-                else
+                else if (Weapon.HasAnim(FireAnim))
                 {
                     Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
                 }
             }
-        }
-        else
-        {
-            if (Weapon.bUsingSights)
+            else if (Weapon.bUsingSights && Weapon.HasAnim(FireIronAnim))
             {
                 Weapon.PlayAnim(FireIronAnim, FireAnimRate, FireTweenTime);
             }
-            else
+            else if (Weapon.HasAnim(FireAnim))
             {
                 Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
             }
         }
-    }
 
-    if (FireSounds.Length > 0)
-    {
-        Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
+        if (FireSounds.Length > 0)
+        {
+            Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
+        }
     }
 
     ClientPlayForceFeedback(FireForce);
-
     FireCount++;
 }
 
+// Modified to handle different fire end animation when on sights
 function PlayFireEnd()
 {
-    if (Weapon.bUsingSights && Weapon.HasAnim(FireIronEndAnim))
+    if (Weapon != none && Weapon.Mesh != none)
     {
-        Weapon.PlayAnim(FireIronEndAnim, FireEndAnimRate, FireTweenTime);
-    }
-    else if (Weapon.HasAnim(FireEndAnim))
-    {
-        Weapon.PlayAnim(FireEndAnim, FireEndAnimRate, FireTweenTime);
+        if (Weapon.bUsingSights && Weapon.HasAnim(FireIronEndAnim))
+        {
+            Weapon.PlayAnim(FireIronEndAnim, FireEndAnimRate, FireTweenTime);
+        }
+        else if (Weapon.HasAnim(FireEndAnim))
+        {
+            Weapon.PlayAnim(FireEndAnim, FireEndAnimRate, FireTweenTime);
+        }
     }
 }
 

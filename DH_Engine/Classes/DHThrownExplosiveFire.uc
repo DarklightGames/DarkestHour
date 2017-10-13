@@ -18,18 +18,13 @@ var     bool    bIsSmokeGrenade;        // is a smoke grenade, which will not ha
 // Modified to allow player to throw explosive while prone transitioning (removes restriction in Super)
 simulated function bool AllowFire()
 {
-    local DHExplosiveWeapon W;
-
-    W = DHExplosiveWeapon(Weapon);
-
-    if (Level.NetMode == NM_Client &&
-        Instigator != none && Instigator.IsLocallyControlled() &&
-        W != none && W.AmmoAmount(ThisModeNum) < W.StartFireAmmoAmount)
+    if (Level.NetMode == NM_Client && Instigator != none && Instigator.IsLocallyControlled()
+        && DHExplosiveWeapon(Weapon) != none && Weapon.AmmoAmount(ThisModeNum) < DHExplosiveWeapon(Weapon).StartFireAmmoAmount)
     {
         return true;
     }
 
-    return W != none && W.AmmoAmount(ThisModeNum) >= AmmoPerFire;
+    return Weapon != none && Weapon.AmmoAmount(ThisModeNum) >= AmmoPerFire;
 }
 
 // Modified to consume ammo on the clients end
@@ -216,25 +211,20 @@ function DoFireEffect()
 // Modified to ignore weapon stuff like sights, bipod, etc
 function CalcSpreadModifiers()
 {
-    local ROPawn ROP;
-    local float  PlayerSpeed, MovementPctModifier;
+    local float PlayerSpeed, MovementPctModifier;
 
-    ROP = ROPawn(Instigator);
-
-    if (ROP == none)
+    if (Instigator != none)
     {
-        return;
-    }
+        // Calculate base spread based on movement speed
+        PlayerSpeed = VSize(Instigator.Velocity);
+        MovementPctModifier = PlayerSpeed / Instigator.default.GroundSpeed;
+        Spread = (1.0 + MovementPctModifier) * default.Spread;
 
-    // Calc spread based on movement speed
-    PlayerSpeed = VSize(ROP.Velocity);
-    MovementPctModifier = PlayerSpeed / ROP.default.GroundSpeed;
-    Spread = default.Spread + default.Spread * MovementPctModifier;
-
-    // Increase the spread if you're jumping
-    if (ROP.Physics == PHYS_Falling)
-    {
-        Spread *= 3.0;
+        // Increase the spread if you're jumping
+        if (Instigator.Physics == PHYS_Falling)
+        {
+            Spread *= 3.0;
+        }
     }
 }
 
@@ -270,7 +260,13 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
             // Set the remaining fuze length
             if (DHThrowableExplosiveProjectile(SpawnedProjectile) != none)
             {
-                DHThrowableExplosiveProjectile(SpawnedProjectile).FuzeLengthTimer = FMax(0.1, DHExplosiveWeapon(Weapon).CurrentFuzeTime) + RandRange(0.0, RANDOM_FUSE_TIME);
+                if (DHExplosiveWeapon(Weapon) != none)
+                {
+                    SetFuseTime = DHExplosiveWeapon(Weapon).CurrentFuzeTime;
+                }
+
+                SetFuseTime = FMax(0.1, SetFuseTime + RandRange(0.0, RANDOM_FUSE_TIME));
+                DHThrowableExplosiveProjectile(SpawnedProjectile).FuzeLengthTimer = SetFuseTime;
             }
 
             // Have the grenade go in the direction the thrower was going, then exit
@@ -311,14 +307,17 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
 // Modified to prime the explosive weapon when thrown, & also to simply play the FireAnim
 function PlayFiring()
 {
-    if (Weapon.Mesh != none)
+    if (Weapon != none)
     {
-        Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
-    }
+        if (Weapon.Mesh != none && Weapon.HasAnim(FireAnim))
+        {
+            Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
+        }
 
-    if (DHExplosiveWeapon(Weapon) != none)
-    {
-        DHExplosiveWeapon(Weapon).InstantPrime();
+        if (Weapon.IsA('DHExplosiveWeapon'))
+        {
+            DHExplosiveWeapon(Weapon).InstantPrime();
+        }
     }
 
     ClientPlayForceFeedback(FireForce);

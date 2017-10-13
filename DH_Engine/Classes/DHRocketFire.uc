@@ -26,7 +26,12 @@ event ModeDoFire()
 
     super.ModeDoFire();
 
-    if (bCausesExhaustDamage)
+    if (Weapon == none)
+    {
+        return;
+    }
+
+    if (bCausesExhaustDamage && Weapon.ThirdPersonActor != none)
     {
         WeaponLocation = Weapon.ThirdPersonActor.Location;
         ExhaustDirection = -vector(Weapon.ThirdPersonActor.Rotation);
@@ -81,26 +86,37 @@ function PlayFiring()
     local DHRocketWeapon RocketWeapon;
     local name           Anim;
 
-    if (Weapon.bUsingSights)
+    if (Weapon != none)
     {
-        RocketWeapon = DHRocketWeapon(Weapon);
-
-        if (RocketWeapon != none && RocketWeapon.RangeSettings.Length > 0)
+        if (Weapon.Mesh != none)
         {
-            Anim = RocketWeapon.RangeSettings[RocketWeapon.RangeIndex].FireIronAnim;
+            if (Weapon.bUsingSights)
+            {
+                RocketWeapon = DHRocketWeapon(Weapon);
+
+                if (RocketWeapon != none && RocketWeapon.RangeSettings.Length > 0)
+                {
+                    Anim = RocketWeapon.RangeSettings[RocketWeapon.RangeIndex].FireIronAnim;
+                }
+                else
+                {
+                    Anim = FireIronAnim;
+                }
+            }
+            else
+            {
+                Anim = FireAnim;
+            }
+
+            if (Weapon.HasAnim(Anim))
+            {
+                Weapon.PlayAnim(Anim, FireAnimRate, FireTweenTime);
+            }
         }
-        else
-        {
-            Anim = FireIronAnim;
-        }
-    }
-    else
-    {
-        Anim = FireAnim;
+
+        Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
     }
 
-    Weapon.PlayAnim(Anim, FireAnimRate, FireTweenTime);
-    Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
     ClientPlayForceFeedback(FireForce);
 }
 
