@@ -199,31 +199,32 @@ function PlayAmbientSound(sound aSound)
 {
     local WeaponAttachment WA;
 
-    WA = WeaponAttachment(Weapon.ThirdPersonActor);
-
-    if (Weapon == none || WA == none)
+    if (Weapon != none)
     {
-        return;
+        WA = WeaponAttachment(Weapon.ThirdPersonActor);
     }
 
-    if (aSound == none)
+    if (WA != none)
     {
-        WA.SoundVolume = WA.default.SoundVolume;
-        WA.SoundRadius = WA.default.SoundRadius;
-    }
-    else
-    {
-        WA.SoundVolume = AmbientFireVolume;
-        WA.SoundRadius = AmbientFireSoundRadius;
-    }
+        if (aSound == none)
+        {
+            WA.SoundVolume = WA.default.SoundVolume;
+            WA.SoundRadius = WA.default.SoundRadius;
+        }
+        else
+        {
+            WA.SoundVolume = AmbientFireVolume;
+            WA.SoundRadius = AmbientFireSoundRadius;
+        }
 
-    WA.AmbientSound = aSound;
+        WA.AmbientSound = aSound;
+    }
 }
 
 // Make sure we are in the fire looping state when we fire
 event ModeDoFire()
 {
-    if (!ROWeapon(Owner).IsBusy() && AllowFire() && IsInState('FireLoop'))
+    if (ROWeapon(Owner) != none && !ROWeapon(Owner).IsBusy() && AllowFire() && IsInState('FireLoop'))
     {
         super.ModeDoFire();
     }
@@ -271,15 +272,18 @@ state FireLoop
 
     function EndState()
     {
-        Weapon.AnimStopLooping();
         PlayAmbientSound(none);
-        Weapon.PlayOwnedSound(FireEndSound, SLOT_None, FireVolume,, AmbientFireSoundRadius);
-        Weapon.StopFire(ThisModeNum);
 
-        //If we are not switching weapons, go to the idle state
-        if (!Weapon.IsInState('LoweringWeapon'))
+        if (Weapon != none)
         {
-            ROWeapon(Weapon).GotoState('Idle');
+            Weapon.AnimStopLooping();
+            Weapon.PlayOwnedSound(FireEndSound, SLOT_None, FireVolume,, AmbientFireSoundRadius);
+            Weapon.StopFire(ThisModeNum);
+
+            if (!Weapon.IsInState('LoweringWeapon') && Weapon.IsA('ROWeapon'))
+            {
+                ROWeapon(Weapon).GotoState('Idle'); // if we are not switching weapons, go to the idle state
+            }
         }
     }
 
@@ -309,11 +313,9 @@ state FireLoop
     {
         super(WeaponFire).ModeTick(DeltaTime);
 
-        if (!bIsFiring || ROWeapon(Weapon).IsBusy() || !AllowFire() || (DHProjectileWeapon(Weapon) != none && DHProjectileWeapon(Weapon).bBarrelFailed))
+        if (!bIsFiring || (ROWeapon(Weapon) != none && ROWeapon(Weapon).IsBusy()) || !AllowFire() || (DHProjectileWeapon(Weapon) != none && DHProjectileWeapon(Weapon).bBarrelFailed))
         {
             GotoState('');
-
-            return;
         }
     }
 }
