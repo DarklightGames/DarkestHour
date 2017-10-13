@@ -116,8 +116,6 @@ function DoTrace(vector Start, rotator Dir)
         return;
     }
 
-    HitPawn = ROPawn(Other);
-
     // Calculate damage if it's something we could hurt (no damage to world geometry unless it's a destroyable mesh)
     if (!Other.bWorldGeometry || Other.IsA('RODestroyableStaticMesh') || Other.IsA('DHConstruction'))
     {
@@ -134,6 +132,8 @@ function DoTrace(vector Start, rotator Dir)
             ThisDamageType = DamageType;
         }
     }
+
+    HitPawn = ROPawn(Other);
 
     // Hit another player (note we don't make weapon attachment play hit effects, as blood effects etc get handled in ProcessLocationalDamage/TakeDamage)
     if (HitPawn != none)
@@ -374,33 +374,22 @@ function PlayFiring()
 function DoFireEffect()
 {
     local vector  StartTrace;
-    local rotator Aim, R;
+    local rotator Aim;
 
     if (Instigator != none)
     {
         Instigator.MakeNoise(1.0);
+
+        StartTrace = Instigator.Location + Instigator.EyePosition(); // the to-hit trace starts right in front of player's eye
+        Aim = AdjustAim(StartTrace, AimError);
+        Aim = rotator(vector(Aim) + (VRand() * FRand() * Spread));
+        DoTrace(StartTrace, Aim);
     }
-
-    // The to-hit trace always starts right in front of the eye
-    StartTrace = Instigator.Location + Instigator.EyePosition();
-    Aim = AdjustAim(StartTrace, AimError);
-    R = rotator(vector(Aim) + (VRand() * FRand() * Spread));
-    DoTrace(StartTrace, R);
-}
-
-function float GetTraceRange()
-{
-    if (Weapon.bBayonetMounted)
-    {
-        return BayonetTraceRange;
-    }
-
-    return TraceRange;
 }
 
 function PlayFireEnd()
 {
-    if (Weapon != none)
+    if (Weapon != none && Weapon.Mesh != none)
     {
         if (Weapon.bBayonetMounted && Weapon.HasAnim(BayoFinishAnim))
         {
@@ -417,10 +406,20 @@ function PlayFireEnd()
     }
 }
 
+function float GetTraceRange()
+{
+    if (Weapon != none && Weapon.bBayonetMounted)
+    {
+        return BayonetTraceRange;
+    }
+
+    return TraceRange;
+}
+
 // Returns the trace range squared for cheaper comparisons
 function float GetTraceRangeSquared()
 {
-    if (Weapon.bBayonetMounted)
+    if (Weapon != none && Weapon.bBayonetMounted)
     {
         return BayonetTraceRange * BayonetTraceRange;
     }
