@@ -27,15 +27,12 @@ simulated function bool AllowFire()
     return Weapon != none && Weapon.AmmoAmount(ThisModeNum) >= AmmoPerFire;
 }
 
-// Modified to consume ammo on the clients end
-// Also to stop an already drawn back explosive from being thrown if player's weapons become locked (due to spawn killing)
+// Modified to immediately consume ammo on a net client, without waiting for a reduced ammo count to replicate
+// We know if it hasn't already been reduced by comparing client's current ammo count to StartFireAmmoAmount recorded at start of fire process
+// Also to set the 'hold' animations on the player's pawn, & to call PostFire() on the explosive weapon
+// And to stop an already drawn back explosive from being thrown if player's weapons become locked (due to spawn killing)
 event ModeDoFire()
 {
-    if (!AllowFire())
-    {
-        return;
-    }
-
     // Stop an already drawn back explosive from being thrown if player's weapons become locked (due to spawn killing)
     // Happens because that forces the fire button to be released, which triggers this event
     // TODO: clean this up & perhaps find a better place to do this, it's just a quick fix with some problems (Matt, Jan 2017)
@@ -44,92 +41,13 @@ event ModeDoFire()
         return;
     }
 
-    if (MaxHoldTime > 0.0)
-    {
-        HoldTime = FMin(HoldTime, MaxHoldTime);
-    }
+    super.ModeDoFire();
 
-    // Server
-    if (Weapon.Role == ROLE_Authority)
+    // Consume ammo on the client as well, if the ammo count hasn't been net updated yet - this should prevent some of the ammo amount related lag bugs
+    if (Level.NetMode == NM_Client && Instigator != none && Instigator.IsLocallyControlled() &&
+        DHExplosiveWeapon(Weapon) != none && DHExplosiveWeapon(Weapon).StartFireAmmoAmount == Weapon.AmmoAmount(ThisModeNum))
     {
         Weapon.ConsumeAmmo(ThisModeNum, Load);
-        DoFireEffect();
-        HoldTime = 0.0; // if bot decides to stop firing, HoldTime must be reset first
-
-        if (Instigator == none || Instigator.Controller == none)
-        {
-            return;
-        }
-
-        if (AIController(Instigator.Controller) != none)
-        {
-            AIController(Instigator.Controller).WeaponFireAgain(BotRefireRate, true);
-        }
-
-        Instigator.DeactivateSpawnProtection();
-    }
-
-    // Client
-    if (Instigator != none && Instigator.IsLocallyControlled())
-    {
-        if (!bDelayedRecoil)
-        {
-            HandleRecoil();
-        }
-
-        ShakeView();
-        PlayFiring();
-
-        // Consume ammo on the client as well, if the ammo count hasn't been net updated yet - this should prevent some of the ammo amount related lag bugs
-        if (Level.NetMode == NM_Client && DHExplosiveWeapon(Weapon) != none && DHExplosiveWeapon(Weapon).StartFireAmmoAmount == Weapon.AmmoAmount(ThisModeNum))
-        {
-            Weapon.ConsumeAmmo(ThisModeNum, Load);
-        }
-
-        if (!bMeleeMode)
-        {
-            if (Instigator.IsFirstPerson() && !bAnimNotifiedShellEjects)
-            {
-                EjectShell();
-            }
-
-            FlashMuzzleFlash();
-            StartMuzzleSmoke();
-        }
-    }
-    // Server
-    else
-    {
-        ServerPlayFiring();
-    }
-
-    Weapon.IncrementFlashCount(ThisModeNum);
-
-    // Set the next firing time - must be careful here so client & server do not get out of sync
-    if (bFireOnRelease)
-    {
-        if (bIsFiring)
-        {
-            NextFireTime += MaxHoldTime + FireRate;
-        }
-        else
-        {
-            NextFireTime = Level.TimeSeconds + FireRate;
-        }
-    }
-    else
-    {
-        NextFireTime += FireRate;
-        NextFireTime = FMax(NextFireTime, Level.TimeSeconds);
-    }
-
-    Load = AmmoPerFire;
-    HoldTime = 0.0;
-
-    if (Instigator != none && Instigator.PendingWeapon != Weapon && Instigator.PendingWeapon != none)
-    {
-        bIsFiring = false;
-        Weapon.PutDown();
     }
 
     Weapon.PostFire();
@@ -140,69 +58,12 @@ event ModeDoFire()
     }
 }
 
-// Modified to ignore weapon stuff like sights, bipod & muzzle position
+// Modified so if the explosive blew up in the player's hand, we kill the player if he isn't already dead
 function DoFireEffect()
 {
-    local vector  StartProj, StartTrace, X, Y, Z, HitLocation, HitNormal;
-    local rotator R, Aim;
-    local Actor   Other;
-    local int     ProjectileID, SpawnCount;
-    local float   Theta;
+    super.DoFireEffect();
 
-    Instigator.MakeNoise(1.0);
-
-    Weapon.GetViewAxes(X, Y, Z);
-
-    // Check if projectile would spawn through a wall & adjust start location accordingly
-    StartTrace = Instigator.Location + Instigator.EyePosition();
-    StartProj = StartTrace + (X * ProjSpawnOffset.X);
-    Other = Trace(HitLocation, HitNormal, StartProj, StartTrace, false);
-
-    if (Other != none)
-    {
-        StartProj = HitLocation;
-    }
-
-    Aim = AdjustAim(StartProj, AimError);
-    SpawnCount = Max(1, ProjPerFire * int(Load));
-    CalcSpreadModifiers();
-    AppliedSpread = Spread;
-
-    switch (SpreadStyle)
-    {
-        case SS_Random:
-
-            X = vector(Aim);
-
-            for (ProjectileID = 0; ProjectileID < SpawnCount; ++ProjectileID)
-            {
-                R.Yaw = AppliedSpread * ((FRand() - 0.5) / 1.5);
-                R.Pitch = AppliedSpread * (FRand() - 0.5);
-                R.Roll = AppliedSpread * (FRand() - 0.5);
-                SpawnProjectile(StartProj, rotator(X >> R));
-            }
-
-            break;
-
-        case SS_Line:
-
-            for (ProjectileID = 0; ProjectileID < SpawnCount; ++ProjectileID)
-            {
-                Theta = AppliedSpread * PI / 32768.0 * (ProjectileID - float(SpawnCount - 1) / 2.0);
-                X.X = Cos(Theta);
-                X.Y = Sin(Theta);
-                X.Z = 0.0;
-                SpawnProjectile(StartProj, rotator(X >> Aim));
-            }
-
-            break;
-
-        default:
-            SpawnProjectile(StartProj, Aim);
-    }
-
-    // Nade blew up in hand - kill the holder if they aren't already
-    if (DHExplosiveWeapon(Weapon) != none && DHExplosiveWeapon(Weapon).bAlreadyExploded && !bIsSmokeGrenade && ROPawn(Weapon.Instigator) != none)
+    if (!bIsSmokeGrenade && DHExplosiveWeapon(Weapon) != none && DHExplosiveWeapon(Weapon).bAlreadyExploded && ROPawn(Weapon.Instigator) != none)
     {
         ROPawn(Weapon.Instigator).KilledSelf(ProjectileClass.default.MyDamageType);
     }
@@ -375,6 +236,11 @@ event ModeHoldFire()
     {
         ROPawn(Instigator).SetExplosiveHoldAnims(true);
     }
+}
+
+simulated function bool IsPlayerHipFiring()
+{
+    return false;
 }
 
 defaultproperties
