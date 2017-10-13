@@ -6,24 +6,16 @@
 class DHMGAutomaticFire extends DHFastAutoFire
     abstract;
 
-var()       float           PctHipMGPenalty;    // The amount of recoil to add when the player firing an MG from the hip
-var         DHMGWeapon      MGWeapon;
-
-simulated function PostBeginPlay()
-{
-    super.PostBeginPlay();
-
-    MGWeapon = DHMGWeapon(Weapon);
-}
+var     float       PctHipMGPenalty; // the amount of recoil to add when the player firing an MG from the hip
 
 // Modified to make rounds disappear from the visible ammo belt when nearly out of ammo
 event ModeDoFire()
 {
     super.ModeDoFire();
 
-    if (Level.NetMode != NM_DedicatedServer)
+    if (Level.NetMode != NM_DedicatedServer && DHMGWeapon(Weapon) != none)
     {
-        MGWeapon.UpdateAmmoBelt();
+        DHMGWeapon(Weapon).UpdateAmmoBelt();
     }
 }
 
@@ -110,7 +102,7 @@ function CalcSpreadModifiers()
 {
     super.CalcSpreadModifiers();
 
-    if (!Instigator.bBipodDeployed)
+    if (Instigator != none && !Instigator.bBipodDeployed)
     {
         Spread *= HipSpreadModifier;
     }
@@ -142,11 +134,7 @@ defaultproperties
     AimError=1800.0
 
     PreFireAnim=""
-    FireIronAnim="Bipod_shoot_single"
-    FireIronLoopAnim="Bipod_Shoot_Loop"
-    FireIronEndAnim="Bipod_Shoot_End"
-/*
     BipodDeployFireAnim="Bipod_shoot_single"
     BipodDeployFireLoopAnim="Bipod_Shoot_Loop"
-    BipodDeployFireEndAnim="Bipod_Shoot_End" */
+    BipodDeployFireEndAnim="Bipod_Shoot_End"
 }

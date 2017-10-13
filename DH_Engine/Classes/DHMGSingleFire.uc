@@ -91,7 +91,7 @@ function CalcSpreadModifiers()
 {
     super.CalcSpreadModifiers();
 
-    if (!Instigator.bBipodDeployed)
+    if (Instigator != none && !Instigator.bBipodDeployed)
     {
         Spread *= HipSpreadModifier;
     }
