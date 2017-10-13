@@ -384,26 +384,22 @@ defaultproperties
     bFireOnRelease=true
     bWaitForRelease=true
     bShouldBlurOnFire=false
+    bUsePreLaunchTrace=false
+    FireRate=50.0 // set FireRate ridiculously high since we manually set the next fire time each time you bring up another explosive
 
     MinimumThrowSpeed=600.0
     MaximumThrowSpeed=1000.0
     SpeedFromHoldingPerSec=850.0
-
-    ProjSpawnOffset=(X=25.0,Y=0.0,Z=0.0)
     AddedPitch=3000
-    SpreadStyle=SS_Random
     Spread=75.0
-    bUsePreLaunchTrace=false
 
     PreFireAnim="Pre_Fire"
     FireAnim="Throw"
     TweenTime=0.01
-    FireRate=50.0 // set FireRate ridiculously high since we manually set the next fire time each time you bring up another explosive
     FireForce="RocketLauncherFire"
 
+    // Bots
     bSplashDamage=true
     bRecommendSplashDamage=true
-    BotRefireRate=0.5
-    WarnTargetPct=0.9
     AimError=200.0
 }

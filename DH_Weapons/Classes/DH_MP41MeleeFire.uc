@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_MP41MeleeFire extends DH_MP40MeleeFire;
+class DH_MP41MeleeFire extends DHMeleeFire;
 
 defaultproperties
 {
     DamageType=class'DH_Weapons.DH_MP41BashDamType'
-    TraceRange=80.0
-    GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.butt_hit_ground'
+    GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.pistol_hit_ground'
 }

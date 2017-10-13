@@ -7,10 +7,9 @@ class DH_PanzerschreckFire extends DHRocketFire;
 
 defaultproperties
 {
-    ExhaustLength=280.0
-    ExhaustDamage=210.0
-    ExhaustDamageType=class'DH_Weapons.DH_PanzerschreckExhaustDamType'
-    AmmoClass=class'DH_Weapons.DH_PanzerschreckAmmo'
     ProjectileClass=class'DH_Weapons.DH_PanzerschreckRocket'
+    AmmoClass=class'DH_Weapons.DH_PanzerschreckAmmo'
+    ExhaustDamageType=class'DH_Weapons.DH_PanzerschreckExhaustDamType'
+    ExhaustDamage=210.0
+    ExhaustLength=280.0
 }
-
