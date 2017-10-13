@@ -4203,7 +4203,7 @@ exec function SetWheelOffset(string NewX, string NewY, string NewZ, optional byt
 // New debug exec to adjust maximum travel distance of the suspension of a vehicle's physics wheels
 // Allows adjustment of individual wheels, but note that on entering a vehicle, native code calls SVehicleUpdateParams(), which will undo individual settings
 // Settings for all wheels get matched to values of WheelSuspensionTravel & WheelSuspensionMaxRenderTravel, so if individual settings are required, SVehicleUpdateParams must be overridden
-exec function SetSuspTravel(int NewValue, optional byte FirstWheelIndex, optional byte LastWheelIndex, optional bool bDontSetSuspensionTravel, optional bool bDontSetMaxRenderTravel)
+exec function SetSuspTravel(string NewValue, optional byte FirstWheelIndex, optional byte LastWheelIndex, optional bool bDontSetSuspensionTravel, optional bool bDontSetMaxRenderTravel)
 {
     local DHVehicle V;
     local float     OldTravel, OldRenderTravel;
@@ -4213,12 +4213,12 @@ exec function SetSuspTravel(int NewValue, optional byte FirstWheelIndex, optiona
     {
         if (!bDontSetSuspensionTravel)
         {
-            V.WheelSuspensionTravel = NewValue; // on re-entering the vehicle, all physics wheels will have this value set (same with max render travel), undoing any individual settings
+            V.WheelSuspensionTravel = float(NewValue); // on re-entering the vehicle, all physics wheels will have this value set (same with max render travel), undoing any individual settings
         }
 
         if (!bDontSetMaxRenderTravel)
         {
-            V.WheelSuspensionMaxRenderTravel = NewValue;
+            V.WheelSuspensionMaxRenderTravel = float(NewValue);
         }
 
         if (LastWheelIndex == 0)
@@ -4233,12 +4233,12 @@ exec function SetSuspTravel(int NewValue, optional byte FirstWheelIndex, optiona
 
             if (!bDontSetSuspensionTravel)
             {
-                V.Wheels[i].SuspensionTravel = NewValue;
+                V.Wheels[i].SuspensionTravel = float(NewValue);
             }
 
             if (!bDontSetMaxRenderTravel)
             {
-                V.Wheels[i].SuspensionMaxRenderTravel = NewValue;
+                V.Wheels[i].SuspensionMaxRenderTravel = float(NewValue);
             }
 
             Log(V.VehicleNameString @ "Wheels[" $ i $ "].SuspensionTravel =" @ V.Wheels[i].SuspensionTravel @ "(was" @ OldTravel $
