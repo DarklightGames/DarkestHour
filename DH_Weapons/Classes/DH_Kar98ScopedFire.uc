@@ -7,13 +7,12 @@ class DH_Kar98ScopedFire extends DH_Kar98Fire;
 
 defaultproperties
 {
-    FireIronAnim="Scope_Shoot"
-    PctRestDeployRecoil=0.25
-    AmmoClass=class'DH_Weapons.DH_Kar98ScopedAmmo'
-    ShakeRotMag=(X=50.0,Y=50.0,Z=400.0)
-    ShakeRotRate=(X=12500.0,Y=12500.0,Z=12500.0)
-    ShakeRotTime=5.0
     ProjectileClass=class'DH_Weapons.DH_Kar98ScopedBullet'
-    AimError=550.0
+    AmmoClass=class'DH_Weapons.DH_Kar98ScopedAmmo'
     Spread=30.0
+    PctRestDeployRecoil=0.25
+    FireIronAnim="Scope_Shoot"
+    ShakeRotMag=(X=50.0,Y=50.0,Z=400.0)
+    ShakeRotTime=5.0
+    AimError=500.0
 }

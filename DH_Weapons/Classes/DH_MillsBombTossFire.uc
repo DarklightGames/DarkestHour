@@ -13,6 +13,5 @@ defaultproperties
     MinimumThrowSpeed=100.0
     MaximumThrowSpeed=500.0
     SpeedFromHoldingPerSec=800.0
-    PreFireAnim="Pre_Fire"
     FireAnim="Toss"
 }
