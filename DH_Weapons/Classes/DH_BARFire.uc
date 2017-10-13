@@ -5,10 +5,6 @@
 
 class DH_BARFire extends DHAutomaticFire;
 
-var     name    BipodDeployFireAnim; // TODO: refactor BAR/Bren/FG42 bipod variables & function overrides into a parent class as they are duplicated in each weapon
-var     name    BipodDeployFireLoopAnim;
-var     name    BipodDeployFireEndAnim;
-
 function ModeTick(float DeltaTime) // TODO: why is this tick override only added to the BAR? (it's probably pointless)
 {
     super.ModeTick(DeltaTime);
@@ -16,86 +12,6 @@ function ModeTick(float DeltaTime) // TODO: why is this tick override only added
     if (bIsFiring && !AllowFire())
     {
         Weapon.StopFire(ThisModeNum);
-    }
-}
-
-// Modified to handle bipod deployed firing animations
-function PlayFiring()
-{
-    if (Weapon.Mesh != none)
-    {
-        if (FireCount > 0)
-        {
-            if ((Weapon.bUsingSights || Instigator.bBipodDeployed) && Weapon.HasAnim(FireIronLoopAnim))
-            {
-                if (Instigator.bBipodDeployed && Weapon.HasAnim(BipodDeployFireLoopAnim))
-                {
-                    Weapon.PlayAnim(BipodDeployFireLoopAnim, FireAnimRate, 0.0);
-                }
-                else
-                {
-                    Weapon.PlayAnim(FireIronLoopAnim, FireAnimRate, 0.0);
-                }
-            }
-            else
-            {
-                if (Weapon.HasAnim(FireLoopAnim))
-                {
-                    Weapon.PlayAnim(FireLoopAnim, FireLoopAnimRate, 0.0);
-                }
-                else if (Weapon.HasAnim(FireAnim))
-                {
-                    Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
-                }
-            }
-        }
-        else
-        {
-            if (Weapon.bUsingSights || Instigator.bBipodDeployed)
-            {
-                if (Instigator.bBipodDeployed && Weapon.HasAnim(BipodDeployFireAnim))
-                {
-                    Weapon.PlayAnim(BipodDeployFireAnim, FireAnimRate, FireTweenTime);
-                }
-                else if (Weapon.HasAnim(FireIronAnim))
-                {
-                    Weapon.PlayAnim(FireIronAnim, FireAnimRate, FireTweenTime);
-                }
-            }
-            else if (Weapon.HasAnim(FireAnim))
-            {
-                Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
-            }
-        }
-    }
-
-    if (FireSounds.Length > 0)
-    {
-        Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
-    }
-
-    ClientPlayForceFeedback(FireForce);
-
-    FireCount++;
-}
-
-// Modified to handle bipod deployed fire end animation
-function PlayFireEnd()
-{
-    if ((Weapon.bUsingSights || Instigator.bBipodDeployed) && Weapon.HasAnim(FireIronEndAnim))
-    {
-        if (Instigator.bBipodDeployed && Weapon.HasAnim(BipodDeployFireEndAnim))
-        {
-            Weapon.PlayAnim(BipodDeployFireEndAnim, FireEndAnimRate, FireTweenTime);
-        }
-        else
-        {
-            Weapon.PlayAnim(FireIronEndAnim, FireEndAnimRate, FireTweenTime);
-        }
-    }
-    else if (Weapon.HasAnim(FireEndAnim))
-    {
-        Weapon.PlayAnim(FireEndAnim, FireEndAnimRate, FireTweenTime);
     }
 }
 

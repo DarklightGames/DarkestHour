@@ -188,23 +188,6 @@ function HandleProjectileSpawning(vector SpawnPoint, rotator SpawnAim)
     LastCalcTime = Level.TimeSeconds;
 }
 
-// Plays the animation at the end of firing the weapon
-function PlayFireEnd()
-{
-    local DHProjectileWeapon RPW;
-
-    RPW = DHProjectileWeapon(Weapon);
-
-    if (RPW.HasAnim(FireEndAnim) && !RPW.bUsingSights && !Instigator.bBipodDeployed)
-    {
-        RPW.PlayAnim(FireEndAnim, FireEndAnimRate, TweenTime);
-    }
-    else if (RPW.HasAnim(FireIronEndAnim) && (RPW.bUsingSights || Instigator.bBipodDeployed))
-    {
-        RPW.PlayAnim(FireIronEndAnim, FireEndAnimRate, TweenTime);
-    }
-}
-
 // Implemented to send the fire class to the looping state
 function StartFiring()
 {
@@ -251,19 +234,32 @@ state FireLoop
 {
     function BeginState()
     {
-        local DHProjectileWeapon RPW;
+        local name Anim;
 
         NextFireTime = Level.TimeSeconds - 0.1; // fire now!
 
-        RPW = DHProjectileWeapon(Weapon);
+        if (Weapon != none && Weapon.Mesh != none)
+        {
+            if (Weapon.bUsingSights || (Instigator != none && Instigator.bBipodDeployed))
+            {
+                if (Weapon.HasAnim(BipodDeployFireLoopAnim) && Instigator != none && Instigator.bBipodDeployed)
+                {
+                    Anim = BipodDeployFireLoopAnim;
+                }
+                else if (Weapon.HasAnim(FireIronLoopAnim))
+                {
+                    Anim = FireIronLoopAnim;
+                }
+            }
 
-        if (!RPW.bUsingSights && !Instigator.bBipodDeployed)
-        {
-            Weapon.LoopAnim(FireLoopAnim, LoopFireAnimRate, TweenTime);
-        }
-        else
-        {
-            Weapon.LoopAnim(FireIronLoopAnim, IronLoopFireAnimRate, TweenTime);
+            if (Anim != '')
+            {
+                Weapon.LoopAnim(Anim, IronLoopFireAnimRate, 0.0);
+            }
+            else if (Weapon.HasAnim(FireLoopAnim))
+            {
+                Weapon.LoopAnim(FireLoopAnim, LoopFireAnimRate, 0.0);
+            }
         }
 
         PlayAmbientSound(AmbientFireSound);
