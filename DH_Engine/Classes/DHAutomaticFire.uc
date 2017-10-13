@@ -15,10 +15,10 @@ var     name    BipodDeployFireEndAnim;
 // Modified to make the player stop firing if they are sprinting or switching to or from ironsights
 simulated function bool AllowFire()
 {
-    if (Weapon.IsInState('IronSightZoomIn') ||
+    if ((Instigator != none && Instigator.bIsSprinting) || (Weapon != none &&
+        (Weapon.IsInState('IronSightZoomIn') ||
         Weapon.IsInState('IronSightZoomOut') ||
-        Weapon.IsInState('TweenDown') ||
-        Instigator.bIsSprinting)
+        Weapon.IsInState('TweenDown'))))
     {
         return false;
     }
