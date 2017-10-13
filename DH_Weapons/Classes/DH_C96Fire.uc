@@ -7,145 +7,47 @@ class DH_C96Fire extends DHFastAutoFire;
 
 // Overridden here to allow semi auto fire sound handling for a FastAuto weapon class
 // This is an extremely messy & inefficient way of doing this, however it works - Ch!cken
+// TODO: (Matt, Oct 2017) Have greatly simplified this, but suspect we could just make it so we only enter this state if firing auto,
+//                        then in SpawnProjectile() we only do the packed shot info stuff if firing full auto
 state FireLoop
 {
     function BeginState()
     {
-        local DHProjectileWeapon RPW;
-
-        if (ROWeapon(Weapon).UsingAutoFire())
+        if (!bWaitForRelease) // if we've been set to bWaitForRelease, it means semi-atuo fire mode is selected
         {
-            NextFireTime = Level.TimeSeconds - 0.1; // fire now!
-
-            RPW = DHProjectileWeapon(Weapon);
-
-            if (!RPW.bUsingSights && !Instigator.bBipodDeployed)
-            {
-                Weapon.LoopAnim(FireLoopAnim, LoopFireAnimRate, TweenTime);
-            }
-            else
-            {
-                Weapon.LoopAnim(FireIronLoopAnim, IronLoopFireAnimRate, TweenTime);
-            }
-
-            PlayAmbientSound(AmbientFireSound);
+            super.BeginState();
         }
     }
 
     function ServerPlayFiring()
     {
-        if (!ROWeapon(Weapon).UsingAutoFire())
+        if (bWaitForRelease)
         {
-            Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
+            global.ServerPlayFiring();
         }
     }
 
     function PlayFiring()
     {
-        if (!ROWeapon(Weapon).UsingAutoFire())
+        if (bWaitForRelease)
         {
-            if (Weapon.Mesh != none)
-            {
-                if (FireCount > 0)
-                {
-                    if (Weapon.bUsingSights && Weapon.HasAnim(FireIronLoopAnim))
-                    {
-                        Weapon.PlayAnim(FireIronLoopAnim, FireAnimRate, 0.0);
-                    }
-                    else
-                    {
-                        if (Weapon.HasAnim(FireLoopAnim))
-                        {
-                            Weapon.PlayAnim(FireLoopAnim, FireLoopAnimRate, 0.0);
-                        }
-                        else
-                        {
-                            Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
-                        }
-                    }
-                }
-                else
-                {
-                    if (Weapon.bUsingSights)
-                    {
-                        Weapon.PlayAnim(FireIronAnim, FireAnimRate, FireTweenTime);
-                    }
-                    else
-                    {
-                        Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
-                    }
-                }
-
-                Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
-
-                ClientPlayForceFeedback(FireForce);
-
-                FireCount++;
-            }
+            global.PlayFiring();
         }
     }
 
     function PlayFireEnd()
     {
-        if (!ROWeapon(Weapon).UsingAutoFire())
+        if (bWaitForRelease)
         {
-            if (Weapon.bUsingSights && Weapon.HasAnim(FireIronEndAnim))
-            {
-                Weapon.PlayAnim(FireIronEndAnim, FireEndAnimRate, FireTweenTime);
-            }
-            else if (Weapon.HasAnim(FireEndAnim))
-            {
-                Weapon.PlayAnim(FireEndAnim, FireEndAnimRate, FireTweenTime);
-            }
+            global.PlayFireEnd();
         }
     }
 
     function EndState()
     {
-        if (ROWeapon(Weapon).UsingAutoFire())
+        if (!bWaitForRelease)
         {
-            Weapon.AnimStopLooping();
-            PlayAmbientSound(none);
-            Weapon.PlayOwnedSound(FireEndSound, SLOT_None, FireVolume,, AmbientFireSoundRadius);
-            Weapon.StopFire(ThisModeNum);
-
-            // If we are not switching weapons, go to the idle state
-            if (!Weapon.IsInState('LoweringWeapon'))
-            {
-                ROWeapon(Weapon).GotoState('Idle');
-            }
-        }
-    }
-
-    function StopFiring()
-    {
-        if (Level.NetMode == NM_DedicatedServer && HiROFWeaponAttachment.bUnReplicatedShot)
-        {
-            HiROFWeaponAttachment.SavedDualShot.FirstShot = HiROFWeaponAttachment.LastShot;
-
-            if (HiROFWeaponAttachment.DualShotCount == 255)
-            {
-                HiROFWeaponAttachment.DualShotCount = 254;
-            }
-            else
-            {
-                HiROFWeaponAttachment.DualShotCount = 255;
-            }
-
-            HiROFWeaponAttachment.NetUpdateTime = Level.TimeSeconds - 1.0;
-        }
-
-        GotoState('');
-    }
-
-    function ModeTick(float DeltaTime)
-    {
-        super.ModeTick(DeltaTime);
-
-        // WeaponTODO: see how to properly reimplement this
-        if (!bIsFiring || ROWeapon(Weapon).IsBusy() || !AllowFire() || (DHMGWeapon(Weapon) != none && DHMGWeapon(Weapon).bBarrelFailed))  // stopped firing, magazine empty or barrel overheat
-        {
-            GotoState('');
+            super.EndState();
         }
     }
 }
