@@ -52,8 +52,9 @@ defaultproperties
     // Physics wheels properties
     WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.2),(InVal=600.0,OutVal=0.001),(InVal=10000000000.0,OutVal=0.0)))
     WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=45.0,OutVal=0.0),(InVal=10000000000.0,OutVal=0.0)))
-    WheelSuspensionOffset=-5.0
+    WheelSoftness=0.01
     WheelSuspensionTravel=10.0
+    WheelSuspensionOffset=0.0
     WheelSuspensionMaxRenderTravel=10.0
 
     // Damage
@@ -144,46 +145,52 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="wheel_R_1"
         BoneRollAxis=AXIS_Y
-        WheelRadius=30.0
+        WheelRadius=25.0
         SupportBoneName="axle_F_R"
         SupportBoneAxis=AXIS_X
+        BoneOffset=(Y=22.0,Z=-5.0)
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_M3Halftrack.RFWheel'
     Begin Object Class=SVehicleWheel Name=LFWheel
         SteerType=VST_Steered
         BoneName="wheel_L_1"
         BoneRollAxis=AXIS_Y
-        WheelRadius=30.0
+        WheelRadius=25.0
         SupportBoneName="axle_F_L"
         SupportBoneAxis=AXIS_X
+        BoneOffset=(Y=-22.0,Z=-5.0)
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_M3Halftrack.LFWheel'
     Begin Object Class=SVehicleWheel Name=FLeft_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_L_F"
         BoneRollAxis=AXIS_Z
-        WheelRadius=35.0
+        WheelRadius=27.0
+        BoneOffset=(Y=-10.0,X=15.0,Z=-5.0)
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_M3Halftrack.FLeft_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=FRight_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_R_F"
         BoneRollAxis=AXIS_Z
-        WheelRadius=35.0
+        WheelRadius=27.0
+        BoneOffset=(Y=10.0,X=15.0,Z=-5.0)
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_M3Halftrack.FRight_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=RLeft_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_L_R"
         BoneRollAxis=AXIS_Z
-        WheelRadius=35.0
+        WheelRadius=27.0
+        BoneOffset=(Y=-10.0,X=-15.0,Z=-5.0)
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_M3Halftrack.RLeft_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=RRight_Drive_Wheel
         bPoweredWheel=true
         BoneName="steer_wheel_R_R"
         BoneRollAxis=AXIS_Z
-        WheelRadius=35.0
+        WheelRadius=27.0
+        BoneOffset=(Y=10.0,X=-15.0,Z=-5.0)
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_M3Halftrack.RRight_Drive_Wheel'
 
@@ -192,6 +199,7 @@ defaultproperties
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
+        KCOMOffset=(X=0.0,Y=0.0,Z=0.4)
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
