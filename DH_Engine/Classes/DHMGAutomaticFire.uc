@@ -27,10 +27,6 @@ event ModeDoFire()
     }
 }
 
-    {
-    }
-}
-
 // Modified to apply PctHipMGPenalty if player is hip-firing the MG (bUsingSights signifies this)
 // That replaces all recoil adjustments for bUsingSights in the Super
 simulated function HandleRecoil()
