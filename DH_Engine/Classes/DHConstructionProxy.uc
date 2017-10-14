@@ -785,5 +785,6 @@ defaultproperties
     bCollideActors=true
     bCollideWorld=false
     bBlockActors=false
+    bAcceptsProjectors=false
 }
 
