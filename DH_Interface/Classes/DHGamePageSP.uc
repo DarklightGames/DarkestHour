@@ -7,6 +7,9 @@ class DHGamePageSP extends UT2K4GamePageSP;
 
 const GAME_DIFFICULTY_INDEX = 3;
 
+var globalconfig bool   bDidShowNoBotsWarning;
+var localized string    NoBotsWarningText;
+
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     local int i;
@@ -38,6 +41,18 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     b_Back = DHGameFooterSP(t_Footer).b_Back;
     b_Primary = DHGameFooterSP(t_Footer).b_Primary;
+}
+
+function InternalOnOpen()
+{
+    super.InternalOnOpen();
+
+    if(!bDidShowNoBotsWarning)
+    {
+        Controller.ShowQuestionDialog(default.NoBotsWarningText, QBTN_OK, QBTN_OK);
+        bDidShowNoBotsWarning = true;
+        SaveConfig();
+    }
 }
 
 function PrepareToPlay(out string GameURL, optional string OverrideMap)
@@ -175,4 +190,10 @@ defaultproperties
     PanelClass(2)="DH_Interface.DHIAMultiColumnRulesPanel"
     PanelClass(3)="DH_Interface.DHTab_MutatorSP"
     PanelClass(4)="none"
+
+    bDidShowNoBotsWarning=false
+    NoBotsWarningText="Darkest Hour: Europe '44-'45 is focused solely on multi-player and, as a result, does NOT include support for bots in Practice mode."
+
+    OnOpen=InternalOnOpen
 }
+
