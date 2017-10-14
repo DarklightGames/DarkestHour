@@ -1549,7 +1549,7 @@ function UpdateSquads()
         SetVisible(C.b_JoinSquad, !bIsInSquad);
         SetVisible(C.b_LeaveSquad, bIsInSquad);
         SetVisible(C.b_LockSquad, bIsSquadLeader && bCanSquadBeLocked);
-        SetVisible(C.i_LockSquad, bIsSquadLeader && bCanSquadBeLocked);
+        SetVisible(C.i_LockSquad, bIsSquadLocked || bIsSquadLeader);
 
         if (bIsSquadLeader)
         {
@@ -1562,6 +1562,23 @@ function UpdateSquads()
             {
                 C.i_LockSquad.Image = UnlockIcon;
                 C.b_LockSquad.SetHint(default.LockText);
+
+                if (bCanSquadBeLocked)
+                {
+                    C.i_LockSquad.ImageColor.A = 255;
+                }
+                else
+                {
+                    C.i_LockSquad.ImageColor.A = 128;
+                }
+            }
+        }
+        else
+        {
+            if (bIsSquadLocked)
+            {
+                C.i_LockSquad.Image = LockIcon;
+                C.i_LockSquad.ImageColor.A = 128;
             }
         }
 
