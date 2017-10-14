@@ -104,7 +104,7 @@ defaultproperties
     OfficialMaps(31)="DH-La_Cambe_Advance.rom"
     OfficialMaps(32)="DH-La_Chapelle.rom"
     OfficialMaps(33)="DH-La_Gleize.rom"
-    OfficialMaps(34="DH-La_Monderie.rom"
+    OfficialMaps(34)="DH-La_Monderie.rom"
     OfficialMaps(35)="DH-Lutremange_Advance.rom"
     OfficialMaps(36)="DH-Noville.rom"
     OfficialMaps(37)="DH-Nuenen_Advance.rom"
