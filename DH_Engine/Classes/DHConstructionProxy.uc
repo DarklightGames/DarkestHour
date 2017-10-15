@@ -639,7 +639,7 @@ function DHConstruction.ConstructionError GetPositionError()
     local ROMineVolume MV;
     local DHSpawnPointBase SP;
     local DHLocationHint LH;
-    local float OtherRadius, OtherHeight;
+    local float OtherRadius, OtherHeight, F;
     local DHGameReplicationInfo GRI;
     local int i;
     local DHConstruction.ConstructionError E;
@@ -747,31 +747,45 @@ function DHConstruction.ConstructionError GetPositionError()
     // placed if is within the duplicate distance.
     if (ConstructionClass.default.DuplicateFriendlyDistanceInMeters > 0.0)
     {
+        F = 0.0;
+
         foreach RadiusActors(ConstructionClass, A, class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.DuplicateFriendlyDistanceInMeters))
         {
             C = DHConstruction(A);
 
             if (C != none && (C.GetTeamIndex() == NEUTRAL_TEAM_INDEX || C.GetTeamIndex() == PawnOwner.GetTeamNum()))
             {
-                E.Type = ERROR_TooCloseFriendly;
-                E.OptionalInteger = int(Ceil(ConstructionClass.default.DuplicateFriendlyDistanceInMeters - class'DHUnits'.static.UnrealToMeters(VSize(C.Location - Location))));
-                return E;
+                F = FMax(F, ConstructionClass.default.DuplicateFriendlyDistanceInMeters - class'DHUnits'.static.UnrealToMeters(VSize(C.Location - Location)));
             }
+        }
+
+        if (F > 0.0)
+        {
+            E.Type = ERROR_TooCloseFriendly;
+            E.OptionalInteger = int(Ceil(F));
+            return E;
         }
     }
 
     if (ConstructionClass.default.DuplicateEnemyDistanceInMeters > 0.0)
     {
+        F = 0.0;
+
         foreach RadiusActors(ConstructionClass, A, class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.DuplicateEnemyDistanceInMeters))
         {
             C = DHConstruction(A);
 
             if (C != none && C.GetTeamIndex() != NEUTRAL_TEAM_INDEX && C.GetTeamIndex() != PawnOwner.GetTeamNum())
             {
-                E.Type = ERROR_TooCloseEnemy;
-                E.OptionalInteger = int(Ceil(ConstructionClass.default.DuplicateEnemyDistanceInMeters - class'DHUnits'.static.UnrealToMeters(VSize(C.Location - Location))));
-                return E;
+                F = FMax(F, ConstructionClass.default.DuplicateEnemyDistanceInMeters - class'DHUnits'.static.UnrealToMeters(VSize(C.Location - Location)));
             }
+        }
+
+        if (F > 0.0)
+        {
+            E.Type = ERROR_TooCloseEnemy;
+            E.OptionalInteger = int(Ceil(F));
+            return E;
         }
     }
 
