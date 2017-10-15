@@ -48,6 +48,7 @@ const SERVERTICKRATE_UPDATETIME =   5.0; // The duration we use to calculate the
 const MAXINFLATED_INTERVALTIME =    60.0; // The max value to add to reinforcement time for inflation
 const SPAWN_KILL_RESPAWN_TIME =     2;
 
+var     bool                        bLogAverageTickRate;
 var()   config float                ServerTickForInflation;                 // Value that determines when inflation will start if ServerTickRateAverage is less than
 var     float                       ServerTickRateAverage;                  // The average tick rate over the past SERVERTICKRATE_UPDATETIME
 var     float                       ServerTickRateConsolidated;             // Keeps track of tick rates over time, used to calculate average
@@ -466,7 +467,10 @@ event Tick(float DeltaTime)
 
         HandleReinforceIntervalInflation();
 
-        //Log("Average Server Tick Rate:" @ ServerTickRateAverage);
+        if (bLogAverageTickRate)
+        {
+            Log("Average Server Tick Rate:" @ ServerTickRateAverage);
+        }
     }
     else
     {
@@ -3135,6 +3139,12 @@ exec function SetAlliesToAxisRatio(float Value)
 exec function SetHardTeamRatio(bool bNewHardTeamRatio)
 {
     DHLevelInfo.bHardTeamRatio = bNewHardTeamRatio;
+}
+
+// Function for toggling the log to console the server's average tick rate (logs every 5 seconds)
+exec function ToggleTickLog()
+{
+    bLogAverageTickRate = !bLogAverageTickRate;
 }
 
 // Function for changing a team's ReinforcementInterval
