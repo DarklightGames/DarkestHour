@@ -19,7 +19,7 @@ var() name              PhaseMineFieldTag;                  // Tag of minefield 
 var() name              PhaseBoundaryTag;                   // Tag of DestroyableStaticMeshes to disable once phase is over
 var() array<name>       InitialSpawnPointTags;              // Tags of spawn points that should only be active while in setup phase
 
-var() bool              bScaleStartingReinforcements;       // Scales starting reinforcements to current number of players
+var() bool              bScaleUpPhaseEndReinforcements;     // Scales the reinforcements set in "PhaseEndReinforcements" upward to account for more players
 var() bool              bResetRoundTimer;                   // If true will reset the round's timer to the proper value when phase is over
 
 var() TeamReinf         PhaseEndReinforcements;             // What to set reinforcements to at the end of the phase (-1 means no change)
@@ -188,36 +188,21 @@ auto state Timing
             }
         }
 
-        // Handle Axis reinforcement changes
-        if (PhaseEndReinforcements.AxisReinforcements >= 0)
+        // Set the reinforcements
+        if (bScaleUpPhaseEndReinforcements)
         {
-            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = PhaseEndReinforcements.AxisReinforcements + UnspawnedPlayers[AXIS_TEAM_INDEX];
+            // Scale up the reinforcements at a factor of the number of players on the server / 2
+            // Example: PhaseEndReinforcements=(AxisReinforcements=8,AlliesReinforcements=10)
+            // There are 50 players on the server
+            // 8 * (50 / 2) = 200
+            // 10 * (50 / 2) = 250
+            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = PhaseEndReinforcements.AlliesReinforcements * (Max(10, G.NumPlayers) / 2) + UnspawnedPlayers[ALLIES_TEAM_INDEX];
+            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = PhaseEndReinforcements.AxisReinforcements * (Max(10, G.NumPlayers) / 2) + UnspawnedPlayers[AXIS_TEAM_INDEX];
         }
         else
-        {
-            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = G.LevelInfo.Axis.SpawnLimit + UnspawnedPlayers[AXIS_TEAM_INDEX];
-        }
-
-        // Handle Allied reinforcement changes
-        if (PhaseEndReinforcements.AlliesReinforcements >= 0)
         {
             GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = PhaseEndReinforcements.AlliesReinforcements + UnspawnedPlayers[ALLIES_TEAM_INDEX];
-        }
-        else
-        {
-            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = G.LevelInfo.Allies.SpawnLimit + UnspawnedPlayers[ALLIES_TEAM_INDEX];
-        }
-
-        // Now scale the reinforcements if desired
-        if (bScaleStartingReinforcements)
-        {
-            // Scale reinforcements based on NumPlayers / Maxplayers, but only by a factor of 50%
-            // Example: 400 is base reinf
-            // = 400 - ((400 / 2.0) * (1.0 - 22 / 64))
-            // = 400 - (200.0 * 0.6562)
-            // with 22/64 players the reinf would be 269 instead of 400
-            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = G.LevelInfo.Allies.SpawnLimit - ((G.LevelInfo.Allies.SpawnLimit / 2.0) * (1.0 - G.NumPlayers / G.MaxPlayers));
-            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = G.LevelInfo.Axis.SpawnLimit - ((G.LevelInfo.Axis.SpawnLimit / 2.0) * (1.0 - G.NumPlayers / G.MaxPlayers));
+            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = PhaseEndReinforcements.AxisReinforcements + UnspawnedPlayers[AXIS_TEAM_INDEX];
         }
 
         // Reset round time if desired
@@ -258,11 +243,11 @@ state Done
 defaultproperties
 {
     PhaseBoundaryTag='SetupBoundaries'
-    PhaseEndReinforcements=(AxisReinforcements=-1,AlliesReinforcements=-1)
+    PhaseEndReinforcements=(AxisReinforcements=8,AlliesReinforcements=8)
     PhaseEndSounds(0)=Sound'DH_SundrySounds.RoundBeginSounds.Axis_Start'
     PhaseEndSounds(1)=Sound'DH_SundrySounds.RoundBeginSounds.US_Start'
     bSkipPreStart=true
-    bScaleStartingReinforcements=true
+    bScaleUpPhaseEndReinforcements=true
     SetupPhaseDuration=60
     SpawningEnabledTime=30
     Texture=Texture'DHEngine_Tex.LevelActor'
