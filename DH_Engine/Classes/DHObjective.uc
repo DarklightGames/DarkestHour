@@ -62,6 +62,7 @@ var(ROObjTerritory) bool            bUseHardBaseRate;           // Tells the cap
 var(ROObjective) bool               bIsInitiallyActive;         // Purpose is mainly to consolidate the variables of actors into one area (less confusing to new levelers)
 
 // Capture/Actions variables
+var(DHObjectiveCapture) bool        bLockDownOnCapture;
 var(DHObjectiveCapture) bool        bVehiclesCanCapture;
 var(DHObjectiveCapture) bool        bTankersCanCapture;
 var(DHObjectiveCapture) bool        bUsePostCaptureOperations;  // Enables below variables to be used for post capture clear check/calls
@@ -449,6 +450,12 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
         DisableCapBarsForThisObj(); // might want to move this to above if statement, but would need testing
     }
 
+    // Activate the no capture lock down
+    if (bLockDownOnCapture)
+    {
+        NoCapTimeRemainingFloat = float(PreventCaptureTime);
+    }
+
     // Don't "disable" the objective, just "deactivate it"
     if (bSetInactiveOnCapture)
     {
@@ -511,8 +518,23 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     }
 
     // Award reinforcements
-    G.ModifyReinforcements(AXIS_TEAM_INDEX, AxisAwardedReinforcements);
-    G.ModifyReinforcements(ALLIES_TEAM_INDEX, AlliedAwardedReinforcements);
+    if (AxisAwardedReinforcements >= 0)
+    {
+        G.ModifyReinforcements(AXIS_TEAM_INDEX, AxisAwardedReinforcements);
+    }
+    else
+    {
+        G.ModifyReinforcements(AXIS_TEAM_INDEX, 1 * (G.NumPlayers / 2));
+    }
+
+    if (AlliedAwardedReinforcements >= 0)
+    {
+        G.ModifyReinforcements(ALLIES_TEAM_INDEX, AlliedAwardedReinforcements);
+    }
+    else
+    {
+        G.ModifyReinforcements(ALLIES_TEAM_INDEX, 1 * (G.NumPlayers / 2));
+    }
 
     // Award round time
     if (MinutesAwarded != 0 && !bUsePostCaptureOperations)
