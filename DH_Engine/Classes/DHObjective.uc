@@ -974,14 +974,6 @@ function Timer()
     {
         CurrentCapTeam = NEUTRAL_TEAM_INDEX;
     }
-    else if (!IsNeutral() && CurrentCapProgress == 1.0 && bNeutralizeBeforeCapture)
-    {
-        // If the objective is not neutral, has completed progress, & is set to bNeutralizedBeforeCaptured
-        // Then we call different logic which will neutralize the objective without "completing" it
-        ObjectiveNeutralized(CurrentCapTeam);
-
-        return;
-    }
     else if (CurrentCapProgress == 1.0)
     {
         ObjectiveCompleted(none, CurrentCapTeam);
@@ -1138,6 +1130,46 @@ function Timer()
     }
 
     UpdateCompressedCapProgress();
+}
+
+// Modified to handle neutralizing objectives
+function ObjectiveCompleted(PlayerReplicationInfo CompletePRI, int Team)
+{
+    if (!IsNeutral() && bNeutralizeBeforeCapture)
+    {
+        // If the objective is not neutral, has completed progress, & is set to bNeutralizedBeforeCaptured
+        // Then we call different logic which will neutralize the objective without "completing" it
+        ObjectiveNeutralized(Team);
+        return;
+    }
+
+    if (Team == AXIS_TEAM_INDEX)
+    {
+        ObjState = OBJ_Axis;
+
+        if (AxisEvent != '')
+        {
+            TriggerEvent(AxisEvent, self, None);
+        }
+    }
+    else
+    {
+        ObjState = OBJ_Allies;
+
+        if (AlliesEvent != '')
+        {
+            TriggerEvent(AlliesEvent, self, None);
+        }
+    }
+
+    HandleCompletion(CompletePRI, Team);
+
+    ROTeamGame(Level.Game).NotifyObjStateChanged();
+
+    ROTeamGame(Level.Game).RemoveHelpRequestsForObj(ObjNum);
+
+    // lets see if this tells the bots the objectives is done for
+    UnrealMPGameInfo(Level.Game).FindNewObjectives(self);
 }
 
 // New function to implement the bNeutralizeBeforeCapture option
