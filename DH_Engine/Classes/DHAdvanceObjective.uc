@@ -9,13 +9,15 @@ class DHAdvanceObjective extends DHObjective;
 
 defaultproperties
 {
-    PreventCaptureTime=150
+    bNeutralizeBeforeCapture=true
+    bLockDownOnCapture=true
+    PreventCaptureTime=120
     BaseCaptureRate=0.006666 // 150 seconds (1 / # of seconds)
     MaxCaptureRate=0.006666
     bRecaptureable=true
-    bSetInactiveOnClear=true
     bUseHardBaseRate=true
-    AlliedAwardedReinforcements=30
-    AxisAwardedReinforcements=30
-    bUsePostCaptureOperations=true
+    AlliedAwardedReinforcements=-1
+    AxisAwardedReinforcements=-1
+
+    bUsePostCaptureOperations=false
 }
