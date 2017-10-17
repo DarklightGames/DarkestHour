@@ -3176,10 +3176,33 @@ exec function SetReinforcements(int Team, int Amount)
     ModifyReinforcements(Team, Amount, true);
 }
 
-// Function to allow for capturing a currently active objective (for the supplied team), useful for debugging
-exec function CaptureObj(int Team)
+// Function to allow for capturing a currently active objective (for the supplied team), can also specify the ObjName and if it should be neutralized instead
+exec function CaptureObj(int Team, optional string ObjName, optional bool bNeutralizeInstead)
 {
     local int i;
+
+    if (ObjName != "")
+    {
+        for (i = 0; i < arraycount(DHObjectives); ++i)
+        {
+            if (DHObjectives[i] != none &&
+                DHObjectives[i].bActive &&
+                DHObjectives[i].ObjState != Team &&
+                DHObjectives[i].ObjName ~= ObjName)
+            {
+                if (bNeutralizeInstead)
+                {
+                    DHObjectives[i].ObjectiveNeutralized(Team);
+                }
+                else
+                {
+                    DHObjectives[i].ObjectiveCompleted(none, Team);
+                }
+                return;
+            }
+        }
+        return;
+    }
 
     for (i = 0; i < arraycount(DHObjectives); ++i)
     {
