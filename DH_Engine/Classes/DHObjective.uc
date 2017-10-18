@@ -203,6 +203,12 @@ function Reset()
 
 function SetActive(bool bActiveStatus)
 {
+    // Don't run any changes if we are already the status sent
+    if (bActive == bActiveStatus)
+    {
+        return;
+    }
+
     super.SetActive(bActiveStatus);
 
     if (bActiveStatus)
