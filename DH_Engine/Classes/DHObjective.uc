@@ -69,7 +69,7 @@ var(DHObjectiveCapture) bool        bUsePostCaptureOperations;  // Enables below
 var(DHObjectiveCapture) bool        bSetInactiveOnCapture;      // Simliar to bRecaptureable, but doesn't disable timer, just sets to inactive (bRecaptureable must = true)
 var(DHObjectiveCapture) bool        bNeutralizeBeforeCapture;   // if this is true the objective will neutralize first (then can be captured by either team)
 var(DHObjectiveCapture) int         PlayersNeededToCapture;
-var(DHObjectiveCapture) byte        PreventCaptureTime;         // time to prevent capture after the objective is activated (default: 0 max: 255 seconds)
+var(DHObjectiveCapture) int         PreventCaptureTime;         // time to prevent capture after the objective is activated
 var(DHObjectiveCapture) bool        bGroupActionsAtDisable;
 var(DHObjectiveCapture) bool        bNeutralOnActivation;       // Should this capture be neutral when it is activated
 var(DHObjectiveCapture) array<int>  AxisRequiredObjForCapture;  // Objectives which are required to progress capture bar towards "capture" (obj can still be neutralized)
@@ -86,20 +86,19 @@ var(DHObjectiveVisual) bool         bHideOnMapWhenInactive;
 var(DHObjectiveVisual) bool         bHideLabelWhenInactive;
 
 // Award variables
-var(DHObjectiveAwards) int          AlliedAwardedReinforcements; // Amount of reinforcement to award for allies if the obj is captured
-var(DHObjectiveAwards) int          AxisAwardedReinforcements;   // Amount of reinforcement to award for axis if the obj is captured
-var(DHObjectiveAwards) int          MinutesAwarded;              // Time in minutes awarded to round time when objective is captured
-var(DHObjectiveAwards) int          AlliedOwnedAttritionRate;    // Rate of Axis Attrition when Allies control this objective
-var(DHObjectiveAwards) int          AxisOwnedAttritionRate;      // Rate of Allies Attrition when Axis control this objective
+var(DHObjectiveAwards) int          AlliedAwardedReinforcements;// Amount of reinforcement to award for allies if the obj is captured
+var(DHObjectiveAwards) int          AxisAwardedReinforcements;  // Amount of reinforcement to award for axis if the obj is captured
+var(DHObjectiveAwards) int          MinutesAwarded;             // Time in minutes awarded to round time when objective is captured
+var(DHObjectiveAwards) int          AlliedOwnedAttritionRate;   // Rate of Axis Attrition when Allies control this objective
+var(DHObjectiveAwards) int          AxisOwnedAttritionRate;     // Rate of Allies Attrition when Axis control this objective
 
 // Other variables
 var(DHObjectiveOther) bool          bAlliesFinalObjective;
 var(DHObjectiveOther) bool          bAxisFinalObjective;
-var(DHObjectiveOther) name          NoArtyVolumeProtectionTag;   // optional Tag for associated no arty volume that protects this SP only when the SP is active
+var(DHObjectiveOther) name          NoArtyVolumeProtectionTag;  // optional Tag for associated no arty volume that protects this SP only when the SP is active
 
 // Non configurable variables
-var     byte                        NoCapProgressTimeRemaining;  // time remaining until obj can be captured (replicated to clients)
-var     float                       NoCapTimeRemainingFloat;     // used to calculate time (timer runs 4 times a second, so we need a float)
+var     int                         UnlockTime;                 // The time at which the objective will be unlocked and ready to be capured again, relative to GRI.ElapsedTime
 var     bool                        bCheckIfAxisCleared;
 var     bool                        bCheckIfAlliesCleared;
 var     bool                        bIsLocked;
@@ -139,7 +138,7 @@ replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        NoCapProgressTimeRemaining;
+        UnlockTime;
 }
 
 function PostBeginPlay()
@@ -192,8 +191,7 @@ function Reset()
 {
     super.Reset();
 
-    NoCapProgressTimeRemaining = 0;
-    NoCapTimeRemainingFloat = 0.0;
+    UnlockTime = 0;
     SetActive(bIsInitiallyActive);
 
     bCheckIfAxisCleared = false;
@@ -213,7 +211,10 @@ function SetActive(bool bActiveStatus)
 
     if (bActiveStatus)
     {
-        NoCapTimeRemainingFloat = float(PreventCaptureTime);
+        if (Level != none && Level.Game != none && Level.Game.GameReplicationInfo != none)
+        {
+            UnlockTime = Level.Game.GameReplicationInfo.ElapsedTime + PreventCaptureTime;
+        }
 
         // Make neutral if desired
         if (bNeutralOnActivation && !bDisabled && !IsNeutral())
@@ -459,7 +460,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     // Activate the no capture lock down
     if (bLockDownOnCapture)
     {
-        NoCapTimeRemainingFloat = float(PreventCaptureTime);
+        UnlockTime = GRI.ElapsedTime + PreventCaptureTime;
     }
 
     // Don't "disable" the objective, just "deactivate it"
@@ -894,16 +895,10 @@ function Timer()
     }
 
     // If we are not ready to capture because of precap prevention set rate to zero
-    if (NoCapTimeRemainingFloat > 0.0)
+    if (DHGRI.ElapsedTime < UnlockTime)
     {
-        NoCapTimeRemainingFloat -= 0.25; // Timer is ran 4 times a second, so we reduce accordingly
-        NoCapProgressTimeRemaining = byte(NoCapTimeRemainingFloat); // Update the replicated byte so clients can see how much longer until the obj unlocks
         Rate[0] = 0.0;
         Rate[1] = 0.0;
-    }
-    else
-    {
-        NoCapProgressTimeRemaining = 0; // Make sure this value gets zeroed
     }
 
     // TODO: need to indicate to the player that they cannot capture this obj until they control the required obj

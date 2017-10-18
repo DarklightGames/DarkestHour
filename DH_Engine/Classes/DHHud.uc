@@ -4438,9 +4438,9 @@ function DrawCaptureBar(Canvas Canvas)
     CaptureBarDefender.Scale = (150.0 / 256.0 * CaptureProgress[EnemyTeam]) + (53.0 / 256.0);
 
     // If objective can't be captured because it's in a timed pre-cap period, we'll show the pre-cap time remaining instead of the objective name
-    if (Objective.NoCapProgressTimeRemaining > 0)
+    if (DHGRI.ElapsedTime < Objective.UnlockTime)
     {
-        ObjectiveNameText = Repl(CaptureBarUnlockText, "{0}", Objective.NoCapProgressTimeRemaining);
+        ObjectiveNameText = Repl(CaptureBarUnlockText, "{0}", class'TimeSpan'.static.ToString(Objective.UnlockTime - DHGRI.ElapsedTime));
     }
     // Otherwise we'll show the objective name & if there are enemy present then add extra text to show that
     else
