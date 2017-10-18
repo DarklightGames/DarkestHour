@@ -517,25 +517,6 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
         G.Metrics.OnObjectiveCaptured(ObjNum, Team, RoundTime, PlayerIDs);
     }
 
-    // Award reinforcements
-    if (AxisAwardedReinforcements >= 0)
-    {
-        G.ModifyReinforcements(AXIS_TEAM_INDEX, AxisAwardedReinforcements);
-    }
-    else
-    {
-        G.ModifyReinforcements(AXIS_TEAM_INDEX, 1 * (G.NumPlayers / 2));
-    }
-
-    if (AlliedAwardedReinforcements >= 0)
-    {
-        G.ModifyReinforcements(ALLIES_TEAM_INDEX, AlliedAwardedReinforcements);
-    }
-    else
-    {
-        G.ModifyReinforcements(ALLIES_TEAM_INDEX, 1 * (G.NumPlayers / 2));
-    }
-
     // Award round time
     if (MinutesAwarded != 0 && !bUsePostCaptureOperations)
     {
@@ -545,6 +526,16 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     switch (Team)
     {
         case AXIS_TEAM_INDEX:
+
+            // Award reinforcements
+            if (AxisAwardedReinforcements >= 0)
+            {
+                G.ModifyReinforcements(AXIS_TEAM_INDEX, AxisAwardedReinforcements);
+            }
+            else
+            {
+                G.ModifyReinforcements(AXIS_TEAM_INDEX, 1 * (G.NumPlayers / 2));
+            }
 
             for (i = 0; i < AxisCaptureObjActions.Length; ++i)
             {
@@ -581,6 +572,16 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
             break;
 
         case ALLIES_TEAM_INDEX:
+
+            // Award reinforcements
+            if (AlliedAwardedReinforcements >= 0)
+            {
+                G.ModifyReinforcements(ALLIES_TEAM_INDEX, AlliedAwardedReinforcements);
+            }
+            else
+            {
+                G.ModifyReinforcements(ALLIES_TEAM_INDEX, 1 * (G.NumPlayers / 2));
+            }
 
             for (i = 0; i < AlliesCaptureObjActions.Length; ++i)
             {
