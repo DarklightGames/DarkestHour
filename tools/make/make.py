@@ -82,6 +82,7 @@ def main():
 
     if args.clean and os.path.isfile(config_path):
         # clean build deletes the existing mod config
+        # TODO: only have this find and re-set the EditPackages and ServerPackages entries!
         os.remove(config_path)
 
     # get packages from generated INI?
@@ -92,9 +93,13 @@ def main():
         packages = default_packages
 
     packages_to_compile = []
+    changed_packages = []
     package_crcs = dict()
 
     manifest_path = os.path.join(mod_dir, '.make'.format(args.mod))
+
+    if args.clean and os.path.isfile(manifest_path):
+        os.remove(manifest_path)
 
     try:
         with open(manifest_path, 'r') as f:
@@ -114,7 +119,7 @@ def main():
 
         should_compile_package = False
 
-        if args.clean or (not args.ignore_dependencies and len(packages_to_compile) > 0):
+        if not args.ignore_dependencies and len(packages_to_compile) > 0:
             should_compile_package = True
         
         package_src_dir = os.path.join(args.dir, package, 'Classes')
@@ -126,6 +131,7 @@ def main():
                     package_crc = crc32(f.read(), package_crc)
 
         if package not in package_crcs or package_crcs[package] != package_crc:
+            changed_packages.append(package + '.u')
             should_compile_package = True
 
         if should_compile_package:
@@ -175,9 +181,9 @@ def main():
 
     # run dumpint on compiled packages
     if args.dumpint:
-        print 'running dumpint (note: output will be garbled due to ucc writing to stdout in parallel)'
+        print 'running dumpint (note: output may be garbled due to ucc writing to stdout in parallel)'
         processes = []
-        for package in compiled_packages:
+        for package in set(compiled_packages) & set(changed_packages):
             processes.append(subprocess.Popen(['ucc', 'dumpint', package, '-mod=' + args.mod]))
 
         [p.wait() for p in processes]
