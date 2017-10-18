@@ -22,7 +22,7 @@ static function string GetString(
     switch (S)
     {
         case 0:
-            return Repl(default.PhaseMessage, "{0}", ExtraInteger);
+            return Repl(default.PhaseMessage, "{0}", class'TimeSpan'.static.ToString(ExtraInteger));
         case 1:
             return default.PhaseEndMessage;
     }
@@ -32,7 +32,7 @@ static function string GetString(
 
 defaultproperties
 {
-    PhaseMessage="The battle begins in {0} seconds"
+    PhaseMessage="The battle begins in {0}"
     PhaseEndMessage="The battle has begun!"
     bBeep=false
     bFadeMessage=true
