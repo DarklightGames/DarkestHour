@@ -919,8 +919,7 @@ function Timer()
                 }
             }
         }
-
-        if (CurrentCapTeam == ALLIES_TEAM_INDEX)
+        else if (CurrentCapTeam == ALLIES_TEAM_INDEX)
         {
             for (i = 0; i < AlliesRequiredObjForCapture.Length; ++i)
             {
