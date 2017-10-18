@@ -11,10 +11,17 @@ var float FovInterpStrength;
 var float FovZoomSpeed;
 var float FovZoomDirection;
 
+delegate float FovInterpFunction(float T, float A, float B);
+
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    FovInterpFunction = class'UInterp'.static.Deceleration;
+}
+
 simulated function bool (int Mode)
 {
-    Log("StartFire" @ Mode);
-
     switch (Mode)
     {
         case 0:
@@ -57,10 +64,58 @@ simulated event WeaponTick(float DeltaTime)
 {
     FovAngleTarget += (DeltaTime * FovZoomDirection * FovZoomSpeed);
     FovAngleTarget = FClamp(FovAngleTarget, 10.0, 120.0);
-    FovAngle = class'UInterp'.static.Deceleration(DeltaTime * FovInterpStrength, FovAngle, FovAngleTarget);
+    FovAngle = FovInterpFunction(DeltaTime * FovInterpStrength, FovAngle, FovAngleTarget);
 
     // TODO: set the player's FOV
     Instigator.Controller.FovAngle = FovAngle;
+}
+
+exec function SetFovZoomSpeed(float F)
+{
+    if (F == 0.0)
+    {
+        F = default.FovZoomSpeed;
+    }
+
+    FovZoomSpeed = F;
+}
+
+exec function SetFovInterpStrength(float F)
+{
+    if (F == 0.0)
+    {
+        F = default.FovInterpStrength;
+    }
+
+    FovInterpStrength = F;
+}
+
+exec function SetFovInterpFunction(string F)
+{
+    switch (Caps(F))
+    {
+        case "DECEL":
+            FovInterpFunction = class'UInterp'.static.Deceleration;
+            break;
+        case "ACCEL":
+            FovInterpFunction = class'UInterp'.static.Acceleration;
+            break;
+        case "SMOOTH":
+            FovInterpFunction = class'UInterp'.static.SmoothStep;
+            break;
+        case "COSINE":
+            FovInterpFunction = class'UInterp'.static.Cosine;
+            break;
+        case "LINEAR":
+            FovInterpFunction = class'UInterp'.static.Linear;
+            break;
+        case "STEP":
+            FovInterpFunction = class'UInterp'.static.Step;
+            break;
+        default:
+            FovInterpFunction = class'UInterp'.static.Deceleration;
+            break;
+    }
 }
 
 defaultproperties
@@ -71,4 +126,5 @@ defaultproperties
     FovZoomSpeed=20.0
     ItemName="Camera"
     InventoryGroup=1
+    PlayerViewOffset=(Z=1000000.0)
 }
