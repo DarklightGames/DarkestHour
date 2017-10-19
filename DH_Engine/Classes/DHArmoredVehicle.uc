@@ -1167,11 +1167,11 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     }
     else // didn't hit any side !! (angles must be screwed up, so fix those)
     {
-        Log("ERROR: hull angles not set up correctly for" @ Tag @ "(took hit from" @ HitLocationAngle @ "degrees & couldn't resolve which side that was");
+        Log("ERROR: hull angles not set up correctly for" @ VehicleNameString @ "(took hit from" @ HitLocationAngle @ "degrees & couldn't resolve which side that was");
 
         if ((bDebugPenetration || class'DH_LevelInfo'.static.DHDebugMode()) && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, "ERROR: hull angles not set up correctly for" @ Tag @ "(took hit from" @ HitLocationAngle @ "degrees & couldn't resolve which side that was");
+            Level.Game.Broadcast(self, "ERROR: hull angles not set up correctly for" @ VehicleNameString @ "(took hit from" @ HitLocationAngle @ "degrees & couldn't resolve which side that was");
         }
 
         ResetTakeDamageVariables();
@@ -2278,17 +2278,22 @@ exec function EngineFire()
 // New debug exec to adjust location of driver's hatch fire position
 exec function SetFEOffset(int NewX, int NewY, int NewZ)
 {
-    if (IsDebugModeAllowed())
+    if (IsDebugModeAllowed() && Level.NetMode != NM_DedicatedServer)
     {
+        // Only update offset if something has been entered (otherwise just entering "SetFEOffset" is quick way of triggering hatch fire at current position)
         if (NewX != 0 || NewY != 0 || NewZ != 0)
         {
+            Log(VehicleNameString @ "FireEffectOffset =" @ NewX @ NewY @ NewZ @ "(old was" @ FireEffectOffset $ ")");
             FireEffectOffset.X = NewX;
             FireEffectOffset.Y = NewY;
             FireEffectOffset.Z = NewZ;
         }
+        else
+        {
+            Log(VehicleNameString @ "FireEffectOffset =" @ FireEffectOffset);
+        }
 
         StartDriverHatchFire();
-        Log(VehicleNameString @ "FireEffectOffset =" @ FireEffectOffset);
     }
 }
 

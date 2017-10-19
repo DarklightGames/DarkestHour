@@ -2027,19 +2027,30 @@ exec function SetAttachOffset(string NewX, string NewY, string NewZ)
 }
 
 // New debug exec to adjust location of hatch fire position
-exec function SetFEOffset(string NewX, string NewY, string NewZ)
+exec function SetFEOffset(int NewX, int NewY, int NewZ, optional float NewScale)
 {
-    if (IsDebugModeAllowed() && VehWep != none)
+    if (IsDebugModeAllowed() && Level.NetMode != NM_DedicatedServer && VehWep != none)
     {
-        if (float(NewX) != 0 || float(NewY) != 0 || float(NewZ) != 0)
+        if (NewScale == 0.0)
         {
-            VehWep.FireEffectOffset.X = float(NewX);
-            VehWep.FireEffectOffset.Y = float(NewY);
-            VehWep.FireEffectOffset.Z = float(NewZ);
+            NewScale = VehWep.FireEffectScale;
+        }
+
+        // Only update offset if something has been entered (otherwise just entering "SetFEOffset" is quick way of triggering hatch fire at current position)
+        if (NewX != 0 || NewY != 0 || NewZ != 0 || NewScale != VehWep.FireEffectScale)
+        {
+            Log(VehWep.Tag @ "FireEffectOffset =" @ NewX @ NewY @ NewZ @ "scale =" @ NewScale @ "(old was" @ VehWep.FireEffectOffset @ "scale =" @ VehWep.FireEffectScale $ ")");
+            VehWep.FireEffectOffset.X = NewX;
+            VehWep.FireEffectOffset.Y = NewY;
+            VehWep.FireEffectOffset.Z = NewZ;
+            VehWep.FireEffectScale = NewScale;
+        }
+        else
+        {
+            Log(VehWep.Tag @ "FireEffectOffset =" @ VehWep.FireEffectOffset @ "scale =" @ VehWep.FireEffectScale);
         }
 
         VehWep.StartHatchFire();
-        Log(VehWep.Tag @ "FireEffectOffset =" @ VehWep.FireEffectOffset);
     }
 }
 

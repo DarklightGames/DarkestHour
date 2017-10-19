@@ -3869,7 +3869,7 @@ exec function SetDrivePos(string NewX, string NewY, string NewZ)
 
         if (V != none && V.Driver != none)
         {
-            Log(V.VehicleNameString @ " new DrivePos =" @ float(NewX) @ float(NewY) @ float(NewZ) @ "(was" @ V.DrivePos $ ")");
+            Log(V.Tag @ " new DrivePos =" @ float(NewX) @ float(NewY) @ float(NewZ) @ "(was" @ V.DrivePos $ ")");
             V.DrivePos.X = float(NewX);
             V.DrivePos.Y = float(NewY);
             V.DrivePos.Z = float(NewZ);
@@ -3890,7 +3890,7 @@ exec function SetDriveRot(int NewPitch, int NewYaw, int NewRoll)
 
         if (V != none && V.Driver != none)
         {
-            Log(V.VehicleNameString @ " new DriveRot =" @ NewPitch @ NewYaw @ NewRoll @ "(was" @ V.DriveRot $ ")");
+            Log(V.Tag @ " new DriveRot =" @ NewPitch @ NewYaw @ NewRoll @ "(was" @ V.DriveRot $ ")");
             V.DriveRot.Pitch = NewPitch;
             V.DriveRot.Yaw = NewYaw;
             V.DriveRot.Roll = NewRoll;
@@ -3926,7 +3926,7 @@ exec function SetCamPos(string NewX, string NewY, string NewZ)
             }
             else
             {
-                Log(V.VehicleNameString @ "FPCamPos =" @ V.FPCamPos @ "(old was" @ OldCamPos $ ")");
+                Log(V.Tag @ "FPCamPos =" @ V.FPCamPos @ "(old was" @ OldCamPos $ ")");
             }
         }
     }
@@ -4731,7 +4731,7 @@ exec function DebugDriverAttachment()
 
     if (V != none && V.Driver != none)
     {
-        Log(V.Name @ "DebugDriverAttachment: RelativeLocation =" @ V.Driver.RelativeLocation @ ", DrivePos =" @ V.DrivePos
+        Log(V.Tag @ "DebugDriverAttachment: RelativeLocation =" @ V.Driver.RelativeLocation @ ", DrivePos =" @ V.DrivePos
             @ ", PrePivot =" @ V.Driver.PrePivot @ ", default.PrePivot =" @ V.Driver.default.PrePivot);
     }
 }
