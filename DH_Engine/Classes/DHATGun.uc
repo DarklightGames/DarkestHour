@@ -219,7 +219,6 @@ defaultproperties
 
     // Miscellaneous
     TouchMessage="Use the "
-    VehicleNameString="AT gun"
     VehicleMass=5.0 // TODO: rationalise the mass & centre of mass settings of guns, but experiment with effect on ground contact & vehicle collisions
     PointValue=2.0
     MaxDesireability=1.9
