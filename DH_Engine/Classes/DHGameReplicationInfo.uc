@@ -26,7 +26,8 @@ enum VehicleReservationError
     ERROR_PoolOutOfSpawns,
     ERROR_PoolInactive,
     ERROR_PoolMaxActive,
-    ERROR_NoReservations
+    ERROR_NoReservations,
+    ERROR_NoSquad
 };
 
 struct ArtilleryTarget
@@ -385,6 +386,19 @@ simulated function bool IsRallyPointIndexValid(DHPlayer PC, byte RallyPointIndex
 simulated function bool CanSpawnWithParameters(int SpawnPointIndex, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck)
 {
     local DHSpawnPointBase SP;
+    local class<DHVehicle> VehicleClass;
+
+    if (VehiclePoolIndex != -1)
+    {
+        VehicleClass = class<DHVehicle>(GetVehiclePoolVehicleClass(VehiclePoolIndex));
+
+        if (VehicleClass == none ||
+            VehicleClass.default.bMustBeInSquadToSpawn && SquadIndex == -1 ||
+            !CanSpawnVehicle(VehiclePoolIndex, bSkipTimeCheck))
+        {
+            return false;
+        }
+    }
 
     SP = GetSpawnPoint(SpawnPointIndex);
 
@@ -875,9 +889,9 @@ simulated function AddPRI(PlayerReplicationInfo PRI)
 
 simulated function VehicleReservationError GetVehicleReservationError(DHPlayer PC, DHRoleInfo RI, int TeamIndex, int VehiclePoolIndex)
 {
-    local class<ROVehicle> VC;
+    local class<DHVehicle> VC;
 
-    VC = class<ROVehicle>(GetVehiclePoolVehicleClass(VehiclePoolIndex));
+    VC = class<DHVehicle>(GetVehiclePoolVehicleClass(VehiclePoolIndex));
 
     if (PC == none || RI == none || VC == none || (TeamIndex != AXIS_TEAM_INDEX && TeamIndex != ALLIES_TEAM_INDEX) || (PC.Pawn != none && PC.Pawn.Health > 0) || VC.default.VehicleTeam != RI.Side)
     {
@@ -912,6 +926,11 @@ simulated function VehicleReservationError GetVehicleReservationError(DHPlayer P
     if (GetVehiclePoolAvailableReservationCount(VehiclePoolIndex) <= 0)
     {
         return ERROR_NoReservations;
+    }
+
+    if (VC.default.bMustBeInSquadToSpawn && !PC.IsInSquad())
+    {
+        return ERROR_NoSquad;
     }
 
     return ERROR_None;

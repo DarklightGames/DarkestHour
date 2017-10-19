@@ -21,4 +21,5 @@ defaultproperties
     SupplyAttachmentOffset=(X=-2.0,Y=0.0,Z=2.0)
     ResupplyAttachmentBone="supply"
     VehHitpoints(3)=(PointRadius=40.0,PointScale=1.0,PointBone="body",PointOffset=(X=-80.0,Y=0.0,Z=90.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    bMustBeInSquadToSpawn=true
 }

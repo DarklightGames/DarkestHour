@@ -148,6 +148,7 @@ var     float                                   SupplyDropSoundVolume;
 var     int                     VehiclePoolIndex;     // the vehicle pool index that this was spawned from
 var     DHSpawnPoint_Vehicle    SpawnPointAttachment; // a spawn vehicle's spawn point attachment
 var     DHSpawnPointBase        SpawnPoint;           // the spawn point that was used to spawn this vehicle
+var     bool                    bMustBeInSquadToSpawn;
 
 // Debugging
 var     bool        bDebuggingText;

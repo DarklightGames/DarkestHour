@@ -158,7 +158,6 @@ function bool SpawnPlayer(DHPlayer PC)
             // We store this value because the spawn point may destroy itself when
             // calling PerformSpawn, which would invalidate the SP reference here.
             bCombatSpawn = SP.bCombatSpawn;
-
             bResult = SP.PerformSpawn(PC);
 
             if (bResult)
@@ -187,15 +186,14 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
     local DHVehicle               DHV;
     local DHPawn                  Driver;
     local int                     i;
+    local class<DHVehicle>        DHVC;
 
     if (PC == none || PC.Pawn != none)
     {
         return none;
     }
 
-    SP = GRI.SpawnPoints[PC.SpawnPointIndex];
-
-    if (SP == none || !SP.CanSpawnWithParameters(GRI, PC.GetTeamNum(), PC.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex))
+    if (!GRI.CanSpawnWithParameters(PC.SpawnPointIndex, PC.GetTeamNum(), PC.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex))
     {
         return none;
     }
@@ -209,6 +207,14 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
         {
             return none;
         }
+    }
+
+    // Make sure the player is in a squad if the vehicle requires them to be
+    DHVC = class<DHVehicle>(VehiclePools[PC.VehiclePoolIndex].VehicleClass);
+
+    if (DHVC != none && DHVC.default.bMustBeInSquadToSpawn && !PC.IsInSquad())
+    {
+        return none;
     }
 
     if (!GRI.CanSpawnVehicle(PC.VehiclePoolIndex))
