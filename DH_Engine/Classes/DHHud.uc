@@ -42,6 +42,7 @@ var     SpriteWidget        MapIconMortarSmokeTarget;
 var     SpriteWidget        MapIconMortarArrow;
 var     SpriteWidget        MapIconMortarHit;
 var     SpriteWidget        MapPlayerNumberIcon;
+var     SpriteWidget        MapIconFrozen;
 var     float               PlayerIconScale, PlayerIconLargeScale;
 
 // Screen icons
@@ -3770,6 +3771,11 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
             Widget = MapIconDispute[ALLIES_TEAM_INDEX];
             DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 6);
         }
+        else if (DHGRI.DHObjectives[i].IsFrozen(DHGRI))
+        {
+            Widget = MapIconFrozen;
+            DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter);
+        }
     }
 
     DrawMapMarkersOnMap(C, Subcoords, MyMapScale, MapCenter);
@@ -4295,8 +4301,8 @@ function DrawCaptureBar(Canvas Canvas)
     local ROVehicleWeaponPawn WpnPwn;
     local int                 OwnTeam, EnemyTeam;
     local byte                ObjectiveIndex, PawnCapProgress, PlayersInCap[2];
-    local float               CaptureProgress[2], XL, YL, YPos;
-    local string              ObjectiveNameText;
+    local float               CaptureProgress[2], XL, YL, XPos, YPos;
+    local string              S;
 
     if (DHGRI == none || PlayerOwner == none || PawnOwnerPRI == none || PawnOwnerPRI.Team == none)
     {
@@ -4438,26 +4444,19 @@ function DrawCaptureBar(Canvas Canvas)
     CaptureBarDefender.Scale = (150.0 / 256.0 * CaptureProgress[EnemyTeam]) + (53.0 / 256.0);
 
     // If objective can't be captured because it's in a timed pre-cap period, we'll show the pre-cap time remaining instead of the objective name
-    if (DHGRI.ElapsedTime < Objective.UnlockTime)
-    {
-        ObjectiveNameText = Repl(CaptureBarUnlockText, "{0}", class'TimeSpan'.static.ToString(Objective.UnlockTime - DHGRI.ElapsedTime));
-    }
     // Otherwise we'll show the objective name & if there are enemy present then add extra text to show that
-    else
-    {
-        ObjectiveNameText = Objective.ObjName;
+    S = Objective.ObjName;
 
-        if (PlayersInCap[EnemyTeam] > 0)
-        {
-            ObjectiveNameText $= NeedsClearedText;
-        }
+    if (PlayersInCap[EnemyTeam] > 0)
+    {
+        S $= NeedsClearedText;
     }
 
     // If objective requires more than 1 player to capture, add current team players in cap vs required number in brackets after objective name
     // But only if player's team doesn't completely own the cap or there are any enemy players in it
     if (Objective.PlayersNeededToCapture > 1 && (CaptureProgress[OwnTeam] < 1.0 || PlayersInCap[EnemyTeam] > 0))
     {
-        ObjectiveNameText @= "(" $ PlayersInCap[OwnTeam] @ "/" @ Objective.PlayersNeededToCapture $ ")";
+        S @= "(" $ PlayersInCap[OwnTeam] @ "/" @ Objective.PlayersNeededToCapture $ ")";
 
         // If player's team don't have enough players in the cap, we'll draw the cap bar faded
         if (PlayersInCap[OwnTeam] < Objective.PlayersNeededToCapture)
@@ -4470,10 +4469,11 @@ function DrawCaptureBar(Canvas Canvas)
     // Draw the objective name text
     Canvas.DrawColor = WhiteColor;
     Canvas.Font = GetConsoleFont(Canvas);
-    Canvas.TextSize(ObjectiveNameText, XL, YL);
-    YPos = (Canvas.ClipY * CaptureBarBackground.PosY) - ((CaptureBarBackground.TextureCoords.Y2 + 5.0) * CaptureBarBackground.TextureScale * HudScale * ResScaleY);
-    Canvas.SetPos((Canvas.ClipX * CaptureBarBackground.PosX) - (XL / 2.0), YPos - YL);
-    Canvas.DrawText(ObjectiveNameText);
+    Canvas.TextSize(S, XL, YL);
+    XPos = (Canvas.ClipX * CaptureBarBackground.PosX) - (XL / 2.0);
+    YPos = (Canvas.ClipY * CaptureBarBackground.PosY) - ((CaptureBarBackground.TextureCoords.Y2) * CaptureBarBackground.TextureScale * HudScale * ResScaleY);
+    Canvas.SetPos(XPos, YPos - YL);
+    Canvas.DrawText(S);
 
     // Draw the capture bar below the objective name
     DrawSpriteWidget(Canvas, CaptureBarBackground);
@@ -4496,6 +4496,21 @@ function DrawCaptureBar(Canvas Canvas)
         }
 
         DrawSpriteWidget(Canvas, CaptureBarIcons[1]);
+    }
+
+    if (Objective.IsFrozen(DHGRI))
+    {
+        // Draw the lockdown icon and the time remainnig
+        S = class'TimeSpan'.static.ToString(Objective.UnfreezeTime - DHGRI.ElapsedTime);
+        Canvas.DrawColor = WhiteColor;
+        Canvas.Font = GetConsoleFont(Canvas);
+        Canvas.TextSize(S, XL, YL);
+        XPos = (Canvas.ClipX * CaptureBarBackground.PosX) - (XL / 2.0);
+        YPos = Canvas.ClipY * CaptureBarBackground.PosY;
+        Canvas.SetPos(XPos, YPos);
+        Canvas.DrawText(S);
+        Canvas.SetPos(XPos - YL - 4, YPos - (YL / 4));
+        Canvas.DrawTileClipped(Texture'DH_InterfaceArt2_tex.icons.lockdown', YL, YL, 0, 0, 31, 31);
     }
 
     // If enemy are present in the cap zone, show an enemy present flashing icon over the right side of the bar (flashes on top of any flag there)
@@ -5461,6 +5476,7 @@ defaultproperties
     MapPlayerIcon=(WidgetTexture=FinalBlend'DH_InterfaceArt_tex.HUD.player_icon_map_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31))
     MapIconDispute(0)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=128,Y1=192,X2=191,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconDispute(1)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=192,X2=63,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapIconFrozen=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.lockdown',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.03,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Map icons for team requests & markers
     MapIconMGResupplyRequest(0)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')

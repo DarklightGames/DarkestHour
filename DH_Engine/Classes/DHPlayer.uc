@@ -109,10 +109,13 @@ var     bool                    bShouldSkipResetInput;
 var     float                   ToggleDuckIntervalSeconds;
 var     float                   NextToggleDuckTimeSeconds;
 
+// Spectating stuff
+var     bool                    bSpectateAllowViewPoints;
+
 replication
 {
     unreliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        SquadMemberLocations;
+        SquadMemberLocations, bSpectateAllowViewPoints;
 
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
@@ -5425,19 +5428,15 @@ function int GetValidSpecModeCount()
     return Count;
 }
 
-function bool IsSpecModeValid(ESpectatorMode Mode)
+simulated function bool IsSpecModeValid(ESpectatorMode Mode)
 {
-    local ROTeamGame ROG;
-
-    ROG = ROTeamGame(Level.Game);
-
     if (Mode == SPEC_Self)
     {
-        return !ROG.bSpectateBlackoutWhenNotViewingPlayers && Pawn != none && PlayerReplicationInfo != none && !PlayerReplicationInfo.bOnlySpectator;
+        return !bViewBlackOnDeadNotViewingPlayers && Pawn != none && PlayerReplicationInfo != none && !PlayerReplicationInfo.bOnlySpectator;
     }
     else if (Mode == SPEC_Roaming)
     {
-        return !ROG.bSpectateBlackoutWhenNotViewingPlayers && ROG.bSpectateAllowRoaming && (!IsDead() || (ROG.bSpectateAllowDeadRoaming && !ROG.bSpectateBlackoutWhenDead));
+        return !bViewBlackonDeadNotViewingPlayers && bAllowRoamWhileSpectating && (!IsDead() || (bAllowRoamWhileDeadSpectating && !bViewBlackWhenDead));
     }
     else if (Mode == SPEC_Players)
     {
@@ -5445,7 +5444,7 @@ function bool IsSpecModeValid(ESpectatorMode Mode)
     }
     else if (Mode == SPEC_ViewPoints)
     {
-        return !ROG.bSpectateBlackoutWhenNotViewingPlayers && ROG.bSpectateAllowViewPoints && ROG.ViewPoints.Length > 0;
+        return !bViewBlackOnDeadNotViewingPlayers && bSpectateAllowViewPoints;
     }
 
     return false;

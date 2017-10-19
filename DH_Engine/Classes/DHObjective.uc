@@ -98,7 +98,7 @@ var(DHObjectiveOther) bool          bAxisFinalObjective;
 var(DHObjectiveOther) name          NoArtyVolumeProtectionTag;  // optional Tag for associated no arty volume that protects this SP only when the SP is active
 
 // Non configurable variables
-var     int                         UnlockTime;                 // The time at which the objective will be unlocked and ready to be capured again, relative to GRI.ElapsedTime
+var     int                         UnfreezeTime;               // The time at which the objective will be unlocked and ready to be capured again, relative to GRI.ElapsedTime
 var     bool                        bCheckIfAxisCleared;
 var     bool                        bCheckIfAlliesCleared;
 var     bool                        bIsLocked;
@@ -138,18 +138,18 @@ replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        UnlockTime;
+        UnfreezeTime;
 }
 
 function PostBeginPlay()
 {
-    local DHGameReplicationInfo DHGRI;
+    local DHGameReplicationInfo GRI;
     local RONoArtyVolume        NAV;
 
     // Call super above ROObjective
     super(GameObjective).PostBeginPlay();
 
-    DHGRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
     // Find the volume to use if the mapper set one
     if (VolumeTag != '')
@@ -181,9 +181,9 @@ function PostBeginPlay()
     }
 
     // Add self to game replication info objectives
-    if (DHGRI != none)
+    if (GRI != none)
     {
-        DHGRI.DHObjectives[ObjNum] = self;
+        GRI.DHObjectives[ObjNum] = self;
     }
 }
 
@@ -191,7 +191,7 @@ function Reset()
 {
     super.Reset();
 
-    UnlockTime = 0;
+    UnfreezeTime = 0;
     SetActive(bIsInitiallyActive);
 
     bCheckIfAxisCleared = false;
@@ -211,10 +211,7 @@ function SetActive(bool bActiveStatus)
 
     if (bActiveStatus)
     {
-        if (Level != none && Level.Game != none && Level.Game.GameReplicationInfo != none)
-        {
-            UnlockTime = Level.Game.GameReplicationInfo.ElapsedTime + PreventCaptureTime;
-        }
+        UnfreezeTime = Level.Game.GameReplicationInfo.ElapsedTime + PreventCaptureTime;
 
         // Make neutral if desired
         if (bNeutralOnActivation && !bDisabled && !IsNeutral())
@@ -424,7 +421,6 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
 {
     local DarkestHourGame           G;
     local DHPlayerReplicationInfo   PRI;
-    local DHGameReplicationInfo     GRI;
     local DHRoleInfo                RI;
     local Controller                C;
     local Pawn                      P;
@@ -436,9 +432,8 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     CurrentCapProgress = 0.0;
 
     G = DarkestHourGame(Level.Game);
-    GRI = DHGameReplicationInfo(G.GameReplicationInfo);
 
-    if (G == none || GRI == none)
+    if (G == none)
     {
         return;
     }
@@ -460,7 +455,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     // Activate the no capture lock down
     if (bLockDownOnCapture)
     {
-        UnlockTime = GRI.ElapsedTime + PreventCaptureTime;
+        UnfreezeTime = Level.Game.GameReplicationInfo.ElapsedTime + PreventCaptureTime;
     }
 
     // Don't "disable" the objective, just "deactivate it"
@@ -520,7 +515,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
 
     if (G.Metrics != none)
     {
-        RoundTime = GRI.ElapsedTime - GRI.RoundStartTime;
+        RoundTime = Level.Game.GameReplicationInfo.ElapsedTime -  Level.Game.GameReplicationInfo.RoundStartTime;
         G.Metrics.OnObjectiveCaptured(ObjNum, Team, RoundTime, PlayerIDs);
     }
 
@@ -836,26 +831,21 @@ function bool HandleClearedLogic(int NumForCheck[2])
 
 function Timer()
 {
-    local DHGameReplicationInfo   DHGRI;
-    local Controller              C;
-    local DHPawn                  P;
-    local ROVehicle               ROVeh;
-    local ROVehicleWeaponPawn     VehWepPawn;
-    local float                   OldCapProgress, Rate[2];
-    local int                     NumTotal[2], Num[2], NumForCheck[2], i;
-    local byte                    CurrentCapAxisCappers, CurrentCapAlliesCappers, CP;
+    local Controller            C;
+    local DHPawn                P;
+    local ROVehicle             ROVeh;
+    local ROVehicleWeaponPawn   VehWepPawn;
+    local DHGameReplicationInfo GRI;
+    local float                 OldCapProgress, Rate[2];
+    local int                   NumTotal[2], Num[2], NumForCheck[2], i;
+    local byte                  CurrentCapAxisCappers, CurrentCapAlliesCappers, CP;
 
     if (ROTeamGame(Level.Game) == none || !ROTeamGame(Level.Game).IsInState('RoundInPlay') || (!bActive && !bUsePostCaptureOperations))
     {
         return;
     }
 
-    DHGRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-    if (DHGRI == none)
-    {
-        return;
-    }
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
     GetPlayersInObjective(Num, NumTotal, NumForCheck);
 
@@ -895,7 +885,7 @@ function Timer()
     }
 
     // If we are not ready to capture because of precap prevention set rate to zero
-    if (DHGRI.ElapsedTime < UnlockTime)
+    if (Level.Game.GameReplicationInfo.ElapsedTime < UnfreezeTime)
     {
         Rate[0] = 0.0;
         Rate[1] = 0.0;
@@ -912,7 +902,7 @@ function Timer()
             // Then check if Axis have required objectives controlled
             for (i = 0; i < AxisRequiredObjForCapture.Length; ++i)
             {
-                if (!DHGRI.DHObjectives[AxisRequiredObjForCapture[i]].IsAxis())
+                if (!GRI.DHObjectives[AxisRequiredObjForCapture[i]].IsAxis())
                 {
                     // We don't have required objectives controlled, no progress allowed
                     Rate[AXIS_TEAM_INDEX] = 0.0;
@@ -923,7 +913,7 @@ function Timer()
         {
             for (i = 0; i < AlliesRequiredObjForCapture.Length; ++i)
             {
-                if (!DHGRI.DHObjectives[AlliesRequiredObjForCapture[i]].IsAllies())
+                if (!GRI.DHObjectives[AlliesRequiredObjForCapture[i]].IsAllies())
                 {
                     Rate[ALLIES_TEAM_INDEX] = 0.0;
                 }
@@ -1244,6 +1234,11 @@ simulated function bool IsAllies()
 simulated function bool IsNeutral()
 {
     return ObjState == OBJ_Neutral;
+}
+
+simulated function bool IsFrozen(GameReplicationInfo GRI)
+{
+    return GRI != none && UnfreezeTime > GRI.ElapsedTime;
 }
 
 defaultproperties

@@ -3198,6 +3198,7 @@ exec function CaptureObj(int Team, optional string ObjName, optional bool bNeutr
                 {
                     DHObjectives[i].ObjectiveCompleted(none, Team);
                 }
+
                 return;
             }
         }
@@ -4610,6 +4611,11 @@ event PostLogin(PlayerController NewPlayer)
     NewPlayer.bViewBlackWhenDead = bSpectateBlackoutWhenDead;
     NewPlayer.bViewBlackOnDeadNotViewingPlayers = bSpectateBlackoutWhenNotViewingPlayers;
     NewPlayer.bAllowRoamWhileDeadSpectating = bSpectateAllowDeadRoaming;
+
+    if (PC != none)
+    {
+        PC.bSpectateAllowViewPoints = bSpectateAllowViewPoints && ViewPoints.Length > 0;
+    }
 }
 
 // Override to leave hash and info in PlayerData, basically to save PRI data for the session
