@@ -87,7 +87,7 @@ defaultproperties
     ExitPositions(7)=(X=250.0,Y=0.0,Z=75.0)     // front
 
     // Sounds
-    IdleSound=SoundGroup'DH_AlliedVehicleSounds.Sherman.ShermanEngineLoop'
+    IdleSound=SoundGroup'DH_AlliedVehicleSounds.Sherman.ShermanEngineLoop' // TODO: M4A3 used a different gasoline engine to M4/M4A1, so ideally add different engine sounds
     StartUpSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStart'
     ShutDownSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
     LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'

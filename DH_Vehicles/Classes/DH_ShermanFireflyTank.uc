@@ -87,7 +87,7 @@ defaultproperties
     ExitPositions(6)=(X=80.0,Y=115.0,Z=125.0)    // co-driver's hatch (a fallback)
 
     // Sounds
-    IdleSound=SoundGroup'DH_AlliedVehicleSounds.Sherman.ShermanEngineLoop'
+    IdleSound=SoundGroup'DH_AlliedVehicleSounds.Sherman.ShermanEngineLoop' // TODO: Sherman Mk.V (M4A4) used a different gasoline multi-engine to M4/M4A1, so ideally add different engine sounds
     StartUpSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStart'
     ShutDownSound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanStop'
     LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'

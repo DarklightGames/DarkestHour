@@ -82,7 +82,7 @@ defaultproperties
     ExitPositions(5)=(X=-125.0,Y=156.0,Z=5.0)  // passenger (r)
 
     // Sounds
-    IdleSound=SoundGroup'Vehicle_Engines.SU76.SU76_engine_loop'
+    IdleSound=SoundGroup'Vehicle_Engines.SU76.SU76_engine_loop' // TODO: Hellcat used same gasoline engine as Sherman M4/M4A1, so switch to Sherman sounds
     StartUpSound=Sound'Vehicle_Engines.SU76.SU76_engine_start'
     ShutDownSound=Sound'Vehicle_Engines.SU76.SU76_engine_stop'
     LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'

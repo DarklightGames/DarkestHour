@@ -83,7 +83,7 @@ defaultproperties
     ExitPositions(5)=(X=-125.0,Y=150.0,Z=75.0)  // passenger (r)
 
     // Sounds
-    IdleSound=SoundGroup'Vehicle_Engines.SU76.SU76_engine_loop'
+    IdleSound=SoundGroup'Vehicle_Engines.SU76.SU76_engine_loop' // TODO: Jackson used same gasoline engine as Sherman M4A3, different to Wolverine, so switch to Sherman sounds
     StartUpSound=Sound'Vehicle_Engines.SU76.SU76_engine_start'
     ShutDownSound=Sound'Vehicle_Engines.SU76.SU76_engine_stop'
     LeftTreadSound=Sound'Vehicle_EnginesTwo.UC.UC_tread_L'
