@@ -3,34 +3,33 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_ChurchillCannon extends DHVehicleCannon;
+class DH_ChurchillMkVIICannon extends DHVehicleCannon;
 
 defaultproperties
 {
     // Turret mesh
-    Mesh=SkeletalMesh'DH_Churchill_anm.ext_turret'
-    Skins(0)=Texture'DH_Churchill_tex.churchill.churchill_turret'
-    CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell.Cromwell_turret_Coll'
-    FireAttachBone="turret_placement"
-//    FireEffectOffset=(X=-3.0,Y=-30.0,Z=50.0)
-
-    WeaponFireAttachmentBone="muzzle"
+    Mesh=SkeletalMesh'DH_Churchill_anm.ChurchillMkVII_turret' // TODO: think cupola & hatches are incorrect - believe should have all round vision cupola
+    Skins(0)=Texture'DH_Churchill_tex.churchill.ChurchillMkVIIl_turret'
+    CollisionStaticMesh=StaticMesh'DH_Churchill_stc.ChurchillMkVII_turret_col'
+    FireAttachBone="Turret"
+    FireEffectOffset=(X=12.0,Y=-25.0,Z=60.0)
+    FireEffectScale=0.8
 
     // Turret armor
-    FrontArmorFactor=7.6
-    RightArmorFactor=6.3
-    LeftArmorFactor=6.3
-    RearArmorFactor=5.7
-    FrontLeftAngle=318.0
-    FrontRightAngle=42.0
-    RearRightAngle=138.0
-    RearLeftAngle=222.0
+    FrontArmorFactor=15.24
+    RightArmorFactor=9.53
+    LeftArmorFactor=9.53
+    RearArmorFactor=9.53
+    FrontLeftAngle=328.0
+    FrontRightAngle=34.0
+    RearRightAngle=147.5
+    RearLeftAngle=204.0
 
     // Turret movement
     ManualRotationsPerSecond=0.029
-    PoweredRotationsPerSecond=0.0625
+    PoweredRotationsPerSecond=0.06667
     CustomPitchUpLimit=3641
-    CustomPitchDownLimit=64500
+    CustomPitchDownLimit=63260
 
     // Cannon ammo
     ProjectileClass=class'DH_Vehicles.DH_CromwellCannonShell'
@@ -38,29 +37,31 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellHE'
     TertiaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellSmoke'
     ProjectileDescriptions(2)="Smoke"
-    InitialPrimaryAmmo=25
-    InitialSecondaryAmmo=13
-    InitialTertiaryAmmo=4
-    MaxPrimaryAmmo=33
-    MaxSecondaryAmmo=26
-    MaxTertiaryAmmo=5
+    InitialPrimaryAmmo=28
+    InitialSecondaryAmmo=15
+    InitialTertiaryAmmo=6
+    MaxPrimaryAmmo=38
+    MaxSecondaryAmmo=38
+    MaxTertiaryAmmo=8
     SecondarySpread=0.00175
     TertiarySpread=0.0036
 
     // Coaxial MG ammo
     AltFireProjectileClass=class'DH_Vehicles.DH_BesaVehicleBullet'
     InitialAltAmmo=225
-    NumMGMags=10
+    NumMGMags=11
     AltFireInterval=0.092
     TracerProjectileClass=class'DH_Vehicles.DH_BesaVehicleTracerBullet'
     TracerFrequency=5
 
     // Smoke launcher
     SmokeLauncherClass=class'DH_Vehicles.DH_TwoInchBombThrower'
-    SmokeLauncherFireOffset(0)=(X=32.0,Y=37.5.0,Z=42.5)
+    SmokeLauncherFireOffset(0)=(X=32.0,Y=37.5,Z=42.5)
 
     // Weapon fire
+    WeaponFireAttachmentBone="muzzle"
     AltFireAttachmentBone="coax_muzzle"
+    AltFireOffset=(X=-8.5,Y=0.0,Z=0.0)
 
     // Sounds
     CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'

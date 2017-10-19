@@ -8,29 +8,28 @@ class DH_ChurchillMountedMG extends DHVehicleMG;
 defaultproperties
 {
     // MG mesh
-    Mesh=SkeletalMesh'DH_Churchill_anm.ext_mg'
+    Mesh=SkeletalMesh'DH_Churchill_anm.Churchill_MG'
     bMatchSkinToVehicle=true
     FireAttachBone="mg_placement"
     FireEffectOffset=(X=-30.0,Y=0.0,Z=15.0) // positions fire on co-driver's hatch
 
     // Movement
-    MaxPositiveYaw=7000
-    MaxNegativeYaw=-6000
-    PitchBone="mg_pitch"
-    YawBone="mg_yaw"
+    MaxPositiveYaw=6200 // yaw restricted due to protruding 'horns' at front of tank (gunner can't shoot own tank)
+    MaxNegativeYaw=-2300
     CustomPitchUpLimit=4500
     CustomPitchDownLimit=64000
 
     // Ammo
     ProjectileClass=class'DH_Vehicles.DH_BesaVehicleBullet'
     InitialPrimaryAmmo=225
-    NumMGMags=10
+    NumMGMags=11
     FireInterval=0.092
     TracerProjectileClass=class'DH_BesaVehicleTracerBullet'
     TracerFrequency=5
 
     // Weapon fire
-    WeaponFireOffset=25.0
+    bDoOffsetTrace=false // otherwise it adjusts the bullet spawn location to outside the vehicle's collision box, which in this tank is quite a way forward
+    WeaponFireOffset=17.0
     FireSoundClass=SoundGroup'DH_WeaponSounds.Besa.Besa_FireLoop'
     FireEndSound=SoundGroup'DH_WeaponSounds.Besa.Besa_FireEnd'
     ShakeRotMag=(X=10.0,Y=10.0,Z=10.0)
