@@ -92,8 +92,8 @@ def main():
     else:
         packages = default_packages
 
-    packages_to_compile = []
-    changed_packages = []
+    packages_to_compile = set()
+    changed_packages = set()
     package_crcs = dict()
 
     manifest_path = os.path.join(mod_dir, '.make'.format(args.mod))
@@ -107,7 +107,7 @@ def main():
     except IOError:
         pass
 
-    # store the old CRCs before be overwrite them
+    # store the old CRCs before we overwrite them
     old_package_crcs = package_crcs
 
     for package in packages:
@@ -131,11 +131,11 @@ def main():
                     package_crc = crc32(f.read(), package_crc)
 
         if package not in package_crcs or package_crcs[package] != package_crc:
-            changed_packages.append(package + '.u')
+            changed_packages.add(package + '.u')
             should_compile_package = True
 
         if should_compile_package:
-            packages_to_compile.append(package + '.u')
+            packages_to_compile.add(package + '.u')
 
         package_crcs[package] = package_crc
 
@@ -169,7 +169,7 @@ def main():
     ucc_log_contents = ucc_log_file.read()
     ucc_log_file.close()
 
-    compiled_packages = []
+    compiled_packages = set()
 
     # move compiled packages to mod directory
     for root, dirs, filenames in os.walk(sys_dir):
@@ -177,13 +177,13 @@ def main():
             if filename in packages_to_compile:
                 shutil.copy(os.path.join(root, filename), mod_sys_dir)
                 os.remove(os.path.join(root, filename))
-                compiled_packages.append(filename)
+                compiled_packages.add(filename)
 
-    # run dumpint on compiled packages
+    # run dumpint on changed and compiled packages
     if args.dumpint:
         print 'running dumpint (note: output may be garbled due to ucc writing to stdout in parallel)'
         processes = []
-        for package in set(compiled_packages) & set(changed_packages):
+        for package in (compiled_packages & changed_packages):
             processes.append(subprocess.Popen(['ucc', 'dumpint', package, '-mod=' + args.mod]))
 
         [p.wait() for p in processes]
@@ -211,7 +211,8 @@ def main():
         package_name = os.path.splitext(package_name)[0]
         old_package_crcs[package_name] = package_crcs[package_name]
 
-    for package_name in set(packages_to_compile).difference(compiled_packages):
+    # delete the CRCs of changed packages that failed to compile
+    for package_name in ((packages_to_compile - compiled_packages) & changed_packages):
         package_name = os.path.splitext(package_name)[0]
         del old_package_crcs[package_name]
 
