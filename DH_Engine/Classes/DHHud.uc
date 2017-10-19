@@ -42,7 +42,7 @@ var     SpriteWidget        MapIconMortarSmokeTarget;
 var     SpriteWidget        MapIconMortarArrow;
 var     SpriteWidget        MapIconMortarHit;
 var     SpriteWidget        MapPlayerNumberIcon;
-var     SpriteWidget        MapIconFrozen;
+var     SpriteWidget        MapIconObjectiveStatusIcon;
 var     float               PlayerIconScale, PlayerIconLargeScale;
 
 // Screen icons
@@ -126,6 +126,7 @@ var     localized string    ReinforcementsDepletedText;
 var     localized string    NeedReloadText;
 var     localized string    CanReloadText;
 var     localized string    CaptureBarUnlockText;
+var     localized string    ConnectedObjectivesNotSecuredText;
 var     localized string    NeedsClearedText;
 var     localized string    BlackoutText;
 
@@ -3747,11 +3748,11 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
         // Draw flashing icon if objective is disputed
         if (DHGRI.DHObjectives[i].CompressedCapProgress != 0 && DHGRI.DHObjectives[i].CurrentCapTeam != NEUTRAL_TEAM_INDEX)
         {
-            if (DHGRI.DHObjectives[i].CompressedCapProgress == 1 || DHGRI.DHObjectives[i].CompressedCapProgress == 2)
+            if (DHGRI.DHObjectives[i].CompressedCapProgress <= 2)
             {
                 DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 2, ObjLabel, DHGRI, i);
             }
-            else if (DHGRI.DHObjectives[i].CompressedCapProgress == 3 || DHGRI.DHObjectives[i].CompressedCapProgress == 4)
+            else if (DHGRI.DHObjectives[i].CompressedCapProgress <= 4)
             {
                 DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 3, ObjLabel, DHGRI, i);
             }
@@ -3773,7 +3774,14 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
         }
         else if (DHGRI.DHObjectives[i].IsFrozen(DHGRI))
         {
-            Widget = MapIconFrozen;
+            Widget = MapIconObjectiveStatusIcon;
+            Widget.WidgetTexture = Texture'DH_InterfaceArt2_tex.Icons.lockdown';
+            DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter);
+        }
+        else if (DHGRI.DHObjectives[i].IsTeamNeutralLocked(DHGRI, OwnerTeam))
+        {
+            Widget = MapIconObjectiveStatusIcon;
+            Widget.WidgetTexture = Texture'DH_InterfaceArt2_tex.Icons.chain';
             DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter);
         }
     }
@@ -4295,14 +4303,15 @@ function DisplayMessages(Canvas C)
 
 function DrawCaptureBar(Canvas Canvas)
 {
-    local DHObjective         Objective;
-    local DHPawn              P;
-    local ROVehicle           Veh;
-    local ROVehicleWeaponPawn WpnPwn;
-    local int                 OwnTeam, EnemyTeam;
-    local byte                ObjectiveIndex, PawnCapProgress, PlayersInCap[2];
-    local float               CaptureProgress[2], XL, YL, XPos, YPos;
-    local string              S;
+    local DHObjective           Objective;
+    local DHPawn                P;
+    local ROVehicle             Veh;
+    local ROVehicleWeaponPawn   WpnPwn;
+    local int                   OwnTeam, EnemyTeam;
+    local byte                  ObjectiveIndex, PawnCapProgress, PlayersInCap[2];
+    local float                 CaptureProgress[2], XL, YL, XPos, YPos;
+    local string                S, StatusText;
+    local Material              StatusIcon;
 
     if (DHGRI == none || PlayerOwner == none || PawnOwnerPRI == none || PawnOwnerPRI.Team == none)
     {
@@ -4501,16 +4510,31 @@ function DrawCaptureBar(Canvas Canvas)
     if (Objective.IsFrozen(DHGRI))
     {
         // Draw the lockdown icon and the time remainnig
-        S = class'TimeSpan'.static.ToString(Objective.UnfreezeTime - DHGRI.ElapsedTime);
+        StatusText = class'TimeSpan'.static.ToString(Objective.UnfreezeTime - DHGRI.ElapsedTime);
+        StatusIcon = Texture'DH_InterfaceArt2_tex.icons.lockdown';
+    }
+    else if (Objective.IsTeamNeutralLocked(DHGRI, OwnTeam))
+    {
+        StatusText = default.ConnectedObjectivesNotSecuredText;
+        StatusIcon = Texture'DH_InterfaceArt2_tex.icons.chain';
+    }
+
+    // Draw status text and icon, if available
+    if (StatusText != "")
+    {
         Canvas.DrawColor = WhiteColor;
         Canvas.Font = GetConsoleFont(Canvas);
-        Canvas.TextSize(S, XL, YL);
+        Canvas.TextSize(StatusText, XL, YL);
         XPos = (Canvas.ClipX * CaptureBarBackground.PosX) - (XL / 2.0);
         YPos = Canvas.ClipY * CaptureBarBackground.PosY;
         Canvas.SetPos(XPos, YPos);
-        Canvas.DrawText(S);
-        Canvas.SetPos(XPos - YL - 4, YPos - (YL / 4));
-        Canvas.DrawTileClipped(Texture'DH_InterfaceArt2_tex.icons.lockdown', YL, YL, 0, 0, 31, 31);
+        Canvas.DrawText(StatusText);
+
+        if (StatusIcon != none)
+        {
+            Canvas.SetPos(XPos - YL - 4, YPos - (YL / 4));
+            Canvas.DrawTileClipped(StatusIcon, YL, YL, 0, 0, StatusIcon.MaterialUSize(), StatusIcon.MaterialVSize());
+        }
     }
 
     // If enemy are present in the cap zone, show an enemy present flashing icon over the right side of the bar (flashes on top of any flag there)
@@ -4656,7 +4680,7 @@ function DrawSpectatingHud(Canvas C)
                         if (DHGRI.SpawningEnableTime - DHGRI.ElapsedTime > 0)
                         {
                             s = default.NotReadyToSpawnText;
-                            s = Repl(s, "{s}", DHGRI.SpawningEnableTime - DHGRI.ElapsedTime);
+                            s = Repl(s, "{s}", class'TimeSpan'.static.ToString(DHGRI.SpawningEnableTime - DHGRI.ElapsedTime));
                             bShouldFlashText = true;
                         }
                         else if (PC.VehiclePoolIndex != -1 && PC.SpawnPointIndex != -1)
@@ -5409,7 +5433,7 @@ defaultproperties
     SpawnRallyPointText="You will deploy as a {0} at your squad rally point in {2} | Press [ESC] to change"
     SpawnNoRoleText="Press [ESC] to select a role"
     ReinforcementsDepletedText="Reinforcements depleted!"
-    NotReadyToSpawnText="Spawning will enable in {s} seconds (Use this time to organize squads and plan)"
+    NotReadyToSpawnText="Spawning will enable in {s} (Use this time to organize squads and plan)"
 
     // Screen indicator icons & player HUD
     CompassNeedle=(WidgetTexture=TexRotator'DH_InterfaceArt_tex.HUD.Compass_rotator') // using DH version of compass background texture
@@ -5476,7 +5500,7 @@ defaultproperties
     MapPlayerIcon=(WidgetTexture=FinalBlend'DH_InterfaceArt_tex.HUD.player_icon_map_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31))
     MapIconDispute(0)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=128,Y1=192,X2=191,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconDispute(1)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=192,X2=63,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-    MapIconFrozen=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.lockdown',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.03,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    MapIconObjectiveStatusIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.lockdown',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.03,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Map icons for team requests & markers
     MapIconMGResupplyRequest(0)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
@@ -5559,6 +5583,8 @@ defaultproperties
     SpectateInstructionText3="Press [%ROIRONSIGHTS%] to toggle First/Third Person View"
     SpectateInstructionText4="Press [%JUMP%] to return to viewing yourself"
     BlackoutText="Blackout"
+
+    ConnectedObjectivesNotSecuredText="Connected objective(s) not secured"
 
     // Supply
     SupplyCountWidget=(WidgetTexture=Texture'DH_GUI_Tex.GUI.supply_indicator',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=31),TextureScale=1.0,DrawPivot=DP_UpperMiddle,PosX=0.5,PosY=0.0,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255),OffsetY=8)

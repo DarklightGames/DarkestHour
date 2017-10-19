@@ -829,6 +829,42 @@ function bool HandleClearedLogic(int NumForCheck[2])
     return false;
 }
 
+// Returns true if a team is unable to capture this objective because
+// they have not secured the required connected objective(s).
+simulated function bool IsTeamNeutralLocked(DHGameReplicationInfo GRI, int TeamIndex)
+{
+    local int i;
+
+    if (GRI == none || !bNeutralizeBeforeCapture || !IsNeutral())
+    {
+        return false;
+    }
+
+    switch (TeamIndex)
+    {
+    case AXIS_TEAM_INDEX:
+        for (i = 0; i < AxisRequiredObjForCapture.Length; ++i)
+        {
+            if (!GRI.DHObjectives[AxisRequiredObjForCapture[i]].IsAxis())
+            {
+                return true;
+            }
+        }
+        break;
+    case ALLIES_TEAM_INDEX:
+        for (i = 0; i < AlliesRequiredObjForCapture.Length; ++i)
+        {
+            if (!GRI.DHObjectives[AlliesRequiredObjForCapture[i]].IsAllies())
+            {
+                return true;
+            }
+        }
+        break;
+    }
+
+    return false;
+}
+
 function Timer()
 {
     local Controller            C;
@@ -891,72 +927,53 @@ function Timer()
         Rate[1] = 0.0;
     }
 
-    // TODO: need to indicate to the player that they cannot capture this obj until they control the required obj
-    // Determine if we can progress on the capture (will set rate to 0.0 to prevent it)
-    // If the objective is bNeutralizeBeforeCapture & if we are capturing (not neutralizing)
-    if (bNeutralizeBeforeCapture && IsNeutral())
-    {
-        // Check if Axis are trying to capture
-        if (CurrentCapTeam == AXIS_TEAM_INDEX)
-        {
-            // Then check if Axis have required objectives controlled
-            for (i = 0; i < AxisRequiredObjForCapture.Length; ++i)
-            {
-                if (!GRI.DHObjectives[AxisRequiredObjForCapture[i]].IsAxis())
-                {
-                    // We don't have required objectives controlled, no progress allowed
-                    Rate[AXIS_TEAM_INDEX] = 0.0;
-                }
-            }
-        }
-        else if (CurrentCapTeam == ALLIES_TEAM_INDEX)
-        {
-            for (i = 0; i < AlliesRequiredObjForCapture.Length; ++i)
-            {
-                if (!GRI.DHObjectives[AlliesRequiredObjForCapture[i]].IsAllies())
-                {
-                    Rate[ALLIES_TEAM_INDEX] = 0.0;
-                }
-            }
-        }
-    }
-
     CurrentCapAxisCappers = NumForCheck[AXIS_TEAM_INDEX];
     CurrentCapAlliesCappers = NumForCheck[ALLIES_TEAM_INDEX];
 
-    // Note: Comparing number of players as opposed to rates to decide which side has advantage for the capture, for fear that rates could be abused in this instance
-    if (!IsAxis() && NumForCheck[AXIS_TEAM_INDEX] > NumForCheck[ALLIES_TEAM_INDEX])
+    // A team that is neutral-locked behaves as though it has no players in the capture area.
+    if (IsTeamNeutralLocked(GRI, AXIS_TEAM_INDEX))
+    {
+        CurrentCapAxisCappers = 0;
+    }
+
+    if (IsTeamNeutralLocked(GRI, ALLIES_TEAM_INDEX))
+    {
+        CurrentCapAlliesCappers = 0;
+    }
+
+    // NOTE: Comparing number of players as opposed to rates to decide which side has advantage for the capture, for fear that rates could be abused in this instance
+    if (!IsAxis() && CurrentCapAxisCappers > CurrentCapAlliesCappers)
     {
         // Have to work down the progress the other team made first, but this is quickened since the fall off rate still occurs
         if (CurrentCapTeam == ALLIES_TEAM_INDEX)
         {
-            CurrentCapProgress -= 0.25 * (MaxCaptureRate + Rate[AXIS_TEAM_INDEX]);
+            CurrentCapProgress -= TimerRate * (MaxCaptureRate + Rate[AXIS_TEAM_INDEX]);
         }
         else
         {
             CurrentCapTeam = AXIS_TEAM_INDEX;
-            CurrentCapProgress += 0.25 * Rate[AXIS_TEAM_INDEX];
+            CurrentCapProgress += TimerRate * Rate[AXIS_TEAM_INDEX];
         }
     }
-    else if (!IsAllies() && NumForCheck[ALLIES_TEAM_INDEX] > NumForCheck[AXIS_TEAM_INDEX])
+    else if (!IsAllies() && CurrentCapAlliesCappers > CurrentCapAxisCappers)
     {
         if (CurrentCapTeam == AXIS_TEAM_INDEX)
         {
-            CurrentCapProgress -= 0.25 * (MaxCaptureRate + Rate[ALLIES_TEAM_INDEX]);
+            CurrentCapProgress -= TimerRate * (MaxCaptureRate + Rate[ALLIES_TEAM_INDEX]);
         }
         else
         {
             CurrentCapTeam = ALLIES_TEAM_INDEX;
-            CurrentCapProgress += 0.25 * Rate[ALLIES_TEAM_INDEX];
+            CurrentCapProgress += TimerRate * Rate[ALLIES_TEAM_INDEX];
         }
     }
-    else if (NumForCheck[ALLIES_TEAM_INDEX] == NumForCheck[AXIS_TEAM_INDEX] && NumForCheck[AXIS_TEAM_INDEX] != 0)
+    else if (CurrentCapAxisCappers == CurrentCapAlliesCappers && CurrentCapAxisCappers != 0)
     {
         // Stalemate! No change.
     }
     else
     {
-        CurrentCapProgress -= 0.25 * MaxCaptureRate;
+        CurrentCapProgress -= TimerRate * MaxCaptureRate;
     }
 
     CurrentCapProgress = FClamp(CurrentCapProgress, 0.0, 1.0);
@@ -1239,6 +1256,19 @@ simulated function bool IsNeutral()
 simulated function bool IsFrozen(GameReplicationInfo GRI)
 {
     return GRI != none && UnfreezeTime > GRI.ElapsedTime;
+}
+
+// Modified to make way simpler and remove redundant if-statement checks.
+function UpdateCompressedCapProgress()
+{
+    if (!bActive || CurrentCapProgress ~= 0.0)
+    {
+        CompressedCapProgress = 0;
+    }
+    else
+    {
+        CompressedCapProgress = Max(1, CurrentCapProgress * 5);
+    }
 }
 
 defaultproperties
