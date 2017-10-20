@@ -176,9 +176,10 @@ simulated function OutOfAmmo()
 
 defaultproperties
 {
+    SwayModifyFactor=0.6
+
     FreeAimRotationSpeed=6.0
-    SwayModifyFactor=0.4
-    BobModifyFactor=0.9
+    BobModifyFactor=0.66
     ZoomOutTime=0.4
 
     IronIdleAnim="Iron_idle"

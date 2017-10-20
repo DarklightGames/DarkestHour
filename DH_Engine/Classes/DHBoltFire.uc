@@ -98,7 +98,6 @@ defaultproperties
 
     bDelayedRecoil=true
     DelayedRecoilTime=0.05
-    PctRestDeployRecoil=0.65
     MaxVerticalRecoilAngle=1000
     MaxHorizontalRecoilAngle=100
     AimError=800.0

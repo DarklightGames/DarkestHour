@@ -6,6 +6,13 @@
 class DHWeapon extends ROWeapon
     abstract;
 
+var     float   SwayNotMovingModifier;
+var     float   SwayRestingModifier;
+var     float   SwayCrouchedModifier;
+var     float   SwayProneModifier;
+var     float   SwayTransitionModifier;
+var     float   SwayLeanModifier;
+
 var     bool    bIsMantling;
 var     float   PlayerIronsightFOV;
 var     float   SwayModifyFactor;
@@ -665,8 +672,16 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
 
 defaultproperties
 {
+    // Sway modifiers
+    SwayModifyFactor=0.8
+    SwayNotMovingModifier=0.5
+    SwayRestingModifier=0.25
+    SwayCrouchedModifier=0.9
+    SwayProneModifier=0.5
+    SwayTransitionModifier=4.5
+    SwayLeanModifier=1.25
+
     PlayerIronsightFOV=60.0
-    SwayModifyFactor=0.66
     BobModifyFactor=1.0
     BobDamping=1.6
     SelectAnimRate=1.0

@@ -17,12 +17,9 @@ defaultproperties
 
     Spread=125.0
     RecoilRate=0.075
-    PctStandIronRecoil=0.8
-    PctCrouchRecoil=0.65
-    PctCrouchIronRecoil=0.45
-    PctProneIronRecoil=0.25
-    PctBipodDeployRecoil=0.01
-    PctRestDeployRecoil=0.05
+    PctBipodDeployRecoil=0.05
+    PctRestDeployRecoil=0.1
+
     MaxVerticalRecoilAngle=950
 
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire01'

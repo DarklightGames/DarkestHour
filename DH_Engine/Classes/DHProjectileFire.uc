@@ -606,13 +606,23 @@ defaultproperties
     ProjPerFire=1
     ProjSpawnOffset=(X=25.0)
 
-    CrouchSpreadModifier=0.85
-    ProneSpreadModifier=0.7
+    // Recoil
+    PctStandIronRecoil=0.65
+    PctCrouchRecoil=0.75
+    PctCrouchIronRecoil=0.6
+    PctProneRecoil=0.7
+    PctProneIronRecoil=0.5
+    PctBipodDeployRecoil=0.1
+    PctRestDeployRecoil=0.5
+    PctLeanPenalty=1.25
+
+    // Spread
+    CrouchSpreadModifier=0.9
+    ProneSpreadModifier=0.8
     BipodDeployedSpreadModifier=0.5
     RestDeploySpreadModifier=0.75
     HipSpreadModifier=3.5
-    LeanSpreadModifier=1.35
-    PctBipodDeployRecoil=0.05
+    LeanSpreadModifier=1.15
 
     NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
     FireForce="AssaultRifleFire"

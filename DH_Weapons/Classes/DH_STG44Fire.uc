@@ -14,10 +14,8 @@ defaultproperties
 
     Spread=145.0
     RecoilRate=0.07
-    PctStandIronRecoil=0.7
-    PctCrouchIronRecoil=0.45
-    PctProneIronRecoil=0.3
-    MaxVerticalRecoilAngle=650
+
+    MaxVerticalRecoilAngle=600
 
     FireSounds(0)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire02'

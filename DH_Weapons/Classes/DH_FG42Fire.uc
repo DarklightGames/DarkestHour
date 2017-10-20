@@ -14,12 +14,10 @@ defaultproperties
 
     Spread=160.0
     RecoilRate=0.075
-    PctStandIronRecoil=0.5
-    PctCrouchRecoil=0.75
-    PctCrouchIronRecoil=0.4
-    PctProneIronRecoil=0.3
+
     PctBipodDeployRecoil=0.05
     PctRestDeployRecoil=0.1
+
     MaxVerticalRecoilAngle=900
     MaxHorizontalRecoilAngle=180
 

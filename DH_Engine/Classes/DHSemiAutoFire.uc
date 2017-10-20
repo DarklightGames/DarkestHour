@@ -19,7 +19,7 @@ defaultproperties
     HipSpreadModifier=6.5
     bDelayedRecoil=true
     DelayedRecoilTime=0.05
-    PctRestDeployRecoil=0.75
+
     MaxVerticalRecoilAngle=1600
     MaxHorizontalRecoilAngle=150
     AimError=1500.0

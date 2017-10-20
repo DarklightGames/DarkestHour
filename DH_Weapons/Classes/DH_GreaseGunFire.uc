@@ -12,7 +12,6 @@ defaultproperties
     FireRate=0.15
     Spread=345.0
     RecoilRate=0.075
-    PctProneIronRecoil=0.5
     MaxVerticalRecoilAngle=585
     MaxHorizontalRecoilAngle=75
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'

@@ -22,15 +22,16 @@ defaultproperties
     FireRate=0.2
     FAProjSpawnOffset=(X=-28.0)
 
-    Spread=130.0
+    // Spread
     HipSpreadModifier=6.0
-    RecoilRate=0.1
-    PctStandIronRecoil=0.7
-    PctCrouchRecoil=0.65
-    PctCrouchIronRecoil=0.45
-    PctProneIronRecoil=0.25
+    Spread=130.0
+
+    // Recoil pct
     PctBipodDeployRecoil=0.05
     PctRestDeployRecoil=0.1
+
+    // Recoil
+    RecoilRate=0.1
     MaxVerticalRecoilAngle=800
     MaxHorizontalRecoilAngle=150
 

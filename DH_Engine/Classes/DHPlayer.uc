@@ -2481,11 +2481,19 @@ simulated function ResetSwayValues()
 simulated function SwayHandler(float DeltaTime)
 {
     local DHPawn P;
+    local DHWeapon W;
     local float  WeaponSwayYawAcc, WeaponSwayPitchAcc, StaminaFactor, TimeFactor, DeltaSwayYaw, DeltaSwayPitch;
 
     P = DHPawn(Pawn);
 
     if (P == none)
+    {
+        return;
+    }
+
+    W = DHWeapon(P.Weapon);
+
+    if (W == none)
     {
         return;
     }
@@ -2510,42 +2518,48 @@ simulated function SwayHandler(float DeltaTime)
     StaminaFactor = ((P.default.Stamina - P.Stamina) / P.default.Stamina) * 0.5;
     TimeFactor = InterpCurveEval(SwayCurve, SwayTime);
 
-    if (DHWeapon(P.Weapon) != none)
-    {
-        TimeFactor *= DHWeapon(P.Weapon).SwayModifyFactor; // added option for weapon specific modifier
-    }
+    // Apply DH sway modifier
+    TimeFactor *= W.SwayModifyFactor; // added option for weapon specific modifier
 
     WeaponSwayYawAcc = (TimeFactor * WeaponSwayYawAcc) + (StaminaFactor * WeaponSwayYawAcc);
     WeaponSwayPitchAcc = (TimeFactor * WeaponSwayPitchAcc) + (StaminaFactor * WeaponSwayPitchAcc);
 
-    // Reduce sway reduction if crouching, prone or resting the weapon
+    // Applied overall modifier for not moving
+    if (P.bIsIdle)
+    {
+        WeaponSwayYawAcc *= W.SwayNotMovingModifier;
+        WeaponSwayPitchAcc *= W.SwayNotMovingModifier;
+    }
+
+    // Reduce sway reduction if crouching, prone or resting the weapon (order in lowest first)
     if (P.bRestingWeapon)
     {
-        WeaponSwayYawAcc *= 0.15; // both were 0.1
-        WeaponSwayPitchAcc *= 0.15;
-    }
-    else if (P.bIsCrouched)
-    {
-        WeaponSwayYawAcc *= 0.55; // both were 0.5
-        WeaponSwayPitchAcc *= 0.55;
+        WeaponSwayYawAcc *= W.SwayRestingModifier;
+        WeaponSwayPitchAcc *= W.SwayRestingModifier;
     }
     else if (P.bIsCrawling)
     {
-        WeaponSwayYawAcc *= 0.3;  // both were 0.15
-        WeaponSwayPitchAcc *= 0.3;
+        WeaponSwayYawAcc *= W.SwayProneModifier;
+        WeaponSwayPitchAcc *= W.SwayProneModifier;
+    }
+    else if (P.bIsCrouched)
+    {
+        WeaponSwayYawAcc *= W.SwayCrouchedModifier;
+        WeaponSwayPitchAcc *= W.SwayCrouchedModifier;
     }
 
     // Increase sway if getting up from prone or if leaning
-    if (P.IsProneTransitioning()) // added
+    if (P.IsProneTransitioning())
     {
-        WeaponSwayYawAcc *= 4.5;
-        WeaponSwayPitchAcc *= 4.5;
+        WeaponSwayYawAcc *= W.SwayTransitionModifier;
+        WeaponSwayPitchAcc *= W.SwayTransitionModifier;
     }
 
+    // Increase sway if leaning
     if (P.LeanAmount != 0.0)
     {
-        WeaponSwayYawAcc *= 1.45;
-        WeaponSwayPitchAcc *= 1.45;
+        WeaponSwayYawAcc *= W.SwayLeanModifier;
+        WeaponSwayPitchAcc *= W.SwayLeanModifier;
     }
 
     // Add an elastic factor to get sway near the original aim-point, & a damping factor to keep elastic factor from causing wild oscillations
