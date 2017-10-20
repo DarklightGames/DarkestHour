@@ -3319,11 +3319,13 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
     local DHPlayerReplicationInfo   PRI;
     local DHRoleInfo                RI;
     local SpriteWidget              Widget;
-    local vector                    Temp, MapCenter;
+    local vector                    Temp, MapCenter, A, B;
     local string                    DistanceString, ObjLabel;
     local float                     MyMapScale, ArrowRotation;
-    local int                       OwnerTeam, Distance, i;
+    local int                       OwnerTeam, Distance, i, j;
     local float                     Yaw;
+    local DHObjective               ObjA, ObjB;
+    local color                     ObjLineColor;
 
     if (DHGRI == none)
     {
@@ -3692,6 +3694,55 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
                     }
                 }
             }
+        }
+    }
+
+    // TODO: make this more efficient!
+    // Draw the "connecting lines" between objectives
+    for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
+    {
+        ObjA = DHGRI.DHObjectives[i];
+
+        if (ObjA == none)
+        {
+            continue;
+        }
+
+        // TODO: the calculation of the "screen coords" of the objectives should
+        // be done ONCE, otherwise it's a lost of wasted effort.
+        // perhaps *store* this?
+        A = GetAdjustedHudLocation(ObjA.Location - MapCenter);
+        A.X = FMax(0.0, FMin(1.0, A.X / MyMapScale + 0.5));
+        A.Y = FMax(0.0, FMin(1.0, A.Y / MyMapScale + 0.5));
+        A.X = SubCoords.PosX + (SubCoords.Width * A.X);
+        A.Y = SubCoords.PosY + (SubCoords.Height * A.Y);
+
+        for (j = 0; j < ObjA.AlliesRequiredObjForCapture.Length; ++j)
+        {
+            ObjB = DHGRI.DHObjectives[ObjA.AlliesRequiredObjForCapture[j]];
+
+            if (ObjB == none)
+            {
+                continue;
+            }
+
+            B = ObjB.Location - MapCenter;
+            B = GetAdjustedHudLocation(B);
+            B.X = FMax(0.0, FMin(1.0, B.X / MyMapScale + 0.5));
+            B.Y = FMax(0.0, FMin(1.0, B.Y / MyMapScale + 0.5));
+            B.X = SubCoords.PosX + (SubCoords.Width * B.X);
+            B.Y = SubCoords.PosY + (SubCoords.Height * B.Y);
+
+            if (ObjA.ObjState == ObjB.ObjState && ObjA.ObjState != OBJ_Neutral)
+            {
+                ObjLineColor = GetTeamColor(int(ObjA.ObjState) ^ 1);
+            }
+            else
+            {
+                ObjLineColor = class'UColor'.default.White;
+            }
+
+            DrawCanvasLine(A.X, A.Y, B.X, B.Y, ObjLineColor);
         }
     }
 
