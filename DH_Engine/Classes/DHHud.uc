@@ -5638,7 +5638,7 @@ defaultproperties
     SpectateInstructionText4="Press [%JUMP%] to return to viewing yourself"
     BlackoutText="Blackout"
 
-    ConnectedObjectivesNotSecuredText="Connected objective(s) not secured"
+    ConnectedObjectivesNotSecuredText="Connected objective(s) not controlled"
 
     // Supply
     SupplyCountWidget=(WidgetTexture=Texture'DH_GUI_Tex.GUI.supply_indicator',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=31),TextureScale=1.0,DrawPivot=DP_UpperMiddle,PosX=0.5,PosY=0.0,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255),OffsetY=8)
