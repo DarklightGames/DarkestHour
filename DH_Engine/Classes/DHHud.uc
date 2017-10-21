@@ -3326,6 +3326,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
     local float                     Yaw;
     local DHObjective               ObjA, ObjB;
     local color                     ObjLineColor;
+    local UColor.HSV                HSV;
 
     if (DHGRI == none)
     {
@@ -3726,21 +3727,31 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
                 continue;
             }
 
-            B = ObjB.Location - MapCenter;
-            B = GetAdjustedHudLocation(B);
+            B = GetAdjustedHudLocation(ObjB.Location - MapCenter);
             B.X = FMax(0.0, FMin(1.0, B.X / MyMapScale + 0.5));
             B.Y = FMax(0.0, FMin(1.0, B.Y / MyMapScale + 0.5));
             B.X = SubCoords.PosX + (SubCoords.Width * B.X);
             B.Y = SubCoords.PosY + (SubCoords.Height * B.Y);
 
+            ObjLineColor = class'UColor'.default.White;
+
             if (ObjA.ObjState == ObjB.ObjState && ObjA.ObjState != OBJ_Neutral)
             {
                 ObjLineColor = GetTeamColor(int(ObjA.ObjState) ^ 1);
             }
+
+            HSV = class'UColor'.static.RGB2HSV(ObjLineColor);
+
+            if (ObjA.bActive && ObjB.bActive)
+            {
+                HSV.V = 1.0;
+            }
             else
             {
-                ObjLineColor = class'UColor'.default.White;
+                HSV.V = 0.5;
             }
+
+            ObjLineColor = class'UColor'.static.HSV2RGB(HSV);
 
             DrawCanvasLine(A.X, A.Y, B.X, B.Y, ObjLineColor);
         }
@@ -5638,7 +5649,7 @@ defaultproperties
     SpectateInstructionText4="Press [%JUMP%] to return to viewing yourself"
     BlackoutText="Blackout"
 
-    ConnectedObjectivesNotSecuredText="Connected objective(s) not controlled"
+    ConnectedObjectivesNotSecuredText="Connected objective(s) not secured"
 
     // Supply
     SupplyCountWidget=(WidgetTexture=Texture'DH_GUI_Tex.GUI.supply_indicator',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=31),TextureScale=1.0,DrawPivot=DP_UpperMiddle,PosX=0.5,PosY=0.0,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255),OffsetY=8)
