@@ -9,6 +9,26 @@ class DH_ChurchillMkVIITank extends DHArmoredVehicle;
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_Churchill_stc.usx
 #exec OBJ LOAD FILE=..\Textures\DH_Churchill_tex.utx
 
+exec function ToggleTreads() // TEMPDEBUG - exec to toggle between normal & destroyed tread skins
+{
+    if (IsDebugModeAllowed())
+    {
+        if (LeftTreadPanner.Material == Combiner'DH_Churchill_tex.Destroyed.churchill_treads_dest')
+        {
+            LeftTreadPanner.Material = Texture'DH_Churchill_tex.churchill.churchill_treads';
+            RightTreadPanner.Material = Texture'DH_Churchill_tex.churchill.churchill_treads';
+        }
+        else
+        {
+            LeftTreadPanner.Material = Combiner'DH_Churchill_tex.Destroyed.churchill_treads_dest';
+            RightTreadPanner.Material = Combiner'DH_Churchill_tex.Destroyed.churchill_treads_dest';
+        }
+
+        Skins[LeftTreadIndex] = LeftTreadPanner;
+        Skins[RightTreadIndex] = RightTreadPanner;
+    }
+}
+
 defaultproperties
 {
     // Vehicle properties
@@ -21,8 +41,10 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Churchill_anm.ChurchillMkVII_body_ext'
     Skins(0)=Texture'DH_Churchill_tex.churchill.ChurchillMkVII_body_ext'
     Skins(1)=Texture'DH_Churchill_tex.churchill.ChurchillMkVIIl_turret'
-    Skins(2)=Texture'DH_Churchill_tex.churchill.churchill_treads' // TODO: tracks have 'broken' UV mappping to front & rear, so when the texture pans it glitches & isn't continuous
-    Skins(3)=Texture'DH_Churchill_tex.churchill.churchill_treads'
+    Skins(2)=Combiner'DH_Churchill_tex.Destroyed.churchill_treads_dest' // TODO: temporary use of destroyed treads as the darkened, messed up overlay actually makes these treads look better
+    Skins(3)=Combiner'DH_Churchill_tex.Destroyed.churchill_treads_dest'
+//  Skins(2)=Texture'DH_Churchill_tex.churchill.churchill_treads' // TODO: tracks have 'broken' UV mapping to front & rear, so when the texture pans it glitches & isn't continuous
+//  Skins(3)=Texture'DH_Churchill_tex.churchill.churchill_treads'
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ChurchillMkVIICannonPawn',WeaponBone="turret_placement")
@@ -46,7 +68,7 @@ defaultproperties
     FrontArmor(0)=(Thickness=13.97,Slope=-20.0,MaxRelativeHeight=53.0,LocationName="nose") // TODO: angle of nose plate in model is very wrong, being sharply raked back when it should be much flatter
     FrontArmor(1)=(Thickness=5.72,Slope=70.0,MaxRelativeHeight=71.0,LocationName="glacis")
     FrontArmor(2)=(Thickness=15.24,LocationName="upper")
-    LeftArmor(0)=(Thickness=9.53) // small plate of side armor above protruding main sides was bit thinner (approx 83mm), but was behind tracks & so not a weaker spot, so have disregarded
+    LeftArmor(0)=(Thickness=9.53) // small plate of side armour above protruding main sides was bit thinner (approx 83mm), but was behind tracks & so not a weaker spot, so have disregarded
     RightArmor(0)=(Thickness=9.53)
     RearArmor(0)=(Thickness=2.54,Slope=-62.0,MaxRelativeHeight=49.0,LocationName="lower")
     RearArmor(1)=(Thickness=5.08,LocationName="upper")
@@ -61,10 +83,11 @@ defaultproperties
     TransRatio=0.078 // gives top speed on the flat of 15 mph (approx 24 kph) // TODO: may need to reduce this slightly for the Mk.VII as think it was a little slower
 
     // Damage
-    VehHitpoints(0)=(PointRadius=35.0,PointBone="engine")
-    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="Body",PointOffset=(X=25.0,Y=20.0,Z=70.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)  // ready rack
-    VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=20.0,Y=-65.0,Z=65.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore) // left pannier
-    VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=20.0,Y=65.0,Z=65.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)  // right pannier
+    VehHitpoints(0)=(PointRadius=35.0,PointOffset=(X=-100.0,Y=0.0,Z=65.0))
+    VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="Turret",PointOffset=(X=20.0,Y=20.0,Z=-30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore) // turret ready rack
+    VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=20.0,Y=-65.0,Z=65.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)   // left pannier
+    VehHitpoints(3)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=20.0,Y=65.0,Z=65.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)    // right pannier
+    NewVehHitpoints(0)=(PointRadius=15.0,PointBone="Turret",PointOffset=(X=48.0,Y=0.0,Z=19.0),NewHitPointType=NHP_GunPitch)
     TreadHitMaxHeight=10.0
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-110.0,Y=0.0,Z=60.0)
@@ -99,6 +122,7 @@ defaultproperties
     TreadVelocityScale=125.0
     WheelRotationScale=75000.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-162.0,Y=0.0,Z=73.0),ExhaustRotation=(Pitch=29000))
+    ShadowZOffset=55.0
 
     // HUD
     VehicleHudImage=Texture'DH_Churchill_tex.hud.churchill_body'
@@ -155,7 +179,7 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="steer_wheel_LF"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-21.0,Y=0.0,Z=0.0) // TODO: ideally edit these offsets out of the model rig when it is edited
+        BoneOffset=(X=-21.0,Y=-10.0,Z=-2.0) // TODO: ideally edit these offsets out of the model rig when it is edited
         WheelRadius=40.0
     End Object
     Wheels(0)=LF_Steering
@@ -164,7 +188,7 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="steer_wheel_RF"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-21.0,Y=0.0,Z=0.0)
+        BoneOffset=(X=-21.0,Y=10.0,Z=-2.0)
         WheelRadius=40.0
     End Object
     Wheels(1)=RF_Steering
@@ -173,7 +197,7 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer_wheel_LR"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-15.0,Y=0.0,Z=0.0)
+        BoneOffset=(X=5.0,Y=-10.0,Z=-2.0)
         WheelRadius=40.0
     End Object
     Wheels(2)=LR_Steering
@@ -182,7 +206,7 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer_wheel_RR"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-15.0,Y=0.0,Z=0.0)
+        BoneOffset=(X=5.0,Y=10.0,Z=-2.0)
         WheelRadius=40.0
     End Object
     Wheels(3)=RR_Steering
@@ -190,7 +214,7 @@ defaultproperties
         bPoweredWheel=true
         BoneName="drive_wheel_L"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-15.0,Y=0.0,Z=0.0)
+        BoneOffset=(X=-15.0,Y=-10.0,Z=-2.0)
         WheelRadius=40.0
     End Object
     Wheels(4)=Left_Drive_Wheel
@@ -198,7 +222,7 @@ defaultproperties
         bPoweredWheel=true
         BoneName="drive_wheel_R"
         BoneRollAxis=AXIS_Y
-        BoneOffset=(X=-5.0,Y=0.0,Z=0.0)
+        BoneOffset=(X=-15.0,Y=10.0,Z=-2.0)
         WheelRadius=40.0
     End Object
     Wheels(5)=Right_Drive_Wheel
@@ -208,7 +232,7 @@ defaultproperties
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(Z=-0.6) // default is -0.5
+        KCOMOffset=(X=-0.1,Y=0.0,Z=0.0) // default is Z=-0.5
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
