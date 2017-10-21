@@ -7,6 +7,13 @@
 class UColor extends Object
     abstract;
 
+struct HSV
+{
+    var float H;
+    var float S;
+    var float V;
+};
+
 var color AliceBlue;
 var color AntiqueWhite;
 var color Aqua;
@@ -175,6 +182,121 @@ static final function color FromHex(string S)
     class'UInteger'.static.ToBytes(class'UInteger'.static.FromHex(S), C.B, C.G, C.R);
 
     return C;
+}
+
+static final function color HSV2RGB(HSV HSV)
+{
+    local int i;
+    local float HH, P, Q, T, FF;
+    local color RGB;
+
+    if (HSV.S <= 0.0)
+    {
+        RGB.R = HSV.V * 255;
+        RGB.G = HSV.V * 255;
+        RGB.B = HSV.V * 255;
+        return RGB;
+    }
+
+    if (HSV.H >= 360.0)
+    {
+        HSV.H = 0.0;
+    }
+
+    HSV.H /= 60.0;
+    i = HSV.H;
+    FF = HSV.H - i;
+    P = HSV.V * (1.0 - HSV.S);
+    Q = HSV.V * (1.0 - (HSV.S * FF));
+    T = HSV.V * (1.0 - (HSV.S * (1.0 - FF)));
+
+    switch(i) {
+    case 0:
+        RGB.R = HSV.V * 255;
+        RGB.G = T * 255;
+        RGB.B = P * 255;
+        break;
+    case 1:
+        RGB.R = Q * 255;
+        RGB.G = HSV.V * 255;
+        RGB.B = P * 255;
+        break;
+    case 2:
+        RGB.R = P * 255;
+        RGB.G = HSV.V * 255;
+        RGB.B = T * 255;
+        break;
+
+    case 3:
+        RGB.R = P * 255;
+        RGB.G = Q * 255;
+        RGB.B = HSV.V * 255;
+        break;
+    case 4:
+        RGB.R = T * 255;
+        RGB.G = P * 255;
+        RGB.B = HSV.V * 255;
+        break;
+    case 5:
+    default:
+        RGB.R = HSV.V * 255;
+        RGB.G = P * 255;
+        RGB.B = Q * 255;
+        break;
+    }
+
+    return RGB;
+}
+
+// http://www.javascripter.net/faq/rgb2hsv.htm
+static final function HSV RGB2HSV(color RGB)
+{
+    local float R, G, B, MinRGB, MaxRGB, D, H;
+    local HSV HSV;
+
+    R = float(RGB.R) / 255;
+    G = float(RGB.G) / 255;
+    B = float(RGB.B) / 255;
+
+    MinRGB = FMin(R, FMin(G, B));
+    MaxRGB = FMax(R, FMax(G, B));
+
+    if (MinRGB == MaxRGB)
+    {
+        HSV.V = MinRGB;
+        return HSV;
+    }
+
+    if (R == MinRGB)
+    {
+        D = G - B;
+    }
+    else if (B == MinRGB)
+    {
+        D = R - G;
+    }
+    else
+    {
+        D = B - R;
+    }
+
+    if (R == MinRGB)
+    {
+        H = 3;
+    }
+    else if (B == MinRGB)
+    {
+        H = 1;
+    }
+    else
+    {
+        H = 5;
+    }
+
+    HSV.H = 60.0 * (H - D / (MaxRGB - MinRGB));
+    HSV.S = (MaxRGB - MinRGB) / MaxRGB;
+    HSV.V = MaxRGB;
+    return HSV;
 }
 
 defaultproperties
