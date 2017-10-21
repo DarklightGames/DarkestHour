@@ -394,6 +394,8 @@ function vector GetProjectileFireLocation(class<Projectile> ProjClass)
 
     // bDoOffsetTrace option to make sure we don't try to spawn projectile inside weapon's own vehicle (re-factored from VehicleWeapon to simplify)
     // Traces from outside vehicle's collision back towards planned spawn location, & if it hits our vehicle we adjust spawn location
+    // TODO: probably remove bDoOffsetTrace functionality as seems to serve no purpose & when applied as standard for hull MGs it just makes bullets spawn too far forward
+    // The problem is TraceThisActor ignores collision static meshes & so traces pretty innacurate hits on the vehicle's crude collision box(es)
     if (bDoOffsetTrace && ProjClass != none && WeaponPawn.VehicleBase != none)
     {
         Extent = ProjClass.default.CollisionRadius * vect(1.0, 1.0, 0.0);
