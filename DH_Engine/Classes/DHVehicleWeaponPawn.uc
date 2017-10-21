@@ -827,10 +827,11 @@ simulated state ViewTransition
             // Note the added IsFirstPerson() check stops this happening on a listen server host that isn't controlling this vehicle
             SwitchMesh(DriverPositionIndex);
 
-            // Set any zoom & camera offset for new position - but only if moving to less zoomed position, otherwise we wait until end of transition to do it
+            // Set any zoom & camera offset for new position
+            // But only if moving to less zoomed position or moving away from a drawn overlay position - otherwise we wait until end of transition to do it
             WeaponFOV = GetViewFOV(DriverPositionIndex);
 
-            if (WeaponFOV > GetViewFOV(LastPositionIndex))
+            if (WeaponFOV > GetViewFOV(LastPositionIndex) || (DriverPositions[LastPositionIndex].bDrawOverlays && !DriverPositions[DriverPositionIndex].bDrawOverlays))
             {
                 PlayerController(Controller).SetFOV(WeaponFOV);
                 FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
@@ -892,8 +893,9 @@ simulated state ViewTransition
 
     simulated function EndState()
     {
-        // Set any zoom & camera offset for new position, if we've moved to a more (or equal) zoomed position (if not, we already did this at start of transition)
-        if (WeaponFOV <= GetViewFOV(LastPositionIndex) && IsFirstPerson())
+        // Set any zoom & camera offset for new position, if we didn't already do this at the already did this at the start of the transition
+        // Means we've moved to a more (or equal) zoomed position or moved away from a drawn overlay position
+        if (WeaponFOV <= GetViewFOV(LastPositionIndex) && (!DriverPositions[LastPositionIndex].bDrawOverlays || DriverPositions[DriverPositionIndex].bDrawOverlays) && IsFirstPerson())
         {
             PlayerController(Controller).SetFOV(WeaponFOV);
             FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;

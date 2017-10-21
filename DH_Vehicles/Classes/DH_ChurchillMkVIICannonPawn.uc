@@ -25,8 +25,6 @@ exec function SetDTAnim(int Position, name NewAnim)
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_ChurchillMkVIICannon'
-    // TODO: animations need modifying to include strating/ending at external periscope location (then remove ViewLocation offset for peri view), as offset causes camera snap at end of unbutton anim
-    // Ideally edit out all attachment & camera offsets when modifying rig/anims
     DriverPositions(0)=(ViewLocation=(X=12.0,Y=-9.5,Z=-0.75),ViewFOV=24.0,bDrawOverlays=true)
     DriverPositions(1)=(ViewLocation=(X=44.0,Y=-8.5,Z=3.0),TransitionUpAnim="com_open",ViewPitchUpLimit=1,ViewPitchDownLimit=0,bDrawOverlays=true)
     DriverPositions(2)=(ViewLocation=(X=5.0,Y=3.0,Z=0.0),TransitionDownAnim="com_close",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bExposed=true)
