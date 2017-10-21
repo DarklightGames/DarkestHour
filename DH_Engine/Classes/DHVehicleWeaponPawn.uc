@@ -2026,7 +2026,7 @@ exec function SetAttachOffset(string NewX, string NewY, string NewZ)
     }
 }
 
-// New debug exec to adjust location of hatch fire position
+// New debug exec to adjust position of hatch fire
 exec function SetFEOffset(int NewX, int NewY, int NewZ, optional float NewScale)
 {
     if (IsDebugModeAllowed() && Level.NetMode != NM_DedicatedServer && VehWep != none)

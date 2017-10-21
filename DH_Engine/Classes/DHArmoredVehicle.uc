@@ -2275,7 +2275,7 @@ exec function EngineFire()
     }
 }
 
-// New debug exec to adjust location of driver's hatch fire position
+// New debug exec to adjust position of driver's hatch fire
 exec function SetFEOffset(int NewX, int NewY, int NewZ)
 {
     if (IsDebugModeAllowed() && Level.NetMode != NM_DedicatedServer)
