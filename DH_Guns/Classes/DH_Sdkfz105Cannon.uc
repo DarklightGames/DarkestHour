@@ -8,7 +8,10 @@ class DH_Sdkfz105Cannon extends DH_Flak38Cannon;
 // Modified to automatically match the cannon mesh to the vehicle's camo variant
 simulated function InitializeVehicleBase()
 {
-    Skins[0] = Base.Skins[2]; // the texture of the FlaK 38 gun mount on the hull
+    if (DHVehicle(Base) != none)
+    {
+        DHVehicle(Base).CannonSkins[0] = Base.Skins[2]; // match to the texture of the FlaK 38 gun mount on the hull
+    }
 
     super.InitializeVehicleBase();
 }

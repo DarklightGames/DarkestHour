@@ -19,12 +19,9 @@ simulated function PostBeginPlay()
 // Modified to match the windscreen camo to vehicle's 'cabin' texture
 simulated function SpawnVehicleAttachments()
 {
-    super.SpawnVehicleAttachments();
+    VehicleAttachments[0].Skin = Skins[1];
 
-    if (VehicleAttachments.Length > 0 && VehicleAttachments[0].Actor != none)
-    {
-        VehicleAttachments[0].Actor.Skins[0] = Skins[1];
-    }
+    super.SpawnVehicleAttachments();
 }
 
 defaultproperties
