@@ -670,6 +670,31 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
     Canvas.SetPos(4.0, YPos);
 }
 
+// New debug exec to toggle the 1st person weapon's HighDetailOverlay (generally a specularity shader) on or off
+exec function ToggleHDO()
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        if (default.HighDetailOverlay != none)
+        {
+            if (HighDetailOverlay == default.HighDetailOverlay)
+            {
+                HighDetailOverlay = none;
+                Log(ItemName @ "disabled HighDetailOverlay:" @ default.HighDetailOverlay);
+            }
+            else
+            {
+                HighDetailOverlay = default.HighDetailOverlay;
+                Log(ItemName @ "enabled HighDetailOverlay :" @ HighDetailOverlay);
+            }
+        }
+        else
+        {
+            Log(ItemName @ "doesn't have a HighDetailOverlay to toggle");
+        }
+    }
+}
+
 defaultproperties
 {
     // Sway modifiers
