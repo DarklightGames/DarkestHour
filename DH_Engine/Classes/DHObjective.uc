@@ -60,6 +60,7 @@ var(ROObjTerritory) bool            bUseHardBaseRate;           // Tells the cap
 
 // Basic Obj variables
 var(ROObjective) bool               bIsInitiallyActive;         // Purpose is mainly to consolidate the variables of actors into one area (less confusing to new levelers)
+var(ROObjective) name               NoArtyVolumeProtectionTag;  // optional Tag for associated no arty volume that protects this SP only when the SP is active
 
 // Capture/Actions variables
 var(DHObjectiveCapture) bool        bLockDownOnCapture;
@@ -91,11 +92,6 @@ var(DHObjectiveAwards) int          AxisAwardedReinforcements;  // Amount of rei
 var(DHObjectiveAwards) int          MinutesAwarded;             // Time in minutes awarded to round time when objective is captured
 var(DHObjectiveAwards) int          AlliedOwnedAttritionRate;   // Rate of Axis Attrition when Allies control this objective
 var(DHObjectiveAwards) int          AxisOwnedAttritionRate;     // Rate of Allies Attrition when Axis control this objective
-
-// Other variables
-var(DHObjectiveOther) bool          bAlliesFinalObjective;
-var(DHObjectiveOther) bool          bAxisFinalObjective;
-var(DHObjectiveOther) name          NoArtyVolumeProtectionTag;  // optional Tag for associated no arty volume that protects this SP only when the SP is active
 
 // Non configurable variables
 var     int                         UnfreezeTime;               // The time at which the objective will be unlocked and ready to be capured again, relative to GRI.ElapsedTime
@@ -786,7 +782,7 @@ function bool HandleClearedLogic(int NumForCheck[2])
             }
 
             // Handle common is cleared logic
-            if (bSetInactiveOnClear && !(bAlliesFinalObjective && IsAxis()) && !(bAxisFinalObjective && IsAllies()))
+            if (bSetInactiveOnClear)
             {
                 CurrentCapProgress = 0.0;
                 SetActive(false);
