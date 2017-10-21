@@ -9,6 +9,7 @@ class DHGameType_Cutoff extends DHGameType
 defaultproperties
 {
     GameTypeName="Cutoff"
-    bRoundEndsAtZeroReinf=true
+    bRoundEndsAtZeroReinf=false
+    bTimeChangesAtZeroReinf=false
 }
 
