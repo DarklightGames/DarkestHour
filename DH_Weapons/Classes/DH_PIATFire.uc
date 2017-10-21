@@ -9,7 +9,7 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_PIATRocket'
     AmmoClass=class'DH_Weapons.DH_PIATAmmo'
-    Spread=490.0
+    Spread=500.0
     MaxVerticalRecoilAngle=2500
     MaxHorizontalRecoilAngle=1000
     bCausesExhaustDamage=false

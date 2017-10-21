@@ -19,4 +19,5 @@ defaultproperties
     FireAnim="shoothip"
     MuzzleBone="Warhead"
     AimError=1200.0
+    Spread=550.0
 }
