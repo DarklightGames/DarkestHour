@@ -3692,6 +3692,86 @@ simulated function bool IsVehicleDebugModeAllowed(out DHVehicle V)
     return V != none;
 }
 
+// New debug exec to turn player's vehicle translucent, which is very useful for debugging things like vehicle hit points
+exec function VehicleTranslucent(optional bool bRevert)
+{
+    local DHVehicle     V;
+    local array<Shader> TranslucentSkins;
+    local Material      NormalSkin;
+    local int           Index, i, j;
+
+    if (IsVehicleDebugModeAllowed(V))
+    {
+        // Re-skin the hull
+        for (i = 0; i < V.Skins.Length; ++i)
+        {
+            if (V.Skins[i] != V.LeftTreadPanner && V.Skins[i] != V.RightTreadPanner) // ignore the treads as they are VariableTexPanners
+            {
+                if (!bRevert)
+                {
+                    Index = TranslucentSkins.Length;
+                    TranslucentSkins[Index] = Shader(Level.ObjectPool.AllocateObject(class'Shader'));
+                    TranslucentSkins[Index].Diffuse = V.default.Skins[i];
+                    TranslucentSkins[Index].OutputBlending = OB_Translucent;
+                    V.Skins[i] = TranslucentSkins[Index];
+                }
+                else
+                {
+                    if (Shader(V.Skins[i]) != none) // clean up the translucent skin objects we created
+                    {
+                        Shader(V.Skins[i]).Diffuse = none;
+                        Level.ObjectPool.FreeObject(V.Skins[i]);
+                    }
+
+                    V.Skins[i] = V.default.Skins[i];
+                }
+            }
+        }
+
+        // Re-skin vehicle weapons
+        for (j = 0; j < V.WeaponPawns.Length; ++j)
+        {
+            if (V.WeaponPawns[j] != none && V.WeaponPawns[j].Gun != none)
+            {
+                for (i = 0; i < V.WeaponPawns[j].Gun.Skins.Length; ++i)
+                {
+                    if (V.WeaponPawns[j].Gun.IsA('DHVehicleCannon') && i < V.CannonSkins.Length && V.CannonSkins[i] != none)
+                    {
+                        NormalSkin = V.CannonSkins[i];
+                    }
+                    else if (i == 0 && V.WeaponPawns[j].Gun.IsA('DHVehicleMG') && DHVehicleMG(V.WeaponPawns[j].Gun).bMatchSkinToVehicle)
+                    {
+                        NormalSkin = V.Skins[i];
+                    }
+                    else
+                    {
+                        NormalSkin = V.WeaponPawns[j].Gun.default.Skins[i];
+                    }
+
+                    if (!bRevert)
+                    {
+                        Index = TranslucentSkins.Length;
+                        TranslucentSkins[Index] = Shader(Level.ObjectPool.AllocateObject(class'Shader'));
+                        TranslucentSkins[Index].Diffuse = NormalSkin;
+                        TranslucentSkins[Index].OutputBlending = OB_Translucent;
+                        V.WeaponPawns[j].Gun.Skins[i] = TranslucentSkins[Index];
+                    }
+                    else
+                    {
+                        if (Shader(V.WeaponPawns[j].Gun.Skins[i]) != none)
+                        {
+                            Shader(V.WeaponPawns[j].Gun.Skins[i]).Diffuse = none;
+                            Level.ObjectPool.FreeObject(V.WeaponPawns[j].Gun.Skins[i]);
+                        }
+
+                        V.WeaponPawns[j].Gun.Skins[i] = NormalSkin;
+                    }
+                }
+            }
+        }
+    }
+}
+
 // New debug exec to show vehicle damage status
 exec function LogVehDamage()
 {
