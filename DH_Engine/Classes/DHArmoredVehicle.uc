@@ -25,21 +25,15 @@ enum ENewHitPointType
     NHP_PeriscopeOptics,
     NHP_Traverse,
     NHP_GunPitch,
-    NHP_Hull,
 };
-
-var     ENewHitPointType    NewHitPointType;    // array of new DH special vehicle hit points that may be hit & damaged
 
 struct NewHitpoint
 {
-    var   float             PointRadius;        // squared radius of the head of the pawn that is vulnerable to headshots
-    var   float             PointHeight;        // distance from base of neck to center of head - used for headshot calculation
-    var   float             PointScale;         // scale factor for radius & height
-    var   name              PointBone;          // bone to reference in offset
-    var   vector            PointOffset;        // amount to offset the hitpoint from the bone
-    var   bool              bPenetrationPoint;  // this is a penetration point, open hatch, etc
-    var   float             DamageMultiplier;   // amount to scale damage to the vehicle if this point is hit
-    var   ENewHitPointType  NewHitPointType;    // what type of hit point this is
+    var   float             PointRadius;
+    var   name              PointBone;
+    var   vector            PointOffset;
+    var   float             DamageMultiplier;
+    var   ENewHitPointType  NewHitPointType;
 };
 
 // General
@@ -63,7 +57,7 @@ var     bool        bTurretPenetration;         // shell has penetrated the turr
 var     bool        bRearHullPenetration;       // shell has penetrated the rear hull (so TakeDamage can tell if an engine hit should stop the round penetrating any further)
 
 // Damage
-var     array<NewHitpoint>  NewVehHitpoints;    // an array of possible small points that can be hit. Index zero is always the driver
+var     array<NewHitpoint>  NewVehHitpoints;    // an array of extra hit points (new DH types) that may be hit & damaged
 var     int         GunOpticsHitPointIndex;     // index of any special hit point for exposed gunsight optics, which may be damaged by a bullet
 var     float       AmmoIgnitionProbability;    // chance that direct hit on ammo store will ignite it
 var     float       TurretDetonationThreshold;  // chance that shrapnel will detonate turret ammo
@@ -1062,54 +1056,68 @@ simulated function bool IsVehicleBurning()
 //  ************************  HIT DETECTION & PENETRATION  ************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// New function to check if something hit a certain DH NewVehHitpoints
-function bool IsNewPointShot(vector Loc, vector Ray, float AdditionalScale, int Index)
+// New function to check if something hit a certain DH NewVehHitpoints (the same as IsPointShot checks for hits on VehHitpoints)
+function bool IsNewPointShot(vector HitLocation, vector LineCheck, int Index, optional float CheckDistance)
 {
-    local coords C;
-    local vector HeadLoc, B, M, Diff;
-    local float  t, DotMM, Distance;
+    local coords HitPointCoords;
+    local vector HitPointLocation, Difference;
+    local float  t, DotMM, ClosestDistance;
 
     if (NewVehHitpoints[Index].PointBone == '')
     {
         return false;
     }
 
-    C = GetBoneCoords(NewVehHitpoints[Index].PointBone);
-
-    HeadLoc = C.Origin + (NewVehHitpoints[Index].PointHeight * NewVehHitpoints[Index].PointScale * AdditionalScale * C.XAxis);
-    HeadLoc = HeadLoc + (NewVehHitpoints[Index].PointOffset >> rotator(C.XAxis));
-
-    // Express snipe trace line in terms of B + tM
-    B = Loc;
-    M = Ray * 150.0;
-
-    // Find point-line squared distance
-    Diff = HeadLoc - B;
-    t = M dot Diff;
-
-    if (t > 0.0)
+    // Get location of the hit point we're going to check (with option to handle turret's yaw bone being specified, so hit point rotates with turret)
+    if (Cannon != none && NewVehHitpoints[Index].PointBone == Cannon.YawBone)
     {
-        DotMM = M dot M;
-
-        if (t < DotMM)
-        {
-            t = t / DotMM;
-            Diff = Diff - (t * M);
-        }
-        else
-        {
-            t = 1.0;
-            Diff -= M;
-        }
+        HitPointCoords = Cannon.GetBoneCoords(NewVehHitpoints[Index].PointBone);
     }
     else
     {
-        t = 0;
+        HitPointCoords = GetBoneCoords(NewVehHitpoints[Index].PointBone);
     }
 
-    Distance = Sqrt(Diff dot Diff);
+    HitPointLocation = HitPointCoords.Origin;
 
-    return (Distance < (NewVehHitpoints[Index].PointRadius * NewVehHitpoints[Index].PointScale * AdditionalScale));
+    if (NewVehHitpoints[Index].PointOffset != vect(0.0, 0.0, 0.0))
+    {
+        HitPointLocation += (NewVehHitpoints[Index].PointOffset >> rotator(HitPointCoords.XAxis));
+    }
+
+    // Set the hit line to check
+    if (CheckDistance > 0.0)
+    {
+        LineCheck = Normal(LineCheck) * CheckDistance;
+    }
+    else
+    {
+        LineCheck *= 150.0;
+    }
+
+    // Find closest distance of line check to hit point (all squared for now, for efficiency)
+    Difference = HitPointLocation - HitLocation;
+    t = LineCheck dot Difference;
+
+    if (t > 0.0) // if not positive it means line check is heading away from hit point, so distance is simply based on HitLocation as that's the closest point
+    {
+        DotMM = LineCheck dot LineCheck;
+
+        if (t < DotMM)
+        {
+            t /= DotMM;
+            Difference -= (t * LineCheck);
+        }
+        else
+        {
+            Difference -= LineCheck;
+        }
+    }
+
+    // Convert distance back from squared & return true if within the hit point's radius (including any scaling)
+    ClosestDistance = Sqrt(Difference dot Difference);
+
+    return ClosestDistance < NewVehHitpoints[Index].PointRadius;
 }
 
 // Re-written from deprecated ROTreadCraft class for DH's armour penetration system
@@ -1703,7 +1711,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         // Check additional DH NewVehHitPoints
         for (i = 0; i < NewVehHitpoints.Length; ++i)
         {
-            if (IsNewPointShot(HitLocation, Momentum, 1.0, i))
+            if (IsNewPointShot(HitLocation, Momentum, i))
             {
                 if (bLogDebugPenetration)
                 {

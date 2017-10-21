@@ -4359,7 +4359,53 @@ exec function SetAngDamp(float NewValue)
     }
 }
 
-// New debug exec to adjust location of engine smoke/fire position
+// New debug exec to adjust position & radius if vehicle hit points
+exec function SetHitPoint(byte Index, string NewX, string NewY, string NewZ, optional string NewRadius, optional bool bIsDHNewHitPoint)
+{
+    local DHArmoredVehicle AV;
+    local DHVehicle        V;
+
+    if (IsVehicleDebugModeAllowed(V))
+    {
+        if (bIsDHNewHitPoint)
+        {
+            AV = DHArmoredVehicle(V);
+
+            if (AV != none && Index < AV.NewVehHitpoints.Length)
+            {
+                if (!(float(NewRadius) > 0.0))
+                {
+                    NewRadius = string(AV.NewVehHitpoints[Index].PointRadius);
+                }
+
+                Log(AV.Tag @ "NewVehHitpoints[" $ Index $ "] Offset =" @ float(NewX) @ float(NewY) @ float(NewZ) @ " Radius =" @ float(NewRadius)
+                    @ "(was" @ AV.NewVehHitpoints[Index].PointOffset @ ",radius" @ AV.NewVehHitpoints[Index].PointRadius $ ")");
+
+                AV.NewVehHitpoints[Index].PointOffset.X = float(NewX);
+                AV.NewVehHitpoints[Index].PointOffset.Y = float(NewY);
+                AV.NewVehHitpoints[Index].PointOffset.Z = float(NewZ);
+                AV.NewVehHitpoints[Index].PointRadius = float(NewRadius);
+            }
+        }
+        else if (Index < V.VehHitpoints.Length)
+        {
+            if (!(float(NewRadius) > 0.0))
+            {
+                NewRadius = string(V.VehHitpoints[Index].PointRadius);
+            }
+
+            Log(V.Tag @ "VehHitpoints[" $ Index $ "] Offset =" @ float(NewX) @ float(NewY) @ float(NewZ) @ " Radius =" @ float(NewRadius)
+                @ "(was" @ V.VehHitpoints[Index].PointOffset @ ",radius" @ V.VehHitpoints[Index].PointRadius $ ")");
+
+            V.VehHitpoints[Index].PointOffset.X = float(NewX);
+            V.VehHitpoints[Index].PointOffset.Y = float(NewY);
+            V.VehHitpoints[Index].PointOffset.Z = float(NewZ);
+            V.VehHitpoints[Index].PointRadius = float(NewRadius);
+        }
+    }
+}
+
+// New debug exec to adjust position of engine smoke/fire
 exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFire, optional string NewScale)
 {
     local DHVehicle V;

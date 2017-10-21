@@ -2272,6 +2272,71 @@ function bool IsSpawnKillProtected()
     return SpawnKillTimeEnds > Level.TimeSeconds;
 }
 
+// Modified to handle a turret's yaw bone being specified for a vehicle hit point, with any positional offset being based on turret's rotation
+// Also optimised a little & PointHeight is deprecated (concerned head shot calcs that aren't relevant here)
+function bool IsPointShot(vector HitLocation, vector LineCheck, float AdditionalScale, int Index, optional float CheckDistance)
+{
+    local coords HitPointCoords;
+    local vector HitPointLocation, Difference;
+    local float  t, DotMM, ClosestDistance;
+
+    if (VehHitpoints[Index].PointBone == '')
+    {
+        return false;
+    }
+
+    // Get location of the hit point we're going to check
+    if (Cannon != none && VehHitpoints[Index].PointBone == Cannon.YawBone)
+    {
+        HitPointCoords = Cannon.GetBoneCoords(VehHitpoints[Index].PointBone);
+    }
+    else
+    {
+        HitPointCoords = GetBoneCoords(VehHitpoints[Index].PointBone);
+    }
+
+    HitPointLocation = HitPointCoords.Origin;
+
+    if (VehHitpoints[Index].PointOffset != vect(0.0, 0.0, 0.0))
+    {
+        HitPointLocation += (VehHitpoints[Index].PointOffset >> rotator(HitPointCoords.XAxis));
+    }
+
+    // Set the hit line to check
+    if (CheckDistance > 0.0)
+    {
+        LineCheck = Normal(LineCheck) * CheckDistance;
+    }
+    else
+    {
+        LineCheck *= 2.0 * (CollisionHeight + CollisionRadius); // TODO: this vector length adjustment is pretty meaningless & if a CheckDistance isn't specified only the direction matters
+    }
+
+    // Find closest distance of line check to hit point (all squared for now, for efficiency)
+    Difference = HitPointLocation - HitLocation;
+    t = LineCheck Dot Difference;
+
+    if (t > 0.0) // if not positive it means line check is heading away from hit point, so distance is simply based on HitLocation as that's the closest point
+    {
+        DotMM = LineCheck dot LineCheck;
+
+        if (t < DotMM)
+        {
+            t /= DotMM;
+            Difference -= (t * LineCheck);
+        }
+        else
+        {
+            Difference -= LineCheck;
+        }
+    }
+
+    // Convert distance back from squared & return true if within the hit point's radius (including any scaling)
+    ClosestDistance = Sqrt(Difference dot Difference);
+
+    return ClosestDistance < (VehHitpoints[Index].PointRadius * VehHitpoints[Index].PointScale * AdditionalScale);
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *************************  SETUP, UPDATE, CLEAN UP  ***************************  //
 ///////////////////////////////////////////////////////////////////////////////////////

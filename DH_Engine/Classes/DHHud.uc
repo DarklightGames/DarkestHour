@@ -3129,70 +3129,89 @@ function DrawNetworkActorsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float My
 // (Badly named, but is an inherited function - best thought of as DrawVehicleHitPoints)
 function DrawVehiclePointSphere()
 {
-    local ROVehicle        V;
+    local DHVehicle        V;
     local DHArmoredVehicle AV;
-    local Coords           CO;
-    local vector           Loc;
+    local Coords           HitPointCoords;
+    local vector           HitPointLocation;
     local color            C;
     local int              i;
 
-    foreach DynamicActors(class'ROVehicle', V)
+    foreach DynamicActors(class'DHVehicle', V)
     {
-        if (V != none)
+        for (i = 0; i < V.VehHitpoints.Length; ++i)
         {
-            for (i = 0; i < V.VehHitpoints.Length; ++i)
+            if (V.VehHitpoints[i].PointBone == '')
             {
-                if (V.VehHitpoints[i].HitPointType != HP_Driver && V.VehHitpoints[i].PointBone != '')
-                {
-                    CO = V.GetBoneCoords(V.VehHitpoints[i].PointBone);
-                    Loc = CO.Origin + (V.VehHitpoints[i].PointHeight * V.VehHitpoints[i].PointScale * CO.XAxis);
-                    Loc = Loc + (V.VehHitpoints[i].PointOffset >> V.Rotation);
-
-                    if (V.VehHitpoints[i].HitPointType == HP_Engine)
-                    {
-                        C = BlueColor;
-                    }
-                    else if (V.VehHitpoints[i].HitPointType == HP_AmmoStore)
-                    {
-                        C = RedColor;
-                    }
-                    else
-                    {
-                        C = GrayColor;
-                    }
-
-                    V.DrawDebugSphere(Loc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, C.R, C.G, C.B);
-                }
+                continue;
             }
 
-            AV = DHArmoredVehicle(V);
-
-            if (AV != none)
+            if (V.Cannon != none && V.VehHitpoints[i].PointBone == V.Cannon.YawBone)
             {
-                for (i = 0; i < AV.NewVehHitpoints.Length; ++i)
+                HitPointCoords = V.Cannon.GetBoneCoords(V.VehHitpoints[i].PointBone);
+            }
+            else
+            {
+                HitPointCoords = V.GetBoneCoords(V.VehHitpoints[i].PointBone);
+            }
+
+            HitPointLocation = HitPointCoords.Origin + (V.VehHitpoints[i].PointOffset >> rotator(HitPointCoords.XAxis));
+
+            if (V.VehHitpoints[i].HitPointType == HP_Engine)
+            {
+                C = BlueColor;
+            }
+            else if (V.VehHitpoints[i].HitPointType == HP_AmmoStore)
+            {
+                C = RedColor;
+            }
+            else if (V.VehHitpoints[i].HitPointType == HP_Driver) // should not exist as deprecated, but draw in black is present by mistake
+            {
+                C = BlackColor;
+            }
+            else
+            {
+                C = GrayColor;
+            }
+
+            V.DrawDebugSphere(HitPointLocation, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, C.R, C.G, C.B);
+        }
+
+        AV = DHArmoredVehicle(V);
+
+        if (AV != none)
+        {
+            for (i = 0; i < AV.NewVehHitpoints.Length; ++i)
+            {
+                if (AV.NewVehHitpoints[i].PointBone == '')
                 {
-                    if (AV.NewVehHitpoints[i].PointBone != '')
-                    {
-                        CO = AV.GetBoneCoords(AV.NewVehHitpoints[i].PointBone);
-                        Loc = CO.Origin + (AV.NewVehHitpoints[i].PointHeight * AV.NewVehHitpoints[i].PointScale * CO.XAxis);
-                        Loc = Loc + (AV.NewVehHitpoints[i].PointOffset >> AV.Rotation);
-
-                        if (AV.NewVehHitpoints[i].NewHitPointType == NHP_Traverse || AV.NewVehHitpoints[i].NewHitPointType == NHP_GunPitch)
-                        {
-                            C = GoldColor;
-                        }
-                        else if (AV.NewVehHitpoints[i].NewHitPointType == NHP_GunOptics || AV.NewVehHitpoints[i].NewHitPointType == NHP_PeriscopeOptics)
-                        {
-                            C = PurpleColor;
-                        }
-                        else
-                        {
-                            C = WhiteColor;
-                        }
-
-                        AV.DrawDebugSphere(Loc, AV.NewVehHitpoints[i].PointRadius * AV.NewVehHitpoints[i].PointScale, 10, C.R, C.G, C.B);
-                    }
+                    continue;
                 }
+
+                if (AV.Cannon != none && AV.NewVehHitpoints[i].PointBone == AV.Cannon.YawBone)
+                {
+                    HitPointCoords = AV.Cannon.GetBoneCoords(AV.NewVehHitpoints[i].PointBone);
+                }
+                else
+                {
+                    HitPointCoords = AV.GetBoneCoords(AV.NewVehHitpoints[i].PointBone);
+                }
+
+                HitPointLocation = HitPointCoords.Origin + (AV.NewVehHitpoints[i].PointOffset >> rotator(HitPointCoords.XAxis));
+
+                if (AV.NewVehHitpoints[i].NewHitPointType == NHP_Traverse || AV.NewVehHitpoints[i].NewHitPointType == NHP_GunPitch)
+                {
+                    C = GoldColor;
+                }
+                else if (AV.NewVehHitpoints[i].NewHitPointType == NHP_GunOptics || AV.NewVehHitpoints[i].NewHitPointType == NHP_PeriscopeOptics)
+                {
+                    C = PurpleColor;
+                }
+                else
+                {
+                    C = WhiteColor;
+                }
+
+                AV.DrawDebugSphere(HitPointLocation, AV.NewVehHitpoints[i].PointRadius, 10, C.R, C.G, C.B);
             }
         }
     }
