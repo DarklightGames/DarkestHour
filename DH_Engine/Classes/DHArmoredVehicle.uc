@@ -1682,7 +1682,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                         }
 
                         Damage *= Health;
-                        bAmmoDetonation = true; // stops unnecessary penetration checks, as the vehicle is going to explode anyway
+                        bAmmoDetonation = true;
                         break;
                     }
                     // Even if ammo did not explode, increase the chance of a fire breaking out
@@ -1844,33 +1844,32 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 }
 
                 Damage *= Health;
-                bAmmoDetonation = true; // stops unnecessary penetration checks, as the vehicle is going to explode anyway
             }
             else if (bTurretPenetration)
             {
                 Damage *= 0.55; // reduce damage to vehicle itself from a turret hit, if the turret ammo didn't detonate
-            }
 
-            // Random chance of shrapnel killing driver
-            if (Driver != none && FRand() < (float(Damage) / DriverKillChance * HullChanceModifier))
-            {
-                if (bDebuggingText)
+                // Random chance of shrapnel killing driver
+                if (Driver != none && FRand() < (float(Damage) / DriverKillChance * HullChanceModifier))
                 {
-                    Level.Game.Broadcast(self, "Driver killed by shrapnel");
+                    if (bDebuggingText)
+                    {
+                        Level.Game.Broadcast(self, "Driver killed by shrapnel");
+                    }
+
+                    Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
                 }
 
-                Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
-            }
-
-            // Random chance of shrapnel killing hull machine gunner
-            if (MGun != none && MGun.WeaponPawn != none && MGun.WeaponPawn.Driver != none && FRand() < (float(Damage) / GunnerKillChance * HullChanceModifier))
-            {
-                if (bDebuggingText)
+                // Random chance of shrapnel killing hull machine gunner
+                if (MGun != none && MGun.WeaponPawn != none && MGun.WeaponPawn.Driver != none && FRand() < (float(Damage) / GunnerKillChance * HullChanceModifier))
                 {
-                    Level.Game.Broadcast(self, "Hull gunner killed by shrapnel");
-                }
+                    if (bDebuggingText)
+                    {
+                        Level.Game.Broadcast(self, "Hull gunner killed by shrapnel");
+                    }
 
-                MGun.WeaponPawn.Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
+                    MGun.WeaponPawn.Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
+                }
             }
         }
 
