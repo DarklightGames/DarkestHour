@@ -448,10 +448,10 @@ function PostBeginPlay()
     PlayerSessions = class'Hashtable_string_Object'.static.Create(128);
 }
 
-// Modified to remove any return on # of bots
+// Modified to remove any return on # of bots (and to remove chance of negative)
 function int GetNumPlayers()
 {
-    return Min(NumPlayers, MaxPlayers);
+    return Max(0, Min(NumPlayers, MaxPlayers));
 }
 
 event Tick(float DeltaTime)
@@ -4627,6 +4627,12 @@ function Logout(Controller Exiting)
     local DHPlayerSession S;
 
     super.Logout(Exiting);
+
+    // Just in case NumPlayers somehow goes negative, set it to 0 (should we just clamp it to 0,MaxPlayers instead?)
+    if (NumPlayers < 0)
+    {
+        NumPlayers = 0;
+    }
 
     PC = DHPlayer(Exiting);
 
