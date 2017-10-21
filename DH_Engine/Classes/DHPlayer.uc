@@ -3965,15 +3965,6 @@ exec function VehCamDist(int NewDistance)
     }
 }
 
-// Modified to shift this functionality into DHHud, where it's directly relevant & where some necessary stuff is added to make this RO function work as designed
-exec function DriverCollisionDebug()
-{
-    if (DHHud(MyHud) != none)
-    {
-        DHHud(MyHud).DriverCollisionDebug();
-    }
-}
-
 // New debug exec to enable/disable penetration debugging functionality for all armored vehicles
 exec function DebugPenetration(bool bEnable)
 {
@@ -4732,6 +4723,11 @@ simulated function DestroyPlaneAttachments(DHVehicle V)
             }
         }
     }
+}
+
+// Emptied out as the system of using coded hit points to represent vehicle occupants has been abandoned
+exec function DriverCollisionDebug()
+{
 }
 
 // TEMPDEBUG (Matt, v8.0): for problem where player in any vehicle position is visibly attached in the wrong position

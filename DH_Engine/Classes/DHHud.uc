@@ -1191,12 +1191,6 @@ function DrawHudPassC(Canvas C)
             DrawPointSphere();
         }
 
-        // Draw all vehicle occupant ('Driver') hit points
-        if (bDebugDriverCollision)
-        {
-            DrawDriverPointSphere();
-        }
-
         // Draw all vehicle's special hit points
         if (bDebugVehicleHitPoints)
         {
@@ -3125,51 +3119,6 @@ function DrawNetworkActorsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float My
                 }
 
                 DrawDebugIconOnMap(C, SubCoords, Widget, MyMapScale, A.Location, MapCenter, s);
-            }
-        }
-    }
-}
-
-// Modified to only show the vehicle occupant ('Driver') hit points, not the vehicle's special hit points for engine & ammo stores
-// (Badly named, but is an inherited function - best thought of as DrawVehicleOccupantHitPoint)
-function DrawDriverPointSphere()
-{
-    local ROVehicle       V;
-    local ROVehicleWeapon VW;
-    local Coords          CO;
-    local vector          Loc;
-    local int             i;
-
-    foreach DynamicActors(class'ROVehicle', V)
-    {
-        if (V != none)
-        {
-            for (i = 0; i < V.VehHitpoints.Length; ++i)
-            {
-                if (V.VehHitpoints[i].HitPointType == HP_Driver && V.VehHitpoints[i].PointBone != '')
-                {
-                    CO = V.GetBoneCoords(V.VehHitpoints[i].PointBone);
-                    Loc = CO.Origin + (V.VehHitpoints[i].PointHeight * V.VehHitpoints[i].PointScale * CO.XAxis);
-                    Loc = Loc + (V.VehHitpoints[i].PointOffset >> V.Rotation);
-                    V.DrawDebugSphere(Loc, V.VehHitpoints[i].PointRadius * V.VehHitpoints[i].PointScale, 10, 0, 255, 0);
-                }
-            }
-        }
-    }
-
-    foreach DynamicActors(class'ROVehicleWeapon', VW)
-    {
-        if (VW != none)
-        {
-            for (i = 0; i < VW.VehHitpoints.Length; ++i)
-            {
-                if (VW.VehHitpoints[i].PointBone != '')
-                {
-                    CO = VW.GetBoneCoords(VW.VehHitpoints[i].PointBone);
-                    Loc = CO.Origin + (VW.VehHitpoints[i].PointHeight * VW.VehHitpoints[i].PointScale * CO.XAxis);
-                    Loc = Loc + (VW.VehHitpoints[i].PointOffset >> rotator(CO.XAxis));
-                    VW.DrawDebugSphere(Loc, VW.VehHitpoints[i].PointRadius * VW.VehHitpoints[i].PointScale, 10, 0, 255, 0);
-                }
             }
         }
     }
@@ -5353,17 +5302,6 @@ function PlayerCollisionDebug()
     }
 }
 
-// A debug exec transferred from ROHud class & modified to include hiding the sky, which is necessary to allow the crucial debug spheres to get drawn
-// Note this is effectively redundant now as from DH 6.0 the system of using coded hit points for vehicle occupants has been abandoned
-function DriverCollisionDebug()
-{
-    if (IsDebugModeAllowed())
-    {
-        bDebugDriverCollision = !bDebugDriverCollision;
-        SetSkyOff(bDebugDriverCollision);
-    }
-}
-
 // New debug exec showing all vehicles' special hit points for engine (blue), ammo stores (red), & DHArmoredVehicle's extra hit points (gold for gun traverse/pivot, pink for periscopes)
 exec function VehicleHitPointDebug()
 {
@@ -5411,7 +5349,7 @@ function SetSkyOff(bool bHideSky)
         }
         // Restore the sky, but only if we have no other similar debug functionality enabled
         else if (PlayerOwner.PlayerReplicationInfo.PlayerZone.SkyZone == none && SavedSkyZone != none
-            && !bDebugDriverCollision && !bDebugPlayerCollision && !bDebugVehicleHitPoints && !bDebugVehicleWheels && !bDebugCamera)
+            && !bDebugPlayerCollision && !bDebugVehicleHitPoints && !bDebugVehicleWheels && !bDebugCamera)
         {
             PlayerOwner.PlayerReplicationInfo.PlayerZone.SkyZone = SavedSkyZone;
         }
