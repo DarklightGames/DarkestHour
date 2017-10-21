@@ -155,9 +155,6 @@ auto state Timing
         // Allow weapon dropping
         G.bAllowWeaponThrowing = true;
 
-        // Tell GRI that we are no longer in setup phase (to allow player mantling)
-        GRI.bIsInSetupPhase = false;
-
         // Disable phase minefields (volumes are static, so use AllActors)
         if (PhaseMineFieldTag != '')
         {
@@ -205,6 +202,10 @@ auto state Timing
             GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = PhaseEndReinforcements.AxisReinforcements + UnspawnedPlayers[AXIS_TEAM_INDEX];
         }
 
+        // Set the starting reinforcements in DHGame (for use in reinforcement warning calculation)
+        G.SpawnsAtRoundStart[ALLIES_TEAM_INDEX] = GRI.SpawnsRemaining[ALLIES_TEAM_INDEX];
+        G.SpawnsAtRoundStart[AXIS_TEAM_INDEX] = GRI.SpawnsRemaining[AXIS_TEAM_INDEX];
+
         // Reset round time if desired
         if (bResetRoundTimer)
         {
@@ -231,6 +232,9 @@ auto state Timing
                 PC.PlayAnnouncement(PhaseEndSounds[PC.GetTeamNum()], 1, true);
             }
         }
+
+        // Tell GRI that we are no longer in setup phase (to allow player mantling)
+        GRI.bIsInSetupPhase = false;
 
         GotoState('Done');
     }

@@ -43,6 +43,7 @@ var     array<float>                ReinforcementMessagePercentages;
 var     int                         TeamReinforcementMessageIndices[2];
 var     int                         bTeamOutOfReinforcements[2];
 var     int                         OriginalReinforcementIntervals[2];
+var     int                         SpawnsAtRoundStart[2];                  // Number of spawns for each team at start of round (used for reinforcement warning calc)
 
 const SERVERTICKRATE_UPDATETIME =   5.0; // The duration we use to calculate the average tick the server is running
 const MAXINFLATED_INTERVALTIME =    60.0; // The max value to add to reinforcement time for inflation
@@ -2959,10 +2960,10 @@ function HandleReinforcements(Controller C)
     {
         ModifyReinforcements(ALLIES_TEAM_INDEX, -1);
 
-        ReinforcementPercent = float(GRI.SpawnsRemaining[ALLIES_TEAM_INDEX]) / LevelInfo.Allies.SpawnLimit;
+        ReinforcementPercent = float(GRI.SpawnsRemaining[ALLIES_TEAM_INDEX]) / SpawnsAtRoundStart[ALLIES_TEAM_INDEX];
 
         // Handle reinforcement % message
-        if (DHLevelInfo.GameTypeClass.default.bUseReinforcementWarning)
+        if (DHLevelInfo.GameTypeClass.default.bUseReinforcementWarning && !GRI.bIsInSetupPhase)
         {
             while (TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX] < default.ReinforcementMessagePercentages.Length &&
                     ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX]])
@@ -2977,10 +2978,10 @@ function HandleReinforcements(Controller C)
     {
         ModifyReinforcements(AXIS_TEAM_INDEX, -1);
 
-        ReinforcementPercent = float(GRI.SpawnsRemaining[AXIS_TEAM_INDEX]) / LevelInfo.Axis.SpawnLimit;
+        ReinforcementPercent = float(GRI.SpawnsRemaining[AXIS_TEAM_INDEX]) / SpawnsAtRoundStart[AXIS_TEAM_INDEX];
 
         // Handle reinforcement % message
-        if (DHLevelInfo.GameTypeClass.default.bUseReinforcementWarning)
+        if (DHLevelInfo.GameTypeClass.default.bUseReinforcementWarning && !GRI.bIsInSetupPhase)
         {
             while (TeamReinforcementMessageIndices[AXIS_TEAM_INDEX] < default.ReinforcementMessagePercentages.Length &&
                     ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[AXIS_TEAM_INDEX]])
@@ -4946,10 +4947,12 @@ defaultproperties
 
     ChangeTeamInterval=120
 
-    ReinforcementMessagePercentages(0)=0.5
-    ReinforcementMessagePercentages(1)=0.25
-    ReinforcementMessagePercentages(2)=0.1
-    ReinforcementMessagePercentages(3)=0.0
+    ReinforcementMessagePercentages(0)=0.75
+    ReinforcementMessagePercentages(1)=0.5
+    ReinforcementMessagePercentages(2)=0.25
+    ReinforcementMessagePercentages(3)=0.10
+    ReinforcementMessagePercentages(4)=0.5
+    ReinforcementMessagePercentages(5)=0.0
 
     Begin Object Class=UVersion Name=VersionObject
         Major=8
