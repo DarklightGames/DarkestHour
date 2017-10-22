@@ -6324,6 +6324,19 @@ exec function SetFlySpeed(float NewSpeed)
     }
 }
 
+exec function GimmeSupplies()
+{
+    switch (GetTeamNum())
+    {
+        case AXIS_TEAM_INDEX:
+            DebugSpawnVehicle("DH_OpelBlitzSupport", 5.0);
+            break;
+        case ALLIES_TEAM_INDEX:
+            DebugSpawnVehicle("DH_GMCTruckSupport", 5.0);
+            break;
+    }
+}
+
 // New debug exec to spawn any vehicle, in front of you
 exec function DebugSpawnVehicle(string VehicleString, int Distance, optional bool bSetAsCrew)
 {
