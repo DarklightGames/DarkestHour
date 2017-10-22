@@ -810,8 +810,8 @@ function Apply()
 
     PC.ServerSetPlayerInfo(255,
                            RoleIndex,
-                           cb_PrimaryWeapon.GetIndex(),
-                           cb_SecondaryWeapon.GetIndex(),
+                           int(cb_PrimaryWeapon.GetExtra()),
+                           int(cb_SecondaryWeapon.GetExtra()),
                            SpawnPointIndex,
                            GetSelectedVehiclePoolIndex());
 }
@@ -1154,7 +1154,7 @@ function InternalOnChange(GUIComponent Sender)
                 {
                     if (RI.PrimaryWeapons[i].Item != none)
                     {
-                        cb_PrimaryWeapon.AddItem(RI.PrimaryWeapons[i].Item.default.ItemName, RI.PrimaryWeapons[i].Item);
+                        cb_PrimaryWeapon.AddItem(RI.PrimaryWeapons[i].Item.default.ItemName, RI.PrimaryWeapons[i].Item, string(i));
                     }
                 }
 
@@ -1162,20 +1162,25 @@ function InternalOnChange(GUIComponent Sender)
                 {
                     if (RI.SecondaryWeapons[i].Item != none)
                     {
-                        cb_SecondaryWeapon.AddItem(RI.SecondaryWeapons[i].Item.default.ItemName, RI.SecondaryWeapons[i].Item);
+                        cb_SecondaryWeapon.AddItem(RI.SecondaryWeapons[i].Item.default.ItemName, RI.SecondaryWeapons[i].Item, string(i));
                     }
                 }
             }
 
+            cb_PrimaryWeapon.SetIndex(0);
+            cb_SecondaryWeapon.SetIndex(0);
+
             if (PC.GetRoleInfo() == RI)
             {
-                cb_PrimaryWeapon.SetIndex(PC.DHPrimaryWeapon);
-                cb_SecondaryWeapon.SetIndex(PC.DHSecondaryWeapon);
-            }
-            else
-            {
-                cb_PrimaryWeapon.SetIndex(0);
-                cb_SecondaryWeapon.SetIndex(0);
+                if (PC.DHPrimaryWeapon >= 0)
+                {
+                    cb_PrimaryWeapon.SetIndex(class'xGUIList'.static.GetIndexOfObject(cb_PrimaryWeapon.MyComboBox.List, RI.PrimaryWeapons[PC.DHPrimaryWeapon].Item));
+                }
+
+                if (PC.DHSecondaryWeapon >= 0)
+                {
+                    cb_SecondaryWeapon.SetIndex(class'xGUIList'.static.GetIndexOfObject(cb_SecondaryWeapon.MyComboBox.List, RI.SecondaryWeapons[PC.DHSecondaryWeapon].Item));
+                }
             }
 
             j = 1;
