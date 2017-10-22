@@ -216,8 +216,8 @@ function SetLoadoutMode(ELoadoutMode Mode)
     i_PrimaryWeapon.SetVisibility(Mode == LM_Equipment);
     i_SecondaryWeapon.SetVisibility(Mode == LM_Equipment);
 
-    cb_PrimaryWeapon.SetVisibility(Mode == LM_Equipment && cb_PrimaryWeapon.ItemCount() > 0);
-    cb_SecondaryWeapon.SetVisibility(Mode == LM_Equipment && cb_SecondaryWeapon.ItemCount() > 0);
+    cb_PrimaryWeapon.SetVisibility(Mode == LM_Equipment && cb_PrimaryWeapon.ItemCount() > 1);
+    cb_SecondaryWeapon.SetVisibility(Mode == LM_Equipment && cb_SecondaryWeapon.ItemCount() > 1);
 
     for (i = 0; i < arraycount(i_GivenItems); ++i)
     {
