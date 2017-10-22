@@ -613,12 +613,13 @@ function DHConstruction.ConstructionError GetProvisionalPosition(out vector OutL
             SquareLength = Sin(Pi / 4) * CollisionRadius;
 
             // Do an extents trace upwards to determine if there is a ceiling
-            // above us.
-            // TODO: will the extents trace hit the ground if it's uneven?
-            TraceStart = OutLocation;
-            TraceEnd = TraceStart + ((vect(0, 0, 1) * class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.IndoorsCeilingHeightInMeters)) << rotator(Forward));
+            // above us. We start the trace slightly higher than the ground
+            // because uneven terrain tends to produce false positives.
+            TraceStart = OutLocation + (vect(0, 0, 1) * ConstructionClass.default.CollisionHeight / 2);
+            TraceEnd = OutLocation + (vect(0, 0, 1) * class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.IndoorsCeilingHeightInMeters));
+            HitActor = Trace(CeilingHitLocation, CeilingHitNormal, TraceEnd, TraceStart,, vect(1.0, 1.0, 0.0) * SquareLength);
 
-            if (Trace(CeilingHitLocation, CeilingHitNormal, TraceEnd, TraceStart,, vect(1.0, 1.0, 0.0) * SquareLength) != none)
+            if (HitActor != none)
             {
                 E.Type = ERROR_Indoors;
             }
