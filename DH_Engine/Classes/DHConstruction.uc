@@ -194,6 +194,8 @@ var class<DamageType> DelayedDamageType;
 // Constructed state if it was placed via the SDK.
 var bool bShouldAutoConstruct;
 
+var bool bDidReportMetrics;
+
 var localized string ConstructionVerb;  // eg. dig, emplace, build etc.
 
 replication
@@ -451,10 +453,24 @@ simulated state Constructed
 {
     simulated function BeginState()
     {
+        local DarkestHourGame G;
+
         if (Role == ROLE_Authority)
         {
             // Reset lifespan so that we don't die of stagnation.
             Lifespan = 0;
+
+            if (!bDidReportMetrics)
+            {
+                G = DarkestHourGame(Level.Game);
+
+                if (G != none && G.Metrics != none && G.GameReplicationInfo != none)
+                {
+                    G.Metrics.OnConstructionBuilt(self, G.GameReplicationInfo.ElapsedTime -  G.RoundStartTime);
+                }
+
+                bDidReportMetrics = true;
+            }
 
             if (bDestroyOnConstruction)
             {

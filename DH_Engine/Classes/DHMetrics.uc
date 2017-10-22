@@ -6,11 +6,12 @@
 class DHMetrics extends Actor
     notplaceable;
 
-var private Hashtable_string_Object Players;
-var private array<DHMetricsFrag>    Frags;
-var private array<DHMetricsCapture> Captures;
-var private DateTime                RoundStartTime;
-var private DateTime                RoundEndTime;
+var private Hashtable_string_Object         Players;
+var private array<DHMetricsFrag>            Frags;
+var private array<DHMetricsCapture>         Captures;
+var private array<DHMetricsConstruction>    Constructions;
+var private DateTime                        RoundStartTime;
+var private DateTime                        RoundEndTime;
 
 function PostBeginPlay()
 {
@@ -45,7 +46,8 @@ function string Dump()
         .PutString("round_end", RoundEndTime.IsoFormat())
         .Put("players", class'JSONArray'.static.FromSerializables(PlayersArray))
         .Put("frags", class'JSONArray'.static.FromSerializables(Frags))
-        .Put("captures", class'JSONArray'.static.FromSerializables(Captures));
+        .Put("captures", class'JSONArray'.static.FromSerializables(Captures))
+        .Put("constructions", class'JSONArray'.static.FromSerializables(Constructions));
 
     StopWatch(false);
 
@@ -130,6 +132,25 @@ function OnPlayerChangeName(PlayerController PC)
     {
         P.Names[P.Names.Length] = PC.PlayerReplicationInfo.PlayerName;
     }
+}
+
+function OnConstructionBuilt(DHConstruction Construction, int RoundTime)
+{
+    local DHMetricsConstruction C;
+
+    if (Construction == none)
+    {
+        return;
+    }
+
+    C = new class'DHMetricsConstruction';
+    C.TeamIndex = Construction.GetTeamIndex();
+    C.ConstructionClass = Construction.Class;
+    C.Location = Construction.Location;
+    C.RoundTime = RoundTime;
+    C.Yaw = Construction.Rotation.Yaw;
+
+    Constructions[Constructions.Length] = C;
 }
 
 function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class<DamageType> DamageType, vector HitLocation, int HitIndex, int RoundTime)
