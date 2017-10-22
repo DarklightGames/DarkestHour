@@ -3182,39 +3182,24 @@ exec function CaptureObj(int Team, optional string ObjName, optional bool bNeutr
 {
     local int i;
 
-    if (ObjName != "")
-    {
-        for (i = 0; i < arraycount(DHObjectives); ++i)
-        {
-            if (DHObjectives[i] != none &&
-                DHObjectives[i].bActive &&
-                DHObjectives[i].ObjState != Team &&
-                DHObjectives[i].ObjName ~= ObjName)
-            {
-                if (bNeutralizeInstead)
-                {
-                    DHObjectives[i].ObjectiveNeutralized(Team);
-                }
-                else
-                {
-                    DHObjectives[i].ObjectiveCompleted(none, Team);
-                }
-
-                return;
-            }
-        }
-        return;
-    }
-
     for (i = 0; i < arraycount(DHObjectives); ++i)
     {
         if (DHObjectives[i] != none &&
             DHObjectives[i].bActive &&
-            DHObjectives[i].ObjState != Team)
+            DHObjectives[i].ObjState != Team &&
+            DHObjectives[i].HasRequiredObjectives(DHGameReplicationInfo(GameReplicationInfo), Team) &&
+            (ObjName == "" || DHObjectives[i].ObjName ~= ObjName))
         {
-            DHObjectives[i].ObjectiveCompleted(none, Team);
+            if (bNeutralizeInstead)
+            {
+                DHObjectives[i].ObjectiveNeutralized(Team);
+            }
+            else
+            {
+                DHObjectives[i].ObjectiveCompleted(none, Team);
+            }
 
-            return;
+            break;
         }
     }
 }

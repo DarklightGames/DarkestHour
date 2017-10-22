@@ -829,36 +829,7 @@ function bool HandleClearedLogic(int NumForCheck[2])
 // they have not secured the required connected objective(s).
 simulated function bool IsTeamNeutralLocked(DHGameReplicationInfo GRI, int TeamIndex)
 {
-    local int i;
-
-    if (GRI == none || !bNeutralizeBeforeCapture || !IsNeutral())
-    {
-        return false;
-    }
-
-    switch (TeamIndex)
-    {
-    case AXIS_TEAM_INDEX:
-        for (i = 0; i < AxisRequiredObjForCapture.Length; ++i)
-        {
-            if (!GRI.DHObjectives[AxisRequiredObjForCapture[i]].IsAxis())
-            {
-                return true;
-            }
-        }
-        break;
-    case ALLIES_TEAM_INDEX:
-        for (i = 0; i < AlliesRequiredObjForCapture.Length; ++i)
-        {
-            if (!GRI.DHObjectives[AlliesRequiredObjForCapture[i]].IsAllies())
-            {
-                return true;
-            }
-        }
-        break;
-    }
-
-    return false;
+    return GRI != none && bNeutralizeBeforeCapture && IsNeutral() && !HasRequiredObjectives(GRI, TeamIndex);
 }
 
 function Timer()
@@ -1252,6 +1223,43 @@ simulated function bool IsNeutral()
 simulated function bool IsFrozen(GameReplicationInfo GRI)
 {
     return GRI != none && UnfreezeTime > GRI.ElapsedTime;
+}
+
+simulated function bool HasRequiredObjectives(coerce DHGameReplicationInfo GRI, int TeamIndex)
+{
+    local int i;
+
+    if (GRI == none)
+    {
+        return false;
+    }
+
+    if (TeamIndex == AXIS_TEAM_INDEX)
+    {
+        for (i = 0; i < AxisRequiredObjForCapture.Length; ++i)
+        {
+            if (!GRI.DHObjectives[AxisRequiredObjForCapture[i]].IsAxis())
+            {
+                return false;
+            }
+        }
+    }
+    else if (TeamIndex == ALLIES_TEAM_INDEX)
+    {
+        for (i = 0; i < AlliesRequiredObjForCapture.Length; ++i)
+        {
+            if (!GRI.DHObjectives[AlliesRequiredObjForCapture[i]].IsAllies())
+            {
+                return false;
+            }
+        }
+    }
+    else
+    {
+        return false;
+    }
+
+    return true;
 }
 
 // Modified to make way simpler and remove redundant if-statement checks.
