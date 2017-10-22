@@ -124,25 +124,11 @@ function OnSelect(int OptionIndex, vector Location)
 
 function bool IsOptionDisabled(int OptionIndex)
 {
-    local DHPlayer PC;
-    local ROWeapon ROW;
     local class<DHConstruction> C;
 
     if (Options[OptionIndex].OptionalObject == none)
     {
         return true;
-    }
-
-    PC = GetPlayerController();
-
-    if (PC != none && PC.Pawn != none)
-    {
-        ROW = ROWeapon(PC.Pawn.Weapon);
-
-        if (ROW != none && !ROW.WeaponCanSwitch())
-        {
-            return true;
-        }
     }
 
     C = class<DHConstruction>(Options[OptionIndex].OptionalObject);
