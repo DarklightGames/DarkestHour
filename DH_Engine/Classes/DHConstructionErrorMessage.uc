@@ -81,6 +81,6 @@ defaultproperties
     ErrorMessages(18)="The ground is too hard to {verb} a {name} at this location."
     ErrorMessages(19)=""    // ERROR_RestrictedType (will never be used)
     ErrorMessages(20)="You must have {integer} members in your squad to {verb} a {name}."
-    ErrorMessages(21)="You cannot {verb} a {name} while sprinting or crawling."
+    ErrorMessages(21)="You cannot {verb} a {name} while you are busy."
 }
 
