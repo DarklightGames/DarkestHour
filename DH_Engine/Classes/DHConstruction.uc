@@ -30,7 +30,8 @@ enum EConstructionErrorType
     ERROR_GroundTooHard,        // This is used when something needs to snap to the terrain, but the engine's native trace functionality isn't cooperating!
     ERROR_RestrictedType,       // Restricted construction type (can't build on this map!)
     ERROR_SquadTooSmall,        // Not enough players in the squad!
-    ERROR_BadPlayerState,       // Player is in an undesireable state (e.g. MG deployed, crawling, prone transitioning or otherwise unable to switch weapons)
+    ERROR_PlayerBusy,           // Player is in an undesireable state (e.g. MG deployed, crawling, prone transitioning or otherwise unable to switch weapons)
+    ERROR_TooCloseToObjective,
     ERROR_Other
 };
 
@@ -88,6 +89,8 @@ var     int     LocalRotationRate;
 var     bool    bInheritsOwnerRotation;         // If true, the base rotation of the placement (prior to local rotation) will be inherited from the owner.
 var     bool    bCanPlaceInObjective;
 var     int     SquadMemberCountMinimum;        // The number of members you must have in your squad to create this.
+
+var     float   ObjectiveDistanceMinMeters;
 
 // Terrain placement
 var     bool    bSnapToTerrain;                 // If true, the origin of the placement (prior to the PlacementOffset) will coincide with the nearest terrain vertex during placement.
@@ -718,7 +721,7 @@ function static ConstructionError GetPlayerError(DHConstruction.Context Context)
 
     if (!P.CanSwitchWeapon())
     {
-        E.Type = ERROR_BadPlayerState;
+        E.Type = ERROR_PlayerBusy;
         return E;
     }
 

@@ -247,7 +247,7 @@ function static color GetProxyErrorColor(DHConstruction.EConstructionErrorType P
         case ERROR_None:
             return class'UColor'.default.Green;
         case ERROR_Fatal:
-        case ERROR_BadPlayerState:
+        case ERROR_PlayerBusy:
             return class'UColor'.default.Black;
         default:
             return class'UColor'.default.Red;
@@ -332,10 +332,19 @@ function DHConstruction.ConstructionError GetProvisionalPosition(out vector OutL
     local TerrainInfo TI;
     local Material HitMaterial;
     local bool bIsTerrainSurfaceTypeAllowed;
+    local DHGameReplicationInfo GRI;
 
     if (PawnOwner == none || PlayerOwner == none || ConstructionClass == none)
     {
-        E.Type = ERROR_SquadTooSmall;
+        E.Type = ERROR_Fatal;
+        return E;
+    }
+
+    GRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
+
+    if (GRI == none)
+    {
+        E.Type = ERROR_Fatal;
         return E;
     }
 
@@ -640,9 +649,9 @@ function DHConstruction.ConstructionError GetPositionError()
     local ROMineVolume MV;
     local DHSpawnPointBase SP;
     local DHLocationHint LH;
-    local float OtherRadius, OtherHeight, F;
+    local float OtherRadius, OtherHeight, F, DistanceMin, Distance;
     local DHGameReplicationInfo GRI;
-    local int i;
+    local int i, ObjectiveIndex;
     local DHConstruction.ConstructionError E;
 
     GRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
@@ -692,16 +701,6 @@ function DHConstruction.ConstructionError GetPositionError()
         }
     }
 
-    // Don't allow the construction to touch blocking actors.
-    foreach TouchingActors(class'Actor', TouchingActor)
-    {
-        if (TouchingActor != none && TouchingActor.bBlockActors)
-        {
-            E.Type = ERROR_NoRoom;
-            return E;
-        }
-    }
-
     // Don't allow construction to be placed in objectives if this is disallowed.
     if (!ConstructionClass.default.bCanPlaceInObjective)
     {
@@ -712,6 +711,45 @@ function DHConstruction.ConstructionError GetPositionError()
                 E.Type = ERROR_InObjective;
                 return E;
             }
+        }
+    }
+
+    if (ConstructionClass.default.ObjectiveDistanceMinMeters > 0.0)
+    {
+        // Don't allow this construction to be placed too close to an objective.
+        DistanceMin = class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ObjectiveDistanceMinMeters);
+        ObjectiveIndex = -1;
+
+        for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
+        {
+            if (GRI.DHObjectives[i] != none)
+            {
+                Distance = VSize(Location - GRI.DHObjectives[i].Location);
+
+                if (Distance < DistanceMin)
+                {
+                    DistanceMin = Distance;
+                    ObjectiveIndex = i;
+                }
+            }
+        }
+
+        if (ObjectiveIndex != -1)
+        {
+            E.Type = ERROR_TooCloseToObjective;
+            E.OptionalString = GRI.DHObjectives[ObjectiveIndex].ObjName;
+            E.OptionalInteger = Max(1, ConstructionClass.default.ObjectiveDistanceMinMeters - class'DHUnits'.static.UnrealToMeters(DistanceMin));
+            return E;
+        }
+    }
+
+    // Don't allow the construction to touch blocking actors.
+    foreach TouchingActors(class'Actor', TouchingActor)
+    {
+        if (TouchingActor != none && TouchingActor.bBlockActors)
+        {
+            E.Type = ERROR_NoRoom;
+            return E;
         }
     }
 
