@@ -12,8 +12,8 @@ defaultproperties
     bNeutralizeBeforeCapture=true
     bLockDownOnCapture=true
     PreventCaptureTime=120
-    BaseCaptureRate=0.006666 // 150 seconds (1 / # of seconds)
-    MaxCaptureRate=0.006666
+    BaseCaptureRate=0.01666 // 60 seconds (1 / # of seconds)
+    MaxCaptureRate=0.01666
     bRecaptureable=true
     bUseHardBaseRate=true
     AlliedAwardedReinforcements=-1
