@@ -2397,7 +2397,7 @@ state RoundInPlay
             P = NextC;
         }
 
-        // Reset ALL actors (except controllers and ROVehicleFactorys)
+        // Reset ALL actors (except controllers and vehicle factories)
         foreach AllActors(class'Actor', A)
         {
             if (!A.IsA('Controller') && !A.IsA('ROVehicleFactory'))
@@ -2406,7 +2406,7 @@ state RoundInPlay
             }
         }
 
-        // Reset ALL ROVehicleFactorys - must reset these after vehicles, otherwise the vehicles that get spawned by the vehicle factories get destroyed instantly as they are reset
+        // Reset all vehicle factories - must reset these after vehicles, otherwise the vehicles that get spawned by factories get destroyed instantly as they are reset
         foreach DynamicActors(class'ROVehicleFactory', ROV)
         {
             ROV.Reset();

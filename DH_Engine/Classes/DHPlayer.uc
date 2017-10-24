@@ -284,7 +284,7 @@ event ClientReset()
 {
     local Actor A;
 
-    // Reset client special timed sounds on the client
+    // Reset special timed actors on the client
     foreach AllActors(class'Actor', A)
     {
         if (A.IsA('ClientSpecialTimedSound') || A.IsA('KrivoiPlaneController'))
@@ -293,7 +293,7 @@ event ClientReset()
         }
     }
 
-    //Reset camera stuff
+    // Reset camera stuff
     bBehindView = false;
     bFixedCamera = false;
     SetViewTarget(self);
