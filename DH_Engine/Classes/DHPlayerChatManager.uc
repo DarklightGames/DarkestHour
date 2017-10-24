@@ -5,6 +5,9 @@
 
 class DHPlayerChatManager extends UnrealPlayerChatManager;
 
+// Deprecated functions to remove unused/broken voice/chat functionality
+event bool AcceptVoice(PlayerReplicationInfo SenderPRI) {return true;}
+
 // Modified to prevent remote possibility of runaway loop due to ChatRestrictions or StoredChatRestrictions arrays somehow being set at an extreme length
 simulated function ChatDebug()
 {
