@@ -193,6 +193,8 @@ simulated function int GetSpawnTimePenalty()
 {
     local int Penalty;
 
+    Penalty = BaseSpawnTimePenalty;
+
     if (bIsEncroachedUpon)
     {
         // If we are being encroached upon, add the spawn timer penalty.
@@ -211,6 +213,7 @@ defaultproperties
     EncroachmentRadiusInMeters=50
     EncroachmentPenaltyBlockThreshold=30
     EncroachmentSpawnTimePenalty=10
+    BaseSpawnTimePenalty=5
     EnemiesNeededToBlock=3
 
     CaptureRadiusInMeters=5

@@ -25,6 +25,7 @@ var     private int     TeamIndex;       // which team this spawn point belongs 
 var     int             SpawnPointIndex; // spawn point's index number in the GRI's SpawnPoints array
 var     bool            bCombatSpawn;    // is a combat spawn point (MDV, squad rally, HQ)
 
+var     int             BaseSpawnTimePenalty;    // how many seconds a player will have to addtionally wait to spawn on this spawn point
 var     float           SpawnProtectionTime;     // how many seconds a player will be invulnerable after spawning on this spawn point
 var     float           SpawnKillProtectionTime; // how many seconds a kill on a player will be considered a spawn kill after spawning on this spawn point
 
@@ -242,7 +243,7 @@ function GetPlayerCountsWithinRadius(float RadiusInMeters, optional int SquadInd
 // Override to add a spawn timer penalty for anyone spawning at this spawn point.
 simulated function int GetSpawnTimePenalty()
 {
-    return 0;
+    return BaseSpawnTimePenalty;
 }
 
 simulated final function int GetTeamIndex()
@@ -264,6 +265,7 @@ function OnTeamIndexChanged();
 
 defaultproperties
 {
+    BaseSpawnTimePenalty=0
     TeamIndex=-1
     SpawnProtectionTime=2.0
     SpawnKillProtectionTime=7.0
