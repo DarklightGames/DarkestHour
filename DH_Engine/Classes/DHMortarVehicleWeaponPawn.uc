@@ -336,7 +336,7 @@ function bool KDriverLeave(bool bForceLeave)
 
         if (P != none && DHPlayer(P.Controller) != none)
         {
-            DHPlayer(P.Controller).ClientToggleDuck();
+            DHPlayer(P.Controller).ClientToggleDuck(); // TODO: suspect this can be done in ClientKDriverLeave(), removing need for replicated function
         }
 
         GotoState(''); // reset state for the next person who gets on the mortar
