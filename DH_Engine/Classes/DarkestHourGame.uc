@@ -41,7 +41,6 @@ var()   config int                  ChangeTeamInterval;                     // S
 
 var     array<float>                ReinforcementMessagePercentages;
 var     int                         TeamReinforcementMessageIndices[2];
-var     int                         bTeamOutOfReinforcements[2];
 var     int                         OriginalReinforcementIntervals[2];
 var     int                         SpawnsAtRoundStart[2];                  // Number of spawns for each team at start of round (used for reinforcement warning calc)
 
@@ -2458,9 +2457,6 @@ state RoundInPlay
         TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX] = 0;
         TeamReinforcementMessageIndices[AXIS_TEAM_INDEX] = 0;
 
-        bTeamOutOfReinforcements[ALLIES_TEAM_INDEX] = 0;
-        bTeamOutOfReinforcements[AXIS_TEAM_INDEX] = 0;
-
         if (Metrics != none)
         {
             Metrics.OnRoundBegin();
@@ -2879,7 +2875,6 @@ function EndGame(PlayerReplicationInfo Winner, string Reason)
 function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcements, optional bool bOnlyIfNotZero)
 {
     local DHGameReplicationInfo GRI;
-    local bool                  bIsDefendingTeam, bIsInfinite, bOutOfReinf;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
@@ -2888,12 +2883,9 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
         return;
     }
 
-    bIsInfinite = GRI.SpawnsRemaining[Team] == -1;
-    bOutOfReinf = GRI.SpawnsRemaining[Team] == 0;
-
     // If we are NOT setting reinforcements & if reinf is infinite, then return
-    // Also if reinf is zero (out) and we are to only modify if NOT zero, then return
-    if ((!bSetReinforcements && bIsInfinite) || (bOutOfReinf && bOnlyIfNotZero))
+    // Also if out of reinf and we are to only modify if NOT zero, then return
+    if ((!bSetReinforcements && GRI.SpawnsRemaining[Team] == -1) || (GRI.SpawnsRemaining[Team] == 0 && bOnlyIfNotZero))
     {
         return;
     }
@@ -2908,23 +2900,12 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
         GRI.SpawnsRemaining[Team] = Max(0, GRI.SpawnsRemaining[Team] + Amount);
     }
 
-    // If out of reinforcements, then handle checks to end the round
-    if (bOutOfReinf && bTeamOutOfReinforcements[Team] == 0)
+    // If round is in play and out of reinforcements and supposed to end the round, do it
+    if (IsInState('RoundInPlay') && GRI.SpawnsRemaining[Team] == 0 && DHLevelInfo.GameTypeClass.default.bRoundEndsAtZeroReinf)
     {
-        // Determine if player's team is defending
-        bIsDefendingTeam = (Team == AXIS_TEAM_INDEX && LevelInfo.DefendingSide == SIDE_Axis) ||
-                           (Team == ALLIES_TEAM_INDEX && LevelInfo.DefendingSide == SIDE_Allies);
-
-        // Team is now out of reinforcements
-        bTeamOutOfReinforcements[Team] = 1;
-
-        // If the round is meant to end when a team runs out of reinforcements, then end it (and exit function)
-        if (DHLevelInfo.GameTypeClass.default.bRoundEndsAtZeroReinf)
-        {
-            Level.Game.Broadcast(self, "The battle ended because a team's reinforcements reached zero", 'Say');
-            ChooseWinner();
-            return; // Leave function as we don't want to change round time as round is over
-        }
+        Level.Game.Broadcast(self, "The battle ended because a team's reinforcements reached zero", 'Say');
+        ChooseWinner();
+        return;
     }
 }
 
@@ -4936,7 +4917,7 @@ defaultproperties
     ReinforcementMessagePercentages(1)=0.5
     ReinforcementMessagePercentages(2)=0.25
     ReinforcementMessagePercentages(3)=0.10
-    ReinforcementMessagePercentages(4)=0.5
+    ReinforcementMessagePercentages(4)=0.05
     ReinforcementMessagePercentages(5)=0.0
 
     Begin Object Class=UVersion Name=VersionObject
