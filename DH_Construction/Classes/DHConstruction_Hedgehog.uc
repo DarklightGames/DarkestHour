@@ -18,7 +18,7 @@ defaultproperties
     CollisionHeight=60
     CollisionRadius=60
     HealthMax=400
-    SupplyCost=150
+    SupplyCost=100
     bIsNeutral=true
     bAcceptsProjectors=false
 }
