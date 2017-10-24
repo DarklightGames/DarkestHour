@@ -114,36 +114,31 @@ var     bool                    bSpectateAllowViewPoints;
 
 replication
 {
-    unreliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        SquadMemberLocations, bSpectateAllowViewPoints;
-
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        NextSpawnTime, SpawnPointIndex, VehiclePoolIndex,
-        DHPrimaryWeapon, DHSecondaryWeapon, bSpawnPointInvalidated,
-        NextVehicleSpawnTime, LastKilledTime,
-        SquadReplicationInfo, NextChangeTeamTime;
+        SpawnPointIndex, VehiclePoolIndex, bSpawnPointInvalidated,
+        NextSpawnTime, NextVehicleSpawnTime, NextChangeTeamTime, LastKilledTime,
+        DHPrimaryWeapon, DHSecondaryWeapon, bSpectateAllowViewPoints,
+        SquadReplicationInfo, SquadMemberLocations;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerLoadATAmmo, ServerThrowMortarAmmo,
-        ServerSaveArtilleryTarget, ServerSetPlayerInfo, ServerClearObstacle,
-        ServerLockWeapons, ServerSetBayonetAtSpawn,
-        ServerSetIsInSpawnMenu, ServerSetLockTankOnEntry,
-        ServerSquadCreate, ServerSquadLeave, ServerSquadJoin, ServerSquadSay,
-        ServerSquadJoinAuto, ServerSquadInvite, ServerSquadKick, ServerSquadPromote,
-        ServerSquadLock, ServerSquadSignal,
-        ServerSquadRename, ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint,
-        ServerSquadSwapRallyPoints, ServerSquadBan,
+        ServerSetPlayerInfo, ServerSetIsInSpawnMenu, ServerSetLockTankOnEntry,
+        ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSetBayonetAtSpawn,
+        ServerSaveArtilleryTarget, ServerClearObstacle,
         ServerAddMapMarker, ServerRemoveMapMarker,
-        // these ones in debug mode only:
-        ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog;
+        ServerSquadCreate, ServerSquadRename,
+        ServerSquadJoin, ServerSquadJoinAuto, ServerSquadLeave,
+        ServerSquadInvite, ServerSquadPromote, ServerSquadKick, ServerSquadBan,
+        ServerSquadSay, ServerSquadLock, ServerSquadSignal,
+        ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
+        ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons; // these ones in debug mode only
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
-        ClientCopyToClipboard, ClientProposeMenu, ClientSaveROIDHash,
-        ClientProne, ClientToggleDuck, ClientConsoleCommand,
-        ClientFadeFromBlack, ClientAddHudDeathMessage, ClientLockWeapons,
+        ClientProne, ClientToggleDuck, ClientLockWeapons,
+        ClientAddHudDeathMessage, ClientFadeFromBlack, ClientProposeMenu,
+        ClientConsoleCommand, ClientCopyToClipboard, ClientSaveROIDHash,
         ClientSquadInvite, ClientSquadSignal;
 }
 
