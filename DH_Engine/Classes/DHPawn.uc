@@ -5270,12 +5270,12 @@ simulated function DHRoleInfo GetRoleInfo()
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-    if (PRI == none || PRI.RoleInfo == none)
+    if (PRI != none)
     {
-        return none;
+        return DHRoleInfo(PRI.RoleInfo);
     }
 
-    return DHRoleInfo(PRI.RoleInfo);
+    return none;
 }
 
 simulated function bool AllowSprint()
