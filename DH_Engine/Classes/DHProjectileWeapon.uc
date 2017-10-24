@@ -2180,7 +2180,10 @@ function AttachToPawn(Pawn P)
 
 simulated function ClientSetBarrelSteam(bool bSteaming)
 {
-    SetBarrelSteamActive(bSteaming);
+    if (Role < ROLE_Authority)
+    {
+        SetBarrelSteamActive(bSteaming);
+    }
 }
 
 function SetBarrelDamaged(bool bDamaged)
