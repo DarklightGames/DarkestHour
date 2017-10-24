@@ -10,28 +10,30 @@ class DHConstruction extends Actor
 enum EConstructionErrorType
 {
     ERROR_None,
-    ERROR_Fatal,                // Some fatal error occurred, usually a case of unexpected values
-    ERROR_NoGround,             // No solid ground was able to be found
-    ERROR_TooSteep,             // The ground slope exceeded the allowable maximum
-    ERROR_InWater,              // The construction is in water and the construction type disallows this
-    ERROR_Restricted,           // Construction overlaps a restriction volume
-    ERROR_NoRoom,               // No room to place this construction
-    ERROR_NotOnTerrain,         // Construction is not on terrain
-    ERROR_TooCloseFriendly,     // Too close to an identical friendly construction
-    ERROR_TooCloseEnemy,        // Too close to an identical enemy construction
-    ERROR_InMinefield,          // Cannot be in a minefield!
-    ERROR_NearSpawnPoint,       // Cannot be so close to a spawn point (or location hint)
-    ERROR_Indoors,              // Cannot be placed indoors
-    ERROR_InObjective,          // Cannot be placed inside an objective area
-    ERROR_TeamLimit,            // Limit reached for this type of construction
-    ERROR_NoSupplies,           // Not within range of any supply caches
-    ERROR_InsufficientSupply,   // Not enough supplies to build this construction
-    ERROR_BadSurface,           // Cannot construct on this surface type
-    ERROR_GroundTooHard,        // This is used when something needs to snap to the terrain, but the engine's native trace functionality isn't cooperating!
-    ERROR_RestrictedType,       // Restricted construction type (can't build on this map!)
-    ERROR_SquadTooSmall,        // Not enough players in the squad!
-    ERROR_PlayerBusy,           // Player is in an undesireable state (e.g. MG deployed, crawling, prone transitioning or otherwise unable to switch weapons)
-    ERROR_TooCloseToObjective,
+    ERROR_Fatal,                    // Some fatal error occurred, usually a case of unexpected values
+    ERROR_NoGround,                 // No solid ground was able to be found
+    ERROR_TooSteep,                 // The ground slope exceeded the allowable maximum
+    ERROR_InWater,                  // The construction is in water and the construction type disallows this
+    ERROR_Restricted,               // Construction overlaps a restriction volume
+    ERROR_NoRoom,                   // No room to place this construction
+    ERROR_NotOnTerrain,             // Construction is not on terrain
+    ERROR_TooCloseFriendly,         // Too close to an identical friendly construction
+    ERROR_TooCloseEnemy,            // Too close to an identical enemy construction
+    ERROR_InMinefield,              // Cannot be in a minefield!
+    ERROR_NearSpawnPoint,           // Cannot be so close to a spawn point (or location hint)
+    ERROR_Indoors,                  // Cannot be placed indoors
+    ERROR_InObjective,              // Cannot be placed inside an objective area
+    ERROR_TeamLimit,                // Limit reached for this type of construction
+    ERROR_NoSupplies,               // Not within range of any supply caches
+    ERROR_InsufficientSupply,       // Not enough supplies to build this construction
+    ERROR_BadSurface,               // Cannot construct on this surface type
+    ERROR_GroundTooHard,            // This is used when something needs to snap to the terrain, but the engine's native trace functionality isn't cooperating!
+    ERROR_RestrictedType,           // Restricted construction type (can't build on this map!)
+    ERROR_SquadTooSmall,            // Not enough players in the squad!
+    ERROR_PlayerBusy,               // Player is in an undesireable state (e.g. MG deployed, crawling, prone transitioning or otherwise unable to switch weapons)
+    ERROR_TooCloseToObjective,      // Too close to an objective
+    ERROR_TooCloseToEnemyObjective, // Too far from a controlled objective
+    ERROR_Custom,                   // Custom error type (provide an error message in OptionalString)
     ERROR_Other
 };
 
@@ -90,7 +92,8 @@ var     bool    bInheritsOwnerRotation;         // If true, the base rotation of
 var     bool    bCanPlaceInObjective;
 var     int     SquadMemberCountMinimum;        // The number of members you must have in your squad to create this.
 
-var     float   ObjectiveDistanceMinMeters;
+var     float   ObjectiveDistanceMinMeters;         // The minimum distance, in meters, that this construction must be placed away from all objectives.
+var     float   EnemyObjectiveDistanceMinMeters;    // The minimum distance, in meters, that this construction must be placed away from enemy objectives.
 
 // Terrain placement
 var     bool    bSnapToTerrain;                 // If true, the origin of the placement (prior to the PlacementOffset) will coincide with the nearest terrain vertex during placement.

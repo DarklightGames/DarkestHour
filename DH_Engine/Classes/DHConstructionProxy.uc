@@ -743,6 +743,36 @@ function DHConstruction.ConstructionError GetPositionError()
         }
     }
 
+    if (ConstructionClass.default.EnemyObjectiveDistanceMinMeters > 0.0)
+    {
+        // Don't allow this construction to be placed too close to an enemy-controlled objective.
+        ObjectiveIndex = -1;
+        DistanceMin = class'UFloat'.static.Infinity();
+
+        for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
+        {
+            if (GRI.DHObjectives[i] != none && PawnOwner.GetTeamNum() != int(GRI.DHObjectives[i].ObjState))
+            {
+                Distance = VSize(Location - GRI.DHObjectives[i].Location);
+
+                if (Distance < class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.EnemyObjectiveDistanceMinMeters) &&
+                    Distance < DistanceMin)
+                {
+                    DistanceMin = Distance;
+                    ObjectiveIndex = i;
+                }
+            }
+        }
+
+        if (ObjectiveIndex != -1)
+        {
+            E.Type = ERROR_TooCloseToEnemyObjective;
+            E.OptionalString = GRI.DHObjectives[ObjectiveIndex].ObjName;
+            E.OptionalInteger = Max(1, ConstructionClass.default.EnemyObjectiveDistanceMinMeters - class'DHUnits'.static.UnrealToMeters(DistanceMin));
+            return E;
+        }
+    }
+
     // Don't allow the construction to touch blocking actors.
     foreach TouchingActors(class'Actor', TouchingActor)
     {

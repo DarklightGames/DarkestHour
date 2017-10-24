@@ -83,5 +83,6 @@ defaultproperties
     ErrorMessages(20)="You must have {integer} members in your squad to {verb} a {name}."
     ErrorMessages(21)="You cannot {verb} a {name} while you are busy."
     ErrorMessages(22)="Too close to an objective ({string}), it must be {integer}m further away."
+    ErrorMessages(23)="Too close to an uncontrolled objective ({string}), it must be {integer}m further away."
 }
 
