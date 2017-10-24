@@ -22,6 +22,8 @@ var int EncroachmentRadiusInMeters;             // The distance, in meters, that
 var int EncroachmentPenaltyBlockThreshold;      // The value that EncroachmentPenaltyCounter must reach for the rally point to be "blocked".
 var int EncroachmentPenaltyOverrunThreshold;    // The value that EncroachmentPenaltyCounter must reach for the rally point to be "overrun".
 var int EncroachmentPenaltyCounter;             // Running counter of encroachment penalty.
+var int EncroachmentSpawnTimePenalty;           // If being encroached upon, this amount of seconds will be added to the spawn timer
+var bool bIsEncroachedUpon;                     // True if there are enemies encroaching upon the rally point.
 
 // Establishment
 var int EstablishmentRadiusInMeters;            // The distance, in meters, that squadmates and enemies must be within to influence the EstablishmentCounter.
@@ -42,8 +44,8 @@ var int SpawnAccrualThreshold;
 
 replication
 {
-    reliable if (Role == ROLE_Authority)
-        SquadIndex, RallyPointIndex, SpawnsRemaining;
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        SquadIndex, RallyPointIndex, SpawnsRemaining, bIsEncroachedUpon;
 }
 
 function Reset()
@@ -166,6 +168,7 @@ state Active
         }
 
         EncroachmentPenaltyCounter = Max(0, EncroachmentPenaltyCounter);
+        bIsEncroachedUpon = EncroachmentPenaltyCounter != 0;
 
         if (EncroachmentPenaltyCounter < default.EncroachmentPenaltyBlockThreshold)
         {
@@ -364,6 +367,16 @@ simulated function string GetMapText()
     return string(SpawnsRemaining);
 }
 
+simulated function int GetSpawnTimePenalty()
+{
+    if (bIsEncroachedUpon)
+    {
+        return EncroachmentSpawnTimePenalty;
+    }
+
+    return 0;
+}
+
 defaultproperties
 {
     StaticMesh=StaticMesh'DH_Construction_stc.Backpacks.USA_backpack'
@@ -376,6 +389,7 @@ defaultproperties
     EncroachmentRadiusInMeters=25
     EncroachmentPenaltyBlockThreshold=10
     EncroachmentPenaltyOverrunThreshold=30
+    EncroachmentSpawnTimePenalty=10
     OverrunRadiusInMeters=10
     EstablishmentRadiusInMeters=25
     EstablishmentCounterThreshold=30

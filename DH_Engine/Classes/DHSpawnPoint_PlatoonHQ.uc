@@ -16,6 +16,8 @@ var float   EncroachmentRadiusInMeters;
 var int     EncroachmentPenaltyBlockThreshold;
 var int     EncroachmentPenaltyCounter;
 var int     EnemiesNeededToBlock;
+var int     EncroachmentSpawnTimePenalty;
+var bool    bIsEncroachedUpon;
 
 var float   CaptureRadiusInMeters;
 var int     CaptureCounter;
@@ -24,6 +26,12 @@ var int     EnemiesNeededToCapture;
 
 var int     SpawnKillPenalty;
 var int     SpawnKillPenaltyCounter;
+
+replication
+{
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        bIsEncroachedUpon;
+}
 
 function PostBeginPlay()
 {
@@ -82,6 +90,8 @@ function Timer()
     {
         EncroachmentPenaltyCounter = 0;
     }
+
+    bIsEncroachedUpon = EncroachmentPenaltyCounter != 0;
 
     if (EncroachmentPenaltyCounter >= EncroachmentPenaltyBlockThreshold)
     {
@@ -179,6 +189,19 @@ function OnSpawnKill(Pawn VictimPawn, Controller KillerController)
     SpawnKillPenaltyCounter += SpawnKillPenalty;
 }
 
+simulated function int GetSpawnTimePenalty()
+{
+    local int Penalty;
+
+    if (bIsEncroachedUpon)
+    {
+        // If we are being encroached upon, add the spawn timer penalty.
+        Penalty += EncroachmentSpawnTimePenalty;
+    }
+
+    return Penalty;
+}
+
 defaultproperties
 {
     SpawnRadius=60.0
@@ -187,11 +210,12 @@ defaultproperties
     ActivationCounterThreshold=60
     EncroachmentRadiusInMeters=50
     EncroachmentPenaltyBlockThreshold=30
+    EncroachmentSpawnTimePenalty=10
     EnemiesNeededToBlock=3
 
     CaptureRadiusInMeters=5
     CaptureCounterThreshold=30
-    EnemiesNeededToCapture=3
+    EnemiesNeededToCapture=2
 
     SpawnKillPenalty=15
 }
