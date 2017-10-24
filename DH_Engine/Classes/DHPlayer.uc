@@ -2342,7 +2342,10 @@ function bool CanRestartPlayer()
     {
         return false;
     }
-    else if (DHGRI.ElapsedTime < NextSpawnTime || DHGRI.ElapsedTime < DHGRI.SpawningEnableTime)
+
+    NextSpawnTime = GetNextSpawnTime(SpawnPointIndex, DHRoleInfo(GetRoleInfo()), VehiclePoolIndex);
+
+    if (DHGRI.ElapsedTime < NextSpawnTime || DHGRI.ElapsedTime < DHGRI.SpawningEnableTime)
     {
         return false;
     }
@@ -2437,14 +2440,14 @@ exec function CommunicationMenu()
 
 // This function returns the time the player will be able to spawn next
 // given some spawn parameters (DHRoleInfo and VehiclePoolIndex).
-simulated function int GetNextSpawnTime(DHRoleInfo RI, int VehiclePoolIndex)
+simulated function int GetNextSpawnTime(int SpawnPointIndex, DHRoleInfo RI, int VehiclePoolIndex)
 {
     local int T;
     local DHGameReplicationInfo GRI;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (RI == none || GRI == none || PlayerReplicationInfo == none || PlayerReplicationInfo.Team == none)
+    if (RI == none || GRI == none || PlayerReplicationInfo == none || PlayerReplicationInfo.Team == none || SpawnPointIndex == -1)
     {
         return 0;
     }
@@ -2459,7 +2462,7 @@ simulated function int GetNextSpawnTime(DHRoleInfo RI, int VehiclePoolIndex)
     {
         // LastKilledTime is 0 the first time a player joins a server, but if he leaves, the time is stored (using the sessions thing)
         // this means the player can pretty much spawn right away the first time connecting, but from then on he will be subject to the respawn time factors
-        T = LastKilledTime + GRI.ReinforcementInterval[PlayerReplicationInfo.Team.TeamIndex] + RI.AddedReinforcementTime;
+        T = LastKilledTime + GRI.ReinforcementInterval[PlayerReplicationInfo.Team.TeamIndex] + RI.AddedReinforcementTime + GRI.SpawnPoints[SpawnPointIndex].GetSpawnTimePenalty();
     }
 
     if (VehiclePoolIndex != -1)
@@ -2833,7 +2836,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
             if (!bDidFail)
             {
                 SpawnPointIndex = NewSpawnPointIndex;
-                NextSpawnTime = GetNextSpawnTime(RI, VehiclePoolIndex);
+                NextSpawnTime = GetNextSpawnTime(SpawnPointIndex, RI, VehiclePoolIndex);
 
                 bSpawnPointInvalidated = false;
 
@@ -3001,7 +3004,7 @@ function PawnDied(Pawn P)
 {
     local DarkestHourGame G;
     local DHGameReplicationInfo GRI;
-    local DHRoleInfo      RI;
+    local DHRoleInfo RI;
 
     if (P == none)
     {
@@ -3013,13 +3016,13 @@ function PawnDied(Pawn P)
     G = DarkestHourGame(Level.Game);
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (G != none)
+    if (G != none && GRI != none)
     {
         RI = DHRoleInfo(G.GetRoleInfo(GetTeamNum(), DesiredRole));
 
         if (RI != none)
         {
-            NextSpawnTime = GetNextSpawnTime(RI, VehiclePoolIndex);
+            NextSpawnTime = GetNextSpawnTime(SpawnPointIndex, RI, VehiclePoolIndex);
         }
     }
 }

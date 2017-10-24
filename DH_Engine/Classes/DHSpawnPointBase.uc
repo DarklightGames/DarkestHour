@@ -239,6 +239,12 @@ function GetPlayerCountsWithinRadius(float RadiusInMeters, optional int SquadInd
     }
 }
 
+// Override to add a spawn timer penalty for anyone spawning at this spawn point.
+simulated function int GetSpawnTimePenalty()
+{
+    return 0;
+}
+
 simulated final function int GetTeamIndex()
 {
     return TeamIndex;

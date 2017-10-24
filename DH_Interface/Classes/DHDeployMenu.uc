@@ -455,7 +455,7 @@ function string GetStatusText()
         return default.SelectSpawnPointText;
     }
 
-    SpawnTime = Max(0, PC.GetNextSpawnTime(RI, GetSelectedVehiclePoolIndex()) - GRI.ElapsedTime);
+    SpawnTime = Max(0, PC.GetNextSpawnTime(SpawnPointIndex, RI, GetSelectedVehiclePoolIndex()) - GRI.ElapsedTime);
 
     if (SpawnTime > 0)
     {
