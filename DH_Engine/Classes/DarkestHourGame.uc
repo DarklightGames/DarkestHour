@@ -4314,19 +4314,10 @@ function NotifyLogout(Controller Exiting)
     super.Destroyed();
 }
 
+// TODO: Deprecate function (make all calls to this function just use BroadcastTeamLocalizedMessage)
 function SendReinforcementMessage(int Team, int Num)
 {
-    local Controller P;
-
-    for (P = Level.ControllerList; P != none; P = P.NextController)
-    {
-        if (PlayerController(P) != none &&
-            P.PlayerReplicationInfo.Team != none &&
-            P.PlayerReplicationInfo.Team.TeamIndex == Team)
-        {
-            PlayerController(P).ReceiveLocalizedMessage(class'DHReinforcementMsg', Num);
-        }
-    }
+    BroadcastTeamLocalizedMessage(Level, Team, class'DHReinforcementMsg', Num);
 }
 
 // Modified to remove reliance on SpawnCount and instead just use SpawnsRemaining

@@ -568,7 +568,7 @@ function TallyVotes(bool bForceMapSwitch)
             VoteCount[MVRI[x].GameVote * MapCount + MVRI[x].MapVote] = VoteCount[MVRI[x].GameVote * MapCount + MVRI[x].MapVote] + Votes;
 
             // If more then half the players voted for the same map as this player then force a winner
-            if (!bScoreMode && Level.Game.NumPlayers > 2 && float(VoteCount[MVRI[x].GameVote * MapCount + MVRI[x].MapVote]) / float(Level.Game.NumPlayers) > 0.5 && Level.Game.bGameEnded)
+            if (!bScoreMode && Level.Game.GetNumPlayers() > 2 && float(VoteCount[MVRI[x].GameVote * MapCount + MVRI[x].MapVote]) / float(Level.Game.GetNumPlayers()) > 0.5 && Level.Game.bGameEnded)
             {
                 bForceMapSwitch = true;
             }
@@ -578,7 +578,7 @@ function TallyVotes(bool bForceMapSwitch)
     Log("___Voted - " $ PlayersThatVoted, 'MapVoteDebug');
 
     // Mid game vote initiated
-    if (Level.Game.NumPlayers > 2 && !Level.Game.bGameEnded && !bMidGameVote && (float(PlayersThatVoted) / float(Level.Game.NumPlayers)) * 100 >= MidGameVotePercent)
+    if (Level.Game.GetNumPlayers() > 2 && !Level.Game.bGameEnded && !bMidGameVote && (float(PlayersThatVoted) / float(Level.Game.GetNumPlayers())) * 100 >= MidGameVotePercent)
     {
         MidGameVote();
     }
@@ -663,7 +663,7 @@ function TallyVotes(bool bForceMapSwitch)
     }
 
     // If everyone has voted go ahead and change map
-    if (bForceMapSwitch || (Level.Game.NumPlayers == PlayersThatVoted && Level.Game.NumPlayers > 0))
+    if (bForceMapSwitch || (Level.Game.GetNumPlayers() == PlayersThatVoted && Level.Game.GetNumPlayers() > 0))
     {
         if (MapList[TopMap - TopMap / MapCount * MapCount].MapName == "")
         {

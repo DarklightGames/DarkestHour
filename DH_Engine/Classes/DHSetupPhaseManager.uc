@@ -193,8 +193,8 @@ auto state Timing
             // There are 50 players on the server
             // 8 * (50 / 2) = 200
             // 10 * (50 / 2) = 250
-            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = PhaseEndReinforcements.AlliesReinforcements * (Max(10, G.NumPlayers) / 2) + UnspawnedPlayers[ALLIES_TEAM_INDEX];
-            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = PhaseEndReinforcements.AxisReinforcements * (Max(10, G.NumPlayers) / 2) + UnspawnedPlayers[AXIS_TEAM_INDEX];
+            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = PhaseEndReinforcements.AlliesReinforcements * (Max(10, G.GetNumPlayers()) / 2) + UnspawnedPlayers[ALLIES_TEAM_INDEX];
+            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = PhaseEndReinforcements.AxisReinforcements * (Max(10, G.GetNumPlayers()) / 2) + UnspawnedPlayers[AXIS_TEAM_INDEX];
         }
         else
         {

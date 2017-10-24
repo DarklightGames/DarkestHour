@@ -2721,7 +2721,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
                 {
                     ClientChangePlayerInfoResult(11);
                 }
-                else if (Level.Game.NumPlayers >= Level.Game.MaxPlayers)
+                else if (Level.Game.GetNumPlayers() >= Level.Game.MaxPlayers)
                 {
                     ClientChangePlayerInfoResult(12);
                 }

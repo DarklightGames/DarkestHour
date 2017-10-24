@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHReinforcementMsg extends LocalMessage
+class DHReinforcementMsg extends ROGameMessage
     abstract;
 
 var localized string ReinforcementsRemaining;
@@ -26,7 +26,6 @@ static function string GetString(
 
 defaultproperties
 {
-    ReinforcementsRemaining="{0}% reinforcements remaining!"
-    ReinforcementsDepleted="Reinforcements depleted!"
-
+    ReinforcementsRemaining="Your team has {0}% reinforcements remaining!"
+    ReinforcementsDepleted="Your team has ran out of reinforcements!"
 }

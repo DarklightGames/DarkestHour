@@ -529,10 +529,12 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
             if (AxisAwardedReinforcements >= 0)
             {
                 G.ModifyReinforcements(AXIS_TEAM_INDEX, AxisAwardedReinforcements);
+                class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, class'DHReinforcementAwardMsg', AxisAwardedReinforcements, none, none, self);
             }
             else
             {
-                G.ModifyReinforcements(AXIS_TEAM_INDEX, 1 * (G.NumPlayers / 2));
+                G.ModifyReinforcements(AXIS_TEAM_INDEX, 1 * (G.GetNumPlayers() / 2));
+                class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, class'DHReinforcementAwardMsg', 1 * (G.GetNumPlayers() / 2), none, none, self);
             }
 
             for (i = 0; i < AxisCaptureObjActions.Length; ++i)
@@ -575,10 +577,12 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
             if (AlliedAwardedReinforcements >= 0)
             {
                 G.ModifyReinforcements(ALLIES_TEAM_INDEX, AlliedAwardedReinforcements);
+                class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, class'DHReinforcementAwardMsg', AlliedAwardedReinforcements, none, none, self);
             }
             else
             {
-                G.ModifyReinforcements(ALLIES_TEAM_INDEX, 1 * (G.NumPlayers / 2));
+                G.ModifyReinforcements(ALLIES_TEAM_INDEX, 1 * (G.GetNumPlayers() / 2));
+                class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, class'DHReinforcementAwardMsg', 1 * (G.GetNumPlayers() / 2), none, none, self);
             }
 
             for (i = 0; i < AlliesCaptureObjActions.Length; ++i)
