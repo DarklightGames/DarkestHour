@@ -369,12 +369,16 @@ simulated function string GetMapText()
 
 simulated function int GetSpawnTimePenalty()
 {
+    local int SpawnTimePenalty;
+
+    SpawnTimePenalty = BaseSpawnTimePenalty;
+
     if (bIsEncroachedUpon)
     {
-        return EncroachmentSpawnTimePenalty;
+        SpawnTimePenalty += EncroachmentSpawnTimePenalty;
     }
 
-    return 0;
+    return SpawnTimePenalty;
 }
 
 defaultproperties
