@@ -389,6 +389,13 @@ simulated function PlayIdle()
 
 defaultproperties
 {
+    // Changed as bOnlyDirtyReplication should only be used with actors that are bAlwaysRelevant & it causes problems here
+    // When true with a weapon attachment, it causes a bug where often the actor fails to be destroyed when the holding player stops being net relevant & is destroyed
+    // This 'orphaned' actor is no longer attached, then when the player becomes relevant again, his weapon attachment is not re-replicated & so continues to exist
+    // The orphaned attachment does not regain its Base actor (or Instigator or Owner, all of which should be the player pawn), so it stays unattached
+    // It cannot be seen because weapon attachments are bOnlyDrawIfAttached, so the viewer sees the player holding no weapon
+    bOnlyDirtyReplication=false
+
     CullDistance=8192.0 // 136m - was originally 4000 UU (approx 66m), but when the 3rd person weapon attachment gets culled, player's can't see a muzzle flash, which is important
     bNetNotify=true
     bSpawnShellsOutBottom=false
