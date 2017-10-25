@@ -37,7 +37,7 @@ defaultproperties
     DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Cromwell_sight_destroyed'
     AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell'
     AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell_reload'
-    PoweredRotateSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
-    PoweredPitchSound=sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    PoweredRotateAndPitchSound=sound'DH_AlliedVehicleSounds.Sherman.ShermanTurretTraverse'
+    PoweredRotateSound=Sound'Vehicle_Weapons.Turret.electric_turret_traverse'
+    PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.electric_turret_traverse'
 }
