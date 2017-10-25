@@ -611,13 +611,13 @@ static function Font GetPlayerNameFont(Canvas C)
 }
 
 // This is more or less just a re-stating of the ROHud function with a couple of
-// minor adjustments.
+// minor adjustments & some != none checks
 event PostRender(Canvas Canvas)
 {
-    local float XPos, YPos;
-    local plane OldModulate,OM;
+    local plane OldModulate, TempModulate;
     local color OldColor;
-    local int i;
+    local float XPos, YPos;
+    local int   i;
 
     // Modified to update the DHGRI instance
     if (DHGRI == none && PlayerOwner != none)
@@ -630,17 +630,20 @@ event PostRender(Canvas Canvas)
     OldModulate = Canvas.ColorModulate;
     OldColor = Canvas.DrawColor;
 
-    Canvas.ColorModulate.X = 1;
-    Canvas.ColorModulate.Y = 1;
-    Canvas.ColorModulate.Z = 1;
-    Canvas.ColorModulate.W = HudOpacity / 255;
+    Canvas.ColorModulate.X = 1.0;
+    Canvas.ColorModulate.Y = 1.0;
+    Canvas.ColorModulate.Z = 1.0;
+    Canvas.ColorModulate.W = HudOpacity / 255.0;
 
     LinkActors();
 
     ResScaleX = Canvas.SizeX / 640.0;
     ResScaleY = Canvas.SizeY / 480.0;
 
-    CheckCountDown(PlayerOwner.GameReplicationInfo);
+    if (PlayerOwner != none)
+    {
+        CheckCountDown(PlayerOwner.GameReplicationInfo);
+    }
 
     if (bFadeToBlack)
     {
@@ -654,20 +657,23 @@ event PostRender(Canvas Canvas)
 
     if (bShowDebugInfo)
     {
-        Canvas.Font = GetConsoleFont(Canvas);
-        Canvas.Style = ERenderStyle.STY_Alpha;
-        Canvas.DrawColor = ConsoleColor;
-
-        PlayerOwner.ViewTarget.DisplayDebug(Canvas, XPos, YPos);
-
-        if (PlayerOwner.ViewTarget != PlayerOwner && (Pawn(PlayerOwner.ViewTarget) == none || Pawn(PlayerOwner.ViewTarget).Controller == none))
+        if (PlayerOwner != none)
         {
-            YPos += XPos * 2;
-            Canvas.SetPos(4, YPos);
-            Canvas.DrawText("----- VIEWER INFO -----");
-            YPos += XPos;
-            Canvas.SetPos(4, YPos);
-            PlayerOwner.DisplayDebug(Canvas, XPos, YPos);
+            Canvas.Font = GetConsoleFont(Canvas);
+            Canvas.Style = ERenderStyle.STY_Alpha;
+            Canvas.DrawColor = ConsoleColor;
+
+            PlayerOwner.ViewTarget.DisplayDebug(Canvas, XPos, YPos);
+
+            if (PlayerOwner.ViewTarget != PlayerOwner && (Pawn(PlayerOwner.ViewTarget) == none || Pawn(PlayerOwner.ViewTarget).Controller == none))
+            {
+                YPos += XPos * 2.0;
+                Canvas.SetPos(4.0, YPos);
+                Canvas.DrawText("----- VIEWER INFO -----");
+                YPos += XPos;
+                Canvas.SetPos(4.0, YPos);
+                PlayerOwner.DisplayDebug(Canvas, XPos, YPos);
+            }
         }
     }
     else if (!bHideHud)
@@ -678,7 +684,7 @@ event PostRender(Canvas Canvas)
 
             if (ScoreBoard != none)
             {
-                OM = Canvas.ColorModulate;
+                TempModulate = Canvas.ColorModulate;
                 Canvas.ColorModulate = OldModulate;
                 ScoreBoard.DrawScoreboard(Canvas);
 
@@ -687,7 +693,7 @@ event PostRender(Canvas Canvas)
                     DisplayMessages(Canvas);
                 }
 
-                Canvas.ColorModulate = OM;
+                Canvas.ColorModulate = TempModulate;
             }
         }
         else
@@ -708,20 +714,17 @@ event PostRender(Canvas Canvas)
                 Overlays[i].Render(Canvas);
             }
 
-            if (!DrawLevelAction(Canvas))
+            if (!DrawLevelAction(Canvas) && PlayerOwner != none)
             {
-                if (PlayerOwner != none)
+                if (PlayerOwner.ProgressTimeOut > Level.TimeSeconds)
                 {
-                    if (PlayerOwner.ProgressTimeOut > Level.TimeSeconds)
-                    {
-                        DisplayProgressMessages(Canvas);
-                    }
-                    else if (MOTDState == 1)
-                    {
-                        MOTDState = 2;
-                    }
+                    DisplayProgressMessages(Canvas);
                 }
-           }
+                else if (MOTDState == 1)
+                {
+                    MOTDState = 2;
+                }
+            }
 
             if (bShowBadConnectionAlert)
             {
@@ -742,7 +745,7 @@ event PostRender(Canvas Canvas)
         DrawInstructionGfx(Canvas);
     }
 
-    // Draw fade effects even if the hud is hidden so poeple can't just turn off thier hud
+    // Draw fade effects even if the HUD is hidden so people can't just turn off their HUD
     if (bHideHud)
     {
         Canvas.Style = ERenderStyle.STY_Alpha;
@@ -756,11 +759,14 @@ event PostRender(Canvas Canvas)
         DrawObjectives(Canvas);
     }
 
-    PlayerOwner.RenderOverlays(Canvas);
-
-    if (PlayerOwner.bViewingMatineeCinematic)
+    if (PlayerOwner != none)
     {
-        DrawCinematicHUD(Canvas);
+        PlayerOwner.RenderOverlays(Canvas);
+
+        if (PlayerOwner.bViewingMatineeCinematic)
+        {
+            DrawCinematicHUD(Canvas);
+        }
     }
 
     if (bDrawHint && !bHideHud)
@@ -788,13 +794,11 @@ event PostRender(Canvas Canvas)
 
     HudLastRenderTime = Level.TimeSeconds;
 
-    if (GUIController(PlayerOwner.Player.GUIController).bLCDAvailable())
+    if (PlayerOwner != none && PlayerOwner.Player != none && GUIController(PlayerOwner.Player.GUIController) != none
+        && GUIController(PlayerOwner.Player.GUIController).bLCDAvailable() && Level.TimeSeconds - LastLCDUpdateTime > LCDUpdateFreq)
     {
-        if (Level.TimeSeconds - LastLCDUpdateTime > LCDUpdateFreq)
-        {
-            LastLCDUpdateTime = Level.TimeSeconds;
-            DrawLCDUpdate(Canvas);
-        }
+        LastLCDUpdateTime = Level.TimeSeconds;
+        DrawLCDUpdate(Canvas);
     }
 }
 
