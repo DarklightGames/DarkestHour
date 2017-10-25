@@ -12,7 +12,7 @@ const VEHICLE_POOLS_MAX = 32;
 const SPAWN_POINTS_MAX = 63;
 const OBJECTIVES_MAX = 32;
 const CONSTRUCTION_CLASSES_MAX = 32;
-const VOICEID_MAX = 100;
+const VOICEID_MAX = 255;
 const SUPPLY_POINTS_MAX = 8;
 const MAP_MARKERS_MAX = 20;
 const MAP_MARKERS_CLASSES_MAX = 16;
@@ -882,6 +882,8 @@ simulated function AddPRI(PlayerReplicationInfo PRI)
         }
 
         PRI.VoiceID = NewVoiceID;
+
+        Log("[VOICEID]" @ NewVoiceID @ "assigned to" @ PRI.PlayerName);
     }
 
     PRIArray[PRIArray.Length] = PRI;
