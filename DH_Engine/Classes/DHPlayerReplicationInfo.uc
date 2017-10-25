@@ -17,6 +17,7 @@ var     bool                    bIsDeveloper;
 
 replication
 {
+    // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         SquadIndex, SquadMemberIndex, bIsPatron, bIsDeveloper;
 }

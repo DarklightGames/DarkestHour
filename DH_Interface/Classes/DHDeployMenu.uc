@@ -1170,7 +1170,7 @@ function InternalOnChange(GUIComponent Sender)
             cb_PrimaryWeapon.SetIndex(0);
             cb_SecondaryWeapon.SetIndex(0);
 
-            if (PC.GetRoleInfo() == RI)
+            if (PC.GetRoleInfo() == RI && RI != none)
             {
                 if (PC.DHPrimaryWeapon >= 0)
                 {
