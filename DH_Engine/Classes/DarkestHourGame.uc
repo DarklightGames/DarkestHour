@@ -114,10 +114,14 @@ function PatronsRequestOnResponse(int Status, TreeMap_string_string Headers, str
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
 
+    Log("Got Patrons Response" @ Status);
+
     if (Status == 200)
     {
         Parser = new class'JSONParser';
         A = Parser.ParseArray(Content);
+
+        Log("Content" @ Content @ A);
 
         if (A != none)
         {
@@ -127,6 +131,8 @@ function PatronsRequestOnResponse(int Status, TreeMap_string_string Headers, str
             for (i = 0 ; i < A.Size(); ++i)
             {
                 PatronROIDs[PatronROIDs.Length] = A.Get(i).AsString();
+
+                Log("Added Patron ID" @ A.Get(i).AsString());
             }
 
             // Go through existing controllers and assign their patron status
@@ -137,6 +143,8 @@ function PatronsRequestOnResponse(int Status, TreeMap_string_string Headers, str
 
                 if (PC != none && PRI != none)
                 {
+                    Log("Setting" @ PRI.PlayerName @ "as a patron (" $ PC.ROIDHash $ ")");
+
                     PRI.bIsPatron = IsPatron(PC.ROIDHash);
                 }
             }
@@ -4560,6 +4568,9 @@ event PostLogin(PlayerController NewPlayer)
 
         // Patron status look-up
         PRI.bIsPatron = IsPatron(ROIDHash);
+
+        Log("Patron look-up for" @ PRI.PlayerName $ ":" @ PRI.bIsPatron);
+
         PRI.bIsDeveloper = class'DHAccessControl'.static.IsDeveloper(ROIDHash);
     }
 
