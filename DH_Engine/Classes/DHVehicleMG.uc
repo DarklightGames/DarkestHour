@@ -126,7 +126,6 @@ defaultproperties
 
     // Ammo & weapon fire
     bUsesMags=true
-    DamageType=class'ROVehMountedMGDamType'
     Spread=0.002
     bUsesTracers=true
     WeaponFireAttachmentBone="mg_yaw"
