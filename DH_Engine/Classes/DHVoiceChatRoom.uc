@@ -18,6 +18,40 @@ function RemoveMember(PlayerReplicationInfo PRI)
     }
 }
 
+// I think I may have fixed the >64 players voice chat bug!!!
+function AddMember(PlayerReplicationInfo PRI)
+{
+    local int                           i;
+    local array<PlayerReplicationInfo>  Members;
+
+    if (IsMember(PRI))
+    {
+        return;
+    }
+
+    if (PRI == none || PRI.VoiceID >= 255)
+    {
+        return;
+    }
+
+    if (Level.NetMode != NM_Client)
+    {
+        // Notify all members of this channel that the player has joined the channel
+        Members = GetMembers();
+        for (i = 0; i < Members.Length; ++i)
+        {
+            if (Members[i] != none && PlayerController(Members[i].Owner) != none)
+            {
+                PlayerController(Members[i].Owner).ChatRoomMessage(11, ChannelIndex, PRI);
+            }
+        }
+    }
+
+    SetMask(GetMask() | (1 << PRI.VoiceID));
+
+    Super(VoiceChatRoom).AddMember(PRI);
+}
+
 simulated function bool IsSquadChannel()
 {
     return SquadIndex >= 0;
