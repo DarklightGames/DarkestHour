@@ -804,7 +804,6 @@ defaultproperties
     MaxSpeed=100000.0
     MomentumTransfer=100.0
     TossZ=0.0
-    SplashEffect=class'ROBulletHitWaterEffect'
-    MyVehicleDamage=class'ROVehicleDamageType'
-
+    SplashEffect=class'ROEffects.ROBulletHitWaterEffect'
+    MyVehicleDamage=class'DH_Engine.DHVehicleDamageType'
 }

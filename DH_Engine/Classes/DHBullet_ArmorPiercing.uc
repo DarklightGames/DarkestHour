@@ -539,24 +539,24 @@ simulated function Destroyed()
 
 defaultproperties
 {
+    WhizType=1
     WhizSoundEffect=class'DH_Effects.DHBulletWhiz'
     ImpactEffect=class'DH_Effects.DHBulletHitEffect'
+    ShellHitWaterEffectClass=class'ROEffects.ROBulletHitWaterEffect'
     ShellHitVehicleEffectClass=class'DH_Effects.DHBulletPenetrateArmorEffect' // custom class with much smaller penetration effects than shell (PTRD uses 'TankAPHitPenetrateSmall')
     VehicleHitSound=Sound'ProjectileSounds.PTRD_penetrate'
     VehiclePenetrateSoundVolume=5.5
     ShellDeflectEffectClass=class'ROEffects.ROBulletHitMetalArmorEffect'
     VehicleDeflectSound=Sound'PTRD_deflect'
     VehicleDeflectSoundVolume=5.5
-    ShellHitWaterEffectClass=class'ROEffects.ROBulletHitWaterEffect'
 
     DrawType=DT_None
-    WhizType=1
     MaxSpeed=40000.0
     MomentumTransfer=100.0
     LifeSpan=5.0
     DestroyTime=0.1
     bBotNotifyIneffective=false
-    MyVehicleDamage=class'ROVehicleDamageType'
+    MyVehicleDamage=class'DH_Engine.DHVehicleDamageType'
 
     // Tracer properties (won't affect ordinary bullet):
     DrawScale=2.0
