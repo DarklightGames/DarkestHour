@@ -10,6 +10,18 @@ var     name                        BarrelBones[4];           // bone names for 
 var     WeaponAmbientEmitter        BarrelEffectEmitter[4];   // separate emitter for each barrel, for muzzle flash & ejected shell cases
 var     class<WeaponAmbientEmitter> BarrelEffectEmitterClass; // class for the barrel firing effect emitters
 
+// Modified to reduce the allowed gun depression if mounted on an M16 halftrack, to stop it shooting its own vehicle
+// Using this little hack just saves having separate M16 MG & MG pawn classes just for this
+simulated function InitializeVehicleBase()
+{
+    super.InitializeVehicleBase();
+
+    if (DH_M16Halftrack(Base) != none)
+    {
+        CustomPitchDownLimit = 65000;
+    }
+}
+
 // Modified to handle multiple barrels firing
 function Fire(Controller C)
 {
