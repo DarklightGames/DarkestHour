@@ -6067,6 +6067,72 @@ simulated function NotifySelected(Pawn User)
     }
 }
 
+// Modified to add a safeguard against a mapper specifying an invalid item name in a GivenItems slot
+// Can happen as he's entering text, unlike the weapon slots where he simply picks a class from a drop down list
+// Also optimised by avoiding a pointless inventory checking loop & if there are no GivenItems to check for (true for most roles)
+simulated function bool VerifyGivenItems()
+{
+    local array<class<Inventory> > GivenItemClasses;
+    local class<Inventory>         InventoryClass;
+    local Inventory                Inv;
+    local RORoleInfo               RI;
+    local int                      FoundItemsCount, LoopCount, i;
+
+    RI = GetRoleInfo();
+
+    if (RI != none)
+    {
+        // First loop through GivenItems array & build an array of inventory classes to check against
+        // Ignores any invalid entries that don't load as it's not a valid class & so the item is not going to spawn/exist
+        for (i = 0; i < RI.GivenItems.Length; ++i)
+        {
+            InventoryClass = class<Inventory>(DynamicLoadObject(RI.GivenItems[i], class'Class'));
+
+            if (InventoryClass != none)
+            {
+                GivenItemClasses[GivenItemClasses.Length] = InventoryClass;
+            }
+        }
+
+        // If the GivenItems array is empty or contains no valid items, just return true so that GivenItems are verified
+        // No point checking for something that isn't going to exist
+        if (GivenItemClasses.Length == 0)
+        {
+            return true;
+        }
+
+        // Loop through the pawn's inventory & find if it has all the valid items we've saved in our GivenItemClasses array
+        for (Inv = Inventory; Inv != none; Inv = Inv.Inventory)
+        {
+            if (Weapon(Inv) != none && Inv.Instigator != none)
+            {
+                for (i = 0; i < GivenItemClasses.Length; ++i)
+                {
+                    // This inventory item is in the role's GivenItems, so increment the found count & return true if we've now found all the GivenItems
+                    if (GivenItemClasses[i] == Inv.Class)
+                    {
+                        FoundItemsCount++;
+
+                        if (FoundItemsCount == GivenItemClasses.Length)
+                        {
+                            return true;
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            if (++LoopCount > 500) // runaway loop safeguard
+            {
+                break;
+            }
+        }
+    }
+
+    return false;
+}
+
 // New helper function to check whether debug execs can be run
 simulated function bool IsDebugModeAllowed()
 {
