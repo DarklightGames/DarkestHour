@@ -1696,7 +1696,7 @@ defaultproperties
     OnMessage=InternalOnMessage
     OnPreDraw=InternalOnPreDraw
     OnKeyEvent=InternalOnKeyEvent
-    bRenderWorld=true
+    bRenderWorld=false
     bAllowedAsLast=true
     WinTop=0.0
     WinHeight=1.0
