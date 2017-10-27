@@ -1234,12 +1234,16 @@ function DoDamageFX(name BoneName, int Damage, class<DamageType> DamageType, rot
     }
 }
 
-// Added bullet impact sounds for helmets and players
+// Modified so any hit to the head will knock off any headgear (in RO it only happened if the player was killed), & to play bullet impact sound for a helmet hit
+// Also re-factored to optimise & make clearer
 simulated function ProcessHitFX()
 {
-    local Coords BoneCoords;
-    local int    j;
-    local float  GibPerterbation;
+    local class<SeveredAppendage> SeveredLimbClass;
+    local name                    BoneName;
+    local vector                  BoneLocation;
+    local rotator                 RotDir;
+    local float                   GibPerterbation;
+    local int                     LoopCount;
 
     if (Level.NetMode == NM_DedicatedServer)
     {
@@ -1248,110 +1252,113 @@ simulated function ProcessHitFX()
         return;
     }
 
-    for (SimHitFxTicker = SimHitFxTicker; SimHitFxTicker != HitFxTicker; SimHitFxTicker = (SimHitFxTicker + 1) % arraycount(HitFX))
+    // Loop from last recorded SimHitFxTicker to latest HitFxTicker & play each hit effect
+    for (SimHitFxTicker = SimHitFxTicker; SimHitFxTicker != HitFxTicker; SimHitFxTicker = ++SimHitFxTicker % arraycount(HitFX))
     {
-        j++;
-
-        if (j > 30)
+        if (++LoopCount > 30) // runaway loop safeguard
         {
             SimHitFxTicker = HitFxTicker;
 
             return;
         }
 
-        if (HitFX[SimHitFxTicker].damtype == none || (Level.bDropDetail && (Level.TimeSeconds - LastRenderTime > 3) && !IsHumanControlled()))
+        if (HitFX[SimHitFxTicker].DamType == none || (Level.bDropDetail && !IsHumanControlled() && (Level.TimeSeconds - LastRenderTime) > 3.0))
         {
             continue;
         }
 
-        if (HitFX[SimHitFxTicker].Bone == 'obliterate' && !class'GameInfo'.static.UseLowGore())
+        BoneName = HitFX[SimHitFxTicker].Bone;
+        RotDir = HitFX[SimHitFxTicker].RotDir;
+
+        // If no gore is enabled we skip any effects for player being gibbed, blood spurting or severed limbs
+        // Blood was previously subject to a separate NoBlood() check, but in RO/DH it serves no different purpose as gore setting gets forced to either full or no gore
+        if (!class'GameInfo'.static.UseLowGore())
         {
-            SpawnGibs(HitFX[SimHitFxTicker].rotDir, 0.0);
-            bGibbed = true;
-            Destroy();
-
-            return;
-        }
-
-        BoneCoords = GetBoneCoords(HitFX[SimHitFxTicker].Bone);
-
-        if (!Level.bDropDetail && !class'GameInfo'.static.NoBlood())
-        {
-            AttachEffect(BleedingEmitterClass, HitFX[SimHitFxTicker].Bone, BoneCoords.Origin, HitFX[SimHitFxTicker].rotDir);
-        }
-
-        if (class'GameInfo'.static.UseLowGore())
-        {
-            HitFX[SimHitFxTicker].bSever = false;
-        }
-
-        if (HitFX[SimHitFxTicker].bSever)
-        {
-            GibPerterbation = HitFX[SimHitFxTicker].damtype.default.GibPerterbation;
-
-            switch (HitFX[SimHitFxTicker].Bone)
+            // A passed BoneName 'obliterate' causes player to be completely gibbed (& we go no further here)
+            if (BoneName == 'obliterate')
             {
-                case 'obliterate':
-                    break;
+                SpawnGibs(RotDir, 0.0);
+                bGibbed = true;
+                Destroy();
 
-                case 'lthigh':
-                case 'lupperthigh':
-                    if (!bLeftLegGibbed)
-                    {
-                        SpawnGiblet(DetachedLegClass, BoneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
-                        bLeftLegGibbed = true;
-                    }
-                    break;
-
-                case 'rthigh':
-                case 'rupperthigh':
-                    if (!bRightLegGibbed)
-                    {
-                        SpawnGiblet(DetachedLegClass, BoneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
-                        bRightLegGibbed = true;
-                    }
-                    break;
-
-                case 'lfarm':
-                case 'lupperarm':
-                    if (!bLeftArmGibbed)
-                    {
-                        SpawnGiblet(DetachedArmClass, BoneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
-                        bLeftArmGibbed = true;
-                    }
-                    break;
-
-                case 'rfarm':
-                case 'rupperarm':
-                    if (!bRightArmGibbed)
-                    {
-                        SpawnGiblet(DetachedArmClass, BoneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
-                        bRightArmGibbed = true;
-                    }
-                    break;
+                return;
             }
 
-            if (HitFX[SimHitFXTicker].Bone != 'Spine' && HitFX[SimHitFXTicker].Bone != 'UpperSpine')
+            BoneLocation = GetBoneCoords(BoneName).Origin;
+
+            // Show blood spurting from body's hit location
+            if (!Level.bDropDetail && BoneName != '')
             {
-                HideBone(HitFX[SimHitFxTicker].Bone);
+                AttachEffect(BleedingEmitterClass, BoneName, BoneLocation, RotDir);
+            }
+
+            // Spawn a severed limb if that's indicated (& allowed)
+            if (HitFX[SimHitFxTicker].bSever)
+            {
+                switch (BoneName)
+                {
+                    case 'lthigh':
+                    case 'lupperthigh':
+                        if (!bLeftLegGibbed)
+                        {
+                            SeveredLimbClass = DetachedLegClass;
+                            bLeftLegGibbed = true;
+                        }
+                        break;
+
+                    case 'rthigh':
+                    case 'rupperthigh':
+                        if (!bRightLegGibbed)
+                        {
+                            SeveredLimbClass = DetachedLegClass;
+                            bRightLegGibbed = true;
+                        }
+                        break;
+
+                    case 'lfarm':
+                    case 'lupperarm':
+                        if (!bLeftArmGibbed)
+                        {
+                            SeveredLimbClass = DetachedArmClass;
+                            bLeftArmGibbed = true;
+                        }
+                        break;
+
+                    case 'rfarm':
+                    case 'rupperarm':
+                        if (!bRightArmGibbed)
+                        {
+                            SeveredLimbClass = DetachedArmClass;
+                            bRightArmGibbed = true;
+                        }
+                        break;
+                }
+
+                if (SeveredLimbClass != none)
+                {
+                    GibPerterbation = HitFX[SimHitFxTicker].DamType.default.GibPerterbation;
+                    SpawnGiblet(SeveredLimbClass, BoneLocation, RotDir, GibPerterbation);
+                    HideBone(BoneName);
+                }
             }
         }
 
-        if (HitFX[SimHitFXTicker].Bone == 'head' && Headgear != none)
+        // Hit to the head knocks off any headgear, with an impact sound
+        if (BoneName == 'head' && Headgear != none)
         {
-            if (DHHeadgear(HeadGear).bIsHelmet)
+            if (Headgear.IsA('DHHeadgear') && DHHeadgear(Headgear).bIsHelmet)
             {
                 if (HitDamageType != none && HitDamageType.default.HumanObliterationThreshhold == 1000001)
                 {
-                    DHHeadgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_None, 2.0,, 8,, true);
+                    Headgear.PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_None, 2.0,, 8,, true);
                 }
                 else
                 {
-                    DHHeadgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_None, RandRange(100.0, 150.0),, 80,, true);
+                    Headgear.PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_None, RandRange(100.0, 150.0),, 80,, true);
                 }
             }
 
-            HelmetShotOff(HitFX[SimHitFxTicker].rotDir);
+            HelmetShotOff(RotDir);
         }
     }
 }
