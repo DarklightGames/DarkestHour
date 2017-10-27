@@ -11,17 +11,15 @@ const   MinPenetrateVelocity = 163;
 
 var     class<ROHitEffect>  ImpactEffect;
 var     class<ROBulletWhiz> WhizSoundEffect;
-var     class<DamageType>   MyVehicleDamage;
-
-var     int             WhizType;
-var     float           VehiclePenetrateSoundVolume;
-var     float           VehicleDeflectSoundVolume;
+var     int                 WhizType;
+var     float               VehiclePenetrateSoundVolume;
+var     float               VehicleDeflectSoundVolume;
 
 // Tracers
-var     class<Emitter>  TracerEffectClass;
-var     Emitter         TracerEffect;
-var     StaticMesh      DeflectedMesh;
-var     float           TracerPullback;
+var     class<Emitter>      TracerEffectClass;
+var     Emitter             TracerEffect;
+var     StaticMesh          DeflectedMesh;
+var     float               TracerPullback;
 
 // Modified to set tracer properties if this is a tracer bullet (from DHBullet)
 simulated function PostNetBeginPlay()
@@ -416,18 +414,10 @@ simulated function HitWall(vector HitNormal, Actor Wall)
                     }
                 }
             }
-            else
+            else if (Vehicle(Wall) != none || ROVehicleWeapon(Wall) != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
             {
                 UpdateInstigator();
-
-                if (ROVehicle(Wall) != none) // have to use special damage for vehicles, otherwise it doesn't register for some reason
-                {
-                    Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyVehicleDamage);
-                }
-                else if (Mover(Wall) != none || RODestroyableStaticMesh(Wall) != none || Vehicle(Wall) != none || ROVehicleWeapon(Wall) != none)
-                {
-                    Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyDamageType);
-                }
+                Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyDamageType);
             }
 
             MakeNoise(1.0);
@@ -556,7 +546,6 @@ defaultproperties
     LifeSpan=5.0
     DestroyTime=0.1
     bBotNotifyIneffective=false
-    MyVehicleDamage=class'DH_Engine.DHVehicleDamageType'
 
     // Tracer properties (won't affect ordinary bullet):
     DrawScale=2.0

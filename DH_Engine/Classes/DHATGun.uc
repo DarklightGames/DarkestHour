@@ -104,7 +104,7 @@ simulated function DisplayVehicleMessage(int MessageNumber, optional Pawn P, opt
 // Also removes other stuff not relevant to a static AT gun (engine & tread stuff & stopping 'vehicle' giving itself impact damage)
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
-    local float VehicleDamageMod;
+    local float DamageModifier;
     local int   i;
 
     // Suicide/self-destruction
@@ -115,18 +115,13 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         return;
     }
 
-    // Set damage modifier from the DamageType
+    // Apply damage modifier from the DamageType, plus a little damage randomisation
     if (class<ROWeaponDamageType>(DamageType) != none)
     {
-        VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier;
-    }
-    else if (class<ROVehicleDamageType>(DamageType) != none)
-    {
-        VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.APCDamageModifier;
+        DamageModifier = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier * RandRange(0.75, 1.08);
     }
 
-    // Add in the DamageType's vehicle damage modifier & a little damage randomisation
-    Damage *= (VehicleDamageMod * RandRange(0.75, 1.08));
+    Damage *= DamageModifier;
 
     // Exit if no damage
     if (Damage < 1)

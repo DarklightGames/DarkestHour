@@ -12,5 +12,4 @@ defaultproperties
     WhizType=2
     Damage=55.0
     MyDamageType=class'DH_Weapons.DH_P38DamType'
-    MyVehicleDamage=class'DH_Weapons.DH_P38VehDamType'
 }

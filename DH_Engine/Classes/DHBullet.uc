@@ -41,7 +41,6 @@ const       MinPenetrateVelocity = 163;              // minimum bullet speed in 
 var         class<ROHitEffect>      ImpactEffect;    // effect to spawn when bullets hits something other than a vehicle (handles sound & visual effect)
 var         class<ROBulletWhiz>     WhizSoundEffect; // bullet whip sound effect class
 var         class<Actor>            SplashEffect;    // water splash effect class
-var         class<DamageType>       MyVehicleDamage; // stupid hack we need because TakeDamage doesn't like our ROWeaponDamage for vehicles // TODO: probably unnecessary & removable
 var         Actor                   WallHitActor;    // internal var used for storing the wall that was hit so the same wall doesn't get hit again
 
 // Modified to move bDebugBallistics stuff to PostNetBeginPlay, as net client won't yet have Instigator here
@@ -514,18 +513,10 @@ simulated function HitWall(vector HitNormal, Actor Wall)
                     }
                 }
             }
-            else
+            else if (Vehicle(Wall) != none || ROVehicleWeapon(Wall) != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
             {
                 UpdateInstigator();
-
-                if (ROVehicle(Wall) != none) // have to use special damage for vehicles, otherwise it doesn't register for some reason // TODO: check whether this is necessary
-                {
-                    Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyVehicleDamage);
-                }
-                else if (Mover(Wall) != none || RODestroyableStaticMesh(Wall) != none || Vehicle(Wall) != none || ROVehicleWeapon(Wall) != none)
-                {
-                    Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyDamageType);
-                }
+                Wall.TakeDamage(Damage - (20.0 * (1.0 - (VSize(Velocity) / default.Speed))), Instigator, Location, MomentumTransfer * Normal(Velocity), MyDamageType);
             }
 
             MakeNoise(1.0);
@@ -805,5 +796,4 @@ defaultproperties
     MomentumTransfer=100.0
     TossZ=0.0
     SplashEffect=class'ROEffects.ROBulletHitWaterEffect'
-    MyVehicleDamage=class'DH_Engine.DHVehicleDamageType'
 }

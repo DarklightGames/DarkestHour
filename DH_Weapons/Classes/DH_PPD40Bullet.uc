@@ -12,5 +12,4 @@ defaultproperties
     WhizType=2
     Damage=55.0
     MyDamageType=class'DH_Weapons.DH_PPD40DamType'
-    MyVehicleDamage=class'DH_Weapons.DH_PPD40VehDamType'
 }

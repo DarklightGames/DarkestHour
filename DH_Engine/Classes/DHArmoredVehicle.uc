@@ -1537,9 +1537,10 @@ simulated static function bool CheckIfShatters(DHAntiVehicleProjectile P, float 
 // Also to use TankDamageModifier instead of VehicleDamageModifier (unless an APC)
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
-    local DHVehicleCannonPawn CannonPawn;
+    local class<ROWeaponDamageType> WepDamageType;
+    local DHVehicleCannonPawn       CannonPawn;
     local Controller InstigatorController;
-    local float      VehicleDamageMod, TreadDamageMod, HullChanceModifier, TurretChanceModifier;
+    local float      DamageModifier, TreadDamageMod, HullChanceModifier, TurretChanceModifier;
     local int        InstigatorTeam, i;
     local bool       bEngineStoppedProjectile, bAmmoDetonation;
 
@@ -1587,49 +1588,32 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         }
     }
 
-    // Set damage modifiers from the DamageType, based on type of vehicle
-    if (class<ROWeaponDamageType>(DamageType) != none)
+    // Apply damage modifier from the DamageType, plus a little damage randomisation (but not randomised for fire damage as it messes up timings)
+    WepDamageType = class<ROWeaponDamageType>(DamageType);
+
+    if (WepDamageType != none)
     {
         if (bIsApc)
         {
-            VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier;
+            DamageModifier = WepDamageType.default.APCDamageModifier;
         }
         else
         {
-            VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.TankDamageModifier;
+            DamageModifier = WepDamageType.default.TankDamageModifier;
+        }
+
+        if (DamageType != VehicleBurningDamType)
+        {
+            DamageModifier *= RandRange(0.75, 1.08);
         }
 
         if (bHasTreads)
         {
-            TreadDamageMod = class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier;
-        }
-    }
-    else if (class<ROVehicleDamageType>(DamageType) != none)
-    {
-        if (bIsApc)
-        {
-            VehicleDamageMod  = class<ROVehicleDamageType>(DamageType).default.APCDamageModifier;
-        }
-        else
-        {
-            VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.TankDamageModifier;
-        }
-
-        if (bHasTreads)
-        {
-            TreadDamageMod = class<ROVehicleDamageType>(DamageType).default.TreadDamageModifier;
+            TreadDamageMod = WepDamageType.default.TreadDamageModifier;
         }
     }
 
-    // Add in the DamageType's vehicle damage modifier & a little damage randomisation (but not for fire damage as it messes up timings)
-    if (DamageType != VehicleBurningDamType)
-    {
-        Damage *= (VehicleDamageMod * RandRange(0.75, 1.08));
-    }
-    else
-    {
-        Damage *= VehicleDamageMod;
-    }
+    Damage *= DamageModifier;
 
     // Exit if no damage
     if (Damage < 1)

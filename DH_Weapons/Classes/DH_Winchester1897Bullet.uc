@@ -11,5 +11,4 @@ defaultproperties
     BallisticCoefficient=0.04
     Damage=48
     MyDamageType=class'DH_Weapons.DH_Winchester1897DamType'
-    MyVehicleDamage=class'DH_Weapons.DH_Winchester1897VehDamType'
 }

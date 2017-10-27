@@ -11,5 +11,4 @@ defaultproperties
     BallisticCoefficient=0.39
     Damage=115.0
     MyDamageType=class'DH_Weapons.DH_BrenDamType'
-    MyVehicleDamage=class'DH_Weapons.DH_BrenVehDamType'
 }

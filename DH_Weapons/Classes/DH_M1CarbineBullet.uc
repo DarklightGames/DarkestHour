@@ -11,5 +11,4 @@ defaultproperties
     BallisticCoefficient=0.168
     Damage=75.0
     MyDamageType=class'DH_Weapons.DH_M1CarbineDamType'
-    MyVehicleDamage=class'DH_Weapons.DH_M1CarbineVehDamType'
 }

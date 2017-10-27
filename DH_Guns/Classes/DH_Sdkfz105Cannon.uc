@@ -20,7 +20,7 @@ simulated function InitializeVehicleBase()
 // Problem is in DHProjectileFire's pre-launch trace functionality, which requires some more work to make it match a spawned bullet's richer functionality
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
-    if (DamageType != none && (ClassIsChildOf(DamageType, class'DHWeaponProjectileDamageType') || ClassIsChildOf(DamageType, class'DHVehicleDamageType')))
+    if (DamageType != none && ClassIsChildOf(DamageType, class'DHWeaponProjectileDamageType'))
     {
         return;
     }

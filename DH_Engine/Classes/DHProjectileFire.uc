@@ -274,8 +274,8 @@ function bool PreLaunchTrace(vector Start, vector Direction)
 {
     local Actor           Other, A;
     local DHPawn          HitPlayer, WhizzedPlayer;
-    local vector          HitLocation, HitPlayerLocation, TempHitLocation, HitNormal, Momentum;
-    local int             WhizType, Damage, i;
+    local vector          HitLocation, HitPlayerLocation, TempHitLocation, HitNormal;
+    local int             WhizType, i;
     local array<int>      HitPoints;
     local array<WhizInfo> SavedWhizzes;
 
@@ -455,23 +455,15 @@ function bool PreLaunchTrace(vector Start, vector Direction)
     }
 
     // Finally handle damage on whatever we've hit
-    Damage = ProjectileClass.default.Damage;
-    Momentum = ProjectileClass.default.MomentumTransfer * Direction;
-
     if (HitPlayer != none)
     {
-        HitPlayer.ProcessLocationalDamage(Damage, Instigator, HitLocation, Momentum, ProjectileClass.default.MyDamageType, HitPoints);
+        HitPlayer.ProcessLocationalDamage(ProjectileClass.default.Damage, Instigator, HitLocation,
+            ProjectileClass.default.MomentumTransfer * Direction, ProjectileClass.default.MyDamageType, HitPoints);
     }
-    else if (!bTraceHitBulletProofColMesh)
+    else if ((!Other.bWorldGeometry || Other.IsA('RODestroyableStaticMesh')) && !bTraceHitBulletProofColMesh)
     {
-        if (Other.IsA('ROVehicle') && class<DHBullet>(ProjectileClass) != none)
-        {
-            Other.TakeDamage(Damage, Instigator, HitLocation, Momentum, class<DHBullet>(ProjectileClass).default.MyVehicleDamage); // only difference is using special vehicle DamageType
-        }
-        else if (!Other.bWorldGeometry || Other.IsA('RODestroyableStaticMesh'))
-        {
-            Other.TakeDamage(Damage, Instigator, HitLocation, Momentum, ProjectileClass.default.MyDamageType);
-        }
+        Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation,
+            ProjectileClass.default.MomentumTransfer * Direction, ProjectileClass.default.MyDamageType);
     }
 
     return true;

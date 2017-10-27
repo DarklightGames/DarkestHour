@@ -1821,8 +1821,9 @@ simulated function StopEmitters()
 // Modified to handle possible tread damage, to add randomised damage, & to add engine fire to APCs
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
+    local class<ROWeaponDamageType> WepDamageType;
     local Controller InstigatorController;
-    local float      VehicleDamageMod, TreadDamageMod;
+    local float      DamageModifier, TreadDamageMod;
     local int        InstigatorTeam, i;
 
     // Suicide/self-destruction
@@ -1863,42 +1864,29 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         }
     }
 
-    // Set damage modifier from the DamageType, based on type of vehicle
-    if (class<ROWeaponDamageType>(DamageType) != none)
+    // Apply damage modifier from the DamageType, plus a little damage randomisation
+    WepDamageType = class<ROWeaponDamageType>(DamageType);
+
+    if (WepDamageType != none)
     {
         if (bIsApc)
         {
-            VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier;
+            DamageModifier = WepDamageType.default.APCDamageModifier;
         }
         else
         {
-            VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier;
+            DamageModifier = WepDamageType.default.VehicleDamageModifier;
         }
+
+        DamageModifier *= RandRange(0.75, 1.08);
 
         if (bHasTreads)
         {
-            TreadDamageMod = class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier;
-        }
-    }
-    else if (class<ROVehicleDamageType>(DamageType) != none)
-    {
-        if (bIsApc)
-        {
-            VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.APCDamageModifier;
-        }
-        else
-        {
-            VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.VehicleDamageModifier;
-        }
-
-        if (bHasTreads)
-        {
-            TreadDamageMod = class<ROVehicleDamageType>(DamageType).default.TreadDamageModifier;
+            TreadDamageMod = WepDamageType.default.TreadDamageModifier;
         }
     }
 
-    // Add in the DamageType's vehicle damage modifier & a little damage randomisation
-    Damage *= (VehicleDamageMod * RandRange(0.75, 1.08));
+    Damage *= DamageModifier;
 
     // Exit if no damage
     if (Damage < 1)
