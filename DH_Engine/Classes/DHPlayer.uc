@@ -5619,6 +5619,19 @@ exec function GiveCamera()
     Pawn.GiveWeapon("DH_Construction.DHCameraWeapon");
 }
 
+// Functions emptied out as RO/DH doesn't use a LocalStatsScreen actor & these aren't used
+function ServerUpdateStats(TeamPlayerReplicationInfo PRI);
+function ServerUpdateStatArrays(TeamPlayerReplicationInfo PRI);
+function ServerGetNextWeaponStats(TeamPlayerReplicationInfo PRI, int i);
+function ServerGetNextVehicleStats(TeamPlayerReplicationInfo PRI, int i);
+simulated function ClientSendWeapon(TeamPlayerReplicationInfo PRI, class<Weapon> W, int Kills, int Deaths, int DeathsHolding, int i);
+simulated function ClientSendVehicle(TeamPlayerReplicationInfo PRI, class<Vehicle> V, int Kills, int Deaths, int DeathsDriving, int i);
+simulated function ClientSendSprees(TeamPlayerReplicationInfo PRI,byte Spree0,byte Spree1,byte Spree2,byte Spree3,byte Spree4,byte Spree5);
+simulated function ClientSendMultiKills(TeamPlayerReplicationInfo PRI, byte MultiKills0, byte MultiKills1, byte MultiKills2, byte MultiKills3, byte MultiKills4, byte MultiKills5, byte MultiKills6);
+simulated function ClientSendCombos(TeamPlayerReplicationInfo PRI,byte Combos0, byte Combos1, byte Combos2, byte Combos3, byte Combos4);
+simulated function ClientSendStats(TeamPlayerReplicationInfo PRI, int NewGoals, bool bNewFirstBlood, int Newkills, int NewSuicides,
+    int NewFlagTouches, int NewFlagReturns, int NewFlakCount, int NewComboCount, int NewHeadCount, int NewRanOverCount);
+
 defaultproperties
 {
     CorpseStayTime=32

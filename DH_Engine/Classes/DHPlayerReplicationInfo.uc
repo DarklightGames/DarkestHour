@@ -68,6 +68,16 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
     }
 }
 
+// Functions emptied out as RO/DH doesn't use a LocalStatsScreen actor, so all of this is just recording pointless information throughout each round
+function AddWeaponKill(class<DamageType> D);
+function AddVehicleKill(class<VehicleDamageType> D);
+function AddWeaponDeath(class<DamageType> D);
+function AddWeaponDeathHolding(class<Weapon> W);
+function AddVehicleDeath(class<DamageType> D);
+function AddVehicleDeathDriving(class<Vehicle> V);
+simulated function UpdateWeaponStats(TeamPlayerReplicationInfo PRI, class<Weapon> W, int NewKills, int NewDeaths, int NewDeathsHolding);
+simulated function UpdateVehicleStats(TeamPlayerReplicationInfo PRI, class<Vehicle> V, int NewKills, int NewDeaths, int NewDeathsDriving);
+
 defaultproperties
 {
     SquadIndex=-1

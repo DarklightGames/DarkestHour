@@ -2191,6 +2191,21 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
     UpdatePlayerScore(Killed);
 }
 
+// Modified to remove all AddWeaponKill() & AddWeaponDeath() calls
+// They're only relevant to a LocalStatsScreen actor, which isn't used in RO/DH , so it would just record pointless information throughout each round
+function KillEvent(string Killtype, PlayerReplicationInfo Killer, PlayerReplicationInfo Victim, class<DamageType> Damage)
+{
+    if ((Killer == none || Killer == Victim) && TeamPlayerReplicationInfo(Victim) != none)
+    {
+        TeamPlayerReplicationInfo(Victim).Suicides++;
+    }
+
+    if (GameStats != none)
+    {
+        GameStats.KillEvent(KillType, Killer, Victim, Damage);
+    }
+}
+
 function UpdateAllPlayerScores()
 {
     local DHPlayerReplicationInfo   PRI;
