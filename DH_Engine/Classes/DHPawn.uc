@@ -32,7 +32,6 @@ var     bool    bReversedSkinsSlots;      // some player meshes have the typical
                                           // TODO: fix the reversed skins indexing in player meshes to standardise with body is 0 & face is 1 (as in RO), then delete this
 var     string  ShovelClassName;          // name of shovel class, so can be set for different nations (string name not class, due to build order)
 var     bool    bShovelHangsOnLeftHip;    // shovel hangs on player's left hip, which is the default position - otherwise it goes on player's backpack (e.g. US shovel)
-var     bool    bHatShotOff;              // records that player's helmet/headgear has been knocked off by a bullet impact
 
 // Mortars
 var     Actor   OwnedMortar;              // mortar vehicle associated with this actor, used to destroy mortar when player dies
@@ -673,36 +672,35 @@ simulated event AnimEnd(int Channel)
     }
 }
 
-simulated function HelmetShotOff(rotator Rotation)
+// Modified to match dropped helmet mesh skin to original helmet skin, including a burned overlay if player is on fire
+// Slight re-factor for clarity
+simulated function HelmetShotOff(rotator RotDir)
 {
-    local DroppedHeadgear Hat;
+    local DroppedHeadgear DroppedHelmet;
 
     if (Headgear == none)
     {
         return;
     }
 
-    Hat = Spawn(class'DroppedHeadGear',,, Headgear.Location, Headgear.Rotation);
+    DroppedHelmet = Spawn(class'DroppedHeadGear',,, Headgear.Location, Headgear.Rotation);
 
-    if (Hat == none)
+    if (DroppedHelmet != none)
     {
-        return;
+        DroppedHelmet.LinkMesh(Headgear.Mesh);
+        DroppedHelmet.Skins[0] = Headgear.Skins[0];
+
+        if (bOnFire)
+        {
+            DroppedHelmet.SetOverlayMaterial(BurnedHeadgearOverlayMaterial, 999.0, true);
+        }
+
+        DroppedHelmet.Velocity = Velocity + vector(RotDir) * (DroppedHelmet.MaxSpeed * (1.0 + FRand() * 0.5));
+        DroppedHelmet.LifeSpan -= (FRand() * 2.0);
+
+        Headgear.Destroy();
+        HeadgearClass = none; // server should replicate this but let's make sure by setting it immediately
     }
-
-    Hat.LinkMesh(HeadGear.Mesh);
-    Hat.Skins[0] = Headgear.Skins[0];
-
-    if (bOnFire)
-    {
-        Hat.SetOverlayMaterial(BurnedHeadgearOverlayMaterial, 999.0, true);
-    }
-
-    HeadGear.Destroy();
-
-    Hat.Velocity = Velocity + vector(Rotation) * (Hat.MaxSpeed + (Hat.MaxSpeed / 2.0) * FRand());
-    Hat.LifeSpan = Hat.LifeSpan + 2.0 * FRand() - 1.0;
-
-    bHatShotOff = true;
 }
 
 function name GetWeaponBoneFor(Inventory I)
@@ -1067,6 +1065,172 @@ simulated function ToggleAuxCollision(bool bEnabled)
     if (AuxCollisionCylinder != none)
     {
         AuxCollisionCylinder.SetCollision(bEnabled, false);
+    }
+}
+
+// Modified so server sets HeadgearClass to none if player takes a hit to the head & survives, which in DH knocks any headgear off (happens in ProcessHitFX)
+// Clearing HeadgearClass stops client from re-spawning player's original headgear if he gets re-replicated & re-spawned on another net client, after dropping out of network relevancy
+// Also re-factored to optimise & make clearer
+function DoDamageFX(name BoneName, int Damage, class<DamageType> DamageType, rotator RotDir)
+{
+    local float       DismemberProbability;
+    local int         RandomBone, i;
+    local bool        bSever;
+    local array<name> SeveredLimbs;
+
+    if (DamageType != none && (Damage > 30 || Health <= 0 || FRand() > 0.3))
+    {
+        // If hit player is dead
+        if (Health <= 0)
+        {
+            // Get bone name for hit effects
+            if (Damage > DamageType.default.HumanObliterationThreshhold && Damage != 1000)
+            {
+                BoneName = 'obliterate';
+            }
+            else
+            {
+                switch(BoneName)
+                {
+                    case 'lfoot':
+                    case 'lthigh':
+                    case 'lupperthigh':
+                        BoneName = 'lthigh';
+                        break;
+
+                    case 'rfoot':
+                    case 'rthigh':
+                    case 'rupperthigh':
+                        BoneName = 'rthigh';
+                        break;
+
+                    case 'lhand':
+                    case 'lfarm':
+                    case 'lupperarm':
+                    case 'lshoulder':
+                        BoneName = 'lfarm';
+                        break;
+
+                    case 'rhand':
+                    case 'rfarm':
+                    case 'rupperarm':
+                    case 'rshoulder':
+                        BoneName = 'rfarm';
+                        break;
+
+                    case 'None':
+                        BoneName = 'spine';
+                        break;
+                }
+            }
+
+            // Check whether a body part should be severed
+            if (!class'GameInfo'.static.UseLowGore())
+            {
+                if (DamageType.default.bAlwaysSevers || Damage == 1000)
+                {
+                    bSever = true;
+                }
+                else if (DamageType.default.GibModifier > 0.0)
+                {
+                    DismemberProbability = Abs((Health - (Damage * DamageType.default.GibModifier)) / 130.0);
+                    bSever = DismemberProbability >= 1.0 || FRand() < DismemberProbability;
+                }
+
+                // If severing a limb & the hit is to the head or spine, switch our bone to a random limb
+                // Added head to this list as in ROPawn sending 'head' with bSever caused helmet to be shot off, but in DH any head hit knocks headgear off
+                // So in DH sending 'head' is pointless & does nothing, as the action has been removed from the severed bone list in ProcessHitFX
+                if (bSever && !DamageType.default.bLocationalHit && (BoneName == 'head' || BoneName == 'Spine' || BoneName == 'Upperspine'))
+                {
+                    RandomBone = Rand(4);
+
+                    switch (RandomBone)
+                    {
+                        case 0:
+                            BoneName = 'lthigh';
+                            break;
+                        case 1:
+                            BoneName = 'rthigh';
+                            break;
+                        case 2:
+                            BoneName = 'lfarm';
+                            break;
+                        case 3:
+                            BoneName = 'rfarm';
+                            break;
+                        default:
+                            BoneName = 'lthigh';
+                    }
+                }
+            }
+        }
+        // If player is still alive, a hit to the head will knock off any headgear, so set replicated HeadgearClass to none
+        else if (BoneName == 'head' && HeadgearClass != none)
+        {
+            HeadgearClass = none;
+        }
+
+        // Now set the replicated HitFX properties & increment the replicated HitFxTicker counter to trigger ProcessHitFX() on all modes
+        HitFX[HitFxTicker].DamType = DamageType;
+        HitFX[HitFxTicker].Bone = BoneName;
+        HitFX[HitFxTicker].bSever = bSever;
+        HitFX[HitFxTicker].RotDir = RotDir;
+
+        HitFxTicker = ++HitFxTicker % arraycount(HitFX); // increment counter, looping back to 0 if reached end
+
+        // If this was really hardcore damage from an explosion, also add some random extra 'hits' that may generate extra severed limbs
+        if (bSever && !DamageType.default.bLocationalHit && Damage > 200 && Damage != 1000)
+        {
+            if ((Damage > 400 && FRand() < 0.3) || FRand() < 0.1 )
+            {
+                SeveredLimbs[SeveredLimbs.Length] = 'head';
+                SeveredLimbs[SeveredLimbs.Length] = 'lthigh';
+                SeveredLimbs[SeveredLimbs.Length] = 'rthigh';
+                SeveredLimbs[SeveredLimbs.Length] = 'lfarm';
+                SeveredLimbs[SeveredLimbs.Length] = 'rfarm';
+            }
+            else if (FRand() < 0.25)
+            {
+                SeveredLimbs[SeveredLimbs.Length] = 'lthigh';
+                SeveredLimbs[SeveredLimbs.Length] = 'rthigh';
+
+                if (FRand() < 0.5)
+                {
+                    SeveredLimbs[SeveredLimbs.Length] = 'lfarm';
+                }
+                else
+                {
+                    SeveredLimbs[SeveredLimbs.Length] = 'rfarm';
+                }
+            }
+            else if (FRand() < 0.35)
+            {
+                SeveredLimbs[SeveredLimbs.Length] = 'lthigh';
+            }
+            else if (FRand() < 0.5)
+            {
+                SeveredLimbs[SeveredLimbs.Length] = 'rthigh';
+            }
+            else if (FRand() < 0.75)
+            {
+                if (FRand() < 0.5)
+                {
+                    SeveredLimbs[SeveredLimbs.Length] = 'lfarm';
+                }
+                else
+                {
+                    SeveredLimbs[SeveredLimbs.Length] = 'rfarm';
+                }
+            }
+
+            for (i = 0; i < SeveredLimbs.Length; ++i)
+            {
+                if (SeveredLimbs[i] != BoneName) // if same as our BoneName then skip, as we've already caused this limb to be severed
+                {
+                    DoDamageFX(SeveredLimbs[i], 1000, DamageType, RotDir);
+                }
+            }
+        }
     }
 }
 
