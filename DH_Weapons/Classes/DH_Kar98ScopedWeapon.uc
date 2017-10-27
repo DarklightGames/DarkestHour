@@ -5,7 +5,7 @@
 
 class DH_Kar98ScopedWeapon extends DHBoltSniperWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Kar98_1stt.ukx
+#exec OBJ LOAD FILE=..\Animations\DH_Kar98_1st.ukx
 
 defaultproperties
 {
