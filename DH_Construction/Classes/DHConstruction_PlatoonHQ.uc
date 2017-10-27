@@ -217,6 +217,6 @@ defaultproperties
     FriendlyFireDamageScale=0.0
 
     ObjectiveDistanceMinMeters=100
-    EnemyObjectiveDistanceMinMeters=200
+    EnemyObjectiveDistanceMinMeters=150
 }
 
