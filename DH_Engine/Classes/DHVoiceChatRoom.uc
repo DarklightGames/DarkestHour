@@ -5,31 +5,26 @@
 
 class DHVoiceChatRoom extends UnrealChatRoom;
 
-var int SquadIndex;
-var float LocalBroadcastRangeSquared;
+var     int     SquadIndex;
+var     float   LocalBroadcastRangeSquared;
 
 // Called after LeaveChannel, or when player exits the server
-// NOTE: overridden to eliminate "has left channel" chat messages
+// NOTE: overridden to eliminate "has left channel" chat messages, & also to allow more than 32 VoiceIDs
 function RemoveMember(PlayerReplicationInfo PRI)
 {
-    if (PRI != none && PRI.VoiceID < 255 && IsMember(PRI, true))
+    if (PRI != none && PRI.VoiceID != 255 && IsMember(PRI, true))
     {
         SetMask(GetMask() & ~(1 << PRI.VoiceID));
     }
 }
 
-// I think I may have fixed the >64 players voice chat bug!!!
+// I think I may have fixed the >64 players voice chat bug!!! (allow more than 32 VoiceIDs)
 function AddMember(PlayerReplicationInfo PRI)
 {
-    local int                           i;
-    local array<PlayerReplicationInfo>  Members;
+    local array<PlayerReplicationInfo> Members;
+    local int                          i;
 
-    if (IsMember(PRI))
-    {
-        return;
-    }
-
-    if (PRI == none || PRI.VoiceID >= 255)
+    if (PRI == none || PRI.VoiceID == 255 || IsMember(PRI))
     {
         return;
     }
@@ -38,6 +33,7 @@ function AddMember(PlayerReplicationInfo PRI)
     {
         // Notify all members of this channel that the player has joined the channel
         Members = GetMembers();
+
         for (i = 0; i < Members.Length; ++i)
         {
             if (Members[i] != none && PlayerController(Members[i].Owner) != none)
@@ -49,7 +45,7 @@ function AddMember(PlayerReplicationInfo PRI)
 
     SetMask(GetMask() | (1 << PRI.VoiceID));
 
-    Super(VoiceChatRoom).AddMember(PRI);
+    super(VoiceChatRoom).AddMember(PRI);
 }
 
 simulated function bool IsSquadChannel()
@@ -74,10 +70,10 @@ simulated function bool IsUnassignedChannel()
 
 simulated event bool IsMember(PlayerReplicationInfo PRI, optional bool bNoCascade)
 {
-    local DHPlayerReplicationInfo   MyPRI;
-    local Pawn                      OwnerPawn, CheckPawn;
-    local PlayerController          OwnerPC;
-    local PlayerReplicationInfo     OwnerPRI;
+    local DHPlayerReplicationInfo MyPRI;
+    local PlayerReplicationInfo   OwnerPRI;
+    local PlayerController        OwnerPC;
+    local Pawn                    OwnerPawn, CheckPawn;
 
     MyPRI = DHPlayerReplicationInfo(PRI);
 
@@ -103,21 +99,20 @@ simulated event bool IsMember(PlayerReplicationInfo PRI, optional bool bNoCascad
             // Okay this channel is a private channel, which means it has an owner, which then we can compare team with
             // Then we can compare distance between pawns (and that they have pawns)
 
-            // Begin establishing the Owner variables and do null checks
+            // Begin establishing the Owner variables and exit if we can't get them
             OwnerPRI = PlayerReplicationInfo(Owner);
 
             if (OwnerPRI != none)
             {
                 OwnerPC = PlayerController(OwnerPRI.Owner);
+
+                if (OwnerPC != none)
+                {
+                    OwnerPawn = OwnerPC.Pawn;
+                }
             }
 
-            if (OwnerPC != none)
-            {
-                OwnerPawn = OwnerPC.Pawn;
-            }
-
-            // Check for null variables
-            if (OwnerPRI == none || OwnerPC == none || OwnerPawn == none)
+            if (OwnerPawn == none)
             {
                 return false;
             }
@@ -144,8 +139,8 @@ simulated event bool IsMember(PlayerReplicationInfo PRI, optional bool bNoCascad
 
 simulated function array<PlayerReplicationInfo> GetMembers()
 {
-    local array<PlayerReplicationInfo>      PRIArray;
-    local int                               i;
+    local array<PlayerReplicationInfo> PRIArray;
+    local int                          i;
 
     if (GRI != none)
     {
