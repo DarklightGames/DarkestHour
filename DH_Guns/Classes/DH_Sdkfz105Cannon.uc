@@ -16,13 +16,13 @@ simulated function InitializeVehicleBase()
     super.InitializeVehicleBase();
 }
 
-// Hacky fix to stop small arms fire hitting the mounted FlaK 38 from passed damage on to the small arms vulnerable vehicle base
-// Problem is in DHProjectileFire's pre-launch trace functionality, which requires some more work to make it match a spawned bullet's richer functionality
+// Modified to hack damage passed to vehicle base, as it ought to use APCDamageModifier for hit on an AT gun, but instead will use VehicleDamageModifier
+// Adjust damage so when vehicle base applies VehicleDamageModifier, result is the same as if it had applied APCDamageModifier to original damage
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
-    if (DamageType != none && ClassIsChildOf(DamageType, class'DHWeaponProjectileDamageType'))
+    if (class<ROWeaponDamageType>(DamageType) != none)
     {
-        return;
+        Damage = Round(float(Damage) * class<ROWeaponDamageType>(DamageType).default.APCDamageModifier / class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier);
     }
 
     super.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType, HitIndex);
