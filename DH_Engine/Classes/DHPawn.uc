@@ -175,9 +175,12 @@ simulated function PostBeginPlay()
 }
 
 // Modified to set up any random selection of body & face skins for the player mesh
+// Also to skip over the Super in ROPawn, so net client doesn't spawn a headgear or ammo pouch attachments, which instead is done in PostNetReceive()
+// That solves network timing problems as for player's own pawn this gets called before server has time to possess pawn & set & replicate its attachment classes
+// Also the bot squad/roster stuff (originally from UnrealPawn) is irrelevant in RO/DH, as Level.bStartup is never true (only applies to pawns placed in the level)
 simulated function PostNetBeginPlay()
 {
-    super.PostNetBeginPlay();
+    super(Pawn).PostNetBeginPlay();
 
     SetBodyAndFaceSkins();
 }
@@ -186,6 +189,8 @@ simulated function PostNetBeginPlay()
 // The functionality is now in a new SetUpPlayerModel() function to avoid code duplication, so see that function for explanatory comments
 // Also so we don't pointlessly try to check for the inventory of other players, as it won't get replicated to us anyway & the check is only relevant to player's own pawn
 // That resulted in all the other pawns doing this inventory loop check constantly throughout the round & so never setting bNetNotify false to disable PostNetReceive!
+// Also to spawn decorative attachments for any headgear or ammo pouches, instead of doing this in PostNetBeginPlay()
+// That solves network timing problems where PostNetBeginPlay() is called before server has time to possess pawn & set & replicate its attachment classes
 simulated function PostNetReceive()
 {
     local PlayerController PC;
@@ -272,8 +277,28 @@ simulated function PostNetReceive()
         }
     }
 
+    // Spawn decorative attachments for any headgear or ammo pouches when we receive the server's choice
+    if (Headgear == none && HeadgearClass != default.HeadgearClass && HeadgearClass != none)
+    {
+        Headgear = Spawn(HeadgearClass, self);
+    }
+
+    if (AmmoPouches.Length == 0 && AmmoPouchClasses[0] != default.AmmoPouchClasses[0] && AmmoPouchClasses[0] != none)
+    {
+        for (i = 0; i < ArrayCount(AmmoPouchClasses); i++)
+        {
+            if (AmmoPouchClasses[i] == none)
+            {
+                break;
+            }
+
+            AmmoPouches[AmmoPouches.Length] = Spawn(AmmoPouchClasses[i], self);
+        }
+    }
+
     // Disable PostNetReceive() notifications once we have initialised everything for this pawn
-    if (bInitializedPlayer && bInitializedWeaponAttachment && bRecievedInitialLoadout)
+    if (bInitializedPlayer && bInitializedWeaponAttachment && bRecievedInitialLoadout
+        && HeadgearClass != default.HeadgearClass && AmmoPouchClasses[0] != default.AmmoPouchClasses[0])
     {
         bNetNotify = false;
     }
@@ -400,9 +425,16 @@ function PossessedBy(Controller C)
 
             RI.GetAmmoPouches(AmmoClasses, PrimaryWeapon, SecondaryWeapon, GrenadeWeapon);
 
-            for (i = 0; i < AmmoClasses.Length; ++i)
+            if (AmmoClasses.Length > 0)
             {
-                AmmoPouchClasses[i] = AmmoClasses[i];
+                for (i = 0; i < AmmoClasses.Length; ++i)
+                {
+                    AmmoPouchClasses[i] = AmmoClasses[i];
+                }
+            }
+            else
+            {
+                AmmoPouchClasses[0] = none; // if no ammo pouch attachments, set 1st replicated array member to none (from default dummy class) so client detects the change
             }
 
             // Set classes for headgear & severed limbs, based on player's role
@@ -415,7 +447,7 @@ function PossessedBy(Controller C)
             // This is for standalones or listen server hosts; a net client does this is PostNetReceive() when the classes get replicated to it
             if (Level.NetMode != NM_DedicatedServer)
             {
-                if (HeadgearClass != none && Headgear == none && !bHatShotOff)
+                if (HeadgearClass != none && HeadgearClass != default.HeadgearClass && Headgear == none)
                 {
                     Headgear = Spawn(HeadgearClass, self);
                 }
@@ -6864,6 +6896,8 @@ defaultproperties
     TouchMessageClass=class'DHPawnTouchMessage'
     bAutoTraceNotify=true
     bCanAutoTraceSelect=true
+    HeadgearClass=class'ROEngine.ROHeadgear' // start with dummy abstract classes so server changes to either a spawnable class or to none; then net client can detect when its been set
+    AmmoPouchClasses(0)=class'ROEngine.ROAmmoPouch'
 
     // Movement & impacts
     WalkingPct=0.45
