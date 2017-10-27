@@ -783,7 +783,7 @@ simulated function bool ShouldBeWhizzed(optional bool bSkipLocallyControlledChec
 // New server-to-client replicated function, used by DHProjectileFire's pre-launch trace system for the server to play whiz/snap effects on clients
 simulated function ClientPawnWhizzed(vector WhizLocation, byte WhizType)
 {
-    if (WhizType != 0)
+    if (WhizType != 0 && Role < ROLE_Authority)
     {
         PawnWhizzed(WhizLocation, int(WhizType));
     }
