@@ -74,10 +74,6 @@ var     DHSquadReplicationInfo      SquadReplicationInfo;
 
 var()   config int                  EmptyTankUnlockTime;                    // Server config option for how long (secs) before unlocking a locked armored vehicle if abandoned by its crew
 
-// Patreon
-var     array<string>   PatronROIDs;
-var     HTTPRequest     PatronsRequest;
-
 // Overridden to make new clamp of MaxPlayers
 event InitGame(string Options, out string Error)
 {
@@ -88,14 +84,6 @@ event InitGame(string Options, out string Error)
         MaxPlayers = Clamp(GetIntOption(Options, "MaxPlayers", MaxPlayers), 0, 128);
         default.MaxPlayers = Clamp(default.MaxPlayers, 0, 128);
     }
-
-    // Send a request to get a list of all the patron ROIDs
-    PatronsRequest = Spawn(class'HTTPRequest');
-    PatronsRequest.Method = "GET";
-    PatronsRequest.Host = "darkesthour.darklightgames.com";
-    PatronsRequest.Path = "/client/patrons.php";
-    PatronsRequest.OnResponse = PatronsRequestOnResponse;
-    PatronsRequest.Send();
 }
 
 function PreBeginPlay()
@@ -103,72 +91,6 @@ function PreBeginPlay()
     super.PreBeginPlay();
 
     SquadReplicationInfo = Spawn(class'DHSquadReplicationInfo');
-}
-
-function PatronsRequestOnResponse(int Status, TreeMap_string_string Headers, string Content)
-{
-    local JSONParser Parser;
-    local JSONArray A;
-    local int i;
-    local Controller C;
-    local DHPlayer PC;
-    local DHPlayerReplicationInfo PRI;
-
-    Log("Got Patrons Response" @ Status);
-
-    if (Status == 200)
-    {
-        Parser = new class'JSONParser';
-        A = Parser.ParseArray(Content);
-
-        Log("Content" @ Content @ A);
-
-        if (A != none)
-        {
-            // Clear old patron list
-            PatronROIDs.Length = 0;
-
-            for (i = 0 ; i < A.Size(); ++i)
-            {
-                PatronROIDs[PatronROIDs.Length] = A.Get(i).AsString();
-
-                Log("Added Patron ID" @ A.Get(i).AsString());
-            }
-
-            // Go through existing controllers and assign their patron status
-            for (C = Level.ControllerList; C != none; C = C.nextController)
-            {
-                PC = DHPlayer(C);
-                PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
-
-                if (PC != none && PRI != none)
-                {
-                    Log("Setting" @ PRI.PlayerName @ "as a patron (" $ PC.ROIDHash $ ")");
-
-                    PRI.bIsPatron = IsPatron(PC.ROIDHash);
-                }
-            }
-        }
-    }
-    else
-    {
-        Warn("Failed to fetch patron list!");
-    }
-}
-
-function bool IsPatron(string ROIDHash)
-{
-    local int i;
-
-    for (i = 0; i < PatronROIDs.Length; ++i)
-    {
-        if (ROIDHash ~= PatronROIDs[i])
-        {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 function PostBeginPlay()
@@ -4580,11 +4502,6 @@ event PostLogin(PlayerController NewPlayer)
                 }
             }
         }
-
-        // Patron status look-up
-        PRI.bIsPatron = IsPatron(ROIDHash);
-
-        Log("Patron look-up for" @ PRI.PlayerName $ ":" @ PRI.bIsPatron);
 
         PRI.bIsDeveloper = class'DHAccessControl'.static.IsDeveloper(ROIDHash);
     }

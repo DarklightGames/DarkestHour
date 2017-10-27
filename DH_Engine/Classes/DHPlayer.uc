@@ -132,6 +132,7 @@ replication
         ServerSquadInvite, ServerSquadPromote, ServerSquadKick, ServerSquadBan,
         ServerSquadSay, ServerSquadLock, ServerSquadSignal,
         ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
+        ServerSetPatronStatus,
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons; // these ones in debug mode only
 
     // Functions the server can call on the client that owns this actor
@@ -3116,8 +3117,19 @@ event ClientProposeMenu(string Menu, optional string Msg1, optional string Msg2)
 
 function ClientSaveROIDHash(string ROID)
 {
+    local HTTPRequest PatronRequest;
+
     ROIDHash = ROID;
+
     SaveConfig();
+
+    // Now send the patron status request.
+    PatronRequest = Spawn(class'HTTPRequest');
+    PatronRequest.Method = "GET";
+    PatronRequest.Host = "darkesthour.darklightgames.com";
+    PatronRequest.Path = "/client/patron.php?steamid64=" $ ROIDHash;
+    PatronRequest.OnResponse = PatronRequestOnResponse;
+    PatronRequest.Send();
 }
 
 // Modified so if we just switched off manual reloading & player is in a cannon that's waiting to reload, we pass any different pending ammo type to the server
@@ -5617,6 +5629,48 @@ state Spectating
 exec function GiveCamera()
 {
     Pawn.GiveWeapon("DH_Construction.DHCameraWeapon");
+}
+
+function PatronRequestOnResponse(int Status, TreeMap_string_string Headers, string Content)
+{
+    local JSONParser Parser;
+    local JSONObject O;
+    local bool bIsPatron;
+
+    if (Status == 200)
+    {
+        Parser = new class'JSONParser';
+        O = Parser.ParseObject(Content);
+
+        Log("Patron status request success (" $ Status  $ ")");
+
+        if (O != none)
+        {
+            bIsPatron = O.Get("is_patron").AsBoolean();
+        }
+
+        if (bIsPatron)
+        {
+            ServerSetPatronStatus(bIsPatron);
+        }
+    }
+    else
+    {
+        Warn("Patron status request failed (" $ Status $ ")");
+    }
+}
+
+// Client reports patron status to the server.
+function ServerSetPatronStatus(bool bIsPatron)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (PRI != none)
+    {
+        PRI.bIsPatron = bIsPatron;
+    }
 }
 
 // Functions emptied out as RO/DH doesn't use a LocalStatsScreen actor & these aren't used
