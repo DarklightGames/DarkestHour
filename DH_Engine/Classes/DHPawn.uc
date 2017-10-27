@@ -340,100 +340,106 @@ simulated function Tick(float DeltaTime)
     }
 }
 
-// PossessedBy - figure out what dummy attachments are needed
+// Modified to give a mortar operator his default carried mortar ammunition
+// Also to fix bugs caused because PossessedBy gets called every time a player gets out of a vehicle & re-possesses his player pawn
+// Each time a server was making new random selection of HeadgearClass for roles that have multiple possibilities
+// Net clients then saw changing headgear on other players whose pawns got re-replicated & re-spawned(i.e. dropped out of network relevance & back in)
+// And standalones & listen servers were spawning a new Headgear attachment each time
 function PossessedBy(Controller C)
 {
-    local ROPlayerReplicationInfo    PRI;
-    local DHRoleInfo                 DHRI;
+    local DHRoleInfo                 RI;
+    local ROPlayer                   PC;
+    local ROBot                      Bot;
     local array<class<ROAmmoPouch> > AmmoClasses;
     local class<DHMortarWeapon>      MortarClass;
-    local int                        Prim, Sec, Gren, i;
+    local int                        PrimaryWeapon, SecondaryWeapon, GrenadeWeapon, i;
 
     super(Pawn).PossessedBy(C);
 
-    // From XPawn
     if (Controller != none)
     {
-        OldController = Controller;
+        OldController = Controller; // OldController records our controller so it can be used even after this pawn gets unpossessed, e.g. when dead
+
+        if (Controller.IsA('DHPlayer'))
+        {
+            bMantleDebug = DHPlayer(Controller).bMantleDebug;
+        }
     }
 
-    // Handle dummy attachments
-    if (Role == ROLE_Authority)
+    // Pass current stamina to net client
+    ClientForceStaminaUpdate(Stamina);
+
+    // Stuff we should only do when this pawn is first possessed (fixes bugs & avoids wasting processing)
+    if (!bHasBeenPossessed)
     {
-        ClientForceStaminaUpdate(Stamina);
+        bHasBeenPossessed = true;
+        RI = GetRoleInfo();
 
-        if (Controller != none)
+        if (RI != none)
         {
-            if (ROPlayer(Controller) != none)
+            // Set classes for any ammo pouches based on player's role & weapon selections
+            PC = ROPlayer(Controller);
+
+            if (PC != none)
             {
-                Prim = ROPlayer(Controller).PrimaryWeapon;
-                Sec = ROPlayer(Controller).SecondaryWeapon;
-                Gren = ROPlayer(Controller).GrenadeWeapon;
+                PrimaryWeapon = PC.PrimaryWeapon;
+                SecondaryWeapon = PC.SecondaryWeapon;
+                GrenadeWeapon = PC.GrenadeWeapon;
             }
-            else if (ROBot(Controller) != none)
+            else
             {
-                Prim = ROBot(Controller).PrimaryWeapon;
-                Sec = ROBot(Controller).SecondaryWeapon;
-                Gren = ROBot(Controller).GrenadeWeapon;
-            }
-        }
+                Bot = ROBot(Controller);
 
-        PRI = ROPlayerReplicationInfo(PlayerReplicationInfo);
-
-        if (PRI != none && PRI.RoleInfo != none)
-        {
-            HeadgearClass = PRI.RoleInfo.GetHeadgear();
-            DetachedArmClass = PRI.RoleInfo.static.GetArmClass();
-            DetachedLegClass = PRI.RoleInfo.static.GetLegClass();
-            PRI.RoleInfo.GetAmmoPouches(AmmoClasses, Prim, Sec, Gren);
-        }
-        else
-        {
-            Warn("Error!!! Possess with no RoleInfo!!!");
-        }
-
-        for (i = 0; i < AmmoClasses.Length; ++i)
-        {
-            AmmoPouchClasses[i] = AmmoClasses[i];
-        }
-
-        // These don't need to exist on dedicated servers at the moment, though they might if the ammo holding functionality of the pouch is put in - Erik
-        if (Level.NetMode != NM_DedicatedServer)
-        {
-            if (HeadgearClass != none && Headgear == none && !bHatShotOff)
-            {
-                Headgear = Spawn(HeadgearClass, self);
-            }
-
-            for (i = 0; i < arraycount(AmmoPouchClasses); ++i)
-            {
-                if (AmmoPouchClasses[i] == none)
+                if (Bot != none)
                 {
-                    break;
+                    PrimaryWeapon = Bot.PrimaryWeapon;
+                    SecondaryWeapon = Bot.SecondaryWeapon;
+                    GrenadeWeapon = Bot.GrenadeWeapon;
+                }
+            }
+
+            RI.GetAmmoPouches(AmmoClasses, PrimaryWeapon, SecondaryWeapon, GrenadeWeapon);
+
+            for (i = 0; i < AmmoClasses.Length; ++i)
+            {
+                AmmoPouchClasses[i] = AmmoClasses[i];
+            }
+
+            // Set classes for headgear & severed limbs, based on player's role
+            // Any random headgear selection for role gets made here, when pawn first possessed
+            HeadgearClass = RI.GetHeadgear();
+            DetachedArmClass = RI.static.GetArmClass();
+            DetachedLegClass = RI.static.GetLegClass();
+
+            // Spawn decorative attachments for any headgear & ammo pouches
+            // This is for standalones or listen server hosts; a net client does this is PostNetReceive() when the classes get replicated to it
+            if (Level.NetMode != NM_DedicatedServer)
+            {
+                if (HeadgearClass != none && Headgear == none && !bHatShotOff)
+                {
+                    Headgear = Spawn(HeadgearClass, self);
                 }
 
-                AmmoPouches[AmmoPouches.Length] = Spawn(AmmoPouchClasses[i], self);
-            }
-        }
-
-        // We just check if we've already been possessed once - if not, we run this
-        if (!bHasBeenPossessed)
-        {
-            DHRI = GetRoleInfo();
-
-            // We've now been possessed
-            bHasBeenPossessed = true;
-            bUsedCarriedMGAmmo = false;
-
-            // Give default mortar ammunition
-            // Don't have weapons yet, so have to get mortar class from role's GivenItems array
-            if (DHRI.bCanUseMortars)
-            {
-                for (i = 0; i < DHRI.GivenItems.Length; ++i)
+                for (i = 0; i < arraycount(AmmoPouchClasses); ++i)
                 {
-                    if (DHRI.GivenItems[i] != "")
+                    if (AmmoPouchClasses[i] == none)
                     {
-                        MortarClass = class<DHMortarWeapon>(Level.Game.BaseMutator.GetInventoryClass(DHRI.GivenItems[i]));
+                        break;
+                    }
+
+                    AmmoPouches[AmmoPouches.Length] = Spawn(AmmoPouchClasses[i], self);
+                }
+            }
+
+            // Give a mortar operator his default carried mortar ammunition
+            // Don't have weapons yet, so have to get mortar class from role's GivenItems array
+            if (RI.bCanUseMortars)
+            {
+                for (i = 0; i < RI.GivenItems.Length; ++i)
+                {
+                    if (RI.GivenItems[i] != "")
+                    {
+                        MortarClass = class<DHMortarWeapon>(Level.Game.BaseMutator.GetInventoryClass(RI.GivenItems[i]));
 
                         if (MortarClass != none)
                         {
@@ -447,14 +453,7 @@ function PossessedBy(Controller C)
         }
     }
 
-    // Send the info to the client now to make sure RoleInfo is replicated quickly
     NetUpdateTime = Level.TimeSeconds - 1.0;
-
-    // Slip this in here
-    if (Controller != none && DHPlayer(Controller) != none)
-    {
-        bMantleDebug = DHPlayer(Controller).bMantleDebug;
-    }
 }
 
 // Modified to remove trying to loop non-existent 'Vehicle_Driving' animation if vehicle doesn't have a DriveAnim (e.g. where driver is hidden)
