@@ -4912,6 +4912,7 @@ defaultproperties
     GameMessageClass=class'DH_Engine.DHGameMessage'
     TeamAIType(0)=class'DH_Engine.DHTeamAI'
     TeamAIType(1)=class'DH_Engine.DHTeamAI'
+    LocalStatsScreenClass=none // stats screen actor isn't used in RO/DH & this stops the class being pointlessly set & replicated in each PRI
 
     ChangeTeamInterval=120
 
