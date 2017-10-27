@@ -100,4 +100,7 @@ defaultproperties
 {
     DeveloperIDs(0)="76561197961365238"
     DeveloperIDs(1)="76561197960644559"
+    DeveloperIDs(2)="76561197983930587"
+    DeveloperIDs(3)="76561198020074261"
+    DeveloperIDs(4)="76561197972412108"
 }
