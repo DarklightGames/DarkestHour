@@ -26,6 +26,16 @@ function string Encode()
     return "\"" $ String $ "\"";
 }
 
+function bool AsBoolean()
+{
+    if (String ~= "true")
+    {
+        return true;
+    }
+
+    return false;
+}
+
 static function JSONString Create(string Value)
 {
     local JSONString S;

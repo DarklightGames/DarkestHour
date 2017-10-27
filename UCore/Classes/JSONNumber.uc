@@ -31,6 +31,11 @@ function float AsFloat()
     return float(Value);
 }
 
+function bool AsBoolean()
+{
+    return AsInteger() != 0;
+}
+
 function string Encode()
 {
     return Value;
