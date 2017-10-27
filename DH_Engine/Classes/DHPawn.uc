@@ -184,50 +184,68 @@ simulated function PostNetBeginPlay()
 
 // Modified to fix 'uniform bug' where player on net client would sometimes spawn with wrong player model (most commonly an allied player spawning as a German)
 // The functionality is now in a new SetUpPlayerModel() function to avoid code duplication, so see that function for explanatory comments
+// Also so we don't pointlessly try to check for the inventory of other players, as it won't get replicated to us anyway & the check is only relevant to player's own pawn
+// That resulted in all the other pawns doing this inventory loop check constantly throughout the round & so never setting bNetNotify false to disable PostNetReceive!
 simulated function PostNetReceive()
 {
-    local Inventory Inv;
-    local bool      bVerifiedPrimary, bVerifiedSecondary, bVerifiedNades;
-    local int       i;
+    local PlayerController PC;
+    local Inventory        Inv;
+    local bool             bVerifiedPrimary, bVerifiedSecondary, bVerifiedGrenades;
+    local int              i;
 
-    // Flag bRecievedInitialLoadout when all of our role's weapons & equipment have been replicated, then switch to best weapon
+    // If this is the local player's pawn, flag bRecievedInitialLoadout when all our role's weapons & equipment have been replicated, then switch to best weapon
+    // But now if it's another player's pawn, we just flag bRecievedInitialLoadout so these checks are skipped
+    // Re-factored to avoid repeating checks when already confirmed, or carrying out checks if we now other checks have failed
     if (!bRecievedInitialLoadout)
     {
-        for (Inv = Inventory; Inv != none; Inv = Inv.Inventory)
+        PC = Level.GetLocalPlayerController();
+
+        if (PC != none)
         {
-            if (Weapon(Inv) != none)
+            // If this is our own pawn, check whether we've now received our full inventory
+            if (PC == Controller)
             {
-                if (VerifyPrimary(Inv))
+                for (Inv = Inventory; Inv != none; Inv = Inv.Inventory)
                 {
-                    bVerifiedPrimary = true;
+                    if (Weapon(Inv) != none && Inv.Instigator != none)
+                    {
+                        if (!bVerifiedPrimary && VerifyPrimary(Inv))
+                        {
+                            bVerifiedPrimary = true;
+                        }
+
+                        if (!bVerifiedSecondary && VerifySecondary(Inv))
+                        {
+                            bVerifiedSecondary = true;
+                        }
+
+                        if (!bVerifiedGrenades && VerifyNades(Inv))
+                        {
+                            bVerifiedGrenades = true;
+                        }
+                    }
+
+                    if (++i > 500) // runaway loop safeguard
+                    {
+                        break;
+                    }
                 }
 
-                if (VerifySecondary(Inv))
+                // If we have our inventory then switch to best weapon
+                if (bVerifiedPrimary && bVerifiedSecondary && bVerifiedGrenades && VerifyGivenItems())
                 {
-                    bVerifiedSecondary = true;
-                }
+                    bRecievedInitialLoadout = true;
 
-                if (VerifyNades(Inv))
-                {
-                    bVerifiedNades = true;
+                    if (Controller != none)
+                    {
+                        Controller.SwitchToBestWeapon();
+                    }
                 }
             }
-
-            i++;
-
-            if (i > 500) // prevents possibility of runaway loop
+            // Or if we can confirm this must be another player's pawn, just flag bRecievedInitialLoadout so we don't check again
+            else if ((PC.Pawn != self && PC.Pawn != none) || (PC.PlayerReplicationInfo != none && PC.PlayerReplicationInfo.bIsSpectator))
             {
-                break;
-            }
-        }
-
-        if (bVerifiedPrimary && bVerifiedSecondary && bVerifiedNades && VerifyGivenItems()) // minor re-factor so don't check given items unless other tests passed
-        {
-            bRecievedInitialLoadout = true;
-
-            if (Controller != none)
-            {
-                Controller.SwitchToBestWeapon();
+                bRecievedInitialLoadout = true;
             }
         }
     }
