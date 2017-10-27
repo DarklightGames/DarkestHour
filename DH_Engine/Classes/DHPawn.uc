@@ -1346,7 +1346,7 @@ simulated function ProcessHitFX()
         // Hit to the head knocks off any headgear, with an impact sound
         if (BoneName == 'head' && Headgear != none)
         {
-            if (Headgear.IsA('DHHeadgear') && DHHeadgear(Headgear).bIsHelmet)
+            if (Headgear.IsA('DHHeadgear') && DHHeadgear(Headgear).bIsHelmet) // TODO: check this is a projectile weapon DamType before playing bullet impact sounds?
             {
                 if (HitDamageType != none && HitDamageType.default.HumanObliterationThreshhold == 1000001)
                 {
