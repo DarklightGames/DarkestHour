@@ -163,7 +163,6 @@ simulated function Timer()
     // Just a fallback & shouldn't happen, as reload gets actively paused if player exits or moves to position where he can't continue reloading
     if (WeaponPawn == none || !WeaponPawn.Occupied() || !WeaponPawn.CanReload())
     {
-        Log(Name @ ": reload timer pausing reload as no player in valid position - SHOULD NOT HAPPEN!!  Occupied() =" @ WeaponPawn.Occupied() @ " CanReload() =" @ WeaponPawn.CanReload());
         PauseReload();
 
         return;
