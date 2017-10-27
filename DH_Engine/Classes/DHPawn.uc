@@ -219,6 +219,7 @@ simulated function PostNetReceive()
                             bVerifiedSecondary = true;
                         }
 
+                        // TODO: unlike primary & secondary weapons, role can have > 1 grenade, so think this needs to include an item count, similar to GivenItems
                         if (!bVerifiedGrenades && VerifyNades(Inv))
                         {
                             bVerifiedGrenades = true;
