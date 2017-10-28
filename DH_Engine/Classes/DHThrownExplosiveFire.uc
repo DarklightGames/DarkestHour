@@ -50,7 +50,10 @@ event ModeDoFire()
         Weapon.ConsumeAmmo(ThisModeNum, Load);
     }
 
-    Weapon.PostFire();
+    if (Weapon != none)
+    {
+        Weapon.PostFire();
+    }
 
     if (ROPawn(Instigator) != none)
     {
