@@ -1157,10 +1157,7 @@ function RemoveMapMarker(int TeamIndex, int MapMarkerIndex)
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            Log("AxisMapMarkers[" $ MapMarkerIndex $ "].MapMarkerClass" @ AxisMapMarkers[MapMarkerIndex].MapMarkerClass);
             AxisMapMarkers[MapMarkerIndex].MapMarkerClass = none;
-            Log("now....");
-            Log("AxisMapMarkers[" $ MapMarkerIndex $ "].MapMarkerClass" @ AxisMapMarkers[MapMarkerIndex].MapMarkerClass);
             break;
         case ALLIES_TEAM_INDEX:
             AlliesMapMarkers[MapMarkerIndex].MapMarkerClass = none;
