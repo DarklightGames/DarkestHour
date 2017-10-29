@@ -5631,6 +5631,43 @@ exec function GiveCamera()
     Pawn.GiveWeapon("DH_Construction.DHCameraWeapon");
 }
 
+// Modified to fix "accessed none" errors when the ChatManager isn't set.
+function ServerRequestBanInfo(int PlayerID)
+{
+    local array<PlayerController> Controllers;
+    local PlayerController PC;
+    local int i;
+
+    if (Level != none && Level.Game != none)
+    {
+        Level.Game.GetPlayerControllerList(Controllers);
+
+        for (i = 0; i < Controllers.Length; ++i)
+        {
+            PC = Controllers[i];
+
+            // Don't send our own info
+            if (PC == none || PC == self)
+            {
+                continue;
+            }
+
+
+            if (PlayerID == -1 || PC.PlayerReplicationInfo.PlayerID == PlayerID)
+            {
+                Log(Name @ "Sending BanInfo To Client PlayerID:" $ PC.PlayerReplicationInfo.PlayerID @ "Hash:" $ PC.GetPlayerIDHash() @ "Address:" $ PC.GetPlayerNetworkAddress(), 'ChatManager');
+
+                if (ChatManager != none)
+                {
+                    ChatManager.TrackNewPlayer(PC.PlayerReplicationInfo.PlayerID, PC.GetPlayerIDHash(), PC.GetPlayerNetworkAddress());
+                }
+
+                ClientReceiveBan(PC.PlayerReplicationInfo.PlayerID $ Chr(27) $ PC.GetPlayerIDHash() $ Chr(27) $ PC.GetPlayerNetworkAddress());
+            }
+        }
+    }
+}
+
 function PatronRequestOnResponse(int Status, TreeMap_string_string Headers, string Content)
 {
     local JSONParser Parser;
