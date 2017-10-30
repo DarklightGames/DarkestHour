@@ -2458,77 +2458,80 @@ state RoundInPlay
             NumObj++;
         }
 
-        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-        if (GRI != none)
+        if (NumObj > 0)
         {
-            // Add attrition rates from the AttritionRateCurve to the already established specific objective attrition rates (look above in this function)
-            AttRateAxis   += InterpCurveEval(DHLevelInfo.AttritionRateCurve, float(Max(0, Num[ALLIES_TEAM_INDEX] - Num[AXIS_TEAM_INDEX]))   / NumObj);
-            AttRateAllies += InterpCurveEval(DHLevelInfo.AttritionRateCurve, float(Max(0, Num[AXIS_TEAM_INDEX]   - Num[ALLIES_TEAM_INDEX])) / NumObj);
+            GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-            // Update the calculated attrition rate
-            CalculatedAttritionRate[AXIS_TEAM_INDEX]   = AttRateAxis;
-            CalculatedAttritionRate[ALLIES_TEAM_INDEX] = AttRateAllies;
-        }
+            if (GRI != none)
+            {
+                // Add attrition rates from the AttritionRateCurve to the already established specific objective attrition rates (look above in this function)
+                AttRateAxis   += InterpCurveEval(DHLevelInfo.AttritionRateCurve, float(Max(0, Num[ALLIES_TEAM_INDEX] - Num[AXIS_TEAM_INDEX]))   / NumObj);
+                AttRateAllies += InterpCurveEval(DHLevelInfo.AttritionRateCurve, float(Max(0, Num[AXIS_TEAM_INDEX]   - Num[ALLIES_TEAM_INDEX])) / NumObj);
 
-        if (LevelInfo.NumObjectiveWin == 0)
-        {
-            if (Num[AXIS_TEAM_INDEX] == NumObj && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
+                // Update the calculated attrition rate
+                CalculatedAttritionRate[AXIS_TEAM_INDEX]   = AttRateAxis;
+                CalculatedAttritionRate[ALLIES_TEAM_INDEX] = AttRateAllies;
+            }
+
+            if (LevelInfo.NumObjectiveWin == 0)
+            {
+                if (Num[AXIS_TEAM_INDEX] == NumObj && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
+                {
+                    EndRound(AXIS_TEAM_INDEX);
+                }
+                else if (Num[ALLIES_TEAM_INDEX] == NumObj && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
+                {
+                    EndRound(ALLIES_TEAM_INDEX);
+                }
+                else
+                {
+                    // Check if we're down to last objective..
+                    if (Num[AXIS_TEAM_INDEX] == NumObj - 1 && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
+                    {
+                        BroadcastLastObjectiveMessage(AXIS_TEAM_INDEX);
+                    }
+
+                    if (Num[ALLIES_TEAM_INDEX] == NumObj - 1 && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
+                    {
+                        BroadcastLastObjectiveMessage(ALLIES_TEAM_INDEX);
+                    }
+                }
+            }
+            else if (Num[AXIS_TEAM_INDEX] >= LevelInfo.NumObjectiveWin && NumReq[AXIS_TEAM_INDEX] == NumObjReq
+                && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
             {
                 EndRound(AXIS_TEAM_INDEX);
             }
-            else if (Num[ALLIES_TEAM_INDEX] == NumObj && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
+            else if (Num[ALLIES_TEAM_INDEX] >= LevelInfo.NumObjectiveWin && NumReq[ALLIES_TEAM_INDEX] == NumObjReq
+                && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
             {
                 EndRound(ALLIES_TEAM_INDEX);
             }
+            // Check if we're down to last objective
             else
             {
-                // Check if we're down to last objective..
-                if (Num[AXIS_TEAM_INDEX] == NumObj - 1 && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
+                // One non-required objective missing
+                if (Num[AXIS_TEAM_INDEX] == LevelInfo.NumObjectiveWin - 1 && NumReq[AXIS_TEAM_INDEX] == NumObjReq
+                    && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
                 {
                     BroadcastLastObjectiveMessage(AXIS_TEAM_INDEX);
                 }
-
-                if (Num[ALLIES_TEAM_INDEX] == NumObj - 1 && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
+                // One required objective missing
+                else if (Num[AXIS_TEAM_INDEX] >= LevelInfo.NumObjectiveWin - 1 && NumReq[AXIS_TEAM_INDEX] == NumObjReq - 1
+                    && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
+                {
+                    BroadcastLastObjectiveMessage(AXIS_TEAM_INDEX);
+                }
+                if (Num[ALLIES_TEAM_INDEX] == LevelInfo.NumObjectiveWin - 1 && NumReq[ALLIES_TEAM_INDEX] == NumObjReq
+                    && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
                 {
                     BroadcastLastObjectiveMessage(ALLIES_TEAM_INDEX);
                 }
-            }
-        }
-        else if (Num[AXIS_TEAM_INDEX] >= LevelInfo.NumObjectiveWin && NumReq[AXIS_TEAM_INDEX] == NumObjReq
-            && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
-        {
-            EndRound(AXIS_TEAM_INDEX);
-        }
-        else if (Num[ALLIES_TEAM_INDEX] >= LevelInfo.NumObjectiveWin && NumReq[ALLIES_TEAM_INDEX] == NumObjReq
-            && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
-        {
-            EndRound(ALLIES_TEAM_INDEX);
-        }
-        // Check if we're down to last objective
-        else
-        {
-            // One non-required objective missing
-            if (Num[AXIS_TEAM_INDEX] == LevelInfo.NumObjectiveWin - 1 && NumReq[AXIS_TEAM_INDEX] == NumObjReq
-                && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
-            {
-                BroadcastLastObjectiveMessage(AXIS_TEAM_INDEX);
-            }
-            // One required objective missing
-            else if (Num[AXIS_TEAM_INDEX] >= LevelInfo.NumObjectiveWin - 1 && NumReq[AXIS_TEAM_INDEX] == NumObjReq - 1
-                && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
-            {
-                BroadcastLastObjectiveMessage(AXIS_TEAM_INDEX);
-            }
-            if (Num[ALLIES_TEAM_INDEX] == LevelInfo.NumObjectiveWin - 1 && NumReq[ALLIES_TEAM_INDEX] == NumObjReq
-                && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
-            {
-                BroadcastLastObjectiveMessage(ALLIES_TEAM_INDEX);
-            }
-            else if (Num[ALLIES_TEAM_INDEX] >= LevelInfo.NumObjectiveWin - 1 && NumReq[ALLIES_TEAM_INDEX] == NumObjReq - 1
-                && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
-            {
-                BroadcastLastObjectiveMessage(ALLIES_TEAM_INDEX);
+                else if (Num[ALLIES_TEAM_INDEX] >= LevelInfo.NumObjectiveWin - 1 && NumReq[ALLIES_TEAM_INDEX] == NumObjReq - 1
+                    && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
+                {
+                    BroadcastLastObjectiveMessage(ALLIES_TEAM_INDEX);
+                }
             }
         }
 
