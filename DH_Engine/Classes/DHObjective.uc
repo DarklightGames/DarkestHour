@@ -71,6 +71,7 @@ var(DHObjectiveCapture) bool        bSetInactiveOnCapture;      // Simliar to bR
 var(DHObjectiveCapture) bool        bNeutralizeBeforeCapture;   // if this is true the objective will neutralize first (then can be captured by either team)
 var(DHObjectiveCapture) int         PlayersNeededToCapture;
 var(DHObjectiveCapture) int         PreventCaptureTime;         // time to prevent capture after the objective is activated
+var(DHObjectiveCapture) int         LockDownOnCaptureTime;      // time to prevent capture after the objective is captured
 var(DHObjectiveCapture) bool        bGroupActionsAtDisable;
 var(DHObjectiveCapture) bool        bNeutralOnActivation;       // Should this capture be neutral when it is activated
 var(DHObjectiveCapture) array<int>  AxisRequiredObjForCapture;  // Objectives which are required to progress capture bar towards "capture" (obj can still be neutralized)
@@ -451,7 +452,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     // Activate the no capture lock down
     if (bLockDownOnCapture)
     {
-        UnfreezeTime = Level.Game.GameReplicationInfo.ElapsedTime + PreventCaptureTime;
+        UnfreezeTime = Level.Game.GameReplicationInfo.ElapsedTime + LockDownOnCaptureTime;
     }
 
     // Don't "disable" the objective, just "deactivate it"
