@@ -99,6 +99,8 @@ var     int                         UnfreezeTime;               // The time at w
 var     bool                        bCheckIfAxisCleared;
 var     bool                        bCheckIfAlliesCleared;
 var     bool                        bIsLocked;
+var     bool                        bDidAwardAxisReinf;
+var     bool                        bDidAwardAlliesReinf;
 
 // Capture operations (after capture)
 var(DH_CaptureActions)      array<ObjOperationAction>   AlliesCaptureObjActions;
@@ -194,6 +196,8 @@ function Reset()
     bCheckIfAxisCleared = false;
     bCheckIfAlliesCleared = false;
     bIsLocked = false;
+    bDidAwardAxisReinf = false;
+    bDidAwardAlliesReinf = false;
 }
 
 function SetActive(bool bActiveStatus)
@@ -525,17 +529,21 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     switch (Team)
     {
         case AXIS_TEAM_INDEX:
+            if (!bDidAwardAxisReinf)
+            {
+                bDidAwardAxisReinf = true;
 
-            // Award reinforcements
-            if (AxisAwardedReinforcements >= 0)
-            {
-                G.ModifyReinforcements(AXIS_TEAM_INDEX, AxisAwardedReinforcements);
-                class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, class'DHReinforcementAwardMsg', AxisAwardedReinforcements, none, none, self);
-            }
-            else
-            {
-                G.ModifyReinforcements(AXIS_TEAM_INDEX, 1 * (G.GetNumPlayers() / 2));
-                class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, class'DHReinforcementAwardMsg', 1 * (G.GetNumPlayers() / 2), none, none, self);
+                // Award reinforcements
+                if (AxisAwardedReinforcements >= 0)
+                {
+                    G.ModifyReinforcements(AXIS_TEAM_INDEX, AxisAwardedReinforcements);
+                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, class'DHReinforcementAwardMsg', AxisAwardedReinforcements, none, none, self);
+                }
+                else
+                {
+                    G.ModifyReinforcements(AXIS_TEAM_INDEX, 1 * (G.GetNumPlayers() / 2));
+                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, class'DHReinforcementAwardMsg', 1 * (G.GetNumPlayers() / 2), none, none, self);
+                }
             }
 
             for (i = 0; i < AxisCaptureObjActions.Length; ++i)
@@ -573,17 +581,21 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
             break;
 
         case ALLIES_TEAM_INDEX:
+            if (!bDidAwardAlliesReinf)
+            {
+                bDidAwardAlliesReinf = true;
 
-            // Award reinforcements
-            if (AlliedAwardedReinforcements >= 0)
-            {
-                G.ModifyReinforcements(ALLIES_TEAM_INDEX, AlliedAwardedReinforcements);
-                class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, class'DHReinforcementAwardMsg', AlliedAwardedReinforcements, none, none, self);
-            }
-            else
-            {
-                G.ModifyReinforcements(ALLIES_TEAM_INDEX, 1 * (G.GetNumPlayers() / 2));
-                class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, class'DHReinforcementAwardMsg', 1 * (G.GetNumPlayers() / 2), none, none, self);
+                // Award reinforcements
+                if (AlliedAwardedReinforcements >= 0)
+                {
+                    G.ModifyReinforcements(ALLIES_TEAM_INDEX, AlliedAwardedReinforcements);
+                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, class'DHReinforcementAwardMsg', AlliedAwardedReinforcements, none, none, self);
+                }
+                else
+                {
+                    G.ModifyReinforcements(ALLIES_TEAM_INDEX, 1 * (G.GetNumPlayers() / 2));
+                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, class'DHReinforcementAwardMsg', 1 * (G.GetNumPlayers() / 2), none, none, self);
+                }
             }
 
             for (i = 0; i < AlliesCaptureObjActions.Length; ++i)
