@@ -2402,6 +2402,9 @@ state RoundInPlay
         TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX] = 0;
         TeamReinforcementMessageIndices[AXIS_TEAM_INDEX] = 0;
 
+        // HACK: recalculate all the attrition rates etc.
+        NotifyObjStateChanged();
+
         if (Metrics != none)
         {
             Metrics.OnRoundBegin();
@@ -2415,6 +2418,7 @@ state RoundInPlay
         local int i, Num[2], NumReq[2], NumObj, NumObjReq;
         local float AttRateAllies, AttRateAxis;
 
+        // TODO: re-factor this out to an "UpdateAttritionRates" function.
         for (i = 0; i < arraycount(DHObjectives); ++i)
         {
             if (DHObjectives[i] == none)
@@ -2465,6 +2469,8 @@ state RoundInPlay
             // Update the calculated attrition rate
             CalculatedAttritionRate[AXIS_TEAM_INDEX]   = AttRateAxis;
             CalculatedAttritionRate[ALLIES_TEAM_INDEX] = AttRateAllies;
+
+            Log("Calculated attrition rate!");
         }
 
         if (LevelInfo.NumObjectiveWin == 0)
