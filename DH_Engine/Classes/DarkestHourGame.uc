@@ -3,8 +3,6 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-// To do: Stop casting GRI and just make a damn class variable and set it in PBP (we have 24 functions which declare a local)
-
 class DarkestHourGame extends ROTeamGame;
 
 var     Hashtable_string_Object     PlayerSessions; // When a player leaves the server this info is stored for the session so if they return these values won't reset
@@ -74,6 +72,8 @@ var     DHSquadReplicationInfo      SquadReplicationInfo;
 
 var()   config int                  EmptyTankUnlockTime;                    // Server config option for how long (secs) before unlocking a locked armored vehicle if abandoned by its crew
 
+var     DHGameReplicationInfo       GRI;
+
 // Overridden to make new clamp of MaxPlayers
 event InitGame(string Options, out string Error)
 {
@@ -95,7 +95,6 @@ function PreBeginPlay()
 
 function PostBeginPlay()
 {
-    local DHGameReplicationInfo GRI;
     local ROLevelInfo           LI;
     local ROMapBoundsNE         NE;
     local ROMapBoundsSW         SW;
@@ -415,25 +414,20 @@ function HandleReinforceIntervalInflation()
 {
     local float TickRatio;
 
-    if (DHGameReplicationInfo(GameReplicationInfo) == none)
-    {
-        return;
-    }
-
     // Lets perform some changes to GRI.ReinforcementInterval if average tick is less than desired
     if (ServerTickRateAverage < ServerTickForInflation)
     {
         TickRatio = 1.0 - ServerTickRateAverage / ServerTickForInflation;
 
-        DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval + int(TickRatio * MAXINFLATED_INTERVALTIME);
-        DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval + int(TickRatio * MAXINFLATED_INTERVALTIME);
+        GRI.ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval + int(TickRatio * MAXINFLATED_INTERVALTIME);
+        GRI.ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval + int(TickRatio * MAXINFLATED_INTERVALTIME);
 
         //Warn("Server is not performing at desired tick rate, raising reinforcement interval based on how bad we are performing!");
     }
     else
     {
-        DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval;
-        DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval;
+        GRI.ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval;
+        GRI.ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval;
     }
 }
 
@@ -670,11 +664,11 @@ function Bot SpawnBot(optional string botName)
         // Increment the RoleCounter for the new role
         if (BotTeam.TeamIndex == AXIS_TEAM_INDEX)
         {
-            ++DHGameReplicationInfo(GameReplicationInfo).DHAxisRoleCount[NewBot.CurrentRole];
+            ++GRI.DHAxisRoleCount[NewBot.CurrentRole];
         }
         else if (BotTeam.TeamIndex == ALLIES_TEAM_INDEX)
         {
-            ++DHGameReplicationInfo(GameReplicationInfo).DHAlliesRoleCount[NewBot.CurrentRole];
+            ++GRI.DHAlliesRoleCount[NewBot.CurrentRole];
         }
 
         // Tone down the "gamey" bot parameters
@@ -820,10 +814,7 @@ function CalculateTeamBalanceValues(out int TeamSizes[2], out int IdealTeamSizes
     IdealTeamSizes[1] = Round((TeamSizes[0] + TeamSizes[1]) * TeamRatios[0]);
 
     // Update the GRI CurrentAlliedToAxisRatio
-    if (DHGameReplicationInfo(GameReplicationInfo) != none)
-    {
-        DHGameReplicationInfo(GameReplicationInfo).CurrentAlliedToAxisRatio = Abs(TeamRatios[0]);
-    }
+    GRI.CurrentAlliedToAxisRatio = Abs(TeamRatios[0]);
 }
 
 // Get imbalance team "count", but calculate AlliedToAxisRatio
@@ -860,11 +851,8 @@ function int GetTeamUnbalanceCount(out UnrealTeamInfo BigTeam, out UnrealTeamInf
 function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
 {
     local int i;
-    local DHGameReplicationInfo GRI;
 
     //return GetBotNewRole(ThisBot, BotTeamNum); // Use this for debuging (when you need to see bots as other roles)
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     if (GRI == none)
     {
@@ -1524,10 +1512,18 @@ function AddDefaultInventory(Pawn aPawn)
 //The following is a clusterfuck of hacky overriding of RO's arbitrarily low limit of roles from 10 to 16
 function AddRole(RORoleInfo NewRole)
 {
-    local DHGameReplicationInfo GRI;
-    local DHRoleInfo            DHRI;
+    local DHRoleInfo DHRI;
 
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
+    if (GRI == none)
+    {
+        GRI = DHGameReplicationInfo(GameReplicationInfo);
+    }
+
+    if (GRI == none)
+    {
+        return;
+    }
+
     DHRI = DHRoleInfo(NewRole);
 
     if (NewRole.Side == SIDE_Allies)
@@ -1560,10 +1556,6 @@ function AddRole(RORoleInfo NewRole)
 
 function RORoleInfo GetRoleInfo(int Team, int Num)
 {
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
     if (Team > 1 || Num < 0 || Num >= arraycount(GRI.DHAxisRoles))
     {
         return none;
@@ -1583,10 +1575,6 @@ function RORoleInfo GetRoleInfo(int Team, int Num)
 
 function bool RoleLimitReached(int Team, int Num)
 {
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
     // This shouldn't even happen, but if it does, just say the limit was reached
     if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && GRI.DHAxisRoles[Num] == none) || (Team == ALLIES_TEAM_INDEX && GRI.DHAlliesRoles[Num] == none) || Num >= arraycount(GRI.DHAxisRoles))
     {
@@ -1609,9 +1597,6 @@ function bool HumanWantsRole(int Team, int Num)
 {
     local Controller            C;
     local ROBot                 BotHasRole;
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     // This shouldn't even happen, but if it does, just say the limit was reached
     if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && GRI.DHAxisRoles[Num] == none) || (Team == ALLIES_TEAM_INDEX && GRI.DHAlliesRoles[Num] == none) || Num >= arraycount(GRI.DHAxisRoles))
@@ -1656,9 +1641,6 @@ function bool HumanWantsRole(int Team, int Num)
 function int GetVehicleRole(int Team, int Num)
 {
     local int i;
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     // This shouldn't even happen, but if it does, just say the limit was reached
     if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && GRI.DHAxisRoles[Num] == none) || (Team == ALLIES_TEAM_INDEX && GRI.DHAlliesRoles[Num] == none) || Num >= arraycount(GRI.DHAxisRoles))
@@ -1681,9 +1663,6 @@ function int GetVehicleRole(int Team, int Num)
 function int GetBotNewRole(ROBot ThisBot, int BotTeamNum)
 {
     local int MyRole, Count, AltRole;
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     if (ThisBot != none)
     {
@@ -1740,9 +1719,6 @@ function UpdateRoleCounts()
 {
     local Controller C;
     local int i;
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
     {
@@ -1799,7 +1775,6 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
     local RORoleInfo RI;
     local DHPlayer   Playa;
     local ROBot      MrRoboto;
-    local DHGameReplicationInfo GRI;
 
     if (aPlayer == none || !aPlayer.bIsPlayer || aPlayer.PlayerReplicationInfo.Team == none || aPlayer.PlayerReplicationInfo.Team.TeamIndex > 1)
     {
@@ -1845,11 +1820,11 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
                     {
                         if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
                         {
-                            DHGameReplicationInfo(GameReplicationInfo).DHAxisRoleCount[Playa.CurrentRole]--;
+                            GRI.DHAxisRoleCount[Playa.CurrentRole]--;
                         }
                         else if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
                         {
-                            DHGameReplicationInfo(GameReplicationInfo).DHAlliesRoleCount[Playa.CurrentRole]--;
+                            GRI.DHAlliesRoleCount[Playa.CurrentRole]--;
                         }
                     }
 
@@ -1858,11 +1833,11 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
                     // Increment the RoleCounter for the new role
                     if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
                     {
-                        DHGameReplicationInfo(GameReplicationInfo).DHAxisRoleCount[Playa.CurrentRole]++;
+                        GRI.DHAxisRoleCount[Playa.CurrentRole]++;
                     }
                     else if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
                     {
-                        DHGameReplicationInfo(GameReplicationInfo).DHAlliesRoleCount[Playa.CurrentRole]++;
+                        GRI.DHAlliesRoleCount[Playa.CurrentRole]++;
                     }
 
                     ROPlayerReplicationInfo(aPlayer.PlayerReplicationInfo).RoleInfo = RI;
@@ -1885,12 +1860,7 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
             // Since we're changing roles, clear all associated requests/rally points
             ClearSavedRequestsAndRallyPoints(Playa, false);
 
-            GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-            if (GRI != none)
-            {
-                GRI.ClearArtilleryTarget(DHPlayer(aPlayer));
-            }
+            GRI.ClearArtilleryTarget(DHPlayer(aPlayer));
         }
         else
         {
@@ -1915,11 +1885,11 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
                 {
                     if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
                     {
-                        DHGameReplicationInfo(GameReplicationInfo).DHAxisRoleCount[MrRoboto.CurrentRole]--;
+                        GRI.DHAxisRoleCount[MrRoboto.CurrentRole]--;
                     }
                     else if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
                     {
-                        DHGameReplicationInfo(GameReplicationInfo).DHAlliesRoleCount[MrRoboto.CurrentRole]--;
+                        GRI.DHAlliesRoleCount[MrRoboto.CurrentRole]--;
                     }
                 }
 
@@ -1928,11 +1898,11 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
                 // Increment the RoleCounter for the new role
                 if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
                 {
-                    DHGameReplicationInfo(GameReplicationInfo).DHAxisRoleCount[MrRoboto.CurrentRole]++;
+                    GRI.DHAxisRoleCount[MrRoboto.CurrentRole]++;
                 }
                 else if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
                 {
-                    DHGameReplicationInfo(GameReplicationInfo).DHAlliesRoleCount[MrRoboto.CurrentRole]++;
+                    GRI.DHAlliesRoleCount[MrRoboto.CurrentRole]++;
                 }
 
                 ROPlayerReplicationInfo(aPlayer.PlayerReplicationInfo).RoleInfo = RI;
@@ -2210,10 +2180,7 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
 
 function bool RoleExists(byte TeamID, DHRoleInfo RI)
 {
-    local DHGameReplicationInfo GRI;
     local int                   i;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     if (TeamID == AXIS_TEAM_INDEX)
     {
@@ -2246,7 +2213,6 @@ state RoundInPlay
         local Controller P, NextC;
         local Actor A;
         local int i;
-        local DHGameReplicationInfo GRI;
         local ROVehicleFactory ROV;
 
         // Begin reseting all round properties!!!
@@ -2256,7 +2222,6 @@ state RoundInPlay
         LevelInfo.Axis.ReinforcementInterval = OriginalReinforcementIntervals[AXIS_TEAM_INDEX];
         LevelInfo.Allies.ReinforcementInterval = OriginalReinforcementIntervals[ALLIES_TEAM_INDEX];
 
-        GRI = DHGameReplicationInfo(GameReplicationInfo);
         GRI.bRoundIsOver = false;
         GRI.RoundStartTime = RoundStartTime;
         GRI.RoundEndTime = RoundStartTime + RoundDuration;
@@ -2414,7 +2379,6 @@ state RoundInPlay
     // Modified for DHObjectives
     function NotifyObjStateChanged()
     {
-        local DHGameReplicationInfo GRI;
         local int i, Num[2], NumReq[2], NumObj, NumObjReq;
         local float AttRateAllies, AttRateAxis;
 
@@ -2460,18 +2424,13 @@ state RoundInPlay
 
         if (NumObj > 0)
         {
-            GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+            // Add attrition rates from the AttritionRateCurve to the already established specific objective attrition rates (look above in this function)
+            AttRateAxis   += InterpCurveEval(DHLevelInfo.AttritionRateCurve, float(Max(0, Num[ALLIES_TEAM_INDEX] - Num[AXIS_TEAM_INDEX]))   / NumObj);
+            AttRateAllies += InterpCurveEval(DHLevelInfo.AttritionRateCurve, float(Max(0, Num[AXIS_TEAM_INDEX]   - Num[ALLIES_TEAM_INDEX])) / NumObj);
 
-            if (GRI != none)
-            {
-                // Add attrition rates from the AttritionRateCurve to the already established specific objective attrition rates (look above in this function)
-                AttRateAxis   += InterpCurveEval(DHLevelInfo.AttritionRateCurve, float(Max(0, Num[ALLIES_TEAM_INDEX] - Num[AXIS_TEAM_INDEX]))   / NumObj);
-                AttRateAllies += InterpCurveEval(DHLevelInfo.AttritionRateCurve, float(Max(0, Num[AXIS_TEAM_INDEX]   - Num[ALLIES_TEAM_INDEX])) / NumObj);
-
-                // Update the calculated attrition rate
-                CalculatedAttritionRate[AXIS_TEAM_INDEX]   = AttRateAxis;
-                CalculatedAttritionRate[ALLIES_TEAM_INDEX] = AttRateAllies;
-            }
+            // Update the calculated attrition rate
+            CalculatedAttritionRate[AXIS_TEAM_INDEX]   = AttRateAxis;
+            CalculatedAttritionRate[ALLIES_TEAM_INDEX] = AttRateAllies;
 
             if (LevelInfo.NumObjectiveWin == 0)
             {
@@ -2609,11 +2568,8 @@ state RoundInPlay
     {
         local int i, ArtilleryStrikeInt;
         local Controller P;
-        local DHGameReplicationInfo GRI;
 
         global.Timer();
-
-        GRI = DHGameReplicationInfo(GameReplicationInfo);
 
         // Go through both teams and spawn reinforcements if necessary
         for (i = 0; i < 2; ++i)
@@ -2768,18 +2724,12 @@ state RoundOver
     function BeginState()
     {
         local DHArtillerySpawner AS;
-        local DHGameReplicationInfo GRI;
-
-        GRI = DHGameReplicationInfo(GameReplicationInfo);
 
         RoundStartTime = ElapsedTime;
 
-        if (GRI != none)
-        {
-            GRI.bReinforcementsComing[AXIS_TEAM_INDEX] = 0;
-            GRI.bReinforcementsComing[ALLIES_TEAM_INDEX] = 0;
-            GRI.bRoundIsOver = true;
-        }
+        GRI.bReinforcementsComing[AXIS_TEAM_INDEX] = 0;
+        GRI.bReinforcementsComing[ALLIES_TEAM_INDEX] = 0;
+        GRI.bRoundIsOver = true;
 
         // Destroy any artillery spawners so they don't keep calling arty
         foreach DynamicActors(class'DHArtillerySpawner', AS)
@@ -2810,10 +2760,7 @@ function EndGame(PlayerReplicationInfo Winner, string Reason)
 {
     local Inventory Inv;
 
-    if (DHGameReplicationInfo(GameReplicationInfo) != none)
-    {
-        DHGameReplicationInfo(GameReplicationInfo).bRoundIsOver = true;
-    }
+    GRI.bRoundIsOver = true;
 
     // Destroy all Inventory (hopeful fix to the constant MG firing)
     foreach DynamicActors(class'Inventory', Inv)
@@ -2826,10 +2773,6 @@ function EndGame(PlayerReplicationInfo Winner, string Reason)
 
 function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcements, optional bool bOnlyIfNotZero)
 {
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
     if (GRI == none || (Team != AXIS_TEAM_INDEX && Team != ALLIES_TEAM_INDEX))
     {
         return;
@@ -2863,25 +2806,16 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
 
 function ResetArtilleryTargets()
 {
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    if (GRI != none)
-    {
-        GRI.ClearAllArtilleryTargets();
-    }
+    GRI.ClearAllArtilleryTargets();
 }
 
 // Handle reinforcment checks and balances
 function HandleReinforcements(Controller C)
 {
     local DHPlayer PC;
-    local DHGameReplicationInfo GRI;
     local float ReinforcementPercent;
 
     PC = DHPlayer(C);
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     // Don't subtract / calc reinforcements as the player didn't get a pawn
     if (PC == none || PC.Pawn == none || GRI == none)
@@ -2997,12 +2931,9 @@ exec function DebugDestroyConstructions()
 // Quick test function to change a role's limit (doesn't support bots)
 exec function DebugSetRoleLimit(int Team, int Index, int NewLimit)
 {
-    local DHGameReplicationInfo GRI;
     local Controller            C;
     local DHPlayer              PC;
     local int                   RoleCount, RoleBotCount, RoleLimit, i;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     if (GRI == none)
     {
@@ -3084,7 +3015,7 @@ exec function ToggleTickLog()
 // Function for changing a team's ReinforcementInterval
 exec function SetReinforcementInterval(int Team, int Amount)
 {
-    if (Amount > 0 && DHGameReplicationInfo(GameReplicationInfo) != none)
+    if (Amount > 0)
     {
         if (Team == AXIS_TEAM_INDEX)
         {
@@ -3095,7 +3026,7 @@ exec function SetReinforcementInterval(int Team, int Amount)
             LevelInfo.Allies.ReinforcementInterval = Amount;
         }
 
-        DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[Team] = Amount;
+        GRI.ReinforcementInterval[Team] = Amount;
     }
 }
 
@@ -3120,7 +3051,7 @@ exec function CaptureObj(int Team, optional string ObjName, optional bool bNeutr
         if (DHObjectives[i] != none &&
             DHObjectives[i].bActive &&
             DHObjectives[i].ObjState != Team &&
-            DHObjectives[i].HasRequiredObjectives(DHGameReplicationInfo(GameReplicationInfo), Team) &&
+            DHObjectives[i].HasRequiredObjectives(GRI, Team) &&
             (ObjName == "" || DHObjectives[i].ObjName ~= ObjName))
         {
             if (bNeutralizeInstead)
@@ -3358,7 +3289,6 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
     local int OldTeam;
     local UnrealTeamInfo NewTeam;
     local DHPlayer       PC;
-    local DHGameReplicationInfo GRI;
 
     OldTeam = Other.GetTeamNum();
 
@@ -3380,7 +3310,6 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
     }
 
     PC = DHPlayer(Other);
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     if (GRI == none)
     {
@@ -3452,11 +3381,9 @@ function bool BecomeSpectator(PlayerController P)
 function PlayerLeftTeam(PlayerController P)
 {
     local DHPlayer PC;
-    local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
 
     PC = DHPlayer(P);
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
     PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
 
     if (PC != none)
@@ -3487,11 +3414,8 @@ function PlayerLeftTeam(PlayerController P)
         PRI.RoleInfo = none;
     }
 
-    if (GRI != none)
-    {
-        GRI.UnreserveVehicle(PC);
-        GRI.ClearArtilleryTarget(PC);
-    }
+    GRI.UnreserveVehicle(PC);
+    GRI.ClearArtilleryTarget(PC);
 
     if (SquadReplicationInfo != none)
     {
@@ -3610,10 +3534,8 @@ function ChooseWinner()
     local Controller C;
     local int i, Num[2], NumReq[2], AxisScore, AlliedScore;
     local float AxisReinforcementsPercent, AlliedReinforcementsPercent;
-    local DHGameReplicationInfo GRI;
 
     // Setup some GRI stuff
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     if (GRI == none)
     {
@@ -4187,28 +4109,22 @@ function CheckVehicleFactories()
 // Do nothing if resupply flagged as controlled by a DH spawn point even if bUseSpawnAreas=true (leveller may misunderstand bUseSpawnAreas & assume means spawn point)
 function CheckResupplyVolumes()
 {
-    local DHGameReplicationInfo GRI;
     local int  TeamIndex, i;
     local bool bShouldBeActive;
 
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    if (GRI != none)
+    for (i = 0; i < arraycount(DHResupplyAreas); ++i)
     {
-        for (i = 0; i < arraycount(DHResupplyAreas); ++i)
+        if (DHResupplyAreas[i] != none && DHResupplyAreas[i].bUsesSpawnAreas && !DHResupplyAreas[i].bControlledBySpawnPoint)
         {
-            if (DHResupplyAreas[i] != none && DHResupplyAreas[i].bUsesSpawnAreas && !DHResupplyAreas[i].bControlledBySpawnPoint)
+            TeamIndex = DHResupplyAreas[i].Team;
+
+            if (TeamIndex == AXIS_TEAM_INDEX || TeamIndex == ALLIES_TEAM_INDEX)
             {
-                TeamIndex = DHResupplyAreas[i].Team;
+                bShouldBeActive = CurrentSpawnArea[TeamIndex].Tag == DHResupplyAreas[i].Tag ||
+                    (CurrentTankCrewSpawnArea[TeamIndex] != none && CurrentTankCrewSpawnArea[TeamIndex].Tag == DHResupplyAreas[i].Tag);
 
-                if (TeamIndex == AXIS_TEAM_INDEX || TeamIndex == ALLIES_TEAM_INDEX)
-                {
-                    bShouldBeActive = CurrentSpawnArea[TeamIndex].Tag == DHResupplyAreas[i].Tag ||
-                        (CurrentTankCrewSpawnArea[TeamIndex] != none && CurrentTankCrewSpawnArea[TeamIndex].Tag == DHResupplyAreas[i].Tag);
-
-                    DHResupplyAreas[i].bActive = bShouldBeActive;
-                    GRI.ResupplyAreas[i].bActive = bShouldBeActive;
-                }
+                DHResupplyAreas[i].bActive = bShouldBeActive;
+                GRI.ResupplyAreas[i].bActive = bShouldBeActive;
             }
         }
     }
@@ -4244,16 +4160,14 @@ function CheckMineVolumes()
 
 function NotifyLogout(Controller Exiting)
 {
-    local DHGameReplicationInfo GRI;
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
 
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
     PC = DHPlayer(Exiting);
 
     ClearSavedRequestsAndRallyPoints(PC, false);
 
-    if (GRI != none && PC != none)
+    if (PC != none)
     {
         GRI.ClearArtilleryTarget(PC);
         GRI.UnreserveVehicle(PC);
@@ -4275,22 +4189,18 @@ function SendReinforcementMessage(int Team, int Num)
 // Modified to remove reliance on SpawnCount and instead just use SpawnsRemaining
 function bool SpawnLimitReached(int Team)
 {
-    return DHGameReplicationInfo(GameReplicationInfo) != none && DHGameReplicationInfo(GameReplicationInfo).SpawnsRemaining[Team] == 0;
+    return GRI.SpawnsRemaining[Team] == 0;
 }
 
 function int GetRoundTime()
 {
-    return Max(0, DHGameReplicationInfo(GameReplicationInfo).RoundEndTime - ElapsedTime);
+    return Max(0, GRI.RoundEndTime - ElapsedTime);
 }
 
 // This function allows proper time remaining to be adjusted as desired
 function ModifyRoundTime(int RoundTime, int Type)
 {
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    if (GRI != none && self.IsInState('RoundInPlay'))
+    if (IsInState('RoundInPlay'))
     {
         switch (Type)
         {
@@ -4707,10 +4617,7 @@ function bool SetPause(bool bPause, PlayerController P)
 // Overridden to undo the exclusion of players who hadn't yet selected a role.
 function GetTeamSizes(out int TeamSizes[2])
 {
-    if (DHGameReplicationInfo(GameReplicationInfo) != none)
-    {
-        DHGameReplicationInfo(GameReplicationInfo).GetTeamSizes(TeamSizes);
-    }
+    GRI.GetTeamSizes(TeamSizes);
 }
 
 // Moved this here so that we didn't have to restate this function in a variety of places.
