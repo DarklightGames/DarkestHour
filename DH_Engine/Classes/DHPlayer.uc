@@ -5710,6 +5710,16 @@ function ServerSetPatronStatus(bool bIsPatron)
     }
 }
 
+simulated exec function DebugChatInfo()
+{
+    Log("DebugChatInfo");
+    Log("=============");
+    Log("VRI" @ VoiceReplicationInfo);
+    Log("VoiceID" @ PlayerReplicationInfo.VoiceID);
+    Log("PlayerID" @ PlayerReplicationInfo.PlayerID);
+    Log("VoiceMemberMask" @ PlayerReplicationInfo.VoiceMemberMask);
+}
+
 // Functions emptied out as RO/DH doesn't use a LocalStatsScreen actor & these aren't used
 function ServerUpdateStats(TeamPlayerReplicationInfo PRI);
 function ServerUpdateStatArrays(TeamPlayerReplicationInfo PRI);
