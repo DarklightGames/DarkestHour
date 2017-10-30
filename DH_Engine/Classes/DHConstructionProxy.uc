@@ -714,35 +714,9 @@ function DHConstruction.ConstructionError GetPositionError()
         }
     }
 
-    if (ConstructionClass.default.ObjectiveDistanceMinMeters > 0.0)
-    {
-        // Don't allow this construction to be placed too close to an objective.
-        DistanceMin = class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ObjectiveDistanceMinMeters);
-        ObjectiveIndex = -1;
-
-        for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
-        {
-            if (GRI.DHObjectives[i] != none)
-            {
-                Distance = VSize(Location - GRI.DHObjectives[i].Location);
-
-                if (Distance < DistanceMin)
-                {
-                    DistanceMin = Distance;
-                    ObjectiveIndex = i;
-                }
-            }
-        }
-
-        if (ObjectiveIndex != -1)
-        {
-            E.Type = ERROR_TooCloseToObjective;
-            E.OptionalString = GRI.DHObjectives[ObjectiveIndex].ObjName;
-            E.OptionalInteger = Max(1, ConstructionClass.default.ObjectiveDistanceMinMeters - class'DHUnits'.static.UnrealToMeters(DistanceMin));
-            return E;
-        }
-    }
-
+    // TODO: Make the evaluation of these two errors dependent on the values
+    // since we want the more restrictive check to be run first. For now, this
+    // order will suffice.
     if (ConstructionClass.default.EnemyObjectiveDistanceMinMeters > 0.0)
     {
         // Don't allow this construction to be placed too close to an enemy-controlled objective.
@@ -769,6 +743,35 @@ function DHConstruction.ConstructionError GetPositionError()
             E.Type = ERROR_TooCloseToEnemyObjective;
             E.OptionalString = GRI.DHObjectives[ObjectiveIndex].ObjName;
             E.OptionalInteger = Max(1, ConstructionClass.default.EnemyObjectiveDistanceMinMeters - class'DHUnits'.static.UnrealToMeters(DistanceMin));
+            return E;
+        }
+    }
+
+    if (ConstructionClass.default.ObjectiveDistanceMinMeters > 0.0)
+    {
+        // Don't allow this construction to be placed too close to an objective.
+        DistanceMin = class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ObjectiveDistanceMinMeters);
+        ObjectiveIndex = -1;
+
+        for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
+        {
+            if (GRI.DHObjectives[i] != none)
+            {
+                Distance = VSize(Location - GRI.DHObjectives[i].Location);
+
+                if (Distance < DistanceMin)
+                {
+                    DistanceMin = Distance;
+                    ObjectiveIndex = i;
+                }
+            }
+        }
+
+        if (ObjectiveIndex != -1)
+        {
+            E.Type = ERROR_TooCloseToObjective;
+            E.OptionalString = GRI.DHObjectives[ObjectiveIndex].ObjName;
+            E.OptionalInteger = Max(1, ConstructionClass.default.ObjectiveDistanceMinMeters - class'DHUnits'.static.UnrealToMeters(DistanceMin));
             return E;
         }
     }
