@@ -21,4 +21,5 @@ defaultproperties
     SupplyCost=100
     bIsNeutral=true
     bAcceptsProjectors=false
+    ProgressMax=6
 }
