@@ -2469,8 +2469,6 @@ state RoundInPlay
             // Update the calculated attrition rate
             CalculatedAttritionRate[AXIS_TEAM_INDEX]   = AttRateAxis;
             CalculatedAttritionRate[ALLIES_TEAM_INDEX] = AttRateAllies;
-
-            Log("Calculated attrition rate!");
         }
 
         if (LevelInfo.NumObjectiveWin == 0)
