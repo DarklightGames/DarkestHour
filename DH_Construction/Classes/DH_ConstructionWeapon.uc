@@ -22,7 +22,7 @@ simulated event Tick(float DeltaTime)
     // HACK: This inventory system doesn't like what we're trying to do with it.
     // This bit of garbage saves us if we get into a state where the proxy has
     // been destroyed but the weapon is still hanging around.
-    if (Role < ROLE_Authority)
+    if (Role < ROLE_Authority && InstigatorIsLocallyControlled())
     {
         if (Proxy == none && Instigator.Weapon == self && Instigator.Weapon.OldWeapon == none)
         {
