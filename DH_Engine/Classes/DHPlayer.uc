@@ -28,6 +28,8 @@ var     float                   MapVoteTime;
 var     globalconfig bool       bLockTankOnEntry;    // option to automatically lock an armored vehicle on entering, providing it contains no other tank crew
 var     globalconfig bool       bSpawnWithBayonet;   // option to automatically spawn with a bayonet attached if applicable
 var     globalconfig int        CorpseStayTime;      // determines how long corpses should stay around (default 30)
+var     int                     CorpseStayTimeMin;
+var     int                     CorpseStayTimeMax;
 var     globalconfig string     ROIDHash;            // client ROID hash (this gets set/updated when a player joins a server)
 
 // View FOV
@@ -5735,7 +5737,9 @@ simulated function ClientSendStats(TeamPlayerReplicationInfo PRI, int NewGoals, 
 
 defaultproperties
 {
-    CorpseStayTime=32
+    CorpseStayTime=15
+    CorpseStayTimeMin=5
+    CorpseStayTimeMax=60
 
     // Sway values
     SwayCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=3.0,OutVal=0.375),(InVal=12.0,OutVal=0.33),(InVal=45.0,OutVal=0.475),(InVal=10000000000.0,OutVal=0.6)))

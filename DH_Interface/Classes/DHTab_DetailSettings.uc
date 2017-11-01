@@ -1186,9 +1186,9 @@ defaultproperties
     End Object
     sl_DistanceLOD=moSlider'DH_Interface.DHTab_DetailSettings.DistanceLODSlider'
     Begin Object Class=moSlider Name=CorpseStayTime
-        Value=30.0
-        MinValue=15.0
-        MaxValue=90.0
+        Value=15.0
+        MinValue=5.0
+        MaxValue=60.0
         bIntSlider=true
         SliderCaptionStyleName="DHLargeText"
         CaptionWidth=0.65

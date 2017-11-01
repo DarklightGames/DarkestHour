@@ -2893,7 +2893,7 @@ simulated function PlayDying(class<DamageType> DamageType, vector HitLoc)
 
         if (PC != none)
         {
-            LifeSpan = Clamp(PC.CorpseStayTime, 15, 90);
+            LifeSpan = Clamp(PC.CorpseStayTime, class'DHPlayer'.default.CorpseStayTimeMin, class'DHPlayer'.default.CorpseStayTimeMax);
         }
         else
         {
