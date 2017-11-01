@@ -396,7 +396,7 @@ defaultproperties
     EncroachmentSpawnTimePenalty=10
     OverrunRadiusInMeters=10
     EstablishmentRadiusInMeters=25
-    EstablishmentCounterThreshold=30
+    EstablishmentCounterThreshold=15
     OverrunMinimumTimeSeconds=15
     SpawnAccrualThreshold=30
     bHidden=false
