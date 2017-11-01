@@ -33,6 +33,7 @@ var     float           SpawnKillProtectionTime; // how many seconds a kill on a
 var     vector          SpawnLocationOffset;
 var     float           SpawnRadius;
 var     int             SpawnRadiusSegmentCount;
+var     bool            bShouldTraceCheckSpawnLocations;
 
 replication
 {
@@ -97,7 +98,6 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
     // due to their larger and varied sizes.
     if (VehiclePoolIndex == -1 && SpawnRadius != 0.0)
     {
-        // Calculate the arclength
         AngleInterval = (Pi * 2) / SpawnRadiusSegmentCount;
         j = Rand(SpawnRadiusSegmentCount);
 
@@ -110,6 +110,16 @@ function bool GetSpawnPosition(out vector SpawnLocation, out rotator SpawnRotati
             L.X += Cos(Angle) * SpawnRadius;
             L.Y += Sin(Angle) * SpawnRadius;
             L.Z += 10.0 + class'DHPawn'.default.CollisionHeight / 2;
+
+            // If enabled, this check ensures we don't spawn in a place that's
+            // not visible from the origin. This stops a bug where players could
+            // spawn inside of "hollow" static meshes or on the outside of
+            // buildings when a rally point was placed on the inside of the
+            // building.
+            if (bShouldTraceCheckSpawnLocations && !FastTrace(L, Location))
+            {
+                continue;
+            }
 
             CT = Spawn(class'DHPawnCollisionTest',,, L);
 

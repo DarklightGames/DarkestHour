@@ -406,5 +406,6 @@ defaultproperties
     SpawnLocationOffset=(Z=52)
     SpawnProtectionTime=1.0
     SpawnKillProtectionTime=8.0
+    bShouldTraceCheckSpawnLocations=true
 }
 
