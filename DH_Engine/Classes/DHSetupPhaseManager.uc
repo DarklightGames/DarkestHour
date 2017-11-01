@@ -247,7 +247,7 @@ state Done
 defaultproperties
 {
     PhaseBoundaryTag='SetupBoundaries'
-    PhaseEndReinforcements=(AxisReinforcements=16,AlliesReinforcements=16)
+    PhaseEndReinforcements=(AxisReinforcements=18,AlliesReinforcements=18)
     PhaseEndSounds(0)=Sound'DH_SundrySounds.RoundBeginSounds.Axis_Start'
     PhaseEndSounds(1)=Sound'DH_SundrySounds.RoundBeginSounds.US_Start'
     bSkipPreStart=true
