@@ -12,6 +12,30 @@ var DHSpawnPoint_PlatoonHQ          SpawnPoint;
 var int                             FlagSkinIndex;
 var class<DHSpawnPoint_PlatoonHQ>   SpawnPointClass;
 
+simulated state Constructed
+{
+    simulated function bool CanTakeTearDownDamageFromPawn(Pawn P, optional bool bShouldSendErrorMessage)
+    {
+        if (!super.CanTakeTearDownDamageFromPawn(P, bShouldSendErrorMessage))
+        {
+            return false;
+        }
+
+        if (SpawnPoint != none && SpawnPoint.CapturingEnemiesCount >= SpawnPoint.EnemiesNeededToCapture)
+        {
+            return true;
+        }
+
+        // "You must have another teammate nearby to deconstruct an enemy Platoon HQ!"
+        if (Role == ROLE_Authority && bShouldSendErrorMessage)
+        {
+            P.ReceiveLocalizedMessage(class'DHGameMessage', 22);
+        }
+
+        return false;
+    }
+}
+
 simulated function OnConstructed()
 {
     local vector HitLocation, HitNormal, TraceEnd, TraceStart;
@@ -32,7 +56,6 @@ simulated function OnConstructed()
 
             TraceStart = Location + vect(0, 0, 32);
             TraceEnd = Location - vect(0, 0, 32);
-
             HitLocation = Location;
 
             if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart) == none)

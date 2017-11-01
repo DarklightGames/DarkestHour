@@ -15,7 +15,7 @@ function Sound GetGroundBashSound(Actor HitActor, Material HitMaterial)
 
     if (C != none)
     {
-        if (C.CanTakeTearnDownDamageFromPawn(Instigator))
+        if (C.CanTakeTearDownDamageFromPawn(Instigator))
         {
             return TearDownSound;
         }

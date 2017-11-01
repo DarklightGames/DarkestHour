@@ -20,9 +20,8 @@ var int     EncroachmentSpawnTimePenalty;
 var bool    bIsEncroachedUpon;
 
 var float   CaptureRadiusInMeters;
-var int     CaptureCounter;
-var int     CaptureCounterThreshold;
 var int     EnemiesNeededToCapture;
+var int     CapturingEnemiesCount;
 
 var int     SpawnKillPenalty;
 var int     SpawnKillPenaltyCounter;
@@ -30,7 +29,7 @@ var int     SpawnKillPenaltyCounter;
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bIsEncroachedUpon;
+        bIsEncroachedUpon, CapturingEnemiesCount;
 }
 
 function PostBeginPlay()
@@ -49,7 +48,6 @@ function ResetActivationTimer()
 function Timer()
 {
     local int EncroachingEnemiesCount;
-    local int CapturingEnemiesCount;
 
     BlockReason = SPBR_None;
 
@@ -105,30 +103,6 @@ function Timer()
     {
         // If any enemies are capturing, spawning must be disabled.
         BlockReason = SPBR_EnemiesNearby;
-
-        if (CapturingEnemiesCount >= EnemiesNeededToCapture)
-        {
-            // Increment capture counter
-            CaptureCounter += CapturingEnemiesCount;
-        }
-    }
-    else
-    {
-        // No enemies capturing, decrement the counter
-        CaptureCounter -= 1;
-    }
-
-    CaptureCounter = Max(0, CaptureCounter);
-
-    if (CaptureCounter >= CaptureCounterThreshold)
-    {
-        // "A Platoon HQ has been overrun by the enemy."
-        class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHPlatoonHQMessage', 2);
-
-        if (Construction != none)
-        {
-            Construction.GotoState('Broken');
-        }
     }
 
     // If the construction is being deconstructed, block spawning.
@@ -217,7 +191,6 @@ defaultproperties
     EnemiesNeededToBlock=3
 
     CaptureRadiusInMeters=5
-    CaptureCounterThreshold=30
     EnemiesNeededToCapture=2
 
     SpawnKillPenalty=15

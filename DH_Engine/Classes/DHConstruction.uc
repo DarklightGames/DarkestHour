@@ -556,7 +556,7 @@ simulated state Constructed
         }
     }
 
-    simulated function bool CanTakeTearnDownDamageFromPawn(Pawn P)
+    simulated function bool CanTakeTearDownDamageFromPawn(Pawn P, optional bool bShouldSendErrorMessage)
     {
         return bCanBeTornDownWhenConstructed && (bCanBeTornDownByFriendlies || (P != none && P.GetTeamNum() != TeamIndex));
     }
@@ -838,7 +838,7 @@ function bool ShouldTakeDamageFromDamageType(class<DamageType> DamageType)
     return false;
 }
 
-simulated function bool CanTakeTearnDownDamageFromPawn(Pawn P)
+simulated function bool CanTakeTearDownDamageFromPawn(Pawn P, optional bool bShouldSendErrorMessage)
 {
     return true;
 }
@@ -849,7 +849,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Mo
 {
     local class<DamageType> TearDownDamageType;
 
-    if (CanTakeTearnDownDamageFromPawn(InstigatedBy))
+    if (CanTakeTearDownDamageFromPawn(InstigatedBy, true))
     {
         TearDownDamageType = class<DamageType>(DynamicLoadObject("DH_Equipment.DHShovelBashDamageType", class'class'));
 

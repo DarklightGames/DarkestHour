@@ -217,6 +217,10 @@ function GetPlayerCountsWithinRadius(float RadiusInMeters, optional int SquadInd
     local Pawn P;
     local DHPlayerReplicationInfo OtherPRI;
 
+    SquadmateCount = 0;
+    EnemyCount = 0;
+    TeammateCount = 0;
+
     foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(RadiusInMeters))
     {
         if (P != none && !P.bDeleteMe && P.Health > 0 && P.PlayerReplicationInfo != none)
