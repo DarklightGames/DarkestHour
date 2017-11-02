@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_6PounderCannonShellHE extends DH_AT57CannonShell;
+class DH_6PounderCannonShellHE extends DH_AT57CannonShellHE;
 
 defaultproperties
 {
