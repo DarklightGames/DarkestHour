@@ -31,6 +31,8 @@ var     bool                        bSkipPreStartTime;                      // W
 
 var     class<DHObstacleManager>    ObstacleManagerClass;
 
+var()   config bool                 bAllowAllChat;                          // optional bool to disable public text chat on the server
+
 var()   config float                AccuracyModifier;                       // 1.0 for normal weapon accuracy, raise for worse accuracy
 
 var()   config int                  ChangeTeamInterval;                     // Server setting determines how long before a player can change teams again after doing so
@@ -195,6 +197,8 @@ function PostBeginPlay()
     {
         return;
     }
+
+    GRI.bAllowAllChat = bAllowAllChat;
 
     // Allow weapon dropping (this is here in case it is set to false and then the server changes map and saved as false)
     bAllowWeaponThrowing = true;
@@ -2918,6 +2922,16 @@ static function string ParseChatPercVar(Mutator BaseMutator, Controller Who, str
 // exec FUNCTIONS - These functions natively require admin access
 //***********************************************************************************
 
+exec function ToggleAllowAllChat()
+{
+    if (GRI == none)
+    {
+        return;
+    }
+
+    GRI.bAllowAllChat = !GRI.bAllowAllChat;
+}
+
 exec function DebugDestroyConstructions()
 {
     local DHConstruction C;
@@ -4783,4 +4797,6 @@ defaultproperties
 
     WeaponLockTimeSecondsInterval=5
     WeaponLockTimeSecondsMaximum=120
+
+    bAllowAllChat=true
 }

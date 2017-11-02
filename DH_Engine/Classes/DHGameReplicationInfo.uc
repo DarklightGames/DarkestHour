@@ -120,6 +120,7 @@ var class<DHConstruction>   ConstructionClasses[CONSTRUCTION_CLASSES_MAX];
 var DHConstructionManager   ConstructionManager;
 
 var bool                bAreConstructionsEnabled;
+var bool                bAllowAllChat;
 
 // Map markers
 struct MapMarker
@@ -176,7 +177,8 @@ replication
         bAreConstructionsEnabled,
         SupplyPoints,
         AxisMapMarkers,
-        AlliesMapMarkers;
+        AlliesMapMarkers,
+        bAllowAllChat;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))
         AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex,
@@ -1292,6 +1294,7 @@ simulated function vector GetAdjustedHudLocation(vector HudLoc, optional bool bI
 
 defaultproperties
 {
+    bAllowAllChat=true
     AlliesVictoryMusicIndex=-1
     AxisVictoryMusicIndex=-1
     ArtilleryTargetDistanceThreshold=15088 //250 meters in UU

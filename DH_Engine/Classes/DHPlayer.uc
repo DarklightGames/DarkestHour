@@ -542,6 +542,24 @@ function ShowMidGameMenu(bool bPause)
     }
 }
 
+// Modified to prevent broadcast of public chat if "all chat" is disabled
+exec function Say(string Msg)
+{
+    Msg = Left(Msg,128);
+
+    // If all chat is not allowed, then don't broadcast (serversay) and tell the user
+    if (DHGameReplicationInfo(GameReplicationInfo) != none && !DHGameReplicationInfo(GameReplicationInfo).bAllowAllChat)
+    {
+        ReceiveLocalizedMessage(class'DHCommunicationMessage', 0); // "Public chat is currently disabled"
+        return;
+    }
+
+    if (AllowTextMessage(Msg))
+    {
+        ServerSay(Msg);
+    }
+}
+
 exec function VehicleSay(string Msg)
 {
     if (Msg == "")
