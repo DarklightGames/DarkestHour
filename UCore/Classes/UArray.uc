@@ -58,6 +58,25 @@ function array<Object> Union(array<Object> LHS, array<Object> RHS)
     return U;
 }
 
+// Add an element if it doesn't already exist in the array. Returns true if the
+// element was added.
+static final function bool AddUnique(out array<Object> A, Object Other)
+{
+    local int i;
+
+    for (i = 0; i < A.Length; ++i)
+    {
+        if (A[i] == Other)
+        {
+            return false;
+        }
+    }
+
+    A[A.Length] = Other;
+
+    return true;
+}
+
 // Slice tries to immitate Python's slice syntax.
 static final function array<Object> Slice(array<Object> A, int Start, int End, int Step)
 {
