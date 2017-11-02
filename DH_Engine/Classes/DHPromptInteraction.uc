@@ -56,13 +56,13 @@ simulated function PostRender(Canvas C)
     // Prompt Text
     MyPromptText = GetPromptText();
     C.TextSize(MyPromptText, XL, YL);
-    Y = (C.ClipY * (2.0 / 3.0)) - (YL / 2);
+    Y = (C.ClipY * 0.5) - (YL / 2);
     C.SetPos(X, Y);
     C.DrawText(MyPromptText, true);
 
     // Options Text
     C.TextSize(OptionsText, XL, YL);
-    Y = (C.ClipY * (2.0 / 3.0)) - (YL / 2) + YL;
+    Y = (C.ClipY * 0.5) - (YL / 2) + YL;
     C.SetPos(X, Y);
     C.DrawText(OptionsText, true);
 }
