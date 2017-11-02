@@ -17,6 +17,7 @@ var localized string UnspecifiedText;
 var Material DHTextLogo;
 var Material OfficialMapIcon;
 var Material CommunityMapIcon;
+var Material DefaultControlsImage;
 
 var CacheManager.MapRecord LoadingMapRecord;
 
@@ -230,4 +231,28 @@ defaultproperties
         FontName="ROInterface.fntROMainMenu"
     End Object
     Operations(7)=OpMapAuthorText
+
+    Begin Object class=DrawOpImage Name=OpDefaultControlsImg
+        Image=Texture'DH_GUI_Tex.Menu.default_keys_2048'
+        ImageStyle=0
+        Top=0.5
+        Lft=0.05
+        Width=0.9
+        Height=0.4
+        DrawColor=(R=200,B=200,G=200,A=220)
+    End Object
+    Operations(8)=OpDefaultControlsImg
+
+    Begin Object class=RODrawOpShadowedText Name=OpDefaultControlsText
+        Text="New Default Controls"
+        Top=0.45
+        Lft=0.1
+        Height=0.05
+        Width=0.25
+        MaxLines=1
+        Justification=0
+        VertAlign=1
+        FontName="ROInterface.fntROMainMenu"
+    End Object
+    Operations(9)=OpDefaultControlsText
 }
