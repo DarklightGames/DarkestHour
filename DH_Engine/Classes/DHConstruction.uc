@@ -849,15 +849,12 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Mo
 {
     local class<DamageType> TearDownDamageType;
 
-    if (CanTakeTearDownDamageFromPawn(InstigatedBy, true))
-    {
-        TearDownDamageType = class<DamageType>(DynamicLoadObject("DH_Equipment.DHShovelBashDamageType", class'class'));
+    TearDownDamageType = class<DamageType>(DynamicLoadObject("DH_Equipment.DHShovelBashDamageType", class'class'));
 
-        if (DamageType == TearDownDamageType)
-        {
-            TakeTearDownDamage(InstigatedBy);
-            return;
-        }
+    if (DamageType != none && DamageType == TearDownDamageType && CanTakeTearDownDamageFromPawn(InstigatedBy, true))
+    {
+        TakeTearDownDamage(InstigatedBy);
+        return;
     }
 
     if (bCanBeDamaged && ShouldTakeDamageFromDamageType(DamageType))
