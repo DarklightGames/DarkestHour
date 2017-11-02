@@ -219,7 +219,7 @@ defaultproperties
     ProxyDistanceInMeters=10.0
     bCanOnlyPlaceOnTerrain=true
     bCanPlaceInWater=false
-    GroundSlopeMaxInDegrees=5
+    GroundSlopeMaxInDegrees=10
     SquadMemberCountMinimum=3
 
     StartRotationMin=(Yaw=32768)
