@@ -118,6 +118,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
 
 defaultproperties
 {
+    bIsUnique=true
     NotQualified="Not qualified to operate this vehicle"
     VehicleIsEnemy="Cannot use an enemy vehicle"
     CannotEnter="Vehicle is full"
