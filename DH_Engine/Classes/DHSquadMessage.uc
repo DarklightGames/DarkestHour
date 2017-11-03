@@ -41,6 +41,9 @@ var localized string BannedPlayer;
 var localized string BannedCannotJoin;
 var localized string AutoJoinFailed;
 var localized string YouLeft;
+var localized string YouVolunteeredToBeSquadLeader;
+var localized string NoVolunteers;
+var localized string NoVolunteersDisbanded;
 
 static function string GetString(optional int S, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -129,6 +132,12 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
             return default.AutoJoinFailed;
         case 64:
             return default.YouLeft;
+        case 65:
+            return default.YouVolunteeredToBeSquadLeader;
+        case 66:
+            return default.NoVolunteers;
+        case 67:
+            return default.NoVolunteersDisbanded;
         default:
             break;
     }
@@ -174,6 +183,9 @@ defaultproperties
     BannedCannotJoin="You are unable to join this squad as you have been banned."
     AutoJoinFailed="There are no squads that you are eligible to join."
     YouLeft="You have left the squad."
+    YouVolunteeredToBeSquadLeader="You have volunteered to be the squad leader. The new squad leader will be selected shortly."
+    NoVolunteers="No members volunteered to be squad leader."
+    NoVolunteersDisbanded="Your squad has been disbanded because the squad is too small and no members volunteered to be squad leader."
     bIsSpecial=false
     bIsConsoleMessage=true
     LifeTime=8.0

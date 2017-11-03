@@ -10,14 +10,17 @@ const SQUAD_SIZE_MAX = 12;
 const SQUAD_RALLY_POINTS_MAX = 2;           // The number of squad rally points that can be exist at one time.
 const SQUAD_RALLY_POINTS_ACTIVE_MAX = 1;    // The number of squad rally points that are "active" at one time.
 const TEAM_SQUAD_MEMBERS_MAX = 64;
-const TEAM_SQUADS_MAX = 8;  // SQUAD_SIZE_MIN / TEAM_SQUAD_MEMBERS_MAX
+const TEAM_SQUADS_MAX = 8;                  // SQUAD_SIZE_MIN / TEAM_SQUAD_MEMBERS_MAX
 
-const RALLY_POINTS_MAX = 32;    // TEAM_SQUADS_MAX * SQUAD_RALLY_POINTS_MAX * 2
+const RALLY_POINTS_MAX = 32;                // TEAM_SQUADS_MAX * SQUAD_RALLY_POINTS_MAX * 2
 
 const SQUAD_NAME_LENGTH_MIN = 3;
 const SQUAD_NAME_LENGTH_MAX = 16;
 
 const SQUAD_LEADER_INDEX = 0;
+
+const SQUAD_DISBAND_THRESHOLD = 2;
+const SQUAD_LEADER_DRAW_DURATION_SECONDS = 15;
 
 // This nightmare is necessary because UnrealScript cannot replicate large
 // arrays of structs.
@@ -51,6 +54,22 @@ var int                             NextRallyPointInterval;
 var bool                            bAreRallyPointsEnabled;
 
 var int                             SquadLockMemberCountMin;    // The amount of squad member required to be able to lock a squad and keep it locked.
+
+struct SquadLeaderVolunteer
+{
+    var int TeamIndex;
+    var int SquadIndex;
+    var array<DHPlayerReplicationInfo> Volunteers;
+};
+var array<SquadLeaderVolunteer>     SquadLeaderVolunteers;
+
+struct SquadLeaderDraw
+{
+    var int TeamIndex;
+    var int SquadIndex;
+    var int ExpirationTime;
+};
+var array<SquadLeaderDraw>          SquadLeaderDraws;
 
 struct SquadBan
 {
@@ -111,6 +130,7 @@ function Timer()
     local int i, TeamIndex, SquadIndex, UnblockedCount;
     local array<DHSpawnPoint_SquadRallyPoint> SquadRallyPoints, ActiveSquadRallyPoints;
     local UComparator Comparator;
+    local array<DHPlayerReplicationInfo> Volunteers;
 
     // We want our player to know where his squadmates are at all times by
     // looking at the situation map. However, since the player may not have
@@ -219,6 +239,53 @@ function Timer()
                     ActiveSquadRallyPoints[i].SpawnAccrualTimer = 0;
                 }
             }
+        }
+    }
+
+    // Squad leader draws
+    for (i = SquadLeaderDraws.Length - 1; i >= 0; --i)
+    {
+        TeamIndex = SquadLeaderDraws[i].TeamIndex;
+        SquadIndex = SquadLeaderDraws[i].SquadIndex;
+
+        if (!IsSquadActive(TeamIndex, SquadIndex))
+        {
+            // Squad is no longer active, cancel the draw.
+            SquadLeaderDraws.Remove(i, 1);
+            continue;
+        }
+
+        if (Level.Game.GameReplicationInfo.ElapsedTime >= SquadLeaderDraws[i].ExpirationTime)
+        {
+            // Draw ended! Let's see who the new squad leader is.
+            GetSquadLeaderVolunteers(TeamIndex, SquadIndex, Volunteers);
+
+            if (Volunteers.Length == 0)
+            {
+                if (GetMemberCount(TeamIndex, SquadIndex) <= SQUAD_DISBAND_THRESHOLD)
+                {
+                    // "Your squad has been disbanded because the squad is too
+                    // small and no members volunteered to be squad leader."
+                    BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 67);
+                    DisbandSquad(TeamIndex, SquadIndex);
+                }
+                else
+                {
+                    // No volunteers, but the squad is big enough to not be
+                    // disbanded, so someone in the squad is going to randomly
+                    // be assigned the squad leader.
+                    BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 66);
+                    GetMembers(TeamIndex, SquadIndex, Volunteers);
+                }
+            }
+
+            if (IsSquadActive(TeamIndex, SquadIndex))
+            {
+                SelectNewSquadLeader(TeamIndex, SquadIndex, Volunteers);
+            }
+
+            // New squad leader has been selected, remove draw from the list.
+            SquadLeaderDraws.Remove(i, 1);
         }
     }
 }
@@ -448,6 +515,9 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
         return false;
     }
 
+    // Rescind squad leader volunteer application.
+    ClearSquadLeaderVolunteer(PRI, TeamIndex, SquadIndex);
+
     if (!SwapSquadMembers(PRI, NewSquadLeader))
     {
         return false;
@@ -492,8 +562,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
     local DHGameReplicationInfo GRI;
     local VoiceChatRoom SquadVCR;
     local int i;
-    local array<DHPlayerReplicationInfo> Members;
-    local UComparator ScoreComparator;
+    local array<DHPlayerReplicationInfo> Volunteers;
 
     if (PRI == none || PRI.Team == none)
     {
@@ -524,9 +593,14 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
 
     // Remove squad member.
     SetMember(TeamIndex, SquadIndex, SquadMemberIndex, none);
+    PRI.SquadIndex = -1;
+    PRI.SquadMemberIndex = -1;
 
     // Unreserve squad-only vehicle selection
     UnreserveSquadVehicle(PC);
+
+    // Clear squad leader volunteer application.
+    ClearSquadLeaderVolunteer(PRI, TeamIndex, SquadIndex);
 
     // "{0} has left the squad."
     BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 31, PRI);
@@ -542,15 +616,18 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
         // "The leader has left the squad."
         BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 40);
 
-        // Squad no longer has a leader. Automatically set a new based on who has the highest score.
-        GetMembers(TeamIndex, SquadIndex, Members);
-        ScoreComparator = new class'UComparator';
-        ScoreComparator.CompareFunction = ScoreComparatorFunction;
-        class'USort'.static.Sort(Members, ScoreComparator);
+        GetSquadLeaderVolunteers(TeamIndex, SquadIndex, Volunteers);
 
-        if (Members.Length > 0)
+        if (Volunteers.Length > 0)
         {
-            CommandeerSquad(Members[0], TeamIndex, SquadIndex);
+            // There are no volunteers, so let's make one of them the new
+            // squad leader without delay.
+            SelectNewSquadLeader(TeamIndex, SquadIndex, Volunteers);
+        }
+        else
+        {
+            // No volunteers, start a new squad leader draw.
+            StartSquadLeaderDraw(TeamIndex, SquadIndex);
         }
     }
 
@@ -561,13 +638,16 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
     {
         SquadVCR = VRI.GetSquadChannel(TeamIndex, SquadIndex);
 
-        if (SquadVCR != none)
+        if (PC != none)
         {
-            PC.ServerLeaveVoiceChannel(SquadVCR.ChannelIndex);
-        }
+            if (SquadVCR != none)
+            {
+                PC.ServerLeaveVoiceChannel(SquadVCR.ChannelIndex);
+            }
 
-        // Set active channel to the local channel
-        PC.Speak(VRI.LocalChannelName);
+            // Set active channel to the local channel
+            PC.Speak(VRI.LocalChannelName);
+        }
     }
 
     if (IsSquadLocked(TeamIndex, SquadIndex) && GetMemberCount(TeamIndex, SquadIndex) < SquadLockMemberCountMin)
@@ -599,13 +679,9 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
         }
 
         SetSquadNextRallyPointTime(TeamIndex, SquadIndex, 0.0);
-
-        // Clear all bans.
         ClearSquadBans(TeamIndex, SquadIndex);
+        ClearSquadLeaderVolunteers(TeamIndex, SquadIndex);
     }
-
-    PRI.SquadIndex = -1;
-    PRI.SquadMemberIndex = -1;
 
     return true;
 }
@@ -680,7 +756,10 @@ simulated function bool IsInSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, i
 
 simulated function bool IsSquadJoinable(int TeamIndex, int SquadIndex)
 {
-    return IsSquadActive(TeamIndex, SquadIndex) && !IsSquadFull(TeamIndex, SquadIndex) && !IsSquadLocked(TeamIndex, SquadIndex);
+    return IsSquadActive(TeamIndex, SquadIndex) &&
+           !IsSquadFull(TeamIndex, SquadIndex) &&
+           !IsSquadLocked(TeamIndex, SquadIndex) &&
+           GetSquadLeader(TeamIndex, SquadIndex) != none;
 }
 
 simulated function bool IsAnySquadJoinable(int TeamIndex)
@@ -769,7 +848,7 @@ function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadInd
         return -1;
     }
 
-    if (!IsSquadActive(TeamIndex, SquadIndex) || IsInSquad(PRI, TeamIndex, SquadIndex))
+    if (!IsSquadActive(TeamIndex, SquadIndex) || IsInSquad(PRI, TeamIndex, SquadIndex) || GetSquadLeader(TeamIndex, SquadIndex) == none)
     {
         return -1;
     }
@@ -1796,6 +1875,166 @@ function SetTeamSquadSize(int TeamIndex, int SquadSize)
         case ALLIES_TEAM_INDEX:
             AlliesSquadSize = SquadSize;
             break;
+    }
+}
+
+// Squad leader volunteer functionality
+function int GetSquadLeaderVolunteersIndex(int TeamIndex, int SquadIndex)
+{
+    local int i;
+
+    for (i = 0; i < SquadLeaderVolunteers.Length; ++i)
+    {
+        if (SquadLeaderVolunteers[i].TeamIndex == TeamIndex &&
+            SquadLeaderVolunteers[i].SquadIndex == SquadIndex)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+function VolunteerForSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex)
+{
+    local int i;
+    local DHPlayer PC;
+
+    if (PRI == none || PRI.Team == none || PRI.Team.TeamIndex != TeamIndex || PRI.SquadIndex != SquadIndex)
+    {
+        return;
+    }
+
+    // Find the squad leader volunteers entry.
+    i = GetSquadLeaderVolunteersIndex(TeamIndex, SquadIndex);
+
+    if (i == -1)
+    {
+        // No entry, create one.
+        i = 0;
+        SquadLeaderVolunteers.Insert(0, 1);
+        SquadLeaderVolunteers[0].TeamIndex = TeamIndex;
+        SquadLeaderVolunteers[0].SquadIndex = SquadIndex;
+    }
+
+    // Add player to volunteer list.
+    class'UArray'.static.AddUnique(SquadLeaderVolunteers[i].Volunteers, PRI);
+
+    PC = DHPlayer(PRI.Owner);
+
+    if (PC != none)
+    {
+        // "You have volunteered to be the squad leader. The new squad leader will be selected shortly."
+        PC.ReceiveLocalizedMessage(class'DHSquadMessage', 65);
+    }
+}
+
+function GetSquadLeaderVolunteers(int TeamIndex, int SquadIndex, out array<DHPlayerReplicationInfo> Volunteers)
+{
+    local int i, j;
+    local DHPlayerReplicationInfo PRI;
+
+    Volunteers.Length = 0;
+
+    i = GetSquadLeaderVolunteersIndex(TeamIndex, SquadIndex);
+
+    if (i == -1)
+    {
+        return;
+    }
+
+    for (j = 0; j < SquadLeaderVolunteers[i].Volunteers.Length; ++j)
+    {
+        PRI = SquadLeaderVolunteers[i].Volunteers[j];
+
+        if (PRI != none &&
+            PRI.Team != none &&
+            PRI.Team.TeamIndex == TeamIndex &&
+            PRI.SquadIndex == SquadIndex)
+        {
+            Volunteers[Volunteers.Length] = PRI;
+        }
+    }
+}
+
+function SelectNewSquadLeader(int TeamIndex, int SquadIndex, array<DHPlayerReplicationInfo> Members)
+{
+    local UComparator ScoreComparator;
+
+    if (!IsSquadActive(TeamIndex, SquadIndex))
+    {
+        return;
+    }
+
+    ScoreComparator = new class'UComparator';
+    ScoreComparator.CompareFunction = ScoreComparatorFunction;
+    class'USort'.static.Sort(Members, ScoreComparator);
+    CommandeerSquad(Members[0], TeamIndex, SquadIndex);
+}
+
+function StartSquadLeaderDraw(int TeamIndex, int SquadIndex)
+{
+    local int i;
+    local array<DHPlayerReplicationInfo> Members;
+    local DHPlayer PC;
+
+    SquadLeaderDraws.Insert(0, 1);
+    SquadLeaderDraws[0].TeamIndex = TeamIndex;
+    SquadLeaderDraws[0].SquadIndex = SquadIndex;
+    SquadLeaderDraws[0].ExpirationTime = Level.Game.GameReplicationInfo.ElapsedTime + SQUAD_LEADER_DRAW_DURATION_SECONDS;
+
+    GetMembers(TeamIndex, SquadIndex, Members);
+
+    for (i = 0; i < Members.Length; ++i)
+    {
+        PC = DHPlayer(Members[i].Owner);
+
+        if (PC != none)
+        {
+            PC.ClientSquadLeaderVolunteerPrompt(TeamIndex, SquadIndex, SquadLeaderDraws[0].ExpirationTime);
+        }
+    }
+}
+
+function ClearSquadLeaderVolunteers(int TeamIndex, int SquadIndex)
+{
+    local int i;
+
+    i = GetSquadLeaderVolunteersIndex(TeamIndex, SquadIndex);
+
+    if (i != -1)
+    {
+        SquadLeaderVolunteers.Remove(i, 1);
+    }
+}
+
+function ClearSquadLeaderVolunteer(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex)
+{
+    local int i;
+
+    i = GetSquadLeaderVolunteersIndex(TeamIndex, SquadIndex);
+
+    if (i != -1)
+    {
+        class'UArray'.static.Erase(SquadLeaderVolunteers[i].Volunteers, PRI);
+    }
+}
+
+function DisbandSquad(int TeamIndex, int SquadIndex)
+{
+    local int i;
+    local array<DHPlayerReplicationInfo> Members;
+
+    if (!IsSquadActive(TeamIndex, SquadIndex))
+    {
+        return;
+    }
+
+    GetMembers(TeamIndex, SquadIndex, Members);
+
+    for (i = 0; i < Members.Length; ++i)
+    {
+        LeaveSquad(Members[i]);
     }
 }
 

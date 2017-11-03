@@ -87,6 +87,7 @@ var     int                     WeaponLockViolations;       // the number of vio
 // Squads
 var     DHSquadReplicationInfo  SquadReplicationInfo;
 var     bool                    bIgnoreSquadInvitations;
+var     bool                    bIgnoreSquadLeaderVolunteerPrompts;
 var     vector                  SquadMemberLocations[12];   // SQUAD_SIZE_MAX
 
 var     DHCommandInteraction    CommandInteraction;
@@ -134,7 +135,7 @@ replication
         ServerSquadInvite, ServerSquadPromote, ServerSquadKick, ServerSquadBan,
         ServerSquadSay, ServerSquadLock, ServerSquadSignal,
         ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
-        ServerSetPatronStatus,
+        ServerSetPatronStatus, ServerSquadLeaderVolunteer,
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons; // these ones in debug mode only
 
     // Functions the server can call on the client that owns this actor
@@ -142,7 +143,7 @@ replication
         ClientProne, ClientToggleDuck, ClientLockWeapons,
         ClientAddHudDeathMessage, ClientFadeFromBlack, ClientProposeMenu,
         ClientConsoleCommand, ClientCopyToClipboard, ClientSaveROIDHash,
-        ClientSquadInvite, ClientSquadSignal;
+        ClientSquadInvite, ClientSquadSignal, ClientSquadLeaderVolunteerPrompt;
 }
 
 function ServerChangePlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2) { } // no longer used
@@ -4919,6 +4920,18 @@ simulated function ClientSquadInvite(string SenderName, string SquadName, int Te
     }
 }
 
+simulated function ClientSquadLeaderVolunteerPrompt(int TeamIndex, int SquadIndex, int ExpirationTime)
+{
+    if (!bIgnoreSquadLeaderVolunteerPrompts)
+    {
+        class'DHSquadLeaderVolunteerInteraction'.default.TeamIndex = TeamIndex;
+        class'DHSquadLeaderVolunteerInteraction'.default.SquadIndex = SquadIndex;
+        class'DHSquadLeaderVolunteerInteraction'.default.ExpirationTime = ExpirationTime;
+
+        Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadLeaderVolunteerInteraction", Player);
+    }
+}
+
 exec function Speak(string ChannelTitle)
 {
     local VoiceChatRoom VCR;
@@ -5730,14 +5743,12 @@ function ServerSetPatronStatus(bool bIsPatron)
     }
 }
 
-simulated exec function DebugChatInfo()
+function ServerSquadLeaderVolunteer(int TeamIndex, int SquadIndex)
 {
-    Log("DebugChatInfo");
-    Log("=============");
-    Log("VRI" @ VoiceReplicationInfo);
-    Log("VoiceID" @ PlayerReplicationInfo.VoiceID);
-    Log("PlayerID" @ PlayerReplicationInfo.PlayerID);
-    Log("VoiceMemberMask" @ PlayerReplicationInfo.VoiceMemberMask);
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.VolunteerForSquadLeader(DHPlayerReplicationInfo(PlayerReplicationInfo), TeamIndex, SquadIndex);
+    }
 }
 
 // Functions emptied out as RO/DH doesn't use a LocalStatsScreen actor & these aren't used

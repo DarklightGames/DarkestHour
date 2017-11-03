@@ -1587,7 +1587,7 @@ function UpdateSquads()
             }
         }
 
-        bCanJoinSquad = !bIsInASquad && (!bIsSquadFull && !bIsSquadLocked);
+        bCanJoinSquad = !bIsInASquad && SRI.IsSquadJoinable(TeamIndex, i);
 
         if (bCanJoinSquad)
         {
