@@ -12,7 +12,7 @@ defaultproperties
     bNeutralizeBeforeCapture=true
     bLockDownOnCapture=true
     PreventCaptureTime=120
-    LockDownOnCaptureTime=120
+    LockDownOnCaptureTime=240
     BaseCaptureRate=0.01666 // 60 seconds (1 / # of seconds)
     MaxCaptureRate=0.01666
     bRecaptureable=true
