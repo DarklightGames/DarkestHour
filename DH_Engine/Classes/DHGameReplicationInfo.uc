@@ -884,9 +884,6 @@ simulated function AddPRI(PlayerReplicationInfo PRI)
         }
 
         PRI.VoiceID = NewVoiceID;
-
-        // TODO: remove this for FINAL release
-        Log("[VOICEID]" @ NewVoiceID @ "assigned to" @ PRI.PlayerName);
     }
 
     PRIArray[PRIArray.Length] = PRI;
