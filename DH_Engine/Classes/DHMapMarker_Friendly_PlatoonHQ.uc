@@ -15,6 +15,6 @@ defaultproperties
 {
     IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.platoon_hq'
     MarkerName="Build HQ"
-    LifetimeSeconds=600
+    LifetimeSeconds=300
 }
 
