@@ -2465,7 +2465,13 @@ simulated function int GetNextSpawnTime(int SpawnPointIndex, DHRoleInfo RI, int 
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (RI == none || GRI == none || PlayerReplicationInfo == none || PlayerReplicationInfo.Team == none || SpawnPointIndex < 0 || SpawnPointIndex >= arraycount(GRI.SpawnPoints))
+    if (RI == none ||
+        GRI == none ||
+        PlayerReplicationInfo == none ||
+        PlayerReplicationInfo.Team == none ||
+        SpawnPointIndex < 0 ||
+        SpawnPointIndex >= arraycount(GRI.SpawnPoints) ||
+        GRI.SpawnPoints[SpawnPointIndex] == none)
     {
         return 0;
     }
