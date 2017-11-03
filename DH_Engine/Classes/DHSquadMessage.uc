@@ -33,10 +33,11 @@ var localized string RallyPointNotOnFoot;
 var localized string RallyPointTooSoon;
 var localized string RallyPointAbandoned;
 var localized string RallyPointBadLocation;
-var localized string RallyPointDestroyed;
+var localized string RallyPointRemoved;
 var localized string RallyPointAbandonmentWarning;
 var localized string RallyPointSwapped;
 var localized string RallyPointTooCloseToConstruction;
+var localized string RallyPointDestroyed;
 var localized string BannedPlayer;
 var localized string BannedCannotJoin;
 var localized string AutoJoinFailed;
@@ -109,7 +110,7 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
         case 56:
             return default.RallyPointBadLocation;
         case 57:
-            return default.RallyPointDestroyed;
+            return default.RallyPointRemoved;
         case 58:
             return default.RallyPointAbandonmentWarning;
         case 59:
@@ -138,6 +139,8 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
             return default.NoVolunteers;
         case 67:
             return default.NoVolunteersDisbanded;
+        case 68:
+            return default.RallyPointDestroyed;
         default:
             break;
     }
@@ -175,10 +178,11 @@ defaultproperties
     RallyPointTooSoon="You must wait {0} seconds until your squad can create a rally point."
     RallyPointAbandoned="A squad rally point failed to be established because it was abandoned."
     RallyPointBadLocation="A squad rally point cannot be created at this location."
-    RallyPointDestroyed="The squad leader has forcibly destroyed a rally point."
+    RallyPointRemoved="The squad leader has forcibly removed a rally point."
     RallyPointAbandonmentWarning="A newly created squad rally point is being abandoned!"
     RallyPointSwapped="The squad leader has forcibly changed the currently active rally point."
     RallyPointTooCloseToConstruction="You cannot create a squad rally point so close to a {0}."
+    RallyPointDestroyed="A squad rally point has been destroyed."
     BannedPlayer="{0} has been banned from the squad."
     BannedCannotJoin="You are unable to join this squad as you have been banned."
     AutoJoinFailed="There are no squads that you are eligible to join."

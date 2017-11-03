@@ -42,6 +42,8 @@ var bool bCanSendAbandonmentWarningMessage;     // Whether or not we should send
 var int SpawnAccrualTimer;
 var int SpawnAccrualThreshold;
 
+var int Health;
+
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -381,6 +383,24 @@ simulated function int GetSpawnTimePenalty()
     return SpawnTimePenalty;
 }
 
+event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+{
+    if (EventInstigator == none || EventInstigator.GetTeamNum() == GetTeamIndex())
+    {
+        // You cannot damage your own rally points.
+        return;
+    }
+
+    Health -= Damage;
+
+    if (Health <= 0)
+    {
+        // "A squad rally point has been destroyed."
+        SRI.BroadcastSquadLocalizedMessage(GetTeamIndex(), SquadIndex, SRI.SquadMessageClass, 68);
+        Destroy();
+    }
+}
+
 defaultproperties
 {
     StaticMesh=StaticMesh'DH_Construction_stc.Backpacks.USA_backpack'
@@ -407,5 +427,14 @@ defaultproperties
     SpawnProtectionTime=1.0
     SpawnKillProtectionTime=8.0
     bShouldTraceCheckSpawnLocations=true
+    Health=150
+
+    bBlockZeroExtentTraces=true
+    bBlockNonZeroExtentTraces=false
+    bBlockProjectiles=true
+    bCollideActors=true
+    bCollideWorld=false
+    bBlockActors=true
+    bBlockKarma=false
 }
 
