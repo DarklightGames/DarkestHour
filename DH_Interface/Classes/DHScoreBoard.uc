@@ -47,6 +47,7 @@ struct ScoreboardColumn
     var EScoreboardColumnType Type;
     var float Width;
     var bool bFriendlyOnly;
+    var bool bRoundEndOnly;
     var byte Justification;
 };
 
@@ -69,7 +70,7 @@ function array<int> GetScoreboardColumnIndicesForTeam(int TeamIndex)
 
     for (i = 0; i < ScoreboardColumns.Length; ++i)
     {
-        if (ScoreboardColumns[i].bFriendlyOnly && MyTeamIndex != TeamIndex)
+        if ((ScoreboardColumns[i].bFriendlyOnly && MyTeamIndex != TeamIndex) || ScoreboardColumns[i].bRoundEndOnly && !DHGRI.bRoundIsOver)
         {
             continue;
         }
@@ -830,10 +831,10 @@ defaultproperties
     ScoreboardColumns(0)=(Title="#",Type=COLUMN_SquadMemberIndex,Width=1.5,Justification=1,bFriendlyOnly=true)
     ScoreboardColumns(1)=(Type=COLUMN_PlayerName,Width=6.0)
     ScoreboardColumns(2)=(Title="Role",Type=COLUMN_Role,Width=4.0,bFriendlyOnly=true)
-//    ScoreboardColumns(3)=(Title="K",Type=COLUMN_Kills,Width=0.75,Justification=1,bFriendlyOnly=true)
-//    ScoreboardColumns(4)=(Title="D",Type=COLUMN_Deaths,Width=0.75,Justification=1,bFriendlyOnly=true)
-    ScoreboardColumns(3)=(Title="Score",Type=COLUMN_Score,Width=1.5,Justification=1)
-    ScoreboardColumns(4)=(Title="Ping",Type=COLUMN_Ping,Width=1.0,Justification=1)
+    ScoreboardColumns(3)=(Title="K",Type=COLUMN_Kills,Width=0.75,Justification=1,bRoundEndOnly=true)
+    ScoreboardColumns(4)=(Title="D",Type=COLUMN_Deaths,Width=0.75,Justification=1,bRoundEndOnly=true)
+    ScoreboardColumns(5)=(Title="Score",Type=COLUMN_Score,Width=1.6,Justification=1)
+    ScoreboardColumns(6)=(Title="Ping",Type=COLUMN_Ping,Width=1.0,Justification=1)
 
     SquadHeaderColor=(R=64,G=64,B=64,A=192)
     PlayerBackgroundColor=(R=0,G=0,B=0,A=192)
