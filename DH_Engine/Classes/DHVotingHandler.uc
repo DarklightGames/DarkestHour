@@ -79,9 +79,9 @@ function AddMap(string MapName, string Mutators, string GameOptions) // called f
 
     RepeatLimitInstance = RepeatLimit;
 
-    if (MapInfo.G != "" && int(MapInfo.G) >= 0)
+    if (MapInfo.U != "" && int(MapInfo.U) >= 0)
     {
-        RepeatLimitInstance = int(MapInfo.G);
+        RepeatLimitInstance = int(MapInfo.U);
     }
 
     MapList.Length = MapCount + 1;
@@ -92,11 +92,13 @@ function AddMap(string MapName, string Mutators, string GameOptions) // called f
 
     MapCount++;
 
+    /*
     if(Mutators != "" && Mutators != MapInfo.U)
     {
         MapInfo.U = Mutators;
         bUpdate = True;
     }
+    */
 
     if(GameOptions != "" && GameOptions != MapInfo.G)
     {
