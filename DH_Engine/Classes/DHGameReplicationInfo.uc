@@ -1251,34 +1251,37 @@ simulated function vector GetWorldCoords(float X, float Y)
 simulated function vector GetAdjustedHudLocation(vector HudLoc, optional bool bInvert)
 {
     local float SwapX, SwapY;
+    local int Offset;
+
+    Offset = OverheadOffset;
 
     if (bInvert)
     {
         if (OverheadOffset == 90)
         {
-            OverheadOffset = 270;
+            Offset = 270;
         }
         else if (OverheadOffset == 270)
         {
-            OverheadOffset = 90;
+            Offset = 90;
         }
     }
 
-    if (OverheadOffset  == 90)
+    if (Offset  == 90)
     {
         SwapX = HudLoc.Y * -1;
         SwapY = HudLoc.X;
         HudLoc.X = SwapX;
         HudLoc.Y = SwapY;
     }
-    else if (OverheadOffset == 180)
+    else if (Offset == 180)
     {
         SwapX = HudLoc.X * -1;
         SwapY = HudLoc.Y * -1;
         HudLoc.X = SwapX;
         HudLoc.Y = SwapY;
     }
-    else if (OverheadOffset == 270)
+    else if (Offset == 270)
     {
         SwapX = HudLoc.Y;
         SwapY = HudLoc.X * -1;
