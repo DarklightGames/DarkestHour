@@ -184,7 +184,7 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
             CRI.Text = string(4 * PRI.Ping);
             break;
         case COLUMN_Kills:
-            CRI.Text = string(PRI.Kills);
+            CRI.Text = string(PRI.DHKills);
             break;
         case COLUMN_Deaths:
             CRI.Text = string(int(PRI.Deaths));

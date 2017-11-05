@@ -11,6 +11,7 @@ var     int                     SquadMemberIndex;
 var     float                   NameDrawStartTime;
 var     float                   LastNameDrawTime;
 var     float                   StashedScore;
+var     int                     DHKills;
 
 var     bool                    bIsPatron;
 var     bool                    bIsDeveloper;
@@ -19,7 +20,7 @@ replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        SquadIndex, SquadMemberIndex, bIsPatron, bIsDeveloper;
+        SquadIndex, SquadMemberIndex, bIsPatron, bIsDeveloper, DHKills;
 }
 
 simulated function bool IsSquadLeader()

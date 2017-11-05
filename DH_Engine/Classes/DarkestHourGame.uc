@@ -1029,7 +1029,7 @@ function ScoreKill(Controller Killer, Controller Other)
         // TODO: When implementing the new scoring system, look at the RO version of this function and add back the killer's occupants logic
         // giving other crewman a reduced score sounds like a good idea (not riders though), but not kills
         DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).StashedScore += Amount;
-        Killer.PlayerReplicationInfo.Kills++;
+        DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).DHKills++;
 
         ScoreEvent(Killer.PlayerReplicationInfo, Amount, "frag");
     }
@@ -4418,7 +4418,7 @@ event PostLogin(PlayerController NewPlayer)
             if (S != none)
             {
                 PRI.Deaths = S.Deaths;
-                PRI.Kills = S.Kills;
+                PRI.DHKills = S.Kills;
                 PRI.Score = S.Score;
 
                 Teams[S.TeamIndex].AddToTeam(PC);
@@ -4491,7 +4491,7 @@ function Logout(Controller Exiting)
     if (S != none)
     {
         S.Deaths = PRI.Deaths;
-        S.Kills = PRI.Kills;
+        S.Kills = PRI.DHKills;
         S.Score = PRI.Score; // No need to add StashedScore here, because it is done on the pawn's death (which it does die)
         S.LastKilledTime = PC.LastKilledTime;
         S.WeaponUnlockTime = PC.WeaponUnlockTime;
