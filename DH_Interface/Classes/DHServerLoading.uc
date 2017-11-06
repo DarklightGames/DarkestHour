@@ -13,6 +13,9 @@ var localized string LegacyMapText;
 var localized string OfficialMapText;
 var localized string CommunityMapText;
 var localized string UnspecifiedText;
+var localized string EnabledText;
+var localized string DisabledText;
+var localized string GameTypeText;
 
 var Material DHTextLogo;
 var Material OfficialMapIcon;
@@ -33,6 +36,9 @@ simulated function SetText()
 {
     local string Map;
     local string Author;
+    local string GameType;
+    local string TempStr;
+    local bool bRallyConstructionsEnabled;
 
     Map = StripMap(MapName);
     Map = StripPrefix(Map);
@@ -45,6 +51,40 @@ simulated function SetText()
         Author = default.UnspecifiedText;
     }
 
+    if (InStr(MapName, "_Advance") >= 0)
+    {
+        GameType = class'DHGameType_Advance'.default.GameTypeName;
+        bRallyConstructionsEnabled = true;
+    }
+    else if (InStr(MapName, "_Push") >= 0)
+    {
+        GameType = class'DHGameType_Push'.default.GameTypeName;
+    }
+    else if (InStr(MapName, "_Cutoff") >= 0)
+    {
+        GameType = class'DHGameType_Cutoff'.default.GameTypeName;
+    }
+    else
+    {
+        GameType = class'DHGameType_Push'.default.GameTypeName;
+    }
+
+    if (bRallyConstructionsEnabled)
+    {
+        DrawOpText(Operations[11]).Text = EnabledText;
+        DrawOpText(Operations[11]).DrawColor = class'DHColor'.default.SquadColor;
+        DrawOpText(Operations[12]).Text = EnabledText;
+        DrawOpText(Operations[12]).DrawColor = class'DHColor'.default.SquadColor;
+    }
+    else
+    {
+        DrawOpText(Operations[11]).Text = DisabledText;
+        DrawOpText(Operations[11]).DrawColor = class'DHColor'.default.RedEnemy;
+        DrawOpText(Operations[12]).Text = DisabledText;
+        DrawOpText(Operations[12]).DrawColor = class'DHColor'.default.RedEnemy;
+    }
+
+    DrawOpText(Operations[10]).Text = Repl(GameTypeText, "{0}", GameType, false);
     DrawOpText(Operations[7]).Text = Repl(AuthorText, "{0}", Author, false);
     DrawOpText(Operations[4]).Text = Repl(DeployingText, "{0}", Map, false);
 }
@@ -142,6 +182,9 @@ simulated function SetImage()
 
 defaultproperties
 {
+    GameTypeText="Game Type: {0}"
+    EnabledText="Enabled"
+    DisabledText="Disabled"
     DeployingText="Deploying to {0}"
     AuthorText="Author: {0}"
     LegacyMapText="Legacy Map"
@@ -255,4 +298,64 @@ defaultproperties
         FontName="ROInterface.fntROMainMenu"
     End Object
     Operations(9)=OpDefaultControlsText
+
+    Begin Object class=RODrawOpShadowedText Name=OpGameTypeText
+        DrawColor=(R=255,G=50,B=50,A=255)
+        Top=0.14
+        Lft=0.5
+        Height=0.05
+        Width=0.48
+        MaxLines=1
+        Justification=2
+        VertAlign=1
+        FontName="ROInterface.fntROMainMenu"
+    End Object
+    Operations(10)=OpGameTypeText
+
+    Begin Object class=RODrawOpShadowedText Name=OpRalliesEnabledText
+        Top=0.21
+        Lft=0.5
+        Height=0.05
+        Width=0.48
+        MaxLines=1
+        Justification=2
+        VertAlign=1
+        FontName="ROInterface.fntROMainMenu"
+    End Object
+    Operations(11)=OpRalliesEnabledText
+
+    Begin Object class=RODrawOpShadowedText Name=OpConstructionsEnabledText
+        Top=0.26
+        Lft=0.5
+        Height=0.05
+        Width=0.48
+        MaxLines=1
+        Justification=2
+        VertAlign=1
+        FontName="ROInterface.fntROMainMenu"
+    End Object
+    Operations(12)=OpConstructionsEnabledText
+
+    Begin Object class=DrawOpImage Name=OpRallyIconImg
+        Image=Texture'DH_InterfaceArt2_tex.Icons.rally_point'
+        ImageStyle=0
+        Top=0.205
+        Lft=0.85
+        Width=0.04
+        Height=0.05
+        DrawColor=(R=255,B=255,G=255,A=255)
+    End Object
+    Operations(13)=OpRallyIconImg
+
+    Begin Object class=DrawOpImage Name=OpConstructionIconImg
+        Image=Texture'DH_InterfaceArt2_tex.Icons.Construction'
+        ImageStyle=0
+        Top=0.255
+        Lft=0.85
+        Width=0.04
+        Height=0.05
+        DrawColor=(R=255,B=255,G=255,A=255)
+    End Object
+    Operations(14)=OpConstructionIconImg
+
 }
