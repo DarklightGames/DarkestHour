@@ -119,6 +119,9 @@ simulated function bool IsPlayerHipFiring()
 
 defaultproperties
 {
+    // Recoil pct
+    PctBipodDeployRecoil=0.04
+
     PackingThresholdTime=0.12
     bUsesTracers=true
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stMG'
