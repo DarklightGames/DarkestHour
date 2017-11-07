@@ -37,7 +37,6 @@ simulated function SetText()
     local string Map;
     local string Author;
     local string GameType;
-    local string TempStr;
     local bool bRallyConstructionsEnabled;
 
     Map = StripMap(MapName);
