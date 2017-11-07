@@ -11,13 +11,9 @@ var float FovInterpStrength;
 var float FovZoomSpeed;
 var float FovZoomDirection;
 
-delegate float FovInterpFunction(float T, float A, float B);
-
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
-
-    FovInterpFunction = class'UInterp'.static.Deceleration;
 }
 
 simulated function bool (int Mode)
@@ -64,7 +60,7 @@ simulated event WeaponTick(float DeltaTime)
 {
     FovAngleTarget += (DeltaTime * FovZoomDirection * FovZoomSpeed);
     FovAngleTarget = FClamp(FovAngleTarget, 10.0, 120.0);
-    FovAngle = FovInterpFunction(DeltaTime * FovInterpStrength, FovAngle, FovAngleTarget);
+    FovAngle = class'UInterp'.static.Deceleration(DeltaTime * FovInterpStrength, FovAngle, FovAngleTarget);
 
     // TODO: set the player's FOV
     Instigator.Controller.FovAngle = FovAngle;
@@ -88,34 +84,6 @@ exec function SetFovInterpStrength(float F)
     }
 
     FovInterpStrength = F;
-}
-
-exec function SetFovInterpFunction(string F)
-{
-    switch (Caps(F))
-    {
-        case "DECEL":
-            FovInterpFunction = class'UInterp'.static.Deceleration;
-            break;
-        case "ACCEL":
-            FovInterpFunction = class'UInterp'.static.Acceleration;
-            break;
-        case "SMOOTH":
-            FovInterpFunction = class'UInterp'.static.SmoothStep;
-            break;
-        case "COSINE":
-            FovInterpFunction = class'UInterp'.static.Cosine;
-            break;
-        case "LINEAR":
-            FovInterpFunction = class'UInterp'.static.Linear;
-            break;
-        case "STEP":
-            FovInterpFunction = class'UInterp'.static.Step;
-            break;
-        default:
-            FovInterpFunction = class'UInterp'.static.Deceleration;
-            break;
-    }
 }
 
 defaultproperties
