@@ -1510,14 +1510,6 @@ function DriverDied()
 // Unlike RO, we avoid playing engine shut down sound when leaving vehicle
 function DriverLeft()
 {
-    if (Health > 0)
-    {
-        DriverPositionIndex = InitialPositionIndex;
-        PreviousPositionIndex = InitialPositionIndex;
-
-        MaybeDestroyVehicle(); // checks if vehicle is now empty & may set a timer to destroy later
-    }
-
     Throttle = 0.0;
     Steering = 0.0;
     Rise = 0.0;
@@ -1526,6 +1518,14 @@ function DriverLeft()
     Driver = none;
     bDriving = false;
     DrivingStatusChanged();
+
+    if (Health > 0)
+    {
+        DriverPositionIndex = InitialPositionIndex;
+        PreviousPositionIndex = InitialPositionIndex;
+
+        MaybeDestroyVehicle(); // checks if vehicle is now empty & may set a timer to destroy later
+    }
 }
 
 // Modified to stop any engine shut down force feedback if player exits just after switching off engine & the FF is still playing (he's exited so he shouldn't feel it)

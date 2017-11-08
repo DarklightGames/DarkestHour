@@ -1299,15 +1299,15 @@ function DriverLeft()
 
     SetRotatingStatus(0); // stop playing any turret rotation sound
 
-    if (VehicleBase != none)
-    {
-        VehicleBase.MaybeDestroyVehicle(); // checks if vehicle is now empty & may set a timer to destroy later
-    }
-
     Level.Game.DriverLeftVehicle(self, Driver);
     Driver = none;
     bDriving = false;
     DrivingStatusChanged();
+
+    if (VehicleBase != none)
+    {
+        VehicleBase.MaybeDestroyVehicle(); // checks if vehicle is now empty & may set a timer to destroy later
+    }
 }
 
 // Modified to pause any reload if player exits
