@@ -3225,7 +3225,7 @@ function CheckGiveShovel()
     {
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-        if (GRI != none)
+        if (GRI != none && GRI.bAreConstructionsEnabled)
         {
             CreateInventory(ShovelClassName);
         }
