@@ -52,7 +52,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
     CameraRotation = Normalize(QuatToRotator(NonRelativeQuat));
 
-    // Get camera location - use GunsightCameraBone if there is one & player is one the gun, otherwise use normal CameraBone
+    // Get camera location - use GunsightCameraBone if there is one & player is on the gun, otherwise use normal CameraBone
     if (GunsightCameraBone != '' && bOnTheGun)
     {
         CameraLocation = Gun.GetBoneCoords(GunsightCameraBone).Origin;
@@ -121,18 +121,16 @@ simulated function DrawHUD(Canvas C)
                 C.DrawColor.A = 255;
                 C.Style = ERenderStyle.STY_Alpha;
 
-                // Draw binoculars overlay
                 if (DriverPositionIndex == BinocPositionIndex)
                 {
                     DrawBinocsOverlay(C);
                 }
-                // Draw gunsight overlay
                 else
                 {
                     DrawGunsightOverlay(C);
                 }
 
-                C.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
+                C.ColorModulate.W = SavedOpacity; // reset HUD opacity to original value
             }
         }
 
