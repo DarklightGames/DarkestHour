@@ -5,23 +5,6 @@
 
 class DH_ChurchillMkVIICannonPawn extends DHBritishCannonPawn;
 
-exec function SetAnim(name NewAnim) // TEMPDEBUG - execs to try different commander animations
-{
-    if (IsDebugModeAllowed())
-    {
-        Driver.StopAnimating(true);
-        Driver.PlayAnim(NewAnim);
-    }
-}
-exec function SetDTAnim(int Position, name NewAnim)
-{
-    if (IsDebugModeAllowed())
-    {
-        Log(Name @ "DriverTransitionAnim for DriverPositions" @ Position @ "=" @ NewAnim @ " was" @ DriverPositions[Position].DriverTransitionAnim);
-        DriverPositions[Position].DriverTransitionAnim = NewAnim;
-    }
-}
-
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_ChurchillMkVIICannon'
