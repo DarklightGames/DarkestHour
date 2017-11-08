@@ -2275,6 +2275,27 @@ simulated function bool ConsumeAmmo(int Mode, float Load, optional bool bAmountN
     return super.ConsumeAmmo(Mode, Load, bAmountNeededIsMax);
 }
 
+// New debug exec to show spread limits as red lines
+exec function DebugSpread()
+{
+    local DHProjectileFire FM;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        FM = DHProjectileFire(FireMode[0]);
+
+        if (FM != none)
+        {
+            FM.bDebugSpread = !FM.bDebugSpread;
+
+            if (!FM.bDebugSpread)
+            {
+                ClearStayingDebugLines();
+            }
+        }
+    }
+}
+
 defaultproperties
 {
     Priority=9

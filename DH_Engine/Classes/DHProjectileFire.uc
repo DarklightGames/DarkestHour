@@ -29,6 +29,7 @@ var     float           BipodDeployedSpreadModifier; // modifier applied when pl
 var     float           RestDeploySpreadModifier;    // modifier applied when players weapon is rest deployed
 var     float           HipSpreadModifier;           // modifier applied when player is firing from the hip
 var     float           LeanSpreadModifier;          // modifier applied when player is firing while leaning
+var     bool            bDebugSpread;                // debug option to show limits of spread as red lines
 
 // Tracers
 var     bool            bUsesTracers;                // true if the weapon uses tracers
@@ -71,7 +72,7 @@ function DoFireEffect()
     local vector  StartTrace, FireLocation, HitLocation, HitNormal, FireDirection, X, Y, Z;
     local rotator RandomSpread;
     local float   AppliedSpread;
-    local int     NumProjectiles, i;
+    local int     NumProjectiles, i, j, k;
 
     if (Weapon == none)
     {
@@ -144,6 +145,26 @@ function DoFireEffect()
         }
 
         SpawnProjectile(FireLocation, rotator(FireDirection >> RandomSpread));
+    }
+
+    // Debug option to show limits of spread as red lines
+    if (bDebugSpread && SpreadStyle == SS_Random)
+    {
+        Weapon.ClearStayingDebugLines();
+
+        for (i = 0; i < 3; ++i)
+        {
+            for (j = 0; j < 3; ++j)
+            {
+                for (k = 0; k < 3; ++k)
+                {
+                    RandomSpread.Yaw = AppliedSpread * (((float(i) / 2.0) - 0.5) / 1.5);
+                    RandomSpread.Pitch = AppliedSpread * ((float(j) / 2.0) - 0.5);
+                    RandomSpread.Roll = AppliedSpread * ((float(k) / 2.0) - 0.5);
+                    Weapon.DrawStayingDebugLine(FireLocation, FireLocation + (25000.0 * (FireDirection >> RandomSpread)), 255, 0, 0);
+                }
+            }
+        }
     }
 }
 
