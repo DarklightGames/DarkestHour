@@ -122,7 +122,7 @@ replication
         SpawnPointIndex, VehiclePoolIndex, bSpawnPointInvalidated,
         NextSpawnTime, NextVehicleSpawnTime, NextChangeTeamTime, LastKilledTime,
         DHPrimaryWeapon, DHSecondaryWeapon, bSpectateAllowViewPoints,
-        SquadReplicationInfo, SquadMemberLocations;
+        SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -2480,7 +2480,6 @@ simulated function int GetNextSpawnTime(int SpawnPointIndex, DHRoleInfo RI, int 
     if (bSpawnedKilled)
     {
         T = LastKilledTime + SPAWN_KILL_RESPAWN_TIME;
-        bSpawnedKilled = false; // We got the reduced time, so we should set this to false
     }
     else
     {

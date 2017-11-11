@@ -3285,6 +3285,7 @@ function bool DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
 
         if (DHC.Pawn != none)
         {
+            DHC.bSpawnedKilled = false; // Every spawn, this should be set to false, but the server needs to do it (if you know a better place to put this in DHPlayer, please move it)
             DHC.ClientFadeFromBlack(3.0);
         }
 
