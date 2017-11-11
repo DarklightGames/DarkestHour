@@ -101,6 +101,8 @@ var     bool                        bCheckIfAlliesCleared;
 var     bool                        bIsLocked;
 var     bool                        bDidAwardAxisReinf;
 var     bool                        bDidAwardAlliesReinf;
+var     bool                        bRecentlyControlledByAxis;
+var     bool                        bRecentlyControlledByAllies;
 
 // Capture operations (after capture)
 var(DH_CaptureActions)      array<ObjOperationAction>   AlliesCaptureObjActions;
@@ -173,6 +175,9 @@ function PostBeginPlay()
 
     ObjState = InitialObjState;
 
+    bRecentlyControlledByAxis = InitialObjState == OBJ_Axis;
+    bRecentlyControlledByAllies = InitialObjState == OBJ_Allies;
+
     // Add self to game objectives
     if (DarkestHourGame(Level.Game) != none)
     {
@@ -198,6 +203,9 @@ function Reset()
     bIsLocked = false;
     bDidAwardAxisReinf = false;
     bDidAwardAlliesReinf = false;
+
+    bRecentlyControlledByAxis = InitialObjState == OBJ_Axis;
+    bRecentlyControlledByAllies = InitialObjState == OBJ_Allies;
 }
 
 function SetActive(bool bActiveStatus)
@@ -453,12 +461,6 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
         DisableCapBarsForThisObj(); // might want to move this to above if statement, but would need testing
     }
 
-    // Activate the no capture lock down
-    if (bLockDownOnCapture)
-    {
-        UnfreezeTime = Level.Game.GameReplicationInfo.ElapsedTime + LockDownOnCaptureTime;
-    }
-
     // Don't "disable" the objective, just "deactivate it"
     if (bSetInactiveOnCapture)
     {
@@ -529,7 +531,12 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     switch (Team)
     {
         case AXIS_TEAM_INDEX:
-            if (!bDidAwardAxisReinf)
+            if (bLockDownOnCapture && bRecentlyControlledByAllies)
+            {
+                UnfreezeTime = Level.Game.GameReplicationInfo.ElapsedTime + LockDownOnCaptureTime;
+            }
+
+            if (!bDidAwardAxisReinf && bRecentlyControlledByAllies)
             {
                 bDidAwardAxisReinf = true;
 
@@ -545,6 +552,9 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
                     class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, class'DHReinforcementAwardMsg', 1 * (G.GetNumPlayers() / 2), none, none, self);
                 }
             }
+
+            // This is set to false because Axis now "recently" control the objective
+            bRecentlyControlledByAllies = false;
 
             for (i = 0; i < AxisCaptureObjActions.Length; ++i)
             {
@@ -581,7 +591,12 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
             break;
 
         case ALLIES_TEAM_INDEX:
-            if (!bDidAwardAlliesReinf)
+            if (bLockDownOnCapture && bRecentlyControlledByAxis)
+            {
+                UnfreezeTime = Level.Game.GameReplicationInfo.ElapsedTime + LockDownOnCaptureTime;
+            }
+
+            if (!bDidAwardAlliesReinf && bRecentlyControlledByAxis)
             {
                 bDidAwardAlliesReinf = true;
 
@@ -597,6 +612,9 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
                     class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, class'DHReinforcementAwardMsg', 1 * (G.GetNumPlayers() / 2), none, none, self);
                 }
             }
+
+            // This is set to false because Allies now "recently" control the objective
+            bRecentlyControlledByAxis = false;
 
             for (i = 0; i < AlliesCaptureObjActions.Length; ++i)
             {
@@ -1139,6 +1157,8 @@ function ObjectiveCompleted(PlayerReplicationInfo CompletePRI, int Team)
     {
         ObjState = OBJ_Axis;
 
+        bRecentlyControlledByAxis = true;
+
         if (AxisEvent != '')
         {
             TriggerEvent(AxisEvent, self, None);
@@ -1147,6 +1167,8 @@ function ObjectiveCompleted(PlayerReplicationInfo CompletePRI, int Team)
     else
     {
         ObjState = OBJ_Allies;
+
+        bRecentlyControlledByAllies = true;
 
         if (AlliesEvent != '')
         {
