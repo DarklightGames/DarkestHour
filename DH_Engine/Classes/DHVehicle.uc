@@ -3682,8 +3682,8 @@ defaultproperties
     DisintegrationEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
     DisintegrationHealth=-10000.0 // -10000 default to make classes enable disintegration
-    ExplosionDamage=325.0
-    ExplosionRadius=700.0
+    ExplosionDamage=150.0
+    ExplosionRadius=400.0
     ExplosionSoundRadius=750.0
     DestructionLinearMomentum=(Min=100.0,Max=350.0)
     DestructionAngularMomentum=(Min=50.0,Max=150.0)

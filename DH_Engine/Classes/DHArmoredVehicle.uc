@@ -2352,8 +2352,8 @@ defaultproperties
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
     DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
-    ExplosionDamage=575.0
-    ExplosionRadius=900.0
+    ExplosionDamage=200.0
+    ExplosionRadius=450.0
     ExplosionSoundRadius=1000.0
 
     // Vehicle reset/respawn
