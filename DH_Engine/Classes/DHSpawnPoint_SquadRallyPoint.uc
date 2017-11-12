@@ -383,7 +383,7 @@ simulated function int GetSpawnTimePenalty()
     return SpawnTimePenalty;
 }
 
-event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     if (EventInstigator == none || EventInstigator.GetTeamNum() == GetTeamIndex())
     {
@@ -428,6 +428,8 @@ defaultproperties
     SpawnKillProtectionTime=8.0
     bShouldTraceCheckSpawnLocations=true
     Health=150
+
+    bCanBeDamaged=true
 
     bBlockZeroExtentTraces=true
     bBlockNonZeroExtentTraces=false
