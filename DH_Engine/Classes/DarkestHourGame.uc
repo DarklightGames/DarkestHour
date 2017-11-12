@@ -2731,6 +2731,7 @@ state RoundOver
 
         RoundStartTime = ElapsedTime;
 
+        GRI.RoundOverTime = GRI.RoundEndTime - GRI.ElapsedTime;
         GRI.bReinforcementsComing[AXIS_TEAM_INDEX] = 0;
         GRI.bReinforcementsComing[ALLIES_TEAM_INDEX] = 0;
         GRI.bRoundIsOver = true;
@@ -2765,6 +2766,7 @@ function EndGame(PlayerReplicationInfo Winner, string Reason)
     local Inventory Inv;
 
     GRI.bRoundIsOver = true;
+    GRI.RoundOverTime = GRI.RoundEndTime - GRI.ElapsedTime;
 
     // Destroy all Inventory (hopeful fix to the constant MG firing)
     foreach DynamicActors(class'Inventory', Inv)

@@ -67,7 +67,8 @@ var int                 AlliedNationID;
 var int                 AlliesVictoryMusicIndex;
 var int                 AxisVictoryMusicIndex;
 
-var int                 RoundEndTime;  // Length of a round in seconds (this can be modified at real time unlike RoundDuration, which it replaces)
+var int                 RoundEndTime;       // Length of a round in seconds (this can be modified at real time unlike RoundDuration, which it replaces)
+var int                 RoundOverTime;      // The time stamp at which the round is over
 var int                 SpawningEnableTime; // When spawning for the round should be enabled (default: 0)
 
 var DHRoleInfo          DHAxisRoles[ROLES_MAX];
@@ -178,7 +179,8 @@ replication
         SupplyPoints,
         AxisMapMarkers,
         AlliesMapMarkers,
-        bAllowAllChat;
+        bAllowAllChat,
+        RoundOverTime;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))
         AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex,
@@ -820,9 +822,9 @@ simulated function int GetRoundTimeRemaining()
     {
         SecondsRemaining = RoundEndTime - ElapsedTime;
 
-        if (bRoundIsOver && SecondsRemaining > 0)
+        if (bRoundIsOver)
         {
-            SecondsRemaining = RoundEndTime;
+            SecondsRemaining = RoundOverTime;
         }
     }
     else
