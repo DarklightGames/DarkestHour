@@ -1269,7 +1269,7 @@ simulated function vector GetAdjustedHudLocation(vector HudLoc, optional bool bI
         }
     }
 
-    if (Offset  == 90)
+    if (Offset == 90)
     {
         SwapX = HudLoc.Y * -1;
         SwapY = HudLoc.X;
