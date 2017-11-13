@@ -61,7 +61,6 @@ function CreateOptionTexRotators(DHCommandMenu Menu)
 
     if (Menu.Options.Length <= 0 || Menu.Options.Length > MAX_OPTIONS)
     {
-        Warn("Assertion error, option count must be between 1 and" @ MAX_OPTIONS @ "(found" @ Menu.Options.Length $ ")");
         return;
     }
 
