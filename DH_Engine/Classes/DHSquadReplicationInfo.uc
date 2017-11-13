@@ -1808,7 +1808,7 @@ function SwapRallyPoints(DHPlayerReplicationInfo PRI)
             // Set the oldest squad rally point to now be the newest (block status will be updated next Timer pop!)
             ActiveSquadRallyPoints[0].CreatedTimeSeconds = Level.TimeSeconds;
 
-            // "The squad leader has forcibly changes the currently active rally point."
+            // "The squad leader has forcibly changed the currently active rally point."
             BroadcastSquadLocalizedMessage(PRI.Team.TeamIndex, PRI.SquadIndex, SquadMessageClass, 59);
         }
     }
