@@ -23,6 +23,7 @@ var int EncroachmentPenaltyBlockThreshold;      // The value that EncroachmentPe
 var int EncroachmentPenaltyOverrunThreshold;    // The value that EncroachmentPenaltyCounter must reach for the rally point to be "overrun".
 var int EncroachmentPenaltyCounter;             // Running counter of encroachment penalty.
 var int EncroachmentSpawnTimePenalty;           // If being encroached upon, this amount of seconds will be added to the spawn timer
+var int EncroachmentEnemyCountMin;              // The amount of enemies needed nearby to increment encroachment penalty counter
 var bool bIsEncroachedUpon;                     // True if there are enemies encroaching upon the rally point.
 
 // Establishment
@@ -156,7 +157,7 @@ state Active
 
         GetPlayerCountsWithinRadius(default.EncroachmentRadiusInMeters,,, EncroachingEnemiesCount);
 
-        if (EncroachingEnemiesCount > 0)
+        if (EncroachingEnemiesCount >= EncroachmentEnemyCountMin)
         {
             // There are enemies nearby, so increase the encroachment penalty
             // counter by the number of nearby enemies.
@@ -164,8 +165,7 @@ state Active
         }
         else
         {
-            // There are no enemies nearby, decrease the penalty timer by the
-            // amount of nearby friendlies.
+            // There are no enemies nearby, decrease the penalty timer.
             EncroachmentPenaltyCounter -= 2;    // TODO; get rid of magic number
         }
 
@@ -414,6 +414,7 @@ defaultproperties
     EncroachmentPenaltyBlockThreshold=10
     EncroachmentPenaltyOverrunThreshold=30
     EncroachmentSpawnTimePenalty=10
+    EncroachmentEnemyCountMin=2
     OverrunRadiusInMeters=10
     EstablishmentRadiusInMeters=25
     EstablishmentCounterThreshold=15
