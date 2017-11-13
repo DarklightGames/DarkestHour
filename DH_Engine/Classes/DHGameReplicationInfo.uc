@@ -104,7 +104,7 @@ var byte                VehiclePoolIsSpawnVehicles[VEHICLE_POOLS_MAX];
 var byte                VehiclePoolReservationCount[VEHICLE_POOLS_MAX];
 var int                 VehiclePoolIgnoreMaxTeamVehiclesFlags;
 
-var byte                MaxTeamVehicles[2];
+var int                 MaxTeamVehicles[2];
 
 var DHSpawnPointBase    SpawnPoints[SPAWN_POINTS_MAX];
 
@@ -891,6 +891,28 @@ simulated function AddPRI(PlayerReplicationInfo PRI)
     PRIArray[PRIArray.Length] = PRI;
 }
 
+simulated function int GetTankReservationCount(int TeamIndex)
+{
+    local int i, Count;
+
+    for (i = 0; i < arraycount(VehiclePoolReservationCount); ++i)
+    {
+        if (VehiclePoolVehicleClasses[i] != none &&
+            VehiclePoolVehicleClasses[i].default.VehicleTeam == TeamIndex &&
+            !IgnoresMaxTeamVehiclesFlags(i))
+        {
+            Count += VehiclePoolReservationCount[i];
+        }
+    }
+
+    return Count;
+}
+
+simulated function int GetReservableTankCount(int TeamIndex)
+{
+    return MaxTeamVehicles[TeamIndex] - GetTankReservationCount(TeamIndex);
+}
+
 simulated function VehicleReservationError GetVehicleReservationError(DHPlayer PC, DHRoleInfo RI, int TeamIndex, int VehiclePoolIndex)
 {
     local class<DHVehicle> VC;
@@ -905,11 +927,6 @@ simulated function VehicleReservationError GetVehicleReservationError(DHPlayer P
     if (!RI.default.bCanBeTankCrew && VC.default.bMustBeTankCommander)
     {
         return ERROR_InvalidCredentials;
-    }
-
-    if (!IgnoresMaxTeamVehiclesFlags(VehiclePoolIndex) && MaxTeamVehicles[TeamIndex] <= 0)
-    {
-        return ERROR_TeamMaxActive;
     }
 
     if (GetVehiclePoolSpawnsRemaining(VehiclePoolIndex) <= 0)
@@ -935,6 +952,11 @@ simulated function VehicleReservationError GetVehicleReservationError(DHPlayer P
     if (VC.default.bMustBeInSquadToSpawn && !PC.IsInSquad())
     {
         return ERROR_NoSquad;
+    }
+
+    if (!IgnoresMaxTeamVehiclesFlags(VehiclePoolIndex) && GetReservableTankCount(TeamIndex) <= 0)
+    {
+        return ERROR_TeamMaxActive;
     }
 
     return ERROR_None;

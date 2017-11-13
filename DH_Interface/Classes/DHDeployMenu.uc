@@ -1330,9 +1330,9 @@ function UpdateVehicleImage()
         {
             i_MaxVehicles.Show();
             l_MaxVehicles.Show();
-            l_MaxVehicles.Caption = string(GRI.MaxTeamVehicles[CurrentTeam]);
+            l_MaxVehicles.Caption = string(Max(0, GRI.GetReservableTankCount(CurrentTeam)));
 
-            if (GRI.MaxTeamVehicles[CurrentTeam] == 0)
+            if (GRI.GetReservableTankCount(CurrentTeam) <= 0)
             {
                 l_MaxVehicles.TextColor = class'UColor'.default.Red;
             }
