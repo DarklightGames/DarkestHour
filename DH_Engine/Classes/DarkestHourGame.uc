@@ -3109,7 +3109,7 @@ exec function ChangeRoundTime(int Minutes, optional string Type)
 // Override to allow more than 32 bots (but not too many, 128 max)
 exec function AddBots(int num)
 {
-    num = Clamp(num, 0, 128 - (NumPlayers + NumBots));
+    num = Clamp(num, 0, 256 - (NumPlayers + NumBots));
 
     while (--num >= 0)
     {
