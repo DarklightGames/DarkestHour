@@ -4711,7 +4711,7 @@ defaultproperties
     bShowServerIPOnScoreboard=true
     bShowTimeOnScoreboard=true
 
-    EmptyTankUnlockTime=60
+    EmptyTankUnlockTime=90
 
     // Strings/hints
     ROHints(1)="You can 'cook' a Mk II grenade by pressing %FIRE3% while holding the grenade back."
