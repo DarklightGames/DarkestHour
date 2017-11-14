@@ -2357,8 +2357,8 @@ defaultproperties
     ExplosionSoundRadius=1000.0
 
     // Vehicle reset/respawn
-    VehicleSpikeTime=60.0     // if disabled
-    TimeTilDissapear=90.0     // after destroyed
+    VehicleSpikeTime=10.0     // if disabled
+    TimeTilDissapear=120.0    // after destroyed
     IdleTimeBeforeReset=200.0 // if empty & no friendlies nearby
 
     // Treads & track wheels

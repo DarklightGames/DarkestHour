@@ -31,6 +31,7 @@ var localized string OtherCrewmanCanLockVehicle;
 
 // Other
 var localized string UnbuttonToReload;
+var localized string VehicleScuttleInitiated;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -104,6 +105,9 @@ static function string GetString(optional int Switch, optional PlayerReplication
         case 28:
             S = default.OtherCrewmanCanLockVehicle;
             break;
+        case 29:
+            S = default.VehicleScuttleInitiated;
+            break;
         default:
             break;
     }
@@ -140,4 +144,5 @@ defaultproperties
     OnlyTankCrewCanLockVehicle="Only tank crew roles can lock or unlock vehicle"
     CanOnlyLockFromCrewPosition="Can only lock or unlock vehicle if you are in a tank crew position"
     OtherCrewmanCanLockVehicle="Only the most senior crew position can lock or unlock vehicle"
+    VehicleScuttleInitiated="Vehicle scuttle initiated, vehicle must be clear of occupents"
 }

@@ -165,7 +165,7 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerStartEngine, ServerDropSupplies;
+        ServerStartEngine, ServerDropSupplies, ServerInitiateVehicleScuttle;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -3485,6 +3485,24 @@ function Inventory FindInventoryType(class DesiredClass) { return none; }
 simulated function Weapon GetDemoRecordingWeapon() { return none; }
 exec function NextItem(); // only concerns UT2004 PowerUps) & just causes "accessed none" log errors if keybound & used
 
+exec function InitiateVehicleScuttle()
+{
+    ServerInitiateVehicleScuttle();
+}
+
+function ServerInitiateVehicleScuttle()
+{
+    bSpikedVehicle = true;
+    SetSpikeTimer();
+
+    DisplayVehicleMessage(29);
+
+    if (bDebuggingText)
+    {
+        Level.Game.Broadcast(self, "Initiating" @ VehicleSpikeTime @ "sec spike timer for disabled vehicle" @ VehicleNameString);
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -3689,7 +3707,7 @@ defaultproperties
     DestructionAngularMomentum=(Min=50.0,Max=150.0)
 
     // Vehicle reset/respawn
-    VehicleSpikeTime=30.0    // if disabled
+    VehicleSpikeTime=10.0    // if disabled
     IdleTimeBeforeReset=90.0 // if empty & no friendlies nearby
     FriendlyResetDistance=4000.0 // 66m
 
