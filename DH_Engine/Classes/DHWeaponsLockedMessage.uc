@@ -10,6 +10,7 @@ class DHWeaponsLockedMessage extends LocalMessage
 
 var localized string LockedMessage;
 var localized string LockedWithTimerMessage;
+var localized string LockedSetupPhaseMessage;
 var localized string UnlockedMessage;
 
 // Modified to play a buzz sound to go with screen screen message if player's weapon's are locked and he can't fire
@@ -50,6 +51,9 @@ static function string GetString(optional int Switch, optional PlayerReplication
 
         case 2:
             return default.UnlockedMessage;
+
+        case 3:
+            return default.LockedSetupPhaseMessage;
     }
 
     return "";
@@ -73,6 +77,7 @@ defaultproperties
     bIsUnique=true
     Lifetime=5.0
     PosY=0.8
+    LockedSetupPhaseMessage="Your weapons are locked during the setup phase"
     LockedMessage="Your weapons have been locked due to excessive spawn killing!"
     LockedWithTimerMessage="Your weapons are locked for {0} seconds"
     UnlockedMessage="Your weapons are now unlocked"

@@ -3295,11 +3295,22 @@ simulated function CheckUnlockWeapons()
 // New helper function to check whether player's weapons are locked due to spawn killing, so he's unable to fire, including warning message on screen
 simulated function bool AreWeaponsLocked(optional bool bNoScreenMessage)
 {
-    if (GameReplicationInfo != none && WeaponUnlockTime > GameReplicationInfo.ElapsedTime)
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI != none && (WeaponUnlockTime > GRI.ElapsedTime || GRI.bIsInSetupPhase))
     {
         if (!bNoScreenMessage)
         {
-            ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 1,,, self); // "Your weapons are locked for X seconds"
+            if (GRI.bIsInSetupPhase)
+            {
+                ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 3,,, self); // "Your weapons are locked during the setup phase"
+            }
+            else
+            {
+                ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 1,,, self); // "Your weapons are locked for X seconds"
+            }
         }
 
         return true;
