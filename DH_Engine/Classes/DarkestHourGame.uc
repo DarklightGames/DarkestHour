@@ -1920,6 +1920,8 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
     }
 }
 
+// Todo: this function is a fucking mess with casting, however we can't just do null checks and return at the beginning, as some logic needs to go through when some are null
+// IMO it also needs to support bots for the most part (as they are very useful in testing)
 function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<DamageType> DamageType)
 {
     local DHPlayer   DHKilled, DHKiller;
@@ -1998,9 +2000,9 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                 KillEvent("K", Killer.PlayerReplicationInfo, Killed.PlayerReplicationInfo, DamageType);
             }
         }
-        // Friendly fire
         else
         {
+            // Friendly fire
             if (bTeamGame && Killer.PlayerReplicationInfo != none && Killed.PlayerReplicationInfo != none && Killer.PlayerReplicationInfo.Team == Killed.PlayerReplicationInfo.Team)
             {
                 // Allow server admins an option of reducing damage from different types of friendly fire
@@ -2026,23 +2028,40 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                     ROPlayerReplicationInfo(Killer.PlayerReplicationInfo).FFKills += FFPenalty; // increase recorded FF kills
                 }
 
-                if (PlayerController(Killer) != none)
+                DHKilled = DHPlayer(Killed);
+                DHKiller = DHPlayer(Killer);
+
+                if (DHKiller != none)
                 {
-                    BroadcastLocalizedMessage(GameMessageClass, 13, Killer.PlayerReplicationInfo);
+                    BroadcastLocalizedMessage(GameMessageClass, 13, DHKiller.PlayerReplicationInfo);
+
+                    // Lock weapons for TKing (more strict than spawn killing)
+                    DHKiller.WeaponLockViolations++;
+
+                    if (DHPlayerReplicationInfo(DHKiller.PlayerReplicationInfo) != none)
+                    {
+                        DHKiller.LockWeapons(Min(WeaponLockTimeSecondsMaximum, DHPlayerReplicationInfo(DHKiller.PlayerReplicationInfo).FFKills / FFKillLimit * WeaponLockTimeSecondsMaximum), 4);
+                    }
 
                     // If bForgiveFFKillsEnabled, store the friendly Killer into the Killed player's controller, so if they choose to forgive, we'll know who to forgive
-                    if (bForgiveFFKillsEnabled && ROPlayer(Killed) != none)
+                    if (bForgiveFFKillsEnabled && DHKilled != none)
                     {
-                        ROPlayer(Killed).ReceiveLocalizedMessage(GameMessageClass, 18, Killer.PlayerReplicationInfo);
-                        ROPlayer(Killed).LastFFKiller = ROPlayerReplicationInfo(Killer.PlayerReplicationInfo);
-                        ROPlayer(Killed).LastFFKillAmount = FFPenalty;
+                        //DHKilled.ReceiveLocalizedMessage(GameMessageClass, 18, DHKiller.PlayerReplicationInfo); removed as we have F1 prompt now
+                        DHKilled.LastFFKiller = ROPlayerReplicationInfo(DHKiller.PlayerReplicationInfo);
+                        DHKilled.LastFFKillAmount = FFPenalty;
                     }
 
                     // Take action if player has exceeded FF kills limit
-                    if (ROPlayerReplicationInfo(Killer.PlayerReplicationInfo) != none && ROPlayerReplicationInfo(Killer.PlayerReplicationInfo).FFKills > FFKillLimit)
+                    if (ROPlayerReplicationInfo(DHKiller.PlayerReplicationInfo) != none && ROPlayerReplicationInfo(DHKiller.PlayerReplicationInfo).FFKills > FFKillLimit)
                     {
-                        HandleFFViolation(PlayerController(Killer));
+                        HandleFFViolation(DHKiller);
                     }
+                }
+
+                if (DHKilled != none)
+                {
+                    // Prompt Killed with interaction to forgive Killer
+                    DHKilled.ClientTeamKillPrompt(Killer.GetHumanReadableName());
                 }
 
                 KillEvent("TK", Killer.PlayerReplicationInfo, Killed.PlayerReplicationInfo, DamageType);

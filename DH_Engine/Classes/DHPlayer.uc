@@ -135,7 +135,7 @@ replication
         ServerSquadInvite, ServerSquadPromote, ServerSquadKick, ServerSquadBan,
         ServerSquadSay, ServerSquadLock, ServerSquadSignal,
         ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
-        ServerSetPatronStatus, ServerSquadLeaderVolunteer,
+        ServerSetPatronStatus, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons; // these ones in debug mode only
 
     // Functions the server can call on the client that owns this actor
@@ -143,7 +143,7 @@ replication
         ClientProne, ClientToggleDuck, ClientLockWeapons,
         ClientAddHudDeathMessage, ClientFadeFromBlack, ClientProposeMenu,
         ClientConsoleCommand, ClientCopyToClipboard, ClientSaveROIDHash,
-        ClientSquadInvite, ClientSquadSignal, ClientSquadLeaderVolunteerPrompt;
+        ClientSquadInvite, ClientSquadSignal, ClientSquadLeaderVolunteerPrompt, ClientTeamKillPrompt;
 }
 
 function ServerChangePlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2) { } // no longer used
@@ -3245,7 +3245,7 @@ function ServerSetLockTankOnEntry(bool bEnabled)
 
 // New function to put player into 'weapon lock' for a specified number of seconds, during which time he won't be allowed to fire
 // In multi-player it is initially called on server & then on owning net client, via a replicated function call
-simulated function LockWeapons(int Seconds)
+simulated function LockWeapons(int Seconds, optional int Reason)
 {
     if (Seconds > 0 && GameReplicationInfo != none)
     {
@@ -3254,7 +3254,7 @@ simulated function LockWeapons(int Seconds)
         // If this is the local player, show him a warning screen message & release his fire buttons
         if (Viewport(Player) != none)
         {
-            ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 0); // "Your weapons have been locked due to excessive spawn killing!"
+            ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', Reason);
             bFire = 0; // 'releases' fire button if being held down, which stops automatic weapon fire from continuing & avoids spamming repeated messages & buzz sounds
             bAltFire = 0;
         }
@@ -4920,6 +4920,13 @@ exec function DebugDriverAttachment()
     }
 }
 
+simulated function ClientTeamKillPrompt(string LastFFKillerString)
+{
+    class'DHTeamKillInteraction'.default.LastFFKillerName = LastFFKillerString;
+
+    Player.InteractionMaster.AddInteraction("DH_Engine.DHTeamKillInteraction", Player);
+}
+
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 // START SQUAD FUNCTIONS
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -5310,20 +5317,32 @@ exec function SquadSay(string Msg)
     }
 }
 
+function ServerForgiveLastFFKiller()
+{
+    if (DarkestHourGame(Level.Game) != none && DarkestHourGame(Level.Game).bForgiveFFKillsEnabled && LastFFKiller != none)
+    {
+        Level.Game.BroadcastLocalizedMessage(Level.Game.default.GameMessageClass, 19, LastFFKiller, PlayerReplicationInfo);
+        LastFFKiller.FFKills -= LastFFKillAmount;
+
+        // If LastFFKiller's weapons are locked and no longer has FF kills, unlock the player's weapons
+        if (DHPlayer(LastFFKiller.Owner) != none && DHPlayer(LastFFKiller.Owner).AreWeaponsLocked(true) && LastFFKiller.FFKills < 1)
+        {
+            DHPlayer(LastFFKiller.Owner).LockWeapons(1, 2);
+        }
+
+        // Set none as we have handled the current LastFFKiller
+        LastFFKiller = none;
+    }
+}
+
 function ServerSquadSay(string Msg)
 {
     local DarkestHourGame G;
 
-    // Colin: We'll preserve this teamkill forgiveness logic because people will
-    // probably be confused if typing "np" only works in Say or TeamSay.
-    if (ROTeamGame(Level.Game) != none &&
-        ROTeamGame(Level.Game).bForgiveFFKillsEnabled &&
-        LastFFKiller != none &&
-        (Msg ~= "np" || Msg ~= "forgive" || Msg ~= "no prob" || Msg ~= "no problem"))
+    // Forgive via typing
+    if (Msg ~= "np" || Msg ~= "forgive" || Msg ~= "no prob" || Msg ~= "no problem")
     {
-        Level.Game.BroadcastLocalizedMessage(Level.Game.default.GameMessageClass, 19, LastFFKiller, PlayerReplicationInfo);
-        LastFFKiller.FFKills -= LastFFKillAmount;
-        LastFFKiller = none;
+        ServerForgiveLastFFKiller();
     }
 
     LastActiveTime = Level.TimeSeconds;

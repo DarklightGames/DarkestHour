@@ -8,7 +8,8 @@ class DHWeaponsLockedMessage extends LocalMessage
 
 #exec OBJ LOAD FILE=..\Sounds\DHMenuSounds.uax
 
-var localized string LockedMessage;
+var localized string LockedFFMessage;
+var localized string LockedSKMessage;
 var localized string LockedWithTimerMessage;
 var localized string LockedSetupPhaseMessage;
 var localized string UnlockedMessage;
@@ -36,7 +37,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
     switch (Switch)
     {
         case 0:
-            return default.LockedMessage;
+            return default.LockedSKMessage;
 
         case 1:
             PC = DHPlayer(OptionalObject);
@@ -54,6 +55,9 @@ static function string GetString(optional int Switch, optional PlayerReplication
 
         case 3:
             return default.LockedSetupPhaseMessage;
+
+        case 4:
+            return default.LockedFFMessage;
     }
 
     return "";
@@ -78,7 +82,8 @@ defaultproperties
     Lifetime=5.0
     PosY=0.8
     LockedSetupPhaseMessage="Your weapons are locked during the setup phase"
-    LockedMessage="Your weapons have been locked due to excessive spawn killing!"
+    LockedFFMessage="Your weapons have been locked due to friendly fire!"
+    LockedSKMessage="Your weapons have been locked due to excessive spawn killing!"
     LockedWithTimerMessage="Your weapons are locked for {0} seconds"
     UnlockedMessage="Your weapons are now unlocked"
 }
