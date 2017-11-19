@@ -1261,7 +1261,7 @@ simulated function vector GetWorldCoords(float X, float Y)
     MapCenter = NorthEastBounds + ((SouthWestBounds - NorthEastBounds) * 0.5);
     WorldLocation.X = ((0.5 - X) * MapScale);
     WorldLocation.Y = ((0.5 - Y) * MapScale);
-    WorldLocation = GetAdjustedHudLocation(WorldLocation);
+    WorldLocation = GetAdjustedHudLocation(WorldLocation, true);
     WorldLocation += MapCenter;
 
     return WorldLocation;
