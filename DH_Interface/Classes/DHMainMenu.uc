@@ -8,7 +8,7 @@ class DHMainMenu extends UT2K4GUIPage;
 var()   config string           MenuSong;
 
 var automated       FloatingImage           i_background, i_Overlay, i_Announcement;
-var automated       GUIButton               b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Host, b_Quit;
+var automated       GUIButton               b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Host, b_Quit, b_LearnToPlay;
 var automated       GUISectionBackground    sb_MainMenu, sb_HelpMenu, sb_ConfigFixMenu, sb_ShowVersion, sb_Social;
 var automated       GUIButton               b_Credits, b_Manual, b_Demos, b_Website, b_Back, b_MOTDTitle, b_Facebook, b_GitHub, b_SteamCommunity, b_Patreon, b_Discord;
 var automated       GUILabel                l_Version;
@@ -51,6 +51,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     super.InitComponent(MyController, MyOwner);
 
     sb_MainMenu.ManageComponent(b_QuickPlay);
+    sb_MainMenu.ManageComponent(b_LearnToPlay);
     sb_MainMenu.ManageComponent(b_MultiPlayer);
     sb_MainMenu.ManageComponent(b_Practice);
     sb_MainMenu.ManageComponent(b_Settings);
@@ -204,6 +205,10 @@ function bool ButtonClick(GUIComponent Sender)
                 Controller.OpenMenu(Controller.GetInstantActionPage());
                 Profile("InstantAction");
             }
+            break;
+
+        case b_LearnToPlay:
+            Controller.OpenMenu("DH_Interface.DHLearnToPlayPage");
             break;
 
         case b_MultiPlayer:
@@ -574,6 +579,20 @@ defaultproperties
     End Object
     b_QuickPlay=GUIButton'DH_Interface.DHMainMenu.QuickPlayButton'
 
+    Begin Object Class=GUIButton Name=LearnToPlayButton
+        CaptionAlign=TXTA_Left
+        Caption="Learn To Play"
+        bAutoShrink=false
+        bUseCaptionHeight=true
+        FontScale=FNS_Large
+        StyleName="DHMenuTextButtonWhiteStyleHuge"
+        TabOrder=2
+        bFocusOnWatch=true
+        OnClick=DHMainMenu.ButtonClick
+        OnKeyEvent=LearnToPlayButton.InternalOnKeyEvent
+    End Object
+    b_LearnToPlay=GUIButton'DH_Interface.DHMainMenu.LearnToPlayButton'
+
     Begin Object Class=GUIButton Name=ServerButton
         CaptionAlign=TXTA_Left
         Caption="Server Browser"
@@ -581,7 +600,7 @@ defaultproperties
         bUseCaptionHeight=true
         FontScale=FNS_Large
         StyleName="DHMenuTextButtonWhiteStyleHuge"
-        TabOrder=2
+        TabOrder=3
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=ServerButton.InternalOnKeyEvent
@@ -595,7 +614,7 @@ defaultproperties
         bUseCaptionHeight=true
         FontScale=FNS_Large
         StyleName="DHMenuTextButtonWhiteStyleHuge"
-        TabOrder=3
+        TabOrder=4
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=InstantActionButton.InternalOnKeyEvent
@@ -609,7 +628,7 @@ defaultproperties
         bUseCaptionHeight=true
         FontScale=FNS_Large
         StyleName="DHMenuTextButtonWhiteStyleHuge"
-        TabOrder=4
+        TabOrder=5
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=SettingsButton.InternalOnKeyEvent
@@ -623,7 +642,7 @@ defaultproperties
         bUseCaptionHeight=true
         FontScale=FNS_Large
         StyleName="DHMenuTextButtonWhiteStyleHuge"
-        TabOrder=5
+        TabOrder=6
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=CreditsButton.InternalOnKeyEvent
@@ -637,7 +656,7 @@ defaultproperties
         bUseCaptionHeight=true
         FontScale=FNS_Large
         StyleName="DHMenuTextButtonWhiteStyleHuge"
-        TabOrder=6
+        TabOrder=7
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=QuitButton.InternalOnKeyEvent
@@ -660,7 +679,7 @@ defaultproperties
         bUseCaptionHeight=true
         FontScale=FNS_Large
         StyleName="DHMenuTextButtonWhiteStyle"
-        TabOrder=7
+        TabOrder=8
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=MOTDTitleButton.InternalOnKeyEvent
@@ -678,7 +697,6 @@ defaultproperties
         WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
         Graphic=Texture'DH_GUI_Tex.MainMenu.facebook'
-        TabOrder=1
         bTabStop=true
         Position=ICP_Center
         Hint="Follow us on Facebook!"
