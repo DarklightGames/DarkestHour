@@ -12,9 +12,9 @@ defaultproperties
     BallisticCoefficient=1.55
     Speed=39832.0 // 660 m/s
     MaxSpeed=39832.0
-    Damage=400.0 // 350 in RO
-    DamageRadius=1140.0 // 750 in RO
-    ImpactDamage=450 // 200 in RO
+    Damage=400.0
+    DamageRadius=1140.0
+    ImpactDamage=450
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
     PenetrationMag=780.0
     Tag="OF-350"

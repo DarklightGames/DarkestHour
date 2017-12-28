@@ -36,7 +36,4 @@ defaultproperties
     VehicleHudOccupantsX(6)=0.55
     VehicleHudOccupantsY(6)=0.6125
     SpawnOverlay(0)=Material'DH_M3Halftrack_tex.hud.m16_menu'
-
-
 }
-

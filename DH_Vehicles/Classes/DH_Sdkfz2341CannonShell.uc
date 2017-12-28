@@ -33,7 +33,6 @@ defaultproperties
     DHPenetrationTable(9)=0.1
     DHPenetrationTable(10)=0.1
     ShellDiameter=2.0
-    bHasTracer=false
     ShellImpactDamage=class'DH_Vehicles.DH_Sdkfz2341CannonShellDamageAP'
     ImpactDamage=175
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.Impact_Metal'
@@ -55,6 +54,7 @@ defaultproperties
     ExplosionDecal=class'ROEffects.BulletHoleConcrete'
     ExplosionDecalSnow=class'ROEffects.BulletHoleSnow'
     StaticMesh=StaticMesh'EffectsSM.Weapons.Ger_Tracer'
+    bHasTracer=false // actually has a tracer but we use a tracer static mesh for the projectile, so no need for extra tracer effect (normally the CoronaClass)
     AmbientSound=SoundGroup'DH_ProjectileSounds.Bullets.Bullet_Whiz'
     Tag="PzGr."
     SoundRadius=350.0

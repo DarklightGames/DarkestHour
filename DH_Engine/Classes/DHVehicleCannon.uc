@@ -1010,7 +1010,7 @@ simulated function int PrimaryAmmoCount()
     return 0;
 }
 
-// Modified to handle extended tertiary ammo type
+// Modified to handle tertiary ammo type
 simulated function byte GetAmmoIndex(optional bool bAltFire)
 {
     if (ProjectileClass == TertiaryProjectileClass && !bAltFire)

@@ -12,8 +12,8 @@ defaultproperties
     Speed=36211.0 // 600 m/s
     MaxSpeed=36211.0
     ImpactDamage=3500
-    Tag="BR-540" // earlier AP round without ballistic cap
     StaticMesh=StaticMesh'WeaponPickupSM.shells.122mm_shell'
+    Tag="BR-540" // earlier AP round without ballistic cap
 
     DHPenetrationTable(0)=12.5 // 100m
     DHPenetrationTable(1)=12.5 // 250m
@@ -64,7 +64,7 @@ defaultproperties
     OpticalRanges(33)=(Range=5600,RangeValue=0.824) // no range markings above 5600m for AP shell, so no adjustment beyond this
     OpticalRanges(34)=(Range=5800,RangeValue=0.824)
 
-    bMechanicalAiming=true // this cannon doesn't actually have mechanical aiming, but believe this is a fudge to adjust for sight markings that are 'out'
+    bMechanicalAiming=true // this cannon doesn't actually have mechanical aiming, but this is a fudge to adjust for sight markings that are 'out'
     MechanicalRanges(1)=(Range=100,RangeValue=-1.0)
     MechanicalRanges(2)=(Range=200,RangeValue=-2.0)
     MechanicalRanges(3)=(Range=300,RangeValue=-3.0)

@@ -15,13 +15,11 @@ var     StaticMesh            TurretCoverColStaticMeshRight;
 
 // Modified to attach 2 extra collision static mesh actors, to represent the mesh covers over the turret, which open & close like a hatch as the player unbuttons/buttons
 // These collision actors are set so they won't stop bullets or blast damage, as they are only mesh, but will stop grenades, as they were designed for
-// Using literals as it isn't worth defining variables for one specific vehicle
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    // Matt: I would use SM literals here, as it's a one-off, but for some strange reason it won't compile ("Missing StaticMesh name")
-    // The #exec OBJ LOAD FILE directive should fix that, but it seems to have no effect, so I've had to add variables for the SMs
+    // Matt: would use SM literals here as it's a one-off, but weirdly it won't compile ("Missing StaticMesh name") because mesh and/or group name begin with a number!
     TurretCoverColMeshLeft = class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, TurretCoverColStaticMeshLeft, 'com_hatch_L');
     TurretCoverColMeshRight = class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, TurretCoverColStaticMeshRight, 'com_hatch_R');
 

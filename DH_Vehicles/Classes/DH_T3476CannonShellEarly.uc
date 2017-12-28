@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_T3476CannonShellEarly extends DH_T3476CannonShell; // TODO: this is not being used anywhere
+class DH_T3476CannonShellEarly extends DH_T3476CannonShell;
 
 defaultproperties
 {

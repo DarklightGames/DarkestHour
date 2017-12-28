@@ -5,7 +5,7 @@
 
 class DH_Flak38CannonPawn extends DHATGunCannonPawn;
 
-// Modified to update sight rotation, if gun pitch has changed
+// Modified to update sight & aiming wheel rotation, if gun yaw or pitch has changed
 function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
 {
     super.HandleTurretRotation(DeltaTime, YawChange, PitchChange);

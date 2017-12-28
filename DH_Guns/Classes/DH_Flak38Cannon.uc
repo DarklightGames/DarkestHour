@@ -94,7 +94,7 @@ defaultproperties
     Skins(2)=none
     Skins(3)=none
     CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Flak38.Flak38_turret_coll'
-    GunnerAttachmentBone="Turret" // this gunner doesn't move (i.e. animation pose), so we don't need a dedicated attachment bone
+    GunnerAttachmentBone="Turret" // gunner doesn't move so we don't need a dedicated attachment bone
 
     // Turret movement
     RotationsPerSecond=0.05

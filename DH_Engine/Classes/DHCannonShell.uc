@@ -8,8 +8,8 @@ class DHCannonShell extends DHAntiVehicleProjectile
 
 struct RangePoint
 {
-    var() int               Range;                // meter distance for this Range setting
-    var() float             RangeValue;           // the adjustment value for this Range setting
+    var() int               Range;                // the distance for this range setting
+    var() float             RangeValue;           // the adjustment value for this range setting
 };
 
 var()   bool                bMechanicalAiming;    // uses the mechanical range settings for this projectile
@@ -88,7 +88,7 @@ simulated function Destroyed()
     super.Destroyed();
 }
 
-// Pitch aim adjustment for cannons with mechanically linked gunsight range setting - returns the proper pitch adjustment to hit a target at a particular range
+// Pitch aim adjustment for gunsights with mechanically adjusted range setting - returns the proper pitch adjustment to hit a target at a particular range
 simulated static function int GetPitchForRange(int Range)
 {
     local int i;

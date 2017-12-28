@@ -135,7 +135,7 @@ defaultproperties
     HullFireChance=0.45
     FireAttachBone="body"
     FireEffectOffset=(X=60.0,Y=-30.0,Z=50.0)
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc2.Locust.Locust_dest' // TODO: get a proper destroyed mesh made & a new destroyed overlay 'shaped' for the treads
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc2.Locust.Locust_dest' // TODO: get a proper destroyed mesh made & a new destroyed overlay texture shaped for the treads
 
     // Exit
     ExitPositions(0)=(X=60.0,Y=-95.0,Z=50.0)   // driver
@@ -164,7 +164,7 @@ defaultproperties
     LeftLeverBoneName="lever_L"
     RightLeverBoneName="lever_R"
 
-    // HUD // TODO: get 4 named HUD icons made
+    // HUD
     VehicleHudImage=Texture'DH_Locust_tex.HUD.locust_body'
     VehicleHudTurret=TexRotator'DH_Locust_tex.HUD.locust_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Locust_tex.HUD.locust_turret_look'

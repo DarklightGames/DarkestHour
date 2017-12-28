@@ -58,10 +58,10 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
         return;
     }
 
-    // Get camera rotation from weapon's aimed direction
+    // Get base camera rotation from weapon's aimed direction, as player moves with weapon in both pitch & yaw
     CameraRotation = Gun.GetBoneRotation(CameraBone);
 
-    // Player has his head raised above the reflector sight & can look around, so factor in the PlayerController's relative rotation
+    // Player has his head raised above the reflector sight & can look around, so factor in the PlayerController's relative view rotation
     if (DriverPositionIndex > 0 || IsInState('ViewTransition'))
     {
         RelativeQuat = QuatFromRotator(Normalize(PC.Rotation));
@@ -70,13 +70,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
         CameraRotation = Normalize(QuatToRotator(NonRelativeQuat));
     }
 
-    // Get camera location, including adjusting for any offset positioning (FPCamPos is either set in default props or from any ViewLocation in DriverPositions)
+    // Get camera location
     CameraLocation = Gun.GetBoneCoords(CameraBone).Origin;
-
-    if (FPCamPos != vect(0.0, 0.0, 0.0))
-    {
-        CameraLocation += (FPCamPos >> CameraRotation);
-    }
 
     // Finalise the camera with any shake
     CameraLocation += (PC.ShakeOffset >> PC.Rotation);
@@ -89,7 +84,7 @@ simulated function SetInitialViewRotation()
     super(DHVehicleWeaponPawn).SetInitialViewRotation();
 }
 
-// Modified so player faces forwards if he's on the gunsight when switching to behind view (same as a cannon pawn)
+// From DHVehicleCannonPawn, so player faces forwards if he's on the gunsight when switching to behind view
 simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 {
     if (PC != none && PC.bBehindView && bBehindViewChanged && DriverPositionIndex == 0)
@@ -100,7 +95,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
     super.POVChanged(PC, bBehindViewChanged);
 }
 
-// Modified so player faces forwards when he lifts his head up from the gunsight, as before his view was locked to the camera bone's rotation (similar to cannon pawn)
+// From DHVehicleCannonPawn, to set view rotation when player moves away from a position where his view was locked to a bone's rotation
 // Stops camera snapping to a strange rotation as view rotation reverts to pawn/PC rotation, which has been redundant & could have wandered meaninglessly via mouse movement
 simulated state ViewTransition
 {
@@ -115,7 +110,7 @@ simulated state ViewTransition
     }
 }
 
-// Modified so if player exits while on the gunsight, his view rotation is zeroed so he exits facing forwards (similar to cannon pawn)
+// From DHVehicleCannonPawn, so if player exits while on the gunsight, his view rotation is zeroed so he exits facing forwards
 // Necessary because while on gunsight his view rotation is locked to camera bone, but pawn/PC rotation can wander meaninglessly via mouse movement
 simulated function ClientKDriverLeave(PlayerController PC)
 {

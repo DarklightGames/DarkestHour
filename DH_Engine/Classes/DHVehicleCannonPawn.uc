@@ -178,7 +178,7 @@ simulated function DrawHUD(Canvas C)
         {
             if (HUDOverlay == none)
             {
-                // Save current HUD opacity & then set up for drawing overlays
+                // Save current HUD opacity & then set up for drawing a texture overlay
                 SavedOpacity = C.ColorModulate.W;
                 C.ColorModulate.W = 1.0;
                 C.DrawColor.A = 255;
@@ -966,7 +966,7 @@ defaultproperties
 
     // Gunsight overlay
     GunsightSize=0.9
-    RangeText="Meters"
+    RangeText="metres"
     RangePositionX=0.16
     RangePositionY=0.2
 

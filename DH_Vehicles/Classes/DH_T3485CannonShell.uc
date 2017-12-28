@@ -11,7 +11,7 @@ defaultproperties
     BallisticCoefficient=2.0
     Speed=47797.0 // 792 m/s
     MaxSpeed=47797.0
-    ImpactDamage=700 // 400 in RO, but have made closer to a tiger's shell (775), as is almost same speed & calibre
+    ImpactDamage=700
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
     Tag="BR-365"
 

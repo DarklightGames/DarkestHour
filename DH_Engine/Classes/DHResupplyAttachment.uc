@@ -42,7 +42,6 @@ final function SetTeamIndex(int TeamIndex)
     OnTeamIndexChanged();
 }
 
-
 function ProcessActorLeave()
 {
     local int i;

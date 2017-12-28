@@ -10,7 +10,7 @@ defaultproperties
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Pak40_anm.Pak40_turret'
     Skins(0)=Texture'DH_Artillery_Tex.Pak40.Pak40'
-    Skins(1)=Texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
+    Skins(1)=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
     Skins(2)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
     CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Pak40.pak40_turret_coll'
     BeginningIdleAnim="com_idle_close"

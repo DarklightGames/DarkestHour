@@ -40,7 +40,7 @@ struct NewHitpoint
 var     int         UnbuttonedPositionIndex;    // lowest DriverPositions index where driver is unbuttoned & exposed
 var     vector      OverlayFPCamPos;            // optional camera offset for overlay position, so can snap to exterior view position, avoiding camera anims passing through hull
 var     texture     PeriscopeOverlay;           // driver's periscope overlay texture
-var     texture     DamagedPeriscopeOverlay;    // gunsight overlay to show if optics have been broken
+var     texture     DamagedPeriscopeOverlay;    // periscope overlay to show if optics have been broken
 
 // Vehicle locking
 var     bool        bVehicleLocked;             // vehicle has been locked by a player, stopping new players from entering tank crew positions
@@ -420,7 +420,7 @@ simulated function ClientKDriverEnter(PlayerController PC)
     }
 }
 
-// Modified to handle optional camera offset for initial overlay position
+// Modified to handle optional camera offset for overlay position
 simulated state ViewTransition
 {
     simulated function HandleTransition()

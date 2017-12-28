@@ -25,7 +25,7 @@ defaultproperties
     PitchBone="MG_pivot"
     CustomPitchUpLimit=4500
     CustomPitchDownLimit=64000
-    
+
     // Ammo
     ProjectileClass=class'DH_Vehicles.DH_BesaVehicleBullet'
     InitialPrimaryAmmo=225

@@ -38,5 +38,5 @@ event Notify(Actor Owner)
 
 defaultproperties
 {
-    LifeSpan=15
+    LifeSpan=15.0
 }

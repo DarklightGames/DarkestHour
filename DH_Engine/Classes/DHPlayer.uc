@@ -4507,7 +4507,7 @@ exec function SetHitPoint(byte Index, string NewX, string NewY, string NewZ, opt
                 }
 
                 Log(AV.Tag @ "NewVehHitpoints[" $ Index $ "] Offset =" @ float(NewX) @ float(NewY) @ float(NewZ) @ " Radius =" @ float(NewRadius)
-                    @ "(was" @ AV.NewVehHitpoints[Index].PointOffset @ ",radius" @ AV.NewVehHitpoints[Index].PointRadius $ ")");
+                    @ "(was" @ AV.NewVehHitpoints[Index].PointOffset $ ", radius" @ AV.NewVehHitpoints[Index].PointRadius $ ")");
 
                 AV.NewVehHitpoints[Index].PointOffset.X = float(NewX);
                 AV.NewVehHitpoints[Index].PointOffset.Y = float(NewY);
@@ -4523,7 +4523,7 @@ exec function SetHitPoint(byte Index, string NewX, string NewY, string NewZ, opt
             }
 
             Log(V.Tag @ "VehHitpoints[" $ Index $ "] Offset =" @ float(NewX) @ float(NewY) @ float(NewZ) @ " Radius =" @ float(NewRadius)
-                @ "(was" @ V.VehHitpoints[Index].PointOffset @ ",radius" @ V.VehHitpoints[Index].PointRadius $ ")");
+                @ "(was" @ V.VehHitpoints[Index].PointOffset $ ", radius" @ V.VehHitpoints[Index].PointRadius $ ")");
 
             V.VehHitpoints[Index].PointOffset.X = float(NewX);
             V.VehHitpoints[Index].PointOffset.Y = float(NewY);
@@ -5720,7 +5720,6 @@ function ServerRequestBanInfo(int PlayerID)
             {
                 continue;
             }
-
 
             if (PlayerID == -1 || PC.PlayerReplicationInfo.PlayerID == PlayerID)
             {
