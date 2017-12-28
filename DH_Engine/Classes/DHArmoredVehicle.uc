@@ -2302,7 +2302,7 @@ defaultproperties
     bMustBeTankCommander=true
     UnbuttonedPositionIndex=2
     BeginningIdleAnim="driver_hatch_idle_close"
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_Allied'
 
     // Damage
     Health=525
@@ -2313,7 +2313,7 @@ defaultproperties
     TreadDamageThreshold=0.75
     bCanCrash=false
     ImpactDamageThreshold=5000.0
-    DamagedPeriscopeOverlay=Texture'DH_VehicleOptics_tex.Allied.Destroyed'
+    DamagedPeriscopeOverlay=Texture'DH_VehicleOpticsDestroyed_tex.General.Destroyed'
 
     // Component damage probabilities
     DriverKillChance=1150.0

@@ -15,11 +15,11 @@ defaultproperties
     PeriscopePositionIndex=1
     DriveAnim="stand_idlehip_binoc"
     DrivePos=(X=-10.0,Y=3.5.0,Z=-10.0) // commander clips the cupola whatever animation or position is used, as hatch is so small - this is as good as I could get it
-    GunsightOverlay=texture'DH_VehicleOptics_tex.Allied.Cromwell_sight_background'
-    CannonScopeCenter=texture'DH_VehicleOptics_tex.Allied.British_sight_mover'
-    DestroyedGunsightOverlay=texture'DH_VehicleOpticsDestroyed_tex.Allied.Cromwell_sight_destroyed'
-    AmmoShellTexture=texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell'
-    AmmoShellReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell_reload'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.British.Cromwell_sight_background'
+    CannonScopeCenter=Texture'DH_VehicleOptics_tex.British.British_sight_mover'
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Cromwell_sight_destroyed'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell_reload'
     PoweredRotateSound=Sound'Vehicle_Weapons.Turret.electric_turret_traverse'
     PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.electric_turret_traverse'

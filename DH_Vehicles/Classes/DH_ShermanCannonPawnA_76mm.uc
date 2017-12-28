@@ -15,7 +15,7 @@ defaultproperties
     PeriscopePositionIndex=1
     DrivePos=(X=3.0,Y=2.0,Z=-17.0)
     DriveAnim="stand_idlehip_binoc"
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.Allied.Sherman76mm_sight_background'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.US.Sherman76mm_sight_background'
     GunsightSize=0.972
     DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Wolverine_sight_destroyed'
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell'

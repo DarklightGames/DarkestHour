@@ -15,7 +15,7 @@ defaultproperties
     PeriscopePositionIndex=1
     DrivePos=(X=8.0,Y=8.0,Z=-5.0)
     DriveAnim="stand_idlehip_binoc"
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.Allied.Stuart_sight_background'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.US.Stuart_sight_background'
     GunsightSize=0.542
     DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Stuart_sight_destroyed'
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.StuartShell'

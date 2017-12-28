@@ -18,8 +18,8 @@ defaultproperties
     DriveAnim="VSU76_com_idle_close"
     bManualTraverseOnly=true
     bHasAltFire=false
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.Artillery.17Pdr_sight_background'
-    CannonScopeCenter=Texture'DH_VehicleOptics_tex.Artillery.17pdr_sight_mover'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.British.17Pdr_sight_background'
+    CannonScopeCenter=Texture'DH_VehicleOptics_tex.British.17pdr_sight_mover'
     GunsightSize=0.542
     RangePositionX=0.16
     DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.17pdr_sight_destroyed'

@@ -17,7 +17,7 @@ defaultproperties
     DriveAnim="VStug3_com_idle_close"
     bHasAltFire=false
     bLockCameraDuringTransition=true
-    GunsightOverlay=Texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
     GunsightSize=0.555
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.KingTigerShell'
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.KingTigerShell_reload'

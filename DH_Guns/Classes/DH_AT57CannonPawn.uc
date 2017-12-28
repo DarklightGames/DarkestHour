@@ -13,9 +13,9 @@ defaultproperties
     DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_6PounderGun_anm.6pounder_turret',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
     DrivePos=(X=-25.0,Y=7.0,Z=-27.0)
     DriveAnim="crouch_idle_binoc"
-    GunsightOverlay=Texture'DH_Artillery_Tex.ATGun_Hud.57mmGun_sight_background'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.US.57mmGun_sight_background'
     GunsightSize=0.542
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
+    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_7x50Allied'
     AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.Panzer3shell_reload'
 }

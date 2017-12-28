@@ -18,7 +18,7 @@ defaultproperties
     DrivePos=(X=-2.0,Y=-1.0,Z=13.0)
     DriveAnim="VSU76_com_idle_close"
     bHasAltFire=false
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.Allied.Sherman76mm_sight_background'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.US.Sherman76mm_sight_background'
     GunsightSize=0.972
     DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Wolverine_sight_destroyed'
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell'

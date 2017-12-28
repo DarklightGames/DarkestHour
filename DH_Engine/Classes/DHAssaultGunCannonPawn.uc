@@ -16,5 +16,5 @@ defaultproperties
     RangeText="meters"
     DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.stug3_SflZF1a_destroyed'
     PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.Sf14z_periscope'
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
+    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Germ'
 }

@@ -23,7 +23,7 @@ defaultproperties
     DriveRot=(Yaw=55536) // have to turn commander to the left so he just about squeezes inside the hatch without clipping the turret
     DriveAnim="stand_idlehip_binoc"
     bManualTraverseOnly=true
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.Allied.Stuart_sight_background'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.US.Stuart_sight_background'
     // TODO: M46 telescope (inside M9 periscope) only gave 6 degree FOV
     // So with magnification of 1.8x (view FOV 50 across screen width), gunsight view would only be 12% of screen width (6 deg / 50 deg)
     // But this gives is horribly small gunsight view, which is barely usable

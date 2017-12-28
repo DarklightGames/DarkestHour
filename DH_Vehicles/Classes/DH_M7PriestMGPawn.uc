@@ -15,7 +15,7 @@ defaultproperties
 //  DriverPositions(1)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_M7Priest_anm.priest_mg_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=63000,bDrawOverlays=true,bExposed=true)
     UnbuttonedPositionIndex=0
     BinocPositionIndex=1
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
+    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_7x50Allied'
     bDrawDriverInTP=true
     DrivePos=(X=-1.0,Y=0.0,Z=0.0)
     DriveAnim="stand_idleiron_mg42"

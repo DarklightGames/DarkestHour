@@ -201,7 +201,7 @@ defaultproperties
     DriveAnim="VPanzer3_driver_idle_open"
     CameraBone="camera_MG"
     GunsightCameraBone="MG_pivot"
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.Allied.BesaMG_sight'
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.Allied.BINOC_overlay_7x50Allied'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.British.BesaMG_sight'
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_Allied'
+    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_7x50Allied'
 }

@@ -8,7 +8,7 @@ class DH_T3476MountedMGPawn extends DHVehicleMGPawn;
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_T3476MountedMG'
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.Common.MG_sight'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.General.MG_sight'
     GunsightSize=0.5
     WeaponFOV=72.0
     CameraBone="MG_pivot"

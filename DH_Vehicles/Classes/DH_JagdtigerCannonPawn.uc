@@ -17,7 +17,7 @@ defaultproperties
     DrivePos=(X=2.0,Y=6.0,Z=-3.0)
     DriveAnim="stand_idlehip_binoc"
     bHasAltFire=false
-    GunsightOverlay=Texture'DH_Artillery_Tex.ATGun_Hud.ZF_II_3x8_Pak'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
     GunsightSize=0.83333
     RangePositionX=0.02
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.JagdTiger_shell'

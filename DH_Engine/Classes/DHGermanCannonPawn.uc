@@ -62,5 +62,5 @@ defaultproperties
     RangeText="meters"
     RangePositionX=0.02
     GunsightOverlay=Texture'DH_VehicleOptics_tex.German.German_sight_background'
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
+    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Germ'
 }

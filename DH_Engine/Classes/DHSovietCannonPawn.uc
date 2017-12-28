@@ -47,8 +47,8 @@ defaultproperties
 {
     RangeText="meters"
     RangePositionX=0.1
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.Soviet.AB_BINOC_overlay_7x50Sov'
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_Allied'
+    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_7x50Sov'
     GunsightSize=0.5371875
     ScopeCenterPositionX=0.215
     ScopeCenterScaleX=1.35

@@ -14,8 +14,8 @@ defaultproperties
     DriverPositions(3)=(ViewFOV=12.0,DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
     PeriscopePositionIndex=1
     DriveAnim="stand_idlehip_binoc"
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.Allied.Cromwell_sight_background'
-    CannonScopeCenter=Texture'DH_VehicleOptics_tex.Allied.British_sight_mover'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.British.Cromwell_sight_background'
+    CannonScopeCenter=Texture'DH_VehicleOptics_tex.British.British_sight_mover'
     DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Cromwell_sight_destroyed'
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell'
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell_reload'

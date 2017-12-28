@@ -58,5 +58,5 @@ defaultproperties
     GunsightCameraBone="Gun"
     GunsightOverlay=Texture'DH_VehicleOptics_tex.German.KZF2_MGSight'
     GunsightSize=0.7
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
+    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Germ'
 }

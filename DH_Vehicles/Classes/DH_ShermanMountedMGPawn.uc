@@ -39,7 +39,7 @@ simulated function DrawGunsightOverlay(Canvas C)
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_ShermanMountedMG'
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied' // not actually a gunsight, but this MG is aimed using co-driver's periscope
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_Allied' // not actually a gunsight, but this MG is aimed using co-driver's periscope
 
 //  This bow MG did not have a sight or even a peephole to aim through, & was instead aimed using co-driver's overhead periscope
 //  Looking through that view (or while unbuttoned but that's not modelled in game), co-driver had to aim by walking tracers or round impacts onto target

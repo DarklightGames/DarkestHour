@@ -17,7 +17,7 @@ defaultproperties
     BinocPositionIndex=3
     DriveAnim="VSU76_com_idle_close"
     bHasAltFire=false
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.Allied.Jackson_sight_background'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.US.Jackson_sight_background'
     GunsightSize=0.895
     DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Wolverine_sight_destroyed'
     AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.IS2shell'
