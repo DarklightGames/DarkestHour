@@ -17,7 +17,7 @@ defaultproperties
     DHPenetrationTable(4)=21.5
     DHPenetrationTable(5)=21.5
     DHPenetrationTable(6)=21.5
-    bIsAlliedShell=false
+    bDebugInImperial=false
     bHasTracer=false
     ShellImpactDamage=class'DH_Weapons.DH_PanzerFaustImpactDamType'
     ImpactDamage=650

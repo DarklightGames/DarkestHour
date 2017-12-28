@@ -34,7 +34,7 @@ defaultproperties
     MechanicalRanges(25)=(Range=3000,RangeValue=768.0)
     bMechanicalAiming=true
     ShellDiameter=7.5
-    bIsAlliedShell=false
+    bDebugInImperial=false
     BallisticCoefficient=2.1
     Speed=33073.0
     MaxSpeed=33073.0

@@ -40,7 +40,7 @@ defaultproperties
     DHPenetrationTable(9)=2.1
     DHPenetrationTable(10)=1.4
     ShellDiameter=5.0
-    bIsAlliedShell=false
+    bDebugInImperial=false
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
     ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIILCannonShellDamageAPCR'

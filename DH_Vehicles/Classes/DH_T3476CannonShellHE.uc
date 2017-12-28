@@ -18,6 +18,7 @@ defaultproperties
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
     PenetrationMag=780.0
     Tag="OF-350"
+    bDebugInImperial=false
 
     DHPenetrationTable(0)=3.3
     DHPenetrationTable(1)=3.1

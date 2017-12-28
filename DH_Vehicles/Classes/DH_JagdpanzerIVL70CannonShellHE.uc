@@ -45,7 +45,7 @@ defaultproperties
     DHPenetrationTable(9)=1.2
     DHPenetrationTable(10)=1.0
     ShellDiameter=7.5
-    bIsAlliedShell=false
+    bDebugInImperial=false
     PenetrationMag=920.0
     ImpactDamage=455
     BallisticCoefficient=2.0

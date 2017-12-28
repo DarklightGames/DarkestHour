@@ -49,7 +49,7 @@ defaultproperties
     DHPenetrationTable(9)=6.2
     DHPenetrationTable(10)=5.9
     ShellDiameter=12.8
-    bIsAlliedShell=false
+    bDebugInImperial=false
     PenetrationMag=1500.0
     ImpactDamage=900
     ShellDeflectEffectClass=class'ROEffects.ROArtilleryDirtEmitter'

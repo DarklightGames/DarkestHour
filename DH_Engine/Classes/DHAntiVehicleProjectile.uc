@@ -27,7 +27,6 @@ var     bool            bExplodesOnArmor;        // shell explodes on vehicle ar
 var     bool            bExplodesOnHittingBody;  // shell explodes on hitting a human body (otherwise punches through & continues in flight)
 var     bool            bExplodesOnHittingWater; // shell explodes on hitting a WaterVolume
 var     bool            bBotNotifyIneffective;   // notify bot of an ineffective attack on target
-var     bool            bIsAlliedShell;          // only used in debugging, so info is shown in metric or imperial
 
 var     array<sound>    ExplosionSound;          // sound of the round exploding (array for random selection)
 var     float           ExplosionSoundVolume;    // volume scale factor for the ExplosionSound (allows variance between shells, while keeping other sounds at same volume)
@@ -58,6 +57,7 @@ var     float           PenetrationMag;          // different for AP and HE shel
 
 // Debugging
 var     bool            bDebuggingText;          // show screen debugging text
+var     bool            bDebugInImperial;        // debugging distance/speed is shown in yards/feet instead of metres
 var globalconfig bool   bDebugROBallistics;      // sets bDebugBallistics to true for getting the arrow pointers (added from DHBullet so bDebugBallistics can be set in a config file)
 
 // Variables from deprecated ROAntiVehicleProjectile class:
@@ -1005,9 +1005,9 @@ simulated function bool ShouldDrawDebugLines()
 
 function DebugShotDistanceAndSpeed()
 {
-    if (bIsAlliedShell)
+    if (bDebugInImperial)
     {
-        Level.Game.Broadcast(self, "Shot distance:" @ (VSize(LaunchLocation - Location) / 55.186) @ "yards, impact speed:" @ VSize(Velocity) / ScaleFactor @ "fps");
+        Level.Game.Broadcast(self, "Shot distance:" @ (VSize(LaunchLocation - Location) / 55.18654) @ "yards, impact speed:" @ VSize(Velocity) / ScaleFactor @ "fps");
     }
     else
     {
@@ -1035,7 +1035,7 @@ defaultproperties
     RoundType=RT_APC
     bUseCollisionStaticMesh=true
     bBotNotifyIneffective=true
-    bIsAlliedShell=true
+    bDebugInImperial=true
     SpeedFudgeScale=0.5
     InitialAccelerationTime=0.2
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect'
