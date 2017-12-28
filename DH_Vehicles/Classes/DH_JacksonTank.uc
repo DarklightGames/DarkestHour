@@ -115,8 +115,6 @@ defaultproperties
     VehicleHudTreadsScale=0.63
     VehicleHudOccupantsX(0)=0.43
     VehicleHudOccupantsY(0)=0.35
-    VehicleHudOccupantsX(1)=0.5
-    VehicleHudOccupantsY(1)=0.5
     VehicleHudOccupantsX(2)=0.375
     VehicleHudOccupantsY(2)=0.725
     VehicleHudOccupantsX(3)=0.45

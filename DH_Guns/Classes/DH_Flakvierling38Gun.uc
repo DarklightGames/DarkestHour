@@ -19,8 +19,6 @@ defaultproperties
     VehicleHudImage=Texture'DH_Artillery_tex.ATGun_Hud.flakv38_base'
     VehicleHudTurret=TexRotator'DH_Artillery_tex.ATGun_Hud.flakv38_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Artillery_tex.ATGun_Hud.flakv38_turret_look'
-    VehicleHudOccupantsX(0)=0.5 // should be slightly to the right & back, but the red dot doesn't rotate with the cannon, so when traversed it would go wrong
-    VehicleHudOccupantsX(1)=0.5
     ExitPositions(1)=(X=-100.0,Y=40.0,Z=50.0)  // right of seat
     ExitPositions(2)=(X=-100.0,Y=-40.0,Z=50.0) // left
 }

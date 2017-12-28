@@ -13,7 +13,6 @@ defaultproperties
     Skins(1)=Texture'DH_VehicleOptics_tex.German.ZF_II_3x8_Pak'
     Skins(2)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
     CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Pak40.pak40_turret_coll'
-    BeginningIdleAnim="com_idle_close"
     GunnerAttachmentBone="com_player"
 
     // Turret movement

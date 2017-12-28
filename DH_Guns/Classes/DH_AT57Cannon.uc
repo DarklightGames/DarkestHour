@@ -15,7 +15,6 @@ defaultproperties
     Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha' // hides 6 pounder's muzzle brake
     Skins(2)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle_MN'
     CollisionStaticMesh=StaticMesh'DH_Artillery_stc.6pounder.6pounder_turret_coll'
-    BeginningIdleAnim="com_idle_close"
     GunnerAttachmentBone="com_player"
 
     // Turret movement

@@ -122,10 +122,8 @@ defaultproperties
     VehicleHudTurretLook=TexRotator'DH_M7Priest_tex.interface.priest_turret_look'
     VehicleHudTreadsPosY=0.51
     VehicleHudTreadsScale=0.72
-    VehicleHudOccupantsX(0)=0.42
     VehicleHudOccupantsY(0)=0.37
     VehicleHudOccupantsX(1)=0.43
-    VehicleHudOccupantsY(1)=0.5
     VehicleHudOccupantsX(2)=0.62
     VehicleHudOccupantsY(2)=0.40
     VehicleHudOccupantsX(3)=0.39

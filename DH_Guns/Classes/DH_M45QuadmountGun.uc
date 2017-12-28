@@ -19,7 +19,6 @@ defaultproperties
     VehicleHudImage=Texture'DH_Artillery_tex.ATGun_Hud.m45_body'
     VehicleHudTurret=TexRotator'DH_Artillery_tex.ATGun_Hud.m45_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_Artillery_tex.ATGun_Hud.m45_turret_look'
-    VehicleHudOccupantsX(1)=0.5
     ExitPositions(1)=(X=-100.0,Y=40.0,Z=50.0)  // right of seat
     ExitPositions(2)=(X=-100.0,Y=-40.0,Z=50.0) // left
 }

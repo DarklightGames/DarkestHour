@@ -112,8 +112,6 @@ defaultproperties
     VehicleHudEngineX=0.51
     VehicleHudOccupantsX(0)=0.45
     VehicleHudOccupantsY(0)=0.35
-    VehicleHudOccupantsX(1)=0.5
-    VehicleHudOccupantsY(1)=0.5
     VehicleHudOccupantsX(2)=0.375
     VehicleHudOccupantsY(2)=0.75
     VehicleHudOccupantsX(3)=0.45

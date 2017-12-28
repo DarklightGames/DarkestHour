@@ -18,7 +18,6 @@ defaultproperties
     VehicleHudTurret=TexRotator'DH_LeIG18_tex.HUD.leig18_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_LeIG18_tex.HUD.leig18_turret_look'
     VehicleHudOccupantsX(1)=0.4
-    VehicleHudOccupantsY(1)=0.5
     ExitPositions(1)=(X=-35.00,Y=-65.00,Z=60.00)
     VehicleMass=11.0                                                            // TODO: replace
 

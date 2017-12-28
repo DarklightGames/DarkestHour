@@ -12,7 +12,6 @@ defaultproperties
     Skins(0)=Texture'DH_Artillery_Tex.17pounder.17Pounder'
     Skins(1)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle_MN'
     CollisionStaticMesh=StaticMesh'DH_Artillery_stc.17pounder.17pdr_turret_coll'
-    BeginningIdleAnim="com_idle_close"
     GunnerAttachmentBone="com_player"
 
     // Turret movement

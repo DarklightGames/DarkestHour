@@ -11,7 +11,6 @@ defaultproperties
     Mesh=SkeletalMesh'DH_LeIG18_anm.leig18_turret'
     Skins(0)=Texture'DH_LeIG18_tex.LeIG18.IG18_1'
     Skins(1)=Texture'DH_LeIG18_tex.LeIG18.IG18_2'
-    BeginningIdleAnim="com_idle_close"
     GunnerAttachmentBone="com_player"
 
     // Turret movement

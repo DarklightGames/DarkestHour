@@ -45,7 +45,6 @@ simulated function DrawGunsightOverlay(Canvas C)
 
 defaultproperties
 {
-    RangeText="meters"
     RangePositionX=0.1
     PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_Allied'
     BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_7x50Sov'
