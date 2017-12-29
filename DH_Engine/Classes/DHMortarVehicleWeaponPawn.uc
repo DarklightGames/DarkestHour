@@ -131,120 +131,117 @@ simulated function DrawHUD(Canvas C)
 
     PC = PlayerController(Controller);
 
-    if (PC != none && !PC.bBehindView)
+    if (PC != none && !PC.bBehindView && HUDOverlay != none && !Level.IsSoftwareRendering() && DHMortarVehicleWeapon(VehWep) != none)
     {
-        if (HUDOverlay != none && !Level.IsSoftwareRendering() && DHMortarVehicleWeapon(VehWep) != none)
+        // Draw HUDOverlay
+        HUDOverlay.SetLocation(PC.CalcViewLocation + (HUDOverlayOffset >> PC.CalcViewRotation));
+        HUDOverlay.SetRotation(PC.CalcViewRotation);
+        C.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
+
+        if (PC.myHUD == none || PC.myHUD.bHideHUD)
         {
-            // Draw HUDOverlay
-            HUDOverlay.SetLocation(PC.CalcViewLocation + (HUDOverlayOffset >> PC.CalcViewRotation));
-            HUDOverlay.SetRotation(PC.CalcViewRotation);
-            C.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
-
-            if (PC.myHUD == none || PC.myHUD.bHideHUD)
-            {
-                return;
-            }
-
-            // Set drawing font & scale
-            C.Font = class'DHHud'.static.GetSmallerMenuFont(C);
-            HUDScale = C.SizeY / 1280.0;
-
-            // Get elevation & traverse
-            Elevation = DHMortarVehicleWeapon(VehWep).Elevation;
-            Traverse = class'UUnits'.static.UnrealToDegrees(VehWep.CurrentAim.Yaw);
-
-            if (Traverse > 180.0) // convert to +/-
-            {
-                Traverse -= 360.0;
-            }
-
-            Traverse = -Traverse; // all the yaw/traverse for mortars has to be reversed (screwed up mesh rigging)
-
-            TraverseString = "T: ";
-
-            if (Traverse > 0.0) // add a + at the beginning to explicitly state a positive rotation
-            {
-                TraverseString $= "+";
-            }
-
-            TraverseString $= string(Traverse);
-
-            // Draw current round type icon
-            RoundIndex = VehWep.GetAmmoIndex();
-
-            if (VehWep.HasAmmo(RoundIndex))
-            {
-                C.SetDrawColor(255, 255, 255, 255);
-            }
-            else
-            {
-                C.SetDrawColor(128, 128, 128, 255);
-            }
-
-            C.SetPos(HUDScale * 256.0, C.SizeY - HUDScale * 256.0);
-
-            if (RoundIndex == 0)
-            {
-                C.DrawTile(HUDHighExplosiveTexture, 128.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 128.0, 256.0);
-            }
-            else
-            {
-                C.DrawTile(HUDSmokeTexture, 128.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 128.0, 256.0);
-            }
-
-            // Draw current round type quantity
-            C.SetPos(384.0 * HUDScale, C.SizeY - (160.0 * HUDScale));
-
-            if (VehWep.MainAmmoCharge[RoundIndex] < 10)
-            {
-                Quotient = VehWep.MainAmmoCharge[RoundIndex];
-
-                SizeX = Digits.TextureCoords[Quotient].X2 - Digits.TextureCoords[Quotient].X1;
-                SizeY = Digits.TextureCoords[Quotient].Y2 - Digits.TextureCoords[Quotient].Y1;
-
-                C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[VehWep.MainAmmoCharge[RoundIndex]].X1,
-                    Digits.TextureCoords[VehWep.MainAmmoCharge[RoundIndex]].Y1, SizeX, SizeY);
-            }
-            else
-            {
-                Quotient = VehWep.MainAmmoCharge[RoundIndex] / 10;
-                Remainder = VehWep.MainAmmoCharge[RoundIndex] % 10;
-
-                SizeX = Digits.TextureCoords[Quotient].X2 - Digits.TextureCoords[Quotient].X1;
-                SizeY = Digits.TextureCoords[Quotient].Y2 - Digits.TextureCoords[Quotient].Y1;
-
-                C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[Quotient].X1, Digits.TextureCoords[Quotient].Y1, SizeX, SizeY);
-
-                SizeX = Digits.TextureCoords[Remainder].X2 - Digits.TextureCoords[Remainder].X1;
-                SizeY = Digits.TextureCoords[Remainder].Y2 - Digits.TextureCoords[Remainder].Y1;
-
-                C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[Remainder].X1, Digits.TextureCoords[Remainder].Y1, SizeX, SizeY);
-            }
-
-            // Draw current round type name
-            C.SetDrawColor(255, 255, 255, 255);
-            C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 96.0));
-            C.DrawText(VehWep.ProjectileClass.default.Tag);
-
-            // Draw the elevation indicator icon
-            C.SetPos(0.0, C.SizeY - (256.0 * HUDScale));
-            C.DrawTile(HUDArcTexture, 256.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 512.0, 512.0);
-
-            HUDArrowTexture.Rotation.Yaw = class'UUnits'.static.DegreesToUnreal(Elevation + 180.0);
-            Loc.X = Cos(class'UUnits'.static.DegreesToRadians(Elevation)) * 256.0;
-            Loc.Y = Sin(class'UUnits'.static.DegreesToRadians(Elevation)) * 256.0;
-            C.SetPos(HUDScale * (Loc.X - 32.0), C.SizeY - (HUDScale * (Loc.Y + 32.0)));
-            C.DrawTile(HUDArrowTexture, 64.0 * HUDScale, 64.0 * HUDScale, 0.0, 0.0, 128.0, 128.0);
-
-            // Draw elevation & traverse text
-            C.SetDrawColor(255, 255, 255, 255);
-            C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 32.0));
-            C.DrawText("E:" @ string(Elevation));
-
-            C.SetDrawColor(255, 255, 255, 255);
-            C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 64.0));
-            C.DrawText(TraverseString);
+            return;
         }
+
+        // Set drawing font & scale
+        C.Font = class'DHHud'.static.GetSmallerMenuFont(C);
+        HUDScale = C.SizeY / 1280.0;
+
+        // Get elevation & traverse
+        Elevation = DHMortarVehicleWeapon(VehWep).Elevation;
+        Traverse = class'UUnits'.static.UnrealToDegrees(VehWep.CurrentAim.Yaw);
+
+        if (Traverse > 180.0) // convert to +/-
+        {
+            Traverse -= 360.0;
+        }
+
+        Traverse = -Traverse; // all the yaw/traverse for mortars has to be reversed (screwed up mesh rigging)
+
+        TraverseString = "T: ";
+
+        if (Traverse > 0.0) // add a + at the beginning to explicitly state a positive rotation
+        {
+            TraverseString $= "+";
+        }
+
+        TraverseString $= string(Traverse);
+
+        // Draw current round type icon
+        RoundIndex = VehWep.GetAmmoIndex();
+
+        if (VehWep.HasAmmo(RoundIndex))
+        {
+            C.SetDrawColor(255, 255, 255, 255);
+        }
+        else
+        {
+            C.SetDrawColor(128, 128, 128, 255);
+        }
+
+        C.SetPos(HUDScale * 256.0, C.SizeY - HUDScale * 256.0);
+
+        if (RoundIndex == 0)
+        {
+            C.DrawTile(HUDHighExplosiveTexture, 128.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 128.0, 256.0);
+        }
+        else
+        {
+            C.DrawTile(HUDSmokeTexture, 128.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 128.0, 256.0);
+        }
+
+        // Draw current round type quantity
+        C.SetPos(384.0 * HUDScale, C.SizeY - (160.0 * HUDScale));
+
+        if (VehWep.MainAmmoCharge[RoundIndex] < 10)
+        {
+            Quotient = VehWep.MainAmmoCharge[RoundIndex];
+
+            SizeX = Digits.TextureCoords[Quotient].X2 - Digits.TextureCoords[Quotient].X1;
+            SizeY = Digits.TextureCoords[Quotient].Y2 - Digits.TextureCoords[Quotient].Y1;
+
+            C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[VehWep.MainAmmoCharge[RoundIndex]].X1,
+                Digits.TextureCoords[VehWep.MainAmmoCharge[RoundIndex]].Y1, SizeX, SizeY);
+        }
+        else
+        {
+            Quotient = VehWep.MainAmmoCharge[RoundIndex] / 10;
+            Remainder = VehWep.MainAmmoCharge[RoundIndex] % 10;
+
+            SizeX = Digits.TextureCoords[Quotient].X2 - Digits.TextureCoords[Quotient].X1;
+            SizeY = Digits.TextureCoords[Quotient].Y2 - Digits.TextureCoords[Quotient].Y1;
+
+            C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[Quotient].X1, Digits.TextureCoords[Quotient].Y1, SizeX, SizeY);
+
+            SizeX = Digits.TextureCoords[Remainder].X2 - Digits.TextureCoords[Remainder].X1;
+            SizeY = Digits.TextureCoords[Remainder].Y2 - Digits.TextureCoords[Remainder].Y1;
+
+            C.DrawTile(Digits.DigitTexture, 40.0 * HUDScale, 64.0 * HUDScale, Digits.TextureCoords[Remainder].X1, Digits.TextureCoords[Remainder].Y1, SizeX, SizeY);
+        }
+
+        // Draw current round type name
+        C.SetDrawColor(255, 255, 255, 255);
+        C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 96.0));
+        C.DrawText(VehWep.ProjectileClass.default.Tag);
+
+        // Draw the elevation indicator icon
+        C.SetPos(0.0, C.SizeY - (256.0 * HUDScale));
+        C.DrawTile(HUDArcTexture, 256.0 * HUDScale, 256.0 * HUDScale, 0.0, 0.0, 512.0, 512.0);
+
+        HUDArrowTexture.Rotation.Yaw = class'UUnits'.static.DegreesToUnreal(Elevation + 180.0);
+        Loc.X = Cos(class'UUnits'.static.DegreesToRadians(Elevation)) * 256.0;
+        Loc.Y = Sin(class'UUnits'.static.DegreesToRadians(Elevation)) * 256.0;
+        C.SetPos(HUDScale * (Loc.X - 32.0), C.SizeY - (HUDScale * (Loc.Y + 32.0)));
+        C.DrawTile(HUDArrowTexture, 64.0 * HUDScale, 64.0 * HUDScale, 0.0, 0.0, 128.0, 128.0);
+
+        // Draw elevation & traverse text
+        C.SetDrawColor(255, 255, 255, 255);
+        C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 32.0));
+        C.DrawText("E:" @ string(Elevation));
+
+        C.SetDrawColor(255, 255, 255, 255);
+        C.SetPos(HUDScale * 8.0, C.SizeY - (HUDScale * 64.0));
+        C.DrawText(TraverseString);
     }
 }
 
