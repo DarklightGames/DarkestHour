@@ -923,7 +923,7 @@ function HitThis(ROArtilleryTrigger RAT)
     }
 }
 
-// New function to determine if the player is operating a vehicle that is marked as artillery.
+// New function to determine if the player is operating a vehicle that is marked as artillery // TODO: suggest exclude passenger positions, so riders don't see arty targets
 simulated function bool IsInArtilleryVehicle()
 {
     local DHVehicle V;
