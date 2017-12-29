@@ -4042,6 +4042,24 @@ exec function SetDriveRot(int NewPitch, int NewYaw, int NewRoll)
     }
 }
 
+// New debug exec to change the player animation in a vehicle position
+exec function SetDriveAnim(name NewAnim)
+{
+    local Vehicle V;
+
+    if (IsDebugModeAllowed())
+    {
+        V = Vehicle(Pawn);
+
+        if (V != none && V.Driver != none)
+        {
+            V.DriveAnim = NewAnim;
+            V.Driver.StopAnimating(true);
+            V.Driver.LoopAnim(V.DriveAnim);
+        }
+    }
+}
+
 // New debug exec to set a vehicle position's 1st person camera position offset
 exec function SetCamPos(string NewX, string NewY, string NewZ)
 {
