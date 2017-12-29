@@ -12,6 +12,9 @@ var() rotator       StartRotation;
 var() rangevector   ImpulseRange;
 var() rangevector   AngularImpulseRange;
 
+var   bool          bDebug;
+var   vector        DebugImpulse, DebugAngularImpulse;
+
 event Notify(Actor Owner)
 {
     local coords BoneCoords;
@@ -20,8 +23,17 @@ event Notify(Actor Owner)
     local vector AngularImpulse;
 
     BoneCoords = Owner.GetBoneCoords(BoneName);
-    Impulse = class'UVector'.static.RandomRange(ImpulseRange) >> rotator(BoneCoords.XAxis);
-    AngularImpulse = class'UVector'.static.RandomRange(AngularImpulseRange) >> rotator(BoneCoords.XAxis);
+
+    if (default.bDebug)
+    {
+        Impulse = default.DebugImpulse >> rotator(BoneCoords.XAxis);
+        AngularImpulse = default.DebugAngularImpulse >> rotator(BoneCoords.XAxis);
+    }
+    else
+    {
+        Impulse = class'UVector'.static.RandomRange(ImpulseRange) >> rotator(BoneCoords.XAxis);
+        AngularImpulse = class'UVector'.static.RandomRange(AngularImpulseRange) >> rotator(BoneCoords.XAxis);
+    }
 
     Shell = Owner.Spawn(class'DHKActor', Owner,, BoneCoords.Origin, rotator(vector(StartRotation) >> rotator(BoneCoords.XAxis)));
 

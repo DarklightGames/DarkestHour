@@ -923,6 +923,39 @@ exec function SetSLFireOffset(string NewX, string NewY, string NewZ)
     }
 }
 
+// New debug execs that allow easy tuning of impulse settings for ejected shell cases triggered by an animation notify, which govern how it moves
+exec function ShellImpulse(string NewX, string NewY, string NewZ)
+{
+    if (float(NewX) != 0.0 || float(NewY) != 0.0 || float(NewZ) != 0.0)
+    {
+        Log("DHAnimNotify_SpawnKActor: DebugImpulse =" @ float(NewX) @ float(NewY) @ float(NewZ) @ " (was" @ class'DHAnimNotify_SpawnKActor'.default.DebugImpulse $ ")");
+        class'DHAnimNotify_SpawnKActor'.default.DebugImpulse.X = float(NewX);
+        class'DHAnimNotify_SpawnKActor'.default.DebugImpulse.Y = float(NewY);
+        class'DHAnimNotify_SpawnKActor'.default.DebugImpulse.Z = float(NewZ);
+        class'DHAnimNotify_SpawnKActor'.default.bDebug = true;
+    }
+    else
+    {
+        class'DHAnimNotify_SpawnKActor'.default.bDebug = false;
+    }
+}
+
+exec function ShellAngImpulse(string NewX, string NewY, string NewZ)
+{
+    if (float(NewX) != 0.0 || float(NewY) != 0.0 || float(NewZ) != 0.0)
+    {
+        Log("DHAnimNotify_SpawnKActor: DebugAngularImpulse =" @ float(NewX) @ float(NewY) @ float(NewZ) @ " (was" @ class'DHAnimNotify_SpawnKActor'.default.DebugAngularImpulse $ ")");
+        class'DHAnimNotify_SpawnKActor'.default.DebugAngularImpulse.X = float(NewX);
+        class'DHAnimNotify_SpawnKActor'.default.DebugAngularImpulse.Y = float(NewY);
+        class'DHAnimNotify_SpawnKActor'.default.DebugAngularImpulse.Z = float(NewZ);
+        class'DHAnimNotify_SpawnKActor'.default.bDebug = true;
+    }
+    else
+    {
+        class'DHAnimNotify_SpawnKActor'.default.bDebug = false;
+    }
+}
+
 exec function LogCannon() // DEBUG (Matt: please use & report the logged result if you ever find you can't fire cannon, coax or SL, or do a reload, when you should be able to)
 {
     Log("LOGCANNON: Gun =" @ Gun.Tag @ " VehWep =" @ VehWep.Tag @ " VehWep.WeaponPawn =" @ VehWep.WeaponPawn.Tag @ " Gun.Owner =" @ Gun.Owner.Tag);
