@@ -174,7 +174,7 @@ simulated function DrawHUD(Canvas C)
     if (PC != none && !PC.bBehindView)
     {
         // Player is in a position where an overlay should be drawn
-        if (DriverPositions[DriverPositionIndex].bDrawOverlays && (!IsInState('ViewTransition') || DriverPositions[LastPositionIndex].bDrawOverlays))
+        if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
         {
             if (HUDOverlay == none)
             {
