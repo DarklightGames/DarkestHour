@@ -43,6 +43,42 @@ simulated function DrawGunsightOverlay(Canvas C)
     }
 }
 
+// New debug execs to adjust ScopeCenter properties
+exec function SetPosX(float NewValue)
+{
+    Log(Tag @ "ScopeCenterPositionX =" @ NewValue @ "(was" @ ScopeCenterPositionX $ ")");
+    ScopeCenterPositionX = NewValue;
+}
+exec function SetScaleX(float NewValue)
+{
+    Log(Tag @ "ScopeCenterScaleX =" @ NewValue @ "(was" @ ScopeCenterScaleX $ ")");
+    ScopeCenterScaleX = NewValue;
+}
+exec function SetScaleY(float NewValue)
+{
+    Log(Tag @ "ScopeCenterScaleY =" @ NewValue @ "(was" @ ScopeCenterScaleY $ ")");
+    ScopeCenterScaleY = NewValue;
+}
+
+// New debug execs to adjust OpticalRanges values
+exec function SetOpticalRange(float NewValue)
+{
+    Log(Cannon.ProjectileClass @ "OpticalRanges[" $ Cannon.CurrentRangeIndex $ "]=" @ NewValue @
+        "(was" @ class<DHCannonShell>(Cannon.ProjectileClass).default.OpticalRanges[Cannon.CurrentRangeIndex].RangeValue $ ")");
+
+    class<DHCannonShell>(Cannon.ProjectileClass).default.OpticalRanges[Cannon.CurrentRangeIndex].RangeValue = NewValue;
+}
+
+exec function AdjustAllOpticalRanges(float Adjustment)
+{
+    local int i;
+
+    for (i = 0; i < class<DHCannonShell>(Cannon.ProjectileClass).default.OpticalRanges.Length; ++i)
+    {
+        class<DHCannonShell>(Cannon.ProjectileClass).default.OpticalRanges[i].RangeValue += Adjustment;
+    }
+}
+
 defaultproperties
 {
     RangePositionX=0.1
