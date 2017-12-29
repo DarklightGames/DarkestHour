@@ -1157,23 +1157,21 @@ simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
+        local PlayerController PC;
+
         if (IsFirstPerson())
         {
+            PC = PlayerController(Controller);
+
             // Switch to mesh for new position as may be different
-            // Note the added IsFirstPerson() check stops this happening on a listen server host that isn't controlling this vehicle
+            // Note added IsFirstPerson() check stops this on dedicated server or on listen server host that's not controlling this vehicle
             SwitchMesh(DriverPositionIndex);
 
-            // If moving to a less zoomed position, we zoom out now, otherwise we wait until end of transition to zoom in
-            if (GetViewFOV(DriverPositionIndex) > GetViewFOV(PreviousPositionIndex))
+            // Unless moving onto an overlay position, apply any zoom for the new position now
+            // If we are moving onto an overlay position, we instead leave it to end of the transition
+            if (!DriverPositions[DriverPositionIndex].bDrawOverlays)
             {
-                if (DriverPositions[DriverPositionIndex].bDrawOverlays)
-                {
-                    SetViewFOV(DriverPositionIndex);
-                }
-                else
-                {
-                    PlayerController(Controller).DesiredFOV = GetViewFOV(DriverPositionIndex);
-                }
+                PC.DesiredFOV = GetViewFOV(DriverPositionIndex); // set DesiredFOV so any zoom change gets applied smoothly
             }
         }
 
@@ -1225,8 +1223,8 @@ simulated state ViewTransition
     {
         if (IsFirstPerson())
         {
-            // If we have moved to a more zoomed position, we zoom in now, because we didn't do it earlier
-            if (GetViewFOV(DriverPositionIndex) < GetViewFOV(PreviousPositionIndex))
+            // If we've finished moving onto an overlay position, now snap to any zoom setting or camera offset it has (we avoiding doing this earlier)
+            if (DriverPositions[DriverPositionIndex].bDrawOverlays)
             {
                 SetViewFOV(DriverPositionIndex);
             }

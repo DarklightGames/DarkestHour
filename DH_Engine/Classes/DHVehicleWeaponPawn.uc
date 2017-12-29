@@ -816,26 +816,49 @@ simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
+        local PlayerController PC;
+
         if (VehicleBase != none)
         {
             StoredVehicleRotation = VehicleBase.Rotation;
         }
 
+        // Switch to mesh for new position as may be different
+        // Note added IsFirstPerson() check stops this on dedicated server or on listen server host that's not controlling this vehicle
         if (IsFirstPerson())
         {
-            // Switch to mesh for new position as may be different
-            // Note the added IsFirstPerson() check stops this happening on a listen server host that isn't controlling this vehicle
             SwitchMesh(DriverPositionIndex);
+            PC = PlayerController(Controller); // having PC reference now serves as a flag that we're locally controlled & in 1st person view
+        }
 
-            // Set any zoom & camera offset for new position
-            // But only if moving to less zoomed position or moving away from a drawn overlay position - otherwise we wait until end of transition to do it
-            WeaponFOV = GetViewFOV(DriverPositionIndex);
-
-            if (WeaponFOV > GetViewFOV(LastPositionIndex) || (DriverPositions[LastPositionIndex].bDrawOverlays && !DriverPositions[DriverPositionIndex].bDrawOverlays))
+        // If moving away from an overlay position, immediately neutralise any zoom or camera offset from the old overlay
+        // Applies to gunsight, periscope or binoculars position, but not if we're using a HUD overlay, e.g. MG 1st person weapon overlay
+        if (DriverPositions[LastPositionIndex].bDrawOverlays && HUDOverlay == none)
+        {
+            if (PC != none)
             {
-                PlayerController(Controller).SetFOV(WeaponFOV);
-                FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
+                PC.SetFOV(PC.DefaultFOV);
             }
+
+            // If moving to another overlay position (e.g. off gunsight towards periscope), remove any camera offset from old overlay
+            if (DriverPositions[DriverPositionIndex].bDrawOverlays)
+            {
+                FPCamPos = vect(0.0, 0.0, 0.0);
+            }
+        }
+
+        WeaponFOV = GetViewFOV(DriverPositionIndex);
+
+        // Unless moving onto an overlay position, apply any zoom & camera offset for the new position now
+        // If we are moving onto an overlay position, we instead leave it to end of the transition
+        if (!DriverPositions[DriverPositionIndex].bDrawOverlays)
+        {
+            if (PC != none)
+            {
+                PC.DesiredFOV = WeaponFOV; // set DesiredFOV so any zoom change gets applied smoothly
+            }
+
+            FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation; // note we set FPCamPos even in behind view so camera debugging works
         }
 
         if (Driver != none)
@@ -893,11 +916,14 @@ simulated state ViewTransition
 
     simulated function EndState()
     {
-        // Set any zoom & camera offset for new position, if we didn't already do this at the already did this at the start of the transition
-        // Means we've moved to a more (or equal) zoomed position or moved away from a drawn overlay position
-        if (WeaponFOV <= GetViewFOV(LastPositionIndex) && (!DriverPositions[LastPositionIndex].bDrawOverlays || DriverPositions[DriverPositionIndex].bDrawOverlays) && IsFirstPerson())
+        // If we've finished moving onto an overlay position, now snap to any zoom setting or camera offset it has (we avoiding doing this earlier)
+        if (DriverPositions[DriverPositionIndex].bDrawOverlays)
         {
-            PlayerController(Controller).SetFOV(WeaponFOV);
+            if (IsFirstPerson())
+            {
+                PlayerController(Controller).SetFOV(WeaponFOV);
+            }
+
             FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
         }
 
