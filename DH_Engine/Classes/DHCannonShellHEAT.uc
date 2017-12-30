@@ -22,9 +22,10 @@ var globalconfig float DistortionScale;  // global distortion scale factor
 // Modified to handle world object penetration
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
-    local Actor  TraceHitActor;
-    local vector Direction, TempHitLocation, TempHitNormal;
-    local float  xH, TempMaxWall;
+    local DHVehicleCannon Cannon;
+    local Actor           TraceHitActor;
+    local vector          Direction, TempHitLocation, TempHitNormal;
+    local float           xH, TempMaxWall;
 
     // Exit without doing anything if we hit something we don't want to count a hit on
     if (bInHitWall || Wall == none || SavedHitActor == Wall || (Wall.Base != none && Wall.Base == Instigator) || Wall.bDeleteMe) // HEAT adds bInHitWall check to prevent recursive calls
@@ -33,6 +34,21 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     }
 
     SavedHitActor = Pawn(Wall);
+
+    // Debug options
+    if (DHVehicleCannonPawn(Instigator) != none)
+    {
+        Cannon = DHVehicleCannonPawn(Instigator).Cannon;
+
+        if (Cannon != none && Cannon.bDebugRangeAutomatically)
+        {
+            Cannon.UpdateAutoDebugRange(Wall, Location);
+            bDidExplosionFX = true;
+            Destroy();
+
+            return;
+        }
+    }
 
     if (bDebuggingText && Role == ROLE_Authority)
     {

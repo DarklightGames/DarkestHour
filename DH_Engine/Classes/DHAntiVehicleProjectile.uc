@@ -376,6 +376,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 // Matt: re-worked a little, but not as much as ProcessTouch, with which is shares some features
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
+    local DHVehicleCannon Cannon;
+
     // Exit without doing anything if we hit something we don't want to count a hit on
     if (Wall == none || SavedHitActor == Wall || (Wall.Base != none && Wall.Base == Instigator) || Wall.bDeleteMe)
     {
@@ -383,6 +385,21 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     }
 
     SavedHitActor = Pawn(Wall); // record hit actor to prevent recurring hits
+
+    // Debug options
+    if (DHVehicleCannonPawn(Instigator) != none)
+    {
+        Cannon = DHVehicleCannonPawn(Instigator).Cannon;
+
+        if (Cannon != none && Cannon.bDebugRangeAutomatically)
+        {
+            Cannon.UpdateAutoDebugRange(Wall, Location);
+            bDidExplosionFX = true;
+            Destroy();
+
+            return;
+        }
+    }
 
     if (bDebuggingText && Role == ROLE_Authority)
     {

@@ -63,9 +63,15 @@ var     array<int>          RangeSettings;             // for cannons with range
 var     int                 AddedPitch;                // option for global adjustment to cannon's pitch aim
 
 // Debugging & calibration
-var     bool                bDebugPenetration;    // debug lines & text on screen, relating to turret hits & penetration calculations
-var     bool                bLogDebugPenetration; // similar debug log entries
-var     bool                bGunsightSettingMode; // allows quick adjustment of added pitch at different range settings, using lean left/right keys
+var     bool                bDebugPenetration;         // debug lines & text on screen, relating to turret hits & penetration calculations
+var     bool                bLogDebugPenetration;      // similar debug log entries
+var     bool                bDebugRangeManually;       // allows quick adjustment of added pitch at different range settings, using lean left/right keys
+var     bool                bDebugRangeAutomatically;  // we are automatically calibrating pitch adjustment to hit a given range
+var     int                 DebugPitchAdjustment;      // the current pitch adjustment setting being used by auto range calibration
+var     int                 ClosestHighDebugPitch;     // pitch adjustments that have so far given closest shots above & below target during auto range calibration
+var     int                 ClosestLowDebugPitch;
+var     float               ClosestHighDebugHeight;    // height (in UU) above & below target from current closest recorded high & low shots during auto range calibration
+var     float               ClosestLowDebugHeight;
 
 replication
 {
@@ -298,6 +304,27 @@ function Fire(Controller C)
     }
 }
 
+// Modified so if we're using bDebugRangeManually mode, we draw any tracer as full size to make it easier to see (instead of its usual MaximumDrawScale reduction)
+function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
+{
+    local Projectile    P;
+    local DHShellTracer Tracer;
+
+    P = super.SpawnProjectile(ProjClass, bAltFire);
+
+    if (bDebugRangeManually && !bAltFire && DHAntiVehicleProjectile(P) != none)
+    {
+        Tracer = DHShellTracer(DHAntiVehicleProjectile(P).Corona);
+
+        if (Tracer != none && Tracer.MaximumDrawScale < 1.0)
+        {
+            Tracer.MaximumDrawScale = 1.0;
+        }
+    }
+
+    return P;
+}
+
 // Modified to handle any pitch adjustments for human players, & any secondary or tertiary projectile spread properties
 function rotator GetProjectileFireRotation(optional bool bAltFire)
 {
@@ -309,11 +336,18 @@ function rotator GetProjectileFireRotation(optional bool bAltFire)
 
     if (Instigator != none && Instigator.IsHumanControlled())
     {
-        FireRotation.Pitch += AddedPitch; // fixes vertical aiming adjustment that allows correction of cannons with non-centred aim points
+        FireRotation.Pitch += AddedPitch; // aim/pitch adjustment affecting all ranges (allows correction of cannons with non-centred aim points)
 
-        if (!bAltFire && RangeSettings.Length > 0) // range-based pitch adjustment for cannons with mechanically linked gunsight range setting
+        if (!bAltFire)
         {
-            FireRotation.Pitch += ProjectileClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
+            if (bDebugRangeAutomatically) // we're in the middle of an automatic debug option to calibrate pitch adjustment for range
+            {
+                FireRotation.Pitch += DebugPitchAdjustment;
+            }
+            else if (RangeSettings.Length > 0) // range-specific pitch adjustment for gunsights with mechanically adjusted range setting
+            {
+                FireRotation.Pitch += ProjectileClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
+            }
         }
     }
 
@@ -322,23 +356,26 @@ function rotator GetProjectileFireRotation(optional bool bAltFire)
     {
         ProjectileSpread = AltFireSpread;
     }
-    else if (ProjectileClass == SecondaryProjectileClass && SecondarySpread > 0.0)
+    else if (!bDebugRangeManually && !bDebugRangeAutomatically)
     {
-        ProjectileSpread = SecondarySpread;
-    }
-    else if (ProjectileClass == TertiaryProjectileClass && TertiarySpread > 0.0)
-    {
-        ProjectileSpread = TertiarySpread;
-    }
-    else
-    {
-        ProjectileSpread = Spread;
+        if (ProjectileClass == SecondaryProjectileClass && SecondarySpread > 0.0)
+        {
+            ProjectileSpread = SecondarySpread;
+        }
+        else if (ProjectileClass == TertiaryProjectileClass && TertiarySpread > 0.0)
+        {
+            ProjectileSpread = TertiarySpread;
+        }
+        else
+        {
+            ProjectileSpread = Spread;
+        }
     }
 
     // Return direction to fire projectile, including any random spread
     if (ProjectileSpread > 0.0)
     {
-        return rotator(vector(FireRotation) + (VRand() * FRand() * ProjectileSpread));
+        FireRotation = rotator(vector(FireRotation) + (VRand() * FRand() * ProjectileSpread));
     }
 
     return FireRotation;
@@ -363,7 +400,7 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
         CalcWeaponFire(bWasAltFire); // net client calculates & records fire location & rotation, used to spawn EffectEmitter
     }
 
-    if (Level.NetMode != NM_DedicatedServer && !bWasAltFire)
+    if (Level.NetMode != NM_DedicatedServer && !bWasAltFire && !bDebugRangeManually && !bDebugRangeAutomatically)
     {
         if (FlashEmitter != none)
         {
@@ -446,7 +483,7 @@ simulated function sound GetFireSound()
 // Modified to remove shake from coaxial MGs
 simulated function ShakeView(bool bWasAltFire)
 {
-    if (!bWasAltFire)
+    if (!bWasAltFire && !bDebugRangeManually && !bDebugRangeAutomatically)
     {
         super.ShakeView(false);
     }
@@ -561,32 +598,38 @@ simulated function vector GetSmokeLauncherFireLocation(optional out int Launcher
 
 // Modified (from ROTankCannon) to network optimise by clientside check before replicating function call to server, & also playing click clientside, not replicating it back
 // These functions now get called on both client & server, but only progress to server if it's a valid action (see modified LeanLeft & LeanRight execs in DHPlayer)
-// Also adds debug option for easy tuning of gunsights in development mode
+// Also adds debug options for easy tuning of gunsights in development mode
 simulated function IncrementRange()
 {
-    // If bGunsightSettingMode is enabled & gun not loaded, then the range control buttons change sight adjustment up and down
-    if (bGunsightSettingMode && ReloadState != RL_ReadyToFire && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
+    // If bDebugRangeManually is enabled & gun not loaded, the range control buttons change the firing pitch adjustment to tune the range setting
+    if (bDebugRangeManually)
     {
-        if (Role == ROLE_Authority) // the server action from when this was a server only function
+        if (ReloadState != RL_ReadyToFire && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
         {
-            IncreaseAddedPitch();
-            GiveInitialAmmo();
-        }
-        else if (Instigator != none && ROPlayer(Instigator.Controller) != none) // net client just calls the server function
-        {
-            ROPlayer(Instigator.Controller).ServerLeanRight(true);
+            DebugModifyAddedPitch(1);
+
+            return;
         }
     }
-    // Normal range adjustment - 1st make sure it's a valid action
-    else if (CurrentRangeIndex < RangeSettings.Length - 1)
+    // If bDebugSights is enabled & gun not loaded, the range control buttons adjust the centring of gunsight by changing cannon pawn's OverlayCorrectionX or Y
+    else if (DHVehicleCannonPawn(WeaponPawn) != none && DHVehicleCannonPawn(WeaponPawn).bDebugSights
+        && ReloadState != RL_ReadyToFire && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
     {
-        if (Role == ROLE_Authority) // the server action from when this was a server only function
+        DebugModifyOverlayCorrection(0.5);
+
+        return;
+    }
+
+    // Normal range adjustment - first make sure it's a valid action
+    if (CurrentRangeIndex < RangeSettings.Length - 1)
+    {
+        if (Role == ROLE_Authority)
         {
             CurrentRangeIndex++;
         }
-        else if (Instigator != none && ROPlayer(Instigator.Controller) != none) // net client calls the server function
+        else if (Instigator != none && ROPlayer(Instigator.Controller) != none)
         {
-            ROPlayer(Instigator.Controller).ServerLeanRight(true);
+            ROPlayer(Instigator.Controller).ServerLeanRight(true); // net client just calls the server function (after validity checks have been passed)
         }
 
         PlayClickSound();
@@ -595,19 +638,24 @@ simulated function IncrementRange()
 
 simulated function DecrementRange()
 {
-    if (bGunsightSettingMode && ReloadState != RL_ReadyToFire && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
+    if (bDebugRangeManually)
     {
-        if (Role == ROLE_Authority)
+        if (ReloadState != RL_ReadyToFire && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
         {
-            DecreaseAddedPitch();
-            GiveInitialAmmo();
-        }
-        else if (Instigator != none && ROPlayer(Instigator.Controller) != none)
-        {
-            ROPlayer(Instigator.Controller).ServerLeanLeft(true);
+            DebugModifyAddedPitch(-1);
+
+            return;
         }
     }
-    else if (CurrentRangeIndex > 0)
+    else if (DHVehicleCannonPawn(WeaponPawn) != none && DHVehicleCannonPawn(WeaponPawn).bDebugSights
+        && ReloadState != RL_ReadyToFire && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()))
+    {
+        DebugModifyOverlayCorrection(-0.5);
+
+        return;
+    }
+
+    if (CurrentRangeIndex > 0)
     {
         if (Role == ROLE_Authority)
         {
@@ -619,45 +667,6 @@ simulated function DecrementRange()
         }
 
         PlayClickSound();
-    }
-}
-
-// New debug functions to adjust AddedPitch (gunsight aim correction), with screen display
-function IncreaseAddedPitch()
-{
-    local int MechanicalRangesValue, Correction;
-
-    AddedPitch += 1;
-
-    if (RangeSettings.Length > 0)
-    {
-        MechanicalRangesValue = ProjectileClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
-    }
-
-    Correction = AddedPitch - default.AddedPitch;
-
-    if (Instigator != none)
-    {
-        Instigator.ClientMessage("Sight old value =" @ MechanicalRangesValue @ "       new value =" @ MechanicalRangesValue + Correction @ "       correction =" @ Correction);
-    }
-}
-
-function DecreaseAddedPitch()
-{
-    local int MechanicalRangesValue, Correction;
-
-    AddedPitch -= 1;
-
-    if (RangeSettings.Length > 0)
-    {
-        MechanicalRangesValue = ProjectileClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
-    }
-
-    Correction = AddedPitch - default.AddedPitch;
-
-    if (Instigator != none)
-    {
-        Instigator.ClientMessage("Sight old value =" @ MechanicalRangesValue @ "       new value =" @ MechanicalRangesValue + Correction @ "       correction =" @ Correction);
     }
 }
 
@@ -1694,7 +1703,7 @@ simulated function CalcWeaponFire(bool bWasAltFire)
     }
 }
 
-// Modified to add CannonDustEmitter (from ROTankCannon)
+// Modified to add CannonDustEmitter (from ROTankCannon) & any debug target wall
 simulated function DestroyEffects()
 {
     super.DestroyEffects();
@@ -1702,6 +1711,275 @@ simulated function DestroyEffects()
     if (CannonDustEmitter != none)
     {
         CannonDustEmitter.Destroy();
+    }
+
+    if (bDebugRangeAutomatically)
+    {
+        DestroyDebugTargetWall();
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+//  ***********************************  DEBUG  ***********************************  //
+///////////////////////////////////////////////////////////////////////////////////////
+
+// New debug function to change the cannon's pitch adjustment for the current, with screen display
+function DebugModifyAddedPitch(int PitchAdjustment)
+{
+    local class<DHCannonShell> ShellClass;
+    local int                  i;
+
+    // Authority role modified the current pitch setting
+    // Also reverts to full ammo as this is a debug mode & we may need to fire lots of rounds
+    if (Role == ROLE_Authority)
+    {
+        GiveInitialAmmo();
+
+        ShellClass = class<DHCannonShell>(ProjectileClass);
+
+        // For cannons with mechanic range adjustment
+        if (ShellClass != none && ShellClass.default.bMechanicalAiming)
+        {
+            for (i = 0; i < ShellClass.default.MechanicalRanges.Length; ++i)
+            {
+                if (ShellClass.default.MechanicalRanges[i].Range >= RangeSettings[CurrentRangeIndex])
+                {
+                    ShellClass.default.MechanicalRanges[i].RangeValue += PitchAdjustment;
+
+                    Instigator.ClientMessage("New added pitch for range" @ RangeSettings[CurrentRangeIndex] @ DHVehicleCannonPawn(Instigator).RangeText
+                        @ "(MechanicalRanges[" $ i $ "]) =" @ ShellClass.default.MechanicalRanges[i].RangeValue);
+
+                    break;
+                }
+            }
+        }
+        // For cannons without any mechanical range adjustment, which only use the global AddedPitch aim correction, affecting all ranges
+        else
+        {
+            AddedPitch += PitchAdjustment;
+            Instigator.ClientMessage("New AddedPitch (all ranges) =" @ AddedPitch @ "    Original value =" @ default.AddedPitch @ "    Adjustment =" @ AddedPitch - default.AddedPitch);
+        }
+    }
+    // Net client just passes the call up to the server
+    else if (Instigator != none && ROPlayer(Instigator.Controller) != none)
+    {
+        if (PitchAdjustment > 0.0)
+        {
+            ROPlayer(Instigator.Controller).ServerLeanRight(true);
+        }
+        else
+        {
+            ROPlayer(Instigator.Controller).ServerLeanLeft(true);
+        }
+    }
+}
+
+// New debug function to begin automatically calibrating the range setting for the current range
+function BeginAutoDebugRange()
+{
+    local DHDecoAttachment TargetWall;
+    local vector           ViewLocation, WallLocation;
+    local rotator          AimRotation, WallRotation;
+    local float            RangeUU;
+
+    if (class<DHCannonShell>(ProjectileClass) == none || !class<DHCannonShell>(ProjectileClass).default.bMechanicalAiming || WeaponPawn == none)
+    {
+        return;
+    }
+
+    // Calculate the target range in UU
+    if (WeaponPawn.IsA('DHVehicleCannonPawn') && DHVehicleCannonPawn(WeaponPawn).RangeText ~= "metres")
+    {
+        RangeUU = class'DHUnits'.static.MetersToUnreal(Max(GetRange(), 10));
+    }
+    else
+    {
+        RangeUU = Max(GetRange(), 10) * 55.18654;
+    }
+
+    // Calculate required position for target wall & spawn it
+    // We calculate our gunsight view position & aim exactly as it's done for our gunsight view (in cannon pawn's SpecialCalcFirstPersonView())
+    AimRotation = GetBoneRotation(WeaponPawn.CameraBone);
+    ViewLocation = GetBoneCoords(WeaponPawn.CameraBone).Origin + (WeaponPawn.DriverPositions[0].ViewLocation >> AimRotation);
+    WallLocation = ViewLocation + (RangeUU * vector(AimRotation)) + (vect(0.0, -100000.0, 0.0) >> AimRotation);
+    WallRotation = AimRotation;
+    WallRotation.Yaw += 16384;
+    TargetWall = Spawn(class'DHDecoAttachment',, 'DebugTargetWall', WallLocation, WallRotation);
+
+    if (TargetWall != none)
+    {
+        // Set up appearance & collision properties for target wall
+        TargetWall.SetStaticMesh(StaticMesh(DynamicLoadObject("DH_DebugTools.Misc.DebugPlaneAttachment", class'StaticMesh')));
+        TargetWall.bOnlyDrawIfAttached = false;
+        TargetWall.SetCollision(true, true);
+        TargetWall.KSetBlockKarma(true);
+        TargetWall.bWorldGeometry = true;
+        TargetWall.SetCollisionSize(1.0, 1.0);
+        TargetWall.SetDrawScale(10000.0);
+
+        // Initialise the debug variables
+        bDebugRangeAutomatically = true;
+        DebugPitchAdjustment = ProjectileClass.static.GetPitchForRange(RangeSettings[CurrentRangeIndex]);
+        ClosestHighDebugHeight = 0.0;
+        ClosestHighDebugPitch = 0;
+        ClosestLowDebugHeight = 0.0;
+        ClosestLowDebugPitch = 0;
+
+        // Spawn the first debug shell
+        CalcWeaponFire(false);
+        SpawnProjectile(ProjectileClass, false);
+    }
+}
+
+// New debug function used when automatically calibrating the range setting
+// Called by the projectile when it hits the target wall, passing us the hit location, which we then use to adjust aim pitch & fire again
+// We vertically bracket the ideal hit location with shots until we've recorded shots within 1 pitch unit of each other, then the closest is best result
+function UpdateAutoDebugRange(Actor HitActor, vector HitLocation)
+{
+    local vector  ViewLocation, IdealHitLocation, HitNormal;
+    local rotator AimRotation;
+    local float   HitHeightAboveIdeal, DistanceSpread;
+    local int     PitchSpread, FinalPitchAdjustment;
+    local string  MessageText;
+
+    if (bDebugRangeAutomatically && WeaponPawn != none)
+    {
+        // Our debug projectile hit the target wall
+        if (HitActor != none && HitActor.Tag == 'DebugTargetWall')
+        {
+            // Trace our line of sight to get an ideal hit location on the target wall, then work out our projectile's hit height relative to that
+            // We calculate our gunsight view position & aim exactly as it's done for our gunsight view (in cannon pawn's SpecialCalcFirstPersonView())
+            AimRotation = GetBoneRotation(WeaponPawn.CameraBone);
+            ViewLocation = GetBoneCoords(WeaponPawn.CameraBone).Origin + (WeaponPawn.DriverPositions[0].ViewLocation >> AimRotation);
+
+            if (!HitActor.TraceThisActor(IdealHitLocation, HitNormal, ViewLocation + (999999.0 * vector(AimRotation)), ViewLocation))
+            {
+                HitHeightAboveIdeal = ((HitLocation - IdealHitLocation) << AimRotation).Z;
+
+                // Shot was too high, so check whether it was the closest high shot we've fired
+                if (HitHeightAboveIdeal > 0.0)
+                {
+                    if (HitHeightAboveIdeal < ClosestHighDebugHeight || ClosestHighDebugHeight == 0.0 || DebugPitchAdjustment < ClosestHighDebugPitch)
+                    {
+                        Log("Closest high shot: Added pitch =" @ DebugPitchAdjustment @ " Hit height relative to target =" @ HitHeightAboveIdeal);
+                        ClosestHighDebugHeight = HitHeightAboveIdeal;
+                        ClosestHighDebugPitch = DebugPitchAdjustment;
+                    }
+                }
+                // Shot was too low, so check whether it was the closest low shot we've fired
+                else if (HitHeightAboveIdeal > ClosestLowDebugHeight || ClosestLowDebugHeight == 0.0 || DebugPitchAdjustment > ClosestLowDebugPitch)
+                {
+                    Log("Closest low shot: Added pitch =" @ DebugPitchAdjustment @ " Hit height relative to target =" @ HitHeightAboveIdeal);
+                    ClosestLowDebugHeight = HitHeightAboveIdeal;
+                    ClosestLowDebugPitch = DebugPitchAdjustment;
+                }
+
+                // If we haven't yet recorded a closest high or low shot, adjust pitch by give a good chance of getting one with next shot
+                if (ClosestHighDebugHeight == 0.0)
+                {
+                    DebugPitchAdjustment += Max(1, -ClosestLowDebugHeight / 5);
+                }
+                else if (ClosestLowDebugHeight == 0.0)
+                {
+                    DebugPitchAdjustment -= Max(1, ClosestHighDebugHeight / 5);
+                }
+                // Otherwise, if closest low & high shots are more than 1 pitch unit apart, calculate new pitch adjustment to try (pro-rata between closest low & high)
+                else if (ClosestHighDebugPitch - ClosestLowDebugPitch > 1)
+                {
+                    DistanceSpread = ClosestHighDebugHeight - ClosestLowDebugHeight;
+                    PitchSpread = ClosestHighDebugPitch - ClosestLowDebugPitch;
+                    DebugPitchAdjustment = ClosestHighDebugPitch - (ClosestHighDebugHeight / DistanceSpread * PitchSpread);
+                    DebugPitchAdjustment = Clamp(DebugPitchAdjustment, ClosestLowDebugPitch + 1, ClosestHighDebugPitch -1); // ensure new pitch is different to recorded low & high
+                }
+                // Or if we have a high & low shot within 1 pitch unit of each other, choose the closest & that's out best result - we're finished
+                else
+                {
+                    if (Abs(ClosestHighDebugHeight) < Abs(ClosestLowDebugHeight))
+                    {
+                        FinalPitchAdjustment = ClosestHighDebugPitch;
+                    }
+                    else
+                    {
+                        FinalPitchAdjustment = ClosestLowDebugPitch;
+                    }
+
+                    class<DHCannonShell>(ProjectileClass).default.MechanicalRanges[CurrentRangeIndex].RangeValue = FinalPitchAdjustment;
+                    bDebugRangeAutomatically = false;
+
+                    MessageText = Tag @ ProjectileDescriptions[GetAmmoIndex()] $ ": Best pitch adjustment for RangeSettings["
+                        $ CurrentRangeIndex $ "] of" @ GetRange() @ DHVehicleCannonPawn(Instigator).RangeText @ "=" @ FinalPitchAdjustment;
+                }
+            }
+            // Somehow we couldn't trace the target wall, so we'd better exit debugging
+            else
+            {
+                bDebugRangeAutomatically = false;
+                MessageText = "SOMEHOW FAILED TO TRACE TARGET WALL SO EXITING AUTO RANGE CALIBRATION !!!";
+            }
+        }
+        // Or if debug projectile didn't hit target wall - most likely the shot was too low & hit ground before wall, so raise pitch a little & we'll try again
+        else
+        {
+            DebugPitchAdjustment += 1;
+        }
+    }
+
+    if (MessageText != "")
+    {
+        WeaponPawn.ClientMessage(MessageText);
+        Log(MessageText);
+    }
+
+    // Fire another debug projectile, using out new pitch adjustment
+    if (bDebugRangeAutomatically && WeaponPawn != none)
+    {
+        SpawnProjectile(ProjectileClass, false);
+    }
+    // Or if auto range setting is over, destroy any target wall
+    else if (HitActor != none && HitActor.Tag == 'DebugTargetWall')
+    {
+        HitActor.Destroy();
+    }
+    else
+    {
+        DestroyDebugTargetWall();
+    }
+}
+
+simulated function DestroyDebugTargetWall()
+{
+    local DHDecoAttachment TargetWall;
+
+    foreach AllActors(class'DHDecoAttachment', TargetWall, 'DebugTargetWall')
+    {
+        TargetWall.Destroy();
+        break;
+    }
+}
+
+// New debug functions to adjust the gunsight centring, by changing the cannon pawn's OverlayCorrectionX or OverlayCorrectionY, with screen display
+// Because we only have 2 range buttons for 4 adjustment options, we adjust (plus or minus) X when in the 1st half of the reload & Y in the 2nd half
+// Seems clumsy, but works pretty well - simply pause or slomo the reload in the relevant part you want to modify, then you can adjust away with the range keys
+simulated function DebugModifyOverlayCorrection(float Adjustment)
+{
+    local DHVehicleCannonPawn CP;
+
+    CP = DHVehicleCannonPawn(WeaponPawn);
+
+    if (CP != none)
+    {
+        if (ReloadState < RL_ReloadingPart3)
+        {
+            CP.OverlayCorrectionX += Adjustment;
+            CP.ClientMessage("New OverlayCorrectionX =" @ CP.OverlayCorrectionX @ " Original value =" @ CP.default.OverlayCorrectionX
+                @ " Adjustment =" @ CP.OverlayCorrectionX - CP.default.OverlayCorrectionX);
+        }
+        else
+        {
+            CP.OverlayCorrectionY += Adjustment;
+            CP.ClientMessage("New OverlayCorrectionY =" @ CP.OverlayCorrectionY @ " Original value =" @ CP.default.OverlayCorrectionY
+                @ " Adjustment =" @ CP.OverlayCorrectionY - CP.default.OverlayCorrectionY);
+        }
     }
 }
 

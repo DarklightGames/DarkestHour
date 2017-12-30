@@ -324,7 +324,7 @@ simulated function POVChanged(PlayerController PC, bool bBehindViewChanged)
 // Also so fire button triggers a manual cannon reload if players uses the manual reloading option & the cannon is waiting to start reloading
 function Fire(optional float F)
 {
-    if (!CanFire() || ArePlayersWeaponsLocked() || Cannon == none)
+    if (!CanFire() || ArePlayersWeaponsLocked() || Cannon == none || Cannon.bDebugRangeAutomatically)
     {
         return;
     }
@@ -385,6 +385,15 @@ exec function Deploy()
     }
 }
 
+// Modified to avoid cannon fire impulse if in gunsight setting mode (a debug mode)
+event ApplyFireImpulse(bool bAlt)
+{
+    if (!(Cannon != none && Cannon.bDebugRangeManually && !Cannon.bDebugRangeAutomatically) || bAlt)
+    {
+        super.ApplyFireImpulse(bAlt);
+    }
+}
+
 // New functions to adjust either the rotation or range setting of any adjustable smoke launcher
 exec function IncreaseSmokeLauncherSetting()
 {
@@ -413,7 +422,7 @@ function bool CanFire()
 // Modified (from deprecated ROTankCannonPawn) to keep ammo changes clientside as a network optimisation (only pass to server when it needs the change, not every key press)
 exec function SwitchFireMode()
 {
-    if (Cannon != none && Cannon.bMultipleRoundTypes)
+    if (Cannon != none && Cannon.bMultipleRoundTypes && !Cannon.bDebugRangeAutomatically)
     {
         Cannon.ToggleRoundType();
     }
@@ -770,16 +779,24 @@ simulated function SetManualTurret(bool bManual)
 // Modified (from deprecated ROTankCannonPawn) to allow turret traverse or elevation seizure if turret ring or pivot are damaged
 function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChange)
 {
-    if (Gun != none && Gun.bUseTankTurretRotation)
+    if (Cannon != none && Cannon.bUseTankTurretRotation)
     {
-        if (bTurretRingDamaged)
+        if (Cannon.bDebugRangeAutomatically)
         {
             YawChange = 0.0;
-        }
-
-        if (bGunPivotDamaged)
-        {
             PitchChange = 0.0;
+        }
+        else
+        {
+            if (bTurretRingDamaged)
+            {
+                YawChange = 0.0;
+            }
+
+            if (bGunPivotDamaged)
+            {
+                PitchChange = 0.0;
+            }
         }
 
         UpdateTurretRotation(DeltaTime, YawChange, PitchChange);
@@ -867,16 +884,6 @@ function float ModifyThreat(float Current, Pawn Threat)
 //  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Debug exec from deprecated ROTankCannonPawn
-exec function SetRange(byte NewRange)
-{
-    if (IsDebugModeAllowed() && Gun != none)
-    {
-        Log("Switching range from" @ Gun.CurrentRangeIndex @ "to" @ NewRange);
-        Gun.CurrentRangeIndex = NewRange;
-    }
-}
-
 // New debug exec to set the coaxial MG's positional offset vector
 exec function SetAltFireOffset(string NewX, string NewY, string NewZ)
 {
@@ -904,13 +911,31 @@ exec function SetAltFireSpawnOffset(float NewValue)
     }
 }
 
-// New debug exec to toggle bGunsightSettingMode, allowing calibration of range settings
-exec function SetGunsight()
+// New debug exec to toggle bDebugRangeManually, allowing manual calibration of range settings
+exec function DebugRange()
 {
     if (IsDebugModeAllowed() && Cannon != none)
     {
-        Cannon.bGunsightSettingMode = !Cannon.bGunsightSettingMode;
-        Log(Cannon.Tag @ "bGunsightSettingMode =" @ Cannon.bGunsightSettingMode);
+        Cannon.bDebugRangeManually = !Cannon.bDebugRangeManually;
+        Log(Cannon.Tag @ "bDebugRangeManually =" @ Cannon.bDebugRangeManually);
+    }
+}
+
+// New debug exec to automatically calibrate the current range setting
+exec function AutoDebugRange()
+{
+    if (Cannon != none)
+    {
+        // If already in this debug mode, running this console command again exits it & destroys the target wall
+        if (Cannon.bDebugRangeAutomatically)
+        {
+            Cannon.bDebugRangeAutomatically = false;
+            Cannon.DestroyDebugTargetWall();
+        }
+        else if (IsDebugModeAllowed())
+        {
+            Cannon.BeginAutoDebugRange();
+        }
     }
 }
 
