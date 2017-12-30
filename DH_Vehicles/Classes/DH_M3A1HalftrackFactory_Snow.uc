@@ -8,7 +8,6 @@ class DH_M3A1HalftrackFactory_Snow extends DH_M3A1HalftrackFactory;
 defaultproperties
 {
     VehicleClass=class'DH_Vehicles.DH_M3A1HalftrackTransport_Snow'
-    Skins(0)=Texture'DH_VehiclesUS_tex2.ext_vehicles.M3A1Halftrack_body_snow'
-    Skins(5)=Texture'DH_VehiclesUS_tex2.Treads.M3A1Halftrack_treadsnow'
-    Skins(6)=Texture'DH_VehiclesUS_tex2.Treads.M3A1Halftrack_treadsnow'
+    Skins(0)=Texture'DH_M3Halftrack_tex.m3.Halftrack_winter'
+    Skins(1)=Texture'DH_M3Halftrack_tex.m3.Halftrack_2_winter'
 }
