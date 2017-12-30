@@ -955,6 +955,16 @@ exec function SetSLFireOffset(string NewX, string NewY, string NewZ)
     }
 }
 
+// New debug exec to toggle bDebugSights mode, which draws a crosshair on the sights at the exact centre point, to check sights are properly centred
+exec function DebugSights()
+{
+    if (IsDebugModeAllowed())
+    {
+        bDebugSights = !bDebugSights;
+        Log(Tag @ "bDebugSights =" @ bDebugSights);
+    }
+}
+
 // New debug execs that allow easy tuning of impulse settings for ejected shell cases triggered by an animation notify, which govern how it moves
 exec function ShellImpulse(string NewX, string NewY, string NewZ)
 {
