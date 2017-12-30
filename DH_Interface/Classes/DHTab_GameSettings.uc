@@ -576,8 +576,8 @@ defaultproperties
     ch_ManualReloading=DHmoCheckBox'ManualReloading'
 
     Begin Object Class=DHmoCheckBox Name=LockTankOnEntry
-        Caption="Spawn with vehicle locked"
-        Hint="Automatically lock a vehicle as you enter it, which stops other players from entering. Only works if the vehicle is empty when you enter."
+        Caption="Lock tank when entering it"
+        Hint="Automatically lock a tank (or other armored vehicle) when you spawn into it, or if you enter an empty tank. This stops other players from using tank crew positions."
         CaptionWidth=0.959
         ComponentJustification=TXTA_Left
         IniOption="@Internal"
