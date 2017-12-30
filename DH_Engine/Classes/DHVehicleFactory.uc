@@ -21,19 +21,45 @@ simulated function PostBeginPlay()
     }
 }
 
-// Modified so doesn't activate if controlled by a spawn point (similar to if linked to a spawn area)
+// Modified so if factory is controlled by a spawn point, we don't activate or deactivate the factory, instead leaving that to the spawn point
 function Reset()
 {
     TotalSpawnedVehicles = 0;
 
-    if (!bUsesSpawnAreas && !bControlledBySpawnPoint)
+    if (!bControlledBySpawnPoint)
     {
-        SpawnVehicle();
-        Activate(TeamNum);
+        if (bUsesSpawnAreas)
+        {
+            Deactivate();
+        }
+        else
+        {
+            SpawnVehicle();
+            Activate(TeamNum);
+        }
     }
-    else
+}
+
+// Modified so if factory is controlled by a spawn point, we add a slight timer delay before a vehicle gets spawned
+// This is because at start of round, all actors get Reset(), but factories are left until last as otherwise the vehicles they spawn also get reset & destroyed
+// But if controlled by a spawn point, the spawn gets reset earlier & if it's initially active that causes any linked factory to activate & spawn a vehicle
+// The vehicle would then get reset too, causing it to destroy itself, so as a workaround we need to add this slight delay before spawning the vehicle
+function Activate(ROSideIndex T)
+{
+    if (!bFactoryActive || TeamNum != T)
     {
-        Deactivate();
+        TeamNum = T;
+        bFactoryActive = true;
+        SpawningBuildEffects = true;
+
+        if (bControlledBySpawnPoint)
+        {
+            SetTimer(0.5, false);
+        }
+        else
+        {
+            Timer();
+        }
     }
 }
 
