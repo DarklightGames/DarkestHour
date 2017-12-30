@@ -17,7 +17,7 @@ defaultproperties
     bLockCameraDuringTransition=true
     GunsightOverlay=Texture'Vehicle_Optic.T3476_sight_background'
     CannonScopeCenter=Texture'Vehicle_Optic.T3476_sight_mover'
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed' // TODO: make one for T34 or generic Soviet
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed' // matches size of gunsight
     AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell_reload'
     PoweredRotateSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'

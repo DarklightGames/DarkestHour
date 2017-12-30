@@ -25,7 +25,7 @@ defaultproperties
     bHasAltFire=false
     GunsightOverlay=Texture'DH_VehicleOptics_tex.Soviet.isu152_sight_background'
     CannonScopeCenter=Texture'Vehicle_Optic.Scopes.T3476_sight_mover'
-    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed' // TODO: make one for ISU-152 or generic Soviet
+    DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed' // matches size of gunsight
     PeriscopeOverlay=Texture'DH_VehicleOptics_tex.Soviet.TNK-1_periscope' // TODO: maybe move this to DHSovietCannonPawn, if was widely used?
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ISU152_shell'
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ISU152_shell_reload'
