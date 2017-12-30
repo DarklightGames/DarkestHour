@@ -11,6 +11,6 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Stug3G_anm.StuH_body_ext'
     Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_body_snow'
     Skins(1)=Texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_armor_snow'
-    Skins(2)=Texture'DH_VehiclesGE_tex2.Treads.Stug3g_treads'
-    Skins(3)=Texture'DH_VehiclesGE_tex2.Treads.Stug3g_treads'
+    Skins(2)=Texture'DH_VehiclesGE_tex3.Treads.Stug3_treads_snow'
+    Skins(3)=Texture'DH_VehiclesGE_tex3.Treads.Stug3_treads_snow'
 }
