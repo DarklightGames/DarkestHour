@@ -10,7 +10,7 @@ defaultproperties
     // MG mesh
     Mesh=SkeletalMesh'DH_T34_anm.T34-76_MG'
     bMatchSkinToVehicle=true
-    FireAttachBone="MG_pivot"
+    FireAttachBone="MG_placement"
     FireEffectOffset=(X=10.0,Y=4.0,Z=0.0)
 
     // Movement (reduced from original for more plausible looking limits)
