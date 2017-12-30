@@ -19,6 +19,7 @@ defaultproperties
     PenetrationMag=1250.0
     StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
     Tag="OF-471"
+    bDebugInImperial=false
 
     DHPenetrationTable(0)=9.5  // 100m
     DHPenetrationTable(1)=8.9  // 250m

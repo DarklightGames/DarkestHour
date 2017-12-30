@@ -3,10 +3,11 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_T3485CannonShell extends DHCannonShellAPBC;
+class DH_T3485CannonShell extends DHSovietCannonShell;
 
 defaultproperties
 {
+    RoundType=RT_APBC
     ShellDiameter=8.5
     BallisticCoefficient=2.0
     Speed=47797.0 // 792 m/s

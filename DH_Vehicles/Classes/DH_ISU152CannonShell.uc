@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_ISU152CannonShell extends DHCannonShellAP;
+class DH_ISU152CannonShell extends DHSovietCannonShell;
 
 defaultproperties
 {

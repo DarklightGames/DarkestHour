@@ -19,6 +19,7 @@ defaultproperties
     Tag="OF-540"
     StaticMesh=StaticMesh'WeaponPickupSM.shells.122mm_shell'
     BlurEffectScalar=3.0
+    bDebugInImperial=false
 
     DHPenetrationTable(0)=9.0  // 100m
     DHPenetrationTable(1)=8.4  // 250m
