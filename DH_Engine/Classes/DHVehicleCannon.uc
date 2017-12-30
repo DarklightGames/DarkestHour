@@ -23,9 +23,6 @@ var localized array<string> ProjectileDescriptions;  // text for each round type
 var     int                 InitialTertiaryAmmo;     // starting load of tertiary round type
 var     float               SecondarySpread;         // spread for secondary ammo type
 var     float               TertiarySpread;
-var     byte                NumPrimaryMags;          // number of mags for an autocannon's primary ammo type // TODO: move autocannon functionality into a subclass
-var     byte                NumSecondaryMags;
-var     byte                NumTertiaryMags;
 var     byte                LocalPendingAmmoIndex;   // next ammo type we want to load - a local version on net client or listen server, updated to ServerPendingAmmoIndex when needed
 var     byte                ServerPendingAmmoIndex;  // on authority role this is authoritative setting for next ammo type to load; on client it records last setting updated to server
 var     class<Projectile>   SavedProjectileClass;    // client & listen server record last ammo when in cannon, so if another player changes ammo, any local pending choice becomes invalid
@@ -74,7 +71,7 @@ replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        MainAmmoChargeExtra, NumPrimaryMags, NumSecondaryMags, NumTertiaryMags, NumSmokeLauncherRounds, SmokeLauncherAdjustmentSetting;
+        MainAmmoChargeExtra, NumSmokeLauncherRounds, SmokeLauncherAdjustmentSetting;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -763,7 +760,6 @@ function bool GiveInitialAmmo()
 {
     if (MainAmmoChargeExtra[0] != InitialPrimaryAmmo || MainAmmoChargeExtra[1] != InitialSecondaryAmmo || MainAmmoChargeExtra[2] != InitialTertiaryAmmo
         || AltAmmoCharge != InitialAltAmmo || NumMGMags != default.NumMGMags
-        || (bUsesMags && (NumPrimaryMags != default.NumPrimaryMags || NumSecondaryMags != default.NumSecondaryMags || NumTertiaryMags != default.NumTertiaryMags))
         || (SmokeLauncherClass != none && NumSmokeLauncherRounds != SmokeLauncherClass.default.InitialAmmo))
     {
         MainAmmoChargeExtra[0] = InitialPrimaryAmmo;
@@ -771,13 +767,6 @@ function bool GiveInitialAmmo()
         MainAmmoChargeExtra[2] = InitialTertiaryAmmo;
         AltAmmoCharge = InitialAltAmmo;
         NumMGMags = default.NumMGMags;
-
-        if (bUsesMags)
-        {
-            NumPrimaryMags = default.NumPrimaryMags;
-            NumSecondaryMags = default.NumSecondaryMags;
-            NumTertiaryMags = default.NumTertiaryMags;
-        }
 
         if (SmokeLauncherClass != none)
         {
@@ -795,29 +784,7 @@ function bool ResupplyAmmo()
 {
     local bool bDidResupply;
 
-    // Autocannon
-    if (bUsesMags)
-    {
-        if (NumPrimaryMags < default.NumPrimaryMags)
-        {
-            ++NumPrimaryMags;
-            bDidResupply = true;
-        }
-
-        if (NumSecondaryMags < default.NumSecondaryMags)
-        {
-            ++NumSecondaryMags;
-            bDidResupply = true;
-        }
-
-        if (NumTertiaryMags < default.NumTertiaryMags)
-        {
-            ++NumTertiaryMags;
-            bDidResupply = true;
-        }
-    }
-    // Cannon
-    else
+    if (!bUsesMags)
     {
         if (MainAmmoChargeExtra[0] < MaxPrimaryAmmo)
         {
@@ -836,12 +803,12 @@ function bool ResupplyAmmo()
             ++MainAmmoChargeExtra[2];
             bDidResupply = true;
         }
-    }
 
-    // If cannon is waiting to reload & we have a player who doesn't use manual reloading (so must be out of ammo), then try to start a reload
-    if (ReloadState == RL_Waiting && WeaponPawn != none && WeaponPawn.Occupied() && !PlayerUsesManualReloading() && bDidResupply)
-    {
-        AttemptReload();
+        // If cannon is waiting to reload & we have a player who doesn't use manual reloading (so must be out of ammo), then try to start a reload
+        if (ReloadState == RL_Waiting && WeaponPawn != none && WeaponPawn.Occupied() && !PlayerUsesManualReloading() && bDidResupply)
+        {
+            AttemptReload();
+        }
     }
 
     // Coaxial MG
@@ -945,23 +912,7 @@ simulated function bool ConsumeAmmo(int AmmoIndex)
     }
 
     return true;
-}
 
-// Modified to handle autocannon's multiple mag types
-function ConsumeMag()
-{
-    if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
-    {
-        NumPrimaryMags--;
-    }
-    else if (ProjectileClass == SecondaryProjectileClass)
-    {
-        NumSecondaryMags--;
-    }
-    else if (ProjectileClass == TertiaryProjectileClass)
-    {
-        NumTertiaryMags--;
-    }
 }
 
 // Modified to use extended ammo types
@@ -989,22 +940,7 @@ simulated function int PrimaryAmmoCount()
 
     if (AmmoIndex < arraycount(MainAmmoChargeExtra))
     {
-        if (bUsesMags)
-        {
-            switch (AmmoIndex)
-            {
-                case 0:
-                    return NumPrimaryMags;
-                case 1:
-                    return NumSecondaryMags;
-                case 2:
-                    return NumTertiaryMags;
-            }
-        }
-        else
-        {
-            return MainAmmoChargeExtra[AmmoIndex];
-        }
+        return MainAmmoChargeExtra[AmmoIndex];
     }
 
     return 0;
@@ -1376,7 +1312,7 @@ simulated function PlayStageReloadSound()
     PlayOwnedSound(ReloadStages[ReloadState].Sound, SLOT_Misc, FireSoundVolume / 255.0,, 150.0,, false);
 }
 
-// Modified to handle autocannon's multiple mag types
+// Modified to use extended ammo types
 function FinishMagReload()
 {
     if (ProjectileClass == PrimaryProjectileClass || !bMultipleRoundTypes)
@@ -1393,25 +1329,12 @@ function FinishMagReload()
     }
 }
 
-// Modified to include a coaxial MG or an autocannon's multiple mag types
+// Modified to include a coaxial MG
 simulated function bool HasAmmoToReload(byte AmmoIndex)
 {
     if (AmmoIndex == ALTFIRE_AMMO_INDEX) // coaxial MG
     {
          return NumMGMags > 0;
-    }
-
-    if (bUsesMags) // autocannon
-    {
-        switch (AmmoIndex)
-        {
-            case 0:
-                return NumPrimaryMags > 0;
-            case 1:
-                return NumSecondaryMags > 0;
-            case 2:
-                return NumTertiaryMags > 0;
-        }
     }
 
     return HasAmmo(AmmoIndex); // normal cannon or smoke launcher

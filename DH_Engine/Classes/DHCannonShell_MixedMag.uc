@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_Sdkfz2341CannonShellMixed extends DH_Sdkfz2341CannonShell
+class DHCannonShell_MixedMag extends DHCannonShell
     abstract;
 
 defaultproperties

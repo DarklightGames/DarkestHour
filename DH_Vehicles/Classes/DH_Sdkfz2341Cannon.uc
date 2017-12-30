@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_Sdkfz2341Cannon extends DHVehicleCannon;
+class DH_Sdkfz2341Cannon extends DHVehicleAutoCannon;
 
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc3.usx
 
@@ -52,26 +52,6 @@ simulated function DestroyEffects()
     }
 }
 
-// Modified to alternate between AP & HE rounds if firing a mixed mag (the tertiary ammo type)
-function Fire(Controller C)
-{
-    if (ProjectileClass == PrimaryProjectileClass) // firing from mixed mag
-    {
-        if ((InitialPrimaryAmmo - MainAmmoChargeExtra[0]) % 2.0 == 0.0) // fires AP on even numbered shots, HE on odd
-        {
-            SpawnProjectile(SecondaryProjectileClass, false);
-        }
-        else
-        {
-            SpawnProjectile(TertiaryProjectileClass, false);
-        }
-    }
-    else
-    {
-        SpawnProjectile(ProjectileClass, false);
-    }
-}
-
 defaultproperties
 {
     // Cannon mesh
@@ -106,9 +86,8 @@ defaultproperties
     CustomPitchDownLimit=64443
 
     // Cannon ammo
-    bUsesMags=true
-    ProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellMixed'
-    PrimaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellMixed'
+    ProjectileClass=class'DH_Engine.DHCannonShell_MixedMag'
+    PrimaryProjectileClass=class'DH_Engine.DHCannonShell_MixedMag'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShell'
     TertiaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2341CannonShellHE'
     ProjectileDescriptions(0)="Mixed"
@@ -123,7 +102,6 @@ defaultproperties
     MaxPrimaryAmmo=10
     MaxSecondaryAmmo=10
     MaxTertiaryAmmo=10
-    Spread=0.003
 
     // Coaxial MG ammo
     AltFireProjectileClass=class'DH_Weapons.DH_MG42Bullet'
@@ -137,29 +115,10 @@ defaultproperties
     WeaponFireOffset=8.5
     AltFireInterval=0.05
     AltFireOffset=(X=-65.0,Y=-24.0,Z=-3.0)
-    FlashEmitterClass=class'ROEffects.MuzzleFlash3rdSTG'
-    EffectEmitterClass=none
-    CannonDustEmitterClass=none // avoids having to override FlashMuzzleFlash function
-    AIInfo(0)=(RefireRate=0.99)
 
-    // Screen shake
-    ShakeRotMag=(Z=5.0)
-    ShakeRotRate=(Z=100.0)
-    ShakeRotTime=2.0
-    ShakeOffsetMag=(Z=0.5)
-    ShakeOffsetRate=(Z=10.0)
-    ShakeOffsetTime=2.0
-
-    // Sounds (HUDProportion overrides to better suit the magazine reload)
-    CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.20mm.DH20mmFire01G'
-    CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.20mm.DH20mmFire02G'
-    CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.20mm.DH20mmFire03G'
+    // Sounds
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.T60_reload_01')
-    ReloadStages(1)=(Sound=Sound'DH_GerVehicleSounds2.Reloads.234_reload_02',HUDProportion=0.6)
-    ReloadStages(2)=(Sound=Sound'DH_GerVehicleSounds2.Reloads.234_reload_03')
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.T60_reload_04',HUDProportion=0.4)
 
     // Cannon range settings
     RangeSettings(1)=100
