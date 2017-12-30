@@ -20,14 +20,29 @@ replication
 // Modified to fire two projectiles from a pair of alternating barrels
 function Fire(Controller C)
 {
+    local class<Projectile> ProjClass;
+
     // Spawn a projectile from the 1st barrel in the firing pair
-    // Note the Super will handle mixed mags (alternating between AP & HE rounds)
-    super.Fire(C);
+    if (ProjectileClass == class'DHCannonShell_MixedMag')
+    {
+        ProjClass = SecondaryProjectileClass;
+    }
+    else
+    {
+        ProjClass = ProjectileClass;
+    }
+
+    SpawnProjectile(ProjClass, false);
     IncrementNextFiringBarrelIndex();
 
     // Spawn a projectile from the 2nd paired barrel, but this time skipping firing effects so we don't repeat them
+    if (ProjectileClass == class'DHCannonShell_MixedMag')
+    {
+        ProjClass = TertiaryProjectileClass;
+    }
+
     bSkipFiringEffects = true;
-    super.Fire(C);
+    SpawnProjectile(ProjClass, false);
     bSkipFiringEffects = false; // reset
     IncrementNextFiringBarrelIndex();
 }
@@ -151,8 +166,6 @@ defaultproperties
     BarrelBones(2)="Barrel_TL"
     BarrelBones(3)="Barrel_BR"
     WeaponFireAttachmentBone="Barrel_TR" // a dummy really, replaced by individual BarrelBones - only used in CalcWeaponFire() to calc a nominal WeaponFireLocation
-    // TODO: change something resulting in WeaponFireLocation being set to a central location between the barrels, instead of its current off-centre position on the top right barrel
-    // This is becuase WeaponFireLocation is used by ApplyFireImpulse(), which gets called natively every Fire(), & is currently applying an off-centre karma impulse
     WeaponFireOffset=0.0
     FireAnimations(0)="shoot_opticA"     // on gun optics, 1st gun pair
     FireAnimations(1)="shoot_opticB"     // on gun optics, 2nd gun pair
