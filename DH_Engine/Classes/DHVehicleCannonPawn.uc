@@ -26,6 +26,7 @@ var     texture     CannonScopeCenter;           // gunsight reticle overlay (re
 var     float       RangePositionX;              // X & Y positioning of range text (0.0 to 1.0)
 var     float       RangePositionY;
 var localized string    RangeText;               // metres or yards (can be localised for other languages)
+var     bool        bIsPeriscopicGunsight;       // cannon uses a periscopic gunsight instead of the more common coaxially mounted telescopic sight
 
 // Manual & powered turret movement
 var     bool        bManualTraverseOnly;
@@ -94,57 +95,63 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
         return;
     }
 
-    // If player is on gunsight, use CameraBone for camera location & use cannon's aim for camera rotation
-    if (DriverPositionIndex < GunsightPositions && !IsInState('ViewTransition') && CameraBone !='') // GunsightPositions may be 2 for dual-magnification optics
+    // GET CAMERA ROTATION
+    // If player is on gunsight, use CameraBone for camera rotation (its rotation will follow the cannon's aim)
+    if (DriverPositionIndex < GunsightPositions && !IsInState('ViewTransition')) // GunsightPositions may be 2 for dual-magnification optics
     {
         bOnGunsight = true;
-        CameraLocation = VehWep.GetBoneCoords(CameraBone).Origin;
         CameraRotation = VehWep.GetBoneRotation(CameraBone);
     }
-    // Otherwise use PlayerCameraBone for camera location & use PC's rotation for camera rotation (unless camera is locked during a transition)
+    // Or if camera is locked during a current transition, use PlayerCameraBone for camera rotation
+    else if (bLockCameraDuringTransition && IsInState('ViewTransition'))
+    {
+        CameraRotation = VehWep.GetBoneRotation(PlayerCameraBone);
+    }
+    // Otherwise player can look around (e.g. cupola, periscope, unbuttoned or binoculars), so use PC's rotation for camera rotation
+    else
+    {
+        CameraRotation = PC.Rotation;
+
+        // If vehicle has a turret, add turret's yaw to player's relative rotation, so player's view turns with the turret
+        if (VehWep.bHasTurret)
+        {
+            CameraRotation.Yaw += VehWep.CurrentAim.Yaw;
+        }
+
+        // Now factor in the vehicle's rotation, to give us a world rotation for the camera
+        RelativeQuat = QuatFromRotator(Normalize(CameraRotation));
+        VehicleQuat = QuatFromRotator(VehWep.Rotation); // note VehWep.Rotation is same as vehicle base
+        NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
+        CameraRotation = Normalize(QuatToRotator(NonRelativeQuat));
+    }
+
+    // GET CAMERA LOCATION
+    // If player is on a gunsight, use CameraBone for camera location, unless it's a perscopic gunsight (which is fixed in position & doesn't move with gun pitch)
+    if (bOnGunsight && !bIsPeriscopicGunsight)
+    {
+        CameraLocation = VehWep.GetBoneCoords(CameraBone).Origin;
+    }
+    // Otherwise use PlayerCameraBone for camera location
     else
     {
         CameraLocation = VehWep.GetBoneCoords(PlayerCameraBone).Origin;
-
-        // If camera is locked during a current transition, lock rotation to PlayerCameraBone
-        if (bLockCameraDuringTransition && IsInState('ViewTransition'))
-        {
-            CameraRotation = VehWep.GetBoneRotation(PlayerCameraBone);
-        }
-        // Otherwise, player can look around, e.g. cupola, periscope, unbuttoned or binoculars
-        else
-        {
-            CameraRotation = PC.Rotation;
-
-            // If vehicle has a turret, add turret's yaw to player's relative rotation, so player's view turns with the turret
-            if (VehWep != none && VehWep.bHasTurret)
-            {
-                CameraRotation.Yaw += VehWep.CurrentAim.Yaw;
-            }
-
-            // Now factor in the vehicle's rotation
-            RelativeQuat = QuatFromRotator(Normalize(CameraRotation));
-            VehicleQuat = QuatFromRotator(VehWep.Rotation); // note VehWep.Rotation is same as vehicle base
-            NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
-            CameraRotation = Normalize(QuatToRotator(NonRelativeQuat));
-        }
     }
 
-    // Adjust camera location for any offset positioning (FPCamPos is set from any ViewLocation in DriverPositions)
+    // Adjust camera location for any offset positioning (note FPCamPos is set from any ViewLocation in DriverPositions)
     if (FPCamPos != vect(0.0, 0.0, 0.0))
     {
-        if (bOnGunsight || (bLockCameraDuringTransition && IsInState('ViewTransition')))
+        if ((bOnGunsight && !bIsPeriscopicGunsight) || (bLockCameraDuringTransition && IsInState('ViewTransition')))
         {
             CameraLocation += (FPCamPos >> CameraRotation);
         }
         // In a 'look around' position, we need to make camera offset relative to the vehicle, not the way the player is facing
         else
         {
-            BaseRotation = VehWep.Rotation; // note VehWep.Rotation is same as vehicle base
+            BaseRotation = VehWep.Rotation;
 
-            if (VehWep != none && VehWep.bHasTurret)
+            if (VehWep.bHasTurret)
             {
-                BaseRotation.Yaw += VehWep.CurrentAim.Yaw;
+                BaseRotation.Yaw += VehWep.CurrentAim.Yaw; // TODO: think this is wrong; can't just add relative yaw/pitch to non-relative veh rotation?
 
                 if (bCamOffsetRelToGunPitch)
                 {
