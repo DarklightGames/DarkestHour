@@ -316,7 +316,7 @@ function Fire(Controller C)
         SpawnProjectile(ProjectileClass, false);
     }
 
-    if (Level.NetMode == NM_ListenServer && AmbientEffectEmitter != none && !(Instigator != none && Instigator.IsLocallyControlled()))
+    if (Level.NetMode == NM_ListenServer && AmbientEffectEmitter != none && !bAmbientEmitterAltFireOnly && !(Instigator != none && Instigator.IsLocallyControlled()))
     {
         AmbientEffectEmitter.SetEmitterStatus(true); // non-owning listen server doesn't get OwnerEffects() & no native code handles this emitter (unlike a non-owning net client)
     }
@@ -331,6 +331,11 @@ function AltFire(Controller C)
     else if (AltFireProjectileClass != none)
     {
         SpawnProjectile(AltFireProjectileClass, true);
+    }
+
+    if (Level.NetMode == NM_ListenServer && AmbientEffectEmitter != none && bAmbientEmitterAltFireOnly && !(Instigator != none && Instigator.IsLocallyControlled()))
+    {
+        AmbientEffectEmitter.SetEmitterStatus(true); // non-owning listen server doesn't get OwnerEffects() & no native code handles this emitter (unlike a non-owning net client)
     }
 }
 
