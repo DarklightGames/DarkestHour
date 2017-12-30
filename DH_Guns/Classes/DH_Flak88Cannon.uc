@@ -11,7 +11,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Flak88_anm.flak88_turret'
     Skins(0)=Texture'MilitaryAxisSMT.Artillery.flak_88'
     Skins(1)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
-//  CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Flak8.Flak88_turret_coll' // TODO - make 'turret' col mesh - although this one is tricky as so much 'turret' pitches up & down
+//  CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Flak88.Flak88_turret_coll' // TODO - make 'turret' col mesh - although this one is tricky as so much 'turret' pitches up & down
 
     // Turret movement
     bHasTurret=true // not really a turret, but this is an easy way of making the player's view turn with the rotating gun
@@ -31,6 +31,7 @@ defaultproperties
 
     // Weapon fire
     WeaponFireOffset=9.0
+    ShootLoweredAnim="shoot_open" // as this model doesn't have the usual 'shoot_close' animation, but using 'shoot_close' has the same effect
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire01'
