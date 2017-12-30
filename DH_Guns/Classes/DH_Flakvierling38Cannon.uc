@@ -146,9 +146,6 @@ defaultproperties
     InitialPrimaryAmmo=40 // actually represents 80 rounds (4 magazines of 20 rounds each), but every time we fire we use 2 rounds (so think of it as 40 double shots)
     InitialSecondaryAmmo=40
     InitialTertiaryAmmo=40
-    MaxPrimaryAmmo=40
-    MaxSecondaryAmmo=40
-    MaxTertiaryAmmo=40
     BarrelBones(0)="Barrel_TR"
     BarrelBones(1)="Barrel_BL"
     BarrelBones(2)="Barrel_TL"

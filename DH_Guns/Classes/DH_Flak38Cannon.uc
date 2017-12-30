@@ -59,9 +59,6 @@ defaultproperties
     InitialPrimaryAmmo=20
     InitialSecondaryAmmo=20
     InitialTertiaryAmmo=20
-    MaxPrimaryAmmo=20
-    MaxSecondaryAmmo=20
-    MaxTertiaryAmmo=20
 
     // Weapon fire
     FireInterval=0.2

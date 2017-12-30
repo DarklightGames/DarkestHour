@@ -99,9 +99,6 @@ defaultproperties
     InitialPrimaryAmmo=10
     InitialSecondaryAmmo=10
     InitialTertiaryAmmo=10
-    MaxPrimaryAmmo=10
-    MaxSecondaryAmmo=10
-    MaxTertiaryAmmo=10
 
     // Coaxial MG ammo
     AltFireProjectileClass=class'DH_Weapons.DH_MG42Bullet'
