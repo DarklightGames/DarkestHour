@@ -3,12 +3,12 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_M3A1HalftrackMG extends DHVehicleMG;
+class DH_HigginsBoatMG extends DHVehicleMG;
 
 defaultproperties
 {
     // MG mesh
-    Mesh=SkeletalMesh'DH_M3A1Halftrack_anm.m3halftrack_gun'
+    Mesh=SkeletalMesh'DH_HigginsBoat_anm.Higgins_MG_3rd'
     Skins(0)=Texture'DH_Weapon_tex.AlliedSmallArms.30calMain'
     Skins(1)=Texture'DH_Weapon_tex.AlliedSmallArms.30calGrip'
     Skins(2)=Texture'DH_Weapon_tex.AmmoPouches.30CalAmmoTin'
