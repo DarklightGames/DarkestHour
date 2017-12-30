@@ -269,7 +269,7 @@ simulated function DrawGunsightOverlay(Canvas C)
         // This is inverse to the specified GunsightSize, i.e. the drawn portion is reduced to 'zoom in', so sight is drawn bigger on screen
         // The draw start position (in the texture, not the screen position) is often negative, meaning it starts drawing from outside of the texture edges
         // Draw areas outside the texture edges are drawn black, so this handily blacks out all the edges around the scaled gunsight, in 1 draw operation
-        TextureSize = float(GunsightOverlay.USize);
+        TextureSize = float(GunsightOverlay.MaterialUSize());
         TilePixelWidth = TextureSize / GunsightSize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
         TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
         TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;

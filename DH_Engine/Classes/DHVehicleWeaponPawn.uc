@@ -20,7 +20,7 @@ var     texture     BinocsOverlay;               // 1st person texture overlay t
 var     DHDecoAttachment    BinocsAttachment;    // decorative actor spawned locally when player is using binoculars
 
 // Gunsight overlay
-var     texture     GunsightOverlay;             // texture overlay for gunsight
+var     Material    GunsightOverlay;             // texture overlay for gunsight
 var     float       GunsightSize;                // size of the gunsight overlay (1.0 means full screen width, 0.5 means half screen width, etc)
 var     float       OverlayCorrectionX;          // scope center correction in pixels, in case an overlay is off-center by pixel or two
 var     float       OverlayCorrectionY;

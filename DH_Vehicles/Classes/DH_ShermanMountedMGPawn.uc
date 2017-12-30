@@ -31,9 +31,9 @@ simulated function DrawGunsightOverlay(Canvas C)
     ScreenRatio = float(C.SizeY) / float(C.SizeX);
     C.SetPos(0.0, 0.0);
 
-    C.DrawTile(GunsightOverlay, C.SizeX, C.SizeY,                           // screen drawing area (to fill screen)
-        0.0, (1.0 - ScreenRatio) * float(GunsightOverlay.VSize) / 2.0,      // position in texture to begin drawing tile (from left edge, with vertical position to suit screen aspect ratio)
-        GunsightOverlay.USize, float(GunsightOverlay.VSize) * ScreenRatio); // width & height of tile within texture
+    C.DrawTile(GunsightOverlay, C.SizeX, C.SizeY,                                // screen drawing area (to fill screen)
+        0.0, (1.0 - ScreenRatio) * float(GunsightOverlay.MaterialVSize()) / 2.0, // position in texture to begin drawing tile (from left edge, with vertical position to suit screen aspect ratio)
+        GunsightOverlay.MaterialUSize(), float(GunsightOverlay.MaterialVSize()) * ScreenRatio); // width & height of tile within texture
 }
 
 defaultproperties

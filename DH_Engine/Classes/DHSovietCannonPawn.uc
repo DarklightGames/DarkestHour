@@ -20,7 +20,7 @@ simulated function DrawGunsightOverlay(Canvas C)
     if (GunsightOverlay != none)
     {
         // Draw the gunsight overlay
-        TextureSize = float(GunsightOverlay.USize);
+        TextureSize = float(GunsightOverlay.MaterialUSize());
         TilePixelWidth = TextureSize / GunsightSize * 0.955;
         TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX);
         TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
