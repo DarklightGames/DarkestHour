@@ -42,6 +42,7 @@ defaultproperties
 
     // Turret movement
     RotationsPerSecond=0.05
+    PitchUpLimit=16384
     CustomPitchUpLimit=15474
     CustomPitchDownLimit=64990
 

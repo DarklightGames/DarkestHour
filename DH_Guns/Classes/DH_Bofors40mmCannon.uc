@@ -48,6 +48,7 @@ defaultproperties
     RotationsPerSecond=0.05
     CustomPitchUpLimit=15474
     CustomPitchDownLimit=64990
+    PitchUpLimit=16384
 
     // Cannon ammo
     ProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShell'
