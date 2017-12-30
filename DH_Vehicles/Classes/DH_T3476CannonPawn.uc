@@ -15,6 +15,7 @@ defaultproperties
     BinocPositionIndex=2
     DriveAnim="VT3476_com_idle_close"
     bLockCameraDuringTransition=true // just stops player being able to turn & see through incomplete turret interior when buttoning or unbuttoning
+    GunsightOverlay=Texture'Vehicle_Optic.T3476_sight_background' // TODO: graphical smears to the sides of sight, so need to add an edited version to the DH package with solid black edges
     CannonScopeCenter=Texture'Vehicle_Optic.T3476_sight_mover'
     GunsightSize=0.4412 // 15 degrees visible FOV at 2.5x magnification (TMFD-7 telescopic gunsight)
     DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed' // matches size of gunsight
