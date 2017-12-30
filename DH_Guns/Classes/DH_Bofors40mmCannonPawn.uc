@@ -28,7 +28,7 @@ defaultproperties
     BinocPositionIndex=3
     DriveAnim="VIS2_driver_idle_close"
     DrivePos=(X=-35.0,Y=26.0,Z=13.0)
-    GunsightOverlay=Texture'DH_Artillery_tex.ATGun_Hud.Flakvierling38_sight'
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.German.ZF_3x8_Flak2cm'
     GunsightSize=1.0
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag'
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag_reload'
