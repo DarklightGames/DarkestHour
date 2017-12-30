@@ -695,17 +695,6 @@ simulated function int GetNumMags()
     return NumMGMags;
 }
 
-// New helper function to return appropriate projectile spread for ammo type (just makes subclassing easier)
-function float GetSpread(bool bAltFire)
-{
-    if (bAltFire)
-    {
-        return AltFireSpread;
-    }
-
-    return Spread;
-}
-
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ********************************** RELOADING **********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////

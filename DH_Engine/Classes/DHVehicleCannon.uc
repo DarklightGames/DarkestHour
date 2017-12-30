@@ -966,28 +966,6 @@ simulated function byte GetAmmoIndex(optional bool bAltFire)
     return super.GetAmmoIndex(bAltFire);
 }
 
-// Modified to use extended ammo types
-function float GetSpread(bool bAltFire)
-{
-    if (bAltFire)
-    {
-        return AltFireSpread;
-    }
-    else if (ProjectileClass == SecondaryProjectileClass)
-    {
-        if (SecondarySpread > 0.0)
-        {
-            return SecondarySpread;
-        }
-    }
-    else if (ProjectileClass == TertiaryProjectileClass && TertiarySpread > 0.0)
-    {
-        return TertiarySpread;
-    }
-
-    return Spread;
-}
-
 // Modified so bots use the cannon against vehicle targets & the coaxial MG against infantry targets (from ROTankCannon)
 function byte BestMode()
 {
