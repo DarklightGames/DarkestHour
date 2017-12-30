@@ -58,7 +58,7 @@ defaultproperties
     // Weapon fire
     WeaponFireAttachmentBone="Gun"
     WeaponFireOffset=200.0
-    AddedPitch=240
+    AddedPitch=230
     AltFireOffset=(X=8.0,Y=12.0,Z=2.0)
 
     // Sounds
