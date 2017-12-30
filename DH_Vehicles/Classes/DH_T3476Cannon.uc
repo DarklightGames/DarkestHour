@@ -16,11 +16,11 @@ defaultproperties
     HighDetailOverlay=shader'allies_vehicles_tex.int_vehicles.t3476_int_s'
     CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.T34-76_turret_col'
 
-    // Turret armor
-    FrontArmorFactor=6.0
+    // Turret armor (model 1941)
+    FrontArmorFactor=5.2
     LeftArmorFactor=5.2
     RightArmorFactor=5.2
-    RearArmorFactor=5.2
+    RearArmorFactor=4.5
     LeftArmorSlope=30.0
     RightArmorSlope=30.0
     RearArmorSlope=30.0
@@ -31,7 +31,7 @@ defaultproperties
 
     // Turret movement
     ManualRotationsPerSecond=0.029
-    PoweredRotationsPerSecond=0.07
+    PoweredRotationsPerSecond=0.0694 // 25 degrees/sec
     CustomPitchUpLimit=4660
     CustomPitchDownLimit=64535
 
@@ -59,7 +59,7 @@ defaultproperties
     WeaponFireAttachmentBone="Gun"
     WeaponFireOffset=200.0
     AddedPitch=240
-    AltFireOffset=(X=8.0,Y=12.0,Z=2.0) // adjusted from original
+    AltFireOffset=(X=8.0,Y=12.0,Z=2.0)
 
     // Sounds
     CannonFireSound(0)=Sound'Vehicle_Weapons.T34_76.76mm_fire01'
