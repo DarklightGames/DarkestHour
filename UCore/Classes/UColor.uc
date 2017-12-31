@@ -187,7 +187,7 @@ static final function color FromHex(string S)
 static final function color HSV2RGB(HSV HSV)
 {
     local int i;
-    local float HH, P, Q, T, FF;
+    local float P, Q, T, FF;
     local color RGB;
 
     if (HSV.S <= 0.0)
