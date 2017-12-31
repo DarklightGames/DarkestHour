@@ -3,12 +3,10 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_Bofors40mmFactory extends DHATGunFactory;
+class DHShellHE37mmATDamageType extends DHShellHE37mmDamageType
+    abstract;
 
 defaultproperties
 {
-    VehicleClass=class'DH_Guns.DH_Bofors40mmGun'
-    Mesh=SkeletalMesh'DH_Bofors_anm.Bofors40mm_base'
-    Skins(0)=Texture'DH_Bofors_tex.Bofors40mmGun'
+    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.ATGunKill'
 }
-

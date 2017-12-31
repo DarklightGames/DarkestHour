@@ -5,25 +5,19 @@
 
 class DH_Bofors40mmCannon extends DHVehicleAutoCannon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Bofors_anm.ukx
+var     name        TraverseControlBone;
+var     name        ElevationControlBone;
 
-var     name        SightBone;
-var     name        TraverseWheelBone;
-var     name        ElevationWheelBone;
-
-// New function to update sight & aiming wheel rotation, called by cannon pawn when gun moves
-simulated function UpdateSightAndWheelRotation()
+// New function to animate the traverse & elevation controls, called by cannon pawn when gun moves
+simulated function UpdateControlsRotation()
 {
-    local rotator SightRotation, ElevationWheelRotation, TraverseWheelRotation;
+    local rotator ControlRotation;
 
-    SightRotation.Pitch = -CurrentAim.Pitch;
-    SetBoneRotation(SightBone, SightRotation);
+    ControlRotation.Pitch = -CurrentAim.Pitch * 32;
+    SetBoneRotation(TraverseControlBone, ControlRotation);
 
-    ElevationWheelRotation.Pitch = -CurrentAim.Pitch * 32;
-    SetBoneRotation(ElevationWheelBone, ElevationWheelRotation);
-
-    TraverseWheelRotation.Pitch = -CurrentAim.Yaw * 32;
-    SetBoneRotation(TraverseWheelBone, TraverseWheelRotation);
+    ControlRotation.Pitch = -CurrentAim.Yaw * 32;
+    SetBoneRotation(ElevationControlBone, ControlRotation);
 }
 
 // From DHATGunCannon, as gun will always be penetrated by a shell
@@ -35,45 +29,30 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
 defaultproperties
 {
     // Cannon mesh
-    Mesh=SkeletalMesh'DH_Bofors_anm.bofors_turret'
-    Skins(0)=Texture'DH_Bofors_tex.bofors.bofors_01'
-    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.Flak38.Flak38_turret_coll'  // TODO: replace
-    GunnerAttachmentBone="driver_placement" // this gunner doesn't move (i.e. animation pose), so we don't need a dedicated attachment bone
-
-    // asdad
-    FireInterval=0.5
-    ShellCaseEjectorBone="ejector"
+    Mesh=SkeletalMesh'DH_Bofors_anm.Bofors40mm_gun'
+    Skins(0)=Texture'DH_Bofors_tex.Bofors40mmGun'
+    Skins(1)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
 
     // Turret movement
-    RotationsPerSecond=0.05
-    CustomPitchUpLimit=15474
-    CustomPitchDownLimit=64990
+    RotationsPerSecond=0.138888 // 50 degrees per sec
     PitchUpLimit=16384
+    CustomPitchUpLimit=15474 // +85/-5 degrees
+    CustomPitchDownLimit=64626
+    TraverseControlBone="traverse_control"
+    ElevationControlBone="elevation_control"
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShell'
-    PrimaryProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShell'
-    SecondaryProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShellHE'
-    ProjectileDescriptions(0)="AP"
-    NumPrimaryMags=15
-    NumSecondaryMags=15
-    NumTertiaryMags=15
-    InitialPrimaryAmmo=10
-    InitialSecondaryAmmo=10
-    InitialTertiaryAmmo=10
+    ProjectileClass=class'DH_Guns.DH_Bofors40mmCannonShellHE'
+    PrimaryProjectileClass=class'DH_Guns.DH_Bofors40mmCannonShellHE'
+    SecondaryProjectileClass=class'DH_Guns.DH_Bofors40mmCannonShell'
+    ProjectileDescriptions(0)="HE-T"
+    ProjectileDescriptions(1)="AP"
+    NumPrimaryMags=20
+    NumSecondaryMags=20
+    InitialPrimaryAmmo=8
+    InitialSecondaryAmmo=8
 
     // Weapon fire
-    WeaponFireOffset=5.0
-    AddedPitch=50
-    ShellCaseEmitterClass=class'DH_Guns.DH_20mmShellCaseEmitter'    // TODO: replace this
-
-    // Animations
-    BeginningIdleAnim="optic_idle"
-    ShootLoweredAnim="shoot_optic"
-    ShootIntermediateAnim="shoot_opensight"
-    ShootRaisedAnim="shoot_lookover"
-    SightBone="Sight_arm"
-    TraverseWheelBone="yaw_wheel"
-    ElevationWheelBone="pitch_wheel"
+    FireInterval=0.5
+    AddedPitch=40 // results in shell hitting exactly where tip of sight is, at point blank range
 }
-
