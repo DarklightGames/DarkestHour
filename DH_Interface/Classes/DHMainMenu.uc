@@ -8,7 +8,7 @@ class DHMainMenu extends UT2K4GUIPage;
 var()   config string           MenuSong;
 
 var automated       FloatingImage           i_background, i_Overlay, i_Announcement;
-var automated       GUIButton               b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Host, b_Quit, b_LearnToPlay;
+var automated       GUIButton               b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Host, b_Quit/*, b_LearnToPlay*/;
 var automated       GUISectionBackground    sb_MainMenu, sb_HelpMenu, sb_ConfigFixMenu, sb_ShowVersion, sb_Social;
 var automated       GUIButton               b_Credits, b_Manual, b_Demos, b_Website, b_Back, b_MOTDTitle, b_Facebook, b_GitHub, b_SteamCommunity, b_Patreon, b_Discord;
 var automated       GUILabel                l_Version;
@@ -51,7 +51,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     super.InitComponent(MyController, MyOwner);
 
     sb_MainMenu.ManageComponent(b_QuickPlay);
-    sb_MainMenu.ManageComponent(b_LearnToPlay);
+//    sb_MainMenu.ManageComponent(b_LearnToPlay);
     sb_MainMenu.ManageComponent(b_MultiPlayer);
     sb_MainMenu.ManageComponent(b_Practice);
     sb_MainMenu.ManageComponent(b_Settings);
@@ -206,11 +206,11 @@ function bool ButtonClick(GUIComponent Sender)
                 Profile("InstantAction");
             }
             break;
-
+/*
         case b_LearnToPlay:
             Controller.OpenMenu("DH_Interface.DHLearnToPlayPage");
             break;
-
+*/
         case b_MultiPlayer:
             if (!Controller.CheckSteam())
             {
@@ -579,6 +579,7 @@ defaultproperties
     End Object
     b_QuickPlay=GUIButton'DH_Interface.DHMainMenu.QuickPlayButton'
 
+/*
     Begin Object Class=GUIButton Name=LearnToPlayButton
         CaptionAlign=TXTA_Left
         Caption="Learn To Play"
@@ -592,6 +593,7 @@ defaultproperties
         OnKeyEvent=LearnToPlayButton.InternalOnKeyEvent
     End Object
     b_LearnToPlay=GUIButton'DH_Interface.DHMainMenu.LearnToPlayButton'
+*/
 
     Begin Object Class=GUIButton Name=ServerButton
         CaptionAlign=TXTA_Left
