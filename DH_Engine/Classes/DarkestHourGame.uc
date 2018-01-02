@@ -229,6 +229,7 @@ function PostBeginPlay()
     GRI.MapImage = LevelInfo.MapImage;
     GRI.bPlayerMustReady = bPlayersMustBeReady;
     GRI.RoundLimit = RoundLimit;
+    GRI.DHRoundLimit = RoundLimit;
     GRI.MaxPlayers = MaxPlayers;
     GRI.bShowServerIPOnScoreboard = bShowServerIPOnScoreboard;
     GRI.bShowTimeOnScoreboard = bShowTimeOnScoreboard;

@@ -71,6 +71,8 @@ var int                 RoundEndTime;       // Length of a round in seconds (thi
 var int                 RoundOverTime;      // The time stamp at which the round is over
 var int                 SpawningEnableTime; // When spawning for the round should be enabled (default: 0)
 
+var int                 DHRoundLimit;       // Added this so that a changing round limit can be replicated to clients.
+
 var DHRoleInfo          DHAxisRoles[ROLES_MAX];
 var DHRoleInfo          DHAlliesRoles[ROLES_MAX];
 
@@ -180,7 +182,8 @@ replication
         AxisMapMarkers,
         AlliesMapMarkers,
         bAllowAllChat,
-        RoundOverTime;
+        RoundOverTime,
+        DHRoundLimit;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))
         AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex,

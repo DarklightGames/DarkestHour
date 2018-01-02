@@ -563,13 +563,13 @@ simulated function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplication
     }
 
     // Draw rounds won/remaining for the team if not limited to 1 round
-    if (GRI.RoundLimit > 1)
+    if (DHGRI.DHRoundLimit > 1)
     {
         S = RoundsWonText @ ":" @ int(GRI.Teams[TeamIndex].Score);
 
-        if (GRI.RoundLimit != 0) // add round limit, if more than 1 round is specified
+        if (DHGRI.DHRoundLimit != 0) // add round limit, if more than 1 round is specified
         {
-            S $= "/" $ GRI.RoundLimit;
+            S $= "/" $ DHGRI.DHRoundLimit;
         }
 
         Y += LineHeight;
