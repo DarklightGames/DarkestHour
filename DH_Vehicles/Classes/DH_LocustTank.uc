@@ -5,28 +5,9 @@
 
 class DH_LocustTank extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Locust_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_Locust_tex.utx
 
-simulated state ViewTransition // TEMP to fake camera position changes until anims are made
-{
-    simulated function HandleTransition()
-    {
-        super(DHVehicle).HandleTransition();
-
-        if (Level.NetMode != NM_DedicatedServer && IsHumanControlled() && !PlayerController(Controller).bBehindView)
-        {
-             if (DriverPositionIndex == 0)
-                 FPCamPos = vect(19.0, -2.0, 16.0);
-             else if (DriverPositionIndex == 1)
-                 FPCamPos = vect(15.0, -0.5, 6.0);
-             else if (DriverPositionIndex == 2)
-                 FPCamPos = vect(23.0, -0.5, 6.0);
-        }
-    }
-}
-
-exec function SetTex(int Slot) // TEMP to allow switching between different sized versions of the vehicle skins, to compare them & look for detail loss
+exec function SetTex(int Slot) // TEMP (incl compiler directive) to allow switching between different sized versions of the vehicle skins, to compare them & look for detail loss
 {
     Switch(Slot)
     {
@@ -70,10 +51,28 @@ exec function SetTex(int Slot) // TEMP to allow switching between different size
     }
 }
 
+simulated state ViewTransition // TEMP to fake camera position changes until anims are made
+{
+    simulated function HandleTransition()
+    {
+        super(DHVehicle).HandleTransition();
+
+        if (Level.NetMode != NM_DedicatedServer && IsHumanControlled() && !PlayerController(Controller).bBehindView)
+        {
+             if (DriverPositionIndex == 0)
+                FPCamPos = vect(13.0, -2.75, 0.0);
+             else if (DriverPositionIndex == 1) // on pericope: move 0/-1.5/+3.75 up to scope, then snap another +7/0/+5 to exterior view
+                 FPCamPos = vect(0.0, -1.5, 3.75);
+             else if (DriverPositionIndex == 3) // hatch open
+                 FPCamPos = vect(9.0, 0.0, 0.0);
+        }
+    }
+}
+
 defaultproperties
 {
     // Vehicle properties
-    VehicleNameString="M22 Locust (WIP)"
+    VehicleNameString="M22 Locust **WIP**"
     VehicleTeam=1
     VehicleMass=5.0
     PointValue=2.0
@@ -96,10 +95,13 @@ defaultproperties
     PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-80.0,Y=46.0,Z=43.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider3_idle")
 
     // Driver
-    DriverPositions(0)=(TransitionUpAnim="Overlay_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true)
-    DriverPositions(1)=(TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_in",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000)
-    DriverPositions(2)=(TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
-    DrivePos=(X=16.0,Y=2.0,Z=-3.0) // TODO: reposition attachment bone to remove need for this offset, then delete this line
+    DriverPositions(0)=(TransitionUpAnim="driver_visor_close",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000,bExposed=true)
+    DriverPositions(1)=(TransitionUpAnim="periscope_out",TransitionDownAnim="driver_visor_open",/*ViewPitchUpLimit=1,ViewPitchDownLimit=65535,*/ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true)
+    DriverPositions(2)=(TransitionUpAnim="driver_hatch_open",TransitionDownAnim="periscope_in",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000)
+    DriverPositions(3)=(TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
+    InitialPositionIndex=2
+    UnbuttonedPositionIndex=3
+    OverlayFPCamPos=(X=7.0,Y=0.0,Z=5.0)
     DriveAnim="VPanzer3_driver_idle_open" // TODO: check is most suitable anim available
 
     // Hull armor
@@ -130,6 +132,8 @@ defaultproperties
     VehHitpoints(0)=(PointRadius=20.0,PointOffset=(X=-72.0,Y=13.5,Z=3.5)) // engine
     VehHitpoints(1)=(PointRadius=9.0,PointScale=1.0,PointBone="body",PointOffset=(X=-17.0,Y=0.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=49.0
+    DamagedTrackStaticMeshLeft=StaticMesh'DH_allies_vehicles_stc2.Locust.Locust_DamagedTrack_left'
+    DamagedTrackStaticMeshRight=StaticMesh'DH_allies_vehicles_stc2.Locust.Locust_DamagedTrack_right'
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=-60.0,Y=13.5,Z=30.0)
     HullFireChance=0.45
@@ -158,8 +162,8 @@ defaultproperties
     RightTreadIndex=5
     LeftTreadPanDirection=(Pitch=0,Yaw=16384,Roll=16384)
     RightTreadPanDirection=(Pitch=0,Yaw=16384,Roll=16384)
-    TreadVelocityScale=120.0
-    WheelRotationScale=45500.0
+    TreadVelocityScale=85.0
+    WheelRotationScale=45000.0
     ExhaustPipes(0)=(ExhaustPosition=(X=-53.0,Y=68.0,Z=29.0),ExhaustRotation=(Yaw=16384))
     LeftLeverBoneName="lever_L"
     RightLeverBoneName="lever_R"
