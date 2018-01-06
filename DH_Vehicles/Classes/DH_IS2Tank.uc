@@ -40,7 +40,7 @@ defaultproperties
     DrivePos=(X=12.0,Y=0.0,Z=0.0) // adjusted from original
     DriveAnim="VIS2_driver_idle_close"
     HUDOverlayClass=class'ROVehicles.IS2DriverOverlay'
-    HUDOverlayFOV=90.0
+    HUDOverlayFOV=85.0
 
     // Hull armor
     FrontArmor(0)=(Thickness=10.0,Slope=-30.0,MaxRelativeHeight=-0.5,LocationName="lower")

@@ -42,7 +42,7 @@ defaultproperties
     DrivePos=(X=10.0,Y=0.0,Z=-41.0) // adjusted from original
     DriveAnim="VIS2_driver_idle_close"
     HUDOverlayClass=class'ROVehicles.KV1DriverOverlay'
-    HUDOverlayFOV=90.0
+    HUDOverlayFOV=85.0
 
     // Hull armor
     FrontArmor(0)=(Thickness=9.0,Slope=-30.0,MaxRelativeHeight=-11.0,LocationName="lower") // note: sources agree IS2 (our base hull) had 100mm, but show ISU-152 having 90mm

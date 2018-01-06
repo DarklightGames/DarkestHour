@@ -40,7 +40,7 @@ defaultproperties
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_T34_anm.T34_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="Vt3485_driver_open",ViewPitchUpLimit=5500,ViewPitchDownLimit=63500,ViewPositiveYawLimit=11000,ViewNegativeYawLimit=-12500,bExposed=true)
     DriveAnim="VT3476_driver_idle_close"
     HUDOverlayClass=class'ROVehicles.T3476DriverOverlay'
-    HUDOverlayFOV=90.0
+    HUDOverlayFOV=85.0
 
     // Hull armor
     FrontArmor(0)=(Thickness=4.5,Slope=-60.0,MaxRelativeHeight=-7.0,LocationName="lower")
