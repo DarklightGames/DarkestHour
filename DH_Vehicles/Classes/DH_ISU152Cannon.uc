@@ -44,7 +44,6 @@ defaultproperties
 
     // Weapon fire
     AddedPitch=360
-    WeaponFireAttachmentBone="Barrel"
     WeaponFireOffset=120.0
 
     // Sounds

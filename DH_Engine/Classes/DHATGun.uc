@@ -202,8 +202,7 @@ defaultproperties
     HealthMax=101.0
     Health=101
     EngineHealth=0
-    VehHitpoints(0)=(PointRadius=0.0,PointBone="",DamageMultiplier=0.0) // remove inherited values from vehicle classes
-    VehHitpoints(1)=(PointRadius=0.0,PointBone="",DamageMultiplier=0.0)
+    VehHitpoints(0)=(PointRadius=0.0,PointBone="",DamageMultiplier=0.0) // remove inherited values for vehicle engine
     DamagedEffectClass=none
     DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
     DisintegrationEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
