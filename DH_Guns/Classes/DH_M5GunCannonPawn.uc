@@ -8,20 +8,16 @@ class DH_M5GunCannonPawn extends DHATGunCannonPawn;
 defaultproperties
 {
     GunClass=class'DH_Guns.DH_M5GunCannon'
-    DriverPositions(0)=(ViewFOV=24.0,PositionMesh=SkeletalMesh'DH_M5Gun_anm.m5_turret',TransitionUpAnim="com_open",DriverTransitionAnim="crouch_idlehold_bayo",ViewPitchUpLimit=3004,ViewPitchDownLimit=64444,ViewPositiveYawLimit=5460,ViewNegativeYawLimit=-5460,bDrawOverlays=true,bExposed=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_M5Gun_anm.m5_turret',TransitionDownAnim="com_close",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
-    DriverPositions(2)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_M5Gun_anm.m5_turret',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
-    DrivePos=(X=0,Y=0,Z=10)
+    DriverPositions(0)=(ViewLocation=(X=0.0,Y=0.0,Z=-16.0),ViewFOV=28.33,TransitionUpAnim="com_open",DriverTransitionAnim="crouch_idlehold_bayo",ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true) // view limits only relevant during transition down, to avoid snap to front at start
+    DriverPositions(1)=(TransitionDownAnim="com_close",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bExposed=true)
+    DriverPositions(2)=(ViewFOV=12.0,DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
+    DrivePos=(X=-45.0,Y=8.0,Z=7.0)
     DriveAnim="crouch_idlehold_bayo"
-    PlayerCameraBone="com_camera"
     CameraBone="com_camera"
-    AttachmentBone="com_player"
-    // TODO: same as priest gunsight?
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.British.17Pdr_sight_background'
-    CannonScopeCenter=Texture'DH_VehicleOptics_tex.British.17pdr_sight_mover'
-    GunsightSize=0.542
-    RangeText="Yards"
-    AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.T3485shell'
-    AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.T3485shell_reload'
+    PlayerCameraBone="com_camera"
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.US.Wolverine_sight_background'
+    GunsightSize=0.369 // 10 degrees 27 minutes visible FOV at 3x magnification (M79C telescope)
     BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_7x50Allied'
+    AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell'
+    AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.WolverineShell_reload'
 }

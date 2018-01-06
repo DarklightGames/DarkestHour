@@ -8,62 +8,40 @@ class DH_M5GunCannon extends DHATGunCannon;
 defaultproperties
 {
     // Cannon mesh
-    Mesh=SkeletalMesh'DH_M5Gun_anm.m5_turret'
+    Mesh=SkeletalMesh'DH_M5Gun_anm.M5_gun'
     Skins(0)=Texture'DH_M5Gun_tex.m5.m5'
-    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.17pounder.17pdr_turret_coll'
-    BeginningIdleAnim="com_idle_close"
+    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.M5.M5_gun_collision'
+    bAttachColMeshToPitchBone=true // because the gun shield also tilts back & forth when the gun is elevated // TODO: but query whether shield should move (pretty sure not)
     GunnerAttachmentBone="com_player"
 
     // Turret movement
-    RotationsPerSecond=0.02
-    MaxPositiveYaw=4096
+    MaxPositiveYaw=4096 // 22.5 degrees traverse
     MaxNegativeYaw=-4096
-    YawStartConstraint=-4096
-    YawEndConstraint=4096
-    CustomPitchUpLimit=5460
+    YawStartConstraint=-4500
+    YawEndConstraint=4500
+    CustomPitchUpLimit=5460 // 30/-5 degrees elevation/depression
     CustomPitchDownLimit=64625
 
     // Cannon ammo
-    ProjectileClass=class'DH_Guns.DH_M5CannonShell'          // TODO: make special shells for the m5
+    ProjectileClass=class'DH_Guns.DH_M5CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_M5CannonShell'
-    SecondaryProjectileClass=class'DH_Guns.DH_17PounderCannonShellHE'
+    SecondaryProjectileClass=class'DH_Guns.DH_M5CannonShellHE'
     InitialPrimaryAmmo=20
     InitialSecondaryAmmo=10
     MaxPrimaryAmmo=60
     MaxSecondaryAmmo=30
-    SecondarySpread=0.00156
+    SecondarySpread=0.00135
 
     // Weapon fire
-    WeaponFireOffset=-5.0
+    WeaponFireOffset=10.0
+    AddedPitch=20
 
     // Sounds
-    CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
-    CannonFireSound(1)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
-    CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
+    CannonFireSound(0)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire01'
+    CannonFireSound(1)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire02'
+    CannonFireSound(2)=SoundGroup'Vehicle_Weapons.T34_85.85mm_fire03'
     ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
     ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
     ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
-
-    // Cannon range settings
-    RangeSettings(1)=100
-    RangeSettings(2)=200
-    RangeSettings(3)=300
-    RangeSettings(4)=400
-    RangeSettings(5)=500
-    RangeSettings(6)=600
-    RangeSettings(7)=700
-    RangeSettings(8)=800
-    RangeSettings(9)=900
-    RangeSettings(10)=1000
-    RangeSettings(11)=1100
-    RangeSettings(12)=1200
-    RangeSettings(13)=1300
-    RangeSettings(14)=1400
-    RangeSettings(15)=1500
-    RangeSettings(16)=1600
-    RangeSettings(17)=1700
-    RangeSettings(18)=1800
-    RangeSettings(19)=1900
-    RangeSettings(20)=2000
 }
