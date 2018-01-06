@@ -34,5 +34,5 @@ defaultproperties
     VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_look'
     VehicleHudOccupantsX(1)=0.45
     VehicleHudOccupantsY(1)=0.65
-//  SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.hanomag' // TODO - make overlay for this variant
+//  SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.Pakwagen' // TODO - get this icon made
 }

@@ -5,7 +5,6 @@
 
 class DH_Cromwell95mmCannon extends DH_CromwellCannon;
 
-// TODO: maybe remove mechanical range settings altogether for howitzer? If yes, RangeSettings.Length = 0 (here), & remove bMechanicalAiming=true & MechanicalRanges from shells
 // Modified to override RangeSettings array to give maximum range setting of 1600m
 simulated function PostBeginPlay()
 {
