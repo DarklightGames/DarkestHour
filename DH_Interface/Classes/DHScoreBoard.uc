@@ -390,7 +390,7 @@ simulated function UpdateScoreBoard(Canvas C)
     // Construct a line with various information about the round & the server
     s = HUD.default.TimeRemainingText; // start with the round timer (time remaining)
 
-    if (DHGRI.RoundDuration == 0)
+    if (DHGRI.DHRoundDuration == 0)
     {
         s $= HUD.default.NoTimeLimitText;
     }

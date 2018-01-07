@@ -4680,7 +4680,7 @@ function DrawSpectatingHud(Canvas C)
         // Update & draw round timer
         CurrentTime = DHGRI.GetRoundTimeRemaining();
 
-        if (DHGRI.RoundDuration == 0)
+        if (DHGRI.DHRoundDuration == 0)
         {
             s = default.TimeRemainingText $ default.NoTimeLimitText;
         }
