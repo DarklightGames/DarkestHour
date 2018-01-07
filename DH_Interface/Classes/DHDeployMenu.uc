@@ -371,7 +371,7 @@ function UpdateRoundStatus()
             i_SizeAdvantage.Hide();
         }
 
-        if (GRI.RoundDuration == 0 && GRI.bMatchHasBegun)
+        if (GRI.DHRoundDuration == 0 && GRI.bMatchHasBegun)
         {
             l_RoundTime.Caption = class'DHHud'.default.NoTimeLimitText;
         }

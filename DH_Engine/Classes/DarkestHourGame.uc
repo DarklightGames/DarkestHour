@@ -216,6 +216,7 @@ function PostBeginPlay()
     }
 
     GRI.RoundDuration = RoundDuration;
+    GRI.DHRoundDuration = RoundDuration;
     GRI.bReinforcementsComing[AXIS_TEAM_INDEX] = 0;
     GRI.bReinforcementsComing[ALLIES_TEAM_INDEX] = 0;
     GRI.ReinforcementInterval[AXIS_TEAM_INDEX] = LevelInfo.Axis.ReinforcementInterval;
