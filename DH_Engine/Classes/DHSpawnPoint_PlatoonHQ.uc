@@ -187,7 +187,7 @@ defaultproperties
     EncroachmentRadiusInMeters=50
     EncroachmentPenaltyBlockThreshold=30
     EncroachmentSpawnTimePenalty=10
-    BaseSpawnTimePenalty=5
+    BaseSpawnTimePenalty=10
     EnemiesNeededToBlock=3
 
     CaptureRadiusInMeters=5
