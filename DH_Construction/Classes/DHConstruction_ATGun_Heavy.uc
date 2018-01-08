@@ -96,7 +96,7 @@ defaultproperties
 {
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.at_large'
     Stages(0)=(Progress=0)
-    ProgressMax=18
+    ProgressMax=14
     PlacementOffset=(Z=30.0)
     SupplyCost=1750
 }

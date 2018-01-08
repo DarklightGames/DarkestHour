@@ -207,7 +207,7 @@ defaultproperties
     MenuName="Platoon HQ"
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.platoon_hq'
     Stages(0)=()
-    ProgressMax=12
+    ProgressMax=9
     SupplyCost=1000
 
     // Placement

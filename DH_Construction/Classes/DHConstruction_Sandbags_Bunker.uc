@@ -11,7 +11,7 @@ defaultproperties
     Stages(1)=(Progress=6,StaticMesh=StaticMesh'DH_Construction_stc.Sandbags.sandbags_03_intermediate')
     StartRotationMin=(Yaw=16384)
     StartRotationMax=(Yaw=16384)
-    ProgressMax=12
+    ProgressMax=9
     StaticMesh=StaticMesh'DH_Construction_stc.Sandbags.sandbags_03'
     bShouldAlignToGround=false
     MenuName="Sandbags (Bunker)"
