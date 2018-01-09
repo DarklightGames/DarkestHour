@@ -138,7 +138,7 @@ simulated function GetTerrainPokeParameters(out int Radius, out int Depth)
 defaultproperties
 {
     Stages(0)=(StaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_01_unpacked')
-    ProgressMax=12
+    ProgressMax=8
     bPokesTerrain=true
     bCanOnlyPlaceOnTerrain=true
     bSnapToTerrain=true

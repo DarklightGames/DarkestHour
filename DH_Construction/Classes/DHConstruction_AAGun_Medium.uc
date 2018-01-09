@@ -25,7 +25,7 @@ defaultproperties
 {
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.aa_light'
     Stages(0)=(Progress=0)
-    ProgressMax=12
+    ProgressMax=9
     SupplyCost=1250
 }
 

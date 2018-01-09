@@ -1039,7 +1039,7 @@ defaultproperties
     // Progress
     StageIndex=-1
     Progress=0
-    ProgressMax=8
+    ProgressMax=4
 
     // Damage
     HarmfulDamageTypes(0)=class'ROArtilleryDamType'
