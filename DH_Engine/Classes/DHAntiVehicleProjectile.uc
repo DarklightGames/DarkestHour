@@ -752,6 +752,7 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
         Explode(HitLocation + ExploWallOut * HitNormal, HitNormal);
     }
     // Round explodes on vehicle armor
+    // TODO: just a note that this does the same as calling SpawnExplosionEffects() except this plays VehicleDeflectSound/ShellDeflectEffectClass instead of VehicleHitSound/ShellHitVehicleEffectClass
     else if (bExplodesOnArmor)
     {
         if (bDebuggingText && Role == ROLE_Authority)
@@ -771,7 +772,7 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
             Spawn(ShellDeflectEffectClass,,, EffectLocation, rotator(HitNormal));
         }
 
-        bDidExplosionFX = true;  // we've played specific explosion effects, so flag this to avoid calling SpawnExplosionEffects
+        bDidExplosionFX = true; // we've played specific explosion effects, so flag this to avoid calling SpawnExplosionEffects // TODO: need to fix - no visible explosion when HE hits tank
         Explode(HitLocation + ExploWallOut * HitNormal, HitNormal);
     }
     // Round deflects off vehicle armor
