@@ -50,7 +50,7 @@ defaultproperties
     InitialPositionIndex=0
     UnbuttonedPositionIndex=1
     DriveAnim="VPanther_driver_idle_close"
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_German'
 
     // Hull armor
     FrontArmor(0)=(Thickness=6.5,Slope=-55.0,MaxRelativeHeight=-8.0,LocationName="lower")

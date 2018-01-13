@@ -19,7 +19,7 @@ defaultproperties
     CameraBone="Turret"
     GunsightOverlay=Texture'DH_VehicleOptics_tex.German.stug3_SflZF1a_sight'
     GunsightSize=0.555
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_German'
     AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.panzer4F2shell_reload'
 }

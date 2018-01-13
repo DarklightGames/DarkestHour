@@ -40,7 +40,7 @@ defaultproperties
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=15000,ViewPitchDownLimit=64500,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
     DrivePos=(X=3.0,Y=3.0,Z=-21.0)
     DriveAnim="VPanzer3_driver_idle_open"
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.German.PERISCOPE_overlay_German'
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_German'
 
     // Hull armor
     FrontArmor(0)=(Thickness=10.0,Slope=-50.0,MaxRelativeHeight=-35.0,LocationName="lower")
