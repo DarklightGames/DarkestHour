@@ -41,6 +41,7 @@ defaultproperties
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Jagdtiger_anm.jagdtiger_body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=65000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
     DrivePos=(X=5.0,Y=0.0,Z=-13.0)
     DriveAnim="VPanzer3_driver_idle_open"
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_German'
 
     // Hull armor
     FrontArmor(0)=(Thickness=10.0,Slope=-50.0,MaxRelativeHeight=-33.2,LocationName="lower")
