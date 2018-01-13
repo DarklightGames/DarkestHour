@@ -51,6 +51,14 @@ function static class<ROVehicle> GetVehicleClass(DHConstruction.Context Context)
                             default:
                                 return class'DH_Guns.DH_M5Gun';
                         }
+                    case NATION_USSR:
+                        switch (Context.LevelInfo.Weather)
+                        {
+                            case WEATHER_Snowy:
+                                return class'DH_Guns.DH_ZiS3Gun_Snow';
+                            default:
+                                return class'DH_Guns.DH_ZiS3Gun';
+                        }
                     default:
                         break;
                 }
