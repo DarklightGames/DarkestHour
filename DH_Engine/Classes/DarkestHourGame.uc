@@ -55,6 +55,8 @@ var     float                       ServerTickRateConsolidated;             // K
 var     int                         ServerTickFrameCount;                   // Keeps track of how many frames are between ServerTickRateConsolidated
 
 var     bool                        bIsAttritionEnabled;                    // This variable is here primarily so that mutators can disable attrition.
+var     bool                        bIsAdvancedReinforcementsDisabled;      // This variable is here primarily so that mutators can disable rounds ending on zero reinforcements
+
 var     float                       CalculatedAttritionRate[2];
 var     float                       TeamAttritionCounter[2];
 var     InterpCurve                 ElapsedTimeAttritionCurve;              // Curve which inputs elapsed time and outputs attrition amount
@@ -2832,7 +2834,7 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
     }
 
     // If round is in play and out of reinforcements and supposed to end the round, do it
-    if (IsInState('RoundInPlay') && GRI.SpawnsRemaining[Team] == 0 && DHLevelInfo.GameTypeClass.default.bRoundEndsAtZeroReinf)
+    if (IsInState('RoundInPlay') && GRI.SpawnsRemaining[Team] == 0 && DHLevelInfo.GameTypeClass.default.bRoundEndsAtZeroReinf && !bIsAdvancedReinforcementsDisabled)
     {
         Level.Game.Broadcast(self, "The battle ended because a team's reinforcements reached zero", 'Say');
         ChooseWinner();
