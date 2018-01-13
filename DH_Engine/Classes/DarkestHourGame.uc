@@ -54,14 +54,15 @@ var     float                       ServerTickRateAverage;                  // T
 var     float                       ServerTickRateConsolidated;             // Keeps track of tick rates over time, used to calculate average
 var     int                         ServerTickFrameCount;                   // Keeps track of how many frames are between ServerTickRateConsolidated
 
+var     bool                        bIsAttritionEnabled;                    // This variable is here primarily so that mutators can disable attrition.
 var     float                       CalculatedAttritionRate[2];
 var     float                       TeamAttritionCounter[2];
-
-var     bool                        bSwapTeams;
-
 var     InterpCurve                 ElapsedTimeAttritionCurve;              // Curve which inputs elapsed time and outputs attrition amount
                                                                             // used to setup a pseudo time limit for Advance/Attrition game modes
                                                                             // this way if there are not many players on, the round will eventually end
+
+var     bool                        bSwapTeams;
+
 
 var     float                       AlliesToAxisRatio;
 
@@ -2453,9 +2454,17 @@ state RoundInPlay
             AttRateAxis   += InterpCurveEval(DHLevelInfo.AttritionRateCurve, float(Max(0, Num[ALLIES_TEAM_INDEX] - Num[AXIS_TEAM_INDEX]))   / NumObj);
             AttRateAllies += InterpCurveEval(DHLevelInfo.AttritionRateCurve, float(Max(0, Num[AXIS_TEAM_INDEX]   - Num[ALLIES_TEAM_INDEX])) / NumObj);
 
-            // Update the calculated attrition rate
-            CalculatedAttritionRate[AXIS_TEAM_INDEX]   = AttRateAxis;
-            CalculatedAttritionRate[ALLIES_TEAM_INDEX] = AttRateAllies;
+            // Update the calculated attrition rate.
+            if (bIsAttritionEnabled)
+            {
+                CalculatedAttritionRate[AXIS_TEAM_INDEX] = AttRateAxis;
+                CalculatedAttritionRate[ALLIES_TEAM_INDEX] = AttRateAllies;
+            }
+            else
+            {
+                CalculatedAttritionRate[AXIS_TEAM_INDEX] = 0.0;
+                CalculatedAttritionRate[ALLIES_TEAM_INDEX] = 0.0;
+            }
 
             if (LevelInfo.NumObjectiveWin == 0)
             {
@@ -4823,4 +4832,5 @@ defaultproperties
     WeaponLockTimeSecondsMaximum=120
 
     bAllowAllChat=true
+    bIsAttritionEnabled=true
 }
