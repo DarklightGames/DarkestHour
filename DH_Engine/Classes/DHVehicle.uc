@@ -3166,15 +3166,27 @@ simulated function SwitchMesh(int PositionIndex, optional bool bUpdateAnimations
 
 // Modified to include setting ResetTime for an empty vehicle, which natively calls future CheckReset() event that may destroy & respawn an apparently abandoned vehicle
 // Moved this functionality here from DriverLeft() as it fits well here, but functionality has been substantially modified & improved
-// We never consider destroying a spawn vehicle, or if it's our factory's last/only vehicle (because it won't spawn a replacement so no point 'recycling' it)
+// We never consider destroying a spawn vehicle, or a factory's last/only vehicle (it won't spawn a replacement so no point 'recycling') unless factory deactivated
 // But we do do now set a ResetTime for an empty bNeverReset vehicle (e.g, AT gun) if its factory has since been deactivated & should destroy an empty vehicle
 // And we skip check that vehicle has moved from its spawning location if parent is DH spawn manager, as that has no location & doesn't spawn empty vehicle like a factory
 function MaybeDestroyVehicle()
 {
     local bool bDeactivatedFactoryWantsToDestroy;
 
-    // Do nothing if vehicle is a spawn vehicle, or isn't empty, or is factory's last vehicle (no point destroying vehicle if factory won't spawn replacement)
-    if (IsSpawnVehicle() || !IsVehicleEmpty() || IsFactorysLastVehicle())
+    // Do nothing if vehicle is a spawn vehicle or it isn't empty
+    if (IsSpawnVehicle() || !IsVehicleEmpty())
+    {
+        return;
+    }
+
+    // Check whether was spawned by a vehicle factory that has since been deactivated & wants to destroy its vehicle when empty
+    bDeactivatedFactoryWantsToDestroy = ParentFactory.IsA('ROVehicleFactory') && !ROVehicleFactory(ParentFactory).bFactoryActive
+        && ROVehicleFactory(ParentFactory).bDestroyVehicleWhenInactive;
+
+    // We don't set a CheckReset timer for vehicles that have bNeverReset (e.g. AT guns), so they don't get reset if left empty
+    // Or if it's a factory's last vehicle, as no point destroying/recycling vehicle if factory won't spawn replacement
+    // The exception is if a factory has deactivated & should destroy its vehicle if it's empty
+    if (!bDeactivatedFactoryWantsToDestroy && (bNeverReset || IsFactorysLastVehicle()))
     {
         return;
     }
@@ -3189,17 +3201,6 @@ function MaybeDestroyVehicle()
         {
             Level.Game.Broadcast(self, "Initiating" @ VehicleSpikeTime @ "sec spike timer for disabled vehicle" @ VehicleNameString);
         }
-    }
-
-    // Check whether was spawned by a vehicle factory that has since been deactivated & wants to destroy its vehicles when empty
-    bDeactivatedFactoryWantsToDestroy = ParentFactory.IsA('ROVehicleFactory') && !ROVehicleFactory(ParentFactory).bFactoryActive
-        && ROVehicleFactory(ParentFactory).bDestroyVehicleWhenInactive;
-
-    // We don't set a CheckReset timer for vehicles that have bNeverReset (e.g. AT guns), so they don't get reset if left empty
-    // The exception is if our factory has deactivated & should destroy an empty vehicle
-    if (bNeverReset && !bDeactivatedFactoryWantsToDestroy)
-    {
-        return;
     }
 
     // Set a ResetTime for empty vehicle, so that CheckReset() event gets called after specified time
@@ -3219,18 +3220,26 @@ function SetSpikeTimer()
     SetTimer(VehicleSpikeTime, false);
 }
 
-// Modified so we don't destroy an empty spawn vehicle, or if it's our factory's last/only vehicle (because it won't spawn a replacement so no point 'recycling' it)
-// Also when checking for nearby friendlies, we ignore empty team vehicles (previously counted) but count any player in vehicle weapon position (previously ignored)
+// Modified so we never destroy an empty spawn vehicle, or a factory's last/only vehicle (it won't spawn a replacement so no point 'recycling') unless factory deactivated
+// Also when checking for nearby friendlies, we ignore empty team vehicles (previously counted) but count any player in a vehicle weapon position (previously ignored)
 // And we only count friendly players that could actually use this vehicle, i.e. so nearby infantry don't prevent an abandoned tank from re-spawning
 event CheckReset()
 {
     local Controller C;
     local float      Distance;
 
-    // Do nothing if vehicle is a spawn vehicle, or isn't empty, or is its factory's last vehicle (no point destroying vehicle if factory won't spawn replacement)
+    // Do nothing if vehicle is a spawn vehicle or it isn't empty
     // Originally this set a new timer if vehicle was found to be occupied, but there's no reason for that
     // Occupied vehicle shouldn't have CheckReset timer running & if player exits, leaving vehicle empty, then a new CheckReset timer gets started
-    if (IsSpawnVehicle() || !IsVehicleEmpty() || IsFactorysLastVehicle())
+    if (IsSpawnVehicle() || !IsVehicleEmpty())
+    {
+        return;
+    }
+
+    // Do nothing if it's a factory's last vehicle, as no point destroying/recycling vehicle if factory won't spawn replacement
+    // The exception is if a factory has deactivated & should destroy its vehicle if it's empty
+    if (IsFactorysLastVehicle() &&
+        !(ParentFactory.IsA('ROVehicleFactory') && !ROVehicleFactory(ParentFactory).bFactoryActive && ROVehicleFactory(ParentFactory).bDestroyVehicleWhenInactive))
     {
         return;
     }
