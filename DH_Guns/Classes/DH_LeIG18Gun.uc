@@ -2,6 +2,10 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2017
 //==============================================================================
+// This gun still need a bunch of work, and it's utility is extremely limited
+// because the gun has such a limited yaw range. This gun can be implemented
+// fully once we have the ability to rotate AT guns.
+//==============================================================================
 
 class DH_LeIG18Gun extends DHATGun;
 
