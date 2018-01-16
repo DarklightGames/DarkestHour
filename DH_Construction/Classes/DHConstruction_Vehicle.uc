@@ -7,8 +7,8 @@ class DHConstruction_Vehicle extends DHConstruction
     abstract
     notplaceable;
 
-var class<ROVehicle>    VehicleClass;
-var ROVehicle           Vehicle;
+var class<DHVehicle>    VehicleClass;
+var DHVehicle           Vehicle;
 
 function Destroyed()
 {
@@ -60,7 +60,7 @@ function static UpdateProxy(DHConstructionProxy CP)
 {
     local int i, j;
     local DHConstructionProxyAttachment CPA;
-    local class<ROVehicle> VehicleClass;
+    local class<DHVehicle> VehicleClass;
 
     VehicleClass = GetVehicleClass(CP.GetContext());
 
@@ -115,7 +115,7 @@ function UpdateAppearance()
 
 function static GetCollisionSize(DHConstruction.Context Context, out float NewRadius, out float NewHeight)
 {
-    local class<ROVehicle> VehicleClass;
+    local class<DHVehicle> VehicleClass;
 
     VehicleClass = GetVehicleClass(Context);
 
@@ -131,7 +131,7 @@ function static GetCollisionSize(DHConstruction.Context Context, out float NewRa
 }
 
 // Override to get a different vehicle class based on scenario (eg. snow camo etc.)
-function static class<ROVehicle> GetVehicleClass(DHConstruction.Context Context)
+function static class<DHVehicle> GetVehicleClass(DHConstruction.Context Context)
 {
     return default.VehicleClass;
 }
@@ -147,6 +147,11 @@ function static DHConstruction.ConstructionError GetPlayerError(DHConstruction.C
     }
 
     return super.GetPlayerError(Context);
+}
+
+simulated static function int GetSupplyCost(DHConstruction.Context Context)
+{
+    return GetVehicleClass(Context).default.SupplyCost;
 }
 
 defaultproperties

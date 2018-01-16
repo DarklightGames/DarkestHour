@@ -5,29 +5,43 @@
 
 class DHConstruction_ATGun_Medium extends DHConstruction_Vehicle;
 
-function static class<ROVehicle> GetVehicleClass(DHConstruction.Context Context)
+function static class<DHVehicle> GetVehicleClass(DHConstruction.Context Context)
 {
+    if (Context.LevelInfo == none)
+    {
+        return none;
+    }
+
     switch (Context.TeamIndex)
     {
         case AXIS_TEAM_INDEX:
-            if (Context.LevelInfo != none && Context.LevelInfo.Season == SEASON_Autumn)
+            switch (Context.LevelInfo.Season)
             {
-                return class'DH_Guns.DH_Pak40ATGun_CamoOne';
-            }
-            else
-            {
-                return class'DH_Guns.DH_Pak40ATGun';
+                case SEASON_Autumn:
+                    return class'DH_Guns.DH_Pak40ATGun_CamoOne';
+                default:
+                    return class'DH_Guns.DH_Pak40ATGun';
             }
         case ALLIES_TEAM_INDEX:
-            if (Context.LevelInfo != none && (Context.LevelInfo.AlliedNation == NATION_Britain || Context.LevelInfo.AlliedNation == NATION_Canada))
+            switch (Context.LevelInfo.AlliedNation)
             {
-                return class'DH_Guns.DH_6PounderGun';
-            }
-            else
-            {
-                return class'DH_Guns.DH_AT57Gun';
+                case NATION_Britain:
+                case NATION_Canada:
+                    return class'DH_Guns.DH_6PounderGun';
+                case NATION_USA:
+                    return class'DH_Guns.DH_AT57Gun';
+                case NATION_USSR:
+                    switch (Context.LevelInfo.Weather)
+                    {
+                        case WEATHER_Snowy:
+                            return class'DH_Guns.DH_45mmM1937Gun_Snow';
+                        default:
+                            return class'DH_Guns.DH_45mmM1937Gun';
+                    }
             }
     }
+
+    return none;
 }
 
 defaultproperties
@@ -36,5 +50,4 @@ defaultproperties
     Stages(0)=(Progress=0)
     ProgressMax=12
     PlacementOffset=(Z=24.0)
-    SupplyCost=750
 }

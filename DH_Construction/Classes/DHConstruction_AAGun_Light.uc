@@ -5,7 +5,7 @@
 
 class DHConstruction_AAGun_Light extends DHConstruction_Vehicle;
 
-function static class<ROVehicle> GetVehicleClass(DHConstruction.Context Context)
+function static class<DHVehicle> GetVehicleClass(DHConstruction.Context Context)
 {
     switch (Context.TeamIndex)
     {

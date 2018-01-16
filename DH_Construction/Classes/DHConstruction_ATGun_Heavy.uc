@@ -5,7 +5,7 @@
 
 class DHConstruction_ATGun_Heavy extends DHConstruction_Vehicle;
 
-function static class<ROVehicle> GetVehicleClass(DHConstruction.Context Context)
+function static class<DHVehicle> GetVehicleClass(DHConstruction.Context Context)
 {
     switch (Context.TeamIndex)
     {
@@ -67,27 +67,6 @@ function static class<ROVehicle> GetVehicleClass(DHConstruction.Context Context)
     }
 
     return none;
-}
-
-// The Flak 88 is very powerful due to the 360 degrees arc of fire and it's
-// ability to penetrate almost everything in the Allied arsenal, so it's cost
-// is higher.
-function static int GetSupplyCost(DHConstruction.Context Context)
-{
-    if (Context.PlayerController != none)
-    {
-        switch (Context.PlayerController.GetTeamNum())
-        {
-            case AXIS_TEAM_INDEX:
-                return 1750;
-            case ALLIES_TEAM_INDEX:
-                return 1500;
-            default:
-                break;
-        }
-    }
-
-    return 0;
 }
 
 function static vector GetPlacementOffset(DHConstruction.Context Context)
