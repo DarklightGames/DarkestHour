@@ -34,6 +34,7 @@ var DHSpawnPoint_SquadRallyPoint    RallyPoints[RALLY_POINTS_MAX];
 var float                           RallyPointInitialDelaySeconds;
 var float                           RallyPointChangeLeaderDelaySeconds;
 var float                           RallyPointRadiusInMeters;
+var float                           RallyPointSquadmatePlacementRadiusInMeters;
 
 var private DHPlayerReplicationInfo AlliesMembers[TEAM_SQUAD_MEMBERS_MAX];
 var private string                  AlliesNames[TEAM_SQUADS_MAX];
@@ -1609,7 +1610,7 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
     if (Level.NetMode != NM_Standalone)
     {
         // Must have a teammate nearby
-        foreach P.RadiusActors(class'Pawn', OtherPawn, class'DHUnits'.static.MetersToUnreal(10))
+        foreach P.RadiusActors(class'Pawn', OtherPawn, class'DHUnits'.static.MetersToUnreal(RallyPointSquadmatePlacementRadiusInMeters))
         {
             if (OtherPawn != none && !OtherPawn.bDeleteMe && OtherPawn.Health > 0)
             {
@@ -2064,4 +2065,5 @@ defaultproperties
     SquadMessageClass=class'DHSquadMessage'
     NextRallyPointInterval=60
     SquadLockMemberCountMin=3
+    RallyPointSquadmatePlacementRadiusInMeters=15.0
 }
