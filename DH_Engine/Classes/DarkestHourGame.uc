@@ -2633,8 +2633,18 @@ state RoundInPlay
         for (i = 0; i < 2; ++i)
         {
             // Combine attrition values and set GRI
-            GRI.AttritionRate[i] = (InterpCurveEval(ElapsedTimeAttritionCurve, float(GRI.ElapsedTime - GRI.RoundStartTime)) + CalculatedAttritionRate[i]) / 60;
+            GRI.AttritionRate[i] = CalculatedAttritionRate[i];
 
+            if (bIsAttritionEnabled)
+            {
+                // Apply time-based attrition (to stop rounds from lasting ages).
+                GRI.AttritionRate[i] += InterpCurveEval(ElapsedTimeAttritionCurve, float(GRI.ElapsedTime - GRI.RoundStartTime))
+            }
+
+            // Convert from tickets-per-minute to tickets-per-second.
+            GRI.AttritionRate[i] /= 60;
+
+            // Increment the team's attrition counter (to preserve fractional attrition).
             TeamAttritionCounter[i] += GRI.AttritionRate[i];
 
             if (TeamAttritionCounter[i] >= 1.0)
