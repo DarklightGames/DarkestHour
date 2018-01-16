@@ -2638,7 +2638,7 @@ state RoundInPlay
             if (bIsAttritionEnabled)
             {
                 // Apply time-based attrition (to stop rounds from lasting ages).
-                GRI.AttritionRate[i] += InterpCurveEval(ElapsedTimeAttritionCurve, float(GRI.ElapsedTime - GRI.RoundStartTime))
+                GRI.AttritionRate[i] += InterpCurveEval(ElapsedTimeAttritionCurve, float(GRI.ElapsedTime - GRI.RoundStartTime));
             }
 
             // Convert from tickets-per-minute to tickets-per-second.
