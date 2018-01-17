@@ -9,8 +9,8 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_45mm_anm.45mmM1937_gun'
-    Skins(0)=Texture'allies_ahz_guns_tex.45mm.45mm_ext'
-    Skins(1)=Texture'allies_ahz_guns_tex.45mm.45mm_ext'
+    Skins(0)=Texture'DH_Artillery_tex.45mmATGun.45mmATgunM1937_01'
+    Skins(1)=Texture'DH_Artillery_tex.45mmATGun.45mmATgunM1937_01'
     WeaponAttachOffset=(X=0.0,Y=0.5,Z=3.0) // raises gun up from base to stop bottom of gun shield from clipping badly through base's vertical front plate (also centres it)
     CollisionStaticMesh=StaticMesh'DH_Artillery_stc.45mmGun.45mmGun_gun_collision' // TODO: make a proper collision mesh, this is just a crude placeholder
 

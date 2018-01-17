@@ -11,7 +11,7 @@ defaultproperties
     VehicleTeam=1
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_ZiS3CannonPawn',WeaponBone="Gun_attachment")
     Mesh=SkeletalMesh'DH_ZiS3_76mm_anm.ZiS3_base'
-    Skins(0)=Texture'MilitaryAlliesSMT.Artillery.76mm'
+    Skins(0)=Texture'DH_Artillery_tex.ZiS3.ZiS3_76mm_M1942_01'
     DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.ZiS3.ZiS3_destroyed'
     VehicleHudImage=Texture'DH_Artillery_Tex.ATGun_Hud.ZiS3_body'
     VehicleHudTurret=TexRotator'DH_Artillery_Tex.ATGun_Hud.ZiS3_turret_rot'
