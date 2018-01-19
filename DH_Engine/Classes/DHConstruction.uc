@@ -378,7 +378,7 @@ auto simulated state Constructing
                 DHPawn(Instigator) != none &&
                 (NEUTRAL_TEAM_INDEX == TeamIndex || Instigator.GetTeamNum() == TeamIndex))
             {
-                SuppliesRefunded = DHPawn(Instigator).RefundSupplies(SupplyCost);
+                SuppliesRefunded = DHPawn(Instigator).RefundSupplies(GetSupplyCost(GetContext()));
             }
 
             if (Owner == none)
@@ -728,7 +728,7 @@ function static ConstructionError GetPlayerError(DHConstruction.Context Context)
         return E;
     }
 
-    if (default.SupplyCost > 0 && P.TouchingSupplyCount < default.SupplyCost)
+    if (static.GetSupplyCost(Context) > 0 && P.TouchingSupplyCount < static.GetSupplyCost(Context))
     {
         E.Type = ERROR_InsufficientSupply;
         return E;
