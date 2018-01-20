@@ -14,6 +14,7 @@ defaultproperties
     VehicleMass=3.0
     ReinforcementCost=5
     MaxDesireability=0.12
+    FriendlyResetDistance=6000.0  // 100 meters
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_ZiS5V_anm.ZiS5V_ext'
