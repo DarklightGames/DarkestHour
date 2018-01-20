@@ -3176,7 +3176,7 @@ function MaybeDestroyVehicle()
     local bool bDeactivatedFactoryWantsToDestroy;
 
     // Do nothing if vehicle is a spawn vehicle or it isn't empty
-    if (IsSpawnVehicle() || !IsVehicleEmpty())
+    if (ParentFactory == none || IsSpawnVehicle() || !IsVehicleEmpty())
     {
         return;
     }
