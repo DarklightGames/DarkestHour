@@ -84,7 +84,7 @@ defaultproperties
     VehicleHudOccupantsY(0)=0.35
     VehicleHudOccupantsX(1)=0.55
     VehicleHudOccupantsY(1)=0.35
-//  SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.zis5v' // TODO: get this icon made
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.zis5v'
 
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=Wheel_FrontL

@@ -7,7 +7,7 @@ class DH_ZiS5vTruckSupport extends DH_ZiS5vTruck;
 
 defaultproperties
 {
-    VehicleNameString="ZiS-5V (logistics)"
+    VehicleNameString="ZiS-5V (Logistics)"
     Skins(2)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha' // hides rear bench seats to make room for the supply attachment static mesh, which fills the truck bed
     DestroyedMeshSkins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
     PassengerPawns(1)=(AttachBone="Passenger_supply1",DriveAnim="VHalftrack_Rider1_idle")
@@ -23,4 +23,5 @@ defaultproperties
     ResupplyAttachmentBone="Ammo_resupply"
     VehHitpoints(1)=(PointRadius=40.0,PointScale=1.0,PointBone="Ammo_resupply",DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     bMustBeInSquadToSpawn=true
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.zis5v_logistics'
 }

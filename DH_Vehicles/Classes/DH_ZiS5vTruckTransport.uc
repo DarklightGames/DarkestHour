@@ -7,7 +7,7 @@ class DH_ZiS5vTruckTransport extends DH_ZiS5vTruck;
 
 defaultproperties
 {
-    VehicleNameString="ZiS-5V (transport)"
+    VehicleNameString="ZiS-5V (Transport)"
     PassengerPawns(1)=(AttachBone="Passenger_L1",DriveAnim="VHalftrack_Rider3_idle")
     PassengerPawns(2)=(AttachBone="Passenger_L2",DriveAnim="VHalftrack_Rider2_idle")
     PassengerPawns(3)=(AttachBone="Passenger_L3",DriveAnim="VHalftrack_Rider1_idle")
