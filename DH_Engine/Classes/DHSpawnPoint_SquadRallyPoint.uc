@@ -39,7 +39,7 @@ var float OverrunMinimumTimeSeconds;            // The number of seconds a rally
 // Abandonment
 var bool bCanSendAbandonmentWarningMessage;     // Whether or not we should send the abandonment message the next time the squad rally point has no teammates nearby while constructing
 
-// Accrual timer (used for adding available spawns on
+// Accrual timer (used for adding available spawns at regular intervals)
 var int SpawnAccrualTimer;
 var int SpawnAccrualThreshold;
 
@@ -408,7 +408,6 @@ defaultproperties
     TeamIndex=-1
     SquadIndex=-1
     RallyPointIndex=-1
-    SpawnsRemaining=15
     CreationSound=Sound'Inf_Player.Gibimpact.Gibimpact'
     EncroachmentRadiusInMeters=25
     EncroachmentPenaltyBlockThreshold=10

@@ -35,6 +35,8 @@ var float                           RallyPointInitialDelaySeconds;
 var float                           RallyPointChangeLeaderDelaySeconds;
 var float                           RallyPointRadiusInMeters;
 var float                           RallyPointSquadmatePlacementRadiusInMeters;
+var int                             RallyPointInitialSpawnsMinimum;
+var float                           RallyPointInitialSpawnsMemberMultiplier;
 
 var private DHPlayerReplicationInfo AlliesMembers[TEAM_SQUAD_MEMBERS_MAX];
 var private string                  AlliesNames[TEAM_SQUADS_MAX];
@@ -232,7 +234,7 @@ function Timer()
                     if (ActiveSquadRallyPoints[i].SpawnAccrualTimer >= ActiveSquadRallyPoints[i].SpawnAccrualThreshold)
                     {
                         ActiveSquadRallyPoints[i].SpawnAccrualTimer = 0;
-                        ActiveSquadRallyPoints[i].SpawnsRemaining = Min(ActiveSquadRallyPoints[i].SpawnsRemaining + 1, class'DHSpawnPoint_SquadRallyPoint'.default.SpawnsRemaining);
+                        ActiveSquadRallyPoints[i].SpawnsRemaining = Min(ActiveSquadRallyPoints[i].SpawnsRemaining + 1, GetSquadRallyPointInitialSpawns(TeamIndex, SquadIndex));
                     }
                 }
                 else
@@ -1760,12 +1762,16 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
 
     RP = Spawn(class'DHSpawnPoint_SquadRallyPoint', none,, HitLocation, R);
 
-    if (RP != none)
+    if (RP == none)
     {
-        RP.SetTeamIndex(P.GetTeamNum());
-        RP.SquadIndex = PRI.SquadIndex;
-        RP.RallyPointIndex = RallyPointIndex;
+        Warn("Failed to spawn squad rally point!");
+        return none;
     }
+
+    RP.SetTeamIndex(P.GetTeamNum());
+    RP.SquadIndex = PRI.SquadIndex;
+    RP.RallyPointIndex = RallyPointIndex;
+    RP.SpawnsRemaining = GetSquadRallyPointInitialSpawns(P.GetTeamNum(), PRI.SquadMemberIndex);
 
     RallyPoints[RallyPointIndex] = RP;
 
@@ -1775,6 +1781,12 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
     SetSquadNextRallyPointTime(RP.GetTeamIndex(), RP.SquadIndex, Level.TimeSeconds + default.NextRallyPointInterval);
 
     return RP;
+}
+
+// Returns the initial number of spawns a squad's rally point will have.
+function int GetSquadRallyPointInitialSpawns(int TeamIndex, int SquadIndex)
+{
+    return Max(RallyPointInitialSpawnsMinimum, GetMemberCount(TeamIndex, SquadIndex) * RallyPointInitialSpawnsMemberMultiplier);
 }
 
 function DestroySquadRallyPoint(DHPlayerReplicationInfo PRI, DHSpawnPoint_SquadRallyPoint SRP)
@@ -2066,4 +2078,6 @@ defaultproperties
     NextRallyPointInterval=60
     SquadLockMemberCountMin=3
     RallyPointSquadmatePlacementRadiusInMeters=15.0
+    RallyPointInitialSpawnsMinimum=10
+    RallyPointInitialSpawnsMemberMultiplier=2.5
 }
