@@ -20,7 +20,7 @@ defaultproperties
     VehicleHudOccupantsY(1)=0.65
     ExitPositions(1)=(X=-120.00,Y=-38.00,Z=30.00)
     VehicleMass=11.0
-    SupplyCost=1500
+    SupplyCost=750
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
