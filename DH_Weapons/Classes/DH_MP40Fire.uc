@@ -7,11 +7,6 @@ class DH_MP40Fire extends DHAutomaticFire;
 
 defaultproperties
 {
-    // THEEL DEBUG TODO TESTING TESTING
-    // because the MP40 seems to be significantly bad when server tick rate is below average, I thought it'd be good to test out removing PLT on it
-    // this might give us better insight if PLT is something we could remove on other guns as well
-    bUsePreLaunchTrace=false
-
     ProjectileClass=class'DH_Weapons.DH_MP40Bullet'
     AmmoClass=class'ROAmmo.MP32Rd9x19Ammo'
     FireRate=0.13
