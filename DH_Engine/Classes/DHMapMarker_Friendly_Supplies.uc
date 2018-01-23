@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHMapMarker_Friendly_PlatoonHQ extends DHMapMarker_Friendly
+class DHMapMarker_Friendly_Supplies extends DHMapMarker_Friendly
     abstract;
 
 static function bool CanBeUsed(DHGameReplicationInfo GRI)
@@ -13,8 +13,8 @@ static function bool CanBeUsed(DHGameReplicationInfo GRI)
 
 defaultproperties
 {
-    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.platoon_hq'
-    MarkerName="Request Platoon HQ"
+    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.supply_cache'
+    MarkerName="Request Supplies"
     LifetimeSeconds=300
 }
 

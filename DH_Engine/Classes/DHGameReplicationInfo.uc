@@ -1354,4 +1354,5 @@ defaultproperties
     MapMarkerClassNames(5)="DH_Engine.DHMapMarker_Enemy_Infantry"
     MapMarkerClassNames(6)="DH_Engine.DHMapMarker_Enemy_ATGun"
     MapMarkerClassNames(7)="DH_Engine.DHMapMarker_Friendly_PlatoonHQ"
+    MapMarkerClassNames(8)="DH_Engine.DHMapMarker_Friendly_Supplies"
 }
