@@ -5,6 +5,8 @@
 
 class DHWeaponFire extends ROWeaponFire;
 
+var bool bIgnoresWeaponLock;
+
 defaultproperties
 {
     SpreadStyle=SS_Random // this is actually assumed & hard-coded into spread functionality

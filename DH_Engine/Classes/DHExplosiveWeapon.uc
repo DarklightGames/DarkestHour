@@ -143,10 +143,19 @@ simulated function InstantPrime()
 simulated function bool StartFire(int Mode)
 {
     local int OtherMode;
+    local class<DHWeaponFire> WF;
+    local DHPlayer PC;
 
-    if (Instigator != none && DHPlayer(Instigator.Controller) != none && DHPlayer(Instigator.Controller).AreWeaponsLocked())
+    WF = class<DHWeaponFire>(FireModeClass[Mode]);
+
+    if (Instigator != none && (WF == none || !WF.default.bIgnoresWeaponLock))
     {
-        return false;
+        PC = DHPlayer(Instigator.Controller);
+
+        if (PC != none && PC.AreWeaponsLocked())
+        {
+            return false;
+        }
     }
 
     if (!ReadyToFire(Mode))

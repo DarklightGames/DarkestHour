@@ -39,9 +39,20 @@ simulated function BringUp(optional Weapon PrevWeapon)
 // Originally in the projectile weapon class, but moved here as it's possible for non-projectile weapons to be used for bash attacks, e.g. shovels
 simulated function bool StartFire(int Mode)
 {
-    if (Instigator != none && DHPlayer(Instigator.Controller) != none && DHPlayer(Instigator.Controller).AreWeaponsLocked())
+    local class<DHWeaponFire> WF;
+    local DHPlayer PC;
+
+    WF = class<DHWeaponFire>(FireModeClass[Mode]);
+
+    // Certain weapon fire modes are exempt from weapon locking logic (e.g. shovel "digging").
+    if (Instigator != none && (WF == none || !WF.default.bIgnoresWeaponLock))
     {
-        return false;
+        PC = DHPlayer(Instigator.Controller);
+
+        if (PC != none && PC.AreWeaponsLocked())
+        {
+            return false;
+        }
     }
 
     if (super.StartFire(Mode))

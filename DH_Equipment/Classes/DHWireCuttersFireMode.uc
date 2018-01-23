@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHWireCuttersFireMode extends WeaponFire;
+class DHWireCuttersFireMode extends DHWeaponFire;
 
 // Modified to check (via a trace) that player is facing an obstacle that can be cut & that player is stationary & not diving to prone
 simulated function bool AllowFire()
@@ -30,5 +30,6 @@ defaultproperties
     MaxHoldTime=5.0
     bModeExclusive=true
     bFireOnRelease=false
+    bIgnoresWeaponLock=true
 }
 
