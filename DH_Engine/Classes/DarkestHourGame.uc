@@ -401,6 +401,9 @@ event Tick(float DeltaTime)
         ServerTickFrameCount = 0;
         ServerTickRateConsolidated -= SERVERTICKRATE_UPDATETIME;
 
+        // Update the server health.
+        GRI.ServerHealth = Clamp(ServerTickRateAverage, 0, 255);
+
         HandleReinforceIntervalInflation();
 
         if (bLogAverageTickRate)

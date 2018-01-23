@@ -126,6 +126,8 @@ var DHConstructionManager   ConstructionManager;
 var bool                bAreConstructionsEnabled;
 var bool                bAllowAllChat;
 
+var byte                ServerHealth;
+
 // Map markers
 struct MapMarker
 {
@@ -185,7 +187,8 @@ replication
         bAllowAllChat,
         RoundOverTime,
         DHRoundLimit,
-        DHRoundDuration;
+        DHRoundDuration,
+        ServerHealth;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))
         AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex,

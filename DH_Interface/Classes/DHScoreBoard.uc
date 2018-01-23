@@ -20,6 +20,10 @@ var int MyTeamIndex;
 
 var localized string SquadLeaderAbbreviation;
 var localized string PlayersText;
+var localized string HealthText;
+var localized string PoorText;
+var localized string FairText;
+var localized string GoodText;
 
 var color SquadHeaderColor;
 var color PlayerBackgroundColor;
@@ -328,6 +332,8 @@ simulated function UpdateScoreBoard(Canvas C)
     local string S;
     local float LineHeight, X, Y, XL, YL;
     local int i;
+    local color HealthColor;
+    local string HealthString;
 
     PC = DHPlayer(Owner);
 
@@ -420,6 +426,25 @@ simulated function UpdateScoreBoard(Canvas C)
 
     // Add game type
     S $= HUD.default.SpacingText $ HUD.default.MapGameTypeText $ DHGRI.GameType.default.GameTypeName;
+
+    // Server health
+    if (DHGRI.ServerHealth < 10)
+    {
+        HealthString = default.PoorText;
+        HealthColor = class'UColor'.default.Red;
+    }
+    else if (DHGRI.ServerHealth < 30)
+    {
+        HealthString = default.FairText;
+        HealthColor = class'UColor'.default.Orange;
+    }
+    else
+    {
+        HealthString = default.GoodText;
+        HealthColor = class'UColor'.default.Green;
+    }
+
+    S $= HUD.default.SpacingText $ default.HealthText $ ":" @ class'GameInfo'.static.MakeColorCode(HealthColor) $ HealthString @ "(" $ DHGRI.ServerHealth $ ")";
 
     Y = CalcY(0.25, C);
 
@@ -850,6 +875,10 @@ defaultproperties
     MyTeamIndex=2
     SquadLeaderAbbreviation="SL"
     PlayersText="Players"
+    HealthText="Health"
+    PoorText="Poor"
+    FairText="Fair"
+    GoodText="Good"
     PatronIconMaterial=Texture'DH_InterfaceArt2_tex.HUD.patron'
     DeveloperIconMaterial=Texture'DH_InterfaceArt2_tex.HUD.developer'
 }
