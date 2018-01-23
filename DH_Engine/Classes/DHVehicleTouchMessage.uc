@@ -6,7 +6,7 @@
 class DHVehicleTouchMessage extends ROTouchMessagePlus
     abstract;
 
-var const string TouchMessage;
+var localized string TouchMessage;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
