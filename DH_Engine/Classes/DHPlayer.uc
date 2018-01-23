@@ -3292,7 +3292,8 @@ simulated function CheckUnlockWeapons()
     }
 }
 
-// New helper function to check whether player's weapons are locked due to spawn killing, so he's unable to fire, including warning message on screen
+// New helper function to check whether player's weapons are locked due to spawn killing, so he's unable to fire, including warning message on screen.
+// TODO: Make this return an enum as to the weapon lock reason and leave it up to the caller to send the messages.
 simulated function bool AreWeaponsLocked(optional bool bNoScreenMessage)
 {
     local DHGameReplicationInfo GRI;
