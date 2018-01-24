@@ -15,14 +15,16 @@ var int                 SupplyCountMax;
 var private int         TeamIndex;
 
 var bool                bShouldShowOnMap;
+var bool                bShouldMapIconBeRotated;
+var Material            MapIcon;
 
 var private localized string    HumanReadableName;
 
 // Whether or not this supply attachment can be resupplied from a static resupply point.
 var bool                bCanBeResupplied;
 
-// Whether or not this supply attachment can receive supply drops from a vehicle.
-var bool                bCanReceiveSupplyDrops;
+// Whether or not this supply attachment can have it's supplies loaded and unloaded from a vehicle.
+var bool                bAreSuppliesTransactable;
 
 // Used to resolve the order in which supplies will be drawn from in the case
 // where the the player is near multiple supply attachments when placing
@@ -91,7 +93,7 @@ simulated function int GetSupplyCount()
     return SupplyCount;
 }
 
-static function StaticMesh GetStaticMeshForSupplyCount(LevelInfo Level, int TeamIndex, int SupplyCount)
+static function StaticMesh GetStaticMesh(LevelInfo Level, int TeamIndex)
 {
     //local float SupplyPercent;
     //local int StaticMeshIndex;
@@ -126,7 +128,7 @@ static function StaticMesh GetStaticMeshForSupplyCount(LevelInfo Level, int Team
 
 function UpdateAppearance()
 {
-    SetStaticMesh(GetStaticMeshForSupplyCount(Level, TeamIndex, SupplyCount));
+    SetStaticMesh(GetStaticMesh(Level, TeamIndex));
     NetUpdateTime = Level.TimeSeconds - 1.0;
 }
 
@@ -216,7 +218,7 @@ function Timer()
             {
                 P.TouchingSupplyAttachments[P.TouchingSupplyAttachments.Length] = self;
             }
-            else if (V != none)
+            else if (V != none && V.SupplyAttachment != self && bAreSuppliesTransactable)
             {
                 V.TouchingSupplyAttachments[V.TouchingSupplyAttachments.Length] = self;
             }
@@ -342,5 +344,6 @@ defaultproperties
     bUseLightingFromBase=true
     bNetNotify=true
     HumanReadableName="Supply Cache"
+    bShouldShowOnMap=true
 }
 

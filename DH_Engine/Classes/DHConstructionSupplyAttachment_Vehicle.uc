@@ -22,9 +22,7 @@ simulated function string GetHumanReadableName()
 defaultproperties
 {
     bCanBeResupplied=true
-    bCanGenerateSupplies=true
-    SupplyDepositInterval=15
-    SupplyGenerationRate=100
-    bShouldShowOnMap=true
+    bShouldMapIconBeRotated=true
+    MapIcon=Texture'DH_GUI_Tex.GUI.supply_point'
 }
 

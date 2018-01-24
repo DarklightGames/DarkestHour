@@ -7,7 +7,11 @@ class DHConstructionSupplyAttachment_Static extends DHConstructionSupplyAttachme
 
 defaultproperties
 {
-    bCanReceiveSupplyDrops=true
+    bAreSuppliesTransactable=true
+    bCanGenerateSupplies=true
+    SupplyDepositInterval=15
+    SupplyGenerationRate=100
     HumanReadableName="Supply Cache"
+    MapIcon=Texture'DH_InterfaceArt2_tex.Icons.Supply_Cache'
 }
 

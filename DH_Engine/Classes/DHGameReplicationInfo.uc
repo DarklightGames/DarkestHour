@@ -54,6 +54,7 @@ struct SupplyPoint
     var DHConstructionSupplyAttachment Actor;
     var byte    TeamIndex;
     var vector  Location;   // (X,Y) is world location, (Z) is the yaw rotation
+    var class<DHConstructionSupplyAttachment> ActorClass;
 };
 
 var class<DHGameType>   GameType;
@@ -301,6 +302,7 @@ function int AddSupplyPoint(DHConstructionSupplyAttachment CSA)
                 SupplyPoints[i].bIsActive = true;
                 SupplyPoints[i].Actor = CSA;
                 SupplyPoints[i].TeamIndex = CSA.GetTeamIndex();
+                SupplyPoints[i].ActorClass = CSA.Class;
                 SupplyPoints[i].Location.X = CSA.Location.X;
                 SupplyPoints[i].Location.Y = CSA.Location.Y;
                 SupplyPoints[i].Location.Z = CSA.Rotation.Yaw;

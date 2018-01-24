@@ -134,9 +134,10 @@ var     int     TearDownProgress;
 // Broken
 var     float           BrokenLifespan;             // How long does the actor stay around after it's been killed?
 var     StaticMesh      BrokenStaticMesh;           // Static mesh to use when the construction is broken
-var     sound           BrokenSound;                // Sound to play when the construction is broken
+var     array<Sound>    BrokenSounds;                // Sound to play when the construction is broken
 var     float           BrokenSoundRadius;
 var     float           BrokenSoundVolume;
+var     float           BrokenSoundPitch;
 var     class<Emitter>  BrokenEmitterClass;         // Emitter to spawn when the construction is broken
 
 // Reset
@@ -170,6 +171,7 @@ var     int         HealthMax;
 // Menu
 var     localized string    MenuName;
 var     localized Material  MenuIcon;
+var     localized string    MenuDescription;
 
 // Level Info
 var DH_LevelInfo LevelInfo;
@@ -570,6 +572,9 @@ DelayedDamage:
     TakeDamage(DelayedDamage, none, vect(0, 0, 0), vect(0, 0, 0), DelayedDamageType);
 }
 
+// Override this for additional functionality when construction breaks.
+simulated function OnBroken();
+
 simulated state Broken
 {
     simulated function BeginState()
@@ -588,7 +593,14 @@ simulated state Broken
             {
                 Spawn(BrokenEmitterClass, self,, Location, Rotation);
             }
+
+            if (BrokenSounds.Length > 0)
+            {
+                PlaySound(BrokenSounds[Rand(BrokenSounds.Length)],, BrokenSoundVolume,, BrokenSoundRadius, BrokenSoundPitch, true);
+            }
         }
+
+        OnBroken();
     }
 
     event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
