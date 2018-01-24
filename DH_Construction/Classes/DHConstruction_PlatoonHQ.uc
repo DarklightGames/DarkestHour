@@ -239,7 +239,7 @@ defaultproperties
     bCanBeTornDownByFriendlies=false
     FriendlyFireDamageScale=0.0
 
-    ObjectiveDistanceMinMeters=100
+    ObjectiveDistanceMinMeters=75
     EnemyObjectiveDistanceMinMeters=150
 }
 
