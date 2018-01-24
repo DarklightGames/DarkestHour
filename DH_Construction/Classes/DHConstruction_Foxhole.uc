@@ -158,7 +158,7 @@ defaultproperties
     MenuName="Foxhole"
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.foxhole'
     bAlwaysRelevant=true            // This is so that the terrain poking gets applied for everyone and also doesn't get applied more than once.
-    DuplicateFriendlyDistanceInMeters=15.0
+    DuplicateFriendlyDistanceInMeters=10.0
     bLimitTerrainSurfaceTypes=true
     TerrainSurfaceTypes(0)=EST_Default
     TerrainSurfaceTypes(1)=EST_Dirt
