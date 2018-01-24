@@ -103,7 +103,16 @@ function static UpdateProxy(DHConstructionProxy CP)
 
 function static string GetMenuName(DHConstruction.Context Context)
 {
-    return GetVehicleClass(Context).default.VehicleNameString;
+    local class<DHVehicle> VC;
+
+    VC = GetVehicleClass(Context);
+
+    if (VC == none)
+    {
+        return "";
+    }
+
+    return VC.default.VehicleNameString;
 }
 
 function UpdateAppearance()
