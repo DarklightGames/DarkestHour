@@ -17,7 +17,6 @@ defaultproperties
     bIsApc=true
     bHasTreads=true
     VehicleMass=8.5
-    FriendlyResetDistance=6000.0
     IdleTimeBeforeReset=300.0
     VehicleSpikeTime=60.0
     PointValue=2.0

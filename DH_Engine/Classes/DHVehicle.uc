@@ -3717,7 +3717,7 @@ defaultproperties
     // Vehicle reset/respawn
     VehicleSpikeTime=10.0    // if disabled
     IdleTimeBeforeReset=90.0 // if empty & no friendlies nearby
-    FriendlyResetDistance=4000.0 // 66m
+    FriendlyResetDistance=6000.0 // 100 meters
 
     // Sounds
     MaxPitchSpeed=150.0

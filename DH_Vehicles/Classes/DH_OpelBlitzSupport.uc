@@ -23,5 +23,5 @@ defaultproperties
     ResupplyAttachmentBone="supply"
     VehHitpoints(2)=(PointRadius=40.0,PointScale=1.0,PointBone="body",PointOffset=(X=0.0,Y=50.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     bMustBeInSquadToSpawn=true
-    FriendlyResetDistance=6000.0  // 100 meters
+    FriendlyResetDistance=15000.0  // 250 meters
 }
