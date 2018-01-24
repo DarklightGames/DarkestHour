@@ -18,7 +18,7 @@ defaultproperties
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.sandbags_bunker'
     CollisionHeight=100
     CollisionRadius=125
-    SupplyCost=500
+    SupplyCost=350
     BrokenEmitterClass=class'DHConstruction_Sandbags_BrokenEmitter'
     HealthMax=400
     bCanTakeImpactDamage=true
