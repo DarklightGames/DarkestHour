@@ -498,7 +498,7 @@ simulated function Tick(float DeltaTime)
             }
         }
 
-        if (TouchingSupplyCount >= 0 && IsLocallyControlled())
+        if (TouchingSupplyCount >= 0 && Controller != none && IsLocallyControlled())
         {
             PlayerController(Controller).ReceiveLocalizedMessage(class'DHSupplyVehicleMessage',,,, Controller);
         }
