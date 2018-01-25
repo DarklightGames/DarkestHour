@@ -867,6 +867,9 @@ function DHConstruction.ConstructionError GetPositionError()
         }
     }
 
+    // We give the construction class an opportunity to return a class-specific error, if one is defined.
+    E = ConstructionClass.static.GetCustomProxyError(self);
+
     return E;
 }
 

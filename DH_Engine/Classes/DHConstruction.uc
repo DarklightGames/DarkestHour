@@ -51,6 +51,7 @@ struct Context
 var struct ConstructionError
 {
     var EConstructionErrorType  Type;
+    var string                  CustomErrorString;  // When Type is ERROR_Custom, this will contain the error string to be used.
     var int                     OptionalInteger;
     var Object                  OptionalObject;
     var string                  OptionalString;
@@ -961,6 +962,15 @@ static function DHConstruction.Context ContextFromPlayerController(DHPlayer PC)
     }
 
     return Context;
+}
+
+// This is used to return a custom error that is class specific for specialized
+// placement logic. By default this simply returns no error.
+static function DHConstruction.ConstructionError GetCustomProxyError(DHConstructionProxy P)
+{
+    local DHConstruction.ConstructionError E;
+
+    return E;
 }
 
 defaultproperties
