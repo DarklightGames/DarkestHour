@@ -129,7 +129,8 @@ var     float   StagnationLifespan;
 // Tear-down
 var     bool    bCanBeTornDownWhenConstructed;  // Whether or not players can tear down the construction after it has been constructed.
 var     bool    bCanBeTornDownByFriendlies;     // Whether or not friendly players can tear down the construction (e.g. to stop griefing of important constructions)
-var     int     TearDownProgress;
+var     float   TearDownProgress;
+var     float   TakeDownProgressInterval;
 
 // Broken
 var     float           BrokenLifespan;             // How long does the actor stay around after it's been killed?
@@ -528,7 +529,7 @@ simulated state Constructed
 
     function TakeTearDownDamage(Pawn InstigatedBy)
     {
-        TearDownProgress += 1;
+        TearDownProgress += TakeDownProgressInterval;
 
         if (TearDownProgress >= ProgressMax)
         {
@@ -1064,5 +1065,6 @@ defaultproperties
     ConstructionVerb="build"
 
     bShouldRefundSuppliesOnTearDown=true
+    TakeDownProgressInterval=0.5
 }
 
