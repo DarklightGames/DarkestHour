@@ -1657,7 +1657,13 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
         {
             if (Constructions[i] != none && Constructions[i].bShouldBlockSquadRallyPoints)
             {
-                if (VSize(P.Location - Constructions[i].Location) - P.CollisionRadius - Constructions[i].default.CollisionRadius < 0.0)
+                if (class'UCollision'.static.PointInCylinder(
+                        Constructions[i].Location,
+                        Constructions[i].default.CollisionRadius + P.CollisionRadius,
+                        Constructions[i].default.CollisionHeight,
+                        Constructions[i].Rotation,
+                        P.Location)
+                    )
                 {
                     // "You cannot create a squad rally point at this location."
                     PC.ReceiveLocalizedMessage(SquadMessageClass, 60,,, Constructions[i]);
