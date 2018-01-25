@@ -201,8 +201,40 @@ function Touch(Actor Other)
     }
 }
 
+// TODO:
+simulated function NotifySelected(Pawn User)
+{
+    super.NotifySelected(User);
+
+    Log("NotifySelected" @ self @ User);
+
+    User.ReceiveLocalizedMessage(class'DHRadioTouchMessage', 1,,, User.Controller);
+}
+
 defaultproperties
 {
+    bAutoTraceNotify=true
+    bCanAutoTraceSelect=true
+    bUseCylinderCollision=true
+    bIgnoreEncroachers=true
+    bIgnoreVehicles=true
+    bCollideActors=true
+    bCollideWorld=false
+    bBlockActors=true
+    bBlockPlayers=true
+    //bShouldBaseAtStartup=true
+    bHidden=false
+    bBlockNonZeroExtentTraces=true
+    bBlockZeroExtentTraces=true
+    Physics=PHYS_None
+    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.g41'
+    DrawType=DT_StaticMesh
+    DrawScale=1.0
+    CollisionRadius=32.0
+    CollisionHeight=32.0
+
+    AmbientSound=Sound'DH_SundrySounds.Radio.RadioStatic'
+
     bShouldShowOnSituationMap=true
     TriggerDelay=5.0
     Message="Request artillery support from HQ"

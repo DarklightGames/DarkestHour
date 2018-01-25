@@ -3,12 +3,15 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHConstruction_Resupply extends DHConstruction;
+class DHConstruction_Resupply extends DHConstruction
+    abstract;
 
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Construction_stc.usx
-
-var DHResupplyAttachment ResupplyAttachment;
-var int ResupplyCount;
+var class<DHResupplyAttachment>         ResupplyAttachmentClass;
+var DHResupplyAttachment                ResupplyAttachment;
+var int                                 ResupplyCount;
+var DHResupplyAttachment.EResupplyType  ResupplyType;
+var float                               ResupplyAttachmentCollisionRadius;
+var float                               ResupplyAttachmentCollisionHeight;
 
 function PostBeginPlay()
 {
@@ -16,11 +19,13 @@ function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        ResupplyAttachment = Spawn(class'DHResupplyAttachment', self);
+        ResupplyAttachment = Spawn(ResupplyAttachmentClass, self);
 
         if (ResupplyAttachment != none)
         {
-            ResupplyAttachment.ResupplyType = RT_Players;
+            ResupplyAttachment.ResupplyType = ResupplyType;
+            ResupplyAttachment.SetTeamIndex(GetTeamIndex());
+            ResupplyAttachment.SetCollisionSize(ResupplyAttachmentCollisionRadius, ResupplyAttachmentCollisionHeight);
             ResupplyAttachment.SetBase(self);
             ResupplyAttachment.OnPawnResupplied = MyOnPawnResupplied;
         }
@@ -60,63 +65,18 @@ event Destroyed()
     }
 }
 
-function UpdateAppearance()
-{
-    switch (GetTeamIndex())
-    {
-        case AXIS_TEAM_INDEX:
-            SetStaticMesh(StaticMesh'DH_Construction_stc.Ammo.DH_Ger_ammo_box');
-            break;
-        case ALLIES_TEAM_INDEX:
-            switch (LevelInfo.AlliedNation)
-            {
-            case NATION_USA:
-                SetStaticMesh(StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box');
-                break;
-            case NATION_Britain:
-            case NATION_Canada:
-                SetStaticMesh(StaticMesh'DH_Construction_stc.Ammo.DH_Commonwealth_ammo_box');
-                break;
-            case NATION_USSR:
-                SetStaticMesh(StaticMesh'DH_Construction_stc.Ammo.DH_Soviet_ammo_box');
-                break;
-            }
-            break;
-    }
-}
-
-function static StaticMesh GetProxyStaticMesh(DHConstruction.Context Context)
-{
-    switch (Context.TeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            return StaticMesh'DH_Construction_stc.Ammo.DH_Ger_ammo_box';
-        case ALLIES_TEAM_INDEX:
-            switch (Context.LevelInfo.AlliedNation)
-            {
-            case NATION_USA:
-                return StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box';
-            case NATION_Britain:
-            case NATION_Canada:
-                return StaticMesh'DH_Construction_stc.Ammo.DH_Commonwealth_ammo_box';
-            case NATION_USSR:
-                return StaticMesh'DH_Construction_stc.Ammo.DH_Soviet_ammo_box';
-            }
-        default:
-            break;
-    }
-
-    return super.GetProxyStaticMesh(Context);
-}
-
 defaultproperties
 {
+    ResupplyAttachmentClass=class'DHResupplyAttachment'
+    ResupplyType=RT_All
+    ResupplyAttachmentCollisionRadius=300
+    ResupplyAttachmentCollisionHeight=100
+
     BrokenEmitterClass=class'DHShellShatterEffect'
     bCanDieOfStagnation=false
     BrokenLifespan=0.1
     StaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box'
     bShouldAlignToGround=true
-    MenuName="Ammo Crate"
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.resupply_box'
     ProxyDistanceInMeters=3.0
     DuplicateFriendlyDistanceInMeters=25.0
