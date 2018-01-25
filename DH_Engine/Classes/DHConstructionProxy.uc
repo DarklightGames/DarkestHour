@@ -323,7 +323,7 @@ function Tick(float DeltaTime)
 // This function gets the provisional location and rotation of the construction.
 function DHConstruction.ConstructionError GetProvisionalPosition(out vector OutLocation, out rotator OutRotation)
 {
-    local vector TraceStart, TraceEnd, HitLocation, HitNormal, Left, Forward, X, Y, Z, HitNormalSum, BaseLocation, CeilingHitLocation, CeilingHitNormal;
+    local vector TraceStart, TraceEnd, HitLocation, HitNormal, OtherHitNormal, Left, Forward, X, Y, Z, HitNormalAverage, BaseLocation, CeilingHitLocation, CeilingHitNormal;
     local Actor TempHitActor, HitActor;
     local rotator R;
     local float GroundSlopeDegrees, AngleRadians, SquareLength;
@@ -499,14 +499,13 @@ function DHConstruction.ConstructionError GetProvisionalPosition(out vector OutL
 
         if (E.Type == ERROR_None)
         {
-            // TODO: enable or disable this check
             GetAxes(rotator(Forward), X, Y, Z);
 
-            const TRACE_RESOLUTION = 8;
+            const TRACE_SAMPLE_COUNT = 8;
 
-            for (i = 0; i < TRACE_RESOLUTION; ++i)
+            for (i = 0; i < TRACE_SAMPLE_COUNT; ++i)
             {
-                AngleRadians = (float(i) / TRACE_RESOLUTION) * Pi;
+                AngleRadians = (float(i) / TRACE_SAMPLE_COUNT) * Pi;
 
                 TraceStart = vect(0, 0, 0);
                 TraceStart.Z = CollisionHeight;
@@ -520,7 +519,7 @@ function DHConstruction.ConstructionError GetProvisionalPosition(out vector OutL
                 TraceEnd = BaseLocation + QuatRotateVector(QuatFromRotator(rotator(X)), TraceEnd);
 
                 // Trace across the diameter of the collision cylinder
-                HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true);
+                HitActor = Trace(HitLocation, OtherHitNormal, TraceEnd, TraceStart, true);
 
                 if (HitActor != none && !HitActor.IsA('ROBulletWhipAttachment') && !HitActor.IsA('Volume'))
                 {
@@ -531,7 +530,7 @@ function DHConstruction.ConstructionError GetProvisionalPosition(out vector OutL
                 // Trace down from the top of the cylinder to the bottom
                 TraceEnd = TraceStart - (Z * (CollisionHeight + class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.FloatToleranceInMeters)));
 
-                HitActor = Trace(HitLocation, HitNormal, TraceEnd, TraceStart, false);
+                HitActor = Trace(HitLocation, OtherHitNormal, TraceEnd, TraceStart, false);
 
                 if (HitActor == none)
                 {
@@ -546,24 +545,24 @@ function DHConstruction.ConstructionError GetProvisionalPosition(out vector OutL
                         break;
                     }
 
-                    HitNormalSum += HitNormal;
+                    HitNormalAverage += OtherHitNormal;
                 }
             }
         }
 
         if (E.Type == ERROR_None)
         {
-            HitNormalSum.X /= TRACE_RESOLUTION;
-            HitNormalSum.Y /= TRACE_RESOLUTION;
-            HitNormalSum.Z /= TRACE_RESOLUTION;
+            HitNormalAverage.X /= TRACE_SAMPLE_COUNT;
+            HitNormalAverage.Y /= TRACE_SAMPLE_COUNT;
+            HitNormalAverage.Z /= TRACE_SAMPLE_COUNT;
         }
         else
         {
-            HitNormalSum = vect(0, 0, 1);
+            HitNormalAverage = vect(0, 0, 1);
         }
 
         // Now check the groundslope again.
-        GroundSlopeDegrees = class'UUnits'.static.RadiansToDegrees(Acos(HitNormalSum dot vect(0, 0, 1)));
+        GroundSlopeDegrees = class'UUnits'.static.RadiansToDegrees(Acos(HitNormalAverage dot vect(0, 0, 1)));
 
         if (E.Type == ERROR_None && GroundSlopeDegrees >= ConstructionClass.default.GroundSlopeMaxInDegrees)
         {
@@ -571,11 +570,18 @@ function DHConstruction.ConstructionError GetProvisionalPosition(out vector OutL
             E.Type = ERROR_TooSteep;
         }
 
+        // If we're aligning to terrain, set HitNormal to the HtNormalAverage
+        // calculated from the circumfrencial traces.
+        if (ConstructionClass.default.bShouldAlignToGround)
+        {
+            HitNormal = HitNormalAverage;
+        }
+
         if (ConstructionClass.default.bInheritsOwnerRotation)
         {
             Forward = Normal(vector(PlayerOwner.CalcViewRotation));
-            Left = Forward cross HitNormalSum;
-            Forward = HitNormalSum cross Left;
+            Left = Forward cross HitNormal;
+            Forward = HitNormal cross Left;
         }
         else
         {
