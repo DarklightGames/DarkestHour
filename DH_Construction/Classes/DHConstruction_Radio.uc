@@ -52,12 +52,7 @@ simulated function OnBroken()
     DestroyArtilleryTrigger();
 }
 
-function StaticMesh GetConstructedStaticMesh()
-{
-    return default.TeamStaticMeshes[GetTeamIndex()];
-}
-
-function static StaticMesh GetProxyStaticMesh(DHConstruction.Context Context)
+static function StaticMesh GetConstructedStaticMesh(DHConstruction.Context Context)
 {
     return default.TeamStaticMeshes[Context.TeamIndex];
 }

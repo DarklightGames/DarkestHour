@@ -7,21 +7,7 @@ class DHConstruction_Resupply_Vehicles extends DHConstruction_Resupply;
 
 #exec OBJ LOAD FILE=../StaticMeshes/DH_Construction_stc.usx
 
-// TODO: isn't this just getconstructedSM?
-function UpdateAppearance()
-{
-    switch (GetTeamIndex())
-    {
-        case AXIS_TEAM_INDEX:
-            SetStaticMesh(StaticMesh'DH_Construction_stc.Ammo.GER_AT_Ammo_Box');
-        case ALLIES_TEAM_INDEX:
-            SetStaticMesh(StaticMesh'DH_Construction_stc.Ammo.USA_AT_Ammo_Box');
-        default:
-            break;
-    }
-}
-
-function static StaticMesh GetProxyStaticMesh(DHConstruction.Context Context)
+static function StaticMesh GetConstructedStaticMesh(DHConstruction.Context Context)
 {
     switch (Context.TeamIndex)
     {
@@ -33,7 +19,7 @@ function static StaticMesh GetProxyStaticMesh(DHConstruction.Context Context)
             break;
     }
 
-    return super.GetProxyStaticMesh(Context);
+    return super.GetConstructedStaticMesh(Context);
 }
 
 defaultproperties

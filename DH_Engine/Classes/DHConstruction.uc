@@ -634,7 +634,7 @@ function UpdateAppearance()
 {
     if (IsConstructed())
     {
-        SetStaticMesh(GetConstructedStaticMesh());
+        SetStaticMesh(static.GetConstructedStaticMesh(GetContext()));
         SetCollision(true, true, true);
         KSetBlockKarma(true);
     }
@@ -654,7 +654,7 @@ function UpdateAppearance()
 
 function StaticMesh GetTatteredStaticMesh();
 
-function StaticMesh GetConstructedStaticMesh()
+static function StaticMesh GetConstructedStaticMesh(DHConstruction.Context Context)
 {
     return default.StaticMesh;
 }
@@ -819,7 +819,7 @@ function static UpdateProxy(DHConstructionProxy CP)
 
 function static StaticMesh GetProxyStaticMesh(DHConstruction.Context Context)
 {
-    return default.StaticMesh;
+    return static.GetConstructedStaticMesh(Context);
 }
 
 function static vector GetPlacementOffset(DHConstruction.Context Context)
@@ -946,6 +946,7 @@ simulated function Context GetContext()
 
     Context.TeamIndex = GetTeamIndex();
     Context.LevelInfo = LevelInfo;
+    Context.GroundActor = Owner;
 
     return Context;
 }
@@ -1047,6 +1048,7 @@ defaultproperties
     TerrainScaleMax=256.0
     RotationSnapAngle=16384
     bInheritsOwnerRotation=true
+    bShouldAlignToGround=true
 
     // Stagnation
     bCanDieOfStagnation=true

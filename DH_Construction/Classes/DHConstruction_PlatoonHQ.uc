@@ -106,9 +106,9 @@ simulated state Broken
     }
 }
 
-function StaticMesh GetConstructedStaticMesh()
+static function StaticMesh GetConstructedStaticMesh(DHConstruction.Context Context)
 {
-    switch (GetTeamIndex())
+    switch (Context.TeamIndex)
     {
         case AXIS_TEAM_INDEX:
             return StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent';
@@ -136,17 +136,6 @@ function StaticMesh GetStageStaticMesh(int StageIndex)
             return StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent_unpacked';
         case ALLIES_TEAM_INDEX:
             return StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent_unpacked';
-    }
-}
-
-function static StaticMesh GetProxyStaticMesh(DHConstruction.Context Context)
-{
-    switch (Context.TeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            return StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent';
-        case ALLIES_TEAM_INDEX:
-            return StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent';
     }
 }
 
@@ -211,7 +200,6 @@ defaultproperties
     SupplyCost=1000
 
     // Placement
-    bShouldAlignToGround=true
     bCanPlaceIndoors=false
     bCanPlaceInObjective=false
     DuplicateFriendlyDistanceInMeters=250

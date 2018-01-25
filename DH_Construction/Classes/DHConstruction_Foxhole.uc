@@ -89,17 +89,17 @@ static function float GetTerrainScale(TerrainInfo TI)
 
 static function bool IsTerrainScaleLarge(TerrainInfo TI)
 {
-    return GetTerrainScale(TI) > default.LargeTerrainScaleThreshold;
+    return TI != none && GetTerrainScale(TI) > default.LargeTerrainScaleThreshold;
 }
 
-function StaticMesh GetConstructedStaticMesh()
+static function StaticMesh GetConstructedStaticMesh(DHConstruction.Context Context)
 {
-    if (IsTerrainScaleLarge(TerrainInfo))
+    if (IsTerrainScaleLarge(TerrainInfo(Context.GroundActor)))
     {
-        return LargeTerrainScaleStaticMesh;
+        return default.LargeTerrainScaleStaticMesh;
     }
 
-    return super.GetConstructedStaticMesh();
+    return super.GetConstructedStaticMesh(Context);
 }
 
 simulated event Destroyed()
