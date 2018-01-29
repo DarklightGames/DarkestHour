@@ -1771,7 +1771,7 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
     RP.SetTeamIndex(P.GetTeamNum());
     RP.SquadIndex = PRI.SquadIndex;
     RP.RallyPointIndex = RallyPointIndex;
-    RP.SpawnsRemaining = GetSquadRallyPointInitialSpawns(P.GetTeamNum(), PRI.SquadMemberIndex);
+    RP.SpawnsRemaining = GetSquadRallyPointInitialSpawns(P.GetTeamNum(), PRI.SquadIndex);
 
     RallyPoints[RallyPointIndex] = RP;
 
