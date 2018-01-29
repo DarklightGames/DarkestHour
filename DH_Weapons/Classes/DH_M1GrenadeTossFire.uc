@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_M1GrenadeTossFire extends DHThrownExplosiveFire;
@@ -13,6 +13,5 @@ defaultproperties
     MinimumThrowSpeed=100.0
     MaximumThrowSpeed=500.0
     SpeedFromHoldingPerSec=800.0
-    PreFireAnim="Pre_Fire"
     FireAnim="Toss"
 }

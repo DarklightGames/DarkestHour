@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_WHTanker extends DH_HeerTankCrew;
@@ -11,7 +11,7 @@ defaultproperties
     AltName="Panzerbesatzung"
     Article="a "
     PluralName="Tank Crewmen"
-    SleeveTexture=texture'Weapons1st_tex.Arms.GermanTankerSleeves'
+    SleeveTexture=Texture'Weapons1st_tex.Arms.GermanTankerSleeves'
     DetachedArmClass=class'ROEffects.SeveredArmGerTanker'
     DetachedLegClass=class'ROEffects.SeveredLegGerTanker'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon')

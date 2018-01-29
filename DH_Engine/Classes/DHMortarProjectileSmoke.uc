@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHMortarProjectileSmoke extends DHMortarProjectile
@@ -43,8 +43,8 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
 defaultproperties
 {
     SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_Grenade'
-    SmokeIgniteSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
-    SmokeLoopSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
+    SmokeIgniteSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
+    SmokeLoopSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
     SmokeSoundDuration=33.0
     SoundVolume=255
     SoundRadius=200.0

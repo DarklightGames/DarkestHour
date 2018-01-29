@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_Stug3GDestroyer_Late_Snow extends DH_Stug3GDestroyer_Late;
@@ -9,10 +9,11 @@ class DH_Stug3GDestroyer_Late_Snow extends DH_Stug3GDestroyer_Late;
 
 defaultproperties
 {
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Stug3.stug3g_destlate'
-    Skins(0)=texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_body_snow'
-    Skins(1)=texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_armor_snow'
-    DestroyedMeshSkins(0)=Combiner'DH_VehiclesGE_tex3.Destroyed.stug3g_snow_dest' // don't have a destroyed mesh for whitewashed late StuG, so just re-skin the summer camo model
-    DestroyedMeshSkins(1)=Combiner'DH_VehiclesGE_tex3.Destroyed.stug3g_snowarmor_dest'
-    CannonSkins(0)=texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_body_snow'
+    Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_body_snow'
+    Skins(1)=Texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_armor_snow'
+    Skins(2)=Texture'DH_VehiclesGE_tex3.Treads.Stug3_treads_snow'
+    Skins(3)=Texture'DH_VehiclesGE_tex3.Treads.Stug3_treads_snow'
+    CannonSkins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_body_snow'
+    DestroyedMeshSkins(0)=combiner'DH_VehiclesGE_tex3.Destroyed.stug3g_snow_dest'
+    DestroyedMeshSkins(1)=combiner'DH_VehiclesGE_tex3.Destroyed.stug3g_snowarmor_dest'
 }

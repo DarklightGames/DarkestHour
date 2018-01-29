@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHCannonShellHVAP extends DHCannonShell
@@ -10,6 +10,7 @@ defaultproperties
 {
     RoundType=RT_HVAP
     bShatterProne=true
+    SpeedFudgeScale=0.4
     ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
     CoronaClass=class'DH_Effects.DHShellTracer_Red'
 }

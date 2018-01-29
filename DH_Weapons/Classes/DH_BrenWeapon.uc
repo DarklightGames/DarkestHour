@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_BrenWeapon extends DHBipodAutoWeapon;
@@ -12,7 +12,7 @@ simulated function ToggleFireMode()
 {
     super.ToggleFireMode();
 
-    PlaySound(sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01',, 2.0);
+    PlaySound(Sound'Inf_Weapons_Foley.stg44.stg44_firemodeswitch01',, 2.0);
 }
 
 defaultproperties

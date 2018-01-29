@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHMGSteam extends ROMGSteam;
@@ -25,7 +25,7 @@ defaultproperties
         SizeScale(0)=(RelativeTime=1.0,RelativeSize=16.0) // different
         StartSizeRange=(X=(Min=1.5,Max=4.0),Y=(Min=1.5,Max=4.0),Z=(Min=1.5,Max=4.0)) // different
         DrawStyle=PTDS_AlphaBlend
-        Texture=texture'Effects_Tex.explosions.DSmoke_2'
+        Texture=Texture'Effects_Tex.explosions.DSmoke_2'
         SecondsBeforeInactive=0.0
         LifetimeRange=(Min=2.0)
         StartVelocityRange=(Z=(Min=8.0,Max=12.0)) // added

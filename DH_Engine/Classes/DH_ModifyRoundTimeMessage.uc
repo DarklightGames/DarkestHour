@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_ModifyRoundTimeMessage extends ROCriticalMessage
@@ -39,7 +39,7 @@ static simulated function ClientReceive(PlayerController P, optional int Switch,
 
 defaultproperties
 {
-    Sound=sound'Miscsounds.Music.notify_drum'
+    Sound=Sound'Miscsounds.Music.notify_drum'
     IncreasedText="increased"
     DecreasedText="decreased"
     ChangedText="changed"

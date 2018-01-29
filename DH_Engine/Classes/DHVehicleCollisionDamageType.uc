@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHVehicleCollisionDamageType extends ROWeaponDamageType
@@ -8,7 +8,7 @@ class DHVehicleCollisionDamageType extends ROWeaponDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt_tex.deathicons.mine'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.mine'
     APCDamageModifier=0.2
     VehicleDamageModifier=0.5
     TreadDamageModifier=0.75

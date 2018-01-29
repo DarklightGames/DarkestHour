@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class ArrayList_Object extends Object;
@@ -9,6 +9,16 @@ var array<Object> Items;
 function Add(Object Item)
 {
     Items[Items.Length] = Item;
+}
+
+function Concatenate(ArrayList_Object NewItems)
+{
+    local int i;
+
+    for (i = 0; i < NewItems.Size(); ++i)
+    {
+        Add(NewItems.Get(i));
+    }
 }
 
 function AddAtIndex(int Index, Object Item)
@@ -68,7 +78,19 @@ function int LastIndexOf(Object Item)
     return -1;
 }
 
-function Remove(int Index)
+function Remove(Object Item)
+{
+    local int i;
+
+    i = IndexOf(Item);
+
+    if (i >= 0)
+    {
+        RemoveAt(i);
+    }
+}
+
+function RemoveAt(int Index)
 {
     Items.Remove(Index, 1);
 }

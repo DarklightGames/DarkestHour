@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHGUITeamSelection extends ROGUITeamSelection;
@@ -71,20 +71,23 @@ function UpdateTeamCounts()
 {
     local DHGameReplicationInfo DHGRI;
     local string AlliedStr, AxisStr;
+    local int TeamSizes[2];
 
-    if (GRI != none)
+    DHGRI = DHGameReplicationInfo(GRI);
+
+    if (DHGRI != none)
     {
-        DHGRI = DHGameReplicationInfo(GRI);
+        DHGRI.GetTeamSizes(TeamSizes);
+
+        if (DHGRI.CurrentAlliedToAxisRatio != 0.5)
+        {
+            AxisStr = " (" $ DHGRI.GetTeamScaleString(AXIS_TEAM_INDEX) @ SizeBonusText $ ")";
+            AlliedStr = " (" $ DHGRI.GetTeamScaleString(ALLIES_TEAM_INDEX) @ SizeBonusText $ ")";
+        }
     }
 
-    if (DHGRI != none && DHGRI.CurrentAlliedToAxisRatio != 0.5)
-    {
-        AxisStr = " (" $ DHGRI.GetTeamScaleString(AXIS_TEAM_INDEX) @ SizeBonusText $ ")";
-        AlliedStr = " (" $ DHGRI.GetTeamScaleString(ALLIES_TEAM_INDEX) @ SizeBonusText $ ")";
-    }
-
-    l_TeamCount[AXIS_TEAM_INDEX].Caption = "" $ getTeamCount(AXIS_TEAM_INDEX) $ UnitsText $ AxisStr;
-    l_TeamCount[ALLIES_TEAM_INDEX].Caption = "" $ getTeamCount(ALLIES_TEAM_INDEX) $ UnitsText $ AlliedStr;
+    l_TeamCount[AXIS_TEAM_INDEX].Caption = "" $ TeamSizes[AXIS_TEAM_INDEX] $ UnitsText $ AxisStr;
+    l_TeamCount[ALLIES_TEAM_INDEX].Caption = "" $ TeamSizes[ALLIES_TEAM_INDEX] $ UnitsText $ AlliedStr;
 }
 
 function SetBackground()
@@ -113,7 +116,7 @@ function SelectTeamSuccessfull()
     if (SelectedTeam != -1)
     {
         PC.ForcedTeamSelectOnRoleSelectPage = SelectedTeam;
-
+        PC.DeployMenuStartMode = MODE_Map;
         Controller.ReplaceMenu("DH_Interface.DHDeployMenu");
     }
     else
@@ -139,7 +142,7 @@ function bool InternalOnClick(GUIComponent Sender)
             break;
 
         case b_Settings:
-            Controller.OpenMenu("DH_Interface.DHSettingsPage_new");
+            Controller.OpenMenu("DH_Interface.DHSettingsPage");
             break;
 
         case b_TeamSelect[AXIS_TEAM_INDEX]:
@@ -157,19 +160,37 @@ function SelectTeam(int Team)
 {
     SelectedTeam = Team;
 
+    // Important check
+    if (PC == none && GRI == none)
+    {
+        return;
+    }
+
+    // Check to make sure we actually can "change" teams
+    if (PC.PlayerReplicationInfo != none &&
+        PC.PlayerReplicationInfo.Team != none &&
+        PC.PlayerReplicationInfo.Team.TeamIndex != Team &&
+        PC.NextChangeTeamTime >= GRI.ElapsedTime)
+    {
+        // Trying to change teams, but recently did (give an error)
+        Controller.ShowQuestionDialog(Repl(class'DHDeployMenu'.default.CantChangeTeamYetText, "{s}", PC.NextChangeTeamTime - GRI.ElapsedTime), QBTN_OK);
+
+        return;
+    }
+
     SetButtonsState(true);
 
     if (Team == -1) // Spectate
     {
-        PC.ServerSetPlayerInfo(254, 255, 0, 0, 255, 255, 255);
+        PC.ServerSetPlayerInfo(254, 255, 0, 0, -1, -1);
     }
     else if (Team == -2) // Auto-select
     {
-        PC.ServerSetPlayerInfo(250, 255, 0, 0, 255, 255, 255);
+        PC.ServerSetPlayerInfo(250, 255, 0, 0, -1, -1);
     }
     else // Allies or Axis
     {
-        PC.ServerSetPlayerInfo(Team, 255, 0, 0, 255, 255, 255);
+        PC.ServerSetPlayerInfo(Team, 255, 0, 0, -1, -1);
     }
 }
 
@@ -209,11 +230,7 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
 
         SetButtonsState(false);
 
-        if (Controller != none)
-        {
-            Controller.OpenMenu(Controller.QuestionMenuClass);
-            GUIQuestionPage(Controller.TopPage()).SetupQuestion(ErrorMessage, QBTN_Ok, QBTN_Ok);
-        }
+        Controller.ShowQuestionDialog(ErrorMessage, QBTN_OK, QBTN_OK);
     }
 }
 
@@ -222,10 +239,10 @@ defaultproperties
     UnitsText=" players"
     SizeBonusText="army size"
 
-    BackgroundTextures(0)=texture'DH_GUI_Tex.Menu.Teamselect'
-    BackgroundTextures(1)=texture'DH_GUI_Tex.Menu.TeamselectB'
-    BackgroundTextures(2)=texture'DH_GUI_Tex.Menu.TeamselectC'
-    BackgroundTextures(3)=texture'DH_GUI_Tex.Menu.TeamselectD'
+    BackgroundTextures(0)=Texture'DH_GUI_Tex.Menu.Teamselect'
+    BackgroundTextures(1)=Texture'DH_GUI_Tex.Menu.TeamselectB'
+    BackgroundTextures(2)=Texture'DH_GUI_Tex.Menu.TeamselectC'
+    BackgroundTextures(3)=Texture'DH_GUI_Tex.Menu.TeamselectD'
 
     Begin Object Class=GUILabel Name=TeamsCount
         Caption="? players"
@@ -357,7 +374,7 @@ defaultproperties
 
     // Background
     Begin Object Class=BackgroundImage Name=PageBackground
-        Image=texture'DH_GUI_Tex.Menu.Teamselect'
+        Image=Texture'DH_GUI_Tex.Menu.Teamselect'
         ImageStyle=ISTY_Scaled
         ImageRenderStyle=MSTY_Alpha
         X1=0

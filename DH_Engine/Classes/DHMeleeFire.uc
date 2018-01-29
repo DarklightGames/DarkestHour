@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHMeleeFire extends DHWeaponFire
@@ -8,7 +8,7 @@ class DHMeleeFire extends DHWeaponFire
 
 const SoundRadius = 32.0;
 
-var   protected float   BehindDamageFactor; // damage factor when player hits another from behind
+var   protected float   VulnerableDamageFactor; // damage factor when instigator hits victim from behind or if victim is crawling
 var   protected float   RearAngleArc;       // angle in Unreal rotational units for a player's rear (used to calculate rear melee hits)
 
 // From ROMeleeFire
@@ -42,6 +42,7 @@ function DoTrace(vector Start, rotator Dir)
     local array<int>        HitPoints;
     local array<int>        DamageHitPoint;
     local int               i;
+    local Material          HitMaterial;
 
     if (Instigator == none || Weapon == none)
     {
@@ -54,7 +55,7 @@ function DoTrace(vector Start, rotator Dir)
     End = Start + (10000.0 * X);
 
     // Do precision hit point trace to see if we hit a player or something else
-    Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start);
+    Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, Start,,, HitMaterial);
 
     // If we hit nothing or it was out of trace range, try tracing to the 4 extremes of our melee attack spread
     if (Other == none || VSizeSquared(Start - HitLocation) > GetTraceRangeSquared())
@@ -83,7 +84,7 @@ function DoTrace(vector Start, rotator Dir)
 
             End = TempVec + (10000.0 * X);
 
-            Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, TempVec);
+            Other = Instigator.HitPointTrace(HitLocation, HitNormal, End, HitPoints, TempVec,,, HitMaterial);
 
             if (Other != none)
             {
@@ -101,7 +102,7 @@ function DoTrace(vector Start, rotator Dir)
     // Still hit nothing within trace range, so try a normal trace
     if (Other == none)
     {
-        Other = Instigator.Trace(HitLocation, HitNormal, End, Start, true);
+        Other = Instigator.Trace(HitLocation, HitNormal, End, Start, true,, HitMaterial);
 
         if (Other != none && VSizeSquared(Start - HitLocation) > GetTraceRangeSquared())
         {
@@ -115,10 +116,8 @@ function DoTrace(vector Start, rotator Dir)
         return;
     }
 
-    HitPawn = ROPawn(Other);
-
     // Calculate damage if it's something we could hurt (no damage to world geometry unless it's a destroyable mesh)
-    if (!Other.bWorldGeometry || Other.IsA('RODestroyableStaticMesh'))
+    if (!Other.bWorldGeometry || Other.IsA('RODestroyableStaticMesh') || Other.IsA('DHConstruction'))
     {
         Scale = (FClamp(HoldTime, MinHoldTime, FullHeldTime) - MinHoldTime) / (FullHeldTime - MinHoldTime);
 
@@ -134,17 +133,20 @@ function DoTrace(vector Start, rotator Dir)
         }
     }
 
+    HitPawn = ROPawn(Other);
+
     // Hit another player (note we don't make weapon attachment play hit effects, as blood effects etc get handled in ProcessLocationalDamage/TakeDamage)
     if (HitPawn != none)
     {
          if (!HitPawn.bDeleteMe)
          {
-            // Increase damage if striking from behind
+            // Calculate the rotational difference to determine if the instigator is behind the victim
             RotationDifference = Normalize(Other.Rotation) - Normalize(Instigator.Rotation);
 
-            if (Abs(RotationDifference.Yaw) <= RearAngleArc)
+            // If the victim is crawling or is being attacked from behind, apply larger damage factor
+            if (HitPawn.bIsCrawling || Abs(RotationDifference.Yaw) <= RearAngleArc)
             {
-                Damage *= BehindDamageFactor;
+                Damage *= VulnerableDamageFactor;
             }
 
             if (HitPoints.Length > 0)
@@ -156,6 +158,7 @@ function DoTrace(vector Start, rotator Dir)
                 DamageHitPoint[0] = 0;
             }
 
+            // Apply hit point multiplier (this can reduce damage on areas such as limbs, hands, etc.)
             HitPawn.ProcessLocationalDamage(int(Damage), Instigator, HitLocation, MomentumTransfer * X, ThisDamageType, DamageHitPoint);
 
             if (Weapon.bBayonetMounted)
@@ -171,20 +174,30 @@ function DoTrace(vector Start, rotator Dir)
     // Hit something other than a player
     else
     {
-        if (!Other.bWorldGeometry || Other.IsA('RODestroyableStaticMesh')) // no damage to world geometry unless it's a destroyable mesh
+        if (!Other.bWorldGeometry || Other.IsA('RODestroyableStaticMesh') || Other.IsA('DHConstruction')) // no damage to world geometry unless it's a destroyable mesh
         {
             Other.TakeDamage(int(Damage), Instigator, HitLocation, MomentumTransfer * X, ThisDamageType);
         }
 
         if (Weapon.bBayonetMounted)
         {
-            Weapon.PlaySound(GroundStabSound, SLOT_None, FireVolume,, SoundRadius,, true);
+            Weapon.PlaySound(GetGroundStabSound(Other, HitMaterial), SLOT_None, FireVolume,, SoundRadius,, true);
         }
         else
         {
-            Weapon.PlaySound(GroundBashSound, SLOT_None, FireVolume,, SoundRadius,, true);
+            Weapon.PlaySound(GetGroundBashSound(Other, HitMaterial), SLOT_None, FireVolume,, SoundRadius,, true);
         }
     }
+}
+
+function Sound GetGroundStabSound(Actor HitActor, Material HitMaterial)
+{
+    return default.GroundStabSound;
+}
+
+function Sound GetGroundBashSound(Actor HitActor, Material HitMaterial)
+{
+    return default.GroundBashSound;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -361,33 +374,22 @@ function PlayFiring()
 function DoFireEffect()
 {
     local vector  StartTrace;
-    local rotator Aim, R;
+    local rotator Aim;
 
     if (Instigator != none)
     {
         Instigator.MakeNoise(1.0);
+
+        StartTrace = Instigator.Location + Instigator.EyePosition(); // the to-hit trace starts right in front of player's eye
+        Aim = AdjustAim(StartTrace, AimError);
+        Aim = rotator(vector(Aim) + (VRand() * FRand() * Spread));
+        DoTrace(StartTrace, Aim);
     }
-
-    // The to-hit trace always starts right in front of the eye
-    StartTrace = Instigator.Location + Instigator.EyePosition();
-    Aim = AdjustAim(StartTrace, AimError);
-    R = rotator(vector(Aim) + (VRand() * FRand() * Spread));
-    DoTrace(StartTrace, R);
-}
-
-function float GetTraceRange()
-{
-    if (Weapon.bBayonetMounted)
-    {
-        return BayonetTraceRange;
-    }
-
-    return TraceRange;
 }
 
 function PlayFireEnd()
 {
-    if (Weapon != none)
+    if (Weapon != none && Weapon.Mesh != none)
     {
         if (Weapon.bBayonetMounted && Weapon.HasAnim(BayoFinishAnim))
         {
@@ -404,12 +406,22 @@ function PlayFireEnd()
     }
 }
 
+function float GetTraceRange()
+{
+    if (Weapon != none && Weapon.bBayonetMounted)
+    {
+        return BayonetTraceRange;
+    }
+
+    return TraceRange;
+}
+
 // Returns the trace range squared for cheaper comparisons
 function float GetTraceRangeSquared()
 {
-    if (Weapon.bBayonetMounted)
+    if (Weapon != none && Weapon.bBayonetMounted)
     {
-        return BayonetTraceRange*BayonetTraceRange;
+        return BayonetTraceRange * BayonetTraceRange;
     }
 
     return TraceRange * TraceRange;
@@ -422,31 +434,38 @@ function float MaxRange()
 
 defaultproperties
 {
-    BehindDamageFactor=3.0
+    bMeleeMode=true
+    bFireOnRelease=true
+    AmmoPerFire=0
+
+    FireRate=0.25
+    MinHoldtime=0.1
+    FullHeldTime=0.3
+    TraceRange=75.0
+    BayonetTraceRange=125.0
+    MeleeAttackSpread=8.0
     RearAngleArc=16000.0
+    MomentumTransfer=0.0 // was 100 in RO
 
     DamageMin=30
     DamageMax=40
-    BayonetDamageMin=35
-    BayonetDamageMax=50
-    MinHoldtime=0.1
-    FullHeldTime=0.3
-    MeleeAttackSpread=8.0
-    MomentumTransfer=0
+    BayonetDamageMin=38
+    BayonetDamageMax=52
+    VulnerableDamageFactor=3.0
 
-    FireRate=0.25
-    FireAnimRate=1.0
+    PlayerBashSound=SoundGroup'Inf_Weapons_Foley.melee.butt_hit'
+    PlayerStabSound=SoundGroup'Inf_Weapons_Foley.melee.bayo_hit'
+    GroundBashSound=SoundGroup'Inf_Weapons_Foley.melee.butt_hit_ground'
+    GroundStabSound=SoundGroup'Inf_Weapons_Foley.melee.bayo_hit_ground'
 
-    // From ROMeleeFire
-    bMeleeMode=true
-    bFireOnRelease=true
-    MaxHoldtime=0.0
-    AmmoPerFire=0
-    SpreadStyle=SS_Random
-    GroundStabSound=sound'Inf_Weapons_Foley.melee.bayo_hit_ground'
-    GroundBashSound=sound'Inf_Weapons_Foley.melee.butt_hit_ground'
-    PlayerStabSound=sound'Inf_Weapons_Foley.melee.bayo_hit'
-    PlayerBashSound=sound'Inf_Weapons_Foley.melee.butt_hit'
+    BashBackAnim="bash_pullback"
+    BashHoldAnim="bash_hold"
+    BashAnim="bash_attack"
+    BashFinishAnim="bash_return"
     FireEndAnim=none
     FireLoopAnim=none
+
+    // Bots
+    BotRefireRate=0.25
+    AimError=800.0
 }

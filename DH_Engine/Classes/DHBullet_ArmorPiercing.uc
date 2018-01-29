@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHBullet_ArmorPiercing extends DHAntiVehicleProjectile
@@ -11,17 +11,15 @@ const   MinPenetrateVelocity = 163;
 
 var     class<ROHitEffect>  ImpactEffect;
 var     class<ROBulletWhiz> WhizSoundEffect;
-var     class<DamageType>   MyVehicleDamage;
-
-var     int             WhizType;
-var     float           VehiclePenetrateSoundVolume;
-var     float           VehicleDeflectSoundVolume;
+var     int                 WhizType;
+var     float               VehiclePenetrateSoundVolume;
+var     float               VehicleDeflectSoundVolume;
 
 // Tracers
-var     class<Emitter>  TracerEffectClass;
-var     Emitter         TracerEffect;
-var     StaticMesh      DeflectedMesh;
-var     float           TracerPullback;
+var     class<Emitter>      TracerEffectClass;
+var     Emitter             TracerEffect;
+var     StaticMesh          DeflectedMesh;
+var     float               TracerPullback;
 
 // Modified to set tracer properties if this is a tracer bullet (from DHBullet)
 simulated function PostNetBeginPlay()
@@ -60,41 +58,31 @@ simulated singular function Touch(Actor Other)
 {
     local vector HitLocation, HitNormal;
 
-    // Added splash if projectile hits a fluid surface
     if (FluidSurfaceInfo(Other) != none)
     {
         CheckForSplash(Location);
     }
 
-    // Added bBlockHitPointTraces check here instead of doing it at the start of ProcessTouch()
-    // This is so a collision static mesh gets handled properly in ProcessTouch, as it will have bBlockHitPointTraces=false
     if (Other == none || (!Other.bProjTarget && !Other.bBlockActors) || !Other.bBlockHitPointTraces)
     {
         return;
     }
 
-    // We use TraceThisActor do a simple line check against the actor we've hit, to get an accurate HitLocation to pass to ProcessTouch()
-    // It's more accurate than using our current location as projectile has often travelled a little further by the time this event gets called
-    // But if that trace returns true then it somehow didn't hit the actor, so we fall back to using our current location as the HitLocation
-    // Also skip trace & use location as HitLocation if our velocity is somehow zero (collided immediately on launch?) or we hit a Mover actor
     if (Velocity == vect(0.0, 0.0, 0.0) || Other.IsA('Mover')
         || Other.TraceThisActor(HitLocation, HitNormal, Location, Location - (2.0 * Velocity), GetCollisionExtent()))
     {
         HitLocation = Location;
     }
 
-    // Special handling for hit on a collision mesh actor - switch hit actor to CM's owner & proceed as if we'd hit that actor
     if (Other.IsA('DHCollisionMeshActor'))
     {
         if (DHCollisionMeshActor(Other).bWontStopBullet)
         {
-            return; // exit, doing nothing, if col mesh actor is set not to stop a bullet
+            return;
         }
 
-        Other = Other.Owner; // switch hit actor
+        Other = Other.Owner;
 
-        // If col mesh represents a vehicle, which would normally get a HitWall() event instead of Touch, then call HitWall on the vehicle & exit
-        // We first match projectile's location to our HitLocation, as we can't pass HitLocation to HitWall & it always uses current location
         if (ROVehicle(Other) != none)
         {
             SetLocation(HitLocation);
@@ -104,21 +92,17 @@ simulated singular function Touch(Actor Other)
         }
     }
 
-    // Now call ProcessTouch(), which is the where the class-specific Touch functionality gets handled
-    // Record LastTouched to prevent possible recursive calls & then clear it after
     LastTouched = Other;
     ProcessTouch(Other, HitLocation);
     LastTouched = none;
 
-    // On a net client call ClientSideTouch() if we hit a pawn with an authority role on the client (in practice this can only be a ragdoll corpse)
-    // TODO: probably remove this & empty out ClientSideTouch() as ProcessTouch() will get called clientside anyway & is much more class-specific & sophisticated
     if (Role < ROLE_Authority && Other.Role == ROLE_Authority && Pawn(Other) != none && Velocity != vect(0.0, 0.0, 0.0))
     {
         ClientSideTouch(Other, HitLocation);
     }
 }
 
-// From DHBullet
+// From DHBullet, just with a penetration check if hit a vehicle weapon, & using differently named variables/functions from different class inheritance
 simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
     local DHPawn       HitPlayer, WhizzedPlayer;
@@ -164,7 +148,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     // Handle hit on a vehicle weapon
     if (Other.IsA('ROVehicleWeapon'))
     {
-        bPenetratedVehicle = !HasDeflected() && PenetrateVehicleWeapon(ROVehicleWeapon(Other));
+        bPenetratedVehicle = !HasDeflected() && (!Other.IsA('DHVehicleCannon') ||
+            DHVehicleCannon(Other).ShouldPenetrate(self, HitLocation, Direction, GetMaxPenetration(LaunchLocation, HitLocation)));
 
         PlayVehicleHitEffects(bPenetratedVehicle, HitLocation, -Direction);
 
@@ -289,7 +274,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
                     // A blocking actor is in the way, so we didn't really hit the player (but ignore anything ProcessTouch would normally ignore)
                     if (A != InstigatorPlayer && A.Base != InstigatorPlayer && A.Owner != InstigatorPlayer && A.Owner != Instigator
-                        && !A.bDeleteMe && !(Other.IsA('Projectile') && !Other.bProjTarget) && A != HitPlayer)
+                        && !A.bDeleteMe && !(A.IsA('Projectile') && !A.bProjTarget) && A != HitPlayer)
                     {
                         HitPlayer = none;
                         break;
@@ -354,7 +339,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     Destroy();
 }
 
-// From DHBullet
+// From DHBullet, just using different penetration check if hit a vehicle, & using differently named variables/functions from different class inheritance
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
     local ROVehicle        HitVehicle;
@@ -388,7 +373,11 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     // Handle hit on a vehicle
     if (HitVehicle != none)
     {
-        bPenetratedVehicle = !HasDeflected() && PenetrateVehicle(HitVehicle);
+        if (!HasDeflected())
+        {
+            AV = DHArmoredVehicle(HitVehicle);
+            bPenetratedVehicle = AV == none || AV.ShouldPenetrate(self, Location, Normal(Velocity), GetMaxPenetration(LaunchLocation, Location));
+        }
 
         PlayVehicleHitEffects(bPenetratedVehicle, Location, HitNormal);
     }
@@ -406,12 +395,10 @@ simulated function HitWall(vector HitNormal, Actor Wall)
             // Skip calling TakeDamage if we hit a vehicle but failed to penetrate - except check for possible hit on any exposed gunsight optics
             if (HitVehicle != none && !bPenetratedVehicle)
             {
-                AV = DHArmoredVehicle(HitVehicle);
-
                 // Hit exposed gunsight optics
                 if (AV != none && AV.GunOpticsHitPointIndex >= 0 && AV.GunOpticsHitPointIndex < AV.NewVehHitpoints.Length
                     && AV.NewVehHitpoints[AV.GunOpticsHitPointIndex].NewHitPointType == NHP_GunOptics
-                    && AV.IsNewPointShot(Location, MomentumTransfer * Normal(Velocity), 1.0, AV.GunOpticsHitPointIndex)
+                    && AV.IsNewPointShot(Location, MomentumTransfer * Normal(Velocity), AV.GunOpticsHitPointIndex)
                     && AV.Cannon != none && DHVehicleCannonPawn(AV.Cannon.WeaponPawn) != none)
                 {
                     DHVehicleCannonPawn(AV.Cannon.WeaponPawn).DamageCannonOverlay();
@@ -427,18 +414,10 @@ simulated function HitWall(vector HitNormal, Actor Wall)
                     }
                 }
             }
-            else
+            else if (Vehicle(Wall) != none || ROVehicleWeapon(Wall) != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
             {
                 UpdateInstigator();
-
-                if (ROVehicle(Wall) != none) // have to use special damage for vehicles, otherwise it doesn't register for some reason
-                {
-                    Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyVehicleDamage);
-                }
-                else if (Mover(Wall) != none || RODestroyableStaticMesh(Wall) != none || Vehicle(Wall) != none || ROVehicleWeapon(Wall) != none)
-                {
-                    Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyDamageType);
-                }
+                Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyDamageType);
             }
 
             MakeNoise(1.0);
@@ -471,18 +450,6 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     {
         Destroy();
     }
-}
-
-// Modified to run penetration calculations on a vehicle cannon (e.g. turret), but damage any other vehicle weapon automatically
-simulated function bool PenetrateVehicleWeapon(VehicleWeapon VW)
-{
-    return DHVehicleCannon(VW) == none || DHVehicleCannon(VW).ShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location));
-}
-
-// Modified to run penetration calculations on an armored vehicle, but damage any other vehicle automatically
-simulated function bool PenetrateVehicle(ROVehicle V)
-{
-    return DHArmoredVehicle(V) == none || DHArmoredVehicle(V).ShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location));
 }
 
 // From DHBullet
@@ -562,24 +529,23 @@ simulated function Destroyed()
 
 defaultproperties
 {
+    WhizType=1
     WhizSoundEffect=class'DH_Effects.DHBulletWhiz'
     ImpactEffect=class'DH_Effects.DHBulletHitEffect'
+    ShellHitWaterEffectClass=class'ROEffects.ROBulletHitWaterEffect'
     ShellHitVehicleEffectClass=class'DH_Effects.DHBulletPenetrateArmorEffect' // custom class with much smaller penetration effects than shell (PTRD uses 'TankAPHitPenetrateSmall')
-    VehicleHitSound=sound'ProjectileSounds.PTRD_penetrate'
+    VehicleHitSound=Sound'ProjectileSounds.PTRD_penetrate'
     VehiclePenetrateSoundVolume=5.5
     ShellDeflectEffectClass=class'ROEffects.ROBulletHitMetalArmorEffect'
-    VehicleDeflectSound=sound'PTRD_deflect'
+    VehicleDeflectSound=Sound'PTRD_deflect'
     VehicleDeflectSoundVolume=5.5
-    ShellHitWaterEffectClass=class'ROEffects.ROBulletHitWaterEffect'
 
     DrawType=DT_None
-    WhizType=1
     MaxSpeed=40000.0
     MomentumTransfer=100.0
     LifeSpan=5.0
     DestroyTime=0.1
     bBotNotifyIneffective=false
-    MyVehicleDamage=class'ROVehicleDamageType'
 
     // Tracer properties (won't affect ordinary bullet):
     DrawScale=2.0

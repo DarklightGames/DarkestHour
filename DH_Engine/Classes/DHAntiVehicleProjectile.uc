@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHAntiVehicleProjectile extends DHBallisticProjectile
@@ -27,7 +27,6 @@ var     bool            bExplodesOnArmor;        // shell explodes on vehicle ar
 var     bool            bExplodesOnHittingBody;  // shell explodes on hitting a human body (otherwise punches through & continues in flight)
 var     bool            bExplodesOnHittingWater; // shell explodes on hitting a WaterVolume
 var     bool            bBotNotifyIneffective;   // notify bot of an ineffective attack on target
-var     bool            bIsAlliedShell;          // only used in debugging, so info is shown in metric or imperial
 
 var     array<sound>    ExplosionSound;          // sound of the round exploding (array for random selection)
 var     float           ExplosionSoundVolume;    // volume scale factor for the ExplosionSound (allows variance between shells, while keeping other sounds at same volume)
@@ -58,6 +57,7 @@ var     float           PenetrationMag;          // different for AP and HE shel
 
 // Debugging
 var     bool            bDebuggingText;          // show screen debugging text
+var     bool            bDebugInImperial;        // debugging distance/speed is shown in yards/feet instead of metres
 var globalconfig bool   bDebugROBallistics;      // sets bDebugBallistics to true for getting the arrow pointers (added from DHBullet so bDebugBallistics can be set in a config file)
 
 // Variables from deprecated ROAntiVehicleProjectile class:
@@ -148,41 +148,41 @@ simulated function PostNetBeginPlay()
     }
 }
 
-// Matt: disabled no longer use delayed destruction stuff from the Super in ROAntiVehicleProjectile - it's far cleaner just to set a short LifeSpan on a server
+// Disabled no longer use delayed destruction stuff from the Super in ROAntiVehicleProjectile - it's far cleaner just to set a short LifeSpan on a server
 simulated function Tick(float DeltaTime)
 {
     Disable('Tick');
 }
 
-// Borrowed from AB: Just using a standard linear interpolation equation here
-simulated function float GetPenetration(vector Distance)
+// Borrowed from AB: just using a standard linear interpolation equation here
+simulated function float GetMaxPenetration(vector LaunchLocation, vector HitLocation)
 {
-    local float MeterDistance, PenetrationNumber;
+    local float DistanceMeters, MaxPenetration;
 
-    MeterDistance = VSize(Distance) / 60.352;
+    DistanceMeters = class'DHUnits'.static.UnrealToMeters(VSize(LaunchLocation - Location));
 
-    if      (MeterDistance < 100.0)   PenetrationNumber = (DHPenetrationTable[0] +  (100.0  - MeterDistance) * (DHPenetrationTable[0] - DHPenetrationTable[1])  / 100.0);
-    else if (MeterDistance < 250.0)   PenetrationNumber = (DHPenetrationTable[1] +  (250.0  - MeterDistance) * (DHPenetrationTable[0] - DHPenetrationTable[1])  / 150.0);
-    else if (MeterDistance < 500.0)   PenetrationNumber = (DHPenetrationTable[2] +  (500.0  - MeterDistance) * (DHPenetrationTable[1] - DHPenetrationTable[2])  / 250.0);
-    else if (MeterDistance < 750.0)   PenetrationNumber = (DHPenetrationTable[3] +  (750.0  - MeterDistance) * (DHPenetrationTable[2] - DHPenetrationTable[3])  / 250.0);
-    else if (MeterDistance < 1000.0)  PenetrationNumber = (DHPenetrationTable[4] +  (1000.0 - MeterDistance) * (DHPenetrationTable[3] - DHPenetrationTable[4])  / 250.0);
-    else if (MeterDistance < 1250.0)  PenetrationNumber = (DHPenetrationTable[5] +  (1250.0 - MeterDistance) * (DHPenetrationTable[4] - DHPenetrationTable[5])  / 250.0);
-    else if (MeterDistance < 1500.0)  PenetrationNumber = (DHPenetrationTable[6] +  (1500.0 - MeterDistance) * (DHPenetrationTable[5] - DHPenetrationTable[6])  / 250.0);
-    else if (MeterDistance < 1750.0)  PenetrationNumber = (DHPenetrationTable[7] +  (1750.0 - MeterDistance) * (DHPenetrationTable[6] - DHPenetrationTable[7])  / 250.0);
-    else if (MeterDistance < 2000.0)  PenetrationNumber = (DHPenetrationTable[8] +  (2000.0 - MeterDistance) * (DHPenetrationTable[7] - DHPenetrationTable[8])  / 250.0);
-    else if (MeterDistance < 2500.0)  PenetrationNumber = (DHPenetrationTable[9] +  (2500.0 - MeterDistance) * (DHPenetrationTable[8] - DHPenetrationTable[9])  / 500.0);
-    else if (MeterDistance < 3000.0)  PenetrationNumber = (DHPenetrationTable[10] + (3000.0 - MeterDistance) * (DHPenetrationTable[9] - DHPenetrationTable[10]) / 500.0);
-    else                              PenetrationNumber =  DHPenetrationTable[10];
+    if      (DistanceMeters < 100.0)   MaxPenetration = (DHPenetrationTable[0]  + (100.0  - DistanceMeters) * (DHPenetrationTable[0] - DHPenetrationTable[1])  / 100.0);
+    else if (DistanceMeters < 250.0)   MaxPenetration = (DHPenetrationTable[1]  + (250.0  - DistanceMeters) * (DHPenetrationTable[0] - DHPenetrationTable[1])  / 150.0);
+    else if (DistanceMeters < 500.0)   MaxPenetration = (DHPenetrationTable[2]  + (500.0  - DistanceMeters) * (DHPenetrationTable[1] - DHPenetrationTable[2])  / 250.0);
+    else if (DistanceMeters < 750.0)   MaxPenetration = (DHPenetrationTable[3]  + (750.0  - DistanceMeters) * (DHPenetrationTable[2] - DHPenetrationTable[3])  / 250.0);
+    else if (DistanceMeters < 1000.0)  MaxPenetration = (DHPenetrationTable[4]  + (1000.0 - DistanceMeters) * (DHPenetrationTable[3] - DHPenetrationTable[4])  / 250.0);
+    else if (DistanceMeters < 1250.0)  MaxPenetration = (DHPenetrationTable[5]  + (1250.0 - DistanceMeters) * (DHPenetrationTable[4] - DHPenetrationTable[5])  / 250.0);
+    else if (DistanceMeters < 1500.0)  MaxPenetration = (DHPenetrationTable[6]  + (1500.0 - DistanceMeters) * (DHPenetrationTable[5] - DHPenetrationTable[6])  / 250.0);
+    else if (DistanceMeters < 1750.0)  MaxPenetration = (DHPenetrationTable[7]  + (1750.0 - DistanceMeters) * (DHPenetrationTable[6] - DHPenetrationTable[7])  / 250.0);
+    else if (DistanceMeters < 2000.0)  MaxPenetration = (DHPenetrationTable[8]  + (2000.0 - DistanceMeters) * (DHPenetrationTable[7] - DHPenetrationTable[8])  / 250.0);
+    else if (DistanceMeters < 2500.0)  MaxPenetration = (DHPenetrationTable[9]  + (2500.0 - DistanceMeters) * (DHPenetrationTable[8] - DHPenetrationTable[9])  / 500.0);
+    else if (DistanceMeters < 3000.0)  MaxPenetration = (DHPenetrationTable[10] + (3000.0 - DistanceMeters) * (DHPenetrationTable[9] - DHPenetrationTable[10]) / 500.0);
+    else                               MaxPenetration =  DHPenetrationTable[10];
 
     if (NumDeflections > 0)
     {
-        PenetrationNumber = PenetrationNumber * 0.04;  // just for now, until pen is based on velocity
+        MaxPenetration = MaxPenetration * 0.04;
     }
 
-    return PenetrationNumber;
+    return MaxPenetration;
 }
 
-// Matt: modified to handle new collision mesh actor - if we hit a CM we switch hit actor to CM's owner & proceed as if we'd hit that actor
+// Modified to handle new collision mesh actor - if we hit a CM we switch hit actor to CM's owner & proceed as if we'd hit that actor
 // Also to do splash effects if projectile hits a fluid surface, which wasn't previously handled
 // Also re-factored generally to optimise, but original functionality unchanged
 simulated singular function Touch(Actor Other)
@@ -201,9 +201,9 @@ simulated singular function Touch(Actor Other)
     }
 
     // We use TraceThisActor do a simple line check against the actor we've hit, to get an accurate HitLocation to pass to ProcessTouch()
-    // It's more accurate than using our current location as projectile has often travelled a little further by the time this event gets called
+    // It's more accurate than using our current location as projectile has often travelled further by the time this event gets called
     // But if that trace returns true then it somehow didn't hit the actor, so we fall back to using our current location as the HitLocation
-    // Also skip trace & use location as HitLocation if our velocity is somehow zero (collided immediately on launch?) or we hit a Mover actor
+    // Also skip trace & use our location if velocity is zero (touching actor when projectile spawns) or hit a Mover actor (legacy, don't know why)
     if (Velocity == vect(0.0, 0.0, 0.0) || Other.IsA('Mover')
         || Other.TraceThisActor(HitLocation, HitNormal, Location, Location - (2.0 * Velocity), GetCollisionExtent()))
     {
@@ -284,7 +284,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
         // We hit a tank cannon (turret) but failed to penetrate its armor
         if (HitVehicleWeapon.IsA('DHVehicleCannon')
-            && !DHVehicleCannon(HitVehicleWeapon).ShouldPenetrate(self, HitLocation, Direction, GetPenetration(LaunchLocation - HitLocation)))
+            && !DHVehicleCannon(HitVehicleWeapon).ShouldPenetrate(self, HitLocation, Direction, GetMaxPenetration(LaunchLocation, HitLocation)))
         {
             FailToPenetrateArmor(HitLocation, HitNormal, HitVehicleWeapon);
         }
@@ -376,6 +376,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 // Matt: re-worked a little, but not as much as ProcessTouch, with which is shares some features
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
+    local DHVehicleCannon Cannon;
+
     // Exit without doing anything if we hit something we don't want to count a hit on
     if (Wall == none || SavedHitActor == Wall || (Wall.Base != none && Wall.Base == Instigator) || Wall.bDeleteMe)
     {
@@ -384,13 +386,28 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 
     SavedHitActor = Pawn(Wall); // record hit actor to prevent recurring hits
 
+    // Debug options
+    if (DHVehicleCannonPawn(Instigator) != none)
+    {
+        Cannon = DHVehicleCannonPawn(Instigator).Cannon;
+
+        if (Cannon != none && Cannon.bDebugRangeAutomatically)
+        {
+            Cannon.UpdateAutoDebugRange(Wall, Location);
+            bDidExplosionFX = true;
+            Destroy();
+
+            return;
+        }
+    }
+
     if (bDebuggingText && Role == ROLE_Authority)
     {
         DebugShotDistanceAndSpeed();
     }
 
     // We hit an armored vehicle hull but failed to penetrate
-    if (Wall.IsA('DHArmoredVehicle') && !DHArmoredVehicle(Wall).ShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))
+    if (Wall.IsA('DHArmoredVehicle') && !DHArmoredVehicle(Wall).ShouldPenetrate(self, Location, Normal(Velocity), GetMaxPenetration(LaunchLocation, Location)))
     {
         FailToPenetrateArmor(Location, HitNormal, Wall);
 
@@ -468,7 +485,7 @@ simulated function BlowUp(vector HitLocation)
     super.BlowUp(HitLocation);
 }
 
-// Matt: modified to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
+// Modified to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
 // Also to call CheckVehicleOccupantsRadiusDamage() instead of DriverRadiusDamage() on a hit vehicle, to properly handle blast damage to any exposed vehicle occupants
 // And to fix problem affecting many vehicles with hull mesh modelled with origin on the ground, where even a slight ground bump could block all blast damage
 // Also to update Instigator, so HurtRadius attributes damage to the player's current pawn
@@ -735,6 +752,7 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
         Explode(HitLocation + ExploWallOut * HitNormal, HitNormal);
     }
     // Round explodes on vehicle armor
+    // TODO: just a note that this does the same as calling SpawnExplosionEffects() except this plays VehicleDeflectSound/ShellDeflectEffectClass instead of VehicleHitSound/ShellHitVehicleEffectClass
     else if (bExplodesOnArmor)
     {
         if (bDebuggingText && Role == ROLE_Authority)
@@ -754,7 +772,7 @@ simulated function FailToPenetrateArmor(vector HitLocation, vector HitNormal, Ac
             Spawn(ShellDeflectEffectClass,,, EffectLocation, rotator(HitNormal));
         }
 
-        bDidExplosionFX = true;  // we've played specific explosion effects, so flag this to avoid calling SpawnExplosionEffects
+        bDidExplosionFX = true; // we've played specific explosion effects, so flag this to avoid calling SpawnExplosionEffects // TODO: need to fix - no visible explosion when HE hits tank
         Explode(HitLocation + ExploWallOut * HitNormal, HitNormal);
     }
     // Round deflects off vehicle armor
@@ -1005,17 +1023,18 @@ simulated function bool ShouldDrawDebugLines()
 
 function DebugShotDistanceAndSpeed()
 {
-    if (bIsAlliedShell)
+    if (bDebugInImperial)
     {
-        Level.Game.Broadcast(self, "Shot distance:" @ (VSize(LaunchLocation - Location) / 55.186) @ "yards, impact speed:" @ VSize(Velocity) / 18.395 @ "fps");
+        Level.Game.Broadcast(self, "Shot distance:" @ (VSize(LaunchLocation - Location) / 55.18654) @ "yards, impact speed:" @ VSize(Velocity) / ScaleFactor @ "fps");
     }
     else
     {
-        Level.Game.Broadcast(self, "Shot distance:" @ (VSize(LaunchLocation - Location) / 60.352) $ "m, impact speed:" @ VSize(Velocity) / 60.352 @ "m/s");
+        Level.Game.Broadcast(self, "Shot distance:" @ class'DHUnits'.static.UnrealToMeters(VSize(LaunchLocation - Location))
+            $ "m, impact speed:" @ class'DHUnits'.static.UnrealToMeters(VSize(Velocity)) @ "m/s");
     }
 }
 
-// Matt: based on HandleShellDebug from cannon class, but may as well do it here as we have saved TraceHitLoc in PostNetBeginPlay if bDebugBallistics is true
+// New function (in this class) based on HandleShellDebug from cannon class, but may as well do it here as we have saved TraceHitLoc in PostNetBeginPlay if bDebugBallistics is true
 // Modified to avoid confusing "bullet drop" text and to add shell drop in both cm and inches (accurately converted)
 simulated function HandleShellDebug(vector RealHitLocation)
 {
@@ -1024,7 +1043,8 @@ simulated function HandleShellDebug(vector RealHitLocation)
     if (NumDeflections < 1) // don't debug if it's just a deflected shell
     {
         ShellDropUnits = TraceHitLoc.Z - RealHitLocation.Z;
-        Log("Shell drop =" @ ShellDropUnits / 60.352 * 100.0 @ "cm /" @ ShellDropUnits / ScaleFactor * 12.0 @ "inches" @ "TraceZ =" @ TraceHitLoc.Z @ " RealZ =" @ RealHitLocation.Z);
+        Log("Shell drop =" @ class'DHUnits'.static.UnrealToMeters(ShellDropUnits) * 100.0 $ "cm /" @ ShellDropUnits / ScaleFactor * 12.0 @ "inches"
+            @ "TraceZ =" @ TraceHitLoc.Z @ " RealZ =" @ RealHitLocation.Z);
     }
 }
 
@@ -1033,7 +1053,9 @@ defaultproperties
     RoundType=RT_APC
     bUseCollisionStaticMesh=true
     bBotNotifyIneffective=true
-    bIsAlliedShell=true
+    bDebugInImperial=true
+    SpeedFudgeScale=0.5
+    InitialAccelerationTime=0.2
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect'
     ShatterVehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.HE_deflect'
     ShatterSound(0)=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode01'
@@ -1051,7 +1073,7 @@ defaultproperties
     PenetrationMag=100.0
 
     // From deprecated ROAntiVehicleProjectile class:
-    VehicleDeflectSound=sound'ProjectileSounds.cannon_rounds.AP_deflect'
+    VehicleDeflectSound=Sound'ProjectileSounds.cannon_rounds.AP_deflect'
     DampenFactor=0.5
     DampenFactorParallel=0.2
     DestroyTime=0.2

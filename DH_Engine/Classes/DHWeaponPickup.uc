@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHWeaponPickup extends ROWeaponPickup
@@ -193,4 +193,5 @@ defaultproperties
     CollisionHeight=3.0
     BarrelSteamEmitterClass=class'DH_Effects.DHMGSteam'
     TouchMessageClass=class'DHWeaponPickupTouchMessage'
+    bAcceptsProjectors=false
 }

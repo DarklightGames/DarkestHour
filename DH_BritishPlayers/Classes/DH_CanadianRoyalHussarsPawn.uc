@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_CanadianRoyalHussarsPawn extends DH_BritishOfficerPawn; // not necessarily an officer but tanker pawn uses the officer player mesh
@@ -8,5 +8,5 @@ class DH_CanadianRoyalHussarsPawn extends DH_BritishOfficerPawn; // not necessar
 defaultproperties
 {
     Species=class'DH_BritishPlayers.DH_Canadian'
-    Skins(1)=texture'DHCanadianCharactersTex.Armoured.RoyalCanadianHussars'
+    Skins(1)=Texture'DHCanadianCharactersTex.Armoured.RoyalCanadianHussars'
 }

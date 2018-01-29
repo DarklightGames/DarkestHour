@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_JagdpanzerIVL70CannonShellHE extends DHCannonShellHE;
@@ -45,7 +45,7 @@ defaultproperties
     DHPenetrationTable(9)=1.2
     DHPenetrationTable(10)=1.0
     ShellDiameter=7.5
-    bIsAlliedShell=false
+    bDebugInImperial=false
     PenetrationMag=920.0
     ImpactDamage=455
     BallisticCoefficient=2.0

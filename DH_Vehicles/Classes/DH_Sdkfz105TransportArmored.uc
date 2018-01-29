@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_Sdkfz105TransportArmored extends DH_Sdkfz105Transport;
@@ -17,7 +17,7 @@ simulated function SpawnVehicleAttachments()
         if (Level.NetMode != NM_DedicatedServer)
         {
             CollisionAttachments[0].Actor.Skins[0] = Skins[1]; // match camo to vehicle's 'cabin' texture
-            CollisionAttachments[0].Actor.bHidden = false;
+            CollisionAttachments[0].Actor.SetDrawType(DT_StaticMesh);
         }
     }
 }
@@ -25,7 +25,7 @@ simulated function SpawnVehicleAttachments()
 defaultproperties
 {
     CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc4.Sdkfz10_5.SdKfz10_5_armor',AttachBone="Body") // collision attachment for armour shielding to the front
-    VehicleAttachments(0)=(StaticMesh=none)       // remove windscreen attachment
+    VehicleAttachments(0)=(StaticMesh=none) // remove windscreen attachment
     DriverPositions(0)=(TransitionUpAnim="Driver_out")  // to lean forward for a better view through vision slot in armoured shield
     DriverPositions(1)=(TransitionDownAnim="Driver_in") // for reference: camera moves X+25, Z-1
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_WHSPCrew extends DH_HeerTankCrew;
@@ -12,7 +12,7 @@ defaultproperties
     AltName="Stugbesatzung"
     Article="a "
     PluralName="Assault Gun Crewmen"
-    SleeveTexture=texture'Weapons1st_tex.Arms.german_sleeves'
+    SleeveTexture=Texture'Weapons1st_tex.Arms.german_sleeves'
     DetachedArmClass=class'ROEffects.SeveredArmGerTanker'
     DetachedLegClass=class'ROEffects.SeveredLegGerTanker'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon')

@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 // https://github.com/php/php-src/blob/c72282a13b12b7e572469eba7a7ce593d900a8a2/ext/standard/url.c
 //==============================================================================
@@ -66,7 +66,7 @@ static final function string RawUrlDecode(string S, optional bool bIgnorePlus)
     while (i >= 0)
     {
         Char = Mid(S, i + 1, 2);
-        Char = Chr(class'UString'.static.Hex2Int(Char));
+        Char = Chr(class'UInteger'.static.FromHex(Char));
 
         if (Char == "%")
         {

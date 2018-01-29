@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHArmoredVehicle extends DHVehicle
@@ -10,6 +10,14 @@ class DHArmoredVehicle extends DHVehicle
 #exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx
 
+struct ArmorSection
+{
+var     float   Thickness;         // in cm
+var     float   Slope;             // in degrees from vertical (must specify a negative if armor slopes 'inwards')
+var     float   MaxRelativeHeight; // max height (in UU) of this armor section, relative to hull mesh's centre
+var     string  LocationName;      // e.g. "lower front", "driver's upstand plate"
+};
+
 enum ENewHitPointType
 {
     NHP_Normal,
@@ -17,43 +25,39 @@ enum ENewHitPointType
     NHP_PeriscopeOptics,
     NHP_Traverse,
     NHP_GunPitch,
-    NHP_Hull,
 };
-
-var     ENewHitPointType    NewHitPointType;    // array of new DH special vehicle hit points that may be hit & damaged
 
 struct NewHitpoint
 {
-    var   float             PointRadius;        // squared radius of the head of the pawn that is vulnerable to headshots
-    var   float             PointHeight;        // distance from base of neck to center of head - used for headshot calculation
-    var   float             PointScale;         // scale factor for radius & height
-    var   name              PointBone;          // bone to reference in offset
-    var   vector            PointOffset;        // amount to offset the hitpoint from the bone
-    var   bool              bPenetrationPoint;  // this is a penetration point, open hatch, etc
-    var   float             DamageMultiplier;   // amount to scale damage to the vehicle if this point is hit
-    var   ENewHitPointType  NewHitPointType;    // what type of hit point this is
+    var   float             PointRadius;
+    var   name              PointBone;
+    var   vector            PointOffset;
+    var   float             DamageMultiplier;
+    var   ENewHitPointType  NewHitPointType;
 };
 
 // General
 var     int         UnbuttonedPositionIndex;    // lowest DriverPositions index where driver is unbuttoned & exposed
-var     bool        bMustUnbuttonToSwitchToRider; // stops driver 'teleporting' outside to rider position if buttoned up
 var     vector      OverlayFPCamPos;            // optional camera offset for overlay position, so can snap to exterior view position, avoiding camera anims passing through hull
 var     texture     PeriscopeOverlay;           // driver's periscope overlay texture
-var     texture     DamagedPeriscopeOverlay;    // gunsight overlay to show if optics have been broken
+var     texture     DamagedPeriscopeOverlay;    // periscope overlay to show if optics have been broken
+
+// Vehicle locking
+var     bool        bVehicleLocked;             // vehicle has been locked by a player, stopping new players from entering tank crew positions
+var     float       UnlockVehicleTime;          // the next time to check whether to unlock a locked vehicle that its crew may have abandoned
 
 // Armor penetration
-var     float       UFrontArmorFactor, URightArmorFactor, ULeftArmorFactor, URearArmorFactor; // upper hull armor thickness (cm)
-var     float       UFrontArmorSlope, URightArmorSlope, ULeftArmorSlope, URearArmorSlope;     // upper hull armor slope (degrees)
-var     float       LFrontArmorFactor, LRightArmorFactor, LLeftArmorFactor, LRearArmorFactor; // lower hull armor thickness
-var     float       LFrontArmorSlope, LRightArmorSlope, LLeftArmorSlope, LRearArmorSlope;     // lower hull armor slope
-var     float       LFrontArmorHeight, LRightArmorHeight, LRearArmorHeight, LLeftArmorHeight; // height (in Unreal units) of top of lower hull armor above hull mesh origin
+var     array<ArmorSection> FrontArmor;        // array of armor properties (divided into horizontal bands) for each side of vehicle
+var     array<ArmorSection> RightArmor;
+var     array<ArmorSection> LeftArmor;
+var     array<ArmorSection> RearArmor;
 var     bool        bHasAddedSideArmor;         // this vehicle has added side armour skirts (schurzen) that will stop HEAT rounds
 var     bool        bProjectilePenetrated;      // shell has passed penetration tests & has entered the vehicle (used in TakeDamage)
 var     bool        bTurretPenetration;         // shell has penetrated the turret (used in TakeDamage)
 var     bool        bRearHullPenetration;       // shell has penetrated the rear hull (so TakeDamage can tell if an engine hit should stop the round penetrating any further)
 
 // Damage
-var     array<NewHitpoint>  NewVehHitpoints;    // an array of possible small points that can be hit. Index zero is always the driver
+var     array<NewHitpoint>  NewVehHitpoints;    // an array of extra hit points (new DH types) that may be hit & damaged
 var     int         GunOpticsHitPointIndex;     // index of any special hit point for exposed gunsight optics, which may be damaged by a bullet
 var     float       AmmoIgnitionProbability;    // chance that direct hit on ammo store will ignite it
 var     float       TurretDetonationThreshold;  // chance that shrapnel will detonate turret ammo
@@ -108,6 +112,10 @@ replication
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bOnFire, bEngineOnFire;
+
+    // Functions a client can call on the server
+    reliable if (Role < ROLE_Authority)
+        ServerToggleVehicleLock;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -124,6 +132,17 @@ simulated function PostBeginPlay()
         // Set fire damage rates
         HullFireDamagePer2Secs = HealthMax * 0.02;             // so approx 100 seconds from full vehicle health to detonation due to fire
         EngineFireDamagePer3Secs = default.EngineHealth * 0.1; // so approx 30 seconds engine fire until engine destroyed
+    }
+}
+
+// Modified to unlock a locked vehicle (unlocking isn't directly necessary, but unlocking it finds & clears any references to the now destroyed vehicle)
+simulated function Destroyed()
+{
+    super.Destroyed();
+
+    if (bVehicleLocked && Role == ROLE_Authority)
+    {
+        SetVehicleLocked(false);
     }
 }
 
@@ -197,6 +216,17 @@ simulated function Timer()
                 bSpikedVehicle = false; // cancel spike timer if vehicle is now occupied or burning (just let the fire destroy it)
             }
         }
+
+        // Unlock a locked vehicle that has been abandoned by its crew
+        if (UnlockVehicleTime != 0.0 && Now >= UnlockVehicleTime)
+        {
+            if (bVehicleLocked && Health > 0)
+            {
+                SetVehicleLocked(false);
+            }
+
+            UnlockVehicleTime = 0.0; // note this must come after unlocking vehicle, as when DHPawns get notified they need to be able to tell it's from this unlock timer
+        }
     }
 
     // Vehicle is burning, so check if we need to spawn any hatch fire effects
@@ -229,7 +259,7 @@ simulated function Timer()
     }
 
     // Engine is dead, but there's no fire, so make sure it is set to smoke instead of burn
-    if (EngineHealth <= 0 && !bEngineOnFire && !bOnFire && (DamagedEffectHealthFireFactor != 0.0 || DamagedEffectHealthHeavySmokeFactor != 1.0))
+    if (EngineHealth <= 0 && !IsVehicleBurning() && (DamagedEffectHealthFireFactor != 0.0 || DamagedEffectHealthHeavySmokeFactor != 1.0))
     {
         SetFireEffects();
     }
@@ -262,6 +292,11 @@ simulated function SetNextTimer(optional float Now)
         if (bSpikedVehicle && (SpikeTime < NextTimerTime || NextTimerTime == 0.0) && SpikeTime > Now)
         {
             NextTimerTime = SpikeTime;
+        }
+
+        if (bVehicleLocked && (UnlockVehicleTime < NextTimerTime || NextTimerTime == 0.0) && UnlockVehicleTime > Now)
+        {
+            NextTimerTime = UnlockVehicleTime;
         }
     }
 
@@ -305,23 +340,20 @@ simulated function DrawHUD(Canvas C)
     if (PC != none && !PC.bBehindView)
     {
         // Player is in a position where an overlay should be drawn
-        if (DriverPositions[DriverPositionIndex].bDrawOverlays && (!IsInState('ViewTransition') || DriverPositions[PreviousPositionIndex].bDrawOverlays))
+        if (DriverPositions[DriverPositionIndex].bDrawOverlays && !IsInState('ViewTransition'))
         {
+            // Draw periscope overlay
             if (HUDOverlay == none)
             {
-                // Draw periscope overlay
-                if (PeriscopeOverlay != none)
-                {
-                    // Save current HUD opacity & then set up for drawing overlays
-                    SavedOpacity = C.ColorModulate.W;
-                    C.ColorModulate.W = 1.0;
-                    C.DrawColor.A = 255;
-                    C.Style = ERenderStyle.STY_Alpha;
+                // Save current HUD opacity & then set up for drawing overlays
+                SavedOpacity = C.ColorModulate.W;
+                C.ColorModulate.W = 1.0;
+                C.DrawColor.A = 255;
+                C.Style = ERenderStyle.STY_Alpha;
 
-                    DrawPeriscopeOverlay(C);
+                DrawPeriscopeOverlay(C);
 
-                    C.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
-                }
+                C.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
             }
             // Draw any HUD overlay
             else if (!Level.IsSoftwareRendering())
@@ -345,46 +377,35 @@ simulated function DrawPeriscopeOverlay(Canvas C)
 {
     local float ScreenRatio;
 
-    ScreenRatio = float(C.SizeY) / float(C.SizeX);
-    C.SetPos(0.0, 0.0);
-    C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, 0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2.0, PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio);
+    if (PeriscopeOverlay != none)
+    {
+        ScreenRatio = float(C.SizeY) / float(C.SizeX);
+        C.SetPos(0.0, 0.0);
+
+        C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY,                            // screen drawing area (to fill screen)
+            0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2.0,       // position in texture to begin drawing tile (from left edge, with vertical position to suit screen aspect ratio)
+            PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio); // width & height of tile within texture
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
-//  ******************************** VEHICLE ENTRY  ******************************** //
+//  ******************* VEHICLE ENTRY, EXIT & SWITCHING POSITIONS ****************** //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to add an extra section from deprecated ROTreadCraft class that was commented "code to get the bots using tanks better"
+// Modified to prevent entry if either vehicle or engine is on fire (with message if own team's vehicle)
 function Vehicle FindEntryVehicle(Pawn P)
 {
-    local int i;
-
-    if (P != none && Bot(P.Controller) != none && WeaponPawns.Length > 0 && IsVehicleEmpty())
+    if (IsVehicleBurning())
     {
-        for (i = WeaponPawns.Length -1; i >= 0; --i)
+        if (P != none && (P.GetTeamNum() == VehicleTeam || !bTeamLocked))
         {
-            if (WeaponPawns[i] != none && WeaponPawns[i].Driver == none)
-            {
-                return WeaponPawns[i];
-            }
+            DisplayVehicleMessage(5, P); // vehicle is on fire
         }
+
+        return none;
     }
 
     return super.FindEntryVehicle(P);
-}
-
-// Modified to prevent entry if either vehicle is on fire
-function bool TryToDrive(Pawn P)
-{
-    // Don't allow entry to burning vehicle (with message)
-    if (bOnFire || bEngineOnFire)
-    {
-        DisplayVehicleMessage(9, P); // vehicle is on fire
-
-        return false;
-    }
-
-    return super.TryToDrive(P);
 }
 
 // Modified to handle optional camera offset for initial overlay position
@@ -399,19 +420,14 @@ simulated function ClientKDriverEnter(PlayerController PC)
     }
 }
 
-///////////////////////////////////////////////////////////////////////////////////////
-//  ***************************** DRIVER VIEW POINTS  ****************************** //
-///////////////////////////////////////////////////////////////////////////////////////
-
-// Modified to handle optional camera offset for initial overlay position
+// Modified to handle optional camera offset for overlay position
 simulated state ViewTransition
 {
     simulated function HandleTransition()
     {
         super.HandleTransition();
 
-        if (Level.NetMode != NM_DedicatedServer && OverlayFPCamPos != vect(0.0, 0.0, 0.0) && DriverPositions[PreviousPositionIndex].bDrawOverlays
-            && IsHumanControlled() && !PlayerController(Controller).bBehindView)
+        if (OverlayFPCamPos != vect(0.0, 0.0, 0.0) && DriverPositions[PreviousPositionIndex].bDrawOverlays && IsFirstPerson())
         {
             FPCamPos = default.FPCamPos; // if moving away from overlay, remove offset immediately
         }
@@ -421,60 +437,49 @@ simulated state ViewTransition
     {
         super.EndState();
 
-        if (Level.NetMode != NM_DedicatedServer && OverlayFPCamPos != vect(0.0, 0.0, 0.0) && DriverPositions[DriverPositionIndex].bDrawOverlays
-            && IsHumanControlled() && !PlayerController(Controller).bBehindView)
+        if (OverlayFPCamPos != vect(0.0, 0.0, 0.0) && DriverPositions[DriverPositionIndex].bDrawOverlays && IsFirstPerson())
         {
             FPCamPos = OverlayFPCamPos; // if moving into overlay, apply offset at end of transition
         }
     }
 }
 
-///////////////////////////////////////////////////////////////////////////////////////
-//  ******************************** VEHICLE EXIT  ********************************* //
-///////////////////////////////////////////////////////////////////////////////////////
-
-// Modified to add clientside check to stop call to server if player selected a rider position but is buttoned up (no 'teleporting' outside to external rider position)
-simulated function SwitchWeapon(byte F)
+// Modified so if an 'allowed' crewman exits a locked vehicle, we check whether we need to set an unlock timer
+function bool KDriverLeave(bool bForceLeave)
 {
-    if (Role < ROLE_Authority && StopExitToRiderPosition(F - 2))
+    local bool bAllowedCrewmanExitingLockedVehicle;
+
+    bAllowedCrewmanExitingLockedVehicle = bVehicleLocked && IsAnAllowedCrewman(Driver) && !(bForceLeave && DHPawn(Driver).SwitchingController != none);
+
+    if (super.KDriverLeave(bForceLeave))
     {
-        return;
+        if (bAllowedCrewmanExitingLockedVehicle)
+        {
+            CheckSetUnlockTimer(); // note this has to be called after the Super, otherwise exiting player will still be registered as the driver
+        }
+
+        return true;
     }
 
-    super.SwitchWeapon(F);
-}
-
-// Modified to prevent 'teleporting' outside to external rider position while buttoned up inside vehicle
-function ServerChangeDriverPosition(byte F)
-{
-    if (!StopExitToRiderPosition(F - 2))
-    {
-        super.ServerChangeDriverPosition(F);
-    }
-}
-
-// New function to check if player is trying to 'teleport' outside to external rider position while buttoned up (just saves repeating code in different functions)
-simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex)
-{
-    return ChosenWeaponPawnIndex >= FirstRiderPositionIndex && ChosenWeaponPawnIndex < PassengerWeapons.Length && bMustUnbuttonToSwitchToRider && !CanExit();
+    return false;
 }
 
 // Implemented to prevent exit if player is buttoned up, displaying an appropriate "unbutton the hatch" message if he can't
 simulated function bool CanExit()
 {
-    if (DriverPositionIndex < UnbuttonedPositionIndex || (IsInState('ViewTransition') && DriverPositionIndex == UnbuttonedPositionIndex))
+    if ((DriverPositionIndex < UnbuttonedPositionIndex || (IsInState('ViewTransition') && DriverPositionIndex == UnbuttonedPositionIndex)) && IsHumanControlled())
     {
         if (DriverPositions.Length > UnbuttonedPositionIndex) // means it is possible to unbutton
         {
-            DisplayVehicleMessage(4,, true); // must unbutton the hatch
+            DisplayVehicleMessage(9,, true); // must unbutton the hatch
         }
         else if (MGun != none && MGun.WeaponPawn != none && MGun.WeaponPawn.DriverPositions.Length > MGun.WeaponPawn.UnbuttonedPositionIndex) // means it's possible to exit MG position
         {
-            DisplayVehicleMessage(11); // must exit through commander's or MG hatch
+            DisplayVehicleMessage(12); // must exit through commander's or MG hatch
         }
         else
         {
-            DisplayVehicleMessage(5); // must exit through commander's hatch
+            DisplayVehicleMessage(10); // must exit through commander's hatch
         }
 
         return false;
@@ -484,57 +489,385 @@ simulated function bool CanExit()
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
-//  ************************* ENGINE START/STOP & EFFECTS ************************** //
+//  ******************************** VEHICLE LOCKING ******************************* //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Modified to handle extended vehicle fire system, plus setting manual/powered turret
-simulated function SetEngine()
+// New keybind function to toggle whether an armored vehicle is locked, stopping new players from entering tank crew positions
+// CanPlayerLockVehicle() is pre-checked by net client for network efficiency, by avoiding sending invalid replicated function calls to server
+simulated exec function ToggleVehicleLock()
 {
-    if (bEngineOff || Health <= 0 || EngineHealth <= 0)
+    if (Role == ROLE_Authority || CanPlayerLockVehicle(self))
     {
-        TurnDamping = 0.0;
+        ServerToggleVehicleLock();
+    }
+}
 
-        if (bOnFire || bEngineOnFire)
+// New client-to-server function to toggle whether an armored vehicle is locked
+function ServerToggleVehicleLock()
+{
+    if (CanPlayerLockVehicle(self) && Role == ROLE_Authority)
+    {
+        SetVehicleLocked(!bVehicleLocked);
+    }
+}
+
+// New function to set whether an armored vehicle is locked (stopping new players from entering tank crew positions) or is unlocked
+function SetVehicleLocked(bool bNewLockedStatus)
+{
+    local Controller C;
+    local DHPawn     P;
+    local int        i;
+
+    bVehicleLocked = bNewLockedStatus;
+
+    // Go through all vehicle positions & update the locked vehicle settings for all occupants
+    UpdatePlayersLockedVehicleSettings(self);
+
+    for (i = 0; i < WeaponPawns.Length; ++i)
+    {
+        UpdatePlayersLockedVehicleSettings(WeaponPawns[i]);
+    }
+
+    // If vehicle has been unlocked, we also need to check for any remaining 'allowed' crew who may be outside the vehicle & clear their locked vehicle reference
+    // Any players we find who are still registered as allowed crew must be out of the vehicle, as we've just cleared it for anyone in one of our vehicle positions
+    if (!bVehicleLocked)
+    {
+        for (C = Level.ControllerList; C != none; C = C.NextController)
         {
-            AmbientSound = VehicleBurningSound;
-            SoundVolume = 255;
-            SoundRadius = 200.0;
+            if (IsAnAllowedCrewman(C.Pawn, P))
+            {
+                P.SetCrewedLockedVehicle(none);
+            }
         }
-        else if (EngineHealth <= 0)
+    }
+}
+
+// New helper function to set a player's locked vehicle settings, base on whether their vehicle is locked or unlocked
+// Includes message to player to tell them that their vehicle has been locked/unlocked
+function UpdatePlayersLockedVehicleSettings(Vehicle PlayersVehiclePosition)
+{
+    local DHPawn P;
+
+    if (PlayersVehiclePosition != none)
+    {
+        P = DHPawn(PlayersVehiclePosition.Driver);
+    }
+
+    if (P != none)
+    {
+        // If player is a tank crew role, either set or clear the player's CrewedLockedVehicle reference
+        if (class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(PlayersVehiclePosition))
         {
-            AmbientSound = SmokingEngineSound;
-            SoundVolume = 64;
-            SoundRadius = 200.0;
+            if (bVehicleLocked)
+            {
+                P.SetCrewedLockedVehicle(self);
+            }
+            else
+            {
+                P.SetCrewedLockedVehicle(none);
+            }
+        }
+
+        // Update player's bInLockedVehicle flag, so net client's vehicle HUD displays the locked vehicle icon correctly
+        P.SetInLockedVehicle(bVehicleLocked);
+
+        // Notify the player that the vehicle was just locked or unlocked
+        if (bVehicleLocked)
+        {
+            DisplayVehicleMessage(20, PlayersVehiclePosition); // "tank crew positions in this vehicle have now been locked"
         }
         else
         {
-            AmbientSound = none;
+            DisplayVehicleMessage(21, PlayersVehiclePosition); // "tank crew positions in this vehicle have now been unlocked"
         }
+    }
+}
 
-        if (bEmittersOn)
-        {
-            StopEmitters();
-        }
+// Modified to handle vehicle locking functionality for a tank or similar armored vehicle
+// If vehicle is locked & the new player has entered a tank position, it makes sure he is registered as allowed to use the vehicle
+// If vehicle is locked but has an unlock timer running, meaning its crew had exited, if new player is an allowed crewman the timer is cancelled
+// If vehicle isn't locked but new crewman has the 'lock tank on entry' option enabled & is a tanker, it attempts to lock the vehicle automatically
+function UpdateVehicleLockOnPlayerEntering(Vehicle EntryPosition)
+{
+    local DHPawn            Player;
+    local VehicleWeaponPawn WP;
+    local bool              bEnteredTankCrewPosition, bFoundCrewman;
+    local int               i;
+
+    if (EntryPosition != none)
+    {
+        Player = DHPawn(EntryPosition.Driver);
+    }
+
+    if (Player == none)
+    {
+         return;
+    }
+
+    if (EntryPosition == self)
+    {
+        bEnteredTankCrewPosition = bMustBeTankCommander;
     }
     else
     {
-        if (IdleSound != none)
-        {
-            AmbientSound = IdleSound;
-            SoundVolume = default.SoundVolume;
-            SoundRadius = default.SoundRadius;
-        }
-
-        if (!bEmittersOn)
-        {
-            StartEmitters();
-        }
+        bEnteredTankCrewPosition = EntryPosition.IsA('ROVehicleWeaponPawn') && ROVehicleWeaponPawn(EntryPosition).bMustBeTankCrew;
     }
 
-    if (Cannon != none && DHVehicleCannonPawn(Cannon.WeaponPawn) != none)
+    if (bVehicleLocked)
     {
-        DHVehicleCannonPawn(Cannon.WeaponPawn).SetManualTurret(bEngineOff);
+        // If player isn't registered as allowed crew, but was allowed to enter entered a locked crew position, then register him as allowed crew
+        // This can happen if he was allowed in because he's in same squad as one of the allowed crew
+        if (bEnteredTankCrewPosition && !IsAnAllowedCrewman(Player))
+        {
+            Player.SetCrewedLockedVehicle(self);
+        }
+
+        // If an allowed crewman just entered (any vehicle position), cancel any unlock timer that's been set
+        if (IsAnAllowedCrewman(Player))
+        {
+            CancelAnyVehicleUnlockTimer();
+        }
     }
+    // If player has the 'lock tank on entry' option enabled & he's a tank crewman, he attempts to lock the vehicle automatically
+    // This only works if there are no other tank crew in the vehicle (& the vehicle must be for tank crew only)
+    else if (bEnteredTankCrewPosition && DHPlayer(EntryPosition.Controller) != none && DHPlayer(EntryPosition.Controller).bLockTankOnEntry
+        && class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(EntryPosition) && bMustBeTankCommander)
+    {
+        // Check through vehicle positions to see if if there is a tank crewman already in the vehicle
+        if (Driver != none && Driver != Player && class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(self))
+        {
+            bFoundCrewman = true;
+        }
+        else
+        {
+            for (i = 0; i < WeaponPawns.Length; ++i)
+            {
+                WP = WeaponPawns[i];
+
+                if (WP != none && WP.Driver != none && WP.Driver != Player && class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(WP))
+                {
+                    bFoundCrewman = true;
+                    break;
+                }
+            }
+        }
+
+        // If we didn't find any tank crew, the entering player locks the vehicle automatically
+        if (!bFoundCrewman)
+        {
+            SetVehicleLocked(true);
+        }
+    }
+
+    // Update player's bInLockedVehicle flag, so a net client's vehicle HUD displays the locked vehicle icon correctly
+    Player.SetInLockedVehicle(bVehicleLocked);
+}
+
+// New function to check whether we need to set a timer to unlock a locked armored vehicle after a set period
+// This happens if the 'allowed' crew have left the vehicle & it may be abandoned
+function CheckSetUnlockTimer()
+{
+    local int i;
+
+    if (IsAnAllowedCrewman(Driver))
+    {
+        return;
+    }
+
+    for (i = 0; i < WeaponPawns.Length; ++i)
+    {
+        if (IsAnAllowedCrewman(WeaponPawns[i]))
+        {
+            return;
+        }
+    }
+
+    // No allowed crew left in the vehicle, so we set an unlock timer
+    SetVehicleUnlockTimer();
+}
+
+// New function to check whether we need to either (1) unlock the vehicle now (if no 'allowed' crew remain alive)
+// Or (2) set a timer to unlock it after a set period (if there are still allowed crew, but none currently in the vehicle, e.g. they may be outside scouting etc)
+// Makes sure that if all tank crew members are killed or abandon a locked vehicle, it doesn't stay locked forever
+function CheckUnlockVehicle()
+{
+    local Controller C;
+    local bool       bFoundAllowedCrewmanOutOfVehicle;
+
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        // Found an allowed crewman
+        if (IsAnAllowedCrewman(C.Pawn))
+        {
+            // Do nothing if any 'allowed' crewman is still in this vehicle
+            if (C.Pawn == self || (C.Pawn.IsA('VehicleWeaponPawn') && VehicleWeaponPawn(C.Pawn).VehicleBase == self))
+            {
+                return;
+            }
+
+            // This allowed crewman is not currently in the vehicle, so for now we just record that we've found at least one such crewman
+            bFoundAllowedCrewmanOutOfVehicle = true;
+        }
+    }
+
+    // No allowed crewman left in the vehicle but we did find one away from it, so it remains locked, but we set an unlock timer
+    if (bFoundAllowedCrewmanOutOfVehicle)
+    {
+        SetVehicleUnlockTimer();
+    }
+    // No allowed crew remain alive, so unlock the vehicle now, & cancel any unlock timer
+    else
+    {
+        SetVehicleLocked(false);
+        CancelAnyVehicleUnlockTimer();
+    }
+}
+
+// New function to set a timer to unlock a locked armored vehicle after a set period
+// Triggered when all 'allowed' crew exit a locked vehicle, so it may be abandoned
+function SetVehicleUnlockTimer()
+{
+    UnlockVehicleTime = Level.TimeSeconds + class'DarkestHourGame'.default.EmptyTankUnlockTime;
+    SetNextTimer();
+}
+
+// New function to check whether an unlock timer has been set & to cancel it if so
+function CancelAnyVehicleUnlockTimer()
+{
+    if (UnlockVehicleTime != 0.0)
+    {
+        UnlockVehicleTime = 0.0;
+        SetNextTimer(); // checks whether some other event now requires a timer setting
+    }
+}
+
+// New helper function to check whether a player is allowed to lock or unlock an armored vehicle
+// If there is more than one human player in a tank crew position, only the most senior crewman is allowed to lock/unlock the vehicle
+// This is based on their position in the vehicle - any commander is most senior, then any driver, then any other crew (i.e. MG position)
+simulated function bool CanPlayerLockVehicle(Vehicle PlayersVehiclePosition)
+{
+    local DHPlayer     PC;
+    local DH_LevelInfo LI;
+    local int          FailMessageNumber;
+
+    FailMessageNumber = -1; // start with an invalid number, so later we know if a genuine failure has occured
+
+    PC = DHPlayer(PlayersVehiclePosition.Controller);
+
+    if (PC != none)
+    {
+        LI = PC.GetLevelInfo();
+    }
+
+    // Not if the map has been set to disallow tank locking
+    if (LI != none && LI.bDisableTankLocking)
+    {
+        FailMessageNumber = 24; // this map doesn't allow vehicles to be locked
+    }
+    // Not if this armored vehicle isn't for tank crew only (very unlikely for an armored vehicle, but possible - perhaps for a scenario map)
+    else if (!bMustBeTankCommander)
+    {
+        FailMessageNumber = 25; // can't lock vehicle as it can be driven by non-tank crew roles
+    }
+    // Not if the player isn't a tank crew role
+    else if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(PlayersVehiclePosition))
+    {
+        FailMessageNumber = 26; // only tank crew roles can lock or unlock vehicle
+    }
+    // Not if the player isn't a tank crew role
+    else if (PlayersVehiclePosition.IsA('ROVehicleWeaponPawn') && !ROVehicleWeaponPawn(PlayersVehiclePosition).bMustBeTankCrew)
+    {
+        FailMessageNumber = 27; // can only lock or unlock vehicle if you are in a tank crew position
+    }
+    // Not if another human player is in the vehicle commander's position
+    else if (Cannon != none && Cannon.WeaponPawn != none && Cannon.WeaponPawn.PlayerReplicationInfo != none && !Cannon.WeaponPawn.PlayerReplicationInfo.bBot)
+    {
+        if (PlayersVehiclePosition != Cannon.WeaponPawn)
+        {
+            FailMessageNumber = 28; // only the most senior crew position can lock or unlock vehicle
+        }
+    }
+    // Not if another human player is in the driver's 's position (& we already know our player isn't the commander)
+    else if (PlayerReplicationInfo != none && !PlayerReplicationInfo.bBot && PlayersVehiclePosition != self)
+    {
+        FailMessageNumber = 28; // only the most senior crew position can lock or unlock vehicle
+    }
+
+    // Player cannot lock/unlock vehicle, so give him a screen message to say why not
+    if (FailMessageNumber >= 0)
+    {
+        DisplayVehicleMessage(FailMessageNumber, PlayersVehiclePosition);
+
+        return false;
+    }
+
+    // Player can lock/unlock this vehicle -  he's a tank crewman in a crew position & there are no other crewmen who rank above him
+    return true;
+}
+
+// Implemented here to check whether a player is prevented from entering a tank crew position in an armored vehicle that has been locked
+// If vehicle is locked, entry is allowed if player is registered as an 'allowed' crewman, i.e. they were in it when it was locked
+// Also allowed if player is in the same squad as one of the allowed crew in the vehicle
+// Displays a screen message if player isn't allowed in, unless that is flagged to be avoided
+function bool AreCrewPositionsLockedForPlayer(Pawn P, optional bool bNoMessageToPlayer)
+{
+    local DHPlayerReplicationInfo EnteringPlayerPRI;
+    local int                     i;
+
+    if (bVehicleLocked && P != none)
+    {
+        // Player is one of the allowed crew, so allow him in
+        if (IsAnAllowedCrewman(P))
+        {
+            return false;
+        }
+
+        EnteringPlayerPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+
+        // Player is in a squad, so check whether he's in the same squad as one of the allowed crew present in the vehicle - if he is, allow him in
+        if (EnteringPlayerPRI != none && EnteringPlayerPRI.IsInSquad())
+        {
+            if (IsAnAllowedCrewman(Driver) && class'DHPlayerReplicationInfo'.static.IsInSameSquad(EnteringPlayerPRI, DHPlayerReplicationInfo(PlayerReplicationInfo)))
+            {
+                return false;
+            }
+            else
+            {
+                for (i = 0; i < WeaponPawns.Length; ++i)
+                {
+                    if (IsAnAllowedCrewman(WeaponPawns[i]) &&
+                        class'DHPlayerReplicationInfo'.static.IsInSameSquad(EnteringPlayerPRI, DHPlayerReplicationInfo(WeaponPawns[i].PlayerReplicationInfo)))
+                    {
+                        return false;
+
+                    }
+                }
+            }
+        }
+
+        // PLayer is locked out of this vehicle's crew positions, so display screen message to notify him (unless flagged not to show message)
+        if (!bNoMessageToPlayer)
+        {
+            DisplayVehicleMessage(22, P); // this vehicle has been locked by its crew
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+// New helper function to check whether a pawn is 'allowed' crewman for this vehicle, if it is locked
+function bool IsAnAllowedCrewman(Pawn P, optional out DHPawn DHP)
+{
+    if (Vehicle(P) != none) // if pawn is a vehicle position, switch pawn to be its occupant
+    {
+        P = Vehicle(P).Driver;
+    }
+
+    DHP = DHPawn(P);
+
+    return DHP != none && DHP.CrewedLockedVehicle == self;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -566,14 +899,13 @@ function StartHullFire(Pawn InstigatedBy)
     // Set the 1st hull damage due in 2 seconds
     NextHullFireDamageTime = Level.TimeSeconds + 2.0;
 
-    // Fire effects, including timers for delayed hatch fires
-    if (Level.NetMode != NM_DedicatedServer)
+    // Start fire effects, including timers for delayed hatch fires
+    SetFireEffects();
+
+    // Set timer for damage only on dedicated server (other authority modes get this in SetFireEffects)
+    if (Level.NetMode == NM_DedicatedServer)
     {
-        SetFireEffects();
-    }
-    else
-    {
-        SetNextTimer(); // for damage only on server
+        SetNextTimer();
     }
 }
 
@@ -616,7 +948,7 @@ simulated function SetFireEffects()
 {
     if (Level.NetMode != NM_DedicatedServer)
     {
-        if (bOnFire || bEngineOnFire)
+        if (IsVehicleBurning())
         {
             // Engine fire effect
             if (DamagedEffectHealthFireFactor != 1.0)
@@ -714,70 +1046,93 @@ simulated function StartDriverHatchFire()
     }
 }
 
+// Modified to use more sophisticated burning vehicle system for armored vehicles
+simulated function bool IsVehicleBurning()
+{
+    return bOnFire || bEngineOnFire;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ************************  HIT DETECTION & PENETRATION  ************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// New function to check if something hit a certain DH NewVehHitpoints
-function bool IsNewPointShot(vector Loc, vector Ray, float AdditionalScale, int Index)
+// New function to check if something hit a certain DH NewVehHitpoints (the same as IsPointShot checks for hits on VehHitpoints)
+function bool IsNewPointShot(vector HitLocation, vector LineCheck, int Index, optional float CheckDistance)
 {
-    local coords C;
-    local vector HeadLoc, B, M, Diff;
-    local float  t, DotMM, Distance;
+    local coords HitPointCoords;
+    local vector HitPointLocation, Difference;
+    local float  t, DotMM, ClosestDistance;
 
     if (NewVehHitpoints[Index].PointBone == '')
     {
         return false;
     }
 
-    C = GetBoneCoords(NewVehHitpoints[Index].PointBone);
-
-    HeadLoc = C.Origin + (NewVehHitpoints[Index].PointHeight * NewVehHitpoints[Index].PointScale * AdditionalScale * C.XAxis);
-    HeadLoc = HeadLoc + (NewVehHitpoints[Index].PointOffset >> rotator(C.XAxis));
-
-    // Express snipe trace line in terms of B + tM
-    B = Loc;
-    M = Ray * 150.0;
-
-    // Find point-line squared distance
-    Diff = HeadLoc - B;
-    t = M dot Diff;
-
-    if (t > 0.0)
+    // Get location of the hit point we're going to check (with option to handle turret's yaw bone being specified, so hit point rotates with turret)
+    if (Cannon != none && NewVehHitpoints[Index].PointBone == Cannon.YawBone)
     {
-        DotMM = M dot M;
-
-        if (t < DotMM)
-        {
-            t = t / DotMM;
-            Diff = Diff - (t * M);
-        }
-        else
-        {
-            t = 1.0;
-            Diff -= M;
-        }
+        HitPointCoords = Cannon.GetBoneCoords(NewVehHitpoints[Index].PointBone);
     }
     else
     {
-        t = 0;
+        HitPointCoords = GetBoneCoords(NewVehHitpoints[Index].PointBone);
     }
 
-    Distance = Sqrt(Diff dot Diff);
+    HitPointLocation = HitPointCoords.Origin;
 
-    return (Distance < (NewVehHitpoints[Index].PointRadius * NewVehHitpoints[Index].PointScale * AdditionalScale));
+    if (NewVehHitpoints[Index].PointOffset != vect(0.0, 0.0, 0.0))
+    {
+        HitPointLocation += (NewVehHitpoints[Index].PointOffset >> rotator(HitPointCoords.XAxis));
+    }
+
+    // Set the hit line to check
+    if (CheckDistance > 0.0)
+    {
+        LineCheck = Normal(LineCheck) * CheckDistance;
+    }
+    else
+    {
+        LineCheck *= 150.0;
+    }
+
+    // Find closest distance of line check to hit point (all squared for now, for efficiency)
+    Difference = HitPointLocation - HitLocation;
+    t = LineCheck dot Difference;
+
+    if (t > 0.0) // if not positive it means line check is heading away from hit point, so distance is simply based on HitLocation as that's the closest point
+    {
+        DotMM = LineCheck dot LineCheck;
+
+        if (t < DotMM)
+        {
+            t /= DotMM;
+            Difference -= (t * LineCheck);
+        }
+        else
+        {
+            Difference -= LineCheck;
+        }
+    }
+
+    // Convert distance back from squared & return true if within the hit point's radius (including any scaling)
+    ClosestDistance = Sqrt(Difference dot Difference);
+
+    return ClosestDistance < NewVehHitpoints[Index].PointRadius;
 }
 
-// Heavily modified from deprecated ROTreadCraft class for DH's armour penetration system, handling penetration calcs for any shell type
-simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector ProjectileDirection, float PenetrationNumber)
+// Re-written from deprecated ROTreadCraft class for DH's armour penetration system
+// Handles penetration calcs for any shell type, & adds including an option for multiple armor sections for each side
+simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector ProjectileDirection, float MaxArmorPenetration)
 {
     local vector  HitLocationRelativeOffset, HitSideAxis, ArmorNormal, X, Y, Z;
     local rotator ArmourSlopeRotator;
-    local float   HitDirectionDegrees, AngleOfIncidenceDegrees, ArmorThickness, ArmorSlope;
-    local string  HitSide, OppositeSide;
-    local bool    bRearHit, bPenetrated;
+    local float   HitLocationAngle, AngleOfIncidence, ArmorThickness, ArmorSlope;
+    local float   OverMatchFactor, SlopeMultiplier, EffectiveArmorThickness, PenetrationRatio;
+    local int     i;
+    local string  HitSide, OppositeSide, DebugString1, DebugString2;
+    local bool    bRearHit;
+    local array<ArmorSection> HitSideArmorArray;
 
-    bRearHullPenetration = false; // reset before we start
     ProjectileDirection = Normal(ProjectileDirection); // should be passed as a normal but we need to be certain
     GetAxes(Rotation, X, Y, Z);
 
@@ -786,48 +1141,50 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     // Then convert to a rotator &, because it's relative, we can simply use the yaw element to give us the angle direction of hit, relative to vehicle
     // Must ignore relative height of hit (represented now by rotator's pitch) as isn't a factor in 'top down 2D' calc & would sometimes actually distort result
     HitLocationRelativeOffset = (HitLocation - Location) << Rotation;
-    HitDirectionDegrees = class'UUnits'.static.UnrealToDegrees(rotator(HitLocationRelativeOffset).Yaw);
+    HitLocationAngle = class'UUnits'.static.UnrealToDegrees(rotator(HitLocationRelativeOffset).Yaw);
 
-    if (HitDirectionDegrees < 0.0)
+    if (HitLocationAngle < 0.0)
     {
-        HitDirectionDegrees += 360.0; // convert negative angles to 180 to 360 degree format
+        HitLocationAngle += 360.0; // convert negative angles to 180 to 360 degree format
     }
 
     // Assign settings based on which side we hit
-    if (HitDirectionDegrees >= FrontLeftAngle || HitDirectionDegrees < FrontRightAngle) // frontal hit
+    if (HitLocationAngle >= FrontLeftAngle || HitLocationAngle < FrontRightAngle) // frontal hit
     {
-        HitSide = "Front";
-        OppositeSide = "Rear";
+        HitSide = "front";
+        OppositeSide = "rear";
         HitSideAxis = X;
     }
-    else if (HitDirectionDegrees >= FrontRightAngle && HitDirectionDegrees < RearRightAngle) // right side hit
+    else if (HitLocationAngle >= FrontRightAngle && HitLocationAngle < RearRightAngle) // right side hit
     {
-        HitSide = "Right";
-        OppositeSide = "Left";
+        HitSide = "right";
+        OppositeSide = "left";
         HitSideAxis = Y;
     }
-    else if (HitDirectionDegrees >= RearRightAngle && HitDirectionDegrees < RearLeftAngle) // rear hit
+    else if (HitLocationAngle >= RearRightAngle && HitLocationAngle < RearLeftAngle) // rear hit
     {
-        HitSide = "Rear";
-        OppositeSide = "Front";
+        HitSide = "rear";
+        OppositeSide = "front";
         HitSideAxis = -X;
     }
-    else if (HitDirectionDegrees >= RearLeftAngle && HitDirectionDegrees < FrontLeftAngle) // left side hit
+    else if (HitLocationAngle >= RearLeftAngle && HitLocationAngle < FrontLeftAngle) // left side hit
     {
-        HitSide = "Left";
-        OppositeSide = "Right";
+        HitSide = "left";
+        OppositeSide = "right";
         HitSideAxis = -Y;
     }
     else // didn't hit any side !! (angles must be screwed up, so fix those)
     {
-       Log("ERROR: hull angles not set up correctly for" @ Tag @ "(took hit from" @ HitDirectionDegrees @ "degrees & couldn't resolve which side that was");
+        Log("ERROR: hull angles not set up correctly for" @ VehicleNameString @ "(took hit from" @ HitLocationAngle @ "degrees & couldn't resolve which side that was");
 
-       if ((bDebugPenetration || class'DH_LevelInfo'.static.DHDebugMode()) && Role == ROLE_Authority)
-       {
-           Level.Game.Broadcast(self, "ERROR: hull angles not set up correctly for" @ Tag @ "(took hit from" @ HitDirectionDegrees @ "degrees & couldn't resolve which side that was");
-       }
+        if ((bDebugPenetration || class'DH_LevelInfo'.static.DHDebugMode()) && Role == ROLE_Authority)
+        {
+            Level.Game.Broadcast(self, "ERROR: hull angles not set up correctly for" @ VehicleNameString @ "(took hit from" @ HitLocationAngle @ "degrees & couldn't resolve which side that was");
+        }
 
-       return false;
+        ResetTakeDamageVariables();
+
+        return false;
     }
 
     // Check for 'hit bug', where a projectile may pass through the 1st face of vehicle's collision & be detected as a hit on the opposite side (on the way out)
@@ -838,19 +1195,20 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     // Also modified to skip this check for deflected shots, which can ricochet onto another part of the vehicle at weird angles
     if (P.NumDeflections == 0)
     {
-        AngleOfIncidenceDegrees = class'UUnits'.static.RadiansToDegrees(Acos(-ProjectileDirection dot HitSideAxis));
+        AngleOfIncidence = class'UUnits'.static.RadiansToDegrees(Acos(-ProjectileDirection dot HitSideAxis));
 
-        if (AngleOfIncidenceDegrees > 120.0)
+        if (AngleOfIncidence > 120.0)
         {
+            if (bLogDebugPenetration || class'DH_LevelInfo'.static.DHDebugMode())
+            {
+                Log("Hit detection bug - switching from" @ HitSide @ "to" @ OppositeSide
+                    @ "as angle of incidence to original side was" @ int(Round(AngleOfIncidence)) @ "degrees");
+            }
+
             if ((bDebugPenetration || class'DH_LevelInfo'.static.DHDebugMode()) && Role == ROLE_Authority)
             {
                 Level.Game.Broadcast(self, "Hit detection bug - switching from" @ HitSide @ "to" @ OppositeSide
-                    @ "as angle of incidence to original side was" @ int(AngleOfIncidenceDegrees) @ "degrees");
-            }
-
-            if (bLogDebugPenetration || class'DH_LevelInfo'.static.DHDebugMode())
-            {
-                Log("Hit detection bug - switching from" @ HitSide @ "to" @ OppositeSide @ "as angle of incidence to original side was" @ int(AngleOfIncidenceDegrees) @ "degrees");
+                    @ "as angle of incidence to original side was" @ int(Round(AngleOfIncidence)) @ "degrees");
             }
 
             HitSide = OppositeSide;
@@ -858,224 +1216,172 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         }
     }
 
-    // Now set the relevant armour properties to use, based on which side we hit
-    if (HitSide ~= "Front")
+    // Get the relevant armour array to use, based on which side we hit
+    if (HitSide ~= "front")
     {
-        // If vehicle has a lower hull armor setting, check whether hit was below the max relative hit height for lower hull armor
-        if (LFrontArmorFactor > 0.0 && HitLocationRelativeOffset.Z <= LFrontArmorHeight)
-        {
-            ArmorThickness = LFrontArmorFactor;
-            ArmorSlope = LFrontArmorSlope;
-            HitSide = "Lower front";
-        }
-        else
-        {
-            ArmorThickness = UFrontArmorFactor;
-            ArmorSlope = UFrontArmorSlope;
-        }
+        HitSideArmorArray = FrontArmor;
     }
-    else if (HitSide ~= "Right")
+    else if (HitSide ~= "rear")
+    {
+        HitSideArmorArray = RearArmor;
+        bRearHit = true; // so we can set bRearHullPenetration if we do penetrate (it's used in TakeDamage)
+    }
+    else if (HitSide ~= "right" || HitSide ~= "left")
     {
         // No penetration if vehicle has extra side armor that stops HEAT projectiles, so exit here (after any debug options)
         if (bHasAddedSideArmor && P.RoundType == RT_HEAT)
         {
-            if (bDebugPenetration && Role == ROLE_Authority)
-            {
-                Level.Game.Broadcast(self, HitSide @ "hull hit: no penetration as extra side armor stops HEAT projectiles");
-            }
-
             if (bLogDebugPenetration)
             {
-                Log(HitSide @ "hull hit: no penetration as extra side armor stops HEAT projectiles");
+                Log("Hit hull" @ HitSide $ ": no penetration as extra side armor stops HEAT projectiles");
             }
+
+            if (bDebugPenetration && Role == ROLE_Authority)
+            {
+                Level.Game.Broadcast(self, "Hit hull" @ HitSide $ ": no penetration as extra side armor stops HEAT projectiles");
+            }
+
+            ResetTakeDamageVariables();
 
             return false;
         }
 
-        // If vehicle has a lower hull armor setting, check whether hit was below the max relative hit height for lower hull armor
-        if (LRightArmorFactor > 0.0 && HitLocationRelativeOffset.Z <= LRightArmorHeight)
+        if (HitSide ~= "right")
         {
-            ArmorThickness = LRightArmorFactor;
-            ArmorSlope = LRightArmorSlope;
-            HitSide = "Lower right";
+            HitSideArmorArray = RightArmor;
         }
         else
         {
-            ArmorThickness = URightArmorFactor;
-            ArmorSlope = URightArmorSlope;
+            HitSideArmorArray = LeftArmor;
         }
     }
-    else if (HitSide ~= "Rear")
-    {
-        bRearHit = true;
 
-        // If vehicle has a lower hull armor setting, check whether hit was below the max relative hit height for lower hull armor
-        if (LRearArmorFactor > 0.0 && HitLocationRelativeOffset.Z <= LRearArmorHeight)
-        {
-            ArmorThickness = LRearArmorFactor;
-            ArmorSlope = LRearArmorSlope;
-            HitSide = "Lower rear";
-        }
-        else
-        {
-            ArmorThickness = URearArmorFactor;
-            ArmorSlope = URearArmorSlope;
-        }
-    }
-    else if (HitSide ~= "Left")
+    // Loop through the armor array for the side of the vehicle we hit, to find which height band (relative to hull mesh centre) our hit fits within
+    // Then get the armor thickness & slope for that section, & append any extra location description for the armor plate
+    for (i = 0; i < HitSideArmorArray.Length; ++i)
     {
-        // No penetration if vehicle has extra side armor that stops HEAT projectiles, so exit here (after any debug options)
-        if (bHasAddedSideArmor && P.RoundType == RT_HEAT)
+        if (HitLocationRelativeOffset.Z <= HitSideArmorArray[i].MaxRelativeHeight || i == HitSideArmorArray.Length - 1)
         {
-            if (bDebugPenetration && Role == ROLE_Authority)
+            ArmorThickness = HitSideArmorArray[i].Thickness;
+            ArmorSlope = HitSideArmorArray[i].Slope;
+
+            if (HitSideArmorArray[i].LocationName != "")
             {
-                Level.Game.Broadcast(self, HitSide @ "hull hit: no penetration as extra side armor stops HEAT projectiles");
+                HitSide @= HitSideArmorArray[i].LocationName;
             }
 
-            if (bLogDebugPenetration)
-            {
-                Log(HitSide @ "hull hit: no penetration as extra side armor stops HEAT projectiles");
-            }
-
-            return false;
-        }
-
-        // If vehicle has a lower hull armor setting, check whether hit was below the max relative hit height for lower hull armor
-        if (LLeftArmorFactor > 0.0 && HitLocationRelativeOffset.Z <= LLeftArmorHeight)
-        {
-            ArmorThickness = LLeftArmorFactor;
-            ArmorSlope = LLeftArmorSlope;
-            HitSide = "Lower left";
-        }
-        else
-        {
-            ArmorThickness = ULeftArmorFactor;
-            ArmorSlope = ULeftArmorSlope;
+            break;
         }
     }
 
-    // Calculate the projectile's angle of incidence to the actual armor slope
-    // Apply armor slope to HitSideAxis to get an ArmorNormal (a normal from the sloping face of the armor), then calculate an AOI relative to that
-    ArmourSlopeRotator.Pitch = class'UUnits'.static.DegreesToUnreal(ArmorSlope);
-    ArmorNormal = Normal(vector(ArmourSlopeRotator) >> rotator(HitSideAxis));
-    AngleOfIncidenceDegrees = class'UUnits'.static.RadiansToDegrees(Acos(-ProjectileDirection dot ArmorNormal));
-
-    // Check whether or not we penetrated (record for now to allow for use in debug options)
-    bPenetrated = CheckPenetration(P, ArmorThickness, AngleOfIncidenceDegrees, PenetrationNumber);
-    bRearHullPenetration = bRearHit && bPenetrated; // used in TakeDamage()
-
-    // Debugging options
-    if (bDebugPenetration && P.NumDeflections == 0)
+    // Calculate the effective armor thickness, factoring in projectile's angle of incidence, & compare to projectile's penetration capability
+    // We can skip these calcs if MaxArmorPenetration doesn't exceed ArmorThickness, because that means we can't ever penetrate
+    // But if a debug option is enabled, we'll do the calcs as they get used in the debug
+    if (MaxArmorPenetration > ArmorThickness || ((bLogDebugPenetration || bDebugPenetration) && P.NumDeflections == 0))
     {
-        if (Level.NetMode != NM_DedicatedServer)
-        {
-            ClearStayingDebugLines();
-            DrawStayingDebugLine(HitLocation, HitLocation + (600.0 * ArmorNormal), 0, 0, 255); // blue line for ArmorNormal
+        // Calculate the projectile's angle of incidence to the actual armor slope
+        // Apply armor slope to HitSideAxis to get an ArmorNormal (a normal from the sloping face of the armor), then calculate an AOI relative to that
+        ArmourSlopeRotator.Pitch = class'UUnits'.static.DegreesToUnreal(ArmorSlope);
+        ArmorNormal = Normal(vector(ArmourSlopeRotator) >> rotator(HitSideAxis));
+        AngleOfIncidence = class'UUnits'.static.RadiansToDegrees(Acos(-ProjectileDirection dot ArmorNormal));
 
-            if (bPenetrated)
-            {
-                DrawStayingDebugLine(HitLocation, HitLocation + (2000.0 * -ProjectileDirection), 0, 255, 0); // green line for penetration
-            }
-            else
-            {
-                DrawStayingDebugLine(HitLocation, HitLocation + (2000.0 * -ProjectileDirection), 255, 0, 0); // red line if failed to penetrate
-            }
-        }
-
-        if (Role == ROLE_Authority)
-        {
-            Level.Game.Broadcast(self, HitSide @ "hull hit: penetrated =" @ Locs(bPenetrated) $ ", hit direction =" @ int(HitDirectionDegrees)
-                @ "deg, base armor =" @ int(ArmorThickness * 10.0) $ "mm, slope =" @ int(ArmorSlope) @ "deg");
-        }
-    }
-
-    if (bLogDebugPenetration && P.NumDeflections == 0)
-    {
-        Log(HitSide @ "hull hit: penetrated =" @ Locs(bPenetrated) $ ", hit direction =" @ int(HitDirectionDegrees)
-            @ "deg, base armor =" @ int(ArmorThickness * 10.0) $ "mm, slope =" @ int(ArmorSlope) @ "deg");
-        Log("------------------------------------------------------------------------------------------------------");
-    }
-
-    // Finally return whether or not we penetrated the vehicle hull
-    return bPenetrated;
-}
-
-// New generic function to handle penetration calcs for any shell type
-// Replaces PenetrationAPC, PenetrationAPDS, PenetrationHVAP, PenetrationHVAPLarge & PenetrationHEAT from DH 5.1 (also DO's PenetrationAP & PenetrationAPBC)
-simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorThickness, float AngleOfIncidenceDegrees, float PenetrationNumber)
-{
-    local float OverMatchFactor, SlopeMultiplier, EffectiveArmorThickness, PenetrationRatio;
-
-    // Calculate armor's slope multiplier & then effective armor thickness, to give us penetration ratio (penetrating depth vs effective thickness)
-    // But we can skip these calcs if PenetrationNumber doesn't exceed ArmorThickness, because that means we can't ever penetrate
-    // Although we won't simply return here because want to make sure bProjectilePenetrated etc actively get set to false in this function
-    // (We'll always do these calcs if a debug option is enabled, as they get used in the debug)
-    if (PenetrationNumber > ArmorThickness || ((bDebugPenetration || bLogDebugPenetration) && P.NumDeflections == 0))
-    {
+        // Get the armor's slope multiplier to calculate effective armor thickness
         OverMatchFactor = ArmorThickness / P.ShellDiameter;
-        SlopeMultiplier = GetArmorSlopeMultiplier(P, AngleOfIncidenceDegrees, OverMatchFactor);
+        SlopeMultiplier = GetArmorSlopeMultiplier(P, AngleOfIncidence, OverMatchFactor);
         EffectiveArmorThickness = ArmorThickness * SlopeMultiplier;
-        PenetrationRatio = PenetrationNumber / EffectiveArmorThickness;
 
-        // Debugging options
-        if (bDebugPenetration && Role == ROLE_Authority && P.NumDeflections == 0)
-        {
-            Level.Game.Broadcast(self, "Shot penetration =" @ int(PenetrationNumber * 10.0) $ "mm, Effective armor =" @ int(EffectiveArmorThickness * 10.0)
-                $ "mm, shot AOI =" @ int(AngleOfIncidenceDegrees) @ "deg, armor slope multiplier =" @ SlopeMultiplier);
-        }
-
-        if (bLogDebugPenetration && P.NumDeflections == 0)
-        {
-            Log("Shot penetration =" @ int(PenetrationNumber * 10.0) $ "mm, Effective armor =" @ int(EffectiveArmorThickness * 10.0)
-                $ "mm, shot AOI =" @ int(AngleOfIncidenceDegrees) @ "deg, armor slope multiplier =" @ SlopeMultiplier);
-        }
+        // Get the penetration ratio (penetration capability vs effective thickness)
+        PenetrationRatio = MaxArmorPenetration / EffectiveArmorThickness;
     }
 
-    // Check if round penetrated the vehicle & record whether it shattered on the armor
+    // Check & record whether or not we penetrated the vehicle (including check if shattered on the armor)
     P.bRoundShattered = P.bShatterProne && PenetrationRatio >= 1.0 && CheckIfShatters(P, PenetrationRatio, OverMatchFactor);
     bProjectilePenetrated = PenetrationRatio >= 1.0 && !P.bRoundShattered;
 
     // Set variables used in TakeDamage()
-    bTurretPenetration = false;
     bHEATPenetration = P.RoundType == RT_HEAT && bProjectilePenetrated;
+    bRearHullPenetration = bRearHit && bProjectilePenetrated;
+    bTurretPenetration = false;
 
+    // Debugging options
+    if ((bLogDebugPenetration || bDebugPenetration) && P.NumDeflections == 0)
+    {
+        DebugString1 = Caps("Hit hull" @ HitSide) $ ": penetrated =" @ Locs(bProjectilePenetrated) $ ", hit location angle ="
+            @ int(Round(HitLocationAngle)) @ "deg, armor =" @ int(Round(ArmorThickness * 10.0)) $ "mm @" @ int(Round(ArmorSlope)) @ "deg";
+
+        DebugString2 = "Shot penetration =" @ int(Round(MaxArmorPenetration * 10.0)) $ "mm, effective armor =" @ int(Round(EffectiveArmorThickness * 10.0))
+            $ "mm, shot AOI =" @ int(Round(AngleOfIncidence)) @ "deg, armor slope multiplier =" @ SlopeMultiplier;
+
+        if (bLogDebugPenetration)
+        {
+            Log(DebugString1);
+            Log(DebugString2);
+            Log("------------------------------------------------------------------------------------------------------");
+        }
+
+        if (bDebugPenetration)
+        {
+            if (Role == ROLE_Authority)
+            {
+                Level.Game.Broadcast(self, DebugString1);
+                Level.Game.Broadcast(self, DebugString2);
+            }
+
+            if (Level.NetMode != NM_DedicatedServer)
+            {
+                ClearStayingDebugLines();
+                DrawStayingDebugLine(HitLocation, HitLocation + (600.0 * ArmorNormal), 0, 0, 255); // blue line for ArmorNormal
+
+                if (bProjectilePenetrated)
+                {
+                    DrawStayingDebugLine(HitLocation, HitLocation + (2000.0 * -ProjectileDirection), 0, 255, 0); // green line for penetration
+                }
+                else
+                {
+                    DrawStayingDebugLine(HitLocation, HitLocation + (2000.0 * -ProjectileDirection), 255, 0, 0); // red line if failed to penetrate
+                }
+            }
+        }
+    }
+
+    // Finally return whether or not we penetrated the vehicle hull
     return bProjectilePenetrated;
 }
 
-// New generic function to work with generic ShouldPenetrate & CheckPenetration functions
+// New function to calculate the appropriate armor slope multiplier for various projectile types & angles
 // A static function so it can be used by cannon class for turret armor, avoiding lots of armor code repetition (same with several others)
-simulated static function float GetArmorSlopeMultiplier(DHAntiVehicleProjectile P, float AngleOfIncidenceDegrees, optional float OverMatchFactor)
+simulated static function float GetArmorSlopeMultiplier(DHAntiVehicleProjectile P, float AngleOfIncidence, optional float OverMatchFactor)
 {
-    local float CompoundExp, BaseAngleDegrees, DegreesSpread, ExtraAngleDegrees, BaseSlopeMultiplier, NextSlopeMultiplier, MultiplierDifference;
+    local float CompoundExp, BaseLookupAngle, DegreesSpread, ExtraAngleDegrees, BaseSlopeMultiplier, NextSlopeMultiplier, MultiplierDifference;
 
     if (P.RoundType == RT_HVAP)
     {
         if (P.ShellDiameter > 8.5) // HVAP rounds bigger than 85mm shell diameter (instead of using separate RoundType RT_HVAPLarge)
         {
-            if (AngleOfIncidenceDegrees <= 30.0)
+            if (AngleOfIncidence <= 30.0)
             {
-               CompoundExp = AngleOfIncidenceDegrees ** 1.75;
+               CompoundExp = AngleOfIncidence ** 1.75;
 
                return 2.71828 ** (CompoundExp * 0.000662);
             }
             else
             {
-               CompoundExp = AngleOfIncidenceDegrees ** 2.2;
+               CompoundExp = AngleOfIncidence ** 2.2;
 
                return 0.9043 * (2.71828 ** (CompoundExp * 0.0001987));
             }
         }
         else // smaller HVAP rounds
         {
-            if (AngleOfIncidenceDegrees <= 25.0)
+            if (AngleOfIncidence <= 25.0)
             {
-               CompoundExp = AngleOfIncidenceDegrees ** 2.2;
+               CompoundExp = AngleOfIncidence ** 2.2;
 
                return 2.71828 ** (CompoundExp * 0.0001727);
             }
             else
             {
-               CompoundExp = AngleOfIncidenceDegrees ** 1.5;
+               CompoundExp = AngleOfIncidence ** 1.5;
 
                return 0.7277 * (2.71828 ** (CompoundExp * 0.003787));
             }
@@ -1083,30 +1389,30 @@ simulated static function float GetArmorSlopeMultiplier(DHAntiVehicleProjectile 
     }
     else if (P.RoundType == RT_APDS)
     {
-        CompoundExp = AngleOfIncidenceDegrees ** 2.6;
+        CompoundExp = AngleOfIncidence ** 2.6;
 
         return 2.71828 ** (CompoundExp * 0.00003011);
     }
     else if (P.RoundType == RT_HEAT)
     {
-        return 1.0 / Cos(class'UUnits'.static.DegreesToRadians(Abs(AngleOfIncidenceDegrees)));
+        return 1.0 / Cos(class'UUnits'.static.DegreesToRadians(Abs(AngleOfIncidence)));
     }
     else // should mean RoundType is RT_APC, RT_HE or RT_Smoke, but treating this as a catch-all default (will also handle DO's AP & APBC shells)
     {
-        if (AngleOfIncidenceDegrees < 10.0)
+        if (AngleOfIncidence < 10.0)
         {
-            BaseAngleDegrees = 10.0; // we'll start with base multiplier for 10 degrees & then reduce based on how far much lower than 10 we are
+            BaseLookupAngle = 10.0; // we'll start with base multiplier for 10 degrees & then reduce based on how far much lower than 10 we are
             DegreesSpread = 10.0;
         }
         else
         {
-            BaseAngleDegrees = float(int(AngleOfIncidenceDegrees / 5.0)) * 5.0; // to nearest 5 degrees, rounded down
+            BaseLookupAngle = float(int(AngleOfIncidence / 5.0)) * 5.0; // to nearest 5 degrees, rounded down
             DegreesSpread = 5.0;
         }
 
-        ExtraAngleDegrees = AngleOfIncidenceDegrees - BaseAngleDegrees;
-        BaseSlopeMultiplier = ArmorSlopeTable(P, BaseAngleDegrees, OverMatchFactor);
-        NextSlopeMultiplier = ArmorSlopeTable(P, BaseAngleDegrees + 5.0, OverMatchFactor);
+        ExtraAngleDegrees = AngleOfIncidence - BaseLookupAngle;
+        BaseSlopeMultiplier = ArmorSlopeTable(P, BaseLookupAngle, OverMatchFactor);
+        NextSlopeMultiplier = ArmorSlopeTable(P, BaseLookupAngle + 5.0, OverMatchFactor);
         MultiplierDifference = NextSlopeMultiplier - BaseSlopeMultiplier;
 
         return BaseSlopeMultiplier + (ExtraAngleDegrees / DegreesSpread * MultiplierDifference);
@@ -1115,72 +1421,74 @@ simulated static function float GetArmorSlopeMultiplier(DHAntiVehicleProjectile 
     return 1.0; // fail-safe neutral return value
 }
 
-// New generic, lookup function to calculate the armor slope multiplier for various AP-type shells
+// New lookup function to calculate the appropriate armor slope multiplier for various projectile types & angles
 // All from "WWII Ballistics: Armor & Gunnery" by Bird & Livingston
-simulated static function float ArmorSlopeTable(DHAntiVehicleProjectile P, float AngleOfIncidenceDegrees, float OverMatchFactor)
+// A static function so it can be used by cannon class for turret armor, avoiding lots of armor code repetition (same with several others)
+simulated static function float ArmorSlopeTable(DHAntiVehicleProjectile P, float AngleOfIncidence, float OverMatchFactor)
 {
     if (P.RoundType == RT_AP) // from Darkest Orchestra
     {
-        if      (AngleOfIncidenceDegrees <= 10.0)  return 0.98  * (OverMatchFactor ** 0.06370); // at 10 degrees
-        else if (AngleOfIncidenceDegrees <= 15.0)  return 1.00  * (OverMatchFactor ** 0.09690);
-        else if (AngleOfIncidenceDegrees <= 20.0)  return 1.04  * (OverMatchFactor ** 0.13561);
-        else if (AngleOfIncidenceDegrees <= 25.0)  return 1.11  * (OverMatchFactor ** 0.16164);
-        else if (AngleOfIncidenceDegrees <= 30.0)  return 1.22  * (OverMatchFactor ** 0.19702);
-        else if (AngleOfIncidenceDegrees <= 35.0)  return 1.38  * (OverMatchFactor ** 0.22546);
-        else if (AngleOfIncidenceDegrees <= 40.0)  return 1.63  * (OverMatchFactor ** 0.26313);
-        else if (AngleOfIncidenceDegrees <= 45.0)  return 2.00  * (OverMatchFactor ** 0.34717);
-        else if (AngleOfIncidenceDegrees <= 50.0)  return 2.64  * (OverMatchFactor ** 0.57353);
-        else if (AngleOfIncidenceDegrees <= 55.0)  return 3.23  * (OverMatchFactor ** 0.69075);
-        else if (AngleOfIncidenceDegrees <= 60.0)  return 4.07  * (OverMatchFactor ** 0.81826);
-        else if (AngleOfIncidenceDegrees <= 65.0)  return 6.27  * (OverMatchFactor ** 0.91920);
-        else if (AngleOfIncidenceDegrees <= 70.0)  return 8.65  * (OverMatchFactor ** 1.00539);
-        else if (AngleOfIncidenceDegrees <= 75.0)  return 13.75 * (OverMatchFactor ** 1.07400);
-        else if (AngleOfIncidenceDegrees <= 80.0)  return 21.87 * (OverMatchFactor ** 1.17973);
+        if      (AngleOfIncidence <= 10.0)  return 0.98  * (OverMatchFactor ** 0.06370); // at 10 degrees
+        else if (AngleOfIncidence <= 15.0)  return 1.00  * (OverMatchFactor ** 0.09690);
+        else if (AngleOfIncidence <= 20.0)  return 1.04  * (OverMatchFactor ** 0.13561);
+        else if (AngleOfIncidence <= 25.0)  return 1.11  * (OverMatchFactor ** 0.16164);
+        else if (AngleOfIncidence <= 30.0)  return 1.22  * (OverMatchFactor ** 0.19702);
+        else if (AngleOfIncidence <= 35.0)  return 1.38  * (OverMatchFactor ** 0.22546);
+        else if (AngleOfIncidence <= 40.0)  return 1.63  * (OverMatchFactor ** 0.26313);
+        else if (AngleOfIncidence <= 45.0)  return 2.00  * (OverMatchFactor ** 0.34717);
+        else if (AngleOfIncidence <= 50.0)  return 2.64  * (OverMatchFactor ** 0.57353);
+        else if (AngleOfIncidence <= 55.0)  return 3.23  * (OverMatchFactor ** 0.69075);
+        else if (AngleOfIncidence <= 60.0)  return 4.07  * (OverMatchFactor ** 0.81826);
+        else if (AngleOfIncidence <= 65.0)  return 6.27  * (OverMatchFactor ** 0.91920);
+        else if (AngleOfIncidence <= 70.0)  return 8.65  * (OverMatchFactor ** 1.00539);
+        else if (AngleOfIncidence <= 75.0)  return 13.75 * (OverMatchFactor ** 1.07400);
+        else if (AngleOfIncidence <= 80.0)  return 21.87 * (OverMatchFactor ** 1.17973);
         else                                       return 34.49 * (OverMatchFactor ** 1.28631); // at 85 degrees
     }
     else if (P.RoundType == RT_APBC) // from Darkest Orchestra
     {
-        if      (AngleOfIncidenceDegrees <= 10.0)  return 1.04  * (OverMatchFactor ** 0.01555); // at 10 degrees
-        else if (AngleOfIncidenceDegrees <= 15.0)  return 1.06  * (OverMatchFactor ** 0.02315);
-        else if (AngleOfIncidenceDegrees <= 20.0)  return 1.08  * (OverMatchFactor ** 0.03448);
-        else if (AngleOfIncidenceDegrees <= 25.0)  return 1.11  * (OverMatchFactor ** 0.05134);
-        else if (AngleOfIncidenceDegrees <= 30.0)  return 1.16  * (OverMatchFactor ** 0.07710);
-        else if (AngleOfIncidenceDegrees <= 35.0)  return 1.22  * (OverMatchFactor ** 0.11384);
-        else if (AngleOfIncidenceDegrees <= 40.0)  return 1.31  * (OverMatchFactor ** 0.16952);
-        else if (AngleOfIncidenceDegrees <= 45.0)  return 1.44  * (OverMatchFactor ** 0.24604);
-        else if (AngleOfIncidenceDegrees <= 50.0)  return 1.68  * (OverMatchFactor ** 0.37910);
-        else if (AngleOfIncidenceDegrees <= 55.0)  return 2.11  * (OverMatchFactor ** 0.56444);
-        else if (AngleOfIncidenceDegrees <= 60.0)  return 3.50  * (OverMatchFactor ** 1.07411);
-        else if (AngleOfIncidenceDegrees <= 65.0)  return 5.34  * (OverMatchFactor ** 1.46188);
-        else if (AngleOfIncidenceDegrees <= 70.0)  return 9.48  * (OverMatchFactor ** 1.81520);
-        else if (AngleOfIncidenceDegrees <= 75.0)  return 20.22 * (OverMatchFactor ** 2.19155);
-        else if (AngleOfIncidenceDegrees <= 80.0)  return 56.20 * (OverMatchFactor ** 2.56210);
+        if      (AngleOfIncidence <= 10.0)  return 1.04  * (OverMatchFactor ** 0.01555); // at 10 degrees
+        else if (AngleOfIncidence <= 15.0)  return 1.06  * (OverMatchFactor ** 0.02315);
+        else if (AngleOfIncidence <= 20.0)  return 1.08  * (OverMatchFactor ** 0.03448);
+        else if (AngleOfIncidence <= 25.0)  return 1.11  * (OverMatchFactor ** 0.05134);
+        else if (AngleOfIncidence <= 30.0)  return 1.16  * (OverMatchFactor ** 0.07710);
+        else if (AngleOfIncidence <= 35.0)  return 1.22  * (OverMatchFactor ** 0.11384);
+        else if (AngleOfIncidence <= 40.0)  return 1.31  * (OverMatchFactor ** 0.16952);
+        else if (AngleOfIncidence <= 45.0)  return 1.44  * (OverMatchFactor ** 0.24604);
+        else if (AngleOfIncidence <= 50.0)  return 1.68  * (OverMatchFactor ** 0.37910);
+        else if (AngleOfIncidence <= 55.0)  return 2.11  * (OverMatchFactor ** 0.56444);
+        else if (AngleOfIncidence <= 60.0)  return 3.50  * (OverMatchFactor ** 1.07411);
+        else if (AngleOfIncidence <= 65.0)  return 5.34  * (OverMatchFactor ** 1.46188);
+        else if (AngleOfIncidence <= 70.0)  return 9.48  * (OverMatchFactor ** 1.81520);
+        else if (AngleOfIncidence <= 75.0)  return 20.22 * (OverMatchFactor ** 2.19155);
+        else if (AngleOfIncidence <= 80.0)  return 56.20 * (OverMatchFactor ** 2.56210);
         else                                       return 221.3 * (OverMatchFactor ** 2.93265); // at 85 degrees
     }
     else // should mean RoundType is RT_APC (also covers APCBC) or RT_HE, but treating this as a catch-all default
     {
-        if      (AngleOfIncidenceDegrees <= 10.0)  return 1.01  * (OverMatchFactor ** 0.0225); // at 10 degrees
-        else if (AngleOfIncidenceDegrees <= 15.0)  return 1.03  * (OverMatchFactor ** 0.0327);
-        else if (AngleOfIncidenceDegrees <= 20.0)  return 1.10  * (OverMatchFactor ** 0.0454);
-        else if (AngleOfIncidenceDegrees <= 25.0)  return 1.17  * (OverMatchFactor ** 0.0549);
-        else if (AngleOfIncidenceDegrees <= 30.0)  return 1.27  * (OverMatchFactor ** 0.0655);
-        else if (AngleOfIncidenceDegrees <= 35.0)  return 1.39  * (OverMatchFactor ** 0.0993);
-        else if (AngleOfIncidenceDegrees <= 40.0)  return 1.54  * (OverMatchFactor ** 0.1388);
-        else if (AngleOfIncidenceDegrees <= 45.0)  return 1.72  * (OverMatchFactor ** 0.1655);
-        else if (AngleOfIncidenceDegrees <= 50.0)  return 1.94  * (OverMatchFactor ** 0.2035);
-        else if (AngleOfIncidenceDegrees <= 55.0)  return 2.12  * (OverMatchFactor ** 0.2427);
-        else if (AngleOfIncidenceDegrees <= 60.0)  return 2.56  * (OverMatchFactor ** 0.2450);
-        else if (AngleOfIncidenceDegrees <= 65.0)  return 3.20  * (OverMatchFactor ** 0.3354);
-        else if (AngleOfIncidenceDegrees <= 70.0)  return 3.98  * (OverMatchFactor ** 0.3478);
-        else if (AngleOfIncidenceDegrees <= 75.0)  return 5.17  * (OverMatchFactor ** 0.3831);
-        else if (AngleOfIncidenceDegrees <= 80.0)  return 8.09  * (OverMatchFactor ** 0.4131);
+        if      (AngleOfIncidence <= 10.0)  return 1.01  * (OverMatchFactor ** 0.0225); // at 10 degrees
+        else if (AngleOfIncidence <= 15.0)  return 1.03  * (OverMatchFactor ** 0.0327);
+        else if (AngleOfIncidence <= 20.0)  return 1.10  * (OverMatchFactor ** 0.0454);
+        else if (AngleOfIncidence <= 25.0)  return 1.17  * (OverMatchFactor ** 0.0549);
+        else if (AngleOfIncidence <= 30.0)  return 1.27  * (OverMatchFactor ** 0.0655);
+        else if (AngleOfIncidence <= 35.0)  return 1.39  * (OverMatchFactor ** 0.0993);
+        else if (AngleOfIncidence <= 40.0)  return 1.54  * (OverMatchFactor ** 0.1388);
+        else if (AngleOfIncidence <= 45.0)  return 1.72  * (OverMatchFactor ** 0.1655);
+        else if (AngleOfIncidence <= 50.0)  return 1.94  * (OverMatchFactor ** 0.2035);
+        else if (AngleOfIncidence <= 55.0)  return 2.12  * (OverMatchFactor ** 0.2427);
+        else if (AngleOfIncidence <= 60.0)  return 2.56  * (OverMatchFactor ** 0.2450);
+        else if (AngleOfIncidence <= 65.0)  return 3.20  * (OverMatchFactor ** 0.3354);
+        else if (AngleOfIncidence <= 70.0)  return 3.98  * (OverMatchFactor ** 0.3478);
+        else if (AngleOfIncidence <= 75.0)  return 5.17  * (OverMatchFactor ** 0.3831);
+        else if (AngleOfIncidence <= 80.0)  return 8.09  * (OverMatchFactor ** 0.4131);
         else                                       return 11.32 * (OverMatchFactor ** 0.4550); // at 85 degrees
     }
 
     return 1.0; // fail-safe neutral return value
 }
 
-// New generic function to work with new CheckPenetration function - checks if the round should shatter, based on the 'shatter gap' for different round types
+// New function to check whether a projectile should shatter on vehicle's armor, based on the 'shatter gap' for different round types
+// A static function so it can be used by cannon class for turret armor, avoiding lots of armor code repetition (same with several others)
 simulated static function bool CheckIfShatters(DHAntiVehicleProjectile P, float PenetrationRatio, optional float OverMatchFactor)
 {
     if (P.RoundType == RT_HVAP)
@@ -1229,9 +1537,10 @@ simulated static function bool CheckIfShatters(DHAntiVehicleProjectile P, float 
 // Also to use TankDamageModifier instead of VehicleDamageModifier (unless an APC)
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
-    local DHVehicleCannonPawn CannonPawn;
+    local class<ROWeaponDamageType> WepDamageType;
+    local DHVehicleCannonPawn       CannonPawn;
     local Controller InstigatorController;
-    local float      VehicleDamageMod, TreadDamageMod, HullChanceModifier, TurretChanceModifier;
+    local float      DamageModifier, TreadDamageMod, HullChanceModifier, TurretChanceModifier;
     local int        InstigatorTeam, i;
     local bool       bEngineStoppedProjectile, bAmmoDetonation;
 
@@ -1279,49 +1588,32 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         }
     }
 
-    // Set damage modifiers from the DamageType, based on type of vehicle
-    if (class<ROWeaponDamageType>(DamageType) != none)
+    // Apply damage modifier from the DamageType, plus a little damage randomisation (but not randomised for fire damage as it messes up timings)
+    WepDamageType = class<ROWeaponDamageType>(DamageType);
+
+    if (WepDamageType != none)
     {
         if (bIsApc)
         {
-            VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier;
+            DamageModifier = WepDamageType.default.APCDamageModifier;
         }
         else
         {
-            VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.TankDamageModifier;
+            DamageModifier = WepDamageType.default.TankDamageModifier;
+        }
+
+        if (DamageType != VehicleBurningDamType)
+        {
+            DamageModifier *= RandRange(0.75, 1.08);
         }
 
         if (bHasTreads)
         {
-            TreadDamageMod = class<ROWeaponDamageType>(DamageType).default.TreadDamageModifier;
-        }
-    }
-    else if (class<ROVehicleDamageType>(DamageType) != none)
-    {
-        if (bIsApc)
-        {
-            VehicleDamageMod  = class<ROVehicleDamageType>(DamageType).default.APCDamageModifier;
-        }
-        else
-        {
-            VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.TankDamageModifier;
-        }
-
-        if (bHasTreads)
-        {
-            TreadDamageMod = class<ROVehicleDamageType>(DamageType).default.TreadDamageModifier;
+            TreadDamageMod = WepDamageType.default.TreadDamageModifier;
         }
     }
 
-    // Add in the DamageType's vehicle damage modifier & a little damage randomisation (but not for fire damage as it messes up timings)
-    if (DamageType != VehicleBurningDamType)
-    {
-        Damage *= (VehicleDamageMod * RandRange(0.75, 1.08));
-    }
-    else
-    {
-        Damage *= VehicleDamageMod;
-    }
+    Damage *= DamageModifier;
 
     // Exit if no damage
     if (Damage < 1)
@@ -1374,7 +1666,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                         }
 
                         Damage *= Health;
-                        bAmmoDetonation = true; // stops unnecessary penetration checks, as the vehicle is going to explode anyway
+                        bAmmoDetonation = true;
                         break;
                     }
                     // Even if ammo did not explode, increase the chance of a fire breaking out
@@ -1403,7 +1695,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         // Check additional DH NewVehHitPoints
         for (i = 0; i < NewVehHitpoints.Length; ++i)
         {
-            if (IsNewPointShot(HitLocation, Momentum, 1.0, i))
+            if (IsNewPointShot(HitLocation, Momentum, i))
             {
                 if (bLogDebugPenetration)
                 {
@@ -1536,33 +1828,32 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 }
 
                 Damage *= Health;
-                bAmmoDetonation = true; // stops unnecessary penetration checks, as the vehicle is going to explode anyway
             }
             else if (bTurretPenetration)
             {
                 Damage *= 0.55; // reduce damage to vehicle itself from a turret hit, if the turret ammo didn't detonate
-            }
 
-            // Random chance of shrapnel killing driver
-            if (Driver != none && FRand() < (float(Damage) / DriverKillChance * HullChanceModifier))
-            {
-                if (bDebuggingText)
+                // Random chance of shrapnel killing driver
+                if (Driver != none && FRand() < (float(Damage) / DriverKillChance * HullChanceModifier))
                 {
-                    Level.Game.Broadcast(self, "Driver killed by shrapnel");
+                    if (bDebuggingText)
+                    {
+                        Level.Game.Broadcast(self, "Driver killed by shrapnel");
+                    }
+
+                    Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
                 }
 
-                Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
-            }
-
-            // Random chance of shrapnel killing hull machine gunner
-            if (MGun != none && MGun.WeaponPawn != none && MGun.WeaponPawn.Driver != none && FRand() < (float(Damage) / GunnerKillChance * HullChanceModifier))
-            {
-                if (bDebuggingText)
+                // Random chance of shrapnel killing hull machine gunner
+                if (MGun != none && MGun.WeaponPawn != none && MGun.WeaponPawn.Driver != none && FRand() < (float(Damage) / GunnerKillChance * HullChanceModifier))
                 {
-                    Level.Game.Broadcast(self, "Hull gunner killed by shrapnel");
-                }
+                    if (bDebuggingText)
+                    {
+                        Level.Game.Broadcast(self, "Hull gunner killed by shrapnel");
+                    }
 
-                MGun.WeaponPawn.Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
+                    MGun.WeaponPawn.Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
+                }
             }
         }
 
@@ -1773,6 +2064,22 @@ function TakeEngineFireDamage()
     }
 }
 
+// Modified to unlock a locked vehicle (unlocking isn't directly necessary, but unlocking it finds & clears any references to the now destroyed vehicle)
+state VehicleDestroyed
+{
+ignores Tick;
+
+    function BeginState()
+    {
+        super.BeginState();
+
+        if (bVehicleLocked)
+        {
+            SetVehicleLocked(false);
+        }
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *************************  SETUP, UPDATE, CLEAN UP  ***************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1806,6 +2113,68 @@ simulated function DestroyAttachments()
     }
 }
 
+// Modified to handle extended vehicle fire system, plus setting manual/powered turret
+simulated function SetEngine()
+{
+    // Engine off
+    if (bEngineOff || Health <= 0 || EngineHealth <= 0)
+    {
+        TurnDamping = 0.0;
+
+        if (IsVehicleBurning())
+        {
+            AmbientSound = VehicleBurningSound;
+            SoundVolume = 255;
+            SoundRadius = 300.0;
+        }
+        else if (EngineHealth <= 0)
+        {
+            AmbientSound = SmokingEngineSound;
+            SoundVolume = 64;
+            SoundRadius = 200.0;
+        }
+        else
+        {
+            AmbientSound = none;
+        }
+
+        if (bEmittersOn)
+        {
+            StopEmitters();
+        }
+
+        if (ShutDownForce != "")
+        {
+            ClientPlayForceFeedback(ShutDownForce);
+        }
+    }
+    // Engine on
+    else
+    {
+        if (IdleSound != none)
+        {
+            AmbientSound = IdleSound;
+            SoundVolume = default.SoundVolume;
+            SoundRadius = default.SoundRadius;
+        }
+
+        if (!bEmittersOn)
+        {
+            StartEmitters();
+        }
+
+        if (StartUpForce != "")
+        {
+            ClientPlayForceFeedback(StartUpForce);
+        }
+    }
+
+    if (Cannon != none && DHVehicleCannonPawn(Cannon.WeaponPawn) != none)
+    {
+        DHVehicleCannonPawn(Cannon.WeaponPawn).SetManualTurret(bEngineOff);
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *******************************  MISCELLANEOUS ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1813,7 +2182,7 @@ simulated function DestroyAttachments()
 // Modified to stop vehicle from prematurely destroying itself when on fire; instead just let the fire run its course
 function MaybeDestroyVehicle()
 {
-    if (!bOnFire && !bEngineOnFire)
+    if (!IsVehicleBurning())
     {
         super.MaybeDestroyVehicle();
     }
@@ -1882,7 +2251,7 @@ function float ModifyThreat(float Current, Pawn Threat)
 // New debug exec for testing hull fire damage & effects
 exec function HullFire()
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && !bOnFire)
+    if (IsDebugModeAllowed() && !bOnFire)
     {
         StartHullFire(none);
     }
@@ -1891,55 +2260,62 @@ exec function HullFire()
 // New debug exec for testing engine fire damage & effects
 exec function EngineFire()
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && !bEngineOnFire)
+    if (IsDebugModeAllowed() && !bEngineOnFire)
     {
         StartEngineFire(none);
     }
 }
 
-// New debug exec to adjust location of driver's hatch fire position
+// New debug exec to adjust position of driver's hatch fire
 exec function SetFEOffset(int NewX, int NewY, int NewZ)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed() && Level.NetMode != NM_DedicatedServer)
     {
+        // Only update offset if something has been entered (otherwise just entering "SetFEOffset" is quick way of triggering hatch fire at current position)
         if (NewX != 0 || NewY != 0 || NewZ != 0)
         {
+            Log(VehicleNameString @ "FireEffectOffset =" @ NewX @ NewY @ NewZ @ "(old was" @ FireEffectOffset $ ")");
             FireEffectOffset.X = NewX;
             FireEffectOffset.Y = NewY;
             FireEffectOffset.Z = NewZ;
         }
+        else
+        {
+            Log(VehicleNameString @ "FireEffectOffset =" @ FireEffectOffset);
+        }
 
         StartDriverHatchFire();
-        Log(VehicleNameString @ "FireEffectOffset =" @ FireEffectOffset);
     }
 }
 
 defaultproperties
 {
+    // Vehicle properties
+    VehicleMass=12.5
+    CollisionHeight=60.0
+    PointValue=3.0
+    MaxDesireability=1.9
+    EngineRestartFailChance=0.1
+    MinRunOverSpeed=83.82 // decreased to 5 kph, as players should be easier to run over with armored vehicles
+
     // Driver & positions
     bMustBeTankCommander=true
     UnbuttonedPositionIndex=2
-    bMustUnbuttonToSwitchToRider=true
-    PeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.PERISCOPE_overlay_Allied'
-    DamagedPeriscopeOverlay=texture'DH_VehicleOptics_tex.Allied.Destroyed'
-
-    // Treads & track wheels
-    bHasTreads=true
-    LeftTreadIndex=1
-    RightTreadIndex=2
-    LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
-    RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
-    TreadVelocityScale=450.0
-    WheelRotationScale=500
-    TreadHitMinAngle=2.0
+    BeginningIdleAnim="driver_hatch_idle_close"
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_Allied'
 
     // Damage
-    Health=300
-    HealthMax=300.0
+    Health=525
+    HealthMax=525.0
     EngineHealth=300
     VehHitpoints(0)=(PointBone="Body") // default engine hit point bone
     GunOpticsHitPointIndex=-1 // set in subclass if vehicle has exposed gunsight optics
-    TreadDamageThreshold=0.5
+    TreadDamageThreshold=0.75
+    bCanCrash=false
+    ImpactDamageThreshold=5000.0
+    DamagedPeriscopeOverlay=Texture'DH_VehicleOpticsDestroyed_tex.General.Destroyed'
+
+    // Component damage probabilities
     DriverKillChance=1150.0
     GunnerKillChance=1150.0
     CommanderKillChance=950.0
@@ -1948,6 +2324,8 @@ defaultproperties
     TraverseDamageChance=2000.0
     TurretDetonationThreshold=1750.0
     AmmoIgnitionProbability=0.75
+
+    // Vehicle fires
     HullFireChance=0.25
     HullFireHEATChance=0.5
     EngineFireChance=0.5
@@ -1956,10 +2334,9 @@ defaultproperties
     PlayerFireDamagePer2Secs=15.0
     FireDetonationChance=0.07
     bFirstPenetratingHit=true
-    ImpactDamageMult=0.001
-    ImpactDamageThreshold=5000.0
+    VehicleBurningDamType=class'DHVehicleBurningDamageType'
 
-    // Vehicle fires
+    // Burning/smoking vehicle effects
     DamagedEffectOffset=(X=-40.0,Y=10.0,Z=10.0) // position of engine smoke or fire
     HeavyEngineDamageThreshold=0.5
     DamagedEffectHealthSmokeFactor=0.85
@@ -1969,98 +2346,86 @@ defaultproperties
     FireEffectClass=class'ROEngine.VehicleDamagedEffect' // driver's hatch fire
     FireAttachBone="driver_player"
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
-    VehicleBurningDamType=class'DHVehicleBurningDamageType'
 
     // Vehicle destruction
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
     DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
-    DisintegrationHealth=-10000.0 // -10000 default to make classes enable disintegration
-    DestructionLinearMomentum=(Min=100.0,Max=350.0)
-    DestructionAngularMomentum=(Min=50.0,Max=150.0)
-    ExplosionDamage=575.0
-    ExplosionRadius=900.0
+    ExplosionDamage=200.0
+    ExplosionRadius=450.0
     ExplosionSoundRadius=1000.0
+
+    // Vehicle reset/respawn
+    VehicleSpikeTime=10.0     // if disabled
+    TimeTilDissapear=120.0    // after destroyed
+    IdleTimeBeforeReset=200.0 // if empty & no friendlies nearby
+
+    // Treads & track wheels
+    bHasTreads=true
+    LeftTreadIndex=1
+    RightTreadIndex=2
+    LeftTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
+    RightTreadPanDirection=(Pitch=0,Yaw=0,Roll=16384)
+    TreadVelocityScale=450.0
 
     // Sounds
     SoundRadius=650.0
     TransientSoundRadius=700.0
-    SmokingEngineSound=sound'Amb_Constructions.steam.Krasnyi_Steam_Deep'
-    TrackDamagedSound=sound'Vehicle_Engines.track_broken'
+    SmokingEngineSound=Sound'Amb_Constructions.steam.Krasnyi_Steam_Deep'
+    TrackDamagedSound=Sound'Vehicle_Engines.track_broken'
+    LeftTrackSoundBone="Track_L"
+    RightTrackSoundBone="Track_R"
     RumbleSoundVolumeModifier=1.0
 
-    // Vehicle reset/respawn
-    VehicleSpikeTime=60.0     // if disabled
-    TimeTilDissapear=90.0     // after destroyed
-    IdleTimeBeforeReset=200.0 // if empty & no friendlies nearby
+    // Effects
+    SparkEffectClass=class'ROEngine.VehicleImpactSparks' // reinstate from ROVehicle (removed for non-armoured DHVehicles)
+    SteeringScaleFactor=0.75
+    SteerBoneAxis=AXIS_X
+    LeftLeverAxis=AXIS_Z
+    RightLeverAxis=AXIS_Z
+    StartUpForce="TankStartUp"
+    ShutDownForce="TankShutDown"
 
-    // Camera
-    PlayerCameraBone="Camera_driver"
+    // Camera & view
+    ViewShakeRadius=50.0 // was 600 in RO
+    ViewShakeOffsetMag=(X=0.0,Y=0.0,Z=0.0) // was X=0.5,Z=2 in RO
+    ViewShakeOffsetFreq=0.0 // was 7 in RO
     TPCamDistance=375.0
     TPCamLookat=(X=0.0,Y=0.0,Z=0.0)
     TPCamWorldOffset=(X=0.0,Y=0.0,Z=100.0)
 
-    // Entry & exit
+    // Exit positions
     ExitPositions(0)=(X=0.0,Y=-165.0,Z=40.0)
     ExitPositions(1)=(X=0.0,Y=165.0,Z=40.0)
     ExitPositions(2)=(X=0.0,Y=-165.0,Z=-40.0)
     ExitPositions(3)=(X=0.0,Y=165.0,Z=-40.0)
 
-    // Physics and movement
-    bSpecialTankTurning=true
-    CollisionRadius=100.0
-    CollisionHeight=400.0
-    VehicleMass=12.5
+    // Driving & steering
     MaxCriticalSpeed=700.0 // approx 42 kph
-    GroundSpeed=325.0
-    bHasHandbrake=true
-    WheelSoftness=0.025
-    WheelPenScale=2.0
-    WheelPenOffset=0.01
-    WheelRestitution=0.1
-    WheelInertia=0.1
-    WheelLongFrictionFunc=(Points=(,(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
-    WheelLongSlip=0.001
-    WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=10000000000.0,OutVal=0.00)))
-    WheelLongFrictionScale=1.5
-    WheelLatFrictionScale=3.0
-    WheelHandbrakeSlip=0.01
-    WheelHandbrakeFriction=0.1
-    WheelSuspensionTravel=15.0
-    WheelSuspensionMaxRenderTravel=15.0
-    FTScale=0.03
-    ChassisTorqueScale=0.9 // was 0.25 in RO
-    MinBrakeFriction=4.0
-    MaxSteerAngleCurve=(Points=((OutVal=35.0),(InVal=1500.0,OutVal=20.0),(InVal=1000000000.0,OutVal=15.0)))
-    TorqueCurve=(Points=((InVal=0,OutVal=12.0),(InVal=200,OutVal=3.0),(InVal=1500,OutVal=4.0),(InVal=2200,OutVal=0.0)))
-    GearRatios(0)=-0.2
-    GearRatios(1)=0.2
-    GearRatios(2)=0.35
-    GearRatios(3)=0.55
-    GearRatios(4)=0.6
-    TransRatio=0.12
+    TorqueCurve=(Points=((InVal=0.0,OutVal=12.0),(InVal=200.0,OutVal=3.0),(InVal=1500.0,OutVal=4.0),(InVal=2200.0,OutVal=0.0)))
     ChangeUpPoint=2050.0   // was 2000 in RO
     ChangeDownPoint=1100.0 // was 1000 in RO
-    LSDFactor=1.0
-    EngineBrakeFactor=0.0001
-    EngineBrakeRPMScale=0.1
-    MaxBrakeTorque=20.0
+    ChassisTorqueScale=0.9 // was 0.25 in RO
+    bSpecialTankTurning=true
+    TurnDamping=50.0
     SteerSpeed=160.0
-    TurnDamping=50
-    StopThreshold=100.0
-    HandbrakeThresh=200.0
-    EngineInertia=0.1
-    IdleRPM=500.0
-    EngineRPMSoundRange=5000
-    RevMeterScale=4000.0
+    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=35.0),(InVal=1500.0,OutVal=20.0),(InVal=1000000000.0,OutVal=15.0)))
+    bHasHandbrake=true
+
+    // Physics wheels properties
+    WheelPenScale=2.0
+    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
+    WheelLongFrictionScale=1.5
+    WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=10000000000.0,OutVal=0.00)))
+    WheelLatFrictionScale=3.0
 
     // Karma properties
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(X=-0.0,Y=0.0,Z=-0.5)
+        KCOMOffset=(X=0.0,Y=0.0,Z=-0.5)
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
@@ -2075,22 +2440,4 @@ defaultproperties
         KMaxAngularSpeed=1.0 // slow down the angular velocity so the tank feels "heavier"
     End Object
     KParams=KarmaParamsRBFull'DH_Engine.DHArmoredVehicle.KParams0'
-
-    // Proximity view shake
-    bEnableProximityViewShake=false // TODO - this is default false anyway, but interesting to test enabling this, as could be a good feature for heavy vehicles
-    ViewShakeRadius=50.0   // was 600 in RO
-    ViewShakeOffsetMag=(X=0.0,Y=0.0,Z=0.0) // was X=0.5,Z=2 in RO
-    ViewShakeOffsetFreq=0.0 // was 7 in RO
-
-    // Force feedback
-    StartUpForce="TankStartUp"
-    ShutDownForce="TankShutDown"
-    CenterSpringForce="SpringONSSRV"
-
-    // Miscellaneous
-    PointValue=3.0
-    MaxDesireability=1.4
-    SteerBoneAxis=AXIS_X
-    SparkEffectClass=class'ROEngine.VehicleImpactSparks' // reinstate from ROVehicle (removed for non-armoured DHVehicles)
-    EngineRestartFailChance=0.1
 }

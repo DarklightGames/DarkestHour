@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHAdminMenuMutator extends Mutator;
@@ -17,7 +17,7 @@ var     float   MVKillTime;
 var     float   MVWarnInterval;
 };
 
-var DHAdminMenu_Replicator Replicator;             // a 'helper' actor that gets replicated to all clients to add menu interactions & replicate variables for client use
+var DHAdminMenu_Replicator  Replicator;             // a 'helper' actor that gets replicated to all clients to add menu interactions & replicate variables for client use
 var     ROTeamGame          ROTG;                   // reference to the ROTeamGame actor (which is RO's GameInfo class) - used by several functions
 var     AccessControl       AccessControl;          // reference to the AccessControl class actor, which handles kicks & bans - used by the kick with warning function
 var     PlayerController    Admin;                  // temporarily saves the admin performing the current action, which avoids passing it through lots & lots of functions
@@ -74,6 +74,13 @@ function SetInitialVariables()
     if (AccessControl == none && Level.NetMode != NM_Standalone)
     {
         Log("DHAdminMenu ERROR: an AccessControl actor wasn't found on the server - it won't be possible to kick a player with a message");
+    }
+
+    // If we're in single player or DH debug mode (i.e. the development branch), always enable the extra menu options for convenience
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        bParaDropPlayerAllowed = true;
+        bShowRealismMenu = true;
     }
 
     // If the paradrop or realism/testing menu options are enabled, we set the necessary paradrop variables for this map
@@ -216,12 +223,11 @@ function Mutate(string MutateString, PlayerController Sender)
 
                 ParaDropAll(Words[2], Words[3], Words[4], Words[5]); // Words[2] is TeamName, Words[3] is TypeOfDropTarget, Words[4+] may be GridRef, Words[4] may be ObjName, Words[5] may be ObjNum
             }
-            // Disable minefields
+            // Disable or enable minefields
             else if (MutateOption ~= "DisableMinefields")
             {
                 DisableMinefields();
             }
-            // Enable minefields
             else if (MutateOption ~= "EnableMinefields")
             {
                 EnableMinefields();
@@ -246,7 +252,7 @@ function Mutate(string MutateString, PlayerController Sender)
             {
                 SetGameSpeed(float(Words[2]));
             }
-            // Set new time remaining
+            // Set new round time remaining
             else if (MutateOption ~= "SetRoundMinutesRemaining")
             {
                 SetRoundMinutesRemaining(float(Words[2]));
@@ -260,6 +266,15 @@ function Mutate(string MutateString, PlayerController Sender)
             else if (MutateOption ~= "DestroyActorInSights")
             {
                 DestroyActorInSights();
+            }
+            // Set new maximum squad size foe either team
+            else if (MutateOption ~= "ChangeAlliesSquadSize")
+            {
+                ChangeAlliesSquadSize(int(Words[2]));
+            }
+            else if (MutateOption ~= "ChangeAxisSquadSize")
+            {
+                ChangeAxisSquadSize(int(Words[2]));
             }
         }
 
@@ -451,7 +466,7 @@ function SwitchPlayer(string PlayerName, string TeamName, string RoleName, strin
     }
 
     // Now change team and/or role
-    PlayerToSwitch.ServerSetPlayerInfo(TeamIndex, RoleIndex, 0, 0, PlayerToSwitch.SpawnPointIndex, 255, 255);
+    PlayerToSwitch.ServerSetPlayerInfo(TeamIndex, RoleIndex, 0, 0, PlayerToSwitch.SpawnPointIndex, -1);
 
     // If switched teams, now restore restore original team balance setting & find an active spawn point for the new team (just find 1st active spawn for team)
     if (TeamIndex != 255 && ROTG != none)
@@ -460,9 +475,9 @@ function SwitchPlayer(string PlayerName, string TeamName, string RoleName, strin
 
         for (i = 0; i < arraycount(DHGRI.SpawnPoints); ++i)
         {
-            if (DHGRI.IsSpawnPointIndexValid(i, TeamIndex, RoleInfo, none))
+            if (DHGRI.GetSpawnPoint(i) != none && DHGRI.GetSpawnPoint(i).CanSpawnWithParameters(DHGRI, TeamIndex, RoleIndex, -1, -1))
             {
-                PlayerToSwitch.ServerSetPlayerInfo(255, 255, 0, 0, i, 255, 255);
+                PlayerToSwitch.ServerSetPlayerInfo(255, 255, 0, 0, i , -1);
                 break;
             }
         }
@@ -901,6 +916,32 @@ function DestroyActorInSights()
     }
 }
 
+function ChangeAlliesSquadSize(int SquadSize)
+{
+    local DHPlayer PC;
+
+    PC = DHPlayer(Admin);
+
+    if (PC != none && PC.SquadReplicationInfo != none)
+    {
+        PC.SquadReplicationInfo.SetTeamSquadSize(ALLIES_TEAM_INDEX, SquadSize);
+        BroadcastMessageToAll(15);
+    }
+}
+
+function ChangeAxisSquadSize(int SquadSize)
+{
+    local DHPlayer PC;
+
+    PC = DHPlayer(Admin);
+
+    if (PC != none && PC.SquadReplicationInfo != none)
+    {
+        PC.SquadReplicationInfo.SetTeamSquadSize(AXIS_TEAM_INDEX, SquadSize);
+        BroadcastMessageToAll(16);
+    }
+}
+
 ////////////////////////////  GENERAL HELPER FUNCTIONS (messaging, true/false checks, find things, etc)  //////////////////////////////////////
 
 function BroadcastMessageToAll(int MessageNumber)
@@ -957,6 +998,7 @@ function bool IsLoggedInAsAdmin(optional bool bEnforceAdminLogin)
     }
 
     ErrorMessageToSelf(1); // must be an admin
+
     return false;
 }
 
@@ -1016,9 +1058,9 @@ function string PutMessageTogether(array<string> Words, byte StartIndex)
     {
         Message $= Words[StartIndex];
 
-        if (Words.Length > (StartIndex +1))
+        if (Words.Length > (StartIndex + 1))
         {
-            for (i = StartIndex +1; i < Words.Length; ++i)
+            for (i = StartIndex + 1; i < Words.Length; ++i)
             {
                 Message @= Words[i];
             }
@@ -1440,5 +1482,5 @@ defaultproperties
     FriendlyName="Admin menu"
     Description="Screen menu options allowing an admin greater control over players, a realism match or during testing"
     bAddToServerPackages=true // this is necessary for the Replicator to be spawned on a client
-    WarningSound=sound'DH_AdminMenuMutator.Klaxon' // can be overridden in server DarkestHour.ini file
+    WarningSound=Sound'DH_AdminMenuMutator.Klaxon' // can be overridden in server DarkestHour.ini file
 }

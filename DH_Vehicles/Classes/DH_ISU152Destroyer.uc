@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 //=====================================================================
@@ -11,7 +11,7 @@
 class DH_ISU152Destroyer extends DHArmoredVehicle;
 
 #exec OBJ LOAD FILE=..\Animations\DH_ISU152_anm.ukx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Soviet_vehicles_stc.ukx
+#exec OBJ LOAD FILE=..\StaticMeshes\DH_Soviet_vehicles_stc.usx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesSOV_tex.utx
 
 defaultproperties
@@ -19,17 +19,15 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="ISU-152"
     VehicleTeam=1
-    MaxDesireability=1.9
-    CollisionRadius=175.0
-    CollisionHeight=60.0
+    VehicleMass=13.5
+    ReinforcementCost=23
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_ISU152_anm.ISU152-body_ext'
-    Skins(0)=texture'DH_VehiclesSOV_tex.ext_vehicles.isu152_body_ext'
-    Skins(1)=texture'DH_VehiclesSOV_tex.Treads.isu152_treads'
-    Skins(2)=texture'DH_VehiclesSOV_tex.Treads.isu152_treads'
-    Skins(3)=texture'DH_VehiclesSOV_tex.int_vehicles.isu152_body_int'
-    BeginningIdleAnim="driver_hatch_idle_close"
+    Skins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.isu152_body_ext'
+    Skins(1)=Texture'DH_VehiclesSOV_tex.Treads.isu152_treads'
+    Skins(2)=Texture'DH_VehiclesSOV_tex.Treads.isu152_treads'
+    Skins(3)=Texture'DH_VehiclesSOV_tex.int_vehicles.isu152_body_int'
 
     // Vehicle weapons & passengers
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ISU152CannonPawn',WeaponBone="Turret_Placement")
@@ -38,24 +36,26 @@ defaultproperties
     PassengerPawns(2)=(AttachBone="Body",DrivePos=(X=-120.0,Y=50.0,Z=82.0),DriveRot=(Yaw=4096),DriveAnim="crouch_idle_binoc")
 
     // Driver
-    DriverPositions(0)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_ISU152_anm.ISU152-body_int',TransitionUpAnim="Overlay_Out",ViewPitchDownLimit=65535,bDrawOverlays=true)
-    DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_ISU152_anm.ISU152-body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VSU76_driver_close",ViewPitchUpLimit=1000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=2000,ViewNegativeYawLimit=-2000)
-    DriverPositions(2)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_ISU152_anm.ISU152-body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VSU76_driver_open",ViewPitchUpLimit=14500,ViewPitchDownLimit=57000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-12000,bExposed=true)
-    DriverAttachmentBone="driver_attachment"
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_ISU152_anm.ISU152-body_int',TransitionUpAnim="Overlay_Out",ViewPitchDownLimit=65535,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_ISU152_anm.ISU152-body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VSU76_driver_close",ViewPitchUpLimit=1000,ViewPitchDownLimit=64000,ViewPositiveYawLimit=2000,ViewNegativeYawLimit=-2000)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ISU152_anm.ISU152-body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VSU76_driver_open",ViewPitchUpLimit=14500,ViewPitchDownLimit=57000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-12000,bExposed=true)
     DrivePos=(X=10.0,Y=0.0,Z=-41.0) // adjusted from original
     DriveAnim="VIS2_driver_idle_close"
     HUDOverlayClass=class'ROVehicles.KV1DriverOverlay'
-    HUDOverlayFOV=90.0
+    HUDOverlayFOV=85.0
 
     // Hull armor
-    UFrontArmorFactor=9.0
-    URightArmorFactor=7.5
-    ULeftArmorFactor=7.5
-    URearArmorFactor=6.0
-    UFrontArmorSlope=30.0
-    URightArmorSlope=15.0
-    ULeftArmorSlope=15.0
-    URearArmorSlope=49.0
+    FrontArmor(0)=(Thickness=9.0,Slope=-30.0,MaxRelativeHeight=-11.0,LocationName="lower") // note: sources agree IS2 (our base hull) had 100mm, but show ISU-152 having 90mm
+    FrontArmor(1)=(Thickness=6.0,Slope=72.0,MaxRelativeHeight=0.1,LocationName="upper")
+    FrontArmor(2)=(Thickness=9.0,Slope=30.0,LocationName="superstructure")
+    RightArmor(0)=(Thickness=9.0,MaxRelativeHeight=0.8,LocationName="lower")
+    RightArmor(1)=(Thickness=7.5,Slope=15.0,LocationName="superstructure")
+    LeftArmor(0)=(Thickness=9.0,MaxRelativeHeight=0.8,LocationName="lower")
+    LeftArmor(1)=(Thickness=7.5,Slope=15.0,LocationName="superstructure")
+    RearArmor(0)=(Thickness=6.0,Slope=-41.0,MaxRelativeHeight=-12.8,LocationName="lower")
+    RearArmor(1)=(Thickness=6.0,Slope=49.0,MaxRelativeHeight=24.2,LocationName="upper")
+    RearArmor(2)=(Thickness=6.0,LocationName="superstructure")
+
     FrontLeftAngle=322.0 // angles adjusted from original
     FrontRightAngle=38.0
     RearRightAngle=163.0
@@ -73,9 +73,7 @@ defaultproperties
     VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-70.0,Y=50.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-20.0,Y=50.0,Z=40.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-20.0,Y=10.0,Z=-20.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    DriverDamageMult=1.0
     TreadHitMaxHeight=-5.0
-    TreadDamageThreshold=0.75
     DamagedEffectOffset=(X=-210.0,Y=0.0,Z=40.0) // adjusted from original
     HullFireChance=0.55
     FireAttachBone="Body"
@@ -90,50 +88,46 @@ defaultproperties
     ExitPositions(4)=(X=-140.00,Y=160.00,Z=50.00)
 
     // Sounds
-    MaxPitchSpeed=100
-    IdleSound=sound'Vehicle_Engines.IS2.IS2_engine_loop' // was SU76 engine sound but vehicle is built off IS2 chassis & engine
-    StartUpSound=sound'Vehicle_Engines.IS2.IS2_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.IS2.IS2_engine_stop'
+    MaxPitchSpeed=100.0
+    IdleSound=Sound'Vehicle_Engines.IS2.IS2_engine_loop' // was SU76 engine sound but vehicle is built off IS2 chassis & engine
+    StartUpSound=Sound'Vehicle_Engines.IS2.IS2_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.IS2.IS2_engine_stop'
     LeftTrackSoundBone="Tread_L"
     RightTrackSoundBone="Tread_R"
-    LeftTreadSound=sound'Vehicle_Engines.track_squeak_L03'
-    RightTreadSound=sound'Vehicle_Engines.track_squeak_R03'
-    RumbleSoundBone="Body"
-    RumbleSound=sound'Vehicle_Engines.tank_inside_rumble02' // was custom 'ISU152_engine_loop', but using same as IS2 as same chassis & engine
+    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L03'
+    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R03'
+    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble02' // was custom 'ISU152_engine_loop', but using same as IS2 as same chassis & engine
 
     // Visual effects
     TreadVelocityScale=125.0
+    WheelRotationScale=65000.0
     ExhaustEffectClass=class'ROEffects.ExhaustDieselEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustDieselEffect_simple'
     ExhaustPipes(0)=(ExhaustPosition=(X=-220.0,Y=60.0,Z=30.0),ExhaustRotation=(Pitch=34000,Roll=-10000)) // positions adjusted from original
     ExhaustPipes(1)=(ExhaustPosition=(X=-220.0,Y=-60.0,Z=30.0),ExhaustRotation=(Pitch=34000,Roll=10000))
     LeftLeverBoneName="lever_L"
-    LeftLeverAxis=AXIS_Z
     RightLeverBoneName="lever_R"
-    RightLeverAxis=AXIS_Z
-    SteeringScaleFactor=0.75
 
     // HUD
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.isu152_body'
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.isu152_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.isu152_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.isu152_turret_look'
     VehicleHudTreadsPosX(0)=0.38 // some positions adjusted from original
     VehicleHudTreadsPosX(1)=0.64
     VehicleHudTreadsScale=0.7
     VehicleHudOccupantsX(0)=0.46
-    VehicleHudOccupantsX(1)=0.592
-    VehicleHudOccupantsX(2)=0.4
-    VehicleHudOccupantsX(3)=0.5
-    VehicleHudOccupantsX(4)=0.6
     VehicleHudOccupantsY(0)=0.26
+    VehicleHudOccupantsX(1)=0.592
     VehicleHudOccupantsY(1)=0.36
+    VehicleHudOccupantsX(2)=0.4
     VehicleHudOccupantsY(2)=0.6
+    VehicleHudOccupantsX(3)=0.5
     VehicleHudOccupantsY(3)=0.625
+    VehicleHudOccupantsX(4)=0.6
     VehicleHudOccupantsY(4)=0.6
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.ISU152'
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.ISU152'
 
     // Visible wheels
-    WheelRotationScale=1000 // was 2500, but lowered to more closely match tread speed
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"
@@ -217,7 +211,6 @@ defaultproperties
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_ISU152Destroyer.Right_Drive_Wheel'
 
     // Karma
-    VehicleMass=13.5
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0

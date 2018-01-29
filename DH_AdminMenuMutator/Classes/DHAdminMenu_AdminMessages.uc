@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 // Confirmation prompts or instructions to an admin using various menu options
@@ -35,6 +35,8 @@ var     localized string    EnterGameSpeed;
 var     localized string    EnterTimeRemaining;
 var     localized string    ConfirmToggleAdminCanPause;
 var     localized string    DestroyActorInSights;
+var     localized string    ChangeAlliesSquadSize;
+var     localized string    ChangeAxisSquadSize;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -94,6 +96,10 @@ static function string GetString(optional int Switch, optional PlayerReplication
             return default.ConfirmToggleAdminCanPause;
         case 27:
             return default.DestroyActorInSights;
+        case 28:
+            return default.ChangeAlliesSquadSize;
+        case 29:
+            return default.ChangeAxisSquadSize;
 
         default:
             return "";
@@ -135,4 +141,6 @@ defaultproperties
     EnterTimeRemaining="Please specify the new round time remaining (in minutes)"
     ConfirmToggleAdminCanPause="Press enter to confirm you want to toggle 'admin can pause' option"
     DestroyActorInSights="Press enter to confirm you want to DESTROY the actor in your sights"
+    ChangeAlliesSquadSize="Please specify the new allied squad size (between 8 and 12, or 0 to reset)"
+    ChangeAxisSquadSize="Please specify the new axis squad size (8 and 12, or 0 to reset)"
 }

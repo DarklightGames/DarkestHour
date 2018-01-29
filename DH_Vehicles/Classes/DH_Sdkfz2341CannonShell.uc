@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_Sdkfz2341CannonShell extends DHGermanCannonShell;
 
 defaultproperties
 {
-    bNetTemporary=true // Matt: so is torn off straight after actor replication, like a bullet instead of a shell, due to volume of fire adding to net load (each shell is a net channel)
+    bNetTemporary=true // so is torn off straight after actor replication, like a bullet instead of a shell, due to volume of fire adding to net load (each shell is a net channel)
     MechanicalRanges(1)=(Range=100,RangeValue=33.0)
     MechanicalRanges(2)=(Range=200,RangeValue=37.0)
     MechanicalRanges(3)=(Range=300,RangeValue=41.0)
@@ -33,7 +33,6 @@ defaultproperties
     DHPenetrationTable(9)=0.1
     DHPenetrationTable(10)=0.1
     ShellDiameter=2.0
-    bHasTracer=false
     ShellImpactDamage=class'DH_Vehicles.DH_Sdkfz2341CannonShellDamageAP'
     ImpactDamage=175
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.Impact_Metal'
@@ -50,12 +49,12 @@ defaultproperties
     ShellHitWaterEffectClass=class'ROEffects.ROBulletHitWaterEffect'
     AmbientVolumeScale=2.0
     BallisticCoefficient=0.77
-    SpeedFudgeScale=0.75
     Speed=47075.0
     MaxSpeed=47075.0
     ExplosionDecal=class'ROEffects.BulletHoleConcrete'
     ExplosionDecalSnow=class'ROEffects.BulletHoleSnow'
     StaticMesh=StaticMesh'EffectsSM.Weapons.Ger_Tracer'
+    bHasTracer=false // actually has a tracer but we use a tracer static mesh for the projectile, so no need for extra tracer effect (normally the CoronaClass)
     AmbientSound=SoundGroup'DH_ProjectileSounds.Bullets.Bullet_Whiz'
     Tag="PzGr."
     SoundRadius=350.0

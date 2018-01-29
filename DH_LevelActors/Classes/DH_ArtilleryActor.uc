@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_ArtilleryActor extends DH_LevelActors;
@@ -112,7 +112,7 @@ state Activated
                     FallOffset.Y *= -1.0;
                 }
 
-                Spawn(class'DHArtilleryShell',,, ArtyReferences[RandomNum].Location + FallOffset, rotator(PhysicsVolume.Gravity)); // Matt: was class ROArtilleryShell
+                Spawn(class'DHArtilleryShell',,, ArtyReferences[RandomNum].Location + FallOffset, rotator(PhysicsVolume.Gravity));
             }
             else
             {
@@ -133,7 +133,7 @@ state Activated
                 }
 
                 // Spawn the artillery round with the random offset
-                Spawn(class'DHArtilleryShell',,, Location + FallOffset, rotator(PhysicsVolume.Gravity)); // Matt: was class ROArtilleryShell
+                Spawn(class'DHArtilleryShell',,, Location + FallOffset, rotator(PhysicsVolume.Gravity));
             }
         }
 

@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_IS2CannonShell extends DHCannonShellAP;
+class DH_IS2CannonShell extends DHSovietCannonShell;
 
 defaultproperties
 {
@@ -12,8 +12,8 @@ defaultproperties
     Speed=47073.0 // 780 m/s
     MaxSpeed=47073.0
     ImpactDamage=900
-    Tag="BR-471" // earlier AP round without ballistic cap
     StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
+    Tag="BR-471" // earlier AP round without ballistic cap
 
     DHPenetrationTable(0)=16.5  // 100m
     DHPenetrationTable(1)=16.0  // 250m

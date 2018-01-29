@@ -1,10 +1,10 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_LevelActors extends Actor
-    hidecategories(Object,Movement,Collision,Lighting,LightColor,Karma,Force,Display,Advanced,Sound)
+    hidecategories(Collision,Lighting,LightColor,Karma,Force,Display,Advanced,Sound)
     placeable;
 
 //Setup some common enums used throughout the child actors
@@ -31,7 +31,7 @@ enum StatusModifyType
 
 defaultproperties
 {
-    Texture=texture'DHEngine_Tex.LevelActor'
+    Texture=Texture'DHEngine_Tex.LevelActor'
     bHidden=true
     RemoteRole=ROLE_None
 }

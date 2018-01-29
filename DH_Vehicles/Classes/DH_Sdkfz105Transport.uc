@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_Sdkfz105Transport extends DHVehicle;
@@ -8,40 +8,130 @@ class DH_Sdkfz105Transport extends DHVehicle;
 #exec OBJ LOAD FILE=..\Animations\DH_SdKfz10_5_anm.ukx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc4.usx
 
+// Modified to set cannon pawn class, as can't be done in default properties, since as DH_Guns code package isn't compiled until after this package
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    PassengerWeapons[1].WeaponPawnClass = class<VehicleWeaponPawn>(DynamicLoadObject("DH_Guns.DH_Sdkfz105CannonPawn", class'Class'));
+}
+
 // Modified to match the windscreen camo to vehicle's 'cabin' texture
 simulated function SpawnVehicleAttachments()
 {
-    super.SpawnVehicleAttachments();
+    VehicleAttachments[0].Skin = Skins[1];
 
-    if (VehicleAttachments.Length > 0 && VehicleAttachments[0].Actor != none)
-    {
-        VehicleAttachments[0].Actor.Skins[0] = Skins[1];
-    }
+    super.SpawnVehicleAttachments();
 }
 
 defaultproperties
 {
-    VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc4.Sdkfz10_5.SdKfz10_5_windscreen',AttachBone="Body") // windscreen on non-armoured version
+    // Vehicle properties
+    VehicleNameString="Sd.Kfz. 10/5"
     bHasTreads=true
+    VehicleMass=6.5
+    PointValue=2.0
+    ReinforcementCost=6
+    MaxDesireability=1.2
+
+    // Hull mesh
+    Mesh=SkeletalMesh'DH_SdKfz10_5_anm.SdKfz10_5_body_ext'
+    Skins(0)=Texture'DH_VehiclesGE_tex7.ext_vehicles.sdkfz10_5_body_ext'
+    Skins(1)=Texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_cabin'
+    Skins(2)=Texture'DH_Artillery_tex.Flak38.Flak38_gun'
+    Skins(3)=Texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_meshpanels'
+    Skins(4)=Texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_wheels'
+    Skins(5)=Texture'DH_VehiclesGE_tex7.Treads.SdKfz10_5_treads'
+    Skins(6)=Texture'DH_VehiclesGE_tex7.Treads.SdKfz10_5_treads'
+    VehicleAttachments(0)=(StaticMesh=StaticMesh'DH_German_vehicles_stc4.Sdkfz10_5.SdKfz10_5_windscreen',AttachBone="Body") // windscreen on non-armoured version
+    BeginningIdleAnim="Driver_idle_out"
+
+    // Vehicle weapons & passengers
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz105PassengerPawn',WeaponBone="Body")
+    PassengerWeapons(1)=(WeaponBone="Turret_placement") // cannon pawn class has to be set in PostBeginPlay() due to build order
+    FirstRiderPositionIndex=0 // non-standard as passenger position comes before vehicle weapon position
+
+    // Driver
+    DriverPositions(0)=(ViewPitchUpLimit=10000,ViewPitchDownLimit=50000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
+    DriverPositions(1)=(ViewPitchUpLimit=10000,ViewPitchDownLimit=50000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true)
+    DriverAttachmentBone="Driver_player"
+    DriveAnim="Vhalftrack_driver_idle"
+
+    // Movement
+    MaxCriticalSpeed=674.0 // 40 kph
+    GearRatios(0)=-0.25
+    GearRatios(3)=0.5
+    GearRatios(4)=0.72
+    TorqueCurve=(Points=((InVal=0.0,OutVal=10.0),(InVal=200.0,OutVal=1.0),(InVal=1500.0,OutVal=2.5),(InVal=2200.0,OutVal=0.0)))
+    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=35.0),(InVal=1500.0,OutVal=30.0),(InVal=1000000000.0,OutVal=15.0)))
+
+    // Physics wheels properties
+    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
+    WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=45.0,OutVal=0.0),(InVal=10000000000.0,OutVal=0.0)))
+    WheelSuspensionTravel=8.0
+    WheelSuspensionMaxRenderTravel=8.0
+
+    // Damage
+    Health=275
+    HealthMax=325.0
+    EngineHealth=150
+    VehHitpoints(0)=(PointRadius=20.0,PointBone="Body",PointOffset=(X=93.0,Y=0.0,Z=9.0)) // engine
     TreadHitMaxHeight=-5.0
-    VehicleHudTreadsPosX(0)=0.38
-    VehicleHudTreadsPosX(1)=0.62
-    VehicleHudTreadsPosY=0.57
-    VehicleHudTreadsScale=0.51
+    DamagedEffectScale=0.75
+    DamagedEffectOffset=(X=90.0,Y=0.0,Z=15.0)
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc4.SdKfz10_5.sdkfz10_5_dest'
+
     FrontRightAngle=39.0 // angles set specifically for tread hits
     RearRightAngle=161.0
     RearLeftAngle=199.0
     FrontLeftAngle=321.0
+
+    // Exit
+    ExitPositions(0)=(X=25.00,Y=-100.00,Z=20.00)  // driver
+    ExitPositions(1)=(X=25.00,Y=100.00,Z=20.00)   // passenger
+    ExitPositions(2)=(X=-230.00,Y=0.0,Z=20.00)    // gunner
+    ExitPositions(3)=(X=-100.00,Y=-125.0,Z=20.00) // alternative exit on left side of rear flat bed
+    ExitPositions(4)=(X=-100.00,Y=125.0,Z=20.00)  // alternative exit on right side
+
+    // Sounds
     MaxPitchSpeed=350.0
-    TreadVelocityScale=40.0
-    WheelRotationScale=150
-    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L02'
-    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R02'
-    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble03'
+    IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
     LeftTrackSoundBone="Tread_drive_wheel_F_L"
+    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L02'
     RightTrackSoundBone="Tread_drive_wheel_F_R"
-    RumbleSoundBone="Body"
-    MaxCriticalSpeed=674.0 // 40 kph
+    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R02'
+    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble03'
+
+    // Visual effects
+    LeftTreadIndex=5
+    RightTreadIndex=6
+    LeftTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
+    RightTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
+    TreadVelocityScale=40.0
+    WheelRotationScale=9750.0
+    ExhaustPipes(0)=(ExhaustPosition=(X=70.0,Y=-65.0,Z=-5.0),ExhaustRotation=(Pitch=-7000,Yaw=-16364))
+    SteerBoneName="Steering_wheel"
+
+    // HUD
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.sdkfz105_body'
+    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.sdkfz105_turet_rot'
+    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.sdkfz105_turet_look'
+    VehicleHudEngineY=0.2
+    VehicleHudTreadsPosX(0)=0.38
+    VehicleHudTreadsPosX(1)=0.62
+    VehicleHudTreadsPosY=0.57
+    VehicleHudTreadsScale=0.51
+    VehicleHudOccupantsX(0)=0.45
+    VehicleHudOccupantsY(0)=0.42
+    VehicleHudOccupantsX(1)=0.55
+    VehicleHudOccupantsY(1)=0.42
+    VehicleHudOccupantsX(2)=0.5
+    VehicleHudOccupantsY(2)=0.6
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sdkfz_105'
+
+    // Visible wheels
     LeftWheelBones(0)="Wheel_T_L_1"
     LeftWheelBones(1)="Wheel_T_L_2"
     LeftWheelBones(2)="Wheel_T_L_3"
@@ -56,74 +146,8 @@ defaultproperties
     RightWheelBones(4)="Wheel_T_R_5"
     RightWheelBones(5)="Wheel_T_R_6"
     RightWheelBones(6)="Wheel_T_R_7"
-    WheelSoftness=0.025
-    WheelPenScale=1.2
-    WheelPenOffset=0.01
-    WheelRestitution=0.1
-    WheelInertia=0.1
-    WheelLongFrictionFunc=(Points=(,(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
-    WheelLongSlip=0.001
-    WheelLatSlipFunc=(Points=(,(InVal=30.0,OutVal=0.009),(InVal=45.0),(InVal=10000000000.0)))
-    WheelLongFrictionScale=1.1
-    WheelLatFrictionScale=2.0
-    WheelHandbrakeSlip=0.01
-    WheelHandbrakeFriction=0.1
-    WheelSuspensionTravel=8.0
-    WheelSuspensionMaxRenderTravel=8.0
-    FTScale=0.03
-    ChassisTorqueScale=0.4
-    MinBrakeFriction=4.0
-    MaxSteerAngleCurve=(Points=((OutVal=35.0),(InVal=1500.0,OutVal=30.0),(InVal=1000000000.0,OutVal=15.0)))
-    TorqueCurve=(Points=((OutVal=10.0),(InVal=200.0,OutVal=1.0),(InVal=1500.0,OutVal=2.5),(InVal=2200.0)))
-    GearRatios(0)=-0.25
-    GearRatios(1)=0.2
-    GearRatios(2)=0.35
-    GearRatios(3)=0.5
-    GearRatios(4)=0.72
-    TransRatio=0.12
-    LSDFactor=1.0
-    EngineBrakeFactor=0.0001
-    EngineBrakeRPMScale=0.1
-    MaxBrakeTorque=20.0
-    SteerSpeed=50.0
-    TurnDamping=35.0
-    StopThreshold=100.0
-    HandbrakeThresh=200.0
-    EngineInertia=0.1
-    IdleRPM=500.0
-    EngineRPMSoundRange=5000.0
-    SteerBoneName="Steering_wheel"
-    RevMeterScale=4000.0
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
-    ExhaustPipes(0)=(ExhaustPosition=(X=70.0,Y=-65.0,Z=-5.0),ExhaustRotation=(Pitch=-7000,Yaw=-16364))
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz105PassengerPawn',WeaponBone="Body")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz105CannonPawn',WeaponBone="Turret_placement")
-    FirstRiderPositionIndex=0
-    IdleSound=SoundGroup'Vehicle_Engines.sdkfz251.sdkfz251_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.sdkfz251.sdkfz251_engine_stop'
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc4.SdKfz10_5.sdkfz10_5_dest'
-    DisintegrationHealth=-10000.0
-    DestructionLinearMomentum=(Min=100.0,Max=350.0)
-    DestructionAngularMomentum=(Max=150.0)
-    DamagedEffectScale=0.75
-    DamagedEffectOffset=(X=90.0,Y=0.0,Z=15.0)
-    SteeringScaleFactor=4.0
-    BeginningIdleAnim="Driver_idle_out"
-    DriverPositions(0)=(ViewPitchUpLimit=10000,ViewPitchDownLimit=50000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
-    DriverPositions(1)=(ViewPitchUpLimit=10000,ViewPitchDownLimit=50000,ViewPositiveYawLimit=27000,ViewNegativeYawLimit=-27000,bExposed=true,ViewFOV=90.0)
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.sdkfz105_body'
-    VehicleHudOccupantsX(0)=0.45
-    VehicleHudOccupantsY(0)=0.42
-    VehicleHudOccupantsX(1)=0.55
-    VehicleHudOccupantsY(1)=0.42
-    VehicleHudOccupantsX(2)=0.5
-    VehicleHudOccupantsY(2)=0.6
-    VehicleHudEngineY=0.2
-    VehHitpoints(0)=(PointRadius=20.0,PointBone="Body",PointOffset=(X=93.0,Y=0.0,Z=9.0)) // engine
-    EngineHealth=150
-    DriverAttachmentBone="Driver_player"
+
+    // Physics wheels
     Begin Object Class=SVehicleWheel Name=Wheel_F_L
         SteerType=VST_Steered
         BoneName="Wheel_F_L"
@@ -170,34 +194,8 @@ defaultproperties
         WheelRadius=25.0
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_Sdkfz105Transport.Tread_drive_wheel_R_R'
-    VehicleMass=6.5
-    DriveAnim="Vhalftrack_driver_idle"
 
-    ExitPositions(0)=(X=25.00,Y=-100.00,Z=20.00)  // driver
-    ExitPositions(1)=(X=25.00,Y=100.00,Z=20.00)   // passenger
-    ExitPositions(2)=(X=-230.00,Y=0.0,Z=20.00)    // gunner
-    ExitPositions(3)=(X=-100.00,Y=-125.0,Z=20.00) // alternative exit on left side of rear flat bed
-    ExitPositions(4)=(X=-100.00,Y=125.0,Z=20.00)  // alternative exit on right side
-
-    CenterSpringForce="SpringONSSRV"
-    DriverDamageMult=1.0
-    VehicleNameString="Sd.Kfz. 10/5"
-    MaxDesireability=1.2
-    GroundSpeed=325.0
-    PitchUpLimit=10000
-    PitchDownLimit=50000
-    HealthMax=325.0
-    Health=275
-    Mesh=SkeletalMesh'DH_SdKfz10_5_anm.SdKfz10_5_body_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex7.ext_vehicles.sdkfz10_5_body_ext'
-    Skins(1)=texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_cabin'
-    Skins(2)=texture'DH_Artillery_tex.Flak38.Flak38_gun'
-    Skins(3)=texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_meshpanels'
-    Skins(4)=texture'DH_VehiclesGE_tex7.ext_vehicles.SdKfz10_5_wheels'
-    Skins(5)=texture'DH_VehiclesGE_tex7.Treads.SdKfz10_5_treads'
-    Skins(6)=texture'DH_VehiclesGE_tex7.Treads.SdKfz10_5_treads'
-    CollisionRadius=175.0
-    CollisionHeight=40.0
+    // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
@@ -217,11 +215,4 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_Sdkfz105Transport.KParams0'
-    LeftTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
-    RightTreadPanDirection=(Pitch=0,Yaw=16384,Roll=0)
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.sdkfz_105'
-    LeftTreadIndex=5
-    RightTreadIndex=6
-    VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.sdkfz105_turet_rot'
-    VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.sdkfz105_turet_look'
 }

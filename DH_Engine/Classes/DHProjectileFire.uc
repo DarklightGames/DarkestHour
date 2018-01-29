@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHProjectileFire extends DHWeaponFire;
@@ -23,13 +23,13 @@ var     float           PreLaunchTraceLengthFactor;  // determines pre launch tr
 var     bool            bTraceHitBulletProofColMesh; // bullet has hit a collision mesh actor that is bullet proof, so we can handle vehicle hits accordingly
 
 // Weapon spread/inaccuracy
-var     float           AppliedSpread;               // spread applied to the projectile
 var     float           CrouchSpreadModifier;        // modifier applied when player is crouched
 var     float           ProneSpreadModifier;         // modifier applied when player is prone
 var     float           BipodDeployedSpreadModifier; // modifier applied when player is using a bipod deployed weapon
 var     float           RestDeploySpreadModifier;    // modifier applied when players weapon is rest deployed
 var     float           HipSpreadModifier;           // modifier applied when player is firing from the hip
 var     float           LeanSpreadModifier;          // modifier applied when player is firing while leaning
+var     bool            bDebugSpread;                // debug option to show limits of spread as red lines
 
 // Tracers
 var     bool            bUsesTracers;                // true if the weapon uses tracers
@@ -67,59 +67,63 @@ function float MaxRange()
 
 function DoFireEffect()
 {
-    local vector  StartProj, StartTrace, X, Y, Z;
-    local rotator R, Aim;
-    local vector  HitLocation, HitNormal;
-    local Actor   Other;
-    local int     ProjectileID;
-    local int     SpawnCount;
-    local float   Theta;
+    local Actor   TracedActor;
     local coords  MuzzlePosition;
+    local vector  StartTrace, FireLocation, HitLocation, HitNormal, FireDirection, X, Y, Z;
+    local rotator RandomSpread;
+    local float   AppliedSpread;
+    local int     NumProjectiles, i, j, k;
+
+    if (Weapon == none)
+    {
+        return;
+    }
 
     if (Instigator != none)
     {
         Instigator.MakeNoise(1.0);
     }
 
-    Weapon.GetViewAxes(X, Y, Z);
-
-    // Check if projectile would spawn through something like a wall and adjust start location accordingly
-    if (Instigator != none && (Instigator.Weapon.bUsingSights || Instigator.bBipodDeployed))
-    {
-        StartTrace = Instigator.Location + Instigator.EyePosition();
-        StartProj = StartTrace + X * ProjSpawnOffset.X;
-
-        Other = Trace(HitLocation, HitNormal, StartProj, StartTrace, false); // false means only trace world geometry
-    }
-    else
+    // Get FireLocation to spawn projectile, & do a trace to check if projectile would spawn through something like a wall (due to ProjSpawnOffset)
+    // If hip firing, spawn projectile at muzzle tip plus FAProjSpawnOffset
+    // Have to calculate the the muzzle offset & then scale it down 5 times, as the 1st person model is scaled up 5 times in the editor
+    if (Instigator != none && IsPlayerHipFiring())
     {
         MuzzlePosition = Weapon.GetMuzzleCoords();
-        StartTrace = MuzzlePosition.Origin - Weapon.Location;
-        StartTrace = StartTrace * 0.2; // scale the muzzle position down 5 times, since the model is scaled up 5 times in the editor
-        StartTrace = Weapon.Location + StartTrace;
-        StartProj = StartTrace + MuzzlePosition.XAxis * FAProjSpawnOffset.X;
-
-        Other = Trace(HitLocation, HitNormal, StartTrace, StartProj, true);
+        StartTrace = Weapon.Location + (0.2 * (MuzzlePosition.Origin - Weapon.Location));
+        FireLocation = StartTrace + (MuzzlePosition.XAxis * FAProjSpawnOffset.X);
+        TracedActor = Trace(HitLocation, HitNormal, StartTrace, FireLocation, true);
     }
-
-    if (Other != none)
+    // Otherwise if weapon is iron sighted or bipod deployed, spawn at eye position plus ProjSpawnOffset
+    else
     {
-        StartProj = HitLocation;
+        Weapon.GetViewAxes(X, Y, Z);
+        StartTrace = Instigator.Location + Instigator.EyePosition();
+        FireLocation = StartTrace + (X * ProjSpawnOffset.X);
+        TracedActor = Trace(HitLocation, HitNormal, FireLocation, StartTrace, false); // false means only trace world geometry
     }
 
-    Aim = AdjustAim(StartProj, AimError);
-
-    // For free-aim, just use where the muzzle bone is pointing
-    if (Instigator != none && !Instigator.Weapon.bUsingSights && !Instigator.bBipodDeployed && Instigator.IsHumanControlled() && Instigator.Weapon.bUsesFreeAim)
+    if (TracedActor != none)
     {
-        Aim = rotator(MuzzlePosition.XAxis);
+        FireLocation = HitLocation; // adjust spawn location to traced HitLocation if we traced something in the way
     }
 
-    SpawnCount = Max(1, ProjPerFire * int(Load));
+    // Get the direction for the projectile
+    // If player is hip firing (& is the default free-aim type), use where the muzzle bone is pointing
+    if (IsPlayerHipFiring() && Instigator != none && Instigator.IsHumanControlled() && Weapon != none && Weapon.bUsesFreeAim)
+    {
+        FireDirection = MuzzlePosition.XAxis;
+    }
+    // Otherwise we call AdjustAim to confirm our aimed direction, but for human players that simply returns where the player is looking
+    else
+    {
+        FireDirection = vector(AdjustAim(FireLocation, AimError));
+    }
 
+    // Calculate random spread
     CalcSpreadModifiers();
 
-    if (DHProjectileWeapon(Owner) != none && DHProjectileWeapon(Owner).bBarrelDamaged)
+    if (Weapon.IsA('DHProjectileWeapon') && DHProjectileWeapon(Weapon).bBarrelDamaged)
     {
         AppliedSpread = 4.0 * Spread;
     }
@@ -128,91 +132,101 @@ function DoFireEffect()
         AppliedSpread = Spread;
     }
 
-    switch (SpreadStyle)
+    // Finally spawn the projectile (or multiple), applying random spread
+    NumProjectiles = Max(1, ProjPerFire * int(Load));
+
+    for (i = 0; i < NumProjectiles; ++i)
     {
-        case SS_Random:
+        if (SpreadStyle == SS_Random)
+        {
+            RandomSpread.Yaw = AppliedSpread * ((FRand() - 0.5) / 1.5);
+            RandomSpread.Pitch = AppliedSpread * (FRand() - 0.5);
+            RandomSpread.Roll = AppliedSpread * (FRand() - 0.5);
+        }
 
-            X = vector(Aim);
+        SpawnProjectile(FireLocation, rotator(FireDirection >> RandomSpread));
+    }
 
-            for (ProjectileID = 0; ProjectileID < SpawnCount; ++ProjectileID)
+    // Debug option to show limits of spread as red lines
+    if (bDebugSpread && SpreadStyle == SS_Random)
+    {
+        Weapon.ClearStayingDebugLines();
+
+        for (i = 0; i < 3; ++i)
+        {
+            for (j = 0; j < 3; ++j)
             {
-                R.Yaw = AppliedSpread * ((FRand() - 0.5) / 1.5);
-                R.Pitch = AppliedSpread * (FRand() - 0.5);
-                R.Roll = AppliedSpread * (FRand() - 0.5);
-                SpawnProjectile(StartProj, rotator(X >> R));
+                for (k = 0; k < 3; ++k)
+                {
+                    RandomSpread.Yaw = AppliedSpread * (((float(i) / 2.0) - 0.5) / 1.5);
+                    RandomSpread.Pitch = AppliedSpread * ((float(j) / 2.0) - 0.5);
+                    RandomSpread.Roll = AppliedSpread * ((float(k) / 2.0) - 0.5);
+                    Weapon.DrawStayingDebugLine(FireLocation, FireLocation + (25000.0 * (FireDirection >> RandomSpread)), 255, 0, 0);
+                }
             }
-
-            break;
-
-        case SS_Line:
-
-            for (ProjectileID = 0; ProjectileID < SpawnCount; ++ProjectileID)
-            {
-                Theta = AppliedSpread * PI / 32768.0 * (ProjectileID - float(SpawnCount - 1) / 2.0);
-                X.X = Cos(Theta);
-                X.Y = Sin(Theta);
-                X.Z = 0.0;
-                SpawnProjectile(StartProj, rotator(X >> Aim));
-            }
-
-            break;
-
-        default:
-            SpawnProjectile(StartProj, Aim);
+        }
     }
 }
 
+// New helper function to check whether player is hip firing
+// Allows easy subclassing, which avoids re-stating long functions just to change bUsingSights and/or bBipodDeployed
+simulated function bool IsPlayerHipFiring()
+{
+    return !(Weapon != none && Weapon.bUsingSights) && !(Instigator != none && Instigator.bBipodDeployed);
+}
+
+// Modified to add the PawnSpreadFactor, which is taken from the config setting AccuracyModifier in DarkestHourGame
 function CalcSpreadModifiers()
 {
-    local ROPawn ROP;
+    local DHPawn P;
     local float  PlayerSpeed, MovementPctModifier;
 
-    ROP = ROPawn(Instigator);
+    P = DHPawn(Instigator);
 
-    if (ROP == none)
+    if (P == none)
     {
         return;
     }
 
-    // Calc spread based on movement speed
-    PlayerSpeed = VSize(ROP.Velocity);
-    MovementPctModifier = PlayerSpeed / ROP.default.GroundSpeed;
-    Spread = default.Spread + default.Spread * MovementPctModifier;
+    // Calculate base spread based on movement speed
+    PlayerSpeed = VSize(P.Velocity);
+    MovementPctModifier = PlayerSpeed / P.default.GroundSpeed;
+    Spread = (1.0 + MovementPctModifier) * default.Spread;
 
-    // Reduce the spread if player is crouched and not moving
-    if (ROP.bIsCrouched && PlayerSpeed == 0.0)
-    {
-        Spread *= CrouchSpreadModifier;
-    }
-    else if (ROP.bIsCrawling)
+    Spread *= P.PawnSpreadFactor; // added to handle the pawn's SpreadFactor
+
+    if (P.bIsCrawling)
     {
         Spread *= ProneSpreadModifier;
     }
+    else if (P.bIsCrouched && PlayerSpeed == 0.0) // crouching reduction only applied if player isn't moving
+    {
+        Spread *= CrouchSpreadModifier;
+    }
 
-    if (ROP.bRestingWeapon)
+    if (P.bRestingWeapon)
     {
         Spread *= RestDeploySpreadModifier;
     }
 
-    // Make the spread crazy if you're jumping
-    if (ROP.Physics == PHYS_Falling)
+    if (P.bBipodDeployed)
     {
-        Spread *= 500.0;
+        Spread *= BipodDeployedSpreadModifier;
     }
-
-    if (!ROP.Weapon.bUsingSights && !ROP.bBipodDeployed)
+    else if (!P.Weapon.bUsingSights)
     {
         Spread *= HipSpreadModifier;
     }
 
-    if (ROP.bBipodDeployed)
-    {
-        Spread *= BipodDeployedSpreadModifier;
-    }
-
-    if (ROP.LeanAmount != 0.0)
+    if (P.LeanAmount != 0.0)
     {
         Spread *= LeanSpreadModifier;
+    }
+
+    // Make the spread crazy if you're jumping // TODO: think Spread should be capped, as a really high spread could result in shots going off at impossible angles
+    if (P.Physics == PHYS_Falling)
+    {
+        Spread *= 500.0;
     }
 }
 
@@ -234,8 +248,9 @@ function Projectile SpawnProjectile(vector Start, rotator Dir)
         return none;
     }
 
-    // Spawn a tracer projectile if one is due (but not on a net client if our weapon uses a DHHighROFWeaponAttachment, as that handles tracers independently on clients)
-    if (bUsesTracers && (Level.NetMode == NM_Standalone || DHHighROFWeaponAttachment(Weapon.ThirdPersonActor) == none) && TracerProjectileClass != none)
+    // Spawn a tracer projectile if one is due
+    // But don't bother on a dedicated server if weapon uses the 'high ROF' system, as net clients will handle tracers independently
+    if (bUsesTracers && !(Level.NetMode == NM_DedicatedServer && DHHighROFWeaponAttachment(Weapon.ThirdPersonActor) != none) && TracerProjectileClass != none)
     {
         NextTracerCounter++;
 
@@ -280,8 +295,8 @@ function bool PreLaunchTrace(vector Start, vector Direction)
 {
     local Actor           Other, A;
     local DHPawn          HitPlayer, WhizzedPlayer;
-    local vector          HitLocation, HitPlayerLocation, TempHitLocation, HitNormal, Momentum;
-    local int             WhizType, Damage, i;
+    local vector          HitLocation, HitPlayerLocation, TempHitLocation, HitNormal;
+    local int             WhizType, i;
     local array<int>      HitPoints;
     local array<WhizInfo> SavedWhizzes;
 
@@ -461,82 +476,75 @@ function bool PreLaunchTrace(vector Start, vector Direction)
     }
 
     // Finally handle damage on whatever we've hit
-    Damage = ProjectileClass.default.Damage;
-    Momentum = ProjectileClass.default.MomentumTransfer * Direction;
-
     if (HitPlayer != none)
     {
-        HitPlayer.ProcessLocationalDamage(Damage, Instigator, HitLocation, Momentum, ProjectileClass.default.MyDamageType, HitPoints);
+        HitPlayer.ProcessLocationalDamage(ProjectileClass.default.Damage, Instigator, HitLocation,
+            ProjectileClass.default.MomentumTransfer * Direction, ProjectileClass.default.MyDamageType, HitPoints);
     }
-    else if (!bTraceHitBulletProofColMesh)
+    else if ((!Other.bWorldGeometry || Other.IsA('RODestroyableStaticMesh')) && !bTraceHitBulletProofColMesh)
     {
-        if (Other.IsA('ROVehicle') && class<DHBullet>(ProjectileClass) != none)
-        {
-            Other.TakeDamage(Damage, Instigator, HitLocation, Momentum, class<DHBullet>(ProjectileClass).default.MyVehicleDamage); // only difference is using special vehicle DamageType
-        }
-        else if (!Other.bWorldGeometry || Other.IsA('RODestroyableStaticMesh'))
-        {
-            Other.TakeDamage(Damage, Instigator, HitLocation, Momentum, ProjectileClass.default.MyDamageType);
-        }
+        Other.TakeDamage(ProjectileClass.default.Damage, Instigator, HitLocation,
+            ProjectileClass.default.MomentumTransfer * Direction, ProjectileClass.default.MyDamageType);
     }
 
     return true;
 }
 
+// Modified to handle different firing animations when on sights
 function PlayFiring()
 {
-    if (Weapon.Mesh != none)
+    if (Weapon != none)
     {
-        if (FireCount > 0)
+        if (Weapon.Mesh != none)
         {
-            if (Weapon.bUsingSights && Weapon.HasAnim(FireIronLoopAnim))
+            if (FireCount > 0)
             {
-                Weapon.PlayAnim(FireIronLoopAnim, FireAnimRate, 0.0);
-            }
-            else
-            {
-                if (Weapon.HasAnim(FireLoopAnim))
+                if (!IsPlayerHipFiring() && Weapon.HasAnim(FireIronLoopAnim))
+                {
+                    Weapon.PlayAnim(FireIronLoopAnim, FireLoopAnimRate, 0.0);
+                }
+                else if (Weapon.HasAnim(FireLoopAnim))
                 {
                     Weapon.PlayAnim(FireLoopAnim, FireLoopAnimRate, 0.0);
                 }
-                else
+                else if (Weapon.HasAnim(FireAnim))
                 {
                     Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
                 }
             }
-        }
-        else
-        {
-            if (Weapon.bUsingSights)
+            else if (!IsPlayerHipFiring() && Weapon.HasAnim(FireIronAnim))
             {
                 Weapon.PlayAnim(FireIronAnim, FireAnimRate, FireTweenTime);
             }
-            else
+            else if (Weapon.HasAnim(FireAnim))
             {
                 Weapon.PlayAnim(FireAnim, FireAnimRate, FireTweenTime);
             }
         }
-    }
 
-    if (FireSounds.Length > 0)
-    {
-        Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
+        if (FireSounds.Length > 0)
+        {
+            Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
+        }
     }
 
     ClientPlayForceFeedback(FireForce);
-
     FireCount++;
 }
 
+// Modified to handle different fire end animation when on sights
 function PlayFireEnd()
 {
-    if (Weapon.bUsingSights && Weapon.HasAnim(FireIronEndAnim))
+    if (Weapon != none && Weapon.Mesh != none)
     {
-        Weapon.PlayAnim(FireIronEndAnim, FireEndAnimRate, FireTweenTime);
-    }
-    else if (Weapon.HasAnim(FireEndAnim))
-    {
-        Weapon.PlayAnim(FireEndAnim, FireEndAnimRate, FireTweenTime);
+        if (!IsPlayerHipFiring() && Weapon.HasAnim(FireIronEndAnim))
+        {
+            Weapon.PlayAnim(FireIronEndAnim, FireEndAnimRate, FireTweenTime);
+        }
+        else if (Weapon.HasAnim(FireEndAnim))
+        {
+            Weapon.PlayAnim(FireEndAnim, FireEndAnimRate, FireTweenTime);
+        }
     }
 }
 
@@ -557,26 +565,93 @@ simulated function HandleRecoil()
     }
 }
 
+// Modified to use the IsPlayerHipFiring() helper function, which makes this function generic & avoids re-stating in subclasses to make minor changes
+simulated function EjectShell()
+{
+    local ROShellEject Shell;
+    local coords       EjectBoneCoords;
+    local vector       SpawnLocation, X, Y, Z;
+    local rotator      ShellRotation;
+
+    if (ShellEjectClass == none)
+    {
+        return;
+    }
+
+    // Get location & rotation to spawn ejected shell case
+    if (IsPlayerHipFiring())
+    {
+        // Have to calculate the the shell ejection bone offset & then scale it down 5 times, as the 1st person model is scaled up 5 times in the editor
+        EjectBoneCoords = Weapon.GetBoneCoords(ShellEmitBone);
+        SpawnLocation = Weapon.Location + (0.2 * (EjectBoneCoords.Origin - Weapon.Location));
+        SpawnLocation += (EjectBoneCoords.XAxis * ShellHipOffset.X) + (EjectBoneCoords.YAxis * ShellHipOffset.Y) +  (EjectBoneCoords.ZAxis * ShellHipOffset.Z);
+        ShellRotation = rotator(-EjectBoneCoords.YAxis);
+        Shell = Weapon.Spawn(ShellEjectClass, none,, SpawnLocation, ShellRotation);
+        ShellRotation = rotator(EjectBoneCoords.XAxis) + ShellRotOffsetHip;
+    }
+    else
+    {
+        Weapon.GetViewAxes(X, Y, Z);
+        SpawnLocation = Instigator.Location + Instigator.EyePosition();
+        SpawnLocation += (X * ShellIronSightOffset.X) + (Y * ShellIronSightOffset.Y) + (Z * ShellIronSightOffset.Z);
+        ShellRotation = rotator(Y);
+        ShellRotation.Yaw += 16384;
+        Shell = Weapon.Spawn(ShellEjectClass, none,, SpawnLocation, ShellRotation);
+        ShellRotation = rotator(Y) + ShellRotOffsetIron;
+    }
+
+    // Apply random direction & speed to ejected shell
+    if (Shell != none)
+    {
+        ShellRotation.Yaw += Shell.RandomYawRange - Rand(Shell.RandomYawRange * 2);
+        ShellRotation.Pitch += Shell.RandomPitchRange - Rand(Shell.RandomPitchRange * 2);
+        ShellRotation.Roll += Shell.RandomRollRange - Rand(Shell.RandomRollRange * 2);
+
+        Shell.Velocity = vector(ShellRotation) * (Shell.MinStartSpeed + (FRand() * (Shell.MaxStartSpeed - Shell.MinStartSpeed)));
+    }
+}
+
 defaultproperties
 {
+    bInstantHit=false
     bUsePreLaunchTrace=true
     PreLaunchTraceLengthFactor=0.1 // gives trace length of around 18m to 37m for pistol, 74m to 85m for full power rifle or MG
     ProjPerFire=1
-    CrouchSpreadModifier=0.85
-    ProneSpreadModifier=0.7
+    ProjSpawnOffset=(X=25.0)
+
+    // Recoil
+    PctStandIronRecoil=0.65
+    PctCrouchRecoil=0.75
+    PctCrouchIronRecoil=0.6
+    PctProneRecoil=0.7
+    PctProneIronRecoil=0.5
+    PctBipodDeployRecoil=0.1
+    PctRestDeployRecoil=0.5
+    PctLeanPenalty=1.25
+
+    // Spread
+    CrouchSpreadModifier=0.9
+    ProneSpreadModifier=0.8
     BipodDeployedSpreadModifier=0.5
     RestDeploySpreadModifier=0.75
     HipSpreadModifier=3.5
-    LeanSpreadModifier=1.35
-    PctBipodDeployRecoil=0.05
-    bLeadTarget=true
-    bInstantHit=false
-    NoAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
+    LeanSpreadModifier=1.15
+
+    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_rifle'
     FireForce="AssaultRifleFire"
-    WarnTargetPct=0.5
+
+    FireAnim="Shoot"
+    FireIronAnim="Iron_Shoot"
+    TweenTime=0.0
+
     bShouldBlurOnFire=true
     BlurTime=0.1
     BlurTimeIronsight=0.1
     BlurScale=0.01
     BlurScaleIronsight=0.1
+
+    // Bots
+    BotRefireRate=0.5
+    WarnTargetPct=0.9
+    bLeadTarget=true
 }

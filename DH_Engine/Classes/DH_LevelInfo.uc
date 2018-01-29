@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_LevelInfo extends ROLevelInfo
@@ -25,26 +25,39 @@ enum ESpawnMode
     ESM_DarkestHour
 };
 
-enum EGameType
+enum ESeason
 {
-    GT_Push,
-    GT_Attrition,
-    GT_Advance,
-    GT_SearchAndDestroy
+    SEASON_Spring,
+    SEASON_Summer,
+    SEASON_Autumn,
+    SEASON_Winter
 };
+
+enum EWeather
+{
+    WEATHER_Clear,
+    WEATHER_Rainy,
+    WEATHER_Snowy
+};
+
+// These are used as hints for skinning dynamically placed objects.
+var() ESeason               Season;
+var() EWeather              Weather;
 
 var() float                 AlliesToAxisRatio;          // Player ratio based on team, allows for unbalanced teams
 var() bool                  bHardTeamRatio;             // Determines if AlliesToAxisRatio should be hard or soft (affected by # of players)
 
 var() EAxisNation           AxisNation;
-var() EAlliedNation         AlliedNation;
-
-var() EGameType             GameType;
-
-var() sound                 AlliesWinsMusic;            // Optional override for Allies victory music
 var() sound                 AxisWinsMusic;              // Optional override for Axis victory music
+var() EAlliedNation         AlliedNation;
+var() sound                 AlliesWinsMusic;            // Optional override for Allies victory music
 
+var() class<DHGameType>     GameTypeClass;
 var() ESpawnMode            SpawnMode;
+
+var() bool                          bAreRallyPointsEnabled;
+var() bool                          bAreConstructionsEnabled;
+var() array<class<DHConstruction> > RestrictedConstructions;
 
 // Colin: Defines the rate of reinforcement drain per minute
 // when the enemy controls more objectives.
@@ -55,7 +68,7 @@ var() ESpawnMode            SpawnMode;
 // objectives, while Team B has 4.)
 var() InterpCurve           AttritionRateCurve;
 
-var() int                   AttritionMaxOpenObj;     // Max allowed open objectives for attrition, 0 means all obj can be open (active)
+var() bool                  bDisableTankLocking;     // option to disallow players from locking tanks & other armored vehicles, stopping other players from entering
 
 var() material              LoadingScreenRef;        // Used to stop loading screen image from being removed on save (not otherwise used)
                                                      // Must be set to myLevel.GUI.LoadingScreen to work!
@@ -67,13 +80,67 @@ singular static function bool DHDebugMode()
     return default.bDHDebugMode;
 }
 
+simulated function bool IsConstructionRestricted(class<DHConstruction> ConstructionClass)
+{
+    local int i;
+
+    for (i = 0; i < RestrictedConstructions.Length; ++i)
+    {
+        if (ConstructionClass == RestrictedConstructions[i])
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+static simulated function DH_LevelInfo GetInstance(LevelInfo Level)
+{
+    local DarkestHourGame G;
+    local DHPlayer PC;
+    local DH_LevelInfo LI;
+
+    if (Level.Role == ROLE_Authority)
+    {
+        G = DarkestHourGame(Level.Game);
+
+        if (G != none)
+        {
+            LI = G.DHLevelInfo;
+        }
+    }
+    else
+    {
+        PC = DHPlayer(Level.GetLocalPlayerController());
+
+        if (PC != none)
+        {
+            LI = PC.ClientLevelInfo;
+        }
+    }
+
+    if (LI == none)
+    {
+        foreach Level.AllActors(class'DH_LevelInfo', LI)
+        {
+            break;
+        }
+    }
+
+    return LI;
+}
+
 defaultproperties
 {
     bDHDebugMode=false // TEMPDEBUG - revert to false before any release
 
     AlliesToAxisRatio=0.5
-    Texture=texture'DHEngine_Tex.LevelInfo'
-    AlliesWinsMusic=sound'DH_win.Allies.DH_AlliesGroup'
-    AxisWinsMusic=sound'DH_win.German.DH_GermanGroup'
+    Texture=Texture'DHEngine_Tex.LevelInfo'
+    AlliesWinsMusic=Sound'DH_win.Allies.DH_AlliesGroup'
+    AxisWinsMusic=Sound'DH_win.German.DH_GermanGroup'
     SpawnMode=ESM_RedOrchestra
+    Season=SEASON_Summer
+    GameTypeClass=class'DHGameType_Push'
 }
+

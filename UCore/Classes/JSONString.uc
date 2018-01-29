@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class JSONString extends JSONValue;
@@ -16,9 +16,24 @@ function string AsString()
     return String;
 }
 
+function int AsInteger()
+{
+    return int(String);
+}
+
 function string Encode()
 {
     return "\"" $ String $ "\"";
+}
+
+function bool AsBoolean()
+{
+    if (String ~= "true")
+    {
+        return true;
+    }
+
+    return false;
 }
 
 static function JSONString Create(string Value)

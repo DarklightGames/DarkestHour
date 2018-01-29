@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHConsole extends ROConsole;
@@ -242,9 +242,7 @@ state SpeechMenuVisible
                 switch (DHPRI.RoleInfo.Side)
                 {
                    case SIDE_Axis:
-                       if ((DHGRI.DHObjectives[i].ObjState == OBJ_Allies ||
-                           DHGRI.DHObjectives[i].ObjState == OBJ_Neutral) &&
-                           DHGRI.DHObjectives[i].bActive)
+                       if ((DHGRI.DHObjectives[i].IsAllies() || DHGRI.DHObjectives[i].IsNeutral()) && DHGRI.DHObjectives[i].bActive)
                        {
                           SMNameArray[SMArraySize] = DHGRI.DHObjectives[i].ObjName;
                           SMIndexArray[SMArraySize] = DHGRI.DHObjectives[i].ObjNum;
@@ -253,9 +251,7 @@ state SpeechMenuVisible
                        break;
 
                    case SIDE_Allies:
-                       if ((DHGRI.DHObjectives[i].ObjState == OBJ_Axis ||
-                           DHGRI.DHObjectives[i].ObjState == OBJ_Neutral) &&
-                           DHGRI.DHObjectives[i].bActive)
+                       if ((DHGRI.DHObjectives[i].IsAxis() || DHGRI.DHObjectives[i].IsNeutral()) && DHGRI.DHObjectives[i].bActive)
                        {
                           SMNameArray[SMArraySize] = DHGRI.DHObjectives[i].ObjName;
                           SMIndexArray[SMArraySize] = DHGRI.DHObjectives[i].ObjNum;
@@ -290,7 +286,7 @@ state SpeechMenuVisible
                 switch (DHPRI.RoleInfo.Side)
                 {
                    case SIDE_Axis:
-                       if (DHGRI.DHObjectives[i].ObjState == OBJ_Axis)
+                       if (DHGRI.DHObjectives[i].IsAxis())
                        {
                           SMNameArray[SMArraySize] = DHGRI.DHObjectives[i].ObjName;
                           SMIndexArray[SMArraySize] = DHGRI.DHObjectives[i].ObjNum;
@@ -299,7 +295,7 @@ state SpeechMenuVisible
                        break;
 
                    case SIDE_Allies:
-                       if (DHGRI.DHObjectives[i].ObjState == OBJ_Allies)
+                       if (DHGRI.DHObjectives[i].IsAllies())
                        {
                           SMNameArray[SMArraySize] = DHGRI.DHObjectives[i].ObjName;
                           SMIndexArray[SMArraySize] = DHGRI.DHObjectives[i].ObjNum;
@@ -346,6 +342,13 @@ exec function VehicleTalk()
         TypedStrPos = Len(TypedStr);
         TypingOpen();
     }
+}
+
+exec function SquadTalk()
+{
+    TypedStr = "SquadSay ";
+    TypedStrPos = Len(TypedStr);
+    TypingOpen();
 }
 
 // Modified to fix reconnect command bug

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHCannonShellHEAT extends DHCannonShell
@@ -14,7 +14,7 @@ var float Hardness;                   // wall hardness, calculated in CheckWall 
 var float EnergyFactor;               // for calculating penetration of projectile
 var float PeneExploWallOut;           // distance out from the wall to spawn penetration explosion
 var bool  bDidPenetrationExplosionFX; // already did the penetration explosion effects
-var bool  bHitWorldObject;            // flags that shell has hit a world object & should run a world penetration check (Matt: reversing original bHitWorldObject, as this way seems more logical)
+var bool  bHitWorldObject;            // flags that shell has hit a world object & should run a world penetration check (reversing original bHitWorldObject, as this way seems more logical)
 
 var globalconfig float PenetrationScale; // global penetration depth scale factor
 var globalconfig float DistortionScale;  // global distortion scale factor
@@ -22,9 +22,10 @@ var globalconfig float DistortionScale;  // global distortion scale factor
 // Modified to handle world object penetration
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
-    local Actor  TraceHitActor;
-    local vector Direction, TempHitLocation, TempHitNormal;
-    local float  xH, TempMaxWall;
+    local DHVehicleCannon Cannon;
+    local Actor           TraceHitActor;
+    local vector          Direction, TempHitLocation, TempHitNormal;
+    local float           xH, TempMaxWall;
 
     // Exit without doing anything if we hit something we don't want to count a hit on
     if (bInHitWall || Wall == none || SavedHitActor == Wall || (Wall.Base != none && Wall.Base == Instigator) || Wall.bDeleteMe) // HEAT adds bInHitWall check to prevent recursive calls
@@ -34,13 +35,28 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 
     SavedHitActor = Pawn(Wall);
 
+    // Debug options
+    if (DHVehicleCannonPawn(Instigator) != none)
+    {
+        Cannon = DHVehicleCannonPawn(Instigator).Cannon;
+
+        if (Cannon != none && Cannon.bDebugRangeAutomatically)
+        {
+            Cannon.UpdateAutoDebugRange(Wall, Location);
+            bDidExplosionFX = true;
+            Destroy();
+
+            return;
+        }
+    }
+
     if (bDebuggingText && Role == ROLE_Authority)
     {
         DebugShotDistanceAndSpeed();
     }
 
     // We hit an armored vehicle hull but failed to penetrate
-    if (Wall.IsA('DHArmoredVehicle') && !DHArmoredVehicle(Wall).ShouldPenetrate(self, Location, Normal(Velocity), GetPenetration(LaunchLocation - Location)))
+    if (Wall.IsA('DHArmoredVehicle') && !DHArmoredVehicle(Wall).ShouldPenetrate(self, Location, Normal(Velocity), GetMaxPenetration(LaunchLocation, Location)))
     {
         FailToPenetrateArmor(Location, HitNormal, Wall);
 
@@ -90,7 +106,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 
     Explode(Location + ExploWallOut * HitNormal, HitNormal);
 
-    // From here is all added in HEAT: // TODO - Matt: should we have a "if (bHitWorldObject) here before proceeding to wall pen calcs?
+    // From here is all added in HEAT: // TODO: should we have a "if (bHitWorldObject) here before proceeding to wall pen calcs?
 
     bInHitWall = true; // set flag to prevent recursive calls
 
@@ -292,6 +308,6 @@ defaultproperties
     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
     ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
     LifeSpan=10.0
-//  SoundRadius=1000.0 // Matt: removed as affects shell's flight 'whistle' (i.e. AmbientSound), not the explosion sound radius
+//  SoundRadius=1000.0 // removed as affects shell's flight 'whistle' (i.e. AmbientSound), not the explosion sound radius
     ExplosionSoundVolume=1.5
 }

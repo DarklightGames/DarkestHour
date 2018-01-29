@@ -1,9 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHServerBrowser extends ROUT2k4ServerBrowser;
+
+var     config bool             bDidShowBetaMessage;
+var     localized string        BetaMessageText;
 
 function CreateTabs()
 {
@@ -11,6 +14,33 @@ function CreateTabs()
 
     // Activate the Internet tab immediately
     c_Tabs.ActivateTabByName(PanelCaption[2], true);
+}
+
+function InternalOnOpen()
+{
+    local GUIQuestionPage QP;
+
+    if (!bDidShowBetaMessage)
+    {
+        QP = Controller.ShowQuestionDialog(default.BetaMessageText, QBTN_OkCancel, QBTN_OK);
+        QP.OnButtonClick = InternalOnButtonClick;
+        QP.ButtonNames[0] = "Join Discord";
+        QP.ButtonNames[1] = "Just play!";
+        QP.SetupQuestion(default.BetaMessageText, QBTN_OkCancel, QBTN_OK, true);
+
+        bDidShowBetaMessage = true;
+        SaveConfig();
+    }
+}
+
+function InternalOnButtonClick(byte bButton)
+{
+    switch (bButton)
+    {
+        case QBTN_OK:
+            PlayerOwner().ConsoleCommand("START" @ class'DHMainMenu'.default.DiscordURL);
+            break;
+    }
 }
 
 defaultproperties
@@ -60,7 +90,7 @@ defaultproperties
     End Object
     t_Footer=DHBrowser_Footer'DH_Interface.DHServerBrowser.FooterPanel'
     Begin Object Class=BackgroundImage Name=PageBackground
-        Image=texture'DH_GUI_Tex.Menu.MultiMenuBack'
+        Image=Texture'DH_GUI_Tex.Menu.MultiMenuBack'
         ImageStyle=ISTY_Scaled
         ImageRenderStyle=MSTY_Alpha
         X1=0
@@ -81,4 +111,8 @@ defaultproperties
     PanelCaption(0)="Favorites"
     PanelCaption(1)="LAN"
     PanelCaption(2)="Internet"
+
+    BetaMessageText="Welcome to the Darkest Hour: Europe '44-'45 v8.0 live beta!  This update adds a number of exciting new features such as squads, constructions, and more! Since this is the largest single update the game has ever seen, we are making sure to get it right: this is why we are doing a \"soft\" beta release for our community to play while we work out the remaining kinks. Be sure to join the 500+ strong Discord community to discuss the game, make suggestions, or report any bugs! See you on the battlefield!"
+    OnOpen=InternalOnOpen
 }
+

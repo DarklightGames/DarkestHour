@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_ModifyReinforcements extends DH_ModifyActors;
@@ -135,5 +135,5 @@ defaultproperties
     bModifyIfDepleted=true
     bUseTeamMessage=true
     messagetype="CriticalEvent"
-    Sound=sound'Miscsounds.Music.notify_drum'
+    Sound=Sound'Miscsounds.Music.notify_drum'
 }

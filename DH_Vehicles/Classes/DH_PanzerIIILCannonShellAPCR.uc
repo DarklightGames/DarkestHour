@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_PanzerIIILCannonShellAPCR extends DHCannonShellHVAP;
@@ -40,13 +40,12 @@ defaultproperties
     DHPenetrationTable(9)=2.1
     DHPenetrationTable(10)=1.4
     ShellDiameter=5.0
-    bIsAlliedShell=false
+    bDebugInImperial=false
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
     ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIILCannonShellDamageAPCR'
     ImpactDamage=325
     BallisticCoefficient=0.95
-    SpeedFudgeScale=0.4
     Speed=71313.0
     MaxSpeed=71313.0
     StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'

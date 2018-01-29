@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_T3476CannonShellHE extends DHCannonShellHE;
@@ -10,14 +10,15 @@ defaultproperties
     // Have matched several damage & similar properties to Sherman 76mm HE shell, as the RO values were at odds with comparable DH shells
     ShellDiameter=7.62
     BallisticCoefficient=1.55
-    Speed=39832.0 // 660 m/s
-    MaxSpeed=39832.0
-    Damage=400.0 // 350 in RO
-    DamageRadius=1140.0 // 750 in RO
-    ImpactDamage=450 // 200 in RO
+    Speed=39953.0 // 662 m/s
+    MaxSpeed=39953.0
+    Damage=400.0
+    DamageRadius=1140.0
+    ImpactDamage=450
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
     PenetrationMag=780.0
     Tag="OF-350"
+    bDebugInImperial=false
 
     DHPenetrationTable(0)=3.3
     DHPenetrationTable(1)=3.1
@@ -52,38 +53,17 @@ defaultproperties
     OpticalRanges(17)=(Range=3400,RangeValue=0.711)
     OpticalRanges(18)=(Range=3600,RangeValue=0.744)
     OpticalRanges(19)=(Range=3800,RangeValue=0.778)
-    OpticalRanges(20)=(Range=4000,RangeValue=0.813) // no range markings above 4000m for HE shell, so no adjustment beyond this
-    OpticalRanges(21)=(Range=4200,RangeValue=0.813)
-    OpticalRanges(22)=(Range=4400,RangeValue=0.813)
-    OpticalRanges(23)=(Range=4600,RangeValue=0.813)
-    OpticalRanges(24)=(Range=4800,RangeValue=0.813)
-    OpticalRanges(25)=(Range=5000,RangeValue=0.813)
+    OpticalRanges(20)=(Range=4000,RangeValue=0.813)
+    OpticalRanges(21)=(Range=5000,RangeValue=0.813) // no range markings above 4000m for HE shell, so no further movement of optics bar
 
-    bMechanicalAiming=true // this cannon doesn't actually have mechanical aiming, but believe this is a fudge to adjust for sight markings that are 'out'
-    MechanicalRanges(0)=(Range=0,RangeValue=0.0)
-    MechanicalRanges(1)=(Range=200,RangeValue=-15.0)
-    MechanicalRanges(2)=(Range=400,RangeValue=-30.0)
-    MechanicalRanges(3)=(Range=600,RangeValue=-40.0)
-    MechanicalRanges(4)=(Range=800,RangeValue=-65.0)
-    MechanicalRanges(5)=(Range=1000,RangeValue=-70.0)
-    MechanicalRanges(6)=(Range=1200,RangeValue=-82.0)
-    MechanicalRanges(7)=(Range=1400,RangeValue=-92.0)
-    MechanicalRanges(8)=(Range=1600,RangeValue=-113.0)
-    MechanicalRanges(9)=(Range=1800,RangeValue=-138.0)
-    MechanicalRanges(10)=(Range=2000,RangeValue=-180.0)
-    MechanicalRanges(11)=(Range=2200,RangeValue=-235.0)
-    MechanicalRanges(12)=(Range=2400,RangeValue=-283.0)
-    MechanicalRanges(13)=(Range=2600,RangeValue=-335.0)
-    MechanicalRanges(14)=(Range=2800,RangeValue=-397.0)
-    MechanicalRanges(15)=(Range=3000,RangeValue=-458.0)
-    MechanicalRanges(16)=(Range=3200,RangeValue=-518.0)
-    MechanicalRanges(17)=(Range=3400,RangeValue=-578.0)
-    MechanicalRanges(18)=(Range=3600,RangeValue=-642.0)
-    MechanicalRanges(19)=(Range=3800,RangeValue=-704.0)
-    MechanicalRanges(20)=(Range=4000,RangeValue=-769.0)
-    MechanicalRanges(21)=(Range=4200,RangeValue=-769.0)
-    MechanicalRanges(22)=(Range=4400,RangeValue=-769.0)
-    MechanicalRanges(23)=(Range=4600,RangeValue=-769.0)
-    MechanicalRanges(24)=(Range=4800,RangeValue=-769.0)
-    MechanicalRanges(25)=(Range=5000,RangeValue=-769.0)
+    bMechanicalAiming=true // this cannon doesn't actually have mechanical aiming, but this is a fudge to adjust for sight markings that are 'out'
+    MechanicalRanges(1)=(Range=200,RangeValue=-12.0)
+    MechanicalRanges(2)=(Range=400,RangeValue=-10.0)
+    MechanicalRanges(3)=(Range=600,RangeValue=-5.0)
+    MechanicalRanges(4)=(Range=800,RangeValue=-4.0)
+    MechanicalRanges(5)=(Range=1000,RangeValue=0.0)
+    MechanicalRanges(6)=(Range=1200,RangeValue=8.0)
+    MechanicalRanges(7)=(Range=1400,RangeValue=15.0)
+    MechanicalRanges(8)=(Range=1600,RangeValue=38.0) // can only set up to here
+    MechanicalRanges(9)=(Range=5000,RangeValue=38.0)
 }

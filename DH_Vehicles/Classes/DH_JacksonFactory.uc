@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_JacksonFactory extends DH_USVehicles; // later version with HVAP instead of AP shot & with muzzle brake

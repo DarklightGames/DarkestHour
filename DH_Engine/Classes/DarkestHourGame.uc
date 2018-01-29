@@ -1,12 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DarkestHourGame extends ROTeamGame;
 
-// When a player leaves the server this info is stored for the session so if they return these values won't reset
-var     Hashtable_string_Object     PlayerSessions;
+var     Hashtable_string_Object     PlayerSessions; // When a player leaves the server this info is stored for the session so if they return these values won't reset
 
 var     DH_LevelInfo                DHLevelInfo;
 
@@ -20,46 +19,63 @@ var     DHObjective                 DHObjectives[OBJECTIVES_MAX];
 
 var     DHSpawnManager              SpawnManager;
 var     DHObstacleManager           ObstacleManager;
+var     DHConstructionManager       ConstructionManager;
 
 var     array<string>               FFViolationIDs;                         // Array of ROIDs that have been kicked once this session
 var()   config bool                 bSessionKickOnSecondFFViolation;
 var()   config bool                 bUseWeaponLocking;                      // Weapons can lock (preventing fire) for punishment
-var     int                         WeaponLockTimes[10];
+var     int                         WeaponLockTimeSecondsInterval;
+var     int                         WeaponLockTimeSecondsMaximum;
+
+var     bool                        bSkipPreStartTime;                      // Whether or not to skip the PreStartTime configured on the server
 
 var     class<DHObstacleManager>    ObstacleManagerClass;
 
-var     float                       ChangeTeamInterval;
+var()   config bool                 bAllowAllChat;                          // optional bool to disable public text chat on the server
+
+var()   config float                AccuracyModifier;                       // 1.0 for normal weapon accuracy, raise for worse accuracy
+
+var()   config int                  ChangeTeamInterval;                     // Server setting determines how long before a player can change teams again after doing so
+                                                                            // Also currently is the length of time for which a player can change teams for free at the beginning of a round
+                                                                            // Note: if bPlayersBalanceTeams is false, players will still be able to change teams
 
 var     array<float>                ReinforcementMessagePercentages;
 var     int                         TeamReinforcementMessageIndices[2];
-var     int                         bTeamOutOfReinforcements[2];
 var     int                         OriginalReinforcementIntervals[2];
+var     int                         SpawnsAtRoundStart[2];                  // Number of spawns for each team at start of round (used for reinforcement warning calc)
 
 const SERVERTICKRATE_UPDATETIME =   5.0; // The duration we use to calculate the average tick the server is running
 const MAXINFLATED_INTERVALTIME =    60.0; // The max value to add to reinforcement time for inflation
 const SPAWN_KILL_RESPAWN_TIME =     2;
 
+var     bool                        bLogAverageTickRate;
 var()   config float                ServerTickForInflation;                 // Value that determines when inflation will start if ServerTickRateAverage is less than
 var     float                       ServerTickRateAverage;                  // The average tick rate over the past SERVERTICKRATE_UPDATETIME
 var     float                       ServerTickRateConsolidated;             // Keeps track of tick rates over time, used to calculate average
 var     int                         ServerTickFrameCount;                   // Keeps track of how many frames are between ServerTickRateConsolidated
 
+var     bool                        bIsAttritionEnabled;                    // This variable is here primarily so that mutators can disable attrition.
+var     float                       CalculatedAttritionRate[2];
 var     float                       TeamAttritionCounter[2];
-
-var     array<int>                  AttritionObjOrder;                      // Order of objectives that were randomly opened
+var     InterpCurve                 ElapsedTimeAttritionCurve;              // Curve which inputs elapsed time and outputs attrition amount
+                                                                            // used to setup a pseudo time limit for Advance/Attrition game modes
+                                                                            // this way if there are not many players on, the round will eventually end
 
 var     bool                        bSwapTeams;
-var     bool                        bUseReinforcementWarning;
+
+
 var     float                       AlliesToAxisRatio;
 
 var     class<DHMetrics>            MetricsClass;
 var     DHMetrics                   Metrics;
 var     config bool                 bEnableMetrics;
 
-var     bool                        bPublicPlay;                            // Variable to determine how things should behave (Private vs Public play)
-                                                                            // An organized unit will want to set this to false in a mutator so they can control
-                                                                            // settings for private matches (ex- change to false in realism match mode)
 var     UVersion                    Version;
+var     DHSquadReplicationInfo      SquadReplicationInfo;
+
+var()   config int                  EmptyTankUnlockTime;                    // Server config option for how long (secs) before unlocking a locked armored vehicle if abandoned by its crew
+
+var     DHGameReplicationInfo       GRI;
 
 // Overridden to make new clamp of MaxPlayers
 event InitGame(string Options, out string Error)
@@ -68,14 +84,20 @@ event InitGame(string Options, out string Error)
 
     if (bIgnore32PlayerLimit)
     {
-        MaxPlayers = Clamp(GetIntOption(Options, "MaxPlayers", MaxPlayers), 0, 64);
-        default.MaxPlayers = Clamp(default.MaxPlayers, 0, 64);
+        MaxPlayers = Clamp(GetIntOption(Options, "MaxPlayers", MaxPlayers), 0, 128);
+        default.MaxPlayers = Clamp(default.MaxPlayers, 0, 128);
     }
+}
+
+function PreBeginPlay()
+{
+    super.PreBeginPlay();
+
+    SquadReplicationInfo = Spawn(class'DHSquadReplicationInfo');
 }
 
 function PostBeginPlay()
 {
-    local DHGameReplicationInfo GRI;
     local ROLevelInfo           LI;
     local ROMapBoundsNE         NE;
     local ROMapBoundsSW         SW;
@@ -163,7 +185,7 @@ function PostBeginPlay()
     }
 
     RoundDuration = LevelInfo.RoundDuration * 60;
-    AlliesToAxisRatio = DH_LevelInfo(LevelInfo).AlliesToAxisRatio;
+    AlliesToAxisRatio = DHLevelInfo.AlliesToAxisRatio;
 
     // Stored the level's original ReinforcementIntervals so we can reset to it when round restarts (in case the level edits it)
     OriginalReinforcementIntervals[AXIS_TEAM_INDEX] = LevelInfo.Axis.ReinforcementInterval;
@@ -177,35 +199,25 @@ function PostBeginPlay()
         return;
     }
 
-    // Setup game type variables
-    switch (DHLevelInfo.GameType)
+    GRI.bAllowAllChat = bAllowAllChat;
+
+    // Allow weapon dropping (this is here in case it is set to false and then the server changes map and saved as false)
+    bAllowWeaponThrowing = true;
+
+    GRI.GameType = DHLevelInfo.GameTypeClass;
+    GRI.bAllowNetDebug = bAllowNetDebug;
+
+    if (bSkipPreStartTime)
     {
-        case GT_Push:
-            GRI.CurrentGameType = "Push";
-            break;
-
-        case GT_Attrition:
-            GRI.CurrentGameType = "Attrition";
-            break;
-
-        case GT_Advance:
-            GRI.CurrentGameType = "Advance";
-            //GRI.bUseDeathPenaltyCount = true; // disable for now, as this feature is likely to be removed
-            bUseReinforcementWarning = false;
-            break;
-
-        case GT_SearchAndDestroy:
-            GRI.CurrentGameType = "SearchAndDestroy";
-            break;
-
-        default:
-            break; // do nothing
+        GRI.PreStartTime = 0;
+    }
+    else
+    {
+        GRI.PreStartTime = PreStartTime;
     }
 
-    // General game type settings
-    GRI.bAllowNetDebug = bAllowNetDebug;
-    GRI.PreStartTime = PreStartTime;
     GRI.RoundDuration = RoundDuration;
+    GRI.DHRoundDuration = RoundDuration;
     GRI.bReinforcementsComing[AXIS_TEAM_INDEX] = 0;
     GRI.bReinforcementsComing[ALLIES_TEAM_INDEX] = 0;
     GRI.ReinforcementInterval[AXIS_TEAM_INDEX] = LevelInfo.Axis.ReinforcementInterval;
@@ -219,6 +231,7 @@ function PostBeginPlay()
     GRI.MapImage = LevelInfo.MapImage;
     GRI.bPlayerMustReady = bPlayersMustBeReady;
     GRI.RoundLimit = RoundLimit;
+    GRI.DHRoundLimit = RoundLimit;
     GRI.MaxPlayers = MaxPlayers;
     GRI.bShowServerIPOnScoreboard = bShowServerIPOnScoreboard;
     GRI.bShowTimeOnScoreboard = bShowTimeOnScoreboard;
@@ -309,7 +322,7 @@ function PostBeginPlay()
         DHResupplyAreas[m] = ARV;
         GRI.ResupplyAreas[m].ResupplyVolumeLocation = ARV.Location;
         GRI.ResupplyAreas[m].Team = ARV.Team;
-        GRI.ResupplyAreas[m].bActive = !ARV.bUsesSpawnAreas;
+        GRI.ResupplyAreas[m].bActive = ARV.bActive;
 
         if (ARV.ResupplyType == RT_Players)
         {
@@ -363,17 +376,6 @@ function PostBeginPlay()
         Warn("DHSpawnManager could not be found");
     }
 
-    // Here we see if the victory music is set to a sound group and pick an index to replicate to the clients
-    if (DHLevelInfo.AlliesWinsMusic != none && DHLevelInfo.AlliesWinsMusic.IsA('SoundGroup'))
-    {
-        GRI.AlliesVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AlliesWinsMusic).Sounds.Length - 1);
-    }
-
-    if (DHLevelInfo.AxisWinsMusic != none && DHLevelInfo.AxisWinsMusic.IsA('SoundGroup'))
-    {
-        GRI.AxisVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AxisWinsMusic).Sounds.Length - 1);
-    }
-
     if (bEnableMetrics && MetricsClass != none)
     {
         Metrics = Spawn(MetricsClass);
@@ -382,10 +384,10 @@ function PostBeginPlay()
     PlayerSessions = class'Hashtable_string_Object'.static.Create(128);
 }
 
-// Modified to remove any return on # of bots
+// Modified to remove any return on # of bots (and to remove chance of negative)
 function int GetNumPlayers()
 {
-    return Min(NumPlayers, MaxPlayers);
+    return Max(0, Min(NumPlayers, MaxPlayers));
 }
 
 event Tick(float DeltaTime)
@@ -399,9 +401,15 @@ event Tick(float DeltaTime)
         ServerTickFrameCount = 0;
         ServerTickRateConsolidated -= SERVERTICKRATE_UPDATETIME;
 
+        // Update the server health.
+        GRI.ServerHealth = Clamp(ServerTickRateAverage, 0, 255);
+
         HandleReinforceIntervalInflation();
 
-        //Log("Average Server Tick Rate:" @ ServerTickRateAverage);
+        if (bLogAverageTickRate)
+        {
+            Log("Average Server Tick Rate:" @ ServerTickRateAverage);
+        }
     }
     else
     {
@@ -411,229 +419,26 @@ event Tick(float DeltaTime)
     super.Tick(DeltaTime);
 }
 
-// Raises the reinforcement interval used in the level if the server is performing poorly, otherwise it sets it to default
+// Raises the reinforcement interval used in GRI if the server is performing poorly, otherwise it sets it to default
 function HandleReinforceIntervalInflation()
 {
     local float TickRatio;
-
-    if (DHGameReplicationInfo(GameReplicationInfo) == none)
-    {
-        return;
-    }
 
     // Lets perform some changes to GRI.ReinforcementInterval if average tick is less than desired
     if (ServerTickRateAverage < ServerTickForInflation)
     {
         TickRatio = 1.0 - ServerTickRateAverage / ServerTickForInflation;
 
-        DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval + int(TickRatio * MAXINFLATED_INTERVALTIME);
-        DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval + int(TickRatio * MAXINFLATED_INTERVALTIME);
+        GRI.ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval + int(TickRatio * MAXINFLATED_INTERVALTIME);
+        GRI.ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval + int(TickRatio * MAXINFLATED_INTERVALTIME);
 
         //Warn("Server is not performing at desired tick rate, raising reinforcement interval based on how bad we are performing!");
     }
     else
     {
-        DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval;
-        DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval;
+        GRI.ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval;
+        GRI.ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval;
     }
-}
-
-function CheckResupplyVolumes()
-{
-    local DHGameReplicationInfo GRI;
-    local int i;
-
-    // Activate any resupply areas that are activated based on spawn areas
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    for (i = 0; i < arraycount(DHResupplyAreas); ++i)
-    {
-        if (DHResupplyAreas[i] == none)
-        {
-            continue;
-        }
-
-        if (DHResupplyAreas[i].bUsesSpawnAreas)
-        {
-            if (DHResupplyAreas[i].Team == AXIS_TEAM_INDEX)
-            {
-                if ((CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag)
-                    || CurrentSpawnArea[AXIS_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag)
-                {
-                    GRI.ResupplyAreas[i].bActive = true;
-                    DHResupplyAreas[i].bActive = true;
-                }
-                else
-                {
-                    GRI.ResupplyAreas[i].bActive = false;
-                    DHResupplyAreas[i].bActive = false;
-                }
-            }
-
-            if (DHResupplyAreas[i].Team == ALLIES_TEAM_INDEX)
-            {
-                if ((CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag)
-                    || CurrentSpawnArea[ALLIES_TEAM_INDEX].Tag == DHResupplyAreas[i].Tag)
-                {
-                    GRI.ResupplyAreas[i].bActive = true;
-                    DHResupplyAreas[i].bActive = true;
-                }
-                else
-                {
-                    GRI.ResupplyAreas[i].bActive = false;
-                    DHResupplyAreas[i].bActive = false;
-                }
-            }
-        }
-        else
-        {
-            GRI.ResupplyAreas[i].bActive = true;
-            DHResupplyAreas[i].bActive = true;
-        }
-    }
-}
-
-// Modified to use more efficient DynamicActors iteration instead of AllActors (vehicle factories aren't static actors), & re-factored to generally optimise
-function CheckVehicleFactories()
-{
-    local ROVehicleFactory VehFact;
-    local int              TeamIndex;
-
-    foreach DynamicActors(class'ROVehicleFactory', VehFact)
-    {
-        if (VehFact.bUsesSpawnAreas)
-        {
-            if (class<ROVehicle>(VehFact.VehicleClass) != none)
-            {
-                TeamIndex = class<ROVehicle>(VehFact.VehicleClass).default.VehicleTeam;
-
-                if ((TeamIndex == AXIS_TEAM_INDEX || TeamIndex == ALLIES_TEAM_INDEX) &&
-                    ((CurrentTankCrewSpawnArea[TeamIndex] != none && CurrentTankCrewSpawnArea[TeamIndex].Tag == VehFact.Tag) ||
-                    (CurrentSpawnArea[TeamIndex] != none && CurrentSpawnArea[TeamIndex].Tag == VehFact.Tag)))
-                {
-                    VehFact.ActivatedBySpawn(TeamIndex);
-                }
-                else
-                {
-                    VehFact.Deactivate();
-                }
-            }
-        }
-    }
-}
-
-function CheckMortarmanSpawnAreas()
-{
-    local DHSpawnArea Best[2];
-    local bool        bReqsMet, bSomeReqsMet;
-    local int         i, j, h, k;
-
-    for (i = 0; i < DHMortarSpawnAreas.Length; ++i)
-    {
-        if (!DHMortarSpawnAreas[i].bEnabled)
-        {
-            continue;
-        }
-
-        // Axis plus: either no best or this one has higher precedence
-        if (DHMortarSpawnAreas[i].bAxisSpawn && (Best[AXIS_TEAM_INDEX] == none || DHMortarSpawnAreas[i].AxisPrecedence > Best[AXIS_TEAM_INDEX].AxisPrecedence))
-        {
-            bReqsMet = true;
-            bSomeReqsMet = false;
-
-            for (j = 0; j < DHMortarSpawnAreas[i].AxisRequiredObjectives.Length; ++j)
-            {
-                if (DHObjectives[DHMortarSpawnAreas[i].AxisRequiredObjectives[j]].ObjState != OBJ_Axis)
-                {
-                    bReqsMet = false;
-                    break;
-                }
-            }
-
-            for (h = 0; h < DHMortarSpawnAreas[i].AxisRequiredObjectives.Length; ++h)
-            {
-                if (DHObjectives[DHMortarSpawnAreas[i].AxisRequiredObjectives[h]].ObjState == OBJ_Axis)
-                {
-                    bSomeReqsMet = true;
-                    break;
-                }
-            }
-
-            if (DHMortarSpawnAreas[i].bIncludeNeutralObjectives)
-            {
-                for (k = 0; k < DHMortarSpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
-                {
-                    if (DHObjectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
-                    {
-                        bSomeReqsMet = true;
-                        break;
-                    }
-                }
-            }
-
-            if (bReqsMet)
-            {
-                Best[AXIS_TEAM_INDEX] = DHMortarSpawnAreas[i];
-            }
-            else if (bSomeReqsMet && DHMortarSpawnAreas[i].TeamMustLoseAllRequired == SPN_Axis)
-            {
-                Best[AXIS_TEAM_INDEX] = DHMortarSpawnAreas[i];
-            }
-        }
-
-        // Allies plus: either no best or this one has higher precedence
-        if (DHMortarSpawnAreas[i].bAlliesSpawn && (Best[ALLIES_TEAM_INDEX] == none || DHMortarSpawnAreas[i].AlliesPrecedence > Best[ALLIES_TEAM_INDEX].AlliesPrecedence))
-        {
-            bReqsMet = true;
-            bSomeReqsMet = false;
-
-            for (j = 0; j < DHMortarSpawnAreas[i].AlliesRequiredObjectives.Length; ++j)
-            {
-                if (DHObjectives[DHMortarSpawnAreas[i].AlliesRequiredObjectives[j]].ObjState != OBJ_Allies)
-                {
-                    bReqsMet = false;
-                    break;
-                }
-            }
-
-            // Added in conjunction with TeamMustLoseAllRequired enum in SpawnAreas
-            // Allows Mappers to force all objectives to be lost/won before moving spawns, instead of just one
-            for (h = 0; h < DHMortarSpawnAreas[i].AlliesRequiredObjectives.Length; ++h)
-            {
-                if (DHObjectives[DHMortarSpawnAreas[i].AlliesRequiredObjectives[h]].ObjState == OBJ_Allies)
-                {
-                    bSomeReqsMet = true;
-                    break;
-                }
-            }
-
-            // Added in conjunction with bIncludeNeutralObjectives in SpawnAreas
-            // Allows mappers to have spawns be used when objectives are neutral, not just captured
-            if (DHMortarSpawnAreas[i].bIncludeNeutralObjectives)
-            {
-                for (k = 0; k < DHMortarSpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
-                {
-                    if (DHObjectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
-                    {
-                        bSomeReqsMet = true;
-                        break;
-                    }
-                }
-            }
-
-            if (bReqsMet)
-            {
-                Best[ALLIES_TEAM_INDEX] = DHMortarSpawnAreas[i];
-            }
-            else if (bSomeReqsMet && DHMortarSpawnAreas[i].TeamMustLoseAllRequired == SPN_Allies)
-            {
-                Best[ALLIES_TEAM_INDEX] = DHMortarSpawnAreas[i];
-            }
-        }
-    }
-
-    DHCurrentMortarSpawnArea[AXIS_TEAM_INDEX] = Best[AXIS_TEAM_INDEX];
-    DHCurrentMortarSpawnArea[ALLIES_TEAM_INDEX] = Best[ALLIES_TEAM_INDEX];
 }
 
 // Modified to avoid logging a misleading warning every time ("Warning - PATHS NOT DEFINED or NO PLAYERSTART with positive rating")
@@ -869,11 +674,11 @@ function Bot SpawnBot(optional string botName)
         // Increment the RoleCounter for the new role
         if (BotTeam.TeamIndex == AXIS_TEAM_INDEX)
         {
-            ++DHGameReplicationInfo(GameReplicationInfo).DHAxisRoleCount[NewBot.CurrentRole];
+            ++GRI.DHAxisRoleCount[NewBot.CurrentRole];
         }
         else if (BotTeam.TeamIndex == ALLIES_TEAM_INDEX)
         {
-            ++DHGameReplicationInfo(GameReplicationInfo).DHAlliesRoleCount[NewBot.CurrentRole];
+            ++GRI.DHAlliesRoleCount[NewBot.CurrentRole];
         }
 
         // Tone down the "gamey" bot parameters
@@ -984,7 +789,7 @@ function CalculateTeamBalanceValues(out int TeamSizes[2], out int IdealTeamSizes
     local float TeamSizeFactor;
 
     // Do some integral checks
-    if (DH_LevelInfo(LevelInfo) == none)
+    if (DHLevelInfo == none)
     {
         return;
     }
@@ -992,6 +797,7 @@ function CalculateTeamBalanceValues(out int TeamSizes[2], out int IdealTeamSizes
     {
         Log("AlliesToAxisRatio for this level is out of bounds, please make sure it is between 0.0 and 1.0");
         Level.Game.Broadcast(self, "AlliesToAxisRatio for this level is out of bounds, please make sure it is between 0.0 and 1.0", 'Say');
+
         return;
     }
 
@@ -999,7 +805,7 @@ function CalculateTeamBalanceValues(out int TeamSizes[2], out int IdealTeamSizes
     GetTeamSizes(TeamSizes);
 
     // If HardRatio then TeamSizeFactor should be 0.5
-    if (DH_LevelInfo(LevelInfo).bHardTeamRatio)
+    if (DHLevelInfo.bHardTeamRatio)
     {
         TeamRatios[0] = AlliesToAxisRatio;
         TeamRatios[1] = 1.0 - AlliesToAxisRatio;
@@ -1018,10 +824,7 @@ function CalculateTeamBalanceValues(out int TeamSizes[2], out int IdealTeamSizes
     IdealTeamSizes[1] = Round((TeamSizes[0] + TeamSizes[1]) * TeamRatios[0]);
 
     // Update the GRI CurrentAlliedToAxisRatio
-    if (DHGameReplicationInfo(GameReplicationInfo) != none)
-    {
-        DHGameReplicationInfo(GameReplicationInfo).CurrentAlliedToAxisRatio = Abs(TeamRatios[0]);
-    }
+    GRI.CurrentAlliedToAxisRatio = Abs(TeamRatios[0]);
 }
 
 // Get imbalance team "count", but calculate AlliedToAxisRatio
@@ -1058,11 +861,8 @@ function int GetTeamUnbalanceCount(out UnrealTeamInfo BigTeam, out UnrealTeamInf
 function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
 {
     local int i;
-    local DHGameReplicationInfo GRI;
 
     //return GetBotNewRole(ThisBot, BotTeamNum); // Use this for debuging (when you need to see bots as other roles)
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     if (GRI == none)
     {
@@ -1089,11 +889,11 @@ function ScoreVehicleKill(Controller Killer, ROVehicle Vehicle, float Points)
     // Decide to reward or punish score based on spawn kill
     if (DHVehicle(Vehicle) != none && DHVehicle(Vehicle).IsSpawnProtected())
     {
-        Killer.PlayerReplicationInfo.Score -= Points;
+        DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).StashedScore -= Points;
     }
     else
     {
-        Killer.PlayerReplicationInfo.Score += Points;
+        DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).StashedScore += Points;
     }
 
     ScoreEvent(Killer.PlayerReplicationInfo, Points, "Vehicle_kill");
@@ -1111,7 +911,7 @@ function ScoreMGResupply(Controller Dropper, Controller Gunner)
     else if (DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).RoleInfo != none)
     {
         ResupplyAward = 5;
-        Dropper.PlayerReplicationInfo.Score += ResupplyAward;
+        DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).StashedScore += ResupplyAward;
 
         ScoreEvent(Dropper.PlayerReplicationInfo, ResupplyAward, "MG_resupply");
     }
@@ -1129,7 +929,7 @@ function ScoreATResupply(Controller Dropper, Controller Gunner)
     else if (DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).RoleInfo != none)
     {
         ResupplyAward = 2;
-        Dropper.PlayerReplicationInfo.Score += ResupplyAward;
+        DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).StashedScore += ResupplyAward;
 
         ScoreEvent(Dropper.PlayerReplicationInfo, ResupplyAward, "AT_resupply");
     }
@@ -1147,7 +947,7 @@ function ScoreATReload(Controller Loader, Controller Gunner)
     else if (DHPlayerReplicationInfo(Loader.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(Loader.PlayerReplicationInfo).RoleInfo != none)
     {
         LoadAward = 1;
-        Loader.PlayerReplicationInfo.Score += LoadAward;
+        DHPlayerReplicationInfo(Loader.PlayerReplicationInfo).StashedScore += LoadAward;
 
         ScoreEvent(Loader.PlayerReplicationInfo, LoadAward, "AT_reload");
     }
@@ -1161,7 +961,7 @@ function ScoreRadioUsed(Controller Radioman)
     if (DHPlayerReplicationInfo(Radioman.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(Radioman.PlayerReplicationInfo).RoleInfo != none)
     {
         RadioUsedAward = 5;
-        Radioman.PlayerReplicationInfo.Score += RadioUsedAward;
+        DHPlayerReplicationInfo(Radioman.PlayerReplicationInfo).StashedScore += RadioUsedAward;
 
         ScoreEvent(Radioman.PlayerReplicationInfo, RadioUsedAward, "Radioman_used");
     }
@@ -1177,7 +977,7 @@ function ScoreMortarResupply(Controller Dropper, Controller Gunner)
         return;
     }
 
-    Dropper.PlayerReplicationInfo.Score += 2;
+    DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).StashedScore += 2;
     ScoreEvent(Dropper.PlayerReplicationInfo, ResupplyAward, "Mortar_resupply");
 }
 
@@ -1189,15 +989,68 @@ function ScoreMortarSpotAssist(Controller Spotter, Controller Mortarman)
         return;
     }
 
-    Spotter.PlayerReplicationInfo.Score += 2;
-    Mortarman.PlayerReplicationInfo.Score += 1;
+    DHPlayerReplicationInfo(Spotter.PlayerReplicationInfo).StashedScore += 2;
+    DHPlayerReplicationInfo(Mortarman.PlayerReplicationInfo).StashedScore += 1;
+}
+
+// Modified to handle StashedScore and prevent fellow vehicle crewman from getting kills and score for yours
+function ScoreKill(Controller Killer, Controller Other)
+{
+    local float                         Amount;
+    local DHPlayerReplicationInfo       PRI;
+
+    if (Killer == Other || Killer == none)
+    {
+        Other.PlayerReplicationInfo.Score -= 1;
+        ScoreEvent(Other.PlayerReplicationInfo, -1, "self_frag");
+    }
+    else if (Other.bIsPlayer && Killer.bIsPlayer && Killer.PlayerReplicationInfo.Team == Other.PlayerReplicationInfo.Team)
+    {
+        if (ROPlayerReplicationInfo(Other.PlayerReplicationInfo) != none && ROPlayerReplicationInfo(Other.PlayerReplicationInfo).RoleInfo != none)
+        {
+            Amount = -2 * ROPlayerReplicationInfo(Other.PlayerReplicationInfo).RoleInfo.default.PointValue;
+            DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).StashedScore += Amount;
+        }
+        else
+        {
+            Amount = -2;
+            DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).StashedScore += Amount;
+        }
+
+        ScoreEvent(Killer.PlayerReplicationInfo, Amount, "team_frag");
+    }
+    else if (Killer.PlayerReplicationInfo != none)
+    {
+        PRI = DHPlayerReplicationInfo(Other.PlayerReplicationInfo);
+
+        if (PRI != none && PRI.RoleInfo != none)
+        {
+            Amount = PRI.RoleInfo.default.PointValue;
+        }
+        else
+        {
+            Amount = 1;
+        }
+
+        // TODO: When implementing the new scoring system, look at the RO version of this function and add back the killer's occupants logic
+        // giving other crewman a reduced score sounds like a good idea (not riders though), but not kills
+        DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).StashedScore += Amount;
+        DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).DHKills++;
+
+        ScoreEvent(Killer.PlayerReplicationInfo, Amount, "frag");
+    }
+
+    if (GameRulesModifiers != none)
+    {
+        GameRulesModifiers.ScoreKill(Killer, Other);
+    }
 }
 
 // Modified to check if the player has just used a select-a-spawn teleport and should be protected from damage
 // Also if the old spawn area system is used, it only checks spawn damage protection for the spawn that is relevant to the player, including any mortar crew spawn
 function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector HitLocation, out vector Momentum, class<DamageType> DamageType)
 {
-    local RORoleInfo  RoleInfo;
+    local DHRoleInfo  RoleInfo;
     local ROSpawnArea SpawnArea;
     local int         TeamIndex;
 
@@ -1226,7 +1079,7 @@ function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector Hi
         if (LevelInfo.bUseSpawnAreas && Injured.PlayerReplicationInfo.Team != none && ROPlayerReplicationInfo(Injured.PlayerReplicationInfo) != none)
         {
             TeamIndex = Injured.PlayerReplicationInfo.Team.TeamIndex;
-            RoleInfo = ROPlayerReplicationInfo(Injured.PlayerReplicationInfo).RoleInfo;
+            RoleInfo = DHRoleInfo(ROPlayerReplicationInfo(Injured.PlayerReplicationInfo).RoleInfo);
 
             if (RoleInfo != none)
             {
@@ -1234,7 +1087,7 @@ function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector Hi
                 {
                     SpawnArea = CurrentTankCrewSpawnArea[TeamIndex];
                 }
-                else if (DHRoleInfo(RoleInfo) != none && DHRoleInfo(RoleInfo).bCanUseMortars && DHCurrentMortarSpawnArea[TeamIndex] != none)
+                else if (RoleInfo.bCanUseMortars && DHCurrentMortarSpawnArea[TeamIndex] != none)
                 {
                     SpawnArea = DHCurrentMortarSpawnArea[TeamIndex];
                 }
@@ -1269,15 +1122,275 @@ function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, vector Hi
     return Damage;
 }
 
+/**
+// TODO: this override has somewhat scrambled this function as returns from the Super in GameInfo are being treated as returns from the function here
+// That means this override can ignore functionality in other, closer Super classes (UnrealMPGameInfo & DeathMatch)
+// A return from the Super in GameInfo would return 'control' to the Super class that called it (UnrealMPGameInfo)
+// Functionality in the closer Supers would & should still execute - so this override needs re-working
+// Suggest best way may be to re-state the long GameInfo Super as a separate function (called say Login_GameInfo or whatever), modified as required
+// That could be called from here & return as it normally would, & this function could handle the closer Supers & any extra DH code
+// Re-factoring this as one function could be done but would end up overly complicated, with lots of extra nested bracketing and/or local bools based on 'soft return' results
+// Matt, Aug 2017
+*/
+// Modified for Squad system and so it doesn't call ChangeTeam() when a player "Logins" to the server
+// Will also make it so when a player joins the server it doesn't say they joined Axis before they actually pick their team
+// This function has a lot of code that probably isn't needed, but kept in case it is (may need cleaned up at some point)
 event PlayerController Login(string Portal, string Options, out string Error)
 {
-    local string InName;
-    local PlayerController NewPlayer;
+    local PlayerController NewPlayer, TestPlayer;
+    local DHPlayer         PC;
+    local Controller       C;
+    local NavigationPoint  StartSpot;
+    local string           InName, InAdminName, InPassword, InChecksum, InCharacter, InSex;
+    local byte             InTeam;
+    local bool             bSpectator, bAdmin;
+    local class<Security>  MySecurityClass;
+    local Pawn             TestPawn;
 
     // Stop the game from automatically trimming longer names
     InName = Left(ParseOption(Options, "Name"), 32);
 
-    NewPlayer = super.Login(Portal, Options, Error);
+    if (MaxLives > 0)
+    {
+        // Check that game isn't too far along (ancient Unreal code dealing with NumLives and LateEntryLives
+        // This could probably be removed
+        for (C = Level.ControllerList; C != none; C = C.NextController)
+        {
+            if (C.PlayerReplicationInfo != none && C.PlayerReplicationInfo.NumLives > LateEntryLives)
+            {
+                Options = "?SpectatorOnly=1" $ Options;
+                break;
+            }
+        }
+    }
+
+    Options = StripColor(Options); // strip out color codes
+
+    BaseMutator.ModifyLogin(Portal, Options);
+
+    // Get URL options
+    InName      = Left(ParseOption(Options, "Name"), 20);
+    InTeam      = GetIntOption(Options, "Team", 255); // default to "no team"
+    InAdminName = ParseOption(Options, "AdminName");
+    InPassword  = ParseOption(Options, "Password");
+    InChecksum  = ParseOption(Options, "Checksum");
+
+    // TODO: we don't support save games, this could probably go bye bye also
+    if (HasOption(Options, "Load"))
+    {
+        Log("Loading Savegame");
+        InitSavedLevel();
+        bIsSaveGame = true;
+
+        // Try to match up to existing unoccupied player in level,
+        // for savegames - also needed coop level switching.
+        foreach DynamicActors(class'PlayerController', TestPlayer)
+        {
+            if (TestPlayer.Player == none && TestPlayer.PlayerOwnerName ~= InName)
+            {
+                TestPawn = TestPlayer.Pawn;
+
+                if (TestPawn != none)
+                {
+                    TestPawn.SetRotation(TestPawn.Controller.Rotation);
+                    Log("FOUND" @ TestPlayer @ TestPlayer.PlayerReplicationInfo.PlayerName);
+                }
+
+                return TestPlayer;
+            }
+        }
+    }
+
+    bSpectator = (ParseOption(Options, "SpectatorOnly") ~= "1");
+
+    if (AccessControl != none)
+    {
+        bAdmin = AccessControl.CheckOptionsAdmin(Options);
+    }
+
+    // Make sure there is capacity except for admins (this might have changed since the PreLogin call)
+    if (!bAdmin && AtCapacity(bSpectator))
+    {
+        Error = GameMessageClass.default.MaxedOutMessage;
+
+        return none;
+    }
+
+    // If admin, force spectate mode if the server already full of reg. players
+    if (bAdmin && AtCapacity(false))
+    {
+        bSpectator = true;
+    }
+
+    // Pick a team (if need teams)
+    InTeam = PickTeam(InTeam, none);
+
+    // Find a start spot
+    StartSpot = FindPlayerStart(none, InTeam, Portal);
+
+    if (StartSpot == none)
+    {
+        Error = GameMessageClass.default.FailedPlaceMessage;
+
+        return none;
+    }
+
+    if (PlayerControllerClass == none)
+    {
+        PlayerControllerClass = class<PlayerController>(DynamicLoadObject(PlayerControllerClassName, class'Class'));
+    }
+
+    NewPlayer = Spawn(PlayerControllerClass,,, StartSpot.Location, StartSpot.Rotation);
+
+    // Handle spawn failure
+    if (NewPlayer == none)
+    {
+        Log("Couldn't spawn player controller of class" @ PlayerControllerClass);
+        Error = GameMessageClass.default.FailedSpawnMessage;
+
+        return none;
+    }
+
+    NewPlayer.StartSpot = StartSpot;
+
+    // Init player's replication info
+    NewPlayer.GameReplicationInfo = GameReplicationInfo;
+
+    // Apply security to this controller
+    MySecurityClass=class<Security>(DynamicLoadObject(SecurityClass, class'class'));
+
+    if (MySecurityClass != none)
+    {
+        NewPlayer.PlayerSecurity = Spawn(MySecurityClass, NewPlayer);
+
+        if (NewPlayer.PlayerSecurity == none)
+        {
+            Log("Could not spawn security for player" @ NewPlayer, 'Security');
+        }
+    }
+    else if (SecurityClass == "")
+    {
+        Log("No value for Engine.GameInfo.SecurityClass -- system is not secure.", 'Security');
+    }
+    else
+    {
+        Log("Unknown security class [" $ SecurityClass $ "] -- system is not secure.", 'Security');
+    }
+
+    if (bAttractCam)
+    {
+        NewPlayer.GotoState('AttractMode');
+    }
+    else
+    {
+        NewPlayer.GotoState('Spectating');
+    }
+
+    // Init player's name
+    if (InName == "")
+    {
+        InName = DefaultPlayerName;
+    }
+    if (Level.NetMode != NM_Standalone || NewPlayer.PlayerReplicationInfo.PlayerName == DefaultPlayerName)
+    {
+        ChangeName(NewPlayer, InName, false);
+    }
+
+    // Custom voicepack (this probably doesn't work, but might be needed)
+    NewPlayer.PlayerReplicationInfo.VoiceTypeName = ParseOption(Options, "Voice");
+
+    InCharacter = ParseOption(Options, "Character");
+    NewPlayer.SetPawnClass(DefaultPlayerClassName, InCharacter);
+    InSex = ParseOption(Options, "Sex");
+
+    // Look at this garbage
+    if (Left(InSex,3) ~= "F")
+    {
+        NewPlayer.SetPawnFemale(); // only effective if character not valid
+    }
+
+    // Set the player's ID
+    NewPlayer.PlayerReplicationInfo.PlayerID = CurrentID++;
+
+    // Here is where the ChangeTeam() call was removed
+    if (bSpectator || NewPlayer.PlayerReplicationInfo.bOnlySpectator) // || !ChangeTeam(NewPlayer, InTeam, false) )
+    {
+        NewPlayer.PlayerReplicationInfo.bOnlySpectator = true;
+        NewPlayer.PlayerReplicationInfo.bIsSpectator = true;
+        NewPlayer.PlayerReplicationInfo.bOutOfLives = true;
+        NumSpectators++;
+
+        return NewPlayer;
+    }
+
+    NewPlayer.StartSpot = StartSpot;
+
+    // Init player's administrative privileges & log it
+    if (AccessControl != none && AccessControl.AdminLogin(NewPlayer, InAdminName, InPassword))
+    {
+        AccessControl.AdminEntered(NewPlayer, InAdminName);
+    }
+
+    NumPlayers++;
+
+    if (NumPlayers > 20)
+    {
+        bLargeGameVOIP = true;
+    }
+
+    bWelcomePending = true;
+
+    // WTF is this?
+    if (bTestMode)
+    {
+        TestLevel();
+    }
+
+    // If delayed start, don't give a pawn to the player yet
+    // Normal for multiplayer games
+    if (bDelayedStart)
+    {
+        NewPlayer.GotoState('PlayerWaiting');
+    }
+
+    // Init voice chat if we are in a MP environment
+    if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
+    {
+        NewPlayer.VoiceReplicationInfo = VoiceReplicationInfo;
+
+        if (Level.NetMode == NM_ListenServer && Level.GetLocalPlayerController() == PC)
+        {
+            NewPlayer.InitializeVoiceChat();
+        }
+    }
+
+    if (bMustJoinBeforeStart && GameReplicationInfo.bMatchHasBegun)
+    {
+        UnrealPlayer(NewPlayer).bLatecomer = true;
+    }
+
+    if (Level.NetMode == NM_Standalone)
+    {
+        if (NewPlayer.PlayerReplicationInfo.bOnlySpectator)
+        {
+            // Compensate for the space left for the player
+            if (!bCustomBots && (bAutoNumBots || (bTeamGame && (InitialBots % 2 == 1))))
+            {
+                InitialBots++;
+            }
+        }
+        else
+        {
+            StandalonePlayer = NewPlayer;
+        }
+    }
+
+    PC = DHPlayer(NewPlayer);
+
+    if (PC != none)
+    {
+        PC.SquadReplicationInfo = SquadReplicationInfo;
+    }
 
     ChangeName(NewPlayer, InName, false);
 
@@ -1409,10 +1522,18 @@ function AddDefaultInventory(Pawn aPawn)
 //The following is a clusterfuck of hacky overriding of RO's arbitrarily low limit of roles from 10 to 16
 function AddRole(RORoleInfo NewRole)
 {
-    local DHGameReplicationInfo GRI;
-    local DHRoleInfo            DHRI;
+    local DHRoleInfo DHRI;
 
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
+    if (GRI == none)
+    {
+        GRI = DHGameReplicationInfo(GameReplicationInfo);
+    }
+
+    if (GRI == none)
+    {
+        return;
+    }
+
     DHRI = DHRoleInfo(NewRole);
 
     if (NewRole.Side == SIDE_Allies)
@@ -1445,10 +1566,6 @@ function AddRole(RORoleInfo NewRole)
 
 function RORoleInfo GetRoleInfo(int Team, int Num)
 {
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
     if (Team > 1 || Num < 0 || Num >= arraycount(GRI.DHAxisRoles))
     {
         return none;
@@ -1468,10 +1585,6 @@ function RORoleInfo GetRoleInfo(int Team, int Num)
 
 function bool RoleLimitReached(int Team, int Num)
 {
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
     // This shouldn't even happen, but if it does, just say the limit was reached
     if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && GRI.DHAxisRoles[Num] == none) || (Team == ALLIES_TEAM_INDEX && GRI.DHAlliesRoles[Num] == none) || Num >= arraycount(GRI.DHAxisRoles))
     {
@@ -1494,9 +1607,6 @@ function bool HumanWantsRole(int Team, int Num)
 {
     local Controller            C;
     local ROBot                 BotHasRole;
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     // This shouldn't even happen, but if it does, just say the limit was reached
     if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && GRI.DHAxisRoles[Num] == none) || (Team == ALLIES_TEAM_INDEX && GRI.DHAlliesRoles[Num] == none) || Num >= arraycount(GRI.DHAxisRoles))
@@ -1541,9 +1651,6 @@ function bool HumanWantsRole(int Team, int Num)
 function int GetVehicleRole(int Team, int Num)
 {
     local int i;
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     // This shouldn't even happen, but if it does, just say the limit was reached
     if (Team > 1 || Num < 0 || (Team == AXIS_TEAM_INDEX && GRI.DHAxisRoles[Num] == none) || (Team == ALLIES_TEAM_INDEX && GRI.DHAlliesRoles[Num] == none) || Num >= arraycount(GRI.DHAxisRoles))
@@ -1566,9 +1673,6 @@ function int GetVehicleRole(int Team, int Num)
 function int GetBotNewRole(ROBot ThisBot, int BotTeamNum)
 {
     local int MyRole, Count, AltRole;
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     if (ThisBot != none)
     {
@@ -1625,9 +1729,6 @@ function UpdateRoleCounts()
 {
     local Controller C;
     local int i;
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
     {
@@ -1684,7 +1785,6 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
     local RORoleInfo RI;
     local DHPlayer   Playa;
     local ROBot      MrRoboto;
-    local DHGameReplicationInfo GRI;
 
     if (aPlayer == none || !aPlayer.bIsPlayer || aPlayer.PlayerReplicationInfo.Team == none || aPlayer.PlayerReplicationInfo.Team.TeamIndex > 1)
     {
@@ -1730,11 +1830,11 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
                     {
                         if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
                         {
-                            DHGameReplicationInfo(GameReplicationInfo).DHAxisRoleCount[Playa.CurrentRole]--;
+                            GRI.DHAxisRoleCount[Playa.CurrentRole]--;
                         }
                         else if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
                         {
-                            DHGameReplicationInfo(GameReplicationInfo).DHAlliesRoleCount[Playa.CurrentRole]--;
+                            GRI.DHAlliesRoleCount[Playa.CurrentRole]--;
                         }
                     }
 
@@ -1743,11 +1843,11 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
                     // Increment the RoleCounter for the new role
                     if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
                     {
-                        DHGameReplicationInfo(GameReplicationInfo).DHAxisRoleCount[Playa.CurrentRole]++;
+                        GRI.DHAxisRoleCount[Playa.CurrentRole]++;
                     }
                     else if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
                     {
-                        DHGameReplicationInfo(GameReplicationInfo).DHAlliesRoleCount[Playa.CurrentRole]++;
+                        GRI.DHAlliesRoleCount[Playa.CurrentRole]++;
                     }
 
                     ROPlayerReplicationInfo(aPlayer.PlayerReplicationInfo).RoleInfo = RI;
@@ -1770,12 +1870,7 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
             // Since we're changing roles, clear all associated requests/rally points
             ClearSavedRequestsAndRallyPoints(Playa, false);
 
-            GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-            if (GRI != none)
-            {
-                GRI.ClearArtilleryTarget(DHPlayer(aPlayer));
-            }
+            GRI.ClearArtilleryTarget(DHPlayer(aPlayer));
         }
         else
         {
@@ -1800,11 +1895,11 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
                 {
                     if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
                     {
-                        DHGameReplicationInfo(GameReplicationInfo).DHAxisRoleCount[MrRoboto.CurrentRole]--;
+                        GRI.DHAxisRoleCount[MrRoboto.CurrentRole]--;
                     }
                     else if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
                     {
-                        DHGameReplicationInfo(GameReplicationInfo).DHAlliesRoleCount[MrRoboto.CurrentRole]--;
+                        GRI.DHAlliesRoleCount[MrRoboto.CurrentRole]--;
                     }
                 }
 
@@ -1813,11 +1908,11 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
                 // Increment the RoleCounter for the new role
                 if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == AXIS_TEAM_INDEX)
                 {
-                    DHGameReplicationInfo(GameReplicationInfo).DHAxisRoleCount[MrRoboto.CurrentRole]++;
+                    GRI.DHAxisRoleCount[MrRoboto.CurrentRole]++;
                 }
                 else if (aPlayer.PlayerReplicationInfo.Team.TeamIndex == ALLIES_TEAM_INDEX)
                 {
-                    DHGameReplicationInfo(GameReplicationInfo).DHAlliesRoleCount[MrRoboto.CurrentRole]++;
+                    GRI.DHAlliesRoleCount[MrRoboto.CurrentRole]++;
                 }
 
                 ROPlayerReplicationInfo(aPlayer.PlayerReplicationInfo).RoleInfo = RI;
@@ -1831,12 +1926,15 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
     }
 }
 
+// Todo: this function is a fucking mess with casting, however we can't just do null checks and return at the beginning, as some logic needs to go through when some are null
+// IMO it also needs to support bots for the most part (as they are very useful in testing)
 function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<DamageType> DamageType)
 {
     local DHPlayer   DHKilled, DHKiller;
     local Controller P;
     local float      FFPenalty;
-    local int        Num, i;
+    local int        i;
+    local bool       bHasAPlayerAlive;
 
     if (Killed == none)
     {
@@ -1872,11 +1970,24 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                 DHKilled.NextVehicleSpawnTime = DHKilled.LastKilledTime + SPAWN_KILL_RESPAWN_TIME;
                 ModifyReinforcements(DHKilled.GetTeamNum(), 1, false, true);
 
-                // Punish killer for spawn killing by locking his weapons (also incrementing his WeaponLockViolations) & reducing his score
-                DHKiller.WeaponLockViolations++;
-                DHKiller.LockWeapons(WeaponLockTimes[Min(DHKiller.WeaponLockViolations, arraycount(WeaponLockTimes) - 1)]); // TODO: probably add 1 second as we are 'mid second' in game time
-                DHKiller.PlayerReplicationInfo.Score -= 2;
+                // Punish killer for spawn killing if the killed wasn't a combat spawn by incrementing his WeaponLockViolations & reducing his score
+                if (!DHPawn(KilledPawn).IsCombatSpawned())
+                {
+                    DHKiller.WeaponLockViolations++;
+                    DHKiller.LockWeapons(Min(WeaponLockTimeSecondsMaximum, DHKiller.WeaponLockViolations * WeaponLockTimeSecondsInterval)); // TODO: probably add 1 second as we are 'mid second' in game time
+
+                    if (DHPlayerReplicationInfo(DHKiller.PlayerReplicationInfo) != none)
+                    {
+                        DHPlayerReplicationInfo(DHKiller.PlayerReplicationInfo).StashedScore -= 2;
+                    }
+                }
+
+                if (DHPawn(KilledPawn) != none && DHPawn(KilledPawn).SpawnPoint != none)
+                {
+                    DHPawn(KilledPawn).SpawnPoint.OnSpawnKill(KilledPawn, Killer);
+                }
             }
+
         }
 
         BroadcastDeathMessage(Killer, Killed, DamageType);
@@ -1895,9 +2006,9 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                 KillEvent("K", Killer.PlayerReplicationInfo, Killed.PlayerReplicationInfo, DamageType);
             }
         }
-        // Friendly fire
         else
         {
+            // Friendly fire
             if (bTeamGame && Killer.PlayerReplicationInfo != none && Killed.PlayerReplicationInfo != none && Killer.PlayerReplicationInfo.Team == Killed.PlayerReplicationInfo.Team)
             {
                 // Allow server admins an option of reducing damage from different types of friendly fire
@@ -1923,23 +2034,40 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                     ROPlayerReplicationInfo(Killer.PlayerReplicationInfo).FFKills += FFPenalty; // increase recorded FF kills
                 }
 
-                if (PlayerController(Killer) != none)
+                DHKilled = DHPlayer(Killed);
+                DHKiller = DHPlayer(Killer);
+
+                if (DHKiller != none)
                 {
-                    BroadcastLocalizedMessage(GameMessageClass, 13, Killer.PlayerReplicationInfo);
+                    BroadcastLocalizedMessage(GameMessageClass, 13, DHKiller.PlayerReplicationInfo);
+
+                    // Lock weapons for TKing (more strict than spawn killing)
+                    DHKiller.WeaponLockViolations++;
+
+                    if (DHPlayerReplicationInfo(DHKiller.PlayerReplicationInfo) != none)
+                    {
+                        DHKiller.LockWeapons(Min(WeaponLockTimeSecondsMaximum, DHPlayerReplicationInfo(DHKiller.PlayerReplicationInfo).FFKills / FFKillLimit * WeaponLockTimeSecondsMaximum), 4);
+                    }
 
                     // If bForgiveFFKillsEnabled, store the friendly Killer into the Killed player's controller, so if they choose to forgive, we'll know who to forgive
-                    if (bForgiveFFKillsEnabled && ROPlayer(Killed) != none)
+                    if (bForgiveFFKillsEnabled && DHKilled != none)
                     {
-                        ROPlayer(Killed).ReceiveLocalizedMessage(GameMessageClass, 18, Killer.PlayerReplicationInfo);
-                        ROPlayer(Killed).LastFFKiller = ROPlayerReplicationInfo(Killer.PlayerReplicationInfo);
-                        ROPlayer(Killed).LastFFKillAmount = FFPenalty;
+                        //DHKilled.ReceiveLocalizedMessage(GameMessageClass, 18, DHKiller.PlayerReplicationInfo); removed as we have F1 prompt now
+                        DHKilled.LastFFKiller = ROPlayerReplicationInfo(DHKiller.PlayerReplicationInfo);
+                        DHKilled.LastFFKillAmount = FFPenalty;
                     }
 
                     // Take action if player has exceeded FF kills limit
-                    if (ROPlayerReplicationInfo(Killer.PlayerReplicationInfo) != none && ROPlayerReplicationInfo(Killer.PlayerReplicationInfo).FFKills > FFKillLimit)
+                    if (ROPlayerReplicationInfo(DHKiller.PlayerReplicationInfo) != none && ROPlayerReplicationInfo(DHKiller.PlayerReplicationInfo).FFKills > FFKillLimit)
                     {
-                        HandleFFViolation(PlayerController(Killer));
+                        HandleFFViolation(DHKiller);
                     }
+                }
+
+                if (DHKilled != none)
+                {
+                    // Prompt Killed with interaction to forgive Killer
+                    DHKilled.ClientTeamKillPrompt(Killer.GetHumanReadableName());
                 }
 
                 KillEvent("TK", Killer.PlayerReplicationInfo, Killed.PlayerReplicationInfo, DamageType);
@@ -1955,31 +2083,82 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
     DiscardInventory(KilledPawn);
     NotifyKilled(Killer, Killed, KilledPawn);
 
-    // Check whether we need to end the round because neither team has any reinforcements left
+    // Check whether we need to end the round because a team has 0 reinforcements and no one alive
+    // If this logic is ever duplicated or resused, it needs to be made a function instead
     for (i = 0; i < 2; ++i)
     {
+        // Make this false for now, because we are going to check and set it to true if we do find someone alive, and it needs to reset for each team we check!
+        bHasAPlayerAlive = false;
+
         if (SpawnLimitReached(i))
         {
-            Num = 0;
-
             for (P = Level.ControllerList; P != none; P = P.NextController)
             {
                 if (P.bIsPlayer && P.Pawn != none && P.Pawn.Health > 0 && P.PlayerReplicationInfo.Team.TeamIndex == i)
                 {
-                    ++Num;
+                    bHasAPlayerAlive = true;
+                    break;
                 }
             }
 
-            if (Num == 0)
+            if (!bHasAPlayerAlive)
             {
                 EndRound(int(!bool(i))); // it looks like a hack, but hey, it's the easiest way to find the opposite team :)
             }
         }
     }
+
+    // Update the killed player's score
+    UpdatePlayerScore(Killed);
+}
+
+// Modified to remove all AddWeaponKill() & AddWeaponDeath() calls
+// They're only relevant to a LocalStatsScreen actor, which isn't used in RO/DH , so it would just record pointless information throughout each round
+function KillEvent(string Killtype, PlayerReplicationInfo Killer, PlayerReplicationInfo Victim, class<DamageType> Damage)
+{
+    if ((Killer == none || Killer == Victim) && TeamPlayerReplicationInfo(Victim) != none)
+    {
+        TeamPlayerReplicationInfo(Victim).Suicides++;
+    }
+
+    if (GameStats != none)
+    {
+        GameStats.KillEvent(KillType, Killer, Victim, Damage);
+    }
+}
+
+function UpdateAllPlayerScores()
+{
+    local DHPlayerReplicationInfo   PRI;
+    local Controller                C;
+
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        if (DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none)
+        {
+            PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
+
+            PRI.Score += PRI.StashedScore;
+            PRI.StashedScore = 0;
+        }
+    }
+}
+
+function UpdatePlayerScore(controller C)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    if (C != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none)
+    {
+        PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
+
+        PRI.Score += PRI.StashedScore;
+        PRI.StashedScore = 0;
+    }
 }
 
 // Modified to call ClientAddHudDeathMessage instead of RO's AddHudDeathMessage (also re-factored to shorten & reduce code duplication)
-// Also to pass Killer's PRI even if Killer is same as Killed, so DHDeathMessage class can work out foir itself whether it needs to display a suicide message
+// Also to pass Killer's PRI even if Killer is same as Killed, so DHDeathMessage class can work out for itself whether it needs to display a suicide message
 // And fixed bug in original function that affected DM_Personal mode, which wouldn't send DM to killer if they killed a bot
 function BroadcastDeathMessage(Controller Killer, Controller Killed, class<DamageType> DamageType)
 {
@@ -2030,12 +2209,9 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
 
 function bool RoleExists(byte TeamID, DHRoleInfo RI)
 {
-    local int i;
-    local DHGameReplicationInfo GRI;
+    local int                   i;
 
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    if (TeamID == 0)
+    if (TeamID == AXIS_TEAM_INDEX)
     {
         for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
         {
@@ -2045,7 +2221,7 @@ function bool RoleExists(byte TeamID, DHRoleInfo RI)
             }
         }
     }
-    else if (TeamID == 1)
+    else if (TeamID == ALLIES_TEAM_INDEX)
     {
         for (i = 0; i < arraycount(GRI.DHAlliesRoles); ++i)
         {
@@ -2066,7 +2242,6 @@ state RoundInPlay
         local Controller P, NextC;
         local Actor A;
         local int i;
-        local DHGameReplicationInfo GRI;
         local ROVehicleFactory ROV;
 
         // Begin reseting all round properties!!!
@@ -2076,16 +2251,25 @@ state RoundInPlay
         LevelInfo.Axis.ReinforcementInterval = OriginalReinforcementIntervals[AXIS_TEAM_INDEX];
         LevelInfo.Allies.ReinforcementInterval = OriginalReinforcementIntervals[ALLIES_TEAM_INDEX];
 
-        GRI = DHGameReplicationInfo(GameReplicationInfo);
+        GRI.bRoundIsOver = false;
         GRI.RoundStartTime = RoundStartTime;
         GRI.RoundEndTime = RoundStartTime + RoundDuration;
         GRI.AttritionRate[AXIS_TEAM_INDEX] = 0;
         GRI.AttritionRate[ALLIES_TEAM_INDEX] = 0;
 
+        // Here we see if the victory music is set to a sound group and pick an index to replicate to the clients
+        if (DHLevelInfo.AlliesWinsMusic != none && DHLevelInfo.AlliesWinsMusic.IsA('SoundGroup'))
+        {
+            GRI.AlliesVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AlliesWinsMusic).Sounds.Length);
+        }
+
+        if (DHLevelInfo.AxisWinsMusic != none && DHLevelInfo.AxisWinsMusic.IsA('SoundGroup'))
+        {
+            GRI.AxisVictoryMusicIndex = Rand(SoundGroup(DHLevelInfo.AxisWinsMusic).Sounds.Length);
+        }
+
         TeamAttritionCounter[AXIS_TEAM_INDEX] = 0;
         TeamAttritionCounter[ALLIES_TEAM_INDEX] = 0;
-
-        AttritionObjOrder.Length = 0;
 
         // Reset PlayerSessions
         PlayerSessions.Clear();
@@ -2152,7 +2336,7 @@ state RoundInPlay
             P = NextC;
         }
 
-        // Reset ALL actors (except controllers and ROVehicleFactorys)
+        // Reset ALL actors (except controllers and vehicle factories)
         foreach AllActors(class'Actor', A)
         {
             if (!A.IsA('Controller') && !A.IsA('ROVehicleFactory'))
@@ -2161,7 +2345,7 @@ state RoundInPlay
             }
         }
 
-        // Reset ALL ROVehicleFactorys - must reset these after vehicles, otherwise the vehicles that get spawned by the vehicle factories get destroyed instantly as they are reset
+        // Reset all vehicle factories - must reset these after vehicles, otherwise the vehicles that get spawned by factories get destroyed instantly as they are reset
         foreach DynamicActors(class'ROVehicleFactory', ROV)
         {
             ROV.Reset();
@@ -2184,9 +2368,19 @@ state RoundInPlay
         NotifyPlayersOfMapInfoChange(NEUTRAL_TEAM_INDEX, none, true);
 
         ResetArtilleryTargets();
+        GRI.ClearMapMarkers();
 
-        GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = LevelInfo.Allies.SpawnLimit;
-        GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = LevelInfo.Axis.SpawnLimit;
+        // Set reinforcements
+        if (DHLevelInfo.GameTypeClass.default.bUseInfiniteReinforcements)
+        {
+            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = -1;
+            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = -1;
+        }
+        else
+        {
+            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = LevelInfo.Allies.SpawnLimit;
+            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = LevelInfo.Axis.SpawnLimit;
+        }
 
         // Set ReinforcementsComing
         if (!SpawnLimitReached(AXIS_TEAM_INDEX))
@@ -2202,40 +2396,29 @@ state RoundInPlay
         TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX] = 0;
         TeamReinforcementMessageIndices[AXIS_TEAM_INDEX] = 0;
 
-        bTeamOutOfReinforcements[ALLIES_TEAM_INDEX] = 0;
-        bTeamOutOfReinforcements[AXIS_TEAM_INDEX] = 0;
+        // HACK: recalculate all the attrition rates etc.
+        NotifyObjStateChanged();
 
         if (Metrics != none)
         {
             Metrics.OnRoundBegin();
         }
-
-        // Activate attrition objectives
-        if (DHLevelInfo.GameType == GT_Attrition)
-        {
-            AttritionSelectObjectiveOrder();
-
-            for (i = 0; i < DHLevelInfo.AttritionMaxOpenObj; ++i)
-            {
-                AttritionUnlockObjective();
-            }
-        }
-
     }
 
     // Modified for DHObjectives
     function NotifyObjStateChanged()
     {
-        local DHGameReplicationInfo GRI;
         local int i, Num[2], NumReq[2], NumObj, NumObjReq;
+        local float AttRateAllies, AttRateAxis;
 
+        // TODO: re-factor this out to an "UpdateAttritionRates" function.
         for (i = 0; i < arraycount(DHObjectives); ++i)
         {
             if (DHObjectives[i] == none)
             {
                 break;
             }
-            else if (DHObjectives[i].ObjState == OBJ_Axis)
+            else if (DHObjectives[i].IsAxis())
             {
                 Num[AXIS_TEAM_INDEX]++;
 
@@ -2243,8 +2426,11 @@ state RoundInPlay
                 {
                     NumReq[AXIS_TEAM_INDEX]++;
                 }
+
+                // Add up objective based attrition
+                AttRateAllies += DHObjectives[i].AxisOwnedAttritionRate;
             }
-            else if (DHObjectives[i].ObjState == OBJ_Allies)
+            else if (DHObjectives[i].IsAllies())
             {
                 Num[ALLIES_TEAM_INDEX]++;
 
@@ -2252,6 +2438,9 @@ state RoundInPlay
                 {
                     NumReq[ALLIES_TEAM_INDEX]++;
                 }
+
+                // Add up objective based attrition
+                AttRateAxis += DHObjectives[i].AlliedOwnedAttritionRate;
             }
 
             if (DHObjectives[i].bRequired)
@@ -2262,73 +2451,83 @@ state RoundInPlay
             NumObj++;
         }
 
-        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-        if (GRI != none)
+        if (NumObj > 0)
         {
-            // Calculate attrition rates
-            GRI.AttritionRate[ALLIES_TEAM_INDEX] = InterpCurveEval(DHLevelInfo.AttritionRateCurve, (float(Max(0, Num[AXIS_TEAM_INDEX]   - Num[ALLIES_TEAM_INDEX])) / NumObj)) / 60.0;
-            GRI.AttritionRate[AXIS_TEAM_INDEX]   = InterpCurveEval(DHLevelInfo.AttritionRateCurve, (float(Max(0, Num[ALLIES_TEAM_INDEX] - Num[AXIS_TEAM_INDEX]))   / NumObj)) / 60.0;
-        }
+            // Add attrition rates from the AttritionRateCurve to the already established specific objective attrition rates (look above in this function)
+            AttRateAxis   += InterpCurveEval(DHLevelInfo.AttritionRateCurve, float(Max(0, Num[ALLIES_TEAM_INDEX] - Num[AXIS_TEAM_INDEX]))   / NumObj);
+            AttRateAllies += InterpCurveEval(DHLevelInfo.AttritionRateCurve, float(Max(0, Num[AXIS_TEAM_INDEX]   - Num[ALLIES_TEAM_INDEX])) / NumObj);
 
-        if (LevelInfo.NumObjectiveWin == 0)
-        {
-            if (Num[AXIS_TEAM_INDEX] == NumObj && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
+            // Update the calculated attrition rate.
+            if (bIsAttritionEnabled)
             {
-                EndRound(AXIS_TEAM_INDEX);
-            }
-            else if (Num[ALLIES_TEAM_INDEX] == NumObj && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
-            {
-                EndRound(ALLIES_TEAM_INDEX);
+                CalculatedAttritionRate[AXIS_TEAM_INDEX] = AttRateAxis;
+                CalculatedAttritionRate[ALLIES_TEAM_INDEX] = AttRateAllies;
             }
             else
             {
-                // Check if we're down to last objective..
-                if (Num[AXIS_TEAM_INDEX] == NumObj - 1 && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
+                CalculatedAttritionRate[AXIS_TEAM_INDEX] = 0.0;
+                CalculatedAttritionRate[ALLIES_TEAM_INDEX] = 0.0;
+            }
+
+            if (LevelInfo.NumObjectiveWin == 0)
+            {
+                if (Num[AXIS_TEAM_INDEX] == NumObj && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
+                {
+                    EndRound(AXIS_TEAM_INDEX);
+                }
+                else if (Num[ALLIES_TEAM_INDEX] == NumObj && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
+                {
+                    EndRound(ALLIES_TEAM_INDEX);
+                }
+                else
+                {
+                    // Check if we're down to last objective..
+                    if (Num[AXIS_TEAM_INDEX] == NumObj - 1 && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
+                    {
+                        BroadcastLastObjectiveMessage(AXIS_TEAM_INDEX);
+                    }
+
+                    if (Num[ALLIES_TEAM_INDEX] == NumObj - 1 && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
+                    {
+                        BroadcastLastObjectiveMessage(ALLIES_TEAM_INDEX);
+                    }
+                }
+            }
+            else if (Num[AXIS_TEAM_INDEX] >= LevelInfo.NumObjectiveWin && NumReq[AXIS_TEAM_INDEX] == NumObjReq
+                && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
+            {
+                EndRound(AXIS_TEAM_INDEX);
+            }
+            else if (Num[ALLIES_TEAM_INDEX] >= LevelInfo.NumObjectiveWin && NumReq[ALLIES_TEAM_INDEX] == NumObjReq
+                && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
+            {
+                EndRound(ALLIES_TEAM_INDEX);
+            }
+            // Check if we're down to last objective
+            else
+            {
+                // One non-required objective missing
+                if (Num[AXIS_TEAM_INDEX] == LevelInfo.NumObjectiveWin - 1 && NumReq[AXIS_TEAM_INDEX] == NumObjReq
+                    && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
                 {
                     BroadcastLastObjectiveMessage(AXIS_TEAM_INDEX);
                 }
-
-                if (Num[ALLIES_TEAM_INDEX] == NumObj - 1 && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
+                // One required objective missing
+                else if (Num[AXIS_TEAM_INDEX] >= LevelInfo.NumObjectiveWin - 1 && NumReq[AXIS_TEAM_INDEX] == NumObjReq - 1
+                    && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
+                {
+                    BroadcastLastObjectiveMessage(AXIS_TEAM_INDEX);
+                }
+                if (Num[ALLIES_TEAM_INDEX] == LevelInfo.NumObjectiveWin - 1 && NumReq[ALLIES_TEAM_INDEX] == NumObjReq
+                    && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
                 {
                     BroadcastLastObjectiveMessage(ALLIES_TEAM_INDEX);
                 }
-            }
-        }
-        else if (Num[AXIS_TEAM_INDEX] >= LevelInfo.NumObjectiveWin && NumReq[AXIS_TEAM_INDEX] == NumObjReq
-            && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
-        {
-            EndRound(AXIS_TEAM_INDEX);
-        }
-        else if (Num[ALLIES_TEAM_INDEX] >= LevelInfo.NumObjectiveWin && NumReq[ALLIES_TEAM_INDEX] == NumObjReq
-            && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
-        {
-            EndRound(ALLIES_TEAM_INDEX);
-        }
-        // Check if we're down to last objective
-        else
-        {
-            // One non-required objective missing
-            if (Num[AXIS_TEAM_INDEX] == LevelInfo.NumObjectiveWin - 1 && NumReq[AXIS_TEAM_INDEX] == NumObjReq
-                && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
-            {
-                BroadcastLastObjectiveMessage(AXIS_TEAM_INDEX);
-            }
-            // One required objective missing
-            else if (Num[AXIS_TEAM_INDEX] >= LevelInfo.NumObjectiveWin - 1 && NumReq[AXIS_TEAM_INDEX] == NumObjReq - 1
-                && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Allies))
-            {
-                BroadcastLastObjectiveMessage(AXIS_TEAM_INDEX);
-            }
-            if (Num[ALLIES_TEAM_INDEX] == LevelInfo.NumObjectiveWin - 1 && NumReq[ALLIES_TEAM_INDEX] == NumObjReq
-                && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
-            {
-                BroadcastLastObjectiveMessage(ALLIES_TEAM_INDEX);
-            }
-            else if (Num[ALLIES_TEAM_INDEX] >= LevelInfo.NumObjectiveWin - 1 && NumReq[ALLIES_TEAM_INDEX] == NumObjReq - 1
-                && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
-            {
-                BroadcastLastObjectiveMessage(ALLIES_TEAM_INDEX);
+                else if (Num[ALLIES_TEAM_INDEX] >= LevelInfo.NumObjectiveWin - 1 && NumReq[ALLIES_TEAM_INDEX] == NumObjReq - 1
+                    && (LevelInfo.DefendingSide == SIDE_None || LevelInfo.DefendingSide == SIDE_Axis))
+                {
+                    BroadcastLastObjectiveMessage(ALLIES_TEAM_INDEX);
+                }
             }
         }
 
@@ -2369,6 +2568,8 @@ state RoundInPlay
 
         RoundCount++;
 
+        UpdateAllPlayerScores();
+
         if (RoundLimit != 0 && RoundCount >= RoundLimit)
         {
             EndGame(none, "RoundLimit");
@@ -2404,11 +2605,8 @@ state RoundInPlay
     {
         local int i, ArtilleryStrikeInt;
         local Controller P;
-        local DHGameReplicationInfo GRI;
 
         global.Timer();
-
-        GRI = DHGameReplicationInfo(GameReplicationInfo);
 
         // Go through both teams and spawn reinforcements if necessary
         for (i = 0; i < 2; ++i)
@@ -2434,9 +2632,22 @@ state RoundInPlay
             }
         }
 
-        // If team is taking attrition losses, decrement their reinforcements
+        // Attrition calculation, set, and reinforcement modification
         for (i = 0; i < 2; ++i)
         {
+            // Combine attrition values and set GRI
+            GRI.AttritionRate[i] = CalculatedAttritionRate[i];
+
+            if (bIsAttritionEnabled)
+            {
+                // Apply time-based attrition (to stop rounds from lasting ages).
+                GRI.AttritionRate[i] += InterpCurveEval(ElapsedTimeAttritionCurve, float(GRI.ElapsedTime - GRI.RoundStartTime));
+            }
+
+            // Convert from tickets-per-minute to tickets-per-second.
+            GRI.AttritionRate[i] /= 60;
+
+            // Increment the team's attrition counter (to preserve fractional attrition).
             TeamAttritionCounter[i] += GRI.AttritionRate[i];
 
             if (TeamAttritionCounter[i] >= 1.0)
@@ -2529,6 +2740,31 @@ state ResetGameCountdown
     }
 }
 
+// Modified to reset stashed score in addition to score
+function ResetScores()
+{
+    local DHPlayerReplicationInfo   PRI;
+    local Controller                C;
+
+    RemainingTime = 60 * TimeLimit;
+    ElapsedTime = 0;
+    GameReplicationInfo.ElapsedTime = 0;
+    GameReplicationInfo.ElapsedQuarterMinute = 1;
+    RoundCount = 0;
+    Teams[AXIS_TEAM_INDEX].Score = 0;
+    Teams[ALLIES_TEAM_INDEX].Score = 0;
+
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        if (DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none)
+        {
+            PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
+            PRI.Score = 0;
+            PRI.StashedScore = 0;
+        }
+    }
+}
+
 state RoundOver
 {
     // Modified to replace ROArtillerySpawner with DHArtillerySpawner
@@ -2537,8 +2773,11 @@ state RoundOver
         local DHArtillerySpawner AS;
 
         RoundStartTime = ElapsedTime;
-        ROGameReplicationInfo(GameReplicationInfo).bReinforcementsComing[AXIS_TEAM_INDEX] = 0;
-        ROGameReplicationInfo(GameReplicationInfo).bReinforcementsComing[ALLIES_TEAM_INDEX] = 0;
+
+        GRI.RoundOverTime = GRI.RoundEndTime - GRI.ElapsedTime;
+        GRI.bReinforcementsComing[AXIS_TEAM_INDEX] = 0;
+        GRI.bReinforcementsComing[ALLIES_TEAM_INDEX] = 0;
+        GRI.bRoundIsOver = true;
 
         // Destroy any artillery spawners so they don't keep calling arty
         foreach DynamicActors(class'DHArtillerySpawner', AS)
@@ -2564,113 +2803,68 @@ state RoundOver
     }
 }
 
+// Extended to inform GRI that the round is over so the time remaining can "pause" on the second the round ended (instead of continuing to count down)
+function EndGame(PlayerReplicationInfo Winner, string Reason)
+{
+    local Inventory Inv;
+
+    GRI.bRoundIsOver = true;
+    GRI.RoundOverTime = GRI.RoundEndTime - GRI.ElapsedTime;
+
+    // Destroy all Inventory (hopeful fix to the constant MG firing)
+    foreach DynamicActors(class'Inventory', Inv)
+    {
+        Inv.Destroy();
+    }
+
+    super.EndGame(Winner, Reason);
+}
+
 function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcements, optional bool bOnlyIfNotZero)
 {
-    local DHGameReplicationInfo GRI;
-    local bool                  bIsDefendingTeam;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    if (GRI == none)
+    if (GRI == none || (Team != AXIS_TEAM_INDEX && Team != ALLIES_TEAM_INDEX))
     {
         return;
     }
 
-    // Don't increase if value is zero and bOnlyIfNotZero
-    if (GRI.SpawnsRemaining[Team] == 0 && bOnlyIfNotZero)
+    // If we are NOT setting reinforcements & if reinf is infinite, then return
+    // Also if out of reinf and we are to only modify if NOT zero, then return
+    if ((!bSetReinforcements && GRI.SpawnsRemaining[Team] == -1) || (GRI.SpawnsRemaining[Team] == 0 && bOnlyIfNotZero))
     {
         return;
     }
 
     // Update GRI with the new value
-    if (!bSetReinforcements && GRI.SpawnsRemaining[Team] != -1)
-    {
-        GRI.SpawnsRemaining[Team] = Max(0, GRI.SpawnsRemaining[Team] += Amount);
-    }
-    else
+    if (bSetReinforcements)
     {
         GRI.SpawnsRemaining[Team] = Max(-1, Amount);
     }
-
-    // Check for zero reinforcements
-    if (GRI.SpawnsRemaining[Team] == 0)
+    else
     {
-        if (bTeamOutOfReinforcements[Team] == 0)
-        {
-            // Colin: Determine if player's team is defending
-            bIsDefendingTeam = (Team == AXIS_TEAM_INDEX && LevelInfo.DefendingSide == SIDE_Axis) ||
-                               (Team == ALLIES_TEAM_INDEX && LevelInfo.DefendingSide == SIDE_Allies);
-
-            // Colin: Team is just now out of reinforcements.
-            bTeamOutOfReinforcements[Team] = 1;
-
-            if ((LevelInfo.DefendingSide != SIDE_none && !bIsDefendingTeam) || LevelInfo.DefendingSide == SIDE_none)
-            {
-                // Colin: if this team is attacking OR there is no defending side
-                // set the round time to 60 seconds, Theel: added special case to choosewinner if Atrrition is used
-                if (RoundDuration == 0 && DHLevelInfo.AttritionRateCurve.Points.Length > 0.0)
-                {
-                    Level.Game.Broadcast(self, "The battle ended because a team's reinforcements reached zero by attrition", 'Say');
-                    Choosewinner();
-                }
-                else
-                {
-                    ModifyRoundTime(Min(GetRoundTime(), 90), 2); //Set time remaining to 90 seconds
-                }
-            }
-        }
+        GRI.SpawnsRemaining[Team] = Max(0, GRI.SpawnsRemaining[Team] + Amount);
     }
-}
 
-// Modified so we only activate/deactivate mine volumes if their status actually needs to change, based on any current spawn areas (if the level even has them)
-// Note that the newer DHSpawnPoint system that replaces spawn areas does not use this, & instead the spawn point itself activates/deactivates any linked MV
-// DHMineVolumes may also be controlled by modify actors in the level, triggered by specified events during player
-// The new MV functionality also uses an bInitiallyActive setting (subject to subsequent activation/deactivation by a spawn point or modify actor)
-// So this override is necessary to stop CheckMineVolumes() functionality from screwing up the new DH functionality
-function CheckMineVolumes()
-{
-    local int i;
-
-    for (i = 0; i < MineVolumes.Length; ++i)
+    // If round is in play and out of reinforcements and supposed to end the round, do it
+    if (IsInState('RoundInPlay') && GRI.SpawnsRemaining[Team] == 0 && DHLevelInfo.GameTypeClass.default.bRoundEndsAtZeroReinf)
     {
-        if (MineVolumes[i] != none && MineVolumes[i].bUsesSpawnAreas && MineVolumes[i].Tag != '')
-        {
-            if ((CurrentSpawnArea[AXIS_TEAM_INDEX] != none && CurrentSpawnArea[AXIS_TEAM_INDEX].Tag == MineVolumes[i].Tag) ||
-                (CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX].Tag == MineVolumes[i].Tag) ||
-                (CurrentSpawnArea[ALLIES_TEAM_INDEX] != none && CurrentSpawnArea[ALLIES_TEAM_INDEX].Tag == MineVolumes[i].Tag) ||
-                (CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX].Tag == MineVolumes[i].Tag))
-            {
-                MineVolumes[i].Activate();
-            }
-            else
-            {
-                MineVolumes[i].Deactivate();
-            }
-        }
+        Level.Game.Broadcast(self, "The battle ended because a team's reinforcements reached zero", 'Say');
+        ChooseWinner();
+        return;
     }
 }
 
 function ResetArtilleryTargets()
 {
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    if (GRI != none)
-    {
-        GRI.ClearAllArtilleryTargets();
-    }
+    GRI.ClearAllArtilleryTargets();
 }
 
 // Handle reinforcment checks and balances
 function HandleReinforcements(Controller C)
 {
     local DHPlayer PC;
-    local DHGameReplicationInfo GRI;
     local float ReinforcementPercent;
 
     PC = DHPlayer(C);
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     // Don't subtract / calc reinforcements as the player didn't get a pawn
     if (PC == none || PC.Pawn == none || GRI == none)
@@ -2678,15 +2872,14 @@ function HandleReinforcements(Controller C)
         return;
     }
 
-    //TODO: look into improving or rewriting this, as this is garbage looking
-    if (PC.GetTeamNum() == ALLIES_TEAM_INDEX && LevelInfo.Allies.SpawnLimit > 0 && GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] != -1)
+    if (PC.GetTeamNum() == ALLIES_TEAM_INDEX && GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] != -1)
     {
         ModifyReinforcements(ALLIES_TEAM_INDEX, -1);
 
-        ReinforcementPercent = float(GRI.SpawnsRemaining[ALLIES_TEAM_INDEX]) / float(LevelInfo.Allies.SpawnLimit);
+        ReinforcementPercent = float(GRI.SpawnsRemaining[ALLIES_TEAM_INDEX]) / SpawnsAtRoundStart[ALLIES_TEAM_INDEX];
 
         // Handle reinforcement % message
-        if (bUseReinforcementWarning)
+        if (DHLevelInfo.GameTypeClass.default.bUseReinforcementWarning && !GRI.bIsInSetupPhase)
         {
             while (TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX] < default.ReinforcementMessagePercentages.Length &&
                     ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX]])
@@ -2697,14 +2890,14 @@ function HandleReinforcements(Controller C)
             }
         }
     }
-    else if (PC.GetTeamNum() == AXIS_TEAM_INDEX && LevelInfo.Axis.SpawnLimit > 0 && GRI.SpawnsRemaining[AXIS_TEAM_INDEX] != -1)
+    else if (PC.GetTeamNum() == AXIS_TEAM_INDEX && GRI.SpawnsRemaining[AXIS_TEAM_INDEX] != -1)
     {
         ModifyReinforcements(AXIS_TEAM_INDEX, -1);
 
-        ReinforcementPercent = float(GRI.SpawnsRemaining[AXIS_TEAM_INDEX]) / float(LevelInfo.Axis.SpawnLimit);
+        ReinforcementPercent = float(GRI.SpawnsRemaining[AXIS_TEAM_INDEX]) / SpawnsAtRoundStart[AXIS_TEAM_INDEX];
 
         // Handle reinforcement % message
-        if (bUseReinforcementWarning)
+        if (DHLevelInfo.GameTypeClass.default.bUseReinforcementWarning && !GRI.bIsInSetupPhase)
         {
             while (TeamReinforcementMessageIndices[AXIS_TEAM_INDEX] < default.ReinforcementMessagePercentages.Length &&
                     ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[AXIS_TEAM_INDEX]])
@@ -2751,6 +2944,22 @@ static function string ParseChatPercVar(Mutator BaseMutator, Controller Who, str
         return Str;
     }
 
+    if (cmd ~= "%h")
+    {
+        if (Who != none && DHVehicle(Who.Pawn) != none && DHVehicle(Who.Pawn).Driver != none)
+        {
+            return "[Vehicle HP:" @ Who.Pawn.Health $ "] [Engine HP:" @ DHVehicle(Who.Pawn).EngineHealth $ "] [Player HP:" @ DHVehicle(Who.Pawn).Driver.Health $ "]";
+        }
+        else if (Who.Pawn != none)
+        {
+            return Who.Pawn.Health $ " Health";
+        }
+        else
+        {
+            return "No Pawn";
+        }
+    }
+
     return super.ParseChatPercVar(BaseMutator, Who, Cmd);
 }
 
@@ -2758,31 +2967,44 @@ static function string ParseChatPercVar(Mutator BaseMutator, Controller Who, str
 // exec FUNCTIONS - These functions natively require admin access
 //***********************************************************************************
 
-// Quick test function to change a role's limit (Allied only)
-// function doesn't support bots
+exec function ToggleAllowAllChat()
+{
+    if (GRI == none)
+    {
+        return;
+    }
+
+    GRI.bAllowAllChat = !GRI.bAllowAllChat;
+}
+
+exec function DebugDestroyConstructions()
+{
+    local DHConstruction C;
+
+    foreach AllActors(class'DHConstruction', C)
+    {
+        C.GotoState('Broken');
+    }
+}
+
+// Quick test function to change a role's limit (doesn't support bots)
 exec function DebugSetRoleLimit(int Team, int Index, int NewLimit)
 {
-    local Controller C;
-    local DHPlayer PC;
-    local DHGameReplicationInfo GRI;
-    local int i;
-    local int RoleLimit;
-    local int RoleBotCount;
-    local int RoleCount;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
+    local Controller            C;
+    local DHPlayer              PC;
+    local int                   RoleCount, RoleBotCount, RoleLimit, i;
 
     if (GRI == none)
     {
         return;
     }
 
-    if (Team == 0)
+    if (Team == AXIS_TEAM_INDEX)
     {
         GRI.DHAxisRoleLimit[Index] = NewLimit;
         GRI.GetRoleCounts(GRI.DHAxisRoles[Index], RoleCount, RoleBotCount, RoleLimit);
     }
-    else if (Team == 1)
+    else if (Team == ALLIES_TEAM_INDEX)
     {
         GRI.DHAlliesRoleLimit[Index] = NewLimit;
         GRI.GetRoleCounts(GRI.DHAlliesRoles[Index], RoleCount, RoleBotCount, RoleLimit);
@@ -2822,7 +3044,7 @@ exec function SetAlliesToAxisRatio(float Value)
     // Pass -1 to reset
     if (Value == -1.0)
     {
-        AlliesToAxisRatio = DH_LevelInfo(LevelInfo).AlliesToAxisRatio;
+        AlliesToAxisRatio = DHLevelInfo.AlliesToAxisRatio;
     }
 
     // Prevent values outside of range
@@ -2840,13 +3062,19 @@ exec function SetAlliesToAxisRatio(float Value)
 // Function for changing bHardTeamRatio at real time
 exec function SetHardTeamRatio(bool bNewHardTeamRatio)
 {
-    DH_LevelInfo(LevelInfo).bHardTeamRatio = bNewHardTeamRatio;
+    DHLevelInfo.bHardTeamRatio = bNewHardTeamRatio;
+}
+
+// Function for toggling the log to console the server's average tick rate (logs every 5 seconds)
+exec function ToggleTickLog()
+{
+    bLogAverageTickRate = !bLogAverageTickRate;
 }
 
 // Function for changing a team's ReinforcementInterval
 exec function SetReinforcementInterval(int Team, int Amount)
 {
-    if (Amount > 0 && DHGameReplicationInfo(GameReplicationInfo) != none)
+    if (Amount > 0)
     {
         if (Team == AXIS_TEAM_INDEX)
         {
@@ -2857,7 +3085,7 @@ exec function SetReinforcementInterval(int Team, int Amount)
             LevelInfo.Allies.ReinforcementInterval = Amount;
         }
 
-        DHGameReplicationInfo(GameReplicationInfo).ReinforcementInterval[Team] = Amount;
+        GRI.ReinforcementInterval[Team] = Amount;
     }
 }
 
@@ -2872,8 +3100,8 @@ exec function SetReinforcements(int Team, int Amount)
     ModifyReinforcements(Team, Amount, true);
 }
 
-// Function to allow for capturing a currently active objective (for the supplied team), useful for debugging
-exec function CaptureObj(int Team)
+// Function to allow for capturing a currently active objective (for the supplied team), can also specify the ObjName and if it should be neutralized instead
+exec function CaptureObj(int Team, optional string ObjName, optional bool bNeutralizeInstead)
 {
     local int i;
 
@@ -2881,11 +3109,20 @@ exec function CaptureObj(int Team)
     {
         if (DHObjectives[i] != none &&
             DHObjectives[i].bActive &&
-            DHObjectives[i].ObjState != Team)
+            DHObjectives[i].ObjState != Team &&
+            DHObjectives[i].HasRequiredObjectives(GRI, Team) &&
+            (ObjName == "" || DHObjectives[i].ObjName ~= ObjName))
         {
-            DHObjectives[i].ObjectiveCompleted(none, Team);
+            if (bNeutralizeInstead)
+            {
+                DHObjectives[i].ObjectiveNeutralized(Team);
+            }
+            else
+            {
+                DHObjectives[i].ObjectiveCompleted(none, Team);
+            }
 
-            return;
+            break;
         }
     }
 }
@@ -2915,7 +3152,7 @@ exec function ChangeRoundTime(int Minutes, optional string Type)
 // Override to allow more than 32 bots (but not too many, 128 max)
 exec function AddBots(int num)
 {
-    num = Clamp(num, 0, 128 - (NumPlayers + NumBots));
+    num = Clamp(num, 0, 256 - (NumPlayers + NumBots));
 
     while (--num >= 0)
     {
@@ -3021,6 +3258,7 @@ function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, 
 
         if (PC != none)
         {
+            PC.DeployMenuStartMode = MODE_Map;
             PC.ClientProposeMenu("DH_Interface.DHDeployMenu");
         }
     }
@@ -3092,6 +3330,7 @@ function bool DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
 
         if (DHC.Pawn != none)
         {
+            DHC.bSpawnedKilled = false; // Every spawn, this should be set to false, but the server needs to do it (if you know a better place to put this in DHPlayer, please move it)
             DHC.ClientFadeFromBlack(3.0);
         }
 
@@ -3110,7 +3349,6 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
     local int OldTeam;
     local UnrealTeamInfo NewTeam;
     local DHPlayer       PC;
-    local DHGameReplicationInfo GRI;
 
     OldTeam = Other.GetTeamNum();
 
@@ -3133,10 +3371,13 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
 
     PC = DHPlayer(Other);
 
-    // Colin: There is a 5 second buffer time between switching teams. This
-    // stops players from being able to rapid-fire switch teams and spam
-    // others with team-change messages.
-    if (PC != none && PC.NextChangeTeamTime >= Level.TimeSeconds)
+    if (GRI == none)
+    {
+        return false;
+    }
+
+    // Do a check to see if we can change teams yet
+    if (bPlayersBalanceTeams && PC != none && PC.NextChangeTeamTime >= GRI.ElapsedTime)
     {
         return false;
     }
@@ -3151,29 +3392,7 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
 
     Other.StartSpot = none;
 
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    if (Other.PlayerReplicationInfo.Team != none)
-    {
-        Other.PlayerReplicationInfo.Team.RemoveFromTeam(Other);
-
-        if (PC != none)
-        {
-            PC.DesiredRole = -1;
-            PC.CurrentRole = -1;
-            PC.PrimaryWeapon = -1;
-            PC.SecondaryWeapon = -1;
-            PC.GrenadeWeapon = -1;
-            PC.bWeaponsSelected = false;
-            PC.SavedArtilleryCoords = vect(0.0, 0.0, 0.0);
-
-            // DARKEST HOUR
-            PC.SpawnPointIndex = 255;
-            PC.SpawnVehicleIndex = 255;
-
-            GRI.UnreserveVehicle(PC);
-        }
-    }
+    PlayerLeftTeam(PC);
 
     if (NewTeam.AddToTeam(Other))
     {
@@ -3192,20 +3411,76 @@ function bool ChangeTeam(Controller Other, int Num, bool bNewTeam)
         }
     }
 
-    // Since we're changing teams, remove all rally points/help requests/etc
-    ClearSavedRequestsAndRallyPoints(ROPlayer(Other), false);
-
-    if (GRI != none)
+    // If we changed team, and if elapsed time hasn't gone past the change team interval, and we aren't in standalone then set the NextChangeTeamTime
+    // The reason why we compare ElapsedTime to ChangeTeamInterval is we want to allow players to change teams freely for a duration from the start
+    // The duration desired is roughly 120 seconds which is what ChangeTeamInterval is currently set to, so if that changes, this if statement (might) need changed as well
+    if (PC != none && bNewTeam && GRI.ElapsedTime > ChangeTeamInterval && Level.NetMode != NM_Standalone && !class'DH_LevelInfo'.static.DHDebugMode())
     {
-        GRI.ClearArtilleryTarget(DHPlayer(Other));
-    }
-
-    if (PC != none)
-    {
-        PC.NextChangeTeamTime = Level.TimeSeconds + default.ChangeTeamInterval;
+        // This sets the DHPlayer NextChangeTeamTime which determines when a player can change team next
+        // If the player leaves, it is stored in a player session and restored if they rejoin
+        PC.NextChangeTeamTime = GRI.ElapsedTime + default.ChangeTeamInterval;
     }
 
     return true;
+}
+
+function bool BecomeSpectator(PlayerController P)
+{
+    if (!super.BecomeSpectator(P))
+    {
+        return false;
+    }
+
+    PlayerLeftTeam(P);
+
+    P.PlayerReplicationInfo.Team = none;
+    P.PlayerReplicationInfo.bIsSpectator = true;
+    P.PlayerReplicationInfo.bOnlySpectator = true;
+}
+
+function PlayerLeftTeam(PlayerController P)
+{
+    local DHPlayer PC;
+    local DHPlayerReplicationInfo PRI;
+
+    PC = DHPlayer(P);
+    PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+
+    if (PC != none)
+    {
+        PC.DesiredRole = -1;
+        PC.CurrentRole = -1;
+        PC.PrimaryWeapon = -1;
+        PC.DesiredPrimary = 0;
+        PC.SecondaryWeapon = -1;
+        PC.DesiredSecondary = 0;
+        PC.GrenadeWeapon = -1;
+        PC.DesiredGrenade = 0;
+        PC.bWeaponsSelected = false;
+        PC.SavedArtilleryCoords = vect(0.0, 0.0, 0.0);
+        PC.SpawnPointIndex = -1;
+        PC.bSpawnPointInvalidated = true;
+
+        ClearSavedRequestsAndRallyPoints(PC, false);
+    }
+
+    if (PRI != none)
+    {
+        if (PRI.Team != none)
+        {
+            PRI.Team.RemoveFromTeam(P);
+        }
+
+        PRI.RoleInfo = none;
+    }
+
+    GRI.UnreserveVehicle(PC);
+    GRI.ClearArtilleryTarget(PC);
+
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.LeaveSquad(PRI);
+    }
 }
 
 // Modified to support one normal kick, then session kick for FF violation
@@ -3276,25 +3551,25 @@ static function PrecacheGameTextures(LevelInfo myLevel)
     super.PrecacheGameTextures(myLevel);
 
     // From ROWheeledVehicle:
-    myLevel.AddPrecacheMaterial(material'Effects_Tex.explosions.fire_16frame');
-    myLevel.AddPrecacheMaterial(material'Effects_Tex.Vehicles.DustCloud');
-    myLevel.AddPrecacheMaterial(material'Effects_Tex.Vehicles.Dust_KickUp');
-    myLevel.AddPrecacheMaterial(material'Effects_Tex.Vehicles.vehiclesparkhead');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.explosions.fire_16frame');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.Vehicles.DustCloud');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.Vehicles.Dust_KickUp');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.Vehicles.vehiclesparkhead');
 
     // From ROTreadCraft:
-    myLevel.AddPrecacheMaterial(material'Effects_Tex.explosions.aptankmark_dirt');
-    myLevel.AddPrecacheMaterial(material'Effects_Tex.explosions.aptankmark_snow');
-    myLevel.AddPrecacheMaterial(material'Effects_Tex.BulletHits.glowfinal');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.explosions.aptankmark_dirt');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.explosions.aptankmark_snow');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.BulletHits.glowfinal');
 
     // From DHArmoredVehicle:
-    myLevel.AddPrecacheMaterial(material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
+    myLevel.AddPrecacheMaterial(Material'DH_VehiclesGE_tex2.ext_vehicles.Alpha');
 
     // From ROTankCannon:
-    myLevel.AddPrecacheMaterial(material'Weapons3rd_tex.tank_shells.shell_122mm');
-    myLevel.AddPrecacheMaterial(material'Weapons3rd_tex.tank_shells.shell_76mm');
-    myLevel.AddPrecacheMaterial(material'Weapons3rd_tex.tank_shells.shell_85mm');
-    myLevel.AddPrecacheMaterial(material'Effects_Tex.fire_quad');
-    myLevel.AddPrecacheMaterial(material'ROEffects.SmokeAlphab_t');
+    myLevel.AddPrecacheMaterial(Material'Weapons3rd_tex.tank_shells.shell_122mm');
+    myLevel.AddPrecacheMaterial(Material'Weapons3rd_tex.tank_shells.shell_76mm');
+    myLevel.AddPrecacheMaterial(Material'Weapons3rd_tex.tank_shells.shell_85mm');
+    myLevel.AddPrecacheMaterial(Material'Effects_Tex.fire_quad');
+    myLevel.AddPrecacheMaterial(Material'ROEffects.SmokeAlphab_t');
 }
 
 // Overridden so we can grab the primary and secondary weapons to feed to replication
@@ -3319,10 +3594,8 @@ function ChooseWinner()
     local Controller C;
     local int i, Num[2], NumReq[2], AxisScore, AlliedScore;
     local float AxisReinforcementsPercent, AlliedReinforcementsPercent;
-    local DHGameReplicationInfo GRI;
 
     // Setup some GRI stuff
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
 
     if (GRI == none)
     {
@@ -3332,30 +3605,26 @@ function ChooseWinner()
     AxisReinforcementsPercent = (float(GRI.SpawnsRemaining[AXIS_TEAM_INDEX]) / LevelInfo.Axis.SpawnLimit) * 100;
     AlliedReinforcementsPercent = (float(GRI.SpawnsRemaining[ALLIES_TEAM_INDEX]) / LevelInfo.Allies.SpawnLimit) * 100;
 
-    // Attrition check
-    // Check to see who has more reinforcements
-    if (DHLevelInfo.AttritionRateCurve.Points.Length > 0.0)
+    // Check to see who has more reinforcements when bRoundEndsAtZeroReinf
+    if (DHLevelInfo.GameTypeClass.default.bRoundEndsAtZeroReinf)
     {
-        // This game is using attrition; therefore, the winner is the one with higher reinforcements (no concern over objective counts)
+        // The winner is the one with higher reinforcements (no concern over objective counts)
         if (AxisReinforcementsPercent > AlliedReinforcementsPercent)
         {
             Level.Game.Broadcast(self, "The Axis won the battle because they have more reinforcements", 'Say');
             EndRound(AXIS_TEAM_INDEX);
-
             return;
         }
         else if (AlliedReinforcementsPercent > AxisReinforcementsPercent)
         {
             Level.Game.Broadcast(self, "The Allies won the battle because they have more reinforcements", 'Say');
             EndRound(ALLIES_TEAM_INDEX);
-
             return;
         }
         else // Both teams have same reinforcements so its a tie "No Decisive Victory"
         {
             Level.Game.Broadcast(self, "Neither side won the battle because they have equal reinforcements", 'Say');
             EndRound(2);
-
             return;
         }
     }
@@ -3383,7 +3652,7 @@ function ChooseWinner()
         {
             break;
         }
-        else if (DHObjectives[i].ObjState == OBJ_Axis)
+        else if (DHObjectives[i].IsAxis())
         {
             Num[AXIS_TEAM_INDEX]++;
 
@@ -3392,7 +3661,7 @@ function ChooseWinner()
                 NumReq[AXIS_TEAM_INDEX]++;
             }
         }
-        else if (DHObjectives[i].ObjState == OBJ_Allies)
+        else if (DHObjectives[i].IsAllies())
         {
             Num[ALLIES_TEAM_INDEX]++;
 
@@ -3498,7 +3767,6 @@ function ChooseWinner()
     EndRound(2);
 }
 
-//Theel: Convert to use DHObjectives, though this isn't supposed to be used
 function CheckSpawnAreas()
 {
     local ROSpawnArea Best[2];
@@ -3519,7 +3787,7 @@ function CheckSpawnAreas()
 
             for (j = 0; j < SpawnAreas[i].AxisRequiredObjectives.Length; ++j)
             {
-                if (DHObjectives[SpawnAreas[i].AxisRequiredObjectives[j]] != none && DHObjectives[SpawnAreas[i].AxisRequiredObjectives[j]].ObjState != OBJ_Axis)
+                if (DHObjectives[SpawnAreas[i].AxisRequiredObjectives[j]] != none && !DHObjectives[SpawnAreas[i].AxisRequiredObjectives[j]].IsAxis())
                 {
                     bReqsMet = false;
                     break;
@@ -3530,7 +3798,7 @@ function CheckSpawnAreas()
             // Allows mappers to force all objectives to be lost/won before moving spawns, instead of just one - Ramm
             for (h = 0; h < SpawnAreas[i].AxisRequiredObjectives.Length; ++h)
             {
-                if (DHObjectives[SpawnAreas[i].AxisRequiredObjectives[h]] != none && DHObjectives[SpawnAreas[i].AxisRequiredObjectives[h]].ObjState == OBJ_Axis)
+                if (DHObjectives[SpawnAreas[i].AxisRequiredObjectives[h]] != none && DHObjectives[SpawnAreas[i].AxisRequiredObjectives[h]].IsAxis())
                 {
                     bSomeReqsMet = true;
                     break;
@@ -3543,7 +3811,7 @@ function CheckSpawnAreas()
             {
                 for (k = 0; k < SpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
                 {
-                    if (DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]] != none && DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
+                    if (DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]] != none && DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]].IsNeutral())
                     {
                         bSomeReqsMet = true;
                         break;
@@ -3568,7 +3836,7 @@ function CheckSpawnAreas()
 
             for (j = 0; j < SpawnAreas[i].AlliesRequiredObjectives.Length; ++j)
             {
-                if (DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[j]] != none && DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[j]].ObjState != OBJ_Allies)
+                if (DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[j]] != none && !DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[j]].IsAllies())
                 {
                     bReqsMet = false;
                     break;
@@ -3579,7 +3847,7 @@ function CheckSpawnAreas()
             // Allows mappers to force all objectives to be lost/won before moving spawns, instead of just one - Ramm
             for (h = 0; h < SpawnAreas[i].AlliesRequiredObjectives.Length; ++h)
             {
-                if (DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[h]] != none && DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[h]].ObjState == OBJ_Allies)
+                if (DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[h]] != none && DHObjectives[SpawnAreas[i].AlliesRequiredObjectives[h]].IsAllies())
                 {
                     bSomeReqsMet = true;
                     break;
@@ -3592,7 +3860,7 @@ function CheckSpawnAreas()
             {
                 for (k = 0; k < SpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
                 {
-                    if (DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]] != none && DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
+                    if (DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]] != none && DHObjectives[SpawnAreas[i].NeutralRequiredObjectives[k]].IsNeutral())
                     {
                         bSomeReqsMet = true;
                         break;
@@ -3614,18 +3882,24 @@ function CheckSpawnAreas()
     CurrentSpawnArea[AXIS_TEAM_INDEX] = Best[AXIS_TEAM_INDEX];
     CurrentSpawnArea[ALLIES_TEAM_INDEX] = Best[ALLIES_TEAM_INDEX];
 
-    if (CurrentSpawnArea[AXIS_TEAM_INDEX] == none)
+    // Run this check for levelers, if they set DH_LevelInfo to use spawn areas, but don't put any on the map, we should inform them
+    if (CurrentSpawnArea[AXIS_TEAM_INDEX] == none || CurrentSpawnArea[ALLIES_TEAM_INDEX] == none)
     {
-        Log("ROTeamGame: no valid Axis spawn area found!");
-    }
+        bReqsMet = false;
 
-    if (CurrentSpawnArea[ALLIES_TEAM_INDEX] == none)
-    {
-        Log("ROTeamGame: no valid Allied spawn area found!");
+        foreach DynamicActors(class'ROSpawnArea', Best[0])
+        {
+            bReqsMet = true;
+        }
+
+        if (!bReqsMet)
+        {
+            Warn("No SpawnAreas found in the level when DarkestHourGame is expecting them!");
+        }
     }
 }
 
-// Theel: This function is no longer used, but I converted to use DHObjectives just in case we make use of it
+// This function is no longer used officially, but is converted to use DHObjectives just in case some map is using SpawnAreas
 function CheckTankCrewSpawnAreas()
 {
     local int i, j, h, k;
@@ -3646,7 +3920,7 @@ function CheckTankCrewSpawnAreas()
 
             for (j = 0; j < TankCrewSpawnAreas[i].AxisRequiredObjectives.Length; ++j)
             {
-                if (DHObjectives[TankCrewSpawnAreas[i].AxisRequiredObjectives[j]].ObjState != OBJ_Axis)
+                if (!DHObjectives[TankCrewSpawnAreas[i].AxisRequiredObjectives[j]].IsAxis())
                 {
                     bReqsMet = false;
                     break;
@@ -3657,7 +3931,7 @@ function CheckTankCrewSpawnAreas()
             // Allows Mappers to force all objectives to be lost/won before moving spawns, instead of just one - Ramm
             for (h = 0; h < TankCrewSpawnAreas[i].AxisRequiredObjectives.Length; ++h)
             {
-                if (DHObjectives[TankCrewSpawnAreas[i].AxisRequiredObjectives[h]].ObjState == OBJ_Axis)
+                if (DHObjectives[TankCrewSpawnAreas[i].AxisRequiredObjectives[h]].IsAxis())
                 {
                     bSomeReqsMet = true;
                     break;
@@ -3670,7 +3944,7 @@ function CheckTankCrewSpawnAreas()
             {
                 for (k = 0; k < TankCrewSpawnAreas[i].NeutralRequiredObjectives.Length; k++)
                 {
-                    if (DHObjectives[TankCrewSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
+                    if (DHObjectives[TankCrewSpawnAreas[i].NeutralRequiredObjectives[k]].IsNeutral())
                     {
                         bSomeReqsMet = true;
                         break;
@@ -3695,7 +3969,7 @@ function CheckTankCrewSpawnAreas()
 
             for (j = 0; j < TankCrewSpawnAreas[i].AlliesRequiredObjectives.Length; ++j)
             {
-                if (DHObjectives[TankCrewSpawnAreas[i].AlliesRequiredObjectives[j]].ObjState != OBJ_Allies)
+                if (!DHObjectives[TankCrewSpawnAreas[i].AlliesRequiredObjectives[j]].IsAllies())
                 {
                     bReqsMet = false;
                     break;
@@ -3706,7 +3980,7 @@ function CheckTankCrewSpawnAreas()
             // Allows Mappers to force all objectives to be lost/won before moving spawns, instead of just one - Ramm
             for (h = 0; h < TankCrewSpawnAreas[i].AlliesRequiredObjectives.Length; ++h)
             {
-                if (DHObjectives[TankCrewSpawnAreas[i].AlliesRequiredObjectives[h]].ObjState == OBJ_Allies)
+                if (DHObjectives[TankCrewSpawnAreas[i].AlliesRequiredObjectives[h]].IsAllies())
                 {
                     bSomeReqsMet = true;
                     break;
@@ -3719,7 +3993,7 @@ function CheckTankCrewSpawnAreas()
             {
                 for (k = 0; k < TankCrewSpawnAreas[i].NeutralRequiredObjectives.Length; k++)
                 {
-                    if (DHObjectives[TankCrewSpawnAreas[i].NeutralRequiredObjectives[k]].ObjState == OBJ_Neutral)
+                    if (DHObjectives[TankCrewSpawnAreas[i].NeutralRequiredObjectives[k]].IsNeutral())
                     {
                         bSomeReqsMet = true;
                         break;
@@ -3745,62 +4019,248 @@ function CheckTankCrewSpawnAreas()
     CheckMortarmanSpawnAreas();
 }
 
+function CheckMortarmanSpawnAreas()
+{
+    local DHSpawnArea Best[2];
+    local bool        bReqsMet, bSomeReqsMet;
+    local int         i, j, h, k;
+
+    for (i = 0; i < DHMortarSpawnAreas.Length; ++i)
+    {
+        if (!DHMortarSpawnAreas[i].bEnabled)
+        {
+            continue;
+        }
+
+        // Axis plus: either no best or this one has higher precedence
+        if (DHMortarSpawnAreas[i].bAxisSpawn && (Best[AXIS_TEAM_INDEX] == none || DHMortarSpawnAreas[i].AxisPrecedence > Best[AXIS_TEAM_INDEX].AxisPrecedence))
+        {
+            bReqsMet = true;
+            bSomeReqsMet = false;
+
+            for (j = 0; j < DHMortarSpawnAreas[i].AxisRequiredObjectives.Length; ++j)
+            {
+                if (!DHObjectives[DHMortarSpawnAreas[i].AxisRequiredObjectives[j]].IsAxis())
+                {
+                    bReqsMet = false;
+                    break;
+                }
+            }
+
+            for (h = 0; h < DHMortarSpawnAreas[i].AxisRequiredObjectives.Length; ++h)
+            {
+                if (DHObjectives[DHMortarSpawnAreas[i].AxisRequiredObjectives[h]].IsAxis())
+                {
+                    bSomeReqsMet = true;
+                    break;
+                }
+            }
+
+            if (DHMortarSpawnAreas[i].bIncludeNeutralObjectives)
+            {
+                for (k = 0; k < DHMortarSpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
+                {
+                    if (DHObjectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].IsNeutral())
+                    {
+                        bSomeReqsMet = true;
+                        break;
+                    }
+                }
+            }
+
+            if (bReqsMet)
+            {
+                Best[AXIS_TEAM_INDEX] = DHMortarSpawnAreas[i];
+            }
+            else if (bSomeReqsMet && DHMortarSpawnAreas[i].TeamMustLoseAllRequired == SPN_Axis)
+            {
+                Best[AXIS_TEAM_INDEX] = DHMortarSpawnAreas[i];
+            }
+        }
+
+        // Allies plus: either no best or this one has higher precedence
+        if (DHMortarSpawnAreas[i].bAlliesSpawn && (Best[ALLIES_TEAM_INDEX] == none || DHMortarSpawnAreas[i].AlliesPrecedence > Best[ALLIES_TEAM_INDEX].AlliesPrecedence))
+        {
+            bReqsMet = true;
+            bSomeReqsMet = false;
+
+            for (j = 0; j < DHMortarSpawnAreas[i].AlliesRequiredObjectives.Length; ++j)
+            {
+                if (!DHObjectives[DHMortarSpawnAreas[i].AlliesRequiredObjectives[j]].IsAllies())
+                {
+                    bReqsMet = false;
+                    break;
+                }
+            }
+
+            // Added in conjunction with TeamMustLoseAllRequired enum in SpawnAreas
+            // Allows Mappers to force all objectives to be lost/won before moving spawns, instead of just one
+            for (h = 0; h < DHMortarSpawnAreas[i].AlliesRequiredObjectives.Length; ++h)
+            {
+                if (DHObjectives[DHMortarSpawnAreas[i].AlliesRequiredObjectives[h]].IsAllies())
+                {
+                    bSomeReqsMet = true;
+                    break;
+                }
+            }
+
+            // Added in conjunction with bIncludeNeutralObjectives in SpawnAreas
+            // Allows mappers to have spawns be used when objectives are neutral, not just captured
+            if (DHMortarSpawnAreas[i].bIncludeNeutralObjectives)
+            {
+                for (k = 0; k < DHMortarSpawnAreas[i].NeutralRequiredObjectives.Length; ++k)
+                {
+                    if (DHObjectives[DHMortarSpawnAreas[i].NeutralRequiredObjectives[k]].IsNeutral())
+                    {
+                        bSomeReqsMet = true;
+                        break;
+                    }
+                }
+            }
+
+            if (bReqsMet)
+            {
+                Best[ALLIES_TEAM_INDEX] = DHMortarSpawnAreas[i];
+            }
+            else if (bSomeReqsMet && DHMortarSpawnAreas[i].TeamMustLoseAllRequired == SPN_Allies)
+            {
+                Best[ALLIES_TEAM_INDEX] = DHMortarSpawnAreas[i];
+            }
+        }
+    }
+
+    DHCurrentMortarSpawnArea[AXIS_TEAM_INDEX] = Best[AXIS_TEAM_INDEX];
+    DHCurrentMortarSpawnArea[ALLIES_TEAM_INDEX] = Best[ALLIES_TEAM_INDEX];
+}
+
+// Modified to use more efficient DynamicActors iteration instead of AllActors (vehicle factories aren't static actors), & re-factored to generally optimise
+// Do nothing if factory flagged as controlled by a DH spawn point even if bUseSpawnAreas=true (leveller may misunderstand bUseSpawnAreas & assume means spawn point)
+function CheckVehicleFactories()
+{
+    local DHVehicleFactory VehFact;
+    local int              TeamIndex;
+
+    foreach DynamicActors(class'DHVehicleFactory', VehFact)
+    {
+        if (VehFact.bUsesSpawnAreas && !VehFact.bControlledBySpawnPoint)
+        {
+            if (class<ROVehicle>(VehFact.VehicleClass) != none)
+            {
+                TeamIndex = class<ROVehicle>(VehFact.VehicleClass).default.VehicleTeam;
+
+                if ((TeamIndex == AXIS_TEAM_INDEX || TeamIndex == ALLIES_TEAM_INDEX) &&
+                    ((CurrentTankCrewSpawnArea[TeamIndex] != none && CurrentTankCrewSpawnArea[TeamIndex].Tag == VehFact.Tag) ||
+                    (CurrentSpawnArea[TeamIndex] != none && CurrentSpawnArea[TeamIndex].Tag == VehFact.Tag)))
+                {
+                    VehFact.ActivatedBySpawn(TeamIndex);
+                }
+                else
+                {
+                    VehFact.Deactivate();
+                }
+            }
+        }
+    }
+}
+
+// Modified so we only activate/deactivate resupply volumes if their status actually needs to change, based on any current spawn areas (if the level even has them)
+// Note that the newer DHSpawnPoint system that replaces spawn areas does not use this, & instead the spawn point itself activates/deactivates any linked resupply
+// So this override is necessary to stop CheckResupplyVolumes() functionality from screwing up the new DH functionality (& also to use the new DHResupplyAreas array)
+// Do nothing if resupply flagged as controlled by a DH spawn point even if bUseSpawnAreas=true (leveller may misunderstand bUseSpawnAreas & assume means spawn point)
+function CheckResupplyVolumes()
+{
+    local int  TeamIndex, i;
+    local bool bShouldBeActive;
+
+    for (i = 0; i < arraycount(DHResupplyAreas); ++i)
+    {
+        if (DHResupplyAreas[i] != none && DHResupplyAreas[i].bUsesSpawnAreas && !DHResupplyAreas[i].bControlledBySpawnPoint)
+        {
+            TeamIndex = DHResupplyAreas[i].Team;
+
+            if (TeamIndex == AXIS_TEAM_INDEX || TeamIndex == ALLIES_TEAM_INDEX)
+            {
+                bShouldBeActive = CurrentSpawnArea[TeamIndex].Tag == DHResupplyAreas[i].Tag ||
+                    (CurrentTankCrewSpawnArea[TeamIndex] != none && CurrentTankCrewSpawnArea[TeamIndex].Tag == DHResupplyAreas[i].Tag);
+
+                DHResupplyAreas[i].bActive = bShouldBeActive;
+                GRI.ResupplyAreas[i].bActive = bShouldBeActive;
+            }
+        }
+    }
+}
+
+// Modified so we only activate/deactivate mine volumes if their status actually needs to change, based on any current spawn areas (if the level even has them)
+// Note that the newer DHSpawnPoint system that replaces spawn areas does not use this, & instead the spawn point itself activates/deactivates any linked MV
+// DHMineVolumes may also be controlled by modify actors in the level, triggered by specified events during player
+// The new MV functionality also uses an bInitiallyActive setting (subject to subsequent activation/deactivation by a spawn point or modify actor)
+// So this override is necessary to stop CheckMineVolumes() functionality from screwing up the new DH functionality
+function CheckMineVolumes()
+{
+    local int i;
+
+    for (i = 0; i < MineVolumes.Length; ++i)
+    {
+        if (MineVolumes[i] != none && MineVolumes[i].bUsesSpawnAreas && MineVolumes[i].Tag != '')
+        {
+            if ((CurrentSpawnArea[AXIS_TEAM_INDEX] != none && CurrentSpawnArea[AXIS_TEAM_INDEX].Tag == MineVolumes[i].Tag) ||
+                (CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[AXIS_TEAM_INDEX].Tag == MineVolumes[i].Tag) ||
+                (CurrentSpawnArea[ALLIES_TEAM_INDEX] != none && CurrentSpawnArea[ALLIES_TEAM_INDEX].Tag == MineVolumes[i].Tag) ||
+                (CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX] != none && CurrentTankCrewSpawnArea[ALLIES_TEAM_INDEX].Tag == MineVolumes[i].Tag))
+            {
+                MineVolumes[i].Activate();
+            }
+            else
+            {
+                MineVolumes[i].Deactivate();
+            }
+        }
+    }
+}
+
 function NotifyLogout(Controller Exiting)
 {
-    local DHGameReplicationInfo GRI;
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
 
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
     PC = DHPlayer(Exiting);
 
     ClearSavedRequestsAndRallyPoints(PC, false);
 
-    if (GRI != none && PC != none)
+    if (PC != none)
     {
         GRI.ClearArtilleryTarget(PC);
         GRI.UnreserveVehicle(PC);
 
         PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+        SquadReplicationInfo.LeaveSquad(PRI);
     }
 
     super.Destroyed();
 }
 
+// TODO: Deprecate function (make all calls to this function just use BroadcastTeamLocalizedMessage)
 function SendReinforcementMessage(int Team, int Num)
 {
-    local Controller P;
-
-    for (P = Level.ControllerList; P != none; P = P.NextController)
-    {
-        if (PlayerController(P) != none &&
-            P.PlayerReplicationInfo.Team != none &&
-            P.PlayerReplicationInfo.Team.TeamIndex == Team)
-        {
-            PlayerController(P).ReceiveLocalizedMessage(class'DHReinforcementMsg', Num);
-        }
-    }
+    BroadcastTeamLocalizedMessage(Level, Team, class'DHReinforcementMsg', Num);
 }
 
 // Modified to remove reliance on SpawnCount and instead just use SpawnsRemaining
 function bool SpawnLimitReached(int Team)
 {
-    return DHGameReplicationInfo(GameReplicationInfo) != none && DHGameReplicationInfo(GameReplicationInfo).SpawnsRemaining[Team] == 0;
+    return GRI.SpawnsRemaining[Team] == 0;
 }
 
 function int GetRoundTime()
 {
-    return Max(0, DHGameReplicationInfo(GameReplicationInfo).RoundEndTime - ElapsedTime);
+    return Max(0, GRI.RoundEndTime - ElapsedTime);
 }
 
 // This function allows proper time remaining to be adjusted as desired
 function ModifyRoundTime(int RoundTime, int Type)
 {
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    if (GRI != none && self.IsInState('RoundInPlay'))
+    if (IsInState('RoundInPlay'))
     {
         switch (Type)
         {
@@ -3849,12 +4309,16 @@ function ChangeSides()
 function OpenPlayerMenus()
 {
     local Controller P;
+    local DHPlayer PC;
 
     for (P = Level.ControllerList; P != none; P = P.NextController)
     {
-        if (P.bIsPlayer && P.PlayerReplicationInfo.Team != none && P.PlayerReplicationInfo.Team.TeamIndex != 2)
+        PC = DHPlayer(P);
+
+        if (PC != none && PC.bIsPlayer && PC.GetTeamNum() != 255)
         {
-            DHPlayer(P).ClientProposeMenu("DH_Interface.DHDeployMenu");
+            PC.DeployMenuStartMode = MODE_Map;
+            PC.ClientProposeMenu("DH_Interface.DHDeployMenu");
         }
     }
 }
@@ -3963,27 +4427,6 @@ event PostLogin(PlayerController NewPlayer)
         }
     }
 
-    // Set player's spectator properties, copied from the GameInfo's properties
-    // Theel: Please use the desired settings for public play, overriding may result in further steps to enforce these settings
-    if (bPublicPlay)
-    {
-        NewPlayer.bLockedBehindView = true;
-        NewPlayer.bFirstPersonSpectateOnly = true;
-        NewPlayer.bAllowRoamWhileSpectating = true;
-        NewPlayer.bViewBlackWhenDead = false;
-        NewPlayer.bViewBlackOnDeadNotViewingPlayers = true;
-        NewPlayer.bAllowRoamWhileDeadSpectating = false;
-    }
-    else
-    {
-        NewPlayer.bLockedBehindView = bSpectateLockedBehindView;
-        NewPlayer.bFirstPersonSpectateOnly = bSpectateFirstPersonOnly;
-        NewPlayer.bAllowRoamWhileSpectating = bSpectateAllowRoaming;
-        NewPlayer.bViewBlackWhenDead = bSpectateBlackoutWhenDead;
-        NewPlayer.bViewBlackOnDeadNotViewingPlayers = bSpectateBlackoutWhenNotViewingPlayers;
-        NewPlayer.bAllowRoamWhileDeadSpectating = bSpectateAllowDeadRoaming;
-    }
-
     PC = DHPlayer(NewPlayer);
 
     if (PC != none)
@@ -4021,11 +4464,14 @@ event PostLogin(PlayerController NewPlayer)
             if (S != none)
             {
                 PRI.Deaths = S.Deaths;
-                PRI.Kills = S.Kills;
+                PRI.DHKills = S.Kills;
                 PRI.Score = S.Score;
+
+                Teams[S.TeamIndex].AddToTeam(PC);
+
                 PC.LastKilledTime = S.LastKilledTime;
                 PC.WeaponLockViolations = S.WeaponLockViolations;
-                PC.DeathPenaltyCount = S.DeathPenaltyCount;
+                PC.NextChangeTeamTime = S.NextChangeTeamTime;
 
                 if (GameReplicationInfo != none && S.WeaponUnlockTime > GameReplicationInfo.ElapsedTime)
                 {
@@ -4033,6 +4479,20 @@ event PostLogin(PlayerController NewPlayer)
                 }
             }
         }
+
+        PRI.bIsDeveloper = class'DHAccessControl'.static.IsDeveloper(ROIDHash);
+    }
+
+    NewPlayer.bLockedBehindView = bSpectateLockedBehindView;
+    NewPlayer.bFirstPersonSpectateOnly = bSpectateFirstPersonOnly;
+    NewPlayer.bAllowRoamWhileSpectating = bSpectateAllowRoaming;
+    NewPlayer.bViewBlackWhenDead = bSpectateBlackoutWhenDead;
+    NewPlayer.bViewBlackOnDeadNotViewingPlayers = bSpectateBlackoutWhenNotViewingPlayers;
+    NewPlayer.bAllowRoamWhileDeadSpectating = bSpectateAllowDeadRoaming;
+
+    if (PC != none)
+    {
+        PC.bSpectateAllowViewPoints = bSpectateAllowViewPoints && ViewPoints.Length > 0;
     }
 }
 
@@ -4045,6 +4505,12 @@ function Logout(Controller Exiting)
     local DHPlayerSession S;
 
     super.Logout(Exiting);
+
+    // Just in case NumPlayers somehow goes negative, set it to 0 (should we just clamp it to 0,MaxPlayers instead?)
+    if (NumPlayers < 0)
+    {
+        NumPlayers = 0;
+    }
 
     PC = DHPlayer(Exiting);
 
@@ -4071,143 +4537,193 @@ function Logout(Controller Exiting)
     if (S != none)
     {
         S.Deaths = PRI.Deaths;
-        S.Kills = PRI.Kills;
-        S.Score = PRI.Score;
+        S.Kills = PRI.DHKills;
+        S.Score = PRI.Score; // No need to add StashedScore here, because it is done on the pawn's death (which it does die)
         S.LastKilledTime = PC.LastKilledTime;
         S.WeaponUnlockTime = PC.WeaponUnlockTime;
         S.WeaponLockViolations = PC.WeaponLockViolations;
-        S.DeathPenaltyCount = PC.DeathPenaltyCount;
+        S.NextChangeTeamTime = PC.NextChangeTeamTime;
+
+        if (PRI.Team != none)
+        {
+            S.TeamIndex = PRI.Team.TeamIndex;
+        }
     }
 }
 
 function int GetNumObjectives()
 {
     local int i;
-    local int count;
+    local int Count;
 
     for (i = 0; i < arraycount(DHObjectives); ++i)
     {
         if (DHObjectives[i] != none)
         {
-            ++count;
+            ++Count;
         }
     }
 
     return count;
 }
 
-// This is called at the start of an attrition round, it develops a random order at which the objectives will unlock
-function AttritionSelectObjectiveOrder()
+function BroadcastSquad(Controller Sender, coerce string Msg, optional name Type)
 {
-    local int i;
+    local DHBroadcastHandler BH;
 
-    AttritionObjOrder.Length = 0; // Clear the array just in case, (we do reset it at the beginning of the round also)
+    BH = DHBroadcastHandler(BroadcastHandler);
 
-    // Build array of objective indices
-    for (i = 0; i < arraycount(DHObjectives); ++i)
+    if (BH != none)
     {
-        if (DHObjectives[i] != none)
-        {
-            AttritionObjOrder[AttritionObjOrder.Length] = i;
-        }
-    }
-
-    // Shuffle the constructed array
-    class'UArray'.static.IShuffle(AttritionObjOrder);
-}
-
-// This function unlocks the next objective that is not active in the attrition objective order
-// It is called when an objective is taken and at the beginning of the round foreach AttritionMaxOpenObj
-function AttritionUnlockObjective(optional int ObjNum)
-{
-    local int i, j, StartIndex;
-
-    StartIndex = class'UArray'.static.IIndexOf(AttritionObjOrder, ObjNum);
-
-    if (StartIndex == -1)
-    {
-        Warn("Issue in AttritionUnlockObjective()");
-        return;
-    }
-
-    // i = 1 so we skip the objective just captured (otherwise it'll pick itself each time due to setting itself inactive in HandleCompletion)
-    for (i = 1; i < AttritionObjOrder.Length; ++i)
-    {
-        j = AttritionObjOrder[(StartIndex + i) % AttritionObjOrder.Length];
-
-        if (DHObjectives[j].IsActive())
-        {
-            continue;
-        }
-        else if (!DHObjectives[j].IsActive())
-        {
-            DHObjectives[j].SetActive(true);
-            break;
-        }
+        BH.BroadcastSquad(Sender, Msg, Type);
     }
 }
 
-// Modified (no super) to (attempt) to prevent continuous fire after the match ends (time for machine gun attempts)
-function EndGame(PlayerReplicationInfo Winner, string Reason)
+function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation, DHSpawnPointBase SP)
 {
-    local Controller P, NextController;
-    local PlayerController Player;
-    local Actor Cam;
-    local ROMinefieldBase Minefield;
-
-    // Turn off all minefields
-    foreach AllActors(class'ROMinefieldBase', Minefield)
+    if (C == none)
     {
-        Minefield.Deactivate();
+        return none;
     }
 
-    foreach AllActors(class'Actor', Cam, LevelInfo.EndCamTag)
+    if (C.PreviousPawnClass != none && C.PawnClass != C.PreviousPawnClass)
     {
-        break;
+        BaseMutator.PlayerChangedClass(C);
     }
 
-    EndGameFocus = Cam;
-
-    if (EndGameFocus != none)
+    // Spawn player pawn
+    if (C.PawnClass != none)
     {
-        EndGameFocus.bAlwaysRelevant = true;
+        C.Pawn = Spawn(C.PawnClass,,, SpawnLocation, SpawnRotation);
     }
 
-    for (P = Level.ControllerList; P != none; P = NextController)
+    // If spawn failed, try again using default player class
+    if (C.Pawn == none)
     {
-        Player = PlayerController(P);
+        C.Pawn = Spawn(GetDefaultPlayerClass(C),,, SpawnLocation, SpawnRotation);
+    }
 
-        if (Player != none)
+    // Hard spawning the player at the spawn location failed, most likely because spawn function was blocked
+    // Try again with black room spawn & teleport them to spawn location
+    if (C.Pawn == none)
+    {
+        DeployRestartPlayer(C, false, true);
+
+        if (C.Pawn != none)
         {
-            if (EndGameFocus != none)
+            if (C.TeleportPlayer(SpawnLocation, SpawnRotation))
             {
-                Player.ClientSetBehindView(false);
-                Player.ClientSetViewTarget(EndGameFocus);
-                Player.SetViewTarget(EndGameFocus);
+                return C.Pawn; // exit as we used old spawn system & don't need to do anything else in this function
             }
             else
             {
-                Player.ClientSetBehindView(true);
+                C.Pawn.Suicide(); // teleport failed & pawn is still in the black room, so kill it
             }
-
-            // Theel: Another attempt to prevent continuous mg fire at game end
-            if (DHPlayer(Player) != none)
-            {
-                DHPlayer(Player).ClientConsoleCommand("pausesounds",false);
-            }
-
-            Player.ClientGameEnded();
         }
-
-        NextController = P.NextController;
-        P.GameHasEnded();
     }
 
-    EndTime = Level.TimeSeconds + EndTimeDelay;
-    bGameEnded = true;
-    TriggerEvent('EndGame', self, none);
-    EndLogging(Reason);
-    GotoState('MatchOver');
+    // Still haven't managed to spawn a player pawn, so go to state 'Dead' & exit
+    if (C.Pawn == none)
+    {
+        C.GotoState('Dead');
+        C.ClientGotoState('Dead', 'Begin');
+
+        return none;
+    }
+
+    // We have a new player pawn, so handle the necessary set up & possession
+    C.TimeMargin = -0.1;
+
+    C.Pawn.LastStartTime = Level.TimeSeconds;
+    C.PreviousPawnClass = C.Pawn.Class;
+    C.Possess(C.Pawn);
+    C.PawnClass = C.Pawn.Class;
+    C.Pawn.PlayTeleportEffect(true, true);
+    C.ClientSetRotation(C.Pawn.Rotation);
+
+    // Set proper spawn kill protection times
+    if (DHPawn(C.Pawn) != none && SP != none)
+    {
+        DHPawn(C.Pawn).SpawnProtEnds = Level.TimeSeconds + SP.SpawnProtectionTime;
+        DHPawn(C.Pawn).SpawnKillTimeEnds = Level.TimeSeconds + SP.SpawnKillProtectionTime;
+        DHPawn(C.Pawn).SpawnPoint = SP;
+    }
+
+    AddDefaultInventory(C.Pawn);
+
+    return C.Pawn;
+}
+
+// Modified so a silent admin can also pause a game when bAdminCanPause is true
+function bool SetPause(bool bPause, PlayerController P)
+{
+    if (P != none && (Level.Netmode == NM_Standalone || (bAdminCanPause && (IsAdmin(P) || P.IsA('Admin'))) || bPauseable))
+    {
+        if (bPause)
+        {
+            Level.Pauser = P.PlayerReplicationInfo;
+        }
+        else
+        {
+            Level.Pauser = none;
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+// Overridden to undo the exclusion of players who hadn't yet selected a role.
+function GetTeamSizes(out int TeamSizes[2])
+{
+    GRI.GetTeamSizes(TeamSizes);
+}
+
+// Moved this here so that we didn't have to restate this function in a variety of places.
+static function BroadcastTeamLocalizedMessage(LevelInfo Level, byte Team, class<LocalMessage> MessageClass, int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
+{
+    local PlayerController PC;
+    local Controller       C;
+
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        if (C.GetTeamNum() == Team)
+        {
+            PC = PlayerController(C);
+
+            if (PC != none)
+            {
+                PC.ReceiveLocalizedMessage(MessageClass, Switch, RelatedPRI_1, RelatedPRI_2, OptionalObject);
+            }
+        }
+    }
+}
+
+function GetServerDetails(out ServerResponseLine ServerState)
+{
+    super.GetServerDetails(ServerState);
+
+    AddServerDetail(ServerState, "Version", Version.ToString());
+}
+
+function bool CanSpectate(PlayerController Viewer, bool bOnlySpectator, Actor ViewTarget)
+{
+    local Controller C;
+    local Pawn P;
+
+    C = Controller(ViewTarget);
+
+    if (C != none)
+    {
+        return C.PlayerReplicationInfo != none &&
+               C.Pawn != none &&
+               (bOnlySpectator || C.PlayerReplicationInfo.Team == Viewer.PlayerReplicationInfo.Team);
+    }
+
+    P = Pawn(ViewTarget);
+
+    return P != none && P.IsPlayerPawn() && (bOnlySpectator || P.PlayerReplicationInfo.Team == Viewer.PlayerReplicationInfo.Team);
 }
 
 defaultproperties
@@ -4218,6 +4734,8 @@ defaultproperties
     bIgnore32PlayerLimit=true // allows more than 32 players
     bVACSecured=true
 
+    ElapsedTimeAttritionCurve=(Points=((InVal=0.0,OutVal=0.0),(InVal=5400.0,OutVal=0.0),(InVal=7200.0,OutVal=500.0),(InVal=10800.0,OutVal=1000.0)))
+
     bSessionKickOnSecondFFViolation=true
     FFDamageLimit=0       // this stops the FF damage system from kicking based on FF damage
     FFKillLimit=4         // new default of 4 unforgiven FF kills before punishment
@@ -4227,12 +4745,16 @@ defaultproperties
     WinLimit=1 // 1 round per map, server admins are able to customize win/rounds to the level in webadmin
     RoundLimit=1
 
+    AccuracyModifier=1.0
+
     MaxTeamDifference=2
     bAutoBalanceTeamsOnDeath=true // if teams become imbalanced it'll force the next player to die to the weaker team
     MaxIdleTime=300
 
     bShowServerIPOnScoreboard=true
     bShowTimeOnScoreboard=true
+
+    EmptyTankUnlockTime=90
 
     // Strings/hints
     ROHints(1)="You can 'cook' a Mk II grenade by pressing %FIRE3% while holding the grenade back."
@@ -4279,6 +4801,7 @@ defaultproperties
     GameName="DarkestHourGame"
 
     // Class references
+    AccessControlClass="DH_Engine.DHAccessControl"
     LoginMenuClass="DH_Interface.DHPlayerSetupPage"
     DefaultPlayerClassName="DH_Engine.DHPawn"
     ScoreBoardType="DH_Interface.DHScoreBoard"
@@ -4295,35 +4818,32 @@ defaultproperties
     GameMessageClass=class'DH_Engine.DHGameMessage'
     TeamAIType(0)=class'DH_Engine.DHTeamAI'
     TeamAIType(1)=class'DH_Engine.DHTeamAI'
+    LocalStatsScreenClass=none // stats screen actor isn't used in RO/DH & this stops the class being pointlessly set & replicated in each PRI
 
-    ChangeTeamInterval=1.0
+    ChangeTeamInterval=120
 
-    ReinforcementMessagePercentages(0)=0.5
-    ReinforcementMessagePercentages(1)=0.25
-    ReinforcementMessagePercentages(2)=0.1
-    ReinforcementMessagePercentages(3)=0.0
+    ReinforcementMessagePercentages(0)=0.75
+    ReinforcementMessagePercentages(1)=0.5
+    ReinforcementMessagePercentages(2)=0.25
+    ReinforcementMessagePercentages(3)=0.10
+    ReinforcementMessagePercentages(4)=0.05
+    ReinforcementMessagePercentages(5)=0.0
 
     Begin Object Class=UVersion Name=VersionObject
-        Major=7
-        Minor=2
-        Patch=3
+        Major=8
+        Minor=0
+        Patch=1
+        Prerelease="beta"
     End Object
     Version=VersionObject
 
     MetricsClass=class'DHMetrics'
     bEnableMetrics=false
     bUseWeaponLocking=true
-    bUseReinforcementWarning=true
-    bPublicPlay=true
 
-    WeaponLockTimes(0)=0
-    WeaponLockTimes(1)=0
-    WeaponLockTimes(2)=5
-    WeaponLockTimes(3)=10
-    WeaponLockTimes(4)=15
-    WeaponLockTimes(5)=20
-    WeaponLockTimes(6)=25
-    WeaponLockTimes(7)=30
-    WeaponLockTimes(8)=45
-    WeaponLockTimes(9)=60
+    WeaponLockTimeSecondsInterval=5
+    WeaponLockTimeSecondsMaximum=120
+
+    bAllowAllChat=true
+    bIsAttritionEnabled=true
 }

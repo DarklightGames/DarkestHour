@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_StielGranateWeapon extends DHExplosiveWeapon;
@@ -16,6 +16,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_StielGranatePickup'
     InventoryGroup=2
 
+    DisplayFOV=80.0
     Mesh=SkeletalMesh'Axis_Granate_1st.German-Grenade-Mesh'
     HighDetailOverlay=shader'Weapons1st_tex.Grenades.stiel_s'
     bUseHighDetailOverlayIndex=true

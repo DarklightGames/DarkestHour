@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 // Displays a list of actions for a chosen player (paradrop options will only display if they are allowed by the server)
@@ -14,7 +14,7 @@ exec function PlayerActionsMenu(string PlayerName)
 
         if (Replicator == none || !Replicator.bParaDropPlayerAllowed) // if paradrops are not enabled on the server then remove those menu options
         {
-            MenuText.Length = MenuText.Length -3;
+            MenuText.Length = MenuText.Length - 3;
             MenuCommand.Length = MenuCommand.Length - 3;
         }
     }

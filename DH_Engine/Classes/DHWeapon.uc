@@ -1,10 +1,17 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHWeapon extends ROWeapon
     abstract;
+
+var     float   SwayNotMovingModifier;
+var     float   SwayRestingModifier;
+var     float   SwayCrouchedModifier;
+var     float   SwayProneModifier;
+var     float   SwayTransitionModifier;
+var     float   SwayLeanModifier;
 
 var     bool    bIsMantling;
 var     float   PlayerIronsightFOV;
@@ -28,14 +35,37 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
 // Modified to prevent firing if player's weapons are locked due to spawn killing, with screen message if the local player
 // Gets called on both client & server, so includes server verification that player's weapons aren't locked (belt & braces as clientside check stops it reaching server)
+// Also modified to set the proper player animations for melee attacks
+// Originally in the projectile weapon class, but moved here as it's possible for non-projectile weapons to be used for bash attacks, e.g. shovels
 simulated function bool StartFire(int Mode)
 {
-    if (Instigator != none && DHPlayer(Instigator.Controller) != none && DHPlayer(Instigator.Controller).AreWeaponsLocked())
+    local class<DHWeaponFire> WF;
+    local DHPlayer PC;
+
+    WF = class<DHWeaponFire>(FireModeClass[Mode]);
+
+    // Certain weapon fire modes are exempt from weapon locking logic (e.g. shovel "digging").
+    if (Instigator != none && (WF == none || !WF.default.bIgnoresWeaponLock))
     {
-        return false;
+        PC = DHPlayer(Instigator.Controller);
+
+        if (PC != none && PC.AreWeaponsLocked())
+        {
+            return false;
+        }
     }
 
-    return super.StartFire(Mode);
+    if (super.StartFire(Mode))
+    {
+        if (FireMode[Mode].bMeleeMode && ROPawn(Instigator) != none)
+        {
+            ROPawn(Instigator).SetMeleeHoldAnims(true);
+        }
+
+        return true;
+    }
+
+    return false;
 }
 
 // Modified to take player out of ironsights if necessary, & to allow for multiple copies of weapon to drop with spread (so they aren't inside each other)
@@ -113,6 +143,24 @@ simulated function SetPlayerFOV(float PlayerFOV)
     if (InstigatorIsLocalHuman())
     {
         PlayerController(Instigator.Controller).DesiredFOV = PlayerFOV;
+    }
+}
+
+// Modified to remove resetting DefaultFOV to hard coded RO value of 85
+simulated function PlayerViewZoom(bool ZoomDirection)
+{
+    bPlayerViewIsZoomed = ZoomDirection;
+
+    if (InstigatorIsHumanControlled())
+    {
+        if (bPlayerViewIsZoomed)
+        {
+            PlayerController(Instigator.Controller).SetFOV(PlayerFOVZoom);
+        }
+        else
+        {
+            PlayerController(Instigator.Controller).ResetFOV();
+        }
     }
 }
 
@@ -489,7 +537,7 @@ simulated function bool WeaponAllowMantle()
 // Determines if the weapon is thrown on death.
 function bool CanDeadThrow()
 {
-    return bCanThrow;
+    return bCanThrow && Level.Game.bAllowWeaponThrowing;
 }
 
 // Modified to avoid "accessed none" Instigator log errors
@@ -563,6 +611,13 @@ static function StaticPrecache(LevelInfo L)
     }
 }
 
+// New functions used by DHPawn to pass lean events to the weapon for
+// possible consumption. Return true to consume the lean event.
+simulated function bool WeaponLeanRight() { return false; }
+simulated function WeaponLeanRightReleased();
+simulated function bool WeaponLeanLeft() { return false; }
+simulated function WeaponLeanLeftReleased();
+
 /////////////////////////////////////////////////////////////
 // New functions to save code repetition in many functions //
 /////////////////////////////////////////////////////////////
@@ -615,15 +670,63 @@ simulated function PlayAnimAndSetTimer(name Anim, float AnimRate, optional float
     }
 }
 
+// Modified to remove the RODebugMode check in ROWeapon, which prevented this from running at all in DHPlayer
+// Don't need to replace that with an equivalent DHDebugMode check because that's already checked in the ShowDebug() exec function that enables this
+simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
+{
+    super(Weapon).DisplayDebug(Canvas, YL, YPos);
+
+    Canvas.DrawText("DisplayFOV =" @ DisplayFOV @ " Default =" @ default.DisplayFOV @ "Zoomed default =" @ IronSightDisplayFOV);
+    YPos += YL;
+    Canvas.SetPos(4.0, YPos);
+}
+
+// New debug exec to toggle the 1st person weapon's HighDetailOverlay (generally a specularity shader) on or off
+exec function ToggleHDO()
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        if (default.HighDetailOverlay != none)
+        {
+            if (HighDetailOverlay == default.HighDetailOverlay)
+            {
+                HighDetailOverlay = none;
+                Log(ItemName @ "disabled HighDetailOverlay:" @ default.HighDetailOverlay);
+            }
+            else
+            {
+                HighDetailOverlay = default.HighDetailOverlay;
+                Log(ItemName @ "enabled HighDetailOverlay :" @ HighDetailOverlay);
+            }
+        }
+        else
+        {
+            Log(ItemName @ "doesn't have a HighDetailOverlay to toggle");
+        }
+    }
+}
+
 defaultproperties
 {
+    // Sway modifiers
+    SwayModifyFactor=0.8
+    SwayNotMovingModifier=0.5
+    SwayRestingModifier=0.25
+    SwayCrouchedModifier=0.9
+    SwayProneModifier=0.5
+    SwayTransitionModifier=4.5
+    SwayLeanModifier=1.25
+
     PlayerIronsightFOV=60.0
-    SwayModifyFactor=0.66
-    BobModifyFactor=0.2
+    BobModifyFactor=1.0
     BobDamping=1.6
     SelectAnimRate=1.0
     PutDownAnimRate=1.0
     ScopeDetail=RO_TextureScope
     FireModeClass(0)=class'ROInventory.ROEmptyFireclass'
     FireModeClass(1)=class'ROInventory.ROEmptyFireclass'
+    CrawlStartAnim="crawl_in"
+    CrawlEndAnim="crawl_out"
+    CrawlForwardAnim="crawlF"
+    CrawlBackwardAnim="crawlB"
 }

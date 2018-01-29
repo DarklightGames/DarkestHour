@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_SovietHelmet extends DH_SovietHeadgear;
@@ -9,5 +9,5 @@ defaultproperties
 {
     bIsHelmet=true
     Mesh=SkeletalMesh'gear_anm.rus_helmet'
-    Skins(0)=texture'DHSovietCharactersTex.RussianHeadgear.DH_rus_headgear'
+    Skins(0)=Texture'DHSovietCharactersTex.RussianHeadgear.DH_rus_headgear'
 }

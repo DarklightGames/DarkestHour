@@ -1,13 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHVehicleFactory extends ROVehicleFactory
     abstract;
 
-var(ROVehicleFactory)   name    FactoryDepletedEvent; // option for specified event to be triggered if factory reaches its vehicle limit (i.e. won't spawn any more)
+var(ROVehicleFactory)   name    FactoryDepletedEvent; // option for specified event to be triggered if the last vehicle the factory can spawn is killed/destroyed
 
+var     bool    bLastVehicle;            // on the last vehicle this factory is meant to spawn
 var     bool    bControlledBySpawnPoint; // flags that this factory is activated or deactivated by a spawn point, based on whether that spawn is active (set by SP)
 
 // Modified to call UpdatePrecacheMaterials(), allowing any subclassed factory materials to be cached
@@ -20,19 +21,55 @@ simulated function PostBeginPlay()
     }
 }
 
-// Modified so doesn't activate if controlled by a spawn point (similar to if linked to a spawn area)
+// Modified so if factory is controlled by a spawn point, we don't activate or deactivate the factory, instead leaving that to the spawn point
 function Reset()
 {
     TotalSpawnedVehicles = 0;
 
-    if (!bUsesSpawnAreas && !bControlledBySpawnPoint)
+    if (!bControlledBySpawnPoint)
     {
-        SpawnVehicle();
-        Activate(TeamNum);
+        if (bUsesSpawnAreas)
+        {
+            Deactivate();
+        }
+        else
+        {
+            SpawnVehicle();
+            Activate(TeamNum);
+        }
     }
-    else
+}
+
+// Modified so if factory is controlled by a spawn point, we add a slight timer delay before a vehicle gets spawned
+// This is because at start of round, all actors get Reset(), but factories are left until last as otherwise the vehicles they spawn also get reset & destroyed
+// But if controlled by a spawn point, the spawn gets reset earlier & if it's initially active that causes any linked factory to activate & spawn a vehicle
+// The vehicle would then get reset too, causing it to destroy itself, so as a workaround we need to add this slight delay before spawning the vehicle
+function Activate(ROSideIndex T)
+{
+    if (!bFactoryActive || TeamNum != T)
     {
-        Deactivate();
+        TeamNum = T;
+        bFactoryActive = true;
+        SpawningBuildEffects = true;
+
+        if (bControlledBySpawnPoint)
+        {
+            SetTimer(0.5, false);
+        }
+        else
+        {
+            Timer();
+        }
+    }
+}
+
+event VehicleDestroyed(Vehicle V)
+{
+    super.VehicleDestroyed(V);
+
+    if (bLastVehicle)
+    {
+        TriggerEvent(FactoryDepletedEvent, self, none);
     }
 }
 
@@ -89,7 +126,7 @@ function SpawnVehicle()
             // Trigger any FactoryDepletedEvent if factory has reached its vehicle limit
             if (FactoryDepletedEvent != '' && TotalSpawnedVehicles >= VehicleRespawnLimit)
             {
-                TriggerEvent(FactoryDepletedEvent, self, none);
+                bLastVehicle = true;
             }
         }
         else

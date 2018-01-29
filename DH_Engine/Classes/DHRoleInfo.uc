@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHRoleInfo extends RORoleInfo
@@ -9,18 +9,18 @@ class DHRoleInfo extends RORoleInfo
 
 struct RolePawn
 {
-    var class<Pawn>     PawnClass; // possible pawn class for this role
-    var float           Weight;    // weighting to be assigned to this choice if randomly selected from a list
+    var() class<Pawn>       PawnClass;              // possible pawn class for this role
+    var() float             Weight;                 // weighting to be assigned to this choice if randomly selected from a list
 };
 
-var     array<RolePawn>     RolePawns;              // list of possible pawn classes for this role, selected randomly (with weighting) if more than 1
+var()   array<RolePawn>     RolePawns;              // list of possible pawn classes for this role, selected randomly (with weighting) if more than 1
 var     array<float>        HeadgearProbabilities;  // chance of each Headgear type being randomly selected (linked to Headgear array in RORoleInfo)
 
 var     bool                bIsArtilleryOfficer;    // role has functionality of an artillery officer
 var     bool                bCanUseMortars;         // role has functionality of a mortar operator
 var     bool                bIsMortarObserver;      // role has functionality of a mortar observer
 
-var()   int                 AddedReinforcementTime; // optional extra time in seconds before re-spawning
+var     int                 AddedReinforcementTime; // extra time in seconds before re-spawning
 
 // Modified to include GivenItems array, & to just call StaticPrecache on the DHWeapon item (which now handles all related pre-caching)
 // Also to avoid pre-cache stuff on a server & avoid accessed none errors

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_ShermanTank_British extends DH_ShermanTank;
@@ -9,8 +9,8 @@ class DH_ShermanTank_British extends DH_ShermanTank;
 
 defaultproperties
 {
-    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Brit_Sherman_Dest'
     VehicleNameString="Sherman Mk.II"
-    Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Brit_Sherman_body_ext'
-    CannonSkins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Brit_Sherman_body_ext'
+    Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.Brit_Sherman_body_ext'
+    CannonSkins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.Brit_Sherman_body_ext'
+    DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Brit_Sherman_Dest'
 }

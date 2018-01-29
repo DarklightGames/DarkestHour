@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHPassengerPawn extends DHVehicleWeaponPawn
@@ -8,19 +8,23 @@ class DHPassengerPawn extends DHVehicleWeaponPawn
 
 /**
 Matt UK, November 2014 - added new system to avoid rider pawns needing to exist on net clients unless rider position is occupied
-Each rider pawn that exists on a client is a net channel that has to be maintained & updated by the server.
-The new system can substantially cut down the number of net channels & associated replication, especially in maps with lots of vehicles.
-We toggle the bTearOff flag for each rider pawn when it is unoccupied/occupied, which causes the usual clientside simulated actors to spawn or be destroyed.
-When bTearOff is set, the actor stops being net relevant & the server closes the channel, stops replicating the actor & destroys the clientside version.
-The trick is to stop the actor from actually being torn off on the client, otherwise that causes us big problems & breaks the system.
-There is a built-in delay of 5 seconds before the server decides the actor isn't net relevant, closes the channel & destroys the clientside actor.
-If a player switches back to the old rider position within these 5 secs, we need them to re-occupy the existing rider pawn & abort closing the channel.
-I've found a way to achieve this is to delay the next NetUpdateTime to be >5 seconds in the future, which delays bTearOff from replicating to clients.
-That way the server closes the channel & destroys the clientside actor before bTearOff is sent to the client, so it never actually gets torn off.
-And if a player re-enters the rider position during these 5 secs, we just change bTearOff back to false & it becomes net relevant again.
-A further complication is when a player exits a rider pawn, we need to introduce a very short delay before setting bTearOff on server, so a 0.5 sec timer is used.
-This is necessary to allow properties updated on exit (e.g. Owner, Driver & PRI all none) to replicate to clients before shutting down all net traffic.
-Changes in other classes: slight modifications to functions NumPassengers in Vehicle classes & DrawVehicleIcon in DHHud, to work with new system & avoid errors.
+Each rider pawn that exists on a client is a net channel that has to be maintained & updated by the server
+The new system can substantially cut down the number of net channels & associated replication, especially in maps with lots of vehicles
+What we need is a way of making the server stop replicating an empty rider pawn & cause any client versions of that actor to be destroyed
+But that's actually hard to do; there isn't a simple instruction that makes a server do it
+We can't just set RemoteRole to none, as that doesn't destroy any existing client actors, it just stops any further replicated info reaching them
+As a workaround, on a server we toggle the bTearOff networking flag based on whether a rider pawn is unoccupied or occupied
+Setting bTearOff on the server stops the actor being considered net relevant & stops further replication for it
+Then, after a built-in engine delay of 5 seconds, the server closes the channel & destroys all existing replicated client versions of the actor
+But the trick is to stop the actor from actually being torn off on clients, otherwise it leaves independent client actor copies, which must be avoided
+Also, if a player switches into this rider position within these 5 seconds, we need to abort closing the net channel & destroying the client actors
+I found a way to achieve all this is to delay next NetUpdateTime to be >5 seconds in the future, which delays bTearOff from replicating to clients
+That way the server closes the channel & destroys the client actor before bTearOff is sent to the client, so it never actually gets torn off
+And if a player re-enters the rider position during these 5 seconds, we simply change bTearOff back to false & it becomes net relevant again
+A further complication is when player exits rider pawn we must introduce a short delay before setting bTearOff on server, so a 0.5 sec timer is used
+That's necessary to allow properties updated on exit (e.g. Owner, Driver & PRI to none) to replicate to clients before shutting down all net traffic
+Changes in other classes: when a DHVehicle spawns on net client, match WeaponPawns.Length to PassengerPawns.Length to account for 'missing' rider pawns
+And always check a WeaponPawns array member exists before trying to do anything with it, as rider pawns may not exist on client (good practice anyway)
 */
 
 // An array of subclasses, one specifically assigned for each index position in the vehicle's WeaponPawns array, so this actor knows its own PositionInArray
@@ -35,10 +39,15 @@ var     bool    bUseDriverHeadBoneCam; // use the driver's head bone for the cam
 //  ************ ACTOR INITIALISATION, DESTRUCTION & KEY ENGINE EVENTS  ***********  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+// Emptied out as the Super in ROVehicleWeaponPawn only tries to spawn a non-existent GunClass
+function BeginPlay()
+{
+}
+
 // Modified to set bTearOff to true on a server, which stops this rider pawn being replicated to clients (until entered, when we unset bTearOff)
 simulated function PostBeginPlay()
 {
-    super(Vehicle).PostBeginPlay(); // skip over Super in DHVehicleWeaponPawn as it contains nothing relevant to a passenger
+    super.PostBeginPlay();
 
     if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
     {
@@ -46,9 +55,9 @@ simulated function PostBeginPlay()
     }
 }
 
-// Sets bTearOff to true on a server when player exits, purely so server decides the actor is no longer net relevant, kills off the clientside actor & closes the net channel
-// But we don't want the clientside actor to actually get torn off, as that would cause us big problems, so we have to stop bTearOff from reaching the client
-// So we delay the next update to the client for longer than the server's 5 second delay before it kills a clientside actor after it becomes net irrelevant
+// Sets bTearOff to true on server after player exits, so server decides actor is no longer net relevant, closes the net channel & destroys client actor
+// But we don't want the client actor to actually get torn off, as that would cause us big problems, so we have to stop bTearOff from reaching the client
+// So we delay next update to client for longer than server's 5 second built-in delay before it destroys client actor after it stops being net relevant
 function Timer()
 {
     if (!bDriving && !bTearOff && (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer))
@@ -95,11 +104,11 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     // Adjust camera location for any FPCamPos offset positioning
     if (FPCamPos != vect(0.0, 0.0, 0.0))
     {
-        CameraLocation = CameraLocation + (FPCamPos >> CameraRotation);
+        CameraLocation += (FPCamPos >> CameraRotation);
     }
 
     // Finalise the camera with any shake
-    CameraLocation = CameraLocation + (PC.ShakeOffset >> PC.Rotation);
+    CameraLocation += (PC.ShakeOffset >> PC.Rotation);
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
 }
 
@@ -117,78 +126,53 @@ simulated function DrawHUD(Canvas C)
     }
 }
 
-// From deprecated ROPassengerPawn
+// Modified (from deprecated ROPassengerPawn) to use the vehicle's WeaponBone we now use to attach this passenger, instead of the confusing CameraBone
 simulated function vector GetCameraLocationStart()
 {
     if (VehicleBase != none)
     {
-        return VehicleBase.GetBoneCoords(CameraBone).Origin;
+        return VehicleBase.GetBoneCoords(VehicleBase.PassengerWeapons[PositionInArray].WeaponBone).Origin;
     }
 
     return Location;
+}
+
+// Modified so the player's view starts facing the same way his attached pawn is facing, which feels natural
+simulated function SetInitialViewRotation()
+{
+    local name    AttachBone;
+    local vector  FacingDirection;
+    local rotator NewRotation;
+
+    if (VehicleBase != none)
+    {
+        AttachBone = VehicleBase.PassengerWeapons[PositionInArray].WeaponBone;
+        FacingDirection = vector(VehicleBase.GetBoneRotation(AttachBone)) >> DriveRot; // apply DriveRot to attachment bone's rotation to get player's initial world facing direction
+        NewRotation = rotator(FacingDirection << VehicleBase.Rotation);                // now make that relative to vehicle's rotation (standard in weapon pawns)
+        NewRotation.Pitch = LimitPitch(NewRotation.Pitch);
+        SetRotation(NewRotation);
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ***************************** VEHICLE ENTRY & EXIT ***************************** //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// From deprecated ROPassengerPawn, which removed all 'Gun' references from the Supers
-// Modified to unset bTearOff on a server, which makes this rider pawn potentially relevant to clients & always to the one entering the rider position
-// Also to set rotation to match the way the rider is facing, so his view starts facing the same way, & to remove redundancy & optimise the ordering of the function
+// Modified to unset bTearOff on a server, which makes this rider pawn potentially relevant to net clients & always to the one entering the rider position
 function KDriverEnter(Pawn P)
 {
-    local Controller C;
-    local rotator    NewRotation;
-
-    // On a server, disable bTearOff so this actor replicates to relevant net clients
     if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
     {
+        if (P == none || (P.Controller == none && !(P.IsA('DHPawn') && DHPawn(P).SwitchingController != none)))
+        {
+            return; // shouldn't happen, but the Super will fail if it can't get a pawn & controller, so this safeguard stops us tearing off if nothing is going to happen
+        }
+
         SetTimer(0.0, false); // clear any timer, so we don't risk setting bTearOff to true again just after we enter
-        bTearOff = false;     // don't need to do quick net update as normal entering sequence already does it
+        bTearOff = false;     // note we don't need to force a quick net update of bTearOff, as normal possession functionality does it
     }
 
-    bDriving = true;
-    StuckCount = 0;
-
-    // Set player's current controller to control this vehicle pawn instead & make the player our 'Driver'
-    C = P.Controller;
-    Driver = P;
-    Driver.StartDriving(self);
-
-    // Make the player unpossess its DHPawn body & possess this vehicle pawn
-    C.bVehicleTransition = true; // to keep Bots from doing Restart()
-    C.Unpossess();
-    Driver.SetOwner(self); // this keeps the driver relevant
-    C.Possess(self);
-    C.bVehicleTransition = false;
-    DrivingStatusChanged();
-    Level.Game.DriverEnteredVehicle(self, P);
-
-    // Match player's rotation to match the way the rider is facing, so his view starts facing the same way
-    NewRotation.Yaw = DriveRot.Yaw;
-    SetRotation(NewRotation);
-    Driver.bSetPCRotOnPossess = false; // so when player gets out, he'll be facing the same direction as he was in the vehicle
-
-    if (PlayerController(C) != none)
-    {
-        VehicleLostTime = 0.0;
-    }
-
-    if (VehicleBase != none)
-    {
-        VehicleBase.ResetTime = Level.TimeSeconds - 1.0; // cancel any CheckReset timer as vehicle now occupied
-    }
-}
-
-// Modified to set rotation to match the way the rider is facing, so his view starts facing the same way
-simulated function ClientKDriverEnter(PlayerController PC)
-{
-    local rotator NewRotation;
-
-    super.ClientKDriverEnter(PC);
-
-    NewRotation.Yaw = DriveRot.Yaw;
-    SetRotation(NewRotation);
+    super.KDriverEnter(P);
 }
 
 // Modified (from deprecated ROPassengerPawn) to avoid confusing attachment to CameraBone & instead use the usual WeaponBone specified in the vehicle's PassengerWeapons array
@@ -209,19 +193,19 @@ simulated function AttachDriver(Pawn P)
     }
 }
 
-// Modified to set bTearOff to true (after a short timer) on a server when player exits, which kills off the clientside actor & closes the net channel
-// Need to use timer to add short delay, to allow properties updated on exit (e.g. Owner, Driver & PRI all none) to replicate to client before shutting down all net traffic
-simulated event DrivingStatusChanged() // TODO: think this fits better in DriverLeft() as only happens on server, which will now always get DriverLeft
+// Modified to set bTearOff to true, after a short timer, on a server when player exits, which causes server to close the net channel & destroy client actor
+// Need to use a short delay to allow properties updated on exit (e.g. Owner, Driver & PRI all to none) to replicate to client before shutting down net traffic
+function DriverLeft()
 {
-    super.DrivingStatusChanged();
+    super.DriverLeft();
 
-    if (!bDriving && (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer))
+    if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
     {
         SetTimer(0.5, false);
     }
 }
 
-// Modified to remove need to have specified CameraBone, which is irrelevant (in conjunction with modified AttachDriver)
+// Modified (from deprecated ROPassengerPawn) to remove need to have specified CameraBone, which is irrelevant (in conjunction with modified AttachDriver)
 simulated function DetachDriver(Pawn P)
 {
     P.PrePivot = P.default.PrePivot;
@@ -261,7 +245,7 @@ simulated function InitializeVehicleBase()
     super.InitializeVehicleBase();
 }
 
-// From ROPassengerPawn
+// From deprecated ROPassengerPawn
 function float ModifyThreat(float Current, Pawn Threat)
 {
     if (Vehicle(Threat) != none)
@@ -273,8 +257,10 @@ function float ModifyThreat(float Current, Pawn Threat)
 }
 
 // Functions emptied out as a passenger pawn has no VehicleWeapon:
-function BeginPlay(); // the Super only tries to spawn the GunClass, which is none
 simulated function InitializeVehicleWeapon();
+simulated function InitializeVehicleAndWeapon();
+function bool CanFire() { return false; }
+function bool ArePlayersWeaponsLocked(optional bool bNoScreenMessage) { return false; }
 function Fire(optional float F); // prevents unnecessary replicated VehicleFire() function calls to server
 function VehicleFire(bool bWasAltFire);
 event FiredPendingPrimary();
@@ -283,18 +269,20 @@ function VehicleCeaseFire(bool bWasAltFire);
 function ClientVehicleCeaseFire(bool bWasAltFire);
 function ClientOnlyVehicleCeaseFire(bool bWasAltFire);
 function bool StopWeaponFiring() { return false; }
+simulated function IncrementRange();
+simulated function DecrementRange();
+simulated function bool CanReload() { return false; }
+function CheckResumeReloadingOnEntry();
 function float GetAmmoReloadState() { return 0.0; }
+function bool ResupplyAmmo() { return false; }
 simulated event SetRotatingStatus(byte NewRotationStatus);
 simulated function ServerSetRotatingStatus(byte NewRotatingStatus);
-function bool ResupplyAmmo() { return false; }
 
 defaultproperties
 {
     bPassengerOnly=true
     bSinglePositionExposed=true
-    bZeroPCRotOnEntry=false // no point, as on entering we're now setting rotation to match the way the rider is facing
     bUseDriverHeadBoneCam=true
-    WeaponFOV=90.0
     HudName="Rider"
 
     PassengerClasses(0)=class'DH_Engine.DHPassengerPawnZero'
@@ -307,4 +295,5 @@ defaultproperties
     PassengerClasses(7)=class'DH_Engine.DHPassengerPawnSeven'
     PassengerClasses(8)=class'DH_Engine.DHPassengerPawnEight'
     PassengerClasses(9)=class'DH_Engine.DHPassengerPawnNine'
+    PassengerClasses(10)=class'DH_Engine.DHPassengerPawnTen'
 }

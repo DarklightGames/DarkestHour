@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 // Implementation is based on minimal-json (github.com/ralfstx/minimal-json)
 //==============================================================================
@@ -15,6 +15,34 @@ function JSONValue Parse(string S)
     InputBuffer.Write(S);
 
     return ReadValue();
+}
+
+function JSONArray ParseArray(string S)
+{
+    local JSONValue ParseValue;
+
+    ParseValue = Parse(S);
+
+    if (ParseValue != none)
+    {
+        return ParseValue.AsArray();
+    }
+
+    return none;
+}
+
+function JSONObject ParseObject(string S)
+{
+    local JSONValue ParseValue;
+
+    ParseValue = Parse(S);
+
+    if (ParseValue != none)
+    {
+        return ParseValue.AsObject();
+    }
+
+    return none;
 }
 
 function JSONValue ReadValue()
@@ -267,7 +295,7 @@ function string ReadEscape()
         case "t":   // Tab
             return Chr(0x09);
         case "u":   // Unicode character (eg. \u0820)
-            return Chr(class'UString'.static.Hex2Int(InputBuffer.Read(4)));
+            return Chr(class'UInteger'.static.FromHex(InputBuffer.Read(4)));
     }
 }
 

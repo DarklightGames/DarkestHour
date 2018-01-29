@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHDeployMenu extends UT2K4GUIPage;
@@ -9,6 +9,12 @@ enum ELoadoutMode
 {
     LM_Equipment,
     LM_Vehicle
+};
+
+enum EMapMode
+{
+    MODE_Map,
+    MODE_Squads
 };
 
 var automated   FloatingImage               i_Background;
@@ -35,8 +41,11 @@ var automated   GUIButton                       b_EquipmentButton;
 var automated   GUIImage                        i_EquipmentButton;
 var automated   GUIButton                       b_VehicleButton;
 var automated   GUIImage                        i_VehiclesButton;
+var automated   ROGUIProportionalContainer  MapSquadsTabContainer;
 var automated   GUIButton                   b_MapButton;
 var automated   GUIImage                    i_MapButton;
+var automated   GUIButton                   b_SquadsButton;
+var automated   GUIImage                    i_SquadsButton;
 var automated   GUILabel                    l_Loadout;
 var automated   ROGUIProportionalContainer  c_Loadout;
 var automated   ROGUIProportionalContainer      c_Equipment;
@@ -45,6 +54,8 @@ var automated   ROGUIProportionalContainer  c_MapRoot;
 var automated   ROGUIProportionalContainer      c_Map;
 var automated   GUIImage                            i_MapBorder;
 var automated   DHGUIMapComponent                   p_Map;
+var automated   ROGUIProportionalContainer      c_Squads;
+var automated   DHGUISquadsComponent                p_Squads;
 var automated   ROGUIProportionalContainer  c_Footer;
 var automated   GUILabel                    l_Status;
 var automated   GUIImage                        i_PrimaryWeapon;
@@ -52,6 +63,9 @@ var automated   GUIImage                        i_SecondaryWeapon;
 var automated   GUIImage                        i_Vehicle;
 var automated   GUIGFXButton                    i_SpawnVehicle;
 var automated   GUIGFXButton                    i_ArtilleryVehicle;
+var automated   GUIGFXButton                    i_SupplyVehicle;
+var automated   GUIGFXButton                    i_MaxVehicles;
+var automated   GUILabel                        l_MaxVehicles;
 var automated   DHmoComboBox                cb_PrimaryWeapon;
 var automated   DHmoComboBox                cb_SecondaryWeapon;
 var automated   GUIImage                    i_GivenItems[5];
@@ -64,6 +78,7 @@ var automated   GUIImage                    i_Arrows;
 var automated   array<GUIButton>            b_MenuOptions;
 
 var DHGameReplicationInfo                   GRI;
+var DHSquadReplicationInfo                  SRI;
 var DHPlayerReplicationInfo                 PRI;
 var DHPlayer                                PC;
 
@@ -73,22 +88,33 @@ var localized   string                      SelectSpawnPointText;
 var localized   string                      DeployInTimeText;
 var localized   string                      DeployNowText;
 var localized   string                      ReservedString;
+var localized   string                      ChangeTeamConfirmText;
+var localized   string                      FreeChangeTeamConfirmText;
+var localized   string                      CantChangeTeamYetText;
+var localized   string                      LockText;
+var localized   string                      UnlockText;
 var localized   string                      VehicleUnavailableString;
+var localized   string                      LockedText;
+var localized   string                      BotsText;
 
-// Colin: The reason this variable is needed is because the PlayerController's
+// NOTE: The reason this variable is needed is because the PlayerController's
 // GetTeamNum function is not reliable after receiving a successful team change
 // signal from InternalOnMessage.
 var             byte                        CurrentTeam;
-var             float                       NextChangeTeamTime;
 
 var             ELoadoutMode                LoadoutMode;
 
-var             byte                        SpawnPointIndex;
+var             int                         SpawnPointIndex;
 var             byte                        SpawnVehicleIndex;
 
 var             bool                        bButtonsEnabled;
 
 var             material                    VehicleNoneMaterial;
+
+var             EMapMode                    MapMode;
+
+var Texture LockIcon;
+var Texture UnlockIcon;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -130,10 +156,17 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     LoadoutTabContainer.ManageComponent(i_EquipmentButton);
     LoadoutTabContainer.ManageComponent(i_VehiclesButton);
 
+    MapSquadsTabContainer.ManageComponent(b_MapButton);
+    MapSquadsTabContainer.ManageComponent(b_SquadsButton);
+    MapSquadsTabContainer.ManageComponent(i_MapButton);
+    MapSquadsTabContainer.ManageComponent(i_SquadsButton);
+
     c_MapRoot.ManageComponent(c_Map);
 
     c_Map.ManageComponent(i_MapBorder);
     c_Map.ManageComponent(p_Map);
+
+    c_Squads.ManageComponent(p_Squads);
 
     c_Equipment.ManageComponent(i_PrimaryWeapon);
     c_Equipment.ManageComponent(i_SecondaryWeapon);
@@ -152,9 +185,21 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     c_Vehicle.ManageComponent(i_Vehicle);
     c_Vehicle.ManageComponent(i_SpawnVehicle);
     c_Vehicle.ManageComponent(i_ArtilleryVehicle);
+    c_Vehicle.ManageComponent(i_SupplyVehicle);
     c_Vehicle.ManageComponent(lb_Vehicles);
+    c_Vehicle.ManageComponent(i_MaxVehicles);
+    c_Vehicle.ManageComponent(l_MaxVehicles);
 
     c_Roles.ManageComponent(lb_Roles);
+
+    if (PC != none)
+    {
+        SetMapMode(EMapMode(PC.DeployMenuStartMode));
+    }
+    else
+    {
+        SetMapMode(MODE_Map);
+    }
 }
 
 function SetLoadoutMode(ELoadoutMode Mode)
@@ -163,7 +208,7 @@ function SetLoadoutMode(ELoadoutMode Mode)
 
     LoadoutMode = Mode;
 
-    // Colin: GUIComponent visibility is not properly hierarchical, so we
+    // GUIComponent visibility is not properly hierarchical, so we
     // need to hide and show elements individually.
     i_Vehicle.SetVisibility(Mode == LM_Vehicle);
     lb_Vehicles.SetVisibility(Mode == LM_Vehicle);
@@ -171,8 +216,8 @@ function SetLoadoutMode(ELoadoutMode Mode)
     i_PrimaryWeapon.SetVisibility(Mode == LM_Equipment);
     i_SecondaryWeapon.SetVisibility(Mode == LM_Equipment);
 
-    cb_PrimaryWeapon.SetVisibility(Mode == LM_Equipment && cb_PrimaryWeapon.ItemCount() > 0);
-    cb_SecondaryWeapon.SetVisibility(Mode == LM_Equipment && cb_SecondaryWeapon.ItemCount() > 0);
+    cb_PrimaryWeapon.SetVisibility(Mode == LM_Equipment && cb_PrimaryWeapon.ItemCount() > 1);
+    cb_SecondaryWeapon.SetVisibility(Mode == LM_Equipment && cb_SecondaryWeapon.ItemCount() > 1);
 
     for (i = 0; i < arraycount(i_GivenItems); ++i)
     {
@@ -189,14 +234,16 @@ function SetLoadoutMode(ELoadoutMode Mode)
             b_VehicleButton.EnableMe();
             i_SpawnVehicle.SetVisibility(false);
             i_ArtilleryVehicle.SetVisibility(false);
-
+            i_SupplyVehicle.SetVisibility(false);
+            i_MaxVehicles.SetVisibility(false);
+            l_MaxVehicles.SetVisibility(false);
             break;
+
         case LM_Vehicle:
             b_EquipmentButton.EnableMe();
             b_VehicleButton.DisableMe();
-            i_VehiclesButton.Image = material'DH_GUI_Tex.DeployMenu.vehicles';
+            i_VehiclesButton.Image = Material'DH_GUI_Tex.DeployMenu.vehicles';
             UpdateVehicleImage();
-
             break;
     }
 
@@ -206,11 +253,11 @@ function SetLoadoutMode(ELoadoutMode Mode)
 
 function Timer()
 {
-    // Colin: The GRI might not be set when we first open the menu if the player
+    // The GRI might not be set when we first open the menu if the player
     // opens it very quickly. This timer will sit and wait until the GRI is
     // confirmed to be present before populating any lists or running any
     // regular timer logic.
-    local byte Team;
+    local int TeamIndex;
 
     if (GRI == none)
     {
@@ -218,41 +265,47 @@ function Timer()
 
         if (GRI != none)
         {
-            // Colin: Now that we have the GRI, we can set the Allied flag on
+            // Now that we have the GRI, we can set the Allied flag on
             // the team button.
             switch (GRI.AlliedNationID)
             {
                 case 0: // USA
-                    i_Allies.Image = material'DH_GUI_tex.DeployMenu.flag_usa';
+                    i_Allies.Image = Material'DH_GUI_tex.DeployMenu.flag_usa';
                     break;
                 case 1: // UK
-                    i_Allies.Image = material'DH_GUI_tex.DeployMenu.flag_uk';
+                    i_Allies.Image = Material'DH_GUI_tex.DeployMenu.flag_uk';
                     break;
                 case 2: // Canada
-                    i_Allies.Image = material'DH_GUI_tex.DeployMenu.flag_canada';
+                    i_Allies.Image = Material'DH_GUI_tex.DeployMenu.flag_canada';
                     break;
                 case 3: // USSR
-                    i_Allies.Image = material'DH_GUI_tex.DeployMenu.flag_ussr';
+                    i_Allies.Image = Material'DH_GUI_tex.DeployMenu.flag_ussr';
                     break;
             }
 
-            // Colin: This bullshit is used by RO code to circumvent the
+            // This bullshit is used by RO code to circumvent the
             // fact we can't send initialization parameters to the menu.
+            // SHOCKING: we actually can, but they never used it!
             if (PC.ForcedTeamSelectOnRoleSelectPage != -5)
             {
-                Team = PC.ForcedTeamSelectOnRoleSelectPage;
+                TeamIndex = PC.ForcedTeamSelectOnRoleSelectPage;
                 PC.ForcedTeamSelectOnRoleSelectPage = -5;
             }
             else
             {
-                Team = PC.GetTeamNum();
+                TeamIndex = PC.GetTeamNum();
             }
 
-            OnTeamChanged(Team);
+            OnTeamChanged(TeamIndex);
 
-            // Colin: Automatically select the player's spawn point.
-            p_Map.SelectSpawnPoint(PC.SpawnPointIndex, PC.SpawnVehicleIndex);
+            // Automatically select the player's spawn point.
+            p_Map.SelectSpawnPoint(PC.SpawnPointIndex);
         }
+    }
+
+    if (SRI == none)
+    {
+        SRI = PC.SquadReplicationInfo;
     }
 
     if (PRI == none)
@@ -269,12 +322,15 @@ function Timer()
         UpdateButtons();
         UpdateSpawnPoints();
     }
+
+    if (SRI != none)
+    {
+        UpdateSquads();
+    }
 }
 
 function UpdateRoundStatus()
 {
-    local int RoundTime;
-
     if (GRI != none)
     {
         if (GRI.AttritionRate[CurrentTeam] > 0.0)
@@ -288,7 +344,13 @@ function UpdateRoundStatus()
             i_Reinforcements.ImageColor = class'UColor'.default.White;
         }
 
-        if (GRI.SpawnsRemaining[CurrentTeam] == -1)
+        if (GRI.bIsInSetupPhase)
+        {
+            l_Reinforcements.Caption = "???";
+            l_Reinforcements.TextColor = class'UColor'.default.White;
+            i_Reinforcements.ImageColor = class'UColor'.default.White;
+        }
+        else if (GRI.SpawnsRemaining[CurrentTeam] == -1)
         {
             l_Reinforcements.Caption = GRI.ReinforcementsInfiniteText;
         }
@@ -309,42 +371,15 @@ function UpdateRoundStatus()
             i_SizeAdvantage.Hide();
         }
 
-        if (!GRI.bMatchHasBegun)
-        {
-            RoundTime = Max(0, GRI.RoundStartTime + GRI.PreStartTime - GRI.ElapsedTime);
-        }
-        else
-        {
-            RoundTime = Max(0, GRI.RoundEndTime - GRI.ElapsedTime);
-        }
-
-        if (GRI.RoundDuration == 0)
+        if (GRI.DHRoundDuration == 0 && GRI.bMatchHasBegun)
         {
             l_RoundTime.Caption = class'DHHud'.default.NoTimeLimitText;
         }
         else
         {
-            l_RoundTime.Caption = class'TimeSpan'.static.ToString(Max(0, RoundTime));
+            l_RoundTime.Caption = class'TimeSpan'.static.ToString(GRI.GetRoundTimeRemaining());
         }
     }
-}
-
-function GetMapCoords(vector Location, out float X, out float Y, optional float Width, optional float Height)
-{
-    local float MapScale;
-    local vector MapCenter;
-
-    MapScale = FMax(1.0, Abs((GRI.SouthWestBounds - GRI.NorthEastBounds).X));
-    MapCenter = GRI.NorthEastBounds + ((GRI.SouthWestBounds - GRI.NorthEastBounds) * 0.5);
-    Location = DHHud(PlayerOwner().MyHud).GetAdjustedHudLocation(Location - MapCenter, false);
-
-    X = FClamp(0.5 + (Location.X / MapScale) - (Width / 2),
-               0.0,
-               1.0 - Width);
-
-    Y = FClamp(0.5 + (Location.Y / MapScale) - (Height / 2),
-               0.0,
-               1.0 - Height);
 }
 
 function int GetSelectedVehiclePoolIndex()
@@ -363,128 +398,37 @@ function int GetSelectedVehiclePoolIndex()
 
 function UpdateSpawnPoints()
 {
-    local int i;
-    local float X, Y;
-    local DHRoleInfo RI;
-    local vector L;
-    local eFontScale FS;
+    local int RoleIndex;
+    local byte TeamIndex;
 
-    RI = DHRoleInfo(li_Roles.GetObject());
-
-    // Spawn points
-    for (i = 0; i < arraycount(p_Map.b_SpawnPoints); ++i)
+    if (GRI != none)
     {
-        if (GRI != none &&
-            GRI.SpawnPoints[i] != none &&
-            GRI.SpawnPoints[i].TeamIndex == CurrentTeam &&
-            GRI.IsSpawnPointIndexActive(i))
-        {
-            GetMapCoords(GRI.SpawnPoints[i].Location, X, Y, p_Map.b_SpawnPoints[i].WinWidth, p_Map.b_SpawnPoints[i].WinHeight);
-
-            p_Map.b_SpawnPoints[i].Tag = i;
-            p_Map.b_SpawnPoints[i].SetPosition(X, Y, p_Map.b_SpawnPoints[i].WinWidth, p_Map.b_SpawnPoints[i].WinHeight, true);
-            p_Map.b_SpawnPoints[i].SetVisibility(true);
-
-            if (GRI.AreSpawnSettingsValid(CurrentTeam, RI, i, GetSelectedVehiclePoolIndex(), 255))
-            {
-                p_Map.b_SpawnPoints[i].MenuStateChange(MSAT_Blurry);
-            }
-            else
-            {
-                if (SpawnPointIndex == p_Map.b_SpawnPoints[i].Tag)
-                {
-                    p_Map.SelectSpawnPoint(255, 255);
-                }
-
-                p_Map.b_SpawnPoints[i].MenuStateChange(MSAT_Disabled);
-            }
-        }
-        else
-        {
-            // If spawn point that was previously selected is now hidden,
-            // deselect it.
-            p_Map.b_SpawnPoints[i].SetVisibility(false);
-
-            if (SpawnPointIndex == p_Map.b_SpawnPoints[i].Tag)
-            {
-                p_Map.SelectSpawnPoint(255, 255);
-            }
-        }
+        RoleIndex = GRI.GetRoleIndexAndTeam(DHRoleInfo(li_Roles.GetObject()), TeamIndex);
+    }
+    else
+    {
+        RoleIndex = -1;
     }
 
-    // Spawn Vehicles
-    for (i = 0; i < arraycount(p_Map.b_SpawnVehicles); ++i)
-    {
-        if (GRI != none &&
-            GRI.SpawnVehicles[i].VehiclePoolIndex >= 0 &&
-            GRI.SpawnVehicles[i].LocationX != 0 && GRI.SpawnVehicles[i].LocationY != 0 &&
-            GRI.VehiclePoolVehicleClasses[GRI.SpawnVehicles[i].VehiclePoolIndex] != none &&
-            GRI.VehiclePoolVehicleClasses[GRI.SpawnVehicles[i].VehiclePoolIndex].default.VehicleTeam == CurrentTeam)
-        {
-            L.X = GRI.SpawnVehicles[i].LocationX;
-            L.Y = GRI.SpawnVehicles[i].LocationY;
-
-            GetMapCoords(L, X, Y, p_Map.b_SpawnVehicles[i].WinWidth, p_Map.b_SpawnVehicles[i].WinHeight);
-
-            p_Map.b_SpawnVehicles[i].Tag = i;
-            p_Map.b_SpawnVehicles[i].SetPosition(X, Y, p_Map.b_SpawnVehicles[i].WinWidth, p_Map.b_SpawnVehicles[i].WinHeight, true);
-            p_Map.b_SpawnVehicles[i].SetVisibility(true);
-
-            if (GRI.SpawnVehicles[i].BlockFlags != class'DHSpawnManager'.default.BlockFlags_None)
-            {
-                p_Map.b_SpawnVehicles[i].StyleName = "DHSpawnVehicleBlockedButtonStyle";
-            }
-            else
-            {
-                p_Map.b_SpawnVehicles[i].StyleName = "DHSpawnVehicleButtonStyle";
-            }
-
-            p_Map.b_SpawnVehicles[i].Style = Controller.GetStyle(p_Map.b_SpawnVehicles[i].StyleName, FS);
-
-            if (li_Vehicles.GetObject() == none && GRI.SpawnVehicles[i].BlockFlags == class'DHSpawnManager'.default.BlockFlags_None)
-            {
-                // If spawn point that was previously selected is now hidden,
-                // deselect it.
-                p_Map.b_SpawnVehicles[i].MenuStateChange(MSAT_Blurry);
-            }
-            else
-            {
-                p_Map.b_SpawnVehicles[i].MenuStateChange(MSAT_Disabled);
-
-                if (SpawnVehicleIndex == p_Map.b_SpawnVehicles[i].Tag)
-                {
-                    p_Map.SelectSpawnPoint(255, 255);
-                }
-            }
-        }
-        else
-        {
-            p_Map.b_SpawnVehicles[i].SetVisibility(false);
-
-            // If spawn point that was previously selected is now hidden,
-            // deselect it.
-            if (SpawnVehicleIndex == p_Map.b_SpawnVehicles[i].Tag)
-            {
-                p_Map.SelectSpawnPoint(255, 255);
-            }
-        }
-    }
+    p_Map.UpdateSpawnPoints(TeamIndex, RoleIndex, GetSelectedVehiclePoolIndex(), SpawnPointIndex);
 }
 
 function UpdateStatus()
 {
-    if (GRI == none)
-    {
-        return;
-    }
+    local int TeamSizes[2];
 
-    l_Axis.Caption = string(class'ROGUITeamSelection'.static.getTeamCountStatic(GRI, PlayerOwner(), AXIS_TEAM_INDEX));
-    l_Allies.Caption = string(class'ROGUITeamSelection'.static.getTeamCountStatic(GRI, PlayerOwner(), ALLIES_TEAM_INDEX));
+    if (GRI != none)
+    {
+        GRI.GetTeamSizes(TeamSizes);
+
+        l_Axis.Caption = string(TeamSizes[AXIS_TEAM_INDEX]);
+        l_Allies.Caption = string(TeamSizes[ALLIES_TEAM_INDEX]);
+    }
 
     l_Status.Caption = GetStatusText();
 
     // Suicide button status
-    if (PC.Pawn != none)
+    if (PC != none && PC.Pawn != none)
     {
         b_MenuOptions[1].MenuStateChange(MSAT_Blurry);
     }
@@ -497,7 +441,7 @@ function UpdateStatus()
 function string GetStatusText()
 {
     local DHRoleInfo RI;
-    local int SpawnTime;
+    local int        SpawnTime;
 
     RI = DHRoleInfo(li_Roles.GetObject());
 
@@ -506,12 +450,12 @@ function string GetStatusText()
         return default.SelectRoleText;
     }
 
-    if (SpawnPointIndex == 255 && SpawnVehicleIndex == 255)
+    if (SpawnPointIndex == -1)
     {
         return default.SelectSpawnPointText;
     }
 
-    SpawnTime = Max(0, PC.GetNextSpawnTime(RI, GetSelectedVehiclePoolIndex()) - GRI.ElapsedTime);
+    SpawnTime = Max(0, PC.GetNextSpawnTime(SpawnPointIndex, RI, GetSelectedVehiclePoolIndex()) - GRI.ElapsedTime);
 
     if (SpawnTime > 0)
     {
@@ -547,12 +491,14 @@ function PopulateVehicles()
 
 function UpdateVehicles(optional bool bShowAlert)
 {
-    local int i, j;
     local class<ROVehicle> VehicleClass;
-    local DHRoleInfo RI;
-    local bool bDisabled;
-    local string S;
-    local float RespawnTime;
+    local DHRoleInfo       RI;
+    local GUIQuestionPage  ConfirmWindow;
+    local bool             bDisabled;
+    local float            RespawnTime;
+    local int              i, j;
+    local string           S;
+    local DHGameReplicationInfo.VehicleReservationError VRE;
 
     if (GRI == none)
     {
@@ -569,20 +515,13 @@ function UpdateVehicles(optional bool bShowAlert)
         }
 
         j = UInteger(li_Vehicles.GetObjectAtIndex(i)).Value;
-
         VehicleClass = GRI.VehiclePoolVehicleClasses[j];
-
         PC = DHPlayer(PlayerOwner());
+        VRE = GRI.GetVehicleReservationError(PC, RI, CurrentTeam, j);
 
-        //TODO: have team max be indicated in another part of this control (ie. don't obfuscate meaning)
-        bDisabled = VehicleClass != none &&
-                    ((VehicleClass.default.bMustBeTankCommander && RI != none && !RI.default.bCanBeTankCrew) ||
-                    (!GRI.IgnoresMaxTeamVehiclesFlags(j) && GRI.MaxTeamVehicles[CurrentTeam] <= 0) ||
-                    GRI.GetVehiclePoolSpawnsRemaining(j) <= 0 ||
-                    !GRI.IsVehiclePoolActive(j) ||
-                    GRI.VehiclePoolActiveCounts[j] >= GRI.VehiclePoolMaxActives[j] ||
-                    (PC.Pawn != none && PC.Pawn.Health > 0) ||
-                    (PC.VehiclePoolIndex != j && !GRI.IsVehiclePoolReservable(PC, RI, j)));
+        // NOTE: Allow our user to select the vehicle if there's a way for us to
+        // display the reason for the error (e.g. team hit the max active limit)
+        bDisabled = PC.VehiclePoolIndex != j && (VRE != ERROR_None && VRE != ERROR_TeamMaxActive);
 
         if (VehicleClass != none)
         {
@@ -622,9 +561,8 @@ function UpdateVehicles(optional bool bShowAlert)
         {
             if (bShowAlert)
             {
-                Controller.OpenMenu("GUI2K4.GUI2K4QuestionPage");
-                GUIQuestionPage(Controller.TopPage()).SetupQuestion(default.VehicleUnavailableString, QBTN_OK, QBTN_OK);
-                GUIQuestionPage(Controller.TopPage()).OnButtonClick = OnOKButtonClick;
+                ConfirmWindow = Controller.ShowQuestionDialog(default.VehicleUnavailableString, QBTN_OK, QBTN_OK);
+                ConfirmWindow.OnButtonClick = none;
             }
 
             li_Vehicles.SetIndex(0);
@@ -639,12 +577,9 @@ function OnOKButtonClick(byte Button)
 
 function UpdateRoles()
 {
-    local int i;
     local RORoleInfo RI;
-    local int Count;
-    local int BotCount;
-    local int Limit;
-    local string S;
+    local int        Count, BotCount, Limit, i;
+    local string     S;
 
     for (i = 0; i < li_Roles.ItemCount; ++i)
     {
@@ -668,7 +603,7 @@ function UpdateRoles()
 
         if (Limit == 0)
         {
-            S @= "[Locked]";
+            S @= "[" $ LockedText $ "]";
         }
         else if (Limit == 255)
         {
@@ -681,7 +616,7 @@ function UpdateRoles()
 
         if (BotCount > 0)
         {
-            S @= "*BOTS*";
+            S @= "*" $ BotsText $ "*";
         }
 
         li_Roles.SetItemAtIndex(i, S);
@@ -691,6 +626,9 @@ function UpdateRoles()
 
 function bool OnClick(GUIComponent Sender)
 {
+    local GUIQuestionPage ConfirmWindow;
+    local string          ConfirmMessage;
+
     switch (Sender)
     {
         // Disconnect
@@ -704,12 +642,12 @@ function bool OnClick(GUIComponent Sender)
             PlayerOwner().ConsoleCommand("SUICIDE");
             break;
 
-        // Kick Vote
+        // Kick vote
         case b_MenuOptions[2]:
             Controller.OpenMenu(Controller.KickVotingMenu);
             break;
 
-        // Map Vote
+        // Map vote
         case b_MenuOptions[3]:
             Controller.OpenMenu(Controller.MapVotingMenu);
             break;
@@ -719,44 +657,87 @@ function bool OnClick(GUIComponent Sender)
             Controller.OpenMenu("ROInterface.ROCommunicationPage");
             break;
 
-        // Server Browser
+        // Server browser
         case b_MenuOptions[5]:
             Controller.OpenMenu("DH_Interface.DHServerBrowser");
             break;
 
-        // Options
+        // Settings
         case b_MenuOptions[6]:
-            Controller.OpenMenu("DH_Interface.DHSettingsPage_new");
+            Controller.OpenMenu("DH_Interface.DHSettingsPage");
             break;
 
-        // Continue
+        // Continue button
         case b_MenuOptions[7]:
             Apply();
             break;
 
-        //Axis
-        case b_Axis:
-            ChangeTeam(AXIS_TEAM_INDEX);
-            break;
-
-        //Allies
-        case b_Allies:
-            ChangeTeam(ALLIES_TEAM_INDEX);
-            break;
-
-        //Spectate
-        case b_Spectate:
-            ChangeTeam(254);
-            break;
-
-        //Equipment
+        // Weapons/equipment
         case b_EquipmentButton:
             SetLoadoutMode(LM_Equipment);
             break;
 
-        //Vehicle
+        // Vehicle
         case b_VehicleButton:
             SetLoadoutMode(LM_Vehicle);
+            break;
+
+        // Map
+        case b_MapButton:
+            SetMapMode(MODE_Map);
+            break;
+
+        // Squads
+        case b_SquadsButton:
+            SetMapMode(MODE_Squads);
+            break;
+
+        // Changing team (most of this functionality is common, with only minor changes depending on team selected)
+        case b_Axis:
+        case b_Allies:
+        case b_Spectate:
+            if (!(Sender == b_Axis && CurrentTeam == AXIS_TEAM_INDEX) && !(Sender == b_Allies && CurrentTeam == ALLIES_TEAM_INDEX)) // make sure player is actually changing team
+            {
+                // Player is prevented from changing team as he switched recently
+                if (PC.NextChangeTeamTime >= GRI.ElapsedTime)
+                {
+                    ConfirmMessage = Repl(default.CantChangeTeamYetText, "{s}", PC.NextChangeTeamTime - GRI.ElapsedTime);
+                    Controller.ShowQuestionDialog(ConfirmMessage, QBTN_OK, QBTN_OK);
+                }
+                // Player can change team, but give him a screen prompt & ask him to confirm the change
+                else
+                {
+                    // Player can switch freely in single player mode, or within the first ChangeTeamInterval seconds of the round
+                    // So this is just a simple confirmation prompt, without any warning
+                    if (PlayerOwner().Level.NetMode == NM_Standalone || GRI.ElapsedTime <= class'DarkestHourGame'.default.ChangeTeamInterval)
+                    {
+                        ConfirmMessage = FreeChangeTeamConfirmText;
+                    }
+                    // Otherwise warn the player that if he changes team, he'll have to wait a certain time before being allowed to switch again
+                    else
+                    {
+                        ConfirmMessage = Repl(default.ChangeTeamConfirmText, "{s}", class'DarkestHourGame'.default.ChangeTeamInterval);
+                    }
+
+                    ConfirmWindow = Controller.ShowQuestionDialog(ConfirmMessage, QBTN_YesNo);
+
+                    // Set the function to call when the player presses 'yes' or 'no'
+                    if (Sender == b_Axis)
+                    {
+                        ConfirmWindow.NewOnButtonClick = ChangeToAxisChoice;
+                    }
+                    else if (Sender == b_Allies)
+                    {
+                        ConfirmWindow.NewOnButtonClick = ChangeToAlliesChoice;
+                    }
+                    else if (Sender == b_Spectate)
+                    {
+                        ConfirmWindow.bAllowedAsLast = true; // when the confirmation window gets closed, this stops it from defaulting to opening the main menu
+                        ConfirmWindow.NewOnButtonClick = ChangeToSpectateChoice;
+                    }
+                }
+            }
+
             break;
 
         default:
@@ -766,11 +747,40 @@ function bool OnClick(GUIComponent Sender)
     return false;
 }
 
+function bool ChangeToAxisChoice(byte Button)
+{
+    if (Button == 16) // player has clicked 'yes' to confirm change
+    {
+        ChangeTeam(AXIS_TEAM_INDEX);
+    }
+
+    return true;
+}
+
+function bool ChangeToAlliesChoice(byte Button)
+{
+    if (Button == 16) // player has clicked 'yes' to confirm change
+    {
+        ChangeTeam(ALLIES_TEAM_INDEX);
+    }
+
+    return true;
+}
+
+function bool ChangeToSpectateChoice(byte Button)
+{
+    if (Button == 16) // player has clicked 'yes' to confirm change
+    {
+        ChangeTeam(254); // to spectator
+    }
+
+    return true;
+}
+
 function Apply()
 {
     local RORoleInfo RI;
-    local int RoleIndex;
-    local byte Team;
+    local int        RoleIndex;
 
     if (b_MenuOptions[7].MenuState == MSAT_Disabled)
     {
@@ -784,7 +794,7 @@ function Apply()
         return;
     }
 
-    RoleIndex = GRI.GetRoleIndexAndTeam(RI, Team);
+    RoleIndex = GRI.GetRoleIndexAndTeam(RI);
 
     if (RoleIndex == -1)
     {
@@ -800,11 +810,10 @@ function Apply()
 
     PC.ServerSetPlayerInfo(255,
                            RoleIndex,
-                           cb_PrimaryWeapon.GetIndex(),
-                           cb_SecondaryWeapon.GetIndex(),
+                           int(cb_PrimaryWeapon.GetExtra()),
+                           int(cb_SecondaryWeapon.GetExtra()),
                            SpawnPointIndex,
-                           GetSelectedVehiclePoolIndex(),
-                           SpawnVehicleIndex);
+                           GetSelectedVehiclePoolIndex());
 }
 
 function SetButtonsEnabled(bool bEnable)
@@ -817,6 +826,17 @@ function SetButtonsEnabled(bool bEnable)
 function UpdateButtons()
 {
     local bool bContinueEnabled;
+    local int  SquadIndex;
+    local byte Team;
+
+    if (PRI != none)
+    {
+        SquadIndex = PRI.SquadIndex;
+    }
+    else
+    {
+        SquadIndex = -1;
+    }
 
     if (bButtonsEnabled)
     {
@@ -840,15 +860,16 @@ function UpdateButtons()
 
         b_Spectate.EnableMe();
 
-        // Colin: Continue button should always be clickable if we're using the old
-        // spawning system. If we're using the new spawning system, we have to check
-        // that our pending parameters are valid.
+        // Continue button should always be clickable if we're using the old
+        // spawning system. If we're using the new spawning system, we have to
+        // check that our pending parameters are valid.
         if (PC.ClientLevelInfo.SpawnMode == ESM_RedOrchestra ||
-            (li_Vehicles.Index >= 0 && GRI.AreSpawnSettingsValid(CurrentTeam,
-                                           DHRoleInfo(li_Roles.GetObject()),
-                                           SpawnPointIndex,
-                                           GetSelectedVehiclePoolIndex(),
-                                           SpawnVehicleIndex)))
+            (li_Vehicles.Index >= 0 && GRI.CanSpawnWithParameters(SpawnPointIndex,
+                                                                 CurrentTeam,
+                                                                 GRI.GetRoleIndexAndTeam(DHRoleInfo(li_Roles.GetObject()), Team),
+                                                                 SquadIndex,
+                                                                 GetSelectedVehiclePoolIndex(),
+                                                                 true)))
         {
             bContinueEnabled = true;
         }
@@ -862,29 +883,29 @@ function UpdateButtons()
 
     if (LoadoutMode == LM_Equipment && li_Vehicles.GetObject() != none)
     {
-        i_VehiclesButton.Image = material'DH_GUI_Tex.DeployMenu.vehicles_asterisk';
+        i_VehiclesButton.Image = Material'DH_GUI_Tex.DeployMenu.vehicles_asterisk';
     }
     else
     {
-        i_VehiclesButton.Image = material'DH_GUI_Tex.DeployMenu.vehicles';
+        i_VehiclesButton.Image = Material'DH_GUI_Tex.DeployMenu.vehicles';
     }
 
     if (bContinueEnabled)
     {
         b_MenuOptions[7].EnableMe();
-        i_Arrows.Image = material'DH_GUI_Tex.DeployMenu.arrow_blurry';
+        i_Arrows.Image = Material'DH_GUI_Tex.DeployMenu.arrow_blurry';
     }
     else
     {
         b_MenuOptions[7].DisableMe();
-        i_Arrows.Image = material'DH_GUI_Tex.DeployMenu.arrow_disabled';
+        i_Arrows.Image = Material'DH_GUI_Tex.DeployMenu.arrow_disabled';
     }
 }
 
 function PopulateRoles()
 {
-    local int i;
     local string RoleName;
+    local int    i;
 
     li_Roles.Clear();
     li_Roles.SetIndex(-1);
@@ -987,8 +1008,8 @@ function AutoSelectRole()
 // selected, by default.
 function AutoSelectVehicle()
 {
-    local int i;
     local UInteger Integer;
+    local int      i;
 
     if (PC.VehiclePoolIndex < 0)
     {
@@ -1008,7 +1029,7 @@ function AutoSelectVehicle()
 
 function InternalOnMessage(coerce string Msg, float MsgLife)
 {
-    local int Result;
+    local int    Result;
     local string ErrorMessage;
 
     if (Msg ~= "NOTIFY_GUI_ROLE_SELECTION_PAGE")
@@ -1017,38 +1038,31 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
 
         switch (Result)
         {
-            //Spectator
+            // Spectator
             case 96:
                 CloseMenu();
                 break;
 
-            //Axis
+            // Axis
             case 97:
-                //Axis
                 OnTeamChanged(AXIS_TEAM_INDEX);
-                p_Map.SelectSpawnPoint(255, 255);
+                p_Map.SelectSpawnPoint(-1);
                 break;
 
-            //Allies
+            // Allies
             case 98:
                 OnTeamChanged(ALLIES_TEAM_INDEX);
-                p_Map.SelectSpawnPoint(255, 255);
+                p_Map.SelectSpawnPoint(-1);
                 break;
 
-            //Success
+            // Success
             case 0:
                 CloseMenu();
                 break;
 
             default:
                 ErrorMessage = class'ROGUIRoleSelection'.static.GetErrorMessageForID(Result);
-
-                if (Controller != none)
-                {
-                    Controller.OpenMenu(Controller.QuestionMenuClass);
-                    GUIQuestionPage(Controller.TopPage()).SetupQuestion(ErrorMessage, QBTN_Ok, QBTN_Ok);
-                }
-
+                Controller.ShowQuestionDialog(ErrorMessage, QBTN_OK, QBTN_OK);
                 break;
         }
     }
@@ -1072,9 +1086,7 @@ function OnOpen()
     super.OnOpen();
 
     PC.ServerSetIsInSpawnMenu(true);
-
     Timer();
-
     SetTimer(1.0, true);
 }
 
@@ -1100,15 +1112,21 @@ function bool MapContainerPreDraw(Canvas C)
                       c_MapRoot.ActualHeight(),
                       true);
 
+    c_Squads.SetPosition(c_MapRoot.WinLeft + Offset,
+                      c_MapRoot.WinTop,
+                      c_MapRoot.ActualHeight(),
+                      c_MapRoot.ActualHeight(),
+                      true);
+
     return true;
 }
 
 function InternalOnChange(GUIComponent Sender)
 {
-    local int i, j;
-    local RORoleInfo RI;
     local class<Inventory> InventoryClass;
-    local Material InventoryMaterial;
+    local RORoleInfo       RI;
+    local material         InventoryMaterial;
+    local int              i, j;
 
     switch (Sender)
     {
@@ -1136,7 +1154,7 @@ function InternalOnChange(GUIComponent Sender)
                 {
                     if (RI.PrimaryWeapons[i].Item != none)
                     {
-                        cb_PrimaryWeapon.AddItem(RI.PrimaryWeapons[i].Item.default.ItemName, RI.PrimaryWeapons[i].Item);
+                        cb_PrimaryWeapon.AddItem(RI.PrimaryWeapons[i].Item.default.ItemName, RI.PrimaryWeapons[i].Item, string(i));
                     }
                 }
 
@@ -1144,20 +1162,25 @@ function InternalOnChange(GUIComponent Sender)
                 {
                     if (RI.SecondaryWeapons[i].Item != none)
                     {
-                        cb_SecondaryWeapon.AddItem(RI.SecondaryWeapons[i].Item.default.ItemName, RI.SecondaryWeapons[i].Item);
+                        cb_SecondaryWeapon.AddItem(RI.SecondaryWeapons[i].Item.default.ItemName, RI.SecondaryWeapons[i].Item, string(i));
                     }
                 }
             }
 
-            if (PC.GetRoleInfo() == RI)
+            cb_PrimaryWeapon.SetIndex(0);
+            cb_SecondaryWeapon.SetIndex(0);
+
+            if (PC.GetRoleInfo() == RI && RI != none)
             {
-                cb_PrimaryWeapon.SetIndex(PC.DHPrimaryWeapon);
-                cb_SecondaryWeapon.SetIndex(PC.DHSecondaryWeapon);
-            }
-            else
-            {
-                cb_PrimaryWeapon.SetIndex(0);
-                cb_SecondaryWeapon.SetIndex(0);
+                if (PC.DHPrimaryWeapon >= 0)
+                {
+                    cb_PrimaryWeapon.SetIndex(class'xGUIList'.static.GetIndexOfObject(cb_PrimaryWeapon.MyComboBox.List, RI.PrimaryWeapons[PC.DHPrimaryWeapon].Item));
+                }
+
+                if (PC.DHSecondaryWeapon >= 0)
+                {
+                    cb_SecondaryWeapon.SetIndex(class'xGUIList'.static.GetIndexOfObject(cb_SecondaryWeapon.MyComboBox.List, RI.SecondaryWeapons[PC.DHSecondaryWeapon].Item));
+                }
             }
 
             j = 1;
@@ -1258,13 +1281,13 @@ function InternalOnChange(GUIComponent Sender)
 
 function UpdateVehicleImage()
 {
-    local class<Vehicle> VehicleClass;
+    local class<Vehicle>   VehicleClass;
     local class<DHVehicle> DHVC;
-    local int VehiclePoolIndex;
+    local int              VehiclePoolIndex;
 
     VehiclePoolIndex = GetSelectedVehiclePoolIndex();
 
-    if (VehiclePoolIndex >= 0)
+    if (LoadoutMode == LM_Vehicle && VehiclePoolIndex >= 0)
     {
         VehicleClass = GRI.VehiclePoolVehicleClasses[VehiclePoolIndex];
         i_Vehicle.Image = VehicleClass.default.SpawnOverlay[0];
@@ -1288,29 +1311,60 @@ function UpdateVehicleImage()
         {
             i_ArtilleryVehicle.Hide();
         }
+
+        if (DHVC != none && DHVC.default.SupplyAttachmentClass != none)
+        {
+            i_SupplyVehicle.Show();
+        }
+        else
+        {
+            i_SupplyVehicle.Hide();
+        }
+
+        if (GRI.IgnoresMaxTeamVehiclesFlags(VehiclePoolIndex))
+        {
+            i_MaxVehicles.Hide();
+            l_MaxVehicles.Hide();
+        }
+        else
+        {
+            i_MaxVehicles.Show();
+            l_MaxVehicles.Show();
+            l_MaxVehicles.Caption = string(Max(0, GRI.GetReservableTankCount(CurrentTeam)));
+
+            if (GRI.GetReservableTankCount(CurrentTeam) <= 0)
+            {
+                l_MaxVehicles.TextColor = class'UColor'.default.Red;
+            }
+            else
+            {
+                l_MaxVehicles.TextColor = class'UColor'.default.White;
+            }
+        }
     }
     else
     {
         i_Vehicle.Image = default.VehicleNoneMaterial;
         i_SpawnVehicle.Hide();
         i_ArtilleryVehicle.Hide();
+        i_SupplyVehicle.Hide();
+        i_MaxVehicles.Hide();
+        l_MaxVehicles.Hide();
     }
 }
 
-function ChangeTeam(byte Team)
+function ChangeTeam(int TeamIndex)
 {
-    if (Team != CurrentTeam &&
-        PC.Level.TimeSeconds >= NextChangeTeamTime)
+    if (TeamIndex != CurrentTeam) // confirm that we are actually changing teams
     {
         SetButtonsEnabled(false);
-
-        PC.ServerSetPlayerInfo(Team, 255, 0, 0, 255, 255, 255);
+        PC.ServerSetPlayerInfo(TeamIndex, 255, 0, 0, -1, -1);
     }
 }
 
-function OnTeamChanged(byte Team)
+function OnTeamChanged(int TeamIndex)
 {
-    CurrentTeam = Team;
+    CurrentTeam = TeamIndex;
 
     PopulateRoles();
     PopulateVehicles();
@@ -1319,14 +1373,12 @@ function OnTeamChanged(byte Team)
     UpdateStatus();
     UpdateButtons();
     UpdateRoundStatus();
-
-    NextChangeTeamTime = PC.Level.TimeSeconds + class'DarkestHourGame'.default.ChangeTeamInterval;
+    UpdateSquads();
 }
 
-function OnSpawnPointChanged(byte SpawnPointIndex, byte SpawnVehicleIndex, optional bool bDoubleClick)
+function OnSpawnPointChanged(int SpawnPointIndex, optional bool bDoubleClick)
 {
     self.SpawnPointIndex = SpawnPointIndex;
-    self.SpawnVehicleIndex = SpawnVehicleIndex;
 
     UpdateStatus();
     UpdateButtons();
@@ -1345,7 +1397,7 @@ function bool InternalOnPreDraw(Canvas C)
     {
         AttritionRate = GRI.AttritionRate[CurrentTeam];
 
-        if (AttritionRate > 0.0)
+        if (!GRI.bIsInSetupPhase && AttritionRate > 0.0)
         {
             // TODO: convert to a material so we don't have to
             // make the alpha calculations ourself in script.
@@ -1358,6 +1410,248 @@ function bool InternalOnPreDraw(Canvas C)
     }
 
     return super.OnPreDraw(C);
+}
+
+function ToggleMapMode()
+{
+    if (MapMode == MODE_Map)
+    {
+        SetMapMode(MODE_Squads);
+    }
+    else if (MapMode == MODE_Squads)
+    {
+        SetMapMode(MODE_Map);
+    }
+}
+
+function SetMapMode(EMapMode Mode)
+{
+    MapMode = Mode;
+
+    switch (MapMode)
+    {
+        case MODE_Map:
+            b_MapButton.DisableMe();
+            b_SquadsButton.EnableMe();
+            c_Map.SetVisibility(true);
+            c_Squads.SetVisibility(false);
+            p_Squads.DisableMe();
+            UpdateSpawnPoints();
+            break;
+
+        case MODE_Squads:
+            b_MapButton.EnableMe();
+            b_SquadsButton.DisableMe();
+            c_Map.SetVisibility(false);
+            c_Squads.SetVisibility(true);
+            p_Squads.EnableMe();
+            break;
+
+        default:
+            Warn("Unhandled map mode");
+            break;
+    }
+
+    UpdateSquads();
+}
+
+function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
+{
+    local Interactions.EInputKey    K;
+    local Interactions.EInputAction A;
+
+    K = EInputKey(Key);
+    A = EInputAction(State);
+
+    if (K == IK_F1 && A == IST_Release)
+    {
+        ToggleMapMode();
+
+        return true;
+    }
+
+    return super.OnKeyEvent(Key, State, Delta);
+}
+
+function UpdateSquads()
+{
+    local array<DHPlayerReplicationInfo> Members;
+    local DHPlayerReplicationInfo        SavedPRI;
+    local DHGUISquadComponent            C;
+    local int  TeamIndex, i, j, k;
+    local bool bIsInSquad, bIsInASquad, bIsSquadLeader, bIsSquadFull, bIsSquadLocked, bCanJoinSquad, bCanSquadBeLocked;
+
+    super.Timer();
+
+    // HACK: this GUI system is madness and requires me to do stupid things
+    // like this in order for it to work.
+    if (MapMode != MODE_Squads)
+    {
+        for (i = 0; i < p_Squads.SquadComponents.Length; ++i)
+        {
+            C = p_Squads.SquadComponents[i];
+            SetVisible(C.lb_Members, false);
+            SetVisible(C.li_Members, false);
+            SetVisible(C.eb_SquadName, false);
+            SetVisible(C.b_CreateSquad, false);
+            SetVisible(C.b_JoinSquad, false);
+            SetVisible(C.b_LeaveSquad, false);
+            SetVisible(C.b_LockSquad, false);
+            SetVisible(C.i_LockSquad, false);
+        }
+
+        return;
+    }
+
+    if (PC == none || PRI == none || SRI == none)
+    {
+        return;
+    }
+
+    TeamIndex = PC.GetTeamNum();
+
+    if (TeamIndex != AXIS_TEAM_INDEX && TeamIndex != ALLIES_TEAM_INDEX)
+    {
+        return;
+    }
+
+    if (PRI == none)
+    {
+        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+        if (PRI == none)
+        {
+            return;
+        }
+    }
+
+    bIsInASquad = PRI.IsInSquad();
+
+    // Go through the active squads
+    for (i = 0; i < SRI.GetTeamSquadLimit(TeamIndex); ++i)
+    {
+        if (!SRI.IsSquadActive(TeamIndex, i))
+        {
+            continue;
+        }
+
+        C = p_Squads.SquadComponents[j];
+        C.SquadIndex = i;
+
+        SetVisible(C, true);
+
+        bIsInSquad = SRI.IsInSquad(PRI, TeamIndex, i);
+        bIsSquadFull = SRI.IsSquadFull(TeamIndex, i);
+        bIsSquadLeader = SRI.IsSquadLeader(PRI, TeamIndex, i);
+        bIsSquadLocked = SRI.IsSquadLocked(TeamIndex, i);
+        bCanSquadBeLocked = SRI.CanSquadBeLocked(TeamIndex, i);
+
+        SetVisible(C.lb_Members, true);
+        SetVisible(C.li_Members, true);
+        SetVisible(C.l_SquadName, !C.bIsEditingName);
+        SetVisible(C.eb_SquadName, bIsSquadLeader);
+        SetVisible(C.b_CreateSquad, false);
+        SetVisible(C.b_JoinSquad, !bIsInSquad);
+        SetVisible(C.b_LeaveSquad, bIsInSquad);
+        SetVisible(C.b_LockSquad, bIsSquadLeader && bCanSquadBeLocked);
+        SetVisible(C.i_LockSquad, bIsSquadLocked || bIsSquadLeader);
+
+        if (bIsSquadLeader)
+        {
+            if (bIsSquadLocked)
+            {
+                C.i_LockSquad.Image = LockIcon;
+                C.b_LockSquad.SetHint(default.UnlockText);
+            }
+            else
+            {
+                C.i_LockSquad.Image = UnlockIcon;
+                C.b_LockSquad.SetHint(default.LockText);
+
+                if (bCanSquadBeLocked)
+                {
+                    C.i_LockSquad.ImageColor.A = 255;
+                }
+                else
+                {
+                    C.i_LockSquad.ImageColor.A = 128;
+                }
+            }
+        }
+        else
+        {
+            if (bIsSquadLocked)
+            {
+                C.i_LockSquad.Image = LockIcon;
+                C.i_LockSquad.ImageColor.A = 128;
+            }
+        }
+
+        bCanJoinSquad = !bIsInASquad && SRI.IsSquadJoinable(TeamIndex, i);
+
+        if (bCanJoinSquad)
+        {
+            C.b_JoinSquad.EnableMe();
+        }
+        else
+        {
+            C.b_JoinSquad.DisableMe();
+        }
+
+        C.b_LockSquad.SetVisibility(bIsSquadLeader);
+
+        C.l_SquadName.Caption = SRI.GetSquadName(TeamIndex, i);
+
+        SRI.GetMembers(TeamIndex, i, Members);
+
+        // Save the current PRI that is selected.
+        SavedPRI = DHPlayerReplicationInfo(C.li_Members.GetObject());
+
+        // Add or remove entries to match the member count.
+        while (C.li_Members.ItemCount < Members.Length)
+        {
+            C.li_Members.Add("");
+        }
+
+        while (C.li_Members.ItemCount > Members.Length)
+        {
+            C.li_Members.Remove(0, 1);
+        }
+
+        // Update the text and associated object for each item.
+        for (k = 0; k < Members.Length; ++k)
+        {
+            C.li_Members.SetItemAtIndex(k, Members[k].SquadMemberIndex + 1 $ "." @ Members[k].PlayerName);
+            C.li_Members.SetObjectAtIndex(k, Members[k]);
+        }
+
+        // Re-select the previous selection.
+        C.li_Members.SelectByObject(SavedPRI);
+
+        ++j;
+    }
+
+    if (!bIsInASquad && j < p_Squads.SquadComponents.Length)
+    {
+        C = p_Squads.SquadComponents[j++];
+
+        SetVisible(C, true);
+        SetVisible(C.lb_Members, false);
+        SetVisible(C.li_Members, false);
+        SetVisible(C.l_SquadName, false);
+        SetVisible(C.b_CreateSquad, true);
+        SetVisible(C.b_JoinSquad, false);
+        SetVisible(C.b_LeaveSquad, false);
+        SetVisible(C.b_LockSquad, false);
+        SetVisible(C.i_LockSquad, false);
+        SetVisible(C.eb_SquadName, false);
+    }
+
+    while (j < p_Squads.SquadComponents.Length)
+    {
+        SetVisible(p_Squads.SquadComponents[j], false);
+        ++j;
+    }
 }
 
 function static SetVisible(GUIComponent C, bool bVisible)
@@ -1379,18 +1673,36 @@ function static SetVisible(GUIComponent C, bool bVisible)
 
 defaultproperties
 {
-    SpawnPointIndex=255
-    SpawnVehicleIndex=255
+    SelectRoleText="Select a role"
+    SelectSpawnPointText="Select a spawn point"
+    DeployInTimeText="Press Continue to deploy ({0})"
+    DeployNowText="Press Continue to deploy now!"
+    ChangeTeamConfirmText="Are you sure you want to change teams? (you will not be able to change back for {s} seconds)"
+    FreeChangeTeamConfirmText="Are you sure you want to change teams?"
+    CantChangeTeamYetText="You must wait {s} seconds before you can change teams"
+    ReservedString="Reserved"
+    VehicleUnavailableString="The vehicle you had selected is no longer available."
+    LockText="Lock"
+    UnlockText="Unlock"
+    NoneText="None"
+    LockedText="Locked"
+    BotsText="BOTS"
 
-    // GUI Components
+    MapMode=MODE_Map
+    bButtonsEnabled=true
+    SpawnPointIndex=-1
+    VehicleNoneMaterial=Material'DH_GUI_tex.DeployMenu.vehicle_none'
+
     OnMessage=InternalOnMessage
-    bRenderWorld=true
+    OnPreDraw=InternalOnPreDraw
+    OnKeyEvent=InternalOnKeyEvent
+    bRenderWorld=false
     bAllowedAsLast=true
     WinTop=0.0
     WinHeight=1.0
 
     Begin Object Class=FloatingImage Name=FloatingBackground
-        Image=texture'DH_GUI_Tex.DeployMenu.Background'
+        Image=Texture'DH_GUI_Tex.DeployMenu.Background'
         DropShadow=none
         ImageStyle=ISTY_Scaled
         WinTop=0.0
@@ -1432,7 +1744,7 @@ defaultproperties
         WinWidth=0.2
         WinTop=0.0
         WinLeft=0.025
-        Image=material'DH_GUI_tex.DeployMenu.flag_germany'
+        Image=Material'DH_GUI_tex.DeployMenu.flag_germany'
         ImageStyle=ISTY_Justified
         ImageAlign=ISTY_Center
     End Object
@@ -1465,7 +1777,7 @@ defaultproperties
         WinWidth=0.2
         WinTop=0.00
         WinLeft=0.425
-        Image=material'DH_GUI_tex.DeployMenu.flag_usa'
+        Image=Material'DH_GUI_tex.DeployMenu.flag_usa'
         ImageStyle=ISTY_Justified
         ImageAlign=ISTY_Center
     End Object
@@ -1498,7 +1810,7 @@ defaultproperties
         WinWidth=0.2
         WinTop=0.0
         WinLeft=0.85
-        Image=material'DH_GUI_tex.DeployMenu.spectate'
+        Image=Material'DH_GUI_tex.DeployMenu.spectate'
         ImageStyle=ISTY_Justified
         ImageAlign=ISTY_Center
     End Object
@@ -1511,7 +1823,7 @@ defaultproperties
         WinTop=0.075
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        Image=texture'DH_GUI_Tex.DeployMenu.reinforcements'
+        Image=Texture'DH_GUI_Tex.DeployMenu.reinforcements'
     End Object
     i_Reinforcements=ReinforcementsImageObject
 
@@ -1534,7 +1846,7 @@ defaultproperties
         WinTop=0.075
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        Image=texture'DH_GUI_Tex.DeployMenu.ForceScale'
+        Image=Texture'DH_GUI_Tex.DeployMenu.ForceScale'
     End Object
     i_SizeAdvantage=SizeAdvantageImageObject
 
@@ -1557,7 +1869,7 @@ defaultproperties
         WinTop=0.075
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        Image=texture'DH_GUI_Tex.DeployMenu.StopWatch'
+        Image=Texture'DH_GUI_Tex.DeployMenu.StopWatch'
     End Object
     i_RoundTime=RoundTimeImageObject
 
@@ -1576,9 +1888,9 @@ defaultproperties
 
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=RolesContainerObject
         WinWidth=0.26
-        WinHeight=0.28
+        WinHeight=0.22
         WinLeft=0.02
-        WinTop=0.12
+        WinTop=0.18
         LeftPadding=0.05
         RightPadding=0.05
         TopPadding=0.05
@@ -1624,6 +1936,14 @@ defaultproperties
     End Object
     LoadoutTabContainer=LoadoutTabContainerObject
 
+    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=MapSquadsTabContainerObject
+        WinWidth=0.26
+        WinHeight=0.05
+        WinLeft=0.02
+        WinTop=0.13
+    End Object
+    MapSquadsTabContainer=MapSquadsTabContainerObject
+
     Begin Object Class=GUIButton Name=EquipmentButtonObject
         StyleName="DHDeployTabButton"
         WinWidth=0.5
@@ -1642,7 +1962,7 @@ defaultproperties
         WinTop=0.0
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        Image=texture'DH_GUI_Tex.DeployMenu.equipment'
+        Image=Texture'DH_GUI_Tex.DeployMenu.equipment'
     End Object
     i_EquipmentButton=EquipmentButtonImageObject
 
@@ -1664,9 +1984,53 @@ defaultproperties
         WinTop=0.0
         ImageStyle=ISTY_Justified
         ImageAlign=IMGA_Center
-        Image=texture'DH_GUI_Tex.DeployMenu.vehicles'
+        Image=Texture'DH_GUI_Tex.DeployMenu.vehicles'
     End Object
     i_VehiclesButton=VehiclesButtonImageObject
+
+    Begin Object Class=GUIButton Name=MapButtonObject
+        StyleName="DHDeployTabButton"
+        WinWidth=0.5
+        WinHeight=1.0
+        WinTop=0.0
+        WinLeft=0.0
+        OnClick=OnClick
+        Hint="Map [F1]"
+    End Object
+    b_MapButton=MapButtonObject
+
+    Begin Object Class=GUIImage Name=MapButtonImageObject
+        WinWidth=0.5
+        WinHeight=1.0
+        WinLeft=0.0
+        WinTop=0.0
+        ImageStyle=ISTY_Justified
+        ImageAlign=IMGA_Center
+        Image=Texture'DH_GUI_Tex.DeployMenu.compass'
+    End Object
+    i_MapButton=MapButtonImageObject
+
+    Begin Object Class=GUIButton Name=SquadsButtonObject
+        StyleName="DHDeployTabButton"
+        WinWidth=0.5
+        WinHeight=1.0
+        WinTop=0.0
+        WinLeft=0.5
+        OnClick=OnClick
+        Hint="Squads [F1]"
+    End Object
+    b_SquadsButton=SquadsButtonObject
+
+    Begin Object Class=GUIImage Name=SquadsButtonImageObject
+        WinWidth=0.5
+        WinHeight=1.0
+        WinLeft=0.5
+        WinTop=0.0
+        ImageStyle=ISTY_Justified
+        ImageAlign=IMGA_Center
+        Image=Texture'DH_GUI_Tex.DeployMenu.squads'
+    End Object
+    i_SquadsButton=SquadsButtonImageObject
 
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=LoadoutContainerObject
         WinWidth=0.26
@@ -1717,7 +2081,6 @@ defaultproperties
     End Object
     b_MenuOptions(0)=DisconnectButtonObject
 
-    //Suicide Button
     Begin Object Class=DHGUIButton Name=SuicideButtonObject
         Caption="Suicide"
         CaptionAlign=TXTA_Center
@@ -1728,7 +2091,6 @@ defaultproperties
     End Object
     b_MenuOptions(1)=SuicideButtonObject
 
-    //Kick Vote Button
     Begin Object Class=DHGUIButton Name=KickVoteButtonObject
         Caption="Kick Vote"
         CaptionAlign=TXTA_Center
@@ -1739,7 +2101,6 @@ defaultproperties
     End Object
     b_MenuOptions(2)=KickVoteButtonObject
 
-    //Map Vote Button
     Begin Object Class=DHGUIButton Name=MapVoteButtonObject
         Caption="Map Vote"
         CaptionAlign=TXTA_Center
@@ -1750,7 +2111,6 @@ defaultproperties
     End Object
     b_MenuOptions(3)=MapVoteButtonObject
 
-    //CommunicationButton
     Begin Object Class=DHGUIButton Name=CommunicationButtonObject
         Caption="Communication"
         CaptionAlign=TXTA_Center
@@ -1761,7 +2121,6 @@ defaultproperties
     End Object
     b_MenuOptions(4)=CommunicationButtonObject
 
-    //Servers Button
     Begin Object Class=DHGUIButton Name=ServersButtonObject
         Caption="Servers"
         CaptionAlign=TXTA_Center
@@ -1772,7 +2131,6 @@ defaultproperties
     End Object
     b_MenuOptions(5)=ServersButtonObject
 
-    //Settings Button
     Begin Object Class=DHGUIButton Name=SettingsButtonObject
         Caption="Settings"
         CaptionAlign=TXTA_Center
@@ -1783,7 +2141,6 @@ defaultproperties
     End Object
     b_MenuOptions(6)=SettingsButtonObject
 
-    //Continue Button
     Begin Object Class=DHGUIButton Name=ContinueButtonObject
         Caption="Continue"
         CaptionAlign=TXTA_Center
@@ -1795,7 +2152,7 @@ defaultproperties
     b_MenuOptions(7)=ContinueButtonObject
 
     Begin Object Class=GUIImage Name=ArrowImageObject
-        Image=material'DH_GUI_tex.DeployMenu.arrow_blurry'
+        Image=Material'DH_GUI_tex.DeployMenu.arrow_blurry'
         WinHeight=1.0
         WinLeft=0.875
         WinWidth=0.125
@@ -1820,7 +2177,7 @@ defaultproperties
         WinTop=0.0
         bNeverFocus=true
         ImageStyle=ISTY_Scaled
-        Image=material'DH_GUI_tex.DeployMenu.map_border'
+        Image=Material'DH_GUI_tex.DeployMenu.map_border'
     End Object
     i_MapBorder=MapBorderImageObject
 
@@ -1942,7 +2299,7 @@ defaultproperties
         WinLeft=0.75
         WinTop=0.0
         Position=ICP_Center
-        Graphic=material'DH_GUI_Tex.DeployMenu.DeployEnabled'
+        Graphic=Material'DH_GUI_Tex.DeployMenu.DeployEnabled'
         Hint="Spawn Vehicle"
         bVisible=false
         StyleName="TextLabel"
@@ -1955,12 +2312,49 @@ defaultproperties
         WinLeft=0.75
         WinTop=0.0
         Position=ICP_Center
-        Graphic=material'DH_GUI_Tex.DeployMenu.artillery'
+        Graphic=Material'DH_GUI_Tex.DeployMenu.artillery'
         bVisible=false
         Hint="Artillery Vehicle"
         StyleName="TextLabel"
     End Object
     i_ArtilleryVehicle=ArtilleryVehicleImageObject
+
+    Begin Object Class=GUIGFXButton Name=MaxVehiclesImageObject
+        WinWidth=0.125
+        WinHeight=0.125
+        WinLeft=0.0
+        WinTop=0.0
+        Position=ICP_Center
+        Graphic=Material'DH_InterfaceArt2_tex.Icons.tank'
+        bVisible=false
+        Hint="Tanks Available"
+        StyleName="TextLabel"
+    End Object
+    i_MaxVehicles=MaxVehiclesImageObject
+
+    Begin Object Class=GUILabel Name=MaxVehiclesLabelObject
+        WinHeight=0.125
+        WinWidth=0.125
+        WinTop=0.0
+        WinLeft=0.125
+        TextAlign=TXTA_Center
+        TextColor=(R=255,G=255,B=255,A=255)
+        TextFont="DHMenuFont"
+    End Object
+    l_MaxVehicles=MaxVehiclesLabelObject
+
+    Begin Object Class=GUIGFXButton Name=SupplyVehicleImageObject
+        WinWidth=0.25
+        WinHeight=0.125
+        WinLeft=0.75
+        WinTop=0.0
+        Position=ICP_Center
+        Graphic=Material'DH_InterfaceArt2_tex.Icons.supply_cache'
+        bVisible=false
+        Hint="Construction Supply Vehicle"
+        StyleName="TextLabel"
+    End Object
+    i_SupplyVehicle=SupplyVehicleImageObject
 
     Begin Object Class=GUILabel Name=StatusLabelObject
         WinWidth=0.26
@@ -1974,16 +2368,25 @@ defaultproperties
     End Object
     l_Status=StatusLabelObject
 
-    NoneText="None"
-    SelectRoleText="Select a role"
-    SelectSpawnPointText="Select a spawn point"
-    DeployInTimeText="Press Continue to deploy ({0})"
-    DeployNowText="Press Continue to deploy now!"
-    bButtonsEnabled=true
-    VehicleNoneMaterial=material'DH_GUI_tex.DeployMenu.vehicle_none'
-    NextChangeTeamTime=0.0
-    OnPreDraw=InternalOnPreDraw
-    ReservedString="Reserved"
-    VehicleUnavailableString="The vehicle you had selected is no longer available."
+    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=SquadsContainerObject
+        WinWidth=1.0
+        WinHeight=1.0
+        WinLeft=0.0
+        WinTop=0.0
+        bNeverFocus=true
+    End Object
+    c_Squads=SquadsContainerObject
+
+    Begin Object Class=DHGUISquadsComponent Name=SquadsComponentObject
+        WinWidth=1.0
+        WinHeight=1.0
+        WinLeft=0.0
+        WinTop=0.0
+        bNeverFocus=true
+    End Object
+    p_Squads=SquadsComponentObject
+
+    LockIcon=Texture'DH_InterfaceArt2_tex.Icons.lock'
+    UnlockIcon=Texture'DH_InterfaceArt2_tex.Icons.unlock'
 }
 

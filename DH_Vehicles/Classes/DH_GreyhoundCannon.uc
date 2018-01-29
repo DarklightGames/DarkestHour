@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_GreyhoundCannon extends DHVehicleCannon;
@@ -9,8 +9,8 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_turret_ext'
-    Skins(0)=texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext'
-    Skins(1)=texture'DH_VehiclesUS_tex4.int_vehicles.Greyhound_body_int'
+    Skins(0)=Texture'DH_VehiclesUS_tex4.ext_vehicles.Greyhound_turret_ext'
+    Skins(1)=Texture'DH_VehiclesUS_tex4.int_vehicles.Greyhound_body_int'
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc3.M8_Greyhound.Greyhound_turret_coll'
     FireEffectScale=1.25 // turret fire is larger & positioned in centre of open turret
     FireEffectOffset=(X=5.0,Y=20.0,Z=0.0)
@@ -36,9 +36,12 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_GreyhoundCannonShellHE'
     TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'
     ProjectileDescriptions(2)="Canister"
-    InitialPrimaryAmmo=24
-    InitialSecondaryAmmo=48
+    InitialPrimaryAmmo=20
+    InitialSecondaryAmmo=24
     InitialTertiaryAmmo=8
+    MaxPrimaryAmmo=24
+    MaxSecondaryAmmo=48
+    MaxTertiaryAmmo=8
     SecondarySpread=0.00145
     TertiarySpread=0.04
 
@@ -58,8 +61,6 @@ defaultproperties
     ShakeRotRate=(Z=600.0)
     ShakeOffsetMag=(Z=5.0)
     ShakeOffsetTime=6.0
-    AltShakeRotMag=(X=0.01,Y=0.01,Z=0.01)
-    AltShakeRotRate=(X=1000.0,Y=1000.0,Z=1000.0)
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire01'
@@ -67,8 +68,8 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire03'
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
-    ReloadStages(0)=(Sound=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload01')
-    ReloadStages(1)=(Sound=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload02')
-    ReloadStages(2)=(Sound=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload03')
-    ReloadStages(3)=(Sound=sound'DH_AlliedVehicleSounds.Sherman.ShermanReload04')
+    ReloadStages(0)=(Sound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload01')
+    ReloadStages(1)=(Sound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload02')
+    ReloadStages(2)=(Sound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload03')
+    ReloadStages(3)=(Sound=Sound'DH_AlliedVehicleSounds.Sherman.ShermanReload04')
 }

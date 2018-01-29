@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_ShermanFactoryB_M4A176W extends DH_ShermanFactory; // later version with HVAP instead of smoke rounds, & with muzzle brake & sandbags on hull front
@@ -8,5 +8,4 @@ class DH_ShermanFactoryB_M4A176W extends DH_ShermanFactory; // later version wit
 defaultproperties
 {
     VehicleClass=class'DH_Vehicles.DH_ShermanTankB_M4A176W'
-    Mesh=SkeletalMesh'DH_ShermanM4A1_anm.ShermanM4A1_body_extB'
 }

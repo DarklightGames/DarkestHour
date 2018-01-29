@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_PanzerIIINCannonShellHE extends DHCannonShellHE;
@@ -46,11 +46,10 @@ defaultproperties
     DHPenetrationTable(9)=0.5
     DHPenetrationTable(10)=0.3
     ShellDiameter=7.5
-    bIsAlliedShell=false
+    bDebugInImperial=false
     PenetrationMag=900.0
     ImpactDamage=455
     BallisticCoefficient=2.0
-    SpeedFudgeScale=0.7
     Speed=25348.0
     MaxSpeed=25348.0
     Damage=415.0

@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_IS2Tank_Late_Snow extends DH_IS2Tank_Snow;
+class DH_IS2Tank_Late_Snow extends DH_IS2Tank_Snow; // late war tank with APBC rounds instead of AP
 
 defaultproperties
 {

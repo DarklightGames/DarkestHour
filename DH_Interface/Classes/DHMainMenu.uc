@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHMainMenu extends UT2K4GUIPage;
@@ -8,9 +8,9 @@ class DHMainMenu extends UT2K4GUIPage;
 var()   config string           MenuSong;
 
 var automated       FloatingImage           i_background, i_Overlay, i_Announcement;
-var automated       GUIButton               b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Host, b_Quit;
+var automated       GUIButton               b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Host, b_Quit/*, b_LearnToPlay*/;
 var automated       GUISectionBackground    sb_MainMenu, sb_HelpMenu, sb_ConfigFixMenu, sb_ShowVersion, sb_Social;
-var automated       GUIButton               b_Credits, b_Manual, b_Demos, b_Website, b_Back, b_MOTDTitle, b_Facebook, b_GitHub, b_SteamCommunity, b_Patreon;
+var automated       GUIButton               b_Credits, b_Manual, b_Demos, b_Website, b_Back, b_MOTDTitle, b_Facebook, b_GitHub, b_SteamCommunity, b_Patreon, b_Discord;
 var automated       GUILabel                l_Version;
 var automated       GUIImage                i_DHTextLogo;
 var automated       DHGUIScrollTextBox      tb_MOTDContent;
@@ -26,6 +26,7 @@ var     string                  FacebookURL;
 var     string                  GitHubURL;
 var     string                  SteamCommunityURL;
 var     string                  PatreonURL;
+var     string                  DiscordURL;
 
 var     localized string        QuickPlayString;
 var     localized string        JoinTestServerString;
@@ -50,6 +51,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     super.InitComponent(MyController, MyOwner);
 
     sb_MainMenu.ManageComponent(b_QuickPlay);
+//    sb_MainMenu.ManageComponent(b_LearnToPlay);
     sb_MainMenu.ManageComponent(b_MultiPlayer);
     sb_MainMenu.ManageComponent(b_Practice);
     sb_MainMenu.ManageComponent(b_Settings);
@@ -61,6 +63,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     sb_Social.ManageComponent(b_GitHub);
     sb_Social.ManageComponent(b_SteamCommunity);
     sb_Social.ManageComponent(b_Patreon);
+    sb_Social.ManageComponent(b_Discord);
 
     c_MOTD.ManageComponent(tb_MOTDContent);
     c_MOTD.ManageComponent(b_MOTDTitle);
@@ -68,21 +71,32 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     l_Version.Caption = class'DarkestHourGame'.default.Version.ToString();
 
-    if (class'DarkestHourGame'.default.Version.IsPrerelease())
+    b_QuickPlay.Caption = default.JoinTestServerString;
+
+    // Only show the quick-play button in pre-release builds (for easy joining of test server)
+    if (!class'DarkestHourGame'.default.Version.IsPrerelease())
     {
-        b_QuickPlay.Caption = default.JoinTestServerString;
+        b_QuickPlay.Hide();
     }
-    else
+
+    // If they have not changed their name from the default, change their
+    // name to their Steam name!
+    if (PlayerOwner() != none &&
+        PlayerOwner().GetUrlOption("Name") ~= "DHPlayer" &&
+        Controller != none &&
+        Controller.SteamGetUserName() != "")
     {
-        b_QuickPlay.Caption = default.QuickPlayString;
+        // This converts an underscore to a non-breaking space (0xA0)
+        PlayerOwner().ConsoleCommand("SetName" @ Repl(Controller.SteamGetUserName(), "_", " "));
     }
 }
 
 function ShowControlsChangedMessage()
 {
-    Controller.OpenMenu("GUI2K4.GUI2K4QuestionPage");
-    GUIQuestionPage(Controller.TopPage()).SetupQuestion(ControlsChangedMessage, QBTN_No | QBTN_Yes, QBTN_Yes);
-    GUIQuestionPage(Controller.TopPage()).OnButtonClick = OnControlsChangedButtonClicked;
+    local GUIQuestionPage ConfirmWindow;
+
+    ConfirmWindow = Controller.ShowQuestionDialog(ControlsChangedMessage, QBTN_YesNo, QBTN_Yes);
+    ConfirmWindow.OnButtonClick = OnControlsChangedButtonClicked;
 }
 
 function OnControlsChangedButtonClicked(byte bButton)
@@ -97,21 +111,38 @@ function OnControlsChangedButtonClicked(byte bButton)
     }
 }
 
+// Override to remove EULA confirmation
 function InternalOnOpen()
 {
-    local string CurrentVersion;
-
     PlayerOwner().ClientSetInitialMusic(MenuSong, MTRAN_Segue);
+}
 
-    CurrentVersion = class'DarkestHourGame'.default.Version.ToString();
+// New function to bind a key to a command, but first checking it's safe to do so without messing up the player's controls config
+// First checks whether our new key is already assigned to something - if it is then we don't make any changes
+// Means the key is either already bound to what we want (so no need to change) or the player is using it for something else (so don't mess up his config)
+// Secondly checks whether our new command is already bound to another key or keys - if it is bound to two keys then we don't make any changes
+// But if the command is already bound to only one key, we'll also bound it to the new key, as the config menu can handle two key assignments
+function SetKeyBindIfAvailable(string BindKeyName, string NewBoundCommand, optional string ExistingCommandCanBeOverridden)
+{
+    local array<string> ExistingAssignedKeys, s;
+    local string        ExistingBoundCommand;
 
-    if (SavedVersion != CurrentVersion)
+    Controller.GetCurrentBind(BindKeyName, ExistingBoundCommand); // finds any command that our key is already assigned to
+
+    if (ExistingBoundCommand == "" || ExistingBoundCommand ~= ExistingCommandCanBeOverridden) // only proceed if our key isn't already bound or is bound to a command we want to override
     {
-        //ShowAnnouncement();
+        Controller.GetAssignedKeys(NewBoundCommand, ExistingAssignedKeys, s); // finds any other keys already assigned to our command
 
-        SavedVersion = class'DarkestHourGame'.default.Version.ToString();
-        SaveConfig();
+        if (ExistingAssignedKeys.Length < 2) // only proceed if no more than one other key is already assigned to our command (we can add a 2nd if a slot is free)
+        {
+            if (ExistingBoundCommand != "") log("BINDING" @ NewBoundCommand @ "TO" @ BindKeyName @ "KEY, overriding existing command" @ ExistingBoundCommand);
+            else log("BINDING" @ NewBoundCommand @ "TO" @ BindKeyName @ "KEY"); // TEMPDEBUG
+
+            Controller.SetKeyBind(BindKeyName, NewBoundCommand);
+        }
+        else log(NewBoundCommand @ "is already bound to" @ ExistingAssignedKeys[0] @ "and" @ ExistingAssignedKeys[1] @ "keys"); // TEMPDEBUG
     }
+    else log(BindKeyName @ "is already assigned to" @ ExistingBoundCommand); // TEMPDEBUG
 }
 
 function OnClose(optional bool bCanceled)
@@ -155,8 +186,7 @@ function bool ButtonClick(GUIComponent Sender)
         case b_QuickPlay:
             if (!Controller.CheckSteam())
             {
-                Controller.OpenMenu(Controller.QuestionMenuClass);
-                GUIQuestionPage(Controller.TopPage()).SetupQuestion(SteamMustBeRunningText, QBTN_Ok, QBTN_Ok);
+                Controller.ShowQuestionDialog(SteamMustBeRunningText, QBTN_Ok, QBTN_Ok);
             }
             else
             {
@@ -167,8 +197,7 @@ function bool ButtonClick(GUIComponent Sender)
         case b_Practice:
             if (class'LevelInfo'.static.IsDemoBuild())
             {
-                Controller.OpenMenu(Controller.QuestionMenuClass);
-                GUIQuestionPage(Controller.TopPage()).SetupQuestion(SinglePlayerDisabledText, QBTN_Ok, QBTN_Ok);
+                Controller.ShowQuestionDialog(SinglePlayerDisabledText, QBTN_Ok, QBTN_Ok);
             }
             else
             {
@@ -177,12 +206,15 @@ function bool ButtonClick(GUIComponent Sender)
                 Profile("InstantAction");
             }
             break;
-
+/*
+        case b_LearnToPlay:
+            Controller.OpenMenu("DH_Interface.DHLearnToPlayPage");
+            break;
+*/
         case b_MultiPlayer:
             if (!Controller.CheckSteam())
             {
-                Controller.OpenMenu(Controller.QuestionMenuClass);
-                GUIQuestionPage(Controller.TopPage()).SetupQuestion(SteamMustBeRunningText, QBTN_Ok, QBTN_Ok);
+                Controller.ShowQuestionDialog(SteamMustBeRunningText, QBTN_Ok, QBTN_Ok);
             }
             else
             {
@@ -195,8 +227,7 @@ function bool ButtonClick(GUIComponent Sender)
         case b_Host:
             if (!Controller.CheckSteam())
             {
-                Controller.OpenMenu(Controller.QuestionMenuClass);
-                GUIQuestionPage(Controller.TopPage()).SetupQuestion(SteamMustBeRunningText, QBTN_Ok, QBTN_Ok);
+                Controller.ShowQuestionDialog(SteamMustBeRunningText, QBTN_Ok, QBTN_Ok);
             }
             else
             {
@@ -242,6 +273,10 @@ function bool ButtonClick(GUIComponent Sender)
             PlayerOwner().ConsoleCommand("START" @ default.PatreonURL);
             break;
 
+        case b_Discord:
+            PlayerOwner().ConsoleCommand("START" @ default.DiscordURL);
+            break;
+
         case i_Overlay:
             HideAnnouncement();
             break;
@@ -271,6 +306,8 @@ function HideAnnouncement()
 
 event Opened(GUIComponent Sender)
 {
+    local UVersion SavedVersionObject;
+
     sb_ShowVersion.SetVisibility(true);
 
     if (bDebugging)
@@ -281,6 +318,48 @@ event Opened(GUIComponent Sender)
     if (Sender != none && PlayerOwner().Level.IsPendingConnection())
     {
         PlayerOwner().ConsoleCommand("CANCEL");
+    }
+
+    if (SavedVersion != class'DarkestHourGame'.default.Version.ToString())
+    {
+        SavedVersionObject = class'UVersion'.static.FromString(SavedVersion);
+
+        // Matt: suggest add "alpha" so ppl using the dev build or who have played the v8-alpha test version will get the new smoke launcher and vehicle lock keys
+        if (SavedVersionObject == none || SavedVersionObject.Major < 8) // || SavedVersionObject.Prerelease == "alpha")
+        {
+            // To make a long story short, we can't force the client to delete
+            // their configuration file at will, so we need to forcibly create
+            // control bindings for the new commands added in 8.0;
+            Controller.SetKeyBind("I", "SquadTalk");
+            Controller.SetKeyBind("Insert", "Speak Squad");
+            Controller.SetKeyBind("CapsLock", "ShowOrderMenu | OnRelease HideOrderMenu");
+            //Controller.SetKeyBind("L", "ToggleVehicleLock"); // Matt: want to add
+            Controller.SetKeyBind("Minus", "DecreaseSmokeLauncherSetting");
+            Controller.SetKeyBind("Equals", "IncreaseSmokeLauncherSetting");
+            // TODO: fetch the defaults programmatically, this is sloppy!
+            // Matt: suggested alternative below, using new SetKeyBindIfAvailable() function:
+            /*
+            SetKeyBindIfAvailable("I", "SquadTalk");
+            SetKeyBindIfAvailable("Insert", "Speak Squad");
+            SetKeyBindIfAvailable("CapsLock", "ShowOrderMenu | OnRelease HideOrderMenu");
+            SetKeyBindIfAvailable("L", "ToggleVehicleLock");
+            SetKeyBindIfAvailable("Minus", "DecreaseSmokeLauncherSetting", "ShrinkHUD"); // optional 3rd argument means it will override a current binding to the ShrinkHUD command
+            SetKeyBindIfAvailable("Equals", "IncreaseSmokeLauncherSetting", "GrowHUD"); */
+        }
+
+        SavedVersion = class'DarkestHourGame'.default.Version.ToString();
+        SaveConfig();
+    }
+
+    // Force voice quality to higher quality
+    if (PlayerOwner().VoiceChatCodec != "CODEC_96WB" || PlayerOwner().ConsoleCommand("get Engine.PlayerController VoiceChatCodec") != "CODEC_96WB")
+    {
+        Log("Forcing codec to 96WB...");
+        PlayerOwner().VoiceChatCodec = "CODEC_96WB";
+        PlayerOwner().VoiceChatLANCodec = "CODEC_96WB";
+        PlayerOwner().ConsoleCommand("set Engine.PlayerController VoiceChatCodec CODEC_96WB");
+        PlayerOwner().ConsoleCommand("set Engine.PlayerController VoiceChatLANCodec CODEC_96WB");
+        PlayerOwner().SaveConfig();
     }
 
     super.Opened(Sender);
@@ -312,14 +391,7 @@ function OnQuickPlayResponse(int Status, TreeMap_string_string Headers, string C
         Log("OnQuickPlayResponse failed:" @ Status @ Content);
     }
 
-    if (class'DarkestHourGame'.default.Version.IsPrerelease())
-    {
-        b_QuickPlay.Caption = default.JoinTestServerString;
-    }
-    else
-    {
-        b_QuickPlay.Caption = default.QuickPlayString;
-    }
+    b_QuickPlay.Caption = default.JoinTestServerString;
 
     QuickPlayRequest = none;
 }
@@ -430,7 +502,7 @@ defaultproperties
 
     // Menu variables
     Begin Object Class=FloatingImage Name=FloatingBackground
-        Image=material'DH_GUI_Tex.MainMenu.BackGround'
+        Image=Material'DH_GUI_Tex.MainMenu.BackGround'
         DropShadow=none
         ImageStyle=ISTY_Scaled
         WinTop=0.0
@@ -442,7 +514,7 @@ defaultproperties
     i_Background=FloatingImage'DH_Interface.DHMainMenu.FloatingBackground'
 
     Begin Object Class=FloatingImage Name=OverlayBackground
-        Image=texture'Engine.BlackTexture'
+        Image=Texture'Engine.BlackTexture'
         DropShadow=none
         ImageStyle=ISTY_Scaled
         WinTop=0.0
@@ -459,7 +531,7 @@ defaultproperties
     i_Overlay=FloatingImage'DH_Interface.DHMainMenu.OverlayBackground'
 
     Begin Object Class=FloatingImage Name=AnnouncementImage
-        Image=texture'DH_GUI_Tex.MainMenu.patreon_announce_image'
+        Image=Texture'Engine.BlackTexture' // Removed reference, this variable could probably be deleted unless we use it for something
         DropShadow=none
         ImageStyle=ISTY_Justified
         WinTop=0.1
@@ -489,13 +561,13 @@ defaultproperties
         WinWidth=0.4
         WinHeight=0.0875
         OnPreDraw=sbSection1.InternalPreDraw
-        NumColumns=4
+        NumColumns=5
     End Object
     sb_Social=SocialSection
 
     Begin Object class=GUIButton Name=QuickPlayButton
         CaptionAlign=TXTA_Left
-        Caption="Quick Join"
+        Caption="Join Test Server"
         bAutoShrink=false
         bUseCaptionHeight=true
         FontScale=FNS_Large
@@ -507,6 +579,22 @@ defaultproperties
     End Object
     b_QuickPlay=GUIButton'DH_Interface.DHMainMenu.QuickPlayButton'
 
+/*
+    Begin Object Class=GUIButton Name=LearnToPlayButton
+        CaptionAlign=TXTA_Left
+        Caption="Learn To Play"
+        bAutoShrink=false
+        bUseCaptionHeight=true
+        FontScale=FNS_Large
+        StyleName="DHMenuTextButtonWhiteStyleHuge"
+        TabOrder=2
+        bFocusOnWatch=true
+        OnClick=DHMainMenu.ButtonClick
+        OnKeyEvent=LearnToPlayButton.InternalOnKeyEvent
+    End Object
+    b_LearnToPlay=GUIButton'DH_Interface.DHMainMenu.LearnToPlayButton'
+*/
+
     Begin Object Class=GUIButton Name=ServerButton
         CaptionAlign=TXTA_Left
         Caption="Server Browser"
@@ -514,7 +602,7 @@ defaultproperties
         bUseCaptionHeight=true
         FontScale=FNS_Large
         StyleName="DHMenuTextButtonWhiteStyleHuge"
-        TabOrder=2
+        TabOrder=3
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=ServerButton.InternalOnKeyEvent
@@ -528,7 +616,7 @@ defaultproperties
         bUseCaptionHeight=true
         FontScale=FNS_Large
         StyleName="DHMenuTextButtonWhiteStyleHuge"
-        TabOrder=3
+        TabOrder=4
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=InstantActionButton.InternalOnKeyEvent
@@ -542,7 +630,7 @@ defaultproperties
         bUseCaptionHeight=true
         FontScale=FNS_Large
         StyleName="DHMenuTextButtonWhiteStyleHuge"
-        TabOrder=4
+        TabOrder=5
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=SettingsButton.InternalOnKeyEvent
@@ -556,7 +644,7 @@ defaultproperties
         bUseCaptionHeight=true
         FontScale=FNS_Large
         StyleName="DHMenuTextButtonWhiteStyleHuge"
-        TabOrder=5
+        TabOrder=6
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=CreditsButton.InternalOnKeyEvent
@@ -570,7 +658,7 @@ defaultproperties
         bUseCaptionHeight=true
         FontScale=FNS_Large
         StyleName="DHMenuTextButtonWhiteStyleHuge"
-        TabOrder=6
+        TabOrder=7
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=QuitButton.InternalOnKeyEvent
@@ -593,7 +681,7 @@ defaultproperties
         bUseCaptionHeight=true
         FontScale=FNS_Large
         StyleName="DHMenuTextButtonWhiteStyle"
-        TabOrder=7
+        TabOrder=8
         bFocusOnWatch=true
         OnClick=DHMainMenu.ButtonClick
         OnKeyEvent=MOTDTitleButton.InternalOnKeyEvent
@@ -605,13 +693,12 @@ defaultproperties
     b_MOTDTitle=MOTDTitleButton
 
     Begin Object Class=GUIGFXButton Name=FacebookButton
-        WinWidth=0.05
+        WinWidth=0.04
         WinHeight=0.075
         WinLeft=0.875
         WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
-        Graphic=texture'DH_GUI_Tex.MainMenu.facebook'
-        TabOrder=1
+        Graphic=Texture'DH_GUI_Tex.MainMenu.facebook'
         bTabStop=true
         Position=ICP_Center
         Hint="Follow us on Facebook!"
@@ -621,12 +708,12 @@ defaultproperties
     b_Facebook=FacebookButton
 
     Begin Object Class=GUIGFXButton Name=GitHubButton
-        WinWidth=0.05
+        WinWidth=0.04
         WinHeight=0.075
         WinLeft=0.875
         WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
-        Graphic=texture'DH_GUI_Tex.MainMenu.github'
+        Graphic=Texture'DH_GUI_Tex.MainMenu.github'
         bTabStop=true
         Position=ICP_Center
         Hint="Join us on GitHub!"
@@ -636,12 +723,12 @@ defaultproperties
     b_GitHub=GitHubButton
 
     Begin Object Class=GUIGFXButton Name=SteamCommunityButton
-        WinWidth=0.05
+        WinWidth=0.04
         WinHeight=0.075
         WinLeft=0.875
         WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
-        Graphic=texture'DH_GUI_Tex.MainMenu.steam'
+        Graphic=Texture'DH_GUI_Tex.MainMenu.steam'
         bTabStop=true
         Position=ICP_Center
         Hint="Join the Steam Community!"
@@ -651,12 +738,12 @@ defaultproperties
     b_SteamCommunity=SteamCommunityButton
 
     Begin Object Class=GUIGFXButton Name=PatreonButton
-        WinWidth=0.05
+        WinWidth=0.04
         WinHeight=0.075
         WinLeft=0.875
         WinTop=0.925
         OnClick=DHMainMenu.ButtonClick
-        Graphic=texture'DH_GUI_Tex.MainMenu.patreon'
+        Graphic=Texture'DH_GUI_Tex.MainMenu.patreon'
         bTabStop=true
         Position=ICP_Center
         Hint="Support us on Patreon!"
@@ -664,6 +751,21 @@ defaultproperties
         StyleName="TextLabel"
     End Object
     b_Patreon=PatreonButton
+
+    Begin Object Class=GUIGFXButton Name=DiscordButton
+        WinWidth=0.04
+        WinHeight=0.075
+        WinLeft=0.875
+        WinTop=0.925
+        OnClick=DHMainMenu.ButtonClick
+        Graphic=Texture'DH_GUI_Tex.MainMenu.discord'
+        bTabStop=true
+        Position=ICP_Center
+        Hint="Join us in Discord!"
+        bRepeatClick=false
+        StyleName="TextLabel"
+    End Object
+    b_Discord=DiscordButton
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection3
         WinWidth=0.261250
@@ -686,7 +788,7 @@ defaultproperties
     l_Version=GUILabel'DH_Interface.DHMainMenu.VersionNum'
 
     Begin Object class=GUIImage Name=LogoImage
-        Image=texture'DH_GUI_Tex.Menu.DHTextLogo'
+        Image=Texture'DH_GUI_Tex.Menu.DHTextLogo'
         ImageColor=(R=255,G=255,B=255,A=255)
         ImageRenderStyle=MSTY_Alpha
         ImageStyle=ISTY_Justified
@@ -751,6 +853,6 @@ defaultproperties
     FacebookURL="http://www.facebook.com/darkesthourgame"
     SteamCommunityURL="http://steamcommunity.com/app/1280"
     PatreonURL="http://www.patreon.com/darkesthourgame"
+    DiscordURL="http://discord.gg/EEwFhtk"
     ControlsChangedMessage="New controls have been added to the game. As a result, your previous control bindings may have been changed.||Do you want to review your control settings?"
 }
-

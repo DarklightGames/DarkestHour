@@ -9,6 +9,7 @@
 *.int
 *.u
 *.DS_Store
+.idea
 Red Orchestra.app
 /Animations/
 /Cache/
@@ -47,7 +48,6 @@ ROInventory/
 RORoles/
 ROVehicles/
 ScreenShots/
-Tools/
 Turul/
 Unrealed/
 UnrealGame/
@@ -100,3 +100,4 @@ XWebAdmin/
 /DH-AllSourceCode/
 /DarkestHourDev/Notes/
 /DarkestHourDev/Maps/Archive/
+*/UCPP

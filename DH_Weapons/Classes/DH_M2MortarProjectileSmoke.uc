@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_M2MortarProjectileSmoke extends DHMortarProjectileSmoke;
@@ -9,6 +9,7 @@ class DH_M2MortarProjectileSmoke extends DHMortarProjectileSmoke;
 
 defaultproperties
 {
+    Speed=4800.0
     MaxSpeed=4800.0
     Tag="M302 WP"
 }

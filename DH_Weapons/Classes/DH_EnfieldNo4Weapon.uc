@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_EnfieldNo4Weapon extends DHBoltActionWeapon;
@@ -33,6 +33,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
+    DisplayFOV=90.0
     IronSightDisplayFOV=20.0
     ZoomOutTime=0.2
     FreeAimRotationSpeed=7.5

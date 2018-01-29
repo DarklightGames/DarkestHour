@@ -1,14 +1,25 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHATGunCannon extends DHVehicleCannon
     abstract;
 
-// Functions emptied out as AT gun will always be penetrated by a shell & needs no penetration functionality:
-simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector HitRotation, float PenetrationNumber) { return true; }
-simulated function bool CheckPenetration(DHAntiVehicleProjectile P, float ArmorFactor, float AngleOfIncidenceDegrees, float PenetrationNumber) { return true; }
+// Emptied out as AT gun will always be penetrated by a shell & needs no penetration functionality
+simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector ProjectileDirection, float MaxArmorPenetration) { return true; }
+
+// Functions emptied out as irrelevant to an AT gun, which never has alt fire (i.e. coaxial MG) or a smoke launcher:
+simulated function AttemptFireSmokeLauncher();
+function ServerFireSmokeLauncher();
+simulated function AdjustSmokeLauncher(bool bIncrease);
+function ServerAdjustSmokeLauncher(bool bIncrease);
+simulated function AttemptAltReload();
+simulated function AttemptSmokeLauncherReload();
+simulated function StartAltReload(optional bool bResumingPausedReload);
+simulated function StartSmokeLauncherReload(optional bool bResumingPausedReload);
+simulated function PauseAltReload();
+simulated function PauseSmokeLauncherReload();
 
 defaultproperties
 {

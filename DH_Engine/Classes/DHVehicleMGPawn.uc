@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHVehicleMGPawn extends DHVehicleWeaponPawn
@@ -52,14 +52,7 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     NonRelativeQuat = QuatProduct(RelativeQuat, VehicleQuat);
     CameraRotation = Normalize(QuatToRotator(NonRelativeQuat));
 
-    // Custom aim update
-    if (bOnTheGun)
-    {
-        PC.WeaponBufferRotation.Yaw = CameraRotation.Yaw;
-        PC.WeaponBufferRotation.Pitch = CameraRotation.Pitch;
-    }
-
-    // Get camera location - use GunsightCameraBone if there is one & player is one the gun, otherwise use normal CameraBone
+    // Get camera location - use GunsightCameraBone if there is one & player is on the gun, otherwise use normal CameraBone
     if (GunsightCameraBone != '' && bOnTheGun)
     {
         CameraLocation = Gun.GetBoneCoords(GunsightCameraBone).Origin;
@@ -74,16 +67,16 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     {
         if (bOnTheGun)
         {
-            CameraLocation = CameraLocation + (FPCamPos >> CameraRotation);
+            CameraLocation += (FPCamPos >> CameraRotation);
         }
         else
         {
-            CameraLocation = CameraLocation + (FPCamPos >> Gun.Rotation);
+            CameraLocation += (FPCamPos >> Gun.Rotation);
         }
     }
 
     // Finalise the camera with any shake
-    CameraLocation = CameraLocation + (PC.ShakeOffset >> PC.Rotation);
+    CameraLocation += (PC.ShakeOffset >> PC.Rotation);
     CameraRotation = Normalize(CameraRotation + PC.ShakeRot);
 }
 
@@ -92,9 +85,8 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
 simulated function DrawHUD(Canvas C)
 {
     local PlayerController PC;
-    local vector           CameraLocation, GunOffset, x, y, z;
-    local rotator          CameraRotation;
-    local float            SavedOpacity, ScreenRatio;
+    local vector           GunOffset;
+    local float            SavedOpacity;
 
     PC = PlayerController(Controller);
 
@@ -103,39 +95,25 @@ simulated function DrawHUD(Canvas C)
         // Player is in a position where an overlay should be drawn
         if (!bMultiPosition || (DriverPositions[DriverPositionIndex].bDrawOverlays && (!IsInState('ViewTransition') || DriverPositions[LastPositionIndex].bDrawOverlays)))
         {
-            // Draw binoculars overlay
-            if (DriverPositionIndex == BinocPositionIndex && BinocsOverlay != none)
-            {
-                DrawBinocsOverlay(C);
-            }
-            // Draw any HUD overlay
-            else if (HUDOverlay != none)
+            // Draw any gun HUD overlay
+            if (HUDOverlay != none && DriverPositionIndex != BinocPositionIndex)
             {
                 if (!Level.IsSoftwareRendering())
                 {
-                    CameraLocation = PC.CalcViewLocation;
-                    CameraRotation = Normalize(PC.CalcViewRotation + PC.ShakeRot);
+                    GunOffset = HUDOverlayOffset + (PC.ShakeOffset * FirstPersonGunShakeScale);
 
-                    // Make the first person gun appear lower when your sticking your head up
+                    // This makes the first person gun appear lower if player raises his head above the gun
                     if (FirstPersonGunRefBone != '' && Gun != none)
                     {
-                        GunOffset += PC.ShakeOffset * FirstPersonGunShakeScale;
-                        GunOffset.Z += (((Gun.GetBoneCoords(FirstPersonGunRefBone).Origin.Z - CameraLocation.Z) * FirstPersonOffsetZScale));
-                        GunOffset += HUDOverlayOffset;
-                        HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-                        C.DrawBoundActor(HUDOverlay, false, true, HUDOverlayFOV, CameraRotation, PC.ShakeRot * FirstPersonGunShakeScale, GunOffset * -1.0);
+                        GunOffset.Z += ((Gun.GetBoneCoords(FirstPersonGunRefBone).Origin.Z - PC.CalcViewLocation.Z) * FirstPersonOffsetZScale);
                     }
-                    else
-                    {
-                        CameraLocation = CameraLocation + (PC.ShakeOffset.X * x) + (PC.ShakeOffset.Y * y) + (PC.ShakeOffset.Z * z);
-                        HUDOverlay.SetLocation(CameraLocation + (HUDOverlayOffset >> CameraRotation));
-                        HUDOverlay.SetRotation(CameraRotation);
-                        C.DrawActor(HUDOverlay, false, true, HUDOverlayFOV);
-                    }
+
+                    HUDOverlay.SetLocation(PC.CalcViewLocation);
+                    C.DrawBoundActor(HUDOverlay, false, true, HUDOverlayFOV, PC.CalcViewRotation, PC.ShakeRot * FirstPersonGunShakeScale, -GunOffset);
                 }
             }
-            // Draw gunsight overlay
-            else if (GunsightOverlay != none)
+            // Draw any texture overlay
+            else
             {
                 // Save current HUD opacity & then set up for drawing overlays
                 SavedOpacity = C.ColorModulate.W;
@@ -143,13 +121,16 @@ simulated function DrawHUD(Canvas C)
                 C.DrawColor.A = 255;
                 C.Style = ERenderStyle.STY_Alpha;
 
-                ScreenRatio = float(C.SizeY) / float(C.SizeX);
-                C.SetPos(0.0, 0.0);
+                if (DriverPositionIndex == BinocPositionIndex)
+                {
+                    DrawBinocsOverlay(C);
+                }
+                else
+                {
+                    DrawGunsightOverlay(C);
+                }
 
-                C.DrawTile(GunsightOverlay, C.SizeX, C.SizeY, OverlayCenterTexStart - OverlayCorrectionX,
-                    OverlayCenterTexStart - OverlayCorrectionY + (1.0 - ScreenRatio) * OverlayCenterTexSize / 2.0, OverlayCenterTexSize, OverlayCenterTexSize * ScreenRatio);
-
-                C.ColorModulate.W = SavedOpacity; // reset HudOpacity to original value
+                C.ColorModulate.W = SavedOpacity; // reset HUD opacity to original value
             }
         }
 
@@ -158,6 +139,38 @@ simulated function DrawHUD(Canvas C)
         {
             ROHud(PC.myHUD).DrawVehicleIcon(C, VehicleBase, self);
         }
+    }
+}
+
+// New function to draw a gunsight overlay
+// Basis is same as a cannon pawn (see notes there), but without the extra cannon stuff)
+simulated function DrawGunsightOverlay(Canvas C)
+{
+    local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
+
+    if (GunsightOverlay != none)
+    {
+        TextureSize = float(GunsightOverlay.MaterialUSize());
+        TilePixelWidth = TextureSize / GunsightSize * 0.955;
+        TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX);
+        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
+        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
+        C.SetPos(0.0, 0.0);
+
+        C.DrawTile(GunsightOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
+    }
+}
+
+// Modified so if player starts on the MG, we match his view rotation to its current aim (which is always relative to vehicle)
+simulated function SetInitialViewRotation()
+{
+    if (CanFire() && Gun != none)
+    {
+        SetRotation(Gun.CurrentAim);
+    }
+    else
+    {
+        super.SetInitialViewRotation();
     }
 }
 
@@ -179,12 +192,16 @@ function Fire(optional float F)
     }
 }
 
-// Implemented to handle externally-mounted MGs where player must be unbuttoned to reload (& not using binoculars)
+// Implemented to handle externally-mounted MGs where player must be unbuttoned to reload, & to prevent reloading if player using binoculars
 simulated function bool CanReload()
 {
-    return !bMustUnbuttonToReload
-        || (DriverPositionIndex == UnbuttonedPositionIndex && (!IsInState('ViewTransition') || LastPositionIndex > UnbuttonedPositionIndex)) // unbuttoned position & not just unbuttoning
-        || (DriverPositionIndex > UnbuttonedPositionIndex && DriverPositionIndex != BinocPositionIndex); // above the lowest unbuttoned position, but not on binocs
+    if (DriverPositionIndex == BinocPositionIndex)
+    {
+        return false;
+    }
+
+    return !bMustUnbuttonToReload || DriverPositionIndex > UnbuttonedPositionIndex
+        || (DriverPositionIndex == UnbuttonedPositionIndex && (!IsInState('ViewTransition') || LastPositionIndex > UnbuttonedPositionIndex)); // if unbuttoned position make sure not unbuttoning
 }
 
 // Modified to show screen message advising player they must unbutton to reload an external MG, if they press the reload key (perhaps in confusion on finding they can't reload)
@@ -192,21 +209,13 @@ simulated exec function ROManualReload()
 {
     if (bMustUnbuttonToReload && !CanReload() && VehWep != none && VehWep.ReloadState != RL_ReadyToFire)
     {
-        DisplayVehicleMessage(12,, true);
+        DisplayVehicleMessage(16,, true); // "You must unbutton the hatch [KEYBIND] to reload"
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ************************* ENTRY, CHANGING VIEW & EXIT  ************************* //
 ///////////////////////////////////////////////////////////////////////////////////////
-
-// Modified to match starting rotation to MG's aim
-simulated function ClientKDriverEnter(PlayerController PC)
-{
-    super.ClientKDriverEnter(PC);
-
-    MatchRotationToGunAim(PC);
-}
 
 // Modified to exit to added state LeavingViewTransition, just to allow CanReload() functionality to work correctly
 // Also to add a workaround (hack really) to turn off muzzle flash in 1st person when player raises head above sights as it sometimes looks wrong, & a reloading hint
@@ -219,7 +228,7 @@ simulated state ViewTransition
         if (VehWep != none)
         {
             // If the option is flagged, turn off muzzle flash if player has raised head above sights
-            if (bHideMuzzleFlashAboveSights && DriverPositionIndex > 0 && VehWep.AmbientEffectEmitter != none && IsHumanControlled() && !PlayerController(Controller).bBehindView)
+            if (bHideMuzzleFlashAboveSights && DriverPositionIndex > 0 && IsFirstPerson() && VehWep.AmbientEffectEmitter != none)
             {
                 VehWep.AmbientEffectEmitter.bHidden = true;
             }
@@ -275,17 +284,19 @@ simulated state LeavingViewTransition
 // Modified to handle different 'can't exit' messages if MG doesn't have a hatch, so player has to exit through driver's and/or commander's hatch
 simulated function bool CanExit()
 {
+    local DHArmoredVehicle AV;
+
     if (!super.CanExit())
     {
         if (DriverPositions.Length <= UnbuttonedPositionIndex) // means it is impossible to unbutton
         {
-            if (DHArmoredVehicle(VehicleBase) != none && DHArmoredVehicle(VehicleBase).DriverPositions.Length > DHArmoredVehicle(VehicleBase).UnbuttonedPositionIndex) // means driver has hatch
+            if (GetArmoredVehicleBase(AV) && AV.DriverPositions.Length > AV.UnbuttonedPositionIndex) // means driver has hatch
             {
-                DisplayVehicleMessage(10); // must exit through driver's or commander's hatch
+                DisplayVehicleMessage(11); // must exit through driver's or commander's hatch
             }
             else
             {
-                DisplayVehicleMessage(5); // must exit through commander's hatch
+                DisplayVehicleMessage(10); // must exit through commander's hatch
             }
         }
 
@@ -425,25 +436,6 @@ function UpdateRocketAcceleration(float DeltaTime, float YawChange, float PitchC
 //  *******************************  MISCELLANEOUS ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// New function to match rotation to MG's current aim (note owning net client will update rotation back to server)
-simulated function MatchRotationToGunAim(optional Controller C)
-{
-    if (Gun != none)
-    {
-        if (C == none)
-        {
-            C = Controller;
-        }
-
-        SetRotation(Gun.CurrentAim);
-
-        if (C != none)
-        {
-            C.SetRotation(Rotation);
-        }
-    }
-}
-
 // From deprecated ROMountedTankMGPawn
 function float ModifyThreat(float Current, Pawn Threat)
 {
@@ -456,28 +448,19 @@ function float ModifyThreat(float Current, Pawn Threat)
 }
 
 // New debug exec to adjust BinocsDrivePos (in binoculars position, the option for a different player offset from attachment bone)
-exec function SetBinocsDrivePos(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
+exec function SetBinocsDrivePos(string NewX, string NewY, string NewZ)
 {
-    local vector OldBinocsDrivePos;
-
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
-        OldBinocsDrivePos = BinocsDrivePos;
-        BinocsDrivePos.X = NewX;
-        BinocsDrivePos.Y = NewY;
-        BinocsDrivePos.Z = NewZ;
-
-        if (bScaleOneTenth) // option allowing accuracy to .1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
-        {
-            BinocsDrivePos /= 10.0;
-        }
+        Log(Tag @ "BinocsDrivePos =" @ float(NewX) @ float(NewY) @ float(NewZ) @ "(was" @ BinocsDrivePos $ ")");
+        BinocsDrivePos.X = float(NewX);
+        BinocsDrivePos.Y = float(NewY);
+        BinocsDrivePos.Z = float(NewZ);
 
         if (DriverPositionIndex == BinocPositionIndex && Driver != none)
         {
             Driver.SetRelativeLocation(BinocsDrivePos + Driver.default.PrePivot);
         }
-
-        Log(Tag @ " new BinocsDrivePos =" @ BinocsDrivePos @ "(was" @ OldBinocsDrivePos $ ")");
     }
 }
 
@@ -496,10 +479,9 @@ defaultproperties
     PositionInArray=1
     UnbuttonedPositionIndex=1
     bDrawDriverInTP=false
-    bZeroPCRotOnEntry=false // we're now calling MatchRotationToGunAim() on entering, so no point zeroing rotation
     CameraBone="mg_yaw"
-    OverlayCenterSize=1.0
+    GunsightSize=1.0
     FirstPersonGunShakeScale=1.0
-    VehicleMGReloadTexture=texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
+    VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.MG42_ammo_reload'
     HudName="MG"
 }

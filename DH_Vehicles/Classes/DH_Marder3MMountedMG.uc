@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_Marder3MMountedMG extends DHVehicleMG;
@@ -9,7 +9,7 @@ defaultproperties
 {
     // MG mesh
     Mesh=SkeletalMesh'DH_Marder3M_anm.marder_M34_ext'
-    Skins(0)=texture'Weapons3rd_tex.German.mg34_world'
+    Skins(0)=Texture'Weapons3rd_tex.German.mg34_world'
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     BeginningIdleAnim="loader_close_idle"
     GunnerAttachmentBone="loader_player"
@@ -43,8 +43,8 @@ defaultproperties
 
     // Reload
     HUDOverlayReloadAnim="Bipod_Reload_s"
-    ReloadStages(0)=(Sound=none,Duration=1.21) // no sounds because HUD overlay reload animation plays them
-    ReloadStages(1)=(Sound=none,Duration=1.92)
+    ReloadStages(0)=(Sound=none,Duration=1.57) // no sounds because HUD overlay reload animation plays them
+    ReloadStages(1)=(Sound=none,Duration=1.56)
     ReloadStages(2)=(Sound=none,Duration=1.92)
-    ReloadStages(3)=(Sound=none,Duration=1.54)
+    ReloadStages(3)=(Sound=none,Duration=1.63)
 }

@@ -1,11 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHGUIController extends UT2K4GUIController;
 
-var     array<string>   RODefaultStyleNames; // holds the name of all styles to use
+// Holds the name of all styles to use
+var     array<string>   RODefaultStyleNames;
 
 event InitializeController()
 {
@@ -17,12 +18,245 @@ event InitializeController()
     RegisterStyle(class'ROInterface.ROSTY_CaptionLabel');
 
     LastGameType = "DH_Engine.DarkestHourGame";
-    Log("DHGUIController initialized");
 }
 
-function PurgeObjectReferences()
+function bool ShouldSkipResetInput()
 {
+    local DHPlayer PC;
+
+    if (ViewportOwner == none || ViewportOwner.Actor == none)
+    {
+        return false;
+    }
+
+    PC = DHPlayer(ViewportOwner.Actor);
+
+    return PC != none && PC.bShouldSkipResetInput;
 }
+
+// Modified to skip input reset step if specified.
+function SetControllerStatus(bool On)
+{
+    local bool bWasActive;
+
+    if (bActive && !On && ViewportOwner != none && ViewportOwner.Actor != none && !ShouldSkipResetInput())
+    {
+        ViewportOwner.Actor.UnpressButtons();
+    }
+
+    bWasActive = bActive;
+    bActive = On;
+    bVisible = On;
+    bRequiresTick = On;
+
+    if (bActive && !bWasActive && ViewportOwner != none && ViewportOwner.Actor != none && !ShouldSkipResetInput())
+    {
+        ViewportOwner.Actor.UnpressButtons();
+    }
+
+    ViewportOwner.bShowWindowsMouse = On && ViewportOwner.bWindowsMouseAvailable;
+
+    if (On)
+    {
+        bIgnoreUntilPress = true;
+    }
+    else
+    {
+//        ResetDesigner();
+//        ViewportOwner.Actor.ConsoleCommand("toggleime 0");
+    }
+
+    PurgeComponentClasses();
+}
+
+// Modified to skip input reset step if specified.
+protected event PushMenu(int Index, GUIPage NewMenu, optional string Param1, optional string Param2)
+{
+    if (NewMenu == none)
+    {
+        Log("Call to GUIController.PushMenu() with invalid NewMenu");
+        return;
+    }
+
+    SetControllerStatus(true);
+
+    if (Index >= 0)
+    {
+        MenuStack[Index] = NewMenu;
+        ActivePage = NewMenu;
+    }
+
+    CloseOverlays();
+
+    if (!ShouldSkipResetInput())
+    {
+        ResetInput();
+    }
+
+    if (NewMenu.Controller == none)
+    {
+        NewMenu.InitComponent(self, none);
+    }
+
+    NewMenu.CheckResolution(false, self);
+
+    // Pass along the event
+    NewMenu.Opened(NewMenu);
+    NewMenu.MenuState = MSAT_Focused;
+    NewMenu.PlayOpenSound();
+
+    bCurMenuInitialized = true;
+
+    NewMenu.HandleParameters(Param1, Param2);
+
+    bForceMouseCheck = true;
+
+    NewMenu.OnOpen();
+}
+
+// Modified to skip input reset step if specified.
+event bool RemoveMenu(GUIPage Menu, optional bool bCancelled)
+{
+    if (MenuStack.Length == 0)
+    {
+        Log("GUIController.RemoveMenu() - Attempting to close a non-existing menu page");
+        return false;
+    }
+
+    if (Menu == none || Menu == ActivePage)
+    {
+        return CloseMenu(bCancelled);
+    }
+
+    if (bModAuthor)
+    {
+        Log(Class @ "RemoveMenu [" $ Menu.Name $ "]", 'ModAuthor');
+    }
+
+    if (!bCurMenuInitialized)
+    {
+        if (bModAuthor)
+        {
+            Log("Cannot remove menu until initialization is complete!", 'ModAuthor');
+        }
+
+        return false;
+    }
+
+    if (!Menu.OnCanClose(bCancelled))
+    {
+        return false;
+    }
+
+    if (!ShouldSkipResetInput())
+    {
+        ResetInput();
+    }
+
+    Menu.PlayCloseSound();
+
+    PopMenu(FindMenuIndex(Menu), Menu, bCancelled);
+
+    // Gab the next page on the stack
+    if (MenuStack.Length == 0)
+    {
+        // Pass control back to the previous menu
+        if (!Menu.bAllowedAsLast && !MainNotWanted)
+        {
+            return OpenMenu(GetMainMenuClass());
+        }
+
+        ActivePage = none;
+        SetControllerStatus(false);
+    }
+
+    VerifyStack();
+    bForceMouseCheck = true;
+    return true;
+}
+
+// Close the top menu.  returns true if success.
+event bool CloseMenu(optional bool bCancelled)
+{
+    if (MenuStack.Length == 0 || ActivePage == none)
+    {
+        Log("Attempting to close a non-existing menu page");
+        return false;
+    }
+
+    if (bModAuthor)
+    {
+        Log(Class @ "CloseMenu [" $ ActivePage.Name $ "]", 'ModAuthor');
+    }
+
+    if (!bCurMenuInitialized)
+    {
+        if (bModAuthor)
+        {
+            Log("Cannot close menu until initialization is complete!", 'ModAuthor');
+        }
+
+        return false;
+    }
+
+    if (!ActivePage.OnCanClose(bCancelled))
+    {
+        return false;
+    }
+
+    if (!ShouldSkipResetInput())
+    {
+        ResetInput();
+    }
+
+    ActivePage.PlayCloseSound();       // Play the closing sound
+
+    PopMenu(FindMenuIndex(ActivePage), ActivePage, bCancelled);
+
+    ActivePage.CheckResolution(true, self);
+
+    // Gab the next page on the stack
+    bCurMenuInitialized = false;
+
+    if (MenuStack.Length > 0)
+    {
+        // Pass control back to the previous menu
+        ActivePage = MenuStack[MenuStack.Length - 1];
+        ActivePage.MenuState = MSAT_Focused;
+
+        ResetFocus();
+        ActivePage.FocusFirst(none);
+
+        if (!ActivePage.bNeverFocus)
+        {
+            ActivePage.OnActivate();
+        }
+    }
+    else
+    {
+        if (!ActivePage.bAllowedAsLast && !MainNotWanted)
+        {
+            ActivePage = none;
+            return OpenMenu(GetMainMenuClass());
+        }
+
+        ActivePage = none;
+        SetControllerStatus(false);
+    }
+
+    bCurMenuInitialized = true;
+
+    if (ActivePage != none)
+    {
+        ActivePage.OnReopen();
+    }
+
+    bForceMouseCheck = true;
+
+    return true;
+}
+
+function PurgeObjectReferences() { }
 
 static simulated event Validate()
 {
@@ -95,21 +329,21 @@ defaultproperties
     Begin Object class=DHHugeButtonFont Name=fntDHHugeButtonFont
     End Object
     FontStack(15)=fntDHHugeButtonFont
-    MouseCursors(0)=texture'DH_GUI_Tex.Menu.DHPointer'
-    MouseCursors(1)=texture'InterfaceArt_tex.Cursors.ResizeAll'
-    MouseCursors(2)=texture'InterfaceArt_tex.Cursors.ResizeSWNE'
-    MouseCursors(3)=texture'InterfaceArt_tex.Cursors.Resize'
-    MouseCursors(4)=texture'InterfaceArt_tex.Cursors.ResizeNWSE'
-    MouseCursors(5)=texture'InterfaceArt_tex.Cursors.ResizeHorz'
-    MouseCursors(6)=texture'DH_GUI_Tex.Menu.DHPointer'
-    ImageList(0)=texture'InterfaceArt_tex.Menu.checkBoxBall_b'
-    ImageList(1)=texture'InterfaceArt_tex.Menu.AltComboTickBlurry'
-    ImageList(2)=texture'InterfaceArt_tex.Menu.LeftMark'
-    ImageList(3)=texture'InterfaceArt_tex.Menu.RightMark'
-    ImageList(4)=texture'InterfaceArt_tex.Menu.RightMark'
-    ImageList(5)=texture'InterfaceArt_tex.Menu.RightMark'
-    ImageList(6)=texture'InterfaceArt_tex.Menu.UpMark'
-    ImageList(7)=texture'InterfaceArt_tex.Menu.DownMark'
+    MouseCursors(0)=Texture'DH_GUI_Tex.Menu.DHPointer'
+    MouseCursors(1)=Texture'InterfaceArt_tex.Cursors.ResizeAll'
+    MouseCursors(2)=Texture'InterfaceArt_tex.Cursors.ResizeSWNE'
+    MouseCursors(3)=Texture'InterfaceArt_tex.Cursors.Resize'
+    MouseCursors(4)=Texture'InterfaceArt_tex.Cursors.ResizeNWSE'
+    MouseCursors(5)=Texture'InterfaceArt_tex.Cursors.ResizeHorz'
+    MouseCursors(6)=Texture'DH_GUI_Tex.Menu.DHPointer'
+    ImageList(0)=Texture'InterfaceArt_tex.Menu.checkBoxBall_b'
+    ImageList(1)=Texture'InterfaceArt_tex.Menu.AltComboTickBlurry'
+    ImageList(2)=Texture'InterfaceArt_tex.Menu.LeftMark'
+    ImageList(3)=Texture'InterfaceArt_tex.Menu.RightMark'
+    ImageList(4)=Texture'InterfaceArt_tex.Menu.RightMark'
+    ImageList(5)=Texture'InterfaceArt_tex.Menu.RightMark'
+    ImageList(6)=Texture'InterfaceArt_tex.Menu.UpMark'
+    ImageList(7)=Texture'InterfaceArt_tex.Menu.DownMark'
     DefaultStyleNames(0)="ROInterface.ROSTY2CloseButton"
     DefaultStyleNames(1)="ROInterface.ROSTY_RoundScaledButton"
     DefaultStyleNames(2)="ROInterface.ROSTY2SquareButton"
@@ -177,11 +411,13 @@ defaultproperties
     DefaultStyleNames(83)="DH_Interface.DHStyle_DeployTabButton"
     DefaultStyleNames(84)="DH_Interface.DHStyle_DeployContinueButton"
     DefaultStyleNames(85)="DH_Interface.DHStyle_SpawnVehicleButton"
-    DefaultStyleNames(86)="DH_Interface.DHStyle_SpawnVehicleBlockedButton"
-    DefaultStyleNames(87)="DH_Interface.DHStyle_MenuTextButtonWhite"
-    DefaultStyleNames(88)="DH_Interface.DHStyle_MenuTextButtonWhiteHuge"
-    DefaultStyleNames(89)="DH_Interface.DHStyle_LargeEditBox"
-    DefaultStyleNames(90)="DH_Interface.DHStyle_ServerBrowserGridRed"
+    DefaultStyleNames(86)="DH_Interface.DHStyle_MenuTextButtonWhite"
+    DefaultStyleNames(87)="DH_Interface.DHStyle_MenuTextButtonWhiteHuge"
+    DefaultStyleNames(88)="DH_Interface.DHStyle_LargeEditBox"
+    DefaultStyleNames(89)="DH_Interface.DHStyle_ServerBrowserGridRed"
+    DefaultStyleNames(90)="DH_Interface.DHStyle_RallyPointButton"
+    DefaultStyleNames(91)="DH_Interface.DHStyle_PlatoonHQButton"
+    DefaultStyleNames(92)="DH_Interface.DHStyle_ListLargeHighlight"
     RequestDataMenu="DH_Interface.DHGetDataMenu"
     DynArrayPropertyMenu="DH_Interface.DHGUIDynArrayPage"
     FilterMenu="DH_Interface.DHFilterListPage"
@@ -192,5 +428,5 @@ defaultproperties
     MainMenuOptions(2)="DH_Interface.DHGamePageSP"
     MainMenuOptions(3)="DH_Interface.DHSettingsPage"
     MainMenuOptions(4)="DH_Interface.DHQuitPage"
-    LCDLogo=texture'DH_G15LCD.Logos.DH_BWLogoRGB8A'
+    LCDLogo=Texture'DH_G15LCD.Logos.DH_BWLogoRGB8A'
 }

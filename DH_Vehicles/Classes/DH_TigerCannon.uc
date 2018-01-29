@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_TigerCannon extends DHVehicleCannon;
@@ -9,7 +9,7 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_Tiger_anm.Tiger_turret_ext'
-    Skins(0)=texture'axis_vehicles_tex.ext_vehicles.Tiger1_ext'
+    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.Tiger1_ext'
     CollisionStaticMesh=StaticMesh'DH_German_vehicles_stc.Tiger1.Tiger1_turret_Coll'
     HighDetailOverlay=shader'axis_vehicles_tex.int_vehicles.tiger1_int_s'
     bUseHighDetailOverlayIndex=true
@@ -36,8 +36,10 @@ defaultproperties
     ProjectileClass=class'DH_Vehicles.DH_TigerCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_TigerCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_TigerCannonShellHE'
-    InitialPrimaryAmmo=48
-    InitialSecondaryAmmo=44
+    InitialPrimaryAmmo=40
+    InitialSecondaryAmmo=22
+    MaxPrimaryAmmo=48
+    MaxSecondaryAmmo=44
     SecondarySpread=0.00125
 
     // Coaxial MG ammo
@@ -58,10 +60,10 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire03'
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
-    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_01')
-    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_02')
-    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
-    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_04')
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_04')
 
     // Cannon range settings
     RangeSettings(1)=100

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHTab_Input extends ROTab_Input;
@@ -53,7 +53,6 @@ function ResetClicked()
     super.ResetClicked();
 }
 
-// Theel: TODO the save config stuff here might be able to be moved to SaveSettings() (but not really worth the hassle)
 function OnInputChange(GUIComponent Sender)
 {
     local PlayerController PC;
@@ -107,10 +106,19 @@ function SaveSettings()
     }
 
     if (bool(PC.ConsoleCommand("get ini:Engine.Engine.ViewportManager UseJoystick")) != bJoystick)
+    {
         PC.ConsoleCommand("set ini:Engine.Engine.ViewportManager UseJoystick" @ bJoystick);
 
+        if (DHPlayer(PC) != none)
+        {
+            DHPlayer(PC).bUsingController = bJoystick;
+        }
+    }
+
     if (bool(PC.ConsoleCommand("get ini:Engine.Engine.RenderDevice ReduceMouseLag")) != bLag)
+    {
         PC.ConsoleCommand("set ini:Engine.Engine.RenderDevice ReduceMouseLag"@bLag);
+    }
 
     if (PC.bSnapToLevel != bSlope)
     {

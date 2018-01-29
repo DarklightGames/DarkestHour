@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_T3485CannonShellHE extends DHCannonShellHE;
@@ -12,12 +12,13 @@ defaultproperties
     BallisticCoefficient=1.55
     Speed=39832.0 // 660 m/s
     MaxSpeed=39832.0
-    Damage=430.0 // 350 in RO
-    DamageRadius=1300.0 // 750 in RO
-    ImpactDamage=510 // 200 in RO
+    Damage=430.0
+    DamageRadius=1300.0
+    ImpactDamage=510
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
     PenetrationMag=1000.0
     Tag="O-365"
+    bDebugInImperial=false
 
     DHPenetrationTable(0)=4.0
     DHPenetrationTable(1)=3.8
@@ -33,49 +34,50 @@ defaultproperties
 
     bMechanicalAiming=true
     MechanicalRanges(0)=(Range=0,RangeValue=0.0)
-    MechanicalRanges(1)=(Range=400,RangeValue=35.0)
-    MechanicalRanges(2)=(Range=500,RangeValue=45.0)
-    MechanicalRanges(3)=(Range=600,RangeValue=55.0)
-    MechanicalRanges(4)=(Range=700,RangeValue=65.0)
-    MechanicalRanges(5)=(Range=800,RangeValue=75.0)
-    MechanicalRanges(6)=(Range=900,RangeValue=85.0)
-    MechanicalRanges(7)=(Range=1000,RangeValue=96.0)
-    MechanicalRanges(8)=(Range=1200,RangeValue=117.0)
-    MechanicalRanges(9)=(Range=1400,RangeValue=139.0)
-    MechanicalRanges(10)=(Range=1600,RangeValue=168.0)
-    MechanicalRanges(11)=(Range=1800,RangeValue=199.0)
-    MechanicalRanges(12)=(Range=2000,RangeValue=226.0)
-    MechanicalRanges(13)=(Range=2200,RangeValue=256.0)
-    MechanicalRanges(14)=(Range=2400,RangeValue=290.0)
-    MechanicalRanges(15)=(Range=2600,RangeValue=327.0)
-    MechanicalRanges(16)=(Range=2800,RangeValue=365.0)
-    MechanicalRanges(17)=(Range=3000,RangeValue=403.0)
-    MechanicalRanges(18)=(Range=3200,RangeValue=449.0)
-    MechanicalRanges(19)=(Range=3400,RangeValue=495.0)
-    MechanicalRanges(20)=(Range=3600,RangeValue=540.0)
-    MechanicalRanges(21)=(Range=3800,RangeValue=592.0)
+    MechanicalRanges(1)=(Range=400,RangeValue=49.0)
+    MechanicalRanges(2)=(Range=500,RangeValue=64.0)
+    MechanicalRanges(3)=(Range=600,RangeValue=77.0)
+    MechanicalRanges(4)=(Range=700,RangeValue=92.0)
+    MechanicalRanges(5)=(Range=800,RangeValue=108.0)
+    MechanicalRanges(6)=(Range=900,RangeValue=124.0)
+    MechanicalRanges(7)=(Range=1000,RangeValue=141.0)
+    MechanicalRanges(8)=(Range=1200,RangeValue=176.0)
+    MechanicalRanges(9)=(Range=1400,RangeValue=216.0)
+    MechanicalRanges(10)=(Range=1600,RangeValue=263.0)
+    MechanicalRanges(11)=(Range=1800,RangeValue=310.0)
+    MechanicalRanges(12)=(Range=2000,RangeValue=353.0)
+    MechanicalRanges(13)=(Range=2200,RangeValue=408.0)
+    MechanicalRanges(14)=(Range=2400,RangeValue=465.0)
+    MechanicalRanges(15)=(Range=2600,RangeValue=527.0)
+    MechanicalRanges(16)=(Range=2800,RangeValue=592.0) // estimates from here on as these extreme ranges are largely theoretical
+    MechanicalRanges(17)=(Range=3000,RangeValue=657.0)
+    MechanicalRanges(18)=(Range=3200,RangeValue=722.0)
+    MechanicalRanges(19)=(Range=3400,RangeValue=787.0)
+    MechanicalRanges(20)=(Range=3600,RangeValue=852.0)
+    MechanicalRanges(21)=(Range=3800,RangeValue=917.0)
 
-    bOpticalAiming=true // just a visual range indicator on the side; doesn't actually alter the aiming point
-    OpticalRanges(0)=(Range=0,RangeValue=0.369)
-    OpticalRanges(1)=(Range=400,RangeValue=0.3565)
-    OpticalRanges(2)=(Range=500,RangeValue=0.349)
-    OpticalRanges(3)=(Range=600,RangeValue=0.343)
-    OpticalRanges(4)=(Range=700,RangeValue=0.336)
-    OpticalRanges(5)=(Range=800,RangeValue=0.3295)
-    OpticalRanges(6)=(Range=900,RangeValue=0.323)
-    OpticalRanges(7)=(Range=1000,RangeValue=0.3165)
-    OpticalRanges(8)=(Range=1200,RangeValue=0.303)
-    OpticalRanges(9)=(Range=1400,RangeValue=0.291)
-    OpticalRanges(10)=(Range=1600,RangeValue=0.278)
-    OpticalRanges(11)=(Range=1800,RangeValue=0.265)
-    OpticalRanges(12)=(Range=2000,RangeValue=0.252)
-    OpticalRanges(13)=(Range=2200,RangeValue=0.239)
-    OpticalRanges(14)=(Range=2400,RangeValue=0.226)
-    OpticalRanges(15)=(Range=2600,RangeValue=0.213)
-    OpticalRanges(16)=(Range=2800,RangeValue=0.200)
-    OpticalRanges(17)=(Range=3000,RangeValue=0.187)
-    OpticalRanges(18)=(Range=3200,RangeValue=0.174)
-    OpticalRanges(19)=(Range=3400,RangeValue=0.161)
-    OpticalRanges(20)=(Range=3600,RangeValue=0.148)
-    OpticalRanges(21)=(Range=3800,RangeValue=0.135)
+    // For this gunsight, the moving optical bar is just a visual range indicator on the side; it doesn't actually alter the aiming point
+    bOpticalAiming=true
+    OpticalRanges(0)=(Range=0,RangeValue=0.374)
+    OpticalRanges(1)=(Range=400,RangeValue=0.3615)
+    OpticalRanges(2)=(Range=500,RangeValue=0.354)
+    OpticalRanges(3)=(Range=600,RangeValue=0.348)
+    OpticalRanges(4)=(Range=700,RangeValue=0.341)
+    OpticalRanges(5)=(Range=800,RangeValue=0.3345)
+    OpticalRanges(6)=(Range=900,RangeValue=0.328)
+    OpticalRanges(7)=(Range=1000,RangeValue=0.3215)
+    OpticalRanges(8)=(Range=1200,RangeValue=0.308)
+    OpticalRanges(9)=(Range=1400,RangeValue=0.296)
+    OpticalRanges(10)=(Range=1600,RangeValue=0.283)
+    OpticalRanges(11)=(Range=1800,RangeValue=0.270)
+    OpticalRanges(12)=(Range=2000,RangeValue=0.257)
+    OpticalRanges(13)=(Range=2200,RangeValue=0.244)
+    OpticalRanges(14)=(Range=2400,RangeValue=0.231)
+    OpticalRanges(15)=(Range=2600,RangeValue=0.218)
+    OpticalRanges(16)=(Range=2800,RangeValue=0.205)
+    OpticalRanges(17)=(Range=3000,RangeValue=0.192)
+    OpticalRanges(18)=(Range=3200,RangeValue=0.179)
+    OpticalRanges(19)=(Range=3400,RangeValue=0.166)
+    OpticalRanges(20)=(Range=3600,RangeValue=0.153)
+    OpticalRanges(21)=(Range=3800,RangeValue=0.140)
 }

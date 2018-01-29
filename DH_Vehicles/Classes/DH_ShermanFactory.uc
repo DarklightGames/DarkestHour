@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_ShermanFactory extends DH_USVehicles; // M4A1 75mm variant (without wet stowage)
@@ -8,5 +8,5 @@ class DH_ShermanFactory extends DH_USVehicles; // M4A1 75mm variant (without wet
 defaultproperties
 {
     VehicleClass=class'DH_Vehicles.DH_ShermanTank'
-    Mesh=SkeletalMesh'DH_ShermanM4A1_anm.ShermanM4A1_body_extA'
+    Mesh=SkeletalMesh'DH_ShermanM4A1_anm.ShermanM4A1_body_ext'
 }

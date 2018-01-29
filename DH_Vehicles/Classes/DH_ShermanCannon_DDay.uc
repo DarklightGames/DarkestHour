@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_ShermanCannon_DDay extends DH_ShermanCannon;
@@ -14,4 +14,6 @@ defaultproperties
     bLimitYaw=true
     InitialPrimaryAmmo=35
     InitialSecondaryAmmo=50
+    MaxPrimaryAmmo=35
+    MaxSecondaryAmmo=50
 }

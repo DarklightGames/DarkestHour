@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_JagdpantherCannon extends DHVehicleCannon;
@@ -9,9 +9,9 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_Jagdpanther_anm.Jagdpanther_turret_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.Jagdpanther_body_goodwood'
-    Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_walls_int'
-    Skins(2)=texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_turret_int'
+    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Jagdpanther_body_goodwood'
+    Skins(1)=Texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_walls_int'
+    Skins(2)=Texture'DH_VehiclesGE_tex2.int_vehicles.Jagdpanther_turret_int'
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
 
     // Cannon armour (mantlet)
@@ -35,9 +35,15 @@ defaultproperties
     ProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpantherCannonShellHE'
-    InitialPrimaryAmmo=42
-    InitialSecondaryAmmo=15
+    InitialPrimaryAmmo=30
+    InitialSecondaryAmmo=7
+    MaxPrimaryAmmo=42
+    MaxSecondaryAmmo=15
     SecondarySpread=0.00135
+
+    // Smoke launcher
+    SmokeLauncherClass=class'DH_Vehicles.DH_Nahverteidigungswaffe'
+    SmokeLauncherFireOffset(0)=(X=-64.0,Y=-39.0,Z=35.0)
 
     // Weapon fire
     WeaponFireOffset=8.5
@@ -47,10 +53,10 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_01'
     CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_02'
     CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.88mm.DH88mm_03'
-    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_01')
-    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_02')
-    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
-    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_04')
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_04')
 
     // Cannon range settings
     RangeSettings(1)=100

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_Stug3GMountedMGPawn extends DHVehicleMGPawn;
@@ -24,14 +24,30 @@ simulated function ClientKDriverEnter(PlayerController PC)
     }
 }
 
+// Modified so if player moves back onto the MG from a position where he could look around freely, we match rotation back to the direction MG is facing
+// Otherwise rotation becomes de-synced & he can have the wrong view rotation if he moves off the gun again or exits
+// Note we do this from state LeavingViewTransition instead of ViewTransition so that a CanFire() check in SetInitialViewRotation() works properly
+simulated state LeavingViewTransition
+{
+    simulated function EndState()
+    {
+        super.EndState();
+
+        if ((LastPositionIndex < UnbuttonedPositionIndex || LastPositionIndex == BinocPositionIndex) && IsFirstPerson()) // has either unbuttoned or moved off binoculars
+        {
+            SetInitialViewRotation();
+        }
+    }
+}
+
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_Stug3GMountedMG'
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     bMultiPosition=true
-    DriverPositions(0)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_ext',TransitionUpAnim="loader_unbutton",ViewPitchUpLimit=7500,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500)
-    DriverPositions(1)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_int',TransitionUpAnim="loader_open",TransitionDownAnim="loader_button",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=2400,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true,bExposed=true)
-    DriverPositions(2)=(ViewFOV=90.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_int',TransitionDownAnim="loader_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=2400,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true,bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_ext',TransitionUpAnim="loader_unbutton",ViewPitchUpLimit=7500,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_int',TransitionUpAnim="loader_open",TransitionDownAnim="loader_button",DriverTransitionAnim="Vhalftrack_com_close",ViewPitchUpLimit=2400,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true,bExposed=true)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_int',TransitionDownAnim="loader_close",DriverTransitionAnim="Vhalftrack_com_open",ViewPitchUpLimit=2400,ViewPitchDownLimit=63500,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true,bExposed=true)
     DriverPositions(3)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=6000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
     BinocPositionIndex=3
     bMustUnbuttonToReload=true
@@ -43,7 +59,7 @@ defaultproperties
     CameraBone="loader_cam"
     HUDOverlayClass=class'DH_Vehicles.DH_VehHUDOverlay_MG34'
     HUDOverlayFOV=45.0
-    BinocsOverlay=texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
+    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Germ'
     FirstPersonGunRefBone="firstperson_wep"
     FirstPersonGunShakeScale=2.0
     FirstPersonOffsetZScale=3.0

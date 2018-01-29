@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_Stug3GMountedMG extends DHVehicleMG;
@@ -9,8 +9,8 @@ defaultproperties
 {
     // MG mesh
     Mesh=SkeletalMesh'DH_Stug3G_anm.Stug_mg34_ext'
-    Skins(1)=texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'
-    Skins(2)=texture'Weapons3rd_tex.German.mg34_world'
+    Skins(1)=Texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'
+    Skins(2)=Texture'Weapons3rd_tex.German.mg34_world'
     bMatchSkinToVehicle=true
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     BeginningIdleAnim="loader_button_idle"
@@ -53,8 +53,8 @@ defaultproperties
 
     // Reload
     HUDOverlayReloadAnim="Bipod_Reload_s"
-    ReloadStages(0)=(Sound=none,Duration=1.21) // no sounds because HUD overlay reload animation plays them
-    ReloadStages(1)=(Sound=none,Duration=1.92)
+    ReloadStages(0)=(Sound=none,Duration=1.57) // no sounds because HUD overlay reload animation plays them
+    ReloadStages(1)=(Sound=none,Duration=1.56)
     ReloadStages(2)=(Sound=none,Duration=1.92)
-    ReloadStages(3)=(Sound=none,Duration=1.54)
+    ReloadStages(3)=(Sound=none,Duration=1.63)
 }

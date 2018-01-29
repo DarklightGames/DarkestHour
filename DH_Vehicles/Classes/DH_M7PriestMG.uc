@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_M7PriestMG extends DHVehicleMG;
@@ -9,8 +9,8 @@ defaultproperties
 {
     // MG mesh
     Mesh=SkeletalMesh'DH_M7Priest_anm.priest_mg_ext'
-    Skins(0)=texture'DH_M7Priest_tex.ext_vehicles.M7Priest'
-    Skins(1)=texture'DH_Weapon_tex.AlliedSmallArms.50CalMain'
+    Skins(0)=Texture'DH_M7Priest_tex.ext_vehicles.M7Priest'
+    Skins(1)=Texture'DH_Weapon_tex.AlliedSmallArms.50CalMain'
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     GunnerAttachmentBone="com_attachment"
     FireEffectClass=none // there's no MG hatch & the 'turret' fire effect fills the open superstructure
@@ -45,8 +45,8 @@ defaultproperties
 
     // Reload
     HUDOverlayReloadAnim="Reload"
-    ReloadStages(0)=(Sound=none,Duration=1.44) // no sounds because HUD overlay reload anim plays them (durations matched to anim notifies)
+    ReloadStages(0)=(Sound=none,Duration=1.44) // no sounds because HUD overlay reload animation plays them
     ReloadStages(1)=(Sound=none,Duration=1.52)
-    ReloadStages(2)=(Sound=none,Duration=2.40)
-    ReloadStages(3)=(Sound=none,Duration=1.70)
+    ReloadStages(2)=(Sound=none,Duration=2.05)
+    ReloadStages(3)=(Sound=none,Duration=2.05)
 }

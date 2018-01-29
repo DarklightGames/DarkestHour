@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_Marder3MMountedMGPawn extends DHVehicleMGPawn;
@@ -9,6 +9,22 @@ class DH_Marder3MMountedMGPawn extends DHVehicleMGPawn;
 function bool CanFire()
 {
     return DriverPositionIndex != BinocPositionIndex || !IsHumanControlled();
+}
+
+// Modified so if player moves off binoculars (where he could look around) & back onto the MG, we match rotation back to the direction MG is facing
+// Otherwise rotation becomes de-synced & he can have the wrong view rotation if he moves back onto binocs or exits
+// Note we do this from state LeavingViewTransition instead of ViewTransition so that a CanFire() check in SetInitialViewRotation() works properly
+simulated state LeavingViewTransition
+{
+    simulated function EndState()
+    {
+        super.EndState();
+
+        if (LastPositionIndex == BinocPositionIndex && IsFirstPerson())
+        {
+            SetInitialViewRotation();
+        }
+    }
 }
 
 defaultproperties
@@ -29,7 +45,7 @@ defaultproperties
     CameraBone="loader_cam"
     HUDOverlayClass=class'DH_Vehicles.DH_VehHUDOverlay_MG34'
     HUDOverlayFOV=45.0
-    BinocsOverlay=texture'DH_VehicleOptics_tex.German.BINOC_overlay_6x30Germ'
+    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Germ'
     FirstPersonGunRefBone="firstperson_wep"
     FirstPersonGunShakeScale=2.0
     FirstPersonOffsetZScale=1.0

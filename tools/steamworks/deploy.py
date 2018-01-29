@@ -22,7 +22,6 @@ if not os.path.exists(content_path):
     print 'unable to find content directory (%s)' % content_path
     sys.exit(1)
 
-
 # delete everything in the content path
 for fname in os.listdir(content_path):
     fpath = os.path.join(content_path, fname)

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_StuH42Cannon extends DH_Stug3GCannon;
@@ -17,12 +17,19 @@ defaultproperties
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="Smoke"
     ProjectileDescriptions(2)="HEAT"
-    InitialPrimaryAmmo=20
-    InitialSecondaryAmmo=6
-    InitialTertiaryAmmo=10
+    InitialPrimaryAmmo=18
+    InitialSecondaryAmmo=5
+    InitialTertiaryAmmo=8
+    MaxPrimaryAmmo=20
+    MaxSecondaryAmmo=6
+    MaxTertiaryAmmo=10
     Spread=0.0015
     SecondarySpread=0.00357
     TertiarySpread=0.00275
+
+    // Smoke launcher
+    SmokeLauncherClass=class'DH_Vehicles.DH_Nahverteidigungswaffe'
+    SmokeLauncherFireOffset(0)=(X=-18.0,Y=23.0,Z=30.0)
 
     // Weapon fire & sounds
     WeaponFireOffset=-53.5

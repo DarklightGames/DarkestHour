@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_StuartCannon extends DHVehicleCannon;
@@ -9,8 +9,8 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_Stuart_anm.Stuart_turret_ext'
-    Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.M5_body_ext'
-    Skins(1)=texture'DH_VehiclesUS_tex.int_vehicles.M5_turret_int'
+    Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.M5_body_ext'
+    Skins(1)=Texture'DH_VehiclesUS_tex.int_vehicles.M5_turret_int'
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.M5_Stuart.Stuart_turret_col'
 
     // Turret armor
@@ -36,9 +36,12 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_StuartCannonShellHE'
     TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'
     ProjectileDescriptions(2)="Canister"
-    InitialPrimaryAmmo=64
-    InitialSecondaryAmmo=44
+    InitialPrimaryAmmo=60
+    InitialSecondaryAmmo=30
     InitialTertiaryAmmo=15
+    MaxPrimaryAmmo=64
+    MaxSecondaryAmmo=44
+    MaxTertiaryAmmo=20
     SecondarySpread=0.00145
     TertiarySpread=0.04
 
@@ -58,8 +61,6 @@ defaultproperties
     ShakeRotRate=(Z=600.0)
     ShakeOffsetMag=(Z=5.0)
     ShakeOffsetTime=6.0
-    AltShakeRotMag=(X=0.01,Y=0.01,Z=0.01)
-    AltShakeRotRate=(X=1000.0,Y=1000.0,Z=1000.0)
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire01'
@@ -67,8 +68,8 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'Inf_Weapons.PTRD.PTRD_fire03'
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
-    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
-    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
 }

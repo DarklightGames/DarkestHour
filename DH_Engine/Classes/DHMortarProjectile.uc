@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHMortarProjectile extends DHBallisticProjectile
@@ -42,8 +42,8 @@ replication
         bDud;
 }
 
-// Modified to add random chance of shell being a dud, to play firing effect, & add a custom debug option
-// Not including RO bDebugBallistics stuff from the Super as not relevant to mortar & would have to be moved to PostNetBeginPlay anyway, as net client won't yet have Instigator
+// Modified to add random chance of shell being a dud, & add a custom debug option
+// Not including RO bDebugBallistics stuff from Super as not relevant to mortar (would have to be moved to PostNetBeginPlay anyway as net client won't yet have Instigator)
 simulated function PostBeginPlay()
 {
     // Relevant stuff from the Super
@@ -65,12 +65,6 @@ simulated function PostBeginPlay()
         }
     }
 
-    // Play mortar firing effect (note - can't do an EffectIsRelevant check here, as shell won't yet have been drawn, so will always fail)
-    if (Level.NetMode != NM_DedicatedServer && Location != vect(0.0, 0.0, 0.0) && FireEmitterClass != none)
-    {
-        Spawn(FireEmitterClass,,, Location, Rotation);
-    }
-
     // Mortar shell debug option
     if (bDebug)
     {
@@ -79,12 +73,17 @@ simulated function PostBeginPlay()
     }
 }
 
-// Modified to set InstigatorController (used to attribute radius damage kills correctly)
+// Modified to play a firing effect, & to set InstigatorController (used to attribute radius damage kills correctly)
 simulated function PostNetBeginPlay()
 {
     if (Instigator != none)
     {
         InstigatorController = Instigator.Controller;
+
+        if (Level.NetMode != NM_DedicatedServer && FireEmitterClass != none && Location != vect(0.0, 0.0, 0.0))
+        {
+            SpawnFiringEffect(); // note - can't do an EffectIsRelevant check here, as shell won't yet have been drawn, so will always fail
+        }
     }
 }
 
@@ -108,7 +107,7 @@ simulated function Timer()
     }
 }
 
-// Matt: modified to handle new collision mesh actor - if we hit a CM we switch hit actor to CM's owner & proceed as if we'd hit that actor
+// Modified to handle new collision mesh actor - if we hit a CM we switch hit actor to CM's owner & proceed as if we'd hit that actor
 // Also to do splash effects if projectile hits a fluid surface, which wasn't previously handled
 // Also re-factored generally to optimise, but original functionality unchanged
 simulated singular function Touch(Actor Other)
@@ -125,9 +124,9 @@ simulated singular function Touch(Actor Other)
     }
 
     // We use TraceThisActor do a simple line check against the actor we've hit, to get an accurate HitLocation to pass to ProcessTouch()
-    // It's more accurate than using our current location as projectile has often travelled a little further by the time this event gets called
+    // It's more accurate than using our current location as projectile has often travelled further by the time this event gets called
     // But if that trace returns true then it somehow didn't hit the actor, so we fall back to using our current location as the HitLocation
-    // Also skip trace & use location as HitLocation if our velocity is somehow zero (collided immediately on launch?) or we hit a Mover actor
+    // Also skip trace & use our location if velocity is zero (touching actor when projectile spawns) or hit a Mover actor (legacy, don't know why)
     if (Velocity == vect(0.0, 0.0, 0.0) || Other.IsA('Mover')
         || Other.TraceThisActor(HitLocation, HitNormal, Location, Location - (2.0 * Velocity), GetCollisionExtent()))
     {
@@ -273,8 +272,28 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
 {
 }
 
+// New function to spawn a firing effect, allowing a net client to calculate correct location for effect, rather than just use projectile's location
+// This is because (1) client & server locations of weapon differ, & (2) projectile will have travelled upwards some distance before replicating to client
+// Probably not too significant for mortar, but very relevant to smoke launcher subclass as it suffers from server/client location differences, being mobile
+simulated function SpawnFiringEffect()
+{
+    local VehicleWeaponPawn WP;
+
+    WP = VehicleWeaponPawn(Instigator);
+
+    if (WP != none && WP.Gun != none)
+    {
+        if (Role < ROLE_Authority)
+        {
+            WP.Gun.CalcWeaponFire(false); // net client calculates & records WeaponFireLocation, as will only have been done on the server (no FlashMuzzleFlash() for mortars)
+        }
+
+        Spawn(FireEmitterClass,,, WP.Gun.WeaponFireLocation, Rotation);
+    }
+}
+
 // Modified to give additional points to the observer & the mortarman for working together for a kill
-// Matt: also to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
+// Also to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
 // Also to call CheckVehicleOccupantsRadiusDamage() instead of DriverRadiusDamage() on a hit vehicle, to properly handle blast damage to any exposed vehicle occupants
 // And to fix problem affecting many vehicles with hull mesh modelled with origin on the ground, where even a slight ground bump could block all blast damage
 // Also to update Instigator, so HurtRadius attributes damage to the player's current pawn
@@ -714,7 +733,7 @@ defaultproperties
     BallisticCoefficient=1.0
     bBlockHitPointTraces=false
     FireEmitterClass=class'DH_Effects.DHMortarFireEffect'
-    DescendingSound=sound'DH_WeaponSounds.Mortars.Descent01'
+    DescendingSound=Sound'DH_WeaponSounds.Mortars.Descent01'
 
     HitDirtEmitterClass=class'ROEffects.TankAPHitDirtEffect'
     HitRockEmitterClass=class'ROEffects.TankAPHitRockEffect'

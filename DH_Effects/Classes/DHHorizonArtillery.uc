@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHHorizonArtillery extends Emitter;
@@ -30,7 +30,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=1.0,RelativeSize=1.75)
         StartSizeRange=(X=(Max=150.0))
         InitialParticlesPerSecond=5000.0
-        Texture=texture'Effects_Tex.BulletHits.glowfinal'
+        Texture=Texture'Effects_Tex.BulletHits.glowfinal'
         LifetimeRange=(Min=0.25,Max=0.35)
     End Object
     Emitters(0)=SpriteEmitter'SpriteEmitter0'
@@ -57,7 +57,7 @@ defaultproperties
         StartSizeRange=(X=(Min=50.0,Max=50.0),Y=(Min=50.0,Max=50.0),Z=(Min=50.0,Max=50.0))
         InitialParticlesPerSecond=30.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=texture'Effects_Tex.explosions.radialexplosion_1frame'
+        Texture=Texture'Effects_Tex.explosions.radialexplosion_1frame'
         LifetimeRange=(Min=0.25,Max=0.25)
     End Object
     Emitters(1)=SpriteEmitter'SpriteEmitter1'
@@ -80,7 +80,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=1.0,RelativeSize=3.0)
         StartSizeRange=(X=(Min=10.0,Max=10.0))
         InitialParticlesPerSecond=5000.0
-        Texture=texture'Effects_Tex.Weapons.muzzle_4frame3rd'
+        Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.1,Max=0.2)
@@ -108,7 +108,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=1.0,RelativeSize=2.0)
         StartSizeRange=(X=(Min=10.0,Max=10.0))
         InitialParticlesPerSecond=5000.0
-        Texture=texture'Effects_Tex.Weapons.muzzle_4frame3rd'
+        Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.2,Max=0.2)
@@ -136,7 +136,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=1.0,RelativeSize=2.0)
         StartSizeRange=(X=(Min=5.0,Max=5.0))
         InitialParticlesPerSecond=5000.0
-        Texture=texture'Effects_Tex.Weapons.muzzle_4frame3rd'
+        Texture=Texture'Effects_Tex.Weapons.muzzle_4frame3rd'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.1,Max=0.2)

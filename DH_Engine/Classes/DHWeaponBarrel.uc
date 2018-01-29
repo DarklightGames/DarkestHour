@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHWeaponBarrel extends Actor
@@ -134,11 +134,11 @@ function UpdateBarrelStatus()
 
 defaultproperties
 {
-    SteamTemperature=225.0
-    CriticalTemperature=250.0
-    FailureTemperature=275.0
-    BarrelCoolingRate=1.0
-    FiringHeatIncrement=1.0
+    SteamTemperature=180.0
+    CriticalTemperature=230.0
+    FailureTemperature=315.0
+    BarrelCoolingRate=1.5
+    FiringHeatIncrement=1.33
     BarrelTimerRate=3.0
     DrawType=DT_None
     bHidden=true

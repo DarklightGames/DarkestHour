@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_BazookaDamType extends DHAntiTankProjectileDamageType
@@ -8,6 +8,6 @@ class DH_BazookaDamType extends DHAntiTankProjectileDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'DH_InterfaceArt_tex.deathicons.zookakill'
+    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.zookakill'
     WeaponClass=class'DH_Weapons.DH_BazookaWeapon'
 }

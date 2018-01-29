@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_BrenBullet extends DHBullet;
@@ -11,5 +11,4 @@ defaultproperties
     BallisticCoefficient=0.39
     Damage=115.0
     MyDamageType=class'DH_Weapons.DH_BrenDamType'
-    MyVehicleDamage=class'DH_Weapons.DH_BrenVehDamType'
 }

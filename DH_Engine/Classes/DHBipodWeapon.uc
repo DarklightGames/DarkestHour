@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHBipodWeapon extends DHProjectileWeapon
@@ -79,11 +79,22 @@ simulated function NotifyOwnerJumped()
 // Modified to deploy/undeploy bipod, instead of the usual bayonet stuff
 simulated exec function Deploy()
 {
+    local DHPlayer PC;
     local bool bNewDeployedStatus;
 
     // Bipod is either deployed or player can deploy the bipod
     if (!IsBusy() && Instigator != none && (Instigator.bBipodDeployed || Instigator.bCanBipodDeploy))
     {
+        if (Instigator.IsLocallyControlled())
+        {
+            PC = DHPlayer(Instigator.Controller);
+
+            if (PC == none || Level.TimeSeconds < PC.NextToggleDuckTimeSeconds)
+            {
+                return;
+            }
+        }
+
         bNewDeployedStatus = !Instigator.bBipodDeployed;
 
         BipodDeploy(bNewDeployedStatus); // toggle whether bipod is deployed
@@ -139,6 +150,11 @@ function ServerBipodDeploy(bool bNewDeployedStatus)
 simulated state DeployingBipod extends WeaponBusy
 {
     simulated function bool WeaponAllowSprint()
+    {
+        return false;
+    }
+
+    simulated function bool WeaponAllowCrouchChange()
     {
         return false;
     }
@@ -336,6 +352,13 @@ simulated state Reloading
     simulated function bool WeaponAllowCrouchChange()
     {
         return false;
+    }
+
+    simulated function BeginState()
+    {
+        super.BeginState();
+
+        ResetPlayerFOV();
     }
 
 // Take the player out of zoom & then zoom them back in

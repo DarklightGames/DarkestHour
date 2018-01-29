@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_OrangeSmokeAttachment extends DHThrowableExplosiveAttachment;
@@ -8,5 +8,5 @@ class DH_OrangeSmokeAttachment extends DHThrowableExplosiveAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.OrangeSmokeGrenade_3rd'
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.OrangeSmoke'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.OrangeSmoke'
 }

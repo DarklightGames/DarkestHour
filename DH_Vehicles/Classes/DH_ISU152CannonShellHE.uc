@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_ISU152CannonShellHE extends DHCannonShellHE;
@@ -19,6 +19,7 @@ defaultproperties
     Tag="OF-540"
     StaticMesh=StaticMesh'WeaponPickupSM.shells.122mm_shell'
     BlurEffectScalar=3.0
+    bDebugInImperial=false
 
     DHPenetrationTable(0)=9.0  // 100m
     DHPenetrationTable(1)=8.4  // 250m
@@ -83,7 +84,7 @@ defaultproperties
     OpticalRanges(33)=(Range=5600,RangeValue=0.824)
     OpticalRanges(34)=(Range=5800,RangeValue=0.845)
 
-    bMechanicalAiming=true // this cannon doesn't actually have mechanical aiming, but believe this is a fudge to adjust for sight markings that are 'out'
+    bMechanicalAiming=true // this cannon doesn't actually have mechanical aiming, but this is a fudge to adjust for sight markings that are 'out'
     MechanicalRanges(1)=(Range=100,RangeValue=-1.0)
     MechanicalRanges(2)=(Range=200,RangeValue=-2.0)
     MechanicalRanges(3)=(Range=300,RangeValue=-3.0)

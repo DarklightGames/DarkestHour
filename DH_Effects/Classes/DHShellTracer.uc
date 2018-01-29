@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHShellTracer extends Effects
@@ -25,7 +25,7 @@ defaultproperties
     MaximumDrawScale=0.3
     bTrailerSameRotation=true
     Physics=PHYS_Trailer
-    Texture=texture'DH_FX_Tex.Effects.RedFlare'
+    Texture=Texture'DH_FX_Tex.Effects.RedFlare'
     DrawScale=0.01
     Style=STY_Additive
     Mass=13.0

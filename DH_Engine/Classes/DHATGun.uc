@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHATGun extends DHVehicle
@@ -15,54 +15,50 @@ simulated function Tick(float DeltaTime)
     Disable('Tick');
 }
 
-// Modified to allow human to kick bot off a gun & to remove stuff not relevant to an AT gun
+// Modified so we always use this actor & rely on its modified TryToDrive() function to control entry to the gun
+function Vehicle FindEntryVehicle(Pawn P)
+{
+    return self;
+}
+
+// Modified to allow human to kick bot off a gun (also removes stuff not relevant to an AT gun)
 function bool TryToDrive(Pawn P)
 {
-    // Deny entry if gun has 'driver' or is dead, or if player on fire or reloading a weapon (plus several very obscure other reasons)
-    if (Driver != none || Health <= 0 || P == none || (DHPawn(P) != none && DHPawn(P).bOnFire) || (P.Weapon != none && P.Weapon.IsInState('Reloading')) ||
-        P.Controller == none || !P.Controller.bIsPlayer || P.DrivenVehicle != none || P.IsA('Vehicle') || bNonHumanControl || !Level.Game.CanEnterVehicle(self, P))
+    // Deny entry if gun is destroyed, or if player is on fire or reloading a weapon (plus several very obscure other reasons)
+    if (Health <= 0 || P == none || (DHPawn(P) != none && DHPawn(P).bOnFire) || (P.Weapon != none && P.Weapon.IsInState('Reloading')) ||
+        P.Controller == none || !P.Controller.bIsPlayer || P.DrivenVehicle != none || P.IsA('Vehicle') || bNonHumanControl || !Level.Game.CanEnterVehicle(self, P) ||
+        WeaponPawns.Length == 0 || WeaponPawns[0] == none)
     {
         return false;
     }
 
-    if (bDebuggingText)
+    // Deny entry to enemy gun
+    if ((bTeamLocked && P.GetTeamNum() != VehicleTeam) ||
+        (!bTeamLocked && WeaponPawns[0].Driver != none && P.GetTeamNum() != WeaponPawns[0].Driver.GetTeamNum())) // if gun not team locked, check enemy player isn't already manning it
     {
-        P.ClientMessage("Gun Health:" @ Health);
-    }
+        DisplayVehicleMessage(1, P); // can't use enemy gun
 
-    // Trying to enter a gun that isn't on our team
-    if (P.GetTeamNum() != VehicleTeam)
-    {
-        // Deny entry to TeamLocked enemy gun or non-TeamLocked gun that already has an enemy occupant
-        if (bTeamLocked || (Driver != none && P.GetTeamNum() != Driver.GetTeamNum()) || (WeaponPawns[0].Driver != none && P.GetTeamNum() != WeaponPawns[0].Driver.GetTeamNum()))
-        {
-            DisplayVehicleMessage(1, P); // can't use enemy gun
-
-            return false;
-        }
+        return false;
     }
 
     // The gun is already manned
     if (WeaponPawns[0].Driver != none)
     {
-        // Deny entry if gun is already manned by a human, or a bot is trying to man a gun already occupied by another bot
-        if (WeaponPawns[0].IsHumanControlled() || !P.IsHumanControlled())
+        // If a human player wants to enter a gun manned by a bot, kick the bot off the gun
+        if (!WeaponPawns[0].IsHumanControlled() && P.IsHumanControlled())
         {
-            DisplayVehicleMessage(3, P); // gun is crewed
+            WeaponPawns[0].KDriverLeave(true);
+        }
+        // Otherwise deny entry to gun that's already manned
+        else
+        {
+            DisplayVehicleMessage(2, P); // gun is already manned
 
             return false;
         }
-
-        // A human player wants to enter a gun manned by a bot, so kick the bot off the gun
-        WeaponPawns[0].KDriverLeave(true);
     }
 
     // Passed all checks, so allow player to man the gun
-    if (bEnterringUnlocks && bTeamLocked)
-    {
-        bTeamLocked = false;
-    }
-
     KDriverEnter(P);
 
     return true;
@@ -71,23 +67,23 @@ function bool TryToDrive(Pawn P)
 // Overridden to bypass attaching as a driver and go straight to the gun
 function KDriverEnter(Pawn P)
 {
-    if (WeaponPawns.Length > 0)
+    if (WeaponPawns.Length > 0 && WeaponPawns[0] != none)
     {
-        WeaponPawns[0].KDriverEnter(P); // attach to the first WeaponPawn, do not pass "Go" :-)
+        WeaponPawns[0].KDriverEnter(P);
     }
 }
 
 // Overridden to bypass attaching as a driver and go straight to the gun
 simulated function ClientKDriverEnter(PlayerController PC)
 {
-    if (WeaponPawns.Length > 0)
+    if (WeaponPawns.Length > 0 && WeaponPawns[0] != none)
     {
-        WeaponPawns[0].ClientKDriverEnter(PC); // attach to the first WeaponPawn, do not pass "Go" :-)
+        WeaponPawns[0].ClientKDriverEnter(PC);
     }
 }
 
-// Modified to use a different AT cannon message class
-function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool bPassController)
+// Modified to use a different AT cannon message class with some messages that are more appropriate to a gun
+simulated function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool bPassController)
 {
     if (P == none)
     {
@@ -104,11 +100,11 @@ function DisplayVehicleMessage(int MessageNumber, optional Pawn P, optional bool
     }
 }
 
-// Modified to use APCDamageModifier, & to remove code preventing players damaging own team's vehicles that haven't been entered (should only protect vehicle in spawn)
-// Also removes some other irrelevant stuff not relevant to a static AT gun (code that stops 'vehicle' giving itself impact damage & check for engine hit point)
+// Modified to use APCDamageModifier, & to remove code preventing players damaging own team's gun that hasn't been entered (only designed to protect vehicles in spawn)
+// Also removes other stuff not relevant to a static AT gun (engine & tread stuff & stopping 'vehicle' giving itself impact damage)
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
-    local float VehicleDamageMod;
+    local float DamageModifier;
     local int   i;
 
     // Suicide/self-destruction
@@ -119,18 +115,13 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         return;
     }
 
-    // Set damage modifier from the DamageType
+    // Apply damage modifier from the DamageType, plus a little damage randomisation
     if (class<ROWeaponDamageType>(DamageType) != none)
     {
-        VehicleDamageMod = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier;
-    }
-    else if (class<ROVehicleDamageType>(DamageType) != none)
-    {
-        VehicleDamageMod = class<ROVehicleDamageType>(DamageType).default.APCDamageModifier;
+        DamageModifier = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier * RandRange(0.75, 1.08);
     }
 
-    // Add in the DamageType's vehicle damage modifier & a little damage randomisation
-    Damage *= (VehicleDamageMod * RandRange(0.75, 1.08));
+    Damage *= DamageModifier;
 
     // Exit if no damage
     if (Damage < 1)
@@ -138,7 +129,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         return;
     }
 
-    // Check RO VehHitpoints, but only for any ammo store (AT gun has no driver or engine)
+    // Check RO VehHitpoints, but only for any ammo store (AT gun has no engine)
     for (i = 0; i < VehHitpoints.Length; ++i)
     {
         if (VehHitpoints[i].HitPointType == HP_AmmoStore && IsPointShot(HitLocation, Momentum, 1.0, i))
@@ -178,12 +169,13 @@ function ServerChangeViewPoint(bool bForward);
 simulated function NextViewPoint();
 simulated function SwitchWeapon(byte F);
 function ServerChangeDriverPosition(byte F);
-function bool KDriverLeave(bool bForceLeave);
+simulated function bool CanSwitchToVehiclePosition(byte F) { return false; }
+function bool KDriverLeave(bool bForceLeave) { return false; }
 function DriverDied();
 function DriverLeft();
 simulated function bool CanExit() { return false; }
-simulated function bool StopExitToRiderPosition(byte ChosenWeaponPawnIndex) { return false; }
 function bool PlaceExitingDriver() { return false; }
+simulated function Destroyed_HandleDriver();
 simulated function SetPlayerPosition();
 simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor ViewActor, out vector CameraLocation, out rotator CameraRotation);
 simulated function DrawHUD(Canvas C);
@@ -191,7 +183,9 @@ simulated function DrawPeriscopeOverlay(Canvas C);
 simulated function POVChanged(PlayerController PC, bool bBehindViewChanged);
 simulated function int LimitYaw(int yaw) { return yaw; }
 function int LimitPawnPitch(int pitch) { return pitch; }
-event CheckReset();
+simulated function float GetViewFOV(int PositionIndex) { return 0.0; }
+simulated function SetViewFOV(int PositionIndex, optional PlayerController PC);
+function bool ResupplyAmmo() { return false; }
 
 defaultproperties
 {
@@ -207,18 +201,17 @@ defaultproperties
     HealthMax=101.0
     Health=101
     EngineHealth=0
-    VehHitpoints(0)=(PointRadius=0.0,PointBone="",DamageMultiplier=0.0) // remove inherited values from vehicle classes
-    VehHitpoints(1)=(PointRadius=0.0,PointBone="",DamageMultiplier=0.0)
+    VehHitpoints(0)=(PointRadius=0.0,PointBone="",DamageMultiplier=0.0) // remove inherited values for vehicle engine
     DamagedEffectClass=none
     DestructionEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
     DisintegrationEffectClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
     DisintegrationHealth=-1000000000.0
     DestructionLinearMomentum=(Min=0.0,Max=0.0)
     DestructionAngularMomentum=(Min=0.0,Max=0.0)
+    bCanCrash=false
 
     // Miscellaneous
     TouchMessage="Use the "
-    VehicleNameString="AT gun"
     VehicleMass=5.0 // TODO: rationalise the mass & centre of mass settings of guns, but experiment with effect on ground contact & vehicle collisions
     PointValue=2.0
     MaxDesireability=1.9

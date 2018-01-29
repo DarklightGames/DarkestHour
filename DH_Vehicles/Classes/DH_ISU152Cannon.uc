@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_ISU152Cannon extends DHVehicleCannon;
@@ -9,8 +9,8 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_ISU152_anm.ISU152-turret_ext'
-    Skins(0)=texture'DH_VehiclesSOV_tex.ext_vehicles.isu152_body_ext'
-    Skins(1)=texture'DH_VehiclesSOV_tex.ext_vehicles.isu152_turret_int'
+    Skins(0)=Texture'DH_VehiclesSOV_tex.ext_vehicles.isu152_body_ext'
+    Skins(1)=Texture'DH_VehiclesSOV_tex.ext_vehicles.isu152_turret_int'
     FireEffectOffset=(X=5.0,Y=0.0,Z=10.0)
 
     // Cannon armour (mantlet)
@@ -35,24 +35,25 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_ISU152CannonShell'
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="AP"
-    InitialPrimaryAmmo=15
+    InitialPrimaryAmmo=12
     InitialSecondaryAmmo=7
+    MaxPrimaryAmmo=15
+    MaxSecondaryAmmo=7
     Spread=0.0009
     SecondarySpread=0.0009
 
     // Weapon fire
     AddedPitch=360
-    WeaponFireAttachmentBone="Barrel"
     WeaponFireOffset=120.0
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.IS2.122mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.IS2.122mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.IS2.122mm_fire02'
-    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.ISU152_reload_01')
-    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.ISU152_reload_02')
-    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.ISU152_reload_03')
-    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.ISU152_reload_04')
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.ISU152_reload_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.ISU152_reload_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.ISU152_reload_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.ISU152_reload_04')
 
     // View shake
     ShakeRotMag=(X=0.0,Y=0.0,Z=150.0)

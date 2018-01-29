@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHMGWeapon extends DHBipodWeapon
@@ -76,8 +76,20 @@ simulated exec function Deploy()
 // Overridden to make ironsights key try to deploy/undeploy the bipod, otherwise it goes to a hip fire mode if weapon allows it
 simulated function ROIronSights()
 {
+    local DHPlayer PC;
+
     if (Instigator != none && (Instigator.bBipodDeployed || Instigator.bCanBipodDeploy))
     {
+        if (Instigator.IsLocallyControlled())
+        {
+            PC = DHPlayer(Instigator.Controller);
+
+            if (PC == none || Level.TimeSeconds < PC.NextToggleDuckTimeSeconds)
+            {
+                return;
+            }
+        }
+
         Deploy();
     }
     else if (bCanFireFromHip)

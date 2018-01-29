@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHRocketWeapon extends DHSemiAutoWeapon
@@ -155,7 +155,7 @@ simulated function SpawnRocketAttachment()
 // Default is to prevent firing (with message) if player is prone or not ironsighted, but allows easy subclassing for different weapon requirements
 simulated function bool CanFire(optional bool bShowFailureMessage)
 {
-    if (!bUsingSights)
+    if (InstigatorIsLocallyControlled() && !bUsingSights)
     {
         if (bShowFailureMessage && InstigatorIsHumanControlled())
         {
@@ -445,7 +445,7 @@ simulated function HurtRadius(float DamageAmount, float DamageRadius, class<Dama
 
     bHurtEntry = true;
 
-    foreach VisibleCollidingActors(class 'Actor', Victims, DamageRadius, HitLocation)
+    foreach VisibleCollidingActors(class'Actor', Victims, DamageRadius, HitLocation)
     {
         if (Victims != self && Victims != Pawn(Owner) && Victims.Role == ROLE_Authority && !Victims.IsA('FluidSurfaceInfo'))
         {

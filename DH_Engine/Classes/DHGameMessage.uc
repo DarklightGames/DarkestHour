@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHGameMessage extends ROGameMessage;
@@ -9,6 +9,8 @@ var localized string VehicleDestroyedMessage;
 var localized string VehicleDepletedMessage;
 var localized string VehicleArrivedMessage;
 var localized string VehicleCutOffMessage;
+
+var localized string NeedMoreFriendliesToDeconstructHQMessage;
 
 // This is overridden to change the hard link to ROPlayer that caused a bug where
 // bUseNativeRoleNames was not being honored.
@@ -145,6 +147,8 @@ static function string GetString(optional int Switch, optional PlayerReplication
         // You have logged out of admin message(used for AdminLoginSilent)
         case 21:
             return default.YouHaveLoggedOutOfAdminMsg;
+        case 22:
+            return default.NeedMoreFriendliesToDeconstructHQMessage;
         default:
             break;
     }
@@ -188,4 +192,7 @@ defaultproperties
     VehicleDepletedMessage="{0} reinforcements have been depleted."
     VehicleArrivedMessage="{0} reinforcements have arrived."
     VehicleCutOffMessage="{0} reinforcements have been cut off."
+
+    NeedMoreFriendliesToDeconstructHQMessage="You must have another teammate nearby to deconstruct an enemy Platoon HQ!"
 }
+

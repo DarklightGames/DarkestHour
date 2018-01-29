@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class HTTPRequest extends Actor;
@@ -160,7 +160,7 @@ function Timer()
                     i = InStr(Response, MyLink.CRLF);
 
                     // Parse chunk length
-                    ChunkLength = class'UString'.static.Hex2Int(Mid(Response, 0, i));
+                    ChunkLength = class'UInteger'.static.FromHex(Mid(Response, 0, i));
 
                     if (ChunkLength <= 0)
                     {
@@ -236,4 +236,5 @@ defaultproperties
     Method="GET"
     Timeout=30
     Protocol="HTTP/1.1"
+    bHidden=true
 }

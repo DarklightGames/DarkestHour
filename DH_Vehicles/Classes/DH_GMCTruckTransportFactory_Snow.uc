@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_GMCTruckTransportFactory_Snow extends DH_GMCTruckTransportFactory;
@@ -8,5 +8,5 @@ class DH_GMCTruckTransportFactory_Snow extends DH_GMCTruckTransportFactory;
 defaultproperties
 {
     VehicleClass=class'DH_Vehicles.DH_GMCTruckTransport_Snow'
-    Skins(0)=texture'DH_Allied_MilitarySM.American.GMC_snow'
+    Skins(0)=Texture'DH_Allied_MilitarySM.American.GMC_snow'
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_WolverineCannonShellHVAP extends DHCannonShellHVAP;
@@ -22,7 +22,6 @@ defaultproperties
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageHVAP'
     ImpactDamage=450
     BallisticCoefficient=0.888
-    SpeedFudgeScale=0.4
     Speed=62525.0
     MaxSpeed=62525.0
     Tag="M93 HVAP"

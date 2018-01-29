@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_T3476MountedMG extends DHVehicleMG;
@@ -10,7 +10,7 @@ defaultproperties
     // MG mesh
     Mesh=SkeletalMesh'DH_T34_anm.T34-76_MG'
     bMatchSkinToVehicle=true
-    FireAttachBone="MG_pivot"
+    FireAttachBone="MG_placement"
     FireEffectOffset=(X=10.0,Y=4.0,Z=0.0)
 
     // Movement (reduced from original for more plausible looking limits)
@@ -28,7 +28,7 @@ defaultproperties
     FireInterval=0.1
     TracerProjectileClass=class'DH_Weapons.DH_DP28TracerBullet'
     TracerFrequency=5
-    HudAltAmmoIcon=texture'InterfaceArt_tex.HUD.dp27_ammo'
+    HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.dp27_ammo'
 
     // Weapon fire
     WeaponFireAttachmentBone="Muzzle"
@@ -38,8 +38,8 @@ defaultproperties
     FireEndSound=SoundGroup'DH_WeaponSounds.dt.dt_fire_end'
 
     // Reload
-    ReloadStages(0)=(Sound=sound'Inf_Weapons_Foley.dt.DT_reloadempty01_000',Duration=1.76)
-    ReloadStages(1)=(Sound=sound'Inf_Weapons_Foley.dt.DT_reloadempty02_052',Duration=2.29,HUDProportion=0.65)
-    ReloadStages(2)=(Sound=sound'Inf_Weapons_Foley.dt.DT_reloadempty03_121',Duration=2.35)
-    ReloadStages(3)=(Sound=sound'Inf_Weapons_Foley.dt.DT_reloadempty04_191',Duration=3.2,HUDProportion=0.35)
+    ReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty01_000',Duration=1.76)
+    ReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty02_052',Duration=2.29,HUDProportion=0.65)
+    ReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty03_121',Duration=2.35)
+    ReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty04_191',Duration=3.2,HUDProportion=0.35)
 }

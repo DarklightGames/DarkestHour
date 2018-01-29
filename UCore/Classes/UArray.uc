@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 // Since array types are copied when passed to these functions, frequent use of
 // these functions is not recommended on large datasets.
@@ -37,6 +37,44 @@ static final function array<Object> Map(array<Object> A, Functor_Object_Object M
     }
 
     return B;
+}
+
+// Creates a "union" of two arrays, eliminating duplicates.
+function array<Object> Union(array<Object> LHS, array<Object> RHS)
+{
+    local int i;
+    local array<Object> U;
+
+    U = LHS;
+
+    for (i = 0; i < RHS.Length; ++i)
+    {
+        if (class'UArray'.static.IndexOf(U, RHS[i]) == -1)
+        {
+            U[U.Length] = RHS[i];
+        }
+    }
+
+    return U;
+}
+
+// Add an element if it doesn't already exist in the array. Returns true if the
+// element was added.
+static final function bool AddUnique(out array<Object> A, Object Other)
+{
+    local int i;
+
+    for (i = 0; i < A.Length; ++i)
+    {
+        if (A[i] == Other)
+        {
+            return false;
+        }
+    }
+
+    A[A.Length] = Other;
+
+    return true;
 }
 
 // Slice tries to immitate Python's slice syntax.

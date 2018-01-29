@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_F1GrenadeWeapon extends DHExplosiveWeapon;
@@ -23,7 +23,7 @@ defaultproperties
 
     FuzeLength=4.0
     bHasReleaseLever=true
-    LeverReleaseSound=sound'Inf_Weapons_Foley.F1.f1_handle'
+    LeverReleaseSound=Sound'Inf_Weapons_Foley.F1.f1_handle'
     LeverReleaseVolume=1.0
     LeverReleaseRadius=200.0
 }

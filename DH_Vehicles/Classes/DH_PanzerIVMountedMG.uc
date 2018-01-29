@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_PanzerIVMountedMG extends DHVehicleMG;
@@ -9,7 +9,7 @@ defaultproperties
 {
     // MG mesh
     Mesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4_mg_ext'
-    Skins(0)=texture'axis_vehicles_tex.ext_vehicles.Panzer4F1_ext'
+    Skins(0)=Texture'axis_vehicles_tex.ext_vehicles.Panzer4F1_ext'
     FireAttachBone="Mg_placement1"
     FireEffectOffset=(X=-30.0,Y=10.0,Z=25.0) // positions fire on co-driver's hatch
 

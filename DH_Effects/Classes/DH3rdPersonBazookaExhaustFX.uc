@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH3rdPersonBazookaExhaustFX extends Emitter;
@@ -36,7 +36,7 @@ defaultproperties
         StartSizeRange=(X=(Min=30.0,Max=45.0),Y=(Min=30.0,Max=45.0),Z=(Min=30.0,Max=45.0))
         InitialParticlesPerSecond=5000.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=texture'Effects_Tex.explosions.DSmoke_2'
+        Texture=Texture'Effects_Tex.explosions.DSmoke_2'
         LifetimeRange=(Min=8.0,Max=12.0)
         StartVelocityRange=(X=(Min=-100.0,Max=-20.0),Y=(Min=-2.0,Max=-5.0),Z=(Min=-2.0,Max=5.0))
     End Object
@@ -63,7 +63,7 @@ defaultproperties
         StartSizeRange=(X=(Min=3.0,Max=5.0),Y=(Min=3.0,Max=5.0),Z=(Min=3.0,Max=5.0))
         InitialParticlesPerSecond=5000.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=texture'Effects_Tex.explosions.DSmoke_2'
+        Texture=Texture'Effects_Tex.explosions.DSmoke_2'
         LifetimeRange=(Min=0.5,Max=1.0)
         StartVelocityRange=(X=(Min=-300.0,Max=-200.0),Y=(Min=-2.0,Max=-5.0),Z=(Min=-2.0,Max=5.0))
     End Object
@@ -93,7 +93,7 @@ defaultproperties
         StartSizeRange=(X=(Min=3.0,Max=5.0),Y=(Min=3.0,Max=5.0),Z=(Min=3.0,Max=5.0))
         InitialParticlesPerSecond=5000.0
         DrawStyle=PTDS_Brighten
-        Texture=texture'Effects_Tex.explosions.impact_2frame'
+        Texture=Texture'Effects_Tex.explosions.impact_2frame'
         TextureUSubdivisions=2
         TextureVSubdivisions=1
         LifetimeRange=(Min=0.2,Max=0.3)

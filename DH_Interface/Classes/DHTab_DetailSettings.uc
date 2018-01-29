@@ -1,22 +1,32 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHTab_DetailSettings extends ROTab_DetailSettings;
+
+var automated moSlider  sl_CorpseStayTime;
+var int                 CorpseStayNum;
+
+var bool                bIsUpdatingGameDetails; // When true, we are in the process of updating all of the options via the Game details option
 
 function SetupPositions()
 {
     super.SetupPositions();
 
+    sb_Section1.UnmanageComponent(ch_Advanced);
+
+    sb_Section2.ManageComponent(sl_DistanceLOD);
+    sb_Section2.ManageComponent(sl_CorpseStayTime);
     sb_Section2.UnmanageComponent(co_ScopeDetail);
 }
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
-    super.InitComponent(MyController, MyOwner);
+    super(UT2K4Tab_DetailSettings).InitComponent(MyController, MyOwner);
 
     RemoveComponent(co_ScopeDetail);
+    RemoveComponent(ch_Advanced);
 }
 
 //Overrided to remove extra options for scope detail
@@ -40,6 +50,16 @@ function MyGetComboOptions(moComboBox Combo, out array<GUIListElem> Options)
                 Options[i].Item = DetailOptions[i];
             }
             break;
+
+        case co_Decal:
+            Options.Length = 6;
+            Options[0].Item = DetailLevels[3];
+            Options[1].Item = DetailLevels[4];
+            Options[2].Item = DetailLevels[5];
+            Options[3].Item = DetailLevels[6];
+            Options[4].Item = DetailLevels[7];
+            Options[5].Item = DetailLevels[8];
+            break;
     }
 
     if (Options.Length == 0)
@@ -51,8 +71,8 @@ function MyGetComboOptions(moComboBox Combo, out array<GUIListElem> Options)
 function InternalOnLoadINI(GUIComponent Sender, string s)
 {
     local PlayerController PC;
-    local string tempStr;
-    local bool a, b;
+    local string TempStr;
+    local bool bPlayerShadows, bBlobShadows;
 
     PC = PlayerOwner();
 
@@ -62,7 +82,6 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             iGlobalDetails = class'ROPlayer'.default.GlobalDetailLevel;
             iGlobalDetailsD = iGlobalDetails;
             co_GlobalDetails.SilentSetIndex(iGlobalDetails);
-            ch_Advanced.SetComponentValue(iGlobalDetailsD == MAX_DETAIL_OPTIONS, true);
             break;
 
         case ch_MotionBlur:
@@ -78,36 +97,52 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             break;
 
         case ch_Advanced:
-            break; // value is set by co_GlobalDetails
+            break;
 
         // Copied from UT2K4Tab_DetailSettings
         case co_Shadows:
-            tempStr = GetNativeClassName("Engine.Engine.RenderDevice");
+            TempStr = GetNativeClassName("Engine.Engine.RenderDevice");
 
             // No render-to-texture on anything but Direct3D
-            if (tempStr == "D3DDrv.D3DRenderDevice" || tempStr == "D3D9Drv.D3D9RenderDevice")
+            if (TempStr == "D3DDrv.D3DRenderDevice" || TempStr == "D3D9Drv.D3D9RenderDevice")
             {
-                a = bool(PC.ConsoleCommand("get ROEngine.ROPawn bPlayerShadows"));
-                b = bool(PC.ConsoleCommand("get ROEngine.ROPawn bBlobShadow"));
+                bPlayerShadows = bool(PC.ConsoleCommand("get ROEngine.ROPawn bPlayerShadows"));
+                bBlobShadows = bool(PC.ConsoleCommand("get ROEngine.ROPawn bBlobShadow"));
 
-                if (b)
+                if (bBlobShadows)
+                {
                     iShadow = 1;
-                else if (a)
+                }
+                else if (bPlayerShadows)
+                {
                     iShadow = 2;
+                }
                 else
+                {
                     iShadow = 0;
+                }
             }
             else
             {
-                b = bool(PC.ConsoleCommand("get ROEngine.ROPawn bBlobShadow"));
-                if (b)
+                bBlobShadows = bool(PC.ConsoleCommand("get ROEngine.ROPawn bBlobShadow"));
+
+                if (bBlobShadows)
+                {
                     iShadow = 1;
+                }
                 else
+                {
                     iShadow = 0;
+                }
             }
 
             iShadowD = iShadow;
             co_Shadows.SilentSetIndex(iShadow);
+            break;
+
+        case sl_CorpseStayTime:
+            CorpseStayNum = class'DHPlayer'.default.CorpseStayTime;
+            sl_CorpseStayTime.SetComponentValue(CorpseStayNum, true);
             break;
 
         default:
@@ -117,6 +152,36 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
     // Post-super checks
     switch (Sender)
     {
+        case co_Decal:
+            switch (class'LevelInfo'.default.DecalStayScale)
+            {
+                case 0.0:
+                    iDecal = 0;
+                    break;
+                case 1.0:
+                    iDecal = 1;
+                    break;
+                case 2.0:
+                    iDecal = 2;
+                    break;
+                case 4.0:
+                    iDecal = 3;
+                    break;
+                case 8.0:
+                    iDecal = 4;
+                    break;
+                case 16.0:
+                    iDecal = 5;
+                    break;
+                default:
+                    iDecal = 2;
+                    break;
+            }
+
+            iDecalD = iDecal;
+            co_Decal.SilentSetIndex(iDecal);
+            break;
+
         case co_RenderDevice:
             DisableHDRControlIfNeeded();
 
@@ -135,10 +200,31 @@ function InternalOnChange(GUIComponent Sender)
     local bool bGoingUp;
     local int i;
 
+    if (!bIsUpdatingGameDetails)
+    {
+        switch (Sender)
+        {
+            case co_GlobalDetails:
+            case co_Resolution:
+            case co_ColorDepth:
+            case co_RenderDevice:
+            case sl_Contrast:
+            case sl_Gamma:
+            case sl_Brightness:
+            case ch_FullScreen:
+                break;
+            default:
+                co_GlobalDetails.SilentSetIndex(MAX_DETAIL_OPTIONS - 1);
+                iGlobalDetails = MAX_DETAIL_OPTIONS - 1;
+        }
+    }
+
     super(UT2K4Tab_DetailSettings).InternalOnChange(Sender);
 
     if (bIgnoreChange)
+    {
         return;
+    }
 
     switch (Sender)
     {
@@ -147,7 +233,6 @@ function InternalOnChange(GUIComponent Sender)
             i = co_GlobalDetails.GetIndex();
             bGoingUp = i > iGlobalDetails && i != iGlobalDetailsD && (i != MAX_DETAIL_OPTIONS - 1);
             iGlobalDetails = i;
-            //ch_Advanced.SetComponentValue(i == MAX_DETAIL_OPTIONS, true);
             UpdateGlobalDetails();
             break;
 
@@ -161,31 +246,57 @@ function InternalOnChange(GUIComponent Sender)
             bGoingUp = bHDR && bHDR != bHDRD;
             break;
 
-        case ch_Advanced:
-            if (ch_Advanced.IsChecked())
+        case co_Decal:
+            switch (co_Decal.GetIndex())
             {
-                iGlobalDetails = MAX_DETAIL_OPTIONS - 1;
-                co_GlobalDetails.SilentSetIndex(iGlobalDetails);
+                case 0:
+                    iDecal = 0.0;
+                    break;
+                case 1:
+                    iDecal = 1.0;
+                    break;
+                case 2:
+                    iDecal = 2.0;
+                    break;
+                case 3:
+                    iDecal = 4.0;
+                    break;
+                case 4:
+                    iDecal = 8.0;
+                    break;
+                case 5:
+                    iDecal = 16.0;
+                    break;
             }
-            UpdateGlobalDetailsVisibility();
+            break;
+
+        case sl_CorpseStayTime:
+            CorpseStayNum = int(sl_CorpseStayTime.GetComponentValue());
+            PlayerOwner().ConsoleCommand("set DH_Engine.DHPlayer CorpseStayTime" @ CorpseStayNum);
             break;
     }
 
     if (bGoingUp)
+    {
         ShowPerformanceWarning();
+    }
 }
 
 function UpdateGlobalDetails()
 {
     local PlayerController PC;
+
     PC = PlayerOwner();
 
     UpdateGlobalDetailsVisibility();
 
     if (iGlobalDetails == MAX_DETAIL_OPTIONS - 1)
+    {
         return; // do not change settings if we picked custom
+    }
 
     bShowPerfWarning = false;
+    bIsUpdatingGameDetails = true;
 
     switch (iGlobalDetails)
     {
@@ -193,13 +304,13 @@ function UpdateGlobalDetails()
             co_Texture.SetIndex(0);         // Range = 0 - 8
             co_Char.SetIndex(0);            // Range = 0 - 8
             co_World.SetIndex(0);           // Range = 0 - 2
-            co_Physics.setindex(0);         // Range = 0 - 2
-            co_Decal.setindex(0);           // Range = 0 - 2
-            co_Shadows.setindex(0);         // Range = 0 - 2 (0 - 1 sometimes -- check that!)
-            co_MeshLOD.setindex(0);         // Range = 0 - 3
-            co_MultiSamples.setindex(0);
-            co_Anisotropy.setindex(0);
-            ch_ForceFSAAScreenshotSupport.SetComponentValue(false,false);
+            co_Physics.SetIndex(0);         // Range = 0 - 2
+            co_Decal.SetIndex(0);           // Range = 0 - 5
+            co_Shadows.SetIndex(0);         // Range = 0 - 2 (0 - 1 sometimes -- check that!)
+            co_MeshLOD.SetIndex(0);         // Range = 0 - 3
+            co_MultiSamples.SetIndex(0);
+            co_Anisotropy.SetIndex(0);
+            ch_ForceFSAAScreenshotSupport.SetComponentValue(false, false);
             ch_Decals.SetComponentValue(false, false);
             ch_DynLight.SetComponentValue(false, false);
             ch_Coronas.SetComponentValue(false, false);
@@ -211,6 +322,7 @@ function UpdateGlobalDetails()
             ch_DecoLayers.SetComponentValue(false, false);
             ch_MotionBlur.SetComponentValue(true, false);
             sl_DistanceLOD.SetComponentValue(0.25, false); // Range = 0.0 - 1.0
+            fDistance = 0.25;
             ch_HDR.SetComponentValue(false, false);
             break;
 
@@ -218,18 +330,22 @@ function UpdateGlobalDetails()
             co_Texture.SetIndex(3);         // Range = 0 - 8
             co_Char.SetIndex(3);            // Range = 0 - 8
             co_World.SetIndex(0);           // Range = 0 - 2
-            co_Physics.setindex(0);         // Range = 0 - 2
-            co_Decal.setindex(1);           // Range = 0 - 2
-            co_Shadows.setindex(1);         // Range = 0 - 2 (0 - 1 sometimes -- check that!)
-            co_MeshLOD.setindex(1);         // Range = 0 - 3
-            co_MultiSamples.setindex(0);
+            co_Physics.SetIndex(0);         // Range = 0 - 2
+            co_Decal.SetIndex(1);           // Range = 0 - 5
+            co_Shadows.SetIndex(1);         // Range = 0 - 2 (0 - 1 sometimes -- check that!)
+            co_MeshLOD.SetIndex(1);         // Range = 0 - 3
+            co_MultiSamples.SetIndex(0);
 
-            if (AnisotropyModes.Length>1)
-                 co_Anisotropy.SetIndex(1);
+            if (AnisotropyModes.Length > 1)
+            {
+                co_Anisotropy.SetIndex(1);
+            }
             else
-                 co_Anisotropy.setindex(0);
+            {
+                co_Anisotropy.SetIndex(0);
+            }
 
-            ch_ForceFSAAScreenshotSupport.SetComponentValue(false,false);
+            ch_ForceFSAAScreenshotSupport.SetComponentValue(false, false);
             ch_Decals.SetComponentValue(true, false);
             ch_DynLight.SetComponentValue(false, false);
             ch_Coronas.SetComponentValue(true, false);
@@ -240,6 +356,7 @@ function UpdateGlobalDetails()
             ch_Weather.SetComponentValue(true, false);
             ch_MotionBlur.SetComponentValue(true, false);
             sl_DistanceLOD.SetComponentValue(0.50, false); // Range = 0.0 - 1.0
+            fDistance = 0.5;
             ch_HDR.SetComponentValue(false, false);
             break;
 
@@ -247,20 +364,26 @@ function UpdateGlobalDetails()
             co_Texture.SetIndex(5);         // Range = 0 - 8
             co_Char.SetIndex(5);            // Range = 0 - 8
             co_World.SetIndex(1);           // Range = 0 - 2
-            co_Physics.setindex(1);         // Range = 0 - 2
-            co_Decal.setindex(1);           // Range = 0 - 2
-            co_Shadows.setindex(1);         // Range = 0 - 2 (0 - 1 sometimes -- check that!)
-            co_MeshLOD.setindex(2);         // Range = 0 - 3
-            co_MultiSamples.setindex(0);
+            co_Physics.SetIndex(1);         // Range = 0 - 2
+            co_Decal.SetIndex(2);           // Range = 0 - 5
+            co_Shadows.SetIndex(1);         // Range = 0 - 2 (0 - 1 sometimes -- check that!)
+            co_MeshLOD.SetIndex(2);         // Range = 0 - 3
+            co_MultiSamples.SetIndex(0);
 
-            if (AnisotropyModes.Length>2)
-                 co_Anisotropy.setindex(2);
-            else if (AnisotropyModes.Length>1)
-                 co_Anisotropy.SetIndex(1);
+            if (AnisotropyModes.Length > 2)
+            {
+                co_Anisotropy.SetIndex(2);
+            }
+            else if (AnisotropyModes.Length > 1)
+            {
+                co_Anisotropy.SetIndex(1);
+            }
             else
-                 co_Anisotropy.setindex(0);
+            {
+                co_Anisotropy.SetIndex(0);
+            }
 
-            ch_ForceFSAAScreenshotSupport.SetComponentValue(false,false);
+            ch_ForceFSAAScreenshotSupport.SetComponentValue(false, false);
             ch_Decals.SetComponentValue(true, false);
             ch_DynLight.SetComponentValue(true, false);
             ch_Coronas.SetComponentValue(true, false);
@@ -271,6 +394,7 @@ function UpdateGlobalDetails()
             ch_Weather.SetComponentValue(true, false);
             ch_MotionBlur.SetComponentValue(true, false);
             sl_DistanceLOD.SetComponentValue(0.75, false); // Range = 0.0 - 1.0
+            fDistance = 0.75;
             ch_HDR.SetComponentValue(false, false);
             break;
 
@@ -278,27 +402,39 @@ function UpdateGlobalDetails()
             co_Texture.SetIndex(6);         // Range = 0 - 8
             co_Char.SetIndex(6);            // Range = 0 - 8
             co_World.SetIndex(2);           // Range = 0 - 2
-            co_Physics.setindex(1);         // Range = 0 - 2
-            co_Decal.setindex(2);           // Range = 0 - 2
-            co_Shadows.setindex(1);         // Range = 0 - 2 (0 - 1 sometimes -- check that!)
-            co_MeshLOD.setindex(2);         // Range = 0 - 3
-            co_MultiSamples.setindex(0);
+            co_Physics.SetIndex(1);         // Range = 0 - 2
+            co_Decal.SetIndex(3);           // Range = 0 - 5
+            co_Shadows.SetIndex(1);         // Range = 0 - 2 (0 - 1 sometimes -- check that!)
+            co_MeshLOD.SetIndex(2);         // Range = 0 - 3
+            co_MultiSamples.SetIndex(0);
 
-            if (MultiSampleModes.Length>1)
-                 co_MultiSamples.setindex(1);
+            if (MultiSampleModes.Length > 1)
+            {
+                co_MultiSamples.SetIndex(1);
+            }
             else
-                 co_MultiSamples.setindex(0);
+            {
+                co_MultiSamples.SetIndex(0);
+            }
 
-            if (AnisotropyModes.Length>3)
-                 co_Anisotropy.setindex(3);
-            else if (AnisotropyModes.Length>2)
-                 co_Anisotropy.setindex(2);
-            else if (AnisotropyModes.Length>1)
-                 co_Anisotropy.SetIndex(1);
+            if (AnisotropyModes.Length > 3)
+            {
+                co_Anisotropy.SetIndex(3);
+            }
+            else if (AnisotropyModes.Length > 2)
+            {
+                co_Anisotropy.SetIndex(2);
+            }
+            else if (AnisotropyModes.Length > 1)
+            {
+                co_Anisotropy.SetIndex(1);
+            }
             else
-                 co_Anisotropy.setindex(0);
+            {
+                co_Anisotropy.SetIndex(0);
+            }
 
-            ch_ForceFSAAScreenshotSupport.SetComponentValue(false,false);
+            ch_ForceFSAAScreenshotSupport.SetComponentValue(false, false);
             ch_Decals.SetComponentValue(true, false);
             ch_DynLight.SetComponentValue(true, false);
             ch_Coronas.SetComponentValue(true, false);
@@ -309,6 +445,7 @@ function UpdateGlobalDetails()
             ch_Weather.SetComponentValue(true, false);
             ch_MotionBlur.SetComponentValue(true, false);
             sl_DistanceLOD.SetComponentValue(1.0, false); // Range = 0.0 - 1.0
+            fDistance = 1.0;
             ch_HDR.SetComponentValue(true, false);
             break;
 
@@ -316,28 +453,42 @@ function UpdateGlobalDetails()
             co_Texture.SetIndex(7);         // Range = 0 - 8
             co_Char.SetIndex(7);            // Range = 0 - 8
             co_World.SetIndex(2);           // Range = 0 - 2
-            co_Physics.setindex(1);         // Range = 0 - 2
-            co_Decal.setindex(2);           // Range = 0 - 2
-            co_Shadows.setindex(min(co_Shadows.ItemCount() - 1, 3));  // Range = 0 - 2 (0 - 1 sometimes -- check that!)
-            co_MeshLOD.setindex(2);         // Range = 0 - 3
+            co_Physics.SetIndex(1);         // Range = 0 - 2
+            co_Decal.SetIndex(4);           // Range = 0 - 5
+            co_Shadows.SetIndex(min(co_Shadows.ItemCount() - 1, 3));  // Range = 0 - 2 (0 - 1 sometimes -- check that!)
+            co_MeshLOD.SetIndex(2);         // Range = 0 - 3
 
-            if (MultiSampleModes.Length>2)
-                 co_MultiSamples.setindex(2);
-            else if (MultiSampleModes.Length>1)
-                 co_MultiSamples.setindex(1);
+            if (MultiSampleModes.Length > 2)
+            {
+                co_MultiSamples.SetIndex(2);
+            }
+            else if (MultiSampleModes.Length > 1)
+            {
+                co_MultiSamples.SetIndex(1);
+            }
             else
-                 co_MultiSamples.setindex(0);
+            {
+                co_MultiSamples.SetIndex(0);
+            }
 
-            if (AnisotropyModes.Length>3)
-                 co_Anisotropy.setindex(3);
-            else if (AnisotropyModes.Length>2)
-                 co_Anisotropy.SetIndex(2);
-            else if (AnisotropyModes.Length>1)
-                 co_Anisotropy.SetIndex(1);
+            if (AnisotropyModes.Length > 3)
+            {
+                co_Anisotropy.SetIndex(3);
+            }
+            else if (AnisotropyModes.Length > 2)
+            {
+                co_Anisotropy.SetIndex(2);
+            }
+            else if (AnisotropyModes.Length > 1)
+            {
+                co_Anisotropy.SetIndex(1);
+            }
             else
-                 co_Anisotropy.setindex(0);
+            {
+                co_Anisotropy.SetIndex(0);
+            }
 
-            ch_ForceFSAAScreenshotSupport.SetComponentValue(true,false);
+            ch_ForceFSAAScreenshotSupport.SetComponentValue(true, false);
             ch_Decals.SetComponentValue(true, false);
             ch_DynLight.SetComponentValue(true, false);
             ch_Coronas.SetComponentValue(true, false);
@@ -348,6 +499,7 @@ function UpdateGlobalDetails()
             ch_Weather.SetComponentValue(true, false);
             ch_MotionBlur.SetComponentValue(true, false);
             sl_DistanceLOD.SetComponentValue(1.0, false); // Range = 0.0 - 1.0
+            fDistance = 1.0;
             ch_HDR.SetComponentValue(true, false);
             break;
 
@@ -355,22 +507,30 @@ function UpdateGlobalDetails()
             co_Texture.SetIndex(8);         // Range = 0 - 8
             co_Char.SetIndex(8);            // Range = 0 - 8
             co_World.SetIndex(2);           // Range = 0 - 2
-            co_Physics.setindex(2);         // Range = 0 - 2
-            co_Decal.setindex(2);           // Range = 0 - 2
-            co_Shadows.setindex(min(co_Shadows.ItemCount() - 1, 3));  // Range = 0 - 2 (0 - 1 sometimes -- check that!)
-            co_MeshLOD.setindex(3);         // Range = 0 - 3
+            co_Physics.SetIndex(2);         // Range = 0 - 2
+            co_Decal.SetIndex(5);           // Range = 0 - 5
+            co_Shadows.SetIndex(min(co_Shadows.ItemCount() - 1, 3));  // Range = 0 - 2 (0 - 1 sometimes -- check that!)
+            co_MeshLOD.SetIndex(3);         // Range = 0 - 3
 
-            if (((true == bool(PC.ConsoleCommand("ISNVIDIAGPU"))) && (false == bool(PC.ConsoleCommand("SUPPORTEDMULTISAMPLE 4"))) || (false == bool(PC.ConsoleCommand("ISNVIDIAGPU"))))
+            if (((bool(PC.ConsoleCommand("ISNVIDIAGPU"))) && (!bool(PC.ConsoleCommand("SUPPORTEDMULTISAMPLE 4"))) || (!bool(PC.ConsoleCommand("ISNVIDIAGPU"))))
                 && (MultiSampleModes.Length > 3))
-                 co_MultiSamples.setindex(3);
+            {
+                co_MultiSamples.SetIndex(3);
+            }
             else if (MultiSampleModes.Length > 2)
-                 co_MultiSamples.setindex(2);
+            {
+                co_MultiSamples.SetIndex(2);
+            }
             else if (MultiSampleModes.Length > 1)
-                 co_MultiSamples.setindex(1);
+            {
+                co_MultiSamples.SetIndex(1);
+            }
             else
-                 co_MultiSamples.setindex(0);
+            {
+                co_MultiSamples.SetIndex(0);
+            }
 
-            co_Anisotropy.setindex(AnisotropyModes.Length - 1);
+            co_Anisotropy.SetIndex(AnisotropyModes.Length - 1);
             ch_ForceFSAAScreenshotSupport.SetComponentValue(true, false);
             ch_Decals.SetComponentValue(true, false);
             ch_DynLight.SetComponentValue(true, false);
@@ -382,11 +542,26 @@ function UpdateGlobalDetails()
             ch_Weather.SetComponentValue(true, false);
             ch_MotionBlur.SetComponentValue(true, false);
             sl_DistanceLOD.SetComponentValue(1.0, false); // Range = 0.0 - 1.0
+            fDistance = 1.0;
             ch_HDR.SetComponentValue(true, false);
             break;
     }
 
+    bIsUpdatingGameDetails = false;
     bShowPerfWarning = true;
+}
+
+// Modified to simply always show the advanced options.
+function UpdateGlobalDetailsVisibility()
+{
+    sb_Section2.EnableMe();
+    DisableHDRControlIfNeeded();
+
+    if (co_RenderDevice.GetExtra() != RenderMode[0])
+    {
+       co_MultiSamples.DisableMe();
+       ch_ForceFSAAScreenshotSupport.DisableMe();
+    }
 }
 
 function SaveSettings()
@@ -404,14 +579,16 @@ function SaveSettings()
         bSavePlayerConfig = true;
 
         if (ROPlayer(PC) != none)
+        {
             ROPlayer(PC).bUseBlurEffect = bMotionBlur;
+        }
 
         bMotionBlurD = bMotionBlur;
     }
 
     if (bHDR != bHDRD)
     {
-        PC.ConsoleCommand("set ini:Engine.Engine.ViewportManager Bloom"@bHDR);
+        PC.ConsoleCommand("set ini:Engine.Engine.ViewportManager Bloom" @ bHDR);
 
         if (ROPlayer(PC) != none)
         {
@@ -441,26 +618,66 @@ function SaveSettings()
         iShadowD = iShadow;
 
         if (PC.Pawn != none && ROPawn(PC.Pawn) != none)
+        {
             ROPawn(PC.Pawn).SaveConfig();
+        }
         else
+        {
             class'ROPawn'.static.StaticSaveConfig();
+        }
 
         UpdateShadows(iShadow == 1, iShadow > 0);
     }
 
-    if (class'Vehicle'.default.bVehicleShadows != (iShadow > 0))
+    if (class'Vehicle'.default.bVehicleShadows != iShadow > 0)
     {
         class'Vehicle'.default.bVehicleShadows = iShadow > 0;
         class'Vehicle'.static.StaticSaveConfig();
         UpdateVehicleShadows(iShadow > 0);
     }
 
+    if (int(PC.ConsoleCommand("get ini:DH_Engine.DHPlayer CorpseStayTime")) != CorpseStayNum)
+    {
+        PC.ConsoleCommand("set ini:DH_Engine.DHPlayer CorpseStayTime" @ CorpseStayNum);
+        bSavePlayerConfig = true;
+    }
+
     if (bSavePlayerConfig)
+    {
        class'ROEngine.ROPlayer'.static.StaticSaveConfig();
+    }
+}
+
+function bool RenderDeviceClick(byte Btn)
+{
+    switch (Btn)
+    {
+    case QBTN_Yes:
+        SaveSettings();
+        Console(Controller.Master.Console).DelayedConsoleCommand("relaunch -mod=DarkestHour");
+        break;
+
+    case QBTN_Cancel:
+        sRenDev = sRenDevD;
+        co_RenderDevice.Find(sRenDev);
+        co_RenderDevice.SetComponentValue(sRenDev, true);
+        break;
+    }
+
+    return true;
 }
 
 defaultproperties
 {
+    RenderModeText(0)="Direct3D 9.0 (Recommended)"
+    RenderModeText(1)="Direct3D 8.0 (Rendering Issues)"
+    RenderModeText(2)="OpenGL (Unstable)"
+    RenderMode(0)="D3D9Drv.D3D9RenderDevice"
+    RenderMode(1)="D3DDrv.D3DRenderDevice"
+    RenderMode(2)="OpenGLDrv.OpenGLRenderDevice"
+
+    RelaunchQuestion="The graphics mode has been successfully changed.  However, it will not take effect until the next time the game is started.  Would you like to restart the game right now?"
+
     DisplayModes(0)=(Width=1280,Height=720)
     DisplayModes(1)=(Width=1024,Height=768)
     DisplayModes(2)=(Width=1280,Height=768)
@@ -510,26 +727,10 @@ defaultproperties
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
     ch_HDR=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.HDRCheckbox'
-    Begin Object Class=DHmoCheckBox Name=Advanced
-        ComponentJustification=TXTA_Left
-        CaptionWidth=0.94
-        Caption="Show Advanced Options"
-        OnCreateComponent=Advanced.InternalOnCreateComponent
-        IniOption="@Internal"
-        IniDefault="true"
-        WinTop=0.479308
-        WinLeft=0.6
-        WinWidth=0.3
-        WinHeight=0.04
-        TabOrder=2
-        OnChange=DHTab_DetailSettings.InternalOnChange
-        OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
-    End Object
-    ch_Advanced=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.Advanced'
     Begin Object Class=DHmoCheckBox Name=MotionBlur
         ComponentJustification=TXTA_Left
         CaptionWidth=0.94
-        Caption="Motion Blur"
+        Caption="Blur Effects"
         OnCreateComponent=MotionBlur.InternalOnCreateComponent
         IniOption="@Internal"
         IniDefault="true"
@@ -543,7 +744,7 @@ defaultproperties
     End Object
     ch_MotionBlur=DHmoCheckBox'DH_Interface.DHTab_DetailSettings.MotionBlur'
     Begin Object Class=DHGUISectionBackground Name=sbSection1
-        Caption="Resolution"
+        Caption="Basic Rendering"
         WinTop=0.004
         WinLeft=0.022
         WinWidth=0.485
@@ -553,11 +754,11 @@ defaultproperties
     End Object
     sb_Section1=DHGUISectionBackground'DH_Interface.DHTab_DetailSettings.sbSection1'
     Begin Object Class=DHGUISectionBackground Name=sbSection2
-        Caption="Options"
+        Caption="Game Details"
         WinTop=0.004
         WinLeft=0.53
         WinWidth=0.452751
-        WinHeight=0.875228
+        WinHeight=0.969928
         RenderWeight=0.01
         OnPreDraw=sbSection2.InternalPreDraw
     End Object
@@ -575,7 +776,7 @@ defaultproperties
     End Object
     sb_Section3=DHGUISectionBackground'DH_Interface.DHTab_DetailSettings.sbSection3'
     Begin Object Class=GUIImage Name=GammaBar
-        Image=texture'DH_GUI_Tex.Menu.DHGammaSet'
+        Image=Texture'DH_GUI_Tex.Menu.DHGammaSet'
         ImageStyle=ISTY_Scaled
         ImageRenderStyle=MSTY_Normal
         OnChange=DHTab_DetailSettings.InternalOnChange
@@ -840,7 +1041,7 @@ defaultproperties
     Begin Object Class=DHmoCheckBox Name=DetailDecoLayers
         ComponentJustification=TXTA_Left
         CaptionWidth=0.94
-        Caption="Foliage"
+        Caption="Ground Details"
         OnCreateComponent=DetailDecoLayers.InternalOnCreateComponent
         IniOption="@Internal"
         IniDefault="true"
@@ -977,7 +1178,6 @@ defaultproperties
         LabelStyleName="DHLargeText"
         OnCreateComponent=DistanceLODSlider.InternalOnCreateComponent
         IniOption="@Internal"
-        WinTop=0.91
         WinLeft=0.56
         WinWidth=0.4
         TabOrder=22
@@ -985,4 +1185,22 @@ defaultproperties
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
     sl_DistanceLOD=moSlider'DH_Interface.DHTab_DetailSettings.DistanceLODSlider'
+    Begin Object Class=moSlider Name=CorpseStayTime
+        Value=15.0
+        MinValue=5.0
+        MaxValue=60.0
+        bIntSlider=true
+        SliderCaptionStyleName="DHLargeText"
+        CaptionWidth=0.65
+        Caption="Corpse Stay Time (Seconds)"
+        LabelStyleName="DHLargeText"
+        OnCreateComponent=DistanceLODSlider.InternalOnCreateComponent
+        IniOption="@Internal"
+        WinLeft=0.56
+        WinWidth=0.4
+        TabOrder=22
+        OnChange=DHTab_DetailSettings.InternalOnChange
+        OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
+    End Object
+    sl_CorpseStayTime=moSlider'CorpseStayTime'
 }

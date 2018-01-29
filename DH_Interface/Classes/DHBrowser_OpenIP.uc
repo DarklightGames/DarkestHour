@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHBrowser_OpenIP extends UT2K4GetDataMenu;
@@ -141,7 +141,7 @@ defaultproperties
     l_Text=GUILabel'DH_Interface.DHBrowser_OpenIP.IPDesc'
 
     Begin Object Class=FloatingImage Name=MessageWindowFrameBackground
-        Image=texture'DH_GUI_Tex.Menu.DHDisplay1'
+        Image=Texture'DH_GUI_Tex.Menu.DHDisplay1'
         DropShadowX=0
         DropShadowY=0
         StyleName="DHExitPageStyle"

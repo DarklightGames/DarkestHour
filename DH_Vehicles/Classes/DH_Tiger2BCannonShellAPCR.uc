@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_Tiger2BCannonShellAPCR extends DHCannonShellHVAP;
@@ -51,11 +51,10 @@ defaultproperties
     DHPenetrationTable(9)=18.3
     DHPenetrationTable(10)=17.6
     ShellDiameter=8.8
-    bIsAlliedShell=false
+    bDebugInImperial=false
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
     ImpactDamage=545
     BallisticCoefficient=1.527
-    SpeedFudgeScale=0.4
     Speed=68198.0
     MaxSpeed=68198.0
     StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'

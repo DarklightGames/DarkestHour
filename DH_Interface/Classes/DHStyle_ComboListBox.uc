@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHStyle_ComboListBox extends ROSTY2ComboListBox;
@@ -26,9 +26,9 @@ defaultproperties
     FontColors(0)=(B=255,G=255)
     FontColors(1)=(B=255,G=255)
     FontColors(4)=(B=255,G=255,R=255)
-    Images(0)=texture'DH_GUI_Tex.Menu.DHBox'
-    Images(1)=texture'DH_GUI_Tex.Menu.DHBox'
-    Images(2)=texture'DH_GUI_Tex.Menu.DHBox'
-    Images(3)=texture'DH_GUI_Tex.Menu.DHBox'
-    Images(4)=texture'DH_GUI_Tex.Menu.DHBox'
+    Images(0)=Texture'DH_GUI_Tex.Menu.DHBox'
+    Images(1)=Texture'DH_GUI_Tex.Menu.DHBox'
+    Images(2)=Texture'DH_GUI_Tex.Menu.DHBox'
+    Images(3)=Texture'DH_GUI_Tex.Menu.DHBox'
+    Images(4)=Texture'DH_GUI_Tex.Menu.DHBox'
 }

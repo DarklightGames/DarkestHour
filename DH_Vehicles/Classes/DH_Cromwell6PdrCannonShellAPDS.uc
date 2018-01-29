@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_Cromwell6PdrCannonShellAPDS extends DHCannonShellAPDS;
@@ -48,7 +48,6 @@ defaultproperties
     ShellImpactDamage=class'DH_Vehicles.DH_Cromwell6PdrCannonShellDamageAPDS'
     ImpactDamage=300
     BallisticCoefficient=1.15
-    SpeedFudgeScale=0.4
     Speed=73569.0
     MaxSpeed=73569.0
     Tag="Mk.I APDS"

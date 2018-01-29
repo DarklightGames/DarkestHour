@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHBinocularsAttachment extends DHWeaponAttachment;
@@ -29,7 +29,7 @@ defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.Binocs_ger'
     CullDistance=4096.0 // 68m - undo the increase added in DHWeaponAttachment, as binoculars don't have a muzzle flash & are also small
-    MenuImage=texture'InterfaceArt_tex.Menu_weapons.Binocs'
+    MenuImage=Texture'InterfaceArt_tex.Menu_weapons.Binocs'
     bRapidFire=false
     LightType=LT_None
     LightEffect=LE_None
@@ -128,14 +128,6 @@ defaultproperties
     PA_ReloadAnim=""
     PA_ProneReloadAnim=""
     PA_ProneIdleRestAnim="prone_idle_binoc"
-    PA_Fire="stand_shoothip_binoc"
-    PA_IronFire="stand_shootiron_binoc"
-    PA_CrouchFire="crouch_shoot_binoc"
-    PA_ProneFire="prone_shoot_binoc"
-    PA_FireLastShot="stand_shoothip_binoc"
-    PA_IronFireLastShot="stand_shootiron_binoc"
-    PA_CrouchFireLastShot="crouch_shoot_binoc"
-    PA_ProneFireLastShot="prone_shoot_binoc"
     PA_AirStillAnim="jump_mid_nade"
     PA_AirAnims(0)="jumpF_mid_nade"
     PA_AirAnims(1)="jumpB_mid_nade"

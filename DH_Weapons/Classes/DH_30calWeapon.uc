@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_30calWeapon extends DHMGWeapon;
@@ -19,6 +19,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
+    DisplayFOV=80.0
     IronSightDisplayFOV=35.0
 
     MaxNumPrimaryMags=2

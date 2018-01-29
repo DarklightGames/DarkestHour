@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHMaplistEditor extends MaplistEditor;
@@ -247,7 +247,7 @@ defaultproperties
     End Object
     t_WindowTitle=DHGUIHeader'DH_Interface.DHMaplistEditor.TitleBar'
     Begin Object Class=FloatingImage Name=FloatingFrameBackground
-        Image=texture'DH_GUI_Tex.Menu.DHDisplay_withcaption_noAlpha'
+        Image=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption_noAlpha'
         DropShadow=none
         ImageStyle=ISTY_Stretched
         ImageRenderStyle=MSTY_Normal

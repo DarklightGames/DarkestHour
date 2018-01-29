@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_Stug3GDestroyer extends DHArmoredVehicle; // earlier version without remote-controlled MG & with boxy mantlet
@@ -10,31 +10,121 @@ class DH_Stug3GDestroyer extends DHArmoredVehicle; // earlier version without re
 
 defaultproperties
 {
-    NewVehHitpoints(0)=(PointRadius=5.0,PointScale=1.0,PointBone="body",PointOffset=(X=22.0,Y=-30.5,Z=61.0),NewHitPointType=NHP_GunOptics)
-    NewVehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=15.0,Y=5.0,Z=35.0),NewHitPointType=NHP_Traverse)
-    NewVehHitpoints(2)=(PointRadius=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=15.0,Y=5.0,Z=35.0),NewHitPointType=NHP_GunPitch)
+    // Vehicle properties
+    VehicleNameString="StuG III Ausf.G"
+    VehicleMass=12.0
+    ReinforcementCost=10
+
+    // Hull mesh
+    Mesh=SkeletalMesh'DH_Stug3G_anm.Stug3g_body_ext'
+    Skins(0)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_ext'
+    Skins(1)=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
+    Skins(2)=Texture'DH_VehiclesGE_tex2.Treads.Stug3g_treads'
+    Skins(3)=Texture'DH_VehiclesGE_tex2.Treads.Stug3g_treads'
+    Skins(4)=Texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'
+    FireEffectOffset=(X=25.0,Y=0.0,Z=-25.0)
+
+    // Vehicle weapons & passengers
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GCannonPawn',WeaponBone="Turret_placement")
+    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GMountedMGPawn',WeaponBone="mg_base")
+    PassengerPawns(0)=(AttachBone="passenger_01",DrivePos=(X=8.0,Y=0.0,Z=3.0),DriveRot=(Yaw=49152),DriveAnim="VHalftrack_Rider4_idle")
+    PassengerPawns(1)=(AttachBone="passenger_02",DrivePos=(X=-11.0,Y=0.0,Z=78.0),DriveRot=(Pitch=34600),DriveAnim="VUC_rider1_idle")
+    PassengerPawns(2)=(AttachBone="passenger_03",DrivePos=(X=10.0,Y=0.0,Z=84.0),DriveRot=(Pitch=32768,Yaw=26500),DriveAnim="VHalftrack_Rider3_idle")
+    PassengerPawns(3)=(AttachBone="passenger_04x",DrivePos=(X=0.0,Y=0.0,Z=57.0),DriveRot=(Pitch=1800),DriveAnim="crouch_idle_binoc")
+
+    // Driver
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug3g_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=12000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug3g_body_int',TransitionDownAnim="Overlay_In",ViewPitchUpLimit=2000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000)
+    bDrawDriverInTP=false
+
+    // Hull armor
+    FrontArmor(0)=(Thickness=2.0,Slope=-75.0,MaxRelativeHeight=-26.5,LocationName="lower nose")
+    FrontArmor(1)=(Thickness=8.0,Slope=-20.0,MaxRelativeHeight=5.5,LocationName="nose")
+    FrontArmor(2)=(Thickness=8.0,Slope=52.0,MaxRelativeHeight=22.5,LocationName="upper nose")
+    FrontArmor(3)=(Thickness=8.0,Slope=10.0,MaxRelativeHeight=42.0,LocationName="lower super")
+    FrontArmor(4)=(Thickness=3.0,Slope=68.0,LocationName="upper super")
+    RightArmor(0)=(Thickness=3.0,MaxRelativeHeight=28.6,LocationName="lower")
+    RightArmor(1)=(Thickness=3.0,Slope=11.0,LocationName="superstructure")
+    LeftArmor(0)=(Thickness=3.0,MaxRelativeHeight=28.6,LocationName="lower")
+    LeftArmor(1)=(Thickness=3.0,Slope=11.0,LocationName="superstructure")
+    RearArmor(0)=(Thickness=5.0,Slope=-10.0,MaxRelativeHeight=2.5,LocationName="lower")
+    RearArmor(1)=(Thickness=5.0,Slope=17.0,MaxRelativeHeight=29.0,LocationName="upper")
+    RearArmor(2)=(Thickness=1.7,Slope=78.0,MaxRelativeHeight=43.3,LocationName="deck")
+    RearArmor(3)=(Thickness=3.0,LocationName="superstructure")
+
+    FrontLeftAngle=330.0
+    FrontRightAngle=30.0
+    RearRightAngle=150.0
+    RearLeftAngle=210.0
+
+    // Movement
+    MaxCriticalSpeed=729.0 // 43 kph
+
+    // Damage
+    VehHitpoints(0)=(PointRadius=20.0,PointHeight=25.0,PointOffset=(X=-90.0)) // engine
+    VehHitpoints(1)=(PointRadius=10.0,PointHeight=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-60.0,Y=-30.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(2)=(PointRadius=10.0,PointHeight=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=5.0,Y=30.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    NewVehHitpoints(0)=(PointRadius=5.0,PointBone="body",PointOffset=(X=22.0,Y=-30.5,Z=61.0),NewHitPointType=NHP_GunOptics)
+    NewVehHitpoints(1)=(PointRadius=20.0,PointBone="body",PointOffset=(X=15.0,Y=5.0,Z=35.0),NewHitPointType=NHP_Traverse)
+    NewVehHitpoints(2)=(PointRadius=20.0,PointBone="body",PointOffset=(X=15.0,Y=5.0,Z=35.0),NewHitPointType=NHP_GunPitch)
     GunOpticsHitPointIndex=0
-    LeftTreadIndex=3
-    MaxCriticalSpeed=729.0
-    UFrontArmorFactor=8.2
-    URightArmorFactor=3.1
-    ULeftArmorFactor=3.1
-    URearArmorFactor=5.0
-    UFrontArmorSlope=20.0
-    URearArmorSlope=10.0
-    MaxPitchSpeed=150.0
-    TreadVelocityScale=146.0
-    LeftTreadSound=sound'Vehicle_Engines.tracks.track_squeak_L08'
-    RightTreadSound=sound'Vehicle_Engines.tracks.track_squeak_R08'
-    RumbleSound=sound'Vehicle_Engines.interior.tank_inside_rumble01'
-    LeftTrackSoundBone="Track_L"
-    RightTrackSoundBone="Track_R"
+    TreadHitMaxHeight=20.0
+    TreadDamageThreshold=0.5
+    DamagedEffectScale=0.9
+    DamagedEffectOffset=(X=-100.0,Y=20.0,Z=26.0)
+    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Stug3.stug3g_destroyed'
+
+    // Exit
+    ExitPositions(0)=(X=-95.0,Y=-40.0,Z=130.0)
+    ExitPositions(1)=(X=-95.0,Y=-40.0,Z=130.0)
+    ExitPositions(2)=(X=-30.0,Y=38.0,Z=150.0)
+    ExitPositions(3)=(X=-80.0,Y=-167.0,Z=5.0)
+    ExitPositions(4)=(X=-235.0,Y=-3.0,Z=5.0)
+    ExitPositions(5)=(X=-80.0,Y=167.0,Z=5.0)
+    ExitPositions(6)=(X=-235.0,Y=-3.0,Z=5.0)
+
+    // Sounds
+    IdleSound=SoundGroup'Vehicle_Engines.STUGiii.stugiii_engine_loop'
+    StartUpSound=Sound'Vehicle_Engines.STUGiii.stugiii_engine_start'
+    ShutDownSound=Sound'Vehicle_Engines.STUGiii.stugiii_engine_stop'
+    LeftTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_L08'
+    RightTreadSound=Sound'Vehicle_Engines.tracks.track_squeak_R08'
     RumbleSoundBone="driver_attachment"
+    RumbleSound=Sound'Vehicle_Engines.interior.tank_inside_rumble01'
+
+    // Visual effects
+    LeftTreadIndex=3
+    TreadVelocityScale=146.0
+    WheelRotationScale=65000.0
+    ExhaustPipes(0)=(ExhaustPosition=(X=-175.0,Y=40.0,Z=-25.0),ExhaustRotation=(Pitch=34000))
+    ExhaustPipes(1)=(ExhaustPosition=(X=-175.0,Y=-40.0,Z=-25.0),ExhaustRotation=(Pitch=34000))
+    LeftLeverBoneName="lever_L"
+    RightLeverBoneName="lever_R"
+
+    // HUD
+    VehicleHudImage=Texture'DH_InterfaceArt_tex.Tank_Hud.stug3g_body'
     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Stug3g_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.Stug3g_turret_look'
     VehicleHudTreadsPosX(0)=0.37
     VehicleHudTreadsPosY=0.51
     VehicleHudTreadsScale=0.66
+    VehicleHudOccupantsX(0)=0.44
+    VehicleHudOccupantsY(0)=0.4
+    VehicleHudOccupantsX(1)=0.44
+    VehicleHudOccupantsY(1)=0.55
+    VehicleHudOccupantsX(2)=0.59
+    VehicleHudOccupantsY(2)=0.56
+    VehicleHudOccupantsX(3)=0.4
+    VehicleHudOccupantsY(3)=0.7
+    VehicleHudOccupantsX(4)=0.5
+    VehicleHudOccupantsY(4)=0.65
+    VehicleHudOccupantsX(5)=0.6
+    VehicleHudOccupantsY(5)=0.7
+    VehicleHudOccupantsX(6)=0.5
+    VehicleHudOccupantsY(6)=0.75
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.stug3g'
+
+    // Visible wheels
     LeftWheelBones(0)="Wheel_L_1"
     LeftWheelBones(1)="Wheel_L_2"
     LeftWheelBones(2)="Wheel_L_3"
@@ -57,56 +147,8 @@ defaultproperties
     RightWheelBones(8)="Wheel_R_9"
     RightWheelBones(9)="Wheel_R_10"
     RightWheelBones(10)="Wheel_R_11"
-    WheelRotationScale=1000
-    TreadHitMinAngle=1.8
-    FrontLeftAngle=330.0
-    FrontRightAngle=30.0
-    RearRightAngle=150.0
-    RearLeftAngle=210.0
-    LeftLeverBoneName="lever_L"
-    LeftLeverAxis=AXIS_Z
-    RightLeverBoneName="lever_R"
-    RightLeverAxis=AXIS_Z
-    ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
-    ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
-    ExhaustPipes(0)=(ExhaustPosition=(X=-175.0,Y=40.0,Z=-25.0),ExhaustRotation=(Pitch=34000))
-    ExhaustPipes(1)=(ExhaustPosition=(X=-175.0,Y=-40.0,Z=-25.0),ExhaustRotation=(Pitch=34000))
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GCannonPawn',WeaponBone="Turret_placement")
-    PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_Stug3GMountedMGPawn',WeaponBone="mg_base")
-    PassengerPawns(0)=(AttachBone="passenger_01",DrivePos=(X=8.0,Y=0.0,Z=3.0),DriveRot=(Yaw=49152),DriveAnim="VHalftrack_Rider4_idle")
-    PassengerPawns(1)=(AttachBone="passenger_02",DrivePos=(X=-11.0,Y=0.0,Z=78.0),DriveRot=(Pitch=34600),DriveAnim="VUC_rider1_idle")
-    PassengerPawns(2)=(AttachBone="passenger_03",DrivePos=(X=10.0,Y=0.0,Z=84.0),DriveRot=(Pitch=32768,Yaw=26500),DriveAnim="VHalftrack_Rider3_idle")
-    PassengerPawns(3)=(AttachBone="passenger_04x",DrivePos=(X=0.0,Y=0.0,Z=57.0),DriveRot=(Pitch=1800),DriveAnim="crouch_idle_binoc")
-    IdleSound=SoundGroup'Vehicle_Engines.STUGiii.stugiii_engine_loop'
-    StartUpSound=sound'Vehicle_Engines.STUGiii.stugiii_engine_start'
-    ShutDownSound=sound'Vehicle_Engines.STUGiii.stugiii_engine_stop'
-    DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Stug3.stug3g_destroyed'
-    DamagedEffectScale=0.9
-    DamagedEffectOffset=(X=-100.0,Y=20.0,Z=26.0)
-    FireEffectOffset=(X=25.0,Y=0.0,Z=-25.0)
-    SteeringScaleFactor=0.75
-    BeginningIdleAnim="driver_hatch_idle_close"
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug3g_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=12000,ViewPitchDownLimit=60000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,ViewFOV=90.0)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Stug3G_anm.Stug3g_body_int',TransitionDownAnim="Overlay_In",ViewPitchUpLimit=2000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000,ViewFOV=90.0)
-    VehicleHudImage=texture'DH_InterfaceArt_tex.Tank_Hud.stug3g_body'
-    VehicleHudOccupantsX(0)=0.44
-    VehicleHudOccupantsX(1)=0.44
-    VehicleHudOccupantsX(2)=0.59
-    VehicleHudOccupantsX(3)=0.4
-    VehicleHudOccupantsX(4)=0.5
-    VehicleHudOccupantsX(5)=0.6
-    VehicleHudOccupantsX(6)=0.5
-    VehicleHudOccupantsY(0)=0.4
-    VehicleHudOccupantsY(1)=0.55
-    VehicleHudOccupantsY(2)=0.56
-    VehicleHudOccupantsY(3)=0.7
-    VehicleHudOccupantsY(4)=0.65
-    VehicleHudOccupantsY(5)=0.7
-    VehicleHudOccupantsY(6)=0.75
-    VehHitpoints(0)=(PointRadius=20.0,PointHeight=25.0,PointOffset=(X=-90.0)) // engine
-    VehHitpoints(1)=(PointRadius=10.0,PointHeight=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-60.0,Y=-30.0,Z=15.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    VehHitpoints(2)=(PointRadius=10.0,PointHeight=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=5.0,Y=30.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
-    DriverAttachmentBone="driver_attachment"
+
+    // Physics wheels
     Begin Object Class=SVehicleWheel Name=LF_Steering
         bPoweredWheel=true
         SteerType=VST_Steered
@@ -159,33 +201,8 @@ defaultproperties
         WheelRadius=30.0
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_Stug3GDestroyer.Right_Drive_Wheel'
-    VehicleMass=12.0
-    bDrawDriverInTP=false
-    bFPNoZFromCameraPitch=true
-    ExitPositions(0)=(X=-95.0,Y=-40.0,Z=130.0)
-    ExitPositions(1)=(X=-95.0,Y=-40.0,Z=130.0)
-    ExitPositions(2)=(X=-30.0,Y=38.0,Z=150.0)
-    ExitPositions(3)=(X=-80.0,Y=-167.0,Z=5.0)
-    ExitPositions(4)=(X=-235.0,Y=-3.0,Z=5.0)
-    ExitPositions(5)=(X=-80.0,Y=167.0,Z=5.0)
-    ExitPositions(6)=(X=-235.0,Y=-3.0,Z=5.0)
-    DriverDamageMult=1.0
-    VehicleNameString="StuG III Ausf.G"
-    MaxDesireability=1.9
-    FlagBone="Mg_placement"
-    FlagRotation=(Yaw=32768)
-    PitchUpLimit=5000
-    PitchDownLimit=60000
-    HealthMax=525.0
-    Health=525
-    Mesh=SkeletalMesh'DH_Stug3G_anm.Stug3g_body_ext'
-    Skins(0)=texture'DH_VehiclesGE_tex2.ext_vehicles.Stug3g_body_ext'
-    Skins(1)=texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
-    Skins(2)=texture'DH_VehiclesGE_tex2.Treads.Stug3g_treads'
-    Skins(3)=texture'DH_VehiclesGE_tex2.Treads.Stug3g_treads'
-    Skins(4)=texture'DH_VehiclesGE_tex2.int_vehicles.Stug3g_body_int'
-    CollisionRadius=175.0
-    CollisionHeight=60.0
+
+    // Karma
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
@@ -205,5 +222,4 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Vehicles.DH_Stug3GDestroyer.KParams0'
-    SpawnOverlay(0)=material'DH_InterfaceArt_tex.Vehicles.stug3g'
 }

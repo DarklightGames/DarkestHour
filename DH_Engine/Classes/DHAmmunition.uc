@@ -1,10 +1,15 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHAmmunition extends ROAmmunition
     abstract;
+
+// TODO: can probably deprecate ammo classes entirely
+// They only contain MaxAmmo, InitialAmount & IconMaterial, which don't change & are only looked up from the ammo class's default values
+// Those 3 variables could easily be added to the WeaponFire class & looked up from there
+// The IconCoords in default properties here appears to be unused (& never changes anyway)
 
 defaultproperties
 {

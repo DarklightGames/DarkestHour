@@ -1,17 +1,17 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_HeerHelmetThree extends DHHeadgear;
 
 static function StaticPrecache(LevelInfo L)
 {
-    L.AddPrecacheMaterial(material'DHGermanCharactersTex.GerHeadGear.WH_HG_3');
+    L.AddPrecacheMaterial(Material'DHGermanCharactersTex.GerHeadGear.WH_HG_3');
 }
 
 defaultproperties
 {
     Mesh=SkeletalMesh'gear_anm.ger_helmet'
-    Skins(0)=texture'DHGermanCharactersTex.GerHeadgear.WH_HG_3'
+    Skins(0)=Texture'DHGermanCharactersTex.GerHeadgear.WH_HG_3'
 }

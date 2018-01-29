@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_F1GrenadeProjectile extends DHGrenadeProjectile;
@@ -9,7 +9,6 @@ defaultproperties
 {
     Damage=150.0
     DamageRadius=700.0
-    FuzeLengthTimer=4.0
     MyDamageType=class'DH_Weapons.DH_F1GrenadeDamType'
     StaticMesh=StaticMesh'WeaponPickupSM.Projectile.F1grenade-throw'
     ExplosionSound(0)=SoundGroup'Inf_Weapons.F1.f1_explode01'

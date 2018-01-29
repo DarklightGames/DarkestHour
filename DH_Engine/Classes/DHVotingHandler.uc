@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHVotingHandler extends xVotingHandler;
@@ -56,6 +56,127 @@ function Timer()
     {
         TallyVotes(true);
     }
+}
+
+// Modified to allow for specific repeat limit
+function AddMap(string MapName, string Mutators, string GameOptions) // called from the MapListLoader
+{
+    local MapHistoryInfo MapInfo;
+    local bool bUpdate;
+    local int i;
+    local int RepeatLimitInstance;
+
+    for (i = 0; i < MapList.Length; i++)  // dont add duplicate map names
+    {
+        if (MapName ~= MapList[i].MapName)
+        {
+            return;
+        }
+    }
+
+    // Get the MapInfo (important to have above other stuff)
+    MapInfo = History.GetMapHistory(MapName);
+
+    RepeatLimitInstance = RepeatLimit;
+
+    if (MapInfo.U != "" && int(MapInfo.U) >= 0)
+    {
+        RepeatLimitInstance = int(MapInfo.U);
+    }
+
+    MapList.Length = MapCount + 1;
+    MapList[MapCount].MapName = MapName;
+    MapList[MapCount].PlayCount = MapInfo.P;
+    MapList[MapCount].Sequence = MapInfo.S;
+    MapList[MapCount].bEnabled = MapInfo.S == 0 || MapInfo.S > RepeatLimitInstance;
+
+    MapCount++;
+
+    /*
+    if(Mutators != "" && Mutators != MapInfo.U)
+    {
+        MapInfo.U = Mutators;
+        bUpdate = True;
+    }
+    */
+
+    if(GameOptions != "" && GameOptions != MapInfo.G)
+    {
+        MapInfo.G = GameOptions;
+        bUpdate = True;
+    }
+
+    if(MapInfo.M == "") // if map not found in MapVoteHistory then add it
+    {
+        MapInfo.M = MapName;
+        bUpdate = True;
+    }
+
+    if(bUpdate)
+    {
+        History.AddMap(MapInfo);
+    }
+}
+
+// Modified to not include per-map game options in the URL string (so we can instead use it for a level's specific repeat limit for voting)
+function string SetupGameMap(MapVoteMapList MapInfo, int GameIndex, MapHistoryInfo MapHistoryInfo)
+{
+    local string            ReturnString, MutatorString, OptionString;
+    local array<string>     MapsInRotation;
+    local int               i;
+
+    // Add Per-GameType Mutators
+    if (GameConfig[GameIndex].Mutators != "")
+    {
+        MutatorString = MutatorString $ GameConfig[GameIndex].Mutators;
+    }
+
+    // Add Per-Map Mutators
+    if (MapHistoryInfo.U != "")
+    {
+        MutatorString = MutatorString $ "," $ MapHistoryInfo.U;
+    }
+
+    // Add Per-GameType Game Options
+    if(GameConfig[GameIndex].Options != "")
+    {
+        OptionString = OptionString $ Repl(Repl(GameConfig[GameIndex].Options,",","?")," ","");
+    }
+
+    // Remove the .rom off of the map name, if it exists
+    if (Right(MapInfo.MapName, 4) == ".rom")
+    {
+        ReturnString = Left(MapInfo.MapName, Len(MapInfo.MapName) - 4);
+    }
+    else
+    {
+        ReturnString = MapInfo.MapName;
+    }
+
+    MapsInRotation = Level.Game.MaplistHandler.GetCurrentMapRotation();
+
+    for (i = 0; i < MapsInRotation.Length; ++i)
+    {
+        if (InStr(MapsInRotation[i], ReturnString) != -1)
+        {
+            ReturnString = MapsInRotation[i];
+            break;
+        }
+    }
+
+    ReturnString = ReturnString $ "?Game=" $ GameConfig[GameIndex].GameClass;
+
+    if (MutatorString != "")
+    {
+        ReturnString = ReturnString $ "?Mutator=" $ MutatorString;
+    }
+
+    if (OptionString != "")
+    {
+        ReturnString = ReturnString $ "?" $ OptionString;
+    }
+
+    return ReturnString;
 }
 
 // NOTE: overridden to fix vote 'duplication' bug
@@ -449,7 +570,7 @@ function TallyVotes(bool bForceMapSwitch)
             VoteCount[MVRI[x].GameVote * MapCount + MVRI[x].MapVote] = VoteCount[MVRI[x].GameVote * MapCount + MVRI[x].MapVote] + Votes;
 
             // If more then half the players voted for the same map as this player then force a winner
-            if (!bScoreMode && Level.Game.NumPlayers > 2 && float(VoteCount[MVRI[x].GameVote * MapCount + MVRI[x].MapVote]) / float(Level.Game.NumPlayers) > 0.5 && Level.Game.bGameEnded)
+            if (!bScoreMode && Level.Game.GetNumPlayers() > 2 && float(VoteCount[MVRI[x].GameVote * MapCount + MVRI[x].MapVote]) / float(Level.Game.GetNumPlayers()) > 0.5 && Level.Game.bGameEnded)
             {
                 bForceMapSwitch = true;
             }
@@ -459,7 +580,7 @@ function TallyVotes(bool bForceMapSwitch)
     Log("___Voted - " $ PlayersThatVoted, 'MapVoteDebug');
 
     // Mid game vote initiated
-    if (Level.Game.NumPlayers > 2 && !Level.Game.bGameEnded && !bMidGameVote && (float(PlayersThatVoted) / float(Level.Game.NumPlayers)) * 100 >= MidGameVotePercent)
+    if (Level.Game.GetNumPlayers() > 2 && !Level.Game.bGameEnded && !bMidGameVote && (float(PlayersThatVoted) / float(Level.Game.GetNumPlayers())) * 100 >= MidGameVotePercent)
     {
         MidGameVote();
     }
@@ -544,7 +665,7 @@ function TallyVotes(bool bForceMapSwitch)
     }
 
     // If everyone has voted go ahead and change map
-    if (bForceMapSwitch || (Level.Game.NumPlayers == PlayersThatVoted && Level.Game.NumPlayers > 0))
+    if (bForceMapSwitch || (Level.Game.GetNumPlayers() == PlayersThatVoted && Level.Game.GetNumPlayers() > 0))
     {
         if (MapList[TopMap - TopMap / MapCount * MapCount].MapName == "")
         {

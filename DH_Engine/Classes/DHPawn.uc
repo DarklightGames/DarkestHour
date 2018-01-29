@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHPawn extends ROPawn
@@ -9,8 +9,10 @@ class DHPawn extends ROPawn
 #exec OBJ LOAD FILE=ProjectileSounds.uax
 
 // General
-var     float   SpawnProtEnds;            // is set when a player spawns/teleports for "spawn" protection in selectable spawn maps
-var     float   SpawnKillTimeEnds;        // is set when a player spawns
+// TODO: I'm sure we can just use existing OldController ref instead of adding SwitchingController, but want to make certain 1st (Matt)
+var     Controller          SwitchingController; // needed by KDriverEnter() when switched vehicle position, as player no longer briefly re-possesses DHPawn before entering new position
+var     ROArtilleryTrigger  CarriedRadioTrigger; // for storing the trigger on a radioman each spawn, for the purpose of deleting it on death
+var     bool    bWeaponNeedsReload;       // whether an AT weapon is loaded or not
 var     float   StanceChangeStaminaDrain; // how much stamina is lost by changing stance
 var     float   MinHurtSpeed;             // when a moving player lands, if they're moving faster than this speed they'll take damage
 var     vector  LastWhizLocation;         // last whiz sound location on pawn (basically a non-replicated version of Pawn's mWhizSoundLocation, as we no longer want it to replicate)
@@ -19,29 +21,48 @@ var     bool    bNeedToAttachDriver;      // flags that net client was unable to
 var     bool    bClientSkipDriveAnim;     // set by vehicle replicated to net client that's already played correct initial driver anim, so DriveAnim doesn't override that
 var     bool    bClientPlayedDriveAnim;   // flags that net client already played DriveAnim on entering vehicle, so replicated vehicle knows not to set bClientSkipDriveAnim
 
+// Accuracy
+var     float   PawnSpreadFactor;         // Applies to weapon spread, 1.0 for no change, gets set in PostBeginPlay() to the DHG AccuracyModifier value
+
 // Player model
 var     array<material> FaceSkins;        // list of body & face skins to be randomly selected for pawn
 var     array<material> BodySkins;
 var     byte    PackedSkinIndexes;        // server packs selected index numbers for body & face skins into a single byte for most efficient replication to net clients
 var     bool    bReversedSkinsSlots;      // some player meshes have the typical body & face skin slots reversed, so this allows it to be assigned per pawn class
                                           // TODO: fix the reversed skins indexing in player meshes to standardise with body is 0 & face is 1 (as in RO), then delete this
-var     bool    bHatShotOff;              // records that player's helmet/headgear has been knocked off by a bullet impact
-
-// Resupply
-var     bool    bWeaponNeedsReload;       // whether an AT weapon is loaded or not
-var     int     MortarHEAmmo;
-var     int     MortarSmokeAmmo;
+var     string  ShovelClassName;          // name of shovel class, so can be set for different nations (string name not class, due to build order)
+var     bool    bShovelHangsOnLeftHip;    // shovel hangs on player's left hip, which is the default position - otherwise it goes on player's backpack (e.g. US shovel)
 
 // Mortars
 var     Actor   OwnedMortar;              // mortar vehicle associated with this actor, used to destroy mortar when player dies
 var     bool    bIsDeployingMortar;       // whether or not the pawn is deploying his mortar - used for disabling movement
 var     bool    bMortarCanBeResupplied;
+var     int     MortarHEAmmo;
+var     int     MortarSmokeAmmo;
 var     bool    bLockViewRotation;
 var     rotator LockViewRotation;
 
 // Obstacle clearing
 var     bool    bCanCutWire;
 var     bool    bIsCuttingWire;
+
+// Spawning
+var     DHSpawnPointBase    SpawnPoint;        // the spawn point that was used to spawn this vehicle
+var     float               SpawnProtEnds;     // is set when a player spawns/teleports for "spawn" protection in selectable spawn maps
+var     float               SpawnKillTimeEnds; // is set when a player spawns
+var     bool                bCombatSpawned;    // indicates the pawn was spawned in combat
+
+// Supply
+var     array<DHConstructionSupplyAttachment> TouchingSupplyAttachments;
+var     int                 TouchingSupplyCount;
+
+// Armored vehicle locking
+var     DHArmoredVehicle    CrewedLockedVehicle; // a locked armored vehicle that this player is allowed to enter
+var     bool                bInLockedVehicle;    // player is in a locked vehicle (only to replicate to net client to display locked icon on vehicle HUD)
+
+// Touch messages
+var     class<LocalMessage> TouchMessageClass;
+var     float               LastNotifyTime;
 
 // Ironsight bob
 var     float   IronsightBobTime;
@@ -50,12 +71,9 @@ var     float   IronsightBobAmplitude;
 var     float   IronsightBobFrequency;
 var     float   IronsightBobDecay;
 
-// Radioman
-var     ROArtilleryTrigger  CarriedRadioTrigger; // for storing the trigger on a radioman each spawn, for the purpose of deleting it on death
-
-// Sounds
-var()   array<sound>    PlayerHitSounds;
-var()   array<sound>    HelmetHitSounds;
+// Hit sounds
+var     array<sound>    PlayerHitSounds;
+var     array<sound>    HelmetHitSounds;
 
 // Mantling
 var     vector  MantleEndPoint;      // player's final location after mantle
@@ -76,12 +94,16 @@ var     vector  NewAcceleration;     // acceleration which is checked by PlayerM
 var     bool    bEndMantleBob;       // initiates the pre mantle head bob up motion
 var     sound   MantleSound;
 
+// Diggin
+var     bool    bCanDig;
+
 var(ROAnimations)   name        MantleAnim_40C, MantleAnim_44C, MantleAnim_48C, MantleAnim_52C, MantleAnim_56C, MantleAnim_60C, MantleAnim_64C,
                                 MantleAnim_68C, MantleAnim_72C, MantleAnim_76C, MantleAnim_80C, MantleAnim_84C, MantleAnim_88C;
 
 var(ROAnimations)   name        MantleAnim_40S, MantleAnim_44S, MantleAnim_48S, MantleAnim_52S, MantleAnim_56S, MantleAnim_60S, MantleAnim_64S,
                                 MantleAnim_68S, MantleAnim_72S, MantleAnim_76S, MantleAnim_80S, MantleAnim_84S, MantleAnim_88S;
-// Burning
+
+// Burning player
 var     bool                bOnFire;                       // whether Pawn is on fire or not
 var     bool                bBurnFXOn;                     // whether Fire FX are enabled or not
 var     bool                bCharred;                      // for switching in a charred overlay after the fire goes out
@@ -97,15 +119,15 @@ var     int                 BurnTimeLeft;                  // number of seconds 
 var     float               LastBurnTime;                  // last time we did fire damage to the Pawn
 var     Pawn                FireStarter;                   // who set a player on fire
 
-// Touch messages
-var     class<LocalMessage> TouchMessageClass;
-var     float               LastNotifyTime;
-
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
     reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
         PackedSkinIndexes;
+
+    // Variables the server will replicate to the client that owns this actor
+    reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
+        TouchingSupplyCount, bInLockedVehicle;
 
     // Variables the server will replicate to all clients except the one that owns this actor
     reliable if (!bNetOwner && bNetDirty && Role == ROLE_Authority)
@@ -114,6 +136,10 @@ replication
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bOnFire, bCrouchMantle, MantleHeight;
+
+    // Functions a client can call on the server
+    reliable if (Role < ROLE_Authority)
+        ServerGiveConstructionWeapon;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -131,6 +157,12 @@ simulated function PostBeginPlay()
         AddDefaultInventory();
     }
 
+    // Authority set this pawns SpreadFactor based on the game settings
+    if (Role == ROLE_Authority && DarkestHourGame(Level.Game) != none)
+    {
+        PawnSpreadFactor = DarkestHourGame(Level.Game).AccuracyModifier;
+    }
+
     AssignInitialPose();
 
     UpdateShadow();
@@ -142,59 +174,83 @@ simulated function PostBeginPlay()
 }
 
 // Modified to set up any random selection of body & face skins for the player mesh
+// Also to skip over the Super in ROPawn, so net client doesn't spawn a headgear or ammo pouch attachments, which instead is done in PostNetReceive()
+// That solves network timing problems as for player's own pawn this gets called before server has time to possess pawn & set & replicate its attachment classes
+// Also the bot squad/roster stuff (originally from UnrealPawn) is irrelevant in RO/DH, as Level.bStartup is never true (only applies to pawns placed in the level)
 simulated function PostNetBeginPlay()
 {
-    super.PostNetBeginPlay();
+    super(Pawn).PostNetBeginPlay();
 
     SetBodyAndFaceSkins();
 }
 
-// Matt 2016: modified to fix 'uniform bug' where player on net client would sometimes spawn with wrong player model (most commonly an allied player spawning as a German)
+// Modified to fix 'uniform bug' where player on net client would sometimes spawn with wrong player model (most commonly an allied player spawning as a German)
 // The functionality is now in a new SetUpPlayerModel() function to avoid code duplication, so see that function for explanatory comments
+// Also so we don't pointlessly try to check for the inventory of other players, as it won't get replicated to us anyway & the check is only relevant to player's own pawn
+// That resulted in all the other pawns doing this inventory loop check constantly throughout the round & so never setting bNetNotify false to disable PostNetReceive!
+// Also to spawn decorative attachments for any headgear or ammo pouches, instead of doing this in PostNetBeginPlay()
+// That solves network timing problems where PostNetBeginPlay() is called before server has time to possess pawn & set & replicate its attachment classes
 simulated function PostNetReceive()
 {
-    local Inventory Inv;
-    local bool      bVerifiedPrimary, bVerifiedSecondary, bVerifiedNades;
-    local int       i;
+    local PlayerController PC;
+    local Inventory        Inv;
+    local bool             bVerifiedPrimary, bVerifiedSecondary, bVerifiedGrenades;
+    local int              i;
 
-    // Flag bRecievedInitialLoadout when all of our role's weapons & equipment have been replicated, then switch to best weapon
+    // If this is the local player's pawn, flag bRecievedInitialLoadout when all our role's weapons & equipment have been replicated, then switch to best weapon
+    // But now if it's another player's pawn, we just flag bRecievedInitialLoadout so these checks are skipped
+    // Re-factored to avoid repeating checks when already confirmed, or carrying out checks if we now other checks have failed
     if (!bRecievedInitialLoadout)
     {
-        for (Inv = Inventory; Inv != none; Inv = Inv.Inventory)
+        PC = Level.GetLocalPlayerController();
+
+        if (PC != none)
         {
-            if (Weapon(Inv) != none)
+            // If this is our own pawn, check whether we've now received our full inventory
+            if (PC == Controller)
             {
-                if (VerifyPrimary(Inv))
+                for (Inv = Inventory; Inv != none; Inv = Inv.Inventory)
                 {
-                    bVerifiedPrimary = true;
+                    if (Weapon(Inv) != none && Inv.Instigator != none)
+                    {
+                        if (!bVerifiedPrimary && VerifyPrimary(Inv))
+                        {
+                            bVerifiedPrimary = true;
+                        }
+
+                        if (!bVerifiedSecondary && VerifySecondary(Inv))
+                        {
+                            bVerifiedSecondary = true;
+                        }
+
+                        // TODO: unlike primary & secondary weapons, role can have > 1 grenade, so think this needs to include an item count, similar to GivenItems
+                        if (!bVerifiedGrenades && VerifyNades(Inv))
+                        {
+                            bVerifiedGrenades = true;
+                        }
+                    }
+
+                    if (++i > 500) // runaway loop safeguard
+                    {
+                        break;
+                    }
                 }
 
-                if (VerifySecondary(Inv))
+                // If we have our inventory then switch to best weapon
+                if (bVerifiedPrimary && bVerifiedSecondary && bVerifiedGrenades && VerifyGivenItems())
                 {
-                    bVerifiedSecondary = true;
-                }
+                    bRecievedInitialLoadout = true;
 
-                if (VerifyNades(Inv))
-                {
-                    bVerifiedNades = true;
+                    if (Controller != none)
+                    {
+                        Controller.SwitchToBestWeapon();
+                    }
                 }
             }
-
-            i++;
-
-            if (i > 500) // prevents possibility of runaway loop
+            // Or if we can confirm this must be another player's pawn, just flag bRecievedInitialLoadout so we don't check again
+            else if ((PC.Pawn != self && PC.Pawn != none) || (PC.PlayerReplicationInfo != none && PC.PlayerReplicationInfo.bIsSpectator))
             {
-                break;
-            }
-        }
-
-        if (bVerifiedPrimary && bVerifiedSecondary && bVerifiedNades && VerifyGivenItems()) // minor re-factor so don't check given items unless other tests passed
-        {
-            bRecievedInitialLoadout = true;
-
-            if (Controller != none)
-            {
-                Controller.SwitchToBestWeapon();
+                bRecievedInitialLoadout = true;
             }
         }
     }
@@ -220,8 +276,28 @@ simulated function PostNetReceive()
         }
     }
 
+    // Spawn decorative attachments for any headgear or ammo pouches when we receive the server's choice
+    if (Headgear == none && HeadgearClass != default.HeadgearClass && HeadgearClass != none)
+    {
+        Headgear = Spawn(HeadgearClass, self);
+    }
+
+    if (AmmoPouches.Length == 0 && AmmoPouchClasses[0] != default.AmmoPouchClasses[0] && AmmoPouchClasses[0] != none)
+    {
+        for (i = 0; i < ArrayCount(AmmoPouchClasses); i++)
+        {
+            if (AmmoPouchClasses[i] == none)
+            {
+                break;
+            }
+
+            AmmoPouches[AmmoPouches.Length] = Spawn(AmmoPouchClasses[i], self);
+        }
+    }
+
     // Disable PostNetReceive() notifications once we have initialised everything for this pawn
-    if (bInitializedPlayer && bInitializedWeaponAttachment && bRecievedInitialLoadout)
+    if (bInitializedPlayer && bInitializedWeaponAttachment && bRecievedInitialLoadout
+        && HeadgearClass != default.HeadgearClass && AmmoPouchClasses[0] != default.AmmoPouchClasses[0])
     {
         bNetNotify = false;
     }
@@ -231,6 +307,8 @@ simulated function PostNetReceive()
 // We also enable burning effects when he first catches fire, or stop them if he's no longer on fire
 simulated function Tick(float DeltaTime)
 {
+    local int i;
+
     super.Tick(DeltaTime);
 
     // If player is on fire, cause fire damage every second & force him to drop any weapon in his hands
@@ -262,117 +340,151 @@ simulated function Tick(float DeltaTime)
             EndBurnFX();
         }
     }
-}
 
-// PossessedBy - figure out what dummy attachments are needed
-function PossessedBy(Controller C)
-{
-    local array<class<ROAmmoPouch> > AmmoClasses;
-    local int i, Prim, Sec, Gren;
-    local DHRoleInfo DHRI;
-    local ROPlayerReplicationInfo PRI;
-
-    super(Pawn).PossessedBy(C);
-
-    // From XPawn
-    if (Controller != none)
-    {
-        OldController = Controller;
-    }
-
-    // Handle dummy attachments
     if (Role == ROLE_Authority)
     {
-        ClientForceStaminaUpdate(Stamina);
-
-        if (Controller != none)
+        // Recalculate the total supply count for our pawn, or -1 if there are
+        // no supplies around.
+        if (TouchingSupplyAttachments.Length == 0)
         {
-            if (ROPlayer(Controller) != none)
-            {
-                Prim = ROPlayer(Controller).PrimaryWeapon;
-                Sec = ROPlayer(Controller).SecondaryWeapon;
-                Gren = ROPlayer(Controller).GrenadeWeapon;
-            }
-            else if (ROBot(Controller) != none)
-            {
-                Prim = ROBot(Controller).PrimaryWeapon;
-                Sec = ROBot(Controller).SecondaryWeapon;
-                Gren = ROBot(Controller).GrenadeWeapon;
-            }
-        }
-
-        PRI = ROPlayerReplicationInfo(PlayerReplicationInfo);
-
-        if (PRI != none && PRI.RoleInfo != none)
-        {
-            HeadgearClass = PRI.RoleInfo.GetHeadgear();
-            DetachedArmClass = PRI.RoleInfo.static.GetArmClass();
-            DetachedLegClass = PRI.RoleInfo.static.GetLegClass();
-            PRI.RoleInfo.GetAmmoPouches(AmmoClasses, Prim, Sec, Gren);
+            TouchingSupplyCount = -1;
         }
         else
         {
-            Warn("Error!!! Possess with no RoleInfo!!!");
-        }
+            TouchingSupplyCount = 0;
 
-        for (i = 0; i < AmmoClasses.Length; ++i)
-        {
-            AmmoPouchClasses[i] = AmmoClasses[i];
-        }
-
-        // These don't need to exist on dedicated servers at the moment, though they might if the ammo holding functionality of the pouch is put in - Erik
-        if (Level.NetMode != NM_DedicatedServer)
-        {
-            if (HeadgearClass != none && Headgear == none && !bHatShotOff)
+            for (i = 0; i < TouchingSupplyAttachments.Length; ++i)
             {
-                Headgear = Spawn(HeadgearClass, self);
-            }
-
-            for (i = 0; i < arraycount(AmmoPouchClasses); ++i)
-            {
-                if (AmmoPouchClasses[i] == none)
+                if (TouchingSupplyAttachments[i] != none)
                 {
-                    break;
-                }
-
-                AmmoPouches[AmmoPouches.Length] = Spawn(AmmoPouchClasses[i], self);
-            }
-        }
-
-        // We just check if we've already been possessed once - if not, we run this
-        if (!bHasBeenPossessed)
-        {
-            DHRI = GetRoleInfo();
-
-            // We've now been possessed
-            bHasBeenPossessed = true;
-            bUsedCarriedMGAmmo = false;
-
-            // Give default mortar ammunition. (TODO: this is horrible!)
-            if (DHRI.bCanUseMortars)
-            {
-                if (C.GetTeamNum() == 0) // axis
-                {
-                    MortarHEAmmo = 16;
-                    MortarSmokeAmmo = 4;
-                }
-                else // allies
-                {
-                    MortarHEAmmo = 24;
-                    MortarSmokeAmmo = 4;
+                    TouchingSupplyCount += TouchingSupplyAttachments[i].GetSupplyCount();
                 }
             }
         }
     }
+}
 
-    // Send the info to the client now to make sure RoleInfo is replicated quickly
-    NetUpdateTime = Level.TimeSeconds - 1.0;
+// Modified to give a mortar operator his default carried mortar ammunition
+// Also to fix bugs caused because PossessedBy gets called every time a player gets out of a vehicle & re-possesses his player pawn
+// Each time a server was making new random selection of HeadgearClass for roles that have multiple possibilities
+// Net clients then saw changing headgear on other players whose pawns got re-replicated & re-spawned(i.e. dropped out of network relevance & back in)
+// And standalones & listen servers were spawning a new Headgear attachment each time
+function PossessedBy(Controller C)
+{
+    local DHRoleInfo                 RI;
+    local ROPlayer                   PC;
+    local ROBot                      Bot;
+    local array<class<ROAmmoPouch> > AmmoClasses;
+    local class<DHMortarWeapon>      MortarClass;
+    local int                        PrimaryWeapon, SecondaryWeapon, GrenadeWeapon, i;
 
-    // Slip this in here
-    if (Controller != none && DHPlayer(Controller) != none)
+    super(Pawn).PossessedBy(C);
+
+    if (Controller != none)
     {
-        bMantleDebug = DHPlayer(Controller).bMantleDebug;
+        OldController = Controller; // OldController records our controller so it can be used even after this pawn gets unpossessed, e.g. when dead
+
+        if (Controller.IsA('DHPlayer'))
+        {
+            bMantleDebug = DHPlayer(Controller).bMantleDebug;
+        }
     }
+
+    // Pass current stamina to net client
+    ClientForceStaminaUpdate(Stamina);
+
+    // Stuff we should only do when this pawn is first possessed (fixes bugs & avoids wasting processing)
+    if (!bHasBeenPossessed)
+    {
+        bHasBeenPossessed = true;
+        RI = GetRoleInfo();
+
+        if (RI != none)
+        {
+            // Set classes for any ammo pouches based on player's role & weapon selections
+            PC = ROPlayer(Controller);
+
+            if (PC != none)
+            {
+                PrimaryWeapon = PC.PrimaryWeapon;
+                SecondaryWeapon = PC.SecondaryWeapon;
+                GrenadeWeapon = PC.GrenadeWeapon;
+            }
+            else
+            {
+                Bot = ROBot(Controller);
+
+                if (Bot != none)
+                {
+                    PrimaryWeapon = Bot.PrimaryWeapon;
+                    SecondaryWeapon = Bot.SecondaryWeapon;
+                    GrenadeWeapon = Bot.GrenadeWeapon;
+                }
+            }
+
+            RI.GetAmmoPouches(AmmoClasses, PrimaryWeapon, SecondaryWeapon, GrenadeWeapon);
+
+            if (AmmoClasses.Length > 0)
+            {
+                for (i = 0; i < AmmoClasses.Length; ++i)
+                {
+                    AmmoPouchClasses[i] = AmmoClasses[i];
+                }
+            }
+            else
+            {
+                AmmoPouchClasses[0] = none; // if no ammo pouch attachments, set 1st replicated array member to none (from default dummy class) so client detects the change
+            }
+
+            // Set classes for headgear & severed limbs, based on player's role
+            // Any random headgear selection for role gets made here, when pawn first possessed
+            HeadgearClass = RI.GetHeadgear();
+            DetachedArmClass = RI.static.GetArmClass();
+            DetachedLegClass = RI.static.GetLegClass();
+
+            // Spawn decorative attachments for any headgear & ammo pouches
+            // This is for standalones or listen server hosts; a net client does this is PostNetReceive() when the classes get replicated to it
+            if (Level.NetMode != NM_DedicatedServer)
+            {
+                if (HeadgearClass != none && HeadgearClass != default.HeadgearClass && Headgear == none)
+                {
+                    Headgear = Spawn(HeadgearClass, self);
+                }
+
+                for (i = 0; i < arraycount(AmmoPouchClasses); ++i)
+                {
+                    if (AmmoPouchClasses[i] == none)
+                    {
+                        break;
+                    }
+
+                    AmmoPouches[AmmoPouches.Length] = Spawn(AmmoPouchClasses[i], self);
+                }
+            }
+
+            // Give a mortar operator his default carried mortar ammunition
+            // Don't have weapons yet, so have to get mortar class from role's GivenItems array
+            if (RI.bCanUseMortars)
+            {
+                for (i = 0; i < RI.GivenItems.Length; ++i)
+                {
+                    if (RI.GivenItems[i] != "")
+                    {
+                        MortarClass = class<DHMortarWeapon>(Level.Game.BaseMutator.GetInventoryClass(RI.GivenItems[i]));
+
+                        if (MortarClass != none)
+                        {
+                            MortarHEAmmo = MortarClass.default.HighExplosiveMaximum;
+                            MortarSmokeAmmo = MortarClass.default.SmokeMaximum;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    NetUpdateTime = Level.TimeSeconds - 1.0;
 }
 
 // Modified to remove trying to loop non-existent 'Vehicle_Driving' animation if vehicle doesn't have a DriveAnim (e.g. where driver is hidden)
@@ -396,9 +508,6 @@ simulated event AnimEnd(int Channel)
 {
     local name  WeapAnim, PlayerAnim, Anim;
     local float Frame, Rate;
-    local bool  bIsMoving;
-
-    bIsMoving = VSizeSquared(Velocity) > 625.0; // equivalent to speed of 25 (VSSquared is more efficient)
 
     if (DrivenVehicle != none)
     {
@@ -420,7 +529,7 @@ simulated event AnimEnd(int Channel)
             AnimBlendToAlpha(1, 0.0, 0.12);
             WeaponState = GS_None;
 
-            if (!bIsMoving)
+            if (VSizeSquared(Velocity) < 25.0) // if player isn't moving significantly
             {
                 IdleTime = Level.TimeSeconds;
             }
@@ -446,7 +555,7 @@ simulated event AnimEnd(int Channel)
                     {
                         WeaponAttachment.LoopAnim(WeaponAttachment.WA_IdleEmpty);
                     }
-                    else
+                    else if (WeaponAttachment.WA_Idle != '')
                     {
                         WeaponAttachment.LoopAnim(WeaponAttachment.WA_Idle);
                     }
@@ -563,36 +672,35 @@ simulated event AnimEnd(int Channel)
     }
 }
 
-simulated function HelmetShotOff(rotator Rotation)
+// Modified to match dropped helmet mesh skin to original helmet skin, including a burned overlay if player is on fire
+// Slight re-factor for clarity
+simulated function HelmetShotOff(rotator RotDir)
 {
-    local DroppedHeadGear Hat;
+    local DroppedHeadgear DroppedHelmet;
 
-    if (HeadGear == none)
+    if (Headgear == none)
     {
         return;
     }
 
-    Hat = Spawn(class'DroppedHeadGear',,, HeadGear.Location, HeadGear.Rotation);
+    DroppedHelmet = Spawn(class'DroppedHeadGear',,, Headgear.Location, Headgear.Rotation);
 
-    if (Hat == none)
+    if (DroppedHelmet != none)
     {
-        return;
+        DroppedHelmet.LinkMesh(Headgear.Mesh);
+        DroppedHelmet.Skins[0] = Headgear.Skins[0];
+
+        if (bOnFire)
+        {
+            DroppedHelmet.SetOverlayMaterial(BurnedHeadgearOverlayMaterial, 999.0, true);
+        }
+
+        DroppedHelmet.Velocity = Velocity + vector(RotDir) * (DroppedHelmet.MaxSpeed * (1.0 + FRand() * 0.5));
+        DroppedHelmet.LifeSpan -= (FRand() * 2.0);
+
+        Headgear.Destroy();
+        HeadgearClass = none; // server should replicate this but let's make sure by setting it immediately
     }
-
-    Hat.LinkMesh(HeadGear.Mesh);
-    Hat.Skins[0] = Headgear.Skins[0];
-
-    if (bOnFire)
-    {
-        Hat.SetOverlayMaterial(BurnedHeadgearOverlayMaterial, 999.0, true);
-    }
-
-    HeadGear.Destroy();
-
-    Hat.Velocity = Velocity + vector(Rotation) * (Hat.MaxSpeed + (Hat.MaxSpeed / 2.0) * FRand());
-    Hat.LifeSpan = Hat.LifeSpan + 2.0 * FRand() - 1.0;
-
-    bHatShotOff = true;
 }
 
 function name GetWeaponBoneFor(Inventory I)
@@ -608,6 +716,12 @@ function bool IsSpawnProtected()
 function bool IsSpawnKillProtected()
 {
     return SpawnKillTimeEnds > Level.TimeSeconds;
+}
+
+// Returns true if this pawn spawned on a combat spawnpoint (MDV, Squad Rally, HQ)
+function bool IsCombatSpawned()
+{
+    return bCombatSpawned;
 }
 
 // Modified to handle new DH SpawnProtEnds variable, & also to avoid occasional "accessed none" log error (re Level.Game) when called on net client
@@ -669,22 +783,22 @@ simulated function bool ShouldBeWhizzed(optional bool bSkipLocallyControlledChec
 // New server-to-client replicated function, used by DHProjectileFire's pre-launch trace system for the server to play whiz/snap effects on clients
 simulated function ClientPawnWhizzed(vector WhizLocation, byte WhizType)
 {
-    if (WhizType != 0)
+    if (WhizType != 0 && Role < ROLE_Authority)
     {
         PawnWhizzed(WhizLocation, int(WhizType));
     }
 }
 
 // Emptied out to prevent playing old whiz sounds over the top of the new
-// Matt: this event is called by native code when net client receives a changed replicated value of SpawnWhizCount,
+// This event is called by native code when net client receives a changed replicated value of SpawnWhizCount,
 // but should no longer be called as I've stopped PawnWhizzed from replicating whiz variables
 simulated event HandleWhizSound()
 {
 }
 
 // Modified so player pawn's AuxCollisionCylinder (the bullet whip attachment) only retains its collision if player is entering a VehicleWeaponPawn in an exposed position
-// Matt: part of new vehicle occupant hit detection system, which basically keeps normal hit detection as for an infantry player pawn, if the player is exposed
-// Also so player's CullDistance isn't set to 5000 (83m) when in vehicle, as caused players to disappear at quite close ranges when often should be highly visible, e.g. AT gunner
+// Part of new vehicle occupant hit detection system, which basically keeps normal hit detection as for an infantry player pawn, if the player is exposed
+// Also so player's CullDistance isn't set to 5000 (83m) when in vehicle, as caused exposed players to disappear at quite close ranges when often should be highly visible
 // And some fixes where vehicle is replicating to net client, which may not have received all relevant actors yet (e.g. Driver, Gun)
 // Flags for vehicle to attach Driver when it receives Gun, & stops DriveAnim overriding a correct driver anim just played by vehicle's SetPlayerPosition()
 simulated event StartDriving(Vehicle V)
@@ -728,14 +842,10 @@ simulated event StartDriving(Vehicle V)
             bNeedToAttachDriver = false;
         }
 
-        if (V.bDrawDriverinTP)
-        {
-//          CullDistance = 5000.0;
-        }
-        else
-        {
-            bHidden = true;
-        }
+        // Set driver visibility - slight change so now we always set whether or not the driver is hidden, based on vehicle's bDrawDriverinTP setting
+        // When switching vehicle positions, we no longer briefly repossess the player pawn & receive StopDriving(), so bHidden won't have been reset to default false
+        // Also we no longer set a visible player's CullDistance to 5000 (83m), as caused exposed players to disappear at quite close ranges
+        bHidden = !V.bDrawDriverinTP;
     }
 
     // Set animation
@@ -826,7 +936,7 @@ simulated function StopDriving(Vehicle V)
 {
     if (Role == ROLE_Authority && IsHumanControlled() && V != none)
     {
-        V.PlayerStartTime = Level.TimeSeconds + 12.0;
+        V.PlayerStartTime = Level.TimeSeconds + 12.0; // tells bots not to enter this vehicle position for a little while
     }
 
     CullDistance = default.CullDistance;
@@ -901,6 +1011,54 @@ simulated function StopDriving(Vehicle V)
     SetAnimAction('ClearAnims');
 }
 
+// New function used by vehicle pawns to record their Controller (as SwitchingController) before a player switches vehicle position
+// SwitchingController is now needed by KDriverEnter() when switched positions, as the player no longer briefly re-possesses his DHPawn before entering the new position
+function SetSwitchingController(Controller C)
+{
+    SwitchingController = C;
+}
+
+// New function to set a player's reference to a locked vehicle that this player is allowed to enter, or to clear it passing 'none'
+function SetCrewedLockedVehicle(DHArmoredVehicle NewLockedVehicleRef)
+{
+    local DHArmoredVehicle OldLockedVehicle;
+
+    // Update player's locked vehicle reference, but first save the old vehicle
+    OldLockedVehicle = CrewedLockedVehicle;
+    CrewedLockedVehicle = NewLockedVehicleRef;
+
+    // Player has stopped being registered as an allowed crewman in a vehicle that hasn't been destroyed
+    if (OldLockedVehicle != none && CrewedLockedVehicle != OldLockedVehicle && OldLockedVehicle.Health > 0)
+    {
+        // Player is no longer relevant to the old vehicle, so get it to check whether it should now be unlocked or set an unlock timer
+        // Means player has either died, or has now become an allowed crewman in a different locked vehicle (can only be registered in one locked vehicle)
+        if (OldLockedVehicle.bVehicleLocked)
+        {
+            OldLockedVehicle.CheckUnlockVehicle();
+        }
+        // Player's locked vehicle just became unlocked as it was left without tank crew for too long, so notify the player
+        else if (OldLockedVehicle.UnlockVehicleTime != 0.0 && Level.TimeSeconds > OldLockedVehicle.UnlockVehicleTime)
+        {
+            if (DrivenVehicle != none)
+            {
+                DrivenVehicle.ReceiveLocalizedMessage(class'DHVehicleMessage', 23); // "You left your locked vehicle for too long and it's now unlocked"
+            }
+            else
+            {
+                ReceiveLocalizedMessage(class'DHVehicleMessage', 23); // "You left your locked vehicle for too long and it's now unlocked"
+            }
+        }
+    }
+}
+
+// New function to set player's bInLockedVehicle flag, which replicates to net clients so their vehicle HUD knows whether to display a locked vehicle icon
+// Note we don't waste replication updating this to false if player isn't in a vehicle as it's only used by a vehicle HUD & when on foot it's irrelevant
+// So all we need to do is make sure it's updated if the player enters a vehicle (any vehicle), & also if the vehicle's lock is toggled
+function SetInLockedVehicle(bool bNewStatus)
+{
+    bInLockedVehicle = bNewStatus;
+}
+
 // Modified to deprecate SavedAuxCollision & simply enable or disable collision based on passed bool
 simulated function ToggleAuxCollision(bool bEnabled)
 {
@@ -910,13 +1068,182 @@ simulated function ToggleAuxCollision(bool bEnabled)
     }
 }
 
-// Added bullet impact sounds for helmets and players
-// MergeTODO: Replace this with realistic gibbing
+// Modified so server sets HeadgearClass to none if player takes a hit to the head & survives, which in DH knocks any headgear off (happens in ProcessHitFX)
+// Clearing HeadgearClass stops client from re-spawning player's original headgear if he gets re-replicated & re-spawned on another net client, after dropping out of network relevancy
+// Also re-factored to optimise & make clearer
+function DoDamageFX(name BoneName, int Damage, class<DamageType> DamageType, rotator RotDir)
+{
+    local float       DismemberProbability;
+    local int         RandomBone, i;
+    local bool        bSever;
+    local array<name> SeveredLimbs;
+
+    if (DamageType != none && (Damage > 30 || Health <= 0 || FRand() > 0.3))
+    {
+        // If hit player is dead
+        if (Health <= 0)
+        {
+            // Get bone name for hit effects
+            if (Damage > DamageType.default.HumanObliterationThreshhold && Damage != 1000)
+            {
+                BoneName = 'obliterate';
+            }
+            else
+            {
+                switch(BoneName)
+                {
+                    case 'lfoot':
+                    case 'lthigh':
+                    case 'lupperthigh':
+                        BoneName = 'lthigh';
+                        break;
+
+                    case 'rfoot':
+                    case 'rthigh':
+                    case 'rupperthigh':
+                        BoneName = 'rthigh';
+                        break;
+
+                    case 'lhand':
+                    case 'lfarm':
+                    case 'lupperarm':
+                    case 'lshoulder':
+                        BoneName = 'lfarm';
+                        break;
+
+                    case 'rhand':
+                    case 'rfarm':
+                    case 'rupperarm':
+                    case 'rshoulder':
+                        BoneName = 'rfarm';
+                        break;
+
+                    case 'None':
+                        BoneName = 'spine';
+                        break;
+                }
+            }
+
+            // Check whether a body part should be severed
+            if (!class'GameInfo'.static.UseLowGore())
+            {
+                if (DamageType.default.bAlwaysSevers || Damage == 1000)
+                {
+                    bSever = true;
+                }
+                else if (DamageType.default.GibModifier > 0.0)
+                {
+                    DismemberProbability = Abs((Health - (Damage * DamageType.default.GibModifier)) / 130.0);
+                    bSever = DismemberProbability >= 1.0 || FRand() < DismemberProbability;
+                }
+
+                // If severing a limb & the hit is to the head or spine, switch our bone to a random limb
+                // Added head to this list as in ROPawn sending 'head' with bSever caused helmet to be shot off, but in DH any head hit knocks headgear off
+                // So in DH sending 'head' is pointless & does nothing, as the action has been removed from the severed bone list in ProcessHitFX
+                if (bSever && !DamageType.default.bLocationalHit && (BoneName == 'head' || BoneName == 'Spine' || BoneName == 'Upperspine'))
+                {
+                    RandomBone = Rand(4);
+
+                    switch (RandomBone)
+                    {
+                        case 0:
+                            BoneName = 'lthigh';
+                            break;
+                        case 1:
+                            BoneName = 'rthigh';
+                            break;
+                        case 2:
+                            BoneName = 'lfarm';
+                            break;
+                        case 3:
+                            BoneName = 'rfarm';
+                            break;
+                        default:
+                            BoneName = 'lthigh';
+                    }
+                }
+            }
+        }
+        // If player is still alive, a hit to the head will knock off any headgear, so set replicated HeadgearClass to none
+        else if (BoneName == 'head' && HeadgearClass != none)
+        {
+            HeadgearClass = none;
+        }
+
+        // Now set the replicated HitFX properties & increment the replicated HitFxTicker counter to trigger ProcessHitFX() on all modes
+        HitFX[HitFxTicker].DamType = DamageType;
+        HitFX[HitFxTicker].Bone = BoneName;
+        HitFX[HitFxTicker].bSever = bSever;
+        HitFX[HitFxTicker].RotDir = RotDir;
+
+        HitFxTicker = ++HitFxTicker % arraycount(HitFX); // increment counter, looping back to 0 if reached end
+
+        // If this was really hardcore damage from an explosion, also add some random extra 'hits' that may generate extra severed limbs
+        if (bSever && !DamageType.default.bLocationalHit && Damage > 200 && Damage != 1000)
+        {
+            if ((Damage > 400 && FRand() < 0.3) || FRand() < 0.1 )
+            {
+                SeveredLimbs[SeveredLimbs.Length] = 'head';
+                SeveredLimbs[SeveredLimbs.Length] = 'lthigh';
+                SeveredLimbs[SeveredLimbs.Length] = 'rthigh';
+                SeveredLimbs[SeveredLimbs.Length] = 'lfarm';
+                SeveredLimbs[SeveredLimbs.Length] = 'rfarm';
+            }
+            else if (FRand() < 0.25)
+            {
+                SeveredLimbs[SeveredLimbs.Length] = 'lthigh';
+                SeveredLimbs[SeveredLimbs.Length] = 'rthigh';
+
+                if (FRand() < 0.5)
+                {
+                    SeveredLimbs[SeveredLimbs.Length] = 'lfarm';
+                }
+                else
+                {
+                    SeveredLimbs[SeveredLimbs.Length] = 'rfarm';
+                }
+            }
+            else if (FRand() < 0.35)
+            {
+                SeveredLimbs[SeveredLimbs.Length] = 'lthigh';
+            }
+            else if (FRand() < 0.5)
+            {
+                SeveredLimbs[SeveredLimbs.Length] = 'rthigh';
+            }
+            else if (FRand() < 0.75)
+            {
+                if (FRand() < 0.5)
+                {
+                    SeveredLimbs[SeveredLimbs.Length] = 'lfarm';
+                }
+                else
+                {
+                    SeveredLimbs[SeveredLimbs.Length] = 'rfarm';
+                }
+            }
+
+            for (i = 0; i < SeveredLimbs.Length; ++i)
+            {
+                if (SeveredLimbs[i] != BoneName) // if same as our BoneName then skip, as we've already caused this limb to be severed
+                {
+                    DoDamageFX(SeveredLimbs[i], 1000, DamageType, RotDir);
+                }
+            }
+        }
+    }
+}
+
+// Modified so any hit to the head will knock off any headgear (in RO it only happened if the player was killed), & to play bullet impact sound for a helmet hit
+// Also re-factored to optimise & make clearer
 simulated function ProcessHitFX()
 {
-    local Coords BoneCoords;
-    local int    j;
-    local float  GibPerterbation;
+    local class<SeveredAppendage> SeveredLimbClass;
+    local name                    BoneName;
+    local vector                  BoneLocation;
+    local rotator                 RotDir;
+    local float                   GibPerterbation;
+    local int                     LoopCount;
 
     if (Level.NetMode == NM_DedicatedServer)
     {
@@ -925,110 +1252,113 @@ simulated function ProcessHitFX()
         return;
     }
 
-    for (SimHitFxTicker = SimHitFxTicker; SimHitFxTicker != HitFxTicker; SimHitFxTicker = (SimHitFxTicker + 1) % arraycount(HitFX))
+    // Loop from last recorded SimHitFxTicker to latest HitFxTicker & play each hit effect
+    for (SimHitFxTicker = SimHitFxTicker; SimHitFxTicker != HitFxTicker; SimHitFxTicker = ++SimHitFxTicker % arraycount(HitFX))
     {
-        j++;
-
-        if (j > 30)
+        if (++LoopCount > 30) // runaway loop safeguard
         {
             SimHitFxTicker = HitFxTicker;
 
             return;
         }
 
-        if (HitFX[SimHitFxTicker].damtype == none || (Level.bDropDetail && (Level.TimeSeconds - LastRenderTime > 3) && !IsHumanControlled()))
+        if (HitFX[SimHitFxTicker].DamType == none || (Level.bDropDetail && !IsHumanControlled() && (Level.TimeSeconds - LastRenderTime) > 3.0))
         {
             continue;
         }
 
-        if (HitFX[SimHitFxTicker].Bone == 'obliterate' && !class'GameInfo'.static.UseLowGore())
+        BoneName = HitFX[SimHitFxTicker].Bone;
+        RotDir = HitFX[SimHitFxTicker].RotDir;
+
+        // If no gore is enabled we skip any effects for player being gibbed, blood spurting or severed limbs
+        // Blood was previously subject to a separate NoBlood() check, but in RO/DH it serves no different purpose as gore setting gets forced to either full or no gore
+        if (!class'GameInfo'.static.UseLowGore())
         {
-            SpawnGibs(HitFX[SimHitFxTicker].rotDir, 0.0);
-            bGibbed = true;
-            Destroy();
-
-            return;
-        }
-
-        BoneCoords = GetBoneCoords(HitFX[SimHitFxTicker].Bone);
-
-        if (!Level.bDropDetail && !class'GameInfo'.static.NoBlood())
-        {
-            AttachEffect(BleedingEmitterClass, HitFX[SimHitFxTicker].Bone, BoneCoords.Origin, HitFX[SimHitFxTicker].rotDir);
-        }
-
-        if (class'GameInfo'.static.UseLowGore())
-        {
-            HitFX[SimHitFxTicker].bSever = false;
-        }
-
-        if (HitFX[SimHitFxTicker].bSever)
-        {
-            GibPerterbation = HitFX[SimHitFxTicker].damtype.default.GibPerterbation;
-
-            switch (HitFX[SimHitFxTicker].Bone)
+            // A passed BoneName 'obliterate' causes player to be completely gibbed (& we go no further here)
+            if (BoneName == 'obliterate')
             {
-                case 'obliterate':
-                    break;
+                SpawnGibs(RotDir, 0.0);
+                bGibbed = true;
+                Destroy();
 
-                case 'lthigh':
-                case 'lupperthigh':
-                    if (!bLeftLegGibbed)
-                    {
-                        SpawnGiblet(DetachedLegClass, BoneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
-                        bLeftLegGibbed = true;
-                    }
-                    break;
-
-                case 'rthigh':
-                case 'rupperthigh':
-                    if (!bRightLegGibbed)
-                    {
-                        SpawnGiblet(DetachedLegClass, BoneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
-                        bRightLegGibbed = true;
-                    }
-                    break;
-
-                case 'lfarm':
-                case 'lupperarm':
-                    if (!bLeftArmGibbed)
-                    {
-                        SpawnGiblet(DetachedArmClass, BoneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
-                        bLeftArmGibbed = true;
-                    }
-                    break;
-
-                case 'rfarm':
-                case 'rupperarm':
-                    if (!bRightArmGibbed)
-                    {
-                        SpawnGiblet(DetachedArmClass, BoneCoords.Origin, HitFX[SimHitFxTicker].rotDir, GibPerterbation);
-                        bRightArmGibbed = true;
-                    }
-                    break;
+                return;
             }
 
-            if (HitFX[SimHitFXTicker].Bone != 'Spine' && HitFX[SimHitFXTicker].Bone != 'UpperSpine')
+            BoneLocation = GetBoneCoords(BoneName).Origin;
+
+            // Show blood spurting from body's hit location
+            if (!Level.bDropDetail && BoneName != '')
             {
-                HideBone(HitFX[SimHitFxTicker].Bone);
+                AttachEffect(BleedingEmitterClass, BoneName, BoneLocation, RotDir);
+            }
+
+            // Spawn a severed limb if that's indicated (& allowed)
+            if (HitFX[SimHitFxTicker].bSever)
+            {
+                switch (BoneName)
+                {
+                    case 'lthigh':
+                    case 'lupperthigh':
+                        if (!bLeftLegGibbed)
+                        {
+                            SeveredLimbClass = DetachedLegClass;
+                            bLeftLegGibbed = true;
+                        }
+                        break;
+
+                    case 'rthigh':
+                    case 'rupperthigh':
+                        if (!bRightLegGibbed)
+                        {
+                            SeveredLimbClass = DetachedLegClass;
+                            bRightLegGibbed = true;
+                        }
+                        break;
+
+                    case 'lfarm':
+                    case 'lupperarm':
+                        if (!bLeftArmGibbed)
+                        {
+                            SeveredLimbClass = DetachedArmClass;
+                            bLeftArmGibbed = true;
+                        }
+                        break;
+
+                    case 'rfarm':
+                    case 'rupperarm':
+                        if (!bRightArmGibbed)
+                        {
+                            SeveredLimbClass = DetachedArmClass;
+                            bRightArmGibbed = true;
+                        }
+                        break;
+                }
+
+                if (SeveredLimbClass != none)
+                {
+                    GibPerterbation = HitFX[SimHitFxTicker].DamType.default.GibPerterbation;
+                    SpawnGiblet(SeveredLimbClass, BoneLocation, RotDir, GibPerterbation);
+                    HideBone(BoneName);
+                }
             }
         }
 
-        if (HitFX[SimHitFXTicker].Bone == 'head' && Headgear != none)
+        // Hit to the head knocks off any headgear, with an impact sound
+        if (BoneName == 'head' && Headgear != none)
         {
-            if (DHHeadgear(HeadGear).bIsHelmet)
+            if (Headgear.IsA('DHHeadgear') && DHHeadgear(Headgear).bIsHelmet) // TODO: check this is a projectile weapon DamType before playing bullet impact sounds?
             {
                 if (HitDamageType != none && HitDamageType.default.HumanObliterationThreshhold == 1000001)
                 {
-                    DHHeadgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_None, 2.0,, 8,, true);
+                    Headgear.PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_None, 2.0,, 8,, true);
                 }
                 else
                 {
-                    DHHeadgear(HeadGear).PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_None, RandRange(100.0, 150.0),, 80,, true);
+                    Headgear.PlaySound(HelmetHitSounds[Rand(HelmetHitSounds.Length)], SLOT_None, RandRange(100.0, 150.0),, 80,, true);
                 }
             }
 
-            HelmetShotOff(HitFX[SimHitFxTicker].rotDir);
+            HelmetShotOff(RotDir);
         }
     }
 }
@@ -1135,8 +1465,6 @@ function ProcessLocationalDamage(int Damage, Pawn InstigatedBy, vector hitlocati
     }
 }
 
-// Handle locational damage
-// MergeTODO: this function needs some work
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     local int        ActualDamage;
@@ -1349,7 +1677,7 @@ function TossAmmo(Pawn Gunner)
         }
     }
 
-    PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
+    PlayOwnedSound(Sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
 }
 
 function TossMortarAmmo(DHPawn P)
@@ -1383,7 +1711,7 @@ function TossMortarAmmo(DHPawn P)
         G.ScoreMortarResupply(Controller, P.Controller);
     }
 
-    PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
+    PlayOwnedSound(Sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
 }
 
 function TossMortarVehicleAmmo(DHMortarVehicle V)
@@ -1432,7 +1760,7 @@ function TossMortarVehicleAmmo(DHMortarVehicle V)
         G.ScoreMortarResupply(Controller, Recipient);
     }
 
-    PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
+    PlayOwnedSound(Sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
 }
 
 function bool ResupplyMortarVehicleWeapon(DHMortarVehicle V)
@@ -1473,7 +1801,7 @@ function LoadWeapon(Pawn Gunner)
             }
         }
 
-        PlayOwnedSound(sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
+        PlayOwnedSound(Sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
     }
     // Notify loader of failed attempt
     else
@@ -1502,6 +1830,113 @@ simulated function SetWeaponAttachment(ROWeaponAttachment NewAtt)
 
         WeaponAttachment.AnimEnd(0);
     }
+}
+
+// Modified to avoid errors if trying to play animations that don't exist
+simulated function PlayBoltAction()
+{
+    local name Anim;
+
+    if (WeaponAttachment != none)
+    {
+        if (bIsCrawling)
+        {
+            Anim = WeaponAttachment.PA_ProneBoltActionAnim;
+        }
+        else if (bIsCrouched)
+        {
+            if (bIronSights || VSizeSquared(Velocity) > 25.0) // if ironsighted or player is moving
+            {
+                Anim = WeaponAttachment.PA_CrouchIronBoltActionAnim;
+            }
+            else
+            {
+                Anim = WeaponAttachment.PA_CrouchBoltActionAnim;
+            }
+        }
+        else
+        {
+            if (bIronSights)
+            {
+                Anim = WeaponAttachment.PA_StandIronBoltActionAnim;
+            }
+            else
+            {
+                Anim = WeaponAttachment.PA_StandBoltActionAnim;
+            }
+        }
+
+        // Play any 3rd person player animation
+        if (HasAnim(Anim))
+        {
+            AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone1);
+            AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone2);
+
+            PlayAnim(Anim,, 0.1, 1);
+
+            AnimBlendTime = GetAnimDuration(Anim, 1.0) + 0.1;
+        }
+
+        if (WeaponAttachment.bBayonetAttached)
+        {
+            Anim = WeaponAttachment.WA_BayonetWorkBolt;
+        }
+        else
+        {
+            Anim = WeaponAttachment.WA_WorkBolt;
+        }
+
+        // Play any 3rd person weapon animation
+        if (WeaponAttachment.HasAnim(Anim))
+        {
+            WeaponAttachment.PlayAnim(Anim,, 0.1);
+        }
+    }
+}
+
+// Modified to avoid errors if trying to play animations that don't exist
+simulated function PlayStopReloading()
+{
+    local name Anim;
+
+    if ((WeaponState == GS_ReloadLooped || WeaponState == GS_PreReload) && WeaponAttachment != none)
+    {
+        AnimBlendParams(1, 1.0, 0.0, 0.2, FireRootBone);
+
+        if (bIsCrawling)
+        {
+            Anim = WeaponAttachment.PA_PronePostReloadAnim;
+        }
+        else
+        {
+            Anim = WeaponAttachment.PA_PostReloadAnim;
+        }
+
+        // Play any 3rd person player animation
+        if (HasAnim(Anim))
+        {
+            PlayAnim(Anim,, 0.1, 1);
+        }
+
+        if (WeaponAttachment.bBayonetAttached && WeaponAttachment.WA_BayonetPostReload != '')
+        {
+            Anim = WeaponAttachment.WA_BayonetPostReload;
+        }
+        else if (WeaponAttachment.WA_PostReload != '')
+        {
+            Anim = WeaponAttachment.WA_PostReload;
+        }
+
+        // Play any 3rd person weapon animation
+        if (WeaponAttachment.HasAnim(Anim))
+        {
+            WeaponAttachment.PlayAnim(Anim,, 0.1);
+        }
+
+        WeaponState = GS_ReloadSingle;
+    }
+
+    IdleTime = Level.TimeSeconds;
 }
 
 // Handles the stamina calculations and sprinting functionality
@@ -1606,6 +2041,8 @@ function HandleStamina(float DeltaTime)
 
 state Dying
 {
+ignores Trigger, Bump, HitWall, HeadVolumeChange, PhysicsVolumeChange, Falling, BreathTimer; // added (from Pawn) as don't believe 'ignores' specifier is inherited & it wasn't re-stated in ROPawn
+
     // Modified to destroy player's bullet whip attachment actor so that happens as soon as player dies, without waiting for pawn actor to be destroyed when ragdoll disappears
     // Also to avoid re-enabling bCollideActors as it can cause some vehicles to jump wildly when player is killed in vehicle with other occupants
     // Seems to be some sort of collision clash when player's collision is re-enabled & he's inside the vehicle's collision
@@ -1769,7 +2206,7 @@ state Dying
                 }
             }
 
-            if (VSizeSquared(Momentum) < 100.0) // Matt: was (VSize(Momentum) < 10.0) but it's more efficient to use VSizeSquared < 100
+            if (VSizeSquared(Momentum) < 100.0) // was VSize(Momentum) < 10 but it's more efficient to use VSizeSquared < 100
             {
                 Momentum = - Normal(SelfToInstigator) * Damage * 1000.0;
                 Momentum.Z = Abs(Momentum.Z);
@@ -1843,7 +2280,8 @@ state Dying
             bOnFire = false;
         }
 
-        super.Timer();
+        // No longer call the super, just rerun the timer
+        SetTimer(1.0, false);
     }
 
 Begin:
@@ -1856,20 +2294,220 @@ Begin:
     }
 }
 
-// Prevented damage overlay from overriding burning overlay
+// Modified to remove native functionality which limited ragdolls to 4
+function PlayDyingAnimation(class<DamageType> DamageType, vector HitLoc)
+{
+    local vector            ShotDir, HitLocRel, DeathAngVel, ShotStrength;
+    local float             MaxDim;
+    local string            RagSkelName;
+    local KarmaParamsSkel   SkelParams;
+    local bool              PlayersRagdoll;
+    local PlayerController  PC;
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        if (OldController != none)
+        {
+            PC = PlayerController(OldController);
+        }
+
+        // Is this the local player's ragdoll?
+        if (PC != none && PC.ViewTarget == self)
+        {
+            PlayersRagdoll = true;
+        }
+
+        if (FRand() < 0.3)
+        {
+            HelmetShotOff(rotator(Normal(GetTearOffMomemtum())));
+        }
+
+        // In low physics detail, if we were not just controlling this pawn,
+        // and it has not been rendered in 3 seconds, just destroy it.
+        if ((Level.PhysicsDetailLevel != PDL_High) && !PlayersRagdoll && (Level.TimeSeconds - LastRenderTime > 3))
+        {
+            Destroy();
+            return;
+        }
+
+        // Get the ragdoll name
+        if( RagdollOverride != "")
+        {
+            RagSkelName = RagdollOverride;
+        }
+        else if(Species != none)
+        {
+            RagSkelName = Species.static.GetRagSkelName( GetMeshName() );
+        }
+        else
+        {
+            Log("xPawn.PlayDying: No Species");
+        }
+
+        // Handle the pawn to ragdoll switch
+        if (RagSkelName != "")
+        {
+            SkelParams = KarmaParamsSkel(KParams);
+            SkelParams.KSkeleton = RagSkelName;
+
+            StopAnimating(true);
+
+            if (DamageType != none)
+            {
+                if (DamageType.default.bLeaveBodyEffect)
+                {
+                    TearOffMomentum = vect(0,0,0);
+                }
+
+                if (DamageType.default.bKUseOwnDeathVel)
+                {
+                    RagDeathVel = DamageType.default.KDeathVel;
+                    RagDeathUpKick = DamageType.default.KDeathUpKick;
+                    RagShootStrength = DamageType.default.KDamageImpulse;
+                }
+            }
+
+            // Set the dude moving in direction he was shot in general
+            ShotDir = Normal(GetTearOffMomemtum());
+            ShotStrength = RagDeathVel * ShotDir;
+
+            // Calculate angular velocity to impart, based on shot location.
+            HitLocRel = TakeHitLocation - Location;
+
+            if (DamageType.default.bLocationalHit)
+            {
+                HitLocRel.X *= RagSpinScale;
+                HitLocRel.Y *= RagSpinScale;
+
+                if (Abs(HitLocRel.X) > RagMaxSpinAmount)
+                {
+                    if (HitLocRel.X < 0)
+                    {
+                        HitLocRel.X = FMax((HitLocRel.X * RagSpinScale), (RagMaxSpinAmount * -1));
+                    }
+                    else
+                    {
+                        HitLocRel.X = FMin((HitLocRel.X * RagSpinScale), RagMaxSpinAmount);
+                    }
+                }
+
+                if (Abs(hitLocRel.Y) > RagMaxSpinAmount)
+                {
+                    if (HitLocRel.Y < 0)
+                    {
+                        HitLocRel.Y = FMax((HitLocRel.Y * RagSpinScale), (RagMaxSpinAmount * -1));
+                    }
+                    else
+                    {
+                        HitLocRel.Y = FMin((HitLocRel.Y * RagSpinScale), RagMaxSpinAmount);
+                    }
+                }
+            }
+            else
+            {
+                // We scale the hit location out sideways a bit, to get more spin around Z.
+                HitLocRel.X *= RagSpinScale;
+                HitLocRel.Y *= RagSpinScale;
+            }
+
+            // If the tear off momentum was very small for some reason, make up some angular velocity for the pawn
+            if (VSize(GetTearOffMomemtum()) < 0.01)
+            {
+                DeathAngVel = VRand() * 18000.0;
+            }
+            else
+            {
+                DeathAngVel = RagInvInertia * (HitLocRel cross ShotStrength);
+            }
+
+            // Set initial angular and linear velocity for ragdoll.
+            // Scale horizontal velocity for characters - they run really fast!
+            if (DamageType.Default.bRubbery)
+            {
+                SkelParams.KStartLinVel = vect(0,0,0);
+            }
+
+            if (Damagetype.default.bKUseTearOffMomentum)
+            {
+                SkelParams.KStartLinVel = GetTearOffMomemtum() + Velocity;
+            }
+            else
+            {
+                SkelParams.KStartLinVel.X = 0.6 * Velocity.X;
+                SkelParams.KStartLinVel.Y = 0.6 * Velocity.Y;
+                SkelParams.KStartLinVel.Z = 1.0 * Velocity.Z;
+                SkelParams.KStartLinVel += ShotStrength;
+            }
+
+            // If not moving downwards - give extra upward kick
+            if (!DamageType.default.bLeaveBodyEffect && !DamageType.Default.bRubbery && (Velocity.Z > -10))
+            {
+                SkelParams.KStartLinVel.Z += RagDeathUpKick;
+            }
+
+            if (DamageType.Default.bRubbery)
+            {
+                Velocity = vect(0,0,0);
+                SkelParams.KStartAngVel = vect(0,0,0);
+            }
+            else
+            {
+                SkelParams.KStartAngVel = DeathAngVel;
+
+                // Set up deferred shot-bone impulse
+                MaxDim = Max(CollisionRadius, CollisionHeight);
+
+                SkelParams.KShotStart = TakeHitLocation - (1 * ShotDir);
+                SkelParams.KShotEnd = TakeHitLocation + (2 * MaxDim * ShotDir);
+                SkelParams.KShotStrength = RagShootStrength;
+            }
+
+            // If this damage type causes convulsions, turn them on here.
+            if (DamageType != none && DamageType.default.bCauseConvulsions)
+            {
+                RagConvulseMaterial = DamageType.default.DamageOverlayMaterial;
+                SkelParams.bKDoConvulsions = true;
+            }
+
+            // Turn on Karma collision for ragdoll.
+            KSetBlockKarma(true);
+
+            // Set physics mode to ragdoll.
+            // This doesn't actaully start it straight away, it's deferred to the first tick.
+            SetPhysics(PHYS_KarmaRagdoll);
+
+            // If viewing this ragdoll, set the flag to indicate that it is 'important'
+            if (PlayersRagdoll)
+            {
+                SkelParams.bKImportantRagdoll = true;
+            }
+
+            SkelParams.KActorGravScale = RagGravScale;
+
+            return;
+        }
+    }
+
+    // Non-Ragdoll death fallback
+    Velocity += GetTearOffMomemtum();
+    BaseEyeHeight = default.BaseEyeHeight;
+    SetTwistLook(0,0);
+    SetPhysics(PHYS_Falling);
+}
+
+// Modified to prevent damage overlay from overriding burning overlay
 function PlayHit(float Damage, Pawn InstigatedBy, vector HitLocation, class<DamageType> DamageType, vector Momentum, optional int HitIndex)
 {
     local PlayerController     PC;
     local ProjectileBloodSplat BloodHit;
-    local vector  HitNormal;
-    local name    HitBone;
-    local float   HitBoneDist;
-    local rotator SplatRot;
-    local bool    bShowEffects, bRecentHit;
+    local name                 HitBone;
+    local vector               HitNormal;
+    local rotator              SplatRot;
+    local bool                 bShowEffects, bRecentHit;
 
     bRecentHit = Level.TimeSeconds - LastPainTime < 0.2;
 
-    // Call the modified version of the original Pawn playhit
+    // Call the modified version of the original Pawn PlayHit()
     OldPlayHit(Damage, InstigatedBy, HitLocation, DamageType, Momentum);
 
     if (Damage <= 0)
@@ -1889,13 +2527,11 @@ function PlayHit(float Damage, Pawn InstigatedBy, vector HitLocation, class<Dama
     if (DamageType.default.bLocationalHit)
     {
         HitBone = GetHitBoneFromIndex(HitIndex);
-        HitBoneDist = 0.0;
     }
     else
     {
         HitLocation = Location;
         HitBone = 'none';
-        HitBoneDist = 0.0;
     }
 
     if (DamageType.default.bAlwaysSevers && DamageType.default.bSpecial)
@@ -1905,7 +2541,7 @@ function PlayHit(float Damage, Pawn InstigatedBy, vector HitLocation, class<Dama
 
     if (InstigatedBy != none)
     {
-        HitNormal = Normal(Normal(InstigatedBy.Location-HitLocation) + VRand() * 0.2 + vect(0.0, 0.0, 2.8));
+        HitNormal = Normal(Normal(InstigatedBy.Location - HitLocation) + VRand() * 0.2 + vect(0.0, 0.0, 2.8));
     }
     else
     {
@@ -2043,9 +2679,9 @@ function PlayTakeHit(vector HitLocation, int Damage, class<DamageType> DamageTyp
     PlayOwnedSound(SoundGroupClass.static.GetHitSound(DamageType), SLOT_Pain, 3.0 * TransientSoundVolume,, RandRange(30, 90),, true); // added randomized radius
 }
 
-// A few minor additions
-// DH added removal of radioman arty triggers on death - PsYcH0_Ch!cKeN
-// No longer disable collision on player's bullet whip attachment as we may as well simply destroy that actor
+// Modified to add removal of radioman arty triggers on death
+// And so if player was registered as an allowed crewman in a locked vehicle, we notify that vehicle this player is no longer valid
+// We no longer disable collision on player's bullet whip attachment as we may as well simply destroy that actor
 // But we now do that in state 'Dying' as that happens on both server & client, while this function is server only
 // Also omit possible call to ClientDying() at end of this function as ClientDying() is redundant & emptied out in ROPawn, so it's pointless replication
 function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
@@ -2123,6 +2759,11 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     {
         Velocity = DrivenVehicle.Velocity; // give dead driver the vehicle's velocity
         DrivenVehicle.DriverDied();
+    }
+
+    if (CrewedLockedVehicle != none)
+    {
+        SetCrewedLockedVehicle(none); // if player was registered as an allowed crewman in a locked vehicle, this will notify vehicle this player is no longer valid
     }
 
     if (Controller != none)
@@ -2212,6 +2853,8 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 // Stop damage overlay from overriding burning overlay if necessary
 simulated function PlayDying(class<DamageType> DamageType, vector HitLoc)
 {
+    local DHPlayer PC;
+
     WeaponState = GS_None;
 
     if (IsHumanControlled())
@@ -2242,7 +2885,25 @@ simulated function PlayDying(class<DamageType> DamageType, vector HitLoc)
     // Stop shooting
     AnimBlendParams(1, 0.0);
 
-    LifeSpan = RagdollLifeSpan;
+    // Set LifeSpan
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        // Set PC
+        PC = DHPlayer(Level.GetLocalPlayerController());
+
+        if (PC != none)
+        {
+            LifeSpan = Clamp(PC.CorpseStayTime, class'DHPlayer'.default.CorpseStayTimeMin, class'DHPlayer'.default.CorpseStayTimeMax);
+        }
+        else
+        {
+            LifeSpan = RagdollLifeSpan; // default (30 seconds)
+        }
+    }
+    else
+    {
+        LifeSpan = 10.0; // TODO: figure out if this matters and what value best to set to (before the server would have set it to 30)
+    }
 
     GotoState('Dying');
 
@@ -2307,6 +2968,8 @@ simulated function SpawnGibs(rotator HitRotation, float ChunkPerterbation)
     super.SpawnGibs(HitRotation, ChunkPerterbation);
 }
 
+// Modified to destroy burning player effects
+// Also so if player was registered as an allowed crewman in a locked vehicle, we notify that vehicle this player is no longer valid
 simulated event Destroyed()
 {
     if (FlameFX != none)
@@ -2317,21 +2980,23 @@ simulated event Destroyed()
         FlameFX.Kill();
     }
 
+    if (CrewedLockedVehicle != none)
+    {
+        SetCrewedLockedVehicle(none); // if player was registered as an allowed crewman in a locked vehicle, this will notify vehicle this player is no longer valid
+    }
+
     super.Destroyed();
 }
 
 // Called by DH_GiveChuteTrigger, adds parachute items to player's inventory
 singular function GiveChute()
 {
-    local RORoleInfo RI;
+    local DHRoleInfo RI;
     local int        i;
     local string     ItemString;
     local bool       bHasPSL, bHasPI;
 
-    if (DHPlayer(Controller) != none)
-    {
-        RI = DHPlayer(Controller).GetRoleInfo();
-    }
+    RI = GetRoleInfo();
 
     // Make sure player doesn't already have a parachute
     if (RI != none)
@@ -2380,9 +3045,11 @@ function DestroyRadioTrigger()
 }
 
 // Modified to allow player to carry more than 1 type of grenade
-// Also to add != "none" (string) checks before calling CreateInventory yo avoid calling GetInventoryClass("none") on base mutator & the log errors created each time a player spawns
+// And to automatically give all players a shovel if constructions are enabled in the map
+// Also to add != "none" (string) checks before calling CreateInventory to avoid calling GetInventoryClass("none") on base mutator & the log errors created each time a player spawns
 function AddDefaultInventory()
 {
+    local DHPlayerReplicationInfo PRI;
     local DHPlayer   P;
     local DHBot      B;
     local RORoleInfo RI;
@@ -2395,6 +3062,7 @@ function AddDefaultInventory()
     }
 
     P = DHPlayer(Controller);
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
     if (IsLocallyControlled())
     {
@@ -2413,6 +3081,9 @@ function AddDefaultInventory()
             {
                 CreateInventory(S);
             }
+
+            CheckGiveShovel();
+            CheckGiveBinocs();
 
             RI = P.GetRoleInfo();
 
@@ -2516,6 +3187,9 @@ function AddDefaultInventory()
             {
                 CreateInventory(S);
             }
+
+            CheckGiveShovel();
+            CheckGiveBinocs();
         }
     }
 
@@ -2542,13 +3216,47 @@ function CreateInventory(string InventoryClassName)
     }
 }
 
+// New function used to give all players a shovel (the appropriate shovel for their nationality)
+function CheckGiveShovel()
+{
+    local DHGameReplicationInfo GRI;
+
+    if (ShovelClassName != "" && Level.Game != none)
+    {
+        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+        if (GRI != none && GRI.bAreConstructionsEnabled)
+        {
+            CreateInventory(ShovelClassName);
+        }
+    }
+}
+
+// Function used to give binoculars to Squad Leaders
+function CheckGiveBinocs()
+{
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
+
+    if (Level.Game != none)
+    {
+        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+        PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+        if (GRI != none && PRI != none && PRI.IsSquadLeader())
+        {
+            CreateInventory("DH_Equipment.DHBinocularsItem");
+        }
+    }
+}
+
 // Modified to optimise network load by avoiding needlessly destroying & re-spawning replicated BackAttachment actors just because we need to change its mesh
 // Also slightly re-factored to optimise
 function ServerChangedWeapon(Weapon OldWeapon, Weapon NewWeapon)
 {
     // If single player mode or a hosting listen server player, & in 1st person view, then just switch the attachment
     // Don't worry about playing all the third person player stuff (that was borking up the first person weapon switches)
-    if (Level.Netmode != NM_DedicatedServer && IsLocallyControlled() && IsHumanControlled() && !PlayerController(Controller).bBehindView)
+    if (IsFirstPerson()) // replacing following checks as does same thing quicker: if (IsLocallyControlled() && IsHumanControlled() && !PlayerController(Controller).bBehindView)
     {
         Weapon = NewWeapon;
 
@@ -2691,8 +3399,8 @@ state PutWeaponAway
                     Anim = 'stand_putaway_nade';
                 }
             }
-            // Putting away a pistol
-            else if (Weapon.IsA('DHPistolWeapon'))
+            // Putting away a pistol, or a shovel that hangs on the player's left hip
+            else if (Weapon.IsA('DHPistolWeapon') || (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
             {
                 if (bIsCrawling)
                 {
@@ -2808,8 +3516,8 @@ state PutWeaponAway
         {
             if (SwapWeapon.IsA('DHExplosiveWeapon') || SwapWeapon.IsA('DHBinocularsItem'))
             {
-                // From grenade or binocs to pistol
-                if (Weapon.IsA('DHPistolWeapon'))
+                // From grenade or binocs, to pistol or shovel from left hip
+                if (Weapon.IsA('DHPistolWeapon') || (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
                 {
                     if (bIsCrawling)
                     {
@@ -2832,7 +3540,7 @@ state PutWeaponAway
                         Anim = 'stand_draw_nade';
                     }
                 }
-                // From grenade or binocs to any other weapon (generic anim to draw new weapon from player's back)
+                // From grenade or binocs, to any other weapon (generic anim to draw new weapon from player's back)
                 else
                 {
                     if (bIsCrawling)
@@ -2845,9 +3553,9 @@ state PutWeaponAway
                     }
                 }
             }
-            else if (SwapWeapon.IsA('DHPistolWeapon'))
+            else if (SwapWeapon.IsA('DHPistolWeapon') || (SwapWeapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
             {
-                // From pistol to grenade or binocs
+                // From pistol or shovel that goes on left hip, to grenade or binocs
                 if (Weapon.IsA('DHExplosiveWeapon') || Weapon.IsA('DHBinocularsItem'))
                 {
                     if (bIsCrawling)
@@ -2859,7 +3567,19 @@ state PutWeaponAway
                         Anim = 'stand_nadefrompistol';
                     }
                 }
-                // From pistol to any other weapon (generic anim to draw new weapon from player's back)
+                // From pistol or shovel that goes on left hip, to pistol or shovel from left hip
+                else if (Weapon.IsA('DHPistolWeapon') ||(Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
+                {
+                    if (bIsCrawling)
+                    {
+                        Anim = 'prone_draw_pistol';
+                    }
+                    else
+                    {
+                        Anim = 'stand_draw_pistol';
+                    }
+                }
+                // From pistol or shovel that goes on left hip, to any other weapon (generic anim to draw new weapon from player's back)
                 else
                 {
                     if (bIsCrawling)
@@ -2886,8 +3606,8 @@ state PutWeaponAway
                         Anim = 'stand_nadefromrifle';
                     }
                 }
-                // From any other weapon to pistol
-                else if (Weapon.IsA('DHPistolWeapon'))
+                // From any other weapon, to pistol or shovel from left hip
+                else if (Weapon.IsA('DHPistolWeapon') || (Weapon.IsA('DHShovelItem') && bShovelHangsOnLeftHip))
                 {
                     if (bIsCrawling)
                     {
@@ -2928,7 +3648,7 @@ state PutWeaponAway
             // Unhide the weapon now
             if (Weapon.ThirdPersonActor != none)
             {
-                if (DrivenVehicle == none) // Matt: added 'if' so we don't make the 3rd person weapon attachment visible again if player just got into a vehicle
+                if (DrivenVehicle == none) // added 'if' so we don't make the 3rd person weapon attachment visible again if player just got into a vehicle
                 {
                     Weapon.ThirdPersonActor.bHidden = false;
                 }
@@ -3038,21 +3758,28 @@ function HandleAssistedReload()
 // Play an assisted reload on the client
 simulated function PlayAssistedReload()
 {
-    local name PlayerAnim;
-    local name WeaponAnim;
+    local name Anim;
 
     if (DHWeaponAttachment(WeaponAttachment) != none)
     {
-        PlayerAnim = DHWeaponAttachment(WeaponAttachment).PA_AssistedReloadAnim;
-        WeaponAnim = WeaponAttachment.WA_ReloadEmpty;
+        Anim = DHWeaponAttachment(WeaponAttachment).PA_AssistedReloadAnim;
 
-        AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone1);
-        AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone2);
+        if (HasAnim(Anim))
+        {
+            AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone1);
+            AnimBlendParams(1, 1.0, 0.0, 0.2, SpineBone2);
 
-        PlayAnim(PlayerAnim,, 0.1, 1);
-        WeaponAttachment.PlayAnim(WeaponAnim,, 0.1);
+            PlayAnim(Anim,, 0.1, 1);
 
-        AnimBlendTime = GetAnimDuration(PlayerAnim, 1.0) + 0.1;
+            AnimBlendTime = GetAnimDuration(Anim, 1.0) + 0.1;
+        }
+
+        Anim = WeaponAttachment.WA_ReloadEmpty;
+
+        if (WeaponAttachment.HasAnim(Anim))
+        {
+            WeaponAttachment.PlayAnim(Anim,, 0.1);
+        }
 
         WeaponState = GS_ReloadSingle;
     }
@@ -3102,10 +3829,9 @@ simulated function PlayMantle()
     LockRootMotion(1); // lock the rendering of the root bone to where it is (it will still translate for calculation purposes)
     bLocallyControlled = IsLocallyControlled();
 
-    // Matt: was PlayOwnedSound but that's only relevant to server & this plays on client - same below & in PlayEndMantle
     if (bLocallyControlled)
     {
-        PlaySound(MantleSound, SLOT_Interact, 1.0,, 10.0);
+        PlaySound(MantleSound, SLOT_Interact, 1.0,, 10.0); // was PlayOwnedSound but that's only relevant to server & this plays on client - same below & in PlayEndMantle
     }
 
     Anim = SetMantleAnim();
@@ -3145,7 +3871,7 @@ simulated function PlayMantle()
     }
 }
 
-simulated function PlayEndMantle()
+simulated function PlayEndMantle() // TODO: perhaps ought to play these anims on a dedicated server to put player's hit boxes in correct position? (server hit boxes must match client)
 {
     if (Weapon != none && WeaponAttachment != none)
     {
@@ -3422,6 +4148,14 @@ simulated event SetAnimAction(name NewAction)
     }
 }
 
+simulated function HUDCheckDig()
+{
+    if (IsLocallyControlled())
+    {
+        bCanDig = CanDig();
+    }
+}
+
 //------------------------
 // Mantling Functions
 //------------------------
@@ -3435,9 +4169,16 @@ simulated function HUDCheckMantle()
     }
 }
 
+// Check whether there's anything in front of the player that can be built with the shovel
+simulated function bool CanDig()
+{
+    return Weapon != none && Weapon.IsA('DHShovelItem') && Weapon.GetFireMode(0) != none && Weapon.GetFireMode(0).AllowFire();
+}
+
 simulated function bool CanMantleActor(Actor A)
 {
     local DHObstacleInstance O;
+    local DHConstruction C;
 
     if (A != none)
     {
@@ -3452,6 +4193,13 @@ simulated function bool CanMantleActor(Actor A)
         {
             return true;
         }
+
+        C = DHConstruction(A);
+
+        if (C != none && C.bCanBeMantled)
+        {
+            return true;
+        }
     }
 
     return false;
@@ -3463,9 +4211,19 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
     local DHWeapon DHW;
     local vector   Extent, HitLoc, HitNorm, StartLoc, EndLoc, Direction;
     local int      i;
-    local DHPlayer Player;
+    local DHPlayer PC;
 
+    PC = DHPlayer(Controller);
     DHW = DHWeapon(Weapon);
+
+    // Do a check if the game is in a setup phase
+    // Because mantling can bypass destroyable static mesh collision, lets just prevent mantling all together while in the setup phase
+    // This is a simulated function which both the server and the client need to check, so the client can't use Level.Game (reason for accessing controller)
+    // If mantling is ever fixed to where it cannot bypass DSM collision, then this check is not needed
+    if (PC != none && PC.GameReplicationInfo != none && DHGameReplicationInfo(PC.GameReplicationInfo).bIsInSetupPhase)
+    {
+        return false;
+    }
 
     if (bOnFire || !bForceTest && (Velocity != vect(0.0, 0.0, 0.0) || bIsCrouched || bWantsToCrouch || bIsCrawling || IsInState('EndProning') || IsInState('CrouchingFromProne') ||
         (Level.TimeSeconds + 1.0 < NextJumpTime) || Stamina < 2.0 || bIsMantling || Physics != PHYS_Walking || bBipodDeployed ||
@@ -3646,11 +4404,9 @@ simulated function bool CanMantle(optional bool bActualMantle, optional bool bFo
         SetTimer(1.0, false); // In case client or server fail to get here for any reason, this will abort the one that did
     }
 
-    Player = DHPlayer(Controller);
-
-    if (Player != none)
+    if (PC != none)
     {
-        Player.QueueHint(1, true);
+        PC.QueueHint(1, true);
     }
 
     return true;
@@ -4450,7 +5206,7 @@ simulated function bool CanCrouchTransition()
 
 simulated function LeanRight()
 {
-    if (TraceWall(16384, 64.0) || bLeaningLeft || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
+    if ((DHWeapon(Weapon) != none && DHWeapon(Weapon).WeaponLeanRight()) || TraceWall(16384, 64.0) || bLeaningLeft || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
     {
         bLeanRight = false;
     }
@@ -4460,9 +5216,19 @@ simulated function LeanRight()
     }
 }
 
+simulated function LeanRightReleased()
+{
+    if (DHWeapon(Weapon) != none)
+    {
+        DHWeapon(Weapon).WeaponLeanRightReleased();
+    }
+
+    super.LeanRightReleased();
+}
+
 simulated function LeanLeft()
 {
-    if (TraceWall(-16384, 64.0) || bLeaningRight || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
+    if ((DHWeapon(Weapon) != none && DHWeapon(Weapon).WeaponLeanLeft()) || TraceWall(-16384, 64.0) || bLeaningRight || bIsSprinting || bIsMantling || bIsDeployingMortar || bIsCuttingWire)
     {
         bLeanLeft = false;
     }
@@ -4470,6 +5236,16 @@ simulated function LeanLeft()
     {
         bLeanLeft = true;
     }
+}
+
+simulated function LeanLeftReleased()
+{
+    if (DHWeapon(Weapon) != none)
+    {
+        DHWeapon(Weapon).WeaponLeanLeftReleased();
+    }
+
+    super.LeanLeftReleased();
 }
 
 //------------------------------
@@ -4496,9 +5272,9 @@ simulated function StartBurnFX()
 
     SetOverlayMaterial(BurningOverlayMaterial, 999.0, true);
 
-    if (HeadGear != none)
+    if (Headgear != none)
     {
-        HeadGear.SetOverlayMaterial(BurnedHeadgearOverlayMaterial, 999.0, true);
+        Headgear.SetOverlayMaterial(BurnedHeadgearOverlayMaterial, 999.0, true);
     }
 
     for (i = 0; i < AmmoPouches.Length; ++i)
@@ -4537,7 +5313,7 @@ simulated function bool CanSwitchWeapon()
 // Modified so a burning player can't switch weapons
 simulated function bool CanBusySwitchWeapon()
 {
-    return !bOnFire && super.CanBusySwitchWeapon();
+    return bOnFire && super.CanBusySwitchWeapon();
 }
 
 // New function to make a burning player drop the weapon he is holding
@@ -4715,12 +5491,12 @@ simulated function DHRoleInfo GetRoleInfo()
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-    if (PRI == none || PRI.RoleInfo == none)
+    if (PRI != none)
     {
-        return none;
+        return DHRoleInfo(PRI.RoleInfo);
     }
 
-    return DHRoleInfo(PRI.RoleInfo);
+    return none;
 }
 
 simulated function bool AllowSprint()
@@ -4774,7 +5550,7 @@ simulated function float BobFunction(float T, float Amplitude, float Frequency, 
 
 simulated exec function BobAmplitude(optional float F)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         if (F == 0)
         {
@@ -4789,7 +5565,7 @@ simulated exec function BobAmplitude(optional float F)
 
 simulated exec function BobFrequency(optional float F)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         if (F == 0)
         {
@@ -4804,7 +5580,7 @@ simulated exec function BobFrequency(optional float F)
 
 simulated exec function BobDecay(optional float F)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         if (F == 0)
         {
@@ -4878,6 +5654,12 @@ function CheckBob(float DeltaTime, vector Y)
         else
         {
             BobModifier = 1.0;
+        }
+
+        // Apply weapon bob modifier factor if bIronSights
+        if (bIronSights && Weapon != none && DHWeapon(Weapon) != none)
+        {
+            BobModifier *= DHWeapon(Weapon).BobModifyFactor;
         }
 
         // If ironsighted, update ironsight bob properties based on the movement state (added this if/else block)
@@ -5087,7 +5869,7 @@ simulated function FootStepping(int Side)
     {
         if ((PhysicsVolume(Touching[i]) != none && PhysicsVolume(Touching[i]).bWaterVolume) || FluidSurfaceInfo(Touching[i]) != none)
         {
-            PlaySound(sound'Inf_Player.FootStepWaterDeep', SLOT_Interact, FootstepVolume * 2.0,, FootStepSoundRadius);
+            PlaySound(Sound'Inf_Player.FootStepWaterDeep', SLOT_Interact, FootstepVolume * 2.0,, FootStepSoundRadius);
 
             // Play a water ring effect as you walk through the water
             if (Level.NetMode != NM_DedicatedServer && !Level.bDropDetail && Level.DetailMode != DM_Low
@@ -5407,6 +6189,32 @@ function SetMovementPhysics()
     }
 }
 
+// Modified to use DHShadowProjector class (unlike vehicle shadows, this has no functional change, but the projector's tick functionality is optimised)
+simulated function UpdateShadow()
+{
+    if (PlayerShadow != none) // shouldn't already have a shadow, so destroy any that somehow exists
+    {
+        PlayerShadow.Destroy();
+        PlayerShadow = none;
+    }
+
+    if (Level.NetMode != NM_DedicatedServer && bPlayerShadows && bActorShadows)
+    {
+        PlayerShadow = Spawn(class'DHShadowProjector', self, '', Location);
+
+        if (PlayerShadow != none)
+        {
+            PlayerShadow.ShadowActor = self;
+            PlayerShadow.bBlobShadow = bBlobShadow;
+            PlayerShadow.LightDirection = Normal(vect(1.0, 1.0, 3.0));
+            PlayerShadow.LightDistance = 320.0;
+            PlayerShadow.MaxTraceDistance = 350;
+
+            PlayerShadow.InitShadow();
+        }
+    }
+}
+
 // Colin: This is a bit of a half-measure, since we need to retain support for
 // "using" the radio trigger normally. Unfortunately, the Pawns is consuming the
 // use requests when players are looking directly at the player and trying to
@@ -5462,6 +6270,139 @@ simulated function NotifySelected(Pawn User)
     }
 }
 
+// Modified to add a safeguard against a mapper specifying an invalid item name in a GivenItems slot
+// Can happen as he's entering text, unlike the weapon slots where he simply picks a class from a drop down list
+// Also optimised by avoiding a pointless inventory checking loop & if there are no GivenItems to check for (true for most roles)
+simulated function bool VerifyGivenItems()
+{
+    local array<class<Inventory> > GivenItemClasses;
+    local class<Inventory>         InventoryClass;
+    local Inventory                Inv;
+    local RORoleInfo               RI;
+    local int                      FoundItemsCount, LoopCount, i;
+
+    RI = GetRoleInfo();
+
+    if (RI != none)
+    {
+        // First loop through GivenItems array & build an array of inventory classes to check against
+        // Ignores any invalid entries that don't load as it's not a valid class & so the item is not going to spawn/exist
+        for (i = 0; i < RI.GivenItems.Length; ++i)
+        {
+            InventoryClass = class<Inventory>(DynamicLoadObject(RI.GivenItems[i], class'Class'));
+
+            if (InventoryClass != none)
+            {
+                GivenItemClasses[GivenItemClasses.Length] = InventoryClass;
+            }
+        }
+
+        // If the GivenItems array is empty or contains no valid items, just return true so that GivenItems are verified
+        // No point checking for something that isn't going to exist
+        if (GivenItemClasses.Length == 0)
+        {
+            return true;
+        }
+
+        // Loop through the pawn's inventory & find if it has all the valid items we've saved in our GivenItemClasses array
+        for (Inv = Inventory; Inv != none; Inv = Inv.Inventory)
+        {
+            if (Weapon(Inv) != none && Inv.Instigator != none)
+            {
+                for (i = 0; i < GivenItemClasses.Length; ++i)
+                {
+                    // This inventory item is in the role's GivenItems, so increment the found count & return true if we've now found all the GivenItems
+                    if (GivenItemClasses[i] == Inv.Class)
+                    {
+                        FoundItemsCount++;
+
+                        if (FoundItemsCount == GivenItemClasses.Length)
+                        {
+                            return true;
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            if (++LoopCount > 500) // runaway loop safeguard
+            {
+                break;
+            }
+        }
+    }
+
+    return false;
+}
+
+// New helper function to check whether debug execs can be run
+simulated function bool IsDebugModeAllowed()
+{
+    return Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode();
+}
+
+// New debug exec to make bots spawn
+// Team is 0 for axis, 1 for allies, 2 for both
+// Num is optional & limits the number of bots that will be spawned (if not entered, zero is passed & gets used to signify no limit on numbers)
+exec function DebugSpawnBots(int Team, optional int Num, optional int Distance)
+{
+    local DarkestHourGame DHG;
+    local Controller      C;
+    local ROBot           B;
+    local vector          TargetLocation, RandomOffset;
+    local rotator         Direction;
+    local int             i;
+
+    DHG = DarkestHourGame(Level.Game);
+
+    if (DHG != none && (IsDebugModeAllowed() || DHG.IsAdmin(PlayerController(Controller))))
+    {
+        TargetLocation = Location;
+
+        // If a Distance has been specified, move the target spawn location that many metres away from the player's location, in the yaw direction he is facing
+        if (Distance > 0)
+        {
+            Direction.Yaw = Rotation.Yaw;
+            TargetLocation += (vector(Direction) * class'DHUnits'.static.MetersToUnreal(Distance));
+        }
+
+        for (C = Level.ControllerList; C != none; C = C.NextController)
+        {
+            B = ROBot(C);
+
+            // Look for bots that aren't in game & are on the the specified team (Team 2 signifies to spawn bots of both teams)
+            if (B != none && B.Pawn == none && (Team == 2 || B.GetTeamNum() == Team))
+            {
+                // Spawn bot
+                DHG.DeployRestartPlayer(B, false, true);
+
+                if (B != none && B.Pawn != none)
+                {
+                    // Randomise location a little, so bots don't all spawn on top of each other
+                    RandomOffset = VRand() * 120.0;
+                    RandomOffset.Z = 0.0;
+
+                    // Move bot to target location
+                    if (B.Pawn.SetLocation(TargetLocation + RandomOffset))
+                    {
+                        // If spawn & move successful, check if we've reached any specified number of bots to spawn (NumBots zero signifies no limit, so skip this check)
+                        if (Num > 0 && ++i >= Num)
+                        {
+                            break;
+                        }
+                    }
+                    // But if we couldn't move the bot to the target, kill the pawn
+                    else
+                    {
+                        B.Pawn.Suicide();
+                    }
+                }
+            }
+        }
+    }
+}
+
 // New debug exec to spawn player pawns with all possible permutations of body & face skins that can be randomly selected
 // Works with either a DHRoleInfo class (includes all of its specified RolePawns classes) or a single DHPawn class
 // Use "DebugPlayerModels kill" to just remove all existing debug pawns that have been spawned
@@ -5476,7 +6417,7 @@ exec function DebugPlayerModels(string ClassName, optional bool bShowAllFaceComb
     local int               i;
 
     // Don't run this on client as resulting pawns only exist clientside & work badly, e.g. can't be shot (use 'admin' console command if you need to use in multiplayer)
-    if (Role < ROLE_Authority || (Level.NetMode != NM_Standalone && !class'DH_LevelInfo'.static.DHDebugMode()))
+    if (Role < ROLE_Authority || !IsDebugModeAllowed())
     {
         return;
     }
@@ -5647,7 +6588,7 @@ function SpawnDebugPawns(class<DHPawn> PawnClass, out vector SpawnLocation, opti
 // Debug exec to set own player on fire
 exec function BurnPlayer()
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         bOnFire = true;
         FireDamage = 1;
@@ -5657,7 +6598,7 @@ exec function BurnPlayer()
 // Debug exec to increase fly speed
 exec function SetFlySpeed(float NewSpeed)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         if (NewSpeed != -1.0)
         {
@@ -5670,6 +6611,19 @@ exec function SetFlySpeed(float NewSpeed)
     }
 }
 
+exec function GimmeSupplies()
+{
+    switch (GetTeamNum())
+    {
+        case AXIS_TEAM_INDEX:
+            DebugSpawnVehicle("DH_OpelBlitzSupport", 5.0);
+            break;
+        case ALLIES_TEAM_INDEX:
+            DebugSpawnVehicle("DH_GMCTruckSupport", 5.0);
+            break;
+    }
+}
+
 // New debug exec to spawn any vehicle, in front of you
 exec function DebugSpawnVehicle(string VehicleString, int Distance, optional bool bSetAsCrew)
 {
@@ -5679,8 +6633,14 @@ exec function DebugSpawnVehicle(string VehicleString, int Distance, optional boo
     local vector         SpawnLocation;
     local rotator        SpawnDirection;
 
-    if (VehicleString != "" && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode() || (PlayerReplicationInfo != none && PlayerReplicationInfo.bAdmin)))
+    // TODO: there really is no reason why a game admin should be able to spawn vehicles in the live game & the admin 'pass through' should be removed here - Matt
+    if (VehicleString != "" && (IsDebugModeAllowed() || (PlayerReplicationInfo != none && (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin))))
     {
+        if (InStr(VehicleString, ".") == -1) // saves typing in "DH_Vehicles." in front of almost all vehicles spawned (but still allows a package name to be specified)
+        {
+            VehicleString = "DH_Vehicles." $ VehicleString;
+        }
+
         VehicleClass = class<Vehicle>(DynamicLoadObject(VehicleString, class'class'));
 
         if (VehicleClass != none)
@@ -5704,101 +6664,398 @@ exec function DebugSpawnVehicle(string VehicleString, int Distance, optional boo
     }
 }
 
-// New debug exec that makes player's current weapon fire 20mm AP rounds, which is very useful for testing hits on vehicle armour, e.g. angle and side calcs
-// Calling it again will toggle back to the normal ammo
-// By default it also enables/disables penetration debug settings, but adding "true" after the console command will ignore those settings
-exec function DebugFire20mm(optional bool bIgnorePenetrationDebug)
+// New debug exec to make player's current weapon fire dummy AP shells, which is very useful for checking vehicle armour is set up correctly
+// It also enables penetration debug, which shows on screen text & lines
+// Entering this console command again will toggle your weapon back to using its normal ammo & disable penetration debug
+// The dummy AP shells do no damage & have no spread & a minimum ballistic drop (for accurate aiming to check certain armour locations)
+// By default, dummy shells will be 75mm calibre & never penetrate - you just use the debug info on screen to check the armour is set up ok
+// But you can specify a specific shell class (from DH_Vehicles package) & then dummy shells will use its calibre & penetration properties
+exec function DebugShootAP(optional string APProjectileClassName)
 {
-    local class<Projectile> AP20mmClass;
-    local DHProjectileFire  FireMode;
-    local bool              bDebugFireEnabled;
+    local class<DHAntiVehicleProjectile> DebugProjectileClass, APProjectileClass;
+    local DHProjectileFire               FireMode;
+    local bool                           bDebugAPEnabled;
+    local int                            i;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Weapon != none)
+    if (IsDebugModeAllowed() && Weapon != none)
     {
         FireMode = DHProjectileFire(Weapon.GetFireMode(0));
 
         if (FireMode != none)
         {
-            AP20mmClass = class<Projectile>(DynamicLoadObject("DH_Vehicles.DH_Sdkfz2341CannonShell", class'Class'));
+            DebugProjectileClass = class'DH_Engine.DHDummyDebugAPShell'; // just avoids lots of literals
 
-            // Switch current weapon to fire 20mm AP rounds (or toggle back to using normal ammo)
-            if (FireMode.ProjectileClass != AP20mmClass)
+            if (APProjectileClassName != "") // get projectile class from any specified class name
             {
-                bDebugFireEnabled = true;
-                FireMode.ProjectileClass = AP20mmClass;
-                FireMode.bUsePreLaunchTrace = false; // have to disable PLT otherwise it stops projectiles even being spawned for close range shots
+                APProjectileClass = class<DHAntiVehicleProjectile>(DynamicLoadObject("DH_Vehicles." $ APProjectileClassName, class'Class'));
             }
+
+            // Switch current weapon to fire dummy (non-damaging) debug AP rounds
+            // If a valid projectile class has been specified, we'll keep the debug enabled, as player may have just switched projectile class
+            if (FireMode.ProjectileClass != DebugProjectileClass || APProjectileClass != none)
+            {
+                bDebugAPEnabled = true;
+                FireMode.ProjectileClass = DebugProjectileClass;
+                FireMode.bUsePreLaunchTrace = false; // have to disable PLT otherwise it stops projectiles even being spawned for close range shots
+                FireMode.SpreadStyle = SS_None;
+
+                // If specific AP projectile class name has been specified, we'll use that to set properties for the debug shell class
+                if (APProjectileClass != none)
+                {
+                    DebugProjectileClass.default.RoundType = APProjectileClass.default.RoundType;
+                    DebugProjectileClass.default.ShellDiameter = APProjectileClass.default.ShellDiameter;
+                    DebugProjectileClass.default.bShatterProne = APProjectileClass.default.bShatterProne;
+
+                    for (i = 0; i < arraycount(DebugProjectileClass.default.DHPenetrationTable); ++i)
+                    {
+                        DebugProjectileClass.default.DHPenetrationTable[i] = APProjectileClass.default.DHPenetrationTable[i];
+                    }
+                }
+                // Otherwise use a default 75mm shell calibre with zero penetration for debug shell class
+                // Have to hard code literals here, as debug shell class defaults may have been changed by earlier debugging
+                else
+                {
+                    DebugProjectileClass.default.RoundType = RT_APC;
+                    DebugProjectileClass.default.ShellDiameter = 7.5;
+                    DebugProjectileClass.default.bShatterProne = false;
+
+                    for (i = 0; i < arraycount(DebugProjectileClass.default.DHPenetrationTable); ++i)
+                    {
+                        DebugProjectileClass.default.DHPenetrationTable[i] = 0;
+                    }
+                }
+            }
+            // Or toggle back to using normal weapon ammo (if debug AP is already enabled & a projectile class hasn't been specified)
             else
             {
                 FireMode.ProjectileClass = FireMode.default.ProjectileClass;
                 FireMode.bUsePreLaunchTrace = FireMode.default.bUsePreLaunchTrace;
+                FireMode.SpreadStyle = FireMode.default.SpreadStyle;
             }
 
-            // Enable penetration debugging (or toggle back to off) - with option to ignore this
-            if (!bIgnorePenetrationDebug && DHPlayer(Controller) != none)
+            // Enable penetration debugging (or toggle back to off)
+            if (DHPlayer(Controller) != none)
             {
-                DHPlayer(Controller).DebugPenetration(bDebugFireEnabled);
+                DHPlayer(Controller).DebugPenetration(bDebugAPEnabled);
             }
         }
     }
 }
 
-// TEMPDEBUG (Matt, v7.2): for problem where net player can't see 3rd person weapon attachment of player exiting vehicle, if vehicle replicated to that client with the player already in it
-exec function LogWepAttach(optional bool bLogAllWeaponAttachments)
+function ServerGiveConstructionWeapon()
 {
-    local ROPawn           P;
-    local WeaponAttachment WA;
-    local int              i;
+    local Weapon ConstructionWeapon;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    GiveWeapon("DH_Construction.DH_ConstructionWeapon");
+    ConstructionWeapon = Weapon(FindInventoryType(class<Weapon>(DynamicLoadObject("DH_Construction.DH_ConstructionWeapon", class'class'))));
+
+    if (ConstructionWeapon != none)
     {
-        P = ROPawn(AutoTraceActor);
+        ConstructionWeapon.ClientWeaponSet(true);
+    }
+}
 
-        if (P != none)
+// Modified to fix an accessed none that could happen if Weapon was none
+simulated function NextWeapon()
+{
+    if (Level.Pauser != none || !bRecievedInitialLoadout)
+    {
+        return;
+    }
+
+    if (Weapon == none && Controller != none)
+    {
+        Controller.SwitchToBestWeapon();
+
+        return;
+    }
+
+    if (PendingWeapon != none)
+    {
+        if (PendingWeapon.bForceSwitch)
         {
-            Log("--------- Weapon log for player:" @ P.PlayerReplicationInfo.PlayerName @ "---------");
+            return;
+        }
 
-            if (P.WeaponAttachment != none)
-            {
-                Log("WeaponAttachment =" @ P.WeaponAttachment.Name @ " bHidden =" @ P.WeaponAttachment.bHidden
-                    @ " Base =" @ P.WeaponAttachment.Base @ " AttachmentBone =" @ P.WeaponAttachment.AttachmentBone);
-            }
-            else
-            {
-                Log("WeaponAttachment = none");
-            }
-
-            if (P.Weapon != none && P.Weapon.ThirdPersonActor != none)
-            {
-                Log("ThirdPersonActor =" @ P.Weapon.ThirdPersonActor.Name @ " bHidden =" @ P.Weapon.ThirdPersonActor.bHidden
-                    @ " Base =" @ P.Weapon.ThirdPersonActor.Base @ " AttachmentBone =" @ P.Weapon.ThirdPersonActor.AttachmentBone);
-            }
-            else
-            {
-                Log("ThirdPersonActor = none (Weapon =" @ P.Weapon $ ")");
-            }
-
-            Log("bInitializedWeaponAttachment =" @ P.bInitializedWeaponAttachment @ " bNetNotify =" @ P.bNetNotify);
-
-            for (i = 0; i < P.Attached.Length; ++i)
-            {
-                if (P.Attached[i].IsA('WeaponAttachment'))
-                {
-                    Log("Attached[" $ i $ "] =" @ P.Attached[i].Name @ " bHidden =" @ P.Attached[i].bHidden @ " Base =" @ P.Attached[i].Base @ " AttachmentBone =" @ P.Attached[i].AttachmentBone);
-                }
-            }
-
-            if (bLogAllWeaponAttachments)
-            {
-                foreach DynamicActors(class'WeaponAttachment', WA)
-                {
-                    Log(WA.Name @ " Player =" @ WA.Instigator.PlayerReplicationInfo.PlayerName @ " bHidden =" @ WA.bHidden @ " Base =" @ WA.Base @ " AttachmentBone =" @ WA.AttachmentBone);
-                }
-            }
-
-            Log("-------------------------------------------------------------------------------------------------");
+        if (Inventory != none)
+        {
+            PendingWeapon = Inventory.NextWeapon(none, PendingWeapon);
         }
     }
+    else if (Inventory != none)
+    {
+        PendingWeapon = Inventory.NextWeapon(none, Weapon);
+    }
+
+    if (PendingWeapon != none && PendingWeapon != Weapon && Weapon != none)
+    {
+        Weapon.PutDown();
+    }
+}
+
+// Emptied out as irrelevant to RO/DH (concerns UT2004 PowerUps) & can just cause "accessed none" log errors if keybound & used (if player has no inventory)
+exec function NextItem()
+{
+}
+
+// Overridden from ROPawn to fix "sequence not found" bugs when a weapon simply
+// does not have a WA_Idle or WA_IdleEmpty.
+simulated function StartFiring(bool bAltFire, bool bRapid)
+{
+    local name FireAnim;
+    local bool bIsMoving;
+
+    if (Physics == PHYS_Swimming || WeaponAttachment == none)
+    {
+        return;
+    }
+
+    bIsMoving = VSizeSquared(Velocity) > 25;
+
+    if (bAltFire)
+    {
+        if (WeaponAttachment.bBayonetAttached)
+        {
+            if (bIsCrawling)
+            {
+                FireAnim = WeaponAttachment.PA_ProneBayonetAltFire;
+            }
+            else if (bIsCrouched)
+            {
+                FireAnim = WeaponAttachment.PA_CrouchBayonetAltFire;
+            }
+            else
+            {
+                FireAnim = WeaponAttachment.PA_BayonetAltFire;
+            }
+        }
+        else
+        {
+            if (bIsCrawling)
+            {
+                FireAnim = WeaponAttachment.PA_ProneAltFire;
+            }
+            else if (bIsCrouched)
+            {
+                FireAnim = WeaponAttachment.PA_CrouchAltFire;
+            }
+            else if (bBipodDeployed)
+            {
+                FireAnim = WeaponAttachment.PA_DeployedAltFire;
+            }
+            else
+            {
+                FireAnim = WeaponAttachment.PA_AltFire;
+            }
+        }
+    }
+    // Regular fire
+    else
+    {
+        if (bBipodDeployed)
+        {
+            if (bIsCrouched)
+            {
+                FireAnim = WeaponAttachment.PA_CrouchDeployedFire;
+            }
+            else if (bIsCrawling)
+            {
+                FireAnim = WeaponAttachment.PA_ProneDeployedFire;
+            }
+            else
+            {
+                FireAnim = WeaponAttachment.PA_DeployedFire;
+            }
+        }
+        else if (bIsCrawling)
+        {
+            FireAnim = WeaponAttachment.PA_ProneFire;
+        }
+        else if (bIsCrouched)
+        {
+            if (bIsMoving)
+            {
+                FireAnim = WeaponAttachment.PA_MoveCrouchFire[Get8WayDirection()];
+            }
+            else
+            {
+                if (bIronSights)
+                {
+                    FireAnim = WeaponAttachment.PA_CrouchIronFire;
+                }
+                else
+                {
+                    FireAnim = WeaponAttachment.PA_CrouchFire;
+                }
+            }
+        }
+        else if (bIronSights)
+        {
+            if (bIsMoving)
+            {
+                FireAnim = WeaponAttachment.PA_MoveStandIronFire[Get8WayDirection()];
+            }
+            else
+            {
+                FireAnim = WeaponAttachment.PA_IronFire;
+            }
+        }
+        else
+        {
+            if (bIsMoving)
+            {
+                if (bIsWalking)
+                {
+                    FireAnim = WeaponAttachment.PA_MoveWalkFire[Get8WayDirection()];
+                }
+                else
+                {
+                    FireAnim = WeaponAttachment.PA_MoveStandFire[Get8WayDirection()];
+
+                }
+            }
+            else
+            {
+                FireAnim = WeaponAttachment.PA_Fire;
+            }
+        }
+    }
+
+    // Blend the fire animation a bit so the standard player movement animations still play
+    AnimBlendParams(1, 0.25, 0.0, 0.2, FireRootBone);
+
+    if (bRapid)
+    {
+        if (WeaponState != GS_FireLooped)
+        {
+            LoopAnim(FireAnim,, 0.0, 1);
+            WeaponState = GS_FireLooped;
+
+            if (!bAltFire)
+            {
+                if (WeaponAttachment.bBayonetAttached && WeaponAttachment.WA_BayonetFire != '')
+                {
+                    WeaponAttachment.LoopAnim(WeaponAttachment.WA_BayonetFire);
+                }
+                else if (WeaponAttachment.WA_Fire != '')
+                {
+                    WeaponAttachment.LoopAnim(WeaponAttachment.WA_Fire);
+                }
+            }
+        }
+    }
+    else
+    {
+        PlayAnim(FireAnim,, 0.0, 1);
+        WeaponState = GS_FireSingle;
+
+        if (!bAltFire)
+        {
+            if (WeaponAttachment.bBayonetAttached)
+            {
+                if (WeaponAttachment.WA_BayonetFire != '')
+                {
+                    WeaponAttachment.PlayAnim(WeaponAttachment.WA_BayonetFire);
+                }
+            }
+            else
+            {
+                if (WeaponAttachment.WA_Fire != '')
+                {
+                    WeaponAttachment.PlayAnim(WeaponAttachment.WA_Fire);
+                }
+            }
+        }
+    }
+
+    IdleTime = Level.TimeSeconds;
+}
+
+// Modified to remove the HasAmmo check since we really don't care if it has
+// ammo or not.
+exec function SwitchToLastWeapon()
+{
+    if (Weapon != none && Weapon.OldWeapon != none)
+    {
+        PendingWeapon = Weapon.OldWeapon;
+        Weapon.PutDown();
+    }
+}
+
+// Uses up the total supplies specified using the touching supply attachments.
+// Returns true if the supplies were used, or false if there were not enough
+// supplies nearby to perform the operation.
+function bool UseSupplies(int SupplyCost)
+{
+    local int i, SuppliesToUse, TotalSupplyCount;
+    local UComparator AttachmentComparator;
+    local array<DHConstructionSupplyAttachment> Attachments;
+
+    for (i = 0; i < TouchingSupplyAttachments.Length; ++i)
+    {
+        if (TouchingSupplyAttachments[i] != none)
+        {
+            TotalSupplyCount += TouchingSupplyAttachments[i].GetSupplyCount();
+        }
+    }
+
+    if (TotalSupplyCount < SupplyCost)
+    {
+        return false;
+    }
+
+    // Sort the supply attachments by priority.
+    Attachments = TouchingSupplyAttachments;
+    AttachmentComparator = new class'UComparator';
+    AttachmentComparator.CompareFunction = class'DHConstructionSupplyAttachment'.static.CompareFunction;
+    class'USort'.static.Sort(Attachments, AttachmentComparator);
+
+    // Use supplies from the sorted supply attachments, in order, until costs are met.
+    for (i = 0; i < Attachments.Length; ++i)
+    {
+        if (SupplyCost == 0)
+        {
+            break;
+        }
+
+        SuppliesToUse = Min(SupplyCost, Attachments[i].GetSupplyCount());
+
+        Attachments[i].SetSupplyCount(Attachments[i].GetSupplyCount() - SuppliesToUse);
+
+        SupplyCost -= SuppliesToUse;
+    }
+
+    return true;
+}
+
+// Attempts to refund supplies to nearby supply attachments. Returns the total
+// amount of supplies that were actually refunded.
+function int RefundSupplies(int SupplyCount)
+{
+    local int i, SuppliesToRefund, SuppliesRefunded;
+    local array<DHConstructionSupplyAttachment> Attachments;
+    local UComparator AttachmentComparator;
+
+    // Sort the supply attachments by priority.
+    Attachments = TouchingSupplyAttachments;
+    AttachmentComparator = new class'UComparator';
+    AttachmentComparator.CompareFunction = class'DHConstructionSupplyAttachment'.static.CompareFunction;
+    class'USort'.static.Sort(Attachments, AttachmentComparator);
+
+    for (i = 0; i < Attachments.Length; ++i)
+    {
+        if (SupplyCount == 0)
+        {
+            break;
+        }
+
+        SuppliesToRefund = Min(SupplyCount, Attachments[i].SupplyCountMax - Attachments[i].GetSupplyCount());
+        Attachments[i].SetSupplyCount(Attachments[i].GetSupplyCount() + SuppliesToRefund);
+        SuppliesRefunded += SuppliesToRefund;
+        SupplyCount -= SuppliesToRefund;
+    }
+
+    return SuppliesRefunded;
 }
 
 defaultproperties
@@ -5810,6 +7067,8 @@ defaultproperties
     TouchMessageClass=class'DHPawnTouchMessage'
     bAutoTraceNotify=true
     bCanAutoTraceSelect=true
+    HeadgearClass=class'ROEngine.ROHeadgear' // start with dummy abstract classes so server changes to either a spawnable class or to none; then net client can detect when its been set
+    AmmoPouchClasses(0)=class'ROEngine.ROAmmoPouch'
 
     // Movement & impacts
     WalkingPct=0.45
@@ -5850,6 +7109,8 @@ defaultproperties
     BurnedHeadgearOverlayMaterial=Combiner'DH_FX_Tex.Fire.HeadgearBurnedOverlay'
 
     // Third person player animations
+    bShovelHangsOnLeftHip=true
+
     DodgeAnims(0)="jumpF_mid_nade"
     DodgeAnims(1)="jumpB_mid_nade"
     DodgeAnims(2)="jumpL_mid_nade"

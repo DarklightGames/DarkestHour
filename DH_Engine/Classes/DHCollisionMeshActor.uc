@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHCollisionMeshActor extends StaticMeshActor
@@ -70,6 +70,9 @@ simulated function PostBeginPlay()
         bProjTarget = Owner.default.bProjTarget;
         bUseCollisionStaticMesh = Owner.default.bUseCollisionStaticMesh;
         bIgnoreEncroachers = Owner.default.bIgnoreEncroachers;
+
+        bCanAutoTraceSelect = Owner.default.bCanAutoTraceSelect;
+        bAutoTraceNotify = Owner.default.bAutoTraceNotify;
     }
     else
     {
@@ -123,21 +126,12 @@ simulated static function DHCollisionMeshActor AttachCollisionMesh(Actor ColMesh
     return ColMeshActor;
 }
 
-// Hides or shows the owning actor - a debug tool used by classes that spawn a col mesh
-simulated function HideOwner(bool bHide)
+// Implemented here so player gets an enter vehicle message when looking at a col mesh actor representing a vehicle weapon or vehicle
+simulated event NotifySelected(Pawn User)
 {
-    local int i;
-
-    for (i = 0; i < Owner.Skins.Length; ++i)
+    if (Owner != none)
     {
-        if (bHide)
-        {
-            Owner.Skins[i] = texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha';
-        }
-        else
-        {
-            Owner.Skins[i] = Owner.default.Skins[i];
-        }
+        Owner.NotifySelected(User);
     }
 }
 
@@ -147,11 +141,77 @@ function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector
     Owner.TakeDamage(Damage, EventInstigator, HitLocation, Momentum, DamageType, HitIndex);
 }
 
+// New debug helper function to toggle whether the col mesh is visible or not
+simulated function ToggleVisible()
+{
+    if (DrawType == default.DrawType)
+    {
+        SetDrawType(DT_StaticMesh); // show
+    }
+    else
+    {
+        SetDrawType(default.DrawType); // hide
+    }
+}
+
+// New debug helper function to hide or re-show the owning actor
+// Can't simply set owner as DrawType=none or bHidden, as that also hides all attached actors, including col mesh & player, so we skin with an alpha transparency texture
+simulated function HideOwner(bool bHide)
+{
+    local DHVehicle V;
+    local bool      bUseCannonSkinsArray, bMatchMGSkinToVehicle;
+    local int       i;
+
+    if (!bHide)
+    {
+        V = DHVehicle(Owner.Base);
+
+        if (V != none)
+        {
+            if (Owner.IsA('DHVehicleCannon'))
+            {
+                bUseCannonSkinsArray = V.CannonSkins.Length > 0;
+            }
+            else if (Owner.IsA('DHVehicleMG'))
+            {
+                bMatchMGSkinToVehicle = DHVehicleMG(Owner).bMatchSkinToVehicle;
+            }
+        }
+    }
+
+    for (i = 0; i < Owner.Skins.Length; ++i)
+    {
+        if (bHide)
+        {
+            Owner.Skins[i] = Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha';
+        }
+        else if (bUseCannonSkinsArray && i < V.CannonSkins.Length && V.CannonSkins[i] != none)
+        {
+            Owner.Skins[i] = V.CannonSkins[i];
+        }
+        else if (bMatchMGSkinToVehicle && i == 0)
+        {
+            Owner.Skins[i] = V.Skins[i];
+        }
+        else
+        {
+            Owner.Skins[i] = Owner.default.Skins[i];
+        }
+    }
+}
+
 defaultproperties
 {
     RemoteRole=ROLE_None
-    bHidden=true
+    DrawType=DT_None // can't use bHidden=true because that stops the auto-trace system from registering the col mesh when player looks at it
     bWorldGeometry=false
     bStatic=false
     bHardAttach=true
+    bBlockKarma=false
+    bShadowCast=false
+    bStaticLighting=false
+    bUseDynamicLights=false
+    bAcceptsProjectors=false
+    bCanAutoTraceSelect=true // so player gets an enter vehicle message when looking at a vehicle weapon, not just its hull or base
+    bAutoTraceNotify=true
 }

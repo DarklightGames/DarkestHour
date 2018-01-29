@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHNetworkStatusMessage extends GUIPage;
@@ -45,7 +45,7 @@ defaultproperties
 {
     bIgnoreEsc=true
     bRequire640x480=false
-    OpenSound=sound'ROMenuSounds.Generic.msfxEdit'
+    OpenSound=Sound'ROMenuSounds.Generic.msfxEdit'
 
     Begin Object Class=GUIButton Name=NetStatBackground
         StyleName="SquareBar"

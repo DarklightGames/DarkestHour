@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_Sdkfz2341CannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
-    bNetTemporary=true // Matt: so is torn off straight after actor replication, like a bullet instead of a shell, due to volume of fire adding to net load (each shell is a net channel)
+    bNetTemporary=true // so is torn off straight after actor replication, like a bullet instead of a shell, due to volume of fire adding to net load (each shell is a net channel)
     MechanicalRanges(1)=(Range=100,RangeValue=33.0)
     MechanicalRanges(2)=(Range=200,RangeValue=37.0)
     MechanicalRanges(3)=(Range=300,RangeValue=41.0)
@@ -30,7 +30,7 @@ defaultproperties
     DHPenetrationTable(6)=0.3
     DHPenetrationTable(7)=0.1
     ShellDiameter=2.0
-    bIsAlliedShell=false
+    bDebugInImperial=false
     BlurTime=2.0
     BlurEffectScalar=0.9
     PenetrationMag=110.0
@@ -44,14 +44,13 @@ defaultproperties
     ShellHitWaterEffectClass=class'ROEffects.GrenadeExplosion'
     AmbientVolumeScale=2.0
     BallisticCoefficient=0.77
-    SpeedFudgeScale=0.75
     Speed=47075.0
     MaxSpeed=47075.0
     Damage=110.0
     MyDamageType=class'DH_Engine.DHShellHE20mmDamageType'
     ExplosionDecal=class'ROEffects.GrenadeMark'
     ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
-    StaticMesh=StaticMesh'EffectsSM.Weapons.Ger_Tracer'
+    StaticMesh=StaticMesh'EffectsSM.Weapons.Ger_Tracer' // static mesh shows as tracer so we see one, even thought HE shell inherits bHasTracer & has no CoronaClass
     AmbientSound=SoundGroup'DH_ProjectileSounds.Bullets.Bullet_Whiz'
     Tag="Sprgr.39"
     SoundRadius=350.0

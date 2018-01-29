@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_BritishTurtleHelmetNet extends DHHeadgear;
@@ -8,5 +8,5 @@ class DH_BritishTurtleHelmetNet extends DHHeadgear;
 defaultproperties
 {
     Mesh=SkeletalMesh'dhgear_anm.Brit_Turtle_Helmet'
-    Skins(0)=texture'DHBritishCharactersTex.Headgear.BritTurtleHelmet_net'
+    Skins(0)=Texture'DHBritishCharactersTex.Headgear.BritTurtleHelmet_net'
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_PIATAttachment extends DHRocketWeaponAttachment;
@@ -9,7 +9,7 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.PIAT_3rd'
     EmptyMesh=SkeletalMesh'DH_Weapons3rd_anm.PIAT_NoShell_3rd'
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.PIAT_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.PIAT_icon'
     bHeavy=true
     MuzzleBoneName="Muzzle"
 

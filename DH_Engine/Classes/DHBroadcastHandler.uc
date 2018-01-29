@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHBroadcastHandler extends ROBroadcastHandler;
@@ -91,7 +91,6 @@ event AllowBroadcastLocalized(
         {
             if (P == none ||
                 P.Pawn == none ||
-                P.Pawn.PlayerReplicationInfo == none ||
                 DHPlayerReplicationInfo(P.Pawn.PlayerReplicationInfo) == none ||
                 DHPlayerReplicationInfo(P.Pawn.PlayerReplicationInfo).RoleInfo == none)
             {
@@ -199,6 +198,71 @@ function Broadcast(Actor Sender, coerce string Msg, optional name Type)
         if (P != none)
         {
             BroadcastText(PRI, P, Msg, Type);
+        }
+    }
+}
+
+function BroadcastSquad(Controller Sender, coerce string Msg, optional name Type)
+{
+    local DarkestHourGame G;
+    local DHPlayerReplicationInfo PRI;
+    local DHPlayer PC;
+    local int i;
+    local array<DHPlayerReplicationInfo> SquadMembers;
+
+    if (!AllowsBroadcast(Sender, Len(Msg)))
+    {
+        return;
+    }
+
+    PC  = DHPlayer(Sender);
+
+    if (PC == none)
+    {
+        return;
+    }
+
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+    if (PRI == none)
+    {
+        return;
+    }
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none && G.SquadReplicationInfo != none)
+    {
+        G.SquadReplicationInfo.GetMembers(PC.GetTeamNum(), PRI.SquadIndex, SquadMembers);
+    }
+
+    if (bPartitionSpectators &&
+        PlayerController(Sender) != none &&
+        Type == 'SquadSay' &&
+        (PlayerController(Sender).IsDead() || Sender.PlayerReplicationInfo.bOnlySpectator || PlayerController(Sender).IsSpectating()))
+    {
+        Type = 'SquadSayDead';
+
+        for (i = 0; i < SquadMembers.Length; ++i)
+        {
+            PC = DHPlayer(SquadMembers[i].Owner);
+
+            if (PC != none && (PC.IsDead() || PC.IsSpectating()))
+            {
+                BroadcastText(Sender.PlayerReplicationInfo, PC, Msg, Type);
+            }
+        }
+    }
+    else
+    {
+        for (i = 0; i < SquadMembers.Length; ++i)
+        {
+            PC = DHPlayer(SquadMembers[i].Owner);
+
+            if (PC != none)
+            {
+                BroadcastText(Sender.PlayerReplicationInfo, PC, Msg, Type);
+            }
         }
     }
 }

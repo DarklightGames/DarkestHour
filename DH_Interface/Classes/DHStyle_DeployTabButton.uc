@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHStyle_DeployTabButton extends GUIStyles;
@@ -9,11 +9,11 @@ defaultproperties
 {
     KeyName="DHDeployTabButton"
 
-    Images(0)=texture'DH_GUI_tex.DeployMenu.button_normal'
-    Images(1)=texture'DH_GUI_tex.DeployMenu.button_normal'
-    Images(2)=texture'DH_GUI_tex.DeployMenu.button_normal'
-    Images(3)=texture'DH_GUI_tex.DeployMenu.button_normal'  //pressed
-    Images(4)=texture'DH_GUI_tex.DeployMenu.button_pressed'
+    Images(0)=Texture'DH_GUI_tex.DeployMenu.button_normal'
+    Images(1)=Texture'DH_GUI_tex.DeployMenu.button_normal'
+    Images(2)=Texture'DH_GUI_tex.DeployMenu.button_normal'
+    Images(3)=Texture'DH_GUI_tex.DeployMenu.button_normal'  //pressed
+    Images(4)=Texture'DH_GUI_tex.DeployMenu.button_pressed'
 
     ImgColors(0)=(R=255,G=255,B=255,A=255)
     ImgColors(1)=(R=255,G=255,B=255,A=255)

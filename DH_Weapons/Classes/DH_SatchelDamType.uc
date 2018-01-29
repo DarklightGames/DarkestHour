@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_SatchelDamType extends DHThrowableExplosiveDamageType
@@ -9,7 +9,7 @@ class DH_SatchelDamType extends DHThrowableExplosiveDamageType
 defaultproperties
 {
     WeaponClass=class'DH_Weapons.DH_SatchelCharge10lb10sWeapon'
-    HUDIcon=texture'InterfaceArt_tex.deathicons.satchel'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.satchel'
 
     VehicleDamageModifier=1.0
     APCDamageModifier=0.75  // was 1.0 in RO

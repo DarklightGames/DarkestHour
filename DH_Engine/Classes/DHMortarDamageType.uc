@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHMortarDamageType extends ROWeaponDamageType
@@ -8,7 +8,7 @@ class DHMortarDamageType extends ROWeaponDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt_tex.deathicons.artkill'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.artkill'
     TankDamageModifier=0.125
     APCDamageModifier=0.5
     VehicleDamageModifier=1.0

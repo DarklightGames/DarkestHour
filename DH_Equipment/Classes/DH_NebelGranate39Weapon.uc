@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_NebelGranate39Weapon extends DHExplosiveWeapon;
@@ -13,6 +13,6 @@ defaultproperties
     AttachmentClass=class'DH_Equipment.DH_NebelGranate39Attachment'
     ItemName="Nebelhandgranate 39"
     Mesh=SkeletalMesh'Axis_Granate_1st.German-Grenade-Mesh'
-    Skins(2)=texture'Weapons1st_tex.Grenades.StielGranate_smokenade'
+    Skins(2)=Texture'Weapons1st_tex.Grenades.StielGranate_smokenade'
     InventoryGroup=7
 }

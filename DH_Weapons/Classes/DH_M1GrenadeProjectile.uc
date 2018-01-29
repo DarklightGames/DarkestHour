@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_M1GrenadeProjectile extends DHGrenadeProjectile;
@@ -15,5 +15,4 @@ defaultproperties
     Damage=140.0
     DamageRadius=785.0
     Speed=1000.0
-    FuzeLengthTimer=4.0
 }

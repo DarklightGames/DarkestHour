@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_ShermanCannon extends DHVehicleCannon;
@@ -21,10 +21,10 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_ShermanM4A1_anm.Sherman75mm_turret_ext'
-    Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_body_ext'
-    Skins(1)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman76w_turret_ext'
-    Skins(2)=texture'DH_VehiclesUS_tex.int_vehicles.Sherman_turret_int'
-    Skins(3)=texture'DH_VehiclesUS_tex.int_vehicles.Sherman_body_int2'
+    Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_body_ext'
+    Skins(1)=Texture'DH_VehiclesUS_tex.ext_vehicles.Sherman76w_turret_ext'
+    Skins(2)=Texture'DH_VehiclesUS_tex.int_vehicles.Sherman_turret_int'
+    Skins(3)=Texture'DH_VehiclesUS_tex.int_vehicles.Sherman_body_int2'
     WeaponAttachOffset=(X=9.0,Y=-2.5,Z=0.0) // this is for M4A1; X=11.5 works better on M4A3 hull
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Sherman_turret_75mm_Coll'
 
@@ -52,9 +52,12 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanCannonShellHE'
     TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanCannonShellSmoke'
     ProjectileDescriptions(2)="Smoke"
-    InitialPrimaryAmmo=45
-    InitialSecondaryAmmo=40
-    InitialTertiaryAmmo=5
+    InitialPrimaryAmmo=40
+    InitialSecondaryAmmo=20
+    InitialTertiaryAmmo=4
+    MaxPrimaryAmmo=45
+    MaxSecondaryAmmo=40
+    MaxTertiaryAmmo=5
     SecondarySpread=0.00175
     TertiarySpread=0.0036
 
@@ -66,13 +69,15 @@ defaultproperties
     TracerProjectileClass=class'DH_Weapons.DH_30CalTracerBullet'
     TracerFrequency=5
 
+    // Smoke launcher
+    SmokeLauncherClass=class'DH_Vehicles.DH_TwoInchBombThrower'
+    SmokeLauncherFireOffset(0)=(X=23.0,Y=-36.0,Z=43.5)
+
     // Weapon fire
     WeaponFireOffset=18.0
     AddedPitch=68
     AltFireOffset=(X=-90.0,Y=-27.5,Z=-1.5)
     AltFireSpawnOffsetX=50.0
-    AltShakeRotMag=(X=0.01,Y=0.01,Z=0.01)
-    AltShakeRotRate=(X=1000.0,Y=1000.0,Z=1000.0)
 
     // Sounds
     CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
@@ -80,8 +85,8 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
-    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
-    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
 }

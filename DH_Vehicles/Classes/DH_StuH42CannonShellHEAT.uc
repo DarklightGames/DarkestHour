@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_StuH42CannonShellHEAT extends DHCannonShellHEAT;
@@ -46,7 +46,7 @@ defaultproperties
     DHPenetrationTable(9)=11.5
     DHPenetrationTable(10)=11.5
     ShellDiameter=10.5
-    bIsAlliedShell=false
+    bDebugInImperial=false
     CoronaClass=class'DH_Effects.DHShellTracer_OrangeLarge'
     ImpactDamage=650
     BallisticCoefficient=2.96

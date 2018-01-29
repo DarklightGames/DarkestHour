@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHWeaponAttachment extends ROWeaponAttachment
@@ -41,7 +41,7 @@ simulated function PostNetBeginPlay()
     }
 }
 
-// Modified to we spawn the hit effects from a replicated pre-launch trace, when a changed value of mHitLocation is received
+// Modified so we spawn the hit effects from a replicated pre-launch trace, when a changed value of mHitLocation is received
 // Now doing this here instead of letting ThirdPersonEffects() do it, as it does for other net modes, to solve a bug
 // Net client gets ThirdPersonEffects() called by native code before we have the new mHitLocation, so the effect used to spawn at the location of the last hit!
 // Also modified so non-owning net clients pick up changed value of bBarrelSteamActive here & it triggers toggling the steam emitter on/off
@@ -361,8 +361,41 @@ simulated function PlayDirectionalHit(Vector HitLoc)
 {
 }
 
+simulated function PlayIdle()
+{
+    if (bBayonetAttached)
+    {
+        if (bOutOfAmmo && WA_BayonetIdleEmpty != '')
+        {
+            LoopAnim(WA_BayonetIdleEmpty);
+        }
+        else if (WA_BayonetIdle != '')
+        {
+            LoopAnim(WA_BayonetIdle);
+        }
+    }
+    else
+    {
+        if (bOutOfAmmo && WA_IdleEmpty != '')
+        {
+            LoopAnim(WA_IdleEmpty);
+        }
+        else if (WA_Idle != '')
+        {
+            LoopAnim(WA_Idle);
+        }
+    }
+}
+
 defaultproperties
 {
+    // Changed as bOnlyDirtyReplication should only be used with actors that are bAlwaysRelevant & it causes problems here
+    // When true with a weapon attachment, it causes a bug where often the actor fails to be destroyed when the holding player stops being net relevant & is destroyed
+    // This 'orphaned' actor is no longer attached, then when the player becomes relevant again, his weapon attachment is not re-replicated & so continues to exist
+    // The orphaned attachment does not regain its Base actor (or Instigator or Owner, all of which should be the player pawn), so it stays unattached
+    // It cannot be seen because weapon attachments are bOnlyDrawIfAttached, so the viewer sees the player holding no weapon
+    bOnlyDirtyReplication=false
+
     CullDistance=8192.0 // 136m - was originally 4000 UU (approx 66m), but when the 3rd person weapon attachment gets culled, player's can't see a muzzle flash, which is important
     bNetNotify=true
     bSpawnShellsOutBottom=false

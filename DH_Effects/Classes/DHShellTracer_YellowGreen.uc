@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHShellTracer_YellowGreen extends DHShellTracer;
@@ -11,5 +11,5 @@ class DHShellTracer_YellowGreen extends DHShellTracer;
 defaultproperties
 {
     MaximumDrawScale=0.2
-    Texture=texture'Effects_Tex.Weapons.Russ_Flare_Final'
+    Texture=Texture'Effects_Tex.Weapons.Russ_Flare_Final'
 }

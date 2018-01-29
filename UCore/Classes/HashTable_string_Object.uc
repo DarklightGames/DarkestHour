@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 // http://algs4.cs.princeton.edu/34hash/LinearProbingHashST.java.html
 //==============================================================================
@@ -67,7 +67,10 @@ private function Resize(int Capacity)
 
     for (i = 0; i < Keys.Length; ++i)
     {
-        T.Put(Keys[i], Values[i]);
+        if (Keys[i] != "")
+        {
+            T.Put(Keys[i], Values[i]);
+        }
     }
 
     Keys = T.Keys;

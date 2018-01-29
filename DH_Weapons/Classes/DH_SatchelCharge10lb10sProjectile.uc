@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_SatchelCharge10lb10sProjectile extends DHThrowableExplosiveProjectile; // incorporating SatchelCharge10lb10sProjectile & ROSatchelChargeProjectile
@@ -75,16 +75,15 @@ defaultproperties
     CollisionRadius=4.0
     CollisionHeight=4.0
 
-    FuzeLengthTimer=15.0
     Speed=300.0
-    Damage=550.0 // was 600 in 5.1
-    DamageRadius=500.0 // was 725.0 in 5.1
+    Damage=600.0
+    DamageRadius=725.0
     MyDamageType=class'DH_Weapons.DH_SatchelDamType'
 
     ExplosionSoundRadius=4000.0
-    ExplosionSound(0)=sound'Inf_Weapons.satchel.satchel_explode01'
-    ExplosionSound(1)=sound'Inf_Weapons.satchel.satchel_explode02'
-    ExplosionSound(2)=sound'Inf_Weapons.satchel.satchel_explode03'
+    ExplosionSound(0)=Sound'Inf_Weapons.satchel.satchel_explode01'
+    ExplosionSound(1)=Sound'Inf_Weapons.satchel.satchel_explode02'
+    ExplosionSound(2)=Sound'Inf_Weapons.satchel.satchel_explode03'
     ExplodeDirtEffectClass=class'ROEffects.ROSatchelExplosion'
     ExplodeSnowEffectClass=class'ROEffects.ROSatchelExplosion'
     ExplodeMidAirEffectClass=class'ROEffects.ROSatchelExplosion'

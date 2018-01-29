@@ -1,33 +1,64 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHGameReplicationInfo extends ROGameReplicationInfo;
 
+const RADIOS_MAX = 10;
+const ROLES_MAX = 16;
+const MORTAR_TARGETS_MAX = 2;
+const VEHICLE_POOLS_MAX = 32;
+const SPAWN_POINTS_MAX = 63;
+const OBJECTIVES_MAX = 32;
+const CONSTRUCTION_CLASSES_MAX = 32;
+const VOICEID_MAX = 255;
+const SUPPLY_POINTS_MAX = 8;
+const MAP_MARKERS_MAX = 20;
+const MAP_MARKERS_CLASSES_MAX = 16;
+
+enum VehicleReservationError
+{
+    ERROR_None,
+    ERROR_Fatal,
+    ERROR_InvalidCredentials,
+    ERROR_TeamMaxActive,
+    ERROR_PoolOutOfSpawns,
+    ERROR_PoolInactive,
+    ERROR_PoolMaxActive,
+    ERROR_NoReservations,
+    ERROR_NoSquad
+};
+
 struct ArtilleryTarget
 {
-    var bool                    bIsActive;
-    var DHPlayer                Controller;
-    var byte                    TeamIndex;
-    var vector                  Location;
-    var vector                  HitLocation;
-    var float                   Time;
-    var bool                    bIsSmoke;
+    var bool            bIsActive;
+    var DHPlayer        Controller;
+    var byte            TeamIndex;
+    var vector          Location;
+    var vector          HitLocation;
+    var float           Time;
+    var bool            bIsSmoke;   // TODO: convert to enum
 };
 
 struct SpawnVehicle
 {
+    var int             SpawnPointIndex;
     var int             VehiclePoolIndex;
     var Vehicle         Vehicle;
-    var int             LocationX;
-    var int             LocationY;
-    var byte            BlockFlags;
 };
 
-const RADIOS_MAX = 10;
+struct SupplyPoint
+{
+    var bool    bIsActive;
+    var DHConstructionSupplyAttachment Actor;
+    var byte    TeamIndex;
+    var vector  Location;   // (X,Y) is world location, (Z) is the yaw rotation
+};
 
-var string              CurrentGameType;
+var class<DHGameType>   GameType;
+
+var SupplyPoint         SupplyPoints[SUPPLY_POINTS_MAX];
 
 var ROArtilleryTrigger  CarriedAlliedRadios[RADIOS_MAX];
 var ROArtilleryTrigger  CarriedAxisRadios[RADIOS_MAX];
@@ -36,9 +67,12 @@ var int                 AlliedNationID;
 var int                 AlliesVictoryMusicIndex;
 var int                 AxisVictoryMusicIndex;
 
-var int                 RoundEndTime;  // Length of a round in seconds (this can be modified at real time unlike RoundDuration, which it replaces)
+var int                 RoundEndTime;       // Length of a round in seconds (this can be modified at real time unlike RoundDuration, which it replaces)
+var int                 RoundOverTime;      // The time stamp at which the round is over
+var int                 SpawningEnableTime; // When spawning for the round should be enabled (default: 0)
 
-const ROLES_MAX = 16;
+var int                 DHRoundLimit;       // Added this so that a changing round limit can be replicated to clients.
+var int                 DHRoundDuration;    // Added this so that a more flexible changing round duration can be replicated to clients (e.g change to unlimited)
 
 var DHRoleInfo          DHAxisRoles[ROLES_MAX];
 var DHRoleInfo          DHAlliesRoles[ROLES_MAX];
@@ -50,23 +84,18 @@ var byte                DHAxisRoleLimit[ROLES_MAX];
 var byte                DHAxisRoleBotCount[ROLES_MAX];
 var byte                DHAxisRoleCount[ROLES_MAX];
 
-const MORTAR_TARGETS_MAX = 2;
-
 // The maximum distance an artillery strike can be away from a marked target for
 // a hit indicator to show on the map
-var float ArtilleryTargetDistanceThreshold;
+var float               ArtilleryTargetDistanceThreshold;
 
-var ArtilleryTarget        AlliedArtilleryTargets[MORTAR_TARGETS_MAX];
-var ArtilleryTarget        GermanArtilleryTargets[MORTAR_TARGETS_MAX];
+var ArtilleryTarget     AlliedArtilleryTargets[MORTAR_TARGETS_MAX];
+var ArtilleryTarget     GermanArtilleryTargets[MORTAR_TARGETS_MAX];
 
 var int                 SpawnsRemaining[2];
 var float               AttritionRate[2];
 var float               CurrentAlliedToAxisRatio;
 
-// Vehicle pool and spawn point info is heavily fragmented due to the arbitrary variable size limit (255 bytes) that exists in UnrealScript
-const VEHICLE_POOLS_MAX = 32;
-
-//TODO: vehicle classes should have been made available in static data for client and server to read
+// TODO: vehicle classes should have been made available in static data for client and server to read
 var class<ROVehicle>    VehiclePoolVehicleClasses[VEHICLE_POOLS_MAX];
 var byte                VehiclePoolIsActives[VEHICLE_POOLS_MAX];
 var float               VehiclePoolNextAvailableTimes[VEHICLE_POOLS_MAX];
@@ -78,26 +107,41 @@ var byte                VehiclePoolIsSpawnVehicles[VEHICLE_POOLS_MAX];
 var byte                VehiclePoolReservationCount[VEHICLE_POOLS_MAX];
 var int                 VehiclePoolIgnoreMaxTeamVehiclesFlags;
 
-var byte                MaxTeamVehicles[2];
+var int                 MaxTeamVehicles[2];
 
-const SPAWN_POINTS_MAX = 48;
-
-var DHSpawnPoint        SpawnPoints[SPAWN_POINTS_MAX];
-var private byte        SpawnPointIsActives[SPAWN_POINTS_MAX];
-
-const SPAWN_VEHICLES_MAX = 8;
-
-var SpawnVehicle        SpawnVehicles[SPAWN_VEHICLES_MAX];
-
-const OBJECTIVES_MAX = 32;
+var DHSpawnPointBase    SpawnPoints[SPAWN_POINTS_MAX];
 
 var DHObjective         DHObjectives[OBJECTIVES_MAX];
 
-var bool                bUseDeathPenaltyCount;
+var bool                bIsInSetupPhase;
+var bool                bRoundIsOver;
 
 var localized string    ForceScaleText;
 var localized string    ReinforcementsInfiniteText;
-var localized string    DeathPenaltyText;
+
+var private array<string>   ConstructionClassNames;
+var class<DHConstruction>   ConstructionClasses[CONSTRUCTION_CLASSES_MAX];
+var DHConstructionManager   ConstructionManager;
+
+var bool                bAreConstructionsEnabled;
+var bool                bAllowAllChat;
+
+var byte                ServerHealth;
+
+// Map markers
+struct MapMarker
+{
+    var class<DHMapMarker> MapMarkerClass;
+    var byte LocationX;     // Quantized representation of 0.0..1.0
+    var byte LocationY;
+    var byte SquadIndex;    // The squad index that owns the marker, or -1 if team-wide
+    var int ExpiryTime;     // The expiry time, relative to ElapsedTime in GRI
+};
+
+var private array<string>               MapMarkerClassNames;
+var class<DHMapMarker>                  MapMarkerClasses[MAP_MARKERS_CLASSES_MAX];
+var MapMarker                           AxisMapMarkers[MAP_MARKERS_MAX];
+var MapMarker                           AlliesMapMarkers[MAP_MARKERS_MAX];
 
 replication
 {
@@ -127,17 +171,28 @@ replication
         VehiclePoolIsSpawnVehicles,
         VehiclePoolReservationCount,
         VehiclePoolIgnoreMaxTeamVehiclesFlags,
-        SpawnPointIsActives,
-        SpawnVehicles,
         MaxTeamVehicles,
         DHObjectives,
         AttritionRate,
-        bUseDeathPenaltyCount,
-        CurrentGameType,
-        CurrentAlliedToAxisRatio;
+        GameType,
+        CurrentAlliedToAxisRatio,
+        SpawnPoints,
+        SpawningEnableTime,
+        bIsInSetupPhase,
+        bRoundIsOver,
+        bAreConstructionsEnabled,
+        SupplyPoints,
+        AxisMapMarkers,
+        AlliesMapMarkers,
+        bAllowAllChat,
+        RoundOverTime,
+        DHRoundLimit,
+        DHRoundDuration,
+        ServerHealth;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))
-        AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex;
+        AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex,
+        ConstructionClasses, MapMarkerClasses;
 }
 
 // Modified to build SpawnPoints array
@@ -145,24 +200,13 @@ replication
 // Another problem is a big splash effect was being played for every ejected bullet shell case that hit water, looking totally wrong for such a small, relatively slow object
 simulated function PostBeginPlay()
 {
-    local DHSpawnPoint     SP;
-    local WaterVolume      WV;
-    local FluidSurfaceInfo FSI;
-    local int              i;
+    local WaterVolume       WV;
+    local FluidSurfaceInfo  FSI;
+    local int               i, j;
+    local DH_LevelInfo      LI;
+    local class<DHMapMarker> MapMarkerClass;
 
     super.PostBeginPlay();
-
-    foreach AllActors(class'DHSpawnPoint', SP)
-    {
-        if (i >= SPAWN_POINTS_MAX)
-        {
-            Warn("Number of DHSpawnPoint actors exceeds" @ SPAWN_POINTS_MAX @ ", some spawn points will be ignored!");
-
-            break;
-        }
-
-        SpawnPoints[i++] = SP;
-    }
 
     foreach AllActors(class'WaterVolume', WV)
     {
@@ -180,200 +224,236 @@ simulated function PostBeginPlay()
     foreach AllActors(class'FluidSurfaceInfo', FSI)
     {
         FSI.TouchEffect = none;
-        FSI.TouchEffect = none;
     }
-}
-
-// Modified to update replicated locations of any spawn vehicles, & for net client to check whether local local player has his weapons locked & it's now time to unlock them
-simulated event Timer()
-{
-    local int i;
-
-    super.Timer();
 
     if (Role == ROLE_Authority)
     {
-        for (i = 0; i < arraycount(SpawnVehicles); ++i)
+        for (i = 0; i < ConstructionClassNames.Length; ++i)
         {
-            if (SpawnVehicles[i].Vehicle != none)
+            AddConstructionClass(class<DHConstruction>(DynamicLoadObject(ConstructionClassNames[i], class'class')));
+        }
+
+        foreach AllActors(class'DH_LevelInfo', LI) // note can't use DHGame's DHLevelInfo reference as hasn't been set when GRI is spawning
+        {
+            bAreConstructionsEnabled = LI.bAreConstructionsEnabled;
+            break;
+        }
+
+        // Add usable map markers to the class list to be replicated!
+        j = 0;
+
+        for (i = 0; i < MapMarkerClassNames.Length; ++i)
+        {
+            MapMarkerClass = class<DHMapMarker>(DynamicLoadObject(MapMarkerClassNames[i], class'class'));
+
+            if (MapMarkerClass != none && MapMarkerClass.static.CanBeUsed(self))
             {
-                SpawnVehicles[i].LocationX = SpawnVehicles[i].Vehicle.Location.X;
-                SpawnVehicles[i].LocationY = SpawnVehicles[i].Vehicle.Location.Y;
+                MapMarkerClasses[j++] = MapMarkerClass;
             }
         }
     }
-    else if (DHPlayer(Level.GetLocalPlayerController()) != none)
+}
+
+function int AddConstructionClass(class<DHConstruction> ConstructionClass)
+{
+    local int i;
+
+    if (ConstructionClass != none)
+    {
+        for (i = 0; i < arraycount(ConstructionClasses); ++i)
+        {
+            if (ConstructionClasses[i] == none)
+            {
+                ConstructionClasses[i] = ConstructionClass;
+                return i;
+            }
+        }
+    }
+
+    return -1;
+}
+
+// Modified for net client to check whether local local player has his weapons locked & it's now time to unlock them
+simulated event Timer()
+{
+    super.Timer();
+
+    if (Role < ROLE_Authority && DHPlayer(Level.GetLocalPlayerController()) != none)
     {
         DHPlayer(Level.GetLocalPlayerController()).CheckUnlockWeapons();
     }
 }
 
-//------------------------------------------------------------------------------
-// Spawn Point Functions
-//------------------------------------------------------------------------------
+//==============================================================================
+// Supply Points
+//==============================================================================
 
-simulated function bool IsSpawnPointIndexActive(byte SpawnPointIndex)
+function int AddSupplyPoint(DHConstructionSupplyAttachment CSA)
 {
-    return SpawnPointIsActives[SpawnPointIndex] != 0;
-}
+    local int i;
 
-simulated function bool IsSpawnPointActive(DHSpawnPoint SP)
-{
-    return IsSpawnPointIndexActive(GetSpawnPointIndex(SP));
-}
-
-function SetSpawnPointIsActive(byte SpawnPointIndex, bool bIsActive)
-{
-    local Controller C;
-    local DHPlayer PC;
-
-    SpawnPointIsActives[SpawnPointIndex] = byte(bIsActive);
-
-    if (!bIsActive)
+    if (CSA != none)
     {
-        for (C = Level.ControllerList; C != none; C = C.NextController)
+        for (i = 0; i < arraycount(SupplyPoints); ++i)
         {
-            PC = DHPlayer(C);
-
-            if (PC != none && PC.SpawnPointIndex == SpawnPointIndex)
+            if (SupplyPoints[i].Actor == none)
             {
-                PC.SpawnPointIndex = 255;
-                PC.bSpawnPointInvalidated = true;
+                SupplyPoints[i].bIsActive = true;
+                SupplyPoints[i].Actor = CSA;
+                SupplyPoints[i].TeamIndex = CSA.GetTeamIndex();
+                SupplyPoints[i].Location.X = CSA.Location.X;
+                SupplyPoints[i].Location.Y = CSA.Location.Y;
+                SupplyPoints[i].Location.Z = CSA.Rotation.Yaw;
+                return i;
+            }
+        }
+    }
+
+    return -1;
+}
+
+function RemoveSupplyPoint(DHConstructionSupplyAttachment CSA)
+{
+    local int i;
+
+    if (CSA != none)
+    {
+        for (i = 0; i < arraycount(SupplyPoints); ++i)
+        {
+            if (SupplyPoints[i].Actor == CSA)
+            {
+                SupplyPoints[i].bIsActive = false;
+                SupplyPoints[i].Actor = none;
+                break;
             }
         }
     }
 }
 
-simulated function byte GetSpawnPointIndex(DHSpawnPoint SP)
+//==============================================================================
+// Spawn Points
+//==============================================================================
+
+simulated function int AddSpawnPoint(DHSpawnPointBase SP)
 {
     local int i;
 
+    if (SP == none)
+    {
+        return -1;
+    }
+
     for (i = 0; i < arraycount(SpawnPoints); ++i)
     {
-        if (SpawnPoints[i] == SP)
+        if (SP == SpawnPoints[i])
         {
+            return -1;
+        }
+    }
+
+    for (i = 0; i < arraycount(SpawnPoints); ++i)
+    {
+        if (SpawnPoints[i] == none)
+        {
+            SpawnPoints[i] = SP;
             return i;
         }
     }
 
-    Warn("Spawn point index could not be resolved");
-
-    return 255;
+    return -1;
 }
 
-simulated function GetActiveSpawnPointsForTeam(out array<DHSpawnPoint> SpawnPoints_, byte TeamIndex)
+simulated function DHSpawnPointBase GetSpawnPoint(int SpawnPointIndex)
 {
-    local int i;
-
-    for (i = 0; i < arraycount(SpawnPoints); ++i)
+    if (SpawnPointIndex < 0 || SpawnPointIndex >= arraycount(SpawnPoints))
     {
-        if (SpawnPoints[i] != none &&
-            SpawnPoints[i].TeamIndex == TeamIndex &&
-            SpawnPointIsActives[i] != 0)
-        {
-            SpawnPoints_[SpawnPoints_.Length] = SpawnPoints[i];
-        }
+        return none;
     }
+
+    return SpawnPoints[SpawnPointIndex];
 }
 
-// Colin: The rules for spawn point availability are a little bit
-// complicated, so here's a run-down:
-//
-// Players not spawning vehicles can spawn at any spawn point marked as
-// SPT_Infantry.
-//
-// Mortar operators can use any spawn point marked as SPT_Mortar.
-//
-// Vehicles can be spawned at any spawn point marked as SPT_Vehicles.
-//
-// Tank crewmen not spawning tanks can use any spawn point marked as
-// SPT_Vehicle (so that vehicle crews can spawn together)
-simulated function bool IsSpawnPointIndexValid(byte SpawnPointIndex, byte TeamIndex, DHRoleInfo RI, class<Vehicle> VehicleClass)
+simulated function bool IsRallyPointIndexValid(DHPlayer PC, byte RallyPointIndex, int TeamIndex)
 {
-    local DHSpawnPoint     SP;
-    local class<ROVehicle> V;
+    local DHSpawnPoint_SquadRallyPoint RP;
+    local DHPlayerReplicationInfo PRI;
 
-    // Valid index?
-    if (SpawnPointIndex >= SPAWN_POINTS_MAX)
-    {
-        return false; //Not valid index
-    }
-
-    // Is spawn point active
-    if (!IsSpawnPointIndexActive(SpawnPointIndex))
-    {
-        return false; //Not active
-    }
-
-    // Is spawn point for the correct team
-    SP = SpawnPoints[SpawnPointIndex];
-
-    if (SP.TeamIndex != TeamIndex)
+    if (PC == none || PC.SquadReplicationInfo == none)
     {
         return false;
     }
 
-    if (RI == none)
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+    RP = PC.SquadReplicationInfo.RallyPoints[RallyPointIndex];
+
+    if (RP == none || PRI == none || PRI.Team.TeamIndex != RP.GetTeamIndex() || PRI.SquadIndex != RP.SquadIndex)
     {
         return false;
     }
 
-    // If the player is mortar crew & the SP is a mortar spawn (or allows any type of spawn) then it's a valid SP for him
-    if (RI.default.bCanUseMortars && SP.CanSpawnMortars())
-    {
-        return true;
-    }
-
-    // If player is trying to spawn into a vehicle then SP is valid if it can either spawn any vehicle type, or can spawn infantry vehicles & one has been selected
-    // Also check the vehicle is the correct team, but that's just a fail-safe
-    if (VehicleClass != none)
-    {
-        V = class<ROVehicle>(VehicleClass);
-
-        return V != none && (SP.CanSpawnVehicles() || (SP.CanSpawnInfantryVehicles() && !V.default.bMustBeTankCommander)) && SP.TeamIndex == V.default.VehicleTeam;
-    }
-
-    // Otherwise the player is trying to spawn on foot, so the SP is valid if it allows that
-    // Plus special exception to allow tank crewmen to spawn on foot at a vehicle SP, so that tank crews can spawn together
-    return SP.CanSpawnInfantry() || (RI.default.bCanBeTankCrew && SP.CanSpawnVehicles());
+    return true;
 }
 
-simulated function bool AreSpawnSettingsValid(byte Team, DHRoleInfo RI, byte SpawnPointIndex, byte VehiclePoolIndex, byte SpawnVehicleIndex)
+simulated function bool CanSpawnWithParameters(int SpawnPointIndex, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck)
 {
-    local class<Vehicle> VehicleClass;
+    local DHSpawnPointBase SP;
+    local class<DHVehicle> VehicleClass;
 
-    // Determine what we are trying to spawn as
-    if (SpawnPointIndex == 255 && VehiclePoolIndex == 255 && SpawnVehicleIndex != 255)
+    if (VehiclePoolIndex != -1)
     {
-        // Trying to spawn at spawn vehicle
-        if (CanSpawnAtVehicle(Team, SpawnVehicleIndex))
-        {
-            return true;
-        }
-    }
-    else if (SpawnPointIndex != 255 && VehiclePoolIndex == 255 && SpawnVehicleIndex == 255)
-    {
-        // Trying to spawn as Infantry at a SP
-        if (IsSpawnPointIndexValid(SpawnPointIndex, Team, RI, none))
-        {
-            return true;
-        }
-    }
-    else if (SpawnPointIndex != 255 && VehiclePoolIndex != 255 && SpawnVehicleIndex == 255)
-    {
-        // Trying to spawn a vehicle
-        if (IsVehiclePoolIndexValid(RI, VehiclePoolIndex))
-        {
-            VehicleClass = VehiclePoolVehicleClasses[VehiclePoolIndex];
+        VehicleClass = class<DHVehicle>(GetVehiclePoolVehicleClass(VehiclePoolIndex));
 
-            if (IsSpawnPointIndexValid(SpawnPointIndex, Team, RI, VehicleClass))
-            {
-                return true;
-            }
+        if (VehicleClass == none ||
+            VehicleClass.default.bMustBeInSquadToSpawn && SquadIndex == -1 ||
+            !CanSpawnVehicle(VehiclePoolIndex, bSkipTimeCheck))
+        {
+            return false;
         }
     }
 
-    return false;
+    SP = GetSpawnPoint(SpawnPointIndex);
+
+    return SP != none && SP.CanSpawnWithParameters(self, TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex, bSkipTimeCheck);
+}
+
+simulated function bool CanSpawnVehicle(int VehiclePoolIndex, optional bool bSkipTimeCheck)
+{
+    local class<ROVehicle> VC;
+
+    if (VehiclePoolIndex < 0 || VehiclePoolIndex >= VEHICLE_POOLS_MAX)
+    {
+        return false;
+    }
+
+    VC = VehiclePoolVehicleClasses[VehiclePoolIndex];
+
+    if (!IgnoresMaxTeamVehiclesFlags(VehiclePoolIndex) && MaxTeamVehicles[VC.default.VehicleTeam] <= 0)
+    {
+        return false;
+    }
+
+    if (!IsVehiclePoolActive(VehiclePoolIndex))
+    {
+        return false;
+    }
+
+    if (!bSkipTimeCheck && ElapsedTime < VehiclePoolNextAvailableTimes[VehiclePoolIndex])
+    {
+        return false;
+    }
+
+    if (VehiclePoolSpawnCounts[VehiclePoolIndex] >= VehiclePoolMaxSpawns[VehiclePoolIndex])
+    {
+        return false;
+    }
+
+    if (VehiclePoolActiveCounts[VehiclePoolIndex] >= VehiclePoolMaxActives[VehiclePoolIndex])
+    {
+        return false;
+    }
+
+    return true;
 }
 
 //------------------------------------------------------------------------------
@@ -399,7 +479,7 @@ function SetVehiclePoolIsActive(byte VehiclePoolIndex, bool bIsActive)
 
             if (PC != none && PC.VehiclePoolIndex == VehiclePoolIndex)
             {
-                PC.VehiclePoolIndex = 255;
+                PC.VehiclePoolIndex = -1;
                 PC.bSpawnPointInvalidated = true;
             }
         }
@@ -416,48 +496,9 @@ simulated function bool IsVehiclePoolActive(byte VehiclePoolIndex)
     return VehiclePoolIsActives[VehiclePoolIndex] != 0;
 }
 
-simulated function bool IsVehiclePoolIndexValid(RORoleInfo RI, byte VehiclePoolIndex)
-{
-    local class<ROVehicle> VehicleClass;
-
-    if (RI == none)
-    {
-        return false;
-    }
-
-    if (VehiclePoolIndex >= arraycount(VehiclePoolVehicleClasses))
-    {
-        return false;
-    }
-
-    if (!IsVehiclePoolActive(VehiclePoolIndex))
-    {
-        return false;
-    }
-
-    VehicleClass = VehiclePoolVehicleClasses[VehiclePoolIndex];
-
-    if (VehicleClass == none)
-    {
-        return false;
-    }
-
-    if (VehicleClass.default.bMustBeTankCommander && !RI.bCanBeTankCrew)
-    {
-        return false;
-    }
-
-    if (VehicleClass.default.VehicleTeam != RI.Side)
-    {
-        return false;
-    }
-
-    return true;
-}
-
 simulated function byte GetVehiclePoolSpawnsRemaining(byte VehiclePoolIndex)
 {
-    if (VehiclePoolMaxSpawns[VehiclePoolIndex] == 255)
+    if (IsVehiclePoolInfinite(VehiclePoolIndex))
     {
         return 255;
     }
@@ -465,9 +506,9 @@ simulated function byte GetVehiclePoolSpawnsRemaining(byte VehiclePoolIndex)
     return VehiclePoolMaxSpawns[VehiclePoolIndex] - VehiclePoolSpawnCounts[VehiclePoolIndex];
 }
 
-simulated function class<Vehicle> GetVehiclePoolVehicleClass(byte VehiclePoolIndex)
+simulated function class<Vehicle> GetVehiclePoolVehicleClass(int VehiclePoolIndex)
 {
-    if (VehiclePoolIndex == 255 || VehiclePoolIndex >= arraycount(VehiclePoolVehicleClasses))
+    if (VehiclePoolIndex == -1 || VehiclePoolIndex >= arraycount(VehiclePoolVehicleClasses))
     {
         return none;
     }
@@ -487,39 +528,16 @@ simulated function byte GetVehiclePoolAvailableReservationCount(int VehiclePoolI
     return Min(VehiclePoolSpawnsRemaning, (MaxActive - Active) - ReservationCount);
 }
 
-simulated function bool IsVehiclePoolReservable(DHPlayer PC, DHRoleInfo RI, int VehiclePoolIndex)
+function bool ReserveVehicle(DHPlayer PC, int VehiclePoolIndex)
 {
-    if (PC == none || (PC.Pawn != none && PC.Pawn.Health > 0))
-    {
-        // Alive players cannot reserve vehicles
-        return false;
-    }
-
-    if (!IsVehiclePoolIndexValid(RI, VehiclePoolIndex))
-    {
-        // Invalid vehicle pool specified
-        return false;
-    }
-
-    if (GetVehiclePoolAvailableReservationCount(VehiclePoolIndex) <= 0)
-    {
-        // All available vehicles have been reserved
-        return false;
-    }
-
-    return true;
-}
-
-function bool ReserveVehicle(DHPlayer PC, byte VehiclePoolIndex)
-{
-    if (VehiclePoolIndex != 255 && !IsVehiclePoolReservable(PC, DHRoleInfo(PC.GetRoleInfo()), VehiclePoolIndex))
+    if (PC == none || VehiclePoolIndex != -1 && GetVehicleReservationError(PC, DHRoleInfo(PC.GetRoleInfo()), PC.GetTeamNum(), VehiclePoolIndex) != ERROR_None)
     {
         return false;
     }
 
     PC.VehiclePoolIndex = VehiclePoolIndex;
 
-    if (VehiclePoolIndex != 255)
+    if (VehiclePoolIndex != -1)
     {
         ++VehiclePoolReservationCount[VehiclePoolIndex];
     }
@@ -529,134 +547,12 @@ function bool ReserveVehicle(DHPlayer PC, byte VehiclePoolIndex)
 
 function UnreserveVehicle(DHPlayer PC)
 {
-    if (PC.VehiclePoolIndex != 255)
+    if (PC.VehiclePoolIndex != -1)
     {
         --VehiclePoolReservationCount[PC.VehiclePoolIndex];
     }
 
-    PC.VehiclePoolIndex = 255;
-}
-
-//------------------------------------------------------------------------------
-// Spawn Vehicle Functions
-//------------------------------------------------------------------------------
-
-function int AddSpawnVehicle(int VehiclePoolIndex, Vehicle V)
-{
-    local int i;
-
-    // Ensure this vehicle doesn't yet exist in the array
-    for (i = 0; i < arraycount(SpawnVehicles); ++i)
-    {
-        if (SpawnVehicles[i].Vehicle == V)
-        {
-            // Vehicle already exists in the array
-            return i;
-        }
-    }
-
-    // Find an empty place to put the vehicle in the array
-    for (i = 0; i < arraycount(SpawnVehicles); ++i)
-    {
-        if (SpawnVehicles[i].Vehicle == none)
-        {
-            SpawnVehicles[i].VehiclePoolIndex = VehiclePoolIndex;
-            SpawnVehicles[i].LocationX = V.Location.X;
-            SpawnVehicles[i].LocationY = V.Location.Y;
-            SpawnVehicles[i].Vehicle = V;
-            SpawnVehicles[i].BlockFlags = class'DHSpawnManager'.default.BlockFlags_None;
-
-            // Vehicle was successfully added
-            return i;
-        }
-    }
-
-    Warn("Spawn vehicle (" $ V.Class $ ") could not be initialized.");
-
-    // No empty spaces, cannot add to SpawnVehicles
-    return -1;
-}
-
-function bool RemoveSpawnVehicle(Vehicle V)
-{
-    local int i;
-    local Controller C;
-    local DHPlayer PC;
-
-    for (i = 0; i < arraycount(SpawnVehicles); ++i)
-    {
-        if (SpawnVehicles[i].Vehicle == V)
-        {
-            SpawnVehicles[i].LocationX = 0;
-            SpawnVehicles[i].LocationY = 0;
-            SpawnVehicles[i].VehiclePoolIndex = -1;
-            SpawnVehicles[i].Vehicle = none;
-            SpawnVehicles[i].BlockFlags = class'DHSpawnManager'.default.BlockFlags_None;
-
-            for (C = Level.ControllerList; C != none; C = C.NextController)
-            {
-                PC = DHPlayer(C);
-
-                if (PC != none && PC.SpawnVehicleIndex == i)
-                {
-                    PC.SpawnVehicleIndex = 255;
-                    PC.bSpawnPointInvalidated = true;
-                }
-            }
-
-            return true;
-        }
-    }
-
-    return false;
-}
-
-simulated function bool CanSpawnAtVehicle(byte Team, byte Index)
-{
-    if (Index >= arraycount(SpawnVehicles) ||
-        SpawnVehicles[Index].VehiclePoolIndex < 0 ||
-        VehiclePoolVehicleClasses[SpawnVehicles[Index].VehiclePoolIndex].default.VehicleTeam != Team ||
-        SpawnVehicles[Index].BlockFlags != class'DHSpawnManager'.default.BlockFlags_None)
-    {
-        return false;
-    }
-
-    return true;
-}
-
-simulated function GetActiveSpawnVehicleIndices(byte Team, out array<int> Indices)
-{
-    local int i;
-
-    Indices.Length = 0;
-
-    for (i = 0; i < arraycount(SpawnVehicles); ++i)
-    {
-        if (CanSpawnAtVehicle(Team, i))
-        {
-            Indices[Indices.Length] = i;
-        }
-    }
-}
-
-// Finds the matching VehicleClass but also check the bIsSpawnVehicle setting also matches
-// Vital as same VehicleClass may well be in the vehicles list twice, with one being a spawn vehicle & the other the ordinary version, e.g. a half-track & a spawn vehicle HT
-simulated function byte GetVehiclePoolIndex(Vehicle V)
-{
-    local int i;
-
-    if (V != none)
-    {
-        for (i = 0; i < arraycount(VehiclePoolVehicleClasses); ++i)
-        {
-            if (V.Class == VehiclePoolVehicleClasses[i] && !(DHVehicle(V) != none && DHVehicle(V).bIsSpawnVehicle != bool(VehiclePoolIsSpawnVehicles[i])))
-            {
-                return i;
-            }
-        }
-    }
-
-    return 255;
+    PC.VehiclePoolIndex = -1;
 }
 
 simulated function bool IgnoresMaxTeamVehiclesFlags(int VehiclePoolIndex)
@@ -673,7 +569,25 @@ simulated function bool IgnoresMaxTeamVehiclesFlags(int VehiclePoolIndex)
 // Roles
 //------------------------------------------------------------------------------
 
-simulated function int GetRoleIndexAndTeam(RORoleInfo RI, out byte Team)
+simulated function DHRoleInfo GetRole(int TeamIndex, int RoleIndex)
+{
+    if (RoleIndex < 0 || RoleIndex >= arraycount(DHAxisRoles))
+    {
+        return none;
+    }
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            return DHAxisRoles[RoleIndex];
+        case ALLIES_TEAM_INDEX:
+            return DHAlliesRoles[RoleIndex];
+    }
+
+    return none;
+}
+
+simulated function int GetRoleIndexAndTeam(RORoleInfo RI, optional out byte Team)
 {
     local int i;
 
@@ -728,6 +642,10 @@ simulated function GetRoleCounts(RORoleInfo RI, out int Count, out int BotCount,
             break;
     }
 }
+
+//------------------------------------------------------------------------------
+// Artillery Functions
+//------------------------------------------------------------------------------
 
 function ClearAllArtilleryTargets()
 {
@@ -840,6 +758,10 @@ function RemoveCarriedRadioTrigger(ROArtilleryTrigger AT)
     }
 }
 
+//------------------------------------------------------------------------------
+// Overhead Map Help Request Functions
+//------------------------------------------------------------------------------
+
 // Modified to avoid "accessed none" errors on PRI.Team
 function AddRallyPoint(PlayerReplicationInfo PRI, vector NewLoc, optional bool bRemoveFromList)
 {
@@ -895,19 +817,30 @@ function RemoveMGResupplyRequestFor(PlayerReplicationInfo PRI)
     }
 }
 
-simulated function byte GetSpawnVehicleBlockFlags(Vehicle V)
+//------------------------------------------------------------------------------
+// Miscellaneous Functions
+//------------------------------------------------------------------------------
+// New helper function to calculate the round time remaining
+// Avoids re-stating this logic in various functionality that display time remaining, e.g. scoreboard, overhead map, deploy screen & spectator HUD
+simulated function int GetRoundTimeRemaining()
 {
-    local int i;
+    local int SecondsRemaining;
 
-    for (i = 0; i < arraycount(SpawnVehicles); ++i)
+    if (bMatchHasBegun)
     {
-        if (SpawnVehicles[i].Vehicle == V)
+        SecondsRemaining = RoundEndTime - ElapsedTime;
+
+        if (bRoundIsOver)
         {
-            return SpawnVehicles[i].BlockFlags;
+            SecondsRemaining = RoundOverTime;
         }
     }
+    else
+    {
+        SecondsRemaining = RoundStartTime + PreStartTime - ElapsedTime;
+    }
 
-    return class'DHSpawnManager'.default.BlockFlags_None;
+    return Max(0, SecondsRemaining);
 }
 
 simulated function string GetTeamScaleString(int Team)
@@ -937,13 +870,489 @@ simulated function string GetTeamScaleString(int Team)
    }
 }
 
+// Modified to allow VoiceID to be greater than 32
+simulated function AddPRI(PlayerReplicationInfo PRI)
+{
+    local byte      NewVoiceID;
+    local int       i;
+
+    if (Level.NetMode == NM_ListenServer || Level.NetMode == NM_DedicatedServer)
+    {
+        for (i = 0; i < PRIArray.Length; ++i)
+        {
+            if (PRIArray[i].VoiceID == NewVoiceID)
+            {
+                i = -1;
+                ++NewVoiceID;
+                continue;
+            }
+        }
+
+        if (NewVoiceID >= VOICEID_MAX)
+        {
+            NewVoiceID = 0;
+        }
+
+        PRI.VoiceID = NewVoiceID;
+    }
+
+    PRIArray[PRIArray.Length] = PRI;
+}
+
+simulated function int GetTankReservationCount(int TeamIndex)
+{
+    local int i, Count;
+
+    for (i = 0; i < arraycount(VehiclePoolReservationCount); ++i)
+    {
+        if (VehiclePoolVehicleClasses[i] != none &&
+            VehiclePoolVehicleClasses[i].default.VehicleTeam == TeamIndex &&
+            !IgnoresMaxTeamVehiclesFlags(i))
+        {
+            Count += VehiclePoolReservationCount[i];
+        }
+    }
+
+    return Count;
+}
+
+simulated function int GetReservableTankCount(int TeamIndex)
+{
+    return MaxTeamVehicles[TeamIndex] - GetTankReservationCount(TeamIndex);
+}
+
+simulated function VehicleReservationError GetVehicleReservationError(DHPlayer PC, DHRoleInfo RI, int TeamIndex, int VehiclePoolIndex)
+{
+    local class<DHVehicle> VC;
+
+    VC = class<DHVehicle>(GetVehiclePoolVehicleClass(VehiclePoolIndex));
+
+    if (PC == none || RI == none || VC == none || (TeamIndex != AXIS_TEAM_INDEX && TeamIndex != ALLIES_TEAM_INDEX) || (PC.Pawn != none && PC.Pawn.Health > 0) || VC.default.VehicleTeam != RI.Side)
+    {
+        return ERROR_Fatal;
+    }
+
+    if (!RI.default.bCanBeTankCrew && VC.default.bMustBeTankCommander)
+    {
+        return ERROR_InvalidCredentials;
+    }
+
+    if (GetVehiclePoolSpawnsRemaining(VehiclePoolIndex) <= 0)
+    {
+        return ERROR_PoolOutOfSpawns;
+    }
+
+    if (!IsVehiclePoolActive(VehiclePoolIndex))
+    {
+        return ERROR_PoolInactive;
+    }
+
+    if (VehiclePoolActiveCounts[VehiclePoolIndex] >= VehiclePoolMaxActives[VehiclePoolIndex])
+    {
+        return ERROR_PoolMaxActive;
+    }
+
+    if (GetVehiclePoolAvailableReservationCount(VehiclePoolIndex) <= 0)
+    {
+        return ERROR_NoReservations;
+    }
+
+    if (VC.default.bMustBeInSquadToSpawn && !PC.IsInSquad())
+    {
+        return ERROR_NoSquad;
+    }
+
+    if (!IgnoresMaxTeamVehiclesFlags(VehiclePoolIndex) && GetReservableTankCount(TeamIndex) <= 0)
+    {
+        return ERROR_TeamMaxActive;
+    }
+
+    return ERROR_None;
+}
+
+// Overridden to undo the exclusion of players who hadn't yet selected a role.
+simulated function GetTeamSizes(out int TeamSizes[2])
+{
+    local int i;
+    local PlayerReplicationInfo PRI;
+
+    TeamSizes[AXIS_TEAM_INDEX] = 0;
+    TeamSizes[ALLIES_TEAM_INDEX] = 0;
+
+    for (i = 0; i < PRIArray.Length; ++i)
+    {
+        PRI = PRIArray[i];
+
+        if (PRI != none &&
+            PRI.Team != none &&
+            (PRI.Team.TeamIndex == AXIS_TEAM_INDEX || PRI.Team.TeamIndex == ALLIES_TEAM_INDEX))
+        {
+            ++TeamSizes[PRI.Team.TeamIndex];
+        }
+    }
+}
+
+//==============================================================================
+// MAP MARKERS
+//==============================================================================
+
+simulated function GetMapMarkers(out array<MapMarker> MapMarkers, out array<int> Indices, int TeamIndex, int SquadIndex)
+{
+    local int i;
+
+    GetMapMarkerIndices(Indices, TeamIndex, SquadIndex);
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            for (i = 0; i < Indices.Length; ++i)
+            {
+                MapMarkers[MapMarkers.Length] = AxisMapMarkers[Indices[i]];
+            }
+            break;
+        case ALLIES_TEAM_INDEX:
+            for (i = 0; i < Indices.Length; ++i)
+            {
+                MapMarkers[MapMarkers.Length] = AlliesMapMarkers[Indices[i]];
+            }
+            break;
+    }
+}
+
+simulated function GetMapMarkerIndices(out array<int> Indices, int TeamIndex, int SquadIndex)
+{
+    local int i;
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            for (i = 0; i < arraycount(AxisMapMarkers); ++i)
+            {
+                if (AxisMapMarkers[i].MapMarkerClass != none &&
+                    (AxisMapMarkers[i].ExpiryTime == -1 || AxisMapMarkers[i].ExpiryTime > ElapsedTime) &&
+                    (AxisMapMarkers[i].SquadIndex == 255 || AxisMapMarkers[i].SquadIndex == SquadIndex))
+                {
+                    Indices[Indices.Length] = i;
+                }
+            }
+            break;
+        case ALLIES_TEAM_INDEX:
+            for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
+            {
+                if (AlliesMapMarkers[i].MapMarkerClass != none &&
+                    (AlliesMapMarkers[i].ExpiryTime == -1 || AlliesMapMarkers[i].ExpiryTime > ElapsedTime) &&
+                    (AlliesMapMarkers[i].SquadIndex == 255 || AlliesMapMarkers[i].SquadIndex == SquadIndex))
+                {
+                    Indices[Indices.Length] = i;
+                }
+            }
+            break;
+    }
+}
+
+function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMarkerClass, vector MapLocation)
+{
+    local int i;
+    local MapMarker M;
+
+    if (PRI == none || PRI.Team == none || !PRI.IsSquadLeader() || MapMarkerClass == none || !MapMarkerClass.static.CanBeUsed(self))
+    {
+        return -1;
+    }
+
+    M.MapMarkerClass = MapMarkerClass;
+
+    // Quantize map-space coordinates for transmission.
+    M.LocationX = byte(255.0 * FClamp(MapLocation.X, 0.0, 1.0));
+    M.LocationY = byte(255.0 * FClamp(MapLocation.Y, 0.0, 1.0));
+
+    if (MapMarkerClass.default.bIsSquadSpecific)
+    {
+        M.SquadIndex = PRI.SquadIndex;
+    }
+    else
+    {
+        M.SquadIndex = -1;
+    }
+
+    if (MapMarkerClass.default.LifetimeSeconds != -1)
+    {
+        M.ExpiryTime = ElapsedTime + MapMarkerClass.default.LifetimeSeconds;
+    }
+    else
+    {
+        M.ExpiryTime = -1;
+    }
+
+    switch (PRI.Team.TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            if (MapMarkerClass.default.bShouldOverwriteGroup)
+            {
+                for (i = 0; i < arraycount(AxisMapMarkers); ++i)
+                {
+                    if (AxisMapMarkers[i].MapMarkerClass != none &&
+                        AxisMapMarkers[i].MapMarkerClass.default.GroupIndex == MapMarkerClass.default.GroupIndex &&
+                        AxisMapMarkers[i].SquadIndex == -1 || AxisMapMarkers[i].SquadIndex == PRI.SquadIndex)
+                    {
+                        AxisMapMarkers[i] = M;
+                        MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
+                        return i;
+                    }
+                }
+            }
+
+            if (MapMarkerClass.default.bIsUnique)
+            {
+                for (i = 0; i < arraycount(AxisMapMarkers); ++i)
+                {
+                    if (AxisMapMarkers[i].MapMarkerClass == MapMarkerClass &&
+                        (!MapMarkerClass.default.bIsSquadSpecific ||
+                         (MapMarkerClass.default.bIsSquadSpecific && AxisMapMarkers[i].SquadIndex == PRI.SquadIndex)))
+                    {
+                        AxisMapMarkers[i] = M;
+                        MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
+                        return i;
+                    }
+                }
+            }
+
+            for (i = 0; i < arraycount(AxisMapMarkers); ++i)
+            {
+                if (AxisMapMarkers[i].MapMarkerClass == none ||
+                    (AxisMapMarkers[i].ExpiryTime != -1 &&
+                     AxisMapMarkers[i].ExpiryTime <= ElapsedTime))
+                {
+                    AxisMapMarkers[i] = M;
+                    MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
+                    return i;
+                }
+            }
+            break;
+
+        case ALLIES_TEAM_INDEX:
+            if (MapMarkerClass.default.bShouldOverwriteGroup)
+            {
+                for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
+                {
+                    if (AlliesMapMarkers[i].MapMarkerClass != none &&
+                        AlliesMapMarkers[i].MapMarkerClass.default.GroupIndex == MapMarkerClass.default.GroupIndex &&
+                        AlliesMapMarkers[i].SquadIndex == -1 || AlliesMapMarkers[i].SquadIndex == PRI.SquadIndex)
+                    {
+                        AlliesMapMarkers[i] = M;
+                        MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
+                        return i;
+                    }
+                }
+            }
+
+            if (MapMarkerClass.default.bIsUnique)
+            {
+                for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
+                {
+                    if (AlliesMapMarkers[i].MapMarkerClass == MapMarkerClass &&
+                        (!MapMarkerClass.default.bIsSquadSpecific ||
+                         (MapMarkerClass.default.bIsSquadSpecific && AlliesMapMarkers[i].SquadIndex == PRI.SquadIndex)))
+                    {
+                        AlliesMapMarkers[i] = M;
+                        MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
+                        return i;
+                    }
+                }
+            }
+
+            for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
+            {
+                if (AlliesMapMarkers[i].MapMarkerClass == none ||
+                    (AlliesMapMarkers[i].ExpiryTime != -1 &&
+                     AlliesMapMarkers[i].ExpiryTime <= ElapsedTime))
+                {
+                    AlliesMapMarkers[i] = M;
+                    MapMarkerClass.static.OnMapMarkerPlaced(DHPlayer(PRI.Owner));
+                    return i;
+                }
+            }
+            break;
+    }
+
+    return -1;
+}
+
+function RemoveMapMarker(int TeamIndex, int MapMarkerIndex)
+{
+    if (MapMarkerIndex < 0 || MapMarkerIndex >= MAP_MARKERS_MAX)
+    {
+        return;
+    }
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            AxisMapMarkers[MapMarkerIndex].MapMarkerClass = none;
+            break;
+        case ALLIES_TEAM_INDEX:
+            AlliesMapMarkers[MapMarkerIndex].MapMarkerClass = none;
+            break;
+        default:
+            break;
+    }
+}
+
+function ClearSquadMapMarkers(int TeamIndex, int SquadIndex)
+{
+    local int i;
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            for (i = 0; i < arraycount(AxisMapMarkers); ++i)
+            {
+                if (AxisMapMarkers[i].SquadIndex == SquadIndex)
+                {
+                    AxisMapMarkers[i].MapMarkerClass = none;
+                }
+            }
+            break;
+        case ALLIES_TEAM_INDEX:
+            for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
+            {
+                if (AlliesMapMarkers[i].SquadIndex == SquadIndex)
+                {
+                    AlliesMapMarkers[i].MapMarkerClass = none;
+                }
+            }
+            break;
+    }
+}
+
+function ClearMapMarkers()
+{
+    local int i;
+
+    for (i = 0; i < arraycount(AxisMapMarkers); ++i)
+    {
+        AxisMapMarkers[i].MapMarkerClass = none;
+    }
+
+    for (i = 0; i < arraycount(AlliesMapMarkers); ++i)
+    {
+        AlliesMapMarkers[i].MapMarkerClass = none;
+    }
+}
+
+// Gets the map coordindates (0..1) from a world location.
+simulated function GetMapCoords(vector WorldLocation, out float X, out float Y, optional float Width, optional float Height)
+{
+    local float  MapScale;
+    local vector MapCenter;
+
+    MapScale = FMax(1.0, Abs((SouthWestBounds - NorthEastBounds).X));
+    MapCenter = NorthEastBounds + ((SouthWestBounds - NorthEastBounds) * 0.5);
+    WorldLocation = GetAdjustedHudLocation(WorldLocation - MapCenter, false);
+
+    X = FClamp(0.5 + (WorldLocation.X / MapScale) - (Width / 2),
+               0.0,
+               1.0 - Width);
+
+    Y = FClamp(0.5 + (WorldLocation.Y / MapScale) - (Height / 2),
+               0.0,
+               1.0 - Height);
+}
+
+// Gets the world location from map coordinates.
+simulated function vector GetWorldCoords(float X, float Y)
+{
+    local float MapScale;
+    local vector MapCenter, WorldLocation;
+
+    MapScale = FMax(1.0, Abs((SouthWestBounds - NorthEastBounds).X));
+    MapCenter = NorthEastBounds + ((SouthWestBounds - NorthEastBounds) * 0.5);
+    WorldLocation.X = ((0.5 - X) * MapScale);
+    WorldLocation.Y = ((0.5 - Y) * MapScale);
+    WorldLocation = GetAdjustedHudLocation(WorldLocation, true);
+    WorldLocation += MapCenter;
+
+    return WorldLocation;
+}
+
+// This function will adjust a hud map location based on the rotation offset of
+// the overhead map.
+// NOTE: This is functionally identical to same function in ROHud. It has been
+// moved here because it had no business being in that class since it only
+// referenced things in the GRI class.
+simulated function vector GetAdjustedHudLocation(vector HudLoc, optional bool bInvert)
+{
+    local float SwapX, SwapY;
+    local int Offset;
+
+    Offset = OverheadOffset;
+
+    if (bInvert)
+    {
+        if (OverheadOffset == 90)
+        {
+            Offset = 270;
+        }
+        else if (OverheadOffset == 270)
+        {
+            Offset = 90;
+        }
+    }
+
+    if (Offset == 90)
+    {
+        SwapX = HudLoc.Y * -1;
+        SwapY = HudLoc.X;
+        HudLoc.X = SwapX;
+        HudLoc.Y = SwapY;
+    }
+    else if (Offset == 180)
+    {
+        SwapX = HudLoc.X * -1;
+        SwapY = HudLoc.Y * -1;
+        HudLoc.X = SwapX;
+        HudLoc.Y = SwapY;
+    }
+    else if (Offset == 270)
+    {
+        SwapX = HudLoc.Y;
+        SwapY = HudLoc.X * -1;
+        HudLoc.X = SwapX;
+        HudLoc.Y = SwapY;
+    }
+
+    return HudLoc;
+}
+
 defaultproperties
 {
+    bAllowAllChat=true
     AlliesVictoryMusicIndex=-1
     AxisVictoryMusicIndex=-1
     ArtilleryTargetDistanceThreshold=15088 //250 meters in UU
     ForceScaleText="Size"
     ReinforcementsInfiniteText="Infinite"
-    DeathPenaltyText="Death Penalty"
-}
+    ConstructionClassNames(0)="DH_Construction.DHConstruction_SupplyCache"
+    ConstructionClassNames(1)="DH_Construction.DHConstruction_ConcertinaWire"
+    ConstructionClassNames(2)="DH_Construction.DHConstruction_Hedgehog"
+    ConstructionClassNames(3)="DH_Construction.DHConstruction_PlatoonHQ"
+    ConstructionClassNames(4)="DH_Construction.DHConstruction_Resupply"
+    ConstructionClassNames(5)="DH_Construction.DHConstruction_Sandbags_Line"
+    ConstructionClassNames(6)="DH_Construction.DHConstruction_Sandbags_Crescent"
+    ConstructionClassNames(7)="DH_Construction.DHConstruction_Sandbags_Bunker"
+    ConstructionClassNames(8)="DH_Construction.DHConstruction_ATGun_Medium"
+    ConstructionClassNames(9)="DH_Construction.DHConstruction_ATGun_Heavy"
+    ConstructionClassNames(10)="DH_Construction.DHConstruction_AAGun_Light"
+    ConstructionClassNames(11)="DH_Construction.DHConstruction_AAGun_Medium"
+    ConstructionClassNames(12)="DH_Construction.DHConstruction_Foxhole"
 
+    MapMarkerClassNames(0)="DH_Engine.DHMapMarker_Squad_Move"
+    MapMarkerClassNames(1)="DH_Engine.DHMapMarker_Squad_Attack"
+    MapMarkerClassNames(2)="DH_Engine.DHMapMarker_Squad_Defend"
+    MapMarkerClassNames(3)="DH_Engine.DHMapMarker_Enemy_PlatoonHQ"
+    MapMarkerClassNames(4)="DH_Engine.DHMapMarker_Enemy_Tank"
+    MapMarkerClassNames(5)="DH_Engine.DHMapMarker_Enemy_Infantry"
+    MapMarkerClassNames(6)="DH_Engine.DHMapMarker_Enemy_ATGun"
+    MapMarkerClassNames(7)="DH_Engine.DHMapMarker_Friendly_PlatoonHQ"
+    MapMarkerClassNames(8)="DH_Engine.DHMapMarker_Friendly_Supplies"
+}

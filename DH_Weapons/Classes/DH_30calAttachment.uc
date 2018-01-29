@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_30calAttachment extends DHHighROFWeaponAttachment;
@@ -8,7 +8,7 @@ class DH_30calAttachment extends DHHighROFWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.30Cal_3rd'
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.30cal_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.30cal_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMG'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     MuzzleBoneName="Muzzle"

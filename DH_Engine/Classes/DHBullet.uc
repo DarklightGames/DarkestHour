@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHBullet extends DHBallisticProjectile
@@ -41,7 +41,6 @@ const       MinPenetrateVelocity = 163;              // minimum bullet speed in 
 var         class<ROHitEffect>      ImpactEffect;    // effect to spawn when bullets hits something other than a vehicle (handles sound & visual effect)
 var         class<ROBulletWhiz>     WhizSoundEffect; // bullet whip sound effect class
 var         class<Actor>            SplashEffect;    // water splash effect class
-var         class<DamageType>       MyVehicleDamage; // stupid hack we need because TakeDamage doesn't like our ROWeaponDamage for vehicles // TODO: probably unnecessary & removable
 var         Actor                   WallHitActor;    // internal var used for storing the wall that was hit so the same wall doesn't get hit again
 
 // Modified to move bDebugBallistics stuff to PostNetBeginPlay, as net client won't yet have Instigator here
@@ -121,21 +120,21 @@ simulated function PostNetBeginPlay()
     }
 }
 
-// Matt: new function, called by DHFastAutoFire's SpawnProjectile function to set this as a server bullet, meaning won't be replicated as a separate client bullet will be spawned on client
+// New function, called by DHFastAutoFire's SpawnProjectile function to set this as a server bullet, meaning won't be replicated as a separate client bullet will be spawned on client
 // RemoteRole = none was the only change in DH_ServerBullet that had any effect, so simply doing this means server bullet classes can be deprecated
 function SetAsServerBullet()
 {
     RemoteRole = ROLE_None;
 }
 
-// Matt: disabled as function is now emptied out, as don't want delayed destruction stuff from ROBullet - far cleaner just to set short LifeSpan on a server
+// Disabled as function is now emptied out, as don't want delayed destruction stuff from ROBullet - far cleaner just to set short LifeSpan on a server
 // And for a tracer bullet, we don't need to keep setting its rotation to match its direction - simply setting bOrientToVelocity handles this natively
 simulated function Tick(float DeltaTime)
 {
     Disable('Tick');
 }
 
-// Matt: modified to handle new collision mesh actor - if we hit a CM we switch hit actor to CM's owner & proceed as if we'd hit that actor
+// Modified to handle new collision mesh actor - if we hit a CM we switch hit actor to CM's owner & proceed as if we'd hit that actor
 // Also to do splash effects if projectile hits a fluid surface, which wasn't previously handled
 // Also re-factored generally to optimise, but original functionality unchanged
 simulated singular function Touch(Actor Other)
@@ -156,9 +155,9 @@ simulated singular function Touch(Actor Other)
     }
 
     // We use TraceThisActor do a simple line check against the actor we've hit, to get an accurate HitLocation to pass to ProcessTouch()
-    // It's more accurate than using our current location as projectile has often travelled a little further by the time this event gets called
+    // It's more accurate than using our current location as projectile has often travelled further by the time this event gets called
     // But if that trace returns true then it somehow didn't hit the actor, so we fall back to using our current location as the HitLocation
-    // Also skip trace & use location as HitLocation if our velocity is somehow zero (collided immediately on launch?) or we hit a Mover actor
+    // Also skip trace & use our location if velocity is zero (touching actor when projectile spawns) or hit a Mover actor (legacy, don't know why)
     if (Velocity == vect(0.0, 0.0, 0.0) || Other.IsA('Mover')
         || Other.TraceThisActor(HitLocation, HitNormal, Location, Location - (2.0 * Velocity), GetCollisionExtent()))
     {
@@ -208,7 +207,7 @@ simulated singular function Touch(Actor Other)
     bHitBulletProofColMesh = false; // guarantees reset
 }
 
-// Matt: modified to handle tracer bullet clientside effects, as well as normal bullet functionality, plus handling of hit on a vehicle weapon similar to a shell
+// Modified to handle tracer bullet clientside effects, as well as normal bullet functionality, plus handling of hit on a vehicle weapon similar to a shell
 simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
     local DHPawn       HitPlayer, WhizzedPlayer;
@@ -216,7 +215,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     local Actor        A;
     local array<Actor> SavedHitActors;
     local vector       Direction, PawnHitLocation, TempHitLocation, HitNormal;
-    local bool         bPenetratedVehicle;
     local float        V;
     local array<int>   HitPoints;
     local int          TraceWhizType, i;
@@ -251,30 +249,24 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
     Direction = Normal(Velocity);
 
-    // Handle hit on a vehicle weapon
-    if (Other.IsA('ROVehicleWeapon'))
+    // Bullet never penetrates a vehicle weapon, so we just play hit effect & exit the function, destroying bullet unless it's a tracer deflection
+    if (Other.IsA('VehicleWeapon'))
     {
-        bPenetratedVehicle = !bHasDeflected && PenetrateVehicleWeapon(ROVehicleWeapon(Other));
+        PlayVehicleHitEffects(false, HitLocation, -Direction);
 
-        PlayVehicleHitEffects(bPenetratedVehicle, HitLocation, -Direction);
-
-        // Exit if failed to penetrate, destroying bullet unless it's a tracer deflection
-        if (!bPenetratedVehicle)
+        // Tracer deflects unless bullet speed is very low (approx 12 m/s)
+        // Added the trace to get a HitNormal, so ricochet is at correct angle (from shell's DeflectWithoutNormal function)
+        if (Level.NetMode != NM_DedicatedServer && bIsTracerBullet && VSizeSquared(Velocity) > 500000.0)
         {
-            // Tracer deflects unless bullet speed is very low (approx 12 m/s)
-            // Added the trace to get a HitNormal, so ricochet is at correct angle (from shell's DeflectWithoutNormal function)
-            if (Level.NetMode != NM_DedicatedServer && bIsTracerBullet && VSizeSquared(Velocity) > 500000.0)
-            {
-                Trace(HitLocation, HitNormal, HitLocation + (Direction * 50.0), HitLocation - (Direction * 50.0), true);
-                Deflect(HitNormal);
-            }
-            else
-            {
-                Destroy();
-            }
-
-            return;
+            Trace(HitLocation, HitNormal, HitLocation + (Direction * 50.0), HitLocation - (Direction * 50.0), true);
+            Deflect(HitNormal);
         }
+        else
+        {
+            Destroy();
+        }
+
+        return;
     }
 
     // Get the bullet's speed
@@ -377,7 +369,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
                     // A blocking actor is in the way, so we didn't really hit the player (but ignore anything ProcessTouch would normally ignore)
                     if (A != InstigatorPlayer && A.Base != InstigatorPlayer && A.Owner != InstigatorPlayer && A.Owner != Instigator
-                        && !A.bDeleteMe && !(Other.IsA('Projectile') && !Other.bProjTarget) && A != HitPlayer)
+                        && !A.bDeleteMe && !(A.IsA('Projectile') && !A.bProjTarget) && A != HitPlayer)
                     {
                         HitPlayer = none;
                         break;
@@ -442,7 +434,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     Destroy();
 }
 
-// Matt: modified to remove delayed destruction of bullet on a server, as serves no purpose for a bullet
+// Modified to remove delayed destruction of bullet on a server, as serves no purpose for a bullet
 // Bullet is bNetTemporary, meaning it gets torn off on client as soon as it replicates, receiving no further input from server, so delaying destruction on server has no effect
 // Also to handle tracer bullet clientside effects, as well as normal bullet functionality
 // Note this gets called when bullet collides with an ROVehicle (not a VehicleWeapon), as well as world geometry
@@ -480,7 +472,11 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     // Handle hit on a vehicle
     if (HitVehicle != none)
     {
-        bPenetratedVehicle = !bHasDeflected && PenetrateVehicle(HitVehicle);
+        if (!bHasDeflected)
+        {
+            AV = DHArmoredVehicle(HitVehicle);
+            bPenetratedVehicle = AV == none && !HitVehicle.bIsApc && !bHitBulletProofColMesh;
+        }
 
         PlayVehicleHitEffects(bPenetratedVehicle, Location, HitNormal);
     }
@@ -498,12 +494,10 @@ simulated function HitWall(vector HitNormal, Actor Wall)
             // Skip calling TakeDamage if we hit a vehicle but failed to penetrate - except check for possible hit on any exposed gunsight optics // TODO: resolve this more tidily (also AP bullet)
             if (HitVehicle != none && !bPenetratedVehicle)
             {
-                AV = DHArmoredVehicle(HitVehicle);
-
                 // Hit exposed gunsight optics
                 if (AV != none && AV.GunOpticsHitPointIndex >= 0 && AV.GunOpticsHitPointIndex < AV.NewVehHitpoints.Length
                     && AV.NewVehHitpoints[AV.GunOpticsHitPointIndex].NewHitPointType == NHP_GunOptics
-                    && AV.IsNewPointShot(Location, MomentumTransfer * Normal(Velocity), 1.0, AV.GunOpticsHitPointIndex)
+                    && AV.IsNewPointShot(Location, MomentumTransfer * Normal(Velocity), AV.GunOpticsHitPointIndex)
                     && AV.Cannon != none && DHVehicleCannonPawn(AV.Cannon.WeaponPawn) != none)
                 {
                     DHVehicleCannonPawn(AV.Cannon.WeaponPawn).DamageCannonOverlay();
@@ -519,18 +513,10 @@ simulated function HitWall(vector HitNormal, Actor Wall)
                     }
                 }
             }
-            else
+            else if (Vehicle(Wall) != none || ROVehicleWeapon(Wall) != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
             {
                 UpdateInstigator();
-
-                if (ROVehicle(Wall) != none) // have to use special damage for vehicles, otherwise it doesn't register for some reason // TODO: check whether this is necessary
-                {
-                    Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyVehicleDamage);
-                }
-                else if (Mover(Wall) != none || RODestroyableStaticMesh(Wall) != none || Vehicle(Wall) != none || ROVehicleWeapon(Wall) != none)
-                {
-                    Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyDamageType);
-                }
+                Wall.TakeDamage(Damage - (20.0 * (1.0 - (VSize(Velocity) / default.Speed))), Instigator, Location, MomentumTransfer * Normal(Velocity), MyDamageType);
             }
 
             MakeNoise(1.0);
@@ -566,18 +552,6 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     {
         Destroy();
     }
-}
-
-// New function to check whether we penetrated a vehicle weapon that we hit (default bullet won't penetrate damage any vehicle weapon)
-simulated function bool PenetrateVehicleWeapon(VehicleWeapon VW)
-{
-    return false;
-}
-
-// New function to check whether we penetrated a vehicle that we hit (default bullet will only penetrate soft skin vehicle, not an armored vehicle or APC)
-simulated function bool PenetrateVehicle(ROVehicle V)
-{
-    return !bHasDeflected && V != none && !V.IsA('DHArmoredVehicle') && !V.bIsApc && !bHitBulletProofColMesh;
 }
 
 // New function to handle hit effects for bullet hitting vehicle or vehicle weapon, depending on whether it penetrated (saves code repetition elsewhere)
@@ -800,10 +774,10 @@ defaultproperties
     ImpactEffect=class'DH_Effects.DHBulletHitEffect'
     WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
     VehiclePenetrateEffectClass=class'ROEffects.ROBulletHitMetalArmorEffect'
-    VehiclePenetrateSound=sound'ProjectileSounds.Bullets.Impact_Metal'
+    VehiclePenetrateSound=Sound'ProjectileSounds.Bullets.Impact_Metal'
     VehiclePenetrateSoundVolume=3.0
     VehicleDeflectEffectClass=class'ROEffects.ROBulletHitMetalArmorEffect'
-    VehicleDeflectSound=sound'ProjectileSounds.Bullets.Impact_Metal'
+    VehicleDeflectSound=Sound'ProjectileSounds.Bullets.Impact_Metal'
     VehicleDeflectSoundVolume=3.0
 
     // Tracer properties (won't affect ordinary bullet):
@@ -821,7 +795,5 @@ defaultproperties
     MaxSpeed=100000.0
     MomentumTransfer=100.0
     TossZ=0.0
-    SplashEffect=class'ROBulletHitWaterEffect'
-    MyVehicleDamage=class'ROVehicleDamageType'
-
+    SplashEffect=class'ROEffects.ROBulletHitWaterEffect'
 }

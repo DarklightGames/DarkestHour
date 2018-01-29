@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_GermanOfficerFJPawn extends DH_GermanFJPawn;
@@ -8,5 +8,5 @@ class DH_GermanOfficerFJPawn extends DH_GermanFJPawn;
 defaultproperties
 {
     Mesh=SkeletalMesh'DHCharacters_anm.Ger_Fallschirmjager_Officer'
-    Skins(0)=texture'DHGermanCharactersTex.Luftwaffe.FJ_SplinterB1'
+    Skins(0)=Texture'DHGermanCharactersTex.Luftwaffe.FJ_SplinterB1'
 }

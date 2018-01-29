@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHEditFavoritePage extends DHBrowser_OpenIP;
@@ -66,7 +66,7 @@ defaultproperties
     End Object
     ed_Data=DHmoEditBox'DH_Interface.DHEditFavoritePage.IpEntryBox'
     Begin Object Class=FloatingImage Name=MessageWindowFrameBackground
-        Image=texture'DH_GUI_Tex.Menu.DHDisplay1'
+        Image=Texture'DH_GUI_Tex.Menu.DHDisplay1'
         DropShadowX=0
         DropShadowY=0
         StyleName="DHExitPageStyle"

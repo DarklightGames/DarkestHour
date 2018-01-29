@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_SpringfieldScopedWeapon extends DHBoltSniperWeapon;
@@ -21,18 +21,12 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
+    ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Springfield_Scope_Overlay'
+    OverlayCorrectionX=-0.5
+    DisplayFOV=90.0
     IronSightDisplayFOV=40.0
     PlayerFOVZoom=36.0 // 2.5x
     ScopePortalFOV=7.0
-    ScopePortalFOVHigh=13.0
-    IronSightDisplayFOVHigh=43.0
-    XOffsetHighDetail=(X=-2.0,Y=0.0,Z=0.0)
-    ScopeYaw=25
-    ScopePitchHigh=20
-    ScopeYawHigh=40
-    TexturedScopeTexture=texture'DH_Weapon_tex.Scopes.Springfield_Scope_Overlay'
-    LensMaterialID=5
-    OverlayCorrectionX=-0.5 // correction of textured scope sights
 
     MaxNumPrimaryMags=13
     InitialNumPrimaryMags=13

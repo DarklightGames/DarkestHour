@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHArtilleryShell extends DHProjectile;
@@ -152,7 +152,7 @@ simulated function PlayCloseSound()
     bAlreadyPlayedCloseSound = true;
 }
 
-// Matt: modified to handle new collision mesh actor - if we hit a CM we switch hit actor to CM's owner & proceed as if we'd hit that actor
+// Modified to handle new collision mesh actor - if we hit a CM we switch hit actor to CM's owner & proceed as if we'd hit that actor
 // Also re-factored generally to optimise, but original functionality unchanged
 simulated singular function Touch(Actor Other)
 {
@@ -164,9 +164,9 @@ simulated singular function Touch(Actor Other)
     }
 
     // We use TraceThisActor do a simple line check against the actor we've hit, to get an accurate HitLocation to pass to ProcessTouch()
-    // It's more accurate than using our current location as projectile has often travelled a little further by the time this event gets called
+    // It's more accurate than using our current location as projectile has often travelled further by the time this event gets called
     // But if that trace returns true then it somehow didn't hit the actor, so we fall back to using our current location as the HitLocation
-    // Also skip trace & use location as HitLocation if our velocity is somehow zero (collided immediately on launch?) or we hit a Mover actor
+    // Also skip trace & use our location if velocity is zero (touching actor when projectile spawns) or hit a Mover actor (legacy, don't know why)
     if (Velocity == vect(0.0, 0.0, 0.0) || Other.IsA('Mover')
         || Other.TraceThisActor(HitLocation, HitNormal, Location, Location - (2.0 * Velocity), GetCollisionExtent()))
     {
@@ -311,7 +311,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
     }
 }
 
-// Matt: modified to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
+// Modified to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
 // Also to call CheckVehicleOccupantsRadiusDamage() instead of DriverRadiusDamage() on a hit vehicle, to properly handle blast damage to any exposed vehicle occupants
 // And to fix problem affecting many vehicles with hull mesh modelled with origin on the ground, where even a slight ground bump could block all blast damage
 // Also to update Instigator, so HurtRadius attributes damage to the player's current pawn
@@ -636,14 +636,14 @@ defaultproperties
     LifeSpan=12.0    // was 1500 seconds but way too long & no reason for that
 //  bProjTarget=true // was in RO but removed as makes no sense for a shell be a target for other projectiles & no other projectiles have this
 
-    DistantSound=sound'Artillery.fire_distant'
-    CloseSound(0)=sound'Artillery.zoomin.zoom_in01'
-    CloseSound(1)=sound'Artillery.zoomin.zoom_in02'
-    CloseSound(2)=sound'Artillery.zoomin.zoom_in03'
-    ExplosionSound(0)=sound'Artillery.explosions.explo01'
-    ExplosionSound(1)=sound'Artillery.explosions.explo02'
-    ExplosionSound(2)=sound'Artillery.explosions.explo03'
-    ExplosionSound(3)=sound'Artillery.explosions.explo04'
+    DistantSound=Sound'Artillery.fire_distant'
+    CloseSound(0)=Sound'Artillery.zoomin.zoom_in01'
+    CloseSound(1)=Sound'Artillery.zoomin.zoom_in02'
+    CloseSound(2)=Sound'Artillery.zoomin.zoom_in03'
+    ExplosionSound(0)=Sound'Artillery.explosions.explo01'
+    ExplosionSound(1)=Sound'Artillery.explosions.explo02'
+    ExplosionSound(2)=Sound'Artillery.explosions.explo03'
+    ExplosionSound(3)=Sound'Artillery.explosions.explo04'
     TransientSoundVolume=1.0
 //  SoundVolume=255 // omitted as irrelevant as actor has no ambient sound
 //  SoundRadius=100.0

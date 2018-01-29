@@ -1,22 +1,25 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_6PounderGunCannon extends DH_AT57Cannon;
 
 defaultproperties
 {
-    Skins(1)=texture'DH_Artillery_Tex.6pounder.6pounder' // show 6 pdr's muzzle brake
+    Skins(1)=Texture'DH_Artillery_Tex.6pounder.6pounder' // show 6 pdr's muzzle brake
     ProjectileClass=class'DH_Guns.DH_6PounderCannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_6PounderCannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_6PounderCannonShellAPDS'
     TertiaryProjectileClass=class'DH_Guns.DH_6PounderCannonShellHE'
     ProjectileDescriptions(1)="APDS"
     ProjectileDescriptions(2)="HE"
-    InitialPrimaryAmmo=66
-    InitialSecondaryAmmo=10
-    InitialTertiaryAmmo=20
+    InitialPrimaryAmmo=22
+    InitialSecondaryAmmo=3
+    InitialTertiaryAmmo=8
+    MaxPrimaryAmmo=66
+    MaxSecondaryAmmo=10
+    MaxTertiaryAmmo=20
     SecondarySpread=0.0048 // become APDS instead of HE
     TertiarySpread=0.00125
     WeaponFireOffset=19.0 // different from US 57mm AT gun due to 6 pdr's muzzle brake

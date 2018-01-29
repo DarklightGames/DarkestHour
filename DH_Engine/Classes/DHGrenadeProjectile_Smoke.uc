@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHGrenadeProjectile_Smoke extends DHGrenadeProjectile
@@ -36,7 +36,7 @@ simulated function Landed(vector HitNormal)
 }
 
 // Modified to add smoke effects & to remove actor destruction on client
-// Matt: actor is torn off & then destroyed on server, but persists for its LifeSpan on clients so grenade is still visible on ground & makes the smoke sound
+// Actor is torn off & then destroyed on server, but persists for its LifeSpan on clients so grenade is still visible on ground & makes the smoke sound
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
     local Emitter SmokeEmitter;
@@ -78,11 +78,12 @@ function BlowUp(vector HitLocation)
 defaultproperties
 {
     bAlwaysRelevant=true // has to be always relevant so that the smoke effect always gets spawned
+    FailureRate=0.0 // don't have smoke grenades fail
     Damage=0.0
     DamageRadius=0.0
     SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_Grenade'
-    SmokeIgniteSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
-    SmokeLoopSound=sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
+    SmokeIgniteSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_ignite'
+    SmokeLoopSound=Sound'Inf_WeaponsTwo.smokegrenade.smoke_loop'
     SmokeSoundDuration=33.0
     SoundVolume=255
     SoundRadius=200.0

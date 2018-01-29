@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_JagdpanzerIVMountedMG extends DH_PanzerIVMountedMG;
@@ -9,7 +9,7 @@ defaultproperties
 {
     // MG mesh
     Mesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer_mg_ext'
-    Skins(0)=texture'Weapons3rd_tex.German.Mg42_world'
+    Skins(0)=Texture'Weapons3rd_tex.German.Mg42_world'
     FireAttachBone="Mg_placement1"
     FireEffectOffset=(X=10.0,Y=0.0,Z=5.0)
 

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHStyle_DeployButton extends GUIStyles;
@@ -35,11 +35,11 @@ defaultproperties
     ImgStyle(3)=ISTY_PartialScaled
     ImgStyle(4)=ISTY_PartialScaled
 
-    //Images(0)=material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator'
-    //Images(1)=material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator'
-    //Images(2)=material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator'
-    //Images(3)=material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator'
-    //Images(4)=material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator'
+    //Images(0)=Material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator'
+    //Images(1)=Material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator'
+    //Images(2)=Material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator'
+    //Images(3)=Material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator'
+    //Images(4)=Material'DH_GUI_Tex.DeployMenu.SpawnPointIndicator'
 
     ImgColors(0)=(R=255,G=255,B=255,A=255)
     ImgColors(1)=(R=255,G=255,B=255,A=255)

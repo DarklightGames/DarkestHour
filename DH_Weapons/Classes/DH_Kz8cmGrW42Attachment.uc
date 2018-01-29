@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_Kz8cmGrW42Attachment extends DHWeaponAttachment;
@@ -45,7 +45,7 @@ defaultproperties
     PA_IdleCrouchAnim="crouch_idle_GrW42"
     PA_IdleRestAnim="stand_Idle_GrW42"
     PA_IdleWeaponAnim="stand_Idle_GrW42"
-    MenuImage=texture'DH_Mortars_tex.Kz8cmGrW42.Kz8cmGrW42'
+    MenuImage=Texture'DH_Mortars_tex.Kz8cmGrW42.Kz8cmGrW42'
     Mesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_carried'
     CullDistance=0.0 // no cull as it's too big
 }

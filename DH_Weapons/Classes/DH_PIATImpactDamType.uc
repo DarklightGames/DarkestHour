@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_PIATImpactDamType extends DHRocketImpactDamage
@@ -9,5 +9,5 @@ class DH_PIATImpactDamType extends DHRocketImpactDamage
 defaultproperties
 {
     WeaponClass=class'DH_Weapons.DH_PIATWeapon'
-    HUDIcon=texture'DH_InterfaceArt_tex.deathicons.piatkill'
+    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.piatkill'
 }

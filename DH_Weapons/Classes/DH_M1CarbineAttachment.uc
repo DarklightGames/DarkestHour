@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_M1CarbineAttachment extends DHWeaponAttachment;
@@ -10,7 +10,7 @@ class DH_M1CarbineAttachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Carbine_3rd'
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.carbine_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.carbine_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
     ROShellCaseClass=class'DH_weapons.DH_3rdShellEject556mm'
     MuzzleBoneName="Muzzle"

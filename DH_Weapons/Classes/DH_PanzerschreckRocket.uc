@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_PanzerschreckRocket extends DHRocketProjectile;
@@ -15,7 +15,7 @@ defaultproperties
     DHPenetrationTable(4)=17.5
     DHPenetrationTable(5)=17.5
     DHPenetrationTable(6)=17.5
-    bIsAlliedShell=false
+    bDebugInImperial=false
     ShellImpactDamage=class'DH_Weapons.DH_PanzerschreckImpactDamType'
     ImpactDamage=625
     Speed=6337.0

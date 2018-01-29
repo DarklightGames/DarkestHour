@@ -1,12 +1,10 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_FJ_Standard extends DH_Fallschirmjager
     abstract;
-
-// TODO: Theel - this class needs to be deprecated one day
 
 defaultproperties
 {

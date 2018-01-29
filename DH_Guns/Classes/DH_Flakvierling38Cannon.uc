@@ -1,126 +1,86 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_Flakvierling38Cannon extends DH_Flak38Cannon;
 
-var     name        BarrelBones[4];       // bone names for each
-var     Emitter     FlashEmitters[4];     // we will have a separate flash emitter for each barrel
-var     name        FireAnimations[6];    // alternating shoot anims for both 'open' & 'closed' positions, i.e. on the sights or with gunner's head raised
-var     bool        bSecondGunPairFiring; // false = fire top right & bottom left guns, true = fire top left & bottom right guns
+var     byte        NextFiringBarrelIndex; // barrel no. that is due to fire next, so SpawnProjectile() can get location of barrel bone
+var     name        BarrelBones[4];        // bone names for each
+var     Emitter     FlashEmitters[4];      // we will have a separate flash emitter for each barrel
+var     name        FireAnimations[6];     // alternating shoot anims for both 'open' & 'closed' positions, i.e. on the sights or with gunner's head raised
 
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
     reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
-        bSecondGunPairFiring; // after initial replication, the client should be able to keep track itself
+        NextFiringBarrelIndex; // after initial replication, the client should be able to keep track itself
 }
 
-// Modified to skip over Super in DH_Sdkfz2341Cannon, as handling of mixed mag is instead handled in SpawnProjectile, which now fires two projectiles
-state ProjectileFireMode
+// Modified to fire two projectiles from a pair of alternating barrels
+function Fire(Controller C)
 {
-    function Fire(Controller C)
+    local class<Projectile> ProjClass;
+
+    // Spawn a projectile from the 1st barrel in the firing pair
+    if (ProjectileClass == class'DHCannonShell_MixedMag')
     {
-        super(DHVehicleCannon).Fire(C);
+        ProjClass = SecondaryProjectileClass;
     }
+    else
+    {
+        ProjClass = ProjectileClass;
+    }
+
+    SpawnProjectile(ProjClass, false);
+    IncrementNextFiringBarrelIndex();
+
+    // Spawn a projectile from the 2nd paired barrel, but this time skipping firing effects so we don't repeat them
+    if (ProjectileClass == class'DHCannonShell_MixedMag')
+    {
+        ProjClass = TertiaryProjectileClass;
+    }
+
+    bSkipFiringEffects = true;
+    SpawnProjectile(ProjClass, false);
+    bSkipFiringEffects = false; // reset
+    IncrementNextFiringBarrelIndex();
 }
 
-// Modified to fire two projectiles from a pair of alternating barrels & to handle alternating AP/HE rounds if a mixed mag is loaded
-function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
+// Modified to get the firing location for the barrel that is next to fire
+function vector GetProjectileFireLocation(class<Projectile> ProjClass)
 {
-    local Projectile P, LastProjectile;
-    local vector     StartLocation, FireOffset;
-    local rotator    FireRot;
-    local bool       bMixedMag;
-    local int        FirstBarrelIndex, i;
-
-    // Barrels 0 & 1 fire first; 2nd pair is barrels 2 & 3
-    if (bSecondGunPairFiring)
-    {
-        FirstBarrelIndex = 2;
-    }
-
-    if (ProjClass == PrimaryProjectileClass)
-    {
-        bMixedMag = true;
-    }
-
-    FireRot = WeaponFireRotation;
-    FireOffset = (WeaponFireOffset * vect(1.0, 0.0, 0.0)) >> WeaponFireRotation;
-
-    // Spawn a projectile from each firing barrel
-    for (i = FirstBarrelIndex; i < (FirstBarrelIndex + 2); ++i)
-    {
-        StartLocation = GetBoneCoords(BarrelBones[i]).Origin + FireOffset;
-
-        if (Instigator != none && Instigator.IsHumanControlled())
-        {
-            FireRot.Pitch += AddedPitch;
-        }
-
-        if (bMixedMag)
-        {
-            if (i == FirstBarrelIndex)
-            {
-                ProjClass = SecondaryProjectileClass;
-            }
-            else
-            {
-                ProjClass = TertiaryProjectileClass;
-            }
-        }
-
-        P = Spawn(ProjClass, none,, StartLocation, FireRot);
-
-        if (P != none)
-        {
-            LastProjectile = P;
-        }
-    }
-
-    // Play fire effects if we spawned a projectile (only play fire effects once)
-    if (LastProjectile != none)
-    {
-        FlashMuzzleFlash(bAltFire);
-        PlayOwnedSound(CannonFireSound[Rand(3)], SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
-    }
-
-    return LastProjectile;
+    return GetBoneCoords(BarrelBones[NextFiringBarrelIndex]).Origin + ((WeaponFireOffset * vect(1.0, 0.0, 0.0)) >> WeaponFireRotation);
 }
 
-// Modified to handle fire effects & animations from alternating pairs of barrels
+// Modified to handle fire effects & animations from alternating pairs of barrels (& EffectEmitter & CannonDustEmitterClass stuff omitted as not relevant to weapon)
 simulated function FlashMuzzleFlash(bool bWasAltFire)
 {
     local DHVehicleCannonPawn CannonPawn;
-    local int FirstBarrelIndex, FireAnimationIndex, i;
+    local int                 FireAnimationIndex;
 
     if (Role == ROLE_Authority)
     {
         FiringMode = byte(bWasAltFire);
-        FlashCount++;
+        ++FlashCount;
         NetUpdateTime = Level.TimeSeconds - 1.0;
     }
     else
     {
-        CalcWeaponFire(bWasAltFire);
+        CalcWeaponFire(bWasAltFire); // doubt net client needs this as only gets used to spawn EffectEmitter, which flakvierling doesn't have
     }
 
     if (Level.NetMode != NM_DedicatedServer && !bWasAltFire)
     {
-        // Barrels 0 & 1 fire first; 2nd pair is barrels 2 & 3
-        if (bSecondGunPairFiring)
+        // Trigger a flash from both firing barrels
+        if (FlashEmitters[NextFiringBarrelIndex] != none)
         {
-            FirstBarrelIndex = 2;
+            FlashEmitters[NextFiringBarrelIndex].Trigger(self, Instigator);
         }
 
-        // Trigger a flash from each firing barrel
-        for (i = FirstBarrelIndex; i < (FirstBarrelIndex + 2); ++i)
+        if (FlashEmitters[NextFiringBarrelIndex + 1] != none)
         {
-            if (FlashEmitters[i] != none)
-            {
-                FlashEmitters[i].Trigger(self, Instigator);
-            }
+            FlashEmitters[NextFiringBarrelIndex + 1].Trigger(self, Instigator);
         }
 
         CannonPawn = DHVehicleCannonPawn(WeaponPawn);
@@ -138,21 +98,32 @@ simulated function FlashMuzzleFlash(bool bWasAltFire)
             }
         }
 
-        if (bSecondGunPairFiring)
+        if (NextFiringBarrelIndex >= 2)
         {
-            ++FireAnimationIndex; // no. 1/3/5 if 2nd pair firing
+            ++FireAnimationIndex; // shift anim index to no. 1/3/5 if 2nd barrel pair (barrels 2 & 3) are firing
         }
 
         if (FireAnimationIndex >= 0 && FireAnimationIndex < arraycount(FireAnimations) && HasAnim(FireAnimations[FireAnimationIndex]))
         {
             PlayAnim(FireAnimations[FireAnimationIndex]);
         }
-    }
 
-    bSecondGunPairFiring = !bSecondGunPairFiring; // toggle for next time (all net modes)
+        // Net client switches to the next barrel pair due to fire
+        if (Role < ROLE_Authority)
+        {
+            if (NextFiringBarrelIndex < 2)
+            {
+                NextFiringBarrelIndex = 2;
+            }
+            else
+            {
+                NextFiringBarrelIndex = 0;
+            }
+        }
+    }
 }
 
-// Modified to handle four barrels
+// Modified to spawn a FlashEmitters for each of the barrels (& AmbientEffectEmitter stuff omitted as not relevant to weapon)
 simulated function InitEffects()
 {
     local int i;
@@ -176,10 +147,16 @@ simulated function InitEffects()
     }
 }
 
+// New helper function to cycle to the next barrel number
+function IncrementNextFiringBarrelIndex()
+{
+    NextFiringBarrelIndex = ++NextFiringBarrelIndex % arraycount(BarrelBones); // loops back to 0 when exceeds last barrel index
+}
+
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Flak38_anm.flakvierling_turret'
-    Skins(0)=texture'DH_Artillery_tex.flakvierling.FlakVeirling38'
+    Skins(0)=Texture'DH_Artillery_tex.flakvierling.FlakVeirling38'
     CollisionStaticMesh=StaticMesh'DH_Artillery_stc.flakvierling.Flakvierling_turret_coll'
     InitialPrimaryAmmo=40 // actually represents 80 rounds (4 magazines of 20 rounds each), but every time we fire we use 2 rounds (so think of it as 40 double shots)
     InitialSecondaryAmmo=40

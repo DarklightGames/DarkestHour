@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_JagdpanzerIVL70Cannon extends DH_JagdpanzerIVL48Cannon;
@@ -20,9 +20,12 @@ defaultproperties
     TertiaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShellHE'
     ProjectileDescriptions(1)="APCR"
     ProjectileDescriptions(2)="HE"
-    InitialPrimaryAmmo=35
-    InitialSecondaryAmmo=5
-    InitialTertiaryAmmo=15
+    InitialPrimaryAmmo=30
+    InitialSecondaryAmmo=4
+    InitialTertiaryAmmo=7
+    MaxPrimaryAmmo=35
+    MaxSecondaryAmmo=5
+    MaxTertiaryAmmo=15
     SecondarySpread=0.00165
     TertiarySpread=0.0012
 
@@ -34,8 +37,8 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Panther.75mm_VL_fire03'
-    ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_01')
-    ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_02')
-    ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_03')
-    ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.STUG_III_reload_04')
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.STUG_III_reload_01')
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.STUG_III_reload_02')
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.STUG_III_reload_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.STUG_III_reload_04')
 }

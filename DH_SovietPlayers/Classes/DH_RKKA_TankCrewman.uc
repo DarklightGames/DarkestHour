@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_RKKA_TankCrewman extends DH_Soviet_Units;
@@ -12,7 +12,7 @@ defaultproperties
     AltName="Ekipazh tanka"
     Article="a "
     PluralName="Tank Crewmen"
-    SleeveTexture=texture'Weapons1st_tex.Arms.RussianTankerSleeves'
+    SleeveTexture=Texture'Weapons1st_tex.Arms.RussianTankerSleeves'
     DetachedArmClass=class'ROEffects.SeveredArmSovTanker'
     DetachedLegClass=class'ROEffects.SeveredLegSovTanker'
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPSH41Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')

@@ -1,31 +1,53 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHPlayer extends ROPlayer;
+class DHPlayer extends ROPlayer
+    dependson(DHSquadReplicationInfo);
 
 const MORTAR_TARGET_TIME_INTERVAL = 5;
 const SPAWN_KILL_RESPAWN_TIME = 2;
 const DEATH_PENALTY_FACTOR = 10;
+const SQUAD_SIGNALS_MAX = 4;
 
-var     DHHintManager           DHHintManager;
-var     float                   MapVoteTime;
+enum EMapMode
+{
+    MODE_Map,
+    MODE_Squads
+};
+
+var     input float             aBaseFire;
+var     bool                    bUsingController;
+
+var     EMapMode                DeployMenuStartMode; // what the deploy menu is supposed to start out on
 var     DH_LevelInfo            ClientLevelInfo;
+var     DHHintManager           DHHintManager;
+var     DHConstructionManager   ConstructionManager; // client only!
+var     float                   MapVoteTime;
+var     globalconfig bool       bLockTankOnEntry;    // option to automatically lock an armored vehicle on entering, providing it contains no other tank crew
+var     globalconfig bool       bSpawnWithBayonet;   // option to automatically spawn with a bayonet attached if applicable
+var     globalconfig int        CorpseStayTime;      // determines how long corpses should stay around (default 30)
+var     int                     CorpseStayTimeMin;
+var     int                     CorpseStayTimeMax;
+var     globalconfig string     ROIDHash;            // client ROID hash (this gets set/updated when a player joins a server)
 
-// DH sway values
+// View FOV
+var     globalconfig float      ConfigViewFOV;       // allows player to set their own preferred view FOV, within acceptable limits
+var     float                   ViewFOVMin;
+var     float                   ViewFOVMax;
+
+// Sway
 var     float                   DHSwayElasticFactor;
 var     float                   DHSwayDampingFactor;
 
-// Rotation clamp values
+// Mouse sensitivity
 var     float                   DHStandardTurnSpeedFactor;
 var     float                   DHHalfTurnSpeedFactor;
 var     globalconfig float      DHISTurnSpeedFactor;        // 0.0 to 1.0
 var     globalconfig float      DHScopeTurnSpeedFactor;     // 0.0 to 1.0
 
-// Client ROID hash (this gets set/updated when a player joins a server)
-var     globalconfig string     ROIDHash;
-
+// Player flinch
 var     vector                  FlinchRotMag;
 var     vector                  FlinchRotRate;
 var     float                   FlinchRotTime;
@@ -34,10 +56,10 @@ var     vector                  FlinchOffsetRate;
 var     float                   FlinchOffsetTime;
 var     float                   FlinchMaxOffset;
 
+// Mantling
 var     float                   MantleCheckTimer;           // makes sure client doesn't try to start mantling without the server
 var     float                   MantleFailTimer;            // makes sure we don't get stuck floating in an object unable to end a mantle
 var     bool                    bDidMantle;                 // is the mantle complete?
-var     bool                    bIsInStateMantling;         // stop the client from exiting state until server has exited to avoid desync
 var     bool                    bDidCrouchCheck;
 var     bool                    bWaitingToMantle;
 var     bool                    bLockJump;
@@ -45,9 +67,8 @@ var     bool                    bMantleDebug;
 var     int                     MantleLoopCount;
 
 // Spawning
-var     byte                    SpawnPointIndex;
-var     byte                    SpawnVehicleIndex;
-var     byte                    VehiclePoolIndex;
+var     int                     SpawnPointIndex;
+var     int                     VehiclePoolIndex;
 var     bool                    bIsInSpawnMenu;             // player is in spawn menu and should not be auto-spawned
 var     bool                    bSpawnedKilled;             // player was spawn killed (set to false, when the spawn time is reduced)
 var     int                     NextSpawnTime;              // the next time the player will be able to spawn
@@ -56,80 +77,197 @@ var     int                     NextVehicleSpawnTime;       // the time at which
 var     int                     DHPrimaryWeapon;            // Picking up RO's slack, this should have been replicated from the outset
 var     int                     DHSecondaryWeapon;
 var     bool                    bSpawnPointInvalidated;
-var     float                   NextChangeTeamTime;         // the time at which a player can change teams next (updated in Level.Game.ChangeTeam)
-var     int                     DeathPenaltyCount;          // number of deaths accumulated that affects respawn time (only increases if bUseDeathPenalty is enabled)
+var     int                     NextChangeTeamTime;         // the time at which a player can change teams next
                                                             // it resets whenever an objective is taken
-
 // Weapon locking (punishment for spawn killing)
 var     int                     WeaponUnlockTime;           // the time at which the player's weapons will be unlocked (being the round's future ElapsedTime in whole seconds)
-var     int                     PendingWeaponLockSeconds ;  // fix for problem where player re-joins server with saved weapon lock, but client doesn't yet have GRI
+var     int                     PendingWeaponLockSeconds;   // fix for problem where player re-joins server with saved weapon lock, but client doesn't yet have GRI
 var     int                     WeaponLockViolations;       // the number of violations this player has, used to increase the locked period for multiple offences
-var     bool                    bWeaponsAreLocked;          // flag only used so we know an unlock message needs to be displayed locally after the locked time expires
+
+// Squads
+var     DHSquadReplicationInfo  SquadReplicationInfo;
+var     bool                    bIgnoreSquadInvitations;
+var     bool                    bIgnoreSquadLeaderVolunteerPrompts;
+var     vector                  SquadMemberLocations[12];   // SQUAD_SIZE_MAX
+
+var     DHCommandInteraction    CommandInteraction;
+
+var     Actor                   LookTarget;
+
+struct SquadSignal
+{
+    var class<DHSquadSignal> SignalClass;
+    var vector Location;
+    var float TimeSeconds;
+};
+
+var     SquadSignal             SquadSignals[SQUAD_SIGNALS_MAX];
+
+// This is used to skip ResetInput calls in the GUIController.
+// Useful when you want to show a menu over top of the game (e.g. situation map)
+// without interrupting player input.
+var     bool                    bShouldSkipResetInput;
+
+// Toggle Duck timing
+var     float                   ToggleDuckIntervalSeconds;
+var     float                   NextToggleDuckTimeSeconds;
+
+// Spectating stuff
+var     bool                    bSpectateAllowViewPoints;
 
 replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        NextSpawnTime, SpawnPointIndex, VehiclePoolIndex, SpawnVehicleIndex,
-        DHPrimaryWeapon, DHSecondaryWeapon, bSpawnPointInvalidated,
-        NextVehicleSpawnTime, LastKilledTime, DeathPenaltyCount;
-
-    // Variables the server will replicate to all clients
-    reliable if (bNetDirty && Role == ROLE_Authority)
-        bIsInStateMantling;
+        SpawnPointIndex, VehiclePoolIndex, bSpawnPointInvalidated,
+        NextSpawnTime, NextVehicleSpawnTime, NextChangeTeamTime, LastKilledTime,
+        DHPrimaryWeapon, DHSecondaryWeapon, bSpectateAllowViewPoints,
+        SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerLoadATAmmo, ServerThrowMortarAmmo,
-        ServerSaveArtilleryTarget, ServerSetPlayerInfo, ServerClearObstacle,
-        // these ones in debug mode only
-        ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerDoLog,
-        ServerMetricsDump, ServerLockWeapons;
+        ServerSetPlayerInfo, ServerSetIsInSpawnMenu, ServerSetLockTankOnEntry,
+        ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSetBayonetAtSpawn,
+        ServerSaveArtilleryTarget, ServerClearObstacle,
+        ServerAddMapMarker, ServerRemoveMapMarker,
+        ServerSquadCreate, ServerSquadRename,
+        ServerSquadJoin, ServerSquadJoinAuto, ServerSquadLeave,
+        ServerSquadInvite, ServerSquadPromote, ServerSquadKick, ServerSquadBan,
+        ServerSquadSay, ServerSquadLock, ServerSquadSignal,
+        ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
+        ServerSetPatronStatus, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
+        ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons; // these ones in debug mode only
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
-        ClientCopyToClipboard, ClientProposeMenu, ClientSaveROIDHash,
-        ClientProne, ClientToggleDuck, ClientConsoleCommand,
-        ClientFadeFromBlack, ClientAddHudDeathMessage, ClientLockWeapons;
-
-    // Variables the owning client will replicate to the server
-    reliable if (Role < ROLE_Authority)
-        ServerSetIsInSpawnMenu;
+        ClientProne, ClientToggleDuck, ClientLockWeapons,
+        ClientAddHudDeathMessage, ClientFadeFromBlack, ClientProposeMenu,
+        ClientConsoleCommand, ClientCopyToClipboard, ClientSaveROIDHash,
+        ClientSquadInvite, ClientSquadSignal, ClientSquadLeaderVolunteerPrompt, ClientTeamKillPrompt;
 }
 
 function ServerChangePlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2) { } // no longer used
 
-// Modified to bypass RO design
+// Modified to use DH's InputClass instead of the RO version
+// Class is enforced here because InputClass is a config variable & so can easily be changed in the player's .ini file
 event InitInputSystem()
 {
+    InputClass = class'DH_Engine.DHPlayerInput';
+
     super(UnrealPlayer).InitInputSystem();
 }
 
 // Modified to have client setup access to DH_LevelInfo so it can get info from it
+// Also to set the default view FOV from the player's own setting for ConfigViewFOV
 simulated event PostBeginPlay()
 {
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        SetDefaultViewFOV(); // do this before calling the Super, then other FOV settings get matched to it when the super calls FixFOV()
+    }
+
     super.PostBeginPlay();
+
+    VoiceChatCodec = "CODEC_96WB";
 
     // Make this only run by the owning client
     if (Level.NetMode != NM_DedicatedServer)
     {
         // Find DH_LevelInfo and assign it to ClientLevelInfo, so client can access it
-        foreach self.AllActors(class'DH_LevelInfo', ClientLevelInfo)
+        foreach AllActors(class'DH_LevelInfo', ClientLevelInfo)
         {
             break;
         }
+
+        // Set bUsingController based on the UseJoystick setting
+        bUsingController = bool(ConsoleCommand("get ini:Engine.Engine.ViewportManager UseJoystick"));
     }
+
+    // This forces the player to choose a valid spectator mode instead of
+    // immediately defaulting to "self" which has no contextual relevance when
+    // you are a brand new player.
+    if (Role == ROLE_Authority)
+    {
+        ServerChangeSpecMode();
+    }
+}
+
+simulated event PostNetBeginPlay()
+{
+    super.PostNetBeginPlay();
+
+    // Make this only run by the owning client
+    if (Role < ROLE_Authority)
+    {
+        ServerSetBayonetAtSpawn(bSpawnWithBayonet);
+        ServerSetLockTankOnEntry(bLockTankOnEntry);
+    }
+}
+
+// Client to server function which tells the server the user's setting (also gets called from DHTab_GameSettings, if the user changes the setting mid-game)
+function ServerSetBayonetAtSpawn(bool bBayonetAtSpawn)
+{
+    bSpawnWithBayonet = bBayonetAtSpawn;
+}
+
+// New function to set the normal view FOV for this player, based on their own
+// config setting ption to pass in new FOV value, otherwise we just use the
+// existing ConfigViewFOV. We only accept valid values of 80 to 100, otherwise
+// we reset to the default value (stops players manually editing their .ini file
+// to invalid values) Note we only ever use the class default.ConfigViewFOV
+// value, as that allows us to use it in static functions where there may not be
+// a DHPlayer instance
+simulated static function SetDefaultViewFOV(optional float NewFOV)
+{
+    if (NewFOV > 0.0 && NewFOV != default.ConfigViewFOV)
+    {
+        default.ConfigViewFOV = NewFOV;
+        StaticSaveConfig();
+    }
+
+    if (default.ConfigViewFOV < default.ViewFOVMin || default.ConfigViewFOV > default.ViewFOVMax)
+    {
+        ResetConfig("ConfigViewFOV"); // in an invalid value, reset to the default
+    }
+
+    if (default.ConfigViewFOV != default.DefaultFOV)
+    {
+        default.DefaultFOV = default.ConfigViewFOV;
+    }
+}
+
+// Added so that the DH_LevelInfo can be retrieved easily on both the server and
+// client from a DHPlayer instance.
+simulated function DH_LevelInfo GetLevelInfo()
+{
+    local DarkestHourGame G;
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        return ClientLevelInfo;
+    }
+    else
+    {
+        G = DarkestHourGame(Level.Game);
+
+        if (G != none)
+        {
+            return G.DHLevelInfo;
+        }
+    }
+
+    return none;
 }
 
 // Modified to add hacky fix for problem where player re-joins a server with an active weapon lock saved in his DHPlayerSession
 // When that happens the weapon lock is passed to the client, but it doesn't yet have a GRI reference so it all goes wrong
-// In that situation we record a PendingWeaponLockSeconds  on client, then here we use it to set the weapon lock on client as soon as it receives the GRI
+// In that situation we record a PendingWeaponLockSeconds on client, then here we use it to set the weapon lock on client as soon as it receives the GRI
 simulated function PostNetReceive()
 {
-    if (PendingWeaponLockSeconds  > 0 && GameReplicationInfo != none)
+    if (PendingWeaponLockSeconds > 0 && GameReplicationInfo != none)
     {
         LockWeapons(PendingWeaponLockSeconds );
-        PendingWeaponLockSeconds  = 0;
+        PendingWeaponLockSeconds = 0;
     }
 
     super.PostNetReceive();
@@ -141,12 +279,12 @@ simulated function bool NeedNetNotify()
     return super.NeedNetNotify() || GameReplicationInfo == none;
 }
 
-// Matt: modified to avoid "accessed none" error
+// Modified to avoid "accessed none" error
 event ClientReset()
 {
     local Actor A;
 
-    // Reset client special timed sounds on the client
+    // Reset special timed actors on the client
     foreach AllActors(class'Actor', A)
     {
         if (A.IsA('ClientSpecialTimedSound') || A.IsA('KrivoiPlaneController'))
@@ -155,7 +293,7 @@ event ClientReset()
         }
     }
 
-    //Reset camera stuff
+    // Reset camera stuff
     bBehindView = false;
     bFixedCamera = false;
     SetViewTarget(self);
@@ -327,17 +465,53 @@ simulated function rotator FreeAimHandler(rotator NewRotation, float DeltaTime)
     return NewPlayerRotation;
 }
 
+// Modified to optimise by usually avoiding lots of pointless tracing & calculations every time a human player fires, as this functionality is only relevant to bots
+// bAimingHelp is false for humans, so so the complicated parent function always returns the Controller's rotation (or pawn's rotation if in behind view)
+// But if we're aiming at a bot with certain types of weapons, the Super can be relevant because it results in the bot receiving a warning
+// Nearly all the time though, that isn't the case and so there's no point doing traces & calcs to get a target for a warning that won't happen
+function rotator AdjustAim(FireProperties FiredAmmunition, vector ProjStart, int AimError)
+{
+    // These are the rare situations where we call the Super as we may be aiming at a bot with a relevant weapon that could result in it receiving a warning
+    if (Level.Game.NumBots > 0 &&       // only need to consider this if there are some bots in the game
+        (FiredAmmunition.bInstantHit || // if we're using an instant hit weapon (very rare in DH), a targeted bot will get a warning when InstantWarnTarget() gets called
+        (FiredAmmunition.ProjectileClass != none && class<ROBallisticProjectile>(FiredAmmunition.ProjectileClass) == none))) // a non-ballistic projectile warns a bot that gets
+    {                                                                                                                        // recorded as the ShotTarget pawn in the Super
+        return super.AdjustAim(FiredAmmunition, ProjStart, AimError);
+    }
+
+    // Otherwise just return the standard rotation, without traces or calcs
+    if (bBehindView && Pawn != none)
+    {
+        return Pawn.Rotation;
+    }
+
+    return Rotation;
+}
+
+// Developer login
+exec function DevLogin()
+{
+    if (Level.TimeSeconds < NextLoginTime) // TODO: doesn't appear to work as for some reason LoginDelay seems to be zero on net client, even though it's replicated?
+    {
+        return;
+    }
+
+    NextLoginTime = Level.TimeSeconds + LoginDelay;
+    ServerAdminLoginSilent("Dev");
+}
+
 // Menu for the player's entire selection process
 exec function PlayerMenu(optional int Tab)
 {
     bPendingMapDisplay = false;
 
-    if (!bWeaponsSelected)
+    if (PlayerReplicationInfo == none || PlayerReplicationInfo.Team == none)
     {
         ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
     }
     else
     {
+        DeployMenuStartMode = MODE_Map;
         ClientReplaceMenu("DH_Interface.DHDeployMenu");
     }
 }
@@ -357,17 +531,34 @@ function ShowMidGameMenu(bool bPause)
     }
     else
     {
-        // If we haven't picked a team, role and weapons yet, or is a spectator... open the team pick menu
-        if (!bWeaponsSelected ||
-            PlayerReplicationInfo.Team == none ||
-            PlayerReplicationInfo.Team.TeamIndex == 254)
+        // If we haven't picked a team or is a spectator... open the team pick menu
+        if (PlayerReplicationInfo == none || PlayerReplicationInfo.Team == none)
         {
             ClientReplaceMenu("DH_Interface.DHGUITeamSelection");
         }
         else
         {
-            ClientReplaceMenu(ROMidGameMenuClass);
+            DeployMenuStartMode = MODE_Map;
+            ClientReplaceMenu("DH_Interface.DHDeployMenu");
         }
+    }
+}
+
+// Modified to prevent broadcast of public chat if "all chat" is disabled
+exec function Say(string Msg)
+{
+    Msg = Left(Msg,128);
+
+    // If all chat is not allowed, then don't broadcast (serversay) and tell the user
+    if (DHGameReplicationInfo(GameReplicationInfo) != none && !DHGameReplicationInfo(GameReplicationInfo).bAllowAllChat)
+    {
+        ReceiveLocalizedMessage(class'DHCommunicationMessage', 0); // "Public chat is currently disabled"
+        return;
+    }
+
+    if (AllowTextMessage(Msg))
+    {
+        ServerSay(Msg);
     }
 }
 
@@ -447,6 +638,15 @@ simulated function PlayerFlinched(float Intensity)
         }
 
         ShakeView(FlinchRotMag, FlinchRotRate, FlinchRotTime, FlinchOffsetMag, FlinchOffsetRate, FlinchOffsetTime);
+    }
+}
+
+// Modified to prevent a mistakenly passed negative blur time, which causes the blur to 'freeze' indefinitely, until some other blur effect resets it
+simulated function AddBlur(float NewBlurTime, float NewBlurScale)
+{
+    if (NewBlurTime > 0.0)
+    {
+        super.AddBlur(NewBlurTime, NewBlurScale);
     }
 }
 
@@ -564,6 +764,17 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
         // Calculate base for new view rotation, factoring in any turning speed reduction & applying max value limits
         ViewRotation.Yaw += FClamp((TurnSpeedFactor * DeltaTime * aTurn), -10000.0, 10000.0);
         ViewRotation.Pitch += FClamp((TurnSpeedFactor * DeltaTime * aLookUp), -10000.0, 10000.0);
+
+        if (Pawn != none && Pawn.Weapon != none && DHPwn != none)
+        {
+            ViewRotation = FreeAimHandler(ViewRotation, DeltaTime);
+        }
+
+        // Look directly at the look target
+        if (LookTarget != none)
+        {
+            ViewRotation = rotator(Normal(LookTarget.Location - (Pawn.Location + Pawn.EyePosition())));
+        }
 
         // Apply any pawn limits on pitch & yaw
         if (DHPwn != none)
@@ -712,7 +923,7 @@ function HitThis(ROArtilleryTrigger RAT)
     }
 }
 
-// New function to determine if the player is operating a vehicle that is marked as artillery.
+// New function to determine if the player is operating a vehicle that is marked as artillery // TODO: suggest exclude passenger positions, so riders don't see arty targets
 simulated function bool IsInArtilleryVehicle()
 {
     local DHVehicle V;
@@ -732,6 +943,11 @@ simulated function bool IsInArtilleryVehicle()
     }
 
     return false;
+}
+
+simulated function bool IsInSquad()
+{
+    return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsInSquad();
 }
 
 // Modified to to spawn a DHArtillerySpawner at the strike co-ords instead of using level's NorthEastBoundsspawn to set its height
@@ -771,7 +987,6 @@ function ServerSaveArtilleryTarget(bool bIsSmoke)
     if (!bValidTarget)
     {
         ReceiveLocalizedMessage(class'DHArtilleryTargetMessage', 0); // "Invalid artillery target"
-
         return;
     }
 
@@ -935,7 +1150,7 @@ function ServerLoadATAmmo(Pawn Gunner)
     }
 }
 
-// Matt: modified to avoid unnecessary Pawn.SaveConfig(), which saved block of pointless vehicle config variables to user.ini file every time player used behind view in a vehicle
+// Modified to avoid unnecessary Pawn.SaveConfig(), which saved block of pointless vehicle config variables to user.ini file every time player used behind view in a vehicle
 // Including TPCamDistance, which once saved in the .ini file will override any changes made in vehicle default properties
 // Also bDesiredBehindView=true was saved in .ini if player exited game while in a vehicle in behind view, which then screwed up their rotation when entering that vehicle in future
 // Instead we ResetConfig() for the vehicle class, in practice meaning clearing all saved config if no default config exists, so we always use the class default values in behind view
@@ -960,8 +1175,40 @@ function ClientSetBehindView(bool B)
     }
 }
 
+// Modified to edit an if state in Timer()
+auto state PlayerWaiting
+{
+ignores SeePlayer, HearNoise, NotifyBump, TakeDamage, PhysicsVolumeChange, SwitchToBestWeapon;
+
+    // In the else if() statement, PRI != none was added so if the player isn't knowledgeable of their PRI yet it doesn't even open a menu
+    // This actually works quite well because now players will actually see the server's MOTD text
+    simulated function Timer()
+    {
+        if (!bPendingMapDisplay || bDemoOwner)
+        {
+            SetTimer(0, false);
+        }
+        else if(Player != none && GUIController(Player.GUIController) != none && !GUIController(Player.GUIController).bActive && PlayerReplicationInfo != none)
+        {
+            bPendingMapDisplay = false;
+            SetTimer(0, false);
+            PlayerMenu();
+
+            // We init the hint manager here because it needs to be
+            // initialized after the Player variables have been set
+            UpdateHintManagement(bShowHints);
+        }
+    }
+
+    exec function Jump( optional float F )
+    {
+    }
+}
+
 state PlayerWalking
 {
+ignores SeePlayer, HearNoise, Bump;
+
     // Modified to allow behind view, if server has called this (restrictions on use of behind view are handled in ServerToggleBehindView)
     function ClientSetBehindView(bool B)
     {
@@ -1078,13 +1325,15 @@ state PlayerWalking
             MantleCheckTimer = Level.TimeSeconds;
         }
 
+        P.HUDCheckDig();
+
         GetAxes(Pawn.Rotation, X, Y, Z);
 
         // Update acceleration
         NewAccel = aForward * X + aStrafe * Y;
         NewAccel.Z = 0.0;
 
-        if (VSize(NewAccel) < 1.0 || bWaitingToMantle || P.bIsDeployingMortar || P.bIsCuttingWire)
+        if (VSizeSquared(NewAccel) < 1.0 || bWaitingToMantle || P.bIsDeployingMortar || P.bIsCuttingWire) // using VSizeSquared instead of VSize for more efficient processing
         {
             NewAccel = vect(0.0, 0.0, 0.0);
         }
@@ -1097,7 +1346,7 @@ state PlayerWalking
             // Take the bipod weapon out of deployed if the player tries to move
             if (Pawn.bBipodDeployed && NewAccel != vect(0.0, 0.0, 0.0) && Pawn.Weapon != none)
             {
-//              ROBipodWeapon(Pawn.Weapon).ForceUndeploy(); // Matt: replaced by if/else below so it actually works with DH weapons
+//              ROBipodWeapon(Pawn.Weapon).ForceUndeploy(); // replaced by if/else below so it actually works with DH weapons
                 if (DHBipodWeapon(Pawn.Weapon) != none)
                 {
                     DHBipodWeapon(Pawn.Weapon).ForceUndeploy();
@@ -1399,6 +1648,8 @@ state Mantling
 
 state PlayerDriving
 {
+ignores SeePlayer, HearNoise, Bump;
+
     // Modified to ignore bDisableThrottle & bWantsToThrottle, which relate to waiting for crew & are now effectively deprecated
     function ProcessDrive(float InForward, float InStrafe, float InUp, bool InJump)
     {
@@ -1421,9 +1672,24 @@ state PlayerDriving
         local Vehicle          CurrentVehicle;
         local DHArmoredVehicle AV;
         local float            NewPing, AppliedThrottle;
+        local bool             bIncrementalThrottle;
 
         CurrentVehicle = Vehicle(Pawn);
-        AV = DHArmoredVehicle(Pawn);
+
+        if (CurrentVehicle != none)
+        {
+            AV = DHArmoredVehicle(Pawn);
+
+            // Check whether player is using an incremental throttle, based on his settings & the type of vehicle
+            if (AV != none)
+            {
+                bIncrementalThrottle = bInterpolatedTankThrottle;
+            }
+            else
+            {
+                bIncrementalThrottle = bInterpolatedVehicleThrottle;
+            }
+        }
 
         if (bHudCapturesMouseInputs)
         {
@@ -1480,7 +1746,7 @@ state PlayerDriving
                 aLastForward = aForward;
                 aLastStrafe = aStrafe;
 
-                if (CurrentVehicle != none && (bInterpolatedVehicleThrottle || (AV != none && bInterpolatedTankThrottle)))
+                if (bIncrementalThrottle)
                 {
                     if (aForward > 0.0)
                     {
@@ -1528,7 +1794,7 @@ state PlayerDriving
         }
         else
         {
-            if (CurrentVehicle != none && (bInterpolatedVehicleThrottle || (AV != none && bInterpolatedTankThrottle)))
+            if (bIncrementalThrottle)
             {
                 if (aForward > 0.0)
                 {
@@ -1581,6 +1847,8 @@ state PlayerDriving
 
 state PlayerSwimming
 {
+ignores SeePlayer, HearNoise, Bump;
+
     // Modified so if player moves into a shallow water volume, they exit swimming state, same as if they move into a non-water volume
     function bool NotifyPhysicsVolumeChange(PhysicsVolume NewVolume)
     {
@@ -1719,6 +1987,8 @@ state PlayerSwimming
 
 state PlayerClimbing
 {
+ignores SeePlayer, HearNoise, Bump;
+
     // Modified so moving into a shallow water volume doesn't send player into swimming state
     function bool NotifyPhysicsVolumeChange(PhysicsVolume NewVolume)
     {
@@ -1732,6 +2002,90 @@ state PlayerClimbing
         }
 
         return false;
+    }
+}
+
+// Modified so player can enter vehicle if looking at one of its vehicle weapons (generally a turret), not just its hull/base
+// In particular this makes it much easier to enter AT guns, which can have a very small base & a large 'turret'
+function ServerUse()
+{
+    local Vehicle   EntryVehicle;
+    local Actor     LookedAtActor, A;
+
+    if (Role < ROLE_Authority)
+    {
+        return;
+    }
+
+    if (Level.Pauser == PlayerReplicationInfo)
+    {
+        SetPause(false);
+
+        return;
+    }
+
+    if (Pawn == none || !Pawn.bCanUse)
+    {
+        return;
+    }
+
+    // If player is in a vehicle, try to exit it
+    if (Vehicle(Pawn) != none)
+    {
+        Vehicle(Pawn).KDriverLeave(false);
+
+        return;
+    }
+
+    // Otherwise try to use any actor the player is looking at & is standing directly in front of
+    if (ROPawn(Pawn) != none)
+    {
+        LookedAtActor = ROPawn(Pawn).AutoTraceActor;
+
+        if (LookedAtActor != none)
+        {
+            if (LookedAtActor.IsA('DHCollisionMeshActor') && LookedAtActor.Owner != none)
+            {
+                LookedAtActor = LookedAtActor.Owner; // if looking at a collision static mesh actor, switch to the vehicle weapon or vehicle it represents
+            }
+
+            if (VehicleWeapon(LookedAtActor) != none && LookedAtActor.Base != none)
+            {
+                LookedAtActor = LookedAtActor.Base; // if looking at a vehicle weapon, switch to its vehicle base
+            }
+
+            // If player is looking at a vehicle, try to enter it
+            if (ROVehicle(LookedAtActor) != none)
+            {
+                EntryVehicle = ROVehicle(LookedAtActor).FindEntryVehicle(Pawn);
+
+                if (EntryVehicle != none && EntryVehicle.TryToDrive(Pawn))
+                {
+                    return;
+                }
+            }
+            // Otherwise try to use whatever other actor player is looking at
+            else
+            {
+                LookedAtActor.UsedBy(Pawn);
+
+                return;
+            }
+        }
+    }
+
+    // Send the 'UsedBy' event to each actor the player is touching, including its Base
+    foreach Pawn.TouchingActors(class'Actor', A)
+    {
+        if (!A.bCanAutoTraceSelect)
+        {
+            A.UsedBy(Pawn);
+        }
+    }
+
+    if (Pawn.Base != none)
+    {
+        Pawn.Base.UsedBy(Pawn);
     }
 }
 
@@ -1814,10 +2168,78 @@ function AdjustView(float DeltaTime)
     }
 }
 
+// Modified to avoid calling ResetFOV() if player is possessing a vehicle, because the vehicle will always set the FOV correctly anyway
+// Fixes occasional network bug where ResetFOV() was received by a client AFTER vehicle had correctly set FOV, resulting in incorrect unmagnified view on a vehicle weapon
+// Also a network optimisation as avoids a pointless replicated function call
+function Possess(Pawn aPawn)
+{
+    local Pawn    OldPawn;
+    local Vehicle V;
+
+    if (PlayerReplicationInfo == none || PlayerReplicationInfo.bOnlySpectator || aPawn == none)
+    {
+        return;
+    }
+
+    OldPawn = Pawn;
+    V = Vehicle(aPawn);
+
+    if (V == none) // added this check to fix a bug & as a network optimisation
+    {
+        ResetFOV();
+    }
+
+    aPawn.PossessedBy(self); // if possessing vehicle, PossessedBy() calls ClientKDriverEnter() on owning client, so could use that to do other client stuff, avoiding further replicated functions?
+    Pawn = aPawn;
+    Pawn.bStasis = false;
+    ResetTimeMargin(); // this gets called in Restart(), just after this, so appears unnecessary to have it here
+    CleanOutSavedMoves(); // avoids replaying any moves prior to possession
+
+    if (V != none && V.Driver != none)
+    {
+        PlayerReplicationInfo.bIsFemale = V.Driver.bIsFemale;
+    }
+    else
+    {
+        PlayerReplicationInfo.bIsFemale = Pawn.bIsFemale;
+    }
+
+    ServerSetHandedness(Handedness);
+    ServerSetAutoTaunt(bAutoTaunt); // this function has been emptied out in RO anyway
+    Restart(); // this calls the replicated ClientRestart() function on the owning client
+    StopViewShaking();
+
+    // Stopped this replicated function being called when exiting a vehicle position, as it only resets bDuck & bCrawl, which aren't relevant in a vehicle
+    // I'm sure we could optimise the network further by calling this from ClientRestart(), which is already being called on the owning client
+    if (Vehicle(OldPawn) == none)
+    {
+        ClientResetMovement();
+    }
+
+    if (ROPawn(aPawn) != none)
+    {
+        ROPawn(aPawn).Setup(PawnSetupRecord, true);
+    }
+}
+
 // Server call to client to force prone
 function ClientProne()
 {
     Prone();
+}
+
+// Modified to disallow this from being spammed without limits.
+// As an added bonus, this solves a particular bug where players would end up
+// in an odd state where their bipodded machine-guns would appear to be shooting
+// blanks, likely as a result of a client-server state mismatch.
+exec function ToggleDuck()
+{
+    if (Level.TimeSeconds >= NextToggleDuckTimeSeconds)
+    {
+        NextToggleDuckTimeSeconds = Level.TimeSeconds + ToggleDuckIntervalSeconds;
+
+        super.ToggleDuck();
+    }
 }
 
 // Server call to client to toggle duck
@@ -1826,18 +2248,25 @@ function ClientToggleDuck()
     ToggleDuck();
 }
 
-// Matt: modified to network optimise by removing automatic call to replicated server function in a VehicleWeaponPawn
+// Modified to network optimise by removing automatic call to replicated server function in a VehicleWeaponPawn
 // Instead we let WVP's clientside IncrementRange() check that it's a valid operation before sending server call
 exec function LeanRight()
 {
-    if (ROPawn(Pawn) != none)
+    local DHPawn P;
+
+    P = DHPawn(Pawn);
+
+    if (P != none)
     {
-        if (!Pawn.bBipodDeployed)
+        if (!P.bBipodDeployed)
         {
-            ROPawn(Pawn).LeanRight();
+            P.LeanRight();
         }
 
-        ServerLeanRight(true);
+        if (P.bLeanRight)
+        {
+            ServerLeanRight(true);
+        }
     }
     else if (VehicleWeaponPawn(Pawn) != none)
     {
@@ -1847,14 +2276,21 @@ exec function LeanRight()
 
 exec function LeanLeft()
 {
-    if (ROPawn(Pawn) != none)
+    local DHPawn P;
+
+    P = DHPawn(Pawn);
+
+    if (P != none)
     {
-        if (!Pawn.bBipodDeployed)
+        if (!P.bBipodDeployed)
         {
-            ROPawn(Pawn).LeanLeft();
+            P.LeanLeft();
         }
 
-        ServerLeanLeft(true);
+        if (P.bLeanLeft)
+        {
+            ServerLeanLeft(true);
+        }
     }
     else if (VehicleWeaponPawn(Pawn) != none && VehicleWeaponPawn(Pawn).Gun != none)
     {
@@ -1920,11 +2356,14 @@ function bool CanRestartPlayer()
     {
         return false;
     }
-    else if ((bIsInSpawnMenu && VehiclePoolIndex == 255) || !HasSelectedTeam() || !HasSelectedRole() || !HasSelectedWeapons() || !HasSelectedSpawn())
+    else if ((bIsInSpawnMenu && VehiclePoolIndex == -1) || !HasSelectedTeam() || !HasSelectedRole() || !HasSelectedWeapons() || !HasSelectedSpawn())
     {
         return false;
     }
-    else if (DHGRI.ElapsedTime < NextSpawnTime)
+
+    NextSpawnTime = GetNextSpawnTime(SpawnPointIndex, DHRoleInfo(GetRoleInfo()), VehiclePoolIndex);
+
+    if (DHGRI.ElapsedTime < NextSpawnTime || DHGRI.ElapsedTime < DHGRI.SpawningEnableTime)
     {
         return false;
     }
@@ -1940,7 +2379,7 @@ function bool HasSelectedSpawn()
 
     if (G != none && G.DHLevelInfo != none && G.DHLevelInfo.SpawnMode == ESM_DarkestHour)
     {
-        return SpawnPointIndex != 255 || SpawnVehicleIndex != 255;
+        return SpawnPointIndex != -1;
     }
 
     return true;
@@ -1953,6 +2392,7 @@ simulated function ClientForcedTeamChange(int NewTeamIndex, int NewRoleIndex)
     ForcedTeamSelectOnRoleSelectPage = NewTeamIndex;
     DesiredRole = NewRoleIndex;
 
+    DeployMenuStartMode = MODE_Map;
     ClientReplaceMenu("DH_Interface.DHDeployMenu");
 }
 
@@ -2018,14 +2458,20 @@ exec function CommunicationMenu()
 
 // This function returns the time the player will be able to spawn next
 // given some spawn parameters (DHRoleInfo and VehiclePoolIndex).
-simulated function int GetNextSpawnTime(DHRoleInfo RI, byte VehiclePoolIndex)
+simulated function int GetNextSpawnTime(int SpawnPointIndex, DHRoleInfo RI, int VehiclePoolIndex)
 {
     local int T;
     local DHGameReplicationInfo GRI;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (RI == none || GRI == none || PlayerReplicationInfo == none || PlayerReplicationInfo.Team == none)
+    if (RI == none ||
+        GRI == none ||
+        PlayerReplicationInfo == none ||
+        PlayerReplicationInfo.Team == none ||
+        SpawnPointIndex < 0 ||
+        SpawnPointIndex >= arraycount(GRI.SpawnPoints) ||
+        GRI.SpawnPoints[SpawnPointIndex] == none)
     {
         return 0;
     }
@@ -2034,16 +2480,15 @@ simulated function int GetNextSpawnTime(DHRoleInfo RI, byte VehiclePoolIndex)
     if (bSpawnedKilled)
     {
         T = LastKilledTime + SPAWN_KILL_RESPAWN_TIME;
-        bSpawnedKilled = false; // We got the reduced time, so we should set this to false
     }
     else
     {
         // LastKilledTime is 0 the first time a player joins a server, but if he leaves, the time is stored (using the sessions thing)
         // this means the player can pretty much spawn right away the first time connecting, but from then on he will be subject to the respawn time factors
-        T = LastKilledTime + GRI.ReinforcementInterval[PlayerReplicationInfo.Team.TeamIndex] + RI.AddedReinforcementTime + (DeathPenaltyCount * DEATH_PENALTY_FACTOR);
+        T = LastKilledTime + GRI.ReinforcementInterval[PlayerReplicationInfo.Team.TeamIndex] + RI.AddedReinforcementTime + GRI.SpawnPoints[SpawnPointIndex].GetSpawnTimePenalty();
     }
 
-    if (VehiclePoolIndex != 255)
+    if (VehiclePoolIndex != -1)
     {
         T = Max(T, GRI.VehiclePoolNextAvailableTimes[VehiclePoolIndex]);
         T = Max(T, NextVehicleSpawnTime);
@@ -2062,11 +2507,19 @@ simulated function ResetSwayValues()
 simulated function SwayHandler(float DeltaTime)
 {
     local DHPawn P;
+    local DHWeapon W;
     local float  WeaponSwayYawAcc, WeaponSwayPitchAcc, StaminaFactor, TimeFactor, DeltaSwayYaw, DeltaSwayPitch;
 
     P = DHPawn(Pawn);
 
     if (P == none)
+    {
+        return;
+    }
+
+    W = DHWeapon(P.Weapon);
+
+    if (W == none)
     {
         return;
     }
@@ -2091,42 +2544,48 @@ simulated function SwayHandler(float DeltaTime)
     StaminaFactor = ((P.default.Stamina - P.Stamina) / P.default.Stamina) * 0.5;
     TimeFactor = InterpCurveEval(SwayCurve, SwayTime);
 
-    if (DHWeapon(P.Weapon) != none)
-    {
-        TimeFactor *= DHWeapon(P.Weapon).SwayModifyFactor; // added option for weapon specific modifier
-    }
+    // Apply DH sway modifier
+    TimeFactor *= W.SwayModifyFactor; // added option for weapon specific modifier
 
     WeaponSwayYawAcc = (TimeFactor * WeaponSwayYawAcc) + (StaminaFactor * WeaponSwayYawAcc);
     WeaponSwayPitchAcc = (TimeFactor * WeaponSwayPitchAcc) + (StaminaFactor * WeaponSwayPitchAcc);
 
-    // Reduce sway reduction if crouching, prone or resting the weapon
+    // Applied overall modifier for not moving
+    if (P.bIsIdle)
+    {
+        WeaponSwayYawAcc *= W.SwayNotMovingModifier;
+        WeaponSwayPitchAcc *= W.SwayNotMovingModifier;
+    }
+
+    // Reduce sway reduction if crouching, prone or resting the weapon (order in lowest first)
     if (P.bRestingWeapon)
     {
-        WeaponSwayYawAcc *= 0.15; // both were 0.1
-        WeaponSwayPitchAcc *= 0.15;
-    }
-    else if (P.bIsCrouched)
-    {
-        WeaponSwayYawAcc *= 0.55; // both were 0.5
-        WeaponSwayPitchAcc *= 0.55;
+        WeaponSwayYawAcc *= W.SwayRestingModifier;
+        WeaponSwayPitchAcc *= W.SwayRestingModifier;
     }
     else if (P.bIsCrawling)
     {
-        WeaponSwayYawAcc *= 0.3;  // both were 0.15
-        WeaponSwayPitchAcc *= 0.3;
+        WeaponSwayYawAcc *= W.SwayProneModifier;
+        WeaponSwayPitchAcc *= W.SwayProneModifier;
+    }
+    else if (P.bIsCrouched)
+    {
+        WeaponSwayYawAcc *= W.SwayCrouchedModifier;
+        WeaponSwayPitchAcc *= W.SwayCrouchedModifier;
     }
 
     // Increase sway if getting up from prone or if leaning
-    if (P.IsProneTransitioning()) // added
+    if (P.IsProneTransitioning())
     {
-        WeaponSwayYawAcc *= 4.5;
-        WeaponSwayPitchAcc *= 4.5;
+        WeaponSwayYawAcc *= W.SwayTransitionModifier;
+        WeaponSwayPitchAcc *= W.SwayTransitionModifier;
     }
 
+    // Increase sway if leaning
     if (P.LeanAmount != 0.0)
     {
-        WeaponSwayYawAcc *= 1.45;
-        WeaponSwayPitchAcc *= 1.45;
+        WeaponSwayYawAcc *= W.SwayLeanModifier;
+        WeaponSwayPitchAcc *= W.SwayLeanModifier;
     }
 
     // Add an elastic factor to get sway near the original aim-point, & a damping factor to keep elastic factor from causing wild oscillations
@@ -2191,21 +2650,34 @@ exec function SwitchTeam() { }
 exec function ChangeTeam(int N) { }
 
 // Modified to not join the opposite team if it fails to join the one passed (fixes a nasty exploit)
-// Colin: This function verifies the spawn parameters (spawn point et al.) that
+// This function verifies the spawn parameters (spawn point et al.) that
 // are passed in, and sets them if they check out. If they don't check out, an
 // error is thrown.
-function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2, byte NewSpawnPointIndex, byte NewVehiclePoolIndex, byte NewSpawnVehicleIndex)
+//
+// TODO: This function is a fucking nightmare and needs to be refactored.
+// Namely, the team selection should *not* be rolled into this function.
+// It would be useful to roll up the "spawning parameters" (role, weapons,
+// spawn point etc.) into a struct so that it's easier to understand what's
+// going on.
+function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2, int NewSpawnPointIndex, int NewVehiclePoolIndex)
 {
     local bool bDidFail;
     local DarkestHourGame Game;
     local DHRoleInfo RI;
     local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
     // Attempt to change teams
     if (newTeam != 255)
     {
+        if (NextChangeTeamTime >= GRI.ElapsedTime)
+        {
+            return;
+        }
+
         // Spectate
         if (newTeam == 254)
         {
@@ -2257,18 +2729,6 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
                 }
 
                 ServerChangeTeam(newTeam);
-
-                // Because we switched teams we should reset current role, desired role, etc.
-                ROPlayerReplicationInfo(PlayerReplicationInfo).RoleInfo = none;
-                DesiredRole = -1;
-                CurrentRole = -1;
-                SpawnPointIndex = 255;
-                SpawnVehicleIndex = 255;
-                GRI.UnreserveVehicle(self);
-                DesiredPrimary = 0;
-                DesiredSecondary = 0;
-                DesiredGrenade = 0;
-                bSpawnPointInvalidated = false;
             }
 
             // Check if change failed and output results
@@ -2284,7 +2744,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
                 {
                     ClientChangePlayerInfoResult(11);
                 }
-                else if (Level.Game.NumPlayers >= Level.Game.MaxPlayers)
+                else if (Level.Game.GetNumPlayers() >= Level.Game.MaxPlayers)
                 {
                     ClientChangePlayerInfoResult(12);
                 }
@@ -2352,18 +2812,20 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
     // Set weapons
     ChangeWeapons(NewWeapon1, NewWeapon2, 0);
 
-    // return result to client
+    // Return result to client
     if (NewTeam == AXIS_TEAM_INDEX)
     {
-        ClientChangePlayerInfoResult(97);   // successfully picked axis team
+        ClientChangePlayerInfoResult(97); // successfully picked axis team
     }
     else if (NewTeam == ALLIES_TEAM_INDEX)
     {
-        ClientChangePlayerInfoResult(98);   // successfully picked allies team
+        ClientChangePlayerInfoResult(98); // successfully picked allies team
     }
+    // TODO: doesn't appear necessary or useful to pass this new 96 success code for switching to a spectator (Matt, June 2017)
+    // Only appears to require an override in DHGUITeamSelection.InternalOnMessage() to make it do exactly the same as if we just passed no.0 (as in RO for a spectator)
     else if (NewTeam == 254)
     {
-        ClientChangePlayerInfoResult(96);   // successfully picked spectator team
+        ClientChangePlayerInfoResult(96); // successfully picked spectator team
     }
     else
     {
@@ -2380,7 +2842,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
                 RI = DHRoleInfo(Game.GetRoleInfo(PlayerReplicationInfo.Team.TeamIndex, DesiredRole));
             }
 
-            if (GRI != none && GRI.AreSpawnSettingsValid(GetTeamNum(), RI, NewSpawnPointIndex, NewVehiclePoolIndex, NewSpawnVehicleIndex))
+            if (GRI != none && GRI.CanSpawnWithParameters(NewSpawnPointIndex, GetTeamNum(), DesiredRole, PRI.SquadIndex, NewVehiclePoolIndex, true))
             {
                 if (NewVehiclePoolIndex != VehiclePoolIndex)
                 {
@@ -2397,8 +2859,7 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
             if (!bDidFail)
             {
                 SpawnPointIndex = NewSpawnPointIndex;
-                SpawnVehicleIndex = NewSpawnVehicleIndex;
-                NextSpawnTime = GetNextSpawnTime(RI, VehiclePoolIndex);
+                NextSpawnTime = GetNextSpawnTime(SpawnPointIndex, RI, VehiclePoolIndex);
 
                 bSpawnPointInvalidated = false;
 
@@ -2409,7 +2870,6 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
             {
                 SpawnPointIndex = default.SpawnPointIndex;
                 VehiclePoolIndex = default.VehiclePoolIndex;
-                SpawnVehicleIndex = default.SpawnVehicleIndex;
                 NextSpawnTime = default.NextSpawnTime;
 
                 // this needs commented on what it is doing, in fact most of this function does, very hard to follow
@@ -2440,13 +2900,13 @@ function Reset()
     super.Reset();
 
     WeaponUnlockTime = default.WeaponUnlockTime;
+    WeaponLockViolations = default.WeaponLockViolations;
     NextSpawnTime = default.NextSpawnTime;
     SpawnPointIndex = default.SpawnPointIndex;
-    SpawnVehicleIndex = default.SpawnVehicleIndex;
     VehiclePoolIndex = default.VehiclePoolIndex;
+    NextChangeTeamTime = default.NextChangeTeamTime;
     LastKilledTime = default.LastKilledTime;
     NextVehicleSpawnTime = default.NextVehicleSpawnTime;
-    DeathPenaltyCount = default.DeathPenaltyCount;
 }
 
 function ServerSetIsInSpawnMenu(bool bIsInSpawnMenu)
@@ -2454,7 +2914,7 @@ function ServerSetIsInSpawnMenu(bool bIsInSpawnMenu)
     self.bIsInSpawnMenu = bIsInSpawnMenu;
 }
 
-// Matt: just added Begin: label, to avoid "label not found" error on ClientGotoState calls to send client to state 'Spectating' or 'PlayerWaiting' (both child states of this)
+// Modified to add 'Begin:' label, to avoid "label not found" error on ClientGotoState calls to send client to state 'Spectating' or 'PlayerWaiting' (both child states of this)
 state BaseSpectating
 {
 Begin:
@@ -2462,19 +2922,28 @@ Begin:
 
 state DeadSpectating
 {
+    ignores SwitchWeapon, RestartLevel, ClientRestart, Suicide, ThrowWeapon, NotifyPhysicsVolumeChange, NotifyHeadVolumeChange;
+
     function BeginState()
     {
         super.BeginState();
 
         if (!PlayerReplicationInfo.bOnlySpectator && bSpawnPointInvalidated)
         {
+            DeployMenuStartMode = MODE_Map;
             ClientProposeMenu("DH_Interface.DHDeployMenu");
         }
+    }
+
+    exec function Jump(optional float F)
+    {
     }
 }
 
 state Dead
 {
+ignores SeePlayer, HearNoise, KilledBy, SwitchWeapon, NextWeapon, PrevWeapon;
+
     function BeginState()
     {
         local DHGameReplicationInfo GRI;
@@ -2558,7 +3027,7 @@ function PawnDied(Pawn P)
 {
     local DarkestHourGame G;
     local DHGameReplicationInfo GRI;
-    local DHRoleInfo      RI;
+    local DHRoleInfo RI;
 
     if (P == none)
     {
@@ -2570,20 +3039,20 @@ function PawnDied(Pawn P)
     G = DarkestHourGame(Level.Game);
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (G != none)
+    if (G != none && GRI != none)
     {
         RI = DHRoleInfo(G.GetRoleInfo(GetTeamNum(), DesiredRole));
 
         if (RI != none)
         {
-            NextSpawnTime = GetNextSpawnTime(RI, VehiclePoolIndex);
+            NextSpawnTime = GetNextSpawnTime(SpawnPointIndex, RI, VehiclePoolIndex);
         }
     }
+}
 
-    if (GRI != none && GRI.bUseDeathPenaltyCount)
-    {
-        ++DeathPenaltyCount;
-    }
+// Emptied out as irrelevant to RO/DH (concerns UT2004 PowerUps) & can just cause "accessed none" log errors if keybound & used (if player in vehicle or has no inventory)
+exec function PrevItem()
+{
 }
 
 // Emptied out so human player doesn't receive "you picked up the [weapon name]" messages when they pick up a weapon
@@ -2675,8 +3144,19 @@ event ClientProposeMenu(string Menu, optional string Msg1, optional string Msg2)
 
 function ClientSaveROIDHash(string ROID)
 {
+    local HTTPRequest PatronRequest;
+
     ROIDHash = ROID;
+
     SaveConfig();
+
+    // Now send the patron status request.
+    PatronRequest = Spawn(class'HTTPRequest');
+    PatronRequest.Method = "GET";
+    PatronRequest.Host = "darkesthour.darklightgames.com";
+    PatronRequest.Path = "/client/patron.php?steamid64=" $ ROIDHash;
+    PatronRequest.OnResponse = PatronRequestOnResponse;
+    PatronRequest.Send();
 }
 
 // Modified so if we just switched off manual reloading & player is in a cannon that's waiting to reload, we pass any different pending ammo type to the server
@@ -2686,7 +3166,7 @@ simulated function SetManualTankShellReloading(bool bUseManualReloading)
 
     if (Role < ROLE_Authority && !bUseManualReloading && DHVehicleCannonPawn(Pawn) != none)
     {
-        Cannon = DHVehicleCannon(DHVehicleCannonPawn(Pawn).Gun);
+        Cannon = DHVehicleCannonPawn(Pawn).Cannon;
 
         if (Cannon != none && Cannon.ReloadState == RL_Waiting)
         {
@@ -2700,38 +3180,88 @@ simulated function SetManualTankShellReloading(bool bUseManualReloading)
 // Modified to use DH cannon class & AttemptReload() function, instead of deprecated ROTankCannon & ServerManualReload()
 function ServerSetManualTankShellReloading(bool bUseManualReloading)
 {
+    local DHVehicleCannon Cannon;
+
     bManualTankShellReloading = bUseManualReloading;
 
     // If we just switched off manual reloading & player is in a cannon that is waiting to reload, try to start a reload
-    if (!bUseManualReloading && DHVehicleCannonPawn(Pawn) != none && DHVehicleCannonPawn(Pawn).VehWep != none && DHVehicleCannonPawn(Pawn).VehWep.ReloadState == RL_Waiting)
+    if (!bManualTankShellReloading && DHVehicleCannonPawn(Pawn) != none)
     {
-        DHVehicleCannonPawn(Pawn).VehWep.AttemptReload();
+        Cannon = DHVehicleCannonPawn(Pawn).Cannon;
+
+        if (Cannon != none && Cannon.ReloadState == RL_Waiting)
+        {
+            Cannon.AttemptReload();
+        }
     }
+}
+
+// New function to set the bLockTankOnEntry option, which is enabled/disabled from the game settings menu
+simulated function SetLockTankOnEntry(bool bEnabled)
+{
+    local DHArmoredVehicle    AV;
+    local DHVehicleWeaponPawn WP;
+
+    bLockTankOnEntry = bEnabled;
+
+    // If the option has just been enabled & the player is in a tank crew position in an armored vehicle, try to automatically lock it now
+    if (Role == ROLE_Authority)
+    {
+        if (bLockTankOnEntry && Vehicle(Pawn) != none)
+        {
+            if (Pawn.IsA('DHArmoredVehicle'))
+            {
+                AV = DHArmoredVehicle(Pawn);
+            }
+            else if (Pawn.IsA('DHVehicleWeaponPawn'))
+            {
+                WP = DHVehicleWeaponPawn(Pawn);
+
+                if (WP.bMustBeTankCrew)
+                {
+                    WP.GetArmoredVehicleBase(AV);
+                }
+            }
+
+            // Player hasn't just entered vehicle, but the functionality is identical & UpdateVehicleLockOnPlayerEntering() will do what we need
+            if (AV != none && !AV.bVehicleLocked)
+            {
+                AV.UpdateVehicleLockOnPlayerEntering(Vehicle(Pawn));
+            }
+        }
+    }
+    // Or of we're a net client, pass the new setting to the server
+    else
+    {
+        ServerSetLockTankOnEntry(bLockTankOnEntry);
+    }
+}
+
+// New client-to-server replicated function to set the bLockTankOnEntry option on a server
+function ServerSetLockTankOnEntry(bool bEnabled)
+{
+    SetLockTankOnEntry(bEnabled);
 }
 
 // New function to put player into 'weapon lock' for a specified number of seconds, during which time he won't be allowed to fire
 // In multi-player it is initially called on server & then on owning net client, via a replicated function call
-simulated function LockWeapons(int Seconds)
+simulated function LockWeapons(int Seconds, optional int Reason)
 {
     if (Seconds > 0 && GameReplicationInfo != none)
     {
         WeaponUnlockTime = GameReplicationInfo.ElapsedTime + Seconds;
 
-        // If this is the local player, flag him as weapon locked & show him a warning screen message
-        // Note bWeaponsAreLocked is only used so we know an unlock message needs to be displayed locally after the locked time expires
-        // Setting a future WeaponUnlockTime is what actually prevents weapons being used
+        // If this is the local player, show him a warning screen message & release his fire buttons
         if (Viewport(Player) != none)
         {
-            bWeaponsAreLocked = true;
-            ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 0); // "Your weapons have been locked due to excessive spawn killing!"
-
+            ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', Reason);
             bFire = 0; // 'releases' fire button if being held down, which stops automatic weapon fire from continuing & avoids spamming repeated messages & buzz sounds
             bAltFire = 0;
         }
         // Or a server calls replicated function to do similar on an owning net client (passing seconds as a byte for efficient replication)
         else if (Role == ROLE_Authority)
         {
-            ClientLockWeapons(byte(Seconds));
+            ClientLockWeapons(Seconds);
         }
     }
     // Hacky fix for problem where player re-joins server with an active weapon lock saved in his DHPlayerSession, but client doesn't yet have GRI
@@ -2747,7 +3277,7 @@ simulated function ClientLockWeapons(byte Seconds)
 {
     if (Role < ROLE_Authority)
     {
-        LockWeapons(int(Seconds));
+        LockWeapons(Seconds);
     }
 }
 
@@ -2755,21 +3285,33 @@ simulated function ClientLockWeapons(byte Seconds)
 // Called from the 1 second timer running continually in the GameInfo & GRI actors (GRI for net clients)
 simulated function CheckUnlockWeapons()
 {
-    if (bWeaponsAreLocked && GameReplicationInfo != none && GameReplicationInfo.ElapsedTime >= WeaponUnlockTime)
+    if (WeaponUnlockTime > 0 && GameReplicationInfo != none && GameReplicationInfo.ElapsedTime >= WeaponUnlockTime)
     {
-        bWeaponsAreLocked = false;
+        WeaponUnlockTime = 0; // reset this now, as when set it effectively acts as a flag that weapons are locked
         ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 2); // "Your weapons are now unlocked"
     }
 }
 
-// New helper function to check whether player's weapons are locked due to spawn killing, so he's unable to fire, including warning message on screen
+// New helper function to check whether player's weapons are locked due to spawn killing, so he's unable to fire, including warning message on screen.
+// TODO: Make this return an enum as to the weapon lock reason and leave it up to the caller to send the messages.
 simulated function bool AreWeaponsLocked(optional bool bNoScreenMessage)
 {
-    if (GameReplicationInfo != none && WeaponUnlockTime > GameReplicationInfo.ElapsedTime)
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI != none && (WeaponUnlockTime > GRI.ElapsedTime || GRI.bIsInSetupPhase))
     {
         if (!bNoScreenMessage)
         {
-            ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 1,,, self); // "Your weapons are locked for X seconds"
+            if (GRI.bIsInSetupPhase)
+            {
+                ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 3,,, self); // "Your weapons are locked during the setup phase"
+            }
+            else
+            {
+                ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 1,,, self); // "Your weapons are locked for X seconds"
+            }
         }
 
         return true;
@@ -2782,10 +3324,29 @@ simulated function bool AreWeaponsLocked(optional bool bNoScreenMessage)
 //  *************************** DEBUG EXEC FUNCTIONS  *****************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+// New helper function to check whether debug execs can be run
+simulated function bool IsDebugModeAllowed()
+{
+    return Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode();
+}
+
+// Modified to ignore the Super in ROPlayer, which mostly added repeated info (player name & our state), plus pretty useless bCrawl, all badly formatted
+// And to also show the PlayerController's rotation & location
+simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
+{
+    super(UnrealPlayer).DisplayDebug(Canvas, YL, YPos);
+
+    Canvas.SetPos(4.0, YPos);
+    Canvas.SetDrawColor(255, 0, 0);
+    Canvas.DrawText("     Location:" @ Location @ " Rotation:" @ Rotation);
+    YPos += YL;
+    Canvas.SetPos(4.0, YPos);
+}
+
 // New debug exec to put self into 'weapon lock' for specified number of seconds
 exec function DebugLockWeapons(int Seconds)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         ServerLockWeapons(Seconds);
     }
@@ -2799,7 +3360,7 @@ function ServerLockWeapons(int Seconds)
 // Modified to work in debug mode, as well as in single player
 exec function FOV(float F)
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         DefaultFOV = FClamp(F, 1.0, 170.0);
         DesiredFOV = DefaultFOV;
@@ -2809,7 +3370,8 @@ exec function FOV(float F)
 // New debug exec for an easy way to write to log in-game, on both server & client in multi-player
 exec function DoLog(string LogMessage)
 {
-    if (LogMessage != "" && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode() || (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin)))
+    // Note bSilentAdmin won't work on a net client as bSilentAdmin isn't replicated (unlike bAdmin), so client can't tell that player is logged in
+    if (LogMessage != "" && (IsDebugModeAllowed() || (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin)))
     {
         Log(GetHumanReadableName() @ ":" @ LogMessage);
 
@@ -2822,7 +3384,7 @@ exec function DoLog(string LogMessage)
 
 function ServerDoLog(string LogMessage)
 {
-    if (LogMessage != "" && (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode() || (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin)))
+    if (LogMessage != "" && (IsDebugModeAllowed() || (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin)))
     {
         Log(GetHumanReadableName() @ ":" @ LogMessage);
     }
@@ -2832,7 +3394,7 @@ exec function DebugObstacles(optional int Option)
 {
     local DHObstacleInfo OI;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         foreach AllActors(class'DHObstacleInfo', OI)
         {
@@ -2847,67 +3409,9 @@ exec function DebugObstacles(optional int Option)
 
 function ServerDebugObstacles(optional int Option)
 {
-    DarkestHourGame(Level.Game).ObstacleManager.DebugObstacles(Option);
-}
-
-// New debug exec to make bots spawn
-// Team is 0 for axis, 1 for allies, 2 for both
-// Num is optional & limits the number of bots that will be spawned (if not entered, zero is passed & gets used to signify no limit on numbers)
-exec function DebugSpawnBots(int Team, optional int Num, optional int Distance)
-{
-    local DarkestHourGame DHG;
-    local Controller      C;
-    local ROBot           B;
-    local vector          TargetLocation, RandomOffset;
-    local rotator         Direction;
-    local int             i;
-
-    DHG = DarkestHourGame(Level.Game);
-
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && DHG != none && Pawn != none)
+    if (IsDebugModeAllowed() && DarkestHourGame(Level.Game) != none)
     {
-        TargetLocation = Pawn.Location;
-
-        // If a Distance has been specified, move the target spawn location that many metres away from the player's location, in the yaw direction he is facing
-        if (Distance > 0)
-        {
-            Direction.Yaw = Pawn.Rotation.Yaw;
-            TargetLocation = TargetLocation + (vector(Direction) * class'DHUnits'.static.MetersToUnreal(Distance));
-        }
-
-        for (C = Level.ControllerList; C != none; C = C.NextController)
-        {
-            B = ROBot(C);
-
-            // Look for bots that aren't in game & are on the the specified team (Team 2 signifies to spawn bots of both teams)
-            if (B != none && B.Pawn == none && (Team == 2 || B.GetTeamNum() == Team))
-            {
-                // Spawn bot
-                DHG.DeployRestartPlayer(B, false, true);
-
-                if (B != none && B.Pawn != none)
-                {
-                    // Randomise location a little, so bots don't all spawn on top of each other
-                    RandomOffset = VRand() * 120.0;
-                    RandomOffset.Z = 0.0;
-
-                    // Move bot to target location
-                    if (B.Pawn.SetLocation(TargetLocation + RandomOffset))
-                    {
-                        // If spawn & move successful, check if we've reached any specified number of bots to spawn (NumBots zero signifies no limit, so skip this check)
-                        if (Num > 0 && ++i >= Num)
-                        {
-                            break;
-                        }
-                    }
-                    // But if we couldn't move the bot to the target, kill the pawn
-                    else
-                    {
-                        B.Pawn.Suicide();
-                    }
-                }
-            }
-        }
+        DarkestHourGame(Level.Game).ObstacleManager.DebugObstacles(Option);
     }
 }
 
@@ -2917,7 +3421,7 @@ exec function DebugHints()
     local DHHintManager.HintInfo Hint;
     local int i;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         if (DHHintManager != none)
         {
@@ -2949,7 +3453,7 @@ exec function SoundPlay(string SoundName, optional float Volume)
 {
     local sound SoundToPlay;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && SoundName != "")
+    if (IsDebugModeAllowed() && SoundName != "")
     {
         SoundToPlay = sound(DynamicLoadObject(SoundName, class'Sound'));
 
@@ -2973,7 +3477,7 @@ exec function PlayerCollisionDebug()
 // Modified to use DH version of debug mode
 exec function ClearLines()
 {
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         ClearStayingDebugLines();
     }
@@ -2984,7 +3488,7 @@ exec function ClearArrows()
 {
     local RODebugTracer Tracer;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         foreach DynamicActors(class'RODebugTracer', Tracer)
         {
@@ -3004,7 +3508,7 @@ exec function LeaveBody(optional bool bKeepPRI)
     local DHVehicle           V;
     local Pawn                OldPawn;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Pawn != none)
+    if (IsDebugModeAllowed() && Pawn != none)
     {
         // If player is in vehicle with an interior mesh, switch to default exterior mesh & play the appropriate animations to put vehicle & player in correct position
         V = DHVehicle(Pawn);
@@ -3044,7 +3548,7 @@ function ServerLeaveBody(optional bool bKeepPRI)
     local Vehicle           V;
     local VehicleWeaponPawn WP;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && Pawn != none)
+    if (IsDebugModeAllowed() && Pawn != none)
     {
         Pawn.UnPossessed();
 
@@ -3088,7 +3592,7 @@ exec function FixPinHead()
 {
     local ROPawn TargetPawn;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && ROPawn(Pawn) != none)
+    if (IsDebugModeAllowed() && ROPawn(Pawn) != none)
     {
         TargetPawn = ROPawn(ROPawn(Pawn).AutoTraceActor);
 
@@ -3104,7 +3608,7 @@ exec function PossessBody()
 {
     local Pawn   TargetPawn;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && ROPawn(Pawn) != none)
+    if (IsDebugModeAllowed() && ROPawn(Pawn) != none)
     {
         TargetPawn = ROPawn(ROPawn(Pawn).AutoTraceActor);
 
@@ -3123,7 +3627,7 @@ exec function PossessBody()
 
 function ServerPossessBody(Pawn NewPawn)
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && NewPawn != none)
+    if (IsDebugModeAllowed() && NewPawn != none)
     {
         // If the pawn body is already associated with the player (shares PRI) then possess it & kill off current pawn
         if (NewPawn.PlayerReplicationInfo == PlayerReplicationInfo)
@@ -3141,31 +3645,10 @@ function ServerPossessBody(Pawn NewPawn)
     }
 }
 
-exec function URL(string S)
-{
-    local URL U;
-
-    U = class'URL'.static.FromString(S);
-
-    Log(U);
-
-    if (U != none)
-    {
-        Log("Scheme" @ U.Scheme);
-        Log("User" @ U.Username);
-        Log("Pass" @ U.Password);
-        Log("Host" @ U.Host);
-        Log("Path" @ U.Path);
-        Log("Query" @ U.Query);
-        Log("Fragment" @ U.Fragment);
-        Log("Port" @ U.Port);
-    }
-}
-
 // New debug exec to trigger or un-trigger a specified event
 exec function DebugEvent(name EventToTrigger, optional bool bUntrigger)
 {
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && EventToTrigger != '')
+    if (IsDebugModeAllowed() && EventToTrigger != '')
     {
         if (bUntrigger)
         {
@@ -3180,22 +3663,59 @@ exec function DebugEvent(name EventToTrigger, optional bool bUntrigger)
     }
 }
 
-exec function MetricsDump()
+// Used for finding pesky "raptor" actors sitting at world origin.
+simulated exec function DebugRaptor()
 {
-    ServerMetricsDump();
+    local Actor A;
+
+    foreach AllActors(class'Actor', A)
+    {
+        if (A.Location == vect(0, 0, 0) &&
+            A.DrawType == DT_Sprite &&
+            !A.bHidden)
+        {
+            Log(A);
+        }
+    }
 }
 
-function ServerMetricsDump()
+exec function GetMyLocation()
 {
-    local DarkestHourGame G;
+    local string s;
 
-    G = DarkestHourGame(Level.Game);
-
-    if (G.Metrics != none)
+    if (IsDebugModeAllowed())
     {
-        G.Broadcast(self, G.Metrics.Dump());
+        s = "(X=" $ ViewTarget.Location.X $ ",Y=" $ ViewTarget.Location.Y $ ",Z=" $ ViewTarget.Location.Z $ ")";
+        player.console.Message(s, 1.0);
+        CopyToClipBoard(s);
+    }
+}
 
-        Log(G.Metrics.Dump());
+exec function GetMyRotation()
+{
+    local string s;
+
+    if (IsDebugModeAllowed())
+    {
+        s = "(Pitch=" $ Rotation.Pitch $ ",Yaw=" $ Rotation.Yaw $ ",Roll=" $ Rotation.Roll $ ")";
+        player.console.Message(s, 1.0);
+        CopyToClipBoard(s);
+    }
+}
+
+exec function SetMyLocation(vector NewLocation)
+{
+    if (IsDebugModeAllowed())
+    {
+        ViewTarget.SetLocation(NewLocation);
+    }
+}
+
+exec function SetMyRotation(rotator NewRotation)
+{
+    if (IsDebugModeAllowed())
+    {
+        SetRotation(NewRotation);
     }
 }
 
@@ -3203,17 +3723,102 @@ function ServerMetricsDump()
 //  *********************** VEHICLE DEBUG EXEC FUNCTIONS  *************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// New helper function just to avoid code repetition & nesting in lots of vehicle-related debug execs
-simulated function bool GetVehicleBase(out DHVehicle V)
+// New helper function to check whether debug execs can be run on a vehicle that we are in
+// For convenience it also returns a reference to our DHVehicle base
+// Avoids code repetition & nesting in lots of vehicle-related debug execs
+simulated function bool IsVehicleDebugModeAllowed(out DHVehicle V)
 {
-    V = DHVehicle(Pawn);
-
-    if (V == none && VehicleWeaponPawn(Pawn) != none)
+    if (IsDebugModeAllowed())
     {
-        V = DHVehicle(VehicleWeaponPawn(Pawn).VehicleBase);
+        V = DHVehicle(Pawn);
+
+        if (V == none && VehicleWeaponPawn(Pawn) != none)
+        {
+            V = DHVehicle(VehicleWeaponPawn(Pawn).VehicleBase);
+        }
     }
 
     return V != none;
+}
+
+// New debug exec to turn player's vehicle translucent, which is very useful for debugging things like vehicle hit points
+exec function VehicleTranslucent(optional bool bRevert)
+{
+    local DHVehicle     V;
+    local array<Shader> TranslucentSkins;
+    local Material      NormalSkin;
+    local int           Index, i, j;
+
+    if (IsVehicleDebugModeAllowed(V))
+    {
+        // Re-skin the hull
+        for (i = 0; i < V.Skins.Length; ++i)
+        {
+            if (V.Skins[i] != V.LeftTreadPanner && V.Skins[i] != V.RightTreadPanner) // ignore the treads as they are VariableTexPanners
+            {
+                if (!bRevert)
+                {
+                    Index = TranslucentSkins.Length;
+                    TranslucentSkins[Index] = Shader(Level.ObjectPool.AllocateObject(class'Shader'));
+                    TranslucentSkins[Index].Diffuse = V.default.Skins[i];
+                    TranslucentSkins[Index].OutputBlending = OB_Translucent;
+                    V.Skins[i] = TranslucentSkins[Index];
+                }
+                else
+                {
+                    if (Shader(V.Skins[i]) != none) // clean up the translucent skin objects we created
+                    {
+                        Shader(V.Skins[i]).Diffuse = none;
+                        Level.ObjectPool.FreeObject(V.Skins[i]);
+                    }
+
+                    V.Skins[i] = V.default.Skins[i];
+                }
+            }
+        }
+
+        // Re-skin vehicle weapons
+        for (j = 0; j < V.WeaponPawns.Length; ++j)
+        {
+            if (V.WeaponPawns[j] != none && V.WeaponPawns[j].Gun != none)
+            {
+                for (i = 0; i < V.WeaponPawns[j].Gun.Skins.Length; ++i)
+                {
+                    if (V.WeaponPawns[j].Gun.IsA('DHVehicleCannon') && i < V.CannonSkins.Length && V.CannonSkins[i] != none)
+                    {
+                        NormalSkin = V.CannonSkins[i];
+                    }
+                    else if (i == 0 && V.WeaponPawns[j].Gun.IsA('DHVehicleMG') && DHVehicleMG(V.WeaponPawns[j].Gun).bMatchSkinToVehicle)
+                    {
+                        NormalSkin = V.Skins[i];
+                    }
+                    else
+                    {
+                        NormalSkin = V.WeaponPawns[j].Gun.default.Skins[i];
+                    }
+
+                    if (!bRevert)
+                    {
+                        Index = TranslucentSkins.Length;
+                        TranslucentSkins[Index] = Shader(Level.ObjectPool.AllocateObject(class'Shader'));
+                        TranslucentSkins[Index].Diffuse = NormalSkin;
+                        TranslucentSkins[Index].OutputBlending = OB_Translucent;
+                        V.WeaponPawns[j].Gun.Skins[i] = TranslucentSkins[Index];
+                    }
+                    else
+                    {
+                        if (Shader(V.WeaponPawns[j].Gun.Skins[i]) != none)
+                        {
+                            Shader(V.WeaponPawns[j].Gun.Skins[i]).Diffuse = none;
+                            Level.ObjectPool.FreeObject(V.WeaponPawns[j].Gun.Skins[i]);
+                        }
+
+                        V.WeaponPawns[j].Gun.Skins[i] = NormalSkin;
+                    }
+                }
+            }
+        }
+    }
 }
 
 // New debug exec to show vehicle damage status
@@ -3222,7 +3827,7 @@ exec function LogVehDamage()
     local DHVehicle V;
     local string    DamageText;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    if (IsVehicleDebugModeAllowed(V))
     {
         DamageText = V.VehicleNameString @ "Health =" @ V.Health @ " EngineHealth =" @ V.EngineHealth
             @ " bLeftTrackDamaged =" @ V.bLeftTrackDamaged @ " bRightTrackDamaged =" @ V.bRightTrackDamaged @ " IsDisabled =" @ V.IsDisabled();
@@ -3238,7 +3843,7 @@ exec function LogVehAttach(optional bool bIncludeAttachedArray)
     local DHVehicle V;
     local int       i;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    if (IsVehicleDebugModeAllowed(V))
     {
         Log("-----------------------------------------------------------");
         Log(Caps(V.VehicleNameString) @ "ATTACHMENTS:");
@@ -3297,7 +3902,7 @@ exec function SetGearRatio(byte Index, float NewValue)
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && Index < arraycount(V.GearRatios))
+    if (IsVehicleDebugModeAllowed(V) && Index < arraycount(V.GearRatios))
     {
         Log(V.VehicleNameString @ "GearRatios[" $ Index $ "] =" @ NewValue @ "(was" @ V.GearRatios[Index] $ ")");
         V.GearRatios[Index] = NewValue;
@@ -3309,7 +3914,7 @@ exec function SetTransRatio(float NewValue)
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    if (IsVehicleDebugModeAllowed(V))
     {
         Log(V.VehicleNameString @ "TransRatio =" @ NewValue @ "(was" @ V.TransRatio $ ")");
         V.TransRatio = NewValue;
@@ -3321,7 +3926,7 @@ exec function SetExitPos(byte Index, int NewX, int NewY, int NewZ)
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && Index < V.ExitPositions.Length)
+    if (IsVehicleDebugModeAllowed(V) && Index < V.ExitPositions.Length)
     {
         Log(V.VehicleNameString @ "ExitPositions[" $ Index $ "] =" @ NewX @ NewY @ NewZ @ "(was" @ V.ExitPositions[Index] $ ")");
         V.ExitPositions[Index].X = NewX;
@@ -3336,7 +3941,7 @@ exec function ExitPosTool()
     local ROVehicle NearbyVeh;
     local vector    Offset;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         foreach RadiusActors(class'ROVehicle', NearbyVeh, 300.0, Pawn.Location)
         {
@@ -3354,76 +3959,65 @@ exec function DrawExits(optional bool bClearScreen)
     local color     C;
     local int       i;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    ClearLines();
+
+    if (!bClearScreen && IsVehicleDebugModeAllowed(V))
     {
-        ClearStayingDebugLines();
+        ZOffset = class'DHPawn'.default.CollisionHeight * vect(0.0, 0.0, 0.5);
+        GetAxes(V.Rotation, X, Y, Z);
 
-        if (!bClearScreen && GetVehicleBase(V))
+        for (i = V.ExitPositions.Length - 1; i >= 0; --i)
         {
-            ZOffset = class'DHPawn'.default.CollisionHeight * vect(0.0, 0.0, 0.5);
-            GetAxes(V.Rotation, X, Y, Z);
-
-            for (i = V.ExitPositions.Length - 1; i >= 0; --i)
+            if (i == 0)
             {
-                if (i == 0)
+                C = class'HUD'.default.BlueColor; // driver
+            }
+            else
+            {
+                if (i - 1 < V.WeaponPawns.Length)
                 {
-                    C = class'HUD'.default.BlueColor; // driver
-                }
-                else
-                {
-                    if (i - 1 < V.WeaponPawns.Length)
+                    if (DHVehicleCannonPawn(V.WeaponPawns[i - 1]) != none)
                     {
-                        if (DHVehicleCannonPawn(V.WeaponPawns[i - 1]) != none)
-                        {
-                            C = class'HUD'.default.RedColor; // commander
-                        }
-                        else if (DHVehicleMGPawn(V.WeaponPawns[i - 1]) != none)
-                        {
-                            C = class'HUD'.default.GoldColor; // machine gunner
-                        }
-                        else
-                        {
-                            C = class'HUD'.default.WhiteColor; // rider
-                        }
+                        C = class'HUD'.default.RedColor; // commander
+                    }
+                    else if (DHVehicleMGPawn(V.WeaponPawns[i - 1]) != none)
+                    {
+                        C = class'HUD'.default.GoldColor; // machine gunner
                     }
                     else
                     {
-                        C = class'HUD'.default.GrayColor; // something outside of WeaponPawns array, so not representing a particular vehicle position
+                        C = class'HUD'.default.WhiteColor; // rider
                     }
                 }
-
-                ExitPosition = V.Location + (V.ExitPositions[i] >> V.Rotation) + ZOffset;
-                class'DHLib'.static.DrawStayingDebugCylinder(V, ExitPosition, X, Y, Z, class'DHPawn'.default.CollisionRadius, class'DHPawn'.default.CollisionHeight, 10, C.R, C.G, C.B);
+                else
+                {
+                    C = class'HUD'.default.GrayColor; // something outside of WeaponPawns array, so not representing a particular vehicle position
+                }
             }
+
+            ExitPosition = V.Location + (V.ExitPositions[i] >> V.Rotation) + ZOffset;
+            class'DHLib'.static.DrawStayingDebugCylinder(V, ExitPosition, X, Y, Z, class'DHPawn'.default.CollisionRadius, class'DHPawn'.default.CollisionHeight, 10, C.R, C.G, C.B);
         }
     }
 }
 
 // New debug exec to adjust a vehicle's DrivePos (vehicle occupant positional offset from attachment bone)
-exec function SetDrivePos(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
+exec function SetDrivePos(string NewX, string NewY, string NewZ)
 {
     local Vehicle V;
-    local vector  OldDrivePos;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         V = Vehicle(Pawn);
 
         if (V != none && V.Driver != none)
         {
-            OldDrivePos = V.DrivePos;
-            V.DrivePos.X = NewX;
-            V.DrivePos.Y = NewY;
-            V.DrivePos.Z = NewZ;
-
-            if (bScaleOneTenth) // option allowing accuracy to .1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
-            {
-                V.DrivePos /= 10.0;
-            }
-
+            Log(V.Tag @ " new DrivePos =" @ float(NewX) @ float(NewY) @ float(NewZ) @ "(was" @ V.DrivePos $ ")");
+            V.DrivePos.X = float(NewX);
+            V.DrivePos.Y = float(NewY);
+            V.DrivePos.Z = float(NewZ);
             V.DetachDriver(V.Driver);
             V.AttachDriver(V.Driver);
-            Log(V.VehicleNameString @ " new DrivePos =" @ V.DrivePos @ "(was" @ OldDrivePos $ ")");
         }
     }
 }
@@ -3432,48 +4026,58 @@ exec function SetDrivePos(int NewX, int NewY, int NewZ, optional bool bScaleOneT
 exec function SetDriveRot(int NewPitch, int NewYaw, int NewRoll)
 {
     local Vehicle V;
-    local rotator OldDriveRot;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         V = Vehicle(Pawn);
 
         if (V != none && V.Driver != none)
         {
-            OldDriveRot = V.DriveRot;
+            Log(V.Tag @ " new DriveRot =" @ NewPitch @ NewYaw @ NewRoll @ "(was" @ V.DriveRot $ ")");
             V.DriveRot.Pitch = NewPitch;
             V.DriveRot.Yaw = NewYaw;
             V.DriveRot.Roll = NewRoll;
             V.DetachDriver(V.Driver);
             V.AttachDriver(V.Driver);
-            Log(V.VehicleNameString @ " new DriveRot =" @ V.DriveRot @ "(was" @ OldDriveRot $ ")");
+        }
+    }
+}
+
+// New debug exec to change the player animation in a vehicle position
+exec function SetDriveAnim(name NewAnim)
+{
+    local Vehicle V;
+
+    if (IsDebugModeAllowed())
+    {
+        V = Vehicle(Pawn);
+
+        if (V != none && V.Driver != none)
+        {
+            V.DriveAnim = NewAnim;
+            V.Driver.StopAnimating(true);
+            V.Driver.LoopAnim(V.DriveAnim);
         }
     }
 }
 
 // New debug exec to set a vehicle position's 1st person camera position offset
-exec function SetCamPos(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth)
+exec function SetCamPos(string NewX, string NewY, string NewZ)
 {
     local Vehicle             V;
     local ROVehicleWeaponPawn WP;
     local vector              OldCamPos;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         V = Vehicle(Pawn);
 
         if (V != none)
         {
             OldCamPos = V.FPCamPos;
-            V.FPCamPos.X = NewX;
-            V.FPCamPos.Y = NewY;
-            V.FPCamPos.Z = NewZ;
-
-            if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
-            {
-                V.FPCamPos /= 10.0;
-            }
-
+            V.FPCamPos.X = float(NewX);
+            V.FPCamPos.Y = float(NewY);
+            V.FPCamPos.Z = float(NewZ);
             WP = ROVehicleWeaponPawn(V);
 
             if (WP != none && WP.bMultiPosition)
@@ -3483,7 +4087,7 @@ exec function SetCamPos(int NewX, int NewY, int NewZ, optional bool bScaleOneTen
             }
             else
             {
-                Log(V.VehicleNameString @ "FPCamPos =" @ V.FPCamPos @ "(old was" @ OldCamPos $ ")");
+                Log(V.Tag @ "FPCamPos =" @ V.FPCamPos @ "(old was" @ OldCamPos $ ")");
             }
         }
     }
@@ -3494,7 +4098,7 @@ exec function VehCamDist(int NewDistance)
 {
     local Vehicle V;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         V = Vehicle(Pawn);
 
@@ -3508,15 +4112,6 @@ exec function VehCamDist(int NewDistance)
     }
 }
 
-// Modified to shift this functionality into DHHud, where it's directly relevant & where some necessary stuff is added to make this RO function work as designed
-exec function DriverCollisionDebug()
-{
-    if (DHHud(MyHud) != none)
-    {
-        DHHud(MyHud).DriverCollisionDebug();
-    }
-}
-
 // New debug exec to enable/disable penetration debugging functionality for all armored vehicles
 exec function DebugPenetration(bool bEnable)
 {
@@ -3527,7 +4122,7 @@ exec function DebugPenetration(bool bEnable)
     local DHGameReplicationInfo   GRI;
     local int                     i;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    if (IsDebugModeAllowed())
     {
         if (!bEnable)
         {
@@ -3581,12 +4176,29 @@ exec function DebugPenetration(bool bEnable)
     }
 }
 
+// New debug exec to adjust a vehicle's tread rotation direction
+exec function SetTreadDir(int NewPitch, int NewYaw, int NewRoll)
+{
+    local DHVehicle V;
+    local rotator   NewPanDirection;
+
+    if (IsVehicleDebugModeAllowed(V) && V.bHasTreads)
+    {
+        Log(V.VehicleNameString @ "TreadPanDirection =" @ NewPitch @ NewYaw @ NewRoll @ "(was" @ V.LeftTreadPanDirection $ ")");
+        NewPanDirection.Pitch = NewPitch;
+        NewPanDirection.Yaw = NewYaw;
+        NewPanDirection.Roll = NewRoll;
+        V.LeftTreadPanner.PanDirection = NewPanDirection;
+        V.RightTreadPanner.PanDirection = NewPanDirection;
+    }
+}
+
 // New debug exec to adjust rotation speed of treads
 exec function SetTreadSpeed(int NewValue, optional bool bAddToCurrentSpeed)
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && V.bHasTreads)
+    if (IsVehicleDebugModeAllowed(V) && V.bHasTreads)
     {
         if (NewValue == 0) // entering zero resets tread speed to vehicle's default value
         {
@@ -3607,7 +4219,7 @@ exec function SetWheelSpeed(int NewValue, optional bool bAddToCurrentSpeed)
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && V.bHasTreads)
+    if (IsVehicleDebugModeAllowed(V) && V.bHasTreads)
     {
         if (NewValue == 0) // entering zero resets wheel speed to vehicle's default value
         {
@@ -3624,38 +4236,33 @@ exec function SetWheelSpeed(int NewValue, optional bool bAddToCurrentSpeed)
 }
 
 // New debug exec to adjust the occupant positions in a vehicle's HUD overlay (the red dots)
-// Pass new X & Y values scaled by 1000, which allows precision to 3 decimal places
-exec function SetOccPos(byte Index, int NewX, int NewY)
+exec function SetOccPos(byte Index, string NewX, string NewY)
 {
     local DHVehicle V;
-    local float     X, Y;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && Index < V.VehicleHudOccupantsX.Length)
+    if (IsVehicleDebugModeAllowed(V) && Index < V.VehicleHudOccupantsX.Length)
     {
-        X = float(NewX) / 1000.0;
-        Y = float(NewY) / 1000.0;
-        Log(V.VehicleNameString @ "VehicleHudOccupantsX[" $ Index $ "] =" @ X @ "Y =" @ Y @ "(was" @ V.VehicleHudOccupantsX[Index] @ V.VehicleHudOccupantsY[Index]);
-        V.VehicleHudOccupantsX[Index] = X;
-        V.VehicleHudOccupantsY[Index] = Y;
+        Log(V.VehicleNameString @ "VehicleHudOccupantsX[" $ Index $ "] =" @ float(NewX) @ "Y =" @ float(NewY) @ "(was" @ V.VehicleHudOccupantsX[Index] @ V.VehicleHudOccupantsY[Index]);
+        V.VehicleHudOccupantsX[Index] = float(NewX);
+        V.VehicleHudOccupantsY[Index] = float(NewY);
     }
 }
 
 // New debug exec to adjust the damaged tread indicators on a vehicle's HUD overlay
-// Pass new values scaled by 1000, which allows precision to 3 decimal places
-exec function SetHUDTreads(int NewPosX0, int NewPosX1, int NewPosY, int NewScale)
+exec function SetHUDTreads(string NewPosX0, string NewPosX1, string NewPosY, string NewScale)
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    if (IsVehicleDebugModeAllowed(V))
     {
-        Log(V.VehicleNameString @ "VehicleHudTreadsPosX[0] =" @ string(float(NewPosX0) / 1000.0) @ "VehicleHudTreadsPosX[1] =" @ float(NewPosX1) / 1000.0
-            @ "VehicleHudTreadsPosY =" @ float(NewPosY) / 1000.0 @ "VehicleHudTreadsScale =" @ float(NewScale) / 1000.0
+        Log(V.VehicleNameString @ "VehicleHudTreadsPosX[0] =" @ float(NewPosX0) @ "VehicleHudTreadsPosX[1] =" @ float(NewPosX1)
+            @ "VehicleHudTreadsPosY =" @ float(NewPosY) @ "VehicleHudTreadsScale =" @ float(NewScale)
             @ "(was" @ V.VehicleHudTreadsPosX[0] @ V.VehicleHudTreadsPosX[1] @ V.VehicleHudTreadsPosY @ V.VehicleHudTreadsScale $ ")");
 
-        V.VehicleHudTreadsPosX[0] = float(NewPosX0) / 1000.0;
-        V.VehicleHudTreadsPosX[1] = float(NewPosX1) / 1000.0;
-        V.VehicleHudTreadsPosY = float(NewPosY) / 1000.0;
-        V.VehicleHudTreadsScale = float(NewScale) / 1000.0;
+        V.VehicleHudTreadsPosX[0] = float(NewPosX0);
+        V.VehicleHudTreadsPosX[1] = float(NewPosX1);
+        V.VehicleHudTreadsPosY = float(NewPosY);
+        V.VehicleHudTreadsScale = float(NewScale);
     }
 }
 
@@ -3664,7 +4271,7 @@ exec function SetExhPos(int Index, int NewX, int NewY, int NewZ)
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && Index < V.ExhaustPipes.Length)
+    if (IsVehicleDebugModeAllowed(V) && Index < V.ExhaustPipes.Length)
     {
         Log(V.VehicleNameString @ "ExhaustPipes[" $ Index $ "].ExhaustPosition =" @ NewX @ NewY @ NewZ @ "(was" @ V.ExhaustPipes[Index].ExhaustPosition $ ")");
         V.ExhaustPipes[Index].ExhaustPosition.X = NewX;
@@ -3684,7 +4291,7 @@ exec function SetExhRot(int Index, int NewPitch, int NewYaw, int NewRoll)
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && Index < V.ExhaustPipes.Length)
+    if (IsVehicleDebugModeAllowed(V) && Index < V.ExhaustPipes.Length)
     {
         Log(V.VehicleNameString @ "ExhaustPipes[" $ Index $ "].ExhaustRotation =" @ NewPitch @ NewYaw @ NewRoll @ "(was" @ V.ExhaustPipes[Index].ExhaustRotation $ ")");
         V.ExhaustPipes[Index].ExhaustRotation.Pitch = NewPitch;
@@ -3700,21 +4307,13 @@ exec function SetExhRot(int Index, int NewPitch, int NewYaw, int NewRoll)
 
 // New debug exec to adjust the radius of a vehicle's physics wheels
 // Include no numbers to adjust all wheels, otherwise add index numbers of first & last wheels to adjust
-exec function SetWheelRad(int NewValue, optional bool bScaleOneTenth, optional byte FirstWheelIndex, optional byte LastWheelIndex)
+exec function SetWheelRad(string NewValue, optional byte FirstWheelIndex, optional byte LastWheelIndex)
 {
     local DHVehicle V;
-    local float     NewRadius;
     local int       i;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && FirstWheelIndex < V.Wheels.Length)
+    if (IsVehicleDebugModeAllowed(V) && FirstWheelIndex < V.Wheels.Length)
     {
-        NewRadius = float(NewValue);
-
-        if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
-        {
-            NewRadius /= 10.0;
-        }
-
         if (LastWheelIndex == 0)
         {
             LastWheelIndex = V.Wheels.Length - 1;
@@ -3722,30 +4321,25 @@ exec function SetWheelRad(int NewValue, optional bool bScaleOneTenth, optional b
 
         for (i = FirstWheelIndex; i <= LastWheelIndex; ++i)
         {
-            Log(V.VehicleNameString @ "Wheels[" $ i $ "].WheelRadius =" @ NewRadius @ "(was" @ V.Wheels[i].WheelRadius $ ")");
-            V.Wheels[i].WheelRadius = NewRadius;
+            Log(V.VehicleNameString @ "Wheels[" $ i $ "].WheelRadius =" @ float(NewValue) @ "(was" @ V.Wheels[i].WheelRadius $ ")");
+            V.Wheels[i].WheelRadius = float(NewValue);
         }
     }
 }
 
 // New debug exec to adjust the attachment bone offset of a vehicle's physics wheels
 // Include no numbers to adjust all wheels, otherwise add index numbers of first & last wheels to adjust
-exec function SetWheelOffset(int NewX, int NewY, int NewZ, optional bool bScaleOneTenth, optional byte FirstWheelIndex, optional byte LastWheelIndex)
+exec function SetWheelOffset(string NewX, string NewY, string NewZ, optional byte FirstWheelIndex, optional byte LastWheelIndex)
 {
     local DHVehicle V;
     local vector    NewBoneOffset;
     local int       i;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && FirstWheelIndex < V.Wheels.Length)
+    if (IsVehicleDebugModeAllowed(V) && FirstWheelIndex < V.Wheels.Length)
     {
-        NewBoneOffset.X = NewX;
-        NewBoneOffset.Y = NewY;
-        NewBoneOffset.Z = NewZ;
-
-        if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
-        {
-            NewBoneOffset /= 10.0;
-        }
+        NewBoneOffset.X = float(NewX);
+        NewBoneOffset.Y = float(NewY);
+        NewBoneOffset.Z = float(NewZ);
 
         if (LastWheelIndex == 0)
         {
@@ -3764,22 +4358,22 @@ exec function SetWheelOffset(int NewX, int NewY, int NewZ, optional bool bScaleO
 // New debug exec to adjust maximum travel distance of the suspension of a vehicle's physics wheels
 // Allows adjustment of individual wheels, but note that on entering a vehicle, native code calls SVehicleUpdateParams(), which will undo individual settings
 // Settings for all wheels get matched to values of WheelSuspensionTravel & WheelSuspensionMaxRenderTravel, so if individual settings are required, SVehicleUpdateParams must be overridden
-exec function SetSuspTravel(int NewValue, optional byte FirstWheelIndex, optional byte LastWheelIndex, optional bool bDontSetSuspensionTravel, optional bool bDontSetMaxRenderTravel)
+exec function SetSuspTravel(string NewValue, optional byte FirstWheelIndex, optional byte LastWheelIndex, optional bool bDontSetSuspensionTravel, optional bool bDontSetMaxRenderTravel)
 {
     local DHVehicle V;
     local float     OldTravel, OldRenderTravel;
     local int       i;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && FirstWheelIndex < V.Wheels.Length)
+    if (IsVehicleDebugModeAllowed(V) && FirstWheelIndex < V.Wheels.Length)
     {
         if (!bDontSetSuspensionTravel)
         {
-            V.WheelSuspensionTravel = NewValue; // on re-entering the vehicle, all physics wheels will have this value set (same with max render travel), undoing any individual settings
+            V.WheelSuspensionTravel = float(NewValue); // on re-entering the vehicle, all physics wheels will have this value set (same with max render travel), undoing any individual settings
         }
 
         if (!bDontSetMaxRenderTravel)
         {
-            V.WheelSuspensionMaxRenderTravel = NewValue;
+            V.WheelSuspensionMaxRenderTravel = float(NewValue);
         }
 
         if (LastWheelIndex == 0)
@@ -3794,12 +4388,12 @@ exec function SetSuspTravel(int NewValue, optional byte FirstWheelIndex, optiona
 
             if (!bDontSetSuspensionTravel)
             {
-                V.Wheels[i].SuspensionTravel = NewValue;
+                V.Wheels[i].SuspensionTravel = float(NewValue);
             }
 
-            if (bDontSetMaxRenderTravel)
+            if (!bDontSetMaxRenderTravel)
             {
-                V.Wheels[i].SuspensionMaxRenderTravel = NewValue;
+                V.Wheels[i].SuspensionMaxRenderTravel = float(NewValue);
             }
 
             Log(V.VehicleNameString @ "Wheels[" $ i $ "].SuspensionTravel =" @ V.Wheels[i].SuspensionTravel @ "(was" @ OldTravel $
@@ -3811,22 +4405,14 @@ exec function SetSuspTravel(int NewValue, optional byte FirstWheelIndex, optiona
 // New debug exec to adjust the positioning of a vehicle's suspension bones that support its physics wheels
 // Allows adjustment of individual wheels, but note that on entering a vehicle, native code calls SVehicleUpdateParams(), which will undo individual settings
 // Settings for all wheels get matched to values of WheelSuspensionOffset, so if individual settings are required, SVehicleUpdateParams must be overridden
-exec function SetSuspOffset(int NewValue, optional bool bScaleOneTenth, optional byte FirstWheelIndex, optional byte LastWheelIndex)
+exec function SetSuspOffset(string NewValue, optional byte FirstWheelIndex, optional byte LastWheelIndex)
 {
     local DHVehicle V;
-    local float     NewOffset;
     local int       i;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && FirstWheelIndex < V.Wheels.Length)
+    if (IsVehicleDebugModeAllowed(V) && FirstWheelIndex < V.Wheels.Length)
     {
-        NewOffset = float(NewValue);
-
-        if (bScaleOneTenth) // option allowing accuracy to 0.1 Unreal units, by passing floats as ints scaled by 10 (e.g. pass 55 for 5.5)
-        {
-            NewOffset /= 10.0;
-        }
-
-        V.WheelSuspensionOffset = NewValue; // on re-entering the vehicle, all physics wheels will have this value set, undoing any individual settings
+        V.WheelSuspensionOffset = float(NewValue); // on re-entering the vehicle, all physics wheels get set to this property, undoing any individual settings
 
         if (LastWheelIndex == 0)
         {
@@ -3835,8 +4421,8 @@ exec function SetSuspOffset(int NewValue, optional bool bScaleOneTenth, optional
 
         for (i = FirstWheelIndex; i <= LastWheelIndex; ++i)
         {
-            Log(V.VehicleNameString @ "Wheels[" $ i $ "].SuspensionOffset =" @ NewOffset @ "(was" @ V.Wheels[i].SuspensionOffset $ ")");
-            V.Wheels[i].SuspensionOffset = NewOffset;
+            Log(V.VehicleNameString @ "Wheels[" $ i $ "].SuspensionOffset =" @ float(NewValue) @ "(was" @ V.Wheels[i].SuspensionOffset $ ")");
+            V.Wheels[i].SuspensionOffset = float(NewValue);
         }
     }
 }
@@ -3846,7 +4432,7 @@ exec function SetMass(float NewValue)
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    if (IsVehicleDebugModeAllowed(V))
     {
         Log(V.VehicleNameString @ "VehicleMass =" @ NewValue @ "(old was" @ V.VehicleMass $ ")");
         V.VehicleMass = NewValue;
@@ -3860,33 +4446,30 @@ exec function DrawCOM(optional bool bClearScreen)
     local DHVehicle V;
     local vector    COM, X, Y, Z;
 
-    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        ClearStayingDebugLines();
+    ClearLines();
 
-        if (!bClearScreen && GetVehicleBase(V))
-        {
-            GetAxes(V.Rotation, X, Y, Z);
-            V.KGetCOMPosition(COM);
-            DrawStayingDebugLine(COM - (200.0 * X), COM + (200.0 * X), 255, 0, 0);
-            DrawStayingDebugLine(COM - (200.0 * Y), COM + (200.0 * Y), 0, 255, 0);
-            DrawStayingDebugLine(COM - (200.0 * Z), COM + (200.0 * Z), 0, 0, 255);
-        }
+    if (!bClearScreen && IsVehicleDebugModeAllowed(V))
+    {
+        GetAxes(V.Rotation, X, Y, Z);
+        V.KGetCOMPosition(COM);
+        DrawStayingDebugLine(COM - (200.0 * X), COM + (200.0 * X), 255, 0, 0);
+        DrawStayingDebugLine(COM - (200.0 * Y), COM + (200.0 * Y), 0, 255, 0);
+        DrawStayingDebugLine(COM - (200.0 * Z), COM + (200.0 * Z), 0, 0, 255);
     }
 }
 
-// New debug exec to adjust a vehicle's karma centre of mass (enter X, Y & Z offset values as one tenths)
-exec function SetCOM(int NewX, int NewY, int NewZ)
+// New debug exec to adjust a vehicle's karma centre of mass
+exec function SetCOM(string NewX, string NewY, string NewZ)
 {
     local DHVehicle V;
     local vector    COM, OldCOM;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    if (IsVehicleDebugModeAllowed(V))
     {
         V.KGetCOMOffset(OldCOM);
-        COM.X = float(NewX) / 10.0;
-        COM.Y = float(NewY) / 10.0;
-        COM.Z = float(NewZ) / 10.0;
+        COM.X = float(NewX);
+        COM.Y = float(NewY);
+        COM.Z = float(NewZ);
         V.KSetCOMOffset(COM);
         V.SetPhysics(PHYS_None);
         V.SetPhysics(PHYS_Karma);
@@ -3900,7 +4483,7 @@ exec function SetMaxAngSpeed(float NewValue)
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && KarmaParams(V.KParams) != none)
+    if (IsVehicleDebugModeAllowed(V) && KarmaParams(V.KParams) != none)
     {
         Log(V.VehicleNameString @ "KMaxAngularSpeed =" @ NewValue @ "(old was" @ KarmaParams(V.KParams).KMaxAngularSpeed $ ")");
         KarmaParams(V.KParams).KMaxAngularSpeed = NewValue;
@@ -3914,7 +4497,7 @@ exec function SetAngDamp(float NewValue)
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V) && KarmaParams(V.KParams) != none)
+    if (IsVehicleDebugModeAllowed(V) && KarmaParams(V.KParams) != none)
     {
         Log(V.VehicleNameString @ "KAngularDamping =" @ NewValue @ "(old was" @ KarmaParams(V.KParams).KAngularDamping $ ")");
         KarmaParams(V.KParams).KAngularDamping = NewValue;
@@ -3923,14 +4506,65 @@ exec function SetAngDamp(float NewValue)
     }
 }
 
-// New debug exec to adjust location of engine smoke/fire position
-exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFire, optional int NewScaleInOneTenths)
+// New debug exec to adjust position & radius if vehicle hit points
+exec function SetHitPoint(byte Index, string NewX, string NewY, string NewZ, optional string NewRadius, optional bool bIsDHNewHitPoint)
+{
+    local DHArmoredVehicle AV;
+    local DHVehicle        V;
+
+    if (IsVehicleDebugModeAllowed(V))
+    {
+        if (bIsDHNewHitPoint)
+        {
+            AV = DHArmoredVehicle(V);
+
+            if (AV != none && Index < AV.NewVehHitpoints.Length)
+            {
+                if (!(float(NewRadius) > 0.0))
+                {
+                    NewRadius = string(AV.NewVehHitpoints[Index].PointRadius);
+                }
+
+                Log(AV.Tag @ "NewVehHitpoints[" $ Index $ "] Offset =" @ float(NewX) @ float(NewY) @ float(NewZ) @ " Radius =" @ float(NewRadius)
+                    @ "(was" @ AV.NewVehHitpoints[Index].PointOffset $ ", radius" @ AV.NewVehHitpoints[Index].PointRadius $ ")");
+
+                AV.NewVehHitpoints[Index].PointOffset.X = float(NewX);
+                AV.NewVehHitpoints[Index].PointOffset.Y = float(NewY);
+                AV.NewVehHitpoints[Index].PointOffset.Z = float(NewZ);
+                AV.NewVehHitpoints[Index].PointRadius = float(NewRadius);
+            }
+        }
+        else if (Index < V.VehHitpoints.Length)
+        {
+            if (!(float(NewRadius) > 0.0))
+            {
+                NewRadius = string(V.VehHitpoints[Index].PointRadius);
+            }
+
+            Log(V.Tag @ "VehHitpoints[" $ Index $ "] Offset =" @ float(NewX) @ float(NewY) @ float(NewZ) @ " Radius =" @ float(NewRadius)
+                @ "(was" @ V.VehHitpoints[Index].PointOffset $ ", radius" @ V.VehHitpoints[Index].PointRadius $ ")");
+
+            V.VehHitpoints[Index].PointOffset.X = float(NewX);
+            V.VehHitpoints[Index].PointOffset.Y = float(NewY);
+            V.VehHitpoints[Index].PointOffset.Z = float(NewZ);
+            V.VehHitpoints[Index].PointRadius = float(NewRadius);
+        }
+    }
+}
+
+// New debug exec to adjust position of engine smoke/fire
+exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFire, optional string NewScale)
 {
     local DHVehicle V;
+    local vector    OldOffset;
+    local float     OldScale;
 
-    if ((Level.NetMode == NM_Standalone || (class'DH_LevelInfo'.static.DHDebugMode() && Level.NetMode != NM_DedicatedServer)) && GetVehicleBase(V))
+    if (IsVehicleDebugModeAllowed(V) && Level.NetMode != NM_DedicatedServer)
     {
-        // Only update offset if something has been entered (otherwise just entering "DEOffset" is quick way of triggering smoke/fire at current position)
+        OldOffset = V.DamagedEffectOffset;
+        OldScale = V.DamagedEffectScale;
+
+        // Only update offset if something has been entered (otherwise just entering "DEOffset" is quick way of triggering smoke effect at current position)
         if (NewX != 0 || NewY != 0 || NewZ != 0)
         {
             V.DamagedEffectOffset.X = NewX;
@@ -3938,7 +4572,21 @@ exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFir
             V.DamagedEffectOffset.Z = NewZ;
         }
 
-        Log(V.VehicleNameString @ "DamagedEffectOffset =" @ V.DamagedEffectOffset);
+        // Option to re-scale effect
+        if (float(NewScale) > 0.0)
+        {
+            V.DamagedEffectScale = float(NewScale);
+        }
+
+        // Log settings
+        if (V.DamagedEffectOffset != OldOffset || V.DamagedEffectScale != OldScale)
+        {
+            Log(V.VehicleNameString @ "DamagedEffectOffset =" @ V.DamagedEffectOffset @ "scale =" @ V.DamagedEffectScale @ "(old was" @ OldOffset @ "scale =" @ OldScale $ ")");
+        }
+        else
+        {
+            Log(V.VehicleNameString @ "DamagedEffectOffset =" @ V.DamagedEffectOffset @ "scale =" @ V.DamagedEffectScale);
+        }
 
         // Appears necessary to get native code to spawn a DamagedEffect if it doesn't already exist
         if (V.DamagedEffect == none)
@@ -3967,12 +4615,6 @@ exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFir
             }
         }
 
-        // Option to re-scale effect (won't accept float as input so have to enter say 9 & convert that to 0.9)
-        if (NewScaleInOneTenths > 0.0)
-        {
-            V.DamagedEffectScale = float(NewScaleInOneTenths) / 10.0;
-        }
-
         // Reposition any existing effect
         if (V.DamagedEffect != none)
         {
@@ -3984,54 +4626,98 @@ exec function SetDEOffset(int NewX, int NewY, int NewZ, optional bool bEngineFir
     }
 }
 
-// New debug exec to show & adjust the height of vehicle's lower armour, i.e. the highest point (above the origin) where a hit counts as a lower hull hit
-// Spawns an angle plane attachment representing the setting (run again with no option specified to remove this)
-exec function SetLowerArmorHeight(optional string Option, optional float NewValue)
+// New debug exec to adjust the position of a vehicle's shadow so it looks right by adjusting the vertical position offset (ShadowZOffset) of attached ShadowProjector
+exec function SetVehShadowHeight(float NewValue)
+{
+    local DHVehicle V;
+
+    if (IsVehicleDebugModeAllowed(V) && DHShadowProjector(V.VehicleShadow) != none)
+    {
+        Log(V.VehicleNameString @ "ShadowZOffset =" @ NewValue @ "(was" @ V.ShadowZOffset $ ")");
+        V.ShadowZOffset = NewValue;
+        DHShadowProjector(V.VehicleShadow).ShadowZOffset = NewValue;
+    }
+}
+
+// New debug exec to show & adjust the height bands of an armoured vehicle's hull armour sections, i.e. highest relative point (above mesh origin) for that armour section
+// Spawns an angle plane attachment representing the height setting (run again with no side specified to remove this)
+exec function SetArmorHeight(optional string Side, optional byte Index, optional float NewValue)
 {
     local DHVehicle        V;
     local DHArmoredVehicle AV;
+    local bool             bDontChangeValue;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    if (IsVehicleDebugModeAllowed(V) && V.IsA('DHArmoredVehicle'))
     {
         AV = DHArmoredVehicle(V);
+        DestroyPlaneAttachments(AV); // remove any existing angle plane attachments
 
-        if (AV != none)
+        if (NewValue == 999.0) // option to just display the existing height, not setting a new value (pass 999 as new height)
         {
-            DestroyPlaneAttachments(AV); // remove any existing angle plane attachments
+            bDontChangeValue = true;
+        }
+        else if (Side ~= "A" || Side ~= "All") // option to display heights for this armor index position for all sides
+        {
+            Side = "All";
+            bDontChangeValue = true;
+        }
 
-            if (Option ~= "F" || Option ~= "Front")
-            {
-                Log(AV.VehicleNameString @ "LFrontArmorHeight =" @ NewValue @ "(was" @ AV.LFrontArmorHeight $ ")");
-                AV.LFrontArmorHeight = NewValue;
-                SpawnPlaneAttachment(AV, rot(0, 0, 16384), AV.LFrontArmorHeight * vect(0.0, 0.0, 1.0));
-            }
-            else if (Option ~= "R" || Option ~= "Right")
-            {
-                Log(AV.VehicleNameString @ "LRightArmorHeight =" @ NewValue @ "(was" @ AV.LRightArmorHeight $ ")");
-                AV.LRightArmorHeight = NewValue;
-                SpawnPlaneAttachment(AV, rot(0, 16384, 16384), AV.LRightArmorHeight * vect(0.0, 0.0, 1.0));
-            }
-            else if (Option ~= "B" || Option ~= "Back" || Option ~= "Rear")
-            {
-                Log(AV.VehicleNameString @ "LRearArmorHeight =" @ NewValue @ "(was" @ AV.LRearArmorHeight $ ")");
-                AV.LRearArmorHeight = NewValue;
-                SpawnPlaneAttachment(AV, rot(0, 32768, 16384), AV.LRearArmorHeight * vect(0.0, 0.0, 1.0));
-            }
-            else if (Option ~= "L" || Option ~= "Left")
-            {
-                Log(AV.VehicleNameString @ "LLeftArmorHeight =" @ NewValue @ "(was" @ AV.LLeftArmorHeight $ ")");
-                AV.LLeftArmorHeight = NewValue;
-                SpawnPlaneAttachment(AV, rot(0, -16384, 16384), AV.LLeftArmorHeight * vect(0.0, 0.0, 1.0));
-            }
-            else if (Option ~= "A" || Option ~= "All") // option to just display heights for all sides (no change)
-            {
-                SpawnPlaneAttachment(AV, rot(0, 0, 16384), AV.LFrontArmorHeight * vect(0.0, 0.0, 1.0));
-                SpawnPlaneAttachment(AV, rot(0, 16384, 16384), AV.LRightArmorHeight * vect(0.0, 0.0, 1.0));
-                SpawnPlaneAttachment(AV, rot(0, 32768, 16384), AV.LRearArmorHeight * vect(0.0, 0.0, 1.0));
-                SpawnPlaneAttachment(AV, rot(0, -16384, 16384), AV.LLeftArmorHeight * vect(0.0, 0.0, 1.0));
-            }
+        if (Side ~= "F" || Side ~= "Front" || Side ~= "All")
+        {
+            ProcessSetArmorHeight(AV, AV.FrontArmor, Index, NewValue, "Front", 0, bDontChangeValue);
+        }
+
+        if (Side ~= "R" || Side ~= "Right" || Side ~= "All")
+        {
+            ProcessSetArmorHeight(AV, AV.RightArmor, Index, NewValue, "Right", 16384, bDontChangeValue);
+        }
+
+        if (Side ~= "B" || Side ~= "Back" || Side ~= "Rear" || Side ~= "All")
+        {
+            ProcessSetArmorHeight(AV, AV.RearArmor, Index, NewValue, "Rear", 32768, bDontChangeValue);
+        }
+
+        if (Side ~= "L" || Side ~= "Left" || Side ~= "All")
+        {
+            ProcessSetArmorHeight(AV, AV.LeftArmor, Index, NewValue, "Left", -16384, bDontChangeValue);
         }
     }
+}
+
+// New helper function for debug exec SetArmorHeight
+function ProcessSetArmorHeight(DHVehicle V, out array<DHArmoredVehicle.ArmorSection> ArmorArray, byte Index, float NewValue, string SideText, int PlaneYaw, optional bool bDontChangeValue)
+{
+    local rotator PlaneRotation;
+
+    // Option to just display the existing height, not setting a new value
+    if (bDontChangeValue)
+    {
+        if (Index >= ArmorArray.Length - 1)
+        {
+            return; // invalid index no. (minus 1 because we don't draw a height plane for the highest armor band as it isn't supposed to have a max height)
+        }
+
+        Log(V.VehicleNameString $ ":" @ SideText $ "Armor[" $ Index $ "].MaxRelativeHeight =" @ ArmorArray[Index].MaxRelativeHeight
+            $ ", thickness =" @ ArmorArray[Index].Thickness $ "mm, slope =" @ ArmorArray[Index].Slope @ "degrees");
+    }
+    // Default is to set a new max height value
+    else
+    {
+        if (Index >= ArmorArray.Length)
+        {
+            ArmorArray.Length = Index + 1; // extend armor array if a higher index no. has been specified
+        }
+
+        Log(V.VehicleNameString $ ":" @ SideText $ "Armor[" $ Index $ "].MaxRelativeHeight =" @ NewValue @ "(was" @ ArmorArray[Index].MaxRelativeHeight
+            $ "), thickness =" @ ArmorArray[Index].Thickness $ "mm, slope =" @ ArmorArray[Index].Slope @ "degrees");
+
+        ArmorArray[Index].MaxRelativeHeight = NewValue;
+    }
+
+    // Display an angle plane showing the max height
+    PlaneRotation.Yaw = PlaneYaw;
+    PlaneRotation.Roll = 16384;
+    SpawnPlaneAttachment(V, PlaneRotation, ArmorArray[Index].MaxRelativeHeight * vect(0.0, 0.0, 1.0));
 }
 
 // New debug exec to show & adjust a vehicle's TreadHitMaxHeight, which is the highest point (above the origin) where a side hit may damage treads
@@ -4040,7 +4726,7 @@ exec function SetTreadHeight(float NewValue)
 {
     local DHVehicle V;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    if (IsVehicleDebugModeAllowed(V))
     {
         Log(V.VehicleNameString @ "TreadHitMaxHeight =" @ NewValue @ "(was" @ V.TreadHitMaxHeight $ ")");
         DestroyPlaneAttachments(V); // remove any existing angle plane attachments
@@ -4065,13 +4751,13 @@ exec function DebugAngles(optional string Option, optional float NewAngle)
     local rotator         NewRotation;
     local string          AnglesList;
 
-    if ((Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode()) && GetVehicleBase(V))
+    if (IsVehicleDebugModeAllowed(V))
     {
         DestroyPlaneAttachments(V); // remove any existing angle plane attachments
 
-        if (VehicleWeaponPawn(Pawn) != none &&  DHVehicleCannon(VehicleWeaponPawn(Pawn).Gun) != none)
+        if (DHVehicleCannonPawn(Pawn) != none && DHVehicleCannonPawn(Pawn).Cannon != none)
         {
-            Cannon = DHVehicleCannon(VehicleWeaponPawn(Pawn).Gun);
+            Cannon = DHVehicleCannonPawn(Pawn).Cannon;
             BaseActor = Cannon;
         }
         else
@@ -4214,14 +4900,14 @@ simulated function SpawnPlaneAttachment(DHVehicle V, rotator RelRotation, option
 simulated function DestroyPlaneAttachments(DHVehicle V)
 {
     local StaticMesh PlaneStaticMesh;
-    local int i;
+    local int        i;
 
     if (V != none)
     {
         // Using DynamicLoadObject so we don't have DH_DebugTools static mesh file loaded all the time; just dynamically load on demand
         PlaneStaticMesh = StaticMesh(DynamicLoadObject("DH_DebugTools.Misc.DebugPlaneAttachment", class'StaticMesh'));
 
-        for (i = V.VehicleAttachments.Length -1; i >= 0; --i)
+        for (i = V.VehicleAttachments.Length - 1; i >= 0; --i)
         {
             if (V.VehicleAttachments[i].Actor != none && V.VehicleAttachments[i].Actor.StaticMesh == PlaneStaticMesh)
             {
@@ -4232,12 +4918,916 @@ simulated function DestroyPlaneAttachments(DHVehicle V)
     }
 }
 
+// Emptied out as the system of using coded hit points to represent vehicle occupants has been abandoned
+exec function DriverCollisionDebug()
+{
+}
+
+// TEMPDEBUG (Matt, v8.0): for problem where player in any vehicle position is visibly attached in the wrong position
+// The problem seems to be a net client very occasionally appears to get the player attached without the default PrePivot -42 Z adjustment to his RelativeLocation
+// This leaves him about 0.7m higher than he should be, e.g. a buttoned up tank commander appearing in an odd pose above the hatch, or can also affect vehicle driver
+exec function DebugDriverAttachment()
+{
+    local Vehicle V;
+
+    V = Vehicle(Pawn);
+
+    if (V != none && V.Driver != none)
+    {
+        Log(V.Tag @ "DebugDriverAttachment: RelativeLocation =" @ V.Driver.RelativeLocation @ ", DrivePos =" @ V.DrivePos
+            @ ", PrePivot =" @ V.Driver.PrePivot @ ", default.PrePivot =" @ V.Driver.default.PrePivot);
+    }
+}
+
+simulated function ClientTeamKillPrompt(string LastFFKillerString)
+{
+    class'DHTeamKillInteraction'.default.LastFFKillerName = LastFFKillerString;
+
+    Player.InteractionMaster.AddInteraction("DH_Engine.DHTeamKillInteraction", Player);
+}
+
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+// START SQUAD FUNCTIONS
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+simulated function ClientSquadInvite(string SenderName, string SquadName, int TeamIndex, int SquadIndex)
+{
+    if (!bIgnoreSquadInvitations)
+    {
+        class'DHSquadInviteInteraction'.default.SenderName = SenderName;
+        class'DHSquadInviteInteraction'.default.SquadName = SquadName;
+        class'DHSquadInviteInteraction'.default.TeamIndex = TeamIndex;
+        class'DHSquadInviteInteraction'.default.SquadIndex = SquadIndex;
+
+        Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadInviteInteraction", Player);
+    }
+}
+
+simulated function ClientSquadLeaderVolunteerPrompt(int TeamIndex, int SquadIndex, int ExpirationTime)
+{
+    if (!bIgnoreSquadLeaderVolunteerPrompts)
+    {
+        class'DHSquadLeaderVolunteerInteraction'.default.TeamIndex = TeamIndex;
+        class'DHSquadLeaderVolunteerInteraction'.default.SquadIndex = SquadIndex;
+        class'DHSquadLeaderVolunteerInteraction'.default.ExpirationTime = ExpirationTime;
+
+        Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadLeaderVolunteerInteraction", Player);
+    }
+}
+
+exec function Speak(string ChannelTitle)
+{
+    local VoiceChatRoom VCR;
+    local string ChanPwd;
+    local DHVoiceReplicationInfo VRI;
+    local DHPlayerReplicationInfo PRI;
+
+    if (VoiceReplicationInfo == none || !VoiceReplicationInfo.bEnableVoiceChat  || !bVoiceChatEnabled)
+    {
+        return;
+    }
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    VRI = DHVoiceReplicationInfo(VoiceReplicationInfo);
+
+    if (VRI == none && PRI == none)
+    {
+        return;
+    }
+
+    // Colin: Hard-coding this, unfortunately, because we need to have the
+    // player be able to join just by executing "Speak Squad". We can't
+    // depend on the name of the squad because it's not unique and is subject
+    // to change, and we don't want to go passing around UUIDs when we can just
+    // put in a sneaky little hack.
+    if (ChannelTitle ~= VRI.SquadChannelName)
+    {
+        VCR = VRI.GetSquadChannel(GetTeamNum(), PRI.SquadIndex);
+    }
+    else if (ChannelTitle ~= VRI.LocalChannelName)
+    {
+        VCR = VRI.GetChannel(PRI.PlayerName, PRI.Team.TeamIndex);
+    }
+    else if (ChannelTitle ~= VRI.UnassignedChannelName && PRI.IsInSquad())
+    {
+        // If we are trying to speak in unassigned but we are in a squad, then return out
+        return;
+    }
+    else if (ChannelTitle ~= VRI.CommandChannelName && !PRI.IsSquadLeader())
+    {
+        // If we are trying to speak in command but we aren't a SL, then return out
+        return;
+    }
+    else
+    {
+        // Check that we are a member of this room.
+        VCR = VoiceReplicationInfo.GetChannel(ChannelTitle, GetTeamNum());
+    }
+
+    if (VCR == none && ChatRoomMessageClass != none)
+    {
+        ClientMessage(ChatRoomMessageClass.static.AssembleMessage(0, ChannelTitle));
+        return;
+    }
+
+    if (VCR.ChannelIndex >= 0)
+    {
+        ChanPwd = FindChannelPassword(ChannelTitle);
+        ServerSpeak(VCR.ChannelIndex, ChanPwd);
+    }
+    else if (ChatRoomMessageClass != none)
+    {
+        ClientMessage(ChatRoomMessageClass.static.AssembleMessage(0, ChannelTitle));
+    }
+}
+
+simulated function int GetSquadIndex()
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (PRI != none)
+    {
+        return PRI.SquadIndex;
+    }
+
+    return -1;
+}
+
+simulated function int GetSquadMemberIndex()
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (PRI != none)
+    {
+        return PRI.SquadMemberIndex;
+    }
+
+    return -1;
+}
+
+simulated function int GetRoleIndex()
+{
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI != none)
+    {
+        return GRI.GetRoleIndexAndTeam(GetRoleInfo());
+    }
+
+    return -1;
+}
+
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+// START SQUAD DEBUG FUNCTIONS
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+function ServerSquadCreate()
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    G.SquadReplicationInfo.CreateSquad(DHPlayerReplicationInfo(PlayerReplicationInfo));
+}
+
+function ServerSquadLeave()
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    G.SquadReplicationInfo.LeaveSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), true);
+}
+
+function ServerSquadJoin(int TeamIndex, int SquadIndex, optional bool bWasInvited)
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    G.SquadReplicationInfo.JoinSquad(DHPlayerReplicationInfo(PlayerReplicationInfo), TeamIndex, SquadIndex, bWasInvited);
+}
+
+function ServerSquadJoinAuto()
+{
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.JoinSquadAuto(DHPlayerReplicationInfo(PlayerReplicationInfo));
+    }
+}
+
+function ServerSquadInvite(DHPlayerReplicationInfo Recipient)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (SquadReplicationInfo != none && PRI != none && PRI.IsSquadLeader() && !Recipient.IsInSquad())
+    {
+        SquadReplicationInfo.InviteToSquad(PRI, GetTeamNum(), PRI.SquadIndex, Recipient);
+    }
+}
+
+function ServerSquadKick(DHPlayerReplicationInfo MemberToKick)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (SquadReplicationInfo != none && PRI != none)
+    {
+        SquadReplicationInfo.KickFromSquad(PRI, GetTeamNum(), PRI.SquadIndex, MemberToKick);
+    }
+}
+
+function ServerSquadBan(DHPlayerReplicationInfo PlayerToBan)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (SquadReplicationInfo != none && PRI != none)
+    {
+        SquadReplicationInfo.BanFromSquad(PRI, GetTeamNum(), PRI.SquadIndex, PlayerToBan);
+    }
+}
+
+function ServerSquadLock(bool bIsLocked)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (SquadReplicationInfo != none && PRI != none)
+    {
+        SquadReplicationInfo.SetSquadLocked(PRI, GetTeamNum(), PRI.SquadIndex, bIsLocked);
+    }
+}
+
+function ServerSquadPromote(DHPlayerReplicationInfo NewSquadLeader)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (SquadReplicationInfo != none && PRI != none)
+    {
+        SquadReplicationInfo.ChangeSquadLeader(PRI, GetTeamNum(), PRI.SquadIndex, NewSquadLeader);
+    }
+}
+
+function ServerSquadSignal(class<DHSquadSignal> SignalClass, vector Location)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (SquadReplicationInfo != none && PRI != none)
+    {
+        SquadReplicationInfo.SendSquadSignal(PRI, GetTeamNum(), PRI.SquadIndex, SignalClass, Location);
+    }
+}
+
+function ServerSquadRename(string Name)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (SquadReplicationInfo != none && PRI != none)
+    {
+        SquadReplicationInfo.SetName(GetTeamNum(), PRI.SquadIndex, Name);
+    }
+}
+
+function ServerAddMapMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY)
+{
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
+    local vector MapLocation;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    MapLocation.X = MapLocationX;
+    MapLocation.Y = MapLocationY;
+
+    if (GRI != none)
+    {
+        GRI.AddMapMarker(PRI, MapMarkerClass, MapLocation);
+    }
+}
+
+function ServerRemoveMapMarker(int MapMarkerIndex)
+{
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI != none && PRI != none && PRI.IsSquadLeader())
+    {
+        GRI.RemoveMapMarker(GetTeamNum(), MapMarkerIndex);
+    }
+}
+
+simulated function ClientSquadSignal(class<DHSquadSignal> SignalClass, vector L)
+{
+    local int i;
+    local int Index;
+
+    Index = -1;
+
+    if (SignalClass == none)
+    {
+        return;
+    }
+
+    if (SignalClass.default.bIsUnique)
+    {
+        // Go through all of the existing signals and see if one already exist.
+        for (i = 0; i < arraycount(SquadSignals); ++i)
+        {
+            if (SquadSignals[i].SignalClass == SignalClass)
+            {
+                Index = i;
+                break;
+            }
+        }
+    }
+
+    if (Index == -1)
+    {
+        // Go through the rest of the existing signal slots and see if any are empty or expired.
+        for (i = 0; i < arraycount(SquadSignals); ++i)
+        {
+            if (!IsSquadSignalActive(i))
+            {
+                Index = i;
+                break;
+            }
+        }
+    }
+
+    if (Index != -1)
+    {
+        SquadSignals[Index].SignalClass = SignalClass;
+        SquadSignals[Index].Location = L;
+        SquadSignals[Index].TimeSeconds = Level.TimeSeconds;
+    }
+}
+
+simulated function bool IsSquadSignalActive(int i)
+{
+    return i >= 0 &&
+           i < arraycount(SquadSignals) &&
+           SquadSignals[i].SignalClass != none &&
+           SquadSignals[i].Location != vect(0, 0, 0) &&
+           Level.TimeSeconds - SquadSignals[i].TimeSeconds < SquadSignals[i].SignalClass.default.DurationSeconds;
+}
+
+function ServerSquadSpawnRallyPoint()
+{
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.SpawnRallyPoint(self);
+    }
+}
+
+function ServerSquadDestroyRallyPoint(DHSpawnPoint_SquadRallyPoint SRP)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.DestroySquadRallyPoint(PRI, SRP);
+    }
+}
+
+// TODO: this should be an RPC in SRI
+function ServerSquadSwapRallyPoints()
+{
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.SwapRallyPoints(DHPlayerReplicationInfo(PlayerReplicationInfo));
+    }
+}
+
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+// END SQUAD DEBUG FUNCTIONS
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+exec function SquadSay(string Msg)
+{
+    Msg = Left(Msg, 128);
+
+    if (AllowTextMessage(Msg))
+    {
+        ServerSquadSay(Msg);
+    }
+}
+
+function ServerForgiveLastFFKiller()
+{
+    if (DarkestHourGame(Level.Game) != none && DarkestHourGame(Level.Game).bForgiveFFKillsEnabled && LastFFKiller != none)
+    {
+        Level.Game.BroadcastLocalizedMessage(Level.Game.default.GameMessageClass, 19, LastFFKiller, PlayerReplicationInfo);
+        LastFFKiller.FFKills -= LastFFKillAmount;
+
+        // If LastFFKiller's weapons are locked and no longer has FF kills, unlock the player's weapons
+        if (DHPlayer(LastFFKiller.Owner) != none && DHPlayer(LastFFKiller.Owner).AreWeaponsLocked(true) && LastFFKiller.FFKills < 1)
+        {
+            DHPlayer(LastFFKiller.Owner).LockWeapons(1, 2);
+        }
+
+        // Set none as we have handled the current LastFFKiller
+        LastFFKiller = none;
+    }
+}
+
+function ServerSquadSay(string Msg)
+{
+    local DarkestHourGame G;
+
+    // Forgive via typing
+    if (Msg ~= "np" || Msg ~= "forgive" || Msg ~= "no prob" || Msg ~= "no problem")
+    {
+        ServerForgiveLastFFKiller();
+    }
+
+    LastActiveTime = Level.TimeSeconds;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none)
+    {
+        G.BroadcastSquad(self, Level.Game.ParseMessageString(Level.Game.BaseMutator, self, Msg) , 'SquadSay');
+    }
+}
+
+exec function SquadMenu()
+{
+    // Open deploy menu with squad tab active
+    bPendingMapDisplay = false;
+
+    // Tell the deploy menu to start up in squad mode
+    DeployMenuStartMode = MODE_Squads;
+    ClientReplaceMenu("DH_Interface.DHDeployMenu");
+}
+
+exec function ShowOrderMenu()
+{
+    local string MenuClassName;
+    local Object MenuObject;
+
+    if (CommandInteraction == none && Pawn != none && !IsDead())
+    {
+        if (GetCommandInteractionMenu(MenuClassName, MenuObject))
+        {
+            CommandInteraction = DHCommandInteraction(Player.InteractionMaster.AddInteraction("DH_Engine.DHCommandInteraction", Player));
+            CommandInteraction.PushMenu(MenuClassName, MenuObject);
+        }
+    }
+}
+
+function bool GetCommandInteractionMenu(out string MenuClassName, out Object MenuObject)
+{
+    local DHPawn OtherPawn;
+    local DHPlayerReplicationInfo PRI, OtherPRI;
+    local vector TraceStart, TraceEnd, HitLocation, HitNormal;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (PRI == none)
+    {
+        return false;
+    }
+
+    if (PRI.IsInSquad())
+    {
+        if (PRI.IsSquadLeader())
+        {
+            // Trace out into the world and find a pawn we are looking at.
+            TraceStart = Pawn.Location + Pawn.EyePosition();
+            TraceEnd = TraceStart + (GetMaxViewDistance() * vector(Rotation));
+            OtherPawn = DHPawn(Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true));
+
+            if (OtherPawn != none && OtherPawn.GetTeamNum() == GetTeamNum())
+            {
+                OtherPRI = DHPlayerReplicationInfo(OtherPawn.PlayerReplicationInfo);
+                MenuObject = OtherPawn;
+            }
+
+            MenuClassName = "DH_Engine.DHCommandMenu_SquadLeader";
+        }
+        else
+        {
+            // TODO: some menu for someone i dunno
+            return false;
+        }
+    }
+    else
+    {
+        MenuClassName = "DH_Engine.DHCommandMenu_LoneWolf";
+    }
+
+    return true;
+}
+
+exec function HideOrderMenu()
+{
+    if (CommandInteraction != none)
+    {
+        CommandInteraction.Hide();
+        CommandInteraction = none;
+    }
+}
+
+function bool TeleportPlayer(vector SpawnLocation, rotator SpawnRotation)
+{
+    if (Pawn != none && Pawn.SetLocation(SpawnLocation))
+    {
+        Pawn.SetRotation(SpawnRotation);
+        Pawn.SetViewRotation(SpawnRotation);
+        Pawn.ClientSetRotation(SpawnRotation);
+
+        return true;
+    }
+
+    return false;
+}
+
+// Modified to allow for switching to a channel the user is already a member of (for private channels)
+function ServerSpeak(int ChannelIndex, optional string ChannelPassword)
+{
+    local VoiceChatRoom VCR;
+    local int Index;
+
+    if (VoiceReplicationInfo == none)
+    {
+        return;
+    }
+
+    VCR = VoiceReplicationInfo.GetChannelAt(ChannelIndex);
+
+    if (VCR == none)
+    {
+        if (VoiceReplicationInfo.bEnableVoiceChat)
+        {
+            ChatRoomMessage(0, ChannelIndex);
+        }
+        else
+        {
+            ChatRoomMessage(15, ChannelIndex);
+        }
+
+        return;
+    }
+
+    if (!VCR.IsMember(PlayerReplicationInfo) && VCR.IsPublicChannel())
+    {
+        if (ServerJoinVoiceChannel(ChannelIndex, ChannelPassword) != JCR_Success)
+        {
+            return;
+        }
+    }
+
+    Index = -1;
+    ActiveRoom = VCR;
+    Log(PlayerReplicationInfo.PlayerName @ "speaking on" @ VCR.GetTitle(), 'VoiceChat');
+    ChatRoomMessage(9, ChannelIndex);
+    ClientSetActiveRoom(VCR.ChannelIndex);
+    Index = VCR.ChannelIndex;
+
+    if (PlayerReplicationInfo != none)
+    {
+        PlayerReplicationinfo.ActiveChannel = Index;
+    }
+}
+
+simulated event ChatRoomMessage(byte Result, int ChannelIndex, optional PlayerReplicationInfo RelatedPRI)
+{
+    local VoiceChatRoom     VCR;
+
+    if (VoiceReplicationInfo != none && ChatRoomMessageClass != none)
+    {
+        VCR = VoiceReplicationInfo.GetChannelAt(ChannelIndex);
+
+        if (VCR == none)
+        {
+            return;
+        }
+
+        // Do not send client message globally for each player (probably should be in the AssembleMessage() function, but want to avoid overriding that)
+        if (Result == 11)
+        {
+            return;
+        }
+
+        if (!VCR.IsPrivateChannel())
+        {
+            ClientMessage(ChatRoomMessageClass.static.AssembleMessage(Result, VCR.GetTitle(), RelatedPRI));
+        }
+        else
+        {
+            ClientMessage(ChatRoomMessageClass.static.AssembleMessage(Result, class'DHVoiceReplicationInfo'.default.LocalChannelText, RelatedPRI));
+        }
+    }
+}
+
+// Modified to get the default channel as the player's personal local channel
+simulated function string GetDefaultActiveChannel()
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (PRI != none)
+    {
+        return PRI.PlayerName;
+    }
+    else
+    {
+        return super.GetDefaultActiveChannel();
+    }
+}
+
+// Returns true if there are players to spectate.
+function bool PlayersToSpectate()
+{
+    local Controller C;
+
+    // Make sure there are players we can spectate. If not, leave the players
+    // looking at their corpse.
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        if (C != self && Level.Game.CanSpectate(self, PlayerReplicationInfo.bOnlySpectator, C))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// Modified to eliminate a bug where the user could spectate controllers that
+// didn't have pawns.
+function ServerViewNextPlayer()
+{
+    local Controller C, NewTarget;
+    local bool bFound, bRealSpec, bWasSpec;
+
+    bRealSpec = PlayerReplicationInfo.bOnlySpectator;
+    bWasSpec = !bBehindView && ViewTarget != Pawn && ViewTarget != self;
+    PlayerReplicationInfo.bOnlySpectator = true;
+
+    // This loop finds the next controller to view.
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        if (C.Pawn != none && Level.Game.CanSpectate(self, bRealSpec, C))
+        {
+            if (NewTarget == none)
+            {
+                // Set the new target to the first valid spectator thing that
+                // we find. This is necessary so that we can effectively "loop"
+                // once we've reached the end of the list.
+                NewTarget = C;
+            }
+
+            if (bFound)
+            {
+                // We found our previous view target last iteration, so this
+                // is the real deal now!
+                NewTarget = C;
+                break;
+            }
+            else
+            {
+                // Check if this controller is our current one, if it is, mark
+                // bFound as true so that we can get a new target after.
+                bFound = RealViewTarget == C || ViewTarget == C;
+            }
+        }
+    }
+
+    SetViewTarget(NewTarget);
+    ClientSetViewTarget(NewTarget);
+
+    if (Vehicle(ViewTarget) != none)
+    {
+        // First person view doesn't look right for these.
+        bBehindView = true;
+    }
+    else if (ViewTarget == self || bWasSpec || ROTeamGame(Level.Game).bSpectateFirstPersonOnly)
+    {
+        bBehindView = false;
+    }
+    else
+    {
+        bBehindView = true;
+    }
+
+    ClientSetBehindView(bBehindView);
+
+    PlayerReplicationInfo.bOnlySpectator = bRealSpec;
+}
+
+function int GetValidSpecModeCount()
+{
+    local ESpectatorMode Mode;
+    local int Count;
+
+    Mode = SPEC_Self;
+
+    do
+    {
+        if (IsSpecModeValid(Mode))
+        {
+            ++Count;
+        }
+
+        Mode = ESpectatorMode((int(Mode) + 1) % 4);
+    }
+    until (Mode == SPEC_Self);
+
+    return Count;
+}
+
+simulated function bool IsSpecModeValid(ESpectatorMode Mode)
+{
+    if (Mode == SPEC_Self)
+    {
+        return !bViewBlackOnDeadNotViewingPlayers && Pawn != none && PlayerReplicationInfo != none && !PlayerReplicationInfo.bOnlySpectator;
+    }
+    else if (Mode == SPEC_Roaming)
+    {
+        return !bViewBlackonDeadNotViewingPlayers && bAllowRoamWhileSpectating && (!IsDead() || (bAllowRoamWhileDeadSpectating && !bViewBlackWhenDead));
+    }
+    else if (Mode == SPEC_Players)
+    {
+        return PlayersToSpectate();
+    }
+    else if (Mode == SPEC_ViewPoints)
+    {
+        return !bViewBlackOnDeadNotViewingPlayers && bSpectateAllowViewPoints;
+    }
+
+    return false;
+}
+
+// get the next valid spectator mode based on the servers settings
+function ESpectatorMode GetNextValidSpecMode()
+{
+    local ESpectatorMode NextSpecMode;
+
+    NextSpecMode = SpecMode;
+
+    do
+    {
+        NextSpecMode = ESpectatorMode((int(NextSpecMode) + 1) % 4);
+
+        if (IsSpecModeValid(NextSpecMode))
+        {
+            break;
+        }
+    }
+    until (NextSpecMode == SpecMode);
+
+    return NextSpecMode;
+}
+
+state Spectating
+{
+    ignores SwitchWeapon, RestartLevel, ClientRestart, Suicide, ThrowWeapon, NotifyPhysicsVolumeChange, NotifyHeadVolumeChange;
+
+    exec function Jump(optional float F)
+    {
+    }
+}
+
+exec function GiveCamera()
+{
+    Pawn.GiveWeapon("DH_Construction.DHCameraWeapon");
+}
+
+// Modified to fix "accessed none" errors when the ChatManager isn't set.
+function ServerRequestBanInfo(int PlayerID)
+{
+    local array<PlayerController> Controllers;
+    local PlayerController PC;
+    local int i;
+
+    if (Level != none && Level.Game != none)
+    {
+        Level.Game.GetPlayerControllerList(Controllers);
+
+        for (i = 0; i < Controllers.Length; ++i)
+        {
+            PC = Controllers[i];
+
+            // Don't send our own info
+            if (PC == none || PC == self)
+            {
+                continue;
+            }
+
+            if (PlayerID == -1 || PC.PlayerReplicationInfo.PlayerID == PlayerID)
+            {
+                Log(Name @ "Sending BanInfo To Client PlayerID:" $ PC.PlayerReplicationInfo.PlayerID @ "Hash:" $ PC.GetPlayerIDHash() @ "Address:" $ PC.GetPlayerNetworkAddress(), 'ChatManager');
+
+                if (ChatManager != none)
+                {
+                    ChatManager.TrackNewPlayer(PC.PlayerReplicationInfo.PlayerID, PC.GetPlayerIDHash(), PC.GetPlayerNetworkAddress());
+                }
+
+                ClientReceiveBan(PC.PlayerReplicationInfo.PlayerID $ Chr(27) $ PC.GetPlayerIDHash() $ Chr(27) $ PC.GetPlayerNetworkAddress());
+            }
+        }
+    }
+}
+
+function PatronRequestOnResponse(int Status, TreeMap_string_string Headers, string Content)
+{
+    local JSONParser Parser;
+    local JSONObject O;
+    local bool bIsPatron;
+
+    if (Status == 200)
+    {
+        Parser = new class'JSONParser';
+        O = Parser.ParseObject(Content);
+
+        Log("Patron status request success (" $ Status  $ ")");
+
+        if (O != none)
+        {
+            bIsPatron = O.Get("is_patron").AsBoolean();
+        }
+
+        if (bIsPatron)
+        {
+            ServerSetPatronStatus(bIsPatron);
+        }
+    }
+    else
+    {
+        Warn("Patron status request failed (" $ Status $ ")");
+    }
+}
+
+// Client reports patron status to the server.
+function ServerSetPatronStatus(bool bIsPatron)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (PRI != none)
+    {
+        PRI.bIsPatron = bIsPatron;
+    }
+}
+
+function ServerSquadLeaderVolunteer(int TeamIndex, int SquadIndex)
+{
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.VolunteerForSquadLeader(DHPlayerReplicationInfo(PlayerReplicationInfo), TeamIndex, SquadIndex);
+    }
+}
+
+// Functions emptied out as RO/DH doesn't use a LocalStatsScreen actor & these aren't used
+function ServerUpdateStats(TeamPlayerReplicationInfo PRI);
+function ServerUpdateStatArrays(TeamPlayerReplicationInfo PRI);
+function ServerGetNextWeaponStats(TeamPlayerReplicationInfo PRI, int i);
+function ServerGetNextVehicleStats(TeamPlayerReplicationInfo PRI, int i);
+simulated function ClientSendWeapon(TeamPlayerReplicationInfo PRI, class<Weapon> W, int Kills, int Deaths, int DeathsHolding, int i);
+simulated function ClientSendVehicle(TeamPlayerReplicationInfo PRI, class<Vehicle> V, int Kills, int Deaths, int DeathsDriving, int i);
+simulated function ClientSendSprees(TeamPlayerReplicationInfo PRI,byte Spree0,byte Spree1,byte Spree2,byte Spree3,byte Spree4,byte Spree5);
+simulated function ClientSendMultiKills(TeamPlayerReplicationInfo PRI, byte MultiKills0, byte MultiKills1, byte MultiKills2, byte MultiKills3, byte MultiKills4, byte MultiKills5, byte MultiKills6);
+simulated function ClientSendCombos(TeamPlayerReplicationInfo PRI,byte Combos0, byte Combos1, byte Combos2, byte Combos3, byte Combos4);
+simulated function ClientSendStats(TeamPlayerReplicationInfo PRI, int NewGoals, bool bNewFirstBlood, int Newkills, int NewSuicides,
+    int NewFlagTouches, int NewFlagReturns, int NewFlakCount, int NewComboCount, int NewHeadCount, int NewRanOverCount);
+
 defaultproperties
 {
+    CorpseStayTime=15
+    CorpseStayTimeMin=5
+    CorpseStayTimeMax=60
+
     // Sway values
     SwayCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=3.0,OutVal=0.375),(InVal=12.0,OutVal=0.33),(InVal=45.0,OutVal=0.475),(InVal=10000000000.0,OutVal=0.6)))
-    DHSwayElasticFactor=8.0;
-    DHSwayDampingFactor=0.51;
+    DHSwayElasticFactor=8.0
+    DHSwayDampingFactor=0.51
     BaseSwayYawAcc=600
     BaseSwayPitchAcc=500
 
@@ -4258,22 +5848,29 @@ defaultproperties
     FlinchOffsetRate=(X=1000.0,Y=0.0,Z=1000.0)
     FlinchOffsetTime=1.0
 
+    // FOV
+    ViewFOVMin=80.0
+    ViewFOVMax=100.0
+    ConfigViewFOV=85.0
+
     // Other values
     NextSpawnTime=15
     ROMidGameMenuClass="DH_Interface.DHDeployMenu"
     GlobalDetailLevel=5
-    DesiredFOV=90.0
-    DefaultFOV=90.0
     PlayerReplicationInfoClass=class'DH_Engine.DHPlayerReplicationInfo'
     InputClass=class'DH_Engine.DHPlayerInput'
     PawnClass=class'DH_Engine.DHPawn'
-    PlayerChatType="DH_Engine.DHPlayerChatManager"
+    PlayerChatType=""   // HACK: emptied this out to see if this stops the server crash and other voice chat issues!
     SteamStatsAndAchievementsClass=none
-    SpawnPointIndex=255
-    VehiclePoolIndex=255
-    SpawnVehicleIndex=255
+    SpawnPointIndex=-1
+    VehiclePoolIndex=-1
     SpectateSpeed=+1200.0
 
     DHPrimaryWeapon=-1
     DHSecondaryWeapon=-1
+
+    VoiceChatCodec="CODEC_96WB"
+    VoiceChatLANCodec="CODEC_96WB"
+
+    ToggleDuckIntervalSeconds=0.5
 }

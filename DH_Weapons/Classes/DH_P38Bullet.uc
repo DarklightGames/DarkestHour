@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_P38Bullet extends DHBullet;
@@ -12,5 +12,4 @@ defaultproperties
     WhizType=2
     Damage=55.0
     MyDamageType=class'DH_Weapons.DH_P38DamType'
-    MyVehicleDamage=class'DH_Weapons.DH_P38VehDamType'
 }

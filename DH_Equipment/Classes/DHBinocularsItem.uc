@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHBinocularsItem extends DHProjectileWeapon; // obviously not really a projectile weapon, but that class has most of the necessary functionality, e.g. zoom in for ironsight mode
@@ -172,9 +172,9 @@ simulated event RenderOverlays(Canvas Canvas)
         // Draw black bars on the sides
         Overlap = 58.0 / float(BinocsOverlay.VSize) * Canvas.SizeY * (1.0 + BinocsEnlargementFactor);
         Canvas.SetPos(0.0, 0.0);
-        Canvas.DrawTile(texture'Engine.BlackTexture', PosX + Overlap, Canvas.SizeY, 0.0, 0.0, 8.0, 8.0);
+        Canvas.DrawTile(Texture'Engine.BlackTexture', PosX + Overlap, Canvas.SizeY, 0.0, 0.0, 8.0, 8.0);
         Canvas.SetPos(Canvas.SizeX - PosX - Overlap, 0.0);
-        Canvas.DrawTile(texture'Engine.BlackTexture', PosX + Overlap, Canvas.SizeY, 0.0, 0.0, 8.0, 8.0);
+        Canvas.DrawTile(Texture'Engine.BlackTexture', PosX + Overlap, Canvas.SizeY, 0.0, 0.0, 8.0, 8.0);
     }
     else
     {
@@ -203,7 +203,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    BinocsOverlay=texture'Weapon_overlays.Scopes.BINOC_overlay'
+    BinocsOverlay=Texture'Weapon_overlays.Scopes.BINOC_overlay'
     BinocsEnlargementFactor=0.2
     IronSightDisplayFOV=70.0
     bPlayerFOVZooms=true

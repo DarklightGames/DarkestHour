@@ -1,11 +1,14 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHGamePageSP extends UT2K4GamePageSP;
 
 const GAME_DIFFICULTY_INDEX = 3;
+
+var globalconfig bool   bDidShowNoBotsWarning;
+var localized string    NoBotsWarningText;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -38,6 +41,18 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     b_Back = DHGameFooterSP(t_Footer).b_Back;
     b_Primary = DHGameFooterSP(t_Footer).b_Primary;
+}
+
+function InternalOnOpen()
+{
+    super.InternalOnOpen();
+
+    if(!bDidShowNoBotsWarning)
+    {
+        Controller.ShowQuestionDialog(default.NoBotsWarningText, QBTN_OK, QBTN_OK);
+        bDidShowNoBotsWarning = true;
+        SaveConfig();
+    }
 }
 
 function PrepareToPlay(out string GameURL, optional string OverrideMap)
@@ -159,7 +174,7 @@ defaultproperties
     t_Footer=DHGameFooterSP'DH_Interface.DHGamePageSP.SPFooter'
 
     Begin Object Class=GUIImage Name=BkChar
-        Image=texture'DH_GUI_Tex.Menu.menuBackground'
+        Image=Texture'DH_GUI_Tex.Menu.menuBackground'
         ImageStyle=ISTY_Scaled
         X1=0
         Y1=0
@@ -175,4 +190,10 @@ defaultproperties
     PanelClass(2)="DH_Interface.DHIAMultiColumnRulesPanel"
     PanelClass(3)="DH_Interface.DHTab_MutatorSP"
     PanelClass(4)="none"
+
+    bDidShowNoBotsWarning=false
+    NoBotsWarningText="Darkest Hour: Europe '44-'45 is focused solely on multi-player and, as a result, does NOT include support for bots in Practice mode."
+
+    OnOpen=InternalOnOpen
 }
+

@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class JSONValue extends Object
@@ -16,6 +16,7 @@ function string AsString() { return ""; }
 function JSONNumber AsNumber() { return none; }
 function int AsInteger() { return 0; }
 function float AsFloat() { return 0.0; }
+function bool AsBoolean() { return false; }
 function JSONObject AsObject() { return none; }
 function JSONArray AsArray() { return none; }
 

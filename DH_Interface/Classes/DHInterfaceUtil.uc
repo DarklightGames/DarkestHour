@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHInterfaceUtil extends GUI;
@@ -377,5 +377,5 @@ final simulated static function int ReformatLists(GUIController MyController, GU
 
 defaultproperties
 {
-    HeaderBase=texture'DH_GUI_Tex.Menu.DHDisplay'
+    HeaderBase=Texture'DH_GUI_Tex.Menu.DHDisplay'
 }

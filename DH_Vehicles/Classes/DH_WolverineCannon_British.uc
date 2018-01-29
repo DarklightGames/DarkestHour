@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_WolverineCannon_British extends DH_WolverineCannon_Early; // British Wolverine won't have HVAP
@@ -37,5 +37,5 @@ simulated function DestroyEffects()
 
 defaultproperties
 {
-    Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Achilles_turret_ext'
+    Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.Achilles_turret_ext'
 }

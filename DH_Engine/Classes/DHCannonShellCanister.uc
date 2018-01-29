@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHCannonShellCanister extends DHBullet;
@@ -11,7 +11,6 @@ defaultproperties
 {
     NumberOfProjectilesPerShot=20
     WhizType=2
-    MyVehicleDamage=class'DH_Engine.DHCanisterShotVehicleDamageType'
     BallisticCoefficient=4.0
     Speed=45988.0
     Damage=120.0

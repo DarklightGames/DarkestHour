@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHMapVotingPage extends MapVotingPage config(DHMapVotingInfo);
@@ -171,7 +171,7 @@ defaultproperties
     co_GameType=moComboBox'DH_Interface.DHMapVotingPage.GameTypeCombo'
     i_MapListBackground=none
     Begin Object Class=GUIImage Name=MapCountListBackground
-        Image=texture'InterfaceArt_tex.Menu.buttonGreyDark01'
+        Image=Texture'InterfaceArt_tex.Menu.buttonGreyDark01'
         ImageStyle=ISTY_Stretched
         OnDraw=DHMapVotingPage.AlignBK
     End Object

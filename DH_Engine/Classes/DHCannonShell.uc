@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHCannonShell extends DHAntiVehicleProjectile
@@ -8,8 +8,8 @@ class DHCannonShell extends DHAntiVehicleProjectile
 
 struct RangePoint
 {
-    var() int               Range;                // meter distance for this Range setting
-    var() float             RangeValue;           // the adjustment value for this Range setting
+    var() int               Range;                // the distance for this range setting
+    var() float             RangeValue;           // the adjustment value for this range setting
 };
 
 var()   bool                bMechanicalAiming;    // uses the mechanical range settings for this projectile
@@ -88,7 +88,7 @@ simulated function Destroyed()
     super.Destroyed();
 }
 
-// Pitch aim adjustment for cannons with mechanically linked gunsight range setting - returns the proper pitch adjustment to hit a target at a particular range
+// Pitch aim adjustment for gunsights with mechanically adjusted range setting - returns the proper pitch adjustment to hit a target at a particular range
 simulated static function int GetPitchForRange(int Range)
 {
     local int i;
@@ -116,7 +116,7 @@ simulated static function float GetYAdjustForRange(int Range)
 
     if (!default.bOpticalAiming)
     {
-        return 0;
+        return 0.0;
     }
 
     for (i = 0; i < default.OpticalRanges.Length; ++i)
@@ -127,7 +127,7 @@ simulated static function float GetYAdjustForRange(int Range)
         }
     }
 
-    return 0;
+    return 0.0;
 }
 
 simulated function Landed(vector HitNormal)
@@ -147,7 +147,7 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 
         if (bDebugBallistics)
         {
-            HandleShellDebug(HitLocation); // Matt: simpler to call this here than in the tank cannon class, as we have saved TraceHitLoc in PostBeginPlay if bDebugBallistics is true
+            HandleShellDebug(HitLocation); // simpler to call this here than in the tank cannon class, as we have saved TraceHitLoc in PostBeginPlay if bDebugBallistics is true
         }
 
         super.Explode(HitLocation, HitNormal);
@@ -228,7 +228,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
                 break;
 
             case EST_Water:
-                HitSound = WaterHitSound; // Matt: added as can't see why not (no duplication with CheckForSplash water effects as here we aren't in a WaterVolume)
+                HitSound = WaterHitSound; // added as can't see why not (no duplication with CheckForSplash water effects as here we aren't in a WaterVolume)
                 HitEmitterClass = ShellHitWaterEffectClass;
                 break;
 
@@ -304,8 +304,6 @@ defaultproperties
     ShellHitRockEffectClass=class'ROEffects.TankAPHitRockEffect'
     ShellHitWaterEffectClass=class'DH_Effects.DHShellSplashEffect'
     AmbientVolumeScale=5.0
-    SpeedFudgeScale=0.5
-    InitialAccelerationTime=0.2
     Speed=500.0
     MaxSpeed=22000.0
     Damage=100.0
@@ -318,7 +316,7 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Tracers.shells.Allied_shell'
     bNetTemporary=false
     bUpdateSimulatedPosition=true
-    AmbientSound=sound'Vehicle_Weapons.Misc.projectile_whistle01'
+    AmbientSound=Sound'Vehicle_Weapons.Misc.projectile_whistle01'
     LifeSpan=7.5
     AmbientGlow=96
     FluidSurfaceShootStrengthMod=10.0

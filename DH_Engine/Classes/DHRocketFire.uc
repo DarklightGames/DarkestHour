@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHRocketFire extends DHProjectileFire
@@ -26,7 +26,12 @@ event ModeDoFire()
 
     super.ModeDoFire();
 
-    if (bCausesExhaustDamage)
+    if (Weapon == none)
+    {
+        return;
+    }
+
+    if (bCausesExhaustDamage && Weapon.ThirdPersonActor != none)
     {
         WeaponLocation = Weapon.ThirdPersonActor.Location;
         ExhaustDirection = -vector(Weapon.ThirdPersonActor.Rotation);
@@ -81,58 +86,67 @@ function PlayFiring()
     local DHRocketWeapon RocketWeapon;
     local name           Anim;
 
-    if (Weapon.bUsingSights)
+    if (Weapon != none)
     {
-        RocketWeapon = DHRocketWeapon(Weapon);
-
-        if (RocketWeapon != none && RocketWeapon.RangeSettings.Length > 0)
+        if (Weapon.Mesh != none)
         {
-            Anim = RocketWeapon.RangeSettings[RocketWeapon.RangeIndex].FireIronAnim;
+            if (!IsPlayerHipFiring())
+            {
+                RocketWeapon = DHRocketWeapon(Weapon);
+
+                if (RocketWeapon != none && RocketWeapon.RangeSettings.Length > 0)
+                {
+                    Anim = RocketWeapon.RangeSettings[RocketWeapon.RangeIndex].FireIronAnim;
+                }
+                else
+                {
+                    Anim = FireIronAnim;
+                }
+            }
+            else
+            {
+                Anim = FireAnim;
+            }
+
+            if (Weapon.HasAnim(Anim))
+            {
+                Weapon.PlayAnim(Anim, FireAnimRate, FireTweenTime);
+            }
         }
-        else
-        {
-            Anim = FireIronAnim;
-        }
-    }
-    else
-    {
-        Anim = FireAnim;
+
+        Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
     }
 
-    Weapon.PlayAnim(Anim, FireAnimRate, FireTweenTime);
-    Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
     ClientPlayForceFeedback(FireForce);
 }
 
 defaultproperties
 {
+    bUsePreLaunchTrace=false
+    FAProjSpawnOffset=(X=-25.0)
+    bWaitForRelease=true
+    FireRate=2.6
+
+    Spread=450.0
+    MaxVerticalRecoilAngle=800
+    MaxHorizontalRecoilAngle=400
+    AimError=2000.0
+
     bCausesExhaustDamage=true
     ExhaustLength=400.0
     ExhaustDamage=200.0
     ExhaustMomentumTransfer=100.0
-    ProjSpawnOffset=(X=25.0)
-    FAProjSpawnOffset=(X=-25.0)
-    bUsePreLaunchTrace=false
-    FireIronAnim="iron_shoot"
+
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Bazooka.BazookaFire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Bazooka.BazookaFire01'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.Bazooka.BazookaFire01'
-    MaxVerticalRecoilAngle=800
-    MaxHorizontalRecoilAngle=400
-    bWaitForRelease=true
-    TweenTime=0.0
     FireForce="RocketLauncherFire"
-    FireRate=2.6
-    ShakeRotMag=(X=50.0,Y=50.0,Z=500.0)
-    ShakeRotRate=(X=12500.0,Y=12500.0,Z=7500.0)
-    ShakeRotTime=6.0
+    FireAnim=""
+
     ShakeOffsetMag=(X=3.0,Y=1.0,Z=5.0)
     ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
     ShakeOffsetTime=1.0
-    BotRefireRate=0.5
-    WarnTargetPct=0.9
-    SmokeEmitterClass=none // removed as is just little wisp of gun muzzle smoke, irrelevant among the smoke & blast of the exhaust
-    AimError=2000.0
-    Spread=450.0
-    SpreadStyle=SS_Random
+    ShakeRotMag=(X=50.0,Y=50.0,Z=500.0)
+    ShakeRotRate=(X=12500.0,Y=12500.0,Z=7500.0)
+    ShakeRotTime=6.0
 }

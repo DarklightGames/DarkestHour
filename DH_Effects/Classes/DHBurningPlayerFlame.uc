@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHBurningPlayerFlame extends Emitter;
@@ -36,7 +36,7 @@ defaultproperties
     bNoDelete=false
     bDynamicLight=true
     bOnlyDrawIfAttached=true
-    AmbientSound=sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
+    AmbientSound=Sound'Amb_Destruction.Fire.Kessel_Fire_Small_Barrel'
     bFullVolume=true
     SoundVolume=255
 
@@ -68,7 +68,7 @@ defaultproperties
         ParticlesPerSecond=10.0
         InitialParticlesPerSecond=10.0
         DrawStyle=PTDS_Brighten
-        Texture=texture'DH_FX_Tex.Fire.FireAnim16F'
+        Texture=Texture'DH_FX_Tex.Fire.FireAnim16F'
         TextureUSubdivisions=4
         TextureVSubdivisions=4
         SecondsBeforeInactive=30.0
@@ -106,7 +106,7 @@ defaultproperties
         ParticlesPerSecond=12.0
         InitialParticlesPerSecond=12.0
         DrawStyle=PTDS_Brighten
-        Texture=texture'DH_FX_Tex.Fire.FireAnim16F'
+        Texture=Texture'DH_FX_Tex.Fire.FireAnim16F'
         TextureUSubdivisions=4
         TextureVSubdivisions=4
         SecondsBeforeInactive=30.0
@@ -141,7 +141,7 @@ defaultproperties
         ParticlesPerSecond=4.0
         InitialParticlesPerSecond=4.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=texture'Effects_Tex.explosions.DSmoke_1'
+        Texture=Texture'Effects_Tex.explosions.DSmoke_1'
         LifetimeRange=(Min=0.7,Max=0.8)
         StartVelocityRange=(X=(Min=10.0,Max=10.0),Y=(Min=10.0,Max=10.0),Z=(Min=50.0,Max=100.0))
         VelocityLossRange=(X=(Max=0.05),Y=(Max=0.05),Z=(Max=0.05))

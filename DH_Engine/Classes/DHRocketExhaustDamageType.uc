@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHRocketExhaustDamageType extends DHThrowableExplosiveDamageType
@@ -8,7 +8,7 @@ class DHRocketExhaustDamageType extends DHThrowableExplosiveDamageType
 
 defaultproperties
 {
-    HUDIcon=texture'DH_InterfaceArt_tex.deathicons.backblastkill'
+    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.backblastkill'
     DeathString="%o was cooked by the exhaust from %k's %w."
     MaleSuicide="%o was cooked by the exhaust from his own %w."
     FemaleSuicide="%o was cooked by the exhaust from her own %w."

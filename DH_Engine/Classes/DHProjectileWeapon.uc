@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHProjectileWeapon extends DHWeapon
@@ -11,7 +11,7 @@ var         bool        bCanFireFromHip;            // if true this weapon has a
 
 // Ammo/magazines
 var         array<int>  PrimaryAmmoArray;           // the array of magazines and their ammo amounts this weapon has
-var         byte        CurrentMagCount;            // current number of magazines, this should be replicated to the client // Matt: changed from int to byte for more efficient replication
+var         byte        CurrentMagCount;            // current number of magazines, this should be replicated to the client (changed from int to byte for more efficient replication)
 var         int         MaxNumPrimaryMags;          // the maximum number of mags a solder can carry for this weapon, should move to the role info
 var         int         InitialNumPrimaryMags;      // the number of mags the soldier starts with, should move to the role info
 var         int         CurrentMagIndex;            // the index of the magazine currently in use
@@ -101,6 +101,22 @@ replication
 // Server won't be in sync with net client's weapon position when ironsighted or bipod deployed, but doesn't matter as sighted calculations don't use weapon's position
 simulated function PostBeginPlay()
 {
+    local DHPlayer PC;
+
+    // Pre-apply bayonet based on user setting (the user setting gets updated when client connects or changes the setting)
+    // If this is a bayonet weapon & is the server and client wants a bayonet attached at spawn, then set the bayonet mounted and update status
+    if (bHasBayonet && Role == ROLE_Authority && Instigator != none && Instigator.Controller != none)
+    {
+        PC = DHPlayer(Instigator.Controller);
+
+        if (PC != none && PC.bSpawnWithBayonet)
+        {
+            bBayonetMounted = true;
+            UpdateBayonet();
+        }
+    }
+
+    // Now call the super (after the server handles the bayonet)
     super.PostBeginPlay();
 
     if (Role == ROLE_Authority && !InstigatorIsLocallyControlled() && HasAnim(IdleAnim))
@@ -198,7 +214,7 @@ simulated event RenderOverlays(Canvas Canvas)
     }
 
     // Draw muzzle flashes/smoke for all fire modes so idle state won't cause emitters to just disappear
-    Canvas.DrawActor(none, false, true);
+    Canvas.DrawActor(none, false, true); // clear the z-buffer here
 
     for (i = 0; i < NUM_FIRE_MODES; ++i)
     {
@@ -226,7 +242,7 @@ simulated event RenderOverlays(Canvas Canvas)
 
     if (bUsesFreeAim && !bUsingSights && Playa != none)
     {
-        if (!IsCrawling())
+        if (!IsCrawling()) // note DH has added this restriction to prevent pitch adjustment if player is crawling
         {
             RollMod.Pitch += Playa.WeaponBufferRotation.Pitch;
         }
@@ -234,7 +250,7 @@ simulated event RenderOverlays(Canvas Canvas)
         RollMod.Yaw += Playa.WeaponBufferRotation.Yaw;
     }
 
-    SetRotation(RollMod);
+    SetRotation(RollMod); // note DH always calls this, where in RO it was only called if player was not ironsighted (which made setting RollMod pointless when sighted)
 
     bDrawingFirstPerson = true;
 
@@ -572,11 +588,6 @@ simulated function bool StartFire(int Mode)
         // Take the weapon out of ironsights if we're trying to do a melee attack in ironsights
         if (FireMode[Mode].bMeleeMode)
         {
-            if (ROPawn(Instigator) != none)
-            {
-                ROPawn(Instigator).SetMeleeHoldAnims(true);
-            }
-
             GotoState('UnZoomImmediately');
         }
 
@@ -980,23 +991,6 @@ function ServerZoomOut()
     ZoomOut(true);
 }
 
-simulated function PlayerViewZoom(bool ZoomDirection)
-{
-    bPlayerViewIsZoomed = ZoomDirection;
-
-    if (InstigatorIsHumanControlled())
-    {
-        if (bPlayerViewIsZoomed)
-        {
-            PlayerController(Instigator.Controller).SetFOV(PlayerFOVZoom);
-        }
-        else
-        {
-            PlayerController(Instigator.Controller).ResetFOV();
-        }
-    }
-}
-
 simulated state IronSightZoomIn extends WeaponBusy
 {
     simulated function bool CanStartCrawlMoving()
@@ -1309,6 +1303,8 @@ simulated function PlayStartSprint()
 // Modified to handle empty anim
 simulated state WeaponSprinting
 {
+ignores PutDown, BringUp;
+
     simulated function PlayIdle()
     {
         local float LoopSpeed, Speed2d;
@@ -2019,7 +2015,7 @@ simulated state ChangingBarrels extends WeaponBusy
         {
             bCallBarrelChangeTimer = false;
             PerformBarrelChange();
-            SetTimer(FMin(0.5 * BarrelChangeDuration, 0.1), false); // minimum of 0.1 secs just in case something has gone wrong - guarantees we set another Timer & exit state
+            SetTimer(FMax(0.5 * BarrelChangeDuration, 0.1), false); // minimum of 0.1 secs just in case something has gone wrong - guarantees we set another Timer & exit state
         }
         // Otherwise we just exit the state as normal, as we've completed the barrel change process
         else
@@ -2184,7 +2180,10 @@ function AttachToPawn(Pawn P)
 
 simulated function ClientSetBarrelSteam(bool bSteaming)
 {
-    SetBarrelSteamActive(bSteaming);
+    if (Role < ROLE_Authority)
+    {
+        SetBarrelSteamActive(bSteaming);
+    }
 }
 
 function SetBarrelDamaged(bool bDamaged)
@@ -2276,6 +2275,27 @@ simulated function bool ConsumeAmmo(int Mode, float Load, optional bool bAmountN
     return super.ConsumeAmmo(Mode, Load, bAmountNeededIsMax);
 }
 
+// New debug exec to show spread limits as red lines
+exec function DebugSpread()
+{
+    local DHProjectileFire FM;
+
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        FM = DHProjectileFire(FireMode[0]);
+
+        if (FM != none)
+        {
+            FM.bDebugSpread = !FM.bDebugSpread;
+
+            if (!FM.bDebugSpread)
+            {
+                ClearStayingDebugLines();
+            }
+        }
+    }
+}
+
 defaultproperties
 {
     Priority=9
@@ -2303,8 +2323,4 @@ defaultproperties
     PutDownAnim="Put_away"
     IronBringUp="iron_in"
     IronPutDown="iron_out"
-    CrawlStartAnim="crawl_in"
-    CrawlEndAnim="crawl_out"
-    CrawlForwardAnim="crawlF"
-    CrawlBackwardAnim="crawlB"
 }

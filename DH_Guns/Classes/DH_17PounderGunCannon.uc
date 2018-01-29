@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_17PounderGunCannon extends DHATGunCannon;
@@ -9,10 +9,9 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_17PounderGun_anm.17Pounder_turret'
-    Skins(0)=texture'DH_Artillery_Tex.17pounder.17Pounder'
-    Skins(1)=texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle_MN'
-//  CollisionStaticMesh=StaticMesh'DH_Artillery_stc.17pounder.17pdr_turret_coll' // TODO - make 'turret' col mesh
-    BeginningIdleAnim="com_idle_close"
+    Skins(0)=Texture'DH_Artillery_Tex.17pounder.17Pounder'
+    Skins(1)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle_MN'
+    CollisionStaticMesh=StaticMesh'DH_Artillery_stc.17pounder.17pdr_turret_coll'
     GunnerAttachmentBone="com_player"
 
     // Turret movement
@@ -29,8 +28,10 @@ defaultproperties
     ProjectileClass=class'DH_Guns.DH_17PounderCannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_17PounderCannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_17PounderCannonShellHE'
-    InitialPrimaryAmmo=60
-    InitialSecondaryAmmo=30
+    InitialPrimaryAmmo=20
+    InitialSecondaryAmmo=8
+    MaxPrimaryAmmo=60
+    MaxSecondaryAmmo=30
     SecondarySpread=0.00156
 
     // Weapon fire
@@ -40,10 +41,10 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
     CannonFireSound(1)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
     CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
-    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
-    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
 
     // Cannon range settings
     RangeSettings(1)=100

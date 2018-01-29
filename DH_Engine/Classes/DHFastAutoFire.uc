@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHFastAutoFire extends DHAutomaticFire;
@@ -22,153 +22,53 @@ var     byte                    AmbientFireVolume;      // The ambient fire soun
 // High ROF system
 var     float                   PackingThresholdTime;   // If the shots are closer than this amount, the dual shot will be used
 
-// Overridden to support packing two shots together to save net bandwidth
-function DoFireEffect()
+// Modified to support packing two shots together to save net bandwidth
+// The high rate of fire system packs shots together, replicates the shot info to net clients & then they spawn their own client bullets
+// Bullet actor replication is disabled
+function Projectile SpawnProjectile(vector Start, rotator Dir)
 {
-    local vector  StartProj, StartTrace, X, Y, Z;
-    local rotator R, Aim;
-    local vector  HitLocation, HitNormal;
-    local Actor   Other;
-    local int     ProjectileID;
-    local int     SpawnCount;
-    local float   theta;
-    local coords  MuzzlePosition;
+    local Projectile SpawnedProjectile;
 
-    Instigator.MakeNoise(1.0);
+    // Start by spawning the projectile as normal
+    SpawnedProjectile = super.SpawnProjectile(Start, Dir);
 
-    Weapon.GetViewAxes(X, Y, Z);
-
-    // if weapon in iron sights, spawn at eye position, otherwise spawn at muzzle tip
-    if (Instigator.Weapon.bUsingSights || Instigator.bBipodDeployed)
-    {
-        StartTrace = Instigator.Location + Instigator.EyePosition();
-        StartProj = StartTrace + X * ProjSpawnOffset.X;
-
-        // check if projectile would spawn through a wall and adjust start location accordingly
-        Other = Trace(HitLocation, HitNormal, StartProj, StartTrace, false);
-
-        if (Other != none)
-        {
-            StartProj = HitLocation;
-        }
-    }
-    else
-    {
-        MuzzlePosition = Weapon.GetMuzzleCoords();
-
-        // Get the muzzle position and scale it down 5 times (since the model is scaled up 5 times in the editor)
-        StartTrace = MuzzlePosition.Origin - Weapon.Location;
-        StartTrace = StartTrace * 0.2;
-        StartTrace = Weapon.Location + StartTrace;
-
-        StartProj = StartTrace + MuzzlePosition.XAxis * FAProjSpawnOffset.X;
-
-        Other = Trace(HitLocation, HitNormal, StartTrace, StartProj, true); // was false to only trace worldgeometry
-
-        if (Other != none)
-        {
-            StartProj = HitLocation;
-        }
-    }
-
-    Aim = AdjustAim(StartProj, AimError);
-
-    // For free-aim, just use where the muzzlebone is pointing
-    if (!Instigator.Weapon.bUsingSights && !Instigator.bBipodDeployed && Instigator.Weapon.bUsesFreeAim && Instigator.IsHumanControlled())
-    {
-        Aim = rotator(MuzzlePosition.XAxis);
-    }
-
-    SpawnCount = Max(1, ProjPerFire * int(Load));
-
-    CalcSpreadModifiers();
-
-    if (DHProjectileWeapon(Owner) != none && DHProjectileWeapon(Owner).bBarrelDamaged)
-    {
-        AppliedSpread = 4.0 * Spread;
-    }
-    else
-    {
-        AppliedSpread = Spread;
-    }
-
-    switch (SpreadStyle)
-    {
-        case SS_Random:
-
-            X = vector(Aim);
-
-            for (ProjectileID = 0; ProjectileID < SpawnCount; ++ProjectileID)
-            {
-                R.Yaw = AppliedSpread * ((FRand() - 0.5) / 1.5);
-                R.Pitch = AppliedSpread * (FRand() - 0.5);
-                R.Roll = AppliedSpread * (FRand() - 0.5);
-
-                HandleProjectileSpawning(StartProj, rotator(X >> R));
-            }
-
-            break;
-
-        case SS_Line:
-
-            for (ProjectileID = 0; ProjectileID < SpawnCount; ++ProjectileID)
-            {
-                theta = AppliedSpread * PI / 32768.0 * (ProjectileID - float(SpawnCount - 1) / 2.0);
-                X.X = Cos(theta);
-                X.Y = Sin(theta);
-                X.Z = 0.0;
-                HandleProjectileSpawning(StartProj, rotator(X >> Aim));
-            }
-
-            break;
-
-        default:
-            HandleProjectileSpawning(StartProj, Aim);
-    }
-}
-
-// This function handles combining the shots and when to replicate them
-function HandleProjectileSpawning(vector SpawnPoint, rotator SpawnAim)
-{
     if (Level.NetMode == NM_Standalone)
     {
-        super(DHProjectileFire).SpawnProjectile(SpawnPoint, SpawnAim);
-
-        return;
+        return SpawnedProjectile; // remaining network stuff isn't relevant to single player
     }
 
-    if (HiROFWeaponAttachment == none)
+    // Stop a server from replicating the bullet actor to net clients
+    if (DHBullet(SpawnedProjectile) != none)
+    {
+        DHBullet(SpawnedProjectile).SetAsServerBullet();
+    }
+
+    // Update the weapon attachment's packed shot info, which gets replicated to net clients, causing them to spawn their own bullets
+    if (HiROFWeaponAttachment == none && Weapon != none)
     {
         HiROFWeaponAttachment = DHHighROFWeaponAttachment(Weapon.ThirdPersonActor);
     }
 
-    SpawnProjectile(SpawnPoint, SpawnAim);
-
-    if (Level.NetMode == NM_Standalone)
+    if (HiROFWeaponAttachment != none)
     {
-        return;
-    }
-    else if ((Level.TimeSeconds - LastCalcTime) > PackingThresholdTime)
-    {
-        HiROFWeaponAttachment.LastShot = HiROFWeaponAttachment.MakeShotInfo(SpawnPoint, SpawnAim);
-        HiROFWeaponAttachment.bUnReplicatedShot = true;
-    }
-    else
-    {
-        if (HiROFWeaponAttachment.bFirstShot)
+        if (Level.TimeSeconds - LastCalcTime > PackingThresholdTime)
         {
-            HiROFWeaponAttachment.LastShot = HiROFWeaponAttachment.MakeShotInfo(SpawnPoint, SpawnAim);
+            HiROFWeaponAttachment.LastShot = HiROFWeaponAttachment.MakeShotInfo(Start, Dir);
+            HiROFWeaponAttachment.bUnReplicatedShot = true;
+        }
+        else if (HiROFWeaponAttachment.bFirstShot)
+        {
+            HiROFWeaponAttachment.LastShot = HiROFWeaponAttachment.MakeShotInfo(Start, Dir);
             HiROFWeaponAttachment.bFirstShot = false;
             HiROFWeaponAttachment.bUnReplicatedShot = true;
         }
         else
         {
             HiROFWeaponAttachment.SavedDualShot.FirstShot = HiROFWeaponAttachment.LastShot;
-            HiROFWeaponAttachment.SavedDualShot.Secondshot = HiROFWeaponAttachment.MakeShotInfo(SpawnPoint, SpawnAim);
+            HiROFWeaponAttachment.SavedDualShot.Secondshot = HiROFWeaponAttachment.MakeShotInfo(Start, Dir);
             HiROFWeaponAttachment.bFirstShot = true;
 
-            // Skip 255 as we will use it for a special trigger
-            if (HiROFWeaponAttachment.DualShotCount < 254)
+            if (HiROFWeaponAttachment.DualShotCount < 254) // skip 255 as we will use it for a special trigger
             {
                 HiROFWeaponAttachment.DualShotCount ++;
             }
@@ -177,111 +77,113 @@ function HandleProjectileSpawning(vector SpawnPoint, rotator SpawnAim)
                 HiROFWeaponAttachment.DualShotCount = 1;
             }
 
-            HiROFWeaponAttachment.NetUpdateTime = Level.TimeSeconds - 1;
+            HiROFWeaponAttachment.NetUpdateTime = Level.TimeSeconds - 1.0;
 
             HiROFWeaponAttachment.bUnReplicatedShot = false;
         }
     }
 
     LastCalcTime = Level.TimeSeconds;
+
+    return SpawnedProjectile;
 }
 
-// Plays the animation at the end of firing the weapon
-function PlayFireEnd()
-{
-    local DHProjectileWeapon RPW;
-
-    RPW = DHProjectileWeapon(Weapon);
-
-    if (RPW.HasAnim(FireEndAnim) && !RPW.bUsingSights && !Instigator.bBipodDeployed)
-    {
-        RPW.PlayAnim(FireEndAnim, FireEndAnimRate, TweenTime);
-    }
-    else if (RPW.HasAnim(FireIronEndAnim) && (RPW.bUsingSights || Instigator.bBipodDeployed))
-    {
-        RPW.PlayAnim(FireIronEndAnim, FireEndAnimRate, TweenTime);
-    }
-}
-
-// Sends the fire class to the looping state
+// Implemented to send the fire class to the looping state
 function StartFiring()
 {
-   GotoState('FireLoop');
+    GotoState('FireLoop');
 }
 
-// Handles toggling the weapon attachment's ambient sound on and off
+// New function to handles toggling the weapon attachment's ambient sound on & off
 function PlayAmbientSound(sound aSound)
 {
     local WeaponAttachment WA;
 
-    WA = WeaponAttachment(Weapon.ThirdPersonActor);
-
-    if (Weapon == none || WA == none)
+    if (Weapon != none)
     {
-        return;
+        WA = WeaponAttachment(Weapon.ThirdPersonActor);
     }
 
-    if (aSound == none)
+    if (WA != none)
     {
-        WA.SoundVolume = WA.default.SoundVolume;
-        WA.SoundRadius = WA.default.SoundRadius;
-    }
-    else
-    {
-        WA.SoundVolume = AmbientFireVolume;
-        WA.SoundRadius = AmbientFireSoundRadius;
-    }
+        if (aSound == none)
+        {
+            WA.SoundVolume = WA.default.SoundVolume;
+            WA.SoundRadius = WA.default.SoundRadius;
+        }
+        else
+        {
+            WA.SoundVolume = AmbientFireVolume;
+            WA.SoundRadius = AmbientFireSoundRadius;
+        }
 
-    WA.AmbientSound = aSound;
+        WA.AmbientSound = aSound;
+    }
 }
 
 // Make sure we are in the fire looping state when we fire
 event ModeDoFire()
 {
-    if (!ROWeapon(Owner).IsBusy() && AllowFire() && IsInState('FireLoop'))
+    if (ROWeapon(Owner) != none && !ROWeapon(Owner).IsBusy() && AllowFire() && IsInState('FireLoop'))
     {
         super.ModeDoFire();
     }
 }
 
-// This state handles looping the firing animations and ambient fire sounds as well as firing rounds.
+// New state to handle looping the firing animations & ambient fire sounds as well as firing rounds
 state FireLoop
 {
     function BeginState()
     {
-        local DHProjectileWeapon RPW;
+        local name Anim;
 
         NextFireTime = Level.TimeSeconds - 0.1; // fire now!
 
-        RPW = DHProjectileWeapon(Weapon);
+        if (Weapon != none && Weapon.Mesh != none)
+        {
+            if (!IsPlayerHipFiring())
+            {
+                if (Weapon.HasAnim(BipodDeployFireLoopAnim) && Instigator != none && Instigator.bBipodDeployed)
+                {
+                    Anim = BipodDeployFireLoopAnim;
+                }
+                else if (Weapon.HasAnim(FireIronLoopAnim))
+                {
+                    Anim = FireIronLoopAnim;
+                }
+            }
 
-        if (!RPW.bUsingSights && !Instigator.bBipodDeployed)
-        {
-            Weapon.LoopAnim(FireLoopAnim, LoopFireAnimRate, TweenTime);
-        }
-        else
-        {
-            Weapon.LoopAnim(FireIronLoopAnim, IronLoopFireAnimRate, TweenTime);
+            if (Anim != '')
+            {
+                Weapon.LoopAnim(Anim, IronLoopFireAnimRate, 0.0);
+            }
+            else if (Weapon.HasAnim(FireLoopAnim))
+            {
+                Weapon.LoopAnim(FireLoopAnim, LoopFireAnimRate, 0.0);
+            }
         }
 
         PlayAmbientSound(AmbientFireSound);
     }
 
-    // Overridden because we play an ambient fire sound
+    // Emptied out because we play an ambient fire sound
     function PlayFiring() { }
     function ServerPlayFiring() { }
 
     function EndState()
     {
-        Weapon.AnimStopLooping();
         PlayAmbientSound(none);
-        Weapon.PlayOwnedSound(FireEndSound, SLOT_None, FireVolume,, AmbientFireSoundRadius);
-        Weapon.StopFire(ThisModeNum);
 
-        //If we are not switching weapons, go to the idle state
-        if (!Weapon.IsInState('LoweringWeapon'))
+        if (Weapon != none)
         {
-            ROWeapon(Weapon).GotoState('Idle');
+            Weapon.AnimStopLooping();
+            Weapon.PlayOwnedSound(FireEndSound, SLOT_None, FireVolume,, AmbientFireSoundRadius);
+            Weapon.StopFire(ThisModeNum);
+
+            if (!Weapon.IsInState('LoweringWeapon') && Weapon.IsA('ROWeapon'))
+            {
+                ROWeapon(Weapon).GotoState('Idle'); // if we are not switching weapons, go to the idle state
+            }
         }
     }
 
@@ -300,39 +202,22 @@ state FireLoop
                 HiROFWeaponAttachment.DualShotCount = 255;
             }
 
-            HiROFWeaponAttachment.NetUpdateTime = Level.TimeSeconds - 1;
+            HiROFWeaponAttachment.NetUpdateTime = Level.TimeSeconds - 1.0;
         }
 
         GotoState('');
     }
 
+    // Modified to make sure we leave this state if weapon has stopped firing, or the magazine is empty, or barrel has failed due to overheating
     function ModeTick(float DeltaTime)
     {
         super(WeaponFire).ModeTick(DeltaTime);
 
-        // Stopped firing, magazine empty or barrel overheat // WeaponTODO: see how to properly reimplement this
-        if (!bIsFiring || ROWeapon(Weapon).IsBusy() || !AllowFire() || (DHProjectileWeapon(Weapon) != none && DHProjectileWeapon(Weapon).bBarrelFailed))
+        if (!bIsFiring || (ROWeapon(Weapon) != none && ROWeapon(Weapon).IsBusy()) || !AllowFire() || (DHProjectileWeapon(Weapon) != none && DHProjectileWeapon(Weapon).bBarrelFailed))
         {
             GotoState('');
-
-            return;
         }
     }
-}
-
-// Matt: modified to disable bullet replication, so actor won't be replicated to clients (was the only difference in the server bullet class)
-function Projectile SpawnProjectile(vector Start, rotator Dir)
-{
-    local Projectile SpawnedProjectile;
-
-    SpawnedProjectile = super.SpawnProjectile(Start, Dir);
-
-    if (DHBullet(SpawnedProjectile) != none)
-    {
-        DHBullet(SpawnedProjectile).SetAsServerBullet();
-    }
-
-    return SpawnedProjectile;
 }
 
 function float MaxRange()
@@ -342,8 +227,13 @@ function float MaxRange()
 
 defaultproperties
 {
+    PackingThresholdTime=0.1
+    MaxVerticalRecoilAngle=300
+    MaxHorizontalRecoilAngle=90
+    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_smg'
+    AmbientFireVolume=255
+    AmbientFireSoundRadius=750.0
+    PreFireAnim="Shoot1_start"
     LoopFireAnimRate=1.0
     IronLoopFireAnimRate=1.0
-    PackingThresholdTime=0.1
-    NoAmmoSound=sound'Inf_Weapons_Foley.Misc.dryfire_smg'
 }

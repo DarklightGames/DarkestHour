@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_M1GrenadeWeapon extends DHExplosiveWeapon;
@@ -17,13 +17,14 @@ defaultproperties
     InventoryGroup=2
 
     Mesh=SkeletalMesh'DH_M1Grenade_1st.M1_Grenade'
-    Skins(2)=texture'DH_Weapon_tex.AlliedSmallArms.M1Grenade' // TODO: there is no specularity mask for this weapon
+    Skins(2)=Texture'DH_Weapon_tex.AlliedSmallArms.M1Grenade' // TODO: there is no specularity mask for this weapon
 
-    PlayerViewOffset=(X=15.0,Y=15.0)
+    DisplayFOV=90.0
+    PlayerViewOffset=(X=15.0,Y=15.0,Z=15.0)
 
     FuzeLength=4.0
     bHasReleaseLever=true
-    LeverReleaseSound=sound'Inf_Weapons_Foley.F1.f1_handle'
+    LeverReleaseSound=Sound'Inf_Weapons_Foley.F1.f1_handle'
     LeverReleaseVolume=1.0
     LeverReleaseRadius=200.0
 }

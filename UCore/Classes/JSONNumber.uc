@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class JSONNumber extends JSONValue;
@@ -29,6 +29,11 @@ function int AsInteger()
 function float AsFloat()
 {
     return float(Value);
+}
+
+function bool AsBoolean()
+{
+    return AsInteger() != 0;
 }
 
 function string Encode()

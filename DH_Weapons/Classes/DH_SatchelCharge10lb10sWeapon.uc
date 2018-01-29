@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_SatchelCharge10lb10sWeapon extends DHExplosiveWeapon;
@@ -16,7 +16,7 @@ defaultproperties
     InventoryGroup=6
 
     Mesh=SkeletalMesh'Common_Satchel_1st.Sachel_Charge'
-    Skins(2)=texture'Weapons1st_tex.Grenades.SatchelCharge'
+    Skins(2)=Texture'Weapons1st_tex.Grenades.SatchelCharge'
 
     PlayerViewOffset=(X=10.0,Y=5.0,Z=0.0)
 

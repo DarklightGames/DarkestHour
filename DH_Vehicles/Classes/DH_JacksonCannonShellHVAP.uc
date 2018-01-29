@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_JacksonCannonShellHVAP extends DHCannonShellHVAP;
@@ -21,7 +21,6 @@ defaultproperties
     ShellDiameter=9.0
     ImpactDamage=525
     BallisticCoefficient=1.564
-    SpeedFudgeScale=0.4
     Speed=61619.0
     MaxSpeed=61619.0
     Tag="M304 HVAP"

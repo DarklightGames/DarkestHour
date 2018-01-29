@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHObjective extends ROObjTerritory
@@ -55,29 +55,54 @@ struct ObjOperationAction
     var() EObjectiveOperation Operation;
 };
 
-var(ROObjTerritory) bool            bSetInactiveOnCapture;      // Simliar to bRecaptureable, but doesn't disable timer, just sets to inactive (bRecaptureable must = true)
+// Territory variables
 var(ROObjTerritory) bool            bUseHardBaseRate;           // Tells the capture rate to always be the base value, so we can have consistent capture times
-var(ROObjective) bool               bIsInitiallyActive;         // Purpose is mainly to consolidate the variables of actors into one area (less confusing to new levelers)
-var()   bool                        bVehiclesCanCapture;
-var()   bool                        bTankersCanCapture;
-var()   bool                        bUsePostCaptureOperations;  // Enables below variables to be used for post capture clear check/calls
-var()   bool                        bDisableWhenAlliesClearObj;
-var()   bool                        bDisableWhenAxisClearObj;
-var()   bool                        bGroupActionsAtDisable;
-var()   bool                        bHideOnMap;
-var()   bool                        bHideOnMapWhenInactive;
-var()   bool                        bHideLabelWhenInactive;
-var()   bool                        bResetDeathPenalties;        // will reset all players death penalty counts
-var()   int                         AlliedAwardedReinforcements; // Amount of reinforcement to aware for allies if the obj is captured
-var()   int                         AxisAwardedReinforcements;   // Amount of reinforcement to aware for axis if the obj is captured
-var()   int                         PlayersNeededToCapture;
-var()   name                        NoArtyVolumeProtectionTag;   // optional Tag for associated no arty volume that protects this SP only when the SP is active
 
+// Basic Obj variables
+var(ROObjective) bool               bIsInitiallyActive;         // Purpose is mainly to consolidate the variables of actors into one area (less confusing to new levelers)
+var(ROObjective) name               NoArtyVolumeProtectionTag;  // optional Tag for associated no arty volume that protects this SP only when the SP is active
+
+// Capture/Actions variables
+var(DHObjectiveCapture) bool        bLockDownOnCapture;
+var(DHObjectiveCapture) bool        bVehiclesCanCapture;
+var(DHObjectiveCapture) bool        bTankersCanCapture;
+var(DHObjectiveCapture) bool        bUsePostCaptureOperations;  // Enables below variables to be used for post capture clear check/calls
+var(DHObjectiveCapture) bool        bSetInactiveOnCapture;      // Simliar to bRecaptureable, but doesn't disable timer, just sets to inactive (bRecaptureable must = true)
+var(DHObjectiveCapture) bool        bNeutralizeBeforeCapture;   // if this is true the objective will neutralize first (then can be captured by either team)
+var(DHObjectiveCapture) int         PlayersNeededToCapture;
+var(DHObjectiveCapture) int         PreventCaptureTime;         // time to prevent capture after the objective is activated
+var(DHObjectiveCapture) int         LockDownOnCaptureTime;      // time to prevent capture after the objective is captured
+var(DHObjectiveCapture) bool        bGroupActionsAtDisable;
+var(DHObjectiveCapture) bool        bNeutralOnActivation;       // Should this capture be neutral when it is activated
+var(DHObjectiveCapture) array<int>  AxisRequiredObjForCapture;  // Objectives which are required to progress capture bar towards "capture" (obj can still be neutralized)
+var(DHObjectiveCapture) array<int>  AlliesRequiredObjForCapture;
+
+// Clear variables
+var(DHObjectiveClear) bool          bSetInactiveOnClear;        // Sets the objective inactive when cleared
+var(DHObjectiveClear) bool          bDisableWhenAlliesClearObj;
+var(DHObjectiveClear) bool          bDisableWhenAxisClearObj;
+
+// Visual variables
+var(DHObjectiveVisual) bool         bHideOnMap;
+var(DHObjectiveVisual) bool         bHideOnMapWhenInactive;
+var(DHObjectiveVisual) bool         bHideLabelWhenInactive;
+
+// Award variables
+var(DHObjectiveAwards) int          AlliedAwardedReinforcements;// Amount of reinforcement to award for allies if the obj is captured
+var(DHObjectiveAwards) int          AxisAwardedReinforcements;  // Amount of reinforcement to award for axis if the obj is captured
+var(DHObjectiveAwards) int          MinutesAwarded;             // Time in minutes awarded to round time when objective is captured
+var(DHObjectiveAwards) int          AlliedOwnedAttritionRate;   // Rate of Axis Attrition when Allies control this objective
+var(DHObjectiveAwards) int          AxisOwnedAttritionRate;     // Rate of Allies Attrition when Axis control this objective
+
+// Non configurable variables
+var     int                         UnfreezeTime;               // The time at which the objective will be unlocked and ready to be capured again, relative to GRI.ElapsedTime
 var     bool                        bCheckIfAxisCleared;
 var     bool                        bCheckIfAlliesCleared;
-var     bool                        bAlliesContesting;
-var     bool                        bAxisContesting;
 var     bool                        bIsLocked;
+var     bool                        bDidAwardAxisReinf;
+var     bool                        bDidAwardAlliesReinf;
+var     bool                        bRecentlyControlledByAxis;
+var     bool                        bRecentlyControlledByAllies;
 
 // Capture operations (after capture)
 var(DH_CaptureActions)      array<ObjOperationAction>   AlliesCaptureObjActions;
@@ -110,35 +135,22 @@ var(DH_GroupedActions)      array<VehiclePoolAction>    AxisGroupVehiclePoolActi
 var(DH_GroupedActions)      array<name>                 AlliesGroupCaptureEvents;
 var(DH_GroupedActions)      array<name>                 AxisGroupCaptureEvents;
 
-// Contested operations (used when a side begins capturing)
-var(DH_ContestedActions)    array<ObjOperationAction>   AlliesContestObjActions;
-var(DH_ContestedActions)    array<ObjOperationAction>   AxisContestObjActions;
-var(DH_ContestedActions)    array<SpawnPointAction>     AlliesContestSpawnPointActions;
-var(DH_ContestedActions)    array<SpawnPointAction>     AxisContestSpawnPointActions;
-var(DH_ContestedActions)    array<VehiclePoolAction>    AlliesContestVehiclePoolActions;
-var(DH_ContestedActions)    array<VehiclePoolAction>    AxisContestVehiclePoolActions;
-var(DH_ContestedActions)    array<name>                 AlliesContestEvents;
-var(DH_ContestedActions)    array<name>                 AxisContestEvents;
-
-// Contest end operations (used when a side fails to capture and contest ends)
-var(DH_ContestEndActions)   array<ObjOperationAction>   AlliesContestEndObjActions;
-var(DH_ContestEndActions)   array<ObjOperationAction>   AxisContestEndObjActions;
-var(DH_ContestEndActions)   array<SpawnPointAction>     AlliesContestEndSpawnPointActions;
-var(DH_ContestEndActions)   array<SpawnPointAction>     AxisContestEndSpawnPointActions;
-var(DH_ContestEndActions)   array<VehiclePoolAction>    AlliesContestEndVehiclePoolActions;
-var(DH_ContestEndActions)   array<VehiclePoolAction>    AxisContestEndVehiclePoolActions;
-var(DH_ContestEndActions)   array<name>                 AlliesContestEndEvents;
-var(DH_ContestEndActions)   array<name>                 AxisContestEndEvents;
+replication
+{
+    // Variables the server will replicate to all clients
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        UnfreezeTime;
+}
 
 function PostBeginPlay()
 {
-    local DHGameReplicationInfo DHGRI;
+    local DHGameReplicationInfo GRI;
     local RONoArtyVolume        NAV;
 
     // Call super above ROObjective
     super(GameObjective).PostBeginPlay();
 
-    DHGRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
     // Find the volume to use if the mapper set one
     if (VolumeTag != '')
@@ -163,11 +175,8 @@ function PostBeginPlay()
 
     ObjState = InitialObjState;
 
-    // Override the GameObjective variable bInitiallyActive with DH
-    if (Role == ROLE_Authority)
-    {
-        SetActive(bIsInitiallyActive);
-    }
+    bRecentlyControlledByAxis = InitialObjState == OBJ_Axis;
+    bRecentlyControlledByAllies = InitialObjState == OBJ_Allies;
 
     // Add self to game objectives
     if (DarkestHourGame(Level.Game) != none)
@@ -176,9 +185,9 @@ function PostBeginPlay()
     }
 
     // Add self to game replication info objectives
-    if (DHGRI != none)
+    if (GRI != none)
     {
-        DHGRI.DHObjectives[ObjNum] = self;
+        GRI.DHObjectives[ObjNum] = self;
     }
 }
 
@@ -186,13 +195,44 @@ function Reset()
 {
     super.Reset();
 
+    UnfreezeTime = 0;
     SetActive(bIsInitiallyActive);
 
     bCheckIfAxisCleared = false;
     bCheckIfAlliesCleared = false;
-    bAlliesContesting = false;
-    bAxisContesting = false;
     bIsLocked = false;
+    bDidAwardAxisReinf = false;
+    bDidAwardAlliesReinf = false;
+
+    bRecentlyControlledByAxis = InitialObjState == OBJ_Axis;
+    bRecentlyControlledByAllies = InitialObjState == OBJ_Allies;
+}
+
+function SetActive(bool bActiveStatus)
+{
+    // Don't run any changes if we are already the status sent
+    if (bActive == bActiveStatus)
+    {
+        return;
+    }
+
+    super.SetActive(bActiveStatus);
+
+    if (bActiveStatus)
+    {
+        UnfreezeTime = Level.Game.GameReplicationInfo.ElapsedTime + PreventCaptureTime;
+
+        // Make neutral if desired
+        if (bNeutralOnActivation && !bDisabled && !IsNeutral())
+        {
+            ObjState = OBJ_Neutral;
+
+            if (DarkestHourGame(Level.Game) != none)
+            {
+                DarkestHourGame(Level.Game).NotifyObjStateChanged();
+            }
+        }
+    }
 }
 
 function DoSpawnPointAction(SpawnPointAction SPA)
@@ -303,108 +343,6 @@ function DoObjectiveAction(ObjOperationAction OOA)
     }
 }
 
-function HandleContestedActions(int Team, bool bStarted)
-{
-    local int i;
-
-    // Contested started
-    if (bStarted)
-    {
-        if (Team == AXIS_TEAM_INDEX)
-        {
-            for (i = 0; i < AxisContestObjActions.Length; ++i)
-            {
-                DoObjectiveAction(AxisContestObjActions[i]);
-            }
-
-            for (i = 0; i < AxisContestSpawnPointActions.Length; ++i)
-            {
-                DoSpawnPointAction(AxisContestSpawnPointActions[i]);
-            }
-
-            for (i = 0; i < AxisContestVehiclePoolActions.Length; ++i)
-            {
-                DoVehiclePoolAction(AxisContestVehiclePoolActions[i]);
-            }
-
-            for (i = 0; i < AxisContestEvents.Length; ++i)
-            {
-                TriggerEvent(AxisContestEvents[i], none, none);
-            }
-        }
-        else if (Team == ALLIES_TEAM_INDEX)
-        {
-            for (i = 0; i < AlliesContestObjActions.Length; ++i)
-            {
-                DoObjectiveAction(AlliesContestObjActions[i]);
-            }
-
-            for (i = 0; i < AlliesContestSpawnPointActions.Length; ++i)
-            {
-                DoSpawnPointAction(AlliesContestSpawnPointActions[i]);
-            }
-
-            for (i = 0; i < AlliesContestVehiclePoolActions.Length; ++i)
-            {
-                DoVehiclePoolAction(AlliesContestVehiclePoolActions[i]);
-            }
-
-            for (i = 0; i < AlliesContestEvents.Length; ++i)
-            {
-                TriggerEvent(AlliesContestEvents[i], none, none);
-            }
-        }
-    }
-    // Contested failed/ended
-    else
-    {
-        if (Team == AXIS_TEAM_INDEX)
-        {
-            for (i = 0; i < AxisContestEndObjActions.Length; ++i)
-            {
-                DoObjectiveAction(AxisContestEndObjActions[i]);
-            }
-
-            for (i = 0; i < AxisContestEndSpawnPointActions.Length; ++i)
-            {
-                DoSpawnPointAction(AxisContestEndSpawnPointActions[i]);
-            }
-
-            for (i = 0; i < AxisContestEndVehiclePoolActions.Length; ++i)
-            {
-                DoVehiclePoolAction(AxisContestEndVehiclePoolActions[i]);
-            }
-
-            for (i = 0; i < AxisContestEndEvents.Length; ++i)
-            {
-                TriggerEvent(AxisContestEndEvents[i], none, none);
-            }
-        }
-        else if (Team == ALLIES_TEAM_INDEX)
-        {
-            for (i = 0; i < AlliesContestEndObjActions.Length; ++i)
-            {
-                DoObjectiveAction(AlliesContestEndObjActions[i]);
-            }
-
-            for (i = 0; i < AlliesContestEndSpawnPointActions.Length; ++i)
-            {
-                DoSpawnPointAction(AlliesContestEndSpawnPointActions[i]);
-            }
-
-            for (i = 0; i < AlliesContestEndVehiclePoolActions.Length; ++i)
-            {
-                DoVehiclePoolAction(AlliesContestEndVehiclePoolActions[i]);
-            }
-
-            for (i = 0; i < AlliesContestEndEvents.Length; ++i)
-            {
-                TriggerEvent(AlliesContestEndEvents[i], none, none);
-            }
-        }
-    }
-}
-
 function HandleGroupActions(int Team)
 {
     local DarkesthourGame DHGame;
@@ -492,22 +430,19 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
 {
     local DarkestHourGame           G;
     local DHPlayerReplicationInfo   PRI;
-    local DHGameReplicationInfo     GRI;
     local DHRoleInfo                RI;
     local Controller                C;
     local Pawn                      P;
     local int                       i;
     local array<string>             PlayerIDs;
     local int                       RoundTime;
+    local int                       NumTotal[2], Num[2], NumForCheck[2];
 
     CurrentCapProgress = 0.0;
-    bAlliesContesting = false; // set to false as the objective was captured
-    bAxisContesting = false;   // ...
 
     G = DarkestHourGame(Level.Game);
-    GRI = DHGameReplicationInfo(G.GameReplicationInfo);
 
-    if (G == none || GRI == none)
+    if (G == none)
     {
         return;
     }
@@ -515,7 +450,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     // If it's not recapturable, make it inactive
     if (!bRecaptureable)
     {
-        bActive = false;
+        SetActive(false);
 
         // Only turn off the timer if bUsePostCaptureOperations is false, we will turn it off after it's clear of enemies (in timer)
         if (!bUsePostCaptureOperations)
@@ -556,12 +491,6 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
             }
         }
 
-        // If bUseDeathPenaltyCount, then reset everyone's count as an objective was captured!
-        if (bResetDeathPenalties && GRI.bUseDeathPenaltyCount && DHPlayer(C) != none)
-        {
-            DHPlayer(C).DeathPenaltyCount = DHPlayer(C).default.DeathPenaltyCount;
-        }
-
         PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
 
         if (PRI != none)
@@ -587,27 +516,45 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
         }
     }
 
-    BroadcastLocalizedMessage(class'DHObjectiveMessage', Team, none, none, self);
-
     if (G.Metrics != none)
     {
-        RoundTime = GRI.ElapsedTime - GRI.RoundStartTime;
+        RoundTime = Level.Game.GameReplicationInfo.ElapsedTime -  Level.Game.GameReplicationInfo.RoundStartTime;
         G.Metrics.OnObjectiveCaptured(ObjNum, Team, RoundTime, PlayerIDs);
     }
 
-    // Award reinforcements
-    G.ModifyReinforcements(AXIS_TEAM_INDEX, AxisAwardedReinforcements * FMax(0.1, (G.NumPlayers / G.MaxPlayers)));
-    G.ModifyReinforcements(ALLIES_TEAM_INDEX, AlliedAwardedReinforcements * FMax(0.1, (G.NumPlayers / G.MaxPlayers)));
-
-    // Handle attrition unlock
-    if (G.DHLevelInfo != none && G.DHLevelInfo.AttritionMaxOpenObj > 0)
+    // Award round time
+    if (MinutesAwarded != 0 && !bUsePostCaptureOperations)
     {
-        G.AttritionUnlockObjective(ObjNum);
+        G.ModifyRoundTime(MinutesAwarded*60, 0);
     }
 
     switch (Team)
     {
         case AXIS_TEAM_INDEX:
+            if (bLockDownOnCapture && bRecentlyControlledByAllies)
+            {
+                UnfreezeTime = Level.Game.GameReplicationInfo.ElapsedTime + LockDownOnCaptureTime;
+            }
+
+            if (!bDidAwardAxisReinf && bRecentlyControlledByAllies)
+            {
+                bDidAwardAxisReinf = true;
+
+                // Award reinforcements
+                if (AxisAwardedReinforcements >= 0)
+                {
+                    G.ModifyReinforcements(AXIS_TEAM_INDEX, AxisAwardedReinforcements);
+                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, class'DHReinforcementAwardMsg', AxisAwardedReinforcements, none, none, self);
+                }
+                else
+                {
+                    G.ModifyReinforcements(AXIS_TEAM_INDEX, 1 * (G.GetNumPlayers() / 4));
+                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, class'DHReinforcementAwardMsg', 1 * (G.GetNumPlayers() / 2), none, none, self);
+                }
+            }
+
+            // This is set to false because Axis now "recently" control the objective
+            bRecentlyControlledByAllies = false;
 
             for (i = 0; i < AxisCaptureObjActions.Length; ++i)
             {
@@ -644,6 +591,30 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
             break;
 
         case ALLIES_TEAM_INDEX:
+            if (bLockDownOnCapture && bRecentlyControlledByAxis)
+            {
+                UnfreezeTime = Level.Game.GameReplicationInfo.ElapsedTime + LockDownOnCaptureTime;
+            }
+
+            if (!bDidAwardAlliesReinf && bRecentlyControlledByAxis)
+            {
+                bDidAwardAlliesReinf = true;
+
+                // Award reinforcements
+                if (AlliedAwardedReinforcements >= 0)
+                {
+                    G.ModifyReinforcements(ALLIES_TEAM_INDEX, AlliedAwardedReinforcements);
+                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, class'DHReinforcementAwardMsg', AlliedAwardedReinforcements, none, none, self);
+                }
+                else
+                {
+                    G.ModifyReinforcements(ALLIES_TEAM_INDEX, 1 * (G.GetNumPlayers() / 4));
+                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, class'DHReinforcementAwardMsg', 1 * (G.GetNumPlayers() / 2), none, none, self);
+                }
+            }
+
+            // This is set to false because Allies now "recently" control the objective
+            bRecentlyControlledByAxis = false;
 
             for (i = 0; i < AlliesCaptureObjActions.Length; ++i)
             {
@@ -679,166 +650,250 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
 
             break;
     }
+
+    // Broadcast the objective capture messages (sound + message)
+    if (bUsePostCaptureOperations) //Is using clear system
+    {
+        if (HasEnemiesPresent() || (bDisableWhenAxisClearObj && Team == ALLIES_TEAM_INDEX) || (bDisableWhenAlliesClearObj && Team == AXIS_TEAM_INDEX))
+        {
+            // If enemies are present in a clear objective, it will still be active, so broadcast capture
+            // If the obj is set to disable when a team clears it, then check to make sure its not the opposite team
+            BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(1, Team), none, none, self);
+        }
+        else if (!HasEnemiesPresent())
+        {
+            // If no enemies are present, then run a handle cleared logic immediately (don't wait for timer)
+            // If objective is still active and timer is still running, then notify capture
+            GetPlayersInObjective(Num, NumTotal, NumForCheck);
+
+            if (bActive && !HandleClearedLogic(NumForCheck))
+            {
+                BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(1, Team), none, none, self);
+            }
+        }
+        // Otherwise don't inform that it was captured, as timer will handle notification from here
+    }
+    else
+    {
+        if (bActive && IsNeutral())
+        {
+            BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(0, Team), none, none, self);
+        }
+        else if (bActive)
+        {
+            BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(1, Team), none, none, self);
+        }
+        else
+        {
+            BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(2, Team), none, none, self);
+        }
+    }
 }
 
-function Timer()
+function bool HasEnemiesPresent()
 {
-    local ROPlayerReplicationInfo PRI;
-    local DHRoleInfo              RI;
-    local Controller              FirstCapturer, C;
-    local Pawn                    Pawn;
-    local DHPawn                  P;
-    local ROVehicle               ROVeh;
-    local ROVehicleWeaponPawn     VehWepPawn;
-    local float                   OldCapProgress, LeaderBonus[2], Rate[2];
-    local int                     NumTotal[2], Num[2], NumForCheck[2], i;
-    local byte                    CurrentCapAxisCappers, CurrentCapAlliesCappers, CP;
+    local int PlayerNums[2];
 
-    if (ROTeamGame(Level.Game) == none || !ROTeamGame(Level.Game).IsInState('RoundInPlay') || (!bActive && !bUsePostCaptureOperations))
-    {
-        return;
-    }
+    GetPlayersInObjective(PlayerNums);
 
-    // Some RO code (that is retarded)
-    LeaderBonus[AXIS_TEAM_INDEX] = 1.0;
-    LeaderBonus[ALLIES_TEAM_INDEX] = 1.0;
+    return PlayerNums[int(!bool(ObjState))] > 0;
+}
+
+function GetPlayersInObjective(out int PlayerNums[2], optional out int TeamTotals[2], optional out int PlayerCheckNums[2])
+{
+    local Controller                C;
+    local DHPlayerReplicationInfo   PRI;
+    local DHRoleInfo                RI;
+    local ROVehicle                 ROVeh;
+    local ROVehicleWeaponPawn       VehWepPawn;
 
     // Loop through Controller list & determine how many players from each team are inside the attached volume, or if there is no volume, within the Radius that was set
     for (C = Level.ControllerList; C != none; C = C.NextController)
     {
         if (C.bIsPlayer && C.PlayerReplicationInfo.Team != none && ((ROPlayer(C) != none && ROPlayer(C).GetRoleInfo() != none) || ROBot(C) != none))
         {
-            Pawn = C.Pawn;
-            P = DHPawn(C.Pawn);
-            ROVeh = ROVehicle(C.Pawn);
-            VehWepPawn = ROVehicleWeaponPawn(C.Pawn);
-
-            PRI = ROPlayerReplicationInfo(C.PlayerReplicationInfo);
-            RI = DHRoleInfo(PRI.RoleInfo);
-
-            if (Pawn != none && Pawn.Health > 0 && WithinArea(Pawn))
+            if (C.Pawn != none && C.Pawn.Health > 0 && WithinArea(C.Pawn))
             {
+                ROVeh = ROVehicle(C.Pawn);
+                VehWepPawn = ROVehicleWeaponPawn(C.Pawn);
+                PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
+
+                if (PRI != none)
+                {
+                    RI = DHRoleInfo(PRI.RoleInfo);
+                }
+
                 if ((!bTankersCanCapture && RI != none && RI.bCanBeTankCrew) || (!bVehiclesCanCapture && (ROVeh != none || VehWepPawn != none)))
                 {
-                    Pawn = none;
                     continue;
                 }
 
-                Num[C.PlayerReplicationInfo.Team.TeamIndex]++;
+                PlayerNums[PRI.Team.TeamIndex]++;
 
                 if (RI != none)
                 {
-                    NumForCheck[C.PlayerReplicationInfo.Team.TeamIndex] += PRI.RoleInfo.ObjCaptureWeight;
+                    PlayerCheckNums[PRI.Team.TeamIndex] += PRI.RoleInfo.ObjCaptureWeight;
                 }
                 else
                 {
-                    NumForCheck[C.PlayerReplicationInfo.Team.TeamIndex]++;
+                    PlayerCheckNums[PRI.Team.TeamIndex]++;
                 }
-
-                FirstCapturer = C; // used so that first person to initiate capture doesn't get the 'map updated' notification
-
-                // Leader bonuses are given to a side if a leader is there
             }
 
-            // Fixes the cap bug
-            Pawn = none;
+            TeamTotals[C.PlayerReplicationInfo.Team.TeamIndex]++;
+        }
+    }
+}
 
-            // Update total nums
-            NumTotal[C.PlayerReplicationInfo.Team.TeamIndex]++;
+function bool HandleClearedLogic(int NumForCheck[2])
+{
+    local int i;
+
+    if (bUsePostCaptureOperations)
+    {
+        // If either team has cleared the objective
+        if (bCheckIfAxisCleared && NumForCheck[0] <= 0 || bCheckIfAlliesCleared && NumForCheck[1] <= 0)
+        {
+            // If cleared of axis, then do Allied actions
+            if (bCheckIfAxisCleared && NumForCheck[0] <= 0)
+            {
+                bCheckIfAxisCleared = false; // stop checking
+
+                for (i = 0; i < AlliesClearedCaptureObjActions.Length; ++i)
+                {
+                    DoObjectiveAction(AlliesClearedCaptureObjActions[i]);
+                }
+
+                for (i = 0; i < AlliesClearedCaptureSpawnPointActions.Length; ++i)
+                {
+                    DoSpawnPointAction(AlliesClearedCaptureSpawnPointActions[i]);
+                }
+
+                for (i = 0; i < AlliesClearedCaptureVehiclePoolActions.Length; ++i)
+                {
+                    DoVehiclePoolAction(AlliesClearedCaptureVehiclePoolActions[i]);
+                }
+
+                for (i = 0; i < AlliesClearedCaptureEvents.Length; ++i)
+                {
+                    TriggerEvent(AlliesClearedCaptureEvents[i], none, none);
+                }
+
+                if (bGroupActionsAtDisable)
+                {
+                    HandleGroupActions(ALLIES_TEAM_INDEX);
+                }
+            }
+
+            // If cleared of Allies, then do Axis actions
+            if (bCheckIfAlliesCleared && NumForCheck[1] <= 0)
+            {
+                bCheckIfAlliesCleared = false; // stop checking
+
+                for (i = 0; i < AxisClearedCaptureObjActions.Length; ++i)
+                {
+                    DoObjectiveAction(AxisClearedCaptureObjActions[i]);
+                }
+
+                for (i = 0; i < AxisClearedCaptureSpawnPointActions.Length; ++i)
+                {
+                    DoSpawnPointAction(AxisClearedCaptureSpawnPointActions[i]);
+                }
+
+                for (i = 0; i < AxisClearedCaptureVehiclePoolActions.Length; ++i)
+                {
+                    DoVehiclePoolAction(AxisClearedCaptureVehiclePoolActions[i]);
+                }
+
+                for (i = 0; i < AxisClearedCaptureEvents.Length; ++i)
+                {
+                    TriggerEvent(AxisClearedCaptureEvents[i], none, none);
+                }
+
+                if (bGroupActionsAtDisable)
+                {
+                    HandleGroupActions(AXIS_TEAM_INDEX);
+                }
+            }
+
+            // Handle common is cleared logic
+            if (bSetInactiveOnClear)
+            {
+                CurrentCapProgress = 0.0;
+                SetActive(false);
+                DisableCapBarsForThisObj();
+                BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(2, int(ObjState)), none, none, self);
+
+                // Award time as the objective was cleared and objective is inactive
+                if (MinutesAwarded != 0)
+                {
+                    DarkestHourGame(Level.Game).ModifyRoundTime(MinutesAwarded * 60, 0);
+                }
+
+                return true;
+            }
+            else if (bDisableWhenAxisClearObj && IsAxis() || bDisableWhenAlliesClearObj && IsAllies())
+            {
+                CurrentCapProgress = 0.0;
+                SetActive(false);
+                SetTimer(0.0, false); // Disable the objective (not just set inactive, it is not meant to be enabled again until reset)
+                DisableCapBarsForThisObj();
+                BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(2, int(ObjState)), none, none, self);
+
+                // Award time as the objective was cleared and objective is disabled
+                if (MinutesAwarded != 0)
+                {
+                    DarkestHourGame(Level.Game).ModifyRoundTime(MinutesAwarded * 60, 0);
+                }
+
+                return true;
+            }
+            else if (!bRecaptureable)
+            {
+                SetTimer(0.0, false);
+                BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(2, int(ObjState)), none, none, self);
+                return true;
+            }
         }
     }
 
-    // Now that we calculated how many of each team is in the objective, lets do the bUsePostCaptureOperations checks
-    if (bUsePostCaptureOperations)
+    return false;
+}
+
+// Returns true if a team is unable to capture this objective because
+// they have not secured the required connected objective(s).
+simulated function bool IsTeamNeutralLocked(DHGameReplicationInfo GRI, int TeamIndex)
+{
+    return GRI != none && bNeutralizeBeforeCapture && IsNeutral() && !HasRequiredObjectives(GRI, TeamIndex);
+}
+
+function Timer()
+{
+    local Controller            C;
+    local DHPawn                P;
+    local ROVehicle             ROVeh;
+    local ROVehicleWeaponPawn   VehWepPawn;
+    local DHGameReplicationInfo GRI;
+    local float                 OldCapProgress, Rate[2];
+    local int                   NumTotal[2], Num[2], NumForCheck[2], i;
+    local byte                  CurrentCapAxisCappers, CurrentCapAlliesCappers, CP;
+
+    if (ROTeamGame(Level.Game) == none || !ROTeamGame(Level.Game).IsInState('RoundInPlay') || (!bActive && !bUsePostCaptureOperations))
     {
-        if (bCheckIfAxisCleared && NumForCheck[0] <= 0)
-        {
-            // IT IS CLEARED OF AXIS (SO DO ALLIES ACTIONS)
-            bCheckIfAxisCleared = false; // stop checking
+        return;
+    }
 
-            for (i = 0; i < AlliesClearedCaptureObjActions.Length; ++i)
-            {
-                DoObjectiveAction(AlliesClearedCaptureObjActions[i]);
-            }
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-            for (i = 0; i < AlliesClearedCaptureSpawnPointActions.Length; ++i)
-            {
-                DoSpawnPointAction(AlliesClearedCaptureSpawnPointActions[i]);
-            }
+    GetPlayersInObjective(Num, NumTotal, NumForCheck);
 
-            for (i = 0; i < AlliesClearedCaptureVehiclePoolActions.Length; ++i)
-            {
-                DoVehiclePoolAction(AlliesClearedCaptureVehiclePoolActions[i]);
-            }
+    // bIsCritical is used to determine if the objective has both teams present (repurposed as it is usually not used, but replicated anyways)
+    bIsCritical = Num[AXIS_TEAM_INDEX] > 0 && Num[ALLIES_TEAM_INDEX] > 0;
 
-            for (i = 0; i < AlliesClearedCaptureEvents.Length; ++i)
-            {
-                TriggerEvent(AlliesClearedCaptureEvents[i], none, none);
-            }
-
-            if (bGroupActionsAtDisable)
-            {
-                HandleGroupActions(ALLIES_TEAM_INDEX);
-            }
-
-            if (bDisableWhenAlliesClearObj)
-            {
-                CurrentCapProgress = 0.0;
-                bActive = false;
-                SetTimer(0.0, false);
-                DisableCapBarsForThisObj();
-
-                return;
-            }
-            else if (!bRecaptureable)
-            {
-                SetTimer(0.0, false);
-
-                return;
-            }
-        }
-
-        if (bCheckIfAlliesCleared && NumForCheck[1] <= 0)
-        {
-            // IT IS CLEARED OF ALLIES (SO DO AXIS ACTIONS)
-            bCheckIfAlliesCleared = false; // stop checking
-
-            for (i = 0; i < AxisClearedCaptureObjActions.Length; ++i)
-            {
-                DoObjectiveAction(AxisClearedCaptureObjActions[i]);
-            }
-
-            for (i = 0; i < AxisClearedCaptureSpawnPointActions.Length; ++i)
-            {
-                DoSpawnPointAction(AxisClearedCaptureSpawnPointActions[i]);
-            }
-
-            for (i = 0; i < AxisClearedCaptureVehiclePoolActions.Length; ++i)
-            {
-                DoVehiclePoolAction(AxisClearedCaptureVehiclePoolActions[i]);
-            }
-
-            if (bGroupActionsAtDisable)
-            {
-                HandleGroupActions(AXIS_TEAM_INDEX);
-            }
-
-            if (bDisableWhenAxisClearObj)
-            {
-                CurrentCapProgress = 0.0;
-                bActive = false;
-                SetTimer(0.0, false);
-                DisableCapBarsForThisObj();
-
-                return;
-            }
-            else if (!bRecaptureable)
-            {
-                SetTimer(0.0, false);
-
-                return;
-            }
-        }
+    // Handle is cleared logic and return if supposed to
+    if (HandleClearedLogic(NumForCheck))
+    {
+        return;
     }
 
     // Do nothing else if it's not active
@@ -859,7 +914,7 @@ function Timer()
         }
         else if (Num[i] >= PlayersNeededToCapture)
         {
-            Rate[i] = FMin(Num[i] * BaseCaptureRate * LeaderBonus[i] * (float(Num[i]) / NumTotal[i]), MaxCaptureRate);
+            Rate[i] = FMin(Num[i] * BaseCaptureRate * (float(Num[i]) / NumTotal[i]), MaxCaptureRate);
         }
         else
         {
@@ -867,76 +922,66 @@ function Timer()
         }
     }
 
-    // Figure what the replicated # of cappers should be (to take into account the leader bonus)
-    CurrentCapAxisCappers = NumForCheck[AXIS_TEAM_INDEX]; // * int(4.0 * LeaderBonus[AXIS_TEAM_INDEX]);
-    CurrentCapAlliesCappers = NumForCheck[ALLIES_TEAM_INDEX]; // * int(4.0 * LeaderBonus[ALLIES_TEAM_INDEX]);
+    // If we are not ready to capture because of precap prevention set rate to zero
+    if (Level.Game.GameReplicationInfo.ElapsedTime < UnfreezeTime)
+    {
+        Rate[0] = 0.0;
+        Rate[1] = 0.0;
+    }
 
-    // Note: Comparing number of players as opposed to rates to decide which side has advantage for the capture, for fear that rates could be abused in this instance
-    if (ObjState != OBJ_Axis && NumForCheck[AXIS_TEAM_INDEX] > NumForCheck[ALLIES_TEAM_INDEX])
+    CurrentCapAxisCappers = NumForCheck[AXIS_TEAM_INDEX];
+    CurrentCapAlliesCappers = NumForCheck[ALLIES_TEAM_INDEX];
+
+    // A team that is neutral-locked behaves as though it has no players in the capture area.
+    if (IsTeamNeutralLocked(GRI, AXIS_TEAM_INDEX))
+    {
+        CurrentCapAxisCappers = 0;
+    }
+
+    if (IsTeamNeutralLocked(GRI, ALLIES_TEAM_INDEX))
+    {
+        CurrentCapAlliesCappers = 0;
+    }
+
+    // NOTE: Comparing number of players as opposed to rates to decide which side has advantage for the capture, for fear that rates could be abused in this instance
+    if (!IsAxis() && CurrentCapAxisCappers > CurrentCapAlliesCappers)
     {
         // Have to work down the progress the other team made first, but this is quickened since the fall off rate still occurs
         if (CurrentCapTeam == ALLIES_TEAM_INDEX)
         {
-            CurrentCapProgress -= 0.25 * (MaxCaptureRate + Rate[AXIS_TEAM_INDEX]);
+            CurrentCapProgress -= TimerRate * (MaxCaptureRate + Rate[AXIS_TEAM_INDEX]);
         }
         else
         {
-            // Axis are contesting capture
-            if (!bAxisContesting && ObjState != OBJ_Neutral) // this stops multiple actions each timer loop
-            {
-                HandleContestedActions(AXIS_TEAM_INDEX, true);
-                bAxisContesting = true;
-            }
-
             CurrentCapTeam = AXIS_TEAM_INDEX;
-            CurrentCapProgress += 0.25 * Rate[AXIS_TEAM_INDEX];
+            CurrentCapProgress += TimerRate * Rate[AXIS_TEAM_INDEX];
         }
     }
-    else if (ObjState != OBJ_Allies && NumForCheck[ALLIES_TEAM_INDEX] > NumForCheck[AXIS_TEAM_INDEX])
+    else if (!IsAllies() && CurrentCapAlliesCappers > CurrentCapAxisCappers)
     {
         if (CurrentCapTeam == AXIS_TEAM_INDEX)
         {
-            CurrentCapProgress -= 0.25 * (MaxCaptureRate + Rate[ALLIES_TEAM_INDEX]);
+            CurrentCapProgress -= TimerRate * (MaxCaptureRate + Rate[ALLIES_TEAM_INDEX]);
         }
         else
         {
-            // Allies are contesting capture
-            if (!bAlliesContesting && ObjState != OBJ_Neutral) //this stops multiple actions each timer loop
-            {
-                HandleContestedActions(ALLIES_TEAM_INDEX, true);
-                bAlliesContesting = true;
-            }
-
             CurrentCapTeam = ALLIES_TEAM_INDEX;
-            CurrentCapProgress += 0.25 * Rate[ALLIES_TEAM_INDEX];
+            CurrentCapProgress += TimerRate * Rate[ALLIES_TEAM_INDEX];
         }
     }
-    else if (NumForCheck[ALLIES_TEAM_INDEX] == NumForCheck[AXIS_TEAM_INDEX] && NumForCheck[AXIS_TEAM_INDEX] != 0)
+    else if (CurrentCapAxisCappers == CurrentCapAlliesCappers && CurrentCapAxisCappers != 0)
     {
         // Stalemate! No change.
     }
     else
     {
-        CurrentCapProgress -= 0.25 * MaxCaptureRate;
+        CurrentCapProgress -= TimerRate * MaxCaptureRate;
     }
 
     CurrentCapProgress = FClamp(CurrentCapProgress, 0.0, 1.0);
 
     if (CurrentCapProgress == 0.0)
     {
-        // CurrentCapProgress hit zero again, so we should check if the objective was contested and handle any necessary actions
-        if (bAxisContesting)
-        {
-            HandleContestedActions(AXIS_TEAM_INDEX, false);
-        }
-        else if (bAlliesContesting)
-        {
-            HandleContestedActions(ALLIES_TEAM_INDEX, false);
-        }
-
-        // Contest has ended
-        bAxisContesting = false;
-        bAlliesContesting = false;
         CurrentCapTeam = NEUTRAL_TEAM_INDEX;
     }
     else if (CurrentCapProgress == 1.0)
@@ -1090,14 +1135,73 @@ function Timer()
         // Check if we changed from 1.0 or from 0.0 (no need to send events otherwise)
         if (OldCapProgress ~= 0.0 || OldCapProgress ~= 1.0)
         {
-            ROTeamGame(Level.Game).NotifyPlayersOfMapInfoChange(NEUTRAL_TEAM_INDEX, FirstCapturer);
+            ROTeamGame(Level.Game).NotifyPlayersOfMapInfoChange(NEUTRAL_TEAM_INDEX);
         }
     }
 
     UpdateCompressedCapProgress();
 }
 
-// Overriden to the fix a console warning that would display when EventInstigator was none.
+// Modified to handle neutralizing objectives
+function ObjectiveCompleted(PlayerReplicationInfo CompletePRI, int Team)
+{
+    if (!IsNeutral() && bNeutralizeBeforeCapture)
+    {
+        // If the objective is not neutral, has completed progress, & is set to bNeutralizedBeforeCaptured
+        // Then we call different logic which will neutralize the objective without "completing" it
+        ObjectiveNeutralized(Team);
+        return;
+    }
+
+    if (Team == AXIS_TEAM_INDEX)
+    {
+        ObjState = OBJ_Axis;
+
+        bRecentlyControlledByAxis = true;
+
+        if (AxisEvent != '')
+        {
+            TriggerEvent(AxisEvent, self, None);
+        }
+    }
+    else
+    {
+        ObjState = OBJ_Allies;
+
+        bRecentlyControlledByAllies = true;
+
+        if (AlliesEvent != '')
+        {
+            TriggerEvent(AlliesEvent, self, None);
+        }
+    }
+
+    HandleCompletion(CompletePRI, Team);
+
+    ROTeamGame(Level.Game).NotifyObjStateChanged();
+
+    ROTeamGame(Level.Game).RemoveHelpRequestsForObj(ObjNum);
+
+    // lets see if this tells the bots the objectives is done for
+    UnrealMPGameInfo(Level.Game).FindNewObjectives(self);
+}
+
+// New function to implement the bNeutralizeBeforeCapture option
+function ObjectiveNeutralized(int Team)
+{
+    // Reset values as the objective was neutralized
+    CurrentCapProgress = 0.0;
+    CurrentCapTeam = NEUTRAL_TEAM_INDEX;
+    ObjState = OBJ_Neutral;
+
+    // Alert the game of changes
+    ROTeamGame(Level.Game).NotifyObjStateChanged();
+
+    // Notify players
+    BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(0, Team), none, none, self);
+}
+
+// Overridden to the fix a console warning that would display when EventInstigator was none
 function Trigger(Actor Other, Pawn EventInstigator)
 {
     local PlayerReplicationInfo PRI;
@@ -1112,22 +1216,109 @@ function Trigger(Actor Other, Pawn EventInstigator)
         PRI = EventInstigator.PlayerReplicationInfo;
     }
 
-    if (ObjState == OBJ_Axis)
+    if (IsAxis())
     {
         ObjectiveCompleted(PRI, ALLIES_TEAM_INDEX);
     }
-    else if (ObjState == OBJ_Allies)
+    else if (IsAllies())
     {
         ObjectiveCompleted(PRI, AXIS_TEAM_INDEX);
+    }
+}
+
+simulated function bool WithinArea(Actor A)
+{
+    if (AttachedVolume != none)
+    {
+        if (AttachedVolume.Encompasses(A))
+        {
+            return true;
+        }
+    }
+    else if (VSize(A.Location - Location) < Radius)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+// Overridden to make simulated functions, so can be used by the HUD, for example
+simulated function bool IsAxis()
+{
+    return ObjState == OBJ_Axis;
+}
+
+simulated function bool IsAllies()
+{
+    return ObjState == OBJ_Allies;
+}
+
+simulated function bool IsNeutral()
+{
+    return ObjState == OBJ_Neutral;
+}
+
+simulated function bool IsFrozen(GameReplicationInfo GRI)
+{
+    return GRI != none && UnfreezeTime > GRI.ElapsedTime;
+}
+
+simulated function bool HasRequiredObjectives(coerce DHGameReplicationInfo GRI, int TeamIndex)
+{
+    local int i;
+
+    if (GRI == none)
+    {
+        return false;
+    }
+
+    if (TeamIndex == AXIS_TEAM_INDEX)
+    {
+        for (i = 0; i < AxisRequiredObjForCapture.Length; ++i)
+        {
+            if (!GRI.DHObjectives[AxisRequiredObjForCapture[i]].IsAxis())
+            {
+                return false;
+            }
+        }
+    }
+    else if (TeamIndex == ALLIES_TEAM_INDEX)
+    {
+        for (i = 0; i < AlliesRequiredObjForCapture.Length; ++i)
+        {
+            if (!GRI.DHObjectives[AlliesRequiredObjForCapture[i]].IsAllies())
+            {
+                return false;
+            }
+        }
+    }
+    else
+    {
+        return false;
+    }
+
+    return true;
+}
+
+// Modified to make way simpler and remove redundant if-statement checks.
+function UpdateCompressedCapProgress()
+{
+    if (!bActive || CurrentCapProgress ~= 0.0)
+    {
+        CompressedCapProgress = 0;
+    }
+    else
+    {
+        CompressedCapProgress = Max(1, CurrentCapProgress * 5);
     }
 }
 
 defaultproperties
 {
     bDoNotUseLabelShiftingOnSituationMap=true
-    Texture=texture'DHEngine_Tex.Objective'
+    Texture=Texture'DHEngine_Tex.Objective'
     bVehiclesCanCapture=true
     bTankersCanCapture=true
-    bResetDeathPenalties=true
     PlayersNeededToCapture=1
 }

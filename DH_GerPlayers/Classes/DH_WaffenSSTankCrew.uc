@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_WaffenSSTankCrew extends DH_German_Units
@@ -9,7 +9,7 @@ class DH_WaffenSSTankCrew extends DH_German_Units
 defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanTankCrewSSPawn',Weight=1.0)
-    SleeveTexture=texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
+    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
     DetachedArmClass=class'ROEffects.SeveredArmGerTanker'
     DetachedLegClass=class'ROEffects.SeveredLegGerTanker'
     MyName="Tank Crewman"

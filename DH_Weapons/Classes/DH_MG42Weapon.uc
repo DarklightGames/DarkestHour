@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_MG42Weapon extends DHMGWeapon;
@@ -29,8 +29,9 @@ defaultproperties
     HighDetailOverlay=shader'Weapons1st_tex.MG.MG42_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
-    HandTex=texture'Weapons1st_tex.Arms.hands_gergloves'
+    HandTex=Texture'Weapons1st_tex.Arms.hands_gergloves'
 
+    DisplayFOV=80.0
     IronSightDisplayFOV=40.0
 
     MaxNumPrimaryMags=2

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHBoatVehicle extends DHVehicle
@@ -85,28 +85,30 @@ simulated event DestroyAppearance()
 
 defaultproperties
 {
-    VehicleAttachments(0)=(AttachClass=class'ROSoundAttachment') // wash sound attachment - add attachment bone name in subclass
+    // Water stuff
     bCanSwim=true
-    GroundSpeed=200.0
+    WaterDamage=0.0
     WaterSpeed=200.0
+    GroundSpeed=200.0
     DustSlipRate=0.0
     DustSlipThresh=100000.0
-    WaterDamage=0.0
-    EngineHealth=100
-    ImpactDamageThreshold=5000.0
-    ImpactDamageMult=0.001
-    MaxDesireability=0.1
+    VehicleAttachments(0)=(AttachClass=class'ROSoundAttachment') // wash sound attachment - add attachment bone name in subclass
+
+    // Vehicle properties
     CollisionRadius=300.0
-    CollisionHeight=45.0
+    CollisionHeight=60.0
+    MaxDesireability=0.1
+
+    // Damage
+    EngineHealth=100
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
     DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
-    DisintegrationHealth=-10000.0
-    DestructionLinearMomentum=(Min=100.0,Max=350.0)
-    DestructionAngularMomentum=(Min=50.0,Max=150.0)
+    ImpactDamageThreshold=5000.0
+
+    // View
     ViewShakeRadius=600.0
     ViewShakeOffsetMag=(X=0.5,Y=0.0,Z=2.0)
     ViewShakeOffsetFreq=7.0
-    CenterSpringForce="SpringONSSRV"
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_ShermanMountedMG extends DHVehicleMG;
@@ -9,7 +9,7 @@ defaultproperties
 {
     // MG mesh
     Mesh=SkeletalMesh'DH_ShermanM4A1_anm.Sherman_MG'
-    Skins(0)=texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_body_ext'
+    Skins(0)=Texture'DH_VehiclesUS_tex.ext_vehicles.Sherman_body_ext'
     FireAttachBone="mg_placement"
     FireEffectOffset=(X=-40.0,Y=0.0,Z=30.0) // positions fire on co-driver's hatch
 

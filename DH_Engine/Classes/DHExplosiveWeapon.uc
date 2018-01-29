@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHExplosiveWeapon extends DHWeapon
@@ -143,10 +143,19 @@ simulated function InstantPrime()
 simulated function bool StartFire(int Mode)
 {
     local int OtherMode;
+    local class<DHWeaponFire> WF;
+    local DHPlayer PC;
 
-    if (Instigator != none && DHPlayer(Instigator.Controller) != none && DHPlayer(Instigator.Controller).AreWeaponsLocked())
+    WF = class<DHWeaponFire>(FireModeClass[Mode]);
+
+    if (Instigator != none && (WF == none || !WF.default.bIgnoresWeaponLock))
     {
-        return false;
+        PC = DHPlayer(Instigator.Controller);
+
+        if (PC != none && PC.AreWeaponsLocked())
+        {
+            return false;
+        }
     }
 
     if (!ReadyToFire(Mode))
@@ -459,10 +468,6 @@ defaultproperties
 
     SelectAnim="Draw"
     PutDownAnim="Put_away"
-    CrawlForwardAnim="crawlF"
-    CrawlBackwardAnim="crawlB"
-    CrawlStartAnim="crawl_in"
-    CrawlEndAnim="crawl_out"
 
     AIRating=0.4
     CurrentRating=0.4

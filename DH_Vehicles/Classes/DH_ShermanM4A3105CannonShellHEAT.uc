@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_ShermanM4A3105CannonShellHEAT extends DHCannonShellHEAT;
@@ -21,7 +21,6 @@ defaultproperties
     ShellDiameter=10.5
     ImpactDamage=650
     BallisticCoefficient=2.96
-    SpeedFudgeScale=0.7
     Speed=22994.0
     MaxSpeed=22994.0
     Damage=415.0

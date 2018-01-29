@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_BritishVestPawn extends DH_BritishPawn;
@@ -16,8 +16,8 @@ simulated function PostBeginPlay()
 defaultproperties
 {
     Mesh=SkeletalMesh'DHCharacters_anm.Brit_Infantry_Vest'
-    Skins(0)=texture'DHBritishCharactersTex.Faces.BritParaFace1'
-    Skins(1)=texture'DHBritishCharactersTex.PBI.British_Infantry_Vest'
+    Skins(0)=Texture'DHBritishCharactersTex.Faces.BritParaFace1'
+    Skins(1)=Texture'DHBritishCharactersTex.PBI.British_Infantry_Vest'
 
     HeadScale=0.9
 

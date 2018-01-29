@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHBoltSniperWeapon extends DHSniperWeapon
@@ -379,7 +379,7 @@ simulated function Fire(float F)
 // New function to work the bolt
 simulated function WorkBolt()
 {
-    if (bWaitingToBolt && AmmoAmount(0) > 0)
+    if (bWaitingToBolt && AmmoAmount(0) > 0 && !FireMode[1].bIsFiring && !FireMode[1].IsInState('MeleeAttacking'))
     {
         GotoState('WorkingBolt');
 
@@ -414,7 +414,6 @@ simulated state WorkingBolt extends WeaponBusy
         return false;
     }
 
-    // Overridden to support playing proper anims after bolting
     simulated function AnimEnd(int Channel)
     {
         local name  Anim;
@@ -437,8 +436,6 @@ simulated state WorkingBolt extends WeaponBusy
 
     simulated function BeginState()
     {
-        local name Anim;
-
         if (bUsingSights)
         {
             if (bPlayerFOVZooms && InstigatorIsLocallyControlled())
@@ -446,19 +443,16 @@ simulated state WorkingBolt extends WeaponBusy
                 PlayerViewZoom(false);
             }
 
-            Anim = BoltIronAnim;
+            PlayAnimAndSetTimer(BoltIronAnim, 1.0, 0.1);
         }
         else
         {
-            Anim = BoltHipAnim;
+            PlayAnimAndSetTimer(BoltHipAnim, 1.0, 0.1);
         }
 
-        PlayAnimAndSetTimer(Anim, 1.0, 0.1);
-
-        // Play the animation on the pawn
         if (Role == ROLE_Authority && ROPawn(Instigator) != none)
         {
-            ROPawn(Instigator).HandleBoltAction();
+            ROPawn(Instigator).HandleBoltAction(); // play the animation on the pawn
         }
     }
 
@@ -543,7 +537,7 @@ simulated function OutOfAmmo()
 defaultproperties
 {
     bPlusOneLoading=false
-    BobModifyFactor=0.05
+    BobModifyFactor=0.8
     ZoomOutTime=0.4
 
     PostFireIdleAnim="Idle"

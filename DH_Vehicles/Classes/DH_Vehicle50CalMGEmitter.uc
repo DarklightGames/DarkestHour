@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_Vehicle50CalMGEmitter extends WeaponAmbientEmitter;
@@ -61,7 +61,7 @@ defaultproperties
         UseRandomSubdivision=true
         Opacity=0.45
         CoordinateSystem=PTCS_Relative
-        StartLocationOffset=(X=8,Y=0,Z=0)
+        StartLocationOffset=(X=8.0,Y=0.0,Z=0.0)
         StartLocationShape=PTLS_Sphere
         UseRotationFrom=PTRS_Normal
         StartSpinRange=(X=(Min=-1.0,Max=1.0),Y=(Min=-1.0,Max=1.0),Z=(Min=-1.0,Max=1.0))
@@ -70,7 +70,7 @@ defaultproperties
         SizeScale(2)=(RelativeTime=1.0,RelativeSize=1.0)
         StartSizeRange=(X=(Min=4.0,Max=5.0))
         DrawStyle=PTDS_Brighten
-        Texture=texture'Effects_Tex.Weapons.STGmuzzleflash_4frame'
+        Texture=Texture'Effects_Tex.Weapons.STGmuzzleflash_4frame'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=0.1,Max=0.1)

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_F1GrenadeDamType extends DHThrowableExplosiveDamageType
@@ -9,5 +9,5 @@ class DH_F1GrenadeDamType extends DHThrowableExplosiveDamageType
 defaultproperties
 {
     WeaponClass=class'DH_Weapons.DH_F1GrenadeWeapon'
-    HUDIcon=texture'InterfaceArt_tex.deathicons.rusgrenade'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.rusgrenade'
 }

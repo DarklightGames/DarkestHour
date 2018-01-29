@@ -1,46 +1,26 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_StenMkIIFire extends DHAutomaticFire;
 
 defaultproperties
 {
-    ProjSpawnOffset=(X=25.0)
-    FAProjSpawnOffset=(X=-20.0)
-    FireIronAnim="Iron_Shoot_Loop"
-    FireIronLoopAnim="Iron_Shoot_Loop"
-    FireIronEndAnim="Iron_Shoot_End"
+    ProjectileClass=class'DH_Weapons.DH_StenMkIIBullet'
+    AmmoClass=class'DH_Weapons.DH_StenMkIIAmmo'
+    FireRate=0.12
+    Spread=320.0
+    RecoilRate=0.075
+    MaxVerticalRecoilAngle=400
+    MaxHorizontalRecoilAngle=70
+    FlashEmitterClass=class'ROEffects.MuzzleFlash1stMP'
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Sten.Sten_fire_g1'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Sten.Sten_fire_g2'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.Sten.Sten_fire_g3'
-    MaxVerticalRecoilAngle=550
-    MaxHorizontalRecoilAngle=75
-    PctProneIronRecoil=0.5
-    RecoilRate=0.075
-    ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
-    ShellIronSightOffset=(X=15.0,Z=-1.5)
-    ShellRotOffsetIron=(Pitch=-500)
+    NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_smg'
     PreFireAnim="Shoot1_start"
-    FireAnim="Shoot_Loop"
-    FireLoopAnim="Shoot_Loop"
-    FireEndAnim="Shoot_End"
-    TweenTime=0.0
-    FireRate=0.12
-    AmmoClass=class'DH_Weapons.DH_StenMkIIAmmo'
-    ShakeRotMag=(X=50.0,Y=50.0,Z=150.0)
-    ShakeRotRate=(X=10000.0,Y=10000.0,Z=10000.0)
-    ShakeRotTime=0.5
-    ShakeOffsetMag=(X=3.0,Y=1.0,Z=3.0)
-    ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
-    ShakeOffsetTime=1.0
-    ProjectileClass=class'DH_Weapons.DH_StenMkIIBullet'
-    BotRefireRate=0.99
-    WarnTargetPct=0.9
-    FlashEmitterClass=class'ROEffects.MuzzleFlash1stMP'
-    SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
-    AimError=1200.0
-    Spread=350.0
-    SpreadStyle=SS_Random
+    ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
+    ShellIronSightOffset=(X=15.0,Y=0.0,Z=-1.5)
+    ShellRotOffsetIron=(Pitch=-500)
 }

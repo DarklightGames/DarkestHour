@@ -1,21 +1,36 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHSetupPhaseManager extends Actor
     placeable
     hidecategories(Collision,Lighting,LightColor,Karma,Force,Sound);
 
-var() localized string  PhaseMessage;                       // Message to send periodically when phase is current
-var() localized string  PhaseEndMessage;                    // Message to send to team when end is reached
-var() int               SetupPhaseDuration;                 // How long should the setup phase be in seconds
-var() array<name>       SetupPhaseBoundaryVols;             // Array of minefield volumes to disable once setup phase is over
-var() bool              bScaleStartingReinforcements;       // Scales starting reinforcements to current number of players
-var() bool              bReplacePreStart;                   // If true will override the game's default PreStartTime, making it zero
+struct TeamReinf
+{
+    var() int AxisReinforcements, AlliesReinforcements;
+};
 
+var() int               SetupPhaseDuration;                 // How long should the setup phase be in seconds
+var() int               SpawningEnabledTime;                // Round time at which players can spawn
+
+var() name              PhaseMineFieldTag;                  // Tag of minefield volumes to disable once setup phase is over
+var() name              PhaseBoundaryTag;                   // Tag of DestroyableStaticMeshes to disable once phase is over
+var() array<name>       InitialSpawnPointTags;              // Tags of spawn points that should only be active while in setup phase
+
+var() bool              bScaleUpPhaseEndReinforcements;     // Scales the reinforcements set in "PhaseEndReinforcements" upward to account for more players
+var() bool              bResetRoundTimer;                   // If true will reset the round's timer to the proper value when phase is over
+
+var() TeamReinf         PhaseEndReinforcements;             // What to set reinforcements to at the end of the phase (-1 means no change)
+
+var() sound             PhaseEndSounds[2];                  // Axis and Allies Round Begin Sound
+
+var bool                bSkipPreStart;                      // If true will override the game's default PreStartTime, making it zero
+var bool                bPlayersOpenedMenus;
 var int                 TimerCount;
 var int                 SetupPhaseDurationActual;
+var int                 SpawningEnabledTimeActual;
 
 event PreBeginPlay()
 {
@@ -28,13 +43,15 @@ event PreBeginPlay()
         return;
     }
 
-    // Remove the pre start time if we are using a post-start setup phase!
-    if (bReplacePreStart)
+    // Skip the pre start time if we are using a post-start setup phase!
+    if (bSkipPreStart)
     {
-        G.PreStartTime = 0;
+        G.bSkipPreStartTime = true;
     }
 
+    // Handle more detailed timer
     SetupPhaseDurationActual = SetupPhaseDuration + 5;
+    SpawningEnabledTimeActual = SpawningEnabledTime + 5;
 
     super.PreBeginPlay();
 }
@@ -42,18 +59,11 @@ event PreBeginPlay()
 function Reset()
 {
     TimerCount = 0;
-    GotoState('Initialize');
+    bPlayersOpenedMenus = false;
+    GotoState('Timing');
 }
 
-auto state Initialize
-{
-    function BeginState()
-    {
-        GotoState('Timing');
-    }
-}
-
-state Timing
+auto state Timing
 {
     function BeginState()
     {
@@ -66,23 +76,37 @@ state Timing
             return;
         }
 
+        // Reset
+        bPlayersOpenedMenus = false;
+
+        // Prevent weapon dropping
+        Level.Game.bAllowWeaponThrowing = false;
+
+        // Set the time at which spawning is allowed
+        GRI.SpawningEnableTime = SpawningEnabledTimeActual;
+
+        // Tell GRI that we are in setup phase (to prevent player mantling)
+        GRI.bIsInSetupPhase = true;
+
         SetTimer(1.0, true);
     }
 
     function Timer()
     {
-        local int i;
-        local string s;
         local Controller C;
-        Local PlayerController PC;
-        local ROMineVolume V;
-        local DarkestHourGame G;
-        local DHGameReplicationInfo GRI;
+        local PlayerController PC;
+
+        // Have everyone open their deploy menu
+        if (!bPlayersOpenedMenus && DarkestHourGame(Level.Game) != none)
+        {
+            DarkestHourGame(Level.Game).OpenPlayerMenus();
+            bPlayersOpenedMenus = true;
+        }
 
         if (TimerCount < SetupPhaseDurationActual)
         {
-            // Set the message out every 5 seconds
-            if (TimerCount > 0 && TimerCount % 5 == 0)
+            // Set the message out every x seconds (currently every second)
+            if (TimerCount > 0 && TimerCount % 1 == 0)
             {
                 for (C = Level.ControllerList; C != none; C = C.NextController)
                 {
@@ -90,8 +114,7 @@ state Timing
 
                     if (PC != none)
                     {
-                        s = Repl(PhaseMessage, "{0}", SetupPhaseDurationActual - TimerCount);
-                        PC.ClientMessage(s,'CriticalEvent');
+                        PC.ReceiveLocalizedMessage(class'DHSetupPhaseMessage', class'UInteger'.static.FromShorts(0, SetupPhaseDurationActual - TimerCount));
                     }
                 }
             }
@@ -99,6 +122,19 @@ state Timing
             ++TimerCount;
             return;
         }
+
+        PhaseEnded();
+    }
+
+    function PhaseEnded()
+    {
+        local int i, UnspawnedPlayers[2];
+        local Controller C;
+        local PlayerController PC;
+        local ROMineVolume V;
+        local DHDestroyableSM DSM;
+        local DarkestHourGame G;
+        local DHGameReplicationInfo GRI;
 
         TimerCount = 0;
 
@@ -116,40 +152,89 @@ state Timing
             return;
         }
 
-        // Disable phase boundaries (volumes are static)
-        foreach AllActors(class'ROMineVolume', V)
+        // Allow weapon dropping
+        G.bAllowWeaponThrowing = true;
+
+        // Disable phase minefields (volumes are static, so use AllActors)
+        if (PhaseMineFieldTag != '')
         {
-            for (i = 0; i < SetupPhaseBoundaryVols.Length; ++i)
+            foreach AllActors(class'ROMineVolume', V, PhaseMineFieldTag)
             {
-                if (V.Tag == SetupPhaseBoundaryVols[i])
-                {
-                    V.Deactivate();
-                }
+                V.Deactivate();
             }
         }
 
-        // Reset reinforcements (scaled if true)
-        if (bScaleStartingReinforcements)
+        if (PhaseBoundaryTag != '')
         {
-            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = G.LevelInfo.Allies.SpawnLimit * FMax(0.1, (G.NumPlayers / G.MaxPlayers));
-            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = G.LevelInfo.Axis.SpawnLimit * FMax(0.1, (G.NumPlayers / G.MaxPlayers));
-        }
-        else
-        {
-            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = G.LevelInfo.Allies.SpawnLimit;
-            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = G.LevelInfo.Axis.SpawnLimit;
+            // Remove boundary (DSMs are dynamic)
+            foreach DynamicActors(class'DHDestroyableSM', DSM, PhaseBoundaryTag)
+            {
+                DSM.DestroyDSM(none);
+            }
         }
 
-        // Set the end message out
+        // Get number of unspawned players
         for (C = Level.ControllerList; C != none; C = C.NextController)
         {
             PC = PlayerController(C);
 
-            if (PC != none)
+            // Get the number of players not spawned on each team, we are going to add the number to the final reinforcement pool
+            if (PC != none && PC.Pawn == none && PC.GetTeamNum() < arraycount(UnspawnedPlayers))
             {
-                PC.ClientMessage(PhaseEndMessage,'CriticalEvent');
+                ++UnspawnedPlayers[PC.GetTeamNum()];
             }
         }
+
+        // Set the reinforcements
+        if (bScaleUpPhaseEndReinforcements)
+        {
+            // Scale up the reinforcements at a factor of the number of players on the server / 2
+            // Example: PhaseEndReinforcements=(AxisReinforcements=8,AlliesReinforcements=10)
+            // There are 50 players on the server
+            // 8 * (50 / 2) = 200
+            // 10 * (50 / 2) = 250
+            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = PhaseEndReinforcements.AlliesReinforcements * (Max(10, G.GetNumPlayers()) / 2) + UnspawnedPlayers[ALLIES_TEAM_INDEX];
+            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = PhaseEndReinforcements.AxisReinforcements * (Max(10, G.GetNumPlayers()) / 2) + UnspawnedPlayers[AXIS_TEAM_INDEX];
+        }
+        else
+        {
+            GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] = PhaseEndReinforcements.AlliesReinforcements + UnspawnedPlayers[ALLIES_TEAM_INDEX];
+            GRI.SpawnsRemaining[AXIS_TEAM_INDEX] = PhaseEndReinforcements.AxisReinforcements + UnspawnedPlayers[AXIS_TEAM_INDEX];
+        }
+
+        // Set the starting reinforcements in DHGame (for use in reinforcement warning calculation)
+        G.SpawnsAtRoundStart[ALLIES_TEAM_INDEX] = GRI.SpawnsRemaining[ALLIES_TEAM_INDEX];
+        G.SpawnsAtRoundStart[AXIS_TEAM_INDEX] = GRI.SpawnsRemaining[AXIS_TEAM_INDEX];
+
+        // Reset round time if desired
+        if (bResetRoundTimer)
+        {
+            G.ModifyRoundTime(G.LevelInfo.RoundDuration * 60, 2);
+        }
+
+        // Deactivate any initial spawn points
+        if (G.SpawnManager != none)
+        {
+            for (i = 0; i < InitialSpawnPointTags.Length; ++i)
+            {
+                G.SpawnManager.SetSpawnPointIsActiveByTag(InitialSpawnPointTags[i], false);
+            }
+        }
+
+        // Announce the end of the phase
+        for (C = Level.ControllerList; C != none; C = C.NextController)
+        {
+            PC = PlayerController(C);
+
+            if (PC != none && (PC.GetTeamNum() == AXIS_TEAM_INDEX || PC.GetTeamNum() == ALLIES_TEAM_INDEX))
+            {
+                PC.ReceiveLocalizedMessage(class'DHSetupPhaseMessage', 1);
+                PC.PlayAnnouncement(PhaseEndSounds[PC.GetTeamNum()], 1, true);
+            }
+        }
+
+        // Tell GRI that we are no longer in setup phase (to allow player mantling)
+        GRI.bIsInSetupPhase = false;
 
         GotoState('Done');
     }
@@ -161,12 +246,15 @@ state Done
 
 defaultproperties
 {
-    PhaseMessage="In Setup Phase ({0} seconds remaining)"
-    PhaseEndMessage="Setup Phase Ended! LIVE LIVE LIVE!"
-    bReplacePreStart=true
-    bScaleStartingReinforcements=true
+    PhaseBoundaryTag='SetupBoundaries'
+    PhaseEndReinforcements=(AxisReinforcements=18,AlliesReinforcements=18)
+    PhaseEndSounds(0)=Sound'DH_SundrySounds.RoundBeginSounds.Axis_Start'
+    PhaseEndSounds(1)=Sound'DH_SundrySounds.RoundBeginSounds.US_Start'
+    bSkipPreStart=true
+    bScaleUpPhaseEndReinforcements=true
     SetupPhaseDuration=60
-    Texture=texture'DHEngine_Tex.LevelActor'
+    SpawningEnabledTime=30
+    Texture=Texture'DHEngine_Tex.LevelActor'
     bHidden=true
     RemoteRole=ROLE_None
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_M38Attachment extends DHWeaponAttachment;
@@ -8,7 +8,7 @@ class DH_M38Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.nagant9138'
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.nagant9130_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.nagant9130_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mmGreen'
     bAnimNotifiedShellEjects=true

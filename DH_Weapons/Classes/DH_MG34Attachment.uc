@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_MG34Attachment extends DHHighROFWeaponAttachment;
@@ -8,7 +8,7 @@ class DH_MG34Attachment extends DHHighROFWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.mg34'
-    MenuImage=texture'InterfaceArt_tex.Menu_weapons.mg34'
+    MenuImage=Texture'InterfaceArt_tex.Menu_weapons.mg34'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMG'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bAltFireFlash=true

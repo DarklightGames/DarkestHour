@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 // The top menu, which lists all the players on the server, allowing a selection to be made
@@ -19,7 +19,6 @@ exec function Menu()
 function GetAllPlayerNames()
 {
     local array<PlayerReplicationInfo> AllPRI;
-    local PlayerReplicationInfo        PRI;
     local int                          i;
 
     MenuText.Length = 0;
@@ -28,11 +27,9 @@ function GetAllPlayerNames()
 
     for (i = 0; i < AllPRI.Length; ++i)
     {
-        PRI = AllPRI[i];
-
-        if (PRI != none && ROPlayerReplicationInfo(PRI) != none && (PRI.Team != none || PRI.bOnlySpectator) && PRI.PlayerName != "") // includes spectators & bots
+        if (ROPlayerReplicationInfo(AllPRI[i]) != none && AllPRI[i].PlayerName != "") // includes spectators & bots, but cast to ROPRI excluded "WebAdmin" & possible other phantom 'players'
         {
-            MenuText[MenuText.Length] = PRI.PlayerName;
+            MenuText[MenuText.Length] = AllPRI[i].PlayerName;
         }
     }
 }

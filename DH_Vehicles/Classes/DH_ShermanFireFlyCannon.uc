@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_ShermanFireFlyCannon extends DHVehicleCannon;
@@ -9,10 +9,10 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_turret_ext'
-    Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.FireFly_body_ext'
-    Skins(1)=texture'DH_VehiclesUK_tex.ext_vehicles.FireFly_armor_ext'
-    Skins(2)=texture'DH_VehiclesUS_tex.int_vehicles.Sherman_turret_int'
-    WeaponAttachOffset=(X=4.5,Y=2.0,Z=3.0)
+    Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.FireFly_body_ext'
+    Skins(1)=Texture'DH_VehiclesUK_tex.ext_vehicles.FireFly_armor_ext'
+    Skins(2)=Texture'DH_VehiclesUS_tex.int_vehicles.Sherman_turret_int'
+    WeaponAttachOffset=(X=0.0,Y=1.78,Z=4.77)
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Firefly_turret_Col'
 
     // Turret armor
@@ -40,9 +40,12 @@ defaultproperties
     TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanFireFlyCannonShellHE'
     ProjectileDescriptions(1)="APDS"
     ProjectileDescriptions(2)="HE"
-    InitialPrimaryAmmo=48
+    InitialPrimaryAmmo=40
     InitialSecondaryAmmo=4
-    InitialTertiaryAmmo=25
+    InitialTertiaryAmmo=12
+    MaxPrimaryAmmo=48
+    MaxSecondaryAmmo=5
+    MaxTertiaryAmmo=24
     SecondarySpread=0.006
     TertiarySpread=0.00156
 
@@ -58,8 +61,10 @@ defaultproperties
     WeaponFireOffset=6.0
     AltFireOffset=(X=-181.0,Y=-23.0,Z=0.0)
     AltFireSpawnOffsetX=48.0
-    AltShakeRotMag=(X=0.01,Y=0.01,Z=0.01)
-    AltShakeRotRate=(X=1000.0,Y=1000.0,Z=1000.0)
+
+    // Smoke launcher
+    SmokeLauncherClass=class'DH_Vehicles.DH_TwoInchBombThrower'
+    SmokeLauncherFireOffset(0)=(X=24.0,Y=-42.0,Z=41.0)
 
     // Sounds
     CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
@@ -67,10 +72,10 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.17pounder.DH17pounder'
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
-    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_01')
-    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_02')
-    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
-    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_02s_04')
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_04')
 
     // Cannon range settings
     RangeSettings(1)=200

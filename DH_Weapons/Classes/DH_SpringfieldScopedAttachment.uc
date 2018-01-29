@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_SpringfieldScopedAttachment extends DHWeaponAttachment;
@@ -22,7 +22,7 @@ simulated function AnimEnd(int Channel)
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Springfield_3rd'
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Springfield_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Springfield_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     MuzzleBoneName="Muzzle"

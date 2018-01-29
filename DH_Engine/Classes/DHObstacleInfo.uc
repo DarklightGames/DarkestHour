@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHObstacleInfo extends Info
@@ -17,7 +17,9 @@ struct Type
     var()   bool                    bCanBeMantled;
     var()   bool                    bCanBeCrushed;
     var()   bool                    bCanBeDestroyedByExplosives;
+    var()   bool                    bCanBeDestroyedByWeapons;
     var()   int                     ExplosionDamageThreshold;
+    var()   int                     DamageThreshold;
     var()   float                   CutDuration;
 };
 
@@ -27,6 +29,6 @@ var     array<DHObstacleInstance>   Obstacles;
 
 defaultproperties
 {
-    Texture=texture'DHEngine_Tex.ObstacleInfo'
+    Texture=Texture'DHEngine_Tex.ObstacleInfo'
     bStatic=true
 }

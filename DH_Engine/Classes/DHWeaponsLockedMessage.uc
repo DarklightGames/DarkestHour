@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHWeaponsLockedMessage extends LocalMessage
@@ -8,8 +8,10 @@ class DHWeaponsLockedMessage extends LocalMessage
 
 #exec OBJ LOAD FILE=..\Sounds\DHMenuSounds.uax
 
-var localized string LockedMessage;
+var localized string LockedFFMessage;
+var localized string LockedSKMessage;
 var localized string LockedWithTimerMessage;
+var localized string LockedSetupPhaseMessage;
 var localized string UnlockedMessage;
 
 // Modified to play a buzz sound to go with screen screen message if player's weapon's are locked and he can't fire
@@ -17,7 +19,7 @@ static function ClientReceive(PlayerController P, optional int Switch, optional 
 {
     if ((Switch == 0 || Switch == 1) && P != none)
     {
-        P.ClientPlaySound(sound'DHMenuSounds.Buzz',,, SLOT_Interface);
+        P.ClientPlaySound(Sound'DHMenuSounds.Buzz',,, SLOT_Interface);
 
         P.bFire = 0; // 'releases' fire button if being held down, which avoids spamming repeated messages & buzz sounds
         P.bAltFire = 0;
@@ -35,7 +37,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
     switch (Switch)
     {
         case 0:
-            return default.LockedMessage;
+            return default.LockedSKMessage;
 
         case 1:
             PC = DHPlayer(OptionalObject);
@@ -50,6 +52,12 @@ static function string GetString(optional int Switch, optional PlayerReplication
 
         case 2:
             return default.UnlockedMessage;
+
+        case 3:
+            return default.LockedSetupPhaseMessage;
+
+        case 4:
+            return default.LockedFFMessage;
     }
 
     return "";
@@ -71,9 +79,11 @@ defaultproperties
     bFadeMessage=true
     bIsConsoleMessage=false
     bIsUnique=true
-    Lifetime=2.5
+    Lifetime=5.0
     PosY=0.8
-    LockedMessage="Your weapons have been locked due to excessive spawn killing!"
+    LockedSetupPhaseMessage="Your weapons are locked during the setup phase"
+    LockedFFMessage="Your weapons have been locked due to friendly fire!"
+    LockedSKMessage="Your weapons have been locked due to excessive spawn killing!"
     LockedWithTimerMessage="Your weapons are locked for {0} seconds"
     UnlockedMessage="Your weapons are now unlocked"
 }

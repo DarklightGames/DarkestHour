@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_PanzerIIINCannon extends DH_PanzerIIILCannon;
@@ -29,8 +29,10 @@ defaultproperties
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="HEAT"
     ProjectileDescriptions(2)="Canister"
-    InitialPrimaryAmmo=40
+    InitialPrimaryAmmo=24
     InitialTertiaryAmmo=14
+    MaxPrimaryAmmo=40
+    MaxTertiaryAmmo=14
     Spread=0.00135
     SecondarySpread=0.0039
     TertiarySpread=0.04
@@ -42,7 +44,6 @@ defaultproperties
     WeaponFireOffset=10.0
     AltFireOffset=(X=-56.0,Y=19.0,Z=6.5)
     AltFireSpawnOffsetX=0.0
-    AltShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F1.75mm_S_fire01'

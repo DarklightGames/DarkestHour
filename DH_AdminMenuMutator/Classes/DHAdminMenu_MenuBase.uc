@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 // The base for all admin menu local interactions (these are the menus that only exist clientside, not on the server)
@@ -13,7 +13,7 @@ const  ITEMS_PER_PAGE = 10; // how many menu items are to be displayed on one pa
 var  localized array<string>  MenuText;             // array of the menu option description to be displayed
 var  array<string>            MenuCommand;          // array of the actual command lines to be executed when we choose a menu option
 
-var  DHAdminMenu_Replicator  Replicator;           // reference to the mutator's 'helper' replicated actor, which replicates some variables used by the menus on the client
+var  DHAdminMenu_Replicator   Replicator;           // reference to the mutator's 'helper' replicated actor, which replicates some variables used by the menus on the client
 var  PlayerController         PC;                   // reference to the local PlayerController, just to simplify lots of ViewportOwner.Actor references
 var  int                      MenuPage;             // for menu lists that run over into more than 1 page, this records the current page number
 var  string                   PreviousMenu;         // saves the command to open the previous menu, so that 'previous menu' key can operate correctly
@@ -284,7 +284,7 @@ function BuildCommandString(out string CommandString, out int SelectionIndex, ou
     }
 }
 
-// Executes console command, logging in as admin first if necessary
+// Executes console command, logging in 'silently' as a admin first, if necessary
 // Note we cannot do admin logout here as the menus leave typing open & the Mutate command won't have been sent yet - instead we log out in the Mutate function
 simulated function ExecuteCommand(string CommandString, coerce bool bDoAdminLogin)
 {
@@ -292,11 +292,15 @@ simulated function ExecuteCommand(string CommandString, coerce bool bDoAdminLogi
     {
         if (!IsLoggedInAsAdmin())
         {
+            // Attempt automatic admin login if we have a user name & password from player's config file, & if player not already logged in
+            // We add an identifying prefix to the passed user name, which is used to avoid spammy log entries for silent admin logins from here
+            // Also flag that we need to log the player out again afterwards
+            // Note: would like to check here if admin login was successful, but bIsAdmin won't have had time to replicate
             if (AdminName != "" && AdminPassword != "")
             {
-                PC.AdminLogin(AdminName @ AdminPassword); // note: would far prefer to use AdminLoginSilent but it doesn't work with the webadmin system
-                bMenuDidAdminLogin = true; // if the menu has automatically logged in the admin, this flags that we need to log them out again afterwards
-            }                              // note: would like to check here if admin login was successful but bIsAdmin won't have had time to replicate (in PC.PRI)
+                PC.AdminLoginSilent(class'DHAccessControl'.static.AdminMenuMutatorLoginPrefix() $ AdminName @ AdminPassword);
+                bMenuDidAdminLogin = true;
+            }
             else
             {
                 ErrorMessageToSelf(1); // must be an admin
@@ -328,7 +332,7 @@ function bool IsNumberKey(EInputKey Key, out int KeyNumber)
 {
     if (Key >= 48 && Key <= 57)
     {
-        KeyNumber = Key -48;
+        KeyNumber = Key - 48;
 
         return true;
     }
@@ -354,8 +358,10 @@ function AdminLogoutIfNecessary()
 }
 
 // Toggles admin login if admin credentials are set in their own DarkestHour.ini file
-// Note not used in this mutator but a very useful console command to have bound to one key, just for general admin use
-exec function AdminLoginToggle()
+// This isn't used in this mutator package but it's a very useful console command to have bound to one key, just for general admin use
+// Note the silent login option won't work properly - it logs in ok, but the toggle then fails on logout & you have to do it manually with the "AdminLogout" command
+// This is because PRI's bSilentAdmin bool isn't replicated (unlike bAdmin), so net client can't detect that player is already logged in as silent admin & always tries to log in
+exec function AdminLoginToggle(optional bool bSilentLogin)
 {
     if (IsLoggedInAsAdmin())
     {
@@ -365,7 +371,14 @@ exec function AdminLoginToggle()
     {
         if (AdminName != "" && AdminPassword != "")
         {
-            PC.AdminLogin(AdminName @ AdminPassword);
+            if (bSilentLogin)
+            {
+                PC.AdminLoginSilent(AdminName @ AdminPassword);
+            }
+            else
+            {
+                PC.AdminLogin(AdminName @ AdminPassword);
+            }
         }
         else
         {
@@ -374,6 +387,7 @@ exec function AdminLoginToggle()
     }
 }
 
+// Note bSilentAdmin won't work on a net client as bSilentAdmin isn't replicated (unlike bAdmin), so client can't tell that player is logged in
 function bool IsLoggedInAsAdmin()
 {
     return PC.PlayerReplicationInfo.bAdmin || PC.PlayerReplicationInfo.bSilentAdmin;

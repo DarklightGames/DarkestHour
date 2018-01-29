@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_AdvTimer extends DH_LevelActors;
@@ -141,7 +141,7 @@ state Done
 
 defaultproperties
 {
-    Texture=texture'DHEngine_Tex.ClockTimer'
+    Texture=Texture'DHEngine_Tex.ClockTimer'
     messagetype="CriticalEvent"
     TimeMin=30
     TimeMax=30

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_SVT40Attachment extends DHWeaponAttachment;
@@ -8,7 +8,7 @@ class DH_SVT40Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.svt40'
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.svt40_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.svt40_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bRapidFire=false

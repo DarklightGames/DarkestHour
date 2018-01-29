@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_JacksonCannon extends DHVehicleCannon;
@@ -9,9 +9,10 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_Jackson_anm.Jackson_turret_ext'
-    Skins(0)=texture'DH_VehiclesUS_tex3.ext_vehicles.M36_turret_ext'
-    Skins(1)=texture'DH_VehiclesUS_tex3.int_vehicles.M36_turret_int'
-    Skins(2)=texture'DH_VehiclesUS_tex3.int_vehicles.M36_turret_int2'
+    Skins(0)=Texture'DH_VehiclesUS_tex3.ext_vehicles.M36_turret_ext'
+    Skins(1)=Texture'DH_VehiclesUS_tex3.int_vehicles.M36_turret_int'
+    Skins(2)=Texture'DH_VehiclesUS_tex3.int_vehicles.M36_turret_int2'
+    Skins(3)=Texture'DH_VehiclesUS_tex3.ext_vehicles.M36_turret_ext' // shows the muzzle brake
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc2.Jackson.Jackson_turret_col'
     FireAttachBone="Turret"
     FireEffectScale=1.5 // turret fire is larger & positioned in centre of open turret
@@ -43,22 +44,25 @@ defaultproperties
     TertiaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShellHE'
     ProjectileDescriptions(1)="HVAP"
     ProjectileDescriptions(2)="HE"
-    InitialPrimaryAmmo=32
-    InitialSecondaryAmmo=6
-    InitialTertiaryAmmo=10
+    InitialPrimaryAmmo=30
+    InitialSecondaryAmmo=4
+    InitialTertiaryAmmo=5
+    MaxPrimaryAmmo=32
+    MaxSecondaryAmmo=6
+    MaxTertiaryAmmo=10
     SecondarySpread=0.0011
     TertiarySpread=0.00125
 
     // Weapon fire
-    WeaponFireOffset=26.2
+    WeaponFireOffset=33.0
     AddedPitch=145
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.IS2.122mm_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.IS2.122mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.IS2.122mm_fire02'
-    ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.SU_76_Reload_01')
-    ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.SU_76_Reload_02')
-    ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.SU_76_Reload_03')
-    ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.SU_76_Reload_04')
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_01')
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_02')
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.SU_76_Reload_04')
 }

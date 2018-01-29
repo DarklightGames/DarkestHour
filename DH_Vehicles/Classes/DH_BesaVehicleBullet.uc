@@ -1,13 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_BesaVehicleBullet extends DHBullet;
 
 defaultproperties
 {
-    MyVehicleDamage=class'DH_Vehicles.DH_BesaVehDamType'
     BallisticCoefficient=0.41
     Speed=49670.0
     Damage=115.0

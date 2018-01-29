@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHATMineDamage extends ROTankShellExplosionDamage
@@ -8,7 +8,7 @@ class DHATMineDamage extends ROTankShellExplosionDamage
 
 defaultproperties
 {
-    HUDIcon=texture'InterfaceArt_tex.deathicons.mine'
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.mine'
     TankDamageModifier=0.15
     APCDamageModifier=0.5
     VehicleDamageModifier=0.85

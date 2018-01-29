@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHStyle_ListSection extends ROSTY_Header;
@@ -18,10 +18,10 @@ defaultproperties
     ImgColors(2)=(B=0,G=0,R=0)
     ImgColors(3)=(B=0,G=0,R=0)
     ImgColors(4)=(B=0,G=0,R=0)
-    Images(0)=texture'InterfaceArt_tex.Menu.empty'
-    Images(1)=texture'InterfaceArt_tex.Menu.empty'
-    Images(2)=texture'InterfaceArt_tex.Menu.empty'
-    Images(3)=texture'InterfaceArt_tex.Menu.empty'
-    Images(4)=texture'InterfaceArt_tex.Menu.empty'
+    Images(0)=Texture'InterfaceArt_tex.Menu.empty'
+    Images(1)=Texture'InterfaceArt_tex.Menu.empty'
+    Images(2)=Texture'InterfaceArt_tex.Menu.empty'
+    Images(3)=Texture'InterfaceArt_tex.Menu.empty'
+    Images(4)=Texture'InterfaceArt_tex.Menu.empty'
     BorderOffsets(1)=4
 }

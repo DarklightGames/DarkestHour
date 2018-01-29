@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHThrowableExplosiveProjectile extends DHProjectile
@@ -26,7 +26,6 @@ var     float           FuzeLengthTimer;
 var     float           FailureRate;      // percentage of duds (expressed between 0.0 & 1.0)
 var     bool            bDud;
 var     bool            bAlreadyExploded; // this projectile already exploded & is waiting to be destroyed
-var     int             ShrapnelCount;
 var     sound           ExplosionSound[3];
 var     AvoidMarker     Fear;             // scares the bots away from this
 var     byte            Bounces;
@@ -48,7 +47,7 @@ replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
     reliable if (bNetInitial && bNetDirty && Role == ROLE_Authority)
-        FuzeLengthTimer, Bounces;
+        FuzeLengthTimer, Bounces, bDud;
 }
 
 // From ROThrowableExplosiveProjectile & ROGrenadeProjectile, combined
@@ -63,6 +62,11 @@ simulated function PostBeginPlay()
         if (Instigator != none && Instigator.HeadVolume != none && Instigator.HeadVolume.bWaterVolume)
         {
             Velocity = 0.25 * Velocity;
+        }
+
+        if (FRand() < FailureRate)
+        {
+            bDud = true;
         }
     }
 
@@ -82,21 +86,17 @@ simulated function Destroyed()
     local ROPawn        Victims;
     local vector        Start, Direction;
     local float         DamageScale, Distance;
-    local int           i;
+
+    if (bDud)
+    {
+        return;
+    }
 
     WeaponLight();
 
     PlaySound(ExplosionSound[Rand(3)],, 5.0,, ExplosionSoundRadius, 1.0, true); // TODO: skip sounds on ded server as played locally anyway? (probably other stuff too)
 
     Start = Location + vect(0.0, 0.0, 32.0);
-
-    if (ShrapnelCount > 0 && Role == ROLE_Authority)
-    {
-        for (i = 0; i < ShrapnelCount; ++i)
-        {
-            Spawn(class'ROShrapnelChunk',, '', Start);
-        }
-    }
 
     DoShakeEffect();
 
@@ -157,7 +157,9 @@ simulated function Tick(float DeltaTime)
     {
         FuzeLengthTimer -= DeltaTime;
 
-        if (FuzeLengthTimer <= 0.0)
+        // If it is a dud, then "explode" 10 seconds late
+        // This will make it so the explosive doesn't disappear for some time instead of right away
+        if ((bDud && FuzeLengthTimer <= -10.0) || (FuzeLengthTimer <= 0.0 && !bDud))
         {
             bAlreadyExploded = true;
             Explode(Location, vect(0.0, 0.0, 1.0));
@@ -166,7 +168,7 @@ simulated function Tick(float DeltaTime)
     }
 }
 
-// Matt: modified to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
+// Modified to handle new collision mesh actor - if we hit a col mesh, we switch hit actor to col mesh's owner & proceed as if we'd hit that actor
 // Also to call CheckVehicleOccupantsRadiusDamage() instead of DriverRadiusDamage() on a hit vehicle, to properly handle blast damage to any exposed vehicle occupants
 // And to fix problem affecting many vehicles with hull mesh modelled with origin on the ground, where even a slight ground bump could block all blast damage
 // Also to update Instigator, so HurtRadius attributes damage to the player's current pawn
@@ -501,7 +503,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     }
 }
 
-// Matt: modified to handle new collision mesh actor - if we hit a CM we switch hit actor to CM's owner & proceed as if we'd hit that actor
+// Modified to handle new collision mesh actor - if we hit a CM we switch hit actor to CM's owner & proceed as if we'd hit that actor
 // Also to do splash effects if projectile hits a fluid surface, which wasn't previously handled
 // Removed call to ClientSideTouch() as produces unwanted impact effects on a ragdoll body, i.e. grenade impact makes dead bodies jump around
 // Also re-factored generally to optimise, but original functionality unchanged
@@ -521,9 +523,9 @@ simulated singular function Touch(Actor Other)
     }
 
     // We use TraceThisActor do a simple line check against the actor we've hit, to get an accurate HitLocation to pass to ProcessTouch()
-    // It's more accurate than using our current location as projectile has often travelled a little further by the time this event gets called
+    // It's more accurate than using our current location as projectile has often travelled further by the time this event gets called
     // But if that trace returns true then it somehow didn't hit the actor, so we fall back to using our current location as the HitLocation
-    // Also skip trace & use location as HitLocation if our velocity is somehow zero (collided immediately on launch?) or we hit a Mover actor
+    // Also skip trace & use our location if velocity is zero (touching actor when projectile spawns) or hit a Mover actor (legacy, don't know why)
     if (Velocity == vect(0.0, 0.0, 0.0) || Other.IsA('Mover')
         || Other.TraceThisActor(HitLocation, HitNormal, Location, Location - (2.0 * Velocity), GetCollisionExtent()))
     {
@@ -571,6 +573,12 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 // From ROGrenadeProjectile
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
+    if (bDud)
+    {
+        Destroy();
+        return;
+    }
+
     BlowUp(HitLocation);
     Destroy();
 }
@@ -578,24 +586,20 @@ simulated function Explode(vector HitLocation, vector HitNormal)
 // From ROGrenadeProjectile & ROSatchelChargeProjectile, combined
 function BlowUp(vector HitLocation)
 {
-    local vector Start;
-    local int    i;
-
     if (Role == ROLE_Authority)
     {
-        DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
+        if (bBounce)
+        {
+            // If the grenade hasn't landed, do 1/3 less damage
+            // This isn't supposed to be realistic, its supposed to make airbursts less effective so players are more apt to through grenades more authentically
+            DelayedHurtRadius(Damage * 0.6666, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
+        }
+        else
+        {
+            DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
+        }
 
         MakeNoise(1.0);
-
-        if (ShrapnelCount > 0)
-        {
-            Start = Location + (32.0 * vect(0.0, 0.0, 1.0));
-
-            for (i = 0; i < ShrapnelCount; ++i)
-            {
-                Spawn(class'ROShrapnelChunk',, '', Start);
-            }
-        }
     }
 }
 
@@ -702,55 +706,55 @@ simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
         case EST_Default:
             DampenFactor = 0.15;
             DampenFactorParallel = 0.5;
-            ImpactSound = sound'Inf_Weapons_Foley.grenadeland';
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Rock:
             DampenFactor = 0.2;
             DampenFactorParallel = 0.5;
-            ImpactSound = sound'Inf_Weapons_Foley.grenadeland';
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Dirt:
             DampenFactor = 0.1;
             DampenFactorParallel = 0.45;
-            ImpactSound = sound'Inf_Weapons_Foley.grenadeland';
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Metal:
             DampenFactor = 0.2;
             DampenFactorParallel = 0.5;
-            ImpactSound = sound'Inf_Weapons_Foley.grenadeland';
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Wood:
             DampenFactor = 0.15;
             DampenFactorParallel = 0.4;
-            ImpactSound = sound'Inf_Weapons_Foley.grenadeland';
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Plant:
             DampenFactor = 0.1;
             DampenFactorParallel = 0.1;
-            ImpactSound = sound'Inf_Weapons_Foley.grenadeland';
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Flesh:
             DampenFactor = 0.1;
             DampenFactorParallel = 0.3;
-            ImpactSound = sound'Inf_Weapons_Foley.grenadeland';
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Ice:
             DampenFactor = 0.2;
             DampenFactorParallel = 0.55;
-            ImpactSound = sound'Inf_Weapons_Foley.grenadeland';
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Snow:
             DampenFactor = 0.0;
             DampenFactorParallel = 0.0;
-            ImpactSound = sound'Inf_Weapons_Foley.grenadeland';
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
 
         case EST_Water:
@@ -762,7 +766,7 @@ simulated function GetDampenAndSoundValue(ESurfaceTypes ST)
         case EST_Glass:
             DampenFactor = 0.3;
             DampenFactorParallel = 0.55;
-            ImpactSound = sound'Inf_Weapons_Foley.grenadeland';
+            ImpactSound = Sound'Inf_Weapons_Foley.grenadeland';
             break;
     }
 }
@@ -822,9 +826,8 @@ defaultproperties
     DampenFactor=0.05
     DampenFactorParallel=0.8
     bFixedRotationDir=true
-    FailureRate=0.01 // failure rate is default to 1 in 100
-    ShrapnelCount=0
-    ImpactSound=sound'Inf_Weapons_Foley.grenadeland'
+    FailureRate=0.001 // 1 in 1000
+    ImpactSound=Sound'Inf_Weapons_Foley.grenadeland'
     ExplosionSoundRadius=300.0
     ExplosionDecal=class'ROEffects.GrenadeMark'
     ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'

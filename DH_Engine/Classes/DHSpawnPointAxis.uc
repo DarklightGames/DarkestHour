@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHSpawnPointAxis extends DHSpawnPoint
@@ -8,6 +8,6 @@ class DHSpawnPointAxis extends DHSpawnPoint
 
 defaultproperties
 {
-    Texture=texture'DHEngine_Tex.Axis_Infantry'
+    Texture=Texture'DHEngine_Tex.Axis_Infantry'
     TeamIndex=0
 }

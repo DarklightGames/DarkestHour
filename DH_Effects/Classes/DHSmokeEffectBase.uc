@@ -1,12 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHSmokeEffectBase extends Emitter
     abstract;
 
-// Modified so in single player this effect is removed if the ResetGame option is used (note this won't work on a net client as Reset is only called on the server)
+// Modified to destroy effect so if reset (if the ResetGame option is used or a new round starts on the same map)
+// Note this requires special handling to call this on a net client, as Reset() is normally only called on authority roles
 simulated function Reset()
 {
     Destroy();

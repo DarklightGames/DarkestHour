@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_MN9130ScopedAttachment extends DHWeaponAttachment;
@@ -22,7 +22,7 @@ simulated function AnimEnd(int Channel)
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.Nagant9130_scoped'
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.nagant9130scoped_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.nagant9130scoped_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mmGreen'
     bAnimNotifiedShellEjects=true

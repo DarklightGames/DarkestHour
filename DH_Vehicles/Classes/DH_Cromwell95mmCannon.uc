@@ -1,11 +1,10 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_Cromwell95mmCannon extends DH_CromwellCannon;
 
-// TODO: maybe remove mechanical range settings altogether for howitzer? If yes, RangeSettings.Length = 0 (here), & remove bMechanicalAiming=true & MechanicalRanges from shells
 // Modified to override RangeSettings array to give maximum range setting of 1600m
 simulated function PostBeginPlay()
 {
@@ -24,9 +23,12 @@ defaultproperties
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="Smoke"
     ProjectileDescriptions(2)="HEAT"
-    InitialPrimaryAmmo=23
-    InitialSecondaryAmmo=23
-    InitialTertiaryAmmo=5
+    InitialPrimaryAmmo=14
+    InitialSecondaryAmmo=8
+    InitialTertiaryAmmo=4
+    MaxPrimaryAmmo=23
+    MaxSecondaryAmmo=12
+    MaxTertiaryAmmo=5
     Spread=0.0036
     SecondarySpread=0.0036
     TertiarySpread=0.0036
@@ -35,8 +37,8 @@ defaultproperties
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire01' // same as 105mm howitzers
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.Tiger.88mm_fire03'
-    ReloadStages(0)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_01') // as Sherman 105mm
-    ReloadStages(1)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_02')
-    ReloadStages(2)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_03')
-    ReloadStages(3)=(Sound=sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_04')
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_01') // as Sherman 105mm
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_02')
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.Pz_IV_F2_Reload_04')
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_CromwellCannon extends DHVehicleCannon;
@@ -9,8 +9,8 @@ defaultproperties
 {
     // Turret mesh
     Mesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_turret_ext'
-    Skins(0)=texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_body_ext'
-    Skins(1)=texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'
+    Skins(0)=Texture'DH_VehiclesUK_tex.ext_vehicles.Cromwell_body_ext'
+    Skins(1)=Texture'DH_VehiclesUK_tex.int_vehicles.Cromwell_body_int2'
     CollisionStaticMesh=StaticMesh'DH_allies_vehicles_stc.Cromwell.Cromwell_turret_Coll'
     FireAttachBone="Turret"
     FireEffectOffset=(X=-3.0,Y=-30.0,Z=50.0)
@@ -37,9 +37,12 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellHE'
     TertiaryProjectileClass=class'DH_Vehicles.DH_CromwellCannonShellSmoke'
     ProjectileDescriptions(2)="Smoke"
-    InitialPrimaryAmmo=33
-    InitialSecondaryAmmo=26
-    InitialTertiaryAmmo=5
+    InitialPrimaryAmmo=25
+    InitialSecondaryAmmo=13
+    InitialTertiaryAmmo=4
+    MaxPrimaryAmmo=33
+    MaxSecondaryAmmo=26
+    MaxTertiaryAmmo=5
     SecondarySpread=0.00175
     TertiarySpread=0.0036
 
@@ -51,10 +54,13 @@ defaultproperties
     TracerProjectileClass=class'DH_Vehicles.DH_BesaVehicleTracerBullet'
     TracerFrequency=5
 
+    // Smoke launcher
+    SmokeLauncherClass=class'DH_Vehicles.DH_TwoInchBombThrower'
+    SmokeLauncherFireOffset(0)=(X=37.0,Y=40.0,Z=42.0)
+
     // Weapon fire
     AltFireOffset=(X=-109.5,Y=-11.5,Z=1.0)
     AltFireSpawnOffsetX=23.0
-    AltShakeRotMag=(X=10.0,Y=10.0,Z=10.0)
 
     // Sounds
     CannonFireSound(0)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
@@ -62,10 +68,10 @@ defaultproperties
     CannonFireSound(2)=SoundGroup'DH_AlliedVehicleSounds.75mm.DHM3-75mm'
     AltFireSoundClass=SoundGroup'DH_WeaponSounds.Besa.Besa_FireLoop'
     AltFireEndSound=SoundGroup'DH_WeaponSounds.Besa.Besa_FireEnd'
-    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
-    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
-    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
-    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_01s_04')
 
     // Cannon range settings
     RangeSettings(1)=200

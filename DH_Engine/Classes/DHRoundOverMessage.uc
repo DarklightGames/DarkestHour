@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHRoundOverMessage extends RORoundOverMsg
@@ -32,7 +32,7 @@ static simulated function ClientReceive(PlayerController P, optional int Switch,
     }
     // End super code
 
-    // Theel: Pausesounds before we begin playing music (another likely failed attempt at preventing MGs from firing continuously after the round ends)
+    // Have client pausesounds before the music begins (can help prevent very loud level sounds from drowning out music)
     if (DHPlayer(P) != none)
     {
         DHPlayer(P).ClientConsoleCommand("pausesounds", false);
@@ -111,6 +111,6 @@ defaultproperties
 {
     // WinMusic variables are now defined in DH_LevelInfo with new default that uses groups
     // These are still defined as a backup in case some idiot uses ROLevelInfo
-    AxisWinsSound=sound'DH_win.German.DH_German_Win_Theme'
-    AlliesWinsSound=sound'DH_win.Allies.DH_Allies_Win_Theme'
+    AxisWinsSound=Sound'DH_win.German.DH_German_Win_Theme'
+    AlliesWinsSound=Sound'DH_win.Allies.DH_Allies_Win_Theme'
 }

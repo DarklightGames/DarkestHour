@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHVehicleMG extends DHVehicleWeapon
@@ -126,12 +126,11 @@ defaultproperties
 
     // Ammo & weapon fire
     bUsesMags=true
-    DamageType=class'ROVehMountedMGDamType'
     Spread=0.002
     bUsesTracers=true
     WeaponFireAttachmentBone="mg_yaw"
     bDoOffsetTrace=true
-    HudAltAmmoIcon=texture'InterfaceArt_tex.HUD.mg42_ammo'
+    HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.mg42_ammo'
     AIInfo(0)=(bFireOnRelease=true,AimError=750.0,RefireRate=0.99)
 
     // Firing effects
@@ -142,10 +141,10 @@ defaultproperties
     bIsRepeatingFF=true
 
     // Reload (default is MG34 reload sounds as is used by most vehicles, even allies)
-    ReloadStages(0)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden01',Duration=1.105)
-    ReloadStages(1)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden02',Duration=2.413,HUDProportion=0.75)
-    ReloadStages(2)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden03',Duration=1.843,HUDProportion=0.5)
-    ReloadStages(3)=(Sound=sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden04',Duration=1.314,HUDProportion=0.25)
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden01',Duration=1.105)
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden02',Duration=2.413,HUDProportion=0.75)
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden03',Duration=1.843,HUDProportion=0.5)
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.MG34_ReloadHidden04',Duration=1.314,HUDProportion=0.25)
 
     // Screen shake
     ShakeOffsetMag=(X=1.0,Y=1.0,Z=1.0)

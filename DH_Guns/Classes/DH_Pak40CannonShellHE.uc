@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_Pak40CannonShellHE extends DHCannonShellHE;
@@ -40,7 +40,7 @@ defaultproperties
     DHPenetrationTable(9)=0.5
     DHPenetrationTable(10)=0.3
     ShellDiameter=7.5
-    bIsAlliedShell=false
+    bDebugInImperial=false
     PenetrationMag=1000.0
     ShellImpactDamage=class'DH_Engine.DHShellATImpactDamageType'
     ImpactDamage=455

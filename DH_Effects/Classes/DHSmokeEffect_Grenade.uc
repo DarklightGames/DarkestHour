@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHSmokeEffect_Grenade extends DHSmokeEffectBase;
 
 /*
-// Matt March 2015: this was some testing work done by Theel on functionality to modify smoke brightness & wind direction/speed based on settings in DHLevelInfo
+// March 2015: this was some testing work done by Theel on functionality to modify smoke brightness & wind direction/speed based on settings in DHLevelInfo
 // This class wouldn't compile if it were left in DH_Effects (it's natural package), as DH_Effects is compiled before DH_Engine & it would be dependant on DH_Engine.DH_LevelInfo
 // So if implemented it would need moving, say to either DH_Engine or to DH_Equipment (which is where Theel had it)
 simulated function PostBeginPlay()
@@ -65,7 +65,7 @@ defaultproperties
         StartSizeRange=(X=(Min=50.0,Max=50.0),Y=(Min=50.0,Max=50.0),Z=(Min=50.0,Max=50.0))
         InitialParticlesPerSecond=4.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=texture'Effects_Tex.Smoke.grenadesmoke'
+        Texture=Texture'Effects_Tex.Smoke.grenadesmoke'
         LifetimeRange=(Min=3.0)
         StartVelocityRange=(X=(Min=-50.0,Max=50.0),Y=(Min=-50.0,Max=50.0),Z=(Min=15.0,Max=50.0))
         VelocityLossRange=(X=(Min=0.2,Max=0.2),Y=(Min=0.2,Max=0.2),Z=(Min=0.2,Max=0.2))
@@ -97,7 +97,7 @@ defaultproperties
         StartSizeRange=(X=(Min=300.0,Max=400.0),Y=(Min=300.0,Max=400.0),Z=(Min=300.0,Max=400.0))
         InitialParticlesPerSecond=10.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=texture'Effects_Tex.Smoke.grenadesmoke'
+        Texture=Texture'Effects_Tex.Smoke.grenadesmoke'
         LifetimeRange=(Min=45.0,Max=50.0)
         InitialDelayRange=(Min=2.0,Max=2.0)
         StartVelocityRange=(Z=(Min=2.0,Max=5.0))
@@ -129,7 +129,7 @@ defaultproperties
         StartSizeRange=(X=(Min=300.0,Max=400.0),Y=(Min=300.0,Max=400.0),Z=(Min=300.0,Max=400.0))
         InitialParticlesPerSecond=10.0
         DrawStyle=PTDS_AlphaBlend
-        Texture=texture'Effects_Tex.Smoke.grenadesmoke'
+        Texture=Texture'Effects_Tex.Smoke.grenadesmoke'
         LifetimeRange=(Min=55.0,Max=60.0)
         InitialDelayRange=(Min=2.0,Max=2.0)
         StartVelocityRange=(Z=(Min=2.0,Max=5.0))
@@ -160,7 +160,7 @@ defaultproperties
         StartSizeRange=(X=(Min=50.0,Max=100.0),Y=(Min=50.0,Max=100.0),Z=(Min=50.0,Max=100.0))
         InitialParticlesPerSecond=1.5
         DrawStyle=PTDS_AlphaBlend
-        Texture=texture'Effects_Tex.Smoke.grenadesmoke_fill'
+        Texture=Texture'Effects_Tex.Smoke.grenadesmoke_fill'
         SecondsBeforeInactive=0.0
         LifetimeRange=(Min=8.0,Max=9.0)
         InitialDelayRange=(Min=0.75,Max=0.75)

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_BrenAttachment extends DHWeaponAttachment;
@@ -39,7 +39,7 @@ simulated function PlayIdle()
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Bren_3rd'
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.Bren_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Bren_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSTG'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     MuzzleBoneName="Muzzle"

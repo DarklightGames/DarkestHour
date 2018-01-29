@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DH_PPSh41Attachment extends DHHighROFWeaponAttachment;
@@ -8,7 +8,7 @@ class DH_PPSh41Attachment extends DHHighROFWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'Weapons3rd_anm.ppsh41'
-    MenuImage=texture'DH_InterfaceArt_tex.weapon_icons.ppsh41_icon'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.ppsh41_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'
 

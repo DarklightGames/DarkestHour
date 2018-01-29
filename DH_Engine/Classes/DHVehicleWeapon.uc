@@ -1,20 +1,35 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2016
+// Darklight Games (c) 2008-2017
 //==============================================================================
 
 class DHVehicleWeapon extends ROVehicleWeapon
     abstract;
 
-// General
+// Vehicle weapon & weapon pawn
 var     DHVehicleWeaponPawn WeaponPawn;         // convenient reference to VehicleWeaponPawn actor
 var     vector              WeaponAttachOffset; // optional positional offset when attaching VehicleWeapon to the hull
 var     bool                bHasTurret;         // this weapon is in a fully rotating turret
-var     bool                bUsesMags;          // main weapon uses magazines or similar (e.g. ammo belts), not single shot shells
 
-// Clientside flags to do certain things when certain actors are received, to fix problems caused by replication timing issues
-var     bool           bInitializedVehicleBase;          // done set up after receiving the (vehicle) Base actor
-var     bool           bInitializedVehicleAndWeaponPawn; // done set up after receiving both the (vehicle) Base & VehicleWeaponPawn actors
+// Clientside flags to do set up when key actors are received, to fix problems caused by replication timing issues
+var     bool                bInitializedVehicleBase;          // done set up after receiving the (vehicle) Base actor
+var     bool                bInitializedVehicleAndWeaponPawn; // done set up after receiving both the (vehicle) Base & VehicleWeaponPawn actors
+
+// Turret/MG collision static mesh - new DHCollisionMeshActor allows us to use a collision static mesh with VehicleWeapon
+var     StaticMesh          CollisionStaticMesh;       // specify a valid CollisionStaticMesh in default props & collision static mesh is automatically used
+var     bool                bAttachColMeshToPitchBone; // option to attach to pitch bone instead of default yaw bone, e.g. for gun mantlet
+var   DHCollisionMeshActor  CollisionMeshActor;        // reference to the spawned DHCollisionMeshActor
+
+// Weapon fire
+var     bool                bUsesMags;          // main weapon uses magazines or similar (e.g. ammo belts), not single shot shells
+var     bool                bIsArtillery;       // report our hits to be tracked on artillery targets // TODO: put this in vehicle itself?
+var     bool                bSkipFiringEffects; // stops SpawnProjectile() playing firing effects; used to prevent multiple effects for weapons that fire multiple projectiles
+
+// MG weapon (hull mounted or coaxial)
+const   ALTFIRE_AMMO_INDEX = 3;                    // ammo index for alt fire (coaxial MG)
+var     byte                NumMGMags;             // number of mags/belts for an MG (using byte for more efficient replication)
+var     class<Projectile>   TracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so old name was misleading
+var     byte                TracerFrequency;       // how often a tracer is loaded in, as in 1 in X (deprecates mTracerInterval & mLastTracerTime)
 
 // Reloading
 struct ReloadStage
@@ -30,8 +45,6 @@ enum    EReloadState
     RL_ReloadingPart2,
     RL_ReloadingPart3,
     RL_ReloadingPart4,
-    RL_ReloadingPart5, // extra options for up to 6 part reload, although the standard is 4 parts
-    RL_ReloadingPart6,
     RL_ReadyToFire,
     RL_Waiting, // put waiting at end as ReloadStages array then matches ReloadState numbering, & also "ReloadState < RL_ReadyToFire" conveniently signifies weapon is reloading
 };
@@ -40,18 +53,7 @@ var     bool                bMultiStageReload;    // this weapon uses a multi-st
 var     EReloadState        ReloadState;          // the stage of weapon reload or readiness
 var     array<ReloadStage>  ReloadStages;         // stages for multi-part reload, including sounds, durations & HUD reload icon proportions
 var     bool                bReloadPaused;        // a reload has started but was paused, as no longer had a player in a valid reloading position
-var     bool                bNewOrResumedReload;  // tells Timer() that we're starting new reload or resuming paused reload, stopping it from advancing to next reload stage
-
-// MG weapon (hull mounted or coaxial)
-const   ALTFIRE_AMMO_INDEX = 3;                    // ammo index for alt fire (coaxial MG)
-var     byte                NumMGMags;             // number of mags/belts for an MG (using byte for more efficient replication)
-var     class<Projectile>   TracerProjectileClass; // replaces DummyTracerClass as tracer is now a real bullet that damages, not just a client-only effect, so old name was misleading
-var     byte                TracerFrequency;       // how often a tracer is loaded in, as in 1 in X (deprecates mTracerInterval & mLastTracerTime)
-
-// Turret/MG collision static mesh
-// Matt: new col mesh actor allows us to use a col static mesh with VehicleWeapon - just specify a valid CollisionStaticMesh in default props & col static mesh is automatically used
-var     DHCollisionMeshActor    CollisionMeshActor;
-var     StaticMesh              CollisionStaticMesh;
+var     bool                bNewOrResumedReload;  // tells Timer we're starting new reload or resuming paused reload, stopping it from advancing to next reload stage
 
 // Hatch fire effects - Ch!cKeN
 var     VehicleDamagedEffect        HatchFireEffect;
@@ -59,9 +61,6 @@ var     class<VehicleDamagedEffect> FireEffectClass;
 var     name                        FireAttachBone;
 var     vector                      FireEffectOffset;
 var     float                       FireEffectScale;
-
-// Artillery
-var     bool                        bIsArtillery;   // TODO: put this in vehicle itself?
 
 replication
 {
@@ -81,22 +80,46 @@ replication
 // Modified to attach any collision static mesh actor
 simulated function PostBeginPlay()
 {
+    local name AttachBone;
+
     super.PostBeginPlay();
 
     if (CollisionStaticMesh != none)
     {
-        CollisionMeshActor = class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, CollisionStaticMesh, YawBone); // attach to yaw bone, so col mesh turns with weapon
+        // Default is to attach to yaw bone, so col mesh turns sideways with the weapon
+        // But there's an option to attach to pitch bone instead, so col mesh rotates up & down with the weapon, e.g. for gun mantlet
+        if (bAttachColMeshToPitchBone)
+        {
+            AttachBone = PitchBone;
+        }
+        else
+        {
+            AttachBone = YawBone;
+        }
 
+        CollisionMeshActor = class'DHCollisionMeshActor'.static.AttachCollisionMesh(self, CollisionStaticMesh, AttachBone);
+
+        // Remove all collision from this VehicleWeapon class (instead let col mesh actor handle collision detection)
         if (CollisionMeshActor != none)
         {
-            // Remove all collision from this VehicleWeapon class (instead let col mesh actor handle collision detection)
-            SetCollision(false, false); // bCollideActors & bBlockActors both false
+            SetCollision(false, false);
             bBlockZeroExtentTraces = false;
             bBlockNonZeroExtentTraces = false;
             bBlockHitPointTraces = false;
             bProjTarget = false;
+
+            bCanAutoTraceSelect = false;
+            bAutoTraceNotify = false;
         }
     }
+}
+
+// Modified to stop us entering state 'ProjectileFireMode', which is deprecated as unnecessary in DH & should never be entered
+// Fire functions now work out of state, so projectile fire is effectively the default, non-state condition for all DHVehicleWeapon
+simulated function PostNetBeginPlay()
+{
+    InitEffects();
+    MaxRange();
 }
 
 // No longer use Tick, as hatch fire effects & manual/powered turret are now triggered on net client from Vehicle's PostNetReceive()
@@ -106,7 +129,7 @@ simulated function Tick(float DeltaTime)
     Disable('Tick');
 }
 
-// Matt: modified to call set up functionality that requires the Vehicle actor (just after vehicle spawns via replication)
+// Modified to call set up functionality that requires the Vehicle actor (just after vehicle spawns via replication)
 // This controls common and sometimes critical problems caused by unpredictability of when & in which order a net client receives replicated actor references
 // Functionality is moved to series of InitializeX functions, for clarity & to allow easy subclassing for anything that is vehicle-specific
 simulated function PostNetReceive()
@@ -131,17 +154,15 @@ simulated function PostNetReceive()
 // Implemented here to handle multi-stage reload
 simulated function Timer()
 {
-    if (!bMultiStageReload || bReloadPaused || ReloadState >= ReloadStages.Length) // invalid reload timer
+    if (ReloadState >= RL_ReadyToFire || bReloadPaused)
     {
-        Log(Name @ ": invalid reload timer call, with bReloadPaused =" @ bReloadPaused $ ", ReloadState =" @ GetEnum(enum'EReloadState', ReloadState));
         return;
     }
 
     // If we don't have a player in a position to reload, pause the reload
-    // This is just a fallback & shouldn't happen, as a reload gets actively paused if player exits or moves to position where he can't continue reloading
+    // Just a fallback & shouldn't happen, as reload gets actively paused if player exits or moves to position where he can't continue reloading
     if (WeaponPawn == none || !WeaponPawn.Occupied() || !WeaponPawn.CanReload())
     {
-        Log(Name @ ": reload timer pausing reload as no player in valid position - SHOULD NOT HAPPEN!!  Occupied() =" @ WeaponPawn.Occupied() @ " CanReload() =" @ WeaponPawn.CanReload());
         PauseReload();
 
         return;
@@ -156,35 +177,34 @@ simulated function Timer()
     else
     {
         ReloadState = EReloadState(ReloadState + 1);
+    }
 
-        // If just completed the final reload stage, complete the reload
-        if (ReloadState >= ReloadStages.Length)
+    // If we just completed the final reload stage, complete the reload
+    if (ReloadState >= ReloadStages.Length)
+    {
+        ReloadState = RL_ReadyToFire;
+
+        if (bUsesMags && Role == ROLE_Authority)
         {
-            ReloadState = RL_ReadyToFire;
-
-            if (bUsesMags && Role == ROLE_Authority)
-            {
-                FinishMagReload();
-            }
-
-            return;
+            FinishMagReload();
         }
     }
-
-    // Play reloading sound for current stage, if there is one (some MGs use a HUD reload animation that plays its own sound through anim notifies)
-    if (ReloadStages[ReloadState].Sound != none)
-    {
-        PlayStageReloadSound();
-    }
-
-    // Set next timer based on duration of current reload sound (use reload duration if specified, otherwise try & get the sound duration)
-    if (ReloadStages[ReloadState].Duration > 0.0)
-    {
-        SetTimer(ReloadStages[ReloadState].Duration, false);
-    }
+    // Otherwise play the reloading sound for the next stage & set the next timer
     else
     {
-        SetTimer(FMax(0.1, GetSoundDuration(ReloadStages[ReloadState].Sound)), false); // FMax is just a fail-safe in case GetSoundDuration somehow returns zero
+        if (ReloadStages[ReloadState].Sound != none)
+        {
+            PlayStageReloadSound(); // note there may not be a sound as some MGs use a HUD reload animation that plays its own sound through anim notifies
+        }
+
+        if (ReloadStages[ReloadState].Duration > 0.0) // use reload duration if specified, otherwise get the sound duration
+        {
+            SetTimer(ReloadStages[ReloadState].Duration, false);
+        }
+        else
+        {
+            SetTimer(FMax(0.1, GetSoundDuration(ReloadStages[ReloadState].Sound)), false); // FMax is just a fail-safe in case GetSoundDuration somehow returns zero
+        }
     }
 }
 
@@ -193,10 +213,10 @@ simulated function Timer()
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // Modified to handle DH's extended ammo system & re-factored to reduce lots of code repetition & make some functionality improvement
+// Random projectile spread is moved to SpawnProjectile() as that allows weapons that fire more than one projectile to calculate random spread for each one
 event bool AttemptFire(Controller C, bool bAltFire)
 {
     local byte  AmmoIndex;
-    local float ProjectileSpread;
 
     if (Role < ROLE_Authority)
     {
@@ -220,25 +240,15 @@ event bool AttemptFire(Controller C, bool bAltFire)
          return false;
     }
 
-    // Calculate the starting WeaponFireRotation & apply any random spread
+    // Calculate & record weapon's firing location & rotation
     CalcWeaponFire(bAltFire);
 
-    if (bCorrectAim)
+    if (bCorrectAim && Instigator != none && !Instigator.IsHumanControlled()) // added human controlled check as in this class AdjustAim() is only relevant to bots
     {
         WeaponFireRotation = AdjustAim(bAltFire);
     }
 
-    if (class<DHCannonShellCanister>(ProjectileClass) == none || bAltFire) // no spread for canister shot, as it gets calculated for each separate projectile
-    {
-        ProjectileSpread = GetSpread(bAltFire);
-
-        if (ProjectileSpread > 0.0)
-        {
-            WeaponFireRotation = rotator(vector(WeaponFireRotation) + VRand() * FRand() * ProjectileSpread);
-        }
-    }
-
-    // Decrement our round count (note we've already done a 'have ammo' check in the earlier ReadyToFire() test, so we don't need to check that ConsumeAmmo() returns true)
+    // Decrement our round count (note we've already done a 'have ammo' check in the earlier ReadyToFire() check, so we don't need to check that ConsumeAmmo() returns true)
     AmmoIndex = GetAmmoIndex(bAltFire);
     ConsumeAmmo(AmmoIndex);
 
@@ -290,33 +300,145 @@ event bool AttemptFire(Controller C, bool bAltFire)
     return true;
 }
 
+// Fire functions moved out of state 'ProjectileFireMode', which is deprecated as unnecessary in DH
+// Projectile fire is now effectively the default, non-state condition for all DHVehicleWeapon
 // Modified to spawn either normal bullet OR tracer, based on proper shot count, not simply time elapsed since last shot
-// Modulo operator (%) divides rounds previously fired by tracer frequency & returns the remainder - if it divides evenly (result = 0) then it's time to fire a tracer
-state ProjectileFireMode
+// Modulo operator (%) divides rounds previously fired by tracer frequency & returns the remainder - if it divides evenly then it's time to fire a tracer
+// Also added a fix for bug where listen server host watching another player fire didn't see the firing effects from any AmbientEffectEmitter
+function Fire(Controller C)
 {
-    function Fire(Controller C)
+    if (bUsesTracers && !bAltFireTracersOnly && ((InitialPrimaryAmmo - PrimaryAmmoCount() - 1) % TracerFrequency == 0.0) && TracerProjectileClass != none)
     {
-        if (bUsesTracers && !bAltFireTracersOnly && ((InitialPrimaryAmmo - PrimaryAmmoCount() - 1) % TracerFrequency == 0.0) && TracerProjectileClass != none)
+        SpawnProjectile(TracerProjectileClass, false);
+    }
+    else if (ProjectileClass != none)
+    {
+        SpawnProjectile(ProjectileClass, false);
+    }
+
+    if (Level.NetMode == NM_ListenServer && AmbientEffectEmitter != none && !bAmbientEmitterAltFireOnly && !(Instigator != none && Instigator.IsLocallyControlled()))
+    {
+        AmbientEffectEmitter.SetEmitterStatus(true); // non-owning listen server doesn't get OwnerEffects() & no native code handles this emitter (unlike a non-owning net client)
+    }
+}
+
+function AltFire(Controller C)
+{
+    if (bUsesTracers && ((InitialAltAmmo - AltAmmoCharge - 1) % TracerFrequency == 0.0) && TracerProjectileClass != none)
+    {
+        SpawnProjectile(TracerProjectileClass, true);
+    }
+    else if (AltFireProjectileClass != none)
+    {
+        SpawnProjectile(AltFireProjectileClass, true);
+    }
+
+    if (Level.NetMode == NM_ListenServer && AmbientEffectEmitter != none && bAmbientEmitterAltFireOnly && !(Instigator != none && Instigator.IsLocallyControlled()))
+    {
+        AmbientEffectEmitter.SetEmitterStatus(true); // non-owning listen server doesn't get OwnerEffects() & no native code handles this emitter (unlike a non-owning net client)
+    }
+}
+
+// Modified to calculate weapon's firing location & direction, including any random spread, instead of doing it in AttemptFire()
+// Advantages are that spread can be applied separately for each projectile for weapons that fire multiple projectiles,
+// and also WeaponFireRotation is preserved as the direction the weapon is aimed (spread is only relevant to one specific projectile, not the weapon's aim)
+function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
+{
+    local Projectile P;
+
+    P = Spawn(ProjClass, none,, GetProjectileFireLocation(ProjClass), GetProjectileFireRotation(bAltFire));
+
+    if (P != none)
+    {
+        if (bIsArtillery && P.IsA('DHBallisticProjectile'))
         {
-            SpawnProjectile(TracerProjectileClass, false);
+            DHBallisticProjectile(P).bIsArtilleryProjectile = true;
         }
-        else if (ProjectileClass != none)
+
+        // Play firing effect & sound (unless flagged not to because we're firing multiple projectiles & only want to do this once)
+        if (!bSkipFiringEffects)
         {
-            SpawnProjectile(ProjectileClass, false);
+            FlashMuzzleFlash(bAltFire);
+
+            if (bAltFire)
+            {
+                if (bAmbientAltFireSound)
+                {
+                    AmbientSound = AltFireSoundClass;
+                    SoundVolume = AltFireSoundVolume;
+                    SoundRadius = AltFireSoundRadius;
+                    AmbientSoundScaling = AltFireSoundScaling;
+                }
+                else
+                {
+                    PlayOwnedSound(AltFireSoundClass, SLOT_None, FireSoundVolume / 255.0,, AltFireSoundRadius,, false);
+                }
+            }
+            else
+            {
+                if (bAmbientFireSound)
+                {
+                    AmbientSound = FireSoundClass;
+                }
+                else
+                {
+                    PlayOwnedSound(GetFireSound(), SLOT_None, FireSoundVolume / 255.0,, FireSoundRadius,, false);
+                }
+            }
         }
     }
 
-    function AltFire(Controller C)
+    return P;
+}
+
+// New function to calculate the firing location for a projectile (allows easy subclassing)
+function vector GetProjectileFireLocation(class<Projectile> ProjClass)
+{
+    local vector Extent, HitLocation, HitNormal;
+
+    // bDoOffsetTrace option to make sure we don't try to spawn projectile inside weapon's own vehicle (re-factored from VehicleWeapon to simplify)
+    // Traces from outside vehicle's collision back towards planned spawn location, & if it hits our vehicle we adjust spawn location
+    // TODO: probably remove bDoOffsetTrace functionality as seems to serve no purpose & when applied as standard for hull MGs it just makes bullets spawn too far forward
+    // The problem is TraceThisActor ignores collision static meshes & so traces pretty innacurate hits on the vehicle's crude collision box(es)
+    if (bDoOffsetTrace && ProjClass != none && WeaponPawn.VehicleBase != none)
     {
-        if (bUsesTracers && ((InitialAltAmmo - AltAmmoCharge - 1) % TracerFrequency == 0.0) && TracerProjectileClass != none)
+        Extent = ProjClass.default.CollisionRadius * vect(1.0, 1.0, 0.0);
+        Extent.Z = ProjClass.default.CollisionHeight;
+
+        if (!WeaponPawn.VehicleBase.TraceThisActor(HitLocation, HitNormal, WeaponFireLocation,
+                WeaponFireLocation + (vector(WeaponFireRotation) * (WeaponPawn.VehicleBase.CollisionRadius * 1.5)), Extent))
         {
-            SpawnProjectile(TracerProjectileClass, true);
+            return HitLocation;
         }
-        else if (AltFireProjectileClass != none)
+        else
         {
-            SpawnProjectile(AltFireProjectileClass, true);
+            return WeaponFireLocation + (vector(WeaponFireRotation) * (ProjClass.default.CollisionRadius * 1.1));
         }
     }
+
+    return WeaponFireLocation;
+}
+
+// New function to calculate the firing direction for a projectile, including any random spread (allows easy subclassing)
+function rotator GetProjectileFireRotation(optional bool bAltFire)
+{
+    local float ProjectileSpread;
+
+    if (bAltFire)
+    {
+        ProjectileSpread = AltFireSpread;
+    }
+    else
+    {
+        ProjectileSpread = Spread;
+    }
+
+    if (ProjectileSpread > 0.0)
+    {
+        return rotator(vector(WeaponFireRotation) + (VRand() * FRand() * ProjectileSpread));
+    }
+
+    return WeaponFireRotation;
 }
 
 // Modified to prevent firing if weapon uses a multi-stage reload & is not loaded, & to only apply FireCountdown check to automatic weapons
@@ -351,7 +473,7 @@ simulated function ClientStartFire(Controller C, bool bAltFire)
 
 // Modified to add generic support for weapons that use magazines or similar, to add generic support for different fire sounds,
 // to stop 'phantom' coaxial firing effects (flash & tracers) from continuing if player has moved to ineligible firing position while holding down fire button,
-// and to enable MG muzzle flash when hosting a listen server, which the original code misses out
+// and to enable MG muzzle flash (AmbientEffectEmitter) for listen server host firing own weapon, which the original code misses out
 simulated function OwnerEffects()
 {
     if (Role < ROLE_Authority)
@@ -405,7 +527,7 @@ simulated function OwnerEffects()
 
         if ((bIsAltFire || !bAmbientEmitterAltFireOnly) && AmbientEffectEmitter != none)
         {
-            AmbientEffectEmitter.SetEmitterStatus(true); // consolidated here instead of having it in 3 places for 3 net modes (listen server now included, so fixes bug)
+            AmbientEffectEmitter.SetEmitterStatus(true); // consolidated here instead of having it in 3 places for 3 net modes (owning listen server now included, so fixes bug)
         }
 
         if (!bIsRepeatingFF)
@@ -423,7 +545,7 @@ simulated function OwnerEffects()
 }
 
 // Modified to skip over the Super in ROVehicleWeapon to avoid calling UpdateTracer()
-// That function is deprecated (& emptied out below) & we now spawn either a normal bullet OR a tracer bullet (see ProjectileFireMode)
+// That function is deprecated (& emptied out below) & we now spawn either a normal bullet OR a tracer bullet when we fire
 simulated function FlashMuzzleFlash(bool bWasAltFire)
 {
     super(VehicleWeapon).FlashMuzzleFlash(bWasAltFire);
@@ -480,29 +602,29 @@ function CeaseFire(Controller C, bool bWasAltFire)
 // Note that the delay in the original system was essentially random & caused by its network inefficiency
 // The server called ClientCeaseFire() on owning client, which in return called VehicleCeaseFire() on server - both know they need to cease fire so was unnecessary
 // It did create delay but timing was from 2-way replication between server & owning client, which is random to other clients & no better than arbitrary time delay, maybe worse
-state ServerCeaseFire extends ProjectileFireMode
+state ServerCeaseFire
 {
     function Fire(Controller C)
     {
-        super.Fire(C);
+        global.Fire(C);
 
-        GotoState('ProjectileFireMode');
+        GotoState('');
     }
 
     function AltFire(Controller C)
     {
-        super.AltFire(C);
+        global.AltFire(C);
 
-        GotoState('ProjectileFireMode');
+        GotoState('');
     }
 
 Begin:
     Sleep(0.1);
     FlashCount = 0;
-    GotoState('ProjectileFireMode');
+    GotoState('');
 }
 
-// New function to play the main weapon firing sound (allows easy subclassing)
+// New helper function to get the main weapon firing sound (allows easy subclassing)
 simulated function sound GetFireSound()
 {
     return FireSoundClass;
@@ -512,7 +634,7 @@ simulated function sound GetFireSound()
 simulated function DryFireEffects(optional bool bAltFire)
 {
     ShakeView(bAltFire);
-    PlaySound(sound'Inf_Weapons_Foley.Misc.dryfire_rifle', SLOT_None, 1.5,, 25.0,, true);
+    PlaySound(Sound'Inf_Weapons_Foley.Misc.dryfire_rifle', SLOT_None, 1.5,, 25.0,, true);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -578,17 +700,6 @@ simulated function int GetNumMags()
     return NumMGMags;
 }
 
-// New helper function to return appropriate projectile spread for ammo type (just makes subclassing easier)
-function float GetSpread(bool bAltFire)
-{
-    if (bAltFire)
-    {
-        return AltFireSpread;
-    }
-
-    return Spread;
-}
-
 ///////////////////////////////////////////////////////////////////////////////////////
 //  ********************************** RELOADING **********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -597,6 +708,11 @@ function float GetSpread(bool bAltFire)
 simulated function AttemptReload()
 {
     local EReloadState OldReloadState;
+
+    if (!bMultiStageReload)
+    {
+        return;
+    }
 
     // Try to start a new reload, as either just fired & needs to load (still in ready to fire state) or is waiting to reload - authority role only
     if (ReloadState == RL_ReadyToFire || ReloadState == RL_Waiting)
@@ -662,6 +778,16 @@ simulated function PauseReload()
 {
     bReloadPaused = true;
     SetTimer(0.0, false); // clear any timer
+}
+
+// New helper function to pause any vehicle weapon reloads that are in progress when the player exits
+// Can be subclassed to handle different types of vehicle weapons
+simulated function PauseAnyReloads()
+{
+    if (ReloadState < RL_ReadyToFire && !bReloadPaused && bMultiStageReload)
+    {
+        PauseReload();
+    }
 }
 
 // New function for a server to replicate weapon's reload state to the owning net client
@@ -748,7 +874,7 @@ simulated function bool PlayerUsesManualReloading()
 //  **************************  HIT DETECTION & DAMAGE  ***************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-// Matt: emptied out as suicide stuff is irrelevant & never called here, & because as shell & bullet's ProcessTouch now call TakeDamage directly on 'Driver' if he was hit
+// Emptied out as suicide stuff is irrelevant & never called here, & because as shell & bullet's ProcessTouch now call TakeDamage directly on 'Driver' if he was hit
 // Note that shell's ProcessTouch also now calls TakeDamage on VehicleWeapon instead of Vehicle itself, so this function decides what to do with that damage
 // Add here if want to pass damage on to vehicle (& if DamageType is bDelayedDamage, need to call SetDelayedDamageInstigatorController(InstigatedBy.Controller) on relevant pawn)
 // Can also add any desired functionality in subclasses, e.g. a shell impact could wreck an exposed MG
@@ -837,7 +963,7 @@ simulated function UpdatePrecacheStaticMeshes()
     }
 }
 
-// Matt: New function to do set up that requires the 'Gun' reference to the VehicleWeaponPawn actor (called from VehicleWeaponPawn when it receives a reference to this actor)
+// New function to do set up that requires the 'Gun' reference to the VehicleWeaponPawn actor (called from VehicleWeaponPawn when it receives a reference to this actor)
 // Using it to set a convenient WeaponPawn reference & our Owner & Instigator variables
 simulated function InitializeWeaponPawn(DHVehicleWeaponPawn WeaponPwn)
 {
@@ -1015,13 +1141,57 @@ simulated function DestroyEffects()
     }
 }
 
+// Implemented in vehicle weapon class so player gets an enter vehicle message when looking at a vehicle weapon, not just its hull or base
+simulated event NotifySelected(Pawn User)
+{
+    if (ROVehicle(Base) != none)
+    {
+        Base.NotifySelected(User);
+    }
+}
+
 // New helper function just to avoid code repetition elsewhere
 simulated function PlayClickSound()
 {
     if (Instigator != none && Instigator.IsHumanControlled() && Instigator.IsLocallyControlled())
     {
-        PlayerController(Instigator.Controller).ClientPlaySound(sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
+        PlayerController(Instigator.Controller).ClientPlaySound(Sound'ROMenuSounds.msfxMouseClick', false,, SLOT_Interface);
     }
+}
+
+// Modified to add location & various weapon rotation variables
+simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
+{
+    local string s;
+
+    super.DisplayDebug(Canvas, YL, YPos);
+
+    YPos += YL;
+    Canvas.SetPos(4.0, YPos);
+    Canvas.DrawText("Location:" @ Location @ " Rotation:" @ Rotation);
+
+    YPos += YL;
+    Canvas.SetPos(4.0, YPos);
+    s = "CurrentAim =" @ CurrentAim;
+
+    if (WeaponPawn != none && WeaponPawn.bCustomAiming)
+    {
+        s @= " CustomAim =" @ WeaponPawn.CustomAim;
+    }
+
+    Canvas.DrawText(s);
+}
+
+// State 'emptied out' as is deprecated as unnecessary in DH and should never be entered
+// Fire functions now work out of state, so projectile fire is effectively the default, non-state condition for all DHVehicleWeapon
+state ProjectileFireMode
+{
+    function Fire(Controller C);
+    function AltFire(Controller C);
+
+Begin:
+    Log("WARNING:" @ Name @ "entered state 'ProjectileFireMode', which should never happen now!");
+    GotoState('');
 }
 
 // Functions emptied out as not relevant to a VehicleWeapon in RO/DH, which never uses InstantFireMode:
@@ -1047,9 +1217,12 @@ defaultproperties
     SoundRadius=272.7
     FireEffectClass=class'ROEngine.VehicleDamagedEffect'
     FireEffectScale=1.0
+    bCanAutoTraceSelect=true // so player gets enter vehicle message when looking at vehicle weapon, not just its hull or base (although will usually be col mesh actor that's traced)
+    bAutoTraceNotify=true
     AIInfo(0)=(bLeadTarget=true,WarnTargetPct=0.9)
 
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & may be hard coded into functionality:
     FireIntervalAimLock=0.0 // also means AimLockReleaseTime is deprecated
     bShowAimCrosshair=false
+    bInheritVelocity=false
 }
