@@ -3826,7 +3826,7 @@ defaultproperties
     VehHitpoints(1)=(PointRadius=0.0,PointScale=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
     TreadDamageThreshold=0.3
     bCanCrash=true
-    ImpactDamageThreshold=20.0
+    ImpactDamageThreshold=40.0
     ImpactDamageMult=0.001
     ImpactWorldDamageMult=0.001
     DriverDamageMult=1.0

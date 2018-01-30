@@ -61,7 +61,6 @@ defaultproperties
     HealthMax=325.0
     EngineHealth=125
     VehHitpoints(0)=(PointRadius=35.0) // engine
-    ImpactDamageThreshold=15.0
     ImpactWorldDamageMult=3.0
     TreadHitMaxHeight=2.5
     DamagedEffectScale=0.75
