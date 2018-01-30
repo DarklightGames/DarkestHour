@@ -76,7 +76,7 @@ defaultproperties
     OfficialMaps(3)="DH-Brecourt.rom"
     OfficialMaps(4)="DH-Bridgehead.rom"
     OfficialMaps(5)="DH-Bridgehead_Advance.rom"
-    OfficialMaps(6)="DH-Caen.rom"
+    OfficialMaps(6)="DH-Caen_Advance.rom"
     OfficialMaps(7)="DH-Cambes-En-Plaine_Advance.rom"
     OfficialMaps(8)="DH-Carentan.rom"
     OfficialMaps(9)="DH-Carentan_Causeway.rom"
