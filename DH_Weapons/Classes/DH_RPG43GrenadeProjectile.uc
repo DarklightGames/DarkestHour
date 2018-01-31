@@ -565,8 +565,8 @@ defaultproperties
     ForceType=FT_None
 
     // RPG-43 specific variables
-    MaxImpactAOIToExplode=35.0
-    MinImpactSpeedToExplode=900.0
+    MaxImpactAOIToExplode=45.0
+    MinImpactSpeedToExplode=600.0
     MaxVerticalAOIForTopArmor=25.0
     PickupClass=class'DH_Weapons.DH_RPG43GrenadePickup'
 }
