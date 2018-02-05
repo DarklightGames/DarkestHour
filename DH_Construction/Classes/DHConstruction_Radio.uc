@@ -5,8 +5,9 @@
 
 class DHConstruction_Radio extends DHConstruction;
 
-var class<DHArtilleryTrigger>   ArtilleryTriggerClass;
-var DHArtilleryTrigger          ArtilleryTrigger;
+var class<DHRadio>              RadioClass;
+var DHRadio                     Radio;
+var vector                      RadioOffset;
 
 var localized string            NoNearbyPlatoonHQErrorString;
 var float                       PlatoonHQProximityInMeters;
@@ -19,22 +20,21 @@ simulated function OnConstructed()
 
     if (Role == ROLE_Authority)
     {
-        if (ArtilleryTriggerClass != none)
+        if (RadioClass != none)
         {
-            ArtilleryTrigger = Spawn(ArtilleryTriggerClass, self);
-            ArtilleryTrigger.TeamCanUse = AT_ArtyTriggerable(GetTeamIndex());
-            ArtilleryTrigger.bShouldShowOnSituationMap = true;
-            ArtilleryTrigger.SetBase(self);
-            ArtilleryTrigger.SetRelativeLocation(vect(0, 0, 64));
+            Radio = Spawn(RadioClass, self);
+            Radio.TeamIndex = GetTeamIndex();
+            Radio.SetBase(self);
+            Radio.SetRelativeLocation(RadioOffset);
         }
     }
 }
 
-function DestroyArtilleryTrigger()
+function DestroyRadio()
 {
-    if (ArtilleryTrigger != none)
+    if (Radio != none)
     {
-        ArtilleryTrigger.Destroy();
+        Radio.Destroy();
     }
 }
 
@@ -42,14 +42,14 @@ simulated function Destroyed()
 {
     super.Destroyed();
 
-    DestroyArtilleryTrigger();
+    DestroyRadio();
 }
 
 simulated function OnBroken()
 {
-    super.OnBroken();
+    DestroyRadio();
 
-    DestroyArtilleryTrigger();
+    super.OnBroken();
 }
 
 static function StaticMesh GetConstructedStaticMesh(DHConstruction.Context Context)
@@ -95,13 +95,21 @@ defaultproperties
 
     NoNearbyPlatoonHQErrorString="You must {verb} a {name} within {integer}m of an established friendly {string}";
 
-    ArtilleryTriggerClass=Class'DH_Engine.DHArtilleryTrigger'
+    StartRotationMin=(Yaw=32768)
+    StartRotationMax=(Yaw=32768)
+    RadioClass=Class'DH_Engine.DHRadio'
+    RadioOffset=(Z=64)
     MenuName="Radio"
+    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.Radio'
+    MenuDescription="Allows artillery call-ins."
     DrawType=DT_StaticMesh
-    ProxyDistanceInMeters=2.5
-    DuplicateFriendlyDistanceInMeters=50.0
-    SupplyCost=250
+    ProxyTraceDepthMeters=2.5
+    DuplicateFriendlyDistanceInMeters=100.0
+    SupplyCost=500
     PlatoonHQProximityInMeters=50.0
     bCanBeTornDownByFriendlies=false
+    bCanBeMantled=false // HACK: Stops the mantle icon from interfering with the touch message
+    GroupClass=class'DHConstructionGroup_Logistics'
+    bCanPlaceIndoors=true
 }
 

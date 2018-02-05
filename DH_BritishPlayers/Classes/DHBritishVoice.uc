@@ -5,9 +5,6 @@
 
 class DHBritishVoice extends DHVoicePack;
 
-#exec OBJ LOAD FILE=..\Sounds\DH_Brit_Voice_Infantry.uax
-#exec OBJ LOAD FILE=..\Sounds\DH_Brit_Voice_vehicle.uax
-
 defaultproperties
 {
     SupportSound(0)=SoundGroup'DH_Brit_Voice_Infantry.requests.need_help'
@@ -76,4 +73,7 @@ defaultproperties
     OrderSound(5)=SoundGroup'DH_Brit_Voice_Infantry.commander.retreat'
     OrderSound(6)=SoundGroup'DH_Brit_Voice_Infantry.commander.fire_at_will'
     OrderSound(7)=SoundGroup'DH_Brit_Voice_Infantry.commander.cease_fire'
+    RadioRequestSound=SoundGroup'DH_ArtillerySounds.requests.britrequest'
+    RadioResponseConfirmSound=SoundGroup'DH_Brit_Voice_Infantry.Artillery.confirm'
+    RadioResponseDenySound=SoundGroup'DH_Brit_Voice_Infantry.Artillery.Deny'
 }

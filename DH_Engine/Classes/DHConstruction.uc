@@ -74,10 +74,12 @@ var private int TeamIndex;
 var int TeamLimit;              // The amount of this type of construction that is allowed, per team.
 
 // Manager
-var     DHConstructionManager   Manager;
+var     DHConstructionManager       Manager;
+var     class<DHConstructionGroup>  GroupClass;
 
 // Placement
-var     float   ProxyDistanceInMeters;          // The distance at which the proxy object will be away from the player when being placed
+var     float   ProxyTraceDepthMeters;          // The depth of the trace from the player's eye when determining the provisional proxy position.
+var     float   ProxyTraceHeightMeters;         // The height at which the proxy object will no longer snap to the ground.
 var     bool    bShouldAlignToGround;
 var     bool    bCanPlaceInWater;
 var     bool    bCanPlaceIndoors;
@@ -165,6 +167,7 @@ var float                       LastImpactTimeSeconds;
 
 // Tattered
 var int                         TatteredHealthThreshold;    // The health below which the construction is considered "tattered". -1 for no tattering
+var StaticMesh                  TatteredStaticMesh;
 
 // Health
 var private int     Health;
@@ -653,7 +656,10 @@ function UpdateAppearance()
     }
 }
 
-function StaticMesh GetTatteredStaticMesh();
+function StaticMesh GetTatteredStaticMesh()
+{
+    return default.TatteredStaticMesh;
+}
 
 static function StaticMesh GetConstructedStaticMesh(DHConstruction.Context Context)
 {
@@ -700,7 +706,7 @@ function static GetCollisionSize(DHConstruction.Context Context, out float NewRa
     NewHeight = default.CollisionHeight;
 }
 
-function static bool ShouldShowOnMenu(DHPlayer PC)
+function static bool ShouldShowOnMenu(DHConstruction.Context Context)
 {
     return true;
 }
@@ -985,7 +991,8 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.hedgehog_01'
     HealthMax=100
     Health=1
-    ProxyDistanceInMeters=5.0
+    ProxyTraceDepthMeters=5.0
+    ProxyTraceHeightMeters=2.0
     GroundSlopeMaxInDegrees=25.0
 
     bStatic=false

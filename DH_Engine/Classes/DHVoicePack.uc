@@ -6,6 +6,10 @@
 class DHVoicePack extends ROVoicePack
     abstract;
 
+var SoundGroup RadioRequestSound;
+var SoundGroup RadioResponseConfirmSound;
+var SoundGroup RadioResponseDenySound;
+
 static function xPlayerSpeech(name Type, int Index, PlayerReplicationInfo SquadLeader, Actor PackOwner)
 {
     local vector MyLocation;

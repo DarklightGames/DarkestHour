@@ -40,6 +40,17 @@ enum EWeather
     WEATHER_Snowy
 };
 
+struct ArtilleryType
+{
+    var() int                   TeamIndex;
+    var() class<DHArtillery>    ArtilleryClass;             // The artillery class to use.
+    var() bool                  bIsInitiallyActive;         // Whether or not this type of artillery is initially available (can be made available and unavailable during a round).
+    var() int                   DelaySeconds;               // The amount of seconds it will take until the artillery actor is spawned.
+    var() int                   Limit;                      // The amount of these types of artillery strikes that are available.
+    var() int                   ConfirmIntervalSeconds;     // The amount of seconds it will take until another request can be confirmed.
+};
+var(Artillery) array<ArtilleryType> ArtilleryTypes;
+
 // These are used as hints for skinning dynamically placed objects.
 var() ESeason               Season;
 var() EWeather              Weather;
@@ -142,5 +153,9 @@ defaultproperties
     SpawnMode=ESM_RedOrchestra
     Season=SEASON_Summer
     GameTypeClass=class'DHGameType_Push'
+
+    // TODO: delay, limit and request interval need to be gotten from elsewhere?
+    ArtilleryTypes(0)=(TeamIndex=0,ArtilleryClass=class'DHArtillery_Legacy',bIsInitiallyActive=true,Limit=1,ConfirmIntervalSeconds=0)
+    ArtilleryTypes(1)=(TeamIndex=1,ArtilleryClass=class'DHArtillery_Legacy',bIsInitiallyActive=true,Limit=1,ConfirmIntervalSeconds=0)
 }
 

@@ -15,10 +15,12 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_02'
     MenuName="Concertina Wire"
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.barbed_wire'
+    MenuDescription="Effective at blocking infantry and light vehicles."
     SupplyCost=50
     HealthMax=250
     bCanBeMantled=false
     bCanTakeImpactDamage=true
     bIsNeutral=true
     bAcceptsProjectors=false
+    GroupClass=class'DHConstructionGroup_Obstacles'
 }

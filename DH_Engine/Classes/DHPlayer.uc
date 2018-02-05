@@ -136,6 +136,7 @@ replication
         ServerSquadSay, ServerSquadLock, ServerSquadSignal,
         ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
         ServerSetPatronStatus, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
+        ServerRequestArtillery,
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons; // these ones in debug mode only
 
     // Functions the server can call on the client that owns this actor
@@ -143,7 +144,8 @@ replication
         ClientProne, ClientToggleDuck, ClientLockWeapons,
         ClientAddHudDeathMessage, ClientFadeFromBlack, ClientProposeMenu,
         ClientConsoleCommand, ClientCopyToClipboard, ClientSaveROIDHash,
-        ClientSquadInvite, ClientSquadSignal, ClientSquadLeaderVolunteerPrompt, ClientTeamKillPrompt;
+        ClientSquadInvite, ClientSquadSignal, ClientSquadLeaderVolunteerPrompt,
+        ClientTeamKillPrompt;
 }
 
 function ServerChangePlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2) { } // no longer used
@@ -822,106 +824,56 @@ function ServerSaveArtilleryPosition()
 {
     local DHRoleInfo   RI;
     local DHVolumeTest VT;
+    local DHPawn P;
+    local DHPlayerReplicationInfo PRI;
     local vector       HitLocation, HitNormal, TraceStart, TraceEnd;
     local bool         bValidTarget;
 
-    if (DHPawn(Pawn) != none && Pawn.Weapon != none && Pawn.Weapon.IsA('DHBinocularsItem'))
-    {
-        RI = DHPawn(Pawn).GetRoleInfo();
-
-        if (RI != none && RI.bIsArtilleryOfficer)
-        {
-            TraceStart = Pawn.Location + Pawn.EyePosition();
-            TraceEnd = TraceStart + (GetMaxViewDistance() * vector(Rotation));
-
-            if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) != none && HitNormal != vect(0.0, 0.0, -1.0))
-            {
-                VT = Spawn(class'DHVolumeTest', self,, HitLocation);
-
-                if (VT != none)
-                {
-                    bValidTarget = !VT.IsInNoArtyVolume();
-                    VT.Destroy();
-                }
-            }
-
-            if (bValidTarget)
-            {
-                ReceiveLocalizedMessage(class'ROArtilleryMsg', 0); // "Artillery Position Saved"
-                SavedArtilleryCoords = HitLocation;
-            }
-            else
-            {
-                ReceiveLocalizedMessage(class'ROArtilleryMsg', 5); // "Not a Valid Artillery Target!"
-            }
-        }
-    }
-}
-
-// Modified to use DHArtilleryTrigger instead of ROArtilleryTrigger, which handles confirm/deny sounds for different allied nations
-// Also to give radio operator points for teaming up with artillery officer to call in arty
-function HitThis(ROArtilleryTrigger RAT)
-{
-    local DarkestHourGame       G;
-    local ROGameReplicationInfo GRI;
-    local DHArtilleryTrigger    AT;
-    local int                   PawnTeam, TimeTilNextStrike;
-
-    G = DarkestHourGame(Level.Game);
-    AT = DHArtilleryTrigger(RAT);
-
-    if (G == none || AT == none)
+    if (Pawn == none || Pawn.Weapon == none || !Pawn.Weapon.IsA('DHBinocularsItem'))
     {
         return;
     }
 
-    GRI = ROGameReplicationInfo(GameReplicationInfo);
-    PawnTeam = Pawn.GetTeamNum();
+    P = DHPawn(Pawn);
 
-    // Arty is available
-    if (GRI.bArtilleryAvailable[PawnTeam] > 0)
+    if (P == none)
     {
-        ReceiveLocalizedMessage(class'ROArtilleryMsg', 3,,, self); // strike confirmed
-
-        AT.PlaySound(AT.GetConfirmSound(PawnTeam), SLOT_None, 3.0, false, 100.0, 1.0, true);
-
-        GRI.LastArtyStrikeTime[PawnTeam] = GRI.ElapsedTime;
-        GRI.TotalStrikes[PawnTeam]++;
-
-        if (AT.Carrier != none)
-        {
-            G.ScoreRadioUsed(AT.Carrier.Controller); // added to give radio operator points
-        }
-
-        ServerArtyStrike();
-
-        G.NotifyPlayersOfMapInfoChange(PawnTeam, self);
+        return;
     }
-    // Arty not available
-    else
+
+    RI = P.GetRoleInfo();
+    PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+
+    if (RI != none && RI.bIsArtilleryOfficer || PRI.IsSquadLeader())
     {
-        AT.PlaySound(AT.GetDenySound(PawnTeam), SLOT_None, 3.0, false, 100.0, 1.0, true);
+        TraceStart = Pawn.Location + Pawn.EyePosition();
+        TraceEnd = TraceStart + (GetMaxViewDistance() * vector(Rotation));
 
-        TimeTilNextStrike = (GRI.LastArtyStrikeTime[PawnTeam] + G.LevelInfo.GetStrikeInterval(PawnTeam)) - GRI.ElapsedTime;
+        if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) != none && HitNormal != vect(0.0, 0.0, -1.0))
+        {
+            VT = Spawn(class'DHVolumeTest', self,, HitLocation);
 
-        if (GRI.TotalStrikes[PawnTeam] >= GRI.ArtilleryStrikeLimit[PawnTeam])
-        {
-            ReceiveLocalizedMessage(class'ROArtilleryMsg', 6); // out of arty
+            if (VT != none)
+            {
+                bValidTarget = !VT.IsInNoArtyVolume();
+                VT.Destroy();
+            }
         }
-        else if (TimeTilNextStrike >= 20)
+
+        if (bValidTarget)
         {
-            ReceiveLocalizedMessage(class'ROArtilleryMsg', 7); // try again later
-        }
-        else if (TimeTilNextStrike >= 0)
-        {
-            ReceiveLocalizedMessage(class'ROArtilleryMsg', 8); // try again soon
+            ReceiveLocalizedMessage(class'ROArtilleryMsg', 0); // "Artillery Position Saved"
+            SavedArtilleryCoords = HitLocation;
         }
         else
         {
-            ReceiveLocalizedMessage(class'ROArtilleryMsg', 2); // arty denied
+            ReceiveLocalizedMessage(class'ROArtilleryMsg', 5); // "Not a Valid Artillery Target!"
         }
     }
 }
+
+// Emptied out, as this funcionality has been moved to DHRadio.
+function HitThis(ROArtilleryTrigger RAT) { return; }
 
 // New function to determine if the player is operating a vehicle that is marked as artillery // TODO: suggest exclude passenger positions, so riders don't see arty targets
 simulated function bool IsInArtilleryVehicle()
@@ -5384,26 +5336,31 @@ exec function SquadMenu()
     ClientReplaceMenu("DH_Interface.DHDeployMenu");
 }
 
+function ShowCommandInteractionWithMenu(string MenuClassName, optional Object MenuObject)
+{
+    CommandInteraction = DHCommandInteraction(Player.InteractionMaster.AddInteraction("DH_Engine.DHCommandInteraction", Player));
+    CommandInteraction.PushMenu(MenuClassName, MenuObject);
+}
+
 exec function ShowOrderMenu()
 {
     local string MenuClassName;
     local Object MenuObject;
 
-    if (CommandInteraction == none && Pawn != none && !IsDead())
+    if (CommandInteraction == none && Pawn != none && !IsDead() && GetCommandInteractionMenu(MenuClassName, MenuObject))
     {
-        if (GetCommandInteractionMenu(MenuClassName, MenuObject))
-        {
-            CommandInteraction = DHCommandInteraction(Player.InteractionMaster.AddInteraction("DH_Engine.DHCommandInteraction", Player));
-            CommandInteraction.PushMenu(MenuClassName, MenuObject);
-        }
+        ShowCommandInteractionWithMenu(MenuClassName, MenuObject);
     }
 }
 
+// Returns the menu that should be displayed when ShowCommandMenu is called.
 function bool GetCommandInteractionMenu(out string MenuClassName, out Object MenuObject)
 {
     local DHPawn OtherPawn;
-    local DHPlayerReplicationInfo PRI, OtherPRI;
+    local DHPlayerReplicationInfo PRI;
+    local DHRadio Radio;
     local vector TraceStart, TraceEnd, HitLocation, HitNormal;
+    local Actor HitActor;
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
@@ -5412,35 +5369,68 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
         return false;
     }
 
-    if (PRI.IsInSquad())
-    {
-        if (PRI.IsSquadLeader())
-        {
-            // Trace out into the world and find a pawn we are looking at.
-            TraceStart = Pawn.Location + Pawn.EyePosition();
-            TraceEnd = TraceStart + (GetMaxViewDistance() * vector(Rotation));
-            OtherPawn = DHPawn(Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true));
+    TraceStart = Pawn.Location + Pawn.EyePosition();
+    TraceEnd = TraceStart + (GetMaxViewDistance() * vector(Rotation));
 
-            if (OtherPawn != none && OtherPawn.GetTeamNum() == GetTeamNum())
+    foreach TraceActors(class'Actor', HitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
+    {
+        if (HitActor.IsA('DHRadio'))
+        {
+            Radio = DHRadio(HitActor);
+
+            // Verify that we are capable of using the radio.
+            if (Radio.GetRadioUsageError(Pawn) == ERROR_None)
             {
-                OtherPRI = DHPlayerReplicationInfo(OtherPawn.PlayerReplicationInfo);
-                MenuObject = OtherPawn;
+                MenuClassName = "DH_Engine.DHCommandMenu_Radio";
+                MenuObject = Radio;
+                return true;
+            }
+        }
+        else if (HitActor.IsA('DHPawn'))
+        {
+            OtherPawn = DHPawn(HitActor);
+
+            if (OtherPawn == Pawn)
+            {
+                continue;
             }
 
-            MenuClassName = "DH_Engine.DHCommandMenu_SquadLeader";
+            if (OtherPawn.Radio != none)
+            {
+                // Verify that we are capable of using the radio.
+                if (OtherPawn.Radio.GetRadioUsageError(Pawn) == ERROR_None)
+                {
+                    MenuClassName = "DH_Engine.DHCommandMenu_Radio";
+                    MenuObject = OtherPawn.Radio;
+                    return true;
+                }
+            }
+
+            if (PRI.IsSquadLeader())
+            {
+                if (OtherPawn.GetTeamNum() == GetTeamNum())
+                {
+                    MenuObject = OtherPawn;
+                }
+
+                MenuClassName = "DH_Engine.DHCommandMenu_SquadLeader";
+                return true;
+            }
         }
-        else
-        {
-            // TODO: some menu for someone i dunno
-            return false;
-        }
-    }
-    else
-    {
-        MenuClassName = "DH_Engine.DHCommandMenu_LoneWolf";
     }
 
-    return true;
+    if (PRI.IsSquadLeader())
+    {
+        MenuClassName = "DH_Engine.DHCommandMenu_SquadLeader";
+        return true;
+    }
+    if (!PRI.IsInSquad())
+    {
+        MenuClassName = "DH_Engine.DHCommandMenu_LoneWolf";
+        return true;
+    }
+
+    return false;
 }
 
 exec function HideOrderMenu()
@@ -5802,6 +5792,14 @@ function ServerSquadLeaderVolunteer(int TeamIndex, int SquadIndex)
     if (SquadReplicationInfo != none)
     {
         SquadReplicationInfo.VolunteerForSquadLeader(DHPlayerReplicationInfo(PlayerReplicationInfo), TeamIndex, SquadIndex);
+    }
+}
+
+function ServerRequestArtillery(DHRadio Radio, int ArtilleryTypeIndex)
+{
+    if (Radio != none && Pawn != none)
+    {
+        Radio.RequestArtillery(Pawn, ArtilleryTypeIndex);
     }
 }
 

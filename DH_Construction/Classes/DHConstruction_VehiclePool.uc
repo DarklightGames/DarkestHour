@@ -62,9 +62,10 @@ defaultproperties
     SpawnPointClass=class'DHSpawnPoint_VehiclePool'
     StaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_Light_Vehicle_Pool'
     MenuName="Vehicle Pool"
-    ProxyDistanceInMeters=10.0
+    ProxyTraceDepthMeters=10.0
     bHidden=false
     CollisionRadius=300.0
     CollisionHeight=60.0
+    GroupClass=class'DHConstructionGroup_Logistics'
 }
 

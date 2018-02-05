@@ -37,5 +37,6 @@ defaultproperties
 {
     ResupplyType=RT_Players
     MenuName="Ammo Crate (Infantry)"
+    MenuDescription="Provides a resupply point for infantry."
 }
 

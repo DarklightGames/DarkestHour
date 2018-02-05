@@ -163,10 +163,16 @@ simulated static function int GetSupplyCost(DHConstruction.Context Context)
     return GetVehicleClass(Context).default.SupplyCost;
 }
 
+static function bool ShouldShowOnMenu(DHConstruction.Context Context)
+{
+    return GetVehicleClass(Context) != none;
+}
+
 defaultproperties
 {
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_02'
     bDestroyOnConstruction=false
     BrokenLifespan=0.0
     ConstructionVerb="emplace"
+    GroupClass=class'DHConstructionGroup_Guns'
 }

@@ -145,7 +145,7 @@ defaultproperties
     bShouldAlignToGround=false
     bCanBeTornDownWhenConstructed=false
     bCanBeDamaged=false
-    ProxyDistanceInMeters=10
+    ProxyTraceDepthMeters=10
     CollisionRadius=192.0
     StaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_01'
     LargeTerrainScaleStaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_02'
@@ -157,6 +157,7 @@ defaultproperties
     PlacementOffset=(Z=0.0)
     MenuName="Foxhole"
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.foxhole'
+    MenuDescription="A hole in the ground for up to two soldiers."
     bAlwaysRelevant=true            // This is so that the terrain poking gets applied for everyone and also doesn't get applied more than once.
     DuplicateFriendlyDistanceInMeters=10.0
     bLimitTerrainSurfaceTypes=true
@@ -172,4 +173,5 @@ defaultproperties
     ConstructionVerb="dig"
     DirtProjectorDrawScaleLarge=850.0
     DirtProjectorDrawScale=550.0
+    GroupClass=class'DHConstructionGroup_Defenses'
 }

@@ -15,5 +15,6 @@ defaultproperties
     bCollideWhenPlacing=false
     bHidden=false
     bIsActive=true
+    BaseSpawnTimePenalty=15
 }
 

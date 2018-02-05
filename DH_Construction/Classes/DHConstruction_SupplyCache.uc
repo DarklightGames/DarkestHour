@@ -99,12 +99,12 @@ defaultproperties
     HealthMax=500
     MenuName="Supply Cache"
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.supply_cache'
-    MenuDescription="Generates construction supplies over time."
-    SupplyCost=500
+    MenuDescription="Stores and generates supplies over time."
+    SupplyCost=250
     InitialSupplyCount=0
     StaticMesh=StaticMesh'DH_Military_stc.Ammo.cratepile1'
     DrawType=DT_StaticMesh
-    DuplicateFriendlyDistanceInMeters=250
+    DuplicateFriendlyDistanceInMeters=150
     CollisionRadius=100
     bCanPlaceIndoors=true
     bCanBeTornDownWhenConstructed=false
@@ -118,5 +118,7 @@ defaultproperties
     BrokenSounds(0)=Sound'Inf_Weapons.satchel.satchel_explode01'
     BrokenSounds(1)=Sound'Inf_Weapons.satchel.satchel_explode02'
     BrokenSounds(2)=Sound'Inf_Weapons.satchel.satchel_explode03'
+
+    GroupClass=class'DHConstructionGroup_Logistics'
 }
 

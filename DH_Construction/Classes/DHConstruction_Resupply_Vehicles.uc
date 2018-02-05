@@ -28,4 +28,5 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Construction_stc.Ammo.GER_AT_Ammo_Box'
     ResupplyAttachmentCollisionRadius=600.0
     MenuName="Ammo Crate (Vehicles)"
+    MenuDescription="Provides a resupply point for vehicles and guns."
 }

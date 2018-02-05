@@ -3450,64 +3450,29 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
             RI = DHRoleInfo(PRI.RoleInfo);
         }
 
-        // Draw the in-progress arty strikes
-        if ((OwnerTeam == AXIS_TEAM_INDEX || OwnerTeam == ALLIES_TEAM_INDEX) && DHGRI.ArtyStrikeLocation[OwnerTeam] != vect(0.0, 0.0, 0.0))
+        // Draw artillery
+        for (i = 0; i < arraycount(DHGRI.DHArtillery); ++i)
         {
-            DrawIconOnMap(C, SubCoords, MapIconArtyStrike, MyMapScale, DHGRI.ArtyStrikeLocation[OwnerTeam], MapCenter);
-        }
-
-        // Draw Artillery Radio Icons
-        if (OwnerTeam == AXIS_TEAM_INDEX)
-        {
-            for (i = 0; i < arraycount(DHGRI.AxisRadios); ++i)
+            if (DHGRI.DHArtillery[i] != none &&
+                DHGRI.DHArtillery[i].TeamIndex == OwnerTeam)
             {
-                if (DHGRI.AxisRadios[i] == none || (DHGRI.AxisRadios[i].IsA('DHArtilleryTrigger') && !DHArtilleryTrigger(DHGRI.AxisRadios[i]).bShouldShowOnSituationMap))
-                {
-                    continue;
-                }
+                MapIconArtyStrike.WidgetTexture = DHGRI.DHArtillery[i].default.MapIcon;
+                MapIconArtyStrike.TextureCoords = DHGRI.DHArtillery[i].default.MapIconTextureCoords;
 
-                DrawIconOnMap(C, SubCoords, MapIconRadio, MyMapScale, DHGRI.AxisRadios[i].Location, MapCenter);
-            }
-        }
-        else if (OwnerTeam == ALLIES_TEAM_INDEX)
-        {
-            for (i = 0; i < arraycount(DHGRI.AlliedRadios); ++i)
-            {
-                if (DHGRI.AlliedRadios[i] == none || (DHGRI.AlliedRadios[i].IsA('DHArtilleryTrigger') && !DHArtilleryTrigger(DHGRI.AlliedRadios[i]).bShouldShowOnSituationMap))
-                {
-                    continue;
-                }
-
-                DrawIconOnMap(C, SubCoords, MapIconRadio, MyMapScale, DHGRI.AlliedRadios[i].Location, MapCenter);
+                DrawIconOnMap(C, SubCoords, MapIconArtyStrike, MyMapScale, DHGRI.DHArtillery[i].Location, MapCenter);
             }
         }
 
-        // Draw player-carried Artillery radio icons if player is an artillery officer
-        if (RI != none && RI.bIsArtilleryOfficer)
+        // Draw radios
+        for (i = 0; i < arraycount(DHGRI.Radios); ++i)
         {
-            if (OwnerTeam == AXIS_TEAM_INDEX)
+            if (DHGRI.Radios[i] != none &&
+                DHGRI.Radios[i].bShouldShowOnSituationMap &&
+                DHGRI.Radios[i].TeamIndex == OwnerTeam &&
+                DHGRI.Radios[i].IsPlayerQualified(DHPlayer(PlayerOwner)))
             {
-                for (i = 0; i < arraycount(DHGRI.CarriedAxisRadios); ++i)
-                {
-                    if (DHGRI.CarriedAxisRadios[i] == none)
-                    {
-                        continue;
-                    }
-
-                    DrawIconOnMap(C, SubCoords, MapIconCarriedRadio, MyMapScale, DHGRI.CarriedAxisRadios[i].Location, MapCenter);
-                }
-            }
-            else if (OwnerTeam == ALLIES_TEAM_INDEX)
-            {
-                for (i = 0; i < arraycount(DHGRI.CarriedAlliedRadios); ++i)
-                {
-                    if (DHGRI.CarriedAlliedRadios[i] == none)
-                    {
-                        continue;
-                    }
-
-                    DrawIconOnMap(C, SubCoords, MapIconCarriedRadio, MyMapScale, DHGRI.CarriedAlliedRadios[i].Location, MapCenter);
-                }
+                // MapIconCarriedRadio
+                DrawIconOnMap(C, SubCoords, MapIconRadio, MyMapScale, DHGRI.Radios[i].Location, MapCenter);
             }
         }
 

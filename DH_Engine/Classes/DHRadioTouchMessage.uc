@@ -6,9 +6,10 @@
 class DHRadioTouchMessage extends ROTouchMessagePlus
     abstract;
 
+var localized string RequestMessage;
+var localized string NotQualifiedMessage;
 var localized string NoTargetMessage;
-var localized string CallArtilleryMessage;
-var localized string NotSquadLeader;
+var localized string NotOwnedMessage;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -19,11 +20,13 @@ static function string GetString(optional int Switch, optional PlayerReplication
     switch (Switch)
     {
         case 0:
-            return default.NoTargetMessage;
+            return class'DarkestHourGame'.static.ParseLoadingHintNoColor(default.RequestMessage, PC);
         case 1:
-            return class'DarkestHourGame'.static.ParseLoadingHintNoColor(default.CallArtilleryMessage, PC);
+            return default.NotQualifiedMessage;
         case 2:
-            return default.NotSquadLeader;
+            return default.NoTargetMessage;
+        case 3:
+            return default.NotOwnedMessage;
     }
 
     return "";
@@ -31,8 +34,9 @@ static function string GetString(optional int Switch, optional PlayerReplication
 
 defaultproperties
 {
-    NoTargetMessage="No target marked. Use binoculars to mark a target."
-    CallArtilleryMessage="Press [%USE%] to call artillery."
-    NotSquadLeader="You must be a squad leader to use the radio."
+    RequestMessage="Hold [%SHOWORDERMENU | ONRELEASE HIDEORDERMENU%] to request artillery"
+    NotQualifiedMessage="You are not qualified to use this radio"
+    NoTargetMessage="No artillery target marked"
+    NotOwnedMessage="You cannot use enemy radios"
 }
 

@@ -27,16 +27,21 @@ const MAX_OPTIONS = 8;
 // of them (probably due to engine-level render batching).
 var Texture             OptionTextures[MAX_OPTIONS];
 var array<TexRotator>   OptionTexRotators;
+var Texture             RingTexture;
 
 var color               SelectedColor;
 var color               DisabledColor;
 var color               SubmenuColor;
+
+var DHGameReplicationInfo GRI;
 
 event Initialized()
 {
     super.Initialized();
 
     Menus = new class'Stack_Object';
+
+    GRI = DHGameReplicationInfo(ViewportOwner.Actor.GameReplicationInfo);
 
     GotoState('FadeIn');
 }
@@ -209,6 +214,13 @@ function Tick(float DeltaTime)
 
     if (PC == none || PC.Pawn == none || PC.IsDead() || Menu == none || Menu.ShouldHideMenu())
     {
+        Log("Hiding");
+        Log("PC" @ PC);
+        Log("PC.Pawn" @ PC.Pawn);
+        Log("PC.IsDead()" @ PC.IsDead());
+        Log("Menu" @ Menu);
+        Log("Menu.ShouldHideMenu()" @ Menu.ShouldHideMenu());
+
         Hide();
         return;
     }
@@ -284,6 +296,10 @@ function PostRender(Canvas C)
     // Draw menu crosshair
     C.DrawColor = class'UColor'.default.White;
     C.DrawTile(Material'DH_InterfaceArt_tex.Communication.menu_crosshair', 16, 16, 0, 0, 16, 16);
+
+    // Draw outer "beauty" ring
+    C.SetPos(CenterX - 256, CenterY - 256);
+    C.DrawTile(RingTexture, 512, 512, 0, 0, 512, 512);
 
     C.Font = class'DHHud'.static.GetSmallerMenuFont(C);
 
@@ -404,6 +420,17 @@ function PostRender(Canvas C)
             C.SetPos(CenterX - (XL / 2) - XL2, CenterY - YL2 - YL - 8);
             C.DrawTile(ORI.InfoIcon, XL2, YL2, 0, 0, ORI.InfoIcon.MaterialUSize() - 1, ORI.InfoIcon.MaterialVSize() - 1);
         }
+
+        // Draw description text
+        C.TextSize(ORI.DescriptionText, XL, YL);
+        C.DrawColor = class'UColor'.default.Black;
+        C.DrawColor.A = byte(255 * MenuAlpha);
+        C.SetPos(CenterX - (XL / 2) + 1, CenterY - 192 -  YL);
+        C.DrawText(ORI.DescriptionText);
+        C.DrawColor = class'UColor'.default.White;
+        C.DrawColor.A = byte(255 * MenuAlpha);
+        C.SetPos(CenterX - (XL / 2), CenterY - 192 - YL);
+        C.DrawText(ORI.DescriptionText);
     }
 //
 //    // debug rendering for cursor
@@ -459,6 +486,8 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
                     TraceStart = PC.CalcViewLocation;
                     TraceEnd = TraceStart + (vector(PC.CalcViewRotation) * PC.Pawn.Region.Zone.DistanceFogEnd);
 
+                    Log("IK_LeftMouse");
+
                     foreach PC.TraceActors(class'Actor', A, HitLocation, HitNormal, TraceEnd, TraceStart)
                     {
                         if (A == PC.Pawn ||
@@ -477,6 +506,8 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
                     {
                         HitLocation = TraceEnd;
                     }
+
+                    Log("OnSelect" @ SelectedIndex @ HitLocation);
 
                     OnSelect(SelectedIndex, HitLocation);
 
@@ -530,6 +561,8 @@ defaultproperties
     OptionTextures(5)=Texture'DH_InterfaceArt_tex.Communication.menu_option_6'
     OptionTextures(6)=Texture'DH_InterfaceArt_tex.Communication.menu_option_7'
     OptionTextures(7)=Texture'DH_InterfaceArt_tex.Communication.menu_option_8'
+
+    RingTexture=Texture'DH_InterfaceArt_tex.Communication.ring'
 
     SelectedColor=(R=255,G=255,B=64,A=255)
     DisabledColor=(R=32,G=32,B=32,A=255)

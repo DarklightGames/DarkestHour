@@ -23,26 +23,35 @@ simulated function Fire(float F)
 {
     local DHRoleInfo RI;
     local DHPlayer   PC;
+    local DHPlayerReplicationInfo PRI;
+    local DHPawn P;
 
-    if (bUsingSights && DHPawn(Instigator) != none && Instigator.IsLocallyControlled())
+    if (bUsingSights && Instigator != none && Instigator.IsLocallyControlled())
     {
-        RI = DHPawn(Instigator).GetRoleInfo();
+        P = DHPawn(Instigator);
 
-        if (RI != none)
+        if (P == none)
         {
-            PC = DHPlayer(Instigator.Controller);
+            return;
+        }
 
-            if (PC != none)
-            {
-                if (RI.bIsMortarObserver)
-                {
-                    PC.ServerSaveArtilleryTarget(false);
-                }
-                else if (RI.bIsArtilleryOfficer)
-                {
-                    PC.ServerSaveArtilleryPosition();
-                }
-            }
+        RI = P.GetRoleInfo();
+        PRI = DHPlayerReplicationInfo(Instigator.PlayerReplicationInfo);
+        PC = DHPlayer(Instigator.Controller);
+
+        if (RI == none || PRI == none || PC == none)
+        {
+            return;
+        }
+
+        // TODO: remove/change mortar observer functionality
+        if (RI.bIsMortarObserver)
+        {
+            PC.ServerSaveArtilleryTarget(false);
+        }
+        else if (RI.bIsArtilleryOfficer || PRI.IsSquadLeader())
+        {
+            PC.ServerSaveArtilleryPosition();
         }
     }
 }

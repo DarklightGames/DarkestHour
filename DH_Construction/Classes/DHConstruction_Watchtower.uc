@@ -8,9 +8,8 @@ class DHConstruction_Watchtower extends DHConstruction;
 defaultproperties
 {
     Stages(0)=(StaticMesh=StaticMesh'DH_Construction_stc.Constructions.GER_watchtower_undeployed')
-    ProgressMax=2   // tODO: increase later
+    ProgressMax=12
     StaticMesh=StaticMesh'DH_Construction_stc.Constructions.GER_watchtower'
-    DrawScale=1.0
     bShouldAlignToGround=false
     bCanBeTornDownByFriendlies=false
     bCanOnlyPlaceOnTerrain=true
@@ -27,4 +26,18 @@ defaultproperties
     TerrainSurfaceTypes(4)=EST_Plant
     bIsNeutral=true
     MenuName="Watchtower"
+    ProxyTraceDepthMeters=10.0
+    ProxyTraceHeightMeters=5.0
+    HealthMax=500
+    TatteredHealthThreshold=250
+    TatteredStaticMesh=StaticMesh'DH_Construction_stc.Constructions.GER_watchtower_damaged'
+    StartRotationMin=(Yaw=-16384)
+    StartRotationMax=(Yaw=-16384)
+    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.WatchTower'
+    GroupClass=Class'DHConstructionGroup_Defenses'
+    BrokenEmitterClass=Class'DHConstruction_Watchtower_BrokenEmitter'
+    SupplyCost=750
+    bCanTakeImpactDamage=true
+    MinDamagetoHurt=50
 }
+

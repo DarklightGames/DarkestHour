@@ -195,6 +195,7 @@ defaultproperties
 {
     MenuName="Platoon HQ"
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.platoon_hq'
+    MenuDescription="Provides a team-wide spawn point."
     Stages(0)=()
     ProgressMax=9
     SupplyCost=1000
@@ -204,7 +205,7 @@ defaultproperties
     bCanPlaceInObjective=false
     DuplicateFriendlyDistanceInMeters=250
     DuplicateEnemyDistanceInMeters=50
-    ProxyDistanceInMeters=10.0
+    ProxyTraceDepthMeters=10.0
     bCanOnlyPlaceOnTerrain=true
     bCanPlaceInWater=false
     GroundSlopeMaxInDegrees=10
@@ -223,11 +224,10 @@ defaultproperties
 
     FlagSkinIndex=1
     SpawnPointClass=class'DHSpawnPoint_PlatoonHQ'
-
     bCanBeTornDownByFriendlies=false
     FriendlyFireDamageScale=0.0
-
     ObjectiveDistanceMinMeters=75
     EnemyObjectiveDistanceMinMeters=150
+    GroupClass=class'DHConstructionGroup_Logistics'
 }
 

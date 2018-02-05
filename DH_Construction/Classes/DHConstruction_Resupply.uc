@@ -77,7 +77,7 @@ defaultproperties
     BrokenLifespan=0.1
     StaticMesh=StaticMesh'DH_Construction_stc.Ammo.DH_USA_ammo_box'
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.resupply_box'
-    ProxyDistanceInMeters=3.0
+    ProxyTraceDepthMeters=3.0
     DuplicateFriendlyDistanceInMeters=25.0
     CollisionRadius=50.0
     CollisionHeight=30.0
@@ -96,4 +96,5 @@ defaultproperties
     StartRotationMax=(Yaw=-16384)
     bShouldRefundSuppliesOnTearDown=false
     bCanBeTornDownByFriendlies=false
+    GroupClass=class'DHConstructionGroup_Logistics'
 }

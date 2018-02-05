@@ -11,7 +11,7 @@ class DHPawn extends ROPawn
 // General
 // TODO: I'm sure we can just use existing OldController ref instead of adding SwitchingController, but want to make certain 1st (Matt)
 var     Controller          SwitchingController; // needed by KDriverEnter() when switched vehicle position, as player no longer briefly re-possesses DHPawn before entering new position
-var     ROArtilleryTrigger  CarriedRadioTrigger; // for storing the trigger on a radioman each spawn, for the purpose of deleting it on death
+var     DHRadio Radio; // for storing the trigger on a radioman each spawn, for the purpose of deleting it on death
 var     bool    bWeaponNeedsReload;       // whether an AT weapon is loaded or not
 var     float   StanceChangeStaminaDrain; // how much stamina is lost by changing stance
 var     float   MinHurtSpeed;             // when a moving player lands, if they're moving faster than this speed they'll take damage
@@ -135,7 +135,7 @@ replication
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bOnFire, bCrouchMantle, MantleHeight;
+        bOnFire, bCrouchMantle, MantleHeight, Radio;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -2747,7 +2747,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     }
 
     // Destroy some possible DH special carried/owned actors
-    DestroyRadioTrigger();
+    DestroyRadio();
 
     if (OwnedMortar != none)
     {
@@ -3028,20 +3028,12 @@ singular function GiveChute()
 }
 
 // Destroys carried radio triggers and removes them from the minimap
-function DestroyRadioTrigger()
+function DestroyRadio()
 {
-    local DHGameReplicationInfo GRI;
-
-    if (CarriedRadioTrigger == none)
+    if (Radio != none)
     {
-        return;
+        Radio.Destroy();
     }
-
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-    GRI.RemoveCarriedRadioTrigger(CarriedRadioTrigger);
-
-    CarriedRadioTrigger.Destroy();
 }
 
 // Modified to allow player to carry more than 1 type of grenade
@@ -6215,26 +6207,9 @@ simulated function UpdateShadow()
     }
 }
 
-// Colin: This is a bit of a half-measure, since we need to retain support for
-// "using" the radio trigger normally. Unfortunately, the Pawns is consuming the
-// use requests when players are looking directly at the player and trying to
-// use the radio. This override simply passes the UsedBy call to the radio
-// trigger, if it exists. All error handling and sanity checks are performed
-// by the artillery trigger.
-function UsedBy(Pawn User)
-{
-    if (CarriedRadioTrigger != none)
-    {
-        CarriedRadioTrigger.UsedBy(User);
-    }
-
-    super.UsedBy(User);
-}
-
 simulated function NotifySelected(Pawn User)
 {
     local DHPawn P;
-    local DHRoleInfo RI;
 
     P = DHPawn(User);
 
@@ -6257,16 +6232,6 @@ simulated function NotifySelected(Pawn User)
     {
         P.ReceiveLocalizedMessage(TouchMessageClass, 1, self.PlayerReplicationInfo,, User.Controller);
         LastNotifyTime = Level.TimeSeconds;
-    }
-    else if (CarriedRadioTrigger != none)
-    {
-        RI = P.GetRoleInfo();
-
-        if (RI != none && RI.bIsArtilleryOfficer)
-        {
-            P.ReceiveLocalizedMessage(TouchMessageClass, 2, self.PlayerReplicationInfo,, User.Controller);
-            LastNotifyTime = Level.TimeSeconds;
-        }
     }
 }
 
@@ -7056,6 +7021,11 @@ function int RefundSupplies(int SupplyCount)
     }
 
     return SuppliesRefunded;
+}
+
+simulated function class<DHVoicePack> GetVoicePack()
+{
+    return class<DHVoicePack>(VoiceClass);
 }
 
 defaultproperties

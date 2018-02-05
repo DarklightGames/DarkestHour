@@ -12,6 +12,7 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.hedgehog_01'
     MenuName="Hedgehog"
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.hedgehog'
+    MenuDescription="Effective at blocking all vehicles."
     StartRotationMin=(Yaw=-16384)
     StartRotationMax=(Yaw=16384)
     CollisionHeight=60
@@ -21,4 +22,5 @@ defaultproperties
     bIsNeutral=true
     bAcceptsProjectors=false
     ProgressMax=4
+    GroupClass=class'DHConstructionGroup_Obstacles'
 }

@@ -16,6 +16,8 @@ const VOICEID_MAX = 255;
 const SUPPLY_POINTS_MAX = 8;
 const MAP_MARKERS_MAX = 20;
 const MAP_MARKERS_CLASSES_MAX = 16;
+const ARTILLERY_TYPES_MAX = 8;
+const ARTILLERY_MAX = 8;
 
 enum VehicleReservationError
 {
@@ -57,12 +59,24 @@ struct SupplyPoint
     var class<DHConstructionSupplyAttachment> ActorClass;
 };
 
+// The request error type.
+enum EArtilleryTypeError
+{
+    ERROR_None,
+    ERROR_Fatal,
+    ERROR_Unavailable,
+    ERROR_Exhausted,
+    ERROR_Unqualified,
+    ERROR_Cooldown,
+    ERROR_Ongoing,
+    ERROR_SquadTooSmall
+};
+
 var class<DHGameType>   GameType;
 
 var SupplyPoint         SupplyPoints[SUPPLY_POINTS_MAX];
 
-var ROArtilleryTrigger  CarriedAlliedRadios[RADIOS_MAX];
-var ROArtilleryTrigger  CarriedAxisRadios[RADIOS_MAX];
+var DHRadio             Radios[RADIOS_MAX];
 
 var int                 AlliedNationID;
 var int                 AlliesVictoryMusicIndex;
@@ -77,6 +91,8 @@ var int                 DHRoundDuration;    // Added this so that a more flexibl
 
 var DHRoleInfo          DHAxisRoles[ROLES_MAX];
 var DHRoleInfo          DHAlliesRoles[ROLES_MAX];
+
+var DHArtillery         DHArtillery[ARTILLERY_MAX];
 
 var byte                DHAlliesRoleLimit[ROLES_MAX];
 var byte                DHAlliesRoleBotCount[ROLES_MAX];
@@ -139,6 +155,18 @@ struct MapMarker
     var int ExpiryTime;     // The expiry time, relative to ElapsedTime in GRI
 };
 
+// This handles the mutable artillery type info (classes, team indices can be fetched from static data in DH_LevelInfo).
+// TODO: reset this somewhere on round begin
+struct ArtilleryTypeInfo
+{
+    var bool                bIsAvailable;               // Whether or not this type of artillery is available (can be made available and unavailable during a round).
+    var int                 UsedCount;                  // The amount of times this artillery type has been confirmed.
+    var int                 Limit;                      // The amount of these types of artillery strikes that are available.
+    var int                 NextConfirmElapsedTime;     // The next time, relative to ElapsedTime, that a request can confirmed for this artillery type.
+    var DHArtillery         ArtilleryActor;             // Artillery actor.
+};
+var ArtilleryTypeInfo                   ArtilleryTypeInfos[ARTILLERY_TYPES_MAX];
+
 var private array<string>               MapMarkerClassNames;
 var class<DHMapMarker>                  MapMarkerClasses[MAP_MARKERS_CLASSES_MAX];
 var MapMarker                           AxisMapMarkers[MAP_MARKERS_MAX];
@@ -158,8 +186,7 @@ replication
         DHAxisRoleCount,
         DHAlliesRoleBotCount,
         DHAxisRoleBotCount,
-        CarriedAlliedRadios,
-        CarriedAxisRadios,
+        Radios,
         AlliedArtilleryTargets,
         GermanArtilleryTargets,
         VehiclePoolVehicleClasses,
@@ -189,7 +216,9 @@ replication
         RoundOverTime,
         DHRoundLimit,
         DHRoundDuration,
-        ServerHealth;
+        ServerHealth,
+        ArtilleryTypeInfos,
+        DHArtillery;
 
     reliable if (bNetInitial && (Role == ROLE_Authority))
         AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex,
@@ -206,6 +235,7 @@ simulated function PostBeginPlay()
     local int               i, j;
     local DH_LevelInfo      LI;
     local class<DHMapMarker> MapMarkerClass;
+    local int               Limit;
 
     super.PostBeginPlay();
 
@@ -234,10 +264,26 @@ simulated function PostBeginPlay()
             AddConstructionClass(class<DHConstruction>(DynamicLoadObject(ConstructionClassNames[i], class'class')));
         }
 
-        foreach AllActors(class'DH_LevelInfo', LI) // note can't use DHGame's DHLevelInfo reference as hasn't been set when GRI is spawning
+        LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+        if (LI != none)
         {
             bAreConstructionsEnabled = LI.bAreConstructionsEnabled;
-            break;
+
+            for (i = 0; i < LI.ArtilleryTypes.Length; ++i)
+            {
+                ArtilleryTypeInfos[i].bIsAvailable = LI.ArtilleryTypes[i].bIsInitiallyActive;
+
+                // Handle limit override in class (mainly for legacy artillery)
+                Limit = LI.ArtilleryTypes[i].ArtilleryClass.static.GetLimitOverride(LI.ArtilleryTypes[i].TeamIndex, Level);
+
+                if (Limit == -1)
+                {
+                    Limit = LI.ArtilleryTypes[i].Limit;
+                }
+
+                ArtilleryTypeInfos[i].Limit = Limit;
+            }
         }
 
         // Add usable map markers to the class list to be replicated!
@@ -692,70 +738,44 @@ function ClearArtilleryTarget(DHPlayer PC)
     }
 }
 
-function AddCarriedRadioTrigger(ROArtilleryTrigger AT)
+function AddArtillery(DHArtillery Artillery)
 {
     local int i;
 
-    if (AT == none)
+    for (i = 0; i < arraycount(DHArtillery); ++i)
     {
-        return;
-    }
-
-    if (AT.TeamCanUse == AT_Axis || AT.TeamCanUse == AT_Both)
-    {
-        for (i = 0; i < arraycount(CarriedAxisRadios); ++i)
+        if (DHArtillery[i] == none)
         {
-            if (CarriedAxisRadios[i] == none)
-            {
-                CarriedAxisRadios[i] = AT;
-
-                break;
-            }
-        }
-    }
-
-    if (AT.TeamCanUse == AT_Allies || AT.TeamCanUse == AT_Both)
-    {
-        for (i = 0; i < arraycount(CarriedAlliedRadios); ++i)
-        {
-            if (CarriedAlliedRadios[i] == none)
-            {
-                CarriedAlliedRadios[i] = AT;
-
-                break;
-            }
+            DHArtillery[i] = Artillery;
+            Log("added artillery at" @ i @ DHArtillery[i]);
+            break;
         }
     }
 }
 
-function RemoveCarriedRadioTrigger(ROArtilleryTrigger AT)
+function AddRadio(DHRadio Radio)
 {
     local int i;
 
-    if (AT == none)
+    for (i = 0; i < arraycount(Radios); ++i)
     {
-        return;
-    }
-
-    if (AT.TeamCanUse == AT_Axis || AT.TeamCanUse == AT_Both)
-    {
-        for (i = 0; i < arraycount(CarriedAxisRadios); ++i)
+        if (Radios[i] == none)
         {
-            if (CarriedAxisRadios[i] == AT)
-            {
-                CarriedAxisRadios[i] = none;
-            }
+            Radios[i] = Radio;
+            break;
         }
     }
+}
 
-    if (AT.TeamCanUse == AT_Allies || AT.TeamCanUse == AT_Both)
+function RemoveRadio(DHRadio Radio)
+{
+    local int i;
+
+    for (i = 0; i < arraycount(Radios); ++i)
     {
-        for (i = 0; i < arraycount(CarriedAlliedRadios); ++i)
+        if (Radios[i] == Radio)
         {
-            if (CarriedAlliedRadios[i] == AT)
-            {
-                CarriedAlliedRadios[i] = none;
-            }
+            Radios[i] = none;
         }
     }
 }
@@ -1326,6 +1346,49 @@ simulated function vector GetAdjustedHudLocation(vector HudLoc, optional bool bI
     return HudLoc;
 }
 
+simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int ArtilleryTypeIndex)
+{
+    local ArtilleryTypeInfo ATI;
+    local DH_LevelInfo LI;
+
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (PC == none || LI == none ||
+        ArtilleryTypeIndex < 0 ||
+        ArtilleryTypeIndex >= arraycount(ArtilleryTypeInfos) ||
+        LI.ArtilleryTypes[ArtilleryTypeIndex].ArtilleryClass == none ||
+        LI.ArtilleryTypes[ArtilleryTypeIndex].TeamIndex != PC.GetTeamNum())
+    {
+        return ERROR_Fatal;
+    }
+
+    if (!LI.ArtilleryTypes[ArtilleryTypeIndex].ArtilleryClass.static.CanBeRequestedBy(PC))
+    {
+        return ERROR_Unqualified;
+    }
+
+    ATI = ArtilleryTypeInfos[ArtilleryTypeIndex];
+
+    if (!ATI.bIsAvailable)
+    {
+        return ERROR_Unavailable;
+    }
+    else if (ATI.UsedCount >= ATI.Limit)
+    {
+        return ERROR_Exhausted;
+    }
+    else if (ATI.ArtilleryActor != none)
+    {
+        return ERROR_Ongoing;
+    }
+    else if (ElapsedTime < ATI.NextConfirmElapsedTime)
+    {
+        return ERROR_Cooldown;
+    }
+
+    return ERROR_None;
+}
+
 defaultproperties
 {
     bAllowAllChat=true
@@ -1334,31 +1397,44 @@ defaultproperties
     ArtilleryTargetDistanceThreshold=15088 //250 meters in UU
     ForceScaleText="Size"
     ReinforcementsInfiniteText="Infinite"
+
+    // Constructions
+
+    // Logistics
     ConstructionClassNames(0)="DH_Construction.DHConstruction_SupplyCache"
-    ConstructionClassNames(1)="DH_Construction.DHConstruction_ConcertinaWire"
-    ConstructionClassNames(2)="DH_Construction.DHConstruction_Hedgehog"
-    ConstructionClassNames(3)="DH_Construction.DHConstruction_PlatoonHQ"
-    ConstructionClassNames(4)="DH_Construction.DHConstruction_Resupply_Players"
-    ConstructionClassNames(5)="DH_Construction.DHConstruction_Sandbags_Line"
-    ConstructionClassNames(6)="DH_Construction.DHConstruction_Sandbags_Crescent"
-    ConstructionClassNames(7)="DH_Construction.DHConstruction_Sandbags_Bunker"
+    ConstructionClassNames(1)="DH_Construction.DHConstruction_PlatoonHQ"
+    ConstructionClassNames(2)="DH_Construction.DHConstruction_Resupply_Players"
+    ConstructionClassNames(3)="DH_Construction.DHConstruction_Resupply_Vehicles"
+    ConstructionClassNames(4)="DH_Construction.DHConstruction_Radio"
+    ConstructionClassNames(5)="DH_Construction.DHConstruction_VehiclePool"
+
+    // Obstacles
+    ConstructionClassNames(6)="DH_Construction.DHConstruction_ConcertinaWire"
+    ConstructionClassNames(7)="DH_Construction.DHConstruction_Hedgehog"
+
+    // Guns
     ConstructionClassNames(8)="DH_Construction.DHConstruction_ATGun_Medium"
     ConstructionClassNames(9)="DH_Construction.DHConstruction_ATGun_Heavy"
     ConstructionClassNames(10)="DH_Construction.DHConstruction_AAGun_Light"
     ConstructionClassNames(11)="DH_Construction.DHConstruction_AAGun_Medium"
-    ConstructionClassNames(12)="DH_Construction.DHConstruction_Foxhole"
-    ConstructionClassNames(13)="DH_Construction.DHConstruction_Radio"
-    ConstructionClassNames(14)="DH_Construction.DHConstruction_Resupply_Vehicles"
-    ConstructionClassNames(15)="DH_Construction.DHConstruction_VehiclePool"
-    ConstructionClassNames(16)="DH_Construction.DHConstruction_Watchtower"
 
+    // Defenses
+    ConstructionClassNames(12)="DH_Construction.DHConstruction_Foxhole"
+    ConstructionClassNames(13)="DH_Construction.DHConstruction_Sandbags_Line"
+    ConstructionClassNames(14)="DH_Construction.DHConstruction_Sandbags_Crescent"
+    ConstructionClassNames(15)="DH_Construction.DHConstruction_Sandbags_Bunker"
+    ConstructionClassNames(16)="DH_Construction.DHConstruction_Watchtower"
+    ConstructionClassNames(17)="DH_Construction.DHConstruction_MortarPit"
+
+    // Map Markers
     MapMarkerClassNames(0)="DH_Engine.DHMapMarker_Squad_Move"
     MapMarkerClassNames(1)="DH_Engine.DHMapMarker_Squad_Attack"
     MapMarkerClassNames(2)="DH_Engine.DHMapMarker_Squad_Defend"
     MapMarkerClassNames(3)="DH_Engine.DHMapMarker_Enemy_PlatoonHQ"
-    MapMarkerClassNames(4)="DH_Engine.DHMapMarker_Enemy_Tank"
-    MapMarkerClassNames(5)="DH_Engine.DHMapMarker_Enemy_Infantry"
-    MapMarkerClassNames(6)="DH_Engine.DHMapMarker_Enemy_ATGun"
-    MapMarkerClassNames(7)="DH_Engine.DHMapMarker_Friendly_PlatoonHQ"
-    MapMarkerClassNames(8)="DH_Engine.DHMapMarker_Friendly_Supplies"
+    MapMarkerClassNames(4)="DH_Engine.DHMapMarker_Enemy_Infantry"
+    MapMarkerClassNameS(5)="DH_Engine.DHMapMarker_Enemy_Vehicle"
+    MapMarkerClassNames(6)="DH_Engine.DHMapMarker_Enemy_Tank"
+    MapMarkerClassNames(7)="DH_Engine.DHMapMarker_Enemy_ATGun"
+    MapMarkerClassNames(8)="DH_Engine.DHMapMarker_Friendly_PlatoonHQ"
+    MapMarkerClassNames(9)="DH_Engine.DHMapMarker_Friendly_Supplies"
 }

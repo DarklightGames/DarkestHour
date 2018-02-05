@@ -12,15 +12,18 @@ struct OptionRenderInfo
     var string      InfoText;
     var Material    InfoIcon;
     var color       InfoColor;
+    var string      DescriptionText;
 };
 
 struct Option
 {
-    var localized string ActionText;
+    var localized string ActionText;    // TODO: rename Action/Subject to something more understandable
     var localized string SubjectText;
+    var localized string DescriptionText;
     var Material ActionIcon;
     var Material Material;
     var Object OptionalObject;
+    var int OptionalInteger;
 };
 
 var array<Option> Options;
@@ -77,6 +80,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     ORI.OptionName = Options[OptionIndex].ActionText;
     ORI.InfoText = Options[OptionIndex].SubjectText;
     ORI.InfoColor = class'UColor'.default.White;
+    ORI.DescriptionText = Options[OptionIndex].DescriptionText;
 }
 
 function bool IsOptionDisabled(int OptionIndex);

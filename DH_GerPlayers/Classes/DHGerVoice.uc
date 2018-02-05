@@ -5,9 +5,6 @@
 
 class DHGerVoice extends DHVoicePack;
 
-#exec OBJ LOAD FILE=..\Sounds\voice_ger_infantry.uax
-#exec OBJ LOAD FILE=..\Sounds\voice_ger_vehicle.uax
-
 defaultproperties
 {
     // Support sound groups
@@ -85,4 +82,8 @@ defaultproperties
     bUseAxisStrings=true
     SupportStringAxis(5)="We need a Panzerschreck!"
     SupportAbbrevAxis(5)="Need a Panzerschreck"
+
+    RadioRequestSound=SoundGroup'Artillery.Request.GerRequest'
+    RadioResponseConfirmSound=SoundGroup'voice_ger_infantry.artillery.confirm'
+    RadioResponseDenySound=SoundGroup'voice_ger_infantry.artillery.Deny'
 }
