@@ -567,7 +567,9 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
     local int i;
     local array<DHPlayerReplicationInfo> Volunteers;
 
-    if (PRI == none || PRI.Team == none)
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (PRI == none || PRI.Team == none || GRI == none)
     {
         return false;
     }
@@ -578,11 +580,6 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
     if (PC == none && Bot == none)
     {
         return false;
-    }
-
-    if (PC != none)
-    {
-        GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
     }
 
     TeamIndex = PRI.Team.TeamIndex;
