@@ -20,12 +20,12 @@ defaultproperties
     bHasTurret=false
     ManualRotationsPerSecond=0.025
     bLimitYaw=true
-    MaxPositiveYaw=1820
+    MaxPositiveYaw=1820 // +/- 10 degrees
     MaxNegativeYaw=-1820
     YawStartConstraint=-3000.0
     YawEndConstraint=3000.0
     PitchBone="Turret"
-    CustomPitchUpLimit=3641
+    CustomPitchUpLimit=3641 // +20/-6 degrees
     CustomPitchDownLimit=64444
 
     // Cannon ammo

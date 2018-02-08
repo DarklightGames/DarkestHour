@@ -22,7 +22,7 @@ defaultproperties
     ManualRotationsPerSecond=0.012
     YawBone="Gun"
     bLimitYaw=true
-    MaxPositiveYaw=1850
+    MaxPositiveYaw=1850 // +/- 10 degrees
     MaxNegativeYaw=-1850
     YawStartConstraint=-3000.0
     YawEndConstraint=3000.0

@@ -235,7 +235,7 @@ defaultproperties
     CannonDustEmitterClass=none
     AIInfo(0)=(RefireRate=0.99)
 
-    // Sounds ( // HUDProportion overrides to better suit magazine reload)
+    // Sounds (HUDProportion overrides to better suit magazine reload)
     CannonFireSound(0)=SoundGroup'DH_GerVehicleSounds.20mm.DH20mmFire01G'
     CannonFireSound(1)=SoundGroup'DH_GerVehicleSounds.20mm.DH20mmFire02G'
     CannonFireSound(2)=SoundGroup'DH_GerVehicleSounds.20mm.DH20mmFire03G'

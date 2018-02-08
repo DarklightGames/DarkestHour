@@ -3844,7 +3844,7 @@ defaultproperties
     DestructionEffectLowClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
     DisintegrationEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
-    DisintegrationHealth=-10000.0 // -10000 default to make classes enable disintegration
+    DisintegrationHealth=-10000.0 // very high default value so subclasses have to enable disintegration
     ExplosionDamage=150.0
     ExplosionRadius=400.0
     ExplosionSoundRadius=750.0

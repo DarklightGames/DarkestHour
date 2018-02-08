@@ -19,14 +19,14 @@ defaultproperties
     bManualTraverseOnly=true
     ManualMinRotateThreshold=0.5
     ManualMaxRotateThreshold=3.0
-    DrivePos=(X=5.0,Y=2.0,Z=-16.0) // adjusted from original
+    DrivePos=(X=5.0,Y=2.0,Z=-16.0)
     DriveAnim="stand_idlehip_binoc"
     bLockCameraDuringTransition=true // stops player looking sideways & seeing through the vehicle
     bHasAltFire=false
     GunsightOverlay=Texture'DH_VehicleOptics_tex.Soviet.isu152_sight_background'
     CannonScopeCenter=Texture'Vehicle_Optic.Scopes.T3476_sight_mover'
     DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed' // matches size of gunsight
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.Soviet.TNK-1_periscope' // TODO: maybe move this to DHSovietCannonPawn, if was widely used?
+    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.Soviet.TNK-1_periscope'
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ISU152_shell'
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ISU152_shell_reload'
     ManualRotateSound=Sound'Vehicle_Weapons.Turret.manual_gun_traverse'

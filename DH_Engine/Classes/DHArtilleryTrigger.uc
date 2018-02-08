@@ -34,4 +34,3 @@ defaultproperties
 {
     bShouldShowOnSituationMap=true
 }
-

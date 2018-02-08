@@ -30,7 +30,7 @@ defaultproperties
     FireInterval=0.133333 // 450 RPM
     TracerProjectileClass=class'DH_Vehicles.DH_50CalVehicleTracerBullet'
     TracerFrequency=5
-//  TODO: make ammo icon (HudAltAmmoIcon) for 50 cal ammo tin
+//  HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.50cal_ammo' // TODO: get this ammo icon made for a 50 cal ammo tin (with matching '50cal_ammo_reload' VehicleMGReloadTexture in MG pawn)
 
     // Weapon fire
     WeaponFireAttachmentBone="tip"

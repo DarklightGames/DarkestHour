@@ -37,10 +37,10 @@ defaultproperties
     PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-210.0,Y=0.0,Z=80.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider2_idle")
 
     // Driver
-    UnbuttonedPositionIndex=3
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=9500,ViewNegativeYawLimit=-9500)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",DriverTransitionAnim="VBA64_driver_close",ViewPitchUpLimit=2730,ViewPitchDownLimit=60065,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_int',TransitionDownAnim="driver_hatch_close",DriverTransitionAnim="VBA64_driver_open",ViewPitchUpLimit=9500,ViewPitchDownLimit=62835,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000,bExposed=true)
+    UnbuttonedPositionIndex=3 // can't unbutton, no exit hatch for driver
     DrivePos=(X=4.0,Y=-2.0,Z=0.0)
     DriveAnim="VBA64_driver_idle_close"
 
