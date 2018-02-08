@@ -31,6 +31,9 @@ defaultproperties
     HealthMax=500
     TatteredHealthThreshold=250
     TatteredStaticMesh=StaticMesh'DH_Construction_stc.Constructions.GER_watchtower_damaged'
+    BrokenLifespan=30.0
+    BrokenStaticMesh=StaticMesh'DH_Construction_stc.Constructions.GER_watchtower_destroyed'
+    // TODO: add broken emitters etc.
     StartRotationMin=(Yaw=-16384)
     StartRotationMax=(Yaw=-16384)
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.WatchTower'
