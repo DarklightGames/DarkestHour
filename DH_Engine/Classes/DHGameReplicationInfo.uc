@@ -1390,7 +1390,7 @@ defaultproperties
     ConstructionClassNames(2)="DH_Construction.DHConstruction_Resupply_Players"
     ConstructionClassNames(3)="DH_Construction.DHConstruction_Resupply_Vehicles"
     ConstructionClassNames(4)="DH_Construction.DHConstruction_Radio"
-    ConstructionClassNames(5)="DH_Construction.DHConstruction_VehiclePool"
+    //ConstructionClassNames(5)="DH_Construction.DHConstruction_VehiclePool"
 
     // Obstacles
     ConstructionClassNames(6)="DH_Construction.DHConstruction_ConcertinaWire"
@@ -1408,7 +1408,7 @@ defaultproperties
     ConstructionClassNames(14)="DH_Construction.DHConstruction_Sandbags_Crescent"
     ConstructionClassNames(15)="DH_Construction.DHConstruction_Sandbags_Bunker"
     ConstructionClassNames(16)="DH_Construction.DHConstruction_Watchtower"
-    ConstructionClassNames(17)="DH_Construction.DHConstruction_MortarPit"
+    //ConstructionClassNames(17)="DH_Construction.DHConstruction_MortarPit"
 
     // Map Markers
     MapMarkerClassNames(0)="DH_Engine.DHMapMarker_Squad_Move"
