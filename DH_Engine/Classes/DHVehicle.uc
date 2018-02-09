@@ -3701,6 +3701,22 @@ exec function ToggleViewLimit()
     }
 }
 
+// New debug exec to adjust the yaw limits for the current driver position
+exec function SetViewLimits(int NewPitchUp, int NewPitchDown, int NewYawRight, int NewYawLeft)
+{
+    if (IsDebugModeAllowed())
+    {
+        Log(VehicleNameString @ ": ViewPitchUpLimit =" @ NewPitchUp @ "ViewPitchDownLimit =" @ NewPitchDown @ "ViewPositiveYawLimit =" @ NewYawRight @ "ViewNegativeYawLimit =" @ NewYawLeft
+            @ "(was" @ DriverPositions[DriverPositionIndex].ViewPitchUpLimit @ DriverPositions[DriverPositionIndex].ViewPitchDownLimit
+            @ DriverPositions[DriverPositionIndex].ViewPositiveYawLimit @ DriverPositions[DriverPositionIndex].ViewNegativeYawLimit $ ")");
+
+        DriverPositions[DriverPositionIndex].ViewPitchUpLimit = NewPitchUp;
+        DriverPositions[DriverPositionIndex].ViewPitchDownLimit = NewPitchDown;
+        DriverPositions[DriverPositionIndex].ViewPositiveYawLimit = NewYawRight;
+        DriverPositions[DriverPositionIndex].ViewNegativeYawLimit = NewYawLeft;
+    }
+}
+
 // New debug exec to quickly damage the vehicle
 exec function DamageVehicle(optional bool bDestroyVehicle)
 {

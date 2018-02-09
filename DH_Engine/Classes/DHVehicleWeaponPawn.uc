@@ -1997,6 +1997,22 @@ exec function ToggleViewLimit()
     }
 }
 
+// New debug exec to adjust the yaw limits for the current 'driver' position
+exec function SetViewLimits(int NewPitchUp, int NewPitchDown, int NewYawRight, int NewYawLeft)
+{
+    if (IsDebugModeAllowed())
+    {
+        Log(Tag @ ": ViewPitchUpLimit =" @ NewPitchUp @ "ViewPitchDownLimit =" @ NewPitchDown @ "ViewPositiveYawLimit =" @ NewYawRight @ "ViewNegativeYawLimit =" @ NewYawLeft
+            @ "(was" @ DriverPositions[DriverPositionIndex].ViewPitchUpLimit @ DriverPositions[DriverPositionIndex].ViewPitchDownLimit
+            @ DriverPositions[DriverPositionIndex].ViewPositiveYawLimit @ DriverPositions[DriverPositionIndex].ViewNegativeYawLimit $ ")");
+
+        DriverPositions[DriverPositionIndex].ViewPitchUpLimit = NewPitchUp;
+        DriverPositions[DriverPositionIndex].ViewPitchDownLimit = NewPitchDown;
+        DriverPositions[DriverPositionIndex].ViewPositiveYawLimit = NewYawRight;
+        DriverPositions[DriverPositionIndex].ViewNegativeYawLimit = NewYawLeft;
+    }
+}
+
 // New debug exec to toggles showing any collision static mesh actor
 exec function ShowColMesh()
 {
@@ -2104,6 +2120,23 @@ exec function SetSoundRadius(float NewValue)
             Log(Gun.Tag @ "SoundRadius =" @ NewValue @ "(was" @ Gun.SoundRadius $ ")");
             Gun.SoundRadius = NewValue;
         }
+    }
+}
+
+// New debug exec to adjust all the view shake settings
+exec function SetShake(float RotMag, float RotRate, float RotTime, float OffMag, float OffRate, float OffTime)
+{
+    if (IsDebugModeAllowed() && Gun != none)
+    {
+        log(Gun.Tag @ "ShakeRotMag =" @ RotMag @ "ShakeRotRate =" @ RotRate @ "ShakeRotTime =" @ RotTime @ "ShakeOffsetMag =" @ OffMag @ "ShakeOffsetRate =" @ OffRate @ "ShakeOffsetTime =" @ OffTime
+            @ "  Rot was" @ Gun.ShakeRotMag.Z @ Gun.ShakeRotRate.Z @ Gun.ShakeRotTime @ "  Offset was" @ Gun.ShakeOffsetMag.Z @ Gun.ShakeOffsetRate.Z @ Gun.ShakeOffsetTime);
+
+        Gun.ShakeRotMag.Z = RotMag;
+        Gun.ShakeRotRate.Z = RotRate;
+        Gun.ShakeRotTime = RotTime;
+        Gun.ShakeOffsetMag.Z = OffMag;
+        Gun.ShakeOffsetRate.Z = OffRate;
+        Gun.ShakeOffsetTime = OffTime;
     }
 }
 
