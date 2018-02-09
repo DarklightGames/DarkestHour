@@ -33,12 +33,12 @@ defaultproperties
     TatteredStaticMesh=StaticMesh'DH_Construction_stc.Constructions.GER_watchtower_damaged'
     BrokenLifespan=30.0
     BrokenStaticMesh=StaticMesh'DH_Construction_stc.Constructions.GER_watchtower_destroyed'
-    // TODO: add broken emitters etc.
+    BrokenEmitterClass=Class'DHConstruction_Watchtower_BrokenEmitter'
+    BrokenSounds(0)=Sound'DH_SundrySounds.foley.CrashWood'
     StartRotationMin=(Yaw=-16384)
     StartRotationMax=(Yaw=-16384)
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.WatchTower'
     GroupClass=Class'DHConstructionGroup_Defenses'
-    BrokenEmitterClass=Class'DHConstruction_Watchtower_BrokenEmitter'
     SupplyCost=750
     bCanTakeImpactDamage=true
     MinDamagetoHurt=50
