@@ -12,8 +12,8 @@ defaultproperties
     FireRate=0.15
     Spread=345.0
     RecoilRate=0.075
-    MaxVerticalRecoilAngle=585
-    MaxHorizontalRecoilAngle=75
+    MaxVerticalRecoilAngle=300
+    MaxHorizontalRecoilAngle=55
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'
     FireSounds(0)=SoundGroup'DH_WeaponSounds.GreaseGun.greasegun_fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.GreaseGun.greasegun_fire02'

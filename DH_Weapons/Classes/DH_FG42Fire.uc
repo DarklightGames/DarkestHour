@@ -26,7 +26,7 @@ defaultproperties
     PctLeanPenalty=1.15
 
     MaxVerticalRecoilAngle=400
-    MaxHorizontalRecoilAngle=160
+    MaxHorizontalRecoilAngle=60
 
     FireSounds(0)=SoundGroup'DH_WeaponSounds.FG42.FG42_Fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.FG42.FG42_Fire02'

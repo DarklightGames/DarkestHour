@@ -20,7 +20,7 @@ defaultproperties
     bDelayedRecoil=true
     DelayedRecoilTime=0.05
 
-    MaxVerticalRecoilAngle=1600
+    MaxVerticalRecoilAngle=1000
     MaxHorizontalRecoilAngle=150
     AimError=1500.0
 

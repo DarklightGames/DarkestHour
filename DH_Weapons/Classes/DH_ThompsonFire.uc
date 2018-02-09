@@ -12,9 +12,8 @@ defaultproperties
     FireRate=0.092307 // 650rpm
     Spread=325.0
     RecoilRate=0.05
-
-    MaxHorizontalRecoilAngle=85
-
+    MaxVerticalRecoilAngle=320
+    MaxHorizontalRecoilAngle=60
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Thompson.Thompson_FireG1'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Thompson.Thompson_FireG2'
