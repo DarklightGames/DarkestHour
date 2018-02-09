@@ -198,7 +198,7 @@ defaultproperties
     MenuDescription="Provides a team-wide spawn point."
     Stages(0)=()
     ProgressMax=9
-    SupplyCost=1000
+    SupplyCost=750
 
     // Placement
     bCanPlaceIndoors=false
