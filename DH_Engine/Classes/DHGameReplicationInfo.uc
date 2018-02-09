@@ -235,7 +235,6 @@ simulated function PostBeginPlay()
     local int               i, j;
     local DH_LevelInfo      LI;
     local class<DHMapMarker> MapMarkerClass;
-    local int               Limit;
 
     super.PostBeginPlay();
 
@@ -269,21 +268,6 @@ simulated function PostBeginPlay()
         if (LI != none)
         {
             bAreConstructionsEnabled = LI.bAreConstructionsEnabled;
-
-            for (i = 0; i < LI.ArtilleryTypes.Length; ++i)
-            {
-                ArtilleryTypeInfos[i].bIsAvailable = LI.ArtilleryTypes[i].bIsInitiallyActive;
-
-                // Handle limit override in class (mainly for legacy artillery)
-                Limit = LI.ArtilleryTypes[i].ArtilleryClass.static.GetLimitOverride(LI.ArtilleryTypes[i].TeamIndex, Level);
-
-                if (Limit == -1)
-                {
-                    Limit = LI.ArtilleryTypes[i].Limit;
-                }
-
-                ArtilleryTypeInfos[i].Limit = Limit;
-            }
         }
 
         // Add usable map markers to the class list to be replicated!

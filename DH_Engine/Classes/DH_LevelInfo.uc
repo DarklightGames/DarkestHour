@@ -106,6 +106,20 @@ simulated function bool IsConstructionRestricted(class<DHConstruction> Construct
     return false;
 }
 
+function int GetArtilleryLimit(int ArtilleryTypeIndex)
+{
+    local int Limit;
+
+    Limit = ArtilleryTypes[ArtilleryTypeIndex].ArtilleryClass.static.GetLimitOverride(ArtilleryTypes[ArtilleryTypeIndex].TeamIndex, Level);
+
+    if (Limit == -1)
+    {
+        Limit = ArtilleryTypes[ArtilleryTypeIndex].Limit;
+    }
+
+    return Limit;
+}
+
 static simulated function DH_LevelInfo GetInstance(LevelInfo Level)
 {
     local DarkestHourGame G;

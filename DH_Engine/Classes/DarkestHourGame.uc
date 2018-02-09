@@ -2310,13 +2310,23 @@ state RoundInPlay
             }
         }
 
-        // Arty
+        // LEGACY: These variables correspond to the old artillery system.
         GRI.bArtilleryAvailable[AXIS_TEAM_INDEX] = 0;
         GRI.bArtilleryAvailable[ALLIES_TEAM_INDEX] = 0;
         GRI.LastArtyStrikeTime[AXIS_TEAM_INDEX] = ElapsedTime - LevelInfo.GetStrikeInterval(AXIS_TEAM_INDEX);
         GRI.LastArtyStrikeTime[ALLIES_TEAM_INDEX] = ElapsedTime - LevelInfo.GetStrikeInterval(ALLIES_TEAM_INDEX);
         GRI.TotalStrikes[AXIS_TEAM_INDEX] = 0;
         GRI.TotalStrikes[ALLIES_TEAM_INDEX] = 0;
+
+        // New artillery!
+        for (i = 0; i < arraycount(GRI.ArtilleryTypeInfos); ++i)
+        {
+            GRI.ArtilleryTypeInfos[i].ArtilleryActor = none;
+            GRI.ArtilleryTypeInfos[i].UsedCount = 0;
+            GRI.ArtilleryTypeInfos[i].NextConfirmElapsedTime = 0;
+            GRI.ArtilleryTypeInfos[i].bIsAvailable = DHLevelInfo.ArtilleryTypes[i].bIsInitiallyActive;
+            GRI.ArtilleryTypeInfos[i].Limit = DHLevelInfo.GetArtilleryLimit(i);
+        }
 
         for (i = 0; i < arraycount(GRI.AxisRallyPoints); ++i)
         {

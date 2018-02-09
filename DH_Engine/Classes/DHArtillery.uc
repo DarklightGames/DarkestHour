@@ -31,6 +31,11 @@ function PostBeginPlay()
     }
 }
 
+function Reset()
+{
+    Destroy();
+}
+
 static function string GetMenuName()
 {
     return default.MenuName;
