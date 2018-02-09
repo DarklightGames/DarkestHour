@@ -94,7 +94,6 @@ defaultproperties
     CommanderKillChance=600.0
     GunDamageChance=1000.0
     TraverseDamageChance=1250.0
-    DisintegrationHealth=-100000.0
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.234.234_dest'
 
     // Exit

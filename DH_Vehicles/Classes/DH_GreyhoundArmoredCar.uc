@@ -76,7 +76,6 @@ defaultproperties
     HealthMax=300.0
     EngineHealth=100
     HeavyEngineDamageThreshold=0.25
-    DisintegrationHealth=-100000.0
     VehHitpoints(0)=(PointBone="Engine",PointOffset=(Z=-10.0)) // engine
     DamagedEffectScale=0.75
     DamagedEffectOffset=(X=-130.0,Y=0.0,Z=100.0)

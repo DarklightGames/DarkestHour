@@ -72,7 +72,6 @@ defaultproperties
     Health=275
     HealthMax=275.0
     EngineHealth=125
-    DisintegrationHealth=-1000.0
     VehHitpoints(0)=(PointRadius=20.0,PointOffset=(X=-15.0,Y=0.0,Z=0.0)) // engine
     VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="Engine",PointOffset=(X=22.0,Y=0.0,Z=0.0),DamageMultiplier=1.0,HitPointType=HP_Engine)
     VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="Engine",PointOffset=(X=0.0,Y=0.0,Z=30.0),DamageMultiplier=1.0,HitPointType=HP_Engine)
