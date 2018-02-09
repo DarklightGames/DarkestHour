@@ -1097,5 +1097,10 @@ defaultproperties
 
     bShouldRefundSuppliesOnTearDown=true
     TakeDownProgressInterval=0.5
+
+    // Broken
+    BrokenSoundRadius=100.0
+    BrokenSoundPitch=1.0
+    BrokenSoundVolume=5.0
 }
 
