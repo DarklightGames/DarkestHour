@@ -185,6 +185,13 @@ simulated state ViewTransition
     }
 }
 
+// Modified to include any overlay position, which for this MG includes the periscope position as well as the gunsight & binoculars
+simulated function bool ShouldViewSnapInPosition(byte PositionIndex)
+{
+    return super(DHVehicleWeaponPawn).ShouldViewSnapInPosition(PositionIndex);
+//  return DriverPositions[PositionIndex].bDrawOverlays && (PositionIndex == 0 || PositionIndex == PeriscopePositionIndex || PositionIndex == BinocPositionIndex); // would be a 'pure' override
+}
+
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_ChurchillMountedMG'

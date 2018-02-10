@@ -640,6 +640,12 @@ simulated state ViewTransition
     }
 }
 
+// Modified to include a periscope overlay position & to allow for a cannon having more than 1 gunsight position
+simulated function bool ShouldViewSnapInPosition(byte PositionIndex)
+{
+    return DriverPositions[PositionIndex].bDrawOverlays && (PositionIndex < GunsightPositions || PositionIndex == PeriscopePositionIndex || PositionIndex == BinocPositionIndex);
+}
+
 // Modified so if player exits while on the gunsight, his view rotation is zeroed so he exits facing forwards
 // Necessary because while on gunsight his view rotation is locked to gunsight camera bone, but pawn/PC rotation can wander meaninglessly via mouse movement
 // Also so listen server host player records currently loaded ammo type on exiting
