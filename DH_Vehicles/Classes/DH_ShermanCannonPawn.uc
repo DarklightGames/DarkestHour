@@ -8,7 +8,7 @@ class DH_ShermanCannonPawn extends DHAmericanCannonPawn;
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_ShermanCannon'
-    DriverPositions(0)=(ViewLocation=(X=21.0,Y=19.0,Z=4.0),ViewFOV=24.0,ViewPitchUpLimit=4551,ViewPitchDownLimit=64079,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
+    DriverPositions(0)=(ViewLocation=(X=21.0,Y=19.0,Z=4.0),ViewFOV=28.33,ViewPitchUpLimit=4551,ViewPitchDownLimit=64079,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
     DriverPositions(1)=(TransitionUpAnim="com_open",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true)
     DriverPositions(2)=(TransitionDownAnim="com_close",DriverTransitionAnim="stand_idlehip_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bExposed=true)
     DriverPositions(3)=(ViewFOV=12.0,DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true,bExposed=true)
@@ -17,7 +17,7 @@ defaultproperties
     DriveAnim="stand_idlehip_binoc"
     bLockCameraDuringTransition=true
     GunsightOverlay=Texture'DH_VehicleOptics_tex.US.Sherman_sight_background'
-    GunsightSize=0.542
+    GunsightSize=0.435 // 12.3 degrees visible FOV at 3x magnification (M70F sight)
     DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed'
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell'
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell_reload'

@@ -1046,7 +1046,7 @@ defaultproperties
     HudName="Cmdr"
 
     // Gunsight overlay
-    GunsightSize=0.9
+    GunsightSize=0.5
     RangeText="metres"
     RangePositionX=0.16
     RangePositionY=0.2

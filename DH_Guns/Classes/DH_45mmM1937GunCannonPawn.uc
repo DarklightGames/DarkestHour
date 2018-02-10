@@ -48,8 +48,8 @@ defaultproperties
     DriverPositions(2)=(ViewLocation=(X=14.0,Y=4.0,Z=-18.0),ViewFOV=12.0,DriverTransitionAnim="crouch_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=20000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
     DrivePos=(X=-22.0,Y=-1.0,Z=0.0)
     DriveAnim="crouch_idle_binoc"
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.Soviet.45mmATGun_sight_background'
-    GunsightSize=0.4412 // 15 degrees visible FOV at 2.5x magnification (telescopic gunsight model?) // TODO: check magnification & visible FOV of gunsight
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.Soviet.45mmATGun_sight_background' // TODO: not sure this AHZ overlay is correct; it could be the telescopic sight used in tanks with the 45mm gun?
+    GunsightSize=0.441 // 15 degrees visible FOV at 2.5x magnification (PP-1 sight)
     CannonScopeCenter=Texture'Vehicle_Optic.Scopes.T3476_sight_mover'
     ScopeCenterPositionX=0.035
     ScopeCenterScaleX=2.2
