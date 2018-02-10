@@ -43,7 +43,7 @@ defaultproperties
     SecondarySpread=0.0009
 
     // Weapon fire
-    AddedPitch=360
+    AddedPitch=286
     WeaponFireOffset=120.0
 
     // Sounds
