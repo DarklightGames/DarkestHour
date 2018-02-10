@@ -56,9 +56,8 @@ defaultproperties
     HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.dp27_ammo'
 
     // Weapon fire
-    WeaponFireAttachmentBone="Gun"
-    WeaponFireOffset=200.0
-    AltFireOffset=(X=14.0,Y=17.5,Z=0.0)
+    WeaponFireOffset=150.9
+    AltFireOffset=(X=-41.0,Y=17.5,Z=0.0)
 
     // Sounds
     CannonFireSound(0)=Sound'Vehicle_Weapons.T34_85.85mm_fire01'

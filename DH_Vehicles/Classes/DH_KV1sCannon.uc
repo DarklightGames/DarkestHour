@@ -40,6 +40,6 @@ defaultproperties
     MaxSecondaryAmmo=60
 
     // Weapon fire
-    WeaponFireOffset=62.0
-    AltFireOffset=(X=-54.0,Y=12.0,Z=-0.5)
+    WeaponFireOffset=69.6
+    AltFireOffset=(X=-54.5,Y=12.0,Z=-0.5)
 }
