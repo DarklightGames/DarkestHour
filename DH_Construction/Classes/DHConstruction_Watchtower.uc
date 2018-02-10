@@ -42,5 +42,6 @@ defaultproperties
     SupplyCost=750
     bCanTakeImpactDamage=true
     MinDamagetoHurt=50
+    bAcceptsProjectors=false
 }
 
