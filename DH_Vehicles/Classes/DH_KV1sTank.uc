@@ -15,7 +15,7 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_KV_anm.KV1S_body_ext'
-    Skins(0)=Texture'allies_vehicles_tex.ext_vehicles.KV1_ext' // TODO: get a whitewashed version made, with snowy treads, then add a winter version of this tank
+    Skins(0)=Texture'allies_vehicles_tex.ext_vehicles.KV1_ext'
     Skins(1)=Texture'allies_vehicles_tex.Treads.kv1_treads'
     Skins(2)=Texture'allies_vehicles_tex.Treads.kv1_treads'
     Skins(3)=Texture'allies_vehicles_tex.int_vehicles.kv1_int'
