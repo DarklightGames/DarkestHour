@@ -14,7 +14,6 @@ defaultproperties
     DriverPositions(3)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Marder3M_anm.marder_turret_ext',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true,bExposed=true)
     UnbuttonedPositionIndex=0
     RaisedPositionIndex=2
-    BinocPositionIndex=3
     DrivePos=(X=-10.0,Y=4.7,Z=21.5) // (X=-14.5,Y=-0.5,Z=21.5) is an ideal position, but left boot pokes through side of vehicle, so had to shift commander to the right
     DriveAnim="VSU76_com_idle_close"
     bHasAltFire=false

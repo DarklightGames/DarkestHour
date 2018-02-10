@@ -14,7 +14,6 @@ defaultproperties
     DriverPositions(3)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Hellcat_anm.hellcat_turret_ext',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=100000,ViewNegativeYawLimit=-100000,bDrawOverlays=true,bExposed=true)
     UnbuttonedPositionIndex=0
     RaisedPositionIndex=2
-    BinocPositionIndex=3
     DrivePos=(X=-2.0,Y=-1.0,Z=13.0)
     DriveAnim="VSU76_com_idle_close"
     bHasAltFire=false

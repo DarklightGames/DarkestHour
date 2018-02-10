@@ -66,7 +66,7 @@ defaultproperties
     // Damage
     Health=600
     HealthMax=600.0
-    VehHitpoints(0)=(PointRadius=40.0,PointScale=1.0,PointBone="body",PointOffset=(X=-100.0,Y=0.0,Z=0.0)) // TODO: check position of all hit points
+    VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-100.0,Y=0.0,Z=0.0)) // engine // TODO: check position of all hit points
     VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=13.0,Y=-25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=13.0,Y=25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=26.0

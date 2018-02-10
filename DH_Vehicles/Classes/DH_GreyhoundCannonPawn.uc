@@ -14,7 +14,6 @@ defaultproperties
     DriverPositions(3)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_turret_ext',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=10000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
     UnbuttonedPositionIndex=0
     RaisedPositionIndex=2
-    BinocPositionIndex=3
     DrivePos=(X=8.0,Y=3.0,Z=-4.5)
     DriveAnim="VSU76_com_idle_close"
     bManualTraverseOnly=true

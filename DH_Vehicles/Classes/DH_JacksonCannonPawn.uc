@@ -14,7 +14,6 @@ defaultproperties
     DriverPositions(3)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_Jackson_anm.Jackson_turret_ext',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=100000,ViewNegativeYawLimit=-100000,bDrawOverlays=true,bExposed=true)
     UnbuttonedPositionIndex=0
     RaisedPositionIndex=2
-    BinocPositionIndex=3
     DriveAnim="VSU76_com_idle_close"
     bHasAltFire=false
     GunsightOverlay=Texture'DH_VehicleOptics_tex.US.Jackson_sight_background'
