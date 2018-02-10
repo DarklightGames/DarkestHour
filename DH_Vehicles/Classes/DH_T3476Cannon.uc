@@ -76,13 +76,6 @@ defaultproperties
     AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty03_121',Duration=2.35)
     AltReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty04_191',Duration=3.2,HUDProportion=0.35)
 
-    // View shake
-    ShakeRotMag=(X=0.0,Y=0.0,Z=250.0)
-    ShakeRotRate=(X=0.0,Y=0.0,Z=2500.0)
-    ShakeRotTime=6.0
-    ShakeOffsetMag=(X=0.0,Y=0.0,Z=10.0)
-    ShakeOffsetRate=(X=0.0,Y=0.0,Z=200.0)
-
     // Cannon range settings
     RangeSettings(0)=0
     RangeSettings(1)=200

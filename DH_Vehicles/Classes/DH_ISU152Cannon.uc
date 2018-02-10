@@ -59,7 +59,6 @@ defaultproperties
     ShakeRotMag=(X=0.0,Y=0.0,Z=150.0)
     ShakeRotRate=(X=0.0,Y=0.0,Z=2000.0)
     ShakeOffsetMag=(X=0.0,Y=0.0,Z=5.0)
-    ShakeOffsetTime=8.0
 
     // Cannon range settings
     RangeSettings(1)=100
