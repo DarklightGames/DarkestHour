@@ -30,10 +30,10 @@ defaultproperties
     RearLeftAngle=217.0
 
     // Turret movement
-    ManualRotationsPerSecond=0.029
-    PoweredRotationsPerSecond=0.07
-    CustomPitchUpLimit=6000
-    CustomPitchDownLimit=64500
+    ManualRotationsPerSecond=0.011
+    PoweredRotationsPerSecond=0.0333 // 12 degrees/sec
+    CustomPitchUpLimit=3459 // +19/-2 degrees
+    CustomPitchDownLimit=65172
 
     // Cannon ammo
     ProjectileClass=class'DH_Vehicles.DH_IS2CannonShell'

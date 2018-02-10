@@ -26,8 +26,8 @@ defaultproperties
     MaxNegativeYaw=-1850
     YawStartConstraint=-3000.0
     YawEndConstraint=3000.0
-    CustomPitchUpLimit=3250
-    CustomPitchDownLimit=65000
+    CustomPitchUpLimit=3641 // +20/-3 degrees
+    CustomPitchDownLimit=64990
 
     // Cannon ammo
     ProjectileClass=class'DH_Vehicles.DH_ISU152CannonShellHE'

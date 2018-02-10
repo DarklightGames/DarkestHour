@@ -31,9 +31,9 @@ defaultproperties
 
     // Turret movement
     ManualRotationsPerSecond=0.029
-    PoweredRotationsPerSecond=0.0694 // 25 degrees/sec
-    CustomPitchUpLimit=4660
-    CustomPitchDownLimit=64535
+    PoweredRotationsPerSecond=0.0833 // 30 degrees/sec
+    CustomPitchUpLimit=5461 // +30/-5 degrees
+    CustomPitchDownLimit=64626
 
     // Cannon ammo
     ProjectileClass=class'DH_Vehicles.DH_T3476CannonShell'
