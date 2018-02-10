@@ -688,7 +688,11 @@ simulated function HelmetShotOff(rotator RotDir)
     if (DroppedHelmet != none)
     {
         DroppedHelmet.LinkMesh(Headgear.Mesh);
-        DroppedHelmet.Skins[0] = Headgear.Skins[0];
+
+        if (Headgear.Skins.Length > 0 && Headgear.Skins[0] != none)
+        {
+            DroppedHelmet.Skins[0] = Headgear.Skins[0];
+        }
 
         if (bOnFire)
         {
