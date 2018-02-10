@@ -35,9 +35,9 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_ISU152CannonShell'
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="AP"
-    InitialPrimaryAmmo=12
+    InitialPrimaryAmmo=11
     InitialSecondaryAmmo=7
-    MaxPrimaryAmmo=15
+    MaxPrimaryAmmo=13
     MaxSecondaryAmmo=7
     Spread=0.0009
     SecondarySpread=0.0009
