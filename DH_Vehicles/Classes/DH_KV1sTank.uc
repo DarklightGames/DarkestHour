@@ -35,8 +35,8 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_KV_anm.KV1S_body_int',DriverTransitionAnim="VKV1_driver_close",TransitionUpAnim="driver_hatch_open",ViewPitchDownLimit=65535,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_KV_anm.KV1S_body_int',DriverTransitionAnim="VKV1_driver_open",TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=11000,ViewNegativeYawLimit=-11000,bExposed=true)
     InitialPositionIndex=0
-    UnbuttonedPositionIndex=1
     DrivePos=(X=10.0,Y=0.0,Z=1.0) // moved forward so driver isn't enveloped in hull collision mesh & can be shot // TODO: either make a hole in collision mesh or change anims to improve result
+    UnbuttonedPositionIndex=1 // TODO: animated hatch is vision only & driver couldn't exit - either prevent driver exit or re-work models to include exit hatch that is overhead & to left
     DriveAnim="VKV1_driver_idle_close"
     HUDOverlayClass=class'ROVehicles.KV1DriverOverlay'
     HUDOverlayFOV=85.0
