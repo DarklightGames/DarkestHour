@@ -41,7 +41,7 @@ defaultproperties
     GroupClass=Class'DHConstructionGroup_Defenses'
     SupplyCost=750
     bCanTakeImpactDamage=true
-    MinDamagetoHurt=50
+    MinDamagetoHurt=25
     bAcceptsProjectors=false
 }
 
