@@ -16,6 +16,12 @@ var IntBox                      MapIconTextureCoords;
 var int                         TeamIndex;
 var PlayerController            Requester;
 
+replication
+{
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        TeamIndex;
+}
+
 function PostBeginPlay()
 {
     local DHGameReplicationInfo GRI;
