@@ -29,4 +29,5 @@ defaultproperties
     ResupplyAttachmentCollisionRadius=600.0
     MenuName="Ammo Crate (Vehicles)"
     MenuDescription="Provides a resupply point for vehicles and guns."
+    ResupplyCount=50    // TODO: remove this once we decrease the maximum amount AT guns can hold etc.
 }
