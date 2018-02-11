@@ -110,6 +110,13 @@ function int GetArtilleryLimit(int ArtilleryTypeIndex)
 {
     local int Limit;
 
+    if (ArtilleryTypeIndex < 0 ||
+        ArtilleryTypeIndex >= ArtilleryTypes.Length ||
+        ArtilleryTypes[ArtilleryTypeIndex].ArtilleryClass == none)
+    {
+        return 0;
+    }
+
     Limit = ArtilleryTypes[ArtilleryTypeIndex].ArtilleryClass.static.GetLimitOverride(ArtilleryTypes[ArtilleryTypeIndex].TeamIndex, Level);
 
     if (Limit == -1)
