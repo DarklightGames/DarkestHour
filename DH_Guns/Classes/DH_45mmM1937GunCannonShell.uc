@@ -42,7 +42,6 @@ defaultproperties
     OpticalRanges(5)=(Range=2500,RangeValue=0.733)
 
     bMechanicalAiming=true // this cannon doesn't actually have mechanical aiming, but this is a fudge to adjust for sight markings that are 'out'
-    MechanicalRanges(0)=(Range=0,RangeValue=50.0)
     MechanicalRanges(1)=(Range=500,RangeValue=-30.0)
     MechanicalRanges(2)=(Range=1000,RangeValue=-65.0)
     MechanicalRanges(3)=(Range=1500,RangeValue=-85.0) // can only set up to here
