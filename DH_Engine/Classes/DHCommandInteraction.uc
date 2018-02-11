@@ -214,13 +214,6 @@ function Tick(float DeltaTime)
 
     if (PC == none || PC.Pawn == none || PC.IsDead() || Menu == none || Menu.ShouldHideMenu())
     {
-        Log("Hiding");
-        Log("PC" @ PC);
-        Log("PC.Pawn" @ PC.Pawn);
-        Log("PC.IsDead()" @ PC.IsDead());
-        Log("Menu" @ Menu);
-        Log("Menu.ShouldHideMenu()" @ Menu.ShouldHideMenu());
-
         Hide();
         return;
     }
@@ -486,8 +479,6 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
                     TraceStart = PC.CalcViewLocation;
                     TraceEnd = TraceStart + (vector(PC.CalcViewRotation) * PC.Pawn.Region.Zone.DistanceFogEnd);
 
-                    Log("IK_LeftMouse");
-
                     foreach PC.TraceActors(class'Actor', A, HitLocation, HitNormal, TraceEnd, TraceStart)
                     {
                         if (A == PC.Pawn ||
@@ -506,8 +497,6 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
                     {
                         HitLocation = TraceEnd;
                     }
-
-                    Log("OnSelect" @ SelectedIndex @ HitLocation);
 
                     OnSelect(SelectedIndex, HitLocation);
 
