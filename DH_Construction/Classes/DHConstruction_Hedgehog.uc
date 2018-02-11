@@ -21,6 +21,6 @@ defaultproperties
     SupplyCost=100
     bIsNeutral=true
     bAcceptsProjectors=false
-    ProgressMax=4
+    ProgressMax=3
     GroupClass=class'DHConstructionGroup_Obstacles'
 }
