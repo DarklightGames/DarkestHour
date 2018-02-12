@@ -2324,7 +2324,7 @@ state RoundInPlay
             GRI.ArtilleryTypeInfos[i].ArtilleryActor = none;
             GRI.ArtilleryTypeInfos[i].UsedCount = 0;
             GRI.ArtilleryTypeInfos[i].NextConfirmElapsedTime = 0;
-            GRI.ArtilleryTypeInfos[i].bIsAvailable = DHLevelInfo.ArtilleryTypes[i].bIsInitiallyActive;
+            GRI.ArtilleryTypeInfos[i].bIsAvailable = DHLevelInfo.IsArtilleryInitiallyAvailable(i);
             GRI.ArtilleryTypeInfos[i].Limit = DHLevelInfo.GetArtilleryLimit(i);
         }
 

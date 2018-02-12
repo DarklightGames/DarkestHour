@@ -106,6 +106,18 @@ simulated function bool IsConstructionRestricted(class<DHConstruction> Construct
     return false;
 }
 
+function bool IsArtilleryInitiallyAvailable(int ArtilleryTypeIndex)
+{
+    if (ArtilleryTypeIndex < 0 ||
+        ArtilleryTypeIndex >= ArtilleryTypes.Length ||
+        ArtilleryTypes[ArtilleryTypeIndex].ArtilleryClass == none)
+    {
+        return false;
+    }
+
+    return ArtilleryTypes[ArtilleryTypeIndex].bIsInitiallyActive;
+}
+
 function int GetArtilleryLimit(int ArtilleryTypeIndex)
 {
     local int Limit;
