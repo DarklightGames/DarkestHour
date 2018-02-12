@@ -301,11 +301,11 @@ simulated function PokeTerrain(float Radius, float Depth)
     {
         if (TI != none)
         {
-            // HACK: There is a terrible bug on Mac platforms where having a
+            // HACK: There is a terrible bug on Mac/Linux platforms where having a
             // larger poke radius causes the terrain to be poked excessively.
             // This little trick fixes the problem, even if it doesn't look
             // as nice!
-            if (Level.NetMode != NM_DedicatedServer && PlatformIsMacOS())
+            if (Level.NetMode != NM_DedicatedServer && (PlatformIsMacOS() || PlatformIsUnix()))
             {
                 Radius = 1.0;
             }
