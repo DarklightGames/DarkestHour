@@ -69,7 +69,7 @@ simulated function bool IsBusy()
     return bIsBusy;
 }
 
-auto state Busy
+state Busy
 {
     function BeginState()
     {
