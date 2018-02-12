@@ -205,6 +205,8 @@ static function int GetConfirmIntervalSecondsOverride(int TeamIndex, LevelInfo L
         return -1;
     }
 
-    return LI.GetStrikeInterval(TeamIndex);
+    // HACK: The 2x multiplier is a stopgap solution to stop artillery from
+    // being so damned frequent.
+    return LI.GetStrikeInterval(TeamIndex) * 2.0;
 }
 
