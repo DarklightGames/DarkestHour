@@ -95,7 +95,7 @@ simulated function OnBroken()
 defaultproperties
 {
     Stages(0)=(Progress=0)
-    ProgressMax=8
+    ProgressMax=5
     HealthMax=500
     MenuName="Supply Cache"
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.supply_cache'
