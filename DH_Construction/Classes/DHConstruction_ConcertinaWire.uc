@@ -16,7 +16,7 @@ defaultproperties
     MenuName="Concertina Wire"
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.barbed_wire'
     MenuDescription="Effective at blocking infantry and light vehicles."
-    SupplyCost=50
+    SupplyCost=25
     HealthMax=250
     bCanBeMantled=false
     bCanTakeImpactDamage=true
