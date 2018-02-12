@@ -305,7 +305,7 @@ simulated function PokeTerrain(float Radius, float Depth)
             // larger poke radius causes the terrain to be poked excessively.
             // This little trick fixes the problem, even if it doesn't look
             // as nice!
-            if (Level.NetMode != NM_DedicatedServer && (PlatformIsMacOS() || PlatformIsUnix()))
+            if (PlatformIsMacOS() || PlatformIsUnix())
             {
                 Radius = 1.0;
             }
