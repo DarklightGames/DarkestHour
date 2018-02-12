@@ -322,7 +322,7 @@ simulated function NotifySelected(Pawn User)
             // "You cannot use enemy radios"
             User.ReceiveLocalizedMessage(class'DHRadioTouchMessage', 3);
             break;
-        case ERROR_Fatal:
+        default:
             break;
     }
 }
