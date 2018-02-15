@@ -107,7 +107,8 @@ defaultproperties
     DuplicateFriendlyDistanceInMeters=150
     CollisionRadius=100
     bCanPlaceIndoors=true
-    bCanBeTornDownWhenConstructed=false
+    bCanBeTornDownByFriendlies=false
+    bCanBeTornDownWhenConstructed=true
     SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Static'
     ConstructionVerb="drop"
 
