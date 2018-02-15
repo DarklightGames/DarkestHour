@@ -73,7 +73,10 @@ state Busy
 {
     function BeginState()
     {
-        bIsBusy = true;
+        if (Role == ROLE_Authority)
+        {
+            bIsBusy = true;
+        }
     }
 }
 
@@ -173,7 +176,10 @@ auto state Idle
 {
     function BeginState()
     {
-        bIsBusy = false;
+        if (Role == ROLE_Authority)
+        {
+            bIsBusy = false;
+        }
     }
 }
 
