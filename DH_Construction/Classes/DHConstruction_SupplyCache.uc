@@ -96,7 +96,7 @@ defaultproperties
 {
     Stages(0)=(Progress=0)
     ProgressMax=5
-    HealthMax=500
+    HealthMax=350
     MenuName="Supply Cache"
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.supply_cache'
     MenuDescription="Stores and generates supplies over time."
