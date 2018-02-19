@@ -155,6 +155,11 @@ var color WhiteSmoke;
 var color Yellow;
 var color YellowGreen;
 
+static final function bool IsZero(color C)
+{
+    return C.R == 0 && C.G == 0 && C.B == 0 && C.A == 0;
+}
+
 static final function string ToString(color C)
 {
     return "(R=" $ C.R $ ",G=" $ C.G $ ",B=" $ C.B $ ",A=" $ C.A $ ")";
