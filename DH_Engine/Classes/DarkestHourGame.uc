@@ -2228,7 +2228,7 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
 
 function bool RoleExists(byte TeamID, DHRoleInfo RI)
 {
-    local int                   i;
+    local int i;
 
     if (TeamID == AXIS_TEAM_INDEX)
     {
