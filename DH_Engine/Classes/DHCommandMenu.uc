@@ -23,6 +23,7 @@ struct Option
     var Material ActionIcon;
     var Material Material;
     var Object OptionalObject;
+    var Color IconColor;    // If unspecified, will default to white.
     var int OptionalInteger;
 };
 
@@ -38,7 +39,17 @@ var int                     SlotCountOverride;  // If non-zero, the amount of sl
 // Called before pushed onto the stack
 function Setup()
 {
-    SlotCount = Max(Options.Length, SlotCountOverride);
+    local int i, OptionCount;
+
+    for (i = 0; i < Options.Length; ++i)
+    {
+        if (!IsOptionHidden(i))
+        {
+            ++OptionCount;
+        }
+    }
+
+    SlotCount = Max(OptionCount, SlotCountOverride);
 }
 
 function int GetOptionIndexFromSlotIndex(int SlotIndex)
@@ -49,6 +60,11 @@ function int GetOptionIndexFromSlotIndex(int SlotIndex)
 
     for (i = 0; i < Options.Length; ++i)
     {
+        if (IsOptionHidden(i))
+        {
+            continue;
+        }
+
         if (SlotIndex <= 0)
         {
             return i;
@@ -85,6 +101,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 
 function bool IsOptionDisabled(int OptionIndex);
 function bool ShouldHideMenu();
+function bool IsOptionHidden(int OptionIndex) { return false; } // This will only get run once when the menu is pushed onto the stack.
 
 function OnPush();                      // Called when the menu is pushed to the top of the stack
 function OnPop();                       // Called when a menu is popped off of the top of the stack

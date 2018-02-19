@@ -19,6 +19,7 @@ var int MaxPlayersListedPerSide;
 var int MyTeamIndex;
 
 var localized string SquadLeaderAbbreviation;
+var localized string AssistantSquadLeaderAbbreviation;
 var localized string PlayersText;
 var localized string HealthText;
 var localized string PoorText;
@@ -130,6 +131,10 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
             if (PRI.SquadMemberIndex == 0)
             {
                 CRI.Text = SquadLeaderAbbreviation;
+            }
+            else if (PRI.bIsSquadAssistant)
+            {
+                CRI.Text = AssistantSquadLeaderAbbreviation;
             }
             else if (PRI.SquadMemberIndex != -1)
             {
@@ -874,6 +879,7 @@ defaultproperties
     PingLength=1.5
     MyTeamIndex=2
     SquadLeaderAbbreviation="SL"
+    AssistantSquadLeaderAbbreviation="A"
     PlayersText="Players"
     HealthText="Health"
     PoorText="Poor"

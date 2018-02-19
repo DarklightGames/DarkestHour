@@ -7,6 +7,7 @@ class DHPlayerReplicationInfo extends ROPlayerReplicationInfo;
 
 var     int                     SquadIndex;
 var     int                     SquadMemberIndex;
+var     bool                    bIsSquadAssistant;
 
 var     float                   NameDrawStartTime;
 var     float                   LastNameDrawTime;
@@ -20,7 +21,25 @@ replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        SquadIndex, SquadMemberIndex, bIsPatron, bIsDeveloper, DHKills;
+        SquadIndex, SquadMemberIndex, bIsPatron, bIsDeveloper, DHKills, bIsSquadAssistant;
+}
+
+simulated function string GetNamePrefix()
+{
+    if (IsSquadLeader())
+    {
+        return "SL";
+    }
+    else if (bIsSquadAssistant)
+    {
+        return "A";
+    }
+    else if (IsInSquad())
+    {
+        return string(SquadMemberIndex);
+    }
+
+    return "";
 }
 
 simulated function bool IsSquadLeader()

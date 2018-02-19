@@ -133,6 +133,7 @@ replication
         ServerSquadCreate, ServerSquadRename,
         ServerSquadJoin, ServerSquadJoinAuto, ServerSquadLeave,
         ServerSquadInvite, ServerSquadPromote, ServerSquadKick, ServerSquadBan,
+        ServerSquadMakeAssistant,
         ServerSquadSay, ServerSquadLock, ServerSquadSignal,
         ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
         ServerSetPatronStatus, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
@@ -5036,7 +5037,7 @@ simulated function int GetRoleIndex()
 }
 
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-// START SQUAD DEBUG FUNCTIONS
+// START SQUAD FUNCTIONS
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 function ServerSquadCreate()
@@ -5110,6 +5111,18 @@ function ServerSquadBan(DHPlayerReplicationInfo PlayerToBan)
     }
 }
 
+function ServerSquadMakeAssistant(DHPlayerReplicationInfo NewAssistant)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (SquadReplicationInfo != none && PRI != none)
+    {
+        SquadReplicationInfo.SetAssistantSquadLeader(GetTeamNum(), GetSquadIndex(), NewAssistant);
+    }
+}
+
 function ServerSquadLock(bool bIsLocked)
 {
     local DHPlayerReplicationInfo PRI;
@@ -5180,11 +5193,18 @@ function ServerRemoveMapMarker(int MapMarkerIndex)
 {
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
+    local DHGameReplicationInfo.MapMarker MM;
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    if (GRI != none && PRI != none && PRI.IsSquadLeader())
+    if (!GRI.GetMapMarker(GetTeamNum(), MapMarkerIndex, MM))
+    {
+        Log("Failed to get map marker!");
+        return;
+    }
+
+    if (GRI != none && PRI != none && MM.MapMarkerClass.static.CanPlayerUse(PRI))
     {
         GRI.RemoveMapMarker(GetTeamNum(), MapMarkerIndex);
     }
@@ -5424,7 +5444,12 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
         MenuClassName = "DH_Engine.DHCommandMenu_SquadLeader";
         return true;
     }
-    if (!PRI.IsInSquad())
+    else if (PRI.bIsSquadAssistant)
+    {
+        MenuClassName = "DH_Engine.DHCommandMenu_SquadAssistant";
+        return true;
+    }
+    else if (!PRI.IsInSquad())
     {
         MenuClassName = "DH_Engine.DHCommandMenu_LoneWolf";
         return true;
@@ -5674,7 +5699,7 @@ simulated function bool IsSpecModeValid(ESpectatorMode Mode)
     return false;
 }
 
-// get the next valid spectator mode based on the servers settings
+// Get the next valid spectator mode based on the servers settings
 function ESpectatorMode GetNextValidSpecMode()
 {
     local ESpectatorMode NextSpecMode;
@@ -5774,7 +5799,7 @@ function PatronRequestOnResponse(int Status, TreeMap_string_string Headers, stri
     }
 }
 
-// Client reports patron status to the server.
+// Client-to-server function that reports the player's patron status to the server.
 function ServerSetPatronStatus(bool bIsPatron)
 {
     local DHPlayerReplicationInfo PRI;
@@ -5787,6 +5812,7 @@ function ServerSetPatronStatus(bool bIsPatron)
     }
 }
 
+// Client-to-server function when player wants to volunteer to be squad leader.
 function ServerSquadLeaderVolunteer(int TeamIndex, int SquadIndex)
 {
     if (SquadReplicationInfo != none)

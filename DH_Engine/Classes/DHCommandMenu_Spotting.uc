@@ -22,6 +22,7 @@ function Setup()
             Options[j].OptionalObject = GRI.MapMarkerClasses[i];
             Options[j].Material = GRI.MapMarkerClasses[i].default.IconMaterial;
             Options[j].SubjectText = GRI.MapMarkerClasses[i].default.MarkerName;
+            Options[j].IconColor = GRI.MapMarkerClasses[i].default.IconColor;
             ++j;
         }
     }

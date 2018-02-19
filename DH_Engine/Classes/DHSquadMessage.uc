@@ -45,6 +45,10 @@ var localized string YouLeft;
 var localized string YouVolunteeredToBeSquadLeader;
 var localized string NoVolunteers;
 var localized string NoVolunteersDisbanded;
+var localized string AlreadyInSquad;
+var localized string YouAreNowAssistantMessage;
+var localized string YouAreNoLongerAssistantMessage;
+var localized string NewAssistantMessage;
 
 static function string GetString(optional int S, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -141,6 +145,14 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
             return default.NoVolunteersDisbanded;
         case 68:
             return default.RallyPointDestroyed;
+        case 69:
+            return default.AlreadyInSquad;
+        case 70:
+            return default.YouAreNowAssistantMessage;
+        case 71:
+            return default.YouAreNoLongerAssistantMessage;
+        case 72:
+            return Repl(default.NewAssistantMessage, "{0}", RelatedPRI_1.PlayerName);
         default:
             break;
     }
@@ -190,6 +202,11 @@ defaultproperties
     YouVolunteeredToBeSquadLeader="You have volunteered to be the squad leader. The new squad leader will be selected shortly."
     NoVolunteers="No members volunteered to be squad leader."
     NoVolunteersDisbanded="Your squad has been disbanded because the squad is too small and no members volunteered to be squad leader."
+    AlreadyInSquad="You are already in a squad."
+    YouAreNowAssistantMessage="You are now the squad leader's assistant."
+    YouAreNoLongerAssistantMessage="You are no longer the squad leader's assistant."
+    NewAssistantMessage="{0} has been promoted to squad leader's assistant."
+
     bIsSpecial=false
     bIsConsoleMessage=true
     LifeTime=8.0

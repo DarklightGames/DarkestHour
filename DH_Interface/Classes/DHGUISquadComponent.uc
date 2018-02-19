@@ -23,6 +23,8 @@ var automated   GUIImage            i_Background;
 var localized string    KickText;
 var localized string    BanText;
 var localized string    PromoteText;
+var localized string    AssistantText;
+var localized string    RescindAssistantText;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -138,10 +140,25 @@ function bool MembersListContextMenuOpen(GUIContextMenu Sender)
     }
 
     Sender.ContextItems.Length = 0;
+
+    // Kick & ban
     Sender.AddItem(Repl(default.KickText, "{0}", OtherPRI.PlayerName));
     Sender.AddItem(Repl(default.BanText, "{0}", OtherPRI.PlayerName));
+
+    // Promote to leader
     Sender.AddItem("-");
     Sender.AddItem(Repl(default.PromoteText, "{0}", OtherPRI.PlayerName));
+
+    // Assign and unassign assistant
+    Sender.AddItem("-");
+    if (OtherPRI.bIsSquadAssistant)
+    {
+        Sender.AddItem(Repl(default.RescindAssistantText, "{0}", OtherPRI.PlayerName));
+    }
+    else
+    {
+        Sender.AddItem(Repl(default.AssistantText, "{0}", OtherPRI.PlayerName));
+    }
 
     return true;
 }
@@ -180,6 +197,18 @@ function MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex)
             break;
         case 3: // Promote
             PC.ServerSquadPromote(PRI);
+            break;
+        case 5:
+            if (PRI.bIsSquadAssistant)
+            {
+                // Remove assistant
+                PC.ServerSquadMakeAssistant(none);
+            }
+            else
+            {
+                // Make assistant
+                PC.ServerSquadMakeAssistant(PRI);
+            }
             break;
     }
 }
@@ -318,4 +347,6 @@ defaultproperties
     KickText="Kick {0}"
     BanText="Ban {0}"
     PromoteText="Promote {0} to squad leader"
+    AssistantText="Assign {0} as assistant"
+    RescindAssistantText="Unassign {0} as assistant"
 }

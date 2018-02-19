@@ -1621,7 +1621,7 @@ function UpdateSquads()
         // Update the text and associated object for each item.
         for (k = 0; k < Members.Length; ++k)
         {
-            C.li_Members.SetItemAtIndex(k, Members[k].SquadMemberIndex + 1 $ "." @ Members[k].PlayerName);
+            C.li_Members.SetItemAtIndex(k, Members[k].GetNamePrefix() $ "." @ Members[k].PlayerName);
             C.li_Members.SetObjectAtIndex(k, Members[k]);
         }
 

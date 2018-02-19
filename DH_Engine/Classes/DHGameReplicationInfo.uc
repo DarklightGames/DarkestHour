@@ -1002,6 +1002,36 @@ simulated function GetTeamSizes(out int TeamSizes[2])
 // MAP MARKERS
 //==============================================================================
 
+simulated function bool GetMapMarker(int TeamIndex, int MapMarkerIndex, optional out DHGameReplicationInfo.MapMarker MapMarker)
+{
+    local DHGameReplicationInfo.MapMarker MM;
+
+    if (MapMarkerIndex < 0 || MapMarkerIndex >= MAP_MARKERS_MAX)
+    {
+        return false;
+    }
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            MM = AxisMapMarkers[MapMarkerIndex];
+            break;
+        case ALLIES_TEAM_INDEX:
+            MM = AlliesMapMarkers[MapMarkerIndex];
+            break;
+        default:
+            return false;
+    }
+
+    if (MM.MapMarkerClass == none || (MM.ExpiryTime != -1 && MM.ExpiryTime <= ElapsedTime))
+    {
+       return false;
+    }
+
+    MapMarker = MM;
+    return true;
+}
+
 simulated function GetMapMarkers(out array<MapMarker> MapMarkers, out array<int> Indices, int TeamIndex, int SquadIndex)
 {
     local int i;
@@ -1061,7 +1091,7 @@ function int AddMapMarker(DHPlayerReplicationInfo PRI, class<DHMapMarker> MapMar
     local int i;
     local MapMarker M;
 
-    if (PRI == none || PRI.Team == none || !PRI.IsSquadLeader() || MapMarkerClass == none || !MapMarkerClass.static.CanBeUsed(self))
+    if (PRI == none || PRI.Team == none || MapMarkerClass == none || !MapMarkerClass.static.CanBeUsed(self) || !MapMarkerClass.static.CanPlayerUse(PRI))
     {
         return -1;
     }

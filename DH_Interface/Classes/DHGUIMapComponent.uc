@@ -292,7 +292,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
     local int GroupIndex;
     local float X, Y;
 
-    if (Sender == none || PC == none || PRI == none || GRI == none || !PRI.IsSquadLeader())
+    if (Sender == none || PC == none || PRI == none || GRI == none)
     {
         return false;
     }
@@ -315,6 +315,11 @@ function bool InternalOnOpen(GUIContextMenu Sender)
 
     for (i = 0; i < MapMarkers.Length; ++i)
     {
+        if (!MapMarkers[i].MapMarkerClass.static.CanPlayerUse(PRI))
+        {
+            continue;
+        }
+
         X = (float(MapMarkers[i].LocationX) / 255.0) - MapClickLocation.X;
         Y = (float(MapMarkers[i].LocationY) / 255.0) - MapClickLocation.Y;
         D = Sqrt(X * X + Y * Y);
@@ -332,7 +337,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
     // Fetch and sort map marker classes by group.
     for (i = 0; i < arraycount(GRI.MapMarkerClasses); ++i)
     {
-        if (GRI.MapMarkerClasses[i] != none)
+        if (GRI.MapMarkerClasses[i] != none && GRI.MapMarkerClasses[i].static.CanPlayerUse(PRI))
         {
             MapMarkerClasses[MapMarkerClasses.Length] = GRI.MapMarkerClasses[i];
         }
@@ -364,7 +369,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
         GroupIndex = MapMarkerClasses[i].default.GroupIndex;
     }
 
-    return true;
+    return Sender.ContextItems.Length > 0;
 }
 
 function bool InternalOnClose(GUIContextMenu Sender)

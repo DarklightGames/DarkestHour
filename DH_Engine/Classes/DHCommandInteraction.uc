@@ -268,7 +268,7 @@ function Tick(float DeltaTime)
 
 function PostRender(Canvas C)
 {
-    local int i;
+    local int i, OptionIndex;
     local float Theta, ArcLength;
     local float CenterX, CenterY, X, Y, XL, YL, U, V, AspectRatio, XL2, YL2;
     local DHCommandMenu Menu;
@@ -300,77 +300,82 @@ function PostRender(Canvas C)
 
     Theta -= class'UUnits'.static.DegreesToRadians(90);
 
-    if (Menu != none)
+    if (Menu == none)
     {
-        ArcLength = Tau / Menu.SlotCount;
+        return;
+    }
 
-        // Draw all the options.
-        for (i = 0; i < Menu.Options.Length; ++i)
+    ArcLength = Tau / Menu.SlotCount;
+
+    // Draw all the options.
+    for (i = 0; i < Menu.SlotCount; ++i)
+    {
+        OptionIndex = Menu.GetOptionIndexFromSlotIndex(i);
+
+        bIsOptionDisabled = Menu.IsOptionDisabled(OptionIndex);
+
+        if (bIsOptionDisabled)
         {
-            bIsOptionDisabled = Menu.IsOptionDisabled(i);
+            C.DrawColor = default.DisabledColor;
 
-            if (bIsOptionDisabled)
+            if (SelectedIndex == OptionIndex)
             {
-                C.DrawColor = default.DisabledColor;
-
-                if (SelectedIndex == i)
-                {
-                    C.DrawColor.A = byte(255 * (MenuAlpha));
-                }
-                else
-                {
-                    C.DrawColor.A = byte(255 * (MenuAlpha * 0.5));
-                }
+                C.DrawColor.A = byte(255 * (MenuAlpha));
             }
             else
             {
-                if (SelectedIndex == i)
-                {
-                    // TODO: also do some sort of "push out" with some sort of offset thing?
-                    C.DrawColor = default.SelectedColor;
-                    C.DrawColor.A = byte(255 * (MenuAlpha * 0.9));
-                }
-                else
-                {
-                    C.DrawColor = class'UColor'.default.White;
-                    C.DrawColor.A = byte(255 * (MenuAlpha * 0.5));
-                }
+                C.DrawColor.A = byte(255 * (MenuAlpha * 0.5));
             }
-
-            if (SelectedIndex == i)
-            {
-                // TODO: indent the position just slightly
-            }
-
-            C.SetPos(CenterX - 256, CenterY - 256);
-            C.DrawTileClipped(OptionTexRotators[i], 512, 512, 0, 0, 512, 512);
-
-            // Draw option icon
-            if (Menu.Options[i].Material != none)
-            {
-                U = Menu.Options[i].Material.MaterialUSize();
-                V = Menu.Options[i].Material.MaterialVSize();
-
-                X = CenterX + (Cos(Theta) * 144) - (U / 2);
-                Y = CenterY + (Sin(Theta) * 144) - (V / 2);
-
-                if (bIsOptionDisabled)
-                {
-                    C.DrawColor = class'UColor'.default.DarkGray;
-                }
-                else
-                {
-                    C.DrawColor = class'UColor'.default.White;
-                }
-
-                C.DrawColor.A = byte(255 * MenuAlpha);
-
-                C.SetPos(X, Y);
-                C.DrawTileClipped(Menu.Options[i].Material, U, V, 0, 0, U, V);
-            }
-
-            Theta += ArcLength;
         }
+        else
+        {
+            if (SelectedIndex == OptionIndex)
+            {
+                C.DrawColor = default.SelectedColor;
+                C.DrawColor.A = byte(255 * (MenuAlpha * 0.9));
+            }
+            else
+            {
+                C.DrawColor = class'UColor'.default.White;
+                C.DrawColor.A = byte(255 * (MenuAlpha * 0.5));
+            }
+        }
+
+        C.SetPos(CenterX - 256, CenterY - 256);
+        C.DrawTileClipped(OptionTexRotators[i], 512, 512, 0, 0, 512, 512);
+
+        // Draw option icon
+        if (Menu.Options[OptionIndex].Material != none)
+        {
+            U = Menu.Options[OptionIndex].Material.MaterialUSize();
+            V = Menu.Options[OptionIndex].Material.MaterialVSize();
+
+            X = CenterX + (Cos(Theta) * 144) - (U / 2);
+            Y = CenterY + (Sin(Theta) * 144) - (V / 2);
+
+            if (bIsOptionDisabled)
+            {
+                C.DrawColor = class'UColor'.default.DarkGray;
+            }
+            else
+            {
+                if (class'UColor'.static.IsZero(Menu.Options[OptionIndex].IconColor))
+                {
+                    C.DrawColor = class'UColor'.default.White;
+                }
+                else
+                {
+                    C.DrawColor = Menu.Options[OptionIndex].IconColor;
+                }
+            }
+
+            C.DrawColor.A = byte(255 * MenuAlpha);
+
+            C.SetPos(X, Y);
+            C.DrawTileClipped(Menu.Options[OptionIndex].Material, U, V, 0, 0, U, V);
+        }
+
+        Theta += ArcLength;
     }
 
     // Display text of selection

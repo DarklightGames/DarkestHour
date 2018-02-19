@@ -24,6 +24,13 @@ static function bool CanBeUsed(DHGameReplicationInfo GRI)
     return true;
 }
 
+// Override this function to determine if this map marker can be placed by
+// the provided player.
+static function bool CanPlayerUse(DHPlayerReplicationInfo PRI)
+{
+    return false;
+}
+
 // Override to run specific logic when this marker is placed.
 static function OnMapMarkerPlaced(DHPlayer PC);
 

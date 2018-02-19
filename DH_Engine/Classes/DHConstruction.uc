@@ -773,7 +773,8 @@ function static ConstructionError GetPlayerError(DHConstruction.Context Context)
     PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
 
     // TODO: in future we may allow non-squad leaders to make constructions.
-    if (PRI == none || SRI == none || !PRI.IsSquadLeader())
+    // A static function in the class could take in a PRI and make a decision there instead of it being in here.
+    if (PRI == none || SRI == none || (!PRI.IsSquadLeader() && !PRI.bIsSquadAssistant))
     {
         E.Type = ERROR_Fatal;
         return E;

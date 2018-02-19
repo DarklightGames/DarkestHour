@@ -25,6 +25,7 @@ const SQUAD_LEADER_DRAW_DURATION_SECONDS = 15;
 // This nightmare is necessary because UnrealScript cannot replicate large
 // arrays of structs.
 var private DHPlayerReplicationInfo AxisMembers[TEAM_SQUAD_MEMBERS_MAX];
+var private byte                    AxisAssistantSquadLeaderMemberIndices[TEAM_SQUADS_MAX];
 var private string                  AxisNames[TEAM_SQUADS_MAX];
 var private byte                    AxisLocked[TEAM_SQUADS_MAX];
 var private float                   AxisNextRallyPointTimes[TEAM_SQUADS_MAX];   // Stores the next time (in relation to Level.TimeSeconds) that a squad can place a new rally point.
@@ -39,6 +40,7 @@ var int                             RallyPointInitialSpawnsMinimum;
 var float                           RallyPointInitialSpawnsMemberMultiplier;
 
 var private DHPlayerReplicationInfo AlliesMembers[TEAM_SQUAD_MEMBERS_MAX];
+var private byte                    AlliesAssistantSquadLeaderMemberIndices[TEAM_SQUADS_MAX];
 var private string                  AlliesNames[TEAM_SQUADS_MAX];
 var private byte                    AlliesLocked[TEAM_SQUADS_MAX];
 var private float                   AlliesNextRallyPointTimes[TEAM_SQUADS_MAX]; // Stores the next time (in relation to Level.TimeSeconds) that a squad can place a new rally point.
@@ -265,6 +267,7 @@ function Timer()
 
             if (Volunteers.Length == 0)
             {
+                // There were no volunteers!
                 if (GetMemberCount(TeamIndex, SquadIndex) <= SQUAD_DISBAND_THRESHOLD)
                 {
                     // "Your squad has been disbanded because the squad is too
@@ -274,14 +277,14 @@ function Timer()
                 }
                 else
                 {
-                    // No volunteers, but the squad is big enough to not be
-                    // disbanded, so someone in the squad is going to randomly
-                    // be assigned the squad leader.
+                    // The squad is big enough to not be disbanded, so someone
+                    // in the squad is going to randomly be assigned the leader.
                     BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 66);
                     GetMembers(TeamIndex, SquadIndex, Volunteers);
                 }
             }
 
+            // If the squad hasn't been disbanded, select the new squad leader.
             if (IsSquadActive(TeamIndex, SquadIndex))
             {
                 SelectNewSquadLeader(TeamIndex, SquadIndex, Volunteers);
@@ -462,6 +465,10 @@ function int CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
         if (!IsSquadActive(TeamIndex, i))
         {
             SetName(TeamIndex, i, Name);
+
+            // Clear out the assistant squad leader role.
+            SetAssistantSquadLeader(TeamIndex, i, none);
+
             SetMember(TeamIndex, i, SQUAD_LEADER_INDEX, PRI);
 
             VRI = DHVoiceReplicationInfo(PC.VoiceReplicationInfo);
@@ -566,6 +573,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
     local VoiceChatRoom SquadVCR;
     local int i;
     local array<DHPlayerReplicationInfo> Volunteers;
+    local DHPlayerReplicationInfo Assistant;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
@@ -591,8 +599,16 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
         return false;
     }
 
+    // If this member was the assistant squad leader, clear the assistant squad
+    // leader.
+    if (GetAssistantSquadLeader(TeamIndex, SquadIndex) == PRI)
+    {
+        SetAssistantSquadLeader(TeamIndex, SquadIndex, none);
+    }
+
     // Remove squad member.
     SetMember(TeamIndex, SquadIndex, SquadMemberIndex, none);
+
     PRI.SquadIndex = -1;
     PRI.SquadMemberIndex = -1;
 
@@ -616,18 +632,29 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
         // "The leader has left the squad."
         BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 40);
 
-        GetSquadLeaderVolunteers(TeamIndex, SquadIndex, Volunteers);
+        Assistant = GetAssistantSquadLeader(TeamIndex, SquadIndex);
 
-        if (Volunteers.Length > 0)
+        if (Assistant != none)
         {
-            // There are no volunteers, so let's make one of them the new
-            // squad leader without delay.
-            SelectNewSquadLeader(TeamIndex, SquadIndex, Volunteers);
+            // The squad has an assistant squad leader, so let's make them the
+            // new assistant squad leader.
+            CommandeerSquad(Assistant, TeamIndex, SquadIndex);
         }
         else
         {
-            // No volunteers, start a new squad leader draw.
-            StartSquadLeaderDraw(TeamIndex, SquadIndex);
+            GetSquadLeaderVolunteers(TeamIndex, SquadIndex, Volunteers);
+
+            if (Volunteers.Length > 0)
+            {
+                // There are volunteers, so let's make one of them the new
+                // squad leader without delay.
+                SelectNewSquadLeader(TeamIndex, SquadIndex, Volunteers);
+            }
+            else
+            {
+                // No volunteers, start a new squad leader draw.
+                StartSquadLeaderDraw(TeamIndex, SquadIndex);
+            }
         }
     }
 
@@ -723,8 +750,7 @@ function bool CommandeerSquad(DHPlayerReplicationInfo PRI, int TeamIndex, int Sq
     local DHPlayer PC;
     local bool bResult;
 
-    if (!IsInSquad(PRI, TeamIndex, SquadIndex) ||
-        HasSquadLeader(TeamIndex, SquadIndex))
+    if (!IsInSquad(PRI, TeamIndex, SquadIndex) || HasSquadLeader(TeamIndex, SquadIndex))
     {
         return false;
     }
@@ -739,6 +765,13 @@ function bool CommandeerSquad(DHPlayerReplicationInfo PRI, int TeamIndex, int Sq
         {
             // "You are now the squad leader"
             PC.ReceiveLocalizedMessage(SquadMessageClass, 34);
+        }
+
+        if (PRI.bIsSquadAssistant)
+        {
+            // The squad no longer has an assistant, since the squad is being
+            // commandeered by the assistant.
+            SetAssistantSquadLeader(TeamIndex, SquadIndex, none);
         }
 
         // "{0} has become the squad leader"
@@ -784,8 +817,22 @@ function int JoinSquadAuto(DHPlayerReplicationInfo PRI)
     local int i, SquadIndex, MaxMemberCount, MemberCount;
     local DHPlayer PC;
 
-    if (PRI == none || PRI.Team == none || PRI.IsInSquad())
+    if (PRI == none || PRI.Team == none)
     {
+        return -1;
+    }
+
+    PC = DHPlayer(PRI.Owner);
+
+    if (PC == none)
+    {
+        return -1;
+    }
+
+    if (PRI.IsInSquad())
+    {
+        // "You are already in a squad."
+        PC.ReceiveLocalizedMessage(SquadMessageClass, 69);
         return -1;
     }
 
@@ -813,13 +860,8 @@ function int JoinSquadAuto(DHPlayerReplicationInfo PRI)
         return JoinSquad(PRI, PRI.Team.TeamIndex, SquadIndex);
     }
 
-    PC = DHPlayer(PRI.Owner);
-
-    if (PC != none)
-    {
-        // "There are no squads that you are eligible to join."
-        PC.ReceiveLocalizedMessage(SquadMessageClass, 63);
-    }
+    // "There are no squads that you are eligible to join."
+    PC.ReceiveLocalizedMessage(SquadMessageClass, 63);
 
     return -1;
 }
@@ -2051,6 +2093,88 @@ function DisbandSquad(int TeamIndex, int SquadIndex)
     for (i = 0; i < Members.Length; ++i)
     {
         LeaveSquad(Members[i]);
+    }
+}
+
+// Returns the squad's assistant squad leader, or none if one does not exist.
+simulated function DHPlayerReplicationInfo GetAssistantSquadLeader(int TeamIndex, int SquadIndex)
+{
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            return GetMember(TeamIndex, SquadIndex, AxisAssistantSquadLeaderMemberIndices[SquadIndex]);
+        case ALLIES_TEAM_INDEX:
+            return GetMember(TeamIndex, SquadIndex, AlliesAssistantSquadLeaderMemberIndices[SquadIndex]);
+    }
+
+    return none;
+}
+
+function SetAssistantSquadLeader(int TeamIndex, int SquadIndex, DHPlayerReplicationInfo PRI)
+{
+    local DHPlayer PC;
+    local DHPlayerReplicationInfo ASL;
+    local int AssistantSquadLeaderMemberIndex;
+
+    if (PRI != none)
+    {
+        if (PRI.Team != none && PRI.Team.TeamIndex == TeamIndex && PRI.SquadIndex == SquadIndex && !PRI.IsSquadLeader())
+        {
+            AssistantSquadLeaderMemberIndex = PRI.SquadMemberIndex;
+        }
+    }
+    else
+    {
+        AssistantSquadLeaderMemberIndex = -1;
+    }
+
+    // Get the current assistant and send them a message that they are no longer
+    // the assistant.
+    ASL = GetAssistantSquadLeader(TeamIndex, SquadIndex);
+
+    if (ASL != none)
+    {
+        if (ASL == PRI)
+        {
+            // Player is already the assistant, bail out!
+            return;
+        }
+
+        ASL.bIsSquadAssistant = false;
+
+        PC = DHPlayer(ASL.Owner);
+
+        if (PC != none)
+        {
+            // "You are no longer the assistant squad leader."
+            PC.ReceiveLocalizedMessage(class'DHSquadMessage', 71);
+        }
+    }
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            AxisAssistantSquadLeaderMemberIndices[SquadIndex] = AssistantSquadLeaderMemberIndex;
+            break;
+        case ALLIES_TEAM_INDEX:
+            AlliesAssistantSquadLeaderMemberIndices[SquadIndex] = AssistantSquadLeaderMemberIndex;
+            break;
+    }
+
+    if (PRI != none)
+    {
+        PRI.bIsSquadAssistant = true;
+
+        PC = DHPlayer(PRI.Owner);
+
+        if (PC != none)
+        {
+            // "You are now the assistant squad leader."
+            PC.ReceiveLocalizedMessage(class'DHSquadMessage', 70);
+        }
+
+        // "{0} is now the assistant squad leader."
+        BroadcastLocalizedMessage(class'DHSquadMessage', 72, PRI);
     }
 }
 
