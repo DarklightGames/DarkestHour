@@ -175,7 +175,7 @@ var     int         HealthMax;
 
 // Menu
 var     localized string    MenuName;
-var     localized Material  MenuIcon;
+var     Material            MenuIcon;
 var     localized string    MenuDescription;
 
 // Level Info
