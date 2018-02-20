@@ -326,9 +326,9 @@ function DHConstruction.ConstructionError GetProvisionalPosition(out vector OutL
     local vector TraceStart, TraceEnd, HitLocation, HitNormal, OtherHitNormal, Left, Forward, X, Y, Z, HitNormalAverage, BaseLocation, CeilingHitLocation, CeilingHitNormal;
     local Actor TempHitActor, HitActor;
     local rotator R;
-    local float GroundSlopeDegrees, AngleRadians, SquareLength;
+    local float GroundSlopeDegrees, AngleRadians, SquareLength, CircumferenceInMeters;
     local DHConstruction.ConstructionError E;
-    local int i;
+    local int i, ArcLengthTraceCount;
     local TerrainInfo TI;
     local Material HitMaterial;
     local bool bIsTerrainSurfaceTypeAllowed;
@@ -501,11 +501,15 @@ function DHConstruction.ConstructionError GetProvisionalPosition(out vector OutL
         {
             GetAxes(rotator(Forward), X, Y, Z);
 
-            const TRACE_SAMPLE_COUNT = 8;
+            CircumferenceInMeters = class'DHUnits'.static.UnrealToMeters(CollisionRadius * Pi * 2);
+            ArcLengthTraceCount = (CircumferenceInMeters / ConstructionClass.default.ArcLengthTraceIntervalInMeters) / 2;
 
-            for (i = 0; i < TRACE_SAMPLE_COUNT; ++i)
+            // For safety's sake, make sure we don't trace more than 64 times.
+            ArcLengthTraceCount = Clamp(ArcLengthTraceCount, 0, 64);
+
+            for (i = 0; i < ArcLengthTraceCount; ++i)
             {
-                AngleRadians = (float(i) / TRACE_SAMPLE_COUNT) * Pi;
+                AngleRadians = (float(i) / ArcLengthTraceCount) * Pi;
 
                 TraceStart = vect(0, 0, 0);
                 TraceStart.Z = CollisionHeight;
@@ -552,9 +556,9 @@ function DHConstruction.ConstructionError GetProvisionalPosition(out vector OutL
 
         if (E.Type == ERROR_None)
         {
-            HitNormalAverage.X /= TRACE_SAMPLE_COUNT;
-            HitNormalAverage.Y /= TRACE_SAMPLE_COUNT;
-            HitNormalAverage.Z /= TRACE_SAMPLE_COUNT;
+            HitNormalAverage.X /= ArcLengthTraceCount;
+            HitNormalAverage.Y /= ArcLengthTraceCount;
+            HitNormalAverage.Z /= ArcLengthTraceCount;
         }
         else
         {

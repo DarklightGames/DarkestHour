@@ -94,6 +94,7 @@ var     int     LocalRotationRate;
 var     bool    bInheritsOwnerRotation;         // If true, the base rotation of the placement (prior to local rotation) will be inherited from the owner.
 var     bool    bCanPlaceInObjective;
 var     int     SquadMemberCountMinimum;        // The number of members you must have in your squad to create this.
+var     float   ArcLengthTraceIntervalInMeters; // The arc-length interval, in meters, used when tracing "outwards" during placement to check for blocking objects.
 
 var     float   ObjectiveDistanceMinMeters;         // The minimum distance, in meters, that this construction must be placed away from all objectives.
 var     float   EnemyObjectiveDistanceMinMeters;    // The minimum distance, in meters, that this construction must be placed away from enemy objectives.
@@ -1058,6 +1059,7 @@ defaultproperties
     RotationSnapAngle=16384
     bInheritsOwnerRotation=true
     bShouldAlignToGround=true
+    ArcLengthTraceIntervalInMeters=1.0
 
     // Stagnation
     bCanDieOfStagnation=true

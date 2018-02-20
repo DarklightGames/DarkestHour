@@ -210,6 +210,7 @@ defaultproperties
     bCanPlaceInWater=false
     GroundSlopeMaxInDegrees=10
     SquadMemberCountMinimum=3
+    ArcLengthTraceIntervalInMeters=0.5
 
     StartRotationMin=(Yaw=32768)
     StartRotationMax=(Yaw=32768)
