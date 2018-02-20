@@ -19,7 +19,7 @@ def parse_array(s, i):
     while True:
         r = parse_array_item(s, i)
         if r is None:
-            print 'Array parse failure for in string "{}"'.format(s)
+            print('Array parse failure for in string "{}"'.format(s))
             break
         i, item = r
         items.append(item)
@@ -96,14 +96,12 @@ def read_localization_file(sections, language, path):
 
 
 def main():
-
-    # parse options
-    argparser = argparse.ArgumentParser()
-    argparser.add_argument('dir', default='.', help='root directory')
-    argparser.add_argument('-mod', required=True, help='mod name')
-    argparser.add_argument('-digest', action='store_true', required=False, default=False)  # TODO: turn into options
-    argparser.add_argument('-output', action='store_true', required=False, default=False)
-    args = argparser.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('dir', default='.', help='root directory')
+    parser.add_argument('-mod', required=True, help='mod name')
+    parser.add_argument('-digest', action='store_true', required=False, default=False)  # TODO: turn into options
+    parser.add_argument('-output', action='store_true', required=False, default=False)
+    args = parser.parse_args()
 
     '''
     # do a clean recompile of the project and run dumpint
@@ -114,31 +112,31 @@ def main():
     args.dir = os.path.abspath(args.dir)
 
     if not os.path.isdir(args.dir):
-        print 'error: "{}" is not a directory'.format(args.dir)
+        print('error: "{}" is not a directory'.format(args.dir))
         sys.exit(1)
 
     # system directory
     sys_dir = os.path.join(args.dir, 'System')
 
     if not os.path.isdir(sys_dir):
-        print 'error: could not resolve System directory'
+        print('error: could not resolve System directory')
         sys.exit(1)
 
     # mod directory
     mod_dir = os.path.join(args.dir, args.mod)
 
     if not os.path.isdir(mod_dir):
-        print 'error: could not resolve mod directory'
+        print('error: could not resolve mod directory')
         sys.exit(1)
 
     # mod system directory
     mod_sys_dir = os.path.join(mod_dir, 'System')
 
     if not os.path.isdir(mod_sys_dir):
-        print 'error could not resolve mod system directory'
+        print('error could not resolve mod system directory')
         sys.exit(1)
 
-    workbook_name = '{0}.xlsx'.format(args.mod)
+    workbook_name = '.'.join([args.mod, 'xlsx'])
 
     if args.output:
         # TODO: write to mod folder
@@ -167,7 +165,6 @@ def main():
             for language in languages:
                 path = os.path.join(mod_sys_dir, os.path.splitext(package)[0] + '.' + language)
                 sections = read_localization_file(sections, language, path)
-
             # strip sections files down
             sections_to_remove = []
             for section in sections.keys():
@@ -227,10 +224,12 @@ def main():
         workbook.close()
 
     if args.digest:
-        # now READ IT IN
-        print 'Loading workboook ' + workbook_name + '...'
+        print('Loading workbook {0}...'.format(workbook_name))
+
         workbook = load_workbook(workbook_name)
-        print 'Workbook loaded!'
+
+        print('Workbook loaded!')
+
         for sheet_name in workbook.get_sheet_names():
             sheet = workbook.get_sheet_by_name(sheet_name)
             # gather up languages in the file
@@ -246,7 +245,6 @@ def main():
             # TODO: go down the rows, find the first section:
             # sections are ones where the first column is filled, but there's nothing in the `int` column
             row += 1
-            col = 1
             sections = OrderedDict()
             section = None
             key = None
@@ -320,12 +318,12 @@ def main():
                     os.remove(file_path)
 
 
-
-
 def match_whitespace(original, translated):
     trailing = len(original) - len(original.lstrip(' '))
     if len(original.strip(' ')) > 0:
         leading = len(original) - len(original.rstrip(' '))
+    else:
+        leading = 0
     return (' ' * trailing) + translated.strip(' ') + (' ' * leading)
 
 if __name__ == "__main__":
