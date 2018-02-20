@@ -36,7 +36,7 @@ simulated function string GetNamePrefix()
     }
     else if (IsInSquad())
     {
-        return string(SquadMemberIndex);
+        return string(SquadMemberIndex + 1);
     }
 
     return "";

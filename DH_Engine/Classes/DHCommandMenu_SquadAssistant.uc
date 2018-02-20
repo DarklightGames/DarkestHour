@@ -8,8 +8,7 @@ class DHCommandMenu_SquadAssistant extends DHCommandMenu;
 function OnSelect(int Index, vector Location)
 {
     local DHPlayer PC;
-    local DHPawn P;
-    local DHPlayerReplicationInfo PRI, OtherPRI;
+    local DHPlayerReplicationInfo PRI;
 
     PC = GetPlayerController();
 

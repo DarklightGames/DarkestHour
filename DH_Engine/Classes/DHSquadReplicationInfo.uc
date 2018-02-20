@@ -525,6 +525,12 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
         return false;
     }
 
+    // If the new squad leader is the assistant squad leader, clear the assistant.
+    if (GetAssistantSquadLeader(TeamIndex, SquadIndex) == NewSquadLeader)
+    {
+        SetAssistantSquadLeader(TeamIndex, SquadIndex, none);
+    }
+
     // Rescind squad leader volunteer application.
     ClearSquadLeaderVolunteer(PRI, TeamIndex, SquadIndex);
 
@@ -611,6 +617,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
 
     PRI.SquadIndex = -1;
     PRI.SquadMemberIndex = -1;
+    PRI.bIsSquadAssistant = false;
 
     // Unreserve squad-only vehicle selection
     UnreserveSquadVehicle(PC);
