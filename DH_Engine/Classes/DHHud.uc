@@ -57,12 +57,13 @@ var     SpriteWidget        DeployInObjectiveIcon;
 // Displayed player name & icons
 var     array<Pawn>         NamedPawns;             // a list of all pawns whose names are currently being rendered
 var     float               HUDLastNameDrawTime;    // the last time we called DrawPlayerNames() function, used so we can tell if a player has just become valid for name drawing
-var     material            PlayerNameIconMaterial;
-var     material            PlayerNameFilledIconMaterial;
-var     material            SquadLeaderIconMaterial;
-var     material            SpeakerIconMaterial;
-var     material            NeedAssistIconMaterial;
-var     material            NeedAmmoIconMaterial;
+var     Material            PlayerNameIconMaterial;
+var     Material            PlayerNameFilledIconMaterial;
+var     Material            SquadLeaderIconMaterial;
+var     Material            SpeakerIconMaterial;
+var     Material            NeedAssistIconMaterial;
+var     Material            NeedAmmoIconMaterial;
+var     Material            AssistantIconMaterial;
 
 // Objective HUD
 var     SpriteWidget        EnemyPresentIcon;
@@ -235,6 +236,7 @@ function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(PlayerNameIconMaterial);
     Level.AddPrecacheMaterial(PlayerNameFilledIconMaterial);
     Level.AddPrecacheMaterial(SquadLeaderIconMaterial);
+    Level.AddPrecacheMaterial(AssistantIconMaterial);
     Level.AddPrecacheMaterial(SpeakerIconMaterial);
     Level.AddPrecacheMaterial(NeedAssistIconMaterial);
     Level.AddPrecacheMaterial(NeedAmmoIconMaterial);
@@ -2551,6 +2553,11 @@ function DrawPlayerNames(Canvas C)
             else if (OtherPRI.IsSquadLeader())
             {
                 IconMaterial = SquadLeaderIconMaterial;
+                IconMaterialColor = GetPlayerColor(OtherPRI);
+            }
+            else if (OtherPRI.bIsSquadAssistant)
+            {
+                IconMaterial = AssistantIconMaterial;
                 IconMaterialColor = GetPlayerColor(OtherPRI);
             }
         }
@@ -5440,6 +5447,7 @@ defaultproperties
     PlayerNameIconMaterial=Material'DH_InterfaceArt_tex.HUD.player_icon_world'
     PlayerNameFilledIconMaterial=Material'DH_InterfaceArt_tex.HUD.player_icon_world_filled'
     SquadLeaderIconMaterial=Material'DH_InterfaceArt2_tex.Icons.squad_leader'
+    AssistantIconMaterial=Material'DH_InterfaceArt2_tex.Icons.assistant'
     SpeakerIconMaterial=Texture'DH_InterfaceArt_tex.Communication.speaker_icon'
     NeedAssistIconMaterial=Texture'DH_InterfaceArt_tex.Communication.need_assist_icon'
     NeedAmmoIconMaterial=Texture'DH_InterfaceArt2_tex.Icons.resupply_box'
