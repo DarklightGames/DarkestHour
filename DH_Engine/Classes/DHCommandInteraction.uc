@@ -312,6 +312,11 @@ function PostRender(Canvas C)
     {
         OptionIndex = Menu.GetOptionIndexFromSlotIndex(i);
 
+        if (OptionIndex == -1)
+        {
+            continue;
+        }
+
         bIsOptionDisabled = Menu.IsOptionDisabled(OptionIndex);
 
         if (bIsOptionDisabled)
