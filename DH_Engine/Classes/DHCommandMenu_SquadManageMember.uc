@@ -171,7 +171,7 @@ defaultproperties
     Options(0)=(SubjectText="Kick from squad",Material=Material'DH_InterfaceArt2_tex.Icons.squad_kick')
     Options(1)=(SubjectText="Promote to squad leader",Material=Material'DH_InterfaceArt2_tex.Icons.squad_leader')
     Options(2)=(SubjectText="Ban from squad",Material=Material'DH_InterfaceArt2_tex.Icons.squad_ban')
-    Options(3)=(SubjectText="Make assistant",Material=Texture'DH_InterfaceArt_tex.Communication.assistant')
-    Options(4)=(SubjectText="Remove assistant",Material=Texture'DH_InterfaceArt_tex.Communication.assistant')
+    Options(3)=(SubjectText="Make assistant",Material=Texture'DH_InterfaceArt2_tex.Icons.assistant')
+    Options(4)=(SubjectText="Remove assistant",Material=Texture'DH_InterfaceArt2_tex.Icons.assistant')
 }
 
