@@ -63,6 +63,10 @@ simulated function SetText()
     {
         GameType = class'DHGameType_Cutoff'.default.GameTypeName;
     }
+    else if (InStr(MapName, "_Armoured") >= 0)
+    {
+        GameType = class'DHGameType_Armoured'.default.GameTypeName;
+    }
     else
     {
         GameType = class'DHGameType_Push'.default.GameTypeName;
