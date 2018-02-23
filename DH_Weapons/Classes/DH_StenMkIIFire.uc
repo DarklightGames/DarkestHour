@@ -12,8 +12,8 @@ defaultproperties
     FireRate=0.12
     Spread=320.0
     RecoilRate=0.075
-    MaxVerticalRecoilAngle=400
-    MaxHorizontalRecoilAngle=70
+    MaxVerticalRecoilAngle=290
+    MaxHorizontalRecoilAngle=50
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stMP'
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Sten.Sten_fire_g1'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Sten.Sten_fire_g2'

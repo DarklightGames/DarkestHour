@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DHCommandMenu_Construction extends DHCommandMenu
+class DHCommandMenu_ConstructionGroup extends DHCommandMenu
     dependson(DHConstruction);
 
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt2_tex.utx
@@ -12,36 +12,23 @@ var Material SuppliesIcon;
 
 var localized string NotAvailableText;
 var localized string TeamLimitText;
-var localized string MoreText;
 
+var class<DHConstructionGroup> GroupClass;
 var DHConstruction.Context Context;
 
 function Setup()
 {
-    local int i, j, StartIndex;
+    local int i, j;
     local DHPlayer PC;
     local DHGameReplicationInfo GRI;
-    local array<class<DHConstruction> > ConstructionClasses;
-
-    GRI = DHGameReplicationInfo(Interaction.ViewportOwner.Actor.GameReplicationInfo);
-
-    if (UInteger(MenuObject) != none)
-    {
-        StartIndex = UInteger(MenuObject).Value;
-    }
 
     PC = GetPlayerController();
+    GRI = DHGameReplicationInfo(Interaction.ViewportOwner.Actor.GameReplicationInfo);
+    GroupClass = class<DHConstructionGroup>(MenuObject);
 
-    // For simplicity's sake, we'll map the static array to a dynamic array so
-    // we can know how many classes we have to deal upfront and not have to deal
-    // with handling null values during iteration.
-    for (i = 0; i < arraycount(GRI.ConstructionClasses); ++i)
+    if (PC == none || GRI == none || GroupClass == none)
     {
-        if (GRI.ConstructionClasses[i] != none &&
-            GRI.ConstructionClasses[i].static.ShouldShowOnMenu(PC))
-        {
-            ConstructionClasses[ConstructionClasses.Length] = GRI.ConstructionClasses[i];
-        }
+        return;
     }
 
     // Establish context
@@ -49,28 +36,21 @@ function Setup()
     Context.LevelInfo = class'DH_LevelInfo'.static.GetInstance(PC.Level);
     Context.PlayerController = PC;
 
-    if (GRI != none)
+    // For simplicity's sake, we'll map the static array to a dynamic array so
+    // we can know how many classes we have to deal upfront and not have to deal
+    // with handling null values during iteration.
+    for (i = 0; i < arraycount(GRI.ConstructionClasses); ++i)
     {
-        // TODO: magic number
-        for (i = StartIndex; i < ConstructionClasses.Length && j < 8; ++i)
+        if (GRI.ConstructionClasses[i] != none &&
+            GRI.ConstructionClasses[i].default.GroupClass == GroupClass &&
+            GRI.ConstructionClasses[i].static.ShouldShowOnMenu(Context))
         {
             Options.Insert(j, 1);
-            Options[j].OptionalObject = ConstructionClasses[i];
-            Options[j].ActionText = ConstructionClasses[i].static.GetMenuName(Context);
-            Options[j].Material = ConstructionClasses[i].static.GetMenuIcon(Context);
+            Options[j].OptionalObject = GRI.ConstructionClasses[i];
+            Options[j].ActionText = GRI.ConstructionClasses[i].static.GetMenuName(Context);
+            Options[j].Material = GRI.ConstructionClasses[i].static.GetMenuIcon(Context);
             Options[j].ActionIcon = SuppliesIcon;
             ++j;
-        }
-
-        if (ConstructionClasses.Length - i >= 1)
-        {
-            // More options are available, so let's make a submenu option.
-            // Insert the "more options" option in the first position.
-            Options.Length = Options.Length - 1;
-            Options.Insert(0, 1);
-            Options[0].OptionalObject = class'UInteger'.static.Create(i - 1);
-            Options[0].ActionText = MoreText;
-            Options[0].Material = Texture'DH_InterfaceArt2_tex.Icons.ellipses';
         }
     }
 
@@ -193,6 +173,8 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
                 ORI.InfoText = string(ConstructionClass.static.GetSupplyCost(Context));
                 break;
         }
+
+        ORI.DescriptionText = ConstructionClass.default.MenuDescription;
     }
 }
 
@@ -209,7 +191,6 @@ defaultproperties
     SuppliesIcon=Texture'DH_InterfaceArt2_tex.Icons.supply_cache'
     NotAvailableText="Not Available"
     TeamLimitText="Limit Reached"
-    MoreText="More..."
     SlotCountOverride=8
 }
 

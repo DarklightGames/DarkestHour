@@ -17,7 +17,6 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 
     if (Instigator != none && Other.Base == Instigator.GetVehicleBase())
     {
-        log("HIT OWN VEHICLE" @ Other.name); // TEMPDEBUG
         return;
     }
 
@@ -34,7 +33,6 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 {
     if (Instigator != none && Wall == Instigator.GetVehicleBase() && Wall != none)
     {
-        log("HIT OWN VEHICLE" @ Wall.name @ " Velocity =" @ Velocity @ " Rotation =" @ Rotation); // TEMPDEBUG
         SetLocation(Location + vector(Rotation));
 
         return;

@@ -185,12 +185,19 @@ simulated state ViewTransition
     }
 }
 
+// Modified to include any overlay position, which for this MG includes the periscope position as well as the gunsight & binoculars
+simulated function bool ShouldViewSnapInPosition(byte PositionIndex)
+{
+    return super(DHVehicleWeaponPawn).ShouldViewSnapInPosition(PositionIndex);
+//  return DriverPositions[PositionIndex].bDrawOverlays && (PositionIndex == 0 || PositionIndex == PeriscopePositionIndex || PositionIndex == BinocPositionIndex); // would be a 'pure' override
+}
+
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_ChurchillMountedMG'
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
     bMultiPosition=true
-    DriverPositions(0)=(ViewFOV=38.0,ViewLocation=(X=10.0,Y=-7.0,Z=0.0),TransitionUpAnim="MG_periscope_in",ViewPitchDownLimit=65535,bDrawOverlays=true)
+    DriverPositions(0)=(ViewFOV=44.74,ViewLocation=(X=10.0,Y=-7.0,Z=0.0),TransitionUpAnim="MG_periscope_in",ViewPitchDownLimit=65535,bDrawOverlays=true)
     DriverPositions(1)=(ViewLocation=(X=10.0,Y=1.0,Z=11.5),TransitionUpAnim="MG_hatch_open",TransitionDownAnim="MG_periscope_out",ViewPitchDownLimit=65535,ViewPositiveYawLimit=2000,ViewNegativeYawLimit=2000,bDrawOverlays=true)
     DriverPositions(2)=(TransitionDownAnim="MG_hatch_close",DriverTransitionAnim="VPanzer3_driver_idle_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=59000,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000,bExposed=true)
     DriverPositions(3)=(ViewFOV=12.0,DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=59000,ViewPositiveYawLimit=15000,ViewNegativeYawLimit=-15000,bDrawOverlays=true,bExposed=true)
@@ -202,6 +209,7 @@ defaultproperties
     CameraBone="camera_MG"
     GunsightCameraBone="MG_pivot"
     GunsightOverlay=Texture'DH_VehicleOptics_tex.British.BesaMG_sight'
+    GunsightSize=0.469 // 21 degrees visible FOV at 1.9x magnification (No.50 x1.9 Mk IS sight)
     PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_Allied'
     BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_7x50Allied'
 }

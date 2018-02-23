@@ -26,6 +26,7 @@ var()   config bool                 bSessionKickOnSecondFFViolation;
 var()   config bool                 bUseWeaponLocking;                      // Weapons can lock (preventing fire) for punishment
 var     int                         WeaponLockTimeSecondsInterval;
 var     int                         WeaponLockTimeSecondsMaximum;
+var     int                         WeaponLockTimeSecondsFFKillsMultiplier;
 
 var     bool                        bSkipPreStartTime;                      // Whether or not to skip the PreStartTime configured on the server
 
@@ -76,6 +77,24 @@ var     DHSquadReplicationInfo      SquadReplicationInfo;
 var()   config int                  EmptyTankUnlockTime;                    // Server config option for how long (secs) before unlocking a locked armored vehicle if abandoned by its crew
 
 var     DHGameReplicationInfo       GRI;
+
+// The response types for requests.
+enum EArtilleryResponseType
+{
+    RESPONSE_OK,
+    RESPONSE_Unavailable,
+    RESPONSE_Exhausted,
+    RESPONSE_BadLocation,
+    RESPONSE_NotQualified,
+    RESPONSE_TooSoon,
+    RESPONSE_BadRequest
+};
+
+struct ArtilleryResponse
+{
+    var EArtilleryResponseType  Type;
+    var DHArtillery             ArtilleryActor;
+};
 
 // Overridden to make new clamp of MaxPlayers
 event InitGame(string Options, out string Error)
@@ -2046,7 +2065,7 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
 
                     if (DHPlayerReplicationInfo(DHKiller.PlayerReplicationInfo) != none)
                     {
-                        DHKiller.LockWeapons(Min(WeaponLockTimeSecondsMaximum, DHPlayerReplicationInfo(DHKiller.PlayerReplicationInfo).FFKills / FFKillLimit * WeaponLockTimeSecondsMaximum), 4);
+                        DHKiller.LockWeapons(Min(WeaponLockTimeSecondsMaximum, DHKiller.PlayerReplicationInfo.FFKills * WeaponLockTimeSecondsFFKillsMultiplier), 4);
                     }
 
                     // If bForgiveFFKillsEnabled, store the friendly Killer into the Killed player's controller, so if they choose to forgive, we'll know who to forgive
@@ -2209,7 +2228,7 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
 
 function bool RoleExists(byte TeamID, DHRoleInfo RI)
 {
-    local int                   i;
+    local int i;
 
     if (TeamID == AXIS_TEAM_INDEX)
     {
@@ -2291,13 +2310,23 @@ state RoundInPlay
             }
         }
 
-        // Arty
+        // LEGACY: These variables correspond to the old artillery system.
         GRI.bArtilleryAvailable[AXIS_TEAM_INDEX] = 0;
         GRI.bArtilleryAvailable[ALLIES_TEAM_INDEX] = 0;
         GRI.LastArtyStrikeTime[AXIS_TEAM_INDEX] = ElapsedTime - LevelInfo.GetStrikeInterval(AXIS_TEAM_INDEX);
         GRI.LastArtyStrikeTime[ALLIES_TEAM_INDEX] = ElapsedTime - LevelInfo.GetStrikeInterval(ALLIES_TEAM_INDEX);
         GRI.TotalStrikes[AXIS_TEAM_INDEX] = 0;
         GRI.TotalStrikes[ALLIES_TEAM_INDEX] = 0;
+
+        // New artillery!
+        for (i = 0; i < arraycount(GRI.ArtilleryTypeInfos); ++i)
+        {
+            GRI.ArtilleryTypeInfos[i].ArtilleryActor = none;
+            GRI.ArtilleryTypeInfos[i].UsedCount = 0;
+            GRI.ArtilleryTypeInfos[i].NextConfirmElapsedTime = 0;
+            GRI.ArtilleryTypeInfos[i].bIsAvailable = DHLevelInfo.IsArtilleryInitiallyAvailable(i);
+            GRI.ArtilleryTypeInfos[i].Limit = DHLevelInfo.GetArtilleryLimit(i);
+        }
 
         for (i = 0; i < arraycount(GRI.AxisRallyPoints); ++i)
         {
@@ -4726,6 +4755,97 @@ function bool CanSpectate(PlayerController Viewer, bool bOnlySpectator, Actor Vi
     return P != none && P.IsPlayerPawn() && (bOnlySpectator || P.PlayerReplicationInfo.Team == Viewer.PlayerReplicationInfo.Team);
 }
 
+// Attempts to creates an artillery strike from an artillery request object.
+// Response object contains the response type, and the artillery actor, if one
+// was created.
+function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
+{
+    local ArtilleryResponse Response;
+    local DHVolumeTest VT;
+    local int Interval;
+
+    if (Request == none ||
+        Request.ArtilleryTypeIndex < 0 ||
+        Request.ArtilleryTypeIndex >= DHLevelInfo.ArtilleryTypes.Length ||
+        DHLevelInfo.ArtilleryTypes[Request.ArtilleryTypeIndex].ArtilleryClass == none ||
+        Request.TeamIndex != DHLevelInfo.ArtilleryTypes[Request.ArtilleryTypeIndex].TeamIndex)
+    {
+        // Malformed request.
+        Response.Type = RESPONSE_BadRequest;
+    }
+    else if (GRI == none || DHLevelInfo == none || !GRI.ArtilleryTypeInfos[Request.ArtilleryTypeIndex].bIsAvailable)
+    {
+        // This type of aritllery is unavailable.
+        Response.Type = RESPONSE_Unavailable;
+    }
+    else if (GRI.ArtilleryTypeInfos[Request.ArtilleryTypeIndex].UsedCount >= GRI.ArtilleryTypeInfos[Request.ArtilleryTypeIndex].Limit)
+    {
+        // This type of artillery has been exhausted.
+        Response.Type = RESPONSE_Exhausted;
+    }
+    else if (GRI.ElapsedTime < GRI.ArtilleryTypeInfos[Request.ArtilleryTypeIndex].NextConfirmElapsedTime)
+    {
+        // This type of artillery cannot be requested yet.
+        Response.Type = RESPONSE_TooSoon;
+    }
+    else if (!DHLevelInfo.ArtilleryTypes[Request.ArtilleryTypeIndex].ArtilleryClass.static.CanBeRequestedBy(Request.Sender))
+    {
+        // The requesting player is unqualified to request this artillery.
+        Response.Type = RESPONSE_NotQualified;
+    }
+    else
+    {
+        // Don't let the player call in an artillery strike on a location that has
+        // become an active "no artillery" volume after they marked the location.
+        VT = Spawn(class'DHVolumeTest', self,, Request.Location);
+
+        if (VT != none && VT.IsInNoArtyVolume())
+        {
+            // The requested location is in a no-artillery volume.
+            Response.Type = RESPONSE_BadLocation;
+        }
+
+        VT.Destroy();
+    }
+
+    if (Response.Type == RESPONSE_OK)
+    {
+        // No errors encountered evaluating response, so spawn the artillery actor.
+        Response.ArtilleryActor = Spawn(DHLevelInfo.ArtilleryTypes[Request.ArtilleryTypeIndex].ArtilleryClass, Request.Sender,, Request.Location);
+
+        if (Response.ArtilleryActor == none)
+        {
+            // Spawning of artillery actor failed, so we are probably in a bad
+            // location, or something else has gone horribly wrong.
+            Warn("FAILED TO SPAWN ARTILLERY ACTOR!");
+            Response.Type = RESPONSE_BadLocation;
+        }
+        else
+        {
+            // Artillery successfully created, assign team.
+            Response.ArtilleryActor.TeamIndex = Request.TeamIndex;
+            Response.ArtilleryActor.Requester = Request.Sender;
+
+            // Update tracking statistics.
+            GRI.ArtilleryTypeInfos[Request.ArtilleryTypeIndex].UsedCount += 1;
+
+            Interval = DHLevelInfo.ArtilleryTypes[Request.ArtilleryTypeIndex].ArtilleryClass.static.GetConfirmIntervalSecondsOverride(Request.TeamIndex, Level);
+
+            if (Interval == -1)
+            {
+                Interval = DHLevelInfo.ArtilleryTypes[Request.ArtilleryTypeIndex].ConfirmIntervalSeconds;
+            }
+
+            GRI.ArtilleryTypeInfos[Request.ArtilleryTypeIndex].NextConfirmElapsedTime = GRI.ElapsedTime + Interval;
+            GRI.ArtilleryTypeInfos[Request.ArtilleryTypeIndex].ArtilleryActor = Response.ArtilleryActor;
+
+            NotifyPlayersOfMapInfoChange(Request.TeamIndex);
+        }
+    }
+
+    return Response;
+}
+
 defaultproperties
 {
     ServerTickForInflation=20.0
@@ -4832,7 +4952,7 @@ defaultproperties
     Begin Object Class=UVersion Name=VersionObject
         Major=8
         Minor=0
-        Patch=2
+        Patch=4
         Prerelease="beta"
     End Object
     Version=VersionObject
@@ -4843,6 +4963,7 @@ defaultproperties
 
     WeaponLockTimeSecondsInterval=5
     WeaponLockTimeSecondsMaximum=120
+    WeaponLockTimeSecondsFFKillsMultiplier=10
 
     bAllowAllChat=true
     bIsAttritionEnabled=true

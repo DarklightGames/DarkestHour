@@ -67,7 +67,7 @@ defaultproperties
     ShellIronSightOffset=(X=10.0,Y=0.0,Z=0.0)
     NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_pistol'
 
-    Spread=450.0
+    Spread=350.0
     MaxVerticalRecoilAngle=600
     MaxHorizontalRecoilAngle=75
     AimError=800.0

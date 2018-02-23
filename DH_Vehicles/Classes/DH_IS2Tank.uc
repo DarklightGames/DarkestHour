@@ -37,6 +37,7 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_IS2_anm.IS2-body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=0,ViewNegativeYawLimit=0,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_IS2_anm.IS2-body_int',DriverTransitionAnim="VIS2_driver_close",TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_in",ViewPitchUpLimit=2730,ViewPitchDownLimit=61900,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_IS2_anm.IS2-body_int',DriverTransitionAnim="VIS2_driver_open",TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=5500,ViewPitchDownLimit=65000,ViewPositiveYawLimit=12000,ViewNegativeYawLimit=-12000,bExposed=true)
+    UnbuttonedPositionIndex=3 // can't unbutton, no proper exit hatch for driver (small opening hatch is just for vision)
     DrivePos=(X=12.0,Y=0.0,Z=0.0) // adjusted from original
     DriveAnim="VIS2_driver_idle_close"
     HUDOverlayClass=class'ROVehicles.IS2DriverOverlay'
@@ -65,7 +66,6 @@ defaultproperties
     // Damage
     Health=650 // was 800 but adjusted to more in line with similar DH vehicles
     HealthMax=650.0
-    DisintegrationHealth=-900.0
     VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-100.0,Y=0.0,Z=0.0)) // engine
     VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=16.0,Y=-25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=16.0,Y=25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)

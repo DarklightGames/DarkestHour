@@ -5,9 +5,6 @@
 
 class DHSovietVoice extends DHVoicePack;
 
-#exec OBJ LOAD FILE=..\Sounds\voice_sov_infantry.uax
-#exec OBJ LOAD FILE=..\Sounds\voice_sov_vehicle.uax
-
 defaultproperties
 {
     // Support sound groups
@@ -89,4 +86,9 @@ defaultproperties
     ExtraSound[0]=SoundGroup'voice_sov_infantry.insults.i_will_kill_you'
     ExtraSound[1]=SoundGroup'voice_sov_infantry.insults.no_retreat'
     ExtraSound[2]=SoundGroup'voice_sov_infantry.insults.insult'
+
+
+    RadioRequestSound=SoundGroup'Artillery.Request.RusRequest'
+    RadioResponseConfirmSound=SoundGroup'voice_sov_infantry.artillery.confirm'
+    RadioResponseDenySound=SoundGroup'voice_sov_infantry.artillery.Deny'
 }

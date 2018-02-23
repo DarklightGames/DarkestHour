@@ -11,12 +11,10 @@ defaultproperties
     AmmoClass=class'ROAmmo.STG44Ammo'
     FAProjSpawnOffset=(X=-28.0)
     FireRate=0.14
-
     Spread=145.0
     RecoilRate=0.07
-
-    MaxVerticalRecoilAngle=600
-
+    MaxVerticalRecoilAngle=305
+    MaxHorizontalRecoilAngle=45
     FireSounds(0)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire03'

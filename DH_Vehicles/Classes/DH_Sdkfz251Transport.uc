@@ -70,7 +70,6 @@ defaultproperties
     EngineHealth=150
     VehHitpoints(0)=(PointRadius=30.0,PointOffset=(X=15.0,Y=0.0,Z=-15.0)) // engine
     ImpactWorldDamageMult=3.0
-    ImpactDamageThreshold=15.0
     TreadHitMaxHeight=-5.0
     DamagedEffectScale=0.75
     DamagedEffectOffset=(X=120.0,Y=00.0,Z=20.0)

@@ -64,7 +64,7 @@ defaultproperties
     // Weapon fire
     FireInterval=0.2
     WeaponFireOffset=5.0
-    AddedPitch=50
+    AddedPitch=35 // tricky one as has no range settings & AddedPitch varies widely between ranges (35/44/32/17/-5 for 500/800/1000/1200/1500m) - this global adjustment works well up to 1000m
     ShellCaseEmitterClass=class'DH_Guns.DH_20mmShellCaseEmitter'
     ShellCaseEjectorBone="Gun"
 

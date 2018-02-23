@@ -831,17 +831,17 @@ simulated state ViewTransition
             PC = PlayerController(Controller); // having PC reference now serves as a flag that we're locally controlled & in 1st person view
         }
 
-        // If moving away from an overlay position, immediately neutralise any zoom or camera offset from the old overlay
-        // Applies to gunsight, periscope or binoculars position, but not if we're using a HUD overlay, e.g. MG 1st person weapon overlay
-        if (DriverPositions[LastPositionIndex].bDrawOverlays && HUDOverlay == none)
+        // If moving away from a position where the camera view snaps, immediately neutralise any zoom or camera offset from the old position
+        // Relevant to overlays like gunsight, periscope or binoculars
+        if (ShouldViewSnapInPosition(LastPositionIndex))
         {
             if (PC != none)
             {
                 PC.SetFOV(PC.DefaultFOV);
             }
 
-            // If moving to another overlay position (e.g. off gunsight towards periscope), remove any camera offset from old overlay
-            if (DriverPositions[DriverPositionIndex].bDrawOverlays)
+            // If moving to another camera snap position (e.g. off gunsight towards periscope), remove any camera offset from old position during the transition
+            if (ShouldViewSnapInPosition(DriverPositionIndex))
             {
                 FPCamPos = vect(0.0, 0.0, 0.0);
             }
@@ -849,9 +849,9 @@ simulated state ViewTransition
 
         WeaponFOV = GetViewFOV(DriverPositionIndex);
 
-        // Unless moving onto an overlay position, apply any zoom & camera offset for the new position now
-        // If we are moving onto an overlay position, we instead leave it to end of the transition
-        if (!DriverPositions[DriverPositionIndex].bDrawOverlays)
+        // Unless moving onto an camera snap position, apply any zoom & camera offset for the new position now
+        // If we are moving onto an camera snap position, we instead leave it to end of the transition
+        if (!ShouldViewSnapInPosition(DriverPositionIndex))
         {
             if (PC != none)
             {
@@ -916,8 +916,8 @@ simulated state ViewTransition
 
     simulated function EndState()
     {
-        // If we've finished moving onto an overlay position, now snap to any zoom setting or camera offset it has (we avoiding doing this earlier)
-        if (DriverPositions[DriverPositionIndex].bDrawOverlays)
+        // If we've finished moving onto a camera snap position, now snap to any zoom setting or camera offset it has (we avoiding doing this earlier)
+        if (ShouldViewSnapInPosition(DriverPositionIndex))
         {
             if (IsFirstPerson())
             {
@@ -944,6 +944,14 @@ Begin:
     HandleTransition();
     Sleep(ViewTransitionDuration);
     GotoState('');
+}
+
+// New helper function to check whether a view position (i.e. one of the DriverPositions) should apply view 'snap' when moving onto or away from iter_swap
+// Used to determine whether any camera view changes (zoom or position offset) should only be applied when actually in the position & not while player is transitioning
+// By default in includes a gunsight or binoculars overlay position, but can easily be subclassed
+simulated function bool ShouldViewSnapInPosition(byte PositionIndex)
+{
+    return DriverPositions[PositionIndex].bDrawOverlays && ((GunsightOverlay != none && PositionIndex == 0) || PositionIndex == BinocPositionIndex);
 }
 
 /*
@@ -1997,6 +2005,22 @@ exec function ToggleViewLimit()
     }
 }
 
+// New debug exec to adjust the yaw limits for the current 'driver' position
+exec function SetViewLimits(int NewPitchUp, int NewPitchDown, int NewYawRight, int NewYawLeft)
+{
+    if (IsDebugModeAllowed())
+    {
+        Log(Tag @ ": ViewPitchUpLimit =" @ NewPitchUp @ "ViewPitchDownLimit =" @ NewPitchDown @ "ViewPositiveYawLimit =" @ NewYawRight @ "ViewNegativeYawLimit =" @ NewYawLeft
+            @ "(was" @ DriverPositions[DriverPositionIndex].ViewPitchUpLimit @ DriverPositions[DriverPositionIndex].ViewPitchDownLimit
+            @ DriverPositions[DriverPositionIndex].ViewPositiveYawLimit @ DriverPositions[DriverPositionIndex].ViewNegativeYawLimit $ ")");
+
+        DriverPositions[DriverPositionIndex].ViewPitchUpLimit = NewPitchUp;
+        DriverPositions[DriverPositionIndex].ViewPitchDownLimit = NewPitchDown;
+        DriverPositions[DriverPositionIndex].ViewPositiveYawLimit = NewYawRight;
+        DriverPositions[DriverPositionIndex].ViewNegativeYawLimit = NewYawLeft;
+    }
+}
+
 // New debug exec to toggles showing any collision static mesh actor
 exec function ShowColMesh()
 {
@@ -2104,6 +2128,23 @@ exec function SetSoundRadius(float NewValue)
             Log(Gun.Tag @ "SoundRadius =" @ NewValue @ "(was" @ Gun.SoundRadius $ ")");
             Gun.SoundRadius = NewValue;
         }
+    }
+}
+
+// New debug exec to adjust all the view shake settings
+exec function SetShake(float RotMag, float RotRate, float RotTime, float OffMag, float OffRate, float OffTime)
+{
+    if (IsDebugModeAllowed() && Gun != none)
+    {
+        log(Gun.Tag @ "ShakeRotMag =" @ RotMag @ "ShakeRotRate =" @ RotRate @ "ShakeRotTime =" @ RotTime @ "ShakeOffsetMag =" @ OffMag @ "ShakeOffsetRate =" @ OffRate @ "ShakeOffsetTime =" @ OffTime
+            @ "  Rot was" @ Gun.ShakeRotMag.Z @ Gun.ShakeRotRate.Z @ Gun.ShakeRotTime @ "  Offset was" @ Gun.ShakeOffsetMag.Z @ Gun.ShakeOffsetRate.Z @ Gun.ShakeOffsetTime);
+
+        Gun.ShakeRotMag.Z = RotMag;
+        Gun.ShakeRotRate.Z = RotRate;
+        Gun.ShakeRotTime = RotTime;
+        Gun.ShakeOffsetMag.Z = OffMag;
+        Gun.ShakeOffsetRate.Z = OffRate;
+        Gun.ShakeOffsetTime = OffTime;
     }
 }
 

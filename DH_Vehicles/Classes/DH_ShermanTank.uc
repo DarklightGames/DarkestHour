@@ -12,7 +12,7 @@ class DH_ShermanTank extends DHArmoredVehicle; // M4A1 75mm variant (without wet
 defaultproperties
 {
     // Vehicle properties
-    VehicleNameString="M4A1 Sherman"
+    VehicleNameString="M4A1(75) Sherman"
     VehicleTeam=1
     VehicleMass=13.5
     ReinforcementCost=9

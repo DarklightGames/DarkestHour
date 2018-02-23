@@ -57,12 +57,13 @@ var     SpriteWidget        DeployInObjectiveIcon;
 // Displayed player name & icons
 var     array<Pawn>         NamedPawns;             // a list of all pawns whose names are currently being rendered
 var     float               HUDLastNameDrawTime;    // the last time we called DrawPlayerNames() function, used so we can tell if a player has just become valid for name drawing
-var     material            PlayerNameIconMaterial;
-var     material            PlayerNameFilledIconMaterial;
-var     material            SquadLeaderIconMaterial;
-var     material            SpeakerIconMaterial;
-var     material            NeedAssistIconMaterial;
-var     material            NeedAmmoIconMaterial;
+var     Material            PlayerNameIconMaterial;
+var     Material            PlayerNameFilledIconMaterial;
+var     Material            SquadLeaderIconMaterial;
+var     Material            SpeakerIconMaterial;
+var     Material            NeedAssistIconMaterial;
+var     Material            NeedAmmoIconMaterial;
+var     Material            AssistantIconMaterial;
 
 // Objective HUD
 var     SpriteWidget        EnemyPresentIcon;
@@ -235,6 +236,7 @@ function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(PlayerNameIconMaterial);
     Level.AddPrecacheMaterial(PlayerNameFilledIconMaterial);
     Level.AddPrecacheMaterial(SquadLeaderIconMaterial);
+    Level.AddPrecacheMaterial(AssistantIconMaterial);
     Level.AddPrecacheMaterial(SpeakerIconMaterial);
     Level.AddPrecacheMaterial(NeedAssistIconMaterial);
     Level.AddPrecacheMaterial(NeedAmmoIconMaterial);
@@ -2553,6 +2555,11 @@ function DrawPlayerNames(Canvas C)
                 IconMaterial = SquadLeaderIconMaterial;
                 IconMaterialColor = GetPlayerColor(OtherPRI);
             }
+            else if (OtherPRI.bIsSquadAssistant)
+            {
+                IconMaterial = AssistantIconMaterial;
+                IconMaterialColor = GetPlayerColor(OtherPRI);
+            }
         }
 
         // Now draw any relevant icon above the player's name, in white to make it more noticeable (instead of the team color)
@@ -3385,7 +3392,16 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
                 Yaw = DHGRI.SupplyPoints[i].Location.Z;
             }
 
-            TexRotator(FinalBlend(SupplyPointIcon.WidgetTexture).Material).Rotation.Yaw = GetMapIconYaw(Yaw);
+            TexRotator(FinalBlend(SupplyPointIcon.WidgetTexture).Material).Material = DHGRI.SupplyPoints[i].ActorClass.default.MapIcon;
+
+            if (DHGRI.SupplyPoints[i].ActorClass.default.bShouldMapIconBeRotated)
+            {
+                TexRotator(FinalBlend(SupplyPointIcon.WidgetTexture).Material).Rotation.Yaw = GetMapIconYaw(Yaw);
+            }
+            else
+            {
+                TexRotator(FinalBlend(SupplyPointIcon.WidgetTexture).Material).Rotation.Yaw = 0.0;
+            }
 
             DrawIconOnMap(C, SubCoords, SupplyPointIcon, MyMapScale, Temp, MapCenter);
 
@@ -3441,64 +3457,29 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
             RI = DHRoleInfo(PRI.RoleInfo);
         }
 
-        // Draw the in-progress arty strikes
-        if ((OwnerTeam == AXIS_TEAM_INDEX || OwnerTeam == ALLIES_TEAM_INDEX) && DHGRI.ArtyStrikeLocation[OwnerTeam] != vect(0.0, 0.0, 0.0))
+        // Draw artillery
+        for (i = 0; i < arraycount(DHGRI.DHArtillery); ++i)
         {
-            DrawIconOnMap(C, SubCoords, MapIconArtyStrike, MyMapScale, DHGRI.ArtyStrikeLocation[OwnerTeam], MapCenter);
-        }
-
-        // Draw Artillery Radio Icons
-        if (OwnerTeam == AXIS_TEAM_INDEX)
-        {
-            for (i = 0; i < arraycount(DHGRI.AxisRadios); ++i)
+            if (DHGRI.DHArtillery[i] != none &&
+                DHGRI.DHArtillery[i].TeamIndex == OwnerTeam)
             {
-                if (DHGRI.AxisRadios[i] == none || (DHGRI.AxisRadios[i].IsA('DHArtilleryTrigger') && !DHArtilleryTrigger(DHGRI.AxisRadios[i]).bShouldShowOnSituationMap))
-                {
-                    continue;
-                }
+                MapIconArtyStrike.WidgetTexture = DHGRI.DHArtillery[i].default.MapIcon;
+                MapIconArtyStrike.TextureCoords = DHGRI.DHArtillery[i].default.MapIconTextureCoords;
 
-                DrawIconOnMap(C, SubCoords, MapIconRadio, MyMapScale, DHGRI.AxisRadios[i].Location, MapCenter);
-            }
-        }
-        else if (OwnerTeam == ALLIES_TEAM_INDEX)
-        {
-            for (i = 0; i < arraycount(DHGRI.AlliedRadios); ++i)
-            {
-                if (DHGRI.AlliedRadios[i] == none || (DHGRI.AlliedRadios[i].IsA('DHArtilleryTrigger') && !DHArtilleryTrigger(DHGRI.AlliedRadios[i]).bShouldShowOnSituationMap))
-                {
-                    continue;
-                }
-
-                DrawIconOnMap(C, SubCoords, MapIconRadio, MyMapScale, DHGRI.AlliedRadios[i].Location, MapCenter);
+                DrawIconOnMap(C, SubCoords, MapIconArtyStrike, MyMapScale, DHGRI.DHArtillery[i].Location, MapCenter);
             }
         }
 
-        // Draw player-carried Artillery radio icons if player is an artillery officer
-        if (RI != none && RI.bIsArtilleryOfficer)
+        // Draw radios
+        for (i = 0; i < arraycount(DHGRI.Radios); ++i)
         {
-            if (OwnerTeam == AXIS_TEAM_INDEX)
+            if (DHGRI.Radios[i] != none &&
+                DHGRI.Radios[i].bShouldShowOnSituationMap &&
+                DHGRI.Radios[i].TeamIndex == OwnerTeam &&
+                DHGRI.Radios[i].IsPlayerQualified(DHPlayer(PlayerOwner)))
             {
-                for (i = 0; i < arraycount(DHGRI.CarriedAxisRadios); ++i)
-                {
-                    if (DHGRI.CarriedAxisRadios[i] == none)
-                    {
-                        continue;
-                    }
-
-                    DrawIconOnMap(C, SubCoords, MapIconCarriedRadio, MyMapScale, DHGRI.CarriedAxisRadios[i].Location, MapCenter);
-                }
-            }
-            else if (OwnerTeam == ALLIES_TEAM_INDEX)
-            {
-                for (i = 0; i < arraycount(DHGRI.CarriedAlliedRadios); ++i)
-                {
-                    if (DHGRI.CarriedAlliedRadios[i] == none)
-                    {
-                        continue;
-                    }
-
-                    DrawIconOnMap(C, SubCoords, MapIconCarriedRadio, MyMapScale, DHGRI.CarriedAlliedRadios[i].Location, MapCenter);
-                }
+                // MapIconCarriedRadio
+                DrawIconOnMap(C, SubCoords, MapIconRadio, MyMapScale, DHGRI.Radios[i].Location, MapCenter);
             }
         }
 
@@ -5466,6 +5447,7 @@ defaultproperties
     PlayerNameIconMaterial=Material'DH_InterfaceArt_tex.HUD.player_icon_world'
     PlayerNameFilledIconMaterial=Material'DH_InterfaceArt_tex.HUD.player_icon_world_filled'
     SquadLeaderIconMaterial=Material'DH_InterfaceArt2_tex.Icons.squad_leader'
+    AssistantIconMaterial=Material'DH_InterfaceArt2_tex.Icons.assistant'
     SpeakerIconMaterial=Texture'DH_InterfaceArt_tex.Communication.speaker_icon'
     NeedAssistIconMaterial=Texture'DH_InterfaceArt_tex.Communication.need_assist_icon'
     NeedAmmoIconMaterial=Texture'DH_InterfaceArt2_tex.Icons.resupply_box'

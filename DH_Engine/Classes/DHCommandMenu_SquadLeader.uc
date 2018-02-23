@@ -40,8 +40,8 @@ function OnSelect(int Index, vector Location)
 
             PC.ServerSquadSignal(class'DHSquadSignal_Fire', Location);  // TODO: project off of the location a bit
             break;
-        case 2: // Construction
-            Interaction.PushMenu("DH_Construction.DHCommandMenu_Construction");
+        case 2:
+            Interaction.PushMenu("DH_Construction.DHCommandMenu_ConstructionGroups");
             return;
         case 3:
             P = DHPawn(MenuObject);
@@ -61,7 +61,7 @@ function OnSelect(int Index, vector Location)
             }
             return;
         case 4:
-            Interaction.PushMenu("DH_Engine.DHCommandMenu_SquadMenu", MenuObject);
+            Interaction.PushMenu("DH_Engine.DHCommandMenu_Spotting", MenuObject);
             return;
         case 5: // Move
             PC.ConsoleCommand("SPEECH ALERT 1");
@@ -122,8 +122,8 @@ function bool IsOptionDisabled(int OptionIndex)
         return DHPawn(PC.Pawn) == none || PC.SquadReplicationInfo == none || !PC.SquadReplicationInfo.bAreRallyPointsEnabled;
     case 2: // Construction
         return DHPawn(PC.Pawn) == none || GRI == none || !GRI.bAreConstructionsEnabled;
-    case 3:
-        return DHPawn(MenuObject) == none || DHPawn(MenuObject).Health <= 0 || PC.GetTeamNum() != DHPawn(MenuObject).GetTeamNum();
+    case 3: // Player
+        return DHPawn(MenuObject) == none || DHPawn(MenuObject) == PC.Pawn || DHPawn(MenuObject).Health <= 0 || PC.GetTeamNum() != DHPawn(MenuObject).GetTeamNum();
     default:
         return false;
     }
@@ -136,7 +136,7 @@ defaultproperties
     Options(1)=(ActionText="Fire",Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
     Options(2)=(ActionText="Construction",Material=Texture'DH_InterfaceArt2_tex.Icons.construction')
     Options(3)=(ActionText="No Player ",Material=Texture'DH_InterfaceArt2_tex.Icons.infantry')
-    Options(4)=(ActionText="Squad",Material=Texture'DH_InterfaceArt2_tex.Icons.squad')
+    Options(4)=(ActionText="Spotting",Material=Texture'DH_InterfaceArt2_tex.Icons.binoculars')
     Options(5)=(ActionText="Move",Material=Texture'DH_InterfaceArt2_tex.Icons.move')
 }
 

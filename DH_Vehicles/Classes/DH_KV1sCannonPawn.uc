@@ -16,7 +16,7 @@ defaultproperties
     bLockCameraDuringTransition=true
     GunsightOverlay=Texture'DH_VehicleOptics_tex.Soviet.T3476_sight_background' // using same sight as T34/76 instead of RO's different KV-1 sight
     CannonScopeCenter=Texture'Vehicle_Optic.T3476_sight_mover'
-    GunsightSize=0.4412 // 15 degrees visible FOV at 2.5x magnification (telescopic gunsight 10T-15?)
+    GunsightSize=0.441 // 15 degrees visible FOV at 2.5x magnification (9T-13, 10T-13 or 20T-13 sight)
     DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed' // matches size of gunsight
     AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell_reload'

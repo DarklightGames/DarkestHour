@@ -89,17 +89,17 @@ static function float GetTerrainScale(TerrainInfo TI)
 
 static function bool IsTerrainScaleLarge(TerrainInfo TI)
 {
-    return GetTerrainScale(TI) > default.LargeTerrainScaleThreshold;
+    return TI != none && GetTerrainScale(TI) > default.LargeTerrainScaleThreshold;
 }
 
-function StaticMesh GetConstructedStaticMesh()
+static function StaticMesh GetConstructedStaticMesh(DHConstruction.Context Context)
 {
-    if (IsTerrainScaleLarge(TerrainInfo))
+    if (IsTerrainScaleLarge(TerrainInfo(Context.GroundActor)))
     {
-        return LargeTerrainScaleStaticMesh;
+        return default.LargeTerrainScaleStaticMesh;
     }
 
-    return super.GetConstructedStaticMesh();
+    return super.GetConstructedStaticMesh(Context);
 }
 
 simulated event Destroyed()
@@ -145,7 +145,7 @@ defaultproperties
     bShouldAlignToGround=false
     bCanBeTornDownWhenConstructed=false
     bCanBeDamaged=false
-    ProxyDistanceInMeters=10
+    ProxyTraceDepthMeters=10
     CollisionRadius=192.0
     StaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_01'
     LargeTerrainScaleStaticMesh=StaticMesh'DH_Construction_stc.Foxholes.foxhole_02'
@@ -172,4 +172,5 @@ defaultproperties
     ConstructionVerb="dig"
     DirtProjectorDrawScaleLarge=850.0
     DirtProjectorDrawScale=550.0
+    GroupClass=class'DHConstructionGroup_Defenses'
 }

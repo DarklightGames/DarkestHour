@@ -7,7 +7,6 @@ class DH_IS2CannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
-    // Have changed several damage & similar properties to broadly comparable DH HE shells, as the RO values were at odds with them
     ShellDiameter=12.2
     BallisticCoefficient=2.35
     Speed=45866.0 // 760 m/s
@@ -42,34 +41,34 @@ defaultproperties
 
     bMechanicalAiming=true
     MechanicalRanges(0)=(Range=0,RangeValue=0.0)
-    MechanicalRanges(1)=(Range=400,RangeValue=38.0)
-    MechanicalRanges(2)=(Range=500,RangeValue=45.0)
+    MechanicalRanges(1)=(Range=400,RangeValue=37.0)
+    MechanicalRanges(2)=(Range=500,RangeValue=48.0)
     MechanicalRanges(3)=(Range=600,RangeValue=57.0)
-    MechanicalRanges(4)=(Range=700,RangeValue=65.0)
+    MechanicalRanges(4)=(Range=700,RangeValue=68.0)
     MechanicalRanges(5)=(Range=800,RangeValue=77.0)
     MechanicalRanges(6)=(Range=900,RangeValue=88.0)
     MechanicalRanges(7)=(Range=1000,RangeValue=100.0)
-    MechanicalRanges(8)=(Range=1200,RangeValue=122.0)
-    MechanicalRanges(9)=(Range=1400,RangeValue=153.0)
-    MechanicalRanges(10)=(Range=1600,RangeValue=185.0)
-    MechanicalRanges(11)=(Range=1800,RangeValue=208.0)
-    MechanicalRanges(12)=(Range=2000,RangeValue=237.0)
-    MechanicalRanges(13)=(Range=2200,RangeValue=265.0)
-    MechanicalRanges(14)=(Range=2400,RangeValue=298.0)
-    MechanicalRanges(15)=(Range=2600,RangeValue=332.0)
-    MechanicalRanges(16)=(Range=2800,RangeValue=372.0)
-    MechanicalRanges(17)=(Range=3000,RangeValue=402.0)
-    MechanicalRanges(18)=(Range=3200,RangeValue=447.0)
-    MechanicalRanges(19)=(Range=3400,RangeValue=489.0)
-    MechanicalRanges(20)=(Range=3600,RangeValue=535.0)
-    MechanicalRanges(21)=(Range=3800,RangeValue=586.0)
-    MechanicalRanges(22)=(Range=4000,RangeValue=644.0)
-    MechanicalRanges(23)=(Range=4200,RangeValue=705.0) // estimates from here on as these extreme ranges are largely theoretical
-    MechanicalRanges(24)=(Range=4400,RangeValue=765.0)
-    MechanicalRanges(25)=(Range=4600,RangeValue=835.0)
-    MechanicalRanges(26)=(Range=4800,RangeValue=905.0)
-    MechanicalRanges(27)=(Range=5000,RangeValue=985.0)
-    MechanicalRanges(28)=(Range=5200,RangeValue=1065.0)
+    MechanicalRanges(8)=(Range=1200,RangeValue=121.0)
+    MechanicalRanges(9)=(Range=1400,RangeValue=145.0)
+    MechanicalRanges(10)=(Range=1600,RangeValue=172.0)
+    MechanicalRanges(11)=(Range=1800,RangeValue=197.0)
+    MechanicalRanges(12)=(Range=2000,RangeValue=225.0)
+    MechanicalRanges(13)=(Range=2200,RangeValue=253.0)
+    MechanicalRanges(14)=(Range=2400,RangeValue=285.0)
+    MechanicalRanges(15)=(Range=2600,RangeValue=317.0)
+    MechanicalRanges(16)=(Range=2800,RangeValue=349.0) // estimates from here on as these extreme ranges are largely theoretical
+    MechanicalRanges(17)=(Range=3000,RangeValue=381.0)
+    MechanicalRanges(18)=(Range=3200,RangeValue=413.0)
+    MechanicalRanges(19)=(Range=3400,RangeValue=445.0)
+    MechanicalRanges(20)=(Range=3600,RangeValue=477.0)
+    MechanicalRanges(21)=(Range=3800,RangeValue=509.0)
+    MechanicalRanges(22)=(Range=4000,RangeValue=541.0)
+    MechanicalRanges(23)=(Range=4200,RangeValue=573.0)
+    MechanicalRanges(24)=(Range=4400,RangeValue=605.0)
+    MechanicalRanges(25)=(Range=4600,RangeValue=637.0)
+    MechanicalRanges(26)=(Range=4800,RangeValue=669.0)
+    MechanicalRanges(27)=(Range=5000,RangeValue=701.0)
+    MechanicalRanges(28)=(Range=5200,RangeValue=733.0)
 
     bOpticalAiming=true // just a visual range indicator on the side; doesn't actually alter the aiming point
     OpticalRanges(0)=(Range=0,RangeValue=0.420)

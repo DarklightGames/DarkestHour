@@ -106,9 +106,9 @@ simulated state Broken
     }
 }
 
-function StaticMesh GetConstructedStaticMesh()
+static function StaticMesh GetConstructedStaticMesh(DHConstruction.Context Context)
 {
-    switch (GetTeamIndex())
+    switch (Context.TeamIndex)
     {
         case AXIS_TEAM_INDEX:
             return StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent';
@@ -136,17 +136,6 @@ function StaticMesh GetStageStaticMesh(int StageIndex)
             return StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent_unpacked';
         case ALLIES_TEAM_INDEX:
             return StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent_unpacked';
-    }
-}
-
-function static StaticMesh GetProxyStaticMesh(DHConstruction.Context Context)
-{
-    switch (Context.TeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            return StaticMesh'DH_Construction_stc.Bases.GER_HQ_tent';
-        case ALLIES_TEAM_INDEX:
-            return StaticMesh'DH_Construction_stc.Bases.USA_HQ_tent';
     }
 }
 
@@ -206,21 +195,22 @@ defaultproperties
 {
     MenuName="Platoon HQ"
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.platoon_hq'
+    MenuDescription="Provides a team-wide spawn point."
     Stages(0)=()
     ProgressMax=9
-    SupplyCost=1000
+    SupplyCost=750
 
     // Placement
-    bShouldAlignToGround=true
     bCanPlaceIndoors=false
     bCanPlaceInObjective=false
     DuplicateFriendlyDistanceInMeters=250
     DuplicateEnemyDistanceInMeters=50
-    ProxyDistanceInMeters=10.0
+    ProxyTraceDepthMeters=10.0
     bCanOnlyPlaceOnTerrain=true
     bCanPlaceInWater=false
     GroundSlopeMaxInDegrees=10
     SquadMemberCountMinimum=3
+    ArcLengthTraceIntervalInMeters=0.5
 
     StartRotationMin=(Yaw=32768)
     StartRotationMax=(Yaw=32768)
@@ -235,11 +225,10 @@ defaultproperties
 
     FlagSkinIndex=1
     SpawnPointClass=class'DHSpawnPoint_PlatoonHQ'
-
     bCanBeTornDownByFriendlies=false
     FriendlyFireDamageScale=0.0
-
     ObjectiveDistanceMinMeters=75
     EnemyObjectiveDistanceMinMeters=150
+    GroupClass=class'DHConstructionGroup_Logistics'
 }
 

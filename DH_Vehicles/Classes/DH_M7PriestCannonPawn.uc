@@ -26,7 +26,7 @@ defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_M7PriestCannon'
     // gunsight
-    DriverPositions(0)=(ViewLocation=(Y=-19.8,Z=47.4),ViewFOV=24.0,ViewPitchUpLimit=4551,ViewPitchDownLimit=64079,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
+    DriverPositions(0)=(ViewLocation=(Y=-19.8,Z=47.4),ViewFOV=28.33,ViewPitchUpLimit=4551,ViewPitchDownLimit=64079,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true,bExposed=true)
     // kneeling
     DriverPositions(1)=(DriverTransitionAnim="crouch_idle_binoc",TransitionUpAnim="com_open",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bExposed=true)
     // standing
@@ -35,12 +35,11 @@ defaultproperties
     DriverPositions(3)=(ViewFOV=12.0,DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=10000,ViewPitchDownLimit=63500,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true,bExposed=true)
     UnbuttonedPositionIndex=0
     RaisedPositionIndex=2
-    BinocPositionIndex=3
     DriveAnim="crouch_idle_binoc"
     bManualTraverseOnly=true
     bHasAltFire=false
-    GunsightOverlay=Texture'DH_VehicleOptics_tex.US.m12a7_sight_2'
-    GunsightSize=0.542
+    GunsightOverlay=Texture'DH_VehicleOptics_tex.US.m12a7_sight_2' // TODO: believe M12 is panoramic sight for indirect fire; we ought to have direct fire M16 telescopic sight (see http://www.strijdbewijs.nl/tanks/priest.htm)
+    GunsightSize=0.435 // 12.3 degrees visible FOV at 3x magnification (M16 sight) // TODO: find M16 sight properties
     DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.Allied.Sherman_sight_destroyed'
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell'
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.ShermanShell_reload'

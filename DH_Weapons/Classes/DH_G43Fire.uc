@@ -11,7 +11,6 @@ defaultproperties
     AmmoClass=class'ROAmmo.G43Ammo'
     FireRate=0.26
     Spread=70.0
-    MaxVerticalRecoilAngle=1600
     FireSounds(0)=SoundGroup'Inf_Weapons.g43.g43_fire01'
     FireSounds(1)=SoundGroup'Inf_Weapons.g43.g43_fire02'
     FireSounds(2)=SoundGroup'Inf_Weapons.g43.g43_fire03'

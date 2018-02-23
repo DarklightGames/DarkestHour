@@ -31,9 +31,9 @@ defaultproperties
 
     // Turret movement
     ManualRotationsPerSecond=0.029
-    PoweredRotationsPerSecond=0.0694 // 25 degrees/sec
-    CustomPitchUpLimit=4660
-    CustomPitchDownLimit=64535
+    PoweredRotationsPerSecond=0.0833 // 30 degrees/sec
+    CustomPitchUpLimit=5461 // +30/-5 degrees
+    CustomPitchDownLimit=64626
 
     // Cannon ammo
     ProjectileClass=class'DH_Vehicles.DH_T3476CannonShell'
@@ -56,10 +56,9 @@ defaultproperties
     HudAltAmmoIcon=Texture'InterfaceArt_tex.HUD.dp27_ammo'
 
     // Weapon fire
-    WeaponFireAttachmentBone="Gun"
-    WeaponFireOffset=200.0
+    WeaponFireOffset=71.9
     AddedPitch=230
-    AltFireOffset=(X=8.0,Y=12.0,Z=2.0)
+    AltFireOffset=(X=-81.0,Y=12.5,Z=1.5)
 
     // Sounds
     CannonFireSound(0)=Sound'Vehicle_Weapons.T34_76.76mm_fire01'
@@ -75,13 +74,6 @@ defaultproperties
     AltReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty02_052',Duration=2.29,HUDProportion=0.65)
     AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty03_121',Duration=2.35)
     AltReloadStages(3)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty04_191',Duration=3.2,HUDProportion=0.35)
-
-    // View shake
-    ShakeRotMag=(X=0.0,Y=0.0,Z=250.0)
-    ShakeRotRate=(X=0.0,Y=0.0,Z=2500.0)
-    ShakeRotTime=6.0
-    ShakeOffsetMag=(X=0.0,Y=0.0,Z=10.0)
-    ShakeOffsetRate=(X=0.0,Y=0.0,Z=200.0)
 
     // Cannon range settings
     RangeSettings(0)=0

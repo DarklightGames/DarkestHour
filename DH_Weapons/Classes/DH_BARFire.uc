@@ -32,8 +32,8 @@ defaultproperties
 
     // Recoil
     RecoilRate=0.1
-    MaxVerticalRecoilAngle=800
-    MaxHorizontalRecoilAngle=150
+    MaxVerticalRecoilAngle=500
+    MaxHorizontalRecoilAngle=90
 
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'
     FireSounds(0)=SoundGroup'DH_WeaponSounds.BAR.BAR_Fire01'

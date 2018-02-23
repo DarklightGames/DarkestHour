@@ -14,7 +14,7 @@ defaultproperties
     DriverPositions(3)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_T34_anm.T34-85_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
     DriveAnim="VT3485_com_idle_close"
     GunsightOverlay=Texture'Vehicle_Optic.t3485_sight'
-    GunsightSize=0.7529 // 16 degrees visible FOV at 4x magnification (TSh-16 telescopic gunsight)
+    GunsightSize=0.753 // 16 degrees visible FOV at 4x magnification (TSh-16 sight)
     OverlayCorrectionY=-2.5 // raises sight slightly so tip of reticle arrowhead is right on the aim point
     CannonScopeCenter=Texture'Vehicle_Optic.T3476_sight_mover'
     ScopeCenterPositionX=0.075

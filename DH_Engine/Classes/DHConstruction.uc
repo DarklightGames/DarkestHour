@@ -51,6 +51,7 @@ struct Context
 var struct ConstructionError
 {
     var EConstructionErrorType  Type;
+    var string                  CustomErrorString;  // When Type is ERROR_Custom, this will contain the error string to be used.
     var int                     OptionalInteger;
     var Object                  OptionalObject;
     var string                  OptionalString;
@@ -73,10 +74,12 @@ var private int TeamIndex;
 var int TeamLimit;              // The amount of this type of construction that is allowed, per team.
 
 // Manager
-var     DHConstructionManager   Manager;
+var     DHConstructionManager       Manager;
+var     class<DHConstructionGroup>  GroupClass;
 
 // Placement
-var     float   ProxyDistanceInMeters;          // The distance at which the proxy object will be away from the player when being placed
+var     float   ProxyTraceDepthMeters;          // The depth of the trace from the player's eye when determining the provisional proxy position.
+var     float   ProxyTraceHeightMeters;         // The height at which the proxy object will no longer snap to the ground.
 var     bool    bShouldAlignToGround;
 var     bool    bCanPlaceInWater;
 var     bool    bCanPlaceIndoors;
@@ -91,6 +94,7 @@ var     int     LocalRotationRate;
 var     bool    bInheritsOwnerRotation;         // If true, the base rotation of the placement (prior to local rotation) will be inherited from the owner.
 var     bool    bCanPlaceInObjective;
 var     int     SquadMemberCountMinimum;        // The number of members you must have in your squad to create this.
+var     float   ArcLengthTraceIntervalInMeters; // The arc-length interval, in meters, used when tracing "outwards" during placement to check for blocking objects.
 
 var     float   ObjectiveDistanceMinMeters;         // The minimum distance, in meters, that this construction must be placed away from all objectives.
 var     float   EnemyObjectiveDistanceMinMeters;    // The minimum distance, in meters, that this construction must be placed away from enemy objectives.
@@ -135,9 +139,10 @@ var     float   TakeDownProgressInterval;
 // Broken
 var     float           BrokenLifespan;             // How long does the actor stay around after it's been killed?
 var     StaticMesh      BrokenStaticMesh;           // Static mesh to use when the construction is broken
-var     sound           BrokenSound;                // Sound to play when the construction is broken
+var     array<Sound>    BrokenSounds;                // Sound to play when the construction is broken
 var     float           BrokenSoundRadius;
 var     float           BrokenSoundVolume;
+var     float           BrokenSoundPitch;
 var     class<Emitter>  BrokenEmitterClass;         // Emitter to spawn when the construction is broken
 
 // Reset
@@ -163,6 +168,7 @@ var float                       LastImpactTimeSeconds;
 
 // Tattered
 var int                         TatteredHealthThreshold;    // The health below which the construction is considered "tattered". -1 for no tattering
+var StaticMesh                  TatteredStaticMesh;
 
 // Health
 var private int     Health;
@@ -170,7 +176,8 @@ var     int         HealthMax;
 
 // Menu
 var     localized string    MenuName;
-var     localized Material  MenuIcon;
+var     Material            MenuIcon;
+var     localized string    MenuDescription;
 
 // Level Info
 var DH_LevelInfo LevelInfo;
@@ -295,11 +302,11 @@ simulated function PokeTerrain(float Radius, float Depth)
     {
         if (TI != none)
         {
-            // HACK: There is a terrible bug on Mac platforms where having a
+            // HACK: There is a terrible bug on Mac/Linux platforms where having a
             // larger poke radius causes the terrain to be poked excessively.
             // This little trick fixes the problem, even if it doesn't look
             // as nice!
-            if (Level.NetMode != NM_DedicatedServer && PlatformIsMacOS())
+            if (PlatformIsMacOS() || PlatformIsUnix())
             {
                 Radius = 1.0;
             }
@@ -571,6 +578,9 @@ DelayedDamage:
     TakeDamage(DelayedDamage, none, vect(0, 0, 0), vect(0, 0, 0), DelayedDamageType);
 }
 
+// Override this for additional functionality when construction breaks.
+simulated function OnBroken();
+
 simulated state Broken
 {
     simulated function BeginState()
@@ -589,7 +599,14 @@ simulated state Broken
             {
                 Spawn(BrokenEmitterClass, self,, Location, Rotation);
             }
+
+            if (BrokenSounds.Length > 0)
+            {
+                PlaySound(BrokenSounds[Rand(BrokenSounds.Length)],, BrokenSoundVolume,, BrokenSoundRadius, BrokenSoundPitch, true);
+            }
         }
+
+        OnBroken();
     }
 
     event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
@@ -622,7 +639,7 @@ function UpdateAppearance()
 {
     if (IsConstructed())
     {
-        SetStaticMesh(GetConstructedStaticMesh());
+        SetStaticMesh(static.GetConstructedStaticMesh(GetContext()));
         SetCollision(true, true, true);
         KSetBlockKarma(true);
     }
@@ -640,9 +657,12 @@ function UpdateAppearance()
     }
 }
 
-function StaticMesh GetTatteredStaticMesh();
+function StaticMesh GetTatteredStaticMesh()
+{
+    return default.TatteredStaticMesh;
+}
 
-function StaticMesh GetConstructedStaticMesh()
+static function StaticMesh GetConstructedStaticMesh(DHConstruction.Context Context)
 {
     return default.StaticMesh;
 }
@@ -687,7 +707,7 @@ function static GetCollisionSize(DHConstruction.Context Context, out float NewRa
     NewHeight = default.CollisionHeight;
 }
 
-function static bool ShouldShowOnMenu(DHPlayer PC)
+function static bool ShouldShowOnMenu(DHConstruction.Context Context)
 {
     return true;
 }
@@ -754,7 +774,8 @@ function static ConstructionError GetPlayerError(DHConstruction.Context Context)
     PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
 
     // TODO: in future we may allow non-squad leaders to make constructions.
-    if (PRI == none || SRI == none || !PRI.IsSquadLeader())
+    // A static function in the class could take in a PRI and make a decision there instead of it being in here.
+    if (PRI == none || SRI == none || (!PRI.IsSquadLeader() && !PRI.bIsSquadAssistant))
     {
         E.Type = ERROR_Fatal;
         return E;
@@ -807,7 +828,7 @@ function static UpdateProxy(DHConstructionProxy CP)
 
 function static StaticMesh GetProxyStaticMesh(DHConstruction.Context Context)
 {
-    return default.StaticMesh;
+    return static.GetConstructedStaticMesh(Context);
 }
 
 function static vector GetPlacementOffset(DHConstruction.Context Context)
@@ -934,6 +955,7 @@ simulated function Context GetContext()
 
     Context.TeamIndex = GetTeamIndex();
     Context.LevelInfo = LevelInfo;
+    Context.GroundActor = Owner;
 
     return Context;
 }
@@ -952,6 +974,15 @@ static function DHConstruction.Context ContextFromPlayerController(DHPlayer PC)
     return Context;
 }
 
+// This is used to return a custom error that is class specific for specialized
+// placement logic. By default this simply returns no error.
+static function DHConstruction.ConstructionError GetCustomProxyError(DHConstructionProxy P)
+{
+    local DHConstruction.ConstructionError E;
+
+    return E;
+}
+
 defaultproperties
 {
     TeamOwner=TEAM_Neutral
@@ -962,7 +993,8 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.hedgehog_01'
     HealthMax=100
     Health=1
-    ProxyDistanceInMeters=5.0
+    ProxyTraceDepthMeters=5.0
+    ProxyTraceHeightMeters=2.0
     GroundSlopeMaxInDegrees=25.0
 
     bStatic=false
@@ -1026,6 +1058,8 @@ defaultproperties
     TerrainScaleMax=256.0
     RotationSnapAngle=16384
     bInheritsOwnerRotation=true
+    bShouldAlignToGround=true
+    ArcLengthTraceIntervalInMeters=1.0
 
     // Stagnation
     bCanDieOfStagnation=true
@@ -1066,5 +1100,10 @@ defaultproperties
 
     bShouldRefundSuppliesOnTearDown=true
     TakeDownProgressInterval=0.5
+
+    // Broken
+    BrokenSoundRadius=100.0
+    BrokenSoundPitch=1.0
+    BrokenSoundVolume=5.0
 }
 

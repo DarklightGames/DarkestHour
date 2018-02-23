@@ -9,7 +9,7 @@ defaultproperties
 {
     // Cannon mesh
     Mesh=SkeletalMesh'DH_ZiS3_76mm_anm.ZiS3_gun'
-    Skins(0)=Texture'DH_Artillery_tex.ZiS3.ZiS3_76mm_M1942_01'
+    Skins(0)=Texture'DH_Artillery_tex.ZiS3.ZiS3Gun'
     Skins(1)=Shader'MilitaryAlliesSMT.Artillery.76mmShellCase2_Shine'
     CollisionStaticMesh=StaticMesh'DH_Artillery_stc.ZiS3.ZiS3_gun_collision'
 
@@ -22,17 +22,15 @@ defaultproperties
     CustomPitchDownLimit=64626
 
     // Cannon ammo
-    ProjectileClass=class'DH_Guns.DH_ZiS3CannonShellHE'
-    PrimaryProjectileClass=class'DH_Guns.DH_ZiS3CannonShellHE'
-    SecondaryProjectileClass=class'DH_Guns.DH_ZiS3CannonShell'
-    ProjectileDescriptions(0)="HE"
-    ProjectileDescriptions(1)="APBC"
-    InitialPrimaryAmmo=20
-    InitialSecondaryAmmo=10
-    MaxPrimaryAmmo=60
-    MaxSecondaryAmmo=30
-    Spread=0.002
-    SecondarySpread=0.0
+    ProjectileClass=class'DH_Guns.DH_ZiS3CannonShell'
+    PrimaryProjectileClass=class'DH_Guns.DH_ZiS3CannonShell'
+    SecondaryProjectileClass=class'DH_Guns.DH_ZiS3CannonShellHE'
+    ProjectileDescriptions(0)="APBC"
+    InitialPrimaryAmmo=10
+    InitialSecondaryAmmo=20
+    MaxPrimaryAmmo=30
+    MaxSecondaryAmmo=60
+    SecondarySpread=0.002
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.SU_76.76mm_fire01'

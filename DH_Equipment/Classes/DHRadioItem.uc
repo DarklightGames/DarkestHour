@@ -7,9 +7,9 @@ class DHRadioItem extends DHWeapon;
 
 // TODO: ArtilleryTrigger seems to serve no purpose as an instance variable & should be made a local variable in AttachToPawn()
 // The other 2 could probably also be removed & replaced with class/name literals as they are only used here & only once & will never change or be subclassed
-var class<DHArtilleryTrigger>   ArtilleryTriggerClass;
-var DHArtilleryTrigger          ArtilleryTrigger;
-var name                        AttachBoneName;
+var class<DHRadio>      RadioClass;
+var DHRadio             Radio;
+var name                AttachBoneName;
 
 simulated function PreBeginPlay() // TODO: merge this into PostBeginPlay & perhaps add an authority role check
 {
@@ -17,7 +17,7 @@ simulated function PreBeginPlay() // TODO: merge this into PostBeginPlay & perha
 
     P = DHPawn(Instigator);
 
-    if (P == none || P.CarriedRadioTrigger != none)
+    if (P == none || P.Radio != none)
     {
         Destroy();
 
@@ -49,33 +49,18 @@ function AttachToPawn(Pawn P)
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
     DHP = DHPawn(P);
 
-    if (GRI == none || DHP == none || DHP.CarriedRadioTrigger != none)
+    if (GRI == none || DHP == none || DHP.Radio != none)
     {
         return; // TODO: radio should destroy itself here as couldn't attach - although that will reintroduce the 'can't switch weapons' bug (as will the Destroy() in PreBeginPlay!)
     }
 
-    ArtilleryTrigger = Spawn(ArtilleryTriggerClass, P);
+    Radio = Spawn(RadioClass, P);
+    Radio.TeamIndex = DHP.GetTeamNum();
+    Radio.Carrier = DHP;
 
-    switch (P.GetTeamNum())
-    {
-        case AXIS_TEAM_INDEX:
-            ArtilleryTrigger.TeamCanUse = AT_Axis;
-            break;
-        case ALLIES_TEAM_INDEX:
-            ArtilleryTrigger.TeamCanUse = AT_Allies;
-            break;
-        default:
-            ArtilleryTrigger.TeamCanUse = AT_Both;
-            break;
-    }
+    DHP.Radio = Radio;
 
-    ArtilleryTrigger.Carrier = DHP;
-
-    DHP.CarriedRadioTrigger = ArtilleryTrigger;
-
-    GRI.AddCarriedRadioTrigger(ArtilleryTrigger);
-
-    P.AttachToBone(ArtilleryTrigger, AttachBoneName);
+    P.AttachToBone(Radio, AttachBoneName);
 }
 
 // Colin: The following functions make it impossible to select the radio as the
@@ -116,5 +101,5 @@ defaultproperties // TODO: perhaps make this remote role none so it doesn't repl
     InventoryGroup=10
     AttachmentClass=class'DH_Equipment.DHRadioAttachment'
     AttachBoneName="hip"
-    ArtilleryTriggerClass=class'DH_Engine.DHArtilleryTrigger'
+    RadioClass=class'DH_Engine.DHRadio'
 }

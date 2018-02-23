@@ -22,12 +22,12 @@ defaultproperties
     ManualRotationsPerSecond=0.012
     YawBone="Gun"
     bLimitYaw=true
-    MaxPositiveYaw=1850
+    MaxPositiveYaw=1850 // +/- 10 degrees
     MaxNegativeYaw=-1850
     YawStartConstraint=-3000.0
     YawEndConstraint=3000.0
-    CustomPitchUpLimit=3250
-    CustomPitchDownLimit=65000
+    CustomPitchUpLimit=3641 // +20/-3 degrees
+    CustomPitchDownLimit=64990
 
     // Cannon ammo
     ProjectileClass=class'DH_Vehicles.DH_ISU152CannonShellHE'
@@ -35,15 +35,15 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Vehicles.DH_ISU152CannonShell'
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="AP"
-    InitialPrimaryAmmo=12
+    InitialPrimaryAmmo=11
     InitialSecondaryAmmo=7
-    MaxPrimaryAmmo=15
+    MaxPrimaryAmmo=13
     MaxSecondaryAmmo=7
     Spread=0.0009
     SecondarySpread=0.0009
 
     // Weapon fire
-    AddedPitch=360
+    AddedPitch=286
     WeaponFireOffset=120.0
 
     // Sounds
@@ -59,7 +59,6 @@ defaultproperties
     ShakeRotMag=(X=0.0,Y=0.0,Z=150.0)
     ShakeRotRate=(X=0.0,Y=0.0,Z=2000.0)
     ShakeOffsetMag=(X=0.0,Y=0.0,Z=5.0)
-    ShakeOffsetTime=8.0
 
     // Cannon range settings
     RangeSettings(1)=100

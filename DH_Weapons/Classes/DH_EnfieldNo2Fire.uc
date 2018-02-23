@@ -9,7 +9,7 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_EnfieldNo2Bullet'
     AmmoClass=class'DH_Weapons.DH_EnfieldNo2Ammo'
-    Spread=440.0
+    Spread=340.0
     FireSounds(0)=SoundGroup'DH_WeaponSounds.EnfieldNo2.EnfieldNo2_Fire01'
     FireLastAnim="shoot"
     FireIronLastAnim="iron_shoot"

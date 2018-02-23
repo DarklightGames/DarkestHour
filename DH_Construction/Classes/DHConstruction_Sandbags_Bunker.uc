@@ -24,4 +24,5 @@ defaultproperties
     bCanTakeImpactDamage=true
     bIsNeutral=true
     bAcceptsProjectors=false
+    GroupClass=class'DHConstructionGroup_Defenses'
 }

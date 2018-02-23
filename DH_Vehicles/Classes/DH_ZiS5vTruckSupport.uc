@@ -22,6 +22,9 @@ defaultproperties
     SupplyAttachmentBone="Construction_supply"
     ResupplyAttachmentBone="Ammo_resupply"
     VehHitpoints(1)=(PointRadius=40.0,PointScale=1.0,PointBone="Ammo_resupply",DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    DisintegrationHealth=-1000.0 // disintegrates if health falls below this threshold, due to explosive ammo carried
+    DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
+    DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
     bMustBeInSquadToSpawn=true
     SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.zis5v_logistics'
     FriendlyResetDistance=15000.0  // 250 meters

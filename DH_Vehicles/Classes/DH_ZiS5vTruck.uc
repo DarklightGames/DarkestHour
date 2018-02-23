@@ -55,8 +55,6 @@ defaultproperties
     Health=150
     HealthMax=150.0
     EngineHealth=35
-    DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
-    DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
     VehHitpoints(0)=(PointBone="Body",PointOffset=(X=100.0,Y=0.0,Z=11.0)) // engine
     ImpactWorldDamageMult=1.0
     HeavyEngineDamageThreshold=0.33

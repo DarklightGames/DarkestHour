@@ -15,7 +15,7 @@ defaultproperties
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_KV_anm.KV1S_body_ext'
-    Skins(0)=Texture'allies_vehicles_tex.ext_vehicles.KV1_ext' // TODO: get a whitewashed version made, with snowy treads, then add a winter version of this tank
+    Skins(0)=Texture'allies_vehicles_tex.ext_vehicles.KV1_ext'
     Skins(1)=Texture'allies_vehicles_tex.Treads.kv1_treads'
     Skins(2)=Texture'allies_vehicles_tex.Treads.kv1_treads'
     Skins(3)=Texture'allies_vehicles_tex.int_vehicles.kv1_int'
@@ -35,8 +35,8 @@ defaultproperties
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_KV_anm.KV1S_body_int',DriverTransitionAnim="VKV1_driver_close",TransitionUpAnim="driver_hatch_open",ViewPitchDownLimit=65535,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_KV_anm.KV1S_body_int',DriverTransitionAnim="VKV1_driver_open",TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=6000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=11000,ViewNegativeYawLimit=-11000,bExposed=true)
     InitialPositionIndex=0
-    UnbuttonedPositionIndex=1
     DrivePos=(X=10.0,Y=0.0,Z=1.0) // moved forward so driver isn't enveloped in hull collision mesh & can be shot // TODO: either make a hole in collision mesh or change anims to improve result
+    UnbuttonedPositionIndex=1 // TODO: animated hatch is vision only & driver couldn't exit - either prevent driver exit or re-work models to include exit hatch that is overhead & to left
     DriveAnim="VKV1_driver_idle_close"
     HUDOverlayClass=class'ROVehicles.KV1DriverOverlay'
     HUDOverlayFOV=85.0
@@ -66,8 +66,7 @@ defaultproperties
     // Damage
     Health=600
     HealthMax=600.0
-    DisintegrationHealth=-1000
-    VehHitpoints(0)=(PointRadius=40.0,PointScale=1.0,PointBone="body",PointOffset=(X=-100.0,Y=0.0,Z=0.0)) // TODO: check position of all hit points
+    VehHitpoints(0)=(PointRadius=40.0,PointOffset=(X=-100.0,Y=0.0,Z=0.0)) // engine // TODO: check position of all hit points
     VehHitpoints(1)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=13.0,Y=-25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=13.0,Y=25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=26.0

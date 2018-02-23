@@ -27,16 +27,21 @@ const MAX_OPTIONS = 8;
 // of them (probably due to engine-level render batching).
 var Texture             OptionTextures[MAX_OPTIONS];
 var array<TexRotator>   OptionTexRotators;
+var Texture             RingTexture;
 
 var color               SelectedColor;
 var color               DisabledColor;
 var color               SubmenuColor;
+
+var DHGameReplicationInfo GRI;
 
 event Initialized()
 {
     super.Initialized();
 
     Menus = new class'Stack_Object';
+
+    GRI = DHGameReplicationInfo(ViewportOwner.Actor.GameReplicationInfo);
 
     GotoState('FadeIn');
 }
@@ -263,7 +268,7 @@ function Tick(float DeltaTime)
 
 function PostRender(Canvas C)
 {
-    local int i;
+    local int i, OptionIndex;
     local float Theta, ArcLength;
     local float CenterX, CenterY, X, Y, XL, YL, U, V, AspectRatio, XL2, YL2;
     local DHCommandMenu Menu;
@@ -285,83 +290,97 @@ function PostRender(Canvas C)
     C.DrawColor = class'UColor'.default.White;
     C.DrawTile(Material'DH_InterfaceArt_tex.Communication.menu_crosshair', 16, 16, 0, 0, 16, 16);
 
+    // Draw outer "beauty" ring
+    C.SetPos(CenterX - 256, CenterY - 256);
+    C.DrawTile(RingTexture, 512, 512, 0, 0, 512, 512);
+
     C.Font = class'DHHud'.static.GetSmallerMenuFont(C);
 
     Menu = DHCommandMenu(Menus.Peek());
 
     Theta -= class'UUnits'.static.DegreesToRadians(90);
 
-    if (Menu != none)
+    if (Menu == none)
     {
-        ArcLength = Tau / Menu.SlotCount;
+        return;
+    }
 
-        // Draw all the options.
-        for (i = 0; i < Menu.Options.Length; ++i)
+    ArcLength = Tau / Menu.SlotCount;
+
+    // Draw all the options.
+    for (i = 0; i < Menu.SlotCount; ++i)
+    {
+        OptionIndex = Menu.GetOptionIndexFromSlotIndex(i);
+
+        if (OptionIndex == -1)
         {
-            bIsOptionDisabled = Menu.IsOptionDisabled(i);
+            continue;
+        }
 
-            if (bIsOptionDisabled)
+        bIsOptionDisabled = Menu.IsOptionDisabled(OptionIndex);
+
+        if (bIsOptionDisabled)
+        {
+            C.DrawColor = default.DisabledColor;
+
+            if (SelectedIndex == OptionIndex)
             {
-                C.DrawColor = default.DisabledColor;
-
-                if (SelectedIndex == i)
-                {
-                    C.DrawColor.A = byte(255 * (MenuAlpha));
-                }
-                else
-                {
-                    C.DrawColor.A = byte(255 * (MenuAlpha * 0.5));
-                }
+                C.DrawColor.A = byte(255 * (MenuAlpha));
             }
             else
             {
-                if (SelectedIndex == i)
-                {
-                    // TODO: also do some sort of "push out" with some sort of offset thing?
-                    C.DrawColor = default.SelectedColor;
-                    C.DrawColor.A = byte(255 * (MenuAlpha * 0.9));
-                }
-                else
-                {
-                    C.DrawColor = class'UColor'.default.White;
-                    C.DrawColor.A = byte(255 * (MenuAlpha * 0.5));
-                }
+                C.DrawColor.A = byte(255 * (MenuAlpha * 0.5));
             }
-
-            if (SelectedIndex == i)
-            {
-                // TODO: indent the position just slightly
-            }
-
-            C.SetPos(CenterX - 256, CenterY - 256);
-            C.DrawTileClipped(OptionTexRotators[i], 512, 512, 0, 0, 512, 512);
-
-            // Draw option icon
-            if (Menu.Options[i].Material != none)
-            {
-                U = Menu.Options[i].Material.MaterialUSize();
-                V = Menu.Options[i].Material.MaterialVSize();
-
-                X = CenterX + (Cos(Theta) * 144) - (U / 2);
-                Y = CenterY + (Sin(Theta) * 144) - (V / 2);
-
-                if (bIsOptionDisabled)
-                {
-                    C.DrawColor = class'UColor'.default.DarkGray;
-                }
-                else
-                {
-                    C.DrawColor = class'UColor'.default.White;
-                }
-
-                C.DrawColor.A = byte(255 * MenuAlpha);
-
-                C.SetPos(X, Y);
-                C.DrawTileClipped(Menu.Options[i].Material, U, V, 0, 0, U, V);
-            }
-
-            Theta += ArcLength;
         }
+        else
+        {
+            if (SelectedIndex == OptionIndex)
+            {
+                C.DrawColor = default.SelectedColor;
+                C.DrawColor.A = byte(255 * (MenuAlpha * 0.9));
+            }
+            else
+            {
+                C.DrawColor = class'UColor'.default.White;
+                C.DrawColor.A = byte(255 * (MenuAlpha * 0.5));
+            }
+        }
+
+        C.SetPos(CenterX - 256, CenterY - 256);
+        C.DrawTileClipped(OptionTexRotators[i], 512, 512, 0, 0, 512, 512);
+
+        // Draw option icon
+        if (Menu.Options[OptionIndex].Material != none)
+        {
+            U = Menu.Options[OptionIndex].Material.MaterialUSize();
+            V = Menu.Options[OptionIndex].Material.MaterialVSize();
+
+            X = CenterX + (Cos(Theta) * 144) - (U / 2);
+            Y = CenterY + (Sin(Theta) * 144) - (V / 2);
+
+            if (bIsOptionDisabled)
+            {
+                C.DrawColor = class'UColor'.default.DarkGray;
+            }
+            else
+            {
+                if (class'UColor'.static.IsZero(Menu.Options[OptionIndex].IconColor))
+                {
+                    C.DrawColor = class'UColor'.default.White;
+                }
+                else
+                {
+                    C.DrawColor = Menu.Options[OptionIndex].IconColor;
+                }
+            }
+
+            C.DrawColor.A = byte(255 * MenuAlpha);
+
+            C.SetPos(X, Y);
+            C.DrawTileClipped(Menu.Options[OptionIndex].Material, U, V, 0, 0, U, V);
+        }
+
+        Theta += ArcLength;
     }
 
     // Display text of selection
@@ -404,6 +423,17 @@ function PostRender(Canvas C)
             C.SetPos(CenterX - (XL / 2) - XL2, CenterY - YL2 - YL - 8);
             C.DrawTile(ORI.InfoIcon, XL2, YL2, 0, 0, ORI.InfoIcon.MaterialUSize() - 1, ORI.InfoIcon.MaterialVSize() - 1);
         }
+
+        // Draw description text
+        C.TextSize(ORI.DescriptionText, XL, YL);
+        C.DrawColor = class'UColor'.default.Black;
+        C.DrawColor.A = byte(255 * MenuAlpha);
+        C.SetPos(CenterX - (XL / 2) + 1, CenterY - 192 -  YL);
+        C.DrawText(ORI.DescriptionText);
+        C.DrawColor = class'UColor'.default.White;
+        C.DrawColor.A = byte(255 * MenuAlpha);
+        C.SetPos(CenterX - (XL / 2), CenterY - 192 - YL);
+        C.DrawText(ORI.DescriptionText);
     }
 //
 //    // debug rendering for cursor
@@ -530,6 +560,8 @@ defaultproperties
     OptionTextures(5)=Texture'DH_InterfaceArt_tex.Communication.menu_option_6'
     OptionTextures(6)=Texture'DH_InterfaceArt_tex.Communication.menu_option_7'
     OptionTextures(7)=Texture'DH_InterfaceArt_tex.Communication.menu_option_8'
+
+    RingTexture=Texture'DH_InterfaceArt_tex.Communication.ring'
 
     SelectedColor=(R=255,G=255,B=64,A=255)
     DisabledColor=(R=32,G=32,B=32,A=255)

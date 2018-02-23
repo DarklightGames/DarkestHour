@@ -61,14 +61,20 @@ function OnSelect(int OptionIndex, vector Location)
         {
             switch (OptionIndex)
             {
-                case 0: // Kick
+                case 0: // Kick from squad
                     PC.ServerSquadKick(OtherPRI);
                     break;
                 case 1: // Promote to leader
                     PC.ServerSquadPromote(OtherPRI);
                     break;
-                case 2: // Ban
+                case 2: // Ban from squad
                     PC.ServerSquadBan(OtherPRI);
+                    break;
+                case 3: // Make assistant
+                    PC.ServerSquadMakeAssistant(OtherPRI);
+                    break;
+                case 4: // Remove assistant
+                    PC.ServerSquadMakeAssistant(none);
                     break;
                 default:
                     break;
@@ -104,20 +110,12 @@ function bool IsOptionDisabled(int OptionIndex)
         OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
     }
 
-    if (OtherPRI == none)
+    if (OtherPRI == none || !OtherPRI.IsInSameSquad(PRI, OtherPRI))
     {
         return true;
     }
 
-    switch (OptionIndex)
-    {
-        case 0: // Kick from squad
-        case 1: // Promote to squad leader
-        case 2: // Ban from squad
-            return !OtherPRI.IsInSameSquad(PRI, OtherPRI);
-        default:
-            return true;
-    }
+    return false;
 }
 
 function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
@@ -140,10 +138,40 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     }
 }
 
+function bool IsOptionHidden(int OptionIndex)
+{
+    local Pawn P;
+    local DHPlayerReplicationInfo OtherPRI;
+
+    P = Pawn(MenuObject);
+
+    if (P != none)
+    {
+        OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+    }
+
+    if (OtherPRI != none)
+    {
+        switch (OptionIndex)
+        {
+            case 3: // Make assistant
+                return OtherPRI.bIsSquadAssistant;
+            case 4: // Remove assistant
+                return !OtherPRI.bIsSquadAssistant;
+            default:
+                break;
+        }
+    }
+
+    return false;
+}
+
 defaultproperties
 {
     Options(0)=(SubjectText="Kick from squad",Material=Material'DH_InterfaceArt2_tex.Icons.squad_kick')
     Options(1)=(SubjectText="Promote to squad leader",Material=Material'DH_InterfaceArt2_tex.Icons.squad_leader')
     Options(2)=(SubjectText="Ban from squad",Material=Material'DH_InterfaceArt2_tex.Icons.squad_ban')
+    Options(3)=(SubjectText="Make assistant",Material=Texture'DH_InterfaceArt2_tex.Icons.assistant')
+    Options(4)=(SubjectText="Remove assistant",Material=Texture'DH_InterfaceArt2_tex.Icons.assistant')
 }
 

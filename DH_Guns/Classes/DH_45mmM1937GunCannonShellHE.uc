@@ -12,6 +12,7 @@ defaultproperties
     MaxSpeed=20218.0
     BallisticCoefficient=0.6 // TODO: try to find an accurate BC (this is from AHZ)
     Tag="O-240"
+    bDebugInImperial=false
 
     Damage=190.0
     DamageRadius=600.0

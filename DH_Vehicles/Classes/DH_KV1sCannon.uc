@@ -28,7 +28,7 @@ defaultproperties
     RearLeftAngle=222.0
 
     // Turret movement
-    ManualRotationsPerSecond=0.025
+    ManualRotationsPerSecond=0.02
     PoweredRotationsPerSecond=0.0778 // 28 degrees per sec
     CustomPitchUpLimit=5097 // +28/-5 degrees
     CustomPitchDownLimit=64626
@@ -40,6 +40,6 @@ defaultproperties
     MaxSecondaryAmmo=60
 
     // Weapon fire
-    WeaponFireOffset=62.0
-    AltFireOffset=(X=-54.0,Y=12.0,Z=-0.5)
+    WeaponFireOffset=69.6
+    AltFireOffset=(X=-54.5,Y=12.0,Z=-0.5)
 }

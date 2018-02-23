@@ -7,7 +7,7 @@ class DH_ThompsonBullet extends DHBullet;
 
 defaultproperties
 {
-    Speed=16899.0
+    Speed=17200.0
     BallisticCoefficient=0.195
     WhizType=2
     Damage=60.0

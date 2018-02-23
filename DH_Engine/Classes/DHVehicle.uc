@@ -136,7 +136,8 @@ var     DHConstructionSupplyAttachment          SupplyAttachment;
 var     vector                                  SupplyAttachmentOffset;
 var     rotator                                 SupplyAttachmentRotation;
 var     int                                     SupplyDropInterval;        // the amount of seconds that must elapse between supply drops
-var     int                                     SupplyDropCountMax;        // how many supplies this vehicle can drop at a time
+var     int                                     SupplyDropCountMax;         // How many supplies this vehicle can drop at a time.
+var     int                                     SupplyLoadCountMax;         // How many supplies this vehicle can load at a time.
 var     array<DHConstructionSupplyAttachment>   TouchingSupplyAttachments; // list of supply attachments we are in range of
 var     int                                     TouchingSupplyCount;       // sum of all supplies in attachments we are in range of
 
@@ -167,7 +168,7 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerStartEngine, ServerDropSupplies, ServerInitiateVehicleScuttle;
+        ServerStartEngine, ServerUnloadSupplies, ServerLoadSupplies, ServerInitiateVehicleScuttle;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -355,10 +356,10 @@ simulated function PostNetReceive()
 // And to make the wheel rotation relative to DeltaTime, as before the wheel speed was variable & depended on the CPU's tick rate
 simulated function Tick(float DeltaTime)
 {
-    local KRigidBodyState BodyState;
-    local rotator         WheelsRotation;
-    local float           VehicleSpeed, MotionSoundVolume, LinTurnSpeed;
-    local int             i;
+    local KRigidBodyState   BodyState;
+    local rotator           WheelsRotation;
+    local float             VehicleSpeed, MotionSoundVolume, LinTurnSpeed;
+    local int               i;
 
     // Stop all movement if engine off or both tracks damaged
     if (bEngineOff || (bLeftTrackDamaged && bRightTrackDamaged))
@@ -402,6 +403,28 @@ simulated function Tick(float DeltaTime)
         else if (EngineHealth <= (default.EngineHealth * HeavyEngineDamageThreshold))
         {
             Throttle = FClamp(Throttle, -0.5, 0.5);
+        }
+    }
+
+    if (Role == ROLE_Authority)
+    {
+        // Recalculate the total supply count for our pawn, or -1 if there are
+        // no supplies around.
+        if (TouchingSupplyAttachments.Length == 0)
+        {
+            TouchingSupplyCount = -1;
+        }
+        else
+        {
+            TouchingSupplyCount = 0;
+
+            for (i = 0; i < TouchingSupplyAttachments.Length; ++i)
+            {
+                if (TouchingSupplyAttachments[i] != none)
+                {
+                    TouchingSupplyCount += TouchingSupplyAttachments[i].GetSupplyCount();
+                }
+            }
         }
     }
 
@@ -474,6 +497,11 @@ simulated function Tick(float DeltaTime)
                 RightTreadPanner.PanRate = 0.0;
             }
         }
+
+        if (TouchingSupplyCount >= 0 && Controller != none && IsLocallyControlled() && SupplyAttachment != none)
+        {
+            PlayerController(Controller).ReceiveLocalizedMessage(class'DHSupplyVehicleMessage',,,, Controller);
+        }
     }
 
     super.Tick(DeltaTime);
@@ -482,28 +510,6 @@ simulated function Tick(float DeltaTime)
     if (!bDriving && ForwardVel ~= 0.0)
     {
         Disable('Tick');
-    }
-
-    if (Role == ROLE_Authority)
-    {
-        // Recalculate the total supply count for our pawn, or -1 if there are
-        // no supplies around.
-        if (TouchingSupplyAttachments.Length == 0)
-        {
-            TouchingSupplyCount = -1;
-        }
-        else
-        {
-            TouchingSupplyCount = 0;
-
-            for (i = 0; i < TouchingSupplyAttachments.Length; ++i)
-            {
-                if (TouchingSupplyAttachments[i] != none)
-                {
-                    TouchingSupplyCount += TouchingSupplyAttachments[i].GetSupplyCount();
-                }
-            }
-        }
     }
 }
 
@@ -3054,24 +3060,93 @@ simulated function DestroyAttachments()
 //  *******************************  MISCELLANEOUS ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
 
+// Unloading supplies.
 simulated exec function ROManualReload()
 {
-    if (SupplyAttachment != none && SupplyAttachment.HasSupplies())
-    {
-        ServerDropSupplies();
-    }
+    LoadSupplies();
 }
 
-// New function for a supply vehicle to drop supplies
-function ServerDropSupplies()
+simulated function UnloadSupplies()
+{
+    local PlayerController PC;
+
+    PC = PlayerController(Controller);
+
+    if (SupplyAttachment == none || PC == none)
+    {
+        return;
+    }
+
+    if (!SupplyAttachment.HasSupplies())
+    {
+        // "The vehicle's supply cache is empty."
+        PC.ReceiveLocalizedMessage(class'DHSupplyMessage', 4);
+        return;
+    }
+
+    if (TouchingSupplyCount == -1)
+    {
+        // "There are no nearby supply caches."
+        PC.ReceiveLocalizedMessage(class'DHSupplyMessage', 3);
+        return;
+    }
+
+    ServerUnloadSupplies();
+}
+
+// Loading supplies.
+simulated exec function ROMGOperation()
+{
+    UnloadSupplies();
+}
+
+simulated function LoadSupplies()
+{
+    local PlayerController PC;
+
+    PC = PlayerController(Controller);
+
+    if (SupplyAttachment == none || PC == none)
+    {
+        return;
+    }
+
+    if (TouchingSupplyCount == -1)
+    {
+        // "There are no nearby supply caches."
+        PC.ReceiveLocalizedMessage(class'DHSupplyMessage', 3);
+        return;
+    }
+
+    if (TouchingSupplyCount == 0)
+    {
+        // "The nearby supply cache is empty."
+        PC.ReceiveLocalizedMessage(class'DHSupplyMessage', 5);
+        return;
+    }
+
+    if (SupplyAttachment.IsFull())
+    {
+        // "The vehicle's supply cache is full."
+        PC.ReceiveLocalizedMessage(class'DHSupplyMessage', 2);
+        return;
+    }
+
+    ServerLoadSupplies();
+}
+
+// This function allows the vehicle to unload supplies to nearby supply caches.
+function ServerUnloadSupplies()
 {
     local DHConstructionSupplyAttachment CSA;
     local int SupplyDropCount, i;
     local DHPlayer PC;
+    local bool bDidFindFullCache;
 
-    if (SupplyAttachment == none)
+    PC = DHPlayer(Controller);
+
+    if (SupplyAttachment == none || PC == none)
     {
-        // No supply attachment to drop from!
         return;
     }
 
@@ -3087,8 +3162,14 @@ function ServerDropSupplies()
     {
         CSA = TouchingSupplyAttachments[i];
 
-        if (CSA != none && CSA.bCanReceiveSupplyDrops && CSA.GetTeamIndex() == GetTeamNum() && !CSA.IsFull())
+        if (CSA != none && CSA.bAreSuppliesTransactable && CSA.GetTeamIndex() == GetTeamNum())
         {
+            if (CSA.IsFull())
+            {
+                bDidFindFullCache = true;
+                continue;
+            }
+
             SupplyDropCount = Min(SupplyDropCount, CSA.SupplyCountMax - CSA.GetSupplyCount());
 
             // Add supplies to the nearby supply attachment.
@@ -3098,17 +3179,72 @@ function ServerDropSupplies()
             // Play a sound to let everybody know a supply drop happened.
             PlaySound(SupplyDropSound, SLOT_None, SupplyDropSoundVolume, true, SupplyDropSoundRadius, 1.0, true);
 
-            // Send a message to the driver and tell them that the supply drop was successful.
-            PC = DHPlayer(Controller);
+            // "250 supplies have been unloaded from the vehicle to a nearby Supply Cache"
+            PC.ReceiveLocalizedMessage(class'DHSupplyMessage', class'UInteger'.static.FromShorts(0, SupplyDropCount),,, CSA);
 
-            if (PC != none)
-            {
-                PC.ReceiveLocalizedMessage(class'DHSupplyMessage', class'UInteger'.static.FromShorts(0, SupplyDropCount),,, CSA);
-            }
-
-            break;
+            return;
         }
     }
+
+    // No supplies were transacted, but at least one full cache was found and skipped.
+    if (bDidFindFullCache)
+    {
+        // "The nearby supply cache is full."
+        PC.ReceiveLocalizedMessage(class'DHSupplyMessage', 6);
+    }
+}
+
+// This function allows the vehicle to load supplies from nearby supply caches.
+function ServerLoadSupplies()
+{
+    local DHConstructionSupplyAttachment CSA;
+    local int i;
+    local int SupplyLoadCount;
+    local DHPlayer PC;
+
+    PC = DHPlayer(Controller);
+
+    if (SupplyAttachment == none || PC == none)
+    {
+        return;
+    }
+
+    if (SupplyAttachment.IsFull())
+    {
+        // "The vehicle's supply cache is full."
+        PC.ReceiveLocalizedMessage(class'DHSupplyMessage', 2);
+        return;
+    }
+
+    // Calculate the maximum amount of supplies we can load.
+    SupplyLoadCount = Min(SupplyLoadCountMax, SupplyAttachment.SupplyCountMax - SupplyAttachment.GetSupplyCount());
+
+    for (i = 0; i < TouchingSupplyAttachments.Length; ++i)
+    {
+        CSA = TouchingSupplyAttachments[i];
+
+        if (CSA != none && CSA.bAreSuppliesTransactable && CSA.GetTeamIndex() == GetTeamNum() && CSA.HasSupplies())
+        {
+            SupplyLoadCount = Min(CSA.GetSupplyCount(), SupplyLoadCount);
+
+            // Remove supplies from the nearby supply attachment.
+            CSA.SetSupplyCount(CSA.GetSupplyCount() - SupplyLoadCount);
+
+            // Add supplies to the vehicle's supply attachment.
+            SupplyAttachment.SetSupplyCount(SupplyAttachment.GetSupplyCount() + SupplyLoadCount);
+
+            // Play a sound to let everybody know a supply drop happened.
+            PlaySound(SupplyDropSound, SLOT_None, SupplyDropSoundVolume, true, SupplyDropSoundRadius, 1.0, true);
+
+            // "250 supplies have been loaded into the vehicle from a nearby Supply Cache"
+            PC.ReceiveLocalizedMessage(class'DHSupplyMessage', class'UInteger'.static.FromShorts(1, SupplyLoadCount),,, CSA);
+
+            return;
+        }
+    }
+
+    // "There are no nearby supply caches."
+    PC.ReceiveLocalizedMessage(class'DHSupplyMessage', 3);
 }
 
 // Modified to include any SupplyAttachment
@@ -3565,6 +3701,22 @@ exec function ToggleViewLimit()
     }
 }
 
+// New debug exec to adjust the yaw limits for the current driver position
+exec function SetViewLimits(int NewPitchUp, int NewPitchDown, int NewYawRight, int NewYawLeft)
+{
+    if (IsDebugModeAllowed())
+    {
+        Log(VehicleNameString @ ": ViewPitchUpLimit =" @ NewPitchUp @ "ViewPitchDownLimit =" @ NewPitchDown @ "ViewPositiveYawLimit =" @ NewYawRight @ "ViewNegativeYawLimit =" @ NewYawLeft
+            @ "(was" @ DriverPositions[DriverPositionIndex].ViewPitchUpLimit @ DriverPositions[DriverPositionIndex].ViewPitchDownLimit
+            @ DriverPositions[DriverPositionIndex].ViewPositiveYawLimit @ DriverPositions[DriverPositionIndex].ViewNegativeYawLimit $ ")");
+
+        DriverPositions[DriverPositionIndex].ViewPitchUpLimit = NewPitchUp;
+        DriverPositions[DriverPositionIndex].ViewPitchDownLimit = NewPitchDown;
+        DriverPositions[DriverPositionIndex].ViewPositiveYawLimit = NewYawRight;
+        DriverPositions[DriverPositionIndex].ViewNegativeYawLimit = NewYawLeft;
+    }
+}
+
 // New debug exec to quickly damage the vehicle
 exec function DamageVehicle(optional bool bDestroyVehicle)
 {
@@ -3669,6 +3821,7 @@ defaultproperties
 
     // Supply
     SupplyDropCountMax=250
+    SupplyLoadCountMax=250
     SupplyDropInterval=5
     TouchingSupplyCount=-1
     SupplyDropSound=Sound'Inf_Weapons_Foley.AmmoPickup'
@@ -3689,7 +3842,7 @@ defaultproperties
     VehHitpoints(1)=(PointRadius=0.0,PointScale=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
     TreadDamageThreshold=0.3
     bCanCrash=true
-    ImpactDamageThreshold=20.0
+    ImpactDamageThreshold=40.0
     ImpactDamageMult=0.001
     ImpactWorldDamageMult=0.001
     DriverDamageMult=1.0
@@ -3707,7 +3860,7 @@ defaultproperties
     DestructionEffectLowClass=class'AHZ_ROVehicles.ATCannonDestroyedEmitter'
     DisintegrationEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
-    DisintegrationHealth=-10000.0 // -10000 default to make classes enable disintegration
+    DisintegrationHealth=-10000.0 // very high default value so subclasses have to enable disintegration
     ExplosionDamage=150.0
     ExplosionRadius=400.0
     ExplosionSoundRadius=750.0

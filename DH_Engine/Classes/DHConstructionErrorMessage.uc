@@ -15,14 +15,19 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
 
     CP = DHConstructionProxy(OptionalObject);
 
-    if (CP != none)
+    if (CP.ProxyError.Type == ERROR_Custom)
+    {
+        Result = CP.ProxyError.CustomErrorString;
+    }
+    else
     {
         Result = default.ErrorMessages[int(CP.ProxyError.Type)];
-        Result = Repl(Result, "{name}", CP.ConstructionClass.static.GetMenuName(CP.GetContext()));
-        Result = Repl(Result, "{verb}", CP.ConstructionClass.default.ConstructionVerb);
-        Result = Repl(Result, "{integer}", CP.ProxyError.OptionalInteger);
-        Result = Repl(Result, "{string}", CP.ProxyError.OptionalString);
     }
+
+    Result = Repl(Result, "{name}", CP.ConstructionClass.static.GetMenuName(CP.GetContext()));
+    Result = Repl(Result, "{verb}", CP.ConstructionClass.default.ConstructionVerb);
+    Result = Repl(Result, "{integer}", CP.ProxyError.OptionalInteger);
+    Result = Repl(Result, "{string}", CP.ProxyError.OptionalString);
 
     return Result;
 }
