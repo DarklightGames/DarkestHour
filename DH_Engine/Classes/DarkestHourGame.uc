@@ -4952,7 +4952,7 @@ defaultproperties
     Begin Object Class=UVersion Name=VersionObject
         Major=8
         Minor=0
-        Patch=4
+        Patch=5
         Prerelease="beta"
     End Object
     Version=VersionObject
