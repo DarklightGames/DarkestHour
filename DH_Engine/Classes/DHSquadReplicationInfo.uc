@@ -2181,7 +2181,7 @@ function SetAssistantSquadLeader(int TeamIndex, int SquadIndex, DHPlayerReplicat
         }
 
         // "{0} is now the assistant squad leader."
-        BroadcastLocalizedMessage(class'DHSquadMessage', 72, PRI);
+        BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, class'DHSquadMessage', 72, PRI);
     }
 }
 
