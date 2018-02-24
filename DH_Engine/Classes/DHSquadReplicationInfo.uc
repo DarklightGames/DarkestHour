@@ -2106,6 +2106,11 @@ function DisbandSquad(int TeamIndex, int SquadIndex)
 // Returns the squad's assistant squad leader, or none if one does not exist.
 simulated function DHPlayerReplicationInfo GetAssistantSquadLeader(int TeamIndex, int SquadIndex)
 {
+    if (!IsSquadActive(TeamIndex, SquadIndex))
+    {
+        return none;
+    }
+
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
@@ -2122,6 +2127,11 @@ function SetAssistantSquadLeader(int TeamIndex, int SquadIndex, DHPlayerReplicat
     local DHPlayer PC;
     local DHPlayerReplicationInfo ASL;
     local int AssistantSquadLeaderMemberIndex;
+
+    if (!IsSquadActive(TeamIndex, SquadIndex))
+    {
+        return;
+    }
 
     if (PRI != none)
     {
