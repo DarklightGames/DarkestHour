@@ -376,6 +376,12 @@ simulated function bool IsSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex
     return PRI.SquadMemberIndex == SQUAD_LEADER_INDEX;
 }
 
+// Returns true if the specified player is the assistant of the specified squad.
+simulated function bool IsSquadAssistant(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex)
+{
+    return GetAssistantSquadLeader(TeamIndex, SquadIndex) == PRI;
+}
+
 // Swaps the position of squad members in the same squad by index.
 private function bool SwapSquadMembersByIndex(int TeamIndex, int SquadIndex, int MemberIndex1, int MemberIndex2)
 {
@@ -756,10 +762,17 @@ function bool CommandeerSquad(DHPlayerReplicationInfo PRI, int TeamIndex, int Sq
 {
     local DHPlayer PC;
     local bool bResult;
+    local bool bWasAssistant;
 
     if (!IsInSquad(PRI, TeamIndex, SquadIndex) || HasSquadLeader(TeamIndex, SquadIndex))
     {
         return false;
+    }
+
+    // NOTE: It is critically important that be done before the indices are swapped!
+    if (GetAssistantSquadLeader(TeamIndex, SquadIndex) == PRI)
+    {
+        SetAssistantSquadLeader(TeamIndex, SquadIndex, none);
     }
 
     bResult = SwapSquadMembersByIndex(TeamIndex, SquadIndex, PRI.SquadMemberIndex, SQUAD_LEADER_INDEX);
@@ -772,13 +785,6 @@ function bool CommandeerSquad(DHPlayerReplicationInfo PRI, int TeamIndex, int Sq
         {
             // "You are now the squad leader"
             PC.ReceiveLocalizedMessage(SquadMessageClass, 34);
-        }
-
-        if (PRI.bIsSquadAssistant)
-        {
-            // The squad no longer has an assistant, since the squad is being
-            // commandeered by the assistant.
-            SetAssistantSquadLeader(TeamIndex, SquadIndex, none);
         }
 
         // "{0} has become the squad leader"
@@ -2135,10 +2141,14 @@ function SetAssistantSquadLeader(int TeamIndex, int SquadIndex, DHPlayerReplicat
 
     if (PRI != none)
     {
-        if (PRI.Team != none && PRI.Team.TeamIndex == TeamIndex && PRI.SquadIndex == SquadIndex && !PRI.IsSquadLeader())
+        if (!IsInSquad(PRI, TeamIndex, SquadIndex) ||
+            IsSquadLeader(PRI, TeamIndex, SquadIndex) ||
+            IsSquadAssistant(PRI, TeamIndex, SquadIndex))
         {
-            AssistantSquadLeaderMemberIndex = PRI.SquadMemberIndex;
+            return;
         }
+
+        AssistantSquadLeaderMemberIndex = PRI.SquadMemberIndex;
     }
     else
     {
@@ -2151,12 +2161,6 @@ function SetAssistantSquadLeader(int TeamIndex, int SquadIndex, DHPlayerReplicat
 
     if (ASL != none)
     {
-        if (ASL == PRI)
-        {
-            // Player is already the assistant, bail out!
-            return;
-        }
-
         ASL.bIsSquadAssistant = false;
 
         PC = DHPlayer(ASL.Owner);
