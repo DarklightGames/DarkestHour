@@ -55,7 +55,7 @@ function PostBeginPlay()
     StrikeDelay = float(LI.GetStrikeDelay(TeamIndex)) * (0.85 + (FRand() * 0.3));  // +/- 15% randomisation on delay
 
     // Set timer until arty strike begins
-    SetTimer(FMin(StrikeDelay, 1.0), false); // added a minimum to avoid any possibility of setting a null timer
+    SetTimer(FMax(StrikeDelay, 1.0), false); // added a minimum to avoid any possibility of setting a null timer
 
     // Set LifeSpan until this actor destroys itself
     // Added as a fail-safe in case the sequence of timers somehow gets interrupted & we don't ever get to end of arty strike
