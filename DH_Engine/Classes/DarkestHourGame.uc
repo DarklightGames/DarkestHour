@@ -21,8 +21,6 @@ var     DHSpawnManager              SpawnManager;
 var     DHObstacleManager           ObstacleManager;
 var     DHConstructionManager       ConstructionManager;
 
-var     DHZoneInfo                  ZoneInfoReference;                      // A reference to the DHZoneInfo if it exists
-
 var     array<string>               FFViolationIDs;                         // Array of ROIDs that have been kicked once this session
 var()   config bool                 bSessionKickOnSecondFFViolation;
 var()   config bool                 bUseWeaponLocking;                      // Weapons can lock (preventing fire) for punishment
@@ -179,11 +177,6 @@ function PostBeginPlay()
     foreach AllActors(class'DHObstacleInfo', DHOI)
     {
         ObstacleManager = Spawn(ObstacleManagerClass);
-        break;
-    }
-
-    foreach AllActors(class'DHZoneInfo', ZoneInfoReference)
-    {
         break;
     }
 
@@ -3071,15 +3064,6 @@ exec function DebugSetRoleLimit(int Team, int Index, int NewLimit)
                 ++i;
             }
         }
-    }
-}
-
-// Function for allowing the server to change the fog distances (currently for testing purposes)
-exec function SetTargetFog(float Distance)
-{
-    if (ZoneInfoReference != none)
-    {
-        ZoneInfoReference.SetTargetFog(Distance);
     }
 }
 

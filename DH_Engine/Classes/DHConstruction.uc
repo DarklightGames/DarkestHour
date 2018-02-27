@@ -426,6 +426,7 @@ auto simulated state Constructing
 Begin:
     if (Role == ROLE_Authority)
     {
+        // When placed in the SDK, the Owner will be none.
         if (Owner == none && bShouldAutoConstruct)
         {
             bShouldAutoConstruct = false;

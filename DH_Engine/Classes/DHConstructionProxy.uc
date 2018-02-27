@@ -19,10 +19,10 @@ var rotator                 LocalRotation;
 var rotator                 LocalRotationRate;
 
 // Projector
-var DHConstructionProxyProjector            Projector;
+var DHConstructionProxyProjector    Projector;
 
 // Attachments
-var array<DHConstructionProxyAttachment>    Attachments;
+var array<Actor>                    Attachments;
 
 function PostBeginPlay()
 {

@@ -1438,6 +1438,7 @@ defaultproperties
     ConstructionClassNames(14)="DH_Construction.DHConstruction_Sandbags_Crescent"
     ConstructionClassNames(15)="DH_Construction.DHConstruction_Sandbags_Bunker"
     ConstructionClassNames(16)="DH_Construction.DHConstruction_Watchtower"
+    ConstructionClassNames(17)="DH_Construction.DHConstruction_GrenadeCrate"
     //ConstructionClassNames(17)="DH_Construction.DHConstruction_MortarPit"
 
     // Map Markers
