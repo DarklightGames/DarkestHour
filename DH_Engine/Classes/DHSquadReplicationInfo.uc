@@ -762,7 +762,6 @@ function bool CommandeerSquad(DHPlayerReplicationInfo PRI, int TeamIndex, int Sq
 {
     local DHPlayer PC;
     local bool bResult;
-    local bool bWasAssistant;
 
     if (!IsInSquad(PRI, TeamIndex, SquadIndex) || HasSquadLeader(TeamIndex, SquadIndex))
     {
