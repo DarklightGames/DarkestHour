@@ -26,10 +26,8 @@ simulated function OnConstructed()
 
 static function UpdateProxy(DHConstructionProxy CP)
 {
-    local int i, j;
+    local int i;
     local class<DHInventorySpawner> SpawnerClass;
-    local Actor Attachment;
-    local array<Material> AttachmentSkins;
 
     super.UpdateProxy(CP);
 
@@ -42,6 +40,11 @@ static function UpdateProxy(DHConstructionProxy CP)
     {
         CP.Skins[i] = CP.CreateProxyMaterial(SpawnerClass.default.Skins[i]);
     }
+}
+
+static function string GetMenuName(DHConstruction.Context Context)
+{
+    return GetSpawnerClass(Context).static.GetMenuName();
 }
 
 static function GetCollisionSize(DHConstruction.Context Context, out float NewRadius, out float NewHeight)

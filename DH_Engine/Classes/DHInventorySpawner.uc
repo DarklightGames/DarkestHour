@@ -10,6 +10,7 @@ class DHInventorySpawner extends Actor
 var DHWeaponPickupTouchMessageParameters    TouchMessageParameters;
 
 var class<Weapon>       WeaponClass;
+
 var array<name>         PickupBoneNames;
 
 var     int             SavedPickupCount;
@@ -32,6 +33,8 @@ var bool                bIsProxy;
 var array<Actor>        Proxies;
 var class<Actor>        ProxyClass;
 var StaticMesh          ProxyStaticMesh;
+
+var localized string    ContainerNoun;
 
 replication
 {
@@ -204,13 +207,13 @@ simulated function UpdateProxies()
 {
     local Actor Proxy;
 
-    while (Proxies.Length > PickupCount)
+    while (Proxies.Length > PickupCount && Proxies.Length > 0)
     {
         Proxies[Proxies.Length - 1].Destroy();
         Proxies.Remove(Proxies.Length - 1, 1);
     }
 
-    while (Proxies.Length < PickupCount)
+    while (Proxies.Length < PickupCount && Proxies.Length < PickupBoneNames.Length)
     {
         Proxy = Spawn(ProxyClass, self);
         Proxy.SetStaticMesh(GetProxyStaticMesh());
@@ -258,6 +261,11 @@ event Destroyed()
     }
 }
 
+static function string GetMenuName()
+{
+    return default.WeaponClass.default.ItemName @ default.ContainerNoun;
+}
+
 defaultproperties
 {
     DrawType=DT_Mesh
@@ -272,7 +280,7 @@ defaultproperties
     ExhaustedLifespan=15.0
     UsesMax=-1
     ProxyClass=class'DHWeaponPickupSpawnerProxy'
-
+    ContainerNoun="box"
     OpenAnimation="open"
     CloseAnimation="close"
     OpenedAnimation="opened"
