@@ -504,8 +504,8 @@ function DHConstruction.ConstructionError GetProvisionalPosition(out vector OutL
             CircumferenceInMeters = class'DHUnits'.static.UnrealToMeters(CollisionRadius * Pi * 2);
             ArcLengthTraceCount = (CircumferenceInMeters / ConstructionClass.default.ArcLengthTraceIntervalInMeters) / 2;
 
-            // For safety's sake, make sure we don't trace more than 64 times.
-            ArcLengthTraceCount = Clamp(ArcLengthTraceCount, 0, 64);
+            // For safety's sake, make sure we don't overdo or underdo it.
+            ArcLengthTraceCount = Clamp(ArcLengthTraceCount, 8, 64);
 
             for (i = 0; i < ArcLengthTraceCount; ++i)
             {
