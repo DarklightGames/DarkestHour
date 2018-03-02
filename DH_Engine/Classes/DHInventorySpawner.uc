@@ -18,6 +18,11 @@ var()   int             PickupCount;
 var     int             UseCount;
 var()   int             UsesMax;    // -1 = infinite
 
+var     name            CloseAnimation;
+var     name            ClosedAnimation;
+var     name            OpenAnimation;
+var     name            OpenedAnimation;
+
 var()   bool            bShouldGeneratePickups;
 var()   int             PickupGenerationRatePerMinute;
 
@@ -62,6 +67,23 @@ simulated function PostBeginPlay()
     }
 }
 
+simulated function PostNetBeginPlay()
+{
+    super.PostNetBeginPlay();
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        if (PickupCount == 0)
+        {
+            PlayAnim(ClosedAnimation);
+        }
+        else
+        {
+            PlayAnim(OpenAnimation);
+        }
+    }
+}
+
 function bool CanGeneratePickups()
 {
     return bShouldGeneratePickups && PickupGenerationRatePerMinute > 0 && PickupCount < PickupsMax;
@@ -78,6 +100,11 @@ function Timer()
 
     if (Level.NetMode != NM_DedicatedServer)
     {
+        if (PickupCount == 1)
+        {
+            PlayAnim(OpenAnimation);
+        }
+
         UpdateProxies();
     }
 
@@ -131,9 +158,14 @@ function UsedBy(Pawn User)
         LifeSpan = default.ExhaustedLifespan;
     }
 
-    if (Level.NetMode != NM_DedicatedServer)
+    if (Level.NetMode != NM_DedicatedServer)    // TODO: standalone?
     {
         UpdateProxies();
+
+        if (PickupCount == 0)
+        {
+            PlayAnim(CloseAnimation);
+        }
     }
 
     if (CanGeneratePickups())
@@ -193,6 +225,15 @@ simulated event PostNetReceive()
 {
     if (SavedPickupCount != PickupCount)
     {
+        if (PickupCount == 0)
+        {
+            PlayAnim(CloseAnimation);
+        }
+        else if (SavedPickupCount == 0)
+        {
+            PlayAnim(OpenedAnimation);
+        }
+
         if (bIsProxy)
         {
             UpdateProxies();
@@ -231,5 +272,10 @@ defaultproperties
     ExhaustedLifespan=15.0
     UsesMax=-1
     ProxyClass=class'DHWeaponPickupSpawnerProxy'
+
+    OpenAnimation="open"
+    CloseAnimation="close"
+    OpenedAnimation="opened"
+    ClosedAnimation="closed"
 }
 

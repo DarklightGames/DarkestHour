@@ -7,6 +7,7 @@ class DHConstruction_InventorySpawner extends DHConstruction
     abstract;
 
 var class<DHInventorySpawner>   SpawnerClass;
+var bool                        bShouldSpawnProxyAttachments;
 
 static function class<DHInventorySpawner> GetSpawnerClass(DHConstruction.Context Context)
 {
@@ -41,36 +42,6 @@ static function UpdateProxy(DHConstructionProxy CP)
     {
         CP.Skins[i] = CP.CreateProxyMaterial(SpawnerClass.default.Skins[i]);
     }
-
-    AttachmentSkins = (new class'UStaticMesh').FindStaticMeshSkins(SpawnerClass.default.WeaponClass.default.PickupClass.default.StaticMesh);
-
-    for (i = 0; i < AttachmentSkins.Length; ++i)
-    {
-        AttachmentSkins[i] = CP.CreateProxyMaterial(AttachmentSkins[i]);
-    }
-
-    CP.DestroyAttachments();
-
-    for (i = 0; i < SpawnerClass.default.PickupBoneNames.Length; ++i)
-    {
-        Attachment = CP.Spawn(SpawnerClass.default.ProxyClass);
-        Attachment.SetStaticMesh(SpawnerClass.default.WeaponClass.default.PickupClass.default.StaticMesh);
-
-        if (Attachment == none)
-        {
-            continue;
-        }
-
-        CP.AttachToBone(Attachment, SpawnerClass.default.PickupBoneNames[i]);
-
-        for (j = 0; j < AttachmentSkins.Length; ++j)
-        {
-            Attachment.Skins[j] = AttachmentSkins[j];
-        }
-
-        Attachment.SetRelativeLocation(vect(0, 0, 0));
-        CP.Attachments[CP.Attachments.Length] = Attachment;
-    }
 }
 
 static function GetCollisionSize(DHConstruction.Context Context, out float NewRadius, out float NewHeight)
@@ -94,5 +65,6 @@ defaultproperties
     ProxyTraceDepthMeters=2.0
     bCanPlaceIndoors=true
     ConstructionVerb="drop"
+    bShouldSpawnProxyAttachments=true
 }
 
