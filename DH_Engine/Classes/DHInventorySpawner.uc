@@ -280,7 +280,7 @@ defaultproperties
     ExhaustedLifespan=15.0
     UsesMax=-1
     ProxyClass=class'DHWeaponPickupSpawnerProxy'
-    ContainerNoun="box"
+    ContainerNoun="crate"
     OpenAnimation="open"
     CloseAnimation="close"
     OpenedAnimation="opened"

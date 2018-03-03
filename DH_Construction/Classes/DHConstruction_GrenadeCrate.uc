@@ -18,8 +18,11 @@ static function class<DHInventorySpawner> GetSpawnerClass(DHConstruction.Context
                     return class'DH_Weapons.DH_M1GrenadeSpawner';
                 case NATION_USSR:
                     return class'DH_Weapons.DH_F1GrenadeSpawner';
+                case NATION_Britain:
+                case NATION_Canada:
+                    return class'DH_Weapons.DH_MillsBombSpawner';
                 default:
-                    return class'DH_Weapons.DH_M1GrenadeSpawner';
+                    break;
             }
         default:
             return none;
@@ -28,4 +31,9 @@ static function class<DHInventorySpawner> GetSpawnerClass(DHConstruction.Context
 
 defaultproperties
 {
+    StartRotationMin=(Yaw=16384)
+    StartRotationMax=(Yaw=16384)
+    SupplyCost=500
+    // TODO: icon
 }
+

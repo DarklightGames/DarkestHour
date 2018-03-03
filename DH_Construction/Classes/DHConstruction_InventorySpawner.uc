@@ -14,6 +14,19 @@ static function class<DHInventorySpawner> GetSpawnerClass(DHConstruction.Context
     return default.SpawnerClass;
 }
 
+static function DHConstruction.ConstructionError GetPlayerError(DHConstruction.Context Context)
+{
+    local DHConstruction.ConstructionError Error;
+
+    if (GetSpawnerClass(Context) == none)
+    {
+        Error.Type = ERROR_Fatal;
+        return Error;
+    }
+
+    return super.GetPlayerError(Context);
+}
+
 simulated function OnConstructed()
 {
     local DHInventorySpawner IS;
