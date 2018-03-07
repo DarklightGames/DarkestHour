@@ -7,7 +7,6 @@ class DHConstruction_InventorySpawner extends DHConstruction
     abstract;
 
 var class<DHInventorySpawner>   SpawnerClass;
-var bool                        bShouldSpawnProxyAttachments;
 
 static function class<DHInventorySpawner> GetSpawnerClass(DHConstruction.Context Context)
 {
@@ -75,12 +74,12 @@ static function GetCollisionSize(DHConstruction.Context Context, out float NewRa
 
 defaultproperties
 {
-    GroupClass=class'DHConstructionGroup_Logistics'
+    GroupClass=class'DHConstructionGroup_Ammunition'
     SpawnerClass=class'DH_Weapons.DH_StielGranateSpawner'
     bDestroyOnConstruction=true
     ProxyTraceDepthMeters=2.0
     bCanPlaceIndoors=true
     ConstructionVerb="drop"
-    bShouldSpawnProxyAttachments=true
+    bBlockZeroExtentTraces=true
 }
 

@@ -96,5 +96,5 @@ defaultproperties
     StartRotationMax=(Yaw=-16384)
     bShouldRefundSuppliesOnTearDown=false
     bCanBeTornDownByFriendlies=false
-    GroupClass=class'DHConstructionGroup_Logistics'
+    GroupClass=class'DHConstructionGroup_Ammunition'
 }

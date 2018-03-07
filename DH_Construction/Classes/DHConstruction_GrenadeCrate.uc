@@ -34,6 +34,6 @@ defaultproperties
     StartRotationMin=(Yaw=16384)
     StartRotationMax=(Yaw=16384)
     SupplyCost=500
-    // TODO: icon
+    MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.grenade'
 }
 

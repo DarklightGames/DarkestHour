@@ -29,7 +29,6 @@ var()   int             PickupGenerationRatePerMinute;
 
 var     float           ExhaustedLifespan;
 
-var bool                bIsProxy;
 var array<Actor>        Proxies;
 var class<Actor>        ProxyClass;
 var StaticMesh          ProxyStaticMesh;
@@ -181,7 +180,11 @@ simulated event NotifySelected(Pawn User)
 {
     local class<ROWeaponPickup> PickupClass;
 
-    if (PickupCount <= 0)
+    if (Level.NetMode == NM_DedicatedServer ||
+        User == none ||
+        !User.IsHumanControlled() ||
+        PickupCount <= 0 || WeaponClass == none ||
+        TouchMessageParameters == none)
     {
         return;
     }
@@ -237,10 +240,7 @@ simulated event PostNetReceive()
             PlayAnim(OpenedAnimation);
         }
 
-        if (bIsProxy)
-        {
-            UpdateProxies();
-        }
+        UpdateProxies();
 
         SavedPickupCount = PickupCount;
     }
@@ -285,5 +285,6 @@ defaultproperties
     CloseAnimation="close"
     OpenedAnimation="opened"
     ClosedAnimation="closed"
+    SavedPickupCount=-1
 }
 

@@ -12,11 +12,19 @@ static function string GetString(optional int Switch, optional PlayerReplication
     local DHWeaponPickupTouchMessageParameters P;
 
     P = DHWeaponPickupTouchMessageParameters(OptionalObject);
-    S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(class'DHWeaponPickup'.default.TouchMessage, P.PlayerController);
+    S = class'DHWeaponPickup'.default.TouchMessage;
 
-    if (P.InventoryClass != none)
+    if (P != none)
     {
-        S = Repl(S, "{0}", P.InventoryClass.default.ItemName);
+        if (P.PlayerController != none)
+        {
+            S = class'DarkestHourGame'.static.ParseLoadingHintNoColor(S, P.PlayerController);
+        }
+
+        if (P.InventoryClass != none)
+        {
+            S = Repl(S, "{0}", P.InventoryClass.default.ItemName);
+        }
     }
 
     return S;
