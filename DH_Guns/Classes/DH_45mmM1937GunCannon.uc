@@ -19,7 +19,7 @@ defaultproperties
     YawStartConstraint=-6000.0
     YawEndConstraint=6000.0
     CustomPitchUpLimit=2366 // +13/-5 (should be +25 degrees, but any higher & barrel clips through gun shield)
-    CustomPitchDownLimit=64626
+    CustomPitchDownLimit=64200
 
     // Cannon ammo
     ProjectileClass=class'DH_Guns.DH_45mmM1937GunCannonShell'

@@ -19,7 +19,7 @@ defaultproperties
     YawStartConstraint=-5500.0
     YawEndConstraint=5500.0
     CustomPitchUpLimit=5097 // +28/-5 degrees (could actually elevate to 37 degrees, but reduced to stop breech sinking into ground)
-    CustomPitchDownLimit=64626
+    CustomPitchDownLimit=64100
 
     // Cannon ammo
     ProjectileClass=class'DH_Guns.DH_ZiS3CannonShell'
