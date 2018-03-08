@@ -519,9 +519,9 @@ function Timer()
     // Check to see if we need to destroy a spiked, abandoned vehicle
     if (bSpikedVehicle)
     {
-        if (Health > 0 && IsVehicleEmpty())
+        if (Health > 0 && (!bHasTreads || IsVehicleEmpty()))
         {
-            KilledBy(self);
+            KilledBy(LastHitBy);
         }
         else
         {

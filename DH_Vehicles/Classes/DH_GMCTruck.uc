@@ -49,15 +49,15 @@ defaultproperties
     HandbrakeThresh=100.0
 
     // Physics wheels properties
-    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.2),(InVal=400.0,OutVal=0.001),(InVal=10000000000.0,OutVal=0.0)))
+    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.1),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.3),(InVal=400.0,OutVal=0.1),(InVal=10000000000.0,OutVal=0.0)))
     WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=45.0,OutVal=0.09),(InVal=10000000000.0,OutVal=0.9)))
-    WheelLatFrictionScale=1.35
-    WheelHandbrakeSlip=1.5
+    WheelLatFrictionScale=2.0
+    WheelHandbrakeSlip=0.1
 
     // Damage
-    Health=150
-    HealthMax=150.0
-    EngineHealth=35
+    Health=1000
+    HealthMax=1000.0
+    EngineHealth=40
     VehHitpoints(1)=(PointRadius=18.0,PointScale=1.0,PointBone="wheel_FL",DamageMultiplier=1.0,HitPointType=HP_Engine) // note VHP(0) is inherited default for engine
     VehHitpoints(2)=(PointRadius=18.0,PointScale=1.0,PointBone="wheel_FR",DamageMultiplier=1.0,HitPointType=HP_Engine)
     ImpactWorldDamageMult=1.0
@@ -65,6 +65,13 @@ defaultproperties
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=135.0,Y=0.0,Z=65.0)
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Trucks.GMC_destroyed'
+
+    // Vehicle destruction
+    ExplosionDamage=50.0
+    ExplosionRadius=100.0
+    ExplosionSoundRadius=200.0
+    DestructionLinearMomentum=(Min=50.0,Max=100.0)
+    DestructionAngularMomentum=(Min=10.0,Max=50.0)
 
     // Exit
     ExitPositions(0)=(X=57.0,Y=-132.0,Z=25.0) // driver

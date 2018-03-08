@@ -50,22 +50,29 @@ defaultproperties
     HandbrakeThresh=100.0
 
     // Physics wheels properties
-    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.2),(InVal=400.0,OutVal=0.001),(InVal=10000000000.0,OutVal=0.0)))
+    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.1),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.3),(InVal=400.0,OutVal=0.1),(InVal=10000000000.0,OutVal=0.0)))
     WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=45.0,OutVal=0.09),(InVal=10000000000.0,OutVal=0.9)))
-    WheelLatFrictionScale=1.35
-    WheelHandbrakeSlip=1.5
+    WheelLatFrictionScale=2.0
+    WheelHandbrakeSlip=0.1
     WheelSuspensionMaxRenderTravel=4.5
 
     // Damage
-    Health=150
-    HealthMax=150.0
-    EngineHealth=35
+    Health=1000
+    HealthMax=1000.0
+    EngineHealth=40
     VehHitpoints(0)=(PointOffset=(X=16.0,Y=0.0,Z=0.0)) // engine
     ImpactWorldDamageMult=1.0
     HeavyEngineDamageThreshold=0.33
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=115.0,Y=0.0,Z=70.0)
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Trucks.OpelBlitz_dest'
+
+    // Vehicle destruction
+    ExplosionDamage=50.0
+    ExplosionRadius=100.0
+    ExplosionSoundRadius=200.0
+    DestructionLinearMomentum=(Min=50.0,Max=100.0)
+    DestructionAngularMomentum=(Min=10.0,Max=50.0)
 
     // Exit
     ExitPositions(0)=(X=70.0,Y=-130.0,Z=60.0) // driver
