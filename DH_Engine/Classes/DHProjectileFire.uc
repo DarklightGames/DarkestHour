@@ -624,7 +624,7 @@ defaultproperties
     PctCrouchRecoil=0.75
     PctCrouchIronRecoil=0.6
     PctProneRecoil=0.7
-    PctProneIronRecoil=0.5
+    PctProneIronRecoil=0.4
     PctBipodDeployRecoil=0.1
     PctRestDeployRecoil=0.5
     PctLeanPenalty=1.25
