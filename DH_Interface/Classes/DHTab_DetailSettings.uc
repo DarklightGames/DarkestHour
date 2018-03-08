@@ -5,10 +5,16 @@
 
 class DHTab_DetailSettings extends ROTab_DetailSettings;
 
-var automated moSlider  sl_CorpseStayTime;
-var int                 CorpseStayNum;
+var automated moCheckBox        ch_DynamicFogRatio;
+var bool                        bUseDynamicFogRatio;
 
-var bool                bIsUpdatingGameDetails; // When true, we are in the process of updating all of the options via the Game details option
+var automated moNumericEdit     nu_MinDesiredFPS;
+var int                         NumMinDesiredFPS;
+
+var automated moSlider          sl_CorpseStayTime;
+var int                         CorpseStayNum;
+
+var bool                        bIsUpdatingGameDetails; // When true, we are in the process of updating all of the options via the Game details option
 
 function SetupPositions()
 {
@@ -16,6 +22,8 @@ function SetupPositions()
 
     sb_Section1.UnmanageComponent(ch_Advanced);
 
+    sb_Section2.ManageComponent(ch_DynamicFogRatio);
+    sb_Section2.ManageComponent(nu_MinDesiredFPS);
     sb_Section2.ManageComponent(sl_DistanceLOD);
     sb_Section2.ManageComponent(sl_CorpseStayTime);
     sb_Section2.UnmanageComponent(co_ScopeDetail);
@@ -143,6 +151,16 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
         case sl_CorpseStayTime:
             CorpseStayNum = class'DHPlayer'.default.CorpseStayTime;
             sl_CorpseStayTime.SetComponentValue(CorpseStayNum, true);
+            break;
+
+        case ch_DynamicFogRatio:
+            bUseDynamicFogRatio = bool(PlayerOwner().ConsoleCommand("get DH_Engine.DHPlayer bDynamicFogRatio", false));
+            ch_DynamicFogRatio.SetComponentValue(bUseDynamicFogRatio, true);
+            break;
+
+        case nu_MinDesiredFPS:
+            NumMinDesiredFPS = int(PlayerOwner().ConsoleCommand("get DH_Engine.DHPlayer MinDesiredFPS", false));
+            nu_MinDesiredFPS.SetComponentValue(NumMinDesiredFPS, true);
             break;
 
         default:
@@ -273,6 +291,16 @@ function InternalOnChange(GUIComponent Sender)
         case sl_CorpseStayTime:
             CorpseStayNum = int(sl_CorpseStayTime.GetComponentValue());
             PlayerOwner().ConsoleCommand("set DH_Engine.DHPlayer CorpseStayTime" @ CorpseStayNum);
+            break;
+
+        case ch_DynamicFogRatio:
+            bUseDynamicFogRatio = bool(ch_DynamicFogRatio.GetComponentValue());
+            PlayerOwner().ConsoleCommand("set DH_Engine.DHPlayer bDynamicFogRatio" @ bUseDynamicFogRatio);
+            break;
+
+        case nu_MinDesiredFPS:
+            NumMinDesiredFPS = int(nu_MinDesiredFPS.GetComponentValue());
+            PlayerOwner().ConsoleCommand("set DH_Engine.DHPlayer MinDesiredFPS" @ NumMinDesiredFPS);
             break;
     }
 
@@ -640,6 +668,30 @@ function SaveSettings()
     {
         PC.ConsoleCommand("set ini:DH_Engine.DHPlayer CorpseStayTime" @ CorpseStayNum);
         bSavePlayerConfig = true;
+    }
+
+    if (bool(PC.ConsoleCommand("get DH_Engine.DHPlayer bDynamicFogRatio")) != bUseDynamicFogRatio)
+    {
+        PC.ConsoleCommand("set ini:DH_Engine.DHPlayer bDynamicFogRatio" @ bUseDynamicFogRatio);
+        PC.ConsoleCommand("set DH_Engine.DHPlayer bDynamicFogRatio" @ bUseDynamicFogRatio);
+
+        if (DHPlayer(PC) != none)
+        {
+            DHPlayer(PC).bDynamicFogRatio = bUseDynamicFogRatio;
+            DHPlayer(PC).SaveConfig();
+        }
+    }
+
+    if (int(PC.ConsoleCommand("get DH_Engine.DHPlayer MinDesiredFPS")) != NumMinDesiredFPS)
+    {
+        PC.ConsoleCommand("set ini:DH_Engine.DHPlayer MinDesiredFPS" @ NumMinDesiredFPS);
+        PC.ConsoleCommand("set DH_Engine.DHPlayer MinDesiredFPS" @ NumMinDesiredFPS);
+
+        if (DHPlayer(PC) != none)
+        {
+            DHPlayer(PC).MinDesiredFPS = NumMinDesiredFPS;
+            DHPlayer(PC).SaveConfig();
+        }
     }
 
     if (bSavePlayerConfig)
@@ -1096,7 +1148,7 @@ defaultproperties
         WinLeft=0.599727
         WinWidth=0.3
         WinHeight=0.04
-        TabOrder=21
+        TabOrder=19
         OnChange=DHTab_DetailSettings.InternalOnChange
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
@@ -1169,6 +1221,45 @@ defaultproperties
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
     sl_Contrast=moSlider'DH_Interface.DHTab_DetailSettings.ContrastSlider'
+
+    Begin Object Class=DHmoCheckBox Name=DynamicFogRatioCH
+        ComponentJustification=TXTA_Left
+        CaptionWidth=0.94
+        Caption="Dynamic Fog Distance (Experimental)"
+        Hint="Currently only working on Black Day July fog distance is calculated based on FPS and Min Desired FPS"
+        OnCreateComponent=DynamicFogRatioCH.InternalOnCreateComponent
+        IniDefault="false"
+        WinTop=0.499308
+        WinLeft=0.6
+        WinWidth=0.3
+        WinHeight=0.04
+        TabOrder=20
+        OnChange=DHTab_DetailSettings.InternalOnChange
+        OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
+        IniOption="@Internal"
+    End Object
+    ch_DynamicFogRatio=DynamicFogRatioCH
+
+    Begin Object class=DHmoNumericEdit Name=MinDesiredFPS_NU
+        WinWidth=0.381250
+        WinLeft=0.550781
+        WinTop=0.196875
+        Caption="Min Desired FPS"
+        CaptionWidth=0.85
+        OnCreateComponent=MinDesiredFPS_NU.InternalOnCreateComponent
+        MinValue=20
+        MaxValue=300
+        Step=10
+        ComponentJustification=TXTA_Left
+        Hint="Used by Dynamic Fog Distance to determine when to start lowing fog distance"
+        OnChange=DHTab_DetailSettings.InternalOnChange
+        OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
+        INIOption="@Internal"
+        bAutoSizeCaption=true
+        TabOrder=21
+    End Object
+    nu_MinDesiredFPS=MinDesiredFPS_NU
+
     Begin Object Class=moSlider Name=DistanceLODSlider
         MaxValue=1.0
         Value=0.5
@@ -1185,6 +1276,7 @@ defaultproperties
         OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
     End Object
     sl_DistanceLOD=moSlider'DH_Interface.DHTab_DetailSettings.DistanceLODSlider'
+
     Begin Object Class=moSlider Name=CorpseStayTime
         Value=15.0
         MinValue=5.0

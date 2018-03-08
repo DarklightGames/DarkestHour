@@ -31,6 +31,8 @@ var     globalconfig int        CorpseStayTime;      // determines how long corp
 var     int                     CorpseStayTimeMin;
 var     int                     CorpseStayTimeMax;
 var     globalconfig string     ROIDHash;            // client ROID hash (this gets set/updated when a player joins a server)
+var     globalconfig bool       bDynamicFogRatio;    // client option to have their fog distance dynamic based on FPS and MinDesiredFPS
+var     globalconfig int        MinDesiredFPS;       // client option used to calculate fog ratio when dynamic fog ratio is true
 
 // View FOV
 var     globalconfig float      ConfigViewFOV;       // allows player to set their own preferred view FOV, within acceptable limits
@@ -5889,6 +5891,7 @@ defaultproperties
     SpawnPointIndex=-1
     VehiclePoolIndex=-1
     SpectateSpeed=+1200.0
+    MinDesiredFPS=+80
 
     DHPrimaryWeapon=-1
     DHSecondaryWeapon=-1
