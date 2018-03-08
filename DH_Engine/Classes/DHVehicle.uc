@@ -521,7 +521,14 @@ function Timer()
     {
         if (Health > 0 && (!bHasTreads || IsVehicleEmpty()))
         {
-            KilledBy(LastHitBy);
+            if (LastHitBy != none && LastHitBy.Pawn != none)
+            {
+                KilledBy(LastHitBy.Pawn);
+            }
+            else
+            {
+                KilledBy(Self);
+            }
         }
         else
         {
@@ -2088,6 +2095,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
         }
 
         SetEngine();
+        MaybeDestroyVehicle();
     }
 }
 
@@ -3311,8 +3319,8 @@ function MaybeDestroyVehicle()
 {
     local bool bDeactivatedFactoryWantsToDestroy;
 
-    // Do nothing if vehicle is a spawn vehicle or it isn't empty
-    if (ParentFactory == none || IsSpawnVehicle() || !IsVehicleEmpty())
+    // Do nothing if vehicle is a spawn vehicle
+    if (ParentFactory == none || IsSpawnVehicle())
     {
         return;
     }
