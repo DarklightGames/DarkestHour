@@ -309,7 +309,7 @@ function Tick(float DeltaTime)
     // Without it, the projector seems to "drift" away from the object it's
     // attached to. This is probably due to some sort of cumulative floating
     // point errors.
-    RL.Z = ConstructionClass.default.CollisionHeight;
+    RL.Z = CollisionHeight;
 
     if (Projector != none)
     {
