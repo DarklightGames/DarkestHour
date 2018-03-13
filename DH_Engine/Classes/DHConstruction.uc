@@ -122,6 +122,7 @@ var     float   DuplicateEnemyDistanceInMeters;     // The distance required bet
 // Construction
 var private int SupplyCost;                     // The amount of supply points this construction costs
 var     bool    bDestroyOnConstruction;         // If true, this actor will be destroyed after being fully constructed
+var     bool    bDummyOnConstruction;           // If true, this actor will be put into the "dummy" state after being fully constructed.
 var     int     Progress;                       // The current count of progress
 var     int     ProgressMax;                    // The amount of construction points required to be built
 var     bool    bShouldRefundSuppliesOnTearDown;
@@ -391,6 +392,8 @@ auto simulated state Constructing
 
             if (Owner == none)
             {
+                // This construction was placed in the editor, so go to the
+                // dummy state.
                 GotoState('Dummy');
             }
             else
@@ -490,6 +493,10 @@ simulated state Constructed
             if (bDestroyOnConstruction)
             {
                 Destroy();
+            }
+            else if (bDummyOnConstruction)
+            {
+                GotoState('Dummy');
             }
             else
             {

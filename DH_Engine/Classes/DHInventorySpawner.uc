@@ -11,6 +11,17 @@ var DHWeaponPickupTouchMessageParameters    TouchMessageParameters;
 
 var class<Weapon>       WeaponClass;
 
+
+enum ETeamOwner
+{
+    TEAM_Axis,
+    TEAM_Allies,
+    TEAM_Neutral
+};
+
+var() ETeamOwner        TeamOwner;
+var private int         TeamIndex;
+
 var array<name>         PickupBoneNames;
 
 var     int             SavedPickupCount;
@@ -26,8 +37,8 @@ var     name            OpenedAnimation;
 
 var()   bool            bShouldGeneratePickups;
 var()   int             PickupGenerationRatePerMinute;
+var     float           NextPickupGenerationTimeSeconds;
 
-var     float           ExhaustedLifespan;
 
 var array<Actor>        Proxies;
 var class<Actor>        ProxyClass;
@@ -35,8 +46,19 @@ var StaticMesh          ProxyStaticMesh;
 
 var localized string    ContainerNoun;
 
+// Client-side variable for keeping track if the box is open or closed.
+var bool                bIsOpen;
+
+// Called when all pickups are exhausted and we are pending deletion.
+var bool                bShouldDestroyOnExhaustion;
+var float               ExhaustedLifespan;
+delegate                OnExhausted(DHInventorySpawner Spawner);
+
 replication
 {
+    reliable if (bNetInitial && Role == ROLE_Authority)
+        TeamIndex;
+
     reliable if (bNetDirty && Role == ROLE_Authority)
         PickupCount;
 }
@@ -44,6 +66,8 @@ replication
 simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
+
+    TeamIndex = int(TeamOwner);
 
     if (Level.NetMode != NM_DedicatedServer)
     {
@@ -62,28 +86,76 @@ simulated function PostBeginPlay()
             PickupCount = Min(PickupCount, UsesMax);
         }
 
-        if (CanGeneratePickups())
+        if (CanGeneratePickups())   // TODO: determine if we need to call this still or move it etc.
         {
-            SetTimer(60.0 / float(PickupGenerationRatePerMinute), false);
+            NextPickupGenerationTimeSeconds = Level.TimeSeconds + (60.0 / PickupGenerationRatePerMinute);
         }
+
+        SetTimer(1.0, true);
     }
+}
+
+
+
+simulated function Open()
+{
+    if (bIsOpen)
+    {
+        return;
+    }
+
+    PlayAnim(OpenAnimation);
+
+    bIsOpen = true;
+}
+
+simulated function Close()
+{
+    if (!bIsOpen)
+    {
+        return;
+    }
+
+    PlayAnim(CloseAnimation);
+
+    bIsOpen = false;
+}
+
+simulated function int GetTeamIndex()
+{
+    return TeamIndex;
+}
+
+function SetTeamIndex(int TeamIndex)
+{
+    self.TeamIndex = TeamIndex;
+}
+
+simulated function bool ShouldBeOpen()
+{
+    local PlayerController PC;
+
+    PC = Level.GetLocalPlayerController();
+
+    return PickupCount > 0 && PC != none && CanBeUsedByTeam(PC.GetTeamNum());
 }
 
 simulated function PostNetBeginPlay()
 {
     super.PostNetBeginPlay();
 
-    if (Level.NetMode != NM_DedicatedServer)
+    bIsOpen = ShouldBeOpen();
+
+    if (bIsOpen)
     {
-        if (PickupCount == 0)
-        {
-            PlayAnim(ClosedAnimation);
-        }
-        else
-        {
-            PlayAnim(OpenAnimation);
-        }
+        PlayAnim(OpenAnimation);
     }
+    else
+    {
+        PlayAnim(ClosedAnimation);
+    }
+
+    SetTimer(1.0, true);
 }
 
 function bool CanGeneratePickups()
@@ -91,29 +163,54 @@ function bool CanGeneratePickups()
     return bShouldGeneratePickups && PickupGenerationRatePerMinute > 0 && PickupCount < PickupsMax;
 }
 
-function Timer()
+simulated function UpdateAnimation()
 {
-    PickupCount = Min(PickupCount + 1, PickupsMax);
+    local bool bShouldBeOpen;
 
-    if (UsesMax != -1)
+    bShouldBeOpen = ShouldBeOpen();
+
+    if (bIsOpen && !bShouldBeOpen)
     {
-        PickupCount = Min(PickupCount, UsesMax - UseCount);
+        Close();
+    }
+    else if (!bIsOpen && bShouldBeOpen)
+    {
+        Open();
+    }
+}
+
+simulated event Timer()
+{
+    if (Role == ROLE_Authority)
+    {
+        if (CanGeneratePickups() && Level.TimeSeconds > NextPickupGenerationTimeSeconds)
+        {
+            PickupCount = Min(PickupCount + 1, PickupsMax);
+
+            if (UsesMax != -1)
+            {
+                PickupCount = Min(PickupCount, UsesMax - UseCount);
+            }
+
+            NextPickupGenerationTimeSeconds = Level.TimeSeconds + (60.0 / PickupGenerationRatePerMinute);
+        }
     }
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        if (PickupCount == 1)
-        {
-            PlayAnim(OpenAnimation);
-        }
-
+        UpdateAnimation();
         UpdateProxies();
     }
+}
 
-    if (CanGeneratePickups())
-    {
-        SetTimer(60.0 / float(PickupGenerationRatePerMinute), false);
-    }
+simulated function bool CanBeUsedByTeam(int TeamIndex)
+{
+    return self.TeamIndex == NEUTRAL_TEAM_INDEX || self.TeamIndex == TeamIndex;
+}
+
+simulated function bool CanBeUsedByPawn(Pawn User)
+{
+    return User != none && User.IsHumanControlled() && CanBeUsedByTeam(User.GetTeamNum());
 }
 
 function UsedBy(Pawn User)
@@ -121,7 +218,7 @@ function UsedBy(Pawn User)
     local Weapon Weapon;
     local Pickup Pickup;
 
-    if (PickupCount == 0)
+    if (!CanBeUsedByPawn(User) || PickupCount == 0)
     {
         return;
     }
@@ -152,28 +249,37 @@ function UsedBy(Pawn User)
     if (UsesMax != -1 && UseCount >= UsesMax)
     {
         PickupCount = 0;
-        LifeSpan = default.ExhaustedLifespan;
+
+        if (bShouldDestroyOnExhaustion)
+        {
+            LifeSpan = default.ExhaustedLifespan;
+        }
+
+        OnExhausted(self);
     }
 
     if (PickupCount <= 0 && !bShouldGeneratePickups)
     {
-        LifeSpan = default.ExhaustedLifespan;
+        if (bShouldDestroyOnExhaustion)
+        {
+            LifeSpan = default.ExhaustedLifespan;
+        }
+
+        OnExhausted(self);
     }
 
-    if (Level.NetMode != NM_DedicatedServer)    // TODO: standalone?
+    if (Level.NetMode != NM_DedicatedServer)
     {
         UpdateProxies();
-
-        if (PickupCount == 0)
-        {
-            PlayAnim(CloseAnimation);
-        }
+        UpdateAnimation();
     }
+}
 
-    if (CanGeneratePickups())
-    {
-        SetTimer(60.0 / float(PickupGenerationRatePerMinute), false);
-    }
+function Reset()
+{
+    PickupCount = default.PickupCount;
+    SavedPickupCount = default.SavedPickupCount;
+    UseCount = default.UseCount;
 }
 
 simulated event NotifySelected(Pawn User)
@@ -181,9 +287,9 @@ simulated event NotifySelected(Pawn User)
     local class<ROWeaponPickup> PickupClass;
 
     if (Level.NetMode == NM_DedicatedServer ||
-        User == none ||
-        !User.IsHumanControlled() ||
-        PickupCount <= 0 || WeaponClass == none ||
+        !CanBeUsedByPawn(User) ||
+        PickupCount <= 0 ||
+        WeaponClass == none ||
         TouchMessageParameters == none)
     {
         return;
@@ -231,22 +337,14 @@ simulated event PostNetReceive()
 {
     if (SavedPickupCount != PickupCount)
     {
-        if (PickupCount == 0)
-        {
-            PlayAnim(CloseAnimation);
-        }
-        else if (SavedPickupCount == 0)
-        {
-            PlayAnim(OpenedAnimation);
-        }
-
         UpdateProxies();
+        UpdateAnimation();
 
         SavedPickupCount = PickupCount;
     }
 }
 
-event Destroyed()
+simulated event Destroyed()
 {
     local int i;
 
@@ -269,13 +367,15 @@ static function string GetMenuName()
 defaultproperties
 {
     DrawType=DT_Mesh
-    RemoteRole=ROLE_DumbProxy
+    RemoteRole=ROLE_SimulatedProxy
     bCanAutoTraceSelect=true
     bAutoTraceNotify=true
     bNetNotify=true
     bCollideActors=true
+    bBlockActors=true
+    bBlockPlayers=true
     bUseCylinderCollision=true
-    CollisionHeight=30.0
+    CollisionHeight=10.0
     CollisionRadius=30.0
     ExhaustedLifespan=15.0
     UsesMax=-1
@@ -286,5 +386,6 @@ defaultproperties
     OpenedAnimation="opened"
     ClosedAnimation="closed"
     SavedPickupCount=-1
+    TeamOwner=TEAM_Neutral
 }
 

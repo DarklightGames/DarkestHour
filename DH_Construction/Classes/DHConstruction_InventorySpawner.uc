@@ -7,6 +7,7 @@ class DHConstruction_InventorySpawner extends DHConstruction
     abstract;
 
 var class<DHInventorySpawner>   SpawnerClass;
+var DHInventorySpawner          Spawner;
 
 static function class<DHInventorySpawner> GetSpawnerClass(DHConstruction.Context Context)
 {
@@ -28,11 +29,17 @@ static function DHConstruction.ConstructionError GetPlayerError(DHConstruction.C
 
 simulated function OnConstructed()
 {
-    local DHInventorySpawner IS;
-
     if (Role == ROLE_Authority)
     {
-        IS = Spawn(GetSpawnerClass(GetContext()),,, Location, Rotation);
+        if (Spawner != none)
+        {
+            Spawner.Destroy();
+        }
+
+        Spawner = Spawn(GetSpawnerClass(GetContext()), Level,, Location, Rotation);
+        Spawner.SetTeamIndex(GetTeamIndex());
+        Spawner.OnExhausted = self.OnExhausted;
+        Spawner.bShouldDestroyOnExhaustion = true;
     }
 }
 
@@ -72,14 +79,32 @@ static function GetCollisionSize(DHConstruction.Context Context, out float NewRa
     }
 }
 
+function Reset()
+{
+    super.Reset();
+
+    if (Spawner != none)
+    {
+        Spawner.Destroy();
+    }
+}
+
+simulated function OnExhausted(DHInventorySpawner Spawner)
+{
+    if (Owner != none)
+    {
+        Destroy();
+    }
+}
+
 defaultproperties
 {
     GroupClass=class'DHConstructionGroup_Ammunition'
     SpawnerClass=class'DH_Weapons.DH_StielGranateSpawner'
-    bDestroyOnConstruction=true
+    bDummyOnConstruction=true
     ProxyTraceDepthMeters=2.0
     bCanPlaceIndoors=true
     ConstructionVerb="drop"
-    bBlockZeroExtentTraces=true
+    DuplicateFriendlyDistanceInMeters=15.0
 }
 

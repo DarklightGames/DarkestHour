@@ -10,8 +10,8 @@ defaultproperties
     Mesh=Mesh'DH_Construction_anm.USA_grenade_crate'
     Skins(0)=Material'DH_Construction_tex.Ammo.USA_grenade_box'
     WeaponClass=class'DH_M1GrenadeWeapon'
-    PickupCount=25
-    PickupsMax=25
+    PickupCount=15
+    PickupsMax=15
     PickupBoneNames(0)="grenade.000"
     PickupBoneNames(1)="grenade.001"
     PickupBoneNames(2)="grenade.002"

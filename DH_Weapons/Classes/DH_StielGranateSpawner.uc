@@ -17,7 +17,7 @@ defaultproperties
     PickupBoneNames(4)="grenade.005"
     PickupBoneNames(5)="grenade.006"
     PickupBoneNames(6)="grenade.007"
-    PickupCount=25
-    PickupsMax=25
+    PickupCount=15
+    PickupsMax=15
 }
 
