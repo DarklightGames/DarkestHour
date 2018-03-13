@@ -9,6 +9,9 @@ var int                 TeamIndex;
 var float               ResponseDelaySeconds;
 var float               UsageDistanceMaximumMeters;
 
+var float               ResponseSoundVolume;
+var float               ResponseSoundRadius;
+
 // Map icon
 var bool                bShouldShowOnSituationMap;
 var Material            MapIconMaterial;
@@ -293,7 +296,7 @@ state Responding extends Busy
         }
 
         // Play the response sound.
-        PlaySound(ResponseSound, SLOT_None, 3.0, false, 100.0, 1.0, true);  // TODO: magic numbers
+        PlaySound(ResponseSound, SLOT_None, ResponseSoundVolume, false, ResponseSoundRadius,, true);
 
         // Wait for the duration of the response sound, then move to the Idle state.
         SetTimer(GetSoundDuration(ResponseSound), false);
@@ -402,6 +405,9 @@ defaultproperties
     RemoteRole=ROLE_DumbProxy
     ResponseDelaySeconds=2.0
     AmbientSound=Sound'DH_SundrySounds.Radio.RadioStatic'
+
+    ResponseSoundRadius=100.0
+    ResponseSoundVolume=3.0
 
     ArtilleryMessageClass=class'DHArtilleryMessage'
 
