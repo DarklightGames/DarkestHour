@@ -11,11 +11,6 @@ var float FovInterpStrength;
 var float FovZoomSpeed;
 var float FovZoomDirection;
 
-simulated function PostBeginPlay()
-{
-    super.PostBeginPlay();
-}
-
 simulated function bool (int Mode)
 {
     switch (Mode)
