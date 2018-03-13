@@ -9,5 +9,6 @@ defaultproperties
 {
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.barbed_wire'
     GroupName="Obstacles"
+    SortOrder=4
 }
 

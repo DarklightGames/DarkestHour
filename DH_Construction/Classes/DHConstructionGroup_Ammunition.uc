@@ -9,5 +9,6 @@ defaultproperties
 {
     GroupName="Ammunition"
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.resupply_box'   // TODO: change
+    SortOrder=2
 }
 

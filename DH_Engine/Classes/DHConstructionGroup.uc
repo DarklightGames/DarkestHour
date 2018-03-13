@@ -13,6 +13,12 @@ class DHConstructionGroup extends Object
 var Material                        MenuIcon;
 var localized string                GroupName;
 var array<class<DHConstruction> >   ConstructionClasses;
+var int                             SortOrder;
+
+static function bool SortFunction(Object LHS, Object RHS)
+{
+    return class<DHConstructionGroup>(LHS).default.SortOrder > class<DHConstructionGroup>(RHS).default.SortOrder;
+}
 
 defaultproperties
 {

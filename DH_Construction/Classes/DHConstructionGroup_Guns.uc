@@ -9,5 +9,6 @@ defaultproperties
 {
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.at_small'
     GroupName="Guns"
+    SortOrder=3
 }
 

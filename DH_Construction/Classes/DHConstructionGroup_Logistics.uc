@@ -9,5 +9,6 @@ defaultproperties
 {
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.platoon_hq'
     GroupName="Logistics"
+    SortOrder=0
 }
 

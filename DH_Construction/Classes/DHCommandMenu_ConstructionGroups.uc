@@ -14,6 +14,7 @@ function Setup()
     local DHPlayer PC;
     local DHGameReplicationInfo GRI;
     local array<class<DHConstructionGroup> > Groups;
+    local UComparator GroupsComparator;
 
     GRI = DHGameReplicationInfo(Interaction.ViewportOwner.Actor.GameReplicationInfo);
     PC = GetPlayerController();
@@ -30,7 +31,9 @@ function Setup()
         }
     }
 
-    //class'USort'.static.Sort(Groups, GroupsComparator); // TODO: make groups comparator
+    GroupsComparator = new class'UComparator';
+    GroupsComparator.CompareFunction = class'DHConstructionGroup'.static.SortFunction;
+    class'USort'.static.Sort(Groups, GroupsComparator);
 
     Options.Length = Groups.Length;
 

@@ -9,5 +9,6 @@ defaultproperties
 {
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.sandbags_bunker'
     GroupName="Defenses"
+    SortOrder=1
 }
 
