@@ -95,17 +95,18 @@ simulated state Building
         return false;
     }
 
-    simulated event EndState()
-    {
-        if (Construction != none && Construction.Role == ROLE_Authority)
-        {
-            Construction.IncrementProgress(Instigator);
-        }
-    }
-
     simulated function Timer()
     {
         SetInitialState();
+    }
+
+}
+
+simulated function DigDone()
+{
+    if (Construction != none && Construction.Role == ROLE_Authority)
+    {
+        Construction.IncrementProgress(Instigator);
     }
 }
 

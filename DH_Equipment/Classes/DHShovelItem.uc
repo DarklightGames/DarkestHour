@@ -22,6 +22,18 @@ simulated function Fire(float F)
     }
 }
 
+simulated event DigDone()
+{
+    local DHShovelBuildFireMode FM;
+
+    FM = DHShovelBuildFireMode(FireMode[0]);
+
+    if (FM != none)
+    {
+        FM.DigDone();
+    }
+}
+
 defaultproperties
 {
     FireModeClass(0)=class'DH_Equipment.DHShovelBuildFireMode'
