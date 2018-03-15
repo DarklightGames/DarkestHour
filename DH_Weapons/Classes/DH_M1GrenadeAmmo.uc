@@ -7,7 +7,7 @@ class DH_M1GrenadeAmmo extends DHAmmunition;
 
 defaultproperties
 {
-    MaxAmmo=2
-    InitialAmount=2
+    MaxAmmo=3
+    InitialAmount=1
     IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.M1Grenade_ammo'
 }

@@ -3,10 +3,12 @@
 // Darklight Games (c) 2008-2017
 //==============================================================================
 
-class DH_F1GrenadeTossFire extends DH_M1GrenadeTossFire;
+class DH_F1GrenadeAmmo extends DHAmmunition;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_F1GrenadeProjectile'
-    AmmoClass=class'DH_Weapons.DH_F1GrenadeAmmo'
+    MaxAmmo=3
+    InitialAmount=1
+    IconMaterial=Material'InterfaceArt_tex.HUD.F1nade_ammo'
+    IconCoords=(X1=445,Y1=75,X2=544,Y2=149)
 }

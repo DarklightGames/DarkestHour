@@ -8,5 +8,5 @@ class DH_F1GrenadeFire extends DHThrownExplosiveFire;
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_F1GrenadeProjectile'
-    AmmoClass=class'ROAmmo.F1GrenadeAmmo'
+    AmmoClass=class'DH_Weapons.DH_F1GrenadeAmmo'
 }

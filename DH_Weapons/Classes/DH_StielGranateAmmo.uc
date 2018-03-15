@@ -7,7 +7,7 @@ class DH_StielGranateAmmo extends DHAmmunition;
 
 defaultproperties
 {
-    MaxAmmo=2
-    InitialAmount=2
+    MaxAmmo=3
+    InitialAmount=1
     IconMaterial=Texture'InterfaceArt_tex.HUD.sticknade_ammo'
 }
