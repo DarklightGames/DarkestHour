@@ -313,7 +313,11 @@ state Responding extends Busy
 
 simulated function NotifySelected(Pawn User)
 {
-    switch (GetRadioUsageError(User))
+    local ERadioUsageError Error;
+
+    Error = GetRadioUsageError(User);
+
+    switch (Error)
     {
         case ERROR_None:
             // "Press [%USE%] to request artillery"
@@ -330,6 +334,14 @@ simulated function NotifySelected(Pawn User)
         case ERROR_NotOwned:
             // "You cannot use enemy radios"
             User.ReceiveLocalizedMessage(class'DHRadioTouchMessage', 3);
+            break;
+        case ERROR_Busy:
+            // "Radio is currently in use"
+            User.ReceiveLocalizedMessage(class'DHRadioTouchMessage', 4);
+            break;
+        case ERROR_Fatal:
+            // For debugging purposes only!
+            User.ReceiveLocalizedMessage(class'DHRadioTouchMessage', 5);
             break;
         default:
             break;
