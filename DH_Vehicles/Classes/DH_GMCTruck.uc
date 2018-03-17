@@ -51,8 +51,8 @@ defaultproperties
     // Physics wheels properties
     WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.1),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.3),(InVal=400.0,OutVal=0.1),(InVal=10000000000.0,OutVal=0.0)))
     WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=45.0,OutVal=0.09),(InVal=10000000000.0,OutVal=0.9)))
-    WheelLatFrictionScale=2.0
-    WheelHandbrakeSlip=0.1
+    WheelLatFrictionScale=1.0
+    WheelHandbrakeSlip=0.5
 
     // Damage
     Health=1000
@@ -159,7 +159,7 @@ defaultproperties
         KInertiaTensor(0)=1.0
         KInertiaTensor(3)=3.0
         KInertiaTensor(5)=3.0
-        KCOMOffset=(X=0.0,Y=0.0,Z=0.4)
+        KCOMOffset=(X=0.0,Y=0.0,Z=0.0)
         KLinearDamping=0.05
         KAngularDamping=0.05
         KStartEnabled=true
