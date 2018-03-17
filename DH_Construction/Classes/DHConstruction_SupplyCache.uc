@@ -81,14 +81,26 @@ function StaticMesh GetStageStaticMesh(int StageIndex)
     return none;
 }
 
+simulated state Constructed
+{
+    simulated function EndState()
+    {
+        super.EndState();
+
+        DestroySupplyAttachment();
+    }
+}
+
 simulated function OnBroken()
 {
-    if (Role == ROLE_Authority)
+    DestroySupplyAttachment();
+}
+
+function DestroySupplyAttachment()
+{
+    if (Role == ROLE_Authority && SupplyAttachment != none)
     {
-        if (SupplyAttachment != none)
-        {
-            SupplyAttachment.Destroy();
-        }
+        SupplyAttachment.Destroy();
     }
 }
 
