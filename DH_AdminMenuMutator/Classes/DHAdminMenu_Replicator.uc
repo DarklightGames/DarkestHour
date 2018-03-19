@@ -361,12 +361,12 @@ simulated function ClientTogglePlayerIcon()
         if (bHidePlayerIcon)
         {
             HUD.MapPlayerIcon.RenderStyle = STY_None;
-            HUD.MapPlayerNumberIcon.RenderStyle = STY_None;
+            HUD.PlayerNumberText.RenderStyle = STY_None;
         }
         else
         {
             HUD.MapPlayerIcon.RenderStyle = HUD.default.MapPlayerIcon.RenderStyle;
-            HUD.MapPlayerNumberIcon.RenderStyle = HUD.default.MapPlayerNumberIcon.RenderStyle;
+            HUD.PlayerNumberText.RenderStyle = HUD.default.PlayerNumberText.RenderStyle;
         }
     }
 }
