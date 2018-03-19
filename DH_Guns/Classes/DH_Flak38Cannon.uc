@@ -44,7 +44,7 @@ defaultproperties
     RotationsPerSecond=0.05
     PitchUpLimit=16384
     CustomPitchUpLimit=15474
-    CustomPitchDownLimit=64990
+    CustomPitchDownLimit=64800
 
     // Cannon ammo
     ProjectileClass=class'DH_Engine.DHCannonShell_MixedMag'

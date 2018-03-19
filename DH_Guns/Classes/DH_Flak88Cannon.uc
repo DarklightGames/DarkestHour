@@ -17,7 +17,7 @@ defaultproperties
     bHasTurret=true // not really a turret, but this is an easy way of making the player's view turn with the rotating gun
     bLimitYaw=false
     CustomPitchUpLimit=15474
-    CustomPitchDownLimit=64990
+    CustomPitchDownLimit=64500
 
     // Cannon ammo
     ProjectileClass=class'DH_Guns.DH_Flak88CannonShell'
