@@ -299,7 +299,7 @@ state Responding extends Busy
         PlaySound(ResponseSound, SLOT_None, ResponseSoundVolume, false, ResponseSoundRadius,, true);
 
         // Wait for the duration of the response sound, then move to the Idle state.
-        SetTimer(GetSoundDuration(ResponseSound), false);
+        SetTimer(FMax(1.0, GetSoundDuration(ResponseSound)), false);
 
         // Free request object.
         Request = None;
