@@ -34,6 +34,7 @@ var     int                 AlliedNationID; // US = 0, Britain = 1, Canada = 2, 
 // Map icons/legends
 var     SpriteWidget        MapLevelOverlay;
 var     TextWidget          MapScaleText;
+var     TextWidget          PlayerNumberText;
 var     SpriteWidget        MapIconCarriedRadio;
 var     SpriteWidget        MapAxisFlagIcon;
 var     SpriteWidget        MapAlliesFlagIcons[4];
@@ -41,7 +42,6 @@ var     SpriteWidget        MapIconMortarHETarget;
 var     SpriteWidget        MapIconMortarSmokeTarget;
 var     SpriteWidget        MapIconMortarArrow;
 var     SpriteWidget        MapIconMortarHit;
-var     SpriteWidget        MapPlayerNumberIcon;
 var     SpriteWidget        MapIconObjectiveStatusIcon;
 var     float               PlayerIconScale, PlayerIconLargeScale;
 
@@ -78,9 +78,6 @@ var     NumericWidget       VehicleSmokeLauncherAmmoAmount;     // ammo quantity
 var     SpriteWidget        VehicleSmokeLauncherAimIcon;        // aim indicator icon for a vehicle smoke launcher that can be rotated
 var     SpriteWidget        VehicleSmokeLauncherRangeBarIcon;   // range indicator icon for a range-adjustable vehicle smoke launcher
 var     SpriteWidget        VehicleSmokeLauncherRangeInfill;    // infill bar to show current range setting for a range-adjustable vehicle smoke launcher
-
-// Squads
-var     array<texture>      PlayerNumberIconTextures;
 
 // Supply Points
 var     SpriteWidget        SupplyPointIcon;
@@ -222,11 +219,6 @@ function UpdatePrecacheMaterials()
     // TODO: Remove this as it's not necessary
     Level.AddPrecacheMaterial(Material'DH_InterfaceArt2_tex.Icons.fire_pulse');
     Level.AddPrecacheMaterial(Material'DH_InterfaceArt2_tex.Icons.move_pulse');
-
-    for (i = 0; i < PlayerNumberIconTextures.Length; ++i)
-    {
-        Level.AddPrecacheMaterial(PlayerNumberIconTextures[i]);
-    }
 
     // On screen indicator icons
     Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.HUD.DeployIcon');
@@ -1457,15 +1449,13 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 
             VehicleOccupants.PosX = Vehicle.VehicleHudOccupantsX[0];
             VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[0];
-
             DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
 
-            MapPlayerNumberIcon.TextureScale = 0.15;
-            MapPlayerNumberIcon.PosX = Vehicle.VehicleHudOccupantsX[0];
-            MapPlayerNumberIcon.PosY = Vehicle.VehicleHudOccupantsY[0];
-            MapPlayerNumberIcon.WidgetTexture = PlayerNumberIconTextures[i];
-
-            DrawSpriteWidgetClipped(Canvas, MapPlayerNumberIcon, Coords, true);
+            PlayerNumberText.PosX = Vehicle.VehicleHudOccupantsX[0];
+            PlayerNumberText.PosY = Vehicle.VehicleHudOccupantsY[0];
+            PlayerNumberText.text = string(i + 1);
+            Canvas.Font = Canvas.TinyFont;
+            DrawTextWidgetClipped(Canvas, PlayerNumberText, Coords);
         }
         else
         {
@@ -1503,14 +1493,13 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
 
             VehicleOccupants.PosX = Vehicle.VehicleHudOccupantsX[i];
             VehicleOccupants.PosY = Vehicle.VehicleHudOccupantsY[i];
-
             DrawSpriteWidgetClipped(Canvas, VehicleOccupants, Coords, true);
 
-            MapPlayerNumberIcon.TextureScale = 0.15;
-            MapPlayerNumberIcon.PosX = Vehicle.VehicleHudOccupantsX[i];
-            MapPlayerNumberIcon.PosY = Vehicle.VehicleHudOccupantsY[i];
-            MapPlayerNumberIcon.WidgetTexture = PlayerNumberIconTextures[Min(i, PlayerNumberIconTextures.Length - 1)];
-            DrawSpriteWidgetClipped(Canvas, MapPlayerNumberIcon, Coords, true);
+            PlayerNumberText.PosX = Vehicle.VehicleHudOccupantsX[i];
+            PlayerNumberText.PosY = Vehicle.VehicleHudOccupantsY[i];
+            PlayerNumberText.text = string(i + 1);
+            Canvas.Font = Canvas.TinyFont;
+            DrawTextWidgetClipped(Canvas, PlayerNumberText, Coords);
         }
     }
 
@@ -3936,7 +3925,7 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
                 IconScale = PlayerIconScale;
             }
 
-            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, PlayerYaw, OtherPRI.SquadMemberIndex, SquadMemberColor, IconScale);
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, PlayerYaw, OtherPRI.SquadMemberIndex, SquadMemberColor, IconScale, OtherPRI.GetNamePrefix());
         }
     }
 
@@ -3979,8 +3968,10 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
     }
 }
 
-function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector Location, vector MapCenter, float PlayerYaw, int Number, color Color, float TextureScale)
+function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector Location, vector MapCenter, float PlayerYaw, int Number, color Color, float TextureScale, optional string Text)
 {
+    local vector HUDLocation;
+
     MapPlayerIcon.TextureScale = TextureScale;
 
     TexRotator(FinalBlend(MapPlayerIcon.WidgetTexture).Material).Rotation.Yaw = GetMapIconYaw(PlayerYaw);
@@ -3991,14 +3982,20 @@ function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
     // Draw the player icon
     DrawIconOnMap(C, SubCoords, MapPlayerIcon, MyMapScale, Location, MapCenter);
 
-    if (Number >= 0)
+    // Draw the player number
+    if (Text != "")
     {
-        MapPlayerNumberIcon.TextureScale = TextureScale;
-        MapPlayerNumberIcon.WidgetTexture = PlayerNumberIconTextures[Number];
-
-        //TODO: draw the number indicator
-        DrawIconOnMap(C, SubCoords, MapPlayerNumberIcon, MyMapScale, Location, MapCenter);
+        HUDLocation = Location - MapCenter;
+        HUDLocation.Z = 0.0;
+        HUDLocation = GetAdjustedHudLocation(HUDLocation);
+        PlayerNumberText.PosX = FClamp(HUDLocation.X / MyMapScale + 0.5, 0.0, 1.0);
+        PlayerNumberText.PosY = FClamp(HUDLocation.Y / MyMapScale + 0.5, 0.0, 1.0);
+        PlayerNumberText.text = Text;
+        C.Font = C.TinyFont;
+        DrawTextWidgetClipped(C, PlayerNumberText, SubCoords);
     }
+
+    C.DrawVertical(0.0, 0.0);
 }
 
 function float GetMapIconYaw(float WorldYaw)
@@ -5505,6 +5502,7 @@ defaultproperties
     // Map general icons
     MapLevelOverlay=(RenderStyle=STY_Alpha,TextureCoords=(X2=511,Y2=511),TextureScale=1.0,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=125),Tints[1]=(B=255,G=255,R=255,A=255))
     MapScaleText=(RenderStyle=STY_Alpha,DrawPivot=DP_LowerRight,PosX=1.0,PosY=0.0375,WrapHeight=1.0,Tints[0]=(B=255,G=255,R=255,A=128),Tints[1]=(B=255,G=255,R=255,A=128))
+    PlayerNumberText=(RenderStyle=STY_Alpha,DrawPivot=DP_MiddleMiddle,PosX=0.0,PosY=0.0,WrapHeight=1.0,Tints[0]=(B=0,G=0,R=0,A=255),Tints[1]=(B=0,G=0,R=0,A=255),bDrawShadow=false)
     MapPlayerIcon=(WidgetTexture=FinalBlend'DH_InterfaceArt_tex.HUD.player_icon_map_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31))
     MapIconDispute(0)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=128,Y1=192,X2=191,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconDispute(1)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=192,X2=63,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
@@ -5541,19 +5539,6 @@ defaultproperties
     MapIconTeam(1)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons')
 
     // Map player number icons
-    MapPlayerNumberIcon=(TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,PosX=0,PosY=0,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=0,G=0,B=0,A=255),Tints[1]=(R=0,G=0,B=0,A=255))
-    PlayerNumberIconTextures(0)=Texture'DH_InterfaceArt_tex.HUD.player_number_1'
-    PlayerNumberIconTextures(1)=Texture'DH_InterfaceArt_tex.HUD.player_number_2'
-    PlayerNumberIconTextures(2)=Texture'DH_InterfaceArt_tex.HUD.player_number_3'
-    PlayerNumberIconTextures(3)=Texture'DH_InterfaceArt_tex.HUD.player_number_4'
-    PlayerNumberIconTextures(4)=Texture'DH_InterfaceArt_tex.HUD.player_number_5'
-    PlayerNumberIconTextures(5)=Texture'DH_InterfaceArt_tex.HUD.player_number_6'
-    PlayerNumberIconTextures(6)=Texture'DH_InterfaceArt_tex.HUD.player_number_7'
-    PlayerNumberIconTextures(7)=Texture'DH_InterfaceArt_tex.HUD.player_number_8'
-    PlayerNumberIconTextures(8)=Texture'DH_InterfaceArt_tex.HUD.player_number_9'
-    PlayerNumberIconTextures(9)=Texture'DH_InterfaceArt_tex.HUD.player_number_10'
-    PlayerNumberIconTextures(10)=Texture'DH_InterfaceArt_tex.HUD.player_number_11'
-    PlayerNumberIconTextures(11)=Texture'DH_InterfaceArt_tex.HUD.player_number_12'
     PlayerIconScale=0.03
     PlayerIconLargeScale=0.05
 
