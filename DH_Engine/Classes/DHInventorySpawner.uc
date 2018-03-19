@@ -67,8 +67,6 @@ simulated function PostBeginPlay()
 {
     super.PostBeginPlay();
 
-    TeamIndex = int(TeamOwner);
-
     if (Level.NetMode != NM_DedicatedServer)
     {
         TouchMessageParameters = new class'DHWeaponPickupTouchMessageParameters';
@@ -79,6 +77,7 @@ simulated function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
+        TeamIndex = int(TeamOwner);
         PickupCount = Min(PickupCount, PickupsMax);
 
         if (UsesMax != -1)
