@@ -12,6 +12,7 @@ var Material SuppliesIcon;
 
 var localized string NotAvailableText;
 var localized string TeamLimitText;
+var localized string BusyText;
 
 var class<DHConstructionGroup> GroupClass;
 var DHConstruction.Context Context;
@@ -155,6 +156,10 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
                 ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
                 ORI.InfoText = default.NotAvailableText;
                 break;
+            case ERROR_PlayerBusy:
+                ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
+                ORI.InfoText = default.BusyText;
+                break;
             case ERROR_TeamLimit:
                 ORI.InfoIcon = Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled';
                 ORI.InfoText = default.TeamLimitText;
@@ -191,6 +196,7 @@ defaultproperties
     SuppliesIcon=Texture'DH_InterfaceArt2_tex.Icons.supply_cache'
     NotAvailableText="Not Available"
     TeamLimitText="Limit Reached"
+    BusyText="Busy"
     SlotCountOverride=8
 }
 
