@@ -245,10 +245,9 @@ simulated function WeaponLeanRightReleased()
 function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor Owner, vector L, rotator R)
 {
     local DHConstruction C;
-    local DH_LevelInfo LI;
     local DHPawn P;
     local DHConstruction.Context Context;
-    local DHConstructionProxy Proxy;
+    local DHConstructionProxy TestProxy;
     local DHConstruction.ConstructionError Error;
 
     if (Instigator == none)
@@ -257,7 +256,7 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
     }
 
     Context.TeamIndex = Instigator.GetTeamNum();
-    Context.LevelInfo = LI;
+    Context.LevelInfo = class'DH_LevelInfo'.static.GetInstance(Level);
     Context.PlayerController = DHPlayer(Instigator.Controller);
 
     if (ConstructionClass.static.GetPlayerError(Context).Type != ERROR_None)
@@ -266,20 +265,20 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
     }
 
     // Create a proxy to test placement logic on the server-side.
-    Proxy = Spawn(class'DHConstructionProxy', Instigator);
+    TestProxy = Spawn(class'DHConstructionProxy', Instigator);
 
-    if (Proxy == none)
+    if (TestProxy == none)
     {
         return;
     }
 
-    Proxy.SetConstructionClass(ConstructionClass);
-    Proxy.SetLocation(L);
-    Proxy.SetRotation(R);
+    TestProxy.SetConstructionClass(ConstructionClass);
+    TestProxy.SetLocation(L);
+    TestProxy.SetRotation(R);
 
-    Error = Proxy.GetPositionError();
+    Error = TestProxy.GetPositionError();
 
-    Proxy.Destroy();
+    TestProxy.Destroy();
 
     if (Error.Type != ERROR_None)
     {
