@@ -89,6 +89,7 @@ simulated function ERadioUsageError GetRadioUsageError(Pawn User)
     local DHRoleInfo RI;
     local DHPlayerReplicationInfo PRI;
     local DHPlayer PC;
+    local DHGameReplicationInfo GRI;
 
     P = DHPawn(User);
 
@@ -121,7 +122,9 @@ simulated function ERadioUsageError GetRadioUsageError(Pawn User)
         return ERROR_NoTarget;
     }
 
-    if (bIsBusy)
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+
+    if (bIsBusy || (GRI != none && GRI.bIsInSetupPhase))
     {
         return ERROR_Busy;
     }
