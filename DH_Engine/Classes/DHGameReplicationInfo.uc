@@ -13,7 +13,7 @@ const SPAWN_POINTS_MAX = 63;
 const OBJECTIVES_MAX = 32;
 const CONSTRUCTION_CLASSES_MAX = 32;
 const VOICEID_MAX = 255;
-const SUPPLY_POINTS_MAX = 8;
+const SUPPLY_POINTS_MAX = 15;
 const MAP_MARKERS_MAX = 20;
 const MAP_MARKERS_CLASSES_MAX = 16;
 const ARTILLERY_TYPES_MAX = 8;
@@ -52,10 +52,10 @@ struct SpawnVehicle
 
 struct SupplyPoint
 {
-    var bool    bIsActive;
+    var byte bIsActive;
+    var byte TeamIndex;
     var DHConstructionSupplyAttachment Actor;
-    var byte    TeamIndex;
-    var vector  Location;   // (X,Y) is world location, (Z) is the yaw rotation
+    var int Quantized2DPose;
     var class<DHConstructionSupplyAttachment> ActorClass;
 };
 
@@ -322,6 +322,7 @@ simulated event Timer()
 function int AddSupplyPoint(DHConstructionSupplyAttachment CSA)
 {
     local int i;
+    local float X, Y;
 
     if (CSA != none)
     {
@@ -329,13 +330,14 @@ function int AddSupplyPoint(DHConstructionSupplyAttachment CSA)
         {
             if (SupplyPoints[i].Actor == none)
             {
-                SupplyPoints[i].bIsActive = true;
+                SupplyPoints[i].bIsActive = 1;
                 SupplyPoints[i].Actor = CSA;
                 SupplyPoints[i].TeamIndex = CSA.GetTeamIndex();
                 SupplyPoints[i].ActorClass = CSA.Class;
-                SupplyPoints[i].Location.X = CSA.Location.X;
-                SupplyPoints[i].Location.Y = CSA.Location.Y;
-                SupplyPoints[i].Location.Z = CSA.Rotation.Yaw;
+                GRI.GetMapCoords(CSA.Location, X, Y);
+                X = 1.0 - X;
+                Y = 1.0 - Y;
+                SupplyPoints[i].Quantized2DPose = class'UQuantize'.static.QuantizeClamped2DPose(X, Y, CSA.Rotation.Yaw);
                 return i;
             }
         }
@@ -354,7 +356,7 @@ function RemoveSupplyPoint(DHConstructionSupplyAttachment CSA)
         {
             if (SupplyPoints[i].Actor == CSA)
             {
-                SupplyPoints[i].bIsActive = false;
+                SupplyPoints[i].bIsActive = 0;
                 SupplyPoints[i].Actor = none;
                 break;
             }

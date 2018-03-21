@@ -3291,7 +3291,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
     local string                    DistanceString, ObjLabel;
     local float                     MyMapScale, ArrowRotation;
     local int                       OwnerTeam, Distance, i, j;
-    local float                     Yaw;
+    local int                       Yaw;
     local DHObjective               ObjA, ObjB;
     local color                     ObjLineColor;
     local UColor.HSV                HSV;
@@ -3367,7 +3367,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
     // Draw supply points
     for (i = 0; i < arraycount(DHGRI.SupplyPoints); ++i)
     {
-        if (DHGRI.SupplyPoints[i].bIsActive &&
+        if (DHGRI.SupplyPoints[i].bIsActive == 1 &&
             (DHGRI.SupplyPoints[i].TeamIndex == NEUTRAL_TEAM_INDEX || DHGRI.SupplyPoints[i].TeamIndex == OwnerTeam))
         {
             if (DHGRI.SupplyPoints[i].Actor != none)
@@ -3377,8 +3377,8 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
             }
             else
             {
-                Temp = DHGRI.SupplyPoints[i].Location;
-                Yaw = DHGRI.SupplyPoints[i].Location.Z;
+                class'UQuantize'.static.DequantizeClamped2DPose(DHGRI.SupplyPoints[i].Quantized2DPose, Temp.X, Temp.Y, Yaw);
+                Temp = DHGRI.GetWorldCoords(Temp.X, Temp.Y);
             }
 
             TexRotator(FinalBlend(SupplyPointIcon.WidgetTexture).Material).Material = DHGRI.SupplyPoints[i].ActorClass.default.MapIcon;

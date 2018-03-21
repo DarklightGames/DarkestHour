@@ -181,6 +181,7 @@ function Timer()
     local int i, Index, SuppliesToDeposit;
     local array<Pawn> NewTouchingPawns;
     local DHGameReplicationInfo GRI;
+    local float X, Y;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
@@ -188,9 +189,10 @@ function Timer()
     {
         // Update supply point information in game replication info.
         GRI.SupplyPoints[SupplyPointIndex].TeamIndex = TeamIndex;
-        GRI.SupplyPoints[SupplyPointIndex].Location.X = Location.X;
-        GRI.SupplyPoints[SupplyPointIndex].Location.Y = Location.Y;
-        GRI.SupplyPoints[SupplyPointIndex].Location.Z = Rotation.Yaw;
+        GRI.GetMapCoords(Location, X, Y);
+        X = 1.0 - X;
+        Y = 1.0 - Y;
+        GRI.SupplyPoints[SupplyPointIndex].Quantized2DPose = class'UQuantize'.static.QuantizeClamped2DPose(X, Y, Rotation.Yaw);
     }
 
     NewTouchingPawns.Length = 0;
