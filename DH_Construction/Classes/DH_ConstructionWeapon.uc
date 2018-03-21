@@ -248,20 +248,47 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
     local DH_LevelInfo LI;
     local DHPawn P;
     local DHConstruction.Context Context;
+    local DHConstructionProxy Proxy;
+    local DHConstruction.ConstructionError Error;
 
-    P = DHPawn(Instigator);
-    LI = class'DH_LevelInfo'.static.GetInstance(Level);
-
-    if (P == none || LI == none || !LI.bAreConstructionsEnabled || LI.IsConstructionRestricted(ConstructionClass))
+    if (Instigator == none)
     {
         return;
     }
 
-    Context.TeamIndex = P.GetTeamNum();
+    Context.TeamIndex = Instigator.GetTeamNum();
     Context.LevelInfo = LI;
-    Context.PlayerController = DHPlayer(P.Controller);
+    Context.PlayerController = DHPlayer(Instigator.Controller);
 
-    if (!P.UseSupplies(ConstructionClass.static.GetSupplyCost(Context)))
+    if (ConstructionClass.static.GetPlayerError(Context).Type != ERROR_None)
+    {
+        return;
+    }
+
+    // Create a proxy to test placement logic on the server-side.
+    Proxy = Spawn(class'DHConstructionProxy', Instigator);
+
+    if (Proxy == none)
+    {
+        return;
+    }
+
+    Proxy.SetConstructionClass(ConstructionClass);
+    Proxy.SetLocation(L);
+    Proxy.SetRotation(R);
+
+    Error = Proxy.GetPositionError();
+
+    Proxy.Destroy();
+
+    if (Error.Type != ERROR_None)
+    {
+        return;
+    }
+
+    P = DHPawn(Instigator);
+
+    if (P == none || !P.UseSupplies(ConstructionClass.static.GetSupplyCost(Context)))
     {
         return;
     }
@@ -272,7 +299,7 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
     {
         if (!C.bIsNeutral)
         {
-            C.SetTeamIndex(P.GetTeamNum());
+            C.SetTeamIndex(Instigator.GetTeamNum());
         }
 
         C.UpdateAppearance();
