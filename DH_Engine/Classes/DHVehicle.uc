@@ -2158,6 +2158,12 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
     local vector LinearImpulse, AngularImpulse;
     local float  ExplosionModifier;
 
+    // Don't explode if vehicle is already exploded! (this fixes the stupid constantly exploding vehicle bug)
+    if (ExplosionCount > 0)
+    {
+        return;
+    }
+
     if (ResupplyAttachment != none)
     {
         ExplosionModifier = 1.0;
@@ -2167,26 +2173,22 @@ function VehicleExplosion(vector MomentumNormal, float PercentMomentum)
         ExplosionModifier = FRand();
     }
 
+    ExplosionCount++;
     HurtRadius(ExplosionDamage * ExplosionModifier, ExplosionRadius * ExplosionModifier, ExplosionDamageType, ExplosionMomentum, Location);
     AmbientSound = DestroyedBurningSound;
     SoundVolume = 255;
     SoundRadius = 300.0;
 
-    if (!bDisintegrateVehicle)
+    if (Level.NetMode != NM_DedicatedServer)
     {
-        ExplosionCount++;
-
-        if (Level.NetMode != NM_DedicatedServer)
-        {
-            ClientVehicleExplosion(false);
-        }
-
-        LinearImpulse = PercentMomentum * RandRange(DestructionLinearMomentum.Min, DestructionLinearMomentum.Max) * MomentumNormal;
-        AngularImpulse = PercentMomentum * RandRange(DestructionAngularMomentum.Min, DestructionAngularMomentum.Max) * VRand();
-        NetUpdateTime = Level.TimeSeconds - 1.0;
-        KAddImpulse(LinearImpulse, vect(0.0, 0.0, 0.0));
-        KAddAngularImpulse(AngularImpulse);
+        ClientVehicleExplosion(false);
     }
+
+    LinearImpulse = PercentMomentum * RandRange(DestructionLinearMomentum.Min, DestructionLinearMomentum.Max) * MomentumNormal;
+    AngularImpulse = PercentMomentum * RandRange(DestructionAngularMomentum.Min, DestructionAngularMomentum.Max) * VRand();
+    NetUpdateTime = Level.TimeSeconds - 1.0;
+    KAddImpulse(LinearImpulse, vect(0.0, 0.0, 0.0));
+    KAddAngularImpulse(AngularImpulse);
 }
 
 // Modified to prevent an already blown up vehicle from triggering an explosion on a net client, if the vehicle becomes net relevant & replicates to that client
