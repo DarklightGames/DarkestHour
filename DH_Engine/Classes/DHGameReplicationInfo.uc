@@ -220,7 +220,7 @@ replication
         ArtilleryTypeInfos,
         DHArtillery;
 
-    reliable if (bNetInitial && (Role == ROLE_Authority))
+    reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex,
         ConstructionClasses, MapMarkerClasses;
 }
