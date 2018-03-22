@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2017
+// Darklight Games (c) 2008-2018
 //==============================================================================
 
 class DH_Stug3GCannonShellHE extends DHCannonShellHE;

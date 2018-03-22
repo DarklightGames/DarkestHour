@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2017
+// Darklight Games (c) 2008-2018
 //==============================================================================
 
 class DH_ShermanCannonPawnB_76mm extends DH_ShermanCannonPawnA_76mm;

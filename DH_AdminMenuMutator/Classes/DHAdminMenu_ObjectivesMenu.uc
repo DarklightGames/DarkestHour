@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2017
+// Darklight Games (c) 2008-2018
 //==============================================================================
 
 // Displays a list of map objectives for paradropping a player, team or all players (menu is only loaded if paradrop or realism options are allowed by the server)

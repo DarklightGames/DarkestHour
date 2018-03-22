@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2017
+// Darklight Games (c) 2008-2018
 //==============================================================================
 
 // Just a legacy class for backwards compatibility, as DHObjective is now in DH_Engine code package

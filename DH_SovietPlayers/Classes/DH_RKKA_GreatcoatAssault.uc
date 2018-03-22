@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2017
+// Darklight Games (c) 2008-2018
 //==============================================================================
 
 class DH_RKKA_GreatcoatAssault extends DH_RKKA_Greatcoat;

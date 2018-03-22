@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2017
+// Darklight Games (c) 2008-2018
 //==============================================================================
 
 class DH_Stug3GFactory_Late extends DH_Stug3GFactory; // late war version with remote-controlled MG & with saukopf mantlet

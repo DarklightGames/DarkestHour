@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2017
+// Darklight Games (c) 2008-2018
 //==============================================================================
 
 class DHPlayer extends ROPlayer
@@ -5658,7 +5658,7 @@ function ServerViewNextPlayer()
     PlayerReplicationInfo.bOnlySpectator = bRealSpec;
 }
 
-function int GetValidSpecModeCount()
+simulated function int GetValidSpecModeCount()
 {
     local ESpectatorMode Mode;
     local int Count;

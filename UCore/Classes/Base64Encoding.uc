@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2017
+// Darklight Games (c) 2008-2018
 //==============================================================================
 // Base64 is a group of similar binary-to-text encoding schemes that represent
 // binary data in an ASCII string format by translating it into a radix-64

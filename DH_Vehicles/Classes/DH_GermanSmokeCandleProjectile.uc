@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2017
+// Darklight Games (c) 2008-2018
 //==============================================================================
 
 class DH_GermanSmokeCandleProjectile extends DHSmokeLauncherProjectile; // German 90mm 'Schnellnebelkerze 39' smoke candle fired from vehicle smoke launcher

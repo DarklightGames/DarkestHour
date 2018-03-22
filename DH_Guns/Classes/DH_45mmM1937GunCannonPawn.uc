@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2017
+// Darklight Games (c) 2008-2018
 //==============================================================================
 
 class DH_45mmM1937GunCannonPawn extends DHATGunCannonPawn; // all overrides from DHSovietCannonPawn class // TODO: merge functionality
