@@ -83,6 +83,9 @@ function UpdateSpawnPoints(int TeamIndex, int RoleIndex, int VehiclePoolIndex, i
         {
             GRI.GetMapCoords(GRI.SpawnPoints[i].Location, X, Y, b_SpawnPoints[i].WinWidth, b_SpawnPoints[i].WinHeight);
 
+            X = 1.0 - X;
+            Y = 1.0 - Y;
+
             b_SpawnPoints[i].SetPosition(X, Y, b_SpawnPoints[i].WinWidth, b_SpawnPoints[i].WinHeight, true);
             b_SpawnPoints[i].SetVisibility(true);
             b_SpawnPoints[i].CenterText = GRI.SpawnPoints[i].GetMapText();

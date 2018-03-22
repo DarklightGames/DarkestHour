@@ -334,9 +334,7 @@ function int AddSupplyPoint(DHConstructionSupplyAttachment CSA)
                 SupplyPoints[i].Actor = CSA;
                 SupplyPoints[i].TeamIndex = CSA.GetTeamIndex();
                 SupplyPoints[i].ActorClass = CSA.Class;
-                GRI.GetMapCoords(CSA.Location, X, Y);
-                X = 1.0 - X;
-                Y = 1.0 - Y;
+                GetMapCoords(CSA.Location, X, Y);
                 SupplyPoints[i].Quantized2DPose = class'UQuantize'.static.QuantizeClamped2DPose(X, Y, CSA.Rotation.Yaw);
                 return i;
             }
@@ -1288,13 +1286,13 @@ simulated function GetMapCoords(vector WorldLocation, out float X, out float Y, 
     MapCenter = NorthEastBounds + ((SouthWestBounds - NorthEastBounds) * 0.5);
     WorldLocation = GetAdjustedHudLocation(WorldLocation - MapCenter, false);
 
-    X = FClamp(0.5 + (WorldLocation.X / MapScale) - (Width / 2),
-               0.0,
-               1.0 - Width);
+    X = 1.0 - FClamp(0.5 + (WorldLocation.X / MapScale) - (Width / 2),
+                     0.0,
+                     1.0 - Width);
 
-    Y = FClamp(0.5 + (WorldLocation.Y / MapScale) - (Height / 2),
-               0.0,
-               1.0 - Height);
+    Y = 1.0 - FClamp(0.5 + (WorldLocation.Y / MapScale) - (Height / 2),
+                     0.0,
+                     1.0 - Height);
 }
 
 // Gets the world location from map coordinates.

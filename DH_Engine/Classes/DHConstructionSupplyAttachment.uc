@@ -190,8 +190,6 @@ function Timer()
         // Update supply point information in game replication info.
         GRI.SupplyPoints[SupplyPointIndex].TeamIndex = TeamIndex;
         GRI.GetMapCoords(Location, X, Y);
-        X = 1.0 - X;
-        Y = 1.0 - Y;
         GRI.SupplyPoints[SupplyPointIndex].Quantized2DPose = class'UQuantize'.static.QuantizeClamped2DPose(X, Y, Rotation.Yaw);
     }
 
