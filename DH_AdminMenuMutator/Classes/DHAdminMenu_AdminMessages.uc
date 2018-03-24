@@ -37,6 +37,7 @@ var     localized string    ConfirmToggleAdminCanPause;
 var     localized string    DestroyActorInSights;
 var     localized string    ChangeAlliesSquadSize;
 var     localized string    ChangeAxisSquadSize;
+var     localized string    SetGamePasswordText;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -100,6 +101,8 @@ static function string GetString(optional int Switch, optional PlayerReplication
             return default.ChangeAlliesSquadSize;
         case 29:
             return default.ChangeAxisSquadSize;
+        case 30:
+            return default.SetGamePasswordText;
 
         default:
             return "";
@@ -143,4 +146,5 @@ defaultproperties
     DestroyActorInSights="Press enter to confirm you want to DESTROY the actor in your sights"
     ChangeAlliesSquadSize="Please specify the new allied squad size (between 8 and 12, or 0 to reset)"
     ChangeAxisSquadSize="Please specify the new axis squad size (8 and 12, or 0 to reset)"
+    SetGamePasswordText="Please specify the new game password"
 }

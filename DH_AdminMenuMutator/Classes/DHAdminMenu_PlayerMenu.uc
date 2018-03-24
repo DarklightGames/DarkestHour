@@ -7,8 +7,12 @@
 // Can also choose the special menu for a realism match (or testing) from here (if that option is allowed by the server)
 class DHAdminMenu_PlayerMenu extends DHAdminMenu_MenuBase;
 
-var localized string    Label_AimedPlayer, Label_RealismMenu; // menu labels for the options for 'player in your sights' & the realism/testing menu
-var localized EInputKey KeyForRealismMenu;                    // localized to allow default R key to be changed to suit a different language
+var localized string    Label_AimedPlayer,
+                        Label_RealismMenu,
+                        Label_ServerMenu;                     // menu labels for the options for 'player in your sights' & the realism/testing menu
+
+var localized EInputKey KeyForRealismMenu,
+                        KeyForServerMenu;                    // localized to allow default R key to be changed to suit a different language
 
 exec function Menu()
 {
@@ -58,6 +62,15 @@ state MenuVisible
 
                 return true;
             }
+
+            // If press M (server menu, open server menu)
+            if (Key == KeyForServerMenu)
+            {
+                GotoState(''); // close current menu
+                ConsoleCommand("ServerMenu");
+
+                return true;
+            }
         }
 
         return super.KeyEvent(Key, Action, Delta);
@@ -74,6 +87,11 @@ state MenuVisible
 function DrawMenu(canvas Canvas, int PosX, out int PosY, string Title, array<string> LineText, optional out float LineHeight)
 {
     super.DrawMenu(Canvas, PosX, PosY, Title, LineText, LineHeight);
+
+    // Draw Server Menu
+    PosY += LineHeight * 2.0; // skip a line
+    Canvas.SetPos(PosX, PosY);
+    Canvas.DrawText(Label_ServerMenu);
 
     if (Replicator != none && Replicator.bShowRealismMenu)
     {
@@ -136,5 +154,7 @@ defaultproperties
 
     Label_AimedPlayer="[Player in your sights]"
     Label_RealismMenu="R = realism match (or testing) menu"
+    Label_ServerMenu="M = server menu (common server settings)"
     KeyForRealismMenu=IK_R
+    KeyForServerMenu=IK_M
 }

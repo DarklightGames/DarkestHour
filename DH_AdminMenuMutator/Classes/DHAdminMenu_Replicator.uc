@@ -404,6 +404,7 @@ defaultproperties
     MenuArray(2)="DH_AdminMenuMutator.DHAdminMenu_RolesMenu"
     MenuArray(3)="DH_AdminMenuMutator.DHAdminMenu_ObjectivesMenu"
     MenuArray(4)="DH_AdminMenuMutator.DHAdminMenu_RealismMenu"
+    MenuArray(5)="DH_AdminMenuMutator.DHAdminMenu_ServerMenu"
 
     bNetNotify=true // so the PostNetReceive event gets called when a variable is replicated (for toggling bHidePlayerIcon & bHideCapProgress)
 

@@ -183,6 +183,11 @@ function Mutate(string MutateString, PlayerController Sender)
         {
             RenamePlayer(Words[2], Words[3]); // Words[2] is OldPlayerName, Words[3] is NewPlayerName
         }
+        // Set game password
+        else if (MutateOption ~= "SetGamePassword")
+        {
+            SetGamePassword(Words[2]);
+        }
         // Drop single player at an objective or at a grid location or at their current location
         else if (MutateOption ~= "ParaDropPlayer")
         {
@@ -516,6 +521,20 @@ function RenamePlayer(string OldPlayerName, string NewPlayerName)
             NotifyPlayer(1, PlayerToRename); // admin changed your game name
             Log("DHAdminMenu: admin" @ GetAdminName() @ "renamed player '" $ OldPlayerName $ "' to '" @ NewPlayerName $ "'");
         }
+    }
+}
+
+function SetGamePassword(string NewPassword)
+{
+    if (!IsLoggedInAsAdmin())
+    {
+        return;
+    }
+
+    if (AccessControl != none)
+    {
+        AccessControl.SetGamePassword(NewPassword);
+        AccessControl.SaveConfig();
     }
 }
 

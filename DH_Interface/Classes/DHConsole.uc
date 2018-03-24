@@ -59,7 +59,7 @@ exec function Reconnect()
 }
 
 // Testing override of this function in hopes to stop the Unknown Steam Error bug
-event ConnectFailure(string FailCode,string URL)
+event ConnectFailure(string FailCode, string URL)
 {
     local string Error, Server;
     local int    i,Index;
@@ -79,6 +79,8 @@ event ConnectFailure(string FailCode,string URL)
 
     if (FailCode == "NEEDPW")
     {
+        /* Removing this, because the password saving stuff not only doesn't work right, but causes very strange problems with trying
+        to connect to passworded servers!
         for (Index = 0; Index < SavedPasswords.Length; ++Index)
         {
             if (SavedPasswords[Index].Server == Server)
@@ -88,11 +90,11 @@ event ConnectFailure(string FailCode,string URL)
 
                 return;
             }
-        }
+        }*/
 
         LastConnectedServer = Server;
 
-        if (ViewportOwner.GUIController.OpenMenu(NeedPasswordMenuClass, URL, FailCode))
+        if (ViewportOwner.GUIController.OpenMenu("DH_Engine.DHGetPassword", Server, FailCode))
         {
             return;
         }
@@ -112,7 +114,7 @@ event ConnectFailure(string FailCode,string URL)
 
         LastConnectedServer = Server;
 
-        if (ViewportOwner.GUIController.OpenMenu(NeedPasswordMenuClass, URL, FailCode))
+        if (ViewportOwner.GUIController.OpenMenu("DH_Engine.DHGetPassword", URL, FailCode))
         {
             return;
         }
@@ -367,4 +369,5 @@ exec function ConsoleClose()
 
 defaultproperties
 {
+    NeedPasswordMenuClass="DH_Engine.DHGetPassword" // lol this doesn't even work, had to replace the reference to this with a direct string
 }
