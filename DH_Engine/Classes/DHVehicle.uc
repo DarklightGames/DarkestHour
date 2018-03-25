@@ -153,6 +153,10 @@ var     DHSpawnPoint_Vehicle    SpawnPointAttachment; // a spawn vehicle's spawn
 var     DHSpawnPointBase        SpawnPoint;           // the spawn point that was used to spawn this vehicle
 var     bool                    bMustBeInSquadToSpawn;
 
+// Ownership
+var     bool                    bSquadOwned;          // Vehicle should be owned by a squad (set this to true in defaults for vehicle to be squad owned)
+var     int                     OwnedBySquadIndex;    // Indicates the vehicle is owned by a squad (only that squad may get in it as driver)
+
 // Debugging
 var     bool        bDebuggingText;
 
@@ -899,7 +903,13 @@ function bool TryToDrive(Pawn P)
     if (bEnemyVehicle)
     {
         DisplayVehicleMessage(1, P); // can't use enemy vehicle
+        return false;
+    }
 
+    // Deny entry if vehicle is squad owned and P isn't in that squad
+    if (bSquadOwned && !CanEnterSquadVehicle(P))
+    {
+        DisplayVehicleMessage(30, P); // can't use squad owned vehicle
         return false;
     }
 
@@ -915,7 +925,6 @@ function bool TryToDrive(Pawn P)
         if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(P) && P.IsHumanControlled())
         {
             DisplayVehicleMessage(0, P); // not qualified to operate vehicle
-
             return false;
         }
 
@@ -938,6 +947,76 @@ function bool TryToDrive(Pawn P)
     KDriverEnter(P);
 
     return true;
+}
+
+function bool CanEnterSquadVehicle(Pawn P)
+{
+    local DarkestHourGame           G;
+    local DHPlayerReplicationInfo   PRI;
+    local DHPlayer                  DHP;
+
+    // If this vehicle is not set to be owned by a squad, then allow entry without additional checks
+    if (!bSquadOwned)
+    {
+        return true;
+    }
+
+    if (P != none)
+    {
+        // Non team specific vehicles cannot be squad owned, make sure this pawn is on the same team as the vehicle
+        if (P.GetTeamNum() != VehicleTeam)
+        {
+            return false;
+        }
+
+        G = DarkestHourGame(Level.Game);
+
+        if (G == none)
+        {
+            return false;
+        }
+
+        if (G.SquadReplicationInfo != none)
+        {
+            DHP = DHPlayer(P.Controller);
+
+            if (DHP != none && DHP.PlayerReplicationInfo != none)
+            {
+                PRI = DHPlayerReplicationInfo(DHP.PlayerReplicationInfo);
+            }
+
+            // If the squad index is not valid, give this to the new squad and allow entry, otherwise if they aren't in a squad don't
+            if (!G.SquadReplicationInfo.IsSquadActive(VehicleTeam, OwnedBySquadIndex))
+            {
+                if (PRI != none && PRI.IsInSquad() && SetSquadOwnership(PRI))
+                {
+                    return true;
+                }
+            }
+
+            // Now check to see if the PRI is in the same squad
+            if (PRI != none && PRI.IsInSquad() && G.SquadReplicationInfo.IsInSquad(PRI, P.GetTeamNum(), OwnedBySquadIndex))
+            {
+                return true;
+            }
+            else // Vehicle has a valid squad, is bSquadOwned, and P is not a part of that squad, deny
+            {
+                return false;
+            }
+        }
+    }
+}
+
+// This will override the current (even if valid) OwnedBySquadIndex to a valid Squad Index
+function bool SetSquadOwnership(DHPlayerReplicationInfo PRI)
+{
+    if (PRI.IsInSquad())
+    {
+         OwnedBySquadIndex = PRI.SquadIndex;
+         return true;
+    }
+
+    return false;
 }
 
 // Modified to avoid playing engine start sound when entering vehicle, but to get a bot to start the engine on entering
@@ -3965,6 +4044,9 @@ defaultproperties
     WheelHandbrakeFriction=0.1
     WheelSuspensionTravel=15.0
     WheelSuspensionMaxRenderTravel=15.0
+
+    // Ownership
+    OwnedBySquadIndex=-1
 
     // These variables are effectively deprecated & should not be used - they are either ignored or values below are assumed & hard coded into functionality:
     bPCRelativeFPRotation=true

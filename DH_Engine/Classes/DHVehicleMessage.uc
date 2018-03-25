@@ -10,6 +10,7 @@ class DHVehicleMessage extends ROVehicleMessage
 var localized string AllRiderPositionsFull;
 var localized string NoRiderPositions;
 var localized string VehicleBurning;
+var localized string OwnedByAnotherSquad;
 
 // Can't exit vehicle
 var localized string OpenHatchToExit;
@@ -108,6 +109,9 @@ static function string GetString(optional int Switch, optional PlayerReplication
         case 29:
             S = default.VehicleScuttleInitiated;
             break;
+        case 30:
+            S = default.OwnedByAnotherSquad;
+            break;
         default:
             break;
     }
@@ -145,4 +149,5 @@ defaultproperties
     CanOnlyLockFromCrewPosition="Can only lock or unlock vehicle if you are in a tank crew position"
     OtherCrewmanCanLockVehicle="Only the most senior crew position can lock or unlock vehicle"
     VehicleScuttleInitiated="Vehicle scuttle initiated, vehicle must be clear of occupents"
+    OwnedByAnotherSquad="Vehicle owned by another squad"
 }
