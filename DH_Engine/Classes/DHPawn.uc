@@ -2989,6 +2989,8 @@ simulated event Destroyed()
         SetCrewedLockedVehicle(none); // if player was registered as an allowed crewman in a locked vehicle, this will notify vehicle this player is no longer valid
     }
 
+    DestroyRadio();
+
     super.Destroyed();
 }
 

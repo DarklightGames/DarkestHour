@@ -65,6 +65,11 @@ function Reset()
     super.Reset();
 
     Request = none;
+
+    if (Carrier != none)
+    {
+        Destroy();
+    }
 }
 
 simulated function bool IsBusy()
