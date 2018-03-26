@@ -16,6 +16,7 @@ defaultproperties
     VehicleNameString="Volkswagen Type 82"
     VehicleMass=1.0
     ReinforcementCost=2
+    bMustBeInSquadToSpawn=true
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Kubelwagen_anm.kubelwagen_body_ext'
@@ -52,31 +53,41 @@ defaultproperties
     EngineBrakeFactor=0.0003
     bHasHandbrake=true
     EngineRPMSoundRange=8000.0
+    MaxCriticalSpeed=1341.0 // approx 80 kph
 
     // Physics wheels properties
     WheelPenScale=0.85
-    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=100.0,OutVal=1.0),(InVal=300.0,OutVal=0.15),(InVal=800.0,OutVal=0.0001),(InVal=10000000000.0,OutVal=0.0)))
+    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.1),(InVal=100.0,OutVal=1.0),(InVal=400.0,OutVal=0.3),(InVal=800.0,OutVal=0.1),(InVal=10000000000.0,OutVal=0.0)))
     WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=45.0,OutVal=0.09),(InVal=10000000000.0,OutVal=0.9)))
     WheelLatFrictionScale=1.55
-    WheelHandbrakeFriction=0.33
+    WheelHandbrakeFriction=0.6
+    WheelHandbrakeSlip=0.05
     WheelSuspensionMaxRenderTravel=5.0
 
     // Damage
-    Health=125
-    HealthMax=125.0
-    VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=100.0,Y=25.0,Z=35.0),DamageMultiplier=25.0,HitPointType=HP_AmmoStore) // note VHP(0) is inherited default for engine
-    VehHitpoints(2)=(PointRadius=8.0,PointScale=1.0,PointBone="LeftFrontWheel",DamageMultiplier=5.0,HitPointType=HP_Engine)
-    VehHitpoints(3)=(PointRadius=8.0,PointScale=1.0,PointBone="RightFrontWheel",DamageMultiplier=5.0,HitPointType=HP_Engine)
-    VehHitpoints(4)=(PointRadius=8.0,PointScale=1.0,PointBone="LeftRearWheel",DamageMultiplier=5.0,HitPointType=HP_Engine)
-    VehHitpoints(5)=(PointRadius=8.0,PointScale=1.0,PointBone="RightRearWheel",DamageMultiplier=5.0,HitPointType=HP_Engine)
+    Health=1000
+    HealthMax=1000.0
+    EngineHealth=16
+    DamagedWheelSpeedFactor=0.33 // 33% of MaxCriticalSpeed will be max speed if wheels are damaged
+    VehHitpoints(0)=(PointRadius=32.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
+    VehHitpoints(1)=(PointRadius=24.0,PointScale=1.0,PointBone="body",PointOffset=(X=100.0,Y=25.0,Z=35.0),DamageMultiplier=10.0,HitPointType=HP_AmmoStore) // ammo
+    VehHitpoints(2)=(PointRadius=18.0,PointScale=1.0,PointBone="LeftFrontWheel",DamageMultiplier=5.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(3)=(PointRadius=18.0,PointScale=1.0,PointBone="RightFrontWheel",DamageMultiplier=5.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(4)=(PointRadius=18.0,PointScale=1.0,PointBone="LeftRearWheel",DamageMultiplier=5.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(5)=(PointRadius=18.0,PointScale=1.0,PointBone="RightRearWheel",DamageMultiplier=5.0,HitPointType=HP_Driver) // wheel
     ImpactDamageMult=0.5
-    ImpactWorldDamageMult=0.008
-    HeavyEngineDamageThreshold=0.33
+    ImpactWorldDamageMult=0.006
+    HeavyEngineDamageThreshold=0.4
     DamagedEffectScale=0.7
     DamagedEffectOffset=(X=-100.0,Y=0.0,Z=15.0)
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Kubelwagen.Kubelwagen_wh_dest'
-    DestructionLinearMomentum=(Min=50.0,Max=175.0)
-    DestructionAngularMomentum=(Min=5.0,Max=15.0)
+
+    // Vehicle destruction
+    ExplosionDamage=50.0
+    ExplosionRadius=150.0
+    ExplosionSoundRadius=200.0
+    DestructionLinearMomentum=(Min=1.0,Max=10.0)
+    DestructionAngularMomentum=(Min=2.0,Max=4.0)
 
     // Exit
     ExitPositions(0)=(X=40.0,Y=-110.0,Z=25.0)  // driver
