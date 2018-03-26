@@ -17,6 +17,7 @@ defaultproperties
     VehicleTeam=1
     VehicleMass=1.0
     ReinforcementCost=2
+    bMustBeInSquadToSpawn=true
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body_ext'
@@ -45,7 +46,7 @@ defaultproperties
     TorqueCurve=(Points=((InVal=0.0,OutVal=10.0),(InVal=200.0,OutVal=7.0),(InVal=600.0,OutVal=4.0),(InVal=1200.0,OutVal=2.0),(InVal=2000.0,OutVal=1.0)))
     ChassisTorqueScale=0.1
     TurnDamping=5.0
-    SteerSpeed=160.0
+    SteerSpeed=130.0
     MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=52.0),(InVal=200.0,OutVal=24.0),(InVal=900.0,OutVal=3.0),(InVal=1000000000.0,OutVal=0.0)))
     MinBrakeFriction=2.0
     MaxBrakeTorque=10.0
@@ -53,31 +54,40 @@ defaultproperties
     bHasHandbrake=true
     HandbrakeThresh=100.0
     EngineRPMSoundRange=6000.0
+    MaxCriticalSpeed=1341.0 // approx 80 kph
 
     // Physics wheels properties
-    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=100.0,OutVal=1.0),(InVal=400.0,OutVal=0.2),(InVal=800.0,OutVal=0.001),(InVal=10000000000.0,OutVal=0.0)))
+    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.1),(InVal=100.0,OutVal=1.0),(InVal=400.0,OutVal=0.3),(InVal=800.0,OutVal=0.1),(InVal=10000000000.0,OutVal=0.0)))
     WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=45.0,OutVal=0.09),(InVal=10000000000.0,OutVal=0.9)))
     WheelLatFrictionScale=1.55
-    WheelHandbrakeFriction=0.33
+    WheelHandbrakeFriction=0.6
+    WheelHandbrakeSlip=0.05
     WheelSuspensionTravel=10.0
     WheelSuspensionMaxRenderTravel=5.0
 
     // Damage
-    Health=125
-    HealthMax=125.0
-    VehHitpoints(0)=(PointRadius=20.0,PointBone="body",PointOffset=(X=65.0,Y=0.0,Z=15.0)) // engine
-    VehHitpoints(1)=(PointRadius=18.0,PointScale=1.0,PointBone="LeftFrontWheel",DamageMultiplier=1.0,HitPointType=HP_Engine)
-    VehHitpoints(2)=(PointRadius=18.0,PointScale=1.0,PointBone="RightFrontWheel",DamageMultiplier=1.0,HitPointType=HP_Engine)
-    VehHitpoints(3)=(PointRadius=18.0,PointScale=1.0,PointBone="LeftRearWheel",DamageMultiplier=1.0,HitPointType=HP_Engine)
-    VehHitpoints(4)=(PointRadius=18.0,PointScale=1.0,PointBone="RightRearWheel",DamageMultiplier=1.0,HitPointType=HP_Engine)
+    Health=1000
+    HealthMax=1000.0
+    EngineHealth=16
+    DamagedWheelSpeedFactor=0.35 // 35% of MaxCriticalSpeed will be max speed if wheels are damaged
+    VehHitpoints(0)=(PointRadius=32.0,PointBone="body",PointOffset=(X=65.0,Y=0.0,Z=15.0)) // engine
+    VehHitpoints(1)=(PointRadius=18.0,PointScale=1.0,PointBone="LeftFrontWheel",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(2)=(PointRadius=18.0,PointScale=1.0,PointBone="RightFrontWheel",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(3)=(PointRadius=18.0,PointScale=1.0,PointBone="LeftRearWheel",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(4)=(PointRadius=18.0,PointScale=1.0,PointBone="RightRearWheel",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     ImpactDamageMult=0.5
-    ImpactWorldDamageMult=0.008
-    HeavyEngineDamageThreshold=0.33
+    ImpactWorldDamageMult=0.006
+    HeavyEngineDamageThreshold=0.4
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=75.0,Y=5.0,Z=45.0)
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Jeep.WillysJeep_dest1'
-    DestructionLinearMomentum=(Min=50.0,Max=175.0)
-    DestructionAngularMomentum=(Min=5.0,Max=15.0)
+
+    // Vehicle destruction
+    ExplosionDamage=50.0
+    ExplosionRadius=150.0
+    ExplosionSoundRadius=200.0
+    DestructionLinearMomentum=(Min=1.0,Max=10.0)
+    DestructionAngularMomentum=(Min=2.0,Max=4.0)
 
     // Exit
     ExitPositions(0)=(X=-4.0,Y=-111.0,Z=30.0)  // driver
@@ -112,6 +122,7 @@ defaultproperties
     // Physics wheels
     Begin Object Class=SVehicleWheel Name=LFWheel
         SteerType=VST_Steered
+        bPoweredWheel=true
         BoneName="LeftFrontWheel"
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=0.0,Y=9.0,Z=1.0)
@@ -122,6 +133,7 @@ defaultproperties
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_WillysJeep.LFWheel'
     Begin Object Class=SVehicleWheel Name=RFWheel
         SteerType=VST_Steered
+        bPoweredWheel=true
         BoneName="RightFrontWheel"
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=0.0,Y=-9.0,Z=1.0)

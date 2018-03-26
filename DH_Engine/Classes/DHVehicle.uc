@@ -52,6 +52,7 @@ var     TreeMap_string_Object  NotifyParameters; // an object that can hold refe
 // Driver & driving
 var     bool        bNeedToInitializeDriver;     // clientside flag that we need to do some driver set up, once we receive the Driver actor
 var     float       MaxCriticalSpeed;            // if vehicle goes over max speed, it forces player to pull back on throttle
+                                                 // ... calculated as (desired kph * 1000 * 60.352 / 3600)
 var     name        PlayerCameraBone;            // just to avoid using literal references to 'Camera_driver' bone & allow extra flexibility
 var     float       ViewTransitionDuration;      // used to control the time we stay in state ViewTransition
 var     bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during view transitions
@@ -60,6 +61,8 @@ var     bool        bLockCameraDuringTransition; // lock the camera's rotation t
 var     float       FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle; // used by the hit detection system to determine which side of the vehicle was hit
 var     float       HeavyEngineDamageThreshold;  // proportion of remaining engine health below which the engine is so badly damaged it limits speed
 var     bool        bCanCrash;                   // vehicle can be damaged by static geometry during impacts (damages the engine)
+var     bool        bWheelsAreDamaged;           // if wheels are damaged, the vehicle is slowed down
+var     float       DamagedWheelSpeedFactor;     // the max speed the vehicle can go if wheels are damaged (1.0 is no change)
 var     float       ImpactWorldDamageMult;       // multiplier for world geometry impact damage when vehicle bCanCrash
 var array<material> DestroyedMeshSkins;          // option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
 var     sound       DamagedStartUpSound;         // sound played when trying to start a damaged engine
@@ -164,7 +167,7 @@ replication
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bEngineOff, bRightTrackDamaged, bLeftTrackDamaged, SpawnPointAttachment, SupplyAttachment, TouchingSupplyCount;
+        bEngineOff, bRightTrackDamaged, bLeftTrackDamaged, SpawnPointAttachment, SupplyAttachment, TouchingSupplyCount, bWheelsAreDamaged;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -443,6 +446,10 @@ simulated function Tick(float DeltaTime)
         {
             // Force player to pull back on throttle if over max speed
             if (VehicleSpeed >= MaxCriticalSpeed && MaxCriticalSpeed > 0.0 && IsHumanControlled())
+            {
+                PlayerController(Controller).aForward = -32768.0;
+            }
+            else if (bWheelsAreDamaged && (VehicleSpeed >= MaxCriticalSpeed * DamagedWheelSpeedFactor) && MaxCriticalSpeed > 0.0 && IsHumanControlled())
             {
                 PlayerController(Controller).aForward = -32768.0;
             }
@@ -1944,6 +1951,22 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
                 Damage *= VehHitpoints[i].DamageMultiplier;
                 break;
+            }
+            // Hit wheels (uses a deprecated "driver" hit point type)
+            else if (VehHitpoints[i].HitPointType == HP_Driver)
+            {
+                if (bDebuggingText)
+                {
+                    Level.Game.Broadcast(self, "Hit vehicle wheel");
+                }
+
+                // If wheel takes enough damage, vehicle has wheel damage
+                if (!bWheelsAreDamaged && Damage >= 2.0)
+                {
+                    bWheelsAreDamaged = true;
+                    // Clamp the vehicle's health to 75% of its maximum, this will make the vehicle look damaged on the HUD
+                    Health = Clamp(Health, 0, HealthMax * 0.75);
+                }
             }
         }
     }
@@ -3868,6 +3891,7 @@ defaultproperties
     VehHitpoints(1)=(PointRadius=0.0,PointScale=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
     TreadDamageThreshold=0.3
     bCanCrash=true
+    DamagedWheelSpeedFactor=0.5
     ImpactDamageThreshold=33.0
     ImpactDamageMult=0.001
     ImpactWorldDamageMult=0.001
