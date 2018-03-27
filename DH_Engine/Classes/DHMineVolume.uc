@@ -413,6 +413,7 @@ function bool WarningDueForPawn(Pawn P)
 
 defaultproperties
 {
+    DamageType=class'DHMineDamageType'
     bInitiallyActive=true // normal minefield will always be active, but leveller can override this option to start deactivated & be activated by a future event
     WarningMessageClass=class'ROEngine.ROMineFieldMsg' // the standard RO 'live' minefield warning
 }

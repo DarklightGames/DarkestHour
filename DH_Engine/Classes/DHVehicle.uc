@@ -62,6 +62,7 @@ var     float       FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAng
 var     float       HeavyEngineDamageThreshold;  // proportion of remaining engine health below which the engine is so badly damaged it limits speed
 var     bool        bCanCrash;                   // vehicle can be damaged by static geometry during impacts (damages the engine)
 var     bool        bWheelsAreDamaged;           // if wheels are damaged, the vehicle is slowed down
+var     bool        bVulnerableToHE;             // if true CAN take extra damage to HE rounds (not all HE rounds may affect this)
 var     float       DamagedWheelSpeedFactor;     // the max speed the vehicle can go if wheels are damaged (1.0 is no change)
 var     float       ImpactWorldDamageMult;       // multiplier for world geometry impact damage when vehicle bCanCrash
 var array<material> DestroyedMeshSkins;          // option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
@@ -1846,7 +1847,7 @@ simulated function StopEmitters()
 // Modified to handle possible tread damage, to add randomised damage, & to add engine fire to APCs
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
-    local class<ROWeaponDamageType> WepDamageType;
+    local class<DHWeaponDamageType> WepDamageType;
     local Controller InstigatorController;
     local float      DamageModifier, TreadDamageMod;
     local int        InstigatorTeam, i;
@@ -1896,7 +1897,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     }
 
     // Apply damage modifier from the DamageType, plus a little damage randomisation
-    WepDamageType = class<ROWeaponDamageType>(DamageType);
+    WepDamageType = class<DHWeaponDamageType>(DamageType);
 
     if (WepDamageType != none)
     {
@@ -1907,6 +1908,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         else
         {
             DamageModifier = WepDamageType.default.VehicleDamageModifier;
+        }
+
+        if (bVulnerableToHE)
+        {
+            DamageModifier *= WepDamageType.default.HighExplosiveDamageModifier;
         }
 
         DamageModifier *= RandRange(0.75, 1.08);
@@ -1980,11 +1986,10 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // Call the Super from Vehicle (skip over others)
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
-    // If an APC's health is very low, kill the engine (which will start an engine fire)
-    if (bIsApc && Health <= (HealthMax / 3) && Health > 0)
+    // If a vehicle's health is lower than DamagedEffectHealthFireFactor, then kill engine (as the engine is on fire)
+    if (!bHasTreads && Health <= (default.HealthMax * default.DamagedEffectHealthFireFactor))
     {
         EngineHealth = 0;
-        bEngineOff = true;
         SetEngine();
     }
 }
@@ -3916,6 +3921,7 @@ defaultproperties
     ExplosionSoundRadius=750.0
     DestructionLinearMomentum=(Min=100.0,Max=350.0)
     DestructionAngularMomentum=(Min=50.0,Max=150.0)
+    ExplosionDamageType=DHVehicleExplosionDamageType
 
     // Vehicle reset/respawn
     VehicleSpikeTime=10.0    // if disabled

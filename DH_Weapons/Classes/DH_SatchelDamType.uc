@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_SatchelDamType extends DHThrowableExplosiveDamageType
+class DH_SatchelDamType extends DHGrenadeWeaponDamageType
     abstract;
 
 defaultproperties

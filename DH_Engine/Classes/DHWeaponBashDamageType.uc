@@ -3,16 +3,17 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHWeaponBashDamageType extends ROWeaponBashDamageType
+class DHWeaponBashDamageType extends DHMeleeWeaponDamageType
     abstract;
 
 defaultproperties
 {
-    VehicleDamageModifier=0.0
     DeathString="%o was bludgeoned to death by %k's %w."
     MaleSuicide="%o bludgeoned himself to death with his own %w."
     FemaleSuicide="%o bludgeoned herself to death with her own %w."
-    GibModifier=0.0
-    KDamageImpulse=400.0
-    HumanObliterationThreshhold=1000001
+
+    HUDIcon=Texture'InterfaceArt_tex.deathicons.buttsmack'
+
+    KDamageImpulse=2000
+    KDeathUpKick=25
 }

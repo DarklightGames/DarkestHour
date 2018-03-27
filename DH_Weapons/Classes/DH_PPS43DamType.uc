@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_PPS43DamType extends DHWeaponProjectileDamageType
+class DH_PPS43DamType extends DHSmallArmsWeaponDamageType
     abstract;
 
 defaultproperties

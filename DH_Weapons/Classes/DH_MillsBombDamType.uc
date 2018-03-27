@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_MillsBombDamType extends DHThrowableExplosiveDamageType
+class DH_MillsBombDamType extends DHGrenadeWeaponDamageType
     abstract;
 
 defaultproperties

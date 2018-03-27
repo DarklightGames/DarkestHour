@@ -2122,7 +2122,7 @@ ignores Trigger, Bump, HitWall, HeadVolumeChange, PhysicsVolumeChange, Falling, 
 
             // Move the body if it's a grenade or mine explosion // TODO: add others explosive types & try to remove projectile-specific literals as far as possible
             if (DamageType.Name == 'DH_StielGranateDamType' || DamageType.Name == 'DH_M1GrenadeDamType' || DamageType.Name == 'DH_F1GrenadeDamType'
-                || DamageType.Name == 'ROMineDamType' || DamageType.Name == 'ROSMineDamType' || DamageType.Name == 'DHATMineDamage')
+                || DamageType.Name == 'DHMineDamageType' || DamageType.Name == 'ROSMineDamType' || DamageType.Name == 'DHATMineDamage')
             {
                 ShotDir = Normal(Momentum);
                 PushLinVel = (RagDeathVel * ShotDir) +  vect(0.0, 0.0, 250.0);
@@ -2659,8 +2659,8 @@ function PlayTakeHit(vector HitLocation, int Damage, class<DamageType> DamageTyp
         return;
     }
 
-    if (Level.NetMode != NM_DedicatedServer && class<ROWeaponDamageType>(DamageType) != none
-        && class<ROWeaponDamageType>(DamageType).default.bCauseViewJarring && ROPlayer(Controller) != none)
+    if (Level.NetMode != NM_DedicatedServer && class<DHWeaponDamageType>(DamageType) != none
+        && class<DHWeaponDamageType>(DamageType).default.bCauseViewJarring && ROPlayer(Controller) != none)
     {
         // Get the approximate direction that the hit went into the body
         Direction = self.Location - HitLocation;
@@ -2738,7 +2738,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 
     if (DamageType == class'Suicided')
     {
-        DamageType = class'ROSuicided'; // fix for suicide death messages
+        DamageType = class'DHSuicideDamageType'; // fix for suicide death messages
     }
 
     bShouldGib = DamageType != none && (DamageType.default.bAlwaysGibs || ((Abs(DamageBeyondZero) + default.Health) > DamageType.default.HumanObliterationThreshhold));
@@ -2819,7 +2819,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
         PlayerController(Controller).ForceDeathUpdate();
     }
 
-    if (DHPlayer(Controller) != none && class<ROWeaponDamageType>(DamageType) != none && class<ROWeaponDamageType>(DamageType).default.bCauseViewJarring)
+    if (DHPlayer(Controller) != none && class<DHWeaponDamageType>(DamageType) != none && class<DHWeaponDamageType>(DamageType).default.bCauseViewJarring)
     {
         HitDirection = Location - HitLocation;
         HitDirection.Z = 0.0;

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHSpawnKillDamageType extends ROWeaponDamageType
+class DHSpawnKillDamageType extends DHDamageType
     abstract;
 
 defaultproperties

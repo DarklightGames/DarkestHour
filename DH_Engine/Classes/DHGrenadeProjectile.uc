@@ -69,7 +69,7 @@ defaultproperties
 {
     FuzeLengthTimer=4.5
     Speed=1100.0
-    MyDamageType=class'DHThrowableExplosiveDamageType'
+    MyDamageType=class'DHGrenadeWeaponDamageType'
     ExplodeDirtEffectClass=class'GrenadeExplosion'
     ExplodeSnowEffectClass=class'GrenadeExplosionSnow' // added instead of using same as ExplodeDirtEffectClass, as there is an RO snow effect available
     ExplodeMidAirEffectClass=class'GrenadeExplosion_midair'

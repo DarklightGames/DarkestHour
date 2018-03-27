@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHShellHE20mmDamageType extends DHShellExplosionDamageType
+class DHShellHE20mmDamageType extends DHTankShellExplosionDamage
     abstract;
 
 defaultproperties

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_BrenDamType extends DHWeaponProjectileDamageType
+class DH_BrenDamType extends DHSmallArmsWeaponDamageType
     abstract;
 
 defaultproperties

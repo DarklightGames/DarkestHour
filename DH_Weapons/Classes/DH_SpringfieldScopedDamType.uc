@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_SpringfieldScopedDamType extends DHWeaponProjectileDamageType
+class DH_SpringfieldScopedDamType extends DHSmallArmsWeaponDamageType
     abstract;
 
 defaultproperties

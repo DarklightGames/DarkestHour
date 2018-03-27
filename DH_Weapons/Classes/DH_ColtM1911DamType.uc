@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_ColtM1911DamType extends DHWeaponProjectileDamageType
+class DH_ColtM1911DamType extends DHSmallArmsWeaponDamageType
     abstract;
 
 defaultproperties

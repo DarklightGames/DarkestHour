@@ -2033,12 +2033,11 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                 // Allow server admins an option of reducing damage from different types of friendly fire
                 if (DamageType != none)
                 {
-                    if (class<ROArtilleryDamType>(DamageType) != none)
+                    if (class<DHArtilleryWeaponDamageType>(DamageType) != none)
                     {
                         FFPenalty = FFArtyScale;
                     }
-                    // Added mortar HE (& removed specific satchel damage as now all thrown explosives extend from ROGrenadeDamType via DHThrowableExplosiveDamageType)
-                    else if (class<ROGrenadeDamType>(DamageType) != none || class<ROTankShellExplosionDamage>(DamageType) != none || class<DHMortarDamageType>(DamageType) != none)
+                    else if (class<DHGrenadeWeaponDamageType>(DamageType) != none || class<DHTankShellExplosionDamage>(DamageType) != none || class<DHMortarWeaponDamageType>(DamageType) != none)
                     {
                         FFPenalty = FFExplosivesScale;
                     }

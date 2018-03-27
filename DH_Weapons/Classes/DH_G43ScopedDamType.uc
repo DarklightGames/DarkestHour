@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_G43ScopedDamType extends DHWeaponProjectileDamageType
+class DH_G43ScopedDamType extends DHSmallArmsWeaponDamageType
     abstract;
 
 defaultproperties

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHATMineDamage extends ROTankShellExplosionDamage
+class DHATMineDamage extends DHVehicleWeaponDamageType
     abstract;
 
 defaultproperties

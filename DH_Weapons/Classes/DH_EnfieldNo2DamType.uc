@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_EnfieldNo2DamType extends DHWeaponProjectileDamageType
+class DH_EnfieldNo2DamType extends DHSmallArmsWeaponDamageType
     abstract;
 
 defaultproperties

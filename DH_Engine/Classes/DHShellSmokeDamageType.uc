@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHShellSmokeDamageType extends DHShellExplosionDamageType
+class DHShellSmokeDamageType extends DHVehicleWeaponDamageType
     abstract;
 
 defaultproperties

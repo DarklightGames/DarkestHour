@@ -12,8 +12,8 @@ var   protected float   VulnerableDamageFactor; // damage factor when instigator
 var   protected float   RearAngleArc;       // angle in Unreal rotational units for a player's rear (used to calculate rear melee hits)
 
 // From ROMeleeFire
-var   class<ROWeaponDamageType> DamageType;        // bash damage type
-var   class<ROWeaponDamageType> BayonetDamageType; // bayonet stab damage type
+var   class<DHWeaponDamageType> DamageType;        // bash damage type
+var   class<DHWeaponDamageType> BayonetDamageType; // bayonet stab damage type
 var     int             DamageMin;          // min damage from a bash
 var     int             DamageMax;          // max damage from a bash
 var     int             BayonetDamageMin;   // min damage from a bayonet stab

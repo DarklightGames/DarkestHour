@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHVehicleBurningDamageType extends ROWeaponDamageType
+class DHVehicleBurningDamageType extends DHDamageType
     abstract;
 
 defaultproperties
@@ -16,6 +16,7 @@ defaultproperties
     MaleSuicide="%o burned up in a vehicle fire."
     FemaleSuicide="%o burned up in a vehicle fire."
     bLocationalHit=false
+    bDirectDamage=true
     bDetonatesGoop=true
     bDelayedDamage=true
     GibModifier=10.0

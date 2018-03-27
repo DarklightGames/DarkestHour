@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHExitMovingVehicleDamageType extends DamageType
+class DHExitMovingVehicleDamageType extends DHDamageType
     abstract;
 
 defaultproperties

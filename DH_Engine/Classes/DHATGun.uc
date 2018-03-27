@@ -116,9 +116,9 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     }
 
     // Apply damage modifier from the DamageType, plus a little damage randomisation
-    if (class<ROWeaponDamageType>(DamageType) != none)
+    if (class<DHWeaponDamageType>(DamageType) != none)
     {
-        DamageModifier = class<ROWeaponDamageType>(DamageType).default.APCDamageModifier * RandRange(0.75, 1.08);
+        DamageModifier = class<DHWeaponDamageType>(DamageType).default.APCDamageModifier * RandRange(0.75, 1.08);
     }
 
     Damage *= DamageModifier;

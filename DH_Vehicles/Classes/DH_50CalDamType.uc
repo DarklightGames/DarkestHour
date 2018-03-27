@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_50CalDamType extends DHWeaponProjectileDamageType
+class DH_50CalDamType extends DHSmallArmsWeaponDamageType
     abstract;
 
 defaultproperties

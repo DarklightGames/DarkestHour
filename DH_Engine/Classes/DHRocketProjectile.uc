@@ -117,7 +117,7 @@ defaultproperties
     StraightFlightTime=0.2
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
     PenetrationMag=250.0
-    ShellImpactDamage=class'ROGame.RORocketImpactDamage'
+    ShellImpactDamage=class'DH_Engine.DHRocketImpactDamage'
     ImpactDamage=675
     VehicleHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
     ShellHitVehicleEffectClass=class'ROEffects.PanzerfaustHitTank'

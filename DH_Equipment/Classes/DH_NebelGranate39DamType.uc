@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_NebelGranate39DamType extends DHThrowableExplosiveDamageType
+class DH_NebelGranate39DamType extends DHGrenadeWeaponDamageType
     abstract;
 
 defaultproperties
