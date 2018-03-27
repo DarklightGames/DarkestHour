@@ -33,6 +33,8 @@ static function bool IsWeaponDamage()
 
 defaultproperties
 {
+    bDirectDamage=true
+
     WeaponClass=none
     HUDIcon=Texture'InterfaceArt_tex.deathicons.Generic'
     bKUseOwnDeathVel=True

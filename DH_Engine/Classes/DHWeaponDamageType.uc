@@ -8,5 +8,4 @@ class DHWeaponDamageType extends DHDamageType
 
 defaultproperties
 {
-    bDirectDamage=true
 }

@@ -1989,6 +1989,22 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     }
 }
 
+// This function can be greatly improved to handle some really cool damage control
+function float GetDamageModifierForDamageType(class<DamageType> DamageType)
+{
+    if (class<DHDamageType>(DamageType) == none)
+    {
+        return 1.0;
+    }
+
+    if (bVulnerableToHE)
+    {
+        return class<DHDamageType>(DamageType).default.HighExplosiveDirectHitModifier;
+    }
+
+    return 1.0;
+}
+
 // New function to remove lengthy functionality from the already very long TakeDamage() function
 // Uses new method for track hit detection that works properly - TreadHitMaxHeight is the height (in Unreal units) of the top of tracks above hull mesh origin
 // Problem with original RO method (TreadHitMinAngle) was the InAngle calculation was distorted by the position of the hit along the vehicle mesh's X axis
