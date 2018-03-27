@@ -14,6 +14,7 @@ var     float                       VehicleDamageModifier;              // Stand
 var     float                       HighExplosiveDamageModifier;        // If vehicle is vulnerable to HE apply this modifier (gets applied on top of other modifiers)
 var     float                       TreadDamageModifier;                // Tank Tread damage
 var     bool                        bCauseViewJarring;                  // Causes the player to be 'struck' and shake
+var     bool                        bIsHighExplosiveDamage;             // Bool that indicates the damage type is high explosive
 
 static function string GetWeaponClass()
 {

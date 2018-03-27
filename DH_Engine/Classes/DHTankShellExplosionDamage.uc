@@ -14,6 +14,8 @@ defaultproperties
 
     HUDIcon=Texture'InterfaceArt_tex.deathicons.Strike'
 
+    bIsHighExplosiveDamage=true
+
     GibModifier=4.0
 
     bDetonatesGoop=true
