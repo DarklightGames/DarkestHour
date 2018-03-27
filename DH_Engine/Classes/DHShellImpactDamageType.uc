@@ -22,7 +22,7 @@ defaultproperties
     GibPerterbation=0.15
     bFlaming=true
     bDelayedDamage=true
-    bLocationalHit=false
+    bLocationalHit=true
 
     KDamageImpulse=5000
     KDeathVel=250.0
