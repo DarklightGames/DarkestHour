@@ -9,7 +9,7 @@ defaultproperties
 {
     Stages(0)=(Progress=0,StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_01_unassembled',Sound=none,Emitter=none)
     ProgressMax=2
-    CollisionRadius=90
+    CollisionRadius=80
     CollisionHeight=50
     BrokenStaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_destro_01'
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_02'
