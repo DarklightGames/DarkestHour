@@ -11,7 +11,7 @@ var     Material                    HUDIcon;
 var     float                       TankDamageModifier;                 // Tank damage
 var     float                       APCDamageModifier;                  // HT type vehicle damage
 var     float                       VehicleDamageModifier;              // Standard vehicle damage
-var     float                       HighExplosiveDamageModifier;        // If vehicle is vulnerable to HE apply this modifier (gets applied on top of other modifiers)
+var     float                       HighExplosiveDirectHitModifier;     // If vehicle is vulnerable to HE apply this modifier (gets applied on top of other modifiers)
 var     float                       TreadDamageModifier;                // Tank Tread damage
 var     bool                        bCauseViewJarring;                  // Causes the player to be 'struck' and shake
 var     bool                        bIsHighExplosiveDamage;             // Bool that indicates the damage type is high explosive
@@ -40,7 +40,7 @@ defaultproperties
     TankDamageModifier=0.0
     APCDamageModifier=0.0
     VehicleDamageModifier=0.10
-    HighExplosiveDamageModifier=1.0
+    HighExplosiveDirectHitModifier=1.0
     TreadDamageModifier=0.0
     bExtraMomentumZ=false
     bCauseViewJarring = false;

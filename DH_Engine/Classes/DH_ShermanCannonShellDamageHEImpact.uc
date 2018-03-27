@@ -8,5 +8,5 @@ class DH_ShermanCannonShellDamageHEImpact extends DHShellImpactDamageType
 
 defaultproperties
 {
-    HighExplosiveDamageModifier=8.0
+    HighExplosiveDirectHitModifier=8.0
 }

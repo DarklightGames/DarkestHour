@@ -1910,11 +1910,6 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             DamageModifier = WepDamageType.default.VehicleDamageModifier;
         }
 
-        if (bVulnerableToHE)
-        {
-            DamageModifier *= WepDamageType.default.HighExplosiveDamageModifier;
-        }
-
         DamageModifier *= RandRange(0.75, 1.08);
 
         if (bHasTreads)
