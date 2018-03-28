@@ -427,13 +427,8 @@ event Tick(float DeltaTime)
 
         if (bLogAverageTickRate)
         {
-            Log("");
             Log("              Average Server Tick Rate:" @ ServerTickRateAverage);
-            Log("--------------------- Packet Loss Info ---------------------");
-            Log("Combined player packet loss is:" @ GetCombinedPlayerPacketLoss());
-            Log("Average player packet loss is:" @ GetAveragePlayerPacketLoss());
-            Log("The number of players with more than 5 packet loss is:" @ GetNumPlayersHighPacketLoss());
-            Log("============================================================");
+            LogNetHealthInfo();
         }
     }
     else
@@ -444,56 +439,37 @@ event Tick(float DeltaTime)
     super.Tick(DeltaTime);
 }
 
-function int GetCombinedPlayerPacketLoss()
+function LogNetHealthInfo()
 {
-    local int i, x;
+    local int i, combined, average, overfive;
 
     for (i = 0; i < GRI.PRIArray.Length; ++i)
     {
         // Don't count the webadmin dude
         if (DHPlayerReplicationInfo(GRI.PRIArray[i]) != none)
         {
-            x += GRI.PRIArray[i].PacketLoss;
+            combined += GRI.PRIArray[i].PacketLoss;
 
             if (GRI.PRIArray[i].PacketLoss > 250)
             {
                 Log("Someone has more than 250 packet loss");
             }
+
+            if (DHPlayerReplicationInfo(GRI.PRIArray[i]) != none && GRI.PRIArray[i].PacketLoss > 5)
+            {
+                ++overfive;
+            }
         }
     }
 
-    return x;
-}
+    average = clamp(combined / (GRI.PRIArray.Length - 1), 0, 255);
 
-function int GetAveragePlayerPacketLoss()
-{
-    local int i, x;
-
-    for (i = 0; i < GRI.PRIArray.Length; ++i)
-    {
-        // Don't count the webadmin dude
-        if (DHPlayerReplicationInfo(GRI.PRIArray[i]) != none)
-        {
-            x += GRI.PRIArray[i].PacketLoss;
-        }
-    }
-
-    return clamp(x / (GRI.PRIArray.Length - 1), 0, 255);
-}
-
-function int GetNumPlayersHighPacketLoss()
-{
-    local int i, x;
-
-    for (i = 0; i < GRI.PRIArray.Length; ++i)
-    {
-        if (DHPlayerReplicationInfo(GRI.PRIArray[i]) != none && GRI.PRIArray[i].PacketLoss > 5)
-        {
-            ++x;
-        }
-    }
-
-    return x;
+    Log("--------------------- Packet Loss Info ---------------------");
+    Log("Combined player packet loss is:" @ combined);
+    Log("Average player packet loss is:" @ average);
+    Log("The number of players with more than 5 packet loss is:" @ overfive);
+    Log("============================================================");
+    Log("");
 }
 
 // Raises the reinforcement interval used in GRI if the server is performing poorly, otherwise it sets it to default
