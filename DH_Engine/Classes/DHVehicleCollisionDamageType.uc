@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHVehicleCollisionDamageType extends ROWeaponDamageType
+class DHVehicleCollisionDamageType extends DHDamageType
     abstract;
 
 defaultproperties
@@ -17,6 +17,7 @@ defaultproperties
     MaleSuicide="%o was killed in a vehicle crash."
     FemaleSuicide="%o was killed in a vehicle crash."
     bLocationalHit=false
+    bDirectDamage=true
     bDetonatesGoop=true
     bDelayedDamage=true
     bCausedByWorld=true

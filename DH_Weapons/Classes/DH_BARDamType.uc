@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_BARDamType extends DHWeaponProjectileDamageType
+class DH_BARDamType extends DHSmallArmsWeaponDamageType
     abstract;
 
 defaultproperties

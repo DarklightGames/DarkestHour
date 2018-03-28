@@ -248,8 +248,8 @@ simulated singular function Touch(Actor Other)
 // Matt: re-worked, with commentary below
 simulated function ProcessTouch(Actor Other, vector HitLocation)
 {
-    local ROVehicle       HitVehicle;
-    local ROVehicleWeapon HitVehicleWeapon;
+    local DHVehicle       HitVehicle;
+    local DHVehicleWeapon HitVehicleWeapon;
     local vector          Direction, TempHitLocation, HitNormal;
     local array<int>      HitPoints;
 
@@ -261,8 +261,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     }
 
     SavedTouchActor = Other;
-    HitVehicleWeapon = ROVehicleWeapon(Other);
-    HitVehicle = ROVehicle(Other.Base);
+    HitVehicleWeapon = DHVehicleWeapon(Other);
+    HitVehicle = DHVehicle(Other.Base);
     Direction = Normal(Velocity);
 
     // We hit a VehicleWeapon
@@ -377,6 +377,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
     local DHVehicleCannon Cannon;
+    local float ImpactDamageModifier;
 
     // Exit without doing anything if we hit something we don't want to count a hit on
     if (Wall == none || SavedHitActor == Wall || (Wall.Base != none && Wall.Base == Instigator) || Wall.bDeleteMe)
@@ -434,7 +435,14 @@ simulated function HitWall(vector HitNormal, Actor Wall)
                     Wall.SetDelayedDamageInstigatorController(InstigatorController);
                 }
 
-                Wall.TakeDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
+                ImpactDamageModifier = 1.0;
+
+                if (DHVehicle(Wall) != none)
+                {
+                    ImpactDamageModifier = DHVehicle(Wall).GetDamageModifierForDamageType(ShellImpactDamage);
+                }
+
+                Wall.TakeDamage(ImpactDamage * ImpactDamageModifier, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
             }
 
             if (DamageRadius > 0.0 && ROVehicle(Wall) != none && ROVehicle(Wall).Health > 0) // need this here as vehicle will be ignored by HurtRadius(), as it's the HurtWall actor

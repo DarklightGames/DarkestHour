@@ -20,9 +20,9 @@ simulated function InitializeVehicleBase()
 // Adjust damage so when vehicle base applies VehicleDamageModifier, result is the same as if it had applied APCDamageModifier to original damage
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
-    if (class<ROWeaponDamageType>(DamageType) != none)
+    if (class<DHWeaponDamageType>(DamageType) != none)
     {
-        Damage = Round(float(Damage) * class<ROWeaponDamageType>(DamageType).default.APCDamageModifier / class<ROWeaponDamageType>(DamageType).default.VehicleDamageModifier);
+        Damage = Round(float(Damage) * class<DHWeaponDamageType>(DamageType).default.APCDamageModifier / class<DHWeaponDamageType>(DamageType).default.VehicleDamageModifier);
     }
 
     super.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType, HitIndex);

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_MP40DamType extends DHWeaponProjectileDamageType
+class DH_MP40DamType extends DHSmallArmsWeaponDamageType
     abstract;
 
 defaultproperties

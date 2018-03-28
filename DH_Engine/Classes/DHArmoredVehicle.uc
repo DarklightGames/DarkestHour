@@ -1537,7 +1537,7 @@ simulated static function bool CheckIfShatters(DHAntiVehicleProjectile P, float 
 // Also to use TankDamageModifier instead of VehicleDamageModifier (unless an APC)
 function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
-    local class<ROWeaponDamageType> WepDamageType;
+    local class<DHWeaponDamageType> WepDamageType;
     local DHVehicleCannonPawn       CannonPawn;
     local Controller InstigatorController;
     local float      DamageModifier, TreadDamageMod, HullChanceModifier, TurretChanceModifier;
@@ -1589,7 +1589,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     }
 
     // Apply damage modifier from the DamageType, plus a little damage randomisation (but not randomised for fire damage as it messes up timings)
-    WepDamageType = class<ROWeaponDamageType>(DamageType);
+    WepDamageType = class<DHWeaponDamageType>(DamageType);
 
     if (WepDamageType != none)
     {

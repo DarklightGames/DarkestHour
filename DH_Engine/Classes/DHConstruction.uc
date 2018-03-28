@@ -1085,10 +1085,10 @@ defaultproperties
     ProgressMax=4
 
     // Damage
-    HarmfulDamageTypes(0)=class'ROArtilleryDamType'
-    HarmfulDamageTypes(1)=class'ROTankShellExplosionDamage'
-    HarmfulDamageTypes(2)=class'DHThrowableExplosiveDamageType'
-    HarmfulDamageTypes(3)=class'DHMortarDamageType'
+    HarmfulDamageTypes(0)=class'DHArtilleryWeaponDamageType'
+    HarmfulDamageTypes(1)=class'DHGrenadeWeaponDamageType'
+    HarmfulDamageTypes(2)=class'DHMortarWeaponDamageType'
+    HarmfulDamageTypes(3)=none
     TatteredHealthThreshold=-1
     MinDamagetoHurt=100
 

@@ -175,7 +175,7 @@ simulated function GetExplosionDecalClass(out class<Projector> ExplosionDecalCla
 
 defaultproperties
 {
-    MyDamageType=class'DH_Engine.DHMortarDamageType'
+    MyDamageType=class'DH_Engine.DHMortarWeaponDamageType'
     MomentumTransfer=75000.0
 
     GroundExplosionEmitterClass=class'DH_Effects.DHMortarExplosion81mm'

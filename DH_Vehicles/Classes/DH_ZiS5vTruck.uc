@@ -43,6 +43,7 @@ defaultproperties
     MaxBrakeTorque=10.0
     bHasHandbrake=true
     HandbrakeThresh=100.0
+    MaxCriticalSpeed=1077.0 // 64 kph
 
     // Physics wheels properties
     WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.1),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.3),(InVal=400.0,OutVal=0.1),(InVal=10000000000.0,OutVal=0.0)))
@@ -52,10 +53,15 @@ defaultproperties
     WheelSuspensionMaxRenderTravel=5.0
 
     // Damage
-    Health=1000
-    HealthMax=1000.0
-    EngineHealth=40
-    VehHitpoints(0)=(PointBone="Body",PointOffset=(X=100.0,Y=0.0,Z=11.0)) // engine
+    Health=2000
+    HealthMax=2000.0
+    DamagedEffectHealthFireFactor=0.5
+    EngineHealth=30
+    VehHitpoints(0)=(PointRadius=25.0,PointScale=1.0,PointBone="Body",PointOffset=(X=100.0,Y=0.0,Z=11.0),bPenetrationPoint=false,DamageMultiplier=3.0,HitPointType=HP_Engine) // engine
+    VehHitpoints(1)=(PointRadius=18.0,PointScale=1.0,PointBone="Axle_FR",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(2)=(PointRadius=18.0,PointScale=1.0,PointBone="Axle_FL",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(3)=(PointRadius=9.0,PointScale=1.0,PointBone="Wheel_BR",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
+    VehHitpoints(4)=(PointRadius=9.0,PointScale=1.0,PointBone="Wheel_BL",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
     ImpactWorldDamageMult=1.0
     HeavyEngineDamageThreshold=0.33
     DamagedEffectScale=0.7

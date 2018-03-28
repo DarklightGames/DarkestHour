@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHRocketExhaustDamageType extends DHThrowableExplosiveDamageType
+class DHRocketExhaustDamageType extends DHGrenadeWeaponDamageType
     abstract;
 
 defaultproperties

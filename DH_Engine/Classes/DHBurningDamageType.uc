@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHBurningDamageType extends ROWeaponDamageType
+class DHBurningDamageType extends DHDamageType
     abstract;
 
 defaultproperties

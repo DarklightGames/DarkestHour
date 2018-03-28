@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_USSmokeGrenadeDamType extends DHThrowableExplosiveDamageType
+class DH_USSmokeGrenadeDamType extends DHGrenadeWeaponDamageType
     abstract;
 
 defaultproperties

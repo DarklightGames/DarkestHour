@@ -58,9 +58,9 @@ static function string GetString(optional int Switch, optional PlayerReplication
         DeathString = DamageType.default.DeathString;
     }
 
-    if (class<WeaponDamageType>(DamageType) != none && class<WeaponDamageType>(DamageType).default.WeaponClass != none)
+    if (class<DHDamageType>(DamageType) != none && class<DHDamageType>(DamageType).default.WeaponClass != none)
     {
-        DeathString = Repl(DeathString, "%w", class<WeaponDamageType>(DamageType).default.WeaponClass.default.ItemName, false);
+        DeathString = Repl(DeathString, "%w", class<DHDamageType>(DamageType).default.WeaponClass.default.ItemName, false);
     }
 
     return class'GameInfo'.static.ParseKillMessage(KillerName, VictimName, DeathString);

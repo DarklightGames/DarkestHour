@@ -3,13 +3,13 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHWeaponProjectileDamageType extends ROWeaponProjectileDamageType
+class DHSmallArmsWeaponDamageType extends DHProjectileWeaponDamageType
     abstract;
 
 defaultproperties
 {
     // Because bullet classes previously used a separate MyVehicleDamage for hits on vehicles (based on ROVehicleDamageType class)
-    // But it is now deprecated as unnecessary & instead bullets simply use their normal MyDamageType (based on ROWeaponDamageType class)
+    // But it is now deprecated as unnecessary & instead bullets simply use their normal MyDamageType (based on RO's WeaponDamageType class)
     // So to maintain the same damage modifiers for damage to vehicles, we need to use the same modifiers of the deprecated ROVehicleDamageType class
     // But we do not use ROVehicleDamageType's APCDamageModifier (0.025) as we don't want bullets to damage APCs or anti-tank guns (which use the APC modifier)
     // Previously APCs or AT guns relied on a minimum APCDamageModifier threshold in the TakeDamage() function, preventing damage by bullets

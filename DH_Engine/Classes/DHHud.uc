@@ -4562,6 +4562,17 @@ function DrawCaptureBar(Canvas Canvas)
 //  bDrawingCaptureBar = true; // deprecated & no longer used when drawing vehicle occupant names
 }
 
+// Modified for DH damage types (all damage types should have their own HUDIcon, but if they don't use 'mine' icon)
+function Material GetDamageIcon(class<DamageType> DamType)
+{
+    if (class<DHDamageType>(DamType) != none && class<DHDamageType>(DamType).default.HUDIcon != none)
+    {
+        return class<DHDamageType>(DamType).default.HUDIcon;
+    }
+
+    return texture'InterfaceArt_tex.deathicons.mine';
+}
+
 // Modified to fix a bug that spams thousands of "accessed none" errors to log, if there is a missing objective number in the array
 function UpdateMapIconLabelCoords(FloatBox LabelCoords, ROGameReplicationInfo GRI, int CurrentObj)
 {
