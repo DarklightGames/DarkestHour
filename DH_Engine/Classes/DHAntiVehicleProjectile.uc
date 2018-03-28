@@ -377,6 +377,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
 simulated function HitWall(vector HitNormal, Actor Wall)
 {
     local DHVehicleCannon Cannon;
+    local float ModifiedImpactDamage;
 
     // Exit without doing anything if we hit something we don't want to count a hit on
     if (Wall == none || SavedHitActor == Wall || (Wall.Base != none && Wall.Base == Instigator) || Wall.bDeleteMe)
@@ -434,7 +435,14 @@ simulated function HitWall(vector HitNormal, Actor Wall)
                     Wall.SetDelayedDamageInstigatorController(InstigatorController);
                 }
 
-                Wall.TakeDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
+                ModifiedImpactDamage = ImpactDamage;
+
+                if (DHVehicle(Wall) != none)
+                {
+                    ModifiedImpactDamage *= DHVehicle(Wall).DirectHEImpactDamageMult;
+                }
+
+                Wall.TakeDamage(ModifiedImpactDamage, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
             }
 
             if (DamageRadius > 0.0 && ROVehicle(Wall) != none && ROVehicle(Wall).Health > 0) // need this here as vehicle will be ignored by HurtRadius(), as it's the HurtWall actor

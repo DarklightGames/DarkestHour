@@ -62,6 +62,7 @@ defaultproperties
     VehHitpoints(2)=(PointRadius=18.0,PointScale=1.0,PointBone="Axle_FL",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     VehHitpoints(3)=(PointRadius=9.0,PointScale=1.0,PointBone="Wheel_BR",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
     VehHitpoints(4)=(PointRadius=9.0,PointScale=1.0,PointBone="Wheel_BL",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
+    DirectHEImpactDamageMult=4.0
     ImpactWorldDamageMult=1.0
     HeavyEngineDamageThreshold=0.33
     DamagedEffectScale=0.7

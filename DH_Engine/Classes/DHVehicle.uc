@@ -64,6 +64,7 @@ var     bool        bCanCrash;                   // vehicle can be damaged by st
 var     bool        bWheelsAreDamaged;           // if wheels are damaged, the vehicle is slowed down
 var     float       DamagedWheelSpeedFactor;     // the max speed the vehicle can go if wheels are damaged (1.0 is no change)
 var     float       ImpactWorldDamageMult;       // multiplier for world geometry impact damage when vehicle bCanCrash
+var     float       DirectHEImpactDamageMult;    // damage multiplier for direct HE impact (direct hits with HE rounds) defaults: 1.0
 var array<material> DestroyedMeshSkins;          // option to skin destroyed vehicle static mesh to match camo variant (avoiding need for multiple destroyed meshes)
 var     sound       DamagedStartUpSound;         // sound played when trying to start a damaged engine
 var     sound       DamagedShutDownSound;        // sound played when damaged engine shuts down
@@ -1980,11 +1981,10 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // Call the Super from Vehicle (skip over others)
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
-    // If an APC's health is very low, kill the engine (which will start an engine fire)
-    if (bIsApc && Health <= (HealthMax / 3) && Health > 0)
+    // If a vehicle's health is lower than DamagedEffectHealthFireFactor, then kill engine (as the engine is on fire)
+    if (!bHasTreads && Health <= (default.HealthMax * default.DamagedEffectHealthFireFactor) && Health > 0)
     {
         EngineHealth = 0;
-        bEngineOff = true;
         SetEngine();
     }
 }
@@ -3891,6 +3891,7 @@ defaultproperties
     VehHitpoints(1)=(PointRadius=0.0,PointScale=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
     TreadDamageThreshold=0.3
     bCanCrash=true
+    DirectHEImpactDamageMult=1.0
     DamagedWheelSpeedFactor=0.5
     ImpactDamageThreshold=33.0
     ImpactDamageMult=0.001
