@@ -1961,7 +1961,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 }
 
                 // If wheel takes enough damage, vehicle has wheel damage
-                if (!bWheelsAreDamaged && Damage >= 2.0)
+                if (!bWheelsAreDamaged)
                 {
                     bWheelsAreDamaged = true;
                     // Clamp the vehicle's health to 75% of its maximum, this will make the vehicle look damaged on the HUD
