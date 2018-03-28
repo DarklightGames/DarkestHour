@@ -22,6 +22,7 @@ defaultproperties
     PointValue=2.0
     ReinforcementCost=4
     MaxDesireability=1.2
+    bMustBeInSquadToSpawn=true
 
     // Hull mesh
     Skins(0)=Texture'DH_M3Halftrack_tex.m3.Halftrack'
@@ -40,13 +41,13 @@ defaultproperties
     DriveAnim="VUC_driver_idle_close"
 
     // Movement
-    MaxCriticalSpeed=1077.0 // 64 kph
+    MaxCriticalSpeed=838.22 // 50 kph
     GearRatios(0)=-0.3
     GearRatios(3)=0.55
     GearRatios(4)=1.15
-    TorqueCurve=(Points=((InVal=0.0,OutVal=18.0),(InVal=200.0,OutVal=12.0),(InVal=600.0,OutVal=9.0),(InVal=1200.0,OutVal=4.0),(InVal=2000.0,OutVal=0.5)))
-    SteerSpeed=65.0
-    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=48.0),(InVal=200.0,OutVal=35.0),(InVal=600.0,OutVal=6.0),(InVal=1000000000.0,OutVal=0.0)))
+    TorqueCurve=(Points=((InVal=0.0,OutVal=18.0),(InVal=200.0,OutVal=12.0),(InVal=600.0,OutVal=5.0),(InVal=1200.0,OutVal=2.0),(InVal=2000.0,OutVal=0.5)))
+    SteerSpeed=60.0
+    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=48.0),(InVal=200.0,OutVal=28.0),(InVal=600.0,OutVal=5.0),(InVal=1000000000.0,OutVal=0.0)))
 
     // Physics wheels properties
     WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.2),(InVal=600.0,OutVal=0.001),(InVal=10000000000.0,OutVal=0.0)))
@@ -57,16 +58,28 @@ defaultproperties
     WheelSuspensionMaxRenderTravel=10.0
 
     // Damage
-    Health=325
-    HealthMax=325.0
-    EngineHealth=125
+    Health=2000
+    HealthMax=2000.0
+    DamagedEffectHealthFireFactor=0.5
+    EngineHealth=50
     VehHitpoints(0)=(PointRadius=35.0) // engine
-    ImpactWorldDamageMult=3.0
+    VehHitpoints(1)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_R_1",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(2)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_L_1",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    DamagedWheelSpeedFactor=0.65 // 65% of MaxCriticalSpeed will be max speed if wheels are damaged
+    DirectHEImpactDamageMult=2.0
+    ImpactWorldDamageMult=2.0
     TreadHitMaxHeight=2.5
     DamagedEffectScale=0.75
     DamagedEffectOffset=(X=120.0,Y=0.0,Z=60.0)
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+
+    // Vehicle destruction
+    ExplosionDamage=85.0
+    ExplosionRadius=150.0
+    ExplosionSoundRadius=200.0
+    DestructionLinearMomentum=(Min=50.0,Max=100.0)
+    DestructionAngularMomentum=(Min=10.0,Max=50.0)
 
     FrontRightAngle=108.0 // angles set specifically for tread hits
     RearRightAngle=168.0
