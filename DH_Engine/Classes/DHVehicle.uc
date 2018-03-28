@@ -3857,7 +3857,7 @@ defaultproperties
     ResupplyAttachmentClass=class'DHResupplyAttachment'
     FirstRiderPositionIndex=255 // unless overridden in subclass, 255 means the value is set automatically when PassengerPawns array is added to the PassengerWeapons
     VehiclePoolIndex=-1
-    MinRunOverSpeed=503.0 // increased from 0 to 30km/h so players don't get run over so easily by vehicles
+    MinRunOverSpeed=586.75 // increased from 0 to 35km/h so players don't get run over so easily by vehicles
     ObjectiveGetOutDist=1500.0
     CenterSpringForce="SpringONSSRV"
     bReplicateAnimations=false // override strange inherited property from ROWheeledVehicle - no reason for server to replicate anims & now we play transition anims on
