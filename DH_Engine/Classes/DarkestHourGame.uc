@@ -427,7 +427,13 @@ event Tick(float DeltaTime)
 
         if (bLogAverageTickRate)
         {
-            Log("Average Server Tick Rate:" @ ServerTickRateAverage);
+            Log("");
+            Log("              Average Server Tick Rate:" @ ServerTickRateAverage);
+            Log("--------------------- Packet Loss Info ---------------------");
+            Log("Combined player packet loss is:" @ GetCombinedPlayerPacketLoss());
+            Log("Average player packet loss is:" @ GetAveragePlayerPacketLoss());
+            Log("The number of players with more than 5 packet loss is:" @ GetNumPlayersHighPacketLoss());
+            Log("============================================================");
         }
     }
     else
@@ -436,6 +442,58 @@ event Tick(float DeltaTime)
     }
 
     super.Tick(DeltaTime);
+}
+
+function int GetCombinedPlayerPacketLoss()
+{
+    local int i, x;
+
+    for (i = 0; i < GRI.PRIArray.Length; ++i)
+    {
+        // Don't count the webadmin dude
+        if (DHPlayerReplicationInfo(GRI.PRIArray[i]) != none)
+        {
+            x += GRI.PRIArray[i].PacketLoss;
+
+            if (GRI.PRIArray[i].PacketLoss > 250)
+            {
+                Log("Someone has more than 250 packet loss");
+            }
+        }
+    }
+
+    return x;
+}
+
+function int GetAveragePlayerPacketLoss()
+{
+    local int i, x;
+
+    for (i = 0; i < GRI.PRIArray.Length; ++i)
+    {
+        // Don't count the webadmin dude
+        if (DHPlayerReplicationInfo(GRI.PRIArray[i]) != none)
+        {
+            x += GRI.PRIArray[i].PacketLoss;
+        }
+    }
+
+    return clamp(x / (GRI.PRIArray.Length - 1), 0, 255);
+}
+
+function int GetNumPlayersHighPacketLoss()
+{
+    local int i, x;
+
+    for (i = 0; i < GRI.PRIArray.Length; ++i)
+    {
+        if (DHPlayerReplicationInfo(GRI.PRIArray[i]) != none && GRI.PRIArray[i].PacketLoss > 5)
+        {
+            ++x;
+        }
+    }
+
+    return x;
 }
 
 // Raises the reinforcement interval used in GRI if the server is performing poorly, otherwise it sets it to default
