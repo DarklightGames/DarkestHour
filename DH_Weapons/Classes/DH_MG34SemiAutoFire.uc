@@ -14,7 +14,12 @@ defaultproperties
     Spread=65.0
     RecoilRate=0.04
     PctHipMGPenalty=0.6
-    MaxVerticalRecoilAngle=600
+
+    // Recoil
+    maxVerticalRecoilAngle=200
+    maxHorizontalRecoilAngle=100
+    PctBipodDeployRecoil=0.02
+    PctRestDeployRecoil=0.05
 
     FireSounds(0)=SoundGroup'Inf_Weapons.mg34.mg34_fire_single'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'

@@ -14,7 +14,12 @@ defaultproperties
     TracerFrequency=7
     RecoilRate=0.04
     PctHipMGPenalty=0.66 // TODO: doesn't seem to make sense as is supposed to be a penalty & so must be > 1 (was originally 1.5) (same in semi auto fire class)
-    MaxVerticalRecoilAngle=600
+
+    // Recoil
+    maxVerticalRecoilAngle=400
+    maxHorizontalRecoilAngle=200
+    PctBipodDeployRecoil=0.02
+    PctRestDeployRecoil=0.05
 
     AmbientFireSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
     FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'

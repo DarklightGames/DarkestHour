@@ -15,6 +15,12 @@ defaultproperties
     Spread=66.0
     RecoilRate=0.03125
 
+    // Recoil
+    maxVerticalRecoilAngle=450
+    maxHorizontalRecoilAngle=250
+    PctBipodDeployRecoil=0.02
+    PctRestDeployRecoil=0.05
+
     AmbientFireSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
     FireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
@@ -25,10 +31,10 @@ defaultproperties
     BipodDeployFireLoopAnim="Shoot_Loop"
     BipodDeployFireEndAnim="Shoot_End"
 
-    ShakeOffsetMag=(X=4.0,Y=2.0,Z=4.0)
+    ShakeOffsetMag=(X=1.0,Y=1.0,Z=1.0)
     ShakeOffsetRate=(X=1000.0,Y=1000.0,Z=1000.0)
-    ShakeOffsetTime=1.0
-    ShakeRotMag=(X=40.0,Y=40.0,Z=40.0)
+    ShakeOffsetTime=2.0
+    ShakeRotMag=(X=20.0,Y=20.0,Z=20.0)
     ShakeRotRate=(X=5000.0,Y=5000.0,Z=5000.0)
     ShakeRotTime=0.75
 }
