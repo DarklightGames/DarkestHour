@@ -33,6 +33,7 @@ defaultproperties
     PointValue=2.0
     ReinforcementCost=6
     MaxDesireability=1.2
+    bMustBeInSquadToSpawn=true
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_SdKfz10_5_anm.SdKfz10_5_body_ext'
@@ -72,14 +73,26 @@ defaultproperties
     WheelSuspensionMaxRenderTravel=8.0
 
     // Damage
-    Health=275
-    HealthMax=325.0
-    EngineHealth=150
+    Health=2000
+    HealthMax=2000.0
+    DamagedEffectHealthFireFactor=0.5
+    EngineHealth=50
     VehHitpoints(0)=(PointRadius=20.0,PointBone="Body",PointOffset=(X=93.0,Y=0.0,Z=9.0)) // engine
+    VehHitpoints(1)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_F_R",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(2)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_F_L",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    DamagedWheelSpeedFactor=0.65 // 65% of MaxCriticalSpeed will be max speed if wheels are damaged
+    DirectHEImpactDamageMult=2.0
     TreadHitMaxHeight=-5.0
     DamagedEffectScale=0.75
     DamagedEffectOffset=(X=90.0,Y=0.0,Z=15.0)
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc4.SdKfz10_5.sdkfz10_5_dest'
+
+    // Vehicle destruction
+    ExplosionDamage=85.0
+    ExplosionRadius=150.0
+    ExplosionSoundRadius=200.0
+    DestructionLinearMomentum=(Min=50.0,Max=100.0)
+    DestructionAngularMomentum=(Min=10.0,Max=50.0)
 
     FrontRightAngle=39.0 // angles set specifically for tread hits
     RearRightAngle=161.0
