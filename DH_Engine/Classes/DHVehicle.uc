@@ -1982,7 +1982,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
     // If a vehicle's health is lower than DamagedEffectHealthFireFactor, then kill engine (as the engine is on fire)
-    if (!bHasTreads && Health <= (default.HealthMax * default.DamagedEffectHealthFireFactor) && Health > 0)
+    if (Health <= (default.HealthMax * default.DamagedEffectHealthFireFactor) && Health > 0)
     {
         EngineHealth = 0;
         SetEngine();
