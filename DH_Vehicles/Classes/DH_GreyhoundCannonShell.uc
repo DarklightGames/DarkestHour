@@ -7,16 +7,16 @@ class DH_GreyhoundCannonShell extends DHCannonShell;
 
 defaultproperties
 {
-    DHPenetrationTable(0)=7.1
-    DHPenetrationTable(1)=6.7
-    DHPenetrationTable(2)=6.3
-    DHPenetrationTable(3)=6.1
-    DHPenetrationTable(4)=5.7
-    DHPenetrationTable(5)=5.2
-    DHPenetrationTable(6)=4.8
-    DHPenetrationTable(7)=4.5
-    DHPenetrationTable(8)=4.1
-    DHPenetrationTable(9)=3.5
+    DHPenetrationTable(0)=6.5
+    DHPenetrationTable(1)=6.1
+    DHPenetrationTable(2)=5.7
+    DHPenetrationTable(3)=5.3
+    DHPenetrationTable(4)=5.0
+    DHPenetrationTable(5)=4.6
+    DHPenetrationTable(6)=4.3
+    DHPenetrationTable(7)=3.9
+    DHPenetrationTable(8)=3.6
+    DHPenetrationTable(9)=3.3
     DHPenetrationTable(10)=3.0
     ShellDiameter=3.7
     bShatterProne=true
