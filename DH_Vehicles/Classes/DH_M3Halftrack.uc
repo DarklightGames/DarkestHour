@@ -18,7 +18,6 @@ defaultproperties
     bHasTreads=true
     VehicleMass=8.5
     IdleTimeBeforeReset=300.0
-    VehicleSpikeTime=60.0
     PointValue=2.0
     ReinforcementCost=4
     MaxDesireability=1.2

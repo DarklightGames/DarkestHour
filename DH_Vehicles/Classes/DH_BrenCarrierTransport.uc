@@ -19,10 +19,10 @@ defaultproperties
     bHasTreads=true
     bSpecialTankTurning=true // because Bren Carrier is fully tracked
     VehicleMass=5.0
-    VehicleSpikeTime=60.0
     PointValue=2.0
     ReinforcementCost=3
     MaxDesireability=1.2
+    bMustBeInSquadToSpawn=true
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_ext'
@@ -69,20 +69,29 @@ defaultproperties
     WheelLatFrictionScale=3.0
 
     // Damage
-    Health=275
-    HealthMax=275.0
-    EngineHealth=125
+    Health=2000
+    HealthMax=2000.0
+    DamagedEffectHealthFireFactor=0.5
+    EngineHealth=50
     VehHitpoints(0)=(PointRadius=20.0,PointOffset=(X=-15.0,Y=0.0,Z=0.0)) // engine
     VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="Engine",PointOffset=(X=22.0,Y=0.0,Z=0.0),DamageMultiplier=1.0,HitPointType=HP_Engine)
     VehHitpoints(2)=(PointRadius=15.0,PointScale=1.0,PointBone="Engine",PointOffset=(X=0.0,Y=0.0,Z=30.0),DamageMultiplier=1.0,HitPointType=HP_Engine)
     VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="Engine",PointOffset=(X=27.0,Y=0.0,Z=30.0),DamageMultiplier=1.0,HitPointType=HP_Engine)
-    VehHitpoints(4)=(PointRadius=15.0,PointHeight=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-83.0,Y=0.0,Z=30.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
+    VehHitpoints(4)=(PointRadius=15.0,PointHeight=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-83.0,Y=0.0,Z=30.0),DamageMultiplier=2.0,HitPointType=HP_AmmoStore)
+    DirectHEImpactDamageMult=2.0
     TreadHitMaxHeight=7.0
     DamagedEffectScale=0.75
     DamagedEffectOffset=(X=-40.0,Y=10.0,Z=10.0)
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Carrier.Carrier_destroyed'
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
+
+    // Vehicle destruction
+    ExplosionDamage=85.0
+    ExplosionRadius=150.0
+    ExplosionSoundRadius=200.0
+    DestructionLinearMomentum=(Min=50.0,Max=100.0)
+    DestructionAngularMomentum=(Min=10.0,Max=50.0)
 
     FrontRightAngle=20.0 // angles set specifically for tread hits
     RearRightAngle=157.0

@@ -3919,7 +3919,7 @@ defaultproperties
     DestructionAngularMomentum=(Min=50.0,Max=150.0)
 
     // Vehicle reset/respawn
-    VehicleSpikeTime=10.0    // if disabled
+    VehicleSpikeTime=15.0    // if disabled
     IdleTimeBeforeReset=90.0 // if empty & no friendlies nearby
     FriendlyResetDistance=6000.0 // 100 meters
 
