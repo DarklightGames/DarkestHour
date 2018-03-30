@@ -7,7 +7,7 @@ class DH_GreyhoundCannonShell extends DHCannonShell;
 
 defaultproperties
 {
-    DHPenetrationTable(0)=6.5
+    DHPenetrationTable(0)=7.1
     DHPenetrationTable(1)=6.1
     DHPenetrationTable(2)=5.7
     DHPenetrationTable(3)=5.3
