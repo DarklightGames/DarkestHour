@@ -59,14 +59,14 @@ defaultproperties
     Health=2000
     HealthMax=2000.0
     DamagedEffectHealthFireFactor=0.5
-    EngineHealth=30
-    VehHitpoints(0)=(PointRadius=25.0,PointScale=1.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
-    VehHitpoints(1)=(PointRadius=18.0,PointScale=1.0,PointBone="Wheel_FR",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(2)=(PointRadius=18.0,PointScale=1.0,PointBone="Wheel_FL",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
-    VehHitpoints(3)=(PointRadius=9.0,PointScale=1.0,PointBone="Wheel_MR",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
-    VehHitpoints(4)=(PointRadius=9.0,PointScale=1.0,PointBone="Wheel_ML",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
-    VehHitpoints(5)=(PointRadius=9.0,PointScale=1.0,PointBone="Wheel_RR",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
-    VehHitpoints(6)=(PointRadius=9.0,PointScale=1.0,PointBone="Wheel_LR",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
+    EngineHealth=20
+    VehHitpoints(0)=(PointRadius=32.0,PointScale=1.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
+    VehHitpoints(1)=(PointRadius=24.0,PointScale=1.0,PointBone="Wheel_FR",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(2)=(PointRadius=24.0,PointScale=1.0,PointBone="Wheel_FL",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
+    VehHitpoints(3)=(PointRadius=12.0,PointScale=1.0,PointBone="Wheel_MR",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
+    VehHitpoints(4)=(PointRadius=12.0,PointScale=1.0,PointBone="Wheel_ML",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
+    VehHitpoints(5)=(PointRadius=12.0,PointScale=1.0,PointBone="Wheel_RR",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
+    VehHitpoints(6)=(PointRadius=12.0,PointScale=1.0,PointBone="Wheel_LR",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
     ImpactWorldDamageMult=1.0
     DirectHEImpactDamageMult=4.0
     HeavyEngineDamageThreshold=0.33
