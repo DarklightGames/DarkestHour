@@ -15,6 +15,11 @@ exec function SetGamePassword()
     BuildMutateCommand("SetGamePassword ", 30);
 }
 
+exec function ToggleLockWeapons()
+{
+    BuildMutateCommand("ToggleLockWeapons ", 31);
+}
+
 defaultproperties
 {
     MenuTitle="SERVER MENU (FOR VARIOUS SETTINGS)"
@@ -22,4 +27,7 @@ defaultproperties
 
     MenuText(1)="Set Game Password (leave blank to remove password)"
     MenuCommand(1)="*SetGamePassword"
+
+    MenuText(2)="Toggle Lock Weapons"
+    MenuCommand(2)="*ToggleLockWeapons"
 }

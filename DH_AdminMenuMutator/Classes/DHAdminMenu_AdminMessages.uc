@@ -38,6 +38,7 @@ var     localized string    DestroyActorInSights;
 var     localized string    ChangeAlliesSquadSize;
 var     localized string    ChangeAxisSquadSize;
 var     localized string    SetGamePasswordText;
+var     localized string    ToggleWeaponLockText;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -103,6 +104,8 @@ static function string GetString(optional int Switch, optional PlayerReplication
             return default.ChangeAxisSquadSize;
         case 30:
             return default.SetGamePasswordText;
+        case 31:
+            return default.ToggleWeaponLockText;
 
         default:
             return "";
@@ -147,4 +150,5 @@ defaultproperties
     ChangeAlliesSquadSize="Please specify the new allied squad size (between 8 and 12, or 0 to reset)"
     ChangeAxisSquadSize="Please specify the new axis squad size (8 and 12, or 0 to reset)"
     SetGamePasswordText="Please specify the new game password"
+    ToggleWeaponLockText="Press enter to confirm you want to toggle weapon locking on/off"
 }

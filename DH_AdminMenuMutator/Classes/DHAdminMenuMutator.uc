@@ -188,6 +188,11 @@ function Mutate(string MutateString, PlayerController Sender)
         {
             SetGamePassword(Words[2]);
         }
+        // Toggle lock all weapons (for setup phase)
+        else if (MutateOption ~= "ToggleLockWeapons")
+        {
+            ToggleIsInSetupPhase();
+        }
         // Drop single player at an objective or at a grid location or at their current location
         else if (MutateOption ~= "ParaDropPlayer")
         {
@@ -331,6 +336,24 @@ function PrivateMessageToPlayer(string PlayerName, string Message, optional bool
         {
             Log("DHAdminMenu: private message from" @ GetAdminName() @ "to '" $ PlayerName $ "':" @ Message);
         }
+    }
+}
+
+function ToggleIsInSetupPhase()
+{
+    local DHGameReplicationInfo DHGRI;
+
+    if (!IsLoggedInAsAdmin())
+    {
+        return;
+    }
+
+    DHGRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    // Get role info
+    if (DHGRI != none)
+    {
+        DHGRI.bIsInSetupPhase = !DHGRI.bIsInSetupPhase;
     }
 }
 
