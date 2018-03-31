@@ -49,5 +49,5 @@ defaultproperties
 //  Otherwise he has to open fire not knowing which way the gun is aimed, & only then can he correct the aim (so he may hit friendlies)
 //  In real life he would know where the MG was pointing because he would be holding it in his hands
 //  So this camera adjustment is just an effective form of substitute feedback about where the gun is pointing
-    FPCamPos=(X=-5.0,Y=0.0,Z=9.0)
+    FPCamPos=(X=-5.0,Y=0.0,Z=4.0)
 }
