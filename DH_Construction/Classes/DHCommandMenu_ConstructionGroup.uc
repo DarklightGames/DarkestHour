@@ -83,9 +83,9 @@ function OnSelect(int OptionIndex, vector Location)
 
         if (CW != none)
         {
-            if (CW.Proxy != none)
+            if (CW.ProxyCursor != none)
             {
-                CW.Proxy.SetConstructionClass(ConstructionClass);
+                CW.ProxyCursor.SetConstructionClass(ConstructionClass);
             }
         }
         else

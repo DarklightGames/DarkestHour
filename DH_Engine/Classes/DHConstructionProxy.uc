@@ -7,7 +7,10 @@ class DHConstructionProxy extends Actor
     dependson(DHConstruction);
 
 var class<DHConstruction>   ConstructionClass;
+
+var rotator                 Direction;
 var Actor                   GroundActor;
+var vector                  GroundNormal;
 
 var DHConstruction.ConstructionError    ProxyError;
 
@@ -256,8 +259,6 @@ function static color GetProxyErrorColor(DHConstruction.EConstructionErrorType P
 
 function Tick(float DeltaTime)
 {
-    local vector L, RL;
-    local rotator R;
     local DHConstruction.ConstructionError ProvisionalPositionError, NewProxyError;
 
     super.Tick(DeltaTime);
@@ -267,18 +268,10 @@ function Tick(float DeltaTime)
         Destroy();
     }
 
-    LocalRotation += (LocalRotationRate * DeltaTime);
-
-    // TODO: Combine getprovisionallocation and getpositionerror into one
-    // function able to be run on the client and the server independently!
+    LocalRotation += LocalRotationRate * DeltaTime; // TODO: move this to the weapon itself
 
     // An error may be thrown when determining the location, so store it here.
-    ProvisionalPositionError = GetProvisionalPosition(L, R);
-
-    // Set the location
-    SetLocation(L);
-    SetRotation(R);
-
+    ProvisionalPositionError = GetProvisionalPosition();
     NewProxyError = ConstructionClass.static.GetPlayerError(GetContext());
 
     if (NewProxyError.Type == ERROR_None)
@@ -305,6 +298,13 @@ function Tick(float DeltaTime)
         PawnOwner.ReceiveLocalizedMessage(class'DHConstructionErrorMessage', int(ProxyError.Type),,, self);
     }
 
+    UpdateProjector();
+}
+
+simulated function UpdateProjector()
+{
+    local vector RL;
+
     // NOTE: The relative location and rotation needs to be set every tick.
     // Without it, the projector seems to "drift" away from the object it's
     // attached to. This is probably due to some sort of cumulative floating
@@ -320,100 +320,60 @@ function Tick(float DeltaTime)
     }
 }
 
-// This function gets the provisional location and rotation of the construction.
-function DHConstruction.ConstructionError GetProvisionalPosition(out vector OutLocation, out rotator OutRotation)
+simulated function TraceAlternate()
 {
-    local vector TraceStart, TraceEnd, HitLocation, HitNormal, OtherHitNormal, Left, Forward, X, Y, Z, HitNormalAverage, BaseLocation, CeilingHitLocation, CeilingHitNormal;
-    local Actor TempHitActor, HitActor;
+}
+
+// This function gets the provisional location and rotation of the construction.
+
+// TODO: this function could simply be the function that *alters* the original position, and there could be.
+function DHConstruction.ConstructionError GetProvisionalPosition()
+{
+    local vector TraceStart, TraceEnd, HitLocation, HitNormal, OtherHitNormal, Forward, Left, X, Y, Z, HitNormalAverage, BaseLocation;
     local rotator R;
-    local float GroundSlopeDegrees, AngleRadians, SquareLength, CircumferenceInMeters;
+    local float GroundSlopeDegrees, AngleRadians, CircumferenceInMeters;
     local DHConstruction.ConstructionError E;
     local int i, ArcLengthTraceCount;
     local TerrainInfo TI;
     local Material HitMaterial;
     local bool bIsTerrainSurfaceTypeAllowed;
     local DHGameReplicationInfo GRI;
+    local Actor HitActor;
 
-    if (PawnOwner == none || PlayerOwner == none || ConstructionClass == none)
+    GRI = DHGameReplicationInfo(Level.GetLocalPlayerController().GameReplicationInfo);
+
+    if (ConstructionClass == none || GRI == none)
     {
         E.Type = ERROR_Fatal;
         return E;
     }
 
-    GRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
-
-    if (GRI == none)
-    {
-        E.Type = ERROR_Fatal;
-        return E;
-    }
-
-    // Trace out into the world and try and hit something static.
-    TraceStart = PawnOwner.Location + PawnOwner.EyePosition();
-    TraceEnd = TraceStart + (vector(PlayerOwner.CalcViewRotation) * class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProxyTraceDepthMeters));
-
-    foreach TraceActors(class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
-    {
-        if (TempHitActor.bStatic && !TempHitActor.IsA('ROBulletWhipAttachment') && !TempHitActor.IsA('Volume'))
-        {
-            HitActor = TempHitActor;
-            break;
-        }
-    }
-
-    if (HitActor == none)
-    {
-        // We didn't hit anything, trace down to the ground in hopes of finding
-        // something solid to rest on
-        TraceStart = TraceEnd;
-        TraceEnd = TraceStart + vect(0, 0, -1) * class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProxyTraceHeightMeters);
-
-        foreach TraceActors(class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
-        {
-            if (TempHitActor.bStatic && !TempHitActor.IsA('ROBulletWhipAttachment') && !TempHitActor.IsA('Volume'))
-            {
-                HitActor = TempHitActor;
-                break;
-            }
-        }
-    }
-
-    if (GroundActor != HitActor)
-    {
-        GroundActor = HitActor;
-
-        // Ground actor changed so let's re-evaluate our collison size.
-        // TODO: we may want to do more than just re-evaluate the collision size
-        // in the future, so moving `UpdateCollisionSize` to `UpdateProxy` and
-        // calling `UpdateProxy` might be a more appropriate route.
-        UpdateCollisionSize();
-    }
-
-    if (HitActor == none)
+    if (GroundActor == none)
     {
         // Didn't hit anything!
         E.Type = ERROR_NoGround;
-        // TODO: verify correctness
-        BaseLocation = TraceStart;
-        R = PlayerOwner.CalcViewRotation;
+        BaseLocation = Location;
+        R = Direction;
         R.Pitch = 0;
         R.Roll = 0;
         Forward = vector(R);
     }
     else
     {
-        BaseLocation = HitLocation;
+        BaseLocation = Location;
 
-        if (ConstructionClass.default.bCanOnlyPlaceOnTerrain && !HitActor.IsA('TerrainInfo'))
+        if (ConstructionClass.default.bCanOnlyPlaceOnTerrain && !GroundActor.IsA('TerrainInfo'))
         {
             E.Type = ERROR_NotOnTerrain;
         }
 
+        HitNormal = GroundNormal;
+
         // Terrain alignment steps.
         // Get the terrain info that's hit
-        if (ConstructionClass.default.bSnapToTerrain && HitActor.IsA('TerrainInfo'))
+        if (ConstructionClass.default.bSnapToTerrain && GroundActor.IsA('TerrainInfo'))
         {
-            TI = TerrainInfo(HitActor);
+            TI = TerrainInfo(GroundActor);
 
             // Transform location into the terrain's local space.
             BaseLocation -= TI.Location;
@@ -484,7 +444,9 @@ function DHConstruction.ConstructionError GetProvisionalPosition(out vector OutL
             HitNormal = vect(0, 0, 1);
         }
 
-        Forward = Normal(vector(PlayerOwner.CalcViewRotation));
+        Log("HitNormal" @ HitNormal);
+
+        Forward = Normal(vector(Direction));
         Left = Forward cross HitNormal;
         Forward = HitNormal cross Left;
 
@@ -581,69 +543,13 @@ function DHConstruction.ConstructionError GetProvisionalPosition(out vector OutL
             HitNormal = HitNormalAverage;
         }
 
-        if (ConstructionClass.default.bInheritsOwnerRotation)
-        {
-            Forward = Normal(vector(PlayerOwner.CalcViewRotation));
-            Left = Forward cross HitNormal;
-            Forward = HitNormal cross Left;
-        }
-        else
-        {
-            Forward = vect(1, 0, 0);
-        }
+        Forward = Normal(vector(Direction));
+        Left = Forward cross HitNormal;
+        Forward = HitNormal cross Left;
     }
 
-    OutLocation = BaseLocation + (ConstructionClass.static.GetPlacementOffset(GetContext()) << rotator(Forward));
-    OutRotation = QuatToRotator(QuatProduct(QuatFromRotator(LocalRotation), QuatFromRotator(rotator(Forward))));
-
-    if (E.Type == ERROR_None && !ConstructionClass.default.bCanPlaceIndoors)
-    {
-        // Knowing whether or not we are "indoors" is somewhat subjective,
-        // therefore, any attempt to systemize will not be 100% correct to all
-        // people all the time.
-        //
-        // The primary reason for classifying constructions as being unable to
-        // be built inside is to stop players from blocking tight entrances and
-        // walkways (eg. stairs, hallways, doors etc.)
-        //
-        // Most of these tight spaces are inside of buildings, where BSP and
-        // static meshes are likely to be on the floor. It's also true that most
-        // of these spaces have a fairly low roof. Therefore, we hit on the
-        // following solution.
-        //
-        // A construction is deemed "inside" if both of these are true:
-        // 1. The floor below it is BSP or static mesh.
-        // 2. The space above it is obstructed with static geometry.
-        //
-        // This will work perfectly fine for the vast majority of cases. Some
-        // cases where this logic could produce incorrect results include:
-        // 1. On a bridge with low metal girders. [FALSE POSITIVE]
-        // 2. On the top floor of a house with no roof. [FALSE NEGATIVE]
-        // 3. In a garage where the floor is terrain. [FALSE NEGATIVE]
-        //
-        // We are more concerned with reducing false negatives (allowing
-        // placement when it would be detrimental to gameplay) than eliminating
-        // false positives, so a DHRestrictionVolume can be used by levelers to
-        // plug any holes left open by the programmatic logic.
-        if (HitActor != none && HitActor.bStatic && !HitActor.IsA('TerrainInfo'))
-        {
-            // Determine the size of the extents trace (a square that is
-            // inscribed inside a circle with the collision radius).
-            SquareLength = Sin(Pi / 4) * CollisionRadius;
-
-            // Do an extents trace upwards to determine if there is a ceiling
-            // above us. We start the trace slightly higher than the ground
-            // because uneven terrain tends to produce false positives.
-            TraceStart = OutLocation + (vect(0, 0, 1) * ConstructionClass.default.CollisionHeight / 2);
-            TraceEnd = OutLocation + (vect(0, 0, 1) * class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.IndoorsCeilingHeightInMeters));
-            HitActor = Trace(CeilingHitLocation, CeilingHitNormal, TraceEnd, TraceStart,, vect(1.0, 1.0, 0.0) * SquareLength);
-
-            if (HitActor != none)
-            {
-                E.Type = ERROR_Indoors;
-            }
-        }
-    }
+    SetLocation(BaseLocation + (ConstructionClass.static.GetPlacementOffset(GetContext()) << rotator(Forward)));
+    SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(LocalRotation), QuatFromRotator(rotator(Forward)))));
 
     return E;
 }
@@ -659,10 +565,12 @@ function DHConstruction.ConstructionError GetPositionError()
     local ROMineVolume MV;
     local DHSpawnPointBase SP;
     local DHLocationHint LH;
-    local float OtherRadius, OtherHeight, F, DistanceMin, Distance;
+    local float OtherRadius, OtherHeight, F, DistanceMin, Distance, SquareLength;
     local DHGameReplicationInfo GRI;
     local int i, ObjectiveIndex;
     local DHConstruction.ConstructionError E;
+    local vector TraceStart, TraceEnd, CeilingHitLocation, CeilingHitNormal;
+    local Actor HitActor;
 
     GRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
 
@@ -796,6 +704,57 @@ function DHConstruction.ConstructionError GetPositionError()
         }
     }
 
+
+    if (!ConstructionClass.default.bCanPlaceIndoors)
+    {
+        // Knowing whether or not we are "indoors" is somewhat subjective,
+        // therefore, any attempt to systemize will not be 100% correct to all
+        // people all the time.
+        //
+        // The primary reason for classifying constructions as being unable to
+        // be built inside is to stop players from blocking tight entrances and
+        // walkways (eg. stairs, hallways, doors etc.)
+        //
+        // Most of these tight spaces are inside of buildings, where BSP and
+        // static meshes are likely to be on the floor. It's also true that most
+        // of these spaces have a fairly low roof. Therefore, we hit on the
+        // following solution.
+        //
+        // A construction is deemed "inside" if both of these are true:
+        // 1. The floor below it is BSP or static mesh.
+        // 2. The space above it is obstructed with static geometry.
+        //
+        // This will work perfectly fine for the vast majority of cases. Some
+        // cases where this logic could produce incorrect results include:
+        // 1. On a bridge with low metal girders. [FALSE POSITIVE]
+        // 2. On the top floor of a house with no roof. [FALSE NEGATIVE]
+        // 3. In a garage where the floor is terrain. [FALSE NEGATIVE]
+        //
+        // We are more concerned with reducing false negatives (allowing
+        // placement when it would be detrimental to gameplay) than eliminating
+        // false positives, so a DHRestrictionVolume can be used by levelers to
+        // plug any holes left open by the programmatic logic.
+        if (GroundActor != none && GroundActor.bStatic && !GroundActor.IsA('TerrainInfo'))
+        {
+            // Determine the size of the extents trace (a square that is
+            // inscribed inside a circle with the collision radius).
+            SquareLength = Sin(Pi / 4) * CollisionRadius;
+
+            // Do an extents trace upwards to determine if there is a ceiling
+            // above us. We start the trace slightly higher than the ground
+            // because uneven terrain tends to produce false positives.
+            TraceStart = Location + (vect(0, 0, 1) * ConstructionClass.default.CollisionHeight / 2);
+            TraceEnd = Location + (vect(0, 0, 1) * class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.IndoorsCeilingHeightInMeters));
+            HitActor = Trace(CeilingHitLocation, CeilingHitNormal, TraceEnd, TraceStart,, vect(1.0, 1.0, 0.0) * SquareLength);
+
+            if (HitActor != none)
+            {
+                E.Type = ERROR_Indoors;
+                return E;
+            }
+        }
+    }
+
     // Don't allow constructions within 2 meters of spawn points or location hints.
     foreach RadiusActors(class'DHSpawnPointBase', SP, CollisionRadius + class'DHUnits'.static.MetersToUnreal(2.0))
     {
@@ -875,6 +834,26 @@ function DHConstruction.ConstructionError GetPositionError()
     E = ConstructionClass.static.GetCustomProxyError(self);
 
     return E;
+}
+
+function UpdateParameters(vector Location, rotator Direction, Actor GroundActor, vector GroundNormal)
+{
+    self.Direction = Direction;
+
+    SetLocation(Location);
+
+    GroundNormal = NewGroundNormal;
+
+    if (GroundActor != NewGroundActor)
+    {
+        GroundActor = NewGroundActor;
+
+        // Ground actor changed so let's re-evaluate our collison size.
+        // TODO: we may want to do more than just re-evaluate the collision size
+        // in the future, so moving `UpdateCollisionSize` to `UpdateProxy` and
+        // calling `UpdateProxy` might be a more appropriate route.
+        UpdateCollisionSize();
+    }
 }
 
 defaultproperties

@@ -5,8 +5,9 @@
 
 class DH_ConstructionWeapon extends DHWeapon;
 
-var class<DHConstruction>   ConstructionClass;
-var DHConstructionProxy     Proxy;
+var class<DHConstruction>       ConstructionClass;
+var DHConstructionProxy         ProxyCursor;
+var array<DHConstructionProxy>  ControlPoints;
 
 replication
 {
@@ -17,14 +18,27 @@ replication
 
 simulated event Tick(float DeltaTime)
 {
+    local Actor HitActor;
+    local vector HitLocation, HitNormal;
+    local PlayerController PC;
+
     super.Tick(DeltaTime);
 
-    // HACK: This inventory system doesn't like what we're trying to do with it.
-    // This bit of garbage saves us if we get into a state where the proxy has
-    // been destroyed but the weapon is still hanging around.
-    if (Role < ROLE_Authority && InstigatorIsLocallyControlled())
+    if (InstigatorIsLocallyControlled())
     {
-        if (Proxy == none && Instigator.Weapon == self && Instigator.Weapon.OldWeapon == none)
+        if (ProxyCursor != none)
+        {
+            PC = PlayerController(Instigator.Controller);
+
+            TraceFromPlayer(HitActor, HitLocation, HitNormal);
+
+            ProxyCursor.UpdateParameters(HitLocation, PC.CalcViewRotation, HitActor, HitNormal);
+        }
+
+        // HACK: This inventory system doesn't like what we're trying to do with it.
+        // This bit of garbage saves us if we get into a state where the proxy has
+        // been destroyed but the weapon is still hanging around.
+        if (ProxyCursor == none && Instigator.Weapon == self && Instigator.Weapon.OldWeapon == none)
         {
             // We've no weapon to go back to so just put this down, subsequently destroying it
             PutDown();
@@ -34,12 +48,27 @@ simulated event Tick(float DeltaTime)
     }
 }
 
+simulated function DestroyProxies()
+{
+    local int i;
+
+    if (ProxyCursor != none)
+    {
+        ProxyCursor.Destroy();
+    }
+
+    for (i = 0; i < ControlPoints.Length; ++i)
+    {
+        if (ControlPoints[i] != none)
+        {
+            ControlPoints[i].Destroy();
+        }
+    }
+}
+
 simulated function Destroyed()
 {
-    if (Proxy != none)
-    {
-        Proxy.Destroy();
-    }
+    DestroyProxies();
 
     super.Destroyed();
 }
@@ -71,13 +100,10 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
     if (InstigatorIsLocallyControlled())
     {
-        if (Proxy != none)
-        {
-            Proxy.Destroy();
-        }
+        DestroyProxies();
 
-        Proxy = Spawn(class'DHConstructionProxy', Instigator);
-        Proxy.SetConstructionClass(default.ConstructionClass);
+        ProxyCursor = Spawn(class'DHConstructionProxy', Instigator);
+        ProxyCursor.SetConstructionClass(default.ConstructionClass);
     }
 }
 
@@ -107,10 +133,7 @@ simulated state LoweringWeapon
 
 simulated function bool PutDown()
 {
-    if (Proxy != none)
-    {
-        Proxy.Destroy();
-    }
+    DestroyProxies();
 
     return super.PutDown();
 }
@@ -123,10 +146,7 @@ simulated function ROIronSights()
 
     if (InstigatorIsLocallyControlled() && P != none && P.CanSwitchWeapon())
     {
-        if (Proxy != none)
-        {
-            Proxy.Destroy();
-        }
+        DestroyProxies();
 
         if (Instigator.Weapon.OldWeapon != none)
         {
@@ -147,10 +167,11 @@ simulated function Fire(float F)
 {
     if (InstigatorIsLocallyControlled())
     {
-        if (Proxy != none && Proxy.ProxyError.Type == ERROR_None)
+        if (ProxyCursor != none && ProxyCursor.ProxyError.Type == ERROR_None)
         {
-            ServerCreateConstruction(Proxy.ConstructionClass, Proxy.GroundActor, Proxy.Location, Proxy.Rotation);
-            Proxy.Destroy();
+            ServerCreateConstruction(ProxyCursor.ConstructionClass, ProxyCursor.GroundActor, ProxyCursor.Location, ProxyCursor.Rotation);
+
+            DestroyProxies();
 
             if (Instigator.Weapon.OldWeapon != none)
             {
@@ -173,30 +194,94 @@ simulated function Fire(float F)
     }
 }
 
-simulated function AltFire(float F) { }
+// TODO: wouldn't be the worst idea to move this to the weapon itself
+simulated function TraceFromPlayer(out Actor HitActor, out vector HitLocation, out vector HitNormal)  // TODO: this needs to output a location and groundactor?
+{
+    local PlayerController PC;
+    local Actor TempHitActor;
+    local vector TraceStart, TraceEnd;
+
+    if (Instigator == none)
+    {
+        return;
+    }
+
+    PC = PlayerController(Instigator.Controller);
+
+    // Trace out into the world and try and hit something static.
+    TraceStart = Instigator.Location + Instigator.EyePosition();
+    TraceEnd = TraceStart + (vector(PC.CalcViewRotation) * class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProxyTraceDepthMeters));
+
+    foreach TraceActors(class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
+    {
+        if (TempHitActor.bStatic && !TempHitActor.IsA('ROBulletWhipAttachment') && !TempHitActor.IsA('Volume'))
+        {
+            HitActor = TempHitActor;
+            break;
+        }
+    }
+
+    if (HitActor == none)
+    {
+        // We didn't hit anything, trace down to the ground in hopes of finding
+        // something solid to rest on
+        TraceStart = TraceEnd;
+        TraceEnd = TraceStart + vect(0, 0, -1) * class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProxyTraceHeightMeters);
+
+        foreach TraceActors(class'Actor', TempHitActor, HitLocation, HitNormal, TraceEnd, TraceStart)
+        {
+            if (TempHitActor.bStatic && !TempHitActor.IsA('ROBulletWhipAttachment') && !TempHitActor.IsA('Volume'))
+            {
+                HitActor = TempHitActor;
+                break;
+            }
+        }
+
+        if (HitActor == none)
+        {
+            HitLocation = TraceStart;
+        }
+    }
+}
+
+simulated function AltFire(float F)
+{
+    local DHConstructionProxy ControlPoint;
+
+    if (ProxyCursor == none || ProxyCursor.ProxyError.Type != ERROR_None)
+    {
+        return;
+    }
+
+    ControlPoint = Spawn(class'DHConstructionProxy', Instigator);
+    ControlPoint.SetConstructionClass(ConstructionClass);
+    ControlPoint.SetLocation(ProxyCursor.Location);
+    ControlPoint.SetRotation(ProxyCursor.Rotation);
+    ControlPoints[ControlPoints.Length] = ControlPoint;
+}
 
 // Modified to simply reset the location rotation of the proxy.
 simulated exec function ROManualReload()
 {
-    if (Proxy != none)
+    if (ProxyCursor != none)
     {
         // This resets the proxy.
         // TODO: make this a bit more readable, use 'Reset'?
-        Proxy.SetConstructionClass(Proxy.ConstructionClass);
+        ProxyCursor.SetConstructionClass(ProxyCursor.ConstructionClass);
     }
 }
 
 simulated function bool WeaponLeanLeft()
 {
-    if (Proxy != none)
+    if (ProxyCursor != none)
     {
-        if (Proxy.ConstructionClass.default.bSnapRotation)
+        if (ProxyCursor.ConstructionClass.default.bSnapRotation)
         {
-            Proxy.LocalRotation.Yaw -= Proxy.ConstructionClass.default.RotationSnapAngle;
+            ProxyCursor.LocalRotation.Yaw -= ProxyCursor.ConstructionClass.default.RotationSnapAngle;
         }
         else
         {
-            Proxy.LocalRotationRate.Yaw = -Proxy.ConstructionClass.default.LocalRotationRate;
+            ProxyCursor.LocalRotationRate.Yaw = -ProxyCursor.ConstructionClass.default.LocalRotationRate;
         }
 
         return true;
@@ -207,15 +292,15 @@ simulated function bool WeaponLeanLeft()
 
 simulated function bool WeaponLeanRight()
 {
-    if (Proxy != none)
+    if (ProxyCursor != none)
     {
-        if (Proxy.ConstructionClass.default.bSnapRotation)
+        if (ProxyCursor.ConstructionClass.default.bSnapRotation)
         {
-            Proxy.LocalRotation.Yaw += Proxy.ConstructionClass.default.RotationSnapAngle;
+            ProxyCursor.LocalRotation.Yaw += ProxyCursor.ConstructionClass.default.RotationSnapAngle;
         }
         else
         {
-            Proxy.LocalRotationRate.Yaw = Proxy.ConstructionClass.default.LocalRotationRate;
+            ProxyCursor.LocalRotationRate.Yaw = ProxyCursor.ConstructionClass.default.LocalRotationRate;
         }
 
         return true;
@@ -226,17 +311,17 @@ simulated function bool WeaponLeanRight()
 
 simulated function WeaponLeanLeftReleased()
 {
-    if (Proxy != none)
+    if (ProxyCursor != none)
     {
-        Proxy.LocalRotationRate.Yaw = 0;
+        ProxyCursor.LocalRotationRate.Yaw = 0;
     }
 }
 
 simulated function WeaponLeanRightReleased()
 {
-    if (Proxy != none)
+    if (ProxyCursor != none)
     {
-        Proxy.LocalRotationRate.Yaw = 0;
+        ProxyCursor.LocalRotationRate.Yaw = 0;
     }
 }
 

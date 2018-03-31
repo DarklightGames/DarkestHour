@@ -91,7 +91,6 @@ var     int     RotationSnapAngle;
 var     rotator StartRotationMin;
 var     rotator StartRotationMax;
 var     int     LocalRotationRate;
-var     bool    bInheritsOwnerRotation;         // If true, the base rotation of the placement (prior to local rotation) will be inherited from the owner.
 var     bool    bCanPlaceInObjective;
 var     int     SquadMemberCountMinimum;        // The number of members you must have in your squad to create this.
 var     float   ArcLengthTraceIntervalInMeters; // The arc-length interval, in meters, used when tracing "outwards" during placement to check for blocking objects.
@@ -1064,8 +1063,6 @@ defaultproperties
     PokeTerrainRadius=32
     PokeTerrainDepth=32
     TerrainScaleMax=256.0
-    RotationSnapAngle=16384
-    bInheritsOwnerRotation=true
     bShouldAlignToGround=true
     ArcLengthTraceIntervalInMeters=1.0
 
