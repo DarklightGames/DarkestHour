@@ -317,6 +317,13 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
         if (ROVehicle(Victim) != none && ROVehicle(Victim).Health > 0)
         {
             CheckVehicleOccupantsRadiusDamage(ROVehicle(Victim), DamageAmount, DamageRadius, DamageType, Momentum, HitLocation);
+
+            // If vehicle's engine is vulnerable to "grenades", then we can cause some damage to the engine!
+            if (V.EngineDamageFromGrenadeModifier > 0.0)
+            {
+                // Cause reduced damage to vehicle's engine
+                V.DamageEngine(DamageScale * DamageAmount * V.EngineDamageFromGrenadeModifier, Instigator, VictimLocation - 0.5 * (Victim.CollisionHeight + Victim.CollisionRadius) * Direction, DamageScale * Momentum * Direction, DamageType);
+            }
         }
     }
 
@@ -591,7 +598,7 @@ function BlowUp(vector HitLocation)
         if (bBounce)
         {
             // If the grenade hasn't landed, do 1/3 less damage
-            // This isn't supposed to be realistic, its supposed to make airbursts less effective so players are more apt to through grenades more authentically
+            // This isn't supposed to be realistic, its supposed to make airbursts less effective so players are more apt to throw grenades more authentically
             DelayedHurtRadius(Damage * 0.6666, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
         }
         else

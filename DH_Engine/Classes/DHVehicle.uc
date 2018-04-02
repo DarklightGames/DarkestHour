@@ -62,6 +62,7 @@ var     float       FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAng
 var     float       HeavyEngineDamageThreshold;  // proportion of remaining engine health below which the engine is so badly damaged it limits speed
 var     bool        bCanCrash;                   // vehicle can be damaged by static geometry during impacts (damages the engine)
 var     bool        bWheelsAreDamaged;           // if wheels are damaged, the vehicle is slowed down
+var     float       EngineDamageFromGrenadeModifier;  // if engine can be damaged, by grenades (can't check bAPC & bTreaded, because there might be a vehile with engine exposed)
 var     float       DamagedWheelSpeedFactor;     // the max speed the vehicle can go if wheels are damaged (1.0 is no change)
 var     float       ImpactWorldDamageMult;       // multiplier for world geometry impact damage when vehicle bCanCrash
 var     float       DirectHEImpactDamageMult;    // damage multiplier for direct HE impact (direct hits with HE rounds) defaults: 1.0
@@ -1920,8 +1921,10 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     Damage *= DamageModifier;
 
-    // Exit if no damage
-    if (Damage < 1)
+    // If damage is less than 1 AND this is NOT a vehicle with damageable wheels, exit
+    // The fucntion will exit shortly, but only after we check if the hit was on a wheel (this is for APCs with damageable wheels like HTs)
+    // This is useful as we don't have to call IsPointShot() for vehicles without damagable wheels when damage is <1 (which will be quite often)
+    if (Damage < 1 && !HasDamageableWheels())
     {
         return;
     }
@@ -1932,6 +1935,12 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     {
         if (IsPointShot(HitLocation, Momentum, 1.0, i))
         {
+            // Okay if damage is < 1 AND its not a "wheel" hit, then continue to the next, otherwise continue
+            if (Damage < 1 && VehHitpoints[i].HitPointType != HP_Driver)
+            {
+                continue;
+            }
+
             // Engine hit
             if (VehHitpoints[i].HitPointType == HP_Engine)
             {
@@ -1972,6 +1981,12 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         }
     }
 
+    // Check damage again, this time without acception for wheels
+    if (Damage < 1)
+    {
+        return;
+    }
+
     // Check if we hit & damaged either track
     if (bHasTreads && TreadDamageMod >= TreadDamageThreshold)
     {
@@ -1981,10 +1996,15 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // Call the Super from Vehicle (skip over others)
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
-    // If a vehicle's health is lower than DamagedEffectHealthFireFactor, then kill engine (as the engine is on fire)
-    if (Health <= (default.HealthMax * default.DamagedEffectHealthFireFactor) && Health > 0)
+    // If a vehicle's health is lower than DamagedEffectHealthFireFactor OR
+    // If the vehicle is APC or Treaded and is empty and damage is significant, just set fire the engine (and spike the vehicle)
+    // Theel TODO: "significant" damage should be based on something
+    if ((Health <= (default.HealthMax * default.DamagedEffectHealthFireFactor) && Health > 0) ||
+        ((bHasTreads || bIsApc) && IsVehicleEmpty() && Damage >= 100))
     {
         EngineHealth = 0;
+        bSpikedVehicle = true;
+        SetSpikeTimer();
         SetEngine();
     }
 }
@@ -2129,8 +2149,8 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
             PlaySound(DamagedShutDownSound, SLOT_None, FClamp(Abs(Throttle), 0.3, 0.75));
         }
 
-        // There is no point in calling SetEngine() if the vehicle is destroyed and already burning
-        if (Health > 0 && DamagedEffectHealthFireFactor != 1.0)
+        // There is no point in calling SetEngine() if the vehicle is destroyed
+        if (Health > 0)
         {
             SetEngine();
             MaybeDestroyVehicle();
@@ -3521,6 +3541,22 @@ function bool IsFactorysLastVehicle()
 // Implemented in armored vehicle subclass, but useful here to facilitate a generic entry functions in this class
 function bool AreCrewPositionsLockedForPlayer(Pawn P, optional bool bNoMessageToPlayer)
 {
+    return false;
+}
+
+// New function to determine if it has wheels that can be damaged
+function bool HasDamageableWheels()
+{
+    local int i;
+
+    for (i = 0; i < VehHitpoints.Length; ++i)
+    {
+        if (VehHitpoints[i].HitPointType == HP_Driver) // Driver repurposed as a wheel
+        {
+            return true;
+        }
+    }
+
     return false;
 }
 

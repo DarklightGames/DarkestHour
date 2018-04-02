@@ -512,6 +512,12 @@ simulated function HitWall(vector HitNormal, Actor Wall)
                         Level.Game.Broadcast(self, "Hit gunsight optics");
                     }
                 }
+                // This allows VehicleMG bullets to damage wheels of APCs
+                else if (DHVehicle(HitVehicle) != none && DHVehicle(HitVehicle).bIsAPC && DHVehicle(HitVehicle).HasDamageableWheels())
+                {
+                    UpdateInstigator();
+                    Wall.TakeDamage(Damage - (20.0 * (1.0 - (VSize(Velocity) / default.Speed))), Instigator, Location, MomentumTransfer * Normal(Velocity), MyDamageType);
+                }
             }
             else if (Vehicle(Wall) != none || ROVehicleWeapon(Wall) != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
             {

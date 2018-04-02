@@ -44,9 +44,9 @@ defaultproperties
     GearRatios(0)=-0.3
     GearRatios(3)=0.55
     GearRatios(4)=1.15
-    TorqueCurve=(Points=((InVal=0.0,OutVal=18.0),(InVal=200.0,OutVal=12.0),(InVal=600.0,OutVal=5.0),(InVal=1200.0,OutVal=2.0),(InVal=2000.0,OutVal=0.5)))
-    SteerSpeed=60.0
-    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=48.0),(InVal=200.0,OutVal=28.0),(InVal=600.0,OutVal=5.0),(InVal=1000000000.0,OutVal=0.0)))
+    TorqueCurve=(Points=((InVal=0.0,OutVal=24.0),(InVal=200.0,OutVal=12.0),(InVal=600.0,OutVal=5.0),(InVal=1200.0,OutVal=2.0),(InVal=2000.0,OutVal=0.5)))
+    SteerSpeed=64.0
+    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=64.0),(InVal=200.0,OutVal=32.0),(InVal=600.0,OutVal=5.0),(InVal=1000000000.0,OutVal=0.0)))
 
     // Physics wheels properties
     WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.2),(InVal=600.0,OutVal=0.001),(InVal=10000000000.0,OutVal=0.0)))
@@ -65,9 +65,10 @@ defaultproperties
     VehHitpoints(1)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_R_1",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     VehHitpoints(2)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_L_1",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     DamagedWheelSpeedFactor=0.65 // 65% of MaxCriticalSpeed will be max speed if wheels are damaged
+    EngineDamageFromGrenadeModifier=0.05
     DirectHEImpactDamageMult=2.0
     ImpactWorldDamageMult=2.0
-    TreadHitMaxHeight=2.5
+    TreadHitMaxHeight=64.0
     DamagedEffectScale=0.75
     DamagedEffectOffset=(X=120.0,Y=0.0,Z=60.0)
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
