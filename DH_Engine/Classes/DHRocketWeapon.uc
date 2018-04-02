@@ -165,6 +165,16 @@ simulated function bool CanFire(optional bool bShowFailureMessage)
         return false;
     }
 
+    if (VSize(Instigator.Velocity) > 0 || (Instigator.Base != none && VSize(Instigator.Base.Velocity) > 0))
+    {
+        if (bShowFailureMessage && InstigatorIsHumanControlled())
+        {
+            Instigator.ReceiveLocalizedMessage(WarningMessageClass, 7,,, self); // must be stationary to fire
+        }
+
+        return false;
+    }
+
     return true;
 }
 

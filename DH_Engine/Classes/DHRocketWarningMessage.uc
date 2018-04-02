@@ -6,12 +6,13 @@
 class DHRocketWarningMessage extends ROCriticalMessage
     abstract;
 
-var     localized string    NoHipFire;
-var     localized string    CrouchOrRestToFire;
-var     localized string    ProneOrRestToFire;
-var     localized string    NoProneReload;
-var     localized string    ProneOrRestToReload;
-var     localized string    ShoulderForAssistedReload;
+var     localized string    NoHipFire,
+                            CrouchOrRestToFire,
+                            ProneOrRestToFire,
+                            NoProneReload,
+                            ProneOrRestToReload,
+                            ShoulderForAssistedReload,
+                            CantBeMoving;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -41,6 +42,9 @@ static function string GetString(optional int Switch, optional PlayerReplication
         case 6:
             S = default.ShoulderForAssistedReload;
             break;
+        case 7:
+            S = default.CantBeMoving;
+            break;
         default:
             break;
     }
@@ -63,4 +67,5 @@ defaultproperties
     NoProneReload="You cannot reload the {0} while prone"
     ProneOrRestToReload="You need to be prone or weapon rested to reload the {0}"
     ShoulderForAssistedReload="You must shoulder the {0} for an assisted reload"
+    CantBeMoving="You must be stationary to fire the {0}"
 }
