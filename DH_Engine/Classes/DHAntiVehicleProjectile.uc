@@ -437,7 +437,8 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 
                 ModifiedImpactDamage = ImpactDamage;
 
-                if (DHVehicle(Wall) != none)
+                // Deal HE bonus damage to vehicle
+                if (DHVehicle(Wall) != none && RoundType == RT_HE)
                 {
                     ModifiedImpactDamage *= DHVehicle(Wall).DirectHEImpactDamageMult;
                 }
