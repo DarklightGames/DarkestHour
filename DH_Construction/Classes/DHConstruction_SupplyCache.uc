@@ -12,6 +12,7 @@ var DHConstructionSupplyAttachment SupplyAttachment;
 var class<DHConstructionSupplyAttachment> SupplyAttachmentClass;
 
 var() int InitialSupplyCount;
+var() int BonusSupplyGenerationRate;
 
 simulated function OnConstructed()
 {
@@ -30,6 +31,7 @@ simulated function OnConstructed()
         SupplyAttachment.SetTeamIndex(GetTeamIndex());
         SupplyAttachment.OnSupplyCountChanged = MyOnSupplyCountChanged;
         SupplyAttachment.SetSupplyCount(InitialSupplyCount);
+        SupplyAttachment.BonusSupplyGenerationRate = default.BonusSupplyGenerationRate;
         SupplyAttachment.bHidden = true;
     }
 }

@@ -45,7 +45,8 @@ var bool                bIsBaseInitialized;
 var bool                bCanGenerateSupplies;               // Whether or not this supply attachment is able to generate supplies.
 var int                 SupplyDepositInterval;              // The amount of seconds before generated supplies are deposited into the supply count.
 var int                 SupplyDepositCounter;               // The next time that generated supplies will be deposited.
-var int                 SupplyGenerationRate;               // The amount of supplies that are able to be generated every minute.
+var int                 SupplyGenerationRate;               // The base amount of supplies that are generated every minute, gets reduced per cache.
+var int                 BonusSupplyGenerationRate;          // Bonus amount of supplies that are generated on top of SupplyGenerationRate every minute (does not get reduced per # of caches).
 
 replication
 {
@@ -65,7 +66,7 @@ simulated function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        SupplyCount = SupplyCountMax;
+        SupplyCount = default.SupplyCount;
 
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
@@ -178,7 +179,7 @@ function Timer()
     local Pawn Pawn;
     local DHPawn P;
     local DHVehicle V;
-    local int i, Index, SuppliesToDeposit;
+    local int i, Index, SuppliesToDeposit, NumOfGeneratingSupplyPoints;
     local array<Pawn> NewTouchingPawns;
     local DHGameReplicationInfo GRI;
     local float X, Y;
@@ -255,8 +256,19 @@ function Timer()
 
         if (SupplyDepositCounter >= SupplyDepositInterval)
         {
-            // Deposit the supplies.
-            SuppliesToDeposit = float(SupplyGenerationRate) / 60.0 * SupplyDepositInterval;
+            // Get number of generating supply points for the team
+            NumOfGeneratingSupplyPoints = Clamp(GRI.GetNumberOfGeneratingSupplyPoints(TeamIndex), 1, 255);
+
+            // Calculate the shared generation
+            SuppliesToDeposit = float(SupplyGenerationRate / NumOfGeneratingSupplyPoints);
+
+            // Calculate the bonus(es)
+            SuppliesToDeposit += float(BonusSupplyGenerationRate) + NumOfGeneratingSupplyPoints;
+
+            // Calculate the rate
+            SuppliesToDeposit = SuppliesToDeposit / 60.0 * SupplyDepositInterval;
+
+            // Deposit the supplies
             SetSupplyCount(GetSupplyCount() + SuppliesToDeposit);
 
             // Reset counter
