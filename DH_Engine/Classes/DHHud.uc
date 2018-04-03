@@ -3368,6 +3368,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
     for (i = 0; i < arraycount(DHGRI.SupplyPoints); ++i)
     {
         if (DHGRI.SupplyPoints[i].bIsActive == 1 &&
+            DHGRI.SupplyPoints[i].ActorClass.static.ShouldShowOnMap() &&
             (DHGRI.SupplyPoints[i].TeamIndex == NEUTRAL_TEAM_INDEX || DHGRI.SupplyPoints[i].TeamIndex == OwnerTeam))
         {
             if (DHGRI.SupplyPoints[i].Actor != none)

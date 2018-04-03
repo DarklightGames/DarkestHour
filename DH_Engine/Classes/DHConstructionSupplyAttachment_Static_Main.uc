@@ -5,6 +5,11 @@
 
 class DHConstructionSupplyAttachment_Static_Main extends DHConstructionSupplyAttachment_Static;
 
+simulated static function bool ShouldShowOnMap()
+{
+    return false;
+}
+
 defaultproperties
 {
     SupplyCount=8000

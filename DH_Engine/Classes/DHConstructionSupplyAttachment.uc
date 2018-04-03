@@ -94,6 +94,11 @@ simulated function int GetSupplyCount()
     return SupplyCount;
 }
 
+simulated static function bool ShouldShowOnMap()
+{
+    return true;
+}
+
 static function StaticMesh GetStaticMesh(LevelInfo Level, int TeamIndex)
 {
     //local float SupplyPercent;
