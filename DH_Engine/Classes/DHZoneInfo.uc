@@ -127,7 +127,7 @@ function SetTargetFog(float NewDistance)
 
 defaultproperties
 {
-    ClientFogRatioCurve=(Points=((InVal=0.0,OutVal=0.0),(InVal=0.4,OutVal=0.0),(InVal=1.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    ClientFogRatioCurve=(Points=((InVal=0.0,OutVal=0.0),(InVal=0.5,OutVal=0.0),(InVal=1.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     ClientSavedFogRatio=1.0
     bUseServerFogOptimization=true
     bNetNotify=true
