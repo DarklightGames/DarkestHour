@@ -5,6 +5,7 @@
 
 class DHConstruction_SupplyCacheMain extends DHConstruction_SupplyCache;
 
+// Do not show on command/radial menu
 static function bool ShouldShowOnMenu(DHConstruction.Context Context)
 {
     return false;
