@@ -24,6 +24,7 @@ var     private bool    bIsActive;       // whether spawn point is currently act
 var     private int     TeamIndex;       // which team this spawn point belongs to
 var     int             SpawnPointIndex; // spawn point's index number in the GRI's SpawnPoints array
 var     bool            bCombatSpawn;    // is a combat spawn point (MDV, squad rally, HQ)
+var()   bool            bMainSpawn;      // is a main spawn for gametype: Advance
 
 var     int             BaseSpawnTimePenalty;    // how many seconds a player will have to addtionally wait to spawn on this spawn point
 var     float           SpawnProtectionTime;     // how many seconds a player will be invulnerable after spawning on this spawn point
@@ -215,7 +216,14 @@ function SetIsActive(bool bIsActive)
 // Override to change the button style for display on the deploy menu.
 simulated function string GetMapStyleName()
 {
-    return "DHSpawnButtonStyle";
+    if (bMainSpawn)
+    {
+        return "DHMainSpawnButtonStyle";
+    }
+    else
+    {
+        return "DHSpawnButtonStyle";
+    }
 }
 
 // Override to change the text displayed overtop of the spawn point icon on the map.
