@@ -362,6 +362,22 @@ function RemoveSupplyPoint(DHConstructionSupplyAttachment CSA)
     }
 }
 
+simulated function int GetNumberOfGeneratingSupplyPoints(int Team)
+{
+    local int i, n;
+
+    // Count active supply points that generate supply based on "Team"
+    for (i = 0; i < arraycount(SupplyPoints); ++i)
+    {
+        if (SupplyPoints[i].bIsActive == 1 && SupplyPoints[i].TeamIndex == Team && SupplyPoints[i].ActorClass.default.bCanGenerateSupplies)
+        {
+            ++n;
+        }
+    }
+
+    return n;
+}
+
 //==============================================================================
 // Spawn Points
 //==============================================================================
