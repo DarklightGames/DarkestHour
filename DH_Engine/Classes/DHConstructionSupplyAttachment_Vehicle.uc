@@ -21,6 +21,8 @@ simulated function string GetHumanReadableName()
 
 defaultproperties
 {
+    SupplyCount=0
+    SupplyCountMax=2000
     bCanBeResupplied=true
     bShouldMapIconBeRotated=true
     MapIcon=Texture'DH_GUI_Tex.GUI.supply_point'
