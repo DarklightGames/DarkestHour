@@ -3,73 +3,73 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHLearnToPlayPage extends LargeWindow;
+class DHLearnToPlayPage extends UT2K4MainPage;
 
-var automated GUIButton b_Close;
-
-function InitComponent(GUIController MyController, GUIComponent MyOwner)
+function BackButtonClicked()
 {
-    super.InitComponent(MyController, MyOwner);
-}
-
-function AddSystemMenu(){} // This removes the x button
-
-function bool InternalOnClick(GUIComponent Sender)
-{
-    if (Sender == b_Close)
-    {
-        Controller.CloseMenu();
-    }
-
-    return true;
+    Controller.CloseMenu(true);
 }
 
 defaultproperties
 {
-    Begin Object Class=GUIButton Name=CloseButton
-        Caption="Close"
-        StyleName="DHMenuTextButtonStyle"
-        WinTop=0.9
-        WinLeft=0.4
-        WinWidth=0.2
-        bBoundToParent=true
-        OnClick=InternalOnClick
-        OnKeyEvent=CloseButton.InternalOnKeyEvent
-    End Object
-    b_Close=CloseButton
+    Background=Texture'DH_GUI_Tex.Menu.Setupmenu'
 
-    Begin Object Class=DHGUIHeader Name=TitleBar
-        StyleName="DHLargeText"
-        WinTop=0.015
-        WinHeight=0.05
-        RenderWeight=0.1
-        bBoundToParent=true
-        bScaleToParent=true
+    PanelCaption(0)="Video Guides"
+    PanelCaption(1)=""
+    PanelCaption(2)=""
+    PanelCaption(3)=""
+    PanelCaption(4)=""
+    PanelCaption(5)=""
+    PanelCaption(6)=""
+
+    PanelClass(0)=""
+    PanelClass(1)=""
+    PanelClass(2)=""
+    PanelClass(3)=""
+    PanelClass(4)=""
+    PanelClass(5)=""
+    PanelClass(6)=""
+
+    PanelHint(0)="Learn about the game by watching a video"
+    PanelHint(1)=""
+    PanelHint(2)=""
+    PanelHint(3)=""
+    PanelHint(4)=""
+    PanelHint(5)=""
+    PanelHint(6)=""
+
+    Begin Object Class=DHGUITabControl Name=LearnToPlayTabs
+        bFillSpace=false
+        bDockPanels=true
+        TabHeight=0.06
+        BackgroundStyleName="DHHeader"
+        WinHeight=0.044
+        RenderWeight=0.49
+        TabOrder=3
         bAcceptsInput=true
-        bNeverFocus=false
-        ScalingType=SCALE_X
-        OnMousePressed=FloatingMousePressed
-        OnMouseRelease=FloatingMouseRelease
+        //OnActivate=SettingTabs.InternalOnActivate
+        OnChange=DHLearnToPlayPage.InternalOnChange
     End Object
-    t_WindowTitle=TitleBar
-    WindowName="Learn To Play"
+    c_Tabs=LearnToPlayTabs
 
-    Begin Object Class=FloatingImage Name=FloatingFrameBackground
-        Image=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption_noAlpha'
-        DropShadow=none
-        ImageStyle=ISTY_Stretched
-        ImageRenderStyle=MSTY_Normal
-        WinTop=0.02
-        WinLeft=0.0
-        WinWidth=1.0
-        WinHeight=0.98
-        RenderWeight=0.000003
+    Begin Object Class=DHGUIHeader Name=LearnToPlayHeader
+        Caption="Learn To Play"
+        StyleName="DHTopper"
+        WinHeight=32.0
+        RenderWeight=0.3
     End Object
-    i_FrameBG=FloatingFrameBackground
+    t_Header=LearnToPlayHeader
+
+    Begin Object Class=DHLearnToPlayFooter Name=LearnToPlayFooter
+        Spacer=0.01
+        StyleName="DHFooter"
+        RenderWeight=0.3
+        TabOrder=4
+        OnPreDraw=SettingFooter.InternalOnPreDraw
+    End Object
+    t_Footer=LearnToPlayFooter
 
     bRequire640x480=false
-    WinTop=0.05
-    WinLeft=0.05
-    WinWidth=0.9
-    WinHeight=0.9
+    WinTop=0.0
+    WinHeight=1.0
 }
