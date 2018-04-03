@@ -136,7 +136,7 @@ function InitDroppedPickupFor(Inventory Inv)
         // Store the ammo mags from the weapon
         for (i = 0; i < W.PrimaryAmmoArray.Length; ++i)
         {
-            if (i == W.CurrentMagIndex && !ClassIsChildOf(InventoryType,class'DHRocketWeapon'))
+            if (i == W.CurrentMagIndex)
             {
                 AmmoMags[AmmoMags.Length] = W.AmmoAmount(0);
             }
