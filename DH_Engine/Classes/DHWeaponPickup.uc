@@ -8,6 +8,10 @@ class DHWeaponPickup extends ROWeaponPickup
 
 var     DHWeaponPickupTouchMessageParameters    TouchMessageParameters;
 
+// General
+var     int                     PlayerNearbyRadius;
+var     int                     PlayerNearbyRetryTime;
+
 // Ammo
 var     array<int>              AmmoMags;
 var     int                     LoadedMagazineIndex;
@@ -74,24 +78,65 @@ auto state Pickup
     {
         return !(DHPawn(Other) != none && DHPawn(Other).bOnFire) && super.ValidTouch(Other);
     }
+
+    function Timer()
+    {
+        // Only goto 'FadeOut' if no one is nearby, else try again shortly
+        if (!ArePlayersNearby() && bDropped)
+        {
+            GotoState('FadeOut');
+        }
+        else if (bDropped)
+        {
+            SetTimer(PlayerNearbyRetryTime, false);
+        }
+    }
 }
 
-// Modified to store ammo mags & any barrels from the weapon
+// New function that returns true if players are nearby
+function bool ArePlayersNearby()
+{
+    local DHPawn    DHP;
+
+    foreach RadiusActors(class'DHPawn', DHP, PlayerNearbyRadius)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+// Modified to store ammo mags & any barrels from the weapon and to not set a lifespan (we will let the fade out do that)
 function InitDroppedPickupFor(Inventory Inv)
 {
     local DHProjectileWeapon W;
     local int i;
 
-    super.InitDroppedPickupFor(Inv);
-
     W = DHProjectileWeapon(Inv);
+
+    if (W != none)
+    {
+        AmmoAmount[0] = W.AmmoAmount(0);
+        AmmoAmount[1] = W.AmmoAmount(1);
+        bHasBayonetMounted = W.bBayonetMounted;
+    }
+
+    SetPhysics(PHYS_Falling);
+    GotoState('FallingPickup');
+    Inventory = Inv;
+    bAlwaysRelevant = false;
+    bOnlyReplicateHidden = false;
+    bUpdateSimulatedPosition = true;
+    bDropped = true;
+    bIgnoreEncroachers = false;
+    NetUpdateFrequency = 8;
 
     if (W != none)
     {
         // Store the ammo mags from the weapon
         for (i = 0; i < W.PrimaryAmmoArray.Length; ++i)
         {
-            if (i == W.CurrentMagIndex)
+            if (i == W.CurrentMagIndex && !ClassIsChildOf(InventoryType,class'DHRocketWeapon'))
             {
                 AmmoMags[AmmoMags.Length] = W.AmmoAmount(0);
             }
@@ -194,4 +239,6 @@ defaultproperties
     BarrelSteamEmitterClass=class'DH_Effects.DHMGSteam'
     TouchMessageClass=class'DHWeaponPickupTouchMessage'
     bAcceptsProjectors=false
+    PlayerNearbyRadius=256
+    PlayerNearbyRetryTime=10
 }

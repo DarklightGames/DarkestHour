@@ -26,7 +26,6 @@ function InitDroppedPickupFor(Inventory Inv)
     bOnlyReplicateHidden = false;
     bUpdateSimulatedPosition = true;
     bDropped = true;
-    LifeSpan = DropLifeTime + Rand(10);
     bIgnoreEncroachers = false; // handles case of dropping stuff on lifts etc
     NetUpdateFrequency = 8.0;
 }
