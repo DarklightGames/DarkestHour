@@ -74,20 +74,20 @@ simulated function SetText()
 
     if (bRallyConstructionsEnabled)
     {
-        DrawOpText(Operations[11]).Text = EnabledText;
-        DrawOpText(Operations[11]).DrawColor = class'DHColor'.default.SquadColor;
-        DrawOpText(Operations[12]).Text = EnabledText;
-        DrawOpText(Operations[12]).DrawColor = class'DHColor'.default.SquadColor;
+        DrawOpText(Operations[9]).Text = EnabledText;
+        DrawOpText(Operations[9]).DrawColor = class'DHColor'.default.SquadColor;
+        DrawOpText(Operations[10]).Text = EnabledText;
+        DrawOpText(Operations[10]).DrawColor = class'DHColor'.default.SquadColor;
     }
     else
     {
-        DrawOpText(Operations[11]).Text = DisabledText;
-        DrawOpText(Operations[11]).DrawColor = class'DHColor'.default.RedEnemy;
-        DrawOpText(Operations[12]).Text = DisabledText;
-        DrawOpText(Operations[12]).DrawColor = class'DHColor'.default.RedEnemy;
+        DrawOpText(Operations[9]).Text = DisabledText;
+        DrawOpText(Operations[9]).DrawColor = class'DHColor'.default.RedEnemy;
+        DrawOpText(Operations[10]).Text = DisabledText;
+        DrawOpText(Operations[10]).DrawColor = class'DHColor'.default.RedEnemy;
     }
 
-    DrawOpText(Operations[10]).Text = Repl(GameTypeText, "{0}", GameType, false);
+    DrawOpText(Operations[8]).Text = Repl(GameTypeText, "{0}", GameType, false);
     DrawOpText(Operations[7]).Text = Repl(AuthorText, "{0}", Author, false);
     DrawOpText(Operations[4]).Text = Repl(DeployingText, "{0}", Map, false);
 }
