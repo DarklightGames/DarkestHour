@@ -43,7 +43,7 @@ def main():
     argparser.add_argument('-ignore_dependencies', required=False, default=False, action='store_true', help='ignore package dependencies')
     argparser.add_argument('-clean', required=False, action='store_true', help='compile all packages')
     argparser.add_argument('-dumpint', required=False, action='store_true', help='dump localization files (.int)')
-    argparser.add_argument('-snapshot', required=False, action='store_true', default=True, help='compresses all build artifacts into a .zip file')
+    argparser.add_argument('-snapshot', required=False, action='store_true', default=False, help='compresses all build artifacts into a .zip file')
     args = argparser.parse_args()
 
     args.dir = os.path.abspath(args.dir)
