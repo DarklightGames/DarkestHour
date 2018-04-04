@@ -278,6 +278,66 @@ defaultproperties
     End Object
     Operations(7)=OpMapAuthorText
 
+    Begin Object class=RODrawOpShadowedText Name=OpGameTypeText
+        DrawColor=(R=255,G=50,B=50,A=255)
+        Top=0.14
+        Lft=0.5
+        Height=0.05
+        Width=0.48
+        MaxLines=1
+        Justification=2
+        VertAlign=1
+        FontName="ROInterface.fntROMainMenu"
+    End Object
+    Operations(8)=OpGameTypeText
+
+    Begin Object class=RODrawOpShadowedText Name=OpRalliesEnabledText
+        Top=0.21
+        Lft=0.5
+        Height=0.05
+        Width=0.48
+        MaxLines=1
+        Justification=2
+        VertAlign=1
+        FontName="ROInterface.fntROMainMenu"
+    End Object
+    Operations(9)=OpRalliesEnabledText
+
+    Begin Object class=RODrawOpShadowedText Name=OpConstructionsEnabledText
+        Top=0.26
+        Lft=0.5
+        Height=0.05
+        Width=0.48
+        MaxLines=1
+        Justification=2
+        VertAlign=1
+        FontName="ROInterface.fntROMainMenu"
+    End Object
+    Operations(10)=OpConstructionsEnabledText
+
+    Begin Object class=DrawOpImage Name=OpRallyIconImg
+        Image=Texture'DH_InterfaceArt2_tex.Icons.rally_point'
+        ImageStyle=0
+        Top=0.205
+        Lft=0.85
+        Width=0.04
+        Height=0.05
+        DrawColor=(R=255,B=255,G=255,A=255)
+    End Object
+    Operations(11)=OpRallyIconImg
+
+    Begin Object class=DrawOpImage Name=OpConstructionIconImg
+        Image=Texture'DH_InterfaceArt2_tex.Icons.Construction'
+        ImageStyle=0
+        Top=0.255
+        Lft=0.85
+        Width=0.04
+        Height=0.05
+        DrawColor=(R=255,B=255,G=255,A=255)
+    End Object
+    Operations(12)=OpConstructionIconImg
+
+/*
     Begin Object class=DrawOpImage Name=OpDefaultControlsImg
         Image=Texture'DH_GUI_Tex.Menu.default_keys_2048'
         ImageStyle=0
@@ -287,7 +347,7 @@ defaultproperties
         Height=0.4
         DrawColor=(R=200,B=200,G=200,A=220)
     End Object
-    Operations(8)=OpDefaultControlsImg
+    Operations(13)=OpDefaultControlsImg
 
     Begin Object class=RODrawOpShadowedText Name=OpDefaultControlsText
         Text="New Default Controls"
@@ -300,65 +360,6 @@ defaultproperties
         VertAlign=1
         FontName="ROInterface.fntROMainMenu"
     End Object
-    Operations(9)=OpDefaultControlsText
-
-    Begin Object class=RODrawOpShadowedText Name=OpGameTypeText
-        DrawColor=(R=255,G=50,B=50,A=255)
-        Top=0.14
-        Lft=0.5
-        Height=0.05
-        Width=0.48
-        MaxLines=1
-        Justification=2
-        VertAlign=1
-        FontName="ROInterface.fntROMainMenu"
-    End Object
-    Operations(10)=OpGameTypeText
-
-    Begin Object class=RODrawOpShadowedText Name=OpRalliesEnabledText
-        Top=0.21
-        Lft=0.5
-        Height=0.05
-        Width=0.48
-        MaxLines=1
-        Justification=2
-        VertAlign=1
-        FontName="ROInterface.fntROMainMenu"
-    End Object
-    Operations(11)=OpRalliesEnabledText
-
-    Begin Object class=RODrawOpShadowedText Name=OpConstructionsEnabledText
-        Top=0.26
-        Lft=0.5
-        Height=0.05
-        Width=0.48
-        MaxLines=1
-        Justification=2
-        VertAlign=1
-        FontName="ROInterface.fntROMainMenu"
-    End Object
-    Operations(12)=OpConstructionsEnabledText
-
-    Begin Object class=DrawOpImage Name=OpRallyIconImg
-        Image=Texture'DH_InterfaceArt2_tex.Icons.rally_point'
-        ImageStyle=0
-        Top=0.205
-        Lft=0.85
-        Width=0.04
-        Height=0.05
-        DrawColor=(R=255,B=255,G=255,A=255)
-    End Object
-    Operations(13)=OpRallyIconImg
-
-    Begin Object class=DrawOpImage Name=OpConstructionIconImg
-        Image=Texture'DH_InterfaceArt2_tex.Icons.Construction'
-        ImageStyle=0
-        Top=0.255
-        Lft=0.85
-        Width=0.04
-        Height=0.05
-        DrawColor=(R=255,B=255,G=255,A=255)
-    End Object
-    Operations(14)=OpConstructionIconImg
-
+    Operations(14)=OpDefaultControlsText
+*/
 }
