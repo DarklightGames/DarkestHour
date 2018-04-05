@@ -2108,20 +2108,34 @@ function DisbandSquad(int TeamIndex, int SquadIndex)
     }
 }
 
+simulated function int GetAssistantSquadLeaderMemberIndex(int TeamIndex, int SquadIndex)
+{
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            return AxisAssistantSquadLeaderMemberIndices[SquadIndex];
+        case ALLIES_TEAM_INDEX:
+            return AlliesAssistantSquadLeaderMemberIndices[SquadIndex];
+    }
+
+    return -1;
+}
+
 // Returns the squad's assistant squad leader, or none if one does not exist.
 simulated function DHPlayerReplicationInfo GetAssistantSquadLeader(int TeamIndex, int SquadIndex)
 {
+    local int MemberIndex;
+
     if (!IsSquadActive(TeamIndex, SquadIndex))
     {
         return none;
     }
 
-    switch (TeamIndex)
+    MemberIndex = GetAssistantSquadLeaderMemberIndex(TeamIndex, SquadIndex);
+
+    if (MemberIndex > 0)
     {
-        case AXIS_TEAM_INDEX:
-            return GetMember(TeamIndex, SquadIndex, AxisAssistantSquadLeaderMemberIndices[SquadIndex]);
-        case ALLIES_TEAM_INDEX:
-            return GetMember(TeamIndex, SquadIndex, AlliesAssistantSquadLeaderMemberIndices[SquadIndex]);
+        GetMember(TeamIndex, SquadIndex, MemberIndex);
     }
 
     return none;
