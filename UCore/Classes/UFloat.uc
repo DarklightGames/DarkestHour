@@ -41,3 +41,9 @@ static final function float Epsilon()
     return 1.401298E-45f;
 }
 
+static final function Mod(float Dividend, float Divisor, optional out int Quotient, optional out float Remainder)
+{
+    Quotient = int(Dividend / Divisor);
+    Remainder = Dividend % Divisor;
+}
+
