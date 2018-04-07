@@ -24,3 +24,4 @@ defaultproperties
     bAcceptsProjectors=false
     GroupClass=class'DHConstructionGroup_Obstacles'
 }
+

@@ -1440,6 +1440,8 @@ defaultproperties
     ConstructionClassNames(16)="DH_Construction.DHConstruction_Watchtower"
     ConstructionClassNames(17)="DH_Construction.DHConstruction_GrenadeCrate"
     //ConstructionClassNames(17)="DH_Construction.DHConstruction_MortarPit"
+    ConstructionClassNames(18)="DH_Construction.DHConstruction_DragonsTooth"
+    ConstructionClassNames(19)="DH_Construction.DHConstruction_WoodFence"
 
     // Map Markers
     MapMarkerClassNames(0)="DH_Engine.DHMapMarker_Squad_Move"

@@ -47,6 +47,12 @@ var int                 SupplyDepositInterval;              // The amount of sec
 var int                 SupplyDepositCounter;               // The next time that generated supplies will be deposited.
 var int                 SupplyGenerationRate;               // The amount of supplies that are able to be generated every minute.
 
+struct Withdrawal
+{
+    var DHConstructionSupplyAttachment Attachment;
+    var int Amount;
+};
+
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -333,6 +339,7 @@ static function bool CompareFunction(Object LHS, Object RHS)
 // put on it for getting notified (OnResupplied)
 defaultproperties
 {
+    TeamIndex=-1
     SupplyPointIndex=-1
     SupplyCount=2000
     SupplyCountMax=2000

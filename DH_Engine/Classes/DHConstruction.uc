@@ -64,6 +64,13 @@ enum ETeamOwner
     TEAM_Neutral
 };
 
+enum EConstructionPlacementStyle
+{
+    CPS_Single,
+    CPS_Continuous,
+    CPS_ControlPoints,
+};
+
 // Client state management
 var name StateName, OldStateName;
 
@@ -94,6 +101,13 @@ var     int     LocalRotationRate;
 var     bool    bCanPlaceInObjective;
 var     int     SquadMemberCountMinimum;        // The number of members you must have in your squad to create this.
 var     float   ArcLengthTraceIntervalInMeters; // The arc-length interval, in meters, used when tracing "outwards" during placement to check for blocking objects.
+
+var     EConstructionPlacementStyle PlacementStyle;
+
+var struct SControlPointParameters
+{
+    var float SpacingDistanceMeters;
+} ControlPointParameters;
 
 var     float   ObjectiveDistanceMinMeters;         // The minimum distance, in meters, that this construction must be placed away from all objectives.
 var     float   EnemyObjectiveDistanceMinMeters;    // The minimum distance, in meters, that this construction must be placed away from enemy objectives.
@@ -211,6 +225,8 @@ var bool bShouldAutoConstruct;
 var bool bDidReportMetrics;
 
 var localized string ConstructionVerb;  // eg. dig, emplace, build etc.
+
+var string OperatorClassName;
 
 replication
 {
@@ -990,6 +1006,11 @@ static function DHConstruction.ConstructionError GetCustomProxyError(DHConstruct
     return E;
 }
 
+static function float GetPlacementDiameter()
+{
+    return default.CollisionRadius * 2 + class'DHUnits'.static.MetersToUnreal(default.ControlPointParameters.SpacingDistanceMeters);
+}
+
 defaultproperties
 {
     TeamOwner=TEAM_Neutral
@@ -1052,6 +1073,7 @@ defaultproperties
     bWorldGeometry=true
 
     // Placement
+    OperatorClassName"DH_Construction.DHConstructionOperator_Single"
     bCanPlaceInWater=false
     bCanPlaceIndoors=false
     FloatToleranceInMeters=0.5

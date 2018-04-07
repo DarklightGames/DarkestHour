@@ -23,4 +23,6 @@ defaultproperties
     bAcceptsProjectors=false
     ProgressMax=3
     GroupClass=class'DHConstructionGroup_Obstacles'
+    PlacementStyle=CPS_ControlPoints
+    ControlPointParameters=(SpacingDistanceMeters=0.75)
 }

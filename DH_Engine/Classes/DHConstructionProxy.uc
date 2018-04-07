@@ -27,6 +27,8 @@ var DHConstructionProxyProjector    Projector;
 // Attachments
 var array<Actor>                    Attachments;
 
+var bool                    bIsInterpolated;
+
 function PostBeginPlay()
 {
     super.PostBeginPlay();
@@ -200,7 +202,7 @@ function static UpdateProxyMaterialColors(Actor A, color Color)
                 if (FC != none)
                 {
                     FC.Color1 = Color;
-                    FC.Color1.A = 64;
+                    FC.Color1.A = 32;
 
                     FC.Color2 = Color;
                     FC.Color2.A = 128;
@@ -259,8 +261,6 @@ function static color GetProxyErrorColor(DHConstruction.EConstructionErrorType P
 
 function Tick(float DeltaTime)
 {
-    local DHConstruction.ConstructionError ProvisionalPositionError, NewProxyError;
-
     super.Tick(DeltaTime);
 
     if (PawnOwner == none || PawnOwner.Health == 0 || PawnOwner.bDeleteMe || PawnOwner.Controller == none)
@@ -268,7 +268,14 @@ function Tick(float DeltaTime)
         Destroy();
     }
 
-    LocalRotation += LocalRotationRate * DeltaTime; // TODO: move this to the weapon itself
+    LocalRotation += LocalRotationRate * DeltaTime;
+
+    UpdateError();
+}
+
+function UpdateError()
+{
+    local DHConstruction.ConstructionError ProvisionalPositionError, NewProxyError;
 
     // An error may be thrown when determining the location, so store it here.
     ProvisionalPositionError = GetProvisionalPosition();
@@ -293,11 +300,6 @@ function Tick(float DeltaTime)
         SetProxyError(NewProxyError);
     }
 
-    if (ProxyError.Type != ERROR_None)
-    {
-        PawnOwner.ReceiveLocalizedMessage(class'DHConstructionErrorMessage', int(ProxyError.Type),,, self);
-    }
-
     UpdateProjector();
 }
 
@@ -313,6 +315,11 @@ simulated function UpdateProjector()
 
     if (Projector != none)
     {
+        if (bHidden || bIsInterpolated)
+        {
+            RL.Z -= 2048.0;
+        }
+
         Projector.MaxTraceDistance = CollisionHeight * 2;
         Projector.SetDrawScale((CollisionRadius * 2) / Projector.ProjTexture.MaterialUSize());
         Projector.SetRelativeLocation(RL);
@@ -444,8 +451,6 @@ function DHConstruction.ConstructionError GetProvisionalPosition()
             HitNormal = vect(0, 0, 1);
         }
 
-        Log("HitNormal" @ HitNormal);
-
         Forward = Normal(vector(Direction));
         Left = Forward cross HitNormal;
         Forward = HitNormal cross Left;
@@ -571,8 +576,21 @@ function DHConstruction.ConstructionError GetPositionError()
     local DHConstruction.ConstructionError E;
     local vector TraceStart, TraceEnd, CeilingHitLocation, CeilingHitNormal;
     local Actor HitActor;
+    local DHConstructionProxy CP;
 
     GRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
+
+    if (Level.NetMode != NM_DedicatedServer && !bHidden)
+    {
+        foreach TouchingActors(class'DHConstructionProxy', CP)
+        {
+            if (CP != none && !CP.bHidden && CP != self)
+            {
+                E.Type = ERROR_NoRoom;
+                return E;
+            }
+        }
+    }
 
     // Don't allow the construction to be placed in water if this is disallowed.
     if (!ConstructionClass.default.bCanPlaceInWater && PhysicsVolume != none && PhysicsVolume.bWaterVolume)
@@ -842,11 +860,11 @@ function UpdateParameters(vector Location, rotator Direction, Actor GroundActor,
 
     SetLocation(Location);
 
-    GroundNormal = NewGroundNormal;
+    self.GroundNormal = GroundNormal;
 
-    if (GroundActor != NewGroundActor)
+    if (self.GroundActor != GroundActor)
     {
-        GroundActor = NewGroundActor;
+        self.GroundActor = GroundActor;
 
         // Ground actor changed so let's re-evaluate our collison size.
         // TODO: we may want to do more than just re-evaluate the collision size
@@ -854,6 +872,8 @@ function UpdateParameters(vector Location, rotator Direction, Actor GroundActor,
         // calling `UpdateProxy` might be a more appropriate route.
         UpdateCollisionSize();
     }
+
+    UpdateError();
 }
 
 defaultproperties

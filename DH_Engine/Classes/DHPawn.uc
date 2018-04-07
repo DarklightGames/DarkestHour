@@ -4,6 +4,7 @@
 //==============================================================================
 
 class DHPawn extends ROPawn
+    dependson(DHConstructionSupplyAttachment)
     config(User);
 
 #exec OBJ LOAD FILE=ProjectileSounds.uax
@@ -6956,7 +6957,7 @@ exec function SwitchToLastWeapon()
 // Uses up the total supplies specified using the touching supply attachments.
 // Returns true if the supplies were used, or false if there were not enough
 // supplies nearby to perform the operation.
-function bool UseSupplies(int SupplyCost)
+function bool UseSupplies(int SupplyCost, optional out array<DHConstructionSupplyAttachment.Withdrawal> Withdrawals)
 {
     local int i, SuppliesToUse, TotalSupplyCount;
     local UComparator AttachmentComparator;
@@ -6992,6 +6993,10 @@ function bool UseSupplies(int SupplyCost)
         SuppliesToUse = Min(SupplyCost, Attachments[i].GetSupplyCount());
 
         Attachments[i].SetSupplyCount(Attachments[i].GetSupplyCount() - SuppliesToUse);
+
+        Withdrawals.Insert(0, 1);
+        Withdrawals[0].Attachment = Attachments[i];
+        Withdrawals[0].Amount = SuppliesToUse;
 
         SupplyCost -= SuppliesToUse;
     }
