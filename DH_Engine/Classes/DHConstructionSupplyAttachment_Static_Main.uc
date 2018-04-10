@@ -5,14 +5,10 @@
 
 class DHConstructionSupplyAttachment_Static_Main extends DHConstructionSupplyAttachment_Static;
 
-simulated static function bool ShouldShowOnMap()
-{
-    return false;
-}
-
 defaultproperties
 {
     SupplyCount=8000
     SupplyCountMax=8000
     HumanReadableName="Main Supply Cache"
+    bShouldShowOnMap=true
 }

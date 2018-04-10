@@ -96,7 +96,7 @@ simulated function int GetSupplyCount()
 
 simulated static function bool ShouldShowOnMap()
 {
-    return true;
+    return default.bShouldShowOnMap;
 }
 
 static function StaticMesh GetStaticMesh(LevelInfo Level, int TeamIndex)
