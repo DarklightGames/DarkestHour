@@ -3,12 +3,12 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHSupplyVehicleMessage extends DHControlsMessage
+class DHConstructionControlsMessage extends DHControlsMessage
     abstract;
 
 defaultproperties
 {
-    Controls(0)=(Keys=("ROMANUALRELOAD"),Text="Load Supplies")
-    Controls(1)=(Keys=("ROMGOPERATION"),Text="Unload Supplies")
+    Controls(0)=(Keys=("FIRE"),Text="Confirm")
+    Controls(1)=(Keys=("ROIRONSIGHTS"),Text="Cancel")
+    Controls(2)=(Keys=("LEANLEFT","LEANRIGHT"),Text="Rotate")
 }
-

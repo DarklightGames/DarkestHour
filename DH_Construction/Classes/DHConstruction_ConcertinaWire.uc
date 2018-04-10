@@ -23,5 +23,6 @@ defaultproperties
     bIsNeutral=true
     bAcceptsProjectors=false
     GroupClass=class'DHConstructionGroup_Obstacles'
+    bShouldSwitchToLastWeaponOnPlacement=false
 }
 

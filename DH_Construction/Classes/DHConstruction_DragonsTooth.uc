@@ -24,6 +24,6 @@ defaultproperties
     bIsNeutral=true
     bAcceptsProjectors=false
     GroupClass=class'DHConstructionGroup_Obstacles'
-    PlacementStyle=CPS_Continuous
+    bShouldSwitchToLastWeaponOnPlacement=false
 }
 

@@ -11,6 +11,6 @@ defaultproperties
     GroupClass=class'DH_Construction.DHConstructionGroup_Debug'
     MenuName="Wood Fence"
     CollisionRadius=170
-    PlacementStyle=CPS_ControlPoints
+    bCanBePlacedWithControlPoints=true
 }
 

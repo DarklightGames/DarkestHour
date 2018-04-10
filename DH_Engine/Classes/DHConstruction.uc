@@ -64,13 +64,6 @@ enum ETeamOwner
     TEAM_Neutral
 };
 
-enum EConstructionPlacementStyle
-{
-    CPS_Single,
-    CPS_Continuous,
-    CPS_ControlPoints,
-};
-
 // Client state management
 var name StateName, OldStateName;
 
@@ -102,7 +95,8 @@ var     bool    bCanPlaceInObjective;
 var     int     SquadMemberCountMinimum;        // The number of members you must have in your squad to create this.
 var     float   ArcLengthTraceIntervalInMeters; // The arc-length interval, in meters, used when tracing "outwards" during placement to check for blocking objects.
 
-var     EConstructionPlacementStyle PlacementStyle;
+var     bool    bShouldSwitchToLastWeaponOnPlacement;
+var     bool    bCanBePlacedWithControlPoints;
 
 var struct SControlPointParameters
 {
@@ -1087,6 +1081,7 @@ defaultproperties
     TerrainScaleMax=256.0
     bShouldAlignToGround=true
     ArcLengthTraceIntervalInMeters=1.0
+    bShouldSwitchToLastWeaponOnPlacement=true
 
     // Stagnation
     bCanDieOfStagnation=true
