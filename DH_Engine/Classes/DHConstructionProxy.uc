@@ -886,6 +886,7 @@ function DHConstruction.ConstructionError GetPositionError()
             if (C != none && (C.GetTeamIndex() == NEUTRAL_TEAM_INDEX || C.GetTeamIndex() == PawnOwner.GetTeamNum()))
             {
                 bFoundFriendlyDuplicate = true;
+                break;
             }
         }
 
