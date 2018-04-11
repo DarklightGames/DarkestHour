@@ -2635,6 +2635,7 @@ simulated function SpawnVehicleAttachments()
             if (SupplyAttachment != none)
             {
                 SupplyAttachment.SetTeamIndex(VehicleTeam);
+                SupplyAttachment.SetInitialSupply();
             }
         }
 

@@ -30,7 +30,7 @@ simulated function OnConstructed()
         SupplyAttachment.SetBase(self);
         SupplyAttachment.SetTeamIndex(GetTeamIndex());
         SupplyAttachment.OnSupplyCountChanged = MyOnSupplyCountChanged;
-        SupplyAttachment.SetSupplyCount(InitialSupplyCount);
+        SupplyAttachment.SetInitialSupply(InitialSupplyCount);
         SupplyAttachment.BonusSupplyGenerationRate = default.BonusSupplyGenerationRate;
         SupplyAttachment.bHidden = true;
     }

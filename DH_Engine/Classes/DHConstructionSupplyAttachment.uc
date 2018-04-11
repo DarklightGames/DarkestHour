@@ -16,6 +16,7 @@ var private int         TeamIndex;
 
 var bool                bShouldShowOnMap;
 var bool                bShouldMapIconBeRotated;
+var bool                bIsMainSupplyCache;
 var Material            MapIcon;
 
 var private localized string    HumanReadableName;
@@ -76,6 +77,19 @@ simulated function PostBeginPlay()
         }
 
         SetTimer(1.0, true);
+    }
+}
+
+// This should be called after spawning
+function SetInitialSupply(optional int Amount)
+{
+    if (Amount != -1)
+    {
+        SetSupplyCount(Amount);
+    }
+    else
+    {
+        SetSupplyCount(default.SupplyCount);
     }
 }
 

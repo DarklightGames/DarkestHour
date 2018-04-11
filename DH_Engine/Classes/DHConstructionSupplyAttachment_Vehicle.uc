@@ -5,6 +5,31 @@
 
 class DHConstructionSupplyAttachment_Vehicle extends DHConstructionSupplyAttachment;
 
+// Overridden as vehicle's should collect initial supply amount from main supply cache
+function SetInitialSupply(optional int Amount)
+{
+    local DHGameReplicationInfo GRI;
+    local int SupplyCollected;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI != none)
+    {
+        SupplyCollected = GRI.CollectSupplyFromMainCache(GetTeamIndex(), default.SupplyCountMax);
+
+        if (SupplyCollected >= 0)
+        {
+            SetSupplyCount(SupplyCollected);
+        }
+        else
+        {
+            SetSupplyCount(SupplyCountMax);
+        }
+
+        SupplyPointIndex = GRI.AddSupplyPoint(self);
+    }
+}
+
 simulated function string GetHumanReadableName()
 {
     local ROVehicle ROV;
@@ -21,7 +46,7 @@ simulated function string GetHumanReadableName()
 
 defaultproperties
 {
-    SupplyCount=0
+    SupplyCount=2000
     SupplyCountMax=2000
     bCanBeResupplied=true
     bShouldMapIconBeRotated=true

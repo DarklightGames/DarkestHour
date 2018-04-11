@@ -362,14 +362,54 @@ function RemoveSupplyPoint(DHConstructionSupplyAttachment CSA)
     }
 }
 
+// Function will collect resources from Main Cache if it exists, will return -1 if it doesn't
+// Collect means it will pass the supply from the main cache (subtracting it) and give it to the vehicle (adding it)
+// This is meant to be used by vehicles with vehicle supply attachements
+function int CollectSupplyFromMainCache(int Team, int MaxCarryingCapacity)
+{
+    local int                               i, n;
+    local DHConstructionSupplyAttachment    SupplyAttachment;
+
+    //var DHConstructionSupplyAttachment Actor;
+
+    for (i = 0; i < arraycount(SupplyPoints); ++i)
+    {
+        // Find the main cache for the team
+        if (SupplyPoints[i].ActorClass.default.bIsMainSupplyCache && SupplyPoints[i].TeamIndex == Team)
+        {
+            if (SupplyPoints[i].Actor != none)
+            {
+                SupplyAttachment = SupplyPoints[i].Actor;
+            }
+
+            // Calculate the supply we can give
+            n = Clamp(SupplyAttachment.GetSupplyCount(), 0, MaxCarryingCapacity);
+
+            // Subtract the supply we will give
+            SupplyAttachment.SetSupplyCount(Clamp(SupplyAttachment.GetSupplyCount() - n, 0, SupplyAttachment.SupplyCountMax));
+
+            // Return the supply amount we are giving
+            return n;
+        }
+    }
+
+    // We did not find a main cache
+    return -1;
+}
+
 simulated function int GetNumberOfGeneratingSupplyPoints(int Team)
 {
     local int i, n;
 
-    // Count active supply points that generate supply based on "Team"
+    // Count active unfilled supply points that generate supply based on "Team"
     for (i = 0; i < arraycount(SupplyPoints); ++i)
     {
-        if (SupplyPoints[i].bIsActive == 1 && SupplyPoints[i].TeamIndex == Team && SupplyPoints[i].ActorClass.default.bCanGenerateSupplies)
+        if (SupplyPoints[i].Actor == none)
+        {
+            continue;
+        }
+
+        if (SupplyPoints[i].bIsActive == 1 && SupplyPoints[i].TeamIndex == Team && !SupplyPoints[i].Actor.IsFull() && SupplyPoints[i].ActorClass.default.bCanGenerateSupplies)
         {
             ++n;
         }
@@ -377,6 +417,7 @@ simulated function int GetNumberOfGeneratingSupplyPoints(int Team)
 
     return n;
 }
+
 
 //==============================================================================
 // Spawn Points
