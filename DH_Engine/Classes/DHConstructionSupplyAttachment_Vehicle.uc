@@ -19,11 +19,11 @@ function SetInitialSupply(optional int Amount)
 
         if (SupplyCollected >= 0)
         {
-            SetSupplyCount(SupplyCollected);
+            SetSupplyCount(float(SupplyCollected));
         }
         else
         {
-            SetSupplyCount(SupplyCountMax);
+            SetSupplyCount(float(SupplyCountMax));
         }
 
         SupplyPointIndex = GRI.AddSupplyPoint(self);
@@ -46,7 +46,7 @@ simulated function string GetHumanReadableName()
 
 defaultproperties
 {
-    SupplyCount=2000
+    SupplyCount=2000.0
     SupplyCountMax=2000
     bCanBeResupplied=true
     bShouldMapIconBeRotated=true

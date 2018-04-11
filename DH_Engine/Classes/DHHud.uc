@@ -1898,7 +1898,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     {
         DrawSpriteWidgetClipped(Canvas, VehicleSuppliesIcon, Coords);
         Canvas.Font = GetSmallerMenuFont(Canvas);
-        VehicleSuppliesText.Text = string(V.SupplyAttachment.GetSupplyCount());
+        VehicleSuppliesText.Text = string(int(V.SupplyAttachment.GetSupplyCount()));
         DrawTextWidgetClipped(Canvas, VehicleSuppliesText, Coords);
     }
 }

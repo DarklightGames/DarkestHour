@@ -10,7 +10,7 @@ class DHConstructionSupplyAttachment extends Actor
 #exec OBJ LOAD FILE=../StaticMeshes/DH_Construction_stc.usx
 
 var int                 SupplyPointIndex;
-var private int         SupplyCount;
+var private float       SupplyCount;
 var int                 SupplyCountMax;
 var private int         TeamIndex;
 
@@ -103,7 +103,7 @@ simulated function bool IsFull()
     return SupplyCount == SupplyCountMax;
 }
 
-simulated function int GetSupplyCount()
+simulated function float GetSupplyCount()
 {
     return SupplyCount;
 }
@@ -152,9 +152,9 @@ function UpdateAppearance()
     NetUpdateTime = Level.TimeSeconds - 1.0;
 }
 
-function SetSupplyCount(int Amount)
+function SetSupplyCount(float Amount)
 {
-    SupplyCount = Clamp(Amount, 0, SupplyCountMax);
+    SupplyCount = FClamp(Amount, 0.0, float(SupplyCountMax));
     UpdateAppearance();
     OnSupplyCountChanged(self);
 }
@@ -278,11 +278,8 @@ function Timer()
             // Get number of generating supply points for the team
             NumOfGeneratingSupplyPoints = Clamp(GRI.GetNumberOfGeneratingSupplyPoints(TeamIndex), 1, 255);
 
-            // Calculate the shared generation
-            SuppliesToDeposit = float(SupplyGenerationRate / NumOfGeneratingSupplyPoints);
-
-            // Calculate the bonus(es)
-            SuppliesToDeposit += float(BonusSupplyGenerationRate) + NumOfGeneratingSupplyPoints;
+            // Calculate the base and bonus generation
+            SuppliesToDeposit = float(SupplyGenerationRate / NumOfGeneratingSupplyPoints) + float(BonusSupplyGenerationRate);
 
             // Calculate the rate
             SuppliesToDeposit = SuppliesToDeposit / 60.0 * SupplyDepositInterval;
@@ -304,7 +301,7 @@ function bool Resupply()
         return false;
     }
 
-    SupplyCount = Min(SupplyCountMax, SupplyCount + 100); // TODO: magic number
+    SupplyCount = FMin(float(SupplyCountMax), SupplyCount + 100.0); // TODO: magic number
 
     OnSupplyCountChanged(self);
 
@@ -365,7 +362,7 @@ static function bool CompareFunction(Object LHS, Object RHS)
 defaultproperties
 {
     SupplyPointIndex=-1
-    SupplyCount=2000
+    SupplyCount=2000.0
     SupplyCountMax=2000
     TouchDistanceInMeters=50
     RemoteRole=ROLE_DumbProxy

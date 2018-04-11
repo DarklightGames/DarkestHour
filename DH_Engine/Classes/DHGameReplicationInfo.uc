@@ -386,7 +386,7 @@ function int CollectSupplyFromMainCache(int Team, int MaxCarryingCapacity)
             n = Clamp(SupplyAttachment.GetSupplyCount(), 0, MaxCarryingCapacity);
 
             // Subtract the supply we will give
-            SupplyAttachment.SetSupplyCount(Clamp(SupplyAttachment.GetSupplyCount() - n, 0, SupplyAttachment.SupplyCountMax));
+            SupplyAttachment.SetSupplyCount(FClamp(SupplyAttachment.GetSupplyCount() - n, 0.0, float(SupplyAttachment.SupplyCountMax)));
 
             // Return the supply amount we are giving
             return n;
