@@ -118,7 +118,7 @@ defaultproperties
     InitialSupplyCount=250
     StaticMesh=StaticMesh'DH_Military_stc.Ammo.cratepile1'
     DrawType=DT_StaticMesh
-    DuplicateFriendlyDistanceInMeters=200
+    DuplicateFriendlyDistanceInMeters=300
     CollisionRadius=100
     bCanPlaceIndoors=true
     bCanBeTornDownByFriendlies=false
