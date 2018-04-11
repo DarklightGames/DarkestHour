@@ -20,12 +20,6 @@ var() int                       BonusSupplyGenerationRate;
 var DHConstructionSupplyAttachment              SupplyAttachment;
 var class<DHConstructionSupplyAttachment>       SupplyAttachmentClass;
 
-function PostBeginPlay()
-{
-    // not sure if I need to create the attachement here
-    //CreateSupplyAttachment();
-}
-
 function Reset()
 {
     if (SupplyAttachment != none)
@@ -67,7 +61,7 @@ function CreateSupplyAttachment()
     SupplyAttachment.SetBase(self);
     SupplyAttachment.SetTeamIndex(GetTeamIndex());
     SupplyAttachment.OnSupplyCountChanged = MyOnSupplyCountChanged;
-    SupplyAttachment.SetSupplyCount(default.InitialSupplyCount);
+    SupplyAttachment.SetInitialSupply(InitialSupplyCount);
     SupplyAttachment.BonusSupplyGenerationRate = default.BonusSupplyGenerationRate;
     SupplyAttachment.bHidden = true;
 }
