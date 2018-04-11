@@ -70,7 +70,7 @@ simulated function PostBeginPlay()
 
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-        if (bShouldShowOnMap && GRI != none)
+        if (GRI != none)
         {
             SupplyPointIndex = GRI.AddSupplyPoint(self);
         }

@@ -10,5 +10,5 @@ defaultproperties
     SupplyCount=8000
     SupplyCountMax=8000
     HumanReadableName="Main Supply Cache"
-    bShouldShowOnMap=true
+    bShouldShowOnMap=false
 }

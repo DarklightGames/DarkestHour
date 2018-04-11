@@ -23,7 +23,7 @@ var class<DHConstructionSupplyAttachment>       SupplyAttachmentClass;
 function PostBeginPlay()
 {
     // not sure if I need to create the attachement here
-    CreateSupplyAttachment();
+    //CreateSupplyAttachment();
 }
 
 function Reset()
@@ -41,11 +41,12 @@ function Reset()
 
 function int GetTeamIndex()
 {
-    return int(default.TeamOwner);
+    return int(TeamOwner);
 }
 
 function MyOnSupplyCountChanged(DHConstructionSupplyAttachment CSA)
 {
+    // @Basnett what is this doing? you'll have to explain to Theel how you "delegate" functions
     if (CSA != none)
     {
         NetUpdateTime = Level.TimeSeconds - 1.0;
@@ -54,8 +55,6 @@ function MyOnSupplyCountChanged(DHConstructionSupplyAttachment CSA)
 
 function CreateSupplyAttachment()
 {
-    Log("Spawning the main supply cache attachment");
-
     // Spawn the supply attachment and set up the delegates.
     // We hide the supply attachment since we are going to handle the visualization through the the construction.
     SupplyAttachment = Spawn(SupplyAttachmentClass, self);
@@ -70,15 +69,13 @@ function CreateSupplyAttachment()
     SupplyAttachment.OnSupplyCountChanged = MyOnSupplyCountChanged;
     SupplyAttachment.SetSupplyCount(default.InitialSupplyCount);
     SupplyAttachment.BonusSupplyGenerationRate = default.BonusSupplyGenerationRate;
-    SupplyAttachment.bHidden = false; // CHANGE THIS BACK!
+    SupplyAttachment.bHidden = true;
 }
 
 function DestroySupplyAttachment()
 {
     if (SupplyAttachment != none)
     {
-        Log("Now destroying it!");
-
         SupplyAttachment.Destroy();
     }
 }
