@@ -23,6 +23,5 @@ defaultproperties
     bAcceptsProjectors=false
     ProgressMax=3
     GroupClass=class'DHConstructionGroup_Obstacles'
-    bCanBePlacedWithControlPoints=true
-    ControlPointParameters=(SpacingDistanceMeters=0.75)
+    bShouldSwitchToLastWeaponOnPlacement=false
 }
