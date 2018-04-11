@@ -64,7 +64,7 @@ defaultproperties
     bIsConsoleMessage=false
     bComplexString=true
     DrawColor=(R=255,G=255,B=255,A=255)
-    FontSize=0
+    FontSize=-2
     Lifetime=0.25
     PosY=0.80
     ErrorMessages(2)="You must {verb} a {name} on solid ground."
@@ -89,5 +89,6 @@ defaultproperties
     ErrorMessages(21)="You cannot {verb} a {name} while you are busy."
     ErrorMessages(22)="Too close to an objective ({string}), it must be {integer}m further away."
     ErrorMessages(23)="Too close to an uncontrolled objective ({string}), it must be {integer}m further away."
+    ErrorMessages(24)="Too close to enemy secured: {string}, it must be closer to another {name}, controlled objective, or {integer}m further away."
 }
 

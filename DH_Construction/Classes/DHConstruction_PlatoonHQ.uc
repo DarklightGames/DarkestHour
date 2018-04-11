@@ -227,8 +227,10 @@ defaultproperties
     SpawnPointClass=class'DHSpawnPoint_PlatoonHQ'
     bCanBeTornDownByFriendlies=false
     FriendlyFireDamageScale=0.0
-    ObjectiveDistanceMinMeters=75
-    EnemyObjectiveDistanceMinMeters=150
+    ObjectiveDistanceMinMeters=100
+    EnemyObjectiveDistanceMinMeters=150.0
+    EnemySecuredObjectiveDistanceMinMeters=800.0
+    PermittedFriendlyControlledDistanceMeters=300.0 // This should be higher than both ObjectiveDistanceMinMeters and DuplicateFriendlyDistanceInMeters
     GroupClass=class'DHConstructionGroup_Logistics'
 }
 

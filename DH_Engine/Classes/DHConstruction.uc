@@ -32,7 +32,8 @@ enum EConstructionErrorType
     ERROR_SquadTooSmall,            // Not enough players in the squad!
     ERROR_PlayerBusy,               // Player is in an undesireable state (e.g. MG deployed, crawling, prone transitioning or otherwise unable to switch weapons)
     ERROR_TooCloseToObjective,      // Too close to an objective
-    ERROR_TooCloseToEnemyObjective, // Too far from a controlled objective
+    ERROR_TooCloseToEnemyObjective, // Too close to enemy controlled objective
+    ERROR_TooCloseToEnemyInactiveObjective, // Too close to enemy controlled objective which you cannot attack yet
     ERROR_Custom,                   // Custom error type (provide an error message in OptionalString)
     ERROR_Other
 };
@@ -96,8 +97,10 @@ var     bool    bCanPlaceInObjective;
 var     int     SquadMemberCountMinimum;        // The number of members you must have in your squad to create this.
 var     float   ArcLengthTraceIntervalInMeters; // The arc-length interval, in meters, used when tracing "outwards" during placement to check for blocking objects.
 
-var     float   ObjectiveDistanceMinMeters;         // The minimum distance, in meters, that this construction must be placed away from all objectives.
-var     float   EnemyObjectiveDistanceMinMeters;    // The minimum distance, in meters, that this construction must be placed away from enemy objectives.
+var     float   ObjectiveDistanceMinMeters;                     // The minimum distance, in meters, that this construction must be placed away from all objectives.
+var     float   EnemyObjectiveDistanceMinMeters;                // The minimum distance, in meters, that this construction must be placed away from enemy objectives.
+var     float   EnemySecuredObjectiveDistanceMinMeters;         // The minimum distance, in meters, that this construction must be placed away from inactive enemy objectives. Can be overriden by PermittedFriendlyControlledDistanceMeters
+var     float   PermittedFriendlyControlledDistanceMeters;      // The distance, in meters, that will allow this construction to be placed closer to inactive enemy objectives, if a friendly duplicate exists in
 
 // Terrain placement
 var     bool    bSnapToTerrain;                 // If true, the origin of the placement (prior to the PlacementOffset) will coincide with the nearest terrain vertex during placement.
