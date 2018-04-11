@@ -296,6 +296,14 @@ function InternalOnChange(GUIComponent Sender)
         case ch_DynamicFogRatio:
             bUseDynamicFogRatio = bool(ch_DynamicFogRatio.GetComponentValue());
             PlayerOwner().ConsoleCommand("set DH_Engine.DHPlayer bDynamicFogRatio" @ bUseDynamicFogRatio);
+
+            // If we are turning the DynamicFogRatio off, then update the current LODDistance to the setting of the fog distance slider
+            // From UScript, we cannot get the current LODDistance setting, we can get the INI setting, but not the current used value
+            // So instead, the optimal approach is to just have the current LODDistance value match the fog slider when this setting is turned off
+            if (PlayerOwner().Level != none && !bUseDynamicFogRatio)
+            {
+                PlayerOwner().Level.UpdateDistanceFogLOD(fDistance);
+            }
             break;
 
         case nu_MinDesiredFPS:
