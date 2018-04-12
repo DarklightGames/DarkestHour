@@ -173,7 +173,7 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerStartEngine, ServerUnloadSupplies, ServerLoadSupplies, ServerInitiateVehicleScuttle;
+        ServerStartEngine, ServerUnloadSupplies, ServerLoadSupplies;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -3714,24 +3714,6 @@ function DeleteInventory(Inventory Item);
 function Inventory FindInventoryType(class DesiredClass) { return none; }
 simulated function Weapon GetDemoRecordingWeapon() { return none; }
 exec function NextItem(); // only concerns UT2004 PowerUps) & just causes "accessed none" log errors if keybound & used
-
-exec function InitiateVehicleScuttle()
-{
-    ServerInitiateVehicleScuttle();
-}
-
-function ServerInitiateVehicleScuttle()
-{
-    bSpikedVehicle = true;
-    SetSpikeTimer();
-
-    DisplayVehicleMessage(29);
-
-    if (bDebuggingText)
-    {
-        Level.Game.Broadcast(self, "Initiating" @ VehicleSpikeTime @ "sec spike timer for disabled vehicle" @ VehicleNameString);
-    }
-}
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *************************** DEBUG EXEC FUNCTIONS  *****************************  //

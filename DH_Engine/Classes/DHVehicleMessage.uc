@@ -144,5 +144,5 @@ defaultproperties
     OnlyTankCrewCanLockVehicle="Only tank crew roles can lock or unlock vehicle"
     CanOnlyLockFromCrewPosition="Can only lock or unlock vehicle if you are in a tank crew position"
     OtherCrewmanCanLockVehicle="Only the most senior crew position can lock or unlock vehicle"
-    VehicleScuttleInitiated="Vehicle scuttle initiated, vehicle must be clear of occupents"
+    VehicleScuttleInitiated="currently deprecated"
 }
