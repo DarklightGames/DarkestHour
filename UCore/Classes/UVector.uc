@@ -26,3 +26,9 @@ static final function float MinElement(vector V)
 {
     return FMin(V.X, FMin(V.Y, V.Z));
 }
+
+static final function vector VLerp(float T, vector Start, vector End)
+{
+    return Start + ((End - Start) * T);
+}
+

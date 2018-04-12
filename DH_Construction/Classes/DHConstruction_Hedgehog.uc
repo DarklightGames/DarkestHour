@@ -23,4 +23,5 @@ defaultproperties
     bAcceptsProjectors=false
     ProgressMax=3
     GroupClass=class'DHConstructionGroup_Obstacles'
+    bShouldSwitchToLastWeaponOnPlacement=false
 }

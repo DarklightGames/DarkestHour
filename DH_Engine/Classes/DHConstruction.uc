@@ -91,15 +91,19 @@ var     int     RotationSnapAngle;
 var     rotator StartRotationMin;
 var     rotator StartRotationMax;
 var     int     LocalRotationRate;
-var     bool    bInheritsOwnerRotation;         // If true, the base rotation of the placement (prior to local rotation) will be inherited from the owner.
 var     bool    bCanPlaceInObjective;
 var     int     SquadMemberCountMinimum;        // The number of members you must have in your squad to create this.
 var     float   ArcLengthTraceIntervalInMeters; // The arc-length interval, in meters, used when tracing "outwards" during placement to check for blocking objects.
 
-var     float   ObjectiveDistanceMinMeters;                     // The minimum distance, in meters, that this construction must be placed away from all objectives.
-var     float   EnemyObjectiveDistanceMinMeters;                // The minimum distance, in meters, that this construction must be placed away from enemy objectives.
-var     float   EnemySecuredObjectiveDistanceMinMeters;         // The minimum distance, in meters, that this construction must be placed away from inactive enemy objectives. Can be overriden by PermittedFriendlyControlledDistanceMeters
-var     float   PermittedFriendlyControlledDistanceMeters;      // The distance, in meters, that will allow this construction to be placed closer to inactive enemy objectives, if a friendly duplicate exists in
+var     float   ObjectiveDistanceMinMeters;             // The minimum distance, in meters, that this construction must be placed away from all objectives.
+var     float   EnemyObjectiveDistanceMinMeters;        // The minimum distance, in meters, that this construction must be placed away from enemy objectives.
+var     bool    bShouldSwitchToLastWeaponOnPlacement;
+var     bool    bCanBePlacedWithControlPoints;
+
+var struct SControlPointParameters
+{
+    var float SpacingDistanceMeters;
+} ControlPointParameters;
 
 // Terrain placement
 var     bool    bSnapToTerrain;                 // If true, the origin of the placement (prior to the PlacementOffset) will coincide with the nearest terrain vertex during placement.
@@ -993,6 +997,11 @@ static function DHConstruction.ConstructionError GetCustomProxyError(DHConstruct
     return E;
 }
 
+static function float GetPlacementDiameter()
+{
+    return default.CollisionRadius * 2 + class'DHUnits'.static.MetersToUnreal(default.ControlPointParameters.SpacingDistanceMeters);
+}
+
 defaultproperties
 {
     TeamOwner=TEAM_Neutral
@@ -1066,10 +1075,9 @@ defaultproperties
     PokeTerrainRadius=32
     PokeTerrainDepth=32
     TerrainScaleMax=256.0
-    RotationSnapAngle=16384
-    bInheritsOwnerRotation=true
     bShouldAlignToGround=true
     ArcLengthTraceIntervalInMeters=1.0
+    bShouldSwitchToLastWeaponOnPlacement=true
 
     // Stagnation
     bCanDieOfStagnation=true

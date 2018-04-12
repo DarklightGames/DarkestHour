@@ -49,6 +49,12 @@ var int                 SupplyDepositCounter;               // The next time tha
 var int                 SupplyGenerationRate;               // The base amount of supplies that are generated every minute, gets reduced per cache.
 var int                 BonusSupplyGenerationRate;          // Bonus amount of supplies that are generated on top of SupplyGenerationRate every minute (does not get reduced per # of caches).
 
+struct Withdrawal
+{
+    var DHConstructionSupplyAttachment Attachment;
+    var int Amount;
+};
+
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -361,6 +367,7 @@ static function bool CompareFunction(Object LHS, Object RHS)
 // put on it for getting notified (OnResupplied)
 defaultproperties
 {
+    TeamIndex=-1
     SupplyPointIndex=-1
     SupplyCount=2000.0
     SupplyCountMax=2000

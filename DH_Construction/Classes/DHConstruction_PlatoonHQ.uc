@@ -13,6 +13,8 @@ var int                             FlagSkinIndex;
 var class<DHSpawnPoint_PlatoonHQ>   SpawnPointClass;
 
 var localized string                CustomErrorString;
+var float                           EnemySecuredObjectiveDistanceMinMeters;     // The minimum distance, in meters, that this construction must be placed away from inactive enemy objectives. Can be overriden by PermittedFriendlyControlledDistanceMeters.
+var float                           PermittedFriendlyControlledDistanceMeters;  // The distance, in meters, that will allow this construction to be placed closer to inactive enemy objectives, if a friendly duplicate exists in
 
 simulated state Constructed
 {

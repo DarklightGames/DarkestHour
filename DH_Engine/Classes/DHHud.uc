@@ -2162,7 +2162,7 @@ function DrawPlayerNames(Canvas C)
     }
 
     // STAGE 1: check if we are looking directly at player (or a vehicle with a player) within 50m, who is not behind something
-    foreach TraceActors(class'Actor', A, HitLocation, HitNormal, ViewLocation + (3018.0 * vector(PlayerOwner.CalcViewRotation)), ViewLocation)
+    foreach TraceActors(class'Actor', A, HitLocation, HitNormal, ViewLocation + (class'DHUnits'.static.MetersToUnreal(50.0) * vector(PlayerOwner.CalcViewRotation)), ViewLocation)
     {
         // Ignore non-blocking actors
         if (!A.bBlockActors)
@@ -2256,7 +2256,7 @@ function DrawPlayerNames(Canvas C)
     }
 
     // STAGE 2: find all other pawns within 25 meters & build our Pawns array (excluding our own pawn & any LookedAtPawn we've already added)
-    foreach RadiusActors(class'Pawn', P, 1509.0, ViewLocation)
+    foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(25.0), ViewLocation)
     {
         if (P != PawnOwner && P != LookedAtPawn)
         {

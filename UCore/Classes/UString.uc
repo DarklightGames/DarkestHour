@@ -166,3 +166,22 @@ static final function string CRLF()
 {
     return Chr(13) $ Chr(10);
 }
+
+// This is essentially a redeclaration of the same function found in GameInfo.
+// Unfortunately, the dingus who wrote it didn't make it static, which is why
+// this one is necessary.
+static final function string StripColor(string S)
+{
+    local int i;
+
+    i = InStr(S, Chr(27));
+
+    while (i >= 0)
+    {
+        S = Left(S, i) $ Mid(S, i + 4);
+        i = InStr(S, Chr(27));
+    }
+
+    return S;
+}
+
