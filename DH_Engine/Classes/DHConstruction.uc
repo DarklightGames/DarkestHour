@@ -33,7 +33,6 @@ enum EConstructionErrorType
     ERROR_PlayerBusy,               // Player is in an undesireable state (e.g. MG deployed, crawling, prone transitioning or otherwise unable to switch weapons)
     ERROR_TooCloseToObjective,      // Too close to an objective
     ERROR_TooCloseToEnemyObjective, // Too close to enemy controlled objective
-    ERROR_TooCloseToEnemyInactiveObjective, // Too close to enemy controlled objective which you cannot attack yet
     ERROR_Custom,                   // Custom error type (provide an error message in OptionalString)
     ERROR_Other
 };

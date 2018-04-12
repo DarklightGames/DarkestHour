@@ -12,6 +12,8 @@ var DHSpawnPoint_PlatoonHQ          SpawnPoint;
 var int                             FlagSkinIndex;
 var class<DHSpawnPoint_PlatoonHQ>   SpawnPointClass;
 
+var localized string                CustomErrorString;
+
 simulated state Constructed
 {
     simulated function bool CanTakeTearDownDamageFromPawn(Pawn P, optional bool bShouldSendErrorMessage)
@@ -191,6 +193,84 @@ simulated function Material GetFlagMaterial()
     return Texture'DH_Construction_tex.Base.flags_01_blank';
 }
 
+static function DHConstruction.ConstructionError GetCustomProxyError(DHConstructionProxy P)
+{
+    local Actor A;
+    local DHConstruction C;
+    local DHConstruction.ConstructionError E;
+    local bool bFoundFriendlyDuplicate, bWithinFriendlyObjectiveDistance;
+    local float ControlledObjDistanceMin, DistanceMin, Distance;
+    local int i, TeamIndex, ObjectiveIndex;
+    local DHGameReplicationInfo GRI;
+
+    TeamIndex = P.GetContext().TeamIndex;
+    GRI = DHGameReplicationInfo(P.GetContext().PlayerController.GameReplicationInfo);
+
+    // Do we have a friendly duplicate within PermittedFriendlyControlledDistanceMeters distance?
+    foreach P.RadiusActors(default.Class, A, class'DHUnits'.static.MetersToUnreal(default.PermittedFriendlyControlledDistanceMeters))
+    {
+        C = DHConstruction(A);
+
+        if (C != none && (C.GetTeamIndex() == NEUTRAL_TEAM_INDEX || C.GetTeamIndex() == TeamIndex))
+        {
+            bFoundFriendlyDuplicate = true;
+            break;
+        }
+    }
+
+    // If not, then check if we are trying to place too close to an inactive enemy objective
+    if (!bFoundFriendlyDuplicate)
+    {
+        ControlledObjDistanceMin = class'DHUnits'.static.MetersToUnreal(default.PermittedFriendlyControlledDistanceMeters);
+        DistanceMin = class'DHUnits'.static.MetersToUnreal(default.EnemySecuredObjectiveDistanceMinMeters);
+        ObjectiveIndex = -1;
+
+        for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
+        {
+            if (GRI.DHObjectives[i] == none)
+            {
+                continue;
+            }
+
+            // Do the check on secured enemy objectives and set index if within range (prioritizes the closest one)
+            if (!GRI.DHObjectives[i].bActive && TeamIndex != int(GRI.DHObjectives[i].ObjState))
+            {
+                Distance = VSize(P.Location - GRI.DHObjectives[i].Location);
+
+                if (Distance < DistanceMin)
+                {
+                    DistanceMin = Distance;
+                    ObjectiveIndex = i;
+                }
+            }
+
+            // Find out if there is a friendly owned objective with the same range as PermittedFriendlyControlledDistanceMeters
+            // An objective can act as a duplicate, this is basically needed or else it is very hard to place an HQ if you don't have one already
+            if (TeamIndex == int(GRI.DHObjectives[i].ObjState))
+            {
+                Distance = VSize(P.Location - GRI.DHObjectives[i].Location);
+
+                if (Distance < ControlledObjDistanceMin)
+                {
+                    bWithinFriendlyObjectiveDistance = true;
+                }
+            }
+        }
+
+        // If we found a secured enemy objective within range AND we are not within range of a friendly control objective, then restrict
+        if (ObjectiveIndex != -1 && !bWithinFriendlyObjectiveDistance)
+        {
+            E.Type = ERROR_Custom;
+            E.CustomErrorString = default.CustomErrorString;
+            E.OptionalString = GRI.DHObjectives[ObjectiveIndex].ObjName;
+            E.OptionalInteger = default.PermittedFriendlyControlledDistanceMeters;
+            return E;
+        }
+    }
+
+    return E;
+}
+
 defaultproperties
 {
     MenuName="Platoon HQ"
@@ -211,6 +291,7 @@ defaultproperties
     GroundSlopeMaxInDegrees=10
     SquadMemberCountMinimum=3
     ArcLengthTraceIntervalInMeters=0.5
+    CustomErrorString="Cannot {verb} a {name} so close to {string} unless it is within {integer}m of a controlled objective or {name}."
 
     StartRotationMin=(Yaw=32768)
     StartRotationMax=(Yaw=32768)

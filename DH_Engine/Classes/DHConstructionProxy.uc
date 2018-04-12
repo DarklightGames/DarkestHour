@@ -659,11 +659,10 @@ function DHConstruction.ConstructionError GetPositionError()
     local ROMineVolume MV;
     local DHSpawnPointBase SP;
     local DHLocationHint LH;
-    local float OtherRadius, OtherHeight, F, DistanceMin, ControlledObjDistanceMin, Distance;
+    local float OtherRadius, OtherHeight, F, DistanceMin, Distance;
     local DHGameReplicationInfo GRI;
     local int i, ObjectiveIndex;
     local DHConstruction.ConstructionError E;
-    local bool bFoundFriendlyDuplicate, bWithinFriendlyObjectiveDistance;
 
     GRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
 
@@ -869,69 +868,6 @@ function DHConstruction.ConstructionError GetPositionError()
             E.Type = ERROR_TooCloseEnemy;
             E.OptionalInteger = int(Ceil(F));
             return E;
-        }
-    }
-
-    // If construction has EnemySecuredObjectiveDistanceMinMeters restriction
-    // Find out if we have a duplicate within PermittedFriendlyControlledDistanceMeters
-    // Then loop objectives and find nearest enemy secured obj and see if we are too close (EnemySecuredObjectiveDistanceMinMeters)
-    // If we are too close, then restrict placement, but only if we are out of range from a friendly controlled objective
-    if (ConstructionClass.default.EnemySecuredObjectiveDistanceMinMeters > 0.0)
-    {
-        // Do we have a friendly duplicate within PermittedFriendlyControlledDistanceMeters distance?
-        foreach RadiusActors(ConstructionClass, A, class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.PermittedFriendlyControlledDistanceMeters))
-        {
-            C = DHConstruction(A);
-
-            if (C != none && (C.GetTeamIndex() == NEUTRAL_TEAM_INDEX || C.GetTeamIndex() == PawnOwner.GetTeamNum()))
-            {
-                bFoundFriendlyDuplicate = true;
-                break;
-            }
-        }
-
-        // If not, then check if we are trying to place too close to an inactive enemy objective
-        if (!bFoundFriendlyDuplicate)
-        {
-            ControlledObjDistanceMin = class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.PermittedFriendlyControlledDistanceMeters);
-            DistanceMin = class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.EnemySecuredObjectiveDistanceMinMeters);
-            ObjectiveIndex = -1;
-
-            for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
-            {
-                // Do the check on secured enemy objectives and set index if within range (prioritizes the closest one)
-                if (GRI.DHObjectives[i] != none && !GRI.DHObjectives[i].bActive && PawnOwner.GetTeamNum() != int(GRI.DHObjectives[i].ObjState))
-                {
-                    Distance = VSize(Location - GRI.DHObjectives[i].Location);
-
-                    if (Distance < DistanceMin)
-                    {
-                        DistanceMin = Distance;
-                        ObjectiveIndex = i;
-                    }
-                }
-
-                // Find out if there is a friendly owned objective with the same range as PermittedFriendlyControlledDistanceMeters
-                // An objective can act as a duplicate, this is basically needed or else it is very hard to place an HQ if you don't have one already
-                if (GRI.DHObjectives[i] != none && PawnOwner.GetTeamNum() == int(GRI.DHObjectives[i].ObjState))
-                {
-                    Distance = VSize(Location - GRI.DHObjectives[i].Location);
-
-                    if (Distance < ControlledObjDistanceMin)
-                    {
-                        bWithinFriendlyObjectiveDistance = true;
-                    }
-                }
-            }
-
-            // If we found a secured enemy objective within range AND we are not within range of a friendly control objective, then restrict
-            if (ObjectiveIndex != -1 && !bWithinFriendlyObjectiveDistance)
-            {
-                E.Type = ERROR_TooCloseToEnemyInactiveObjective;
-                E.OptionalString = GRI.DHObjectives[ObjectiveIndex].ObjName;
-                E.OptionalInteger = Max(1, ConstructionClass.default.EnemySecuredObjectiveDistanceMinMeters - class'DHUnits'.static.UnrealToMeters(DistanceMin));
-                return E;
-            }
         }
     }
 
