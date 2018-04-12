@@ -1477,7 +1477,7 @@ defaultproperties
     ConstructionClassNames(2)="DH_Construction.DHConstruction_Resupply_Players"
     ConstructionClassNames(3)="DH_Construction.DHConstruction_Resupply_Vehicles"
     ConstructionClassNames(4)="DH_Construction.DHConstruction_Radio"
-    //ConstructionClassNames(5)="DH_Construction.DHConstruction_VehiclePool"
+    ConstructionClassNames(5)="DH_Construction.DHConstruction_VehiclePool"
 
     // Obstacles
     ConstructionClassNames(6)="DH_Construction.DHConstruction_ConcertinaWire"
