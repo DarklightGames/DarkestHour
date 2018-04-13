@@ -281,6 +281,7 @@ defaultproperties
     Stages(0)=()
     ProgressMax=9
     SupplyCost=750
+    MinDamagetoHurt=50
 
     // Placement
     bCanPlaceIndoors=false
