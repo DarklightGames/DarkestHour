@@ -40,7 +40,6 @@ static final function int FromShorts(optional int Short1, optional int Short2)
     return ((Short2 & 0xFFFF) << 16) | (Short1 & 0xFFFF);
 }
 
-
 static final function int FromHex(string S)
 {
     local int i, j, R;
