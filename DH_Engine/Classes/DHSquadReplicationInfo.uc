@@ -136,6 +136,9 @@ function Timer()
     local array<DHSpawnPoint_SquadRallyPoint> SquadRallyPoints, ActiveSquadRallyPoints;
     local UComparator Comparator;
     local array<DHPlayerReplicationInfo> Volunteers;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
     // We want our player to know where his squadmates are at all times by
     // looking at the situation map. However, since the player may not have
@@ -155,8 +158,14 @@ function Timer()
 
         PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
-        if (PRI == none || !PRI.IsInSquad())
+        if (PRI == none)
         {
+            continue;
+        }
+
+        if (!PRI.IsInSquad() && bAreRallyPointsEnabled && Level.Game.GameReplicationInfo.ElapsedTime % 30 == 0)
+        {
+            PC.ReceiveLocalizedMessage(SquadMessageClass, 73,,, PC);
             continue;
         }
 

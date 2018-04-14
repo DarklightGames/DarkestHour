@@ -521,6 +521,11 @@ exec function PlayerMenu(optional int Tab)
     }
 }
 
+exec function SquadJoinAuto()
+{
+    ServerSquadJoinAuto();
+}
+
 // Modified to remove pausing in singleplayer and to open the correct menu
 function ShowMidGameMenu(bool bPause)
 {
@@ -5829,6 +5834,11 @@ function ServerRequestArtillery(DHRadio Radio, int ArtilleryTypeIndex)
     {
         Radio.RequestArtillery(Pawn, ArtilleryTypeIndex);
     }
+}
+
+exec function version(string LHS, string RHS)
+{
+    Level.Game.Broadcast(self, class'UVersion'.static.FromString(LHS).Compare(class'UVersion'.static.FromString(RHS)));
 }
 
 // Functions emptied out as RO/DH doesn't use a LocalStatsScreen actor & these aren't used

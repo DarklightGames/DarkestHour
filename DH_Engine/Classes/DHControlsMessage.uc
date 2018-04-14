@@ -41,7 +41,7 @@ static function RenderComplexMessage(Canvas Canvas,
 
         for (j = 0; j < default.Controls[i].Keys.Length; ++j)
         {
-            Keys[Keys.Length] = class'GameInfo'.static.MakeColorCode(class'UColor'.default.Gray) $
+            Keys[Keys.Length] = class'GameInfo'.static.MakeColorCode(class'Canvas'.static.MakeColor(200, 200, 200)) $
                                 "[" $ class'ROTeamGame'.static.ParseLoadingHintNoColor("%" $ default.Controls[i].Keys[j] $ "%", PC) $ "]" $
                                 class'GameInfo'.static.MakeColorCode(class'UColor'.default.White);
         }
@@ -59,11 +59,12 @@ static function RenderComplexMessage(Canvas Canvas,
 
 defaultproperties
 {
-    PosY=0.7
+    PosY=0.8
     bComplexString=true
     bIsConsoleMessage=false
     bIsUnique=true
     bFadeMessage=false
     Lifetime=0.25
+    FontSize=-2
 }
 

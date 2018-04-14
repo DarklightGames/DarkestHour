@@ -49,6 +49,7 @@ var localized string AlreadyInSquad;
 var localized string YouAreNowAssistantMessage;
 var localized string YouAreNoLongerAssistantMessage;
 var localized string NewAssistantMessage;
+var localized string NotInSquadMessage;
 
 static function string GetString(optional int S, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -153,6 +154,8 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
             return default.YouAreNoLongerAssistantMessage;
         case 72:
             return Repl(default.NewAssistantMessage, "{0}", RelatedPRI_1.PlayerName);
+        case 73:
+            return class'ROTeamGame'.static.ParseLoadingHintNoColor(default.NotInSquadMessage, PlayerController(OptionalObject));
         default:
             break;
     }
@@ -206,6 +209,7 @@ defaultproperties
     YouAreNowAssistantMessage="You are now the squad leader's assistant."
     YouAreNoLongerAssistantMessage="You are no longer the squad leader's assistant."
     NewAssistantMessage="{0} has been promoted to squad leader's assistant."
+    NotInSquadMessage="You are not in a squad. Press [%SQUADMENU%] to enter the squad menu or press [%SQUADJOINAUTO%] to automatically join a squad."
 
     bIsSpecial=false
     bIsConsoleMessage=true

@@ -125,6 +125,10 @@ defaultproperties
 
     bindings_game(4)="ToggleVehicleLock"
     captions_game(4)="Lock/Unlock Armored Vehicle"
+    bindings_game(5)="ShowOrderMenu | OnRelease HideOrderMenu"
+    captions_game(5)="Squad Orders Menu"
+    bindings_game(6)="SquadJoinAuto"
+    captions_game(6)="Auto-Join Squad"
 
     bindings_weapons(9)="ROMGOperation" // renumbered from here so the new vehicle smoke launcher controls are grouped together at the end of the weapons section
     captions_weapons(9)="Change MG Barrel"
@@ -153,9 +157,6 @@ defaultproperties
     captions_comm(9)="Switch to Unassigned Voice Channel"
     bindings_comm(10)="Speak Squad"
     captions_comm(10)="Switch to Squad Voice Channel"
-
-    bindings_interface(5)="ShowOrderMenu | OnRelease HideOrderMenu"
-    captions_interface(5)="Squad Orders Menu"
 
     Begin Object Class=DHGUIProportionalContainer Name=InputBK1
         HeaderBase=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption'

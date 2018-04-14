@@ -324,27 +324,23 @@ event Opened(GUIComponent Sender)
     {
         SavedVersionObject = class'UVersion'.static.FromString(SavedVersion);
 
-        // Matt: suggest add "alpha" so ppl using the dev build or who have played the v8-alpha test version will get the new smoke launcher and vehicle lock keys
-        if (SavedVersionObject == none || SavedVersionObject.Major < 8) // || SavedVersionObject.Prerelease == "alpha")
+        // To make a long story short, we can't force the client to delete
+        // their configuration file at will, so we need to forcibly create
+        // control bindings for the new commands added in 8.0;
+        if (SavedVersionObject == none || SavedVersionObject.Major < 8)
         {
-            // To make a long story short, we can't force the client to delete
-            // their configuration file at will, so we need to forcibly create
-            // control bindings for the new commands added in 8.0;
-            Controller.SetKeyBind("I", "SquadTalk");
-            Controller.SetKeyBind("Insert", "Speak Squad");
-            Controller.SetKeyBind("CapsLock", "ShowOrderMenu | OnRelease HideOrderMenu");
-            //Controller.SetKeyBind("L", "ToggleVehicleLock"); // Matt: want to add
-            Controller.SetKeyBind("Minus", "DecreaseSmokeLauncherSetting");
-            Controller.SetKeyBind("Equals", "IncreaseSmokeLauncherSetting");
-            // TODO: fetch the defaults programmatically, this is sloppy!
-            // Matt: suggested alternative below, using new SetKeyBindIfAvailable() function:
-            /*
             SetKeyBindIfAvailable("I", "SquadTalk");
             SetKeyBindIfAvailable("Insert", "Speak Squad");
-            SetKeyBindIfAvailable("CapsLock", "ShowOrderMenu | OnRelease HideOrderMenu");
+            SetKeyBindIfAvailable("CapsLock", "ToggleRadialMenu");
             SetKeyBindIfAvailable("L", "ToggleVehicleLock");
             SetKeyBindIfAvailable("Minus", "DecreaseSmokeLauncherSetting", "ShrinkHUD"); // optional 3rd argument means it will override a current binding to the ShrinkHUD command
-            SetKeyBindIfAvailable("Equals", "IncreaseSmokeLauncherSetting", "GrowHUD"); */
+            SetKeyBindIfAvailable("Equals", "IncreaseSmokeLauncherSetting", "GrowHUD");
+        }
+
+        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.0.9")) > 0)
+        {
+            SetKeyBindIfAvailable("Slash", "SquadJoinAuto");
+            SetKeyBindIfAvailable("P", "SquadMenu");
         }
 
         SavedVersion = class'DarkestHourGame'.default.Version.ToString();
