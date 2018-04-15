@@ -577,6 +577,7 @@ function DHConstruction.ConstructionError GetPositionError()
     local vector TraceStart, TraceEnd, CeilingHitLocation, CeilingHitNormal;
     local Actor HitActor;
     local DHConstructionProxy CP;
+    local bool bDidSatisfyProximityRequirement;
 
     GRI = DHGameReplicationInfo(PlayerOwner.GameReplicationInfo);
 
@@ -844,6 +845,31 @@ function DHConstruction.ConstructionError GetPositionError()
         {
             E.Type = ERROR_TooCloseEnemy;
             E.OptionalInteger = int(Ceil(F));
+            return E;
+        }
+    }
+
+    for (i = 0; i < ConstructionClass.default.ProximityRequirements.Length; ++i)
+    {
+        bDidSatisfyProximityRequirement = false;
+
+        foreach RadiusActors(ConstructionClass.default.ProximityRequirements[i].ConstructionClass, A,
+                             class'DHUnits'.static.MetersToUnreal(ConstructionClass.default.ProximityRequirements[i].DistanceMeters))
+        {
+            C = DHConstruction(A);
+
+            if (C != none && C.GetTeamIndex() == PawnOwner.GetTeamNum() && C.IsConstructed())
+            {
+                bDidSatisfyProximityRequirement = true;
+                break;
+            }
+        }
+
+        if (!bDidSatisfyProximityRequirement)
+        {
+            E.Type = ERROR_MissingRequirement;
+            E.OptionalInteger = ConstructionClass.default.ProximityRequirements[i].DistanceMeters;
+            E.OptionalString = ConstructionClass.default.ProximityRequirements[i].ConstructionClass.default.MenuName;
             return E;
         }
     }

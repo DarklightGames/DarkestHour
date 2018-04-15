@@ -67,5 +67,7 @@ defaultproperties
     CollisionRadius=300.0
     CollisionHeight=60.0
     GroupClass=class'DHConstructionGroup_Logistics'
+
+    ProximityRequirements(0)=(ConstructionClass=class'DHConstruction_PlatoonHQ',DistanceMeters=100.0)
 }
 
