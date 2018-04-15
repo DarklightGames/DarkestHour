@@ -90,7 +90,7 @@ var     int                     WeaponLockViolations;       // the number of vio
 var     DHSquadReplicationInfo  SquadReplicationInfo;
 var     bool                    bIgnoreSquadInvitations;
 var     bool                    bIgnoreSquadLeaderVolunteerPrompts;
-var     vector                  SquadMemberLocations[12];   // SQUAD_SIZE_MAX
+var     int                     SquadMemberLocations[12];   // SQUAD_SIZE_MAX
 
 var     DHCommandInteraction    CommandInteraction;
 

@@ -2893,7 +2893,8 @@ function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, 
         // Squad leader
         if (PC.GetSquadIndex() != -1 && PC.GetSquadMemberIndex() != 0)
         {
-            Target = PC.SquadMemberLocations[0];
+            class'UQuantize'.static.DequantizeClamped2DPose(PC.SquadMemberLocations[0], Target.X, Target.Y);
+            Target = DHGRI.GetWorldCoords(Target.X, Target.Y);
 
             // Update widget color & texture
             CompassIcons.WidgetTexture = SquadLeaderIconMaterial;
@@ -3856,7 +3857,7 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
     local color SquadMemberColor, SelfColor;
     local int i;
     local array<DHPlayerReplicationInfo> SquadMembers;
-    local float IconScale;
+    local float IconScale, X, Y;
 
     PC = DHPlayer(PlayerOwner);
 
@@ -3903,11 +3904,10 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
                 PlayerLocation = OtherPawn.Location;
                 PlayerYaw = OtherPawn.Rotation.Yaw;
             }
-            else if (OtherPRI.SquadMemberIndex != -1 && PC.SquadMemberLocations[OtherPRI.SquadMemberIndex] != vect(0, 0, 0))
+            else if (OtherPRI.SquadMemberIndex != -1 && PC.SquadMemberLocations[OtherPRI.SquadMemberIndex] != 0)
             {
-                PlayerLocation.X = PC.SquadMemberLocations[OtherPRI.SquadMemberIndex].X;
-                PlayerLocation.Y = PC.SquadMemberLocations[OtherPRI.SquadMemberIndex].Y;
-                PlayerYaw = PC.SquadMemberLocations[OtherPRI.SquadMemberIndex].Z;
+                class'UQuantize'.static.DequantizeClamped2DPose(PC.SquadMemberLocations[OtherPRI.SquadMemberIndex], X, Y, PlayerYaw);
+                PlayerLocation = DHGRI.GetWorldCoords(X, Y);
             }
             else
             {

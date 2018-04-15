@@ -137,6 +137,7 @@ function Timer()
     local UComparator Comparator;
     local array<DHPlayerReplicationInfo> Volunteers;
     local DHGameReplicationInfo GRI;
+    local float X, Y;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
@@ -179,14 +180,13 @@ function Timer()
 
                 if (OtherController != none && OtherController.Pawn != none)
                 {
-                    PC.SquadMemberLocations[i].X = OtherController.Pawn.Location.X;
-                    PC.SquadMemberLocations[i].Y = OtherController.Pawn.Location.Y;
-                    PC.SquadMemberLocations[i].Z = OtherController.Pawn.Rotation.Yaw;
+                    GRI.GetMapCoords(OtherController.Pawn.Location, X, Y);
+                    PC.SquadMemberLocations[i] = class'UQuantize'.static.QuantizeClamped2DPose(X, Y, OtherController.Pawn.Rotation.Yaw);
                     continue;
                 }
             }
 
-            PC.SquadMemberLocations[i] = vect(0, 0, 0);
+            PC.SquadMemberLocations[i] = 0;
         }
     }
 
