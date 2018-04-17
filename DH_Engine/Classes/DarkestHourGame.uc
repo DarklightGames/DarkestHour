@@ -413,22 +413,25 @@ event Tick(float DeltaTime)
 {
     ServerTickRateConsolidated += DeltaTime;
 
-    // This code should only execute every SERVERTICKRATE_UPDATETIME seconds
+    // This code only executes every SERVERTICKRATE_UPDATETIME seconds
     if (ServerTickRateConsolidated > SERVERTICKRATE_UPDATETIME)
     {
         ServerTickRateAverage = ServerTickFrameCount / ServerTickRateConsolidated;
         ServerTickFrameCount = 0;
         ServerTickRateConsolidated -= SERVERTICKRATE_UPDATETIME;
 
-        // Update the server health.
-        GRI.ServerHealth = Clamp(ServerTickRateAverage, 0, 255);
+        // Update the server tick health
+        GRI.ServerTickHealth = Clamp(ServerTickRateAverage, 0, 255);
 
+        // Update the server net health
+        UpdateServerNetHealth();
+
+        // Adjust the reinforcement interval
         HandleReinforceIntervalInflation();
 
         if (bLogAverageTickRate)
         {
-            Log("              Average Server Tick Rate:" @ ServerTickRateAverage);
-            LogNetHealthInfo();
+            Log("Average Server Tick Rate:" @ ServerTickRateAverage);
         }
     }
     else
@@ -439,37 +442,49 @@ event Tick(float DeltaTime)
     super.Tick(DeltaTime);
 }
 
-function LogNetHealthInfo()
+// Function which will calculate the server's network health based on combined player packloss
+function UpdateServerNetHealth()
 {
-    local int i, combined, average, overfive;
+    const    PACKET_LOSS_THRESHOLD   = 15;
+    const    THRESHOLD_OVERRIDE      = 10;
+
+    local int       i, combined, average, overthreshold;
 
     for (i = 0; i < GRI.PRIArray.Length; ++i)
     {
-        // Don't count the webadmin dude
+        // Don't count the webadmin
         if (DHPlayerReplicationInfo(GRI.PRIArray[i]) != none)
         {
-            combined += GRI.PRIArray[i].PacketLoss;
-
-            if (GRI.PRIArray[i].PacketLoss > 250)
+            // Only count players who are under threshold
+            if (GRI.PRIArray[i].PacketLoss < PACKET_LOSS_THRESHOLD)
             {
-                Log("Someone has more than 250 packet loss");
+                combined += GRI.PRIArray[i].PacketLoss;
             }
 
-            if (DHPlayerReplicationInfo(GRI.PRIArray[i]) != none && GRI.PRIArray[i].PacketLoss > 5)
+            // Count # of players over threshold
+            if (GRI.PRIArray[i].PacketLoss > PACKET_LOSS_THRESHOLD)
             {
-                ++overfive;
+                ++overthreshold;
             }
         }
     }
 
+    // Calculate average packet loss (not counting webadmin)
     average = clamp(combined / (GRI.PRIArray.Length - 1), 0, 255);
 
-    Log("--------------------- Packet Loss Info ---------------------");
-    Log("Combined player packet loss is:" @ combined);
-    Log("Average player packet loss is:" @ average);
-    Log("The number of players with more than 5 packet loss is:" @ overfive);
-    Log("============================================================");
-    Log("");
+    if (bLogAverageTickRate)
+    {
+        Log("Average Server Packet Loss:" @ average);
+    }
+
+    // If enough players are over the PACKET_LOSS_THRESHOLD, then something is terribly wrong
+    if (overthreshold > THRESHOLD_OVERRIDE)
+    {
+        GRI.ServerNetHealth = 255; // insanely high packetloss value
+        return;
+    }
+
+    GRI.ServerNetHealth = byte(average); // Clamp(ServerTickRateAverage, 0, 255);
 }
 
 // Raises the reinforcement interval used in GRI if the server is performing poorly, otherwise it sets it to default

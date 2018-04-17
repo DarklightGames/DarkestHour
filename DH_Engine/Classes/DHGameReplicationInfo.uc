@@ -143,7 +143,8 @@ var DHConstructionManager   ConstructionManager;
 var bool                bAreConstructionsEnabled;
 var bool                bAllowAllChat;
 
-var byte                ServerHealth;
+var byte                ServerTickHealth;
+var byte                ServerNetHealth;
 
 // Map markers
 struct MapMarker
@@ -216,7 +217,8 @@ replication
         RoundOverTime,
         DHRoundLimit,
         DHRoundDuration,
-        ServerHealth,
+        ServerTickHealth,
+        ServerNetHealth,
         ArtilleryTypeInfos,
         DHArtillery;
 

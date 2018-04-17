@@ -5404,7 +5404,10 @@ defaultproperties
     MouseInterfaceIcon=(WidgetTexture=Texture'DH_GUI_Tex.Menu.DHPointer')
     PlayerNameFontSize=1
     OverrideConsoleFontName="DHFonts.DHFont14"
-    SpacingText="        "
+    SpacingText="      "
+    ConsoleMessageCount=8
+    ConsoleFontSize=2
+    MessageFontOffset=0
 
     // Death messages
     bShowDeathMessages=true

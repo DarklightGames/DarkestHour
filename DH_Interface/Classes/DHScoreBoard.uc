@@ -19,7 +19,8 @@ var int MaxPlayersListedPerSide;
 var int MyTeamIndex;
 
 var localized string PlayersText;
-var localized string HealthText;
+var localized string TickHealthText;
+var localized string NetHealthText;
 var localized string PoorText;
 var localized string FairText;
 var localized string GoodText;
@@ -415,13 +416,13 @@ simulated function UpdateScoreBoard(Canvas C)
     // Add game type
     S $= HUD.default.SpacingText $ HUD.default.MapGameTypeText $ DHGRI.GameType.default.GameTypeName;
 
-    // Server health
-    if (DHGRI.ServerHealth < 10)
+    // Server Tick Health
+    if (DHGRI.ServerTickHealth < 10)
     {
         HealthString = default.PoorText;
         HealthColor = class'UColor'.default.Red;
     }
-    else if (DHGRI.ServerHealth < 20)
+    else if (DHGRI.ServerTickHealth < 20)
     {
         HealthString = default.FairText;
         HealthColor = class'UColor'.default.Orange;
@@ -432,7 +433,28 @@ simulated function UpdateScoreBoard(Canvas C)
         HealthColor = class'UColor'.default.Green;
     }
 
-    S $= HUD.default.SpacingText $ default.HealthText $ ":" @ class'GameInfo'.static.MakeColorCode(HealthColor) $ HealthString @ "(" $ DHGRI.ServerHealth $ ")";
+    // Add tickrate health
+    S $= HUD.default.SpacingText $ default.TickHealthText $ ":" @ class'GameInfo'.static.MakeColorCode(HealthColor) $ HealthString @ "(" $ DHGRI.ServerTickHealth $ ")";
+
+    // Server Tick Health
+    if (DHGRI.ServerNetHealth > 10)
+    {
+        HealthString = default.PoorText;
+        HealthColor = class'UColor'.default.Red;
+    }
+    else if (DHGRI.ServerNetHealth > 2)
+    {
+        HealthString = default.FairText;
+        HealthColor = class'UColor'.default.Orange;
+    }
+    else
+    {
+        HealthString = default.GoodText;
+        HealthColor = class'UColor'.default.Green;
+    }
+
+    // Add network health, added in white color code
+    S $= HUD.default.SpacingText $ class'GameInfo'.static.MakeColorCode(HUD.default.WhiteColor) $ default.NetHealthText $ ":" @ class'GameInfo'.static.MakeColorCode(HealthColor) $ HealthString @ "(" $ DHGRI.ServerNetHealth $ ")";
 
     Y = CalcY(0.25, C);
 
@@ -862,7 +884,8 @@ defaultproperties
     PingLength=1.5
     MyTeamIndex=2
     PlayersText="Players"
-    HealthText="Health"
+    TickHealthText="Tick"
+    NetHealthText="Net"
     PoorText="Poor"
     FairText="Fair"
     GoodText="Good"
