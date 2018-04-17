@@ -370,10 +370,13 @@ function int CollectSupplyFromMainCache(int Team, int MaxCarryingCapacity)
     local int                               i, n;
     local DHConstructionSupplyAttachment    SupplyAttachment;
 
-    //var DHConstructionSupplyAttachment Actor;
-
     for (i = 0; i < arraycount(SupplyPoints); ++i)
     {
+        if (SupplyPoints[i].ActorClass == none)
+        {
+            continue;
+        }
+
         // Find the main cache for the team
         if (SupplyPoints[i].ActorClass.default.bIsMainSupplyCache && SupplyPoints[i].TeamIndex == Team)
         {
