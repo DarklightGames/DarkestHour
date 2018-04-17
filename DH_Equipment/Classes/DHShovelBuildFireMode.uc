@@ -112,7 +112,7 @@ simulated function DigDone()
 
 defaultproperties
 {
-    TraceDistanceInMeters=2.0
+    TraceDistanceInMeters=2.15
     bModeExclusive=true
     bFireOnRelease=false
     bWaitForRelease=true
