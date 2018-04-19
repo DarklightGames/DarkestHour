@@ -5406,7 +5406,7 @@ defaultproperties
     OverrideConsoleFontName="DHFonts.DHFont14"
     SpacingText="      "
     ConsoleMessageCount=8
-    ConsoleFontSize=2
+    ConsoleFontSize=6
     MessageFontOffset=0
 
     // Death messages
