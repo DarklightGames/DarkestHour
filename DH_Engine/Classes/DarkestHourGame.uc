@@ -3045,6 +3045,16 @@ static function string ParseChatPercVar(Mutator BaseMutator, Controller Who, str
 // exec FUNCTIONS - These functions natively require admin access
 //***********************************************************************************
 
+exec function SetServerViewDistance(int NewDistance)
+{
+    local DHZoneInfo Z;
+
+    foreach AllActors(class'DHZoneInfo', Z)
+    {
+        Z.SetNewTargetFogDistance(NewDistance);
+    }
+}
+
 exec function ToggleAllowAllChat()
 {
     if (GRI == none)

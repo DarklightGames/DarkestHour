@@ -3,27 +3,41 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
+// The purpose of this class is to optimize both server and client performance using FogDistance and FogRatio
+
 class DHZoneInfo extends ZoneInfo;
 
-const FOG_CHANGE_TIME =             700.0;                      // This doesn't seem to be in seconds, but does affect the fog change time
+const FOG_RATIO_CHANGE_TIME =       200.0;                      // Time in changing the fog ratio value, it needs to be very slow so it doesn't pulse
+const FOG_CHANGE_TIME =             20.0;                       // Time in changing the fog distance
+const MIN_DESIRED_UPDATE_TIME =     60.0;                       // After changing min deisred FPS, how quickly its change takes affect
 const CLIENTFRAMERATE_UPDATETIME =  5.0;                        // How often to calculate the average fps
 
-var()   bool            bUseServerFogOptimization;              // WIP (not functional)
+var()   bool            bUsesDynamicFogDistance;                // Indicates for the server to dynamically change its and the client's view distance based on server health
 
-var     float           TargetDistanceFog,                      // WIP stuff (does not affect anything)
-                        FogChangeStart,
-                        FogChangeEnd;
+var     float           OriginalFogDistanceEnd,                 // Saves at the beginning of the level, but only then
+                        TargetDistanceFog,                      // Target fog distance for both the client and server, this is replicated to all clients
+                        FogChangeStart,                         // Not replicated, but used by both server and client
+                        FogChangeEnd,                           // Not replicated, but used by both server and client
+                        SavedDistanceEndFog;                    // The fog value at which point the fog was changed (this gives us a starting point to change from)
 
-var     float           ClientSavedFogRatio,                    // Client-sided fog ratio
+var     float           ClientFogRatio,                         // Client-sided fog ratio
                         TargetFogRatio,                         // Client target for fog distance ratio (to make fog adjustments smooth)
                         FogRatioChangeStart,                    // Used to make fog adjustments smooth
                         FogRatioChangeEnd;                      // ...
+
 var     InterpCurve     ClientFogRatioCurve;                    // Curve used for more control over fog ratio (makes it so we can drop to min fog distance before 0 fps)
 
 var     float           ClientAverageFrameRate;
 var     float           ClientFrameRateConsolidated;            // Keeps track of tick rates over time, used to calculate average
 var     int             ClientFrameRateCount;                   // Keeps track of how many frames are between ClientFrameRateConsolidated
 
+var     float           ClientFrameChangeStart,
+                        ClientFrameChangeEnd;
+var     int             ClientSavedDesiredFrame,
+                        ClientMinDesiredFrame,
+                        TargetMinDesiredFrame;                  // Keeps track of clients desired frame and will blend (smoothly) if client changes it
+
+//var     bool            bClientInitialized;                     // Has completed initialization (set at end of PostNetBeginPlay)
 
 replication
 {
@@ -39,97 +53,175 @@ simulated event PostBeginPlay()
     // Set the initial target fog value
     if (Role == ROLE_Authority)
     {
-        SetTargetFog(DistanceFogEnd);
+        OriginalFogDistanceEnd = DistanceFogEnd;
+        SetNewTargetFogDistance(OriginalFogDistanceEnd);
     }
 }
+/*
+simulated function PostNetBeginPlay()
+{
+    super.PostNetBeginPlay();
 
+    if (Level.NetMode == NM_Client)
+    {
+        bClientInitialized = true;
+    }
+}
+*/
 simulated function PostNetReceive()
 {
-    if (DistanceFogEnd != TargetDistanceFog)
+    super.PostNetReceive();
+
+    if (RealDistanceFogEnd != TargetDistanceFog)
     {
         FogChangeStart = Level.TimeSeconds;
         FogChangeEnd = FogChangeStart + FOG_CHANGE_TIME;
+        SavedDistanceEndFog = RealDistanceFogEnd;
     }
-
-    super.PostNetReceive();
 }
 
+
+function Reset()
+{
+    super.Reset();
+
+    // Reset to the initial fog value
+    if (Role == ROLE_Authority)
+    {
+        SetNewTargetFogDistance(OriginalFogDistanceEnd);
+    }
+}
+
+//
 simulated function Tick( float DeltaTime )
 {
-    local float T;
-    local DHPlayer C;
+    local float         T;
+    local bool          bUpdate;
+    local DHPlayer      C;
 
-    // Client
-    if (Level.NetMode != NM_DedicatedServer)
+    super.Tick(DeltaTime);
+
+    // Net Client Only
+    if (Level.NetMode == NM_Client)
     {
-        // Handle the average frame rate
+        C = DHPlayer(Level.GetLocalPlayerController());
+
+        // Return out if can't find controller
+        if (C == none)
+        {
+            return;
+        }
+
+        // Consolidate DeltaTime onto ClientFrameRateConsolidated (used to limit calculations in tick)
         ClientFrameRateConsolidated += DeltaTime;
 
+        // If enough time has passed, calculate Average Frame Rate and Fog Ratio
         if (ClientFrameRateConsolidated > CLIENTFRAMERATE_UPDATETIME)
         {
+            // Set
             ClientAverageFrameRate = ClientFrameRateCount / ClientFrameRateConsolidated;
             ClientFrameRateCount = 0;
             ClientFrameRateConsolidated -= CLIENTFRAMERATE_UPDATETIME;
 
-            C = DHPlayer(Level.GetLocalPlayerController());
-
-            if (C != none && C.bDynamicFogRatio)
+            // Update the to the client's MinFPS setting
+            if (TargetMinDesiredFrame != C.MinDesiredFPS && C.bDynamicFogRatio)
             {
-                TargetFogRatio = InterpCurveEval(ClientFogRatioCurve, ClientAverageFrameRate / C.MinDesiredFPS);
-                FogRatioChangeStart = Level.TimeSeconds;
-                FogRatioChangeEnd = FogRatioChangeStart + FOG_CHANGE_TIME;
+                ClientFrameChangeStart = Level.TimeSeconds;
+                ClientFrameChangeEnd = ClientFrameChangeStart + MIN_DESIRED_UPDATE_TIME;
+                ClientSavedDesiredFrame = C.MinDesiredFPS;
+                TargetMinDesiredFrame = C.MinDesiredFPS;
             }
+
+            if (C.bDynamicFogRatio)
+            {
+                TargetFogRatio = InterpCurveEval(ClientFogRatioCurve, ClientAverageFrameRate / ClientMinDesiredFrame);
+            }
+            else
+            {
+                // TODO: This should not be a console command to get this damn value, only other way is to keep track of it :C
+                TargetFogRatio = float(C.ConsoleCommand("get ini:Engine.Engine.ViewportManager DrawDistanceLOD"));
+            }
+
+            FogRatioChangeStart = Level.TimeSeconds;
+            FogRatioChangeEnd = FogRatioChangeStart + FOG_RATIO_CHANGE_TIME;
         }
         else
         {
             ++ClientFrameRateCount;
         }
 
-        // WIP stuff
-        /*
+        // Update MinDesiredFrames
+        if (ClientMinDesiredFrame != TargetMinDesiredFrame && C.bDynamicFogRatio)
+        {
+            T = FClamp((Level.TimeSeconds - ClientFrameChangeStart) / (ClientFrameChangeEnd - ClientFrameChangeStart), 0.0, 1.0);
+            ClientMinDesiredFrame = class'UInterp'.static.Linear(T, ClientSavedDesiredFrame, TargetMinDesiredFrame);
+            bUpdate = true;
+        }
+
+        // Update replicated fog distance from server
+        if (RealDistanceFogEnd != TargetDistanceFog)
+        {
+            T = FClamp((Level.TimeSeconds - FogChangeStart) / (FogChangeEnd - FogChangeStart), 0.0, 1.0);
+            RealDistanceFogEnd = class'UInterp'.static.Linear(T, SavedDistanceEndFog, TargetDistanceFog);
+            ClientFogRatio = TargetFogRatio;
+            bUpdate = true;
+        }
+
+        // Calc ClientFogRatio if bDynamicFogRatio == true
+        if (ClientFogRatio != TargetFogRatio && C.bDynamicFogRatio)
+        {
+            T = FClamp((Level.TimeSeconds - FogRatioChangeStart) / (FogRatioChangeEnd - FogRatioChangeStart), 0.0, 1.0);
+            ClientFogRatio = class'UInterp'.static.Linear(T, ClientFogRatio, TargetFogRatio);
+            bUpdate = true;
+        }
+
+        // Update the client's FogLOD
+        if (bUpdate)
+        {
+            // This function must be called for the fog distance to actually change!
+            // So it actually needs to be called regardless of the user's bDynamicFogRatio setting
+            C.Level.UpdateDistanceFogLOD(ClientFogRatio);
+        }
+    }
+
+    // Non net client
+    if (Level.NetMode != NM_Client)
+    {
         if (DistanceFogEnd != TargetDistanceFog)
         {
             T = FClamp((Level.TimeSeconds - FogChangeStart) / (FogChangeEnd - FogChangeStart), 0.0, 1.0);
-            DistanceFogEnd = class'UInterp'.static.Linear(T, DistanceFogEnd, TargetDistanceFog);
+            DistanceFogEnd = class'UInterp'.static.Linear(T, SavedDistanceEndFog, TargetDistanceFog);
         }
-        */
+    }
+}
 
-        // Set C, but only if we haven't already
-        if (C == none)
+function SetNewTargetFogDistance(float NewDistance)
+{
+    // Not client (dedicated, stanalone, listen)
+    if (Level.NetMode != NM_Client)
+    {
+        // If greater than 0 AND above the start fog distance, then we can set the TargetDistanceFog
+        // It is important to never let the DistanceFogEnd be less than DistanceFogStart, because of a very strange render effect
+        if (NewDistance > 0.0 && NewDistance > DistanceFogStart)
         {
-            C = DHPlayer(Level.GetLocalPlayerController());
-        }
+            // Clamp the view distance to the level's FogEndMin and ~4km
+            TargetDistanceFog = FClamp(NewDistance, DistanceFogEndMin + 100.0, 256000.0);
 
-        // If client has dynamic fog ratio true, then handle the Fog Distance based on current and target ratio
-        if (C != none && C.bDynamicFogRatio)
-        {
-            if (ClientSavedFogRatio != TargetFogRatio)
+            if (DistanceFogEnd != TargetDistanceFog)
             {
-                T = FClamp((Level.TimeSeconds - FogRatioChangeStart) / (FogRatioChangeEnd - FogRatioChangeStart), 0.0, 1.0);
-                ClientSavedFogRatio = class'UInterp'.static.Linear(T, ClientSavedFogRatio, TargetFogRatio);
-                C.Level.UpdateDistanceFogLOD(ClientSavedFogRatio);
+                FogChangeStart = Level.TimeSeconds;
+                FogChangeEnd = FogChangeStart + FOG_CHANGE_TIME;
+                SavedDistanceEndFog = DistanceFogEnd;
             }
         }
     }
 }
 
-function SetTargetFog(float NewDistance)
-{
-    if (NewDistance > 0.0)
-    {
-        TargetDistanceFog = NewDistance;
-    }
-    else
-    {
-        Warn("A target fog value was less than or equal to zero and is not valid.");
-    }
-}
-
 defaultproperties
 {
+    bUsesDynamicFogDistance=true // TODO: set this to false
     ClientFogRatioCurve=(Points=((InVal=0.0,OutVal=0.0),(InVal=0.5,OutVal=0.0),(InVal=1.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
-    ClientSavedFogRatio=1.0
-    bUseServerFogOptimization=true
+    ClientFogRatio=1.0
     bNetNotify=true
     bStatic=false
     bAlwaysRelevant=true
