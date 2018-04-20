@@ -96,6 +96,9 @@ var     DHCommandInteraction    CommandInteraction;
 
 var     Actor                   LookTarget;
 
+// Log File
+var     FileLog                 ClientLogFile;
+
 struct SquadSignal
 {
     var class<DHSquadSignal> SignalClass;
@@ -148,7 +151,7 @@ replication
         ClientAddHudDeathMessage, ClientFadeFromBlack, ClientProposeMenu,
         ClientConsoleCommand, ClientCopyToClipboard, ClientSaveROIDHash,
         ClientSquadInvite, ClientSquadSignal, ClientSquadLeaderVolunteerPrompt,
-        ClientTeamKillPrompt;
+        ClientTeamKillPrompt, ClientOpenLogFile, ClientLogToFile, ClientCloseLogFile;
 }
 
 function ServerChangePlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2) { } // no longer used
@@ -3045,8 +3048,13 @@ function RORoleInfo GetRoleInfo()
     }
 }
 
-// Override to have the list of players copied into the clipboard of the player whom typed "ListPlayers"
-// The player can then use a regular expression find/replace to split the single line string into multiple lines, with ease of access to the ROIDs
+// New function for server to tell client to copy string into it's clipboard
+simulated function ClientCopyToClipboard(string Str)
+{
+    CopyToClipBoard(Str);
+}
+
+// Will have the client make a .txt file on their machine with the listplayers info in it, very useful to be able to copy ROIDs
 function ServerListPlayers()
 {
     local array<PlayerReplicationInfo> AllPRI;
@@ -3061,6 +3069,8 @@ function ServerListPlayers()
     LastPlayerListTime = Level.TimeSeconds;
     Level.Game.GameReplicationInfo.GetPRIArray(AllPRI);
 
+    ClientOpenLogFile("listplayers"); //Open the logfile on the client
+
     for (i = 0; i < AllPRI.Length; ++i)
     {
         if (PlayerController(AllPRI[i].Owner) != none && AllPRI[i].PlayerName != "WebAdmin")
@@ -3072,15 +3082,43 @@ function ServerListPlayers()
         {
             ClientMessage(Right("   " $ AllPRI[i].PlayerID, 3) $ ")" @ AllPRI[i].PlayerName);
         }
+
+        ClientLogToFile(ParseString); //Write the name and ROID to the logfile
     }
 
-    ClientCopyToClipboard(ParseString);
+    ClientCloseLogFile(); //Close and destroy the logfile
 }
 
-// New function for server to tell client to copy string into it's clipboard
-simulated function ClientCopyToClipboard(string Str)
+// Server to client function which has the client open a logfile with name = FileNameString
+simulated function ClientOpenLogFile(String FileNameString)
 {
-    CopyToClipBoard(Str);
+    if (ClientLogFile == none)
+    {
+        ClientLogFile = Spawn(class'FileLog');
+
+        if (ClientLogFile != none)
+        {
+            ClientLogFile.OpenLog(FileNameString, ".txt", true);
+        }
+    }
+}
+
+// Server to client function which will output a log file on the client with LogString outputted
+simulated function ClientLogToFile(String LogString)
+{
+    if (ClientLogFile != none)
+    {
+        ClientLogFile.Logf(LogString);
+    }
+}
+
+// Server to client function to tell the client to close/destroy the ClientLogFile
+simulated function ClientCloseLogFile()
+{
+    if (ClientLogFile != none)
+    {
+        ClientLogFile.Destroy();
+    }
 }
 
 // Similar to ClientOpenMenu(), but only opens menu if no menu is already open and the player isn't typing
