@@ -615,7 +615,7 @@ defaultproperties
 {
     bInstantHit=false
     bUsePreLaunchTrace=true
-    PreLaunchTraceLengthFactor=0.1 // gives trace length of around 18m to 37m for pistol, 74m to 85m for full power rifle or MG
+    PreLaunchTraceLengthFactor=0.120704 // 50000 velocity = 100m trace
     ProjPerFire=1
     ProjSpawnOffset=(X=25.0)
 
