@@ -637,6 +637,12 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
     // Unreserve squad-only vehicle selection
     UnreserveSquadVehicle(PC);
 
+    // Unreserve role, if gametype restricts specials roles only to squads
+    if (GRI.GameType.default.bSquadSpecialRolesOnly)
+    {
+        PRI.RoleInfo = none;
+    }
+
     // Clear squad leader volunteer application.
     ClearSquadLeaderVolunteer(PRI, TeamIndex, SquadIndex);
 

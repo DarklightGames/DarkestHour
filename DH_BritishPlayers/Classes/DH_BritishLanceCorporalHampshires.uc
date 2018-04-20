@@ -20,4 +20,5 @@ defaultproperties
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
     Headgear(2)=class'DH_BritishPlayers.DH_BritishTommyHelmet'
     Limit=2
+    bRequiresSLorASL=true
 }

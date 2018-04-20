@@ -47,6 +47,16 @@ simulated function bool IsSquadLeader()
     return IsInSquad() && SquadMemberIndex == 0;
 }
 
+simulated function bool IsAssistantLeader()
+{
+    return IsInSquad() && bIsSquadAssistant;
+}
+
+simulated function bool IsSLorASL()
+{
+    return IsInSquad() && (SquadMemberIndex == 0 || bIsSquadAssistant);
+}
+
 simulated function bool IsInSquad()
 {
     return Team != none && (Team.TeamIndex == AXIS_TEAM_INDEX || Team.TeamIndex == ALLIES_TEAM_INDEX) && SquadIndex != -1;

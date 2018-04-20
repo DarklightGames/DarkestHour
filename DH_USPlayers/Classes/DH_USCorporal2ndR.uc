@@ -17,4 +17,5 @@ defaultproperties
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet2ndREMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet2ndREMb'
     Limit=2
+    bRequiresSLorASL=true
 }

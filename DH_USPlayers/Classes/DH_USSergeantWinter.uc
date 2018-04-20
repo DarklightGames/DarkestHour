@@ -24,4 +24,5 @@ defaultproperties
     HeadgearProbabilities(2)=0.4
     Headgear(2)=class'DH_USPlayers.DH_AmericanHelmet1stNCOa'
     Limit=2
+    bRequiresSLorASL=true
 }

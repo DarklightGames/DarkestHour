@@ -82,20 +82,22 @@ var DHSquadReplicationInfo                  SRI;
 var DHPlayerReplicationInfo                 PRI;
 var DHPlayer                                PC;
 
-var localized   string                      NoneText;
-var localized   string                      SelectRoleText;
-var localized   string                      SelectSpawnPointText;
-var localized   string                      DeployInTimeText;
-var localized   string                      DeployNowText;
-var localized   string                      ReservedString;
-var localized   string                      ChangeTeamConfirmText;
-var localized   string                      FreeChangeTeamConfirmText;
-var localized   string                      CantChangeTeamYetText;
-var localized   string                      LockText;
-var localized   string                      UnlockText;
-var localized   string                      VehicleUnavailableString;
-var localized   string                      LockedText;
-var localized   string                      BotsText;
+var localized   string                      NoneText,
+                                            SelectRoleText,
+                                            SelectSpawnPointText,
+                                            DeployInTimeText,
+                                            DeployNowText,
+                                            ReservedString,
+                                            ChangeTeamConfirmText,
+                                            FreeChangeTeamConfirmText,
+                                            CantChangeTeamYetText,
+                                            LockText,
+                                            UnlockText,
+                                            VehicleUnavailableString,
+                                            LockedText,
+                                            BotsText,
+                                            SquadOnlyText,
+                                            SquadLeadershipOnlyText;
 
 // NOTE: The reason this variable is needed is because the PlayerController's
 // GetTeamNum function is not reliable after receiving a successful team change
@@ -577,13 +579,14 @@ function OnOKButtonClick(byte Button)
 
 function UpdateRoles()
 {
-    local RORoleInfo RI;
+    local DHRoleInfo RI;
+    local bool       bShouldBeDisabled;
     local int        Count, BotCount, Limit, i;
     local string     S;
 
     for (i = 0; i < li_Roles.ItemCount; ++i)
     {
-        RI = RORoleInfo(li_Roles.GetObjectAtIndex(i));
+        RI = DHRoleInfo(li_Roles.GetObjectAtIndex(i));
 
         if (RI == none)
         {
@@ -619,8 +622,24 @@ function UpdateRoles()
             S @= "*" $ BotsText $ "*";
         }
 
+        bShouldBeDisabled = PC.GetRoleInfo() != RI && Limit > 0 && Count >= Limit && BotCount == 0;
+
+        // If not in a squad AND gametype restricts specialized roles to squads only AND the role is not limitless
+        if (!PRI.IsInSquad() && GRI.GameType.default.bSquadSpecialRolesOnly && Limit != 255)
+        {
+            S @= "*" $ SquadOnlyText $ "*";
+            bShouldBeDisabled = true;
+        }
+
+        // If in a squad AND role requires sl/asl AND not a sl/asl AND gametype restricts specialized roles to squads only
+        if (PRI.IsInSquad() && RI.bRequiresSLorASL && !PRI.IsSLorASL() && GRI.GameType.default.bSquadSpecialRolesOnly)
+        {
+            S @= "*" $ SquadLeadershipOnlyText $ "*";
+            bShouldBeDisabled = true;
+        }
+
         li_Roles.SetItemAtIndex(i, S);
-        li_Roles.SetDisabledAtIndex(i, (PC.GetRoleInfo() != RI) && (Limit > 0) && (Count >= Limit) && (BotCount == 0));
+        li_Roles.SetDisabledAtIndex(i, bShouldBeDisabled);
     }
 }
 
@@ -1687,6 +1706,8 @@ defaultproperties
     NoneText="None"
     LockedText="Locked"
     BotsText="BOTS"
+    SquadOnlyText="SQUADS ONLY"
+    SquadLeadershipOnlyText="LEADERS ONLY"
 
     MapMode=MODE_Map
     bButtonsEnabled=true

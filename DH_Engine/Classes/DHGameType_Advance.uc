@@ -11,5 +11,6 @@ defaultproperties
     GameTypeName="Advance"
     bRoundEndsAtZeroReinf=true
     bUseReinforcementWarning=true
+    bSquadSpecialRolesOnly=true
 }
 

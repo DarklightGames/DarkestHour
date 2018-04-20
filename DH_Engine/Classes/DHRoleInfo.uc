@@ -20,6 +20,8 @@ var     bool                bIsArtilleryOfficer;    // role has functionality of
 var     bool                bCanUseMortars;         // role has functionality of a mortar operator
 var     bool                bIsMortarObserver;      // role has functionality of a mortar observer
 
+var     bool                bRequiresSLorASL;       // player must be a SL or ASL to select this role, only applies when gametype has bSquadSpecialRolesOnly=true
+
 var     int                 AddedReinforcementTime; // extra time in seconds before re-spawning
 
 // Modified to include GivenItems array, & to just call StaticPrecache on the DHWeapon item (which now handles all related pre-caching)

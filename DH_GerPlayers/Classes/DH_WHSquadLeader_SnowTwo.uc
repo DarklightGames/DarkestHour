@@ -22,4 +22,5 @@ defaultproperties
     Headgear(0)=class'DH_GerPlayers.DH_HeerCamoCap'
     HeadgearProbabilities(0)=0.8
     Limit=2
+    bRequiresSLorASL=true
 }

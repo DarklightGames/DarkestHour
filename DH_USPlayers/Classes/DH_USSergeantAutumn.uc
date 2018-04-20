@@ -20,4 +20,5 @@ defaultproperties
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet1stNCOa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet1stNCOb'
     Limit=2
+    bRequiresSLorASL=true
 }

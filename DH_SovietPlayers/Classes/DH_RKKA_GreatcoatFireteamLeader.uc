@@ -18,4 +18,5 @@ defaultproperties
     Headgear(1)=class'DH_SovietPlayers.DH_SovietFurHat'
     Headgear(2)=class'DH_SovietPlayers.DH_SovietFurHat'
     Limit=2
+    bRequiresSLorASL=true
 }

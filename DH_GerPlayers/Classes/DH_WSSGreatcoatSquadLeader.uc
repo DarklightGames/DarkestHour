@@ -23,4 +23,5 @@ defaultproperties
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetTwo'
     Limit=2
+    bRequiresSLorASL=true
 }

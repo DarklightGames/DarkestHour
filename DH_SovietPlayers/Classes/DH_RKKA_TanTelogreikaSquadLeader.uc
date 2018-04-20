@@ -22,4 +22,5 @@ defaultproperties
     Headgear(2)=class'DH_SovietPlayers.DH_SovietHelmet'
     bIsLeader=true
     Limit=2
+    bRequiresSLorASL=true
 }

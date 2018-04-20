@@ -20,4 +20,5 @@ defaultproperties
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetNoCover'
     Limit=3
     GivenItems(0)="DH_Equipment.DHWireCuttersItem"
+    bRequiresSLorASL=true
 }

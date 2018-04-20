@@ -11,6 +11,7 @@ var bool                bUseInfiniteReinforcements;
 var bool                bUseReinforcementWarning;
 var bool                bRoundEndsAtZeroReinf;
 var bool                bTimeChangesAtZeroReinf;
+var bool                bSquadSpecialRolesOnly;
 
 defaultproperties
 {

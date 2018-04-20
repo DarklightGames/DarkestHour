@@ -25,4 +25,5 @@ defaultproperties
     HeadgearProbabilities(1)=0.5
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
     Limit=2
+    bRequiresSLorASL=true
 }

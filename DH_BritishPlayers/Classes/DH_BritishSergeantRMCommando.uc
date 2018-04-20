@@ -22,4 +22,5 @@ defaultproperties
     Grenades(2)=(Item=class'DH_Equipment.DH_RedSmokeWeapon')
     Headgear(0)=class'DH_BritishPlayers.DH_BritishRMCommandoBeret'
     Limit=2
+    bRequiresSLorASL=true
 }

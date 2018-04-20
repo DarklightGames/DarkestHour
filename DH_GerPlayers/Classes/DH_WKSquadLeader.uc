@@ -19,4 +19,5 @@ defaultproperties
     GivenItems(0)="DH_Equipment.DHBinocularsItem"
     Headgear(0)=class'DH_GerPlayers.DH_KriegsmarineCap'
     Limit=2
+    bRequiresSLorASL=true
 }

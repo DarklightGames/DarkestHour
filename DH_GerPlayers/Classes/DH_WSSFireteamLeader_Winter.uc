@@ -22,4 +22,5 @@ defaultproperties
     Limit=1
     Limit33to44=2
     LimitOver44=2
+    bRequiresSLorASL=true
 }

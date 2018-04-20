@@ -21,4 +21,5 @@ defaultproperties
     Headgear(1)=class'DH_BritishPlayers.DH_BritishParaHelmetTwo'
     Headgear(2)=class'DH_BritishPlayers.DH_BritishParaHelmetOne'
     Limit=2
+    bRequiresSLorASL=true
 }
