@@ -5,4 +5,4 @@
 // This class has been deprecated and will be deleted in v8.
 //==============================================================================
 
-class DH_PIATWeapon extends DH_Weapons.DH_PIATWeapon;
+class DH_PIATWeapon extends DH_Equipment.DHBinocularsItem;

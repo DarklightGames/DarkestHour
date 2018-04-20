@@ -5,4 +5,4 @@
 // This class has been deprecated and will be deleted in v8.
 //==============================================================================
 
-class DH_PlaceablePanzerFaustPickup extends DH_Weapons.DH_PlaceablePanzerFaustPickup;
+class DH_PlaceablePanzerFaustPickup extends DHDeprecated;
