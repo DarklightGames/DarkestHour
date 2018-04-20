@@ -18,6 +18,7 @@ simulated function ToggleFireMode()
 defaultproperties
 {
     ItemName="Bren Mk.IV"
+    TeamIndex=1
     FireModeClass(0)=class'DH_Weapons.DH_BrenFire'
     FireModeClass(1)=class'DH_Weapons.DH_BrenMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_BrenAttachment'

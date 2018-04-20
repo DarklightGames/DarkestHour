@@ -75,7 +75,7 @@ function UpdateResupplyStatus(bool bCurrentWeapon)
 
     if (P != none)
     {
-        P.bWeaponNeedsResupply = bCanBeResupplied && bCurrentWeapon && CurrentMagCount < MaxNumPrimaryMags;
+        P.bWeaponNeedsResupply = bCanBeResupplied && bCurrentWeapon && CurrentMagCount < MaxNumPrimaryMags && (TeamIndex == 2 || TeamIndex == P.GetTeamNum());
         P.bWeaponNeedsReload = bCanHaveAsssistedReload && bCurrentWeapon && !IsLoaded() && CurrentMagCount > 0 && !IsInState('Reloading');
     }
 }

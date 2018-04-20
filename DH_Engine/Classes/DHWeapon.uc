@@ -6,6 +6,9 @@
 class DHWeapon extends ROWeapon
     abstract;
 
+var     int     TeamIndex;                      // Which team this weapon "belongs" to, used for ammo giving, you can't give enemy weapons ammo
+                                                // Default: 2 which is neutral and allows anyone to reupply it
+
 var     float   SwayNotMovingModifier;
 var     float   SwayRestingModifier;
 var     float   SwayCrouchedModifier;
@@ -729,4 +732,6 @@ defaultproperties
     CrawlEndAnim="crawl_out"
     CrawlForwardAnim="crawlF"
     CrawlBackwardAnim="crawlB"
+
+    TeamIndex=2
 }

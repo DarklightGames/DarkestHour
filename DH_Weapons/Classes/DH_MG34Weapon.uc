@@ -44,6 +44,7 @@ simulated event StopFire(int Mode) // TODO: check this shouldn't apply to all MG
 defaultproperties
 {
     ItemName="Maschinengewehr 34"
+    TeamIndex=0
     FireModeClass(0)=class'DH_Weapons.DH_MG34AutoFire'
     FireModeClass(1)=class'DH_Weapons.DH_MG34SemiAutoFire' // this secondary fire mode is not a switch, it is done with another button
     AttachmentClass=class'DH_Weapons.DH_MG34Attachment'

@@ -16,6 +16,7 @@ simulated function ToggleFireMode()
 defaultproperties
 {
     ItemName="ZB30 Machine Gun"
+    TeamIndex=0
     FireModeClass(0)=class'DH_Weapons.DH_ZB30AutoFire'
     FireModeClass(1)=class'DH_Weapons.DH_ZB30MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_ZB30Attachment'

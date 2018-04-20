@@ -35,6 +35,7 @@ simulated function bool UsingAutoFire()
 defaultproperties
 {
     ItemName="Browning Automatic Rifle"
+    TeamIndex=1
     FireModeClass(0)=class'DH_Weapons.DH_BARFire'
     FireModeClass(1)=class'DH_Weapons.DH_BARMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_BARAttachment'

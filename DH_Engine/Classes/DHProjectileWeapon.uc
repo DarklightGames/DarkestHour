@@ -1671,7 +1671,7 @@ function UpdateResupplyStatus(bool bCurrentWeapon)
 
     if (P != none)
     {
-        P.bWeaponNeedsResupply = bCanBeResupplied && bCurrentWeapon && CurrentMagCount < (MaxNumPrimaryMags - 1);
+        P.bWeaponNeedsResupply = bCanBeResupplied && bCurrentWeapon && CurrentMagCount < (MaxNumPrimaryMags - 1) && (TeamIndex == 2 || TeamIndex == P.GetTeamNum());
         P.bWeaponNeedsReload = false;
     }
 }

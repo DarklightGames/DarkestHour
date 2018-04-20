@@ -10,6 +10,7 @@ class DH_FG42Weapon extends DHBipodAutoWeapon;
 defaultproperties
 {
     ItemName="Fallschirmjägergewehr 42"
+    TeamIndex=0
     FireModeClass(0)=class'DH_Weapons.DH_FG42Fire'
     FireModeClass(1)=class'DH_Weapons.DH_FG42MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_FG42Attachment'

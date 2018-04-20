@@ -10,6 +10,7 @@ class DH_BazookaWeapon extends DHRocketWeapon;
 defaultproperties
 {
     ItemName="M1A1 Bazooka"
+    TeamIndex=1
     FireModeClass(0)=class'DH_Weapons.DH_BazookaFire'
     FireModeClass(1)=class'DH_Weapons.DH_BazookaMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_BazookaAttachment'

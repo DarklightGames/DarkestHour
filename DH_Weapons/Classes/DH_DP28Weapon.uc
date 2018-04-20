@@ -22,6 +22,7 @@ simulated function PostNetBeginPlay()
 defaultproperties
 {
     ItemName="DP28 Machine Gun"
+    TeamIndex=1
     FireModeClass(0)=class'DH_Weapons.DH_DP28Fire'
     AttachmentClass=class'DH_Weapons.DH_DP28Attachment'
     PickupClass=class'DH_Weapons.DH_DP28Pickup'
