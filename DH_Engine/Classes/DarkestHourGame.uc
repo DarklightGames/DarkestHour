@@ -2936,7 +2936,7 @@ function ResetArtilleryTargets()
     GRI.ClearAllArtilleryTargets();
 }
 
-// Handle reinforcment checks and balances
+// Handle reinforcment checks, this function is called when a player spawns and subtracts a reinforcement, also handles messages
 function HandleReinforcements(Controller C)
 {
     local DHPlayer PC;
@@ -2957,14 +2957,20 @@ function HandleReinforcements(Controller C)
         ReinforcementPercent = float(GRI.SpawnsRemaining[ALLIES_TEAM_INDEX]) / SpawnsAtRoundStart[ALLIES_TEAM_INDEX];
 
         // Handle reinforcement % message
-        if (DHLevelInfo.GameTypeClass.default.bUseReinforcementWarning && !GRI.bIsInSetupPhase)
+        if (GRI.GameType.default.bUseReinforcementWarning && !GRI.bIsInSetupPhase)
         {
             while (TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX] < default.ReinforcementMessagePercentages.Length &&
                     ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX]])
             {
-                SendReinforcementMessage(ALLIES_TEAM_INDEX, 100 * default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX]]);
+                BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, class'DHReinforcementMsg', 100 * default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX]]);
 
                 ++TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX];
+            }
+
+            // The team is very low on reinforcements, men are fleeing! Enemy should know they are about to win
+            if (TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX] > default.ReinforcementMessagePercentages.Length - 1)
+            {
+                BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, class'DHEnemyInformationMsg', 0);
             }
         }
     }
@@ -2975,14 +2981,20 @@ function HandleReinforcements(Controller C)
         ReinforcementPercent = float(GRI.SpawnsRemaining[AXIS_TEAM_INDEX]) / SpawnsAtRoundStart[AXIS_TEAM_INDEX];
 
         // Handle reinforcement % message
-        if (DHLevelInfo.GameTypeClass.default.bUseReinforcementWarning && !GRI.bIsInSetupPhase)
+        if (GRI.GameType.default.bUseReinforcementWarning && !GRI.bIsInSetupPhase)
         {
             while (TeamReinforcementMessageIndices[AXIS_TEAM_INDEX] < default.ReinforcementMessagePercentages.Length &&
                     ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[AXIS_TEAM_INDEX]])
             {
-                SendReinforcementMessage(AXIS_TEAM_INDEX, 100 * default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[AXIS_TEAM_INDEX]]);
+                BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, class'DHReinforcementMsg', 100 * default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[AXIS_TEAM_INDEX]]);
 
                 ++TeamReinforcementMessageIndices[AXIS_TEAM_INDEX];
+            }
+
+            // The team is very low on reinforcements, men are fleeing! Enemy should know they are about to win
+            if (TeamReinforcementMessageIndices[AXIS_TEAM_INDEX] > default.ReinforcementMessagePercentages.Length - 1)
+            {
+                BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, class'DHEnemyInformationMsg', 0);
             }
         }
     }
@@ -4328,12 +4340,6 @@ function NotifyLogout(Controller Exiting)
     super.Destroyed();
 }
 
-// TODO: Deprecate function (make all calls to this function just use BroadcastTeamLocalizedMessage)
-function SendReinforcementMessage(int Team, int Num)
-{
-    BroadcastTeamLocalizedMessage(Level, Team, class'DHReinforcementMsg', Num);
-}
-
 // Modified to remove reliance on SpawnCount and instead just use SpawnsRemaining
 function bool SpawnLimitReached(int Team)
 {
@@ -5001,12 +5007,16 @@ defaultproperties
 
     ChangeTeamInterval=120
 
-    ReinforcementMessagePercentages(0)=0.75
-    ReinforcementMessagePercentages(1)=0.5
-    ReinforcementMessagePercentages(2)=0.25
-    ReinforcementMessagePercentages(3)=0.10
-    ReinforcementMessagePercentages(4)=0.05
-    ReinforcementMessagePercentages(5)=0.0
+    ReinforcementMessagePercentages(0)=0.9
+    ReinforcementMessagePercentages(1)=0.8
+    ReinforcementMessagePercentages(2)=0.7
+    ReinforcementMessagePercentages(3)=0.6
+    ReinforcementMessagePercentages(4)=0.5
+    ReinforcementMessagePercentages(5)=0.4
+    ReinforcementMessagePercentages(6)=0.3
+    ReinforcementMessagePercentages(7)=0.2
+    ReinforcementMessagePercentages(8)=0.1
+    ReinforcementMessagePercentages(9)=0.05
 
     Begin Object Class=UVersion Name=VersionObject
         Major=8
