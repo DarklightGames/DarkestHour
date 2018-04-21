@@ -3852,8 +3852,11 @@ exec function ShowColMesh()
 // New debug exec to adjust the volume of the interior rumble sound
 exec function SetRumbleVol(float NewValue)
 {
-    Log(VehicleNameString @ "RumbleSoundVolumeModifier =" @ NewValue @ "(was" @ RumbleSoundVolumeModifier $ ")");
-    RumbleSoundVolumeModifier = NewValue;
+    if (IsDebugModeAllowed())
+    {
+        Log(VehicleNameString @ "RumbleSoundVolumeModifier =" @ NewValue @ "(was" @ RumbleSoundVolumeModifier $ ")");
+        RumbleSoundVolumeModifier = NewValue;
+    }
 }
 
 // Modified to use a small font so the extensive vehicle debug info fits on the screen (before a lot of it was missing at the bottom of the screen)
