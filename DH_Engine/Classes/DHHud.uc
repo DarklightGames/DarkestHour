@@ -135,6 +135,9 @@ var     globalconfig int    PlayerNameFontSize;     // the size of the name you 
 var     globalconfig bool   bAlwaysShowSquadIcons;  // whether or not to show squadmate icons when not looking at them
 var     globalconfig bool   bAlwaysShowSquadNames;  // whether or not to show squadmate names when not directly looking at them
 
+// Indicators
+var     SpriteWidget        PacketLossIndicator;    // shows up in various colors when packet loss is present
+
 // Debug
 var     bool                bDebugVehicleHitPoints; // show all vehicle's special hit points (VehHitpoints & NewVehHitpoints), but not the driver's hit points
 var     bool                bDebugVehicleWheels;    // show all vehicle's physics wheels (the Wheels array of invisible wheels that drive & steer vehicle, even ones with treads)
@@ -967,6 +970,9 @@ function DrawHudPassC(Canvas C)
             }
         }
     }
+
+    // Draw indicators
+    DrawIndicators(C);
 
     // Objective capture bar
     DrawCaptureBar(C);
@@ -4317,6 +4323,41 @@ function DisplayMessages(Canvas C)
     }
 }
 
+function DrawIndicators(Canvas Canvas)
+{
+    if (PlayerOwner == none || PawnOwnerPRI == none)
+    {
+        return;
+    }
+
+    if (PawnOwnerPRI.PacketLoss > 16)
+    {
+        PacketLossIndicator.Tints[0] = class'UColor'.default.Red;
+        PacketLossIndicator.Tints[0].A = 255;
+    }
+    else if (PawnOwnerPRI.PacketLoss > 12)
+    {
+        PacketLossIndicator.Tints[0] = class'UColor'.default.OrangeRed;
+        PacketLossIndicator.Tints[0].A = 210;
+    }
+    else if (PawnOwnerPRI.PacketLoss > 8)
+    {
+        PacketLossIndicator.Tints[0] = class'UColor'.default.Orange;
+        PacketLossIndicator.Tints[0].A = 180;
+    }
+    else if (PawnOwnerPRI.PacketLoss > 4)
+    {
+        PacketLossIndicator.Tints[0] = class'UColor'.default.Yellow;
+        PacketLossIndicator.Tints[0].A = 150;
+    }
+    else
+    {
+        return;
+    }
+
+    DrawSpriteWidget(Canvas, PacketLossIndicator);
+}
+
 function DrawCaptureBar(Canvas Canvas)
 {
     local DHObjective           Objective;
@@ -5566,6 +5607,9 @@ defaultproperties
     // Construction
     VehicleSuppliesIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.supply_cache',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=1.0,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.0,OffsetX=-24,OffsetY=-16,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     VehicleSuppliesText=(PosX=0.5,PosY=0,WrapWidth=0,WrapHeight=0,OffsetX=-8,OffsetY=-16,DrawPivot=DP_MiddleLeft,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=true)
+
+    // Indicators
+    PacketLossIndicator=(WidgetTexture=Texture'DH_InterfaceArt_tex.HUD.PacketLoss_Indicator',TextureCoords=(X1=0,Y1=0,X2=63,Y2=63),TextureScale=0.4,DrawPivot=DP_MiddleMiddle,PosX=0.97,PosY=0.5,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Signals
     SignalNewTimeSeconds=2.0
