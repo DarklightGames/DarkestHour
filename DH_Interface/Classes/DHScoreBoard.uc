@@ -442,7 +442,7 @@ simulated function UpdateScoreBoard(Canvas C)
         HealthString = default.PoorText;
         HealthColor = class'UColor'.default.Red;
     }
-    else if (DHGRI.ServerNetHealth > 2)
+    else if (DHGRI.ServerNetHealth > 1)
     {
         HealthString = default.FairText;
         HealthColor = class'UColor'.default.Orange;
@@ -885,7 +885,7 @@ defaultproperties
     MyTeamIndex=2
     PlayersText="Players"
     TickHealthText="Tick"
-    NetHealthText="Net"
+    NetHealthText="Loss"
     PoorText="Poor"
     FairText="Fair"
     GoodText="Good"

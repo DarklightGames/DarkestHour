@@ -449,6 +449,7 @@ function UpdateServerNetHealth()
     const    THRESHOLD_OVERRIDE      = 10;
 
     local int       i, combined, average, overthreshold;
+    local bool      bWebAdminExists;
 
     for (i = 0; i < GRI.PRIArray.Length; ++i)
     {
@@ -456,7 +457,7 @@ function UpdateServerNetHealth()
         if (DHPlayerReplicationInfo(GRI.PRIArray[i]) != none)
         {
             // Only count players who are under threshold
-            if (GRI.PRIArray[i].PacketLoss < PACKET_LOSS_THRESHOLD)
+            if (GRI.PRIArray[i].PacketLoss <= PACKET_LOSS_THRESHOLD)
             {
                 combined += GRI.PRIArray[i].PacketLoss;
             }
@@ -467,10 +468,21 @@ function UpdateServerNetHealth()
                 ++overthreshold;
             }
         }
+        else if (GRI.PRIArray[i].PlayerName == "WebAdmin")
+        {
+            bWebAdminExists = true;
+        }
     }
 
     // Calculate average packet loss (not counting webadmin)
-    average = clamp(combined / (GRI.PRIArray.Length - 1), 0, 255);
+    if (bWebAdminExists)
+    {
+        average = clamp(combined / (GRI.PRIArray.Length - 1), 0, 255);
+    }
+    else
+    {
+        average = clamp(combined / (GRI.PRIArray.Length), 0, 255);
+    }
 
     if (bLogAverageTickRate)
     {
@@ -484,7 +496,7 @@ function UpdateServerNetHealth()
         return;
     }
 
-    GRI.ServerNetHealth = byte(average); // Clamp(ServerTickRateAverage, 0, 255);
+    GRI.ServerNetHealth = byte(average);
 }
 
 // Raises the reinforcement interval used in GRI if the server is performing poorly, otherwise it sets it to default
