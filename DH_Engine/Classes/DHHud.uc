@@ -134,6 +134,7 @@ var     globalconfig bool   bShowDeathMessages;     // whether or not to show th
 var     globalconfig int    PlayerNameFontSize;     // the size of the name you see when you mouseover a player
 var     globalconfig bool   bAlwaysShowSquadIcons;  // whether or not to show squadmate icons when not looking at them
 var     globalconfig bool   bAlwaysShowSquadNames;  // whether or not to show squadmate names when not directly looking at them
+var     globalconfig bool   bShowIndicators;        // whether or not to show indicators such as the packet loss indicator
 
 // Indicators
 var     SpriteWidget        PacketLossIndicator;    // shows up in various colors when packet loss is present
@@ -972,7 +973,10 @@ function DrawHudPassC(Canvas C)
     }
 
     // Draw indicators
-    DrawIndicators(C);
+    if (bShowIndicators)
+    {
+        DrawIndicators(C);
+    }
 
     // Objective capture bar
     DrawCaptureBar(C);
@@ -5449,6 +5453,7 @@ defaultproperties
     ConsoleMessageCount=8
     ConsoleFontSize=6
     MessageFontOffset=0
+    bShowIndicators=true
 
     // Death messages
     bShowDeathMessages=true
