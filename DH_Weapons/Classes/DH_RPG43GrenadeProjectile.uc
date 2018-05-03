@@ -153,8 +153,9 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     local Actor  TraceHitActor;
     local vector Direction, TempHitLocation, TempHitNormal, VehicleRelativeVertical, X, Y;
     local int    ImpactSpeed, xH, TempMaxWall, i;
-    local bool   bExplodeOnImpact;
+    local bool   bExplodeOnImpact, bFailedToPenetrate;
     local float  ImpactAOI;  // Angle of incidence, in degrees
+    local float  ImpactDamageMultiplier;
 
     // Exit without doing anything if we hit something we don't want to count a hit on (allowing Wall == none as grenade's Landed() passes none)
     if (bInHitWall || (Wall != none && (SavedHitActor == Wall || (Wall.Base != none && Wall.Base == Instigator) || Wall.bDeleteMe))) // HEAT adds bInHitWall check to prevent recursive calls
@@ -164,6 +165,12 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 
     SavedHitActor = Pawn(Wall);
 
+    // If we didn't hit a pawn, lets see if we hit a VehicleWeapon and if so get that weapon's base pawn and set it
+    if (SavedHitActor == none && VehicleWeapon(Wall) != none && VehicleWeapon(Wall).Base != none && Pawn(VehicleWeapon(Wall).Base) != none)
+    {
+        SavedHitActor = Pawn(VehicleWeapon(Wall).Base);
+    }
+
     // Return here, this was causing the famous "nade bug"
     if (ROCollisionAttachment(Wall) != none)
     {
@@ -171,6 +178,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     }
 
     DestroMesh = RODestroyableStaticMesh(Wall);
+    ImpactDamageMultiplier = 0.25;
 
     // We hit a destroyable mesh that is so weak it doesn't stop bullets (e.g. glass), so we'll probably break it instead of bouncing off it
     if (DestroMesh != none && DestroMesh.bWontStopBullets)
@@ -215,22 +223,37 @@ simulated function HitWall(vector HitNormal, Actor Wall)
         if (ImpactSpeed >= default.MinImpactSpeedToExplode && ImpactAOI <= default.MaxImpactAOIToExplode)
         {
             // We hit an armored vehicle
-            // 1st check whether it's a downwards hit, which probably means grenade dropped onto relatively thin top surface armour (a common tactic)
+            // 1st check if we should pen. a side hit
+            // 2nd check whether it's a downwards hit, which probably means grenade dropped onto relatively thin top surface armour (a common tactic)
             // If so we'll assume HEAT grenade's substantial penetration will defeat top armour of any vehicle's hull or turret, so skip penetration check
             // Top hits or armor are not modelled in this game, but it's a reasonable assumption as even heavy tanks only had 30-40mm top armor
             // Otherwise do normal armour penetration check & exit if it fails to penetrate (with suitable effects)
             if (DHArmoredVehicle(Wall) != none || DHVehicleCannon(Wall) != none)
             {
-                // Re-calc AOI, this time relative to a line 'straight up' from the vehicle (relative to its rotation)
-                Wall.GetAxes(Wall.Rotation, X, Y, VehicleRelativeVertical);
-                ImpactAOI = class'UUnits'.static.RadiansToDegrees(Acos(-Normal(Velocity) dot VehicleRelativeVertical));
-
-                if (ImpactAOI > default.MaxVerticalAOIForTopArmor &&
-                    ((Wall.IsA('DHArmoredVehicle') && !DHArmoredVehicle(Wall).ShouldPenetrate(self, Location, Normal(Velocity), GetMaxPenetration(LaunchLocation, Location)))
+                if (((Wall.IsA('DHArmoredVehicle') && !DHArmoredVehicle(Wall).ShouldPenetrate(self, Location, Normal(Velocity), GetMaxPenetration(LaunchLocation, Location)))
                     || (Wall.IsA('DHVehicleCannon') && !DHVehicleCannon(Wall).ShouldPenetrate(self, Location, Normal(Velocity), GetMaxPenetration(LaunchLocation, Location)))))
                 {
-                    FailToPenetrateArmor(Location, HitNormal, Wall);
+                    bFailedToPenetrate = true;
+                }
 
+                // If we have failed to pen the side, then see if it was a top hit
+                if (bFailedToPenetrate)
+                {
+                    // Re-calc AOI, this time relative to a line 'straight up' from the vehicle (relative to its rotation)
+                    Wall.GetAxes(Wall.Rotation, X, Y, VehicleRelativeVertical);
+                    ImpactAOI = class'UUnits'.static.RadiansToDegrees(Acos(-Normal(Velocity) dot VehicleRelativeVertical));
+
+                    if (ImpactAOI <= default.MaxVerticalAOIForTopArmor)
+                    {
+                        // We hit top armor and at the right angle
+                        bFailedToPenetrate = false;
+                        ImpactDamageMultiplier = 2.0;
+                    }
+                }
+
+                if (bFailedToPenetrate)
+                {
+                    FailToPenetrateArmor(Location, HitNormal, Wall);
                     return;
                 }
             }
@@ -271,7 +294,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
                     Wall.SetDelayedDamageInstigatorController(InstigatorController);
                 }
 
-                Wall.TakeDamage(ImpactDamage, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
+                Wall.TakeDamage(ImpactDamage * ImpactDamageMultiplier, Instigator, Location, MomentumTransfer * Normal(Velocity), ShellImpactDamage);
             }
 
             if (DamageRadius > 0.0 && ROVehicle(Wall) != none && ROVehicle(Wall).Health > 0)
@@ -566,7 +589,7 @@ defaultproperties
 
     // RPG-43 specific variables
     MaxImpactAOIToExplode=45.0
-    MinImpactSpeedToExplode=600.0
-    MaxVerticalAOIForTopArmor=25.0
+    MinImpactSpeedToExplode=450.0
+    MaxVerticalAOIForTopArmor=33.0
     PickupClass=class'DH_Weapons.DH_RPG43GrenadePickup'
 }
