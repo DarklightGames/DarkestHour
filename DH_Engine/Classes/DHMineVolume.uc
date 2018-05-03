@@ -36,8 +36,9 @@ Explanation of several nasty bugs in ROMineVolume, especially when mine volume i
     Solution: when a vehicle enters the MV or we find a vehicle in the MV, loop through all occupants & give a warning to any players.
 */
 
-var()   bool                    bInitiallyActive;    // leveller can set MV to be inactive at start of round, so it can be activated later by an event
-var()   bool                    bIsAlsoNoArtyVolume; // leveller can set this volume to also function like a no arty volume, stopping artillery/mortars rounds from being effective
+var()   bool                    bInitiallyActive;    // leveler can set MV to be inactive at start of round, so it can be activated later by an event
+var()   bool                    bIsAlsoNoArtyVolume; // leveler can set this volume to also function like a no arty volume, stopping artillery/mortars rounds from being effective
+var()   bool                    bEventsCanToggle;    // leveler setting for events to be able to toggle the status of this mine volume
 var     float                   ActivationTime;      // time this MV was activated - used in workaround fix to bug if player teleports into MV, & also useful in subclasses
 var     class<ROMineFieldMsg>   WarningMessageClass; // local message class to use for warning messages, so can be replaced by custom messages in a subclass
 
@@ -46,6 +47,22 @@ var     class<ROMineFieldMsg>   WarningMessageClass; // local message class to u
 function PostBeginPlay()
 {
     super(Volume).PostBeginPlay();
+}
+
+// Triggering the minefield will only deactivate it, not toggle it
+event Trigger(Actor Other, Pawn EventInstigator)
+{
+    if (bEventsCanToggle)
+    {
+        if (!bActive)
+        {
+            Activate();
+        }
+        else
+        {
+            Deactivate();
+        }
+    }
 }
 
 // Modified to activate or deactivate the mine volume based on the leveller's setting of bInitiallyActive
