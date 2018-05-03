@@ -208,7 +208,7 @@ simulated event PostNetBeginPlay()
     if (Role < ROLE_Authority)
     {
         ServerSetBayonetAtSpawn(bSpawnWithBayonet);
-        ServerSetLockTankOnEntry(bLockTankOnEntry);
+        SetLockTankOnEntry(bLockTankOnEntry);
     }
 }
 
