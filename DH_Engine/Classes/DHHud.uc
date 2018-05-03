@@ -1031,7 +1031,7 @@ function DrawHudPassC(Canvas C)
             {
                 // Check width & height of text label
                 s = class'ROTeamGame'.static.ParseLoadingHintNoColor(OpenMapText, PlayerController(Owner));
-                C.Font = getSmallMenuFont(C);
+                C.Font = GetSmallMenuFont(C);
 
                 // Draw text
                 MapUpdatedText.Text = s;
@@ -3351,6 +3351,13 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
         MyMapScale = 1.0; // just so we never get divisions by 0
     }
 
+    // Get smaller font to draw the map scale in
+    C.Font = C.TinyFont;
+
+    // Draw map scale indicator
+    MapScaleText.Text = "Grid Square: ~" $ string(int(GetMapMeterScale())) $ "m";
+    DrawTextWidgetClipped(C, MapScaleText, SubCoords);
+
     // Set the font to be used to draw objective text
     C.Font = GetSmallMenuFont(C);
 
@@ -4035,6 +4042,35 @@ function float GetMapIconYaw(float WorldYaw)
     }
 
     return MapIconYaw;
+}
+
+function float GetMapMeterScale()
+{
+    local vector MapCenter, DropLoc, temp, dist;
+    local float MapMeterScale, Meters;
+
+    if (DHGRI == none)
+    {
+        return 0.0;
+    }
+
+    temp = DHGRI.SouthWestBounds - DHGRI.NorthEastBounds;
+
+    MapCenter = temp / 2 + DHGRI.NorthEastBounds;
+
+    MapMeterScale = abs(temp.X);
+
+    DropLoc.X = MapMeterScale * 1 / 9;
+    DropLoc.Y = 0;
+
+    DropLoc = GetAdjustedHudLocation(DropLoc);
+    MapCenter = GetAdjustedHudLocation(MapCenter);
+    DropLoc += MapCenter;
+    dist = DropLoc - MapCenter;
+    Meters = abs(VSize(dist));
+    Meters /= 60.352;
+
+    return Meters;
 }
 
 // Renders the objectives on the HUD similar to the scoreboard
@@ -5542,7 +5578,7 @@ defaultproperties
 
     // Map general icons
     MapLevelOverlay=(RenderStyle=STY_Alpha,TextureCoords=(X2=511,Y2=511),TextureScale=1.0,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=125),Tints[1]=(B=255,G=255,R=255,A=255))
-    MapScaleText=(RenderStyle=STY_Alpha,DrawPivot=DP_LowerRight,PosX=1.0,PosY=0.0375,WrapHeight=1.0,Tints[0]=(B=255,G=255,R=255,A=128),Tints[1]=(B=255,G=255,R=255,A=128))
+    MapScaleText=(RenderStyle=STY_Alpha,DrawPivot=DP_UpperRight,PosX=1.0,PosY=0.001,WrapHeight=1.0,Tints[0]=(B=255,G=255,R=255,A=128),Tints[1]=(B=255,G=255,R=255,A=128))
     PlayerNumberText=(RenderStyle=STY_Alpha,DrawPivot=DP_MiddleMiddle,PosX=0.0,PosY=0.0,WrapHeight=1.0,Tints[0]=(B=0,G=0,R=0,A=255),Tints[1]=(B=0,G=0,R=0,A=255),bDrawShadow=false)
     MapPlayerIcon=(WidgetTexture=FinalBlend'DH_InterfaceArt_tex.HUD.player_icon_map_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31))
     MapIconDispute(0)=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=128,Y1=192,X2=191,Y2=255),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
