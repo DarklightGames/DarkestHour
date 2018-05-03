@@ -2334,6 +2334,7 @@ state RoundInPlay
         GRI.bRoundIsOver = false;
         GRI.RoundStartTime = RoundStartTime;
         GRI.RoundEndTime = RoundStartTime + RoundDuration;
+        GRI.DHRoundDuration = RoundDuration;
         GRI.AttritionRate[AXIS_TEAM_INDEX] = 0;
         GRI.AttritionRate[ALLIES_TEAM_INDEX] = 0;
 
@@ -2763,10 +2764,9 @@ state RoundInPlay
             }
         }
 
-        // if round time is up, the defending team wins, if any
-        if (RoundDuration != 0 && ElapsedTime > GRI.RoundEndTime)
+        // If round time is up, decide the winner
+        if (GRI.DHRoundDuration != 0 && GRI.ElapsedTime > GRI.RoundEndTime)
         {
-            Level.Game.Broadcast(self, "The battle ended because time ran out", 'Say');
             ChooseWinner();
         }
 
@@ -2940,6 +2940,15 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
         Level.Game.Broadcast(self, "The battle ended because a team's reinforcements reached zero", 'Say');
         ChooseWinner();
         return;
+    }
+
+    // If roundtime is currently infinite AND in play AND reinf at zero AND time changes at zero reinf
+    // This will estentially set the round time to the desired amount once zero reinf is reached, but will only if the round time was infinite
+    // If the second team reinf hits zero, this will not execute as the round timer won't be infinite
+    if (GRI.DHRoundDuration == 0 && IsInState('RoundInPlay') && GRI.SpawnsRemaining[Team] == 0 && DHLevelInfo.GameTypeClass.default.bTimeChangesAtZeroReinf)
+    {
+        // Then adjust the round time
+        ModifyRoundTime(DHLevelInfo.GameTypeClass.default.OutOfReinforcementsRoundTime, 2);
     }
 }
 
@@ -3717,8 +3726,9 @@ function ChooseWinner()
     AxisReinforcementsPercent = (float(GRI.SpawnsRemaining[AXIS_TEAM_INDEX]) / LevelInfo.Axis.SpawnLimit) * 100;
     AlliedReinforcementsPercent = (float(GRI.SpawnsRemaining[ALLIES_TEAM_INDEX]) / LevelInfo.Allies.SpawnLimit) * 100;
 
-    // Check to see who has more reinforcements when bRoundEndsAtZeroReinf
-    if (DHLevelInfo.GameTypeClass.default.bRoundEndsAtZeroReinf)
+    // If gametype has time changes at zero reinf OR round ends at zero reinf
+    // Highest reinforcements percent wins, if equal then draw
+    if (DHLevelInfo.GameTypeClass.default.bTimeChangesAtZeroReinf || DHLevelInfo.GameTypeClass.default.bRoundEndsAtZeroReinf)
     {
         // The winner is the one with higher reinforcements (no concern over objective counts)
         if (AxisReinforcementsPercent > AlliedReinforcementsPercent)
@@ -3735,7 +3745,7 @@ function ChooseWinner()
         }
         else // Both teams have same reinforcements so its a tie "No Decisive Victory"
         {
-            Level.Game.Broadcast(self, "Neither side won the battle because they have equal reinforcements", 'Say');
+            Level.Game.Broadcast(self, "Battle is a draw as both sides are out of reinforcements", 'Say');
             EndRound(2);
             return;
         }
@@ -4355,7 +4365,14 @@ function NotifyLogout(Controller Exiting)
 // Modified to remove reliance on SpawnCount and instead just use SpawnsRemaining
 function bool SpawnLimitReached(int Team)
 {
-    return GRI.SpawnsRemaining[Team] == 0;
+    if (DHLevelInfo.GameTypeClass.default.bKeepSpawningWithoutReinf)
+    {
+        return false;
+    }
+    else
+    {
+        return GRI.SpawnsRemaining[Team] == 0;
+    }
 }
 
 function int GetRoundTime()
@@ -4378,9 +4395,11 @@ function ModifyRoundTime(int RoundTime, int Type)
                 break;
             case 2: //Set
                 GRI.RoundEndTime = GRI.ElapsedTime + RoundTime;
+                GRI.DHRoundDuration = RoundTime;
                 break;
             default:
                 GRI.RoundEndTime = GRI.ElapsedTime + RoundTime;
+                GRI.DHRoundDuration = RoundTime;
                 break;
         }
 

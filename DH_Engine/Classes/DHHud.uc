@@ -120,7 +120,6 @@ var     localized string    SpawnVehicleText;
 var     localized string    SpawnAtVehicleText;
 var     localized string    SpawnRallyPointText;
 var     localized string    SpawnNoRoleText;
-var     localized string    ReinforcementsDepletedText;
 var     localized string    NeedReloadText;
 var     localized string    CanReloadText;
 var     localized string    CaptureBarUnlockText;
@@ -4731,77 +4730,70 @@ function DrawSpectatingHud(Canvas C)
         }
         else if (DHGRI.bReinforcementsComing[PRI.Team.TeamIndex] == 1)
         {
-            if (DHGRI.SpawnsRemaining[PRI.Team.TeamIndex] > 0 || DHGRI.SpawnsRemaining[PRI.Team.TeamIndex] == -1)
+            Time = Max(PC.NextSpawnTime - DHGRI.ElapsedTime, 0);
+
+            switch (PC.ClientLevelInfo.SpawnMode)
             {
-                Time = Max(PC.NextSpawnTime - DHGRI.ElapsedTime, 0);
+                case ESM_DarkestHour:
+                    if (DHGRI.SpawningEnableTime - DHGRI.ElapsedTime > 0)
+                    {
+                        s = default.NotReadyToSpawnText;
+                        s = Repl(s, "{s}", class'TimeSpan'.static.ToString(DHGRI.SpawningEnableTime - DHGRI.ElapsedTime));
+                        bShouldFlashText = true;
+                    }
+                    else if (PC.VehiclePoolIndex != -1 && PC.SpawnPointIndex != -1)
+                    {
+                        // You will deploy as a {0} driving a {3} at {2} | Press ESC to change
+                        s = default.SpawnVehicleText;
+                        s = Repl(s, "{3}", DHGRI.VehiclePoolVehicleClasses[PC.VehiclePoolIndex].default.VehicleNameString);
+                    }
+                    else if (PC.SpawnPointIndex != -1)
+                    {
+                        SP = DHGRI.SpawnPoints[PC.SpawnPointIndex];
 
-                switch (PC.ClientLevelInfo.SpawnMode)
-                {
-                    case ESM_DarkestHour:
-                        if (DHGRI.SpawningEnableTime - DHGRI.ElapsedTime > 0)
-                        {
-                            s = default.NotReadyToSpawnText;
-                            s = Repl(s, "{s}", class'TimeSpan'.static.ToString(DHGRI.SpawningEnableTime - DHGRI.ElapsedTime));
-                            bShouldFlashText = true;
-                        }
-                        else if (PC.VehiclePoolIndex != -1 && PC.SpawnPointIndex != -1)
-                        {
-                            // You will deploy as a {0} driving a {3} at {2} | Press ESC to change
-                            s = default.SpawnVehicleText;
-                            s = Repl(s, "{3}", DHGRI.VehiclePoolVehicleClasses[PC.VehiclePoolIndex].default.VehicleNameString);
-                        }
-                        else if (PC.SpawnPointIndex != -1)
-                        {
-                            SP = DHGRI.SpawnPoints[PC.SpawnPointIndex];
-
-                            if (SP == none)
-                            {
-                                // Press ESC to select a spawn point
-                                s = default.SelectSpawnPointText;
-                                bShouldFlashText = true;
-                            }
-                            else
-                            {
-                                // You will deploy as a {0} in {2} | Press ESC to change
-                                s = default.SpawnInfantryText;
-                            }
-                        }
-                        else
+                        if (SP == none)
                         {
                             // Press ESC to select a spawn point
                             s = default.SelectSpawnPointText;
                             bShouldFlashText = true;
                         }
-
-                        break;
-
-                    case ESM_RedOrchestra:
-                        s = default.ReinforcementText;
-                        break;
-                }
-
-                if (PRI.RoleInfo != none)
-                {
-                    if (PC.bUseNativeRoleNames)
-                    {
-                        s = Repl(s, "{0}", PRI.RoleInfo.AltName);
+                        else
+                        {
+                            // You will deploy as a {0} in {2} | Press ESC to change
+                            s = default.SpawnInfantryText;
+                        }
                     }
                     else
                     {
-                        s = Repl(s, "{0}", PRI.RoleInfo.MyName);
+                        // Press ESC to select a spawn point
+                        s = default.SelectSpawnPointText;
+                        bShouldFlashText = true;
                     }
+
+                    break;
+
+                case ESM_RedOrchestra:
+                    s = default.ReinforcementText;
+                    break;
+            }
+
+            if (PRI.RoleInfo != none)
+            {
+                if (PC.bUseNativeRoleNames)
+                {
+                    s = Repl(s, "{0}", PRI.RoleInfo.AltName);
                 }
                 else
                 {
-                    s = default.SpawnNoRoleText;
+                    s = Repl(s, "{0}", PRI.RoleInfo.MyName);
                 }
-
-                s = Repl(s, "{2}", class'TimeSpan'.static.ToString(Max(0, Time)));
             }
             else
             {
-                s = default.ReinforcementsDepletedText;
+                s = default.SpawnNoRoleText;
             }
+
+            s = Repl(s, "{2}", class'TimeSpan'.static.ToString(Max(0, Time)));
         }
 
         Y += 4.0 * Scale + StrY;
@@ -5486,7 +5478,6 @@ defaultproperties
     SpawnAtVehicleText="You will deploy as a {0} at a {1} in {2} | Press [ESC] to change"
     SpawnRallyPointText="You will deploy as a {0} at your squad rally point in {2} | Press [ESC] to change"
     SpawnNoRoleText="Press [ESC] to select a role"
-    ReinforcementsDepletedText="Reinforcements depleted!"
     NotReadyToSpawnText="Spawning will enable in {s} (Use this time to organize squads and plan)"
 
     // Screen indicator icons & player HUD

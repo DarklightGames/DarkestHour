@@ -9,8 +9,12 @@ class DHGameType_Advance extends DHGameType
 defaultproperties
 {
     GameTypeName="Advance"
-    bRoundEndsAtZeroReinf=true
+
     bUseReinforcementWarning=true
     bSquadSpecialRolesOnly=true
+
+    bTimeChangesAtZeroReinf=true
+    bKeepSpawningWithoutReinf=true
+    OutOfReinforcementsRoundTime=120
 }
 

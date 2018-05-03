@@ -12,6 +12,9 @@ var bool                bUseReinforcementWarning;
 var bool                bRoundEndsAtZeroReinf;
 var bool                bTimeChangesAtZeroReinf;
 var bool                bSquadSpecialRolesOnly;
+var bool                bKeepSpawningWithoutReinf;
+
+var int                 OutOfReinforcementsRoundTime;
 
 defaultproperties
 {
