@@ -584,6 +584,11 @@ function UpdateRoles()
     local int        Count, BotCount, Limit, i;
     local string     S;
 
+    if (PRI == none)
+    {
+        PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+    }
+
     for (i = 0; i < li_Roles.ItemCount; ++i)
     {
         RI = DHRoleInfo(li_Roles.GetObjectAtIndex(i));
@@ -625,14 +630,14 @@ function UpdateRoles()
         bShouldBeDisabled = PC.GetRoleInfo() != RI && Limit > 0 && Count >= Limit && BotCount == 0;
 
         // If not in a squad AND gametype restricts specialized roles to squads only AND the role is not limitless
-        if (!PRI.IsInSquad() && GRI.GameType.default.bSquadSpecialRolesOnly && Limit != 255)
+        if (PRI != none && !PRI.IsInSquad() && GRI.GameType.default.bSquadSpecialRolesOnly && Limit != 255)
         {
             S @= "*" $ SquadOnlyText $ "*";
             bShouldBeDisabled = true;
         }
 
         // If in a squad AND role requires sl/asl AND not a sl/asl AND gametype restricts specialized roles to squads only
-        if (PRI.IsInSquad() && RI.bRequiresSLorASL && !PRI.IsSLorASL() && GRI.GameType.default.bSquadSpecialRolesOnly)
+        if (PRI != none && PRI.IsInSquad() && RI.bRequiresSLorASL && !PRI.IsSLorASL() && GRI.GameType.default.bSquadSpecialRolesOnly)
         {
             S @= "*" $ SquadLeadershipOnlyText $ "*";
             bShouldBeDisabled = true;
