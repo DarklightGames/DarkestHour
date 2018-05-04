@@ -16,6 +16,42 @@ simulated exec function ROManualReload() {return;}
 simulated function bool IsBusy() {return false;}
 simulated function bool ShouldUseFreeAim() {return false;}
 
+// Modified to allow same InventoryGroup item (this shares same slot as binocs, will allow player to have both wirecutters and binocs)
+function bool HandlePickupQuery(Pickup Item)
+{
+    local int i;
+
+    // If no passed item, prevent pick up & stops checking rest of Inventory chain
+    if (Item == none)
+    {
+        return true;
+    }
+
+    // Pickup weapon is same as this weapon, so see if we can carry another
+    if (Class == Item.InventoryType && WeaponPickup(Item) != none)
+    {
+        for (i = 0; i < NUM_FIRE_MODES; ++i)
+        {
+            if (AmmoClass[i] != none && AmmoCharge[i] < MaxAmmo(i) && WeaponPickup(Item).AmmoAmount[i] > 0)
+            {
+                AddAmmo(WeaponPickup(Item).AmmoAmount[i], i);
+
+                // Need to do this here as we're going to prevent a new weapon pick up, so the pickup won't give a screen message or destroy/respawn itself
+                Item.AnnouncePickup(Pawn(Owner));
+                Item.SetRespawn();
+
+                break;
+            }
+        }
+
+        return true; // prevents pick up, as already have weapon, & stops checking rest of Inventory chain
+    }
+
+    // Didn't do any pick up for this weapon, so pass this query on to the next item in the Inventory chain
+    // If we've reached the last Inventory item, returning false will allow pick up of the weapon
+    return Inventory != none && Inventory.HandlePickupQuery(Item);
+}
+
 simulated state Cutting
 {
     simulated function BeginState()
@@ -150,6 +186,7 @@ defaultproperties
     ItemName="Wire Cutters"
     AttachmentClass=class'DHWireCuttersAttachment'
     InventoryGroup=4
+    GroupOffset=2
     Priority=1
     bCanThrow=false
     CutDistance=100.0

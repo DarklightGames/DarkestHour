@@ -14,5 +14,6 @@ defaultproperties
     ItemName="Nebelhandgranate 39"
     Mesh=SkeletalMesh'Axis_Granate_1st.German-Grenade-Mesh'
     Skins(2)=Texture'Weapons1st_tex.Grenades.StielGranate_smokenade'
-    InventoryGroup=7
+
+    GroupOffset=6
 }

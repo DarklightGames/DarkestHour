@@ -13,5 +13,6 @@ defaultproperties
     AttachmentClass=class'DH_Equipment.DH_USSmokeGrenadeAttachment'
     ItemName="M8 Smoke Grenade"
     Mesh=SkeletalMesh'DH_USSmokeGrenade_1st.smokegrenade'
-    InventoryGroup=7
+
+    GroupOffset=8
 }

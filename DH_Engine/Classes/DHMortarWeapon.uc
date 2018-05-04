@@ -291,6 +291,42 @@ simulated function ImmediateStopFire();
 simulated function ROIronSights();
 simulated exec function ROManualReload();
 
+// Modified to allow same InventoryGroup items
+function bool HandlePickupQuery(Pickup Item)
+{
+    local int i;
+
+    // If no passed item, prevent pick up & stops checking rest of Inventory chain
+    if (Item == none)
+    {
+        return true;
+    }
+
+    // Pickup weapon is same as this weapon, so see if we can carry another
+    if (Class == Item.InventoryType && WeaponPickup(Item) != none)
+    {
+        for (i = 0; i < NUM_FIRE_MODES; ++i)
+        {
+            if (AmmoClass[i] != none && AmmoCharge[i] < MaxAmmo(i) && WeaponPickup(Item).AmmoAmount[i] > 0)
+            {
+                AddAmmo(WeaponPickup(Item).AmmoAmount[i], i);
+
+                // Need to do this here as we're going to prevent a new weapon pick up, so the pickup won't give a screen message or destroy/respawn itself
+                Item.AnnouncePickup(Pawn(Owner));
+                Item.SetRespawn();
+
+                break;
+            }
+        }
+
+        return true; // prevents pick up, as already have weapon, & stops checking rest of Inventory chain
+    }
+
+    // Didn't do any pick up for this weapon, so pass this query on to the next item in the Inventory chain
+    // If we've reached the last Inventory item, returning false will allow pick up of the weapon
+    return Inventory != none && Inventory.HandlePickupQuery(Item);
+}
+
 defaultproperties
 {
     InventoryGroup=9

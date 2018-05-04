@@ -709,6 +709,100 @@ exec function ToggleHDO()
     }
 }
 
+// No functional change, copied from ROWeapon, just cleaned up
+simulated function Weapon PrevWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
+{
+    if ((CurrentChoice == none))
+    {
+        if (CurrentWeapon != self)
+        {
+            CurrentChoice = self;
+        }
+    }
+    else if (InventoryGroup == CurrentWeapon.InventoryGroup)
+    {
+        if (GroupOffset < CurrentWeapon.GroupOffset &&
+           (CurrentChoice.InventoryGroup != InventoryGroup || GroupOffset > CurrentChoice.GroupOffset))
+        {
+            CurrentChoice = self;
+        }
+    }
+    else if (InventoryGroup == CurrentChoice.InventoryGroup)
+    {
+        if (GroupOffset > CurrentChoice.GroupOffset)
+        {
+            CurrentChoice = self;
+        }
+    }
+    else if (InventoryGroup > CurrentChoice.InventoryGroup)
+    {
+        if (InventoryGroup < CurrentWeapon.InventoryGroup || CurrentChoice.InventoryGroup > CurrentWeapon.InventoryGroup)
+        {
+            CurrentChoice = self;
+        }
+    }
+    else if (CurrentChoice.InventoryGroup > CurrentWeapon.InventoryGroup && InventoryGroup < CurrentWeapon.InventoryGroup)
+    {
+        CurrentChoice = self;
+    }
+
+    if (Inventory == none)
+    {
+        return CurrentChoice;
+    }
+    else
+    {
+        return Inventory.PrevWeapon(CurrentChoice,CurrentWeapon);
+    }
+}
+
+// No functional change, copied from ROWeapon, just cleaned up
+simulated function Weapon NextWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
+{
+    if (CurrentChoice == none)
+    {
+        if (CurrentWeapon != self)
+        {
+            CurrentChoice = self;
+        }
+    }
+    else if (InventoryGroup == CurrentWeapon.InventoryGroup)
+    {
+        if (GroupOffset > CurrentWeapon.GroupOffset && (CurrentChoice.InventoryGroup != InventoryGroup || GroupOffset < CurrentChoice.GroupOffset))
+        {
+            CurrentChoice = self;
+        }
+    }
+    else if (InventoryGroup == CurrentChoice.InventoryGroup)
+    {
+        if (GroupOffset < CurrentChoice.GroupOffset)
+        {
+            CurrentChoice = self;
+        }
+    }
+
+    else if (InventoryGroup < CurrentChoice.InventoryGroup)
+    {
+        if (InventoryGroup > CurrentWeapon.InventoryGroup || CurrentChoice.InventoryGroup < CurrentWeapon.InventoryGroup)
+        {
+            CurrentChoice = self;
+        }
+    }
+    else if (CurrentChoice.InventoryGroup < CurrentWeapon.InventoryGroup && InventoryGroup > CurrentWeapon.InventoryGroup)
+    {
+        CurrentChoice = self;
+    }
+
+    if (Inventory == none)
+    {
+        return CurrentChoice;
+    }
+    else
+    {
+        return Inventory.NextWeapon(CurrentChoice,CurrentWeapon);
+    }
+}
+
 defaultproperties
 {
     // Sway modifiers

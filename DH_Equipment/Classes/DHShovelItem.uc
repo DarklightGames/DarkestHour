@@ -40,8 +40,9 @@ defaultproperties
     FireModeClass(1)=class'DH_Equipment.DHShovelMeleeFire'
 
     ItemName="Shovel"
-    InventoryGroup=9
-    Priority=1
+    InventoryGroup=4
+    GroupOffset=0
+    Priority=4 // this should be higher than any other weapon on InventoryGroup=4, raising this higher than 8 will require to raise priority on other weapons
     bCanThrow=false
 
     DisplayFOV=80.0

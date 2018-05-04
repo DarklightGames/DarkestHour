@@ -29,5 +29,6 @@ defaultproperties
     AttachmentClass=class'DH_Equipment.DH_OrangeSmokeAttachment'
     PickupClass=class'DH_Equipment.DH_OrangeSmokePickup'
     Mesh=SkeletalMesh'DH_GermanSmokeGrenade_1st.OrangeSmokeGrenade'
-    InventoryGroup=8
+
+    GroupOffset=9
 }

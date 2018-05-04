@@ -14,8 +14,8 @@ defaultproperties
     FireModeClass(1)=class'DH_Weapons.DH_RPG43GrenadeFire' // no toss fire because it would be utterly useless
     AttachmentClass=class'DH_Weapons.DH_RPG43GrenadeAttachment'
     PickupClass=class'DH_Weapons.DH_RPG43GrenadePickup'
-    InventoryGroup=2
-
     Mesh=SkeletalMesh'DH_RPG43Grenade_1st.RPG43Grenade'
     Skins(2)=Texture'DH_Weapon_tex.AlliedSmallArms.RPG43Grenade' // TODO: there is no specularity mask for this weapon
+
+    GroupOffset=5
 }

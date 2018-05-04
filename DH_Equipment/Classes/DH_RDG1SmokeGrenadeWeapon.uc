@@ -13,6 +13,7 @@ defaultproperties
     AttachmentClass=class'DH_Equipment.DH_RDG1SmokeGrenadeAttachment'
     ItemName="RDG-1 Smoke Grenade"
     Mesh=SkeletalMesh'Allies_RGD1_1st.RGD1_mesh'
-    InventoryGroup=7
     PutDownAnim="putaway"
+
+    GroupOffset=7
 }

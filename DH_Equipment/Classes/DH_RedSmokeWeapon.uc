@@ -29,5 +29,6 @@ defaultproperties
     AttachmentClass=class'DH_Equipment.DH_RedSmokeAttachment'
     PickupClass=class'DH_Equipment.DH_RedSmokePickup'
     Mesh=SkeletalMesh'DH_USSmokeGrenade_1st.RedSmokeGrenade'
-    InventoryGroup=8
+
+    GroupOffset=10
 }

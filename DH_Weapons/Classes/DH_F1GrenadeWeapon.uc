@@ -14,7 +14,6 @@ defaultproperties
     FireModeClass(1)=class'DH_Weapons.DH_F1GrenadeTossFire'
     AttachmentClass=class'DH_Weapons.DH_F1GrenadeAttachment'
     PickupClass=class'DH_Weapons.DH_F1GrenadePickup'
-    InventoryGroup=2
 
     Mesh=SkeletalMesh'Allies_F1nade_1st.F1-Grenade-Mesh'
     HighDetailOverlay=shader'Weapons1st_tex.Grenades.f1grenade_s'
@@ -26,4 +25,6 @@ defaultproperties
     LeverReleaseSound=Sound'Inf_Weapons_Foley.F1.f1_handle'
     LeverReleaseVolume=1.0
     LeverReleaseRadius=200.0
+
+    GroupOffset=0
 }

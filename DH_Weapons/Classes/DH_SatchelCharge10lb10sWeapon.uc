@@ -13,7 +13,6 @@ defaultproperties
     FireModeClass(0)=class'DH_Weapons.DH_SatchelCharge10lb10sFire'
     AttachmentClass=class'DH_Weapons.DH_SatchelCharge10lb10sAttachment'
     PickupClass=class'DH_Weapons.DH_SatchelCharge10lb10sPickup'
-    InventoryGroup=6
 
     Mesh=SkeletalMesh'Common_Satchel_1st.Sachel_Charge'
     Skins(2)=Texture'Weapons1st_tex.Grenades.SatchelCharge'
@@ -22,4 +21,6 @@ defaultproperties
 
     FuzeLength=15.0
     PreFireHoldAnim="Weapon_Down"
+
+    GroupOffset=4
 }
