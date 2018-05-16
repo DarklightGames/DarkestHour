@@ -274,7 +274,7 @@ defaultproperties
     ItemName="Binoculars"
     AttachmentClass=class'DH_Equipment.DHBinocularsAttachment'
     PickupClass=class'DH_Equipment.DHBinocularsPickup'
-    InventoryGroup=4
+    InventoryGroup=6
     GroupOffset=1
     Priority=1
     bCanAttachOnBack=false
