@@ -39,6 +39,8 @@ Explanation of several nasty bugs in ROMineVolume, especially when mine volume i
 var()   bool                    bInitiallyActive;    // leveler can set MV to be inactive at start of round, so it can be activated later by an event
 var()   bool                    bIsAlsoNoArtyVolume; // leveler can set this volume to also function like a no arty volume, stopping artillery/mortars rounds from being effective
 var()   bool                    bEventsCanToggle;    // leveler setting for events to be able to toggle the status of this mine volume
+var()   bool                    bEventsCanDisable;   // leveler setting for events to be able to disable the status of this mine volume
+var()   bool                    bEventsCanEnable;    // leveler setting for events to be able to enable the status of this mine volume
 var     float                   ActivationTime;      // time this MV was activated - used in workaround fix to bug if player teleports into MV, & also useful in subclasses
 var     class<ROMineFieldMsg>   WarningMessageClass; // local message class to use for warning messages, so can be replaced by custom messages in a subclass
 
@@ -52,6 +54,8 @@ function PostBeginPlay()
 // Triggering the minefield will only deactivate it, not toggle it
 event Trigger(Actor Other, Pawn EventInstigator)
 {
+    super.Trigger(Other, EventInstigator);
+
     if (bEventsCanToggle)
     {
         if (!bActive)
@@ -62,6 +66,14 @@ event Trigger(Actor Other, Pawn EventInstigator)
         {
             Deactivate();
         }
+    }
+    else if (bEventsCanDisable && bActive)
+    {
+        Deactivate();
+    }
+    else if (bEventsCanEnable && !bActive)
+    {
+        Activate();
     }
 }
 
