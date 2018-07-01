@@ -186,6 +186,10 @@ def main():
 
         os.chdir(sys_dir)
 
+        if not os.path.exists(os.path.join(sys_dir, 'ucc.exe')):
+            print('error: compiler executable not found (do you have the SDK installed?)')
+            sys.exit(1)
+
         # run ucc make
         proc = subprocess.Popen(['ucc', 'make', '-mod=' + args.mod, '-silentbuild'])
         proc.communicate()
