@@ -198,6 +198,7 @@ simulated function Material GetFlagMaterial()
 static function DHConstruction.ConstructionError GetCustomProxyError(DHConstructionProxy P)
 {
     local Actor A;
+    local DHSpawnPoint SP;
     local DHConstruction C;
     local DHConstruction.ConstructionError E;
     local bool bFoundFriendlyDuplicate, bWithinFriendlyObjectiveDistance;
@@ -220,7 +221,20 @@ static function DHConstruction.ConstructionError GetCustomProxyError(DHConstruct
         }
     }
 
-    // If not, then check if we are trying to place too close to an inactive enemy objective
+    // If we have not found a friendly HQ, then lets check if we are near main spawn
+    if (!bFoundFriendlyDuplicate)
+    {
+        foreach P.RadiusActors(class'DHSpawnPoint', SP, class'DHUnits'.static.MetersToUnreal(default.PermittedFriendlyControlledDistanceMeters))
+        {
+            if (SP != none && SP.bMainSpawn && (SP.GetTeamIndex() == NEUTRAL_TEAM_INDEX || SP.GetTeamIndex() == TeamIndex))
+            {
+                bFoundFriendlyDuplicate = true;
+                break;
+            }
+        }
+    }
+
+    // If we have not found a friendly duplicate, then check if we are trying to place too close to an inactive enemy objective
     if (!bFoundFriendlyDuplicate)
     {
         ControlledObjDistanceMin = class'DHUnits'.static.MetersToUnreal(default.PermittedFriendlyControlledDistanceMeters);
@@ -294,7 +308,7 @@ defaultproperties
     GroundSlopeMaxInDegrees=10
     SquadMemberCountMinimum=3
     ArcLengthTraceIntervalInMeters=0.5
-    CustomErrorString="Cannot {verb} a {name} so close to {string} unless it is within {integer}m of a controlled objective or {name}."
+    CustomErrorString="Cannot {verb} a {name} close to {string} unless within {integer}m of controlled territory."
 
     StartRotationMin=(Yaw=32768)
     StartRotationMax=(Yaw=32768)
