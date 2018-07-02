@@ -321,6 +321,18 @@ defaultproperties
     HealthMax=500
     TatteredHealthThreshold=250
 
+    // Damage
+    bCanTakeImpactDamage=true
+    HarmfulDamageTypes(0)=class'ROArtilleryDamType'                 // Artillery
+    HarmfulDamageTypes(1)=class'ROTankShellExplosionDamage'         // HE and some others
+    HarmfulDamageTypes(2)=class'DHThrowableExplosiveDamageType'     // Satchel/Grenades
+    HarmfulDamageTypes(3)=class'DHMortarDamageType'                 // Mortar
+    HarmfulDamageTypes(4)=class'ROTankShellImpactDamage'            // AP
+    HarmfulDamageTypes(5)=class'DHAntiTankProjectileDamageType'     // Splash AT weapon
+    HarmfulDamageTypes(6)=class'DHRocketImpactDamage'               // Direct AT weapon hits
+
+    DamageTypeScales(0)=(DamageType=class'ROTankShellImpactDamage',Scale=0.33)
+
     FlagSkinIndex=1
     SpawnPointClass=class'DHSpawnPoint_PlatoonHQ'
     bCanBeTornDownByFriendlies=false

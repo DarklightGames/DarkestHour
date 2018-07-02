@@ -57,20 +57,57 @@ simulated event Destroyed()
 
 defaultproperties
 {
-    Stages(0)=(Progress=0,StaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_Light_Vehicle_Pool_undeployed')
-    ProgressMax=4   // TODO: make this larger later
-    SpawnPointClass=class'DHSpawnPoint_VehiclePool'
-    StaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_Light_Vehicle_Pool'
-    MenuIcon=Texture'DH_InterfaceArt2_tex.icons.motorpool'
     MenuName="Vehicle Pool"
-    ProxyTraceDepthMeters=10.0
-    bHidden=false
-    CollisionRadius=300.0
-    CollisionHeight=60.0
-    GroupClass=class'DHConstructionGroup_Logistics'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.icons.motorpool'
+    MenuDescription="Provides a team-wide vehicle spawn point."
+    Stages(0)=(Progress=0,StaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_Light_Vehicle_Pool_undeployed')
+    ProgressMax=12
+    SupplyCost=750
+    MinDamagetoHurt=5
 
+    // Temp
+    StaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_Light_Vehicle_Pool'
+
+    // Placement
+    bCanPlaceIndoors=false
+    bCanPlaceInObjective=false
+    DuplicateFriendlyDistanceInMeters=300
+    DuplicateEnemyDistanceInMeters=150
+    ObjectiveDistanceMinMeters=150
+    EnemyObjectiveDistanceMinMeters=200.0
+    ProxyTraceDepthMeters=10.0
+    bCanOnlyPlaceOnTerrain=true
+    bCanPlaceInWater=false
+    GroundSlopeMaxInDegrees=10
+    SquadMemberCountMinimum=3
+    ArcLengthTraceIntervalInMeters=0.5
     ProximityRequirements(0)=(ConstructionClass=class'DHConstruction_PlatoonHQ',DistanceMeters=100.0)
 
-    DuplicateFriendlyDistanceInMeters=250
+    // Collision
+    CollisionHeight=120.0
+    CollisionRadius=300.0
+
+    // Health
+    HealthMax=200
+    TatteredHealthThreshold=100
+
+    // Damage
+    bCanTakeImpactDamage=true
+    HarmfulDamageTypes(0)=class'ROArtilleryDamType'                 // Artillery
+    HarmfulDamageTypes(1)=class'ROTankShellExplosionDamage'         // HE and some others
+    HarmfulDamageTypes(2)=class'DHThrowableExplosiveDamageType'     // Satchel/Grenades
+    HarmfulDamageTypes(3)=class'DHMortarDamageType'                 // Mortar
+    HarmfulDamageTypes(4)=class'ROTankShellImpactDamage'            // AP
+    HarmfulDamageTypes(5)=class'DHAntiTankProjectileDamageType'     // Splash AT weapon
+    HarmfulDamageTypes(6)=class'DHRocketImpactDamage'               // Direct AT weapon hits
+
+    // Group Class
+    SpawnPointClass=class'DHSpawnPoint_VehiclePool'
+    GroupClass=class'DHConstructionGroup_Logistics'
+
+    // Rules
+    bCanBeTornDownByFriendlies=false
+    FriendlyFireDamageScale=0.0
+
 }
 
