@@ -11,7 +11,7 @@ defaultproperties
     bStatic=false
     bCombatSpawn=true
     bCollideWhenPlacing=false
-    bHidden=false
+    bHidden=true
     bIsActive=true
     BaseSpawnTimePenalty=15
 
