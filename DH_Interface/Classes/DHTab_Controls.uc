@@ -236,9 +236,9 @@ defaultproperties
     ControlProfileCommands(2)=(Cmds=())
 
     // Pro 104
-    ControlProfileKeys(3)=    (Keys=("V",  "Z",    "B",                      "N",             "J",               "K",         "L",           "Semicolon",   "SingleQuote",   "Ctrl",            "Alt",                                    "Backslash",     "MouseX",                               "MouseY",                               "CapsLock","F",                     "Backspace"))
-    ControlProfileCommands(3)=(Cmds=("Use","Prone","ROMGOperation | Deploy","speech ALERT 0","speech SUPPORT 2","teamsay np","speech ACK 3","speech ACK 2","speech ALERT 3","SpeechMenuToggle","ShowOrderMenu | OnRelease HideOrderMenu","speech ALERT 2","Count bXAxis | Axis aMouseX Speed=1.0","Count bYAxis | Axis aMouseY Speed=1.0","Walking", "HudOptionsWithOverview","ToggleVehicleLock"))
-    //Description:                                  Change Barrel or Deploy   Yell Grenade!	   Ask For Ammo!	 Forgive TK!   Say Sorry!	  Say Thanks!	 Yell Stop!						                                              Yell Take Cover!
+    ControlProfileKeys(3)=    (Keys=("V",  "Z",    "B",                     "N",             "J",               "K",         "L",           "Semicolon",   "SingleQuote",   "Ctrl",            "Alt",                                    "Backslash",     "MouseX",                               "MouseY",                               "CapsLock","F",             "Backspace"))
+    ControlProfileCommands(3)=(Cmds=("Use","Prone","ROMGOperation | Deploy","speech ALERT 0","speech SUPPORT 2","teamsay np","speech ACK 3","speech ACK 2","speech ALERT 3","SpeechMenuToggle","ShowOrderMenu | OnRelease HideOrderMenu","speech ALERT 2","Count bXAxis | Axis aMouseX Speed=1.0","Count bYAxis | Axis aMouseY Speed=1.0","Walking", "ShowObjectives","ToggleVehicleLock"))
+    //Description:                                  Change Barrel or Deploy   Yell Grenade!    Ask For Ammo!     Forgive TK!   Say Sorry!     Say Thanks!    Yell Stop!                                                                   Yell Take Cover!
 
     // Pro 105
     ControlProfileKeys(4)=    (Keys=("Z",         "BackSlash","Alt","Ctrl",   "X",          "C",  "B",      "N",             "M",            "F",        "G",             "H",          "T",   "Y",       "U",        "I",          "O",             "L",             "Semicolon",     "Comma",         "Period",        "F1",    "MiddleMouse"))
