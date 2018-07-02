@@ -347,8 +347,8 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
                 return;
             }
         }
-        // We hit some other kind of pawn or a destroyable mesh
-        else if (Other.IsA('RODestroyableStaticMesh') || Other.IsA('Pawn'))
+        // We hit some other kind of pawn, destroyable mesh, or construction
+        else if (Other.IsA('RODestroyableStaticMesh') || Other.IsA('DHConstruction') || Other.IsA('Pawn'))
         {
             if (Role == ROLE_Authority)
             {
@@ -419,9 +419,9 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 
     if (Role == ROLE_Authority)
     {
-        if ((!Wall.bStatic && !Wall.bWorldGeometry) || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
+        if ((!Wall.bStatic && !Wall.bWorldGeometry) || DHConstruction(Wall) != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
         {
-            if (SavedHitActor != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
+            if (SavedHitActor != none || DHConstruction(Wall) != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
             {
                 if (ShouldDrawDebugLines())
                 {
