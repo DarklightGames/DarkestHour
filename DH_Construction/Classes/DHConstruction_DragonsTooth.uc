@@ -15,7 +15,7 @@ defaultproperties
     TatteredStaticMesh=StaticMesh'DH_Construction_stc.Obstacles.dragon_tooth_damaged'
     TatteredHealthThreshold=100
     MenuName="Dragon's Teeth"
-    MenuIcon=Texture'DH_InterfaceArt2_tex.icons.barbed_wire'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.icons.dragon_teeth'
     MenuDescription="Effective at blocking all vehicles."
     SupplyCost=25
     HealthMax=250

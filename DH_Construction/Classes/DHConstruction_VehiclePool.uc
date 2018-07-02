@@ -61,6 +61,7 @@ defaultproperties
     ProgressMax=4   // TODO: make this larger later
     SpawnPointClass=class'DHSpawnPoint_VehiclePool'
     StaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_Light_Vehicle_Pool'
+    MenuIcon=Texture'DH_InterfaceArt2_tex.icons.motorpool'
     MenuName="Vehicle Pool"
     ProxyTraceDepthMeters=10.0
     bHidden=false
