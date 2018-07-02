@@ -5,8 +5,6 @@
 
 class DHSpawnPoint_VehiclePool extends DHSpawnPoint;
 
-// TODO: we have to BLOCK this if there are vehicles nearby
-
 defaultproperties
 {
     Type=ESPT_Vehicles
@@ -16,5 +14,12 @@ defaultproperties
     bHidden=false
     bIsActive=true
     BaseSpawnTimePenalty=15
+
+    bCanBeEncroachedUpon=true
+    EncroachmentRadiusInMeters=150
+    EncroachmentPenaltyMax=15
+    EncroachmentPenaltyBlockThreshold=1
+    EncroachmentEnemyCountMin=1
+    EncroachmentPenaltyForgivenessPerSecond=1
 }
 

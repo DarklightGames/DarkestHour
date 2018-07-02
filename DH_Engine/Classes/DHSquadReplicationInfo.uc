@@ -204,7 +204,7 @@ function Timer()
 
             for (i = 0; i < SquadRallyPoints.Length; ++i)
             {
-                SquadRallyPoints[i].Step();
+                SquadRallyPoints[i].Timer();
             }
 
             // Sort active rally point list by creation time, oldest first.

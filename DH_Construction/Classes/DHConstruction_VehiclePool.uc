@@ -70,5 +70,7 @@ defaultproperties
     GroupClass=class'DHConstructionGroup_Logistics'
 
     ProximityRequirements(0)=(ConstructionClass=class'DHConstruction_PlatoonHQ',DistanceMeters=100.0)
+
+    DuplicateFriendlyDistanceInMeters=250
 }
 

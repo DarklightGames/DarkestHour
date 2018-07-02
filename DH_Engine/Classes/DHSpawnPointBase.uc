@@ -36,11 +36,32 @@ var     float           SpawnRadius;
 var     int             SpawnRadiusSegmentCount;
 var     bool            bShouldTraceCheckSpawnLocations;
 
+var     bool            bShouldDelegateTimer;           // When true, the SetTimer loop will not be initiated on start-up, and it will be up to another area of the code to call the Timer logic manually.
+
+// Spawn killing
+var int     SpawnKillPenalty;
+var int     SpawnKillPenaltyCounter;
+var int     SpawnKillPenaltyForgivenessPerSecond;
+
+// Encroachment
+var bool    bCanBeEncroachedUpon;
+var int     EncroachmentRadiusInMeters;                 // The distance, in meters, that enemies must be within to affect the EncroachmentPenaltyCounter
+var int     EncroachmentPenaltyBlockThreshold;          // The value that EncroachmentPenaltyCounter must reach for the spawn point to be "blocked".
+var int     EncroachmentPenaltyOverrunThreshold;        // The value that EncroachmentPenaltyCounter must reach for the spawn point to be "overrun".
+var int     EncroachmentPenaltyMax;                     // The maximum value that EncroachmentPenaltyCounter can reach.
+var int     EncroachmentPenaltyCounter;                 // Running counter of encroachment penalty.
+var int     EncroachmentPenaltyForgivenessPerSecond;    // The number of points deducted from the encroachment penalty counter when there are no longer any encroaching enemies.
+var int     EncroachmentSpawnTimePenalty;               // If being encroached upon, this amount of seconds will be added to the spawn timer
+var int     EncroachmentEnemyCountMin;                  // The amount of enemies needed nearby to increment encroachment penalty counter
+var bool    bCanEncroachmentOverrun;                    // When true, if the overrun timer exceeds EncroachmentPenaltyOverrunThreshold, OnOverrun will be called, destroying the spawn point.
+
+var bool    bIsEncroachedUpon;                          // True if there are enemies encroaching upon the spawn point.
+
 replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        SpawnPointIndex, TeamIndex, BlockReason, bIsActive;
+        SpawnPointIndex, TeamIndex, BlockReason, bIsActive, bIsEncroachedUpon;
 }
 
 // Implemented to add this spawn point to the GRI's SpawnPoints array, setting the GRI reference & our index position in that array
@@ -59,6 +80,62 @@ simulated event PostBeginPlay()
         {
             Error("Failed to add" @ self @ "to spawn point list!");
         }
+
+        if (!bShouldDelegateTimer)
+        {
+            SetTimer(1.0, true);
+        }
+    }
+}
+
+function OnOverrun();
+
+function Timer()
+{
+    local int EncroachingEnemiesCount;
+
+    BlockReason = SPBR_None;
+
+    // Encroachment
+    if (bCanBeEncroachedUpon)
+    {
+        GetPlayerCountsWithinRadius(EncroachmentRadiusInMeters,,, EncroachingEnemiesCount);
+
+        if (EncroachingEnemiesCount >= EncroachmentEnemyCountMin)
+        {
+            // There are enemies nearby, so increase the encroachment penalty
+            // counter by the number of nearby enemies.
+            EncroachmentPenaltyCounter += EncroachingEnemiesCount;
+        }
+        else
+        {
+            // There are no enemies nearby, decrease the penalty timer.
+            EncroachmentPenaltyCounter -= EncroachmentPenaltyForgivenessPerSecond;
+        }
+
+        EncroachmentPenaltyCounter = Clamp(EncroachmentPenaltyCounter, 0, EncroachmentPenaltyMax);
+        bIsEncroachedUpon = EncroachmentPenaltyCounter != 0;
+
+        if (bCanEncroachmentOverrun && EncroachmentPenaltyCounter >= EncroachmentPenaltyOverrunThreshold)
+        {
+            OnOverrun();
+            Destroy();
+        }
+        else if (EncroachmentPenaltyCounter >= EncroachmentPenaltyBlockThreshold)
+        {
+            // The encoroachment penalty counter has reached a point where we
+            // are now blocking the spawn from being used until enemies are
+            // cleared out.
+            BlockReason = SPBR_EnemiesNearby;
+        }
+    }
+
+    // Spawn kill penalty
+    SpawnKillPenaltyCounter = Max(0, SpawnKillPenaltyCounter - SpawnKillPenaltyForgivenessPerSecond);
+
+    if (SpawnKillPenaltyCounter > 0)
+    {
+        BlockReason = SPBR_EnemiesNearby;
     }
 }
 

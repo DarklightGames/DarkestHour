@@ -1,3 +1,4 @@
+
 //==============================================================================
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2018
@@ -12,25 +13,9 @@ var bool    bIsActivated;
 var int     ActivationCounter;
 var int     ActivationCounterThreshold;
 
-var float   EncroachmentRadiusInMeters;
-var int     EncroachmentPenaltyBlockThreshold;
-var int     EncroachmentPenaltyCounter;
-var int     EnemiesNeededToBlock;
-var int     EncroachmentSpawnTimePenalty;
-var bool    bIsEncroachedUpon;
-
-var float   CaptureRadiusInMeters;
-var int     EnemiesNeededToCapture;
 var int     CapturingEnemiesCount;
-
-var int     SpawnKillPenalty;
-var int     SpawnKillPenaltyCounter;
-
-replication
-{
-    reliable if (bNetDirty && Role == ROLE_Authority)
-        bIsEncroachedUpon, CapturingEnemiesCount;
-}
+var float   CaptureRadiusInMeters;
+var int     EnemiesNeededToDeconstruct;
 
 function PostBeginPlay()
 {
@@ -43,73 +28,6 @@ function ResetActivationTimer()
 {
     bIsActivated = false;
     ActivationCounter = 0;
-}
-
-function Timer()
-{
-    local int EncroachingEnemiesCount;
-
-    BlockReason = SPBR_None;
-
-    // Spawn kill penalty
-    SpawnKillPenaltyCounter = Max(0, SpawnKillPenaltyCounter - 1);
-
-    if (SpawnKillPenaltyCounter > 0)
-    {
-        BlockReason = SPBR_EnemiesNearby;
-    }
-
-    // Activation
-    if (Construction != none && Construction.IsConstructed() && !bIsActivated)
-    {
-        ActivationCounter = Clamp(ActivationCounter + 1, 0, ActivationCounterThreshold);
-
-        if (ActivationCounter < ActivationCounterThreshold)
-        {
-            BlockReason = SPBR_Constructing;
-        }
-        else
-        {
-            bIsActivated = true;
-
-            // "A Platoon HQ has been established."
-            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHPlatoonHQMessage', 0);
-        }
-    }
-
-    // Encroachment
-    GetPlayerCountsWithinRadius(EncroachmentRadiusInMeters,,, EncroachingEnemiesCount);
-
-    if (EncroachingEnemiesCount >= EnemiesNeededToBlock)
-    {
-        EncroachmentPenaltyCounter = Clamp(EncroachmentPenaltyCounter + EncroachingEnemiesCount, 0, EncroachmentPenaltyBlockThreshold);
-    }
-    else
-    {
-        EncroachmentPenaltyCounter = 0;
-    }
-
-    bIsEncroachedUpon = EncroachmentPenaltyCounter != 0;
-
-    if (EncroachmentPenaltyCounter >= EncroachmentPenaltyBlockThreshold)
-    {
-        BlockReason = SPBR_EnemiesNearby;
-    }
-
-    // Capturing
-    GetPlayerCountsWithinRadius(CaptureRadiusInMeters,,, CapturingEnemiesCount);
-
-    if (CapturingEnemiesCount >= 1)
-    {
-        // If any enemies are capturing, spawning must be disabled.
-        BlockReason = SPBR_EnemiesNearby;
-    }
-
-    // If the construction is being deconstructed, block spawning.
-    if (Construction != none && !Construction.IsConstructed())
-    {
-        BlockReason = SPBR_Constructing;
-    }
 }
 
 function OnTeamIndexChanged()
@@ -178,20 +96,63 @@ simulated function int GetSpawnTimePenalty()
     return Penalty;
 }
 
+function Timer()
+{
+    super.Timer();
+
+    // Activation
+    if (Construction != none && Construction.IsConstructed() && !bIsActivated)
+    {
+        ActivationCounter = Clamp(ActivationCounter + 1, 0, ActivationCounterThreshold);
+
+        if (ActivationCounter < ActivationCounterThreshold)
+        {
+            BlockReason = SPBR_Constructing;
+        }
+        else
+        {
+            bIsActivated = true;
+
+            // "A Platoon HQ has been established."
+            class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHPlatoonHQMessage', 0);
+        }
+    }
+
+    // If the construction is being deconstructed, block spawning.
+    if (Construction != none && !Construction.IsConstructed())
+    {
+        BlockReason = SPBR_Constructing;
+    }
+
+    // Capturing
+    GetPlayerCountsWithinRadius(CaptureRadiusInMeters,,, CapturingEnemiesCount);
+
+    if (CapturingEnemiesCount >= 1)
+    {
+        // If any enemies are capturing, spawning must be disabled.
+        BlockReason = SPBR_EnemiesNearby;
+    }
+}
+
 defaultproperties
 {
     SpawnRadius=60.0
     bCombatSpawn=true
-
     ActivationCounterThreshold=60
+
+    bCanBeEncroachedUpon=true
     EncroachmentRadiusInMeters=50
+    EncroachmentPenaltyMax=30
     EncroachmentPenaltyBlockThreshold=30
     EncroachmentSpawnTimePenalty=10
+    EncroachmentEnemyCountMin=3
+    EncroachmentPenaltyForgivenessPerSecond=10
+
     BaseSpawnTimePenalty=10
-    EnemiesNeededToBlock=3
 
     CaptureRadiusInMeters=5
-    EnemiesNeededToCapture=2
+    EnemiesNeededToDeconstruct=2
 
     SpawnKillPenalty=15
+    SpawnKillPenaltyForgivenessPerSecond=1
 }

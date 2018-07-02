@@ -17,23 +17,14 @@ var int SpawnsRemaining;                        // The amount of spawns remainin
 var float CreatedTimeSeconds;                   // The time (relative to Level.TimeSeconds) that this rally point was created
 var sound CreationSound;                        // Sound that is played when the squad rally point is first placed.
 
-// Encroachment
-var int EncroachmentRadiusInMeters;             // The distance, in meters, that enemies must be within to affect the EncroachmentPenaltyCounter
-var int EncroachmentPenaltyBlockThreshold;      // The value that EncroachmentPenaltyCounter must reach for the rally point to be "blocked".
-var int EncroachmentPenaltyOverrunThreshold;    // The value that EncroachmentPenaltyCounter must reach for the rally point to be "overrun".
-var int EncroachmentPenaltyCounter;             // Running counter of encroachment penalty.
-var int EncroachmentSpawnTimePenalty;           // If being encroached upon, this amount of seconds will be added to the spawn timer
-var int EncroachmentEnemyCountMin;              // The amount of enemies needed nearby to increment encroachment penalty counter
-var bool bIsEncroachedUpon;                     // True if there are enemies encroaching upon the rally point.
-
 // Establishment
-var int EstablishmentRadiusInMeters;            // The distance, in meters, that squadmates and enemies must be within to influence the EstablishmentCounter.
+var int   EstablishmentRadiusInMeters;          // The distance, in meters, that squadmates and enemies must be within to influence the EstablishmentCounter.
 var float EstablishmentStartTimeSeconds;        // The value of Level.TimeSeconds when this rally point began Establishment.
 var float EstablishmentCounter;                 // Running counter to keep track of Establishment status.
 var float EstablishmentCounterThreshold;        // The value that EstablishmentCounter must reach for the rally point to be "established".
 
 // Overrun
-var int OverrunRadiusInMeters;                  // The distance, in meters, that enemies must be within to immediately overrun a rally point.
+var int   OverrunRadiusInMeters;                // The distance, in meters, that enemies must be within to immediately overrun a rally point.
 var float OverrunMinimumTimeSeconds;            // The number of seconds a rally point must be "alive" for in order to be overrun by enemies. (To stop squad rally points being used as "enemy radar".
 
 // Abandonment
@@ -48,7 +39,7 @@ var int Health;
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
-        SquadIndex, RallyPointIndex, SpawnsRemaining, bIsEncroachedUpon;
+        SquadIndex, RallyPointIndex, SpawnsRemaining;
 }
 
 function Reset()
@@ -77,12 +68,12 @@ function PostBeginPlay()
 
 auto state Constructing
 {
-    function Step()
+    function Timer()
     {
         local int SquadmateCount;
         local int EnemyCount;
 
-        global.Step();
+        global.Timer();
 
         GetPlayerCountsWithinRadius(default.EstablishmentRadiusInMeters, SquadIndex, SquadmateCount, EnemyCount);
 
@@ -130,9 +121,11 @@ Begin:
     EstablishmentStartTimeSeconds = Level.TimeSeconds;
 }
 
-function Step()
+function Timer()
 {
     local int OverrunningEnemiesCount;
+
+    super.Timer();
 
     GetPlayerCountsWithinRadius(OverrunRadiusInMeters,,, OverrunningEnemiesCount);
 
@@ -149,55 +142,18 @@ function Step()
 
 state Active
 {
-    function Step()
-    {
-        local int EncroachingEnemiesCount;
-
-        global.Step();
-
-        GetPlayerCountsWithinRadius(default.EncroachmentRadiusInMeters,,, EncroachingEnemiesCount);
-
-        if (EncroachingEnemiesCount >= EncroachmentEnemyCountMin)
-        {
-            // There are enemies nearby, so increase the encroachment penalty
-            // counter by the number of nearby enemies.
-            EncroachmentPenaltyCounter += EncroachingEnemiesCount;
-        }
-        else
-        {
-            // There are no enemies nearby, decrease the penalty timer.
-            EncroachmentPenaltyCounter -= 2;    // TODO; get rid of magic number
-        }
-
-        EncroachmentPenaltyCounter = Max(0, EncroachmentPenaltyCounter);
-        bIsEncroachedUpon = EncroachmentPenaltyCounter != 0;
-
-        if (EncroachmentPenaltyCounter < default.EncroachmentPenaltyBlockThreshold)
-        {
-            BlockReason = SPBR_None;
-        }
-        else if (EncroachmentPenaltyCounter < default.EncroachmentPenaltyOverrunThreshold)
-        {
-            // The encoroachment penalty counter has reached a point where we
-            // are now blocking the spawn from being used until enemies are
-            // cleared out.
-            BlockReason = SPBR_EnemiesNearby;
-        }
-        else
-        {
-            // "A squad rally point has been overrun by enemies."
-            SRI.BroadcastSquadLocalizedMessage(GetTeamIndex(), SquadIndex, SRI.SquadMessageClass, 54);
-
-            Destroy();
-        }
-    }
-
     event BeginState()
     {
         SetIsActive(true);
 
         UpdateAppearance();
     }
+}
+
+function OnOverrun()
+{
+    // "A squad rally point has been overrun by enemies."
+    SRI.BroadcastSquadLocalizedMessage(GetTeamIndex(), SquadIndex, SRI.SquadMessageClass, 54);
 }
 
 function SetIsActive(bool bIsActive)
@@ -409,11 +365,17 @@ defaultproperties
     SquadIndex=-1
     RallyPointIndex=-1
     CreationSound=Sound'Inf_Player.Gibimpact.Gibimpact'
+
+    bCanBeEncroachedUpon=true
     EncroachmentRadiusInMeters=25
+    EncroachmentPenaltyMax=30
     EncroachmentPenaltyBlockThreshold=10
     EncroachmentPenaltyOverrunThreshold=30
     EncroachmentSpawnTimePenalty=10
     EncroachmentEnemyCountMin=2
+    EncroachmentPenaltyForgivenessPerSecond=2
+    bCanEncroachmentOverrun=true
+
     OverrunRadiusInMeters=10
     EstablishmentRadiusInMeters=25
     EstablishmentCounterThreshold=15
@@ -428,9 +390,8 @@ defaultproperties
     SpawnKillProtectionTime=8.0
     bShouldTraceCheckSpawnLocations=true
     Health=150
-
+    bShouldDelegateTimer=true
     bCanBeDamaged=true
-
     bBlockZeroExtentTraces=true
     bBlockNonZeroExtentTraces=false
     bBlockProjectiles=true

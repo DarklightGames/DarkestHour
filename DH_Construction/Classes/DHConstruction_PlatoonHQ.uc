@@ -25,7 +25,7 @@ simulated state Constructed
             return false;
         }
 
-        if (SpawnPoint != none && SpawnPoint.CapturingEnemiesCount >= SpawnPoint.EnemiesNeededToCapture)
+        if (SpawnPoint != none && SpawnPoint.CapturingEnemiesCount >= SpawnPoint.EnemiesNeededToDeconstruct)
         {
             return true;
         }
