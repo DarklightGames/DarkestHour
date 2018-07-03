@@ -537,17 +537,30 @@ simulated state Constructed
     function KImpact(Actor Other, vector Pos, vector ImpactVel, vector ImpactNorm)
     {
         local float Momentum;
+        local int Damage;
+        local Pawn P;
 
-        if (Level.TimeSeconds - LastImpactTimeSeconds >= 1.0)
+        if (Level.TimeSeconds - LastImpactTimeSeconds >= 1.0)  // TODO: magic number
         {
             LastImpactTimeSeconds = Level.TimeSeconds;
 
             if (bCanTakeImpactDamage && Role == ROLE_Authority)
             {
                 Momentum = Other.KGetMass() * VSize(ImpactVel);
-                DelayedDamage = int(Momentum * ImpactDamageModifier);
-                DelayedDamageType = ImpactDamageType;
-                GotoState(GetStateName(), 'DelayedDamage');
+                Damage = int(Momentum * ImpactDamageModifier);
+                P = Pawn(Other);
+
+                if (P != none && GetTeamIndex() != -1 && P.GetTeamNum() == GetTeamIndex())
+                {
+                    Damage *= FriendlyFireDamageScale;
+                }
+
+                if (Damage > 0)
+                {
+                    DelayedDamage = Damage;
+                    DelayedDamageType = ImpactDamageType;
+                    GotoState(GetStateName(), 'DelayedDamage');
+                }
             }
         }
     }
