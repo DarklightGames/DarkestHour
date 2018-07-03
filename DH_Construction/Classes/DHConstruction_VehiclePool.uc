@@ -89,7 +89,8 @@ defaultproperties
 
     // Health
     HealthMax=200
-    TatteredHealthThreshold=100
+//    TatteredHealthThreshold=100
+    // TODO: if you're going to have this, be sure to have an associated tattered mesh!
 
     // Damage
     bCanTakeImpactDamage=true
