@@ -12,10 +12,10 @@ class DHArmoredVehicle extends DHVehicle
 
 struct ArmorSection
 {
-var     float   Thickness;         // in cm
-var     float   Slope;             // in degrees from vertical (must specify a negative if armor slopes 'inwards')
-var     float   MaxRelativeHeight; // max height (in UU) of this armor section, relative to hull mesh's centre
-var     string  LocationName;      // e.g. "lower front", "driver's upstand plate"
+    var     float   Thickness;         // in cm
+    var     float   Slope;             // in degrees from vertical (must specify a negative if armor slopes 'inwards')
+    var     float   MaxRelativeHeight; // max height (in UU) of this armor section, relative to hull mesh's centre
+    var     string  LocationName;      // e.g. "lower front", "driver's upstand plate"
 };
 
 enum ENewHitPointType
