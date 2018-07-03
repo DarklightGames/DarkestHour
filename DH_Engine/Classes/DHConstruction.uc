@@ -590,12 +590,23 @@ simulated state Constructed
 
     function OnHealthChanged()
     {
+        local StaticMesh NewStaticMesh;
+
         if (TatteredHealthThreshold != -1)
         {
             if (Health <= TatteredHealthThreshold)
             {
-                SetStaticMesh(GetTatteredStaticMesh());
-                NetUpdateTime = Level.TimeSeconds - 1.0;
+                NewStaticMesh = GetTatteredStaticMesh();
+
+                if (NewStaticMesh == none)
+                {
+                    Warn("No tattered static mesh found!");
+                }
+                else
+                {
+                    SetStaticMesh(NewStaticMesh);
+                    NetUpdateTime = Level.TimeSeconds - 1.0;
+                }
             }
         }
     }
