@@ -44,6 +44,7 @@ def main():
     argparser.add_argument('-clean', required=False, action='store_true', help='compile all packages')
     argparser.add_argument('-dumpint', required=False, action='store_true', help='dump localization files (.int)')
     argparser.add_argument('-snapshot', required=False, action='store_true', default=False, help='compresses all build artifacts into a .zip file')
+    argparser.add_argument('-debug', required=False, action='store_true', default=False, help='compile debug packages (for use with UDebugger)')
     args = argparser.parse_args()
 
     args.dir = os.path.abspath(args.dir)
@@ -191,7 +192,10 @@ def main():
             sys.exit(1)
 
         # run ucc make
-        proc = subprocess.Popen(['ucc', 'make', '-mod=' + args.mod, '-silentbuild'])
+        ucc_args = ['ucc', 'make', '-mod=' + args.mod, '-silentbuild']
+        if args.debug:
+            ucc_args.append('-debug')
+        proc = subprocess.Popen(ucc_args)
         proc.communicate()
 
         # store contents of ucc.log before it's overwritten
