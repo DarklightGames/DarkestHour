@@ -141,13 +141,6 @@ function Timer()
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-    // We want our player to know where his squadmates are at all times by
-    // looking at the situation map. However, since the player may not have
-    // all squadmates replicated on his machine, he needs another way to know
-    // his squadmates' locations and rotations.
-    //
-    // The method below sends the position (X, Y) and rotation (Z) of each
-    // member in the players' squad every 2 seconds.
     for (C = Level.ControllerList; C != none; C = C.nextController)
     {
         PC = DHPlayer(C);
@@ -164,12 +157,50 @@ function Timer()
             continue;
         }
 
+        // All unassigned players will be berated to join a squad every 30 seconds.
         if (!PRI.IsInSquad() && bAreRallyPointsEnabled && Level.Game.GameReplicationInfo.ElapsedTime % 30 == 0)
         {
             PC.ReceiveLocalizedMessage(SquadMessageClass, 73,,, PC);
             continue;
         }
 
+        // Squad leaders and their assistants should know where their teams'
+        // other squad leaders are.
+        if (PRI.IsSLorASL())
+        {
+            for (i = 0; i < GetTeamSquadLimit(PC.GetTeamNum()); ++i)
+            {
+                PC.SquadLeaderLocations[i] = 0;
+
+                if (!IsSquadActive(PC.GetTeamNum(), i))
+                {
+                    continue;
+                }
+
+                OtherPRI = GetSquadLeader(PC.GetTeamNum(), i);
+
+                if (OtherPRI == none)
+                {
+                    continue;
+                }
+
+                OtherController = Controller(OtherPRI.Owner);
+
+                if (OtherController != none && OtherController.Pawn != none)
+                {
+                    GRI.GetMapCoords(OtherController.Pawn.Location, X, Y);
+                    PC.SquadLeaderLocations[i] = class'UQuantize'.static.QuantizeClamped2DPose(X, Y, OtherController.Pawn.Rotation.Yaw);
+                }
+            }
+        }
+
+        // We want our player to know where his squadmates are at all times by
+        // looking at the situation map. However, since the player may not have
+        // all squadmates replicated on his machine, he needs another way to know
+        // his squadmates' locations and rotations.
+        //
+        // The method below sends the position (X, Y) and rotation (Z) of each
+        // member in the players' squad every 2 seconds.
         for (i = 0; i < GetTeamSquadSize(PC.GetTeamNum()); ++i)
         {
             OtherPRI = GetMember(PC.GetTeamNum(), PRI.SquadIndex, i);

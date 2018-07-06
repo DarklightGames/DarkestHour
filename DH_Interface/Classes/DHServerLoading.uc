@@ -82,9 +82,9 @@ simulated function SetText()
     else
     {
         DrawOpText(Operations[9]).Text = DisabledText;
-        DrawOpText(Operations[9]).DrawColor = class'DHColor'.default.RedEnemy;
+        DrawOpText(Operations[9]).DrawColor = class'UColor'.default.Red;
         DrawOpText(Operations[10]).Text = DisabledText;
-        DrawOpText(Operations[10]).DrawColor = class'DHColor'.default.RedEnemy;
+        DrawOpText(Operations[10]).DrawColor = class'UColor'.default.Red;
     }
 
     DrawOpText(Operations[8]).Text = Repl(GameTypeText, "{0}", GameType, false);

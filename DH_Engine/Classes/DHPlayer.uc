@@ -91,6 +91,7 @@ var     DHSquadReplicationInfo  SquadReplicationInfo;
 var     bool                    bIgnoreSquadInvitations;
 var     bool                    bIgnoreSquadLeaderVolunteerPrompts;
 var     int                     SquadMemberLocations[12];   // SQUAD_SIZE_MAX
+var     int                     SquadLeaderLocations[8];    // TEAM_SQUADS_MAX
 
 var     DHCommandInteraction    CommandInteraction;
 
@@ -127,7 +128,8 @@ replication
         SpawnPointIndex, VehiclePoolIndex, bSpawnPointInvalidated,
         NextSpawnTime, NextVehicleSpawnTime, NextChangeTeamTime, LastKilledTime,
         DHPrimaryWeapon, DHSecondaryWeapon, bSpectateAllowViewPoints,
-        SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled;
+        SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled,
+        SquadLeaderLocations;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)

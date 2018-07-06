@@ -3874,6 +3874,7 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
     local int i;
     local array<DHPlayerReplicationInfo> SquadMembers;
     local float IconScale, X, Y;
+    local string SquadNameAbbreviation;
 
     PC = DHPlayer(PlayerOwner);
 
@@ -3942,7 +3943,30 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
                 IconScale = PlayerIconScale;
             }
 
-            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, PlayerYaw, OtherPRI.SquadMemberIndex, SquadMemberColor, IconScale, OtherPRI.GetNamePrefix());
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, PlayerYaw, SquadMemberColor, IconScale, OtherPRI.GetNamePrefix());
+        }
+
+        if (PRI.IsSLorASL())
+        {
+            for (i = 0; i < SRI.GetTeamSquadLimit(PC.GetTeamNum()); ++i)
+            {
+                if (i == PRI.SquadIndex || PC.SquadLeaderLocations[i] == 0)
+                {
+                    continue;
+                }
+
+                class'UQuantize'.static.DequantizeClamped2DPose(PC.SquadLeaderLocations[i], X, Y, PlayerYaw);
+                PlayerLocation = DHGRI.GetWorldCoords(X, Y);
+
+                SquadMemberColor = class'DHColor'.default.FriendlySquadColor;
+                SquadMemberColor.A = 160;
+
+                IconScale = PlayerIconLargeScale;
+
+                SquadNameAbbreviation = Mid(SRI.GetSquadName(PC.GetTeamNum(), i), 0, 1);
+
+                DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, PlayerYaw, SquadMemberColor, IconScale, SquadNameAbbreviation);
+            }
         }
     }
 
@@ -3980,12 +4004,12 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
         {
             SelfColor = class'UColor'.default.OrangeRed;
             SelfColor.A = 160;
-            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, PlayerYaw, PRI.SquadMemberIndex, SelfColor, 0.05); // TODO: magic number
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, PlayerYaw, SelfColor, 0.05); // TODO: magic number
         }
     }
 }
 
-function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector Location, vector MapCenter, float PlayerYaw, int Number, color Color, float TextureScale, optional string Text)
+function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector Location, vector MapCenter, float PlayerYaw, color Color, float TextureScale, optional string Text)
 {
     local vector HUDLocation;
 
