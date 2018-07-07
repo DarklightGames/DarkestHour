@@ -51,7 +51,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     super.InitComponent(MyController, MyOwner);
 
     sb_MainMenu.ManageComponent(b_QuickPlay);
-    sb_MainMenu.ManageComponent(b_LearnToPlay);
     sb_MainMenu.ManageComponent(b_MultiPlayer);
     sb_MainMenu.ManageComponent(b_Practice);
     sb_MainMenu.ManageComponent(b_Settings);
@@ -205,10 +204,6 @@ function bool ButtonClick(GUIComponent Sender)
                 Controller.OpenMenu(Controller.GetInstantActionPage());
                 Profile("InstantAction");
             }
-            break;
-
-        case b_LearnToPlay:
-            Controller.OpenMenu("DH_Interface.DHLearnToPlayPage");
             break;
 
         case b_MultiPlayer:
@@ -574,20 +569,6 @@ defaultproperties
         OnKeyEvent=QuickPlayButton.InternalOnKeyEvent
     End Object
     b_QuickPlay=GUIButton'DH_Interface.DHMainMenu.QuickPlayButton'
-
-    Begin Object Class=GUIButton Name=LearnToPlayButton
-        CaptionAlign=TXTA_Left
-        Caption="Learn To Play"
-        bAutoShrink=false
-        bUseCaptionHeight=true
-        FontScale=FNS_Large
-        StyleName="DHMenuTextButtonWhiteStyleHuge"
-        TabOrder=2
-        bFocusOnWatch=true
-        OnClick=DHMainMenu.ButtonClick
-        OnKeyEvent=LearnToPlayButton.InternalOnKeyEvent
-    End Object
-    b_LearnToPlay=GUIButton'DH_Interface.DHMainMenu.LearnToPlayButton'
 
     Begin Object Class=GUIButton Name=ServerButton
         CaptionAlign=TXTA_Left
