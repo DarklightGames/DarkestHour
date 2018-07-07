@@ -62,7 +62,7 @@ defaultproperties
     MenuDescription="Provides a team-wide vehicle spawn point."
     Stages(0)=(Progress=0,StaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_Light_Vehicle_Pool_undeployed')
     ProgressMax=12
-    SupplyCost=750
+    SupplyCost=1500
     MinDamagetoHurt=5
 
     // Temp
@@ -89,8 +89,6 @@ defaultproperties
 
     // Health
     HealthMax=200
-//    TatteredHealthThreshold=100
-    // TODO: if you're going to have this, be sure to have an associated tattered mesh!
 
     // Damage
     bCanTakeImpactDamage=true
@@ -109,6 +107,5 @@ defaultproperties
     // Rules
     bCanBeTornDownByFriendlies=false
     FriendlyFireDamageScale=0.0
-
 }
 
