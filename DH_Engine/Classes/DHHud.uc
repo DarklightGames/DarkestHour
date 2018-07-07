@@ -3468,7 +3468,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
         for (i = 0; i < arraycount(DHGRI.DHArtillery); ++i)
         {
             if (DHGRI.DHArtillery[i] != none &&
-                DHGRI.DHArtillery[i].TeamIndex == OwnerTeam)
+                DHGRI.DHArtillery[i].GetTeamIndex() == OwnerTeam)
             {
                 MapIconArtyStrike.WidgetTexture = DHGRI.DHArtillery[i].default.MapIcon;
                 MapIconArtyStrike.TextureCoords = DHGRI.DHArtillery[i].default.MapIconTextureCoords;

@@ -74,7 +74,7 @@ simulated function OnConstructed()
             SpawnPoint.SetLocation(HitLocation);
             SpawnPoint.SetTeamIndex(GetTeamIndex());
             SpawnPoint.SetIsActive(true);
-            SpawnPoint.ResetActivationTimer();
+            SpawnPoint.ResetEstablishmentTimer();
         }
 
         // TODO: Find any nearby friendly "Build Platoon HQ" icons within 50m and remove them.

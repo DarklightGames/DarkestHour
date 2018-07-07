@@ -419,6 +419,7 @@ defaultproperties
     DefaultStyleNames(91)="DH_Interface.DHStyle_MainSpawnButton"
     DefaultStyleNames(92)="DH_Interface.DHStyle_PlatoonHQButton"
     DefaultStyleNames(93)="DH_Interface.DHStyle_ListLargeHighlight"
+    DefaultStyleNames(94)="DH_Interface.DHStyle_ParatroopersButton"
     RequestDataMenu="DH_Interface.DHGetDataMenu"
     DynArrayPropertyMenu="DH_Interface.DHGUIDynArrayPage"
     FilterMenu="DH_Interface.DHFilterListPage"

@@ -1,4 +1,3 @@
-
 //==============================================================================
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2018
@@ -9,9 +8,9 @@ class DHSpawnPoint_PlatoonHQ extends DHSpawnPointBase
 
 var DHConstruction Construction;
 
-var bool    bIsActivated;
-var int     ActivationCounter;
-var int     ActivationCounterThreshold;
+var bool    bIsEstablished;
+var int     EstablishmentCounter;
+var int     EstablishmentCounterThreshold;
 
 var int     CapturingEnemiesCount;
 var float   CaptureRadiusInMeters;
@@ -24,16 +23,16 @@ function PostBeginPlay()
     SetTimer(1.0, true);
 }
 
-function ResetActivationTimer()
+function ResetEstablishmentTimer()
 {
-    bIsActivated = false;
-    ActivationCounter = 0;
+    bIsEstablished = false;
+    EstablishmentCounter = 0;
 }
 
 function OnTeamIndexChanged()
 {
-    // Reset activation state and timer
-    ResetActivationTimer();
+    // Reset establishment state and timer
+    ResetEstablishmentTimer();
 
     // Reset spawn kill penalty counter
     SpawnKillPenaltyCounter = 0;
@@ -47,33 +46,6 @@ function OnTeamIndexChanged()
 simulated function string GetMapStyleName()
 {
     return "DHPlatoonHQButtonStyle";
-}
-
-function bool PerformSpawn(DHPlayer PC)
-{
-    local DarkestHourGame G;
-    local vector SpawnLocation;
-    local rotator SpawnRotation;
-
-    G = DarkestHourGame(Level.Game);
-
-    if (PC == none || PC.Pawn != none || G == none)
-    {
-        return false;
-    }
-
-    if (CanSpawnWithParameters(GRI, PC.GetTeamNum(), PC.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex) &&
-        GetSpawnPosition(SpawnLocation, SpawnRotation, PC.VehiclePoolIndex))
-    {
-        if (G.SpawnPawn(PC, SpawnLocation, SpawnRotation, self) == none)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    return false;
 }
 
 function OnSpawnKill(Pawn VictimPawn, Controller KillerController)
@@ -100,18 +72,18 @@ function Timer()
 {
     super.Timer();
 
-    // Activation
-    if (Construction != none && Construction.IsConstructed() && !bIsActivated)
+    // Establishment
+    if (Construction != none && Construction.IsConstructed() && !bIsEstablished)
     {
-        ActivationCounter = Clamp(ActivationCounter + 1, 0, ActivationCounterThreshold);
+        EstablishmentCounter = Clamp(EstablishmentCounter + 1, 0, EstablishmentCounterThreshold);
 
-        if (ActivationCounter < ActivationCounterThreshold)
+        if (EstablishmentCounter < EstablishmentCounterThreshold)
         {
             BlockReason = SPBR_Constructing;
         }
         else
         {
-            bIsActivated = true;
+            bIsEstablished = true;
 
             // "A Platoon HQ has been established."
             class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), class'DHPlatoonHQMessage', 0);
@@ -138,7 +110,7 @@ defaultproperties
 {
     SpawnRadius=60.0
     bCombatSpawn=true
-    ActivationCounterThreshold=60
+    EstablishmentCounterThreshold=60
 
     bCanBeEncroachedUpon=true
     EncroachmentRadiusInMeters=50

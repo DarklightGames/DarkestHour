@@ -13,7 +13,8 @@ enum ESpawnPointBlockReason
     SPBR_InObjective,
     SPBR_Full,
     SPBR_Burning,
-    SPBR_Constructing
+    SPBR_Constructing,
+    SPBR_MissingRequirement
 };
 
 var ESpawnPointBlockReason  BlockReason; // any reason why spawn point can't be used currently
@@ -148,7 +149,38 @@ event Destroyed()
 }
 
 // Override to provide the business logic that does the spawning
-function bool PerformSpawn(DHPlayer PC);
+function bool PerformSpawn(DHPlayer PC)
+{
+    local DarkestHourGame G;
+    local vector SpawnLocation;
+    local rotator SpawnRotation;
+    local Pawn P;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (PC == none || PC.Pawn != none || G == none)
+    {
+        return false;
+    }
+
+    if (CanSpawnWithParameters(GRI, PC.GetTeamNum(), PC.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex) &&
+        GetSpawnPosition(SpawnLocation, SpawnRotation, PC.VehiclePoolIndex))
+    {
+        P = G.SpawnPawn(PC, SpawnLocation, SpawnRotation, self);
+
+        if (P != none)
+        {
+            OnPawnSpawned(P);
+        }
+
+        return P != none;
+    }
+
+    return false;
+}
+
+// Called when a spawn is spawned from this spawn point.
+function OnPawnSpawned(Pawn P);
 
 // Called when a pawn is spawn killed from this spawn point - override in child classes
 function OnSpawnKill(Pawn VictimPawn, Controller KillerController);

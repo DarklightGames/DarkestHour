@@ -27,7 +27,7 @@ static function string GetString(
         case 3:
             return default.DestroyedMessage;
         case 4:
-            return Repl(default.ConstructedMessage, "{0}", class'DHSpawnPoint_PlatoonHQ'.default.ActivationCounterThreshold);
+            return Repl(default.ConstructedMessage, "{0}", class'DHSpawnPoint_PlatoonHQ'.default.EstablishmentCounterThreshold);
     }
 
     return "";

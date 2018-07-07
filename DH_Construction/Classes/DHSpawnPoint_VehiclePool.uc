@@ -5,6 +5,35 @@
 
 class DHSpawnPoint_VehiclePool extends DHSpawnPoint;
 
+var DHSpawnPoint_PlatoonHQ HQSpawnPoint;
+
+function Timer()
+{
+    local DHSpawnPoint_PlatoonHQ SP;
+    local bool bDidFindActiveUnblockedHQ;
+
+    super.Timer();
+
+    if (HQSpawnPoint == none || !HQSpawnPoint.IsActive() || HQSpawnPoint.IsBlocked())
+    {
+        HQSpawnPoint = none;
+
+        foreach RadiusActors(class'DHSpawnPoint_PlatoonHQ', SP, class'DHUnits'.static.MetersToUnreal(100.0))    // TODO: Magic number!
+        {
+            if (SP.GetTeamIndex() == GetTeamIndex() && SP.IsActive() && !SP.IsBlocked())
+            {
+                HQSpawnPoint = SP;
+                break;
+            }
+        }
+    }
+
+    if (HQSpawnPoint == none)
+    {
+        BlockReason = SPBR_MissingRequirement;
+    }
+}
+
 defaultproperties
 {
     Type=ESPT_Vehicles

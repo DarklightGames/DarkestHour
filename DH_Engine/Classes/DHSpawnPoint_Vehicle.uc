@@ -143,7 +143,7 @@ private function Vehicle FindEntryVehicle(bool bCanEnterTankCrewPositions)
     return none; // there are no empty, usable vehicle positions
 }
 
-// Implemented to handle spawning the player into, or near to, our spawn vehicle
+// Overridden to handle spawning the player into, or near to, our spawn vehicle
 function bool PerformSpawn(DHPlayer PC)
 {
     local RORoleInfo RoleInfo;
@@ -187,6 +187,7 @@ function bool PerformSpawn(DHPlayer PC)
             {
                 if (PC.TeleportPlayer(Vehicle.Location + (Vehicle.ExitPositions[ExitPositionIndices[i]] >> Vehicle.Rotation) + Offset, Vehicle.Rotation))
                 {
+                    OnPawnSpawned(PC.Pawn);
                     return true;
                 }
             }
@@ -199,6 +200,7 @@ function bool PerformSpawn(DHPlayer PC)
 
             if (EntryVehiclePosition != none && EntryVehiclePosition.TryToDrive(PC.Pawn))
             {
+                OnPawnSpawned(PC.Pawn);
                 return true;
             }
         }

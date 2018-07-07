@@ -271,6 +271,7 @@ function bool PerformSpawn(DHPlayer PC)
     local DarkestHourGame G;
     local vector          SpawnLocation;
     local rotator         SpawnRotation;
+    local Pawn            P;
 
     G = DarkestHourGame(Level.Game);
 
@@ -279,12 +280,19 @@ function bool PerformSpawn(DHPlayer PC)
     {
         if (PC.VehiclePoolIndex >= 0)
         {
-            return G.SpawnManager.SpawnVehicle(PC, SpawnLocation, SpawnRotation) != none;
+            P = G.SpawnManager.SpawnVehicle(PC, SpawnLocation, SpawnRotation);
         }
         else
         {
-            return G.SpawnPawn(PC, SpawnLocation, SpawnRotation, self) != none; // spawn infantry
+            P = G.SpawnPawn(PC, SpawnLocation, SpawnRotation, self);
         }
+
+        if (P != none)
+        {
+            OnPawnSpawned(P);
+        }
+
+        return P != none;
     }
 
     return false;

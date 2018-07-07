@@ -191,41 +191,17 @@ simulated function bool IsVisibleTo(int TeamIndex, int RoleIndex, int SquadIndex
     return super.IsVisibleTo(TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex) && self.SquadIndex == SquadIndex;
 }
 
-function bool PerformSpawn(DHPlayer PC)
+function OnPawnSpawned(Pawn P)
 {
-    local DarkestHourGame G;
-    local vector SpawnLocation;
-    local rotator SpawnRotation;
+    SpawnsRemaining -= 1;
 
-    G = DarkestHourGame(Level.Game);
-
-    if (PC == none || PC.Pawn != none || G == none)
+    if (SpawnsRemaining <= 0)
     {
-        return false;
+        // "A squad rally point has been exhausted."
+        SRI.BroadcastSquadLocalizedMessage(GetTeamIndex(), SquadIndex, SRI.SquadMessageClass, 46);
+
+        Destroy();
     }
-
-    if (CanSpawnWithParameters(GRI, PC.GetTeamNum(), PC.GetRoleIndex(), PC.GetSquadIndex(), PC.VehiclePoolIndex) &&
-        GetSpawnPosition(SpawnLocation, SpawnRotation, PC.VehiclePoolIndex))
-    {
-        if (G.SpawnPawn(PC, SpawnLocation, SpawnRotation, self) == none)
-        {
-            return false;
-        }
-
-        SpawnsRemaining -= 1;
-
-        if (SpawnsRemaining <= 0)
-        {
-            // "A squad rally point has been exhausted."
-            SRI.BroadcastSquadLocalizedMessage(GetTeamIndex(), SquadIndex, SRI.SquadMessageClass, 46);
-
-            Destroy();
-        }
-
-        return true;
-    }
-
-    return false;
 }
 
 function OnSpawnKill(Pawn VictimPawn, Controller KillerController)

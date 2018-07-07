@@ -4919,7 +4919,7 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
         else
         {
             // Artillery successfully created, assign team.
-            Response.ArtilleryActor.TeamIndex = Request.TeamIndex;
+            Response.ArtilleryActor.SetTeamIndex(Request.TeamIndex);
             Response.ArtilleryActor.Requester = Request.Sender;
 
             // Update tracking statistics.

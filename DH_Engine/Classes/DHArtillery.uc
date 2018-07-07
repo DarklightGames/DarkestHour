@@ -13,7 +13,7 @@ var Material                    MenuIcon;
 var Material                    MapIcon;
 var IntBox                      MapIconTextureCoords;
 
-var int                         TeamIndex;
+var protected int               TeamIndex;
 var PlayerController            Requester;
 
 replication
@@ -86,6 +86,23 @@ static function int GetLimitOverride(int TeamIndex, LevelInfo Level)
 static function int GetConfirmIntervalSecondsOverride(int TeamIndex, LevelInfo Level)
 {
     return -1;
+}
+
+function OnTeamIndexChanged();
+
+function int GetTeamIndex()
+{
+    return TeamIndex;
+}
+
+function SetTeamIndex(int TeamIndex)
+{
+    if (self.TeamIndex != TeamIndex)
+    {
+        self.TeamIndex = TeamIndex;
+
+        OnTeamIndexChanged();
+    }
 }
 
 defaultproperties
