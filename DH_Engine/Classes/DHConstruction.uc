@@ -467,6 +467,7 @@ Begin:
         OnProgressChanged(none);
     }
 
+    // TODO: these don't actually seem to work in a multiplayer environment.
     // Client-side effects
     if (Level.NetMode != NM_DedicatedServer)
     {
@@ -943,7 +944,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector Hitlocation, vector Mo
 
             if (Health <= 0)
             {
-                GotoState('Broken');
+                BreakMe();
             }
         }
     }
@@ -979,6 +980,14 @@ simulated function PostNetReceive()
         OnTeamIndexChanged();
 
         OldTeamIndex = TeamIndex;
+    }
+}
+
+function BreakMe()
+{
+    if (!IsBroken())
+    {
+        GotoState('Broken');
     }
 }
 

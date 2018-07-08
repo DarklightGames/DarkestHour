@@ -34,6 +34,18 @@ function Timer()
     }
 }
 
+function OnSpawnKill(Pawn VictimPawn, Controller KillerController)
+{
+    local DHConstruction Construction;
+
+    Construction = DHConstruction(Base);
+
+    if (Construction != none)
+    {
+        Construction.BreakMe();
+    }
+}
+
 defaultproperties
 {
     Type=ESPT_Vehicles

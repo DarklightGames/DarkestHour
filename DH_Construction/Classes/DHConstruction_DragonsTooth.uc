@@ -12,18 +12,19 @@ defaultproperties
     CollisionRadius=60
     CollisionHeight=50
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.dragon_tooth'
-    TatteredStaticMesh=StaticMesh'DH_Construction_stc.Obstacles.dragon_tooth_damaged'
-    TatteredHealthThreshold=100
     MenuName="Dragon's Teeth"
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.dragon_teeth'
     MenuDescription="Effective at blocking all vehicles."
-    SupplyCost=25
-    HealthMax=250
+    SupplyCost=150
+    HealthMax=750
+    TatteredHealthThreshold=375
+    TatteredStaticMesh=StaticMesh'DH_Construction_stc.Obstacles.dragon_tooth_damaged'
     bCanBeMantled=true
-    bCanTakeImpactDamage=true
+    bCanTakeImpactDamage=false
     bIsNeutral=true
     bAcceptsProjectors=false
     GroupClass=class'DHConstructionGroup_Obstacles'
     bShouldSwitchToLastWeaponOnPlacement=false
+    bCanBeTornDownWhenConstructed=false
 }
 
