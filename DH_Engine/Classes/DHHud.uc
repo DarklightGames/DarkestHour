@@ -3961,9 +3961,9 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
                 SquadMemberColor = class'DHColor'.default.FriendlySquadColor;
                 SquadMemberColor.A = 160;
 
-                IconScale = PlayerIconLargeScale;
+                IconScale = PlayerIconScale;
 
-                SquadNameAbbreviation = Mid(SRI.GetSquadName(PC.GetTeamNum(), i), 0, 1);
+                SquadNameAbbreviation = Caps(Mid(SRI.GetSquadName(PC.GetTeamNum(), i), 0, 1));
 
                 DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, PlayerYaw, SquadMemberColor, IconScale, SquadNameAbbreviation);
             }
