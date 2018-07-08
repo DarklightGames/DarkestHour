@@ -5,8 +5,12 @@
 
 class DHMineVolume extends ROMineVolume;
 
+// Theel: Actors that are bStatic=true are not iterated with events and thus cannot be triggered, this is why the genius you are, added level actors to change them
+// Just use level actors to modify volumes!!!!!!!!!!!!!!!!!!!!!!!
+// YOU LOSE GOOD DAY SIR
+
 /**
-Explanation of several nasty bugs in ROMineVolume, especially when mine volume is activated during the round, e.g. by a spawn:
+Matt's explanation of several nasty bugs in ROMineVolume, especially when mine volume is activated during the round, e.g. by a spawn:
 
 1.  Enemy players & vehicles already inside a MV when it activates are ignored because they don't trigger a Touch event, as they never crossed the MV's border.
     Without a Touch, those enemy pawns don't record a MineAreaEnterTime, which instead will remain either zero or some time way back (from entering an earlier MV).
@@ -38,9 +42,6 @@ Explanation of several nasty bugs in ROMineVolume, especially when mine volume i
 
 var()   bool                    bInitiallyActive;    // leveler can set MV to be inactive at start of round, so it can be activated later by an event
 var()   bool                    bIsAlsoNoArtyVolume; // leveler can set this volume to also function like a no arty volume, stopping artillery/mortars rounds from being effective
-var()   bool                    bEventsCanToggle;    // leveler setting for events to be able to toggle the status of this mine volume
-var()   bool                    bEventsCanDisable;   // leveler setting for events to be able to disable the status of this mine volume
-var()   bool                    bEventsCanEnable;    // leveler setting for events to be able to enable the status of this mine volume
 var     float                   ActivationTime;      // time this MV was activated - used in workaround fix to bug if player teleports into MV, & also useful in subclasses
 var     class<ROMineFieldMsg>   WarningMessageClass; // local message class to use for warning messages, so can be replaced by custom messages in a subclass
 
@@ -49,32 +50,6 @@ var     class<ROMineFieldMsg>   WarningMessageClass; // local message class to u
 function PostBeginPlay()
 {
     super(Volume).PostBeginPlay();
-}
-
-// Triggering the minefield will only deactivate it, not toggle it
-event Trigger(Actor Other, Pawn EventInstigator)
-{
-    super.Trigger(Other, EventInstigator);
-
-    if (bEventsCanToggle)
-    {
-        if (!bActive)
-        {
-            Activate();
-        }
-        else
-        {
-            Deactivate();
-        }
-    }
-    else if (bEventsCanDisable && bActive)
-    {
-        Deactivate();
-    }
-    else if (bEventsCanEnable && !bActive)
-    {
-        Activate();
-    }
 }
 
 // Modified to activate or deactivate the mine volume based on the leveller's setting of bInitiallyActive
