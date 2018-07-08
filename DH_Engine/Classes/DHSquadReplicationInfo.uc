@@ -2191,7 +2191,7 @@ simulated function DHPlayerReplicationInfo GetAssistantSquadLeader(int TeamIndex
 
     if (MemberIndex > 0)
     {
-        GetMember(TeamIndex, SquadIndex, MemberIndex);
+        return GetMember(TeamIndex, SquadIndex, MemberIndex);
     }
 
     return none;
