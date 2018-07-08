@@ -14,7 +14,8 @@ enum ESpawnPointBlockReason
     SPBR_Full,
     SPBR_Burning,
     SPBR_Constructing,
-    SPBR_MissingRequirement
+    SPBR_MissingRequirement,
+    SPBR_Waiting,
 };
 
 var ESpawnPointBlockReason  BlockReason; // any reason why spawn point can't be used currently

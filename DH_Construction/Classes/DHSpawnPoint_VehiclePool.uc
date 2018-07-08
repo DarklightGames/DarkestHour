@@ -6,6 +6,8 @@
 class DHSpawnPoint_VehiclePool extends DHSpawnPoint;
 
 var DHSpawnPoint_PlatoonHQ HQSpawnPoint;
+var float NextSpawnTime;
+var int SpawnTimeInterval;
 
 function Timer()
 {
@@ -18,7 +20,7 @@ function Timer()
     {
         HQSpawnPoint = none;
 
-        foreach RadiusActors(class'DHSpawnPoint_PlatoonHQ', SP, class'DHUnits'.static.MetersToUnreal(100.0))    // TODO: Magic number!
+        foreach RadiusActors(class'DHSpawnPoint_PlatoonHQ', SP, class'DHUnits'.static.MetersToUnreal(100.0))
         {
             if (SP.GetTeamIndex() == GetTeamIndex() && SP.IsActive() && !SP.IsBlocked())
             {
@@ -32,6 +34,17 @@ function Timer()
     {
         BlockReason = SPBR_MissingRequirement;
     }
+    else if (Level.TimeSeconds < NextSpawnTime)
+    {
+        BlockReason = SPBR_Waiting;
+    }
+}
+
+function OnPawnSpawned(Pawn P)
+{
+    super.OnPawnSpawned(P);
+
+    NextSpawnTime += Level.TimeSeconds + SpawnTimeInterval;
 }
 
 function OnSpawnKill(Pawn VictimPawn, Controller KillerController)
@@ -62,5 +75,7 @@ defaultproperties
     EncroachmentPenaltyBlockThreshold=1
     EncroachmentEnemyCountMin=1
     EncroachmentPenaltyForgivenessPerSecond=1
+
+    SpawnTimeInterval=10
 }
 
