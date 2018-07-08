@@ -44,7 +44,7 @@ function OnPawnSpawned(Pawn P)
 {
     super.OnPawnSpawned(P);
 
-    NextSpawnTime += Level.TimeSeconds + SpawnTimeInterval;
+    NextSpawnTime = Level.TimeSeconds + SpawnTimeInterval;
 }
 
 function OnSpawnKill(Pawn VictimPawn, Controller KillerController)
