@@ -332,7 +332,7 @@ event Opened(GUIComponent Sender)
             SetKeyBindIfAvailable("Equals", "IncreaseSmokeLauncherSetting", "GrowHUD");
         }
 
-        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.0.9")) > 0)
+        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.0.9")) >= 0)
         {
             SetKeyBindIfAvailable("Slash", "SquadJoinAuto");
             SetKeyBindIfAvailable("P", "SquadMenu");
