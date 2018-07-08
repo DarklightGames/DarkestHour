@@ -49,7 +49,7 @@ defaultproperties
 {
     MenuName="Paratroopers"
     MenuIcon=Material'DH_InterfaceArt2_tex.Icons.paratroopers'
-    LifeSpan=60
+    LifeSpan=90
     MapIcon=none
 }
 
