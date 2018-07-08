@@ -44,6 +44,7 @@ var     array<float>                ReinforcementMessagePercentages;
 var     int                         TeamReinforcementMessageIndices[2];
 var     int                         OriginalReinforcementIntervals[2];
 var     int                         SpawnsAtRoundStart[2];                  // Number of spawns for each team at start of round (used for reinforcement warning calc)
+var     byte                        bDidSendEnemyTeamWeakMessage[2];        // Flag as to whether or not the "enemy team is weak" has been sent for each team.
 
 const SERVERTICKRATE_UPDATETIME =   5.0; // The duration we use to calculate the average tick the server is running
 const MAXINFLATED_INTERVALTIME =    60.0; // The max value to add to reinforcement time for inflation
@@ -2425,6 +2426,11 @@ state RoundInPlay
             GRI.AxisHelpRequests[i].RequestType = 255;
         }
 
+        for (i = 0; i < arraycount(bDidSendEnemyTeamWeakMessage); ++i)
+        {
+            bDidSendEnemyTeamWeakMessage[i] = 0;
+        }
+
         // Reset all controllers
         P = Level.ControllerList;
 
@@ -3009,7 +3015,12 @@ function HandleReinforcements(Controller C)
             // The team is very low on reinforcements, men are fleeing! Enemy should know they are about to win
             if (TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX] > default.ReinforcementMessagePercentages.Length - 1)
             {
-                BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, class'DHEnemyInformationMsg', 0);
+                if (bDidSendEnemyTeamWeakMessage[AXIS_TEAM_INDEX] == 0)
+                {
+                    BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, class'DHEnemyInformationMsg', 0);
+
+                    bDidSendEnemyTeamWeakMessage[AXIS_TEAM_INDEX] = 1;
+                }
             }
         }
     }
@@ -3033,7 +3044,12 @@ function HandleReinforcements(Controller C)
             // The team is very low on reinforcements, men are fleeing! Enemy should know they are about to win
             if (TeamReinforcementMessageIndices[AXIS_TEAM_INDEX] > default.ReinforcementMessagePercentages.Length - 1)
             {
-                BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, class'DHEnemyInformationMsg', 0);
+                if (bDidSendEnemyTeamWeakMessage[ALLIES_TEAM_INDEX] == 0)
+                {
+                    BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, class'DHEnemyInformationMsg', 0);
+
+                    bDidSendEnemyTeamWeakMessage[ALLIES_TEAM_INDEX] = 1;
+                }
             }
         }
     }
