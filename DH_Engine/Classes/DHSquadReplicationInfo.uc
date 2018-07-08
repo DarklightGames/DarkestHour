@@ -623,10 +623,12 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
     local DHVoiceReplicationInfo VRI;
     local DHGameReplicationInfo GRI;
     local VoiceChatRoom SquadVCR;
-    local int i;
+    local int i, RoleIndex;
     local array<DHPlayerReplicationInfo> Volunteers;
     local DHPlayerReplicationInfo Assistant;
+    local DarkestHourGame G;
 
+    G = DarkestHourGame(Level.Game);
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
     if (PRI == none || PRI.Team == none || GRI == none)
@@ -669,9 +671,17 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
     UnreserveSquadVehicle(PC);
 
     // Unreserve role, if gametype restricts specials roles only to squads
-    if (GRI.GameType.default.bSquadSpecialRolesOnly)
+    if (GRI.GameType.default.bSquadSpecialRolesOnly && PRI.RoleInfo.Limit != 255)
     {
-        PRI.RoleInfo = none;
+        PC.bSpawnPointInvalidated = true;
+        PC.DesiredRole = -1;
+
+        RoleIndex = G.GetUnlimitedRoleIndex(TeamIndex);
+
+        if (RoleIndex != -1)
+        {
+            PC.ChangeRole(i);
+        }
     }
 
     // Clear squad leader volunteer application.

@@ -936,6 +936,24 @@ function int GetTeamUnbalanceCount(out UnrealTeamInfo BigTeam, out UnrealTeamInf
     }
 }
 
+function int GetUnlimitedRoleIndex(int TeamIndex)
+{
+    local int i;
+    local RORoleInfo RI;
+
+    for (i = 0; i < arraycount(GRI.DHAxisRoles); ++i)
+    {
+        RI = GetRoleInfo(TeamIndex, i);
+
+        if (RI != none && RI.Limit == 255)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
 // Get a new random role for a bot - replaces old GetBotNewRole to use DHBots instead
 // If a new role is successfully found the role number for that role will be returned (if a role cannot be found, returns -1)
 function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
