@@ -5053,7 +5053,7 @@ defaultproperties
         Major=8
         Minor=0
         Patch=10
-        Prerelease="alpha"
+        Prerelease="beta"
     End Object
     Version=VersionObject
 
