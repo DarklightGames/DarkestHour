@@ -12,6 +12,7 @@ var localized string    VehicleEmpty;
 var localized string    NoSupplyCaches;
 var localized string    SupplyCacheEmpty;
 var localized string    SupplyCacheFull;
+var localized string    SupplyCacheFallbackName;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -55,6 +56,10 @@ static function string GetString(optional int Switch, optional PlayerReplication
     {
         S = Repl(S, "{1}", CSA.GetHumanReadableName());
     }
+    else
+    {
+        S = Repl(S, "{1}", default.SupplyCacheFallbackName);
+    }
 
     return S;
 }
@@ -68,5 +73,6 @@ defaultproperties
     VehicleEmpty="The vehicle's supply cache is empty."
     SupplyCacheEmpty="The nearby supply cache is empty."
     SupplyCacheFull="The nearby supply cache is full."
+    SupplyCacheFallbackName="supply cache"
 }
 
