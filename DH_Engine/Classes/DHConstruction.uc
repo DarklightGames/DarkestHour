@@ -829,7 +829,7 @@ function static ConstructionError GetPlayerError(DHConstruction.Context Context)
         return E;
     }
 
-    if (P.Level.NetMode != NM_Standalone && SRI.GetMemberCount(P.GetTeamNum(), PRI.SquadIndex) < default.SquadMemberCountMinimum)
+    if (P.Level.NetMode != NM_Standalone && !PRI.bAdmin && SRI.GetMemberCount(P.GetTeamNum(), PRI.SquadIndex) < default.SquadMemberCountMinimum)
     {
         E.Type = ERROR_SquadTooSmall;
         E.OptionalInteger = default.SquadMemberCountMinimum;
