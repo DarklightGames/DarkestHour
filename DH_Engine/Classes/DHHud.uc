@@ -4393,22 +4393,22 @@ function DrawIndicators(Canvas Canvas)
         return;
     }
 
-    if (PawnOwnerPRI.PacketLoss > 16)
+    if (PawnOwnerPRI.PacketLoss > 24)
     {
         PacketLossIndicator.Tints[0] = class'UColor'.default.Red;
         PacketLossIndicator.Tints[0].A = 255;
     }
-    else if (PawnOwnerPRI.PacketLoss > 12)
+    else if (PawnOwnerPRI.PacketLoss > 19)
     {
         PacketLossIndicator.Tints[0] = class'UColor'.default.OrangeRed;
         PacketLossIndicator.Tints[0].A = 210;
     }
-    else if (PawnOwnerPRI.PacketLoss > 8)
+    else if (PawnOwnerPRI.PacketLoss > 14)
     {
         PacketLossIndicator.Tints[0] = class'UColor'.default.Orange;
         PacketLossIndicator.Tints[0].A = 180;
     }
-    else if (PawnOwnerPRI.PacketLoss > 4)
+    else if (PawnOwnerPRI.PacketLoss > 9)
     {
         PacketLossIndicator.Tints[0] = class'UColor'.default.Yellow;
         PacketLossIndicator.Tints[0].A = 150;
