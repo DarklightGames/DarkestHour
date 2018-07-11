@@ -5,6 +5,9 @@
 
 class DHTab_Hud extends ROTab_Hud;
 
+var automated moNumericEdit     nu_MinPacketLoss;
+var int                         NumMinPacketLoss;
+
 var automated moCheckBox    ch_SimpleColours;
 var automated moCheckBox    ch_ShowDeathMessages;
 var automated moCheckBox    ch_ShowIndicators;
@@ -19,6 +22,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     i_BG2.ManageComponent(ch_SimpleColours);
     i_BG1.ManageComponent(ch_ShowDeathMessages);
     i_BG1.ManageComponent(ch_ShowIndicators);
+    i_BG1.ManageComponent(nu_MinPacketLoss);
 }
 
 function InternalOnLoadINI(GUIComponent Sender, string s)
@@ -46,6 +50,17 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
                 bShowIndicators = class'DHHud'.default.bShowIndicators;
             }
             ch_ShowIndicators.SetComponentValue(bShowIndicators, true);
+            break;
+        case nu_MinPacketLoss:
+            if (H != none)
+            {
+                NumMinPacketLoss = H.MinPromptPacketLoss;
+            }
+            else
+            {
+                NumMinPacketLoss = class'DHHud'.default.MinPromptPacketLoss;
+            }
+            nu_MinPacketLoss.SetComponentValue(NumMinPacketLoss, true);
             break;
         case ch_SimpleColours:
             if (H != none)
@@ -233,6 +248,13 @@ function SaveSettings()
             bSave = true;
         }
 
+        if (H.MinPromptPacketLoss != NumMinPacketLoss)
+        {
+            H.MinPromptPacketLoss = NumMinPacketLoss;
+            PC.ConsoleCommand("set DH_Engine.DHHud MinPromptPacketLoss" @ NumMinPacketLoss);
+            bSave = true;
+        }
+
         if (H.bShowCompass != bShowCompass)
         {
             H.bShowCompass = bShowCompass;
@@ -270,6 +292,7 @@ function SaveSettings()
     {
         class'DHHud'.default.bShowCompass = bShowCompass;
         class'DHHud'.default.bShowIndicators = bShowIndicators;
+        class'DHHud'.default.MinPromptPacketLoss = NumMinPacketLoss;
         class'DHHud'.default.bShowMapUpdatedText = bShowMapUpdatedText;
         class'DHHud'.default.bSimpleColours = bSimpleColours;
         class'DHHud'.default.bShowDeathMessages = bShowDeathMessages;
@@ -283,6 +306,9 @@ function InternalOnChange(GUIComponent Sender)
     {
         case ch_ShowIndicators:
             bShowIndicators = ch_ShowIndicators.IsChecked();
+            break;
+        case nu_MinPacketLoss:
+            NumMinPacketLoss = int(nu_MinPacketLoss.GetComponentValue());
             break;
         case ch_SimpleColours:
             bSimpleColours = ch_SimpleColours.IsChecked();
@@ -344,6 +370,27 @@ defaultproperties
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
     ch_ShowIndicators=DHmoCheckBox'DH_Interface.DHTab_Hud.GameHudShowIndicators'
+
+    Begin Object class=DHmoNumericEdit Name=MinPacketLoss_NU
+        ComponentJustification=TXTA_Left
+        CaptionWidth=0.9
+        Caption="Packet Loss Indicator Threshold"
+        Hint="Used by Packet Loss Indicator to determine when to begin prompting for packet loss"
+        INIOption="@Internal"
+        WinTop=0.822959
+        WinLeft=0.555313
+        WinWidth=0.373749
+        WinHeight=0.034156
+        OnCreateComponent=MinPacketLoss_NU.InternalOnCreateComponent
+        MinValue=1
+        MaxValue=90
+        Step=1
+        OnChange=DHTab_Hud.InternalOnChange
+        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+        bAutoSizeCaption=true
+        TabOrder=28
+    End Object
+    nu_MinPacketLoss=MinPacketLoss_NU
 
     Begin Object Class=DHmoCheckBox Name=ShowCompass
         ComponentJustification=TXTA_Left

@@ -134,6 +134,7 @@ var     globalconfig int    PlayerNameFontSize;     // the size of the name you 
 var     globalconfig bool   bAlwaysShowSquadIcons;  // whether or not to show squadmate icons when not looking at them
 var     globalconfig bool   bAlwaysShowSquadNames;  // whether or not to show squadmate names when not directly looking at them
 var     globalconfig bool   bShowIndicators;        // whether or not to show indicators such as the packet loss indicator
+var     globalconfig int    MinPromptPacketLoss;    // client option used for the packet loss indicator, this is the min value packetloss should be for the indicator to pop
 
 // Indicators
 var     SpriteWidget        PacketLossIndicator;    // shows up in various colors when packet loss is present
@@ -4393,22 +4394,22 @@ function DrawIndicators(Canvas Canvas)
         return;
     }
 
-    if (PawnOwnerPRI.PacketLoss > 24)
+    if (PawnOwnerPRI.PacketLoss > MinPromptPacketLoss + 12)
     {
         PacketLossIndicator.Tints[0] = class'UColor'.default.Red;
         PacketLossIndicator.Tints[0].A = 255;
     }
-    else if (PawnOwnerPRI.PacketLoss > 19)
+    else if (PawnOwnerPRI.PacketLoss > MinPromptPacketLoss + 8)
     {
         PacketLossIndicator.Tints[0] = class'UColor'.default.OrangeRed;
         PacketLossIndicator.Tints[0].A = 210;
     }
-    else if (PawnOwnerPRI.PacketLoss > 14)
+    else if (PawnOwnerPRI.PacketLoss > MinPromptPacketLoss + 4)
     {
         PacketLossIndicator.Tints[0] = class'UColor'.default.Orange;
         PacketLossIndicator.Tints[0].A = 180;
     }
-    else if (PawnOwnerPRI.PacketLoss > 9)
+    else if (PawnOwnerPRI.PacketLoss > MinPromptPacketLoss)
     {
         PacketLossIndicator.Tints[0] = class'UColor'.default.Yellow;
         PacketLossIndicator.Tints[0].A = 150;
@@ -5506,6 +5507,7 @@ defaultproperties
     ConsoleFontSize=6
     MessageFontOffset=0
     bShowIndicators=true
+    MinPromptPacketLoss=9
 
     // Death messages
     bShowDeathMessages=true
