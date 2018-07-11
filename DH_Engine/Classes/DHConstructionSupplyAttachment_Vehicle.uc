@@ -25,8 +25,6 @@ function SetInitialSupply(optional int Amount)
         {
             SetSupplyCount(float(SupplyCountMax));
         }
-
-        SupplyPointIndex = GRI.AddSupplyPoint(self);
     }
 }
 
