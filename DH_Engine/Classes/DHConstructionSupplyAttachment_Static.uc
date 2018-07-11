@@ -9,8 +9,8 @@ defaultproperties
 {
     bAreSuppliesTransactable=true
     bCanGenerateSupplies=true
-    SupplyDepositInterval=10
-    SupplyGenerationRate=180
+    SupplyDepositInterval=5
+    SupplyGenerationRate=600
     HumanReadableName="Supply Cache"
     MapIcon=Texture'DH_InterfaceArt2_tex.Icons.Supply_Cache'
 }

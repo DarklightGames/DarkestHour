@@ -78,7 +78,7 @@ defaultproperties
 {
     SupplyAttachmentClass=class'DHConstructionSupplyAttachment_Static_Main'
     InitialSupplyCount=8000
-    BonusSupplyGenerationRate=240
+    BonusSupplyGenerationRate=200
 
     Texture=Texture'DHEngine_Tex.LevelActor'
     bHidden=true
