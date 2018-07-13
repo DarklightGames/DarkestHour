@@ -152,6 +152,9 @@ var     float                                   SupplyDropSoundVolume;
 
 var     int                                     SupplyCost;             // The amout of supplies it takes to create a vehicle of this type.
 
+// Construction
+var     vector                                  ConstructionPlacementOffset;
+
 // Spawning
 var     int                     VehiclePoolIndex;     // the vehicle pool index that this was spawned from
 var     DHSpawnPoint_Vehicle    SpawnPointAttachment; // a spawn vehicle's spawn point attachment
