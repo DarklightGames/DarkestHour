@@ -20,7 +20,7 @@ defaultproperties
 
     IronSightDisplayFOV=35.0
 
-    MaxNumPrimaryMags=6
+    MaxNumPrimaryMags=11
     InitialNumPrimaryMags=6
     NumMagsToResupply=2 // TODO: can't be resupplied (needs bCanBeResupplied=true) - one or the other (if should be resupplied, move 2 def props to bipod auto parent class)
     bHasSelectFire=true

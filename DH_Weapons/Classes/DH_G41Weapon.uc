@@ -35,7 +35,8 @@ defaultproperties
     FreeAimRotationSpeed=7.5
 
     MaxNumPrimaryMags=11
-    InitialNumPrimaryMags=11
+    InitialNumPrimaryMags=5
+
     bTwoMagsCapacity=true
     bPlusOneLoading=false
     MagEmptyReloadAnim="reload_striper_empty"

@@ -32,8 +32,8 @@ defaultproperties
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=30.0
 
-    MaxNumPrimaryMags=6
-    InitialNumPrimaryMags=6
+    MaxNumPrimaryMags=8
+    InitialNumPrimaryMags=4
     bCanBeResupplied=true
     NumMagsToResupply=2
     bHasSelectFire=true

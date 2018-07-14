@@ -4833,6 +4833,12 @@ function bool SetPause(bool bPause, PlayerController P)
     return false;
 }
 
+// New function which will collect
+function float GetInitialMunitionPercentage(pawn P)
+{
+    return 1.0;
+}
+
 // Overridden to undo the exclusion of players who hadn't yet selected a role.
 function GetTeamSizes(out int TeamSizes[2])
 {

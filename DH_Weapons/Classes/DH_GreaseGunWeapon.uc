@@ -23,7 +23,7 @@ defaultproperties
     DisplayFOV=85.0
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=30.0
-    MaxNumPrimaryMags=7
-    InitialNumPrimaryMags=7
+    MaxNumPrimaryMags=9
+    InitialNumPrimaryMags=6
     PutDownAnim="putaway"
 }

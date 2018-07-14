@@ -48,7 +48,7 @@ var     bool    bCanCutWire;
 var     bool    bIsCuttingWire;
 
 // Spawning
-var     DHSpawnPointBase    SpawnPoint;        // the spawn point that was used to spawn this vehicle
+var     DHSpawnPointBase    SpawnPoint;        // the spawn point that was used to spawn this pawn
 var     float               SpawnProtEnds;     // is set when a player spawns/teleports for "spawn" protection in selectable spawn maps
 var     float               SpawnKillTimeEnds; // is set when a player spawns
 var     bool                bCombatSpawned;    // indicates the pawn was spawned in combat

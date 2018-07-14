@@ -39,7 +39,7 @@ defaultproperties
     FreeAimRotationSpeed=7.5
 
     MaxNumPrimaryMags=13
-    InitialNumPrimaryMags=13
+    InitialNumPrimaryMags=6
     bTwoMagsCapacity=true
 
     bHasBayonet=true

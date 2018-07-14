@@ -1764,7 +1764,7 @@ function GiveAmmo(int M, WeaponPickup WP, bool bJustSpawned)
         {
             InitialAmount = FireMode[M].AmmoClass.default.InitialAmount;
             CurrentMagIndex = 0;
-            PrimaryAmmoArray.Length = InitialNumPrimaryMags;
+            PrimaryAmmoArray.Length = Ceil(InitialNumPrimaryMags * GetInitialNumMagsPercentage());
 
             for (i = 0; i < PrimaryAmmoArray.Length; ++i)
             {
@@ -1807,6 +1807,25 @@ function bool AddAmmo(int AmmoToAdd, int Mode)
     NetUpdateTime = Level.TimeSeconds - 1.0;
 
     return true;
+}
+
+function float GetInitialNumMagsPercentage()
+{
+    local float InitialAmmoPercent;
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (bCanGameChangeInitialNumMags && G != none)
+    {
+        G.GetInitialMunitionPercentage(Instigator);
+    }
+    else
+    {
+        InitialAmmoPercent = 1.0;
+    }
+
+    return InitialAmmoPercent;
 }
 
 // Modified to handle picking up spare ammo magazines from a WeaponPickup, which is a new system in DH

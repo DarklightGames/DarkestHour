@@ -25,6 +25,6 @@ defaultproperties
     FreeAimRotationSpeed=7.5
     ZoomOutTime=0.15
 
-    MaxNumPrimaryMags=8
-    InitialNumPrimaryMags=8
+    MaxNumPrimaryMags=9
+    InitialNumPrimaryMags=6
 }
