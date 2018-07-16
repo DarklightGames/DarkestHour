@@ -121,6 +121,8 @@ var     float                   NextToggleDuckTimeSeconds;
 // Spectating stuff
 var     bool                    bSpectateAllowViewPoints;
 
+var     DHPlayerScore           PlayerScore;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -199,6 +201,37 @@ simulated event PostBeginPlay()
     if (Role == ROLE_Authority)
     {
         ServerChangeSpecMode();
+    }
+
+    if (Role == ROLE_Authority)
+    {
+        PlayerScore = new class'DHPlayerScore';
+        PlayerScore.OnCategoryScoreChanged = OnCategoryScoreChanged;
+        PlayerScore.OnTotalScoreChanged = OnTotalScoreChanged;
+    }
+}
+
+function OnCategoryScoreChanged(class<DHScoreCategory> CategoryClass, int Score)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (PRI != none)
+    {
+        PRI.CategoryScores[CategoryClass.default.CategoryIndex] = Score;
+    }
+}
+
+function OnTotalScoreChanged(int TotalScore)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (PRI != none)
+    {
+        PRI.TotalScore = TotalScore;
     }
 }
 
@@ -5876,9 +5909,10 @@ function ServerRequestArtillery(DHRadio Radio, int ArtilleryTypeIndex)
     }
 }
 
-exec function version(string LHS, string RHS)
+// Scoringg
+function SendScoreEvent(class<DHScoreEvent> EventClass)
 {
-    Level.Game.Broadcast(self, class'UVersion'.static.FromString(LHS).Compare(class'UVersion'.static.FromString(RHS)));
+    PlayerScore.HandleScoreEvent(EventClass);
 }
 
 // Functions emptied out as RO/DH doesn't use a LocalStatsScreen actor & these aren't used

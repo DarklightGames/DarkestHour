@@ -17,11 +17,15 @@ var     int                     DHKills;
 var     bool                    bIsPatron;
 var     bool                    bIsDeveloper;
 
+var     int                     TotalScore;
+var     int                     CategoryScores[4];
+
 replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        SquadIndex, SquadMemberIndex, bIsPatron, bIsDeveloper, DHKills, bIsSquadAssistant;
+        SquadIndex, SquadMemberIndex, bIsPatron, bIsDeveloper, DHKills, bIsSquadAssistant,
+        TotalScore, CategoryScores;
 }
 
 simulated function string GetNamePrefix()
