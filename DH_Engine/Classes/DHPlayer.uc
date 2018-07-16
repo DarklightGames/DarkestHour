@@ -215,6 +215,8 @@ function OnCategoryScoreChanged(class<DHScoreCategory> CategoryClass, int Score)
 {
     local DHPlayerReplicationInfo PRI;
 
+    Log("CATEGORY SCORE CHANGED" @ CategoryClass.default.HumanReadableName @ Score);
+
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
     if (PRI != none)
@@ -226,6 +228,8 @@ function OnCategoryScoreChanged(class<DHScoreCategory> CategoryClass, int Score)
 function OnTotalScoreChanged(int TotalScore)
 {
     local DHPlayerReplicationInfo PRI;
+
+    Log("TOTAL SCORE CHANGED" @ TotalScore);
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
@@ -5912,7 +5916,10 @@ function ServerRequestArtillery(DHRadio Radio, int ArtilleryTypeIndex)
 // Scoringg
 function SendScoreEvent(class<DHScoreEvent> EventClass)
 {
-    PlayerScore.HandleScoreEvent(EventClass);
+    if (PlayerScore != none)
+    {
+        PlayerScore.HandleScoreEvent(EventClass);
+    }
 }
 
 // Functions emptied out as RO/DH doesn't use a LocalStatsScreen actor & these aren't used

@@ -171,7 +171,7 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
             }
             break;
         case COLUMN_Score:
-            CRI.Text = string(int(PRI.Score));
+            CRI.Text = string(PRI.TotalScore);
             break;
         case COLUMN_Ping:
             CRI.Text = string(4 * PRI.Ping);

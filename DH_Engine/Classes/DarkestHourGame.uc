@@ -1097,6 +1097,7 @@ function ScoreKill(Controller Killer, Controller Other)
 {
     local float                         Amount;
     local DHPlayerReplicationInfo       PRI;
+    local DHPlayer                      KillerPC;
 
     if (Killer == Other || Killer == none)
     {
@@ -1136,7 +1137,12 @@ function ScoreKill(Controller Killer, Controller Other)
         DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).StashedScore += Amount;
         DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).DHKills++;
 
-        ScoreEvent(Killer.PlayerReplicationInfo, Amount, "frag");
+        KillerPC = DHPlayer(Killer);
+
+        if (KillerPC != none)
+        {
+            KillerPC.SendScoreEvent(class'DHScoreEvent_Kill');
+        }
     }
 
     if (GameRulesModifiers != none)

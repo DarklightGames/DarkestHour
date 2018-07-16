@@ -3,10 +3,12 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHScoreEvent extends Object
-    abstract;
+class DHScoreEvent_Kill extends DHScoreEvent;
 
-var localized string            HumanReadableName;
-var int                         Value;
-var class<DHScoreCategory>      CategoryClass;
+defaultproperties
+{
+    HumanReadableName="Kill"
+    Value=100
+    CategoryClass=class'DHScoreCategory_Combat'
+}
 

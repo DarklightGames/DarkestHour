@@ -17,6 +17,7 @@ var     int                     DHKills;
 var     bool                    bIsPatron;
 var     bool                    bIsDeveloper;
 
+// Scoring
 var     int                     TotalScore;
 var     int                     CategoryScores[4];
 

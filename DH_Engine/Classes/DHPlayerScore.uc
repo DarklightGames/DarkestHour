@@ -64,6 +64,8 @@ function HandleScoreEvent(class<DHScoreEvent> EventClass)
 
     TotalScore += Value;
 
+    OnTotalScoreChanged(TotalScore);
+
     CategoryIndex = EventClass.default.CategoryClass.default.CategoryIndex;
 
     if (CategoryIndex != -1)
