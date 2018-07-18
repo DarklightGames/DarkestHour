@@ -980,54 +980,38 @@ function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
 // Give player a point for resupplying an MG gunner
 function ScoreMGResupply(Controller Dropper, Controller Gunner)
 {
-    local int ResupplyAward;
-
     if (Dropper == Gunner)
     {
         return;
     }
-    else if (DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).RoleInfo != none)
+    else if (DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo) != none &&
+             DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).RoleInfo != none)
     {
-        ResupplyAward = 5;
-        DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).StashedScore += ResupplyAward;
-
-        ScoreEvent(Dropper.PlayerReplicationInfo, ResupplyAward, "MG_resupply");
+        SendScoreEvent(Dropper, class'DHScoreEvent_FriendlyResupply'.static.Create());
     }
 }
 
 // Give player a point for resupplying an AT gunner
 function ScoreATResupply(Controller Dropper, Controller Gunner)
 {
-    local int ResupplyAward;
-
     if (Dropper == Gunner)
     {
         return;
     }
     else if (DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).RoleInfo != none)
     {
-        ResupplyAward = 2;
-        DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).StashedScore += ResupplyAward;
-
-        ScoreEvent(Dropper.PlayerReplicationInfo, ResupplyAward, "AT_resupply");
+        SendScoreEvent(Dropper, class'DHScoreEvent_FriendlyResupply'.static.Create());
     }
 }
 
 // Give player a point for loading an AT gunner
 function ScoreATReload(Controller Loader, Controller Gunner)
 {
-    local int LoadAward;
-
-    if (Loader == Gunner)
+    if (Loader != Gunner &&
+        DHPlayerReplicationInfo(Loader.PlayerReplicationInfo) != none &&
+        DHPlayerReplicationInfo(Loader.PlayerReplicationInfo).RoleInfo != none)
     {
-        return;
-    }
-    else if (DHPlayerReplicationInfo(Loader.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(Loader.PlayerReplicationInfo).RoleInfo != none)
-    {
-        LoadAward = 1;
-        DHPlayerReplicationInfo(Loader.PlayerReplicationInfo).StashedScore += LoadAward;
-
-        ScoreEvent(Loader.PlayerReplicationInfo, LoadAward, "AT_reload");
+        SendScoreEvent(Loader, class'DHScoreEvent_FriendlyReload'.static.Create());
     }
 }
 
@@ -1048,15 +1032,12 @@ function ScoreRadioUsed(Controller Radioman)
 // Give player two points for resupplying a mortar operator
 function ScoreMortarResupply(Controller Dropper, Controller Gunner)
 {
-    local int ResupplyAward;
-
     if (Dropper == none || Dropper == Gunner || Dropper.PlayerReplicationInfo == none)
     {
         return;
     }
 
-    DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).StashedScore += 2;
-    ScoreEvent(Dropper.PlayerReplicationInfo, ResupplyAward, "Mortar_resupply");
+    SendScoreEvent(Dropper, class'DHScoreEvent_FriendlyResupply'.static.Create());
 }
 
 // Give spotter a point or two for spotting a kill
