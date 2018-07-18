@@ -121,7 +121,7 @@ var     float                   NextToggleDuckTimeSeconds;
 // Spectating stuff
 var     bool                    bSpectateAllowViewPoints;
 
-var     DHPlayerScore           PlayerScore;
+var     DHScoreManager          ScoreManager;
 
 replication
 {
@@ -146,6 +146,7 @@ replication
         ServerSquadSay, ServerSquadLock, ServerSquadSignal,
         ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
         ServerSetPatronStatus, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
+        ServerPunishLastFFKiller,
         ServerRequestArtillery,
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons; // these ones in debug mode only
 
@@ -205,23 +206,21 @@ simulated event PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        PlayerScore = new class'DHPlayerScore';
-        PlayerScore.OnCategoryScoreChanged = OnCategoryScoreChanged;
-        PlayerScore.OnTotalScoreChanged = OnTotalScoreChanged;
+        ScoreManager = new class'DHScoreManager';
+        ScoreManager.OnCategoryScoreChanged = OnCategoryScoreChanged;
+        ScoreManager.OnTotalScoreChanged = OnTotalScoreChanged;
     }
 }
 
-function OnCategoryScoreChanged(class<DHScoreCategory> CategoryClass, int Score)
+function OnCategoryScoreChanged(int CategoryIndex, int Score)
 {
     local DHPlayerReplicationInfo PRI;
-
-    Log("CATEGORY SCORE CHANGED" @ CategoryClass.default.HumanReadableName @ Score);
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
     if (PRI != none)
     {
-        PRI.CategoryScores[CategoryClass.default.CategoryIndex] = Score;
+        PRI.CategoryScores[CategoryIndex] = Score;
     }
 }
 
@@ -5394,20 +5393,43 @@ exec function SquadSay(string Msg)
 
 function ServerForgiveLastFFKiller()
 {
-    if (DarkestHourGame(Level.Game) != none && DarkestHourGame(Level.Game).bForgiveFFKillsEnabled && LastFFKiller != none)
+    local DarkestHourGame G;
+    local DHPlayer KillerPC;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G == none || !G.bForgiveFFKillsEnabled || LastFFKiller == none)
     {
-        Level.Game.BroadcastLocalizedMessage(Level.Game.default.GameMessageClass, 19, LastFFKiller, PlayerReplicationInfo);
-        LastFFKiller.FFKills -= LastFFKillAmount;
-
-        // If LastFFKiller's weapons are locked and no longer has FF kills, unlock the player's weapons
-        if (DHPlayer(LastFFKiller.Owner) != none && DHPlayer(LastFFKiller.Owner).AreWeaponsLocked(true) && LastFFKiller.FFKills < 1)
-        {
-            DHPlayer(LastFFKiller.Owner).LockWeapons(1, 2);
-        }
-
-        // Set none as we have handled the current LastFFKiller
-        LastFFKiller = none;
+        return;
     }
+
+    Level.Game.BroadcastLocalizedMessage(Level.Game.default.GameMessageClass, 19, LastFFKiller, PlayerReplicationInfo);
+    LastFFKiller.FFKills -= LastFFKillAmount;
+
+    KillerPC = DHPlayer(LastFFKiller.Owner);
+
+    // If LastFFKiller's weapons are locked and no longer has FF kills, unlock the player's weapons
+    if (KillerPC != none && KillerPC.AreWeaponsLocked(true) && LastFFKiller.FFKills < 1)
+    {
+        KillerPC.LockWeapons(1, 2);
+    }
+
+    // Set none as we have handled the current LastFFKiller
+    LastFFKiller = none;
+}
+
+function ServerPunishLastFFKiller()
+{
+    local DHPlayer PC;
+
+    if (LastFFKiller != none && LastFFKiller.Owner != none)
+    {
+        PC = DHPlayer(LastFFKiller.Owner);
+
+        PC.ReceiveScoreEvent(class'DHScoreEvent_TeamKill'.static.Create());
+    }
+
+    LastFFKiller = none;
 }
 
 function ServerSquadSay(string Msg)
@@ -5913,12 +5935,38 @@ function ServerRequestArtillery(DHRadio Radio, int ArtilleryTypeIndex)
     }
 }
 
-// Scoringg
-function SendScoreEvent(class<DHScoreEvent> EventClass)
+// Scoring
+function ReceiveScoreEvent(DHScoreEvent ScoreEvent)
 {
-    if (PlayerScore != none)
+    if (ScoreManager != none)
     {
-        PlayerScore.HandleScoreEvent(EventClass);
+        ScoreManager.HandleScoreEvent(ScoreEvent);
+    }
+}
+
+// TODO: put this elsewhere/clean up
+simulated exec function DumpScore()
+{
+    local int i;
+
+    if (ScoreManager == none)
+    {
+        return;
+    }
+
+    Log("TotalScore:" @ ScoreManager.TotalScore);
+    Log("== CategoryScores ==");
+
+    for (i = 0; i < arraycount(ScoreManager.default.ScoreCategoryClasses); ++i)
+    {
+        Log(ScoreManager.default.ScoreCategoryClasses[i].default.HumanReadableName $ ":" @ ScoreManager.GetCategoryScoreByIndex(i));
+    }
+
+    Log("== Events ==");
+
+    for (i = 0; i < ScoreManager.EventScores.Length; ++i)
+    {
+        Log(ScoreManager.EventScores[i].EventClass.default.HumanReadableName @ "(" $ ScoreManager.EventScores[i].Count $ ")" @ ScoreManager.EventScores[i].Score);
     }
 }
 

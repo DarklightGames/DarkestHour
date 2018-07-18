@@ -34,7 +34,11 @@ var bool bCanSendAbandonmentWarningMessage;     // Whether or not we should send
 var int SpawnAccrualTimer;
 var int SpawnAccrualThreshold;
 
+// Health
 var int Health;
+
+// Instigator
+var DHPlayer InstigatorController;
 
 replication
 {

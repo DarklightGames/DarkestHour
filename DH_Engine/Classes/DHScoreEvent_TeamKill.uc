@@ -3,11 +3,17 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHScoreCategory_Combat extends DHScoreCategory
-    abstract;
+class DHScoreEvent_TeamKill extends DHScoreEvent;
+
+static function DHScoreEvent_TeamKill Create()
+{
+    return new class'DHScoreEvent_TeamKill';
+}
 
 defaultproperties
 {
-    HumanReadableName="Combat"
-    CategoryIndex=0
+    HumanReadableName="Friendly Fire"
+    CategoryClass=class'DHScoreCategory_Combat'
+    Value=-500
 }
+

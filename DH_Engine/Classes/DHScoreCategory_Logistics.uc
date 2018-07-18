@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHScoreCategory_Combat extends DHScoreCategory
-    abstract;
+class DHScoreCategory_Logistics extends DHScoreCategory;
 
 defaultproperties
 {
-    HumanReadableName="Combat"
-    CategoryIndex=0
+    HumanReadableName="Logistics"
+    CategoryIndex=2
 }

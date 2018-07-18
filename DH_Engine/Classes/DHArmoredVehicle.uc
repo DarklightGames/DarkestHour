@@ -2293,10 +2293,10 @@ defaultproperties
     // Vehicle properties
     VehicleMass=12.5
     CollisionHeight=60.0
-    PointValue=3.0
     MaxDesireability=1.9
     EngineRestartFailChance=0.1
     MinRunOverSpeed=83.82 // decreased to 5 kph, as players should be easier to run over with armored vehicles
+    PointValue=1000
 
     // Driver & positions
     bMustBeTankCommander=true

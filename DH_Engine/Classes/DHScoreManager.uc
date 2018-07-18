@@ -3,9 +3,9 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHPlayerScore extends Object;
+class DHScoreManager extends Object;
 
-const CATEGORIES_MAX = 4;
+const SCORE_CATEGORIES_MAX = 4;
 
 struct EventScore
 {
@@ -15,15 +15,37 @@ struct EventScore
 };
 
 var int                     TotalScore;
-var int                     CategoryScores[CATEGORIES_MAX]; // Will be referenced by index, determined at runtime depending on what gets registered?
+var int                     CategoryScores[SCORE_CATEGORIES_MAX];
 var array<EventScore>       EventScores;
 
+var class<DHScoreCategory>  ScoreCategoryClasses[SCORE_CATEGORIES_MAX];
+
 // Event listeners for score changes.
-delegate OnCategoryScoreChanged(class<DHScoreCategory> CategoryClass, int Score);
+delegate OnCategoryScoreChanged(int CategoryIndex, int Score);
 delegate OnTotalScoreChanged(int Score);
 
+static function class<DHScoreCategory> GetCategoryByIndex(int Index)
+{
+    if (Index < 0 || Index >= SCORE_CATEGORIES_MAX)
+    {
+        return none;
+    }
+
+    return default.ScoreCategoryClasses[Index];
+}
+
+function int GetCategoryScoreByIndex(int Index)
+{
+    if (Index < 0 || Index >= SCORE_CATEGORIES_MAX)
+    {
+        return -1;
+    }
+
+    return CategoryScores[Index];
+}
+
 // Gets the cumulative score for the specified category.
-function int GetCategoryScore(class<DHScoreCategory> CategoryClass)
+function int GetCategoryScoreByClass(class<DHScoreCategory> CategoryClass)
 {
     if (CategoryClass == none ||
         CategoryClass.default.CategoryIndex < 0 ||
@@ -45,44 +67,41 @@ function Reset()
     for (i = 0; i < arraycount(CategoryScores); ++i)
     {
         CategoryScores[i] = 0;
-
-//        OnCategoryScoreChanged(0, Categories[i]);
+        OnCategoryScoreChanged(i, CategoryScores[i]);
     }
 
     EventScores.Length = 0;
 }
 
-function HandleScoreEvent(class<DHScoreEvent> EventClass)
+function HandleScoreEvent(DHScoreEvent ScoreEvent)
 {
     local int CategoryIndex;
     local int Value;
     local int EventScoreIndex;
 
-    Value = EventClass.default.Value;
-
-    // TODO: Calculate bonuses.
+    Value = ScoreEvent.GetValue();
 
     TotalScore += Value;
 
     OnTotalScoreChanged(TotalScore);
 
-    CategoryIndex = EventClass.default.CategoryClass.default.CategoryIndex;
+    CategoryIndex = ScoreEvent.default.CategoryClass.default.CategoryIndex;
 
     if (CategoryIndex != -1)
     {
         CategoryScores[CategoryIndex] += Value;
 
-        OnCategoryScoreChanged(EventClass.default.CategoryClass, CategoryScores[CategoryIndex]);
+        OnCategoryScoreChanged(CategoryIndex, CategoryScores[CategoryIndex]);
     }
 
-    EventScoreIndex = GetEventScoreIndex(EventClass);
+    EventScoreIndex = GetEventScoreIndex(ScoreEvent.Class);
 
     if (EventScoreIndex == -1)
     {
         // Event type has not been added yet, let's add it now.
-        EventScores.Length += 1;
+        EventScores.Length = EventScores.Length + 1;
         EventScoreIndex = EventScores.Length - 1;
-        EventScores[EventScoreIndex].EventClass = EventClass;
+        EventScores[EventScoreIndex].EventClass = ScoreEvent.Class;
     }
 
     ++EventScores[EventScoreIndex].Count;
@@ -101,10 +120,14 @@ function int GetEventScoreIndex(class<DHScoreEvent> EventClass)
         }
     }
 
-    return i;
+    return -1;
 }
 
 defaultproperties
 {
+    ScoreCategoryClasses(0)=class'DHScoreCategory_Combat'
+    ScoreCategoryClasses(1)=class'DHScoreCategory_Support'
+    ScoreCategoryClasses(2)=class'DHScoreCategory_Logistics'
+    ScoreCategoryClasses(3)=class'DHScoreCategory_Squad'
 }
 

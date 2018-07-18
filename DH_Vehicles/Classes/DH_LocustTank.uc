@@ -75,7 +75,6 @@ defaultproperties
     VehicleNameString="M22 Locust **WIP**"
     VehicleTeam=1
     VehicleMass=5.0
-    PointValue=2.0
     ReinforcementCost=10
 
     // Hull mesh

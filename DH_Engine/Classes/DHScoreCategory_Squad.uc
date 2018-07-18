@@ -3,11 +3,12 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHScoreCategory_Combat extends DHScoreCategory
+class DHScoreCategory_Squad extends DHScoreCategory
     abstract;
 
 defaultproperties
 {
-    HumanReadableName="Combat"
-    CategoryIndex=0
+    HumanReadableName="Squad"
+    CategoryIndex=3
 }
+

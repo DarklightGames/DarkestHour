@@ -3,11 +3,12 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHScoreCategory_Combat extends DHScoreCategory
-    abstract;
+class DHScoreEvent_ObjectiveCapture extends DHScoreEvent;
 
 defaultproperties
 {
-    HumanReadableName="Combat"
-    CategoryIndex=0
+    HumanReadableName="Objective Capture"
+    CategoryClass=class'DHScoreCategory_Support'
+    Value=500
 }
+

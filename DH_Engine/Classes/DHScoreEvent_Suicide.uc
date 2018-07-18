@@ -3,11 +3,17 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHScoreCategory_Combat extends DHScoreCategory
-    abstract;
+class DHScoreEvent_Suicide extends DHScoreEvent;
+
+static function DHScoreEvent_Suicide Create()
+{
+    return new class'DHScoreEvent_Suicide';
+}
 
 defaultproperties
 {
-    HumanReadableName="Combat"
-    CategoryIndex=0
+    HumanReadableName="Suicide"
+    Value=-50
+    CategoryClass=class'DHScoreCategory_Combat'
 }
+

@@ -1885,6 +1885,7 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
     RP.SquadIndex = PRI.SquadIndex;
     RP.RallyPointIndex = RallyPointIndex;
     RP.SpawnsRemaining = GetSquadRallyPointInitialSpawns(P.GetTeamNum(), PRI.SquadIndex);
+    RP.InstigatorController = PC;
 
     RallyPoints[RallyPointIndex] = RP;
 
@@ -1947,6 +1948,14 @@ function bool RallyPointSortFunction(Object LHS, Object RHS)
 
 function OnSquadRallyPointActivated(DHSpawnPoint_SquadRallyPoint SRP)
 {
+    if (SRP != none &&
+        SRP.InstigatorController != none &&
+        SRP.InstigatorController.GetTeamNum() == SRP.GetTeamIndex() &&
+        SRP.InstigatorController.GetSquadIndex() == SRP.SquadIndex)
+    {
+        SRP.InstigatorController.ReceiveScoreEvent(class'DHScoreEvent_SquadRallyPointEstablished'.static.Create());
+    }
+
     // "The squad has established a new rally point."
     BroadcastSquadLocalizedMessage(SRP.GetTeamIndex(), SRP.SquadIndex, SquadMessageClass, 44);
 }

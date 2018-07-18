@@ -977,27 +977,6 @@ function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
     }
 }
 
-// Give player points for destroying an enemy vehicle
-function ScoreVehicleKill(Controller Killer, ROVehicle Vehicle, float Points)
-{
-    if (Killer == none || Points <= 0 || Killer.PlayerReplicationInfo == none || Killer.GetTeamNum() == Vehicle.GetTeamNum())
-    {
-        return;
-    }
-
-    // Decide to reward or punish score based on spawn kill
-    if (DHVehicle(Vehicle) != none && DHVehicle(Vehicle).IsSpawnProtected())
-    {
-        DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).StashedScore -= Points;
-    }
-    else
-    {
-        DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).StashedScore += Points;
-    }
-
-    ScoreEvent(Killer.PlayerReplicationInfo, Points, "Vehicle_kill");
-}
-
 // Give player a point for resupplying an MG gunner
 function ScoreMGResupply(Controller Dropper, Controller Gunner)
 {
@@ -1095,60 +1074,37 @@ function ScoreMortarSpotAssist(Controller Spotter, Controller Mortarman)
 // Modified to handle StashedScore and prevent fellow vehicle crewman from getting kills and score for yours
 function ScoreKill(Controller Killer, Controller Other)
 {
-    local float                         Amount;
-    local DHPlayerReplicationInfo       PRI;
-    local DHPlayer                      KillerPC;
-
     if (Killer == Other || Killer == none)
     {
-        Other.PlayerReplicationInfo.Score -= 1;
-        ScoreEvent(Other.PlayerReplicationInfo, -1, "self_frag");
+        SendScoreEvent(Other, class'DHScoreEvent_Suicide'.static.Create());
     }
     else if (Other.bIsPlayer && Killer.bIsPlayer && Killer.PlayerReplicationInfo.Team == Other.PlayerReplicationInfo.Team)
     {
-        if (ROPlayerReplicationInfo(Other.PlayerReplicationInfo) != none && ROPlayerReplicationInfo(Other.PlayerReplicationInfo).RoleInfo != none)
-        {
-            Amount = -2 * ROPlayerReplicationInfo(Other.PlayerReplicationInfo).RoleInfo.default.PointValue;
-            DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).StashedScore += Amount;
-        }
-        else
-        {
-            Amount = -2;
-            DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).StashedScore += Amount;
-        }
-
-        ScoreEvent(Killer.PlayerReplicationInfo, Amount, "team_frag");
+        SendScoreEvent(Killer, class'DHScoreEvent_TeamKill'.static.Create());
     }
     else if (Killer.PlayerReplicationInfo != none)
     {
-        PRI = DHPlayerReplicationInfo(Other.PlayerReplicationInfo);
-
-        if (PRI != none && PRI.RoleInfo != none)
-        {
-            Amount = PRI.RoleInfo.default.PointValue;
-        }
-        else
-        {
-            Amount = 1;
-        }
-
-        // TODO: When implementing the new scoring system, look at the RO version of this function and add back the killer's occupants logic
-        // giving other crewman a reduced score sounds like a good idea (not riders though), but not kills
-        DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).StashedScore += Amount;
-        DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).DHKills++;
-
-        KillerPC = DHPlayer(Killer);
-
-        if (KillerPC != none)
-        {
-            KillerPC.SendScoreEvent(class'DHScoreEvent_Kill');
-        }
+        SendScoreEvent(Killer, class'DHScoreEvent_Kill'.static.Create(Killer.Pawn, Other.Pawn));
     }
 
     if (GameRulesModifiers != none)
     {
         GameRulesModifiers.ScoreKill(Killer, Other);
     }
+}
+
+function SendScoreEvent(Controller C, DHScoreEvent ScoreEvent)
+{
+    local DHPlayer PC;
+
+    PC = DHPlayer(C);
+
+    if (PC == none || ScoreEvent == none)
+    {
+        return;
+    }
+
+    PC.ReceiveScoreEvent(ScoreEvent);
 }
 
 // Modified to check if the player has just used a select-a-spawn teleport and should be protected from damage

@@ -212,7 +212,6 @@ defaultproperties
     // Miscellaneous
     TouchMessage="Use the "
     VehicleMass=5.0 // TODO: rationalise the mass & centre of mass settings of guns, but experiment with effect on ground contact & vehicle collisions
-    PointValue=2.0
     MaxDesireability=1.9
     CollisionRadius=75.0
     CollisionHeight=100.0
@@ -220,6 +219,7 @@ defaultproperties
     MinBrakeFriction=40.0
     VehicleHudOccupantsX(0)=0.0 // neutralise driver & hull gunner positions
     VehicleHudOccupantsX(2)=0.0
+    PointValue=200
 
     // Exit positions
     ExitPositions(0)=(X=0.0,Y=0.0,Z=100.0)  // last resort (because we start at index 1 for a cannon pawn)

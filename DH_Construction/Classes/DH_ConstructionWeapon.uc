@@ -355,7 +355,6 @@ simulated function Fire(float F)
     }
 }
 
-// TODO: wouldn't be the worst idea to move this to the weapon itself
 simulated function TraceFromPlayer(out Actor HitActor, out vector HitLocation, out vector HitNormal)  // TODO: this needs to output a location and groundactor?
 {
     local PlayerController PC;
@@ -583,6 +582,8 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
 
     if (C != none)
     {
+        C.InstigatorController = DHPlayer(Instigator.Controller);
+
         if (!C.bIsNeutral)
         {
             C.SetTeamIndex(Instigator.GetTeamNum());
