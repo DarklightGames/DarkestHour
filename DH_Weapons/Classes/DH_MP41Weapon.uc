@@ -26,5 +26,5 @@ defaultproperties
     ZoomOutTime=0.15
 
     MaxNumPrimaryMags=9
-    InitialNumPrimaryMags=6
+    InitialNumPrimaryMags=9
 }

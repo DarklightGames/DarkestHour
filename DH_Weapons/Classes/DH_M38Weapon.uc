@@ -25,5 +25,5 @@ defaultproperties
     FreeAimRotationSpeed=7.0
 
     MaxNumPrimaryMags=10
-    InitialNumPrimaryMags=6
+    InitialNumPrimaryMags=10
 }

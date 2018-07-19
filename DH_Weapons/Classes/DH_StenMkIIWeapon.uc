@@ -25,7 +25,7 @@ defaultproperties
     IronSightDisplayFOV=30.0
 
     MaxNumPrimaryMags=8
-    InitialNumPrimaryMags=6
+    InitialNumPrimaryMags=8
 
     bHasSelectFire=true
     SelectFireAnim="switch_fire"

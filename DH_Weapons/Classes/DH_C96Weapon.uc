@@ -24,7 +24,7 @@ defaultproperties
     IronSightDisplayFOV=45.0
 
     MaxNumPrimaryMags=5
-    InitialNumPrimaryMags=4
+    InitialNumPrimaryMags=5
     bHasSelectFire=true
 
     SelectEmptyAnim="Draw_empty"

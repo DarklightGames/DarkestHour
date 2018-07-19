@@ -51,7 +51,7 @@ defaultproperties
     FreeAimRotationSpeed=7.5
 
     MaxNumPrimaryMags=11
-    InitialNumPrimaryMags=7
+    InitialNumPrimaryMags=11
 
     bPlusOneLoading=false
     bDiscardMagOnReload=true

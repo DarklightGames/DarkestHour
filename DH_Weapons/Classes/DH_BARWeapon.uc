@@ -50,7 +50,7 @@ defaultproperties
     FreeAimRotationSpeed=2.0
 
     MaxNumPrimaryMags=12
-    InitialNumPrimaryMags=5
+    InitialNumPrimaryMags=12
     bCanBeResupplied=true
     NumMagsToResupply=2
 

@@ -26,7 +26,7 @@ defaultproperties
     FreeAimRotationSpeed=7.0
 
     MaxNumPrimaryMags=8
-    InitialNumPrimaryMags=6
+    InitialNumPrimaryMags=8
 
     bHasSelectFire=true
     SelectFireAnim="select_fire"

@@ -25,7 +25,7 @@ defaultproperties
     FreeAimRotationSpeed=7.0
 
     MaxNumPrimaryMags=12
-    InitialNumPrimaryMags=7
+    InitialNumPrimaryMags=12
 
     PutDownAnim="putaway"
     IdleEmptyAnim="idle_empty"

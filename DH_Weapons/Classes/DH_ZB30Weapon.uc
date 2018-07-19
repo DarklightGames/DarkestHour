@@ -31,7 +31,7 @@ defaultproperties
     IronSightDisplayFOV=110.0
 
     MaxNumPrimaryMags=11
-    InitialNumPrimaryMags=8
+    InitialNumPrimaryMags=11
     bCanBeResupplied=true
     NumMagsToResupply=1
     bHasSelectFire=true

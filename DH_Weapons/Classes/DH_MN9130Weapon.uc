@@ -24,7 +24,7 @@ defaultproperties
     ZoomOutTime=0.35
 
     MaxNumPrimaryMags=10
-    InitialNumPrimaryMags=6
+    InitialNumPrimaryMags=10
 
     bHasBayonet=true
     BayonetBoneName="bayonet"
