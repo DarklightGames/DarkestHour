@@ -4438,6 +4438,7 @@ event PostLogin(PlayerController NewPlayer)
     local Object                  O;
     local DHPlayerSession         S;
     local string                  ROIDHash;
+    local int i;
 
     if (NewPlayer == none)
     {
@@ -4567,7 +4568,12 @@ event PostLogin(PlayerController NewPlayer)
             {
                 PRI.Deaths = S.Deaths;
                 PRI.DHKills = S.Kills;
-                PRI.Score = S.Score;
+                PRI.TotalScore = S.TotalScore;
+
+                for (i = 0; i < arraycount(PRI.CategoryScores); ++i)
+                {
+                    PRI.CategoryScores[i] = S.CategoryScores[i];
+                }
 
                 Teams[S.TeamIndex].AddToTeam(PC);
 
@@ -4605,6 +4611,7 @@ function Logout(Controller Exiting)
     local DHPlayerReplicationInfo PRI;
     local Object O;
     local DHPlayerSession S;
+    local int i;
 
     super.Logout(Exiting);
 
@@ -4640,7 +4647,13 @@ function Logout(Controller Exiting)
     {
         S.Deaths = PRI.Deaths;
         S.Kills = PRI.DHKills;
-        S.Score = PRI.Score; // No need to add StashedScore here, because it is done on the pawn's death (which it does die)
+        S.TotalScore = PRI.TotalScore; // No need to add StashedScore here, because it is done on the pawn's death (which it does die)
+
+        for (i = 0; i < arraycount(S.CategoryScores); ++i)
+        {
+            S.CategoryScores[i] = PRI.CategoryScores[i];
+        }
+
         S.LastKilledTime = PC.LastKilledTime;
         S.WeaponUnlockTime = PC.WeaponUnlockTime;
         S.WeaponLockViolations = PC.WeaponLockViolations;
