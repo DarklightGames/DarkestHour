@@ -55,13 +55,16 @@ var(Artillery) array<ArtilleryType> ArtilleryTypes;
 var() ESeason               Season;
 var() EWeather              Weather;
 
-var() float                 AlliesToAxisRatio;          // Player ratio based on team, allows for unbalanced teams
-var() bool                  bHardTeamRatio;             // Determines if AlliesToAxisRatio should be hard or soft (affected by # of players)
+var() float                 AlliesToAxisRatio;              // Player ratio based on team, allows for unbalanced teams
+var() bool                  bHardTeamRatio;                 // Determines if AlliesToAxisRatio should be hard or soft (affected by # of players)
+var() bool                  bReinforcementsScalesMunitions; // Setting this to true, will lower munition percentage based on reinforcement percentage TODO: Implement
 
+var() float                 BaseMunitionPercentages[2];     // The starting munition percentage for each team
 var() EAxisNation           AxisNation;
-var() sound                 AxisWinsMusic;              // Optional override for Axis victory music
+var() sound                 AxisWinsMusic;                  // Optional override for Axis victory music
+
 var() EAlliedNation         AlliedNation;
-var() sound                 AlliesWinsMusic;            // Optional override for Allies victory music
+var() sound                 AlliesWinsMusic;                // Optional override for Allies victory music
 
 var() class<DHGameType>     GameTypeClass;
 var() ESpawnMode            SpawnMode;
@@ -190,5 +193,8 @@ defaultproperties
     // TODO: delay, limit and request interval need to be gotten from elsewhere?
     ArtilleryTypes(0)=(TeamIndex=0,ArtilleryClass=class'DHArtillery_Legacy',bIsInitiallyActive=true,Limit=1,ConfirmIntervalSeconds=0)
     ArtilleryTypes(1)=(TeamIndex=1,ArtilleryClass=class'DHArtillery_Legacy',bIsInitiallyActive=true,Limit=1,ConfirmIntervalSeconds=0)
+
+    BaseMunitionPercentages(0)=0.5
+    BaseMunitionPercentages(1)=0.5
 }
 

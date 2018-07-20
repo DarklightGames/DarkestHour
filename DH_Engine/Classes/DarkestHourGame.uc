@@ -256,6 +256,9 @@ function PostBeginPlay()
     GRI.bShowServerIPOnScoreboard = bShowServerIPOnScoreboard;
     GRI.bShowTimeOnScoreboard = bShowTimeOnScoreboard;
 
+    GRI.TeamMunitionPercentages[AXIS_TEAM_INDEX] = DHLevelInfo.BaseMunitionPercentages[AXIS_TEAM_INDEX];
+    GRI.TeamMunitionPercentages[ALLIES_TEAM_INDEX] = DHLevelInfo.BaseMunitionPercentages[ALLIES_TEAM_INDEX];
+
     // Artillery
     GRI.ArtilleryStrikeLimit[AXIS_TEAM_INDEX] = LevelInfo.Axis.ArtilleryStrikeLimit;
     GRI.ArtilleryStrikeLimit[ALLIES_TEAM_INDEX] = LevelInfo.Allies.ArtilleryStrikeLimit;
@@ -2356,6 +2359,8 @@ state RoundInPlay
         GRI.DHRoundDuration = RoundDuration;
         GRI.AttritionRate[AXIS_TEAM_INDEX] = 0;
         GRI.AttritionRate[ALLIES_TEAM_INDEX] = 0;
+        GRI.TeamMunitionPercentages[AXIS_TEAM_INDEX] = DHLevelInfo.BaseMunitionPercentages[AXIS_TEAM_INDEX];
+        GRI.TeamMunitionPercentages[ALLIES_TEAM_INDEX] = DHLevelInfo.BaseMunitionPercentages[ALLIES_TEAM_INDEX];
 
         // Here we see if the victory music is set to a sound group and pick an index to replicate to the clients
         if (DHLevelInfo.AlliesWinsMusic != none && DHLevelInfo.AlliesWinsMusic.IsA('SoundGroup'))
@@ -4833,10 +4838,10 @@ function bool SetPause(bool bPause, PlayerController P)
     return false;
 }
 
-// New function which will collect
+// New function which will return the desired munition percentage for the pawn (can be changed to get more complicated)
 function float GetInitialMunitionPercentage(pawn P)
 {
-    return 1.0;
+    return GRI.TeamMunitionPercentages[P.GetTeamNum()];
 }
 
 // Overridden to undo the exclusion of players who hadn't yet selected a role.

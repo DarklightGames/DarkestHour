@@ -1764,6 +1764,7 @@ function GiveAmmo(int M, WeaponPickup WP, bool bJustSpawned)
         {
             InitialAmount = FireMode[M].AmmoClass.default.InitialAmount;
             CurrentMagIndex = 0;
+
             PrimaryAmmoArray.Length = Ceil(InitialNumPrimaryMags * GetInitialNumMagsPercentage());
 
             for (i = 0; i < PrimaryAmmoArray.Length; ++i)
@@ -1816,9 +1817,9 @@ function float GetInitialNumMagsPercentage()
 
     G = DarkestHourGame(Level.Game);
 
-    if (bCanGameChangeInitialNumMags && G != none)
+    if (bGameCanChangeInitialNumMags && G != none)
     {
-        G.GetInitialMunitionPercentage(Instigator);
+        InitialAmmoPercent = G.GetInitialMunitionPercentage(Instigator);
     }
     else
     {

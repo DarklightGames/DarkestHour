@@ -126,6 +126,8 @@ var int                 VehiclePoolIgnoreMaxTeamVehiclesFlags;
 
 var int                 MaxTeamVehicles[2];
 
+var float               TeamMunitionPercentages[2];
+
 var DHSpawnPointBase    SpawnPoints[SPAWN_POINTS_MAX];
 
 var DHObjective         DHObjectives[OBJECTIVES_MAX];
@@ -220,7 +222,8 @@ replication
         ServerTickHealth,
         ServerNetHealth,
         ArtilleryTypeInfos,
-        DHArtillery;
+        DHArtillery,
+        TeamMunitionPercentages;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex,
