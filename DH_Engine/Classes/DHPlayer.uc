@@ -100,6 +100,8 @@ var     Actor                   LookTarget;
 // Log File
 var     FileLog                 ClientLogFile;
 
+var     bool                    bHasReceivedSquadJoinRecommendationMessage; // True when we have displayed the "you should probably join a squad" message.
+
 struct SquadSignal
 {
     var class<DHSquadSignal> SignalClass;
