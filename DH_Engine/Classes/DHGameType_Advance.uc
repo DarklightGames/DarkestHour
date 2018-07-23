@@ -12,6 +12,7 @@ defaultproperties
 
     bUseReinforcementWarning=true
     bSquadSpecialRolesOnly=true
+    bHasTemporarySpawnVehicles=true
 
     bTimeChangesAtZeroReinf=true
     bKeepSpawningWithoutReinf=true

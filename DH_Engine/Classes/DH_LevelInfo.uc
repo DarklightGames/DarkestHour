@@ -86,6 +86,8 @@ var() material              LoadingScreenRef;        // Used to stop loading scr
 
 var const bool              bDHDebugMode;            // flag for whether debug commands can be run
 
+var() int                   InfantrySpawnVehicleDuration;
+
 singular static function bool DHDebugMode()
 {
     return default.bDHDebugMode;
@@ -186,6 +188,7 @@ defaultproperties
     SpawnMode=ESM_RedOrchestra
     Season=SEASON_Summer
     GameTypeClass=class'DHGameType_Push'
+    InfantrySpawnVehicleDuration=60
 
     // TODO: delay, limit and request interval need to be gotten from elsewhere?
     ArtilleryTypes(0)=(TeamIndex=0,ArtilleryClass=class'DHArtillery_Legacy',bIsInitiallyActive=true,Limit=1,ConfirmIntervalSeconds=0)

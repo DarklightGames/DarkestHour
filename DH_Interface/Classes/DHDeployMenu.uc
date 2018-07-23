@@ -1316,7 +1316,8 @@ function UpdateVehicleImage()
         VehicleClass = GRI.VehiclePoolVehicleClasses[VehiclePoolIndex];
         i_Vehicle.Image = VehicleClass.default.SpawnOverlay[0];
 
-        if (GRI.VehiclePoolIsSpawnVehicles[VehiclePoolIndex] != 0)
+        if (GRI.VehiclePoolIsSpawnVehicles[VehiclePoolIndex] != 0 ||
+            (PC.ClientLevelInfo.GameTypeClass.default.bHasTemporarySpawnVehicles && !GRI.VehiclePoolVehicleClasses[VehiclePoolIndex].default.bMustBeTankCommander))
         {
             i_SpawnVehicle.Show();
         }

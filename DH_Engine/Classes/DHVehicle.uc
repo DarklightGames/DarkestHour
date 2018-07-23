@@ -3598,7 +3598,7 @@ simulated function DisplayVehicleMessage(int MessageNumber, optional Pawn P, opt
 // New helper function to check whether vehicle is a spawn vehicle
 simulated function bool IsSpawnVehicle()
 {
-    return SpawnPointAttachment != none;
+    return SpawnPointAttachment != none && !SpawnPointAttachment.bIsTemporary;
 }
 
 // Modified so vehicle is treated as disabled if it suffers a range of damage that renders it of very limited use, as well as if the engine is dead

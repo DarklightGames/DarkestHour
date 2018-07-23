@@ -13,6 +13,7 @@ var bool                bRoundEndsAtZeroReinf;
 var bool                bTimeChangesAtZeroReinf;
 var bool                bSquadSpecialRolesOnly;
 var bool                bKeepSpawningWithoutReinf;
+var bool                bHasTemporarySpawnVehicles;
 
 var int                 OutOfReinforcementsRoundTime;
 
