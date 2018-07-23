@@ -2372,7 +2372,7 @@ defaultproperties
     Begin Object Class=GUIGFXButton Name=SupplyVehicleImageObject
         WinWidth=0.25
         WinHeight=0.125
-        WinLeft=0.75
+        WinLeft=0.5
         WinTop=0.0
         Position=ICP_Center
         Graphic=Material'DH_InterfaceArt2_tex.Icons.supply_cache'
