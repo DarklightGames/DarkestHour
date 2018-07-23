@@ -3117,6 +3117,28 @@ static function string ParseChatPercVar(Mutator BaseMutator, Controller Who, str
 // exec FUNCTIONS - These functions natively require admin access
 //***********************************************************************************
 
+exec function SetTeamMunitionPercentage(int TeamIndex, int Percent, optional int Added)
+{
+    local float f;
+
+    if (TeamIndex == 0 || TeamIndex == 1)
+    {
+        if (Added != 0)
+        {
+            f = Percent / 100.0;
+            GRI.TeamMunitionPercentages[TeamIndex] = f;
+        }
+        else
+        {
+            f = Added / 100.0;
+            GRI.TeamMunitionPercentages[TeamIndex] += f;
+        }
+    }
+
+    // Clamp the munition percentage so it can't go less than or greater than limits
+    GRI.TeamMunitionPercentages[TeamIndex] = FClamp(GRI.TeamMunitionPercentages[TeamIndex], 0.0, 1.0);
+}
+
 exec function SetServerViewDistance(int NewDistance)
 {
     local DHZoneInfo Z;
@@ -4839,7 +4861,7 @@ function bool SetPause(bool bPause, PlayerController P)
 }
 
 // New function which will return the desired munition percentage for the pawn (can be changed to get more complicated)
-function float GetInitialMunitionPercentage(pawn P)
+function float GetMunitionPercentageForPawn(pawn P)
 {
     return GRI.TeamMunitionPercentages[P.GetTeamNum()];
 }

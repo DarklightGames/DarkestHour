@@ -1819,7 +1819,7 @@ function float GetInitialNumMagsPercentage()
 
     if (bGameCanChangeInitialNumMags && G != none)
     {
-        InitialAmmoPercent = G.GetInitialMunitionPercentage(Instigator);
+        InitialAmmoPercent = G.GetMunitionPercentageForPawn(Instigator);
     }
     else
     {
