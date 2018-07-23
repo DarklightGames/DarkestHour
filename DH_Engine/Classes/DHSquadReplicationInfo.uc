@@ -2292,7 +2292,7 @@ defaultproperties
     AxisDefaultSquadNames(6)="Gustav"
     AxisDefaultSquadNames(7)="Heinrich"
     SquadMessageClass=class'DHSquadMessage'
-    NextRallyPointInterval=60
+    NextRallyPointInterval=50
     SquadLockMemberCountMin=3
     RallyPointSquadmatePlacementRadiusInMeters=15.0
     RallyPointInitialSpawnsMinimum=10
