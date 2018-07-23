@@ -453,6 +453,22 @@ simulated function int AddSpawnPoint(DHSpawnPointBase SP)
         }
     }
 
+    // All spawn points slots are filled. If the new spawn point is not
+    // low-priority, we can search for a spawn point to destroy and replace
+    // it with.
+    if (!SP.bIsLowPriority)
+    {
+        for (i = 0; i < arraycount(SpawnPoints); ++i)
+        {
+            if (SpawnPoints[i].bIsLowPriority)
+            {
+                SpawnPoints[i].Destroy();
+                SpawnPoints[i] = SP;
+                return i;
+            }
+        }
+    }
+
     return -1;
 }
 

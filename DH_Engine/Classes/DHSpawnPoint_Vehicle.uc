@@ -239,4 +239,5 @@ simulated function string GetMapStyleName()
 defaultproperties
 {
     bCombatSpawn=true
+    bIsLowPriority=true
 }

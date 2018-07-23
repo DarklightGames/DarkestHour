@@ -59,6 +59,8 @@ var bool    bCanEncroachmentOverrun;                    // When true, if the ove
 
 var bool    bIsEncroachedUpon;                          // True if there are enemies encroaching upon the spawn point.
 
+var bool    bIsLowPriority;                             // When true, this spawn point may be deleted in favor of spawning a newer high priority spawn point if the # of potential spawn points is reached.
+
 replication
 {
     // Variables the server will replicate to all clients
