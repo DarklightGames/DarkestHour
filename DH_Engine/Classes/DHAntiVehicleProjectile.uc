@@ -526,8 +526,6 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
 
     UpdateInstigator();
 
-    Log("HURTWALL IS:" @ HurtWall);
-
     // Find all colliding actors within blast radius, which the blast should damage
     // No longer use VisibleCollidingActors as much slower (FastTrace on every actor found), but we can filter actors & then we do our own, more accurate trace anyway
     foreach CollidingActors(class'Actor', Victim, DamageRadius, HitLocation)
