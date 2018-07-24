@@ -199,6 +199,14 @@ function OnPawnSpawned(Pawn P)
 {
     SpawnsRemaining -= 1;
 
+    if (InstigatorController != none &&
+        InstigatorController != P.Controller &&
+        InstigatorController.GetTeamNum() == GetTeamIndex() &&
+        InstigatorController.GetSquadIndex() == SquadIndex)
+    {
+        InstigatorController.ReceiveScoreEvent(class'DHScoreEvent_SquadRallyPointSpawn'.static.Create());
+    }
+
     if (SpawnsRemaining <= 0)
     {
         // "A squad rally point has been exhausted."
