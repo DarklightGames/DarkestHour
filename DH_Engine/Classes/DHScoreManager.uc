@@ -5,7 +5,7 @@
 
 class DHScoreManager extends Object;
 
-const SCORE_CATEGORIES_MAX = 4;
+const SCORE_CATEGORIES_MAX = 2;
 
 struct EventScore
 {
@@ -127,7 +127,5 @@ defaultproperties
 {
     ScoreCategoryClasses(0)=class'DHScoreCategory_Combat'
     ScoreCategoryClasses(1)=class'DHScoreCategory_Support'
-    ScoreCategoryClasses(2)=class'DHScoreCategory_Logistics'
-    ScoreCategoryClasses(3)=class'DHScoreCategory_Squad'
 }
 

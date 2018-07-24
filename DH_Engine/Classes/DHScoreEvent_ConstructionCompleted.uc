@@ -25,6 +25,6 @@ function int GetValue()
 defaultproperties
 {
     HumanReadableName="Construction Built"
-    CategoryClass=class'DHScoreCategory_Logistics'
+    CategoryClass=class'DHScoreCategory_Support'
 }
 
