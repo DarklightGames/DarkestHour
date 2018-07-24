@@ -348,7 +348,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             }
         }
         // We hit some other kind of pawn, destroyable mesh, or construction
-        else if (Other.IsA('RODestroyableStaticMesh') || Other.IsA('DHConstruction') || Other.IsA('Pawn'))
+        else if (Other.IsA('RODestroyableStaticMesh') || Other.IsA('Pawn'))
         {
             if (Role == ROLE_Authority)
             {
@@ -362,6 +362,13 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
             }
 
             HurtWall = Other; // added to prevent Other from being damaged again by HurtRadius called by Explode/BlowUp
+        }
+        else if (Other.IsA('DHConstruction'))
+        {
+            if (Role == ROLE_Authority)
+            {
+                Other.TakeDamage(ImpactDamage, Instigator, HitLocation, MomentumTransfer * Direction, ShellImpactDamage);
+            }
         }
         // Otherwise we hit something we aren't going to damage
         else if (bBotNotifyIneffective && Role == ROLE_Authority && ROBot(InstigatorController) != none)
@@ -518,6 +525,8 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
     bHurtEntry = true;
 
     UpdateInstigator();
+
+    Log("HURTWALL IS:" @ HurtWall);
 
     // Find all colliding actors within blast radius, which the blast should damage
     // No longer use VisibleCollidingActors as much slower (FastTrace on every actor found), but we can filter actors & then we do our own, more accurate trace anyway
