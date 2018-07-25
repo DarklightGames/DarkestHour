@@ -207,34 +207,6 @@ simulated event PostBeginPlay()
     if (Role == ROLE_Authority)
     {
         ScoreManager = new class'DHScoreManager';
-        ScoreManager.OnCategoryScoreChanged = OnCategoryScoreChanged;
-        ScoreManager.OnTotalScoreChanged = OnTotalScoreChanged;
-    }
-}
-
-function OnCategoryScoreChanged(int CategoryIndex, int Score)
-{
-    local DHPlayerReplicationInfo PRI;
-
-    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-
-    if (PRI != none)
-    {
-        PRI.CategoryScores[CategoryIndex] = Score;
-    }
-}
-
-function OnTotalScoreChanged(int TotalScore)
-{
-    local DHPlayerReplicationInfo PRI;
-
-    Log("TOTAL SCORE CHANGED" @ TotalScore);
-
-    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
-
-    if (PRI != none)
-    {
-        PRI.TotalScore = TotalScore;
     }
 }
 

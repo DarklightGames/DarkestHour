@@ -19,7 +19,7 @@ var     bool                    bIsDeveloper;
 
 // Scoring
 var     int                     TotalScore;
-var     int                     CategoryScores[4];
+var     int                     CategoryScores[2];
 
 replication
 {

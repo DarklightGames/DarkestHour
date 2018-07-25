@@ -2171,31 +2171,31 @@ function KillEvent(string Killtype, PlayerReplicationInfo Killer, PlayerReplicat
 
 function UpdateAllPlayerScores()
 {
-    local DHPlayerReplicationInfo   PRI;
-    local Controller                C;
+    local Controller C;
 
     for (C = Level.ControllerList; C != none; C = C.NextController)
     {
-        if (DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none)
-        {
-            PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
-
-            PRI.Score += PRI.StashedScore;
-            PRI.StashedScore = 0;
-        }
+        UpdatePlayerScore(C);
     }
 }
 
-function UpdatePlayerScore(controller C)
+function UpdatePlayerScore(Controller C)
 {
     local DHPlayerReplicationInfo PRI;
+    local DHPlayer PC;
+    local int i;
 
-    if (C != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none)
+    PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
+    PC = DHPlayer(C);
+
+    if (PRI != none && PC != none)
     {
-        PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
+        PRI.TotalScore = PC.ScoreManager.TotalScore;
 
-        PRI.Score += PRI.StashedScore;
-        PRI.StashedScore = 0;
+        for (i = 0; i < arraycount(PC.ScoreManager.CategoryScores); ++i)
+        {
+            PRI.CategoryScores[i] = PC.ScoreManager.CategoryScores[i];
+        }
     }
 }
 
