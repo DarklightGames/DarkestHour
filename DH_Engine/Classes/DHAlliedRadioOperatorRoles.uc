@@ -1,0 +1,16 @@
+//==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2018
+//==============================================================================
+
+class DHAlliedRadioOperatorRoles extends DHAlliedRoles
+    abstract;
+
+defaultproperties
+{
+    MyName="Radio Operator"
+    AltName="Radio Operator"
+    Article="a "
+    PluralName="Radio Operators"
+    Limit=1
+}

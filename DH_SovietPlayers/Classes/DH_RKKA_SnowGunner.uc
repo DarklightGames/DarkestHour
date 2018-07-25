@@ -3,20 +3,12 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_RKKA_SnowGunner extends DH_RKKA_Snow;
+class DH_RKKA_SnowGunner extends DHSOVMachineGunnerRoles;
 
 defaultproperties
 {
-    MyName="Machine-gunner"
-    AltName="Pulemetchik"
-    Article="a "
-    PluralName="Machine-gunners"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_DP28Weapon',Amount=1)
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_TT33Weapon',Amount=1)
-    Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'
-    Headgear(1)=class'DH_SovietPlayers.DH_SovietHelmet'
-    Headgear(2)=class'DH_SovietPlayers.DH_SovietHelmet'
-    bIsGunner=true
-    bCarriesMGAmmo=false
-    Limit=2
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietSnowPawn',Weight=1.0)
+    SleeveTexture=Texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
+    DetachedArmClass=class'ROEffects.SeveredArmSovSnow'
+    DetachedLegClass=class'ROEffects.SeveredLegSovSnow'
 }

@@ -3,21 +3,12 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_USRadioOperatorAutumn extends DH_US_Autumn_Infantry;
+class DH_USRadioOperatorAutumn extends DHUSRadioOperatorRoles;
 
 defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USRadioWinterPawn')
     RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USRadioTrenchcoatPawn')
-    MyName="Radio Operator"
-    AltName="Radio Operator"
-    Article="a "
-    PluralName="Radio Operators"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_GreaseGunWeapon',AssociatedAttachment=class'DH_Weapons.DH_ThompsonAmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
-    GivenItems(0)="DH_Equipment.DHRadioItem"
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet1stEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet1stEMb'
-    Limit=1
 }

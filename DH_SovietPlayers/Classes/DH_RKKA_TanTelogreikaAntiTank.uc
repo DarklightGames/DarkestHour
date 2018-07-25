@@ -3,21 +3,14 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_RKKA_TanTelogreikaAntiTank extends DH_RKKA_TanTelogreika;
+class DH_RKKA_TanTelogreikaAntiTank extends DHSOVAntiTankRoles;
 
 defaultproperties
 {
-    MyName="Anti-tank soldier"
-    AltName="PT-Soldat"
-    Article="an "
-    PluralName="Anti-tank soldiers"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M38Weapon',Amount=15,AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_PTRDWeapon',Amount=1,AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_TT33Weapon',Amount=1)
-    Grenades(0)=(Item=class'DH_Weapons.DH_RPG43GrenadeWeapon',Amount=3)
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietTanTeloPawn',Weight=1.0)
     Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'
     Headgear(1)=class'DH_SovietPlayers.DH_SovietHelmet'
-    Headgear(2)=class'DH_SovietPlayers.DH_SovietSidecap'
-    bIsGunner=true
-    Limit=2
+    HeadgearProbabilities(0)=0.5
+    HeadgearProbabilities(1)=0.5
+    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves_tan'
 }

@@ -3,17 +3,11 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_BritishRadioOperatorRMCommando extends DH_RoyalMarineCommandos;
+class DH_BritishRadioOperatorRMCommando extends DHCWRadioOperatorRoles;
 
 defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishRadioRMCommandoPawn')
-    MyName="Radio Operator"
-    AltName="Radio Operator"
-    Article="a "
-    PluralName="Radio Operators"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
-    GivenItems(0)="DH_Equipment.DHRadioItem"
     Headgear(0)=class'DH_BritishPlayers.DH_BritishRMCommandoBeret'
-    Limit=1
+    HeadgearProbabilities(0)=1.0
 }

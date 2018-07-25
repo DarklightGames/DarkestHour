@@ -3,18 +3,13 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_RKKA_SnowRifleman extends DH_RKKA_Snow;
+class DH_RKKA_SnowRifleman extends DHSOVRiflemanRoles;
 
 defaultproperties
 {
-    MyName="Rifleman"
-    AltName="Strelok"
-    Article="a "
-    PluralName="Riflemen"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MN9130Weapon',Amount=15,AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_M38Weapon',Amount=15,AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon',Amount=2)
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietSnowPawn',Weight=1.0)
+    SleeveTexture=Texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
+    DetachedArmClass=class'ROEffects.SeveredArmSovSnow'
+    DetachedLegClass=class'ROEffects.SeveredLegSovSnow'
     Headgear(0)=class'DH_SovietPlayers.DH_SovietFurHat'
-    Headgear(1)=class'DH_SovietPlayers.DH_SovietFurHat'
-    Headgear(2)=class'DH_SovietPlayers.DH_SovietFurHat'
-    }
+}

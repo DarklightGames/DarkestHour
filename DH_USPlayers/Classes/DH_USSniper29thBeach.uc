@@ -3,17 +3,10 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_USSniper29thBeach extends DH_US_29th_Infantry_Beach;
+class DH_USSniper29thBeach extends DH_USSniper29th;
 
 defaultproperties
 {
-    MyName="Sniper"
-    AltName="Sniper"
-    Article="a "
-    PluralName="Snipers"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_SpringfieldScopedWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
-    Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet29thEMa'
-    Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet29thEMb'
-    Limit=1
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USBeach29thPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USBeachVest29thPawn',Weight=1.0)
 }

@@ -3,18 +3,16 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_USRifleman506101st extends DH_US_506PIR;
+class DH_USRifleman506101st extends DHUSRiflemanRoles;
 
 defaultproperties
 {
-    MyName="Rifleman"
-    AltName="Rifleman"
-    Article="a "
-    PluralName="Riflemen"
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USAB101stPawn',Weight=1.0)
+    SleeveTexture=Texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
+    Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet506101stEMa'
+    Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet506101stEMb'
+
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1GarandWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
-    Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
-    Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet506101stEMa'
-    Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet506101stEMb'
 }

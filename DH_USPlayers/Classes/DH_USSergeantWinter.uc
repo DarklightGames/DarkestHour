@@ -3,26 +3,18 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_USSergeantWinter extends DH_US_Winter_Infantry;
+class DH_USSergeantWinter extends DHUSSergeantRoles;
 
 defaultproperties
 {
-    MyName="Sergeant"
-    AltName="Sergeant"
-    Article="a "
-    PluralName="Sergeants"
-    bIsLeader=true
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_ThompsonWeapon',AssociatedAttachment=class'DH_Weapons.DH_ThompsonAmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_GreaseGunWeapon',AssociatedAttachment=class'DH_Weapons.DH_ThompsonAmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
-    Grenades(0)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
-    Grenades(1)=(Item=class'DH_Equipment.DH_RedSmokeWeapon')
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USTrenchcoatScarfPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USWinterScarfPawn',Weight=1.0)
+    RolePawns(2)=(PawnClass=class'DH_USPlayers.DH_USTrenchcoatPawn',Weight=0.6)
+    RolePawns(3)=(PawnClass=class'DH_USPlayers.DH_USWinterPawn',Weight=0.3)
     HeadgearProbabilities(0)=0.2
     Headgear(0)=class'DH_USPlayers.DH_AmericanWinterWoolHat'
     HeadgearProbabilities(1)=0.4
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetWinter'
     HeadgearProbabilities(2)=0.4
     Headgear(2)=class'DH_USPlayers.DH_AmericanHelmet1stNCOa'
-    Limit=2
-    bRequiresSLorASL=true
 }
