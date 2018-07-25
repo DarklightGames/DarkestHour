@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHAxisMortarObserverRoles extends DHAxisRoles;
+class DHAxisMortarObserverRoles extends DHAxisRoles
+    abstract;
 
 defaultproperties
 {

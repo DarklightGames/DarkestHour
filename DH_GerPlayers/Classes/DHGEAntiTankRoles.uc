@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHAxisArtilleryOfficerRoles extends DHAxisRoles
+class DHGEAntiTankRoles extends DHAxisAntiTankRoles
     abstract;
 
 defaultproperties

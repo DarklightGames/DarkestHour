@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHAxisEngineerRoles extends DHAxisRoles;
+class DHAxisEngineerRoles extends DHAxisRoles
+    abstract;
 
 defaultproperties
 {

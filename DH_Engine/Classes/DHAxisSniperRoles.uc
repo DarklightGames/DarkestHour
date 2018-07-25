@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHAxisSniperRoles extends DHAxisRoles;
+class DHAxisSniperRoles extends DHAxisRoles
+    abstract;
 
 defaultproperties
 {
