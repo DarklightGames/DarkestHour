@@ -15,7 +15,8 @@ defaultproperties
     MenuName="Dragon's Teeth"
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.dragon_teeth'
     MenuDescription="Effective at blocking all vehicles."
-    SupplyCost=150
+    SupplyCost=200
+    MinDamagetoHurt=250
     HealthMax=750
     TatteredHealthThreshold=375
     TatteredStaticMesh=StaticMesh'DH_Construction_stc.Obstacles.dragon_tooth_damaged'
