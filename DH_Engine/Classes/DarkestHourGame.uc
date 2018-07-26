@@ -2190,6 +2190,7 @@ function UpdatePlayerScore(Controller C)
 
     if (PRI != none && PC != none)
     {
+        PRI.Score = PC.ScoreManager.TotalScore;
         PRI.TotalScore = PC.ScoreManager.TotalScore;
 
         for (i = 0; i < arraycount(PC.ScoreManager.CategoryScores); ++i)
@@ -4568,6 +4569,7 @@ event PostLogin(PlayerController NewPlayer)
             {
                 PRI.Deaths = S.Deaths;
                 PRI.DHKills = S.Kills;
+                PRI.Score = S.TotalScore;
                 PRI.TotalScore = S.TotalScore;
 
                 for (i = 0; i < arraycount(PRI.CategoryScores); ++i)
@@ -4647,7 +4649,7 @@ function Logout(Controller Exiting)
     {
         S.Deaths = PRI.Deaths;
         S.Kills = PRI.DHKills;
-        S.TotalScore = PRI.TotalScore; // No need to add StashedScore here, because it is done on the pawn's death (which it does die)
+        S.TotalScore = PRI.TotalScore;
 
         for (i = 0; i < arraycount(S.CategoryScores); ++i)
         {
