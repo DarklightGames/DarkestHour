@@ -14,6 +14,6 @@ defaultproperties
 {
     HumanReadableName="Friendly Resupply"
     Value=25
-    CategoryClass=class'DHScoreCategory_Combat'
+    CategoryClass=class'DHScoreCategory_Support'
 }
 
