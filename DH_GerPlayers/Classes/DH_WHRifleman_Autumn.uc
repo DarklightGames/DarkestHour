@@ -3,17 +3,13 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_WHRifleman_Autumn extends DH_HeerAutumn;
+class DH_WHRifleman_Autumn extends DHGERiflemanRoles;
 
 defaultproperties
 {
-    MyName="Rifleman"
-    AltName="Schütze"
-    Article="a "
-    PluralName="Riflemen"
-
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanParkaHeerPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanSmockHeerPawn',Weight=1.0)
+    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.SplinterASleeve'
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetCover'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetNoCover'
 }

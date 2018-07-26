@@ -3,15 +3,13 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_WKRifleman extends DH_Kriegsmarine;
+class DH_WKRifleman extends DHGERiflemanRoles;
 
 defaultproperties
 {
-    MyName="Rifleman"
-    AltName="Schütze"
-    Article="a "
-    PluralName="Riflemen"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanKriegsmarinePawn',Weight=1.0)
+    SleeveTexture=Texture'Weapons1st_tex.Arms.german_sleeves'
     Headgear(0)=class'DH_GerPlayers.DH_KriegsmarineHelmet'
+    HeadgearProbabilities(0)=1.0
+    HeadgearProbabilities(1)=0.0
 }

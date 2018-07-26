@@ -3,20 +3,13 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_WSSMortarObserver extends DH_WaffenSS;
+class DH_WSSMortarObserver extends DHGEMortarObserverRoles;
 
 defaultproperties
 {
-    bIsMortarObserver=true
-    MyName="Artillery Observer"
-    AltName="Artilleriebeobachter"
-    Article="a "
-    PluralName="Artillery Observers"
-
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
-    GivenItems(0)="DH_Equipment.DHBinocularsItem"
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanSSPawn',Weight=1.5)
+    RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanSpringSmockSSPawn',Weight=1.0)
+    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetTwo'
-    Limit=1
 }

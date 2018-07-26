@@ -3,15 +3,12 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_LWRifleman extends DH_LuftwaffeFlak;
+class DH_LWRifleman extends DHGERiflemanRoles;
 
 defaultproperties
 {
-    MyName="Rifleman"
-    AltName="Schütze"
-    Article="a "
-    PluralName="Riflemen"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanLuftwaffePawn',Weight=1.0)
+    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
     Headgear(0)=class'DH_GerPlayers.DH_LWHelmet'
     Headgear(1)=class'DH_GerPlayers.DH_LWHelmetTwo'
 }

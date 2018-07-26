@@ -8,5 +8,10 @@ class DHAxisMortarObserverRoles extends DHAxisRoles
 
 defaultproperties
 {
-
+    bIsMortarObserver=true
+    MyName="Artillery Observer"
+    AltName="Artilleriebeobachter"
+    Article="a "
+    PluralName="Artillery Observers"
+    Limit=1
 }

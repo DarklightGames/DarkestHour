@@ -3,16 +3,14 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_OstTruppenRifleman extends DH_OstTruppen;
+class DH_OstTruppenRifleman extends DHGERiflemanRoles;
 
 defaultproperties
 {
     MyName="Osttruppe Rifleman"
     AltName="Schütze Osttruppe"
-    Article="a "
-    PluralName="Riflemen"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
+    PluralName="Osttruppe Riflemen"
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanHeerPawn',Weight=1.0)
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
 }

@@ -3,22 +3,16 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_WSSOfficer_Snow extends DH_WaffenSSSnow;
+class DH_WSSOfficer_Snow extends DHGEArtilleryOfficerRoles;
 
 defaultproperties
 {
-    bIsArtilleryOfficer=true
-    MyName="Artillery Officer"
-    AltName="Artillerieoffizier"
-    Article="a "
-    PluralName="Artillery Officers"
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanParkaSnowSSPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanSmockToqueSSPawn',Weight=1.0)
+    SleeveTexture=Texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
+    Headgear(0)=class'DH_GerPlayers.DH_SSHelmetCover'
+    Headgear(1)=class'DH_GerPlayers.DH_SSHelmetSnow'
 
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_G43Weapon',AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
-    SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
-    GivenItems(0)="DH_Equipment.DHBinocularsItem"
-    Headgear(0)=class'DH_GerPlayers.DH_SSHelmetCover'
-    Headgear(1)=class'DH_GerPlayers.DH_SSHelmetSnow'
-    Limit=1
 }

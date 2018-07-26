@@ -8,5 +8,10 @@ class DHAxisArtilleryOfficerRoles extends DHAxisRoles
 
 defaultproperties
 {
-
+    bIsArtilleryOfficer=true
+    MyName="Artillery Officer"
+    AltName="Artillerieoffizier"
+    Article="a "
+    PluralName="Artillery Officers"
+    Limit=1
 }

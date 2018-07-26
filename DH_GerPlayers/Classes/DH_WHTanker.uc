@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_WHTanker extends DH_HeerTankCrew;
+class DH_WHTanker extends DHGETankCrewmanRoles;
 
 defaultproperties
 {

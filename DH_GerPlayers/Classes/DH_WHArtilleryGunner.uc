@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_WHArtilleryGunner extends DH_Heer;
+class DH_WHArtilleryGunner extends DHGETankCrewmanRoles;
 
 defaultproperties
 {

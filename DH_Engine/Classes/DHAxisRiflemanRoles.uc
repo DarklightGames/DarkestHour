@@ -8,5 +8,8 @@ class DHAxisRiflemanRoles extends DHAxisRoles
 
 defaultproperties
 {
-
+    MyName="Rifleman"
+    AltName="Schütze"
+    Article="a "
+    PluralName="Riflemen"
 }

@@ -3,18 +3,12 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_WHSniper_Autumn extends DH_HeerAutumn;
+class DH_WHSniper_Autumn extends DHGESniperRoles;
 
 defaultproperties
 {
-    MyName="Sniper"
-    AltName="Scharfschütze"
-    Article="a "
-    PluralName="Snipers"
-
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98ScopedWeapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
-    SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanParkaHeerPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanSmockHeerPawn',Weight=1.0)
+    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.SplinterASleeve'
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetCover'
-    Limit=2
 }

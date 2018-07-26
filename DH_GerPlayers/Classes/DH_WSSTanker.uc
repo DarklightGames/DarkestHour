@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_WSSTanker extends DH_WaffenSSTankCrew;
+class DH_WSSTanker extends DHGETankCrewmanRoles;
 
 defaultproperties
 {

@@ -3,19 +3,14 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_WHAntiTank_Greatcoat extends DH_HeerGreatcoat;
+class DH_WHAntiTank_Greatcoat extends DHGEAntiTankRoles;
 
 defaultproperties
 {
-    MyName="Tank Hunter"
-    AltName="Panzerjäger"
-    Article="a "
-    PluralName="Tank Hunters"
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanGreatCoatPawn',Weight=1.0)
     SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
-    Grenades(0)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon')
-    GivenItems(0)="DH_Weapons.DH_PanzerschreckWeapon"
+    DetachedArmClass=class'ROEffects.SeveredArmGerGreat'
+    DetachedLegClass=class'ROEffects.SeveredLegGerGreat'
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
-    Limit=1
 }

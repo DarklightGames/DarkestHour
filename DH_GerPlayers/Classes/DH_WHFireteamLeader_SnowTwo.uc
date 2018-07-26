@@ -3,20 +3,23 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_WHFireteamLeader_SnowTwo extends DH_HeerSnowTwo;
+class DH_WHFireteamLeader_SnowTwo extends DHGECorporalRoles;
 
 defaultproperties
 {
-    MyName="Corporal"
-    AltName="Gefreiter"
-    Article="a "
-    PluralName="Corporals"
-    SleeveTexture=Texture'Weapons1st_tex.Arms.german_sleeves'
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanSnowGreatCoatPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanSnowHeerPawn',Weight=1.0)
+    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.snow_sleeves'
+
+    Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetSnowTwo'
+    Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetSnowThree'
+    Headgear(2)=class'DH_GerPlayers.DH_HeerHelmetSnow'
+    Headgear(3)=class'DH_GerPlayers.DH_HeerHelmetCover'
+    HeadgearProbabilities(0)=0.4
+    HeadgearProbabilities(1)=0.25
+    HeadgearProbabilities(2)=0.3
+    HeadgearProbabilities(3)=0.05
+
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_G43Weapon',AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
-    Limit=1
-    Limit33to44=2
-    LimitOver44=2
-    bRequiresSLorASL=true
 }

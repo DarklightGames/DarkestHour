@@ -3,20 +3,15 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_WSSAntiTank_Autumn extends DH_WaffenSSAutumn;
+class DH_WSSAntiTank_Autumn extends DHGEAntiTankRoles;
 
 defaultproperties
 {
-    MyName="Tank Hunter"
-    AltName="Panzerjäger"
-    Article="a "
-    PluralName="Tank Hunters"
-
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_G43Weapon',AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')
-    Grenades(0)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon')
-    GivenItems(0)="DH_Weapons.DH_PanzerschreckWeapon"
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanParkaSSPawn',Weight=1.5)
+    RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanAutumnSmockSSPawn',Weight=1.0)
+    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetCover'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetNoCover'
-    Limit=1
+
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_G43Weapon',AssociatedAttachment=class'ROInventory.ROG43AmmoPouch')
 }

@@ -8,5 +8,9 @@ class DHAxisRadioOperatorRoles extends DHAxisRoles
 
 defaultproperties
 {
-
+    MyName="Radio Operator"
+    AltName="Funktruppe"
+    Article="a "
+    PluralName="Radio Operator"
+    Limit=1
 }

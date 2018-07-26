@@ -8,5 +8,10 @@ class DHAxisMachineGunnerRoles extends DHAxisRoles
 
 defaultproperties
 {
-
+    bIsGunner=true
+    MyName="Machine-Gunner"
+    AltName="Maschinengewehrschütze"
+    Article="a "
+    PluralName="Machine-Gunners"
+    Limit=2
 }

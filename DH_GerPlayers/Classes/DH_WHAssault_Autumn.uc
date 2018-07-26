@@ -3,19 +3,13 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_WHAssault_Autumn extends DH_HeerAutumn;
+class DH_WHAssault_Autumn extends DHGEAssaultRoles;
 
 defaultproperties
 {
-    MyName="Assault Troop"
-    AltName="Stoﬂtruppe"
-    Article="an "
-    PluralName="Assault Troopers"
-
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_STG44Weapon',AssociatedAttachment=class'ROInventory.ROSTG44AmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanParkaHeerPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanSmockHeerPawn',Weight=1.0)
+    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.SplinterASleeve'
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetCover'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetNoCover'
-    Limit=4
 }
