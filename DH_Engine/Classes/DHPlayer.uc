@@ -150,6 +150,7 @@ replication
         ServerSetPatronStatus, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
         ServerPunishLastFFKiller,
         ServerRequestArtillery,
+        ServerResetScore,
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons; // these ones in debug mode only
 
     // Functions the server can call on the client that owns this actor
@@ -5927,6 +5928,21 @@ simulated exec function DumpScore()
     }
 
     Log(ScoreManager.Serialize());
+}
+
+// TODO: DEBUG
+simulated exec function ResetScore()
+{
+    ServerResetScore();
+}
+
+function ServerResetScore()
+{
+    if (ScoreManager != none)
+    {
+        ScoreManager.Reset();
+        DarkestHourGame(Level.Game).UpdatePlayerScore(self);
+    }
 }
 
 // Functions emptied out as RO/DH doesn't use a LocalStatsScreen actor & these aren't used
