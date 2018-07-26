@@ -1059,10 +1059,6 @@ function ScoreKill(Controller Killer, Controller Other)
     {
         SendScoreEvent(Other, class'DHScoreEvent_Suicide'.static.Create());
     }
-    else if (Other.bIsPlayer && Killer.bIsPlayer && Killer.PlayerReplicationInfo.Team == Other.PlayerReplicationInfo.Team)
-    {
-        SendScoreEvent(Killer, class'DHScoreEvent_TeamKill'.static.Create());
-    }
     else if (Killer.PlayerReplicationInfo != none)
     {
         SendScoreEvent(Killer, class'DHScoreEvent_Kill'.static.Create(Killer.Pawn, Other.Pawn));
