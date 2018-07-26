@@ -5921,27 +5921,12 @@ function ReceiveScoreEvent(DHScoreEvent ScoreEvent)
 // TODO: put this elsewhere/clean up
 simulated exec function DumpScore()
 {
-    local int i;
-
     if (ScoreManager == none)
     {
         return;
     }
 
-    Log("TotalScore:" @ ScoreManager.TotalScore);
-    Log("== CategoryScores ==");
-
-    for (i = 0; i < arraycount(ScoreManager.default.ScoreCategoryClasses); ++i)
-    {
-        Log(ScoreManager.default.ScoreCategoryClasses[i].default.HumanReadableName $ ":" @ ScoreManager.GetCategoryScoreByIndex(i));
-    }
-
-    Log("== Events ==");
-
-    for (i = 0; i < ScoreManager.EventScores.Length; ++i)
-    {
-        Log(ScoreManager.EventScores[i].EventClass.default.HumanReadableName @ "(" $ ScoreManager.EventScores[i].Count $ ")" @ ScoreManager.EventScores[i].Score);
-    }
+    Log(ScoreManager.Serialize());
 }
 
 // Functions emptied out as RO/DH doesn't use a LocalStatsScreen actor & these aren't used
