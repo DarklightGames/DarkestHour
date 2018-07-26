@@ -5401,7 +5401,7 @@ function ServerPunishLastFFKiller()
     {
         PC = DHPlayer(LastFFKiller.Owner);
 
-        PC.ReceiveScoreEvent(class'DHScoreEvent_TeamKill'.static.Create());
+        PC.ReceiveScoreEvent(class'DHScoreEvent_TeamKillPunish'.static.Create());
     }
 
     LastFFKiller = none;

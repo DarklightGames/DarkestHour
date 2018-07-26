@@ -3,16 +3,16 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHScoreEvent_TeamKill extends DHScoreEvent;
+class DHScoreEvent_TeamKillPunish extends DHScoreEvent;
 
-static function DHScoreEvent_TeamKill Create()
+static function DHScoreEvent_TeamKillPunish Create()
 {
-    return new class'DHScoreEvent_TeamKill';
+    return new class'DHScoreEvent_TeamKillPunish';
 }
 
 defaultproperties
 {
-    HumanReadableName="Team Kill"
+    HumanReadableName="Team Kill Punish"
     CategoryClass=class'DHScoreCategory_Combat'
     Value=-500
 }
