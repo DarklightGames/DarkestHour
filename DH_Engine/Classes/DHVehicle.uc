@@ -2002,6 +2002,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // Call the Super from Vehicle (skip over others)
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
+    if (InstigatedBy != none && InstigatedBy != self)
+    {
+        LastHitBy = InstigatedBy.Controller;
+    }
+
     // If a vehicle's health is lower than DamagedEffectHealthFireFactor OR
     // If the vehicle is APC or Treaded and is empty and damage is significant, just set fire the engine (and spike the vehicle)
     // Theel TODO: "significant" damage should be based on something
