@@ -14,7 +14,6 @@ defaultproperties
     VehicleNameString="M5 Stuart"
     VehicleTeam=1
     VehicleMass=7.0
-    PointValue=2.0
     ReinforcementCost=7
 
     // Hull mesh

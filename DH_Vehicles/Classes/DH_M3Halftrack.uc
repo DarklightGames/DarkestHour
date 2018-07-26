@@ -6,10 +6,6 @@
 class DH_M3Halftrack extends DHVehicle
     abstract;
 
-#exec OBJ LOAD FILE=..\Animations\DH_M3Halftrack_anm.ukx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_M3Halftrack_stc.usx
-#exec OBJ LOAD FILE=..\Textures\DH_M3Halftrack_tex.utx
-
 defaultproperties
 {
     // Vehicle properties
@@ -18,10 +14,10 @@ defaultproperties
     bHasTreads=true
     VehicleMass=8.5
     IdleTimeBeforeReset=300.0
-    PointValue=2.0
     ReinforcementCost=4
     MaxDesireability=1.2
     bMustBeInSquadToSpawn=true
+    PointValue=500
 
     // Hull mesh
     Skins(0)=Texture'DH_M3Halftrack_tex.m3.Halftrack'

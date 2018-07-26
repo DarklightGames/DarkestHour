@@ -5,16 +5,11 @@
 
 class DH_TigerTank extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Tiger_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\axis_vehicles_tex.utx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex.utx
-
 defaultproperties
 {
     // Vehicle properties
     VehicleNameString="Panzer VI 'Tiger' Ausf.E"
     VehicleMass=15.0
-    PointValue=5.0
     ReinforcementCost=19
 
     // Hull mesh

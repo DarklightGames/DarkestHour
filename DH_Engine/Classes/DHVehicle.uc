@@ -304,12 +304,15 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     {
         if (ReinforcementCost != 0)
         {
+            // Deducts reinforcements based on the vehicle's "reinforcement cost"
             DHG.ModifyReinforcements(VehicleTeam, -ReinforcementCost);
         }
 
-        if (Killer != none)
+        if (Killer != none &&
+            Killer.GetTeamNum() != GetTeamNum() &&
+            !IsSpawnProtected())
         {
-            DHG.ScoreVehicleKill(Killer, self, PointValue);
+            DHG.SendScoreEvent(Killer, class'DHScoreEvent_VehicleKill'.static.Create(self));
         }
     }
 }
@@ -3874,7 +3877,7 @@ defaultproperties
 {
     // Miscellaneous
     VehicleMass=3.0
-    PointValue=1.0
+    PointValue=250
     CollisionRadius=175.0
     CollisionHeight=40.0
     VehicleNameString="ADD VehicleNameString !!"

@@ -34,7 +34,11 @@ var bool bCanSendAbandonmentWarningMessage;     // Whether or not we should send
 var int SpawnAccrualTimer;
 var int SpawnAccrualThreshold;
 
+// Health
 var int Health;
+
+// Instigator
+var DHPlayer InstigatorController;
 
 replication
 {
@@ -194,6 +198,14 @@ simulated function bool IsVisibleTo(int TeamIndex, int RoleIndex, int SquadIndex
 function OnPawnSpawned(Pawn P)
 {
     SpawnsRemaining -= 1;
+
+    if (InstigatorController != none &&
+        InstigatorController != P.Controller &&
+        InstigatorController.GetTeamNum() == GetTeamIndex() &&
+        InstigatorController.GetSquadIndex() == SquadIndex)
+    {
+        InstigatorController.ReceiveScoreEvent(class'DHScoreEvent_SquadRallyPointSpawn'.static.Create());
+    }
 
     if (SpawnsRemaining <= 0)
     {

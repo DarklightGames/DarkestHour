@@ -24,10 +24,11 @@ function OnOptionSelected(int Index)
     {
         switch (Index)
         {
-            case 0: // Forgive TK
+            case 0: // Forgive
                 PC.ServerForgiveLastFFKiller();
                 break;
-            case 1: // Do Nothing
+            case 1: // Punish
+                PC.ServerPunishLastFFKiller();
                 break;
         }
     }
@@ -39,5 +40,5 @@ defaultproperties
 {
     PromptText="{0} has team-killed you!"
     Options(0)=(Key=IK_F1,Text="Forgive")
-    Options(1)=(Key=IK_F2,Text="Don't Forgive")
+    Options(1)=(Key=IK_F2,Text="Punish")
 }

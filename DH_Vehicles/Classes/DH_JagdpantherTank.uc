@@ -25,7 +25,6 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="Jagdpanzer V 'Jagdpanther'"
     VehicleMass=14.0
-    PointValue=4.0
     ReinforcementCost=21
 
     // Hull mesh
