@@ -12,5 +12,4 @@ defaultproperties
     SleeveTexture=Texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetSnow'
     HeadgearProbabilities(0)=1.0
-    HeadgearProbabilities(1)=0.0
 }

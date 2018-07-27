@@ -12,5 +12,4 @@ defaultproperties
     SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetCover'
     HeadgearProbabilities(0)=1.0
-    HeadgearProbabilities(1)=0.0
 }
