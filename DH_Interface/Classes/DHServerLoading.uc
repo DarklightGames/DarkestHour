@@ -9,7 +9,6 @@ class DHServerLoading extends UT2K4ServerLoading;
 
 var localized string DeployingText;
 var localized string AuthorText;
-var localized string LegacyMapText;
 var localized string OfficialMapText;
 var localized string CommunityMapText;
 var localized string UnspecifiedText;
@@ -129,10 +128,6 @@ simulated function SetImage()
     {
         DrawOpImage(Operations[5]).Image = OfficialMapIcon;
     }
-    else if (class'DHMapList'.static.IsMapLegacy(LoadingMapRecord.MapName))
-    {
-        DrawOpImage(Operations[5]).Image = OfficialMapIcon;
-    }
     else
     {
         DrawOpImage(Operations[5]).Image = CommunityMapIcon;
@@ -150,12 +145,10 @@ defaultproperties
     DisabledText="Disabled"
     DeployingText="Deploying to {0}"
     AuthorText="Author: {0}"
-    LegacyMapText="Legacy Map"
     OfficialMapText="Official Map"
     OfficialMapIcon=Texture'DH_GUI_Tex.Menu.OfficialMapLogo'
     CommunityMapText="Community Map"
     CommunityMapIcon=Texture'DH_GUI_Tex.Menu.CommunityMapLogo'
-    DHTextLogo=Texture'DH_GUI_Tex.Menu.DHTextLogo'
 
     // The official backgrounds
     Backgrounds(0)="DH_GUI_Tex.LoadingScreen.Background_Default"
