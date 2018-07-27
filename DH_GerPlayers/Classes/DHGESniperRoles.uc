@@ -12,4 +12,6 @@ defaultproperties
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_G43ScopedWeapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
     SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
+    HeadgearProbabilities(0)=0.5
+    HeadgearProbabilities(1)=0.5
 }

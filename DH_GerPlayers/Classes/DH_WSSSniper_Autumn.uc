@@ -11,4 +11,6 @@ defaultproperties
     RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanAutumnSmockSSPawn',Weight=1.0)
     SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetCover'
+    HeadgearProbabilities(0)=1.0
+    HeadgearProbabilities(1)=0.0
 }

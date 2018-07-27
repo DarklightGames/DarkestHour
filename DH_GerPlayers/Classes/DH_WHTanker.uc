@@ -7,18 +7,8 @@ class DH_WHTanker extends DHGETankCrewmanRoles;
 
 defaultproperties
 {
-    MyName="Tank Crewman"
-    AltName="Panzerbesatzung"
-    Article="a "
-    PluralName="Tank Crewmen"
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanTankCrewPawn',Weight=1.0)
     SleeveTexture=Texture'Weapons1st_tex.Arms.GermanTankerSleeves'
-    DetachedArmClass=class'ROEffects.SeveredArmGerTanker'
-    DetachedLegClass=class'ROEffects.SeveredLegGerTanker'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
-    GivenItems(0)="DH_Equipment.DHBinocularsItem"
     Headgear(0)=class'DH_GerPlayers.DH_HeerTankerCap'
     Headgear(1)=class'DH_GerPlayers.DH_HeerCamoCap'
-    bCanBeTankCrew=true
-    Limit=3
 }

@@ -7,8 +7,10 @@ class DH_WHSquadLeader_Greatcoat extends DHGESergeantRoles;
 
 defaultproperties
 {
-    AltName="Gruppenführer"
-
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanGreatCoatPawn',Weight=1.0)
+    SleeveTexture=Texture'Weapons1st_tex.Arms.GermanCoatSleeves'
+    DetachedArmClass=class'ROEffects.SeveredArmGerGreat'
+    DetachedLegClass=class'ROEffects.SeveredLegGerGreat'
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetOne'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
 
