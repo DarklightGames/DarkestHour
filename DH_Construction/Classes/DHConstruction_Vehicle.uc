@@ -168,6 +168,15 @@ static function bool ShouldShowOnMenu(DHConstruction.Context Context)
     return GetVehicleClass(Context) != none;
 }
 
+static function vector GetPlacementOffset(DHConstruction.Context Context)
+{
+    local class<DHVehicle> VehicleClass;
+
+    VehicleClass = GetVehicleClass(Context);
+
+    return VehicleClass.default.ConstructionPlacementOffset;
+}
+
 defaultproperties
 {
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_02'
@@ -176,3 +185,4 @@ defaultproperties
     ConstructionVerb="emplace"
     GroupClass=class'DHConstructionGroup_Guns'
 }
+

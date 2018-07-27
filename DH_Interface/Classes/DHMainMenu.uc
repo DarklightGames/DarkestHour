@@ -10,7 +10,7 @@ var()   config string           MenuSong;
 var automated       FloatingImage           i_background, i_Overlay, i_Announcement;
 var automated       GUIButton               b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Host, b_Quit, b_LearnToPlay;
 var automated       GUISectionBackground    sb_MainMenu, sb_HelpMenu, sb_ConfigFixMenu, sb_ShowVersion, sb_Social;
-var automated       GUIButton               b_Credits, b_Manual, b_Demos, b_Website, b_Back, b_MOTDTitle, b_Facebook, b_GitHub, b_SteamCommunity, b_Patreon, b_Discord;
+var automated       GUIButton               b_Credits, b_Manual, b_Demos, b_Website, b_Back, b_MOTDTitle, b_Facebook, b_GitHub, b_SteamCommunity, /*b_Patreon, */b_Discord;
 var automated       GUILabel                l_Version;
 var automated       GUIImage                i_DHTextLogo;
 var automated       DHGUIScrollTextBox      tb_MOTDContent;
@@ -61,7 +61,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     sb_Social.ManageComponent(b_Facebook);
     sb_Social.ManageComponent(b_GitHub);
     sb_Social.ManageComponent(b_SteamCommunity);
-    sb_Social.ManageComponent(b_Patreon);
+//    sb_Social.ManageComponent(b_Patreon);
     sb_Social.ManageComponent(b_Discord);
 
     c_MOTD.ManageComponent(tb_MOTDContent);
@@ -264,9 +264,9 @@ function bool ButtonClick(GUIComponent Sender)
             PlayerOwner().ConsoleCommand("START" @ default.SteamCommunityURL);
             break;
 
-        case b_Patreon:
-            PlayerOwner().ConsoleCommand("START" @ default.PatreonURL);
-            break;
+//       case b_Patreon:
+//            PlayerOwner().ConsoleCommand("START" @ default.PatreonURL);
+//            break;
 
         case b_Discord:
             PlayerOwner().ConsoleCommand("START" @ default.DiscordURL);
@@ -277,7 +277,7 @@ function bool ButtonClick(GUIComponent Sender)
             break;
 
         case i_Announcement:
-            PlayerOwner().ConsoleCommand("START" @ default.PatreonURL);
+//            PlayerOwner().ConsoleCommand("START" @ default.PatreonURL);
             HideAnnouncement();
             break;
     }
@@ -712,20 +712,20 @@ defaultproperties
     End Object
     b_SteamCommunity=SteamCommunityButton
 
-    Begin Object Class=GUIGFXButton Name=PatreonButton
-        WinWidth=0.04
-        WinHeight=0.075
-        WinLeft=0.875
-        WinTop=0.925
-        OnClick=DHMainMenu.ButtonClick
-        Graphic=Texture'DH_GUI_Tex.MainMenu.patreon'
-        bTabStop=true
-        Position=ICP_Center
-        Hint="Support us on Patreon!"
-        bRepeatClick=false
-        StyleName="TextLabel"
-    End Object
-    b_Patreon=PatreonButton
+//    Begin Object Class=GUIGFXButton Name=PatreonButton
+//        WinWidth=0.04
+//        WinHeight=0.075
+//        WinLeft=0.875
+//        WinTop=0.925
+//        OnClick=DHMainMenu.ButtonClick
+//        Graphic=Texture'DH_GUI_Tex.MainMenu.patreon'
+//        bTabStop=true
+//        Position=ICP_Center
+//        Hint="Support us on Patreon!"
+//        bRepeatClick=false
+//        StyleName="TextLabel"
+//    End Object
+//    b_Patreon=PatreonButton
 
     Begin Object Class=GUIGFXButton Name=DiscordButton
         WinWidth=0.04
@@ -827,7 +827,7 @@ defaultproperties
     GitHubURL="http://github.com/DarklightGames/DarkestHour/wiki"
     FacebookURL="http://www.facebook.com/darkesthourgame"
     SteamCommunityURL="http://steamcommunity.com/app/1280"
-    PatreonURL="http://www.patreon.com/darkesthourgame"
+//    PatreonURL="http://www.patreon.com/darkesthourgame"
     DiscordURL="http://discord.gg/EEwFhtk"
     ControlsChangedMessage="New controls have been added to the game. As a result, your previous control bindings may have been changed.||Do you want to review your control settings?"
 }

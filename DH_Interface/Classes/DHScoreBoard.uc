@@ -45,6 +45,8 @@ enum EScoreboardColumnType
     COLUMN_Role,
     COLUMN_Score,
     COLUMN_Kills,
+    COLUMN_PointsCombat,
+    COLUMN_PointsSupport,
     COLUMN_Deaths,
     COLUMN_Ping
 };
@@ -52,6 +54,7 @@ enum EScoreboardColumnType
 struct ScoreboardColumn
 {
     var localized string Title;
+    var Material IconMaterial;
     var EScoreboardColumnType Type;
     var float Width;
     var bool bFriendlyOnly;
@@ -174,8 +177,14 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
                 CRI.Text = "";
             }
             break;
+        case COLUMN_PointsCombat:
+            CRI.Text = string(PRI.CategoryScores[class'DHScoreCategory_Combat'.default.CategoryIndex]);
+            break;
+        case COLUMN_PointsSupport:
+            CRI.Text = string(PRI.CategoryScores[class'DHScoreCategory_Support'.default.CategoryIndex]);
+            break;
         case COLUMN_Score:
-            CRI.Text = string(int(PRI.Score));
+            CRI.Text = string(PRI.TotalScore);
             break;
         case COLUMN_Ping:
             CRI.Text = string(4 * PRI.Ping);
@@ -407,13 +416,6 @@ simulated function UpdateScoreBoard(Canvas C)
         S $= HUD.default.SpacingText $ HUD.default.IPText $ PlayerController(Owner).GetServerIP();
     }
 
-    // Add real world time, at server location (optional)
-    if (DHGRI.bShowTimeOnScoreboard)
-    {
-        S $= HUD.default.SpacingText $ HUD.default.TimeText $ Level.Hour $ ":" $ class'UString'.static.ZFill(Level.Minute, 2)
-        @ Level.Month $ "/" $ Level.Day $ "/" $ Level.Year;
-    }
-
     // Add level name (extra in DH)
     s $= HUD.default.SpacingText $ HUD.default.MapNameText $ class'DHLib'.static.GetMapName(Level);
 
@@ -633,7 +635,18 @@ simulated function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplication
 
     for (i = 0; i < ScoreboardColumnIndices.Length; ++i)
     {
-        DHDrawCell(C, GetColumnTitle(TeamIndex, ScoreboardColumnIndices[i]), ScoreboardColumns[ScoreboardColumnIndices[i]].Justification, X, Y, CalcX(ScoreboardColumns[ScoreboardColumnIndices[i]].Width, C), LineHeight, true, class'UColor'.default.White, TeamColor);
+        DHDrawCell(C,
+            GetColumnTitle(TeamIndex, ScoreboardColumnIndices[i]),
+            ScoreboardColumns[ScoreboardColumnIndices[i]].Justification,
+            X,
+            Y,
+            CalcX(ScoreboardColumns[ScoreboardColumnIndices[i]].Width, C),
+            LineHeight,
+            true,
+            class'UColor'.default.White,
+            TeamColor,
+            ScoreboardColumns[ScoreboardColumnIndices[i]].IconMaterial);
+
         X += CalcX(ScoreboardColumns[ScoreboardColumnIndices[i]].Width, C);
     }
 
@@ -879,12 +892,14 @@ defaultproperties
     LargeTabSpaces="        "
 
     ScoreboardColumns(0)=(Title="#",Type=COLUMN_SquadMemberIndex,Width=1.5,Justification=1,bFriendlyOnly=true)
-    ScoreboardColumns(1)=(Type=COLUMN_PlayerName,Width=6.0)
-    ScoreboardColumns(2)=(Title="Role",Type=COLUMN_Role,Width=4.0,bFriendlyOnly=true)
-    ScoreboardColumns(3)=(Title="K",Type=COLUMN_Kills,Width=0.75,Justification=1,bRoundEndOnly=true)
-    ScoreboardColumns(4)=(Title="D",Type=COLUMN_Deaths,Width=0.75,Justification=1,bRoundEndOnly=true)
-    ScoreboardColumns(5)=(Title="Score",Type=COLUMN_Score,Width=1.6,Justification=1)
-    ScoreboardColumns(6)=(Title="Ping",Type=COLUMN_Ping,Width=1.0,Justification=1)
+    ScoreboardColumns(1)=(Type=COLUMN_PlayerName,Width=5.0)
+    ScoreboardColumns(2)=(Title="Role",Type=COLUMN_Role,Width=5.0,bFriendlyOnly=true)
+    ScoreboardColumns(3)=(Title="",Type=COLUMN_PointsCombat,Width=1.5,bFriendlyOnly=true,IconMaterial=Material'DH_InterfaceArt2_tex.Icons.points_combat')
+    ScoreboardColumns(4)=(Title="",Type=COLUMN_PointsSupport,Width=1.5,bFriendlyOnly=true,IconMaterial=Material'DH_InterfaceArt2_tex.Icons.points_support')
+    ScoreboardColumns(5)=(Title="K",Type=COLUMN_Kills,Width=0.75,Justification=1,bRoundEndOnly=true)
+    ScoreboardColumns(6)=(Title="D",Type=COLUMN_Deaths,Width=0.75,Justification=1,bRoundEndOnly=true)
+    ScoreboardColumns(7)=(Title="Score",Type=COLUMN_Score,Width=1.5,Justification=1)
+    ScoreboardColumns(8)=(Title="Ping",Type=COLUMN_Ping,Width=1.0,Justification=1)
 
     SquadHeaderColor=(R=64,G=64,B=64,A=192)
     PlayerBackgroundColor=(R=0,G=0,B=0,A=192)

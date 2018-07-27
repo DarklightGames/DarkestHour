@@ -407,23 +407,22 @@ function int CollectSupplyFromMainCache(int Team, int MaxCarryingCapacity)
 
 simulated function int GetNumberOfGeneratingSupplyPoints(int Team)
 {
-    local int i, n;
+    local int i, Count;
 
-    // Count active unfilled supply points that generate supply based on "Team"
+    // Count active unfilled supply points that generate supply based on team
     for (i = 0; i < arraycount(SupplyPoints); ++i)
     {
-        if (SupplyPoints[i].Actor == none)
+        if (SupplyPoints[i].Actor != none &&
+            SupplyPoints[i].bIsActive == 1 &&
+            SupplyPoints[i].TeamIndex == Team &&
+            !SupplyPoints[i].Actor.IsFull() &&
+            SupplyPoints[i].ActorClass.default.bCanGenerateSupplies)
         {
-            continue;
-        }
-
-        if (SupplyPoints[i].bIsActive == 1 && SupplyPoints[i].TeamIndex == Team && !SupplyPoints[i].Actor.IsFull() && SupplyPoints[i].ActorClass.default.bCanGenerateSupplies)
-        {
-            ++n;
+            ++Count;
         }
     }
 
-    return n;
+    return Count;
 }
 
 
@@ -454,6 +453,22 @@ simulated function int AddSpawnPoint(DHSpawnPointBase SP)
         {
             SpawnPoints[i] = SP;
             return i;
+        }
+    }
+
+    // All spawn points slots are filled. If the new spawn point is not
+    // low-priority, we can search for a spawn point to destroy and replace
+    // it with.
+    if (!SP.bIsLowPriority)
+    {
+        for (i = 0; i < arraycount(SpawnPoints); ++i)
+        {
+            if (SpawnPoints[i].bIsLowPriority)
+            {
+                SpawnPoints[i].Destroy();
+                SpawnPoints[i] = SP;
+                return i;
+            }
         }
     }
 
@@ -1506,6 +1521,7 @@ defaultproperties
     ConstructionClassNames(17)="DH_Construction.DHConstruction_GrenadeCrate"
     //ConstructionClassNames(17)="DH_Construction.DHConstruction_MortarPit"
     ConstructionClassNames(18)="DH_Construction.DHConstruction_DragonsTooth"
+    ConstructionClassNames(19)="DH_Construction.DHConstruction_AntiTankCrate"
     //ConstructionClassNames(19)="DH_Construction.DHConstruction_WoodFence"
 
     // Map Markers

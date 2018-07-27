@@ -97,7 +97,8 @@ var localized   string                      NoneText,
                                             LockedText,
                                             BotsText,
                                             SquadOnlyText,
-                                            SquadLeadershipOnlyText;
+                                            SquadLeadershipOnlyText,
+                                            RecommendJoiningSquadText;
 
 // NOTE: The reason this variable is needed is because the PlayerController's
 // GetTeamNum function is not reliable after receiving a successful team change
@@ -693,7 +694,21 @@ function bool OnClick(GUIComponent Sender)
 
         // Continue button
         case b_MenuOptions[7]:
-            Apply();
+            if (PC != none &&
+                !PC.bHasReceivedSquadJoinRecommendationMessage &&
+                PC.SquadReplicationInfo != none &&
+                PC.SquadReplicationInfo.bAreRallyPointsEnabled &&
+                !PC.IsInSquad() &&
+                PC.SquadReplicationInfo.IsAnySquadJoinable(PC.GetTeamNum()))
+            {
+                PC.bHasReceivedSquadJoinRecommendationMessage = true;
+                ConfirmWindow = Controller.ShowQuestionDialog(default.RecommendJoiningSquadText, QBTN_YesNo, QBTN_Yes);
+                ConfirmWindow.OnButtonClick = OnRecommendJoiningSquadButtonClick;
+            }
+            else
+            {
+                Apply();
+            }
             break;
 
         // Weapons/equipment
@@ -769,6 +784,34 @@ function bool OnClick(GUIComponent Sender)
     }
 
     return false;
+}
+
+function OnRecommendJoiningSquadButtonClick(byte Button)
+{
+    switch (Button)
+    {
+        case QBTN_YES:
+            if (PC != none && PC.SquadReplicationInfo != none && PC.SquadReplicationInfo.IsAnySquadJoinable(PC.GetTeamnum()))
+            {
+                // Automatically join a squad, deselect the current spawn point.
+                // Ideally, this will show the user their new spawning options
+                // if the squad has it's act together.
+                PC.ServerSquadJoinAuto();
+                p_Map.SelectSpawnPoint(-1);
+                SetMapMode(MODE_Map);
+            }
+            else
+            {
+                // No squads are joinable, just take them to the squad menu (rare case)
+                SetMapMode(MODE_Squads);
+            }
+            break;
+        case QBTN_NO:
+            Apply();
+            break;
+        default:
+            break;
+    }
 }
 
 function bool ChangeToAxisChoice(byte Button)
@@ -1713,6 +1756,7 @@ defaultproperties
     BotsText="BOTS"
     SquadOnlyText="SQUADS ONLY"
     SquadLeadershipOnlyText="LEADERS ONLY"
+    RecommendJoiningSquadText="It it HIGHLY RECOMMENDED that you JOIN A SQUAD before deploying! Joining a squad grants you additional deployment options and lets you get to the fight faster.||Do you want to automatically join a squad now?"
 
     MapMode=MODE_Map
     bButtonsEnabled=true
@@ -2372,7 +2416,7 @@ defaultproperties
     Begin Object Class=GUIGFXButton Name=SupplyVehicleImageObject
         WinWidth=0.25
         WinHeight=0.125
-        WinLeft=0.75
+        WinLeft=0.5
         WinTop=0.0
         Position=ICP_Center
         Graphic=Material'DH_InterfaceArt2_tex.Icons.supply_cache'

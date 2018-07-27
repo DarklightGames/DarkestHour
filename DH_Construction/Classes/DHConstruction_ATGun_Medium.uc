@@ -41,5 +41,4 @@ defaultproperties
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.at_small'
     Stages(0)=(Progress=0)
     ProgressMax=12
-    PlacementOffset=(Z=24.0)
 }

@@ -11,7 +11,14 @@ class DHSpawnPoint_Vehicle extends DHSpawnPointBase
 
 const SPAWN_VEHICLES_BLOCK_RADIUS = 2048.0;
 
-var     DHVehicle   Vehicle;
+var     DHVehicle   Vehicle;        // Reference to the owning vehicle.
+var     bool        bIsTemporary;   // When true, this is a "temporary" spawn point that will be destroyed soon. Used for diplay purposes.
+
+replication
+{
+    reliable if (Role == ROLE_Authority && bNetDirty)
+        bIsTemporary;
+}
 
 // Modified to start a repeating timer to keep checking whether this spawn vehicle can be deployed into
 function PostBeginPlay()
@@ -232,4 +239,5 @@ simulated function string GetMapStyleName()
 defaultproperties
 {
     bCombatSpawn=true
+    bIsLowPriority=true
 }

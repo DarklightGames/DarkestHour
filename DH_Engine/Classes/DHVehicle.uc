@@ -152,6 +152,9 @@ var     float                                   SupplyDropSoundVolume;
 
 var     int                                     SupplyCost;             // The amout of supplies it takes to create a vehicle of this type.
 
+// Construction
+var     vector                                  ConstructionPlacementOffset;
+
 // Spawning
 var     int                     VehiclePoolIndex;     // the vehicle pool index that this was spawned from
 var     DHSpawnPoint_Vehicle    SpawnPointAttachment; // a spawn vehicle's spawn point attachment
@@ -301,12 +304,15 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     {
         if (ReinforcementCost != 0)
         {
+            // Deducts reinforcements based on the vehicle's "reinforcement cost"
             DHG.ModifyReinforcements(VehicleTeam, -ReinforcementCost);
         }
 
-        if (Killer != none)
+        if (Killer != none &&
+            Killer.GetTeamNum() != GetTeamNum() &&
+            !IsSpawnProtected())
         {
-            DHG.ScoreVehicleKill(Killer, self, PointValue);
+            DHG.SendScoreEvent(Killer, class'DHScoreEvent_VehicleKill'.static.Create(self));
         }
     }
 }
@@ -1996,6 +2002,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // Call the Super from Vehicle (skip over others)
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
+    if (InstigatedBy != none && InstigatedBy != self)
+    {
+        LastHitBy = InstigatedBy.Controller;
+    }
+
     // If a vehicle's health is lower than DamagedEffectHealthFireFactor OR
     // If the vehicle is APC or Treaded and is empty and damage is significant, just set fire the engine (and spike the vehicle)
     // Theel TODO: "significant" damage should be based on something
@@ -3595,7 +3606,7 @@ simulated function DisplayVehicleMessage(int MessageNumber, optional Pawn P, opt
 // New helper function to check whether vehicle is a spawn vehicle
 simulated function bool IsSpawnVehicle()
 {
-    return SpawnPointAttachment != none;
+    return SpawnPointAttachment != none && !SpawnPointAttachment.bIsTemporary;
 }
 
 // Modified so vehicle is treated as disabled if it suffers a range of damage that renders it of very limited use, as well as if the engine is dead
@@ -3871,7 +3882,7 @@ defaultproperties
 {
     // Miscellaneous
     VehicleMass=3.0
-    PointValue=1.0
+    PointValue=250
     CollisionRadius=175.0
     CollisionHeight=40.0
     VehicleNameString="ADD VehicleNameString !!"

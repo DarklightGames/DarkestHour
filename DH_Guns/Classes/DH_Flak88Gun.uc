@@ -23,6 +23,7 @@ defaultproperties
     ExitPositions(1)=(X=-50.0,Y=75.0,Z=50.0)
     VehicleMass=20.0
     SupplyCost=1750
+    ConstructionPlacementOffset=(Z=0)
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

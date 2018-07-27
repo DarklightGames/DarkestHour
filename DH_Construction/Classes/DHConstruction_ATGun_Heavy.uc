@@ -69,21 +69,10 @@ function static class<DHVehicle> GetVehicleClass(DHConstruction.Context Context)
     return none;
 }
 
-function static vector GetPlacementOffset(DHConstruction.Context Context)
-{
-    if (Context.TeamIndex == AXIS_TEAM_INDEX)
-    {
-        return vect(0, 0, 8);
-    }
-
-    return super.GetPlacementOffset(Context);
-}
-
 defaultproperties
 {
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.at_large'
     Stages(0)=(Progress=0)
     ProgressMax=14
-    PlacementOffset=(Z=30.0)
     SupplyCost=1750
 }

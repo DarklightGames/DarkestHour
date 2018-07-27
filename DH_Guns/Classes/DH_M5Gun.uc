@@ -22,4 +22,5 @@ defaultproperties
     ExitPositions(1)=(X=-100.00,Y=-30.00,Z=35.00)
     VehicleMass=11.0
     SupplyCost=1500
+    ConstructionPlacementOffset=(Z=-2)
 }

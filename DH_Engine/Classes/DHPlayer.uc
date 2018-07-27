@@ -100,6 +100,8 @@ var     Actor                   LookTarget;
 // Log File
 var     FileLog                 ClientLogFile;
 
+var     bool                    bHasReceivedSquadJoinRecommendationMessage; // True when we have displayed the "you should probably join a squad" message.
+
 struct SquadSignal
 {
     var class<DHSquadSignal> SignalClass;
@@ -120,6 +122,8 @@ var     float                   NextToggleDuckTimeSeconds;
 
 // Spectating stuff
 var     bool                    bSpectateAllowViewPoints;
+
+var     DHScoreManager          ScoreManager;
 
 replication
 {
@@ -144,7 +148,9 @@ replication
         ServerSquadSay, ServerSquadLock, ServerSquadSignal,
         ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
         ServerSetPatronStatus, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
+        ServerPunishLastFFKiller,
         ServerRequestArtillery,
+        ServerResetScore,
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons; // these ones in debug mode only
 
     // Functions the server can call on the client that owns this actor
@@ -199,6 +205,11 @@ simulated event PostBeginPlay()
     if (Role == ROLE_Authority)
     {
         ServerChangeSpecMode();
+    }
+
+    if (Role == ROLE_Authority)
+    {
+        ScoreManager = new class'DHScoreManager';
     }
 }
 
@@ -5357,20 +5368,43 @@ exec function SquadSay(string Msg)
 
 function ServerForgiveLastFFKiller()
 {
-    if (DarkestHourGame(Level.Game) != none && DarkestHourGame(Level.Game).bForgiveFFKillsEnabled && LastFFKiller != none)
+    local DarkestHourGame G;
+    local DHPlayer KillerPC;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G == none || !G.bForgiveFFKillsEnabled || LastFFKiller == none)
     {
-        Level.Game.BroadcastLocalizedMessage(Level.Game.default.GameMessageClass, 19, LastFFKiller, PlayerReplicationInfo);
-        LastFFKiller.FFKills -= LastFFKillAmount;
-
-        // If LastFFKiller's weapons are locked and no longer has FF kills, unlock the player's weapons
-        if (DHPlayer(LastFFKiller.Owner) != none && DHPlayer(LastFFKiller.Owner).AreWeaponsLocked(true) && LastFFKiller.FFKills < 1)
-        {
-            DHPlayer(LastFFKiller.Owner).LockWeapons(1, 2);
-        }
-
-        // Set none as we have handled the current LastFFKiller
-        LastFFKiller = none;
+        return;
     }
+
+    Level.Game.BroadcastLocalizedMessage(Level.Game.default.GameMessageClass, 19, LastFFKiller, PlayerReplicationInfo);
+    LastFFKiller.FFKills -= LastFFKillAmount;
+
+    KillerPC = DHPlayer(LastFFKiller.Owner);
+
+    // If LastFFKiller's weapons are locked and no longer has FF kills, unlock the player's weapons
+    if (KillerPC != none && KillerPC.AreWeaponsLocked(true) && LastFFKiller.FFKills < 1)
+    {
+        KillerPC.LockWeapons(1, 2);
+    }
+
+    // Set none as we have handled the current LastFFKiller
+    LastFFKiller = none;
+}
+
+function ServerPunishLastFFKiller()
+{
+    local DHPlayer PC;
+
+    if (LastFFKiller != none && LastFFKiller.Owner != none)
+    {
+        PC = DHPlayer(LastFFKiller.Owner);
+
+        PC.ReceiveScoreEvent(class'DHScoreEvent_TeamKillPunish'.static.Create());
+    }
+
+    LastFFKiller = none;
 }
 
 function ServerSquadSay(string Msg)
@@ -5876,9 +5910,39 @@ function ServerRequestArtillery(DHRadio Radio, int ArtilleryTypeIndex)
     }
 }
 
-exec function version(string LHS, string RHS)
+// Scoring
+function ReceiveScoreEvent(DHScoreEvent ScoreEvent)
 {
-    Level.Game.Broadcast(self, class'UVersion'.static.FromString(LHS).Compare(class'UVersion'.static.FromString(RHS)));
+    if (ScoreManager != none)
+    {
+        ScoreManager.HandleScoreEvent(ScoreEvent);
+    }
+}
+
+// TODO: put this elsewhere/clean up
+simulated exec function DumpScore()
+{
+    if (ScoreManager == none)
+    {
+        return;
+    }
+
+    Log(ScoreManager.Serialize());
+}
+
+// TODO: DEBUG
+simulated exec function ResetScore()
+{
+    ServerResetScore();
+}
+
+function ServerResetScore()
+{
+    if (ScoreManager != none)
+    {
+        ScoreManager.Reset();
+        DarkestHourGame(Level.Game).UpdatePlayerScore(self);
+    }
 }
 
 // Functions emptied out as RO/DH doesn't use a LocalStatsScreen actor & these aren't used

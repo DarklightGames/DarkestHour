@@ -30,10 +30,10 @@ defaultproperties
     VehicleNameString="Sd.Kfz. 10/5"
     bHasTreads=true
     VehicleMass=6.5
-    PointValue=2.0
     ReinforcementCost=6
     MaxDesireability=1.2
     bMustBeInSquadToSpawn=true
+    PointValue=500
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_SdKfz10_5_anm.SdKfz10_5_body_ext'

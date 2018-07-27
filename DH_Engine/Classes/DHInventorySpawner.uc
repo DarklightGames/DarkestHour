@@ -11,7 +11,6 @@ var DHWeaponPickupTouchMessageParameters    TouchMessageParameters;
 
 var class<Weapon>       WeaponClass;
 
-
 enum ETeamOwner
 {
     TEAM_Axis,

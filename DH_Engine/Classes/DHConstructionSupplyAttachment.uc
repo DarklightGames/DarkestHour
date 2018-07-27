@@ -282,7 +282,7 @@ function Timer()
         if (SupplyDepositCounter >= SupplyDepositInterval)
         {
             // Get number of generating supply points for the team
-            NumOfGeneratingSupplyPoints = Clamp(GRI.GetNumberOfGeneratingSupplyPoints(TeamIndex), 1, 255);
+            NumOfGeneratingSupplyPoints = Max(GRI.GetNumberOfGeneratingSupplyPoints(TeamIndex), 1);
 
             // Calculate the base and bonus generation
             SuppliesToDeposit = float(SupplyGenerationRate / NumOfGeneratingSupplyPoints) + float(BonusSupplyGenerationRate);

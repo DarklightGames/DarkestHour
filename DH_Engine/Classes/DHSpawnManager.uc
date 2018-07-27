@@ -180,13 +180,19 @@ function bool SpawnPlayer(DHPlayer PC)
 
 function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator SpawnRotation)
 {
-    local ROPlayerReplicationInfo PRI;
-    local DHSpawnPointBase        SP;
-    local ROVehicle               V;
-    local DHVehicle               DHV;
-    local DHPawn                  Driver;
-    local int                     i;
-    local class<DHVehicle>        DHVC;
+    local ROPlayerReplicationInfo   PRI;
+    local DHSpawnPointBase          SP;
+    local ROVehicle                 V;
+    local DHVehicle                 DHV;
+    local DHPawn                    Driver;
+    local int                       i;
+    local class<DHVehicle>          DHVC;
+    local DH_LevelInfo              LI;
+
+    if (DarkestHourGame(Level.Game) != none)
+    {
+        LI = DarkestHourGame(Level.Game).DHLevelInfo;
+    }
 
     if (PC == none || PC.Pawn != none)
     {
@@ -269,8 +275,7 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
             DHV.ServerStartEngine();
         }
 
-        // If this vehicle is a spawn vehicle, create the spawn point attachment
-        if (VehiclePools[PC.VehiclePoolIndex].bIsSpawnVehicle)
+        if (VehiclePools[PC.VehiclePoolIndex].bIsSpawnVehicle || (LI != none && LI.GameTypeClass.default.bHasTemporarySpawnVehicles))
         {
             DHV.SpawnPointAttachment = DHSpawnPoint_Vehicle(DHV.SpawnAttachment(class'DHSpawnPoint_Vehicle'));
 
@@ -279,6 +284,13 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
                 DHV.SpawnPointAttachment.Vehicle = DHV;
                 DHV.SpawnPointAttachment.SetTeamIndex(DHV.default.VehicleTeam);
                 DHV.SpawnPointAttachment.SetIsActive(true);
+
+                if (!VehiclePools[PC.VehiclePoolIndex].bIsSpawnVehicle && LI != none && LI.GameTypeClass.default.bHasTemporarySpawnVehicles)
+                {
+                    // If this vehicle is not a tank crew-only vehicle, create the temporary spawn point attachment.
+                    DHV.SpawnPointAttachment.LifeSpan = LI.InfantrySpawnVehicleDuration;
+                    DHV.SpawnPointattachment.bIsTemporary = true;   // bIsTemporary is just used for replication
+                }
             }
         }
 
