@@ -3065,7 +3065,7 @@ exec function SetTeamMunitionPercentage(int TeamIndex, int Percent, optional int
 {
     local float f;
 
-    if (TeamIndex == 0 || TeamIndex == 1)
+    if (TeamIndex < arraycount(GRI.TeamMunitionPercentages))
     {
         if (Added != 0)
         {
@@ -3077,10 +3077,10 @@ exec function SetTeamMunitionPercentage(int TeamIndex, int Percent, optional int
             f = Added / 100.0;
             GRI.TeamMunitionPercentages[TeamIndex] += f;
         }
-    }
 
-    // Clamp the munition percentage so it can't go less than or greater than limits
-    GRI.TeamMunitionPercentages[TeamIndex] = FClamp(GRI.TeamMunitionPercentages[TeamIndex], 0.0, 1.0);
+        // Clamp the munition percentage so it can't go less than or greater than limits
+        GRI.TeamMunitionPercentages[TeamIndex] = FClamp(GRI.TeamMunitionPercentages[TeamIndex], 0.0, 1.0);
+    }
 }
 
 exec function SetServerViewDistance(int NewDistance)
@@ -4819,7 +4819,7 @@ function bool SetPause(bool bPause, PlayerController P)
 }
 
 // New function which will return the desired munition percentage for the pawn (can be changed to get more complicated)
-function float GetMunitionPercentageForPawn(pawn P)
+function float GetMunitionPercentageForPawn(Pawn P)
 {
     return GRI.TeamMunitionPercentages[P.GetTeamNum()];
 }
