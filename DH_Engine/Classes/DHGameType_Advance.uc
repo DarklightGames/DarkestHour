@@ -14,6 +14,7 @@ defaultproperties
     bSquadSpecialRolesOnly=true
     bHasTemporarySpawnVehicles=true
 
+    bMunitionsDrainOverTime=true
     bTimeChangesAtZeroReinf=true
     bKeepSpawningWithoutReinf=true
     OutOfReinforcementsRoundTime=120

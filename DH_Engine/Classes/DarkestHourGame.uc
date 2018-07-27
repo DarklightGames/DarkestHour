@@ -2721,6 +2721,9 @@ state RoundInPlay
             }
         }
 
+        // Update munition percentages (this will update both team's munitions and set them in GRI)
+        UpdateMunitionPercentages();
+
         // Go through both teams and update artillery availability
         for (i = 0; i < 2; ++i)
         {
@@ -3060,28 +3063,6 @@ static function string ParseChatPercVar(Mutator BaseMutator, Controller Who, str
 //***********************************************************************************
 // exec FUNCTIONS - These functions natively require admin access
 //***********************************************************************************
-
-exec function SetTeamMunitionPercentage(int TeamIndex, int Percent, optional int Added)
-{
-    local float f;
-
-    if (TeamIndex < arraycount(GRI.TeamMunitionPercentages))
-    {
-        if (Added != 0)
-        {
-            f = Percent / 100.0;
-            GRI.TeamMunitionPercentages[TeamIndex] = f;
-        }
-        else
-        {
-            f = Added / 100.0;
-            GRI.TeamMunitionPercentages[TeamIndex] += f;
-        }
-
-        // Clamp the munition percentage so it can't go less than or greater than limits
-        GRI.TeamMunitionPercentages[TeamIndex] = FClamp(GRI.TeamMunitionPercentages[TeamIndex], 0.0, 1.0);
-    }
-}
 
 exec function SetServerViewDistance(int NewDistance)
 {
@@ -3711,6 +3692,39 @@ function ChangeWeapons(Controller aPlayer, int Primary, int Secondary, int Grena
     {
         PC.DHPrimaryWeapon = PC.PrimaryWeapon;
         PC.DHSecondaryWeapon = PC.SecondaryWeapon;
+    }
+}
+
+function UpdateMunitionPercentages()
+{
+    local int i, NumCaches, CacheBonus;
+    local float p;
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    // Don't update munitions if the gamemode does not specify to TODO: perhaps this should be up to levels, but for now it should be gamemode so we have control in code
+    if (!GRI.GameType.default.bMunitionsDrainOverTime)
+    {
+        return;
+    }
+
+    // Calculate and set the Munition Percentages for each team
+    for (i = 0; i < 2; ++i)
+    {
+        // Get the munition percentage by this formula:    StartingMunitions - (ElaspedMinutes * LossRate)
+        p = DHLevelInfo.BaseMunitionPercentages[i] - ((GRI.ElapsedTime - GRI.RoundStartTime) / 60.0 * DHLevelInfo.MunitionLossPerMinute[i]);
+
+        // Get the number of caches (does not count main cache)
+        NumCaches = GRI.GetNumberOfSupplyCachesForTeam(i, true);
+
+        // Calc the CacheBonus, which is a min value that munitions can get (based on MunitionPercentageValue) capped at 30 TODO: fix magic number
+        CacheBonus = Min(NumCaches * class'DHConstructionSupplyAttachment'.default.MunitionPercentageValue, 30);
+
+        // Set the GRI value clamped to the munition percentage
+        GRI.TeamMunitionPercentages[i] = FClamp(p, CacheBonus, 100.0);
     }
 }
 
@@ -4818,12 +4832,6 @@ function bool SetPause(bool bPause, PlayerController P)
     return false;
 }
 
-// New function which will return the desired munition percentage for the pawn (can be changed to get more complicated)
-function float GetMunitionPercentageForPawn(Pawn P)
-{
-    return GRI.TeamMunitionPercentages[P.GetTeamNum()];
-}
-
 // Overridden to undo the exclusion of players who hadn't yet selected a role.
 function GetTeamSizes(out int TeamSizes[2])
 {
@@ -4975,7 +4983,7 @@ defaultproperties
     bIgnore32PlayerLimit=true // allows more than 32 players
     bVACSecured=true
 
-    ElapsedTimeAttritionCurve=(Points=((InVal=0.0,OutVal=0.0),(InVal=5400.0,OutVal=0.0),(InVal=7200.0,OutVal=500.0),(InVal=10800.0,OutVal=1000.0)))
+    ElapsedTimeAttritionCurve=(Points=((InVal=0.0,OutVal=0.0),(InVal=4200.0,OutVal=50.0),(InVal=5400.0,OutVal=500.0),(InVal=10800.0,OutVal=1000.0)))
 
     bSessionKickOnSecondFFViolation=true
     FFDamageLimit=0       // this stops the FF damage system from kicking based on FF damage

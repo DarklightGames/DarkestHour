@@ -405,7 +405,8 @@ function int CollectSupplyFromMainCache(int Team, int MaxCarryingCapacity)
     return -1;
 }
 
-simulated function int GetNumberOfGeneratingSupplyPoints(int Team)
+// This will return supply caches that are able to generate supply (aka not full)
+simulated function int GetNumberOfGeneratingSupplyPointsForTeam(int Team)
 {
     local int i, Count;
 
@@ -425,6 +426,30 @@ simulated function int GetNumberOfGeneratingSupplyPoints(int Team)
     return Count;
 }
 
+// This will return supply caches (only they can generate supply)
+simulated function int GetNumberOfSupplyCachesForTeam(int Team, optional bool bExcludeMainCache)
+{
+    local int i, Count;
+
+    // Count active supply points based on team
+    for (i = 0; i < arraycount(SupplyPoints); ++i)
+    {
+        if (SupplyPoints[i].Actor != none &&
+            SupplyPoints[i].bIsActive == 1 &&
+            SupplyPoints[i].TeamIndex == Team &&
+            SupplyPoints[i].ActorClass.default.bCanGenerateSupplies)
+        {
+            ++Count;
+
+            if (bExcludeMainCache && SupplyPoints[i].ActorClass.default.bIsMainSupplyCache)
+            {
+                --Count;
+            }
+        }
+    }
+
+    return Count;
+}
 
 //==============================================================================
 // Spawn Points

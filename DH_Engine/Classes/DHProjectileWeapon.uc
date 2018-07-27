@@ -1813,16 +1813,17 @@ function bool AddAmmo(int AmmoToAdd, int Mode)
 function float GetInitialNumMagsPercentage()
 {
     local float InitialAmmoPercent;
-    local DarkestHourGame G;
+    local DHGameReplicationInfo GRI;
 
-    G = DarkestHourGame(Level.Game);
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-    if (bGameCanChangeInitialNumMags && G != none)
+    if (GRI != none && bGameCanChangeInitialNumMags)
     {
-        InitialAmmoPercent = G.GetMunitionPercentageForPawn(Instigator);
+        InitialAmmoPercent = GRI.TeamMunitionPercentages[Instigator.GetTeamNum()] / 100.0;
     }
     else
     {
+        Warn("Could not find GRI in GetInitialNumMagsPercentage() in:" @ self);
         InitialAmmoPercent = 1.0;
     }
 

@@ -60,6 +60,7 @@ var() bool                  bHardTeamRatio;                 // Determines if All
 var() bool                  bReinforcementsScalesMunitions; // Setting this to true, will lower munition percentage based on reinforcement percentage TODO: Implement
 
 var() float                 BaseMunitionPercentages[2];     // The starting munition percentage for each team
+var() float                 MunitionLossPerMinute[2];       // The rate at which munition drains (if game type is setup to drain munitions)
 var() EAxisNation           AxisNation;
 var() sound                 AxisWinsMusic;                  // Optional override for Axis victory music
 
@@ -197,7 +198,10 @@ defaultproperties
     ArtilleryTypes(0)=(TeamIndex=0,ArtilleryClass=class'DHArtillery_Legacy',bIsInitiallyActive=true,Limit=1,ConfirmIntervalSeconds=0)
     ArtilleryTypes(1)=(TeamIndex=1,ArtilleryClass=class'DHArtillery_Legacy',bIsInitiallyActive=true,Limit=1,ConfirmIntervalSeconds=0)
 
-    BaseMunitionPercentages(0)=0.5
-    BaseMunitionPercentages(1)=0.5
+    BaseMunitionPercentages(0)=100.0
+    BaseMunitionPercentages(1)=100.0
+
+    MunitionLossPerMinute(0)=1.6666
+    MunitionLossPerMinute(1)=1.6666
 }
 
