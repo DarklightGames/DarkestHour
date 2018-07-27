@@ -224,9 +224,15 @@ var class<DamageType> DelayedDamageType;
 // Constructed state if it was placed via the SDK.
 var bool bShouldAutoConstruct;
 
-var bool bDidReportMetrics;
+// Whether or not this construction has been fully constructed before.
+// Used to make sure not to send duplicate events.
+var bool bHasBeenConstructed;
 
 var localized string ConstructionVerb;  // eg. dig, emplace, build etc.
+
+// Scoring
+var DHPlayer InstigatorController;
+var int CompletionPointValue;
 
 replication
 {
@@ -494,16 +500,21 @@ simulated state Constructed
             // Reset lifespan so that we don't die of stagnation.
             Lifespan = 0;
 
-            if (!bDidReportMetrics)
+            if (!bHasBeenConstructed)
             {
                 G = DarkestHourGame(Level.Game);
 
                 if (G != none && G.Metrics != none && G.GameReplicationInfo != none)
                 {
-                    G.Metrics.OnConstructionBuilt(self, G.GameReplicationInfo.ElapsedTime -  G.RoundStartTime);
+                    G.Metrics.OnConstructionBuilt(self, G.GameReplicationInfo.ElapsedTime - G.RoundStartTime);
                 }
 
-                bDidReportMetrics = true;
+                if (InstigatorController != none)
+                {
+                    InstigatorController.ReceiveScoreEvent(class'DHScoreEvent_ConstructionCompleted'.static.Create(Class));
+                }
+
+                bHasBeenConstructed = true;
             }
 
             if (bDestroyOnConstruction)

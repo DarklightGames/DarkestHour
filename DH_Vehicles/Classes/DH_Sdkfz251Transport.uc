@@ -16,10 +16,10 @@ defaultproperties
     bHasTreads=true
     VehicleMass=8.5
     IdleTimeBeforeReset=300.0
-    PointValue=2.0
     ReinforcementCost=4
     MaxDesireability=1.2
     bMustBeInSquadToSpawn=true
+    PointValue=500
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_ext'

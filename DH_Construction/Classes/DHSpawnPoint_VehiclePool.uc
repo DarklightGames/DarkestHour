@@ -12,7 +12,6 @@ var int SpawnTimeInterval;
 function Timer()
 {
     local DHSpawnPoint_PlatoonHQ SP;
-    local bool bDidFindActiveUnblockedHQ;
 
     super.Timer();
 

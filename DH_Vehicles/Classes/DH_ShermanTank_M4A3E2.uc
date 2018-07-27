@@ -10,7 +10,6 @@ defaultproperties
     VehicleNameString="M4A3E2(75)W Sherman"
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn_M4A3E2')
     VehicleMass=14.0
-    PointValue=4.0
     Mesh=SkeletalMesh'DH_ShermanM4A3_anm.ShermanM4A3E2_body_ext'
     Skins(0)=Texture'DH_VehiclesUS_tex3.ext_vehicles.ShermanM4A3E2_ext'
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3_anm.ShermanM4A3E2_body_int')

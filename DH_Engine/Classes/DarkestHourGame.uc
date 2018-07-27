@@ -977,78 +977,41 @@ function int GetDHBotNewRole(DHBot ThisBot, int BotTeamNum)
     }
 }
 
-// Give player points for destroying an enemy vehicle
-function ScoreVehicleKill(Controller Killer, ROVehicle Vehicle, float Points)
-{
-    if (Killer == none || Points <= 0 || Killer.PlayerReplicationInfo == none || Killer.GetTeamNum() == Vehicle.GetTeamNum())
-    {
-        return;
-    }
-
-    // Decide to reward or punish score based on spawn kill
-    if (DHVehicle(Vehicle) != none && DHVehicle(Vehicle).IsSpawnProtected())
-    {
-        DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).StashedScore -= Points;
-    }
-    else
-    {
-        DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).StashedScore += Points;
-    }
-
-    ScoreEvent(Killer.PlayerReplicationInfo, Points, "Vehicle_kill");
-}
-
 // Give player a point for resupplying an MG gunner
 function ScoreMGResupply(Controller Dropper, Controller Gunner)
 {
-    local int ResupplyAward;
-
     if (Dropper == Gunner)
     {
         return;
     }
-    else if (DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).RoleInfo != none)
+    else if (DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo) != none &&
+             DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).RoleInfo != none)
     {
-        ResupplyAward = 5;
-        DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).StashedScore += ResupplyAward;
-
-        ScoreEvent(Dropper.PlayerReplicationInfo, ResupplyAward, "MG_resupply");
+        SendScoreEvent(Dropper, class'DHScoreEvent_FriendlyResupply'.static.Create());
     }
 }
 
 // Give player a point for resupplying an AT gunner
 function ScoreATResupply(Controller Dropper, Controller Gunner)
 {
-    local int ResupplyAward;
-
     if (Dropper == Gunner)
     {
         return;
     }
     else if (DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).RoleInfo != none)
     {
-        ResupplyAward = 2;
-        DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).StashedScore += ResupplyAward;
-
-        ScoreEvent(Dropper.PlayerReplicationInfo, ResupplyAward, "AT_resupply");
+        SendScoreEvent(Dropper, class'DHScoreEvent_FriendlyResupply'.static.Create());
     }
 }
 
 // Give player a point for loading an AT gunner
 function ScoreATReload(Controller Loader, Controller Gunner)
 {
-    local int LoadAward;
-
-    if (Loader == Gunner)
+    if (Loader != Gunner &&
+        DHPlayerReplicationInfo(Loader.PlayerReplicationInfo) != none &&
+        DHPlayerReplicationInfo(Loader.PlayerReplicationInfo).RoleInfo != none)
     {
-        return;
-    }
-    else if (DHPlayerReplicationInfo(Loader.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(Loader.PlayerReplicationInfo).RoleInfo != none)
-    {
-        LoadAward = 1;
-        DHPlayerReplicationInfo(Loader.PlayerReplicationInfo).StashedScore += LoadAward;
-
-        ScoreEvent(Loader.PlayerReplicationInfo, LoadAward, "AT_reload");
+        SendScoreEvent(Loader, class'DHScoreEvent_FriendlyReload'.static.Create());
     }
 }
 
@@ -1069,15 +1032,12 @@ function ScoreRadioUsed(Controller Radioman)
 // Give player two points for resupplying a mortar operator
 function ScoreMortarResupply(Controller Dropper, Controller Gunner)
 {
-    local int ResupplyAward;
-
     if (Dropper == none || Dropper == Gunner || Dropper.PlayerReplicationInfo == none)
     {
         return;
     }
 
-    DHPlayerReplicationInfo(Dropper.PlayerReplicationInfo).StashedScore += 2;
-    ScoreEvent(Dropper.PlayerReplicationInfo, ResupplyAward, "Mortar_resupply");
+    SendScoreEvent(Dropper, class'DHScoreEvent_FriendlyResupply'.static.Create());
 }
 
 // Give spotter a point or two for spotting a kill
@@ -1095,54 +1055,37 @@ function ScoreMortarSpotAssist(Controller Spotter, Controller Mortarman)
 // Modified to handle StashedScore and prevent fellow vehicle crewman from getting kills and score for yours
 function ScoreKill(Controller Killer, Controller Other)
 {
-    local float                         Amount;
-    local DHPlayerReplicationInfo       PRI;
-
     if (Killer == Other || Killer == none)
     {
-        Other.PlayerReplicationInfo.Score -= 1;
-        ScoreEvent(Other.PlayerReplicationInfo, -1, "self_frag");
+        SendScoreEvent(Other, class'DHScoreEvent_Suicide'.static.Create());
     }
     else if (Other.bIsPlayer && Killer.bIsPlayer && Killer.PlayerReplicationInfo.Team == Other.PlayerReplicationInfo.Team)
     {
-        if (ROPlayerReplicationInfo(Other.PlayerReplicationInfo) != none && ROPlayerReplicationInfo(Other.PlayerReplicationInfo).RoleInfo != none)
-        {
-            Amount = -2 * ROPlayerReplicationInfo(Other.PlayerReplicationInfo).RoleInfo.default.PointValue;
-            DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).StashedScore += Amount;
-        }
-        else
-        {
-            Amount = -2;
-            DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).StashedScore += Amount;
-        }
-
-        ScoreEvent(Killer.PlayerReplicationInfo, Amount, "team_frag");
+        SendScoreEvent(Killer, class'DHScoreEvent_TeamKill'.static.Create());
     }
     else if (Killer.PlayerReplicationInfo != none)
     {
-        PRI = DHPlayerReplicationInfo(Other.PlayerReplicationInfo);
-
-        if (PRI != none && PRI.RoleInfo != none)
-        {
-            Amount = PRI.RoleInfo.default.PointValue;
-        }
-        else
-        {
-            Amount = 1;
-        }
-
-        // TODO: When implementing the new scoring system, look at the RO version of this function and add back the killer's occupants logic
-        // giving other crewman a reduced score sounds like a good idea (not riders though), but not kills
-        DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).StashedScore += Amount;
-        DHPlayerReplicationInfo(Killer.PlayerReplicationInfo).DHKills++;
-
-        ScoreEvent(Killer.PlayerReplicationInfo, Amount, "frag");
+        SendScoreEvent(Killer, class'DHScoreEvent_Kill'.static.Create(Killer.Pawn, Other.Pawn));
     }
 
     if (GameRulesModifiers != none)
     {
         GameRulesModifiers.ScoreKill(Killer, Other);
     }
+}
+
+function SendScoreEvent(Controller C, DHScoreEvent ScoreEvent)
+{
+    local DHPlayer PC;
+
+    PC = DHPlayer(C);
+
+    if (PC == none || ScoreEvent == none)
+    {
+        return;
+    }
+
+    PC.ReceiveScoreEvent(ScoreEvent);
 }
 
 // Modified to check if the player has just used a select-a-spawn teleport and should be protected from damage
@@ -2228,31 +2171,32 @@ function KillEvent(string Killtype, PlayerReplicationInfo Killer, PlayerReplicat
 
 function UpdateAllPlayerScores()
 {
-    local DHPlayerReplicationInfo   PRI;
-    local Controller                C;
+    local Controller C;
 
     for (C = Level.ControllerList; C != none; C = C.NextController)
     {
-        if (DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none)
-        {
-            PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
-
-            PRI.Score += PRI.StashedScore;
-            PRI.StashedScore = 0;
-        }
+        UpdatePlayerScore(C);
     }
 }
 
-function UpdatePlayerScore(controller C)
+function UpdatePlayerScore(Controller C)
 {
     local DHPlayerReplicationInfo PRI;
+    local DHPlayer PC;
+    local int i;
 
-    if (C != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none)
+    PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
+    PC = DHPlayer(C);
+
+    if (PRI != none && PC != none)
     {
-        PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
+        PRI.Score = PC.ScoreManager.TotalScore;
+        PRI.TotalScore = PC.ScoreManager.TotalScore;
 
-        PRI.Score += PRI.StashedScore;
-        PRI.StashedScore = 0;
+        for (i = 0; i < arraycount(PC.ScoreManager.CategoryScores); ++i)
+        {
+            PRI.CategoryScores[i] = PC.ScoreManager.CategoryScores[i];
+        }
     }
 }
 
@@ -4495,6 +4439,7 @@ event PostLogin(PlayerController NewPlayer)
     local Object                  O;
     local DHPlayerSession         S;
     local string                  ROIDHash;
+    local int i;
 
     if (NewPlayer == none)
     {
@@ -4624,7 +4569,13 @@ event PostLogin(PlayerController NewPlayer)
             {
                 PRI.Deaths = S.Deaths;
                 PRI.DHKills = S.Kills;
-                PRI.Score = S.Score;
+                PRI.Score = S.TotalScore;
+                PRI.TotalScore = S.TotalScore;
+
+                for (i = 0; i < arraycount(PRI.CategoryScores); ++i)
+                {
+                    PRI.CategoryScores[i] = S.CategoryScores[i];
+                }
 
                 Teams[S.TeamIndex].AddToTeam(PC);
 
@@ -4662,6 +4613,7 @@ function Logout(Controller Exiting)
     local DHPlayerReplicationInfo PRI;
     local Object O;
     local DHPlayerSession S;
+    local int i;
 
     super.Logout(Exiting);
 
@@ -4697,7 +4649,13 @@ function Logout(Controller Exiting)
     {
         S.Deaths = PRI.Deaths;
         S.Kills = PRI.DHKills;
-        S.Score = PRI.Score; // No need to add StashedScore here, because it is done on the pawn's death (which it does die)
+        S.TotalScore = PRI.TotalScore;
+
+        for (i = 0; i < arraycount(S.CategoryScores); ++i)
+        {
+            S.CategoryScores[i] = PRI.CategoryScores[i];
+        }
+
         S.LastKilledTime = PC.LastKilledTime;
         S.WeaponUnlockTime = PC.WeaponUnlockTime;
         S.WeaponLockViolations = PC.WeaponLockViolations;

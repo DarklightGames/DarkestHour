@@ -423,49 +423,16 @@ function HandleGroupActions(int Team)
             }
         }
     }
-
 }
 
-function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
+function GetCapturingControllers(int Teamindex, out array<Controller> Controllers)
 {
-    local DarkestHourGame           G;
-    local DHPlayerReplicationInfo   PRI;
-    local DHRoleInfo                RI;
-    local Controller                C;
-    local Pawn                      P;
-    local int                       i;
-    local array<string>             PlayerIDs;
-    local int                       RoundTime;
-    local int                       NumTotal[2], Num[2], NumForCheck[2];
+    local Controller C;
+    local Pawn P;
+    local DHPlayerReplicationInfo PRI;
+    local DHRoleInfo RI;
 
-    CurrentCapProgress = 0.0;
-
-    G = DarkestHourGame(Level.Game);
-
-    if (G == none)
-    {
-        return;
-    }
-
-    // If it's not recapturable, make it inactive
-    if (!bRecaptureable)
-    {
-        SetActive(false);
-
-        // Only turn off the timer if bUsePostCaptureOperations is false, we will turn it off after it's clear of enemies (in timer)
-        if (!bUsePostCaptureOperations)
-        {
-            SetTimer(0.0, false);
-        }
-
-        DisableCapBarsForThisObj(); // might want to move this to above if statement, but would need testing
-    }
-
-    // Don't "disable" the objective, just "deactivate it"
-    if (bSetInactiveOnCapture)
-    {
-        SetActive(false);
-    }
+    Controllers.Length = 0;
 
     // Give players points for helping with the capture
     for (C = Level.ControllerList; C != none; C = C.NextController)
@@ -498,7 +465,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
             RI = DHRoleInfo(PRI.RoleInfo);
         }
 
-        if (!C.bIsPlayer || P == none || !WithinArea(P) || C.PlayerReplicationInfo.Team == none || C.PlayerReplicationInfo.Team.TeamIndex != Team)
+        if (!C.bIsPlayer || P == none || !WithinArea(P) || C.PlayerReplicationInfo.Team == none || C.PlayerReplicationInfo.Team.TeamIndex != TeamIndex)
         {
             continue;
         }
@@ -508,11 +475,58 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
             continue;
         }
 
-        Level.Game.ScoreObjective(C.PlayerReplicationInfo, 10);
+        Controllers[Controllers.Length] = C;
+    }
+}
 
-        if (PlayerController(C) != none)
+function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
+{
+    local DarkestHourGame           G;
+    local int                       i;
+    local array<string>             PlayerIDs;
+    local int                       RoundTime;
+    local int                       NumTotal[2], Num[2], NumForCheck[2];
+    local array<Controller>         CapturingControllers;
+
+    CurrentCapProgress = 0.0;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G == none)
+    {
+        return;
+    }
+
+    // If it's not recapturable, make it inactive
+    if (!bRecaptureable)
+    {
+        SetActive(false);
+
+        // Only turn off the timer if bUsePostCaptureOperations is false, we will turn it off after it's clear of enemies (in timer)
+        if (!bUsePostCaptureOperations)
         {
-             PlayerIDs[PlayerIDs.Length] = PlayerController(C).GetPlayerIDHash();
+            SetTimer(0.0, false);
+        }
+
+        DisableCapBarsForThisObj(); // might want to move this to above if statement, but would need testing
+    }
+
+    // Don't "disable" the objective, just "deactivate it"
+    if (bSetInactiveOnCapture)
+    {
+        SetActive(false);
+    }
+
+    // Give players points for helping with the capture
+    GetCapturingControllers(Team, CapturingControllers);
+
+    for (i = 0; i < CapturingControllers.Length; ++i)
+    {
+        DarkestHourGame(Level.Game).SendScoreEvent(CapturingControllers[i], class'DHScoreEvent_ObjectiveCapture'.static.Create());
+
+        if (PlayerController(CapturingControllers[i]) != none)
+        {
+             PlayerIDs[PlayerIDs.Length] = PlayerController(CapturingControllers[i]).GetPlayerIDHash();
         }
     }
 
@@ -1189,6 +1203,11 @@ function ObjectiveCompleted(PlayerReplicationInfo CompletePRI, int Team)
 // New function to implement the bNeutralizeBeforeCapture option
 function ObjectiveNeutralized(int Team)
 {
+    local int i;
+    local array<Controller> CapturingControllers;
+    local DHScoreEvent_ObjectiveNeutralize ScoreEvent;
+    local DarkestHourGame G;
+
     // Reset values as the objective was neutralized
     CurrentCapProgress = 0.0;
     CurrentCapTeam = NEUTRAL_TEAM_INDEX;
@@ -1199,6 +1218,19 @@ function ObjectiveNeutralized(int Team)
 
     // Notify players
     BroadcastLocalizedMessage(class'DHObjectiveMessage', class'UInteger'.static.FromShorts(0, Team), none, none, self);
+
+    GetCapturingControllers(Team, CapturingControllers);
+    ScoreEvent = class'DHScoreEvent_ObjectiveNeutralize'.static.Create();
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none)
+    {
+        for (i = 0; i < CapturingControllers.Length; ++i)
+        {
+            G.SendScoreEvent(CapturingControllers[i], ScoreEvent);
+        }
+    }
 }
 
 // Overridden to the fix a console warning that would display when EventInstigator was none

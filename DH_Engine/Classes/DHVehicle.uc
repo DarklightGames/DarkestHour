@@ -304,12 +304,15 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     {
         if (ReinforcementCost != 0)
         {
+            // Deducts reinforcements based on the vehicle's "reinforcement cost"
             DHG.ModifyReinforcements(VehicleTeam, -ReinforcementCost);
         }
 
-        if (Killer != none)
+        if (Killer != none &&
+            Killer.GetTeamNum() != GetTeamNum() &&
+            !IsSpawnProtected())
         {
-            DHG.ScoreVehicleKill(Killer, self, PointValue);
+            DHG.SendScoreEvent(Killer, class'DHScoreEvent_VehicleKill'.static.Create(self));
         }
     }
 }
@@ -1998,6 +2001,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     // Call the Super from Vehicle (skip over others)
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+
+    if (InstigatedBy != none && InstigatedBy != self)
+    {
+        LastHitBy = InstigatedBy.Controller;
+    }
 
     // If a vehicle's health is lower than DamagedEffectHealthFireFactor OR
     // If the vehicle is APC or Treaded and is empty and damage is significant, just set fire the engine (and spike the vehicle)
@@ -3874,7 +3882,7 @@ defaultproperties
 {
     // Miscellaneous
     VehicleMass=3.0
-    PointValue=1.0
+    PointValue=250
     CollisionRadius=175.0
     CollisionHeight=40.0
     VehicleNameString="ADD VehicleNameString !!"

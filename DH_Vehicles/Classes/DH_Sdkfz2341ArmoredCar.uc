@@ -17,7 +17,6 @@ defaultproperties
     bHasTreads=false
     bSpecialTankTurning=false
     VehicleMass=5.0
-    PointValue=2.0
     ReinforcementCost=8
 
     // Hull mesh
