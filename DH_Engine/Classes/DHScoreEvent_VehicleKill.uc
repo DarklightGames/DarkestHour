@@ -5,21 +5,21 @@
 
 class DHScoreEvent_VehicleKill extends DHScoreEvent;
 
-var DHVehicle Vehicle;
+var class<DHVehicle> VehicleClass;
 
-static function DHScoreEvent_VehicleKill Create(DHVehicle Vehicle)
+static function DHScoreEvent_VehicleKill Create(class<DHVehicle> VehicleClass)
 {
     local DHScoreEvent_VehicleKill ScoreEvent;
 
     ScoreEvent = new class'DHScoreEvent_VehicleKill';
-    ScoreEvent.Vehicle = Vehicle;
+    ScoreEvent.VehicleClass = VehicleClass;
 
     return ScoreEvent;
 }
 
 function int GetValue()
 {
-    return Vehicle.default.PointValue;
+    return VehicleClass.default.PointValue;
 }
 
 defaultproperties
