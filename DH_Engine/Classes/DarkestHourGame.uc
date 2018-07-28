@@ -1065,7 +1065,7 @@ function ScoreKill(Controller Killer, Controller Other)
     }
     else if (Killer.PlayerReplicationInfo != none)
     {
-        SendScoreEvent(Killer, class'DHScoreEvent_Kill'.static.Create(Killer.Pawn, Other.Pawn));
+        SendScoreEvent(Killer, class'DHScoreEvent_Kill'.static.Create());
     }
 
     if (GameRulesModifiers != none)
