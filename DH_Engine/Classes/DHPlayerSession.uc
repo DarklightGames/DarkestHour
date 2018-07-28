@@ -11,7 +11,7 @@ var int         WeaponUnlockTime;
 var int         LastKilledTime;
 var int         Kills;
 var int         TotalScore;
-var int         CategoryScores[4];
+var int         CategoryScores[2];
 var int         Deaths;
 var int         NextChangeTeamTime;
 var byte        TeamIndex;
