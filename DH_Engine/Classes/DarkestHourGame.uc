@@ -1055,6 +1055,8 @@ function ScoreMortarSpotAssist(Controller Spotter, Controller Mortarman)
 // Modified to handle StashedScore and prevent fellow vehicle crewman from getting kills and score for yours
 function ScoreKill(Controller Killer, Controller Other)
 {
+    local DHPlayerReplicationInfo PRI;
+
     if (Killer == Other || Killer == none)
     {
         SendScoreEvent(Other, class'DHScoreEvent_Suicide'.static.Create());
@@ -1066,6 +1068,14 @@ function ScoreKill(Controller Killer, Controller Other)
     else if (Killer.PlayerReplicationInfo != none)
     {
         SendScoreEvent(Killer, class'DHScoreEvent_Kill'.static.Create());
+
+        PRI = DHPlayerReplicationInfo(Killer.PlayerReplicationInfo);
+
+        if (PRI != none)
+        {
+            ++PRI.Kills;
+            ++PRI.DHKills;
+        }
     }
 
     if (GameRulesModifiers != none)
