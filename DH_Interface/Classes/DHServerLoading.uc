@@ -122,6 +122,16 @@ simulated function SetImage()
     if (M == none)
     {
         M = DLOTexture(Backgrounds[0]);
+
+        // If using default background, the borders should be blacked out
+        DrawOpImage(Operations[1]).Image = Material'MenuBlack';
+        DrawOpImage(Operations[2]).Image = Material'MenuBlack';
+    }
+    else
+    {
+        // If using the map's background, then the borders should be default
+        DrawOpImage(Operations[1]).Image = Texture'DH_GUI_Tex.Menu.DHSectionTopper';
+        DrawOpImage(Operations[2]).Image = Texture'DH_GUI_Tex.Menu.DHSectionTopper';
     }
 
     if (class'DHMapList'.static.IsMapOfficial(LoadingMapRecord.MapName))
@@ -154,7 +164,7 @@ defaultproperties
     Backgrounds(0)="DH_GUI_Tex.LoadingScreen.Background_Default"
 
     Begin Object class=DrawOpImage Name=OpTopBorder
-        Image=Texture'DH_GUI_Tex.Menu.DHSectionTopper'
+        Image=Texture'DH_GUI_Tex.Menu.DHSectionTopper' // if you change this, you have to change it in the SetImage() function also
         ImageStyle=0
         Top=0.0
         Lft=0.0
@@ -165,7 +175,7 @@ defaultproperties
     Operations(1)=OpTopBorder
 
     Begin Object class=DrawOpImage Name=OpBottomBorder
-        Image=Texture'DH_GUI_Tex.Menu.DHSectionTopper'
+        Image=Texture'DH_GUI_Tex.Menu.DHSectionTopper' // if you change this, you have to change it in the SetImage() function also
         ImageStyle=0
         Top=0.91
         Lft=0.0
