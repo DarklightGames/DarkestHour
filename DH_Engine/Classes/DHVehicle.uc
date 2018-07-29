@@ -312,7 +312,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
             Killer.GetTeamNum() != GetTeamNum() &&
             !IsSpawnProtected())
         {
-            DHG.SendScoreEvent(Killer, class'DHScoreEvent_VehicleKill'.static.Create(self));
+            DHG.SendScoreEvent(Killer, class'DHScoreEvent_VehicleKill'.static.Create(Class));
         }
     }
 }

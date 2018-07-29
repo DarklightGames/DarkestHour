@@ -184,5 +184,6 @@ defaultproperties
     BrokenLifespan=0.0
     ConstructionVerb="emplace"
     GroupClass=class'DHConstructionGroup_Guns'
+    bCanBeDamaged=false
 }
 

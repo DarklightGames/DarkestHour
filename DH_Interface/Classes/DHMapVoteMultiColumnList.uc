@@ -185,7 +185,7 @@ defaultproperties
     InitColumnPerc(4)=0.25
 
     ColumnHeadingHints(0)="The map's name."
-    ColumnHeadingHints(1)="Current domain of the level, community, legacy, or official."
+    ColumnHeadingHints(1)="Current domain of the level, community or official."
     ColumnHeadingHints(2)="The Allied country for the map."
     ColumnHeadingHints(3)="What type of game or battle for the map."
     ColumnHeadingHints(4)="Recommended players for the map."

@@ -14,5 +14,5 @@ defaultproperties
     ItemName="M8 Smoke Grenade"
     Mesh=SkeletalMesh'DH_USSmokeGrenade_1st.smokegrenade'
 
-    GroupOffset=8
+    GroupOffset=7
 }

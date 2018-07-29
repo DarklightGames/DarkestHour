@@ -111,7 +111,7 @@ simulated function UpdateSamples()
             {
                 if (Pool.Length == 0)
                 {
-                    // TODO: make a new one if necessary
+                    break;
                 }
 
                 Proxies[Proxies.Length] = Pool[Pool.Length - 1];

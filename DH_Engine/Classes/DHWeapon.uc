@@ -709,7 +709,7 @@ exec function ToggleHDO()
     }
 }
 
-// No functional change, copied from ROWeapon, just cleaned up
+// This function overrides ROWeapon's (see NextWeapon for more info)
 simulated function Weapon PrevWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
 {
     if ((CurrentChoice == none))
@@ -718,6 +718,10 @@ simulated function Weapon PrevWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
         {
             CurrentChoice = self;
         }
+    }
+    else if (CurrentChoice.InventoryGroup == CurrentWeapon.InventoryGroup && CurrentChoice.GroupOffset > CurrentWeapon.GroupOffset)
+    {
+        CurrentChoice = self;
     }
     else if (InventoryGroup == CurrentWeapon.InventoryGroup)
     {
@@ -756,7 +760,10 @@ simulated function Weapon PrevWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
     }
 }
 
-// No functional change, copied from ROWeapon, just cleaned up
+// This function overrides ROWeapon's
+// This function is recursive and on the client
+// Basically when you "NextWeapon" it goes through your inventory, each part of the inventory calling the nexts "NextWeapon" until
+// the inventory has been interated through. It keeps track of the "choice" and some weapons can "win" over others by replacing itself as the CurrentChoice
 simulated function Weapon NextWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
 {
     if (CurrentChoice == none)
@@ -780,7 +787,6 @@ simulated function Weapon NextWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
             CurrentChoice = self;
         }
     }
-
     else if (InventoryGroup < CurrentChoice.InventoryGroup)
     {
         if (InventoryGroup > CurrentWeapon.InventoryGroup || CurrentChoice.InventoryGroup < CurrentWeapon.InventoryGroup)
@@ -788,7 +794,16 @@ simulated function Weapon NextWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
             CurrentChoice = self;
         }
     }
+    // If the chosen weapon's inventory group is < the current selected weapon AND
+    // this weapon's inventory group is greater than current selected weapon's inventory group, then set current choice to this weapon
     else if (CurrentChoice.InventoryGroup < CurrentWeapon.InventoryGroup && InventoryGroup > CurrentWeapon.InventoryGroup)
+    {
+        CurrentChoice = self;
+    }
+    // If the chosen's inventory group is <= the current weapon's AND the chosen's group offset is < the currentweapon's, then pick me!
+    // This is added, because unlike RO DH supports items on the same inventory slot
+    // This is needed so players with multiple items on the same slot can cycle through and onto the next slot (otherwise it loops in the same slot)
+    else if (CurrentChoice.InventoryGroup == CurrentWeapon.InventoryGroup && CurrentChoice.GroupOffset < CurrentWeapon.GroupOffset)
     {
         CurrentChoice = self;
     }

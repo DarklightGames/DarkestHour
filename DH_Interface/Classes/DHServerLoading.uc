@@ -9,7 +9,6 @@ class DHServerLoading extends UT2K4ServerLoading;
 
 var localized string DeployingText;
 var localized string AuthorText;
-var localized string LegacyMapText;
 var localized string OfficialMapText;
 var localized string CommunityMapText;
 var localized string UnspecifiedText;
@@ -123,13 +122,19 @@ simulated function SetImage()
     if (M == none)
     {
         M = DLOTexture(Backgrounds[0]);
+
+        // If using default background, the borders should be blacked out
+        DrawOpImage(Operations[1]).Image = Material'MenuBlack';
+        DrawOpImage(Operations[2]).Image = Material'MenuBlack';
+    }
+    else
+    {
+        // If using the map's background, then the borders should be default
+        DrawOpImage(Operations[1]).Image = Texture'DH_GUI_Tex.Menu.DHSectionTopper';
+        DrawOpImage(Operations[2]).Image = Texture'DH_GUI_Tex.Menu.DHSectionTopper';
     }
 
     if (class'DHMapList'.static.IsMapOfficial(LoadingMapRecord.MapName))
-    {
-        DrawOpImage(Operations[5]).Image = OfficialMapIcon;
-    }
-    else if (class'DHMapList'.static.IsMapLegacy(LoadingMapRecord.MapName))
     {
         DrawOpImage(Operations[5]).Image = OfficialMapIcon;
     }
@@ -150,18 +155,16 @@ defaultproperties
     DisabledText="Disabled"
     DeployingText="Deploying to {0}"
     AuthorText="Author: {0}"
-    LegacyMapText="Legacy Map"
     OfficialMapText="Official Map"
     OfficialMapIcon=Texture'DH_GUI_Tex.Menu.OfficialMapLogo'
     CommunityMapText="Community Map"
     CommunityMapIcon=Texture'DH_GUI_Tex.Menu.CommunityMapLogo'
-    DHTextLogo=Texture'DH_GUI_Tex.Menu.DHTextLogo'
 
     // The official backgrounds
     Backgrounds(0)="DH_GUI_Tex.LoadingScreen.Background_Default"
 
     Begin Object class=DrawOpImage Name=OpTopBorder
-        Image=Texture'DH_GUI_Tex.Menu.DHSectionTopper'
+        Image=Texture'DH_GUI_Tex.Menu.DHSectionTopper' // if you change this, you have to change it in the SetImage() function also
         ImageStyle=0
         Top=0.0
         Lft=0.0
@@ -172,7 +175,7 @@ defaultproperties
     Operations(1)=OpTopBorder
 
     Begin Object class=DrawOpImage Name=OpBottomBorder
-        Image=Texture'DH_GUI_Tex.Menu.DHSectionTopper'
+        Image=Texture'DH_GUI_Tex.Menu.DHSectionTopper' // if you change this, you have to change it in the SetImage() function also
         ImageStyle=0
         Top=0.91
         Lft=0.0
