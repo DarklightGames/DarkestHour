@@ -148,7 +148,7 @@ function Timer()
                         }
                     }
 
-                    if (RI != none && P.bUsedCarriedMGAmmo)
+                    if (RI != none && P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo)
                     {
                         P.bUsedCarriedMGAmmo = false;
                         bResupplied = true;
@@ -175,7 +175,7 @@ function Timer()
                             bResupplied = true;
                         }
 
-                        if (P.bUsedCarriedMGAmmo)
+                        if (P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo)
                         {
                             P.bUsedCarriedMGAmmo = false;
                             bResupplied = true;

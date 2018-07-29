@@ -165,7 +165,7 @@ simulated event NotifySelected(Pawn User)
             User.ReceiveLocalizedMessage(TouchMessageClass, 0,,, NotifyParameters);
             LastNotifyTime = Level.TimeSeconds;
         }
-        else if (bCanBeResupplied && !P.bUsedCarriedMGAmmo && OwningPawn != P)
+        else if (bCanBeResupplied && !P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo && OwningPawn != P)
         {
             User.ReceiveLocalizedMessage(class'DHPawnTouchMessage', 0, PlayerReplicationInfo,, User.Controller);
             LastNotifyTime = Level.TimeSeconds;

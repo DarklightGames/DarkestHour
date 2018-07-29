@@ -19,6 +19,8 @@ var     array<float>        HeadgearProbabilities;  // chance of each Headgear t
 var     bool                bIsArtilleryOfficer;    // role has functionality of an artillery officer
 var     bool                bCanUseMortars;         // role has functionality of a mortar operator
 var     bool                bIsMortarObserver;      // role has functionality of a mortar observer
+var     bool                bCanCarryExtraAmmo;     // role can carry extra ammo
+var     bool                bSpawnWithExtraAmmo;    // role spawns with extra ammo
 
 var     bool                bRequiresSLorASL;       // player must be a SL or ASL to select this role, only applies when gametype has bSquadSpecialRolesOnly=true
 
@@ -210,4 +212,6 @@ defaultproperties
     Limit=255 // unlimited (0 is now deactivated)
     AddedReinforcementTime=0
     HeadgearProbabilities(0)=1.0
+    bCanCarryExtraAmmo=true
+    bSpawnWithExtraAmmo=false
 }
