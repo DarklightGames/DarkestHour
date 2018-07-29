@@ -14,4 +14,5 @@ defaultproperties
     Article="a "
     PluralName="Machine-Gunners"
     Limit=1
+    bCanCarryExtraAmmo=false
 }

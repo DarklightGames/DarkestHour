@@ -12,4 +12,5 @@ defaultproperties
     AltName="Schütze"
     Article="a "
     PluralName="Riflemen"
+    bSpawnWithExtraAmmo=true
 }

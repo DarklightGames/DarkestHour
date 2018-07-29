@@ -12,4 +12,5 @@ defaultproperties
     AltName="Rifleman"
     Article="a "
     PluralName="Riflemen"
+    bSpawnWithExtraAmmo=true
 }

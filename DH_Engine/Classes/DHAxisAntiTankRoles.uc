@@ -13,4 +13,5 @@ defaultproperties
     Article="a "
     PluralName="Tank Hunters"
     Limit=1
+    bCanCarryExtraAmmo=false
 }

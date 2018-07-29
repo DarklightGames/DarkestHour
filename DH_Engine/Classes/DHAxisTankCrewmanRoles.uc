@@ -14,4 +14,5 @@ defaultproperties
     Article="a "
     PluralName="Tank Crewmen"
     Limit=3
+    bCanCarryExtraAmmo=false
 }
