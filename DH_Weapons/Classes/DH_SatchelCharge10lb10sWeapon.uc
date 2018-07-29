@@ -23,6 +23,4 @@ defaultproperties
 
     FuzeLength=15.0
     PreFireHoldAnim="Weapon_Down"
-
-    GroupOffset=4
 }

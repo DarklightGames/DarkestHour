@@ -14,6 +14,6 @@ defaultproperties
 {
     HumanReadableName="Team Kill"
     CategoryClass=class'DHScoreCategory_Combat'
-    Value=-500
+    Value=-250
 }
 

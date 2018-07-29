@@ -112,6 +112,11 @@ function float GetScoreboardTeamWidth(int TeamIndex)
 
 function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplicationInfo PRI, out CellRenderInfo CRI)
 {
+    if (PRI == none)
+    {
+        return;
+    }
+
     CRI.Icon = none;
     CRI.bDrawBacking = true;
     CRI.BackingColor = PlayerBackgroundColor;
@@ -725,7 +730,7 @@ simulated function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplication
 
         for (i = 0; i < TeamPRI.Length; ++i)
         {
-            if (TeamPRI[i].SquadIndex == -1)
+            if (TeamPRI[i] != none && TeamPRI[i].SquadIndex == -1)
             {
                 bHasUnassigned = true;
                 break;
@@ -756,7 +761,7 @@ simulated function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplication
 
             for (i = 0; i < TeamPRI.Length; ++i)
             {
-                if (TeamPRI[i].SquadIndex != -1)
+                if (TeamPRI[i] == none || TeamPRI[i].SquadIndex != -1)
                 {
                     continue;
                 }
@@ -799,6 +804,11 @@ simulated function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplication
 
         for (i = 0; i < TeamPRI.Length; ++i)
         {
+            if (TeamPRI[i] == none)
+            {
+                continue;
+            }
+
             if (Y + LineHeight > C.ClipY)
             {
                 break;
