@@ -64,6 +64,7 @@ defaultproperties
 
     IronSightDisplayFOV=30.0
 
+    bHasSelectFire=true
     MaxNumPrimaryMags=3
     InitialNumPrimaryMags=3
 }
