@@ -29,7 +29,7 @@ static function bool IsMapOfficial(string S)
 
     for (i = 0; i < arraycount(default.OfficialMaps); ++i)
     {
-        if (S ~= default.OfficialMaps[i])
+        if (GetPrettyName(S) ~= GetPrettyName(default.OfficialMaps[i]))
         {
             return true;
         }
@@ -50,7 +50,7 @@ defaultproperties
 {
     // Make sure the variable array size matches correctly
     OfficialMaps(0)="DH-Barashka_Advance.rom"
-    OfficialMaps(1)="DH-Bois_Jacques_Push"
+    OfficialMaps(1)="DH-Bois_Jacques_Push.rom"
     OfficialMaps(2)="DH-Brecourt_Push.rom"
     OfficialMaps(3)="DH-Bridgehead_Advance.rom"
     OfficialMaps(4)="DH-Bridgehead_Push.rom"
