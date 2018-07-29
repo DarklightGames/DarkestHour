@@ -3,22 +3,12 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_USSergeant29th extends DH_US_29th_Infantry;
+class DH_USSergeant29th extends DHUSSergeantRoles;
 
 defaultproperties
 {
-    MyName="Sergeant"
-    AltName="Sergeant"
-    Article="a "
-    PluralName="Sergeants"
-    bIsLeader=true
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_ThompsonWeapon',AssociatedAttachment=class'DH_Weapons.DH_ThompsonAmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_GreaseGunWeapon',AssociatedAttachment=class'DH_Weapons.DH_ThompsonAmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
-    Grenades(0)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
-    Grenades(1)=(Item=class'DH_Equipment.DH_RedSmokeWeapon')
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_US29thPawn',Weight=3.0)
+    RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USVest29thPawn',Weight=1.0)
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet29thNCOa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet29thNCOb'
-    Limit=2
-    bRequiresSLorASL=true
 }

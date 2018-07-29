@@ -3,19 +3,19 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_FJ45Rifleman extends DH_FJ_1945Late;
+class DH_FJ45Rifleman extends DHGERiflemanRoles;
 
 defaultproperties
 {
-    MyName="Rifleman"
-    AltName="Schütze"
-    Article="a "
-    PluralName="Riflemen"
-
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
-    Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanArdennesFJPawn',Weight=1.0)
+    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
     Headgear(0)=class'DH_GerPlayers.DH_FJHelmetOne'
     Headgear(1)=class'DH_GerPlayers.DH_FJHelmetTwo'
     Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNetOne'
+    HeadgearProbabilities(0)=0.33
+    HeadgearProbabilities(1)=0.33
+    HeadgearProbabilities(2)=0.33
+
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
+    SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
 }

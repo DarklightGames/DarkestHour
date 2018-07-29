@@ -3,16 +3,14 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_USRiflemanWinter extends DH_US_Winter_Infantry;
+class DH_USRiflemanWinter extends DHUSRiflemanRoles;
 
 defaultproperties
 {
-    MyName="Rifleman"
-    AltName="Rifleman"
-    Article="a "
-    PluralName="Riflemen"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1GarandWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USTrenchcoatScarfPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USWinterScarfPawn',Weight=1.0)
+    RolePawns(2)=(PawnClass=class'DH_USPlayers.DH_USTrenchcoatPawn',Weight=0.6)
+    RolePawns(3)=(PawnClass=class'DH_USPlayers.DH_USWinterPawn',Weight=0.3)
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet1stEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetWinter'
 }

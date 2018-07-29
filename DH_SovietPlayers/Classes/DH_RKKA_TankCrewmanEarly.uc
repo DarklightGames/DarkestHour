@@ -3,10 +3,11 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_RKKA_TankCrewmanEarly extends DH_RKKA_TankCrewman;
+class DH_RKKA_TankCrewmanEarly extends DHSOVTankCrewmanRoles;
 
 defaultproperties
 {
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPD40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_PPSH41Weapon',Amount=6,AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietTankCrewPawn',Weight=1.0)
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPD40Weapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_PPSH41Weapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
 }

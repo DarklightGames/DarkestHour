@@ -3,24 +3,11 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_BritishSergeantOx_Bucks extends DH_Ox_Bucks;
+class DH_BritishSergeantOx_Bucks extends DHCWSergeantRoles;
 
 defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishAirbornSergeantPawn')
-    MyName="Corporal"
-    AltName="Corporal"
-    Article="a "
-    PluralName="Corporals"
-    bIsLeader=true
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
-    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_ThompsonWeapon')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
-    Grenades(0)=(Item=class'DH_Weapons.DH_MillsBombWeapon')
-    Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
-    Grenades(2)=(Item=class'DH_Equipment.DH_RedSmokeWeapon')
     Headgear(0)=class'DH_BritishPlayers.DH_BritishAirborneBeretOx_Bucks'
-    Limit=2
-    bRequiresSLorASL=true
+    SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.Brit_Para_sleeves'
 }

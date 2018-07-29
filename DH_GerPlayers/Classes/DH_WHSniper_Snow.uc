@@ -3,18 +3,13 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_WHSniper_Snow extends DH_HeerSnow;
+class DH_WHSniper_Snow extends DHGESniperRoles;
 
 defaultproperties
 {
-    MyName="Sniper"
-    AltName="Scharfschütze"
-    Article="a "
-    PluralName="Snipers"
-
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98ScopedWeapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
-    SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanParkaSnowHeerPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanSmockToqueHeerPawn',Weight=1.0)
+    SleeveTexture=Texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetSnow'
-    Limit=2
+    HeadgearProbabilities(0)=1.0
 }

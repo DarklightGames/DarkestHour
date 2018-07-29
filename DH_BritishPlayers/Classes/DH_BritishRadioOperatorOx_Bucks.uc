@@ -3,17 +3,12 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_BritishRadioOperatorOx_Bucks extends DH_Ox_Bucks;
+class DH_BritishRadioOperatorOx_Bucks extends DHCWRadioOperatorRoles;
 
 defaultproperties
 {
-    MyName="Radio Operator"
-    AltName="Radio Operator"
-    Article="a "
-    PluralName="Radio Operators"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
-    GivenItems(0)="DH_Equipment.DHRadioItem"
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishAirbornePawn',Weight=1.0)
+    SleeveTexture=Texture'DHBritishCharactersTex.Sleeves.Brit_Para_sleeves'
     Headgear(0)=class'DH_BritishPlayers.DH_BritishAirborneBeretOx_Bucks'
-    Limit=1
+    HeadgearProbabilities(0)=1.0
 }

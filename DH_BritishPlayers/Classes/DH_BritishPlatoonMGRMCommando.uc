@@ -3,19 +3,10 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_BritishPlatoonMGRMCommando extends DH_RoyalMarineCommandos;
+class DH_BritishPlatoonMGRMCommando extends DHCWMachineGunnerRoles;
 
 defaultproperties
 {
-    MyName="Machine-Gunner"
-    AltName="Machine-Gunner"
-    Article="a "
-    PluralName="Machine-Gunners"
-    bIsGunner=true
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_30calWeapon')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
-    Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
-    Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishRMCommandoPawn')
     Headgear(2)=class'DH_BritishPlayers.DH_BritishRMCommandoBeret'
-    Limit=1
 }

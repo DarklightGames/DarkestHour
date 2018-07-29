@@ -3,20 +3,12 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_USAntiTankAutumn extends DH_US_Autumn_Infantry;
+class DH_USAntiTankAutumn extends DHUSAntiTankRoles;
 
 defaultproperties
 {
-    MyName="Anti-Tank Soldier"
-    AltName="Anti-Tank Soldier"
-    Article="an "
-    PluralName="Anti-Tank Soldiers"
-    bIsGunner=true
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_GreaseGunWeapon',AssociatedAttachment=class'DH_Weapons.DH_ThompsonAmmoPouch')
-    Grenades(0)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
-    GivenItems(0)="DH_Weapons.DH_BazookaWeapon"
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USWinterPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USTrenchcoatPawn',Weight=1.0)
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet1stEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet1stEMb'
-    Limit=1
 }

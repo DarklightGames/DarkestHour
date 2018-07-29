@@ -3,18 +3,11 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_USOfficerAutumn extends DH_US_Autumn_Infantry;
+class DH_USOfficerAutumn extends DHUSArtilleryOfficerRoles;
 
 defaultproperties
 {
-    bIsArtilleryOfficer=true
-    MyName="Artillery Officer"
-    AltName="Artillery Officer"
-    Article="an "
-    PluralName="Artillery Officers"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
-    GivenItems(0)="DH_Equipment.DHBinocularsItem"
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USWinterPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USTrenchcoatPawn',Weight=1.0)
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet1stOfficer'
-    Limit=1
 }

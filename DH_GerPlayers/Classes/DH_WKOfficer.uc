@@ -3,21 +3,14 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_WKOfficer extends DH_Kriegsmarine;
+class DH_WKOfficer extends DHGEArtilleryOfficerRoles;
 
 defaultproperties
 {
-    bIsArtilleryOfficer=true
-    MyName="Officer"
-    AltName="Zugführer"
-    Article="a "
-    PluralName="Officers"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
-    SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P38Weapon')
-    Grenades(0)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon')
-    Grenades(1)=(Item=class'DH_Equipment.DH_OrangeSmokeWeapon')
-    GivenItems(0)="DH_Equipment.DHBinocularsItem"
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanKriegsmarinePawn',Weight=1.0)
+    SleeveTexture=Texture'Weapons1st_tex.Arms.german_sleeves'
     Headgear(0)=class'DH_GerPlayers.DH_KriegsmarineHelmet'
-    Limit=1
+    HeadgearProbabilities(0)=1.0
+
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
 }

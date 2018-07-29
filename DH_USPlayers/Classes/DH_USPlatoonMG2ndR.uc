@@ -3,18 +3,12 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_USPlatoonMG2ndR extends DH_US_2ndRangersBattalion;
+class DH_USPlatoonMG2ndR extends DHUSMachineGunnerRoles;
 
 defaultproperties
 {
-    MyName="Machine-Gunner"
-    AltName="Machine-Gunner"
-    Article="a "
-    PluralName="Machine-Gunners"
-    bIsGunner=true
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_30calWeapon')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_US2ndRPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USVest2ndRPawn',Weight=1.0)
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet2ndREMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet2ndREMb'
-    Limit=1
 }

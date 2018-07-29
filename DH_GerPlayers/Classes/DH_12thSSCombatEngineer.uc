@@ -3,20 +3,12 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_12thSSCombatEngineer extends DH_12thSS;
+class DH_12thSSCombatEngineer extends DHGEEngineerRoles;
 
 defaultproperties
 {
-    MyName="Combat Engineer"
-    AltName="Sturmpioniere"
-    Article="a "
-    PluralName="Combat Engineers"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
-    Grenades(1)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon')
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_German12thSSPawn',Weight=1.0)
+    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.12thSS_Sleeve'
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetTwo'
-    Limit=3
-    GivenItems(0)="DH_Equipment.DHWireCuttersItem"
 }

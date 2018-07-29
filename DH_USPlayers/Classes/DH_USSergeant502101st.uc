@@ -3,23 +3,12 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_USSergeant502101st extends DH_US_502PIR;
+class DH_USSergeant502101st extends DHUSSergeantRoles;
 
 defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USAB101stNCOPawn')
-    MyName="Sergeant"
-    AltName="Sergeant"
-    Article="a "
-    PluralName="Sergeants"
-    bIsLeader=true
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_ThompsonWeapon',AssociatedAttachment=class'DH_Weapons.DH_ThompsonAmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_GreaseGunWeapon',AssociatedAttachment=class'DH_Weapons.DH_ThompsonAmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
-    Grenades(0)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
-    Grenades(1)=(Item=class'DH_Equipment.DH_RedSmokeWeapon')
+    SleeveTexture=Texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet502101stNCOa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet502101stNCOb'
-    Limit=2
-    bRequiresSLorASL=true
 }

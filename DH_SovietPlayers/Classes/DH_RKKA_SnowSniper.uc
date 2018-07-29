@@ -3,18 +3,13 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_RKKA_SnowSniper extends DH_RKKA_Snow;
+class DH_RKKA_SnowSniper extends DHSOVSniperRoles;
 
 defaultproperties
 {
-    MyName="Sniper"
-    AltName="Sniper"
-    Article="a "
-    PluralName="Snipers"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MN9130ScopedWeapon',Amount=15,AssociatedAttachment=class'ROInventory.ROMN9130AmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_TT33Weapon',Amount=1)
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietSnowPawn',Weight=1.0)
+    SleeveTexture=Texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
+    DetachedArmClass=class'ROEffects.SeveredArmSovSnow'
+    DetachedLegClass=class'ROEffects.SeveredLegSovSnow'
     Headgear(0)=class'DH_SovietPlayers.DH_SovietFurHat'
-    Headgear(1)=class'DH_SovietPlayers.DH_SovietFurHat'
-    Headgear(2)=class'DH_SovietPlayers.DH_SovietFurHat'
-    Limit=1
 }

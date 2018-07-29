@@ -3,20 +3,13 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_WHMortarObserverC extends DH_HeerCamo;
+class DH_WHMortarObserverC extends DHGEMortarObserverRoles;
 
 defaultproperties
 {
-    bIsMortarObserver=true
-    MyName="Artillery Observer"
-    AltName="Artilleriebeobachter"
-    Article="a "
-    PluralName="Artillery Observers"
-
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_StielGranateWeapon')
-    GivenItems(0)="DH_Equipment.DHBinocularsItem"
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanCamoHeerPawn',Weight=8.0)
+    RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanSniperHeerPawn',Weight=1.0)
+    SleeveTexture=Texture'Weapons1st_tex.Arms.german_sleeves'
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetOne'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
-    Limit=1
 }

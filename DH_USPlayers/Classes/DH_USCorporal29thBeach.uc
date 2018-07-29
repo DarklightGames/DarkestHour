@@ -3,18 +3,10 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_USCorporal29thBeach extends DH_US_29th_Infantry_Beach;
+class DH_USCorporal29thBeach extends DH_USCorporal29th;
 
 defaultproperties
 {
-    MyName="Corporal"
-    AltName="Corporal"
-    Article="a "
-    PluralName="Corporals"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1GarandWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
-    Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
-    Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet29thEMa'
-    Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet29thEMb'
-    Limit=2
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USBeach29thPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USBeachVest29thPawn',Weight=1.0)
 }

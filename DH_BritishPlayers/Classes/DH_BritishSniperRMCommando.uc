@@ -3,19 +3,10 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_BritishSniperRMCommando extends DH_RoyalMarineCommandos;
+class DH_BritishSniperRMCommando extends DHCWSniperRoles;
 
 defaultproperties
 {
-    MyName="Sniper"
-    AltName="Sniper"
-    Article="a "
-    PluralName="Snipers"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4ScopedWeapon')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
-    Grenades(0)=(Item=class'DH_Weapons.DH_MillsBombWeapon')
-    Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
-    Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishRMCommandoPawn')
     Headgear(2)=class'DH_BritishPlayers.DH_BritishRMCommandoBeret'
-    Limit=2
 }

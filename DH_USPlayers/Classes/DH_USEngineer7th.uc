@@ -3,20 +3,14 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_USEngineer7th extends DH_US_7th_NavalBeachBattalion;
+class DH_USEngineer7th extends DHUSEngineerRoles;
+
+// Note: There are no other 7th Naval Beach Battalion roles (only engineer)
 
 defaultproperties
 {
-    MyName="Combat Engineer"
-    AltName="Combat Engineer"
-    Article="a "
-    PluralName="Combat Engineers"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_GreaseGunWeapon',AssociatedAttachment=class'DH_Weapons.DH_ThompsonAmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
-    Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
-    GivenItems(0)="DH_Weapons.DH_SatchelCharge10lb10sWeapon"
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_US7thPawn',Weight=5.0)
+    RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USVest7thPawn',Weight=4.0)
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet7thEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet7thEMb'
-    Limit=2
 }

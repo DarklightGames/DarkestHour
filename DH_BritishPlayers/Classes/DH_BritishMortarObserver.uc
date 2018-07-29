@@ -3,19 +3,9 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_BritishMortarObserver extends DH_British_Infantry;
+class DH_BritishMortarObserver extends DHCWMortarObserverRoles;
 
 defaultproperties
 {
-    bIsMortarObserver=true
-    MyName="Artillery Observer"
-    AltName="Artillery Observer"
-    Article="a "
-    PluralName="Artillery Observers"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
-    Grenades(0)=(Item=class'DH_Weapons.DH_MillsBombWeapon')
-    GivenItems(0)="DH_Equipment.DHBinocularsItem"
-    Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
-    Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
-    Headgear(2)=class'DH_BritishPlayers.DH_BritishTommyHelmet'
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishPawn',Weight=1.0)
 }

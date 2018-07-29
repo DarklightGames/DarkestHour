@@ -3,17 +3,13 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_CanadianRiflemanRoyalNewBrunswicks extends DH_RoyalNewBrunswicks;
+class DH_CanadianRiflemanRoyalNewBrunswicks extends DHCWRiflemanRoles;
 
 defaultproperties
 {
-    MyName="Rifleman"
-    AltName="Rifleman"
-    Article="a "
-    PluralName="Riflemen"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
-    Grenades(0)=(Item=class'DH_Weapons.DH_MillsBombWeapon')
-    Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
-    Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
-    Headgear(2)=class'DH_BritishPlayers.DH_BritishTommyHelmet'
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_CanadianBrunswicksPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_BritishPlayers.DH_CanadianVestBrunswicksPawn',Weight=1.0)
+    VoiceType="DH_BritishPlayers.DHCanadianVoice"
+    AltVoiceType="DH_BritishPlayers.DHCanadianVoice"
+    SleeveTexture=Texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
 }

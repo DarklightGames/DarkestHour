@@ -3,20 +3,12 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_WHGunner_Autumn extends DH_HeerAutumn;
+class DH_WHGunner_Autumn extends DHGEMachineGunnerRoles;
 
 defaultproperties
 {
-    MyName="Machine-Gunner"
-    AltName="Maschinengewehrschütze"
-    Article="a "
-    PluralName="Machine-Gunners"
-    bIsGunner=true
-
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MG42Weapon')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MG34Weapon')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
-    SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanParkaHeerPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanSmockHeerPawn',Weight=1.0)
+    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.SplinterASleeve'
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetCover'
-    Limit=2
 }

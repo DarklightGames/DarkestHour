@@ -3,19 +3,12 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_USMortarman3rd extends DH_US_3rd_Infantry;
+class DH_USMortarman3rd extends DHUSMortarmanRoles;
 
 defaultproperties
 {
-    bCanUseMortars=true
-    MyName="Mortar Operator"
-    AltName="Mortar Operator"
-    Article="a "
-    PluralName="Mortar Operators"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
-    GivenItems(0)="DH_Weapons.DH_M2MortarWeapon"
-    GivenItems(1)="DH_Equipment.DHBinocularsItem"
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_US3rdPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USVest3rdPawn',Weight=1.0)
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet3rdEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet3rdEMb'
-    Limit=1
 }

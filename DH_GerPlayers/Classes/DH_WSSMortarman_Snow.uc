@@ -3,20 +3,13 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_WSSMortarman_Snow extends DH_WaffenSSSnow;
+class DH_WSSMortarman_Snow extends DHGEMortarmanRoles;
 
 defaultproperties
 {
-    bCanUseMortars=true
-    MyName="Mortar Operator"
-    AltName="Werferschütze"
-    Article="a "
-    PluralName="Mortar Operators"
-
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
-    GivenItems(0)="DH_Mortars.DH_Kz8cmGrW42Weapon"
-    GivenItems(1)="DH_Equipment.DHBinocularsItem"
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanParkaSnowSSPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanSmockToqueSSPawn',Weight=1.0)
+    SleeveTexture=Texture'Weapons1st_tex.Arms.RussianSnow_Sleeves'
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetCover'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetSnow'
-    Limit=1
 }

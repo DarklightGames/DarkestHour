@@ -3,19 +3,19 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_FJRadioman extends DH_FJ;
+class DH_FJRadioman extends DHGERadioOperatorRoles;
 
 defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanRadioFJPawn')
-    MyName="Radio Operator"
-    AltName="Funktruppe"
-    Article="a "
-    PluralName="Radio Operator"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon')
-    GivenItems(0)="DH_Equipment.DHRadioItem"
+    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.FJ_Sleeve'
     Headgear(0)=class'DH_GerPlayers.DH_FJHelmetCamoOne'
     Headgear(1)=class'DH_GerPlayers.DH_FJHelmetCamoTwo'
     Headgear(2)=class'DH_GerPlayers.DH_FJHelmetNetOne'
-    Limit=1
+    HeadgearProbabilities(0)=0.33
+    HeadgearProbabilities(1)=0.33
+    HeadgearProbabilities(2)=0.33
+
+    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
+    SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
 }

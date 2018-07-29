@@ -630,8 +630,8 @@ function UpdateRoles()
 
         bShouldBeDisabled = PC.GetRoleInfo() != RI && Limit > 0 && Count >= Limit && BotCount == 0;
 
-        // If not in a squad AND gametype restricts specialized roles to squads only AND the role is not limitless
-        if (PRI != none && !PRI.IsInSquad() && GRI.GameType.default.bSquadSpecialRolesOnly && Limit != 255)
+        // If not in a squad AND gametype restricts specialized roles to squads only AND the role is not limitless AND the role is not excempt
+        if (PRI != none && !PRI.IsInSquad() && GRI.GameType.default.bSquadSpecialRolesOnly && Limit != 255 && !RI.bExemptSquadRequirement)
         {
             S @= "*" $ SquadOnlyText $ "*";
             bShouldBeDisabled = true;

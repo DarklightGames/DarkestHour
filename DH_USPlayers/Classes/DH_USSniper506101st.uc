@@ -3,17 +3,12 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_USSniper506101st extends DH_US_506PIR;
+class DH_USSniper506101st extends DHUSSniperRoles;
 
 defaultproperties
 {
-    MyName="Sniper"
-    AltName="Sniper"
-    Article="a "
-    PluralName="Snipers"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_SpringfieldScopedWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USAB101stPawn',Weight=1.0)
+    SleeveTexture=Texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet506101stEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet506101stEMb'
-    Limit=1
 }

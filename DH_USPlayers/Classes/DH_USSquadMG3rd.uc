@@ -3,17 +3,12 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_USSquadMG3rd extends DH_US_3rd_Infantry;
+class DH_USSquadMG3rd extends DHUSAutoRifleRoles;
 
 defaultproperties
 {
-    MyName="Light Machine-Gunner"
-    AltName="Light Machine-Gunner"
-    Article="a "
-    PluralName="Light Machine-Gunners"
-    bIsGunner=true
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_BARWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_US3rdPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USVest3rdPawn',Weight=1.0)
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet3rdEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet3rdEMb'
-    Limit=2
 }

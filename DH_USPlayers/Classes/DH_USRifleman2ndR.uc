@@ -3,16 +3,12 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_USrifleman2ndR extends DH_US_2ndRangersBattalion;
+class DH_USrifleman2ndR extends DHUSRiflemanRoles;
 
 defaultproperties
 {
-    MyName="Rifleman"
-    AltName="Rifleman"
-    Article="a "
-    PluralName="Riflemen"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1GarandWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1GarandAmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_M1GrenadeWeapon')
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_US2ndRPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USVest2ndRPawn',Weight=1.0)
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet2ndREMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet2ndREMb'
 }

@@ -20,6 +20,7 @@ var     bool                bIsArtilleryOfficer;    // role has functionality of
 var     bool                bCanUseMortars;         // role has functionality of a mortar operator
 var     bool                bIsMortarObserver;      // role has functionality of a mortar observer
 
+var     bool                bExemptSquadRequirement;// this role will be exempt from the requirement of being in a squad to select
 var     bool                bRequiresSLorASL;       // player must be a SL or ASL to select this role, only applies when gametype has bSquadSpecialRolesOnly=true
 
 var     int                 AddedReinforcementTime; // extra time in seconds before re-spawning

@@ -3,16 +3,11 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_WKAntiTank extends DH_Kriegsmarine;
+class DH_WKAntiTank extends DHGEAntiTankRoles;
 
 defaultproperties
 {
-    MyName="Anti-tank soldier"
-    AltName="PaK-Soldat"
-    Article="an "
-    PluralName="Anti-tank soldiers"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
-    GivenItems(0)="DH_Weapons.DH_PanzerschreckWeapon"
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanKriegsmarinePawn',Weight=1.0)
+    SleeveTexture=Texture'Weapons1st_tex.Arms.german_sleeves'
     Headgear(0)=class'DH_GerPlayers.DH_KriegsmarineHelmet'
-    Limit=2
 }

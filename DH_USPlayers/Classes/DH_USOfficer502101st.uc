@@ -3,19 +3,14 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_USOfficer502101st extends DH_US_502PIR;
+class DH_USOfficer502101st extends DHUSArtilleryOfficerRoles;
 
 defaultproperties
 {
-    bIsArtilleryOfficer=true
-    MyName="Artillery Officer"
-    AltName="Artillery Officer"
-    Article="an "
-    PluralName="Artillery Officers"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_ColtM1911Weapon')
-    GivenItems(0)="DH_Equipment.DHBinocularsItem"
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USAB101stPawn',Weight=1.0)
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet502101stOfficera'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet502101stOfficerb'
-    Limit=1
+    HeadgearProbabilities(0)=0.5
+    HeadgearProbabilities(1)=0.5
+    SleeveTexture=Texture'DHUSCharactersTex.Sleeves.USAB_sleeves'
 }
