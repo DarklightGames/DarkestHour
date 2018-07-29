@@ -96,7 +96,7 @@ defaultproperties
     ZoomOutTime=0.35
 
     MaxNumPrimaryMags=20
-    InitialNumPrimaryMags=15
+    InitialNumPrimaryMags=20
 
     SelectEmptyAnim="Draw_empty"
     PutDownEmptyAnim="put_away_empty"

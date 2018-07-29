@@ -49,8 +49,8 @@ defaultproperties
     IronSightDisplayFOV=25.0
     FreeAimRotationSpeed=2.0
 
-    MaxNumPrimaryMags=8
-    InitialNumPrimaryMags=8
+    MaxNumPrimaryMags=12
+    InitialNumPrimaryMags=12
     bCanBeResupplied=true
     NumMagsToResupply=2
 

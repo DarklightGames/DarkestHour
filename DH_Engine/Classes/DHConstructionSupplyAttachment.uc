@@ -14,6 +14,8 @@ var private float       SupplyCount;
 var int                 SupplyCountMax;
 var private int         TeamIndex;
 
+var int                 MunitionPercentageValue;
+
 var bool                bShouldShowOnMap;
 var bool                bShouldMapIconBeRotated;
 var bool                bIsMainSupplyCache;
@@ -282,7 +284,7 @@ function Timer()
         if (SupplyDepositCounter >= SupplyDepositInterval)
         {
             // Get number of generating supply points for the team
-            NumOfGeneratingSupplyPoints = Max(GRI.GetNumberOfGeneratingSupplyPoints(TeamIndex), 1);
+            NumOfGeneratingSupplyPoints = Max(GRI.GetNumberOfGeneratingSupplyPointsForTeam(TeamIndex), 1);
 
             // Calculate the base and bonus generation
             SuppliesToDeposit = float(SupplyGenerationRate / NumOfGeneratingSupplyPoints) + float(BonusSupplyGenerationRate);
@@ -372,6 +374,7 @@ defaultproperties
     SupplyCount=2000.0
     SupplyCountMax=2000
     TouchDistanceInMeters=50
+    MunitionPercentageValue=10
     RemoteRole=ROLE_DumbProxy
     bOnlyDrawIfAttached=true
     DrawType=DT_StaticMesh

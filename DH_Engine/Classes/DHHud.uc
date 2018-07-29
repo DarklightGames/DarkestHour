@@ -49,7 +49,7 @@ var     float               PlayerIconScale, PlayerIconLargeScale;
 var     SpriteWidget        CanMantleIcon;
 var     SpriteWidget        CanDigIcon;
 var     SpriteWidget        CanCutWireIcon;
-var     SpriteWidget        ExtraAmmoIcon; // extra ammo icon appears if the player has extra ammo to give out
+var     SpriteWidget        ExtraAmmoIcon; // extra ammo icon, (white) indicates if the player has extra ammo otherwise its (grey), some roles can't carry extra ammo
 var     SpriteWidget        DeployOkayIcon;
 var     SpriteWidget        DeployEnemiesNearbyIcon;
 var     SpriteWidget        DeployInObjectiveIcon;
@@ -837,16 +837,19 @@ function DrawHudPassC(Canvas C)
         DrawLocationHits(C, ROPawn(PawnOwner));
 
         // Extra ammo icon
-        if (!P.bUsedCarriedMGAmmo)
+        if (P.bCarriesExtraAmmo)
         {
-            ExtraAmmoIcon.Tints[TeamIndex] = default.ExtraAmmoIcon.Tints[TeamIndex];
-        }
-        else
-        {
-            ExtraAmmoIcon.Tints[TeamIndex] = WeaponReloadingColor;
-        }
+            if (!P.bUsedCarriedMGAmmo)
+            {
+                ExtraAmmoIcon.Tints[TeamIndex] = default.ExtraAmmoIcon.Tints[TeamIndex];
+            }
+            else
+            {
+                ExtraAmmoIcon.Tints[TeamIndex] = WeaponReloadingColor;
+            }
 
-        DrawSpriteWidget(C, ExtraAmmoIcon);
+            DrawSpriteWidget(C, ExtraAmmoIcon);
+        }
     }
 
     // MG deploy icon if the weapon can be deployed
@@ -2134,6 +2137,7 @@ function MouseInterfaceStopCapturing()
 // Modified to show names of friendly players within 25m if they are talking, are in our squad, or if we can resupply them or assist them with loading a rocket
 // This is as well as any player we are looking directly at (within a longer distance of 50m)
 // We also show a relevant icon above a drawn name if the player is talking or if we can resupply or assist reload them
+// TODO: this function would be much easier to follow if we didn't have to cast all the time, might want to rewrite with DH classes in mind
 function DrawPlayerNames(Canvas C)
 {
     local DHPlayerReplicationInfo PRI, OtherPRI;
@@ -2305,12 +2309,12 @@ function DrawPlayerNames(Canvas C)
         else if (P.IsA('DHMortarVehicleWeaponPawn'))
         {
             Mortar = DHMortarVehicle(VehicleWeaponPawn(P).VehicleBase);
-            bMayBeValid = Mortar != none && Mortar.bCanBeResupplied && ROPawn(PlayerOwner.Pawn) != none && !ROPawn(PlayerOwner.Pawn).bUsedCarriedMGAmmo;
+            bMayBeValid = Mortar != none && Mortar.bCanBeResupplied && ROPawn(PlayerOwner.Pawn) != none && !ROPawn(PlayerOwner.Pawn).bUsedCarriedMGAmmo && DHPawn(PlayerOwner.Pawn).bCarriesExtraAmmo;
         }
         // Check whether we can resupply the player or assist them with loading a rocket
         else if (DHPawn(P) != none)
         {
-            bMayBeValid = (DHPawn(P).bWeaponNeedsResupply && ROPawn(PlayerOwner.Pawn) != none && !ROPawn(PlayerOwner.Pawn).bUsedCarriedMGAmmo) // we can resupply ammo
+            bMayBeValid = (DHPawn(P).bWeaponNeedsResupply && ROPawn(PlayerOwner.Pawn) != none && (!ROPawn(PlayerOwner.Pawn).bUsedCarriedMGAmmo && DHPawn(PlayerOwner.Pawn).bCarriesExtraAmmo)) // we can resupply ammo
                         || DHPawn(P).bWeaponNeedsReload;                                                                                       // we can assist rocket reload
         }
         // Player isn't currently valid as we aren't looking at them, they aren't talking, & we can't resupply them or assist them with loading a rocket
@@ -2534,14 +2538,14 @@ function DrawPlayerNames(Canvas C)
         {
             Mortar = DHMortarVehicle(VehicleWeaponPawn(P).VehicleBase);
 
-            if (Mortar != none && Mortar.bCanBeResupplied && ROPawn(PlayerOwner.Pawn) != none && !ROPawn(PlayerOwner.Pawn).bUsedCarriedMGAmmo)
+            if (Mortar != none && Mortar.bCanBeResupplied && ROPawn(PlayerOwner.Pawn) != none && !ROPawn(PlayerOwner.Pawn).bUsedCarriedMGAmmo && DHPawn(PlayerOwner.Pawn).bCarriesExtraAmmo)
             {
                 IconMaterial = NeedAmmoIconMaterial;
             }
         }
         else if (DHPawn(P) != none)
         {
-            if (DHPawn(P).bWeaponNeedsResupply && ROPawn(PlayerOwner.Pawn) != none && !ROPawn(PlayerOwner.Pawn).bUsedCarriedMGAmmo)
+            if (DHPawn(P).bWeaponNeedsResupply && ROPawn(PlayerOwner.Pawn) != none && !ROPawn(PlayerOwner.Pawn).bUsedCarriedMGAmmo && DHPawn(PlayerOwner.Pawn).bCarriesExtraAmmo)
             {
                 IconMaterial = NeedAmmoIconMaterial;
             }

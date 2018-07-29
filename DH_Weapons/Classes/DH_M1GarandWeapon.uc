@@ -52,6 +52,7 @@ defaultproperties
 
     MaxNumPrimaryMags=11
     InitialNumPrimaryMags=11
+
     bPlusOneLoading=false
     bDiscardMagOnReload=true
 

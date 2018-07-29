@@ -1764,7 +1764,8 @@ function GiveAmmo(int M, WeaponPickup WP, bool bJustSpawned)
         {
             InitialAmount = FireMode[M].AmmoClass.default.InitialAmount;
             CurrentMagIndex = 0;
-            PrimaryAmmoArray.Length = InitialNumPrimaryMags;
+
+            PrimaryAmmoArray.Length = Ceil(InitialNumPrimaryMags * GetInitialNumMagsPercentage());
 
             for (i = 0; i < PrimaryAmmoArray.Length; ++i)
             {
@@ -1807,6 +1808,26 @@ function bool AddAmmo(int AmmoToAdd, int Mode)
     NetUpdateTime = Level.TimeSeconds - 1.0;
 
     return true;
+}
+
+function float GetInitialNumMagsPercentage()
+{
+    local float InitialAmmoPercent;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI != none && bGameCanChangeInitialNumMags)
+    {
+        InitialAmmoPercent = GRI.TeamMunitionPercentages[Instigator.GetTeamNum()] / 100.0;
+    }
+    else
+    {
+        Warn("Could not find GRI in GetInitialNumMagsPercentage() in:" @ self);
+        InitialAmmoPercent = 1.0;
+    }
+
+    return InitialAmmoPercent;
 }
 
 // Modified to handle picking up spare ammo magazines from a WeaponPickup, which is a new system in DH
