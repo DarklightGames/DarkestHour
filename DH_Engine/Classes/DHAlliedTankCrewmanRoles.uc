@@ -9,6 +9,7 @@ class DHAlliedTankCrewmanRoles extends DHAlliedRoles
 defaultproperties
 {
     bCanBeTankCrew=true
+    bExemptSquadRequirement=true
     MyName="Tank Crewman"
     AltName="Tank Crewman"
     Article="a "

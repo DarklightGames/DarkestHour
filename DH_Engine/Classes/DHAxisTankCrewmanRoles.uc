@@ -9,6 +9,7 @@ class DHAxisTankCrewmanRoles extends DHAxisRoles
 defaultproperties
 {
     bCanBeTankCrew=true
+    bExemptSquadRequirement=true
     MyName="Tank Crewman"
     AltName="Panzerbesatzung"
     Article="a "
