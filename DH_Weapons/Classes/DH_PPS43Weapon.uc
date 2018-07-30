@@ -5,8 +5,6 @@
 
 class DH_PPS43Weapon extends DHFastAutoWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\Allies_Pps43_1st.ukx
-
 defaultproperties
 {
     ItemName="PPS-43"

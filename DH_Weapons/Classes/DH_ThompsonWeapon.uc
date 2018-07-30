@@ -5,8 +5,6 @@
 
 class DH_ThompsonWeapon extends DHAutoWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Thompson_1st.ukx
-
 defaultproperties
 {
     ItemName="M1A1 Thompson"

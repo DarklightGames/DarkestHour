@@ -5,8 +5,6 @@
 
 class DH_M1GrenadeWeapon extends DHExplosiveWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_M1Grenade_1st.ukx
-
 defaultproperties
 {
     ItemName="Mk II Grenade"

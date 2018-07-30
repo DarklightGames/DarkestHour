@@ -5,8 +5,6 @@
 
 class DH_SatchelCharge10lb10sWeapon extends DHExplosiveWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\Common_Satchel_1st.ukx
-
 defaultproperties
 {
     ItemName="10lb Satchel Charge"

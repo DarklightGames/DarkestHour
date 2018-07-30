@@ -5,8 +5,6 @@
 
 class DH_C96Weapon extends DHFastAutoWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_C96_1st.ukx
-
 defaultproperties
 {
     ItemName="Mauser C96"

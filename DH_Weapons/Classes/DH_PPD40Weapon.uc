@@ -5,8 +5,6 @@
 
 class DH_PPD40Weapon extends DHFastAutoWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\Allies_Ppd40_1st.ukx
-
 defaultproperties
 {
     ItemName="PPD-40"

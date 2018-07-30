@@ -5,8 +5,6 @@
 
 class DH_STG44Weapon extends DHAutoWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\Axis_Stg44_1st.ukx
-
 defaultproperties
 {
     ItemName="Sturmgewehr 44"

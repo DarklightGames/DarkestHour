@@ -5,8 +5,6 @@
 
 class DH_MP40Weapon extends DHAutoWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Mp40_1st.ukx
-
 defaultproperties
 {
     ItemName="Maschinenpistole 40"

@@ -5,8 +5,6 @@
 
 class DH_StielGranateWeapon extends DHExplosiveWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\Axis_Granate_1st.ukx
-
 defaultproperties
 {
     ItemName="Stielhandgranate 39/43"

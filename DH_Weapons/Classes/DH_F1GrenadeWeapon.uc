@@ -5,8 +5,6 @@
 
 class DH_F1GrenadeWeapon extends DHExplosiveWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\Allies_F1nade_1st.ukx
-
 defaultproperties
 {
     ItemName="F1 Grenade"

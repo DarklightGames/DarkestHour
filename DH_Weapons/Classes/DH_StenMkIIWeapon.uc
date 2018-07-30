@@ -5,8 +5,6 @@
 
 class DH_StenMkIIWeapon extends DHAutoWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Sten_1st.ukx
-
 defaultproperties
 {
     ItemName="Sten MkII"

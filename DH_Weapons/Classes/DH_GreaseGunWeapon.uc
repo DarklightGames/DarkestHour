@@ -5,8 +5,6 @@
 
 class DH_GreaseGunWeapon extends DHAutoWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_M3GreaseGun_1st.ukx
-
 defaultproperties
 {
     ItemName="M3 Grease Gun"

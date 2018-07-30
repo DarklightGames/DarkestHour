@@ -5,8 +5,6 @@
 
 class DH_RPG43GrenadeWeapon extends DHExplosiveWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_RPG43Grenade_1st.ukx
-
 defaultproperties
 {
     ItemName="RPG43 Anti-Tank Grenade"
