@@ -12,8 +12,14 @@ defaultproperties
     FireRate=0.13
     Spread=310.0
     RecoilRate=0.05
-    MaxVerticalRecoilAngle=280
-    MaxHorizontalRecoilAngle=35
+    MaxVerticalRecoilAngle=250
+    MaxHorizontalRecoilAngle=32
+
+    // Recoil percentages
+    PctStandIronRecoil=0.55
+    PctCrouchIronRecoil=0.45
+    PctProneIronRecoil=0.3
+
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stMP'
     FireSounds(0)=SoundGroup'DH_WeaponSounds.mp40.mp40_fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.mp40.mp40_fire02'

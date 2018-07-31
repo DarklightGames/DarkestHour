@@ -16,10 +16,10 @@ defaultproperties
     MaxVerticalRecoilAngle=280
     MaxHorizontalRecoilAngle=85
 
-    // Recoil
-    PctStandIronRecoil=0.4
-    PctCrouchIronRecoil=0.35
-    PctProneIronRecoil=0.25
+    // Recoil percentages
+    PctStandIronRecoil=0.55
+    PctCrouchIronRecoil=0.45
+    PctProneIronRecoil=0.3
 
     AmbientFireSound=SoundGroup'DH_WeaponSounds.ppsh41.ppsh41_fire_loop'
     FireEndSound=SoundGroup'DH_WeaponSounds.ppsh41.ppsh41_fire_end'
