@@ -3,19 +3,11 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_RKKA_StandardFireteamLeader extends DH_RKKA_Standard;
+class DH_RKKA_StandardFireteamLeader extends DHSOVCorporalRoles;
 
 defaultproperties
 {
-    MyName="Corporal"
-    AltName="Komandir zvena"
-    Article="a "
-    PluralName="Corporals"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_SVT40Weapon',Amount=6,AssociatedAttachment=class'ROInventory.SVT40AmmoPouch')
-    Grenades(0)=(Item=class'DH_Weapons.DH_F1GrenadeWeapon',Amount=2)
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietPawn',Weight=1.0)
     Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'
-    Headgear(1)=class'DH_SovietPlayers.DH_SovietSidecap'
-    Headgear(2)=class'DH_SovietPlayers.DH_SovietSidecap'
-    Limit=2
-    bRequiresSLorASL=true
+    SleeveTexture=Texture'Weapons1st_tex.russian_sleeves'
 }

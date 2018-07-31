@@ -3,20 +3,13 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_CanadianMortarmanRoyalNewBrunswicks extends DH_RoyalNewBrunswicks;
+class DH_CanadianMortarmanRoyalNewBrunswicks extends DHCWMortarmanRoles;
 
 defaultproperties
 {
-    bCanUseMortars=true
-    MyName="Mortar Operator"
-    AltName="Mortar Operator"
-    Article="a "
-    PluralName="Mortar Operators"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
-    GivenItems(0)="DH_Weapons.DH_M2MortarWeapon"
-    GivenItems(1)="DH_Equipment.DHBinocularsItem"
-    Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
-    Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
-    Headgear(2)=class'DH_BritishPlayers.DH_BritishTommyHelmet'
-    Limit=1
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_CanadianBrunswicksPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_BritishPlayers.DH_CanadianVestBrunswicksPawn',Weight=1.0)
+    VoiceType="DH_BritishPlayers.DHCanadianVoice"
+    AltVoiceType="DH_BritishPlayers.DHCanadianVoice"
+    SleeveTexture=Texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
 }

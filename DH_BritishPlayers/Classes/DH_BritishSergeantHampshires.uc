@@ -3,28 +3,14 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_BritishSergeantHampshires extends DH_Hampshires;
+class DH_BritishSergeantHampshires extends DHCWSergeantRoles;
 
 defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_BritishSergeantHampshiresPawn')
     RolePawns(1)=(PawnClass=class'DH_BritishPlayers.DH_BritishVestSergeantHampshiresPawn')
-    MyName="Corporal"
-    AltName="Corporal"
-    Article="a "
-    PluralName="Corporals"
-    bIsLeader=true
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
-    PrimaryWeapons(2)=(Item=class'DH_Weapons.DH_ThompsonWeapon')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
-    Grenades(0)=(Item=class'DH_Weapons.DH_MillsBombWeapon')
-    Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
-    Grenades(2)=(Item=class'DH_Equipment.DH_RedSmokeWeapon')
-    HeadgearProbabilities(0)=0.5
     Headgear(0)=class'DH_BritishPlayers.DH_BritishInfantryBeretHampshires'
-    HeadgearProbabilities(1)=0.5
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
-    Limit=2
-    bRequiresSLorASL=true
+    HeadgearProbabilities(0)=0.5
+    HeadgearProbabilities(1)=0.5
 }

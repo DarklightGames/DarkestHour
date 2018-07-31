@@ -20,6 +20,6 @@ defaultproperties
 
     IronSightDisplayFOV=35.0
 
-    MaxNumPrimaryMags=8
-    InitialNumPrimaryMags=8
+    MaxNumPrimaryMags=10
+    InitialNumPrimaryMags=10
 }

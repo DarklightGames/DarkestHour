@@ -3,20 +3,13 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_WSSSniper extends DH_WaffenSS;
+class DH_WSSSniper extends DHGESniperRoles;
 
 defaultproperties
 {
-    MyName="Sniper"
-    AltName="Scharfschütze"
-    Article="a "
-    PluralName="Snipers"
-
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98ScopedWeapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_G43ScopedWeapon')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
-    SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanSSPawn',Weight=1.5)
+    RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanSpringSmockSSPawn',Weight=1.0)
+    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetTwo'
-    Limit=2
 }

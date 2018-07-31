@@ -36,6 +36,7 @@ defaultproperties
 
     MaxNumPrimaryMags=11
     InitialNumPrimaryMags=11
+
     bTwoMagsCapacity=true
     bPlusOneLoading=false
     MagEmptyReloadAnim="reload_striper_empty"

@@ -3,18 +3,13 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_CanadianSquadMGRoyalNewBrunswicks extends DH_RoyalNewBrunswicks;
+class DH_CanadianSquadMGRoyalNewBrunswicks extends DHCWAutoRifleRoles;
 
 defaultproperties
 {
-    MyName="Light Machine-Gunner"
-    AltName="Light Machine-Gunner"
-    Article="a "
-    PluralName="Light Machine-Gunners"
-    bIsGunner=true
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_BrenWeapon')
-    Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
-    Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
-    Headgear(2)=class'DH_BritishPlayers.DH_BritishTommyHelmet'
-    Limit=3
+    RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_CanadianBrunswicksPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_BritishPlayers.DH_CanadianVestBrunswicksPawn',Weight=1.0)
+    VoiceType="DH_BritishPlayers.DHCanadianVoice"
+    AltVoiceType="DH_BritishPlayers.DHCanadianVoice"
+    SleeveTexture=Texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
 }

@@ -3,18 +3,19 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_WHMortarman_SnowTwo extends DH_HeerSnowTwo;
+class DH_WHMortarman_SnowTwo extends DHGEMortarmanRoles;
 
 defaultproperties
 {
-    bCanUseMortars=true
-    MyName="Mortar Operator"
-    AltName="Werferschütze"
-    Article="a "
-    PluralName="Mortar Operators"
-
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
-    GivenItems(0)="DH_Mortars.DH_Kz8cmGrW42Weapon"
-    GivenItems(1)="DH_Equipment.DHBinocularsItem"
-    Limit=1
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanSnowGreatCoatPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_GerPlayers.DH_GermanSnowHeerPawn',Weight=1.0)
+    SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.snow_sleeves'
+    Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetSnowTwo'
+    Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetSnowThree'
+    Headgear(2)=class'DH_GerPlayers.DH_HeerHelmetSnow'
+    Headgear(3)=class'DH_GerPlayers.DH_HeerHelmetCover'
+    HeadgearProbabilities(0)=0.4
+    HeadgearProbabilities(1)=0.25
+    HeadgearProbabilities(2)=0.3
+    HeadgearProbabilities(3)=0.05
 }

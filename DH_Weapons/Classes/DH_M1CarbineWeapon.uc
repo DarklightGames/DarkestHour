@@ -24,8 +24,8 @@ defaultproperties
     IronSightDisplayFOV=20.0
     FreeAimRotationSpeed=7.0
 
-    MaxNumPrimaryMags=9
-    InitialNumPrimaryMags=9
+    MaxNumPrimaryMags=12
+    InitialNumPrimaryMags=12
 
     PutDownAnim="putaway"
     IdleEmptyAnim="idle_empty"

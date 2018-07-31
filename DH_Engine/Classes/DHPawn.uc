@@ -14,6 +14,7 @@ class DHPawn extends ROPawn
 var     Controller          SwitchingController; // needed by KDriverEnter() when switched vehicle position, as player no longer briefly re-possesses DHPawn before entering new position
 var     DHRadio Radio; // for storing the trigger on a radioman each spawn, for the purpose of deleting it on death
 var     bool    bWeaponNeedsReload;       // whether an AT weapon is loaded or not
+var     bool    bCarriesExtraAmmo;        // used to determine if this pawn can carry extra ammo
 var     float   StanceChangeStaminaDrain; // how much stamina is lost by changing stance
 var     float   MinHurtSpeed;             // when a moving player lands, if they're moving faster than this speed they'll take damage
 var     vector  LastWhizLocation;         // last whiz sound location on pawn (basically a non-replicated version of Pawn's mWhizSoundLocation, as we no longer want it to replicate)
@@ -48,7 +49,7 @@ var     bool    bCanCutWire;
 var     bool    bIsCuttingWire;
 
 // Spawning
-var     DHSpawnPointBase    SpawnPoint;        // the spawn point that was used to spawn this vehicle
+var     DHSpawnPointBase    SpawnPoint;        // the spawn point that was used to spawn this pawn
 var     float               SpawnProtEnds;     // is set when a player spawns/teleports for "spawn" protection in selectable spawn maps
 var     float               SpawnKillTimeEnds; // is set when a player spawns
 var     bool                bCombatSpawned;    // indicates the pawn was spawned in combat
@@ -128,7 +129,7 @@ replication
 
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        TouchingSupplyCount, bInLockedVehicle;
+        TouchingSupplyCount, bInLockedVehicle, bCarriesExtraAmmo;
 
     // Variables the server will replicate to all clients except the one that owns this actor
     reliable if (!bNetOwner && bNetDirty && Role == ROLE_Authority)
@@ -3051,7 +3052,7 @@ function AddDefaultInventory()
     local DHPlayerReplicationInfo PRI;
     local DHPlayer   P;
     local DHBot      B;
-    local RORoleInfo RI;
+    local DHRoleInfo RI;
     local string     S;
     local int        i;
 
@@ -3084,7 +3085,7 @@ function AddDefaultInventory()
             CheckGiveShovel();
             CheckGiveBinocs();
 
-            RI = P.GetRoleInfo();
+            RI = GetRoleInfo();
 
             if (RI != none)
             {
@@ -3104,6 +3105,15 @@ function AddDefaultInventory()
                     {
                         CreateInventory(RI.GivenItems[i]);
                     }
+                }
+
+                // Set whether this pawn can carry extra ammo
+                bCarriesExtraAmmo = RI.default.bCanCarryExtraAmmo;
+
+                // If we do not carry extra ammo or we aren't supposed to spawn with it, then we shouldn't have it
+                if (!bCarriesExtraAmmo || !RI.default.bSpawnWithExtraAmmo)
+                {
+                    bUsedCarriedMGAmmo = true; // This means it is "used" aka the player won't have extra ammo
                 }
             }
         }
@@ -3127,7 +3137,7 @@ function AddDefaultInventory()
                     CreateInventory(S);
                 }
 
-                RI = B.GetRoleInfo();
+                RI = DHRoleInfo(B.GetRoleInfo());
 
                 if (RI != none)
                 {
@@ -3150,7 +3160,7 @@ function AddDefaultInventory()
 
         if (P != none)
         {
-            RI = P.GetRoleInfo();
+            RI = GetRoleInfo();
 
             if (RI != none)
             {
@@ -3185,6 +3195,15 @@ function AddDefaultInventory()
             if (S != "None" && S != "")
             {
                 CreateInventory(S);
+            }
+
+            // Set whether this pawn can carry extra ammo
+            bCarriesExtraAmmo = RI.default.bCanCarryExtraAmmo;
+
+            // If we do not carry extra ammo or we aren't supposed to spawn with it, then we shouldn't have it
+            if (!bCarriesExtraAmmo || !RI.default.bSpawnWithExtraAmmo)
+            {
+                bUsedCarriedMGAmmo = true; // This means it is "used" aka the player won't have extra ammo
             }
 
             CheckGiveShovel();
@@ -6230,7 +6249,7 @@ simulated function NotifySelected(Pawn User)
         return;
     }
 
-    if (!P.bUsedCarriedMGAmmo && bWeaponNeedsResupply)
+    if (!P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo && bWeaponNeedsResupply)
     {
         P.ReceiveLocalizedMessage(TouchMessageClass, 0, self.PlayerReplicationInfo,, User.Controller);
         LastNotifyTime = Level.TimeSeconds;

@@ -104,7 +104,7 @@ function Timer()
                 }
             }
 
-            if (RI != none && DHP != none && DHP.bUsedCarriedMGAmmo)
+            if (RI != none && DHP != none && DHP.bUsedCarriedMGAmmo && DHP.bCarriesExtraAmmo)
             {
                 DHP.bUsedCarriedMGAmmo = false;
 
@@ -134,7 +134,7 @@ function Timer()
                     bResupplied = true;
                 }
 
-                if (DHP.bUsedCarriedMGAmmo)
+                if (DHP.bUsedCarriedMGAmmo && DHP.bCarriesExtraAmmo)
                 {
                     DHP.bUsedCarriedMGAmmo = false;
                     bResupplied = true;

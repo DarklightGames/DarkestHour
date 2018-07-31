@@ -3,19 +3,14 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_WSSGreatcoatAntiTank extends DH_WaffenSSGreatcoat;
+class DH_WSSGreatcoatAntiTank extends DHGEAntiTankRoles;
 
 defaultproperties
 {
-    MyName="SS Tank Hunter"
-    AltName="SS Panzerjäger"
-    Article="a "
-    PluralName="SS Tank Hunters"
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanGreatCoatPawn',Weight=1.0)
     SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
-    Grenades(0)=(Item=class'DH_Equipment.DH_NebelGranate39Weapon')
-    GivenItems(0)="DH_Weapons.DH_PanzerschreckWeapon"
+    DetachedArmClass=class'ROEffects.SeveredArmGerGreat'
+    DetachedLegClass=class'ROEffects.SeveredLegGerGreat'
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetTwo'
-    Limit=1
 }

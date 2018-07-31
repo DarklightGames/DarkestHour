@@ -3,17 +3,10 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_USSquadMG29thBeach extends DH_US_29th_Infantry_Beach;
+class DH_USSquadMG29thBeach extends DH_USSquadMG29th;
 
 defaultproperties
 {
-    MyName="Light Machine-Gunner"
-    AltName="Light Machine-Gunner"
-    Article="a "
-    PluralName="Light Machine-Gunners"
-    bIsGunner=true
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_BARWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
-    Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet29thEMa'
-    Headgear(1)=class'DH_USPlayers.DH_AmericanHelmet29thEMb'
-    Limit=2
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USBeach29thPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USBeachVest29thPawn',Weight=1.0)
 }

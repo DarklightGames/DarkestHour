@@ -1069,7 +1069,7 @@ exec function ThrowMGAmmo()
 
         if (OtherPawn != none)
         {
-            if (!MyPawn.bUsedCarriedMGAmmo && OtherPawn.bWeaponNeedsResupply)
+            if (!MyPawn.bUsedCarriedMGAmmo && MyPawn.bCarriesExtraAmmo && OtherPawn.bWeaponNeedsResupply)
             {
                 ServerThrowMGAmmo(OtherPawn);
             }

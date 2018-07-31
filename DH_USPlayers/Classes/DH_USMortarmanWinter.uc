@@ -3,19 +3,14 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_USMortarmanWinter extends DH_US_Winter_Infantry;
+class DH_USMortarmanWinter extends DHUSMortarmanRoles;
 
 defaultproperties
 {
-    bCanUseMortars=true
-    MyName="Mortar Operator"
-    AltName="Mortar Operator"
-    Article="a "
-    PluralName="Mortar Operators"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_M1CarbineWeapon',AssociatedAttachment=class'DH_Weapons.DH_M1CarbineAmmoPouch')
-    GivenItems(0)="DH_Weapons.DH_M2MortarWeapon"
-    GivenItems(1)="DH_Equipment.DHBinocularsItem"
+    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USTrenchcoatScarfPawn',Weight=2.0)
+    RolePawns(1)=(PawnClass=class'DH_USPlayers.DH_USWinterScarfPawn',Weight=1.0)
+    RolePawns(2)=(PawnClass=class'DH_USPlayers.DH_USTrenchcoatPawn',Weight=0.6)
+    RolePawns(3)=(PawnClass=class'DH_USPlayers.DH_USWinterPawn',Weight=0.3)
     Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet1stEMa'
     Headgear(1)=class'DH_USPlayers.DH_AmericanHelmetWinter'
-    Limit=1
 }

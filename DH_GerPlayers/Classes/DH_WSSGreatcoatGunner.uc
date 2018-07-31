@@ -3,20 +3,14 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_WSSGreatcoatGunner extends DH_WaffenSSGreatcoat;
+class DH_WSSGreatcoatGunner extends DHGEMachineGunnerRoles;
 
 defaultproperties
 {
-    MyName="SS Machine-gunner"
-    AltName="MG-Schütze-SS"
-    Article="a "
-    PluralName="SS Machine-gunners"
-    bIsGunner=true
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_MG42Weapon')
-    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MG34Weapon')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
-    SecondaryWeapons(1)=(Item=class'DH_Weapons.DH_P08LugerWeapon')
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanGreatCoatPawn',Weight=1.0)
+    SleeveTexture=Texture'Weapons1st_tex.Arms.GermanCoatSleeves'
+    DetachedArmClass=class'ROEffects.SeveredArmGerGreat'
+    DetachedLegClass=class'ROEffects.SeveredLegGerGreat'
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
-    Limit=2
 }

@@ -23,8 +23,8 @@ defaultproperties
     ZoomOutTime=0.1
     FreeAimRotationSpeed=7.0
 
-    MaxNumPrimaryMags=7
-    InitialNumPrimaryMags=7
+    MaxNumPrimaryMags=8
+    InitialNumPrimaryMags=8
 
     bHasSelectFire=true
     SelectFireAnim="select_fire"

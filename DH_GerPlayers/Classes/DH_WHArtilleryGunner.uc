@@ -3,21 +3,19 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_WHArtilleryGunner extends DH_Heer;
+class DH_WHArtilleryGunner extends DHGETankCrewmanRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanArtilleryHeerPawn')
     MyName="Artillery Gunner"
     AltName="Artillerie Schütze"
     Article="a "
     PluralName="Artillery Gunners"
 
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_P38Weapon')
-    GivenItems(0)="DH_Equipment.DHBinocularsItem"
+    RolePawns(0)=(PawnClass=class'DH_GerPlayers.DH_GermanArtilleryHeerPawn')
     Headgear(0)=class'DH_GerPlayers.DH_HeerHelmetThree'
     Headgear(1)=class'DH_GerPlayers.DH_HeerHelmetTwo'
-    bCanBeTankCrew=true
-    Limit=5
+
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_Kar98Weapon',AssociatedAttachment=class'ROInventory.ROKar98AmmoPouch')
+    PrimaryWeapons(1)=none
 }

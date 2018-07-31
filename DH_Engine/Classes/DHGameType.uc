@@ -14,6 +14,7 @@ var bool                bTimeChangesAtZeroReinf;
 var bool                bSquadSpecialRolesOnly;
 var bool                bKeepSpawningWithoutReinf;
 var bool                bHasTemporarySpawnVehicles;
+var bool                bMunitionsDrainOverTime;
 
 var int                 OutOfReinforcementsRoundTime;
 

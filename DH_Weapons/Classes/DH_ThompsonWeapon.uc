@@ -18,8 +18,8 @@ defaultproperties
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=30.0
 
-    MaxNumPrimaryMags=7
-    InitialNumPrimaryMags=7
+    MaxNumPrimaryMags=9
+    InitialNumPrimaryMags=9
 
     bHasSelectFire=true
     SelectFireAnim="switch_fire"

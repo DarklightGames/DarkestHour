@@ -3,19 +3,13 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_CanadianTanker1stHussars extends DH_1stHussars;
+class DH_CanadianTanker1stHussars extends DHCWTankCrewmanRoles;
 
 defaultproperties
 {
     RolePawns(0)=(PawnClass=class'DH_BritishPlayers.DH_Canadian1stHussarsPawn',Weight=1.0)
-    MyName="Tank Crewman"
-    AltName="Tank Crewman"
-    Article="a "
-    PluralName="Tank Crewmen"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_StenMkIIWeapon')
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
-    GivenItems(0)="DH_Equipment.DHBinocularsItem"
     Headgear(0)=class'DH_BritishPlayers.DH_CanadianTankerBeret'
-    bCanBeTankCrew=true
-    Limit=3
+    VoiceType="DH_BritishPlayers.DHCanadianVoice"
+    AltVoiceType="DH_BritishPlayers.DHCanadianVoice"
+    SleeveTexture=Texture'DHCanadianCharactersTex.Sleeves.CanadianSleeves'
 }

@@ -3,20 +3,10 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_RKKA_GreenTelogreikaGunner extends DH_RKKA_GreenTelogreika;
+class DH_RKKA_GreenTelogreikaGunner extends DHSOVMachineGunnerRoles;
 
 defaultproperties
 {
-    MyName="Machine-gunner"
-    AltName="Pulemetchik"
-    Article="a "
-    PluralName="Machine-gunners"
-    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_DP28Weapon',Amount=1)
-    SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_TT33Weapon',Amount=1)
-    Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'
-    Headgear(1)=class'DH_SovietPlayers.DH_SovietHelmet'
-    Headgear(2)=class'DH_SovietPlayers.DH_SovietSidecap'
-    bIsGunner=true
-    bCarriesMGAmmo=false
-    Limit=2
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietGreenTeloPawn',Weight=1.0)
+    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves_green'
 }

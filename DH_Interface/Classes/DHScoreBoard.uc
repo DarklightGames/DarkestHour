@@ -18,12 +18,16 @@ var float BaseXPos[2], BaseLineHeight, MaxTeamYPos, MaxTeamWidth;
 var int MaxPlayersListedPerSide;
 var int MyTeamIndex;
 
+var localized string MunitionPercentageText;
 var localized string PlayersText;
 var localized string TickHealthText;
 var localized string NetHealthText;
 var localized string PoorText;
 var localized string FairText;
 var localized string GoodText;
+
+var string TabSpaces;
+var string LargeTabSpaces;
 
 var color SquadHeaderColor;
 var color PlayerBackgroundColor;
@@ -544,7 +548,7 @@ simulated function string GetColumnTitle(int TeamIndex, int ColumnIndex)
 
 simulated function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplicationInfo> TeamPRI, out float X, out float Y, out float LineHeight)
 {
-    local string S, TeamName;
+    local string S, TeamName, TeamInfoString;
     local color  TeamColor;
     local int i, j, TeamTotalScore, SquadIndex;
     local array<int> ScoreboardColumnIndices;
@@ -582,26 +586,34 @@ simulated function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplication
 
     Y += LineHeight;
 
-    // Draw reinforcements remaining, if on team
+    // Draw reinforcements remaining and munitions and if needed team scale, only for your team or if round is over
     if (MyTeamIndex == TeamIndex || DHGRI.bRoundIsOver)
     {
+        // Construct the string of the team info
         if (DHGRI.bIsInSetupPhase)
         {
-            DHDrawCell(C, ReinforcementsText @ ":" @ "???", 0, X, Y, TeamWidth, LineHeight, false, TeamColor);
+            TeamInfoString = ReinforcementsText $ ":" @ "???";
         }
         else if (DHGRI.SpawnsRemaining[TeamIndex] >= 0)
         {
-            DHDrawCell(C, ReinforcementsText @ ":" @ DHGRI.SpawnsRemaining[TeamIndex], 0, X, Y, TeamWidth, LineHeight, false, TeamColor);
+            TeamInfoString = ReinforcementsText $ ":" @ DHGRI.SpawnsRemaining[TeamIndex];
         }
         else
         {
-            DHDrawCell(C, ReinforcementsText @ ":" @ DHGRI.ReinforcementsInfiniteText, 0, X, Y, TeamWidth, LineHeight, false, TeamColor);
+            TeamInfoString = ReinforcementsText $ ":" @ DHGRI.ReinforcementsInfiniteText;
         }
-    }
 
-    if (DHGRI.CurrentAlliedToAxisRatio != 0.5)
-    {
-        DHDrawCell(C, DHGRI.ForceScaleText @ ":" @ DHGRI.GetTeamScaleString(TeamIndex), 0, BaseXPos[TeamIndex] + NameLength, Y, MaxTeamWidth, LineHeight, false, TeamColor);
+        // Add the munition percentage
+        TeamInfoString $= LargeTabSpaces $ MunitionPercentageText $ ":" @ int(DHGRI.TeamMunitionPercentages[TeamIndex]) $ "%";
+
+        // Add the team scale if needed
+        if (DHGRI.CurrentAlliedToAxisRatio != 0.5)
+        {
+            TeamInfoString $= LargeTabSpaces $ DHGRI.ForceScaleText $ ":" @ DHGRI.GetTeamScaleString(TeamIndex);
+        }
+
+        // Draw the team info
+        DHDrawCell(C, TeamInfoString, 0, X, Y, TeamWidth, LineHeight, false, TeamColor);
     }
 
     // Draw rounds won/remaining for the team if not limited to 1 round
@@ -671,7 +683,7 @@ simulated function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplication
             X = BaseXPos[TeamIndex];
 
             // Draw the squad header
-            DHDrawCell(C, "    " $ SRI.GetSquadName(TeamIndex, SquadIndex) @ "(" $ SquadMembers.Length $ "/" $ SRI.GetTeamSquadSize(TeamIndex) $ ")", 0, X, Y, TeamWidth, LineHeight, true, class'UColor'.default.White, SquadHeaderColor);
+            DHDrawCell(C, TabSpaces $ SRI.GetSquadName(TeamIndex, SquadIndex) @ "(" $ SquadMembers.Length $ "/" $ SRI.GetTeamSquadSize(TeamIndex) $ ")", 0, X, Y, TeamWidth, LineHeight, true, class'UColor'.default.White, SquadHeaderColor);
 
             // Increment the Y value
             Y += LineHeight;
@@ -739,7 +751,7 @@ simulated function DHDrawTeam(Canvas C, int TeamIndex, array<DHPlayerReplication
             X = BaseXPos[TeamIndex];
 
             // Draw the unassigned header
-            DHDrawCell(C, "    " $ UnassignedTeamName, 0, X, Y, TeamWidth, LineHeight, true, class'UColor'.default.White, SquadHeaderColor);
+            DHDrawCell(C, TabSpaces $ UnassignedTeamName, 0, X, Y, TeamWidth, LineHeight, true, class'UColor'.default.White, SquadHeaderColor);
 
             // Increment the Y value
             Y += LineHeight;
@@ -886,6 +898,9 @@ simulated function DHDrawCell(Canvas C, coerce string Text, byte Align, float XP
 
 defaultproperties
 {
+    TabSpaces="    "
+    LargeTabSpaces="        "
+
     ScoreboardColumns(0)=(Title="#",Type=COLUMN_SquadMemberIndex,Width=1.5,Justification=1,bFriendlyOnly=true)
     ScoreboardColumns(1)=(Type=COLUMN_PlayerName,Width=5.0)
     ScoreboardColumns(2)=(Title="Role",Type=COLUMN_Role,Width=5.0,bFriendlyOnly=true)
@@ -914,6 +929,7 @@ defaultproperties
     PoorText="Poor"
     FairText="Fair"
     GoodText="Good"
+    MunitionPercentageText="Munitions"
     PatronIconMaterial=Texture'DH_InterfaceArt2_tex.HUD.patron'
     DeveloperIconMaterial=Texture'DH_InterfaceArt2_tex.HUD.developer'
 }

@@ -256,6 +256,9 @@ function PostBeginPlay()
     GRI.bShowServerIPOnScoreboard = bShowServerIPOnScoreboard;
     GRI.bShowTimeOnScoreboard = bShowTimeOnScoreboard;
 
+    GRI.TeamMunitionPercentages[AXIS_TEAM_INDEX] = DHLevelInfo.BaseMunitionPercentages[AXIS_TEAM_INDEX];
+    GRI.TeamMunitionPercentages[ALLIES_TEAM_INDEX] = DHLevelInfo.BaseMunitionPercentages[ALLIES_TEAM_INDEX];
+
     // Artillery
     GRI.ArtilleryStrikeLimit[AXIS_TEAM_INDEX] = LevelInfo.Axis.ArtilleryStrikeLimit;
     GRI.ArtilleryStrikeLimit[ALLIES_TEAM_INDEX] = LevelInfo.Allies.ArtilleryStrikeLimit;
@@ -2310,6 +2313,8 @@ state RoundInPlay
         GRI.DHRoundDuration = RoundDuration;
         GRI.AttritionRate[AXIS_TEAM_INDEX] = 0;
         GRI.AttritionRate[ALLIES_TEAM_INDEX] = 0;
+        GRI.TeamMunitionPercentages[AXIS_TEAM_INDEX] = DHLevelInfo.BaseMunitionPercentages[AXIS_TEAM_INDEX];
+        GRI.TeamMunitionPercentages[ALLIES_TEAM_INDEX] = DHLevelInfo.BaseMunitionPercentages[ALLIES_TEAM_INDEX];
 
         // Here we see if the victory music is set to a sound group and pick an index to replicate to the clients
         if (DHLevelInfo.AlliesWinsMusic != none && DHLevelInfo.AlliesWinsMusic.IsA('SoundGroup'))
@@ -2725,6 +2730,9 @@ state RoundInPlay
                 TeamAttritionCounter[i] = TeamAttritionCounter[i] % 1.0;
             }
         }
+
+        // Update munition percentages (this will update both team's munitions and set them in GRI)
+        UpdateMunitionPercentages();
 
         // Go through both teams and update artillery availability
         for (i = 0; i < 2; ++i)
@@ -3694,6 +3702,39 @@ function ChangeWeapons(Controller aPlayer, int Primary, int Secondary, int Grena
     {
         PC.DHPrimaryWeapon = PC.PrimaryWeapon;
         PC.DHSecondaryWeapon = PC.SecondaryWeapon;
+    }
+}
+
+function UpdateMunitionPercentages()
+{
+    local int i, NumCaches, CacheBonus;
+    local float p;
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    // Don't update munitions if the gamemode does not specify to TODO: perhaps this should be up to levels, but for now it should be gamemode so we have control in code
+    if (!GRI.GameType.default.bMunitionsDrainOverTime)
+    {
+        return;
+    }
+
+    // Calculate and set the Munition Percentages for each team
+    for (i = 0; i < 2; ++i)
+    {
+        // Get the munition percentage by this formula:    StartingMunitions - (ElaspedMinutes * LossRate)
+        p = DHLevelInfo.BaseMunitionPercentages[i] - ((GRI.ElapsedTime - GRI.RoundStartTime) / 60.0 * DHLevelInfo.MunitionLossPerMinute[i]);
+
+        // Get the number of caches (does not count main cache)
+        NumCaches = GRI.GetNumberOfSupplyCachesForTeam(i, true);
+
+        // Calc the CacheBonus, which is a min value that munitions can get (based on MunitionPercentageValue) capped at 30 TODO: fix magic number
+        CacheBonus = Min(NumCaches * class'DHConstructionSupplyAttachment'.default.MunitionPercentageValue, 30);
+
+        // Set the GRI value clamped to the munition percentage
+        GRI.TeamMunitionPercentages[i] = FClamp(p, CacheBonus, 100.0);
     }
 }
 
@@ -4952,7 +4993,7 @@ defaultproperties
     bIgnore32PlayerLimit=true // allows more than 32 players
     bVACSecured=true
 
-    ElapsedTimeAttritionCurve=(Points=((InVal=0.0,OutVal=0.0),(InVal=5400.0,OutVal=0.0),(InVal=7200.0,OutVal=500.0),(InVal=10800.0,OutVal=1000.0)))
+    ElapsedTimeAttritionCurve=(Points=((InVal=0.0,OutVal=0.0),(InVal=4200.0,OutVal=50.0),(InVal=5400.0,OutVal=500.0),(InVal=10800.0,OutVal=1000.0)))
 
     bSessionKickOnSecondFFViolation=true
     FFDamageLimit=0       // this stops the FF damage system from kicking based on FF damage
