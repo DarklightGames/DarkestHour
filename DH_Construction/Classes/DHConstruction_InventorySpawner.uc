@@ -105,6 +105,6 @@ defaultproperties
     ProxyTraceDepthMeters=2.0
     bCanPlaceIndoors=true
     ConstructionVerb="drop"
-    DuplicateFriendlyDistanceInMeters=15.0
+    DuplicateFriendlyDistanceInMeters=1.0
 }
 

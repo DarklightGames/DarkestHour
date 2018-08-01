@@ -28,7 +28,7 @@ defaultproperties
     MenuName="Watchtower"
     ProxyTraceDepthMeters=10.0
     ProxyTraceHeightMeters=5.0
-    HealthMax=500
+    HealthMax=400
     TatteredHealthThreshold=250
     TatteredStaticMesh=StaticMesh'DH_Construction_stc.Constructions.GER_watchtower_damaged'
     BrokenLifespan=30.0

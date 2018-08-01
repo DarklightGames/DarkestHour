@@ -20,7 +20,7 @@ defaultproperties
     CollisionRadius=125
     SupplyCost=350
     BrokenEmitterClass=class'DHConstruction_Sandbags_BrokenEmitter'
-    HealthMax=400
+    HealthMax=500
     bCanTakeImpactDamage=true
     bIsNeutral=true
     bAcceptsProjectors=false
