@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_EnfieldNo4ScopedDamType extends DHWeaponProjectileDamageType
+class DH_EnfieldNo4ScopedDamType extends DHMediumCaliberDamageType
     abstract;
 
 defaultproperties

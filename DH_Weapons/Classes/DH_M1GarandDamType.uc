@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_M1GarandDamType extends DHWeaponProjectileDamageType
+class DH_M1GarandDamType extends DHMediumCaliberDamageType
     abstract;
 
 defaultproperties

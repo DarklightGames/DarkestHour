@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_Kar98ScopedDamType extends DHWeaponProjectileDamageType
+class DH_Kar98ScopedDamType extends DHMediumCaliberDamageType
     abstract;
 
 defaultproperties

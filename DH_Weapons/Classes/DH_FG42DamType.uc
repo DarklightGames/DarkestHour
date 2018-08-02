@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_FG42DamType extends DHWeaponProjectileDamageType
+class DH_FG42DamType extends DHMediumCaliberDamageType
     abstract;
 
 defaultproperties

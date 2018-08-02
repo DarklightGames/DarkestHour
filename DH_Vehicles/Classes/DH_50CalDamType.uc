@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_50CalDamType extends DHWeaponProjectileDamageType
+class DH_50CalDamType extends DHLargeCaliberDamageType
     abstract;
 
 defaultproperties
@@ -17,8 +17,6 @@ defaultproperties
     DeathString="%o was killed by %k's .50 cal machine gun."
     FemaleSuicide="%o was killed by her own .50 cal machine gun."
     MaleSuicide="%o was killed by his own .50 cal machine gun."
-    PawnDamageEmitter=class'ROEffects.ROBloodPuffLarge'
-    bAlwaysSevers=true // so limbs & head are severed by a hit from such a powerful bullet
     GibModifier=2.0            // 0 in 30cal, 4 in PTRD
     GibPerterbation=0.09       // weapon default is 0.06, 0.15 in PTRD (but that value is used by explosives, so is too high)
     VehicleMomentumScaling=0.2 // 0.3 in 234/1, 0.6 in PTRD, 1.3 is default for tank cannon

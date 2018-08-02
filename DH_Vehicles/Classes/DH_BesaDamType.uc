@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_BesaDamType extends DHWeaponProjectileDamageType
+class DH_BesaDamType extends DHMediumCaliberDamageType
     abstract;
 
 defaultproperties

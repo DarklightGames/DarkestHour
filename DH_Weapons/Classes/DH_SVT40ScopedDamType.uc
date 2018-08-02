@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_SVT40ScopedDamType extends DHWeaponProjectileDamageType
+class DH_SVT40ScopedDamType extends DHMediumCaliberDamageType
     abstract;
 
 defaultproperties

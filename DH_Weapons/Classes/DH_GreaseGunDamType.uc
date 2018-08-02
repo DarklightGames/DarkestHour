@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_GreaseGunDamType extends DHWeaponProjectileDamageType
+class DH_GreaseGunDamType extends DHSmallCaliberDamageType
     abstract;
 
 defaultproperties

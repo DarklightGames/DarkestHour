@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_ZB30DamType extends DHWeaponProjectileDamageType
+class DH_ZB30DamType extends DHMediumCaliberDamageType
     abstract;
 
 defaultproperties

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_MN9130ScopedDamType extends DHWeaponProjectileDamageType
+class DH_MN9130ScopedDamType extends DHMediumCaliberDamageType
     abstract;
 
 defaultproperties

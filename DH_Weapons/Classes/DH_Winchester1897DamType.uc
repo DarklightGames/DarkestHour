@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_Winchester1897DamType extends DHWeaponProjectileDamageType;
+class DH_Winchester1897DamType extends DHMediumCaliberDamageType;
 
 defaultproperties
 {

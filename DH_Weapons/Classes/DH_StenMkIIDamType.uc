@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_StenMkIIDamType extends DHWeaponProjectileDamageType
+class DH_StenMkIIDamType extends DHSmallCaliberDamageType
     abstract;
 
 defaultproperties

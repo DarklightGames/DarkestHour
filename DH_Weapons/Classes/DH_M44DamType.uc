@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_M44DamType extends DHWeaponProjectileDamageType
+class DH_M44DamType extends DHMediumCaliberDamageType
     abstract;
 
 defaultproperties
