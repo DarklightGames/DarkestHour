@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_Winchester1897DamType extends DHMediumCaliberDamageType;
+class DH_Winchester1897DamType extends DHMediumCaliberDamageType
+    abstract;
 
 defaultproperties
 {
