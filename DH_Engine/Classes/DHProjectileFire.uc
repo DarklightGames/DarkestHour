@@ -478,7 +478,7 @@ function bool PreLaunchTrace(vector Start, vector Direction)
     // Finally handle damage on whatever we've hit
     if (HitPlayer != none)
     {
-        HitPlayer.ProcessLocationalDamage(ProjectileClass.default.Damage, Instigator, HitLocation,
+        HitPlayer.ProcessLocationalDamage(ProjectileClass.default.Damage, Instigator, HitPlayerLocation,
             ProjectileClass.default.MomentumTransfer * Direction, ProjectileClass.default.MyDamageType, HitPoints);
     }
     else if ((!Other.bWorldGeometry || Other.IsA('RODestroyableStaticMesh')) && !bTraceHitBulletProofColMesh)
