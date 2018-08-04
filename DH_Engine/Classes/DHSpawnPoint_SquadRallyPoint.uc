@@ -365,7 +365,7 @@ function AwardScoreOnEstablishment()
                 PRI = DHPlayerReplicationInfo(DHP.PlayerReplicationInfo);
 
                 // Don't award the SL himself, he gets his own award
-                if (PRI != none && PRI.IsSquadLeader() && DHP.GetSquadIndex() == SquadIndex)
+                if (PRI != none && !PRI.IsSquadLeader() && DHP.GetSquadIndex() == SquadIndex)
                 {
                     DHP.ReceiveScoreEvent(class'DHScoreEvent_SquadRallyPointEstablishment'.static.Create());
                 }
