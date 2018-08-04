@@ -3,6 +3,8 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
+// Score awarded to Squad Leader for establishing RP
+
 class DHScoreEvent_SquadRallyPointEstablished extends DHScoreEvent;
 
 static function DHScoreEvent_SquadRallyPointEstablished Create()
