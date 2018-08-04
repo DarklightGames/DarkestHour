@@ -18,6 +18,6 @@ defaultproperties
 {
     HumanReadableName="Squad Rally Point Established"
     CategoryClass=class'DHScoreCategory_Support'
-    Value=250
+    Value=500
 }
 

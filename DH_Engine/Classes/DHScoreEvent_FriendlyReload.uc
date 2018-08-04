@@ -13,7 +13,7 @@ static function DHScoreEvent_FriendlyReload Create()
 defaultproperties
 {
     HumanReadableName="Friendly Reload"
-    Value=25
+    Value=50
     CategoryClass=class'DHScoreCategory_Support'
 }
 

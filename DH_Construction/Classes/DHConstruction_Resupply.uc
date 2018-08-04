@@ -97,4 +97,6 @@ defaultproperties
     bShouldRefundSuppliesOnTearDown=false
     bCanBeTornDownByFriendlies=false
     GroupClass=class'DHConstructionGroup_Ammunition'
+
+    CompletionPointValue=500
 }

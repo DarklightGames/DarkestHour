@@ -13,7 +13,7 @@ static function DHScoreEvent_FriendlyResupply Create()
 defaultproperties
 {
     HumanReadableName="Friendly Resupply"
-    Value=25
+    Value=50
     CategoryClass=class'DHScoreCategory_Support'
 }
 

@@ -106,5 +106,7 @@ defaultproperties
     bCanPlaceIndoors=true
     ConstructionVerb="drop"
     DuplicateFriendlyDistanceInMeters=1.0
+
+    CompletionPointValue=100
 }
 

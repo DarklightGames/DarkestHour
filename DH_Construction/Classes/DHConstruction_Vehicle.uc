@@ -185,5 +185,7 @@ defaultproperties
     ConstructionVerb="emplace"
     GroupClass=class'DHConstructionGroup_Guns'
     bCanBeDamaged=false
+
+    CompletionPointValue=100
 }
 

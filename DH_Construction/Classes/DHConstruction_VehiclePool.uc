@@ -107,5 +107,7 @@ defaultproperties
     // Rules
     bCanBeTornDownByFriendlies=false
     FriendlyFireDamageScale=0.0
+
+    CompletionPointValue=500
 }
 

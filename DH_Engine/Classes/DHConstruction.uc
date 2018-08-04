@@ -1176,5 +1176,7 @@ defaultproperties
     BrokenSoundRadius=100.0
     BrokenSoundPitch=1.0
     BrokenSoundVolume=5.0
+
+    CompletionPointValue=10
 }
 

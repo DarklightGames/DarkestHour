@@ -13,7 +13,7 @@ static function DHScoreEvent_Suicide Create()
 defaultproperties
 {
     HumanReadableName="Suicide"
-    Value=-50
+    Value=-100
     CategoryClass=class'DHScoreCategory_Combat'
 }
 

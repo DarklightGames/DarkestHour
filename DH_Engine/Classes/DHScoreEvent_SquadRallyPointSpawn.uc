@@ -14,6 +14,6 @@ defaultproperties
 {
     HumanReadableName="Squad Rally Point"
     CategoryClass=class'DHScoreCategory_Support'
-    Value=25
+    Value=50
     LimitPerMinute=10
 }

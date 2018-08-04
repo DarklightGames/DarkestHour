@@ -76,5 +76,7 @@ defaultproperties
     bCanPlaceIndoors=true
 
     ProximityRequirements(0)=(ConstructionClass=class'DHConstruction_PlatoonHQ',DistanceMeters=50.0)
+
+    CompletionPointValue=50
 }
 
