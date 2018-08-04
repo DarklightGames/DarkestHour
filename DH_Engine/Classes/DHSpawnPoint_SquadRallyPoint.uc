@@ -150,6 +150,8 @@ state Active
     {
         SetIsActive(true);
 
+        AwardScoreOnEstablishment();
+
         UpdateAppearance();
     }
 }
@@ -345,6 +347,33 @@ function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector
     }
 }
 
+// Git dim nearby squadies and git dem points
+function AwardScoreOnEstablishment()
+{
+    local Pawn P;
+    local DHPlayer DHP;
+    local DHPlayerReplicationInfo PRI;
+
+    foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(EstablishmentRadiusInMeters))
+    {
+        if (P != none && !P.bDeleteMe && P.Health > 0 && P.PlayerReplicationInfo != none && P.GetTeamNum() == GetTeamIndex())
+        {
+            DHP = DHPlayer(P.Controller);
+
+            if (DHP != none)
+            {
+                PRI = DHPlayerReplicationInfo(DHP.PlayerReplicationInfo);
+
+                // Don't award the SL himself, he gets his own award
+                if (PRI != none && PRI.IsSquadLeader() && DHP.GetSquadIndex() == SquadIndex)
+                {
+                    DHP.ReceiveScoreEvent(class'DHScoreEvent_SquadRallyPointEstablishment'.static.Create());
+                }
+            }
+        }
+    }
+}
+
 defaultproperties
 {
     StaticMesh=StaticMesh'DH_Construction_stc.Backpacks.USA_backpack'
@@ -364,7 +393,7 @@ defaultproperties
     EncroachmentPenaltyForgivenessPerSecond=2
     bCanEncroachmentOverrun=true
 
-    OverrunRadiusInMeters=10
+    OverrunRadiusInMeters=15
     EstablishmentRadiusInMeters=25
     EstablishmentCounterThreshold=15
     OverrunMinimumTimeSeconds=15
