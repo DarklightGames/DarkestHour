@@ -12,7 +12,7 @@ static function DHScoreEvent_SquadRallyPointSpawn Create()
 
 defaultproperties
 {
-    HumanReadableName="Squad Rally Point"
+    HumanReadableName="Squad Rally Point Spawn"
     CategoryClass=class'DHScoreCategory_Support'
     Value=50
     LimitPerMinute=10
