@@ -2,7 +2,7 @@
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2018
 //==============================================================================
-// Score awarded to squad members near the RP when it establishes
+// Score awarded to squad members near the rally point when it establishes.
 //==============================================================================
 
 class DHScoreEvent_SquadRallyPointEstablishedAssist extends DHScoreEvent;
