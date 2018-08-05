@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHScoreManager extends Object;
+class DHScoreManager extends Actor;
 
 const SCORE_CATEGORIES_MAX = 2;
 
@@ -14,9 +14,16 @@ struct EventScore
     var int                 Score;      // The amount of score accumulated from this type
 };
 
+struct ScoreEvent
+{
+    var class<DHScoreEvent>     EventClass;
+    var int                     TimeSeconds;
+};
+
 var int                     TotalScore;
 var int                     CategoryScores[SCORE_CATEGORIES_MAX];
 var array<EventScore>       EventScores;
+var array<ScoreEvent>       ScoreEvents;
 
 var class<DHScoreCategory>  ScoreCategoryClasses[SCORE_CATEGORIES_MAX];
 
@@ -71,6 +78,40 @@ function Reset()
     }
 
     EventScores.Length = 0;
+    ScoreEvents.Length = 0;
+}
+
+// Gets the number of limited scoring events for the specified event type (based
+// on the limit duration of the event class in question).
+function int GetCountOfScoreEvents(class<DHScoreEvent> EventClass)
+{
+    local int i;
+    local int Count;
+
+    for (i = 0; i < ScoreEvents.Length; ++i)
+    {
+        if (ScoreEvents[i].EventClass == EventClass &&
+            Level.Game.GameReplicationInfo.ElapsedTime - ScoreEvents[i].TimeSeconds < EventClass.default.LimitDurationSeconds)
+        {
+            ++Count;
+        }
+    }
+
+    return Count;
+}
+
+// Trims tracking of limited score events that are older than one minute.
+function TrimScoreEvents()
+{
+    local int i;
+
+    for (i = ScoreEvents.Length - 1; i >= 0; --i)
+    {
+        if (Level.Game.GameReplicationInfo.ElapsedTime - ScoreEvents[i].TimeSeconds > ScoreEvents[i].EventClass.default.LimitDurationSeconds)
+        {
+            ScoreEvents.Remove(i, 1);
+        }
+    }
 }
 
 function HandleScoreEvent(DHScoreEvent ScoreEvent)
@@ -78,6 +119,28 @@ function HandleScoreEvent(DHScoreEvent ScoreEvent)
     local int CategoryIndex;
     local int Value;
     local int EventScoreIndex;
+    local int ScoreEventCount;
+
+    if (ScoreEvent.default.LimitPerDuration > 0)
+    {
+        TrimScoreEvents();
+        ScoreEventCount = GetCountOfScoreEvents(ScoreEvent.Class);
+
+        Level.Game.Broadcast(self, ScoreEventCount);
+
+        if (ScoreEventCount >= ScoreEvent.default.LimitPerDuration)
+        {
+            Level.Game.Broadcast(self, "Exceeded count per minute, discarding!");
+
+            // Player has reached the limit of scoring events of this time
+            // in the last minute.
+            return;
+        }
+
+        ScoreEvents.Insert(0, 1);
+        ScoreEvents[0].EventClass = ScoreEvent.Class;
+        ScoreEvents[0].TimeSeconds = Level.Game.GameReplicationInfo.ElapsedTime;
+    }
 
     Value = ScoreEvent.GetValue();
 
@@ -162,5 +225,7 @@ defaultproperties
 {
     ScoreCategoryClasses(0)=class'DHScoreCategory_Combat'
     ScoreCategoryClasses(1)=class'DHScoreCategory_Support'
+    RemoteRole=ROLE_None
+    bHidden=true
 }
 

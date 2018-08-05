@@ -209,7 +209,7 @@ simulated event PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        ScoreManager = new class'DHScoreManager';
+        ScoreManager = Spawn(class'DHScoreManager', self);
     }
 }
 
@@ -5942,6 +5942,16 @@ function ServerResetScore()
     {
         ScoreManager.Reset();
         DarkestHourGame(Level.Game).UpdatePlayerScore(self);
+    }
+}
+
+simulated function Destroyed()
+{
+    super.Destroyed();
+
+    if (Role == ROLE_Authority && ScoreManager != none)
+    {
+        ScoreManager.Destroy();
     }
 }
 

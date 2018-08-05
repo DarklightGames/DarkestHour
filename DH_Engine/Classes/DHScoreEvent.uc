@@ -3,12 +3,14 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHScoreEvent extends Object;
+class DHScoreEvent extends Object
+    abstract;
 
 var localized string            HumanReadableName;
 var class<DHScoreCategory>      CategoryClass;
 var int                         Value;
-var int                         LimitPerMinute; // TODO: would be more intensive to keep track of this!
+var int                         LimitPerDuration;
+var int                         LimitDurationSeconds;
 
 function int GetValue()
 {
@@ -20,3 +22,7 @@ function int GetBonusValue()
     return 0;
 }
 
+defaultproperties
+{
+    LimitDurationSeconds=60
+}

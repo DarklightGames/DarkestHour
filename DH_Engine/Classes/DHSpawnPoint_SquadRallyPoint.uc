@@ -367,7 +367,7 @@ function AwardScoreOnEstablishment()
                 // Don't award the SL himself, he gets his own award
                 if (PRI != none && !PRI.IsSquadLeader() && DHP.GetSquadIndex() == SquadIndex)
                 {
-                    DHP.ReceiveScoreEvent(class'DHScoreEvent_SquadRallyPointEstablishment'.static.Create());
+                    DHP.ReceiveScoreEvent(class'DHScoreEvent_SquadRallyPointEstablishedAssist'.static.Create());
                 }
             }
         }
