@@ -158,7 +158,10 @@ function Timer()
         }
 
         // All unassigned players will be berated to join a squad every 30 seconds.
-        if (!PRI.IsInSquad() && bAreRallyPointsEnabled && Level.Game.GameReplicationInfo.ElapsedTime % 30 == 0)
+        if (PRI.Team != none &&
+            !PRI.IsInSquad() &&
+            bAreRallyPointsEnabled &&
+            Level.Game.GameReplicationInfo.ElapsedTime % 30 == 0)
         {
             PC.ReceiveLocalizedMessage(SquadMessageClass, 73,,, PC);
             continue;
