@@ -147,8 +147,10 @@ var     bool    bCanDieOfStagnation;            // If true, this construction wi
 var     float   StagnationLifespan;
 
 // Tear-down
-var     bool    bCanBeTornDownWhenConstructed;  // Whether or not players can tear down the construction after it has been constructed.
-var     bool    bCanBeTornDownByFriendlies;     // Whether or not friendly players can tear down the construction (e.g. to stop griefing of important constructions)
+var     bool    bCanBeTornDownWhenConstructed;      // Whether or not players can tear down the construction after it has been constructed.
+var     bool    bCanBeTornDownWithSupplyTruckNearby;// Whether or not players can tear down the construction if a friendly supply truck is nearby...
+                                                    // (if true, then `bCanBeTornDownWhenConstructed` and 'bCanBeTornDownByFriendlies' are ignored)
+var     bool    bCanBeTornDownByFriendlies;         // Whether or not friendly players can tear down the construction (e.g. to stop griefing of important constructions)
 var     float   TearDownProgress;
 var     float   TakeDownProgressInterval;
 
@@ -625,7 +627,14 @@ simulated state Constructed
 
     simulated function bool CanTakeTearDownDamageFromPawn(Pawn P, optional bool bShouldSendErrorMessage)
     {
-        return bCanBeTornDownWhenConstructed && (bCanBeTornDownByFriendlies || (P != none && P.GetTeamNum() != TeamIndex));
+        if (DHPawn(P) != none && bCanBeTornDownWithSupplyTruckNearby)
+        {
+            return IsFriendlySupplyTruckNearby(DHPawn(P));
+        }
+        else
+        {
+            return bCanBeTornDownWhenConstructed && (bCanBeTornDownByFriendlies || (P != none && P.GetTeamNum() != TeamIndex));
+        }
     }
 
 // This is required because we cannot call TakeDamage within the KImpact
@@ -692,6 +701,21 @@ simulated state Broken
             }
         }
     }
+}
+
+simulated function bool IsFriendlySupplyTruckNearby(DHPawn P)
+{
+    local int i;
+
+    for (i = 0; i < P.TouchingSupplyAttachments.Length; ++i)
+    {
+        if (P.TouchingSupplyAttachments[i] != none && P.TouchingSupplyAttachments[i].bIsAttachedToVehicle)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 function UpdateAppearance()

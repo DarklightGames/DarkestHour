@@ -44,6 +44,7 @@ simulated function string GetHumanReadableName()
 
 defaultproperties
 {
+    bIsAttachedToVehicle=true
     SupplyCount=2000.0
     SupplyCountMax=2000
     bCanBeResupplied=true

@@ -40,6 +40,9 @@ var float               TouchDistanceInMeters;
 // Used to circumvent an engine bug (see PostNetReceive below)
 var bool                bIsBaseInitialized;
 
+// Whether or not this supply attachment is attached to a vehicle
+var bool                bIsAttachedToVehicle;
+
 //==============================================================================
 // Supply Generation
 //==============================================================================

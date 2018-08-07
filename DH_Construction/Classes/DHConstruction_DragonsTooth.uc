@@ -26,6 +26,6 @@ defaultproperties
     bAcceptsProjectors=false
     GroupClass=class'DHConstructionGroup_Obstacles'
     bShouldSwitchToLastWeaponOnPlacement=false
-    bCanBeTornDownWhenConstructed=false
+    bCanBeTornDownWithSupplyTruckNearby=true
 }
 
