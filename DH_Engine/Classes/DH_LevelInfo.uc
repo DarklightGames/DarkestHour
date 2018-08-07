@@ -198,10 +198,10 @@ defaultproperties
     ArtilleryTypes(0)=(TeamIndex=0,ArtilleryClass=class'DHArtillery_Legacy',bIsInitiallyActive=true,Limit=1,ConfirmIntervalSeconds=0)
     ArtilleryTypes(1)=(TeamIndex=1,ArtilleryClass=class'DHArtillery_Legacy',bIsInitiallyActive=true,Limit=1,ConfirmIntervalSeconds=0)
 
-    BaseMunitionPercentages(0)=100.0
-    BaseMunitionPercentages(1)=100.0
+    BaseMunitionPercentages(0)=75.0
+    BaseMunitionPercentages(1)=75.0
 
-    MunitionLossPerMinute(0)=1.6666
-    MunitionLossPerMinute(1)=1.6666
+    MunitionLossPerMinute(0)=1.5
+    MunitionLossPerMinute(1)=1.5
 }
 

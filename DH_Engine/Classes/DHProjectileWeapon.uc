@@ -1813,18 +1813,24 @@ function bool AddAmmo(int AmmoToAdd, int Mode)
 function float GetInitialNumMagsPercentage()
 {
     local float InitialAmmoPercent;
-    local DHGameReplicationInfo GRI;
+    local DarkestHourGame G;
 
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+    G = DarkestHourGame(Level.Game);
 
-    if (GRI != none && bGameCanChangeInitialNumMags)
+    if (G == none)
     {
-        InitialAmmoPercent = GRI.TeamMunitionPercentages[Instigator.GetTeamNum()] / 100.0;
+        Warn("Could not find G in GetInitialNumMagsPercentage() in:" @ self);
+        return 1.0;
+    }
+
+    // If we are a DHPawn and the gametype can change initial num mags, then get munition percentage
+    if (DHPawn(Instigator) != none && bGameCanChangeInitialNumMags)
+    {
+        InitialAmmoPercent = G.GetMunitionPercentageForPawn(DHPawn(Instigator)) / 100.0; // we are using a 0.0 to 1.0 percentage, not 100.0% so divide by 100.0
     }
     else
     {
-        Warn("Could not find GRI in GetInitialNumMagsPercentage() in:" @ self);
-        InitialAmmoPercent = 1.0;
+        InitialAmmoPercent = 1.0; // Set max otherwise
     }
 
     return InitialAmmoPercent;

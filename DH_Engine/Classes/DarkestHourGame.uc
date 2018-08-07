@@ -63,6 +63,7 @@ var     InterpCurve                 ElapsedTimeAttritionCurve;              // C
                                                                             // used to setup a pseudo time limit for Advance/Attrition game modes
                                                                             // this way if there are not many players on, the round will eventually end
 
+var     InterpCurve                 BonusMunitionDeathCurve;                // Curve which inputs number of deaths and outputs bonus munition percentage
 var     bool                        bSwapTeams;
 
 
@@ -3707,7 +3708,9 @@ function ChangeWeapons(Controller aPlayer, int Primary, int Secondary, int Grena
 
 function UpdateMunitionPercentages()
 {
-    local int i, NumCaches, CacheBonus;
+    const MIN_MUNITION_PERCENTAGE = 0.0;
+
+    local int i;
     local float p;
 
     if (GRI == none)
@@ -3727,14 +3730,8 @@ function UpdateMunitionPercentages()
         // Get the munition percentage by this formula:    StartingMunitions - (ElaspedMinutes * LossRate)
         p = DHLevelInfo.BaseMunitionPercentages[i] - ((GRI.ElapsedTime - GRI.RoundStartTime) / 60.0 * DHLevelInfo.MunitionLossPerMinute[i]);
 
-        // Get the number of caches (does not count main cache)
-        NumCaches = GRI.GetNumberOfSupplyCachesForTeam(i, true);
-
-        // Calc the CacheBonus, which is a min value that munitions can get (based on MunitionPercentageValue) capped at 30 TODO: fix magic number
-        CacheBonus = Min(NumCaches * class'DHConstructionSupplyAttachment'.default.MunitionPercentageValue, 30);
-
         // Set the GRI value clamped to the munition percentage
-        GRI.TeamMunitionPercentages[i] = FClamp(p, CacheBonus, 100.0);
+        GRI.TeamMunitionPercentages[i] = FClamp(p, MIN_MUNITION_PERCENTAGE, 100.0);
     }
 }
 
@@ -4985,6 +4982,33 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
     return Response;
 }
 
+function float GetMunitionPercentageForPawn(DHPawn P)
+{
+    local DHPlayerReplicationInfo PRI;
+    local float PawnAddedPercentage, Combined;
+    local int Team;
+
+    Team = P.GetTeamNum();
+    PRI = DHPlayerReplicationInfo(P.Controller.PlayerReplicationInfo);
+
+    if (PRI != none)
+    {
+        // Calculate the total bonus (death and score bonuses)
+        PawnAddedPercentage = InterpCurveEval(BonusMunitionDeathCurve, PRI.Deaths) + (PRI.TotalScore / 1000);
+
+        // Add the pawn bonus to the team percentage
+        Combined = GRI.TeamMunitionPercentages[Team] + PawnAddedPercentage;
+
+        // Now return the final percentage, but clamped to boundaries
+        return FClamp(Combined, 0.0, DHLevelInfo.BaseMunitionPercentages[Team]);
+    }
+    else
+    {
+        Warn("Could not get PRI from pawn in GetMunitionPercentageForPawn()");
+        return 100.0;
+    }
+}
+
 defaultproperties
 {
     ServerTickForInflation=20.0
@@ -4993,6 +5017,7 @@ defaultproperties
     bIgnore32PlayerLimit=true // allows more than 32 players
     bVACSecured=true
 
+    BonusMunitionDeathCurve=(Points=((InVal=0.0,OutVal=100.0),(InVal=8.0,OutVal=90.0),(InVal=16.0,OutVal=25.0),(InVal=25.0,OutVal=0.0)))
     ElapsedTimeAttritionCurve=(Points=((InVal=0.0,OutVal=0.0),(InVal=4200.0,OutVal=0.0),(InVal=5400.0,OutVal=100.0),(InVal=10800.0,OutVal=1000.0)))
 
     bSessionKickOnSecondFFViolation=true
