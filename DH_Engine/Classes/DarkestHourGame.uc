@@ -2929,13 +2929,21 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
         return;
     }
 
-    // If roundtime is currently infinite AND in play AND reinf at zero AND time changes at zero reinf
-    // This will estentially set the round time to the desired amount once zero reinf is reached, but will only if the round time was infinite
-    // If the second team reinf hits zero, this will not execute as the round timer won't be infinite
-    if (GRI.DHRoundDuration == 0 && IsInState('RoundInPlay') && GRI.SpawnsRemaining[Team] == 0 && DHLevelInfo.GameTypeClass.default.bTimeChangesAtZeroReinf)
+    // If round is in play AND roundtime is currently infinite AND the team is out of reinforcements AND the gametype can change time when at zero reinf
+    if (IsInState('RoundInPlay') && GRI.DHRoundDuration == 0 && GRI.SpawnsRemaining[Team] == 0 && DHLevelInfo.GameTypeClass.default.bTimeCanChangeAtZeroReinf)
     {
-        // Then adjust the round time
-        ModifyRoundTime(DHLevelInfo.GameTypeClass.default.OutOfReinforcementsRoundTime, 2);
+
+        // If the opposing team is within limit for changing round time, then change round time
+        if (GRI.SpawnsRemaining[int(!bool(Team))] <= DHLevelInfo.GameTypeClass.default.OutOfReinfLimitForTimeChange)
+        {
+            ModifyRoundTime(DHLevelInfo.GameTypeClass.default.OutOfReinfRoundTime, 2);
+        }
+        else // Otherwise just end the round
+        {
+            Level.Game.Broadcast(self, "The battle ended because a team's reinforcements reached zero", 'Say');
+            ChooseWinner();
+            return;
+        }
     }
 }
 
@@ -3754,7 +3762,7 @@ function ChooseWinner()
 
     // If gametype has time changes at zero reinf OR round ends at zero reinf
     // Highest reinforcements percent wins, if equal then draw
-    if (DHLevelInfo.GameTypeClass.default.bTimeChangesAtZeroReinf || DHLevelInfo.GameTypeClass.default.bRoundEndsAtZeroReinf)
+    if (DHLevelInfo.GameTypeClass.default.bTimeCanChangeAtZeroReinf || DHLevelInfo.GameTypeClass.default.bRoundEndsAtZeroReinf)
     {
         // The winner is the one with higher reinforcements (no concern over objective counts)
         if (AxisReinforcementsPercent > AlliedReinforcementsPercent)

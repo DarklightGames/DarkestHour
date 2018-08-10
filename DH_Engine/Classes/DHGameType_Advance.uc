@@ -15,8 +15,9 @@ defaultproperties
     bHasTemporarySpawnVehicles=true
 
     bMunitionsDrainOverTime=true
-    bTimeChangesAtZeroReinf=true
+    bTimeCanChangeAtZeroReinf=true
     bKeepSpawningWithoutReinf=true
-    OutOfReinforcementsRoundTime=120
+    OutOfReinfRoundTime=120
+    OutOfReinfLimitForTimeChange=50
 }
 

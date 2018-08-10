@@ -10,6 +10,6 @@ defaultproperties
 {
     GameTypeName="Cutoff"
     bRoundEndsAtZeroReinf=false
-    bTimeChangesAtZeroReinf=false
+    bTimeCanChangeAtZeroReinf=false
 }
 
