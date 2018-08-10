@@ -94,8 +94,6 @@ function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
 {
     local DHHud HUD;
 
-    Log("InternalOnKeyEvent" @ Key @ State @ Delta);
-
     if (Key == 0x1B || IsShowObjectivesKey(key))
     {
         if (PlayerOwner() != none)
@@ -104,8 +102,6 @@ function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
 
             if (HUD != none)
             {
-                Log("TRYING TO HIDE OBJECTIVES");
-
                 HUD.HideObjectives();
             }
 
