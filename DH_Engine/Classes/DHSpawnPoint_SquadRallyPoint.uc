@@ -384,11 +384,11 @@ defaultproperties
     CreationSound=Sound'Inf_Player.Gibimpact.Gibimpact'
 
     bCanBeEncroachedUpon=true
-    EncroachmentRadiusInMeters=25
+    EncroachmentRadiusInMeters=50
     EncroachmentPenaltyMax=30
     EncroachmentPenaltyBlockThreshold=10
     EncroachmentPenaltyOverrunThreshold=30
-    EncroachmentSpawnTimePenalty=10
+    EncroachmentSpawnTimePenalty=15
     EncroachmentEnemyCountMin=2
     EncroachmentPenaltyForgivenessPerSecond=2
     bCanEncroachmentOverrun=true
