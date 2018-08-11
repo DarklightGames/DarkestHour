@@ -2478,6 +2478,8 @@ state RoundInPlay
         {
             Metrics.OnRoundBegin();
         }
+
+        UpdateAllPlayerScores();
     }
 
     // Modified for DHObjectives
