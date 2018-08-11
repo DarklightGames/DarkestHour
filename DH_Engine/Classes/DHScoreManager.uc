@@ -126,12 +126,8 @@ function HandleScoreEvent(DHScoreEvent ScoreEvent)
         TrimScoreEvents();
         ScoreEventCount = GetCountOfScoreEvents(ScoreEvent.Class);
 
-        Level.Game.Broadcast(self, ScoreEventCount);
-
         if (ScoreEventCount >= ScoreEvent.default.LimitPerDuration)
         {
-            Level.Game.Broadcast(self, "Exceeded count per minute, discarding!");
-
             // Player has reached the limit of scoring events of this time
             // in the last minute.
             return;
