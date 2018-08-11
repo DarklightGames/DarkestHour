@@ -24,7 +24,7 @@ simulated function OnConstructed()
 
         SpawnPoint.SetTeamIndex(GetTeamIndex());
         SpawnPoint.SetBase(self);
-        SpawnPoint.SetRelativeLocation(vect(0, 0, 32.0));
+        SpawnPoint.SetRelativeLocation(vect(64.0, 0, 32.0));
         SpawnPoint.SetRelativeRotation(rot(0, 0, 0));
     }
 }
