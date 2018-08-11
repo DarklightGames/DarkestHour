@@ -385,6 +385,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 {
     local DHVehicleCannon Cannon;
     local float ModifiedImpactDamage;
+    local bool bCanWallTakeDamage;
 
     // Exit without doing anything if we hit something we don't want to count a hit on
     if (Wall == none || SavedHitActor == Wall || (Wall.Base != none && Wall.Base == Instigator) || Wall.bDeleteMe)
@@ -426,9 +427,11 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 
     if (Role == ROLE_Authority)
     {
-        if ((!Wall.bStatic && !Wall.bWorldGeometry) || DHConstruction(Wall) != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
+        bCanWallTakeDamage = DHConstruction(Wall) != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none;
+
+        if ((!Wall.bStatic && !Wall.bWorldGeometry) || bCanWallTakeDamage)
         {
-            if (SavedHitActor != none || DHConstruction(Wall) != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
+            if (SavedHitActor != none || bCanWallTakeDamage)
             {
                 if (ShouldDrawDebugLines())
                 {

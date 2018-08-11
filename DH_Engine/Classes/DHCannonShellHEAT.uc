@@ -64,7 +64,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     }
 
     // Check & record whether we hit a world object we can penetrate (added in HEAT)
-    if ((Wall.bStatic || Wall.bWorldGeometry) && RODestroyableStaticMesh(Wall) == none && Mover(Wall) == none)
+    if ((Wall.bStatic || Wall.bWorldGeometry) && DHConstruction(Wall) == none && RODestroyableStaticMesh(Wall) == none && Mover(Wall) == none)
     {
         bHitWorldObject = true;
     }
@@ -74,7 +74,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 //      if ((!Wall.bStatic && !Wall.bWorldGeometry) || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
         if (!bHitWorldObject) // using this instead of above, as as we've already done this check earlier on
         {
-            if (SavedHitActor != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
+            if (SavedHitActor != none || DHConstruction(Wall) != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
             {
                 if (ShouldDrawDebugLines())
                 {
