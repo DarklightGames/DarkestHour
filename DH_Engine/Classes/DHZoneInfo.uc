@@ -37,8 +37,6 @@ var     int             ClientSavedDesiredFrame,
                         ClientMinDesiredFrame,
                         TargetMinDesiredFrame;                  // Keeps track of clients desired frame and will blend (smoothly) if client changes it
 
-//var     bool            bClientInitialized;                     // Has completed initialization (set at end of PostNetBeginPlay)
-
 replication
 {
     // Variables the server will replicate to all clients
@@ -57,17 +55,7 @@ simulated event PostBeginPlay()
         SetNewTargetFogDistance(OriginalFogDistanceEnd);
     }
 }
-/*
-simulated function PostNetBeginPlay()
-{
-    super.PostNetBeginPlay();
 
-    if (Level.NetMode == NM_Client)
-    {
-        bClientInitialized = true;
-    }
-}
-*/
 simulated function PostNetReceive()
 {
     super.PostNetReceive();
@@ -80,7 +68,6 @@ simulated function PostNetReceive()
     }
 }
 
-
 function Reset()
 {
     super.Reset();
@@ -92,7 +79,6 @@ function Reset()
     }
 }
 
-//
 simulated function Tick( float DeltaTime )
 {
     local float         T;
@@ -219,7 +205,7 @@ function SetNewTargetFogDistance(float NewDistance)
 
 defaultproperties
 {
-    bUsesDynamicFogDistance=true // TODO: set this to false
+    bUsesDynamicFogDistance=true
     ClientFogRatioCurve=(Points=((InVal=0.0,OutVal=0.0),(InVal=0.5,OutVal=0.0),(InVal=1.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     ClientFogRatio=1.0
     bNetNotify=true
