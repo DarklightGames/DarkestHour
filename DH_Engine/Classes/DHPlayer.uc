@@ -512,13 +512,11 @@ function rotator AdjustAim(FireProperties FiredAmmunition, vector ProjStart, int
 // Developer login
 exec function DevLogin()
 {
-    if (Level.TimeSeconds < NextLoginTime) // TODO: doesn't appear to work as for some reason LoginDelay seems to be zero on net client, even though it's replicated?
+    // If is a client and client checks his own ROID, then ask server for dev login
+    if (Level.NetMode != NM_DedicatedServer && class'DHAccessControl'.static.IsDeveloper(ROIDHash))
     {
-        return;
+        ServerAdminLoginSilent("Dev");
     }
-
-    NextLoginTime = Level.TimeSeconds + LoginDelay;
-    ServerAdminLoginSilent("Dev");
 }
 
 // Menu for the player's entire selection process
