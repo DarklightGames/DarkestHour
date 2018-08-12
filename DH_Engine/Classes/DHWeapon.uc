@@ -9,7 +9,7 @@ class DHWeapon extends ROWeapon
 var     int     TeamIndex;                      // Which team this weapon "belongs" to, used for ammo giving, you can't give enemy weapons ammo
                                                 // Default: 2 which is neutral and allows anyone to reupply it
 
-var     bool    bGameCanChangeInitialNumMags;   // Determines if the weapon will have initial number of magazines affected by the game's variables
+var     bool    bCanHaveInitialNumMagsChanged;  // Determines if the weapon will have initial number of magazines affected by the game's variables
 
 var     float   SwayNotMovingModifier;
 var     float   SwayRestingModifier;
@@ -845,5 +845,5 @@ defaultproperties
     CrawlBackwardAnim="crawlB"
 
     TeamIndex=2
-    bGameCanChangeInitialNumMags=true
+    bCanHaveInitialNumMagsChanged=true
 }
