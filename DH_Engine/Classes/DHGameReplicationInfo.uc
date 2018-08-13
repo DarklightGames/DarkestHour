@@ -143,7 +143,7 @@ var class<DHConstruction>   ConstructionClasses[CONSTRUCTION_CLASSES_MAX];
 var DHConstructionManager   ConstructionManager;
 
 var bool                bAreConstructionsEnabled;
-var bool                bAllowAllChat;
+var bool                bAllChatEnabled;
 
 var byte                ServerTickHealth;
 var byte                ServerNetHealth;
@@ -215,7 +215,7 @@ replication
         SupplyPoints,
         AxisMapMarkers,
         AlliesMapMarkers,
-        bAllowAllChat,
+        bAllChatEnabled,
         RoundOverTime,
         DHRoundLimit,
         DHRoundDuration,
@@ -1510,7 +1510,7 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
 
 defaultproperties
 {
-    bAllowAllChat=true
+    bAllChatEnabled=true
     AlliesVictoryMusicIndex=-1
     AxisVictoryMusicIndex=-1
     ArtilleryTargetDistanceThreshold=15088 //250 meters in UU

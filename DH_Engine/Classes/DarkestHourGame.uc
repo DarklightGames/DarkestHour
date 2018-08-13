@@ -40,6 +40,8 @@ var()   config int                  ChangeTeamInterval;                     // S
                                                                             // Also currently is the length of time for which a player can change teams for free at the beginning of a round
                                                                             // Note: if bPlayersBalanceTeams is false, players will still be able to change teams
 
+var()   config int                  DisableAllChatThreshold;                // Player count to disallow all chat at
+
 var     array<float>                ReinforcementMessagePercentages;
 var     int                         TeamReinforcementMessageIndices[2];
 var     int                         OriginalReinforcementIntervals[2];
@@ -219,8 +221,6 @@ function PostBeginPlay()
         return;
     }
 
-    GRI.bAllowAllChat = bAllowAllChat;
-
     // Allow weapon dropping (this is here in case it is set to false and then the server changes map and saved as false)
     bAllowWeaponThrowing = true;
 
@@ -255,6 +255,7 @@ function PostBeginPlay()
     GRI.MaxPlayers = MaxPlayers;
     GRI.bShowServerIPOnScoreboard = bShowServerIPOnScoreboard;
     GRI.bShowTimeOnScoreboard = bShowTimeOnScoreboard;
+    GRI.bAllChatEnabled = bAllowAllChat;
 
     GRI.TeamMunitionPercentages[AXIS_TEAM_INDEX] = DHLevelInfo.BaseMunitionPercentages[AXIS_TEAM_INDEX];
     GRI.TeamMunitionPercentages[ALLIES_TEAM_INDEX] = DHLevelInfo.BaseMunitionPercentages[ALLIES_TEAM_INDEX];
@@ -2315,6 +2316,7 @@ state RoundInPlay
         GRI.AttritionRate[ALLIES_TEAM_INDEX] = 0;
         GRI.TeamMunitionPercentages[AXIS_TEAM_INDEX] = DHLevelInfo.BaseMunitionPercentages[AXIS_TEAM_INDEX];
         GRI.TeamMunitionPercentages[ALLIES_TEAM_INDEX] = DHLevelInfo.BaseMunitionPercentages[ALLIES_TEAM_INDEX];
+        GRI.bAllChatEnabled = bAllowAllChat;
 
         // Here we see if the victory music is set to a sound group and pick an index to replicate to the clients
         if (DHLevelInfo.AlliesWinsMusic != none && DHLevelInfo.AlliesWinsMusic.IsA('SoundGroup'))
@@ -2684,6 +2686,16 @@ state RoundInPlay
 
         global.Timer();
 
+        // If server allows all chat AND all chat is enabled AND player count is >= DisableAllChatThreshold
+        if (bAllowAllChat && GRI.bAllChatEnabled && GetNumPlayers() >= DisableAllChatThreshold)
+        {
+            GRI.bAllChatEnabled = false;
+        }
+        else if (bAllowAllChat && !GRI.bAllChatEnabled && GetNumPlayers() < DisableAllChatThreshold)
+        {   // Player threshold has dropped and we should enable all chat
+            GRI.bAllChatEnabled = true;
+        }
+
         // Go through both teams and spawn reinforcements if necessary
         for (i = 0; i < 2; ++i)
         {
@@ -2856,6 +2868,7 @@ state RoundOver
         GRI.bReinforcementsComing[AXIS_TEAM_INDEX] = 0;
         GRI.bReinforcementsComing[ALLIES_TEAM_INDEX] = 0;
         GRI.bRoundIsOver = true;
+        GRI.bAllChatEnabled = true; // Lets enable all chat because the round is over
 
         // Destroy any artillery spawners so they don't keep calling arty
         foreach DynamicActors(class'DHArtillerySpawner', AS)
@@ -3094,14 +3107,14 @@ exec function SetServerViewDistance(int NewDistance)
     }
 }
 
-exec function ToggleAllowAllChat()
+exec function SetAllChat(bool bOn)
 {
-    if (GRI == none)
-    {
-        return;
-    }
+    GRI.bAllChatEnabled = bOn;
+}
 
-    GRI.bAllowAllChat = !GRI.bAllowAllChat;
+exec function SetAllChatThreshold(int NewThreshold)
+{
+    DisableAllChatThreshold = NewThreshold;
 }
 
 exec function DebugDestroyConstructions()
@@ -5114,6 +5127,7 @@ defaultproperties
     WeaponLockTimeSecondsMaximum=120
     WeaponLockTimeSecondsFFKillsMultiplier=10
 
+    DisableAllChatThreshold=40
     bAllowAllChat=true
     bIsAttritionEnabled=true
 }

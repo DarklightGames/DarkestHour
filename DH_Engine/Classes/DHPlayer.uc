@@ -574,7 +574,7 @@ exec function Say(string Msg)
     Msg = Left(Msg,128);
 
     // If all chat is not allowed, then don't broadcast (serversay) and tell the user
-    if (DHGameReplicationInfo(GameReplicationInfo) != none && !DHGameReplicationInfo(GameReplicationInfo).bAllowAllChat)
+    if (DHGameReplicationInfo(GameReplicationInfo) != none && !DHGameReplicationInfo(GameReplicationInfo).bAllChatEnabled)
     {
         ReceiveLocalizedMessage(class'DHCommunicationMessage', 0); // "Public chat is currently disabled"
         return;
