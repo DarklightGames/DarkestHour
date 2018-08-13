@@ -12,4 +12,7 @@ defaultproperties
     SleeveTexture=Texture'DHGermanCharactersTex.GerSleeves.Dot44Sleeve'
     Headgear(0)=class'DH_GerPlayers.DH_SSHelmetOne'
     Headgear(1)=class'DH_GerPlayers.DH_SSHelmetTwo'
+
+    PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_STG44Weapon',AssociatedAttachment=class'ROInventory.ROSTG44AmmoPouch')
+    PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_MP40Weapon',AssociatedAttachment=class'ROInventory.ROMP40AmmoPouch')
 }
