@@ -95,6 +95,7 @@ defaultproperties
     IronSightDisplayFOV=35.0
     ZoomOutTime=0.35
 
+    bCanHaveInitialNumMagsChanged=false
     MaxNumPrimaryMags=20
     InitialNumPrimaryMags=20
 
