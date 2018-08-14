@@ -9,6 +9,7 @@ class DHAdminMenu_NotifyMessages extends LocalMessage
 
 var     localized string    NotifyRename;
 var     localized string    NotifyKill;
+var     localized string    NotifyGag;
 var     localized string    NotifySwitch;
 var     localized string    NotifyParaDrop;
 var     localized string    BroadcastMinesDisabled;
@@ -95,6 +96,9 @@ static function string GetString(optional int Switch, optional PlayerReplication
             case 16:
                 MessageString = default.BroadcastAxisSquadSizeChanged;
                 break;
+            case 17:
+                MessageString = default.NotifyGag;
+                break;
 
             default: // just in case something goes wrong we'll return a blank string
                 return "";
@@ -118,6 +122,7 @@ defaultproperties
 
     NotifyRename="Your game name has been changed by admin"
     NotifyKill="You've been re-spawned by admin"
+    NotifyGag="You've been gagged by admin"
     NotifySwitch="You've been switched to new role or team by admin"
     NotifyParaDrop="You've been para dropped somewhere by admin"
     BroadcastMinesDisabled="All minefields DISABLED by admin"

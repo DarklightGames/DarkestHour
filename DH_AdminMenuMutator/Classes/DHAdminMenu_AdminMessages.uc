@@ -13,6 +13,7 @@ var     localized string    EnterPrivateMessage;
 var     localized string    EnterWarningMessage;
 var     localized string    EnterKickReason;
 var     localized string    ConfirmKillPlayer;
+var     localized string    ConfirmGagPlayer;
 var     localized string    ConfirmSwitchToAlliesRole;
 var     localized string    ConfirmSwitchToAxisRole;
 var     localized string    ConfirmDropAtObjective;
@@ -106,6 +107,8 @@ static function string GetString(optional int Switch, optional PlayerReplication
             return default.SetGamePasswordText;
         case 31:
             return default.ToggleWeaponLockText;
+        case 32:
+            return default.ConfirmGagPlayer;
 
         default:
             return "";
@@ -125,6 +128,7 @@ defaultproperties
     EnterWarningMessage="Type your warning message to the player - then press enter"
     EnterKickReason="Type your kick message to the player - then press enter to KICK them"
     ConfirmKillPlayer="Press enter to confirm you want to KILL this player"
+    ConfirmGagPlayer="Press enter to confirm you want to GAG this player"
     ConfirmSwitchToAlliesRole="Press enter to confirm you want to SWITCH this player to a new ALLIES role"
     ConfirmSwitchToAxisRole="Press enter to confirm you want to SWITCH this player to a new AXIS role"
     ConfirmDropAtObjective="Press enter to confirm you want to PARADROP this player at the chosen objective"

@@ -390,7 +390,16 @@ exec function AdminLoginToggle(optional bool bSilentLogin)
 // Note bSilentAdmin won't work on a net client as bSilentAdmin isn't replicated (unlike bAdmin), so client can't tell that player is logged in
 function bool IsLoggedInAsAdmin()
 {
-    return PC.PlayerReplicationInfo.bAdmin || PC.PlayerReplicationInfo.bSilentAdmin;
+    local DHPlayer P;
+
+    P = DHPlayer(PC);
+
+    if (P == none)
+    {
+        return false;
+    }
+
+    return PC.PlayerReplicationInfo.bAdmin || class'DHAccessControl'.static.IsDeveloper(P.ROIDHash);
 }
 
 function ErrorMessageToSelf(byte MessageNumber, optional string InsertedName)

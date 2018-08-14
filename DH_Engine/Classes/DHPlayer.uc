@@ -19,6 +19,7 @@ enum EMapMode
 
 var     input float             aBaseFire;
 var     bool                    bUsingController;
+var     bool                    bIsGagged;
 
 var     EMapMode                DeployMenuStartMode; // what the deploy menu is supposed to start out on
 var     DH_LevelInfo            ClientLevelInfo;
@@ -133,7 +134,7 @@ replication
         NextSpawnTime, NextVehicleSpawnTime, NextChangeTeamTime, LastKilledTime,
         DHPrimaryWeapon, DHSecondaryWeapon, bSpectateAllowViewPoints,
         SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled,
-        SquadLeaderLocations;
+        SquadLeaderLocations, bIsGagged;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -148,9 +149,7 @@ replication
         ServerSquadSay, ServerSquadLock, ServerSquadSignal,
         ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
         ServerSetPatronStatus, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
-        ServerPunishLastFFKiller,
-        ServerRequestArtillery,
-        ServerResetScore,
+        ServerPunishLastFFKiller, ServerRequestArtillery, ServerResetScore, ServerVote,
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons; // these ones in debug mode only
 
     // Functions the server can call on the client that owns this actor
@@ -158,7 +157,7 @@ replication
         ClientProne, ClientToggleDuck, ClientLockWeapons,
         ClientAddHudDeathMessage, ClientFadeFromBlack, ClientProposeMenu,
         ClientConsoleCommand, ClientCopyToClipboard, ClientSaveROIDHash,
-        ClientSquadInvite, ClientSquadSignal, ClientSquadLeaderVolunteerPrompt,
+        ClientSquadInvite, ClientSquadSignal, ClientSquadLeaderVolunteerPrompt, ClientTeamSurrenderPrompt,
         ClientTeamKillPrompt, ClientOpenLogFile, ClientLogToFile, ClientCloseLogFile;
 }
 
@@ -566,6 +565,42 @@ function ShowMidGameMenu(bool bPause)
             ClientReplaceMenu("DH_Interface.DHDeployMenu");
         }
     }
+}
+
+// Override for player gag functionality
+function bool AllowTextMessage(string Msg)
+{
+    local int i;
+
+    if (PlayerReplicationInfo.bSilentAdmin || Level.NetMode == NM_Standalone || PlayerReplicationInfo.bAdmin)
+    {
+        return true;
+    }
+    if (Level.Pauser == none && Level.TimeSeconds - LastBroadcastTime < 2 || bIsGagged)
+    {
+        return false;
+    }
+
+    // If same text, then lower the allowed frequency
+    if (Level.TimeSeconds - LastBroadcastTime < 5)
+    {
+        Msg = Left(Msg,Clamp(len(Msg) - 4, 8, 64));
+
+        for (i = 0; i < 4; ++i)
+        {
+            if (LastBroadcastString[i] ~= Msg)
+            {
+                return false;
+            }
+        }
+    }
+    for (i = 3; i > 0; --i)
+    {
+        LastBroadcastString[i] = LastBroadcastString[i-1];
+    }
+
+    LastBroadcastTime = Level.TimeSeconds;
+    return true;
 }
 
 // Modified to prevent broadcast of public chat if "all chat" is disabled
@@ -4953,6 +4988,23 @@ simulated function ClientTeamKillPrompt(string LastFFKillerString)
     class'DHTeamKillInteraction'.default.LastFFKillerName = LastFFKillerString;
 
     Player.InteractionMaster.AddInteraction("DH_Engine.DHTeamKillInteraction", Player);
+}
+
+simulated function ClientTeamSurrenderPrompt()
+{
+    Player.InteractionMaster.AddInteraction("DH_Engine.DHTeamSurrenderInteraction", Player);
+}
+
+function ServerVote(bool bVote, DHPromptInteraction Interaction)
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none)
+    {
+        G.PlayerVoted(self, bVote, Interaction);
+    }
 }
 
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<

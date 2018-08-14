@@ -173,6 +173,10 @@ function Mutate(string MutateString, PlayerController Sender)
         {
             KillPlayer(Words[2]); // Words[2] is PlayerName
         }
+        else if (MutateOption ~= "GagPlayer")
+        {
+            GagPlayer(Words[2]); // Words[2] is PlayerName
+        }
         // Switch a player (including a spectator) to a different role or team
         else if (MutateOption ~= "SwitchPlayer")
         {
@@ -422,6 +426,24 @@ function KillPlayer(string PlayerName)
     }
 }
 
+function GagPlayer(string PlayerName)
+{
+    local Controller PlayerToGag;
+
+    if (!IsLoggedInAsAdmin())
+    {
+        return;
+    }
+
+    PlayerToGag = FindControllerFromName(PlayerName, false);
+
+    if (PlayerToGag != none)
+    {
+        GagThisPlayer(PlayerToGag, PlayerName);
+    }
+}
+
+
 function SwitchPlayer(string PlayerName, string TeamName, string RoleName, string RoleIndexString)
 {
     local DHGameReplicationInfo DHGRI;
@@ -644,6 +666,29 @@ function KillThisPlayer(Controller PlayerToKill, optional string PlayerName)
         {
             NotifyPlayer(2, PlayerToKill); // admin killed you
             Log("DHAdminMenu: admin" @ GetAdminName() @ "killed player '" $ PlayerName $ "'");
+        }
+    }
+    else if (PlayerName != "")
+    {
+        ErrorMessageToSelf(9, PlayerName); // player is not active
+    }
+}
+
+function GagThisPlayer(Controller PlayerToGag, optional string PlayerName)
+{
+    if (DHPlayer(PlayerToGag) == none)
+    {
+        return;
+    }
+
+    if (!DHPlayer(PlayerToGag).bIsGagged)
+    {
+        DHPlayer(PlayerToGag).bIsGagged = true;
+
+        if (PlayerName != "" && Admin != none)
+        {
+            NotifyPlayer(17, PlayerToGag); // admin gagged you
+            Log("DHAdminMenu: admin" @ GetAdminName() @ "gagged player '" $ PlayerName $ "'");
         }
     }
     else if (PlayerName != "")
@@ -1020,10 +1065,17 @@ function ErrorMessageToSelf(byte MessageNumber, optional string InsertedName)
 // A check if the sending player is an admin - if not displays a message to say "you must be logged in as an admin ..."
 function bool IsLoggedInAsAdmin(optional bool bEnforceAdminLogin)
 {
-    // Do a normal admin login check
-    if (Admin != none && Admin.PlayerReplicationInfo != none && (Admin.PlayerReplicationInfo.bAdmin || Admin.PlayerReplicationInfo.bSilentAdmin))
+    local DHPlayer P;
+
+    // Do an admin login check
+    if (Admin != none && Admin.PlayerReplicationInfo != none)
     {
-        return true;
+        P = DHPlayer(Admin);
+
+        if (P != none && (Admin.PlayerReplicationInfo.bAdmin || Admin.PlayerReplicationInfo.bSilentAdmin || class'DHAccessControl'.static.IsDeveloper(P.GetPlayerIDHash())))
+        {
+            return true;
+        }
     }
 
     // Otherwise, if bBypassAdminLogin has been set to true in the config file, we effectively bypass the usual admin check (e.g. for use on a test server)

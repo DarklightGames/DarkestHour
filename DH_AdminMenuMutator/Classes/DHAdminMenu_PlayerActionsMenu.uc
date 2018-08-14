@@ -52,6 +52,11 @@ exec function KillPlayer(string PlayerName)
     BuildMutateCommand("KillPlayer" @ PlayerName, 5);
 }
 
+exec function GagPlayer(string PlayerName)
+{
+    BuildMutateCommand("GagPlayer" @ PlayerName, 32);
+}
+
 exec function ParaDropPlayerAtGrid(string PlayerName)
 {
     BuildMutateCommand("ParaDropPlayer" @ PlayerName @ "AtGridRef ", 9);
@@ -72,20 +77,22 @@ defaultproperties
     MenuText(2)="Send warning message (with sound)"
     MenuText(3)="Kick with message"
     MenuText(4)="Kill this player"
-    MenuText(5)="Switch player to allies role"
-    MenuText(6)="Switch player to axis role"
-    MenuText(7)="Paradrop player at objective"
-    MenuText(8)="Paradrop player at grid"
-    MenuText(9)="Paradrop player at current location"
+    MenuText(5)="Gag this player"
+    MenuText(6)="Switch player to allies role"
+    MenuText(7)="Switch player to axis role"
+    MenuText(8)="Paradrop player at objective"
+    MenuText(9)="Paradrop player at grid"
+    MenuText(10)="Paradrop player at current location"
 
     MenuCommand(0)="*RenamePlayer"
     MenuCommand(1)="*PrivateMessageToPlayer"
     MenuCommand(2)="*WarningMessageToPlayer"
     MenuCommand(3)="*KickPlayerWithReason"
     MenuCommand(4)="*KillPlayer"
-    MenuCommand(5)="RolesMenu Allies *SwitchPlayerToAlliesRole"
-    MenuCommand(6)="RolesMenu Axis *SwitchPlayerToAxisRole"
-    MenuCommand(7)="ObjectivesMenu *ParaDropPlayerAtObjective"
-    MenuCommand(8)="*ParaDropPlayerAtGrid"
-    MenuCommand(9)="*ParaDropPlayerAtCurrentLocation"
+    MenuCommand(5)="*GagPlayer"
+    MenuCommand(6)="RolesMenu Allies *SwitchPlayerToAlliesRole"
+    MenuCommand(7)="RolesMenu Axis *SwitchPlayerToAxisRole"
+    MenuCommand(8)="ObjectivesMenu *ParaDropPlayerAtObjective"
+    MenuCommand(9)="*ParaDropPlayerAtGrid"
+    MenuCommand(10)="*ParaDropPlayerAtCurrentLocation"
 }

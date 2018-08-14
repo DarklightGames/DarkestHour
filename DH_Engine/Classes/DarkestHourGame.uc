@@ -21,6 +21,8 @@ var     DHSpawnManager              SpawnManager;
 var     DHObstacleManager           ObstacleManager;
 var     DHConstructionManager       ConstructionManager;
 
+var     DHVoteInfo                  ActiveVotes[3];                         // 0-Axis, 1-Allies, 2-Both
+
 var     array<string>               FFViolationIDs;                         // Array of ROIDs that have been kicked once this session
 var()   config bool                 bSessionKickOnSecondFFViolation;
 var()   config bool                 bUseWeaponLocking;                      // Weapons can lock (preventing fire) for punishment
@@ -5002,6 +5004,19 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
     }
 
     return Response;
+}
+
+exec function StartSurrenderVote(int Team)
+{
+    // Check to see if we already have a vote present for the team
+    //
+
+}
+
+function PlayerVoted(DHPlayer Player,bool bVote, DHPromptInteraction Interaction)
+{
+
+
 }
 
 defaultproperties
