@@ -15,7 +15,7 @@ defaultproperties
     VehicleNameString="M4A1(75) Sherman"
     VehicleTeam=1
     VehicleMass=13.5
-    ReinforcementCost=9
+    ReinforcementCost=8
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_ShermanM4A1_anm.ShermanM4A1_body_ext'

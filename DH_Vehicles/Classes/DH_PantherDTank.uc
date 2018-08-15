@@ -23,7 +23,7 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="Panzer V 'Panther' Ausf.D"
     VehicleMass=14.0
-    ReinforcementCost=14
+    ReinforcementCost=10
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Panther_anm.Panther_body_ext'

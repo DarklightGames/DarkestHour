@@ -19,7 +19,7 @@ defaultproperties
     bHasTreads=true
     bSpecialTankTurning=true // because Bren Carrier is fully tracked
     VehicleMass=5.0
-    ReinforcementCost=3
+    ReinforcementCost=4
     MaxDesireability=1.2
     bMustBeInSquadToSpawn=true
 

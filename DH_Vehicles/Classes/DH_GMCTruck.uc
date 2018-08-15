@@ -15,7 +15,7 @@ defaultproperties
     VehicleNameString="GMC CCKW"
     VehicleTeam=1
     VehicleMass=2.5
-    ReinforcementCost=5
+    ReinforcementCost=3
     MaxDesireability=0.12
 
     // Hull mesh

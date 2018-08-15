@@ -30,7 +30,7 @@ defaultproperties
     VehicleNameString="Sd.Kfz. 10/5"
     bHasTreads=true
     VehicleMass=6.5
-    ReinforcementCost=6
+    ReinforcementCost=4
     MaxDesireability=1.2
     bMustBeInSquadToSpawn=true
     PointValue=500

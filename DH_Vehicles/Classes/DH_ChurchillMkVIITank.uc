@@ -44,7 +44,7 @@ defaultproperties
     VehicleNameString="Churchill Mk.VII"
     VehicleTeam=1
     VehicleMass=13.5
-    ReinforcementCost=13
+    ReinforcementCost=10
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Churchill_anm.ChurchillMkVII_body_ext'

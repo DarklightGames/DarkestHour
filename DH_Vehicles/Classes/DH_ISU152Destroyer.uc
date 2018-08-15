@@ -20,7 +20,7 @@ defaultproperties
     VehicleNameString="ISU-152"
     VehicleTeam=1
     VehicleMass=13.5
-    ReinforcementCost=23
+    ReinforcementCost=15
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_ISU152_anm.ISU152-body_ext'
