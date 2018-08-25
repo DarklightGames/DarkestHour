@@ -11,6 +11,13 @@ var localized string    SwapAndRestartText;
 var config    float     MapVoteIntervalDuration;
 var config    bool      bUseSwapVote;
 
+// Deprecated functions
+function SaveAccVotes(int WinningMapIndex, int WinningGameIndex){}
+function SubmitKickVote(int PlayerID, Actor Voter){}
+function UpdateKickVoteCount(int PlayerID, int VoteCountDelta){}
+function TallyKickVotes(){}
+function KickPlayer(int PlayerIndex){}
+
 // Modified to avoid calling PlayCountDown() on the VotingReplicationInfo as that just spams log errors as this game doesn't have a StatusAnnouncer actor
 function Timer()
 {
@@ -192,7 +199,7 @@ function PlayerExit(Controller Exiting)
 
     ExitingPlayerIndex = -1;
 
-    if (bMapVote || bKickVote || bMatchSetup)
+    if (bMapVote)
     {
         // Find the MVRI belonging to the exiting player
         for (i = 0; i < MVRI.Length; ++i)
@@ -215,23 +222,6 @@ function PlayerExit(Controller Exiting)
                         }
                     }
                 }
-
-                if (bKickVote)
-                {
-                    // Clear votes for exiting player
-                    UpdateKickVoteCount(MVRI[ExitingPlayerIndex].PlayerID, 0);
-
-                    // Decrease votecount for player that the exiting player voted against
-                    if (MVRI[ExitingPlayerIndex].KickVote > -1 && MVRI[MVRI[ExitingPlayerIndex].KickVote] != none)
-                    {
-                        UpdateKickVoteCount(MVRI[MVRI[ExitingPlayerIndex].KickVote].PlayerID, -1);
-                    }
-                }
-            }
-
-            if (bKickVote && ExitingPlayerIndex > -1 && MVRI[i] != none && MVRI[i].KickVote == ExitingPlayerIndex)
-            {
-                MVRI[i].KickVote = -1;
             }
 
             if (MVRI[i] != none && (MVRI[i].PlayerOwner == none || MVRI[i].PlayerOwner == Exiting))
@@ -240,11 +230,6 @@ function PlayerExit(Controller Exiting)
 
                 MVRI[i].Destroy();
                 MVRI[i] = none;
-
-                if (bKickVote)
-                {
-                    TallyKickVotes();
-                }
 
                 if (bMapVote)
                 {
@@ -266,6 +251,7 @@ function string PrepMapStr(string MapName)
 }
 
 // Overridden to stop rapid-fire voting, handle more aesthetic messages, and handle swap teams vote
+// also guts out other vote modes as we should only be using 1 in DH
 function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
 {
     local MapHistoryInfo MapInfo;
@@ -347,32 +333,9 @@ function SubmitMapVote(int MapIndex, int GameIndex, Actor Voter)
     MVRI[Index].MapVote = MapIndex;
     MVRI[Index].GameVote = GameIndex;
 
-    if (bAccumulationMode)
-    {
-        if (bScoreMode)
-        {
-            VoteCount = GetAccVote(PlayerController(Voter)) + int(GetPlayerScore(PlayerController(Voter)));
-            TextMessage = lmsgMapVotedForWithCount;
-        }
-        else
-        {
-            VoteCount = GetAccVote(PlayerController(Voter)) + 1;
-            TextMessage = lmsgMapVotedForWithCount;
-        }
-    }
-    else
-    {
-        if (bScoreMode)
-        {
-            VoteCount = int(GetPlayerScore(PlayerController(Voter)));
-            TextMessage = lmsgMapVotedForWithCount;
-        }
-        else
-        {
-            VoteCount = 1;
-            TextMessage = lmsgMapVotedFor;
-        }
-    }
+    // Sets the vote count for the player based on the player's score (to a maximum)
+    VoteCount = int(GetPlayerVotePower(PlayerController(Voter)));
+    TextMessage = lmsgMapVotedForWithCount;
 
     if (P != none)
     {
@@ -522,6 +485,7 @@ function GetDefaultMap(out int MapIdx, out int GameIdx)
 }
 
 // Override to support additional vote options like Swap Teams and Restart
+// Guts voting mode options, as DH only uses 1 vote method
 function TallyVotes(bool bForceMapSwitch)
 {
     local MapHistoryInfo MapInfo;
@@ -543,37 +507,10 @@ function TallyVotes(bool bForceMapSwitch)
         {
             PlayersThatVoted++;
 
-            if (bScoreMode)
-            {
-                if (bAccumulationMode)
-                {
-                    Votes = GetAccVote(MVRI[x].PlayerOwner) + int(GetPlayerScore(MVRI[x].PlayerOwner));
-                }
-                else
-                {
-                    Votes = int(GetPlayerScore(MVRI[x].PlayerOwner));
-                }
-            }
-            // Not Score Mode == Majority (one vote per player)
-            else
-            {
-                if (bAccumulationMode)
-                {
-                    Votes = GetAccVote(MVRI[x].PlayerOwner) + 1;
-                }
-                else
-                {
-                    Votes = 1;
-                }
-            }
+            // Get the vote power of the player
+            Votes = int(GetPlayerVotePower(MVRI[x].PlayerOwner));
 
             VoteCount[MVRI[x].GameVote * MapCount + MVRI[x].MapVote] = VoteCount[MVRI[x].GameVote * MapCount + MVRI[x].MapVote] + Votes;
-
-            // If more then half the players voted for the same map as this player then force a winner
-            if (!bScoreMode && Level.Game.GetNumPlayers() > 2 && float(VoteCount[MVRI[x].GameVote * MapCount + MVRI[x].MapVote]) / float(Level.Game.GetNumPlayers()) > 0.5 && Level.Game.bGameEnded)
-            {
-                bForceMapSwitch = true;
-            }
         }
     }
 
@@ -690,16 +627,6 @@ function TallyVotes(bool bForceMapSwitch)
         Log("ServerTravelString =" $ ServerTravelString, 'MapVoteDebug');
         History.Save();
 
-        if (bEliminationMode)
-        {
-            RepeatLimit++;
-        }
-
-        if (bAccumulationMode)
-        {
-            SaveAccVotes(TopMap - TopMap / MapCount * MapCount, TopMap / MapCount);
-        }
-
         CurrentGameConfig = TopMap / MapCount;
 
         if (!bAutoDetectMode)
@@ -711,6 +638,31 @@ function TallyVotes(bool bForceMapSwitch)
         SetTimer(Level.TimeDilation, true); // Timer() will monitor the server-travel & detect a failure
         Level.ServerTravel(ServerTravelString, false); // change the map
     }
+}
+
+// DH function which will calculate a specifici player's power
+function float GetPlayerVotePower(PlayerController Player)
+{
+    const PLAYER_VOTE_POWER_MAX = 15;
+
+    local int VotePower;
+
+    // If game has not ended, make the vote power only 1
+    if (!Level.Game.bGameEnded)
+    {
+        VotePower = 1;
+    }
+    else
+    {
+        VotePower = Clamp(Player.PlayerReplicationInfo.Score / 1000, 0, PLAYER_VOTE_POWER_MAX);
+    }
+
+    if (VotePower < 1)
+    {
+        VotePower = 1;
+    }
+
+    return VotePower;
 }
 
 function ExitVoteAndSwap()
@@ -763,7 +715,7 @@ function LoadMapList()
 {
     local class<MapListLoader> MapListLoaderClass;
     local MapListLoader        Loader;
-    local int                  EnabledMapCount, i;
+    local int                  i;
 
     MapList.Length = 0;
     MapCount = 0;
@@ -823,30 +775,6 @@ function LoadMapList()
 
     History.Save();
 
-    if (bEliminationMode)
-    {
-        // Count the Remaining Enabled maps
-        EnabledMapCount = 0;
-
-        for (i = 0; i < MapCount; ++i)
-        {
-            if (MapList[i].bEnabled)
-            {
-                EnabledMapCount++;
-            }
-        }
-
-        if (EnabledMapCount < MinMapCount || EnabledMapCount == 0)
-        {
-            Log("Elimination Mode Reset/Reload.", 'MapVote');
-            RepeatLimit = 0;
-            MapList.Length = 0;
-            MapCount = 0;
-            SaveConfig();
-            Loader.LoadMapList(self);
-        }
-    }
-
     Loader.Destroy();
 }
 
@@ -862,6 +790,24 @@ function MidGameVote()
     TimeLeft = VoteTimeLimit;
     ScoreBoardTime = 1;
     SetTimer(1.0, true);
+}
+
+// Override to remove deprecated server options
+static function FillPlayInfo(PlayInfo PlayInfo)
+{
+    super(VotingHandler).FillPlayInfo(PlayInfo);
+
+    PlayInfo.AddSetting(default.MapVoteGroup,"bMapVote",default.PropsDisplayText[0],0,1,"Check",,,True,False);
+    PlayInfo.AddSetting(default.MapVoteGroup,"bAutoOpen",default.PropsDisplayText[1],0,1,"Check",,,True,True);
+    PlayInfo.AddSetting(default.MapVoteGroup,"ScoreBoardDelay",default.PropsDisplayText[2],0,1,"Text","3;0:60",,True,True);
+    PlayInfo.AddSetting(default.MapVoteGroup,"RepeatLimit",default.PropsDisplayText[7],0,1,"Text","4;0:9999",,True,True);
+    PlayInfo.AddSetting(default.MapVoteGroup,"VoteTimeLimit",default.PropsDisplayText[8],0,1,"Text","3;10:300",,True,True);
+    PlayInfo.AddSetting(default.MapVoteGroup,"MidGameVotePercent",default.PropsDisplayText[9],0,1,"Text","3;1:100",,True,True);
+    PlayInfo.AddSetting(default.MapVoteGroup,"bDefaultToCurrentGameType",default.PropsDisplayText[10],0,1,"Check",,,True,True);
+    PlayInfo.AddSetting(default.MapVoteGroup,"GameConfig",default.PropsDisplayText[15],0, 1,"Custom",";;"$default.GameConfigPage,,True,True);
+
+    class'DefaultMapListLoader'.static.FillPlayInfo(PlayInfo);
+    PlayInfo.PopClass();
 }
 
 defaultproperties

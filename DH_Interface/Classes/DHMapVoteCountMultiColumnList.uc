@@ -5,6 +5,8 @@
 
 class DHMapVoteCountMultiColumnList extends MapVoteCountMultiColumnList;
 
+var localized string             TotalVotePowerText;
+
 var(Style) string                RedListStyleName; // name of the style to use for when current player is out of recommended player range
 var(Style) noexport GUIStyles    RedListStyle;
 
@@ -54,7 +56,7 @@ function DrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, bool
 
     // Vote Count
     GetCellLeftWidth(1, CellLeft, CellWidth);
-    DrawStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left, string(VRI.MapVoteCount[SortData[i].SortItem].VoteCount), FontScale);
+    DrawStyle.DrawText(Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left, TotalVotePowerText @ string(VRI.MapVoteCount[SortData[i].SortItem].VoteCount), FontScale);
 
     // Player Range
     if (Parts.Length >= 5)
@@ -115,11 +117,13 @@ function string GetSortString(int i)
 
 defaultproperties
 {
+    TotalVotePowerText="Combined Weight:"
+
     ColumnHeadings(0)="Nominated Maps"
-    ColumnHeadings(1)="Votes"
+    ColumnHeadings(1)="Vote Weight"
     ColumnHeadings(2)="Player Range"
     ColumnHeadingHints(0)="The map's name."
-    ColumnHeadingHints(1)="Number of votes registered for this map."
+    ColumnHeadingHints(1)="The combined voting power of players for this map."
     ColumnHeadingHints(2)="Recommended players for the map."
     InitColumnPerc(0)=0.4
     InitColumnPerc(1)=0.3
