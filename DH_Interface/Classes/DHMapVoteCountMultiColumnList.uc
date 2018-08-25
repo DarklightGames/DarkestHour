@@ -123,7 +123,7 @@ defaultproperties
     ColumnHeadings(1)="Vote Weight"
     ColumnHeadings(2)="Player Range"
     ColumnHeadingHints(0)="The map's name."
-    ColumnHeadingHints(1)="The combined voting power of players for this map."
+    ColumnHeadingHints(1)="The combined voting power of players for the map."
     ColumnHeadingHints(2)="Recommended players for the map."
     InitColumnPerc(0)=0.4
     InitColumnPerc(1)=0.3
