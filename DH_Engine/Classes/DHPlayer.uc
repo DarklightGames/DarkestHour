@@ -5905,7 +5905,7 @@ function PatronRequestOnResponse(int Status, TreeMap_string_string Headers, stri
 {
     local JSONParser Parser;
     local JSONObject O;
-    local bool bIsPatron;
+    local byte PatronLevel;
 
     if (Status == 200)
     {
@@ -5916,12 +5916,12 @@ function PatronRequestOnResponse(int Status, TreeMap_string_string Headers, stri
 
         if (O != none)
         {
-            bIsPatron = O.Get("is_patron").AsBoolean();
+            PatronLevel = O.Get("patron_level").AsInteger(); //TODO FIX THIS
         }
 
-        if (bIsPatron)
+        if (PatronLevel > 0)
         {
-            ServerSetPatronStatus(bIsPatron);
+            ServerSetPatronStatus(PatronLevel);
         }
     }
     else
@@ -5931,7 +5931,7 @@ function PatronRequestOnResponse(int Status, TreeMap_string_string Headers, stri
 }
 
 // Client-to-server function that reports the player's patron status to the server.
-function ServerSetPatronStatus(bool bIsPatron)
+function ServerSetPatronStatus(byte PatronLevel)
 {
     local DHPlayerReplicationInfo PRI;
 
@@ -5939,7 +5939,7 @@ function ServerSetPatronStatus(bool bIsPatron)
 
     if (PRI != none)
     {
-        PRI.bIsPatron = bIsPatron;
+        PRI.PatronStatus = PatronStatusType(PatronLevel);
     }
 }
 

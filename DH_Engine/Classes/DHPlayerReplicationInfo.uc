@@ -5,27 +5,38 @@
 
 class DHPlayerReplicationInfo extends ROPlayerReplicationInfo;
 
+// Patron status
+enum PatronStatusType
+{
+    PATRON_None,
+    PATRON_Lead,
+    PATRON_Bronze,
+    PATRON_Silver,
+    PATRON_Gold
+};
+
+var     PatronStatusType        PatronStatus;
+var     bool                    bIsDeveloper;
+
+var     float                   NameDrawStartTime;
+var     float                   LastNameDrawTime;
+var     int                     DHKills;
+
+// Squad
 var     int                     SquadIndex;
 var     int                     SquadMemberIndex;
 var     bool                    bIsSquadAssistant;
 
-var     float                   NameDrawStartTime;
-var     float                   LastNameDrawTime;
-var     float                   StashedScore;
-var     int                     DHKills;
-
-var     bool                    bIsPatron;
-var     bool                    bIsDeveloper;
-
 // Scoring
 var     int                     TotalScore;
+var     float                   StashedScore;
 var     int                     CategoryScores[2];
 
 replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        SquadIndex, SquadMemberIndex, bIsPatron, bIsDeveloper, DHKills, bIsSquadAssistant,
+        SquadIndex, SquadMemberIndex, PatronStatus, bIsDeveloper, DHKills, bIsSquadAssistant,
         TotalScore, CategoryScores;
 }
 
