@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_ShermanTank_M4A3105_Snow extends DH_ShermanTank_M4A3105;
+class DH_ShermanTank_M4A3105_Snow extends DH_ShermanTank_M4A3105_Howitzer;
 
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex2.utx
 
