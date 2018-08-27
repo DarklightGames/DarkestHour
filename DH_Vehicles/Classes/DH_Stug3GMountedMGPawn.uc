@@ -57,7 +57,7 @@ defaultproperties
     BinocsDrivePos=(X=-2.0,Y=5.0,Z=4.0)
     DriveAnim="VHalftrack_com_idle"
     CameraBone="loader_cam"
-    HUDOverlayClass=class'DH_Vehicles.DH_VehHUDOverlay_MG34'
+    HUDOverlayClass=class'DH_Vehicles.DH_MG34_VehHUDOverlay'
     HUDOverlayFOV=45.0
     BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Germ'
     FirstPersonGunRefBone="firstperson_wep"

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_VehHUDOverlay_MG34 extends VehicleHUDOverlay;
+class DH_MG34_VehHUDOverlay extends VehicleHUDOverlay;
 
 #exec OBJ LOAD FILE=..\Animations\Axis_Mg34_1st.ukx
 

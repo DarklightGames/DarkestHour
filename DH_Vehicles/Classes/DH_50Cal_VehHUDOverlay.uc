@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_VehHUDOverlay_50Cal extends VehicleHUDOverlay;
+class DH_50Cal_VehHUDOverlay extends VehicleHUDOverlay;
 
 #exec OBJ LOAD FILE=..\Animations\DH_50Cal_1st.ukx
 

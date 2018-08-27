@@ -44,7 +44,7 @@ defaultproperties
     DriveRot=(Yaw=16384)
     DriveAnim="VHalftrack_com_idle"
     CameraBone="Camera_com"
-    HUDOverlayClass=class'DH_Vehicles.DH_VehHUDOverlay_30Cal'
+    HUDOverlayClass=class'DH_Vehicles.DH_30Cal_VehHUDOverlay'
     HUDOverlayOffset=(X=-2.0)
     HUDOverlayFOV=35.0
     BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_7x50Allied'
