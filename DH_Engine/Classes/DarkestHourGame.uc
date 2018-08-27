@@ -63,12 +63,7 @@ var     int                         ServerTickFrameCount;                   // K
 var     bool                        bIsAttritionEnabled;                    // This variable is here primarily so that mutators can disable attrition.
 var     float                       CalculatedAttritionRate[2];
 var     float                       TeamAttritionCounter[2];
-var     InterpCurve                 ElapsedTimeAttritionCurve;              // Curve which inputs elapsed time and outputs attrition amount
-                                                                            // used to setup a pseudo time limit for Advance/Attrition game modes
-                                                                            // this way if there are not many players on, the round will eventually end
-
 var     bool                        bSwapTeams;
-
 
 var     float                       AlliesToAxisRatio;
 
@@ -2728,10 +2723,18 @@ state RoundInPlay
             // Combine attrition values and set GRI
             GRI.AttritionRate[i] = CalculatedAttritionRate[i];
 
+            // Apply time-based attrition (to stop rounds from lasting ages)
             if (bIsAttritionEnabled)
             {
-                // Apply time-based attrition (to stop rounds from lasting ages).
-                GRI.AttritionRate[i] += InterpCurveEval(ElapsedTimeAttritionCurve, float(GRI.ElapsedTime - GRI.RoundStartTime));
+                // If we are supposed to omit defender AND the level has a defender AND this is not the defending side, the apply attrition
+                if (GRI.GameType.default.bOmitTimeAttritionForDefender && LevelInfo.DefendingSide != SIDE_None && LevelInfo.DefendingSide != i)
+                {
+                    GRI.AttritionRate[i] += InterpCurveEval(GRI.GameType.default.ElapsedTimeAttritionCurve, float(GRI.ElapsedTime - GRI.RoundStartTime));
+                }
+                else
+                {
+                    GRI.AttritionRate[i] += InterpCurveEval(GRI.GameType.default.ElapsedTimeAttritionCurve, float(GRI.ElapsedTime - GRI.RoundStartTime));
+                }
             }
 
             // Convert from tickets-per-minute to tickets-per-second.
@@ -5026,8 +5029,6 @@ defaultproperties
     // Default settings based on common used server settings in DH
     bIgnore32PlayerLimit=true // allows more than 32 players
     bVACSecured=true
-
-    ElapsedTimeAttritionCurve=(Points=((InVal=0.0,OutVal=0.0),(InVal=4200.0,OutVal=0.0),(InVal=5400.0,OutVal=100.0),(InVal=10800.0,OutVal=1000.0)))
 
     bSessionKickOnSecondFFViolation=true
     FFDamageLimit=0       // this stops the FF damage system from kicking based on FF damage

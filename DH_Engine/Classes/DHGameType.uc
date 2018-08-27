@@ -15,11 +15,17 @@ var bool                bSquadSpecialRolesOnly;                 // Whether this 
 var bool                bKeepSpawningWithoutReinf;              // Whether this gamemode alls spawning once out of reinforcements
 var bool                bHasTemporarySpawnVehicles;             // Whether this gamemode treats all vehicles as temporary spawn vehicles after their spawn
 var bool                bMunitionsDrainOverTime;                // Whether this gamemode should drain munitions over time
+var bool                bOmitTimeAttritionForDefender;          // Whether the defender can take attrition over time from ElapsedTimeAttritionCurve
 
 var int                 OutOfReinfLimitForTimeChange;           // Threshold for the bTimeCanChangeAtZeroReinf, the team with reinforcements remaining must have <= this amount
 var int                 OutOfReinfRoundTime;                    // The round time to set when a team runs out of reinforcements, if bTimeCanChangeAtZeroReinf
 
+var InterpCurve         ElapsedTimeAttritionCurve;              // Curve which inputs elapsed time and outputs attrition amount
+                                                                // used to setup a pseudo time limit for Advance/Attrition game modes
+                                                                // this way if there are too many reinforcements, the round will end in a sane amount of time
 defaultproperties
 {
     GameTypeName="Unknown Game Type"
+
+    ElapsedTimeAttritionCurve=(Points=((InVal=0.0,OutVal=0.0),(InVal=4200.0,OutVal=0.0),(InVal=5400.0,OutVal=100.0),(InVal=10800.0,OutVal=1000.0)))
 }

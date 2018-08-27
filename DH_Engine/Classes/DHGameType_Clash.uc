@@ -3,20 +3,19 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHGameType_Advance extends DHGameType
+class DHGameType_Clash extends DHGameType
     abstract;
 
 defaultproperties
 {
-    GameTypeName="Advance"
+    GameTypeName="Clash"
 
     bUseReinforcementWarning=true
     bSquadSpecialRolesOnly=true
     bHasTemporarySpawnVehicles=true
-    bOmitTimeAttritionForDefender=true
+
     bTimeCanChangeAtZeroReinf=true
     bKeepSpawningWithoutReinf=true
     OutOfReinfRoundTime=120
     OutOfReinfLimitForTimeChange=50
 }
-
