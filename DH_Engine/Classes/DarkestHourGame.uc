@@ -1557,6 +1557,24 @@ function ChangeName(Controller Other, string S, bool bNameChange)
     }
 }
 
+function int GetObjectiveNumByTag(name ObjectiveTag)
+{
+    local int i;
+    local int ObjNum;
+
+    ObjNum = -1;
+
+    for (i = 0; i < arraycount(DHObjectives); ++i)
+    {
+        if (DHObjectives[i] != none && DHObjectives[i].Tag == ObjectiveTag)
+        {
+            ObjNum = DHObjectives[i].ObjNum;
+        }
+    }
+
+    return ObjNum;
+}
+
 function BroadcastLastObjectiveMessage(int Team_that_is_about_to_win)
 {
     BroadcastLocalizedMessage(class'DHLastObjectiveMessage', Team_that_is_about_to_win);
