@@ -223,11 +223,12 @@ replication
         ServerNetHealth,
         ArtilleryTypeInfos,
         DHArtillery,
-        TeamMunitionPercentages;
+        TeamMunitionPercentages,
+        AlliesVictoryMusicIndex,
+        AxisVictoryMusicIndex;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
-        AlliedNationID, AlliesVictoryMusicIndex, AxisVictoryMusicIndex,
-        ConstructionClasses, MapMarkerClasses;
+        AlliedNationID, ConstructionClasses, MapMarkerClasses;
 }
 
 // Modified to build SpawnPoints array
