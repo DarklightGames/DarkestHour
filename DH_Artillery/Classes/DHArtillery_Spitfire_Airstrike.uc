@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHArtillery_Airstrike_BF109 extends DHArtillery_Airstrike;
+class DHArtillery_Spitfire_Airstrike extends DHArtillery_Airstrike;
 
 defaultproperties
 {
-    MenuName="Airstrike (Bf109G)"
-    AirplaneClass=class'DHAirplane_Bf109'
+    AirplaneClass=class'DH_Spitfire_Airplane'
 }
 

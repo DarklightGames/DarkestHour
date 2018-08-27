@@ -3,10 +3,10 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHArtillery_Airstrike_Spitfire extends DHArtillery_Airstrike;
+class DH_Spitfire_Airplane extends DHAirplane;
 
 defaultproperties
 {
-    AirplaneClass=class'DHAirplane_Spitfire'
+    AirplaneName="Supermarine Spitfire"
+    Mesh=Mesh'DH_Airplanes_anm.Spitfire'
 }
-

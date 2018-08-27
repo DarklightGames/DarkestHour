@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHAirplane_BF109 extends DHAirplane;
+class DH_BF109_Airplane extends DHAirplane;
 
 defaultproperties
 {
