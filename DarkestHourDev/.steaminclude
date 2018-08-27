@@ -15,3 +15,4 @@ System/dh_server_launcher.bat
 !tools
 !DarkestHourDev/System/DarkestHourDev Server.bat
 !DarkestHourDev/Maps/DH-Template_*
+!DarkestHourDev/Maps/DH-INCOMPLETE_*
