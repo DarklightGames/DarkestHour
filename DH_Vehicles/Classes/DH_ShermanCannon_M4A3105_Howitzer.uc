@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_ShermanCannon_M4A3105 extends DHVehicleCannon;
+class DH_ShermanCannon_M4A3105_Howitzer extends DHVehicleCannon;
 
 defaultproperties
 {

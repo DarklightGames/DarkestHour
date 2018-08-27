@@ -7,7 +7,7 @@ class DH_ShermanCannonPawn_M4A3105_Howitzer extends DHAmericanCannonPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_Vehicles.DH_ShermanCannon_M4A3105'
+    GunClass=class'DH_Vehicles.DH_ShermanCannon_M4A3105_Howitzer'
     DriverPositions(0)=(ViewLocation=(X=25.0,Y=18.0,Z=2.0),ViewFOV=28.33,PositionMesh=SkeletalMesh'DH_ShermanM4A3_anm.shermanM4A3105_turret_int',TransitionUpAnim="Periscope_in",ViewPitchUpLimit=4551,ViewPitchDownLimit=63715,ViewPositiveYawLimit=19000,ViewNegativeYawLimit=-20000,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3_anm.shermanM4A3105_turret_int',TransitionUpAnim="periscope_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3_anm.shermanM4A3105_turret_int',TransitionUpAnim="com_open",TransitionDownAnim="Periscope_in",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536)
