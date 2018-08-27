@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_ShermanCannonPawn_M4A3E2 extends DHAmericanCannonPawn;
+class DH_ShermanCannonPawn_M4A3E2_Jumbo extends DHAmericanCannonPawn;
 
 defaultproperties
 {

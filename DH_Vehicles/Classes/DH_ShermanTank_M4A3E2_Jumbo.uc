@@ -8,7 +8,7 @@ class DH_ShermanTank_M4A3E2_Jumbo extends DH_ShermanTank_M4A375W;
 defaultproperties
 {
     VehicleNameString="M4A3E2(75)W Sherman"
-    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn_M4A3E2')
+    PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn_M4A3E2_Jumbo')
     VehicleMass=14.0
     Mesh=SkeletalMesh'DH_ShermanM4A3_anm.ShermanM4A3E2_body_ext'
     Skins(0)=Texture'DH_VehiclesUS_tex3.ext_vehicles.ShermanM4A3E2_ext'
