@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_ShermanFactory_M4A3E2_Snow extends DH_ShermanFactory_M4A3E2;
+class DH_ShermanFactory_M4A3E2_Snow extends DH_ShermanFactory_M4A3E2_Jumbo;
 
 defaultproperties
 {
