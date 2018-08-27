@@ -52,6 +52,7 @@ struct VehiclePoolAction
 struct ObjOperationAction
 {
     var() int ObjectiveNum;
+    var() name ObjectiveTag;
     var() EObjectiveOperation Operation;
 };
 
@@ -314,6 +315,7 @@ function DoVehiclePoolAction(VehiclePoolAction VPA)
 function DoObjectiveAction(ObjOperationAction OOA)
 {
     local DarkesthourGame G;
+    local int ObjIndex;
 
     if (bIsLocked)
     {
@@ -322,22 +324,36 @@ function DoObjectiveAction(ObjOperationAction OOA)
 
     G = DarkesthourGame(Level.Game);
 
+    if (OOA.ObjectiveTag != '')
+    {
+        ObjIndex = G.GetObjectiveNumByTag(OOA.ObjectiveTag);
+    }
+    else
+    {
+        ObjIndex = OOA.ObjectiveNum;
+    }
+
+    if (ObjIndex < 0)
+    {
+        return;
+    }
+
     switch (OOA.Operation)
     {
         case EOO_Activate:
-            G.DHObjectives[OOA.ObjectiveNum].SetActive(true);
+            G.DHObjectives[ObjIndex].SetActive(true);
             break;
         case EOO_Deactivate:
-            G.DHObjectives[OOA.ObjectiveNum].SetActive(false);
+            G.DHObjectives[ObjIndex].SetActive(false);
             break;
         case EOO_Toggle:
-            G.DHObjectives[OOA.ObjectiveNum].SetActive(!G.DHObjectives[OOA.ObjectiveNum].bActive);
+            G.DHObjectives[ObjIndex].SetActive(!G.DHObjectives[ObjIndex].bActive);
             break;
         case EOO_Lock:
-            G.DHObjectives[OOA.ObjectiveNum].bIsLocked = true;
+            G.DHObjectives[ObjIndex].bIsLocked = true;
             break;
         case EOO_Unlock:
-            G.DHObjectives[OOA.ObjectiveNum].bIsLocked = false;
+            G.DHObjectives[ObjIndex].bIsLocked = false;
             break;
         default:
             Warn("Unhandled EObjectiveOperation");
