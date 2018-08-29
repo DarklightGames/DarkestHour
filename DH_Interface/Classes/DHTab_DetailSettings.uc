@@ -8,6 +8,9 @@ class DHTab_DetailSettings extends ROTab_DetailSettings;
 var automated moCheckBox        ch_DynamicFogRatio;
 var bool                        bUseDynamicFogRatio;
 
+var automated moCheckBox        ch_UseVSync;
+var bool                        bUseVSync;              // The optional variable already exists as UseVSync under D3DDrv.RENDERDEVICE
+
 var automated moNumericEdit     nu_MinDesiredFPS;
 var int                         NumMinDesiredFPS;
 
@@ -21,6 +24,7 @@ function SetupPositions()
     super.SetupPositions();
 
     sb_Section1.UnmanageComponent(ch_Advanced);
+    sb_Section1.ManageComponent(ch_UseVSync);
 
     sb_Section2.ManageComponent(ch_DynamicFogRatio);
     sb_Section2.ManageComponent(nu_MinDesiredFPS);
@@ -90,6 +94,11 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             iGlobalDetails = class'ROPlayer'.default.GlobalDetailLevel;
             iGlobalDetailsD = iGlobalDetails;
             co_GlobalDetails.SilentSetIndex(iGlobalDetails);
+            break;
+
+        case ch_UseVSync:
+            bUseVSync = bool(PC.ConsoleCommand("get" @ co_RenderDevice.GetComponentValue() @ "UseVSync")); // Get the UseVSync value for the current render device
+            ch_UseVSync.SetComponentValue(bUseVSync,true);
             break;
 
         case ch_MotionBlur:
@@ -252,6 +261,12 @@ function InternalOnChange(GUIComponent Sender)
             bGoingUp = i > iGlobalDetails && i != iGlobalDetailsD && (i != MAX_DETAIL_OPTIONS - 1);
             iGlobalDetails = i;
             UpdateGlobalDetails();
+            break;
+
+        case ch_UseVSync:
+            bUseVSync = ch_UseVSync.IsChecked();
+            PlayerOwner().ConsoleCommand("set" @ co_RenderDevice.GetComponentValue() @ "UseVSync" @ bUseVSync);
+            bGoingUp = bUseVSync;
             break;
 
         case ch_MotionBlur:
@@ -702,6 +717,12 @@ function SaveSettings()
         }
     }
 
+    if (bool(PC.ConsoleCommand("get" @ co_RenderDevice.GetComponentValue() @ "UseVSync")) != bUseVSync)
+    {
+        PlayerOwner().ConsoleCommand("set" @ co_RenderDevice.GetComponentValue() @ "UseVSync" @ bUseVSync);
+        bSavePlayerConfig = true;
+    }
+
     if (bSavePlayerConfig)
     {
        class'ROEngine.ROPlayer'.static.StaticSaveConfig();
@@ -755,6 +776,23 @@ defaultproperties
     DisplayModes(14)=(Width=1600,Height=1200)
     DisplayModes(15)=(Width=1920,Height=1200)
     DisplayModes(16)=(Width=2560,Height=1440)
+
+    Begin Object Class=DHmoCheckBox Name=UseVSyncCheckBox
+        ComponentJustification=TXTA_Left
+        CaptionWidth=0.94
+        Caption="VSync (Recommended to have unchecked)"
+        OnCreateComponent=UseVSyncCheckBox.InternalOnCreateComponent
+        IniOption="@Internal"
+        IniDefault="false"
+        WinTop=0.0
+        WinLeft=0.0
+        WinWidth=0.3
+        WinHeight=0.04
+        TabOrder=12
+        OnChange=DHTab_DetailSettings.InternalOnChange
+        OnLoadINI=DHTab_DetailSettings.InternalOnLoadINI
+    End Object
+    ch_UseVSync=UseVSyncCheckBox
 
     Begin Object Class=DHmoComboBox Name=GlobalDetails
         ComponentJustification=TXTA_Left
