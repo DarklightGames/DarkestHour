@@ -23,6 +23,21 @@ var             vector                      MapClickLocation;
 var             array<class<DHMapMarker> >  MenuItemObjects;
 var             int                         MapMarkerIndexToRemove;
 
+var             vector                      Origin;
+var             int                         ZoomLevel;
+var             int                         ZoomLevelMin;
+var             int                         ZoomLevelMax;
+
+var             float                       ZoomScale;
+var             Range                       ZoomScaleRange;
+
+var             Range                       ZoomScaleInterpRange;
+var             float                       ZoomScaleInterpStartTime;
+var             float                       ZoomScaleInterpEndTime;
+var             float                       ZoomScaleInterpDuration;
+
+var             bool                        bIsPanning;
+
 var localized string        SquadRallyPointDestroyText;
 var localized string        SquadRallyPointSetAsSecondaryText;
 var localized string        RemoveText;
@@ -59,12 +74,46 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
         MyHud = DHHud(PC.myHUD);
     }
+
+    // Set the initial zoom scale.
+    ZoomScale = GetZoomScale(ZoomLevel);
+}
+
+function UpdateSpawnPointPositions()
+{
+    local int i;
+    local Box Viewport;
+    local float X, Y;
+
+    Viewport = GetViewport();
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    for (i = 0; i < arraycount(b_SpawnPoints); ++i)
+    {
+        if (b_SpawnPoints[i] == none || !b_SpawnPoints[i].bVisible)
+        {
+            continue;
+        }
+
+        GRI.GetMapCoords(GRI.SpawnPoints[i].Location, X, Y, b_SpawnPoints[i].WinWidth, b_SpawnPoints[i].WinHeight);
+
+        X = 1.0 - X;
+        Y = 1.0 - Y;
+
+        X = (X - Viewport.Min.X) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
+        Y = (Y - Viewport.Min.Y) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
+
+        b_SpawnPoints[i].SetPosition(X, Y, b_SpawnPoints[i].WinWidth, b_SpawnPoints[i].WinHeight, true);
+    }
 }
 
 function UpdateSpawnPoints(int TeamIndex, int RoleIndex, int VehiclePoolIndex, int SpawnPointIndex)
 {
     local GUI.eFontScale FS;
-    local float          X, Y;
     local int            SquadIndex, i;
 
     SquadIndex = -1;
@@ -81,12 +130,6 @@ function UpdateSpawnPoints(int TeamIndex, int RoleIndex, int VehiclePoolIndex, i
             GRI.SpawnPoints[i] != none &&
             GRI.SpawnPoints[i].IsVisibleTo(TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex))
         {
-            GRI.GetMapCoords(GRI.SpawnPoints[i].Location, X, Y, b_SpawnPoints[i].WinWidth, b_SpawnPoints[i].WinHeight);
-
-            X = 1.0 - X;
-            Y = 1.0 - Y;
-
-            b_SpawnPoints[i].SetPosition(X, Y, b_SpawnPoints[i].WinWidth, b_SpawnPoints[i].WinHeight, true);
             b_SpawnPoints[i].SetVisibility(true);
             b_SpawnPoints[i].CenterText = GRI.SpawnPoints[i].GetMapText();
 
@@ -121,7 +164,20 @@ function UpdateSpawnPoints(int TeamIndex, int RoleIndex, int VehiclePoolIndex, i
 
 function bool InternalOnDraw(Canvas C)
 {
+    local float ClipX, ClipY, TimeSeconds, ZoomAlpha;
     local ROHud.AbsoluteCoordsInfo SubCoords;
+
+    // Interpolate zoom scale.
+    TimeSeconds = PC.Level.TimeSeconds;
+
+    if (TimeSeconds < ZoomScaleInterpEndTime)
+    {
+        ZoomAlpha = (TimeSeconds - ZoomScaleInterpStartTime) / (ZoomScaleInterpEndTime - ZoomScaleInterpStartTime);
+        ZoomAlpha = FClamp(ZoomAlpha, 0.0, 1.0);
+        ZoomScale = ZoomScaleInterpRange.Min + (ZoomAlpha * (ZoomScaleInterpRange.Max - ZoomScaleInterpRange.Min));
+    }
+
+    UpdateSpawnPointPositions();
 
     if (bVisible)
     {
@@ -130,13 +186,42 @@ function bool InternalOnDraw(Canvas C)
         SubCoords.Width = ActualWidth();
         SubCoords.Height = ActualHeight();
 
+        ClipX = C.ClipX;
+        ClipY = C.ClipY;
+
+        C.ClipX = ActualWidth();
+        C.ClipY = ActualHeight();
+
         if (MyHud != none)
         {
-            MyHud.DrawMap(C, SubCoords, PC);
+            MyHud.DrawMap(C, SubCoords, PC, GetViewport());
         }
+
+        C.ClipX = ClipX;
+        C.ClipY = ClipY;
     }
 
     return false;
+}
+
+function Box GetViewport()
+{
+    local Box Viewport;
+    local vector Translation;
+
+    Viewport.Min.X = Origin.X - (ZoomScale * 0.5);
+    Viewport.Min.Y = Origin.Y - (ZoomScale * 0.5);
+    Viewport.Max.X = Origin.X + (ZoomScale * 0.5);
+    Viewport.Max.Y = Origin.Y + (ZoomScale * 0.5);
+
+    // Translate the box within the 0-1 bounds
+    Translation = -class'UVector'.static.MinComponent(Viewport.Min, vect(0, 0, 0));
+    Viewport = class'UBox'.static.Translate(Viewport, Translation);
+
+    Translation = -(class'UVector'.static.MaxComponent(Viewport.Max, vect(1, 1, 0)) - vect(1, 1, 0));
+    Viewport = class'UBox'.static.Translate(Viewport, Translation);
+
+    return Viewport;
 }
 
 function SelectSpawnPoint(int SpawnPointIndex)
@@ -285,28 +370,38 @@ function SortMapMarkerClasses(out array<class<DHMapMarker> > MapMarkerClasses)
     }
 }
 
+// Gets the normalized location given an absolute screen coordinate.
+function vector GetNormalizedLocation(float X, float Y)
+{
+    local vector Location;
+
+    Location.X = (X - ActualLeft(WinLeft)) / ActualWidth(WinWidth);
+    Location.Y = (Y - ActualTop(WinTop)) / ActualHeight(WinHeight);
+
+    return Location;
+}
+
 function bool InternalOnOpen(GUIContextMenu Sender)
 {
     local int i;
-    local float L, T, W, H, D;
+    local float D;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local array<int> Indices;
     local array<class<DHMapMarker> > MapMarkerClasses;
     local int GroupIndex;
     local float X, Y;
+    local Box Viewport;
 
     if (Sender == none || PC == none || PRI == none || GRI == none)
     {
         return false;
     }
 
-    L = ActualLeft(WinLeft);
-    T = ActualTop(WinTop);
-    W = ActualWidth(WinWidth);
-    H = ActualHeight(WinHeight);
+    Viewport = GetViewport();
 
-    MapClickLocation.X = 1.0 - ((Controller.MouseX - L) / W);
-    MapClickLocation.Y = 1.0 - ((Controller.MouseY - T) / H);
+    MapClickLocation = GetNormalizedLocation(Controller.MouseX, Controller.MouseY);
+    MapClickLocation.X = 1.0 - (Viewport.Min.X + (MapClickLocation.X * (Viewport.Max.X - Viewport.Min.X)));
+    MapClickLocation.Y = 1.0 - (Viewport.Min.Y + (MapClickLocation.Y * (Viewport.Max.Y - Viewport.Min.Y)));
 
     Sender.ContextItems.Length = 0;
 
@@ -400,11 +495,149 @@ function InternalOnSelect(GUIContextMenu Sender, int ClickIndex)
     }
 }
 
+// Gets the zoom scale based on the zoom level.
+function float GetZoomScale(int ZoomLevel)
+{
+    local int ZoomLevelRange;
+    local float T;
+
+    ZoomLevelRange = ZoomLevelMax - ZoomLevelMin;
+    T = float(ZoomLevel) * (1.0 / ZoomLevelRange);
+    return class'UInterp'.static.SmoothStep(T, ZoomScaleRange.Max, ZoomScaleRange.Min);
+}
+
+// Returns true if a new zoom level was set.
+function SetZoomLevel(int NewZoomLevel)
+{
+    NewZoomLevel = Clamp(NewZoomLevel, ZoomLevelMin, ZoomLevelMax);
+
+    if (ZoomLevel == NewZoomLevel)
+    {
+        return;
+    }
+
+    ZoomLevel = NewZoomLevel;
+    ZoomScaleInterpStartTime = PC.Level.TimeSeconds;
+    ZoomScaleInterpEndTime = ZoomScaleInterpStartTime + ZoomScaleInterpDuration;
+
+    ZoomScaleInterpRange.Min = ZoomScale;
+    ZoomScaleInterpRange.Max = GetZoomScale(ZoomLevel);
+}
+
+// Given a viewport and a location within that viewport, get the frame coordinates.
+function vector ViewportToFrame(Box Viewport, vector Location)
+{
+    Location.X = (Viewport.Min.X + (Location.X * (Viewport.Max.X - Viewport.Min.X)));
+    Location.Y = (Viewport.Min.Y + (Location.Y * (Viewport.Max.Y - Viewport.Min.Y)));
+    return Location;
+}
+
+function ZoomIn()
+{
+    local vector CursorLocation, Delta;
+    local Box Viewport;
+    local float NewZoomScale;
+
+    // Get the pre-zoomed viewport.
+    Viewport = GetViewport();
+
+    // Get the frame location of the intended origin.
+    CursorLocation = GetNormalizedLocation(Controller.MouseX, Controller.MouseY);
+    Origin = ViewportToFrame(Viewport, CursorLocation);
+
+    SetZoomLevel(ZoomLevel + 1);
+
+    // TODO: we must keep the area under the mouse "pinned", so we need to
+    // translate the origin by the difference between the new relative cursor
+    // location and the middle of the viewport.
+
+    // TODO: essentially we are lerping viewports here
+
+    // new zoom level [0..1] frame difference of cursor loc vs. middle of viewport
+    NewZoomScale = GetZoomScale(ZoomLevel);
+
+    Viewport = GetViewport();
+}
+
+function ZoomOut()
+{
+    SetZoomLevel(ZoomLevel - 1);
+}
+
+function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
+{
+    local Interactions.EInputKey InputKey;
+    local Interactions.EInputAction InputAction;
+
+    InputKey = EInputKey(Key);
+    InputAction = EInputAction(State);
+
+    if (InputAction == IST_Release && InputKey == IK_MouseWheelUp)
+    {
+        ZoomIn();
+        return true;
+    }
+    else if (InputAction == IST_Release && InputKey == IK_MouseWheelDown)
+    {
+        ZoomOut();
+        return true;
+    }
+    // TODO: maybe a "follow me" kind of option?
+
+    return false;
+}
+
+function InternalOnMousePressed(GUIComponent Sender, bool bRepeat)
+{
+    bIsPanning = true;
+}
+
+function InternalOnMouseRelease(GUIComponent Sender)
+{
+    bIsPanning = false;
+}
+
+function bool InternalOnCapturedMouseMove(float DeltaX, float DeltaY)
+{
+    local float W, H;
+    local Box Viewport;
+    local Box OriginViewport;
+    local vector HalfViewportExtents;
+
+    if (bIsPanning)
+    {
+        W = ActualWidth(WinWidth);
+        H = ActualHeight(WinHeight);
+
+        Viewport = GetViewport();
+        OriginViewport = Viewport;
+
+        HalfViewportExtents = class'UBox'.static.Extents(Viewport) / 2;
+        OriginViewport.Min = HalfViewportExtents;
+        OriginViewport.Max = vect(1, 1, 0) - HalfViewportExtents;
+
+        Origin.X -= (DeltaX / W) * ZoomScale;
+        Origin.Y += (DeltaY / H) * ZoomScale;
+
+        Origin = class'UVector'.static.MaxComponent(Origin, OriginViewport.Min);
+        Origin = class'UVector'.static.MinComponent(Origin, OriginViewport.Max);
+
+        return true;
+    }
+
+    return false;
+}
+
 defaultproperties
 {
     SquadRallyPointDestroyText="Destroy"
     SquadRallyPointSetAsSecondaryText="Set as Secondary"
     RemoveText="Remove"
+
+    OnKeyEvent=InternalOnKeyEvent
+    OnMousePressed=InternalOnMousePressed
+    OnMouseRelease=InternalOnMouseRelease
+    OnCapturedMouseMove=InternalOnCapturedMouseMove
 
     SpawnPointBlockedOverlay=Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled'
 
@@ -415,6 +648,7 @@ defaultproperties
         OnClose=DHGUIMapComponent.MyContextClose
         OnSelect=DHGUIMapComponent.MyContextSelect
     End Object
+
 
     // Spawn points
     Begin Object Class=DHGUICheckBoxButton Name=SpawnPointButton
@@ -509,5 +743,13 @@ defaultproperties
     b_SpawnPoints(62)=SpawnPointButton
 
     bAcceptsInput=true
+    bCaptureMouse=true
+
+    Origin=(X=0.5,Y=0.5)
+    ZoomLevel=0
+    ZoomLevelMin=0
+    ZoomLevelMax=4
+    ZoomScaleRange=(Min=0.25,Max=1.0)
+    ZoomScaleInterpDuration=0.33
 }
 

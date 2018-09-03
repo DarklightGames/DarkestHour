@@ -3296,8 +3296,8 @@ function DrawVehiclePhysiscsWheels()
 
 // New function to split out lengthy map drawing functionality from the DrawObjectives() function
 // As this is now called from the DHGUIMapComponent class as well as DrawObjectives (& also it helps
-// shorten a very length DrawObjectives function)
-function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
+// shorten a very lengthy DrawObjectives function)
+function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Viewport)
 {
     local DHPlayerReplicationInfo   PRI;
     local DHRoleInfo                RI;
@@ -3332,8 +3332,10 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
     if (MapLevelImage.WidgetTexture != none)
     {
         // Set the texture coords to support the size of the image and not rely on defaultproperties
-        MapLevelImage.TextureCoords.X2 = MapLevelImage.WidgetTexture.MaterialUSize() - 1;
-        MapLevelImage.TextureCoords.Y2 = MapLevelImage.WidgetTexture.MaterialVSize() - 1;
+        MapLevelImage.TextureCoords.X1 = Viewport.Min.X * MapLevelImage.WidgetTexture.MaterialUSize();
+        MapLevelImage.TextureCoords.Y1 = Viewport.Min.Y * MapLevelImage.WidgetTexture.MaterialVSize();
+        MapLevelImage.TextureCoords.X2 = (Viewport.Max.X * MapLevelImage.WidgetTexture.MaterialUSize()) - 1;
+        MapLevelImage.TextureCoords.Y2 = (Viewport.Max.Y * MapLevelImage.WidgetTexture.MaterialVSize()) - 1;
 
         DrawSpriteWidgetClipped(C, MapLevelImage, SubCoords, true);
     }
@@ -3343,6 +3345,10 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
 
     if (MapLevelOverlay.WidgetTexture != none)
     {
+        MapLevelOverlay.TextureCoords.X1 = Viewport.Min.X * MapLevelOverlay.WidgetTexture.MaterialUSize();
+        MapLevelOverlay.TextureCoords.Y1 = Viewport.Min.Y * MapLevelOverlay.WidgetTexture.MaterialVSize();
+        MapLevelOverlay.TextureCoords.X2 = (Viewport.Max.X * MapLevelOverlay.WidgetTexture.MaterialUSize()) - 1;
+        MapLevelOverlay.TextureCoords.Y2 = (Viewport.Max.Y * MapLevelOverlay.WidgetTexture.MaterialVSize()) - 1;
         DrawSpriteWidgetClipped(C, MapLevelOverlay, subCoords, true);
     }
 
@@ -3377,12 +3383,12 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
         if (DHGRI.ResupplyAreas[i].ResupplyType == 1)
         {
             // Tank resupply icon
-            DrawIconOnMap(C, SubCoords, MapIconVehicleResupply, MyMapScale, DHGRI.ResupplyAreas[i].ResupplyVolumeLocation, MapCenter);
+            DHDrawIconOnMap(C, SubCoords, MapIconVehicleResupply, MyMapScale, DHGRI.ResupplyAreas[i].ResupplyVolumeLocation, MapCenter, Viewport);
         }
         else
         {
             // Player resupply icon
-            DrawIconOnMap(C, SubCoords, MapIconResupply, MyMapScale, DHGRI.ResupplyAreas[i].ResupplyVolumeLocation, MapCenter);
+            DHDrawIconOnMap(C, SubCoords, MapIconResupply, MyMapScale, DHGRI.ResupplyAreas[i].ResupplyVolumeLocation, MapCenter, Viewport);
         }
     }
 
@@ -3415,7 +3421,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
                 TexRotator(FinalBlend(SupplyPointIcon.WidgetTexture).Material).Rotation.Yaw = 0.0;
             }
 
-            DrawIconOnMap(C, SubCoords, SupplyPointIcon, MyMapScale, Temp, MapCenter);
+            DHDrawIconOnMap(C, SubCoords, SupplyPointIcon, MyMapScale, Temp, MapCenter, Viewport);
 
             // HACK: This stops the engine from "instancing" the texture,
             // resulting in the bizarre bug where all the icons share the same
@@ -3434,7 +3440,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
             Widget = MapIconArtyStrike;
             Widget.Tints[0].A = 125;
             Widget.Tints[1].A = 125;
-            DrawIconOnMap(C, SubCoords, Widget, MyMapScale, Temp, MapCenter);
+            DHDrawIconOnMap(C, SubCoords, Widget, MyMapScale, Temp, MapCenter, Viewport);
         }
 
         // Draw the destroyable/destroyed targets
@@ -3449,11 +3455,11 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
 
                 if (Player.Destroyables[i].bHidden || Player.Destroyables[i].bDamaged)
                 {
-                    DrawIconOnMap(C, SubCoords, MapIconDestroyedItem, MyMapScale, Player.Destroyables[i].Location, MapCenter);
+                    DHDrawIconOnMap(C, SubCoords, MapIconDestroyedItem, MyMapScale, Player.Destroyables[i].Location, MapCenter, Viewport);
                 }
                 else
                 {
-                    DrawIconOnMap(C, SubCoords, MapIconDestroyableItem, MyMapScale, Player.Destroyables[i].Location, MapCenter);
+                    DHDrawIconOnMap(C, SubCoords, MapIconDestroyableItem, MyMapScale, Player.Destroyables[i].Location, MapCenter, Viewport);
                 }
             }
         }
@@ -3478,7 +3484,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
                 MapIconArtyStrike.WidgetTexture = DHGRI.DHArtillery[i].default.MapIcon;
                 MapIconArtyStrike.TextureCoords = DHGRI.DHArtillery[i].default.MapIconTextureCoords;
 
-                DrawIconOnMap(C, SubCoords, MapIconArtyStrike, MyMapScale, DHGRI.DHArtillery[i].Location, MapCenter);
+                DHDrawIconOnMap(C, SubCoords, MapIconArtyStrike, MyMapScale, DHGRI.DHArtillery[i].Location, MapCenter, Viewport);
             }
         }
 
@@ -3491,7 +3497,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
                 DHGRI.Radios[i].IsPlayerQualified(DHPlayer(PlayerOwner)))
             {
                 // MapIconCarriedRadio
-                DrawIconOnMap(C, SubCoords, MapIconRadio, MyMapScale, DHGRI.Radios[i].Location, MapCenter);
+                DHDrawIconOnMap(C, SubCoords, MapIconRadio, MyMapScale, DHGRI.Radios[i].Location, MapCenter, Viewport);
             }
         }
 
@@ -3511,20 +3517,20 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
                         Widget = MapIconHelpRequest;
                         Widget.Tints[0].A = 125;
                         Widget.Tints[1].A = 125;
-                        DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[DHGRI.AxisHelpRequests[i].objectiveID].Location, MapCenter);
+                        DHDrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[DHGRI.AxisHelpRequests[i].objectiveID].Location, MapCenter, Viewport);
                         break;
 
                     case 1: // attack request
                     case 2: // defend request
-                        DrawIconOnMap(C, SubCoords, MapIconAttackDefendRequest, MyMapScale, DHGRI.DHObjectives[DHGRI.AxisHelpRequests[i].objectiveID].Location, MapCenter);
+                        DHDrawIconOnMap(C, SubCoords, MapIconAttackDefendRequest, MyMapScale, DHGRI.DHObjectives[DHGRI.AxisHelpRequests[i].objectiveID].Location, MapCenter, Viewport);
                         break;
 
                     case 3: // mg resupply requests
-                        DrawIconOnMap(C, SubCoords, MapIconMGResupplyRequest[AXIS_TEAM_INDEX], MyMapScale, DHGRI.AxisHelpRequestsLocs[i], MapCenter);
+                        DHDrawIconOnMap(C, SubCoords, MapIconMGResupplyRequest[AXIS_TEAM_INDEX], MyMapScale, DHGRI.AxisHelpRequestsLocs[i], MapCenter, Viewport);
                         break;
 
                     case 4: // help request at coords
-                        DrawIconOnMap(C, SubCoords, MapIconHelpRequest, MyMapScale, DHGRI.AxisHelpRequestsLocs[i], MapCenter);
+                        DHDrawIconOnMap(C, SubCoords, MapIconHelpRequest, MyMapScale, DHGRI.AxisHelpRequestsLocs[i], MapCenter, Viewport);
                         break;
 
                     default:
@@ -3550,7 +3556,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
                             ArrowRotation -= class'UUnits'.static.DegreesToUnreal(DHGRI.OverheadOffset);
                             TexRotator(FinalBlend(MapIconMortarArrow.WidgetTexture).Material).Rotation.Yaw = ArrowRotation;
 
-                            DrawIconOnMap(C, SubCoords, MapIconMortarArrow, MyMapScale, DHGRI.GermanArtilleryTargets[i].Location, MapCenter);
+                            DHDrawIconOnMap(C, SubCoords, MapIconMortarArrow, MyMapScale, DHGRI.GermanArtilleryTargets[i].Location, MapCenter, Viewport);
                         }
 
                         if (RI.bCanUseMortars && PlayerOwner.Pawn != none)
@@ -3562,17 +3568,17 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
 
                         if (DHGRI.GermanArtilleryTargets[i].bIsSmoke)
                         {
-                            DrawIconOnMap(C, SubCoords, MapIconMortarSmokeTarget, MyMapScale, DHGRI.GermanArtilleryTargets[i].Location, MapCenter,, DistanceString);
+                            DHDrawIconOnMap(C, SubCoords, MapIconMortarSmokeTarget, MyMapScale, DHGRI.GermanArtilleryTargets[i].Location, MapCenter, Viewport,, DistanceString);
                         }
                         else
                         {
-                            DrawIconOnMap(C, SubCoords, MapIconMortarHETarget, MyMapScale, DHGRI.GermanArtilleryTargets[i].Location, MapCenter,, DistanceString);
+                            DHDrawIconOnMap(C, SubCoords, MapIconMortarHETarget, MyMapScale, DHGRI.GermanArtilleryTargets[i].Location, MapCenter, Viewport,, DistanceString);
                         }
 
                         // Draw hit location
                         if (DHGRI.GermanArtilleryTargets[i].HitLocation.Z != 0.0)
                         {
-                            DrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, DHGRI.GermanArtilleryTargets[i].HitLocation, MapCenter);
+                            DHDrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, DHGRI.GermanArtilleryTargets[i].HitLocation, MapCenter, Viewport);
                         }
                     }
                 }
@@ -3594,20 +3600,20 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
                         Widget = MapIconHelpRequest;
                         Widget.Tints[0].A = 125;
                         Widget.Tints[1].A = 125;
-                        DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[DHGRI.AlliedHelpRequests[i].objectiveID].Location, MapCenter);
+                        DHDrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[DHGRI.AlliedHelpRequests[i].objectiveID].Location, MapCenter, Viewport);
                         break;
 
                     case 1: // attack request
                     case 2: // defend request
-                        DrawIconOnMap(C, SubCoords, MapIconAttackDefendRequest, MyMapScale, DHGRI.DHObjectives[DHGRI.AlliedHelpRequests[i].objectiveID].Location, MapCenter);
+                        DHDrawIconOnMap(C, SubCoords, MapIconAttackDefendRequest, MyMapScale, DHGRI.DHObjectives[DHGRI.AlliedHelpRequests[i].objectiveID].Location, MapCenter, Viewport);
                         break;
 
                     case 3: // mg resupply requests
-                        DrawIconOnMap(C, SubCoords, MapIconMGResupplyRequest[ALLIES_TEAM_INDEX], MyMapScale, DHGRI.AlliedHelpRequestsLocs[i], MapCenter);
+                        DHDrawIconOnMap(C, SubCoords, MapIconMGResupplyRequest[ALLIES_TEAM_INDEX], MyMapScale, DHGRI.AlliedHelpRequestsLocs[i], MapCenter, Viewport);
                         break;
 
                     case 4: // help request at coords
-                        DrawIconOnMap(C, SubCoords, MapIconHelpRequest, MyMapScale, DHGRI.AlliedHelpRequestsLocs[i], MapCenter);
+                        DHDrawIconOnMap(C, SubCoords, MapIconHelpRequest, MyMapScale, DHGRI.AlliedHelpRequestsLocs[i], MapCenter, Viewport);
                         break;
 
                     default:
@@ -3633,7 +3639,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
                             ArrowRotation -= class'UUnits'.static.DegreesToUnreal(DHGRI.OverheadOffset);
                             TexRotator(FinalBlend(MapIconMortarArrow.WidgetTexture).Material).Rotation.Yaw = ArrowRotation;
 
-                            DrawIconOnMap(C, SubCoords, MapIconMortarArrow, MyMapScale, DHGRI.AlliedArtilleryTargets[i].Location, MapCenter);
+                            DHDrawIconOnMap(C, SubCoords, MapIconMortarArrow, MyMapScale, DHGRI.AlliedArtilleryTargets[i].Location, MapCenter, Viewport);
                         }
 
                         if (RI.bCanUseMortars && PlayerOwner.Pawn != none)
@@ -3645,17 +3651,17 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
 
                         if (DHGRI.AlliedArtilleryTargets[i].bIsSmoke)
                         {
-                            DrawIconOnMap(C, SubCoords, MapIconMortarSmokeTarget, MyMapScale, DHGRI.AlliedArtilleryTargets[i].Location, MapCenter,, DistanceString);
+                            DHDrawIconOnMap(C, SubCoords, MapIconMortarSmokeTarget, MyMapScale, DHGRI.AlliedArtilleryTargets[i].Location, MapCenter, Viewport,, DistanceString);
                         }
                         else
                         {
-                            DrawIconOnMap(C, SubCoords, MapIconMortarHETarget, MyMapScale, DHGRI.AlliedArtilleryTargets[i].Location, MapCenter,, DistanceString);
+                            DHDrawIconOnMap(C, SubCoords, MapIconMortarHETarget, MyMapScale, DHGRI.AlliedArtilleryTargets[i].Location, MapCenter, Viewport,, DistanceString);
                         }
 
                         // Draw hit location
                         if (DHGRI.AlliedArtilleryTargets[i].HitLocation.Z != 0.0)
                         {
-                            DrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, DHGRI.AlliedArtilleryTargets[i].HitLocation, MapCenter);
+                            DHDrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, DHGRI.AlliedArtilleryTargets[i].HitLocation, MapCenter, Viewport);
                         }
                     }
                 }
@@ -3680,6 +3686,8 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
         A = GetAdjustedHudLocation(ObjA.Location - MapCenter);
         A.X = FMax(0.0, FMin(1.0, A.X / MyMapScale + 0.5));
         A.Y = FMax(0.0, FMin(1.0, A.Y / MyMapScale + 0.5));
+        A.X = (A.X - Viewport.Min.X) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
+        A.Y = (A.Y - Viewport.Min.Y) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
         A.X = SubCoords.PosX + (SubCoords.Width * A.X);
         A.Y = SubCoords.PosY + (SubCoords.Height * A.Y);
 
@@ -3695,6 +3703,8 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
             B = GetAdjustedHudLocation(ObjB.Location - MapCenter);
             B.X = FMax(0.0, FMin(1.0, B.X / MyMapScale + 0.5));
             B.Y = FMax(0.0, FMin(1.0, B.Y / MyMapScale + 0.5));
+            B.X = (B.X - Viewport.Min.X) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
+            B.Y = (B.Y - Viewport.Min.Y) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
             B.X = SubCoords.PosX + (SubCoords.Width * B.X);
             B.Y = SubCoords.PosY + (SubCoords.Height * B.Y);
 
@@ -3777,20 +3787,20 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
         {
             if (DHGRI.DHObjectives[i].CompressedCapProgress <= 2)
             {
-                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 2, ObjLabel, DHGRI, i);
+                DHDrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, Viewport, 2, ObjLabel, DHGRI, i);
             }
             else if (DHGRI.DHObjectives[i].CompressedCapProgress <= 4)
             {
-                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 3, ObjLabel, DHGRI, i);
+                DHDrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, Viewport, 3, ObjLabel, DHGRI, i);
             }
             else
             {
-                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 1, ObjLabel, DHGRI, i);
+                DHDrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, Viewport, 1, ObjLabel, DHGRI, i);
             }
         }
         else
         {
-            DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 1, ObjLabel, DHGRI, i);
+            DHDrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, Viewport, 1, ObjLabel, DHGRI, i);
         }
 
         // If both teams are present in the capture, then overlay a flashing (rifles crossing) icon
@@ -3800,32 +3810,32 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
             {
                 Widget = MapIconObjectiveStatusIcon;
                 Widget.WidgetTexture = Texture'DH_InterfaceArt2_tex.Icons.lockdown';
-                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter);
+                DHDrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, Viewport);
             }
             else if (DHGRI.DHObjectives[i].IsTeamNeutralLocked(DHGRI, OwnerTeam))
             {
                 Widget = MapIconObjectiveStatusIcon;
                 Widget.WidgetTexture = Texture'DH_InterfaceArt2_tex.Icons.chain';
-                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter);
+                DHDrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, Viewport);
             }
             else if (DHGRI.DHObjectives[i].bIsCritical)
             {
                 Widget = MapIconDispute[ALLIES_TEAM_INDEX];
-                DrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, 6);
+                DHDrawIconOnMap(C, SubCoords, Widget, MyMapScale, DHGRI.DHObjectives[i].Location, MapCenter, Viewport, 6);
             }
         }
     }
 
-    DrawMapMarkersOnMap(C, Subcoords, MyMapScale, MapCenter);
-    DrawPlayerIconsOnMap(C, SubCoords, MyMapScale, MapCenter);
+    DrawMapMarkersOnMap(C, Subcoords, MyMapScale, MapCenter, Viewport);
+    DrawPlayerIconsOnMap(C, SubCoords, MyMapScale, MapCenter, Viewport);
 
     // DEBUG:
 
     // Show map's north-east & south-west bounds - toggle using console command: ShowDebugMap (formerly enabled by LevelInfo.bDebugOverhead)
     if (bShowDebugInfoOnMap && Level.NetMode == NM_Standalone)
     {
-        DrawIconOnMap(C, SubCoords, MapIconTeam[ALLIES_TEAM_INDEX], MyMapScale, DHGRI.NorthEastBounds, MapCenter);
-        DrawIconOnMap(C, SubCoords, MapIconTeam[AXIS_TEAM_INDEX], MyMapScale, DHGRI.SouthWestBounds, MapCenter);
+        DHDrawIconOnMap(C, SubCoords, MapIconTeam[ALLIES_TEAM_INDEX], MyMapScale, DHGRI.NorthEastBounds, MapCenter, Viewport);
+        DHDrawIconOnMap(C, SubCoords, MapIconTeam[AXIS_TEAM_INDEX], MyMapScale, DHGRI.SouthWestBounds, MapCenter, Viewport);
     }
 
     // Show specified network actors, based on NetDebugMode - toggle using console command: ShowNetDebugMap [optional int DebugMode]
@@ -3835,7 +3845,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player)
     }
 }
 
-function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter)
+function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
 {
     local DHPlayer PC;
     local int i;
@@ -3862,11 +3872,11 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
         MapMarkerIcon.TextureCoords = MapMarkers[i].MapMarkerClass.default.IconCoords;
         MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = MapMarkers[i].MapMarkerClass.default.IconColor;
 
-        DrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, L, MapCenter);
+        DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, L, MapCenter, Viewport);
     }
 }
 
-function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter)
+function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
 {
     local Actor A;
     local DHPlayer PC;
@@ -3948,7 +3958,7 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
                 IconScale = PlayerIconScale;
             }
 
-            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, PlayerYaw, SquadMemberColor, IconScale, OtherPRI.GetNamePrefix());
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, Viewport, PlayerYaw, SquadMemberColor, IconScale, OtherPRI.GetNamePrefix());
         }
 
         if (PRI.IsSLorASL())
@@ -3970,7 +3980,7 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
 
                 SquadNameAbbreviation = Caps(Mid(SRI.GetSquadName(PC.GetTeamNum(), i), 0, 1));
 
-                DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, PlayerYaw, SquadMemberColor, IconScale, SquadNameAbbreviation);
+                DrawPlayerIconOnMap(C, SubCoords, MyMapScale, PlayerLocation, MapCenter, Viewport, PlayerYaw, SquadMemberColor, IconScale, SquadNameAbbreviation);
             }
         }
     }
@@ -4009,12 +4019,12 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
         {
             SelfColor = class'UColor'.default.OrangeRed;
             SelfColor.A = 160;
-            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, PlayerYaw, SelfColor, 0.05); // TODO: magic number
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, A.Location, MapCenter, Viewport, PlayerYaw, SelfColor, 0.05); // TODO: magic number
         }
     }
 }
 
-function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector Location, vector MapCenter, float PlayerYaw, color Color, float TextureScale, optional string Text)
+function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector Location, vector MapCenter, Box Viewport, float PlayerYaw, color Color, float TextureScale, optional string Text)
 {
     local vector HUDLocation;
 
@@ -4026,7 +4036,7 @@ function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
     MapPlayerIcon.Tints[0].A = 192;
 
     // Draw the player icon
-    DrawIconOnMap(C, SubCoords, MapPlayerIcon, MyMapScale, Location, MapCenter);
+    DHDrawIconOnMap(C, SubCoords, MapPlayerIcon, MyMapScale, Location, MapCenter, Viewport);
 
     // Draw the player number
     if (Text != "")
@@ -4034,8 +4044,11 @@ function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
         HUDLocation = Location - MapCenter;
         HUDLocation.Z = 0.0;
         HUDLocation = GetAdjustedHudLocation(HUDLocation);
+        // TODO: text widget is gonna need to be adjusted also!
         PlayerNumberText.PosX = FClamp(HUDLocation.X / MyMapScale + 0.5, 0.0, 1.0);
         PlayerNumberText.PosY = FClamp(HUDLocation.Y / MyMapScale + 0.5, 0.0, 1.0);
+        PlayerNumberText.PosX = (PlayerNumberText.PosX - Viewport.Min.X) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
+        PlayerNumberText.PosY = (PlayerNumberText.PosY - Viewport.Min.Y) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
         PlayerNumberText.text = Text;
         C.Font = C.TinyFont;
         DrawTextWidgetClipped(C, PlayerNumberText, SubCoords);
@@ -4972,8 +4985,19 @@ function DrawSpectatingHud(Canvas C)
 }
 
 // Modified to make objective title's smaller on the overview
-function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo LevelCoords, SpriteWidget Icon, float MyMapScale, vector Location, vector MapCenter,
-    optional int FlashMode, optional string Title, optional ROGameReplicationInfo GRI, optional int ObjectiveIndex)
+function DHDrawIconOnMap(
+    Canvas C,
+    AbsoluteCoordsInfo LevelCoords,
+    SpriteWidget Icon,
+    float MyMapScale,
+    vector Location,
+    vector MapCenter,
+    Box Viewport,
+    optional int FlashMode,
+    optional string Title,
+    optional ROGameReplicationInfo GRI,
+    optional int ObjectiveIndex
+    )
 {
     local FloatBox Label_coords;
     local vector   HUDLocation;
@@ -4989,6 +5013,9 @@ function DrawIconOnMap(Canvas C, AbsoluteCoordsInfo LevelCoords, SpriteWidget Ic
 
     Icon.PosX = FMax(0.0, FMin(1.0, Icon.PosX));
     Icon.PosY = FMax(0.0, FMin(1.0, Icon.PosY));
+
+    Icon.PosX = (Icon.PosX - Viewport.Min.X) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
+    Icon.PosY = (Icon.PosY - Viewport.Min.Y) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
 
     // Set flashing texture if needed
     if (FlashMode > 1)

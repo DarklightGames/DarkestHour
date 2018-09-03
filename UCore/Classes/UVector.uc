@@ -32,3 +32,25 @@ static final function vector VLerp(float T, vector Start, vector End)
     return Start + ((End - Start) * T);
 }
 
+static final function vector MinComponent(vector A, vector B)
+{
+    local vector V;
+
+    V.X = FMin(A.X, B.X);
+    V.Y = FMin(A.Y, B.Y);
+    V.Z = FMin(A.Z, B.Z);
+
+    return V;
+}
+
+static final function vector MaxComponent(vector A, vector B)
+{
+    local vector V;
+
+    V.X = FMax(A.X, B.X);
+    V.Y = FMax(A.Y, B.Y);
+    V.Z = FMax(A.Z, B.Z);
+
+    return V;
+}
+
