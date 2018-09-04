@@ -130,7 +130,8 @@ var float               TeamMunitionPercentages[2];
 
 var DHSpawnPointBase    SpawnPoints[SPAWN_POINTS_MAX];
 
-var DHObjective         DHObjectives[OBJECTIVES_MAX];
+var DHObjective             DHObjectives[OBJECTIVES_MAX];
+var Hashtable_string_int    DHObjectiveTable; // not replicated and not usable for clients
 
 var bool                bIsInSetupPhase;
 var bool                bRoundIsOver;
@@ -229,6 +230,13 @@ replication
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
+}
+
+simulated event PreBeginPlay()
+{
+    super.PreBeginPlay();
+
+    DHObjectiveTable = class'Hashtable_string_int'.static.Create(OBJECTIVES_MAX * 2);
 }
 
 // Modified to build SpawnPoints array

@@ -65,20 +65,24 @@ var(ROObjective) name               NoArtyVolumeProtectionTag;  // optional Tag 
 
 // Capture/Actions variables
 var(DHObjectiveCapture) bool        bLockDownOnCapture;
-var(DHObjectiveCapture) bool        bVehiclesCanCapture;
-var(DHObjectiveCapture) bool        bTankersCanCapture;
 var(DHObjectiveCapture) bool        bUsePostCaptureOperations;  // Enables below variables to be used for post capture clear check/calls
 var(DHObjectiveCapture) bool        bSetInactiveOnCapture;      // Simliar to bRecaptureable, but doesn't disable timer, just sets to inactive (bRecaptureable must = true)
 var(DHObjectiveCapture) bool        bNeutralizeBeforeCapture;   // if this is true the objective will neutralize first (then can be captured by either team)
-var(DHObjectiveCapture) int         PlayersNeededToCapture;
 var(DHObjectiveCapture) int         PreventCaptureTime;         // time to prevent capture after the objective is activated
 var(DHObjectiveCapture) int         LockDownOnCaptureTime;      // time to prevent capture after the objective is captured
 var(DHObjectiveCapture) int         AlliesAddedLockDown;        // added time to lock down if Allies take the objective
 var(DHObjectiveCapture) int         AxisAddedLockDown;          // added time to lock down if Axis takle the objective
-var(DHObjectiveCapture) bool        bGroupActionsAtDisable;
 var(DHObjectiveCapture) bool        bNeutralOnActivation;       // Should this capture be neutral when it is activated
-var(DHObjectiveCapture) array<int>  AxisRequiredObjForCapture;  // Objectives which are required to progress capture bar towards "capture" (obj can still be neutralized)
-var(DHObjectiveCapture) array<int>  AlliesRequiredObjForCapture;
+var(DHObjectiveCapture) bool        bGroupActionsAtDisable;
+
+// Requirements
+var(DHObjectiveRequirements) array<name>    AxisRequiredObjTagForCapture;       // ObjTag
+var(DHObjectiveRequirements) array<name>    AlliesRequiredObjTagForCapture;     // ObjTag
+var(DHObjectiveRequirements) array<int>     AxisRequiredObjForCapture;          // ObjNum
+var(DHObjectiveRequirements) array<int>     AlliesRequiredObjForCapture;        // ObjNum
+var(DHObjectiveRequirements) int            PlayersNeededToCapture;
+var(DHObjectiveRequirements) bool           bVehiclesCanCapture;
+var(DHObjectiveRequirements) bool           bTankersCanCapture;
 
 // Clear variables
 var(DHObjectiveClear) bool          bSetInactiveOnClear;        // Sets the objective inactive when cleared
@@ -98,7 +102,6 @@ var(DHObjectiveAwards) int          AlliedOwnedAttritionRate;   // Rate of Axis 
 var(DHObjectiveAwards) int          AxisOwnedAttritionRate;     // Rate of Allies Attrition when Axis control this objective
 
 // Non configurable variables
-var     int                         UnfreezeTime;               // The time at which the objective will be unlocked and ready to be capured again, relative to GRI.ElapsedTime
 var     bool                        bCheckIfAxisCleared;
 var     bool                        bCheckIfAlliesCleared;
 var     bool                        bIsLocked;
@@ -106,6 +109,11 @@ var     bool                        bDidAwardAxisReinf;
 var     bool                        bDidAwardAlliesReinf;
 var     bool                        bRecentlyControlledByAxis;
 var     bool                        bRecentlyControlledByAllies;
+
+// Replicated variables
+var     int                         UnfreezeTime;               // The time at which the objective will be unlocked and ready to be capured again, relative to GRI.ElapsedTime
+var     bool                        bAxisMeetRequirementsForCapture;
+var     bool                        bAlliesMeetRequirementsForCapture;
 
 // Capture operations (after capture)
 var(DH_CaptureActions)      array<ObjOperationAction>   AlliesCaptureObjActions;
@@ -142,7 +150,7 @@ replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        UnfreezeTime;
+        UnfreezeTime, bAxisMeetRequirementsForCapture, bAlliesMeetRequirementsForCapture;
 }
 
 function PostBeginPlay()
@@ -191,6 +199,7 @@ function PostBeginPlay()
     if (GRI != none)
     {
         GRI.DHObjectives[ObjNum] = self;
+        GRI.DHObjectiveTable.Put(Tag, ObjNum);
     }
 }
 
@@ -200,6 +209,9 @@ function Reset()
 
     UnfreezeTime = 0;
     SetActive(bIsInitiallyActive);
+
+    bAxisMeetRequirementsForCapture = true;
+    bAlliesMeetRequirementsForCapture = true;
 
     bCheckIfAxisCleared = false;
     bCheckIfAlliesCleared = false;
@@ -314,19 +326,23 @@ function DoVehiclePoolAction(VehiclePoolAction VPA)
 
 function DoObjectiveAction(ObjOperationAction OOA)
 {
-    local DarkesthourGame G;
     local int ObjIndex;
+    local DHGameReplicationInfo GRI;
 
-    if (bIsLocked)
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI == none || bIsLocked)
     {
         return;
     }
 
-    G = DarkesthourGame(Level.Game);
-
     if (OOA.ObjectiveTag != '')
     {
-        ObjIndex = G.GetObjectiveNumByTag(OOA.ObjectiveTag);
+        if (!GRI.DHObjectiveTable.Get(string(OOA.ObjectiveTag), ObjIndex)) // This gets the objective's index by tag, and sets it as ObjIndex
+        {   // if it returns false, then return out of function as something went wrong
+            Warn("Something went wrong in getting objective index by tag from table in DHObjective.DoObjectiveAction()");
+            return;
+        }
     }
     else
     {
@@ -341,19 +357,19 @@ function DoObjectiveAction(ObjOperationAction OOA)
     switch (OOA.Operation)
     {
         case EOO_Activate:
-            G.DHObjectives[ObjIndex].SetActive(true);
+            GRI.DHObjectives[ObjIndex].SetActive(true);
             break;
         case EOO_Deactivate:
-            G.DHObjectives[ObjIndex].SetActive(false);
+            GRI.DHObjectives[ObjIndex].SetActive(false);
             break;
         case EOO_Toggle:
-            G.DHObjectives[ObjIndex].SetActive(!G.DHObjectives[ObjIndex].bActive);
+            GRI.DHObjectives[ObjIndex].SetActive(!GRI.DHObjectives[ObjIndex].bActive);
             break;
         case EOO_Lock:
-            G.DHObjectives[ObjIndex].bIsLocked = true;
+            GRI.DHObjectives[ObjIndex].bIsLocked = true;
             break;
         case EOO_Unlock:
-            G.DHObjectives[ObjIndex].bIsLocked = false;
+            GRI.DHObjectives[ObjIndex].bIsLocked = false;
             break;
         default:
             Warn("Unhandled EObjectiveOperation");
@@ -892,11 +908,29 @@ function bool HandleClearedLogic(int NumForCheck[2])
     return false;
 }
 
-// Returns true if a team is unable to capture this objective because
-// they have not secured the required connected objective(s).
+// Returns true if a team is unable to capture this objective because they have not secured the required connected objective(s).
 simulated function bool IsTeamNeutralLocked(DHGameReplicationInfo GRI, int TeamIndex)
 {
-    return GRI != none && bNeutralizeBeforeCapture && IsNeutral() && !HasRequiredObjectives(GRI, TeamIndex);
+    local bool bObjMeetsLinkRequirements;
+
+    // Server (the server needs to call the function to actually check if it meets requirements (can't just use the replicated values)
+    if (Role == ROLE_Authority)
+    {
+        bObjMeetsLinkRequirements = HasRequiredObjectives(GRI, TeamIndex);
+    }
+    else // Client (should use replicated variables the server sets in timer)
+    {
+        if (TeamIndex == AXIS_TEAM_INDEX)
+        {
+            bObjMeetsLinkRequirements = bAxisMeetRequirementsForCapture;
+        }
+        else if (TeamIndex == ALLIES_TEAM_INDEX)
+        {
+            bObjMeetsLinkRequirements = bAlliesMeetRequirementsForCapture;
+        }
+    }
+
+    return GRI != none && bNeutralizeBeforeCapture && IsNeutral() && !bObjMeetsLinkRequirements;
 }
 
 function Timer()
@@ -968,11 +1002,21 @@ function Timer()
     if (IsTeamNeutralLocked(GRI, AXIS_TEAM_INDEX))
     {
         CurrentCapAxisCappers = 0;
+        bAxisMeetRequirementsForCapture = false;
+    }
+    else
+    {
+        bAxisMeetRequirementsForCapture = true;
     }
 
     if (IsTeamNeutralLocked(GRI, ALLIES_TEAM_INDEX))
     {
         CurrentCapAlliesCappers = 0;
+        bAlliesMeetRequirementsForCapture = false;
+    }
+    else
+    {
+        bAlliesMeetRequirementsForCapture = true;
     }
 
     // NOTE: Comparing number of players as opposed to rates to decide which side has advantage for the capture, for fear that rates could be abused in this instance
@@ -1314,9 +1358,9 @@ simulated function bool IsFrozen(GameReplicationInfo GRI)
     return GRI != none && UnfreezeTime > GRI.ElapsedTime;
 }
 
-simulated function bool HasRequiredObjectives(coerce DHGameReplicationInfo GRI, int TeamIndex)
+function bool HasRequiredObjectives(coerce DHGameReplicationInfo GRI, int TeamIndex)
 {
-    local int i;
+    local int i, ObjIndex;
 
     if (GRI == none)
     {
@@ -1325,27 +1369,64 @@ simulated function bool HasRequiredObjectives(coerce DHGameReplicationInfo GRI, 
 
     if (TeamIndex == AXIS_TEAM_INDEX)
     {
-        for (i = 0; i < AxisRequiredObjForCapture.Length; ++i)
+        // First check for tag AxisRequiredObjTagForCapture
+        if (AxisRequiredObjTagForCapture.Length > 0)
         {
-            if (!GRI.DHObjectives[AxisRequiredObjForCapture[i]].IsAxis())
+            for (i = 0; i < AxisRequiredObjTagForCapture.Length; ++i)
             {
-                return false;
+                // This gets the objective's index by tag, and sets it as ObjIndex (returns true if found)
+                if (GRI.DHObjectiveTable.Get(string(AxisRequiredObjTagForCapture[i]), ObjIndex))
+                {
+                    // We know the objective index, so lets check if Axis do not own it
+                    if (!GRI.DHObjectives[ObjIndex].IsAxis())
+                    {
+                        return false; // Return false if Axis don't own it
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (i = 0; i < AxisRequiredObjForCapture.Length; ++i)
+            {
+                if (!GRI.DHObjectives[AxisRequiredObjForCapture[i]].IsAxis())
+                {
+                    return false;
+                }
             }
         }
     }
     else if (TeamIndex == ALLIES_TEAM_INDEX)
     {
-        for (i = 0; i < AlliesRequiredObjForCapture.Length; ++i)
+        if (AlliesRequiredObjTagForCapture.Length > 0)
         {
-            if (!GRI.DHObjectives[AlliesRequiredObjForCapture[i]].IsAllies())
+            for (i = 0; i < AlliesRequiredObjTagForCapture.Length; ++i)
             {
-                return false;
+                // This gets the objective's index by tag, and sets it as ObjIndex (returns true if found)
+                if (GRI.DHObjectiveTable.Get(string(AlliesRequiredObjTagForCapture[i]), ObjIndex))
+                {
+                    // We know the objective index, so lets check if Allies do not own it
+                    if (!GRI.DHObjectives[ObjIndex].IsAllies())
+                    {
+                        return false; // Return false if Allies don't own it
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (i = 0; i < AlliesRequiredObjForCapture.Length; ++i)
+            {
+                if (!GRI.DHObjectives[AlliesRequiredObjForCapture[i]].IsAllies())
+                {
+                    return false;
+                }
             }
         }
     }
     else
     {
-        return false;
+        return false; // The capturing team "was neutral"
     }
 
     return true;

@@ -1557,24 +1557,6 @@ function ChangeName(Controller Other, string S, bool bNameChange)
     }
 }
 
-function int GetObjectiveNumByTag(name ObjectiveTag)
-{
-    local int i;
-    local int ObjNum;
-
-    ObjNum = -1;
-
-    for (i = 0; i < arraycount(DHObjectives); ++i)
-    {
-        if (DHObjectives[i] != none && DHObjectives[i].Tag == ObjectiveTag)
-        {
-            ObjNum = DHObjectives[i].ObjNum;
-        }
-    }
-
-    return ObjNum;
-}
-
 function BroadcastLastObjectiveMessage(int Team_that_is_about_to_win)
 {
     BroadcastLocalizedMessage(class'DHLastObjectiveMessage', Team_that_is_about_to_win);
@@ -3273,16 +3255,15 @@ exec function CaptureObj(int Team, optional string ObjName, optional bool bNeutr
         if (DHObjectives[i] != none &&
             DHObjectives[i].bActive &&
             DHObjectives[i].ObjState != Team &&
-            DHObjectives[i].HasRequiredObjectives(GRI, Team) &&
             (ObjName == "" || DHObjectives[i].ObjName ~= ObjName))
         {
-            if (bNeutralizeInstead)
-            {
-                DHObjectives[i].ObjectiveNeutralized(Team);
-            }
-            else
+            if (DHObjectives[i].HasRequiredObjectives(GRI, Team))
             {
                 DHObjectives[i].ObjectiveCompleted(none, Team);
+            }
+            else if (bNeutralizeInstead)
+            {
+                DHObjectives[i].ObjectiveNeutralized(Team);
             }
 
             break;
