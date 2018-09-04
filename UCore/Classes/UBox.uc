@@ -6,17 +6,29 @@
 class UBox extends Object
     abstract;
 
-static function vector Center(Box B)
+static final function Box Create(vector Origin, float Extents)
 {
-    return (B.Max - B.Min) / 2.0;
+    local Box Box;
+
+    Box.Min.X = Origin.X - (Extents * 0.5);
+    Box.Min.Y = Origin.Y - (Extents * 0.5);
+    Box.Max.X = Origin.X + (Extents * 0.5);
+    Box.Max.Y = Origin.Y + (Extents * 0.5);
+
+    return Box;
 }
 
-static function vector Extents(Box B)
+static final function vector Center(Box B)
+{
+    return B.Min + ((B.Max - B.Min) / 2.0);
+}
+
+static final function vector Extents(Box B)
 {
     return B.Max - B.Min;
 }
 
-static function Box Translate(Box B, vector V)
+static final function Box Translate(Box B, vector V)
 {
     local Box Result;
 
@@ -35,3 +47,13 @@ static function Box Interp(float T, Box A, Box B)
 
     return C;
 }
+
+static function Box Scale(Box B, vector Origin, float Scale)
+{
+    B = Translate(B, -Origin);
+    B.Min *= Scale;
+    B.Max *= Scale;
+    B = Translate(B, Origin);
+    return B;
+}
+

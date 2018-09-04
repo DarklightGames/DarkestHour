@@ -2236,7 +2236,6 @@ defaultproperties
         WinHeight=1.0
         WinLeft=0.0
         WinTop=0.0
-        bNeverFocus=true
     End Object
     c_Map=MapContainerObject
 
@@ -2256,7 +2255,6 @@ defaultproperties
         WinHeight=0.89
         WinLeft=0.055
         WinTop=0.055
-        bNeverFocus=true
         OnSpawnPointChanged=OnSpawnPointChanged
     End Object
     p_Map=MapComponentObject

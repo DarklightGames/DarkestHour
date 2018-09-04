@@ -23,20 +23,22 @@ var             vector                      MapClickLocation;
 var             array<class<DHMapMarker> >  MenuItemObjects;
 var             int                         MapMarkerIndexToRemove;
 
-var             vector                      Origin;
+var             Box                         Viewport;
+var             Box                         ViewportInterpStart;
+var             Box                         ViewportInterpEnd;
+var             float                       ViewportInterpStartTime;
+var             float                       ViewportInterpEndTime;
+var             float                       ViewportInterpDuration;
+
 var             int                         ZoomLevel;
 var             int                         ZoomLevelMin;
 var             int                         ZoomLevelMax;
 
-var             float                       ZoomScale;
 var             Range                       ZoomScaleRange;
-
 var             Range                       ZoomScaleInterpRange;
-var             float                       ZoomScaleInterpStartTime;
-var             float                       ZoomScaleInterpEndTime;
-var             float                       ZoomScaleInterpDuration;
 
 var             bool                        bIsPanning;
+var             bool                        bIsViewportInterpolating;
 
 var localized string        SquadRallyPointDestroyText;
 var localized string        SquadRallyPointSetAsSecondaryText;
@@ -75,17 +77,14 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         MyHud = DHHud(PC.myHUD);
     }
 
-    // Set the initial zoom scale.
-    ZoomScale = GetZoomScale(ZoomLevel);
+    // Set up the initial viewport
+    Viewport = GetViewport(vect(0.5, 0.5, 0), GetZoomScale(ZoomLevel));
 }
 
 function UpdateSpawnPointPositions()
 {
     local int i;
-    local Box Viewport;
     local float X, Y;
-
-    Viewport = GetViewport();
 
     if (GRI == none)
     {
@@ -164,17 +163,23 @@ function UpdateSpawnPoints(int TeamIndex, int RoleIndex, int VehiclePoolIndex, i
 
 function bool InternalOnDraw(Canvas C)
 {
-    local float ClipX, ClipY, TimeSeconds, ZoomAlpha;
+    local float ClipX, ClipY, TimeSeconds, ViewportInterpAlpha;
     local ROHud.AbsoluteCoordsInfo SubCoords;
 
-    // Interpolate zoom scale.
+    // Interpolate viewport.
     TimeSeconds = PC.Level.TimeSeconds;
 
-    if (TimeSeconds < ZoomScaleInterpEndTime)
+    // Set the viewport interpolation flag.
+    if (bIsViewportInterpolating)
     {
-        ZoomAlpha = (TimeSeconds - ZoomScaleInterpStartTime) / (ZoomScaleInterpEndTime - ZoomScaleInterpStartTime);
-        ZoomAlpha = FClamp(ZoomAlpha, 0.0, 1.0);
-        ZoomScale = ZoomScaleInterpRange.Min + (ZoomAlpha * (ZoomScaleInterpRange.Max - ZoomScaleInterpRange.Min));
+        if (TimeSeconds >= ViewportInterpEndTime)
+        {
+            bIsViewportInterpolating = false;
+        }
+
+        ViewportInterpAlpha = (TimeSeconds - ViewportInterpStartTime) / (ViewportInterpEndTime - ViewportInterpStartTime);
+        ViewportInterpAlpha = FClamp(ViewportInterpAlpha, 0.0, 1.0);
+        Viewport =  class'UBox'.static.Interp(class'UInterp'.static.Deceleration(ViewportInterpAlpha, 0.0, 1.0), ViewportInterpStart, ViewportInterpEnd);
     }
 
     UpdateSpawnPointPositions();
@@ -194,7 +199,7 @@ function bool InternalOnDraw(Canvas C)
 
         if (MyHud != none)
         {
-            MyHud.DrawMap(C, SubCoords, PC, GetViewport());
+            MyHud.DrawMap(C, SubCoords, PC, Viewport);
         }
 
         C.ClipX = ClipX;
@@ -204,17 +209,15 @@ function bool InternalOnDraw(Canvas C)
     return false;
 }
 
-function Box GetViewport()
+function Box GetViewport(vector Origin, float Extents)
 {
-    local Box Viewport;
+    return ConstrainViewport(class'UBox'.static.Create(Origin, Extents), vect(0, 0, 0), vect(1, 1, 0));
+}
+
+function Box ConstrainViewport(Box Viewport, vector Min, vector Max)
+{
     local vector Translation;
 
-    Viewport.Min.X = Origin.X - (ZoomScale * 0.5);
-    Viewport.Min.Y = Origin.Y - (ZoomScale * 0.5);
-    Viewport.Max.X = Origin.X + (ZoomScale * 0.5);
-    Viewport.Max.Y = Origin.Y + (ZoomScale * 0.5);
-
-    // Translate the box within the 0-1 bounds
     Translation = -class'UVector'.static.MinComponent(Viewport.Min, vect(0, 0, 0));
     Viewport = class'UBox'.static.Translate(Viewport, Translation);
 
@@ -390,14 +393,11 @@ function bool InternalOnOpen(GUIContextMenu Sender)
     local array<class<DHMapMarker> > MapMarkerClasses;
     local int GroupIndex;
     local float X, Y;
-    local Box Viewport;
 
     if (Sender == none || PC == none || PRI == none || GRI == none)
     {
         return false;
     }
-
-    Viewport = GetViewport();
 
     MapClickLocation = GetNormalizedLocation(Controller.MouseX, Controller.MouseY);
     MapClickLocation.X = 1.0 - (Viewport.Min.X + (MapClickLocation.X * (Viewport.Max.X - Viewport.Min.X)));
@@ -503,25 +503,17 @@ function float GetZoomScale(int ZoomLevel)
 
     ZoomLevelRange = ZoomLevelMax - ZoomLevelMin;
     T = float(ZoomLevel) * (1.0 / ZoomLevelRange);
-    return class'UInterp'.static.SmoothStep(T, ZoomScaleRange.Max, ZoomScaleRange.Min);
+    return class'UInterp'.static.Deceleration(T, ZoomScaleRange.Max, ZoomScaleRange.Min);
 }
 
-// Returns true if a new zoom level was set.
 function SetZoomLevel(int NewZoomLevel)
 {
-    NewZoomLevel = Clamp(NewZoomLevel, ZoomLevelMin, ZoomLevelMax);
+    ZoomLevel = Clamp(NewZoomLevel, ZoomLevelMin, ZoomLevelMax);
+}
 
-    if (ZoomLevel == NewZoomLevel)
-    {
-        return;
-    }
-
-    ZoomLevel = NewZoomLevel;
-    ZoomScaleInterpStartTime = PC.Level.TimeSeconds;
-    ZoomScaleInterpEndTime = ZoomScaleInterpStartTime + ZoomScaleInterpDuration;
-
-    ZoomScaleInterpRange.Min = ZoomScale;
-    ZoomScaleInterpRange.Max = GetZoomScale(ZoomLevel);
+// Given a viewport and a frame location, return the view viewport-space coordinates.
+function vector FrameToViewport(Box Viewport, vector Location)
+{
 }
 
 // Given a viewport and a location within that viewport, get the frame coordinates.
@@ -532,36 +524,101 @@ function vector ViewportToFrame(Box Viewport, vector Location)
     return Location;
 }
 
+function bool CanZoomIn()
+{
+    return ZoomLevel < ZoomLevelMax;
+}
+
+function bool CanZoomOut()
+{
+    return ZoomLevel > ZoomLevelMin;
+}
+
+function InterpolateToViewport(Box NewViewport)
+{
+    NewViewport = ConstrainViewport(NewViewport, vect(0, 0, 0), vect(1, 1, 1));
+
+    ViewportInterpStart = Viewport;
+    ViewportInterpEnd = NewViewport;
+    ViewportInterpStartTime = PC.Level.TimeSeconds;
+    ViewportInterpEndTime = ViewportInterpStartTime + ViewportInterpDuration;
+
+    bIsViewportInterpolating = true;
+}
+
+// TODO: remove later
+function string ViewportToString(Box viewport)
+{
+    return "(Min=(" $ Viewport.Min $ "), Max=(" $ Viewport.Max $ "))";
+}
+
 function ZoomIn()
 {
-    local vector CursorLocation, Delta;
-    local Box Viewport;
-    local float NewZoomScale;
+    local vector ViewportLocation, FrameLocation, FrameLocationOffset;
+    local Box NewViewport;
+    local float OldZoomScale, NewZoomScale;
 
-    // Get the pre-zoomed viewport.
-    Viewport = GetViewport();
+    if (!CanZoomIn())
+    {
+        return;
+    }
 
-    // Get the frame location of the intended origin.
-    CursorLocation = GetNormalizedLocation(Controller.MouseX, Controller.MouseY);
-    Origin = ViewportToFrame(Viewport, CursorLocation);
+    // Save the old zoom scale.
+    OldZoomScale = Viewport.Max.X - Viewport.Min.X;
 
+    // Increment the zoom leve.
     SetZoomLevel(ZoomLevel + 1);
 
-    // TODO: we must keep the area under the mouse "pinned", so we need to
-    // translate the origin by the difference between the new relative cursor
-    // location and the middle of the viewport.
-
-    // TODO: essentially we are lerping viewports here
-
-    // new zoom level [0..1] frame difference of cursor loc vs. middle of viewport
+    // Calculate the new zoom scale.
     NewZoomScale = GetZoomScale(ZoomLevel);
 
-    Viewport = GetViewport();
+    // Get viewport-space location of mouse cursor.
+    ViewportLocation = GetNormalizedLocation(Controller.MouseX, Controller.MouseY);
+
+    // Convert view-space location to frame-space location.
+    FrameLocation = ViewportToFrame(Viewport, ViewportLocation);
+
+    // Get the new viewport by scaling the current viewport with the mouse
+    // location as the scaling origin.
+    NewViewport = class'UBox'.static.Scale(Viewport, ViewportLocation, NewZoomScale / OldZoomScale);
+
+    InterpolateToViewport(NewViewport);
 }
 
 function ZoomOut()
 {
+    local vector ViewportLocation, FrameLocation, FrameLocationOffset;
+    local Box NewViewport;
+    local float OldZoomScale, NewZoomScale;
+
+    if (!CanZoomOut())
+    {
+        return;
+    }
+
+    // Save the old zoom scale.
+    OldZoomScale = Viewport.Max.X - Viewport.Min.X;
+
+    // Increment the zoom leve.
     SetZoomLevel(ZoomLevel - 1);
+
+    // Calculate the new zoom scale.
+    NewZoomScale = GetZoomScale(ZoomLevel);
+
+    // Get viewport-space location of mouse cursor.
+    ViewportLocation = GetNormalizedLocation(Controller.MouseX, Controller.MouseY);
+
+    // TODO: scale by max/min of current viewport
+    ViewportLocation = Viewport.Min + (ViewportLocation * (Viewport.Max - Viewport.Min));
+
+    // Convert view-space location to frame-space location.
+    //FrameLocation = ViewportToFrame(Viewport, ViewportLocation);
+
+    // Get the new viewport by scaling the current viewport with the mouse
+    // location as the scaling origin.
+    NewViewport = class'UBox'.static.Scale(Viewport, ViewportLocation, NewZoomScale / OldZoomScale);
+
+    InterpolateToViewport(NewViewport);
 }
 
 function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
@@ -600,27 +657,18 @@ function InternalOnMouseRelease(GUIComponent Sender)
 function bool InternalOnCapturedMouseMove(float DeltaX, float DeltaY)
 {
     local float W, H;
-    local Box Viewport;
-    local Box OriginViewport;
-    local vector HalfViewportExtents;
+    local vector OriginDelta;
 
-    if (bIsPanning)
+    if (!bIsViewportInterpolating && bIsPanning)
     {
         W = ActualWidth(WinWidth);
         H = ActualHeight(WinHeight);
 
-        Viewport = GetViewport();
-        OriginViewport = Viewport;
+        OriginDelta.X -= (DeltaX / W) * GetZoomScale(ZoomLevel);
+        OriginDelta.Y += (DeltaY / H) * GetZoomScale(ZoomLevel);
 
-        HalfViewportExtents = class'UBox'.static.Extents(Viewport) / 2;
-        OriginViewport.Min = HalfViewportExtents;
-        OriginViewport.Max = vect(1, 1, 0) - HalfViewportExtents;
-
-        Origin.X -= (DeltaX / W) * ZoomScale;
-        Origin.Y += (DeltaY / H) * ZoomScale;
-
-        Origin = class'UVector'.static.MaxComponent(Origin, OriginViewport.Min);
-        Origin = class'UVector'.static.MinComponent(Origin, OriginViewport.Max);
+        Viewport = class'UBox'.static.Translate(Viewport, OriginDelta);
+        Viewport = ConstrainViewport(Viewport, vect(0, 0, 0), vect(1, 1, 0));
 
         return true;
     }
@@ -745,11 +793,10 @@ defaultproperties
     bAcceptsInput=true
     bCaptureMouse=true
 
-    Origin=(X=0.5,Y=0.5)
     ZoomLevel=0
     ZoomLevelMin=0
-    ZoomLevelMax=4
+    ZoomLevelMax=3
     ZoomScaleRange=(Min=0.25,Max=1.0)
-    ZoomScaleInterpDuration=0.33
+    ViewportInterpDuration=0.33
 }
 
