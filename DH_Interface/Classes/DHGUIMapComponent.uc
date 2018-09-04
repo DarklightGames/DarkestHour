@@ -676,6 +676,16 @@ function bool InternalOnCapturedMouseMove(float DeltaX, float DeltaY)
     return false;
 }
 
+function bool InternalOnHover(GUIComponent Sender)
+{
+    if (Sender == self)
+    {
+        SetFocus(none);
+    }
+
+    return false;
+}
+
 defaultproperties
 {
     SquadRallyPointDestroyText="Destroy"
@@ -686,6 +696,7 @@ defaultproperties
     OnMousePressed=InternalOnMousePressed
     OnMouseRelease=InternalOnMouseRelease
     OnCapturedMouseMove=InternalOnCapturedMouseMove
+    OnHover=InternalOnHover
 
     SpawnPointBlockedOverlay=Texture'DH_GUI_tex.DeployMenu.spawn_point_disabled'
 
