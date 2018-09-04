@@ -3345,6 +3345,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
 
     if (MapLevelOverlay.WidgetTexture != none)
     {
+        MapLevelOverlay.Tints[0].A = 128 + class'UInterp'.static.Linear(Viewport.Max.X - Viewport.Min.X, 128, 0);
         MapLevelOverlay.TextureCoords.X1 = Viewport.Min.X * MapLevelOverlay.WidgetTexture.MaterialUSize();
         MapLevelOverlay.TextureCoords.Y1 = Viewport.Min.Y * MapLevelOverlay.WidgetTexture.MaterialVSize();
         MapLevelOverlay.TextureCoords.X2 = (Viewport.Max.X * MapLevelOverlay.WidgetTexture.MaterialUSize()) - 1;
