@@ -644,8 +644,20 @@ function TallyVotes(bool bForceMapSwitch)
 function float GetPlayerVotePower(PlayerController Player)
 {
     const PLAYER_VOTE_POWER_MAX = 15;
+    const PATRON_LEAD_REWARD = 3;
+    const PATRON_BRONZE_REWARD = 7;
+    const PATRON_SILVER_REWARD = 15;
+    const PATRON_GOLD_REWARD = 25;
 
     local int VotePower;
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(Player.PlayerReplicationInfo);
+
+    if (PRI == none)
+    {
+        return 0;
+    }
 
     // If game has not ended, make the vote power only 1
     if (!Level.Game.bGameEnded)
@@ -654,7 +666,23 @@ function float GetPlayerVotePower(PlayerController Player)
     }
     else
     {
-        VotePower = Clamp(Player.PlayerReplicationInfo.Score / 1000, 0, PLAYER_VOTE_POWER_MAX);
+        Switch (PRI.PatronStatus)
+        {
+            case PATRON_Lead:
+                VotePower = PATRON_LEAD_REWARD;
+                break;
+            case PATRON_Bronze:
+                VotePower = PATRON_BRONZE_REWARD;
+                break;
+            case PATRON_Silver:
+                VotePower = PATRON_SILVER_REWARD;
+                break;
+            case PATRON_Gold:
+                VotePower = PATRON_GOLD_REWARD;
+                break;
+        }
+
+        VotePower += Clamp(PRI.Score / 1000, 0, PLAYER_VOTE_POWER_MAX);
     }
 
     if (VotePower < 1)
