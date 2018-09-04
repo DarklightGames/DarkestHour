@@ -35,7 +35,11 @@ var color SelfBackgroundColor;
 
 var array<DHPlayerReplicationInfo> AxisPRI, AlliesPRI, UnassignedPRI;
 
-var Material PatronIconMaterial;
+var Material PatronLeadMaterial,
+             PatronBronzeMaterial,
+             PatronSilverMaterial,
+             PatronGoldMaterial;
+
 var Material DeveloperIconMaterial;
 
 enum EScoreboardColumnType
@@ -162,7 +166,21 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
             }
             else if (PRI.PatronStatus > 0) // TODO expand on this (have array of icons and use the index of the enum)
             {
-                CRI.Icon = default.PatronIconMaterial;
+                Switch (PRI.PatronStatus)
+                {
+                    case PATRON_Lead:
+                        CRI.Icon = default.PatronLeadMaterial;
+                        break;
+                    case PATRON_Bronze:
+                        CRI.Icon = default.PatronBronzeMaterial;
+                        break;
+                    case PATRON_Silver:
+                        CRI.Icon = default.PatronSilverMaterial;
+                        break;
+                    case PATRON_Gold:
+                        CRI.Icon = default.PatronGoldMaterial;
+                        break;
+                }
             }
             break;
         case COLUMN_Role:
@@ -930,6 +948,9 @@ defaultproperties
     FairText="Fair"
     GoodText="Good"
     MunitionPercentageText="Munitions"
-    PatronIconMaterial=Texture'DH_InterfaceArt2_tex.HUD.patron'
+    PatronLeadMaterial=Texture'DH_InterfaceArt2_tex.Patron_Icons.PATRON_Lead'
+    PatronBronzeMaterial=Texture'DH_InterfaceArt2_tex.Patron_Icons.PATRON_Bronze'
+    PatronSilverMaterial=Texture'DH_InterfaceArt2_tex.Patron_Icons.PATRON_Silver'
+    PatronGoldMaterial=Texture'DH_InterfaceArt2_tex.Patron_Icons.PATRON_Gold'
     DeveloperIconMaterial=Texture'DH_InterfaceArt2_tex.HUD.developer'
 }
