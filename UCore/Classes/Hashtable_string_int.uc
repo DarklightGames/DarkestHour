@@ -85,7 +85,7 @@ private function Resize(int Capacity)
     Values = T.Values;
 }
 
-function Put(string Key, int Value)
+function Put(coerce string Key,coerce int Value)
 {
     local int i;
 
