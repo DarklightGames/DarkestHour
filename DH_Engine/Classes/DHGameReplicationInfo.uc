@@ -131,7 +131,7 @@ var float               TeamMunitionPercentages[2];
 var DHSpawnPointBase    SpawnPoints[SPAWN_POINTS_MAX];
 
 var DHObjective             DHObjectives[OBJECTIVES_MAX];
-var Hashtable_string_int    DHObjectiveTable; // not replicated and not usable for clients
+var Hashtable_string_int    DHObjectiveTable; // not replicated, but clients create their own so can be used by both client/server
 
 var bool                bIsInSetupPhase;
 var bool                bRoundIsOver;
@@ -295,6 +295,23 @@ simulated function PostBeginPlay()
             {
                 MapMarkerClasses[j++] = MapMarkerClass;
             }
+        }
+    }
+}
+
+simulated function PostNetBeginPlay()
+{
+    local DHObjective Obj;
+
+    super.PostNetBeginPlay();
+
+    // Add tag and obj index into the table (runs on both server and client) so both can use the table
+    foreach AllActors(class'DHObjective', Obj)
+    {
+        if (Obj != none)
+        {
+            //Log("Putting" @ Obj.ObjNum @ "as index for" @ Obj.Tag @ "into table");
+            DHObjectiveTable.Put(Obj.Tag, Obj.ObjNum);
         }
     }
 }

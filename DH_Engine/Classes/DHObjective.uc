@@ -112,8 +112,6 @@ var     bool                        bRecentlyControlledByAllies;
 
 // Replicated variables
 var     int                         UnfreezeTime;               // The time at which the objective will be unlocked and ready to be capured again, relative to GRI.ElapsedTime
-var     bool                        bAxisMeetRequirementsForCapture;
-var     bool                        bAlliesMeetRequirementsForCapture;
 
 // Capture operations (after capture)
 var(DH_CaptureActions)      array<ObjOperationAction>   AlliesCaptureObjActions;
@@ -150,7 +148,7 @@ replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        UnfreezeTime, bAxisMeetRequirementsForCapture, bAlliesMeetRequirementsForCapture;
+        UnfreezeTime;
 }
 
 function PostBeginPlay()
@@ -199,7 +197,6 @@ function PostBeginPlay()
     if (GRI != none)
     {
         GRI.DHObjectives[ObjNum] = self;
-        GRI.DHObjectiveTable.Put(Tag, ObjNum);
     }
 }
 
@@ -209,9 +206,6 @@ function Reset()
 
     UnfreezeTime = 0;
     SetActive(bIsInitiallyActive);
-
-    bAxisMeetRequirementsForCapture = true;
-    bAlliesMeetRequirementsForCapture = true;
 
     bCheckIfAxisCleared = false;
     bCheckIfAlliesCleared = false;
@@ -911,26 +905,7 @@ function bool HandleClearedLogic(int NumForCheck[2])
 // Returns true if a team is unable to capture this objective because they have not secured the required connected objective(s).
 simulated function bool IsTeamNeutralLocked(DHGameReplicationInfo GRI, int TeamIndex)
 {
-    local bool bObjMeetsLinkRequirements;
-
-    // Server (the server needs to call the function to actually check if it meets requirements (can't just use the replicated values)
-    if (Role == ROLE_Authority)
-    {
-        bObjMeetsLinkRequirements = HasRequiredObjectives(GRI, TeamIndex);
-    }
-    else // Client (should use replicated variables the server sets in timer)
-    {
-        if (TeamIndex == AXIS_TEAM_INDEX)
-        {
-            bObjMeetsLinkRequirements = bAxisMeetRequirementsForCapture;
-        }
-        else if (TeamIndex == ALLIES_TEAM_INDEX)
-        {
-            bObjMeetsLinkRequirements = bAlliesMeetRequirementsForCapture;
-        }
-    }
-
-    return GRI != none && bNeutralizeBeforeCapture && IsNeutral() && !bObjMeetsLinkRequirements;
+    return GRI != none && bNeutralizeBeforeCapture && IsNeutral() && !HasRequiredObjectives(GRI, TeamIndex);
 }
 
 function Timer()
@@ -1002,21 +977,11 @@ function Timer()
     if (IsTeamNeutralLocked(GRI, AXIS_TEAM_INDEX))
     {
         CurrentCapAxisCappers = 0;
-        bAxisMeetRequirementsForCapture = false;
-    }
-    else
-    {
-        bAxisMeetRequirementsForCapture = true;
     }
 
     if (IsTeamNeutralLocked(GRI, ALLIES_TEAM_INDEX))
     {
         CurrentCapAlliesCappers = 0;
-        bAlliesMeetRequirementsForCapture = false;
-    }
-    else
-    {
-        bAlliesMeetRequirementsForCapture = true;
     }
 
     // NOTE: Comparing number of players as opposed to rates to decide which side has advantage for the capture, for fear that rates could be abused in this instance
@@ -1358,7 +1323,8 @@ simulated function bool IsFrozen(GameReplicationInfo GRI)
     return GRI != none && UnfreezeTime > GRI.ElapsedTime;
 }
 
-function bool HasRequiredObjectives(coerce DHGameReplicationInfo GRI, int TeamIndex)
+// Clients/Server can run this function very fast because of the hashtable
+simulated function bool HasRequiredObjectives(coerce DHGameReplicationInfo GRI, int TeamIndex)
 {
     local int i, ObjIndex;
 
