@@ -78,8 +78,8 @@ var(DHObjectiveCapture) bool        bGroupActionsAtDisable;
 // Requirements
 var(DHObjectiveRequirements) array<name>    AxisRequiredObjTagForCapture;       // ObjTag
 var(DHObjectiveRequirements) array<name>    AlliesRequiredObjTagForCapture;     // ObjTag
-var(DHObjectiveRequirements) array<int>     AxisRequiredObjForCapture;          // ObjNum
-var(DHObjectiveRequirements) array<int>     AlliesRequiredObjForCapture;        // ObjNum
+var(DHObjectiveRequirements) array<int>     AxisRequiredObjForCapture;          // TODO: Once a lot of levels are using the tag system, make this variable un(configuratable)
+var(DHObjectiveRequirements) array<int>     AlliesRequiredObjForCapture;        // TODO: Once a lot of levels are using the tag system, make this variable un(configuratable)
 var(DHObjectiveRequirements) int            PlayersNeededToCapture;
 var(DHObjectiveRequirements) bool           bVehiclesCanCapture;
 var(DHObjectiveRequirements) bool           bTankersCanCapture;
