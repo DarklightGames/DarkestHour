@@ -1326,7 +1326,7 @@ simulated function bool IsFrozen(GameReplicationInfo GRI)
 // Clients/Server can run this function very fast because of the hashtable
 simulated function bool HasRequiredObjectives(coerce DHGameReplicationInfo GRI, int TeamIndex)
 {
-    local int i, ObjIndex;
+    local int i;
 
     if (GRI == none)
     {
