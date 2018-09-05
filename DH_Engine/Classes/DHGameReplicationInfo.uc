@@ -302,16 +302,42 @@ simulated function PostBeginPlay()
 simulated function PostNetBeginPlay()
 {
     local DHObjective Obj;
+    local int i, ObjIndex;
 
     super.PostNetBeginPlay();
 
-    // Add tag and obj index into the table (runs on both server and client) so both can use the table
+    // Loop all objectives to setup the hash table
     foreach AllActors(class'DHObjective', Obj)
     {
         if (Obj != none)
         {
-            //Log("Putting" @ Obj.ObjNum @ "as index for" @ Obj.Tag @ "into table");
+            // Add tag and obj index into the table (runs on both server and client) so both can use the table
             DHObjectiveTable.Put(Obj.Tag, Obj.ObjNum);
+        }
+    }
+
+    // Loop all objectives to set index variables up based on tag ones (uses hash table)
+    foreach AllActors(class'DHObjective', Obj)
+    {
+        if (Obj != none)
+        {
+            // Loop through the Axis Required Objectives (by tag) and set the (by index) values up
+            for (i = 0; i < Obj.AxisRequiredObjTagForCapture.Length; ++i)
+            {
+                if (DHObjectiveTable.Get(string(Obj.AxisRequiredObjTagForCapture[i]), ObjIndex))
+                {
+                    Obj.AxisRequiredObjForCapture[Obj.AxisRequiredObjForCapture.Length] = ObjIndex;
+                }
+            }
+
+            // Loop through the Allies Required Objectives (by tag) and set the (by index) values up
+            for (i = 0; i < Obj.AlliesRequiredObjTagForCapture.Length; ++i)
+            {
+                if (DHObjectiveTable.Get(string(Obj.AlliesRequiredObjTagForCapture[i]), ObjIndex))
+                {
+                    Obj.AlliesRequiredObjForCapture[Obj.AlliesRequiredObjForCapture.Length] = ObjIndex;
+                }
+            }
         }
     }
 }

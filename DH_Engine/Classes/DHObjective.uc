@@ -1335,58 +1335,21 @@ simulated function bool HasRequiredObjectives(coerce DHGameReplicationInfo GRI, 
 
     if (TeamIndex == AXIS_TEAM_INDEX)
     {
-        // First check for tag AxisRequiredObjTagForCapture
-        if (AxisRequiredObjTagForCapture.Length > 0)
+        for (i = 0; i < AxisRequiredObjForCapture.Length; ++i)
         {
-            for (i = 0; i < AxisRequiredObjTagForCapture.Length; ++i)
+            if (!GRI.DHObjectives[AxisRequiredObjForCapture[i]].IsAxis())
             {
-                // This gets the objective's index by tag, and sets it as ObjIndex (returns true if found)
-                if (GRI.DHObjectiveTable.Get(string(AxisRequiredObjTagForCapture[i]), ObjIndex))
-                {
-                    // We know the objective index, so lets check if Axis do not own it
-                    if (!GRI.DHObjectives[ObjIndex].IsAxis())
-                    {
-                        return false; // Return false if Axis don't own it
-                    }
-                }
-            }
-        }
-        else
-        {
-            for (i = 0; i < AxisRequiredObjForCapture.Length; ++i)
-            {
-                if (!GRI.DHObjectives[AxisRequiredObjForCapture[i]].IsAxis())
-                {
-                    return false;
-                }
+                return false;
             }
         }
     }
     else if (TeamIndex == ALLIES_TEAM_INDEX)
     {
-        if (AlliesRequiredObjTagForCapture.Length > 0)
+        for (i = 0; i < AlliesRequiredObjForCapture.Length; ++i)
         {
-            for (i = 0; i < AlliesRequiredObjTagForCapture.Length; ++i)
+            if (!GRI.DHObjectives[AlliesRequiredObjForCapture[i]].IsAllies())
             {
-                // This gets the objective's index by tag, and sets it as ObjIndex (returns true if found)
-                if (GRI.DHObjectiveTable.Get(string(AlliesRequiredObjTagForCapture[i]), ObjIndex))
-                {
-                    // We know the objective index, so lets check if Allies do not own it
-                    if (!GRI.DHObjectives[ObjIndex].IsAllies())
-                    {
-                        return false; // Return false if Allies don't own it
-                    }
-                }
-            }
-        }
-        else
-        {
-            for (i = 0; i < AlliesRequiredObjForCapture.Length; ++i)
-            {
-                if (!GRI.DHObjectives[AlliesRequiredObjForCapture[i]].IsAllies())
-                {
-                    return false;
-                }
+                return false;
             }
         }
     }
