@@ -5,6 +5,9 @@
 
 class DHGUICheckBoxButton extends GUICheckBoxButton;
 
+var bool bIsActive; // HACK: A hacky workaround to indicate that this button is
+                    // active but temporarily hidden (e.g. outside of the viewport).
+
 var bool bCanClickUncheck;
 
 var string CenterText;

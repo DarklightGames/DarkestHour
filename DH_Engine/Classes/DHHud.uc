@@ -3304,12 +3304,13 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     local SpriteWidget              Widget;
     local vector                    Temp, MapCenter, A, B;
     local string                    DistanceString, ObjLabel;
-    local float                     MyMapScale, ArrowRotation;
+    local float                     MyMapScale, ArrowRotation, X0, Y0, X1, Y1;
     local int                       OwnerTeam, Distance, i, j;
     local int                       Yaw;
     local DHObjective               ObjA, ObjB;
     local color                     ObjLineColor;
     local UColor.HSV                HSV;
+    local Box                       Box;
 
     if (DHGRI == none)
     {
@@ -3670,6 +3671,9 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
         }
     }
 
+    Box.Min = vect(0, 0, 0);
+    Box.Max = vect(1, 1, 0);
+
     // TODO: make this more efficient!
     // Draw the "connecting lines" between objectives
     for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
@@ -3689,8 +3693,6 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
         A.Y = FMax(0.0, FMin(1.0, A.Y / MyMapScale + 0.5));
         A.X = (A.X - Viewport.Min.X) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
         A.Y = (A.Y - Viewport.Min.Y) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
-        A.X = SubCoords.PosX + (SubCoords.Width * A.X);
-        A.Y = SubCoords.PosY + (SubCoords.Height * A.Y);
 
         for (j = 0; j < ObjA.AlliesRequiredObjForCapture.Length; ++j)
         {
@@ -3706,8 +3708,21 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
             B.Y = FMax(0.0, FMin(1.0, B.Y / MyMapScale + 0.5));
             B.X = (B.X - Viewport.Min.X) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
             B.Y = (B.Y - Viewport.Min.Y) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
-            B.X = SubCoords.PosX + (SubCoords.Width * B.X);
-            B.Y = SubCoords.PosY + (SubCoords.Height * B.Y);
+
+            X0 = A.X;
+            Y0 = A.Y;
+            X1 = B.X;
+            Y1 = B.Y;
+
+            if (!class'UCollision'.static.ClipLineToViewport(X0, Y0, X1, Y1, Box))
+            {
+                continue;
+            }
+
+            X0 = SubCoords.PosX + (SubCoords.Width * X0);
+            Y0 = SubCoords.PosY + (SubCoords.Height * Y0);
+            X1 = SubCoords.PosX + (SubCoords.Width * X1);
+            Y1 = SubCoords.PosY + (SubCoords.Height * Y1);
 
             ObjLineColor = class'UColor'.default.White;
 
@@ -3729,7 +3744,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
 
             ObjLineColor = class'UColor'.static.HSV2RGB(HSV);
 
-            DrawCanvasLine(A.X, A.Y, B.X, B.Y, ObjLineColor);
+            DrawCanvasLine(X0, Y0, X1, Y1, ObjLineColor);
         }
     }
 
@@ -5017,6 +5032,11 @@ function DHDrawIconOnMap(
 
     Icon.PosX = (Icon.PosX - Viewport.Min.X) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
     Icon.PosY = (Icon.PosY - Viewport.Min.Y) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
+
+    if (Icon.PosX < 0.0 || Icon.PosX > 1.0 || Icon.PosY < 0.0 || Icon.PosY > 1.0)
+    {
+        return;
+    }
 
     // Set flashing texture if needed
     if (FlashMode > 1)

@@ -1211,6 +1211,7 @@ ignores SeePlayer, HearNoise, NotifyBump, TakeDamage, PhysicsVolumeChange, Switc
 
     exec function Jump( optional float F )
     {
+        TryToActivateSituationMap();
     }
 }
 
@@ -2946,6 +2947,7 @@ state DeadSpectating
 
     exec function Jump(optional float F)
     {
+        TryToActivateSituationMap();
     }
 }
 
@@ -5857,6 +5859,7 @@ state Spectating
 
     exec function Jump(optional float F)
     {
+        TryToActivateSituationMap();
     }
 }
 
@@ -6017,6 +6020,53 @@ simulated function ClientSendMultiKills(TeamPlayerReplicationInfo PRI, byte Mult
 simulated function ClientSendCombos(TeamPlayerReplicationInfo PRI,byte Combos0, byte Combos1, byte Combos2, byte Combos3, byte Combos4);
 simulated function ClientSendStats(TeamPlayerReplicationInfo PRI, int NewGoals, bool bNewFirstBlood, int Newkills, int NewSuicides,
     int NewFlagTouches, int NewFlagReturns, int NewFlakCount, int NewComboCount, int NewHeadCount, int NewRanOverCount);
+
+// We're hijacking InventoryActivate (since it does literally nothing and is
+// by default bound to the Enter key which is unused otherwise).
+function bool TryToActivateSituationMap()
+{
+    local GUIController GUIController;
+    local int MenuIndex;
+    local DHHud HUD;
+
+    HUD = DHHud(myHUD);
+
+    if (HUD == none)
+    {
+        return false;
+    }
+
+    MenuIndex = -1;
+    GUIController = GUIController(Player.GUIController);
+
+    if (GUIController != none)
+    {
+        MenuIndex = GUIController.FindMenuIndexByName("DH_Interface.DHSituationMapGUIPage");
+    }
+
+    if (MenuIndex != -1)
+    {
+        GUIController.bActive = true;
+        HUD.MouseInterfaceStartCapturing();
+        HUD.bShowObjectives = true;
+        bShouldSkipResetInput = true;
+
+        GUIController.MouseX = GUIController.ResX / 2;
+        GUIController.MouseY = GUIController.ResY / 2;
+
+        return true;
+    }
+
+    return false;
+}
+
+exec function Jump(optional float F)
+{
+    if (!TryToActivateSituationMap())
+    {
+        super.Jump(F);
+    }
+}
 
 defaultproperties
 {

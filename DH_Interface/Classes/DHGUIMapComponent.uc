@@ -61,13 +61,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         b_SpawnPoints[i].ContextMenu.OnSelect = MyContextSelect;
     }
 
-    if (Controller != none)
-    {
-        // "Hide" the mouse cursor by sticking it in a corner.
-        Controller.MouseX = 4096.0;
-        Controller.MouseY = 4096.0;
-    }
-
     PC = DHPlayer(PlayerOwner());
 
     if (PC != none)
@@ -93,7 +86,7 @@ function UpdateSpawnPointPositions()
 
     for (i = 0; i < arraycount(b_SpawnPoints); ++i)
     {
-        if (b_SpawnPoints[i] == none || !b_SpawnPoints[i].bVisible)
+        if (b_SpawnPoints[i] == none || !b_SpawnPoints[i].bIsActive)
         {
             continue;
         }
@@ -107,6 +100,9 @@ function UpdateSpawnPointPositions()
         Y = (Y - Viewport.Min.Y) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
 
         b_SpawnPoints[i].SetPosition(X, Y, b_SpawnPoints[i].WinWidth, b_SpawnPoints[i].WinHeight, true);
+
+        // Hide if the button is not currently within the viewport.
+        b_SpawnPoints[i].SetVisibility(X >= 0 && X <= 1.0 && Y >= 0.0 && Y <= 1.0);
     }
 }
 
@@ -129,6 +125,7 @@ function UpdateSpawnPoints(int TeamIndex, int RoleIndex, int VehiclePoolIndex, i
             GRI.SpawnPoints[i] != none &&
             GRI.SpawnPoints[i].IsVisibleTo(TeamIndex, RoleIndex, SquadIndex, VehiclePoolIndex))
         {
+            b_SpawnPoints[i].bIsActive = true;
             b_SpawnPoints[i].SetVisibility(true);
             b_SpawnPoints[i].CenterText = GRI.SpawnPoints[i].GetMapText();
 
@@ -151,6 +148,7 @@ function UpdateSpawnPoints(int TeamIndex, int RoleIndex, int VehiclePoolIndex, i
         else
         {
             // If spawn point that was previously selected is now hidden, deselect it.
+            b_SpawnPoints[i].bIsActive = false;
             b_SpawnPoints[i].SetVisibility(false);
 
             if (SpawnPointIndex == b_SpawnPoints[i].Tag)
@@ -163,17 +161,17 @@ function UpdateSpawnPoints(int TeamIndex, int RoleIndex, int VehiclePoolIndex, i
 
 function bool InternalOnDraw(Canvas C)
 {
-    local float ClipX, ClipY, TimeSeconds, ViewportInterpAlpha;
+    local float TimeSeconds, ViewportInterpAlpha;
     local ROHud.AbsoluteCoordsInfo SubCoords;
 
     // Interpolate viewport.
     TimeSeconds = PC.Level.TimeSeconds;
 
-    // Set the viewport interpolation flag.
     if (bIsViewportInterpolating)
     {
         if (TimeSeconds >= ViewportInterpEndTime)
         {
+            // Turn off the viewport interpolation flag.
             bIsViewportInterpolating = false;
         }
 
@@ -191,19 +189,10 @@ function bool InternalOnDraw(Canvas C)
         SubCoords.Width = ActualWidth();
         SubCoords.Height = ActualHeight();
 
-        ClipX = C.ClipX;
-        ClipY = C.ClipY;
-
-        C.ClipX = ActualWidth();
-        C.ClipY = ActualHeight();
-
         if (MyHud != none)
         {
             MyHud.DrawMap(C, SubCoords, PC, Viewport);
         }
-
-        C.ClipX = ClipX;
-        C.ClipY = ClipY;
     }
 
     return false;
@@ -511,11 +500,6 @@ function SetZoomLevel(int NewZoomLevel)
     ZoomLevel = Clamp(NewZoomLevel, ZoomLevelMin, ZoomLevelMax);
 }
 
-// Given a viewport and a frame location, return the view viewport-space coordinates.
-function vector FrameToViewport(Box Viewport, vector Location)
-{
-}
-
 // Given a viewport and a location within that viewport, get the frame coordinates.
 function vector ViewportToFrame(Box Viewport, vector Location)
 {
@@ -554,7 +538,7 @@ function string ViewportToString(Box viewport)
 
 function ZoomIn()
 {
-    local vector ViewportLocation, FrameLocation, FrameLocationOffset;
+    local vector ViewportLocation;
     local Box NewViewport;
     local float OldZoomScale, NewZoomScale;
 
@@ -575,9 +559,6 @@ function ZoomIn()
     // Get viewport-space location of mouse cursor.
     ViewportLocation = GetNormalizedLocation(Controller.MouseX, Controller.MouseY);
 
-    // Convert view-space location to frame-space location.
-    FrameLocation = ViewportToFrame(Viewport, ViewportLocation);
-
     // Get the new viewport by scaling the current viewport with the mouse
     // location as the scaling origin.
     NewViewport = class'UBox'.static.Scale(Viewport, ViewportLocation, NewZoomScale / OldZoomScale);
@@ -587,7 +568,7 @@ function ZoomIn()
 
 function ZoomOut()
 {
-    local vector ViewportLocation, FrameLocation, FrameLocationOffset;
+    local vector ViewportLocation;
     local Box NewViewport;
     local float OldZoomScale, NewZoomScale;
 

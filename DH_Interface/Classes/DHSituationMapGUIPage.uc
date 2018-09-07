@@ -10,6 +10,10 @@ var automated   ROGUIProportionalContainer  c_Map;
 var automated   GUIImage                    i_MapBorder;
 var automated   DHGUIMapComponent           p_Map;
 
+
+var string                                  HideExecs[2];
+var array<int>                              HideKeys;
+
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     super.InitComponent(MyController, MyOwner);
@@ -18,6 +22,15 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     c_Map.ManageComponent(i_MapBorder);
     c_Map.ManageComponent(p_Map);
+
+    if (Controller != none)
+    {
+        // "Hide" the mouse cursor by sticking it in a corner.
+        Controller.MouseX = 4096.0;
+        Controller.MouseY = 4096.0;
+    }
+
+    PopulateHideKeys();
 }
 
 function InternalOnOpen()
@@ -93,8 +106,13 @@ function OnSpawnPointChanged(int SpawnPointIndex, optional bool bDoubleClick)
 function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
 {
     local DHHud HUD;
+    local Interactions.EInputKey InputKey;
+    local Interactions.EInputAction InputAction;
 
-    if (Key == 0x1B || IsShowObjectivesKey(key))
+    InputKey = EInputKey(Key);
+    InputAction = EInputAction(State);
+
+    if (InputAction == IST_Press && (Key == 0x1B || IsHideKey(Key)))
     {
         if (PlayerOwner() != none)
         {
@@ -112,33 +130,54 @@ function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
     return false;
 }
 
-function bool IsShowObjectivesKey(byte Key)
+function bool IsHideKey(byte Key)
 {
-    local array<string> Bindings;
     local int i;
 
-    if (PlayerOwner() != none)
+    for (i = 0; i < HideKeys.Length; ++i)
     {
-        Split(PlayerOwner().ConsoleCommand("BINDINGTOKEY \"SHOWOBJECTIVES\""), ",", Bindings);
-
-        for (i = 0; i < Bindings.Length; ++i)
+        if (Key == HideKeys[i])
         {
-            if (Key == int(PlayerOwner().ConsoleCommand("KEYNUMBER" @ Bindings[i])))
-            {
-                return true;
-            }
+            return true;
         }
     }
 
     return false;
 }
 
+function PopulateHideKeys()
+{
+    local array<string> AllBindings;
+    local array<string> Bindings;
+    local int i, j;
+
+    HideKeys.Length = 0;
+
+    if (PlayerOwner() != none)
+    {
+        for (i = 0;  i < arraycount(HideExecs); ++i)
+        {
+            Split(PlayerOwner().ConsoleCommand("BINDINGTOKEY \"" $ HideExecs[i] $ "\""), ",", Bindings);
+
+            for (j = 0; j < Bindings.Length; ++j)
+            {
+                AllBindings[AllBindings.Length] = Bindings[j];
+            }
+        }
+
+        for (i = 0; i < AllBindings.Length; ++i)
+        {
+            HideKeys[HideKeys.Length] = int(PlayerOwner().ConsoleCommand("KEYNUMBER" @ AllBindings[i]));
+        }
+    }
+}
+
 defaultproperties
 {
     bRenderWorld=true
     bAllowedAsLast=true
-    bAcceptsInput=false
-    bCaptureInput=false
+    bAcceptsInput=true
+    bCaptureInput=true
     OnOpen=InternalOnOpen
     OnClose=InternalOnClose
     OnKeyEvent=InternalOnKeyEvent
@@ -157,7 +196,6 @@ defaultproperties
         WinHeight=1.0
         WinLeft=0.0
         WinTop=0.0
-        bNeverFocus=true
     End Object
     c_Map=MapContainerObject
 
@@ -177,10 +215,12 @@ defaultproperties
         WinHeight=0.89
         WinLeft=0.055
         WinTop=0.055
-        bNeverFocus=true
         OnSpawnPointChanged=OnSpawnPointChanged
     End Object
     p_Map=MapComponentObject
 
     MouseCursorIndex=2
+
+    HideExecs(0)="SHOWOBJECTIVES"
+    Hideexecs(1)="JUMP"
 }
