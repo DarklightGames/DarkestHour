@@ -15,12 +15,12 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_G43Pickup'
     AttachmentClass=class'DH_Weapons.DH_G43Attachment'
 
-    Mesh=SkeletalMesh'Axis_G43_1st.G-43-Mesh'
+    Mesh=SkeletalMesh'DH_G43_1st.G-43-Mesh'
     HighDetailOverlay=shader'Weapons1st_tex.Rifles.G43_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    IronSightDisplayFOV=20.0
+    IronSightDisplayFOV=21.0
 
     MaxNumPrimaryMags=10
     InitialNumPrimaryMags=10
