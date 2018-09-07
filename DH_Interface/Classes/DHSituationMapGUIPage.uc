@@ -10,12 +10,13 @@ var automated   ROGUIProportionalContainer  c_Map;
 var automated   GUIImage                    i_MapBorder;
 var automated   DHGUIMapComponent           p_Map;
 
-
 var string                                  HideExecs[2];
 var array<int>                              HideKeys;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
+    local DHPlayer PC;
+
     super.InitComponent(MyController, MyOwner);
 
     c_MapRoot.ManageComponent(c_Map);
@@ -31,6 +32,15 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     }
 
     PopulateHideKeys();
+
+    UpdateSpawnPoints();
+
+    PC = DHPlayer(PlayerOwner());
+
+    if (PC != none)
+    {
+        p_Map.SelectSpawnPoint(PC.SpawnPointIndex);
+    }
 }
 
 function InternalOnOpen()
