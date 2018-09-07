@@ -149,11 +149,13 @@ defaultproperties
 {
     bPawnRapidFireAnim=true
     FAProjSpawnOffset=(X=-20.0)
-    MaxVerticalRecoilAngle=600
-    MaxHorizontalRecoilAngle=120
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stSTG'
     SmokeEmitterClass=class'ROEffects.ROMuzzleSmoke'
     ShellIronSightOffset=(X=15.0,Y=0.0,Z=0.0)
+
+    // Recoil
+    MaxVerticalRecoilAngle=600
+    MaxHorizontalRecoilAngle=120
 
     FireAnim="Shoot_Loop"
     FireLoopAnim="Shoot_Loop"

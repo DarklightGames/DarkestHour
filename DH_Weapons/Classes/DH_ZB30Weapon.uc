@@ -32,7 +32,6 @@ defaultproperties
 
     MaxNumPrimaryMags=11
     InitialNumPrimaryMags=11
-    bCanBeResupplied=true
     NumMagsToResupply=1
     bHasSelectFire=true
 

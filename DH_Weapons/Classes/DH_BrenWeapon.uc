@@ -34,8 +34,7 @@ defaultproperties
 
     MaxNumPrimaryMags=10
     InitialNumPrimaryMags=10
-    bCanBeResupplied=true
-    NumMagsToResupply=2
+
     bHasSelectFire=true
 
     SightUpIronBringUp="Deploy"

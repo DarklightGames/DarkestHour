@@ -18,11 +18,11 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_Fallschirmgewehr42_1st.FG42' // TODO: there is no specularity mask for this weapon
 
-    IronSightDisplayFOV=35.0
+    IronSightDisplayFOV=28.0
 
     MaxNumPrimaryMags=11
     InitialNumPrimaryMags=11
-    NumMagsToResupply=2 // TODO: can't be resupplied (needs bCanBeResupplied=true) - one or the other (if should be resupplied, move 2 def props to bipod auto parent class)
+
     bHasSelectFire=true
 
     SelectFireAnim="switch_fire"

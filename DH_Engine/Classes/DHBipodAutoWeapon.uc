@@ -375,6 +375,9 @@ Begin:
 
 defaultproperties
 {
+    bCanBeResupplied=true
+    NumMagsToResupply=2
+
     bCanBipodDeploy=true
     ZoomOutTime=0.1
 
