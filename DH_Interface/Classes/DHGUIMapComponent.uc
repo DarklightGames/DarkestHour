@@ -102,6 +102,8 @@ function UpdateSpawnPointPositions()
         b_SpawnPoints[i].SetPosition(X, Y, b_SpawnPoints[i].WinWidth, b_SpawnPoints[i].WinHeight, true);
 
         // Hide if the button is not currently within the viewport.
+        X += b_SpawnPoints[i].WinWidth / 2;
+        Y += b_SpawnPoints[i].WinHeight / 2;
         b_SpawnPoints[i].SetVisibility(X >= 0 && X <= 1.0 && Y >= 0.0 && Y <= 1.0);
     }
 }
@@ -530,12 +532,6 @@ function InterpolateToViewport(Box NewViewport)
     bIsViewportInterpolating = true;
 }
 
-// TODO: remove later
-function string ViewportToString(Box viewport)
-{
-    return "(Min=(" $ Viewport.Min $ "), Max=(" $ Viewport.Max $ "))";
-}
-
 function ZoomIn()
 {
     local vector ViewportLocation;
@@ -592,9 +588,6 @@ function ZoomOut()
     // TODO: scale by max/min of current viewport
     ViewportLocation = Viewport.Min + (ViewportLocation * (Viewport.Max - Viewport.Min));
 
-    // Convert view-space location to frame-space location.
-    //FrameLocation = ViewportToFrame(Viewport, ViewportLocation);
-
     // Get the new viewport by scaling the current viewport with the mouse
     // location as the scaling origin.
     NewViewport = class'UBox'.static.Scale(Viewport, ViewportLocation, NewZoomScale / OldZoomScale);
@@ -620,6 +613,7 @@ function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
         ZoomOut();
         return true;
     }
+
     // TODO: maybe a "follow me" kind of option?
 
     return false;
@@ -627,7 +621,10 @@ function bool InternalOnKeyEvent(out byte Key, out byte State, float Delta)
 
 function InternalOnMousePressed(GUIComponent Sender, bool bRepeat)
 {
-    bIsPanning = true;
+    if (ZoomLevel > 0)
+    {
+        bIsPanning = true;
+    }
 }
 
 function InternalOnMouseRelease(GUIComponent Sender)
@@ -669,6 +666,9 @@ function bool InternalOnHover(GUIComponent Sender)
 
 defaultproperties
 {
+    bAcceptsInput=true
+    bCaptureMouse=true
+
     SquadRallyPointDestroyText="Destroy"
     SquadRallyPointSetAsSecondaryText="Set as Secondary"
     RemoveText="Remove"
@@ -688,7 +688,6 @@ defaultproperties
         OnClose=DHGUIMapComponent.MyContextClose
         OnSelect=DHGUIMapComponent.MyContextSelect
     End Object
-
 
     // Spawn points
     Begin Object Class=DHGUICheckBoxButton Name=SpawnPointButton
@@ -781,9 +780,6 @@ defaultproperties
     b_SpawnPoints(60)=SpawnPointButton
     b_SpawnPoints(61)=SpawnPointButton
     b_SpawnPoints(62)=SpawnPointButton
-
-    bAcceptsInput=true
-    bCaptureMouse=true
 
     ZoomLevel=0
     ZoomLevelMin=0

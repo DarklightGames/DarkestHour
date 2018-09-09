@@ -51,9 +51,7 @@ var automated   ROGUIProportionalContainer  c_Loadout;
 var automated   ROGUIProportionalContainer      c_Equipment;
 var automated   ROGUIProportionalContainer      c_Vehicle;
 var automated   ROGUIProportionalContainer  c_MapRoot;
-var automated   ROGUIProportionalContainer      c_Map;
-var automated   GUIImage                            i_MapBorder;
-var automated   DHGUIMapComponent                   p_Map;
+var automated   DHGUIMapContainer               c_Map;
 var automated   ROGUIProportionalContainer      c_Squads;
 var automated   DHGUISquadsComponent                p_Squads;
 var automated   ROGUIProportionalContainer  c_Footer;
@@ -165,9 +163,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     MapSquadsTabContainer.ManageComponent(i_SquadsButton);
 
     c_MapRoot.ManageComponent(c_Map);
-
-    c_Map.ManageComponent(i_MapBorder);
-    c_Map.ManageComponent(p_Map);
 
     c_Squads.ManageComponent(p_Squads);
 
@@ -302,7 +297,7 @@ function Timer()
             OnTeamChanged(TeamIndex);
 
             // Automatically select the player's spawn point.
-            p_Map.SelectSpawnPoint(PC.SpawnPointIndex);
+            c_Map.p_Map.SelectSpawnPoint(PC.SpawnPointIndex);
         }
     }
 
@@ -413,7 +408,7 @@ function UpdateSpawnPoints()
         RoleIndex = -1;
     }
 
-    p_Map.UpdateSpawnPoints(TeamIndex, RoleIndex, GetSelectedVehiclePoolIndex(), SpawnPointIndex);
+    c_Map.p_Map.UpdateSpawnPoints(TeamIndex, RoleIndex, GetSelectedVehiclePoolIndex(), SpawnPointIndex);
 }
 
 function UpdateStatus()
@@ -797,7 +792,7 @@ function OnRecommendJoiningSquadButtonClick(byte Button)
                 // Ideally, this will show the user their new spawning options
                 // if the squad has it's act together.
                 PC.ServerSquadJoinAuto();
-                p_Map.SelectSpawnPoint(-1);
+                c_Map.p_Map.SelectSpawnPoint(-1);
                 SetMapMode(MODE_Map);
             }
             else
@@ -1113,13 +1108,13 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
             // Axis
             case 97:
                 OnTeamChanged(AXIS_TEAM_INDEX);
-                p_Map.SelectSpawnPoint(-1);
+                c_Map.p_Map.SelectSpawnPoint(-1);
                 break;
 
             // Allies
             case 98:
                 OnTeamChanged(ALLIES_TEAM_INDEX);
-                p_Map.SelectSpawnPoint(-1);
+                c_Map.p_Map.SelectSpawnPoint(-1);
                 break;
 
             // Success
@@ -2132,15 +2127,6 @@ defaultproperties
     End Object
     c_Vehicle=VehicleContainerObject
 
-    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=MapRootContainerObject
-        WinWidth=0.68
-        WinHeight=0.91
-        WinLeft=0.3
-        WinTop=0.02
-        OnPreDraw=MapContainerPreDraw
-    End Object
-    c_MapRoot=MapRootContainerObject
-
     Begin Object Class=DHGUIButton Name=DisconnectButtonObject
         Caption="Disconnect"
         CaptionAlign=TXTA_Center
@@ -2231,33 +2217,23 @@ defaultproperties
     End Object
     i_Arrows=ArrowImageObject
 
-    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=MapContainerObject
+    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=MapRootContainerObject
+        WinWidth=0.68
+        WinHeight=0.91
+        WinLeft=0.3
+        WinTop=0.02
+        OnPreDraw=MapContainerPreDraw
+    End Object
+    c_MapRoot=MapRootContainerObject
+
+    Begin Object Class=DHGUIMapContainer Name=MapContainerObject
         WinWidth=1.0
         WinHeight=1.0
         WinLeft=0.0
         WinTop=0.0
-    End Object
-    c_Map=MapContainerObject
-
-    Begin Object Class=GUIImage Name=MapBorderImageObject
-        WinWidth=1.0
-        WinHeight=1.0
-        WinLeft=0.0
-        WinTop=0.0
-        bNeverFocus=true
-        ImageStyle=ISTY_Scaled
-        Image=Material'DH_GUI_tex.DeployMenu.map_border'
-    End Object
-    i_MapBorder=MapBorderImageObject
-
-    Begin Object Class=DHGUIMapComponent Name=MapComponentObject
-        WinWidth=0.89
-        WinHeight=0.89
-        WinLeft=0.055
-        WinTop=0.055
         OnSpawnPointChanged=OnSpawnPointChanged
     End Object
-    p_Map=MapComponentObject
+    c_Map=MapContainerObject
 
     Begin Object Class=GUIImage Name=PrimaryWeaponImageObject
         WinWidth=1.0

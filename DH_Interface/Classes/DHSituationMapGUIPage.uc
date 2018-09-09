@@ -6,9 +6,7 @@
 class DHSituationMapGUIPage extends GUIPage;
 
 var automated   ROGUIProportionalContainer  c_MapRoot;
-var automated   ROGUIProportionalContainer  c_Map;
-var automated   GUIImage                    i_MapBorder;
-var automated   DHGUIMapComponent           p_Map;
+var automated   DHGUIMapContainer           c_Map;
 
 var string                                  HideExecs[2];
 var array<int>                              HideKeys;
@@ -20,9 +18,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     super.InitComponent(MyController, MyOwner);
 
     c_MapRoot.ManageComponent(c_Map);
-
-    c_Map.ManageComponent(i_MapBorder);
-    c_Map.ManageComponent(p_Map);
 
     if (Controller != none)
     {
@@ -39,7 +34,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     if (PC != none)
     {
-        p_Map.SelectSpawnPoint(PC.SpawnPointIndex);
+        c_Map.p_Map.SelectSpawnPoint(PC.SpawnPointIndex);
     }
 }
 
@@ -65,7 +60,7 @@ function UpdateSpawnPoints()
 
     if (PC != none)
     {
-        p_Map.UpdateSpawnPoints(PC.GetTeamNum(), PC.GetRoleIndex(), PC.VehiclePoolIndex, PC.SpawnPointIndex);
+        c_Map.p_Map.UpdateSpawnPoints(PC.GetTeamNum(), PC.GetRoleIndex(), PC.VehiclePoolIndex, PC.SpawnPointIndex);
     }
 }
 
@@ -192,42 +187,27 @@ defaultproperties
     OnClose=InternalOnClose
     OnKeyEvent=InternalOnKeyEvent
 
+    OnDraw=InternalOnDraw
+
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=MapRootContainerObject
         WinWidth=0.68
         WinHeight=0.91
         WinLeft=0.3
         WinTop=0.02
         OnPreDraw=MapContainerPreDraw
+        bNeverFocus=true
     End Object
     c_MapRoot=MapRootContainerObject
 
-    Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=MapContainerObject
-        WinWidth=1.0
-        WinHeight=1.0
-        WinLeft=0.0
-        WinTop=0.0
-    End Object
-    c_Map=MapContainerObject
-
-    Begin Object Class=GUIImage Name=MapBorderImageObject
+    Begin Object Class=DHGUIMapContainer Name=MapContainerObject
         WinWidth=1.0
         WinHeight=1.0
         WinLeft=0.0
         WinTop=0.0
         bNeverFocus=true
-        ImageStyle=ISTY_Scaled
-        Image=Material'DH_GUI_tex.DeployMenu.map_border'
-    End Object
-    i_MapBorder=MapBorderImageObject
-
-    Begin Object Class=DHGUIMapComponent Name=MapComponentObject
-        WinWidth=0.89
-        WinHeight=0.89
-        WinLeft=0.055
-        WinTop=0.055
         OnSpawnPointChanged=OnSpawnPointChanged
     End Object
-    p_Map=MapComponentObject
+    c_Map=MapContainerObject
 
     MouseCursorIndex=2
 
