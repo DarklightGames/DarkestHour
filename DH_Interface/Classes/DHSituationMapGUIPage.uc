@@ -187,8 +187,6 @@ defaultproperties
     OnClose=InternalOnClose
     OnKeyEvent=InternalOnKeyEvent
 
-    OnDraw=InternalOnDraw
-
     Begin Object Class=ROGUIProportionalContainerNoSkinAlt Name=MapRootContainerObject
         WinWidth=0.68
         WinHeight=0.91
