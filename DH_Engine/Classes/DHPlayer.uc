@@ -5919,10 +5919,11 @@ function PatronRequestOnResponse(int Status, TreeMap_string_string Headers, stri
 
         if (O != none)
         {
-            PatronLevel = O.Get("patron_level").AsInteger(); //TODO FIX THIS
+            PatronLevel = O.Get("patreon_tier").AsInteger();
         }
 
-        if (PatronLevel > 0)
+        // No Patron = -1, Lead = 0, Bronze = 1, Silver = 2, Gold = 3
+        if (PatronLevel >= 0)
         {
             ServerSetPatronStatus(PatronLevel);
         }
@@ -5942,7 +5943,7 @@ function ServerSetPatronStatus(byte PatronLevel)
 
     if (PRI != none)
     {
-        PRI.PatronStatus = PatronStatusType(PatronLevel);
+        PRI.PatronStatus = PatronStatusType(PatronLevel + 1); // add 1 to offset the index for the PatronStatusType enum
     }
 }
 
