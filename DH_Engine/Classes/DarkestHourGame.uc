@@ -5142,7 +5142,7 @@ defaultproperties
     WeaponLockTimeSecondsMaximum=120
     WeaponLockTimeSecondsFFKillsMultiplier=10
 
-    DisableAllChatThreshold=40
+    DisableAllChatThreshold=50
     bAllowAllChat=true
     bIsAttritionEnabled=true
 }
