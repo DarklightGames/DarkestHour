@@ -1,5 +1,5 @@
 import os
-import urllib2
+from urllib.request import urlopen
 from zipfile import ZipFile
 
 
@@ -14,9 +14,9 @@ of it.
 SDK_URL = 'http://darklightgames.com/tools/steamworks_sdk/steamworks_sdk_138a.zip'
 
 
-print 'Downloading Steamworks SDK...'
-print 'URL: %s' % SDK_URL
-response = urllib2.urlopen(SDK_URL)
+print('Downloading Steamworks SDK...')
+print('URL: {}'.format(SDK_URL))
+response = urlopen(SDK_URL)
 bytes = response.read()
 cwd = os.path.dirname(os.path.realpath(__file__))
 zip_path = os.path.join(cwd, 'steamworks_sdk.zip')

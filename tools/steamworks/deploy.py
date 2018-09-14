@@ -20,7 +20,7 @@ content_path = os.path.join(contentbuilder_path, 'content')
 steamcmd_path = os.path.join(contentbuilder_path, 'builder', 'steamcmd.exe')
 
 if not os.path.exists(content_path):
-    print 'unable to find content directory (%s)' % content_path
+    print('unable to find content directory ({})'.format(content_path))
     sys.exit(1)
 
 # delete everything in the content path
@@ -34,10 +34,10 @@ for fname in os.listdir(content_path):
 # find the .steaminclude file
 steaminclude_path = os.path.join(args.dir, args.mod, '.steaminclude')
 
-print steaminclude_path
+print(steaminclude_path)
 
 if not os.path.exists(steaminclude_path):
-    print 'unable to find .steaminclude file'
+    print('unable to find .steaminclude file')
     sys.exit(1)
 
 # read include and ignore patterns
