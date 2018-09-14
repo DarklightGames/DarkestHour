@@ -22,7 +22,7 @@ function InternalOnSpawnPointChanged(int SpawnPointIndex, optional bool bDoubleC
 function bool InternalOnPostDraw(Canvas C)
 {
     local int i, j;
-    local float D, X, Y, X1, Y1, X2, Y2, Step, XL, YL;
+    local float D, X, Y, X1, Y1, X2, Y2, Step;
     local string Symbol;
 
     const GRID_COUNT = 9;
