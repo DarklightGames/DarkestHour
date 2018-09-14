@@ -44,8 +44,8 @@ if not os.path.exists(steaminclude_path):
 with open(steaminclude_path, 'rb') as f:
     include_patterns = []
     ignore_patterns = []
-    for line in filter(lambda x: len(x) > 0, map(lambda x: x.strip(), f.read().splitlines())):
-        m = re.match(r'\!(.+)', line)
+    for line in filter(lambda x: len(x) > 0, map(lambda x: x.decode().strip(), f.read().splitlines())):
+        m = re.match(r'!(.+)', line)
         if m is not None:
             ignore_patterns.append(m.groups()[0])
         else:
