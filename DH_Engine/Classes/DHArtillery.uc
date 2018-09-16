@@ -90,7 +90,7 @@ static function int GetConfirmIntervalSecondsOverride(int TeamIndex, LevelInfo L
 
 function OnTeamIndexChanged();
 
-function int GetTeamIndex()
+simulated function int GetTeamIndex()
 {
     return TeamIndex;
 }
