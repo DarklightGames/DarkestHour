@@ -6616,11 +6616,10 @@ exec function GimmeSupplies()
 }
 
 // New debug exec to spawn any vehicle, in front of you
-exec function DebugSpawnVehicle(string VehicleString, int Distance, optional bool bSetAsCrew)
+exec function DebugSpawnVehicle(string VehicleString, int Distance, optional int Degrees)
 {
     local class<Vehicle> VehicleClass;
     local Vehicle        V;
-    local DHRoleInfo     RI;
     local vector         SpawnLocation;
     local rotator        SpawnDirection;
 
@@ -6639,18 +6638,11 @@ exec function DebugSpawnVehicle(string VehicleString, int Distance, optional boo
             SpawnDirection.Yaw = Rotation.Yaw;
             SpawnLocation = Location + (vector(SpawnDirection) * class'DHUnits'.static.MetersToUnreal(Max(Distance, 5.0))); // distance is raised to 5 if <5
 
+            // Add the vehicel's desired rotation (90 will be perpendicular)
+            SpawnDirection.Yaw += class'UUnits'.static.DegreesToUnreal(Degrees);
+
             V = Spawn(VehicleClass,,, SpawnLocation, SpawnDirection);
             Level.Game.Broadcast(self, "Admin" @ GetHumanReadableName() @ "spawned a" @ V.GetHumanReadableName());
-
-            if (bSetAsCrew)
-            {
-                RI = GetRoleInfo();
-
-                if (RI != none)
-                {
-                    RI.bCanBeTankCrew = true;
-                }
-            }
         }
     }
 }
