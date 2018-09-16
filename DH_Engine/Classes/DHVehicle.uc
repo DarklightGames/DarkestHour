@@ -1980,8 +1980,6 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 if (!bWheelsAreDamaged)
                 {
                     bWheelsAreDamaged = true;
-                    // Clamp the vehicle's health to 75% of its maximum, this will make the vehicle look damaged on the HUD
-                    Health = Clamp(Health, 0, HealthMax * 0.75);
                 }
             }
         }
@@ -3925,7 +3923,7 @@ defaultproperties
     TreadDamageThreshold=0.3
     bCanCrash=true
     DirectHEImpactDamageMult=1.0
-    DamagedWheelSpeedFactor=0.5
+    DamagedWheelSpeedFactor=0.35
     ImpactDamageThreshold=33.0
     ImpactDamageMult=0.001
     ImpactWorldDamageMult=0.001

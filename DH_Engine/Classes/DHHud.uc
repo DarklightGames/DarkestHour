@@ -1313,6 +1313,13 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
         return;
     }
 
+    V = DHVehicle(Vehicle);
+
+    if (V == none)
+    {
+        return;
+    }
+
     // Figure where to draw
     Coords.PosX = Canvas.ClipX * VehicleIconCoords.X;
     Coords.Height = Canvas.ClipY * VehicleIconCoords.YL * HudScale;
@@ -1332,7 +1339,7 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     Widget = VehicleIcon;
 
     // Set vehicle color based on any damage
-    f = Vehicle.Health / Vehicle.HealthMax;
+    f = V.Health / V.HealthMax;
 
     if (f > 0.75)
     {
@@ -1345,6 +1352,12 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     else
     {
         VehicleColor = VehicleCriticalColor;
+    }
+
+    // If we are normal color AND the vehicle's wheels are damaged, set the vehicle color to the damaged color instead
+    if (VehicleColor == VehicleNormalColor && V.bWheelsAreDamaged)
+    {
+        VehicleColor = VehicleDamagedColor;
     }
 
     Widget.Tints[0] = VehicleColor;
@@ -1366,66 +1379,61 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     VehicleIcon.WidgetTexture = Material'DH_InterfaceArt_tex.Tank_Hud.clock_numbers';
     DrawSpriteWidgetClipped(Canvas, VehicleIcon, Coords, true);
 
-    V = DHVehicle(Vehicle);
-
-    if (V != none)
+    // Draw engine damage icon (if needed) - modified to show red if engine badly damaged enough to slow vehicle, & to flash red if engine is dead
+    if (V.EngineHealth <= (V.default.EngineHealth * V.HeavyEngineDamageThreshold) && V.default.EngineHealth > 0)
     {
-        // Draw engine damage icon (if needed) - modified to show red if engine badly damaged enough to slow vehicle, & to flash red if engine is dead
-        if (V.EngineHealth <= (V.default.EngineHealth * V.HeavyEngineDamageThreshold) && V.default.EngineHealth > 0)
+        if (V.EngineHealth <= 0)
         {
-            if (V.EngineHealth <= 0)
-            {
-                VehicleEngine.WidgetTexture = VehicleEngineCriticalTexture; // flashing red icon
-            }
-            else
-            {
-                VehicleEngine.WidgetTexture = VehicleEngineDamagedTexture; // red icon (not flashing)
-            }
-
-            VehicleEngine.PosX = V.VehicleHudEngineX;
-            VehicleEngine.PosY = V.VehicleHudEngineY;
-            DrawSpriteWidgetClipped(Canvas, VehicleEngine, Coords, true);
+            VehicleEngine.WidgetTexture = VehicleEngineCriticalTexture; // flashing red icon
+        }
+        else
+        {
+            VehicleEngine.WidgetTexture = VehicleEngineDamagedTexture; // red icon (not flashing)
         }
 
-        // Draw any damaged treads
-        if (V.bLeftTrackDamaged)
+        VehicleEngine.PosX = V.VehicleHudEngineX;
+        VehicleEngine.PosY = V.VehicleHudEngineY;
+        DrawSpriteWidgetClipped(Canvas, VehicleEngine, Coords, true);
+    }
+
+    // Draw any damaged treads
+    if (V.bLeftTrackDamaged)
+    {
+        VehicleThreads[0].TextureScale = V.VehicleHudTreadsScale;
+        VehicleThreads[0].PosX = V.VehicleHudTreadsPosX[0];
+        VehicleThreads[0].PosY = V.VehicleHudTreadsPosY;
+        DrawSpriteWidgetClipped(Canvas, VehicleThreads[0], Coords, true, XL, YL, false, true);
+    }
+
+    if (V.bRightTrackDamaged)
+    {
+        VehicleThreads[1].TextureScale = V.VehicleHudTreadsScale;
+        VehicleThreads[1].PosX = V.VehicleHudTreadsPosX[1];
+        VehicleThreads[1].PosY = V.VehicleHudTreadsPosY;
+        DrawSpriteWidgetClipped(Canvas, VehicleThreads[1], Coords, true, XL, YL, false, true);
+    }
+
+    // Draw any turret icon, with current turret rotation (applies to any turret-mounted MG as well as cannons)
+    if (V.VehicleHudTurret != none)
+    {
+        if (V.Cannon != none)
         {
-            VehicleThreads[0].TextureScale = V.VehicleHudTreadsScale;
-            VehicleThreads[0].PosX = V.VehicleHudTreadsPosX[0];
-            VehicleThreads[0].PosY = V.VehicleHudTreadsPosY;
-            DrawSpriteWidgetClipped(Canvas, VehicleThreads[0], Coords, true, XL, YL, false, true);
+            Gun = V.Cannon;
+        }
+        else if (V.MGun != none)
+        {
+            Gun = V.MGun;
         }
 
-        if (V.bRightTrackDamaged)
+        if (Gun != none)
         {
-            VehicleThreads[1].TextureScale = V.VehicleHudTreadsScale;
-            VehicleThreads[1].PosX = V.VehicleHudTreadsPosX[1];
-            VehicleThreads[1].PosY = V.VehicleHudTreadsPosY;
-            DrawSpriteWidgetClipped(Canvas, VehicleThreads[1], Coords, true, XL, YL, false, true);
-        }
-
-        // Draw any turret icon, with current turret rotation (applies to any turret-mounted MG as well as cannons)
-        if (V.VehicleHudTurret != none)
-        {
-            if (V.Cannon != none)
-            {
-                Gun = V.Cannon;
-            }
-            else if (V.MGun != none)
-            {
-                Gun = V.MGun;
-            }
-
-            if (Gun != none)
-            {
-                MyRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
-                V.VehicleHudTurret.Rotation.Yaw = V.Rotation.Yaw - MyRot.Yaw;
-                Widget.WidgetTexture = V.VehicleHudTurret;
-                Widget.TextureCoords.X2 = V.VehicleHudTurret.MaterialUSize() - 1;
-                Widget.TextureCoords.Y2 = V.VehicleHudTurret.MaterialVSize() - 1;
-                Widget.TextureScale = V.VehicleHudTurret.MaterialUSize() / 256.0;
-                DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
-            }
+            MyRot = rotator(vector(Gun.CurrentAim) >> Gun.Rotation);
+            V.VehicleHudTurret.Rotation.Yaw = V.Rotation.Yaw - MyRot.Yaw;
+            Widget.WidgetTexture = V.VehicleHudTurret;
+            Widget.TextureCoords.X2 = V.VehicleHudTurret.MaterialUSize() - 1;
+            Widget.TextureCoords.Y2 = V.VehicleHudTurret.MaterialVSize() - 1;
+            Widget.TextureScale = V.VehicleHudTurret.MaterialUSize() / 256.0;
+            DrawSpriteWidgetClipped(Canvas, Widget, Coords, true);
         }
     }
 

@@ -67,9 +67,9 @@ defaultproperties
     // Damage
     Health=2000
     HealthMax=2000.0
-    EngineHealth=15
-    DamagedEffectHealthFireFactor=0.5
-    DamagedWheelSpeedFactor=0.33 // 33% of MaxCriticalSpeed will be max speed if wheels are damaged
+    EngineHealth=25
+    DamagedEffectHealthFireFactor=0.8
+    DamagedWheelSpeedFactor=0.3
     VehHitpoints(0)=(PointRadius=32.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
     VehHitpoints(1)=(PointRadius=24.0,PointScale=1.0,PointBone="body",PointOffset=(X=100.0,Y=25.0,Z=35.0),DamageMultiplier=2.0,HitPointType=HP_AmmoStore) // ammo
     VehHitpoints(2)=(PointRadius=24.0,PointScale=1.0,PointBone="LeftFrontWheel",DamageMultiplier=5.0,HitPointType=HP_Driver) // wheel
@@ -77,7 +77,7 @@ defaultproperties
     VehHitpoints(4)=(PointRadius=24.0,PointScale=1.0,PointBone="LeftRearWheel",DamageMultiplier=5.0,HitPointType=HP_Driver) // wheel
     VehHitpoints(5)=(PointRadius=24.0,PointScale=1.0,PointBone="RightRearWheel",DamageMultiplier=5.0,HitPointType=HP_Driver) // wheel
     EngineDamageFromGrenadeModifier=0.125
-    DirectHEImpactDamageMult=6.0
+    DirectHEImpactDamageMult=10.0
     ImpactDamageMult=0.5
     ImpactWorldDamageMult=0.006
     HeavyEngineDamageThreshold=0.4

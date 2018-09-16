@@ -55,15 +55,15 @@ defaultproperties
     // Damage
     Health=2000
     HealthMax=2000.0
-    DamagedEffectHealthFireFactor=0.5
-    EngineHealth=20
+    DamagedEffectHealthFireFactor=0.75
+    EngineHealth=30
     VehHitpoints(0)=(PointRadius=32.0,PointScale=1.0,PointBone="Body",PointOffset=(X=100.0,Y=0.0,Z=11.0),bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
     VehHitpoints(1)=(PointRadius=24.0,PointScale=1.0,PointBone="Axle_FR",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     VehHitpoints(2)=(PointRadius=24.0,PointScale=1.0,PointBone="Axle_FL",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     VehHitpoints(3)=(PointRadius=12.0,PointScale=1.0,PointBone="Wheel_BR",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
     VehHitpoints(4)=(PointRadius=12.0,PointScale=1.0,PointBone="Wheel_BL",DamageMultiplier=1.0,HitPointType=HP_Driver) // reinforced wheel
     EngineDamageFromGrenadeModifier=0.15
-    DirectHEImpactDamageMult=6.0
+    DirectHEImpactDamageMult=9.0
     ImpactWorldDamageMult=1.0
     HeavyEngineDamageThreshold=0.33
     DamagedEffectScale=0.7
