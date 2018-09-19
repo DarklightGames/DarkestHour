@@ -2873,7 +2873,6 @@ state RoundOver
         GRI.bReinforcementsComing[AXIS_TEAM_INDEX] = 0;
         GRI.bReinforcementsComing[ALLIES_TEAM_INDEX] = 0;
         GRI.bRoundIsOver = true;
-        GRI.bAllChatEnabled = true; // Lets enable all chat because the round is over
 
         // Destroy any artillery spawners so they don't keep calling arty
         foreach DynamicActors(class'DHArtillerySpawner', AS)
@@ -2896,6 +2895,16 @@ state RoundOver
 
             GotoState('RoundInPlay');
         }
+    }
+}
+
+// Extended to inform GRI that all chat should be enabled as the match is over
+state MatchOver
+{
+    function BeginState()
+    {
+        super.BeginState();
+        GRI.bAllChatEnabled = true; // Lets enable all chat because the round is over
     }
 }
 
