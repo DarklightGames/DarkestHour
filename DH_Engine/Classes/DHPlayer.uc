@@ -5770,18 +5770,11 @@ function ServerViewNextPlayer()
     SetViewTarget(NewTarget);
     ClientSetViewTarget(NewTarget);
 
-    if (Vehicle(ViewTarget) != none)
-    {
-        // First person view doesn't look right for these.
-        bBehindView = true;
-    }
-    else if (ViewTarget == self || bWasSpec || ROTeamGame(Level.Game).bSpectateFirstPersonOnly)
+    bBehindView = true;
+
+    if (ViewTarget == self || bWasSpec || ROTeamGame(Level.Game).bSpectateFirstPersonOnly)
     {
         bBehindView = false;
-    }
-    else
-    {
-        bBehindView = true;
     }
 
     ClientSetBehindView(bBehindView);
@@ -5814,7 +5807,8 @@ simulated function bool IsSpecModeValid(ESpectatorMode Mode)
 {
     if (Mode == SPEC_Self)
     {
-        return !bViewBlackOnDeadNotViewingPlayers && Pawn != none && PlayerReplicationInfo != none && !PlayerReplicationInfo.bOnlySpectator;
+        return true;
+        //return !bViewBlackOnDeadNotViewingPlayers && Pawn != none && PlayerReplicationInfo != none && !PlayerReplicationInfo.bOnlySpectator;
     }
     else if (Mode == SPEC_Roaming)
     {
