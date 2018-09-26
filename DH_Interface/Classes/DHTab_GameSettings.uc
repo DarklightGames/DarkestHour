@@ -20,7 +20,8 @@ var automated DHmoComboBox      co_Netspeed, co_PurgeCacheDays;
 var     int                     OriginalNetSpeed, OriginalPurgeCacheDays; // save initial values so can tell later if they have changed & need to be saved
 var     int                     PurgeCacheDaysValues[3]; // deliberately one less than PurgeCacheDaysText array size, as highest text in list is for possible custom value
 
-var     localized string        NetSpeedText[4], PurgeCacheDaysText[4];
+var     localized string        UserDefinedNetSpeedText;
+var     localized string        NetSpeedText[6], PurgeCacheDaysText[4];
 var     localized string        IDText, NoROIDText;
 var     localized string        DegreesText;
 
@@ -187,6 +188,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             break;
 
         case co_Netspeed:
+            // Get the ConfiguredInternetSpeed and set it to i
             if (PC.Player != none)
             {
                 i = PC.Player.ConfiguredInternetSpeed;
@@ -196,10 +198,35 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
                 i = class'Player'.default.ConfiguredInternetSpeed;
             }
 
-            if (i <= 2600)       OriginalNetSpeed = 0;
-            else if (i <= 5000)  OriginalNetSpeed = 1;
-            else if (i <= 10000) OriginalNetSpeed = 2;
-            else                 OriginalNetSpeed = 3;
+            // Remove the NetSpeed User Defined value, we will add it back only if it is actually defined by the user
+            co_NetSpeed.RemoveItem(5);
+
+            // Select the setting based on the NetSpeed value
+            if (i == 6000)
+            {
+                OriginalNetSpeed = 0;
+            }
+            else if (i == 8000)
+            {
+                OriginalNetSpeed = 1;
+            }
+            else if (i == 10000)
+            {
+                OriginalNetSpeed = 2;
+            }
+            else if (i == 15000)
+            {
+                OriginalNetSpeed = 3;
+            }
+            else if (i == 20000)
+            {
+                OriginalNetSpeed = 4;
+            }
+            else // Value is set differently than above and therefore is "User Defined" in INI file
+            {
+                co_NetSpeed.AddItem(Repl(default.NetSpeedText[5], "%NetSpeed%", i));
+                OriginalNetSpeed = 5;
+            }
 
             co_NetSpeed.SetIndex(OriginalNetSpeed);
             break;
@@ -381,10 +408,11 @@ function SaveSettings()
         {
             switch (NetSpeed)
             {
-                case 0: PC.Player.ConfiguredInternetSpeed = 2600;  break;
-                case 1: PC.Player.ConfiguredInternetSpeed = 5000;  break;
+                case 0: PC.Player.ConfiguredInternetSpeed = 6000;  break;
+                case 1: PC.Player.ConfiguredInternetSpeed = 8000;  break;
                 case 2: PC.Player.ConfiguredInternetSpeed = 10000; break;
                 case 3: PC.Player.ConfiguredInternetSpeed = 15000; break;
+                case 4: PC.Player.ConfiguredInternetSpeed = 20000; break;
             }
 
             PC.Player.SaveConfig();
@@ -393,10 +421,11 @@ function SaveSettings()
         {
             switch (NetSpeed)
             {
-                case 0: class'Player'.default.ConfiguredInternetSpeed = 2600;  break;
-                case 1: class'Player'.default.ConfiguredInternetSpeed = 5000;  break;
+                case 0: class'Player'.default.ConfiguredInternetSpeed = 6000;  break;
+                case 1: class'Player'.default.ConfiguredInternetSpeed = 8000;  break;
                 case 2: class'Player'.default.ConfiguredInternetSpeed = 10000; break;
                 case 3: class'Player'.default.ConfiguredInternetSpeed = 15000; break;
+                case 4: class'Player'.default.ConfiguredInternetSpeed = 20000; break;
             }
 
             class'Player'.static.StaticSaveConfig();
@@ -467,10 +496,12 @@ defaultproperties
     IDText="ID:"
     NoROIDText="Must join multiplayer first"
 
-    NetSpeedText(0)="Modem (2600)"
-    NetSpeedText(1)="ISDN (5000)"
-    NetSpeedText(2)="Cable/ADSL (10000)"
-    NetSpeedText(3)="LAN/T1 (15000)"
+    NetSpeedText(0)="Lowest (6000)"
+    NetSpeedText(1)="Low (8000)"
+    NetSpeedText(2)="Medium (10000)"
+    NetSpeedText(3)="Recommended (15000)"
+    NetSpeedText(4)="High (20000)"
+    NetSpeedText(5)="User Defined (%NetSpeed%)"
 
     PurgeCacheDaysValues(0)=0
     PurgeCacheDaysValues(1)=30
@@ -515,6 +546,7 @@ defaultproperties
 
     Begin Object Class=DHmoCheckBox Name=NoGore
         Caption="No Gore"
+        Hint="Recommended to have this unchecked"
         CaptionWidth=0.959
         ComponentJustification=TXTA_Left
         IniOption="@Internal"
@@ -525,6 +557,7 @@ defaultproperties
 
     Begin Object Class=DHmoCheckBox Name=BayonetSpawn
         Caption="Spawn with bayonet attached"
+        Hint="Useful if you always want to have your bayonet attached and don't like having to attach it each spawn"
         CaptionWidth=0.959
         ComponentJustification=TXTA_Left
         IniOption="@Internal"
@@ -547,6 +580,7 @@ defaultproperties
 
     Begin Object Class=DHmoCheckBox Name=ThrottleTanks
         Caption="Incremental Throttle - Tanks"
+        Hint="Uses a throttle for tanks, useful for long drives"
         CaptionWidth=0.959
         ComponentJustification=TXTA_Left
         IniOption="@Internal"
@@ -557,6 +591,7 @@ defaultproperties
 
     Begin Object Class=DHmoCheckBox Name=ThrottleOtherVehicles
         Caption="Incremental Throttle - Other Vehicles"
+        Hint="Uses a throttle for non-tank vehicles, not recommended"
         CaptionWidth=0.959
         ComponentJustification=TXTA_Left
         IniOption="@Internal"
@@ -567,6 +602,7 @@ defaultproperties
 
     Begin Object Class=DHmoCheckBox Name=ManualReloading
         Caption="Manual Tank Shell Reloading"
+        Hint="Rounds will not reload until you click after firing, useful if you decide you want to change round types after firing"
         CaptionWidth=0.959
         ComponentJustification=TXTA_Left
         IniOption="@Internal"
@@ -610,6 +646,7 @@ defaultproperties
 
     Begin Object class=DHGUIButton Name=CopyROIDButton
         Caption="Copy ID To Clipboard"
+        Hint="This will allow you to paste your ROID as text"
         StyleName="DHSmallTextButtonStyle"
         OnClick=OnClick
     End Object
@@ -617,6 +654,7 @@ defaultproperties
 
     Begin Object Class=DHmoCheckBox Name=DynamicNetspeed
         Caption="Dynamic Netspeed"
+        Hint="Will lower NetSpeed to 6000 or until 40 ping is achieved, useful for those who want better ping vs stable NetSpeed"
         CaptionWidth=0.959
         ComponentJustification=TXTA_Left
         IniOption="@Internal"
@@ -626,11 +664,12 @@ defaultproperties
     ch_DynamicNetSpeed=DHmoCheckBox'DynamicNetspeed'
 
     Begin Object Class=DHmoComboBox Name=NetSpeed
-        Caption="Connection"
+        Caption="NetSpeed (Bytes Per Second)"
+        Hint="Your maximum desired internet speed used by the game (in Bytes Per Second). Servers can set a maximum client speed, which will override clients."
         CaptionWidth=0.38
         ComponentJustification=TXTA_Left
         bReadOnly=true
-        IniDefault="Cable Modem/DSL"
+        IniDefault="Recommended (15000)"
         IniOption="@Internal"
         OnChange=InternalOnChange
         OnLoadINI=InternalOnLoadINI
@@ -639,6 +678,7 @@ defaultproperties
 
     Begin Object Class=DHmoComboBox Name=PurgeCacheDays
         Caption="Purge Cache"
+        Hint="How often to delete custom downloaded files from servers"
         CaptionWidth=0.38
         ComponentJustification=TXTA_Left
         bReadOnly=true
