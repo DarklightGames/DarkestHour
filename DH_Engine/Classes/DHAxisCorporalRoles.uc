@@ -14,4 +14,5 @@ defaultproperties
     Article="a "
     PluralName="Corporals"
     Limit=2
+    bSpawnWithExtraAmmo=true
 }

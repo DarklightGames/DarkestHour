@@ -13,4 +13,5 @@ defaultproperties
     Article="an "
     PluralName="Assault Troops"
     Limit=3
+    bSpawnWithExtraAmmo=true
 }

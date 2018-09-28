@@ -15,4 +15,5 @@ defaultproperties
     Article="a "
     PluralName="Sergeants"
     Limit=2
+    bSpawnWithExtraAmmo=true
 }

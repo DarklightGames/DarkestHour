@@ -13,4 +13,5 @@ defaultproperties
     Article="a "
     PluralName="Combat Engineers"
     Limit=3
+    bSpawnWithExtraAmmo=true
 }
