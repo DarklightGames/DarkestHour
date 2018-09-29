@@ -14,7 +14,7 @@ defaultproperties
 {
     // Vehicle properties
     VehicleNameString="Volkswagen Type 82"
-    VehicleMass=1.0
+    VehicleMass=3.5
     ReinforcementCost=2
     bMustBeInSquadToSpawn=true
 
@@ -47,7 +47,7 @@ defaultproperties
     ChassisTorqueScale=0.095
     TurnDamping=5.0
     SteerSpeed=85.0
-    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=52.0),(InVal=200.0,OutVal=24.0),(InVal=900.0,OutVal=3.0),(InVal=1000000000.0,OutVal=0.0)))
+    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=62.0),(InVal=200.0,OutVal=31.0),(InVal=900.0,OutVal=3.0),(InVal=1000000000.0,OutVal=0.0)))
     MinBrakeFriction=1.5
     MaxBrakeTorque=10.0
     EngineBrakeFactor=0.0003
@@ -89,8 +89,8 @@ defaultproperties
     ExplosionDamage=50.0
     ExplosionRadius=150.0
     ExplosionSoundRadius=200.0
-    DestructionLinearMomentum=(Min=1.0,Max=10.0)
-    DestructionAngularMomentum=(Min=2.0,Max=4.0)
+    DestructionLinearMomentum=(Min=10.0,Max=50.0)
+    DestructionAngularMomentum=(Min=10.0,Max=50.0)
 
     // Exit
     ExitPositions(0)=(X=40.0,Y=-110.0,Z=25.0)  // driver

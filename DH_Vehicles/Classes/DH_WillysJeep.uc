@@ -15,7 +15,7 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="Willys Jeep MB"
     VehicleTeam=1
-    VehicleMass=1.0
+    VehicleMass=3.5
     ReinforcementCost=2
     bMustBeInSquadToSpawn=true
 
@@ -47,7 +47,7 @@ defaultproperties
     ChassisTorqueScale=0.1
     TurnDamping=5.0
     SteerSpeed=130.0
-    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=52.0),(InVal=200.0,OutVal=24.0),(InVal=900.0,OutVal=3.0),(InVal=1000000000.0,OutVal=0.0)))
+    MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=64.0),(InVal=200.0,OutVal=35.0),(InVal=900.0,OutVal=3.0),(InVal=1000000000.0,OutVal=0.0)))
     MinBrakeFriction=2.0
     MaxBrakeTorque=10.0
     EngineBrakeFactor=0.0002
@@ -89,8 +89,8 @@ defaultproperties
     ExplosionDamage=50.0
     ExplosionRadius=150.0
     ExplosionSoundRadius=200.0
-    DestructionLinearMomentum=(Min=1.0,Max=10.0)
-    DestructionAngularMomentum=(Min=2.0,Max=4.0)
+    DestructionLinearMomentum=(Min=10.0,Max=50.0)
+    DestructionAngularMomentum=(Min=10.0,Max=50.0)
 
     // Exit
     ExitPositions(0)=(X=-4.0,Y=-111.0,Z=30.0)  // driver
