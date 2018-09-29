@@ -623,7 +623,7 @@ defaultproperties
     // All from deprecated ROArtilleryShell class:
     Damage=500
     DamageRadius=1000.0
-    MyDamageType=class'ROArtilleryDamType'
+    MyDamageType=class'DHArtillery105DamageType'
     MomentumTransfer=75000.0
 
     DrawType=DT_None // was DT_StaticMesh in RO, but was then set to DT_None in PostBeginPlay - now we simply start with None & switch to SM when we drop the projectile
