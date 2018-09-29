@@ -13,22 +13,21 @@ defaultproperties
     GroupClass=class'DHConstructionGroup_Obstacles'
     bCanBeMantled=true
     bIsNeutral=true
-    SupplyCost=200
+    SupplyCost=250
     CollisionRadius=60
     CollisionHeight=50
     bShouldSwitchToLastWeaponOnPlacement=false
-    bCanBeTornDownWithSupplyTruckNearby=true
 
     // Construction and Display
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.dragon_tooth'
     TatteredStaticMesh=StaticMesh'DH_Construction_stc.Obstacles.dragon_tooth_damaged'
     Stages(0)=(Progress=0,StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.dragon_tooth_unassembled',Sound=none,Emitter=none)
-    ProgressMax=6
+    ProgressMax=7
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.dragon_teeth'
     bAcceptsProjectors=false
 
     // Health
-    MinDamagetoHurt=150
+    MinDamagetoHurt=125
     HealthMax=750
     TatteredHealthThreshold=300
 
