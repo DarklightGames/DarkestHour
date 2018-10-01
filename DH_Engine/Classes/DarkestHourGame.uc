@@ -447,8 +447,8 @@ event Tick(float DeltaTime)
 // Function which will calculate the server's network health based on combined player packloss
 function UpdateServerNetHealth()
 {
-    const    PACKET_LOSS_THRESHOLD   = 15;
-    const    THRESHOLD_OVERRIDE      = 10;
+    const    PACKET_LOSS_THRESHOLD   = 30; // The packetloss at which to count the player as "insanely high" packet loss
+    const    THRESHOLD_OVERRIDE      = 10; // Num players required to be over threshold to show "insanely high" packet loss
 
     local int       i, combined, average, overthreshold;
     local bool      bWebAdminExists;
@@ -458,16 +458,13 @@ function UpdateServerNetHealth()
         // Don't count the webadmin
         if (DHPlayerReplicationInfo(GRI.PRIArray[i]) != none)
         {
-            // Only count players who are under threshold
             if (GRI.PRIArray[i].PacketLoss <= PACKET_LOSS_THRESHOLD)
             {
-                combined += GRI.PRIArray[i].PacketLoss;
+                combined += GRI.PRIArray[i].PacketLoss; // Only count players who are under threshold
             }
-
-            // Count # of players over threshold
-            if (GRI.PRIArray[i].PacketLoss > PACKET_LOSS_THRESHOLD)
+            else
             {
-                ++overthreshold;
+                ++overthreshold; // Count # of players over threshold
             }
         }
         else if (GRI.PRIArray[i].PlayerName == "WebAdmin")
