@@ -792,12 +792,12 @@ function LoadMapList()
         Loader = Spawn(class'DefaultMapListLoader');
     }
 
-    Loader.LoadMapList(self);
-
     if (bUseSwapVote)
     {
         AddMap(SwapAndRestartText, "", "");
     }
+
+    Loader.LoadMapList(self);
 
     Log(MapCount $ " maps loaded.", 'MapVote');
 
