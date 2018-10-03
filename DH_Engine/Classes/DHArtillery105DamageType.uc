@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHArtillery105DamageType extends ROWeaponDamageType
+class DHArtillery105DamageType extends DHArtilleryDamageType
     abstract;
 
 defaultproperties

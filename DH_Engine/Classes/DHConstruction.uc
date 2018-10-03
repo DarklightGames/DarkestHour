@@ -1172,7 +1172,7 @@ defaultproperties
     ProgressMax=4
 
     // Damage
-    HarmfulDamageTypes(0)=class'ROArtilleryDamType'
+    HarmfulDamageTypes(0)=class'DHArtilleryDamageType'
     HarmfulDamageTypes(1)=class'ROTankShellExplosionDamage'
     HarmfulDamageTypes(2)=class'DHThrowableExplosiveDamageType'
     HarmfulDamageTypes(3)=class'DHMortarDamageType'

@@ -85,7 +85,7 @@ defaultproperties
     bCanPlaceIndoors=true
     ResupplyCount=25
     HealthMax=50
-    HarmfulDamageTypes(0)=class'ROArtilleryDamType'
+    HarmfulDamageTypes(0)=class'DHArtilleryDamageType'
     HarmfulDamageTypes(1)=class'DHThrowableExplosiveDamageType'
     HarmfulDamageTypes(2)=class'DHShellExplosionDamageType'
     HarmfulDamageTypes(3)=class'DHShellImpactDamageType'

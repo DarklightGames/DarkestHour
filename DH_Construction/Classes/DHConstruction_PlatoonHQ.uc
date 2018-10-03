@@ -323,7 +323,7 @@ defaultproperties
 
     // Damage
     bCanTakeImpactDamage=true
-    HarmfulDamageTypes(0)=class'ROArtilleryDamType'                 // Artillery
+    HarmfulDamageTypes(0)=class'DHArtilleryDamageType'                 // Artillery
     HarmfulDamageTypes(1)=class'ROTankShellExplosionDamage'         // HE and some others
     HarmfulDamageTypes(2)=class'DHThrowableExplosiveDamageType'     // Satchel/Grenades
     HarmfulDamageTypes(3)=class'DHMortarDamageType'                 // Mortar

@@ -2064,7 +2064,7 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                 // Allow server admins an option of reducing damage from different types of friendly fire
                 if (DamageType != none)
                 {
-                    if (class<ROArtilleryDamType>(DamageType) != none)
+                    if (class<DHArtilleryDamageType>(DamageType) != none)
                     {
                         FFPenalty = FFArtyScale;
                     }
