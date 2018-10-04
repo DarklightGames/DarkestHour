@@ -16,10 +16,12 @@ var IntBox                      MapIconTextureCoords;
 var protected int               TeamIndex;
 var PlayerController            Requester;
 
+var bool                        bCanBeCancelled;
+
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
-        TeamIndex;
+        TeamIndex, Requester;
 }
 
 function PostBeginPlay()
@@ -116,5 +118,7 @@ defaultproperties
 
     MapIcon=Material'InterfaceArt_tex.OverheadMap.overheadmap_Icons'
     MapIconTextureCoords=(X1=0,Y1=64,X2=63,Y2=127)
+
+    bCanBeCancelled=true
 }
 

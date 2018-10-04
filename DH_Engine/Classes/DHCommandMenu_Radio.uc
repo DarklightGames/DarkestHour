@@ -14,6 +14,7 @@ var localized string ExhaustedText;
 var localized string UnqualifiedText;
 var localized string OngoingText;
 var localized string AvailableText;
+var localized string CancelText;
 
 function Setup()
 {
@@ -63,6 +64,11 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
         ORI.InfoColor = class'UColor'.default.White;
         ORI.InfoText = default.AvailableText @ "(" $ Interaction.GRI.ArtilleryTypeInfos[Index].Limit - Interaction.GRI.ArtilleryTypeInfos[Index].UsedCount $ ")";
     }
+    else if (Error == ERROR_Cancellable)
+    {
+        ORI.InfoColor = class'UColor'.default.Yellow;
+        ORI.InfoText = default.CancelText;
+    }
     else
     {
         ORI.InfoColor = class'UColor'.default.Red;
@@ -108,20 +114,36 @@ function OnActive()
 function OnSelect(int OptionIndex, vector Location)
 {
     local DHPlayer PC;
+    local int Index;
+    local DHGameReplicationInfo.EArtilleryTypeError Error;
 
     PC = GetPlayerController();
 
     if (PC != none && Radio != none)
     {
-        PC.ServerRequestArtillery(Radio, Options[OptionIndex].OptionalInteger);
+        Index = Options[OptionIndex].OptionalInteger;
+        Error = Interaction.GRI.GetArtilleryTypeError(GetPlayerController(), Index);
 
-        Interaction.Hide();
+        if (Error == ERROR_None)
+        {
+            PC.ServerRequestArtillery(Radio, Options[OptionIndex].OptionalInteger);
+            Interaction.Hide();
+        }
+        else if (Error == ERROR_Cancellable)
+        {
+            PC.ServerCancelArtillery(Radio, Options[OptionIndex].OptionalInteger);
+            Interaction.Hide();
+        }
     }
 }
 
 function bool IsOptionDisabled(int OptionIndex)
 {
-    return Interaction.GRI.GetArtilleryTypeError(GetPlayerController(), Options[OptionIndex].OptionalInteger) != ERROR_None;
+    local DHGameReplicationInfo.EArtilleryTypeError Error;
+
+    Error = Interaction.GRI.GetArtilleryTypeError(GetPlayerController(), Options[OptionIndex].OptionalInteger);
+
+    return Error != ERROR_None && Error != ERROR_Cancellable;
 }
 
 function bool ShouldHideMenu()
@@ -143,5 +165,6 @@ defaultproperties
     UnqualifiedText="Unqualified"
     AvailableText="Available"
     OngoingText="Ongoing"
+    CancelText="Ongoing (Cancel)"
 }
 

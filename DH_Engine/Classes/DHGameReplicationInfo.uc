@@ -69,7 +69,8 @@ enum EArtilleryTypeError
     ERROR_Unqualified,
     ERROR_Cooldown,
     ERROR_Ongoing,
-    ERROR_SquadTooSmall
+    ERROR_SquadTooSmall,
+    ERROR_Cancellable
 };
 
 var class<DHGameType>   GameType;
@@ -888,7 +889,6 @@ function AddArtillery(DHArtillery Artillery)
         if (DHArtillery[i] == none)
         {
             DHArtillery[i] = Artillery;
-            Log("added artillery at" @ i @ DHArtillery[i]);
             break;
         }
     }
@@ -1550,7 +1550,14 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
     }
     else if (ATI.ArtilleryActor != none)
     {
-        return ERROR_Ongoing;
+        if (ATI.ArtilleryActor.bCanBeCancelled && PC == ATI.ArtilleryActor.Requester)
+        {
+            return ERROR_Cancellable;
+        }
+        else
+        {
+            return ERROR_Ongoing;
+        }
     }
     else if (ElapsedTime < ATI.NextConfirmElapsedTime)
     {

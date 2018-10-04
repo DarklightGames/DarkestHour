@@ -13,6 +13,7 @@ var localized string ExhaustedText;
 var localized string UnavailableText;
 var localized string BadLocationText;
 var localized string NotQualifiedText;
+var localized string CancelledText;
 
 static function string GetString(
     optional int Switch,
@@ -57,6 +58,9 @@ static function string GetString(
         case 7:
             S = default.NotQualifiedText;
             break;
+        case 8:
+            S = default.CancelledText;
+            break;
     }
 
     S = Repl(S, "{name}", ArtilleryClass.static.GetMenuName());
@@ -74,5 +78,6 @@ defaultproperties
     UnavailableText="{name} is unavailable at this time."
     BadLocationText="Invalid target location for {name}."
     NotQualifiedText="You are not qualified to request a {name}."
+    CancelledText="{name} has been cancelled."
 }
 
