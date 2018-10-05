@@ -5016,14 +5016,24 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
     return Response;
 }
 
-// Voting
-function StartVote(class<DHVoteInfo> VoteInfoClass)
+// The consumer of this function is expected to initialize the DHVoteInfo
+// actor prior to this being called.
+function StartVote(DHVoteInfo Vote)
 {
-    local DHVoteInfo Vote;
+    local int i;
 
-    Vote = Spawn(VoteInfoClass, self);
+    for (i = 0; i < Votes.Length; ++i)
+    {
+        if (Votes[i] == Vote)
+        {
+            Warn("Attempted to start a vote that was already in progress.");
+            return;
+        }
+    }
+
     Vote.VoteId = ++NextVoteId;
     Votes[Votes.Length] = Vote;
+    Vote.StartVote();
 }
 
 function int GetVoteIndexById(int VoteId)

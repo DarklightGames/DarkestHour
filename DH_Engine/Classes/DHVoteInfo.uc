@@ -30,16 +30,14 @@ function string GetQuestionText()
     return default.QuestionText;
 }
 
-function PostBeginPlay()
+function StartVote()
 {
     local int i;
     local DHPlayer PC;
 
-    Voters = GetEligibleVoters();
-
-    if (Voters.Length == 0)
+    if (VoteId == -1)
     {
-        Error("No eligible voters.");
+        Error("Attempted to start a vote without being registered via DarkestHourGame");
         return;
     }
 
@@ -51,24 +49,32 @@ function PostBeginPlay()
         return;
     }
 
+    Voters = GetEligibleVoters();
+
+    if (Voters.Length == 0)
+    {
+        Error("No eligible voters.");
+        return;
+    }
+
     for (i = 0; i < Voters.Length; ++i)
     {
         PC = DHPlayer(Voters[i]);
 
         if (PC != none)
         {
-            PC.ClientRecieveVotePrompt(Class);
+            PC.ClientRecieveVotePrompt(Class, VoteId);
         }
     }
-}
 
-function array<Option> GetOptions();
+    GotoState('Open');
+}
 
 function RecieveVote(PlayerController Voter, int OptionIndex)
 {
     local int VoterIndex;
 
-    if (Voter == none)
+    if (Voter == none || OptionIndex < 0 || OptionIndex >= Options.Length)
     {
         return;
     }
@@ -81,16 +87,25 @@ function RecieveVote(PlayerController Voter, int OptionIndex)
         return;
     }
 
-    // TODO: ensure that option index is good to go
     Voters.Remove(VoterIndex, 1);
 
+    Options[OptionIndex].Votes += 1;
+
     OnVoteReceieved(Voter, OptionIndex);
+
+    if (Voters.Length == 0)
+    {
+        // All eligible voters have voted, end the voting!
+        OnVoteEnded();
+        Destroy();
+    }
 }
 
 function OnVoteReceieved(PlayerController Voter, int OptionIndex)
 {
     // "Your vote has been receieved."
     Voter.ReceiveLocalizedMessage(class'DHVoteMessage', 0,,, class'UInteger'.static.Create(OptionIndex));
+    // TODO: maybe just make a JSON payload for this stuff?
 }
 
 state Open
@@ -107,14 +122,29 @@ state Open
     }
 }
 
-function OnVoteEnded();
+function int GetTotalVotes()
+{
+    local int i, TotalVotes;
 
-// Vote % needed to win
-// bTeamVote or Global?
-// Voted true #
-// voted false #
+    for (i = 0; i < Options.Length; ++i)
+    {
+        TotalVotes += Options[i].Votes;
+    }
+
+    return TotalVotes;
+}
+
+function array<Option> GetOptions()
+{
+    return default.Options;
+}
+
+function OnVoteEnded();
 
 defaultproperties
 {
+    VoteId=-1
     DurationSeconds=30
+    Options(0)=(Text="Yes")
+    Options(1)=(Text="No")
 }

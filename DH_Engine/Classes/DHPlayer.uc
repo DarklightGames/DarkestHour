@@ -145,7 +145,7 @@ replication
         ServerSquadCreate, ServerSquadRename,
         ServerSquadJoin, ServerSquadJoinAuto, ServerSquadLeave,
         ServerSquadInvite, ServerSquadPromote, ServerSquadKick, ServerSquadBan,
-        ServerSquadMakeAssistant,
+        ServerSquadMakeAssistant, ServerSendVote,
         ServerSquadSay, ServerSquadLock, ServerSquadSignal,
         ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
         ServerSetPatronStatus, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
@@ -5972,14 +5972,57 @@ function ReceiveScoreEvent(DHScoreEvent ScoreEvent)
 }
 
 // Voting
-simulated exec function DebugStartVote()
+simulated exec function Surrender()
 {
     // TODO: tell the server to trigger a vote of some sort.
+    ServerDebugStartSurrenderVote();
 }
 
-simulated function ClientRecieveVotePrompt(class<DHVoteInfo> VoteInfoClass, optional string OptionalString)
+function ServerDebugStartSurrenderVote()
+{
+    local DarkestHourGame G;
+    local DHVoteInfo_TeamSurrender Vote;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G == none)
+    {
+        return;
+    }
+
+    Vote = Spawn(class'DHVoteInfo_TeamSurrender');
+
+    if (Vote == none)
+    {
+        Warn("Surrender vote not created!");
+        return;
+    }
+
+    Vote.TeamIndex = GetTeamNum();
+
+    G.StartVote(Vote);
+}
+
+function ServerSendVote(int VoteId, int OptionIndex)
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none)
+    {
+        G.PlayerVoted(self, VoteId, OptionIndex);
+    }
+}
+
+simulated function ClientRecieveVotePrompt(class<DHVoteInfo> VoteInfoClass, int VoteId, optional string OptionalString)
 {
     // TODO: display the interaction prompt!
+    // TODO: how are we showing other interactions?
+    class'DHVoteInteraction'.default.VoteInfoClass = VoteInfoClass;
+    class'DHVoteInteraction'.default.VoteId = VoteId;
+
+    Player.InteractionMaster.AddInteraction("DH_Engine.DHVoteInteraction", Player);
 }
 
 simulated function Destroyed()
