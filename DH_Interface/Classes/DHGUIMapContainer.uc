@@ -13,10 +13,16 @@ var automated GUIImage              c_BorderLeft;
 var automated GUIImage              c_BorderRight;
 
 delegate OnSpawnPointChanged(int SpawnPointIndex, optional bool bDoubleClick);
+delegate OnZoomLevelChanged(int ZoomLevel);
 
 function InternalOnSpawnPointChanged(int SpawnPointIndex, optional bool bDoubleClick)
 {
     OnSpawnPointChanged(SpawnPointIndex, bDoubleClick);
+}
+
+function InternalOnZoomLevelChanged(int ZoomLevel)
+{
+    OnZoomLevelChanged(ZoomLevel);
 }
 
 function bool InternalOnPostDraw(Canvas C)
@@ -151,6 +157,7 @@ defaultproperties
         WinLeft=0.055
         WinTop=0.055
         OnSpawnPointChanged=InternalOnSpawnPointChanged
+        OnZoomLevelChanged=InternalOnZoomLevelChanged
     End Object
     p_Map=MapComponentObject
 }

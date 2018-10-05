@@ -45,6 +45,7 @@ var localized string        SquadRallyPointSetAsSecondaryText;
 var localized string        RemoveText;
 
 delegate OnSpawnPointChanged(int SpawnPointIndex, optional bool bDoubleClick);
+delegate OnZoomLevelChanged(int ZoomLevel);
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -69,9 +70,12 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
         GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
         MyHud = DHHud(PC.myHUD);
     }
+}
 
-    // Set up the initial viewport
-    Viewport = GetViewport(vect(0.5, 0.5, 0), GetZoomScale(ZoomLevel));
+function SetViewport(vector Origin, int ZoomLevel)
+{
+    SetZoomLevel(ZoomLevel);
+    Viewport = ConstrainViewport(class'UBox'.static.Create(Origin, GetZoomScale(ZoomLevel)), vect(0, 0, 0), vect(1, 1, 0));
 }
 
 function UpdateSpawnPointPositions()
@@ -198,11 +202,6 @@ function bool InternalOnDraw(Canvas C)
     }
 
     return false;
-}
-
-function Box GetViewport(vector Origin, float Extents)
-{
-    return ConstrainViewport(class'UBox'.static.Create(Origin, Extents), vect(0, 0, 0), vect(1, 1, 0));
 }
 
 function Box ConstrainViewport(Box Viewport, vector Min, vector Max)
@@ -500,6 +499,8 @@ function float GetZoomScale(int ZoomLevel)
 function SetZoomLevel(int NewZoomLevel)
 {
     ZoomLevel = Clamp(NewZoomLevel, ZoomLevelMin, ZoomLevelMax);
+
+    OnZoomLevelChanged(ZoomLevel);
 }
 
 // Given a viewport and a location within that viewport, get the frame coordinates.
@@ -786,5 +787,6 @@ defaultproperties
     ZoomLevelMax=3
     ZoomScaleRange=(Min=0.25,Max=1.0)
     ViewportInterpDuration=0.33
+    Viewport=(Min=(X=0,Y=0),Max=(X=1,Y=1))
 }
 

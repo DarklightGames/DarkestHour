@@ -11,11 +11,17 @@ var automated   DHGUIMapContainer           c_Map;
 var string                                  HideExecs[2];
 var array<int>                              HideKeys;
 
+var int                                     SavedZoomLevel;
+
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     local DHPlayer PC;
+    local DHGameReplicationInfo GRI;
+    local vector Origin;
 
     super.InitComponent(MyController, MyOwner);
+
+    PC = DHPlayer(PlayerOwner());
 
     c_MapRoot.ManageComponent(c_Map);
 
@@ -30,11 +36,18 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     UpdateSpawnPoints();
 
-    PC = DHPlayer(PlayerOwner());
-
     if (PC != none)
     {
         c_Map.p_Map.SelectSpawnPoint(PC.SpawnPointIndex);
+        GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+
+        if (PC.Pawn != none && GRI != none)
+        {
+            GRI.GetMapCoords(PC.Pawn.Location, Origin.X, Origin.Y);
+            Origin.X = 1 - Origin.X;
+            Origin.Y = 1 - Origin.Y;
+            c_Map.p_Map.SetViewport(Origin, default.SavedZoomLevel);
+        }
     }
 }
 
@@ -177,6 +190,11 @@ function PopulateHideKeys()
     }
 }
 
+function OnZoomLevelChanged(int ZoomLevel)
+{
+    default.SavedZoomLevel = ZoomLevel;
+}
+
 defaultproperties
 {
     bRenderWorld=true
@@ -204,6 +222,7 @@ defaultproperties
         WinTop=0.0
         bNeverFocus=true
         OnSpawnPointChanged=OnSpawnPointChanged
+        OnZoomLevelChanged=OnZoomLevelChanged
     End Object
     c_Map=MapContainerObject
 
