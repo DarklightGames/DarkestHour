@@ -4997,18 +4997,6 @@ simulated function ClientTeamSurrenderPrompt()
     Player.InteractionMaster.AddInteraction("DH_Engine.DHTeamSurrenderInteraction", Player);
 }
 
-function ServerVote(bool bVote, DHPromptInteraction Interaction)
-{
-    local DarkestHourGame G;
-
-    G = DarkestHourGame(Level.Game);
-
-    if (G != none)
-    {
-        G.PlayerVoted(self, bVote, Interaction);
-    }
-}
-
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 // START SQUAD FUNCTIONS
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
