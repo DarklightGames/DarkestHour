@@ -5983,30 +5983,15 @@ function ReceiveScoreEvent(DHScoreEvent ScoreEvent)
     }
 }
 
-// TODO: put this elsewhere/clean up
-simulated exec function DumpScore()
+// Voting
+simulated exec function DebugStartVote()
 {
-    if (ScoreManager == none)
-    {
-        return;
-    }
-
-    Log(ScoreManager.Serialize());
+    // TODO: tell the server to trigger a vote of some sort.
 }
 
-// TODO: DEBUG
-simulated exec function ResetScore()
+simulated function ClientRecieveVotePrompt(class<DHVoteInfo> VoteInfoClass, optional string OptionalString)
 {
-    ServerResetScore();
-}
-
-function ServerResetScore()
-{
-    if (ScoreManager != none)
-    {
-        ScoreManager.Reset();
-        DarkestHourGame(Level.Game).UpdatePlayerScore(self);
-    }
+    // TODO: display the interaction prompt!
 }
 
 simulated function Destroyed()

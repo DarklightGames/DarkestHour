@@ -21,8 +21,6 @@ var     DHSpawnManager              SpawnManager;
 var     DHObstacleManager           ObstacleManager;
 var     DHConstructionManager       ConstructionManager;
 
-var     DHVoteInfo                  ActiveVotes[3];                         // 0-Axis, 1-Allies, 2-Both
-
 var     array<string>               FFViolationIDs;                         // Array of ROIDs that have been kicked once this session
 var()   config bool                 bSessionKickOnSecondFFViolation;
 var()   config bool                 bUseWeaponLocking;                      // Weapons can lock (preventing fire) for punishment
@@ -75,6 +73,10 @@ var     UVersion                    Version;
 var     DHSquadReplicationInfo      SquadReplicationInfo;
 
 var()   config int                  EmptyTankUnlockTime;                    // Server config option for how long (secs) before unlocking a locked armored vehicle if abandoned by its crew
+
+// Voting
+var     int                         NextVoteId;
+var     array<DHVoteInfo>           Votes;
 
 var     DHGameReplicationInfo       GRI;
 
@@ -5014,17 +5016,43 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
     return Response;
 }
 
-exec function StartSurrenderVote(int Team)
+// Voting
+function StartVote(class<DHVoteInfo> VoteInfoClass)
 {
-    // Check to see if we already have a vote present for the team
-    //
+    local DHVoteInfo Vote;
 
+    Vote = Spawn(VoteInfoClass, self);
+    Vote.VoteId = ++NextVoteId;
+    Votes[Votes.Length] = Vote;
 }
 
-function PlayerVoted(DHPlayer Player,bool bVote, DHPromptInteraction Interaction)
+function int GetVoteIndexById(int VoteId)
 {
+    local int i;
 
+    for (i = 0; i < Votes.Length; ++i)
+    {
+        if (Votes[i].VoteId == VoteId)
+        {
+            return i;
+        }
+    }
 
+    return -1;
+}
+
+function PlayerVoted(PlayerController Voter, int VoteId, int OptionIndex)
+{
+    local int VoteIndex;
+
+    VoteIndex = GetVoteIndexById(VoteId);
+
+    if (Voter == none || VoteIndex == -1)
+    {
+        return;
+    }
+
+    Votes[VoteIndex].RecieveVote(Voter, OptionIndex);
 }
 
 defaultproperties

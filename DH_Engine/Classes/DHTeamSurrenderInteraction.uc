@@ -16,10 +16,10 @@ function OnOptionSelected(int Index)
         switch (Index)
         {
             case 0:
-                PC.ServerVote(true, self);
+                //PC.Server
                 break;
             case 2:
-                PC.ServerVote(false, self);
+                //PC.ServerVote(false, self);
                 break;
         }
     }
