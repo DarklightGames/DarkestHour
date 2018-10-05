@@ -153,7 +153,7 @@ simulated function CalcWeaponFire(bool bWasAltFire)
     Y.Z = 0.0;
     Y = Normal(Y);
 
-    WeaponFireRotation = rotator(QuatRotatevector(QuatFromAxisAndAngle(Y, class'UUnits'.static.DegreesToRadians(-Elevation)), X));
+    WeaponFireRotation = rotator(QuatRotateVector(QuatFromAxisAndAngle(Y, class'UUnits'.static.DegreesToRadians(-Elevation)), X));
 
     // Calculate WeaponFireLocation
     WeaponFireLocation = GetBoneCoords(WeaponFireAttachmentBone).Origin;
