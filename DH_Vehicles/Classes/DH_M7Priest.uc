@@ -5,10 +5,6 @@
 
 class DH_M7Priest extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_M7Priest_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_M7Priest_tex.utx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc2.usx
-
 defaultproperties
 {
     // Vehicle properties
