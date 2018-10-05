@@ -51,7 +51,7 @@ var     int                         SpawnsAtRoundStart[2];                  // N
 var     byte                        bDidSendEnemyTeamWeakMessage[2];        // Flag as to whether or not the "enemy team is weak" has been sent for each team.
 
 const SERVERTICKRATE_UPDATETIME =   5.0; // The duration we use to calculate the average tick the server is running
-const MAXINFLATED_INTERVALTIME =    60.0; // The max value to add to reinforcement time for inflation
+const MAXINFLATED_INTERVALTIME =    90.0; // The max value to add to reinforcement time for inflation
 const SPAWN_KILL_RESPAWN_TIME =     2;
 
 var     bool                        bLogAverageTickRate;
