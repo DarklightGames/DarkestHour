@@ -80,6 +80,9 @@ var     array<DHVoteInfo>           Votes;
 
 var     DHGameReplicationInfo       GRI;
 
+var     float                       TeamSurrenderVoteTimes[2];  // The next time a team surrender vote can be initiated
+var     array<PlayerController>     SurrenderNominators;
+
 // The response types for requests.
 enum EArtilleryResponseType
 {
@@ -2959,7 +2962,6 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
     // If round is in play AND roundtime is currently infinite AND the team is out of reinforcements AND the gametype can change time when at zero reinf
     if (IsInState('RoundInPlay') && GRI.DHRoundDuration == 0 && GRI.SpawnsRemaining[Team] == 0 && DHLevelInfo.GameTypeClass.default.bTimeCanChangeAtZeroReinf)
     {
-
         // If the opposing team is within limit for changing round time, then change round time
         if (GRI.SpawnsRemaining[int(!bool(Team))] <= DHLevelInfo.GameTypeClass.default.OutOfReinfLimitForTimeChange)
         {
@@ -5063,6 +5065,12 @@ function PlayerVoted(PlayerController Voter, int VoteId, int OptionIndex)
     }
 
     Votes[VoteIndex].RecieveVote(Voter, OptionIndex);
+}
+
+// TODO: called when a player
+function PlayerSurrendered(PlayerController Player)
+{
+
 }
 
 defaultproperties

@@ -29,12 +29,38 @@ function array<PlayerController> GetEligibleVoters()
 function OnVoteEnded()
 {
     local int i;
+    local DarkestHourGame G;
+    local int VotesNeededToWin;
+    local PlayerController PC;
+    local Controller C;
 
-    Level.Game.Broadcast(self, "VOTE ENDED");
+    G = DarkestHourGame(Level.Game);
 
-    for (i = 0; i < Options.Length; ++i)
+    if (G == none)
     {
-        Level.Game.Broadcast(self, "[" $ Options[i].Text $ "]" @ Options[i].Votes);
+        return;
+    }
+
+    VotesNeededToWin = int(VoterCount * 0.5);
+
+    if (Options[0].Votes >= VotesNeededToWin)
+    {
+        // TODO: having these as
+        Level.Game.Broadcast(self, "The round ended because a team voted to surrender.", 'Say');
+
+        G.EndRound(int(!bool(TeamIndex)));
+    }
+    else
+    {
+        for (C = Level.ControllerList; C != none; C = C.nextController)
+        {
+            PC = PlayerController(C);
+
+            if (PC != none && C.GetTeamNum() == TeamIndex)
+            {
+//                PC.ReceiveLocalizedMessage(class'DHTeamSurrenderVoteMessage', 0
+            }
+        }
     }
 }
 

@@ -21,6 +21,7 @@ var float                           DurationSeconds;
 
 var array<Option>                   Options;
 var array<PlayerController>         Voters;
+var int                             VoterCount;
 
 // Gets the list of eligible voters.
 function array<PlayerController>    GetEligibleVoters();
@@ -56,6 +57,8 @@ function StartVote()
         Error("No eligible voters.");
         return;
     }
+
+    VoterCount = Voters.Length;
 
     for (i = 0; i < Voters.Length; ++i)
     {
@@ -105,7 +108,6 @@ function OnVoteReceieved(PlayerController Voter, int OptionIndex)
 {
     // "Your vote has been receieved."
     Voter.ReceiveLocalizedMessage(class'DHVoteMessage', 0,,, class'UInteger'.static.Create(OptionIndex));
-    // TODO: maybe just make a JSON payload for this stuff?
 }
 
 state Open

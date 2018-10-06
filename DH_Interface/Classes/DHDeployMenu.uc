@@ -664,6 +664,7 @@ function bool OnClick(GUIComponent Sender)
 
         // Kick vote
         case b_MenuOptions[2]:
+            // TODO:
             Controller.OpenMenu(Controller.KickVotingMenu);
             break;
 
@@ -2148,7 +2149,7 @@ defaultproperties
     b_MenuOptions(1)=SuicideButtonObject
 
     Begin Object Class=DHGUIButton Name=KickVoteButtonObject
-        Caption="Kick Vote"
+        Caption="Surrender"
         CaptionAlign=TXTA_Center
         StyleName="DHSmallTextButtonStyle"
         WinHeight=1.0
