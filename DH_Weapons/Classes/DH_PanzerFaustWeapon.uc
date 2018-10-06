@@ -5,8 +5,6 @@
 
 class DH_PanzerFaustWeapon extends DHRocketWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\Axis_Panzerfaust_1st.ukx
-
 // Modified to revert to Super from DHWeapon, as faust is a one-shot weapon
 function DropFrom(vector StartLocation)
 {

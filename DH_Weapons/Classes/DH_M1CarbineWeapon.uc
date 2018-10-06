@@ -5,8 +5,6 @@
 
 class DH_M1CarbineWeapon extends DHSemiAutoWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_M1Carbine_1st.ukx
-
 defaultproperties
 {
     ItemName="M1 Carbine"

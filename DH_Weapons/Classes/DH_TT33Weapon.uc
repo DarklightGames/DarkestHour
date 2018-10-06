@@ -5,8 +5,6 @@
 
 class DH_TT33Weapon extends DHPistolWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\Allies_Tt33_1st.ukx
-
 defaultproperties
 {
     ItemName="TT-33"

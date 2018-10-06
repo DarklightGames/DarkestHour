@@ -5,8 +5,6 @@
 
 class DH_P08LugerWeapon extends DHPistolWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\Axis_Luger_1st.ukx
-
 defaultproperties
 {
     ItemName="Luger P08"

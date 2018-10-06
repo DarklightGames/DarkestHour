@@ -5,8 +5,6 @@
 
 class DH_BazookaWeapon extends DHRocketWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Bazooka_1st.ukx
-
 defaultproperties
 {
     ItemName="M1A1 Bazooka"

@@ -5,8 +5,6 @@
 
 class DH_Kz8cmGrW42ProjectileSmoke extends DHMortarProjectileSmoke;
 
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Mortars_stc.usx
-
 defaultproperties
 {
     Speed=3936.0

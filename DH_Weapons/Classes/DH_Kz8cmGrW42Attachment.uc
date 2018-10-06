@@ -5,8 +5,6 @@
 
 class DH_Kz8cmGrW42Attachment extends DHWeaponAttachment;
 
-#exec OBJ LOAD FILE=..\Textures\DH_Mortars_tex.utx
-
 defaultproperties
 {
     PA_MortarDeployAnim="deploy_GrW42"

@@ -5,9 +5,6 @@
 
 class DH_Kz8cmGrW42ProjectileHE extends DHMortarProjectileHE;
 
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Mortars_stc.usx
-#exec OBJ LOAD FILE=..\Textures\DH_Mortars_tex.utx
-
 defaultproperties
 {
     Speed=3936.0

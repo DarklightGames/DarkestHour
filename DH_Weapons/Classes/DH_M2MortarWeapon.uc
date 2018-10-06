@@ -5,8 +5,6 @@
 
 class DH_M2MortarWeapon extends DHMortarWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Mortars_1st.ukx
-
 defaultproperties
 {
     VehicleClass=class'DH_Weapons.DH_M2MortarVehicle'

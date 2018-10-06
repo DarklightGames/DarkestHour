@@ -5,8 +5,6 @@
 
 class DH_G43Weapon extends DHSemiAutoWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\Axis_G43_1st.ukx
-
 defaultproperties
 {
     ItemName="Gewehr 43"

@@ -5,8 +5,6 @@
 
 class DH_PanzerschreckWeapon extends DHRocketWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Panzerschreck_1st.ukx
-
 defaultproperties
 {
     ItemName="Raketenpanzerbüchse 54"

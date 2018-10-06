@@ -5,8 +5,6 @@
 
 class DH_M2MortarProjectileHE extends DHMortarProjectileHE;
 
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Mortars_stc.usx
-
 defaultproperties
 {
     Speed=4800.0

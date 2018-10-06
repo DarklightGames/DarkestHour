@@ -5,8 +5,6 @@
 
 class DH_G41Weapon extends DHSemiAutoWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\Axis_G41_1st.ukx
-
 // Modified to add hint about weapon's two clip loading capacity
 simulated function BringUp(optional Weapon PrevWeapon)
 {

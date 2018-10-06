@@ -5,8 +5,6 @@
 
 class DH_EnfieldNo4Weapon extends DHBoltActionWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_EnfieldNo4_1st.ukx
-
 // Modified to add hint about weapon's two clip loading capacity
 simulated function BringUp(optional Weapon PrevWeapon)
 {

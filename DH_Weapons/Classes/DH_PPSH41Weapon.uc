@@ -5,8 +5,6 @@
 
 class DH_PPSh41Weapon extends DHFastAutoWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\Allies_Ppsh_1st.ukx
-
 simulated function bool StartFire(int Mode)
 {
     if (super(DHProjectileWeapon).StartFire(Mode))

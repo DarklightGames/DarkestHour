@@ -5,8 +5,6 @@
 
 class DH_BrenWeapon extends DHBipodAutoWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Bren_1st.ukx
-
 // Modified to play the click sound that would usually be played in the select animation (we don't have a select anim for the Bren)
 simulated function ToggleFireMode()
 {

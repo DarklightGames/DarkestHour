@@ -5,8 +5,6 @@
 
 class DH_BARWeapon extends DHBipodAutoWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_BAR_1st.ukx
-
 var     bool    bSlowFireRate; // flags that the slower firing rate is currently selected
 
 // Modified as BAR switches between slow/fast auto fire

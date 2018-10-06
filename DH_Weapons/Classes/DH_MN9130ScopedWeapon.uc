@@ -5,8 +5,6 @@
 
 class DH_MN9130ScopedWeapon extends DHBoltSniperWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\Allies_Nagantscope_1st.ukx
-
 defaultproperties
 {
     ItemName="Mosin-Nagant M91/30 PU Sniper"

@@ -5,8 +5,6 @@
 
 class DH_M2MortarVehicleWeaponPawn extends DHMortarVehicleWeaponPawn;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Mortars_3rd.ukx
-
 defaultproperties
 {
     WeaponClass=class'DH_Weapons.DH_M2MortarWeapon'

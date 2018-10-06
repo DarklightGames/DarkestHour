@@ -5,8 +5,6 @@
 
 class DH_30calWeapon extends DHMGWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_30Cal_1st.ukx
-
 defaultproperties
 {
     ItemName="M1919A4 Browning Machine Gun"

@@ -5,8 +5,6 @@
 
 class DH_SpringfieldScopedWeapon extends DHBoltSniperWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Springfield_1st.ukx
-
 defaultproperties
 {
     ItemName="M1903 Springfield Scoped"

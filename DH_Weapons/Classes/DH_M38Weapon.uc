@@ -5,8 +5,6 @@
 
 class DH_M38Weapon extends DHBoltActionWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\Allies_Nagant_1st.ukx
-
 defaultproperties
 {
     ItemName="Mosin-Nagant M38 Carbine"

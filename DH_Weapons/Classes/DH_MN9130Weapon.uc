@@ -5,8 +5,6 @@
 
 class DH_MN9130Weapon extends DHBoltActionWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\Allies_Nagant_1st.ukx
-
 defaultproperties
 {
     ItemName="Mosin-Nagant M91/30"

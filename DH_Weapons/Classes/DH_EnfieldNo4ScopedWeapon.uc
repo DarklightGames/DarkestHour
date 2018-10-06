@@ -5,8 +5,6 @@
 
 class DH_EnfieldNo4ScopedWeapon extends DHBoltSniperWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_EnfieldNo4_1st.ukx
-
 defaultproperties
 {
     ItemName="Scoped Enfield No.4"

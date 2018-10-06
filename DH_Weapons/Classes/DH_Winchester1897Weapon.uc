@@ -5,8 +5,6 @@
 
 class DH_Winchester1897Weapon extends DHBoltSniperWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Winchester1897_1st.ukx
-
 // This obviously isn't a bolt-action sniper rifle, but extending DHBoltSniperWeapon gives us most of the functionality we need:
 // 1) The pump action after firing is equivalent to bolting a rifle, i.e. a 2nd 'fire' press is required to work the post-fire action
 // 2) The shotgun is loaded one round at a time & reload can be interrupted by again pressing fire (just like a bolt sniper rifle)

@@ -5,8 +5,6 @@
 
 class DH_P38Weapon extends DHPistolWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\Axis_P38_1st.ukx
-
 defaultproperties
 {
     ItemName="Walther P38"

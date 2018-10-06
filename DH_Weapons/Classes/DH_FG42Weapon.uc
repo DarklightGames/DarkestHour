@@ -5,8 +5,6 @@
 
 class DH_FG42Weapon extends DHBipodAutoWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Fallschirmgewehr42_1st.ukx
-
 defaultproperties
 {
     ItemName="Fallschirmjägergewehr 42"

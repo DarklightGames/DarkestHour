@@ -5,8 +5,6 @@
 
 class DH_MG34Weapon extends DHMGWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Mg34_1st.ukx
-
 // Modified to fix graphics bug where a Mac computer doesn't draw the specularity shader, leaving most of the 1st person weapon invisible to the user
 simulated function PostNetBeginPlay()
 {

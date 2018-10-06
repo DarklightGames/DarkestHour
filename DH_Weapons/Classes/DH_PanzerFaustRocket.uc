@@ -5,8 +5,6 @@
 
 class DH_PanzerFaustRocket extends DHRocketProjectile;
 
-#exec OBJ LOAD FILE=..\Staticmeshes\DH_Military_Axis.usx
-
 defaultproperties
 {
     StraightFlightTime=0.25

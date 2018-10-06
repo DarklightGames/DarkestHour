@@ -5,8 +5,6 @@
 
 class DH_Kar98Weapon extends DHBoltActionWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Kar98_1st.ukx
-
 defaultproperties
 {
     ItemName="Karabiner 98k"

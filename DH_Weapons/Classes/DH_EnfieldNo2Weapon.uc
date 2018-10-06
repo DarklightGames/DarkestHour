@@ -5,8 +5,6 @@
 
 class DH_EnfieldNo2Weapon extends DHPistolWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_EnfieldNo2_1st.ukx
-
 defaultproperties
 {
     ItemName="Enfield No.2"

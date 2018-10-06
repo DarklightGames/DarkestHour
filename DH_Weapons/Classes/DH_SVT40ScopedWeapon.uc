@@ -5,8 +5,6 @@
 
 class DH_SVT40ScopedWeapon extends DHSniperWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\Allies_Svt40_1st.ukx
-
 defaultproperties
 {
     ItemName="SVT-40 Scoped"

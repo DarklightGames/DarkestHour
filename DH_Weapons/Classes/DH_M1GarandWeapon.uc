@@ -5,8 +5,6 @@
 
 class DH_M1GarandWeapon extends DHSemiAutoWeapon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Garand_1st.ukx
-
 var     bool    bIsLastRound;
 
 // Modified to support garand last round clip eject for client only
