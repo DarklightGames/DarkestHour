@@ -5,10 +5,6 @@
 
 class DH_Marder3MDestroyer extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex7.utx
-#exec OBJ LOAD FILE=..\Animations\DH_Marder3M_anm.ukx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc3.usx
-
 defaultproperties
 {
     // Vehicle properties

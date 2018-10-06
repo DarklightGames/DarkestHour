@@ -5,8 +5,6 @@
 
 class DH_MG34_VehHUDOverlay extends VehicleHUDOverlay;
 
-#exec OBJ LOAD FILE=..\Animations\Axis_Mg34_1st.ukx
-
 defaultproperties
 {
     Mesh=SkeletalMesh'Axis_Mg34_1st.MG_34_Mesh'

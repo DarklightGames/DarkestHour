@@ -5,8 +5,6 @@
 
 class DH_ShermanTankA_M4A176W extends DH_ShermanTank; // later 76mm version with HVAP instead of smoke rounds (but still without muzzle brake or sandbags)
 
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc2.usx
-
 defaultproperties
 {
     VehicleNameString="M4A1(76) Sherman"

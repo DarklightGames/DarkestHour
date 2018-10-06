@@ -5,7 +5,6 @@
 
 class DH_ChurchillMkVIITank extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Churchill_anm.ukx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_Churchill_stc.usx
 #exec OBJ LOAD FILE=..\Textures\DH_Churchill_tex.utx
 

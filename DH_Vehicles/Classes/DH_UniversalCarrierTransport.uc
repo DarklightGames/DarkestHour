@@ -5,8 +5,6 @@
 
 class DH_UniversalCarrierTransport extends DH_BrenCarrierTransport;
 
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesSOV_tex.utx
-
 defaultproperties
 {
     VehicleNameString="Universal Carrier"

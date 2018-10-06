@@ -5,10 +5,6 @@
 
 class DH_Sdkfz2341ArmoredCar extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Sdkfz234ArmoredCar_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex6.utx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc3.usx
-
 defaultproperties
 {
     // Vehicle properties

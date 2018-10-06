@@ -5,8 +5,6 @@
 
 class DH_PanzerIIILTank_Camo extends DH_PanzerIIILTank;
 
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx
-
 defaultproperties
 {
     bHasAddedSideArmor=true

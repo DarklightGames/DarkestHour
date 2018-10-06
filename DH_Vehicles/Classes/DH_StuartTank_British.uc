@@ -5,8 +5,6 @@
 
 class DH_StuartTank_British extends DH_StuartTank;
 
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUK_tex.utx
-
 defaultproperties
 {
     VehicleNameString="Stuart Mk.VI"

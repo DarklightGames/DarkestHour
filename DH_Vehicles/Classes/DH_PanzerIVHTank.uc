@@ -5,9 +5,6 @@
 
 class DH_PanzerIVHTank extends DH_PanzerIVGLateTank;
 
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex.utx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex3.utx
-
 defaultproperties
 {
     VehicleNameString="Panzer IV Ausf.H"

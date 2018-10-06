@@ -5,9 +5,6 @@
 
 class DH_JacksonTank extends DHArmoredVehicle; // later version with HVAP instead of AP shot & with muzzle brake
 
-#exec OBJ LOAD FILE=..\Animations\DH_Jackson_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex4.utx
-
 defaultproperties
 {
     // Vehicle properties

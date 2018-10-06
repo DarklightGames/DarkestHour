@@ -5,9 +5,6 @@
 
 class DH_Sdkfz105Transport extends DHVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_SdKfz10_5_anm.ukx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc4.usx
-
 // Modified to set cannon pawn class, as can't be done in default properties, since as DH_Guns code package isn't compiled until after this package
 simulated function PostBeginPlay()
 {

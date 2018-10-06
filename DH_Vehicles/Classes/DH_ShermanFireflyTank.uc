@@ -5,11 +5,6 @@
 
 class DH_ShermanFireflyTank extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_ShermanFirefly_anm.ukx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc.usx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUK_tex.utx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
-
 defaultproperties
 {
     // Vehicle properties

@@ -5,10 +5,6 @@
 
 class DH_PanzerIIILTank extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Panzer3_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\axis_vehicles_tex.utx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2
-
 defaultproperties
 {
     // Vehicle properties

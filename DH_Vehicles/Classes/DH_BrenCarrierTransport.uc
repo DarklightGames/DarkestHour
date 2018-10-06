@@ -5,11 +5,6 @@
 
 class DH_BrenCarrierTransport extends DHVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_BrenCarrier_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\allies_vehicles_tex2.utx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUK_tex.utx
-#exec OBJ LOAD FILE=..\Sounds\Vehicle_EnginesTwo.uax
-
 defaultproperties
 {
     // Vehicle properties

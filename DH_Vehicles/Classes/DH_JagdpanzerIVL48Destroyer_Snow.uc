@@ -5,8 +5,6 @@
 
 class DH_JagdpanzerIVL48Destroyer_Snow extends DH_JagdpanzerIVL48Destroyer;
 
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex5.utx
-
 defaultproperties
 {
     Skins(0)=Texture'DH_VehiclesGE_tex5.ext_vehicles.jagdpanzeriv_body_snow'

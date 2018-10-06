@@ -5,10 +5,6 @@
 
 class DH_JagdpantherTank extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Jagdpanther_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex3.utx
-
 // Hack to stop jagdpanther camo variants without a matching schurzen texture from spawning schurzen
 simulated function SpawnVehicleAttachments()
 {

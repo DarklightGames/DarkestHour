@@ -5,8 +5,6 @@
 
 class DH_GreyhoundArmoredCar_British extends DH_GreyhoundArmoredCar;
 
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUK_tex.utx
-
 defaultproperties
 {
     VehicleNameString="Greyhound Armoured Car"

@@ -5,10 +5,6 @@
 
 class DH_ShermanTank extends DHArmoredVehicle; // M4A1 75mm variant (without wet stowage)
 
-#exec OBJ LOAD FILE=..\Animations\DH_ShermanM4A1_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc.usx
-
 defaultproperties
 {
     // Vehicle properties

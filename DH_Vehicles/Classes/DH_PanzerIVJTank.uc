@@ -5,9 +5,6 @@
 
 class DH_PanzerIVJTank extends DH_PanzerIVHTank;
 
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex4.utx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc3.usx
-
 defaultproperties
 {
     // Vehicle properties

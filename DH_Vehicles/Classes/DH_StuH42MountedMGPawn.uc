@@ -5,8 +5,6 @@
 
 class DH_StuH42MountedMGPawn extends DHVehicleMGPawn;
 
-#exec OBJ LOAD FILE=..\Textures\DH_VehicleOptics_tex.utx
-
 // Can't fire unless buttoned up & controlling the remote MG
 function bool CanFire()
 {

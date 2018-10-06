@@ -5,9 +5,6 @@
 
 class DH_CromwellTank extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Cromwell_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUK_tex.utx
-
 // Modified to adjust size/proportions of texture overlay to match driver's glass vision block
 simulated function DrawPeriscopeOverlay(Canvas C)
 {

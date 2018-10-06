@@ -5,8 +5,6 @@
 
 class DH_PanzerIVJTank_SnowOne extends DH_PanzerIVJTank; // snow topped version of DH_PanzerIVJTank
 
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex5.utx
-
 defaultproperties
 {
     Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.Panzer4J_body_snow1'

@@ -5,11 +5,6 @@
 
 class DH_JagdpanzerIVL48Destroyer extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Jagdpanzer4_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex4.utx
-#exec OBJ LOAD FILE=..\Textures\axis_vehicles_tex.utx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc4.usx
-
 defaultproperties
 {
     // Vehicle properties

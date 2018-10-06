@@ -6,9 +6,6 @@
 class DH_OpelBlitz extends DHVehicle
     abstract;
 
-#exec OBJ LOAD FILE=..\Animations\DH_OpelBlitz_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx
-
 defaultproperties
 {
     // Vehicle properties

@@ -10,10 +10,6 @@
 
 class DH_ISU152Destroyer extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_ISU152_anm.ukx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Soviet_vehicles_stc.usx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesSOV_tex.utx
-
 defaultproperties
 {
     // Vehicle properties

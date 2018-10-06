@@ -5,10 +5,6 @@
 
 class DH_HellcatTank extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Hellcat_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex5.utx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc3
-
 defaultproperties
 {
     // Vehicle properties

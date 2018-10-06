@@ -5,10 +5,6 @@
 
 class DH_IS2Tank extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_IS2_anm.ukx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Soviet_vehicles_stc.usx
-#exec OBJ LOAD FILE=..\Textures\allies_vehicles_tex.utx
-
 defaultproperties
 {
     // Vehicle properties

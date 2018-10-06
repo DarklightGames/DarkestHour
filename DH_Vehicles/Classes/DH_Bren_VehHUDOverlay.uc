@@ -5,8 +5,6 @@
 
 class DH_Bren_VehHUDOverlay extends VehicleHUDOverlay;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Bren_1st.ukx
-
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Bren_1st.BrenV'

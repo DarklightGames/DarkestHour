@@ -5,6 +5,8 @@
 
 class DH_WolverineCannon_British extends DH_WolverineCannon_Early; // British Wolverine won't have HVAP
 
+#exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc.usx
+
 var     RODummyAttachment   StowageAttachment;
 
 // Modified to attach a static mesh decorative attachment, to cover blackened areas resulting from applying Achilles skin to Wolverine mesh

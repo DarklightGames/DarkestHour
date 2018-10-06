@@ -5,6 +5,7 @@
 
 class DH_HigginsBoat extends DHBoatVehicle;
 
+#exec OBJ LOAD FILE=..\Sounds\DH_AlliedVehicleSounds.uax
 #exec OBJ LOAD FILE=..\Animations\DH_HigginsBoat_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
 

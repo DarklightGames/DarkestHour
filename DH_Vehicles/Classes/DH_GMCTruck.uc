@@ -6,9 +6,6 @@
 class DH_GMCTruck extends DHVehicle
     abstract;
 
-#exec OBJ LOAD FILE=..\Animations\DH_GMCTruck_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_Allied_MilitarySM.utx
-
 defaultproperties
 {
     // Vehicle properties

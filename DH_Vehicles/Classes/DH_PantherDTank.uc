@@ -5,8 +5,6 @@
 
 class DH_PantherDTank extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Panther_anm.ukx
-
 // Hack to stop panther camo variants without a matching schurzen texture from spawning schurzen
 simulated function SpawnVehicleAttachments()
 {

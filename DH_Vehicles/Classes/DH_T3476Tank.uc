@@ -5,9 +5,6 @@
 
 class DH_T3476Tank extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_T34_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\allies_vehicles_tex.utx
-
 defaultproperties
 {
     // Vehicle properties

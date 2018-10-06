@@ -5,11 +5,6 @@
 
 class DH_WillysJeep extends DHVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_WillysJeep_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex2.utx
-#exec OBJ LOAD FILE=..\Sounds\DH_AlliedVehicleSounds.uax
-#exec OBJ LOAD FILE=..\Sounds\DH_GerVehicleSounds2.uax
-
 defaultproperties
 {
     // Vehicle properties

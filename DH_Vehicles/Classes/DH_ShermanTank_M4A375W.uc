@@ -5,11 +5,6 @@
 
 class DH_ShermanTank_M4A375W extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_ShermanM4A3_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex3.utx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc3.usx
-
 defaultproperties
 {
     // Vehicle properties

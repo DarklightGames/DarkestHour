@@ -5,9 +5,6 @@
 
 class DH_StuartTank extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Stuart_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
-
 defaultproperties
 {
     // Vehicle properties

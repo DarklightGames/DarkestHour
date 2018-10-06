@@ -5,8 +5,6 @@
 
 class DH_Sdkfz2341ArmoredCar_Snow extends DH_Sdkfz2341ArmoredCar;
 
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex5.utx
-
 defaultproperties
 {
     Skins(0)=Texture'DH_VehiclesGE_tex5.ext_vehicles.sdkfz2341_body_snow'

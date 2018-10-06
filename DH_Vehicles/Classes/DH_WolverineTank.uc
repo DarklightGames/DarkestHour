@@ -5,10 +5,6 @@
 
 class DH_WolverineTank extends DHArmoredVehicle; // later version with HVAP instead of smoke rounds
 
-#exec OBJ LOAD FILE=..\Animations\DH_Wolverine_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex2.utx
-
 defaultproperties
 {
     // Vehicle properties

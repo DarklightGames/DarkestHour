@@ -5,8 +5,6 @@
 
 class DH_ShermanTank_M4A3E2_Snow extends DH_ShermanTank_M4A3E2_Jumbo;
 
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex2.utx
-
 defaultproperties
 {
     Skins(0)=Texture'DH_VehiclesUS_tex2.ext_vehicles.ShermanM4A3E2_ext_snow'

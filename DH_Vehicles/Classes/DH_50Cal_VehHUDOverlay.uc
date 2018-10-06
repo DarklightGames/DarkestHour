@@ -5,8 +5,6 @@
 
 class DH_50Cal_VehHUDOverlay extends VehicleHUDOverlay;
 
-#exec OBJ LOAD FILE=..\Animations\DH_50Cal_1st.ukx
-
 // To put the overlay mesh in the correct position, with a full belt of bullets fed into the gun
 simulated function PostBeginPlay()
 {

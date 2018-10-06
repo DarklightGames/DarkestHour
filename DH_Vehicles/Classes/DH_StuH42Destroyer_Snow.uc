@@ -5,8 +5,6 @@
 
 class DH_StuH42Destroyer_Snow extends DH_StuH42Destroyer;
 
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex3.utx
-
 defaultproperties
 {
     Skins(0)=Texture'DH_VehiclesGE_tex3.ext_vehicles.stug3g_body_snow'
