@@ -82,6 +82,8 @@ var     DHGameReplicationInfo       GRI;
 
 var     float                       TeamSurrenderVoteTimes[2];  // The next time a team surrender vote can be initiated
 var     array<PlayerController>     SurrenderNominators;
+var     int                         SurrenderNominationsThreshold;
+var     int                         SurrenderTeamSizeMin;
 
 // The response types for requests.
 enum EArtilleryResponseType
@@ -5070,7 +5072,108 @@ function PlayerVoted(PlayerController Voter, int VoteId, int OptionIndex)
 // TODO: called when a player
 function PlayerSurrendered(PlayerController Player)
 {
+    local DHPlayer PC;
+    local int i, TeamIndex;
+    local int TeamSizes[2];
+    local DHVoteInfo_TeamSurrender Vote;
+    local int SurrenderNominatorCount;
 
+    PC = DHPlayer(Player);
+
+    if (PC == none || GRI == none)
+    {
+        return;
+    }
+
+    TeamIndex = PC.GetTeamNum();
+
+    Log("PC" @ PC);
+    Log("GRI" @ GRI);
+    Log("TeamIndex" @ TeamIndex);
+
+    if (TeamIndex < 0 || TeamIndex >= arraycount(TeamSurrenderVoteTimes))
+    {
+        PC.ClientTeamSurrenderResponse(1);
+        return;
+    }
+
+    if (!IsInState('RoundInPlay'))
+    {
+        // Round is not in play.
+        PC.ClientTeamSurrenderResponse(2);
+        return;
+    }
+
+    // TODO: remove player from SurrenderNominators when they switch teams
+    for (i = 0; i < SurrenderNominators.Length; ++i)
+    {
+        if (Player == SurrenderNominators[i])
+        {
+            Log("A");
+            // Already voted to surender.
+            PC.ClientTeamSurrenderResponse(3);
+            return;
+        }
+    }
+
+    if (TeamSurrenderVoteTimes[TeamIndex] > GRI.ElapsedTime)
+    {
+        Log("B");
+        // You cannot vote to surrender yet.
+        PC.ClientTeamSurrenderResponse(4);
+        return;
+    }
+
+    // Surrendering can only be voted for with ~16+ people on a team.
+    Log("C");
+    GetTeamSizes(TeamSizes);
+
+    if (TeamSizes[TeamIndex] < default.SurrenderTeamSizeMin)
+    {
+        Log("D");
+        PC.ClientTeamSurrenderResponse(5);
+        return;
+    }
+
+    SurrenderNominators.Insert(0, 1);
+    SurrenderNominators[0] = Player;
+
+    Log("E");
+
+    for (i = 0; i < SurrenderNominators.Length; ++i)
+    {
+        if (SurrenderNominators[i] != none && SurrenderNominators[i].GetTeamNum() == TeamIndex)
+        {
+            ++SurrenderNominatorCount;
+        }
+    }
+
+    Log("SurrenderNominatorCount" @ SurrenderNominatorCount);
+
+    if (SurrenderNominatorCount >= default.SurrenderNominationsThreshold)
+    {
+        // Start the vote!
+        Vote = Spawn(class'DHVoteInfo_TeamSurrender');
+
+        if (Vote != none)
+        {
+            Vote.TeamIndex = TeamIndex;
+            Vote.StartVote();
+        }
+
+        for (i = SurrenderNominators.Length - 1; i >= 0; --i)
+        {
+            if (SurrenderNominators[i] != none && SurrenderNominators[i].GetTeamNum() == TeamIndex)
+            {
+                SurrenderNominators.Remove(i, 1);
+            }
+        }
+
+        PC.ClientTeamSurrenderResponse(5);
+        return;
+    }
+
+    PC.ClientTeamSurrenderResponse(0);
 }
 
 defaultproperties
@@ -5197,4 +5300,7 @@ defaultproperties
     DisableAllChatThreshold=50
     bAllowAllChat=true
     bIsAttritionEnabled=true
+
+    SurrenderNominationsThreshold=5
+    SurrenderTeamSizeMin=16
 }

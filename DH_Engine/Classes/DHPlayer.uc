@@ -149,8 +149,9 @@ replication
         ServerSquadSay, ServerSquadLock, ServerSquadSignal,
         ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
         ServerSetPatronStatus, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
-        ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
-        ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons; // these ones in debug mode only
+        ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery,
+        ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
+        ServerSurrender;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -158,7 +159,8 @@ replication
         ClientAddHudDeathMessage, ClientFadeFromBlack, ClientProposeMenu,
         ClientConsoleCommand, ClientCopyToClipboard, ClientSaveROIDHash,
         ClientSquadInvite, ClientSquadSignal, ClientSquadLeaderVolunteerPrompt, ClientTeamSurrenderPrompt,
-        ClientTeamKillPrompt, ClientOpenLogFile, ClientLogToFile, ClientCloseLogFile;
+        ClientTeamKillPrompt, ClientOpenLogFile, ClientLogToFile, ClientCloseLogFile,
+        ClientTeamSurrenderResponse;
 }
 
 function ServerChangePlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2) { } // no longer used
@@ -4992,11 +4994,6 @@ simulated function ClientTeamKillPrompt(string LastFFKillerString)
     Player.InteractionMaster.AddInteraction("DH_Engine.DHTeamKillInteraction", Player);
 }
 
-simulated function ClientTeamSurrenderPrompt()
-{
-    Player.InteractionMaster.AddInteraction("DH_Engine.DHTeamSurrenderInteraction", Player);
-}
-
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 // START SQUAD FUNCTIONS
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -5971,36 +5968,47 @@ function ReceiveScoreEvent(DHScoreEvent ScoreEvent)
     }
 }
 
-// Voting
-simulated exec function Surrender()
+simulated function ClientTeamSurrenderPrompt()
 {
-    // TODO: tell the server to trigger a vote of some sort.
-    ServerDebugStartSurrenderVote();
+    Player.InteractionMaster.AddInteraction("DH_Engine.DHTeamSurrenderInteraction", Player);
 }
 
-function ServerDebugStartSurrenderVote()
+simulated function ClientTeamSurrenderResponse(int Result)
+{
+    local UT2K4GUIController GC;
+    local GUIPage Page;
+
+    // Find the currently open ROGUIRoleSelection menu and notify it
+    GC = UT2K4GUIController(Player.GUIController);
+
+    Log("GC" @ GC);
+    Log("Result" @ Result);
+
+    if (GC == none)
+    {
+        return;
+    }
+
+    Page = GC.FindMenuByClass(class'GUIPage');
+
+    Log("Page" @ Page);
+
+    if (Page != none)
+    {
+        Page.OnMessage("NOTIFY_GUI_SURRENDER_RESULT", Result);
+    }
+}
+
+function ServerSurrender()
 {
     local DarkestHourGame G;
-    local DHVoteInfo_TeamSurrender Vote;
 
     G = DarkestHourGame(Level.Game);
 
-    if (G == none)
+    if (G != none)
     {
-        return;
+        G.PlayerSurrendered(self);
     }
-
-    Vote = Spawn(class'DHVoteInfo_TeamSurrender');
-
-    if (Vote == none)
-    {
-        Warn("Surrender vote not created!");
-        return;
-    }
-
-    Vote.TeamIndex = GetTeamNum();
-
-    G.StartVote(Vote);
 }
 
 function ServerSendVote(int VoteId, int OptionIndex)

@@ -648,12 +648,16 @@ function bool OnClick(GUIComponent Sender)
 {
     local GUIQuestionPage ConfirmWindow;
     local string          ConfirmMessage;
+    local DHGameReplicationInfo GRI;
+    local DHPlayer PC;
+
+    PC = DHPlayer(PlayerOwner());
 
     switch (Sender)
     {
         // Disconnect
         case b_MenuOptions[0]:
-            PlayerOwner().ConsoleCommand("DISCONNECT");
+            PC.ConsoleCommand("DISCONNECT");
             CloseMenu();
             break;
 
@@ -662,10 +666,12 @@ function bool OnClick(GUIComponent Sender)
             PlayerOwner().ConsoleCommand("SUICIDE");
             break;
 
-        // Kick vote
+        // Surrender
         case b_MenuOptions[2]:
-            // TODO:
-            Controller.OpenMenu(Controller.KickVotingMenu);
+            if (PC != none)
+            {
+                PC.ServerSurrender();
+            }
             break;
 
         // Map vote
@@ -1092,13 +1098,13 @@ function AutoSelectVehicle()
 
 function InternalOnMessage(coerce string Msg, float MsgLife)
 {
-    local int    Result;
+    local int Result;
     local string ErrorMessage;
+
+    Result = int(MsgLife);
 
     if (Msg ~= "NOTIFY_GUI_ROLE_SELECTION_PAGE")
     {
-        Result = int(MsgLife);
-
         switch (Result)
         {
             // Spectator
@@ -1126,6 +1132,18 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
             default:
                 ErrorMessage = class'ROGUIRoleSelection'.static.GetErrorMessageForID(Result);
                 Controller.ShowQuestionDialog(ErrorMessage, QBTN_OK, QBTN_OK);
+                break;
+        }
+    }
+    else if (Msg ~= "NOTIFY_GUI_SURRENDER_RESULT")
+    {
+        switch (Result)
+        {
+            case 0:
+                Controller.ShowQuestionDialog("SURRENDER RESULT" @ Result, QBTN_OK, QBTN_OK);
+                break;
+            default:
+                Controller.ShowQuestionDialog("SURRENDER RESULT" @ Result, QBTN_OK, QBTN_OK);
                 break;
         }
     }
