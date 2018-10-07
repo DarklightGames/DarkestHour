@@ -780,7 +780,7 @@ defaultproperties
     Begin Object Class=DHmoCheckBox Name=UseVSyncCheckBox
         ComponentJustification=TXTA_Left
         CaptionWidth=0.94
-        Caption="VSync (Recommended: Uncheck)"
+        Caption="VSync (Not Recommended)"
         Hint="VSync is used to reduce screen tearing at the high cost of input lag (GPU settings can override many graphic settings such as this)"
         OnCreateComponent=UseVSyncCheckBox.InternalOnCreateComponent
         IniOption="@Internal"
@@ -1272,7 +1272,7 @@ defaultproperties
     Begin Object Class=DHmoCheckBox Name=DynamicFogRatioCH
         ComponentJustification=TXTA_Left
         CaptionWidth=0.94
-        Caption="Dynamic Fog Distance (Recommended: Checked)"
+        Caption="Dynamic Fog Distance (Recommended)"
         Hint="Keeps FPS as high as possible by adjusting the fog distance automatically based on FPS"
         OnCreateComponent=DynamicFogRatioCH.InternalOnCreateComponent
         IniDefault="false"
