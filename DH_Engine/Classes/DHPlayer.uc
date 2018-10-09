@@ -5981,17 +5981,12 @@ simulated function ClientTeamSurrenderResponse(int Result)
     // Find the currently open ROGUIRoleSelection menu and notify it
     GC = UT2K4GUIController(Player.GUIController);
 
-    Log("GC" @ GC);
-    Log("Result" @ Result);
-
     if (GC == none)
     {
         return;
     }
 
     Page = GC.FindMenuByClass(class'GUIPage');
-
-    Log("Page" @ Page);
 
     if (Page != none)
     {
