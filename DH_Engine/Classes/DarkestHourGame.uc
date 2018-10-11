@@ -5036,7 +5036,7 @@ function PlayerVoted(DHPlayer Player,bool bVote, DHPromptInteraction Interaction
 
 defaultproperties
 {
-    ServerTickForInflation=20.0
+    ServerTickForInflation=19.0
 
     // Default settings based on common used server settings in DH
     bIgnore32PlayerLimit=true // allows more than 32 players
