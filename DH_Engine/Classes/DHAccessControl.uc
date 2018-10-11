@@ -100,6 +100,4 @@ defaultproperties
 {
     DeveloperIDs(0)="76561197961365238" // Theel
     DeveloperIDs(1)="76561197960644559" // Basnett
-    DeveloperIDs(2)="76561197983930587" // Jellysoda
-    DeveloperIDs(3)="76561198020074261" // Kashash
 }

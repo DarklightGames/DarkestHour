@@ -96,7 +96,7 @@ struct ArtilleryResponse
     var DHArtillery             ArtilleryActor;
 };
 
-// Overridden to make new clamp of MaxPlayers
+// Overridden to make new clamp of MaxPlayers and force AccessControlType
 event InitGame(string Options, out string Error)
 {
     super.InitGame(Options, Error);
@@ -105,6 +105,13 @@ event InitGame(string Options, out string Error)
     {
         MaxPlayers = Clamp(GetIntOption(Options, "MaxPlayers", MaxPlayers), 0, 128);
         default.MaxPlayers = Clamp(default.MaxPlayers, 0, 128);
+    }
+
+    // If a dedicated server and AccessControl is wrong type, then delete the wrong AccessControl and spawn our DHAccessControl as the AccessControl
+    if (Level.NetMode == NM_DedicatedServer && !AccessControl.IsA('DHAccessControl'))
+    {
+        AccessControl.Destroy();
+        AccessControl = Spawn(class'DH_Engine.DHAccessControl');
     }
 }
 
