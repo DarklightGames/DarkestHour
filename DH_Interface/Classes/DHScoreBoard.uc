@@ -446,12 +446,12 @@ simulated function UpdateScoreBoard(Canvas C)
     S $= HUD.default.SpacingText $ HUD.default.MapGameTypeText $ DHGRI.GameType.default.GameTypeName;
 
     // Server Tick Health
-    if (DHGRI.ServerTickHealth < 10)
+    if (DHGRI.ServerTickHealth < 15)
     {
         HealthString = default.PoorText;
         HealthColor = class'UColor'.default.Red;
     }
-    else if (DHGRI.ServerTickHealth < 20)
+    else if (DHGRI.ServerTickHealth < 18)
     {
         HealthString = default.FairText;
         HealthColor = class'UColor'.default.Orange;
@@ -466,7 +466,7 @@ simulated function UpdateScoreBoard(Canvas C)
     S $= HUD.default.SpacingText $ default.TickHealthText $ ":" @ class'GameInfo'.static.MakeColorCode(HealthColor) $ HealthString @ "(" $ DHGRI.ServerTickHealth $ ")";
 
     // Server Tick Health
-    if (DHGRI.ServerNetHealth > 10)
+    if (DHGRI.ServerNetHealth > 4)
     {
         HealthString = default.PoorText;
         HealthColor = class'UColor'.default.Red;
