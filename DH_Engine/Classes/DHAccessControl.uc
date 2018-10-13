@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHAccessControl extends AccessControl;
+class DHAccessControl extends AccessControlINI;
 
 var private array<string> DeveloperIDs;
 
@@ -24,9 +24,9 @@ function bool AdminLoginSilent(PlayerController P, string UserName, string Passw
     ROID = P.GetPlayerIDHash();
 
     // Special developer login functionality, triggered by DevLogin exec
-    if (Password ~= "DEV")
+    if (Password ~= "Dev")
     {
-        bIsDeveloper = IsDeveloper(ROID);
+        bIsDeveloper = IsDeveloper(ROID); // Server checks ROID also
     }
 
     // Normal admin login check
@@ -98,6 +98,7 @@ static function bool IsDeveloper(string ROID)
 
 defaultproperties
 {
+    AdminClass=Class'DH_Engine.DHAdmin'
     DeveloperIDs(0)="76561197961365238" // Theel
     DeveloperIDs(1)="76561197960644559" // Basnett
 }
