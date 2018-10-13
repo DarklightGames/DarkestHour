@@ -10,6 +10,7 @@ var localized string WaitText;
 var localized string AttackText;
 var localized string DefendText;
 var localized string MoveText;
+var localized string AttentionText;
 
 var sound OrderSound;
 
@@ -25,6 +26,8 @@ static function string GetString(optional int Switch, optional PlayerReplication
             return default.DefendText;
         case 3:
             return default.MoveText;
+        case 4:
+            return default.AttentionText;
         default:
             return "";
     }
@@ -43,5 +46,6 @@ defaultproperties
     AttackText="Squad leader has issued a new Attack order"
     DefendText="Squad leader has issued a new Defend order"
     MoveText="Squad leader has issued a new Move order"
+    AttentionText="Squad leader has issued a new Attention order"
     OrderSound=Sound'DH_SundrySounds.Squad.squad_order'
 }
