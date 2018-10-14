@@ -425,6 +425,7 @@ defaultproperties
     FilterMenu="DH_Interface.DHFilterListPage"
     MapVotingMenu="DH_Interface.DHMapVotingPage"
     EditFavoriteMenu="DH_Interface.DHEditFavoritePage"
+    NetworkMsgMenu="DH_Interface.DHNetworkStatusMsg"
     MainMenuOptions(0)="DH_Interface.DHServerBrowser"
     MainMenuOptions(1)="DH_Interface.DHGamePageMP"
     MainMenuOptions(2)="DH_Interface.DHGamePageSP"
