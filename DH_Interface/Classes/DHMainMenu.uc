@@ -342,6 +342,13 @@ event Opened(GUIComponent Sender)
         SaveConfig();
     }
 
+    // Force the correct NetworkStatusMsg class
+    if (PlayerOwner().ConsoleCommand("get DH_Interface.DHGUIController NetworkMsgMenu") != "DH_Interface.DHNetworkStatusMsg")
+    {
+        PlayerOwner().ConsoleCommand("set DH_Interface.DHGUIController NetworkMsgMenu DH_Interface.DHNetworkStatusMsg");
+        PlayerOwner().SaveConfig();
+    }
+
     // Force voice quality to higher quality
     if (PlayerOwner().VoiceChatCodec != "CODEC_96WB" || PlayerOwner().ConsoleCommand("get Engine.PlayerController VoiceChatCodec") != "CODEC_96WB")
     {
