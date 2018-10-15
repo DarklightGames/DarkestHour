@@ -386,11 +386,11 @@ defaultproperties
     bCanBeEncroachedUpon=true
     EncroachmentRadiusInMeters=50
     EncroachmentPenaltyMax=30
-    EncroachmentPenaltyBlockThreshold=10
+    EncroachmentPenaltyBlockThreshold=15
     EncroachmentPenaltyOverrunThreshold=30
     EncroachmentSpawnTimePenalty=15
-    EncroachmentEnemyCountMin=2
-    EncroachmentPenaltyForgivenessPerSecond=2
+    EncroachmentEnemyCountMin=3
+    EncroachmentPenaltyForgivenessPerSecond=5
     bCanEncroachmentOverrun=true
 
     OverrunRadiusInMeters=15
