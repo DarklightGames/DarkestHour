@@ -224,8 +224,8 @@ defaultproperties
     // DO NOT EDIT ANYTHING BELOW WITHOUT ASKING
 
     // Defaults Basic (this always gets applied before every profile)
-    ControlProfileKeys(0)=    (Keys=("Tab",        "GreyMinus",        "F2",          "F3",               "Insert",     "CapsLock",                               "Home",         "End",             "Minus",                       "Equals"))
-    ControlProfileCommands(0)=(Cmds=("ScoreToggle","CommunicationMenu","ShowVoteMenu","CommunicationMenu","Speak Squad","ShowOrderMenu | OnRelease HideOrderMenu","Speak Command","Speak Unassigned","DecreaseSmokeLauncherSetting","IncreaseSmokeLauncherSetting"))
+    ControlProfileKeys(0)=    (Keys=("Tab",        "GreyMinus ",       "F2",          "F3",               "Insert",     "CapsLock",                               "Home",         "End",             "Minus",                       "Equals"))
+    ControlProfileCommands(0)=(Cmds=("ScoreToggle","ToggleAdminLogin","ShowVoteMenu","CommunicationMenu","Speak Squad","ShowOrderMenu | OnRelease HideOrderMenu","Speak Command","Speak Unassigned","DecreaseSmokeLauncherSetting","IncreaseSmokeLauncherSetting"))
 
     // Defaults Filled (this always gets applied EXCEPT for when RO Classic is selected)
     ControlProfileKeys(1)=    (Keys=("T",        "Y",   "U",       "I",          "O",        "P",        "F",             "G",          "H",          "N",     "GreySlash",          "NumPadPeriod",       "NumPad3",            "NumPad9",            "GreyPlus",           "RightMouse",  "MiddleMouse","M","J","K","L",                "Comma","Period","LeftBracket","RightBracket","Backslash","Slash","Semicolon","SingleQuote","BackSpace","PageUp","PageDown","Up","Down","Left","Right","ScrollLock","JOY1","JOY2","JOY3","JOY5","JOY13","JOY14","JOY15","JOY16","F24"))
