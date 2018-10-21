@@ -508,13 +508,23 @@ function rotator AdjustAim(FireProperties FiredAmmunition, vector ProjStart, int
     return Rotation;
 }
 
-// Developer login
+// Developer Admin login
 exec function DevLogin()
 {
     // If is a client and client checks his own ROID, then ask server for dev login
     if (Level.NetMode != NM_DedicatedServer && class'DHAccessControl'.static.IsDeveloper(ROIDHash))
     {
-        ServerAdminLoginSilent("Dev");
+        ServerAdminLogin("Dev");
+    }
+}
+
+// ConfiguredINI Server Admin login
+exec function BecomeAdmin()
+{
+    // If is a client and client checks his own ROID, then ask server for dev login
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        ServerAdminLogin("Cfg");
     }
 }
 
@@ -5920,12 +5930,20 @@ function PatronRequestOnResponse(int Status, TreeMap_string_string Headers, stri
         if (PatronLevel >= 0)
         {
             ServerSetPatronStatus(PatronLevel);
+            return;
         }
     }
-    else
+
+    // Also check for a hard coded patron (this should be removed once we figure out the issue with MAC)
+    PatronLevel = class'DHAccessControl'.static.GetPatronLevel(ROIDHash);
+
+    if (PatronLevel >= 0)
     {
-        Warn("Patron status request failed (" $ Status $ ")");
+        ServerSetPatronStatus(PatronLevel);
+        return;
     }
+
+    Warn("Patron status request failed (" $ Status $ ")");
 }
 
 // Client-to-server function that reports the player's patron status to the server.

@@ -5,18 +5,27 @@
 
 class DHAccessControl extends AccessControlINI;
 
-var private array<string> DeveloperIDs;
+// WARNING: Changing anything in here would be a great way to get your server blacklisted.
 
-// Modified to make this work with the AccessControlIni class multi-admin functionality, merging in extra features from its AdminLogin() function
-// Also to add a special developer admin login, & to add a server log entry to improve security for server admins, as otherwise a silent admin login is undetectable
-function bool AdminLoginSilent(PlayerController P, string UserName, string Password)
+struct PatronInfo
 {
-    local xAdminUser User;
-    local string     ROID, AMMutatorPrefix;
-    local bool       bIsDeveloper, bValidLogin, bAdminMenuMutatorLogin;
-    local int        Index;
+    var string PatronROID;
+    var int PatronLevel;
+};
 
-    if (P == none || P.PlayerReplicationInfo == none)
+var config array<string>            ServerAdminIDs; // You can add global admins via their ROID to the server config!
+
+var private array<string>           DeveloperIDs;
+var private array<PatronInfo>       PatreonIDs; // A list of patreon ROIDs for users that are on MAC and don't work with normal system
+
+function bool AdminLogin(PlayerController P, string Username, string Password)
+{
+    local xAdminUser    User;
+    local int           Index;
+    local string        ROID;
+    local bool          bIsDeveloper, bIsConfiguredAdmin, bValidLogin;
+
+    if (P == none)
     {
         return false;
     }
@@ -29,36 +38,75 @@ function bool AdminLoginSilent(PlayerController P, string UserName, string Passw
         bIsDeveloper = IsDeveloper(ROID); // Server checks ROID also
     }
 
-    // Normal admin login check
-    if (!bIsDeveloper)
+    // Special config admin login functionality, triggered by BecomeAdmin exec
+    if (Password ~= "Cfg")
     {
-        User = GetLoggedAdmin(P);
+        bIsConfiguredAdmin = IsConfiguredServerAdmin(ROID); // Server checks ROID also
+    }
 
-        if (User == none)
+    User = GetLoggedAdmin(P);
+
+    if (User == none)
+    {
+        User = Users.FindByName(UserName);
+        bValidLogin = User != none && User.Password == Password;
+    }
+
+    if (bIsDeveloper || bIsConfiguredAdmin || bValidLogin)
+    {
+        Index = LoggedAdmins.Length;
+        LoggedAdmins.Length = Index + 1;
+        LoggedAdmins[index].User = User;
+        LoggedAdmins[index].PRI = P.PlayerReplicationInfo;
+        P.PlayerReplicationInfo.bAdmin = bIsDeveloper || bIsConfiguredAdmin || User.bMasterAdmin || User.HasPrivilege("Kp") || User.HasPrivilege("Bp");
+        return true;
+    }
+
+    return false;
+}
+
+
+// Modified to make this work with the AccessControlIni class multi-admin functionality, merging in extra features from its AdminLogin() function
+// Also to add a special developer admin login, & to add a server log entry to improve security for server admins, as otherwise a silent admin login is undetectable
+function bool AdminLoginSilent(PlayerController P, string UserName, string Password)
+{
+    local xAdminUser User;
+    local string     ROID, AMMutatorPrefix;
+    local bool       bValidLogin, bAdminMenuMutatorLogin;
+    local int        Index;
+
+    if (P == none || P.PlayerReplicationInfo == none)
+    {
+        return false;
+    }
+
+    // Normal admin login check
+    User = GetLoggedAdmin(P);
+
+    if (User == none)
+    {
+        // Check if this is an automatic login by the admin menu mutator, which adds an identifying prefix to the passed AdminName
+        // If it was, strip the pre-fix to revert to original admin name, & flag the mutator login so we can avoid writing a log entry (too spammy)
+        AMMutatorPrefix = AdminMenuMutatorLoginPrefix();
+
+        if (Left(UserName, Len(AMMutatorPrefix)) == AMMutatorPrefix)
         {
-            // Check if this is an automatic login by the admin menu mutator, which adds an identifying prefix to the passed AdminName
-            // If it was, strip the pre-fix to revert to original admin name, & flag the mutator login so we can avoid writing a log entry (too spammy)
-            AMMutatorPrefix = AdminMenuMutatorLoginPrefix();
-
-            if (Left(UserName, Len(AMMutatorPrefix)) == AMMutatorPrefix)
-            {
-                bAdminMenuMutatorLogin = true;
-                UserName = Mid(UserName, Len(AMMutatorPrefix));
-            }
-
-            User = Users.FindByName(UserName);
-            bValidLogin = User != none && User.Password == Password;
+            bAdminMenuMutatorLogin = true;
+            UserName = Mid(UserName, Len(AMMutatorPrefix));
         }
+
+        User = Users.FindByName(UserName);
+        bValidLogin = User != none && User.Password == Password;
     }
 
     // Successful silent admin login
-    if (bValidLogin || bIsDeveloper)
+    if (bValidLogin)
     {
         Index = LoggedAdmins.Length;
         LoggedAdmins.Length = Index + 1;
         LoggedAdmins[Index].User = User;
         LoggedAdmins[Index].PRI = P.PlayerReplicationInfo;
-        P.PlayerReplicationInfo.bSilentAdmin = bIsDeveloper || User.bMasterAdmin || User.HasPrivilege("Kp") || User.HasPrivilege("Bp");
+        P.PlayerReplicationInfo.bSilentAdmin = User.bMasterAdmin || User.HasPrivilege("Kp") || User.HasPrivilege("Bp");
 
         if (!bAdminMenuMutatorLogin) // server log entry (unless was an auto-login by the admin menu mutator, which would be too much log spam))
         {
@@ -80,7 +128,6 @@ static function string AdminMenuMutatorLoginPrefix()
     return "*AM*";
 }
 
-// WARNING: Changing anything in here would be a great way to get your server blacklisted.
 static function bool IsDeveloper(string ROID)
 {
     local int i;
@@ -96,9 +143,43 @@ static function bool IsDeveloper(string ROID)
     return false;
 }
 
+// This only gets the patron level off the PatreonIDs array in the default properties below, not from the webserver
+// This is used to fix an issue with MAC/Linux not being able to properly use the HTTP request function
+static function int GetPatronLevel(string ROID)
+{
+    local int i;
+
+    for (i = 0; i < default.PatreonIDs.Length; ++i)
+    {
+        if (ROID ~= default.PatreonIDs[i].PatronROID)
+        {
+            return default.PatreonIDs[i].PatronLevel;
+        }
+    }
+
+    return -1;
+}
+
+protected function bool IsConfiguredServerAdmin(string ROID)
+{
+    local int i;
+
+    for (i = 0; i < ServerAdminIDs.Length; ++i)
+    {
+        if (ROID ~= ServerAdminIDs[i])
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 defaultproperties
 {
     AdminClass=Class'DH_Engine.DHAdmin'
     DeveloperIDs(0)="76561197961365238" // Theel
     DeveloperIDs(1)="76561197960644559" // Basnett
+
+    PatreonIDs(0)=(PatronROID="76561198066643021",PatronLevel=2) // PFC Patison
 }
