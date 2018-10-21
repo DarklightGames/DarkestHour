@@ -2935,6 +2935,12 @@ state MatchOver
     function BeginState()
     {
         super.BeginState();
+
+        if (DHVotingHandler(VotingHandler) != none)
+        {
+            DHVotingHandler(VotingHandler).ReapplyMapVotes();
+        }
+
         GRI.bAllChatEnabled = true; // Lets enable all chat because the round is over
     }
 }
