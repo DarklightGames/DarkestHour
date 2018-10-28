@@ -1087,8 +1087,6 @@ function ScoreRadioUsed(Controller Radioman)
     if (DHPlayerReplicationInfo(Radioman.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(Radioman.PlayerReplicationInfo).RoleInfo != none)
     {
         RadioUsedAward = 5;
-        DHPlayerReplicationInfo(Radioman.PlayerReplicationInfo).StashedScore += RadioUsedAward;
-
         ScoreEvent(Radioman.PlayerReplicationInfo, RadioUsedAward, "Radioman_used");
     }
 }
@@ -1107,13 +1105,8 @@ function ScoreMortarResupply(Controller Dropper, Controller Gunner)
 // Give spotter a point or two for spotting a kill
 function ScoreMortarSpotAssist(Controller Spotter, Controller Mortarman)
 {
-    if (Spotter == none || Spotter == Mortarman || Spotter.PlayerReplicationInfo == none || Mortarman == none || Mortarman.PlayerReplicationInfo == none)
-    {
-        return;
-    }
-
-    DHPlayerReplicationInfo(Spotter.PlayerReplicationInfo).StashedScore += 2;
-    DHPlayerReplicationInfo(Mortarman.PlayerReplicationInfo).StashedScore += 1;
+    // DEPRECATED FOR NOW
+    return;
 }
 
 // Modified to handle StashedScore and prevent fellow vehicle crewman from getting kills and score for yours
@@ -2091,11 +2084,6 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                 {
                     DHKiller.WeaponLockViolations++;
                     DHKiller.LockWeapons(Min(WeaponLockTimeSecondsMaximum, DHKiller.WeaponLockViolations * WeaponLockTimeSecondsInterval)); // TODO: probably add 1 second as we are 'mid second' in game time
-
-                    if (DHPlayerReplicationInfo(DHKiller.PlayerReplicationInfo) != none)
-                    {
-                        DHPlayerReplicationInfo(DHKiller.PlayerReplicationInfo).StashedScore -= 2;
-                    }
                 }
 
                 if (DHPawn(KilledPawn) != none && DHPawn(KilledPawn).SpawnPoint != none)
@@ -2282,7 +2270,7 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
     local PlayerReplicationInfo KillerPRI, KilledPRI;
     local Controller C;
 
-    if (DeathMessageMode == DM_None || Killed == none)
+    if (DeathMessageMode == DM_None || Killed == none && DamageType != class'DHSpawnKillDamageType')
     {
         return;
     }
@@ -2294,20 +2282,8 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
 
     KilledPRI = Killed.PlayerReplicationInfo;
 
-    // Send DM to every human player
-    if (DeathMessageMode == DM_All)
-    {
-        // Loop through all controllers & DM each human player
-        for (C = Level.ControllerList; C != none; C = C.NextController)
-        {
-            if (DHPlayer(C) != none)
-            {
-                DHPlayer(C).ClientAddHudDeathMessage(KillerPRI, KilledPRI, DamageType);
-            }
-        }
-    }
     // OnDeath means only send DM to player who is killed, Personal means send DM to both killed & killer
-    else if (DeathMessageMode == DM_OnDeath || DeathMessageMode == DM_Personal)
+    if (DeathMessageMode == DM_OnDeath || DeathMessageMode == DM_Personal && DamageType != class'DHSpawnKillDamageType')
     {
         // Send DM to a killed human player
         if (DHPlayer(Killed) != none)
@@ -2320,6 +2296,18 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
         if (DeathMessageMode == DM_Personal && DHPlayer(Killer) != none)
         {
             DHPlayer(Killer).ClientAddHudDeathMessage(KillerPRI, KilledPRI, DamageType);
+        }
+
+        return;
+    }
+
+    // If we made it to this point we can assume DeathMessageMode is DM_All or it was a Spawn Kill
+    // Loop through all controllers & DM each human player
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        if (DHPlayer(C) != none)
+        {
+            DHPlayer(C).ClientAddHudDeathMessage(KillerPRI, KilledPRI, DamageType);
         }
     }
 }
@@ -2918,7 +2906,6 @@ function ResetScores()
         {
             PRI = DHPlayerReplicationInfo(C.PlayerReplicationInfo);
             PRI.Score = 0;
-            PRI.StashedScore = 0;
         }
     }
 }

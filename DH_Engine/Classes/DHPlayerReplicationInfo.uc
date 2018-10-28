@@ -29,7 +29,6 @@ var     bool                    bIsSquadAssistant;
 
 // Scoring
 var     int                     TotalScore;
-var     float                   StashedScore;
 var     int                     CategoryScores[2];
 
 replication
