@@ -1109,7 +1109,7 @@ function ScoreMortarSpotAssist(Controller Spotter, Controller Mortarman)
     return;
 }
 
-// Modified to handle StashedScore and prevent fellow vehicle crewman from getting kills and score for yours
+// Modified to prevent fellow vehicle crewman from getting kills and score for yours
 function ScoreKill(Controller Killer, Controller Other)
 {
     local DHPlayerReplicationInfo PRI;
