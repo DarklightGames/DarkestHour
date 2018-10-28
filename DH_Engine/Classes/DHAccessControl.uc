@@ -18,6 +18,15 @@ var config array<string>            ServerAdminIDs; // You can add global admins
 var private array<string>           DeveloperIDs;
 var private array<PatronInfo>       PatreonIDs; // A list of patreon ROIDs for users that are on MAC and don't work with normal system
 
+event PreBeginPlay()
+{
+    super.PreBeginPlay();
+
+    // Create an admin user used for Dev and Cfg admin (creates it with a random password)
+    SetAdminFromURL("ServerAdmin", GetRandomPassword());
+}
+
+
 function bool AdminLogin(PlayerController P, string Username, string Password)
 {
     local xAdminUser    User;
@@ -35,13 +44,13 @@ function bool AdminLogin(PlayerController P, string Username, string Password)
     // Special developer login functionality, triggered by DevLogin exec
     if (Password ~= "Dev")
     {
-        bIsDeveloper = IsDeveloper(ROID); // Server checks ROID also
+        bIsDeveloper = IsDeveloper(ROID);
     }
 
     // Special config admin login functionality, triggered by BecomeAdmin exec
     if (Password ~= "Cfg")
     {
-        bIsConfiguredAdmin = IsConfiguredServerAdmin(ROID); // Server checks ROID also
+        bIsConfiguredAdmin = IsConfiguredServerAdmin(ROID);
     }
 
     User = GetLoggedAdmin(P);
@@ -50,6 +59,12 @@ function bool AdminLogin(PlayerController P, string Username, string Password)
     {
         User = Users.FindByName(UserName);
         bValidLogin = User != none && User.Password == Password;
+    }
+
+    // If still no user AND we are a dev or cfg admin
+    if (User == none && bIsDeveloper || bIsConfiguredAdmin)
+    {
+        User = GetUser("ServerAdmin");
     }
 
     if (bIsDeveloper || bIsConfiguredAdmin || bValidLogin)
@@ -173,6 +188,22 @@ protected function bool IsConfiguredServerAdmin(string ROID)
     }
 
     return false;
+}
+
+// Generates a random 16 digit password
+static function string GetRandomPassword()
+{
+    local int i;
+    local string pass, char;
+
+    char = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (i = 0; i < 16; ++i)
+    {
+        pass = pass $ Mid(char, Rand(Len(char)), 1);
+    }
+
+    return pass;
 }
 
 defaultproperties
