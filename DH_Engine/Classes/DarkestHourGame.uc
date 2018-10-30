@@ -2069,10 +2069,10 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
             DHKilled = DHPlayer(Killed);
             DHKiller = DHPlayer(Killer);
 
+            DamageType = class'DHSpawnKillDamageType'; // change the damage type to signify this was a spawn kill
+
             if (DHKiller != none && DHKilled != none) // only relevant to player vs player spawn kills
             {
-                DamageType = class'DHSpawnKillDamageType'; // change the damage type to signify this was a spawn kill
-
                 // Inform victim's controller that it was spawn killed, allow player to re-spawn in a vehicle quickly,
                 // & increment player reinforcements for victim's team so they don't suffer loss
                 DHKilled.bSpawnedKilled = true;
@@ -2270,7 +2270,7 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
     local PlayerReplicationInfo KillerPRI, KilledPRI;
     local Controller C;
 
-    if (DeathMessageMode == DM_None || Killed == none && DamageType != class'DHSpawnKillDamageType')
+    if ((DeathMessageMode == DM_None || Killed == none) && DamageType != class'DHSpawnKillDamageType')
     {
         return;
     }
@@ -2283,7 +2283,7 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
     KilledPRI = Killed.PlayerReplicationInfo;
 
     // OnDeath means only send DM to player who is killed, Personal means send DM to both killed & killer
-    if (DeathMessageMode == DM_OnDeath || DeathMessageMode == DM_Personal && DamageType != class'DHSpawnKillDamageType')
+    if ((DeathMessageMode == DM_OnDeath || DeathMessageMode == DM_Personal) && DamageType != class'DHSpawnKillDamageType')
     {
         // Send DM to a killed human player
         if (DHPlayer(Killed) != none)
