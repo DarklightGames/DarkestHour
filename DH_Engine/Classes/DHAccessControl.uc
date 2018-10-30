@@ -194,16 +194,16 @@ protected function bool IsConfiguredServerAdmin(string ROID)
 static function string GetRandomPassword()
 {
     local int i;
-    local string pass, char;
+    local string Password, Characters;
 
-    char = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    Characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     for (i = 0; i < 16; ++i)
     {
-        pass = pass $ Mid(char, Rand(Len(char)), 1);
+        Password $= Mid(Characters, Rand(Len(Characters)), 1);
     }
 
-    return pass;
+    return Password;
 }
 
 defaultproperties
