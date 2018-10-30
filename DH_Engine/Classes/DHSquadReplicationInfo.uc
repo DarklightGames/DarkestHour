@@ -408,6 +408,11 @@ simulated function bool HasSquadLeader(int TeamIndex, int SquadIndex)
     return GetSquadLeader(TeamIndex, SquadIndex) != none;
 }
 
+simulated function bool HasAssistant(int TeamIndex, int SquadIndex)
+{
+    return GetAssistantSquadLeader(TeamIndex, SquadIndex) != none;
+}
+
 // Returns true if the specified player is the squad leader of the specified squad.
 simulated function bool IsSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex)
 {

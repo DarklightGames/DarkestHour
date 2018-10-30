@@ -25,6 +25,7 @@ var localized string    BanText;
 var localized string    PromoteText;
 var localized string    AssistantText;
 var localized string    RescindAssistantText;
+var localized string    VolunteerToAssistText;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -123,6 +124,8 @@ function bool MembersListContextMenuOpen(GUIContextMenu Sender)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo MyPRI, OtherPRI;
+    local DHSquadReplicationInfo SRI;
+    local int Index;
 
     PC = DHPlayer(PlayerOwner());
 
@@ -133,34 +136,48 @@ function bool MembersListContextMenuOpen(GUIContextMenu Sender)
 
     MyPRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
     OtherPRI = DHPlayerReplicationInfo(li_Members.GetObject());
+    SRI = PC.SquadReplicationInfo;
 
-    if (MyPRI == none || OtherPRI == none || MyPRI == OtherPRI || MyPRI.SquadIndex != SquadIndex || !MyPRI.IsSquadLeader())
+    if (MyPRI == none || OtherPRI == none || SRI == none || MyPRI == OtherPRI || MyPRI.SquadIndex != SquadIndex)
     {
         return false;
     }
 
     Sender.ContextItems.Length = 0;
 
-    // Kick & ban
-    Sender.AddItem(Repl(default.KickText, "{0}", OtherPRI.PlayerName));
-    Sender.AddItem(Repl(default.BanText, "{0}", OtherPRI.PlayerName));
-
-    // Promote to leader
-    Sender.AddItem("-");
-    Sender.AddItem(Repl(default.PromoteText, "{0}", OtherPRI.PlayerName));
-
-    // Assign and unassign assistant
-    Sender.AddItem("-");
-    if (OtherPRI.bIsSquadAssistant)
+    if (MyPRI.IsSquadLeader())
     {
-        Sender.AddItem(Repl(default.RescindAssistantText, "{0}", OtherPRI.PlayerName));
+        // Kick & ban
+        Sender.AddItem(Repl(default.KickText, "{0}", OtherPRI.PlayerName));
+        Sender.AddItem(Repl(default.BanText, "{0}", OtherPRI.PlayerName));
+
+        // Promote to leader
+        Sender.AddItem("-");
+        Sender.AddItem(Repl(default.PromoteText, "{0}", OtherPRI.PlayerName));
+
+        // Assign and unassign assistant
+        Sender.AddItem("-");
+
+        if (OtherPRI.bIsSquadAssistant)
+        {
+            Sender.AddItem(Repl(default.RescindAssistantText, "{0}", OtherPRI.PlayerName));
+        }
+        else
+        {
+            Sender.AddItem(Repl(default.AssistantText, "{0}", OtherPRI.PlayerName));
+        }
     }
     else
     {
-        Sender.AddItem(Repl(default.AssistantText, "{0}", OtherPRI.PlayerName));
+        Index = li_Members.GetIndexByObject(li_Members.GetObject());
+
+        if (Index == 0 && !SRI.HasAssistant(PC.GetTeamNum(), MyPRI.SquadIndex))
+        {
+            Sender.AddItem(Repl(default.VolunteerToAssistText, "{0}", OtherPRI.PlayerName));
+        }
     }
 
-    return true;
+    return Sender.ContextItems.Length > 0;
 }
 
 function bool MembersListContextMenuClose(GUIContextMenu Sender)
@@ -171,7 +188,7 @@ function bool MembersListContextMenuClose(GUIContextMenu Sender)
 function MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex)
 {
     local DHPlayer PC;
-    local DHPlayerReplicationInfo PRI;
+    local DHPlayerReplicationInfo MyPRI, PRI;
 
     PC = DHPlayer(PlayerOwner());
 
@@ -180,36 +197,50 @@ function MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex)
         return;
     }
 
+    MyPRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
     PRI = DHPlayerReplicationInfo(li_Members.GetObject());
 
-    if (PRI == none)
+    if (MyPRI == none || PRI == none)
     {
         return;
     }
 
-    switch (ClickIndex)
+    if (MyPRI.IsSquadLeader())
     {
-        case 0: // Kick
-            PC.ServerSquadKick(PRI);
-            break;
-        case 1: // Ban
-            PC.ServerSquadBan(PRI);
-            break;
-        case 3: // Promote
-            PC.ServerSquadPromote(PRI);
-            break;
-        case 5:
-            if (PRI.bIsSquadAssistant)
-            {
-                // Remove assistant
-                PC.ServerSquadMakeAssistant(none);
-            }
-            else
-            {
-                // Make assistant
-                PC.ServerSquadMakeAssistant(PRI);
-            }
-            break;
+        switch (ClickIndex)
+        {
+            case 0: // Kick
+                PC.ServerSquadKick(PRI);
+                break;
+            case 1: // Ban
+                PC.ServerSquadBan(PRI);
+                break;
+            case 3: // Promote
+                PC.ServerSquadPromote(PRI);
+                break;
+            case 5:
+                if (PRI.bIsSquadAssistant)
+                {
+                    // Remove assistant
+                    PC.ServerSquadMakeAssistant(none);
+                }
+                else
+                {
+                    // Make assistant
+                    PC.ServerSquadMakeAssistant(PRI);
+                }
+                break;
+        }
+    }
+    else
+    {
+        // Non-squad leader menu.
+        switch (ClickIndex)
+        {
+            case 0: // volunteer
+                PC.ServerSquadVolunteerToAssist();
+                break;
+        }
     }
 }
 
@@ -349,4 +380,6 @@ defaultproperties
     PromoteText="Promote {0} to squad leader"
     AssistantText="Assign {0} as assistant"
     RescindAssistantText="Unassign {0} as assistant"
+    VolunteerToAssistText="Volunteer as assistant"
 }
+

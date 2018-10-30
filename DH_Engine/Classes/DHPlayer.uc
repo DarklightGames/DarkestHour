@@ -91,6 +91,7 @@ var     int                     WeaponLockViolations;       // the number of vio
 var     DHSquadReplicationInfo  SquadReplicationInfo;
 var     bool                    bIgnoreSquadInvitations;
 var     bool                    bIgnoreSquadLeaderVolunteerPrompts;
+var     bool                    bIgnoreSquadLeaderAssistantVolunteerPrompts;
 var     int                     SquadMemberLocations[12];   // SQUAD_SIZE_MAX
 var     int                     SquadLeaderLocations[8];    // TEAM_SQUADS_MAX
 
@@ -149,6 +150,7 @@ replication
         ServerSquadSay, ServerSquadLock, ServerSquadSignal,
         ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
         ServerSetPatronStatus, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
+        ServerSquadVolunteerToAssist,
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons; // these ones in debug mode only
 
@@ -158,7 +160,8 @@ replication
         ClientAddHudDeathMessage, ClientFadeFromBlack, ClientProposeMenu,
         ClientConsoleCommand, ClientCopyToClipboard, ClientSaveROIDHash,
         ClientSquadInvite, ClientSquadSignal, ClientSquadLeaderVolunteerPrompt, ClientTeamSurrenderPrompt,
-        ClientTeamKillPrompt, ClientOpenLogFile, ClientLogToFile, ClientCloseLogFile;
+        ClientTeamKillPrompt, ClientOpenLogFile, ClientLogToFile, ClientCloseLogFile,
+        ClientSquadAssistantVolunteerPrompt;
 }
 
 function ServerChangePlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2) { } // no longer used
@@ -5007,6 +5010,39 @@ simulated function ClientTeamSurrenderPrompt()
     Player.InteractionMaster.AddInteraction("DH_Engine.DHTeamSurrenderInteraction", Player);
 }
 
+function ServerSquadVolunteerToAssist()
+{
+    local int TeamIndex, SquadIndex;
+    local DHPlayerReplicationInfo PRI, SLPRI;
+    local DHPlayer SLPC;
+
+    TeamIndex = GetTeamNum();
+    SquadIndex = GetSquadIndex();
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    SLPRI = SquadReplicationInfo.GetSquadLeader(TeamIndex, SquadIndex);
+
+    if (PRI == none || SLPRI == none)
+    {
+        return;
+    }
+
+    SLPC = DHPlayer(SLPRI.Owner);
+
+    if (SLPC == none)
+    {
+        return;
+    }
+
+    if (SquadReplicationInfo.HasAssistant(TeamIndex, SquadIndex))
+    {
+        // Squad assistant already exists.
+        return;
+    }
+
+    SLPC.ClientSquadAssistantVolunteerPrompt(TeamIndex, SquadIndex, PRI);
+}
+
 function ServerVote(bool bVote, DHPromptInteraction Interaction)
 {
     local DarkestHourGame G;
@@ -5045,6 +5081,17 @@ simulated function ClientSquadLeaderVolunteerPrompt(int TeamIndex, int SquadInde
         class'DHSquadLeaderVolunteerInteraction'.default.ExpirationTime = ExpirationTime;
 
         Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadLeaderVolunteerInteraction", Player);
+    }
+}
+
+simulated function ClientSquadAssistantVolunteerPrompt(int TeamIndex, int SquadIndex, DHPlayerReplicationInfo VolunteerPRI)
+{
+    if (!bIgnoreSquadLeaderAssistantVolunteerPrompts)
+    {
+        class'DHSquadLeaderAssistantVolunteerInteraction'.default.TeamIndex = TeamIndex;
+        class'DHSquadLeaderAssistantVolunteerInteraction'.default.SquadIndex = SquadIndex;
+        class'DHSquadLeaderAssistantVolunteerInteraction'.default.VolunteerPRI = VolunteerPRI;
+        Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadLeaderAssistantVolunteerInteraction", Player);
     }
 }
 
