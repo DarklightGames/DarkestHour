@@ -5561,8 +5561,21 @@ function DHDrawTypingPrompt(Canvas C)
     local float XPos, YPos;
     local float XL, YL;
     local DHConsole Console;
+    local color SayTypeColor;
+    local string SayTypeText;
+    local class<DHLocalMessage> SayTypeMessageClass;
 
     Console = DHConsole(PlayerConsole);
+    SayTypeMessageClass = Console.GetSayTypeMessageClass(Console.SayType);
+
+    if (SayTypeMessageClass == none)
+    {
+        SayTypeColor = class'UColor'.default.White;
+    }
+    else
+    {
+        SayTypeColor = SayTypeMessageClass.static.GetDHConsoleColor(PlayerOwner.PlayerReplicationInfo, AlliedNationID, bSimpleColours);
+    }
 
     C.Font = GetConsoleFont(C);
     C.Style = ERenderStyle.STY_Alpha;
@@ -5574,7 +5587,10 @@ function DHDrawTypingPrompt(Canvas C)
     YPos = (ConsoleMessagePosY * HudCanvasScale * C.SizeY) + (((1.0 - HudCanvasScale) * 0.5) * C.SizeY) - YL;
 
     C.SetPos(XPos, YPos);
-    C.DrawTextClipped("(>" @ Console.SayType @ Left(Console.TypedStr, Console.TypedStrPos) $ Chr(4) $ Eval(Console.TypedStrPos < Len(Console.TypedStr), Mid(Console.TypedStr, Console.TypedStrPos), "_"), true);
+
+    SayTypeText = class'GameInfo'.static.MakeColorCode(SayTypeColor) $ Console.SayType $ class'GameInfo'.static.MakeColorCode(WhiteColor);
+
+    C.DrawTextClipped("(>" @ SayTypeText @ Left(Console.TypedStr, Console.TypedStrPos) $ Chr(4) $ Eval(Console.TypedStrPos < Len(Console.TypedStr), Mid(Console.TypedStr, Console.TypedStrPos), "_"), true);
 }
 
 defaultproperties

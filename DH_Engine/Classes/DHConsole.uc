@@ -400,7 +400,6 @@ function DecrementSayType()
 
     for (i = 0; i < SayTypes.Length; ++i)
     {
-        // TODO: not sure if unrealscript is smart enough to do the mod correctly
         j = (SayTypeIndex - i) % SayTypes.Length;
 
         if (CanUseSayType(SayTypes[j]))
@@ -478,6 +477,24 @@ function bool CanUseSayType(string SayType)
     }
 
     return false;
+}
+
+static function class<DHLocalMessage> GetSayTypeMessageClass(string SayType)
+{
+    // TODO: make struct of saytypes instead
+    switch (SayType)
+    {
+        case "Say":
+            return class'DHSayMessage';
+        case "TeamSay":
+            return class'DHTeamSayMessage';
+        case "SquadSay":
+            return class'DHSquadSayMessage';
+        case "VehicleSay":
+            return class'DHVehicleSayMessage';
+    }
+
+    return none;
 }
 
 state Typing
