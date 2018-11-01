@@ -779,7 +779,7 @@ event PostRender(Canvas Canvas)
 
     if (PlayerConsole != none && PlayerConsole.bTyping)
     {
-        DrawTypingPrompt(Canvas, PlayerConsole.TypedStr, PlayerConsole.TypedStrPos);
+        DHDrawTypingPrompt(Canvas);
     }
 
     if (bCapturingMouse)
@@ -5554,6 +5554,27 @@ function DrawFadeEffect(Canvas C)
     C.DrawTileStretched(Material'Engine.WhiteSquareTexture', C.ClipX, C.ClipY);
     C.DrawColor = WhiteColor;
     C.ColorModulate.W = HudOpacity / 255.0;
+}
+
+function DHDrawTypingPrompt(Canvas C)
+{
+    local float XPos, YPos;
+    local float XL, YL;
+    local DHConsole Console;
+
+    Console = DHConsole(PlayerConsole);
+
+    C.Font = GetConsoleFont(C);
+    C.Style = ERenderStyle.STY_Alpha;
+    C.DrawColor = ConsoleColor;
+
+    C.TextSize ("A", XL, YL);
+
+    XPos = (ConsoleMessagePosX * HudCanvasScale * C.SizeX) + (((1.0 - HudCanvasScale) * 0.5) * C.SizeX);
+    YPos = (ConsoleMessagePosY * HudCanvasScale * C.SizeY) + (((1.0 - HudCanvasScale) * 0.5) * C.SizeY) - YL;
+
+    C.SetPos(XPos, YPos);
+    C.DrawTextClipped("(>" @ Console.SayType @ Left(Console.TypedStr, Console.TypedStrPos) $ Chr(4) $ Eval(Console.TypedStrPos < Len(Console.TypedStr), Mid(Console.TypedStr, Console.TypedStrPos), "_"), true);
 }
 
 defaultproperties
