@@ -10,6 +10,7 @@ var class<DHConstruction>   ConstructionClass;
 var vector                  Location;
 var int                     RoundTime;
 var int                     Yaw;
+var string                  PlayerID;
 
 function JSONValue ToJSON()
 {
@@ -18,6 +19,7 @@ function JSONValue ToJSON()
         .PutInteger("round_time", RoundTime)
         .PutString("class", ConstructionClass)
         .PutVector("location", Location)
-        .PutInteger("yaw", Yaw);
+        .PutInteger("yaw", Yaw)
+        .PutString("player_id", PlayerID);
 }
 

@@ -149,6 +149,7 @@ function OnConstructionBuilt(DHConstruction Construction, int RoundTime)
     C.Location = Construction.Location;
     C.RoundTime = RoundTime;
     C.Yaw = Construction.Rotation.Yaw;
+    C.PlayerID = Construction.InstigatorController.GetPlayerIDHash();
 
     Constructions[Constructions.Length] = C;
 }
