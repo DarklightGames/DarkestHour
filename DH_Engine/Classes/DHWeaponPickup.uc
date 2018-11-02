@@ -146,9 +146,6 @@ function InitDroppedPickupFor(Inventory Inv)
             }
         }
 
-        // Ensure that AmmoMags has at least 1 item (otherwise it bugs other things)
-        AmmoMags.Length = Max(AmmoMags.Length, 1);
-
         // If weapon has barrels, transfer over any barrels
         if (W.Barrels.Length > 0)
         {
