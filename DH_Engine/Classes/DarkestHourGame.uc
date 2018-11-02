@@ -564,16 +564,27 @@ function HandlePerformanceInfraction()
     {
         ++PoorPerformanceStrikeCount;
 
+        Log("Server received a performance strike, please consider lowering max player slots or removing" @ class'DHLib'.static.GetMapName(Level) @ "from rotation!");
+
         // If too many strikes, then lets just start a MidGameVote as no one is having fun
         if (PoorPerformanceStrikeCount > PERFORMANCE_STRIKE_MARGIN)
         {
             Level.Game.Broadcast(self, "This server and/or level is under performing, starting a mid-game-vote", 'Say');
             MidGameVote();
         }
-        else // Otherwise its a strike and we increase respawn time until end of level
+        else // Otherwise its a strike and we increase respawn time until end of level & deal with server view distance
         {
-            Level.Game.Broadcast(self, "Warning (Strike" @ PoorPerformanceStrikeCount $ "):" @ "Server is performing very poorly, raising respawn times until end of level!!!", 'Say');
             ConsolidatedRespawnTimeAdded += ADDED_RESPAWN_TIME_PUNISHMENT;
+
+            if (HandleServerViewDistance())
+            {
+                Level.Game.Broadcast(self, "Warning (Strike" @ PoorPerformanceStrikeCount $ "):" @ "Server is performing very poorly, raising respawn times & lowering view distance until end of level!!!", 'Say');
+            }
+            else
+            {
+                Level.Game.Broadcast(self, "Warning (Strike" @ PoorPerformanceStrikeCount $ "):" @ "Server is performing very poorly, raising respawn times until end of level!!!", 'Say');
+            }
+
             PoorPerformanceInfractionCount = 0; // Reset infractions
         }
     }
@@ -585,6 +596,24 @@ function HandlePerformanceInfraction()
     // Handle Reinforcement Intervals
     GRI.ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval + ConsolidatedRespawnTimeAdded + int(TickRatio * MAXINFLATED_INTERVALTIME);
     GRI.ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval + ConsolidatedRespawnTimeAdded + int(TickRatio * MAXINFLATED_INTERVALTIME);
+}
+
+function bool HandleServerViewDistance()
+{
+    local DHZoneInfo Z;
+    local bool bChangedFogDistance;
+
+    foreach DynamicActors(class'DHZoneInfo', Z)
+    {
+        if (Z.bUseDynamicFogDistance)
+        {
+            // Set the fog distance to 33% less for each strike (1 strikes = 66% distance, 2 strikes = 33% distance)
+            Z.SetFogDistanceWithRatio(1.0 - (PoorPerformanceStrikeCount * 0.33));
+            bChangedFogDistance = true;
+        }
+    }
+
+    return bChangedFogDistance;
 }
 
 // Modified to avoid logging a misleading warning every time ("Warning - PATHS NOT DEFINED or NO PLAYERSTART with positive rating")
