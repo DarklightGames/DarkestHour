@@ -89,7 +89,7 @@ simulated function Weapon PrevWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
 {
     if (Inventory != none)
     {
-        return Inventory.NextWeapon(CurrentChoice, CurrentWeapon);
+        return Inventory.PrevWeapon(CurrentChoice, CurrentWeapon);
     }
 
     return none;
@@ -102,4 +102,6 @@ defaultproperties // TODO: perhaps make this remote role none so it doesn't repl
     AttachmentClass=class'DH_Equipment.DHRadioAttachment'
     AttachBoneName="hip"
     RadioClass=class'DH_Engine.DHRadio'
+    bCanThrow=false
+    bCanSway=false
 }
