@@ -65,7 +65,7 @@ var     int                         PoorPerformanceStrikeCount;             // N
 var     int                         GoodPerformanceMeritCount;              // Number of merits the server gets for having good performance, will reset if it receives an infraction
 
 var     bool                        bLogAverageTickRate;
-var     float                       ServerTickForInflation;                 // Value that determines when inflation will start if ServerTickRateAverage is less than
+var     float                       ServerTickForInfraction;                // Value that determines when a server receives an infraction for having low ServerTickRateAverage
 var     float                       ServerTickRateAverage;                  // The average tick rate over the past SERVERTICKRATE_UPDATETIME
 var     float                       ServerTickRateConsolidated;             // Keeps track of tick rates over time, used to calculate average
 var     int                         ServerTickFrameCount;                   // Keeps track of how many frames are between ServerTickRateConsolidated
@@ -454,8 +454,26 @@ event Tick(float DeltaTime)
         // Update the server net health
         UpdateServerNetHealth();
 
-        // Adjust the reinforcement interval
-        HandleReinforceIntervalInflation();
+        // Is there a performance infraction?
+        if (ServerTickRateAverage < ServerTickForInfraction)
+        {
+            HandlePerformanceInfraction();
+        }
+        else
+        {
+            // No infraction, server is running at acceptable tick
+            ++GoodPerformanceMeritCount;
+
+            // If enough merits are received & there is an infraction floating around, remove it
+            if (GoodPerformanceMeritCount > PERFORMANCE_MERIT_MARGIN && PoorPerformanceInfractionCount > 0)
+            {
+                --PoorPerformanceInfractionCount;
+            }
+
+            // Set normal + consolidated spawn intervals
+            GRI.ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval + ConsolidatedRespawnTimeAdded;
+            GRI.ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval + ConsolidatedRespawnTimeAdded;
+        }
 
         if (bLogAverageTickRate)
         {
@@ -524,8 +542,8 @@ function UpdateServerNetHealth()
     GRI.ServerNetHealth = byte(average);
 }
 
-// Raises the reinforcement interval used in GRI if the server is performing poorly, otherwise it sets it to default
-function HandleReinforceIntervalInflation()
+// Function to handle performance infractions (multiple infractions lead to strikes, strikes will lead to level change)
+function HandlePerformanceInfraction()
 {
     local float TickRatio;
 
@@ -535,55 +553,38 @@ function HandleReinforceIntervalInflation()
         return;
     }
 
-    // Perform some changes to GRI.ReinforcementInterval if average tick is less than desired
-    if (ServerTickRateAverage < ServerTickForInflation)
+    ++PoorPerformanceInfractionCount; // Count infractions
+    GoodPerformanceMeritCount = 0; // Remove merits because we got an infraction
+
+    // Calculate the ratio of how bad the average tick is compared to ServerTickForInfraction
+    TickRatio = 1.0 - ServerTickRateAverage / ServerTickForInfraction;
+
+    // Do we have enough infractions for a strike?
+    if (PoorPerformanceInfractionCount > PERFORMANCE_INFRACTION_MARGIN)
     {
-        ++PoorPerformanceInfractionCount;
-        GoodPerformanceMeritCount = 0;
+        ++PoorPerformanceStrikeCount;
 
-        TickRatio = 1.0 - ServerTickRateAverage / ServerTickForInflation;
-
-        // Do we have enough infractions for a strike?
-        if (PoorPerformanceInfractionCount > PERFORMANCE_INFRACTION_MARGIN)
+        // If too many strikes, then lets just start a MidGameVote as no one is having fun
+        if (PoorPerformanceStrikeCount > PERFORMANCE_STRIKE_MARGIN)
         {
-            ++PoorPerformanceStrikeCount;
-
-            // If too many strikes, then lets just start a MidGameVote as no one is having fun
-            if (PoorPerformanceStrikeCount > PERFORMANCE_STRIKE_MARGIN)
-            {
-                Level.Game.Broadcast(self, "This server and/or level is under performing, starting a mid-game-vote", 'Say');
-                MidGameVote();
-            }
-            else // Otherwise its a strike and we increase respawn time until end of level
-            {
-                Level.Game.Broadcast(self, "Warning (Strike" @ PoorPerformanceStrikeCount $ "):" @ "Server is performing very poorly, raising respawn times until end of level!!!", 'Say');
-                ConsolidatedRespawnTimeAdded += ADDED_RESPAWN_TIME_PUNISHMENT;
-                PoorPerformanceInfractionCount = 0; // Reset infractions
-            }
+            Level.Game.Broadcast(self, "This server and/or level is under performing, starting a mid-game-vote", 'Say');
+            MidGameVote();
         }
-        else
+        else // Otherwise its a strike and we increase respawn time until end of level
         {
-            Level.Game.Broadcast(self, "Server is performing poorly, respawn times increased temporarily to improve performance!", 'Say');
+            Level.Game.Broadcast(self, "Warning (Strike" @ PoorPerformanceStrikeCount $ "):" @ "Server is performing very poorly, raising respawn times until end of level!!!", 'Say');
+            ConsolidatedRespawnTimeAdded += ADDED_RESPAWN_TIME_PUNISHMENT;
+            PoorPerformanceInfractionCount = 0; // Reset infractions
         }
-
-        GRI.ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval + ConsolidatedRespawnTimeAdded + int(TickRatio * MAXINFLATED_INTERVALTIME);
-        GRI.ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval + ConsolidatedRespawnTimeAdded + int(TickRatio * MAXINFLATED_INTERVALTIME);
     }
     else
     {
-        // Server is running at acceptable tick
-        ++GoodPerformanceMeritCount;
-
-        // If enough merits are received & there is an infraction, remove it
-        if (GoodPerformanceMeritCount > PERFORMANCE_MERIT_MARGIN && PoorPerformanceInfractionCount > 0)
-        {
-            --PoorPerformanceInfractionCount;
-        }
-
-        // Set normal + consolidated spawn intervals
-        GRI.ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval + ConsolidatedRespawnTimeAdded;
-        GRI.ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval + ConsolidatedRespawnTimeAdded;
+        Level.Game.Broadcast(self, "Server is performing poorly, respawn times increased temporarily to improve performance!", 'Say');
     }
+
+    // Handle Reinforcement Intervals
+    GRI.ReinforcementInterval[0] = LevelInfo.Axis.ReinforcementInterval + ConsolidatedRespawnTimeAdded + int(TickRatio * MAXINFLATED_INTERVALTIME);
+    GRI.ReinforcementInterval[1] = LevelInfo.Allies.ReinforcementInterval + ConsolidatedRespawnTimeAdded + int(TickRatio * MAXINFLATED_INTERVALTIME);
 }
 
 // Modified to avoid logging a misleading warning every time ("Warning - PATHS NOT DEFINED or NO PLAYERSTART with positive rating")
@@ -5088,7 +5089,7 @@ function PlayerVoted(DHPlayer Player,bool bVote, DHPromptInteraction Interaction
 
 defaultproperties
 {
-    ServerTickForInflation=19.0
+    ServerTickForInfraction=19.0
 
     // Default settings based on common used server settings in DH
     bIgnore32PlayerLimit=true // allows more than 32 players
