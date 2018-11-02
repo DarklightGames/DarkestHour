@@ -599,7 +599,7 @@ function BlowUp(vector HitLocation)
         {
             // If the grenade hasn't landed, do 1/3 less damage
             // This isn't supposed to be realistic, its supposed to make airbursts less effective so players are more apt to throw grenades more authentically
-            DelayedHurtRadius(Damage * 0.6666, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
+            DelayedHurtRadius(Damage * 0.75, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
         }
         else
         {
