@@ -50,7 +50,7 @@ var     int                         OriginalReinforcementIntervals[2];
 var     int                         SpawnsAtRoundStart[2];                  // Number of spawns for each team at start of round (used for reinforcement warning calc)
 var     byte                        bDidSendEnemyTeamWeakMessage[2];        // Flag as to whether or not the "enemy team is weak" has been sent for each team.
 
-const SERVERTICKRATE_CORRECTION =       1.5;    // Corrects the floating point errors in the average tick rate calculation, the value represents how many ticks aren't 'included' every second
+
 const SERVERTICKRATE_UPDATETIME =       15.0;   // The duration we use to calculate the average tick the server is running
 const MAXINFLATED_INTERVALTIME =        100.0;  // The max value to add to reinforcement time for inflation for poor performance
 const ADDED_RESPAWN_TIME_PUNISHMENT =   30.0;   // How much to increase ConsolidatedRespawnTimeAdded by when server receives a strike
@@ -68,8 +68,8 @@ var     int                         GoodPerformanceMeritCount;              // N
 var     bool                        bLogAverageTickRate;
 var     float                       ServerTickForInfraction;                // Value that determines when a server receives an infraction for having low ServerTickRateAverage
 var     float                       ServerTickRateAverage;                  // The average tick rate over the past SERVERTICKRATE_UPDATETIME
-var     float                       ServerTickRateConsolidated;             // Keeps track of tick rates over time, used to calculate average
 var     int                         ServerTickFrameCount;                   // Keeps track of how many frames are between ServerTickRateConsolidated
+var     float                       ServerTickNextAverageTime;              // The next time at which to calculate the average tick rate
 
 var     bool                        bIsAttritionEnabled;                    // This variable is here primarily so that mutators can disable attrition.
 var     float                       CalculatedAttritionRate[2];
@@ -431,22 +431,18 @@ function int GetNumPlayers()
 
 event Tick(float DeltaTime)
 {
-    // Add up the delta time, (how much time has passed since last tick), there is a floating point error as DeltaTime is not accurate enough
-    ServerTickRateConsolidated += DeltaTime;
+    ++ServerTickFrameCount;
 
     // This code only executes every SERVERTICKRATE_UPDATETIME seconds
-    if (ServerTickRateConsolidated > SERVERTICKRATE_UPDATETIME)
+    if (Level.TimeSeconds > ServerTickNextAverageTime)
     {
-        // The average is calculated by taking how many ticks have happened in the past SERVERTICKRATE_UPDATETIME seconds and dividing it by
-        // the ServerTickRateConsolidated (which is roughly the same as the UPDATETIME)
-        // There is a correction however as there is a floating point error in DeltaTime, instead of doing the math every tick, we only do it every
-        // SERVERTICKRATE_UPDATETIME to save on Script ms
-        ServerTickRateAverage = (ServerTickFrameCount + (SERVERTICKRATE_CORRECTION * SERVERTICKRATE_UPDATETIME)) / ServerTickRateConsolidated;
+        // Average = (# of ticks in x seconds) / (x seconds)
+        ServerTickRateAverage = ServerTickFrameCount / SERVERTICKRATE_UPDATETIME;
         ServerTickFrameCount = 0; // Reset the frame count
-        ServerTickRateConsolidated -= SERVERTICKRATE_UPDATETIME; // Reset the consolitation, but keep left overs
+        ServerTickNextAverageTime = Level.TimeSeconds + SERVERTICKRATE_UPDATETIME;
 
         // Update the server tick health in GRI to our average rounded up
-        GRI.ServerTickHealth = Ceil(ServerTickRateAverage);
+        GRI.ServerTickHealth = ServerTickRateAverage;
 
         // Update the server net health
         UpdateServerNetHealth();
@@ -476,10 +472,6 @@ event Tick(float DeltaTime)
         {
             Log("Average Server Tick Rate:" @ ServerTickRateAverage);
         }
-    }
-    else
-    {
-        ++ServerTickFrameCount;
     }
 
     super.Tick(DeltaTime);
