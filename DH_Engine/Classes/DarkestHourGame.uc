@@ -50,6 +50,7 @@ var     int                         OriginalReinforcementIntervals[2];
 var     int                         SpawnsAtRoundStart[2];                  // Number of spawns for each team at start of round (used for reinforcement warning calc)
 var     byte                        bDidSendEnemyTeamWeakMessage[2];        // Flag as to whether or not the "enemy team is weak" has been sent for each team.
 
+const SERVERTICKRATE_CORRECTION =       1.5;    // Corrects the floating point errors in the average tick rate calculation, the value represents how many ticks aren't 'included' every second
 const SERVERTICKRATE_UPDATETIME =       15.0;   // The duration we use to calculate the average tick the server is running
 const MAXINFLATED_INTERVALTIME =        100.0;  // The max value to add to reinforcement time for inflation for poor performance
 const ADDED_RESPAWN_TIME_PUNISHMENT =   30.0;   // How much to increase ConsolidatedRespawnTimeAdded by when server receives a strike
@@ -430,23 +431,19 @@ function int GetNumPlayers()
 
 event Tick(float DeltaTime)
 {
+    // Add up the delta time, (how much time has passed since last tick), there is a floating point error as DeltaTime is not accurate enough
     ServerTickRateConsolidated += DeltaTime;
 
     // This code only executes every SERVERTICKRATE_UPDATETIME seconds
     if (ServerTickRateConsolidated > SERVERTICKRATE_UPDATETIME)
     {
-        ServerTickRateAverage = ServerTickFrameCount / ServerTickRateConsolidated;
-
-        // This is a hack
-        // Add 2 to the average so it reports correctly, it seems to report 2 less than what the server is actually running at
-        // We only add 2 if its above 10 because we still want values to be very low so more of the inflation kicks in
-        if (ServerTickRateAverage > 10)
-        {
-            ServerTickRateAverage += 2;
-        }
-
-        ServerTickFrameCount = 0;
-        ServerTickRateConsolidated -= SERVERTICKRATE_UPDATETIME;
+        // The average is calculated by taking how many ticks have happened in the past SERVERTICKRATE_UPDATETIME seconds and dividing it by
+        // the ServerTickRateConsolidated (which is roughly the same as the UPDATETIME)
+        // There is a correction however as there is a floating point error in DeltaTime, instead of doing the math every tick, we only do it every
+        // SERVERTICKRATE_UPDATETIME to save on Script ms
+        ServerTickRateAverage = (ServerTickFrameCount + (SERVERTICKRATE_CORRECTION * SERVERTICKRATE_UPDATETIME)) / ServerTickRateConsolidated;
+        ServerTickFrameCount = 0; // Reset the frame count
+        ServerTickRateConsolidated -= SERVERTICKRATE_UPDATETIME; // Reset the consolitation, but keep left overs
 
         // Update the server tick health in GRI to our average rounded up
         GRI.ServerTickHealth = Ceil(ServerTickRateAverage);
@@ -547,8 +544,8 @@ function HandlePerformanceInfraction()
 {
     local float TickRatio;
 
-    // If server isn't running at normal gamespeed OR we've already reached strike margin, then ignore
-    if (GameSpeed != 1.0 || PoorPerformanceStrikeCount > PERFORMANCE_STRIKE_MARGIN)
+    // If server isn't running at normal gamespeed OR round is not in play OR we've already reached strike margin, then ignore
+    if (GameSpeed != 1.0 || !IsInState('RoundInPlay') || PoorPerformanceStrikeCount > PERFORMANCE_STRIKE_MARGIN)
     {
         return;
     }
