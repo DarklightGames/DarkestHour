@@ -15,6 +15,14 @@ var string      StoredServerAddress;
 var array<string>           SayTypes;
 var string                  SayType;
 
+// Since "say" messages are being treated differently now, we want to keep a
+// separate history so we don't accidentally broadcast console messages (like
+// admin login credentials etc.).
+var array<string>           SayHistory;
+var int                     SayHistoryCur;
+
+const SAY_HISTORY_MAX = 16;
+
 // Modified to fix the reconnect console command, a delay is need, but so is a bit in ConnectFailure, as it does techically fail still
 simulated event Tick(float Delta)
 {
@@ -371,6 +379,17 @@ exec function SquadTalk()
 
 exec function Talk()
 {
+    if (CanUseSayType("Say"))
+    {
+        SayType = "Say";
+        TypedStr = "";
+        TypedStrPos = 0;
+        TypingOpen();
+    }
+}
+
+exec function StartTyping()
+{
     UpdateSayType();
     TypedStr = "";
     TypedStrPos = 0;
@@ -449,7 +468,7 @@ function UpdateSayType()
 {
     if (!CanUseSayType(SayType))
     {
-        IncrementSayType();
+        DecrementSayType();
     }
 }
 
@@ -515,6 +534,7 @@ state Typing
                 TypedStr = "";
                 TypedStrPos = 0;
                 HistoryCur = HistoryTop;
+                SayHistoryCur = -1;
             }
             else
             {
@@ -531,15 +551,26 @@ state Typing
         {
             if (TypedStr != "")
             {
-                History[HistoryTop] = TypedStr;
+                History[HistoryTop] = SayType @ TypedStr;
                 HistoryTop = (HistoryTop + 1) % arraycount(History);
 
                 if (HistoryBot == -1 || HistoryBot == HistoryTop)
                 {
-                    HistoryBot = (HistoryBot+1) % arraycount(History);
+                    HistoryBot = (HistoryBot + 1) % arraycount(History);
                 }
 
                 HistoryCur = HistoryTop;
+
+                // SayHistory
+                SayHistory.Insert(0, 1);
+                SayHistory[0] = TypedStr;
+
+                if (SayHistory.Length > SAY_HISTORY_MAX)
+                {
+                    SayHistory.Length = SAY_HISTORY_MAX;
+                }
+
+                SayHistoryCur = -1;
 
                 // Make a local copy of the string.
                 Temp = SayType @ TypedStr;
@@ -560,44 +591,23 @@ state Typing
         }
         else if (Key == IK_Up)
         {
-            if (HistoryBot >= 0)
-            {
-                if (HistoryCur == HistoryBot)
-                {
-                    HistoryCur = HistoryTop;
-                }
-                else
-                {
-                    HistoryCur--;
-
-                    if (HistoryCur < 0)
-                    {
-                        HistoryCur = arraycount(History) - 1;
-                    }
-                }
-
-                TypedStr = History[HistoryCur];
-                TypedStrPos = Len(TypedStr);
-            }
-
+            SayHistoryCur = (SayHistoryCur + 1) % SayHistory.Length;
+            TypedStr = SayHistory[SayHistoryCur];
+            TypedStrPos = Len(TypedStr);
             return true;
         }
+
         else if (Key == IK_Down)
         {
-            if (HistoryBot >= 0)
+            if (SayHistoryCur == -1)
             {
-                if (HistoryCur == HistoryTop)
-                {
-                    HistoryCur = HistoryBot;
-                }
-                else
-                {
-                    HistoryCur = (HistoryCur+ 1 ) % arraycount(History);
-                }
-
-                TypedStr = History[HistoryCur];
-                TypedStrPos = Len(TypedStr);
+                SayHistoryCur = SayHistory.Length;
             }
+
+            SayHistoryCur = (SayHistoryCur - 1) % SayHistory.Length;
+            TypedStr = Eval(SayHistoryCur == -1, "", SayHistory[SayHistoryCur]);
+            TypedStrPos = Len(TypedStr);
+            return true;
         }
         else if (Key == IK_Backspace)
         {

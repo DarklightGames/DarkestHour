@@ -5568,13 +5568,15 @@ function DHDrawTypingPrompt(Canvas C)
     Console = DHConsole(PlayerConsole);
     SayTypeMessageClass = Console.GetSayTypeMessageClass(Console.SayType);
 
-    if (SayTypeMessageClass == none)
+    if (SayTypeMessageClass == none || SayTypeMessageClass == class'DHSayMessage')
     {
         SayTypeColor = class'UColor'.default.White;
+        SayTypeText = "[ALL]";
     }
     else
     {
         SayTypeColor = SayTypeMessageClass.static.GetDHConsoleColor(PlayerOwner.PlayerReplicationInfo, AlliedNationID, bSimpleColours);
+        SayTypeText = SayTypeMessageClass.default.MessagePrefix;
     }
 
     C.Font = GetConsoleFont(C);
@@ -5588,9 +5590,9 @@ function DHDrawTypingPrompt(Canvas C)
 
     C.SetPos(XPos, YPos);
 
-    SayTypeText = class'GameInfo'.static.MakeColorCode(SayTypeColor) $ Console.SayType $ class'GameInfo'.static.MakeColorCode(WhiteColor);
+    SayTypeText = class'GameInfo'.static.MakeColorCode(SayTypeColor) $ SayTypeText $ class'GameInfo'.static.MakeColorCode(WhiteColor);
 
-    C.DrawTextClipped("(>" @ SayTypeText @ Left(Console.TypedStr, Console.TypedStrPos) $ Chr(4) $ Eval(Console.TypedStrPos < Len(Console.TypedStr), Mid(Console.TypedStr, Console.TypedStrPos), "_"), true);
+    C.DrawTextClipped(SayTypeText @ "(>" @ Left(Console.TypedStr, Console.TypedStrPos) $ Chr(4) $ Eval(Console.TypedStrPos < Len(Console.TypedStr), Mid(Console.TypedStr, Console.TypedStrPos), "_"), true);
 }
 
 defaultproperties
@@ -5626,7 +5628,7 @@ defaultproperties
     NoTimeLimitText="Unlimited"
     NeedReloadText="Needs reloading"
     CanReloadText="Press %THROWMGAMMO% to assist reload"
-    TeamMessagePrefix="*TEAM* "
+    TeamMessagePrefix="[TEAM] "
 
     // Deploying text
     JoinTeamText="Press [ESC] to join a team"
