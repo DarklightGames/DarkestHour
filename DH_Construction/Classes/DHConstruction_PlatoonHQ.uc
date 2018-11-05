@@ -332,6 +332,7 @@ defaultproperties
     HarmfulDamageTypes(6)=class'DHRocketImpactDamage'               // Direct AT weapon hits
 
     DamageTypeScales(0)=(DamageType=class'ROTankShellImpactDamage',Scale=0.33)
+    DamageTypeScales(1)=(DamageType=class'DHRocketImpactDamage',Scale=0.33)
 
     FlagSkinIndex=1
     SpawnPointClass=class'DHSpawnPoint_PlatoonHQ'
