@@ -16,4 +16,5 @@ defaultproperties
     PluralName="Tank Crewmen"
     Limit=3
     bCanCarryExtraAmmo=false
+    AddedReinforcementTime=15
 }

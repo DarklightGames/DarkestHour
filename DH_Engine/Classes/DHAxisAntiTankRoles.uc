@@ -14,4 +14,5 @@ defaultproperties
     PluralName="Tank Hunters"
     Limit=1
     bCanCarryExtraAmmo=false
+    AddedReinforcementTime=5
 }

@@ -14,4 +14,5 @@ defaultproperties
     Article="a "
     PluralName="Mortar Operators"
     Limit=1
+    AddedReinforcementTime=10
 }

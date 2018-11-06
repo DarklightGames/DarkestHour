@@ -15,4 +15,5 @@ defaultproperties
     PluralName="Anti-Tank Soldiers"
     Limit=1
     bCanCarryExtraAmmo=false
+    AddedReinforcementTime=5
 }

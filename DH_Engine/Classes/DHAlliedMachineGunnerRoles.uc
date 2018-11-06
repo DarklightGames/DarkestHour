@@ -15,4 +15,5 @@ defaultproperties
     PluralName="Machine-Gunners"
     Limit=1
     bCanCarryExtraAmmo=false
+    AddedReinforcementTime=10
 }

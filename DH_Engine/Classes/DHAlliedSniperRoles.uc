@@ -13,4 +13,5 @@ defaultproperties
     Article="a "
     PluralName="Snipers"
     Limit=1
+    AddedReinforcementTime=15
 }
