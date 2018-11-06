@@ -182,7 +182,7 @@ function int GetEventScoreIndex(class<DHScoreEvent> EventClass)
     return -1;
 }
 
-function string Serialize()
+function JSONObject Serialize()
 {
     local int i;
     local JSONObject Root, EventScoreObject, CategoryScoreObject;
@@ -210,11 +210,11 @@ function string Serialize()
     }
 
     Root = new class'JSONObject';
-    Root.Put("total_score", class'JSONNumber'.static.ICreate(TotalScore));
+    Root.Put("total", class'JSONNumber'.static.ICreate(TotalScore));
     Root.Put("categories", CategoryScoresArray);
     Root.Put("events", EventScoresArray);
 
-    return Root.Encode();
+    return Root;
 }
 
 defaultproperties
