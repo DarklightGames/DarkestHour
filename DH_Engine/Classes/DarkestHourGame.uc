@@ -5219,7 +5219,7 @@ defaultproperties
     Version=VersionObject
 
     MetricsClass=class'DHMetrics'
-    bEnableMetrics=false
+    bEnableMetrics=true
     bUseWeaponLocking=true
 
     WeaponLockTimeSecondsInterval=5
