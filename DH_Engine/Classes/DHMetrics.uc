@@ -12,6 +12,7 @@ var private array<DHMetricsCapture>         Captures;
 var private array<DHMetricsConstruction>    Constructions;
 var private DateTime                        RoundStartTime;
 var private DateTime                        RoundEndTime;
+var private int                             WinnerTeamIndex;
 
 function PostBeginPlay()
 {
@@ -44,20 +45,17 @@ function string Dump()
         .PutString("map", class'DHLib'.static.GetMapName(Level))
         .PutString("round_start", RoundStartTime.IsoFormat())
         .PutString("round_end", RoundEndTime.IsoFormat())
+        .PutInteger("winner", WinnerTeamIndex)
         .Put("players", class'JSONArray'.static.FromSerializables(PlayersArray))
         .Put("frags", class'JSONArray'.static.FromSerializables(Frags))
         .Put("captures", class'JSONArray'.static.FromSerializables(Captures))
         .Put("constructions", class'JSONArray'.static.FromSerializables(Constructions));
-
-    StopWatch(false);
 
     F = Spawn(class'FileLog');
     F.OpenLog(class'DateTime'.static.Now(self).IsoFormat(), "log");
     class'UFileLog'.static.Logf(F, Root.Encode());
     F.CloseLog();
     F.Destroy();
-
-    StopWatch(true);
 
     return Root.Encode();
 }
@@ -69,9 +67,10 @@ function OnRoundBegin()
     Frags.Length = 0;
 }
 
-function OnRoundEnd(int WinnerTeamIndex)
+function OnRoundEnd(int Winner)
 {
     RoundEndTime = class'DateTime'.static.Now(self);
+    WinnerTeamIndex = Winner;
 
     Dump();
 }
