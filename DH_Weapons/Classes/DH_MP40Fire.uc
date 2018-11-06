@@ -10,7 +10,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_MP40Bullet'
     AmmoClass=class'ROAmmo.MP32Rd9x19Ammo'
     FireRate=0.13
-    Spread=310.0
+    Spread=328.0
     RecoilRate=0.05
     MaxVerticalRecoilAngle=250
     MaxHorizontalRecoilAngle=32
