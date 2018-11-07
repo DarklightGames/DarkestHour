@@ -16,4 +16,6 @@ defaultproperties
     DetachedArmClass=class'ROEffects.SeveredArmSovTanker'
     DetachedLegClass=class'ROEffects.SeveredLegSovTanker'
     Headgear(0)=class'DH_SovietPlayers.DH_SovietTankerHat'
+    VoiceType="DH_SovietPlayers.DHSovietVoice"
+    AltVoiceType="DH_SovietPlayers.DHSovietVoice"
 }
