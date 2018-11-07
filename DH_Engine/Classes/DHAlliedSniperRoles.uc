@@ -13,5 +13,5 @@ defaultproperties
     Article="a "
     PluralName="Snipers"
     Limit=1
-    AddedReinforcementTime=15
+    AddedRoleRespawnTime=15
 }
