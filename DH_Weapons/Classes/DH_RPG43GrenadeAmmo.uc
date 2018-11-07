@@ -7,7 +7,7 @@ class DH_RPG43GrenadeAmmo extends DHAmmunition;
 
 defaultproperties
 {
-    MaxAmmo=3 // TODO: too many for DH I think?
-    InitialAmount=3
+    MaxAmmo=2
+    InitialAmount=2
     IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.rpg43_ammo'
 }
