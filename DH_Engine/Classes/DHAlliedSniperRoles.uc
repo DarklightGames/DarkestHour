@@ -14,4 +14,5 @@ defaultproperties
     PluralName="Snipers"
     Limit=1
     AddedRoleRespawnTime=15
+    bExemptSquadRequirement=true
 }
