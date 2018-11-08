@@ -5197,7 +5197,7 @@ defaultproperties
     TeamAIType(1)=class'DH_Engine.DHTeamAI'
     LocalStatsScreenClass=none // stats screen actor isn't used in RO/DH & this stops the class being pointlessly set & replicated in each PRI
 
-    ChangeTeamInterval=120
+    ChangeTeamInterval=300
 
     ReinforcementMessagePercentages(0)=0.9
     ReinforcementMessagePercentages(1)=0.8
