@@ -62,7 +62,7 @@ defaultproperties
     MenuDescription="Provides a team-wide vehicle spawn point."
     Stages(0)=(Progress=0,StaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_Light_Vehicle_Pool_undeployed')
     ProgressMax=12
-    SupplyCost=1250
+    SupplyCost=1750
     MinDamagetoHurt=5
 
     // Temp
