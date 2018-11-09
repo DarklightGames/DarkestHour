@@ -75,6 +75,21 @@ function OnRoundEnd(int Winner)
     Dump();
 }
 
+static function string TrimPort(string NetworkAddress)
+{
+    local int i;
+
+    i = InStr(NetworkAddress, ":");
+
+    if (i >= 0)
+    {
+        NetworkAddress = Left(NetworkAddress, i);
+    }
+
+    return NetworkAddress;
+
+}
+
 function OnPlayerLogin(PlayerController PC)
 {
     local Object O;
@@ -84,7 +99,8 @@ function OnPlayerLogin(PlayerController PC)
     {
         P = new class'DHMetricsPlayer';
         P.ID = PC.GetPlayerIDHash();
-        P.NetworkAddress = PC.GetPlayerNetworkAddress();
+        P.NetworkAddress = TrimPort(PC.GetPlayerNetworkAddress());
+
         Players.Put(P.ID, P);
     }
     else
