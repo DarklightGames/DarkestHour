@@ -179,21 +179,30 @@ function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class
         return;
     }
 
-    if (Killer.Pawn != none)
-    {
-        KillerLocation = Killer.Pawn.Location;
-    }
-
     F = new class'DHMetricsFrag';
-    F.KillerID = Killer.GetPlayerIDHash();
-    F.VictimID = Victim.GetPlayerIDHash();
-    F.KillerLocation = KillerLocation;
     F.DamageType = DamageType;
-    F.VictimLocation = HitLocation;
     F.HitIndex  = HitIndex;
     F.RoundTime = RoundTime;
+
+    // Killer
+    F.KillerID = Killer.GetPlayerIDHash();
     F.KillerTeam = Killer.GetTeamNum();
+    F.KillerLocation = KillerLocation;
+
+    if (Killer.Pawn != none)
+    {
+        F.KillerPawn = Killer.Pawn.Class;
+    }
+
+    // Victim
+    F.VictimID = Victim.GetPlayerIDHash();
     F.VictimTeam = Victim.GetTeamNum();
+    F.VictimLocation = HitLocation;
+
+    if (Victim.Pawn != none)
+    {
+        F.VictimPawn = Victim.Pawn.Class;
+    }
 
     Frags[Frags.Length] = F;
 }
