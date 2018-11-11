@@ -11,6 +11,18 @@ var class<DHRadio>      RadioClass;
 var DHRadio             Radio;
 var name                AttachBoneName;
 
+
+// Functions emptied out or returning false, as radio isn't a real weapon
+simulated function Fire(float F) {return;}
+simulated event ClientStartFire(int Mode) {return;}
+simulated event StopFire(int Mode) {return;}
+simulated function bool IsFiring(){return false;}
+function bool FillAmmo(){return false;}
+function bool ResupplyAmmo(){return false;}
+simulated exec function ROManualReload() {return;}
+simulated function bool IsBusy() {return false;} // not busy in the idle state because we never fire
+simulated function bool ShouldUseFreeAim() {return false;}
+
 simulated function PreBeginPlay() // TODO: merge this into PostBeginPlay & perhaps add an authority role check
 {
     local DHPawn P;
@@ -82,17 +94,17 @@ simulated function Weapon NextWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
         return Inventory.NextWeapon(CurrentChoice, CurrentWeapon);
     }
 
-    return none;
+    return CurrentChoice;
 }
 
 simulated function Weapon PrevWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
 {
     if (Inventory != none)
     {
-        return Inventory.NextWeapon(CurrentChoice, CurrentWeapon);
+        return Inventory.PrevWeapon(CurrentChoice, CurrentWeapon);
     }
 
-    return none;
+    return CurrentChoice;
 }
 
 defaultproperties // TODO: perhaps make this remote role none so it doesn't replicate as client doesn't need it,
@@ -101,5 +113,7 @@ defaultproperties // TODO: perhaps make this remote role none so it doesn't repl
     InventoryGroup=10
     AttachmentClass=class'DH_Equipment.DHRadioAttachment'
     AttachBoneName="hip"
-    RadioClass=class'DH_Engine.DHRadio'
+    RadioClass=class'DH_Engine.DHInfantryRadio'
+    bCanThrow=false
+    bCanSway=false
 }

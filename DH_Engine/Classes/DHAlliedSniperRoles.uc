@@ -13,4 +13,6 @@ defaultproperties
     Article="a "
     PluralName="Snipers"
     Limit=1
+    AddedRoleRespawnTime=15
+    bExemptSquadRequirement=true
 }

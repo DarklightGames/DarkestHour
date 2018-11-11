@@ -615,13 +615,6 @@ function UpdateVehicleLockOnPlayerEntering(Vehicle EntryPosition)
 
     if (bVehicleLocked)
     {
-        // If player isn't registered as allowed crew, but was allowed to enter entered a locked crew position, then register him as allowed crew
-        // This can happen if he was allowed in because he's in same squad as one of the allowed crew
-        if (bEnteredTankCrewPosition && !IsAnAllowedCrewman(Player))
-        {
-            Player.SetCrewedLockedVehicle(self);
-        }
-
         // If an allowed crewman just entered (any vehicle position), cancel any unlock timer that's been set
         if (IsAnAllowedCrewman(Player))
         {
@@ -807,13 +800,9 @@ simulated function bool CanPlayerLockVehicle(Vehicle PlayersVehiclePosition)
 
 // Implemented here to check whether a player is prevented from entering a tank crew position in an armored vehicle that has been locked
 // If vehicle is locked, entry is allowed if player is registered as an 'allowed' crewman, i.e. they were in it when it was locked
-// Also allowed if player is in the same squad as one of the allowed crew in the vehicle
 // Displays a screen message if player isn't allowed in, unless that is flagged to be avoided
 function bool AreCrewPositionsLockedForPlayer(Pawn P, optional bool bNoMessageToPlayer)
 {
-    local DHPlayerReplicationInfo EnteringPlayerPRI;
-    local int                     i;
-
     if (bVehicleLocked && P != none)
     {
         // Player is one of the allowed crew, so allow him in
@@ -822,30 +811,7 @@ function bool AreCrewPositionsLockedForPlayer(Pawn P, optional bool bNoMessageTo
             return false;
         }
 
-        EnteringPlayerPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
-
-        // Player is in a squad, so check whether he's in the same squad as one of the allowed crew present in the vehicle - if he is, allow him in
-        if (EnteringPlayerPRI != none && EnteringPlayerPRI.IsInSquad())
-        {
-            if (IsAnAllowedCrewman(Driver) && class'DHPlayerReplicationInfo'.static.IsInSameSquad(EnteringPlayerPRI, DHPlayerReplicationInfo(PlayerReplicationInfo)))
-            {
-                return false;
-            }
-            else
-            {
-                for (i = 0; i < WeaponPawns.Length; ++i)
-                {
-                    if (IsAnAllowedCrewman(WeaponPawns[i]) &&
-                        class'DHPlayerReplicationInfo'.static.IsInSameSquad(EnteringPlayerPRI, DHPlayerReplicationInfo(WeaponPawns[i].PlayerReplicationInfo)))
-                    {
-                        return false;
-
-                    }
-                }
-            }
-        }
-
-        // PLayer is locked out of this vehicle's crew positions, so display screen message to notify him (unless flagged not to show message)
+        // Player is locked out of this vehicle's crew positions, so display screen message to notify him (unless flagged not to show message)
         if (!bNoMessageToPlayer)
         {
             DisplayVehicleMessage(22, P); // this vehicle has been locked by its crew

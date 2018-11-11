@@ -14,4 +14,5 @@ defaultproperties
     Article="a "
     PluralName="Mortar Operators"
     Limit=1
+    AddedRoleRespawnTime=10
 }

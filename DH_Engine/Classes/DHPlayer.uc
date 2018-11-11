@@ -2508,7 +2508,7 @@ simulated function int GetNextSpawnTime(int SpawnPointIndex, DHRoleInfo RI, int 
     {
         // LastKilledTime is 0 the first time a player joins a server, but if he leaves, the time is stored (using the sessions thing)
         // this means the player can pretty much spawn right away the first time connecting, but from then on he will be subject to the respawn time factors
-        T = LastKilledTime + GRI.ReinforcementInterval[PlayerReplicationInfo.Team.TeamIndex] + RI.AddedReinforcementTime + GRI.SpawnPoints[SpawnPointIndex].GetSpawnTimePenalty();
+        T = LastKilledTime + GRI.ReinforcementInterval[PlayerReplicationInfo.Team.TeamIndex] + RI.AddedRoleRespawnTime + GRI.SpawnPoints[SpawnPointIndex].GetSpawnTimePenalty();
     }
 
     if (VehiclePoolIndex != -1)

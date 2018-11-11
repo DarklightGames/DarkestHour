@@ -81,12 +81,14 @@ function SetViewport(vector Origin, int ZoomLevel)
 function UpdateSpawnPointPositions()
 {
     local int i;
-    local float X, Y;
+    local float X, Y, ViewportScale;
 
     if (GRI == none)
     {
         return;
     }
+
+    ViewportScale = Viewport.Max.X - Viewport.Min.X;
 
     for (i = 0; i < arraycount(b_SpawnPoints); ++i)
     {
@@ -95,7 +97,7 @@ function UpdateSpawnPointPositions()
             continue;
         }
 
-        GRI.GetMapCoords(GRI.SpawnPoints[i].Location, X, Y, b_SpawnPoints[i].WinWidth, b_SpawnPoints[i].WinHeight);
+        GRI.GetMapCoords(GRI.SpawnPoints[i].Location, X, Y, b_SpawnPoints[i].WinWidth * ViewportScale, b_SpawnPoints[i].WinHeight * ViewportScale);
 
         X = 1.0 - X;
         Y = 1.0 - Y;

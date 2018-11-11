@@ -25,7 +25,7 @@ var     bool                bSpawnWithExtraAmmo;    // role spawns with extra am
 var     bool                bExemptSquadRequirement;// this role will be exempt from the requirement of being in a squad to select
 var     bool                bRequiresSLorASL;       // player must be a SL or ASL to select this role, only applies when gametype has bSquadSpecialRolesOnly=true
 
-var     int                 AddedReinforcementTime; // extra time in seconds before re-spawning
+var     int                 AddedRoleRespawnTime; // extra time in seconds before re-spawning
 
 // Modified to include GivenItems array, & to just call StaticPrecache on the DHWeapon item (which now handles all related pre-caching)
 // Also to avoid pre-cache stuff on a server & avoid accessed none errors
@@ -211,7 +211,6 @@ simulated function bool IsValidCharacterName(string InCharacterName)
 defaultproperties
 {
     Limit=255 // unlimited (0 is now deactivated)
-    AddedReinforcementTime=0
     HeadgearProbabilities(0)=1.0
     bCanCarryExtraAmmo=true
     bSpawnWithExtraAmmo=false

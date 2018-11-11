@@ -3,16 +3,9 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHAxisSniperRoles extends DHAxisRoles
-    abstract;
+class DHInfantryRadio extends DHRadio;
 
 defaultproperties
 {
-    MyName="Sniper"
-    AltName="Scharfschütze"
-    Article="a "
-    PluralName="Snipers"
-    Limit=2
-    AddedRoleRespawnTime=15
-    bExemptSquadRequirement=true
+    AmbientSound=none
 }

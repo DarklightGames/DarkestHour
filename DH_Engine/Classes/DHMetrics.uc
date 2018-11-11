@@ -12,6 +12,7 @@ var private array<DHMetricsCapture>         Captures;
 var private array<DHMetricsConstruction>    Constructions;
 var private DateTime                        RoundStartTime;
 var private DateTime                        RoundEndTime;
+var private int                             WinnerTeamIndex;
 
 function PostBeginPlay()
 {
@@ -44,20 +45,17 @@ function string Dump()
         .PutString("map", class'DHLib'.static.GetMapName(Level))
         .PutString("round_start", RoundStartTime.IsoFormat())
         .PutString("round_end", RoundEndTime.IsoFormat())
+        .PutInteger("winner", WinnerTeamIndex)
         .Put("players", class'JSONArray'.static.FromSerializables(PlayersArray))
         .Put("frags", class'JSONArray'.static.FromSerializables(Frags))
         .Put("captures", class'JSONArray'.static.FromSerializables(Captures))
         .Put("constructions", class'JSONArray'.static.FromSerializables(Constructions));
-
-    StopWatch(false);
 
     F = Spawn(class'FileLog');
     F.OpenLog(class'DateTime'.static.Now(self).IsoFormat(), "log");
     class'UFileLog'.static.Logf(F, Root.Encode());
     F.CloseLog();
     F.Destroy();
-
-    StopWatch(true);
 
     return Root.Encode();
 }
@@ -69,11 +67,27 @@ function OnRoundBegin()
     Frags.Length = 0;
 }
 
-function OnRoundEnd(int WinnerTeamIndex)
+function OnRoundEnd(int Winner)
 {
     RoundEndTime = class'DateTime'.static.Now(self);
+    WinnerTeamIndex = Winner;
 
     Dump();
+}
+
+static function string TrimPort(string NetworkAddress)
+{
+    local int i;
+
+    i = InStr(NetworkAddress, ":");
+
+    if (i >= 0)
+    {
+        NetworkAddress = Left(NetworkAddress, i);
+    }
+
+    return NetworkAddress;
+
 }
 
 function OnPlayerLogin(PlayerController PC)
@@ -85,7 +99,8 @@ function OnPlayerLogin(PlayerController PC)
     {
         P = new class'DHMetricsPlayer';
         P.ID = PC.GetPlayerIDHash();
-        P.NetworkAddress = PC.GetPlayerNetworkAddress();
+        P.NetworkAddress = TrimPort(PC.GetPlayerNetworkAddress());
+
         Players.Put(P.ID, P);
     }
     else
@@ -164,21 +179,30 @@ function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class
         return;
     }
 
-    if (Killer.Pawn != none)
-    {
-        KillerLocation = Killer.Pawn.Location;
-    }
-
     F = new class'DHMetricsFrag';
-    F.KillerID = Killer.GetPlayerIDHash();
-    F.VictimID = Victim.GetPlayerIDHash();
-    F.KillerLocation = KillerLocation;
     F.DamageType = DamageType;
-    F.VictimLocation = HitLocation;
     F.HitIndex  = HitIndex;
     F.RoundTime = RoundTime;
+
+    // Killer
+    F.KillerID = Killer.GetPlayerIDHash();
     F.KillerTeam = Killer.GetTeamNum();
+    F.KillerLocation = KillerLocation;
+
+    if (Killer.Pawn != none)
+    {
+        F.KillerPawn = Killer.Pawn.Class;
+    }
+
+    // Victim
+    F.VictimID = Victim.GetPlayerIDHash();
     F.VictimTeam = Victim.GetTeamNum();
+    F.VictimLocation = HitLocation;
+
+    if (Victim.Pawn != none)
+    {
+        F.VictimPawn = Victim.Pawn.Class;
+    }
 
     Frags[Frags.Length] = F;
 }
