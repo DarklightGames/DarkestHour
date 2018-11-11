@@ -113,4 +113,5 @@ defaultproperties
     // These are still defined as a backup in case some idiot uses ROLevelInfo
     AxisWinsSound=Sound'DH_win.German.DH_German_Win_Theme'
     AlliesWinsSound=Sound'DH_win.Allies.DH_Allies_Win_Theme'
+    LifeTime=15
 }
