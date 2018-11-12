@@ -236,33 +236,13 @@ function BroadcastSquad(Controller Sender, coerce string Msg, optional name Type
         G.SquadReplicationInfo.GetMembers(PC.GetTeamNum(), PRI.SquadIndex, SquadMembers);
     }
 
-    if (bPartitionSpectators &&
-        PlayerController(Sender) != none &&
-        Type == 'SquadSay' &&
-        (PlayerController(Sender).IsDead() || Sender.PlayerReplicationInfo.bOnlySpectator || PlayerController(Sender).IsSpectating()))
+    for (i = 0; i < SquadMembers.Length; ++i)
     {
-        Type = 'SquadSayDead';
+        PC = DHPlayer(SquadMembers[i].Owner);
 
-        for (i = 0; i < SquadMembers.Length; ++i)
+        if (PC != none)
         {
-            PC = DHPlayer(SquadMembers[i].Owner);
-
-            if (PC != none && (PC.IsDead() || PC.IsSpectating()))
-            {
-                BroadcastText(Sender.PlayerReplicationInfo, PC, Msg, Type);
-            }
-        }
-    }
-    else
-    {
-        for (i = 0; i < SquadMembers.Length; ++i)
-        {
-            PC = DHPlayer(SquadMembers[i].Owner);
-
-            if (PC != none)
-            {
-                BroadcastText(Sender.PlayerReplicationInfo, PC, Msg, Type);
-            }
+            BroadcastText(Sender.PlayerReplicationInfo, PC, Msg, Type);
         }
     }
 }

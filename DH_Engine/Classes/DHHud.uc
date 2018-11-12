@@ -351,14 +351,6 @@ function Message(PlayerReplicationInfo PRI, coerce string Msg, name MsgType)
             DHMessageClassType = class'DHTeamSayMessage';
             Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
             break;
-        case 'SayDead':
-            DHMessageClassType = class'DHSayDeadMessage';
-            Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
-            break;
-        case 'TeamSayDead':
-            DHMessageClassType = class'DHTeamSayDeadMessage';
-            Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
-            break;
         case 'SquadSay':
             if (PC != none && PC.SquadReplicationInfo.IsASquadLeader(DHPlayerReplicationInfo(PRI)))
             {
@@ -367,17 +359,6 @@ function Message(PlayerReplicationInfo PRI, coerce string Msg, name MsgType)
             else
             {
                 DHMessageClassType = class'DHSquadSayMessage';
-            }
-            Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
-            break;
-        case 'SquadSayDead':
-            if (PC != none && PC.SquadReplicationInfo.IsASquadLeader(DHPlayerReplicationInfo(PRI)))
-            {
-                DHMessageClassType = class'DHSquadLeaderSayDeadMessage';
-            }
-            else
-            {
-                DHMessageClassType = class'DHSquadSayDeadMessage';
             }
             Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
             break;
