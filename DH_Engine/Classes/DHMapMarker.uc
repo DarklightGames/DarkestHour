@@ -16,6 +16,7 @@ var int                 LifetimeSeconds;        // Lifetime, in seconds, of the 
 var int                 GroupIndex;             // Used for grouping map markers (e.g. in the context menu when placing them).
 var bool                bShouldOverwriteGroup;  // If true, adding this map marker will overwrite any existing markers that are in the same group.
 var bool                bIsUnique;              // If true, only one of this type may be active for the team or squad (if squad specific)
+var bool                bShouldDrawBeeLine;     // If true, draw a line from the player to this marker on the situation map.
 
 // Override this function to determine if this map marker can be used. This
 // function evaluated once at the beginning of the map.
@@ -29,6 +30,11 @@ static function bool CanBeUsed(DHGameReplicationInfo GRI)
 static function bool CanPlayerUse(DHPlayerReplicationInfo PRI)
 {
     return false;
+}
+
+static function color GetBeeLineColor()
+{
+    return default.IconColor;
 }
 
 // Override to run specific logic when this marker is placed.
