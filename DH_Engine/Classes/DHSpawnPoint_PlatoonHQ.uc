@@ -125,6 +125,6 @@ defaultproperties
     CaptureRadiusInMeters=5
     EnemiesNeededToDeconstruct=2
 
-    SpawnKillPenalty=15
+    SpawnKillPenalty=30
     SpawnKillPenaltyForgivenessPerSecond=1
 }
