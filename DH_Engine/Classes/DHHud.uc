@@ -3310,15 +3310,14 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     local DHPlayerReplicationInfo   PRI;
     local DHRoleInfo                RI;
     local SpriteWidget              Widget;
-    local vector                    Temp, MapCenter, A, B;
+    local vector                    Temp, MapCenter;
     local string                    DistanceString, ObjLabel;
-    local float                     MyMapScale, ArrowRotation, X0, Y0, X1, Y1;
+    local float                     MyMapScale, ArrowRotation;
     local int                       OwnerTeam, Distance, i, j;
     local int                       Yaw;
     local DHObjective               ObjA, ObjB;
     local color                     ObjLineColor;
     local UColor.HSV                HSV;
-    local Box                       Box;
 
     if (DHGRI == none)
     {
@@ -3679,9 +3678,6 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
         }
     }
 
-    Box.Min = vect(0, 0, 0);
-    Box.Max = vect(1, 1, 0);
-
     // TODO: make this more efficient!
     // Draw the "connecting lines" between objectives
     for (i = 0; i < arraycount(DHGRI.DHObjectives); ++i)
@@ -3693,15 +3689,6 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
             continue;
         }
 
-        // TODO: the calculation of the "screen coords" of the objectives should
-        // be done ONCE, otherwise it's a lost of wasted effort.
-        // perhaps *store* this?
-        A = GetAdjustedHudLocation(ObjA.Location - MapCenter);
-        A.X = FMax(0.0, FMin(1.0, A.X / MyMapScale + 0.5));
-        A.Y = FMax(0.0, FMin(1.0, A.Y / MyMapScale + 0.5));
-        A.X = (A.X - Viewport.Min.X) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
-        A.Y = (A.Y - Viewport.Min.Y) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
-
         for (j = 0; j < ObjA.AlliesRequiredObjForCapture.Length; ++j)
         {
             ObjB = DHGRI.DHObjectives[ObjA.AlliesRequiredObjForCapture[j]];
@@ -3711,27 +3698,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
                 continue;
             }
 
-            B = GetAdjustedHudLocation(ObjB.Location - MapCenter);
-            B.X = FMax(0.0, FMin(1.0, B.X / MyMapScale + 0.5));
-            B.Y = FMax(0.0, FMin(1.0, B.Y / MyMapScale + 0.5));
-            B.X = (B.X - Viewport.Min.X) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
-            B.Y = (B.Y - Viewport.Min.Y) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
-
-            X0 = A.X;
-            Y0 = A.Y;
-            X1 = B.X;
-            Y1 = B.Y;
-
-            if (!class'UCollision'.static.ClipLineToViewport(X0, Y0, X1, Y1, Box))
-            {
-                continue;
-            }
-
-            X0 = SubCoords.PosX + (SubCoords.Width * X0);
-            Y0 = SubCoords.PosY + (SubCoords.Height * Y0);
-            X1 = SubCoords.PosX + (SubCoords.Width * X1);
-            Y1 = SubCoords.PosY + (SubCoords.Height * Y1);
-
+            // ObjA.Location ObjB.Location
             ObjLineColor = class'UColor'.default.White;
 
             if (ObjA.ObjState == ObjB.ObjState && ObjA.ObjState != OBJ_Neutral)
@@ -3752,7 +3719,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
 
             ObjLineColor = class'UColor'.static.HSV2RGB(HSV);
 
-            DrawCanvasLine(X0, Y0, X1, Y1, ObjLineColor);
+            DrawMapLine(C, SubCoords, MyMapScale, MapCenter, Viewport, ObjA.Location, ObjB.Location, ObjLineColor);
         }
     }
 
@@ -3897,7 +3864,52 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
         MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = MapMarkers[i].MapMarkerClass.default.IconColor;
 
         DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, L, MapCenter, Viewport);
+
+        if (PC.Pawn != none && MapMarkers[i].MapMarkerClass.default.bShouldDrawBeeLine)
+        {
+            // Draw a bee-line from the player to the map marker.
+            DrawMapLine(C, SubCoords, MyMapScale, MapCenter, Viewport, PC.Pawn.Location, L, MapMarkers[i].MapMarkerClass.static.GetBeeLineColor());
+        }
     }
+}
+
+// LineStart and LineEnd need to be in world-coordinates.
+function DrawMapLine(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport, vector LineStart, vector LineEnd, color LineColor)
+{
+    local Box Box;
+    local float X0, Y0, X1, Y1;
+    local vector A, B;
+
+    Box.Max = vect(1, 1, 0);
+
+    A = GetAdjustedHudLocation(LineStart - MapCenter);
+    A.X = FMax(0.0, FMin(1.0, A.X / MyMapScale + 0.5));
+    A.Y = FMax(0.0, FMin(1.0, A.Y / MyMapScale + 0.5));
+    A.X = (A.X - Viewport.Min.X) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
+    A.Y = (A.Y - Viewport.Min.Y) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
+
+    B = GetAdjustedHudLocation(LineEnd - MapCenter);
+    B.X = FMax(0.0, FMin(1.0, B.X / MyMapScale + 0.5));
+    B.Y = FMax(0.0, FMin(1.0, B.Y / MyMapScale + 0.5));
+    B.X = (B.X - Viewport.Min.X) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
+    B.Y = (B.Y - Viewport.Min.Y) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
+
+    X0 = A.X;
+    Y0 = A.Y;
+    X1 = B.X;
+    Y1 = B.Y;
+
+    if (!class'UCollision'.static.ClipLineToViewport(X0, Y0, X1, Y1, Box))
+    {
+        return;
+    }
+
+    X0 = SubCoords.PosX + (SubCoords.Width * X0);
+    Y0 = SubCoords.PosY + (SubCoords.Height * Y0);
+    X1 = SubCoords.PosX + (SubCoords.Width * X1);
+    Y1 = SubCoords.PosY + (SubCoords.Height * Y1);
+
+    DrawCanvasLine(X0, Y0, X1, Y1, LineColor);
 }
 
 function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
