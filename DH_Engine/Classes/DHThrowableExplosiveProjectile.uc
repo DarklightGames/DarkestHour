@@ -277,16 +277,10 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
                 continue;
             }
 
-            //ScriptLog: DamageExposure 1.00
-            //ScriptLog: Distance 294.66
-            //ScriptLog: DamageScale 0.57
-
             CheckedROPawns[CheckedROPawns.Length] = P;
 
             // If player is partially shielded from the blast, calculate damage reduction scale
             DamageExposure = P.GetExposureTo(HitLocation + 15.0 * -Normal(PhysicsVolume.Gravity));
-
-            Log("DamageExposure" @ DamageExposure);
 
             if (DamageExposure <= 0.0)
             {
@@ -300,16 +294,10 @@ function HurtRadius(float DamageAmount, float DamageRadius, class<DamageType> Da
         Direction = Direction / Distance;
         DamageScale = 1.0 - FMax(0.0, (Distance - Victim.CollisionRadius) / DamageRadius);
 
-
         if (P != none)
         {
             DamageScale *= DamageExposure;
         }
-
-        Log("Distance" @ Distance);
-        Log("Victim.CollisionRadius" @ Victim.CollisionRadius);
-        Log("DamageScale" @ DamageScale);
-        Log("DamageScale * DamageAmount" @ DamageScale * DamageAmount);
 
         // Record player responsible for damage caused, & if we're damaging LastTouched actor, reset that to avoid damaging it again at end of function
         if (Instigator == none || Instigator.Controller == none)
