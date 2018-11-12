@@ -733,7 +733,7 @@ function ReapplyMapVotes()
             {
                 if (MVRI[i].MapVote == MapVoteCount[x].MapIndex && MVRI[i].GameVote == MapVoteCount[x].GameConfigIndex)
                 {
-                    SubmitMapVote(MapVoteCount[x].MapIndex, MapVoteCount[x].GameConfigIndex, MVRI[x].PlayerOwner);
+                    SubmitMapVote(MapVoteCount[x].MapIndex, MapVoteCount[x].GameConfigIndex, MVRI[i].PlayerOwner);
                     break;
                 }
             }
@@ -845,7 +845,7 @@ defaultproperties
 {
     bUseSwapVote=true
     MapVoteIntervalDuration=3.0
-    lmsgMapVotedTooRecently="Please wait %seconds% seconds before voting for another map!"
+    lmsgMapVotedTooRecently="Please wait %seconds% seconds before voting another map!"
     SwapAndRestartText="DH-[Swap Teams and Restart]"
 
     PatronVoteModifiers(0)=0.0  //Not Patron
