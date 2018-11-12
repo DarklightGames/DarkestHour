@@ -338,6 +338,11 @@ event Opened(GUIComponent Sender)
             SetKeyBindIfAvailable("P", "SquadMenu");
         }
 
+        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.2.6")) >= 0)
+        {
+            SetKeyBindIfAvailable("Enter", "StartTyping");
+        }
+
         SavedVersion = class'DarkestHourGame'.default.Version.ToString();
         SaveConfig();
     }

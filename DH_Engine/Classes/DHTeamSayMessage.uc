@@ -18,7 +18,7 @@ static function string AssembleString(HUD myHUD, optional int Switch, optional P
 
 defaultproperties
 {
-    MessagePrefix="*TEAM*"
+    MessagePrefix="[TEAM]"
     bComplexString=true
     bBeep=true
 }

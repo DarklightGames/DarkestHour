@@ -24,7 +24,7 @@ static function color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int 
 defaultproperties
 {
     DrawColor=(R=0,G=204,B=0,A=255)
-    MessagePrefix="(DEAD) *SQUAD*"
+    MessagePrefix="(DEAD) [SQUAD]"
     bComplexString=true
     bBeep=true
 }

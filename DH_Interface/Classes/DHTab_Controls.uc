@@ -157,6 +157,8 @@ defaultproperties
     captions_comm(9)="Switch to Unassigned Voice Channel"
     bindings_comm(10)="Speak Squad"
     captions_comm(10)="Switch to Squad Voice Channel"
+    bindings_comm(11)="StartTyping"
+    captions_comm(11)="Start typing a chat message"
 
     Begin Object Class=DHGUIProportionalContainer Name=InputBK1
         HeaderBase=Texture'DH_GUI_Tex.Menu.DHDisplay_withcaption'

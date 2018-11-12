@@ -779,7 +779,7 @@ event PostRender(Canvas Canvas)
 
     if (PlayerConsole != none && PlayerConsole.bTyping)
     {
-        DrawTypingPrompt(Canvas, PlayerConsole.TypedStr, PlayerConsole.TypedStrPos);
+        DHDrawTypingPrompt(Canvas);
     }
 
     if (bCapturingMouse)
@@ -5556,6 +5556,45 @@ function DrawFadeEffect(Canvas C)
     C.ColorModulate.W = HudOpacity / 255.0;
 }
 
+function DHDrawTypingPrompt(Canvas C)
+{
+    local float XPos, YPos;
+    local float XL, YL;
+    local DHConsole Console;
+    local color SayTypeColor;
+    local string SayTypeText;
+    local class<DHLocalMessage> SayTypeMessageClass;
+
+    Console = DHConsole(PlayerConsole);
+    SayTypeMessageClass = Console.GetSayTypeMessageClass(Console.SayType);
+
+    if (SayTypeMessageClass == none || SayTypeMessageClass == class'DHSayMessage')
+    {
+        SayTypeColor = class'UColor'.default.White;
+        SayTypeText = "[ALL]";
+    }
+    else
+    {
+        SayTypeColor = SayTypeMessageClass.static.GetDHConsoleColor(PlayerOwner.PlayerReplicationInfo, AlliedNationID, bSimpleColours);
+        SayTypeText = SayTypeMessageClass.default.MessagePrefix;
+    }
+
+    C.Font = GetConsoleFont(C);
+    C.Style = ERenderStyle.STY_Alpha;
+    C.DrawColor = ConsoleColor;
+
+    C.TextSize ("A", XL, YL);
+
+    XPos = (ConsoleMessagePosX * HudCanvasScale * C.SizeX) + (((1.0 - HudCanvasScale) * 0.5) * C.SizeX);
+    YPos = (ConsoleMessagePosY * HudCanvasScale * C.SizeY) + (((1.0 - HudCanvasScale) * 0.5) * C.SizeY) - YL;
+
+    C.SetPos(XPos, YPos);
+
+    SayTypeText = class'GameInfo'.static.MakeColorCode(SayTypeColor) $ SayTypeText $ class'GameInfo'.static.MakeColorCode(WhiteColor);
+
+    C.DrawTextClipped(SayTypeText @ "(>" @ Left(Console.TypedStr, Console.TypedStrPos) $ Chr(4) $ Eval(Console.TypedStrPos < Len(Console.TypedStr), Mid(Console.TypedStr, Console.TypedStrPos), "_"), true);
+}
+
 defaultproperties
 {
     // General
@@ -5589,7 +5628,7 @@ defaultproperties
     NoTimeLimitText="Unlimited"
     NeedReloadText="Needs reloading"
     CanReloadText="Press %THROWMGAMMO% to assist reload"
-    TeamMessagePrefix="*TEAM* "
+    TeamMessagePrefix="[TEAM] "
 
     // Deploying text
     JoinTeamText="Press [ESC] to join a team"
