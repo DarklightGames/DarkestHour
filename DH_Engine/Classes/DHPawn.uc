@@ -6333,6 +6333,40 @@ simulated function bool IsDebugModeAllowed()
     return Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode();
 }
 
+// New boogey man mode, needs a lot of work, but it does work
+exec function BoogeyManMe()
+{
+    local DarkestHourGame DHG;
+    local DHPlayer DHP;
+
+    DHG = DarkestHourGame(Level.Game);
+    DHP = DHPlayer(Controller);
+
+    if (DHG == none || DHP == none)
+    {
+        return;
+    }
+
+    Log(" ");
+    Log("Calling BoogeyManMe");
+    Log(" ");
+
+    if (DHG.IsAdmin(DHP) && class'DHAccessControl'.static.IsDeveloper(DHP.ROIDHash))
+    {
+        //PlayerController
+        DHP.bGodMode = true; // may not be 100% needed as you can't be shot with no collision (I think)
+        DHP.bCheatFlying = true; // needs confirmed as required
+        DHP.GotoState('PlayerFlying');
+
+        //Pawn
+        bHidden = true; // does this hide us
+        Visibility = 0; // or do this?
+        UnderWaterTime = -1.0; // not sure what this does
+        SetCollision(false, false, false); // turns off collision (IMO very important)
+        bCollideWorld = false; // this too
+    }
+}
+
 // New debug exec to make bots spawn
 // Team is 0 for axis, 1 for allies, 2 for both
 // Num is optional & limits the number of bots that will be spawned (if not entered, zero is passed & gets used to signify no limit on numbers)
