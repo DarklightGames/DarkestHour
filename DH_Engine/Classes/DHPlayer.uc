@@ -2982,6 +2982,9 @@ ignores SeePlayer, HearNoise, KilledBy, SwitchWeapon, NextWeapon, PrevWeapon;
             {
                 LastKilledTime = GRI.ElapsedTime;
             }
+
+            // Apply personal message from server strings
+            ClientMessage(DarkestHourGame(Level.Game).GetServerMessage(), 'ServerMessage');
         }
     }
 }

@@ -372,6 +372,10 @@ function Message(PlayerReplicationInfo PRI, coerce string Msg, name MsgType)
             return;
         case 'DeathMessage':
             return;
+        case 'ServerMessage':
+            DHMessageClassType = class'DHServerSayMessage';
+            Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
+            break;
         default:
             DHMessageClassType = class'DHLocalMessage';
             break;

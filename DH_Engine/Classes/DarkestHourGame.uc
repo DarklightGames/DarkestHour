@@ -78,6 +78,8 @@ var     bool                        bSwapTeams;
 
 var     float                       AlliesToAxisRatio;
 
+var()   config array<string>        ServerMessages;
+
 var     class<DHMetrics>            MetricsClass;
 var     DHMetrics                   Metrics;
 var     config bool                 bEnableMetrics;
@@ -4980,6 +4982,18 @@ function GetServerDetails(out ServerResponseLine ServerState)
     super.GetServerDetails(ServerState);
 
     AddServerDetail(ServerState, "Version", Version.ToString());
+}
+
+function string GetServerMessage()
+{
+    if (ServerMessages.Length > 0)
+    {
+        return ServerMessages[Rand(ServerMessages.Length)];
+    }
+    else
+    {
+        return "Winning is not everything";
+    }
 }
 
 function bool CanSpectate(PlayerController Viewer, bool bOnlySpectator, Actor ViewTarget)
