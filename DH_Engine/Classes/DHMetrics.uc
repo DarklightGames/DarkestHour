@@ -153,7 +153,7 @@ function OnConstructionBuilt(DHConstruction Construction, int RoundTime)
 {
     local DHMetricsConstruction C;
 
-    if (Construction == none)
+    if (Construction == none || Construction.InstigatorController == none)
     {
         return;
     }
