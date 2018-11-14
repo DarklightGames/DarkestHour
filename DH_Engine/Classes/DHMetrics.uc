@@ -7,12 +7,7 @@ class DHMetrics extends Actor
     notplaceable;
 
 var private Hashtable_string_Object         Players;
-var private array<DHMetricsFrag>            Frags;
-var private array<DHMetricsCapture>         Captures;
-var private array<DHMetricsConstruction>    Constructions;
-var private DateTime                        RoundStartTime;
-var private DateTime                        RoundEndTime;
-var private int                             WinnerTeamIndex;
+var private array<DHMetricsRound>           Rounds;
 
 function PostBeginPlay()
 {
@@ -21,13 +16,36 @@ function PostBeginPlay()
     Players = class'Hashtable_string_Object'.static.Create(128);
 }
 
-function string Dump()
+// Called at the end to clean up all data (finalize sessions etc.)
+function Finalize()
+{
+    local Object Object;
+    local HashtableIterator_string_Object PlayersIterator;
+    local DHMetricsPlayer MP;
+
+    Players.CreateIterator();
+
+    // Finalize sessions.
+    while (PlayersIterator.Next(, Object))
+    {
+        MP = DHMetricsPlayer(Object);
+
+        if (MP != none)
+        {
+            MP.Sessions[0].EndedAt = class'DateTime'.static.Now(self);
+        }
+    }
+}
+
+function WriteToFile()
 {
     local Object Object;
     local HashtableIterator_string_Object PlayersIterator;
     local JSONObject Root;
     local array<DHMetricsPlayer> PlayersArray;
     local FileLog F;
+
+    Finalize();
 
     PlayersIterator = Players.CreateIterator();
 
@@ -37,42 +55,44 @@ function string Dump()
         PlayersArray[PlayersArray.Length] = DHMetricsPlayer(Object);
     }
 
-    // Frags
+    // Rounds
     Root = (new class'JSONObject')
+        .Put("players", class'JSONArray'.static.FromSerializables(PlayersArray))
+        .Put("rounds", class'JSONArray'.static.FromSerializables(Rounds))
         .PutString("version", class'DarkestHourGame'.default.Version.ToString())
         .Put("server", (new class'JSONObject')
             .PutString("name", Level.Game.GameReplicationInfo.ServerName))
-        .PutString("map", class'DHLib'.static.GetMapName(Level))
-        .PutString("round_start", RoundStartTime.IsoFormat())
-        .PutString("round_end", RoundEndTime.IsoFormat())
-        .PutInteger("winner", WinnerTeamIndex)
-        .Put("players", class'JSONArray'.static.FromSerializables(PlayersArray))
-        .Put("frags", class'JSONArray'.static.FromSerializables(Frags))
-        .Put("captures", class'JSONArray'.static.FromSerializables(Captures))
-        .Put("constructions", class'JSONArray'.static.FromSerializables(Constructions));
+        .PutString("map", class'DHLib'.static.GetMapName(Level));
 
     F = Spawn(class'FileLog');
     F.OpenLog(class'DateTime'.static.Now(self).IsoFormat(), "log");
     class'UFileLog'.static.Logf(F, Root.Encode());
     F.CloseLog();
     F.Destroy();
-
-    return Root.Encode();
 }
 
 function OnRoundBegin()
 {
-    RoundStartTime = class'DateTime'.static.Now(self);
+    local DHMetricsRound Round;
 
-    Frags.Length = 0;
+    Round = new class'DHMetricsRound';
+    Round.StartedAt = class'DateTime'.static.Now(Level);
+    Rounds.Insert(0, 1);
+    Rounds[0] = Round;
 }
 
 function OnRoundEnd(int Winner)
 {
-    RoundEndTime = class'DateTime'.static.Now(self);
-    WinnerTeamIndex = Winner;
+    if (Rounds.Length == 0)
+    {
+        return;
+    }
 
-    Dump();
+    Rounds[0].EndedAt = class'DateTime'.static.Now(self);
+    Rounds[0].Winner = Winner;
+
+    // TODO: are all player sessions ended at the time we expect? do we need to
+    // manually write session endings?
 }
 
 static function string TrimPort(string NetworkAddress)
@@ -87,7 +107,6 @@ static function string TrimPort(string NetworkAddress)
     }
 
     return NetworkAddress;
-
 }
 
 function OnPlayerLogin(PlayerController PC)
@@ -99,7 +118,6 @@ function OnPlayerLogin(PlayerController PC)
     {
         P = new class'DHMetricsPlayer';
         P.ID = PC.GetPlayerIDHash();
-        P.NetworkAddress = TrimPort(PC.GetPlayerNetworkAddress());
 
         Players.Put(P.ID, P);
     }
@@ -114,6 +132,33 @@ function OnPlayerLogin(PlayerController PC)
     }
 
     OnPlayerChangeName(PC);
+
+    // Add a new session to the front of the sessions list.
+    P.Sessions.Insert(0, 1);
+    P.Sessions[0] = new class'DHMetricsPlayerSession';
+    P.Sessions[0].StartedAt = class'DateTime'.static.Now(self);
+    P.Sessions[0].NetworkAddress = TrimPort(PC.GetPlayerNetworkAddress());
+}
+
+function OnPlayerLogout(DHPlayer PC)
+{
+    local Object O;
+    local DHMetricsPlayer P;
+
+    if (PC == none)
+    {
+        return;
+    }
+
+    // NOTE: We use ROIDHash because calling GetPlayerIDHash results in some sort of unusable UUID.
+    Players.Get(PC.ROIDHash, O);
+    P = DHMetricsPlayer(O);
+
+    if (P != none)
+    {
+        // Mark the end of the player's current session.
+        P.Sessions[0].EndedAt = class'DateTime'.static.Now(self);
+    }
 }
 
 function OnPlayerChangeName(PlayerController PC)
@@ -153,7 +198,7 @@ function OnConstructionBuilt(DHConstruction Construction, int RoundTime)
 {
     local DHMetricsConstruction C;
 
-    if (Construction == none)
+    if (Rounds.Length == 0 || Construction == none)
     {
         return;
     }
@@ -166,7 +211,7 @@ function OnConstructionBuilt(DHConstruction Construction, int RoundTime)
     C.Yaw = Construction.Rotation.Yaw;
     C.PlayerID = Construction.InstigatorController.GetPlayerIDHash();
 
-    Constructions[Constructions.Length] = C;
+    Rounds[0].Constructions[Rounds[0].Constructions.Length] = C;
 }
 
 function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class<DamageType> DamageType, vector HitLocation, int HitIndex, int RoundTime)
@@ -174,7 +219,7 @@ function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class
     local DHMetricsFrag F;
     local vector KillerLocation;
 
-    if (Killer == none || Victim == none || DamageType == none)
+    if (Killer == none || Victim == none || DamageType == none || Rounds.Length == 0)
     {
         return;
     }
@@ -204,12 +249,17 @@ function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class
         F.VictimPawn = Victim.Pawn.Class;
     }
 
-    Frags[Frags.Length] = F;
+    Rounds[0].Frags[Rounds[0].Frags.Length] = F;
 }
 
 function OnObjectiveCaptured(int ObjectiveIndex, int TeamIndex, int RoundTime, array<string> PlayerIDs)
 {
     local DHMetricsCapture C;
+
+    if (Rounds.Length == 0)
+    {
+        return;
+    }
 
     C = new class'DHMetricsCapture';
     C.ObjectiveIndex = ObjectiveIndex;
@@ -217,7 +267,7 @@ function OnObjectiveCaptured(int ObjectiveIndex, int TeamIndex, int RoundTime, a
     C.PlayerIDs = PlayerIDs;
     C.RoundTime = RoundTime;
 
-    Captures[Captures.Length] = C;
+    Rounds[0].Captures[Rounds[0].Captures.Length] = C;
 }
 
 defaultproperties
@@ -225,3 +275,4 @@ defaultproperties
     RemoteRole=ROLE_None
     bHidden=true
 }
+

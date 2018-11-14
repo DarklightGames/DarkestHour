@@ -193,7 +193,7 @@ function JSONObject Serialize()
     for (i = 0; i < arraycount(CategoryScores); ++i)
     {
         CategoryScoreObject = new class'JSONObject';
-        CategoryScoreObject.PutString("class", GetCategoryClassByIndex(i));
+        CategoryScoreObject.PutString("type", GetCategoryClassByIndex(i));
         CategoryScoreObject.PutInteger("score", CategoryScores[i]);
         CategoryScoresArray.Add(CategoryScoreObject);
     }
@@ -203,7 +203,7 @@ function JSONObject Serialize()
     for (i = 0; i < EventScores.Length; ++i)
     {
         EventScoreObject = new class'JSONObject';
-        EventScoreObject.PutString("class", string(EventScores[i].EventClass));
+        EventScoreObject.PutString("type", string(EventScores[i].EventClass));
         EventScoreObject.PutInteger("count", EventScores[i].Count);
         EventScoreObject.PutInteger("score", EventScores[i].Score);
         EventScoresArray.Add(EventScoreObject);

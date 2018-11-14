@@ -5,15 +5,15 @@
 
 class DHMetricsPlayer extends JSONSerializable;
 
-var string          ID;
-var array<string>   Names;
-var string          NetworkAddress;
+var string                          ID;
+var array<string>                   Names;
+var array<DHMetricsPlayerSession>   Sessions;
 
 function JSONValue ToJSON()
 {
     return (new class'JSONObject')
         .PutString("id", ID)
         .Put("names", class'JSONArray'.static.FromStrings(Names))
-        .PutString("ip", NetworkAddress);
+        .Put("sessions", class'JSONArray'.static.FromSerializables(Sessions));
 }
 
