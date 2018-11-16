@@ -22,5 +22,5 @@ defaultproperties
     VehicleHudOccupantsY(1)=0.62
     ExitPositions(1)=(X=-88.0,Y=-8.0,Z=25.0)
     VehicleMass=8.0
-    SupplyCost=600
+    SupplyCost=1050
 }
