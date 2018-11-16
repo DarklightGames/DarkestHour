@@ -2984,7 +2984,7 @@ ignores SeePlayer, HearNoise, KilledBy, SwitchWeapon, NextWeapon, PrevWeapon;
             }
 
             // Apply personal message from server strings
-            ClientMessage(DarkestHourGame(Level.Game).GetServerMessage(), 'ServerMessage');
+            ClientMessage(DarkestHourGame(Level.Game).GetServerMessage(PlayerReplicationInfo.Deaths - 1), 'ServerMessage');
         }
     }
 }

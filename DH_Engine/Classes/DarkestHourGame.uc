@@ -78,7 +78,7 @@ var     bool                        bSwapTeams;
 
 var     float                       AlliesToAxisRatio;
 
-var()   config array<string>        ServerMessages;
+var()   config array<string>        OnDeathServerMessages;
 
 var     class<DHMetrics>            MetricsClass;
 var     DHMetrics                   Metrics;
@@ -4984,16 +4984,28 @@ function GetServerDetails(out ServerResponseLine ServerState)
     AddServerDetail(ServerState, "Version", Version.ToString());
 }
 
-function string GetServerMessage()
+function string GetServerMessage(int Index)
 {
-    if (ServerMessages.Length > 0)
+    // If index is invalid OR there are no OnDeathServerMessages configured, then return the MessageOfTheDay
+    if (Index < 0 || OnDeathServerMessages.Length <= 0)
     {
-        return ServerMessages[Rand(ServerMessages.Length)];
+        return GRI.MessageOfTheDay;
     }
-    else
+
+    // Return a random OnDeathServerMessage if the Index is higher than Length
+    if (Index > OnDeathServerMessages.Length)
     {
-        return "Winning is not everything";
+        return OnDeathServerMessages[Rand(OnDeathServerMessages.Length)];
     }
+
+    // Return a OnDeathServerMessage based on the Index given (usually what is passed is the player controller's death count)
+    if (Index <= OnDeathServerMessages.Length)
+    {
+        return OnDeathServerMessages[Index];
+    }
+
+    // Return the server's message of the day if we made it this far
+    return GRI.MessageOfTheDay;
 }
 
 function bool CanSpectate(PlayerController Viewer, bool bOnlySpectator, Actor ViewTarget)
