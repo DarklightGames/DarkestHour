@@ -6333,37 +6333,27 @@ simulated function bool IsDebugModeAllowed()
     return Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode();
 }
 
-// New boogey man mode, needs a lot of work, but it does work
-exec function BoogeyManMe()
+// Bogeyman mode to become invisible and invincible, useful for filming!
+exec function BogeyMan()
 {
-    local DarkestHourGame DHG;
-    local DHPlayer DHP;
+    local DarkestHourGame G;
+    local DHPlayer PC;
 
-    DHG = DarkestHourGame(Level.Game);
-    DHP = DHPlayer(Controller);
+    G = DarkestHourGame(Level.Game);
+    PC = DHPlayer(Controller);
 
-    if (DHG == none || DHP == none)
+    if (G == none || PC == none)
     {
         return;
     }
 
-    Log(" ");
-    Log("Calling BoogeyManMe");
-    Log(" ");
-
-    if (DHG.IsAdmin(DHP) && class'DHAccessControl'.static.IsDeveloper(DHP.ROIDHash))
+    if (G.IsAdmin(PC) && class'DHAccessControl'.static.IsDeveloper(PC.ROIDHash))
     {
-        //PlayerController
-        DHP.bGodMode = true; // may not be 100% needed as you can't be shot with no collision (I think)
-        DHP.bCheatFlying = true; // needs confirmed as required
-        DHP.GotoState('PlayerFlying');
+        PC.bGodMode = true;
+        bHidden = true;
+        SetCollision(false, false, false);
 
-        //Pawn
-        bHidden = true; // does this hide us
-        Visibility = 0; // or do this?
-        UnderWaterTime = -1.0; // not sure what this does
-        SetCollision(false, false, false); // turns off collision (IMO very important)
-        bCollideWorld = false; // this too
+        PC.ClientMessage("Bogeyman, goin' black...", 'Say');
     }
 }
 
