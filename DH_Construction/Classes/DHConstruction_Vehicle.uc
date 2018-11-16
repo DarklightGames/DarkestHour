@@ -185,7 +185,7 @@ defaultproperties
     ConstructionVerb="emplace"
     GroupClass=class'DHConstructionGroup_Guns'
     bCanBeDamaged=false
-
+    DuplicateFriendlyDistanceInMeters=15.0
     CompletionPointValue=100
 }
 

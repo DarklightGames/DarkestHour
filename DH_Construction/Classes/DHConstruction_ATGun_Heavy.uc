@@ -74,5 +74,5 @@ defaultproperties
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.at_large'
     Stages(0)=(Progress=0)
     ProgressMax=14
-    SupplyCost=1750
+    DuplicateFriendlyDistanceInMeters=30.0
 }
