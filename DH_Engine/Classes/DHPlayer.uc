@@ -127,6 +127,11 @@ var     bool                    bSpectateAllowViewPoints;
 
 var     DHScoreManager          ScoreManager;
 
+// "Lazy" camera controls
+var     bool                    bLazyCam;
+var     float                   LazyCamLaziness;
+var     rotator                 LazyCamRotationTarget;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -296,7 +301,7 @@ simulated function PostNetReceive()
     super.PostNetReceive();
 }
 
-// Modified so we don't disable PostNetReceive() until we've received the GRI, which allows PendingWeaponLockSeconds  functionality to work
+// Modified so we don't disable PostNetReceive() until we've received the GRI, which allows PendingWeaponLockSeconds functionality to work
 simulated function bool NeedNetNotify()
 {
     return super.NeedNetNotify() || GameReplicationInfo == none;
@@ -722,6 +727,35 @@ simulated function AddBlur(float NewBlurTime, float NewBlurScale)
     }
 }
 
+// LAZY CAM
+exec function LazyCam(float Laziness)
+{
+    if (Level.NetMode != NM_Standalone && !PlayerReplicationInfo.bSilentAdmin && !PlayerReplicationInfo.bAdmin)
+    {
+        return;
+    }
+
+    if (Laziness == 0.0)
+    {
+        SetLazyCam(false);
+    }
+    else
+    {
+        SetLazyCam(true);
+        LazyCamLaziness = Laziness;
+    }
+}
+
+function SetLazyCam(bool bLazyCam)
+{
+    self.bLazyCam = bLazyCam;
+
+    if (bLazyCam)
+    {
+        LazyCamRotationTarget = Rotation;
+    }
+}
+
 // Updated to allow Yaw limits for mantling
 // Also to disable sway on bolt rifles between shots (while weapon is lowered from face)
 function UpdateRotation(float DeltaTime, float MaxPitch)
@@ -731,6 +765,7 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
     local ROVehicle ROVeh;
     local rotator   NewRotation, ViewRotation;
     local float     TurnSpeedFactor;
+    local Quat      A, B;
 
     if (Pawn != none)
     {
@@ -781,6 +816,36 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
         {
             CameraDeltaRotation.Yaw += DHStandardTurnSpeedFactor * DeltaTime * aTurn;
             CameraDeltaRotation.Pitch += DHStandardTurnSpeedFactor * DeltaTime * aLookUp;
+        }
+    }
+    else if (bLazyCam)
+    {
+        LazyCamRotationTarget.Yaw += FClamp(DeltaTime * aTurn * DHStandardTurnSpeedFactor, -10000.0, 10000.0);
+        LazyCamRotationTarget.Pitch += FClamp(DeltaTime * aLookUp * DHStandardTurnSpeedFactor, -10000.0, 10000.0);
+
+        A = QuatFromRotator(Rotation);
+        B = QuatFromRotator(LazyCamRotationTarget);
+
+        if (class'UQuaternion'.static.Angle(A, B) < class'UUnits'.static.DegreesToRadians(0.125))
+        {
+            ViewRotation = LazyCamRotationTarget;
+        }
+        else
+        {
+            ViewRotation = QuatToRotator(QuatSlerp(A, B, DeltaTime * ((1.0 - FClamp(LazyCamLaziness, 0.0, 1.0)) * 32.0)));
+        }
+
+        SetRotation(ViewRotation);
+
+        ViewShake(DeltaTime);
+        ViewFlash(DeltaTime);
+
+        // Make pawn face towards new view rotation (applied only to a DHPawn as vehicles ignore FaceRotation)
+        if (!bRotateToDesired && DHPwn != none && (!bFreeCamera || !bBehindView))
+        {
+            NewRotation = ViewRotation;
+            NewRotation.Roll = Rotation.Roll;
+            DHPwn.FaceRotation(NewRotation, DeltaTime);
         }
     }
     else
