@@ -138,6 +138,7 @@ function Timer()
     local array<DHPlayerReplicationInfo> Volunteers;
     local DHGameReplicationInfo GRI;
     local float X, Y;
+    local DHSpawnPoint_SquadRallyPoint RP;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
@@ -251,7 +252,15 @@ function Timer()
             // If so, forcibly delete the oldest ones.
             while (ActiveSquadRallyPoints.Length > SQUAD_RALLY_POINTS_MAX)
             {
-                RallyPoints[ActiveSquadRallyPoints[0].RallyPointIndex].Destroy();
+                RP = RallyPoints[ActiveSquadRallyPoints[0].RallyPointIndex];
+
+                if (RP != none && RP.MetricsObject != none)
+                {
+                    RP.MetricsObject.DestroyedReason = REASON_Replaced;
+                }
+
+                RP.Destroy();
+
                 ActiveSquadRallyPoints.Remove(0, 1);
             }
 
@@ -1661,6 +1670,7 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
     local float D, ClosestBlockingRallyPointDistance;
     local DHConstructionManager CM;
     local array<DHConstruction> Constructions;
+    local DarkestHourGame G;
 
     if (PC == none || !bAreRallyPointsEnabled)
     {
@@ -1895,6 +1905,13 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
     RP.SpawnsRemaining = GetSquadRallyPointInitialSpawns(P.GetTeamNum(), PRI.SquadIndex);
     RP.InstigatorController = PC;
 
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none && G.Metrics != none)
+    {
+        G.Metrics.OnRallyPointCreated(RP);
+    }
+
     RallyPoints[RallyPointIndex] = RP;
 
     // "You have create a squad rally point. Secure the area with your squad to establish this rally point."
@@ -1920,6 +1937,11 @@ function DestroySquadRallyPoint(DHPlayerReplicationInfo PRI, DHSpawnPoint_SquadR
 
     // "The squad leader has forcibly destroyed a rally point."
     BroadcastSquadLocalizedMessage(SRP.GetTeamIndex(), SRP.SquadIndex, SquadMessageClass, 57);
+
+    if (SRP.MetricsObject != none)
+    {
+        SRP.MetricsObject.DestroyedReason = REASON_Deleted;
+    }
 
     SRP.Destroy();
 }

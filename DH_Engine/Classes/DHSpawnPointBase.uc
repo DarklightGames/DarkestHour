@@ -92,7 +92,7 @@ simulated event PostBeginPlay()
     }
 }
 
-function OnOverrun();
+function OnOverrunByEncroachment();
 
 function Timer()
 {
@@ -122,7 +122,7 @@ function Timer()
 
         if (bCanEncroachmentOverrun && EncroachmentPenaltyCounter >= EncroachmentPenaltyOverrunThreshold)
         {
-            OnOverrun();
+            OnOverrunByEncroachment();
             Destroy();
         }
         else if (EncroachmentPenaltyCounter >= EncroachmentPenaltyBlockThreshold)

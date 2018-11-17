@@ -4495,9 +4495,25 @@ function NotifyLogout(Controller Exiting)
         PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
         SquadReplicationInfo.LeaveSquad(PRI);
+
+        if (Metrics != none)
+        {
+            Metrics.OnPlayerLogout(PC);
+        }
     }
 
     super.Destroyed();
+}
+
+// Overriden to write out metrics data
+function ProcessServerTravel(string URL, bool bItems)
+{
+    super.ProcessServerTravel(URL, bItems);
+
+    if (Metrics != none)
+    {
+        Metrics.WriteToFile();
+    }
 }
 
 // Modified to remove reliance on SpawnCount and instead just use SpawnsRemaining
@@ -4668,6 +4684,7 @@ event PostLogin(PlayerController NewPlayer)
     if (NewPlayer.PlayerReplicationInfo != none)
     {
         NotifyLogin(NewPlayer.PlayerReplicationInfo.PlayerID);
+
         Log("New Player" @ NewPlayer.PlayerReplicationInfo.PlayerName @ " ID =" @ NewPlayer.GetPlayerIDHash());
 
         if (NewPlayer.PlayerReplicationInfo.Team != none)

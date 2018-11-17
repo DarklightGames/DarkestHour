@@ -15,7 +15,7 @@ function JSONValue ToJSON()
     return (new class'JSONObject')
         .PutInteger("objective_id", ObjectiveIndex)
         .PutInteger("round_time", RoundTime)
-        .PutInteger("team_index", TeamIndex)
+        .PutInteger("team", TeamIndex)
         .Put("player_ids", class'JSONArray'.static.FromStrings(PlayerIDs));
 }
 

@@ -28,7 +28,7 @@ var int   OverrunRadiusInMeters;                // The distance, in meters, that
 var float OverrunMinimumTimeSeconds;            // The number of seconds a rally point must be "alive" for in order to be overrun by enemies. (To stop squad rally points being used as "enemy radar".
 
 // Abandonment
-var bool bCanSendAbandonmentWarningMessage;     // Whether or not we should send the abandonment message the next time the squad rally point has no teammates nearby while constructing
+var bool bCanSendAbandonmentWarningMessage;     // Whether or not we should send the abandonment message the next time the squad rally point has no teammates nearby while establishing
 
 // Accrual timer (used for adding available spawns at regular intervals)
 var int SpawnAccrualTimer;
@@ -40,6 +40,9 @@ var int Health;
 // Instigator
 var DHPlayer InstigatorController;
 
+// Metrics
+var DHMetricsRallyPoint MetricsObject;
+
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -48,6 +51,7 @@ replication
 
 function Reset()
 {
+    // TODO: set destroyed reason?
     Destroy();
 }
 
@@ -76,6 +80,7 @@ auto state Constructing
     {
         local int SquadmateCount;
         local int EnemyCount;
+        local bool bIsBeingAbandoned;
 
         global.Timer();
 
@@ -99,6 +104,7 @@ auto state Constructing
         if (SquadmateCount == 0 && EnemyCount == 0)
         {
             // No one is around to establish the rally point, start depleting the counter.
+            bIsBeingAbandoned = true;
             EstablishmentCounter -= 1;
         }
 
@@ -115,6 +121,18 @@ auto state Constructing
             {
                 // "A squad rally point failed to be established."
                 SRI.BroadcastSquadLocalizedMessage(GetTeamIndex(), SquadIndex, SRI.SquadMessageClass, 55);
+
+                if (MetricsObject != none)
+                {
+                    if (bIsBeingAbandoned)
+                    {
+                        MetricsObject.DestroyedReason = REASON_Abandoned;
+                    }
+                    else
+                    {
+                        MetricsObject.DestroyedReason = REASON_Encroached;
+                    }
+                }
 
                 Destroy();
             }
@@ -140,6 +158,11 @@ function Timer()
         // "A squad rally point has been overrun by enemies."
         SRI.BroadcastSquadLocalizedMessage(GetTeamIndex(), SquadIndex, SRI.SquadMessageClass, 54);
 
+        if (MetricsObject != none)
+        {
+            MetricsObject.DestroyedReason = REASON_Overrun;
+        }
+
         Destroy();
     }
 }
@@ -153,13 +176,25 @@ state Active
         AwardScoreOnEstablishment();
 
         UpdateAppearance();
+
+        if (MetricsObject != none)
+        {
+            MetricsObject.IsEstablished = true;
+        }
     }
 }
 
-function OnOverrun()
+function OnOverrunByEncroachment()
 {
     // "A squad rally point has been overrun by enemies."
     SRI.BroadcastSquadLocalizedMessage(GetTeamIndex(), SquadIndex, SRI.SquadMessageClass, 54);
+
+    if (MetricsObject != none)
+    {
+        MetricsObject.DestroyedReason = REASON_Encroached;
+    }
+
+    Destroy();
 }
 
 function SetIsActive(bool bIsActive)
@@ -209,10 +244,20 @@ function OnPawnSpawned(Pawn P)
         InstigatorController.ReceiveScoreEvent(class'DHScoreEvent_SquadRallyPointSpawn'.static.Create());
     }
 
+    if (MetricsObject != none)
+    {
+        ++MetricsObject.SpawnCount;
+    }
+
     if (SpawnsRemaining <= 0)
     {
         // "A squad rally point has been exhausted."
         SRI.BroadcastSquadLocalizedMessage(GetTeamIndex(), SquadIndex, SRI.SquadMessageClass, 46);
+
+        if (MetricsObject != none)
+        {
+            MetricsObject.DestroyedReason = REASON_Exhausted;
+        }
 
         Destroy();
     }
@@ -224,6 +269,11 @@ function OnSpawnKill(Pawn VictimPawn, Controller KillerController)
     {
         // "A squad rally point has been overrun by enemies."
         SRI.BroadcastSquadLocalizedMessage(GetTeamIndex(), SquadIndex, SRI.SquadMessageClass, 54);
+
+        if (MetricsObject != none)
+        {
+            MetricsObject.DestroyedReason = REASON_SpawnKill;
+        }
 
         Destroy();
     }
@@ -343,34 +393,60 @@ function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector
     {
         // "A squad rally point has been destroyed."
         SRI.BroadcastSquadLocalizedMessage(GetTeamIndex(), SquadIndex, SRI.SquadMessageClass, 68);
+
+        if (MetricsObject != none)
+        {
+            MetricsObject.DestroyedReason = REASON_Damaged;
+        }
+
         Destroy();
     }
 }
 
-// Git dim nearby squadies and git dem points
+// Give nearby squadmates points for helping establish the rally point.
 function AwardScoreOnEstablishment()
 {
     local Pawn P;
-    local DHPlayer DHP;
+    local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
+    local int EstablisherCount;
+
+    EstablisherCount = 1;
 
     foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(EstablishmentRadiusInMeters))
     {
         if (P != none && !P.bDeleteMe && P.Health > 0 && P.PlayerReplicationInfo != none && P.GetTeamNum() == GetTeamIndex())
         {
-            DHP = DHPlayer(P.Controller);
+            PC = DHPlayer(P.Controller);
 
-            if (DHP != none)
+            if (PC != none)
             {
-                PRI = DHPlayerReplicationInfo(DHP.PlayerReplicationInfo);
+                PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
-                // Don't award the SL himself, he gets his own award
-                if (PRI != none && !PRI.IsSquadLeader() && DHP.GetSquadIndex() == SquadIndex)
+                // Don't award the SL himself, he gets his own award.
+                if (PRI != none && !PRI.IsSquadLeader() && PC.GetSquadIndex() == SquadIndex)
                 {
-                    DHP.ReceiveScoreEvent(class'DHScoreEvent_SquadRallyPointEstablishedAssist'.static.Create());
+                    PC.ReceiveScoreEvent(class'DHScoreEvent_SquadRallyPointEstablishedAssist'.static.Create());
+
+                    ++EstablisherCount;
                 }
             }
         }
+    }
+
+    if (MetricsObject != none)
+    {
+        MetricsObject.EstablisherCount = EstablisherCount;
+    }
+}
+
+function Destroyed()
+{
+    super.Destroyed();
+
+    if (MetricsObject != none)
+    {
+        MetricsObject.DestroyedAt = class'DateTime'.static.Now(self);
     }
 }
 

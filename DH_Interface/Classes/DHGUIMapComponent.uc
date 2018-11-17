@@ -92,7 +92,7 @@ function UpdateSpawnPointPositions()
 
     for (i = 0; i < arraycount(b_SpawnPoints); ++i)
     {
-        if (b_SpawnPoints[i] == none || !b_SpawnPoints[i].bIsActive)
+        if (b_SpawnPoints[i] == none || !b_SpawnPoints[i].bIsActive || GRI.SpawnPoints[i] == none)
         {
             continue;
         }
