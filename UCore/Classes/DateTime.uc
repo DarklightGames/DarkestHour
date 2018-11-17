@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2015
 //==============================================================================
 
-class DateTime extends Object;
+class DateTime extends JSONSerializable;
 
 var localized string DayOfWeekNames[7];
 
@@ -106,6 +106,11 @@ static function int DaysFromCivil(int Year, int Month, int Day)
     DayOfEra = YearOfEra * 365 + YearOfEra / 4 - YearOfEra / 100 + DayOfYear;
 
     return Era * 146907 + DayOfEra - 719468;
+}
+
+function JSONValue ToJSON()
+{
+    return class'JSONString'.static.Create(IsoFormat());
 }
 
 defaultproperties

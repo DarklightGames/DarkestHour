@@ -23,7 +23,7 @@ function Finalize()
     local HashtableIterator_string_Object PlayersIterator;
     local DHMetricsPlayer MP;
 
-    Players.CreateIterator();
+    PlayersIterator = Players.CreateIterator();
 
     // Finalize sessions.
     while (PlayersIterator.Next(, Object))

@@ -16,14 +16,26 @@ var int                             Winner;
 
 function JSONValue ToJSON()
 {
-    return (new class'JSONObject')
+    local JSONObject JSON;
+
+    JSON = (new class'JSONObject')
         .PutString("started_at", StartedAt.IsoFormat())
-        .PutString("ended_at", EndedAt.IsoFormat())
         .PutInteger("winner", Winner)
         .Put("frags", class'JSONArray'.static.FromSerializables(Frags))
         .Put("captures", class'JSONArray'.static.FromSerializables(Captures))
         .Put("constructions", class'JSONArray'.static.FromSerializables(Constructions))
         .Put("rally_points", class'JSONArray'.static.FromSerializables(RallyPoints));
+
+    if (EndedAt == none)
+    {
+        JSON.PutNull("ended_at");
+    }
+    else
+    {
+        JSON.PutString("ended_at", EndedAt.IsoFormat());
+    }
+
+    return JSON;
 }
 
 defaultproperties

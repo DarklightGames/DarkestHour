@@ -56,7 +56,9 @@ static function JSONValue GetDestroyedReasonValue(EDestroyedReason DestroyedReas
 
 function JSONValue ToJSON()
 {
-    return (new class'JSONObject')
+    local JSONObject JSON;
+
+    JSON = (new class'JSONObject')
         .PutInteger("team_index", TeamIndex)
         .PutInteger("squad_index", SquadIndex)
         .PutString("player_id", PlayerID)
@@ -64,8 +66,20 @@ function JSONValue ToJSON()
         .PutInteger("establisher_count", EstablisherCount)
         .PutVector("location", Location)
         .PutString("created_at", CreatedAt.IsoFormat())
-        .PutString("destroyed_at", DestroyedAt.IsoFormat())
         .Put("destroyed_reason", GetDestroyedReasonValue(DestroyedReason))
         .PutInteger("spawn_count", SpawnCount);
+
+    // TODO: improve the underlying JSON structure so we can just pass the DateTime
+    // object, null or not, and have it serialize correctly.
+    if (DestroyedAt == none)
+    {
+        JSON.PutNull("destroyed_at");
+    }
+    else
+    {
+        JSON.PutString("destroyed_at", DestroyedAt.IsoFormat());
+    }
+
+    return JSON;
 }
 
