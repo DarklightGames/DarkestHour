@@ -4987,25 +4987,12 @@ function GetServerDetails(out ServerResponseLine ServerState)
 function string GetServerMessage(int Index)
 {
     // If index is invalid OR there are no OnDeathServerMessages configured, then return the MessageOfTheDay
-    if (Index < 0 || OnDeathServerMessages.Length <= 0)
+    if (OnDeathServerMessages.Length == 0)
     {
         return GRI.MessageOfTheDay;
     }
 
-    // Return a random OnDeathServerMessage if the Index is higher than Length
-    if (Index > OnDeathServerMessages.Length)
-    {
-        return OnDeathServerMessages[Rand(OnDeathServerMessages.Length)];
-    }
-
-    // Return a OnDeathServerMessage based on the Index given (usually what is passed is the player controller's death count)
-    if (Index <= OnDeathServerMessages.Length)
-    {
-        return OnDeathServerMessages[Index];
-    }
-
-    // Return the server's message of the day if we made it this far
-    return GRI.MessageOfTheDay;
+    return OnDeathServerMessages[Index % OnDeathServerMessages.Length];
 }
 
 function bool CanSpectate(PlayerController Viewer, bool bOnlySpectator, Actor ViewTarget)
