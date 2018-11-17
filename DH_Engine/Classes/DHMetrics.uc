@@ -211,7 +211,6 @@ function OnConstructionBuilt(DHConstruction Construction, int RoundTime)
 function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class<DamageType> DamageType, vector HitLocation, int HitIndex, int RoundTime)
 {
     local DHMetricsFrag F;
-    local vector KillerLocation;
 
     if (Killer == none || Victim == none || DamageType == none || Rounds.Length == 0)
     {
@@ -226,10 +225,10 @@ function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class
     // Killer
     F.KillerID = Killer.GetPlayerIDHash();
     F.KillerTeam = Killer.GetTeamNum();
-    F.KillerLocation = KillerLocation;
 
     if (Killer.Pawn != none)
     {
+        F.KillerLocation = Killer.Pawn.Location;
         F.KillerPawn = Killer.Pawn.Class;
     }
 
