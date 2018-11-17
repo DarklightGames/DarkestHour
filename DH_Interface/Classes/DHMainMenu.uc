@@ -340,7 +340,7 @@ event Opened(GUIComponent Sender)
 
         if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.2.6")) >= 0)
         {
-            SetKeyBindIfAvailable("Enter", "StartTyping");
+            SetKeyBindIfAvailable("Enter", "StartTyping", "InventoryActivate");
         }
 
         SavedVersion = class'DarkestHourGame'.default.Version.ToString();
