@@ -50,6 +50,11 @@ function JSONObject PutInteger(string Key, int Value)
     return Put(Key, class'JSONNumber'.static.Create(string(Value)));
 }
 
+function JSONObject PutBoolean(string Key, bool Value)
+{
+    return Put(Key, class'JSONLiteral'.static.CreateBoolean(Value));
+}
+
 function JSONObject PutFloat(string Key, float Value)
 {
     return Put(Key, class'JSONNumber'.static.Create(string(Value)));

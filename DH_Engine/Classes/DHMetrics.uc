@@ -44,6 +44,7 @@ function WriteToFile()
     local JSONObject Root;
     local array<DHMetricsPlayer> PlayersArray;
     local FileLog F;
+    local DHGameReplicationInfo GRI;
 
     Finalize();
 
@@ -55,6 +56,8 @@ function WriteToFile()
         PlayersArray[PlayersArray.Length] = DHMetricsPlayer(Object);
     }
 
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
     // Rounds
     Root = (new class'JSONObject')
         .Put("players", class'JSONArray'.static.FromSerializables(PlayersArray))
@@ -62,10 +65,15 @@ function WriteToFile()
         .PutString("version", class'DarkestHourGame'.default.Version.ToString())
         .Put("server", (new class'JSONObject')
             .PutString("name", Level.Game.GameReplicationInfo.ServerName))
-        .PutString("map", class'DHLib'.static.GetMapName(Level));
+        .Put("map", (new class'JSONObject')
+            .PutString("name", class'DHLib'.static.GetMapName(Level))
+            .PutInteger("offset", GRI.OverheadOffset)
+            .Put("bounds", (new class'JSONObject')
+                .PutVector("ne", GRI.NorthEastBounds)
+                .PutVector("sw", GRI.SouthWestBounds)));
 
     F = Spawn(class'FileLog');
-    F.OpenLog(class'DateTime'.static.Now(self).IsoFormat(), "log");
+    F.OpenLog(class'DateTime'.static.Now(self).IsoFormat(), "json");
     class'UFileLog'.static.Logf(F, Root.Encode());
     F.CloseLog();
     F.Destroy();
@@ -93,20 +101,6 @@ function OnRoundEnd(int Winner)
 
     // TODO: are all player sessions ended at the time we expect? do we need to
     // manually write session endings?
-}
-
-static function string TrimPort(string NetworkAddress)
-{
-    local int i;
-
-    i = InStr(NetworkAddress, ":");
-
-    if (i >= 0)
-    {
-        NetworkAddress = Left(NetworkAddress, i);
-    }
-
-    return NetworkAddress;
 }
 
 function OnPlayerLogin(PlayerController PC)
@@ -268,6 +262,41 @@ function OnObjectiveCaptured(int ObjectiveIndex, int TeamIndex, int RoundTime, a
     C.RoundTime = RoundTime;
 
     Rounds[0].Captures[Rounds[0].Captures.Length] = C;
+}
+
+function OnRallyPointCreated(DHSpawnPoint_SquadRallyPoint RP)
+{
+    local DHMetricsRallyPoint MRP;
+
+    if (Rounds.Length == 0)
+    {
+        return;
+    }
+
+    MRP = new class'DHMetricsRallyPoint';
+    MRP.TeamIndex = RP.GetTeamIndex();
+    MRP.SquadIndex = RP.SquadIndex;
+    MRP.PlayerID = RP.InstigatorController.ROIDHash;
+    MRP.Location = RP.Location;
+    MRP.CreatedAt = class'DateTime'.static.Now(self);
+
+    RP.MetricsObject = MRP;
+
+    Rounds[0].RallyPoints[Rounds[0].RallyPoints.Length] = MRP;
+}
+
+static function string TrimPort(string NetworkAddress)
+{
+    local int i;
+
+    i = InStr(NetworkAddress, ":");
+
+    if (i >= 0)
+    {
+        NetworkAddress = Left(NetworkAddress, i);
+    }
+
+    return NetworkAddress;
 }
 
 defaultproperties
