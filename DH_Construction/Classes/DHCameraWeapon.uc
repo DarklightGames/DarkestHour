@@ -11,7 +11,7 @@ var float FovInterpStrength;
 var float FovZoomSpeed;
 var float FovZoomDirection;
 
-simulated function bool (int Mode)
+simulated function SetMode(int Mode)
 {
     switch (Mode)
     {
@@ -57,7 +57,6 @@ simulated event WeaponTick(float DeltaTime)
     FovAngleTarget = FClamp(FovAngleTarget, 10.0, 120.0);
     FovAngle = class'UInterp'.static.Deceleration(DeltaTime * FovInterpStrength, FovAngle, FovAngleTarget);
 
-    // TODO: set the player's FOV
     Instigator.Controller.FovAngle = FovAngle;
 }
 
