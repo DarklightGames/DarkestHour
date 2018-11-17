@@ -3031,7 +3031,7 @@ state DeadSpectating
 
 state Dead
 {
-ignores SeePlayer, HearNoise, KilledBy, SwitchWeapon, NextWeapon, PrevWeapon;
+    ignores SeePlayer, HearNoise, KilledBy, SwitchWeapon, NextWeapon, PrevWeapon;
 
     function BeginState()
     {
