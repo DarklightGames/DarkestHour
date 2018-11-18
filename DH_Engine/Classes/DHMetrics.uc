@@ -198,7 +198,7 @@ function OnConstructionBuilt(DHConstruction Construction, int RoundTime)
     }
 
     C = new class'DHMetricsConstruction';
-    C.TeamIndex = Construction.GetTeamIndex();
+    C.TeamIndex = Construction.InstigatorController.GetTeamNum();
     C.ConstructionClass = Construction.Class;
     C.Location = Construction.Location;
     C.RoundTime = RoundTime;
