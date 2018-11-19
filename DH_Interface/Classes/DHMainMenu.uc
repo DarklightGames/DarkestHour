@@ -27,6 +27,7 @@ var     string                  GitHubURL;
 var     string                  SteamCommunityURL;
 var     string                  PatreonURL;
 var     string                  DiscordURL;
+var     string                  ResetINIGuideURL;
 
 var     localized string        QuickPlayString;
 var     localized string        JoinTestServerString;
@@ -35,14 +36,18 @@ var     localized string        SteamMustBeRunningText;
 var     localized string        SinglePlayerDisabledText;
 var     localized string        MOTDErrorString;
 
+var     localized string        ControlsChangedMessage;
+var     localized string        BadConfigMessage;
+
 var     bool                    bAllowClose;
 var     int                     EllipseCount;
 var     bool                    bShouldRequestMOTD;
 var     bool                    bShouldRequestQuickPlayIP;
 var     bool                    bIsRequestingQuickPlayIP;
+var     bool                    bShouldPromptBadConfig;
 
 var     config string           SavedVersion;
-var     string                  ControlsChangedMessage;
+
 
 delegate OnHideAnnouncement();
 
@@ -87,6 +92,27 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     {
         // This converts an underscore to a non-breaking space (0xA0)
         PlayerOwner().ConsoleCommand("SetName" @ Repl(Controller.SteamGetUserName(), "_", " "));
+    }
+}
+
+function ShowBadConfigMessage()
+{
+    local GUIQuestionPage ConfirmWindow;
+
+    ConfirmWindow = Controller.ShowQuestionDialog(BadConfigMessage, QBTN_Continue, QBTN_Continue);
+    ConfirmWindow.OnButtonClick = OnBadConfigButtonClicked;
+}
+
+function OnBadConfigButtonClicked(byte bButton)
+{
+    switch (bButton)
+    {
+        case QBTN_Continue:
+            Controller.LaunchURL(default.ResetINIGuideURL);
+            PlayerOwner().ConsoleCommand("quit");
+            break;
+        default:
+            break;
     }
 }
 
@@ -354,6 +380,12 @@ event Opened(GUIComponent Sender)
         PlayerOwner().SaveConfig();
     }
 
+    // Force the correct Console class
+    if (!PlayerOwner().Player.Console.IsA('DHConsole'))
+    {
+        bShouldPromptBadConfig = true;
+    }
+
     // Force voice quality to higher quality
     if (PlayerOwner().VoiceChatCodec != "CODEC_96WB" || PlayerOwner().ConsoleCommand("get Engine.PlayerController VoiceChatCodec") != "CODEC_96WB")
     {
@@ -431,7 +463,7 @@ function OnMOTDResponse(int Status, TreeMap_string_string Headers, string Conten
     i_MOTDLoading.SetVisibility(false);
 }
 
-// Quick play button functions
+// Some logic can't execute too early, so we use timer instead
 event Timer()
 {
     local int i;
@@ -451,8 +483,13 @@ event Timer()
     if (bShouldRequestMOTD)
     {
         GetMOTD();
-
         bShouldRequestMOTD = false;
+    }
+
+    if (bShouldPromptBadConfig)
+    {
+        ShowBadConfigMessage();
+        bShouldPromptBadConfig = false;
     }
 }
 
@@ -841,5 +878,7 @@ defaultproperties
     SteamCommunityURL="http://steamcommunity.com/app/1280"
     PatreonURL="http://www.patreon.com/theel"
     DiscordURL="http://discord.gg/EEwFhtk"
+    ResetINIGuideURL="http://steamcommunity.com/sharedfiles/filedetails/?id=713146225"
     ControlsChangedMessage="New controls have been added to the game. As a result, your previous control bindings may have been changed.||Do you want to review your control settings?"
+    BadConfigMessage="A problem exists with your configuration file, click continue to quit the game and open a guide on how to fix your configuration file."
 }
