@@ -1,0 +1,217 @@
+<html>
+<head>
+<title><%Title%></title>
+<meta http-equiv="Content-Type" content="text/html; charset=<%charset%>">
+<%RefreshMeta%>
+<link rel="stylesheet" type="text/css" href="<%CSS%>">
+<%JavaScripts%>
+<!-- if _RO_ -->
+<script language="JavaScript" type="text/javascript">
+function GetObject(id)
+{
+   var obj;
+
+   if(navigator.appName == "Netscape")
+      obj = document.getElementById(id);
+   else
+      obj = document.all[id];
+
+   return obj;
+}
+
+function GetRoundLimit(FullURL)
+{
+   var RoundLimitIndex;
+   var RoundLimit = undefined;
+
+   RoundLimitIndex = FullURL.search(/RoundLimit=/i);
+
+   if (RoundLimitIndex != -1 )
+      RoundLimit = FullURL.charAt(RoundLimitIndex + 11);
+
+   if (RoundLimit == undefined)
+      return 0;
+
+   return RoundLimit;
+}
+
+function GetWinLimit(FullURL)
+{
+   var WinLimitIndex;
+   var WinLimit = undefined;
+
+   WinLimitIndex = FullURL.search(/WinLimit=/i);
+
+   if (WinLimitIndex != -1 )
+      WinLimit = FullURL.charAt(WinLimitIndex + 9);
+
+   if (WinLimit == undefined)
+      return 0;
+
+   return WinLimit;
+}
+
+function UpdateLimits()
+{
+   var MapsInCycleList = GetObject('IncludeMapsSelect');
+   var RoundLimitTextBox = GetObject('RoundLimit');
+   var WinLimitTextBox = GetObject('WinLimit');
+   var NewRoundLimitValue = -1;
+   var NewWinLimitValue = -1;
+   var i;
+
+   if (MapsInCycleList.selectedIndex < 0)
+   {
+      RoundLimitTextBox.value = "";
+      WinLimitTextBox.value = "";
+      return;
+   }
+
+
+   for (i = 0; i < MapsInCycleList.options.length; i++)
+   {
+      var Current = MapsInCycleList.options[i];
+      if (Current.selected)
+      {
+         if (NewRoundLimitValue == -1)
+         {
+            if (GetRoundLimit(Current.value) != 0)
+            {
+               NewRoundLimitValue = GetRoundLimit(Current.value);
+            }
+         }
+         else if (NewRoundLimitValue != GetRoundLimit(Current.value))
+         {
+            NewRoundLimitValue = "-";
+         }
+
+         if (NewWinLimitValue == -1)
+         {
+            if (GetWinLimit(Current.value) != 0)
+            {
+               NewWinLimitValue = GetWinLimit(Current.value);
+            }
+         }
+         else if (NewWinLimitValue != GetWinLimit(Current.value))
+         {
+            NewWinLimitValue = "-";
+         }
+      }
+   }
+
+   if (NewRoundLimitValue != -1)
+   {
+      RoundLimitTextBox.value = NewRoundLimitValue;
+   }
+   else
+   {
+      RoundLimitTextBox.value = "";
+   }
+
+   if (NewWinLimitValue != -1)
+   {
+      WinLimitTextBox.value = NewWinLimitValue;
+   }
+   else
+   {
+      WinLimitTextBox.value = "";
+   }
+}
+</script>
+<!-- end _RO_ -->
+</head>
+<body bgcolor="#161616" topmargin="0" leftmargin="0" marginheight="0" marginwidth="0" onload="UpdateLimits()">
+
+<table width="100%" height="55px" border=0 cellpadding=8 cellspacing=0>
+ <tr>
+  <td valign="bottom" width="200px" rowspan=2 class=ttitle><%Section%></td>
+  <td valign="top" height="20px" class=ttext><%SubTitle%>&nbsp;</td>
+ </tr>
+ <tr>
+  <td valign="bottom" class="ttext"><%PageHelp%>&nbsp;</td>
+ </tr>
+</table>
+<img width="100%" height="20" src="/images/t.gif">
+<table width="75%" cellspacing="0" cellpadding="0" border="0">
+ <tr>
+  <td width="12px"><img src="/images/q_topleft.gif"></td>
+  <td background="/images/q_topmid.gif"><img src="/images/q_topmid.gif"></td>
+  <td width="12px"><img src="/images/q_topright.gif"></td>
+ </tr>
+ <tr>
+  <td width="12px" background="/images/q_left.gif"> </td>
+  <td>
+<form method="post" action="<%PostAction%>">
+<input type="hidden" name="GameType" value="<%GameType%>">
+<input type="hidden" name="Session" value="<%Session%>">
+<table width="67%" height="0%" border="0" cellpadding="3" cellspacing="1">
+ <tr>
+   <td height="8%" colspan="4" align="center" valign="middle" class="ntbg">Game&nbsp;MapList&nbsp;Management</td>
+ </tr>
+ <tr>
+  <td height="31" colspan="4" align="left" nowrap>
+   <table width="100%" cellpadding="3" cellspacing="1" class="border">
+   <tr>
+   <td width="50%" align="left"><select class="mini" name="MapListNum">
+      <%MapListOptions%></select> </td>
+    <td align="right">
+     <input name="ListName" type="text" class="textbox" value="<%MapListName%>" size="20" maxlength="40">
+    </td>
+   </tr>
+   <tr>
+   <td align="left" nowrap>
+      <input name="View" type="submit" class="button" id="View" value="Load">
+      <input name="Save" type="submit" class="button" id="Save" value="Save">
+      <input name="Use" type="submit" class="button" id="Use" value="Use">
+   </td>
+   <td width="1%" align="right" nowrap>
+      <input name="New" type="submit" class="button" id="New" value="New">
+      <input name="Delete" type="submit" class="button" id="Delete" value="Delete">
+    </td>
+   </tr>
+   </table><br></td>
+   </tr>
+  <tr align="center" nowrap>
+   <td colspan="4" valign="middle" class="shbg">Make&nbsp;maplist&nbsp;changes&nbsp;here</td>
+   </tr>
+   <tr nowrap>
+     <td align="left" valign="middle">Maps&nbsp;Not&nbsp;In&nbsp;Cycle</td>
+     <td width="1%" align="center" valign="middle">&nbsp;</td>
+     <td align="right" valign="middle">Maps&nbsp;In&nbsp;Cycle</td>
+     <td>&nbsp;</td>
+   </tr>
+   <tr>
+     <td align="left" valign="middle">
+        <select name="ExcludeMapsSelect" size="9" multiple>
+        <%ExcludeMapsOptions%></select>
+        </td>
+     <td align="center" valign="middle"><br>
+        <input name="MoveMap" type="submit" class="button" id="MoveMap" value=" &gt; "><br>
+      <input name="MoveMap" type="submit" class="button" id="MoveMap" value=" &lt; "><br><br>
+      <input name="MoveMap" type="submit" class="button" id="MoveMap" value="&gt;&gt;"><br>
+        <input name="MoveMap" type="submit" class="button" id="MoveMap" value="&lt;&lt;">
+      </td>
+    <td align="right" valign="middle">
+       <select name="IncludeMapsSelect" size="9" multiple id="IncludeMapsSelect" onchange="UpdateLimits();">
+          <%IncludeMapsOptions%>
+        </select></td>
+     <!-- if _RO_ -->
+     <td>
+        Round&nbsp;Limit:<br><input name="RoundLimit" type="text" class="textbox" id="RoundLimit" size="3" maxlength="1" ><br><br>
+        Win&nbsp;Limit:<br><input name="WinLimit" type="text" class="textbox" id="WinLimit" size="3" maxlength="1"><br><br>
+        <input class="button" type="submit" name="MoveMap" value="Update">
+     </td>
+     <!-- end _RO_ -->
+    </tr>
+    <tr>
+    <td height="10%" align="left" nowrap>&nbsp;</td>
+    <td align="center" nowrap>&nbsp;</td>
+    <td align="right" nowrap>
+        <input class="textbox" type="text" name="MoveMapCount" size="1" maxlength="1" value="1">
+      <input class="button" type="submit" name="MoveMap" value="Up">&nbsp;
+      <input class="button" type="submit" name="MoveMap" value="Down">
+	</td>
+   </tr>
+  </table>
+</form>
+<!-- #include file="footer.inc" -->

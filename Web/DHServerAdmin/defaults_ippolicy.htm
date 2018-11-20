@@ -1,0 +1,16 @@
+<!-- #include file="header.inc" -->
+  <table width="300" border="0" ID="Table1">
+   <tr><th nowrap>Policy Action</th><th nowrap>Policy Value</th><th></th></tr>
+   <%Policies%>
+   <tr>
+    <form method="post" action="<%PostAction%>">
+     <td>
+      <input type="radio" name="AcceptDeny" value="ACCEPT" checked>Accept<br>
+      <input type="radio" name="AcceptDeny" value="DENY">Deny
+     </td>
+     <td><input class="textbox" type="text" name="IPMask" size="15" maxlength="25"></td>
+     <td><input class="button" type="Submit" name="Update" value="New"></td>
+    </form>
+   </tr>
+  </table>
+<!-- #include file="footer.inc" -->		
