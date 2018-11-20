@@ -6118,32 +6118,6 @@ function ReceiveScoreEvent(DHScoreEvent ScoreEvent)
     }
 }
 
-// TODO: put this elsewhere/clean up
-simulated exec function DumpScore()
-{
-    if (ScoreManager == none)
-    {
-        return;
-    }
-
-    Log(ScoreManager.Serialize());
-}
-
-// TODO: DEBUG
-simulated exec function ResetScore()
-{
-    ServerResetScore();
-}
-
-function ServerResetScore()
-{
-    if (ScoreManager != none)
-    {
-        ScoreManager.Reset();
-        DarkestHourGame(Level.Game).UpdatePlayerScore(self);
-    }
-}
-
 simulated function Destroyed()
 {
     super.Destroyed();
