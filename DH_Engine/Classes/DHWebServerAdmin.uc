@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHWebServerAdmin extends UTServerAdmin;
+class DHWebServerAdmin extends UTServerAdmin config;
 
 // Override to add ServerName arguement so we can put the servername on the header page
 function QueryHeaderPage(WebRequest Request, WebResponse Response)
