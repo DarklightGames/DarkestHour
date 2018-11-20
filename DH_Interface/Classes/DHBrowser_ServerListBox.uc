@@ -7,20 +7,23 @@ class DHBrowser_ServerListBox extends UT2K4Browser_ServerListBox;
 
 defaultproperties
 {
+    DefaultListClass="DH_Interface.DHBrowser_ServersList"
     OpenIPPage="DH_Interface.DHBrowser_OpenIP"
+    SelectedStyleName="DHListSelectionStyle"
+    StyleName="DHComboListBox"
+
     Begin Object Class=GUIMultiColumnListHeader Name=MyHeader
         BarStyleName="DHMultiColBar"
         StyleName="DHMultiColBar"
     End Object
     Header=GUIMultiColumnListHeader'DH_Interface.DHBrowser_ServerListBox.MyHeader'
-    SelectedStyleName="DHListSelectionStyle"
-    DefaultListClass="DH_Interface.DHBrowser_ServersList"
+
     Begin Object Class=DHGUIVertScrollBar Name=TheScrollbar
         bVisible=false
         OnPreDraw=TheScrollbar.GripPreDraw
     End Object
     MyScrollBar=DHGUIVertScrollBar'DH_Interface.DHBrowser_ServerListBox.TheScrollbar'
-    StyleName="DHComboListBox"
+
     Begin Object Class=GUIContextMenu Name=RCMenu
         ContextItems(0)="Join Server"
         ContextItems(1)="Join As Spectator"
