@@ -1,1 +1,0 @@
-<tr><td><%Mark%><span class=location><%DisplayText%></span></td><td><input class=textbox type=text name="<%SettingName%>" value="<%SettingValue%>" size="<%SettingWidth%>" maxlength="<%SettingWidth%>"><%MinMaxInfo%></td></tr>
