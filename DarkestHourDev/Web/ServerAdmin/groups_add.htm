@@ -1,0 +1,20 @@
+<!-- #include file="header.inc" -->
+<form method="post" action="<%PostAction%>">
+<table>
+<tr>
+ <td nowrap>Group Name :</td>
+ <td><input class=textbox type="text" name="GroupName" value="<%NameValue%>" maxlength="16"><input type="hidden" name="edit" value="<%NameValue%>"></td>
+</tr>
+<tr>
+ <td nowrap>Privileges :</td>
+ <td><%PrivTable%></td>
+</tr>
+<tr>
+ <td nowrap>Game Settings Level :</td>
+ <td><input class=textbox type="text" name="GameSec" size=8 value="<%GameSecValue%>" maxlength="3"></td>
+</tr>
+ <%ExtraRows%>
+</table><br><br>
+  <input class="button" type="submit" name="<%SubmitName%>" value="<%SubmitValue%>">&nbsp;&nbsp;<input class="button" type="reset" value="Reset">
+    </form>
+<!-- #include file="footer.inc" -->

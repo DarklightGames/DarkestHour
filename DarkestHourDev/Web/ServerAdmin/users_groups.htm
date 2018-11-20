@@ -1,0 +1,11 @@
+<!-- #include file="header.inc" -->
+   <span class="location">
+    <form method="post" action="<%PostAction%>">
+     Select&nbsp;<%Managed%>Groups for <span class="orange"><%NameValue%></span><input type="hidden" name="edit" value="<%NameValue%>"><br><br>
+     <table border="0">
+      <tr><td>&nbsp;</td><td>Group Name</td></tr>
+<%GroupRows%>
+			<tr><td colspan="2"><input class="button" type="submit" name="submit" value="Accept">&nbsp;&nbsp;<input class="button" type="reset" value="Reset"></td></tr>
+     </table>
+    </form></span>
+<!-- #include file="footer.inc" -->

@@ -1,0 +1,13 @@
+<!-- #include file="header.inc" -->
+<form method="post" action="<%PostAction%>">
+	<table>
+	<%TableContent%>
+	<%WebSkinSelect%>
+	</table><br>
+	<input class="button" type="submit" name="Save" value="<%SubmitValue%>">
+	<input class="button" type="reset" value="reset">
+	<input type="hidden" name="GameType" value="<%GameType%>">
+	<input type="hidden" name="Filter" value="<%Filter%>">
+	<br><br><span class="Location"><font size="-1">Note: item prefixed with <!-- #include file="defaults_mark.inc" -->may affect more than 1 game type.</font></span><br>
+</form>
+<!-- #include file="footer.inc" -->

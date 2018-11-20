@@ -1,0 +1,12 @@
+<!-- #include file="menuheader.inc" -->
+   <form method="post" action="<%PostAction%>" target="_parent">
+     <input type="hidden" name="GameType" value="<%GameType%>">
+     <input type="hidden" name="Page" value="<%Page%>">
+     <input type="hidden" name="Filter" value="<%Filter%>">
+     <span class="location">Game Type: </span><%GameTypeButton%><br>
+     <%GameTypeSelect%>
+    </form>
+    <span class="navigation">
+     <p><%Content%></p>
+    </span>
+<!-- #include file="menufooter.inc" -->

@@ -1,0 +1,14 @@
+<!-- #include file="header.inc" -->
+<form method="post" action="<%PostAction%>">
+	A conflict was found between a command line value and its default value from the ini file.  You must resolve the conflict before the server can be restarted<br><br>
+	Command line values normally override the default value.  To allow the command line value to override the default value, clear the checkbox, then click Accept.  To update the command line with the value from the ini, just click Accept.<br><br>
+	<table>
+		<tr><td><span class="orange">Setting&nbsp;&nbsp;&nbsp;</span></td><td><span class="orange">Defaults&nbsp;&nbsp;&nbsp;</span></td><td><span class="orange">Command Line&nbsp;&nbsp;&nbsp;</span></td><td><span class="orange">Override&nbsp;&nbsp;&nbsp;</span></td></tr>
+  <%Conflicts%>
+	</table><br>
+	<input class="button" type="submit" name="Save" value="<%SubmitValue%>">
+	<input class="button" type="reset" value="Reset">
+	<input type="hidden" name="GameType" value="<%GameType%>">
+	<input type="hidden" name="MapName" value="<%MapName%>">
+</form>
+<!-- #include file="footer.inc" -->
