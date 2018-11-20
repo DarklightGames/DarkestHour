@@ -71,10 +71,10 @@ defaultproperties
     // Placement
     bCanPlaceIndoors=false
     bCanPlaceInObjective=false
-    DuplicateFriendlyDistanceInMeters=300
-    DuplicateEnemyDistanceInMeters=150
-    ObjectiveDistanceMinMeters=150
-    EnemyObjectiveDistanceMinMeters=200.0
+    DuplicateFriendlyDistanceInMeters=400.0
+    DuplicateEnemyDistanceInMeters=200.0
+    ObjectiveDistanceMinMeters=200.0
+    EnemyObjectiveDistanceMinMeters=400.0
     ProxyTraceDepthMeters=10.0
     bCanOnlyPlaceOnTerrain=true
     bCanPlaceInWater=false
