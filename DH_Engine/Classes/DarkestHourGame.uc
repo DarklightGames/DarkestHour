@@ -84,6 +84,7 @@ var     class<DHMetrics>            MetricsClass;
 var     DHMetrics                   Metrics;
 var     config bool                 bEnableMetrics;
 
+var     string                      ServerLocation;
 var     UVersion                    Version;
 var     DHSquadReplicationInfo      SquadReplicationInfo;
 
@@ -128,11 +129,51 @@ event InitGame(string Options, out string Error)
     }
 }
 
+function GetServerLocation()
+{
+    local HTTPRequest LocationRequest;
+
+    // Now send the patron status request.
+    LocationRequest = Spawn(class'HTTPRequest');
+    LocationRequest.Method = "GET";
+    LocationRequest.Host = "ip-api.com";
+    LocationRequest.Path = "/json/";
+    LocationRequest.OnResponse = LocationRequestOnResponse;
+    LocationRequest.Send();
+}
+
+function LocationRequestOnResponse(int Status, TreeMap_string_string Headers, string Content)
+{
+    local JSONParser Parser;
+    local JSONObject O;
+    local string LocationString;
+
+    if (Status == 200)
+    {
+        Parser = new class'JSONParser';
+        O = Parser.ParseObject(Content);
+
+        Log("Server location request success (" $ Status  $ ")");
+
+        if (O != none)
+        {
+            LocationString = O.Get("city").AsString();
+        }
+
+        ServerLocation = LocationString;
+    }
+    else
+    {
+        ServerLocation = "Unknown";
+    }
+}
+
 function PreBeginPlay()
 {
     super.PreBeginPlay();
 
     SquadReplicationInfo = Spawn(class'DHSquadReplicationInfo');
+    GetServerLocation();
 }
 
 function PostBeginPlay()
@@ -4999,6 +5040,8 @@ function GetServerDetails(out ServerResponseLine ServerState)
     super.GetServerDetails(ServerState);
 
     AddServerDetail(ServerState, "Version", Version.ToString());
+    AddServerDetail(ServerState, "ServerLocation", ServerLocation);
+    AddServerDetail(ServerState, "ServerAverageTick", ServerTickRateAverage);
 }
 
 function string GetServerMessage(int Index)
@@ -5239,6 +5282,8 @@ defaultproperties
     ReinforcementMessagePercentages(7)=0.2
     ReinforcementMessagePercentages(8)=0.1
     ReinforcementMessagePercentages(9)=0.05
+
+    ServerLocation="Unspecified"
 
     Begin Object Class=UVersion Name=VersionObject
         Major=8
