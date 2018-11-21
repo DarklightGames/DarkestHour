@@ -22,9 +22,6 @@ var localized string MunitionPercentageText;
 var localized string PlayersText;
 var localized string TickHealthText;
 var localized string NetHealthText;
-var localized string PoorText;
-var localized string FairText;
-var localized string GoodText;
 
 var string TabSpaces;
 var string LargeTabSpaces;
@@ -445,45 +442,12 @@ simulated function UpdateScoreBoard(Canvas C)
     // Add game type
     S $= HUD.default.SpacingText $ HUD.default.MapGameTypeText $ DHGRI.GameType.default.GameTypeName;
 
-    // Server Tick Health
-    if (DHGRI.ServerTickHealth <= 18)
-    {
-        HealthString = default.PoorText;
-        HealthColor = class'UColor'.default.Red;
-    }
-    else if (DHGRI.ServerTickHealth <= 19)
-    {
-        HealthString = default.FairText;
-        HealthColor = class'UColor'.default.Orange;
-    }
-    else
-    {
-        HealthString = default.GoodText;
-        HealthColor = class'UColor'.default.Green;
-    }
-
-    // Add tickrate health
+    // Add Server Tick Health
+    HealthString = class'DHLib'.static.GetServerHealthString(DHGRI.ServerTickHealth, HealthColor);
     S $= HUD.default.SpacingText $ default.TickHealthText $ ":" @ class'GameInfo'.static.MakeColorCode(HealthColor) $ HealthString @ "(" $ DHGRI.ServerTickHealth $ ")";
 
-    // Server Tick Health
-    if (DHGRI.ServerNetHealth > 4)
-    {
-        HealthString = default.PoorText;
-        HealthColor = class'UColor'.default.Red;
-    }
-    else if (DHGRI.ServerNetHealth > 1)
-    {
-        HealthString = default.FairText;
-        HealthColor = class'UColor'.default.Orange;
-    }
-    else
-    {
-        HealthString = default.GoodText;
-        HealthColor = class'UColor'.default.Green;
-    }
-
-    // Add network health, added in white color code
-    S $= HUD.default.SpacingText $ class'GameInfo'.static.MakeColorCode(HUD.default.WhiteColor) $ default.NetHealthText $ ":" @ class'GameInfo'.static.MakeColorCode(HealthColor) $ HealthString @ "(" $ DHGRI.ServerNetHealth $ ")";
+    // Add Server Loss/Net Health (forces back white colors)
+    S $= HUD.default.SpacingText $ class'GameInfo'.static.MakeColorCode(HUD.default.WhiteColor) $ default.NetHealthText $ ":" @ "(" $ DHGRI.ServerNetHealth $ ")";
 
     Y = CalcY(0.25, C);
 
@@ -944,9 +908,6 @@ defaultproperties
     PlayersText="Players"
     TickHealthText="Tick"
     NetHealthText="Loss"
-    PoorText="Poor"
-    FairText="Fair"
-    GoodText="Good"
     MunitionPercentageText="Munitions"
     PatronLeadMaterial=Texture'DH_InterfaceArt2_tex.Patron_Icons.PATRON_Lead'
     PatronBronzeMaterial=Texture'DH_InterfaceArt2_tex.Patron_Icons.PATRON_Bronze'

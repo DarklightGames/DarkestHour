@@ -7,11 +7,19 @@ class DHBrowser_ServersList extends UT2K4Browser_ServersList;
 
 const MAX_RULES_REFRESH_ATTEMPTS = 5;
 
+var(Style) noexport GUIStyles           WrongVersionStyle;
+var(Style) string                       WrongVersionStyleName;
+
 var int    ServerRulesRefreshAttempts;
 
 function InitComponent(GUIController InController, GUIComponent InOwner)
 {
-    Super.InitComponent(InController,InOwner);
+    Super.InitComponent(InController, InOwner);
+
+    if (WrongVersionStyleName != "" && WrongVersionStyle == none)
+    {
+        WrongVersionStyle = InController.GetStyle(WrongVersionStyleName,FontScale);
+    }
 
     SetTimer(1.5,true);
 }
@@ -50,55 +58,23 @@ function MyOnDrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, 
 {
     local float CellLeft, CellWidth, DrawX;
     local float IconPosX, IconPosY;
-    local string Ping, VersionString, LocationString, PerformanceString;
+    local string Ping, VersionString, LocationString, HealthString;
     local int k, j, flags, checkFlag;
+    local color HealthColor;
     local GUIStyles DStyle;
-
-    // Draw the selection border
-    if (bSelected)
-    {
-        SelectedStyle.Draw(Canvas,MenuState,X,Y,W,H+1);
-        DStyle = SelectedStyle;
-    }
-    else
-    {
-        DStyle = Style;
-    }
 
     // Get values for columns (have to use j as i is passed in as arguement)
     for (j = 0; j < Servers[SortData[i].SortItem].ServerInfo.Length; ++j)
     {
         // Get the server's performance string
-        if (Servers[SortData[i].SortItem].ServerInfo[j].Key ~= "ServerLocation")
+        if (Servers[SortData[i].SortItem].ServerInfo[j].Key ~= "AverageTick")
         {
-            if (int(Servers[SortData[i].SortItem].ServerInfo[j].Value) > 24)
-            {
-                PerformanceString = "Excellent";
-            }
-            else if (int(Servers[SortData[i].SortItem].ServerInfo[j].Value) > 22)
-            {
-                PerformanceString = "Good";
-            }
-            else if (int(Servers[SortData[i].SortItem].ServerInfo[j].Value) > 20)
-            {
-                PerformanceString = "Acceptable";
-            }
-            else if (int(Servers[SortData[i].SortItem].ServerInfo[j].Value) > 18)
-            {
-                PerformanceString = "Fair";
-            }
-            else if (int(Servers[SortData[i].SortItem].ServerInfo[j].Value) > 15)
-            {
-                PerformanceString = "Poor";
-            }
-            else
-            {
-                PerformanceString = "Abysmal";
-            }
+            HealthString = class'DHLib'.static.GetServerHealthString(byte(Servers[SortData[i].SortItem].ServerInfo[j].Value), HealthColor);
+            HealthString = class'GameInfo'.static.MakeColorCode(HealthColor) $ HealthString;
         }
 
         // Get the server's location string
-        if (Servers[SortData[i].SortItem].ServerInfo[j].Key ~= "ServerLocation")
+        if (Servers[SortData[i].SortItem].ServerInfo[j].Key ~= "Location")
         {
             LocationString = Servers[SortData[i].SortItem].ServerInfo[j].Value;
         }
@@ -108,6 +84,21 @@ function MyOnDrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, 
         {
             VersionString = Servers[SortData[i].SortItem].ServerInfo[j].Value;
         }
+    }
+
+    // Draw the selection border
+    if (VersionString != class'DarkestHourGame'.default.Version.ToString())
+    {
+        DStyle = WrongVersionStyle;
+    }
+    else if (bSelected)
+    {
+        SelectedStyle.Draw(Canvas,MenuState,X,Y,W,H+1);
+        DStyle = SelectedStyle;
+    }
+    else
+    {
+        DStyle = Style;
     }
 
     //////////////////////////////////////////////////////////////////////
@@ -153,9 +144,9 @@ function MyOnDrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, 
     GetCellLeftWidth( 1, CellLeft, CellWidth );
     DStyle.DrawText( Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Left, Servers[SortData[i].SortItem].ServerName, FontScale );
 
-    // Performance
+    // Server Health
     GetCellLeftWidth( 2, CellLeft, CellWidth );
-    DStyle.DrawText( Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Center, PerformanceString, FontScale );
+    DStyle.DrawText( Canvas, MenuState, CellLeft, Y, CellWidth, H, TXTA_Center, HealthString, FontScale );
 
     // Location
     GetCellLeftWidth( 3, CellLeft, CellWidth );
@@ -191,10 +182,11 @@ defaultproperties
     SelectedStyleName="DHListSelectionStyle"
     SectionStyleName="DHListSelectionStyle"
     StyleName="DHListSelectionStyle"
+    WrongVersionStyleName="DHListSelectionBlackStyle"
 
     ColumnHeadings(0)=""
     ColumnHeadings(1)="Server Name"
-    ColumnHeadings(2)="Performance"
+    ColumnHeadings(2)="Health"
     ColumnHeadings(3)="Location"
     ColumnHeadings(4)="Version"
     ColumnHeadings(5)="Map"
@@ -203,7 +195,7 @@ defaultproperties
 
     InitColumnPerc(0)=0.04  // icons
     InitColumnPerc(1)=0.22  // name
-    InitColumnPerc(2)=0.09  // performance
+    InitColumnPerc(2)=0.09  // health
     InitColumnPerc(3)=0.10  // location
     InitColumnPerc(4)=0.10  // version
     InitColumnPerc(5)=0.27  // map

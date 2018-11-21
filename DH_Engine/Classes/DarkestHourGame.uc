@@ -146,7 +146,7 @@ function LocationRequestOnResponse(int Status, TreeMap_string_string Headers, st
 {
     local JSONParser Parser;
     local JSONObject O;
-    local string LocationString;
+    local string City, Country;
 
     if (Status == 200)
     {
@@ -157,14 +157,11 @@ function LocationRequestOnResponse(int Status, TreeMap_string_string Headers, st
 
         if (O != none)
         {
-            LocationString = O.Get("city").AsString();
-        }
+            City = O.Get("city").AsString();
+            Country = O.Get("country").AsString();
 
-        ServerLocation = LocationString;
-    }
-    else
-    {
-        ServerLocation = "Unknown";
+            default.ServerLocation = City $ "," @ Country;
+        }
     }
 }
 
@@ -173,7 +170,11 @@ function PreBeginPlay()
     super.PreBeginPlay();
 
     SquadReplicationInfo = Spawn(class'DHSquadReplicationInfo');
-    GetServerLocation();
+
+    if (default.ServerLocation == "Unknown")
+    {
+        GetServerLocation();
+    }
 }
 
 function PostBeginPlay()
@@ -579,8 +580,8 @@ function HandlePerformanceInfraction()
 {
     local float TickRatio;
 
-    // If server isn't running at normal gamespeed OR round is not in play OR we've already reached strike margin, then ignore
-    if (GameSpeed != 1.0 || !IsInState('RoundInPlay') || PoorPerformanceStrikeCount > PERFORMANCE_STRIKE_MARGIN)
+    // If not a dedicated server OR isn't running at normal gamespeed OR round is not in play OR we've already reached strike margin, then ignore
+    if (Level.NetMode != NM_DedicatedServer || GameSpeed != 1.0 || !IsInState('RoundInPlay') || PoorPerformanceStrikeCount > PERFORMANCE_STRIKE_MARGIN)
     {
         return;
     }
@@ -5040,8 +5041,8 @@ function GetServerDetails(out ServerResponseLine ServerState)
     super.GetServerDetails(ServerState);
 
     AddServerDetail(ServerState, "Version", Version.ToString());
-    AddServerDetail(ServerState, "ServerLocation", ServerLocation);
-    AddServerDetail(ServerState, "ServerAverageTick", ServerTickRateAverage);
+    AddServerDetail(ServerState, "Location", default.ServerLocation);
+    AddServerDetail(ServerState, "AverageTick", ServerTickRateAverage);
 }
 
 function string GetServerMessage(int Index)
@@ -5283,7 +5284,7 @@ defaultproperties
     ReinforcementMessagePercentages(8)=0.1
     ReinforcementMessagePercentages(9)=0.05
 
-    ServerLocation="Unspecified"
+    ServerLocation="Unknown"
 
     Begin Object Class=UVersion Name=VersionObject
         Major=8
