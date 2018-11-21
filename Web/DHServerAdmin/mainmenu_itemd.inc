@@ -1,1 +1,1 @@
-<span class="gray"><%MenuTitle%></span><img src="/images/t.gif" width="20" height="17">
+<span class="gray"><%MenuTitle%></span><img src="/DHImages/t.gif" width="20" height="17">
