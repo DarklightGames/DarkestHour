@@ -86,18 +86,23 @@ function MyOnDrawItem(Canvas Canvas, int i, float X, float Y, float W, float H, 
         }
     }
 
-    // Draw the selection border
+    // Choose style, we will grey out servers which don't match version
     if (VersionString != class'DarkestHourGame'.default.Version.ToString())
     {
+        if (bSelected)
+        {
+            WrongVersionStyle.Draw(Canvas,MenuState,X,Y,W,H+1);
+        }
+
         DStyle = WrongVersionStyle;
-    }
-    else if (bSelected)
-    {
-        SelectedStyle.Draw(Canvas,MenuState,X,Y,W,H+1);
-        DStyle = SelectedStyle;
     }
     else
     {
+        if (bSelected)
+        {
+            Style.Draw(Canvas,MenuState,X,Y,W,H+1);
+        }
+
         DStyle = Style;
     }
 
@@ -182,7 +187,7 @@ defaultproperties
     SelectedStyleName="DHListSelectionStyle"
     SectionStyleName="DHListSelectionStyle"
     StyleName="DHListSelectionStyle"
-    WrongVersionStyleName="DHListSelectionBlackStyle"
+    WrongVersionStyleName="DHListSelectionGreyStyle"
 
     ColumnHeadings(0)=""
     ColumnHeadings(1)="Server Name"

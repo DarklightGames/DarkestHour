@@ -420,6 +420,7 @@ defaultproperties
     DefaultStyleNames(92)="DH_Interface.DHStyle_PlatoonHQButton"
     DefaultStyleNames(93)="DH_Interface.DHStyle_ListLargeHighlight"
     DefaultStyleNames(94)="DH_Interface.DHStyle_ParatroopersButton"
+    DefaultStyleNames(95)="DH_Interface.DHStyle_ListSelectionGrey"
     RequestDataMenu="DH_Interface.DHGetDataMenu"
     DynArrayPropertyMenu="DH_Interface.DHGUIDynArrayPage"
     FilterMenu="DH_Interface.DHFilterListPage"
