@@ -133,7 +133,7 @@ function GetServerLocation()
 {
     local HTTPRequest LocationRequest;
 
-    // Now send the patron status request.
+    // Now send the location request
     LocationRequest = Spawn(class'HTTPRequest');
     LocationRequest.Method = "GET";
     LocationRequest.Host = "ip-api.com";
@@ -162,6 +162,22 @@ function LocationRequestOnResponse(int Status, TreeMap_string_string Headers, st
 
             default.ServerLocation = City $ "," @ Country;
         }
+    }
+    else
+    {
+        Parser = new class'JSONParser';
+        O = Parser.ParseObject(Content);
+
+        Log(" ");
+        Log("Server location request was a failure (" $ Status  $ ")");
+
+        if (O != none)
+        {
+            Log("Fail message is:" @ O.Get("message").AsString());
+            Log("IP used for query is:" @ O.Get("query").AsString());
+        }
+
+        Log(" ");
     }
 }
 
