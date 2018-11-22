@@ -29,7 +29,7 @@ function PostBeginPlay()
 
 function Send()
 {
-    MyLink.ServerIpAddr.Port = 80;
+    MyLink.ServerIpAddr.Port = 0;
     MyLink.Resolve(Host);
 
     Log(" ");
@@ -208,6 +208,8 @@ function Timer()
     }
     else if (MyLink.ReceiveState == "" && MyLink.ServerIpAddr.Port != 0 && MyLink.IsConnected())
     {
+        Log("in the first else if");
+
         Command = Method @ Path @ Protocol $ MyLink.CRLF $
                   "Host:" @ Host $ MyLink.CRLF;
 
@@ -241,10 +243,18 @@ function Timer()
     }
     else if (MyLink.ReceiveState == MyLink.Timeout)
     {
+        Log("in the last else if");
+
         OnResponse(408, none, "");
     }
 
     Timeout -= 1;
+
+    if (Timeout < 0)
+    {
+        Destroy();
+        return;
+    }
 }
 
 function int GetTimeout()
