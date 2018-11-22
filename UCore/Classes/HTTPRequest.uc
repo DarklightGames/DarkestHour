@@ -108,6 +108,9 @@ function Timer()
     Log(" ");
     Log("Running timer, Timeout is:" @ Timeout);
 
+    Log("MyLink.ReceiveState is:" @ MyLink.ReceiveState);
+    Log("MyLink.Match is:" @ MyLink.Match);
+
     if (MyLink.ReceiveState == MyLink.Match)
     {
         Log("MyLink.ReceiveState == MyLink.Match");
