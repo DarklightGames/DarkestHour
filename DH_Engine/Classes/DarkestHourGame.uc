@@ -136,8 +136,13 @@ function GetServerLocation()
     // Now send the location request
     LocationRequest = Spawn(class'HTTPRequest');
     LocationRequest.Method = "GET";
+
     LocationRequest.Host = "ip-api.com";
-    LocationRequest.Path = "/json/";
+    LocationRequest.Path = "/json";
+
+    //LocationRequest.Host = "ipinfo.io";
+    //LocationRequest.Path = "/json?token=092f8aa069f043";
+
     LocationRequest.OnResponse = LocationRequestOnResponse;
     LocationRequest.Send();
 }
@@ -148,6 +153,9 @@ function LocationRequestOnResponse(int Status, TreeMap_string_string Headers, st
     local JSONObject O;
     local string City, Country;
 
+    Log(" ");
+    Log("LocationRequestOnResponse executing...");
+
     if (Status == 200)
     {
         Parser = new class'JSONParser';
@@ -155,12 +163,21 @@ function LocationRequestOnResponse(int Status, TreeMap_string_string Headers, st
 
         Log("Server location request success (" $ Status  $ ")");
 
+        Log(Content);
+
         if (O != none)
         {
+            Log("Content exists!");
+
             City = O.Get("city").AsString();
             Country = O.Get("country").AsString();
 
+            Log("city is:" @ City);
+            Log("country is:" @ Country);
+
             default.ServerLocation = City $ "," @ Country;
+
+            Log("default.ServerLocation is now:" @ default.ServerLocation);
         }
     }
     else
@@ -176,9 +193,9 @@ function LocationRequestOnResponse(int Status, TreeMap_string_string Headers, st
             Log("Fail message is:" @ O.Get("message").AsString());
             Log("IP used for query is:" @ O.Get("query").AsString());
         }
-
-        Log(" ");
     }
+
+    Log(" ");
 }
 
 function PreBeginPlay()
@@ -5326,7 +5343,7 @@ defaultproperties
     Begin Object Class=UVersion Name=VersionObject
         Major=8
         Minor=3
-        Patch=1
+        Patch=2
         Prerelease=""
     End Object
     Version=VersionObject
