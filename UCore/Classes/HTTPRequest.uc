@@ -29,9 +29,16 @@ function PostBeginPlay()
 
 function Send()
 {
-    MyLink.ServerIpAddr.Port = 0;
+    MyLink.ServerIpAddr.Port = 80;
     MyLink.Resolve(Host);
 
+    Log(" ");
+    Log(" ");
+    Log(" ");
+    Log(" ");
+    Log(" ");
+    Log("Setting timer in HTTPRequest...");
+    Log(" ");
     SetTimer(1.0, true);
 }
 
@@ -98,11 +105,20 @@ function Timer()
     local HTTPRequest R;
     local Object O;
 
+    Log(" ");
+    Log("Running timer, Timeout is:" @ Timeout);
+
     if (MyLink.ReceiveState == MyLink.Match)
     {
+        Log("MyLink.ReceiveState == MyLink.Match");
+
         if (MyLink.PeekChar() != 0)
         {
+            Log("MyLink.PeekChar() != 0");
+
             Response = MyLink.InputBuffer;
+
+            Log("Response:" @ Response);
 
             Divide(Response, MyLink.CRLF, StatusString, Response);
             Divide(Response, MyLink.CRLF $ MyLink.CRLF, HeadersString, Response);
@@ -125,6 +141,8 @@ function Timer()
                 case 302:   // Found
                 case 307:   // Temporary Redirect
                 case 308:   // Permanent Redirect
+                    Log(" doing a redirect, but probably can't");
+
                     if (bAllowRedirects && ResponseHeaders.Get("Location", Loc) && !OnRedirect(self, Status, Loc))
                     {
                         U = class'URL'.static.FromString(Loc);
@@ -145,6 +163,8 @@ function Timer()
                             Warn("Could not parse URL for redirection (" $ Loc $ ")");
                         }
                     }
+
+                    Log("Redirect failed, destroying");
                     Destroy();
                     return;
                 default:
@@ -178,6 +198,7 @@ function Timer()
                 Content = Response;
             }
 
+            Log(" Calling OnResponse !!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             OnResponse(Status, ResponseHeaders, Content);
 
             MyLink.DestroyLink();
