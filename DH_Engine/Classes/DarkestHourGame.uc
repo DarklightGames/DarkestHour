@@ -5179,6 +5179,27 @@ function PlayerVoted(DHPlayer Player,bool bVote, DHPromptInteraction Interaction
 
 }
 
+// Overriden to stop the addition of duplicate keys into the server info array.
+static function AddServerDetail(out ServerResponseLine ServerState, string RuleName, coerce string RuleValue)
+{
+    local int i;
+
+    for (i = 0; i < ServerState.ServerInfo.Length; ++i)
+    {
+        if (ServerState.ServerInfo[i].Key == RuleName)
+        {
+            ServerState.ServerInfo[i].Value = RuleValue;
+            return;
+        }
+    }
+
+    i = ServerState.ServerInfo.Length;
+    ServerState.ServerInfo.Length = i + 1;
+
+    ServerState.ServerInfo[i].Key = RuleName;
+    ServerState.ServerInfo[i].Value = RuleValue;
+}
+
 defaultproperties
 {
     ServerTickForInfraction=17.0
