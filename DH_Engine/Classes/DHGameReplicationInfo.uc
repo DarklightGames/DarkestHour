@@ -1544,10 +1544,6 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
     {
         return ERROR_Unavailable;
     }
-    else if (ATI.UsedCount >= ATI.Limit)
-    {
-        return ERROR_Exhausted;
-    }
     else if (ATI.ArtilleryActor != none)
     {
         if (ATI.ArtilleryActor.bCanBeCancelled && PC == ATI.ArtilleryActor.Requester)
@@ -1558,6 +1554,10 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
         {
             return ERROR_Ongoing;
         }
+    }
+    else if (ATI.UsedCount >= ATI.Limit)
+    {
+        return ERROR_Exhausted;
     }
     else if (ElapsedTime < ATI.NextConfirmElapsedTime)
     {
