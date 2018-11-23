@@ -40,6 +40,23 @@ static function color GetBeeLineColor()
 // Override to run specific logic when this marker is placed.
 static function OnMapMarkerPlaced(DHPlayer PC);
 
+// Override these 2 functions to determine how the marker should be handled
+// when added/removed (e.g. make it private).
+static function AddMarker(out DHPlayer PC, float MapLocationX, float MapLocationY)
+{
+   PC.ServerAddMapMarker(default.Class, MapLocationX, MapLocationY);
+}
+
+static function RemoveMarker(out DHPlayer PC, optional int Index)
+{
+   if (Index < 0)
+   {
+       return;
+   }
+
+   PC.ServerRemoveMapMarker(Index);
+}
+
 defaultproperties
 {
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)

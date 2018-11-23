@@ -17,6 +17,16 @@ enum EMapMode
     MODE_Squads
 };
 
+struct PrivateMapMarker
+{
+    var class<DHMapMarker> MapMarkerClass;
+    var vector MapLocation;
+    var vector WorldLocation;
+    var bool bIsActive;
+};
+
+var     private PrivateMapMarker RulerMarker;
+
 var     input float             aBaseFire;
 var     bool                    bUsingController;
 var     bool                    bIsGagged;
@@ -5447,6 +5457,30 @@ function ServerRemoveMapMarker(int MapMarkerIndex)
     }
 }
 
+function GetRulerMarker(out PrivateMapMarker PMM)
+{
+    PMM = RulerMarker;
+}
+
+function AddRulerMarker(float MapLocationX, float MapLocationY)
+{
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    RulerMarker.bIsActive = true;
+
+    RulerMarker.MapLocation.X = MapLocationX;
+    RulerMarker.MapLocation.Y = MapLocationY;
+
+    RulerMarker.WorldLocation = GRI.GetWorldCoords(MapLocationX, MapLocationY);
+}
+
+function RemoveRulerMarker()
+{
+    RulerMarker.bIsActive = false;
+}
+
 simulated function ClientSquadSignal(class<DHSquadSignal> SignalClass, vector L)
 {
     local int i;
@@ -6224,6 +6258,7 @@ defaultproperties
     ConfigViewFOV=85.0
 
     // Other values
+    RulerMarker=(MapMarkerClass=class'DH_Engine.DHMapMarker_Ruler')
     NextSpawnTime=15
     ROMidGameMenuClass="DH_Interface.DHDeployMenu"
     GlobalDetailLevel=5

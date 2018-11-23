@@ -2692,6 +2692,34 @@ function DrawCompass(Canvas C)
     HudScale = HudScaleTemp;
 }
 
+function DrawMapMarkerOnCompass (Canvas C, float CenterX, float CenterY, float Radius, float RotationCompensation, AbsoluteCoordsInfo GlobalCoords, class<DHMapMarker> MapMarkerClass, vector Target, vector Current, float XL, float YL)
+{
+    local float Angle;
+    local rotator RotAngle;
+
+    if (!MapMarkerClass.default.bShouldShowOnCompass)
+    {
+        return;
+    }
+
+    // Update widget color & texture
+    CompassIcons.WidgetTexture = MapMarkerClass.default.IconMaterial;
+    CompassIcons.TextureCoords = MapMarkerClass.default.IconCoords;
+    CompassIcons.Tints[TeamIndex] = MapMarkerClass.default.IconColor;
+    CompassIcons.Tints[TeamIndex].A = float(default.CompassIcons.Tints[TeamIndex].A) * CompassIconsOpacity;
+
+    // Calculate rotation
+    RotAngle = rotator(Target - Current);
+    Angle = (RotAngle.Yaw + RotationCompensation) * Pi / 32768;
+
+    // Update widget offset
+    CompassIcons.OffsetX = CenterX + Radius * Cos(Angle);
+    CompassIcons.OffsetY = CenterY + Radius * Sin(Angle);
+
+    // Draw marker image
+    DrawSpriteWidgetClipped(C, CompassIcons, GlobalCoords, true, XL, YL, true, true, true);
+}
+
 function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, float RotationCompensation, Actor viewer, AbsoluteCoordsInfo GlobalCoords)
 {
     local vector Target, Current;
@@ -2699,6 +2727,7 @@ function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, 
     local ROGameReplicationInfo GRI;
     local float angle, XL, YL;
     local rotator rotAngle;
+    local DHPlayer.PrivateMapMarker RulerMarker;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local DHPlayer PC;
     local array<int> Indices;
@@ -2865,36 +2894,20 @@ function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, 
 
     if (PC != none)
     {
+        // Private markers
+        PC.GetRulerMarker(RulerMarker);
+        DrawMapMarkerOnCompass(C, CenterX, CenterY, Radius, RotationCompensation, GlobalCoords, RulerMarker.MapMarkerClass, RulerMarker.WorldLocation, Current, XL, YL);
+
         // Map markers
         DHGRI.GetMapMarkers(MapMarkers, Indices, PC.GetTeamNum(), PC.GetSquadIndex());
 
         for (i = 0; i < MapMarkers.Length; ++i)
         {
-            if (!MapMarkers[i].MapMarkerClass.default.bShouldShowOnCompass)
-            {
-                continue;
-            }
-
             Target.X = float(MapMarkers[i].LocationX) / 255.0;
             Target.Y = float(MapMarkers[i].LocationY) / 255.0;
             Target = DHGRI.GetWorldCoords(Target.X, Target.Y);
 
-            // Update widget color & texture
-            CompassIcons.WidgetTexture = MapMarkers[i].MapMarkerClass.default.IconMaterial;
-            CompassIcons.TextureCoords = MapMarkers[i].MapMarkerClass.default.IconCoords;
-            CompassIcons.Tints[TeamIndex] = MapMarkers[i].MapMarkerClass.default.IconColor;
-            CompassIcons.Tints[TeamIndex].A = float(default.CompassIcons.Tints[TeamIndex].A) * CompassIconsOpacity;
-
-            // Calculate rotation
-            RotAngle = rotator(Target - Current);
-            Angle = (RotAngle.Yaw + RotationCompensation) * Pi / 32768;
-
-            // Update widget offset
-            CompassIcons.OffsetX = CenterX + Radius * Cos(Angle);
-            CompassIcons.OffsetY = CenterY + Radius * Sin(Angle);
-
-            // Draw marker image
-            DrawSpriteWidgetClipped(C, CompassIcons, GlobalCoords, true, XL, YL, true, true, true);
+            DrawMapMarkerOnCompass(C, CenterX, CenterY, Radius, RotationCompensation, GlobalCoords, MapMarkers[i].MapMarkerClass, Target, Current, XL, YL);
         }
 
         // Squad leader
@@ -3821,13 +3834,30 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     }
 }
 
+function DrawMapMarkerOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport, class<DHMapMarker> MapMarkerClass, vector Target, Pawn P, optional string Caption)
+{
+    MapMarkerIcon.WidgetTexture = MapMarkerClass.default.IconMaterial;
+    MapMarkerIcon.TextureCoords = MapMarkerClass.default.IconCoords;
+    MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = MapMarkerClass.default.IconColor;
+
+    DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, Target, MapCenter, Viewport,, Caption);
+
+    if (P != none && MapMarkerClass.default.bShouldDrawBeeLine)
+    {
+        // Draw a bee-line from the player to the map marker.
+        DrawMapLine(C, SubCoords, MyMapScale, MapCenter, Viewport, P.Location, Target, MapMarkerClass.static.GetBeeLineColor());
+    }
+}
+
 function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
 {
     local DHPlayer PC;
     local int i;
     local vector L;
+    local DHPlayer.PrivateMapMarker RulerMarker;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local array<int> Indices;
+    local string Caption;
 
     PC = DHPlayer(PlayerOwner);
 
@@ -3844,18 +3874,25 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
         L.Y = float(MapMarkers[i].LocationY) / 255.0;
         L = DHGRI.GetWorldCoords(L.X, L.Y);
 
-        MapMarkerIcon.WidgetTexture = MapMarkers[i].MapMarkerClass.default.IconMaterial;
-        MapMarkerIcon.TextureCoords = MapMarkers[i].MapMarkerClass.default.IconCoords;
-        MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = MapMarkers[i].MapMarkerClass.default.IconColor;
-
-        DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, L, MapCenter, Viewport);
-
-        if (PC.Pawn != none && MapMarkers[i].MapMarkerClass.default.bShouldDrawBeeLine)
-        {
-            // Draw a bee-line from the player to the map marker.
-            DrawMapLine(C, SubCoords, MyMapScale, MapCenter, Viewport, PC.Pawn.Location, L, MapMarkers[i].MapMarkerClass.static.GetBeeLineColor());
-        }
+        DrawMapMarkerOnMap(C, SubCoords, MyMapScale, MapCenter, Viewport, MapMarkers[i].MapMarkerClass, L, PC.Pawn);
     }
+
+    PC.GetRulerMarker(RulerMarker);
+
+    if (!RulerMarker.bIsActive)
+    {
+        return;
+    }
+
+    if (PC.Pawn == none && !RulerMarker.MapMarkerClass.static.CanPlayerUse(DHPlayerReplicationInfo(PC.PlayerReplicationInfo)))
+    {
+        PC.RemoveRulerMarker();
+        return;
+    }
+
+    Caption = GetMapDistance(PC.Pawn.Location, RulerMarker.WorldLocation, 5, PC);
+
+    DrawMapMarkerOnMap(C, SubCoords, MyMapScale, MapCenter, Viewport, RulerMarker.MapMarkerClass, RulerMarker.WorldLocation, PC.Pawn, Caption);
 }
 
 // LineStart and LineEnd need to be in world-coordinates.
@@ -3895,6 +3932,39 @@ function DrawMapLine(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, v
     Y1 = SubCoords.PosY + (SubCoords.Height * Y1);
 
     DrawCanvasLine(X0, Y0, X1, Y1, LineColor);
+}
+
+function string GetMapDistance(vector SourceLocation, vector TargetLocation, optional int RoundMultiple, optional DHPlayer PC)
+{
+    local float Distance;
+    local int OutputDistance;
+    local string UnitString;
+
+    SourceLocation.Z = 0.0;
+    TargetLocation.Z = 0.0;
+
+    Distance = class'DHUnits'.static.UnrealToMeters(VSize(SourceLocation - TargetLocation));
+
+    if (PC != none &&
+        PC.GetTeamNum() == ALLIES_TEAM_INDEX &&
+        PC.ClientLevelInfo.AlliedNation != NATION_USSR)
+    {
+        UnitString = "yd";
+        Distance = Distance * 1.0936;
+    }
+    else
+    {
+        UnitString = "m";
+    }
+
+    OutputDistance = int(Distance);
+
+    if (RoundMultiple != 0)
+    {
+        OutputDistance = (OutputDistance / RoundMultiple) * RoundMultiple;
+    }
+
+    return string(OutputDistance) @ UnitString;
 }
 
 function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)

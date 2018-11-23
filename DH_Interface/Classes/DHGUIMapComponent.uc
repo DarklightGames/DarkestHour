@@ -22,6 +22,7 @@ var             Material                    SpawnPointBlockedOverlay;
 var             vector                      MapClickLocation;
 var             array<class<DHMapMarker> >  MenuItemObjects;
 var             int                         MapMarkerIndexToRemove;
+var             bool                        bRemoveMapMarker;
 
 var             Box                         Viewport;
 var             Box                         ViewportInterpStart;
@@ -376,15 +377,25 @@ function vector GetNormalizedLocation(float X, float Y)
     return Location;
 }
 
+function bool DetectMarker(float LocationX, float LocationY, float MapClickLocationX, float MapClickLocationY)
+{
+    local float X, Y, D;
+
+    X = LocationX - MapClickLocationX;
+    Y = LocationY - MapClickLocationY;
+    D = Sqrt(X * X + Y * Y);
+
+    return D <= class'DHHud'.default.MapMarkerIcon.TextureScale / 2.0;
+}
+
 function bool InternalOnOpen(GUIContextMenu Sender)
 {
     local int i;
-    local float D;
+    local DHPlayer.PrivateMapMarker RulerMarker;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local array<int> Indices;
     local array<class<DHMapMarker> > MapMarkerClasses;
     local int GroupIndex;
-    local float X, Y;
 
     if (Sender == none || PC == none || PRI == none || GRI == none)
     {
@@ -399,27 +410,33 @@ function bool InternalOnOpen(GUIContextMenu Sender)
 
     // Iterate through existing map markers and check if any were clicked on.
     GRI.GetMapMarkers(MapMarkers, Indices, PC.GetTeamNum(), PC.GetSquadIndex());
+    PC.GetRulerMarker(RulerMarker);
 
     MenuItemObjects.Length = 0;
     MapMarkerIndexToRemove = -1;
+    bRemoveMapMarker = false;
 
-    for (i = 0; i < MapMarkers.Length; ++i)
+    if (RulerMarker.bIsActive &&
+        DetectMarker(RulerMarker.MapLocation.X, RulerMarker.MapLocation.Y, MapClickLocation.X, MapClickLocation.Y))
     {
-        if (!MapMarkers[i].MapMarkerClass.static.CanPlayerUse(PRI))
+        bRemoveMapMarker = true;
+        Sender.AddItem(RemoveText);
+        MenuItemObjects[MenuItemObjects.Length] = RulerMarker.MapMarkerClass;
+    }
+    else
+    {
+        for (i = 0; i < MapMarkers.Length; ++i)
         {
-            continue;
-        }
+            if (!MapMarkers[i].MapMarkerClass.static.CanPlayerUse(PRI) ||
+                !DetectMarker(float(MapMarkers[i].LocationX) / 255.0, float(MapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y))
+            {
+                continue;
+            }
 
-        X = (float(MapMarkers[i].LocationX) / 255.0) - MapClickLocation.X;
-        Y = (float(MapMarkers[i].LocationY) / 255.0) - MapClickLocation.Y;
-        D = Sqrt(X * X + Y * Y);
-
-        if (D <= class'DHHud'.default.MapMarkerIcon.TextureScale / 2.0)
-        {
-            // Clicked on an existing map marker, add the "remove" option.
+            bRemoveMapMarker = true;
             MapMarkerIndexToRemove = Indices[i];
             Sender.AddItem(RemoveText);
-            MenuItemObjects[MenuItemObjects.Length] = none;
+            MenuItemObjects[MenuItemObjects.Length] = MapMarkers[i].MapMarkerClass;
             break;
         }
     }
@@ -431,6 +448,11 @@ function bool InternalOnOpen(GUIContextMenu Sender)
         {
             MapMarkerClasses[MapMarkerClasses.Length] = GRI.MapMarkerClasses[i];
         }
+    }
+
+    if (PC.Pawn != none && RulerMarker.MapMarkerClass.static.CanPlayerUse(PRI))
+    {
+        MapMarkerClasses[MapMarkerClasses.Length] = RulerMarker.MapMarkerClass;
     }
 
     SortMapMarkerClasses(MapMarkerClasses);
@@ -469,21 +491,19 @@ function bool InternalOnClose(GUIContextMenu Sender)
 
 function InternalOnSelect(GUIContextMenu Sender, int ClickIndex)
 {
-    if (PC == none || ClickIndex < 0 || ClickIndex >= MenuItemObjects.Length)
+    if (PC == none || ClickIndex < 0 || ClickIndex >= MenuItemObjects.Length ||
+        MenuItemObjects[ClickIndex] == none)
     {
         return;
     }
 
-    if (MenuItemObjects[ClickIndex] == none)
+    if (bRemoveMapMarker && ClickIndex == 0)
     {
-        if (MapMarkerIndexToRemove != -1)
-        {
-            PC.ServerRemoveMapMarker(MapMarkerIndexToRemove);
-        }
+        MenuItemObjects[ClickIndex].static.RemoveMarker(PC, MapMarkerIndexToRemove);
     }
     else
     {
-        PC.ServerAddMapMarker(MenuItemObjects[ClickIndex], MapClickLocation.X, MapClickLocation.Y);
+        MenuItemObjects[ClickIndex].static.AddMarker(PC, MapClickLocation.X, MapClickLocation.Y);
     }
 }
 
