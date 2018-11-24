@@ -417,7 +417,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
     bRemoveMapMarker = false;
 
     if (RulerMarker.bIsActive &&
-        DetectMarker(RulerMarker.MapLocation.X, RulerMarker.MapLocation.Y, MapClickLocation.X, MapClickLocation.Y))
+        DetectMarker(RulerMarker.MapLocationX, RulerMarker.MapLocationY, MapClickLocation.X, MapClickLocation.Y))
     {
         bRemoveMapMarker = true;
         Sender.AddItem(RemoveText);

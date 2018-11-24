@@ -20,7 +20,8 @@ enum EMapMode
 struct PrivateMapMarker
 {
     var class<DHMapMarker> MapMarkerClass;
-    var vector MapLocation;
+    var float MapLocationX;
+    var float MapLocationY;
     var vector WorldLocation;
     var bool bIsActive;
 };
@@ -5470,8 +5471,8 @@ function AddRulerMarker(float MapLocationX, float MapLocationY)
 
     RulerMarker.bIsActive = true;
 
-    RulerMarker.MapLocation.X = MapLocationX;
-    RulerMarker.MapLocation.Y = MapLocationY;
+    RulerMarker.MapLocationX = MapLocationX;
+    RulerMarker.MapLocationY = MapLocationY;
 
     RulerMarker.WorldLocation = GRI.GetWorldCoords(MapLocationX, MapLocationY);
 }
