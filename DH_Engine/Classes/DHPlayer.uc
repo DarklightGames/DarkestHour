@@ -17,16 +17,16 @@ enum EMapMode
     MODE_Squads
 };
 
-struct PrivateMapMarker
+struct PersonalMapMarker
 {
     var class<DHMapMarker> MapMarkerClass;
     var float MapLocationX;
     var float MapLocationY;
     var vector WorldLocation;
-    var bool bIsActive;
 };
 
-var     private PrivateMapMarker RulerMarker;
+var     array<class<DHMapMarker> >           PersonalMapMarkerClasses;
+var     private array<PersonalMapMarker>    PersonalMapMarkers;
 
 var     input float             aBaseFire;
 var     bool                    bUsingController;
@@ -5458,28 +5458,48 @@ function ServerRemoveMapMarker(int MapMarkerIndex)
     }
 }
 
-function GetRulerMarker(out PrivateMapMarker PMM)
+function array<PersonalMapMarker> GetPersonalMarkers()
 {
-    PMM = RulerMarker;
+    return PersonalMapMarkers;
 }
 
-function AddRulerMarker(float MapLocationX, float MapLocationY)
+function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY)
 {
     local DHGameReplicationInfo GRI;
+    local PersonalMapMarker PMM;
+    local int i;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
-    RulerMarker.bIsActive = true;
+    if (GRI == none || MapMarkerClass == none || !MapMarkerClass.default.bIsPersonal)
+    {
+        return;
+    }
 
-    RulerMarker.MapLocationX = MapLocationX;
-    RulerMarker.MapLocationY = MapLocationY;
+    if (MapMarkerClass.default.bIsUnique)
+    {
+        for (i = 0; i < PersonalMapMarkers.Length; ++i)
+        {
+            if (PersonalMapMarkers[i].MapMarkerClass == MapMarkerClass)
+            {
+                PersonalMapMarkers.Remove(i, 1);
+                break;
+            }
+        }
+    }
 
-    RulerMarker.WorldLocation = GRI.GetWorldCoords(MapLocationX, MapLocationY);
+    PMM.MapMarkerClass = MapMarkerClass;
+    PMM.MapLocationX = MapLocationX;
+    PMM.MapLocationY = MapLocationY;
+    PMM.WorldLocation = GRI.GetWorldCoords(MapLocationX, MapLocationY);
+
+    PersonalMapMarkers.Insert(0, 1);
+    PersonalMapMarkers[0] = PMM;
 }
 
-function RemoveRulerMarker()
+function RemovePersonalMarker(int Index)
 {
-    RulerMarker.bIsActive = false;
+    PersonalMapMarkers.Remove(Index, 1);
 }
 
 simulated function ClientSquadSignal(class<DHSquadSignal> SignalClass, vector L)
@@ -6259,7 +6279,6 @@ defaultproperties
     ConfigViewFOV=85.0
 
     // Other values
-    RulerMarker=(MapMarkerClass=class'DH_Engine.DHMapMarker_Ruler')
     NextSpawnTime=15
     ROMidGameMenuClass="DH_Interface.DHDeployMenu"
     GlobalDetailLevel=5
@@ -6280,4 +6299,6 @@ defaultproperties
     VoiceChatLANCodec="CODEC_96WB"
 
     ToggleDuckIntervalSeconds=0.5
+
+    PersonalMapMarkerClasses(0)=class'DHMapMarker_Ruler'
 }

@@ -14,21 +14,37 @@ static function bool CanPlayerUse(DHPlayerReplicationInfo PRI)
     RI = DHRoleInfo(PRI.RoleInfo);
     PC = DHPlayer(PRI.Owner);
 
-    if (RI.bCanUseMortars ||
-        RI.bCanBeTankCrew)
+    /*
+    if (RI.bCanUseMortars || RI.bCanBeTankCrew)
     {
         return true;
     }
+    */
+
+    return true;
 }
 
-static function AddMarker(DHPlayer PC, float MapLocationX, float MapLocationY)
+static function string GetCaptionString(DHPlayer PC, vector WorldLocation)
 {
-   PC.AddRulerMarker(MapLocationX, MapLocationY);
-}
+    local float Distance;
+    local int OutputDistance;
+    local vector PlayerLocation;
+    local string UnitString;
 
-static function RemoveMarker(DHPlayer PC, optional int Index)
-{
-   PC.RemoveRulerMarker();
+    if (PC == none || PC.Pawn != none)
+    {
+        PlayerLocation = PC.Pawn.Location;
+        PlayerLocation.Z = 0.0;
+        WorldLocation.Z = 0.0;
+
+        Distance = class'DHUnits'.static.UnrealToMeters(VSize(PlayerLocation - WorldLocation));
+        UnitString = "m";
+        OutputDistance = (int(Distance) / 5) * 5;
+
+        return string(OutputDistance) @ UnitString;
+    }
+
+    return "";
 }
 
 defaultproperties
@@ -39,4 +55,6 @@ defaultproperties
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     GroupIndex=4
     bShouldShowOnCompass=true
+    bIsUnique=true
 }
+

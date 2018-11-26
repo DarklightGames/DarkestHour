@@ -2727,7 +2727,7 @@ function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, 
     local ROGameReplicationInfo GRI;
     local float angle, XL, YL;
     local rotator rotAngle;
-    local DHPlayer.PrivateMapMarker RulerMarker;
+    local array<DHPlayer.PersonalMapMarker> PersonalMapMarkers;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local DHPlayer PC;
     local array<int> Indices;
@@ -2894,9 +2894,13 @@ function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, 
 
     if (PC != none)
     {
-        // Private markers
-        PC.GetRulerMarker(RulerMarker);
-        DrawMapMarkerOnCompass(C, CenterX, CenterY, Radius, RotationCompensation, GlobalCoords, RulerMarker.MapMarkerClass, RulerMarker.WorldLocation, Current, XL, YL);
+        // Personal markers
+        PersonalMapMarkers = PC.GetPersonalMarkers();
+
+        for (i = 0; i < PersonalMapMarkers.Length; ++i)
+        {
+            DrawMapMarkerOnCompass(C, CenterX, CenterY, Radius, RotationCompensation, GlobalCoords, PersonalMapMarkers[i].MapMarkerClass, PersonalMapMarkers[i].WorldLocation, Current, XL, YL);
+        }
 
         // Map markers
         DHGRI.GetMapMarkers(MapMarkers, Indices, PC.GetTeamNum(), PC.GetSquadIndex());
@@ -3854,10 +3858,9 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
     local DHPlayer PC;
     local int i;
     local vector L;
-    local DHPlayer.PrivateMapMarker RulerMarker;
+    local array<DHPlayer.PersonalMapMarker> PersonalMapMarkers;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local array<int> Indices;
-    local string Caption;
 
     PC = DHPlayer(PlayerOwner);
 
@@ -3866,6 +3869,7 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
         return;
     }
 
+    // Team & squad map markers
     DHGRI.GetMapMarkers(MapMarkers, Indices, PC.GetTeamNum(), PC.GetSquadIndex());
 
     for (i = 0; i < MapMarkers.Length; ++i)
@@ -3874,25 +3878,32 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
         L.Y = float(MapMarkers[i].LocationY) / 255.0;
         L = DHGRI.GetWorldCoords(L.X, L.Y);
 
-        DrawMapMarkerOnMap(C, SubCoords, MyMapScale, MapCenter, Viewport, MapMarkers[i].MapMarkerClass, L, PC.Pawn);
+        DrawMapMarkerOnMap(C,
+                           SubCoords,
+                           MyMapScale,
+                           MapCenter,
+                           Viewport,
+                           MapMarkers[i].MapMarkerClass,
+                           L,
+                           PC.Pawn,
+                           MapMarkers[i].MapMarkerClass.static.GetCaptionString(PC, L));
     }
 
-    PC.GetRulerMarker(RulerMarker);
+    // Personal map markers
+    PersonalMapMarkers = PC.GetPersonalMarkers();
 
-    if (!RulerMarker.bIsActive)
+    for (i = 0; i < PersonalMapMarkers.Length; ++i)
     {
-        return;
+        DrawMapMarkerOnMap(C,
+                           SubCoords,
+                           MyMapScale,
+                           MapCenter,
+                           Viewport,
+                           PersonalMapMarkers[i].MapMarkerClass,
+                           PersonalMapMarkers[i].WorldLocation,
+                           PC.Pawn,
+                           MapMarkers[i].MapMarkerClass.static.GetCaptionString(PC, L));
     }
-
-    if (PC.Pawn == none && !RulerMarker.MapMarkerClass.static.CanPlayerUse(DHPlayerReplicationInfo(PC.PlayerReplicationInfo)))
-    {
-        PC.RemoveRulerMarker();
-        return;
-    }
-
-    Caption = GetMapDistance(PC.Pawn.Location, RulerMarker.WorldLocation, 5, PC);
-
-    DrawMapMarkerOnMap(C, SubCoords, MyMapScale, MapCenter, Viewport, RulerMarker.MapMarkerClass, RulerMarker.WorldLocation, PC.Pawn, Caption);
 }
 
 // LineStart and LineEnd need to be in world-coordinates.
@@ -3932,39 +3943,6 @@ function DrawMapLine(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, v
     Y1 = SubCoords.PosY + (SubCoords.Height * Y1);
 
     DrawCanvasLine(X0, Y0, X1, Y1, LineColor);
-}
-
-function string GetMapDistance(vector SourceLocation, vector TargetLocation, optional int RoundMultiple, optional DHPlayer PC)
-{
-    local float Distance;
-    local int OutputDistance;
-    local string UnitString;
-
-    SourceLocation.Z = 0.0;
-    TargetLocation.Z = 0.0;
-
-    Distance = class'DHUnits'.static.UnrealToMeters(VSize(SourceLocation - TargetLocation));
-
-    if (PC != none &&
-        PC.GetTeamNum() == ALLIES_TEAM_INDEX &&
-        PC.ClientLevelInfo.AlliedNation != NATION_USSR)
-    {
-        UnitString = "yd";
-        Distance = Distance * 1.0936;
-    }
-    else
-    {
-        UnitString = "m";
-    }
-
-    OutputDistance = int(Distance);
-
-    if (RoundMultiple != 0)
-    {
-        OutputDistance = (OutputDistance / RoundMultiple) * RoundMultiple;
-    }
-
-    return string(OutputDistance) @ UnitString;
 }
 
 function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)

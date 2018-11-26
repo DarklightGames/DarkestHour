@@ -385,13 +385,13 @@ function bool DetectMarker(float LocationX, float LocationY, float MapClickLocat
     Y = LocationY - MapClickLocationY;
     D = Sqrt(X * X + Y * Y);
 
-    return D <= class'DHHud'.default.MapMarkerIcon.TextureScale / 2.0;
+    return D <= class'DHHud'.default.MapMarkerIcon.TextureScale * 0.5;
 }
 
 function bool InternalOnOpen(GUIContextMenu Sender)
 {
     local int i;
-    local DHPlayer.PrivateMapMarker RulerMarker;
+    local array<DHPlayer.PersonalMapMarker> PersonalMapMarkers;
     local array<DHGameReplicationInfo.MapMarker> MapMarkers;
     local array<int> Indices;
     local array<class<DHMapMarker> > MapMarkerClasses;
@@ -410,20 +410,25 @@ function bool InternalOnOpen(GUIContextMenu Sender)
 
     // Iterate through existing map markers and check if any were clicked on.
     GRI.GetMapMarkers(MapMarkers, Indices, PC.GetTeamNum(), PC.GetSquadIndex());
-    PC.GetRulerMarker(RulerMarker);
+    PersonalMapMarkers = PC.GetPersonalMarkers();
 
     MenuItemObjects.Length = 0;
     MapMarkerIndexToRemove = -1;
     bRemoveMapMarker = false;
 
-    if (RulerMarker.bIsActive &&
-        DetectMarker(RulerMarker.MapLocationX, RulerMarker.MapLocationY, MapClickLocation.X, MapClickLocation.Y))
+    for (i = 0; i < PersonalMapMarkers.Length; ++i)
     {
-        bRemoveMapMarker = true;
-        Sender.AddItem(RemoveText);
-        MenuItemObjects[MenuItemObjects.Length] = RulerMarker.MapMarkerClass;
+        if (DetectMarker(PersonalMapMarkers[i].MapLocationX, PersonalMapMarkers[i].MapLocationY, MapClickLocation.X, MapClickLocation.Y))
+        {
+            bRemoveMapMarker = true;
+            MapMarkerIndexToRemove = i;
+            Sender.AddItem(RemoveText);
+            MenuItemObjects[MenuItemObjects.Length] = PersonalMapMarkers[i].MapMarkerClass;
+            break;
+        }
     }
-    else
+
+    if (!bRemoveMapMarker)
     {
         for (i = 0; i < MapMarkers.Length; ++i)
         {
@@ -450,9 +455,12 @@ function bool InternalOnOpen(GUIContextMenu Sender)
         }
     }
 
-    if (PC.Pawn != none && RulerMarker.MapMarkerClass.static.CanPlayerUse(PRI))
+    for (i = 0; i < class'DHPlayer'.default.PersonalMapMarkerClasses.Length; ++i)
     {
-        MapMarkerClasses[MapMarkerClasses.Length] = RulerMarker.MapMarkerClass;
+        if (class'DHPlayer'.default.PersonalMapMarkerClasses[i].static.CanPlayerUse(PRI))
+        {
+            MapMarkerClasses[MapMarkerClasses.Length] = class'DHPlayer'.default.PersonalMapMarkerClasses[i];
+        }
     }
 
     SortMapMarkerClasses(MapMarkerClasses);
@@ -491,8 +499,7 @@ function bool InternalOnClose(GUIContextMenu Sender)
 
 function InternalOnSelect(GUIContextMenu Sender, int ClickIndex)
 {
-    if (PC == none || ClickIndex < 0 || ClickIndex >= MenuItemObjects.Length ||
-        MenuItemObjects[ClickIndex] == none)
+    if (PC == none || ClickIndex < 0 || ClickIndex >= MenuItemObjects.Length || MenuItemObjects[ClickIndex] == none)
     {
         return;
     }
