@@ -377,12 +377,13 @@ function vector GetNormalizedLocation(float X, float Y)
     return Location;
 }
 
-function bool DetectMarker(float LocationX, float LocationY, float MapClickLocationX, float MapClickLocationY)
+// TODO:
+function bool IsMarkerUnderCursor(float LocationX, float LocationY, float CursorMapLocationX, float CursorMapLocationY)
 {
     local float X, Y, D;
 
-    X = LocationX - MapClickLocationX;
-    Y = LocationY - MapClickLocationY;
+    X = LocationX - CursorMapLocationX;
+    Y = LocationY - CursorMapLocationY;
     D = Sqrt(X * X + Y * Y);
 
     return D <= class'DHHud'.default.MapMarkerIcon.TextureScale * 0.5;
@@ -418,7 +419,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
 
     for (i = 0; i < PersonalMapMarkers.Length; ++i)
     {
-        if (DetectMarker(PersonalMapMarkers[i].MapLocationX, PersonalMapMarkers[i].MapLocationY, MapClickLocation.X, MapClickLocation.Y))
+        if (IsMarkerUnderCursor(PersonalMapMarkers[i].MapLocationX, PersonalMapMarkers[i].MapLocationY, MapClickLocation.X, MapClickLocation.Y))
         {
             bRemoveMapMarker = true;
             MapMarkerIndexToRemove = i;
@@ -433,7 +434,7 @@ function bool InternalOnOpen(GUIContextMenu Sender)
         for (i = 0; i < MapMarkers.Length; ++i)
         {
             if (!MapMarkers[i].MapMarkerClass.static.CanPlayerUse(PRI) ||
-                !DetectMarker(float(MapMarkers[i].LocationX) / 255.0, float(MapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y))
+                !IsMarkerUnderCursor(float(MapMarkers[i].LocationX) / 255.0, float(MapMarkers[i].LocationY) / 255.0, MapClickLocation.X, MapClickLocation.Y))
             {
                 continue;
             }
@@ -680,6 +681,8 @@ function bool InternalOnCapturedMouseMove(float DeltaX, float DeltaY)
 
         return true;
     }
+
+    // TODO: Check if cursor is overtop of a player.
 
     return false;
 }
