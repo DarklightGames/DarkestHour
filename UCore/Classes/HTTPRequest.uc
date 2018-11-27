@@ -25,7 +25,7 @@ function PostBeginPlay()
 
     MyLink = Spawn(class'UCoreBufferedTCPLink');
     MyLink.ResetBuffer();
-    MyLink.ReceiveMode = RMODE_Event;
+    //MyLink.ReceiveMode = RMODE_Event;
 }
 
 function Send()
@@ -115,7 +115,7 @@ function Timer()
     Log(" ");
     Log("MyLink.IsConnected() is:" @ MyLink.IsConnected());
     Log(" ");
-    Log("MyLink.LinkState is:" @ MyLink.LinkState);
+    Log("MyLink.LinkState is:" @ MyLink.LinkState @ MyLink.LinkState == STATE_Connected);
     Log(" ");
     Log("=============================================================");
 
@@ -216,6 +216,14 @@ function Timer()
 
             Destroy();
         }
+    }
+    else if (!MyLink.IsConnected())
+    {
+        Log(" ");
+        Log("Changing protocol and re-resolving Host which is:" @ Host);
+        Protocol="HTTP/2";
+
+        MyLink.Resolve(Host);
     }
     else if (MyLink.ReceiveState == "" && MyLink.ServerIpAddr.Port != 0 && MyLink.IsConnected())
     {
