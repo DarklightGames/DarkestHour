@@ -106,10 +106,19 @@ function Timer()
     local Object O;
 
     Log(" ");
+    Log("=============================================================");
+    Log(" ");
     Log("Running timer, Timeout is:" @ Timeout);
-
+    Log(" ");
     Log("MyLink.ReceiveState is:" @ MyLink.ReceiveState);
+    Log(" ");
     Log("MyLink.Match is:" @ MyLink.Match);
+    Log(" ");
+    Log("MyLink.ServerIpAddr.Port is:" @ MyLink.ServerIpAddr.Port);
+    Log(" ");
+    Log("MyLink.IsConnected() is:" @ MyLink.IsConnected());
+    Log(" ");
+    Log("=============================================================");
 
     if (MyLink.ReceiveState == MyLink.Match)
     {
