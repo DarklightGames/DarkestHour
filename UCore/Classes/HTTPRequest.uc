@@ -25,6 +25,7 @@ function PostBeginPlay()
 
     MyLink = Spawn(class'UCoreBufferedTCPLink');
     MyLink.ResetBuffer();
+    MyLink.ReceiveMode = RMODE_Event;
 }
 
 function Send()
@@ -32,10 +33,6 @@ function Send()
     MyLink.ServerIpAddr.Port = 0;
     MyLink.Resolve(Host);
 
-    Log(" ");
-    Log(" ");
-    Log(" ");
-    Log(" ");
     Log(" ");
     Log("Setting timer in HTTPRequest...");
     Log(" ");
@@ -117,6 +114,8 @@ function Timer()
     Log("MyLink.ServerIpAddr.Port is:" @ MyLink.ServerIpAddr.Port);
     Log(" ");
     Log("MyLink.IsConnected() is:" @ MyLink.IsConnected());
+    Log(" ");
+    Log("MyLink.LinkState is:" @ MyLink.LinkState);
     Log(" ");
     Log("=============================================================");
 
