@@ -716,6 +716,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
     if (SquadMemberIndex == SQUAD_LEADER_INDEX)
     {
         // "The leader has left the squad."
+
         BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 40);
 
         Assistant = GetAssistantSquadLeader(TeamIndex, SquadIndex);
@@ -954,7 +955,7 @@ function int JoinSquadAuto(DHPlayerReplicationInfo PRI)
 // Attempts to make the specified player join the specified squad.
 // Returns the index of the player's new SquadMemberIndex or -1 if
 // they were unable to join the squad.
-function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex, optional bool bWasInvited)
+function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex, optional bool bWasInvited, optional bool bIsQuiet)
 {
     local bool bDidJoinSquad;
     local int i;
@@ -1011,8 +1012,11 @@ function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadInd
 
     if (bDidJoinSquad)
     {
-        // "{0} has joined the squad"
-        BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 30, PRI);
+        if (!bIsQuiet)
+        {
+            // "{0} has joined the squad"
+            BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 30, PRI);
+        }
 
         if (PC != none)
         {
@@ -2185,7 +2189,7 @@ function ClearSquadLeaderVolunteer(DHPlayerReplicationInfo PRI, int TeamIndex, i
     }
 }
 
-function DisbandSquad(int TeamIndex, int SquadIndex)
+function DisbandSquad(int TeamIndex, int SquadIndex, optional bool bIsQuiet)
 {
     local int i;
     local array<DHPlayerReplicationInfo> Members;
@@ -2199,7 +2203,7 @@ function DisbandSquad(int TeamIndex, int SquadIndex)
 
     for (i = 0; i < Members.Length; ++i)
     {
-        LeaveSquad(Members[i]);
+        LeaveSquad(Members[i], !bIsQuiet);
     }
 }
 
@@ -2304,6 +2308,67 @@ function SetAssistantSquadLeader(int TeamIndex, int SquadIndex, DHPlayerReplicat
 
         // "{0} is now the assistant squad leader."
         BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, class'DHSquadMessage', 72, PRI);
+    }
+}
+
+simulated function bool CanMergeSquads(int TeamIndex, int SourceSquadIndex, int DestinationSquadIndex)
+{
+    local int TotalMemberCount;
+
+    if (!IsSquadActive(TeamIndex, SourceSquadIndex) || !IsSquadActive(TeamIndex, DestinationSquadIndex))
+    {
+        // Invalid squad index(es).
+        return false;
+    }
+
+    if (!HasSquadLeader(TeamIndex, SourceSquadIndex) || !HasSquadLeader(TeamIndex, DestinationSquadIndex))
+    {
+        // One or more squads does not have a squad leader.
+        return false;
+    }
+
+    TotalMemberCount = GetMemberCount(TeamIndex, SourceSquadIndex) + GetMemberCount(TeamIndex, DestinationSquadIndex);
+
+    if (TotalMemberCount > GetTeamSquadSize(TeamIndex))
+    {
+        // Merged squad would exceed the squad size limit.
+        return false;
+    }
+
+    // TODO: other checks?
+
+    return true;
+}
+
+// Takes all of the players from the source squad and merges them into the destination squad.
+function MergeSquads(int TeamIndex, int SourceSquadIndex, int DestinationSquadIndex)
+{
+    local int i, SwitchValue;
+    local array<DHPlayerReplicationInfo> SourceSquadMembers;
+
+    if (!CanMergeSquads(TeamIndex, SourceSquadIndex, DestinationSquadIndex))
+    {
+        return;
+    }
+
+    // "Your squad has been merged into {0} squad. Your squad leader is now {1}."
+    SwitchValue = class'UInteger'.static.FromShorts(74, DestinationSquadIndex);
+    BroadcastSquadLocalizedMessage(TeamIndex, SourceSquadIndex, SquadMessageClass, SwitchValue, GetSquadLeader(TeamIndex, DestinationSquadIndex),, self);
+
+    // "Another squad has been merged into your squad."
+    BroadcastSquadLocalizedMessage(TeamIndex, DestinationSquadIndex, SquadMessageClass, 75);
+
+    // Fetch the list of players to be moved before disbanding the squad.
+    GetMembers(TeamIndex, SourceSquadIndex, SourceSquadMembers);
+
+    // Quietly disband the source squad.
+    DisbandSquad(TeamIndex, SourceSquadIndex, true);
+
+    // Move all players from the source squad to the destination squad.
+    for (i = 0; i < SourceSquadMembers.Length; ++i)
+    {
+        // Quietly join the squad.
+        JoinSquad(SourceSquadMembers[i], TeamIndex, DestinationSquadIndex, true, true);
     }
 }
 

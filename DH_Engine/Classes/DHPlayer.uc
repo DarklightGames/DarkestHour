@@ -157,6 +157,7 @@ replication
         ServerSetPatronStatus, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
         ServerSquadVolunteerToAssist,
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
+        ServerDebugMerge,
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons; // these ones in debug mode only
 
     // Functions the server can call on the client that owns this actor
@@ -6186,6 +6187,17 @@ exec function Jump(optional float F)
     {
         super.Jump(F);
     }
+}
+
+// TODO: remove
+exec function DebugMerge(int SourceSquadIndex, int DestinationSquadIndex)
+{
+    ServerDebugMerge(SourceSquadIndex, DestinationSquadIndex);
+}
+
+function ServerDebugMerge(int SourceSquadIndex, int DestinationSquadIndex)
+{
+    SquadReplicationInfo.MergeSquads(GetTeamNum(), SourceSquadIndex, DestinationSquadIndex);
 }
 
 defaultproperties
