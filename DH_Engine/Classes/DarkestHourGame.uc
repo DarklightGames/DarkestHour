@@ -144,7 +144,7 @@ function GetServerLocation()
     //LocationRequest.Path = "/json?token=092f8aa069f043";
 
     LocationRequest.Host = "extreme-ip-lookup.com";
-    LocationRequest.Path = "/json";
+    LocationRequest.Path = "/json/104.153.108.162";
 
     LocationRequest.OnResponse = LocationRequestOnResponse;
     LocationRequest.Send();
