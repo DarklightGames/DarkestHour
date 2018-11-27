@@ -137,11 +137,11 @@ function GetServerLocation()
     LocationRequest = Spawn(class'HTTPRequest');
     LocationRequest.Method = "GET";
 
-    LocationRequest.Host = "ip-api.com";
-    LocationRequest.Path = "/json";
+    //LocationRequest.Host = "ip-api.com";
+    //LocationRequest.Path = "/json";
 
-    //LocationRequest.Host = "ipinfo.io";
-    //LocationRequest.Path = "/json?token=092f8aa069f043";
+    LocationRequest.Host = "ipinfo.io";
+    LocationRequest.Path = "/json?token=092f8aa069f043";
 
     LocationRequest.OnResponse = LocationRequestOnResponse;
     LocationRequest.Send();
