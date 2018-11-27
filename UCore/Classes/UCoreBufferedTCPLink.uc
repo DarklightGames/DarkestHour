@@ -17,6 +17,8 @@ function ResolveFailed()
 
 function Resolved(IpAddr Addr)
 {
+    local int BindPortResult;
+
     // Set the address
     ServerIpAddr.Addr = Addr.Addr;
     ServerIpAddr.Port = 80;  // connect to http port
@@ -27,8 +29,12 @@ function Resolved(IpAddr Addr)
         return;
     }
 
+    BindPortResult = BindPort();
+
+    Log("============================================= BINDPORT returns:" @ BindPortResult);
+
     // Bind the local port.
-    if (BindPort() == 0)
+    if (BindPortResult == 0)
     {
         return;
     }

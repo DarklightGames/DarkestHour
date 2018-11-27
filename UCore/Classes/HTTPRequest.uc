@@ -221,8 +221,11 @@ function Timer()
     {
         Log(" ");
         Log("Not Connected to host:" @ Host);
-        Log("Port is:" @ MyLink.Port);
-        //Protocol="HTTP/2";
+        //Log("Changing MyLink.Port to Port 80!");
+
+        //MyLink.BindPort(80);
+
+        //Log("MyLink.Port is:" @ MyLink.Port);
 
         //MyLink.Resolve(Host);
     }
@@ -268,10 +271,11 @@ function Timer()
         OnResponse(408, none, "");
     }
 
-    Timeout -= 1;
+    --Timeout;
 
     if (Timeout < 0)
     {
+        Log("Destroying HTTPRequest... Timed out!!!!");
         Destroy();
         return;
     }
