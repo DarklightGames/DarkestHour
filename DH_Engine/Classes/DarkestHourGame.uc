@@ -140,8 +140,11 @@ function GetServerLocation()
     //LocationRequest.Host = "ip-api.com";
     //LocationRequest.Path = "/json";
 
-    LocationRequest.Host = "ipinfo.io";
-    LocationRequest.Path = "/json?token=092f8aa069f043";
+    //LocationRequest.Host = "ipinfo.io";
+    //LocationRequest.Path = "/json?token=092f8aa069f043";
+
+    LocationRequest.Host = "extreme-ip-lookup.com";
+    LocationRequest.Path = "/json";
 
     LocationRequest.OnResponse = LocationRequestOnResponse;
     LocationRequest.Send();
