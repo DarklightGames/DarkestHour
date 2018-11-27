@@ -220,10 +220,11 @@ function Timer()
     else if (!MyLink.IsConnected())
     {
         Log(" ");
-        Log("Changing protocol and re-resolving Host which is:" @ Host);
-        Protocol="HTTP/2";
+        Log("Not Connected to host:" @ Host);
+        Log("Port is:" @ MyLink.Port);
+        //Protocol="HTTP/2";
 
-        MyLink.Resolve(Host);
+        //MyLink.Resolve(Host);
     }
     else if (MyLink.ReceiveState == "" && MyLink.ServerIpAddr.Port != 0 && MyLink.IsConnected())
     {
@@ -284,7 +285,7 @@ function int GetTimeout()
 defaultproperties
 {
     Method="GET"
-    Timeout=30
+    Timeout=5
     Protocol="HTTP/1.1"
     bHidden=true
 }
