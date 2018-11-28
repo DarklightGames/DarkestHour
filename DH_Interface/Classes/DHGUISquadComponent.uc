@@ -26,6 +26,7 @@ var localized string    PromoteText;
 var localized string    AssistantText;
 var localized string    RescindAssistantText;
 var localized string    VolunteerToAssistText;
+var localized string    MergeRequestText;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -138,42 +139,54 @@ function bool MembersListContextMenuOpen(GUIContextMenu Sender)
     OtherPRI = DHPlayerReplicationInfo(li_Members.GetObject());
     SRI = PC.SquadReplicationInfo;
 
-    if (MyPRI == none || OtherPRI == none || SRI == none || MyPRI == OtherPRI || MyPRI.SquadIndex != SquadIndex)
+    if (MyPRI == none || OtherPRI == none || SRI == none || MyPRI == OtherPRI)
     {
         return false;
     }
 
     Sender.ContextItems.Length = 0;
 
-    if (MyPRI.IsSquadLeader())
+    if (MyPRI.SquadIndex == SquadIndex)
     {
-        // Kick & ban
-        Sender.AddItem(Repl(default.KickText, "{0}", OtherPRI.PlayerName));
-        Sender.AddItem(Repl(default.BanText, "{0}", OtherPRI.PlayerName));
-
-        // Promote to leader
-        Sender.AddItem("-");
-        Sender.AddItem(Repl(default.PromoteText, "{0}", OtherPRI.PlayerName));
-
-        // Assign and unassign assistant
-        Sender.AddItem("-");
-
-        if (OtherPRI.bIsSquadAssistant)
+        if (MyPRI.IsSquadLeader())
         {
-            Sender.AddItem(Repl(default.RescindAssistantText, "{0}", OtherPRI.PlayerName));
+            // Kick & ban
+            Sender.AddItem(Repl(default.KickText, "{0}", OtherPRI.PlayerName));
+            Sender.AddItem(Repl(default.BanText, "{0}", OtherPRI.PlayerName));
+
+            // Promote to leader
+            Sender.AddItem("-");
+            Sender.AddItem(Repl(default.PromoteText, "{0}", OtherPRI.PlayerName));
+
+            // Assign and unassign assistant
+            Sender.AddItem("-");
+
+            if (OtherPRI.bIsSquadAssistant)
+            {
+                Sender.AddItem(Repl(default.RescindAssistantText, "{0}", OtherPRI.PlayerName));
+            }
+            else
+            {
+                Sender.AddItem(Repl(default.AssistantText, "{0}", OtherPRI.PlayerName));
+            }
         }
         else
         {
-            Sender.AddItem(Repl(default.AssistantText, "{0}", OtherPRI.PlayerName));
+            Index = li_Members.GetIndexByObject(li_Members.GetObject());
+
+            if (Index == 0 && !SRI.HasAssistant(PC.GetTeamNum(), MyPRI.SquadIndex))
+            {
+                Sender.AddItem(Repl(default.VolunteerToAssistText, "{0}", OtherPRI.PlayerName));
+            }
         }
     }
     else
     {
-        Index = li_Members.GetIndexByObject(li_Members.GetObject());
-
-        if (Index == 0 && !SRI.HasAssistant(PC.GetTeamNum(), MyPRI.SquadIndex))
+        // We have selected another squad.
+        if (MyPRI.IsSquadLeader() && OtherPRI.IsSquadLeader())
         {
-            Sender.AddItem(Repl(default.VolunteerToAssistText, "{0}", OtherPRI.PlayerName));
+            // We have selected another squad's leader.
+            Sender.AddItem(default.MergeRequestText);
         }
     }
 
@@ -381,5 +394,6 @@ defaultproperties
     AssistantText="Assign {0} as assistant"
     RescindAssistantText="Unassign {0} as assistant"
     VolunteerToAssistText="Volunteer as assistant"
+    MergeRequestText="Request to merge squads"
 }
 

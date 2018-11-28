@@ -53,6 +53,8 @@ var localized string NotInSquadMessage;
 var localized string SquadMergedSourceMessage;
 var localized string SquadMergedSourceGenericMessage;
 var localized string SquadMergedDestinationMessage;
+var localized string SquadMergeRequestDeniedMessage;
+var localized string SquadMergeRequestDeniedGenericMessage;
 
 static function string GetString(optional int S, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -174,6 +176,14 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
             }
         case 75:
             return default.SquadMergedDestinationMessage;
+        case 76:
+            SRI = DHSquadReplicationInfo(OptionalObject);
+            if (SRI != none)
+            {
+                SquadName = SRI.GetSquadName(RelatedPRI_1.Team.TeamIndex, ExtraValue);
+                return Repl(default.SquadMergeRequestDeniedMessage, "{0}", SquadName);
+            }
+            return default.SquadMergeRequestDeniedGenericMessage;
         default:
             break;
     }
@@ -231,6 +241,8 @@ defaultproperties
     SquadMergedSourceMessage="Your squad has been merged into {0} squad. Your new squad leader is {1}."
     SquadMergedDestinationMessage="Another squad has been merged into your squad."
     SquadMergedSourceGenericMessage="Your squad has been merged into another squad."
+    SquadMergeRequestDeniedMessage="Your squad merge request was denied by {0} squad."
+    SquadMergeRequestDeniedGenericMessage="Your squad merge was denied."
 
     bIsSpecial=false
     bIsConsoleMessage=true

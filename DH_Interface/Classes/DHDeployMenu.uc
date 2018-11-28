@@ -1094,10 +1094,10 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
     local int    Result;
     local string ErrorMessage;
 
+    Result = int(MsgLife);
+
     if (Msg ~= "NOTIFY_GUI_ROLE_SELECTION_PAGE")
     {
-        Result = int(MsgLife);
-
         switch (Result)
         {
             // Spectator
@@ -1127,6 +1127,11 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
                 Controller.ShowQuestionDialog(ErrorMessage, QBTN_OK, QBTN_OK);
                 break;
         }
+    }
+    else if (Msg ~= "SQUAD_MERGE_REQUEST_RESULT")
+    {
+        ErrorMessage = class'DHSquadReplicationInfo'.static.GetSquadMergeRequestResultString(Result);
+        Controller.ShowQuestionDialog(ErrorMessage, QBTN_OK, QBTN_OK);
     }
 
     SetButtonsEnabled(true);
