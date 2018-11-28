@@ -26,10 +26,10 @@ static function bool CanPlayerUse(DHPlayerReplicationInfo PRI)
 
 static function string GetCaptionString(DHPlayer PC, vector WorldLocation)
 {
-    local float Distance;
-    local int OutputDistance;
-    local vector PlayerLocation;
-    local string UnitString;
+    local vector MarkerDirection, ViewDirection, PlayerLocation;
+    local rotator ViewRotation;
+    local int Deflection, Distance;
+    local string DeflectionOut, DistanceOut;
 
     if (PC == none || PC.Pawn != none)
     {
@@ -37,11 +37,28 @@ static function string GetCaptionString(DHPlayer PC, vector WorldLocation)
         PlayerLocation.Z = 0.0;
         WorldLocation.Z = 0.0;
 
-        Distance = class'DHUnits'.static.UnrealToMeters(VSize(PlayerLocation - WorldLocation));
-        UnitString = "m";
-        OutputDistance = (int(Distance) / 5) * 5;
+        ViewRotation.Yaw = PC.CalcViewRotation.Yaw;
+        ViewDirection = vector(ViewRotation);
+        MarkerDirection = WorldLocation - PlayerLocation;
 
-        return string(OutputDistance) @ UnitString;
+        Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(MarkerDirection)));
+        DistanceOut = string((Distance / 5) * 5) $ "m";
+
+        Deflection = class'DHUnits'.static.RadiansToMilliradians(class'UVector'.static.SignedAngle(MarkerDirection, ViewDirection, vect(0, 0, 1)));
+
+        if (Abs(Deflection) > 500)
+        {
+            return DistanceOut;
+        }
+
+        if (Deflection > 0)
+        {
+            DeflectionOut = "+";
+        }
+
+        DeflectionOut $= string(Deflection) $ "mil";
+
+        return DistanceOut @ DeflectionOut;
     }
 
     return "";

@@ -26,4 +26,7 @@ static final function float UnrealToInches(coerce float Unreal)
     return Unreal * 0.65234126458112407211028632025448;
 }
 
-
+static final function int RadiansToMilliradians(coerce float Radians)
+{
+    return int(Radians * 1000);
+}
