@@ -39,7 +39,7 @@ defaultproperties
     StartRotationMax=(Yaw=-16384)
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.WatchTower'
     GroupClass=Class'DHConstructionGroup_Defenses'
-    SupplyCost=750
+    SupplyCost=900
     bCanTakeImpactDamage=true
     MinDamagetoHurt=25
     bAcceptsProjectors=false
