@@ -516,26 +516,6 @@ function rotator AdjustAim(FireProperties FiredAmmunition, vector ProjStart, int
     return Rotation;
 }
 
-// Developer Admin login
-exec function DevLogin()
-{
-    // If is a client and client checks his own ROID, then ask server for dev login
-    if (Level.NetMode != NM_DedicatedServer && class'DHAccessControl'.static.IsDeveloper(ROIDHash))
-    {
-        ServerAdminLogin("Dev");
-    }
-}
-
-// ConfiguredINI Server Admin login
-exec function BecomeAdmin()
-{
-    // If is a client and client checks his own ROID, then ask server for dev login
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        ServerAdminLogin("Cfg");
-    }
-}
-
 // Menu for the player's entire selection process
 exec function PlayerMenu(optional int Tab)
 {
