@@ -136,16 +136,8 @@ function GetServerLocation()
     // Now send the location request
     LocationRequest = Spawn(class'HTTPRequest');
     LocationRequest.Method = "GET";
-
-    //LocationRequest.Host = "ip-api.com";
-    //LocationRequest.Path = "/json";
-
-    //LocationRequest.Host = "ipinfo.io";
-    //LocationRequest.Path = "/json?token=092f8aa069f043";
-
-    LocationRequest.Host = "extreme-ip-lookup.com";
-    LocationRequest.Path = "/json/104.153.108.162";
-
+    LocationRequest.Host = "ip-api.com";
+    LocationRequest.Path = "/json";
     LocationRequest.OnResponse = LocationRequestOnResponse;
     LocationRequest.Send();
 }
@@ -156,49 +148,18 @@ function LocationRequestOnResponse(int Status, TreeMap_string_string Headers, st
     local JSONObject O;
     local string City, Country;
 
-    Log(" ");
-    Log("LocationRequestOnResponse executing...");
-
     if (Status == 200)
     {
         Parser = new class'JSONParser';
         O = Parser.ParseObject(Content);
 
-        Log("Server location request success (" $ Status  $ ")");
-
-        Log(Content);
-
         if (O != none)
         {
-            Log("Content exists!");
-
             City = O.Get("city").AsString();
             Country = O.Get("country").AsString();
-
-            Log("city is:" @ City);
-            Log("country is:" @ Country);
-
             default.ServerLocation = City $ "," @ Country;
-
-            Log("default.ServerLocation is now:" @ default.ServerLocation);
         }
     }
-    else
-    {
-        Parser = new class'JSONParser';
-        O = Parser.ParseObject(Content);
-
-        Log(" ");
-        Log("Server location request was a failure (" $ Status  $ ")");
-
-        if (O != none)
-        {
-            Log("Fail message is:" @ O.Get("message").AsString());
-            Log("IP used for query is:" @ O.Get("query").AsString());
-        }
-    }
-
-    Log(" ");
 }
 
 function PreBeginPlay()
