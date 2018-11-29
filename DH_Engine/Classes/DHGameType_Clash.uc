@@ -10,6 +10,9 @@ defaultproperties
 {
     GameTypeName="Clash"
 
+    bAreRallyPointsEnabled=true
+    bAreConstructionsEnabled=true
+
     bUseReinforcementWarning=true
     bSquadSpecialRolesOnly=true
     bHasTemporarySpawnVehicles=true

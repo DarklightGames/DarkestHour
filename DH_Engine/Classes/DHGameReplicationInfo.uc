@@ -282,7 +282,7 @@ simulated function PostBeginPlay()
 
         if (LI != none)
         {
-            bAreConstructionsEnabled = LI.bAreConstructionsEnabled;
+            bAreConstructionsEnabled = LI.GameTypeClass.default.bAreConstructionsEnabled;
         }
 
         // Add usable map markers to the class list to be replicated!

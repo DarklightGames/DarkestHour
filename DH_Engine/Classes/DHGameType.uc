@@ -17,6 +17,9 @@ var bool                bHasTemporarySpawnVehicles;             // Whether this 
 var bool                bMunitionsDrainOverTime;                // Whether this gamemode should drain munitions over time
 var bool                bOmitTimeAttritionForDefender;          // Whether the defender can take attrition over time from ElapsedTimeAttritionCurve
 
+var bool                bAreRallyPointsEnabled;                 // Whether this gamemode should allow rally points for squads
+var bool                bAreConstructionsEnabled;               // Whether this gamemode should allow constructions
+
 var int                 OutOfReinfLimitForTimeChange;           // Threshold for the bTimeCanChangeAtZeroReinf, the team with reinforcements remaining must have <= this amount
 var int                 OutOfReinfRoundTime;                    // The round time to set when a team runs out of reinforcements, if bTimeCanChangeAtZeroReinf
 

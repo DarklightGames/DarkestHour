@@ -110,7 +110,7 @@ function PostBeginPlay()
 
         foreach AllActors(class'DH_LevelInfo', LI)
         {
-            bAreRallyPointsEnabled = LI.bAreRallyPointsEnabled;
+            bAreRallyPointsEnabled = LI.GameTypeClass.default.bAreRallyPointsEnabled;
             break;
         }
     }

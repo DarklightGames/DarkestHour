@@ -10,6 +10,9 @@ defaultproperties
 {
     GameTypeName="Advance"
 
+    bAreRallyPointsEnabled=true
+    bAreConstructionsEnabled=true
+
     bUseReinforcementWarning=true
     bSquadSpecialRolesOnly=true
     bHasTemporarySpawnVehicles=true

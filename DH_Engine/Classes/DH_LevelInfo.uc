@@ -70,8 +70,6 @@ var() sound                 AlliesWinsMusic;                // Optional override
 var() class<DHGameType>     GameTypeClass;
 var() ESpawnMode            SpawnMode;
 
-var() bool                          bAreRallyPointsEnabled;
-var() bool                          bAreConstructionsEnabled;
 var() array<class<DHConstruction> > RestrictedConstructions;
 
 // Colin: Defines the rate of reinforcement drain per minute
