@@ -101,7 +101,6 @@ struct SquadMergeRequest
     var int TeamIndex;
     var int SourceSquadIndex;
     var int DestinationSquadIndex;
-    var int ExpirationTime;
 };
 var array<SquadMergeRequest>        SquadMergeRequests;
 var int                             NextSquadMergeRequestID;
@@ -2542,10 +2541,12 @@ function bool AcceptSquadMergeRequest(DHPlayer SenderPC, int SquadMergeRequestID
             return false;
         }
 
+        /*
         if (Level.TimeSeconds >= SMR.ExpirationTime)
         {
             return false;
         }
+        */
 
         SquadMergeRequests.Remove(SquadMergeRequestIndex, 1);
 
