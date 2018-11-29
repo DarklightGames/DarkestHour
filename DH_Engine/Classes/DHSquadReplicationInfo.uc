@@ -2423,8 +2423,8 @@ function ESquadMergeRequestResult SendSquadMergeRequest(DHPlayer SenderPC, int T
         return RESULT_CannotMerge;
     }
 
-    RecipientPRI = GetSquadLeader(TeamIndex, SourceSquadIndex);
-    SenderPRI = GetSquadLeader(TeamIndex, DestinationSquadIndex);
+    RecipientPRI = GetSquadLeader(TeamIndex, DestinationSquadIndex);
+    SenderPRI = GetSquadLeader(TeamIndex, SourceSquadIndex);
 
     if (RecipientPRI == none || SenderPRI == none)
     {
