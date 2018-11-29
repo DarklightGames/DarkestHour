@@ -322,8 +322,7 @@ defaultproperties
     TatteredHealthThreshold=250
 
     // Damage
-    bCanTakeImpactDamage=true
-    HarmfulDamageTypes(0)=class'DHArtilleryDamageType'                 // Artillery
+    HarmfulDamageTypes(0)=class'DHArtilleryDamageType'              // Artillery
     HarmfulDamageTypes(1)=class'ROTankShellExplosionDamage'         // HE and some others
     HarmfulDamageTypes(2)=class'DHThrowableExplosiveDamageType'     // Satchel/Grenades
     HarmfulDamageTypes(3)=class'DHMortarDamageType'                 // Mortar
@@ -333,6 +332,7 @@ defaultproperties
 
     DamageTypeScales(0)=(DamageType=class'ROTankShellImpactDamage',Scale=0.33)
     DamageTypeScales(1)=(DamageType=class'DHRocketImpactDamage',Scale=0.33)
+    DamageTypeScales(2)=(DamageType=class'DHThrowableExplosiveDamageType',Scale=1.25)
 
     FlagSkinIndex=1
     SpawnPointClass=class'DHSpawnPoint_PlatoonHQ'
