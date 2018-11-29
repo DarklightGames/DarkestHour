@@ -10,7 +10,7 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="Willys Jeep MB"
     VehicleTeam=1
-    VehicleMass=3.5
+    VehicleMass=2.0
     ReinforcementCost=2
     bMustBeInSquadToSpawn=true
 

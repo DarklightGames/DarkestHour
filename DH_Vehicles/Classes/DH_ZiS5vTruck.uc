@@ -11,7 +11,7 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="ZiS-5V"
     VehicleTeam=1
-    VehicleMass=3.0
+    VehicleMass=2.5
     ReinforcementCost=3
     MaxDesireability=0.12
 

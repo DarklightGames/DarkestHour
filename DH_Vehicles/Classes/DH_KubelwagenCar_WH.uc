@@ -9,7 +9,7 @@ defaultproperties
 {
     // Vehicle properties
     VehicleNameString="Volkswagen Type 82"
-    VehicleMass=3.5
+    VehicleMass=2.0
     ReinforcementCost=2
     bMustBeInSquadToSpawn=true
 

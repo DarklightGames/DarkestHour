@@ -13,7 +13,7 @@ defaultproperties
     bIsApc=true
     bHasTreads=false
     bSpecialTankTurning=false
-    VehicleMass=5.0
+    VehicleMass=8.0
     ReinforcementCost=5
 
     // Hull mesh
