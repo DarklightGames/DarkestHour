@@ -218,41 +218,56 @@ function MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex)
         return;
     }
 
-    if (MyPRI.IsSquadLeader())
+    if (MyPRI.SquadIndex == SquadIndex)
     {
-        switch (ClickIndex)
+        if (MyPRI.IsSquadLeader())
         {
-            case 0: // Kick
-                PC.ServerSquadKick(PRI);
-                break;
-            case 1: // Ban
-                PC.ServerSquadBan(PRI);
-                break;
-            case 3: // Promote
-                PC.ServerSquadPromote(PRI);
-                break;
-            case 5:
-                if (PRI.bIsSquadAssistant)
-                {
-                    // Remove assistant
-                    PC.ServerSquadMakeAssistant(none);
-                }
-                else
-                {
-                    // Make assistant
-                    PC.ServerSquadMakeAssistant(PRI);
-                }
-                break;
+            switch (ClickIndex)
+            {
+                case 0: // Kick
+                    PC.ServerSquadKick(PRI);
+                    break;
+                case 1: // Ban
+                    PC.ServerSquadBan(PRI);
+                    break;
+                case 3: // Promote
+                    PC.ServerSquadPromote(PRI);
+                    break;
+                case 5:
+                    if (PRI.bIsSquadAssistant)
+                    {
+                        // Remove assistant
+                        PC.ServerSquadMakeAssistant(none);
+                    }
+                    else
+                    {
+                        // Make assistant
+                        PC.ServerSquadMakeAssistant(PRI);
+                    }
+                    break;
+            }
+        }
+        else
+        {
+            // Non-squad leader menu.
+            switch (ClickIndex)
+            {
+                case 0: // volunteer
+                    PC.ServerSquadVolunteerToAssist();
+                    break;
+            }
         }
     }
     else
     {
-        // Non-squad leader menu.
-        switch (ClickIndex)
+        if (MyPRI.IsSquadLeader() && PRI.IsSquadLeader())
         {
-            case 0: // volunteer
-                PC.ServerSquadVolunteerToAssist();
-                break;
+            switch (ClickIndex)
+            {
+                case 0:
+                    PC.ServerSendSquadMergeRequest(SquadIndex);
+                    break;
+            }
         }
     }
 }
