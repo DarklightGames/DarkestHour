@@ -2473,7 +2473,7 @@ function int GetSquadMergeRequestIndex(int TeamIndex, int SourceSquadIndex, int 
         }
     }
 
-    return 01;
+    return -1;
 }
 
 function int GetSquadMergeRequestIndexByID(int ID)
