@@ -2422,8 +2422,8 @@ function ESquadMergeRequestResult SendSquadMergeRequest(DHPlayer SenderPC, int T
         return RESULT_CannotMerge;
     }
 
-    RecipientPRI = GetSquadLeader(TeamIndex, DestinationSquadIndex);
-    SenderPRI = GetSquadLeader(TeamIndex, SourceSquadIndex);
+    RecipientPRI = GetSquadLeader(TeamIndex, SourceSquadIndex);
+    SenderPRI = GetSquadLeader(TeamIndex, DestinationSquadIndex);
 
     if (RecipientPRI == none || SenderPRI == none)
     {
@@ -2503,7 +2503,7 @@ function bool DenySquadMergeRequest(DHPlayer SenderPC, int SquadMergeRequestID)
     {
         // TODO: send a message that the squad merge request was denied to the destination squad leader.
         SMR = SquadMergeRequests[SquadMergeRequestIndex];
-        PRI = GetSquadLeader(SMR.TeamIndex, SMR.DestinationSquadIndex);
+        PRI = GetSquadLeader(SMR.TeamIndex, SMR.SourceSquadIndex);
 
         if (PRI != none)
         {

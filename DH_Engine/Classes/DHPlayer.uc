@@ -6196,13 +6196,13 @@ exec function Jump(optional float F)
 //==============================================================================
 // SQUAD MERGE REQUESTS
 //==============================================================================
-function ServerSendSquadMergeRequest(int DestinationSquadIndex)
+function ServerSendSquadMergeRequest(int RecipientSquadIndex)
 {
     local DHSquadReplicationInfo.ESquadMergeRequestResult Result;
 
     if (SquadReplicationInfo != none)
     {
-        Result = SquadReplicationInfo.SendSquadMergeRequest(self, GetTeamNum(), GetSquadIndex(), DestinationSquadIndex);
+        Result = SquadReplicationInfo.SendSquadMergeRequest(self, GetTeamNum(), RecipientSquadIndex, GetSquadIndex());
 
         ClientSendSquadMergeRequestResult(Result);
     }
