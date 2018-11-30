@@ -160,7 +160,6 @@ replication
         ServerSendSquadMergeRequest, ServerAcceptSquadMergeRequest, ServerDenySquadMergeRequest,
         ServerSquadVolunteerToAssist,
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
-        ServerDebugMerge,
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons; // these ones in debug mode only
 
     // Functions the server can call on the client that owns this actor
@@ -6257,17 +6256,6 @@ function ClientSendSquadMergeRequestResult(DHSquadReplicationInfo.ESquadMergeReq
     {
         Page.OnMessage("SQUAD_MERGE_REQUEST_RESULT", int(Result));
     }
-}
-
-// TODO: remove
-exec function DebugMerge(int SourceSquadIndex, int DestinationSquadIndex)
-{
-    ServerDebugMerge(SourceSquadIndex, DestinationSquadIndex);
-}
-
-function ServerDebugMerge(int SourceSquadIndex, int DestinationSquadIndex)
-{
-    SquadReplicationInfo.MergeSquads(GetTeamNum(), SourceSquadIndex, DestinationSquadIndex);
 }
 
 defaultproperties
