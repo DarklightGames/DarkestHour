@@ -2504,7 +2504,6 @@ function bool DenySquadMergeRequest(DHPlayer SenderPC, int SquadMergeRequestID)
 
     if (SquadMergeRequestIndex != -1)
     {
-        // TODO: send a message that the squad merge request was denied to the destination squad leader.
         SMR = SquadMergeRequests[SquadMergeRequestIndex];
         PRI = GetSquadLeader(SMR.TeamIndex, SMR.SenderSquadIndex);
 
@@ -2514,6 +2513,7 @@ function bool DenySquadMergeRequest(DHPlayer SenderPC, int SquadMergeRequestID)
 
             if (PC != none)
             {
+                // "Your squad merge request was denied by {0} squad."
                 PC.ReceiveLocalizedMessage(SquadMessageClass, class'UInteger'.static.FromShorts(76, SMR.RecipientSquadIndex), PRI,, self);
             }
         }
@@ -2548,6 +2548,8 @@ function bool AcceptSquadMergeRequest(DHPlayer SenderPC, int SquadMergeRequestID
             return false;
         }
 
+        // Merge the squads (note that this also clears the request when
+        // the recipient squad disbands).
         MergeSquads(SMR.TeamIndex, SMR.SenderSquadIndex, SMR.RecipientSquadIndex);
 
         return true;
