@@ -22,6 +22,8 @@ const SQUAD_LEADER_INDEX = 0;
 const SQUAD_DISBAND_THRESHOLD = 2;
 const SQUAD_LEADER_DRAW_DURATION_SECONDS = 15;
 
+const SQUAD_MERGE_REQUEST_INTERVAL = 15.0;
+
 // This nightmare is necessary because UnrealScript cannot replicate large
 // arrays of structs.
 var private DHPlayerReplicationInfo AxisMembers[TEAM_SQUAD_MEMBERS_MAX];
@@ -83,6 +85,27 @@ struct SquadBan
     var string ROID;
 };
 var array<SquadBan>                 SquadBans;
+
+enum ESquadMergeRequestResult
+{
+    RESULT_Throttled,
+    RESULT_Fatal,
+    RESULT_CannotMerge,
+    RESULT_Duplicate,
+    RESULT_Sent
+};
+
+struct SquadMergeRequest
+{
+    var int ID;
+    var int TeamIndex;
+    var int SenderSquadIndex;
+    var int RecipientSquadIndex;
+};
+var array<SquadMergeRequest>        SquadMergeRequests;
+var int                             NextSquadMergeRequestID;
+
+var localized array<string>         SquadMergeRequestResultStrings;
 
 replication
 {
@@ -715,8 +738,10 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
 
     if (SquadMemberIndex == SQUAD_LEADER_INDEX)
     {
-        // "The leader has left the squad."
+        // "The squad leader has left the squad."
         BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 40);
+
+        ClearSquadMergeRequests(TeamIndex, SquadIndex);
 
         Assistant = GetAssistantSquadLeader(TeamIndex, SquadIndex);
 
@@ -794,6 +819,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
         SetSquadNextRallyPointTime(TeamIndex, SquadIndex, 0.0);
         ClearSquadBans(TeamIndex, SquadIndex);
         ClearSquadLeaderVolunteers(TeamIndex, SquadIndex);
+        ClearSquadMergeRequests(TeamIndex, SquadIndex);
     }
 
     return true;
@@ -954,7 +980,7 @@ function int JoinSquadAuto(DHPlayerReplicationInfo PRI)
 // Attempts to make the specified player join the specified squad.
 // Returns the index of the player's new SquadMemberIndex or -1 if
 // they were unable to join the squad.
-function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex, optional bool bWasInvited)
+function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadIndex, optional bool bWasInvited, optional bool bIsQuiet)
 {
     local bool bDidJoinSquad;
     local int i;
@@ -1011,8 +1037,11 @@ function int JoinSquad(DHPlayerReplicationInfo PRI, byte TeamIndex, int SquadInd
 
     if (bDidJoinSquad)
     {
-        // "{0} has joined the squad"
-        BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 30, PRI);
+        if (!bIsQuiet)
+        {
+            // "{0} has joined the squad"
+            BroadcastSquadLocalizedMessage(TeamIndex, SquadIndex, SquadMessageClass, 30, PRI);
+        }
 
         if (PC != none)
         {
@@ -2185,7 +2214,7 @@ function ClearSquadLeaderVolunteer(DHPlayerReplicationInfo PRI, int TeamIndex, i
     }
 }
 
-function DisbandSquad(int TeamIndex, int SquadIndex)
+function DisbandSquad(int TeamIndex, int SquadIndex, optional bool bIsQuiet)
 {
     local int i;
     local array<DHPlayerReplicationInfo> Members;
@@ -2199,7 +2228,7 @@ function DisbandSquad(int TeamIndex, int SquadIndex)
 
     for (i = 0; i < Members.Length; ++i)
     {
-        LeaveSquad(Members[i]);
+        LeaveSquad(Members[i], !bIsQuiet);
     }
 }
 
@@ -2307,6 +2336,248 @@ function SetAssistantSquadLeader(int TeamIndex, int SquadIndex, DHPlayerReplicat
     }
 }
 
+//==============================================================================
+// SQUAD MERGING
+//==============================================================================
+simulated function bool CanMergeSquads(int TeamIndex, int SenderSquadIndex, int RecipientSquadIndex)
+{
+    local int TotalMemberCount;
+
+    if (!IsSquadActive(TeamIndex, SenderSquadIndex) || !IsSquadActive(TeamIndex, RecipientSquadIndex))
+    {
+        // Invalid squad index(es).
+        return false;
+    }
+
+    if (!HasSquadLeader(TeamIndex, SenderSquadIndex) || !HasSquadLeader(TeamIndex, RecipientSquadIndex))
+    {
+        // One or more squads does not have a squad leader.
+        return false;
+    }
+
+    TotalMemberCount = GetMemberCount(TeamIndex, SenderSquadIndex) + GetMemberCount(TeamIndex, RecipientSquadIndex);
+
+    if (TotalMemberCount > GetTeamSquadSize(TeamIndex))
+    {
+        // Merged squad would exceed the squad size limit.
+        return false;
+    }
+
+    return true;
+}
+
+// Takes all of the players from the source squad and merges them into the destination squad.
+function MergeSquads(int TeamIndex, int SenderSquadIndex, int RecipientSquadIndex)
+{
+    local int i, SwitchValue;
+    local array<DHPlayerReplicationInfo> RecipientSquadMembers;
+
+    if (!CanMergeSquads(TeamIndex, SenderSquadIndex, RecipientSquadIndex))
+    {
+        return;
+    }
+
+    // "Your squad has been merged into {0} squad. Your squad leader is now {1}."
+    SwitchValue = class'UInteger'.static.FromShorts(74, SenderSquadIndex);
+    BroadcastSquadLocalizedMessage(TeamIndex, RecipientSquadIndex, SquadMessageClass, SwitchValue, GetSquadLeader(TeamIndex, SenderSquadIndex),, self);
+
+    // "Another squad has been merged into your squad."
+    BroadcastSquadLocalizedMessage(TeamIndex, SenderSquadIndex, SquadMessageClass, 75);
+
+    // Fetch the list of players to be moved before disbanding the squad.
+    GetMembers(TeamIndex, RecipientSquadIndex, RecipientSquadMembers);
+
+    // Quietly disband the source squad.
+    DisbandSquad(TeamIndex, RecipientSquadIndex, true);
+
+    // Move all players from the source squad to the destination squad.
+    for (i = 0; i < RecipientSquadMembers.Length; ++i)
+    {
+        // Quietly join the squad.
+        JoinSquad(RecipientSquadMembers[i], TeamIndex, SenderSquadIndex, true, true);
+    }
+}
+
+function ESquadMergeRequestResult SendSquadMergeRequest(DHPlayer SenderPC, int TeamIndex, int SenderSquadIndex, int RecipientSquadIndex)
+{
+    local SquadMergeRequest MR;
+    local DHPlayerReplicationInfo RecipientPRI, SenderPRI;
+    local DHPlayer RecipientPC;
+    local int SquadMergeRequestIndex;
+
+    if (Level.TimeSeconds < SenderPC.NextSquadMergeRequestTimeSeconds)
+    {
+        // TODO: send a message indicating that the player must wait to send another SMR
+        return RESULT_Throttled;
+    }
+
+    // Ensure that the sender is valid.
+    if (GetSquadLeader(TeamIndex, SenderSquadIndex).Owner != SenderPC)
+    {
+        return RESULT_Fatal;
+    }
+
+    // Ensure that the squads are actually capable of being merged.
+    if (!CanMergeSquads(TeamIndex, SenderSquadIndex, RecipientSquadIndex))
+    {
+        return RESULT_CannotMerge;
+    }
+
+    RecipientPRI = GetSquadLeader(TeamIndex, RecipientSquadIndex);
+    SenderPRI = GetSquadLeader(TeamIndex, SenderSquadIndex);
+
+    if (RecipientPRI == none || SenderPRI == none)
+    {
+        return RESULT_Fatal;
+    }
+
+    RecipientPC = DHPlayer(RecipientPRI.Owner);
+
+    if (RecipientPC == none)
+    {
+        return RESULT_Fatal;
+    }
+
+    // If another squad merge request already exists, just stop.
+    SquadMergeRequestIndex = GetSquadMergeRequestIndex(TeamIndex, SenderSquadIndex, RecipientSquadIndex);
+
+    if (SquadMergeRequestIndex != -1)
+    {
+        return RESULT_Duplicate;
+    }
+
+    MR.ID = NextSquadMergeRequestID++;
+    MR.TeamIndex = TeamIndex;
+    MR.SenderSquadIndex = SenderSquadIndex;
+    MR.RecipientSquadIndex = RecipientSquadIndex;
+    SquadMergeRequests[SquadMergeRequests.Length] = MR;
+
+    // Send the merge request to the recipient.
+    RecipientPC.ClientReceieveSquadMergeRequest(MR.ID, SenderPRI.PlayerName, GetSquadName(TeamIndex, SenderSquadIndex));
+
+    // Set the next merge request time for the sender.
+    SenderPC.NextSquadMergeRequestTimeSeconds = Level.TimeSeconds + SQUAD_MERGE_REQUEST_INTERVAL;
+
+    return RESULT_Sent;
+}
+
+function int GetSquadMergeRequestIndex(int TeamIndex, int SenderSquadIndex, int RecipientSquadIndex)
+{
+    local int i;
+
+    for (i = 0; i < SquadMergeRequests.Length; ++i)
+    {
+        if (SquadMergeRequests[i].TeamIndex == TeamIndex &&
+            SquadMergeRequests[i].SenderSquadIndex == SenderSquadIndex &&
+            SquadMergeRequests[i].RecipientSquadIndex == RecipientSquadIndex)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+function int GetSquadMergeRequestIndexByID(int ID)
+{
+    local int i;
+
+    for (i = 0; i < SquadMergeRequests.Length; ++i)
+    {
+        if (SquadMergeRequests[i].ID == ID)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+function bool DenySquadMergeRequest(DHPlayer SenderPC, int SquadMergeRequestID)
+{
+    local int SquadMergeRequestIndex;
+    local SquadMergeRequest SMR;
+    local DHPlayerReplicationInfo PRI;
+    local DHPlayer PC;
+
+    SquadMergeRequestIndex = GetSquadMergeRequestIndexByID(SquadMergeRequestID);
+
+    if (SquadMergeRequestIndex != -1)
+    {
+        SMR = SquadMergeRequests[SquadMergeRequestIndex];
+        PRI = GetSquadLeader(SMR.TeamIndex, SMR.SenderSquadIndex);
+
+        if (PRI != none)
+        {
+            PC = DHPlayer(PRI.Owner);
+
+            if (PC != none)
+            {
+                // "Your squad merge request was denied by {0} squad."
+                PC.ReceiveLocalizedMessage(SquadMessageClass, class'UInteger'.static.FromShorts(76, SMR.RecipientSquadIndex), PRI,, self);
+            }
+        }
+
+        SquadMergeRequests.Remove(SquadMergeRequestIndex, 1);
+
+        return true;
+    }
+
+    return false;
+}
+
+function bool AcceptSquadMergeRequest(DHPlayer SenderPC, int SquadMergeRequestID)
+{
+    local int SquadMergeRequestIndex;
+    local SquadMergeRequest SMR;
+
+    SquadMergeRequestIndex = GetSquadMergeRequestIndexByID(SquadMergeRequestID);
+
+    if (SquadMergeRequestIndex != -1)
+    {
+        SMR = SquadMergeRequests[SquadMergeRequestIndex];
+
+        if (!CanMergeSquads(SMR.TeamIndex, SMR.SenderSquadIndex, SMR.RecipientSquadIndex))
+        {
+            // "The squad merge failed."
+            SenderPC.ReceiveLocalizedMessage(SquadMessageClass, 77);
+
+            // Clear the merge request.
+            ClearSquadMergeRequests(SMR.TeamIndex, SMR.RecipientSquadIndex);
+
+            return false;
+        }
+
+        // Merge the squads (note that this also clears the request when
+        // the recipient squad disbands).
+        MergeSquads(SMR.TeamIndex, SMR.SenderSquadIndex, SMR.RecipientSquadIndex);
+
+        return true;
+    }
+
+    return false;
+}
+
+// Clears all squad merge requests related to the specified squad.
+function ClearSquadMergeRequests(int TeamIndex, int SquadIndex)
+{
+    local int i;
+
+    for (i = SquadMergeRequests.Length - 1; i >= 0; --i)
+    {
+        if (SquadMergeRequests[i].TeamIndex == TeamIndex &&
+            (SquadMergeRequests[i].SenderSquadIndex == SquadIndex || SquadMergeRequests[i].RecipientSquadIndex == SquadIndex))
+        {
+            SquadMergeRequests.Remove(i, 1);
+        }
+    }
+}
+
+static function string GetSquadMergeRequestResultString(int Result)
+{
+    return default.SquadMergeRequestResultStrings[Result];
+}
+
 defaultproperties
 {
     AlliesSquadSize=10
@@ -2336,4 +2607,10 @@ defaultproperties
     RallyPointSquadmatePlacementRadiusInMeters=15.0
     RallyPointInitialSpawnsMinimum=10
     RallyPointInitialSpawnsMemberMultiplier=2.5
+
+    SquadMergeRequestResultStrings(0)="Please wait a short time before sending another squad merge request."
+    SquadMergeRequestResultStrings(1)="An error occurred while sending the squad merge request."
+    SquadMergeRequestResultStrings(2)="A merge request cannot be sent to this squad."
+    SquadMergeRequestResultStrings(3)="There is already an existing merge request for this squad."
+    SquadMergeRequestResultStrings(4)="Squad merge request has been sent."
 }

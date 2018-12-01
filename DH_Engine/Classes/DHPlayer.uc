@@ -92,8 +92,10 @@ var     DHSquadReplicationInfo  SquadReplicationInfo;
 var     bool                    bIgnoreSquadInvitations;
 var     bool                    bIgnoreSquadLeaderVolunteerPrompts;
 var     bool                    bIgnoreSquadLeaderAssistantVolunteerPrompts;
+var     bool                    bIgnoreSquadMergeRequestPrompts;
 var     int                     SquadMemberLocations[12];   // SQUAD_SIZE_MAX
 var     int                     SquadLeaderLocations[8];    // TEAM_SQUADS_MAX
+var     float                   NextSquadMergeRequestTimeSeconds;  // The time (relative to TimeSeconds) that this player can send another squad merge request.
 
 var     DHCommandInteraction    CommandInteraction;
 
@@ -155,6 +157,7 @@ replication
         ServerSquadSay, ServerSquadLock, ServerSquadSignal,
         ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
         ServerSetPatronStatus, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
+        ServerSendSquadMergeRequest, ServerAcceptSquadMergeRequest, ServerDenySquadMergeRequest,
         ServerSquadVolunteerToAssist,
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons; // these ones in debug mode only
@@ -166,7 +169,8 @@ replication
         ClientConsoleCommand, ClientCopyToClipboard, ClientSaveROIDHash,
         ClientSquadInvite, ClientSquadSignal, ClientSquadLeaderVolunteerPrompt, ClientTeamSurrenderPrompt,
         ClientTeamKillPrompt, ClientOpenLogFile, ClientLogToFile, ClientCloseLogFile,
-        ClientSquadAssistantVolunteerPrompt;
+        ClientSquadAssistantVolunteerPrompt,
+        ClientReceieveSquadMergeRequest, ClientSendSquadMergeRequestResult;
 }
 
 function ServerChangePlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2) { } // no longer used
@@ -6165,6 +6169,73 @@ exec function Jump(optional float F)
     if (!TryToActivateSituationMap())
     {
         super.Jump(F);
+    }
+}
+
+//==============================================================================
+// SQUAD MERGE REQUESTS
+//==============================================================================
+function ServerSendSquadMergeRequest(int RecipientSquadIndex)
+{
+    local DHSquadReplicationInfo.ESquadMergeRequestResult Result;
+
+    if (SquadReplicationInfo != none)
+    {
+        Result = SquadReplicationInfo.SendSquadMergeRequest(self, GetTeamNum(), GetSquadIndex(), RecipientSquadIndex);
+
+        ClientSendSquadMergeRequestResult(Result);
+    }
+}
+
+function ServerAcceptSquadMergeRequest(int SquadMergeRequestID)
+{
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.AcceptSquadMergeRequest(self, SquadMergeRequestID);
+    }
+}
+
+function ServerDenySquadMergeRequest(int SquadMergeRequestID)
+{
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.DenySquadMergeRequest(self, SquadMergeRequestID);
+    }
+}
+
+function ClientReceieveSquadMergeRequest(int SquadMergeRequestID, string SenderPlayerName, string SenderSquadName)
+{
+    if (bIgnoreSquadMergeRequestPrompts)
+    {
+        ServerDenySquadMergeRequest(SquadMergeRequestID);
+        return;
+    }
+
+    class'DHSquadMergeRequestInteraction'.default.SquadMergeRequestID = SquadMergeRequestID;
+    class'DHSquadMergeRequestInteraction'.default.SenderPlayerName = SenderPlayerName;
+    class'DHSquadMergeRequestInteraction'.default.SenderSquadName = SenderSquadName;
+
+    Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadMergeRequestInteraction", Player);
+}
+
+function ClientSendSquadMergeRequestResult(DHSquadReplicationInfo.ESquadMergeRequestResult Result)
+{
+    local UT2K4GUIController GUIController;
+    local GUIPage Page;
+
+    // Find the currently open ROGUIRoleSelection menu and notify it
+    GUIController = UT2K4GUIController(Player.GUIController);
+
+    if (GUIController == none)
+    {
+        return;
+    }
+
+    Page = GUIController.FindMenuByClass(class'GUIPage');
+
+    if (Page != none)
+    {
+        Page.OnMessage("SQUAD_MERGE_REQUEST_RESULT", int(Result));
     }
 }
 

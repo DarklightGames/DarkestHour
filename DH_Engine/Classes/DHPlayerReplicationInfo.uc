@@ -31,6 +31,9 @@ var     bool                    bIsSquadAssistant;
 var     int                     TotalScore;
 var     int                     CategoryScores[2];
 
+var     localized string        SquadLeaderAbbreviation;
+var     localized string        AssistantAbbreviation;
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -43,11 +46,11 @@ simulated function string GetNamePrefix()
 {
     if (IsSquadLeader())
     {
-        return "SL";
+        return default.SquadLeaderAbbreviation;
     }
     else if (bIsSquadAssistant)
     {
-        return "A";
+        return default.AssistantAbbreviation;
     }
     else if (IsInSquad())
     {
@@ -127,4 +130,6 @@ defaultproperties
 {
     SquadIndex=-1
     SquadMemberIndex=-1
+    SquadLeaderAbbreviation="SL"
+    AssistantAbbreviation="A"
 }
