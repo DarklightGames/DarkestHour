@@ -2542,6 +2542,9 @@ function bool AcceptSquadMergeRequest(DHPlayer SenderPC, int SquadMergeRequestID
             // "The squad merge failed."
             SenderPC.ReceiveLocalizedMessage(SquadMessageClass, 77);
 
+            // Clear the merge request.
+            ClearSquadMergeRequests(TeamIndex, SMR.RecipientSquadIndex);
+
             return false;
         }
 
