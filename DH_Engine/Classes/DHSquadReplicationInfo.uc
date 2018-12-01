@@ -2370,7 +2370,7 @@ simulated function bool CanMergeSquads(int TeamIndex, int SenderSquadIndex, int 
 function MergeSquads(int TeamIndex, int SenderSquadIndex, int RecipientSquadIndex)
 {
     local int i, SwitchValue;
-    local array<DHPlayerReplicationInfo> SourceSquadMembers;
+    local array<DHPlayerReplicationInfo> RecipientSquadMembers;
 
     if (!CanMergeSquads(TeamIndex, SenderSquadIndex, RecipientSquadIndex))
     {
@@ -2378,23 +2378,23 @@ function MergeSquads(int TeamIndex, int SenderSquadIndex, int RecipientSquadInde
     }
 
     // "Your squad has been merged into {0} squad. Your squad leader is now {1}."
-    SwitchValue = class'UInteger'.static.FromShorts(74, RecipientSquadIndex);
-    BroadcastSquadLocalizedMessage(TeamIndex, SenderSquadIndex, SquadMessageClass, SwitchValue, GetSquadLeader(TeamIndex, RecipientSquadIndex),, self);
+    SwitchValue = class'UInteger'.static.FromShorts(74, SenderSquadIndex);
+    BroadcastSquadLocalizedMessage(TeamIndex, RecipientSquadIndex, SquadMessageClass, SwitchValue, GetSquadLeader(TeamIndex, SenderSquadIndex),, self);
 
     // "Another squad has been merged into your squad."
-    BroadcastSquadLocalizedMessage(TeamIndex, RecipientSquadIndex, SquadMessageClass, 75);
+    BroadcastSquadLocalizedMessage(TeamIndex, SenderSquadIndex, SquadMessageClass, 75);
 
     // Fetch the list of players to be moved before disbanding the squad.
-    GetMembers(TeamIndex, SenderSquadIndex, SourceSquadMembers);
+    GetMembers(TeamIndex, RecipientSquadIndex, RecipientSquadMembers);
 
     // Quietly disband the source squad.
-    DisbandSquad(TeamIndex, SenderSquadIndex, true);
+    DisbandSquad(TeamIndex, RecipientSquadIndex, true);
 
     // Move all players from the source squad to the destination squad.
-    for (i = 0; i < SourceSquadMembers.Length; ++i)
+    for (i = 0; i < RecipientSquadMembers.Length; ++i)
     {
         // Quietly join the squad.
-        JoinSquad(SourceSquadMembers[i], TeamIndex, RecipientSquadIndex, true, true);
+        JoinSquad(RecipientSquadMembers[i], TeamIndex, SenderSquadIndex, true, true);
     }
 }
 
