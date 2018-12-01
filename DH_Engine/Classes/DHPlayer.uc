@@ -6201,7 +6201,7 @@ function ServerSendSquadMergeRequest(int RecipientSquadIndex)
 
     if (SquadReplicationInfo != none)
     {
-        Result = SquadReplicationInfo.SendSquadMergeRequest(self, GetTeamNum(), RecipientSquadIndex, GetSquadIndex());
+        Result = SquadReplicationInfo.SendSquadMergeRequest(self, GetTeamNum(), GetSquadIndex(), RecipientSquadIndex);
 
         ClientSendSquadMergeRequestResult(Result);
     }
