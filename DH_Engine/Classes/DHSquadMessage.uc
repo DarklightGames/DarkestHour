@@ -55,6 +55,7 @@ var localized string SquadMergedSourceGenericMessage;
 var localized string SquadMergedDestinationMessage;
 var localized string SquadMergeRequestDeniedMessage;
 var localized string SquadMergeRequestDeniedGenericMessage;
+var localized string SquadMergeFailedMessage;
 
 static function string GetString(optional int S, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -184,6 +185,8 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
                 return Repl(default.SquadMergeRequestDeniedMessage, "{0}", SquadName);
             }
             return default.SquadMergeRequestDeniedGenericMessage;
+        case 77:
+            return default.SquadMergeFailedMessage;
         default:
             break;
     }
@@ -243,6 +246,7 @@ defaultproperties
     SquadMergedSourceGenericMessage="Your squad has been merged into another squad."
     SquadMergeRequestDeniedMessage="Your squad merge request was denied by {0} squad."
     SquadMergeRequestDeniedGenericMessage="Your squad merge was denied."
+    SquadMergeFailedMessage="The squad merge failed,"
 
     bIsSpecial=false
     bIsConsoleMessage=true

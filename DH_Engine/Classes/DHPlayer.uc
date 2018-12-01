@@ -6227,6 +6227,7 @@ function ClientReceieveSquadMergeRequest(int SquadMergeRequestID, string SenderP
 {
     if (bIgnoreSquadMergeRequestPrompts)
     {
+        ServerDenySquadMergeRequest(SquadMergeRequestID);
         return;
     }
 

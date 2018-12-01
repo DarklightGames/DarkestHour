@@ -2514,7 +2514,7 @@ function bool DenySquadMergeRequest(DHPlayer SenderPC, int SquadMergeRequestID)
 
             if (PC != none)
             {
-                PC.ReceiveLocalizedMessage(SquadMessageClass, class'UInteger'.static.FromShorts(76, SMR.SenderSquadIndex), PRI,, self);
+                PC.ReceiveLocalizedMessage(SquadMessageClass, class'UInteger'.static.FromShorts(76, SMR.RecipientSquadIndex), PRI,, self);
             }
         }
 
@@ -2533,35 +2533,19 @@ function bool AcceptSquadMergeRequest(DHPlayer SenderPC, int SquadMergeRequestID
 
     SquadMergeRequestIndex = GetSquadMergeRequestIndexByID(SquadMergeRequestID);
 
-    Level.Game.Broadcast(self, "SquadMergeRequestID" @ SquadMergeRequestID);
-    Level.Game.Broadcast(self, "SquadMergeRequestIndex" @ SquadMergeRequestIndex);
-
     if (SquadMergeRequestIndex != -1)
     {
-        Level.Game.Broadcast(self, "Squad merge request found!");
-
         SMR = SquadMergeRequests[SquadMergeRequestIndex];
 
         if (!CanMergeSquads(SMR.TeamIndex, SMR.SenderSquadIndex, SMR.RecipientSquadIndex))
         {
-            // TODO: Send a message that the squads cannot be merged to the
-            // person accepting.
-            Level.Game.Broadcast(self, "cannot merge squads!");
-            return false;
-        }
+            // "The squad merge failed."
+            SenderPC.ReceiveLocalizedMessage(SquadMessageClass, 77);
 
-        /*
-        if (Level.TimeSeconds >= SMR.ExpirationTime)
-        {
             return false;
         }
-        */
 
         MergeSquads(SMR.TeamIndex, SMR.SenderSquadIndex, SMR.RecipientSquadIndex);
-
-        SquadMergeRequests.Remove(SquadMergeRequestIndex, 1);
-
-        Level.Game.Broadcast(self, "accepted!!!");
 
         return true;
     }

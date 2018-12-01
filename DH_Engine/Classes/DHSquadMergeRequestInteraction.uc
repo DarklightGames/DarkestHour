@@ -28,7 +28,6 @@ function OnOptionSelected(int Index)
         switch (Index)
         {
             case 0: // Accept
-                // We need to
                 PC.ServerAcceptSquadMergeRequest(default.SquadMergeRequestID);
                 break;
             case 1: // Decline
