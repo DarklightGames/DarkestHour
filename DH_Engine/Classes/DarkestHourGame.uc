@@ -524,8 +524,13 @@ function UpdateServerNetHealth()
     const    PACKET_LOSS_THRESHOLD   = 30; // The packetloss at which to count the player as "insanely high" packet loss
     const    THRESHOLD_OVERRIDE      = 10; // Num players required to be over threshold to show "insanely high" packet loss
 
-    local int       i, combined, average, overthreshold;
+    local int       i, Combined, Average, OverThreshold;
     local bool      bWebAdminExists;
+
+    if (GRI == none)
+    {
+        return;
+    }
 
     for (i = 0; i < GRI.PRIArray.Length; ++i)
     {
@@ -534,11 +539,11 @@ function UpdateServerNetHealth()
         {
             if (GRI.PRIArray[i].PacketLoss <= PACKET_LOSS_THRESHOLD)
             {
-                combined += GRI.PRIArray[i].PacketLoss; // Only count players who are under threshold
+                Combined += GRI.PRIArray[i].PacketLoss; // Only count players who are under threshold
             }
             else
             {
-                ++overthreshold; // Count # of players over threshold
+                ++OverThreshold; // Count # of players over threshold
             }
         }
         else if (GRI.PRIArray[i].PlayerName == "WebAdmin")
@@ -550,26 +555,26 @@ function UpdateServerNetHealth()
     // Calculate average packet loss (not counting webadmin)
     if (bWebAdminExists)
     {
-        average = clamp(combined / (GRI.PRIArray.Length - 1), 0, 255);
+        Average = Clamp(Combined / (GRI.PRIArray.Length - 1), 0, 255);
     }
     else
     {
-        average = clamp(combined / (GRI.PRIArray.Length), 0, 255);
+        Average = Clamp(Combined / (GRI.PRIArray.Length), 0, 255);
     }
 
     if (bLogAverageTickRate)
     {
-        Log("Average Server Packet Loss:" @ average);
+        Log("Average Server Packet Loss:" @ Average);
     }
 
     // If enough players are over the PACKET_LOSS_THRESHOLD, then something is terribly wrong
-    if (overthreshold > THRESHOLD_OVERRIDE)
+    if (OverThreshold > THRESHOLD_OVERRIDE)
     {
         GRI.ServerNetHealth = 255; // insanely high packetloss value
         return;
     }
 
-    GRI.ServerNetHealth = byte(average);
+    GRI.ServerNetHealth = byte(Average);
 }
 
 // Function to handle performance infractions (multiple infractions lead to strikes, strikes will lead to level change)
