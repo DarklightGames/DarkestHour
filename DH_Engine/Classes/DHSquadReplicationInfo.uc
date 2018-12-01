@@ -2543,7 +2543,7 @@ function bool AcceptSquadMergeRequest(DHPlayer SenderPC, int SquadMergeRequestID
             SenderPC.ReceiveLocalizedMessage(SquadMessageClass, 77);
 
             // Clear the merge request.
-            ClearSquadMergeRequests(TeamIndex, SMR.RecipientSquadIndex);
+            ClearSquadMergeRequests(SMR.TeamIndex, SMR.RecipientSquadIndex);
 
             return false;
         }
