@@ -1997,13 +1997,13 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         CheckTreadDamage(HitLocation, Momentum);
     }
 
-    // Call the Super from Vehicle (skip over others)
-    super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
-
     if (InstigatedBy != none && InstigatedBy != self)
     {
         LastHitBy = InstigatedBy.Controller;
     }
+
+    // Call the Super from Vehicle (skip over others)
+    super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
     // If a vehicle's health is lower than DamagedEffectHealthFireFactor OR
     // If the vehicle is APC or Treaded and is empty and damage is significant, just set fire the engine (and spike the vehicle)
@@ -3390,26 +3390,22 @@ function MaybeDestroyVehicle()
 {
     local bool bDeactivatedFactoryWantsToDestroy;
 
-    // Do nothing if vehicle is a spawn vehicle
-    if (ParentFactory == none || IsSpawnVehicle())
+    // If the vehicle is not on fire, then do the following checks
+    if (!IsDisabled())
     {
-        return;
+        // Check whether was spawned by a vehicle factory that has since been deactivated & wants to destroy its vehicle when empty
+        bDeactivatedFactoryWantsToDestroy = ParentFactory.IsA('ROVehicleFactory') && !ROVehicleFactory(ParentFactory).bFactoryActive
+            && ROVehicleFactory(ParentFactory).bDestroyVehicleWhenInactive;
+
+        // (If the vehicle was spawned by a vehicle factory that has since been deactivated & wants to destroy its vehicle when empty
+        // AND is not meant to reset)
+        // OR is a spawn vehicle, return
+        if ((!bDeactivatedFactoryWantsToDestroy && bNeverReset) || IsSpawnVehicle())
+        {
+            return;
+        }
     }
-
-    // Check whether was spawned by a vehicle factory that has since been deactivated & wants to destroy its vehicle when empty
-    bDeactivatedFactoryWantsToDestroy = ParentFactory.IsA('ROVehicleFactory') && !ROVehicleFactory(ParentFactory).bFactoryActive
-        && ROVehicleFactory(ParentFactory).bDestroyVehicleWhenInactive;
-
-    // We don't set a CheckReset timer for vehicles that have bNeverReset (e.g. AT guns), so they don't get reset if left empty
-    // Or if it's a factory's last vehicle, as no point destroying/recycling vehicle if factory won't spawn replacement
-    // The exception is if a factory has deactivated & should destroy its vehicle if it's empty
-    if (!bDeactivatedFactoryWantsToDestroy && (bNeverReset || IsFactorysLastVehicle()))
-    {
-        return;
-    }
-
-    // If vehicle is classed as disabled, set a spike timer to destroy it after a set period if still empty
-    if (IsDisabled())
+    else // If vehicle is classed as disabled, set a spike timer to destroy it after a set period if still empty
     {
         bSpikedVehicle = true;
         SetSpikeTimer(); // separate function for easy subclassing
@@ -3931,7 +3927,7 @@ defaultproperties
     DamagedTreadPanner=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
 
     // Smoking/burning engine effect
-    HeavyEngineDamageThreshold=0.25
+    HeavyEngineDamageThreshold=0.5
     DamagedEffectHealthSmokeFactor=0.75
     DamagedEffectHealthMediumSmokeFactor=0.5
     DamagedEffectHealthHeavySmokeFactor=0.25
