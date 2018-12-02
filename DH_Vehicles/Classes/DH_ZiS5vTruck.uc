@@ -12,7 +12,7 @@ defaultproperties
     VehicleNameString="ZiS-5V"
     VehicleTeam=1
     VehicleMass=2.5
-    ReinforcementCost=3
+    ReinforcementCost=2
     MaxDesireability=0.12
 
     // Hull mesh

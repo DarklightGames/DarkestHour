@@ -10,7 +10,7 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="Volkswagen Type 82"
     VehicleMass=2.0
-    ReinforcementCost=2
+    ReinforcementCost=1
     bMustBeInSquadToSpawn=true
 
     // Hull mesh

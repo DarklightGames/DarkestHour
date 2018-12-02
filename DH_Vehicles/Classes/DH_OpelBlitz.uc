@@ -11,7 +11,7 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="Opel Blitz"
     VehicleMass=3.0
-    ReinforcementCost=3
+    ReinforcementCost=2
     MaxDesireability=0.12
 
     // Hull mesh

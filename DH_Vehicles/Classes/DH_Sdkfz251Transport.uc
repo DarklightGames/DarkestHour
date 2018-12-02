@@ -16,7 +16,7 @@ defaultproperties
     bHasTreads=true
     VehicleMass=8.5
     IdleTimeBeforeReset=300.0
-    ReinforcementCost=4
+    ReinforcementCost=3
     MaxDesireability=1.2
     bMustBeInSquadToSpawn=true
     PointValue=500

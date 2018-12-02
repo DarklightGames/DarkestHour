@@ -11,7 +11,7 @@ defaultproperties
     VehicleNameString="M18 Hellcat"
     VehicleTeam=1
     VehicleMass=11.0
-    ReinforcementCost=10
+    ReinforcementCost=8
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_ext'

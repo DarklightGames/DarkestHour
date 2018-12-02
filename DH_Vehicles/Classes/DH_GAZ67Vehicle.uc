@@ -11,7 +11,7 @@ defaultproperties
     VehicleNameString="GAZ-67"
     VehicleTeam=1
     VehicleMass=3.5
-    ReinforcementCost=2
+    ReinforcementCost=1
     bMustBeInSquadToSpawn=true
 
     // Hull mesh

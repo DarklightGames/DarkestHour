@@ -11,7 +11,7 @@ defaultproperties
     VehicleNameString="Willys Jeep MB"
     VehicleTeam=1
     VehicleMass=2.0
-    ReinforcementCost=2
+    ReinforcementCost=1
     bMustBeInSquadToSpawn=true
 
     // Hull mesh
