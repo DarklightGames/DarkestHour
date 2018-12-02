@@ -67,7 +67,6 @@ defaultproperties
     EngineDamageFromGrenadeModifier=0.15
     ImpactWorldDamageMult=1.0
     DirectHEImpactDamageMult=9.0
-    HeavyEngineDamageThreshold=0.33
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=135.0,Y=0.0,Z=65.0)
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Trucks.GMC_destroyed'

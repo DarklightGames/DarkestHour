@@ -63,8 +63,8 @@ defaultproperties
     // Damage
     Health=2000
     HealthMax=2000.0
-    DamagedEffectHealthFireFactor=0.8
-    EngineHealth=25
+    DamagedEffectHealthFireFactor=0.95
+    EngineHealth=10
     DamagedWheelSpeedFactor=0.3
     VehHitpoints(0)=(PointRadius=32.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
     VehHitpoints(1)=(PointRadius=18.0,PointScale=1.0,PointBone="wheel_FL",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
@@ -75,7 +75,6 @@ defaultproperties
     EngineDamageFromGrenadeModifier=0.125
     ImpactDamageMult=0.5
     ImpactWorldDamageMult=0.008
-    HeavyEngineDamageThreshold=0.33
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=60.0,Y=0.0,Z=25.0)
     DestroyedVehicleMesh=StaticMesh'DH_Soviet_vehicles_stc.GAZ67.GAZ67_destroyed'

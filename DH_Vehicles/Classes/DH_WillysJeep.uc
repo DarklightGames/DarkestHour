@@ -63,8 +63,8 @@ defaultproperties
     // Damage
     Health=2000
     HealthMax=2000.0
-    DamagedEffectHealthFireFactor=0.8
-    EngineHealth=25
+    DamagedEffectHealthFireFactor=0.95
+    EngineHealth=10
     DamagedWheelSpeedFactor=0.3
     VehHitpoints(0)=(PointRadius=32.0,PointBone="body",PointOffset=(X=65.0,Y=0.0,Z=15.0),DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
     VehHitpoints(1)=(PointRadius=24.0,PointScale=1.0,PointBone="LeftFrontWheel",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
@@ -75,7 +75,6 @@ defaultproperties
     DirectHEImpactDamageMult=10.0
     ImpactDamageMult=0.5
     ImpactWorldDamageMult=0.006
-    HeavyEngineDamageThreshold=0.4
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=75.0,Y=5.0,Z=45.0)
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Jeep.WillysJeep_dest1'

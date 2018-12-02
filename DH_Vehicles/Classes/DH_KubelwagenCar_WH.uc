@@ -62,8 +62,8 @@ defaultproperties
     // Damage
     Health=2000
     HealthMax=2000.0
-    EngineHealth=25
-    DamagedEffectHealthFireFactor=0.8
+    EngineHealth=10
+    DamagedEffectHealthFireFactor=0.95
     DamagedWheelSpeedFactor=0.3
     VehHitpoints(0)=(PointRadius=32.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
     VehHitpoints(1)=(PointRadius=24.0,PointScale=1.0,PointBone="body",PointOffset=(X=100.0,Y=25.0,Z=35.0),DamageMultiplier=2.0,HitPointType=HP_AmmoStore) // ammo
@@ -75,7 +75,6 @@ defaultproperties
     DirectHEImpactDamageMult=10.0
     ImpactDamageMult=0.5
     ImpactWorldDamageMult=0.006
-    HeavyEngineDamageThreshold=0.4
     DamagedEffectScale=0.7
     DamagedEffectOffset=(X=-100.0,Y=0.0,Z=15.0)
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc2.Kubelwagen.Kubelwagen_wh_dest'

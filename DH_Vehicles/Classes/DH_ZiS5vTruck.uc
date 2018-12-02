@@ -65,7 +65,6 @@ defaultproperties
     EngineDamageFromGrenadeModifier=0.15
     DirectHEImpactDamageMult=9.0
     ImpactWorldDamageMult=1.0
-    HeavyEngineDamageThreshold=0.33
     DamagedEffectScale=0.7
     DamagedEffectOffset=(X=105.0,Y=0.0,Z=20.0)
     DestroyedVehicleMesh=StaticMesh'DH_Soviet_vehicles_stc.ZiS5.ZiS5V_destroyed'

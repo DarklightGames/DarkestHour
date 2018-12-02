@@ -67,7 +67,6 @@ defaultproperties
     EngineDamageFromGrenadeModifier=0.15
     DirectHEImpactDamageMult=9.0
     ImpactWorldDamageMult=1.0
-    HeavyEngineDamageThreshold=0.33
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=115.0,Y=0.0,Z=70.0)
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Trucks.OpelBlitz_dest'
