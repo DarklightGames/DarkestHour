@@ -45,20 +45,25 @@ function OnVoteEnded()
 
     if (Options[0].Votes >= VotesNeededToWin)
     {
-        // TODO: having these as
+        // "Your team voted to surrender."
+        PC.ReceiveLocalizedMessage(class'DHTeamSurrenderVoteMessage', 0);
+
+        // TODO: this is horrible.
         Level.Game.Broadcast(self, "The round ended because a team voted to surrender.", 'Say');
 
         G.EndRound(int(!bool(TeamIndex)));
     }
     else
     {
+        // Inform the team that the surrender vote failed.
         for (C = Level.ControllerList; C != none; C = C.nextController)
         {
             PC = PlayerController(C);
 
             if (PC != none && C.GetTeamNum() == TeamIndex)
             {
-//                PC.ReceiveLocalizedMessage(class'DHTeamSurrenderVoteMessage', 0
+                // "Your team voted to continue fighting."
+                PC.ReceiveLocalizedMessage(class'DHTeamSurrenderVoteMessage', 1);
             }
         }
     }

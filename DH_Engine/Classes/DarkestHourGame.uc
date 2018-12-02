@@ -75,8 +75,7 @@ var     DHSquadReplicationInfo      SquadReplicationInfo;
 var()   config int                  EmptyTankUnlockTime;                    // Server config option for how long (secs) before unlocking a locked armored vehicle if abandoned by its crew
 
 // Voting
-var     int                         NextVoteId;
-var     array<DHVoteInfo>           Votes;
+var     DHVoteManager               VoteManager;
 
 var     DHGameReplicationInfo       GRI;
 
@@ -5109,7 +5108,6 @@ function PlayerSurrendered(PlayerController Player)
     {
         if (Player == SurrenderNominators[i])
         {
-            Log("A");
             // Already voted to surender.
             PC.ClientTeamSurrenderResponse(3);
             return;
@@ -5125,20 +5123,16 @@ function PlayerSurrendered(PlayerController Player)
     }
 
     // Surrendering can only be voted for with ~16+ people on a team.
-    Log("C");
     GetTeamSizes(TeamSizes);
 
-    if (TeamSizes[TeamIndex] < default.SurrenderTeamSizeMin)
+    if (Level.NetMode != NM_Client && TeamSizes[TeamIndex] < default.SurrenderTeamSizeMin)
     {
-        Log("D");
         PC.ClientTeamSurrenderResponse(5);
         return;
     }
 
     SurrenderNominators.Insert(0, 1);
     SurrenderNominators[0] = Player;
-
-    Log("E");
 
     for (i = 0; i < SurrenderNominators.Length; ++i)
     {
@@ -5147,8 +5141,6 @@ function PlayerSurrendered(PlayerController Player)
             ++SurrenderNominatorCount;
         }
     }
-
-    Log("SurrenderNominatorCount" @ SurrenderNominatorCount);
 
     if (SurrenderNominatorCount >= default.SurrenderNominationsThreshold)
     {
