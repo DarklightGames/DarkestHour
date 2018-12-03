@@ -4902,7 +4902,7 @@ function int GetNumObjectives()
         }
     }
 
-    return count;
+    return Count;
 }
 
 function BroadcastSquad(Controller Sender, coerce string Msg, optional name Type)
