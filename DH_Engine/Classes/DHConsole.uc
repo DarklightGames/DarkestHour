@@ -493,6 +493,8 @@ function bool CanUseSayType(string SayType)
             return PC.IsInSquad();
         case "VehicleSay":
             return PC.Pawn != none && PC.Pawn.IsA('Vehicle');
+        case "CommandSay":
+            return PC.IsSquadLeader();
     }
 
     return false;
@@ -511,6 +513,8 @@ static function class<DHLocalMessage> GetSayTypeMessageClass(string SayType)
             return class'DHSquadSayMessage';
         case "VehicleSay":
             return class'DHVehicleSayMessage';
+        case "CommandSay":
+            return class'DHCommandSayMessage';
     }
 
     return none;
@@ -664,6 +668,7 @@ defaultproperties
     SayTypes(0)="Say"
     SayTypes(1)="TeamSay"
     SayTypes(2)="SquadSay"
-    SayTypes(3)="VehicleSay"
+    SayTypes(3)="CommandSay"
+    SayTypes(4)="VehicleSay"
 }
 

@@ -4917,6 +4917,18 @@ function BroadcastSquad(Controller Sender, coerce string Msg, optional name Type
     }
 }
 
+function BroadcastCommand(Controller Sender, coerce string Msg, optional name Type)
+{
+    local DHBroadcastHandler BH;
+
+    BH = DHBroadcastHandler(BroadcastHandler);
+
+    if (BH != none)
+    {
+        BH.BroadcastCommand(Sender, Msg, Type);
+    }
+}
+
 function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation, DHSpawnPointBase SP)
 {
     if (C == none)

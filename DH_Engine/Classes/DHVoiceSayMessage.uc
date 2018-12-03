@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHSayMessage extends DHLocalMessage
+class DHVoiceSayMessage extends DHLocalMessage
     abstract;
 
 static function string AssembleString(HUD myHUD, optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional string MessageString)
@@ -13,11 +13,13 @@ static function string AssembleString(HUD myHUD, optional int Switch, optional P
         return "";
     }
 
-    return RelatedPRI_1.PlayerName $ ":" @ class'GameInfo'.static.MakeColorCode(class'UColor'.default.White) $ MessageString;
+    return default.MessagePrefix @ RelatedPRI_1.PlayerName @ ":" @ MessageString;
 }
 
 defaultproperties
 {
+    MessagePrefix="[VOICE]"
     bComplexString=true
     bBeep=true
 }
+
