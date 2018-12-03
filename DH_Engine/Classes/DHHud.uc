@@ -2685,7 +2685,7 @@ function DrawCompass(Canvas C)
     // Draw icons
     if (CompassIconsOpacity > 0.0 || bShowObjectives)
     {
-        DrawCompassIcons(C, CompassNeedle.OffsetX, CompassNeedle.OffsetY, XL / HudScale / 2.0 * CompassIconsPositionRadius, -(A.Rotation.Yaw + 16384), A, GlobalCoors);
+        DrawCompassIcons(C, CompassNeedle.OffsetX, CompassNeedle.OffsetY, XL / HudScale / 2.0 * CompassIconsPositionRadius, -(PawnRotation + 16384), A, GlobalCoors);
     }
 
     // Bring back the correct HudScale
