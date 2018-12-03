@@ -57,14 +57,17 @@ defaultproperties
 
     // Movement
     MaxCriticalSpeed=674.0 // 40 kph
-    GearRatios(0)=-0.25
-    GearRatios(3)=0.5
-    GearRatios(4)=0.72
+    GearRatios(0)=-0.3
+    GearRatios(1)=0.3
+    GearRatios(2)=0.5
+    GearRatios(3)=0.7
+    GearRatios(4)=0.9
     TorqueCurve=(Points=((InVal=0.0,OutVal=10.0),(InVal=200.0,OutVal=1.0),(InVal=1500.0,OutVal=2.5),(InVal=2200.0,OutVal=0.0)))
     MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=35.0),(InVal=1500.0,OutVal=30.0),(InVal=1000000000.0,OutVal=15.0)))
 
     // Physics wheels properties
-    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
+    WheelLongFrictionScale=1.25
+    WheelLongFrictionFunc=(Points=(,(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
     WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=45.0,OutVal=0.0),(InVal=10000000000.0,OutVal=0.0)))
     WheelSuspensionTravel=8.0
     WheelSuspensionMaxRenderTravel=8.0
