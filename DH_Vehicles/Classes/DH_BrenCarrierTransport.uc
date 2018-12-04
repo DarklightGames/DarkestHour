@@ -65,7 +65,7 @@ defaultproperties
     // Damage
     Health=2000
     HealthMax=2000.0
-    DamagedEffectHealthFireFactor=0.7
+    DamagedEffectHealthFireFactor=0.9
     EngineHealth=50
     VehHitpoints(0)=(PointRadius=20.0,PointOffset=(X=-15.0,Y=0.0,Z=0.0)) // engine
     VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="Engine",PointOffset=(X=22.0,Y=0.0,Z=0.0),DamageMultiplier=1.0,HitPointType=HP_Engine)
