@@ -6315,11 +6315,9 @@ function ClientLocationalVoiceMessage(PlayerReplicationInfo Sender,
 
             if (bIsTeamVoice)
             {
-                Log("MessageType" @ MessageType);
-
                 if (MessageType == 'VEH_ORDERS' || MessageType == 'VEH_ALERTS' || MessageType == 'VEH_GOTO')
                 {
-                    VehicleMessage(Sender, V.getClientParsedMessage());
+                    VehicleVoiceMessage(Sender, V.getClientParsedMessage());
                 }
                 else if (MessageType == 'TAUNT')
                 {
@@ -6341,6 +6339,20 @@ function ClientLocationalVoiceMessage(PlayerReplicationInfo Sender,
             Log("Fallback: voice.ClientInitialize(Sender, Recipient, messagetype, messageID);");
             Voice.ClientInitialize(Sender, Recipient, MessageType, MessageID);
         }
+    }
+}
+
+function VehicleVoiceMessage(PlayerReplicationInfo Sender, string Msg)
+{
+    local ROBroadCastHandler Handler;
+
+    if (Level != none &&
+        Level.Game != none &&
+        Level.Game.BroadcastHandler != none &&
+        Level.Game.BroadcastHandler.IsA('ROBroadcastHandler'))
+    {
+       Handler = ROBroadCastHandler(Level.Game.BroadcastHandler);
+       Handler.BroadcastText(Sender, self, Msg, 'VehicleVoiceSay');
     }
 }
 

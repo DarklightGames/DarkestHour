@@ -362,6 +362,10 @@ function Message(PlayerReplicationInfo PRI, coerce string Msg, name MsgType)
             DHMessageClassType = class'DHVehicleSayMessage';
             Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
             break;
+        case 'VehicleVoiceSay':
+            DHMessageClassType = class'DHVehicleVoiceSayMessage';
+            Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
+            break;
         case 'CommandSay':
             DHMessageClassType = class'DHCommandSayMessage';
             Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
