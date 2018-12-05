@@ -421,6 +421,13 @@ function DecrementSayType()
     {
         j = (SayTypeIndex - i) % SayTypes.Length;
 
+        if (j < 0)
+        {
+            // Unrealscript has an interesting idea of what a modulo operator
+            // does, so we need to correct this.
+            j = -j;
+        }
+
         if (CanUseSayType(SayTypes[j]))
         {
             SayType = SayTypes[j];
@@ -439,6 +446,13 @@ function IncrementSayType()
     for (i = 0; i < SayTypes.Length; ++i)
     {
         j = (SayTypeIndex + i) % SayTypes.Length;
+
+        if (j < 0)
+        {
+            // Unrealscript has an interesting idea of what a modulo operator
+            // should be doing, so we need to correct it.
+            j = -j;
+        }
 
         if (CanUseSayType(SayTypes[j]))
         {
@@ -463,12 +477,19 @@ static function int GetSayTypeIndex(string SayType)
     return -1;
 }
 
-// If the current SayType is invalid, find the next available SayType.
+// If the current SayType is invalid, revert to the default say type.
 function UpdateSayType()
 {
     if (!CanUseSayType(SayType))
     {
-        DecrementSayType();
+        if (CanUseSayType(default.SayType))
+        {
+            SayType = default.SayType;
+        }
+        else
+        {
+            DecrementSayType();
+        }
     }
 }
 
@@ -665,6 +686,7 @@ defaultproperties
 {
     NeedPasswordMenuClass="DH_Engine.DHGetPassword" // lol this doesn't even work, had to replace the reference to this with a direct string
 
+    SayType="Say"
     SayTypes(0)="Say"
     SayTypes(1)="TeamSay"
     SayTypes(2)="SquadSay"

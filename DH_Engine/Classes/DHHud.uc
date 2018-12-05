@@ -5574,7 +5574,14 @@ function DHDrawTypingPrompt(Canvas C)
     Console = DHConsole(PlayerConsole);
     SayTypeMessageClass = Console.GetSayTypeMessageClass(Console.SayType);
 
-    if (SayTypeMessageClass == none || SayTypeMessageClass == class'DHSayMessage')
+    if (Console.SayType == "")
+    {
+        // We have to handle the admin menu mutator functionality "gracefully",
+        // so here ya go.
+        SayTypeColor = class'UColor'.default.White;
+        SayTypeText = "[CONSOLE]";
+    }
+    else if (SayTypeMessageClass == none || SayTypeMessageClass == class'DHSayMessage')
     {
         SayTypeColor = class'UColor'.default.White;
         SayTypeText = "[ALL]";
