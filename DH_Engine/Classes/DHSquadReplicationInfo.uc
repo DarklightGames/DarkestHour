@@ -1700,6 +1700,7 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
     local DHConstructionManager CM;
     local array<DHConstruction> Constructions;
     local DarkestHourGame G;
+    local DHGameReplicationInfo GRI;
 
     if (PC == none || !bAreRallyPointsEnabled)
     {
@@ -1741,6 +1742,20 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
                     ClosestBlockingRallyPointDistance = D;
                 }
             }
+        }
+    }
+
+    // Cannot be inside of an uncontrolled objective.
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
+    {
+        if (GRI.DHObjectives[i] != none && GRI.DHObjectives[i].WithinArea(P) && GRI.DHObjectives[i].ObjState != P.GetTeamNum())
+        {
+            // "You cannot create a squad rally point inside an uncontrolled objective."
+            PC.ReceiveLocalizedMessage(SquadMessageClass, 78);
+
+            return none;
         }
     }
 
