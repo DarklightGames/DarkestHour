@@ -171,6 +171,9 @@ replication
         ClientTeamKillPrompt, ClientOpenLogFile, ClientLogToFile, ClientCloseLogFile,
         ClientSquadAssistantVolunteerPrompt,
         ClientReceieveSquadMergeRequest, ClientSendSquadMergeRequestResult;
+
+    unreliable if (Role < ROLE_Authority)
+        VehicleVoiceMessage;
 }
 
 function ServerChangePlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2) { } // no longer used
@@ -6344,15 +6347,15 @@ function ClientLocationalVoiceMessage(PlayerReplicationInfo Sender,
 
 function VehicleVoiceMessage(PlayerReplicationInfo Sender, string Msg)
 {
-    local ROBroadCastHandler Handler;
+    local ROBroadcastHandler Handler;
 
     if (Level != none &&
         Level.Game != none &&
         Level.Game.BroadcastHandler != none &&
         Level.Game.BroadcastHandler.IsA('ROBroadcastHandler'))
     {
-       Handler = ROBroadCastHandler(Level.Game.BroadcastHandler);
-       Handler.BroadcastText(Sender, self, Msg, 'VehicleVoiceSay');
+        Handler = ROBroadcastHandler(Level.Game.BroadcastHandler);
+        Handler.BroadcastText(Sender, self, Msg, 'VehicleVoiceSay');
     }
 }
 
@@ -6370,6 +6373,8 @@ function SendVoiceMessage(PlayerReplicationInfo Sender,
     local float DistanceToOther;
     local array<Controller> VehicleOccupants;
     local int i;
+
+    Log("SendVoiceMessage" @ Sender @ Sender @ MessageType @ MessageID @ BroadcastType);
 
     if (!AllowVoiceMessage(MessageType))
     {
