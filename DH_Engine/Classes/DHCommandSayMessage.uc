@@ -27,6 +27,6 @@ defaultproperties
     MessagePrefix="[COMMAND]"
     bComplexString=true
     bBeep=true
-    DrawColor=(R=252,G=0,B=126,A=255)
+    DrawColor=(R=225,G=105,B=45,A=255)
 }
 
