@@ -539,6 +539,11 @@ exec function PlayerMenu(optional int Tab)
     }
 }
 
+exec function PlaceRallyPoint()
+{
+    ServerSquadSpawnRallyPoint();
+}
+
 exec function SquadJoinAuto()
 {
     ServerSquadJoinAuto();

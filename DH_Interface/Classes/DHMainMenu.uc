@@ -350,6 +350,7 @@ event Opened(GUIComponent Sender)
         // control bindings for the new commands added in 8.0;
         if (SavedVersionObject == none || SavedVersionObject.Major < 8)
         {
+            Log("Configuration file is older than v8.0.0, attempting to assign new controls created in version v8.0.0");
             SetKeyBindIfAvailable("I", "SquadTalk");
             SetKeyBindIfAvailable("Insert", "Speak Squad");
             SetKeyBindIfAvailable("CapsLock", "ToggleRadialMenu");
@@ -358,15 +359,23 @@ event Opened(GUIComponent Sender)
             SetKeyBindIfAvailable("Equals", "IncreaseSmokeLauncherSetting", "GrowHUD");
         }
 
-        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.0.9")) >= 0)
+        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.0.9")) < 0)
         {
+            Log("Configuration file is older than v8.0.9, attempting to assign new controls created in version v8.0.9");
             SetKeyBindIfAvailable("Slash", "SquadJoinAuto");
             SetKeyBindIfAvailable("P", "SquadMenu");
         }
 
-        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.2.6")) >= 0)
+        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.2.6")) < 0)
         {
+            Log("Configuration file is older than v8.2.6, attempting to assign new controls created in version v8.2.6");
             SetKeyBindIfAvailable("Enter", "StartTyping", "InventoryActivate");
+        }
+
+        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.3.7")) < 0)
+        {
+            Log("Configuration file is older than v8.3.7, attempting to assign new controls created in version v8.3.7");
+            SetKeyBindIfAvailable("J", "PlaceRallyPoint");
         }
 
         SavedVersion = class'DarkestHourGame'.default.Version.ToString();

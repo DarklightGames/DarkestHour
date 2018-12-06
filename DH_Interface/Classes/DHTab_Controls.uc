@@ -129,6 +129,8 @@ defaultproperties
     captions_game(5)="Squad Orders Menu"
     bindings_game(6)="SquadJoinAuto"
     captions_game(6)="Auto-Join Squad"
+    bindings_game(7)="PlaceRallyPoint"
+    captions_game(7)="Place Rally Point"
 
     bindings_weapons(9)="ROMGOperation" // renumbered from here so the new vehicle smoke launcher controls are grouped together at the end of the weapons section
     captions_weapons(9)="Change MG Barrel"
@@ -226,20 +228,20 @@ defaultproperties
     // DO NOT EDIT ANYTHING BELOW WITHOUT ASKING
 
     // Defaults Basic (this always gets applied before every profile)
-    ControlProfileKeys(0)=    (Keys=("Tab",        "GreyMinus ",      "F2",          "F3",               "Insert",     "CapsLock",                               "Home",         "End",             "Minus",                       "Equals"))
-    ControlProfileCommands(0)=(Cmds=("ScoreToggle","ToggleAdminLogin","ShowVoteMenu","CommunicationMenu","Speak Squad","ShowOrderMenu | OnRelease HideOrderMenu","Speak Command","Speak Unassigned","DecreaseSmokeLauncherSetting","IncreaseSmokeLauncherSetting"))
+    ControlProfileKeys(0)=    (Keys=("Tab",        "GreyMinus ",      "F2",          "F3",               "Insert",     "CapsLock",                               "Home",         "End",             "Minus",                       "Equals",                      "Joy4","Joy6","Joy7","Joy8","Joy9","Joy10","Joy11","Joy12"))
+    ControlProfileCommands(0)=(Cmds=("ScoreToggle","Menu",            "ShowVoteMenu","CommunicationMenu","Speak Squad","ShowOrderMenu | OnRelease HideOrderMenu","Speak Command","Speak Unassigned","DecreaseSmokeLauncherSetting","IncreaseSmokeLauncherSetting","",    "",    "",    "",    "",    "",     "",     ""))
 
     // Defaults Filled (this always gets applied EXCEPT for when RO Classic is selected)
-    ControlProfileKeys(1)=    (Keys=("T",        "Y",   "U",       "I",          "O",        "P",        "F",             "G",          "H",          "N",     "GreySlash",          "NumPadPeriod",       "NumPad3",            "NumPad9",            "GreyPlus",           "RightMouse",  "MiddleMouse","Enter",      "M","J","K","L",                "Comma","Period","LeftBracket","RightBracket","Backslash","Slash",        "Semicolon","SingleQuote","BackSpace","PageUp","PageDown","Up","Down","Left","Right","ScrollLock","JOY1","JOY2","JOY3","JOY5","JOY13","JOY14","JOY15","JOY16","F24"))
-    ControlProfileCommands(1)=(Cmds=("VoiceTalk","Talk","TeamTalk","VehicleTalk","SquadTalk","SquadMenu","ShowObjectives","ThrowWeapon","ThrowMGAmmo","Deploy","speech VEH_ORDERS 0","speech VEH_ORDERS 7","speech VEH_ORDERS 6","speech VEH_ORDERS 9","speech VEH_ALERTS 9","ROIronSights","AltFire",    "StartTyping","", "", "", "ToggleVehicleLock","",     "",      "",           "",            "",         "SquadJoinAuto","",         "",           "",         "",      "",        "",  "",    "",    "",     "",          "",    "",    "",    "",    "",     "",     "",     "",     ""))
+    ControlProfileKeys(1)=    (Keys=("T",        "Y",   "U",       "I",          "O",        "P",        "F",             "G",          "H",          "N",     "GreySlash",          "NumPadPeriod",       "NumPad3",            "NumPad9",            "GreyPlus",           "RightMouse",  "MiddleMouse","Enter",      "M","J",               "K","L",                "Comma","Period","LeftBracket","RightBracket","Backslash","Slash",        "Semicolon","SingleQuote","BackSpace","PageUp","PageDown","Up","Down","Left","Right","ScrollLock","JOY1","JOY2","JOY3","JOY5","JOY13","JOY14","JOY15","JOY16","F24"))
+    ControlProfileCommands(1)=(Cmds=("VoiceTalk","Talk","TeamTalk","VehicleTalk","SquadTalk","SquadMenu","ShowObjectives","ThrowWeapon","ThrowMGAmmo","Deploy","speech VEH_ORDERS 0","speech VEH_ORDERS 7","speech VEH_ORDERS 6","speech VEH_ORDERS 9","speech VEH_ALERTS 9","ROIronSights","AltFire",    "StartTyping","", "PlaceRallyPoint", "", "ToggleVehicleLock","",     "",      "",           "",            "",         "SquadJoinAuto","",         "",           "",         "",      "",        "",  "",    "",    "",     "",          "",    "",    "",    "",    "",     "",     "",     "",     ""))
 
     // RO Classic
     ControlProfileKeys(2)=    (Keys=())
     ControlProfileCommands(2)=(Cmds=())
 
     // Pro 104
-    ControlProfileKeys(3)=    (Keys=("V",  "Z",    "B",                     "N",             "J",               "K",         "L",           "Semicolon",   "SingleQuote",   "Ctrl",            "Alt",                                    "Backslash",     "MouseX",                               "MouseY",                               "CapsLock","F",             "Backspace",        "Y",   "U",       "I",          "O"))
-    ControlProfileCommands(3)=(Cmds=("Use","Prone","ROMGOperation | Deploy","speech ALERT 0","speech SUPPORT 2","teamsay np","speech ACK 3","speech ACK 2","speech ALERT 3","SpeechMenuToggle","ShowOrderMenu | OnRelease HideOrderMenu","speech ALERT 2","Count bXAxis | Axis aMouseX Speed=1.0","Count bYAxis | Axis aMouseY Speed=1.0","Walking", "ShowObjectives","ToggleVehicleLock","",    "",        "",           ""))
+    ControlProfileKeys(3)=    (Keys=("V",  "Z",    "B",                     "N",             "J",               "K",         "L",           "Semicolon",   "SingleQuote",   "Ctrl",            "Alt",                                    "Backslash",     "MouseX",                               "MouseY",                               "CapsLock","F",             "Backspace",        "Y",                  "U",       "I",          "O"))
+    ControlProfileCommands(3)=(Cmds=("Use","Prone","ROMGOperation | Deploy","speech ALERT 0","speech SUPPORT 2","teamsay np","speech ACK 3","speech ACK 2","speech ALERT 3","SpeechMenuToggle","ShowOrderMenu | OnRelease HideOrderMenu","speech ALERT 2","Count bXAxis | Axis aMouseX Speed=1.0","Count bYAxis | Axis aMouseY Speed=1.0","Walking", "ShowObjectives","ToggleVehicleLock","PlaceRallyPoint",    "",        "",           ""))
     //Description:                                  Change Barrel or Deploy   Yell Grenade!    Ask For Ammo!     Forgive TK!   Say Sorry!     Say Thanks!    Yell Stop!                                                                   Yell Take Cover!
 
     // Pro 105
