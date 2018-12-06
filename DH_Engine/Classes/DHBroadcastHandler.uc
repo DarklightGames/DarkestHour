@@ -247,6 +247,54 @@ function BroadcastSquad(Controller Sender, coerce string Msg, optional name Type
     }
 }
 
+function BroadcastCommand(Controller Sender, coerce string Msg, optional name Type)
+{
+    local DHPlayer PC;
+    local PlayerController Receiver;
+    local DarkestHourGame G;
+    local DHSquadReplicationInfo SRI;
+    local array<DHPlayerReplicationInfo> SquadLeaders;
+    local int i;
+
+    if (!AllowsBroadcast(Sender, Len(Msg)))
+    {
+        return;
+    }
+
+    PC  = DHPlayer(Sender);
+
+    if (PC == none || !PC.IsSquadLeader())
+    {
+        return;
+    }
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G == none)
+    {
+        return;
+    }
+
+    SRI = G.SquadReplicationInfo;
+
+    if (SRI == none)
+    {
+        return;
+    }
+
+    SquadLeaders = SRI.GetSquadLeaders(PC.GetTeamNum());
+
+    for (i = 0; i < SquadLeaders.Length; ++i)
+    {
+        Receiver = PlayerController(SquadLeaders[i].Owner);
+
+        if (Receiver != none)
+        {
+            BroadcastText(Sender.PlayerReplicationInfo, Receiver, Msg, Type);
+        }
+    }
+}
+
 defaultproperties
 {
 }

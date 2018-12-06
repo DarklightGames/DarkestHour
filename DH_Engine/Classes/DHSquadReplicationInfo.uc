@@ -2578,6 +2578,24 @@ static function string GetSquadMergeRequestResultString(int Result)
     return default.SquadMergeRequestResultStrings[Result];
 }
 
+simulated function array<DHPlayerReplicationInfo> GetSquadLeaders(int TeamIndex)
+{
+    local int i;
+    local array<DHPlayerReplicationInfo> SquadLeaders;
+
+    for (i = 0; i < TEAM_SQUADS_MAX; ++i)
+    {
+        if (!IsSquadActive(TeamIndex, i))
+        {
+            continue;
+        }
+
+        SquadLeaders[SquadLeaders.Length] = GetSquadLeader(TeamIndex, i);
+    }
+
+    return SquadLeaders;
+}
+
 defaultproperties
 {
     AlliesSquadSize=10

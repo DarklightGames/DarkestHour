@@ -340,12 +340,8 @@ function Message(PlayerReplicationInfo PRI, coerce string Msg, name MsgType)
     switch (MsgType)
     {
         case 'Say':
-            if (PRI != none && PRI.PlayerName != "")
-            {
-                Msg = PRI.PlayerName $ ":" @ Msg;
-            }
-
             DHMessageClassType = class'DHSayMessage';
+            Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
             break;
         case 'TeamSay':
             DHMessageClassType = class'DHTeamSayMessage';
@@ -364,6 +360,19 @@ function Message(PlayerReplicationInfo PRI, coerce string Msg, name MsgType)
             break;
         case 'VehicleSay':
             DHMessageClassType = class'DHVehicleSayMessage';
+            Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
+            break;
+        case 'VehicleVoiceSay':
+            DHMessageClassType = class'DHVehicleVoiceSayMessage';
+            Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
+            break;
+        case 'CommandSay':
+            DHMessageClassType = class'DHCommandSayMessage';
+            Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
+            break;
+        case 'VoiceSay':
+            // Voice say type for distinguishing voice commands from real player text.
+            DHMessageClassType = class'DHVoiceSayMessage';
             Msg = DHMessageClassType.static.AssembleString(self,, PRI, Msg);
             break;
         case 'CriticalEvent':
@@ -5565,7 +5574,14 @@ function DHDrawTypingPrompt(Canvas C)
     Console = DHConsole(PlayerConsole);
     SayTypeMessageClass = Console.GetSayTypeMessageClass(Console.SayType);
 
-    if (SayTypeMessageClass == none || SayTypeMessageClass == class'DHSayMessage')
+    if (Console.SayType == "")
+    {
+        // We have to handle the admin menu mutator functionality "gracefully",
+        // so here ya go.
+        SayTypeColor = class'UColor'.default.White;
+        SayTypeText = "[CONSOLE]";
+    }
+    else if (SayTypeMessageClass == none || SayTypeMessageClass == class'DHSayMessage')
     {
         SayTypeColor = class'UColor'.default.White;
         SayTypeText = "[ALL]";

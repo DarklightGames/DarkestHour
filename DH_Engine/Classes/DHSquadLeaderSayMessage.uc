@@ -13,7 +13,7 @@ static function string AssembleString(HUD myHUD, optional int Switch, optional P
         return "";
     }
 
-    return default.MessagePrefix @ RelatedPRI_1.PlayerName @ ":" @ MessageString;
+    return default.MessagePrefix @ RelatedPRI_1.PlayerName @ ":" @ class'GameInfo'.static.MakeColorCode(class'UColor'.default.White) $ MessageString;
 }
 
 static function color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int AlliedNationID, bool bSimpleColours)
@@ -23,7 +23,7 @@ static function color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int 
 
 defaultproperties
 {
-    DrawColor=(R=0,G=204,B=204,A=255)
+    DrawColor=(R=0,G=204,B=0,A=255)
     MessagePrefix="[SQUAD LEADER]"
     bComplexString=true
     bBeep=true
