@@ -3040,10 +3040,8 @@ state Dead
                 LastKilledTime = GRI.ElapsedTime;
             }
 
-            /* Commenting this out for now because the way it works is irritating.
             // Apply personal message from server strings
             ClientMessage(DarkestHourGame(Level.Game).GetServerMessage(PlayerReplicationInfo.Deaths - 1), 'ServerMessage');
-            */
         }
     }
 }
