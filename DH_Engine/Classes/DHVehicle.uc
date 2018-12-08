@@ -3394,8 +3394,11 @@ function MaybeDestroyVehicle()
     if (!IsDisabled())
     {
         // Check whether was spawned by a vehicle factory that has since been deactivated & wants to destroy its vehicle when empty
-        bDeactivatedFactoryWantsToDestroy = ParentFactory.IsA('ROVehicleFactory') && !ROVehicleFactory(ParentFactory).bFactoryActive
-            && ROVehicleFactory(ParentFactory).bDestroyVehicleWhenInactive;
+        if (ParentFactory != none)
+        {
+            bDeactivatedFactoryWantsToDestroy = ParentFactory.IsA('ROVehicleFactory') && !ROVehicleFactory(ParentFactory).bFactoryActive
+                && ROVehicleFactory(ParentFactory).bDestroyVehicleWhenInactive;
+        }
 
         // (If the vehicle was spawned by a vehicle factory that has since been deactivated & wants to destroy its vehicle when empty
         // AND is not meant to reset)
@@ -3420,8 +3423,8 @@ function MaybeDestroyVehicle()
     // But if spawned by vehicle factory, make sure vehicle has moved some way from spawning location (> 83m or out of sight) as no point making it re-spawn nearby
     // Skip that check if spawned by DH spawn manager system as it doesn't spawn an empty vehicle that just sits there as a factory does
     // Also skip the check if our factory has deactivated & should destroy an empty vehicle
-    if (ParentFactory.IsA('DHSpawnManager') || bDeactivatedFactoryWantsToDestroy
-        || VSizeSquared(Location - ParentFactory.Location) > 25000000.0 || !FastTrace(ParentFactory.Location, Location)) // changed to VSizeSquared for efficiency
+    if (ParentFactory != none && (ParentFactory.IsA('DHSpawnManager') || bDeactivatedFactoryWantsToDestroy
+        || VSizeSquared(Location - ParentFactory.Location) > 25000000.0 || !FastTrace(ParentFactory.Location, Location))) // changed to VSizeSquared for efficiency
     {
         ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
     }
