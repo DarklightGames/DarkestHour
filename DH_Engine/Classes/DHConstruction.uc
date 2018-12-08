@@ -1065,11 +1065,6 @@ static function DHConstruction.Context ContextFromPlayerController(DHPlayer PC)
     return Context;
 }
 
-simulated function bool IsDummy()
-{
-    return IsInState('Dummy');
-}
-
 // This is used to return a custom error that is class specific for specialized
 // placement logic. By default this simply returns no error.
 static function DHConstruction.ConstructionError GetCustomProxyError(DHConstructionProxy P)
