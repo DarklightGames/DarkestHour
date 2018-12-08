@@ -372,9 +372,9 @@ event Opened(GUIComponent Sender)
             SetKeyBindIfAvailable("Enter", "StartTyping", "InventoryActivate");
         }
 
-        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.3.7")) < 0)
+        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.4.0")) < 0)
         {
-            Log("Configuration file is older than v8.3.7, attempting to assign new controls created in version v8.3.7");
+            Log("Configuration file is older than v8.4.0, attempting to assign new controls created in version v8.4.0");
             SetKeyBindIfAvailable("J", "PlaceRallyPoint");
         }
 
