@@ -3041,7 +3041,7 @@ state Dead
             }
 
             // Apply personal message from server strings
-            ClientMessage(DarkestHourGame(Level.Game).GetServerMessage(PlayerReplicationInfo.Deaths - 1), 'ServerMessage');
+            //ClientMessage(DarkestHourGame(Level.Game).GetServerMessage(PlayerReplicationInfo.Deaths - 1), 'ServerMessage');
         }
     }
 }
