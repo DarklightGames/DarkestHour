@@ -3264,18 +3264,29 @@ event ClientProposeMenu(string Menu, optional string Msg1, optional string Msg2)
 function ClientSaveROIDHash(string ROID)
 {
     local HTTPRequest PatronRequest;
+    local int PatronLevel;
 
     ROIDHash = ROID;
 
     SaveConfig();
 
-    // Now send the patron status request.
-    PatronRequest = Spawn(class'HTTPRequest');
-    PatronRequest.Method = "GET";
-    PatronRequest.Host = "darkesthour.darklightgames.com";
-    PatronRequest.Path = "/client/patron.php?steamid64=" $ ROIDHash;
-    PatronRequest.OnResponse = PatronRequestOnResponse;
-    PatronRequest.Send();
+    // Get script based patron status (this should be removed once we fix the HTTP issue with MAC)
+    PatronLevel = class'DHAccessControl'.static.GetPatronLevel(ROIDHash);
+
+    // If we have script patron status, then set patron status on server
+    if (PatronLevel >= 0)
+    {
+        ServerSetPatronStatus(PatronLevel);
+    }
+    else // Else, check via HTTP request for patron status
+    {
+        PatronRequest = Spawn(class'HTTPRequest');
+        PatronRequest.Method = "GET";
+        PatronRequest.Host = "darkesthour.darklightgames.com";
+        PatronRequest.Path = "/client/patron.php?steamid64=" $ ROIDHash;
+        PatronRequest.OnResponse = PatronRequestOnResponse;
+        PatronRequest.Send();
+    }
 }
 
 // Modified so if we just switched off manual reloading & player is in a cannon that's waiting to reload, we pass any different pending ammo type to the server
@@ -6039,7 +6050,7 @@ function PatronRequestOnResponse(int Status, TreeMap_string_string Headers, stri
 {
     local JSONParser Parser;
     local JSONObject O;
-    local byte PatronLevel;
+    local int PatronLevel;
 
     if (Status == 200)
     {
@@ -6060,17 +6071,6 @@ function PatronRequestOnResponse(int Status, TreeMap_string_string Headers, stri
             return;
         }
     }
-
-    // Also check for a hard coded patron (this should be removed once we figure out the issue with MAC)
-    PatronLevel = class'DHAccessControl'.static.GetPatronLevel(ROIDHash);
-
-    if (PatronLevel >= 0)
-    {
-        ServerSetPatronStatus(PatronLevel);
-        return;
-    }
-
-    Warn("Patron status request failed (" $ Status $ ")");
 }
 
 // Client-to-server function that reports the player's patron status to the server.
