@@ -14,7 +14,6 @@ var bool                bTimeCanChangeAtZeroReinf;              // Whether this 
 var bool                bSquadSpecialRolesOnly;                 // Whether this gamemode restricts roles to squad members and leaders
 var bool                bKeepSpawningWithoutReinf;              // Whether this gamemode alls spawning once out of reinforcements
 var bool                bHasTemporarySpawnVehicles;             // Whether this gamemode treats all vehicles as temporary spawn vehicles after their spawn
-var bool                bMunitionsDrainOverTime;                // Whether this gamemode should drain munitions over time
 var bool                bOmitTimeAttritionForDefender;          // Whether the defender can take attrition over time from ElapsedTimeAttritionCurve
 
 var bool                bAreRallyPointsEnabled;                 // Whether this gamemode should allow rally points for squads

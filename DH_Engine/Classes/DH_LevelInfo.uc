@@ -57,10 +57,10 @@ var() EWeather              Weather;
 
 var() float                 AlliesToAxisRatio;              // Player ratio based on team, allows for unbalanced teams
 var() bool                  bHardTeamRatio;                 // Determines if AlliesToAxisRatio should be hard or soft (affected by # of players)
-var() bool                  bReinforcementsScalesMunitions; // Setting this to true, will lower munition percentage based on reinforcement percentage TODO: Implement
 
 var() float                 BaseMunitionPercentages[2];     // The starting munition percentage for each team
-var() float                 MunitionLossPerMinute[2];       // The rate at which munition drains (if game type is setup to drain munitions)
+var() float                 FinalMunitionPercentages[2];    // The minimum munition percentage each team can drop to
+
 var() EAxisNation           AxisNation;
 var() sound                 AxisWinsMusic;                  // Optional override for Axis victory music
 
@@ -199,7 +199,7 @@ defaultproperties
     BaseMunitionPercentages(0)=60.0
     BaseMunitionPercentages(1)=60.0
 
-    MunitionLossPerMinute(0)=1.0
-    MunitionLossPerMinute(1)=1.0
+    FinalMunitionPercentages(0)=40.0
+    FinalMunitionPercentages(1)=40.0
 }
 

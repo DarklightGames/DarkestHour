@@ -3864,18 +3864,10 @@ function ChangeWeapons(Controller aPlayer, int Primary, int Secondary, int Grena
 
 function UpdateMunitionPercentages()
 {
-    const MIN_MUNITION_PERCENTAGE = 10.0;
-
     local int i;
-    local float p;
+    local float p, MunitionDifference, ElapsedRatio;
 
     if (GRI == none)
-    {
-        return;
-    }
-
-    // Don't update munitions if the gamemode does not specify to TODO: perhaps this should be up to levels, but for now it should be gamemode so we have control in code
-    if (!GRI.GameType.default.bMunitionsDrainOverTime)
     {
         return;
     }
@@ -3883,11 +3875,21 @@ function UpdateMunitionPercentages()
     // Calculate and set the Munition Percentages for each team
     for (i = 0; i < 2; ++i)
     {
-        // Get the munition percentage by this formula:    StartingMunitions - (ElaspedMinutes * LossRate)
-        p = DHLevelInfo.BaseMunitionPercentages[i] - ((GRI.ElapsedTime - GRI.RoundStartTime) / 60.0 * DHLevelInfo.MunitionLossPerMinute[i]);
+        ElapsedRatio = FClamp(((GRI.ElapsedTime - GRI.RoundStartTime) / 60.0) / 60.0, 0.0, 1.0);
 
-        // Set the GRI value clamped to the munition percentage
-        GRI.TeamMunitionPercentages[i] = FClamp(p, MIN_MUNITION_PERCENTAGE, 100.0);
+        // If Base > Final (aka ammo goes down)
+        if (DHLevelInfo.BaseMunitionPercentages[i] > DHLevelInfo.FinalMunitionPercentages[i])
+        {
+            MunitionDifference = DHLevelInfo.BaseMunitionPercentages[i] - DHLevelInfo.FinalMunitionPercentages[i];
+
+            GRI.TeamMunitionPercentages[i] = DHLevelInfo.BaseMunitionPercentages[i] - (MunitionDifference * ElapsedRatio);
+        }
+        else // Ammo is going up over time
+        {
+            MunitionDifference = DHLevelInfo.FinalMunitionPercentages[i] - DHLevelInfo.BaseMunitionPercentages[i];
+
+            GRI.TeamMunitionPercentages[i] = DHLevelInfo.BaseMunitionPercentages[i] + (MunitionDifference * ElapsedRatio);
+        }
     }
 }
 
