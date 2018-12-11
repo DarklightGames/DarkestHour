@@ -175,7 +175,6 @@ simulated function bool IsPlayerHipFiring()
     return !(Weapon != none && Weapon.bUsingSights) && !(Instigator != none && Instigator.bBipodDeployed);
 }
 
-// Modified to add the PawnSpreadFactor, which is taken from the config setting AccuracyModifier in DarkestHourGame
 function CalcSpreadModifiers()
 {
     local DHPawn P;
@@ -192,8 +191,6 @@ function CalcSpreadModifiers()
     PlayerSpeed = VSize(P.Velocity);
     MovementPctModifier = PlayerSpeed / P.default.GroundSpeed;
     Spread = (1.0 + MovementPctModifier) * default.Spread;
-
-    Spread *= P.PawnSpreadFactor; // added to handle the pawn's SpreadFactor
 
     if (P.bIsCrawling)
     {
