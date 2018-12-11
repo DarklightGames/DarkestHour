@@ -36,8 +36,6 @@ var     class<DHObstacleManager>    ObstacleManagerClass;
 
 var()   config bool                 bAllowAllChat;                          // optional bool to disable public text chat on the server
 
-var()   config float                AccuracyModifier;                       // 1.0 for normal weapon accuracy, raise for worse accuracy
-
 var()   config int                  ChangeTeamInterval;                     // Server setting determines how long before a player can change teams again after doing so
                                                                             // Also currently is the length of time for which a player can change teams for free at the beginning of a round
                                                                             // Note: if bPlayersBalanceTeams is false, players will still be able to change teams
@@ -3864,18 +3862,10 @@ function ChangeWeapons(Controller aPlayer, int Primary, int Secondary, int Grena
 
 function UpdateMunitionPercentages()
 {
-    const MIN_MUNITION_PERCENTAGE = 10.0;
-
     local int i;
-    local float p;
+    local float p, MunitionDifference, ElapsedRatio;
 
     if (GRI == none)
-    {
-        return;
-    }
-
-    // Don't update munitions if the gamemode does not specify to TODO: perhaps this should be up to levels, but for now it should be gamemode so we have control in code
-    if (!GRI.GameType.default.bMunitionsDrainOverTime)
     {
         return;
     }
@@ -3883,11 +3873,21 @@ function UpdateMunitionPercentages()
     // Calculate and set the Munition Percentages for each team
     for (i = 0; i < 2; ++i)
     {
-        // Get the munition percentage by this formula:    StartingMunitions - (ElaspedMinutes * LossRate)
-        p = DHLevelInfo.BaseMunitionPercentages[i] - ((GRI.ElapsedTime - GRI.RoundStartTime) / 60.0 * DHLevelInfo.MunitionLossPerMinute[i]);
+        ElapsedRatio = FClamp(((GRI.ElapsedTime - GRI.RoundStartTime) / 60.0) / 60.0, 0.0, 1.0);
 
-        // Set the GRI value clamped to the munition percentage
-        GRI.TeamMunitionPercentages[i] = FClamp(p, MIN_MUNITION_PERCENTAGE, 100.0);
+        // If Base > Final (aka ammo goes down)
+        if (DHLevelInfo.BaseMunitionPercentages[i] > DHLevelInfo.FinalMunitionPercentages[i])
+        {
+            MunitionDifference = DHLevelInfo.BaseMunitionPercentages[i] - DHLevelInfo.FinalMunitionPercentages[i];
+
+            GRI.TeamMunitionPercentages[i] = DHLevelInfo.BaseMunitionPercentages[i] - (MunitionDifference * ElapsedRatio);
+        }
+        else // Ammo is going up over time
+        {
+            MunitionDifference = DHLevelInfo.FinalMunitionPercentages[i] - DHLevelInfo.BaseMunitionPercentages[i];
+
+            GRI.TeamMunitionPercentages[i] = DHLevelInfo.BaseMunitionPercentages[i] + (MunitionDifference * ElapsedRatio);
+        }
     }
 }
 
@@ -5230,8 +5230,6 @@ defaultproperties
 
     WinLimit=1 // 1 round per map, server admins are able to customize win/rounds to the level in webadmin
     RoundLimit=1
-
-    AccuracyModifier=1.0
 
     MaxTeamDifference=2
     bAutoBalanceTeamsOnDeath=true // if teams become imbalanced it'll force the next player to die to the weaker team

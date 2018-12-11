@@ -23,9 +23,6 @@ var     bool    bNeedToAttachDriver;      // flags that net client was unable to
 var     bool    bClientSkipDriveAnim;     // set by vehicle replicated to net client that's already played correct initial driver anim, so DriveAnim doesn't override that
 var     bool    bClientPlayedDriveAnim;   // flags that net client already played DriveAnim on entering vehicle, so replicated vehicle knows not to set bClientSkipDriveAnim
 
-// Accuracy
-var     float   PawnSpreadFactor;         // Applies to weapon spread, 1.0 for no change, gets set in PostBeginPlay() to the DHG AccuracyModifier value
-
 // Player model
 var     array<material> FaceSkins;        // list of body & face skins to be randomly selected for pawn
 var     array<material> BodySkins;
@@ -157,12 +154,6 @@ simulated function PostBeginPlay()
     if (Level.bStartup && !bNoDefaultInventory)
     {
         AddDefaultInventory();
-    }
-
-    // Authority set this pawns SpreadFactor based on the game settings
-    if (Role == ROLE_Authority && DarkestHourGame(Level.Game) != none)
-    {
-        PawnSpreadFactor = DarkestHourGame(Level.Game).AccuracyModifier;
     }
 
     AssignInitialPose();
