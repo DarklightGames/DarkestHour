@@ -343,6 +343,56 @@ simulated function PostNetBeginPlay()
     }
 }
 
+// This function returns all objectives (via array of indices) which meet reserve spawn criteria
+function GetReserveObjIndicesForTeam(int Team, out array<int> Indices)
+{
+    local int i;
+
+    for (i = 0; i < arraycount(DHObjectives); ++i)
+    {
+        // If obj is not none &&
+        // if inactive (only inactive objectives can be reserve spawns) &&
+        // if objective secured by our team
+        if (DHObjectives[i] != none && !DHObjectives[i].IsActive() && int(DHObjectives[i].ObjState) == Team)
+        {
+            // Is objective linked to an active objective
+            if (IsObjIndexLinkedToActiveObj(i))
+            {
+                // Objective meets criteria to be a Reserve Spawn, so add it to Indices
+                Indices[Indices.Length] = i;
+            }
+        }
+    }
+}
+
+function bool IsObjIndexLinkedToActiveObj(int ObjIndex)
+{
+    local int i;
+
+    if (DHObjectives[ObjIndex] != none)
+    {
+        // Loop through Axis required objective to find if linked to active obj
+        for (i = 0; i < DHObjectives[ObjIndex].AxisRequiredObjForCapture.Length; ++i)
+        {
+            if (DHObjectives[DHObjectives[ObjIndex].AxisRequiredObjForCapture[i]].IsActive())
+            {
+                return true;
+            }
+        }
+
+        // Loop through Allies required objective to find if linked to active obj
+        for (i = 0; i < DHObjectives[ObjIndex].AlliesRequiredObjForCapture.Length; ++i)
+        {
+            if (DHObjectives[DHObjectives[ObjIndex].AlliesRequiredObjForCapture[i]].IsActive())
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 function int AddConstructionClass(class<DHConstruction> ConstructionClass)
 {
     local int i;
