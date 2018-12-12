@@ -3,11 +3,9 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_StuartCannonShellDamageAP extends DHShellAPImpactDamageType
-    abstract;
+class DH_Flak38CannonShellDamageHE extends DHShellHEGunImpactDamageType;
 
 defaultproperties
 {
-    VehicleDamageModifier=1.0
-    TreadDamageModifier=0.75
+    HUDIcon=Texture'DH_Artillery_tex.ATGun_Hud.flakv38_deathicon' // TODO: add one specifically for single barrelled Flak 38
 }

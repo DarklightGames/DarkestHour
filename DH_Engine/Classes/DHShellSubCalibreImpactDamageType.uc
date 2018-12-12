@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHShellSubCalibreImpactDamageType extends DHShellImpactDamageType
+class DHShellSubCalibreImpactDamageType extends DHShellAPImpactDamageType
     abstract;
 
 defaultproperties

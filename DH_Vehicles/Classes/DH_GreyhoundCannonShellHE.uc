@@ -13,7 +13,7 @@ defaultproperties
     DHPenetrationTable(3)=1.0
     DHPenetrationTable(4)=1.0
     ShellDiameter=3.7
-    ShellImpactDamage=class'DH_Vehicles.DH_StuartCannonShellDamageAP'
+    ShellImpactDamage=class'DH_Vehicles.DH_StuartCannonShellDamageHE'
     ImpactDamage=185
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'

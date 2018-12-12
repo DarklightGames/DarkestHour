@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_StuartCannonShellDamageAP extends DHShellAPImpactDamageType
-    abstract;
+class DH_Cromwell6PdrCannonShellDamageHE extends DHShellHEImpactDamageType;
 
 defaultproperties
 {
     VehicleDamageModifier=1.0
-    TreadDamageModifier=0.75
+    TreadDamageModifier=0.85
 }

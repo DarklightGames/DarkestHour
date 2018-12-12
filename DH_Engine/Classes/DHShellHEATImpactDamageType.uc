@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHShellHEATImpactDamageType extends DHShellImpactDamageType
+class DHShellHEATImpactDamageType extends DHShellAPImpactDamageType
     abstract;
 
 defaultproperties
