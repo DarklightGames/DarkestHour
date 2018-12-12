@@ -63,6 +63,9 @@ var(ROObjTerritory) bool            bUseHardBaseRate;           // Tells the cap
 var(ROObjective) bool               bIsInitiallyActive;         // Purpose is mainly to consolidate the variables of actors into one area (less confusing to new levelers)
 var(ROObjective) name               NoArtyVolumeProtectionTag;  // optional Tag for associated no arty volume that protects this SP only when the SP is active
 
+// Reserve Spawn variables
+var(DHReserveSpawn) name            ReserveSpawnHintTags[2];    // Tags of hints for reserve spawns (0 = Axis, 1 = Allies)
+
 // Capture/Actions variables
 var(DHObjectiveCapture) bool        bLockDownOnCapture;
 var(DHObjectiveCapture) bool        bUsePostCaptureOperations;  // Enables below variables to be used for post capture clear check/calls

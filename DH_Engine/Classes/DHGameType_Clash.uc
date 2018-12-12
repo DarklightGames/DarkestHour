@@ -10,6 +10,7 @@ defaultproperties
 {
     GameTypeName="Clash"
 
+    bAreReserveSpawnsEnabled=true
     bAreRallyPointsEnabled=true
     bAreConstructionsEnabled=true
 

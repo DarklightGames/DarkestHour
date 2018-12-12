@@ -16,6 +16,7 @@ var bool                bKeepSpawningWithoutReinf;              // Whether this 
 var bool                bHasTemporarySpawnVehicles;             // Whether this gamemode treats all vehicles as temporary spawn vehicles after their spawn
 var bool                bOmitTimeAttritionForDefender;          // Whether the defender can take attrition over time from ElapsedTimeAttritionCurve
 
+var bool                bAreReserveSpawnsEnabled;               // Whether this gamemode uses reserve spawns
 var bool                bAreRallyPointsEnabled;                 // Whether this gamemode should allow rally points for squads
 var bool                bAreConstructionsEnabled;               // Whether this gamemode should allow constructions
 
