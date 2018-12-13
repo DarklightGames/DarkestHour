@@ -5,7 +5,7 @@
 
 class DHConstruction_ATGun_Medium extends DHConstruction_Vehicle;
 
-function static class<DHVehicle> GetVehicleClass(DHConstruction.Context Context)
+function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
 {
     if (Context.LevelInfo == none)
     {

@@ -7,7 +7,7 @@ class DHConstruction_Resupply_Vehicles extends DHConstruction_Resupply;
 
 #exec OBJ LOAD FILE=../StaticMeshes/DH_Construction_stc.usx
 
-static function StaticMesh GetConstructedStaticMesh(DHConstruction.Context Context)
+static function StaticMesh GetConstructedStaticMesh(DHActorProxy.Context Context)
 {
     switch (Context.TeamIndex)
     {

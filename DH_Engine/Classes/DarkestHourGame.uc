@@ -3863,7 +3863,7 @@ function ChangeWeapons(Controller aPlayer, int Primary, int Secondary, int Grena
 function UpdateMunitionPercentages()
 {
     local int i;
-    local float p, MunitionDifference, ElapsedRatio;
+    local float MunitionDifference, ElapsedRatio;
 
     if (GRI == none)
     {

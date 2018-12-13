@@ -5,7 +5,7 @@
 
 class DHConstruction_AAGun_Medium extends DHConstruction_Vehicle;
 
-function static class<DHVehicle> GetVehicleClass(DHConstruction.Context Context)
+function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
 {
     switch (Context.TeamIndex)
     {
