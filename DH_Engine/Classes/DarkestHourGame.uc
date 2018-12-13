@@ -51,8 +51,8 @@ var     byte                        bDidSendEnemyTeamWeakMessage[2];        // F
 
 const SERVERTICKRATE_UPDATETIME =       15.0;   // The duration we use to calculate the average tick the server is running
 const MAXINFLATED_INTERVALTIME =        100.0;  // The max value to add to reinforcement time for inflation for poor performance
-const ADDED_RESPAWN_TIME_PUNISHMENT =   30.0;   // How much to increase ConsolidatedRespawnTimeAdded by when server receives a strike
-const PERFORMANCE_INFRACTION_MARGIN =   5;      // How many infractions allowed before the server receives a strike
+const ADDED_RESPAWN_TIME_PUNISHMENT =   20.0;   // How much to increase ConsolidatedRespawnTimeAdded by when server receives a strike
+const PERFORMANCE_INFRACTION_MARGIN =   8;      // How many infractions allowed before the server receives a strike
 const PERFORMANCE_STRIKE_MARGIN =       2;      // How many strikes allowed before a MidGameVote is forced
 const PERFORMANCE_MERIT_MARGIN =        20;     // How many merits before it begins removing infractions
 const SPAWN_KILL_RESPAWN_TIME =         2;
@@ -620,10 +620,6 @@ function HandlePerformanceInfraction()
 
             PoorPerformanceInfractionCount = 0; // Reset infractions
         }
-    }
-    else
-    {
-        Level.Game.Broadcast(self, "Server is performing poorly, respawn times increased temporarily to improve performance!", 'Say');
     }
 
     // Handle Reinforcement Intervals
