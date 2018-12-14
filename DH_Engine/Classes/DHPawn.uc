@@ -7080,7 +7080,7 @@ exec function RotateAT()
         }
     }
 
-    if (Gun == none)
+    if (Gun == none || Gun.GetRotationError(self) != ERROR_None)
     {
         return;
     }

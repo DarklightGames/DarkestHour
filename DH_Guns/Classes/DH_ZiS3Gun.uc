@@ -22,6 +22,7 @@ defaultproperties
     VehicleMass=11.0
     SupplyCost=1050
     ConstructionPlacementOffset=(Z=16)
+    bCanBeRotated=true
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

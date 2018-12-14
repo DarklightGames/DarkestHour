@@ -27,6 +27,7 @@ defaultproperties
     VehicleHudOccupantsX(1)=0.4
     ExitPositions(1)=(X=-35.00,Y=-65.00,Z=60.00)
     VehicleMass=11.0 // TODO: replace
+    bCanBeRotated=true
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

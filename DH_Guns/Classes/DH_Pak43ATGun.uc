@@ -23,6 +23,7 @@ defaultproperties
     ExitPositions(1)=(X=-105.00,Y=-37.00,Z=28.00)
     VehicleMass=11.0
     SupplyCost=2000
+    bCanBeRotated=true
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

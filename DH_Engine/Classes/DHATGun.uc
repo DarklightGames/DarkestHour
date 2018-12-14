@@ -9,6 +9,26 @@ class DHATGun extends DHVehicle
 #exec OBJ LOAD FILE=..\Textures\DH_Artillery_tex.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_Artillery_stc.usx
 
+enum ERotateError
+{
+    ERROR_None,
+    ERROR_CannotBeRotated,
+    ERROR_Occupied,
+    ERROR_Cooldown,
+    ERROR_NeedMorePlayers,
+};
+
+var bool    bCanBeRotated;
+var int     PlayersNeededToRotate;
+var bool    bIsBeingRotated;
+var Pawn    RotatingPawn;
+
+replication
+{
+    reliable if (Role == ROLE_Authority)
+        bIsBeingRotated;
+}
+
 // Disabled as nothing in Tick is relevant to an AT gun (to be on the safe side, MinBrakeFriction is set very high in default properties, so gun won't slide down a hill)
 simulated function Tick(float DeltaTime)
 {
@@ -29,6 +49,13 @@ function bool TryToDrive(Pawn P)
         P.Controller == none || !P.Controller.bIsPlayer || P.DrivenVehicle != none || P.IsA('Vehicle') || bNonHumanControl || !Level.Game.CanEnterVehicle(self, P) ||
         WeaponPawns.Length == 0 || WeaponPawns[0] == none)
     {
+        return false;
+    }
+
+    // Deny entry if the gun is being rotated.
+    if (bIsBeingRotated)
+    {
+        DisplayVehicleMessage(14, P);
         return false;
     }
 
@@ -146,6 +173,21 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     // Call the Super from Vehicle (skip over others)
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
+}
+
+simulated function ERotateError GetRotationError(DHPawn Pawn)
+{
+    if (!bCanBeRotated)
+    {
+        return ERROR_CannotBeRotated;
+    }
+
+    if (NumPassengers() > 0)
+    {
+        return ERROR_Occupied;
+    }
+
+    return ERROR_None;
 }
 
 // Functions emptied out as AT gun bases cannot be occupied & have no engine or treads:
