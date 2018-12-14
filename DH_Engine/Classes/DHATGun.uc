@@ -12,21 +12,27 @@ class DHATGun extends DHVehicle
 enum ERotateError
 {
     ERROR_None,
+    ERROR_EnemyGun,
     ERROR_CannotBeRotated,
     ERROR_Occupied,
     ERROR_Cooldown,
     ERROR_NeedMorePlayers,
+    ERROR_Fatal,
 };
 
 var bool    bCanBeRotated;
 var int     PlayersNeededToRotate;
 var bool    bIsBeingRotated;
 var Pawn    RotatingPawn;
+var float   RotationsPerSecond;
 
 replication
 {
     reliable if (Role == ROLE_Authority)
         bIsBeingRotated;
+
+    reliable if (Role < Role_Authority)
+        ServerStartRotating;
 }
 
 // Disabled as nothing in Tick is relevant to an AT gun (to be on the safe side, MinBrakeFriction is set very high in default properties, so gun won't slide down a hill)
@@ -175,8 +181,25 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 }
 
+// Rotation
+
+simulated function ServerStartRotating(Pawn Instigator)
+{
+    // TODO: do player checks!
+}
+
 simulated function ERotateError GetRotationError(DHPawn Pawn)
 {
+    if (Pawn == none)
+    {
+        return ERROR_Fatal;
+    }
+
+    if (Pawn.GetTeamNum() != VehicleTeam)
+    {
+        return ERROR_EnemyGun;
+    }
+
     if (!bCanBeRotated)
     {
         return ERROR_CannotBeRotated;
@@ -280,6 +303,10 @@ defaultproperties
     ExitPositions(13)=(X=-100.0,Y=0.0,Z=75.0)
     ExitPositions(14)=(X=-100.0,Y=75.0,Z=75.0)
     ExitPositions(15)=(X=-100.0,Y=-75.0,Z=75.0)
+
+    // Rotation
+    PlayersNeededToRotate=1
+    RotationsPerSecond=0.125
 
     // Karma properties
     Begin Object Class=KarmaParamsRBFull Name=KParams0

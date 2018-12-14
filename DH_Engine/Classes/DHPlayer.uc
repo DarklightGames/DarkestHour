@@ -5687,6 +5687,12 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
                 return true;
             }
         }
+        else if (HitActor.IsA('DHATGun'))
+        {
+            MenuClassName = "DH_Engine.DHCommandMenu_ATGun";
+            MenuObject = HitActor;
+            return true;
+        }
         else if (HitActor.IsA('DHPawn'))
         {
             OtherPawn = DHPawn(HitActor);
