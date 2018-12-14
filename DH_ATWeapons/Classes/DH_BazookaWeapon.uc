@@ -5,4 +5,4 @@
 // This class has been deprecated and will be DELETED in v8.
 //==============================================================================
 
-class DH_BazookaWeapon extends DH_Weapons.DH_BazookaWeapon;
+class DH_BazookaWeapon extends DHDeprecated;

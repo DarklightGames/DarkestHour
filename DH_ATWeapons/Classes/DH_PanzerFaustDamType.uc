@@ -5,4 +5,4 @@
 // This class has been deprecated and will be deleted in v8.
 //==============================================================================
 
-class DH_PanzerFaustDamType extends DH_Weapons.DH_PanzerFaustDamType;
+class DH_PanzerFaustDamType extends DHDeprecated;
