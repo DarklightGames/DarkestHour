@@ -104,13 +104,6 @@ function Tick(float DeltaTime)
 {
     super.Tick(DeltaTime);
 
-    if (PawnOwner == none || PawnOwner.Health == 0 || PawnOwner.bDeleteMe || PawnOwner.Controller == none)
-    {
-        Destroy();
-    }
-
-    LocalRotation += LocalRotationRate * DeltaTime;
-
     UpdateError();
 }
 
@@ -141,6 +134,7 @@ function UpdateError()
         SetProxyError(NewProxyError);
     }
 
+    // This should happen every tick regardless.
     UpdateProjector();
 }
 

@@ -5,12 +5,38 @@
 
 class DH_ATGunRotateWeapon extends DH_ProxyWeapon;
 
-function DHActorProxy CreateProxyCursor()
+var DHATGun Gun;
+
+simulated function PostBeginPlay()
+{
+    local DHPawn P;
+
+    super.PostBeginPlay();
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        P = DHPawn(Instigator);
+
+        if (P == none)
+        {
+            Destroy();
+        }
+
+        Gun = P.GunToRotate;
+
+        if (Gun == none)
+        {
+            Destroy();
+        }
+
+        // Hide the gun locally on the client so the proxy takes center stage.
+        Gun.bHidden = true;
+    }
+}
+
+simulated function DHActorProxy CreateProxyCursor()
 {
     local DHATGunProxy Proxy;
-    local DHATGun Gun;
-
-    Gun = DHPawn(Instigator).GunToRotate;
 
     Proxy = Spawn(class'DHATGunProxy', Instigator,, Gun.Location, Gun.Rotation);
     Proxy.SetGun(Gun);
@@ -20,7 +46,30 @@ function DHActorProxy CreateProxyCursor()
 
 simulated function float GetLocalRotationRate()
 {
-    return 512;
+    return 8192;
+}
+
+simulated function OnConfirmPlacement()
+{
+    if (Gun == none || ProxyCursor == none)
+    {
+        return;
+    }
+
+    Gun.SetPhysics(PHYS_None);
+    Gun.SetLocation(ProxyCursor.Location);
+    Gun.SetRotation(Proxycursor.Rotation);
+    Gun.SetPhysics(PHYS_Karma);
+}
+
+simulated function Destroyed()
+{
+    super.Destroyed();
+
+    if (Gun != none)
+    {
+        Gun.bHidden = false;
+    }
 }
 
 defaultproperties

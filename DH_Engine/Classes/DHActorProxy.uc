@@ -183,6 +183,18 @@ function UpdateColor(color Color)
     }
 }
 
+function Tick(float DeltaTime)
+{
+    super.Tick(DeltaTime);
+
+    if (PawnOwner == none || PawnOwner.Health == 0 || PawnOwner.bDeleteMe || PawnOwner.Controller == none)
+    {
+        Destroy();
+    }
+
+    LocalRotation += LocalRotationRate * DeltaTime;
+}
+
 simulated function UpdateProjector()
 {
     local vector RL;

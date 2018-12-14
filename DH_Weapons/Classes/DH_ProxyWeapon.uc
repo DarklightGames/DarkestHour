@@ -10,11 +10,15 @@ var DHActorProxy                ProxyCursor;
 simulated function OnTick(float DeltaTime);
 simulated function DHActorProxy CreateProxyCursor();
 simulated function OnConfirmPlacement();
-simulated function bool ShouldSwitchToLastWeaponOnPlacement();
 simulated function bool ShouldSnapRotation();
 simulated function float GetRotationSnapAngle();
 simulated function float GetLocalRotationRate();
 simulated function ResetCursor();
+
+simulated function bool ShouldSwitchToLastWeaponOnPlacement()
+{
+    return true;
+}
 
 simulated event Tick(float DeltaTime)
 {
@@ -109,7 +113,10 @@ simulated state LoweringWeapon
 
 simulated function bool PutDown()
 {
-    ProxyCursor.Destroy();
+    if (ProxyCursor != none)
+    {
+        ProxyCursor.Destroy();
+    }
 
     return super.PutDown();
 }

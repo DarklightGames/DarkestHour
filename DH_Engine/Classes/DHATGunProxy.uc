@@ -34,38 +34,53 @@ function UpdateAppearance()
     VehicleClass = Gun.Class;
 
     SetDrawType(DT_Mesh);
-    LinkMesh(VehicleClass.default.Mesh);
+    LinkMesh(Gun.Mesh);
 
-    for (j = 0; j < VehicleClass.default.Skins.Length; ++j)
+    for (j = 0; j < Gun.Skins.Length; ++j)
     {
-        if (VehicleClass.default.Skins[j] != none)
+        if (Gun.Skins[j] != none)
         {
-            Skins[j] = CreateProxyMaterial(VehicleClass.default.Skins[j]);
+            Skins[j] = CreateProxyMaterial(Gun.Skins[j]);
         }
     }
 
-    for (i = 0; i < VehicleClass.default.PassengerWeapons.Length; ++i)
+    for (i = 0; i < Gun.WeaponPawns.Length; ++i)
     {
         APA = Spawn(class'DHActorProxyAttachment', self);
 
         if (APA != none)
         {
-            AttachToBone(APA, VehicleClass.default.PassengerWeapons[i].WeaponBone);
+            AttachToBone(APA, Gun.PassengerWeapons[i].WeaponBone);
 
             APA.SetDrawType(DT_Mesh);
-            APA.LinkMesh(VehicleClass.default.PassengerWeapons[i].WeaponPawnClass.default.GunClass.default.Mesh);
+            APA.LinkMesh(Gun.WeaponPawns[i].Gun.Mesh);
 
-            for (j = 0; j < VehicleClass.default.PassengerWeapons[i].WeaponPawnClass.default.GunClass.default.Skins.Length; ++j)
+            for (j = 0; j < Gun.WeaponPawns[i].Gun.Skins.Length; ++j)
             {
-                if (VehicleClass.default.PassengerWeapons[i].WeaponPawnClass.default.GunClass.default.Skins[j] != none)
+                if (Gun.WeaponPawns[i].Gun.Skins[j] != none)
                 {
-                    APA.Skins[j] = CreateProxyMaterial(VehicleClass.default.PassengerWeapons[i].WeaponPawnClass.default.GunClass.default.Skins[j]);
+                    APA.Skins[j] = CreateProxyMaterial(Gun.WeaponPawns[i].Gun.Skins[j]);
                 }
             }
 
             Attachments[Attachments.Length] = APA;
         }
     }
+}
+
+function Tick(float DeltaTime)
+{
+    super.Tick(DeltaTime);
+
+    if (Gun == none)
+    {
+        Destroy();
+    }
+
+    // TODO: maybe
+
+    SetLocation(Gun.Location);
+    SetRotation(QuatToRotator(QuatProduct(QuatFromRotator(LocalRotation), QuatFromRotator(Gun.Rotation))));
 }
 
 // TODO; we need to run an "update proxy" type thing here, but make the rest of

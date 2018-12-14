@@ -7071,11 +7071,13 @@ simulated function class<DHVoicePack> GetVoicePack()
 exec function RotateAT()
 {
     local DHATGun Gun;
-    local DHATGunProxy Proxy;
 
-    foreach VisibleCollidingActors(class'DHATGun', Gun, 256.0)
+    foreach RadiusActors(class'DHATGun', Gun, 256.0)
     {
-        break;
+        if (Gun != none)
+        {
+            break;
+        }
     }
 
     if (Gun == none)
