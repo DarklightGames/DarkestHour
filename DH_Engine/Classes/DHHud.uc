@@ -10,6 +10,7 @@ class DHHud extends ROHud
 #exec OBJ LOAD FILE=..\Textures\DH_Weapon_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt2_tex.utx
+#exec OBJ LOAD FILE=..\Textures\DH_Artillery_tex.utx
 
 // Death messages
 struct DHObituary

@@ -27,14 +27,12 @@ var Pawn    RotatingPawn;
 var float   RotationsPerSecond;
 var rotator TargetRotation;
 var Actor   OldBase;
+var DHRotatingActor RotatingActor;
 
 replication
 {
     reliable if (Role == ROLE_Authority)
         bIsBeingRotated;
-
-    reliable if (Role < Role_Authority)
-        ServerStartRotating, ServerRotate, ServerStopRotating;
 }
 
 // Disabled as nothing in Tick is relevant to an AT gun (to be on the safe side, MinBrakeFriction is set very high in default properties, so gun won't slide down a hill)
@@ -195,9 +193,10 @@ simulated function ServerStartRotating(DHPawn Instigator)
     bIsBeingRotated = true;
 }
 
-simulated function ServerRotate(rotator TargetRotation)
+function RotateTo(rotator TargetRotation)
 {
     self.TargetRotation = TargetRotation;
+
     GotoState('Rotating');
 }
 
@@ -235,36 +234,38 @@ state Rotating
 {
     function BeginState()
     {
-        local Quat D;
+        Enable('Tick');
 
-        //bRotateToDesired = true;
-        DesiredRotation = TargetRotation;
+        RotatingActor = Spawn(class'DHRotatingActor',,, Location, Rotation);
+        RotatingActor.DesiredRotation = TargetRotation;
 
         SetPhysics(PHYS_None);
-        SetPhysics(PHYS_Rotating);
+        SetBase(RotatingActor);
 
-        D = QuatFindBetween(vector(TargetRotation), vector(Rotation));
-
-        RotationRate.Yaw = 1000;
-        RotationRate.Pitch = 1000;
-        RotationRate.Roll = 1000;
-
-        SetTimer(2.0, false);
+        SetTimer(0.5, true);
     }
 
-    function Timer()
+    event Timer()
     {
-        // We are done rotating, let's get outta here!
-        GotoState(InitialState);
+        Log("TIMER" @ RotatingActor);
+
+        if (class'URotator'.static.Equal(RotatingActor.Rotation, RotatingActor.DesiredRotation))
+        {
+            // We are done rotating, let's get outta here!
+            GotoState('');
+        }
     }
 
     function EndState()
     {
+        Log("END STATE");
+
+        SetBase(none);
+        RotatingActor.Destroy();
         SetPhysics(PHYS_None);
         SetRotation(TargetRotation);
         SetPhysics(PHYS_Karma);
 
-        bRotateToDesired = false;
         bIsBeingRotated = false;
     }
 }

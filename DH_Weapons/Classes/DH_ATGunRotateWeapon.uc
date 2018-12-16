@@ -7,36 +7,38 @@ class DH_ATGunRotateWeapon extends DH_ProxyWeapon;
 
 var DHATGun Gun;
 
-simulated function PostBeginPlay()
+replication
 {
-    local DHPawn P;
-
-    super.PostBeginPlay();
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        P = DHPawn(Instigator);
-
-        if (P == none)
-        {
-            Destroy();
-        }
-
-        Gun = P.GunToRotate;
-
-        if (Gun == none)
-        {
-            Destroy();
-        }
-
-        // Hide the gun locally on the client so the proxy takes center stage.
-        Gun.bHidden = true;
-    }
+    reliable if (Role < ROLE_Authority)
+        ServerRotate;
 }
 
 simulated function DHActorProxy CreateProxyCursor()
 {
     local DHATGunProxy Proxy;
+    local DHPawn P;
+
+    P = DHPawn(Instigator);
+
+    if (P == none)
+    {
+        Destroy();
+    }
+
+    Gun = P.GunToRotate;
+
+    if (Gun == none)
+    {
+        Destroy();
+    }
+
+    // Hide the gun locally on the client so the proxy takes center stage.
+    Gun.bHidden = true;
+
+    if (Gun == none)
+    {
+        Error("Attempted to create proxy cursor before Gun was assigned.");
+    }
 
     Proxy = Spawn(class'DHATGunProxy', Instigator,, Gun.Location, Gun.Rotation);
     Proxy.SetGun(Gun);
@@ -46,7 +48,7 @@ simulated function DHActorProxy CreateProxyCursor()
 
 simulated function float GetLocalRotationRate()
 {
-    return 8192;
+    return 2048;
 }
 
 simulated function OnConfirmPlacement()
@@ -56,7 +58,15 @@ simulated function OnConfirmPlacement()
         return;
     }
 
-    Gun.ServerRotate(ProxyCursor.Rotation);
+    ServerRotate(Gun, ProxyCursor.Rotation);
+}
+
+function ServerRotate(DHATGun Gun, rotator TargetRotation)
+{
+    if (Gun != none)
+    {
+        Gun.RotateTo(TargetRotation);
+    }
 }
 
 simulated function Destroyed()

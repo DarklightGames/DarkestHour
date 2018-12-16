@@ -41,6 +41,9 @@ function OnSelect(int Index, vector Location)
     Interaction.Hide();
 }
 
+function bool IsOptionDisabled(int OptionIndex)
+{
+}
 
 defaultproperties
 {
