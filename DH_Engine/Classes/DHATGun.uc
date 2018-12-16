@@ -25,6 +25,8 @@ var int     PlayersNeededToRotate;
 var bool    bIsBeingRotated;
 var Pawn    RotatingPawn;
 var float   RotationsPerSecond;
+var rotator TargetRotation;
+var Actor   OldBase;
 
 replication
 {
@@ -32,7 +34,7 @@ replication
         bIsBeingRotated;
 
     reliable if (Role < Role_Authority)
-        ServerStartRotating;
+        ServerStartRotating, ServerRotate, ServerStopRotating;
 }
 
 // Disabled as nothing in Tick is relevant to an AT gun (to be on the safe side, MinBrakeFriction is set very high in default properties, so gun won't slide down a hill)
@@ -182,10 +184,26 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 }
 
 // Rotation
-
-simulated function ServerStartRotating(Pawn Instigator)
+simulated function ServerStartRotating(DHPawn Instigator)
 {
-    // TODO: do player checks!
+    if (GetRotationError(Instigator) != ERROR_None)
+    {
+        // TODO: optionally send a message, since there was a timing issue apparently
+        return;
+    }
+
+    bIsBeingRotated = true;
+}
+
+simulated function ServerRotate(rotator TargetRotation)
+{
+    self.TargetRotation = TargetRotation;
+    GotoState('Rotating');
+}
+
+simulated function ServerStopRotating()
+{
+    bIsBeingRotated = false;
 }
 
 simulated function ERotateError GetRotationError(DHPawn Pawn)
@@ -211,6 +229,44 @@ simulated function ERotateError GetRotationError(DHPawn Pawn)
     }
 
     return ERROR_None;
+}
+
+state Rotating
+{
+    function BeginState()
+    {
+        local Quat D;
+
+        //bRotateToDesired = true;
+        DesiredRotation = TargetRotation;
+
+        SetPhysics(PHYS_None);
+        SetPhysics(PHYS_Rotating);
+
+        D = QuatFindBetween(vector(TargetRotation), vector(Rotation));
+
+        RotationRate.Yaw = 1000;
+        RotationRate.Pitch = 1000;
+        RotationRate.Roll = 1000;
+
+        SetTimer(2.0, false);
+    }
+
+    function Timer()
+    {
+        // We are done rotating, let's get outta here!
+        GotoState(InitialState);
+    }
+
+    function EndState()
+    {
+        SetPhysics(PHYS_None);
+        SetRotation(TargetRotation);
+        SetPhysics(PHYS_Karma);
+
+        bRotateToDesired = false;
+        bIsBeingRotated = false;
+    }
 }
 
 // Functions emptied out as AT gun bases cannot be occupied & have no engine or treads:
@@ -307,6 +363,7 @@ defaultproperties
     // Rotation
     PlayersNeededToRotate=1
     RotationsPerSecond=0.125
+    bFixedRotationDir=false
 
     // Karma properties
     Begin Object Class=KarmaParamsRBFull Name=KParams0

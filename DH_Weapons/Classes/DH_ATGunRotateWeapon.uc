@@ -56,10 +56,7 @@ simulated function OnConfirmPlacement()
         return;
     }
 
-    Gun.SetPhysics(PHYS_None);
-    Gun.SetLocation(ProxyCursor.Location);
-    Gun.SetRotation(Proxycursor.Rotation);
-    Gun.SetPhysics(PHYS_Karma);
+    Gun.ServerRotate(ProxyCursor.Rotation);
 }
 
 simulated function Destroyed()

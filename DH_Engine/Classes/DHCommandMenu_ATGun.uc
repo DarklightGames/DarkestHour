@@ -9,7 +9,6 @@ function OnSelect(int Index, vector Location)
 {
     local DHPlayer PC;
     local DHPawn P;
-    local DHPlayerReplicationInfo PRI, OtherPRI;
     local DHATGun Gun;
 
     PC = GetPlayerController();

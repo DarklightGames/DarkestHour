@@ -5689,6 +5689,8 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
         }
         else if (HitActor.IsA('DHATGun'))
         {
+            // TODO: we need some sort of way to check if we're being auto-traced?
+            // perhaps keep tabs on who the tracer was using timeseconds + pawn in the AT gun?
             MenuClassName = "DH_Engine.DHCommandMenu_ATGun";
             MenuObject = HitActor;
             return true;
