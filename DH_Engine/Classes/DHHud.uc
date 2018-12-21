@@ -3871,6 +3871,7 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
     }
 }
 
+// TODO:
 function DrawDangerZoneOverlay(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
 {
     local DHPlayer PC;
@@ -3879,7 +3880,10 @@ function DrawDangerZoneOverlay(Canvas C, AbsoluteCoordsInfo SubCoords, float MyM
 
     PC = DHPlayer(PlayerOwner);
 
-    Res = 50;
+    if (DHGRI == none || PC == none)
+        return;
+
+    Res = 40;
 
     MinX = int(Viewport.Min.X * Res) + 1;
     MaxX = int(Viewport.Max.X * Res);
@@ -3902,7 +3906,7 @@ function DrawDangerZoneOverlay(Canvas C, AbsoluteCoordsInfo SubCoords, float MyM
             MapMarkerIcon.WidgetTexture = class'DHMapMarker_Enemy_PlatoonHQ'.default.IconMaterial;
             MapMarkerIcon.TextureCoords = class'DHMapMarker_Enemy_PlatoonHQ'.default.IconCoords;
             MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = class'DHMapMarker_Enemy_PlatoonHQ'.default.IconColor;
-            MapMarkerIcon.Tints[AXIS_TEAM_INDEX].A = 100;
+            MapMarkerIcon.Tints[AXIS_TEAM_INDEX].A = 50;
 
             DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, L, MapCenter, Viewport);
         }

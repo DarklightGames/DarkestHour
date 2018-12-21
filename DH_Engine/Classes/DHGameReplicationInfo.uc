@@ -1569,9 +1569,10 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
 
 // This function will return a positive number if the pointer is OUTSIDE of
 // `TeamIndex` influence.
-simulated function int GetDangerZoneIntensity(float PointerX, float PointerY, int TeamIndex)
+simulated function int GetDangerZoneIntensity(float PointerX, float PointerY, byte TeamIndex)
 {
-    local int Intensity, IntensityA, IntensityB, TotalA, TotalB, i;
+    local float Intensity, IntensityA, IntensityB;
+    local int TotalA, TotalB, i;
     local vector V1, V2;
 
     V2.X = PointerX;
@@ -1585,7 +1586,7 @@ simulated function int GetDangerZoneIntensity(float PointerX, float PointerY, in
         V1.X = DHObjectives[i].Location.X;
         V1.Y = DHObjectives[i].Location.Y;
 
-        Intensity = 1000000 / (VSize(V1 - V2) ^ 2);
+        Intensity = 1 / ((VSize(V1 - V2) ^ 2) * 0.000001);
 
         if (DHObjectives[i].IsActive() || DHObjectives[i].IsOwnedByTeam(TeamIndex))
         {
@@ -1599,7 +1600,7 @@ simulated function int GetDangerZoneIntensity(float PointerX, float PointerY, in
         }
     }
 
-    return 0.5 * IntensityB / (TotalB + 1) - IntensityA / (TotalA + 1);
+    return int(0.5 * IntensityB / (TotalB + 1) - IntensityA / (TotalA + 1));
 }
 
 defaultproperties

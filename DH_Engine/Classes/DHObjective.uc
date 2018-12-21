@@ -1323,7 +1323,7 @@ simulated function bool IsFrozen(GameReplicationInfo GRI)
     return GRI != none && UnfreezeTime > GRI.ElapsedTime;
 }
 
-simulated function bool IsOwnedByTeam(int TeamIndex)
+simulated function bool IsOwnedByTeam(byte TeamIndex)
 {
     if (TeamIndex == AXIS_TEAM_INDEX)
         return IsAxis();
