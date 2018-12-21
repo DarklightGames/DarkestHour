@@ -140,6 +140,7 @@ var     globalconfig int    MinPromptPacketLoss;    // client option used for th
 var     SpriteWidget        PacketLossIndicator;    // shows up in various colors when packet loss is present
 
 // Debug
+var     bool                bDebugDangerZoneOverlay; // show hot spots on the map
 var     bool                bDebugVehicleHitPoints; // show all vehicle's special hit points (VehHitpoints & NewVehHitpoints), but not the driver's hit points
 var     bool                bDebugVehicleWheels;    // show all vehicle's physics wheels (the Wheels array of invisible wheels that drive & steer vehicle, even ones with treads)
 var     bool                bDebugCamera;           // in behind view, draws a red dot & white sphere to show current camera location, with a red line showing camera rotation
@@ -3816,6 +3817,9 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
 
     // DEBUG:
 
+    if (bDebugDangerZoneOverlay)
+        DrawDangerZoneOverlay(C, Subcoords, MyMapScale, MapCenter, Viewport);
+
     // Show map's north-east & south-west bounds - toggle using console command: ShowDebugMap (formerly enabled by LevelInfo.bDebugOverhead)
     if (bShowDebugInfoOnMap && Level.NetMode == NM_Standalone)
     {
@@ -3863,6 +3867,44 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
         {
             // Draw a bee-line from the player to the map marker.
             DrawMapLine(C, SubCoords, MyMapScale, MapCenter, Viewport, PC.Pawn.Location, L, MapMarkers[i].MapMarkerClass.static.GetBeeLineColor());
+        }
+    }
+}
+
+function DrawDangerZoneOverlay(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
+{
+    local DHPlayer PC;
+    local int i, j, MinX, MaxX, MinY, MaxY, Res;
+    local vector L;
+
+    PC = DHPlayer(PlayerOwner);
+
+    Res = 50;
+
+    MinX = int(Viewport.Min.X * Res) + 1;
+    MaxX = int(Viewport.Max.X * Res);
+
+    MinY = int(Viewport.Min.Y * Res) + 1;
+    MaxY = int(Viewport.Max.Y * Res);
+
+    for (i = MinX; i < MaxX; i++)
+    {
+        for (j = MinY; j < MaxY; j++)
+        {
+            L.X = float(i) / Res;
+            L.Y = float(j) / Res;
+
+            L = DHGRI.GetWorldCoords(L.X, L.Y);
+
+            if (DHGRI.GetDangerZoneIntensity(L.X, L.Y, PC.GetTeamNum()) < 0)
+               continue;
+
+            MapMarkerIcon.WidgetTexture = class'DHMapMarker_Enemy_PlatoonHQ'.default.IconMaterial;
+            MapMarkerIcon.TextureCoords = class'DHMapMarker_Enemy_PlatoonHQ'.default.IconCoords;
+            MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = class'DHMapMarker_Enemy_PlatoonHQ'.default.IconColor;
+            MapMarkerIcon.Tints[AXIS_TEAM_INDEX].A = 100;
+
+            DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, L, MapCenter, Viewport);
         }
     }
 }
@@ -5496,6 +5538,11 @@ exec function CameraDebug()
         bDebugCamera = !bDebugCamera;
         SetSkyOff(bDebugCamera);
     }
+}
+
+exec function DangerZoneDebug()
+{
+    bDebugDangerZoneOverlay = !bDebugDangerZoneOverlay;
 }
 
 // New function to hide or restore the sky, used by debug functions that use DrawDebugX native functions, that won't draw unless the sky is off

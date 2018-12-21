@@ -1323,6 +1323,16 @@ simulated function bool IsFrozen(GameReplicationInfo GRI)
     return GRI != none && UnfreezeTime > GRI.ElapsedTime;
 }
 
+simulated function bool IsOwnedByTeam(int TeamIndex)
+{
+    if (TeamIndex == AXIS_TEAM_INDEX)
+        return IsAxis();
+    else if (TeamIndex == ALLIES_TEAM_INDEX)
+        return IsAllies();
+
+    return false;
+}
+
 // Clients/Server can run this function very fast because of the hashtable
 simulated function bool HasRequiredObjectives(coerce DHGameReplicationInfo GRI, int TeamIndex)
 {
