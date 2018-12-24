@@ -67,7 +67,12 @@ function OnSelect(int OptionIndex, vector Location)
 
     P = DHPawn(Interaction.ViewportOwner.Actor.Pawn);
 
-    if (Interaction == none || Interaction.ViewportOwner == none || OptionIndex < 0 || OptionIndex >= Options.Length || Options[OptionIndex].OptionalObject == none || P == none)
+    if (P == none ||
+        Interaction == none ||
+        Interaction.ViewportOwner == none ||
+        OptionIndex < 0 ||
+        OptionIndex >= Options.Length ||
+        Options[OptionIndex].OptionalObject == none)
     {
         return;
     }
