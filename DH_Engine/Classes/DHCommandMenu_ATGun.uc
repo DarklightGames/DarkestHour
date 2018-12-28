@@ -43,6 +43,7 @@ function OnSelect(int Index, vector Location)
 
 function bool IsOptionDisabled(int OptionIndex)
 {
+    return false;
 }
 
 defaultproperties

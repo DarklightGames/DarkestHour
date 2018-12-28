@@ -17,6 +17,7 @@ simulated function DHActorProxy CreateProxyCursor()
 {
     local DHATGunProxy Proxy;
     local DHPawn P;
+    local vector HitLocation, HitNormal, CrossProduct, Forward, TraceStart, TraceEnd;
 
     P = DHPawn(Instigator);
 
@@ -35,12 +36,16 @@ simulated function DHActorProxy CreateProxyCursor()
     // Hide the gun locally on the client so the proxy takes center stage.
     Gun.bHidden = true;
 
-    if (Gun == none)
-    {
-        Error("Attempted to create proxy cursor before Gun was assigned.");
-    }
+    // Get the orientation of the gun (aligned to the ground that it's on)
+    TraceStart = Gun.Location;
+    TraceEnd = TraceStart - vect(0, 0, 64);
 
-    Proxy = Spawn(class'DHATGunProxy', Instigator,, Gun.Location, Gun.Rotation);
+    Trace(HitLocation, HitNormal, TraceEnd, TraceStart);
+
+    CrossProduct = HitNormal cross vector(Gun.Rotation);
+    Forward = HitNormal cross CrossProduct;
+
+    Proxy = Spawn(class'DHATGunProxy', Instigator,, Gun.Location, rotator(Forward));
     Proxy.SetGun(Gun);
 
     return Proxy;
@@ -48,7 +53,7 @@ simulated function DHActorProxy CreateProxyCursor()
 
 simulated function float GetLocalRotationRate()
 {
-    return 2048;
+    return 4096;
 }
 
 simulated function OnConfirmPlacement()

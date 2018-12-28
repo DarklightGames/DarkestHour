@@ -234,8 +234,6 @@ state Rotating
 {
     function BeginState()
     {
-        Enable('Tick');
-
         RotatingActor = Spawn(class'DHRotatingActor',,, Location, Rotation);
         RotatingActor.DesiredRotation = TargetRotation;
 
