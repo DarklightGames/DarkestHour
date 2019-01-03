@@ -5546,7 +5546,10 @@ exec function CameraDebug()
 
 exec function DangerZoneDebug()
 {
-    bDebugDangerZoneOverlay = !bDebugDangerZoneOverlay;
+    if (IsDebugModeAllowed())
+    {
+        bDebugDangerZoneOverlay = !bDebugDangerZoneOverlay;
+    }
 }
 
 // New function to hide or restore the sky, used by debug functions that use DrawDebugX native functions, that won't draw unless the sky is off
