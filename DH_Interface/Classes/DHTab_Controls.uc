@@ -132,6 +132,9 @@ defaultproperties
     bindings_game(7)="PlaceRallyPoint"
     captions_game(7)="Place Rally Point"
 
+    bindings_movement(12)="ToggleRun"
+    captions_movement(12)="Toggle Run"
+
     bindings_weapons(9)="ROMGOperation" // renumbered from here so the new vehicle smoke launcher controls are grouped together at the end of the weapons section
     captions_weapons(9)="Change MG Barrel"
     bindings_weapons(10)="SwitchFireMode"
@@ -240,8 +243,8 @@ defaultproperties
     ControlProfileCommands(2)=(Cmds=())
 
     // Pro 104
-    ControlProfileKeys(3)=    (Keys=("V",  "Z",    "B",                     "N",             "J",               "K",         "L",           "Semicolon",   "SingleQuote",   "Ctrl",            "Alt",                                    "Backslash",     "MouseX",                               "MouseY",                               "CapsLock","F",             "Backspace",        "Y",                  "U",       "I",          "O"))
-    ControlProfileCommands(3)=(Cmds=("Use","Prone","ROMGOperation | Deploy","speech ALERT 0","speech SUPPORT 2","teamsay np","speech ACK 3","speech ACK 2","speech ALERT 3","SpeechMenuToggle","ShowOrderMenu | OnRelease HideOrderMenu","speech ALERT 2","Count bXAxis | Axis aMouseX Speed=1.0","Count bYAxis | Axis aMouseY Speed=1.0","Walking", "ShowObjectives","ToggleVehicleLock","PlaceRallyPoint",    "",        "",           ""))
+    ControlProfileKeys(3)=    (Keys=("V",  "Z",    "B",                     "N",             "J",               "K",         "L",           "Semicolon",   "SingleQuote",   "Ctrl",            "Alt",                                    "Backslash",     "MouseX",                               "MouseY",                               "CapsLock","F",             "Backspace",        "Y",                  "U",                "I",          "O"))
+    ControlProfileCommands(3)=(Cmds=("Use","Prone","ROMGOperation | Deploy","speech ALERT 0","speech SUPPORT 2","teamsay np","speech ACK 3","speech ACK 2","speech ALERT 3","SpeechMenuToggle","ShowOrderMenu | OnRelease HideOrderMenu","speech ALERT 2","Count bXAxis | Axis aMouseX Speed=1.0","Count bYAxis | Axis aMouseY Speed=1.0","Walking", "ShowObjectives","ToggleVehicleLock","PlaceRallyPoint",    "ToggleRun",        "",           ""))
     //Description:                                  Change Barrel or Deploy   Yell Grenade!    Ask For Ammo!     Forgive TK!   Say Sorry!     Say Thanks!    Yell Stop!                                                                   Yell Take Cover!
 
     // Pro 105
