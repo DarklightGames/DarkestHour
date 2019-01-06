@@ -343,22 +343,22 @@ simulated function PostNetBeginPlay()
     }
 }
 
-// This function returns all objectives (via array of indices) which meet reserve spawn criteria
-function GetReserveObjIndicesForTeam(int Team, out array<int> Indices)
+// This function returns all objectives (via array of indices) which meets objective spawn criteria
+function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
 {
     local int i;
 
     for (i = 0; i < arraycount(DHObjectives); ++i)
     {
         // If obj is not none &&
-        // if inactive (only inactive objectives can be reserve spawns) &&
+        // if inactive (only inactive objectives can have objective spawns) &&
         // if objective secured by our team
         if (DHObjectives[i] != none && !DHObjectives[i].IsActive() && int(DHObjectives[i].ObjState) == Team)
         {
             // Is objective linked to an active objective
             if (IsObjIndexLinkedToActiveObj(i))
             {
-                // Objective meets criteria to be a Reserve Spawn, so add it to Indices
+                // Objective meets criteria to have an Obj Spawn, so add it to Indices
                 Indices[Indices.Length] = i;
             }
         }

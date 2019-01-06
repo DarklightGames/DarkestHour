@@ -2716,6 +2716,11 @@ state RoundInPlay
             }
         }
 
+        if (GRI.GameType.default.bAreObjectiveSpawnsEnabled)
+        {
+            HandleObjectiveSpawns();
+        }
+
         if (LevelInfo.bUseSpawnAreas)
         {
             CheckSpawnAreas();
@@ -3609,6 +3614,85 @@ function bool DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
     }
 
     return true;
+}
+
+// Function which creates objective spawns where they are valid
+function HandleObjectiveSpawns()
+{
+    local int i, Team;
+    local array<int> ObjIndices;
+    local DHObjective Obj;
+    local DHSpawnPoint_Objective SpawnPoint;
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    // TODO remove debug line
+    Log("Calling HandleObjectiveSpawns() in DarkestHourGame");
+
+    // Loop Teams
+    for (Team = 0; Team < 2; ++Team)
+    {
+        ObjIndices.Length = 0; // Clear the index array for the next team
+
+        GRI.GetIndicesForObjectiveSpawns(Team, ObjIndices); // Get the objective indices for valid obj spawns
+
+        // Loop all objectives
+        for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
+        {
+            Obj = GRI.DHObjectives[i];
+
+            if (Obj == none)
+            {
+                continue;
+            }
+
+            // If the objective is NOT valid for an Objective Spawn
+            if (class'UArray'.static.IIndexOf(ObjIndices, i) == -1) // -1 is returned if it was NOT found
+            {
+                // Destroy its Objective Spawn
+                if (Obj.SpawnPoint != none)
+                {
+                    Obj.SpawnPoint.Destroy();
+                }
+            }
+            else // The Obj is valid for an Objective Spawn
+            {
+                // Check if an obj spawn already exists at said objective
+                if (Obj.SpawnPoint != none)
+                {
+                    // If the team is not the same, delete it otherwise continue to the next
+                    if (Obj.SpawnPoint.GetTeamIndex() != Team)
+                    {
+                        Obj.SpawnPoint.Destroy();
+                    }
+                    else
+                    {
+                        continue; // No changes, so continue to the next
+                    }
+                }
+
+                // If the objective has hints defined, then spawn an objective spawnpoint
+                if (Obj.SpawnPointHintTags[Team] != '')
+                {
+                    SpawnPoint = Spawn(class'DH_Engine.DHSpawnPoint_Objective', self,, Obj.Location);
+
+                    // Setup the properties of the new spawnpoint
+                    SpawnPoint.SetTeamIndex(Team);
+                    SpawnPoint.Objective = Obj;
+                    SpawnPoint.InfantryLocationHintTag = Obj.SpawnPointHintTags[Team];
+                    SpawnPoint.BuildLocationHintsArrays();
+
+                    SpawnPoint.SetIsActive(true);
+
+                    // Assign the SpawnPoint reference in the objective
+                    Obj.SpawnPoint = SpawnPoint;
+                }
+            }
+        }
+    }
 }
 
 // Functionally identical to ROTeamGame.ChangeTeam except we reset additional parameters in DHPlayer
