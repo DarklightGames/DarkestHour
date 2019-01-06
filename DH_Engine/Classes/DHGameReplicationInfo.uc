@@ -1586,7 +1586,7 @@ simulated function int GetDangerZoneIntensity(float PointerX, float PointerY, by
         V1.X = DHObjectives[i].Location.X;
         V1.Y = DHObjectives[i].Location.Y;
 
-        Intensity = 1 / ((VSize(V1 - V2) ^ 2) * 0.000001);
+        Intensity = 1 / (FMax((VSize(V1 - V2) ^ 2), 1.0) * 0.000001);
 
         if (DHObjectives[i].IsActive() || DHObjectives[i].IsOwnedByTeam(TeamIndex))
         {
@@ -1600,7 +1600,7 @@ simulated function int GetDangerZoneIntensity(float PointerX, float PointerY, by
         }
     }
 
-    return int(0.5 * IntensityB / (TotalB + 1) - IntensityA / (TotalA + 1));
+    return int(0.62 * IntensityB / (TotalB + 1) - IntensityA / (TotalA + 1));
 }
 
 simulated function bool IsInDangerZone(float PointerX, float PointerY, byte TeamIndex)
