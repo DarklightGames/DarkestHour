@@ -1186,6 +1186,10 @@ function Timer()
 // Modified to handle neutralizing objectives
 function ObjectiveCompleted(PlayerReplicationInfo CompletePRI, int Team)
 {
+    local DHSquadReplicationInfo SRI;
+
+    SRI = DarkestHourGame(Level.Game).SquadReplicationInfo;
+
     if (!IsNeutral() && bNeutralizeBeforeCapture)
     {
         // If the objective is not neutral, has completed progress, & is set to bNeutralizedBeforeCaptured
@@ -1225,6 +1229,11 @@ function ObjectiveCompleted(PlayerReplicationInfo CompletePRI, int Team)
 
     // lets see if this tells the bots the objectives is done for
     UnrealMPGameInfo(Level.Game).FindNewObjectives(self);
+
+    if (SRI != none)
+    {
+        SRI.UpdateRallyPoints();
+    }
 }
 
 // New function to implement the bNeutralizeBeforeCapture option

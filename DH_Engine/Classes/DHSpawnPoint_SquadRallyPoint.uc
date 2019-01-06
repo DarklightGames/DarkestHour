@@ -46,12 +46,13 @@ var DHMetricsRallyPoint MetricsObject;
 // Objective
 var ROObjective Objective;
 var bool bIsInActiveObjective;
+var bool bIsExposed;
 var int InActiveObjectivePenaltySeconds;
 
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
-        SquadIndex, RallyPointIndex, SpawnsRemaining, bIsInActiveObjective;
+        SquadIndex, RallyPointIndex, SpawnsRemaining, bIsInActiveObjective, bIsExposed;
 }
 
 function Reset()
@@ -205,6 +206,8 @@ state Active
         {
             MetricsObject.IsEstablished = true;
         }
+
+        OnUpdated();
     }
 }
 
@@ -228,6 +231,28 @@ function SetIsActive(bool bIsActive)
     if (SRI != none && bIsActive)
     {
         SRI.OnSquadRallyPointActivated(self);
+    }
+}
+
+function OnUpdated()
+{
+    UpdateExposedStatus();
+
+    if (SRI != none)
+    {
+        SRI.OnSquadRallyPointUpdated(self);
+    }
+}
+
+function UpdateExposedStatus()
+{
+    if (GRI != none && GRI.IsInDangerZone(Location.X, Location.Y, GetTeamIndex()))
+    {
+        bIsExposed = true;
+    }
+    else
+    {
+        bIsExposed = false;
     }
 }
 

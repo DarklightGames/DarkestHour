@@ -1603,6 +1603,11 @@ simulated function int GetDangerZoneIntensity(float PointerX, float PointerY, by
     return int(0.5 * IntensityB / (TotalB + 1) - IntensityA / (TotalA + 1));
 }
 
+simulated function bool IsInDangerZone(float PointerX, float PointerY, byte TeamIndex)
+{
+    return GetDangerZoneIntensity(PointerX, PointerY, TeamIndex) >= 0;
+}
+
 defaultproperties
 {
     bAllChatEnabled=true
