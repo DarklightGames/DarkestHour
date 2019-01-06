@@ -198,8 +198,8 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
                 i = class'Player'.default.ConfiguredInternetSpeed;
             }
 
-            // Remove the NetSpeed User Defined value, we will add it back only if it is actually defined by the user
-            co_NetSpeed.RemoveItem(5);
+            // Remove the NetSpeed User Defined value (last value), we will add it back only if it is actually defined by the user
+            co_NetSpeed.RemoveItem(arraycount(NetSpeedText) - 1);
 
             // Select the setting based on the NetSpeed value
             if (i == 6000)
@@ -228,7 +228,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             else // Value is set differently than above and therefore is "User Defined" in INI file
             {
-                co_NetSpeed.AddItem(Repl(default.NetSpeedText[6], "%NetSpeed%", i));
+                co_NetSpeed.AddItem(Repl(default.NetSpeedText[arraycount(NetSpeedText) - 1], "%NetSpeed%", i));
                 OriginalNetSpeed = 6;
             }
 
