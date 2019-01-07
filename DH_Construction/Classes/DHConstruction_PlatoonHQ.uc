@@ -322,17 +322,11 @@ defaultproperties
     TatteredHealthThreshold=250
 
     // Damage
-    HarmfulDamageTypes(0)=class'DHArtilleryDamageType'              // Artillery
-    HarmfulDamageTypes(1)=class'ROTankShellExplosionDamage'         // HE and some others
-    HarmfulDamageTypes(2)=class'DHThrowableExplosiveDamageType'     // Satchel/Grenades
-    HarmfulDamageTypes(3)=class'DHMortarDamageType'                 // Mortar
-    HarmfulDamageTypes(4)=class'ROTankShellImpactDamage'            // AP
-    HarmfulDamageTypes(5)=class'DHAntiTankProjectileDamageType'     // Splash AT weapon
-    HarmfulDamageTypes(6)=class'DHRocketImpactDamage'               // Direct AT weapon hits
-
-    DamageTypeScales(0)=(DamageType=class'ROTankShellImpactDamage',Scale=0.33)
-    DamageTypeScales(1)=(DamageType=class'DHRocketImpactDamage',Scale=0.33)
-    DamageTypeScales(2)=(DamageType=class'DHThrowableExplosiveDamageType',Scale=1.25)
+    DamageTypeScales(0)=(DamageType=class'DHShellAPImpactDamageType',Scale=0.33)            // AP Impact
+    DamageTypeScales(1)=(DamageType=class'DHRocketImpactDamage',Scale=0.33)                 // AT Rocket Impact
+    DamageTypeScales(2)=(DamageType=class'DHThrowableExplosiveDamageType',Scale=1.25)       // Satchel/Grenades
+    DamageTypeScales(3)=(DamageType=class'DHShellHEImpactDamageType',Scale=1.5)             // HE Impact
+    DamageTypeScales(4)=(DamageType=class'ROTankShellExplosionDamage',Scale=1.33)           // HE Splash
 
     FlagSkinIndex=1
     SpawnPointClass=class'DHSpawnPoint_PlatoonHQ'

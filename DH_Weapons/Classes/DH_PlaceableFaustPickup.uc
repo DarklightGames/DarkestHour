@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_StuartCannonShellDamageAP extends DHShellAPImpactDamageType
-    abstract;
+class DH_PlaceableFaustPickup extends DHPlaceableWeaponPickup;
 
 defaultproperties
 {
-    VehicleDamageModifier=1.0
-    TreadDamageModifier=0.75
+    WeaponType=class'DH_Weapons.DH_PanzerFaustWeapon'
+    InventoryType=class'DH_Weapons.DH_PanzerFaustWeapon'
+    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.PanzerFaust'
 }

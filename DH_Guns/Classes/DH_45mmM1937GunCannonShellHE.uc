@@ -18,7 +18,7 @@ defaultproperties
     DamageRadius=600.0
     MyDamageType=Class'DH_Engine.DHShellHE50mmATDamageType'
     ImpactDamage=225
-    ShellImpactDamage=class'DH_Engine.DHShellATImpactDamageType'
+    ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
 
     DHPenetrationTable(0)=1.3 // penetration same as Bofors 40mm HE, slightly better than US 37mm HE
     DHPenetrationTable(1)=1.2

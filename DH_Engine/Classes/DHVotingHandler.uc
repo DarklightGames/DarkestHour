@@ -850,7 +850,7 @@ defaultproperties
 
     PatronVoteModifiers(0)=0.0  //Not Patron
     PatronVoteModifiers(1)=0.15 //Lead
-    PatronVoteModifiers(2)=0.3  //Bronze
-    PatronVoteModifiers(3)=0.5  //Silver
-    PatronVoteModifiers(4)=0.7  //Gold
+    PatronVoteModifiers(2)=0.25  //Bronze
+    PatronVoteModifiers(3)=0.35  //Silver
+    PatronVoteModifiers(4)=0.5  //Gold
 }

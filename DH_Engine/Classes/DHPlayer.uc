@@ -18,8 +18,8 @@ enum EMapMode
 };
 
 var     input float             aBaseFire;
-var     bool                    bUsingController;
-var     bool                    bIsGagged;
+var     bool                    bToggleRun;          // user activated toggle run
+var     bool                    bIsGagged;           // player is gagged from chatting
 
 var     EMapMode                DeployMenuStartMode; // what the deploy menu is supposed to start out on
 var     DH_LevelInfo            ClientLevelInfo;
@@ -208,9 +208,6 @@ simulated event PostBeginPlay()
         {
             break;
         }
-
-        // Set bUsingController based on the UseJoystick setting
-        bUsingController = bool(ConsoleCommand("get ini:Engine.Engine.ViewportManager UseJoystick"));
     }
 
     // This forces the player to choose a valid spectator mode instead of
@@ -1409,7 +1406,20 @@ ignores SeePlayer, HearNoise, Bump;
 
         GetAxes(Pawn.Rotation, X, Y, Z);
 
-        // Update acceleration
+        // Handle toggle run
+        if (bToggleRun)
+        {
+            if (aForward == 6000.0 || aForward == -6000.0 || aStrafe != 0.0)
+            {
+                bToggleRun = false; // If any movement input (WASD), then cancel toggle run
+            }
+            else
+            {
+                aForward = 5999.9; // If toggle run, then make aForward as close as possible to 6000.0, but not
+            }
+        }
+
+        // Calculate acceleration (movement)
         NewAccel = aForward * X + aStrafe * Y;
         NewAccel.Z = 0.0;
 
@@ -1496,6 +1506,7 @@ ignores SeePlayer, HearNoise, Bump;
     function EndState()
     {
         GroundPitch = 0;
+        bToggleRun = false;
 
         if (Pawn != none)
         {
@@ -2326,6 +2337,11 @@ exec function ToggleDuck()
 function ClientToggleDuck()
 {
     ToggleDuck();
+}
+
+exec function ToggleRun()
+{
+    bToggleRun = !bToggleRun;
 }
 
 // Modified to network optimise by removing automatic call to replicated server function in a VehicleWeaponPawn
@@ -3264,18 +3280,29 @@ event ClientProposeMenu(string Menu, optional string Msg1, optional string Msg2)
 function ClientSaveROIDHash(string ROID)
 {
     local HTTPRequest PatronRequest;
+    local int PatronLevel;
 
     ROIDHash = ROID;
 
     SaveConfig();
 
-    // Now send the patron status request.
-    PatronRequest = Spawn(class'HTTPRequest');
-    PatronRequest.Method = "GET";
-    PatronRequest.Host = "darkesthour.darklightgames.com";
-    PatronRequest.Path = "/client/patron.php?steamid64=" $ ROIDHash;
-    PatronRequest.OnResponse = PatronRequestOnResponse;
-    PatronRequest.Send();
+    // Get script based patron status (this should be removed once we fix the HTTP issue with MAC)
+    PatronLevel = class'DHAccessControl'.static.GetPatronLevel(ROIDHash);
+
+    // If we have script patron status, then set patron status on server
+    if (PatronLevel >= 0)
+    {
+        ServerSetPatronStatus(PatronLevel);
+    }
+    else // Else, check via HTTP request for patron status
+    {
+        PatronRequest = Spawn(class'HTTPRequest');
+        PatronRequest.Method = "GET";
+        PatronRequest.Host = "darkesthour.darklightgames.com";
+        PatronRequest.Path = "/client/patron.php?steamid64=" $ ROIDHash;
+        PatronRequest.OnResponse = PatronRequestOnResponse;
+        PatronRequest.Send();
+    }
 }
 
 // Modified so if we just switched off manual reloading & player is in a cannon that's waiting to reload, we pass any different pending ammo type to the server
@@ -6039,7 +6066,7 @@ function PatronRequestOnResponse(int Status, TreeMap_string_string Headers, stri
 {
     local JSONParser Parser;
     local JSONObject O;
-    local byte PatronLevel;
+    local int PatronLevel;
 
     if (Status == 200)
     {
@@ -6060,17 +6087,6 @@ function PatronRequestOnResponse(int Status, TreeMap_string_string Headers, stri
             return;
         }
     }
-
-    // Also check for a hard coded patron (this should be removed once we figure out the issue with MAC)
-    PatronLevel = class'DHAccessControl'.static.GetPatronLevel(ROIDHash);
-
-    if (PatronLevel >= 0)
-    {
-        ServerSetPatronStatus(PatronLevel);
-        return;
-    }
-
-    Warn("Patron status request failed (" $ Status $ ")");
 }
 
 // Client-to-server function that reports the player's patron status to the server.
