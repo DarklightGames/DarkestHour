@@ -3629,9 +3629,6 @@ function HandleObjectiveSpawns()
         return;
     }
 
-    // TODO remove debug line
-    Log("Calling HandleObjectiveSpawns() in DarkestHourGame");
-
     // Loop Teams
     for (Team = 0; Team < 2; ++Team)
     {
@@ -3652,8 +3649,8 @@ function HandleObjectiveSpawns()
             // If the objective is NOT valid for an Objective Spawn
             if (class'UArray'.static.IIndexOf(ObjIndices, i) == -1) // -1 is returned if it was NOT found
             {
-                // Destroy its Objective Spawn
-                if (Obj.SpawnPoint != none)
+                // If the objective has a SpawnPoint reference and is controlled by Team or is neutral, then destroy the SpawnPoint
+                if (Obj.SpawnPoint != none && (int(Obj.ObjState) == Team || Obj.IsNeutral()))
                 {
                     Obj.SpawnPoint.Destroy();
                 }
@@ -3681,7 +3678,6 @@ function HandleObjectiveSpawns()
                 SpawnPoint.Objective = Obj;
                 SpawnPoint.InfantryLocationHintTag = Obj.SpawnPointHintTags[Team];
                 SpawnPoint.BuildLocationHintsArrays();
-
                 SpawnPoint.SetIsActive(true);
 
                 // Assign the SpawnPoint reference in the objective

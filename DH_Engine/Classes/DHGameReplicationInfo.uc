@@ -391,6 +391,11 @@ function TraverseTreeNode(int Team, DHObjectiveTreeNode Node, out array<int> Obj
 {
     local int i;
 
+    if (Node == none)
+    {
+        return;
+    }
+
     // If this node is valid, add it
     if (Node.Objective.SpawnPointHintTags[Team] != '')
     {
@@ -408,7 +413,7 @@ function TraverseTreeNode(int Team, DHObjectiveTreeNode Node, out array<int> Obj
     }
 }
 
-function DHObjectiveTreeNode GetObjectiveTree(int Team, DHObjective Objective, optional DHObjectiveTreeNode Parent)
+function DHObjectiveTreeNode GetObjectiveTree(int Team, DHObjective Objective)
 {
     local int i;
     local DHObjectiveTreeNode Node;
@@ -448,6 +453,8 @@ function DHObjectiveTreeNode GetObjectiveTree(int Team, DHObjective Objective, o
             }
         }
     }
+
+    return Node;
 }
 
 function int AddConstructionClass(class<DHConstruction> ConstructionClass)
