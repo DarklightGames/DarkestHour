@@ -21,7 +21,7 @@ defaultproperties
     ShellDiameter=5.7
     bHasTracer=true
     PenetrationMag=630.0
-    ShellImpactDamage=class'DH_Engine.DHShellATImpactDamageType'
+    ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
     ImpactDamage=295
     ShellHitDirtEffectClass=class'ROEffects.TankHEHitDirtEffect'
     ShellHitSnowEffectClass=class'ROEffects.TankHEHitSnowEffect'

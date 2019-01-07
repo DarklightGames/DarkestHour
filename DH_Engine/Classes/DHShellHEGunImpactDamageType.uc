@@ -3,11 +3,9 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_StuartCannonShellDamageAP extends DHShellAPImpactDamageType
-    abstract;
+class DHShellHEGunImpactDamageType extends DHShellHEImpactDamageType;
 
 defaultproperties
 {
-    VehicleDamageModifier=1.0
-    TreadDamageModifier=0.75
+    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.ATGunKill'
 }

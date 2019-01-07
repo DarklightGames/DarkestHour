@@ -40,7 +40,7 @@ defaultproperties
     DHPenetrationTable(9)=7.6
     DHPenetrationTable(10)=6.8
     ShellDiameter=7.5
-    ShellImpactDamage=class'DH_Engine.DHShellATImpactDamageType'
+    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
     ImpactDamage=650
     BallisticCoefficient=2.52
     Speed=45270.0
