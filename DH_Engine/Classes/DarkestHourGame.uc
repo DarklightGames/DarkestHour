@@ -3674,22 +3674,18 @@ function HandleObjectiveSpawns()
                     }
                 }
 
-                // If the objective has hints defined, then spawn an objective spawnpoint
-                if (Obj.SpawnPointHintTags[Team] != '')
-                {
-                    SpawnPoint = Spawn(class'DH_Engine.DHSpawnPoint_Objective', self,, Obj.Location);
+                SpawnPoint = Spawn(class'DH_Engine.DHSpawnPoint_Objective', self,, Obj.Location);
 
-                    // Setup the properties of the new spawnpoint
-                    SpawnPoint.SetTeamIndex(Team);
-                    SpawnPoint.Objective = Obj;
-                    SpawnPoint.InfantryLocationHintTag = Obj.SpawnPointHintTags[Team];
-                    SpawnPoint.BuildLocationHintsArrays();
+                // Setup the properties of the new spawnpoint
+                SpawnPoint.SetTeamIndex(Team);
+                SpawnPoint.Objective = Obj;
+                SpawnPoint.InfantryLocationHintTag = Obj.SpawnPointHintTags[Team];
+                SpawnPoint.BuildLocationHintsArrays();
 
-                    SpawnPoint.SetIsActive(true);
+                SpawnPoint.SetIsActive(true);
 
-                    // Assign the SpawnPoint reference in the objective
-                    Obj.SpawnPoint = SpawnPoint;
-                }
+                // Assign the SpawnPoint reference in the objective
+                Obj.SpawnPoint = SpawnPoint;
             }
         }
     }
