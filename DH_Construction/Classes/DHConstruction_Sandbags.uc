@@ -3,7 +3,8 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHConstruction_Sandbags extends DHConstruction;
+class DHConstruction_Sandbags extends DHConstruction
+    abstract;
 
 defaultproperties
 {
