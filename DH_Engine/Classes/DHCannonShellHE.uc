@@ -63,6 +63,7 @@ defaultproperties
     ShellHitWaterEffectClass=class'DH_Effects.DHShellExplosion_MediumHE'
     DamageRadius=300.0
     MyDamageType=class'DH_Engine.DHShellHE75mmDamageType'
+    ShellImpactDamage=class'DH_Engine.DHShellHEImpactDamageType'
     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
     ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
     LifeSpan=10.0

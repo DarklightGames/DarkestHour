@@ -14,7 +14,7 @@ defaultproperties
 {
     HumanReadableName="Squad Rally Point Spawn"
     CategoryClass=class'DHScoreCategory_Support'
-    Value=50
+    Value=25
     LimitPerDuration=10
 }
 
