@@ -133,7 +133,7 @@ simulated function BuildLocationHintsArrays()
 {
     local DHLocationHint LH;
 
-    // Find associated location hint actors & build arrays of actor references
+    // Find associated location hint actors & build arrays of actor references.
     foreach AllActors(class'DHLocationHint', LH)
     {
         if (LH.Tag != '')

@@ -425,10 +425,9 @@ function DHObjectiveTreeNode GetObjectiveTree(int Team, DHObjective Objective)
     }
 
     Node = new class'DHObjectiveTreeNode';
-
     Node.Objective = Objective;
 
-    // Axis
+
     if (Team == AXIS_TEAM_INDEX)
     {
         for (i = 0; i < Objective.AxisRequiredObjForCapture.Length; ++i)
@@ -440,7 +439,7 @@ function DHObjectiveTreeNode GetObjectiveTree(int Team, DHObjective Objective)
                 Node.Children[Node.Children.Length] = Child;
             }
         }
-    } // Allies
+    }
     else if (Team == ALLIES_TEAM_INDEX)
     {
         for (i = 0; i < Objective.AlliesRequiredObjForCapture.Length; ++i)

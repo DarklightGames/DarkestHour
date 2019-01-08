@@ -2718,7 +2718,7 @@ state RoundInPlay
 
         if (GRI.GameType.default.bAreObjectiveSpawnsEnabled)
         {
-            HandleObjectiveSpawns();
+            UpdateObjectiveSpawns();
         }
 
         if (LevelInfo.bUseSpawnAreas)
@@ -3617,7 +3617,7 @@ function bool DHRestartPlayer(Controller C, optional bool bHandleReinforcements)
 }
 
 // Function which creates objective spawns where they are valid
-function HandleObjectiveSpawns()
+function UpdateObjectiveSpawns()
 {
     local int i, Team;
     local array<int> ObjIndices;
@@ -3629,12 +3629,14 @@ function HandleObjectiveSpawns()
         return;
     }
 
-    // Loop Teams
+    // For each team.
     for (Team = 0; Team < 2; ++Team)
     {
-        ObjIndices.Length = 0; // Clear the index array for the next team
+        // Clear the objective index array for the team.
+        ObjIndices.Length = 0;
 
-        GRI.GetIndicesForObjectiveSpawns(Team, ObjIndices); // Get the objective indices for valid obj spawns
+        // Get the objective indices for valid objective spawns.
+        GRI.GetIndicesForObjectiveSpawns(Team, ObjIndices);
 
         // Loop all objectives
         for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
@@ -3646,34 +3648,36 @@ function HandleObjectiveSpawns()
                 continue;
             }
 
-            // If the objective is NOT valid for an Objective Spawn
-            if (class'UArray'.static.IIndexOf(ObjIndices, i) == -1) // -1 is returned if it was NOT found
+            if (class'UArray'.static.IIndexOf(ObjIndices, i) == -1)
             {
-                // If the objective has a SpawnPoint reference and is controlled by Team or is neutral, then destroy the SpawnPoint
+                // If the objective has a spawn point reference and is neutral
+                // or controlled by current team, destroy the spawn point.
                 if (Obj.SpawnPoint != none && (int(Obj.ObjState) == Team || Obj.IsNeutral()))
                 {
                     Obj.SpawnPoint.Destroy();
                 }
             }
-            else // The Obj is valid for an Objective Spawn
+            else
             {
-                // Check if an obj spawn already exists at said objective
+                // The objective should have a spawn point!
+                // Check if an objective already has a spawn point.
                 if (Obj.SpawnPoint != none)
                 {
-                    // If the team is not the same, delete it otherwise continue to the next
+                    // If the team is not the same, delete it.
                     if (Obj.SpawnPoint.GetTeamIndex() != Team)
                     {
                         Obj.SpawnPoint.Destroy();
                     }
                     else
                     {
-                        continue; // No changes, so continue to the next
+                        // No changes to this spawn point.
+                        continue;
                     }
                 }
 
                 SpawnPoint = Spawn(class'DH_Engine.DHSpawnPoint_Objective', self,, Obj.Location);
 
-                // Setup the properties of the new spawnpoint
+                // Setup the properties of the new spawn point.
                 SpawnPoint.SetTeamIndex(Team);
                 SpawnPoint.Objective = Obj;
                 SpawnPoint.InfantryLocationHintTag = Obj.SpawnPointHintTags[Team];
