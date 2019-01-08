@@ -587,7 +587,7 @@ defaultproperties
     i_Announcement=FloatingImage'DH_Interface.DHMainMenu.AnnouncementImage'
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection1
-        Image=Texture'DHEngine_Tex.Transparency.Trans_60'
+        Image=Texture'DHEngine_Tex.Transparency.Trans_80'
         TopPadding=0.2
         LeftPadding=0.1
         BottomPadding=0.2
@@ -859,7 +859,7 @@ defaultproperties
     tb_MOTDContent=DHGUIScrollTextBox'DH_Interface.DHMainMenu.MyMOTDText'
 
     Begin Object Class=ROGUIProportionalContainerNoSkin Name=sbSection4
-        Image=Texture'DHEngine_Tex.Transparency.Trans_40'
+        Image=Texture'DHEngine_Tex.Transparency.Trans_70'
         WinTop=0.25
         WinLeft=0.55
         WinWidth=0.4
