@@ -6,6 +6,17 @@ class DHSpawnPoint_Objective extends DHSpawnPoint;
 
 var DHObjective Objective;
 
+function Timer()
+{
+    if (GRI != none && GRI.bIsInSetupPhase)
+    {
+        BlockReason = SPBR_Waiting;
+        return;
+    }
+
+    BlockReason = SPBR_None;
+}
+
 defaultproperties
 {
     Type=ESPT_Infantry
