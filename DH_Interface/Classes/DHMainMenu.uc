@@ -7,7 +7,7 @@ class DHMainMenu extends UT2K4GUIPage;
 
 var()   config string           MenuSong;
 
-var automated       FloatingImage           i_background, i_Overlay, i_Announcement;
+var automated       FloatingImage           i_Overlay, i_Announcement;
 var automated       GUIButton               b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Host, b_Quit, b_LearnToPlay;
 var automated       GUISectionBackground    sb_MainMenu, sb_HelpMenu, sb_ConfigFixMenu, sb_ShowVersion, sb_Social;
 var automated       GUIButton               b_Credits, b_Manual, b_Demos, b_Website, b_Back, b_MOTDTitle, b_Facebook, b_GitHub, b_SteamCommunity, b_Patreon, b_Discord;
@@ -544,24 +544,15 @@ function GetQuickPlayIp()
 
 defaultproperties
 {
+    // Render Entry.rom instead of background
+    bRenderWorld=true
+
     // IP variables
     QuickPlayString="Quick Join"
     JoinTestServerString="Join Test Server"
     ConnectingString="Joining"
 
     // Menu variables
-    Begin Object Class=FloatingImage Name=FloatingBackground
-        Image=Material'DH_GUI_Tex.MainMenu.BackGround'
-        DropShadow=none
-        ImageStyle=ISTY_Scaled
-        WinTop=0.0
-        WinLeft=0.0
-        WinWidth=1.0
-        WinHeight=1.0
-        RenderWeight=0.000003
-    End Object
-    i_Background=FloatingImage'DH_Interface.DHMainMenu.FloatingBackground'
-
     Begin Object Class=FloatingImage Name=OverlayBackground
         Image=Texture'Engine.BlackTexture'
         DropShadow=none
@@ -596,10 +587,14 @@ defaultproperties
     i_Announcement=FloatingImage'DH_Interface.DHMainMenu.AnnouncementImage'
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection1
-        WinTop=0.25
-        WinLeft=0.025
+        Image=Texture'DHEngine_Tex.Transparency.Trans_80'
+        TopPadding=0.2
+        LeftPadding=0.1
+        BottomPadding=0.2
+        WinTop=0.0
+        WinLeft=0.0
         WinWidth=0.2
-        WinHeight=0.75
+        WinHeight=1.0
         OnPreDraw=sbSection1.InternalPreDraw
     End Object
     sb_MainMenu=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection1'
@@ -864,6 +859,7 @@ defaultproperties
     tb_MOTDContent=DHGUIScrollTextBox'DH_Interface.DHMainMenu.MyMOTDText'
 
     Begin Object Class=ROGUIProportionalContainerNoSkin Name=sbSection4
+        Image=Texture'DHEngine_Tex.Transparency.Trans_70'
         WinTop=0.25
         WinLeft=0.55
         WinWidth=0.4
