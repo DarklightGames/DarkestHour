@@ -15,5 +15,7 @@ defaultproperties
     Mesh=SkeletalMesh'Allies_RGD1_1st.RGD1_mesh'
     PutDownAnim="putaway"
 
-    GroupOffset=6
+    InventoryGroup=7
+    GroupOffset=1
+    Priority=2
 }

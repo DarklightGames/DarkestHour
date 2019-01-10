@@ -12,7 +12,9 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_SatchelCharge10lb10sAttachment'
     PickupClass=class'DH_Weapons.DH_SatchelCharge10lb10sPickup'
 
-    InventoryGroup=7
+    InventoryGroup=4
+    GroupOffset=1
+    Priority=2
 
     Mesh=SkeletalMesh'Common_Satchel_1st.Sachel_Charge'
     Skins(2)=Texture'Weapons1st_tex.Grenades.SatchelCharge'
