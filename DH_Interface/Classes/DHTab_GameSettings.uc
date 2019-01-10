@@ -21,7 +21,7 @@ var     int                     OriginalNetSpeed, OriginalPurgeCacheDays; // sav
 var     int                     PurgeCacheDaysValues[3]; // deliberately one less than PurgeCacheDaysText array size, as highest text in list is for possible custom value
 
 var     localized string        UserDefinedNetSpeedText;
-var     localized string        NetSpeedText[6], PurgeCacheDaysText[4];
+var     localized string        NetSpeedText[7], PurgeCacheDaysText[4];
 var     localized string        IDText, NoROIDText;
 var     localized string        DegreesText;
 
@@ -198,8 +198,8 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
                 i = class'Player'.default.ConfiguredInternetSpeed;
             }
 
-            // Remove the NetSpeed User Defined value, we will add it back only if it is actually defined by the user
-            co_NetSpeed.RemoveItem(5);
+            // Remove the NetSpeed User Defined value (last value), we will add it back only if it is actually defined by the user
+            co_NetSpeed.RemoveItem(arraycount(NetSpeedText) - 1);
 
             // Select the setting based on the NetSpeed value
             if (i == 6000)
@@ -222,10 +222,14 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             {
                 OriginalNetSpeed = 4;
             }
+            else if (i == 30000)
+            {
+                OriginalNetSpeed = 5;
+            }
             else // Value is set differently than above and therefore is "User Defined" in INI file
             {
-                co_NetSpeed.AddItem(Repl(default.NetSpeedText[5], "%NetSpeed%", i));
-                OriginalNetSpeed = 5;
+                co_NetSpeed.AddItem(Repl(default.NetSpeedText[arraycount(NetSpeedText) - 1], "%NetSpeed%", i));
+                OriginalNetSpeed = 6;
             }
 
             co_NetSpeed.SetIndex(OriginalNetSpeed);
@@ -413,6 +417,7 @@ function SaveSettings()
                 case 2: PC.Player.ConfiguredInternetSpeed = 10000; break;
                 case 3: PC.Player.ConfiguredInternetSpeed = 15000; break;
                 case 4: PC.Player.ConfiguredInternetSpeed = 20000; break;
+                case 5: PC.Player.ConfiguredInternetSpeed = 30000; break;
             }
 
             PC.Player.SaveConfig();
@@ -426,6 +431,7 @@ function SaveSettings()
                 case 2: class'Player'.default.ConfiguredInternetSpeed = 10000; break;
                 case 3: class'Player'.default.ConfiguredInternetSpeed = 15000; break;
                 case 4: class'Player'.default.ConfiguredInternetSpeed = 20000; break;
+                case 5: class'Player'.default.ConfiguredInternetSpeed = 30000; break;
             }
 
             class'Player'.static.StaticSaveConfig();
@@ -501,7 +507,8 @@ defaultproperties
     NetSpeedText(2)="Medium (10000)"
     NetSpeedText(3)="Recommended (15000)"
     NetSpeedText(4)="High (20000)"
-    NetSpeedText(5)="User Defined (%NetSpeed%)"
+    NetSpeedText(5)="Experimental (30000)"
+    NetSpeedText(6)="User Defined (%NetSpeed%)"
 
     PurgeCacheDaysValues(0)=0
     PurgeCacheDaysValues(1)=30

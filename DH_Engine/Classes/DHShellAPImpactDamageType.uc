@@ -3,10 +3,9 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHShellATImpactDamageType extends DHShellImpactDamageType
-    abstract;
+class DHShellAPImpactDamageType extends DHShellImpactDamageType;
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.ATGunKill'
+
 }
