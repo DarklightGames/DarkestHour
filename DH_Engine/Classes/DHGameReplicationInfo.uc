@@ -150,6 +150,8 @@ var bool                bAllChatEnabled;
 var byte                ServerTickHealth;
 var byte                ServerNetHealth;
 
+var float               DangerZoneScale;
+
 // Map markers
 struct MapMarker
 {
@@ -1713,7 +1715,7 @@ simulated function int GetDangerZoneIntensity(float PointerX, float PointerY, by
         }
     }
 
-    return int(0.62 * IntensityB / (TotalB + 1) - IntensityA / (TotalA + 1));
+    return int(DangerZoneScale * IntensityB / (TotalB + 1) - IntensityA / (TotalA + 1));
 }
 
 simulated function bool IsInDangerZone(float PointerX, float PointerY, byte TeamIndex)
@@ -1727,6 +1729,7 @@ defaultproperties
     AlliesVictoryMusicIndex=-1
     AxisVictoryMusicIndex=-1
     ArtilleryTargetDistanceThreshold=15088 //250 meters in UU
+    DangerZoneScale=0.8
     ForceScaleText="Size"
     ReinforcementsInfiniteText="Infinite"
 
