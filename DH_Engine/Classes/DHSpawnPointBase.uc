@@ -27,6 +27,7 @@ var     private int     TeamIndex;       // which team this spawn point belongs 
 var     int             SpawnPointIndex; // spawn point's index number in the GRI's SpawnPoints array
 var     bool            bCombatSpawn;    // is a combat spawn point (MDV, squad rally, HQ)
 var()   bool            bMainSpawn;      // is a main spawn for gametype: Advance
+var     string          SpawnPointStyle; // style name to use for spawnpoints (main spawns require an override in GetMapStyleName())
 
 var     int             BaseSpawnTimePenalty;    // how many seconds a player will have to addtionally wait to spawn on this spawn point
 var     float           SpawnProtectionTime;     // how many seconds a player will be invulnerable after spawning on this spawn point
@@ -334,7 +335,7 @@ simulated function string GetMapStyleName()
     }
     else
     {
-        return "DHSpawnButtonStyle";
+        return SpawnPointStyle;
     }
 }
 
@@ -399,6 +400,7 @@ function OnTeamIndexChanged();
 
 defaultproperties
 {
+    SpawnPointStyle="DHSpawnButtonStyle"
     BaseSpawnTimePenalty=0
     TeamIndex=-1
     SpawnProtectionTime=2.0
