@@ -48,6 +48,7 @@ var ROObjective Objective;
 var bool bIsInActiveObjective;
 var bool bIsExposed;
 var int InActiveObjectivePenaltySeconds;
+var int IsExposedPenaltySeconds;
 
 replication
 {
@@ -430,6 +431,11 @@ simulated function int GetSpawnTimePenalty()
         SpawnTimePenalty += InActiveObjectivePenaltySeconds;
     }
 
+    if (bIsExposed)
+    {
+        SpawnTimePenalty += IsExposedPenaltySeconds;
+    }
+
     return SpawnTimePenalty;
 }
 
@@ -524,6 +530,7 @@ defaultproperties
     bCanEncroachmentOverrun=true
 
     InActiveObjectivePenaltySeconds=10
+    IsExposedPenaltySeconds=20
 
     OverrunRadiusInMeters=15
     EstablishmentRadiusInMeters=25
