@@ -106,6 +106,7 @@ var     FileLog                 ClientLogFile;
 
 var     bool                    bHasReceivedSquadJoinRecommendationMessage; // True when we have displayed the "you should probably join a squad" message.
 
+// Squad Things
 struct SquadSignal
 {
     var class<DHSquadSignal> SignalClass;
@@ -114,6 +115,9 @@ struct SquadSignal
 };
 
 var     SquadSignal             SquadSignals[SQUAD_SIGNALS_MAX];
+
+var     DHSquadReplicationInfo.RallyPointPlacementError RallyPointPlacementError;
+var     int                                             NextSquadRallyPointTime;
 
 // This is used to skip ResetInput calls in the GUIController.
 // Useful when you want to show a menu over top of the game (e.g. situation map)

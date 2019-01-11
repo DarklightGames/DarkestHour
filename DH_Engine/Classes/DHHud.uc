@@ -1180,6 +1180,9 @@ function DrawHudPassC(Canvas C)
     // Draw the currently available supply count.
     DrawSupplyCount(C);
 
+    // Draw the squad leader HUD.
+    DrawSquadRallyPointHUD(C);
+
     // DEBUG OPTIONS = slow!
 
     // Draw actors on the HUD to help debugging network relevancy (toggle using console command: ShowNetDebugOverlay)
@@ -5437,6 +5440,82 @@ function DisplayVoiceGain(Canvas C)
     }
 
     C.DrawColor = SavedColor;
+}
+
+function DrawSquadRallyPointHUD(Canvas C)
+{
+    local DHPlayer PC;
+    local DHSquadReplicationInfo SRI;
+    local int RallyPointCount;
+    local DHSquadReplicationInfo.RallyPointPlacementResult Result;
+    local float XL, YL;
+    local float X, Y;
+    local string ErrorString;
+    local int CooldownTimeSeconds;
+
+    X = 100;
+    Y = 100;
+
+    PC = DHPlayer(PlayerOwner);
+
+    if (PC == none || !PC.IsSquadLeader() || PC.SquadReplicationInfo == none)
+    {
+        return;
+    }
+
+    SRI = PC.SquadReplicationInfo;
+    RallyPointCount = SRI.GetSquadRallyPoints(PC.GetTeamNum(), PC.GetSquadIndex()).Length;
+    CooldownTimeSeconds = Max(0, PC.NextSquadRallyPointTime - DHGRI.ElapsedTime);
+    Result = SRI.GetRallyPointPlacementResult(PC);
+
+    C.DrawColor = class'UColor'.default.White;
+    C.TextSize("A", XL, YL);
+    C.SetPos(X, Y);
+    C.DrawText("# of Rally Points:" @ RallyPointCount);
+    Y += YL;
+
+    if (CooldownTimeSeconds > 0)
+    {
+        C.SetPos(X, Y);
+        C.DrawText("Cooldown:" @ class'TimeSpan'.static.ToString(CooldownTimeSeconds));
+        Y += YL;
+    }
+
+    if (Result.Error.Type != ERROR_None)
+    {
+        if (Result.Error.Type == ERROR_Fatal)
+        {
+            ErrorString = "FATAL";
+        }
+        else if (Result.Error.Type == ERROR_NotOnFoot)
+        {
+            ErrorString = "NOT ON FOOT";
+        }
+        else if (Result.Error.Type == ERROR_TooCloseToOtherRallyPoint)
+        {
+            ErrorString = "TOO CLOSE TO OTHER RALLY POINT (" $ Result.Error.OptionalInt $ ")";
+        }
+        else if (Result.Error.Type == ERROR_MissingSquadmate)
+        {
+            ErrorString = "MISSING SQUADMATE";
+        }
+        else if (Result.Error.Type == ERROR_TooSoon)
+        {
+            ErrorString = "TOO SOON";
+        }
+        else if (Result.Error.Type == ERROR_InUncontrolledObjective)
+        {
+            ErrorString = "IN OBJECTIVE";
+        }
+        else if (Result.Error.Type == ERROR_BadLocation)
+        {
+            ErrorString = "BAD LOCATION";
+        }
+
+        C.SetPos(X, Y);
+        C.DrawText(ErrorString);
+        Y += YL;
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
