@@ -303,11 +303,6 @@ function OnSpawnKill(Pawn VictimPawn, Controller KillerController)
     }
 }
 
-simulated function string GetMapStyleName()
-{
-    return "DHRallyPointButtonStyle";
-}
-
 function UpdateAppearance()
 {
     local DarkestHourGame G;
@@ -481,6 +476,8 @@ function Destroyed()
 
 defaultproperties
 {
+    SpawnPointStyle="DHRallyPointButtonStyle"
+
     StaticMesh=StaticMesh'DH_Construction_stc.Backpacks.USA_backpack'
     DrawType=DT_StaticMesh
     TeamIndex=-1
