@@ -150,7 +150,7 @@ var bool                bAllChatEnabled;
 var byte                ServerTickHealth;
 var byte                ServerNetHealth;
 
-var float               DangerZoneScale;
+var float               DangerZoneIntensityScale;
 
 // Map markers
 struct MapMarker
@@ -1684,7 +1684,7 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
 
 // This function will return a positive number if the pointer is OUTSIDE of
 // `TeamIndex` influence.
-simulated function int GetDangerZoneIntensity(float PointerX, float PointerY, byte TeamIndex)
+simulated function float GetDangerZoneIntensity(float PointerX, float PointerY, byte TeamIndex)
 {
     local float Intensity, IntensityA, IntensityB;
     local int TotalA, TotalB, i;
@@ -1696,12 +1696,14 @@ simulated function int GetDangerZoneIntensity(float PointerX, float PointerY, by
     for (i = 0; i < arraycount(DHObjectives); i++)
     {
         if (DHObjectives[i] == none)
+        {
             continue;
+        }
 
         V1.X = DHObjectives[i].Location.X;
         V1.Y = DHObjectives[i].Location.Y;
 
-        Intensity = 1 / (FMax((VSize(V1 - V2) ^ 2), 1.0) * 0.000001);
+        Intensity = 1 / FMax(VSizeSquared(V1 - V2), class'UFloat'.static.Epsilon());
 
         if (DHObjectives[i].IsActive() || DHObjectives[i].IsOwnedByTeam(TeamIndex))
         {
@@ -1715,12 +1717,12 @@ simulated function int GetDangerZoneIntensity(float PointerX, float PointerY, by
         }
     }
 
-    return int(DangerZoneScale * IntensityB / (TotalB + 1) - IntensityA / (TotalA + 1));
+    return DangerZoneIntensityScale * IntensityB / Max(TotalB, 1) - IntensityA / Max(TotalA, 1);
 }
 
 simulated function bool IsInDangerZone(float PointerX, float PointerY, byte TeamIndex)
 {
-    return GetDangerZoneIntensity(PointerX, PointerY, TeamIndex) >= 0;
+    return GetDangerZoneIntensity(PointerX, PointerY, TeamIndex) >= 0.0;
 }
 
 defaultproperties
@@ -1729,7 +1731,7 @@ defaultproperties
     AlliesVictoryMusicIndex=-1
     AxisVictoryMusicIndex=-1
     ArtilleryTargetDistanceThreshold=15088 //250 meters in UU
-    DangerZoneScale=0.8
+    DangerZoneIntensityScale=0.8
     ForceScaleText="Size"
     ReinforcementsInfiniteText="Infinite"
 
