@@ -1740,10 +1740,6 @@ defaultproperties
     ForceScaleText="Size"
     ReinforcementsInfiniteText="Infinite"
 
-    // Danger Zone
-    bIsDangerZoneEnabled=true
-    DangerZoneIntensityScale=0.8
-
     // Constructions
 
     // Logistics
