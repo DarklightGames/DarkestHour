@@ -150,6 +150,7 @@ var bool                bAllChatEnabled;
 var byte                ServerTickHealth;
 var byte                ServerNetHealth;
 
+var bool                bIsDangerZoneEnabled;
 var float               DangerZoneIntensityScale;
 
 // Map markers
@@ -1717,11 +1718,16 @@ simulated function float GetDangerZoneIntensity(float PointerX, float PointerY, 
         }
     }
 
-    return DangerZoneIntensityScale * IntensityB / Max(TotalB, 1) - IntensityA / Max(TotalA, 1);
+    return FClamp(DangerZoneIntensityScale, 0.1, 2.0) * IntensityB / Max(TotalB, 1) - IntensityA / Max(TotalA, 1);
 }
 
 simulated function bool IsInDangerZone(float PointerX, float PointerY, byte TeamIndex)
 {
+    if (!bIsDangerZoneEnabled)
+    {
+        return false;
+    }
+
     return GetDangerZoneIntensity(PointerX, PointerY, TeamIndex) >= 0.0;
 }
 
@@ -1731,9 +1737,12 @@ defaultproperties
     AlliesVictoryMusicIndex=-1
     AxisVictoryMusicIndex=-1
     ArtilleryTargetDistanceThreshold=15088 //250 meters in UU
-    DangerZoneIntensityScale=0.8
     ForceScaleText="Size"
     ReinforcementsInfiniteText="Infinite"
+
+    // Danger Zone
+    bIsDangerZoneEnabled=true
+    DangerZoneIntensityScale=0.8
 
     // Constructions
 

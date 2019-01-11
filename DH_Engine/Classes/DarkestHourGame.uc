@@ -3227,6 +3227,14 @@ static function string ParseChatPercVar(Mutator BaseMutator, Controller Who, str
     return super.ParseChatPercVar(BaseMutator, Who, Cmd);
 }
 
+function UpdateRallyPoints()
+{
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.UpdateRallyPoints();
+    }
+}
+
 //***********************************************************************************
 // exec FUNCTIONS - These functions natively require admin access
 //***********************************************************************************
@@ -3499,6 +3507,28 @@ exec function MidGameVote()
     {
         VH.MidGameVote();
     }
+}
+
+exec function SetDangerZone(bool bOn)
+{
+    if (GRI == none)
+    {
+        return;
+    }
+
+    GRI.bIsDangerZoneEnabled = bOn;
+    UpdateRallyPoints();
+}
+
+exec function SetDangerZoneIntensityScale(float Value)
+{
+    if (GRI == none)
+    {
+        return;
+    }
+
+    GRI.DangerZoneIntensityScale = Value;
+    UpdateRallyPoints();
 }
 
 //***********************************************************************************
