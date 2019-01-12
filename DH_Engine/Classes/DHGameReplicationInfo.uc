@@ -387,11 +387,11 @@ function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
     }
 }
 
-function TraverseTreeNode(int Team, DHObjectiveTreeNode Node, out array<int> ObjectiveIndices)
+function TraverseTreeNode(int Team, DHObjectiveTreeNode Node, out array<int> ObjectiveIndices, optional int Depth)
 {
     local int i;
 
-    if (Node == none)
+    if (Node == none || Depth > 1)
     {
         return;
     }
@@ -408,7 +408,7 @@ function TraverseTreeNode(int Team, DHObjectiveTreeNode Node, out array<int> Obj
     {
         for (i = 0; i < Node.Children.Length; ++i)
         {
-            TraverseTreeNode(Team, Node.Children[i], ObjectiveIndices);
+            TraverseTreeNode(Team, Node.Children[i], ObjectiveIndices, Depth + 1);
         }
     }
 }
