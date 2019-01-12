@@ -145,6 +145,9 @@ var     bool                bDebugVehicleWheels;    // show all vehicle's physic
 var     bool                bDebugCamera;           // in behind view, draws a red dot & white sphere to show current camera location, with a red line showing camera rotation
 var     SkyZoneInfo         SavedSkyZone;           // saves original SkyZone for player's current ZoneInfo if sky is turned off for debugging, so can be restored when sky is turned back on
 
+// Squad rally point placement
+var     float               NextRallyPointPlacementResultTime;
+
 // Modified to ignore the Super in ROHud, which added a hacky way of changing the compass rotating texture
 // We now use a DH version of the compass texture, with a proper TexRotator set up for it
 function PostBeginPlay()
@@ -5464,9 +5467,21 @@ function DrawSquadRallyPointHUD(Canvas C)
     }
 
     SRI = PC.SquadReplicationInfo;
+
+    if (Level.TimeSeconds >= NextRallyPointPlacementResultTime)
+    {
+        Result = SRI.GetRallyPointPlacementResult(PC);
+        PC.RallyPointPlacementResult = Result;
+        NextRallyPointPlacementResultTime = Level.TimeSeconds + 1.0;
+        Log("doing calc");
+    }
+    else
+    {
+        Result = PC.RallyPointPlacementResult;
+    }
+
     RallyPointCount = SRI.GetSquadRallyPoints(PC.GetTeamNum(), PC.GetSquadIndex()).Length;
     CooldownTimeSeconds = Max(0, PC.NextSquadRallyPointTime - DHGRI.ElapsedTime);
-    Result = SRI.GetRallyPointPlacementResult(PC);
 
     C.DrawColor = class'UColor'.default.White;
     C.TextSize("A", XL, YL);
