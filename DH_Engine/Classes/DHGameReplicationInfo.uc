@@ -427,7 +427,6 @@ function DHObjectiveTreeNode GetObjectiveTree(int Team, DHObjective Objective, o
 
     if (class'UArray'.static.IIndexOf(ObjectiveIndices, Objective.ObjNum) != -1)
     {
-        Log("stopping the madness");
         return none;
     }
 
