@@ -13,13 +13,13 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_ColtM1911Attachment'
     PickupClass=class'DH_Weapons.DH_ColtM1911Pickup'
 
-    Mesh=SkeletalMesh'DH_Colt1911_1st.Colt45'
+    Mesh=SkeletalMesh'DH_Colt1911_1st.newcolt1911_4'
     HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.ColtM1911_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    DisplayFOV=90.0
-    IronSightDisplayFOV=40.0
+    DisplayFOV=70
+    IronSightDisplayFOV=55
 
     MaxNumPrimaryMags=5
     InitialNumPrimaryMags=5

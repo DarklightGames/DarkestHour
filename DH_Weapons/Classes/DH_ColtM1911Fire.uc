@@ -15,6 +15,6 @@ defaultproperties
     ShellHipOffset=(X=0.0,Y=3.0,Z=0.0)
     ShellRotOffsetHip=(Pitch=2500,Yaw=4000)
     bReverseShellSpawnDirection=true
-    FireLastAnim="shoot_last"
-    FireIronLastAnim="Iron_Shoot_Last"
+    FireLastAnim="Shoot_Empty"
+    FireIronLastAnim="iron_shoot_empty"
 }
