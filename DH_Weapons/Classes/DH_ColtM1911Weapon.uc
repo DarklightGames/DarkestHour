@@ -26,7 +26,7 @@ defaultproperties
 
     SelectEmptyAnim="Draw_empty"
     PutDownAnim="putaway"
-    PutDownEmptyAnim="putaway_empty"
+    PutDownEmptyAnim="put_away_empty"
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"
     IronBringUpEmpty="Iron_In_empty"
