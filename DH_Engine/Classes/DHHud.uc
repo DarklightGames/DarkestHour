@@ -5449,7 +5449,6 @@ function DrawSquadRallyPointHUD(Canvas C)
 {
     local DHPlayer PC;
     local DHSquadReplicationInfo SRI;
-    local int RallyPointCount;
     local DHSquadReplicationInfo.RallyPointPlacementResult Result;
     local float XL, YL;
     local float X, Y;
@@ -5460,6 +5459,8 @@ function DrawSquadRallyPointHUD(Canvas C)
     Y = 100;
 
     PC = DHPlayer(PlayerOwner);
+
+    C.Font = C.TinyFont;
 
     if (PC == none || !PC.IsSquadLeader() || PC.SquadReplicationInfo == none)
     {
@@ -5473,20 +5474,18 @@ function DrawSquadRallyPointHUD(Canvas C)
         Result = SRI.GetRallyPointPlacementResult(PC);
         PC.RallyPointPlacementResult = Result;
         NextRallyPointPlacementResultTime = Level.TimeSeconds + 1.0;
-        Log("doing calc");
     }
     else
     {
         Result = PC.RallyPointPlacementResult;
     }
 
-    RallyPointCount = SRI.GetSquadRallyPoints(PC.GetTeamNum(), PC.GetSquadIndex()).Length;
     CooldownTimeSeconds = Max(0, PC.NextSquadRallyPointTime - DHGRI.ElapsedTime);
 
     C.DrawColor = class'UColor'.default.White;
     C.TextSize("A", XL, YL);
     C.SetPos(X, Y);
-    C.DrawText("# of Rally Points:" @ RallyPointCount);
+    C.DrawText("# of Rally Points:" @ PC.SquadRallyPointCount);
     Y += YL;
 
     if (CooldownTimeSeconds > 0)

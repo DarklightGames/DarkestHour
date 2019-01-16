@@ -442,6 +442,11 @@ function AwardScoreOnEstablishment()
 
 function Destroyed()
 {
+    if (SRI != none)
+    {
+        SRI.OnSquadRallyPointDestroyed(self);
+    }
+
     super.Destroyed();
 
     if (MetricsObject != none)

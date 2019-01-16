@@ -148,7 +148,8 @@ replication
         NextSpawnTime, NextVehicleSpawnTime, NextChangeTeamTime, LastKilledTime,
         DHPrimaryWeapon, DHSecondaryWeapon, bSpectateAllowViewPoints,
         SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled,
-        SquadLeaderLocations, bIsGagged;
+        SquadLeaderLocations, bIsGagged,
+        NextSquadRallyPointTime, SquadRallyPointCount;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)

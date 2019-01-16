@@ -349,6 +349,8 @@ function Timer()
                     ActiveSquadRallyPoints[i].SpawnAccrualTimer = 0;
                 }
             }
+
+            UpdateSquadRallyPointInfo(TeamIndex, SquadIndex);
         }
     }
 
@@ -1660,8 +1662,6 @@ function int GetSquadNextRallyPointTime(int TeamIndex, int SquadIndex)
 
 function SetSquadNextRallyPointTime(int TeamIndex, int SquadIndex, int ElapsedTime)
 {
-    local DHPlayer PC;
-
     switch (TeamIndex)
     {
         case AXIS_TEAM_INDEX:
@@ -1673,13 +1673,23 @@ function SetSquadNextRallyPointTime(int TeamIndex, int SquadIndex, int ElapsedTi
         default:
             break;
     }
+}
 
-    PC = DHPlayer(GetSquadLeader(TeamIndex, SquadIndex).Owner);
+simulated function int GetSquadRallyPointCount(int TeamIndex, int SquadIndex)
+{
+    local int i, Count;
 
-    if (PC != none)
+    for (i = 0; i < arraycount(RallyPoints); ++i)
     {
-        PC.NextSquadRallyPointTime = ElapsedTime;
+        if (RallyPoints[i] != none &&
+            RallyPoints[i].GetTeamIndex() == TeamIndex &&
+            RallyPoints[i].SquadIndex == SquadIndex)
+        {
+            ++Count;
+        }
     }
+
+    return Count;
 }
 
 simulated function array<DHSpawnPoint_SquadRallyPoint> GetSquadRallyPoints(int TeamIndex, int SquadIndex)
@@ -2024,6 +2034,11 @@ function int GetSquadRallyPointInitialSpawns(int TeamIndex, int SquadIndex)
     return Max(RallyPointInitialSpawnsMinimum, GetMemberCount(TeamIndex, SquadIndex) * RallyPointInitialSpawnsMemberMultiplier);
 }
 
+// Function is called when a rally point is destroyed for any reason.
+function OnSquadRallyPointDestroyed(DHSpawnPoint_SquadRallyPoint SRP)
+{
+}
+
 function DestroySquadRallyPoint(DHPlayerReplicationInfo PRI, DHSpawnPoint_SquadRallyPoint SRP)
 {
     if (PRI == none || SRP == none || !PRI.IsSquadLeader() || PRI.Team.TeamIndex != SRP.GetTeamIndex() || PRI.SquadIndex != SRP.SquadIndex || !SRP.IsActive())
@@ -2040,6 +2055,33 @@ function DestroySquadRallyPoint(DHPlayerReplicationInfo PRI, DHSpawnPoint_SquadR
     }
 
     SRP.Destroy();
+}
+
+function DHPlayer GetSquadLeaderPlayerController(int TeamIndex, int SquadIndex)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = GetSquadLeader(TeamIndex, SquadIndex);
+
+    if (PRI == none)
+    {
+        return none;
+    }
+
+    return DHPlayer(PRI.Owner);
+}
+
+function UpdateSquadRallyPointInfo(int TeamIndex, int SquadIndex)
+{
+    local DHPlayer PC;
+
+    PC = GetSquadLeaderPlayerController(TeamIndex, SquadIndex);
+
+    if (PC != none)
+    {
+        PC.NextSquadRallyPointTime = GetSquadNextRallyPointTime(TeamIndex, SquadIndex);
+        PC.SquadRallyPointCount = GetSquadRallyPointCount(TeamIndex, SquadIndex);
+    }
 }
 
 function SwapRallyPoints(DHPlayerReplicationInfo PRI)
