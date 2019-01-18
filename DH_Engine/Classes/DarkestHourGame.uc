@@ -90,6 +90,8 @@ var()   config int                  EmptyTankUnlockTime;                    // S
 
 var     DHGameReplicationInfo       GRI;
 
+var()   config bool                 bDebugNetSpeed;
+
 // The response types for requests.
 enum EArtilleryResponseType
 {
@@ -124,6 +126,13 @@ event InitGame(string Options, out string Error)
     {
         AccessControl.Destroy();
         AccessControl = Spawn(class'DH_Engine.DHAccessControl');
+    }
+
+    if (bDebugNetSpeed)
+    {
+        // Debug command, attempting to "unlock" the 10000 rate limit
+        // This command can be typed manually after each level loads to "unlock" the 10000 rate limit, lets see if this is the proper place to automatically do it
+        ConsoleCommand("set IpDrv.TcpNetDriver MaxClientRate 30000");
     }
 }
 
