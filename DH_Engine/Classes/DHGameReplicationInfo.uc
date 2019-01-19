@@ -352,6 +352,7 @@ function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
     local int i, j;
     local array<DHObjectiveTreeNode> Roots;
     local DHObjective Obj;
+    local array<int> ObjectiveIndices;
 
     for (i = 0; i < arraycount(DHObjectives); ++i)
     {
@@ -369,7 +370,7 @@ function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
             if (DHObjectives[Obj.AxisRequiredObjForCapture[j]].IsActive())
             {
                 // We have a root objective, lets check if it has hints defined
-                Roots[Roots.Length] = GetObjectiveTree(Team, Obj);
+                Roots[Roots.Length] = GetObjectiveTree(Team, Obj, ObjectiveIndices);
             }
         }
         // Loop through Allies required objective to find if linked to active obj
@@ -378,7 +379,7 @@ function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
             if (DHObjectives[Obj.AlliesRequiredObjForCapture[j]].IsActive())
             {
                 // We have a root objective, lets find the nearest objective with hints
-                Roots[Roots.Length] = GetObjectiveTree(Team, Obj);
+                Roots[Roots.Length] = GetObjectiveTree(Team, Obj, ObjectiveIndices);
             }
         }
     }
@@ -390,11 +391,11 @@ function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
     }
 }
 
-function TraverseTreeNode(int Team, DHObjectiveTreeNode Node, out array<int> ObjectiveIndices)
+function TraverseTreeNode(int Team, DHObjectiveTreeNode Node, out array<int> ObjectiveIndices, optional int Depth)
 {
     local int i;
 
-    if (Node == none)
+    if (Node == none || Depth > 1)
     {
         return;
     }
@@ -411,12 +412,12 @@ function TraverseTreeNode(int Team, DHObjectiveTreeNode Node, out array<int> Obj
     {
         for (i = 0; i < Node.Children.Length; ++i)
         {
-            TraverseTreeNode(Team, Node.Children[i], ObjectiveIndices);
+            TraverseTreeNode(Team, Node.Children[i], ObjectiveIndices, Depth + 1);
         }
     }
 }
 
-function DHObjectiveTreeNode GetObjectiveTree(int Team, DHObjective Objective)
+function DHObjectiveTreeNode GetObjectiveTree(int Team, DHObjective Objective, out array<int> ObjectiveIndices)
 {
     local int i;
     local DHObjectiveTreeNode Node;
@@ -427,15 +428,23 @@ function DHObjectiveTreeNode GetObjectiveTree(int Team, DHObjective Objective)
         return none;
     }
 
+    if (class'UArray'.static.IIndexOf(ObjectiveIndices, Objective.ObjNum) != -1)
+    {
+        return none;
+    }
+
+    ObjectiveIndices[ObjectiveIndices.Length] = Objective.ObjNum;
+
     Node = new class'DHObjectiveTreeNode';
     Node.Objective = Objective;
 
+    ObjectiveIndices[ObjectiveIndices.Length] = Objective.ObjNum;
 
     if (Team == AXIS_TEAM_INDEX)
     {
         for (i = 0; i < Objective.AxisRequiredObjForCapture.Length; ++i)
         {
-            Child = GetObjectiveTree(Team, DHObjectives[Objective.AxisRequiredObjForCapture[i]]);
+            Child = GetObjectiveTree(Team, DHObjectives[Objective.AxisRequiredObjForCapture[i]], ObjectiveIndices);
 
             if (Child != none)
             {
@@ -447,7 +456,7 @@ function DHObjectiveTreeNode GetObjectiveTree(int Team, DHObjective Objective)
     {
         for (i = 0; i < Objective.AlliesRequiredObjForCapture.Length; ++i)
         {
-            Child = GetObjectiveTree(Team, DHObjectives[Objective.AlliesRequiredObjForCapture[i]]);
+            Child = GetObjectiveTree(Team, DHObjectives[Objective.AlliesRequiredObjForCapture[i]], ObjectiveIndices);
 
             if (Child != none)
             {

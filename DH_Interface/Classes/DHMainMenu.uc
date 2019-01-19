@@ -378,6 +378,20 @@ event Opened(GUIComponent Sender)
             SetKeyBindIfAvailable("J", "PlaceRallyPoint");
         }
 
+        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.4.3")) < 0)
+        {
+            Log("Configuration file is older than v8.4.3, attempting to assign a min netspeed value");
+
+            if (PlayerOwner().Player != none)
+            {
+                if (PlayerOwner().Player.ConfiguredInternetSpeed < 10000)
+                {
+                    PlayerOwner().Player.ConfiguredInternetSpeed = 10000;
+                    PlayerOwner().ConsoleCommand("NetSpeed" @ 10000);
+                }
+            }
+        }
+
         SavedVersion = class'DarkestHourGame'.default.Version.ToString();
         SaveConfig();
     }

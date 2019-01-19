@@ -19,9 +19,10 @@ function Timer()
 
 defaultproperties
 {
+    SpawnPointStyle="DHObjectiveSpawnButtonStyle"
     Type=ESPT_Infantry
     bStatic=false
     bCollideWhenPlacing=false
     bHidden=true
-    BaseSpawnTimePenalty=10
+    BaseSpawnTimePenalty=15
 }
