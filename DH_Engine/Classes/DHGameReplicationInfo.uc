@@ -1683,52 +1683,14 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
     return ERROR_None;
 }
 
-// This function will return a positive number if the pointer is OUTSIDE of
-// `TeamIndex` influence.
 simulated function float GetDangerZoneIntensity(float PointerX, float PointerY, byte TeamIndex)
 {
-    local float Intensity, IntensityA, IntensityB;
-    local int TotalA, TotalB, i;
-    local vector V1, V2;
-
-    V2.X = PointerX;
-    V2.Y = PointerY;
-
-    for (i = 0; i < arraycount(DHObjectives); i++)
-    {
-        if (DHObjectives[i] == none)
-        {
-            continue;
-        }
-
-        V1.X = DHObjectives[i].Location.X;
-        V1.Y = DHObjectives[i].Location.Y;
-
-        Intensity = 1 / FMax(VSizeSquared(V1 - V2), class'UFloat'.static.Epsilon());
-
-        if (DHObjectives[i].IsActive() || DHObjectives[i].IsOwnedByTeam(TeamIndex))
-        {
-            TotalA++;
-            IntensityA += Intensity;
-        }
-        else
-        {
-            TotalB++;
-            IntensityB += Intensity;
-        }
-    }
-
-    return FClamp(DangerZoneIntensityScale, 0.1, 2.0) * IntensityB / Max(TotalB, 1) - IntensityA / Max(TotalA, 1);
+    return class'DHDangerZone'.static.GetIntensity(self, PointerX, PointerY, TeamIndex);
 }
 
 simulated function bool IsInDangerZone(float PointerX, float PointerY, byte TeamIndex)
 {
-    if (!bIsDangerZoneEnabled)
-    {
-        return false;
-    }
-
-    return GetDangerZoneIntensity(PointerX, PointerY, TeamIndex) >= 0.0;
+    return class'DHDangerZone'.static.IsIn(self, PointerX, PointerY, TeamIndex);
 }
 
 defaultproperties

@@ -4,7 +4,8 @@
 //==============================================================================
 
 class DHHud extends ROHud
-    dependson(DHSquadReplicationInfo);
+    dependson(DHSquadReplicationInfo)
+    dependson(DHDangerZone);
 
 #exec OBJ LOAD FILE=..\Textures\DH_GUI_Tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_Weapon_tex.utx
@@ -140,8 +141,13 @@ var     globalconfig int    MinPromptPacketLoss;    // client option used for th
 // Indicators
 var     SpriteWidget        PacketLossIndicator;    // shows up in various colors when packet loss is present
 
+// Danger Zone
+var DHDangerZone.OverlayData DangerZoneOverlayData;
+var class<DHDangerZone> DangerZoneClass;
+var int DangerZoneOverlayResolution;
+var bool bDangerZoneUpdatePending;
+
 // Debug
-var     bool                bDebugDangerZoneOverlay; // show hot spots on the map
 var     bool                bDebugVehicleHitPoints; // show all vehicle's special hit points (VehHitpoints & NewVehHitpoints), but not the driver's hit points
 var     bool                bDebugVehicleWheels;    // show all vehicle's physics wheels (the Wheels array of invisible wheels that drive & steer vehicle, even ones with treads)
 var     bool                bDebugCamera;           // in behind view, draws a red dot & white sphere to show current camera location, with a red line showing camera rotation
@@ -2058,6 +2064,11 @@ function DrawSignals(Canvas C)
     }
 }
 
+function OnObjectiveCompleted()
+{
+    bDangerZoneUpdatePending = true;
+}
+
 exec function ShowObjectives()
 {
     local GUIController GUIController;
@@ -3817,10 +3828,14 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     DrawPlayerIconsOnMap(C, SubCoords, MyMapScale, MapCenter, Viewport);
     DrawExposedEnemyRallyPoints(C, SubCoords, MyMapScale, MapCenter, Viewport);
 
-    // DEBUG:
+    if (bDangerZoneUpdatePending)
+    {
+        UpdateDangerZoneOverlay();
+    }
 
-    if (bDebugDangerZoneOverlay)
-        DrawDangerZoneOverlay(C, Subcoords, MyMapScale, MapCenter, Viewport);
+    DrawDangerZoneOverlay(C, SubCoords, MyMapScale, MapCenter, Viewport, DangerZoneOverlayData);
+
+    // DEBUG:
 
     // Show map's north-east & south-west bounds - toggle using console command: ShowDebugMap (formerly enabled by LevelInfo.bDebugOverhead)
     if (bShowDebugInfoOnMap && Level.NetMode == NM_Standalone)
@@ -3873,47 +3888,27 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
     }
 }
 
-// TODO:
-function DrawDangerZoneOverlay(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
+function UpdateDangerZoneOverlay()
 {
     local DHPlayer PC;
-    local int i, j, MinX, MaxX, MinY, MaxY, Res;
-    local vector L;
 
     PC = DHPlayer(PlayerOwner);
 
-    if (DHGRI == none || PC == none)
-        return;
-
-    Res = 40;
-
-    MinX = int(Viewport.Min.X * Res) + 1;
-    MaxX = int(Viewport.Max.X * Res);
-
-    MinY = int(Viewport.Min.Y * Res) + 1;
-    MaxY = int(Viewport.Max.Y * Res);
-
-    for (i = MinX; i < MaxX; i++)
+    if (PC != none)
     {
-        for (j = MinY; j < MaxY; j++)
-        {
-            L.X = float(i) / Res;
-            L.Y = float(j) / Res;
+        DangerZoneOverlayData = DangerZoneClass.static.GetOverlayData(DHGRI, DangerZoneOverlayResolution, PC.GetTeamNum());
+    }
 
-            L = DHGRI.GetWorldCoords(L.X, L.Y);
+    bDangerZoneUpdatePending = false;
+}
 
-            if (!DHGRI.IsInDangerZone(L.X, L.Y, PC.GetTeamNum()))
-            {
-                continue;
-            }
+function DrawDangerZoneOverlay(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport, DHDangerZone.OverlayData O)
+{
+    local int i;
 
-            MapMarkerIcon.WidgetTexture = class'DHMapMarker_Enemy_PlatoonHQ'.default.IconMaterial;
-            MapMarkerIcon.TextureCoords = class'DHMapMarker_Enemy_PlatoonHQ'.default.IconCoords;
-            MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = class'DHMapMarker_Enemy_PlatoonHQ'.default.IconColor;
-            MapMarkerIcon.Tints[AXIS_TEAM_INDEX].A = 50;
-
-            DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, L, MapCenter, Viewport);
-        }
+    for (i = 0; i < O.LineStart.Length; i++)
+    {
+        DrawMapLine(C, SubCoords, MyMapScale, MapCenter, Viewport, O.LineStart[i], O.LineEnd[i], DangerZoneClass.default.ContourColor);
     }
 }
 
@@ -5581,11 +5576,12 @@ exec function CameraDebug()
     }
 }
 
-exec function DangerZoneDebug()
+exec function DangerZoneSetRes(int Value)
 {
     if (IsDebugModeAllowed())
     {
-        bDebugDangerZoneOverlay = !bDebugDangerZoneOverlay;
+        DangerZoneOverlayResolution = Min(256, Value);
+        UpdateDangerZoneOverlay();
     }
 }
 
@@ -5893,4 +5889,9 @@ defaultproperties
     SupplyCountWidget=(WidgetTexture=Texture'DH_GUI_Tex.GUI.supply_indicator',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=31),TextureScale=1.0,DrawPivot=DP_UpperMiddle,PosX=0.5,PosY=0.0,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255),OffsetY=8)
     SupplyCountIconWidget=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.supply_cache',RenderStyle=STY_Alpha,TextureCoords=(X2=31,Y2=31),TextureScale=0.9,DrawPivot=DP_UpperMiddle,PosX=0.5,PosY=0.0,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255),OffsetX=51,OffsetY=8)
     SupplyCountTextWidget=(PosX=0.5,PosY=0,WrapWidth=0,WrapHeight=0,OffsetX=0,OffsetY=0,DrawPivot=DP_MiddleRight,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=true,OffsetX=16,OffsetY=24)
+
+    // Danger Zone
+    DangerZoneClass=class'DH_Engine.DHDangerZone'
+    DangerZoneOverlayResolution=54
+    bDangerZoneUpdatePending=true
 }

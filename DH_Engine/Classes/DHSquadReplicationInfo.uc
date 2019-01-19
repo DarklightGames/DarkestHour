@@ -2056,7 +2056,10 @@ function UpdateRallyPoints()
 
     for (i = 0; i < arraycount(RallyPoints); i++)
     {
-        RallyPoints[i].OnUpdated();
+        if (RallyPoints[i] != none)
+        {
+            RallyPoints[i].OnUpdated();
+        }
     }
 }
 
@@ -2067,7 +2070,7 @@ simulated function array<DHSpawnPoint_SquadRallyPoint> GetExposedEnemyRallyPoint
 
     for (i = 0; i < arraycount(RallyPoints); i++)
     {
-        if (RallyPoints[i].GetTeamIndex() != TeamIndex && RallyPoints[i].bIsExposed)
+        if (RallyPoints[i] != none && RallyPoints[i].GetTeamIndex() != TeamIndex && RallyPoints[i].bIsExposed)
         {
             ExposedEnemyRallyPoints[ExposedEnemyRallyPoints.Length] = RallyPoints[i];
         }
