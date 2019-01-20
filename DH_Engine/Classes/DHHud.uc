@@ -4,8 +4,7 @@
 //==============================================================================
 
 class DHHud extends ROHud
-    dependson(DHSquadReplicationInfo)
-    dependson(DHDangerZone);
+    dependson(DHSquadReplicationInfo);
 
 #exec OBJ LOAD FILE=..\Textures\DH_GUI_Tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_Weapon_tex.utx
@@ -142,12 +141,13 @@ var     globalconfig int    MinPromptPacketLoss;    // client option used for th
 var     SpriteWidget        PacketLossIndicator;    // shows up in various colors when packet loss is present
 
 // Danger Zone
-var DHDangerZone.OverlayData DangerZoneOverlayData;
+var array<vector> DangerZoneOverlayContour;
 var class<DHDangerZone> DangerZoneClass;
 var int DangerZoneOverlayResolution;
 var bool bDangerZoneUpdatePending;
 
 // Debug
+var     bool                bDangerZoneOverlayDebug;
 var     bool                bDebugVehicleHitPoints; // show all vehicle's special hit points (VehHitpoints & NewVehHitpoints), but not the driver's hit points
 var     bool                bDebugVehicleWheels;    // show all vehicle's physics wheels (the Wheels array of invisible wheels that drive & steer vehicle, even ones with treads)
 var     bool                bDebugCamera;           // in behind view, draws a red dot & white sphere to show current camera location, with a red line showing camera rotation
@@ -3833,7 +3833,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
         UpdateDangerZoneOverlay();
     }
 
-    DrawDangerZoneOverlay(C, SubCoords, MyMapScale, MapCenter, Viewport, DangerZoneOverlayData);
+    DrawDangerZoneOverlay(C, SubCoords, MyMapScale, MapCenter, Viewport);
 
     // DEBUG:
 
@@ -3891,24 +3891,30 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
 function UpdateDangerZoneOverlay()
 {
     local DHPlayer PC;
+    local string DebugInfo;
 
     PC = DHPlayer(PlayerOwner);
 
     if (PC != none)
     {
-        DangerZoneOverlayData = DangerZoneClass.static.GetOverlayData(DHGRI, DangerZoneOverlayResolution, PC.GetTeamNum());
+        DangerZoneOverlayContour = DangerZoneClass.static.GetContour(DHGRI, DangerZoneOverlayResolution, PC.GetTeamNum(), DebugInfo);
     }
 
     bDangerZoneUpdatePending = false;
+
+    if (bDangerZoneOverlayDebug)
+    {
+        PC.ClientMessage("DANGER ZONE UPDATED:" @ DebugInfo);
+    }
 }
 
-function DrawDangerZoneOverlay(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport, DHDangerZone.OverlayData O)
+function DrawDangerZoneOverlay(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
 {
     local int i;
 
-    for (i = 0; i < O.LineStart.Length; i++)
+    for (i = 0; i < DangerZoneOverlayContour.Length; i += 2)
     {
-        DrawMapLine(C, SubCoords, MyMapScale, MapCenter, Viewport, O.LineStart[i], O.LineEnd[i], DangerZoneClass.default.ContourColor);
+        DrawMapLine(C, SubCoords, MyMapScale, MapCenter, Viewport, DangerZoneOverlayContour[i], DangerZoneOverlayContour[i + 1], DangerZoneClass.default.ContourColor);
     }
 }
 
@@ -5576,11 +5582,19 @@ exec function CameraDebug()
     }
 }
 
+exec function DangerZoneDebug()
+{
+    if (IsDebugModeAllowed())
+    {
+        bDangerZoneOverlayDebug = !bDangerZoneOverlayDebug;
+    }
+}
+
 exec function DangerZoneSetRes(int Value)
 {
     if (IsDebugModeAllowed())
     {
-        DangerZoneOverlayResolution = Min(256, Value);
+        DangerZoneOverlayResolution = Value;
         UpdateDangerZoneOverlay();
     }
 }

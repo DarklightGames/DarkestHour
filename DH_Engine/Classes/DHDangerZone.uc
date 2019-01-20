@@ -7,25 +7,15 @@ class DHDangerZone extends Object
 
 var color ContourColor;
 
-struct ScalarField
+static final function vector IndicesToCoords(int X_Index, int Y_Index, float X_Step, float Y_Step, vector Origin)
 {
-    var int Width;
-    var array<float> Intensity;
-    var array<byte> Normal;
-    var array<byte> Mask;
-};
+    local vector L;
 
-struct OverlayData
-{
-    var ScalarField Data;
+    L.X = X_Index * X_Step;
+    L.Y = Y_Index * Y_Step;
 
-    var vector Center;
-    var vector Origin;
-    var float X_Step;
-    var float Y_Step;
-    var array<vector> LineStart;
-    var array<vector> LineEnd;
-};
+    return L + Origin;
+}
 
 // This function will return a positive number if the pointer is OUTSIDE of
 // `TeamIndex` influence.
@@ -75,166 +65,145 @@ static function bool IsIn(DHGameReplicationInfo GRI, float PointerX, float Point
     return GetIntensity(GRI, PointerX, PointerY, TeamIndex) >= 0.0;
 }
 
-protected static function AddContour(out OverlayData O, int X_Index, int Y_Index)
+protected static function AddSegment(out array<vector>Contour, byte Mask, byte Normal, vector CellCoords, int X_Step, int Y_Step)
 {
-    local int Index;
-    local byte Mask, Normal;
-    local vector CellCoords, LineStartOffset, LineEndOffset;
-
-    Index = class'UArray'.static.RavelIndices(X_Index, Y_Index, O.Data.Width);
-    Mask = O.Data.Mask[Index];
+    local vector StartOffset, EndOffset;
 
     if (Mask < 1 || Mask > 14)
     {
         return;
     }
 
-    Normal = O.Data.Normal[Index];
-    CellCoords = static.IndicesToCoords(O, X_Index, Y_Index);
-
     if (Mask == 1 || Mask == 14)
     {
         // NW
-        LineStartOffset.Y += O.Y_Step;
-        LineEndOffset.X -= O.X_Step;
+        StartOffset.Y += Y_Step;
+        EndOffset.X -= X_Step;
     }
     else if (Mask == 2 || Mask == 13)
     {
         // NE
-        LineStartOffset.Y += O.Y_Step;
-        LineEndOffset.X += O.X_Step;
+        StartOffset.Y += Y_Step;
+        EndOffset.X += X_Step;
     }
     else if (Mask == 3 || Mask == 12)
     {
         // W-E
-        LineStartOffset.X -= O.X_Step;
-        LineEndOffset.X += O.X_Step;
+        StartOffset.X -= X_Step;
+        EndOffset.X += X_Step;
     }
     else if (Mask == 4 || Mask == 11)
     {
         // SE
-        LineStartOffset.Y -= O.Y_Step;
-        LineEndOffset.X += O.X_Step;
+        StartOffset.Y -= Y_Step;
+        EndOffset.X += X_Step;
     }
     else if ((Mask == 5 && Normal > 0) || (Mask == 10 && Normal == 0))
     {
         // NE
-        LineStartOffset.Y += O.Y_Step;
-        LineEndOffset.X += O.X_Step;
+        StartOffset.Y += Y_Step;
+        EndOffset.X += X_Step;
 
-        O.LineStart[O.LineStart.Length] = CellCoords + LineStartOffset;
-        O.LineEnd[O.LineEnd.Length] = CellCoords + LineEndOffset;
+        Contour[Contour.Length] = CellCoords + StartOffset;
+        Contour[Contour.Length] = CellCoords + EndOffset;
 
         // SW
-        LineStartOffset.Y -= O.Y_Step;
-        LineEndOffset.X -= O.X_Step;
+        StartOffset.Y -= Y_Step;
+        EndOffset.X -= X_Step;
     }
     else if ((Mask == 5 && Normal == 0) || (Mask == 10 && Normal > 0))
     {
         // NW
-        LineStartOffset.Y += O.Y_Step;
-        LineEndOffset.X -= O.X_Step;
+        StartOffset.Y += Y_Step;
+        EndOffset.X -= X_Step;
 
-        O.LineStart[O.LineStart.Length] = CellCoords + LineStartOffset;
-        O.LineEnd[O.LineEnd.Length] = CellCoords + LineEndOffset;
+        Contour[Contour.Length] = CellCoords + StartOffset;
+        Contour[Contour.Length] = CellCoords + EndOffset;
 
         // SE
-        LineStartOffset.Y -= O.Y_Step;
-        LineEndOffset.X += O.X_Step;
+        StartOffset.Y -= Y_Step;
+        EndOffset.X += X_Step;
     }
     else if (Mask == 6 || Mask == 9)
     {
         // N-S
-        LineStartOffset.Y += O.Y_Step;
-        LineEndOffset.Y -= O.Y_Step;
+        StartOffset.Y += Y_Step;
+        EndOffset.Y -= Y_Step;
     }
     else if (Mask == 7 || Mask == 8)
     {
         // SW
-        LineStartOffset.Y -= O.Y_Step;
-        LineEndOffset.X -= O.X_Step;
+        StartOffset.Y -= Y_Step;
+        EndOffset.X -= X_Step;
     }
     else
     {
         return;
     }
 
-    O.LineStart[O.LineStart.Length] = CellCoords + LineStartOffset;
-    O.LineEnd[O.LineEnd.Length] = CellCoords + LineEndOffset;
+    Contour[Contour.Length] = CellCoords + StartOffset;
+    Contour[Contour.Length] = CellCoords + EndOffset;
 }
 
-static final function vector IndicesToCoords(OverlayData O, int X_Index, int Y_Index)
+static function array<vector> GetContour(DHGameReplicationInfo GRI, int Resolution, byte TeamIndex, out string DebugInfo)
 {
-    local vector L;
+    local int x, y;
+    local float XL, YL, X_Step, Y_Step;
+    local vector Origin, CellCoords;
+    local byte Mask;
+    local array<byte> Normal;
+    local array<vector> Contour;
 
-    L.X = X_Index * O.X_Step;
-    L.Y = Y_Index * O.Y_Step;
-
-    return L + O.Origin;
-}
-
-static function OverlayData GetOverlayData(DHGameReplicationInfo GRI, int Resolution, byte TeamIndex)
-{
-    local int x, y, i;
-    local float XL, YL;
-    local vector CellCoords;
-    local OverlayData O;
-
-    Resolution = Max(1, Resolution);
+    Resolution = Clamp(Resolution, 3, 255);
+    Resolution += 1 - Ceil(Resolution % 2);
 
     XL = FMax(1.0, Abs(GRI.SouthWestBounds.X) + Abs(GRI.NorthEastBounds.X));
     YL = FMax(1.0, Abs(GRI.SouthWestBounds.Y) + Abs(GRI.NorthEastBounds.Y));
 
-    O.X_Step = XL / Resolution;
-    O.Y_Step = YL / Resolution;
+    X_Step = XL / (Resolution - 1);
+    Y_Step = YL / (Resolution - 1);
 
-    O.Origin.X = GRI.SouthWestBounds.X;
-    O.Origin.Y = GRI.NorthEastBounds.Y;
+    Origin.X = GRI.SouthWestBounds.X;
+    Origin.Y = GRI.NorthEastBounds.Y;
 
-    O.Data.Width = Resolution;
-
-    // Populate the intensity and normal arrays
-    for (x = 0; x < O.Data.Width; x++)
+    // Get the normalized field
+    for (x = 0; x < Resolution; x++)
     {
-        for (y = 0; y < O.Data.Width; y++)
+        for (y = 0; y < Resolution; y++)
         {
-            CellCoords = static.IndicesToCoords(O, x, y);
+            CellCoords = static.IndicesToCoords(x, y, X_Step, Y_Step, Origin);
 
-            O.Data.Intensity[O.Data.Intensity.Length] = static.GetIntensity(GRI, CellCoords.X, CellCoords.Y, TeamIndex);
-
-            if (O.Data.Intensity[O.Data.Intensity.Length - 1] > 0)
+            if (static.IsIn(GRI, CellCoords.X, CellCoords.Y, TeamIndex))
             {
-                O.Data.Normal[O.Data.Normal.Length] = 1;
+                Normal[Normal.Length] = 1;
             }
             else
             {
-                O.Data.Normal[O.Data.Normal.Length] = 0;
+                Normal[Normal.Length] = 0;
             }
         }
     }
 
-    // Calculate bit-masks and contour coordinates
-    for (x = 0; x < Ceil(O.Data.Normal.Length / O.Data.Width); x++)
+    // Calculate bitmasks and contour coordinates
+    for (x = 1; x < Ceil(Normal.Length / Resolution) - 1; x += 2)
     {
-        for (y = 0; y < O.Data.Width; y++)
+        for (y = 1; y < Resolution - 1; y += 2)
         {
-            O.Data.Mask[O.Data.Mask.Length] = 0;
+            Mask = 0;
+            Mask += Normal[class'UArray'.static.RavelIndices(x - 1, y - 1, Resolution)] << 3;
+            Mask += Normal[class'UArray'.static.RavelIndices(x + 1, y - 1, Resolution)] << 2;
+            Mask += Normal[class'UArray'.static.RavelIndices(x + 1, y + 1, Resolution)] << 1;
+            Mask += Normal[class'UArray'.static.RavelIndices(x - 1, y + 1, Resolution)];
 
-            if (x > 0 && y > 0 && x % 2 == 0 && y % 2 == 0 && x < O.Data.Width - 1 && y < O.Data.Normal.Length / O.Data.Width - 1)
-            {
-                i = O.Data.Mask.Length - 1;
+            CellCoords = static.IndicesToCoords(x, y, X_Step, Y_Step, Origin);
 
-                O.Data.Mask[i] += O.Data.Normal[class'UArray'.static.RavelIndices(x - 1, y - 1, O.Data.Width)] << 3;
-                O.Data.Mask[i] += O.Data.Normal[class'UArray'.static.RavelIndices(x + 1, y - 1, O.Data.Width)] << 2;
-                O.Data.Mask[i] += O.Data.Normal[class'UArray'.static.RavelIndices(x + 1, y + 1, O.Data.Width)] << 1;
-                O.Data.Mask[i] += O.Data.Normal[class'UArray'.static.RavelIndices(x - 1, y + 1, O.Data.Width)];
-
-                AddContour(O, x, y);
-            }
+            AddSegment(Contour, Mask, Normal[class'UArray'.static.RavelIndices(x, y, Resolution)], CellCoords, X_Step, Y_Step);
         }
     }
 
-    return O;
+    DebugInfo = string(Contour.Length / 2) @ "lines @" @ string(Resolution) @ "resolution";
+
+    return Contour;
 }
 
 defaultproperties
