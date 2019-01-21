@@ -28,7 +28,7 @@ static function float GetIntensity(DHGameReplicationInfo GRI, float PointerX, fl
     V2.X = PointerX;
     V2.Y = PointerY;
 
-    for (i = 0; i < arraycount(GRI.DHObjectives); i++)
+    for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
     {
         if (GRI.DHObjectives[i] == none)
         {
@@ -38,16 +38,16 @@ static function float GetIntensity(DHGameReplicationInfo GRI, float PointerX, fl
         V1.X = GRI.DHObjectives[i].Location.X;
         V1.Y = GRI.DHObjectives[i].Location.Y;
 
-        Intensity = 1 / FMax(VSizeSquared(V1 - V2), class'UFloat'.static.Epsilon());
+        Intensity = 1.0 / FMax(VSizeSquared(V1 - V2), class'UFloat'.static.Epsilon());
 
         if (GRI.DHObjectives[i].IsActive() || GRI.DHObjectives[i].IsOwnedByTeam(TeamIndex))
         {
-            TotalA++;
+            ++TotalA;
             IntensityA += Intensity;
         }
         else
         {
-            TotalB++;
+            ++TotalB;
             IntensityB += Intensity;
         }
     }
@@ -167,9 +167,9 @@ static function array<vector> GetContour(DHGameReplicationInfo GRI, int Resoluti
     Origin.Y = GRI.NorthEastBounds.Y;
 
     // Get the normalized field
-    for (x = 0; x < Resolution; x++)
+    for (x = 0; x < Resolution; ++x)
     {
-        for (y = 0; y < Resolution; y++)
+        for (y = 0; y < Resolution; ++y)
         {
             CellCoords = static.IndicesToCoords(x, y, X_Step, Y_Step, Origin);
 
@@ -190,10 +190,10 @@ static function array<vector> GetContour(DHGameReplicationInfo GRI, int Resoluti
         for (y = 1; y < Resolution - 1; y += 2)
         {
             Mask = 0;
-            Mask += Normal[class'UArray'.static.RavelIndices(x - 1, y - 1, Resolution)] << 3;
-            Mask += Normal[class'UArray'.static.RavelIndices(x + 1, y - 1, Resolution)] << 2;
-            Mask += Normal[class'UArray'.static.RavelIndices(x + 1, y + 1, Resolution)] << 1;
-            Mask += Normal[class'UArray'.static.RavelIndices(x - 1, y + 1, Resolution)];
+            Mask |= Normal[class'UArray'.static.RavelIndices(x - 1, y - 1, Resolution)] << 3;
+            Mask |= Normal[class'UArray'.static.RavelIndices(x + 1, y - 1, Resolution)] << 2;
+            Mask |= Normal[class'UArray'.static.RavelIndices(x + 1, y + 1, Resolution)] << 1;
+            Mask |= Normal[class'UArray'.static.RavelIndices(x - 1, y + 1, Resolution)];
 
             CellCoords = static.IndicesToCoords(x, y, X_Step, Y_Step, Origin);
 
