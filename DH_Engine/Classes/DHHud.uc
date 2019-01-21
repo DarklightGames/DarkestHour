@@ -145,7 +145,11 @@ var     bool                bDebugVehicleWheels;    // show all vehicle's physic
 var     bool                bDebugCamera;           // in behind view, draws a red dot & white sphere to show current camera location, with a red line showing camera rotation
 var     SkyZoneInfo         SavedSkyZone;           // saves original SkyZone for player's current ZoneInfo if sky is turned off for debugging, so can be restored when sky is turned back on
 
-// Squad rally point placement
+// Squad Rally Point
+var     Material            RallyPointBase;
+var     Material            RallyPointBaseRed;
+var     Material            RallyPointBaseDark;
+var     Material            RallyPointBaseGlow;
 var     float               NextRallyPointPlacementResultTime;
 
 // Modified to ignore the Super in ROHud, which added a hacky way of changing the compass rotating texture
@@ -5454,13 +5458,9 @@ function DrawSquadRallyPointHUD(Canvas C)
     local float X, Y;
     local string ErrorString;
     local Material ErrorIcon;
-
-    X = 100;
-    Y = 100;
+    local float BaseX, BaseY, BaseXL, BaseYL, CombinedXL, MarginX, IconXL, IconXY;
 
     PC = DHPlayer(PlayerOwner);
-
-    C.Font = C.TinyFont;
 
     if (PC == none || !PC.IsSquadLeader() || PC.SquadReplicationInfo == none)
     {
@@ -5469,6 +5469,7 @@ function DrawSquadRallyPointHUD(Canvas C)
 
     SRI = PC.SquadReplicationInfo;
 
+    // Draw
     if (Level.TimeSeconds >= NextRallyPointPlacementResultTime)
     {
         Result = SRI.GetRallyPointPlacementResult(PC);
@@ -5480,14 +5481,34 @@ function DrawSquadRallyPointHUD(Canvas C)
         Result = PC.RallyPointPlacementResult;
     }
 
-    C.DrawColor = class'UColor'.default.White;
-    C.TextSize("A", XL, YL);
-    C.SetPos(X, Y);
-    Y += YL;
+    BaseX = C.ClipX * 1.0;
+    BaseY = C.ClipY * 1.0;
 
-    if (Result.bIsInDangerZone)
+    BaseXL = RallyPointBase.MaterialUSize();
+    BaseYL = RallyPointBase.MaterialVSize();
+
+    BaseX -= BaseXL * 2; // TODO: debugging, for now
+    BaseY -= BaseYL;
+
+    X = BaseX;
+    Y = BaseY;
+
+    C.SetPos(X, Y);
+
+    if (PC.SquadRallyPointCount == 0)
     {
-        // TODO: draw danger zone overlay
+        // Draw a flashing overlay if there are currently no rally points.
+        C.DrawTile(RallyPointBaseRed, 128, 128, 0, 0, 127, 127);
+    }
+    else if (Result.Error.Type == ERROR_None)
+    {
+        C.DrawTile(RallyPointBaseGlow, 128, 128, 0, 0, 127, 127);
+        C.SetPos(X, Y);
+        C.DrawTile(RallyPointBase, 128, 128, 0, 0, 127, 127);
+    }
+    else
+    {
+        C.DrawTile(RallyPointBaseDark, 128, 128, 0, 0, 127, 127);
     }
 
     if (Result.Error.Type != ERROR_None)
@@ -5518,11 +5539,45 @@ function DrawSquadRallyPointHUD(Canvas C)
             default:
                 break;
         }
+    }
+
+    if (ErrorString != "" || ErrorIcon != none)
+    {
+        C.Font = C.MedFont;
+        C.DrawColor = class'UColor'.default.White;
+
+        // Measure the font size.
+        C.TextSize("A", XL, YL);
+
+        if (ErrorIcon != none)
+        {
+            IconXL = 32;
+            IconXY = 32;
+        }
+
+        CombinedXL = XL + IconXL;
+        MarginX = 4;
+
+        // TODO: figure out X/Y
+        X = BaseX + (BaseXL / 2) - (CombinedXL + MarginX);
+        Y = BaseY + (BaseYL / 2) - YL;
 
         C.SetPos(X, Y);
-        C.DrawText(ErrorString);
-        Y += YL;
+
+        if (ErrorIcon != none)
+        {
+            C.DrawTile(ErrorIcon, 32, 32, 0, 0, 31, 31);
+            X += 32;
+        }
+
+        DrawShadowedTextClipped(C, ErrorString);
     }
+
+    if (Result.bIsInDangerZone)
+    {
+        // TODO: draw danger zone overlay
+    }
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -5887,4 +5942,10 @@ defaultproperties
     SupplyCountWidget=(WidgetTexture=Texture'DH_GUI_Tex.GUI.supply_indicator',RenderStyle=STY_Alpha,TextureCoords=(X2=127,Y2=31),TextureScale=1.0,DrawPivot=DP_UpperMiddle,PosX=0.5,PosY=0.0,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255),OffsetY=8)
     SupplyCountIconWidget=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.supply_cache',RenderStyle=STY_Alpha,TextureCoords=(X2=31,Y2=31),TextureScale=0.9,DrawPivot=DP_UpperMiddle,PosX=0.5,PosY=0.0,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255),OffsetX=51,OffsetY=8)
     SupplyCountTextWidget=(PosX=0.5,PosY=0,WrapWidth=0,WrapHeight=0,OffsetX=0,OffsetY=0,DrawPivot=DP_MiddleRight,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=true,OffsetX=16,OffsetY=24)
+
+    // Rally Point
+    RallyPointBase=Material'DH_InterfaceArt2_tex.RallyPoint.rp'
+    RallyPointBaseRed=Material'DH_InterfaceArt2_tex.RallyPoint.rp_red'
+    RallyPointBaseDark=Material'DH_InterfaceArt2_tex.RallyPoint.rp_dark'
+    RallyPointBaseGlow=Material'DH_InterfaceArt2_tex.RallyPoint.rp_glow'
 }
