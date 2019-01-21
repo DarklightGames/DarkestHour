@@ -133,8 +133,9 @@ struct RallyPointPlacementError
 struct RallyPointPlacementResult
 {
     var RallyPointPlacementError Error;
-    var vector HitLocation;
-    var vector HitNormal;
+    var bool    bIsInDangerZone;
+    var vector  HitLocation;
+    var vector  HitNormal;
 };
 
 replication

@@ -5453,7 +5453,7 @@ function DrawSquadRallyPointHUD(Canvas C)
     local float XL, YL;
     local float X, Y;
     local string ErrorString;
-    local int CooldownTimeSeconds;
+    local Material ErrorIcon;
 
     X = 100;
     Y = 100;
@@ -5480,50 +5480,43 @@ function DrawSquadRallyPointHUD(Canvas C)
         Result = PC.RallyPointPlacementResult;
     }
 
-    CooldownTimeSeconds = Max(0, PC.NextSquadRallyPointTime - DHGRI.ElapsedTime);
-
     C.DrawColor = class'UColor'.default.White;
     C.TextSize("A", XL, YL);
     C.SetPos(X, Y);
-    C.DrawText("# of Rally Points:" @ PC.SquadRallyPointCount);
     Y += YL;
 
-    if (CooldownTimeSeconds > 0)
+    if (Result.bIsInDangerZone)
     {
-        C.SetPos(X, Y);
-        C.DrawText("Cooldown:" @ class'TimeSpan'.static.ToString(CooldownTimeSeconds));
-        Y += YL;
+        // TODO: draw danger zone overlay
     }
 
     if (Result.Error.Type != ERROR_None)
     {
-        if (Result.Error.Type == ERROR_Fatal)
+        switch (Result.Error.Type)
         {
-            ErrorString = "FATAL";
-        }
-        else if (Result.Error.Type == ERROR_NotOnFoot)
-        {
-            ErrorString = "NOT ON FOOT";
-        }
-        else if (Result.Error.Type == ERROR_TooCloseToOtherRallyPoint)
-        {
-            ErrorString = "TOO CLOSE TO OTHER RALLY POINT (" $ Result.Error.OptionalInt $ ")";
-        }
-        else if (Result.Error.Type == ERROR_MissingSquadmate)
-        {
-            ErrorString = "MISSING SQUADMATE";
-        }
-        else if (Result.Error.Type == ERROR_TooSoon)
-        {
-            ErrorString = "TOO SOON";
-        }
-        else if (Result.Error.Type == ERROR_InUncontrolledObjective)
-        {
-            ErrorString = "IN OBJECTIVE";
-        }
-        else if (Result.Error.Type == ERROR_BadLocation)
-        {
-            ErrorString = "BAD LOCATION";
+            case ERROR_Fatal:
+            case ERROR_NotOnFoot:
+                ErrorIcon = none;   // TODO
+                break;
+            case ERROR_BadLocation:
+                ErrorIcon = none;   // TODO
+                break;
+            case ERROR_TooCloseToOtherRallyPoint:
+                ErrorIcon = none;   // TODO
+                ErrorString = Result.Error.OptionalInt $ "m";
+                break;
+            case ERROR_MissingSquadmate:
+                ErrorIcon = none;   // TODO
+                break;
+            case ERROR_TooSoon:
+                ErrorIcon = none;   // TODO
+                ErrorString = class'TimeSpan'.static.ToString(Max(0, PC.NextSquadRallyPointTime - DHGRI.ElapsedTime));
+                break;
+            case ERROR_InUncontrolledObjective:
+                ErrorIcon = none;   // TODO
+                break;
+            default:
+                break;
         }
 
         C.SetPos(X, Y);
