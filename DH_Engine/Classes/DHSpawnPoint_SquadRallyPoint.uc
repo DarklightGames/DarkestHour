@@ -495,7 +495,7 @@ defaultproperties
     EncroachmentPenaltyForgivenessPerSecond=5
     bCanEncroachmentOverrun=true
 
-    InActiveObjectivePenaltySeconds=10
+    InActiveObjectivePenaltySeconds=15
 
     OverrunRadiusInMeters=15
     EstablishmentRadiusInMeters=25
