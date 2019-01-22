@@ -152,6 +152,15 @@ var     Material            RallyPointBaseDark;
 var     Material            RallyPointBaseGlow;
 var     float               NextRallyPointPlacementResultTime;
 
+var     Material            RallyPointIconNotOnFoot;
+var     Material            RallyPointIconDistance;
+var     Material            RallyPointIconCooldown;
+var     Material            RallyPointIconAlert;
+var     Material            RallyPointIconFlag;
+var     Material            RallyPointIconBadLocation;
+var     Material            RallyPointIconMissingSquadmate;
+var     Material            RallyPointIconKey;
+
 // Modified to ignore the Super in ROHud, which added a hacky way of changing the compass rotating texture
 // We now use a DH version of the compass texture, with a proper TexRotator set up for it
 function PostBeginPlay()
@@ -5454,11 +5463,12 @@ function DrawSquadRallyPointHUD(Canvas C)
     local DHPlayer PC;
     local DHSquadReplicationInfo SRI;
     local DHSquadReplicationInfo.RallyPointPlacementResult Result;
-    local float XL, YL;
     local float X, Y;
     local string ErrorString;
     local Material ErrorIcon;
-    local float BaseX, BaseY, BaseXL, BaseYL, CombinedXL, MarginX, IconXL, IconXY;
+    local float BaseX, BaseY, BaseXL, BaseYL, CombinedXL, MarginX, IconXL, IconYL, IconXY, TextXL, TextYL;
+
+    C.DrawColor = class'UColor'.default.White;
 
     PC = DHPlayer(PlayerOwner);
 
@@ -5474,7 +5484,7 @@ function DrawSquadRallyPointHUD(Canvas C)
     {
         Result = SRI.GetRallyPointPlacementResult(PC);
         PC.RallyPointPlacementResult = Result;
-        NextRallyPointPlacementResultTime = Level.TimeSeconds + 1.0;
+        NextRallyPointPlacementResultTime = Level.TimeSeconds + 0.25;
     }
     else
     {
@@ -5493,6 +5503,13 @@ function DrawSquadRallyPointHUD(Canvas C)
     X = BaseX;
     Y = BaseY;
 
+    if (Result.Error.Type == ERROR_None)
+    {
+        // A rally point can be placed, show the glow!
+        C.SetPos(X, Y);
+        C.DrawTile(RallyPointBaseGlow, 128, 128, 0, 0, 127, 127);
+    }
+
     C.SetPos(X, Y);
 
     if (PC.SquadRallyPointCount == 0)
@@ -5500,15 +5517,15 @@ function DrawSquadRallyPointHUD(Canvas C)
         // Draw a flashing overlay if there are currently no rally points.
         C.DrawTile(RallyPointBaseRed, 128, 128, 0, 0, 127, 127);
     }
-    else if (Result.Error.Type == ERROR_None)
+    else if (Result.Error.Type != ERROR_None)
     {
-        C.DrawTile(RallyPointBaseGlow, 128, 128, 0, 0, 127, 127);
-        C.SetPos(X, Y);
-        C.DrawTile(RallyPointBase, 128, 128, 0, 0, 127, 127);
+        // Draw a darkened bag, since there is a placement error.
+        C.DrawTile(RallyPointBaseDark, 128, 128, 0, 0, 127, 127);
     }
     else
     {
-        C.DrawTile(RallyPointBaseDark, 128, 128, 0, 0, 127, 127);
+        // Draw a normal bag!
+        C.DrawTile(RallyPointBase, 128, 128, 0, 0, 127, 127);
     }
 
     if (Result.Error.Type != ERROR_None)
@@ -5517,24 +5534,27 @@ function DrawSquadRallyPointHUD(Canvas C)
         {
             case ERROR_Fatal:
             case ERROR_NotOnFoot:
-                ErrorIcon = none;   // TODO
+                ErrorIcon = default.RallyPointIconNotOnFoot;
                 break;
             case ERROR_BadLocation:
-                ErrorIcon = none;   // TODO
+                ErrorIcon = default.RallyPointIconBadLocation;
                 break;
             case ERROR_TooCloseToOtherRallyPoint:
-                ErrorIcon = none;   // TODO
+                ErrorIcon = default.RallyPointIconDistance;
                 ErrorString = Result.Error.OptionalInt $ "m";
                 break;
             case ERROR_MissingSquadmate:
-                ErrorIcon = none;   // TODO
+                ErrorIcon = default.RallyPointIconMissingSquadmate;
                 break;
             case ERROR_TooSoon:
-                ErrorIcon = none;   // TODO
+                ErrorIcon = default.RallyPointIconCooldown;   // TODO
                 ErrorString = class'TimeSpan'.static.ToString(Max(0, PC.NextSquadRallyPointTime - DHGRI.ElapsedTime));
                 break;
             case ERROR_InUncontrolledObjective:
-                ErrorIcon = none;   // TODO
+                ErrorIcon = default.RallyPointIconFlag;
+                break;
+            CASE ERROR_None:
+                ErrorIcon = default.RallyPointIconKey;
                 break;
             default:
                 break;
@@ -5543,41 +5563,56 @@ function DrawSquadRallyPointHUD(Canvas C)
 
     if (ErrorString != "" || ErrorIcon != none)
     {
-        C.Font = C.MedFont;
-        C.DrawColor = class'UColor'.default.White;
+        // Time to display an error!
+        C.Font = class'DHHud'.static.GetSmallerMenuFont(C);
 
         // Measure the font size.
-        C.TextSize("A", XL, YL);
+        if (ErrorString != "")
+        {
+            C.TextSize(ErrorString, TextXL, TextYL);
+        }
 
         if (ErrorIcon != none)
         {
-            IconXL = 32;
-            IconXY = 32;
+            if (ErrorString == "")
+            {
+                IconXL = 32;
+                IconYL = 32;
+            }
+            else
+            {
+                IconXL = 24;
+                IconYL = 24;
+                MarginX = 2;
+            }
         }
 
-        CombinedXL = XL + IconXL;
-        MarginX = 4;
+        CombinedXL = TextXL + IconXL + MarginX;
 
-        // TODO: figure out X/Y
-        X = BaseX + (BaseXL / 2) - (CombinedXL + MarginX);
-        Y = BaseY + (BaseYL / 2) - YL;
+        X = BaseX + (BaseXL / 2) - (CombinedXL / 2);
 
-        C.SetPos(X, Y);
-
+        // Draw the icon!
         if (ErrorIcon != none)
         {
-            C.DrawTile(ErrorIcon, 32, 32, 0, 0, 31, 31);
-            X += 32;
+            Y = BaseY + (BaseYL / 2) - (IconYL / 2);
+            C.SetPos(X, Y);
+            C.DrawTile(ErrorIcon, IconXL, IconYL, 0, 0, 31, 31);
         }
 
-        DrawShadowedTextClipped(C, ErrorString);
+        // Draw the text (if it exists)
+        if (ErrorString != "")
+        {
+            X += IconXL + MarginX;
+            Y = BaseY + (BaseYL / 2) - (TextYL / 2);
+            C.SetPos(X, Y);
+            DrawShadowedTextClipped(C, ErrorString);
+        }
     }
 
     if (Result.bIsInDangerZone)
     {
         // TODO: draw danger zone overlay
     }
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -5948,4 +5983,14 @@ defaultproperties
     RallyPointBaseRed=Material'DH_InterfaceArt2_tex.RallyPoint.rp_red'
     RallyPointBaseDark=Material'DH_InterfaceArt2_tex.RallyPoint.rp_dark'
     RallyPointBaseGlow=Material'DH_InterfaceArt2_tex.RallyPoint.rp_glow'
+
+    RallyPointIconNotOnFoot=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_notonfoot'
+    RallyPointIconDistance=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_distance'
+    RallyPointIconCooldown=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_cooldown'
+    RallyPointIconAlert=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_alert'
+    RallyPointIconFlag=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_flag'
+    RallyPointIconBadLocation=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_badlocation'
+    RallyPointIconMissingSquadmate=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_missingsquadmate'
+    RallyPointIconKey=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_key'
+//    RallyPointIconFlag=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_key'
 }
