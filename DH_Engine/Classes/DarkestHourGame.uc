@@ -490,11 +490,7 @@ event Tick(float DeltaTime)
 // Function which will calculate the server's network health based on combined player packloss
 function UpdateServerNetHealth()
 {
-    const    PACKET_LOSS_THRESHOLD   = 30; // The packetloss at which to count the player as "insanely high" packet loss
-    const    THRESHOLD_OVERRIDE      = 10; // Num players required to be over threshold to show "insanely high" packet loss
-
-    local int       i, Combined, Average, OverThreshold;
-    local bool      bWebAdminExists;
+    local int i, Combined;
 
     if (GRI == none)
     {
@@ -503,47 +499,14 @@ function UpdateServerNetHealth()
 
     for (i = 0; i < GRI.PRIArray.Length; ++i)
     {
-        // Don't count the webadmin
+        // Make sure its a player
         if (DHPlayerReplicationInfo(GRI.PRIArray[i]) != none)
         {
-            if (GRI.PRIArray[i].PacketLoss <= PACKET_LOSS_THRESHOLD)
-            {
-                Combined += GRI.PRIArray[i].PacketLoss; // Only count players who are under threshold
-            }
-            else
-            {
-                ++OverThreshold; // Count # of players over threshold
-            }
-        }
-        else if (GRI.PRIArray[i].PlayerName == "WebAdmin")
-        {
-            bWebAdminExists = true;
+            Combined += GRI.PRIArray[i].PacketLoss;
         }
     }
 
-    // Calculate average packet loss (not counting webadmin)
-    if (bWebAdminExists)
-    {
-        Average = Clamp(Combined / (GRI.PRIArray.Length - 1), 0, 255);
-    }
-    else
-    {
-        Average = Clamp(Combined / (GRI.PRIArray.Length), 0, 255);
-    }
-
-    if (bLogAverageTickRate)
-    {
-        Log("Average Server Packet Loss:" @ Average);
-    }
-
-    // If enough players are over the PACKET_LOSS_THRESHOLD, then something is terribly wrong
-    if (OverThreshold > THRESHOLD_OVERRIDE)
-    {
-        GRI.ServerNetHealth = 255; // insanely high packetloss value
-        return;
-    }
-
-    GRI.ServerNetHealth = byte(Average);
+    GRI.ServerNetHealth = Combined;
 }
 
 // Function to handle performance infractions (multiple infractions lead to strikes, strikes will lead to level change)
