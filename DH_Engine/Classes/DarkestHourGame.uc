@@ -90,8 +90,6 @@ var()   config int                  EmptyTankUnlockTime;                    // S
 
 var     DHGameReplicationInfo       GRI;
 
-var()   config bool                 bDebugNetSpeed;
-
 // The response types for requests.
 enum EArtilleryResponseType
 {
@@ -128,12 +126,9 @@ event InitGame(string Options, out string Error)
         AccessControl = Spawn(class'DH_Engine.DHAccessControl');
     }
 
-    if (bDebugNetSpeed)
-    {
-        // Debug command, attempting to "unlock" the 10000 rate limit
-        // This command can be typed manually after each level loads to "unlock" the 10000 rate limit, lets see if this is the proper place to automatically do it
-        ConsoleCommand("set IpDrv.TcpNetDriver MaxClientRate 30000");
-    }
+    // Force the server to update the MaxClientRate, setting it in config file doesn't work as intended (something bugged in native)
+    // This command will unlock a server so it can allow clients to have more than 10000 netspeed
+    ConsoleCommand("set IpDrv.TcpNetDriver MaxClientRate 30000");
 }
 
 function PreBeginPlay()
