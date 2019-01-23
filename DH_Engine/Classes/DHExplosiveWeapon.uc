@@ -453,7 +453,7 @@ simulated state WeaponSprinting
     }
 }
 
-// Modified to allow same InventoryGroup items (grenades + satchels are on same inventory group)
+// Modified to allow same InventoryGroup items (frag grenades are on same inventory group) (satchel shares slot with shovel/wirecutters too)
 function bool HandlePickupQuery(Pickup Item)
 {
     local int i;

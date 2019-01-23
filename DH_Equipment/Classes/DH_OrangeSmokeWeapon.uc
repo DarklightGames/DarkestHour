@@ -30,5 +30,7 @@ defaultproperties
     PickupClass=class'DH_Equipment.DH_OrangeSmokePickup'
     Mesh=SkeletalMesh'DH_GermanSmokeGrenade_1st.OrangeSmokeGrenade'
 
-    GroupOffset=8
+    InventoryGroup=4
+    GroupOffset=3
+    Priority=1
 }

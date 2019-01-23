@@ -2127,6 +2127,51 @@ function OnSquadRallyPointActivated(DHSpawnPoint_SquadRallyPoint SRP)
 
     // "The squad has established a new rally point."
     BroadcastSquadLocalizedMessage(SRP.GetTeamIndex(), SRP.SquadIndex, SquadMessageClass, 44);
+
+    OnSquadRallyPointUpdated(SRP);
+}
+
+function OnSquadRallyPointUpdated(DHSpawnPoint_SquadRallyPoint SRP)
+{
+    if (SRP == none)
+    {
+        return;
+    }
+
+    // "A squad rally point has been spotted by the enemy!"
+    if (SRP.bIsExposed)
+    {
+        BroadcastSquadLocalizedMessage(SRP.GetTeamIndex(), SRP.SquadIndex, SquadMessageClass, 79);
+    }
+}
+
+function UpdateRallyPoints()
+{
+    local int i;
+
+    for (i = 0; i < arraycount(RallyPoints); i++)
+    {
+        if (RallyPoints[i] != none)
+        {
+            RallyPoints[i].OnUpdated();
+        }
+    }
+}
+
+simulated function array<DHSpawnPoint_SquadRallyPoint> GetExposedEnemyRallyPoints(int TeamIndex)
+{
+    local int i;
+    local array<DHSpawnPoint_SquadRallyPoint> ExposedEnemyRallyPoints;
+
+    for (i = 0; i < arraycount(RallyPoints); i++)
+    {
+        if (RallyPoints[i] != none && RallyPoints[i].GetTeamIndex() != TeamIndex && RallyPoints[i].bIsExposed)
+        {
+            ExposedEnemyRallyPoints[ExposedEnemyRallyPoints.Length] = RallyPoints[i];
+        }
+    }
+
+    return ExposedEnemyRallyPoints;
 }
 
 function SetTeamSquadSize(int TeamIndex, int SquadSize)

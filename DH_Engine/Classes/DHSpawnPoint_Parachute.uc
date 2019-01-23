@@ -19,13 +19,10 @@ function OnPawnSpawned(Pawn P)
     super.OnPawnSpawned(P);
 }
 
-simulated function string GetMapStyleName()
-{
-    return "DHParatroopersButtonStyle";
-}
-
 defaultproperties
 {
+    SpawnPointStyle="DHParatroopersButtonStyle"
+
     SpawnLocationOffset=(Z=10000)
     SpawnRadius=1024.0
 }

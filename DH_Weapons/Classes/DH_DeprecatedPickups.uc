@@ -3,10 +3,11 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHShellATImpactDamageType extends DHShellImpactDamageType
-    abstract;
+class DH_DeprecatedPickups extends DHPlaceableWeaponPickup abstract;
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.ATGunKill'
+    WeaponType=class'DH_Weapons.DH_PanzerFaustWeapon'
+    InventoryType=class'DH_Weapons.DH_PanzerFaustWeapon'
+    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.PanzerFaust'
 }

@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_Sdkfz2341CannonShellDamageAP extends DHShellImpactDamageType
+class DH_Sdkfz2341CannonShellDamageAP extends DHShellAPImpactDamageType
     abstract;
 
 defaultproperties

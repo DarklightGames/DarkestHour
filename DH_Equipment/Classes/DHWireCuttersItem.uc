@@ -16,7 +16,7 @@ simulated exec function ROManualReload() {return;}
 simulated function bool IsBusy() {return false;}
 simulated function bool ShouldUseFreeAim() {return false;}
 
-// Modified to allow same InventoryGroup item (this shares same slot as binocs, will allow player to have both wirecutters and binocs)
+// Modified to allow same InventoryGroup item (this shares same slot as shovel/satchel, each item on the slot requires multi-item support)
 function bool HandlePickupQuery(Pickup Item)
 {
     local int i;
@@ -185,7 +185,7 @@ defaultproperties
 {
     ItemName="Wire Cutters"
     AttachmentClass=class'DHWireCuttersAttachment'
-    InventoryGroup=4
+    InventoryGroup=7
     GroupOffset=2
     Priority=1
     bCanThrow=false

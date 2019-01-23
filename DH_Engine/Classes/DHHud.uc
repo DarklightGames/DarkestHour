@@ -43,6 +43,7 @@ var     SpriteWidget        MapIconMortarSmokeTarget;
 var     SpriteWidget        MapIconMortarArrow;
 var     SpriteWidget        MapIconMortarHit;
 var     SpriteWidget        MapIconObjectiveStatusIcon;
+var     SpriteWidget        MapIconEnemyRallyPoint;
 var     float               PlayerIconScale, PlayerIconLargeScale;
 
 // Screen icons
@@ -139,7 +140,14 @@ var     globalconfig int    MinPromptPacketLoss;    // client option used for th
 // Indicators
 var     SpriteWidget        PacketLossIndicator;    // shows up in various colors when packet loss is present
 
+// Danger Zone
+var array<vector> DangerZoneOverlayContour;
+var class<DHDangerZone> DangerZoneClass;
+var int DangerZoneOverlayResolution;
+var bool bDangerZoneUpdatePending;
+
 // Debug
+var     bool                bDangerZoneOverlayDebug;
 var     bool                bDebugVehicleHitPoints; // show all vehicle's special hit points (VehHitpoints & NewVehHitpoints), but not the driver's hit points
 var     bool                bDebugVehicleWheels;    // show all vehicle's physics wheels (the Wheels array of invisible wheels that drive & steer vehicle, even ones with treads)
 var     bool                bDebugCamera;           // in behind view, draws a red dot & white sphere to show current camera location, with a red line showing camera rotation
@@ -2075,6 +2083,11 @@ function DrawSignals(Canvas C)
     }
 }
 
+function OnObjectiveCompleted()
+{
+    bDangerZoneUpdatePending = true;
+}
+
 exec function ShowObjectives()
 {
     local GUIController GUIController;
@@ -3832,6 +3845,14 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
 
     DrawMapMarkersOnMap(C, Subcoords, MyMapScale, MapCenter, Viewport);
     DrawPlayerIconsOnMap(C, SubCoords, MyMapScale, MapCenter, Viewport);
+    DrawExposedEnemyRallyPoints(C, SubCoords, MyMapScale, MapCenter, Viewport);
+
+    if (bDangerZoneUpdatePending)
+    {
+        UpdateDangerZoneOverlay();
+    }
+
+    DrawDangerZoneOverlay(C, SubCoords, MyMapScale, MapCenter, Viewport);
 
     // DEBUG:
 
@@ -3883,6 +3904,69 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
             // Draw a bee-line from the player to the map marker.
             DrawMapLine(C, SubCoords, MyMapScale, MapCenter, Viewport, PC.Pawn.Location, L, MapMarkers[i].MapMarkerClass.static.GetBeeLineColor());
         }
+    }
+}
+
+function UpdateDangerZoneOverlay()
+{
+    local DHPlayer PC;
+    local string DebugInfo;
+
+    PC = DHPlayer(PlayerOwner);
+
+    if (PC != none)
+    {
+        DangerZoneOverlayContour = DangerZoneClass.static.GetContour(DHGRI, DangerZoneOverlayResolution, PC.GetTeamNum(), DebugInfo);
+    }
+
+    bDangerZoneUpdatePending = false;
+
+    if (bDangerZoneOverlayDebug)
+    {
+        PC.ClientMessage("DANGER ZONE UPDATED:" @ DebugInfo);
+    }
+}
+
+function DrawDangerZoneOverlay(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
+{
+    local int i;
+
+    for (i = 0; i < DangerZoneOverlayContour.Length; i += 2)
+    {
+        DrawMapLine(C, SubCoords, MyMapScale, MapCenter, Viewport, DangerZoneOverlayContour[i], DangerZoneOverlayContour[i + 1], DangerZoneClass.default.ContourColor);
+    }
+}
+
+function DrawExposedEnemyRallyPoints(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
+{
+    local DHPlayer PC;
+    local DHSquadReplicationInfo SRI;
+    local array<DHSpawnPoint_SquadRallyPoint> ExposedEnemyRallyPoints;
+    local int i;
+    local vector L;
+
+    PC = DHPlayer(PlayerOwner);
+
+    if (PC == none)
+    {
+        return;
+    }
+
+    SRI = PC.SquadReplicationInfo;
+
+    if (SRI == none)
+    {
+        return;
+    }
+
+    ExposedEnemyRallyPoints = SRI.GetExposedEnemyRallyPoints(PC.GetTeamNum());
+
+    for (i = 0; i < ExposedEnemyRallyPoints.Length; i++)
+    {
+        L.X = ExposedEnemyRallyPoints[i].Location.X;
+        L.Y = ExposedEnemyRallyPoints[i].Location.Y;
+
+        DHDrawIconOnMap(C, SubCoords, MapIconEnemyRallyPoint, MyMapScale, L, MapCenter, Viewport);
     }
 }
 
@@ -5690,6 +5774,23 @@ exec function CameraDebug()
     }
 }
 
+exec function DangerZoneDebug()
+{
+    if (IsDebugModeAllowed())
+    {
+        bDangerZoneOverlayDebug = !bDangerZoneOverlayDebug;
+    }
+}
+
+exec function DangerZoneSetRes(int Value)
+{
+    if (IsDebugModeAllowed())
+    {
+        DangerZoneOverlayResolution = Value;
+        UpdateDangerZoneOverlay();
+    }
+}
+
 // New function to hide or restore the sky, used by debug functions that use DrawDebugX native functions, that won't draw unless the sky is off
 // Console command "show sky" toggles the sky on/off, but it only works in single player, so this allows these debug options to work in multiplayer
 function SetSkyOff(bool bHideSky)
@@ -5925,6 +6026,7 @@ defaultproperties
     MapIconMortarSmokeTarget=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=191,Y1=0,X2=255,Y2=64),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconMortarArrow=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.mortar-arrow-final',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.1,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconMortarHit=(WidgetTexture=Texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(Y1=64,X2=63,Y2=127),TextureScale=0.05,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
+    MapIconEnemyRallyPoint=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.rally_point',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.04,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=0,B=0,A=255),Tints[1]=(R=255,G=0,B=0,A=255))
 
     SupplyPointIcon=(WidgetTexture=FinalBlend'DH_GUI_tex.GUI.supply_point_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.04,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
@@ -6008,4 +6110,9 @@ defaultproperties
     RallyPointIconBadLocation=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_badlocation'
     RallyPointIconMissingSquadmate=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_missingsquadmate'
     RallyPointIconKey=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_key'
+
+    // Danger Zone
+    DangerZoneClass=class'DH_Engine.DHDangerZone'
+    DangerZoneOverlayResolution=54
+    bDangerZoneUpdatePending=true
 }

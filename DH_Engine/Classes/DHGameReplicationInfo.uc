@@ -150,6 +150,9 @@ var bool                bAllChatEnabled;
 var byte                ServerTickHealth;
 var byte                ServerNetHealth;
 
+var bool                bIsDangerZoneEnabled;
+var float               DangerZoneIntensityScale;
+
 // Map markers
 struct MapMarker
 {
@@ -341,6 +344,128 @@ simulated function PostNetBeginPlay()
             }
         }
     }
+}
+
+// This function returns all objectives (via array of indices) which meets objective spawn criteria
+function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
+{
+    local int i, j;
+    local array<DHObjectiveTreeNode> Roots;
+    local DHObjective Obj;
+    local array<int> ObjectiveIndices;
+
+    for (i = 0; i < arraycount(DHObjectives); ++i)
+    {
+        Obj = DHObjectives[i];
+
+        // If obj is not none && inactive (only inactive objectives can have objective spawns) && objective secured by our team
+        if (Obj == none || Obj.IsActive() || int(Obj.ObjState) != Team)
+        {
+            continue;
+        }
+
+        // Loop through Axis required objective to find if linked to active obj
+        for (j = 0; j < Obj.AxisRequiredObjForCapture.Length; ++j)
+        {
+            if (DHObjectives[Obj.AxisRequiredObjForCapture[j]].IsActive())
+            {
+                // We have a root objective, lets check if it has hints defined
+                Roots[Roots.Length] = GetObjectiveTree(Team, Obj, ObjectiveIndices);
+            }
+        }
+        // Loop through Allies required objective to find if linked to active obj
+        for (j = 0; j < Obj.AlliesRequiredObjForCapture.Length; ++j)
+        {
+            if (DHObjectives[Obj.AlliesRequiredObjForCapture[j]].IsActive())
+            {
+                // We have a root objective, lets find the nearest objective with hints
+                Roots[Roots.Length] = GetObjectiveTree(Team, Obj, ObjectiveIndices);
+            }
+        }
+    }
+
+    // We have the root objectives, lets tranverse the trees to find the nearest objective with spawnpoint hints defined
+    for (i = 0; i < Roots.Length; ++i)
+    {
+        TraverseTreeNode(Team, Roots[i], Indices);
+    }
+}
+
+function TraverseTreeNode(int Team, DHObjectiveTreeNode Node, out array<int> ObjectiveIndices, optional int Depth)
+{
+    local int i;
+
+    if (Node == none || Depth > 1)
+    {
+        return;
+    }
+
+    // If this node is valid, add it
+    if (Node.Objective.SpawnPointHintTags[Team] != '')
+    {
+        if (class'UArray'.static.IIndexOf(ObjectiveIndices, Node.Objective.ObjNum) == -1)
+        {
+            ObjectiveIndices[ObjectiveIndices.Length] = Node.Objective.ObjNum;
+        }
+    }
+    else // Otherwise continue traversing
+    {
+        for (i = 0; i < Node.Children.Length; ++i)
+        {
+            TraverseTreeNode(Team, Node.Children[i], ObjectiveIndices, Depth + 1);
+        }
+    }
+}
+
+function DHObjectiveTreeNode GetObjectiveTree(int Team, DHObjective Objective, out array<int> ObjectiveIndices)
+{
+    local int i;
+    local DHObjectiveTreeNode Node;
+    local DHObjectiveTreeNode Child;
+
+    if (Objective == none || Objective.IsActive() || int(Objective.ObjState) != Team)
+    {
+        return none;
+    }
+
+    if (class'UArray'.static.IIndexOf(ObjectiveIndices, Objective.ObjNum) != -1)
+    {
+        return none;
+    }
+
+    ObjectiveIndices[ObjectiveIndices.Length] = Objective.ObjNum;
+
+    Node = new class'DHObjectiveTreeNode';
+    Node.Objective = Objective;
+
+    ObjectiveIndices[ObjectiveIndices.Length] = Objective.ObjNum;
+
+    if (Team == AXIS_TEAM_INDEX)
+    {
+        for (i = 0; i < Objective.AxisRequiredObjForCapture.Length; ++i)
+        {
+            Child = GetObjectiveTree(Team, DHObjectives[Objective.AxisRequiredObjForCapture[i]], ObjectiveIndices);
+
+            if (Child != none)
+            {
+                Node.Children[Node.Children.Length] = Child;
+            }
+        }
+    }
+    else if (Team == ALLIES_TEAM_INDEX)
+    {
+        for (i = 0; i < Objective.AlliesRequiredObjForCapture.Length; ++i)
+        {
+            Child = GetObjectiveTree(Team, DHObjectives[Objective.AlliesRequiredObjForCapture[i]], ObjectiveIndices);
+
+            if (Child != none)
+            {
+                Node.Children[Node.Children.Length] = Child;
+            }
+        }
+    }
+
+    return Node;
 }
 
 function int AddConstructionClass(class<DHConstruction> ConstructionClass)
@@ -1565,6 +1690,16 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
     }
 
     return ERROR_None;
+}
+
+simulated function float GetDangerZoneIntensity(float PointerX, float PointerY, byte TeamIndex)
+{
+    return class'DHDangerZone'.static.GetIntensity(self, PointerX, PointerY, TeamIndex);
+}
+
+simulated function bool IsInDangerZone(float PointerX, float PointerY, byte TeamIndex)
+{
+    return class'DHDangerZone'.static.IsIn(self, PointerX, PointerY, TeamIndex);
 }
 
 defaultproperties

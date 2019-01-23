@@ -92,13 +92,6 @@ defaultproperties
 
     // Damage
     bCanTakeImpactDamage=true
-    HarmfulDamageTypes(0)=class'DHArtilleryDamageType'                 // Artillery
-    HarmfulDamageTypes(1)=class'ROTankShellExplosionDamage'         // HE and some others
-    HarmfulDamageTypes(2)=class'DHThrowableExplosiveDamageType'     // Satchel/Grenades
-    HarmfulDamageTypes(3)=class'DHMortarDamageType'                 // Mortar
-    HarmfulDamageTypes(4)=class'ROTankShellImpactDamage'            // AP
-    HarmfulDamageTypes(5)=class'DHAntiTankProjectileDamageType'     // Splash AT weapon
-    HarmfulDamageTypes(6)=class'DHRocketImpactDamage'               // Direct AT weapon hits
 
     // Group Class
     SpawnPointClass=class'DHSpawnPoint_VehiclePool'
