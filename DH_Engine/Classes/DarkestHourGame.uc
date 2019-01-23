@@ -5244,6 +5244,7 @@ defaultproperties
     MaxTeamDifference=2
     bAutoBalanceTeamsOnDeath=true // if teams become imbalanced it'll force the next player to die to the weaker team
     MaxIdleTime=300
+    ChangeTeamInterval=300
 
     bShowServerIPOnScoreboard=true
     bShowTimeOnScoreboard=true
@@ -5313,8 +5314,6 @@ defaultproperties
     TeamAIType(0)=class'DH_Engine.DHTeamAI'
     TeamAIType(1)=class'DH_Engine.DHTeamAI'
     LocalStatsScreenClass=none // stats screen actor isn't used in RO/DH & this stops the class being pointlessly set & replicated in each PRI
-
-    ChangeTeamInterval=300
 
     ReinforcementMessagePercentages(0)=0.9
     ReinforcementMessagePercentages(1)=0.8
