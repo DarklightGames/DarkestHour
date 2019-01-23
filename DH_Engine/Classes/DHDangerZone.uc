@@ -74,9 +74,9 @@ static function bool IsIn(DHGameReplicationInfo GRI, float PointerX, float Point
     return GetIntensity(GRI, PointerX, PointerY, TeamIndex) >= 0.0;
 }
 
-static final function array<Intbox> GetVertexIndecies(int X, int Y, byte Mask, byte Normal)
+static final function array<Intbox> GetVertexIndices(int X, int Y, byte Mask, byte Normal)
 {
-    local array<Intbox> Indecies;
+    local array<Intbox> Indices;
     local Intbox North, East, West, South;
 
     North.X1 = X - 1;
@@ -102,63 +102,62 @@ static final function array<Intbox> GetVertexIndecies(int X, int Y, byte Mask, b
     if (Mask == 1 || Mask == 14)
     {
         // NW
-        Indecies[Indecies.Length] = North;
-        Indecies[Indecies.Length] = West;
+        Indices[Indices.Length] = North;
+        Indices[Indices.Length] = West;
     }
     else if (Mask == 2 || Mask == 13)
     {
         // NE
-        Indecies[Indecies.Length] = North;
-        Indecies[Indecies.Length] = East;
+        Indices[Indices.Length] = North;
+        Indices[Indices.Length] = East;
     }
     else if (Mask == 3 || Mask == 12)
     {
         // W-E
-        Indecies[Indecies.Length] = West;
-        Indecies[Indecies.Length] = East;
+        Indices[Indices.Length] = West;
+        Indices[Indices.Length] = East;
     }
     else if (Mask == 4 || Mask == 11)
     {
         // SE
-        Indecies[Indecies.Length] = South;
-        Indecies[Indecies.Length] = East;
+        Indices[Indices.Length] = South;
+        Indices[Indices.Length] = East;
     }
     else if ((Mask == 5 && Normal > 0) || (Mask == 10 && Normal == 0))
     {
         // NE
-        Indecies[Indecies.Length] = North;
-        Indecies[Indecies.Length] = East;
+        Indices[Indices.Length] = North;
+        Indices[Indices.Length] = East;
 
         // SW
-        Indecies[Indecies.Length] = South;
-        Indecies[Indecies.Length] = West;
+        Indices[Indices.Length] = South;
+        Indices[Indices.Length] = West;
     }
     else if ((Mask == 5 && Normal == 0) || (Mask == 10 && Normal > 0))
     {
         // NW
-        Indecies[Indecies.Length] = North;
-        Indecies[Indecies.Length] = West;
+        Indices[Indices.Length] = North;
+        Indices[Indices.Length] = West;
 
         // SE
-        Indecies[Indecies.Length] = South;
-        Indecies[Indecies.Length] = East;
+        Indices[Indices.Length] = South;
+        Indices[Indices.Length] = East;
     }
     else if (Mask == 6 || Mask == 9)
     {
         // N-S
-        Indecies[Indecies.Length] = North;
-        Indecies[Indecies.Length] = South;
+        Indices[Indices.Length] = North;
+        Indices[Indices.Length] = South;
     }
     else if (Mask == 7 || Mask == 8)
     {
         // SW
-        Indecies[Indecies.Length] = South;
-        Indecies[Indecies.Length] = West;
+        Indices[Indices.Length] = South;
+        Indices[Indices.Length] = West;
     }
 
-    return Indecies;
+    return Indices;
 }
-
 
 static function array<vector> GetContour(DHGameReplicationInfo GRI, int Resolution, byte TeamIndex, out string DebugInfo)
 {
@@ -169,7 +168,7 @@ static function array<vector> GetContour(DHGameReplicationInfo GRI, int Resoluti
     local array<byte> Normal;
     local array<float> Intensity;
     local array<vector> Contour;
-    local array<Intbox> VertexIndecies;
+    local array<Intbox> VertexIndices;
 
     Resolution = Clamp(Resolution, 3, 255);
     Resolution += 1 - Ceil(Resolution % 2);
@@ -215,14 +214,14 @@ static function array<vector> GetContour(DHGameReplicationInfo GRI, int Resoluti
             Mask += Normal[class'UArray'.static.RavelIndices(x - 1, y + 1, Resolution)];
 
             CellCoords = static.IndicesToCoords(x, y, X_Step, Y_Step, Origin);
-            VertexIndecies = GetVertexIndecies(x, y, Mask, Normal[class'UArray'.static.RavelIndices(x, y, Resolution)]);
+            VertexIndices = GetVertexIndices(x, y, Mask, Normal[class'UArray'.static.RavelIndices(x, y, Resolution)]);
 
-            for (i = 0; i < VertexIndecies.Length; ++i)
+            for (i = 0; i < VertexIndices.Length; ++i)
             {
-                Contour[Contour.Length] = GetInterpCoords(static.IndicesToCoords(VertexIndecies[i].X1, VertexIndecies[i].Y1, X_Step, Y_Step, Origin),
-                                                          static.IndicesToCoords(VertexIndecies[i].X2, VertexIndecies[i].Y2, X_Step, Y_Step, Origin),
-                                                          Intensity[class'UArray'.static.RavelIndices(VertexIndecies[i].X1, VertexIndecies[i].Y1, Resolution)],
-                                                          Intensity[class'UArray'.static.RavelIndices(VertexIndecies[i].X2, VertexIndecies[i].Y2, Resolution)],
+                Contour[Contour.Length] = GetInterpCoords(static.IndicesToCoords(VertexIndices[i].X1, VertexIndices[i].Y1, X_Step, Y_Step, Origin),
+                                                          static.IndicesToCoords(VertexIndices[i].X2, VertexIndices[i].Y2, X_Step, Y_Step, Origin),
+                                                          Intensity[class'UArray'.static.RavelIndices(VertexIndices[i].X1, VertexIndices[i].Y1, Resolution)],
+                                                          Intensity[class'UArray'.static.RavelIndices(VertexIndices[i].X2, VertexIndices[i].Y2, Resolution)],
                                                           0);
             }
         }
