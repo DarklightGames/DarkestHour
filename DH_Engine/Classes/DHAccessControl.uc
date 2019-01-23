@@ -144,6 +144,9 @@ static function int GetPatronLevel(string ROID)
 
 defaultproperties
 {
+    IPBanned="You cannot join this server, you have been banned."
+    SessionBanned="You cannot join this server until it changes level."
+
     AdminClass=Class'DH_Engine.DHAdmin'
     DeveloperIDs(0)="76561197961365238" // Theel
     DeveloperIDs(1)="76561197960644559" // Basnett
