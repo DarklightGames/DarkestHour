@@ -2054,7 +2054,7 @@ function UpdateRallyPoints()
 {
     local int i;
 
-    for (i = 0; i < arraycount(RallyPoints); i++)
+    for (i = 0; i < arraycount(RallyPoints); ++i)
     {
         if (RallyPoints[i] != none)
         {
@@ -2068,7 +2068,7 @@ simulated function array<DHSpawnPoint_SquadRallyPoint> GetExposedEnemyRallyPoint
     local int i;
     local array<DHSpawnPoint_SquadRallyPoint> ExposedEnemyRallyPoints;
 
-    for (i = 0; i < arraycount(RallyPoints); i++)
+    for (i = 0; i < arraycount(RallyPoints); ++i)
     {
         if (RallyPoints[i] != none && RallyPoints[i].GetTeamIndex() != TeamIndex && RallyPoints[i].bIsExposed)
         {

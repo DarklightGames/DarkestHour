@@ -17,6 +17,15 @@ static final function vector IndicesToCoords(int X_Index, int Y_Index, float X_S
     return L + Origin;
 }
 
+static final function vector GetInterpCoords(vector A, vector B, float A_Value, float B_Value, float Value)
+{
+    local float T;
+
+    T = FClamp((Value - A_Value) / (B_Value - A_Value), 0.0, 1.0);
+
+    return (1 - T) * A + T * B;
+}
+
 // This function will return a positive number if the pointer is OUTSIDE of
 // `TeamIndex` influence.
 static function float GetIntensity(DHGameReplicationInfo GRI, float PointerX, float PointerY, byte TeamIndex)
@@ -28,7 +37,7 @@ static function float GetIntensity(DHGameReplicationInfo GRI, float PointerX, fl
     V2.X = PointerX;
     V2.Y = PointerY;
 
-    for (i = 0; i < arraycount(GRI.DHObjectives); i++)
+    for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
     {
         if (GRI.DHObjectives[i] == none)
         {
@@ -38,16 +47,16 @@ static function float GetIntensity(DHGameReplicationInfo GRI, float PointerX, fl
         V1.X = GRI.DHObjectives[i].Location.X;
         V1.Y = GRI.DHObjectives[i].Location.Y;
 
-        Intensity = 1 / FMax(VSizeSquared(V1 - V2), class'UFloat'.static.Epsilon());
+        Intensity = 1.0 / FMax(VSizeSquared(V1 - V2), class'UFloat'.static.Epsilon());
 
         if (GRI.DHObjectives[i].IsActive() || GRI.DHObjectives[i].IsOwnedByTeam(TeamIndex))
         {
-            TotalA++;
+            ++TotalA;
             IntensityA += Intensity;
         }
         else
         {
-            TotalB++;
+            ++TotalB;
             IntensityB += Intensity;
         }
     }
@@ -65,94 +74,102 @@ static function bool IsIn(DHGameReplicationInfo GRI, float PointerX, float Point
     return GetIntensity(GRI, PointerX, PointerY, TeamIndex) >= 0.0;
 }
 
-protected static function AddSegment(out array<vector>Contour, byte Mask, byte Normal, vector CellCoords, int X_Step, int Y_Step)
+static final function array<Intbox> GetVertexIndecies(int X, int Y, byte Mask, byte Normal)
 {
-    local vector StartOffset, EndOffset;
+    local array<Intbox> Indecies;
+    local Intbox North, East, West, South;
 
-    if (Mask < 1 || Mask > 14)
-    {
-        return;
-    }
+    North.X1 = X - 1;
+    North.Y1 = Y + 1;
+    North.X2 = X + 1;
+    North.Y2 = Y + 1;
+
+    South.X1 = X + 1;
+    South.Y1 = Y - 1;
+    South.X2 = X - 1;
+    South.Y2 = Y - 1;
+
+    West.X1 = South.X2;
+    West.Y1 = South.Y2;
+    West.X2 = North.X1;
+    West.Y2 = North.Y1;
+
+    East.X1 = North.X2;
+    East.Y1 = North.Y2;
+    East.X2 = South.X1;
+    East.Y2 = South.Y1;
 
     if (Mask == 1 || Mask == 14)
     {
         // NW
-        StartOffset.Y += Y_Step;
-        EndOffset.X -= X_Step;
+        Indecies[Indecies.Length] = North;
+        Indecies[Indecies.Length] = West;
     }
     else if (Mask == 2 || Mask == 13)
     {
         // NE
-        StartOffset.Y += Y_Step;
-        EndOffset.X += X_Step;
+        Indecies[Indecies.Length] = North;
+        Indecies[Indecies.Length] = East;
     }
     else if (Mask == 3 || Mask == 12)
     {
         // W-E
-        StartOffset.X -= X_Step;
-        EndOffset.X += X_Step;
+        Indecies[Indecies.Length] = West;
+        Indecies[Indecies.Length] = East;
     }
     else if (Mask == 4 || Mask == 11)
     {
         // SE
-        StartOffset.Y -= Y_Step;
-        EndOffset.X += X_Step;
+        Indecies[Indecies.Length] = South;
+        Indecies[Indecies.Length] = East;
     }
     else if ((Mask == 5 && Normal > 0) || (Mask == 10 && Normal == 0))
     {
         // NE
-        StartOffset.Y += Y_Step;
-        EndOffset.X += X_Step;
-
-        Contour[Contour.Length] = CellCoords + StartOffset;
-        Contour[Contour.Length] = CellCoords + EndOffset;
+        Indecies[Indecies.Length] = North;
+        Indecies[Indecies.Length] = East;
 
         // SW
-        StartOffset.Y -= Y_Step;
-        EndOffset.X -= X_Step;
+        Indecies[Indecies.Length] = South;
+        Indecies[Indecies.Length] = West;
     }
     else if ((Mask == 5 && Normal == 0) || (Mask == 10 && Normal > 0))
     {
         // NW
-        StartOffset.Y += Y_Step;
-        EndOffset.X -= X_Step;
-
-        Contour[Contour.Length] = CellCoords + StartOffset;
-        Contour[Contour.Length] = CellCoords + EndOffset;
+        Indecies[Indecies.Length] = North;
+        Indecies[Indecies.Length] = West;
 
         // SE
-        StartOffset.Y -= Y_Step;
-        EndOffset.X += X_Step;
+        Indecies[Indecies.Length] = South;
+        Indecies[Indecies.Length] = East;
     }
     else if (Mask == 6 || Mask == 9)
     {
         // N-S
-        StartOffset.Y += Y_Step;
-        EndOffset.Y -= Y_Step;
+        Indecies[Indecies.Length] = North;
+        Indecies[Indecies.Length] = South;
     }
     else if (Mask == 7 || Mask == 8)
     {
         // SW
-        StartOffset.Y -= Y_Step;
-        EndOffset.X -= X_Step;
-    }
-    else
-    {
-        return;
+        Indecies[Indecies.Length] = South;
+        Indecies[Indecies.Length] = West;
     }
 
-    Contour[Contour.Length] = CellCoords + StartOffset;
-    Contour[Contour.Length] = CellCoords + EndOffset;
+    return Indecies;
 }
+
 
 static function array<vector> GetContour(DHGameReplicationInfo GRI, int Resolution, byte TeamIndex, out string DebugInfo)
 {
-    local int x, y;
+    local int x, y, i;
     local float XL, YL, X_Step, Y_Step;
     local vector Origin, CellCoords;
     local byte Mask;
     local array<byte> Normal;
+    local array<float> Intensity;
     local array<vector> Contour;
+    local array<Intbox> VertexIndecies;
 
     Resolution = Clamp(Resolution, 3, 255);
     Resolution += 1 - Ceil(Resolution % 2);
@@ -167,13 +184,15 @@ static function array<vector> GetContour(DHGameReplicationInfo GRI, int Resoluti
     Origin.Y = GRI.NorthEastBounds.Y;
 
     // Get the normalized field
-    for (x = 0; x < Resolution; x++)
+    for (x = 0; x < Resolution; ++x)
     {
-        for (y = 0; y < Resolution; y++)
+        for (y = 0; y < Resolution; ++y)
         {
             CellCoords = static.IndicesToCoords(x, y, X_Step, Y_Step, Origin);
 
-            if (static.IsIn(GRI, CellCoords.X, CellCoords.Y, TeamIndex))
+            Intensity[Intensity.Length] = static.GetIntensity(GRI, CellCoords.X, CellCoords.Y, TeamIndex);
+
+            if (Intensity[Intensity.Length - 1] >= 0)
             {
                 Normal[Normal.Length] = 1;
             }
@@ -196,8 +215,16 @@ static function array<vector> GetContour(DHGameReplicationInfo GRI, int Resoluti
             Mask += Normal[class'UArray'.static.RavelIndices(x - 1, y + 1, Resolution)];
 
             CellCoords = static.IndicesToCoords(x, y, X_Step, Y_Step, Origin);
+            VertexIndecies = GetVertexIndecies(x, y, Mask, Normal[class'UArray'.static.RavelIndices(x, y, Resolution)]);
 
-            AddSegment(Contour, Mask, Normal[class'UArray'.static.RavelIndices(x, y, Resolution)], CellCoords, X_Step, Y_Step);
+            for (i = 0; i < VertexIndecies.Length; ++i)
+            {
+                Contour[Contour.Length] = GetInterpCoords(static.IndicesToCoords(VertexIndecies[i].X1, VertexIndecies[i].Y1, X_Step, Y_Step, Origin),
+                                                          static.IndicesToCoords(VertexIndecies[i].X2, VertexIndecies[i].Y2, X_Step, Y_Step, Origin),
+                                                          Intensity[class'UArray'.static.RavelIndices(VertexIndecies[i].X1, VertexIndecies[i].Y1, Resolution)],
+                                                          Intensity[class'UArray'.static.RavelIndices(VertexIndecies[i].X2, VertexIndecies[i].Y2, Resolution)],
+                                                          0);
+            }
         }
     }
 
