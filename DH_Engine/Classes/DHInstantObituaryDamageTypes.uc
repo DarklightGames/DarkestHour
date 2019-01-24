@@ -3,13 +3,11 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHSpawnKillDamageType extends DHInstantObituaryDamageTypes
+class DHInstantObituaryDamageTypes extends ROWeaponDamageType
     abstract;
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.spawnkill'
-    DeathString="%o was spawn killed by %k."
-    MaleSuicide="%o spawn killed himself."
-    FemaleSuicide="%o spawn killed herself."
+    bLocationalHit=false
+    GibModifier=0.0
 }

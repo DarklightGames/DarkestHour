@@ -2276,7 +2276,7 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
     local PlayerReplicationInfo KillerPRI, KilledPRI;
     local Controller C;
 
-    if ((DeathMessageMode == DM_None || Killed == none) && DamageType != class'DHSpawnKillDamageType')
+    if ((DeathMessageMode == DM_None || Killed == none) && DamageType != class'DHInstantObituaryDamageTypes')
     {
         return;
     }
@@ -2289,7 +2289,7 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
     KilledPRI = Killed.PlayerReplicationInfo;
 
     // OnDeath means only send DM to player who is killed, Personal means send DM to both killed & killer
-    if ((DeathMessageMode == DM_OnDeath || DeathMessageMode == DM_Personal) && DamageType != class'DHSpawnKillDamageType')
+    if ((DeathMessageMode == DM_OnDeath || DeathMessageMode == DM_Personal) && DamageType != class'DHInstantObituaryDamageTypes')
     {
         // Send DM to a killed human player
         if (DHPlayer(Killed) != none)

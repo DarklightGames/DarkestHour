@@ -296,8 +296,6 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 {
     local DarkestHourGame DHG;
 
-    super.Died(Killer, DamageType, HitLocation);
-
     DHG = DarkestHourGame(Level.Game);
 
     if (DHG != none)
@@ -314,7 +312,19 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
         {
             DHG.SendScoreEvent(Killer, class'DHScoreEvent_VehicleKill'.static.Create(Class));
         }
+
+        // If killed by a friendly
+        if (Killer != none && Killer.PlayerReplicationInfo != none && Killer.GetTeamNum() == GetTeamNum())
+        {
+            // Broadcast a message to all players
+            Level.Game.BroadcastLocalizedMessage(class'DHGameMessage', 23, Killer.PlayerReplicationInfo,, self); // "[instigator] killed a friendly [vehiclename]"
+
+            // Death message icon
+            Level.Game.BroadcastDeathMessage(Killer, Killer, class'DHVehicleTeamKillDamageType');
+        }
     }
+
+    super.Died(Killer, DamageType, HitLocation);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1879,13 +1889,10 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         return;
     }
 
-    // Prevent griefer players from damaging own team's vehicles that haven't yet been entered, i.e. are sitting in a spawn area (not applicable in single player)
-    if (!bDriverAlreadyEntered && Level.NetMode != NM_Standalone)
+    // Check for friendly damage
+    if (InstigatedBy != none)
     {
-        if (InstigatedBy != none)
-        {
-            InstigatorController = InstigatedBy.Controller;
-        }
+        InstigatorController = InstigatedBy.Controller;
 
         if (InstigatorController == none && DamageType.default.bDelayedDamage)
         {
@@ -1896,9 +1903,20 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         {
             InstigatorTeam = InstigatorController.GetTeamNum();
 
+            // Is this friendly damage
             if (GetTeamNum() != 255 && InstigatorTeam != 255 && GetTeamNum() == InstigatorTeam)
             {
-                return;
+                // Inform the instigator they are doing something wrong
+                if (PlayerController(InstigatorController) != none)
+                {
+                    PlayerController(InstigatorController).ClientPlaySound(Sound'DHMenuSounds.Buzz',,, SLOT_Interface);
+                }
+
+                // If no one has ever entered the vehicle, then don't allow team damage
+                if (!bDriverAlreadyEntered)
+                {
+                    return;
+                }
             }
         }
     }
@@ -2137,6 +2155,12 @@ event TakeImpactDamage(float AccelMag)
 // Modified to kill engine if zero health
 function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType)
 {
+    // Don't let friendlies damage engines
+    if (InstigatedBy != none && InstigatedBy.Controller != none && InstigatedBy.Controller.GetTeamNum() == GetTeamNum())
+    {
+        return;
+    }
+
     // Apply new damage
     if (EngineHealth > 0)
     {
