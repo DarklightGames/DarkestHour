@@ -48,6 +48,8 @@ var     float       FriendlyResetDistance;       // used in CheckReset() as maxi
 var     bool        bClientInitialized;          // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                                  // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 var     TreeMap_string_Object  NotifyParameters; // an object that can hold references to several other objects, which can be used by messages to build a tailored message
+var     int         WeaponLockTimeForTK;         // Number of seconds a player's weapons are locked for TKing this vehicle
+var     int         PreventTeamChangeForTK;      // Number of seconds a player cannot team change after TKing this vehicle
 
 // Driver & driving
 var     bool        bNeedToInitializeDriver;     // clientside flag that we need to do some driver set up, once we receive the Driver actor
@@ -295,36 +297,59 @@ simulated function Destroyed()
 function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
 {
     local DarkestHourGame DHG;
+    local DHGameReplicationInfo GRI;
+    local DHPlayer DHKiller;
+
+    // Call the super first
+    super.Died(Killer, DamageType, HitLocation);
 
     DHG = DarkestHourGame(Level.Game);
 
     if (DHG != none)
     {
-        if (ReinforcementCost != 0)
-        {
-            // Deducts reinforcements based on the vehicle's "reinforcement cost"
-            DHG.ModifyReinforcements(VehicleTeam, -ReinforcementCost);
-        }
-
-        if (Killer != none &&
-            Killer.GetTeamNum() != GetTeamNum() &&
-            !IsSpawnProtected())
-        {
-            DHG.SendScoreEvent(Killer, class'DHScoreEvent_VehicleKill'.static.Create(Class));
-        }
-
-        // If killed by a friendly
-        if (Killer != none && Killer.PlayerReplicationInfo != none && Killer.GetTeamNum() == GetTeamNum())
-        {
-            // Broadcast a message to all players
-            Level.Game.BroadcastLocalizedMessage(class'DHGameMessage', 23, Killer.PlayerReplicationInfo,, self); // "[instigator] killed a friendly [vehiclename]"
-
-            // Death message icon
-            Level.Game.BroadcastDeathMessage(Killer, Killer, class'DHVehicleTeamKillDamageType');
-        }
+        GRI = DHGameReplicationInfo(DHG.GameReplicationInfo);
     }
 
-    super.Died(Killer, DamageType, HitLocation);
+    DHKiller = DHPlayer(Killer);
+
+    if (DHG == none || GRI == none || DHKiller == none)
+    {
+        return;
+    }
+
+    // Handle reinforcement loss for the vehicle
+    if (ReinforcementCost != 0)
+    {
+        // Deducts reinforcements based on the vehicle's "reinforcement cost"
+        DHG.ModifyReinforcements(VehicleTeam, -ReinforcementCost);
+    }
+
+    // If is not a team kill and the vehicle is NOT spawn protected, then +score for killer
+    if (DHKiller.GetTeamNum() != GetTeamNum() && !IsSpawnProtected())
+    {
+        DHG.SendScoreEvent(DHKiller, class'DHScoreEvent_VehicleKill'.static.Create(Class));
+    }
+
+    // If killed by a friendly
+    if (DHKiller.GetTeamNum() == GetTeamNum())
+    {
+        if (DHKiller.PlayerReplicationInfo != none)
+        {
+            // Broadcast a message to all players
+            Level.Game.BroadcastLocalizedMessage(class'DHGameMessage', 23, DHKiller.PlayerReplicationInfo,, self); // "[instigator] killed a friendly [vehiclename]"
+
+            // Death message icon
+            Level.Game.BroadcastDeathMessage(DHKiller, DHKiller, class'DHVehicleTeamKillDamageType');
+
+            // Lock weapons
+            DHKiller.WeaponLockViolations++;
+            DHKiller.LockWeapons(WeaponLockTimeForTK);
+            DHKiller.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 4); // "Your weapons have been locked due to friendly fire!"
+
+            // Prevent team change
+            DHKiller.NextChangeTeamTime = GRI.ElapsedTime + PreventTeamChangeForTK;
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -3903,6 +3928,8 @@ defaultproperties
 {
     // Miscellaneous
     VehicleMass=3.0
+    WeaponLockTimeForTK=5
+    PreventTeamChangeForTK=1500 // 25 minutes
     PointValue=250
     CollisionRadius=175.0
     CollisionHeight=40.0
