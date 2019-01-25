@@ -41,6 +41,8 @@ var()   config int                  ChangeTeamInterval;                     // S
                                                                             // Note: if bPlayersBalanceTeams is false, players will still be able to change teams
 
 var()   config int                  DisableAllChatThreshold;                // Player count to disallow all chat at
+var()   config int                  EnableIdleKickingThreshold;             // Player count required before idle kicking is turned on
+var()   config bool                 bUseIdleKickingThreshold;               // If enabled, will change idle kicking based on the numplayers and threshold
 
 var     array<float>                ReinforcementMessagePercentages;
 var     int                         TeamReinforcementMessageIndices[2];
@@ -2755,6 +2757,18 @@ state RoundInPlay
             GRI.bAllChatEnabled = true;
         }
 
+        // If server is currently not kicking idlers AND numplayers > EnableIdleKickingThreshold, then enable idle kicking
+        if (bUseIdleKickingThreshold && GetNumPlayers() >= EnableIdleKickingThreshold)
+        {
+            //MaxIdleTime = 300;
+            Level.bKickLiveIdlers = true;
+        }
+        else if (bUseIdleKickingThreshold && GetNumPlayers() < EnableIdleKickingThreshold)
+        {
+            //MaxIdleTime = 0;
+            Level.bKickLiveIdlers = false;
+        }
+
         // Go through both teams and spawn reinforcements if necessary
         for (i = 0; i < 2; ++i)
         {
@@ -5357,6 +5371,8 @@ defaultproperties
     WeaponLockTimeSecondsMaximum=120
     WeaponLockTimeSecondsFFKillsMultiplier=10
 
+    bUseIdleKickingThreshold=true
+    EnableIdleKickingThreshold=50
     DisableAllChatThreshold=50
     bAllowAllChat=true
     bIsAttritionEnabled=true
