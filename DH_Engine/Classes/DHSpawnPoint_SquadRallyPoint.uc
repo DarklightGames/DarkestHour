@@ -527,7 +527,7 @@ defaultproperties
     bCanEncroachmentOverrun=true
 
     InActiveObjectivePenaltySeconds=15
-    IsExposedPenaltySeconds=20
+    IsExposedPenaltySeconds=15
 
     OverrunRadiusInMeters=15
     EstablishmentRadiusInMeters=25
