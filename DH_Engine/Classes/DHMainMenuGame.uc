@@ -22,7 +22,6 @@ var     int             IterationMultiplier;
 event Tick(float DeltaTime)
 {
     local int i, j, x;
-    local Controller C;
 
     ClientFrameRateConsolidated += DeltaTime;
 
