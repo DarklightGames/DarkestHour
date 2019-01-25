@@ -2762,9 +2762,14 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
     local DHRoleInfo RI;
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
+    local DHHud HUD;
+    local byte TeamIndex;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    HUD = DHHud(myHUD);
+
+    TeamIndex = GetTeamNum();
 
     // Attempt to change teams
     if (newTeam != 255)
@@ -2907,6 +2912,12 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
 
     // Set weapons
     ChangeWeapons(NewWeapon1, NewWeapon2, 0);
+
+    // Update HUD
+    if (HUD != none && NewTeam != TeamIndex)
+    {
+        HUD.OnTeamIndexChanged();
+    }
 
     // Return result to client
     if (NewTeam == AXIS_TEAM_INDEX)

@@ -2064,6 +2064,11 @@ function DrawSignals(Canvas C)
     }
 }
 
+function OnTeamIndexChanged()
+{
+    bDangerZoneUpdatePending = true;
+}
+
 function OnObjectiveCompleted()
 {
     bDangerZoneUpdatePending = true;
@@ -3491,6 +3496,10 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
             RI = DHRoleInfo(PRI.RoleInfo);
         }
 
+        // Draw Danger Zone overlay
+        UpdateDangerZoneOverlay();
+        DrawDangerZoneOverlay(C, SubCoords, MyMapScale, MapCenter, Viewport);
+
         // Draw artillery
         for (i = 0; i < arraycount(DHGRI.DHArtillery); ++i)
         {
@@ -3828,13 +3837,6 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     DrawPlayerIconsOnMap(C, SubCoords, MyMapScale, MapCenter, Viewport);
     DrawExposedEnemyRallyPoints(C, SubCoords, MyMapScale, MapCenter, Viewport);
 
-    if (bDangerZoneUpdatePending)
-    {
-        UpdateDangerZoneOverlay();
-    }
-
-    DrawDangerZoneOverlay(C, SubCoords, MyMapScale, MapCenter, Viewport);
-
     // DEBUG:
 
     // Show map's north-east & south-west bounds - toggle using console command: ShowDebugMap (formerly enabled by LevelInfo.bDebugOverhead)
@@ -3895,10 +3897,12 @@ function UpdateDangerZoneOverlay()
 
     PC = DHPlayer(PlayerOwner);
 
-    if (PC != none)
+    if (PC == none || DHGRI == none || !bDangerZoneUpdatePending)
     {
-        DangerZoneOverlayContour = DangerZoneClass.static.GetContour(DHGRI, DangerZoneOverlayResolution, PC.GetTeamNum(), DebugInfo);
+        return;
     }
+
+    DangerZoneOverlayContour = DangerZoneClass.static.GetContour(DHGRI, DangerZoneOverlayResolution, PC.GetTeamNum(), DebugInfo);
 
     bDangerZoneUpdatePending = false;
 
@@ -5907,5 +5911,4 @@ defaultproperties
     // Danger Zone
     DangerZoneClass=class'DH_Engine.DHDangerZone'
     DangerZoneOverlayResolution=54
-    bDangerZoneUpdatePending=true
 }

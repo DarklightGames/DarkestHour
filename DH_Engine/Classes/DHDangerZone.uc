@@ -74,20 +74,20 @@ static function bool IsIn(DHGameReplicationInfo GRI, float PointerX, float Point
     return GetIntensity(GRI, PointerX, PointerY, TeamIndex) >= 0.0;
 }
 
-static final function array<Intbox> GetVertexIndices(int X, int Y, byte Mask, byte Normal)
+static final function array<Intbox> GetVertexIndices(int X, int Y, byte Mask, bool bSaddleIn)
 {
     local array<Intbox> Indices;
     local Intbox North, East, West, South;
 
-    North.X1 = X - 1;
-    North.Y1 = Y + 1;
+    North.X1 = X;
+    North.Y1 = Y;
     North.X2 = X + 1;
-    North.Y2 = Y + 1;
+    North.Y2 = Y;
 
     South.X1 = X + 1;
-    South.Y1 = Y - 1;
-    South.X2 = X - 1;
-    South.Y2 = Y - 1;
+    South.Y1 = Y + 1;
+    South.X2 = X;
+    South.Y2 = Y + 1;
 
     West.X1 = South.X2;
     West.Y1 = South.Y2;
@@ -123,7 +123,7 @@ static final function array<Intbox> GetVertexIndices(int X, int Y, byte Mask, by
         Indices[Indices.Length] = South;
         Indices[Indices.Length] = East;
     }
-    else if ((Mask == 5 && Normal > 0) || (Mask == 10 && Normal == 0))
+    else if ((Mask == 5 && bSaddleIn) || (Mask == 10 && !bSaddleIn))
     {
         // NE
         Indices[Indices.Length] = North;
@@ -133,7 +133,7 @@ static final function array<Intbox> GetVertexIndices(int X, int Y, byte Mask, by
         Indices[Indices.Length] = South;
         Indices[Indices.Length] = West;
     }
-    else if ((Mask == 5 && Normal == 0) || (Mask == 10 && Normal > 0))
+    else if ((Mask == 5 && !bSaddleIn) || (Mask == 10 && bSaddleIn))
     {
         // NW
         Indices[Indices.Length] = North;
@@ -170,8 +170,7 @@ static function array<vector> GetContour(DHGameReplicationInfo GRI, int Resoluti
     local array<vector> Contour;
     local array<Intbox> VertexIndices;
 
-    Resolution = Clamp(Resolution, 3, 255);
-    Resolution += 1 - Ceil(Resolution % 2);
+    Resolution = Clamp(Resolution, 2, 255);
 
     XL = FMax(1.0, Abs(GRI.SouthWestBounds.X) + Abs(GRI.NorthEastBounds.X));
     YL = FMax(1.0, Abs(GRI.SouthWestBounds.Y) + Abs(GRI.NorthEastBounds.Y));
@@ -203,18 +202,18 @@ static function array<vector> GetContour(DHGameReplicationInfo GRI, int Resoluti
     }
 
     // Calculate bitmasks and contour coordinates
-    for (x = 1; x < Ceil(Normal.Length / Resolution) - 1; x += 2)
+    for (x = 0; x < Ceil(Normal.Length / Resolution) - 1; ++x)
     {
-        for (y = 1; y < Resolution - 1; y += 2)
+        for (y = 0; y < Resolution - 1; ++y)
         {
             Mask = 0;
-            Mask += Normal[class'UArray'.static.RavelIndices(x - 1, y - 1, Resolution)] << 3;
-            Mask += Normal[class'UArray'.static.RavelIndices(x + 1, y - 1, Resolution)] << 2;
-            Mask += Normal[class'UArray'.static.RavelIndices(x + 1, y + 1, Resolution)] << 1;
-            Mask += Normal[class'UArray'.static.RavelIndices(x - 1, y + 1, Resolution)];
+            Mask += Normal[class'UArray'.static.RavelIndices(x, y + 1, Resolution)] << 3;
+            Mask += Normal[class'UArray'.static.RavelIndices(x + 1, y + 1, Resolution)] << 2;
+            Mask += Normal[class'UArray'.static.RavelIndices(x + 1, y, Resolution)] << 1;
+            Mask += Normal[class'UArray'.static.RavelIndices(x, y, Resolution)];
 
             CellCoords = static.IndicesToCoords(x, y, X_Step, Y_Step, Origin);
-            VertexIndices = GetVertexIndices(x, y, Mask, Normal[class'UArray'.static.RavelIndices(x, y, Resolution)]);
+            VertexIndices = GetVertexIndices(x, y, Mask, static.IsIn(GRI, CellCoords.X + X_Step / 2.0, CellCoords.Y - Y_Step / 2.0, TeamIndex));
 
             for (i = 0; i < VertexIndices.Length; ++i)
             {
