@@ -339,5 +339,7 @@ defaultproperties
     GroupClass=class'DHConstructionGroup_Logistics'
 
     CompletionPointValue=1000
+
+    BrokenLifespan=30.0
 }
 

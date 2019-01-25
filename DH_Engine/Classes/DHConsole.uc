@@ -143,13 +143,13 @@ event ConnectFailure(string FailCode, string URL)
     else if (FailCode == "LOCALBAN")
     {
         ViewportOwner.Actor.ClearProgressMessages();
-        ViewportOwner.GUIController.OpenMenu(class'GameEngine'.default.DisconnectMenuClass,Localize("Errors","ConnectionFailed", "Engine"), class'AccessControl'.default.IPBanned);
+        ViewportOwner.GUIController.OpenMenu(class'GameEngine'.default.DisconnectMenuClass,Localize("Errors","ConnectionFailed", "Engine"), class'DHAccessControl'.default.IPBanned);
         return;
     }
     else if (FailCode == "SESSIONBAN")
     {
         ViewportOwner.Actor.ClearProgressMessages();
-        ViewportOwner.GUIController.OpenMenu(class'GameEngine'.default.DisconnectMenuClass,Localize("Errors","ConnectionFailed", "Engine"), class'AccessControl'.default.SessionBanned);
+        ViewportOwner.GUIController.OpenMenu(class'GameEngine'.default.DisconnectMenuClass,Localize("Errors","ConnectionFailed", "Engine"), class'DHAccessControl'.default.SessionBanned);
         return;
     }
     else if (FailCode == "SERVERFULL")

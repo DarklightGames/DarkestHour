@@ -298,7 +298,7 @@ simulated function PostNetReceive()
 {
     if (PendingWeaponLockSeconds > 0 && GameReplicationInfo != none)
     {
-        LockWeapons(PendingWeaponLockSeconds );
+        LockWeapons(PendingWeaponLockSeconds);
         PendingWeaponLockSeconds = 0;
     }
 
@@ -3401,24 +3401,22 @@ function ServerSetLockTankOnEntry(bool bEnabled)
 }
 
 // New function to put player into 'weapon lock' for a specified number of seconds, during which time he won't be allowed to fire
-// In multi-player it is initially called on server & then on owning net client, via a replicated function call
-simulated function LockWeapons(int Seconds, optional int Reason)
+simulated function LockWeapons(int Seconds)
 {
     if (Seconds > 0 && GameReplicationInfo != none)
     {
         WeaponUnlockTime = GameReplicationInfo.ElapsedTime + Seconds;
 
-        // If this is the local player, show him a warning screen message & release his fire buttons
+        // If this is the local player, release his fire buttons
         if (Viewport(Player) != none)
         {
-            ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', Reason);
             bFire = 0; // 'releases' fire button if being held down, which stops automatic weapon fire from continuing & avoids spamming repeated messages & buzz sounds
             bAltFire = 0;
         }
         // Or a server calls replicated function to do similar on an owning net client (passing seconds as a byte for efficient replication)
         else if (Role == ROLE_Authority)
         {
-            ClientLockWeapons(Seconds);
+            ClientLockWeapons(Seconds); // Force weapon lock on client
         }
     }
     // Hacky fix for problem where player re-joins server with an active weapon lock saved in his DHPlayerSession, but client doesn't yet have GRI
@@ -5610,10 +5608,11 @@ function ServerForgiveLastFFKiller()
 
     KillerPC = DHPlayer(LastFFKiller.Owner);
 
-    // If LastFFKiller's weapons are locked and no longer has FF kills, unlock the player's weapons
-    if (KillerPC != none && KillerPC.AreWeaponsLocked(true) && LastFFKiller.FFKills < 1)
+    // If LastFFKiller's weapons are locked, unlock that player's weapons
+    if (KillerPC != none && KillerPC.AreWeaponsLocked(true))
     {
-        KillerPC.LockWeapons(1, 2);
+        KillerPC.LockWeapons(1); // Unlock weapons as soon as possible
+        KillerPC.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 2); // "Weapons are now unlocked"
     }
 
     // Set none as we have handled the current LastFFKiller

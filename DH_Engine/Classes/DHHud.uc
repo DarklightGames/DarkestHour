@@ -107,6 +107,7 @@ var     float               ObituaryFadeInTime;     // for some added suspense:
 var     float               ObituaryDelayTime;
 
 // Map or screen text that can be localized for different languages
+var     localized string    ServerNameText;
 var     localized string    MapNameText;
 var     localized string    MapGameTypeText;
 var     localized string    NoTimeLimitText;
@@ -457,7 +458,7 @@ function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Vic
     O.DamageType = DamageType;
 
     // If a suicide, team kill, or spawn kill then have the kill message display ASAP
-    if ((Killer != none && Killer.Team.TeamIndex == Victim.Team.TeamIndex) || DamageType == class'DHSpawnKillDamageType')
+    if ((Killer != none && Killer.Team.TeamIndex == Victim.Team.TeamIndex) || DamageType == class'DHInstantObituaryDamageTypes')
     {
         O.EndOfLife = Level.TimeSeconds + ObituaryLifeSpan + ObituaryFadeInTime - ObituaryDelayTime;
         O.bShowInstantly = true;
@@ -5732,9 +5733,12 @@ defaultproperties
     ObituaryFadeInTime=0.5
     ObituaryDelayTime=5.0
 
-    // Map text
+    // Scoreboard text
+    ServerNameText="Server: "
     MapNameText="Map: "
     MapGameTypeText="Gametype: "
+
+    // Overview text (no longer used)
     AndMoreText="and more..."
     LegendAxisObjectiveText="Axis territory"
     LegendAlliesObjectiveText="Allied territory"

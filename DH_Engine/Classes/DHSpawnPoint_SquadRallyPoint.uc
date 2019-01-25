@@ -85,7 +85,7 @@ function PostBeginPlay()
         {
             for (i = 0; i < arraycount(GRI.Objectives); ++i)
             {
-                if (GRI.Objectives[i].WithinArea(self))
+                if (GRI.Objectives[i] != none && GRI.Objectives[i].WithinArea(self))
                 {
                     // We'll make a bold assumption that it's not really possible
                     // to be in multiple objectives at once and just stop at one.
@@ -526,7 +526,7 @@ defaultproperties
     EncroachmentPenaltyForgivenessPerSecond=5
     bCanEncroachmentOverrun=true
 
-    InActiveObjectivePenaltySeconds=10
+    InActiveObjectivePenaltySeconds=15
     IsExposedPenaltySeconds=20
 
     OverrunRadiusInMeters=15
@@ -553,4 +553,3 @@ defaultproperties
     bBlockActors=true
     bBlockKarma=false
 }
-

@@ -3,13 +3,13 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHSpawnKillDamageType extends DHInstantObituaryDamageTypes
+class DHVehicleTeamKillDamageType extends DHInstantObituaryDamageTypes
     abstract;
 
 defaultproperties
 {
-    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.spawnkill'
-    DeathString="%o was spawn killed by %k."
-    MaleSuicide="%o spawn killed himself."
-    FemaleSuicide="%o spawn killed herself."
+    HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.Andy'
+    DeathString="" // No string as its handled else where
+    MaleSuicide=""
+    FemaleSuicide=""
 }

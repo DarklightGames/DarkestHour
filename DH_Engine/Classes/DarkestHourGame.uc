@@ -41,6 +41,8 @@ var()   config int                  ChangeTeamInterval;                     // S
                                                                             // Note: if bPlayersBalanceTeams is false, players will still be able to change teams
 
 var()   config int                  DisableAllChatThreshold;                // Player count to disallow all chat at
+var()   config int                  EnableIdleKickingThreshold;             // Player count required before idle kicking is turned on
+var()   config bool                 bUseIdleKickingThreshold;               // If enabled, will change idle kicking based on the numplayers and threshold
 
 var     array<float>                ReinforcementMessagePercentages;
 var     int                         TeamReinforcementMessageIndices[2];
@@ -83,15 +85,13 @@ var     class<DHMetrics>            MetricsClass;
 var     DHMetrics                   Metrics;
 var     config bool                 bEnableMetrics;
 
-var     string                      ServerLocation;
+var()   config string               ServerLocation;
 var     UVersion                    Version;
 var     DHSquadReplicationInfo      SquadReplicationInfo;
 
 var()   config int                  EmptyTankUnlockTime;                    // Server config option for how long (secs) before unlocking a locked armored vehicle if abandoned by its crew
 
 var     DHGameReplicationInfo       GRI;
-
-var()   config bool                 bDebugNetSpeed;
 
 // The response types for requests.
 enum EArtilleryResponseType
@@ -129,45 +129,9 @@ event InitGame(string Options, out string Error)
         AccessControl = Spawn(class'DH_Engine.DHAccessControl');
     }
 
-    if (bDebugNetSpeed)
-    {
-        // Debug command, attempting to "unlock" the 10000 rate limit
-        // This command can be typed manually after each level loads to "unlock" the 10000 rate limit, lets see if this is the proper place to automatically do it
-        ConsoleCommand("set IpDrv.TcpNetDriver MaxClientRate 30000");
-    }
-}
-
-function GetServerLocation()
-{
-    local HTTPRequest LocationRequest;
-
-    // Now send the location request
-    LocationRequest = Spawn(class'HTTPRequest');
-    LocationRequest.Method = "GET";
-    LocationRequest.Host = "ip-api.com";
-    LocationRequest.Path = "/json";
-    LocationRequest.OnResponse = LocationRequestOnResponse;
-    LocationRequest.Send();
-}
-
-function LocationRequestOnResponse(int Status, TreeMap_string_string Headers, string Content)
-{
-    local JSONParser Parser;
-    local JSONObject O;
-    local string City, Country;
-
-    if (Status == 200)
-    {
-        Parser = new class'JSONParser';
-        O = Parser.ParseObject(Content);
-
-        if (O != none)
-        {
-            City = O.Get("city").AsString();
-            Country = O.Get("country").AsString();
-            default.ServerLocation = City $ "," @ Country;
-        }
-    }
+    // Force the server to update the MaxClientRate, setting it in config file doesn't work as intended (something bugged in native)
+    // This command will unlock a server so it can allow clients to have more than 10000 netspeed
+    ConsoleCommand("set IpDrv.TcpNetDriver MaxClientRate 30000");
 }
 
 function PreBeginPlay()
@@ -175,11 +139,6 @@ function PreBeginPlay()
     super.PreBeginPlay();
 
     SquadReplicationInfo = Spawn(class'DHSquadReplicationInfo');
-
-    if (default.ServerLocation == "Unknown")
-    {
-        GetServerLocation();
-    }
 }
 
 function PostBeginPlay()
@@ -535,11 +494,7 @@ event Tick(float DeltaTime)
 // Function which will calculate the server's network health based on combined player packloss
 function UpdateServerNetHealth()
 {
-    const    PACKET_LOSS_THRESHOLD   = 30; // The packetloss at which to count the player as "insanely high" packet loss
-    const    THRESHOLD_OVERRIDE      = 10; // Num players required to be over threshold to show "insanely high" packet loss
-
-    local int       i, Combined, Average, OverThreshold;
-    local bool      bWebAdminExists;
+    local int i, Combined;
 
     if (GRI == none)
     {
@@ -548,47 +503,14 @@ function UpdateServerNetHealth()
 
     for (i = 0; i < GRI.PRIArray.Length; ++i)
     {
-        // Don't count the webadmin
+        // Make sure its a player
         if (DHPlayerReplicationInfo(GRI.PRIArray[i]) != none)
         {
-            if (GRI.PRIArray[i].PacketLoss <= PACKET_LOSS_THRESHOLD)
-            {
-                Combined += GRI.PRIArray[i].PacketLoss; // Only count players who are under threshold
-            }
-            else
-            {
-                ++OverThreshold; // Count # of players over threshold
-            }
-        }
-        else if (GRI.PRIArray[i].PlayerName == "WebAdmin")
-        {
-            bWebAdminExists = true;
+            Combined += GRI.PRIArray[i].PacketLoss;
         }
     }
 
-    // Calculate average packet loss (not counting webadmin)
-    if (bWebAdminExists)
-    {
-        Average = Clamp(Combined / (GRI.PRIArray.Length - 1), 0, 255);
-    }
-    else
-    {
-        Average = Clamp(Combined / (GRI.PRIArray.Length), 0, 255);
-    }
-
-    if (bLogAverageTickRate)
-    {
-        Log("Average Server Packet Loss:" @ Average);
-    }
-
-    // If enough players are over the PACKET_LOSS_THRESHOLD, then something is terribly wrong
-    if (OverThreshold > THRESHOLD_OVERRIDE)
-    {
-        GRI.ServerNetHealth = 255; // insanely high packetloss value
-        return;
-    }
-
-    GRI.ServerNetHealth = byte(Average);
+    GRI.ServerNetHealth = Combined;
 }
 
 // Function to handle performance infractions (multiple infractions lead to strikes, strikes will lead to level change)
@@ -2118,7 +2040,7 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
     local Controller P;
     local float      FFPenalty;
     local int        i;
-    local bool       bHasAPlayerAlive;
+    local bool       bHasAPlayerAlive, bInformedKillerOfWeaponLock;
 
     if (Killed == none)
     {
@@ -2158,7 +2080,19 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                 if (!DHPawn(KilledPawn).IsCombatSpawned())
                 {
                     DHKiller.WeaponLockViolations++;
-                    DHKiller.LockWeapons(Min(WeaponLockTimeSecondsMaximum, DHKiller.WeaponLockViolations * WeaponLockTimeSecondsInterval)); // TODO: probably add 1 second as we are 'mid second' in game time
+
+                    // If friendly fire
+                    if (bTeamGame && Killer.PlayerReplicationInfo != none && Killed.PlayerReplicationInfo != none && Killer.PlayerReplicationInfo.Team == Killed.PlayerReplicationInfo.Team)
+                    {
+                        DHKiller.LockWeapons(Min(WeaponLockTimeSecondsMaximum, DHKiller.WeaponLockViolations * WeaponLockTimeSecondsInterval) + 1);
+                        DHKiller.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 5); // "Your weapons have been locked due to spawn killing a friendly!"
+                        bInformedKillerOfWeaponLock = true;
+                    }
+                    else
+                    {
+                        DHKiller.LockWeapons(Min(WeaponLockTimeSecondsMaximum, DHKiller.WeaponLockViolations * WeaponLockTimeSecondsInterval) + 1);
+                        DHKiller.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 0); // "Your weapons have been locked due to excessive spawn killing!"
+                    }
                 }
 
                 if (DHPawn(KilledPawn) != none && DHPawn(KilledPawn).SpawnPoint != none)
@@ -2220,18 +2154,24 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
                 {
                     BroadcastLocalizedMessage(GameMessageClass, 13, DHKiller.PlayerReplicationInfo);
 
-                    // Lock weapons for TKing (more strict than spawn killing)
+                    // Lock weapons for TKing, this is run twice if the TK was also a Spawn Kill (this means double violation for Spawn TKing)
                     DHKiller.WeaponLockViolations++;
 
                     if (DHPlayerReplicationInfo(DHKiller.PlayerReplicationInfo) != none)
                     {
-                        DHKiller.LockWeapons(Min(WeaponLockTimeSecondsMaximum, DHKiller.PlayerReplicationInfo.FFKills * WeaponLockTimeSecondsFFKillsMultiplier), 4);
+                        // This will override the weapon lock time, TKs have a higher time punishment, however it will not override the message on that player's screen
+                        DHKiller.LockWeapons(Min(WeaponLockTimeSecondsMaximum, DHKiller.PlayerReplicationInfo.FFKills * WeaponLockTimeSecondsFFKillsMultiplier));
+
+                        // If we haven't already informed the killer of weapon lock (in the case of spawn killing a friendly), then inform them of weapon lock for TKing
+                        if (!bInformedKillerOfWeaponLock)
+                        {
+                            DHKiller.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 4); // "Your weapons have been locked due to friendly fire!"
+                        }
                     }
 
                     // If bForgiveFFKillsEnabled, store the friendly Killer into the Killed player's controller, so if they choose to forgive, we'll know who to forgive
                     if (bForgiveFFKillsEnabled && DHKilled != none)
                     {
-                        //DHKilled.ReceiveLocalizedMessage(GameMessageClass, 18, DHKiller.PlayerReplicationInfo); removed as we have F1 prompt now
                         DHKilled.LastFFKiller = ROPlayerReplicationInfo(DHKiller.PlayerReplicationInfo);
                         DHKilled.LastFFKillAmount = FFPenalty;
                     }
@@ -2345,7 +2285,7 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
     local PlayerReplicationInfo KillerPRI, KilledPRI;
     local Controller C;
 
-    if ((DeathMessageMode == DM_None || Killed == none) && DamageType != class'DHSpawnKillDamageType')
+    if ((DeathMessageMode == DM_None || Killed == none) && DamageType != class'DHInstantObituaryDamageTypes')
     {
         return;
     }
@@ -2358,7 +2298,7 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
     KilledPRI = Killed.PlayerReplicationInfo;
 
     // OnDeath means only send DM to player who is killed, Personal means send DM to both killed & killer
-    if ((DeathMessageMode == DM_OnDeath || DeathMessageMode == DM_Personal) && DamageType != class'DHSpawnKillDamageType')
+    if ((DeathMessageMode == DM_OnDeath || DeathMessageMode == DM_Personal) && DamageType != class'DHInstantObituaryDamageTypes')
     {
         // Send DM to a killed human player
         if (DHPlayer(Killed) != none)
@@ -2822,6 +2762,18 @@ state RoundInPlay
         else if (bAllowAllChat && !GRI.bAllChatEnabled && GetNumPlayers() < DisableAllChatThreshold)
         {   // Player threshold has dropped and we should enable all chat
             GRI.bAllChatEnabled = true;
+        }
+
+        // If server is currently not kicking idlers AND numplayers > EnableIdleKickingThreshold, then enable idle kicking
+        if (bUseIdleKickingThreshold && GetNumPlayers() >= EnableIdleKickingThreshold)
+        {
+            //MaxIdleTime = 300;
+            Level.bKickLiveIdlers = true;
+        }
+        else if (bUseIdleKickingThreshold && GetNumPlayers() < EnableIdleKickingThreshold)
+        {
+            //MaxIdleTime = 0;
+            Level.bKickLiveIdlers = false;
         }
 
         // Go through both teams and spawn reinforcements if necessary
@@ -5177,7 +5129,7 @@ function GetServerDetails(out ServerResponseLine ServerState)
     super.GetServerDetails(ServerState);
 
     AddServerDetail(ServerState, "Version", Version.ToString());
-    AddServerDetail(ServerState, "Location", default.ServerLocation);
+    AddServerDetail(ServerState, "Location", ServerLocation);
     AddServerDetail(ServerState, "AverageTick", ServerTickRateAverage);
 }
 
@@ -5356,6 +5308,7 @@ defaultproperties
     MaxTeamDifference=2
     bAutoBalanceTeamsOnDeath=true // if teams become imbalanced it'll force the next player to die to the weaker team
     MaxIdleTime=300
+    ChangeTeamInterval=300
 
     bShowServerIPOnScoreboard=true
     bShowTimeOnScoreboard=true
@@ -5426,8 +5379,6 @@ defaultproperties
     TeamAIType(1)=class'DH_Engine.DHTeamAI'
     LocalStatsScreenClass=none // stats screen actor isn't used in RO/DH & this stops the class being pointlessly set & replicated in each PRI
 
-    ChangeTeamInterval=300
-
     ReinforcementMessagePercentages(0)=0.9
     ReinforcementMessagePercentages(1)=0.8
     ReinforcementMessagePercentages(2)=0.7
@@ -5439,12 +5390,12 @@ defaultproperties
     ReinforcementMessagePercentages(8)=0.1
     ReinforcementMessagePercentages(9)=0.05
 
-    ServerLocation="Unknown"
+    ServerLocation="Unspecified"
 
     Begin Object Class=UVersion Name=VersionObject
         Major=8
         Minor=4
-        Patch=4
+        Patch=5
         Prerelease=""
     End Object
     Version=VersionObject
@@ -5457,6 +5408,8 @@ defaultproperties
     WeaponLockTimeSecondsMaximum=120
     WeaponLockTimeSecondsFFKillsMultiplier=10
 
+    bUseIdleKickingThreshold=true
+    EnableIdleKickingThreshold=50
     DisableAllChatThreshold=50
     bAllowAllChat=true
     bIsAttritionEnabled=true
