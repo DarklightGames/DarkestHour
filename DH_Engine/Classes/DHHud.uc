@@ -142,10 +142,11 @@ var     globalconfig int    MinPromptPacketLoss;    // client option used for th
 var     SpriteWidget        PacketLossIndicator;    // shows up in various colors when packet loss is present
 
 // Danger Zone
-var array<vector> DangerZoneOverlayContour;
-var class<DHDangerZone> DangerZoneClass;
-var int DangerZoneOverlayResolution;
-var bool bDangerZoneUpdatePending;
+var     class<DHDangerZone> DangerZoneClass;
+var     array<vector>       DangerZoneOverlayContour;
+var     int                 DangerZoneOverlayResolution;
+var     byte                DangerZoneOverlayTeamIndex;
+var     bool                bDangerZoneOverlayUpdatePending;
 
 // Debug
 var     bool                bDangerZoneOverlayDebug;
@@ -2065,14 +2066,9 @@ function DrawSignals(Canvas C)
     }
 }
 
-function OnTeamIndexChanged()
-{
-    bDangerZoneUpdatePending = true;
-}
-
 function OnObjectiveCompleted()
 {
-    bDangerZoneUpdatePending = true;
+    bDangerZoneOverlayUpdatePending = true;
 }
 
 exec function ShowObjectives()
@@ -3497,7 +3493,6 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
             RI = DHRoleInfo(PRI.RoleInfo);
         }
 
-        // Draw Danger Zone overlay
         UpdateDangerZoneOverlay();
         DrawDangerZoneOverlay(C, SubCoords, MyMapScale, MapCenter, Viewport);
 
@@ -3898,14 +3893,14 @@ function UpdateDangerZoneOverlay()
 
     PC = DHPlayer(PlayerOwner);
 
-    if (PC == none || DHGRI == none || !bDangerZoneUpdatePending)
+    if (PC == none || DHGRI == none || (!bDangerZoneOverlayUpdatePending && PC.GetTeamNum() == DangerZoneOverlayTeamIndex))
     {
         return;
     }
 
     DangerZoneOverlayContour = DangerZoneClass.static.GetContour(DHGRI, DangerZoneOverlayResolution, PC.GetTeamNum(), DebugInfo);
-
-    bDangerZoneUpdatePending = false;
+    DangerZoneOverlayTeamIndex = PC.GetTeamNum();
+    bDangerZoneOverlayUpdatePending = false;
 
     if (bDangerZoneOverlayDebug)
     {
