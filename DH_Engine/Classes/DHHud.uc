@@ -154,9 +154,14 @@ var     bool                bDebugCamera;           // in behind view, draws a r
 var     SkyZoneInfo         SavedSkyZone;           // saves original SkyZone for player's current ZoneInfo if sky is turned off for debugging, so can be restored when sky is turned back on
 
 // Squad Rally Point
+var     globalconfig bool   bShowRallyPoint;
+var     SpriteWidget        RallyPointWidget;
+var     SpriteWidget        RallyPointGlowWidget;
+var     SpriteWidget        RallyPointAlertWidget;
 var     Material            RallyPointBase;
 var     Material            RallyPointBaseRed;
 var     Material            RallyPointBaseDark;
+var     Material            RallyPointBaseDarkRed;
 var     Material            RallyPointBaseGlow;
 var     float               NextRallyPointPlacementResultTime;
 
@@ -351,6 +356,11 @@ function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.VehicleFireKill');
     Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.PlayerFireKill');
     Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.spawnkill');
+
+    // TODO: more
+    // Rally points
+    Level.AddPrecacheMaterial(RallyPointBase);
+//    Level.AddPrecacheMaterial(RallyPointBase);
 }
 
 function Message(PlayerReplicationInfo PRI, coerce string Msg, name MsgType)
@@ -1008,78 +1018,10 @@ function DrawHudPassC(Canvas C)
         DrawCompass(C);
     }
 
-    // 'Map updated' icon
-    if (bShowMapUpdatedIcon)
+    // Rally Point Status
+    if (bShowRallyPoint)
     {
-        Alpha = (Level.TimeSeconds - MapUpdatedIconTime) % 2.0;
-
-        if (Alpha < 0.5)
-        {
-            Alpha = 1.0 - Alpha / 0.5;
-        }
-        else if (Alpha < 1.0)
-        {
-            Alpha = (Alpha - 0.5) / 0.5;
-        }
-        else
-        {
-            Alpha = 1.0;
-        }
-
-        MyColor.R = 255;
-        MyColor.G = 255;
-        MyColor.B = 255;
-        MyColor.A = byte(Alpha * 255.0);
-
-        if (MyColor.A != 0)
-        {
-            // Set different position if not showing compass
-            if (!bShowCompass)
-            {
-                MapUpdatedText.PosX = 0.95;
-                MapUpdatedIcon.PosX = 0.95;
-            }
-            else
-            {
-                MapUpdatedText.PosX = default.MapUpdatedText.PosX;
-                MapUpdatedIcon.PosX = default.MapUpdatedIcon.PosX;
-            }
-
-            XL = 0.0;
-            YL = 0.0;
-            Y  = 0.0;
-
-            if (bShowMapUpdatedText)
-            {
-                // Check width & height of text label
-                s = class'ROTeamGame'.static.ParseLoadingHintNoColor(OpenMapText, PlayerController(Owner));
-                C.Font = GetSmallMenuFont(C);
-
-                // Draw text
-                MapUpdatedText.Text = s;
-                MapUpdatedText.Tints[0] = MyColor; MapUpdatedText.Tints[1] = MyColor;
-                MapUpdatedText.OffsetY = default.MapUpdatedText.OffsetY * MapUpdatedIcon.TextureScale;
-                DrawTextWidgetClipped(C, MapUpdatedText, Coords, XL, YL, Y);
-
-                // Offset icon by text height
-                MapUpdatedIcon.OffsetY = MapUpdatedText.OffsetY - YL - Y / 2.0;
-            }
-            else
-            {
-                // Offset icon by text height
-                MapUpdatedIcon.OffsetY = default.MapUpdatedText.OffsetY * MapUpdatedIcon.TextureScale;
-            }
-
-            // Draw icon
-            MapUpdatedIcon.Tints[0] = MyColor; MapUpdatedIcon.Tints[1] = MyColor;
-            DrawSpriteWidgetClipped(C, MapUpdatedIcon, Coords, true, XL, YL, true, true, true);
-
-            // Check if we should stop showing the icon
-            if (Level.TimeSeconds - MapUpdatedIconTime > MaxMapUpdatedIconDisplayTime)
-            {
-                bShowMapUpdatedIcon = false;
-            }
-        }
+        DrawRallyPointStatus(C);
     }
 
     // Player names
@@ -1203,9 +1145,6 @@ function DrawHudPassC(Canvas C)
 
     // Draw the currently available supply count.
     DrawSupplyCount(C);
-
-    // Draw the squad leader HUD.
-    DrawRallyPointIndicator(C);
 
     // DEBUG OPTIONS = slow!
 
@@ -2642,7 +2581,7 @@ function DrawCompass(Canvas C)
 {
     local Actor              A;
     local AbsoluteCoordsInfo GlobalCoors;
-    local float              HudScaleTemp, PawnRotation, PlayerRotation, Compensation, XL, YL;
+    local float              PawnRotation, PlayerRotation, Compensation, XL, YL;
     local int                OverheadOffset;
 
     // Get player actor
@@ -2703,13 +2642,6 @@ function DrawCompass(Canvas C)
         PlayerRotation = CompassCurrentRotation;
     }
 
-    // Save the current HudScale, as we are going to change it temporarily for the compass
-    // Can't just use a local scale variable here as the HudScale is used by the DrawSpriteWidgetClipped() function we call
-    HudScaleTemp = HudScale;
-
-    // Buff the hud scale for the compass so it doesn't get so small
-    HudScale = FClamp(HudScale * 1.33, 0.5, 1.0);
-
     // Draw compass base (fake, only to get sizes)
     GlobalCoors.Width = C.ClipX;
     GlobalCoors.Height = C.ClipY;
@@ -2728,9 +2660,6 @@ function DrawCompass(Canvas C)
     {
         DrawCompassIcons(C, CompassNeedle.OffsetX, CompassNeedle.OffsetY, XL / HudScale / 2.0 * CompassIconsPositionRadius, -(PawnRotation + 16384), A, GlobalCoors);
     }
-
-    // Bring back the correct HudScale
-    HudScale = HudScaleTemp;
 }
 
 function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, float RotationCompensation, Actor viewer, AbsoluteCoordsInfo GlobalCoords)
@@ -5542,19 +5471,37 @@ function DisplayVoiceGain(Canvas C)
     C.DrawColor = SavedColor;
 }
 
-function DrawRallyPointIndicator(Canvas C)
+function bool ShouldShowRallyPointIndicator()
+{
+    local DHPlayer PC;
+
+    if (!bShowRallyPoint)
+    {
+        return false;
+    }
+
+    PC = DHPlayer(PlayerOwner);
+
+    if (PC == none || !PC.IsSquadLeader() || PC.SquadReplicationInfo == none)
+    {
+        return false;
+    }
+
+    return PC.SquadReplicationInfo.bAreRallyPointsEnabled;
+}
+
+function DrawRallyPointStatus(Canvas C)
 {
     local DHPlayer PC;
     local DHSquadReplicationInfo SRI;
     local DHSquadReplicationInfo.RallyPointPlacementResult Result;
-    local float X, Y;
+    local float X, Y, XL, YL;
     local string ErrorString;
     local Material ErrorIcon;
     local color IconColor, DrawColor;
-    local float BaseX, BaseY, BaseXL, BaseYL, CombinedXL, MarginX, IconXL, IconYL, TextXL, TextYL;
-    local float OffsetY, TempHudScale;
-
-    DrawColor = class'UColor'.default.White;
+    local float BaseX, BaseY, CombinedXL, MarginX, IconXL, IconYL, TextXL, TextYL;
+    local float OffsetY;
+    local AbsoluteCoordsInfo GlobalCoors;
 
     PC = DHPlayer(PlayerOwner);
 
@@ -5565,7 +5512,11 @@ function DrawRallyPointIndicator(Canvas C)
 
     SRI = PC.SquadReplicationInfo;
 
-    // Draw
+    if (!SRI.bAreRallyPointsEnabled)
+    {
+        return;
+    }
+
     if (Level.TimeSeconds >= NextRallyPointPlacementResultTime)
     {
         Result = SRI.GetRallyPointPlacementResult(PC);
@@ -5577,50 +5528,58 @@ function DrawRallyPointIndicator(Canvas C)
         Result = PC.RallyPointPlacementResult;
     }
 
-    BaseX = C.ClipX;
-    BaseY = C.ClipY;
-
-    BaseXL = RallyPointBase.MaterialUSize() * HudScale;
-    BaseYL = RallyPointBase.MaterialVSize() * HudScale;
-
-    BaseX -= BaseXL;
-    BaseY -= BaseYL;
-
-    if (bShowCompass)
+    if (!bShowCompass)
     {
-        TempHudScale = FClamp(HudScale * 1.33, 0.5, 1.0);
-        BaseX -= (C.ClipX * CompassBase.TextureScale * TempHudScale);
+        RallyPointWidget.PosX = 1.0;
+        RallyPointGlowWidget.PosX = 1.0;
+    }
+    else
+    {
+        RallyPointWidget.PosX = default.RallyPointWidget.PosX;
+        RallyPointGlowWidget.PosX = default.RallyPointGlowWidget.PosX;
     }
 
-    X = BaseX;
-    Y = BaseY;
+    DrawColor = class'UColor'.default.White;
+    GlobalCoors.Width = C.ClipX;
+    GlobalCoors.Height = C.ClipY;
 
     if (Result.Error.Type == ERROR_None)
     {
-        // A rally point can be placed, show the glow!
-        C.SetPos(X, Y);
-        C.DrawTile(RallyPointBaseGlow, BaseXL, BaseYL, 0, 0, 127, 127);
+        DrawSpriteWidgetClipped(C, RallyPointGlowWidget, GlobalCoors, true, XL, YL, true, true, true);
     }
 
-    C.SetPos(X, Y);
-
+    // Determine what texture to use based on the current state.
     if (PC.SquadRallyPointCount == 0)
     {
-        // Draw a flashing overlay if there are currently no rally points.
-        C.DrawTile(RallyPointBaseRed, BaseXL, BaseYL, 0, 0, 127, 127);
+        if (Result.Error.Type != ERROR_None)
+        {
+            // Draw a flashing overlay if there are currently no rally points.
+            RallyPointWidget.WidgetTexture = RallyPointBaseDarkRed;
+        }
+        else
+        {
+            // Draw a flashing overlay if there are currently no rally points.
+            RallyPointWidget.WidgetTexture = RallyPointBaseRed;
+        }
     }
     else if (Result.Error.Type != ERROR_None)
     {
         // Draw a darkened bag, since there is a placement error.
-        C.DrawTile(RallyPointBaseDark, BaseXL, BaseYL, 0, 0, 127, 127);
+        RallyPointWidget.WidgetTexture = RallyPointBaseDark;
     }
     else
     {
         // Draw a normal bag!
-        C.DrawTile(RallyPointBase, BaseXL, BaseYL, 0, 0, 127, 127);
+        RallyPointWidget.WidgetTexture = RallyPointBase;
     }
 
+    // Draw the bag!
+    DrawSpriteWidgetClipped(C, RallyPointWidget, GlobalCoors, true, XL, YL, true, true, true);
+
     IconColor = class'UColor'.default.White;
+
+    BaseX = C.CurX - XL;
+    BaseY = C.CurY;
 
     switch (Result.Error.Type)
     {
@@ -5655,6 +5614,7 @@ function DrawRallyPointIndicator(Canvas C)
             break;
     }
 
+    // TODO: we need to figure out
     if (ErrorString != "" || ErrorIcon != none)
     {
         // Time to display an error!
@@ -5690,20 +5650,20 @@ function DrawRallyPointIndicator(Canvas C)
 
         CombinedXL = TextXL + IconXL + MarginX;
 
-        X = BaseX + (BaseXL / 2) - (CombinedXL / 2);
+        X = BaseX + (XL / 2) - (CombinedXL / 2);
 
         OffsetY = 0;
 
         if (Result.Error.Type == ERROR_None)
         {
-            OffsetY = -(BaseYL / 2);
+            OffsetY = -(YL / 2);
         }
 
         // Draw the icon!
         if (ErrorIcon != none)
         {
             C.DrawColor = IconColor;
-            Y = BaseY + (BaseYL / 2) - (IconYL / 2) + OffsetY;
+            Y = BaseY + (YL / 2) - (IconYL / 2) + OffsetY;
             C.SetPos(X, Y);
             C.DrawTile(ErrorIcon, IconXL, IconYL, 0, 0, 31, 31);
         }
@@ -5712,7 +5672,7 @@ function DrawRallyPointIndicator(Canvas C)
         if (ErrorString != "")
         {
             X += IconXL + MarginX;
-            Y = BaseY + (BaseYL / 2) - (TextYL / 2) + OffsetY;
+            Y = BaseY + (YL / 2) - (TextYL / 2) + OffsetY;
             C.SetPos(X, Y);
             DrawShadowedTextClipped(C, ErrorString);
         }
@@ -5720,12 +5680,12 @@ function DrawRallyPointIndicator(Canvas C)
 
     if (Result.bIsInDangerZone)
     {
-        IconXL = 32 * HUDScale;
-        IconYL = 32 * HUDScale;
-        X = BaseX + BaseXL - IconXL - (12 * HudScale);
-        Y = BaseY + (12 * HudScale);
-        C.SetPos(X, Y);
-        C.DrawTile(RallyPointIconAlert, IconXL, IconYL, 0, 0, 31, 31);
+        GlobalCoors.PosX = BaseX;
+        GlobalCoors.PosY = BaseY;
+        GlobalCoors.width = XL;
+        GlobalCoors.height = YL;
+
+        DrawSpriteWidgetClipped(C, RallyPointAlertWidget, GlobalCoors, true,,, true, true, true);
     }
 }
 
@@ -6111,10 +6071,16 @@ defaultproperties
     SupplyCountTextWidget=(PosX=0.5,PosY=0,WrapWidth=0,WrapHeight=0,OffsetX=0,OffsetY=0,DrawPivot=DP_MiddleRight,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=true,OffsetX=16,OffsetY=24)
 
     // Rally Point
+    bShowRallyPoint=true
+    RallyPointWidget=(WidgetTexture=Material'DH_InterfaceArt2_tex.RallyPoint.rp',TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.15,DrawPivot=DP_LowerRight,PosX=0.9,PosY=1.0,OffsetX=-3,OffsetY=3,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    RallyPointGlowWidget=(WidgetTexture=Material'DH_InterfaceArt2_tex.RallyPoint.rp_glow',TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.15,DrawPivot=DP_LowerRight,PosX=0.9,PosY=1.0,OffsetX=-3,OffsetY=3,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    RallyPointAlertWidget=(WidgetTexture=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_alert',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.25,DrawPivot=DP_UpperRight,PosX=0.85,PosY=0.15,OffsetX=0,OffsetY=0,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+
     RallyPointBase=Material'DH_InterfaceArt2_tex.RallyPoint.rp'
     RallyPointBaseRed=Material'DH_InterfaceArt2_tex.RallyPoint.rp_red'
     RallyPointBaseDark=Material'DH_InterfaceArt2_tex.RallyPoint.rp_dark'
     RallyPointBaseGlow=Material'DH_InterfaceArt2_tex.RallyPoint.rp_glow'
+    RallyPointBaseDarkRed=Material'DH_InterfaceArt2_tex.RallyPoint.rp_dark_red'
 
     RallyPointIconNotOnFoot=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_notonfoot'
     RallyPointIconDistance=Material'DH_InterfaceArt2_tex.RallyPoint.rp_icon_distance'
