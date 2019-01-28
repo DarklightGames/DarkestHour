@@ -107,6 +107,7 @@ var     float               ObituaryFadeInTime;     // for some added suspense:
 var     float               ObituaryDelayTime;
 
 // Map or screen text that can be localized for different languages
+var     localized string    ServerNameText;
 var     localized string    MapNameText;
 var     localized string    MapGameTypeText;
 var     localized string    NoTimeLimitText;
@@ -141,10 +142,11 @@ var     globalconfig int    MinPromptPacketLoss;    // client option used for th
 var     SpriteWidget        PacketLossIndicator;    // shows up in various colors when packet loss is present
 
 // Danger Zone
-var array<vector> DangerZoneOverlayContour;
-var class<DHDangerZone> DangerZoneClass;
-var int DangerZoneOverlayResolution;
-var bool bDangerZoneUpdatePending;
+var     class<DHDangerZone> DangerZoneClass;
+var     array<vector>       DangerZoneOverlayContour;
+var     int                 DangerZoneOverlayResolution;
+var     byte                DangerZoneOverlayTeamIndex;
+var     bool                bDangerZoneOverlayUpdatePending;
 
 // Debug
 var     bool                bDangerZoneOverlayDebug;
@@ -494,7 +496,7 @@ function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Vic
     O.DamageType = DamageType;
 
     // If a suicide, team kill, or spawn kill then have the kill message display ASAP
-    if ((Killer != none && Killer.Team.TeamIndex == Victim.Team.TeamIndex) || DamageType == class'DHSpawnKillDamageType')
+    if ((Killer != none && Killer.Team.TeamIndex == Victim.Team.TeamIndex) || DamageType == class'DHInstantObituaryDamageTypes')
     {
         O.EndOfLife = Level.TimeSeconds + ObituaryLifeSpan + ObituaryFadeInTime - ObituaryDelayTime;
         O.bShowInstantly = true;
@@ -2033,7 +2035,7 @@ function DrawSignals(Canvas C)
 
 function OnObjectiveCompleted()
 {
-    bDangerZoneUpdatePending = true;
+    bDangerZoneOverlayUpdatePending = true;
 }
 
 exec function ShowObjectives()
@@ -3448,6 +3450,9 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
             RI = DHRoleInfo(PRI.RoleInfo);
         }
 
+        UpdateDangerZoneOverlay();
+        DrawDangerZoneOverlay(C, SubCoords, MyMapScale, MapCenter, Viewport);
+
         // Draw artillery
         for (i = 0; i < arraycount(DHGRI.DHArtillery); ++i)
         {
@@ -3785,13 +3790,6 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     DrawPlayerIconsOnMap(C, SubCoords, MyMapScale, MapCenter, Viewport);
     DrawExposedEnemyRallyPoints(C, SubCoords, MyMapScale, MapCenter, Viewport);
 
-    if (bDangerZoneUpdatePending)
-    {
-        UpdateDangerZoneOverlay();
-    }
-
-    DrawDangerZoneOverlay(C, SubCoords, MyMapScale, MapCenter, Viewport);
-
     // DEBUG:
 
     // Show map's north-east & south-west bounds - toggle using console command: ShowDebugMap (formerly enabled by LevelInfo.bDebugOverhead)
@@ -3852,12 +3850,14 @@ function UpdateDangerZoneOverlay()
 
     PC = DHPlayer(PlayerOwner);
 
-    if (PC != none)
+    if (PC == none || DHGRI == none || (!bDangerZoneOverlayUpdatePending && PC.GetTeamNum() == DangerZoneOverlayTeamIndex))
     {
-        DangerZoneOverlayContour = DangerZoneClass.static.GetContour(DHGRI, DangerZoneOverlayResolution, PC.GetTeamNum(), DebugInfo);
+        return;
     }
 
-    bDangerZoneUpdatePending = false;
+    DangerZoneOverlayContour = DangerZoneClass.static.GetContour(DHGRI, DangerZoneOverlayResolution, PC.GetTeamNum(), DebugInfo);
+    DangerZoneOverlayTeamIndex = PC.GetTeamNum();
+    bDangerZoneOverlayUpdatePending = false;
 
     if (bDangerZoneOverlayDebug)
     {
@@ -5903,9 +5903,12 @@ defaultproperties
     ObituaryFadeInTime=0.5
     ObituaryDelayTime=5.0
 
-    // Map text
+    // Scoreboard text
+    ServerNameText="Server: "
     MapNameText="Map: "
     MapGameTypeText="Gametype: "
+
+    // Overview text (no longer used)
     AndMoreText="and more..."
     LegendAxisObjectiveText="Axis territory"
     LegendAlliesObjectiveText="Allied territory"
@@ -6103,5 +6106,4 @@ defaultproperties
     // Danger Zone
     DangerZoneClass=class'DH_Engine.DHDangerZone'
     DangerZoneOverlayResolution=54
-    bDangerZoneUpdatePending=true
 }

@@ -33,13 +33,6 @@ event Tick(float DeltaTime)
         ClientFrameRateCount = 0;
         ClientFrameRateConsolidated -= CLIENTFRAMERATE_UPDATETIME;
 
-        //Log("Inside tick and ClientAverageFrameRate is:" @ ClientAverageFrameRate);
-        // Debug
-        for (C = Level.ControllerList; C != none; C = C.NextController)
-        {
-            Log(C @ C.GetStateName() @ "is fixed camera:" @ PlayerController(C).bFixedCamera);
-        }
-
         if (ClientAverageFrameRate > DESIRED_MAX_FPS)
         {
             ++IterationMultiplier;

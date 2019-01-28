@@ -148,7 +148,7 @@ var bool                bAreConstructionsEnabled;
 var bool                bAllChatEnabled;
 
 var byte                ServerTickHealth;
-var byte                ServerNetHealth;
+var int                 ServerNetHealth;
 
 var bool                bIsDangerZoneEnabled;
 var float               DangerZoneIntensityScale;
