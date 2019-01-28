@@ -607,7 +607,7 @@ function int CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
 
             // Have a slight delay in placing rally points to dissuade players
             // from trying to exploit the system.
-            SetSquadNextRallyPointTime(TeamIndex, i, Level.TimeSeconds + RallyPointInitialDelaySeconds);
+            SetSquadNextRallyPointTime(TeamIndex, i, Level.Game.GameReplicationInfo.ElapsedTime + RallyPointInitialDelaySeconds);
 
             return i;
         }
@@ -675,7 +675,7 @@ function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int 
 
     // Have a slight delay in placing rally points to dissuade players
     // from trying to exploit the system.
-    SetSquadNextRallyPointTime(TeamIndex, SquadIndex, Level.TimeSeconds + RallyPointChangeLeaderDelaySeconds);
+    SetSquadNextRallyPointTime(TeamIndex, SquadIndex, Level.Game.GameReplicationInfo.ElapsedTime + RallyPointChangeLeaderDelaySeconds);
 
     return true;
 }
@@ -1755,8 +1755,6 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
     local array<DHConstruction> Constructions;
     local vector L;
 
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
     // Rally points must be enabled.
     if (PC == none || !bAreRallyPointsEnabled)
     {
@@ -1764,10 +1762,11 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
         return Result;
     }
 
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
     // Must be a squad leader
-    if (PRI == none || !PRI.IsSquadLeader())
+    if (GRI == none || PRI == none || !PRI.IsSquadLeader())
     {
         Result.Error.Type = ERROR_Fatal;
         return Result;
@@ -1823,8 +1822,6 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
     }
 
     // Cannot be inside of an uncontrolled objective.
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
     for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
     {
         if (GRI.DHObjectives[i] != none &&
@@ -2057,7 +2054,7 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
     // "You have create a squad rally point. Secure the area with your squad to establish this rally point."
     PC.ReceiveLocalizedMessage(SquadMessageClass, 48);
 
-    SetSquadNextRallyPointTime(RP.GetTeamIndex(), RP.SquadIndex, Level.TimeSeconds + default.NextRallyPointInterval);
+    SetSquadNextRallyPointTime(RP.GetTeamIndex(), RP.SquadIndex, Level.Game.GameReplicationInfo.ElapsedTime + default.NextRallyPointInterval);
 
     return RP;
 }
