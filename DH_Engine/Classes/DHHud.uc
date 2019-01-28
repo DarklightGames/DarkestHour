@@ -357,10 +357,21 @@ function UpdatePrecacheMaterials()
     Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.PlayerFireKill');
     Level.AddPrecacheMaterial(Texture'DH_InterfaceArt_tex.deathicons.spawnkill');
 
-    // TODO: more
     // Rally points
     Level.AddPrecacheMaterial(RallyPointBase);
-//    Level.AddPrecacheMaterial(RallyPointBase);
+    Level.AddPrecacheMaterial(RallyPointBaseRed);
+    Level.AddPrecacheMaterial(RallyPointBaseDark);
+    Level.AddPrecacheMaterial(RallyPointBaseDarkRed);
+    Level.AddPrecacheMaterial(RallyPointBaseGlow);
+
+    Level.AddPrecacheMaterial(RallyPointIconNotOnFoot);
+    Level.AddPrecacheMaterial(RallyPointIconDistance);
+    Level.AddPrecacheMaterial(RallyPointIconCooldown);
+    Level.AddPrecacheMaterial(RallyPointIconAlert);
+    Level.AddPrecacheMaterial(RallyPointIconFlag);
+    Level.AddPrecacheMaterial(RallyPointIconBadLocation);
+    Level.AddPrecacheMaterial(RallyPointIconMissingSquadmate);
+    Level.AddPrecacheMaterial(RallyPointIconKey);
 }
 
 function Message(PlayerReplicationInfo PRI, coerce string Msg, name MsgType)
@@ -833,9 +844,7 @@ event PostRender(Canvas Canvas)
 function DrawHudPassC(Canvas C)
 {
     local DHVoiceChatRoom       VCR;
-    local float                 Y, XL, YL, Alpha;
-    local string                s;
-    local color                 MyColor;
+    local float                 XL, YL;
     local AbsoluteCoordsInfo    Coords;
     local ROWeapon              MyWeapon;
     local vector                CameraLocation;
