@@ -1979,7 +1979,29 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
 
     if (Result.Error.Type != ERROR_None)
     {
-        // TODO: throw an error message to the user informing them to try again.
+        // Display an error message to the user informing them of the error.
+        switch (Result.Error.Type)
+        {
+            case ERROR_NotOnFoot:
+                PC.ReceiveLocalizedMessage(SquadMessageClass, 52);
+                break;
+            case ERROR_TooCloseToOtherRallyPoint:
+                PC.ReceiveLocalizedMessage(SquadMessageClass, class'UInteger'.static.FromShorts(45, Result.Error.OptionalInt));
+                break;
+            case ERROR_InUncontrolledObjective:
+                PC.ReceiveLocalizedMessage(SquadMessageClass, 78);
+                break;
+            case ERROR_TooSoon:
+                PC.ReceiveLocalizedMessage(SquadMessageClass, class'UInteger'.static.FromShorts(53, Result.Error.OptionalInt));
+                break;
+            case ERROR_MissingSquadmate:
+                PC.ReceiveLocalizedMessage(SquadMessageClass, 47);
+                break;
+            case ERROR_BadLocation:
+                PC.ReceiveLocalizedMessage(SquadMessageClass, 56);
+                break;
+        }
+
         return none;
     }
 
