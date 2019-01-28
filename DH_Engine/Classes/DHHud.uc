@@ -1205,7 +1205,7 @@ function DrawHudPassC(Canvas C)
     DrawSupplyCount(C);
 
     // Draw the squad leader HUD.
-    DrawSquadRallyPointHUD(C);
+    DrawRallyPointIndicator(C);
 
     // DEBUG OPTIONS = slow!
 
@@ -5542,7 +5542,7 @@ function DisplayVoiceGain(Canvas C)
     C.DrawColor = SavedColor;
 }
 
-function DrawSquadRallyPointHUD(Canvas C)
+function DrawRallyPointIndicator(Canvas C)
 {
     local DHPlayer PC;
     local DHSquadReplicationInfo SRI;
@@ -5550,11 +5550,11 @@ function DrawSquadRallyPointHUD(Canvas C)
     local float X, Y;
     local string ErrorString;
     local Material ErrorIcon;
-    local color IconColor;
-    local float BaseX, BaseY, BaseXL, BaseYL, CombinedXL, MarginX, IconXL, IconYL, IconXY, TextXL, TextYL;
-    local float OffsetY;
+    local color IconColor, DrawColor;
+    local float BaseX, BaseY, BaseXL, BaseYL, CombinedXL, MarginX, IconXL, IconYL, TextXL, TextYL;
+    local float OffsetY, TempHudScale;
 
-    C.DrawColor = class'UColor'.default.White;
+    DrawColor = class'UColor'.default.White;
 
     PC = DHPlayer(PlayerOwner);
 
@@ -5577,14 +5577,20 @@ function DrawSquadRallyPointHUD(Canvas C)
         Result = PC.RallyPointPlacementResult;
     }
 
-    BaseX = C.ClipX * 1.0;
-    BaseY = C.ClipY * 1.0;
+    BaseX = C.ClipX;
+    BaseY = C.ClipY;
 
-    BaseXL = RallyPointBase.MaterialUSize();
-    BaseYL = RallyPointBase.MaterialVSize();
+    BaseXL = RallyPointBase.MaterialUSize() * HudScale;
+    BaseYL = RallyPointBase.MaterialVSize() * HudScale;
 
-    BaseX -= BaseXL * 2; // TODO: debugging, for now
+    BaseX -= BaseXL;
     BaseY -= BaseYL;
+
+    if (bShowCompass)
+    {
+        TempHudScale = FClamp(HudScale * 1.33, 0.5, 1.0);
+        BaseX -= (C.ClipX * CompassBase.TextureScale * TempHudScale);
+    }
 
     X = BaseX;
     Y = BaseY;
@@ -5593,7 +5599,7 @@ function DrawSquadRallyPointHUD(Canvas C)
     {
         // A rally point can be placed, show the glow!
         C.SetPos(X, Y);
-        C.DrawTile(RallyPointBaseGlow, 128, 128, 0, 0, 127, 127);
+        C.DrawTile(RallyPointBaseGlow, BaseXL, BaseYL, 0, 0, 127, 127);
     }
 
     C.SetPos(X, Y);
@@ -5601,17 +5607,17 @@ function DrawSquadRallyPointHUD(Canvas C)
     if (PC.SquadRallyPointCount == 0)
     {
         // Draw a flashing overlay if there are currently no rally points.
-        C.DrawTile(RallyPointBaseRed, 128, 128, 0, 0, 127, 127);
+        C.DrawTile(RallyPointBaseRed, BaseXL, BaseYL, 0, 0, 127, 127);
     }
     else if (Result.Error.Type != ERROR_None)
     {
         // Draw a darkened bag, since there is a placement error.
-        C.DrawTile(RallyPointBaseDark, 128, 128, 0, 0, 127, 127);
+        C.DrawTile(RallyPointBaseDark, BaseXL, BaseYL, 0, 0, 127, 127);
     }
     else
     {
         // Draw a normal bag!
-        C.DrawTile(RallyPointBase, 128, 128, 0, 0, 127, 127);
+        C.DrawTile(RallyPointBase, BaseXL, BaseYL, 0, 0, 127, 127);
     }
 
     IconColor = class'UColor'.default.White;
@@ -5634,7 +5640,7 @@ function DrawSquadRallyPointHUD(Canvas C)
             ErrorIcon = default.RallyPointIconMissingSquadmate;
             break;
         case ERROR_TooSoon:
-            ErrorIcon = default.RallyPointIconCooldown;   // TODO
+            ErrorIcon = default.RallyPointIconCooldown;
             ErrorString = class'TimeSpan'.static.ToString(Max(0, PC.NextSquadRallyPointTime - DHGRI.ElapsedTime));
             break;
         case ERROR_InUncontrolledObjective:
@@ -5652,7 +5658,14 @@ function DrawSquadRallyPointHUD(Canvas C)
     if (ErrorString != "" || ErrorIcon != none)
     {
         // Time to display an error!
-        C.Font = class'DHHud'.static.GetSmallerMenuFont(C);
+        if (HudScale < 0.60)
+        {
+            C.Font = C.TinyFont;
+        }
+        else
+        {
+            C.Font = class'DHHud'.static.GetSmallerMenuFont(C);
+        }
 
         // Measure the font size.
         if (ErrorString != "")
@@ -5664,13 +5677,13 @@ function DrawSquadRallyPointHUD(Canvas C)
         {
             if (ErrorString == "")
             {
-                IconXL = 32;
-                IconYL = 32;
+                IconXL = 32 * HUDScale;
+                IconYL = 32 * HUDScale;
             }
             else
             {
-                IconXL = 24;
-                IconYL = 24;
+                IconXL = 24 * HUDScale;
+                IconYL = 24 * HUDScale;
                 MarginX = 2;
             }
         }
@@ -5683,12 +5696,13 @@ function DrawSquadRallyPointHUD(Canvas C)
 
         if (Result.Error.Type == ERROR_None)
         {
-            OffsetY = -64;
+            OffsetY = -(BaseYL / 2);
         }
 
         // Draw the icon!
         if (ErrorIcon != none)
         {
+            C.DrawColor = IconColor;
             Y = BaseY + (BaseYL / 2) - (IconYL / 2) + OffsetY;
             C.SetPos(X, Y);
             C.DrawTile(ErrorIcon, IconXL, IconYL, 0, 0, 31, 31);
@@ -5704,14 +5718,14 @@ function DrawSquadRallyPointHUD(Canvas C)
         }
     }
 
-    if (true || Result.bIsInDangerZone)
+    if (Result.bIsInDangerZone)
     {
-        IconXL = 32;
-        IconYL = 32;
-        X = BaseX + BaseXL - IconXL - 12;
-        Y = BaseY + 12;
+        IconXL = 32 * HUDScale;
+        IconYL = 32 * HUDScale;
+        X = BaseX + BaseXL - IconXL - (12 * HudScale);
+        Y = BaseY + (12 * HudScale);
         C.SetPos(X, Y);
-        C.DrawTile(RallyPointIconAlert, 32, 32, 0, 0, 31, 31);
+        C.DrawTile(RallyPointIconAlert, IconXL, IconYL, 0, 0, 31, 31);
     }
 }
 
