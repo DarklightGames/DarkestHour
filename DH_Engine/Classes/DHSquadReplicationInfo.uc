@@ -145,7 +145,8 @@ replication
 
     reliable if (bNetDirty && Role == ROLE_Authority)
         AxisMembers, AxisNames, AxisLocked, AlliesMembers, AlliesNames,
-        AlliesLocked, bAreRallyPointsEnabled, RallyPoints;
+        AlliesLocked, bAreRallyPointsEnabled, RallyPoints,
+        AxisNextRallyPointTimes, AlliesNextRallyPointTimes;
 }
 
 function PostBeginPlay()
@@ -1648,7 +1649,7 @@ function DHSpawnPoint_SquadRallyPoint GetRallyPoint(int TeamIndex, int SquadInde
     return none;
 }
 
-function int GetSquadNextRallyPointTime(int TeamIndex, int SquadIndex)
+simulated function int GetSquadNextRallyPointTime(int TeamIndex, int SquadIndex)
 {
     switch (TeamIndex)
     {
@@ -1755,8 +1756,6 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
     local vector L;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-
 
     // Rally points must be enabled.
     if (PC == none || !bAreRallyPointsEnabled)
