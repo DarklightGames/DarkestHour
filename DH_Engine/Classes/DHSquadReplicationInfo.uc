@@ -1756,6 +1756,8 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
+
+
     // Rally points must be enabled.
     if (PC == none || !bAreRallyPointsEnabled)
     {
@@ -1774,8 +1776,18 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
 
     P = DHPawn(PC.Pawn);
 
-    // Must be on foot as an infantryman
-    if (P == none || P.Physics != PHYS_Walking)
+    // Must be an infantryman.
+    if (P == none)
+    {
+        Result.Error.Type = ERROR_NotOnFoot;
+        return Result;
+    }
+
+    // Determine whether or not we are in the danger zone.
+    Result.bIsInDangerZone = class'DHDangerZone'.static.IsIn(GRI, P.Location.X, P.Location.Y, PC.GetTeamNum());
+
+    // Must be on foot.
+    if (P.Physics != PHYS_Walking)
     {
         Result.Error.Type = ERROR_NotOnFoot;
         return Result;
