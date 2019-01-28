@@ -14,11 +14,13 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_ColtM1911Pickup'
 
     Mesh=SkeletalMesh'DH_Colt1911_1st.Colt45'
-    HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.ColtM1911_s'
+    HighDetailOverlay=Shader'DH_Weapon_tex.Spec_Maps.ColtM1911_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=0
     HandNum=1
     SleeveNum=2
+
+    Skins(0)=Shader'DH_Weapon_tex.Spec_Maps.ColtM1911_s'
 
     DisplayFOV=70
     IronSightDisplayFOV=55
@@ -27,7 +29,7 @@ defaultproperties
     InitialNumPrimaryMags=5
 
     SelectEmptyAnim="Draw_empty"
-    PutDownAnim="putaway"
+    PutDownAnim="put_away"
     PutDownEmptyAnim="put_away_empty"
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"
