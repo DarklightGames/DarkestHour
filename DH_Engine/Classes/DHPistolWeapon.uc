@@ -24,6 +24,10 @@ simulated state Reloading
 
 defaultproperties
 {
+    SwayModifyFactor=1.5 // More sway for pistols
+
+    BobModifyFactor=0.2 // Less weapon bob for pistols
+
     bCanAttachOnBack=false
     InventoryGroup=3
     Priority=5
