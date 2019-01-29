@@ -11,10 +11,10 @@ defaultproperties
     AmmoClass=class'DH_Weapons.DH_ColtM1911Ammo'
     Spread=330.0
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Colt45.Colt45_Fire01'
+
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
-    ShellHipOffset=(X=0.0,Y=3.0,Z=0.0)
-    ShellRotOffsetHip=(Pitch=2500,Yaw=4000)
-    bReverseShellSpawnDirection=true
+    ShellHipOffset=(X=0.0,Y=0.0,Z=0.0)
+
     FireLastAnim="Shoot_Empty"
     FireIronLastAnim="iron_shoot_empty"
 }
