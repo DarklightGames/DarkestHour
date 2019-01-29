@@ -174,7 +174,7 @@ Begin:
             Sleep(GetAnimDuration(SightUpMagPartialReloadAnim, 1.0) - default.ZoomInTime - default.ZoomOutTime);
         }
 
-        SetPlayerFOV(PlayerIronsightFOV);
+        SetPlayerFOV(GetPlayerIronsightFOV());
         SmoothZoom(true);
     }
 }
@@ -311,7 +311,7 @@ simulated state DeployingBipod extends WeaponBusy
 
         PlayAnimAndSetTimer(Anim, IronSwitchAnimRate, 0.1);
 
-        SetPlayerFOV(PlayerIronsightFOV);
+        SetPlayerFOV(GetPlayerIronsightFOV());
     }
 
     simulated function EndState()
@@ -323,7 +323,7 @@ Begin:
     if (bUsingSights)
     {
         ZoomOut();
-        SetPlayerFOV(PlayerIronsightFOV);
+        SetPlayerFOV(GetPlayerIronsightFOV());
     }
 
     if (InstigatorIsLocalHuman())

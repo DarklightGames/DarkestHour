@@ -31,4 +31,5 @@ defaultproperties
     AIRating=0.35
     CurrentRating=0.35
     bSniping=false
+    bUsesIronsightFOV=false
 }

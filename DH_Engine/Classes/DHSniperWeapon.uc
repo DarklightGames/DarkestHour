@@ -256,7 +256,7 @@ defaultproperties
     bPlusOneLoading=true
     ScopeOverlaySize=0.7
 
-    PlayerIronsightFOV=90.0
+    bUsesIronsightFOV=false
     FreeAimRotationSpeed=6.0
     BobModifyFactor=0.85
 

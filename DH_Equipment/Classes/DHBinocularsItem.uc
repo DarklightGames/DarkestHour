@@ -196,7 +196,7 @@ simulated function ZoomIn(optional bool bAnimateTransition)
     }
     else if (InstigatorIsLocalHuman())
     {
-        SetPlayerFOV(PlayerIronsightFOV); // if there's no animation, go to zoomed FOV now
+        SetPlayerFOV(GetPlayerIronsightFOV()); // if there's no animation, go to zoomed FOV now
     }
 
     if (ROPawn(Instigator) != none)
