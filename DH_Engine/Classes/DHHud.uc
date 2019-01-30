@@ -2037,7 +2037,7 @@ function DrawSignals(Canvas C)
 
 function OnObjectiveCompleted()
 {
-    bDangerZoneOverlayUpdatePending = true;
+    DangerZoneOverlayUpdateRequest();
 }
 
 exec function ShowObjectives()
@@ -3452,8 +3452,11 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
             RI = DHRoleInfo(PRI.RoleInfo);
         }
 
-        UpdateDangerZoneOverlay();
-        DrawDangerZoneOverlay(C, SubCoords, MyMapScale, MapCenter, Viewport);
+        if (DHGRI.bIsDangerZoneEnabled)
+        {
+            UpdateDangerZoneOverlay();
+            DrawDangerZoneOverlay(C, SubCoords, MyMapScale, MapCenter, Viewport);
+        }
 
         // Draw artillery
         for (i = 0; i < arraycount(DHGRI.DHArtillery); ++i)
@@ -3843,6 +3846,11 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
             DrawMapLine(C, SubCoords, MyMapScale, MapCenter, Viewport, PC.Pawn.Location, L, MapMarkers[i].MapMarkerClass.static.GetBeeLineColor());
         }
     }
+}
+
+function DangerZoneOverlayUpdateRequest()
+{
+    bDangerZoneOverlayUpdatePending = true;
 }
 
 function UpdateDangerZoneOverlay(optional bool bForce)
@@ -6110,6 +6118,7 @@ defaultproperties
     DangerZoneClass=class'DH_Engine.DHDangerZone'
     DangerZoneOverlayResolution=30
     DangerZoneOverlaySubResolution=57
+    DangerZoneOverlayTeamIndex=-1
     DangerZoneOverlayPointIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.Dot',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=7,Y2=7),TextureScale=0.01,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=200,G=0,B=0,A=158),Tints[1]=(R=200,G=0,B=0,A=158))
 
 }

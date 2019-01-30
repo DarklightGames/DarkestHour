@@ -166,11 +166,6 @@ static function array<vector> GetContour(DHGameReplicationInfo GRI, byte TeamInd
     local array<InterpCurve> LineStringsX;
     local array<InterpCurve> LineStringsY;
 
-    if (!GRI.bIsDangerZoneEnabled)
-    {
-        return Contour;
-    }
-
     Resolution = Clamp(Resolution, 2, 128);
     SubResolution = Max(2, SubResolution);
 

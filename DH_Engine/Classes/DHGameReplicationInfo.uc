@@ -152,6 +152,7 @@ var int                 ServerNetHealth;
 
 var bool                bIsDangerZoneEnabled;
 var float               DangerZoneIntensityScale;
+var float               OldDangerZoneIntensityScale;
 
 // Map markers
 struct MapMarker
@@ -230,7 +231,9 @@ replication
         DHArtillery,
         TeamMunitionPercentages,
         AlliesVictoryMusicIndex,
-        AxisVictoryMusicIndex;
+        AxisVictoryMusicIndex,
+        bIsDangerZoneEnabled,
+        DangerZoneIntensityScale;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
@@ -1700,6 +1703,32 @@ simulated function float GetDangerZoneIntensity(float PointerX, float PointerY, 
 simulated function bool IsInDangerZone(float PointerX, float PointerY, byte TeamIndex)
 {
     return class'DHDangerZone'.static.IsIn(self, PointerX, PointerY, TeamIndex);
+}
+
+simulated function PostNetReceive()
+{
+    local DHPlayer PC;
+    local DHHud Hud;
+
+    super.PostNetReceive();
+
+    // Notify HUD about changes to Danger Zone
+    if (OldDangerZoneIntensityScale != DangerZoneIntensityScale)
+    {
+        PC = DHPlayer(Level.GetLocalPlayerController());
+
+        if (PC != none)
+        {
+            Hud = DHHud(PC.myHUD);
+
+            if (Hud != none)
+            {
+                Hud.DangerZoneOverlayUpdateRequest();
+            }
+        }
+
+        OldDangerZoneIntensityScale = DangerZoneIntensityScale;
+    }
 }
 
 defaultproperties

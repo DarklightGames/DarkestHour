@@ -1194,6 +1194,8 @@ function Timer()
 function ObjectiveCompleted(PlayerReplicationInfo CompletePRI, int Team)
 {
     local DHSquadReplicationInfo SRI;
+    local DHPlayer PC;
+    local DHHud Hud;
 
     SRI = DarkestHourGame(Level.Game).SquadReplicationInfo;
 
@@ -1240,6 +1242,21 @@ function ObjectiveCompleted(PlayerReplicationInfo CompletePRI, int Team)
     if (SRI != none)
     {
         SRI.UpdateRallyPoints();
+    }
+
+    if (Level.NetMode == NM_Standalone)
+    {
+        PC = DHPlayer(Level.GetLocalPlayerController());
+
+        if (PC != none)
+        {
+            Hud = DHHud(PC.myHUD);
+
+            if (Hud != none)
+            {
+                Hud.OnObjectiveCompleted();
+            }
+        }
     }
 }
 
