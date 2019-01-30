@@ -148,6 +148,9 @@ var(DH_GroupedActions)      array<VehiclePoolAction>    AxisGroupVehiclePoolActi
 var(DH_GroupedActions)      array<name>                 AlliesGroupCaptureEvents;
 var(DH_GroupedActions)      array<name>                 AxisGroupCaptureEvents;
 
+// Replication
+var                         EObjectiveState             OldObjState;
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -1191,16 +1194,8 @@ function Timer()
 function ObjectiveCompleted(PlayerReplicationInfo CompletePRI, int Team)
 {
     local DHSquadReplicationInfo SRI;
-    local DHPlayer PC;
-    local DHHud PCHUD;
 
     SRI = DarkestHourGame(Level.Game).SquadReplicationInfo;
-    PC = DHPlayer(Level.GetLocalPlayerController());
-
-    if (PC != none)
-    {
-        PCHUD = DHHud(PC.myHUD);
-    }
 
     if (!IsNeutral() && bNeutralizeBeforeCapture)
     {
@@ -1245,11 +1240,6 @@ function ObjectiveCompleted(PlayerReplicationInfo CompletePRI, int Team)
     if (SRI != none)
     {
         SRI.UpdateRallyPoints();
-    }
-
-    if (PCHUD != none)
-    {
-        PCHUD.OnObjectiveCompleted();
     }
 }
 
@@ -1407,6 +1397,36 @@ function UpdateCompressedCapProgress()
     else
     {
         CompressedCapProgress = Max(1, CurrentCapProgress * 5);
+    }
+}
+
+// Overridden to notify the HUD to update the danger zone contour.
+simulated function PostNetReceive()
+{
+    local DHPlayer PC;
+    local DHHud Hud;
+
+    super.PostNetReceive();
+
+    // Listen for state changes so we can notify the HUD!
+    if (ObjState != OldObjState)
+    {
+        if (ObjState != OBJ_Neutral)
+        {
+            PC = DHPlayer(Level.GetLocalPlayerController());
+
+            if (PC != none)
+            {
+                Hud = DHHud(PC.myHUD);
+
+                if (Hud != none)
+                {
+                    Hud.OnObjectiveCompleted();
+                }
+            }
+        }
+
+        OldObjState = ObjState;
     }
 }
 
