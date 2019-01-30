@@ -106,6 +106,7 @@ var     FileLog                 ClientLogFile;
 
 var     bool                    bHasReceivedSquadJoinRecommendationMessage; // True when we have displayed the "you should probably join a squad" message.
 
+// Squad Things
 struct SquadSignal
 {
     var class<DHSquadSignal> SignalClass;
@@ -114,6 +115,11 @@ struct SquadSignal
 };
 
 var     SquadSignal             SquadSignals[SQUAD_SIGNALS_MAX];
+
+// Squad Leader HUD Info
+var     DHSquadReplicationInfo.RallyPointPlacementResult    RallyPointPlacementResult;
+var     int                                                 NextSquadRallyPointTime;
+var     byte                                                SquadRallyPointCount;
 
 // This is used to skip ResetInput calls in the GUIController.
 // Useful when you want to show a menu over top of the game (e.g. situation map)
@@ -142,7 +148,8 @@ replication
         NextSpawnTime, NextVehicleSpawnTime, NextChangeTeamTime, LastKilledTime,
         DHPrimaryWeapon, DHSecondaryWeapon, bSpectateAllowViewPoints,
         SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled,
-        SquadLeaderLocations, bIsGagged;
+        SquadLeaderLocations, bIsGagged,
+        NextSquadRallyPointTime, SquadRallyPointCount;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -1254,7 +1261,7 @@ function ClientSetBehindView(bool B)
 // Modified to edit an if state in Timer()
 auto state PlayerWaiting
 {
-ignores SeePlayer, HearNoise, NotifyBump, TakeDamage, PhysicsVolumeChange, SwitchToBestWeapon;
+    ignores SeePlayer, HearNoise, NotifyBump, TakeDamage, PhysicsVolumeChange, SwitchToBestWeapon;
 
     // In the else if() statement, PRI != none was added so if the player isn't knowledgeable of their PRI yet it doesn't even open a menu
     // This actually works quite well because now players will actually see the server's MOTD text
@@ -1284,7 +1291,7 @@ ignores SeePlayer, HearNoise, NotifyBump, TakeDamage, PhysicsVolumeChange, Switc
 
 state PlayerWalking
 {
-ignores SeePlayer, HearNoise, Bump;
+    ignores SeePlayer, HearNoise, Bump;
 
     // Modified to allow behind view, if server has called this (restrictions on use of behind view are handled in ServerToggleBehindView)
     function ClientSetBehindView(bool B)

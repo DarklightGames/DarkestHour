@@ -75,6 +75,7 @@ var     bool                        bIsAttritionEnabled;                    // T
 var     float                       CalculatedAttritionRate[2];
 var     float                       TeamAttritionCounter[2];
 var     bool                        bSwapTeams;
+var     bool                        bIsDangerZoneEnabled;
 
 var     float                       AlliesToAxisRatio;
 
@@ -281,6 +282,12 @@ function PostBeginPlay()
 
     GRI.TeamMunitionPercentages[AXIS_TEAM_INDEX] = DHLevelInfo.BaseMunitionPercentages[AXIS_TEAM_INDEX];
     GRI.TeamMunitionPercentages[ALLIES_TEAM_INDEX] = DHLevelInfo.BaseMunitionPercentages[ALLIES_TEAM_INDEX];
+
+    if (bIsDangerZoneEnabled && (SquadReplicationInfo.bAreRallyPointsEnabled || class'DH_LevelInfo'.static.DHDebugMode()))
+    {
+        GRI.bIsDangerZoneEnabled = DHLevelInfo.bIsDangerZoneInitiallyEnabled;
+        GRI.DangerZoneIntensityScale = DHLevelInfo.DangerZoneIntensityScale;
+    }
 
     // Artillery
     GRI.ArtilleryStrikeLimit[AXIS_TEAM_INDEX] = LevelInfo.Axis.ArtilleryStrikeLimit;
@@ -3188,6 +3195,14 @@ static function string ParseChatPercVar(Mutator BaseMutator, Controller Who, str
     return super.ParseChatPercVar(BaseMutator, Who, Cmd);
 }
 
+function UpdateRallyPoints()
+{
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.UpdateRallyPoints();
+    }
+}
+
 //***********************************************************************************
 // exec FUNCTIONS - These functions natively require admin access
 //***********************************************************************************
@@ -3460,6 +3475,28 @@ exec function MidGameVote()
     {
         VH.MidGameVote();
     }
+}
+
+exec function SetDangerZone(bool bOn)
+{
+    if (GRI == none)
+    {
+        return;
+    }
+
+    GRI.bIsDangerZoneEnabled = bOn;
+    UpdateRallyPoints();
+}
+
+exec function SetDangerZoneIntensityScale(float Value)
+{
+    if (GRI == none)
+    {
+        return;
+    }
+
+    GRI.DangerZoneIntensityScale = Value;
+    UpdateRallyPoints();
 }
 
 //***********************************************************************************
@@ -5376,4 +5413,5 @@ defaultproperties
     DisableAllChatThreshold=50
     bAllowAllChat=true
     bIsAttritionEnabled=true
+    bIsDangerZoneEnabled=true
 }

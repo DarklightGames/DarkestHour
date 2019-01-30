@@ -337,3 +337,8 @@ static final function array<int> Range(int Min, int Max)
 
     return A;
 }
+
+static final function int RavelIndices(int X, int Y, int Width)
+{
+    return X * Width + Y;
+}

@@ -39,6 +39,7 @@ var localized string RallyPointSwapped;
 var localized string RallyPointTooCloseToConstruction;
 var localized string RallyPointDestroyed;
 var localized string RallyPointInUncontrolledObjective;
+var localized string RallyPointExposed;
 var localized string BannedPlayer;
 var localized string BannedCannotJoin;
 var localized string AutoJoinFailed;
@@ -190,6 +191,8 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
             return default.SquadMergeFailedMessage;
         case 78:
             return default.RallyPointInUncontrolledObjective;
+        case 79:
+            return default.RallyPointExposed;
         default:
             break;
     }
@@ -233,6 +236,7 @@ defaultproperties
     RallyPointTooCloseToConstruction="You cannot create a squad rally point so close to a {0}."
     RallyPointDestroyed="A squad rally point has been destroyed."
     RallyPointInUncontrolledObjective="You cannot create a squad rally point inside an uncontrolled objective."
+    RallyPointExposed="A squad rally point has been spotted by the enemy!"
     BannedPlayer="{0} has been banned from the squad."
     BannedCannotJoin="You are unable to join this squad as you have been banned."
     AutoJoinFailed="There are no squads that you are eligible to join."

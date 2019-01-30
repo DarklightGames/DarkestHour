@@ -71,6 +71,10 @@ var(DH_GameSettings) ESpawnMode                     SpawnMode;
 var(DH_GameSettings) array<class<DHConstruction> >  RestrictedConstructions;
 var(DH_GameSettings) int                            InfantrySpawnVehicleDuration;
 var(DH_GameSettings) InterpCurve                    AttritionRateCurve;
+
+var(DH_GameSettings) bool                           bIsDangerZoneInitiallyEnabled;
+var(DH_GameSettings) float                          DangerZoneIntensityScale;
+
 // Colin: AttritionRateCurve defines the rate of reinforcement drain per minute
 // when the enemy controls more objectives.
 // For example, an in value of 1.0 should return the reinforcement
@@ -197,5 +201,7 @@ defaultproperties
 
     FinalMunitionPercentages(0)=40.0
     FinalMunitionPercentages(1)=40.0
-}
 
+    bIsDangerZoneInitiallyEnabled=true
+    DangerZoneIntensityScale=0.8
+}

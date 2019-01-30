@@ -1190,6 +1190,18 @@ function Timer()
 // Modified to handle neutralizing objectives
 function ObjectiveCompleted(PlayerReplicationInfo CompletePRI, int Team)
 {
+    local DHSquadReplicationInfo SRI;
+    local DHPlayer PC;
+    local DHHud PCHUD;
+
+    SRI = DarkestHourGame(Level.Game).SquadReplicationInfo;
+    PC = DHPlayer(Level.GetLocalPlayerController());
+
+    if (PC != none)
+    {
+        PCHUD = DHHud(PC.myHUD);
+    }
+
     if (!IsNeutral() && bNeutralizeBeforeCapture)
     {
         // If the objective is not neutral, has completed progress, & is set to bNeutralizedBeforeCaptured
@@ -1229,6 +1241,16 @@ function ObjectiveCompleted(PlayerReplicationInfo CompletePRI, int Team)
 
     // lets see if this tells the bots the objectives is done for
     UnrealMPGameInfo(Level.Game).FindNewObjectives(self);
+
+    if (SRI != none)
+    {
+        SRI.UpdateRallyPoints();
+    }
+
+    if (PCHUD != none)
+    {
+        PCHUD.OnObjectiveCompleted();
+    }
 }
 
 // New function to implement the bNeutralizeBeforeCapture option
@@ -1325,6 +1347,16 @@ simulated function bool IsNeutral()
 simulated function bool IsFrozen(GameReplicationInfo GRI)
 {
     return GRI != none && UnfreezeTime > GRI.ElapsedTime;
+}
+
+simulated function bool IsOwnedByTeam(byte TeamIndex)
+{
+    if (TeamIndex == AXIS_TEAM_INDEX)
+        return IsAxis();
+    else if (TeamIndex == ALLIES_TEAM_INDEX)
+        return IsAllies();
+
+    return false;
 }
 
 // Clients/Server can run this function very fast because of the hashtable

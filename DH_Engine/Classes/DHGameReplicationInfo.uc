@@ -150,6 +150,9 @@ var bool                bAllChatEnabled;
 var byte                ServerTickHealth;
 var int                 ServerNetHealth;
 
+var bool                bIsDangerZoneEnabled;
+var float               DangerZoneIntensityScale;
+
 // Map markers
 struct MapMarker
 {
@@ -1687,6 +1690,16 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
     }
 
     return ERROR_None;
+}
+
+simulated function float GetDangerZoneIntensity(float PointerX, float PointerY, byte TeamIndex)
+{
+    return class'DHDangerZone'.static.GetIntensity(self, PointerX, PointerY, TeamIndex);
+}
+
+simulated function bool IsInDangerZone(float PointerX, float PointerY, byte TeamIndex)
+{
+    return class'DHDangerZone'.static.IsIn(self, PointerX, PointerY, TeamIndex);
 }
 
 defaultproperties
