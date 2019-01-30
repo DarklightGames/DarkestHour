@@ -145,8 +145,10 @@ var     SpriteWidget        PacketLossIndicator;    // shows up in various color
 var     class<DHDangerZone> DangerZoneClass;
 var     array<vector>       DangerZoneOverlayContour;
 var     int                 DangerZoneOverlayResolution;
+var     int                 DangerZoneOverlaySubResolution;
 var     byte                DangerZoneOverlayTeamIndex;
 var     bool                bDangerZoneOverlayUpdatePending;
+var     SpriteWidget        DangerZoneOverlayPointIcon;
 
 // Debug
 var     bool                bDangerZoneOverlayDebug;
@@ -3886,35 +3888,29 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
     }
 }
 
-function UpdateDangerZoneOverlay()
+function UpdateDangerZoneOverlay(optional bool bForce)
 {
     local DHPlayer PC;
-    local string DebugInfo;
 
     PC = DHPlayer(PlayerOwner);
 
-    if (PC == none || DHGRI == none || (!bDangerZoneOverlayUpdatePending && PC.GetTeamNum() == DangerZoneOverlayTeamIndex))
+    if (PC == none || DHGRI == none || (!bForce && !bDangerZoneOverlayUpdatePending && PC.GetTeamNum() == DangerZoneOverlayTeamIndex))
     {
         return;
     }
 
-    DangerZoneOverlayContour = DangerZoneClass.static.GetContour(DHGRI, DangerZoneOverlayResolution, PC.GetTeamNum(), DebugInfo);
+    DangerZoneOverlayContour = DangerZoneClass.static.GetContour(DHGRI, PC.GetTeamNum(), DangerZoneOverlayResolution, DangerZoneOverlaySubResolution);
     DangerZoneOverlayTeamIndex = PC.GetTeamNum();
     bDangerZoneOverlayUpdatePending = false;
-
-    if (bDangerZoneOverlayDebug)
-    {
-        PC.ClientMessage("DANGER ZONE UPDATED:" @ DebugInfo);
-    }
 }
 
 function DrawDangerZoneOverlay(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
 {
     local int i;
 
-    for (i = 0; i < DangerZoneOverlayContour.Length; i += 2)
+    for (i = 0; i < DangerZoneOverlayContour.Length; ++i)
     {
-        DrawMapLine(C, SubCoords, MyMapScale, MapCenter, Viewport, DangerZoneOverlayContour[i], DangerZoneOverlayContour[i + 1], DangerZoneClass.default.ContourColor);
+        DHDrawIconOnMap(C, SubCoords, DangerZoneOverlayPointIcon, MyMapScale, DangerZoneOverlayContour[i], MapCenter, Viewport);
     }
 }
 
@@ -5590,13 +5586,20 @@ exec function DangerZoneDebug()
     }
 }
 
-exec function DangerZoneSetRes(int Value)
+exec function DangerZoneSetRes(int Resolution, optional int SubResolution)
 {
-    if (IsDebugModeAllowed())
+    if (!IsDebugModeAllowed())
     {
-        DangerZoneOverlayResolution = Value;
-        UpdateDangerZoneOverlay();
+        return;
     }
+
+    if (SubResolution > 0)
+    {
+        DangerZoneOverlaySubResolution = SubResolution;
+    }
+
+    DangerZoneOverlayResolution = Resolution;
+    UpdateDangerZoneOverlay(true);
 }
 
 // New function to hide or restore the sky, used by debug functions that use DrawDebugX native functions, that won't draw unless the sky is off
@@ -5909,5 +5912,8 @@ defaultproperties
 
     // Danger Zone
     DangerZoneClass=class'DH_Engine.DHDangerZone'
-    DangerZoneOverlayResolution=54
+    DangerZoneOverlayResolution=30
+    DangerZoneOverlaySubResolution=57
+    DangerZoneOverlayPointIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.Dot',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=7,Y2=7),TextureScale=0.01,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=200,G=0,B=0,A=158),Tints[1]=(R=200,G=0,B=0,A=158))
+
 }
