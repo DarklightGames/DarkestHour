@@ -5,25 +5,19 @@
 class DHDangerZone extends Object
     abstract;
 
-var color ContourColor;
-
-static final function vector IndicesToCoords(int X_Index, int Y_Index, float X_Step, float Y_Step, vector Origin)
+static final function vector IndicesToCoords(int X, int Y, float StepX, float StepY, vector Origin)
 {
     local vector L;
 
-    L.X = X_Index * X_Step;
-    L.Y = Y_Index * Y_Step;
+    L.X = X * StepX;
+    L.Y = Y * StepY;
 
     return L + Origin;
 }
 
-static final function vector GetInterpCoords(vector A, vector B, float A_Value, float B_Value, float Value)
+static final function vector GetInterpCoords(float Value, float ValueA, float ValueB, vector A, vector B)
 {
-    local float T;
-
-    T = FClamp((Value - A_Value) / (B_Value - A_Value), 0.0, 1.0);
-
-    return (1 - T) * A + T * B;
+    return class'UVector'.static.VLerp(FClamp((Value - ValueA) / (ValueB - ValueA), 0.0, 1.0), A, B);
 }
 
 // This function will return a positive number if the pointer is OUTSIDE of
@@ -84,20 +78,20 @@ static final function array<Intbox> GetVertexIndices(int X, int Y, byte Mask, bo
     North.X2 = X + 1;
     North.Y2 = Y;
 
-    South.X1 = X + 1;
+    South.X1 = X;
     South.Y1 = Y + 1;
-    South.X2 = X;
+    South.X2 = X + 1;
     South.Y2 = Y + 1;
 
-    West.X1 = South.X2;
-    West.Y1 = South.Y2;
-    West.X2 = North.X1;
-    West.Y2 = North.Y1;
+    West.X1 = North.X1;
+    West.Y1 = North.Y1;
+    West.X2 = South.X1;
+    West.Y2 = South.Y1;
 
     East.X1 = North.X2;
     East.Y1 = North.Y2;
-    East.X2 = South.X1;
-    East.Y2 = South.Y1;
+    East.X2 = South.X2;
+    East.Y2 = South.Y2;
 
     if (Mask == 1 || Mask == 14)
     {
@@ -159,34 +153,42 @@ static final function array<Intbox> GetVertexIndices(int X, int Y, byte Mask, bo
     return Indices;
 }
 
-static function array<vector> GetContour(DHGameReplicationInfo GRI, int Resolution, byte TeamIndex, out string DebugInfo)
+static function array<vector> GetContour(DHGameReplicationInfo GRI, byte TeamIndex, int Resolution, int SubResolution)
 {
-    local int x, y, i;
-    local float XL, YL, X_Step, Y_Step;
-    local vector Origin, CellCoords;
+    local int i, j, k, PairIndex, InitLength, PointCount;
+    local float XL, YL, StepX, StepY, PointInterval, AdjustedPointInterval;
+    local vector Origin, CellCoords, V0, V1;
     local byte Mask;
     local array<byte> Normal;
     local array<float> Intensity;
-    local array<vector> Contour;
     local array<Intbox> VertexIndices;
+    local array<vector> Segments, Contour;
+    local array<InterpCurve> LineStringsX;
+    local array<InterpCurve> LineStringsY;
 
-    Resolution = Clamp(Resolution, 2, 255);
+    if (!GRI.bIsDangerZoneEnabled)
+    {
+        return Contour;
+    }
+
+    Resolution = Clamp(Resolution, 2, 128);
+    SubResolution = Max(2, SubResolution);
 
     XL = FMax(1.0, Abs(GRI.SouthWestBounds.X) + Abs(GRI.NorthEastBounds.X));
     YL = FMax(1.0, Abs(GRI.SouthWestBounds.Y) + Abs(GRI.NorthEastBounds.Y));
 
-    X_Step = XL / (Resolution - 1);
-    Y_Step = YL / (Resolution - 1);
+    StepX = XL / (Resolution - 1);
+    StepY = YL / (Resolution - 1);
 
     Origin.X = GRI.SouthWestBounds.X;
     Origin.Y = GRI.NorthEastBounds.Y;
 
     // Get the normalized field
-    for (x = 0; x < Resolution; ++x)
+    for (i = 0; i < Resolution; ++i)
     {
-        for (y = 0; y < Resolution; ++y)
+        for (j = 0; j < Resolution; ++j)
         {
-            CellCoords = static.IndicesToCoords(x, y, X_Step, Y_Step, Origin);
+            CellCoords = static.IndicesToCoords(i, j, StepX, StepY, Origin);
 
             Intensity[Intensity.Length] = static.GetIntensity(GRI, CellCoords.X, CellCoords.Y, TeamIndex);
 
@@ -201,37 +203,132 @@ static function array<vector> GetContour(DHGameReplicationInfo GRI, int Resoluti
         }
     }
 
-    // Calculate bitmasks and contour coordinates
-    for (x = 0; x < Ceil(Normal.Length / Resolution) - 1; ++x)
+    // Calculate the segment coordinates
+    for (i = 0; i < Ceil(Normal.Length / Resolution) - 1; ++i)
     {
-        for (y = 0; y < Resolution - 1; ++y)
+        for (j = 0; j < Resolution - 1; ++j)
         {
             Mask = 0;
-            Mask += Normal[class'UArray'.static.RavelIndices(x, y + 1, Resolution)] << 3;
-            Mask += Normal[class'UArray'.static.RavelIndices(x + 1, y + 1, Resolution)] << 2;
-            Mask += Normal[class'UArray'.static.RavelIndices(x + 1, y, Resolution)] << 1;
-            Mask += Normal[class'UArray'.static.RavelIndices(x, y, Resolution)];
+            Mask += Normal[class'UArray'.static.RavelIndices(i, j + 1, Resolution)] << 3;
+            Mask += Normal[class'UArray'.static.RavelIndices(i + 1, j + 1, Resolution)] << 2;
+            Mask += Normal[class'UArray'.static.RavelIndices(i + 1, j, Resolution)] << 1;
+            Mask += Normal[class'UArray'.static.RavelIndices(i, j, Resolution)];
 
-            CellCoords = static.IndicesToCoords(x, y, X_Step, Y_Step, Origin);
-            VertexIndices = GetVertexIndices(x, y, Mask, static.IsIn(GRI, CellCoords.X + X_Step / 2.0, CellCoords.Y - Y_Step / 2.0, TeamIndex));
+            CellCoords = static.IndicesToCoords(i, j, StepX, StepY, Origin);
+            VertexIndices = GetVertexIndices(i, j, Mask, static.IsIn(GRI, CellCoords.X + StepX / 2.0, CellCoords.Y - StepY / 2.0, TeamIndex));
 
-            for (i = 0; i < VertexIndices.Length; ++i)
+            for (k = 0; k < VertexIndices.Length; ++k)
             {
-                Contour[Contour.Length] = GetInterpCoords(static.IndicesToCoords(VertexIndices[i].X1, VertexIndices[i].Y1, X_Step, Y_Step, Origin),
-                                                          static.IndicesToCoords(VertexIndices[i].X2, VertexIndices[i].Y2, X_Step, Y_Step, Origin),
-                                                          Intensity[class'UArray'.static.RavelIndices(VertexIndices[i].X1, VertexIndices[i].Y1, Resolution)],
-                                                          Intensity[class'UArray'.static.RavelIndices(VertexIndices[i].X2, VertexIndices[i].Y2, Resolution)],
-                                                          0);
+                Segments[Segments.Length] = GetInterpCoords(0,
+                                                            Intensity[class'UArray'.static.RavelIndices(VertexIndices[k].X1, VertexIndices[k].Y1, Resolution)],
+                                                            Intensity[class'UArray'.static.RavelIndices(VertexIndices[k].X2, VertexIndices[k].Y2, Resolution)],
+                                                            static.IndicesToCoords(VertexIndices[k].X1, VertexIndices[k].Y1, StepX, StepY, Origin),
+                                                            static.IndicesToCoords(VertexIndices[k].X2, VertexIndices[k].Y2, StepX, StepY, Origin));
             }
         }
     }
 
-    DebugInfo = string(Contour.Length / 2) @ "lines @" @ string(Resolution) @ "resolution";
+    // Sort segments into the InterpCurve
+    i = 0;
+
+    while (Segments.Length > 0)
+    {
+        // Choose a pivot segment
+        LineStringsX.Insert(LineStringsX.Length, 1);
+        LineStringsX[i].Points.Insert(LineStringsX[i].Points.Length, 1);
+        LineStringsX[i].Points[LineStringsX[i].Points.Length - 1].OutVal = Segments[Segments.Length - 2].X;
+        LineStringsX[i].Points.Insert(LineStringsX[i].Points.Length, 1);
+        LineStringsX[i].Points[LineStringsX[i].Points.Length - 1].OutVal = Segments[Segments.Length - 1].X;
+
+        LineStringsY.Insert(LineStringsY.Length, 1);
+        LineStringsY[i].Points.Insert(LineStringsY[i].Points.Length, 1);
+        LineStringsY[i].Points[LineStringsY[i].Points.Length - 1].OutVal = Segments[Segments.Length - 2].Y;
+        LineStringsY[i].Points.Insert(LineStringsY[i].Points.Length, 1);
+        LineStringsY[i].Points[LineStringsY[i].Points.Length - 1].OutVal = Segments[Segments.Length - 1].Y;
+
+        Segments.Remove(Segments.Length - 2, 2);
+
+        // Look for adjacent segments
+        do
+        {
+            InitLength = LineStringsX[i].Points.Length;
+
+            for (j = 0; j < Segments.Length; ++j)
+            {
+                PairIndex = j + 1 - int(Ceil(j % 2.0)) * 2;
+
+                if (Segments[j].X ~= LineStringsX[i].Points[LineStringsX[i].Points.Length - 1].OutVal &&
+                    Segments[j].Y ~= LineStringsY[i].Points[LineStringsY[i].Points.Length - 1].OutVal)
+                {
+                    LineStringsX[i].Points.Insert(LineStringsX[i].Points.Length, 1);
+                    LineStringsX[i].Points[LineStringsX[i].Points.Length - 1].OutVal = Segments[PairIndex].X;
+
+                    LineStringsY[i].Points.Insert(LineStringsY[i].Points.Length, 1);
+                    LineStringsY[i].Points[LineStringsY[i].Points.Length - 1].OutVal = Segments[PairIndex].Y;
+                }
+                else if (Segments[j].X ~= LineStringsX[i].Points[0].OutVal &&
+                         Segments[j].Y ~= LineStringsY[i].Points[0].OutVal)
+                {
+                    LineStringsX[i].Points.Insert(0, 1);
+                    LineStringsX[i].Points[0].OutVal = Segments[PairIndex].X;
+
+                    LineStringsY[i].Points.Insert(0, 1);
+                    LineStringsY[i].Points[0].OutVal = Segments[PairIndex].Y;
+                }
+                else
+                {
+                    continue;
+                }
+
+                break;
+            }
+
+            if (InitLength != LineStringsX[i].Points.Length)
+            {
+                Segments.Remove(j - int(Ceil(j % 2.0)), 2);
+            }
+        }
+        until(InitLength == LineStringsX[i].Points.Length);
+
+        ++i;
+    }
+
+    // Generate the spline
+    PointInterval = XL / (SubResolution - 1);
+
+    for (i = 0; i < LineStringsX.Length; ++i)
+    {
+        for (j = 1; j < LineStringsX[i].Points.Length; ++j)
+        {
+            V0.X = LineStringsX[i].Points[j - 1].OutVal;
+            V0.Y = LineStringsY[i].Points[j - 1].OutVal;
+            V1.X = LineStringsX[i].Points[j].OutVal;
+            V1.Y = LineStringsY[i].Points[j].OutVal;
+
+            LineStringsX[i].Points[j].InVal = LineStringsX[i].Points[j - 1].InVal + VSize(V1 - V0);
+            LineStringsY[i].Points[j].InVal = LineStringsX[i].Points[j].InVal;
+        }
+
+        PointCount = LineStringsX[i].Points[LineStringsX[i].Points.Length - 1].InVal / PointInterval;
+        AdjustedPointInterval = LineStringsX[i].Points[LineStringsX[i].Points.Length - 1].InVal / PointCount;
+
+        if (LineStringsX[i].Points[0].OutVal ~= LineStringsX[i].Points[LineStringsX[i].Points.Length - 1].OutVal &&
+            LineStringsY[i].Points[0].OutVal ~= LineStringsY[i].Points[LineStringsX[i].Points.Length - 1].OutVal)
+        {
+            --PointCount;
+        }
+
+        for (j = 0; j < PointCount + 1; ++j)
+        {
+            Contour.Insert(Contour.Length, 1);
+            Contour[Contour.Length - 1].X = InterpCurveEval(LineStringsX[i], j * AdjustedPointInterval);
+            Contour[Contour.Length - 1].Y = InterpCurveEval(LineStringsY[i], j * AdjustedPointInterval);
+        }
+    }
 
     return Contour;
 }
 
 defaultproperties
 {
-    ContourColor=(R=255,G=0,B=0,A=255)
 }
