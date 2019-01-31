@@ -3860,7 +3860,7 @@ function UpdateDangerZoneOverlay(optional bool bForce)
 
     PC = DHPlayer(PlayerOwner);
 
-    if (PC == none || DHGRI == none || (!bForce && !bDangerZoneOverlayUpdatePending && PC.GetTeamNum() == DangerZoneOverlayTeamIndex))
+    if (PC == none || DHGRI == none || (!bDangerZoneOverlayUpdatePending && PC.GetTeamNum() == DangerZoneOverlayTeamIndex && !bForce && !DHGRI.bMatchHasBegun))
     {
         return;
     }
@@ -6127,7 +6127,7 @@ defaultproperties
     DangerZoneClass=class'DH_Engine.DHDangerZone'
     DangerZoneOverlayResolution=30
     DangerZoneOverlaySubResolution=57
-    DangerZoneOverlayTeamIndex=-1
+    DangerZoneOverlayTeamIndex=255
+    bDangerZoneOverlayUpdatePending=true
     DangerZoneOverlayPointIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.Dot',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=7,Y2=7),TextureScale=0.01,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=200,G=0,B=0,A=158),Tints[1]=(R=200,G=0,B=0,A=158))
-
 }
