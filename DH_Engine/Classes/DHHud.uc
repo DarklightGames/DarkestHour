@@ -115,6 +115,7 @@ var     localized string    AndMoreText;
 var     localized string    LegendCarriedArtilleryRadioText;
 var     localized string    TimeElapsedText;
 var     localized string    JoinTeamText;
+var     localized string    InvalidSpawnSettingsText;
 var     localized string    NotReadyToSpawnText;
 var     localized string    SelectSpawnPointText;
 var     localized string    SpawnInfantryText;
@@ -4890,8 +4891,15 @@ function DrawSpectatingHud(Canvas C)
                 case ESM_DarkestHour:
                     if (DHGRI.SpawningEnableTime - DHGRI.ElapsedTime > 0)
                     {
+                        // Spawning not enabled yet
                         s = default.NotReadyToSpawnText;
                         s = Repl(s, "{s}", class'TimeSpan'.static.ToString(DHGRI.SpawningEnableTime - DHGRI.ElapsedTime));
+                        bShouldFlashText = true;
+                    }
+                    else if (Time == 0)
+                    {
+                        // Press ESC to confirm your role, vehicle, and spawnpoint as something changed that has invalidated your selections
+                        s = default.InvalidSpawnSettingsText;
                         bShouldFlashText = true;
                     }
                     else if (PC.VehiclePoolIndex != -1 && PC.SpawnPointIndex != -1)
@@ -5943,6 +5951,7 @@ defaultproperties
     SpawnRallyPointText="You will deploy as a {0} at your squad rally point in {2} | Press [ESC] to change"
     SpawnNoRoleText="Press [ESC] to select a role"
     NotReadyToSpawnText="Spawning will enable in {s} (Use this time to organize squads and plan)"
+    InvalidSpawnSettingsText="Press [ESC] to confirm your role, vehicle, and spawnpoint selections"
 
     // Screen indicator icons & player HUD
     CompassNeedle=(WidgetTexture=TexRotator'DH_InterfaceArt_tex.HUD.Compass_rotator') // using DH version of compass background texture

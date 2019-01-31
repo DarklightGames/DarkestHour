@@ -213,6 +213,7 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
     {
         if (PRI == none || PRI.RoleInfo == none || !PRI.RoleInfo.bCanBeTankCrew)
         {
+            GRI.UnreserveVehicle(PC);
             return none;
         }
     }
@@ -222,11 +223,13 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
 
     if (DHVC != none && DHVC.default.bRequiresDriverLicense && PRI != none && !PRI.IsPlayerLicensedToDrive(PC))
     {
+        GRI.UnreserveVehicle(PC);
         return none;
     }
 
     if (!GRI.CanSpawnVehicle(PC.VehiclePoolIndex))
     {
+        GRI.UnreserveVehicle(PC);
         return none;
     }
 
@@ -238,6 +241,7 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
 
     if (PC.Pawn == none)
     {
+        GRI.UnreserveVehicle(PC);
         return none; // exit if we somehow failed to spawn a player to drive the vehicle
     }
 
@@ -246,6 +250,7 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
 
     if (V == none)
     {
+        GRI.UnreserveVehicle(PC);
         return none;
     }
 
@@ -255,6 +260,7 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
         V.Destroy();
         PC.Pawn.Suicide();
 
+        GRI.UnreserveVehicle(PC);
         return none;
     }
 

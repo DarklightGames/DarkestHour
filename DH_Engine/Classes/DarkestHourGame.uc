@@ -3513,6 +3513,9 @@ function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, 
 
         if (PC != none)
         {
+            // Spawn player failed, so invalidate some selections and have the player open the deploy menu
+            PC.SpawnPointIndex = -1;
+            PC.VehiclePoolIndex = -1;
             PC.DeployMenuStartMode = MODE_Map;
             PC.ClientProposeMenu("DH_Interface.DHDeployMenu");
         }
