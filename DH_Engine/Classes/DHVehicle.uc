@@ -7,6 +7,7 @@ class DHVehicle extends ROWheeledVehicle
     abstract;
 
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
+#exec OBJ LOAD FILE=..\Sounds\DHMenuSounds.uax
 
 // Structs
 struct PassengerPawn
@@ -52,6 +53,7 @@ var     int         WeaponLockTimeForTK;         // Number of seconds a player's
 var     int         PreventTeamChangeForTK;      // Number of seconds a player cannot team change after TKing this vehicle
 
 // Driver & driving
+var     bool        bRequiresDriverLicense;      // Vehicle requires player to have a driver license to be in driver position
 var     bool        bNeedToInitializeDriver;     // clientside flag that we need to do some driver set up, once we receive the Driver actor
 var     float       MaxCriticalSpeed;            // if vehicle goes over max speed, it forces player to pull back on throttle
                                                  // ... calculated as (desired kph * 1000 * 60.352 / 3600)
@@ -161,7 +163,6 @@ var     vector                                  ConstructionPlacementOffset;
 var     int                     VehiclePoolIndex;     // the vehicle pool index that this was spawned from
 var     DHSpawnPoint_Vehicle    SpawnPointAttachment; // a spawn vehicle's spawn point attachment
 var     DHSpawnPointBase        SpawnPoint;           // the spawn point that was used to spawn this vehicle
-var     bool                    bMustBeInSquadToSpawn;
 
 // Debugging
 var     bool        bDebuggingText;
@@ -826,7 +827,7 @@ function Vehicle FindEntryVehicle(Pawn P)
         }
 
         // Select driver position if it's empty, & player isn't barred by tank crew restriction, & it isn't a locked armored vehicle that player can't enter
-        if (Driver == none && (!bMustBeTankCommander || bCanEnterTankCrewPositions))
+        if (Driver == none && (!bMustBeTankCommander || bCanEnterTankCrewPositions) && (!default.bRequiresDriverLicense || class'DHPlayerReplicationInfo'.static.IsPlayerLicensedToDrive(DHPlayer(P.Controller))))
         {
             return self;
         }
@@ -850,7 +851,11 @@ function Vehicle FindEntryVehicle(Pawn P)
         // There are no empty, usable vehicle positions for this player, so give him a screen message (only if vehicle is his team's) & don't let him enter
         if (P.GetTeamNum() == VehicleTeam || !bTeamLocked)
         {
-            if (!bHasTankCrewPositions || bPlayerIsTankCrew)
+            if (default.bRequiresDriverLicense && !class'DHPlayerReplicationInfo'.static.IsPlayerLicensedToDrive(DHPlayer(P.Controller)))
+            {
+                DisplayVehicleMessage(3, P); // all rider positions full (if non-tanker tries to enter a tank that has rider positions)
+            }
+            else if (!bHasTankCrewPositions || bPlayerIsTankCrew)
             {
                 DisplayVehicleMessage(2, P); // vehicle is full (this simple message if vehicle isn't a tank or if player is a tank crewman)
             }
@@ -965,7 +970,6 @@ function bool TryToDrive(Pawn P)
         if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(P) && P.IsHumanControlled())
         {
             DisplayVehicleMessage(0, P); // not qualified to operate vehicle
-
             return false;
         }
 
@@ -974,6 +978,12 @@ function bool TryToDrive(Pawn P)
         {
             return false;
         }
+    }
+
+    if (default.bRequiresDriverLicense && !class'DHPlayerReplicationInfo'.static.IsPlayerLicensedToDrive(DHPlayer(P.Controller)) && P.IsHumanControlled())
+    {
+        DisplayVehicleMessage(0, P); // not qualified to operate vehicle
+        return false;
     }
 
     // Deny entry if vehicle has a driver
@@ -1934,7 +1944,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 // Inform the instigator they are doing something wrong
                 if (PlayerController(InstigatorController) != none)
                 {
-                    PlayerController(InstigatorController).ClientPlaySound(Sound'DHMenuSounds.Buzz',,, SLOT_Interface);
+                    PlayerController(InstigatorController).ClientPlaySound(Sound'DHMenuSounds.BuzzBuzz',,, SLOT_Interface);
                 }
 
                 // If no one has ever entered the vehicle, then don't allow team damage

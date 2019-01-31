@@ -75,6 +75,7 @@ var     bool                        bIsAttritionEnabled;                    // T
 var     float                       CalculatedAttritionRate[2];
 var     float                       TeamAttritionCounter[2];
 var     bool                        bSwapTeams;
+var     bool                        bIsDangerZoneEnabled;
 
 var     float                       AlliesToAxisRatio;
 
@@ -281,6 +282,12 @@ function PostBeginPlay()
 
     GRI.TeamMunitionPercentages[AXIS_TEAM_INDEX] = DHLevelInfo.BaseMunitionPercentages[AXIS_TEAM_INDEX];
     GRI.TeamMunitionPercentages[ALLIES_TEAM_INDEX] = DHLevelInfo.BaseMunitionPercentages[ALLIES_TEAM_INDEX];
+
+    if (bIsDangerZoneEnabled && (SquadReplicationInfo.bAreRallyPointsEnabled || class'DH_LevelInfo'.static.DHDebugMode()))
+    {
+        GRI.bIsDangerZoneEnabled = DHLevelInfo.bIsDangerZoneInitiallyEnabled;
+        GRI.DangerZoneIntensityScale = DHLevelInfo.DangerZoneIntensityScale;
+    }
 
     // Artillery
     GRI.ArtilleryStrikeLimit[AXIS_TEAM_INDEX] = LevelInfo.Axis.ArtilleryStrikeLimit;
@@ -2822,6 +2829,7 @@ state RoundInPlay
             if (TeamAttritionCounter[i] >= 1.0)
             {
                 ModifyReinforcements(i, -TeamAttritionCounter[i]);
+                HandleReinforcementChangeMessages(i);
                 TeamAttritionCounter[i] = TeamAttritionCounter[i] % 1.0;
             }
         }
@@ -3065,7 +3073,6 @@ function ResetArtilleryTargets()
 function HandleReinforcements(Controller C)
 {
     local DHPlayer PC;
-    local float ReinforcementPercent;
 
     PC = DHPlayer(C);
 
@@ -3078,66 +3085,49 @@ function HandleReinforcements(Controller C)
     if (PC.GetTeamNum() == ALLIES_TEAM_INDEX && GRI.SpawnsRemaining[ALLIES_TEAM_INDEX] != -1)
     {
         ModifyReinforcements(ALLIES_TEAM_INDEX, -1);
-
-        ReinforcementPercent = float(GRI.SpawnsRemaining[ALLIES_TEAM_INDEX]) / SpawnsAtRoundStart[ALLIES_TEAM_INDEX];
-
-        // Handle reinforcement % message
-        if (GRI.GameType.default.bUseReinforcementWarning && !GRI.bIsInSetupPhase)
-        {
-            while (TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX] < default.ReinforcementMessagePercentages.Length &&
-                    ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX]])
-            {
-                BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, class'DHReinforcementMsg', 100 * default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX]]);
-
-                ++TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX];
-            }
-
-            // The team is very low on reinforcements, men are fleeing! Enemy should know they are about to win
-            if (TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX] > default.ReinforcementMessagePercentages.Length - 1)
-            {
-                if (bDidSendEnemyTeamWeakMessage[AXIS_TEAM_INDEX] == 0)
-                {
-                    BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, class'DHEnemyInformationMsg', 0);
-
-                    bDidSendEnemyTeamWeakMessage[AXIS_TEAM_INDEX] = 1;
-                }
-            }
-        }
+        HandleReinforcementChangeMessages(ALLIES_TEAM_INDEX);
     }
     else if (PC.GetTeamNum() == AXIS_TEAM_INDEX && GRI.SpawnsRemaining[AXIS_TEAM_INDEX] != -1)
     {
         ModifyReinforcements(AXIS_TEAM_INDEX, -1);
-
-        ReinforcementPercent = float(GRI.SpawnsRemaining[AXIS_TEAM_INDEX]) / SpawnsAtRoundStart[AXIS_TEAM_INDEX];
-
-        // Handle reinforcement % message
-        if (GRI.GameType.default.bUseReinforcementWarning && !GRI.bIsInSetupPhase)
-        {
-            while (TeamReinforcementMessageIndices[AXIS_TEAM_INDEX] < default.ReinforcementMessagePercentages.Length &&
-                    ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[AXIS_TEAM_INDEX]])
-            {
-                BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, class'DHReinforcementMsg', 100 * default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[AXIS_TEAM_INDEX]]);
-
-                ++TeamReinforcementMessageIndices[AXIS_TEAM_INDEX];
-            }
-
-            // The team is very low on reinforcements, men are fleeing! Enemy should know they are about to win
-            if (TeamReinforcementMessageIndices[AXIS_TEAM_INDEX] > default.ReinforcementMessagePercentages.Length - 1)
-            {
-                if (bDidSendEnemyTeamWeakMessage[ALLIES_TEAM_INDEX] == 0)
-                {
-                    BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, class'DHEnemyInformationMsg', 0);
-
-                    bDidSendEnemyTeamWeakMessage[ALLIES_TEAM_INDEX] = 1;
-                }
-            }
-        }
+        HandleReinforcementChangeMessages(AXIS_TEAM_INDEX);
     }
 
     if (PC.bFirstRoleAndTeamChange && GetStateName() == 'RoundInPlay')
     {
         PC.NotifyOfMapInfoChange();
         PC.bFirstRoleAndTeamChange = true;
+    }
+}
+
+// Handles the messages regarding low reinforcements, should be called by anything that lowers reinforcements
+function HandleReinforcementChangeMessages(int Team)
+{
+    local float ReinforcementPercent;
+
+    ReinforcementPercent = float(GRI.SpawnsRemaining[Team]) / SpawnsAtRoundStart[Team];
+
+    // Handle reinforcement % message
+    if (GRI.GameType.default.bUseReinforcementWarning && !GRI.bIsInSetupPhase)
+    {
+        while (TeamReinforcementMessageIndices[Team] < default.ReinforcementMessagePercentages.Length &&
+                ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[Team]])
+        {
+            BroadcastTeamLocalizedMessage(Level, Team, class'DHReinforcementMsg', 100 * default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX]]);
+
+            ++TeamReinforcementMessageIndices[Team];
+        }
+
+        // The team is very low on reinforcements, men are fleeing! Enemy should know they are about to win
+        if (TeamReinforcementMessageIndices[Team] > default.ReinforcementMessagePercentages.Length - 1)
+        {
+            if (bDidSendEnemyTeamWeakMessage[int(!bool(Team))] == 0)
+            {
+                BroadcastTeamLocalizedMessage(Level, int(!bool(Team)), class'DHEnemyInformationMsg', 0);
+
+                bDidSendEnemyTeamWeakMessage[int(!bool(Team))] = 1;
+            }
+        }
     }
 }
 
@@ -3186,6 +3176,14 @@ static function string ParseChatPercVar(Mutator BaseMutator, Controller Who, str
     }
 
     return super.ParseChatPercVar(BaseMutator, Who, Cmd);
+}
+
+function UpdateRallyPoints()
+{
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.UpdateRallyPoints();
+    }
 }
 
 //***********************************************************************************
@@ -3333,6 +3331,7 @@ exec function WinRound(optional int TeamToWin)
 exec function SetReinforcements(int Team, int Amount)
 {
     ModifyReinforcements(Team, Amount, true);
+    HandleReinforcementChangeMessages(Team);
 }
 
 // Function to allow for capturing a currently active objective (for the supplied team), can also specify the ObjName and if it should be neutralized instead
@@ -3462,6 +3461,28 @@ exec function MidGameVote()
     }
 }
 
+exec function SetDangerZone(bool bOn)
+{
+    if (GRI == none)
+    {
+        return;
+    }
+
+    GRI.bIsDangerZoneEnabled = bOn;
+    UpdateRallyPoints();
+}
+
+exec function SetDangerZoneIntensityScale(float Value)
+{
+    if (GRI == none)
+    {
+        return;
+    }
+
+    GRI.DangerZoneIntensityScale = Value;
+    UpdateRallyPoints();
+}
+
 //***********************************************************************************
 // END exec Functions!!!
 //***********************************************************************************
@@ -3492,6 +3513,9 @@ function DeployRestartPlayer(Controller C, optional bool bHandleReinforcements, 
 
         if (PC != none)
         {
+            // Spawn player failed, so invalidate some selections and have the player open the deploy menu
+            PC.SpawnPointIndex = -1;
+            PC.VehiclePoolIndex = -1;
             PC.DeployMenuStartMode = MODE_Map;
             PC.ClientProposeMenu("DH_Interface.DHDeployMenu");
         }
@@ -5342,16 +5366,10 @@ defaultproperties
     TeamAIType(1)=class'DH_Engine.DHTeamAI'
     LocalStatsScreenClass=none // stats screen actor isn't used in RO/DH & this stops the class being pointlessly set & replicated in each PRI
 
-    ReinforcementMessagePercentages(0)=0.9
-    ReinforcementMessagePercentages(1)=0.8
-    ReinforcementMessagePercentages(2)=0.7
-    ReinforcementMessagePercentages(3)=0.6
-    ReinforcementMessagePercentages(4)=0.5
-    ReinforcementMessagePercentages(5)=0.4
-    ReinforcementMessagePercentages(6)=0.3
-    ReinforcementMessagePercentages(7)=0.2
-    ReinforcementMessagePercentages(8)=0.1
-    ReinforcementMessagePercentages(9)=0.05
+    ReinforcementMessagePercentages(0)=0.75
+    ReinforcementMessagePercentages(1)=0.5
+    ReinforcementMessagePercentages(2)=0.25
+    ReinforcementMessagePercentages(3)=0.1
 
     ServerLocation="Unspecified"
 
@@ -5376,4 +5394,5 @@ defaultproperties
     DisableAllChatThreshold=50
     bAllowAllChat=true
     bIsAttritionEnabled=true
+    bIsDangerZoneEnabled=true
 }

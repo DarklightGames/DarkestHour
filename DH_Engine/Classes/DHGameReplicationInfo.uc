@@ -29,7 +29,7 @@ enum VehicleReservationError
     ERROR_PoolInactive,
     ERROR_PoolMaxActive,
     ERROR_NoReservations,
-    ERROR_NoSquad
+    ERROR_NoLicense
 };
 
 struct ArtilleryTarget
@@ -150,6 +150,10 @@ var bool                bAllChatEnabled;
 var byte                ServerTickHealth;
 var int                 ServerNetHealth;
 
+var bool                bIsDangerZoneEnabled;
+var float               DangerZoneIntensityScale;
+var float               OldDangerZoneIntensityScale;
+
 // Map markers
 struct MapMarker
 {
@@ -227,7 +231,9 @@ replication
         DHArtillery,
         TeamMunitionPercentages,
         AlliesVictoryMusicIndex,
-        AxisVictoryMusicIndex;
+        AxisVictoryMusicIndex,
+        bIsDangerZoneEnabled,
+        DangerZoneIntensityScale;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
@@ -716,9 +722,7 @@ simulated function bool CanSpawnWithParameters(int SpawnPointIndex, int TeamInde
     {
         VehicleClass = class<DHVehicle>(GetVehiclePoolVehicleClass(VehiclePoolIndex));
 
-        if (VehicleClass == none ||
-            VehicleClass.default.bMustBeInSquadToSpawn && SquadIndex == -1 ||
-            !CanSpawnVehicle(VehiclePoolIndex, bSkipTimeCheck))
+        if (VehicleClass == none || !CanSpawnVehicle(VehiclePoolIndex, bSkipTimeCheck))
         {
             return false;
         }
@@ -1242,9 +1246,9 @@ simulated function VehicleReservationError GetVehicleReservationError(DHPlayer P
         return ERROR_NoReservations;
     }
 
-    if (VC.default.bMustBeInSquadToSpawn && !PC.IsInSquad())
+    if (VC.default.bRequiresDriverLicense && !DHPlayerReplicationInfo(PC.PlayerReplicationInfo).IsPlayerLicensedToDrive(PC))
     {
-        return ERROR_NoSquad;
+        return ERROR_NoLicense;
     }
 
     if (!IgnoresMaxTeamVehiclesFlags(VehiclePoolIndex) && GetReservableTankCount(TeamIndex) <= 0)
@@ -1687,6 +1691,42 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
     }
 
     return ERROR_None;
+}
+
+simulated function float GetDangerZoneIntensity(float PointerX, float PointerY, byte TeamIndex)
+{
+    return class'DHDangerZone'.static.GetIntensity(self, PointerX, PointerY, TeamIndex);
+}
+
+simulated function bool IsInDangerZone(float PointerX, float PointerY, byte TeamIndex)
+{
+    return class'DHDangerZone'.static.IsIn(self, PointerX, PointerY, TeamIndex);
+}
+
+simulated function PostNetReceive()
+{
+    local DHPlayer PC;
+    local DHHud Hud;
+
+    super.PostNetReceive();
+
+    // Notify HUD about changes to Danger Zone
+    if (OldDangerZoneIntensityScale != DangerZoneIntensityScale)
+    {
+        PC = DHPlayer(Level.GetLocalPlayerController());
+
+        if (PC != none)
+        {
+            Hud = DHHud(PC.myHUD);
+
+            if (Hud != none)
+            {
+                Hud.DangerZoneOverlayUpdateRequest();
+            }
+        }
+
+        OldDangerZoneIntensityScale = DangerZoneIntensityScale;
+    }
 }
 
 defaultproperties
