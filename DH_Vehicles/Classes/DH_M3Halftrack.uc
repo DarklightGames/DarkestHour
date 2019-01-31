@@ -15,7 +15,6 @@ defaultproperties
     VehicleMass=8.5
     ReinforcementCost=3
     MaxDesireability=1.2
-    bMustBeInSquadToSpawn=true
     PointValue=500
 
     // Hull mesh

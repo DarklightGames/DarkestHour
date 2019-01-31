@@ -29,7 +29,7 @@ enum VehicleReservationError
     ERROR_PoolInactive,
     ERROR_PoolMaxActive,
     ERROR_NoReservations,
-    ERROR_NoSquad
+    ERROR_NoLicense
 };
 
 struct ArtilleryTarget
@@ -722,9 +722,7 @@ simulated function bool CanSpawnWithParameters(int SpawnPointIndex, int TeamInde
     {
         VehicleClass = class<DHVehicle>(GetVehiclePoolVehicleClass(VehiclePoolIndex));
 
-        if (VehicleClass == none ||
-            VehicleClass.default.bMustBeInSquadToSpawn && SquadIndex == -1 ||
-            !CanSpawnVehicle(VehiclePoolIndex, bSkipTimeCheck))
+        if (VehicleClass == none || !CanSpawnVehicle(VehiclePoolIndex, bSkipTimeCheck))
         {
             return false;
         }
@@ -1248,9 +1246,9 @@ simulated function VehicleReservationError GetVehicleReservationError(DHPlayer P
         return ERROR_NoReservations;
     }
 
-    if (VC.default.bMustBeInSquadToSpawn && !PC.IsInSquad())
+    if (VC.default.bRequiresDriverLicense && !DHPlayerReplicationInfo(PC.PlayerReplicationInfo).IsPlayerLicensedToDrive(PC))
     {
-        return ERROR_NoSquad;
+        return ERROR_NoLicense;
     }
 
     if (!IgnoresMaxTeamVehiclesFlags(VehiclePoolIndex) && GetReservableTankCount(TeamIndex) <= 0)

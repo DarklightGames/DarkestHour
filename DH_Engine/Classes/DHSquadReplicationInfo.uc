@@ -741,9 +741,6 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
     PRI.SquadMemberIndex = -1;
     PRI.bIsSquadAssistant = false;
 
-    // Unreserve squad-only vehicle selection
-    UnreserveSquadVehicle(PC);
-
     // Unreserve role, if gametype restricts specials roles only to squads
     if (GRI.GameType.default.bSquadSpecialRolesOnly && PRI.RoleInfo != none && PRI.RoleInfo.Limit != 255)
     {
@@ -857,36 +854,6 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
     }
 
     return true;
-}
-
-// HACK: If the player had a squad-only vehicle reserved, unreserve it and
-// mark his spawn settings as invalid. I don't particularly like this. In future
-// it would be nice to have some sort of "verify spawn settings" thing we can
-// run elsewhere instead, since the SRI shouldn't have to care or know about
-// the vehicle reservation system.
-function UnreserveSquadVehicle(DHPlayer PC)
-{
-    local DHGameReplicationInfo GRI;
-    local class<DHVehicle> VC;
-
-    if (PC != none)
-    {
-        GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
-    }
-
-    if (GRI == none)
-    {
-        return;
-    }
-
-    VC = class<DHVehicle>(GRI.GetVehiclePoolVehicleClass(PC.VehiclePoolIndex));
-
-    if (VC != none && VC.default.bMustBeInSquadToSpawn)
-    {
-        GRI.UnreserveVehicle(PC);
-        PC.SpawnPointIndex = 900;   // HACK: this forces the user into the deploy menu
-        PC.bSpawnPointInvalidated = true;
-    }
 }
 
 // Attempts to make the specified player the leader of the specified squad.
