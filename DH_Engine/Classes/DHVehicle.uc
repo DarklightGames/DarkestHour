@@ -7,6 +7,7 @@ class DHVehicle extends ROWheeledVehicle
     abstract;
 
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
+#exec OBJ LOAD FILE=..\Sounds\DHMenuSounds.uax
 
 // Structs
 struct PassengerPawn
@@ -1943,7 +1944,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 // Inform the instigator they are doing something wrong
                 if (PlayerController(InstigatorController) != none)
                 {
-                    PlayerController(InstigatorController).ClientPlaySound(Sound'DHMenuSounds.Buzz',,, SLOT_Interface);
+                    PlayerController(InstigatorController).ClientPlaySound(Sound'DHMenuSounds.BuzzBuzz',,, SLOT_Interface);
                 }
 
                 // If no one has ever entered the vehicle, then don't allow team damage
