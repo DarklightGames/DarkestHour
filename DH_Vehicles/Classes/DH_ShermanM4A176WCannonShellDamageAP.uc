@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_ShermanM4A176WCannonShellDamageAP extends DHShellImpactDamageType
+class DH_ShermanM4A176WCannonShellDamageAP extends DHShellAPImpactDamageType
     abstract;
 
 defaultproperties

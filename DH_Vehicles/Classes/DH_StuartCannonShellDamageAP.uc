@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_StuartCannonShellDamageAP extends DHShellImpactDamageType
+class DH_StuartCannonShellDamageAP extends DHShellAPImpactDamageType
     abstract;
 
 defaultproperties

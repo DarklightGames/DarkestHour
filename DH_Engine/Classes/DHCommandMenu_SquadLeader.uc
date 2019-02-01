@@ -6,6 +6,7 @@
 class DHCommandMenu_SquadLeader extends DHCommandMenu;
 
 var localized string NoPlayerInLineOfSight;
+var localized string InEnemyTerritory;
 
 function OnSelect(int Index, vector Location)
 {
@@ -78,14 +79,27 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
 {
     local DHPawn OtherPawn;
     local DHPlayer PC;
+    local DHGameReplicationInfo GRI;
 
     OtherPawn = DHPawn(MenuObject);
     PC = GetPlayerController();
+
+    if (PC != none)
+    {
+        GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+    }
 
     super.GetOptionRenderInfo(OptionIndex, ORI);
 
     switch (OptionIndex)
     {
+        case 0: // Rally Point
+            if (GRI != none && GRI.IsInDangerZone(PC.Pawn.Location.X, PC.Pawn.Location.Y, PC.GetTeamNum()))
+            {
+                ORI.InfoText = default.InEnemyTerritory;
+                ORI.InfoColor = class'UColor'.default.Yellow;
+            }
+            break;
         case 3: // Player Menu
             if (OtherPawn != none && OtherPawn.PlayerReplicationInfo != none)
             {
@@ -97,6 +111,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
                 ORI.InfoText = default.NoPlayerInLineOfSight;
                 ORI.InfoColor = class'UColor'.default.Yellow;
             }
+            break;
         default:
             break;
     }
@@ -132,6 +147,7 @@ function bool IsOptionDisabled(int OptionIndex)
 defaultproperties
 {
     NoPlayerInLineOfSight="No player in sights"
+    InEnemyTerritory="In enemy territory"
     Options(0)=(ActionText="Create Rally Point",Material=Texture'DH_InterfaceArt2_tex.Icons.rally_point')
     Options(1)=(ActionText="Fire",Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
     Options(2)=(ActionText="Construction",Material=Texture'DH_InterfaceArt2_tex.Icons.construction')

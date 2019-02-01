@@ -15,7 +15,6 @@ defaultproperties
     Damage=400.0
     DamageRadius=1140.0
     ImpactDamage=450
-    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
     PenetrationMag=780.0
     Tag="OF-350"
     bDebugInImperial=false

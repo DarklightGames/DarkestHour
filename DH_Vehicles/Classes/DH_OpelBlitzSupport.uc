@@ -25,6 +25,6 @@ defaultproperties
     DisintegrationHealth=-1000.0 // disintegrates if health falls below this threshold, due to explosive ammo carried
     DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
-    bMustBeInSquadToSpawn=true
+    bRequiresDriverLicense=true
     FriendlyResetDistance=15000.0  // 250 meters
 }

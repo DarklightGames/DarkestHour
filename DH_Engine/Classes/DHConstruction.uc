@@ -1161,21 +1161,23 @@ defaultproperties
     ProgressMax=4
 
     // Damage
-    HarmfulDamageTypes(0)=class'DHArtilleryDamageType'
-    HarmfulDamageTypes(1)=class'ROTankShellExplosionDamage'
-    HarmfulDamageTypes(2)=class'DHThrowableExplosiveDamageType'
-    HarmfulDamageTypes(3)=class'DHMortarDamageType'
     TatteredHealthThreshold=-1
     MinDamagetoHurt=100
-
-    SquadMemberCountMinimum=2
-    bCanBeMantled=true
+    HarmfulDamageTypes(0)=class'DHArtilleryDamageType'              // Artillery
+    HarmfulDamageTypes(1)=class'ROTankShellExplosionDamage'         // HE Splash
+    HarmfulDamageTypes(2)=class'DHShellHEImpactDamageType'          // HE Impact
+    HarmfulDamageTypes(3)=class'DHShellAPImpactDamageType'          // AP Impact
+    HarmfulDamageTypes(4)=class'DHRocketImpactDamage'               // AT Rocket Impact
+    HarmfulDamageTypes(5)=class'DHThrowableExplosiveDamageType'     // Satchel/Grenades
+    HarmfulDamageTypes(6)=class'DHMortarDamageType'                 // Mortar
 
     // Impact
     bCanTakeImpactDamage=false
     ImpactDamageType=class'Crushed'
     ImpactDamageModifier=0.1
 
+    SquadMemberCountMinimum=2
+    bCanBeMantled=true
     bCanBeTornDownByFriendlies=true
     FriendlyFireDamageScale=1.0
     bShouldAutoConstruct=true

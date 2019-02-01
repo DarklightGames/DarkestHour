@@ -63,6 +63,10 @@ var(ROObjTerritory) bool            bUseHardBaseRate;           // Tells the cap
 var(ROObjective) bool               bIsInitiallyActive;         // Purpose is mainly to consolidate the variables of actors into one area (less confusing to new levelers)
 var(ROObjective) name               NoArtyVolumeProtectionTag;  // optional Tag for associated no arty volume that protects this SP only when the SP is active
 
+// Objective Spawn variables
+var(DHObjectiveSpawn) name          SpawnPointHintTags[2];      // Tags of hints for obj spawns (0 = Axis, 1 = Allies)
+var DHSpawnPoint_Objective          SpawnPoint;                 // Reference to the attached DHSpawnPoint_Objective if one exists
+
 // Capture/Actions variables
 var(DHObjectiveCapture) bool        bLockDownOnCapture;
 var(DHObjectiveCapture) bool        bUsePostCaptureOperations;  // Enables below variables to be used for post capture clear check/calls
@@ -143,6 +147,9 @@ var(DH_GroupedActions)      array<VehiclePoolAction>    AlliesGroupVehiclePoolAc
 var(DH_GroupedActions)      array<VehiclePoolAction>    AxisGroupVehiclePoolActions;
 var(DH_GroupedActions)      array<name>                 AlliesGroupCaptureEvents;
 var(DH_GroupedActions)      array<name>                 AxisGroupCaptureEvents;
+
+// Replication
+var                         EObjectiveState             OldObjState;
 
 replication
 {
@@ -1186,6 +1193,12 @@ function Timer()
 // Modified to handle neutralizing objectives
 function ObjectiveCompleted(PlayerReplicationInfo CompletePRI, int Team)
 {
+    local DHSquadReplicationInfo SRI;
+    local DHPlayer PC;
+    local DHHud Hud;
+
+    SRI = DarkestHourGame(Level.Game).SquadReplicationInfo;
+
     if (!IsNeutral() && bNeutralizeBeforeCapture)
     {
         // If the objective is not neutral, has completed progress, & is set to bNeutralizedBeforeCaptured
@@ -1225,6 +1238,26 @@ function ObjectiveCompleted(PlayerReplicationInfo CompletePRI, int Team)
 
     // lets see if this tells the bots the objectives is done for
     UnrealMPGameInfo(Level.Game).FindNewObjectives(self);
+
+    if (SRI != none)
+    {
+        SRI.UpdateRallyPoints();
+    }
+
+    if (Level.NetMode == NM_Standalone)
+    {
+        PC = DHPlayer(Level.GetLocalPlayerController());
+
+        if (PC != none)
+        {
+            Hud = DHHud(PC.myHUD);
+
+            if (Hud != none)
+            {
+                Hud.OnObjectiveCompleted();
+            }
+        }
+    }
 }
 
 // New function to implement the bNeutralizeBeforeCapture option
@@ -1323,6 +1356,16 @@ simulated function bool IsFrozen(GameReplicationInfo GRI)
     return GRI != none && UnfreezeTime > GRI.ElapsedTime;
 }
 
+simulated function bool IsOwnedByTeam(byte TeamIndex)
+{
+    if (TeamIndex == AXIS_TEAM_INDEX)
+        return IsAxis();
+    else if (TeamIndex == ALLIES_TEAM_INDEX)
+        return IsAllies();
+
+    return false;
+}
+
 // Clients/Server can run this function very fast because of the hashtable
 simulated function bool HasRequiredObjectives(coerce DHGameReplicationInfo GRI, int TeamIndex)
 {
@@ -1371,6 +1414,36 @@ function UpdateCompressedCapProgress()
     else
     {
         CompressedCapProgress = Max(1, CurrentCapProgress * 5);
+    }
+}
+
+// Overridden to notify the HUD to update the danger zone contour.
+simulated function PostNetReceive()
+{
+    local DHPlayer PC;
+    local DHHud Hud;
+
+    super.PostNetReceive();
+
+    // Listen for state changes so we can notify the HUD!
+    if (ObjState != OldObjState)
+    {
+        if (ObjState != OBJ_Neutral)
+        {
+            PC = DHPlayer(Level.GetLocalPlayerController());
+
+            if (PC != none)
+            {
+                Hud = DHHud(PC.myHUD);
+
+                if (Hud != none)
+                {
+                    Hud.OnObjectiveCompleted();
+                }
+            }
+        }
+
+        OldObjState = ObjState;
     }
 }
 

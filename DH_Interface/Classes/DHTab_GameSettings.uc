@@ -21,9 +21,12 @@ var     int                     OriginalNetSpeed, OriginalPurgeCacheDays; // sav
 var     int                     PurgeCacheDaysValues[3]; // deliberately one less than PurgeCacheDaysText array size, as highest text in list is for possible custom value
 
 var     localized string        UserDefinedNetSpeedText;
-var     localized string        NetSpeedText[6], PurgeCacheDaysText[4];
+var     localized string        PurgeCacheDaysText[4];
 var     localized string        IDText, NoROIDText;
 var     localized string        DegreesText;
+
+var     localized string        NetSpeedText[7];
+var     int                     NetSpeedValues[7];
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -56,7 +59,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     for (i = 0; i < arraycount(NetSpeedText); ++i)
     {
-        co_Netspeed.AddItem(NetSpeedText[i]);
+        co_Netspeed.AddItem(Repl(NetSpeedText[i], "{0}", NetSpeedValues[i]));
     }
 
     for (i = 0; i < arraycount(PurgeCacheDaysValues); ++i) // deliberately using PurgeCacheDaysValues array size, as highest list text is reserved for possible custom value
@@ -69,7 +72,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
 {
     local PlayerController PC;
     local float            ViewFOV;
-    local int              i;
+    local int              i, j;
     local bool             bOptionEnabled;
 
     PC = PlayerOwner();
@@ -198,34 +201,21 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
                 i = class'Player'.default.ConfiguredInternetSpeed;
             }
 
-            // Remove the NetSpeed User Defined value, we will add it back only if it is actually defined by the user
-            co_NetSpeed.RemoveItem(5);
+            // Remove the NetSpeed User Defined value (last value), we will add it back only if it is actually defined by the user
+            co_NetSpeed.RemoveItem(arraycount(NetSpeedText) - 1);
 
             // Select the setting based on the NetSpeed value
-            if (i == 6000)
+            for (j = 0; j < arraycount(NetSpeedValues); ++j)
             {
-                OriginalNetSpeed = 0;
-            }
-            else if (i == 8000)
-            {
-                OriginalNetSpeed = 1;
-            }
-            else if (i == 10000)
-            {
-                OriginalNetSpeed = 2;
-            }
-            else if (i == 15000)
-            {
-                OriginalNetSpeed = 3;
-            }
-            else if (i == 20000)
-            {
-                OriginalNetSpeed = 4;
-            }
-            else // Value is set differently than above and therefore is "User Defined" in INI file
-            {
-                co_NetSpeed.AddItem(Repl(default.NetSpeedText[5], "%NetSpeed%", i));
-                OriginalNetSpeed = 5;
+                if (i == NetSpeedValues[j])
+                {
+                    if (j == arraycount(NetSpeedValues) - 1)
+                    {
+                        co_NetSpeed.AddItem(Repl(default.NetSpeedText[arraycount(NetSpeedText) - 1], "%NetSpeed%", i));
+                    }
+
+                    OriginalNetSpeed = j;
+                }
             }
 
             co_NetSpeed.SetIndex(OriginalNetSpeed);
@@ -406,28 +396,13 @@ function SaveSettings()
     {
         if (PC.Player != none)
         {
-            switch (NetSpeed)
-            {
-                case 0: PC.Player.ConfiguredInternetSpeed = 6000;  break;
-                case 1: PC.Player.ConfiguredInternetSpeed = 8000;  break;
-                case 2: PC.Player.ConfiguredInternetSpeed = 10000; break;
-                case 3: PC.Player.ConfiguredInternetSpeed = 15000; break;
-                case 4: PC.Player.ConfiguredInternetSpeed = 20000; break;
-            }
-
+            PC.Player.ConfiguredInternetSpeed = NetSpeedValues[NetSpeed];
+            PC.ConsoleCommand("NetSpeed" @ NetSpeedValues[NetSpeed]);
             PC.Player.SaveConfig();
         }
         else
         {
-            switch (NetSpeed)
-            {
-                case 0: class'Player'.default.ConfiguredInternetSpeed = 6000;  break;
-                case 1: class'Player'.default.ConfiguredInternetSpeed = 8000;  break;
-                case 2: class'Player'.default.ConfiguredInternetSpeed = 10000; break;
-                case 3: class'Player'.default.ConfiguredInternetSpeed = 15000; break;
-                case 4: class'Player'.default.ConfiguredInternetSpeed = 20000; break;
-            }
-
+            class'Player'.default.ConfiguredInternetSpeed = NetSpeedValues[NetSpeed];
             class'Player'.static.StaticSaveConfig();
         }
     }
@@ -496,12 +471,21 @@ defaultproperties
     IDText="ID:"
     NoROIDText="Must join multiplayer first"
 
-    NetSpeedText(0)="Lowest (6000)"
-    NetSpeedText(1)="Low (8000)"
-    NetSpeedText(2)="Medium (10000)"
-    NetSpeedText(3)="Recommended (15000)"
-    NetSpeedText(4)="High (20000)"
-    NetSpeedText(5)="User Defined (%NetSpeed%)"
+    NetSpeedValues(0)=10000
+    NetSpeedValues(1)=12000
+    NetSpeedValues(2)=15000
+    NetSpeedValues(3)=20000
+    NetSpeedValues(4)=30000
+    NetSpeedValues(5)=50000
+    NetSpeedValues(6)=0
+
+    NetSpeedText(0)="Lowest ({0})"
+    NetSpeedText(1)="Low ({0})"
+    NetSpeedText(2)="Medium ({0})"
+    NetSpeedText(3)="Recommended ({0})"
+    NetSpeedText(4)="High ({0})"
+    NetSpeedText(5)="Extreme ({0})"
+    NetSpeedText(6)="User Defined (%NetSpeed%)"
 
     PurgeCacheDaysValues(0)=0
     PurgeCacheDaysValues(1)=30
@@ -669,7 +653,7 @@ defaultproperties
         CaptionWidth=0.38
         ComponentJustification=TXTA_Left
         bReadOnly=true
-        IniDefault="Recommended (15000)"
+        IniDefault="Recommended (20000)"
         IniOption="@Internal"
         OnChange=InternalOnChange
         OnLoadINI=InternalOnLoadINI

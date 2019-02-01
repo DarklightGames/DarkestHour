@@ -10,6 +10,7 @@ defaultproperties
 {
     GameTypeName="Advance"
 
+    bAreObjectiveSpawnsEnabled=true
     bAreRallyPointsEnabled=true
     bAreConstructionsEnabled=true
 

@@ -752,13 +752,8 @@ simulated function bool CanPlayerLockVehicle(Vehicle PlayersVehiclePosition)
         LI = PC.GetLevelInfo();
     }
 
-    // Not if the map has been set to disallow tank locking
-    if (LI != none && LI.bDisableTankLocking)
-    {
-        FailMessageNumber = 24; // this map doesn't allow vehicles to be locked
-    }
     // Not if this armored vehicle isn't for tank crew only (very unlikely for an armored vehicle, but possible - perhaps for a scenario map)
-    else if (!bMustBeTankCommander)
+    if (!bMustBeTankCommander)
     {
         FailMessageNumber = 25; // can't lock vehicle as it can be driven by non-tank crew roles
     }
@@ -2263,6 +2258,7 @@ defaultproperties
     EngineRestartFailChance=0.1
     MinRunOverSpeed=83.82 // decreased to 5 kph, as players should be easier to run over with armored vehicles
     PointValue=1000
+    WeaponLockTimeForTK=30
 
     // Driver & positions
     bMustBeTankCommander=true

@@ -9,6 +9,7 @@ var localized string VehicleDestroyedMessage;
 var localized string VehicleDepletedMessage;
 var localized string VehicleArrivedMessage;
 var localized string VehicleCutOffMessage;
+var localized string VehicleTeamKilledMessage;
 
 var localized string NeedMoreFriendliesToDeconstructHQMessage;
 
@@ -149,6 +150,20 @@ static function string GetString(optional int Switch, optional PlayerReplication
             return default.YouHaveLoggedOutOfAdminMsg;
         case 22:
             return default.NeedMoreFriendliesToDeconstructHQMessage;
+        // A vehicle was team killed
+        case 23:
+            if (RelatedPRI_1 != none && DHVehicle(OptionalObject) != none)
+            {
+                Repl(S, "{0}", SM.VehiclePools[Switch % 100].VehicleClass.default.VehicleNameString);
+
+                S = Repl(default.VehicleTeamKilledMessage, "{0}", RelatedPRI_1.PlayerName);
+                S = Repl(S, "{1}", DHVehicle(OptionalObject).VehicleNameString);
+                return S;
+            }
+            else
+            {
+                return "";
+            }
         default:
             break;
     }
@@ -192,6 +207,7 @@ defaultproperties
     VehicleDepletedMessage="{0} reinforcements have been depleted."
     VehicleArrivedMessage="{0} reinforcements have arrived."
     VehicleCutOffMessage="{0} reinforcements have been cut off."
+    VehicleTeamKilledMessage="{0} killed a friendly {1}."
 
     NeedMoreFriendliesToDeconstructHQMessage="You must have another teammate nearby to deconstruct an enemy Platoon HQ!"
 }

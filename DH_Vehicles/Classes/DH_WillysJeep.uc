@@ -12,7 +12,6 @@ defaultproperties
     VehicleTeam=1
     VehicleMass=2.0
     ReinforcementCost=1
-    bMustBeInSquadToSpawn=true
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body_ext'
