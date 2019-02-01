@@ -27,14 +27,14 @@ defaultproperties
     bAcceptsProjectors=false
 
     // Health
-    MinDamagetoHurt=125
-    HealthMax=750
+    MinDamagetoHurt=150
+    HealthMax=1000
     TatteredHealthThreshold=300
 
     // Damage
     bCanTakeImpactDamage=false
     DamageTypeScales(0)=(DamageType=class'DHArtilleryDamageType',Scale=1.5)         // Artillery
-    DamageTypeScales(1)=(DamageType=class'ROTankShellExplosionDamage',Scale=0.6)    // HE Splash
+    DamageTypeScales(1)=(DamageType=class'ROTankShellExplosionDamage',Scale=0.5)    // HE Splash
     DamageTypeScales(2)=(DamageType=class'DHShellHEImpactDamageType',Scale=0.8)     // HE Impact
     DamageTypeScales(3)=(DamageType=class'ROTankShellImpactDamage',Scale=0.4)       // AP Impact
     DamageTypeScales(4)=(DamageType=class'DHRocketImpactDamage',Scale=0.8)          // AT Rocket Impact

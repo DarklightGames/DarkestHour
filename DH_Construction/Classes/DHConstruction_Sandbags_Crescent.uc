@@ -16,5 +16,5 @@ defaultproperties
     CollisionHeight=100
     CollisionRadius=150
     SupplyCost=200
-    HealthMax=300
+    HealthMax=700
 }
