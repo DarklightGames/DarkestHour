@@ -3860,14 +3860,17 @@ function UpdateDangerZoneOverlay(optional bool bForce)
 
     PC = DHPlayer(PlayerOwner);
 
-    if (PC == none || DHGRI == none || (!bDangerZoneOverlayUpdatePending && PC.GetTeamNum() == DangerZoneOverlayTeamIndex && !bForce && !DHGRI.bMatchHasBegun))
+    if (PC == none || DHGRI == none || !DHGRI.bMatchHasBegun)
     {
         return;
     }
 
-    DangerZoneOverlayContour = DangerZoneClass.static.GetContour(DHGRI, PC.GetTeamNum(), DangerZoneOverlayResolution, DangerZoneOverlaySubResolution);
-    DangerZoneOverlayTeamIndex = PC.GetTeamNum();
-    bDangerZoneOverlayUpdatePending = false;
+    if (bForce || bDangerZoneOverlayUpdatePending || PC.GetTeamNum() != DangerZoneOverlayTeamIndex)
+    {
+        DangerZoneOverlayContour = DangerZoneClass.static.GetContour(DHGRI, PC.GetTeamNum(), DangerZoneOverlayResolution, DangerZoneOverlaySubResolution);
+        DangerZoneOverlayTeamIndex = PC.GetTeamNum();
+        bDangerZoneOverlayUpdatePending = false;
+    }
 }
 
 function DrawDangerZoneOverlay(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
