@@ -158,15 +158,13 @@ replication
         UnfreezeTime;
 }
 
-function PostBeginPlay()
+simulated function PostBeginPlay()
 {
     local DHGameReplicationInfo GRI;
     local RONoArtyVolume        NAV;
 
     // Call super above ROObjective
     super(GameObjective).PostBeginPlay();
-
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
     // Find the volume to use if the mapper set one
     if (VolumeTag != '')
@@ -189,21 +187,26 @@ function PostBeginPlay()
         }
     }
 
-    ObjState = InitialObjState;
-
-    bRecentlyControlledByAxis = InitialObjState == OBJ_Axis;
-    bRecentlyControlledByAllies = InitialObjState == OBJ_Allies;
-
-    // Add self to game objectives
-    if (DarkestHourGame(Level.Game) != none)
+    if (Role == ROLE_Authority)
     {
-        DarkestHourGame(Level.Game).DHObjectives[ObjNum] = self;
-    }
+        ObjState = InitialObjState;
 
-    // Add self to game replication info objectives
-    if (GRI != none)
-    {
-        GRI.DHObjectives[ObjNum] = self;
+        bRecentlyControlledByAxis = InitialObjState == OBJ_Axis;
+        bRecentlyControlledByAllies = InitialObjState == OBJ_Allies;
+
+        // Add self to game objectives
+        if (DarkestHourGame(Level.Game) != none)
+        {
+            DarkestHourGame(Level.Game).DHObjectives[ObjNum] = self;
+        }
+
+        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+        // Add self to game replication info objectives
+        if (GRI != none)
+        {
+            GRI.DHObjectives[ObjNum] = self;
+        }
     }
 }
 
