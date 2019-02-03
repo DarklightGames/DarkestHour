@@ -360,7 +360,7 @@ function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
     local int i, j;
     local array<DHObjectiveTreeNode> Roots;
     local DHObjective Obj;
-    local array<int> ObjectiveIndices, VisitedIndices;
+    local array<int> ObjectiveIndices;
     local UComparator_int Comparator;
     local int Depth;
 
