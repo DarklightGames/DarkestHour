@@ -3111,9 +3111,9 @@ function HandleReinforcementChangeMessages(int Team)
     if (GRI.GameType.default.bUseReinforcementWarning && !GRI.bIsInSetupPhase)
     {
         while (TeamReinforcementMessageIndices[Team] < default.ReinforcementMessagePercentages.Length &&
-                ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[Team]])
+               ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[Team]])
         {
-            BroadcastTeamLocalizedMessage(Level, Team, class'DHReinforcementMsg', 100 * default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX]]);
+            BroadcastTeamLocalizedMessage(Level, Team, class'DHReinforcementMsg', 100 * default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[Team]]);
 
             ++TeamReinforcementMessageIndices[Team];
         }
