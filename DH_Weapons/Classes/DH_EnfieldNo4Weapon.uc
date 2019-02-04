@@ -31,22 +31,17 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    DisplayFOV=90.0
-    IronSightDisplayFOV=20.0
-    ZoomOutTime=0.2
-    FreeAimRotationSpeed=7.5
+    IronSightDisplayFOV=25.0
 
     MaxNumPrimaryMags=13
     InitialNumPrimaryMags=13
-    bTwoMagsCapacity=true
 
     bHasBayonet=true
     BayonetBoneName="bayonet"
     BayoAttachAnim="Bayonet_on"
     BayoDetachAnim="Bayonet_off"
+    IronBringUpRest="iron_inrest"
 
-    PutDownAnim="putaway"
-    BoltIronAnim="iron_bolt"
     MagEmptyReloadAnim="reload_empty"
     MagPartialReloadAnim="reload_half"
-}
+}t
