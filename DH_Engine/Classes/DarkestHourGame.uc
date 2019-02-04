@@ -3111,9 +3111,9 @@ function HandleReinforcementChangeMessages(int Team)
     if (GRI.GameType.default.bUseReinforcementWarning && !GRI.bIsInSetupPhase)
     {
         while (TeamReinforcementMessageIndices[Team] < default.ReinforcementMessagePercentages.Length &&
-                ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[Team]])
+               ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[Team]])
         {
-            BroadcastTeamLocalizedMessage(Level, Team, class'DHReinforcementMsg', 100 * default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX]]);
+            BroadcastTeamLocalizedMessage(Level, Team, class'DHReinforcementMsg', 100 * default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[Team]]);
 
             ++TeamReinforcementMessageIndices[Team];
         }
@@ -5375,8 +5375,8 @@ defaultproperties
 
     Begin Object Class=UVersion Name=VersionObject
         Major=8
-        Minor=4
-        Patch=5
+        Minor=5
+        Patch=1
         Prerelease=""
     End Object
     Version=VersionObject

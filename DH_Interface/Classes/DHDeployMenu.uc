@@ -735,7 +735,7 @@ function bool OnClick(GUIComponent Sender)
                 // Player is prevented from changing team as he switched recently
                 if (PC.NextChangeTeamTime >= GRI.ElapsedTime)
                 {
-                    ConfirmMessage = Repl(default.CantChangeTeamYetText, "{s}", PC.NextChangeTeamTime - GRI.ElapsedTime);
+                    ConfirmMessage = Repl(default.CantChangeTeamYetText, "{s}", class'TimeSpan'.static.ToString(PC.NextChangeTeamTime - GRI.ElapsedTime));
                     Controller.ShowQuestionDialog(ConfirmMessage, QBTN_OK, QBTN_OK);
                 }
                 // Player can change team, but give him a screen prompt & ask him to confirm the change
@@ -1746,7 +1746,7 @@ defaultproperties
     DeployNowText="Press Continue to deploy now!"
     ChangeTeamConfirmText="Are you sure you want to change teams? (you will not be able to change back for {s} seconds)"
     FreeChangeTeamConfirmText="Are you sure you want to change teams?"
-    CantChangeTeamYetText="You must wait {s} seconds before you can change teams"
+    CantChangeTeamYetText="You must wait {s} before you can change teams"
     ReservedString="Reserved"
     VehicleUnavailableString="The vehicle you had selected is no longer available."
     LockText="Lock"

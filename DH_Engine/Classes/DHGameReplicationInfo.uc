@@ -349,6 +349,11 @@ simulated function PostNetBeginPlay()
     }
 }
 
+function bool ObjectiveTreeNodeDepthComparatorFunction(int LHS, int RHS)
+{
+    return (LHS >> 16) > (RHS >> 16);
+}
+
 // This function returns all objectives (via array of indices) which meets objective spawn criteria
 function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
 {
@@ -356,6 +361,8 @@ function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
     local array<DHObjectiveTreeNode> Roots;
     local DHObjective Obj;
     local array<int> ObjectiveIndices;
+    local UComparator_int Comparator;
+    local int Depth;
 
     for (i = 0; i < arraycount(DHObjectives); ++i)
     {
@@ -390,33 +397,60 @@ function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
     // We have the root objectives, lets tranverse the trees to find the nearest objective with spawnpoint hints defined
     for (i = 0; i < Roots.Length; ++i)
     {
-        TraverseTreeNode(Team, Roots[i], Indices);
+        TraverseTreeNode(Team, Roots[i], Roots[i], Indices);
+    }
+
+    // Sort the indices by depth.
+    Comparator = new class'UComparator_int';
+    Comparator.CompareFunction = ObjectiveTreeNodeDepthComparatorFunction;
+    class'USort'.static.ISort(Indices, Comparator);
+
+    // Eliminate all objective indices that do not match the lowest depth.
+    if (Indices.Length > 0)
+    {
+        Depth = Indices[0] >> 16;
+    }
+
+    for (i = Indices.Length - 1; i >= 0; --i)
+    {
+        if ((Indices[i] >> 16) != Depth)
+        {
+            Indices.Remove(i, 1);
+        }
+    }
+
+    for (i = 0; i < Indices.Length; ++i)
+    {
+        Indices[i] = Indices[i] & 0xFFFF;
     }
 }
 
-function TraverseTreeNode(int Team, DHObjectiveTreeNode Node, out array<int> ObjectiveIndices, optional int Depth)
+function TraverseTreeNode(int Team, DHObjectiveTreeNode Root, DHObjectiveTreeNode Node, out array<int> ObjectiveIndices, optional int Depth)
 {
     local int i;
+    local bool bIsFarEnoughAway;
+    local bool bNodeHasHints;
+    local bool bAlreadyAdded;
 
-    if (Node == none || Depth > 1)
+    if (Node == none)
     {
         return;
     }
 
-    // If this node is valid, add it
-    if (Node.Objective.SpawnPointHintTags[Team] != '')
+    bIsFarEnoughAway = VSize(Root.Objective.Location - Node.Objective.Location) > class'DHUnits'.static.MetersToUnreal(150);
+    bNodeHasHints = Node.Objective.SpawnPointHintTags[Team] != '';
+    bAlreadyAdded = class'UArray'.static.IIndexOf(ObjectiveIndices, Node.Objective.ObjNum) == -1;
+
+    if (bNodeHasHints && bIsFarEnoughAway && bAlreadyAdded)
     {
-        if (class'UArray'.static.IIndexOf(ObjectiveIndices, Node.Objective.ObjNum) == -1)
-        {
-            ObjectiveIndices[ObjectiveIndices.Length] = Node.Objective.ObjNum;
-        }
+        ObjectiveIndices[ObjectiveIndices.Length] = (Depth << 16) | Node.Objective.ObjNum;
+        return;
     }
-    else // Otherwise continue traversing
+
+
+    for (i = 0; i < Node.Children.Length; ++i)
     {
-        for (i = 0; i < Node.Children.Length; ++i)
-        {
-            TraverseTreeNode(Team, Node.Children[i], ObjectiveIndices, Depth + 1);
-        }
+        TraverseTreeNode(Team, Root, Node.Children[i], ObjectiveIndices, Depth + 1);
     }
 }
 
