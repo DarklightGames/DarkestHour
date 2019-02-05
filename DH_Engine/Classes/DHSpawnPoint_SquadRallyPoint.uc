@@ -62,7 +62,7 @@ function Reset()
     Destroy();
 }
 
-function PostBeginPlay()
+simulated function PostBeginPlay()
 {
     local int i;
 
@@ -83,13 +83,14 @@ function PostBeginPlay()
 
         if (GRI != none)
         {
-            for (i = 0; i < arraycount(GRI.Objectives); ++i)
+            for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
             {
-                if (GRI.Objectives[i] != none && GRI.Objectives[i].WithinArea(self))
+                if (GRI.DHObjectives[i] != none && GRI.DHObjectives[i].WithinArea(self))
                 {
                     // We'll make a bold assumption that it's not really possible
                     // to be in multiple objectives at once and just stop at one.
-                    Objective = GRI.Objectives[i];
+                    Objective = GRI.DHObjectives[i];
+
                     break;
                 }
             }
