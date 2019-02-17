@@ -259,7 +259,7 @@ function Tick(float DeltaTime)
 
         if (SelectedIndex != -1 && !Menu.IsOptionDisabled(SelectedIndex))
         {
-            PC.Pawn.PlayOwnedSound(Sound'ROMenuSounds.msfxDown', SLOT_Interface, 1.0);
+            PlaySound(Sound'ROMenuSounds.msfxDown');
 
             Menu.OnHoverIn(SelectedIndex);
         }
@@ -512,6 +512,8 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
 
                     return true;
                 case IK_RightMouse:
+                    PlaySound(Sound'ROMenuSounds.CharFade');
+
                     if (Menus.Size() > 1)
                     {
                         PopMenu();
@@ -540,6 +542,20 @@ function OnSelect(int OptionIndex, optional vector Location)
     }
 
     Menu.OnSelect(OptionIndex, Location);
+
+    PlaySound(Sound'ROMenuSounds.msfxMouseClick');
+}
+
+function PlaySound(Sound Sound)
+{
+    local DHPlayer PC;
+
+    PC = DHPlayer(ViewportOwner.Actor);
+
+    if (PC != none && PC.Pawn != none)
+    {
+        PC.Pawn.PlayOwnedSound(Sound, SLOT_Interface, 1.0);
+    }
 }
 
 function bool IsFadingIn() { return IsInState('FadeIn'); }
