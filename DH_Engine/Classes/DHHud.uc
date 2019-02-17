@@ -136,7 +136,7 @@ var     globalconfig bool   bShowDeathMessages;     // whether or not to show th
 var     globalconfig int    PlayerNameFontSize;     // the size of the name you see when you mouseover a player
 var     globalconfig bool   bAlwaysShowSquadIcons;  // whether or not to show squadmate icons when not looking at them
 var     globalconfig bool   bAlwaysShowSquadNames;  // whether or not to show squadmate names when not directly looking at them
-var     globalconfig bool   bShowIndicators;        // whether or not to show indicators such as the packet loss or debug information indicator
+var     globalconfig bool   bShowIndicators;        // whether or not to show indicators such as the packet loss indicator
 var     globalconfig int    MinPromptPacketLoss;    // client option used for the packet loss indicator, this is the min value packetloss should be for the indicator to pop
 
 // Indicators
@@ -1198,7 +1198,7 @@ function DrawHudPassC(Canvas C)
         }
     }
 
-    if (IsDebugModeAllowed() || class'DarkestHourGame'.default.Version.IsPrerelease() || bShowIndicators)
+    if (IsDebugModeAllowed() || class'DarkestHourGame'.default.Version.IsPrerelease())
     {
         DrawDebugInformation(C);
     }
