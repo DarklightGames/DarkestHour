@@ -248,14 +248,7 @@ function OnUpdated()
 
 function UpdateExposedStatus()
 {
-    if (GRI != none && GRI.IsInDangerZone(Location.X, Location.Y, GetTeamIndex()))
-    {
-        bIsExposed = true;
-    }
-    else
-    {
-        bIsExposed = false;
-    }
+    bIsExposed = GRI != none && GRI.IsInDangerZone(Location.X, Location.Y, GetTeamIndex());
 }
 
 simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck)
