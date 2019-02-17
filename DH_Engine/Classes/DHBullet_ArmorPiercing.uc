@@ -414,7 +414,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
                     }
                 }
             }
-            else if (Vehicle(Wall) != none || ROVehicleWeapon(Wall) != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
+            else if (Wall.bCanBeDamaged)
             {
                 UpdateInstigator();
                 Wall.TakeDamage(Damage - (20.0 * (1.0 - VSize(Velocity) / default.Speed)), Instigator, Location, MomentumTransfer * Normal(Velocity), MyDamageType);
