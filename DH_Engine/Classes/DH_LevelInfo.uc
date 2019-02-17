@@ -75,6 +75,8 @@ var(DH_GameSettings) InterpCurve                    AttritionRateCurve;
 var(DH_GameSettings) bool                           bIsDangerZoneInitiallyEnabled;
 var(DH_GameSettings) float                          DangerZoneIntensityScale;
 
+var(DH_GameSettings) float                          ObjectiveSpawnDistanceThreshold;
+
 // Colin: AttritionRateCurve defines the rate of reinforcement drain per minute
 // when the enemy controls more objectives.
 // For example, an in value of 1.0 should return the reinforcement
@@ -204,4 +206,6 @@ defaultproperties
 
     bIsDangerZoneInitiallyEnabled=true
     DangerZoneIntensityScale=0.8
+
+    ObjectiveSpawnDistanceThreshold=150.0
 }
