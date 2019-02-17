@@ -62,7 +62,7 @@ function Reset()
     Destroy();
 }
 
-simulated function PostBeginPlay()
+function PostBeginPlay()
 {
     local int i;
 
