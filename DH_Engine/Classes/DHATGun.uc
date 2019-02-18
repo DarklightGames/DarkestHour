@@ -25,7 +25,6 @@ var int     PlayersNeededToRotate;
 var bool    bIsBeingRotated;
 var Pawn    RotatingPawn;
 var float   RotationsPerSecond;
-var rotator TargetRotation;
 var Actor   OldBase;
 var DHRotatingActor RotatingActor;
 
@@ -182,27 +181,36 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 }
 
 // Rotation
-simulated function ServerStartRotating(DHPawn Instigator)
+function ServerEnterRotation(DHPawn Instigator)
 {
+    Log(":: ServerEnterRotation");
+
     if (GetRotationError(Instigator) != ERROR_None)
     {
+        Log(":: > error");
+
         // TODO: optionally send a message, since there was a timing issue apparently
         return;
     }
 
     bIsBeingRotated = true;
-}
-
-function RotateTo(rotator TargetRotation)
-{
-    self.TargetRotation = TargetRotation;
-
     GotoState('Rotating');
 }
 
-simulated function ServerStopRotating()
+function ServerExitRotation()
 {
+    Log(":: ServerExitRotation");
+
     bIsBeingRotated = false;
+    GotoState('');
+}
+
+function ServerUpdateRotationDirection(byte RotationDirection)
+{
+    if (RotatingActor != none)
+    {
+        RotatingActor.RotationDirection = RotationDirection;
+    }
 }
 
 simulated function ERotateError GetRotationError(DHPawn Pawn)
@@ -235,36 +243,21 @@ state Rotating
     function BeginState()
     {
         RotatingActor = Spawn(class'DHRotatingActor',,, Location, Rotation);
-        RotatingActor.DesiredRotation = TargetRotation;
 
         SetPhysics(PHYS_None);
         SetBase(RotatingActor);
 
-        SetTimer(0.5, true);
-    }
-
-    event Timer()
-    {
-        Log("TIMER" @ RotatingActor);
-
-        if (class'URotator'.static.Equal(RotatingActor.Rotation, RotatingActor.DesiredRotation))
-        {
-            // We are done rotating, let's get outta here!
-            GotoState('');
-        }
+        Log("!! BEGIN ROTATING");
     }
 
     function EndState()
     {
-        Log("END STATE");
-
         SetBase(none);
         RotatingActor.Destroy();
-        SetPhysics(PHYS_None);
-        SetRotation(TargetRotation);
         SetPhysics(PHYS_Karma);
+        ServerExitRotation();
 
-        bIsBeingRotated = false;
+        Log("!! END ROTATING");
     }
 }
 
