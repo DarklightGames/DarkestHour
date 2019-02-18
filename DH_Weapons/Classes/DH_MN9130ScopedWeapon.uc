@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_MN9130ScopedWeapon extends DHBoltSniperWeapon;
+class DH_MN9130ScopedWeapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
@@ -17,6 +17,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
+    bHasScope=true
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'
     IronSightDisplayFOV=40.0
     PlayerFOVZoom=24.0

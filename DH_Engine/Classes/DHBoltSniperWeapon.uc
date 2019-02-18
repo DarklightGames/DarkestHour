@@ -10,22 +10,38 @@ enum EReloadState
 {
     RS_None,
     RS_PreReload,
+    RS_ReloadStripper,
     RS_ReloadLooped,
     RS_PostReload,
 };
 
-var     EReloadState    ReloadState;      // weapon's current reloading state (none means not reloading)
-var     bool            bInterruptReload; // set when one-by-one reload is stopped by player part way through, by pressing fire button
-var     name            PreReloadAnim;    // one-off anim when starting to reload
-var     name            SingleReloadAnim; // looping anim for inserting a single round
-var     name            PostReloadAnim;   // one-off anim when reloading ends
-var     byte            NumRoundsToLoad;  // how many rounds to be loaded to fill the weapon
+var     EReloadState    ReloadState;        // weapon's current reloading state (none means not reloading)
+var     bool            bInterruptReload;   // set when one-by-one reload is stopped by player part way through, by pressing fire button
+var     name            PreReloadAnim;      // one-off anim when starting to reload
+var     name            SingleReloadAnim;   // looping anim for inserting a single round
+var     name            StripperReloadAnim; // stripper clip reload animation
+var     name            PostReloadAnim;     // one-off anim when reloading ends
+var     byte            NumRoundsToLoad;    // how many rounds to be loaded to fill the weapon
+var     byte            NumSingles;         // how many singles we have in reserve to be reloaded.
+
+// TODO: for refactoring this, when we try to do a reload,
+// check if the magazine is empty enough for a full stripper clip to be
+// reloaded. if so, do the full stripper clip (N times if need be, unless cancelled!)
+// if we can't fit a whole new stripper clip in, we go to *single* reload mode.
+// when we do that, we essentially consume a whole clip to break down into singles
+// and keep track of the number of singles. if at the end of a reload, we have
+// enough singles to make a new clip, consolidate the singles into a clip.
 
 replication
 {
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerSetInterruptReload;
+}
+
+simulated function int GetStripperClipSize()
+{
+    return 5;   // TODO: get this from the ammo class??
 }
 
 // Modified to update number of individual spare rounds
@@ -133,14 +149,22 @@ simulated state Reloading
             if (Anim == PreReloadAnim)
             {
                 SetTimer(0.0, false);
-                ReloadState = RS_ReloadLooped;
+
+                if (CanLoadStripperClip())
+                {
+                    ReloadState = RS_ReloadStripper;
+                }
+                else
+                {
+                    ReloadState = RS_ReloadLooped;
+                }
+
                 PlayReload();
 
                 return;
             }
-
             // Just finished playing a single round reload anim
-            if (Anim == SingleReloadAnim)
+            else if (Anim == SingleReloadAnim || Anim == StripperReloadAnim)
             {
                 // Either loaded last round or player stopped the reload (by pressing fire), so now play post-reload anim
                 if (NumRoundsToLoad == 0 || bInterruptReload)
@@ -260,6 +284,11 @@ simulated function PlayPreReload()
     PlayAnimAndSetTimer(PreReloadAnim, 1.0);
 }
 
+simulated function bool CanLoadStripperClip()
+{
+    return HasAnim(StripperReloadAnim) && NumRoundsToLoad >= GetStripperClipSize();
+}
+
 // Modified to use single reload animation (without adding FastTweenTime to timer), & to decrement the number of rounds to load
 simulated function PlayReload()
 {
@@ -267,10 +296,14 @@ simulated function PlayReload()
 
     if (InstigatorIsLocallyControlled())
     {
-        NumRoundsToLoad--;
-
-        if (HasAnim(SingleReloadAnim))
+        if (CanLoadStripperClip())
         {
+            NumRoundsToLoad -= GetStripperClipSize();
+            PlayAnim(StripperReloadAnim, 1.0);
+        }
+        else
+        {
+            NumRoundsToLoad -= 1;
             PlayAnim(SingleReloadAnim, 1.0);
         }
     }
@@ -287,6 +320,11 @@ simulated function PlayPostReload()
     }
 }
 
+simulated function int GetMaxLoadedRounds()
+{
+    return AmmoClass[0].default.InitialAmount;
+}
+
 // New function to calculate the number of rounds to be loaded to fill the weapon
 function byte GetRoundsToLoad()
 {
@@ -299,17 +337,13 @@ function byte GetRoundsToLoad()
     }
 
     CurrentLoadedRounds = AmmoAmount(0);
-    MaxLoadedRounds = AmmoClass[0].default.InitialAmount;
-
-    if (bTwoMagsCapacity)
-    {
-        MaxLoadedRounds *= 2;
-    }
-
+    MaxLoadedRounds = GetMaxLoadedRounds();
     AmountNeeded = MaxLoadedRounds - CurrentLoadedRounds;
 
     return Min(AmountNeeded, CurrentMagCount);
 }
+
+/* HOLY SHIT THIS IS AWFUL, FIX IT! */
 
 // Modified to load one round each time
 // 'Mags' for this weapon aren't really mags, they are just dummy mags that act as data groupings of individual spare rounds
@@ -318,7 +352,7 @@ function byte GetRoundsToLoad()
 // When reloading, individual rounds are stripped one at a time from mag 1 & loaded into the weapon
 // When mag 1 is empty it is deleted (removed from PrimaryAmmoArray) so the next mag becomes mag 1 & that is used for any further loading
 // It's done this way to work with existing mag-based functionality, while allowing one at a time loading up to a max no. limited by the dummy mag size
-function PerformReload()
+function PerformReload(optional int Count)
 {
     local int i;
 
@@ -363,159 +397,6 @@ function PerformReload()
     UpdateResupplyStatus(true);
 }
 
-// Modified to work the bolt when fire is pressed, if weapon is waiting to bolt
-simulated function Fire(float F)
-{
-    if (bWaitingToBolt && !IsBusy())
-    {
-        WorkBolt();
-    }
-    else
-    {
-        super.Fire(F);
-    }
-}
-
-// New function to work the bolt
-simulated function WorkBolt()
-{
-    if (bWaitingToBolt && AmmoAmount(0) > 0 && !FireMode[1].bIsFiring && !FireMode[1].IsInState('MeleeAttacking'))
-    {
-        GotoState('WorkingBolt');
-
-        if (Role < ROLE_Authority)
-        {
-            ServerWorkBolt();
-        }
-    }
-}
-
-// Client-to-server function to work the bolt
-function ServerWorkBolt()
-{
-    WorkBolt();
-}
-
-// State where the bolt is being worked
-simulated state WorkingBolt extends WeaponBusy
-{
-    simulated function bool ShouldUseFreeAim()
-    {
-        return global.ShouldUseFreeAim();
-    }
-
-    simulated function bool WeaponAllowSprint()
-    {
-        return false;
-    }
-
-    simulated function bool CanStartCrawlMoving()
-    {
-        return false;
-    }
-
-    simulated function AnimEnd(int Channel)
-    {
-        local name  Anim;
-        local float Frame, Rate;
-
-        if (InstigatorIsLocallyControlled())
-        {
-            GetAnimParams(0, Anim, Frame, Rate);
-
-            if (Anim == BoltIronAnim || Anim == BoltHipAnim)
-            {
-                bWaitingToBolt = false;
-            }
-        }
-
-        super.AnimEnd(Channel);
-
-        GotoState('Idle');
-    }
-
-    simulated function BeginState()
-    {
-        if (bUsingSights)
-        {
-            if (bPlayerFOVZooms && InstigatorIsLocallyControlled())
-            {
-                PlayerViewZoom(false);
-            }
-
-            PlayAnimAndSetTimer(BoltIronAnim, 1.0, 0.1);
-        }
-        else
-        {
-            PlayAnimAndSetTimer(BoltHipAnim, 1.0, 0.1);
-        }
-
-        if (Role == ROLE_Authority && ROPawn(Instigator) != none)
-        {
-            ROPawn(Instigator).HandleBoltAction(); // play the animation on the pawn
-        }
-    }
-
-    simulated function EndState()
-    {
-        if (bUsingSights && bPlayerFOVZooms && InstigatorIsLocallyControlled())
-        {
-            PlayerViewZoom(true);
-        }
-
-        bWaitingToBolt = false;
-        FireMode[0].NextFireTime = Level.TimeSeconds - 0.1; // ready to fire fire now
-    }
-}
-
-// Called by the weapon fire code to send the weapon to the post firing state
-simulated function PostFire()
-{
-    GotoState('PostFiring');
-}
-
-// State where the weapon has just been fired
-simulated state PostFiring
-{
-    simulated function bool ReadyToFire(int Mode)
-    {
-        return false;
-    }
-
-    simulated function Timer()
-    {
-        if (!InstigatorIsHumanControlled())
-        {
-            if (AmmoAmount(0) > 0)
-            {
-                GotoState('WorkingBolt');
-            }
-            else
-            {
-               GotoState('Reloading');
-            }
-        }
-        else
-        {
-            GotoState('Idle');
-        }
-    }
-
-    simulated function BeginState()
-    {
-        bWaitingToBolt = true;
-
-        if (bUsingSights && DHProjectileFire(FireMode[0]) != none)
-        {
-            SetTimer(GetAnimDuration(DHProjectileFire(FireMode[0]).FireIronAnim, 1.0), false);
-        }
-        else
-        {
-            SetTimer(GetAnimDuration(FireMode[0].FireAnim, 1.0), false);
-        }
-    }
-}
-
 // Modified to skip over the Super in DHSniperWeapon that is only relevant to semi-auto & auto weapons
 simulated function AnimEnd(int channel)
 {
@@ -526,12 +407,6 @@ simulated function AnimEnd(int channel)
 simulated event StopFire(int Mode)
 {
     super(DHProjectileWeapon).StopFire(Mode);
-}
-
-// Modified so bots don't go straight to the reloading state on bolt actions
-simulated function OutOfAmmo()
-{
-    super(ROWeapon).OutOfAmmo();
 }
 
 defaultproperties

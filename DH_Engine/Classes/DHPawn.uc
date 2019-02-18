@@ -7091,7 +7091,7 @@ defaultproperties
     SlowStaminaRecoveryRate=0.5
 
     // Weapon aim
-    IronsightBobAmplitude=4.0
+    IronsightBobAmplitude=1.0
     IronsightBobFrequency=4.0
     IronsightBobDecay=6.0
     DeployedPitchUpLimit=7300 // bipod

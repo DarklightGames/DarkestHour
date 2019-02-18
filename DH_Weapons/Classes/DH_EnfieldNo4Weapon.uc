@@ -5,17 +5,6 @@
 
 class DH_EnfieldNo4Weapon extends DHBoltActionWeapon;
 
-// Modified to add hint about weapon's two clip loading capacity
-simulated function BringUp(optional Weapon PrevWeapon)
-{
-    super.BringUp(PrevWeapon);
-
-    if (Instigator != none && DHPlayer(Instigator.Controller) != none)
-    {
-        DHPlayer(Instigator.Controller).QueueHint(21, true);
-    }
-}
-
 defaultproperties
 {
     ItemName="Lee Enfield No.4 Rifle"
@@ -25,16 +14,19 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_EnfieldNo4Pickup'
 
     Mesh=SkeletalMesh'DH_EnfieldNo4_1st.EnfieldNo4'
-    Skins(3)=shader'Weapons1st_tex.Bullets.kar98k_stripper_s' // TODO: ammo & bayo specularity shaders aren't used in the anim mesh & should be added there
+    Skins(1)=shader'Weapons1st_tex.Bullets.kar98k_stripper_s' // TODO: ammo & bayo specularity shaders aren't used in the anim mesh & should be added there
     Skins(4)=shader'DH_Weapon_tex.Spec_Maps.EnfieldNo4Bayo_s'
     HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.EnfieldNo4Main_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    IronSightDisplayFOV=25.0
+    SleeveNum=0
+    HandNum=5
 
     MaxNumPrimaryMags=13
     InitialNumPrimaryMags=13
+
+    IronSightDisplayFOV=25.0
 
     bHasBayonet=true
     BayonetBoneName="bayonet"
@@ -42,6 +34,8 @@ defaultproperties
     BayoDetachAnim="Bayonet_off"
     IronBringUpRest="iron_inrest"
 
-    MagEmptyReloadAnim="reload_empty"
-    MagPartialReloadAnim="reload_half"
+    PreReloadAnim="reload_start"
+    PostReloadAnim="reload_end"
+    SingleReloadAnim="reload_single"
+    StripperReloadAnim="reload_stripper"
 }t

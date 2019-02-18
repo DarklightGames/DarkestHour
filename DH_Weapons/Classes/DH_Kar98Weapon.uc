@@ -28,4 +28,9 @@ defaultproperties
     BayoAttachAnim="Bayonet_on"
     BayoDetachAnim="Bayonet_off"
     IronBringUpRest="iron_inrest"
+
+    SingleReloadAnim="single_inset_half"
+    StripperReloadAnim="reload"
+    PreReloadAnim="single"
+    PostReloadAnim="single_close"
 }

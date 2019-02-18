@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_Kar98ScopedWeapon extends DHBoltSniperWeapon;
+class DH_Kar98ScopedWeapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
@@ -18,6 +18,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
+    bHasScope=true
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'
     IronSightDisplayFOV=45.0
     PlayerFOVZoom=22.5

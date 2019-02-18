@@ -5,8 +5,6 @@
 
 class DH_EnfieldNo4Attachment extends DHWeaponAttachment;
 
-#exec OBJ LOAD FILE=InterfaceArt2_tex.utx
-
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.EnfieldNo4_3rd'
@@ -97,9 +95,16 @@ defaultproperties
     PA_IdleIronRestAnim="stand_idleiron_kar"
     PA_IdleIronWeaponAnim="stand_idleiron_kar"
     PA_IdleCrouchIronWeaponAnim="crouch_idleiron_kar"
-    PA_ReloadAnim="stand_reload_kar"
-    PA_ReloadEmptyAnim="stand_reload_kar"
-    PA_ProneReloadEmptyAnim="prone_reload_kar"
+
+    PA_ReloadAnim="stand_insert_karscope"
+    PA_ReloadEmptyAnim="stand_insert_karscope"
+    PA_ProneReloadAnim="prone_insert_karscope"
+    PA_ProneReloadEmptyAnim="prone_insert_karscope"
+    PA_PreReloadAnim="stand_open_karscope"
+    PA_PronePreReloadAnim="prone_open_karscope"
+    PA_PostReloadAnim="stand_close_karscope"
+    PA_PronePostReloadAnim="prone_close_karscope"
+
     PA_ProneIdleRestAnim="prone_idle_kar"
     PA_BayonetAttachAnim="stand_bayattach_kar"
     PA_ProneBayonetAttachAnim="prone_Bayattach_kar"

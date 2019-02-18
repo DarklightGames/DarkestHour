@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_SpringfieldScopedWeapon extends DHBoltSniperWeapon;
+class DH_SpringfieldScopedWeapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
@@ -19,6 +19,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
+    bHasScope=true
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Springfield_Scope_Overlay'
     OverlayCorrectionX=-0.5
     DisplayFOV=90.0
