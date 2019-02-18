@@ -483,7 +483,7 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
             {
                 // TODO: Left mouse might not be bound to fire, and exec functions
                 // do not register in interactions. This isn't ideal, but I'm
-                // guessing that %99.9 of players use left mouse as the fire
+                // guessing that 99.9% of players use left mouse as the fire
                 // key, so this will do for now.
                 case IK_LeftMouse:
                     TraceStart = PC.CalcViewLocation;
