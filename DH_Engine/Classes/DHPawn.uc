@@ -7065,6 +7065,23 @@ simulated function class<DHVoicePack> GetVoicePack()
     return class<DHVoicePack>(VoiceClass);
 }
 
+simulated exec function IronSightDisplayFOV(float FOV)
+{
+    local DHProjectileWeapon W;
+
+    if (IsDebugModeAllowed())
+    {
+        W = DHProjectileWeapon(Weapon);
+
+        if (W != none)
+        {
+            W.default.IronSightDisplayFOV = FOV;
+            W.default.IronSightDisplayFOVHigh = FOV;
+            W.SetIronSightFOV();
+        }
+    }
+}
+
 defaultproperties
 {
     // General class & interaction stuff
