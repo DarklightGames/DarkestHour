@@ -148,6 +148,9 @@ var(DH_GroupedActions)      array<VehiclePoolAction>    AxisGroupVehiclePoolActi
 var(DH_GroupedActions)      array<name>                 AlliesGroupCaptureEvents;
 var(DH_GroupedActions)      array<name>                 AxisGroupCaptureEvents;
 
+// Replication
+var                         EObjectiveState             OldObjState;
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -155,15 +158,13 @@ replication
         UnfreezeTime;
 }
 
-function PostBeginPlay()
+simulated function PostBeginPlay()
 {
     local DHGameReplicationInfo GRI;
     local RONoArtyVolume        NAV;
 
     // Call super above ROObjective
     super(GameObjective).PostBeginPlay();
-
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
     // Find the volume to use if the mapper set one
     if (VolumeTag != '')
@@ -186,21 +187,26 @@ function PostBeginPlay()
         }
     }
 
-    ObjState = InitialObjState;
-
-    bRecentlyControlledByAxis = InitialObjState == OBJ_Axis;
-    bRecentlyControlledByAllies = InitialObjState == OBJ_Allies;
-
-    // Add self to game objectives
-    if (DarkestHourGame(Level.Game) != none)
+    if (Role == ROLE_Authority)
     {
-        DarkestHourGame(Level.Game).DHObjectives[ObjNum] = self;
-    }
+        ObjState = InitialObjState;
 
-    // Add self to game replication info objectives
-    if (GRI != none)
-    {
-        GRI.DHObjectives[ObjNum] = self;
+        bRecentlyControlledByAxis = InitialObjState == OBJ_Axis;
+        bRecentlyControlledByAllies = InitialObjState == OBJ_Allies;
+
+        // Add self to game objectives
+        if (DarkestHourGame(Level.Game) != none)
+        {
+            DarkestHourGame(Level.Game).DHObjectives[ObjNum] = self;
+        }
+
+        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+        // Add self to game replication info objectives
+        if (GRI != none)
+        {
+            GRI.DHObjectives[ObjNum] = self;
+        }
     }
 }
 
@@ -1190,6 +1196,12 @@ function Timer()
 // Modified to handle neutralizing objectives
 function ObjectiveCompleted(PlayerReplicationInfo CompletePRI, int Team)
 {
+    local DHSquadReplicationInfo SRI;
+    local DHPlayer PC;
+    local DHHud Hud;
+
+    SRI = DarkestHourGame(Level.Game).SquadReplicationInfo;
+
     if (!IsNeutral() && bNeutralizeBeforeCapture)
     {
         // If the objective is not neutral, has completed progress, & is set to bNeutralizedBeforeCaptured
@@ -1229,6 +1241,26 @@ function ObjectiveCompleted(PlayerReplicationInfo CompletePRI, int Team)
 
     // lets see if this tells the bots the objectives is done for
     UnrealMPGameInfo(Level.Game).FindNewObjectives(self);
+
+    if (SRI != none)
+    {
+        SRI.UpdateRallyPoints();
+    }
+
+    if (Level.NetMode == NM_Standalone)
+    {
+        PC = DHPlayer(Level.GetLocalPlayerController());
+
+        if (PC != none)
+        {
+            Hud = DHHud(PC.myHUD);
+
+            if (Hud != none)
+            {
+                Hud.OnObjectiveCompleted();
+            }
+        }
+    }
 }
 
 // New function to implement the bNeutralizeBeforeCapture option
@@ -1327,6 +1359,16 @@ simulated function bool IsFrozen(GameReplicationInfo GRI)
     return GRI != none && UnfreezeTime > GRI.ElapsedTime;
 }
 
+simulated function bool IsOwnedByTeam(byte TeamIndex)
+{
+    if (TeamIndex == AXIS_TEAM_INDEX)
+        return IsAxis();
+    else if (TeamIndex == ALLIES_TEAM_INDEX)
+        return IsAllies();
+
+    return false;
+}
+
 // Clients/Server can run this function very fast because of the hashtable
 simulated function bool HasRequiredObjectives(coerce DHGameReplicationInfo GRI, int TeamIndex)
 {
@@ -1375,6 +1417,36 @@ function UpdateCompressedCapProgress()
     else
     {
         CompressedCapProgress = Max(1, CurrentCapProgress * 5);
+    }
+}
+
+// Overridden to notify the HUD to update the danger zone contour.
+simulated function PostNetReceive()
+{
+    local DHPlayer PC;
+    local DHHud Hud;
+
+    super.PostNetReceive();
+
+    // Listen for state changes so we can notify the HUD!
+    if (ObjState != OldObjState)
+    {
+        if (ObjState != OBJ_Neutral)
+        {
+            PC = DHPlayer(Level.GetLocalPlayerController());
+
+            if (PC != none)
+            {
+                Hud = DHHud(PC.myHUD);
+
+                if (Hud != none)
+                {
+                    Hud.OnObjectiveCompleted();
+                }
+            }
+        }
+
+        OldObjState = ObjState;
     }
 }
 

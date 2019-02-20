@@ -180,7 +180,7 @@ function bool SpawnPlayer(DHPlayer PC)
 
 function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator SpawnRotation)
 {
-    local ROPlayerReplicationInfo   PRI;
+    local DHPlayerReplicationInfo   PRI;
     local DHSpawnPointBase          SP;
     local ROVehicle                 V;
     local DHVehicle                 DHV;
@@ -206,13 +206,14 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
         return none;
     }
 
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
     // Make sure player isn't excluded from a tank crew role
     if (VehiclePools[PC.VehiclePoolIndex].VehicleClass.default.bMustBeTankCommander)
     {
-        PRI = ROPlayerReplicationInfo(PC.PlayerReplicationInfo);
-
         if (PRI == none || PRI.RoleInfo == none || !PRI.RoleInfo.bCanBeTankCrew)
         {
+            GRI.UnreserveVehicle(PC);
             return none;
         }
     }
@@ -220,13 +221,15 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
     // Make sure the player is in a squad if the vehicle requires them to be
     DHVC = class<DHVehicle>(VehiclePools[PC.VehiclePoolIndex].VehicleClass);
 
-    if (DHVC != none && DHVC.default.bMustBeInSquadToSpawn && !PC.IsInSquad())
+    if (DHVC != none && DHVC.default.bRequiresDriverLicense && PRI != none && !PRI.IsPlayerLicensedToDrive(PC))
     {
+        GRI.UnreserveVehicle(PC);
         return none;
     }
 
     if (!GRI.CanSpawnVehicle(PC.VehiclePoolIndex))
     {
+        GRI.UnreserveVehicle(PC);
         return none;
     }
 
@@ -238,6 +241,7 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
 
     if (PC.Pawn == none)
     {
+        GRI.UnreserveVehicle(PC);
         return none; // exit if we somehow failed to spawn a player to drive the vehicle
     }
 
@@ -246,6 +250,7 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
 
     if (V == none)
     {
+        GRI.UnreserveVehicle(PC);
         return none;
     }
 
@@ -255,6 +260,7 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
         V.Destroy();
         PC.Pawn.Suicide();
 
+        GRI.UnreserveVehicle(PC);
         return none;
     }
 

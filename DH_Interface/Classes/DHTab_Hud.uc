@@ -11,14 +11,20 @@ var int                         NumMinPacketLoss;
 var automated moCheckBox    ch_SimpleColours;
 var automated moCheckBox    ch_ShowDeathMessages;
 var automated moCheckBox    ch_ShowIndicators;
+var automated moCheckBox    ch_ShowRallyPoint;
 var bool bSimpleColours;
 var bool bShowDeathMessages;
 var bool bShowIndicators;
+var bool bShowRallyPoint;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     super.InitComponent(MyController, MyOwner);
 
+    i_BG1.UnmanageComponent(ch_ShowMapUpdatedText);
+    RemoveComponent(ch_ShowMapUpdatedText);
+
+    i_BG1.ManageComponent(ch_ShowRallyPoint);
     i_BG2.ManageComponent(ch_SimpleColours);
     i_BG1.ManageComponent(ch_ShowDeathMessages);
     i_BG1.ManageComponent(ch_ShowIndicators);
@@ -112,16 +118,16 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             }
             ch_ShowCompass.SetComponentValue(bShowCompass,true);
             break;
-        case ch_ShowMapUpdatedText:
+        case ch_ShowRallyPoint:
             if (ROH != none)
             {
-                bShowMapUpdatedText = ROH.bShowMapUpdatedText;
+                bShowRallyPoint = H.bShowRallyPoint;
             }
             else
             {
-                bShowMapUpdatedText = class'ROHud'.default.bShowMapUpdatedText;
+                bShowRallyPoint = class'DHHud'.default.bShowRallyPoint;
             }
-            ch_ShowMapUpdatedText.SetComponentValue(bShowMapUpdatedText,true);
+            ch_ShowRallyPoint.SetComponentValue(bShowRallyPoint, true);
             break;
         case sl_Opacity:
             fOpacity = (PlayerOwner().myHUD.HudOpacity / 255) * 100;
@@ -262,10 +268,10 @@ function SaveSettings()
             bSave = true;
         }
 
-        if (H.bShowMapUpdatedText != bShowMapUpdatedText)
+        if (H.bShowRallyPoint != bShowRallyPoint)
         {
-            H.bShowMapUpdatedText = bShowMapUpdatedText;
-            PC.ConsoleCommand("set ROEngine.ROHud bShowMapUpdatedText" @ string(bShowMapUpdatedText));
+            H.bShowRallyPoint = bShowRallyPoint;
+            PC.ConsoleCommand("set DH_Engine.DHHud bShowRallyPoint" @ string(bShowRallyPoint));
             bSave = true;
         }
 
@@ -293,7 +299,7 @@ function SaveSettings()
         class'DHHud'.default.bShowCompass = bShowCompass;
         class'DHHud'.default.bShowIndicators = bShowIndicators;
         class'DHHud'.default.MinPromptPacketLoss = NumMinPacketLoss;
-        class'DHHud'.default.bShowMapUpdatedText = bShowMapUpdatedText;
+        class'DHHud'.default.bShowRallyPoint = bShowRallyPoint;
         class'DHHud'.default.bSimpleColours = bSimpleColours;
         class'DHHud'.default.bShowDeathMessages = bShowDeathMessages;
         class'DHHud'.static.StaticSaveConfig();
@@ -315,6 +321,9 @@ function InternalOnChange(GUIComponent Sender)
             break;
         case ch_ShowDeathMessages:
             bShowDeathMessages = ch_ShowDeathMessages.IsChecked();
+            break;
+        case ch_ShowRallyPoint:
+            bShowRallyPoint = ch_ShowRallyPoint.IsChecked();
             break;
         default:
             super.InternalOnChange(Sender);
@@ -379,7 +388,7 @@ defaultproperties
         INIOption="@Internal"
         WinTop=0.822959
         WinLeft=0.555313
-        WinWidth=0.373749
+        WinWidth=0.5
         WinHeight=0.034156
         OnCreateComponent=MinPacketLoss_NU.InternalOnCreateComponent
         MinValue=1
@@ -406,11 +415,12 @@ defaultproperties
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
     ch_ShowCompass=DHmoCheckBox'DH_Interface.DHTab_Hud.ShowCompass'
-    Begin Object Class=DHmoCheckBox Name=ShowMapUpdateText
+
+    Begin Object Class=DHmoCheckBox Name=ShowRallyPoint
         ComponentJustification=TXTA_Left
         CaptionWidth=0.9
-        Caption="Show 'Map Updated' Text"
-        OnCreateComponent=ShowMapUpdateText.InternalOnCreateComponent
+        Caption="Show Squad Rally Point Status"
+        OnCreateComponent=ShowRallyPoint.InternalOnCreateComponent
         IniOption="@Internal"
         WinTop=0.481406
         WinLeft=0.555313
@@ -419,7 +429,8 @@ defaultproperties
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
-    ch_ShowMapUpdatedText=DHmoCheckBox'DH_Interface.DHTab_Hud.ShowMapUpdateText'
+    ch_ShowRallyPoint=DHmoCheckBox'DH_Interface.DHTab_Hud.ShowRallyPoint'
+
     Begin Object Class=DHmoCheckBox Name=ShowMapFirstSpawn
         ComponentJustification=TXTA_Left
         CaptionWidth=0.9

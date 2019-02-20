@@ -2258,6 +2258,7 @@ defaultproperties
     EngineRestartFailChance=0.1
     MinRunOverSpeed=83.82 // decreased to 5 kph, as players should be easier to run over with armored vehicles
     PointValue=1000
+    WeaponLockTimeForTK=30
 
     // Driver & positions
     bMustBeTankCommander=true

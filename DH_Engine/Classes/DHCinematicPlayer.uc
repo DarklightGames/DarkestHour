@@ -16,7 +16,7 @@ auto state PlayerWaiting
     {
         bFixedCamera = true;
 
-        CameraDist = Default.CameraDist;
+        CameraDist = default.CameraDist;
 
         if (PlayerReplicationInfo != none)
         {

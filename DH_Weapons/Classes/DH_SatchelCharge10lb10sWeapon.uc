@@ -12,7 +12,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_SatchelCharge10lb10sAttachment'
     PickupClass=class'DH_Weapons.DH_SatchelCharge10lb10sPickup'
 
-    InventoryGroup=4
+    InventoryGroup=7
     GroupOffset=1
     Priority=2
 

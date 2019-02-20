@@ -106,6 +106,7 @@ var     FileLog                 ClientLogFile;
 
 var     bool                    bHasReceivedSquadJoinRecommendationMessage; // True when we have displayed the "you should probably join a squad" message.
 
+// Squad Things
 struct SquadSignal
 {
     var class<DHSquadSignal> SignalClass;
@@ -114,6 +115,11 @@ struct SquadSignal
 };
 
 var     SquadSignal             SquadSignals[SQUAD_SIGNALS_MAX];
+
+// Squad Leader HUD Info
+var     DHSquadReplicationInfo.RallyPointPlacementResult    RallyPointPlacementResult;
+var     int                                                 NextSquadRallyPointTime;
+var     byte                                                SquadRallyPointCount;
 
 // This is used to skip ResetInput calls in the GUIController.
 // Useful when you want to show a menu over top of the game (e.g. situation map)
@@ -142,7 +148,8 @@ replication
         NextSpawnTime, NextVehicleSpawnTime, NextChangeTeamTime, LastKilledTime,
         DHPrimaryWeapon, DHSecondaryWeapon, bSpectateAllowViewPoints,
         SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled,
-        SquadLeaderLocations, bIsGagged;
+        SquadLeaderLocations, bIsGagged,
+        NextSquadRallyPointTime, SquadRallyPointCount;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -298,7 +305,7 @@ simulated function PostNetReceive()
 {
     if (PendingWeaponLockSeconds > 0 && GameReplicationInfo != none)
     {
-        LockWeapons(PendingWeaponLockSeconds );
+        LockWeapons(PendingWeaponLockSeconds);
         PendingWeaponLockSeconds = 0;
     }
 
@@ -1254,7 +1261,7 @@ function ClientSetBehindView(bool B)
 // Modified to edit an if state in Timer()
 auto state PlayerWaiting
 {
-ignores SeePlayer, HearNoise, NotifyBump, TakeDamage, PhysicsVolumeChange, SwitchToBestWeapon;
+    ignores SeePlayer, HearNoise, NotifyBump, TakeDamage, PhysicsVolumeChange, SwitchToBestWeapon;
 
     // In the else if() statement, PRI != none was added so if the player isn't knowledgeable of their PRI yet it doesn't even open a menu
     // This actually works quite well because now players will actually see the server's MOTD text
@@ -1284,7 +1291,7 @@ ignores SeePlayer, HearNoise, NotifyBump, TakeDamage, PhysicsVolumeChange, Switc
 
 state PlayerWalking
 {
-ignores SeePlayer, HearNoise, Bump;
+    ignores SeePlayer, HearNoise, Bump;
 
     // Modified to allow behind view, if server has called this (restrictions on use of behind view are handled in ServerToggleBehindView)
     function ClientSetBehindView(bool B)
@@ -3390,24 +3397,22 @@ function ServerSetLockTankOnEntry(bool bEnabled)
 }
 
 // New function to put player into 'weapon lock' for a specified number of seconds, during which time he won't be allowed to fire
-// In multi-player it is initially called on server & then on owning net client, via a replicated function call
-simulated function LockWeapons(int Seconds, optional int Reason)
+simulated function LockWeapons(int Seconds)
 {
     if (Seconds > 0 && GameReplicationInfo != none)
     {
         WeaponUnlockTime = GameReplicationInfo.ElapsedTime + Seconds;
 
-        // If this is the local player, show him a warning screen message & release his fire buttons
+        // If this is the local player, release his fire buttons
         if (Viewport(Player) != none)
         {
-            ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', Reason);
             bFire = 0; // 'releases' fire button if being held down, which stops automatic weapon fire from continuing & avoids spamming repeated messages & buzz sounds
             bAltFire = 0;
         }
         // Or a server calls replicated function to do similar on an owning net client (passing seconds as a byte for efficient replication)
         else if (Role == ROLE_Authority)
         {
-            ClientLockWeapons(Seconds);
+            ClientLockWeapons(Seconds); // Force weapon lock on client
         }
     }
     // Hacky fix for problem where player re-joins server with an active weapon lock saved in his DHPlayerSession, but client doesn't yet have GRI
@@ -5599,10 +5604,11 @@ function ServerForgiveLastFFKiller()
 
     KillerPC = DHPlayer(LastFFKiller.Owner);
 
-    // If LastFFKiller's weapons are locked and no longer has FF kills, unlock the player's weapons
-    if (KillerPC != none && KillerPC.AreWeaponsLocked(true) && LastFFKiller.FFKills < 1)
+    // If LastFFKiller's weapons are locked, unlock that player's weapons
+    if (KillerPC != none && KillerPC.AreWeaponsLocked(true))
     {
-        KillerPC.LockWeapons(1, 2);
+        KillerPC.LockWeapons(1); // Unlock weapons as soon as possible
+        KillerPC.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 2); // "Weapons are now unlocked"
     }
 
     // Set none as we have handled the current LastFFKiller

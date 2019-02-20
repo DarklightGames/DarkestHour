@@ -29,7 +29,7 @@ enum VehicleReservationError
     ERROR_PoolInactive,
     ERROR_PoolMaxActive,
     ERROR_NoReservations,
-    ERROR_NoSquad
+    ERROR_NoLicense
 };
 
 struct ArtilleryTarget
@@ -148,7 +148,11 @@ var bool                bAreConstructionsEnabled;
 var bool                bAllChatEnabled;
 
 var byte                ServerTickHealth;
-var byte                ServerNetHealth;
+var int                 ServerNetHealth;
+
+var bool                bIsDangerZoneEnabled;
+var float               DangerZoneIntensityScale;
+var float               OldDangerZoneIntensityScale;
 
 // Map markers
 struct MapMarker
@@ -227,7 +231,9 @@ replication
         DHArtillery,
         TeamMunitionPercentages,
         AlliesVictoryMusicIndex,
-        AxisVictoryMusicIndex;
+        AxisVictoryMusicIndex,
+        bIsDangerZoneEnabled,
+        DangerZoneIntensityScale;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
@@ -343,6 +349,11 @@ simulated function PostNetBeginPlay()
     }
 }
 
+function bool ObjectiveTreeNodeDepthComparatorFunction(int LHS, int RHS)
+{
+    return (LHS >> 16) > (RHS >> 16);
+}
+
 // This function returns all objectives (via array of indices) which meets objective spawn criteria
 function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
 {
@@ -350,6 +361,8 @@ function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
     local array<DHObjectiveTreeNode> Roots;
     local DHObjective Obj;
     local array<int> ObjectiveIndices;
+    local UComparator_int Comparator;
+    local int Depth;
 
     for (i = 0; i < arraycount(DHObjectives); ++i)
     {
@@ -384,33 +397,60 @@ function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
     // We have the root objectives, lets tranverse the trees to find the nearest objective with spawnpoint hints defined
     for (i = 0; i < Roots.Length; ++i)
     {
-        TraverseTreeNode(Team, Roots[i], Indices);
+        TraverseTreeNode(Team, Roots[i], Roots[i], Indices);
+    }
+
+    // Sort the indices by depth.
+    Comparator = new class'UComparator_int';
+    Comparator.CompareFunction = ObjectiveTreeNodeDepthComparatorFunction;
+    class'USort'.static.ISort(Indices, Comparator);
+
+    // Eliminate all objective indices that do not match the lowest depth.
+    if (Indices.Length > 0)
+    {
+        Depth = Indices[0] >> 16;
+    }
+
+    for (i = Indices.Length - 1; i >= 0; --i)
+    {
+        if ((Indices[i] >> 16) != Depth)
+        {
+            Indices.Remove(i, 1);
+        }
+    }
+
+    for (i = 0; i < Indices.Length; ++i)
+    {
+        Indices[i] = Indices[i] & 0xFFFF;
     }
 }
 
-function TraverseTreeNode(int Team, DHObjectiveTreeNode Node, out array<int> ObjectiveIndices, optional int Depth)
+function TraverseTreeNode(int Team, DHObjectiveTreeNode Root, DHObjectiveTreeNode Node, out array<int> ObjectiveIndices, optional int Depth)
 {
     local int i;
+    local bool bIsFarEnoughAway;
+    local bool bNodeHasHints;
+    local bool bAlreadyAdded;
 
-    if (Node == none || Depth > 1)
+    if (Node == none)
     {
         return;
     }
 
-    // If this node is valid, add it
-    if (Node.Objective.SpawnPointHintTags[Team] != '')
+    bIsFarEnoughAway = VSize(Root.Objective.Location - Node.Objective.Location) > class'DHUnits'.static.MetersToUnreal(150);
+    bNodeHasHints = Node.Objective.SpawnPointHintTags[Team] != '';
+    bAlreadyAdded = class'UArray'.static.IIndexOf(ObjectiveIndices, Node.Objective.ObjNum) == -1;
+
+    if (bNodeHasHints && bIsFarEnoughAway && bAlreadyAdded)
     {
-        if (class'UArray'.static.IIndexOf(ObjectiveIndices, Node.Objective.ObjNum) == -1)
-        {
-            ObjectiveIndices[ObjectiveIndices.Length] = Node.Objective.ObjNum;
-        }
+        ObjectiveIndices[ObjectiveIndices.Length] = (Depth << 16) | Node.Objective.ObjNum;
+        return;
     }
-    else // Otherwise continue traversing
+
+
+    for (i = 0; i < Node.Children.Length; ++i)
     {
-        for (i = 0; i < Node.Children.Length; ++i)
-        {
-            TraverseTreeNode(Team, Node.Children[i], ObjectiveIndices, Depth + 1);
-        }
+        TraverseTreeNode(Team, Root, Node.Children[i], ObjectiveIndices, Depth + 1);
     }
 }
 
@@ -716,9 +756,7 @@ simulated function bool CanSpawnWithParameters(int SpawnPointIndex, int TeamInde
     {
         VehicleClass = class<DHVehicle>(GetVehiclePoolVehicleClass(VehiclePoolIndex));
 
-        if (VehicleClass == none ||
-            VehicleClass.default.bMustBeInSquadToSpawn && SquadIndex == -1 ||
-            !CanSpawnVehicle(VehiclePoolIndex, bSkipTimeCheck))
+        if (VehicleClass == none || !CanSpawnVehicle(VehiclePoolIndex, bSkipTimeCheck))
         {
             return false;
         }
@@ -1242,9 +1280,9 @@ simulated function VehicleReservationError GetVehicleReservationError(DHPlayer P
         return ERROR_NoReservations;
     }
 
-    if (VC.default.bMustBeInSquadToSpawn && !PC.IsInSquad())
+    if (VC.default.bRequiresDriverLicense && !DHPlayerReplicationInfo(PC.PlayerReplicationInfo).IsPlayerLicensedToDrive(PC))
     {
-        return ERROR_NoSquad;
+        return ERROR_NoLicense;
     }
 
     if (!IgnoresMaxTeamVehiclesFlags(VehiclePoolIndex) && GetReservableTankCount(TeamIndex) <= 0)
@@ -1687,6 +1725,42 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
     }
 
     return ERROR_None;
+}
+
+simulated function float GetDangerZoneIntensity(float PointerX, float PointerY, byte TeamIndex)
+{
+    return class'DHDangerZone'.static.GetIntensity(self, PointerX, PointerY, TeamIndex);
+}
+
+simulated function bool IsInDangerZone(float PointerX, float PointerY, byte TeamIndex)
+{
+    return class'DHDangerZone'.static.IsIn(self, PointerX, PointerY, TeamIndex);
+}
+
+simulated function PostNetReceive()
+{
+    local DHPlayer PC;
+    local DHHud Hud;
+
+    super.PostNetReceive();
+
+    // Notify HUD about changes to Danger Zone
+    if (OldDangerZoneIntensityScale != DangerZoneIntensityScale)
+    {
+        PC = DHPlayer(Level.GetLocalPlayerController());
+
+        if (PC != none)
+        {
+            Hud = DHHud(PC.myHUD);
+
+            if (Hud != none)
+            {
+                Hud.DangerZoneOverlayUpdateRequest();
+            }
+        }
+
+        OldDangerZoneIntensityScale = DangerZoneIntensityScale;
+    }
 }
 
 defaultproperties

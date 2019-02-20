@@ -96,6 +96,11 @@ simulated static function bool IsPlayerTankCrew(Pawn P)
         && ROPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew;
 }
 
+simulated static function bool IsPlayerLicensedToDrive(DHPlayer C)
+{
+    return C != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo).IsSLorASL();
+}
+
 // Modified to fix bug where the last line was being drawn at top of screen, instead of in vertical sequence, so overwriting info in the 1st screen line
 simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
 {

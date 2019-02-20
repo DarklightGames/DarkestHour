@@ -16,7 +16,6 @@ defaultproperties
     VehicleMass=5.0
     ReinforcementCost=3
     MaxDesireability=1.2
-    bMustBeInSquadToSpawn=true
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_ext'

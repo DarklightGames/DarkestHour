@@ -600,6 +600,15 @@ function DHConstruction.ConstructionError GetPositionError()
         return E;
     }
 
+    if (!ConstructionClass.default.bCanBePlacedInDangerZone)
+    {
+        if (class'DHDangerZone'.static.IsIn(GRI, Location.X, Location.Y, Instigator.GetTeamNum()))
+        {
+            E.Type = ERROR_InDangerZone;
+            return E;
+        }
+    }
+
     // Don't allow constructions to overlap restriction volumes that restrict constructions.
     foreach TouchingActors(class'DHRestrictionVolume', RV)
     {

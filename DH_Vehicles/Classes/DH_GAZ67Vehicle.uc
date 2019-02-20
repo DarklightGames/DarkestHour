@@ -12,7 +12,6 @@ defaultproperties
     VehicleTeam=1
     VehicleMass=3.5
     ReinforcementCost=1
-    bMustBeInSquadToSpawn=true
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_GAZ67_anm.GAZ67_ext'

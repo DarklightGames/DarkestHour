@@ -46,12 +46,14 @@ var DHMetricsRallyPoint MetricsObject;
 // Objective
 var ROObjective Objective;
 var bool bIsInActiveObjective;
+var bool bIsExposed;
 var int InActiveObjectivePenaltySeconds;
+var int IsExposedPenaltySeconds;
 
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
-        SquadIndex, RallyPointIndex, SpawnsRemaining, bIsInActiveObjective;
+        SquadIndex, RallyPointIndex, SpawnsRemaining, bIsInActiveObjective, bIsExposed;
 }
 
 function Reset()
@@ -81,13 +83,14 @@ function PostBeginPlay()
 
         if (GRI != none)
         {
-            for (i = 0; i < arraycount(GRI.Objectives); ++i)
+            for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
             {
-                if (GRI.Objectives[i].WithinArea(self))
+                if (GRI.DHObjectives[i] != none && GRI.DHObjectives[i].WithinArea(self))
                 {
                     // We'll make a bold assumption that it's not really possible
                     // to be in multiple objectives at once and just stop at one.
-                    Objective = GRI.Objectives[i];
+                    Objective = GRI.DHObjectives[i];
+
                     break;
                 }
             }
@@ -205,6 +208,8 @@ state Active
         {
             MetricsObject.IsEstablished = true;
         }
+
+        OnUpdated();
     }
 }
 
@@ -229,6 +234,21 @@ function SetIsActive(bool bIsActive)
     {
         SRI.OnSquadRallyPointActivated(self);
     }
+}
+
+function OnUpdated()
+{
+    UpdateExposedStatus();
+
+    if (SRI != none)
+    {
+        SRI.OnSquadRallyPointUpdated(self);
+    }
+}
+
+function UpdateExposedStatus()
+{
+    bIsExposed = GRI != none && GRI.IsInDangerZone(Location.X, Location.Y, GetTeamIndex());
 }
 
 simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck)
@@ -400,6 +420,11 @@ simulated function int GetSpawnTimePenalty()
         SpawnTimePenalty += InActiveObjectivePenaltySeconds;
     }
 
+    if (bIsExposed)
+    {
+        SpawnTimePenalty += IsExposedPenaltySeconds;
+    }
+
     return SpawnTimePenalty;
 }
 
@@ -466,6 +491,11 @@ function AwardScoreOnEstablishment()
 
 function Destroyed()
 {
+    if (SRI != none)
+    {
+        SRI.OnSquadRallyPointDestroyed(self);
+    }
+
     super.Destroyed();
 
     if (MetricsObject != none)
@@ -495,7 +525,8 @@ defaultproperties
     EncroachmentPenaltyForgivenessPerSecond=5
     bCanEncroachmentOverrun=true
 
-    InActiveObjectivePenaltySeconds=10
+    InActiveObjectivePenaltySeconds=15
+    IsExposedPenaltySeconds=15
 
     OverrunRadiusInMeters=15
     EstablishmentRadiusInMeters=25
@@ -521,4 +552,3 @@ defaultproperties
     bBlockActors=true
     bBlockKarma=false
 }
-
