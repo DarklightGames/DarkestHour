@@ -5,6 +5,10 @@
 
 class DHProjectileFire extends DHWeaponFire;
 
+// Recoil constants, make sure to only change these if you are willing to change the curve values of all the weapons with custom curves
+const RECOIL_GAIN_INCREMENT = 1.0;
+const RECOIL_GAIN_FALLOFF = 5.0;
+
 struct WhizInfo
 {
     var DHPawn  Player;
@@ -30,6 +34,11 @@ var     float           RestDeploySpreadModifier;    // modifier applied when pl
 var     float           HipSpreadModifier;           // modifier applied when player is firing from the hip
 var     float           LeanSpreadModifier;          // modifier applied when player is firing while leaning
 var     bool            bDebugSpread;                // debug option to show limits of spread as red lines
+
+// Recoil system
+var     InterpCurve     RecoilCurve;                 // A curve to determine the recoil modifier for RecoilGain (shots fired recently)
+var     float           RecoilGain;                  // The input for the RecoilCurve, RecoilGain is higher if a lot of rounds have been fired recently
+var     float           LastRecoilTime;
 
 // Tracers
 var     bool            bUsesTracers;                // true if the weapon uses tracers
@@ -547,17 +556,100 @@ function PlayFireEnd()
 
 simulated function HandleRecoil()
 {
-    super.HandleRecoil();
+    local rotator       NewRecoilRotation;
+    local DHPlayer      PC;
+    local DHPawn        P;
 
+    if (Instigator != none)
+    {
+        PC = DHPlayer(Instigator.Controller);
+        P = DHPawn(Instigator);
+    }
+
+    if (PC == none || P == none)
+    {
+        return;
+    }
+
+    if (!PC.bFreeCamera)
+    {
+        // Initial recoil values (random range from 75% of max to max)
+        NewRecoilRotation.Pitch = RandRange(MaxVerticalRecoilAngle * 0.75, MaxVerticalRecoilAngle);
+        NewRecoilRotation.Yaw = RandRange(MaxHorizontalRecoilAngle * 0.75, MaxHorizontalRecoilAngle);
+
+        // Randomize the horizontal recoil (so it goes left or right)
+        if( Rand(2) == 1)
+        {
+            NewRecoilRotation.Yaw *= -1;
+        }
+
+        // If falling, increase recoil significantly
+        if (Instigator.Physics == PHYS_Falling)
+        {
+            NewRecoilRotation *= 3;
+        }
+
+        if (Instigator.bIsCrouched)
+        {
+            NewRecoilRotation *= PctCrouchRecoil;
+
+            if (Weapon.bUsingSights)
+            {
+                NewRecoilRotation *= PctCrouchIronRecoil;
+            }
+        }
+        else if (Instigator.bIsCrawling)
+        {
+            NewRecoilRotation *= PctProneRecoil;
+
+            if (Weapon.bUsingSights)
+            {
+                NewRecoilRotation *= PctProneIronRecoil;
+            }
+        }
+        else if (Weapon.bUsingSights)
+        {
+            NewRecoilRotation *= PctStandIronRecoil;
+        }
+
+        if (P.bRestingWeapon)
+        {
+            NewRecoilRotation *= PctRestDeployRecoil;
+        }
+
+        if (Instigator.bBipodDeployed)
+        {
+            NewRecoilRotation *= PctBipodDeployRecoil;
+        }
+
+        if (P.LeanAmount != 0)
+        {
+            NewRecoilRotation *= PctLeanPenalty;
+        }
+
+        // Falloff the RecoilGain based on how much time has passed since we last had recoil (make sure it doesn't go below zero)
+        RecoilGain = FMax(0, RecoilGain - ((Level.TimeSeconds - PC.LastRecoilTime) * RECOIL_GAIN_FALLOFF));
+
+        // This interps the recoil curve based on RecoilGain, which is based on # of shots fired recently
+        NewRecoilRotation *= InterpCurveEval(RecoilCurve, RecoilGain);
+
+        // Increment the RecoilGain as recoil has been handled
+        RecoilGain += RECOIL_GAIN_INCREMENT;
+
+        // Set the recoil in the DHPlayer
+        PC.SetRecoil(NewRecoilRotation, RecoilRate);
+    }
+
+    // Handle blur from the recoil
     if (Level.NetMode != NM_DedicatedServer && default.bShouldBlurOnFire && Instigator != none && ROPlayer(Instigator.Controller) != none)
     {
         if (Weapon.bUsingSights)
         {
-            ROPlayer(Instigator.Controller).AddBlur(BlurTimeIronsight, BlurScaleIronsight);
+            PC.AddBlur(BlurTimeIronsight, BlurScaleIronsight);
         }
         else
         {
-            ROPlayer(Instigator.Controller).AddBlur(BlurTime, BlurScale);
+            PC.AddBlur(BlurTime, BlurScale);
         }
     }
 }
@@ -625,6 +717,7 @@ defaultproperties
     PctBipodDeployRecoil=0.1
     PctRestDeployRecoil=0.5
     PctLeanPenalty=1.25
+    RecoilCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0))) // Default curve has no impact on recoil
 
     // Spread
     CrouchSpreadModifier=0.9
