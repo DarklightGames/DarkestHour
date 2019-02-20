@@ -2691,6 +2691,13 @@ simulated function SwayHandler(float DeltaTime)
         WeaponSwayPitchAcc *= W.SwayLeanModifier;
     }
 
+    // Increase sway if bayonet attached
+    if (W.bBayonetMounted)
+    {
+        WeaponSwayYawAcc *= W.SwayBayonetModifier;
+        WeaponSwayPitchAcc *= W.SwayBayonetModifier;
+    }
+
     // Add an elastic factor to get sway near the original aim-point, & a damping factor to keep elastic factor from causing wild oscillations
     WeaponSwayYawAcc = WeaponSwayYawAcc - (DHSwayElasticFactor * SwayYaw) - (DHSwayDampingFactor * WeaponSwayYawRate);
     WeaponSwayPitchAcc = WeaponSwayPitchAcc - (DHSwayElasticFactor * SwayPitch) - (DHSwayDampingFactor * WeaponSwayPitchRate);

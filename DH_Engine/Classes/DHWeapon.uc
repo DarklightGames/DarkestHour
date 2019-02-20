@@ -17,6 +17,7 @@ var     float   SwayCrouchedModifier;
 var     float   SwayProneModifier;
 var     float   SwayTransitionModifier;
 var     float   SwayLeanModifier;
+var     float   SwayBayonetModifier;
 
 var     bool            bIsMantling;
 var     bool            bUsesIronsightFOV;
@@ -843,6 +844,7 @@ defaultproperties
     SwayProneModifier=0.5
     SwayTransitionModifier=4.5
     SwayLeanModifier=1.25
+    SwayBayonetModifier=1.02
 
     PlayerIronsightFOV=60.0
     BobModifyFactor=1.0
