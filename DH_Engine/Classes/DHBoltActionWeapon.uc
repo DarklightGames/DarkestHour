@@ -540,7 +540,7 @@ simulated function byte GetRoundsToLoad()
 // It's done this way to work with existing mag-based functionality, while allowing one at a time loading up to a max no. limited by the dummy mag size
 function PerformReload(optional int Count)
 {
-    local int i, j;
+    local int i;
 
     // TODO: we need to deduct 5 after reloading a stripper clip!
     // server + client need to know about this (use different state, maybe, or keep track of how many we are loading (pass arg??)
