@@ -10,9 +10,11 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_TT33Bullet'
     AmmoClass=class'ROAmmo.TT33Ammo'
     FireRate=0.2
-    Spread=400.0
+
+    Spread=210
     MaxVerticalRecoilAngle=500
-    MaxHorizontalRecoilAngle=60
+    MaxHorizontalRecoilAngle=300
+
     FireSounds(0)=Sound'Inf_Weapons.tt33.tt33_fire01'
     FireSounds(1)=Sound'Inf_Weapons.tt33.tt33_fire02'
     FireSounds(2)=Sound'Inf_Weapons.tt33.tt33_fire03'
