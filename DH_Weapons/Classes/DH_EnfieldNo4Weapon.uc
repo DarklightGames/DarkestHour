@@ -38,4 +38,4 @@ defaultproperties
     PostReloadAnim="reload_end"
     SingleReloadAnim="reload_single"
     StripperReloadAnim="reload_stripper"
-}t
+}
