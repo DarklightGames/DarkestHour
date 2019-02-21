@@ -5,10 +5,6 @@
 
 class DHProjectileFire extends DHWeaponFire;
 
-// Recoil constants, make sure to only change these if you are willing to change the curve values of all the weapons with custom curves
-const RECOIL_GAIN_INCREMENT = 1.0;
-const RECOIL_GAIN_FALLOFF = 5.0;
-
 struct WhizInfo
 {
     var DHPawn  Player;
@@ -38,7 +34,9 @@ var     bool            bDebugSpread;                // debug option to show lim
 // Recoil system
 var     InterpCurve     RecoilCurve;                 // A curve to determine the recoil modifier for RecoilGain (shots fired recently)
 var     float           RecoilGain;                  // The input for the RecoilCurve, RecoilGain is higher if a lot of rounds have been fired recently
-var     float           LastRecoilTime;
+var     float           RecoilGainIncrementAmount;   // The value to increase RecoilGain by every time recoil happens
+var     float           RecoilFallOffFactor;         // (TimeSinceLastRecoil ^ RecoilFallOffExponent) * RecoilFallOffFactor
+var     float           RecoilFallOffExponent;
 
 // Tracers
 var     bool            bUsesTracers;                // true if the weapon uses tracers
@@ -627,14 +625,15 @@ simulated function HandleRecoil()
             NewRecoilRotation *= PctLeanPenalty;
         }
 
-        // Falloff the RecoilGain based on how much time has passed since we last had recoil (make sure it doesn't go below zero)
-        RecoilGain = FMax(0, RecoilGain - ((Level.TimeSeconds - PC.LastRecoilTime) * RECOIL_GAIN_FALLOFF));
+        // Falloff the RecoilGain based on how much time has passed since we last had recoil
+        RecoilGain -= GetRecoilGainFalloff(Level.TimeSeconds - PC.LastRecoilTime);
+        RecoilGain = FMax(0.0, RecoilGain); // Make sure RecoilGain is not below zero
 
         // This interps the recoil curve based on RecoilGain, which is based on # of shots fired recently
         NewRecoilRotation *= InterpCurveEval(RecoilCurve, RecoilGain);
 
         // Increment the RecoilGain as recoil has been handled
-        RecoilGain += RECOIL_GAIN_INCREMENT;
+        RecoilGain += RecoilGainIncrementAmount;
 
         // Set the recoil in the DHPlayer
         PC.SetRecoil(NewRecoilRotation, RecoilRate);
@@ -652,6 +651,11 @@ simulated function HandleRecoil()
             PC.AddBlur(BlurTime, BlurScale);
         }
     }
+}
+
+simulated function float GetRecoilGainFalloff(float TimeSeconds)
+{
+    return (TimeSeconds ** RecoilFallOffExponent) * RecoilFallOffFactor;
 }
 
 // Modified to use the IsPlayerHipFiring() helper function, which makes this function generic & avoids re-stating in subclasses to make minor changes
@@ -718,6 +722,9 @@ defaultproperties
     PctRestDeployRecoil=0.5
     PctLeanPenalty=1.25
     RecoilCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0))) // Default curve has no impact on recoil
+    RecoilGainIncrementAmount=1.0
+    RecoilFallOffFactor=5.0
+    RecoilFallOffExponent=1.5
 
     // Spread
     CrouchSpreadModifier=0.9
