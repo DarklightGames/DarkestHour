@@ -14,14 +14,15 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_EnfieldNo4Pickup'
 
     Mesh=SkeletalMesh'DH_EnfieldNo4_1st.EnfieldNo4'
-    Skins(1)=shader'Weapons1st_tex.Bullets.kar98k_stripper_s' // TODO: ammo & bayo specularity shaders aren't used in the anim mesh & should be added there
-    Skins(4)=shader'DH_Weapon_tex.Spec_Maps.EnfieldNo4Bayo_s'
-    HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.EnfieldNo4Main_s'
+    Skins(3)=Shader'Weapons1st_tex.Bullets.kar98k_stripper_s' // TODO: ammo & bayo specularity shaders aren't used in the anim mesh & should be added there
+    Skins(1)=Shader'DH_EnfieldNo4_tex.EnfieldNo4.EnfieldNo4Bayonet_s'
+    Skins(0)=Shader'DH_EnfieldNo4_tex.EnfieldNo4.EnfieldNo4_s'
+    HighDetailOverlay=Shader'DH_EnfieldNo4_tex.EnfieldNo4.EnfieldNo4_s'
     bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=2
+    HighDetailOverlayIndex=0
 
-    SleeveNum=0
     HandNum=5
+    SleeveNum=4
 
     MaxNumPrimaryMags=13
     InitialNumPrimaryMags=13

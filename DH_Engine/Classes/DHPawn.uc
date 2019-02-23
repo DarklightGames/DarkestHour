@@ -7082,6 +7082,40 @@ simulated exec function IronSightDisplayFOV(float FOV)
     }
 }
 
+simulated exec function ShellRotOffsetIron(int Pitch, int Yaw, int Roll)
+{
+    local ROWeaponFire WF;
+
+    if (IsDebugModeAllowed())
+    {
+        WF = ROWeaponFire(Weapon.GetFireMode(0));
+
+        if (WF != none)
+        {
+            WF.ShellRotOffsetIron.Pitch = Pitch;
+            WF.ShellRotOffsetIron.Yaw = Yaw;
+            WF.ShellRotOffsetIron.Roll = Roll;
+        }
+    }
+}
+
+simulated exec function ShellRotOffsetHip(int Pitch, int Yaw, int Roll)
+{
+    local ROWeaponFire WF;
+
+    if (IsDebugModeAllowed())
+    {
+        WF = ROWeaponFire(Weapon.GetFireMode(0));
+
+        if (WF != none)
+        {
+            WF.ShellRotOffsetHip.Pitch = Pitch;
+            WF.ShellRotOffsetHip.Yaw = Yaw;
+            WF.ShellRotOffsetHip.Roll = Roll;
+        }
+    }
+}
+
 defaultproperties
 {
     // General class & interaction stuff
