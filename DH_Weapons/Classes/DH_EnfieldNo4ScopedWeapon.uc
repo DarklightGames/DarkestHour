@@ -22,6 +22,7 @@ defaultproperties
     bIsSniper=true
     bPlusOneLoading=true
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.EnfieldNo4_Scope_Overlay'
+    ScriptedScopeTexture=Texture'DH_EnfieldNo4_tex.EnfieldNo4.EnfieldNo4_Scope_3D'
     ScopeOverlaySize=0.7
     OverlayCorrectionX=-1.5
     OverlayCorrectionY=6

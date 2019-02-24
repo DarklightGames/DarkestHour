@@ -103,14 +103,11 @@ var()       int         ScopePitchHigh;         // Tweaks the pitch of the scope
 var()       int         ScopeYawHigh;           // Tweaks the yaw of the scope firing angle high detail scope
 
 // 3d Scope vars
-var   ScriptedTexture   ScopeScriptedTexture;   // Scripted texture for 3d scopes
-var   Shader            ScopeScriptedShader;    // The shader that combines the scripted texture with the sight overlay
-var   Material          ScriptedTextureFallback;// The texture to render if the users system doesn't support shaders
-
-// new scope vars
+var   ScriptedTexture   ScopeScriptedTexture;       // Scripted texture for 3d scopes
+var   Shader            ScopeScriptedShader;        // The shader that combines the scripted texture with the sight overlay
+var   Material          ScriptedTextureFallback;    // The texture to render if the users system doesn't support shaders
+var   Material          ScriptedScopeTexture;       // The reticle texture to use for 3d scopes.
 var   Combiner          ScriptedScopeCombiner;
-
-var   texture           TexturedScopeTexture;
 
 replication
 {
@@ -320,9 +317,12 @@ simulated event RenderOverlays(Canvas Canvas)
     // TODO: debug, remove later!
     ScopeDetail = RO_ModelScopeHigh;
 
-    Skins[LensMaterialID] = ScriptedTextureFallback;
+    if (bHasScope && LensMaterialID != -1)
+    {
+        Skins[LensMaterialID] = ScriptedTextureFallback;
+    }
 
-    if (bHasScope && bUsingSights)
+    if (bHasScope && bUsingSights)  // TODO: also we shouldn't be in the idlerest animation!
     {
         if (ScopeDetail == RO_ModelScope || ScopeDetail == RO_ModelScopeHigh)
         {
@@ -1352,7 +1352,7 @@ simulated state TweenDown extends WeaponBusy
         {
             if (bWaitingToBolt && HasAnim(PostFireIronIdleAnim))
             {
-                TweenAnim(PostFireIronIdleAnim, FastTweenTime);
+                TweenAnim(PostFireIronIdleAnim, 0.5);
             }
             else if (AmmoAmount(0) < 1 && HasAnim(IronIdleEmptyAnim))
             {
@@ -1421,30 +1421,30 @@ simulated function PlayIdle()
     {
         if (bWaitingToBolt && HasAnim(PostFireIronIdleAnim))
         {
-            LoopAnim(PostFireIronIdleAnim, IdleAnimRate, 0.2);
+            LoopAnim(PostFireIronIdleAnim, IdleAnimRate, 0.5);
         }
         else if (AmmoAmount(0) < 1 && HasAnim(IronIdleEmptyAnim))
         {
-            LoopAnim(IronIdleEmptyAnim, IdleAnimRate, 0.2);
+            LoopAnim(IronIdleEmptyAnim, IdleAnimRate, FastTweenTime);
         }
         else if (HasAnim(IronIdleAnim))
         {
-            LoopAnim(IronIdleAnim, IdleAnimRate, 0.2);
+            LoopAnim(IronIdleAnim, IdleAnimRate, FastTweenTime);
         }
     }
     else
     {
         if (bWaitingToBolt && HasAnim(PostFireIdleAnim))
         {
-            LoopAnim(PostFireIdleAnim, IdleAnimRate, 0.2);
+            LoopAnim(PostFireIdleAnim, IdleAnimRate, FastTweenTime);
         }
         else if (AmmoAmount(0) < 1 && HasAnim(IdleEmptyAnim))
         {
-            LoopAnim(IdleEmptyAnim, IdleAnimRate, 0.2);
+            LoopAnim(IdleEmptyAnim, IdleAnimRate, FastTweenTime);
         }
         else if (HasAnim(IdleAnim))
         {
-            LoopAnim(IdleAnim, IdleAnimRate, 0.2);
+            LoopAnim(IdleAnim, IdleAnimRate, FastTweenTime);
         }
     }
 }
@@ -2610,7 +2610,7 @@ simulated function UpdateScopeMode()
             {
                 // Construct the combiner
                 ScriptedScopeCombiner = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
-                ScriptedScopeCombiner.Material1 = Texture'ScopeShaders.Zoomblur.Xhair';
+                ScriptedScopeCombiner.Material1 = ScriptedScopeTexture;
                 ScriptedScopeCombiner.FallbackMaterial = Shader'ScopeShaders.Zoomblur.LensShader';
                 ScriptedScopeCombiner.CombineOperation = CO_Multiply;
                 ScriptedScopeCombiner.AlphaOperation = AO_Use_Mask;
@@ -2652,7 +2652,7 @@ simulated function UpdateScopeMode()
             {
                 // Construct the Combiner
                 ScriptedScopeCombiner = Combiner(Level.ObjectPool.AllocateObject(class'Combiner'));
-                ScriptedScopeCombiner.Material1 = Texture'ScopeShaders.Zoomblur.Xhair';
+                ScriptedScopeCombiner.Material1 = ScriptedScopeTexture;
                 ScriptedScopeCombiner.FallbackMaterial = Shader'ScopeShaders.Zoomblur.LensShader';
                 ScriptedScopeCombiner.CombineOperation = CO_Multiply;
                 ScriptedScopeCombiner.AlphaOperation = AO_Use_Mask;
@@ -2710,4 +2710,6 @@ defaultproperties
     IronPutDown="iron_out"
 
     ScriptedTextureFallback=Material'Weapons1st_tex.Zoomscope.LensShader'
+    LensMaterialID=-1
+    ScriptedScopeTexture=Texture'ScopeShaders.Zoomblur.Xhair'
 }

@@ -233,11 +233,6 @@ function UpdateResupplyStatus(bool bCurrentWeapon)
 // Modified to prevent reloading if weapon is already reloading or has maximum ammo
 simulated function bool AllowReload()
 {
-    Log("AllowReload?");
-    Log("CurrentMagCount" @ CurrentMagCount);
-    Log("GetRoundsToLoad()" @ GetRoundsToLoad());
-    Log("ReloadState" @ ReloadState);
-
     return ReloadState == RS_None && !AmmoMaxed(0) && !IsFiring() && !IsBusy() && CurrentMagCount > 0 && GetRoundsToLoad() > 0;
 }
 
@@ -246,13 +241,9 @@ function ServerRequestReload()
 {
     local byte ReloadAmount;
 
-    Log("ServerRequestReload");
-
     if (AllowReload())
     {
         ReloadAmount = GetRoundsToLoad();
-
-        Log("ReloadAmount" @ ReloadAmount);
 
         if (Level.NetMode == NM_DedicatedServer)
         {
@@ -372,8 +363,6 @@ simulated state Reloading
     // Modified to progress through reload stages
     simulated function Timer()
     {
-        Log("TIMER");
-
         // Just finished pre-reload anim so now load 1st round
         if (ReloadState == RS_PreReload)
         {
@@ -524,10 +513,6 @@ simulated function byte GetRoundsToLoad()
     MaxLoadedRounds = GetMaxLoadedRounds();
     AmountNeeded = MaxLoadedRounds - CurrentLoadedRounds;
 
-    Log("CurrentLoadedRounds" @ CurrentLoadedRounds);
-    Log("MaxLoadedRounds" @ MaxLoadedRounds);
-    Log("AmountNeeded" @ AmountNeeded);
-
     return Min(AmountNeeded, CurrentMagCount);
 }
 
@@ -588,6 +573,21 @@ function PerformReload(optional int Count)
     }
 
     UpdateResupplyStatus(true);
+}
+
+simulated function bool ShouldDrawPortal()
+{
+    local name SeqName;
+    local float AnimFrame, AnimRate;
+
+    if (!super.ShouldDrawPortal())
+    {
+        return false;
+    }
+
+    GetAnimParams(0, SeqName, AnimFrame, AnimRate);
+
+    return SeqName != PostFireIronIdleAnim;
 }
 
 defaultproperties
