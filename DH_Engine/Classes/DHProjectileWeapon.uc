@@ -1273,15 +1273,23 @@ simulated function SetIronSightFOV()
 
     if (InstigatorIsLocalHuman())
     {
-        if (ScopeDetail == RO_ModelScopeHigh)
+        if (bHasScope)
         {
-            TargetDisplayFOV = default.IronSightDisplayFOVHigh;
-            TargetPVO = default.XoffsetHighDetail;
-        }
-        else if (ScopeDetail == RO_ModelScope)
-        {
-            TargetDisplayFOV = default.IronSightDisplayFOV;
-            TargetPVO = default.XOffsetScoped;
+            if (ScopeDetail == RO_ModelScopeHigh)
+            {
+                TargetDisplayFOV = default.IronSightDisplayFOVHigh;
+                TargetPVO = default.XoffsetHighDetail;
+            }
+            else if (ScopeDetail == RO_ModelScope)
+            {
+                TargetDisplayFOV = default.IronSightDisplayFOV;
+                TargetPVO = default.XOffsetScoped;
+            }
+            else
+            {
+                TargetDisplayFOV = default.IronSightDisplayFOV;
+                TargetPVO = default.PlayerViewOffset;
+            }
         }
         else
         {
