@@ -7133,6 +7133,14 @@ simulated exec function ShellIronSightOffset(float X, float Y, float Z)
     }
 }
 
+simulated exec function DebugGiveWeapon(string ClassName)
+{
+    if (IsDebugModeAllowed())
+    {
+        GiveWeapon(ClassName);
+    }
+}
+
 defaultproperties
 {
     // General class & interaction stuff
