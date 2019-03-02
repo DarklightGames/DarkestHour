@@ -3,14 +3,15 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_ATGunRotateWeapon extends DHWeapon;
+class DH_ATGunRotateWeapon extends DHWeapon
+    dependson(DHATGun);
 
 var DHATGun Gun;
 
 replication
 {
     reliable if (Role < ROLE_Authority)
-        ServerUpdateRotationDirection, ServerExitRotation, ServerEnterRotation;
+        ServerRotate, ServerExitRotation, ServerEnterRotation;
 }
 
 simulated function bool ShouldSwitchToLastWeaponOnPlacement()
@@ -24,18 +25,13 @@ simulated event Tick(float DeltaTime)
 
     if (InstigatorIsLocallyControlled())
     {
-        if (Instigator == none)
+        if (Gun != none && Gun.bIsBeingRotated)
         {
-             Log("-- instigator probably died");
-             OnExitRotation();
+            Instigator.ReceiveLocalizedMessage(class'DHATGunRotateControlsMessage',,,, Instigator.Controller);
         }
-
-        // HACK: This inventory system doesn't like what we're trying to do with it.
-        // This bit of garbage saves us if we get into a state where the proxy has
-        // been destroyed but the weapon is still hanging around.
-        if (Gun == none && Instigator.Weapon == self && Instigator.Weapon.OldWeapon == none)
+        else if (Instigator.Weapon == self)
         {
-            // We've no weapon to go back to so just put this down, subsequently destroying it
+            // TODO: Get rid of this
             PutDown();
             Instigator.Controller.SwitchToBestWeapon();
             Instigator.ChangedWeapon();
@@ -49,12 +45,8 @@ simulated function OnEnterRotation()
 
     P = DHPawn(Instigator);
 
-    Log(":: OnEnterRotation");
-
     if (P == none)
     {
-        Log(":: > no instigator");
-
         Destroy();
         return;
     }
@@ -63,8 +55,6 @@ simulated function OnEnterRotation()
 
     if (Gun == none)
     {
-        Log(":: > no gun");
-
         Destroy();
         return;
     }
@@ -72,19 +62,16 @@ simulated function OnEnterRotation()
     {
         ServerEnterRotation(Gun, P);
     }
-
 }
 
-function ServerEnterRotation(DHATGun Gun, DHPawn Instigator)
+function ServerEnterRotation(DHATGun Gun, DHPawn Pawn)
 {
-    Gun.ServerEnterRotation(Instigator);
+    Gun.ServerEnterRotation(Pawn);
 }
 
 simulated function OnExitRotation()
 {
-    Log(":: OnExitRotation");
-
-    if (Gun != none)
+    if (Gun != none && Gun.bIsBeingRotated)
     {
         ServerExitRotation(Gun);
     }
@@ -95,27 +82,24 @@ function ServerExitRotation(DHATGun Gun)
     Gun.ServerExitRotation();
 }
 
-// RotationDirection: 0 - none; 1 - cw; 255 - ccw
-simulated function OnUpdateRotationDirection(byte RotationDirection)
+simulated function OnRotate(byte InputRotationFactor)
 {
-    Log(":: OnUpdateRotationDirection" @ string(RotationDirection));
-
     if (Gun != none)
     {
-        ServerUpdateRotationDirection(Gun, RotationDirection);
+        ServerRotate(Gun, InputRotationFactor);
     }
 }
 
-function ServerUpdateRotationDirection(DHATGun Gun, byte RotationDirection)
+function ServerRotate(DHATGun Gun, byte InputRotationFactor)
 {
-    Gun.ServerUpdateRotationDirection(RotationDirection);
+    Gun.ServerRotate(InputRotationFactor);
 }
 
 simulated function bool WeaponLeanLeft()
 {
     if (Gun != none)
     {
-        OnUpdateRotationDirection(255);
+        OnRotate(255);
         return true;
     }
 
@@ -126,7 +110,7 @@ simulated function bool WeaponLeanRight()
 {
     if (Gun != none)
     {
-        OnUpdateRotationDirection(1);
+        OnRotate(1);
         return true;
     }
 
@@ -137,7 +121,7 @@ simulated function WeaponLeanLeftReleased()
 {
     if (Gun != none)
     {
-        OnUpdateRotationDirection(0);
+        OnRotate(0);
     }
 }
 
@@ -145,7 +129,7 @@ simulated function WeaponLeanRightReleased()
 {
     if (Gun != none)
     {
-        OnUpdateRotationDirection(0);
+        OnRotate(0);
     }
 }
 

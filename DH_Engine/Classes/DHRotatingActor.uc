@@ -5,45 +5,87 @@
 
 class DHRotatingActor extends Actor;
 
-var byte RotationDirection;
+var DHGameReplicationInfo DHGRI;
+var DHPawn ControllerPawn;
+
+var int   RotationFactor;
+var int   ExpiryTime;
+var float ControlRadius;
+
+var int   LifespanTime;          // how long something can be hogged for rotation
+var float ControlRadiusInMeters; // how far a controlling player can stray away
+
+replication
+{
+    unreliable if (RemoteRole == ROLE_SimulatedProxy && Physics == PHYS_Rotating)
+       UpdateRotation;
+}
+
+delegate OnDestroyed(int Time);
+
+simulated event PostBeginPlay()
+{
+    DesiredRotation = Rotation;
+    ControlRadius = class'DHUnits'.static.MetersToUnreal(ControlRadiusInMeters);
+}
+
+event PostNetBeginPlay()
+{
+    DHGRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (DHGRI != none && LifespanTime > 0)
+    {
+        ExpiryTime = DHGRI.ElapsedTime + LifespanTime;
+
+        SetTimer(1.0, true);
+    }
+}
+
+event Destroyed()
+{
+    OnDestroyed(DHGRI.ElapsedTime);
+}
+
+simulated function Timer()
+{
+    // End rotation if the player takes too long or strayed too far
+    // TODO: Notify why he was thrown out of the rotaion mode
+    if ((DHGRI != none && DHGRI.ElapsedTime > ExpiryTime) ||
+        (ControllerPawn != none && VSize(ControllerPawn.Location - Location) > ControlRadius))
+    {
+        Destroy();
+    }
+}
 
 simulated function Tick(float DeltaTime)
 {
     UpdateRotation(DeltaTime);
 }
 
-// TODO: Fix rotation values for multiplayer
-function UpdateRotation(float DeltaTime)
+function SetRotationFactor(int RotationFactor)
 {
-    local rotator CurrentRotation;
+    self.RotationFactor = RotationFactor;
+}
 
-    if (RotationDirection == 0)
+simulated function UpdateRotation(float DeltaTime)
+{
+    if (RotationFactor == 0)
     {
-        bRotateToDesired = false;
         return;
     }
 
-    CurrentRotation = Rotation;
-    DesiredRotation = CurrentRotation;
-
-    if (RotationDirection == 1)
-    {
-        DesiredRotation.Yaw += RotationRate.Yaw;
-    }
-    else if (RotationDirection == 255)
-    {
-        DesiredRotation.Yaw -= RotationRate.Yaw;
-    }
-
-    Log(":: RotateInDirection > DesiredRotation.Yaw:" @ string(DesiredRotation.Yaw));
-
-    bRotateToDesired = true;
+    DesiredRotation.Yaw += RotationFactor * RotationRate.Yaw * DeltaTime;
 }
 
 defaultproperties
 {
     Physics=PHYS_Rotating
-    RotationRate=(Pitch=4096,Yaw=4096,Roll=4096)
+    RotationRate=(Pitch=2048,Yaw=2048,Roll=2048)
     RemoteRole=ROLE_SimulatedProxy
     bReplicateMovement=true
+    bNetInitialRotation=true
+    bAlwaysRelevant=true
+    bRotateToDesired=true
+    LifespanTime=20
+    ControlRadiusInMeters=5.0
 }

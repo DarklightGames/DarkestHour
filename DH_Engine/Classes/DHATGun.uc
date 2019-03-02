@@ -14,24 +14,39 @@ enum ERotateError
     ERROR_None,
     ERROR_EnemyGun,
     ERROR_CannotBeRotated,
+    ERROR_IsBeingRotated,
     ERROR_Occupied,
-    ERROR_Cooldown,
     ERROR_NeedMorePlayers,
     ERROR_Fatal,
+    ERROR_Cooldown
 };
 
-var bool    bCanBeRotated;
-var int     PlayersNeededToRotate;
-var bool    bIsBeingRotated;
-var Pawn    RotatingPawn;
-var float   RotationsPerSecond;
-var Actor   OldBase;
-var DHRotatingActor RotatingActor;
+var DHPawn            RotateControllerPawn;
+var DHRotatingActor   RotatingActor;
+var Actor             OldBase;
+
+var ROSoundAttachment RotateSoundAttachment;
+var sound             RotateSound;
+var float             RotateSoundVolume;
+
+var bool              bIsBeingRotated;
+var bool              bCanBeRotated;
+var int               NextRotationTime;
+var int               PlayersNeededToRotate;
+var int               RotateCooldown;
+var float             RotateControlRadiusInMeters;
+var float             RotationsPerSecond;
 
 replication
 {
     reliable if (Role == ROLE_Authority)
         bIsBeingRotated;
+
+    reliable if (Role == ROLE_Authority && !IsInState('Rotating'))
+        NextRotationTime;
+
+    unreliable if (Role == ROLE_Authority && Physics == PHYS_None)
+        ClientAdjustRotation;
 }
 
 // Disabled as nothing in Tick is relevant to an AT gun (to be on the safe side, MinBrakeFriction is set very high in default properties, so gun won't slide down a hill)
@@ -181,40 +196,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 }
 
 // Rotation
-function ServerEnterRotation(DHPawn Instigator)
+simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int TeammatesInRadiusCount)
 {
-    Log(":: ServerEnterRotation");
+    local DHPlayer PC;
+    local DHGameReplicationInfo GRI;
 
-    if (GetRotationError(Instigator) != ERROR_None)
-    {
-        Log(":: > error");
-
-        // TODO: optionally send a message, since there was a timing issue apparently
-        return;
-    }
-
-    bIsBeingRotated = true;
-    GotoState('Rotating');
-}
-
-function ServerExitRotation()
-{
-    Log(":: ServerExitRotation");
-
-    bIsBeingRotated = false;
-    GotoState('');
-}
-
-function ServerUpdateRotationDirection(byte RotationDirection)
-{
-    if (RotatingActor != none)
-    {
-        RotatingActor.RotationDirection = RotationDirection;
-    }
-}
-
-simulated function ERotateError GetRotationError(DHPawn Pawn)
-{
     if (Pawn == none)
     {
         return ERROR_Fatal;
@@ -230,34 +216,202 @@ simulated function ERotateError GetRotationError(DHPawn Pawn)
         return ERROR_CannotBeRotated;
     }
 
+    if (bIsBeingRotated)
+    {
+        return ERROR_IsBeingRotated;
+    }
+
     if (NumPassengers() > 0)
     {
         return ERROR_Occupied;
     }
 
+    PC = DHPlayer(Pawn.Controller);
+
+    if (PC != none)
+    {
+        GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+
+        if (GRI == none)
+        {
+            return ERROR_Fatal;
+        }
+
+        if (GRI.ElapsedTime < NextRotationTime)
+        {
+            return ERROR_Cooldown;
+        }
+    }
+    else
+    {
+        return ERROR_Fatal;
+    }
+
+    if (PlayersNeededToRotate > 1)
+    {
+        TeammatesInRadiusCount = GetTeammatesInRadiusCount(Pawn);
+
+        if (TeammatesInRadiusCount < PlayersNeededToRotate)
+        {
+            return ERROR_NeedMorePlayers;
+        }
+    }
+
     return ERROR_None;
+}
+
+simulated function int GetTeammatesInRadiusCount(DHPawn Pawn)
+{
+    local Pawn OtherPawn;
+    local DHPlayerReplicationInfo OtherPRI;
+    local int Count;
+
+    foreach RadiusActors(class'Pawn', OtherPawn, class'DHUnits'.static.MetersToUnreal(RotateControlRadiusInMeters))
+    {
+        if (OtherPawn != none &&
+            OtherPawn.GetTeamNum() == Pawn.GetTeamNum() &&
+            !OtherPawn.bDeleteMe &&
+            OtherPawn.Health > 0 &&
+            (!OtherPawn.IsA('ROVehicle') || !OtherPawn.IsA('ROVehicleWeaponPawn')))
+        {
+            OtherPRI = DHPlayerReplicationInfo(OtherPawn.PlayerReplicationInfo);
+
+            if (OtherPRI != none)
+            {
+                ++Count;
+            }
+        }
+    }
+
+    return Count;
+}
+
+function ServerEnterRotation(DHPawn Instigator)
+{
+    local ERotateError RotateError;
+
+    RotateError = GetRotationError(Instigator);
+
+    if (RotateError != ERROR_None)
+    {
+        // TODO: Send a message to the player
+        Instigator.ExitATRotation();
+        return;
+    }
+
+    RotateControllerPawn = Instigator;
+    GotoState('Rotating');
+}
+
+function ServerExitRotation()
+{
+    if (RotatingActor != none || RotatingActor.bPendingDelete)
+    {
+        RotatingActor.Destroy();
+    }
+}
+
+function ServerRotate(byte InputRotationFactor)
+{
+    local int F;
+
+    if (InputRotationFactor > 127)
+    {
+        F = InputRotationFactor - 256;
+    }
+    else
+    {
+        F = InputRotationFactor;
+    }
+
+    HandleRotate(F);
+}
+
+function HandleRotate(int RotationFactor);
+function OnRotatingActorDestroyed(int Time);
+
+simulated function ClientAdjustRotation(rotator NewRotation)
+{
+    SetRotation(NewRotation);
 }
 
 state Rotating
 {
     function BeginState()
     {
+        bIsBeingRotated = true;
+
         RotatingActor = Spawn(class'DHRotatingActor',,, Location, Rotation);
+        RotatingActor.OnDestroyed = OnRotatingActorDestroyed;
+        RotatingActor.ControlRadiusInMeters = RotateControlRadiusInMeters;
+        RotatingActor.ControllerPawn = RotateControllerPawn;
+
+        if (RotateSound != none)
+        {
+            RotateSoundAttachment = Spawn(class'ROSoundAttachment');
+            RotateSoundAttachment.AmbientSound = RotateSound;
+            RotateSoundAttachment.SetBase(self);
+        }
 
         SetPhysics(PHYS_None);
         SetBase(RotatingActor);
+    }
 
-        Log("!! BEGIN ROTATING");
+    function OnRotatingActorDestroyed(int Time)
+    {
+        NextRotationTime = Time + RotateCooldown;
+        GotoState('');
+    }
+
+    function HandleRotate(int RotationFactor)
+    {
+        RotatingActor.SetRotationFactor(RotationFactor);
+
+        if (RotateSoundAttachment != none)
+        {
+            if (RotationFactor == 0)
+            {
+                RotateSoundAttachment.SoundVolume = 0.0;
+            }
+            else
+            {
+                RotateSoundAttachment.SoundVolume = RotateSoundVolume;
+            }
+        }
     }
 
     function EndState()
     {
-        SetBase(none);
-        RotatingActor.Destroy();
-        SetPhysics(PHYS_Karma);
-        ServerExitRotation();
+        if (RotatingActor != none && !RotatingActor.bPendingDelete)
+        {
+            RotatingActor.Destroy();
+        }
 
-        Log("!! END ROTATING");
+        if (RotateSoundAttachment != none)
+        {
+            RotateSoundAttachment.Destroy();
+        }
+
+        SetBase(none);
+        ClientAdjustRotation(RotatingActor.DesiredRotation);
+        SetPhysics(PHYS_Karma);
+
+        bIsBeingRotated = false;
+
+        if (RotateControllerPawn != none)
+        {
+            RotateControllerPawn.ExitATRotation();
+        }
+    }
+}
+
+// Overriden to suppress the touch message when the gun is being rotated
+// TODO: This is probably not the best way to do this
+simulated event NotifySelected(Pawn User)
+{
+    if (!bIsBeingRotated)
+    {
+        super.NotifySelected(User);
     }
 }
 
@@ -356,6 +510,10 @@ defaultproperties
     PlayersNeededToRotate=1
     RotationsPerSecond=0.125
     bFixedRotationDir=false
+    RotateCooldown=5
+    RotateControlRadiusInMeters=5
+    RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    RotateSoundVolume=20.0
 
     // Karma properties
     Begin Object Class=KarmaParamsRBFull Name=KParams0

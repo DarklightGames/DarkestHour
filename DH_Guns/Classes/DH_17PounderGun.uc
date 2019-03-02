@@ -25,6 +25,7 @@ defaultproperties
     SupplyCost=1600
     ConstructionPlacementOffset=(Z=12.0)
     bCanBeRotated=true
+    PlayersNeededToRotate=2
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

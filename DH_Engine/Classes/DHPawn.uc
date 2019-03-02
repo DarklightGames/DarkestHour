@@ -7068,6 +7068,24 @@ simulated function class<DHVoicePack> GetVoicePack()
     return class<DHVoicePack>(VoiceClass);
 }
 
+function EnterATRotation(DHATGun Gun)
+{
+    GunToRotate = Gun;
+    ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon");
+}
+
+// TODO: This should be reworked
+simulated function ExitATRotation()
+{
+    GunToRotate = none;
+
+    if (Weapon.IsA('DH_ATGunRotateWeapon'))
+    {
+        Weapon.Destroy();
+        Controller.SwitchToBestWeapon();
+    }
+}
+
 exec function RotateAT()
 {
     local DHATGun Gun;
