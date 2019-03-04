@@ -331,7 +331,7 @@ simulated event RenderOverlays(Canvas Canvas)
             }
 
             bDrawingFirstPerson = true;
-            Canvas.DrawBoundActor(self, false, false,DisplayFOV, Playa.Rotation, Playa.WeaponBufferRotation, Instigator.CalcZoomedDrawOffset(self));
+            Canvas.DrawBoundActor(self, false, false, DisplayFOV, Playa.Rotation, Playa.WeaponBufferRotation, Instigator.CalcZoomedDrawOffset(self));
             bDrawingFirstPerson = false;
         }
         else if (ScopeDetail == RO_TextureScope)
