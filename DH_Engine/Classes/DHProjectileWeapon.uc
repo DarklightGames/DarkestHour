@@ -1277,7 +1277,7 @@ simulated function SetIronSightFOV()
         {
             if (ScopeDetail == RO_ModelScopeHigh)
             {
-                TargetDisplayFOV = default.IronSightDisplayFOVHigh;
+                TargetDisplayFOV = default.IronSightDisplayFOV;
                 TargetPVO = default.XoffsetHighDetail;
             }
             else if (ScopeDetail == RO_ModelScope)
@@ -2639,7 +2639,7 @@ simulated function UpdateScopeMode()
         else if (ScopeDetail == RO_ModelScopeHigh)
         {
             ScopePortalFOV = ScopePortalFOVHigh;
-            IronSightDisplayFOV = default.IronSightDisplayFOVHigh;
+            IronSightDisplayFOV = default.IronSightDisplayFOV;
             bPlayerFOVZooms = false;
 
             if (bUsingSights)
