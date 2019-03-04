@@ -156,6 +156,7 @@ defaultproperties
     // Recoil
     MaxVerticalRecoilAngle=600
     MaxHorizontalRecoilAngle=120
+    PctRestDeployRecoil=0.8
 
     FireAnim="Shoot_Loop"
     FireLoopAnim="Shoot_Loop"
