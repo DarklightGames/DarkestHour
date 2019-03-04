@@ -314,10 +314,7 @@ simulated event RenderOverlays(Canvas Canvas)
 
     SetRotation(RollMod); // note DH always calls this, where in RO it was only called if player was not ironsighted (which made setting RollMod pointless when sighted)
 
-    // TODO: debug, remove later!
-    ScopeDetail = RO_ModelScopeHigh;
-
-    if (bHasScope && LensMaterialID != -1)
+    if (bHasScope && LensMaterialID != -1 && LensMaterialID < Skins.Length)
     {
         Skins[LensMaterialID] = ScriptedTextureFallback;
     }
