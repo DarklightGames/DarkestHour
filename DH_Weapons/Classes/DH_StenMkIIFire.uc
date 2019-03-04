@@ -9,11 +9,16 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_StenMkIIBullet'
     AmmoClass=class'DH_Weapons.DH_StenMkIIAmmo'
-    FireRate=0.12
-    Spread=320.0
+    FireRate=0.12 // 500rpm
+    Spread=168.0
+
+    // Recoil
     RecoilRate=0.075
     MaxVerticalRecoilAngle=290
-    MaxHorizontalRecoilAngle=50
+    MaxHorizontalRecoilAngle=110
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.33),(InVal=3.0,OutVal=1.0),(InVal=5.0,OutVal=1.25),(InVal=8.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0))))
+    RecoilFallOffFactor=9.0
+
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stMP'
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Sten.Sten_fire_g1'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Sten.Sten_fire_g2'

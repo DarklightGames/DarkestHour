@@ -10,10 +10,15 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_ThompsonBullet'
     AmmoClass=class'DH_Weapons.DH_ThompsonAmmo'
     FireRate=0.092307 // 650rpm
-    Spread=200.0
+    Spread=175.0
+
+    // Recoil
     RecoilRate=0.05
     MaxVerticalRecoilAngle=320
     MaxHorizontalRecoilAngle=120
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.33),(InVal=3.0,OutVal=0.66),(InVal=6.0,OutVal=1.3),(InVal=15.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilFallOffFactor=12.0
+
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Thompson.Thompson_FireG1'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Thompson.Thompson_FireG2'
@@ -23,5 +28,5 @@ defaultproperties
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
     ShellRotOffsetIron=(Pitch=5000)
 
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.33),(InVal=3.0,OutVal=0.66),(InVal=6.0,OutVal=1.33),(InVal=15.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+
 }

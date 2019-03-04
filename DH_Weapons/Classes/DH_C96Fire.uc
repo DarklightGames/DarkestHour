@@ -56,11 +56,15 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_C96Bullet'
     AmmoClass=class'DH_Weapons.DH_C96Ammo'
-    FireRate=0.066666
-    Spread=400.0
+    FireRate=0.066666 // 900rpm
+    Spread=180.0
+
+    // Recoil
     RecoilRate=0.05
-    MaxVerticalRecoilAngle=600
-    MaxHorizontalRecoilAngle=75
+    MaxVerticalRecoilAngle=275
+    MaxHorizontalRecoilAngle=120
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.33),(InVal=3.0,OutVal=0.66),(InVal=6.0,OutVal=1.3),(InVal=15.0,OutVal=1.5),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilFallOffFactor=10.0
 
     AmbientFireSound=SoundGroup'DH_WeaponSounds.c96.C96_FireLoop01'
     FireSounds(0)=SoundGroup'DH_WeaponSounds.c96.C96_FireSingle01'

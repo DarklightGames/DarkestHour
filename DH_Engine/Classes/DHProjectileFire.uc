@@ -724,7 +724,7 @@ defaultproperties
     RecoilCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0))) // Default curve has no impact on recoil
     RecoilGainIncrementAmount=1.0
     RecoilFallOffFactor=5.0
-    RecoilFallOffExponent=1.5
+    RecoilFallOffExponent=2.0
 
     // Spread
     CrouchSpreadModifier=0.9
