@@ -185,7 +185,7 @@ defaultproperties
     CreditLines(79)="FlashPanHunter"
     CreditLines(80)="Jeff Duquette"
     CreditLines(81)="Sichartshofen"
-    CreditLines(82)="Peter Klinger"
+    CreditLines(82)="kashash"
     CreditLines(83)="EvilHobo"
     CreditLines(84)="TWB*RedYager and TWB*JimMiller"
     CreditLines(85)="Ravelo"
