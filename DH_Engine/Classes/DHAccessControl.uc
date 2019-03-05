@@ -150,6 +150,8 @@ defaultproperties
     AdminClass=Class'DH_Engine.DHAdmin'
     DeveloperIDs(0)="76561197961365238" // Theel
     DeveloperIDs(1)="76561197960644559" // Basnett
+    DeveloperIDs(2)="76561198020074261" // Kashash
+    DeveloperIDs(3)="76561198043869714" // DirtyBirdy
 
     PatreonIDs(0)=(PatronROID="76561198066643021",PatronLevel=2) // PFC Patison
 }
