@@ -431,13 +431,21 @@ function TraverseTreeNode(int Team, DHObjectiveTreeNode Root, DHObjectiveTreeNod
     local bool bIsFarEnoughAway;
     local bool bNodeHasHints;
     local bool bAlreadyAdded;
+    local DH_LevelInfo LI;
 
     if (Node == none)
     {
         return;
     }
 
-    bIsFarEnoughAway = VSize(Root.Objective.Location - Node.Objective.Location) > class'DHUnits'.static.MetersToUnreal(150);
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (LI == none)
+    {
+        return;
+    }
+
+    bIsFarEnoughAway = VSize(Root.Objective.Location - Node.Objective.Location) > class'DHUnits'.static.MetersToUnreal(LI.ObjectiveSpawnDistanceThreshold);
     bNodeHasHints = Node.Objective.SpawnPointHintTags[Team] != '';
     bAlreadyAdded = class'UArray'.static.IIndexOf(ObjectiveIndices, Node.Objective.ObjNum) == -1;
 

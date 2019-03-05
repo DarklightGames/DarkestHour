@@ -672,23 +672,18 @@ function bool OnClick(GUIComponent Sender)
             Controller.OpenMenu(Controller.MapVotingMenu);
             break;
 
-        // Communication
-        case b_MenuOptions[4]:
-            Controller.OpenMenu("ROInterface.ROCommunicationPage");
-            break;
-
         // Server browser
-        case b_MenuOptions[5]:
+        case b_MenuOptions[4]:
             Controller.OpenMenu("DH_Interface.DHServerBrowser");
             break;
 
         // Settings
-        case b_MenuOptions[6]:
+        case b_MenuOptions[5]:
             Controller.OpenMenu("DH_Interface.DHSettingsPage");
             break;
 
         // Continue button
-        case b_MenuOptions[7]:
+        case b_MenuOptions[6]:
             if (PC != none &&
                 !PC.bHasReceivedSquadJoinRecommendationMessage &&
                 PC.SquadReplicationInfo != none &&
@@ -844,7 +839,7 @@ function Apply()
     local RORoleInfo RI;
     local int        RoleIndex;
 
-    if (b_MenuOptions[7].MenuState == MSAT_Disabled)
+    if (b_MenuOptions[6].MenuState == MSAT_Disabled)
     {
         return;
     }
@@ -954,12 +949,12 @@ function UpdateButtons()
 
     if (bContinueEnabled)
     {
-        b_MenuOptions[7].EnableMe();
+        b_MenuOptions[6].EnableMe();
         i_Arrows.Image = Material'DH_GUI_Tex.DeployMenu.arrow_blurry';
     }
     else
     {
-        b_MenuOptions[7].DisableMe();
+        b_MenuOptions[6].DisableMe();
         i_Arrows.Image = Material'DH_GUI_Tex.DeployMenu.arrow_disabled';
     }
 }
@@ -2172,16 +2167,6 @@ defaultproperties
     End Object
     b_MenuOptions(3)=MapVoteButtonObject
 
-    Begin Object Class=DHGUIButton Name=CommunicationButtonObject
-        Caption="Communication"
-        CaptionAlign=TXTA_Center
-        StyleName="DHSmallTextButtonStyle"
-        WinHeight=1.0
-        WinTop=0.0
-        OnClick=OnClick
-    End Object
-    b_MenuOptions(4)=CommunicationButtonObject
-
     Begin Object Class=DHGUIButton Name=ServersButtonObject
         Caption="Servers"
         CaptionAlign=TXTA_Center
@@ -2190,7 +2175,7 @@ defaultproperties
         WinTop=0.0
         OnClick=OnClick
     End Object
-    b_MenuOptions(5)=ServersButtonObject
+    b_MenuOptions(4)=ServersButtonObject
 
     Begin Object Class=DHGUIButton Name=SettingsButtonObject
         Caption="Settings"
@@ -2200,7 +2185,7 @@ defaultproperties
         WinTop=0.0
         OnClick=OnClick
     End Object
-    b_MenuOptions(6)=SettingsButtonObject
+    b_MenuOptions(5)=SettingsButtonObject
 
     Begin Object Class=DHGUIButton Name=ContinueButtonObject
         Caption="Continue"
@@ -2210,7 +2195,7 @@ defaultproperties
         WinTop=0.0
         OnClick=OnClick
     End Object
-    b_MenuOptions(7)=ContinueButtonObject
+    b_MenuOptions(6)=ContinueButtonObject
 
     Begin Object Class=GUIImage Name=ArrowImageObject
         Image=Material'DH_GUI_tex.DeployMenu.arrow_blurry'

@@ -14,10 +14,12 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     super.InitComponent(MyController, MyOwner);
 
     i_BG1.ManageComponent(nu_AudioChannels);
+    i_BG1.UnmanageComponent(sl_VOIP);
 
     i_BG3.UnmanageComponent(co_Quality);
     i_BG3.UnmanageComponent(co_LANQuality);
 
+    RemoveComponent(sl_VOIP);
     RemoveComponent(co_Quality);
     RemoveComponent(co_LANQuality);
 }
