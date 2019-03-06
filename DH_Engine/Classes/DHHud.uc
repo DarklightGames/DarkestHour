@@ -2882,7 +2882,7 @@ function DrawCompassIcons(Canvas C, float CenterX, float CenterY, float Radius, 
         }
 
         // Squad leader
-        if (PC.GetSquadIndex() != -1 && PC.GetSquadMemberIndex() != 0)
+        if (PC.GetSquadIndex() != -1 && PC.GetSquadMemberIndex() != 0 && PC.SquadMemberLocations[0] != 0)
         {
             class'UQuantize'.static.DequantizeClamped2DPose(PC.SquadMemberLocations[0], Target.X, Target.Y);
             Target = DHGRI.GetWorldCoords(Target.X, Target.Y);
