@@ -30,7 +30,7 @@ function Finalize()
     {
         MP = DHMetricsPlayer(Object);
 
-        if (MP != none)
+        if (MP != none && MP.Sessions[0].EndedAt == none)
         {
             MP.Sessions[0].EndedAt = class'DateTime'.static.Now(self);
         }

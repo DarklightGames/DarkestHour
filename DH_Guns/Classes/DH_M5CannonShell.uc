@@ -7,5 +7,5 @@ class DH_M5CannonShell extends DH_WolverineCannonShell;
 
 defaultproperties
 {
-    ShellImpactDamage=class'DH_Engine.DHShellATImpactDamageType'
+    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
 }

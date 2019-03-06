@@ -27,7 +27,6 @@ defaultproperties
 {
     EnemyIsWeak="The enemy is nearly out of reinforcements, victory is near!"
 
-    bBeep=true
     bFadeMessage=true
     bIsUnique=true
     bIsConsoleMessage=true

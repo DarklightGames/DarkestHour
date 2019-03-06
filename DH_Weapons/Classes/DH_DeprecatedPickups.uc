@@ -3,12 +3,11 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHGameType_Armoured extends DHGameType
-    abstract;
+class DH_DeprecatedPickups extends DHPlaceableWeaponPickup abstract;
 
 defaultproperties
 {
-    GameTypeName="Armoured"
-    bRoundEndsAtZeroReinf=true
-    bUseReinforcementWarning=true
+    WeaponType=class'DH_Weapons.DH_PanzerFaustWeapon'
+    InventoryType=class'DH_Weapons.DH_PanzerFaustWeapon'
+    StaticMesh=StaticMesh'WeaponPickupSM.Weapons.PanzerFaust'
 }

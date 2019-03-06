@@ -11,8 +11,8 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="ZiS-5V"
     VehicleTeam=1
-    VehicleMass=3.0
-    ReinforcementCost=3
+    VehicleMass=2.5
+    ReinforcementCost=2
     MaxDesireability=0.12
 
     // Hull mesh
@@ -55,8 +55,8 @@ defaultproperties
     // Damage
     Health=2000
     HealthMax=2000.0
-    DamagedEffectHealthFireFactor=0.75
-    EngineHealth=30
+    DamagedEffectHealthFireFactor=0.9
+    EngineHealth=20
     VehHitpoints(0)=(PointRadius=32.0,PointScale=1.0,PointBone="Body",PointOffset=(X=100.0,Y=0.0,Z=11.0),bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
     VehHitpoints(1)=(PointRadius=24.0,PointScale=1.0,PointBone="Axle_FR",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     VehHitpoints(2)=(PointRadius=24.0,PointScale=1.0,PointBone="Axle_FL",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
@@ -65,7 +65,6 @@ defaultproperties
     EngineDamageFromGrenadeModifier=0.15
     DirectHEImpactDamageMult=9.0
     ImpactWorldDamageMult=1.0
-    HeavyEngineDamageThreshold=0.33
     DamagedEffectScale=0.7
     DamagedEffectOffset=(X=105.0,Y=0.0,Z=20.0)
     DestroyedVehicleMesh=StaticMesh'DH_Soviet_vehicles_stc.ZiS5.ZiS5V_destroyed'

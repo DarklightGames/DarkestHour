@@ -27,24 +27,18 @@ defaultproperties
     bAcceptsProjectors=false
 
     // Health
-    MinDamagetoHurt=125
-    HealthMax=750
+    MinDamagetoHurt=150
+    HealthMax=1000
     TatteredHealthThreshold=300
 
     // Damage
     bCanTakeImpactDamage=false
-    HarmfulDamageTypes(0)=class'DHArtilleryDamageType'                 // Artillery
-    HarmfulDamageTypes(1)=class'ROTankShellExplosionDamage'         // HE Splash
-    HarmfulDamageTypes(2)=class'DH_SatchelDamType'                  // Satchel
-    HarmfulDamageTypes(3)=class'DHMortarDamageType'                 // Mortar
-    HarmfulDamageTypes(4)=class'DHRocketImpactDamage'               // Direct AT weapon hits
-    HarmfulDamageTypes(5)=class'ROTankShellImpactDamage'            // AP and HE direct hits
-
-    DamageTypeScales(0)=(DamageType=class'DHArtilleryDamageType',Scale=1.5)
-    DamageTypeScales(1)=(DamageType=class'ROTankShellExplosionDamage',Scale=0.6)
-    DamageTypeScales(2)=(DamageType=class'DH_SatchelDamType',Scale=1.4)
-    DamageTypeScales(3)=(DamageType=class'DHMortarDamageType',Scale=0.5)
-    DamageTypeScales(4)=(DamageType=class'DHRocketImpactDamage',Scale=0.8)
-    DamageTypeScales(5)=(DamageType=class'ROTankShellImpactDamage',Scale=0.4)
+    DamageTypeScales(0)=(DamageType=class'DHArtilleryDamageType',Scale=1.5)         // Artillery
+    DamageTypeScales(1)=(DamageType=class'ROTankShellExplosionDamage',Scale=0.5)    // HE Splash
+    DamageTypeScales(2)=(DamageType=class'DHShellHEImpactDamageType',Scale=0.8)     // HE Impact
+    DamageTypeScales(3)=(DamageType=class'ROTankShellImpactDamage',Scale=0.4)       // AP Impact
+    DamageTypeScales(4)=(DamageType=class'DHRocketImpactDamage',Scale=0.8)          // AT Rocket Impact
+    DamageTypeScales(5)=(DamageType=class'DH_SatchelDamType',Scale=1.4)             // Satchel/Grenades
+    DamageTypeScales(6)=(DamageType=class'DHMortarDamageType',Scale=0.5)            // Mortar
 }
 

@@ -13,7 +13,7 @@ defaultproperties
     bHasTreads=false
     bSpecialTankTurning=false
     VehicleMass=5.0
-    ReinforcementCost=6
+    ReinforcementCost=3
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_ext'
@@ -80,7 +80,6 @@ defaultproperties
     Health=300
     HealthMax=300.0
     EngineHealth=100
-    HeavyEngineDamageThreshold=0.25
     VehHitpoints(0)=(PointOffset=(X=-150.0,Z=52.0)) // engine
     VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=30.0,Y=-30.0,Z=52.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
     DamagedEffectScale=0.8

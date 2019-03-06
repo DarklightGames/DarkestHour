@@ -43,11 +43,6 @@ function OnTeamIndexChanged()
     }
 }
 
-simulated function string GetMapStyleName()
-{
-    return "DHPlatoonHQButtonStyle";
-}
-
 function OnSpawnKill(Pawn VictimPawn, Controller KillerController)
 {
     SpawnKillPenaltyCounter += SpawnKillPenalty;
@@ -108,6 +103,8 @@ function Timer()
 
 defaultproperties
 {
+    SpawnPointStyle="DHPlatoonHQButtonStyle"
+
     SpawnRadius=60.0
     bCombatSpawn=true
     EstablishmentCounterThreshold=60
@@ -120,7 +117,7 @@ defaultproperties
     EncroachmentEnemyCountMin=3
     EncroachmentPenaltyForgivenessPerSecond=10
 
-    BaseSpawnTimePenalty=10
+    BaseSpawnTimePenalty=15
 
     CaptureRadiusInMeters=5
     EnemiesNeededToDeconstruct=2

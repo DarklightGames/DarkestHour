@@ -43,10 +43,17 @@ var DHPlayer InstigatorController;
 // Metrics
 var DHMetricsRallyPoint MetricsObject;
 
+// Objective
+var ROObjective Objective;
+var bool bIsInActiveObjective;
+var bool bIsExposed;
+var int InActiveObjectivePenaltySeconds;
+var int IsExposedPenaltySeconds;
+
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
-        SquadIndex, RallyPointIndex, SpawnsRemaining;
+        SquadIndex, RallyPointIndex, SpawnsRemaining, bIsInActiveObjective, bIsExposed;
 }
 
 function Reset()
@@ -57,6 +64,8 @@ function Reset()
 
 function PostBeginPlay()
 {
+    local int i;
+
     super.PostBeginPlay();
 
     if (Role == ROLE_Authority)
@@ -71,6 +80,21 @@ function PostBeginPlay()
         }
 
         PlaySound(CreationSound, SLOT_None, 4.0,, 60.0,, true);
+
+        if (GRI != none)
+        {
+            for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
+            {
+                if (GRI.DHObjectives[i] != none && GRI.DHObjectives[i].WithinArea(self))
+                {
+                    // We'll make a bold assumption that it's not really possible
+                    // to be in multiple objectives at once and just stop at one.
+                    Objective = GRI.DHObjectives[i];
+
+                    break;
+                }
+            }
+        }
     }
 }
 
@@ -165,6 +189,9 @@ function Timer()
 
         Destroy();
     }
+
+    // Update the "in active objective" status.
+    bIsInActiveObjective = Objective != none && Objective.IsActive();
 }
 
 state Active
@@ -181,6 +208,8 @@ state Active
         {
             MetricsObject.IsEstablished = true;
         }
+
+        OnUpdated();
     }
 }
 
@@ -205,6 +234,21 @@ function SetIsActive(bool bIsActive)
     {
         SRI.OnSquadRallyPointActivated(self);
     }
+}
+
+function OnUpdated()
+{
+    UpdateExposedStatus();
+
+    if (SRI != none)
+    {
+        SRI.OnSquadRallyPointUpdated(self);
+    }
+}
+
+function UpdateExposedStatus()
+{
+    bIsExposed = GRI != none && GRI.IsInDangerZone(Location.X, Location.Y, GetTeamIndex());
 }
 
 simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck)
@@ -277,11 +321,6 @@ function OnSpawnKill(Pawn VictimPawn, Controller KillerController)
 
         Destroy();
     }
-}
-
-simulated function string GetMapStyleName()
-{
-    return "DHRallyPointButtonStyle";
 }
 
 function UpdateAppearance()
@@ -376,6 +415,16 @@ simulated function int GetSpawnTimePenalty()
         SpawnTimePenalty += EncroachmentSpawnTimePenalty;
     }
 
+    if (bIsInActiveObjective)
+    {
+        SpawnTimePenalty += InActiveObjectivePenaltySeconds;
+    }
+
+    if (bIsExposed)
+    {
+        SpawnTimePenalty += IsExposedPenaltySeconds;
+    }
+
     return SpawnTimePenalty;
 }
 
@@ -442,6 +491,11 @@ function AwardScoreOnEstablishment()
 
 function Destroyed()
 {
+    if (SRI != none)
+    {
+        SRI.OnSquadRallyPointDestroyed(self);
+    }
+
     super.Destroyed();
 
     if (MetricsObject != none)
@@ -452,6 +506,8 @@ function Destroyed()
 
 defaultproperties
 {
+    SpawnPointStyle="DHRallyPointButtonStyle"
+
     StaticMesh=StaticMesh'DH_Construction_stc.Backpacks.USA_backpack'
     DrawType=DT_StaticMesh
     TeamIndex=-1
@@ -468,6 +524,9 @@ defaultproperties
     EncroachmentEnemyCountMin=3
     EncroachmentPenaltyForgivenessPerSecond=5
     bCanEncroachmentOverrun=true
+
+    InActiveObjectivePenaltySeconds=15
+    IsExposedPenaltySeconds=15
 
     OverrunRadiusInMeters=15
     EstablishmentRadiusInMeters=25
@@ -493,4 +552,3 @@ defaultproperties
     bBlockActors=true
     bBlockKarma=false
 }
-

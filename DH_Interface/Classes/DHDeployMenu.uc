@@ -672,23 +672,18 @@ function bool OnClick(GUIComponent Sender)
             Controller.OpenMenu(Controller.MapVotingMenu);
             break;
 
-        // Communication
-        case b_MenuOptions[4]:
-            Controller.OpenMenu("ROInterface.ROCommunicationPage");
-            break;
-
         // Server browser
-        case b_MenuOptions[5]:
+        case b_MenuOptions[4]:
             Controller.OpenMenu("DH_Interface.DHServerBrowser");
             break;
 
         // Settings
-        case b_MenuOptions[6]:
+        case b_MenuOptions[5]:
             Controller.OpenMenu("DH_Interface.DHSettingsPage");
             break;
 
         // Continue button
-        case b_MenuOptions[7]:
+        case b_MenuOptions[6]:
             if (PC != none &&
                 !PC.bHasReceivedSquadJoinRecommendationMessage &&
                 PC.SquadReplicationInfo != none &&
@@ -735,7 +730,7 @@ function bool OnClick(GUIComponent Sender)
                 // Player is prevented from changing team as he switched recently
                 if (PC.NextChangeTeamTime >= GRI.ElapsedTime)
                 {
-                    ConfirmMessage = Repl(default.CantChangeTeamYetText, "{s}", PC.NextChangeTeamTime - GRI.ElapsedTime);
+                    ConfirmMessage = Repl(default.CantChangeTeamYetText, "{s}", class'TimeSpan'.static.ToString(PC.NextChangeTeamTime - GRI.ElapsedTime));
                     Controller.ShowQuestionDialog(ConfirmMessage, QBTN_OK, QBTN_OK);
                 }
                 // Player can change team, but give him a screen prompt & ask him to confirm the change
@@ -844,7 +839,7 @@ function Apply()
     local RORoleInfo RI;
     local int        RoleIndex;
 
-    if (b_MenuOptions[7].MenuState == MSAT_Disabled)
+    if (b_MenuOptions[6].MenuState == MSAT_Disabled)
     {
         return;
     }
@@ -954,12 +949,12 @@ function UpdateButtons()
 
     if (bContinueEnabled)
     {
-        b_MenuOptions[7].EnableMe();
+        b_MenuOptions[6].EnableMe();
         i_Arrows.Image = Material'DH_GUI_Tex.DeployMenu.arrow_blurry';
     }
     else
     {
-        b_MenuOptions[7].DisableMe();
+        b_MenuOptions[6].DisableMe();
         i_Arrows.Image = Material'DH_GUI_Tex.DeployMenu.arrow_disabled';
     }
 }
@@ -1094,10 +1089,10 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
     local int    Result;
     local string ErrorMessage;
 
+    Result = int(MsgLife);
+
     if (Msg ~= "NOTIFY_GUI_ROLE_SELECTION_PAGE")
     {
-        Result = int(MsgLife);
-
         switch (Result)
         {
             // Spectator
@@ -1127,6 +1122,11 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
                 Controller.ShowQuestionDialog(ErrorMessage, QBTN_OK, QBTN_OK);
                 break;
         }
+    }
+    else if (Msg ~= "SQUAD_MERGE_REQUEST_RESULT")
+    {
+        ErrorMessage = class'DHSquadReplicationInfo'.static.GetSquadMergeRequestResultString(Result);
+        Controller.ShowQuestionDialog(ErrorMessage, QBTN_OK, QBTN_OK);
     }
 
     SetButtonsEnabled(true);
@@ -1741,7 +1741,7 @@ defaultproperties
     DeployNowText="Press Continue to deploy now!"
     ChangeTeamConfirmText="Are you sure you want to change teams? (you will not be able to change back for {s} seconds)"
     FreeChangeTeamConfirmText="Are you sure you want to change teams?"
-    CantChangeTeamYetText="You must wait {s} seconds before you can change teams"
+    CantChangeTeamYetText="You must wait {s} before you can change teams"
     ReservedString="Reserved"
     VehicleUnavailableString="The vehicle you had selected is no longer available."
     LockText="Lock"
@@ -2167,16 +2167,6 @@ defaultproperties
     End Object
     b_MenuOptions(3)=MapVoteButtonObject
 
-    Begin Object Class=DHGUIButton Name=CommunicationButtonObject
-        Caption="Communication"
-        CaptionAlign=TXTA_Center
-        StyleName="DHSmallTextButtonStyle"
-        WinHeight=1.0
-        WinTop=0.0
-        OnClick=OnClick
-    End Object
-    b_MenuOptions(4)=CommunicationButtonObject
-
     Begin Object Class=DHGUIButton Name=ServersButtonObject
         Caption="Servers"
         CaptionAlign=TXTA_Center
@@ -2185,7 +2175,7 @@ defaultproperties
         WinTop=0.0
         OnClick=OnClick
     End Object
-    b_MenuOptions(5)=ServersButtonObject
+    b_MenuOptions(4)=ServersButtonObject
 
     Begin Object Class=DHGUIButton Name=SettingsButtonObject
         Caption="Settings"
@@ -2195,7 +2185,7 @@ defaultproperties
         WinTop=0.0
         OnClick=OnClick
     End Object
-    b_MenuOptions(6)=SettingsButtonObject
+    b_MenuOptions(5)=SettingsButtonObject
 
     Begin Object Class=DHGUIButton Name=ContinueButtonObject
         Caption="Continue"
@@ -2205,7 +2195,7 @@ defaultproperties
         WinTop=0.0
         OnClick=OnClick
     End Object
-    b_MenuOptions(7)=ContinueButtonObject
+    b_MenuOptions(6)=ContinueButtonObject
 
     Begin Object Class=GUIImage Name=ArrowImageObject
         Image=Material'DH_GUI_tex.DeployMenu.arrow_blurry'

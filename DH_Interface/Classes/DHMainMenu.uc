@@ -7,7 +7,7 @@ class DHMainMenu extends UT2K4GUIPage;
 
 var()   config string           MenuSong;
 
-var automated       FloatingImage           i_background, i_Overlay, i_Announcement;
+var automated       FloatingImage           i_Overlay, i_Announcement;
 var automated       GUIButton               b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Host, b_Quit, b_LearnToPlay;
 var automated       GUISectionBackground    sb_MainMenu, sb_HelpMenu, sb_ConfigFixMenu, sb_ShowVersion, sb_Social;
 var automated       GUIButton               b_Credits, b_Manual, b_Demos, b_Website, b_Back, b_MOTDTitle, b_Facebook, b_GitHub, b_SteamCommunity, b_Patreon, b_Discord;
@@ -350,6 +350,7 @@ event Opened(GUIComponent Sender)
         // control bindings for the new commands added in 8.0;
         if (SavedVersionObject == none || SavedVersionObject.Major < 8)
         {
+            Log("Configuration file is older than v8.0.0, attempting to assign new controls created in version v8.0.0");
             SetKeyBindIfAvailable("I", "SquadTalk");
             SetKeyBindIfAvailable("Insert", "Speak Squad");
             SetKeyBindIfAvailable("CapsLock", "ToggleRadialMenu");
@@ -358,15 +359,37 @@ event Opened(GUIComponent Sender)
             SetKeyBindIfAvailable("Equals", "IncreaseSmokeLauncherSetting", "GrowHUD");
         }
 
-        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.0.9")) >= 0)
+        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.0.9")) < 0)
         {
+            Log("Configuration file is older than v8.0.9, attempting to assign new controls created in version v8.0.9");
             SetKeyBindIfAvailable("Slash", "SquadJoinAuto");
             SetKeyBindIfAvailable("P", "SquadMenu");
         }
 
-        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.2.6")) >= 0)
+        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.2.6")) < 0)
         {
+            Log("Configuration file is older than v8.2.6, attempting to assign new controls created in version v8.2.6");
             SetKeyBindIfAvailable("Enter", "StartTyping", "InventoryActivate");
+        }
+
+        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.4.0")) < 0)
+        {
+            Log("Configuration file is older than v8.4.0, attempting to assign new controls created in version v8.4.0");
+            SetKeyBindIfAvailable("J", "PlaceRallyPoint");
+        }
+
+        if (SavedVersionObject == none || SavedVersionObject.Compare(class'UVersion'.static.FromString("v8.4.3")) < 0)
+        {
+            Log("Configuration file is older than v8.4.3, attempting to assign a min netspeed value");
+
+            if (PlayerOwner().Player != none)
+            {
+                if (PlayerOwner().Player.ConfiguredInternetSpeed < 10000)
+                {
+                    PlayerOwner().Player.ConfiguredInternetSpeed = 10000;
+                    PlayerOwner().ConsoleCommand("NetSpeed" @ 10000);
+                }
+            }
         }
 
         SavedVersion = class'DarkestHourGame'.default.Version.ToString();
@@ -535,24 +558,15 @@ function GetQuickPlayIp()
 
 defaultproperties
 {
+    // Render Entry.rom instead of background
+    bRenderWorld=true
+
     // IP variables
     QuickPlayString="Quick Join"
     JoinTestServerString="Join Test Server"
     ConnectingString="Joining"
 
     // Menu variables
-    Begin Object Class=FloatingImage Name=FloatingBackground
-        Image=Material'DH_GUI_Tex.MainMenu.BackGround'
-        DropShadow=none
-        ImageStyle=ISTY_Scaled
-        WinTop=0.0
-        WinLeft=0.0
-        WinWidth=1.0
-        WinHeight=1.0
-        RenderWeight=0.000003
-    End Object
-    i_Background=FloatingImage'DH_Interface.DHMainMenu.FloatingBackground'
-
     Begin Object Class=FloatingImage Name=OverlayBackground
         Image=Texture'Engine.BlackTexture'
         DropShadow=none
@@ -587,10 +601,14 @@ defaultproperties
     i_Announcement=FloatingImage'DH_Interface.DHMainMenu.AnnouncementImage'
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection1
-        WinTop=0.25
-        WinLeft=0.025
+        Image=Texture'DHEngine_Tex.Transparency.Trans_80'
+        TopPadding=0.2
+        LeftPadding=0.1
+        BottomPadding=0.2
+        WinTop=0.0
+        WinLeft=0.0
         WinWidth=0.2
-        WinHeight=0.75
+        WinHeight=1.0
         OnPreDraw=sbSection1.InternalPreDraw
     End Object
     sb_MainMenu=ROGUIContainerNoSkinAlt'DH_Interface.DHMainMenu.sbSection1'
@@ -855,6 +873,7 @@ defaultproperties
     tb_MOTDContent=DHGUIScrollTextBox'DH_Interface.DHMainMenu.MyMOTDText'
 
     Begin Object Class=ROGUIProportionalContainerNoSkin Name=sbSection4
+        Image=Texture'DHEngine_Tex.Transparency.Trans_70'
         WinTop=0.25
         WinLeft=0.55
         WinWidth=0.4

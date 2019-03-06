@@ -11,7 +11,7 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="Opel Blitz"
     VehicleMass=3.0
-    ReinforcementCost=3
+    ReinforcementCost=2
     MaxDesireability=0.12
 
     // Hull mesh
@@ -57,8 +57,8 @@ defaultproperties
     // Damage
     Health=2000
     HealthMax=2000.0
-    DamagedEffectHealthFireFactor=0.75
-    EngineHealth=30
+    DamagedEffectHealthFireFactor=0.9
+    EngineHealth=20
     VehHitpoints(0)=(PointRadius=32.0,PointScale=1.0,PointBone="Engine",PointOffset=(X=16.0,Y=0.0,Z=0.0),bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
     VehHitpoints(1)=(PointRadius=24.0,PointScale=1.0,PointBone="Wheel_FR",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     VehHitpoints(2)=(PointRadius=24.0,PointScale=1.0,PointBone="Wheel_FL",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
@@ -67,7 +67,6 @@ defaultproperties
     EngineDamageFromGrenadeModifier=0.15
     DirectHEImpactDamageMult=9.0
     ImpactWorldDamageMult=1.0
-    HeavyEngineDamageThreshold=0.33
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=115.0,Y=0.0,Z=70.0)
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Trucks.OpelBlitz_dest'

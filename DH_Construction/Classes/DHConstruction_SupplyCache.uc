@@ -114,8 +114,8 @@ defaultproperties
     MenuName="Supply Cache"
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.supply_cache'
     MenuDescription="Stores and generates supplies over time."
-    SupplyCost=250
-    InitialSupplyCount=250
+    SupplyCost=500
+    InitialSupplyCount=500
     StaticMesh=StaticMesh'DH_Military_stc.Ammo.cratepile1'
     DrawType=DT_StaticMesh
     DuplicateFriendlyDistanceInMeters=300

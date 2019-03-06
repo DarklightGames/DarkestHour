@@ -34,6 +34,7 @@ enum EConstructionErrorType
     ERROR_TooCloseToObjective,      // Too close to an objective
     ERROR_TooCloseToEnemyObjective, // Too close to enemy controlled objective
     ERROR_MissingRequirement,       // Not close enough to a required friendly construciton
+    ERROR_InDangerZone,             // Cannot place this construction inside enemy territory.
     ERROR_Custom,                   // Custom error type (provide an error message in OptionalString)
     ERROR_Other
 };
@@ -100,6 +101,7 @@ var     float   ObjectiveDistanceMinMeters;             // The minimum distance,
 var     float   EnemyObjectiveDistanceMinMeters;        // The minimum distance, in meters, that this construction must be placed away from enemy objectives.
 var     bool    bShouldSwitchToLastWeaponOnPlacement;
 var     bool    bCanBePlacedWithControlPoints;
+var     bool    bCanBePlacedInDangerZone;
 
 struct ProximityRequirement
 {
@@ -1155,6 +1157,7 @@ defaultproperties
     bShouldAlignToGround=true
     ArcLengthTraceIntervalInMeters=1.0
     bShouldSwitchToLastWeaponOnPlacement=true
+    bCanBePlacedInDangerZone=true
 
     // Stagnation
     bCanDieOfStagnation=true
@@ -1172,21 +1175,23 @@ defaultproperties
     ProgressMax=4
 
     // Damage
-    HarmfulDamageTypes(0)=class'DHArtilleryDamageType'
-    HarmfulDamageTypes(1)=class'ROTankShellExplosionDamage'
-    HarmfulDamageTypes(2)=class'DHThrowableExplosiveDamageType'
-    HarmfulDamageTypes(3)=class'DHMortarDamageType'
     TatteredHealthThreshold=-1
     MinDamagetoHurt=100
-
-    SquadMemberCountMinimum=2
-    bCanBeMantled=true
+    HarmfulDamageTypes(0)=class'DHArtilleryDamageType'              // Artillery
+    HarmfulDamageTypes(1)=class'ROTankShellExplosionDamage'         // HE Splash
+    HarmfulDamageTypes(2)=class'DHShellHEImpactDamageType'          // HE Impact
+    HarmfulDamageTypes(3)=class'DHShellAPImpactDamageType'          // AP Impact
+    HarmfulDamageTypes(4)=class'DHRocketImpactDamage'               // AT Rocket Impact
+    HarmfulDamageTypes(5)=class'DHThrowableExplosiveDamageType'     // Satchel/Grenades
+    HarmfulDamageTypes(6)=class'DHMortarDamageType'                 // Mortar
 
     // Impact
     bCanTakeImpactDamage=false
     ImpactDamageType=class'Crushed'
     ImpactDamageModifier=0.1
 
+    SquadMemberCountMinimum=2
+    bCanBeMantled=true
     bCanBeTornDownByFriendlies=true
     FriendlyFireDamageScale=1.0
     bShouldAutoConstruct=true

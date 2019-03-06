@@ -68,21 +68,8 @@ simulated function PostBeginPlay()
         return; // net client doesn't need to do anything else - this function would otherwise be non-simulated & execute on server only
     }
 
-    // Find associated location hint actors & build arrays of actor references
-    foreach AllActors(class'DHLocationHint', LH)
-    {
-        if (LH.Tag != '')
-        {
-            if (LH.Tag == InfantryLocationHintTag)
-            {
-                InfantryLocationHints[InfantryLocationHints.Length] = LH;
-            }
-            else if (LH.Tag == VehicleLocationHintTag)
-            {
-                VehicleLocationHints[VehicleLocationHints.Length] = LH;
-            }
-        }
-    }
+    // Create location hint arrays
+    BuildLocationHintsArrays();
 
     // Check whether an infantry spawn point should also allow players to spawn into infantry vehicles, as well as on foot (this is where server flags it)
     if (Type == ESPT_Infantry && VehicleLocationHints.Length > 0)
@@ -140,6 +127,28 @@ function Reset()
     super.Reset();
 
     bIsLocked = bIsInitiallyLocked;
+}
+
+simulated function BuildLocationHintsArrays()
+{
+    local DHLocationHint LH;
+
+    // Find associated location hint actors & build arrays of actor references.
+    foreach AllActors(class'DHLocationHint', LH)
+    {
+        if (LH.Tag != '')
+        {
+            if (LH.Tag == InfantryLocationHintTag)
+            {
+                InfantryLocationHints[InfantryLocationHints.Length] = LH;
+            }
+            else if (LH.Tag == VehicleLocationHintTag)
+            {
+                VehicleLocationHints[VehicleLocationHints.Length] = LH;
+            }
+        }
+    }
+
 }
 
 // Modified to activate/deactivate any linked mine volume, resupply volume or vehicle factories, that get activated/deactivated with this spawn point

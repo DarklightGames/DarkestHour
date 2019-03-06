@@ -29,7 +29,7 @@ enum VehicleReservationError
     ERROR_PoolInactive,
     ERROR_PoolMaxActive,
     ERROR_NoReservations,
-    ERROR_NoSquad
+    ERROR_NoLicense
 };
 
 struct ArtilleryTarget
@@ -148,7 +148,11 @@ var bool                bAreConstructionsEnabled;
 var bool                bAllChatEnabled;
 
 var byte                ServerTickHealth;
-var byte                ServerNetHealth;
+var int                 ServerNetHealth;
+
+var bool                bIsDangerZoneEnabled;
+var float               DangerZoneIntensityScale;
+var float               OldDangerZoneIntensityScale;
 
 // Map markers
 struct MapMarker
@@ -227,7 +231,9 @@ replication
         DHArtillery,
         TeamMunitionPercentages,
         AlliesVictoryMusicIndex,
-        AxisVictoryMusicIndex;
+        AxisVictoryMusicIndex,
+        bIsDangerZoneEnabled,
+        DangerZoneIntensityScale;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
@@ -282,7 +288,7 @@ simulated function PostBeginPlay()
 
         if (LI != none)
         {
-            bAreConstructionsEnabled = LI.bAreConstructionsEnabled;
+            bAreConstructionsEnabled = LI.GameTypeClass.default.bAreConstructionsEnabled;
         }
 
         // Add usable map markers to the class list to be replicated!
@@ -341,6 +347,170 @@ simulated function PostNetBeginPlay()
             }
         }
     }
+}
+
+function bool ObjectiveTreeNodeDepthComparatorFunction(int LHS, int RHS)
+{
+    return (LHS >> 16) > (RHS >> 16);
+}
+
+// This function returns all objectives (via array of indices) which meets objective spawn criteria
+function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
+{
+    local int i, j;
+    local array<DHObjectiveTreeNode> Roots;
+    local DHObjective Obj;
+    local array<int> ObjectiveIndices;
+    local UComparator_int Comparator;
+    local int Depth;
+
+    for (i = 0; i < arraycount(DHObjectives); ++i)
+    {
+        Obj = DHObjectives[i];
+
+        // If obj is not none && inactive (only inactive objectives can have objective spawns) && objective secured by our team
+        if (Obj == none || Obj.IsActive() || int(Obj.ObjState) != Team)
+        {
+            continue;
+        }
+
+        // Loop through Axis required objective to find if linked to active obj
+        for (j = 0; j < Obj.AxisRequiredObjForCapture.Length; ++j)
+        {
+            if (DHObjectives[Obj.AxisRequiredObjForCapture[j]].IsActive())
+            {
+                // We have a root objective, lets check if it has hints defined
+                Roots[Roots.Length] = GetObjectiveTree(Team, Obj, ObjectiveIndices);
+            }
+        }
+        // Loop through Allies required objective to find if linked to active obj
+        for (j = 0; j < Obj.AlliesRequiredObjForCapture.Length; ++j)
+        {
+            if (DHObjectives[Obj.AlliesRequiredObjForCapture[j]].IsActive())
+            {
+                // We have a root objective, lets find the nearest objective with hints
+                Roots[Roots.Length] = GetObjectiveTree(Team, Obj, ObjectiveIndices);
+            }
+        }
+    }
+
+    // We have the root objectives, lets tranverse the trees to find the nearest objective with spawnpoint hints defined
+    for (i = 0; i < Roots.Length; ++i)
+    {
+        TraverseTreeNode(Team, Roots[i], Roots[i], Indices);
+    }
+
+    // Sort the indices by depth.
+    Comparator = new class'UComparator_int';
+    Comparator.CompareFunction = ObjectiveTreeNodeDepthComparatorFunction;
+    class'USort'.static.ISort(Indices, Comparator);
+
+    // Eliminate all objective indices that do not match the lowest depth.
+    if (Indices.Length > 0)
+    {
+        Depth = Indices[0] >> 16;
+    }
+
+    for (i = Indices.Length - 1; i >= 0; --i)
+    {
+        if ((Indices[i] >> 16) != Depth)
+        {
+            Indices.Remove(i, 1);
+        }
+    }
+
+    for (i = 0; i < Indices.Length; ++i)
+    {
+        Indices[i] = Indices[i] & 0xFFFF;
+    }
+}
+
+function TraverseTreeNode(int Team, DHObjectiveTreeNode Root, DHObjectiveTreeNode Node, out array<int> ObjectiveIndices, optional int Depth)
+{
+    local int i;
+    local bool bIsFarEnoughAway;
+    local bool bNodeHasHints;
+    local bool bAlreadyAdded;
+    local DH_LevelInfo LI;
+
+    if (Node == none)
+    {
+        return;
+    }
+
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (LI == none)
+    {
+        return;
+    }
+
+    bIsFarEnoughAway = VSize(Root.Objective.Location - Node.Objective.Location) > class'DHUnits'.static.MetersToUnreal(LI.ObjectiveSpawnDistanceThreshold);
+    bNodeHasHints = Node.Objective.SpawnPointHintTags[Team] != '';
+    bAlreadyAdded = class'UArray'.static.IIndexOf(ObjectiveIndices, Node.Objective.ObjNum) == -1;
+
+    if (bNodeHasHints && bIsFarEnoughAway && bAlreadyAdded)
+    {
+        ObjectiveIndices[ObjectiveIndices.Length] = (Depth << 16) | Node.Objective.ObjNum;
+        return;
+    }
+
+
+    for (i = 0; i < Node.Children.Length; ++i)
+    {
+        TraverseTreeNode(Team, Root, Node.Children[i], ObjectiveIndices, Depth + 1);
+    }
+}
+
+function DHObjectiveTreeNode GetObjectiveTree(int Team, DHObjective Objective, out array<int> ObjectiveIndices)
+{
+    local int i;
+    local DHObjectiveTreeNode Node;
+    local DHObjectiveTreeNode Child;
+
+    if (Objective == none || Objective.IsActive() || int(Objective.ObjState) != Team)
+    {
+        return none;
+    }
+
+    if (class'UArray'.static.IIndexOf(ObjectiveIndices, Objective.ObjNum) != -1)
+    {
+        return none;
+    }
+
+    ObjectiveIndices[ObjectiveIndices.Length] = Objective.ObjNum;
+
+    Node = new class'DHObjectiveTreeNode';
+    Node.Objective = Objective;
+
+    ObjectiveIndices[ObjectiveIndices.Length] = Objective.ObjNum;
+
+    if (Team == AXIS_TEAM_INDEX)
+    {
+        for (i = 0; i < Objective.AxisRequiredObjForCapture.Length; ++i)
+        {
+            Child = GetObjectiveTree(Team, DHObjectives[Objective.AxisRequiredObjForCapture[i]], ObjectiveIndices);
+
+            if (Child != none)
+            {
+                Node.Children[Node.Children.Length] = Child;
+            }
+        }
+    }
+    else if (Team == ALLIES_TEAM_INDEX)
+    {
+        for (i = 0; i < Objective.AlliesRequiredObjForCapture.Length; ++i)
+        {
+            Child = GetObjectiveTree(Team, DHObjectives[Objective.AlliesRequiredObjForCapture[i]], ObjectiveIndices);
+
+            if (Child != none)
+            {
+                Node.Children[Node.Children.Length] = Child;
+            }
+        }
+    }
+
+    return Node;
 }
 
 function int AddConstructionClass(class<DHConstruction> ConstructionClass)
@@ -594,9 +764,7 @@ simulated function bool CanSpawnWithParameters(int SpawnPointIndex, int TeamInde
     {
         VehicleClass = class<DHVehicle>(GetVehiclePoolVehicleClass(VehiclePoolIndex));
 
-        if (VehicleClass == none ||
-            VehicleClass.default.bMustBeInSquadToSpawn && SquadIndex == -1 ||
-            !CanSpawnVehicle(VehiclePoolIndex, bSkipTimeCheck))
+        if (VehicleClass == none || !CanSpawnVehicle(VehiclePoolIndex, bSkipTimeCheck))
         {
             return false;
         }
@@ -1120,9 +1288,9 @@ simulated function VehicleReservationError GetVehicleReservationError(DHPlayer P
         return ERROR_NoReservations;
     }
 
-    if (VC.default.bMustBeInSquadToSpawn && !PC.IsInSquad())
+    if (VC.default.bRequiresDriverLicense && !DHPlayerReplicationInfo(PC.PlayerReplicationInfo).IsPlayerLicensedToDrive(PC))
     {
-        return ERROR_NoSquad;
+        return ERROR_NoLicense;
     }
 
     if (!IgnoresMaxTeamVehiclesFlags(VehiclePoolIndex) && GetReservableTankCount(TeamIndex) <= 0)
@@ -1544,10 +1712,6 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
     {
         return ERROR_Unavailable;
     }
-    else if (ATI.UsedCount >= ATI.Limit)
-    {
-        return ERROR_Exhausted;
-    }
     else if (ATI.ArtilleryActor != none)
     {
         if (ATI.ArtilleryActor.bCanBeCancelled && PC == ATI.ArtilleryActor.Requester)
@@ -1559,12 +1723,52 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
             return ERROR_Ongoing;
         }
     }
+    else if (ATI.UsedCount >= ATI.Limit)
+    {
+        return ERROR_Exhausted;
+    }
     else if (ElapsedTime < ATI.NextConfirmElapsedTime)
     {
         return ERROR_Cooldown;
     }
 
     return ERROR_None;
+}
+
+simulated function float GetDangerZoneIntensity(float PointerX, float PointerY, byte TeamIndex)
+{
+    return class'DHDangerZone'.static.GetIntensity(self, PointerX, PointerY, TeamIndex);
+}
+
+simulated function bool IsInDangerZone(float PointerX, float PointerY, byte TeamIndex)
+{
+    return class'DHDangerZone'.static.IsIn(self, PointerX, PointerY, TeamIndex);
+}
+
+simulated function PostNetReceive()
+{
+    local DHPlayer PC;
+    local DHHud Hud;
+
+    super.PostNetReceive();
+
+    // Notify HUD about changes to Danger Zone
+    if (OldDangerZoneIntensityScale != DangerZoneIntensityScale)
+    {
+        PC = DHPlayer(Level.GetLocalPlayerController());
+
+        if (PC != none)
+        {
+            Hud = DHHud(PC.myHUD);
+
+            if (Hud != none)
+            {
+                Hud.DangerZoneOverlayUpdateRequest();
+            }
+        }
+
+        OldDangerZoneIntensityScale = DangerZoneIntensityScale;
+    }
 }
 
 defaultproperties

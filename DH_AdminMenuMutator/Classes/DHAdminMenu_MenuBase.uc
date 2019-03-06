@@ -390,16 +390,7 @@ exec function AdminLoginToggle(optional bool bSilentLogin)
 // Note bSilentAdmin won't work on a net client as bSilentAdmin isn't replicated (unlike bAdmin), so client can't tell that player is logged in
 function bool IsLoggedInAsAdmin()
 {
-    local DHPlayer P;
-
-    P = DHPlayer(PC);
-
-    if (P == none)
-    {
-        return false;
-    }
-
-    return PC.PlayerReplicationInfo.bAdmin || class'DHAccessControl'.static.IsDeveloper(P.ROIDHash);
+    return PC.PlayerReplicationInfo.bAdmin;
 }
 
 function ErrorMessageToSelf(byte MessageNumber, optional string InsertedName)
@@ -414,6 +405,15 @@ function ErrorMessageToSelf(byte MessageNumber, optional string InsertedName)
 // Includes info to tell the Mutate function whether or not to log admin out afterwards & also displays a screen prompt/confirmation message to the admin
 function BuildMutateCommand(string CommandString, optional int MessageNumber)
 {
+    local DHConsole Console;
+
+    Console = DHConsole(ViewportOwner.Console);
+
+    if (Console == none)
+    {
+        return;
+    }
+
     if (CommandString == "")
     {
         AdminLogoutIfNecessary();
@@ -424,15 +424,17 @@ function BuildMutateCommand(string CommandString, optional int MessageNumber)
     if (bMenuDidAdminLogin) // if the menu automatically logged in the admin this flag will have been set to true
     {
         bMenuDidAdminLogin = false; // re-set for next time
-        ViewportOwner.Console.TypedStr = "Mutate logout" @ CommandString; // adds 1st argument for Mutate function that flags to log the admin out afterwards
+        Console.SayType = "";
+        Console.TypedStr = "Mutate logout" @ CommandString; // adds 1st argument for Mutate function that flags to log the admin out afterwards
     }
     else
     {
-        ViewportOwner.Console.TypedStr = "Mutate nologout" @ CommandString; // adds 1st argument for Mutate function that flags NOT to log the admin out afterwards
+        Console.SayType = "";
+        Console.TypedStr = "Mutate nologout" @ CommandString; // adds 1st argument for Mutate function that flags NOT to log the admin out afterwards
     }
 
-    ViewportOwner.Console.TypedStrPos = Len(ViewportOwner.Console.TypedStr);
-    ViewportOwner.Console.TypingOpen();
+    Console.TypedStrPos = Len(ViewportOwner.Console.TypedStr);
+    Console.TypingOpen();
 
     if (MessageNumber > 0) // display the relevant prompt/confirmation message across the admin's screen
     {

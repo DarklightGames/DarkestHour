@@ -22,7 +22,7 @@ defaultproperties
 {
     StartRotationMin=(Yaw=16384)
     StartRotationMax=(Yaw=16384)
-    SupplyCost=750
+    SupplyCost=850
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.at_crate'
 }
 

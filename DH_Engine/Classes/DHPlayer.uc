@@ -29,8 +29,8 @@ var     array<class<DHMapMarker> >           PersonalMapMarkerClasses;
 var     private array<PersonalMapMarker>    PersonalMapMarkers;
 
 var     input float             aBaseFire;
-var     bool                    bUsingController;
-var     bool                    bIsGagged;
+var     bool                    bToggleRun;          // user activated toggle run
+var     bool                    bIsGagged;           // player is gagged from chatting
 
 var     EMapMode                DeployMenuStartMode; // what the deploy menu is supposed to start out on
 var     DH_LevelInfo            ClientLevelInfo;
@@ -103,8 +103,10 @@ var     DHSquadReplicationInfo  SquadReplicationInfo;
 var     bool                    bIgnoreSquadInvitations;
 var     bool                    bIgnoreSquadLeaderVolunteerPrompts;
 var     bool                    bIgnoreSquadLeaderAssistantVolunteerPrompts;
+var     bool                    bIgnoreSquadMergeRequestPrompts;
 var     int                     SquadMemberLocations[12];   // SQUAD_SIZE_MAX
 var     int                     SquadLeaderLocations[8];    // TEAM_SQUADS_MAX
+var     float                   NextSquadMergeRequestTimeSeconds;  // The time (relative to TimeSeconds) that this player can send another squad merge request.
 
 var     DHCommandInteraction    CommandInteraction;
 
@@ -115,6 +117,7 @@ var     FileLog                 ClientLogFile;
 
 var     bool                    bHasReceivedSquadJoinRecommendationMessage; // True when we have displayed the "you should probably join a squad" message.
 
+// Squad Things
 struct SquadSignal
 {
     var class<DHSquadSignal> SignalClass;
@@ -123,6 +126,11 @@ struct SquadSignal
 };
 
 var     SquadSignal             SquadSignals[SQUAD_SIGNALS_MAX];
+
+// Squad Leader HUD Info
+var     DHSquadReplicationInfo.RallyPointPlacementResult    RallyPointPlacementResult;
+var     int                                                 NextSquadRallyPointTime;
+var     byte                                                SquadRallyPointCount;
 
 // This is used to skip ResetInput calls in the GUIController.
 // Useful when you want to show a menu over top of the game (e.g. situation map)
@@ -151,7 +159,8 @@ replication
         NextSpawnTime, NextVehicleSpawnTime, NextChangeTeamTime, LastKilledTime,
         DHPrimaryWeapon, DHSecondaryWeapon, bSpectateAllowViewPoints,
         SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled,
-        SquadLeaderLocations, bIsGagged;
+        SquadLeaderLocations, bIsGagged,
+        NextSquadRallyPointTime, SquadRallyPointCount;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -163,9 +172,10 @@ replication
         ServerSquadJoin, ServerSquadJoinAuto, ServerSquadLeave,
         ServerSquadInvite, ServerSquadPromote, ServerSquadKick, ServerSquadBan,
         ServerSquadMakeAssistant,
-        ServerSquadSay, ServerSquadLock, ServerSquadSignal,
+        ServerSquadSay, ServerCommandSay, ServerSquadLock, ServerSquadSignal,
         ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
         ServerSetPatronStatus, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
+        ServerSendSquadMergeRequest, ServerAcceptSquadMergeRequest, ServerDenySquadMergeRequest,
         ServerSquadVolunteerToAssist,
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons; // these ones in debug mode only
@@ -177,7 +187,11 @@ replication
         ClientConsoleCommand, ClientCopyToClipboard, ClientSaveROIDHash,
         ClientSquadInvite, ClientSquadSignal, ClientSquadLeaderVolunteerPrompt, ClientTeamSurrenderPrompt,
         ClientTeamKillPrompt, ClientOpenLogFile, ClientLogToFile, ClientCloseLogFile,
-        ClientSquadAssistantVolunteerPrompt;
+        ClientSquadAssistantVolunteerPrompt,
+        ClientReceieveSquadMergeRequest, ClientSendSquadMergeRequestResult;
+
+    unreliable if (Role < ROLE_Authority)
+        VehicleVoiceMessage;
 }
 
 function ServerChangePlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2) { } // no longer used
@@ -212,9 +226,6 @@ simulated event PostBeginPlay()
         {
             break;
         }
-
-        // Set bUsingController based on the UseJoystick setting
-        bUsingController = bool(ConsoleCommand("get ini:Engine.Engine.ViewportManager UseJoystick"));
     }
 
     // This forces the player to choose a valid spectator mode instead of
@@ -305,7 +316,7 @@ simulated function PostNetReceive()
 {
     if (PendingWeaponLockSeconds > 0 && GameReplicationInfo != none)
     {
-        LockWeapons(PendingWeaponLockSeconds );
+        LockWeapons(PendingWeaponLockSeconds);
         PendingWeaponLockSeconds = 0;
     }
 
@@ -527,26 +538,6 @@ function rotator AdjustAim(FireProperties FiredAmmunition, vector ProjStart, int
     return Rotation;
 }
 
-// Developer Admin login
-exec function DevLogin()
-{
-    // If is a client and client checks his own ROID, then ask server for dev login
-    if (Level.NetMode != NM_DedicatedServer && class'DHAccessControl'.static.IsDeveloper(ROIDHash))
-    {
-        ServerAdminLogin("Dev");
-    }
-}
-
-// ConfiguredINI Server Admin login
-exec function BecomeAdmin()
-{
-    // If is a client and client checks his own ROID, then ask server for dev login
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        ServerAdminLogin("Cfg");
-    }
-}
-
 // Menu for the player's entire selection process
 exec function PlayerMenu(optional int Tab)
 {
@@ -561,6 +552,11 @@ exec function PlayerMenu(optional int Tab)
         DeployMenuStartMode = MODE_Map;
         ClientReplaceMenu("DH_Interface.DHDeployMenu");
     }
+}
+
+exec function PlaceRallyPoint()
+{
+    ServerSquadSpawnRallyPoint();
 }
 
 exec function SquadJoinAuto()
@@ -1276,7 +1272,7 @@ function ClientSetBehindView(bool B)
 // Modified to edit an if state in Timer()
 auto state PlayerWaiting
 {
-ignores SeePlayer, HearNoise, NotifyBump, TakeDamage, PhysicsVolumeChange, SwitchToBestWeapon;
+    ignores SeePlayer, HearNoise, NotifyBump, TakeDamage, PhysicsVolumeChange, SwitchToBestWeapon;
 
     // In the else if() statement, PRI != none was added so if the player isn't knowledgeable of their PRI yet it doesn't even open a menu
     // This actually works quite well because now players will actually see the server's MOTD text
@@ -1306,7 +1302,7 @@ ignores SeePlayer, HearNoise, NotifyBump, TakeDamage, PhysicsVolumeChange, Switc
 
 state PlayerWalking
 {
-ignores SeePlayer, HearNoise, Bump;
+    ignores SeePlayer, HearNoise, Bump;
 
     // Modified to allow behind view, if server has called this (restrictions on use of behind view are handled in ServerToggleBehindView)
     function ClientSetBehindView(bool B)
@@ -1428,7 +1424,20 @@ ignores SeePlayer, HearNoise, Bump;
 
         GetAxes(Pawn.Rotation, X, Y, Z);
 
-        // Update acceleration
+        // Handle toggle run
+        if (bToggleRun)
+        {
+            if (aForward == 6000.0 || aForward == -6000.0 || aStrafe != 0.0)
+            {
+                bToggleRun = false; // If any movement input (WASD), then cancel toggle run
+            }
+            else
+            {
+                aForward = 5999.9; // If toggle run, then make aForward as close as possible to 6000.0, but not
+            }
+        }
+
+        // Calculate acceleration (movement)
         NewAccel = aForward * X + aStrafe * Y;
         NewAccel.Z = 0.0;
 
@@ -1515,6 +1524,7 @@ ignores SeePlayer, HearNoise, Bump;
     function EndState()
     {
         GroundPitch = 0;
+        bToggleRun = false;
 
         if (Pawn != none)
         {
@@ -2347,6 +2357,11 @@ function ClientToggleDuck()
     ToggleDuck();
 }
 
+exec function ToggleRun()
+{
+    bToggleRun = !bToggleRun;
+}
+
 // Modified to network optimise by removing automatic call to replicated server function in a VehicleWeaponPawn
 // Instead we let WVP's clientside IncrementRange() check that it's a valid operation before sending server call
 exec function LeanRight()
@@ -3059,10 +3074,8 @@ state Dead
                 LastKilledTime = GRI.ElapsedTime;
             }
 
-            /* Commenting this out for now because the way it works is irritating.
             // Apply personal message from server strings
-            ClientMessage(DarkestHourGame(Level.Game).GetServerMessage(PlayerReplicationInfo.Deaths - 1), 'ServerMessage');
-            */
+            //ClientMessage(DarkestHourGame(Level.Game).GetServerMessage(PlayerReplicationInfo.Deaths - 1), 'ServerMessage');
         }
     }
 }
@@ -3285,18 +3298,29 @@ event ClientProposeMenu(string Menu, optional string Msg1, optional string Msg2)
 function ClientSaveROIDHash(string ROID)
 {
     local HTTPRequest PatronRequest;
+    local int PatronLevel;
 
     ROIDHash = ROID;
 
     SaveConfig();
 
-    // Now send the patron status request.
-    PatronRequest = Spawn(class'HTTPRequest');
-    PatronRequest.Method = "GET";
-    PatronRequest.Host = "darkesthour.darklightgames.com";
-    PatronRequest.Path = "/client/patron.php?steamid64=" $ ROIDHash;
-    PatronRequest.OnResponse = PatronRequestOnResponse;
-    PatronRequest.Send();
+    // Get script based patron status (this should be removed once we fix the HTTP issue with MAC)
+    PatronLevel = class'DHAccessControl'.static.GetPatronLevel(ROIDHash);
+
+    // If we have script patron status, then set patron status on server
+    if (PatronLevel >= 0)
+    {
+        ServerSetPatronStatus(PatronLevel);
+    }
+    else // Else, check via HTTP request for patron status
+    {
+        PatronRequest = Spawn(class'HTTPRequest');
+        PatronRequest.Method = "GET";
+        PatronRequest.Host = "darkesthour.darklightgames.com";
+        PatronRequest.Path = "/client/patron.php?steamid64=" $ ROIDHash;
+        PatronRequest.OnResponse = PatronRequestOnResponse;
+        PatronRequest.Send();
+    }
 }
 
 // Modified so if we just switched off manual reloading & player is in a cannon that's waiting to reload, we pass any different pending ammo type to the server
@@ -3384,24 +3408,22 @@ function ServerSetLockTankOnEntry(bool bEnabled)
 }
 
 // New function to put player into 'weapon lock' for a specified number of seconds, during which time he won't be allowed to fire
-// In multi-player it is initially called on server & then on owning net client, via a replicated function call
-simulated function LockWeapons(int Seconds, optional int Reason)
+simulated function LockWeapons(int Seconds)
 {
     if (Seconds > 0 && GameReplicationInfo != none)
     {
         WeaponUnlockTime = GameReplicationInfo.ElapsedTime + Seconds;
 
-        // If this is the local player, show him a warning screen message & release his fire buttons
+        // If this is the local player, release his fire buttons
         if (Viewport(Player) != none)
         {
-            ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', Reason);
             bFire = 0; // 'releases' fire button if being held down, which stops automatic weapon fire from continuing & avoids spamming repeated messages & buzz sounds
             bAltFire = 0;
         }
         // Or a server calls replicated function to do similar on an owning net client (passing seconds as a byte for efficient replication)
         else if (Role == ROLE_Authority)
         {
-            ClientLockWeapons(Seconds);
+            ClientLockWeapons(Seconds); // Force weapon lock on client
         }
     }
     // Hacky fix for problem where player re-joins server with an active weapon lock saved in his DHPlayerSession, but client doesn't yet have GRI
@@ -5586,10 +5608,6 @@ function ServerSquadSwapRallyPoints()
     }
 }
 
-//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-// END SQUAD DEBUG FUNCTIONS
-//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
 exec function SquadSay(string Msg)
 {
     Msg = Left(Msg, 128);
@@ -5597,6 +5615,30 @@ exec function SquadSay(string Msg)
     if (AllowTextMessage(Msg))
     {
         ServerSquadSay(Msg);
+    }
+}
+
+exec function CommandSay(string Msg)
+{
+    Msg = Left(Msg, 128);
+
+    if (AllowTextMessage(Msg))
+    {
+        ServerCommandSay(Msg);
+    }
+}
+
+function ServerCommandSay(string Msg)
+{
+    local DarkestHourGame G;
+
+    LastActiveTime = Level.TimeSeconds;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none)
+    {
+        G.BroadcastCommand(self, Level.Game.ParseMessageString(Level.Game.BaseMutator, self, Msg) , 'CommandSay');
     }
 }
 
@@ -5617,10 +5659,11 @@ function ServerForgiveLastFFKiller()
 
     KillerPC = DHPlayer(LastFFKiller.Owner);
 
-    // If LastFFKiller's weapons are locked and no longer has FF kills, unlock the player's weapons
-    if (KillerPC != none && KillerPC.AreWeaponsLocked(true) && LastFFKiller.FFKills < 1)
+    // If LastFFKiller's weapons are locked, unlock that player's weapons
+    if (KillerPC != none && KillerPC.AreWeaponsLocked(true))
     {
-        KillerPC.LockWeapons(1, 2);
+        KillerPC.LockWeapons(1); // Unlock weapons as soon as possible
+        KillerPC.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 2); // "Weapons are now unlocked"
     }
 
     // Set none as we have handled the current LastFFKiller
@@ -6084,7 +6127,7 @@ function PatronRequestOnResponse(int Status, TreeMap_string_string Headers, stri
 {
     local JSONParser Parser;
     local JSONObject O;
-    local byte PatronLevel;
+    local int PatronLevel;
 
     if (Status == 200)
     {
@@ -6105,17 +6148,6 @@ function PatronRequestOnResponse(int Status, TreeMap_string_string Headers, stri
             return;
         }
     }
-
-    // Also check for a hard coded patron (this should be removed once we figure out the issue with MAC)
-    PatronLevel = class'DHAccessControl'.static.GetPatronLevel(ROIDHash);
-
-    if (PatronLevel >= 0)
-    {
-        ServerSetPatronStatus(PatronLevel);
-        return;
-    }
-
-    Warn("Patron status request failed (" $ Status $ ")");
 }
 
 // Client-to-server function that reports the player's patron status to the server.
@@ -6240,6 +6272,293 @@ exec function Jump(optional float F)
     if (!TryToActivateSituationMap())
     {
         super.Jump(F);
+    }
+}
+
+//==============================================================================
+// SQUAD MERGE REQUESTS
+//==============================================================================
+function ServerSendSquadMergeRequest(int RecipientSquadIndex)
+{
+    local DHSquadReplicationInfo.ESquadMergeRequestResult Result;
+
+    if (SquadReplicationInfo != none)
+    {
+        Result = SquadReplicationInfo.SendSquadMergeRequest(self, GetTeamNum(), GetSquadIndex(), RecipientSquadIndex);
+
+        ClientSendSquadMergeRequestResult(Result);
+    }
+}
+
+function ServerAcceptSquadMergeRequest(int SquadMergeRequestID)
+{
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.AcceptSquadMergeRequest(self, SquadMergeRequestID);
+    }
+}
+
+function ServerDenySquadMergeRequest(int SquadMergeRequestID)
+{
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.DenySquadMergeRequest(self, SquadMergeRequestID);
+    }
+}
+
+function ClientReceieveSquadMergeRequest(int SquadMergeRequestID, string SenderPlayerName, string SenderSquadName)
+{
+    if (bIgnoreSquadMergeRequestPrompts)
+    {
+        ServerDenySquadMergeRequest(SquadMergeRequestID);
+        return;
+    }
+
+    class'DHSquadMergeRequestInteraction'.default.SquadMergeRequestID = SquadMergeRequestID;
+    class'DHSquadMergeRequestInteraction'.default.SenderPlayerName = SenderPlayerName;
+    class'DHSquadMergeRequestInteraction'.default.SenderSquadName = SenderSquadName;
+
+    Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadMergeRequestInteraction", Player);
+}
+
+function ClientSendSquadMergeRequestResult(DHSquadReplicationInfo.ESquadMergeRequestResult Result)
+{
+    local UT2K4GUIController GUIController;
+    local GUIPage Page;
+
+    // Find the currently open ROGUIRoleSelection menu and notify it
+    GUIController = UT2K4GUIController(Player.GUIController);
+
+    if (GUIController == none)
+    {
+        return;
+    }
+
+    Page = GUIController.FindMenuByClass(class'GUIPage');
+
+    if (Page != none)
+    {
+        Page.OnMessage("SQUAD_MERGE_REQUEST_RESULT", int(Result));
+    }
+}
+
+simulated function bool IsSquadLeader()
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    return PRI != none && PRI.IsSquadLeader();
+}
+
+function ClientLocationalVoiceMessage(PlayerReplicationInfo Sender,
+                                      PlayerReplicationInfo Recipient,
+                                      name messagetype, byte messageID,
+                                      optional Pawn senderPawn, optional vector senderLocation)
+{
+    local VoicePack Voice;
+    local ROVoicePack V;
+    local bool bIsTeamVoice;
+    local class<ROVoicePack> ROV;
+    local ROPlayerReplicationInfo PRI;
+
+    if (Sender == none || Sender.VoiceType == none || Sender.Team == none || Player.Console == none || Level.NetMode == NM_DedicatedServer)
+    {
+        return;
+    }
+
+    // If the sender is receiving the sound then allow them to hear the
+    // voicepack from their settings instead of the regular voicepack
+    PRI = ROPlayerReplicationInfo(Sender);
+
+    if (PRI != none && PRI.RoleInfo != none)
+    {
+        if (Level.GetLocalPlayerController().PlayerReplicationInfo.Team == none ||
+            Sender.Team.TeamIndex == Level.GetLocalPlayerController().PlayerReplicationInfo.Team.TeamIndex)
+        {
+            ROV = class<ROVoicePack>(DynamicLoadObject(PRI.RoleInfo.AltVoiceType, class'Class'));
+            bIsTeamVoice = true;
+            V = Spawn(ROV, self);
+        }
+        else
+        {
+            ROV = class<ROVoicePack>(DynamicLoadObject(PRI.RoleInfo.VoiceType, class'Class'));
+            V = Spawn(ROV, self);
+
+            if (V != none)
+            {
+                V.bUseLocationalVoice = true;
+                V.bIsFromDifferentTeam = true;
+            }
+        }
+
+        if (V != none)
+        {
+            V.ClientInitializeLocational(Sender, Recipient, MessageType, MessageID, SenderPawn, SenderLocation);
+
+            if (bIsTeamVoice)
+            {
+                if (MessageType == 'VEH_ORDERS' || MessageType == 'VEH_ALERTS' || MessageType == 'VEH_GOTO')
+                {
+                    VehicleVoiceMessage(Sender, V.getClientParsedMessage());
+                }
+                else if (MessageType == 'TAUNT')
+                {
+                    TeamMessage(Sender, V.getClientParsedMessage(), 'VOICESAY');
+                }
+                else
+                {
+                    TeamMessage(Sender, V.getClientParsedMessage(), 'VOICESAY');
+                }
+            }
+        }
+    }
+    else
+    {
+        Voice = Spawn(Sender.VoiceType, self);
+
+        if (Voice != none)
+        {
+            Log("Fallback: voice.ClientInitialize(Sender, Recipient, messagetype, messageID);");
+            Voice.ClientInitialize(Sender, Recipient, MessageType, MessageID);
+        }
+    }
+}
+
+function VehicleVoiceMessage(PlayerReplicationInfo Sender, string Msg)
+{
+    local ROBroadcastHandler Handler;
+
+    if (Level != none &&
+        Level.Game != none &&
+        Level.Game.BroadcastHandler != none &&
+        Level.Game.BroadcastHandler.IsA('ROBroadcastHandler'))
+    {
+        Handler = ROBroadcastHandler(Level.Game.BroadcastHandler);
+        Handler.BroadcastText(Sender, self, Msg, 'VehicleVoiceSay');
+    }
+}
+
+function SendVoiceMessage(PlayerReplicationInfo Sender,
+                          PlayerReplicationInfo Recipient,
+                          name MessageType,
+                          byte MessageID,
+                          name BroadcastType,
+                          optional Pawn SoundSender,
+                          optional vector SenderLocation)
+{
+    local Controller P;
+    local ROPlayer ROP;
+    local ROBot ROB;
+    local float DistanceToOther;
+    local array<Controller> VehicleOccupants;
+    local int i;
+
+    Log("SendVoiceMessage" @ Sender @ Sender @ MessageType @ MessageID @ BroadcastType);
+
+    if (!AllowVoiceMessage(MessageType))
+    {
+        return;
+    }
+
+    if (MessageType == 'VEH_ORDERS' || MessageType == 'VEH_ALERTS' || MessageType == 'VEH_GOTO')
+    {
+        SendVehicleVoiceMessage(Sender, Recipient, MessageType, MessageID, BroadcastType);
+        ROP = ROPlayer(Sender.Owner);
+        VehicleOccupants = GetBotVehicleOccupants(ROP);
+
+        for (i = 0; i < VehicleOccupants.length; ++i)
+        {
+            ROB = ROBot(VehicleOccupants[i]);
+
+            if (ROB != none)
+            {
+                ROB.BotVoiceMessage(MessageType, MessageID, self);
+            }
+        }
+
+        return;
+    }
+
+    for (P = Level.ControllerList; P != none; P = P.NextController)
+    {
+        ROP = ROPlayer(P);
+
+        if (ROP != none)
+        {
+            if (Pawn != none)
+            {
+                // do we want people who are dead to hear voice commands? - Antarian
+                if (ROP.Pawn != none && Pawn != ROP.Pawn)
+                {
+                    DistanceToOther = VSize(Pawn.Location - ROP.Pawn.Location);
+
+                    if (class'ROVoicePack'.static.isValidDistanceForMessageType(messagetype,distanceToOther))
+                    {
+                        if (ROP.PlayerReplicationInfo.Team.TeamIndex == PlayerReplicationInfo.Team.TeamIndex)
+                        {
+                            ROP.ClientLocationalVoiceMessage(Sender, Recipient, MessageType, MessageID, none, SenderLocation);
+                        }
+                        else
+                        {
+                            ROP.ClientLocationalVoiceMessage(Sender, Recipient, MessageType, MessageID, SoundSender, SenderLocation);
+                        }
+                    }
+                }
+                else
+                {
+                    // Sending to self
+                   ROP.ClientLocationalVoiceMessage(Sender, Recipient, MessageType, MessageID, SoundSender, SenderLocation);
+                }
+            }
+        }
+        else if ((MessageType == 'ORDER' || MessageType == 'ATTACK' || MessageType == 'DEFEND') &&
+                 (Recipient == none || Recipient == P.PlayerReplicationInfo ||
+                 (Bot(P) != none && Bot(P).Squad != none && Bot(P).Squad.SquadLeader != none && Bot(P).Squad.SquadLeader.PlayerReplicationInfo == Recipient)))
+        {
+            P.BotVoiceMessage(MessageType, MessageID, self);
+        }
+    }
+
+    // Lets make the bots attack/defend particular objectives
+    if (MessageType == 'ATTACK' || MessageType == 'DEFEND')
+    {
+        if (Recipient == none)
+        {
+            ROTeamGame(Level.Game).SetTeamAIObjectives(messageID, PlayerReplicationInfo.Team.TeamIndex);
+        }
+        else
+        {
+            ROTeamGame(Level.Game).SetSquadObjectives(messageID, PlayerReplicationInfo.Team.TeamIndex, Recipient);
+        }
+    }
+
+    // Add to 'help request' array if needed
+    if (MessageType == 'ATTACK')
+    {
+        AttemptToAddHelpRequest(PlayerReplicationInfo, MessageID, 1, GetObjectiveLocation(MessageID)); // Send locations all the time (easier on hud drawing code)
+    }
+    else if (MessageType == 'DEFEND')
+    {
+        AttemptToAddHelpRequest(PlayerReplicationInfo, MessageID, 2, GetObjectiveLocation(MessageID)); // Ditto
+    }
+    else if (MessageType == 'HELPAT')
+    {
+        AttemptToAddHelpRequest(PlayerReplicationInfo, MessageID, 0, GetObjectiveLocation(MessageID)); // Idem
+    }
+    else if (MessageType == 'SUPPORT' && MessageID == 0) // need help at coords
+    {
+        if (Pawn != none)
+        {
+            AttemptToAddHelpRequest(PlayerReplicationInfo, MessageID, 4, Pawn.location);
+        }
+    }
+    else if (MessageType == 'SUPPORT' && MessageID == 2) // need mg ammo
+    {
+        if (Pawn != none)
+        {
+            AttemptToAddHelpRequest(PlayerReplicationInfo, MessageID, 3, Pawn.location);
+        }
     }
 }
 

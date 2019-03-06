@@ -31,6 +31,9 @@ var     bool                    bIsSquadAssistant;
 var     int                     TotalScore;
 var     int                     CategoryScores[2];
 
+var     localized string        SquadLeaderAbbreviation;
+var     localized string        AssistantAbbreviation;
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -43,11 +46,11 @@ simulated function string GetNamePrefix()
 {
     if (IsSquadLeader())
     {
-        return "SL";
+        return default.SquadLeaderAbbreviation;
     }
     else if (bIsSquadAssistant)
     {
-        return "A";
+        return default.AssistantAbbreviation;
     }
     else if (IsInSquad())
     {
@@ -93,6 +96,11 @@ simulated static function bool IsPlayerTankCrew(Pawn P)
         && ROPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew;
 }
 
+simulated static function bool IsPlayerLicensedToDrive(DHPlayer C)
+{
+    return C != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo).IsSLorASL();
+}
+
 // Modified to fix bug where the last line was being drawn at top of screen, instead of in vertical sequence, so overwriting info in the 1st screen line
 simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
 {
@@ -127,4 +135,6 @@ defaultproperties
 {
     SquadIndex=-1
     SquadMemberIndex=-1
+    SquadLeaderAbbreviation="SL"
+    AssistantAbbreviation="A"
 }

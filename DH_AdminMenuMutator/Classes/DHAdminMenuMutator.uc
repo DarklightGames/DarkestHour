@@ -1065,17 +1065,10 @@ function ErrorMessageToSelf(byte MessageNumber, optional string InsertedName)
 // A check if the sending player is an admin - if not displays a message to say "you must be logged in as an admin ..."
 function bool IsLoggedInAsAdmin(optional bool bEnforceAdminLogin)
 {
-    local DHPlayer P;
-
     // Do an admin login check
-    if (Admin != none && Admin.PlayerReplicationInfo != none)
+    if (Admin != none && Admin.PlayerReplicationInfo != none && (Admin.PlayerReplicationInfo.bAdmin || Admin.PlayerReplicationInfo.bSilentAdmin))
     {
-        P = DHPlayer(Admin);
-
-        if (P != none && (Admin.PlayerReplicationInfo.bAdmin || Admin.PlayerReplicationInfo.bSilentAdmin || class'DHAccessControl'.static.IsDeveloper(P.GetPlayerIDHash())))
-        {
-            return true;
-        }
+        return true;
     }
 
     // Otherwise, if bBypassAdminLogin has been set to true in the config file, we effectively bypass the usual admin check (e.g. for use on a test server)

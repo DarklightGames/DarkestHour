@@ -13,44 +13,18 @@ struct PatronInfo
     var int PatronLevel;
 };
 
-var config array<string>            ServerAdminIDs; // You can add global admins via their ROID to the server config!
-
 var private array<string>           DeveloperIDs;
 var private array<PatronInfo>       PatreonIDs; // A list of patreon ROIDs for users that are on MAC and don't work with normal system
-
-event PreBeginPlay()
-{
-    super.PreBeginPlay();
-
-    // Create an admin user used for Dev and Cfg admin (creates it with a random password)
-    SetAdminFromURL("ServerAdmin", GetRandomPassword());
-}
-
 
 function bool AdminLogin(PlayerController P, string Username, string Password)
 {
     local xAdminUser    User;
     local int           Index;
-    local string        ROID;
-    local bool          bIsDeveloper, bIsConfiguredAdmin, bValidLogin;
+    local bool          bValidLogin;
 
     if (P == none)
     {
         return false;
-    }
-
-    ROID = P.GetPlayerIDHash();
-
-    // Special developer login functionality, triggered by DevLogin exec
-    if (Password ~= "Dev")
-    {
-        bIsDeveloper = IsDeveloper(ROID);
-    }
-
-    // Special config admin login functionality, triggered by BecomeAdmin exec
-    if (Password ~= "Cfg")
-    {
-        bIsConfiguredAdmin = IsConfiguredServerAdmin(ROID);
     }
 
     User = GetLoggedAdmin(P);
@@ -61,28 +35,21 @@ function bool AdminLogin(PlayerController P, string Username, string Password)
         bValidLogin = User != none && User.Password == Password;
     }
 
-    // If still no user AND we are a dev or cfg admin
-    if (User == none && bIsDeveloper || bIsConfiguredAdmin)
-    {
-        User = GetUser("ServerAdmin");
-    }
-
-    if (bIsDeveloper || bIsConfiguredAdmin || bValidLogin)
+    if (bValidLogin)
     {
         Index = LoggedAdmins.Length;
         LoggedAdmins.Length = Index + 1;
         LoggedAdmins[index].User = User;
         LoggedAdmins[index].PRI = P.PlayerReplicationInfo;
-        P.PlayerReplicationInfo.bAdmin = bIsDeveloper || bIsConfiguredAdmin || User.bMasterAdmin || User.HasPrivilege("Kp") || User.HasPrivilege("Bp");
+        P.PlayerReplicationInfo.bAdmin = User.bMasterAdmin || User.HasPrivilege("Kp") || User.HasPrivilege("Bp");
         return true;
     }
 
     return false;
 }
 
-
 // Modified to make this work with the AccessControlIni class multi-admin functionality, merging in extra features from its AdminLogin() function
-// Also to add a special developer admin login, & to add a server log entry to improve security for server admins, as otherwise a silent admin login is undetectable
+// AdminLoginSilent is not reliable, many commands do not work
 function bool AdminLoginSilent(PlayerController P, string UserName, string Password)
 {
     local xAdminUser User;
@@ -175,42 +142,16 @@ static function int GetPatronLevel(string ROID)
     return -1;
 }
 
-protected function bool IsConfiguredServerAdmin(string ROID)
-{
-    local int i;
-
-    for (i = 0; i < ServerAdminIDs.Length; ++i)
-    {
-        if (ROID ~= ServerAdminIDs[i])
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-// Generates a random 16 digit password
-static function string GetRandomPassword()
-{
-    local int i;
-    local string Password, Characters;
-
-    Characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for (i = 0; i < 16; ++i)
-    {
-        Password $= Mid(Characters, Rand(Len(Characters)), 1);
-    }
-
-    return Password;
-}
-
 defaultproperties
 {
+    IPBanned="You cannot join this server, you have been banned."
+    SessionBanned="You cannot join this server until it changes level."
+
     AdminClass=Class'DH_Engine.DHAdmin'
     DeveloperIDs(0)="76561197961365238" // Theel
     DeveloperIDs(1)="76561197960644559" // Basnett
+    DeveloperIDs(2)="76561198020074261" // Kashash
+    DeveloperIDs(3)="76561198043869714" // DirtyBirdy
 
     PatreonIDs(0)=(PatronROID="76561198066643021",PatronLevel=2) // PFC Patison
 }

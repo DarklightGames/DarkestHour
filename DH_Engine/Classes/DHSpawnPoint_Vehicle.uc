@@ -231,13 +231,9 @@ function bool PerformSpawn(DHPlayer PC)
     return false;
 }
 
-simulated function string GetMapStyleName()
-{
-    return "DHSpawnVehicleButtonStyle";
-}
-
 defaultproperties
 {
+    SpawnPointStyle="DHSpawnVehicleButtonStyle"
     bCombatSpawn=true
     bIsLowPriority=true
 }
