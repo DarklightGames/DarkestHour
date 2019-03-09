@@ -18,6 +18,7 @@ defaultproperties
     RotationsPerSecond=0.007813
     MaxPositiveYaw=1820
     MaxNegativeYaw=-1820
+    Elevation=80.0
     ElevationMaximum=88.0
     Mesh=SkeletalMesh'DH_Mortars_3rd.Kz8cmGrW42_deployed'
 }
