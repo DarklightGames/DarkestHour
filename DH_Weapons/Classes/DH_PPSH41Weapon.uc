@@ -55,7 +55,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_PPSH41Attachment'
     PickupClass=class'DH_Weapons.DH_PPSH41Pickup'
 
-    Mesh=SkeletalMesh'DH_Ppsh_1st.PPSH-41-mesh'
+    Mesh=SkeletalMesh'DH_Ppsh_1st.PPSH-41-meshnew'
     HighDetailOverlay=shader'Weapons1st_tex.SMG.PPSH41_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
