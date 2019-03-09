@@ -41,9 +41,9 @@ static function color GetBeeLineColor()
 // Override to run specific logic when this marker is placed.
 static function OnMapMarkerPlaced(DHPlayer PC);
 
-// Override these 2 functions to determine how the marker should be handled
-// when added/removed (e.g. make it private).
-static function AddMarker(out DHPlayer PC, float MapLocationX, float MapLocationY)
+// Override these 2 functions to determine how the marker should be handled when
+// added/removed.
+static function AddMarker(DHPlayer PC, float MapLocationX, float MapLocationY)
 {
     if (default.bIsPersonal)
     {
@@ -55,7 +55,7 @@ static function AddMarker(out DHPlayer PC, float MapLocationX, float MapLocation
     }
 }
 
-static function RemoveMarker(out DHPlayer PC, optional int Index)
+static function RemoveMarker(DHPlayer PC, optional int Index)
 {
     if (Index < 0)
     {
@@ -84,4 +84,3 @@ defaultproperties
     LifetimeSeconds=-1
     GroupIndex=-1
 }
-

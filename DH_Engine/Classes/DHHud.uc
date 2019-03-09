@@ -3893,7 +3893,7 @@ function DrawMapMarkersOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
                            PersonalMapMarkers[i].MapMarkerClass,
                            PersonalMapMarkers[i].WorldLocation,
                            PC.Pawn,
-                           MapMarkers[i].MapMarkerClass.static.GetCaptionString(PC, L));
+                           PersonalMapMarkers[i].MapMarkerClass.static.GetCaptionString(PC, PersonalMapMarkers[i].WorldLocation));
     }
 }
 

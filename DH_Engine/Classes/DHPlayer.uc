@@ -25,7 +25,7 @@ struct PersonalMapMarker
     var vector WorldLocation;
 };
 
-var     array<class<DHMapMarker> >           PersonalMapMarkerClasses;
+var     array<class<DHMapMarker> >          PersonalMapMarkerClasses;
 var     private array<PersonalMapMarker>    PersonalMapMarkers;
 
 var     input float             aBaseFire;
@@ -5483,6 +5483,19 @@ function ServerRemoveMapMarker(int MapMarkerIndex)
 function array<PersonalMapMarker> GetPersonalMarkers()
 {
     return PersonalMapMarkers;
+}
+
+function PersonalMapMarker FindPersonalMarker(class<DHMapMarker> MapMarkerClass)
+{
+    local int i;
+
+    for (i = 0; i < PersonalMapMarkers.Length; ++i)
+    {
+        if (PersonalMapMarkers[i].MapMarkerClass == MapMarkerClass)
+        {
+            return PersonalMapMarkers[i];
+        }
+    }
 }
 
 function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY)
