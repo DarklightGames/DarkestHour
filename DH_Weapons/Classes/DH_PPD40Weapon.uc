@@ -13,7 +13,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_PPD40Attachment'
     PickupClass=class'DH_Weapons.DH_PPD40Pickup'
 
-    Mesh=SkeletalMesh'Allies_Ppd40_1st.PPD-40-Mesh'
+    Mesh=SkeletalMesh'DH_Ppd40_1st.PPD-40-Meshnew'
     HighDetailOverlay=shader'Weapons1st_tex.SMG.PPD40_1_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
