@@ -13,7 +13,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_PPS43Attachment'
     PickupClass=class'DH_Weapons.DH_PPS43Pickup'
 
-    Mesh=SkeletalMesh'Allies_Pps43_1st.PPS-43-Mesh'
+    Mesh=SkeletalMesh'DH_Pps43_1st.PPS-43-Meshnew'
     HighDetailOverlay=shader'Weapons1st_tex.SMG.PPS43_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
