@@ -295,7 +295,7 @@ function ServerEnterRotation(DHPawn Instigator)
     if (RotateError != ERROR_None)
     {
         // TODO: Send a message to the player
-        Instigator.ExitATRotation();
+        Instigator.ClientExitATRotation();
         return;
     }
 
@@ -400,7 +400,7 @@ state Rotating
 
         if (RotateControllerPawn != none)
         {
-            RotateControllerPawn.ExitATRotation();
+            RotateControllerPawn.ClientExitATRotation();
         }
     }
 }

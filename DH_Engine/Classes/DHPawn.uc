@@ -145,7 +145,7 @@ replication
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
-        ClientPawnWhizzed, ExitATRotation;
+        ClientPawnWhizzed, ClientExitATRotation;
 }
 
 // Modified to use DH version of bullet whip attachment, & to remove its SavedAuxCollision (deprecated as now we simply enable/disable collision in ToggleAuxCollision function)
@@ -7074,7 +7074,7 @@ function EnterATRotation(DHATGun Gun)
     ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon");
 }
 
-function ExitATRotation()
+function ClientExitATRotation()
 {
     GunToRotate = none;
 }
