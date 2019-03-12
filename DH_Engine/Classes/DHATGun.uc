@@ -18,7 +18,8 @@ enum ERotateError
     ERROR_Occupied,
     ERROR_NeedMorePlayers,
     ERROR_Fatal,
-    ERROR_Cooldown
+    ERROR_Cooldown,
+    ERROR_TooFarAway
 };
 
 var DHPawn            RotateControllerPawn;
@@ -204,6 +205,11 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
     if (Pawn == none)
     {
         return ERROR_Fatal;
+    }
+
+    if (VSize(Pawn.Location - Location) > class'DHUnits'.static.MetersToUnreal(RotateControlRadiusInMeters))
+    {
+        return ERROR_TooFarAway;
     }
 
     if (Pawn.GetTeamNum() != VehicleTeam)

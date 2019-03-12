@@ -5682,6 +5682,7 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
     local DHPawn OtherPawn;
     local DHPlayerReplicationInfo PRI;
     local DHRadio Radio;
+    local DHATGun Gun;
     local vector TraceStart, TraceEnd, HitLocation, HitNormal;
     local Actor HitActor;
 
@@ -5711,11 +5712,16 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
         }
         else if (HitActor.IsA('DHATGun'))
         {
-            // TODO: we need some sort of way to check if we're being auto-traced?
-            // perhaps keep tabs on who the tracer was using timeseconds + pawn in the AT gun?
-            MenuClassName = "DH_Engine.DHCommandMenu_ATGun";
-            MenuObject = HitActor;
-            return true;
+            Gun = DHATGun(HitActor);
+
+            if (Gun.GetRotationError(DHPawn(Pawn)) == ERROR_None)
+            {
+                // TODO: we need some sort of way to check if we're being auto-traced?
+                // perhaps keep tabs on who the tracer was using timeseconds + pawn in the AT gun?
+                MenuClassName = "DH_Engine.DHCommandMenu_ATGun";
+                MenuObject = HitActor;
+                return true;
+            }
         }
         else if (HitActor.IsA('DHPawn'))
         {
