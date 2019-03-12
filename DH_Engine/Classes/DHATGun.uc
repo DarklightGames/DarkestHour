@@ -305,7 +305,7 @@ function ServerEnterRotation(DHPawn Instigator)
 
 function ServerExitRotation()
 {
-    if (RotatingActor != none || RotatingActor.bPendingDelete)
+    if (RotatingActor != none && !RotatingActor.bPendingDelete)
     {
         RotatingActor.Destroy();
     }

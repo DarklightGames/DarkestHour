@@ -24,4 +24,5 @@ defaultproperties
     SupplyCost=1650
     ConstructionPlacementOffset=(Z=-2)
     bCanBeRotated=true
+    PlayersNeededToRotate=2
 }

@@ -25,16 +25,13 @@ simulated event Tick(float DeltaTime)
 
     if (InstigatorIsLocallyControlled())
     {
-        if (Gun != none && Gun.bIsBeingRotated)
+        if (Gun != none && DHPawn(Instigator).GunToRotate != none)
         {
             Instigator.ReceiveLocalizedMessage(class'DHATGunRotateControlsMessage',,,, Instigator.Controller);
         }
-        else if (Instigator.Weapon == self)
+        else
         {
-            // TODO: Get rid of this
-            PutDown();
-            Instigator.Controller.SwitchToBestWeapon();
-            Instigator.ChangedWeapon();
+            OnExitRotation();
         }
     }
 }
@@ -71,9 +68,32 @@ function ServerEnterRotation(DHATGun Gun, DHPawn Pawn)
 
 simulated function OnExitRotation()
 {
-    if (Gun != none && Gun.bIsBeingRotated)
+    if (bDeleteMe || !InstigatorIsLocallyControlled() || Gun == none || !Gun.bIsBeingRotated)
     {
-        ServerExitRotation(Gun);
+        return;
+    }
+
+    ServerExitRotation(Gun);
+    Gun = none;
+
+    if (Instigator.Weapon.OldWeapon != none)
+    {
+        // HACK: This stops a standalone client from immediately firing
+        // their previous weapon.
+        if (Level.NetMode == NM_Standalone)
+        {
+            Instigator.Weapon.OldWeapon.ClientState = WS_Hidden;
+        }
+
+        Instigator.SwitchToLastWeapon();
+        Instigator.ChangedWeapon();
+    }
+    else
+    {
+        // We've no weapon to go back to so just put this down, subsequently
+        // destroying it.
+        PutDown();
+        Instigator.Controller.SwitchToBestWeapon();
     }
 }
 
@@ -97,40 +117,24 @@ function ServerRotate(DHATGun Gun, byte InputRotationFactor)
 
 simulated function bool WeaponLeanLeft()
 {
-    if (Gun != none)
-    {
-        OnRotate(255);
-        return true;
-    }
-
-    return false;
+    OnRotate(255);
+    return true;
 }
 
 simulated function bool WeaponLeanRight()
 {
-    if (Gun != none)
-    {
-        OnRotate(1);
-        return true;
-    }
-
-    return false;
+    OnRotate(1);
+    return true;
 }
 
 simulated function WeaponLeanLeftReleased()
 {
-    if (Gun != none)
-    {
-        OnRotate(0);
-    }
+    OnRotate(0);
 }
 
 simulated function WeaponLeanRightReleased()
 {
-    if (Gun != none)
-    {
-        OnRotate(0);
-    }
+    OnRotate(0);
 }
 
 simulated function BringUp(optional Weapon PrevWeapon)
@@ -161,34 +165,6 @@ simulated function BringUp(optional Weapon PrevWeapon)
     }
 }
 
-simulated function ROIronSights()
-{
-    local ROPawn P;
-
-    P = ROPawn(Instigator);
-
-    if (InstigatorIsLocallyControlled())
-    {
-        if (P != none && P.CanSwitchWeapon())
-        {
-            OnEnterRotation();
-
-            if (Instigator.Weapon.OldWeapon != none)
-            {
-                Instigator.SwitchToLastWeapon();
-                Instigator.ChangedWeapon();
-            }
-            else
-            {
-                // We've no weapon to go back to so just put this down, subsequently
-                // destroying it.
-                PutDown();
-                Instigator.Controller.SwitchToBestWeapon();
-            }
-        }
-    }
-}
-
 simulated state LoweringWeapon
 {
     simulated function BeginState()
@@ -215,40 +191,16 @@ simulated state LoweringWeapon
 
 simulated function Fire(float F)
 {
-    if (InstigatorIsLocallyControlled())
-    {
-        OnExitRotation();
+    OnExitRotation();
+}
 
-        if (ShouldSwitchToLastWeaponOnPlacement())
-        {
-            if (Instigator.Weapon.OldWeapon != none)
-            {
-                // HACK: This stops a standalone client from immediately firing
-                // their previous weapon.
-                if (Level.NetMode == NM_Standalone)
-                {
-                    Instigator.Weapon.OldWeapon.ClientState = WS_Hidden;
-                }
-
-                Instigator.SwitchToLastWeapon();
-                Instigator.ChangedWeapon();
-            }
-            else
-            {
-                PutDown();
-                Instigator.Controller.SwitchToBestWeapon();
-            }
-        }
-    }
+simulated function ROIronSights()
+{
+    OnExitRotation();
 }
 
 simulated function bool PutDown()
 {
-    if (InstigatorIsLocallyControlled())
-    {
-        OnExitRotation();
-    }
-
     return super.PutDown();
 }
 
@@ -256,10 +208,7 @@ simulated function Destroyed()
 {
     super.Destroyed();
 
-    if (InstigatorIsLocallyControlled())
-    {
-        OnExitRotation();
-    }
+    OnExitRotation();
 }
 
 defaultproperties
