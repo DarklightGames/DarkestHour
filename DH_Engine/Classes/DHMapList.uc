@@ -10,7 +10,7 @@ var localized string OfficialText;
 var localized string CommunityText;
 var localized string WorkInProgressText;
 
-var protected string OfficialMaps[53];                  // Make sure size matches correctly
+var protected string OfficialMaps[54];                  // Make sure size matches correctly
 var protected string WorkInProgressMaps[32];            // this one also
 
 static function string GetMapSource(string S)
@@ -123,6 +123,7 @@ defaultproperties
     OfficialMaps(50)="DH-Varaville_Advance.rom"
     OfficialMaps(51)="DH-Vierville_Push.rom"
     OfficialMaps(52)="DH-Vossenack_Push.rom"
+    OfficialMaps(53)="DH-Salaca_River_Clash.rom"
 
     WorkInProgressMaps(0)="DH-WIP_Arad_Advance.rom"
     WorkInProgressMaps(1)="DH-WIP_Arnhem_Bridge_Push.rom"
@@ -150,10 +151,9 @@ defaultproperties
     WorkInProgressMaps(23)="DH-WIP_Prussia_Push.rom"
     WorkInProgressMaps(24)="DH-WIP_Ramelle_Push.rom"
     WorkInProgressMaps(25)="DH-WIP_Rhine_River_Clash.rom"
-    WorkInProgressMaps(26)="DH-WIP_Salaca_River_Clash.rom"
-    WorkInProgressMaps(27)="DH-WIP_San_Valentino_Advance.rom"
-    WorkInProgressMaps(28)="DH-WIP_Schijndel_Advance.rom"
-    WorkInProgressMaps(29)="DH-WIP_Smolensk_Advance.rom"
-    WorkInProgressMaps(30)="DH-WIP_Turqueville_Push.rom"
-    WorkInProgressMaps(31)="DH-WIP_Winter_Stalemate_Clash.rom"
+    WorkInProgressMaps(26)="DH-WIP_San_Valentino_Advance.rom"
+    WorkInProgressMaps(27)="DH-WIP_Schijndel_Advance.rom"
+    WorkInProgressMaps(28)="DH-WIP_Smolensk_Advance.rom"
+    WorkInProgressMaps(29)="DH-WIP_Turqueville_Push.rom"
+    WorkInProgressMaps(30)="DH-WIP_Winter_Stalemate_Clash.rom"
 }
