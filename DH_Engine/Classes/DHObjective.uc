@@ -113,6 +113,7 @@ var     bool                        bDidAwardAxisReinf;
 var     bool                        bDidAwardAlliesReinf;
 var     bool                        bRecentlyControlledByAxis;
 var     bool                        bRecentlyControlledByAllies;
+var     float                       AwardedReinforcementFactor;
 
 // Replicated variables
 var     int                         UnfreezeTime;               // The time at which the objective will be unlocked and ready to be capured again, relative to GRI.ElapsedTime
@@ -522,7 +523,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     local DarkestHourGame           G;
     local int                       i;
     local array<string>             PlayerIDs;
-    local int                       RoundTime;
+    local int                       RoundTime, AwardedReinf;
     local int                       NumTotal[2], Num[2], NumForCheck[2];
     local array<Controller>         CapturingControllers;
 
@@ -600,8 +601,9 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
                 }
                 else
                 {
-                    G.ModifyReinforcements(AXIS_TEAM_INDEX, 1 * (G.GetNumPlayers() / 4));
-                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, class'DHReinforcementAwardMsg', 1 * (G.GetNumPlayers() / 2), none, none, self);
+                    AwardedReinf = int(G.GetNumPlayers() * AwardedReinforcementFactor);
+                    G.ModifyReinforcements(AXIS_TEAM_INDEX, AwardedReinf);
+                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, class'DHReinforcementAwardMsg', AwardedReinf, none, none, self);
                 }
             }
 
@@ -660,8 +662,9 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
                 }
                 else
                 {
-                    G.ModifyReinforcements(ALLIES_TEAM_INDEX, 1 * (G.GetNumPlayers() / 4));
-                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, class'DHReinforcementAwardMsg', 1 * (G.GetNumPlayers() / 2), none, none, self);
+                    AwardedReinf = int(G.GetNumPlayers() * AwardedReinforcementFactor);
+                    G.ModifyReinforcements(ALLIES_TEAM_INDEX, AwardedReinf);
+                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, class'DHReinforcementAwardMsg', AwardedReinf, none, none, self);
                 }
             }
 
@@ -1457,4 +1460,5 @@ defaultproperties
     bVehiclesCanCapture=true
     bTankersCanCapture=true
     PlayersNeededToCapture=1
+    AwardedReinforcementFactor=0.25
 }
