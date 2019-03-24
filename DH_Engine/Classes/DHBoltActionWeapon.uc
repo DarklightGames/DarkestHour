@@ -12,14 +12,24 @@ enum EReloadState
     RS_PreReload,
     RS_ReloadLooped,
     RS_PostReload,
+    RS_FullReload
 };
 
 var     EReloadState    ReloadState;        // weapon's current reloading state (none means not reloading)
 var     bool            bInterruptReload;   // set when one-by-one reload is stopped by player part way through, by pressing fire button
+
 var     name            PreReloadAnim;      // one-off anim when starting to reload
-var     name            SingleReloadAnim;   // looping anim for inserting a single round
+var     name            PreReloadHalfAnim;  // same as above, but when there are one or more rounds in the chamber
+
+var     name            SingleReloadAnim;       // looping anim for inserting a single round
+var     name            SingleReloadHalfAnim;   // same as above, but when there are one or more rounds in the chamber
+
 var     name            StripperReloadAnim; // stripper clip reload animation
+
 var     name            PostReloadAnim;     // one-off anim when reloading ends
+
+var     name            FullReloadAnim;     // full reload animation (takes precedence!)
+
 var     int             NumRoundsToLoad;    // how many rounds to be loaded to fill the weapon
 
 // TODO: for refactoring this, when we try to do a reload,
@@ -303,7 +313,7 @@ simulated state Reloading
             GetAnimParams(0, Anim, Frame, Rate);
 
             // Just finished playing pre-reload anim so now load 1st round
-            if (Anim == PreReloadAnim)
+            if (Anim == PreReloadAnim || Anim == PreReloadHalfAnim)
             {
                 SetTimer(0.0, false);
 
@@ -313,11 +323,27 @@ simulated state Reloading
 
                 return;
             }
+            else if (Anim == FullReloadAnim)
+            {
+                ReloadState = RS_None;
+
+                if (Role == ROLE_Authority)
+                {
+                    if (ROPawn(Instigator) != none)
+                    {
+                        ROPawn(Instigator).StopReload();
+                    }
+
+                    PerformReload(GetMaxLoadedRounds());
+                }
+
+                GotoState('Idle');
+            }
             // Just finished playing a single round reload anim
-            else if (Anim == SingleReloadAnim || Anim == StripperReloadAnim)
+            else if (Anim == SingleReloadAnim || Anim == SingleReloadHalfAnim || Anim == StripperReloadAnim)
             {
                 // TODO: Alternatively, change this to be some sort of class-level variable.
-                if (Anim == SingleReloadAnim)
+                if (Anim == SingleReloadAnim || Anim == SingleReloadHalfAnim)
                 {
                     ReloadCount = 1;
                 }
@@ -421,8 +447,8 @@ simulated state Reloading
                 }
             }
         }
-        // Just finished post-reload anim so we're finished
-        else if (ReloadState == RS_PostReload)
+        // Just finished post-reload or full-reload anim so we're finished
+        else if (ReloadState == RS_PostReload || ReloadState == RS_FullReload)
         {
             GotoState('Idle');
         }
@@ -437,26 +463,28 @@ simulated state Reloading
 
         if (ReloadState == RS_None)
         {
-            ReloadState = RS_PreReload;
-            PlayPreReload();
+            if (AmmoAmount(0) == 0 && HasAnim(FullReloadAnim))
+            {
+                ReloadState = RS_FullReload;
+                PlayFullReload();
+            }
+            else
+            {
+                ReloadState = RS_PreReload;
+                PlayAnimAndSetTimer(GetPreReloadAnim(), 1.0);
+            }
         }
     }
 
     simulated function EndState()
     {
-        if (ReloadState == RS_PostReload)
+        if (ReloadState == RS_PostReload || ReloadState == RS_FullReload)
         {
             NumRoundsToLoad = 0;
             bWaitingToBolt = false;
             ReloadState = RS_None;
         }
     }
-}
-
-// New function to play the pre-reload animation
-simulated function PlayPreReload()
-{
-    PlayAnimAndSetTimer(PreReloadAnim, 1.0);
 }
 
 simulated function bool CanLoadStripperClip()
@@ -477,8 +505,45 @@ simulated function PlayReload()
         else
         {
             NumRoundsToLoad -= 1;
-            PlayAnimAndSetTimer(SingleReloadAnim, 1.0);
+
+            PlayAnimAndSetTimer(GetSingleReloadAnim(), 1.0);
         }
+    }
+}
+
+simulated function name GetPreReloadAnim()
+{
+    if (AmmoAmount(0) > 0 && HasAnim(PreReloadHalfAnim))
+    {
+        return PreReloadHalfAnim;
+    }
+
+    return PreReloadAnim;
+}
+
+simulated function name GetSingleReloadAnim()
+{
+    if (AmmoAmount(0) > 0 && HasAnim(SingleReloadHalfAnim))
+    {
+        return SingleReloadHalfAnim;
+    }
+
+    return SingleReloadAnim;
+}
+
+simulated function PlayFullReload()
+{
+    local float Duration;
+
+    Duration = GetAnimDuration(FullReloadAnim, 1.0);
+
+    Level.Game.Broadcast(self, Duration);
+
+    SetTimer(GetAnimDuration(FullReloadAnim, 1.0), false);
+
+    if (InstigatorIsLocallyControlled() && HasAnim(FullReloadAnim))
+    {
+        PlayAnim(FullReloadAnim, 1.0);
     }
 }
 
