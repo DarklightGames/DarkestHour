@@ -420,6 +420,14 @@ event Opened(GUIComponent Sender)
         PlayerOwner().SaveConfig();
     }
 
+    // Due to a bug introduced in 9.0, the VoiceVolume was being
+    // set to 0.0 upon saving settings. Originally we thought the setting
+    // did *nothing*, but it appears to disable VOIP entirely if you start
+    // the game up with the value as 0.0. To be extra safe, we just
+    // forcibly set the VoiceVolume to 1.0 every time.
+    PlayerOwner().ConsoleCommand("set ini:Engine.Engine.AudioDevice VoiceVolume 1.0");
+    PlayerOwner().SaveConfig();
+
     super.Opened(Sender);
 
     SetTimer(1.0, true);
