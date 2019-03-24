@@ -12,19 +12,16 @@ defaultproperties
     FireRate=0.08
     FAProjSpawnOffset=(X=-28.0)
 
+    // Spread
+    HipSpreadModifier=5.0
     Spread=160.0
-    RecoilRate=0.06
 
     // Recoil
-    PctStandIronRecoil=0.55
-    PctCrouchRecoil=0.8
-    PctCrouchIronRecoil=0.45
-    PctProneIronRecoil=0.35
+    RecoilRate=0.06
     PctBipodDeployRecoil=0.08
     PctRestDeployRecoil=0.15
-
-    MaxVerticalRecoilAngle=360
-    MaxHorizontalRecoilAngle=80
+    MaxVerticalRecoilAngle=410
+    MaxHorizontalRecoilAngle=110
 
     FireSounds(0)=SoundGroup'DH_WeaponSounds.FG42.FG42_Fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.FG42.FG42_Fire02'
