@@ -80,6 +80,11 @@ simulated function bool IsInSquad()
     return Team != none && (Team.TeamIndex == AXIS_TEAM_INDEX || Team.TeamIndex == ALLIES_TEAM_INDEX) && SquadIndex != -1;
 }
 
+simulated function bool IsPatron()
+{
+    return PatronStatus > 0;
+}
+
 // Will return true if passed two players that are in the same squad.
 simulated static function bool IsInSameSquad(DHPlayerReplicationInfo A, DHPlayerReplicationInfo B)
 {

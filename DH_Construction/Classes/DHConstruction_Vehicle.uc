@@ -165,7 +165,14 @@ simulated static function int GetSupplyCost(DHConstruction.Context Context)
 
 static function bool ShouldShowOnMenu(DHConstruction.Context Context)
 {
-    return GetVehicleClass(Context) != none;
+    if (GetVehicleClass(Context) != none)
+    {
+        super.ShouldShowOnMenu(Context);
+    }
+    else
+    {
+        return false;
+    }
 }
 
 static function vector GetPlacementOffset(DHConstruction.Context Context)

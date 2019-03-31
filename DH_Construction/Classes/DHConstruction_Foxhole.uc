@@ -87,6 +87,11 @@ static function float GetTerrainScale(TerrainInfo TI)
     return 0.0;
 }
 
+static function bool IsPlaceableByPlayer(DHPlayerReplicationInfo PRI)
+{
+    return PRI.IsSLorASL() || PRI.IsPatron();
+}
+
 static function bool IsTerrainScaleLarge(TerrainInfo TI)
 {
     return TI != none && GetTerrainScale(TI) > default.LargeTerrainScaleThreshold;

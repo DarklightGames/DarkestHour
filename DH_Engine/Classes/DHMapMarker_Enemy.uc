@@ -6,10 +6,10 @@
 class DHMapMarker_Enemy extends DHMapMarker
     abstract;
 
-// Allow squad leaders their assistants to mark enemy positions.
+// Allow squad leaders, their assistants, and patrons to mark enemy positions.
 static function bool CanPlayerUse(DHPlayerReplicationInfo PRI)
 {
-    return PRI != none && (PRI.IsSquadLeader() || PRI.bIsSquadAssistant);
+    return PRI != none && (PRI.IsSLorASL() || PRI.IsPatron());
 }
 
 defaultproperties

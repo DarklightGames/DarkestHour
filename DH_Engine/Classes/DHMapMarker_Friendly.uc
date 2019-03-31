@@ -6,10 +6,10 @@
 class DHMapMarker_Friendly extends DHMapMarker
     abstract;
 
-// Allow squad leaders their assistants to mark friendly markers.
+// Allow squad leaders and their assistants to mark friendly markers.
 static function bool CanPlayerUse(DHPlayerReplicationInfo PRI)
 {
-    return PRI != none && (PRI.IsSquadLeader() || PRI.bIsSquadAssistant);
+    return PRI != none && PRI.IsSLorASL();
 }
 
 defaultproperties

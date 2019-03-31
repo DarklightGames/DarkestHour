@@ -5757,6 +5757,11 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
         MenuClassName = "DH_Engine.DHCommandMenu_LoneWolf";
         return true;
     }
+    else if (PRI.IsPatron())
+    {
+        MenuClassName = "DH_Engine.DHCommandMenu_Patron";
+        return true;
+    }
 
     return false;
 }
