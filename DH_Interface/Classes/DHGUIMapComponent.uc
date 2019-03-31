@@ -672,9 +672,9 @@ defaultproperties
     bAcceptsInput=true
     bCaptureMouse=true
 
-    SquadRallyPointDestroyText="Destroy"
+    SquadRallyPointDestroyText="Destroy Rally"
     SquadRallyPointSetAsSecondaryText="Set as Secondary"
-    RemoveText="Remove"
+    RemoveText="Remove Marker"
 
     OnKeyEvent=InternalOnKeyEvent
     OnMousePressed=InternalOnMousePressed
