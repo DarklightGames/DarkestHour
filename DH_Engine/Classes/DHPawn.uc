@@ -3252,7 +3252,7 @@ function CheckGiveBinocs()
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
         PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-        if (GRI != none && PRI != none && PRI.IsSquadLeader())
+        if (GRI != none && PRI != none && (PRI.IsSquadLeader() || PRI.IsAssistantLeader()))
         {
             CreateInventory("DH_Equipment.DHBinocularsItem");
         }
