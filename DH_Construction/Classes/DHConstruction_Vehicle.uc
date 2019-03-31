@@ -167,7 +167,7 @@ static function bool ShouldShowOnMenu(DHConstruction.Context Context)
 {
     if (GetVehicleClass(Context) != none)
     {
-        super.ShouldShowOnMenu(Context);
+        return super.ShouldShowOnMenu(Context);
     }
     else
     {
