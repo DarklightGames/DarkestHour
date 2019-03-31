@@ -373,7 +373,7 @@ defaultproperties
         OnActivate=OnSquadNameEditBoxActivate
         OnDeactivate=OnSquadNameEditBoxDeactivate
         OnEnter=OnSquadNameEditBoxEnter
-        MaxWidth=16
+        MaxWidth=20
     End Object
     eb_SquadName=SquadNameEditBox
 
