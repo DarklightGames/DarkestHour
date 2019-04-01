@@ -6,9 +6,6 @@
 class DHATGun extends DHVehicle
     abstract;
 
-#exec OBJ LOAD FILE=..\Textures\DH_Artillery_tex.utx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Artillery_stc.usx
-
 enum ERotateError
 {
     ERROR_None,

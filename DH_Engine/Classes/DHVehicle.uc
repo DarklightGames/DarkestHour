@@ -6,7 +6,6 @@
 class DHVehicle extends ROWheeledVehicle
     abstract;
 
-#exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
 #exec OBJ LOAD FILE=..\Sounds\DHMenuSounds.uax
 
 // Structs
