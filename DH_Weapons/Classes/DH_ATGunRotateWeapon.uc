@@ -63,7 +63,10 @@ simulated function OnEnterRotation()
 
 function ServerEnterRotation(DHATGun Gun, DHPawn Pawn)
 {
-    Gun.ServerEnterRotation(Pawn);
+    if (Gun != none)
+    {
+        Gun.ServerEnterRotation(Pawn);
+    }
 }
 
 simulated function OnExitRotation()
@@ -99,7 +102,10 @@ simulated function OnExitRotation()
 
 function ServerExitRotation(DHATGun Gun)
 {
-    Gun.ServerExitRotation();
+    if (Gun != none)
+    {
+        Gun.ServerExitRotation();
+    }
 }
 
 simulated function OnRotate(byte InputRotationFactor)
@@ -112,7 +118,10 @@ simulated function OnRotate(byte InputRotationFactor)
 
 function ServerRotate(DHATGun Gun, byte InputRotationFactor)
 {
-    Gun.ServerRotate(InputRotationFactor);
+    if (Gun != none)
+    {
+        Gun.ServerRotate(InputRotationFactor);
+    }
 }
 
 simulated function bool WeaponLeanLeft()
