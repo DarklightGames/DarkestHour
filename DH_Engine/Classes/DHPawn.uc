@@ -7074,7 +7074,7 @@ function EnterATRotation(DHATGun Gun)
     ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon");
 }
 
-function ClientExitATRotation()
+simulated function ClientExitATRotation()
 {
     GunToRotate = none;
 }
