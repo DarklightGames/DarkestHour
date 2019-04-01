@@ -21,6 +21,7 @@ var     bool                    bIsDeveloper;
 var     float                   NameDrawStartTime;
 var     float                   LastNameDrawTime;
 var     int                     DHKills;
+var     int                     DHKillsSinceSpawn;
 
 // Squad
 var     int                     SquadIndex;
@@ -38,7 +39,7 @@ replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        SquadIndex, SquadMemberIndex, PatronStatus, bIsDeveloper, DHKills, bIsSquadAssistant,
+        SquadIndex, SquadMemberIndex, PatronStatus, bIsDeveloper, DHKills, DHKillsSinceSpawn, bIsSquadAssistant,
         TotalScore, CategoryScores;
 }
 
