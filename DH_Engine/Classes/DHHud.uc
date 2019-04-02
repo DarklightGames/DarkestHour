@@ -3399,6 +3399,9 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
                 TexRotator(FinalBlend(SupplyPointIcon.WidgetTexture).Material).Rotation.Yaw = 0.0;
             }
 
+            // Set the color of the widget
+            SupplyPointIcon.Tints[0] = class'DHColor'.default.FriendlyColor;
+
             DHDrawIconOnMap(C, SubCoords, SupplyPointIcon, MyMapScale, Temp, MapCenter, Viewport);
 
             // HACK: This stops the engine from "instancing" the texture,
@@ -4052,7 +4055,7 @@ function DrawPlayerIconsOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMa
                 class'UQuantize'.static.DequantizeClamped2DPose(PC.SquadLeaderLocations[i], X, Y, PlayerYaw);
                 PlayerLocation = DHGRI.GetWorldCoords(X, Y);
 
-                SquadMemberColor = class'DHColor'.default.FriendlySquadColor;
+                SquadMemberColor = class'DHColor'.default.FriendlyColor;
                 SquadMemberColor.A = 160;
 
                 IconScale = PlayerIconScale;
