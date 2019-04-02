@@ -62,7 +62,7 @@ defaultproperties
     MenuDescription="Provides a team-wide vehicle spawn point."
     Stages(0)=(Progress=0,StaticMesh=StaticMesh'DH_Construction_stc.Bases.GER_Light_Vehicle_Pool_undeployed')
     ProgressMax=12
-    SupplyCost=1750
+    SupplyCost=1500
     MinDamagetoHurt=5
 
     // Temp
@@ -71,10 +71,10 @@ defaultproperties
     // Placement
     bCanPlaceIndoors=false
     bCanPlaceInObjective=false
-    DuplicateFriendlyDistanceInMeters=400.0
+    DuplicateFriendlyDistanceInMeters=200.0
     DuplicateEnemyDistanceInMeters=200.0
-    ObjectiveDistanceMinMeters=200.0
-    EnemyObjectiveDistanceMinMeters=400.0
+    ObjectiveDistanceMinMeters=100.0
+    EnemyObjectiveDistanceMinMeters=300.0
     ProxyTraceDepthMeters=10.0
     bCanOnlyPlaceOnTerrain=true
     bCanPlaceInWater=false
@@ -82,6 +82,7 @@ defaultproperties
     SquadMemberCountMinimum=3
     ArcLengthTraceIntervalInMeters=0.5
     ProximityRequirements(0)=(ConstructionClass=class'DHConstruction_PlatoonHQ',DistanceMeters=100.0)
+    bCanBePlacedInDangerZone=false
 
     // Collision
     CollisionHeight=120.0
