@@ -294,26 +294,6 @@ simulated function PostNetReceive()
     }
 }
 
-simulated event SetHeadScale(float NewScale)
-{
-    HeadScale = NewScale;
-    SetBoneScale(4,HeadScale,'head');
-
-    if (Headgear != none)
-    {
-        Headgear.SetDrawScale(HeadScale);
-    }
-
-    // Increase scale of main collision hitbox (whole body hitbox used first to make sure you hit a target)
-    // We shouldn't increase this on the same scale as the head as the main collision hitbox will be way too large
-    HitPoints[0].PointRadius = 60.0 * HeadScale;
-    HitPoints[0].PointHeight = 75.0 * HeadScale;
-
-    // Adjust scale of head hitbox
-    HitPoints[1].PointRadius = 6.5 * HeadScale;
-    HitPoints[1].PointHeight = 8.0 * HeadScale;
-}
-
 // Modified so if player is on fire we cause fire damage every second, & force him to drop any weapon he in carrying in his hands
 // We also enable burning effects when he first catches fire, or stop them if he's no longer on fire
 simulated function Tick(float DeltaTime)

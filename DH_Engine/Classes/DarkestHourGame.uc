@@ -1106,16 +1106,6 @@ function ScoreMortarSpotAssist(Controller Spotter, Controller Mortarman)
     return;
 }
 
-exec function BigHeads()
-{
-    local DHPawn P;
-
-    foreach DynamicActors(class'DHPawn', P)
-    {
-        P.SetHeadScale(15.0);
-    }
-}
-
 // Modified to prevent fellow vehicle crewman from getting kills and score for yours
 function ScoreKill(Controller Killer, Controller Other)
 {
@@ -1139,22 +1129,6 @@ function ScoreKill(Controller Killer, Controller Other)
         {
             ++PRI.Kills;
             ++PRI.DHKills;
-            ++PRI.DHKillsSinceSpawn;
-
-            if (Killer.Pawn != none)
-            {
-                if (Vehicle(Killer.Pawn) != none)
-                {
-                    if (Vehicle(Killer.Pawn).Driver != none)
-                    {
-                        Vehicle(Killer.Pawn).Driver.SetHeadScale(FMax(Vehicle(Killer.Pawn).Driver.default.HeadScale, PRI.DHKillsSinceSpawn));
-                    }
-                }
-                else
-                {
-                    Killer.Pawn.SetHeadScale(FMax(Killer.Pawn.default.HeadScale, PRI.DHKillsSinceSpawn));
-                }
-            }
         }
     }
 
@@ -2083,7 +2057,6 @@ function Killed(Controller Killer, Controller Killed, Pawn KilledPawn, class<Dam
         if (Killed.PlayerReplicationInfo != none)
         {
             Killed.PlayerReplicationInfo.Deaths += 1.0;
-            DHPlayerReplicationInfo(Killed.PlayerReplicationInfo).DHKillsSinceSpawn = 0; // TODO this should be cleaned up, so it doesn't need casted
         }
 
         // Special handling if this was a spawn kill
