@@ -4,7 +4,8 @@
 //==============================================================================
 
 class DHMortarVehicleWeaponPawn extends DHVehicleWeaponPawn
-    abstract;
+    abstract
+    dependson(DHPlayer);
 
 struct DigitSet
 {
@@ -49,6 +50,9 @@ var     TexRotator  HUDArrowTexture;         // indicator icon for current eleva
 var     texture     HUDHighExplosiveTexture; // ammo icon for HE rounds
 var     texture     HUDSmokeTexture;         // ammo icon for smoke rounds
 var     DigitSet    Digits;                  // numerals for showing ammo count
+
+// Fire adjustment info
+var     class<DHMapMarker>    TargetMarkerClass;
 
 replication
 {
@@ -118,14 +122,59 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out actor Vie
     }
 }
 
+simulated function string GetDeflectionAdjustmentString(DHPlayer PC)
+{
+    local int Deflection;
+    local string DeflectionSign;
+    local vector WeaponLocation, Target;
+    local rotator WeaponRotation;
+    local DHPlayer.PersonalMapMarker TargetMarker;
+
+    if (PC == none)
+    {
+        return "";
+    }
+
+    TargetMarker = PC.FindPersonalMarker(TargetMarkerClass);
+
+    if (TargetMarker.MapMarkerClass == none)
+    {
+        return "";
+    }
+
+    WeaponLocation.X = VehWep.Location.X;
+    WeaponLocation.Y = VehWep.Location.Y;
+
+    WeaponRotation = Gun.CurrentAim;
+    WeaponRotation.Yaw = -WeaponRotation.Yaw; // reversed due to messed up rigging
+    WeaponRotation = rotator(vector(WeaponRotation) >> Gun.Rotation);
+    WeaponRotation.Roll = 0;
+    WeaponRotation.Pitch = 0;
+
+    Target = TargetMarker.WorldLocation - WeaponLocation;
+    Deflection = -class'DHUnits'.static.RadiansToMilliradians(class'UVector'.static.SignedAngle(Target, vector(WeaponRotation), vect(0, 0, 1)));
+
+    if (Abs(Deflection) > 500)
+    {
+        return "";
+    }
+
+    if (Deflection > 0)
+    {
+        DeflectionSign = "+";
+    }
+
+    return DeflectionSign $ string(Deflection);
+}
+
 // Modified to draw the mortar 1st person overlay & HUD information, including elevation, traverse & ammo
 // Also to fix bug where HUDOverlay would be destroyed if function called before net client received Controller reference through replication
 simulated function DrawHUD(Canvas C)
 {
     local PlayerController PC;
     local vector           Loc;
-    local float            HUDScale, Elevation, Traverse;
-    local int              SizeX, SizeY, RoundIndex;
+    local float            HUDScale, Elevation;
+    local int              SizeX, SizeY, RoundIndex, Traverse;
     local byte             Quotient, Remainder;
     local string           TraverseString;
 
@@ -149,23 +198,23 @@ simulated function DrawHUD(Canvas C)
 
         // Get elevation & traverse
         Elevation = DHMortarVehicleWeapon(VehWep).Elevation;
-        Traverse = class'UUnits'.static.UnrealToDegrees(VehWep.CurrentAim.Yaw);
+        Traverse = class'DHUnits'.static.UnrealToMilliradians(VehWep.CurrentAim.Yaw);
 
-        if (Traverse > 180.0) // convert to +/-
+        if (Traverse > 3200) // convert to +/-
         {
-            Traverse -= 360.0;
+            Traverse -= 6400;
         }
 
         Traverse = -Traverse; // all the yaw/traverse for mortars has to be reversed (screwed up mesh rigging)
 
         TraverseString = "T: ";
 
-        if (Traverse > 0.0) // add a + at the beginning to explicitly state a positive rotation
+        if (Traverse > 0) // add a + at the beginning to explicitly state a positive rotation
         {
             TraverseString $= "+";
         }
 
-        TraverseString $= string(Traverse);
+        TraverseString $= string(Traverse) @ class'GameInfo'.static.MakeColorCode(class'UColor'.default.Gray) $ GetDeflectionAdjustmentString(DHPlayer(PC));
 
         // Draw current round type icon
         RoundIndex = VehWep.GetAmmoIndex();
@@ -916,4 +965,7 @@ defaultproperties
     OverlayKnobLoweringAnimRate=1.25
     OverlayKnobRaisingAnimRate=1.25
     OverlayKnobTurnAnimRate=1.25
+
+    // Fire adjustment info
+    TargetMarkerClass=class'DHMapMarker_Ruler'
 }

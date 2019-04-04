@@ -54,3 +54,7 @@ static final function vector MaxComponent(vector A, vector B)
     return V;
 }
 
+static final function float SignedAngle(vector From, vector To, vector PlaneNormal)
+{
+    return ATan((From cross To) dot PlaneNormal, From dot To);
+}
