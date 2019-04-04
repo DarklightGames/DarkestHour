@@ -15,24 +15,58 @@ enum EResupplyType
 };
 
 var     private int     TeamIndex;      // Team this volume resupplies
-var     EResupplyType   ResupplyType;   //Who this volume will resupply
+var     EResupplyType   ResupplyType;   // Who this volume will resupply
 var     array<Pawn>     ResupplyActors;
 var     float           UpdateTime;     // How often this thing needs to do it's business
+var     bool            bShowOnMap;
+
+replication
+{
+    // Variables the server will replicate to all clients
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        TeamIndex, ResupplyType, bShowOnMap;
+}
 
 delegate OnPawnResupplied(Pawn P);            // Called for every pawn that is resupplied
 
 function OnTeamIndexChanged();
 
-simulated function PostBeginPlay()
+function PostBeginPlay()
 {
+    local DHGameReplicationInfo GRI;
+
     super(Actor).PostBeginPlay();
+
+    GRI = DHGameReplicationInfo(Level.GRI);
+
+    if (GRI != none)
+    {
+        // Add the attachement to the GRI array, if it fails to add, show a warning in the log
+        if (GRI.AddResupplyAttachement(self) == -1)
+        {
+            Warn("Unable to add a Resupply Attachement to GRI.ResupplyAttachments in DHResupplyAttachment's PostBeginPlay()");
+        }
+    }
 
     SetTimer(1.0, true);
 }
 
-function int GetTeamIndex()
+simulated function int GetTeamIndex()
 {
     return TeamIndex;
+}
+
+simulated function Material GetAttachmentIcon()
+{
+    switch (ResupplyType)
+    {
+        case RT_Players:
+            return Texture'DH_InterfaceArt2_tex.Icons.munitions_infantry';
+        case RT_Vehicles:
+            return Texture'DH_InterfaceArt2_tex.Icons.munitions_vehicle';
+        default:
+            return Texture'DH_InterfaceArt2_tex.Icons.munitions_infantry';
+    }
 }
 
 final function SetTeamIndex(int TeamIndex)
@@ -275,7 +309,9 @@ event UnTouch(Actor Other)
 
 defaultproperties
 {
-    TeamIndex=NEUTRAL_TEAM_INDEX
+    RemoteRole=ROLE_DumbProxy
+
+    TeamIndex=-1
     UpdateTime=2.5
     ResupplyType=RT_All
     bDramaticLighting=true

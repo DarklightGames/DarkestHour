@@ -28,6 +28,7 @@ function PostBeginPlay()
             ResupplyAttachment.SetCollisionSize(ResupplyAttachmentCollisionRadius, ResupplyAttachmentCollisionHeight);
             ResupplyAttachment.SetBase(self);
             ResupplyAttachment.OnPawnResupplied = MyOnPawnResupplied;
+            ResupplyAttachment.bShowOnMap = true;
         }
         else
         {

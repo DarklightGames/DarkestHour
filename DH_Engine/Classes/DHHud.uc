@@ -86,6 +86,9 @@ var     SpriteWidget        SupplyCountWidget;
 var     SpriteWidget        SupplyCountIconWidget;
 var     TextWidget          SupplyCountTextWidget;
 
+// Resupply Attachment
+var     SpriteWidget        ResupplyAttachmentIcon;
+
 // Construction
 var     SpriteWidget        VehicleSuppliesIcon;
 var     TextWidget          VehicleSuppliesText;
@@ -3387,6 +3390,22 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
         }
     }
 
+    // Draw resupply attachments
+    for (i = 0; i < arraycount(DHGRI.ResupplyAttachments); ++i)
+    {
+        if (DHGRI.ResupplyAttachments[i] == none || !DHGRI.ResupplyAttachments[i].bShowOnMap ||
+            (DHGRI.ResupplyAttachments[i].GetTeamIndex() != OwnerTeam && DHGRI.ResupplyAttachments[i].GetTeamIndex() != NEUTRAL_TEAM_INDEX))
+        {
+            continue;
+        }
+
+        // Get the Widget texture
+        ResupplyAttachmentIcon.WidgetTexture = DHGRI.ResupplyAttachments[i].GetAttachmentIcon();
+
+        // Draw the Widget
+        DHDrawIconOnMap(C, SubCoords, ResupplyAttachmentIcon, MyMapScale, DHGRI.ResupplyAttachments[i].Location, MapCenter, Viewport);
+    }
+
     // Draw supply points
     for (i = 0; i < arraycount(DHGRI.SupplyPoints); ++i)
     {
@@ -6090,6 +6109,8 @@ defaultproperties
 
     SupplyPointIcon=(WidgetTexture=FinalBlend'DH_GUI_tex.GUI.supply_point_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.04,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
+    ResupplyAttachmentIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.03,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=0,G=124,B=252,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+
     // Map markers
     MapMarkerIcon=(WidgetTexture=none,RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.04,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=0,G=0,B=255,A=255),Tints[1]=(R=0,G=0,B=255,A=255))
 
@@ -6129,7 +6150,7 @@ defaultproperties
     VehicleSmokeLauncherRangeInfill=(WidgetTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.SmokeLauncher_rangebar_infill',TextureCoords=(X1=0,Y1=0,X2=63,Y2=255),TextureScale=0.096,DrawPivot=DP_LowerLeft,PosX=0.37,PosY=1.0,OffsetX=-10,OffsetY=-18,ScaleMode=SM_Up,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Construction
-    VehicleSuppliesIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.supply_cache',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=1.0,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.0,OffsetX=-24,OffsetY=-16,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    VehicleSuppliesIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.supply_cache',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.4,DrawPivot=DP_MiddleMiddle,PosX=0.5,PosY=0.0,OffsetX=-24,OffsetY=-16,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     VehicleSuppliesText=(PosX=0.5,PosY=0,WrapWidth=0,WrapHeight=0,OffsetX=-8,OffsetY=-16,DrawPivot=DP_MiddleLeft,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255),bDrawShadow=true)
 
     // Indicators
