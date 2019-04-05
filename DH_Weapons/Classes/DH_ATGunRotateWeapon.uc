@@ -50,6 +50,7 @@ simulated function OnEnterRotation()
 
     Gun = P.GunToRotate;
     Log("Start Rot: "$Gun.Rotation);
+    Log(Gun.Owner);
     if (Gun == none)
     {
         Destroy();
