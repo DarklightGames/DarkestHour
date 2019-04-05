@@ -34,6 +34,8 @@ var int               PlayersNeededToRotate;
 var int               RotateCooldown;
 var float             RotateControlRadiusInMeters;
 var float             RotationsPerSecond;
+var Rotator           SentinelRotator;
+var Rotator           OldRotator;
 
 replication
 {
@@ -45,6 +47,9 @@ replication
 
     unreliable if (Role == ROLE_Authority && Physics == PHYS_None)
         ClientAdjustRotation;
+
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        SentinelRotator;
 }
 
 // Disabled as nothing in Tick is relevant to an AT gun (to be on the safe side, MinBrakeFriction is set very high in default properties, so gun won't slide down a hill)
@@ -308,6 +313,7 @@ function ServerEnterRotation(DHPawn Instigator)
 
 function ServerExitRotation()
 {
+    Log("Server Exit Rotation");
     if (RotatingActor != none && !RotatingActor.bPendingDelete)
     {
         RotatingActor.Destroy();
@@ -334,14 +340,20 @@ function HandleRotate(int RotationFactor);
 function OnRotatingActorDestroyed(int Time);
 
 simulated function ClientAdjustRotation(rotator NewRotation)
+//function ClientAdjustRotation(rotator NewRotation)
 {
+
     SetRotation(NewRotation);
+    Log("Client rotation:"$Rotation);
 }
 
 state Rotating
 {
     function BeginState()
     {
+        Log("Start Rotation");
+        Log(Rotation);
+
         bIsBeingRotated = true;
 
         RotatingActor = Spawn(class'DHRotatingActor',,, Location, Rotation);
@@ -396,7 +408,24 @@ state Rotating
         }
 
         SetBase(none);
-        ClientAdjustRotation(RotatingActor.DesiredRotation);
+        // potentially the problem is here!
+
+
+
+        // getting rid of this line prevents a miss match of the gun's model
+        // and the gun's fire trajectory. I think this might indicate that
+        // while the client is being updated with the new rotation, the server is being reset each end.
+        // ClientAdjustRotation(RotatingActor.DesiredRotation);
+
+        // my addition hoping to force the server in line with the client.
+        SetRotation(RotatingActor.DesiredRotation);
+
+        SentinelRotator = Rotation;
+
+        Log("Ending Rotation");
+        Log(RotatingActor.DesiredRotation);
+        Log(Rotation);
+
         SetPhysics(PHYS_Karma);
 
         bIsBeingRotated = false;
@@ -406,6 +435,22 @@ state Rotating
             RotateControllerPawn.ClientExitATRotation();
         }
     }
+}
+
+simulated event PostNetReceive()
+{
+
+    super.PostNetReceive();
+
+    // check if SentinelRotator has changed!
+    if (OldRotator != SentinelRotator)
+    {
+        Log("POST NET REC: "$ SentinelRotator);
+        //has changed:
+        OldRotator = SentinelRotator;
+        SetRotation(SentinelRotator);
+    }
+
 }
 
 // Overriden to suppress the touch message when the gun is being rotated
@@ -419,7 +464,7 @@ simulated event NotifySelected(Pawn User)
 }
 
 // Functions emptied out as AT gun bases cannot be occupied & have no engine or treads:
-simulated function PostNetReceive();
+//simulated function PostNetReceive();
 function Fire(optional float F);
 function ServerStartEngine();
 simulated function SetEngine();
@@ -461,7 +506,7 @@ defaultproperties
 {
     // Key properties
     bNeverReset=true // AT gun never re-spawns if left unattended with no friendlies nearby or is left disabled
-    bNetNotify=false // AT gun doesn't use PostNetReceive() as engine on/off, damaged tracks & hull fires are all irrelevant to it
+    bNetNotify=true // AT gun doesn't use PostNetReceive() as engine on/off, damaged tracks & hull fires are all irrelevant to it
     bHasTreads=false
     bMustBeTankCommander=false
     bMultiPosition=false
@@ -517,6 +562,9 @@ defaultproperties
     RotateControlRadiusInMeters=5
     RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     RotateSoundVolume=20.0
+    SentinelRotator=(Pitch=0,Yaw=0,Roll=0)
+    OldRotator=(Pitch=0,Yaw=0,Roll=0)
+
 
     // Karma properties
     Begin Object Class=KarmaParamsRBFull Name=KParams0
