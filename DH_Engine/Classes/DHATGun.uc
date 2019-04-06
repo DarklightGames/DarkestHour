@@ -35,7 +35,8 @@ var int               RotateCooldown;
 var float             RotateControlRadiusInMeters;
 var float             RotationsPerSecond;
 //var Rotator           SentinelRotator;
-var Int               SentinelRotator;
+//var Int               SentinelRotator;
+var String            SentinelString;
 var Rotator           OldRotator;
 
 
@@ -51,7 +52,8 @@ replication
         ClientAdjustRotation;
 
     reliable if (bNetDirty && Role == ROLE_Authority)
-        SentinelRotator;
+        SentinelString;
+        //SentinelRotator;
 }
 
 // Disabled as nothing in Tick is relevant to an AT gun (to be on the safe side, MinBrakeFriction is set very high in default properties, so gun won't slide down a hill)
@@ -424,7 +426,9 @@ state Rotating
         Log(owner);
         Log(Role);
 
-        SentinelRotator = class'UInteger'.static.FromShorts(Rotation.Pitch, Rotation.Yaw);
+        SentinelString = String(Rotation);
+
+        //SentinelRotator = class'UInteger'.static.FromShorts(Rotation.Pitch, Rotation.Yaw);
 
         // OG Set Client Rotation implementation.
         //SentinelRotator = Rotation;
@@ -448,6 +452,36 @@ state Rotating
 simulated event PostNetReceive()
 {
     local Rotator uncomRotation;
+    local int firstComma,secondComma;
+    local String CutSentinel;
+    super.PostNetReceive();
+
+    //CutSentinel = SentinelString;
+   // for(int i = 0; i < 3; i++)
+    //{
+
+    //}
+     firstComma = InStr(SentinelString,",");
+     uncomRotation.Pitch = Int(Left(SentinelString, firstComma));
+     CutSentinel = Mid(SentinelString,firstComma + 1);
+     secondComma = InStr(CutSentinel, ",");
+     uncomRotation.Yaw = Int(Left(CutSentinel, secondComma));
+     uncomRotation.Roll = Int(Mid(CutSentinel, secondComma + 1));
+
+
+    if(OldRotator != unComRotation)
+    {
+        Log(uncomRotation);
+        OldRotator = uncomRotation;
+
+        SetPhysics(PHYS_None);
+        SetRotation(uncomRotation);
+        SetPhysics(PHYS_Karma);
+    }
+
+    // check if SentinelRotator has changed!
+    /*
+    local Rotator uncomRotation;
     local int Pitch;
     local int Yaw;
     super.PostNetReceive();
@@ -457,8 +491,6 @@ simulated event PostNetReceive()
     uncomRotation.Pitch = Pitch;
     uncomRotation.Yaw = Yaw;
     uncomRotation.Roll = 0;
-    // check if SentinelRotator has changed!
-
     if (OldRotator != uncomRotation)
     {
         Log("POST NET REC: "$ uncomRotation);
@@ -470,7 +502,7 @@ simulated event PostNetReceive()
         SetRotation(uncomRotation);
         SetPhysics(PHYS_Karma);
     }
-
+    */
     /*
     if (OldRotator != SentinelRotator)
     {
@@ -597,7 +629,7 @@ defaultproperties
     RotateControlRadiusInMeters=5
     RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     RotateSoundVolume=20.0
-    SentinelRotator=(Pitch=0,Yaw=0,Roll=0)
+    //SentinelRotator=(Pitch=0,Yaw=0,Roll=0)
     OldRotator=(Pitch=0,Yaw=0,Roll=0)
 
 
