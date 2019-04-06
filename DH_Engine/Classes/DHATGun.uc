@@ -34,6 +34,9 @@ var int               PlayersNeededToRotate;
 var int               RotateCooldown;
 var float             RotateControlRadiusInMeters;
 var float             RotationsPerSecond;
+var String            SentinelString;
+var Rotator           OldRotator;
+
 
 replication
 {
@@ -43,8 +46,8 @@ replication
     reliable if (Role == ROLE_Authority && !IsInState('Rotating'))
         NextRotationTime;
 
-    unreliable if (Role == ROLE_Authority && Physics == PHYS_None)
-        ClientAdjustRotation;
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        SentinelString;
 }
 
 // Disabled as nothing in Tick is relevant to an AT gun (to be on the safe side, MinBrakeFriction is set very high in default properties, so gun won't slide down a hill)
@@ -308,6 +311,7 @@ function ServerEnterRotation(DHPawn Instigator)
 
 function ServerExitRotation()
 {
+
     if (RotatingActor != none && !RotatingActor.bPendingDelete)
     {
         RotatingActor.Destroy();
@@ -333,15 +337,14 @@ function ServerRotate(byte InputRotationFactor)
 function HandleRotate(int RotationFactor);
 function OnRotatingActorDestroyed(int Time);
 
-simulated function ClientAdjustRotation(rotator NewRotation)
-{
-    SetRotation(NewRotation);
-}
+
 
 state Rotating
 {
     function BeginState()
     {
+
+
         bIsBeingRotated = true;
 
         RotatingActor = Spawn(class'DHRotatingActor',,, Location, Rotation);
@@ -396,7 +399,17 @@ state Rotating
         }
 
         SetBase(none);
-        ClientAdjustRotation(RotatingActor.DesiredRotation);
+
+
+        // my addition hoping to force the server in line with the client.
+        SetRotation(RotatingActor.DesiredRotation);
+
+
+
+        SentinelString = String(Rotation);
+
+
+
         SetPhysics(PHYS_Karma);
 
         bIsBeingRotated = false;
@@ -408,6 +421,35 @@ state Rotating
     }
 }
 
+
+// Used to force the final server rotation onto the clients. Gets around replication ownership issue.
+simulated event PostNetReceive()
+{
+    local Rotator uncomRotation;
+    local int firstComma,secondComma;
+    local String CutSentinel;
+    super.PostNetReceive();
+
+    // Rotation is sent as string, process.
+    firstComma = InStr(SentinelString,",");
+    uncomRotation.Pitch = Int(Left(SentinelString, firstComma));
+    CutSentinel = Mid(SentinelString,firstComma + 1);
+    secondComma = InStr(CutSentinel, ",");
+    uncomRotation.Yaw = Int(Left(CutSentinel, secondComma));
+    uncomRotation.Roll = Int(Mid(CutSentinel, secondComma + 1));
+
+
+    if(OldRotator != unComRotation)
+    {
+
+        OldRotator = uncomRotation;
+
+        SetPhysics(PHYS_None);
+        SetRotation(uncomRotation);
+        SetPhysics(PHYS_Karma);
+    }
+}
+
 // Overriden to suppress the touch message when the gun is being rotated
 // TODO: This is probably not the best way to do this
 simulated event NotifySelected(Pawn User)
@@ -415,11 +457,11 @@ simulated event NotifySelected(Pawn User)
     if (!bIsBeingRotated)
     {
         super.NotifySelected(User);
+
     }
 }
 
 // Functions emptied out as AT gun bases cannot be occupied & have no engine or treads:
-simulated function PostNetReceive();
 function Fire(optional float F);
 function ServerStartEngine();
 simulated function SetEngine();
@@ -461,7 +503,7 @@ defaultproperties
 {
     // Key properties
     bNeverReset=true // AT gun never re-spawns if left unattended with no friendlies nearby or is left disabled
-    bNetNotify=false // AT gun doesn't use PostNetReceive() as engine on/off, damaged tracks & hull fires are all irrelevant to it
+    bNetNotify=true // AT gun doesn't use PostNetReceive() as engine on/off, damaged tracks & hull fires are all irrelevant to it
     bHasTreads=false
     bMustBeTankCommander=false
     bMultiPosition=false
@@ -517,6 +559,9 @@ defaultproperties
     RotateControlRadiusInMeters=5
     RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     RotateSoundVolume=20.0
+    //SentinelRotator=(Pitch=0,Yaw=0,Roll=0)
+    OldRotator=(Pitch=0,Yaw=0,Roll=0)
+
 
     // Karma properties
     Begin Object Class=KarmaParamsRBFull Name=KParams0

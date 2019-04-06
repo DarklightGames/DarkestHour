@@ -76,6 +76,7 @@ simulated function OnExitRotation()
         return;
     }
 
+
     ServerExitRotation(Gun);
     Gun = none;
 
@@ -98,10 +99,13 @@ simulated function OnExitRotation()
         PutDown();
         Instigator.Controller.SwitchToBestWeapon();
     }
+
+
 }
 
 function ServerExitRotation(DHATGun Gun)
 {
+
     if (Gun != none)
     {
         Gun.ServerExitRotation();
