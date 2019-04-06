@@ -49,8 +49,7 @@ simulated function OnEnterRotation()
     }
 
     Gun = P.GunToRotate;
-    Log("Start Rot: "$Gun.Rotation);
-    Log(Gun.Owner);
+
     if (Gun == none)
     {
         Destroy();
@@ -76,9 +75,8 @@ simulated function OnExitRotation()
     {
         return;
     }
-    Log("On Exit Rotation: "$Gun.Rotation);
-    //Gun.SetRotation(Gun.Base.Rotation);
-    //Gun.SetBase(none);
+
+
     ServerExitRotation(Gun);
     Gun = none;
 
@@ -107,7 +105,7 @@ simulated function OnExitRotation()
 
 function ServerExitRotation(DHATGun Gun)
 {
-    Log("Server Exit Rotation Wep");
+
     if (Gun != none)
     {
         Gun.ServerExitRotation();
@@ -118,14 +116,7 @@ simulated function OnRotate(byte InputRotationFactor)
 {
     if (Gun != none)
     {
-
-       // Log(Gun.Rotation.Yaw);
-        //Log(Gun.Rotation);
-        //Log("Rotation Actor:"$Gun.RotatingActor.Rotation);
-
         ServerRotate(Gun, InputRotationFactor);
-        Log("OnRotate: Current: "$Gun.Rotation);
-        //Log("BaseName: "$Gun.Base.Name$": "$Gun.Base.Rotation);
     }
 }
 

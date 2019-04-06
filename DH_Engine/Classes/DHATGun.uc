@@ -34,8 +34,6 @@ var int               PlayersNeededToRotate;
 var int               RotateCooldown;
 var float             RotateControlRadiusInMeters;
 var float             RotationsPerSecond;
-//var Rotator           SentinelRotator;
-//var Int               SentinelRotator;
 var String            SentinelString;
 var Rotator           OldRotator;
 
@@ -48,12 +46,8 @@ replication
     reliable if (Role == ROLE_Authority && !IsInState('Rotating'))
         NextRotationTime;
 
-    unreliable if (Role == ROLE_Authority && Physics == PHYS_None)
-        ClientAdjustRotation;
-
     reliable if (bNetDirty && Role == ROLE_Authority)
         SentinelString;
-        //SentinelRotator;
 }
 
 // Disabled as nothing in Tick is relevant to an AT gun (to be on the safe side, MinBrakeFriction is set very high in default properties, so gun won't slide down a hill)
@@ -317,7 +311,7 @@ function ServerEnterRotation(DHPawn Instigator)
 
 function ServerExitRotation()
 {
-    Log("Server Exit Rotation");
+
     if (RotatingActor != none && !RotatingActor.bPendingDelete)
     {
         RotatingActor.Destroy();
@@ -343,20 +337,13 @@ function ServerRotate(byte InputRotationFactor)
 function HandleRotate(int RotationFactor);
 function OnRotatingActorDestroyed(int Time);
 
-simulated function ClientAdjustRotation(rotator NewRotation)
-//function ClientAdjustRotation(rotator NewRotation)
-{
 
-    SetRotation(NewRotation);
-    Log("Client rotation:"$Rotation);
-}
 
 state Rotating
 {
     function BeginState()
     {
-        Log("Start Rotation");
-        Log(Rotation);
+
 
         bIsBeingRotated = true;
 
@@ -412,30 +399,15 @@ state Rotating
         }
 
         SetBase(none);
-        // potentially the problem is here!
 
-
-
-        // getting rid of this line prevents a miss match of the gun's model
-        // and the gun's fire trajectory. I think this might indicate that
-        // while the client is being updated with the new rotation, the server is being reset each end.
-        // ClientAdjustRotation(RotatingActor.DesiredRotation);
 
         // my addition hoping to force the server in line with the client.
         SetRotation(RotatingActor.DesiredRotation);
-        Log(owner);
-        Log(Role);
+
+
 
         SentinelString = String(Rotation);
 
-        //SentinelRotator = class'UInteger'.static.FromShorts(Rotation.Pitch, Rotation.Yaw);
-
-        // OG Set Client Rotation implementation.
-        //SentinelRotator = Rotation;
-
-        Log("Ending Rotation");
-        Log(RotatingActor.DesiredRotation);
-        Log(Rotation);
 
 
         SetPhysics(PHYS_Karma);
@@ -449,6 +421,8 @@ state Rotating
     }
 }
 
+
+// Used to force the final server rotation onto the clients. Gets around replication ownership issue.
 simulated event PostNetReceive()
 {
     local Rotator uncomRotation;
@@ -456,67 +430,24 @@ simulated event PostNetReceive()
     local String CutSentinel;
     super.PostNetReceive();
 
-    //CutSentinel = SentinelString;
-   // for(int i = 0; i < 3; i++)
-    //{
-
-    //}
-     firstComma = InStr(SentinelString,",");
-     uncomRotation.Pitch = Int(Left(SentinelString, firstComma));
-     CutSentinel = Mid(SentinelString,firstComma + 1);
-     secondComma = InStr(CutSentinel, ",");
-     uncomRotation.Yaw = Int(Left(CutSentinel, secondComma));
-     uncomRotation.Roll = Int(Mid(CutSentinel, secondComma + 1));
+    // Rotation is sent as string, process.
+    firstComma = InStr(SentinelString,",");
+    uncomRotation.Pitch = Int(Left(SentinelString, firstComma));
+    CutSentinel = Mid(SentinelString,firstComma + 1);
+    secondComma = InStr(CutSentinel, ",");
+    uncomRotation.Yaw = Int(Left(CutSentinel, secondComma));
+    uncomRotation.Roll = Int(Mid(CutSentinel, secondComma + 1));
 
 
     if(OldRotator != unComRotation)
     {
-        Log(uncomRotation);
+
         OldRotator = uncomRotation;
 
         SetPhysics(PHYS_None);
         SetRotation(uncomRotation);
         SetPhysics(PHYS_Karma);
     }
-
-    // check if SentinelRotator has changed!
-    /*
-    local Rotator uncomRotation;
-    local int Pitch;
-    local int Yaw;
-    super.PostNetReceive();
-
-    class'UInteger'.static.ToShorts(SentinelRotator, Pitch, Yaw);
-    //uncomRotation = Rotator(Pitch,Yaw,65536);
-    uncomRotation.Pitch = Pitch;
-    uncomRotation.Yaw = Yaw;
-    uncomRotation.Roll = 0;
-    if (OldRotator != uncomRotation)
-    {
-        Log("POST NET REC: "$ uncomRotation);
-        Log(self.Physics);
-        //has changed:
-        OldRotator = uncomRotation;
-
-        SetPhysics(PHYS_None);
-        SetRotation(uncomRotation);
-        SetPhysics(PHYS_Karma);
-    }
-    */
-    /*
-    if (OldRotator != SentinelRotator)
-    {
-        Log("POST NET REC: "$ SentinelRotator);
-        Log(self.Physics);
-        //has changed:
-        OldRotator = SentinelRotator;
-
-        SetPhysics(PHYS_None);
-        SetRotation(SentinelRotator);
-        SetPhysics(PHYS_Karma);
-    }
-   */
-
 }
 
 // Overriden to suppress the touch message when the gun is being rotated
@@ -531,7 +462,6 @@ simulated event NotifySelected(Pawn User)
 }
 
 // Functions emptied out as AT gun bases cannot be occupied & have no engine or treads:
-//simulated function PostNetReceive();
 function Fire(optional float F);
 function ServerStartEngine();
 simulated function SetEngine();
