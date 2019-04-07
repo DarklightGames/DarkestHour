@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHPlayer extends ROPlayer
@@ -16,6 +16,17 @@ enum EMapMode
     MODE_Map,
     MODE_Squads
 };
+
+struct PersonalMapMarker
+{
+    var class<DHMapMarker> MapMarkerClass;
+    var float MapLocationX;
+    var float MapLocationY;
+    var vector WorldLocation;
+};
+
+var     array<class<DHMapMarker> >          PersonalMapMarkerClasses;
+var     private array<PersonalMapMarker>    PersonalMapMarkers;
 
 var     input float             aBaseFire;
 var     bool                    bToggleRun;          // user activated toggle run
@@ -5469,6 +5480,63 @@ function ServerRemoveMapMarker(int MapMarkerIndex)
     }
 }
 
+function array<PersonalMapMarker> GetPersonalMarkers()
+{
+    return PersonalMapMarkers;
+}
+
+function PersonalMapMarker FindPersonalMarker(class<DHMapMarker> MapMarkerClass)
+{
+    local int i;
+
+    for (i = 0; i < PersonalMapMarkers.Length; ++i)
+    {
+        if (PersonalMapMarkers[i].MapMarkerClass == MapMarkerClass)
+        {
+            return PersonalMapMarkers[i];
+        }
+    }
+}
+
+function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY)
+{
+    local DHGameReplicationInfo GRI;
+    local PersonalMapMarker PMM;
+    local int i;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI == none || MapMarkerClass == none || !MapMarkerClass.default.bIsPersonal)
+    {
+        return;
+    }
+
+    if (MapMarkerClass.default.bIsUnique)
+    {
+        for (i = 0; i < PersonalMapMarkers.Length; ++i)
+        {
+            if (PersonalMapMarkers[i].MapMarkerClass == MapMarkerClass)
+            {
+                PersonalMapMarkers.Remove(i, 1);
+                break;
+            }
+        }
+    }
+
+    PMM.MapMarkerClass = MapMarkerClass;
+    PMM.MapLocationX = MapLocationX;
+    PMM.MapLocationY = MapLocationY;
+    PMM.WorldLocation = GRI.GetWorldCoords(MapLocationX, MapLocationY);
+
+    PersonalMapMarkers.Insert(0, 1);
+    PersonalMapMarkers[0] = PMM;
+}
+
+function RemovePersonalMarker(int Index)
+{
+    PersonalMapMarkers.Remove(Index, 1);
+}
+
 simulated function ClientSquadSignal(class<DHSquadSignal> SignalClass, vector L)
 {
     local int i;
@@ -5755,6 +5823,11 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
     else if (!PRI.IsInSquad())
     {
         MenuClassName = "DH_Engine.DHCommandMenu_LoneWolf";
+        return true;
+    }
+    else if (PRI.IsPatron())
+    {
+        MenuClassName = "DH_Engine.DHCommandMenu_Patron";
         return true;
     }
 
@@ -6563,4 +6636,6 @@ defaultproperties
     VoiceChatLANCodec="CODEC_96WB"
 
     ToggleDuckIntervalSeconds=0.5
+
+    PersonalMapMarkerClasses(0)=class'DHMapMarker_Ruler'
 }

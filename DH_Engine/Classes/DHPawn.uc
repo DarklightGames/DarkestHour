@@ -1,13 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHPawn extends ROPawn
     dependson(DHConstructionSupplyAttachment)
     config(User);
-
-#exec OBJ LOAD FILE=ProjectileSounds.uax
 
 // General
 // TODO: I'm sure we can just use existing OldController ref instead of adding SwitchingController, but want to make certain 1st (Matt)
@@ -3252,7 +3250,7 @@ function CheckGiveBinocs()
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
         PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-        if (GRI != none && PRI != none && PRI.IsSquadLeader())
+        if (GRI != none && PRI != none && (PRI.IsSquadLeader() || PRI.IsAssistantLeader()))
         {
             CreateInventory("DH_Equipment.DHBinocularsItem");
         }

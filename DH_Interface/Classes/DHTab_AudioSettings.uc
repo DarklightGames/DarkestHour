@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHTab_AudioSettings extends ROTab_AudioSettings;
@@ -14,12 +14,10 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     super.InitComponent(MyController, MyOwner);
 
     i_BG1.ManageComponent(nu_AudioChannels);
-    i_BG1.UnmanageComponent(sl_VOIP);
 
     i_BG3.UnmanageComponent(co_Quality);
     i_BG3.UnmanageComponent(co_LANQuality);
 
-    RemoveComponent(sl_VOIP);
     RemoveComponent(co_Quality);
     RemoveComponent(co_LANQuality);
 }
@@ -117,9 +115,9 @@ defaultproperties
     sl_EffectsVol=moSlider'DH_Interface.DHTab_AudioSettings.AudioEffectsVolumeSlider'
 
     Begin Object Class=moSlider Name=VoiceVolume
-        MaxValue=10.0
+        MaxValue=1.0
         MinValue=0.0
-        Caption="Voice Chat Volume"
+        Caption="Voice Receive Volume"
         LabelStyleName="DHLargeText"
         OnCreateComponent=VoiceVolume.InternalOnCreateComponent
         IniOption="@Internal"

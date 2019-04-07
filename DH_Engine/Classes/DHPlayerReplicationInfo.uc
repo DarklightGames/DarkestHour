@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHPlayerReplicationInfo extends ROPlayerReplicationInfo;
@@ -78,6 +78,11 @@ simulated function bool IsSLorASL()
 simulated function bool IsInSquad()
 {
     return Team != none && (Team.TeamIndex == AXIS_TEAM_INDEX || Team.TeamIndex == ALLIES_TEAM_INDEX) && SquadIndex != -1;
+}
+
+simulated function bool IsPatron()
+{
+    return PatronStatus > 0;
 }
 
 // Will return true if passed two players that are in the same squad.

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHSquadReplicationInfo extends ReplicationInfo;
@@ -15,7 +15,7 @@ const TEAM_SQUADS_MAX = 8;                  // SQUAD_SIZE_MIN / TEAM_SQUAD_MEMBE
 const RALLY_POINTS_MAX = 32;                // TEAM_SQUADS_MAX * SQUAD_RALLY_POINTS_MAX * 2
 
 const SQUAD_NAME_LENGTH_MIN = 3;
-const SQUAD_NAME_LENGTH_MAX = 16;
+const SQUAD_NAME_LENGTH_MAX = 20;
 
 const SQUAD_LEADER_INDEX = 0;
 
