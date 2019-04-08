@@ -253,6 +253,7 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
         return ERROR_Fatal;
     }
 
+    /*
     if (PlayersNeededToRotate > 1)
     {
         TeammatesInRadiusCount = GetTeammatesInRadiusCount(Pawn);
@@ -262,7 +263,7 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
             return ERROR_NeedMorePlayers;
         }
     }
-
+    */
     return ERROR_None;
 }
 
@@ -347,6 +348,8 @@ state Rotating
 
         bIsBeingRotated = true;
 
+
+
         RotatingActor = Spawn(class'DHRotatingActor',,, Location, Rotation);
         RotatingActor.OnDestroyed = OnRotatingActorDestroyed;
         RotatingActor.ControlRadiusInMeters = RotateControlRadiusInMeters;
@@ -358,7 +361,8 @@ state Rotating
             RotateSoundAttachment.AmbientSound = RotateSound;
             RotateSoundAttachment.SetBase(self);
         }
-
+        log("  ASDASD ASD ASD BINGO");
+        bCollideWorld = False;
         SetPhysics(PHYS_None);
         SetBase(RotatingActor);
     }
@@ -371,6 +375,7 @@ state Rotating
 
     function HandleRotate(int RotationFactor)
     {
+        Log("Handle Rotation");
         RotatingActor.SetRotationFactor(RotationFactor);
 
         if (RotateSoundAttachment != none)
@@ -409,7 +414,7 @@ state Rotating
         SentinelString = String(Rotation);
 
 
-
+        bCollideWorld = False;
         SetPhysics(PHYS_Karma);
 
         bIsBeingRotated = false;
@@ -561,6 +566,7 @@ defaultproperties
     RotateSoundVolume=20.0
     //SentinelRotator=(Pitch=0,Yaw=0,Roll=0)
     OldRotator=(Pitch=0,Yaw=0,Roll=0)
+
 
 
     // Karma properties
