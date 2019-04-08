@@ -153,8 +153,8 @@ defaultproperties
 {
     Options(0)=(ActionText="Rotate",Material=Texture'DH_InterfaceArt2_tex.Rotate')
     EnemyGunText="Cannot rotate an enemy gun"
-    CannotBeRotatedText="The gun cannot be rotated"
-    OccupiedText="The gun is occupied"
-    FatalText="Rotation isn't available"
+    CannotBeRotatedText="Cannot be rotated"
+    OccupiedText="Gun is occupied"
+    FatalText="Rotation unavailable"
     CooldownText="Wait"
 }
