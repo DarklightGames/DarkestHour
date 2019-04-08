@@ -170,6 +170,12 @@ function bool SpawnPlayer(DHPlayer PC)
                     P.bCombatSpawned = bCombatSpawn;
                 }
             }
+            else
+            {
+                // It's possible that the user attempted to spawn a vehicle,
+                // in which case we need to invalidate the spawn reservation.
+                GRI.UnreserveVehicle(PC);
+            }
 
             return bResult;
         }
