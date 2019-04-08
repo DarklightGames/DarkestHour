@@ -5,8 +5,6 @@
 
 class DH_AT57Gun extends DHATGun;
 
-#exec OBJ LOAD FILE=..\Animations\DH_6PounderGun_anm.ukx
-
 defaultproperties
 {
     VehicleNameString="57mm M1 AT gun"

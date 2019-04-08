@@ -5,10 +5,6 @@
 
 class DH_Flak88Gun extends DHATGun;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Flak88_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\MilitaryAxisSMT.utx
-#exec OBJ LOAD FILE=..\StaticMeshes\MilitaryAxisSM.usx
-
 defaultproperties
 {
     VehicleNameString="8.8cm FlaK 36 gun"
