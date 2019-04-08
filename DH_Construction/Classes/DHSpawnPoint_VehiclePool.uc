@@ -54,6 +54,8 @@ function OnSpawnKill(Pawn VictimPawn, Controller KillerController)
 
     if (Construction != none)
     {
+        // If our tank was spawn killed, just destroy the vehicle pool as it's
+        // likely being spawn-camped from afar.
         Construction.BreakMe();
     }
 }
