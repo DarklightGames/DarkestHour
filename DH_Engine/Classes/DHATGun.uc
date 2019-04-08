@@ -311,7 +311,6 @@ function ServerEnterRotation(DHPawn Instigator)
 
 function ServerExitRotation()
 {
-
     if (RotatingActor != none && !RotatingActor.bPendingDelete)
     {
         RotatingActor.Destroy();
@@ -337,14 +336,10 @@ function ServerRotate(byte InputRotationFactor)
 function HandleRotate(int RotationFactor);
 function OnRotatingActorDestroyed(int Time);
 
-
-
 state Rotating
 {
     function BeginState()
     {
-
-
         bIsBeingRotated = true;
 
         RotatingActor = Spawn(class'DHRotatingActor',,, Location, Rotation);
