@@ -1044,6 +1044,11 @@ simulated function bool IsInSquad()
     return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsInSquad();
 }
 
+simulated function bool IsSLorASL()
+{
+    return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsSLorASL();
+}
+
 // Modified to to spawn a DHArtillerySpawner at the strike co-ords instead of using level's NorthEastBoundsspawn to set its height
 // The spawner then simply spawns shell's a fixed height above strike location, & it doesn't need to record OriginalArtyLocation as can simply use its own location
 function ServerArtyStrike()
@@ -5236,7 +5241,7 @@ exec function Speak(string ChannelTitle)
         // If we are trying to speak in unassigned but we are in a squad, then return out
         return;
     }
-    else if (ChannelTitle ~= VRI.CommandChannelName && !PRI.IsSquadLeader())
+    else if (ChannelTitle ~= VRI.CommandChannelName && !PRI.IsSLorASL())
     {
         // If we are trying to speak in command but we aren't a SL, then return out
         return;

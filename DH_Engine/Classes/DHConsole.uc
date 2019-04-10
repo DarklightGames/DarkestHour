@@ -515,7 +515,7 @@ function bool CanUseSayType(string SayType)
         case "VehicleSay":
             return PC.Pawn != none && PC.Pawn.IsA('Vehicle');
         case "CommandSay":
-            return PC.IsSquadLeader();
+            return PC.IsSLorASL();
     }
 
     return false;
