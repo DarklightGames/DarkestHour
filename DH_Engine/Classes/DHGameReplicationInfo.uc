@@ -14,6 +14,7 @@ const OBJECTIVES_MAX = 32;
 const CONSTRUCTION_CLASSES_MAX = 32;
 const VOICEID_MAX = 255;
 const SUPPLY_POINTS_MAX = 15;
+const RESUPPLY_ATTACHEMENTS_MAX = 32;
 const MAP_MARKERS_MAX = 20;
 const MAP_MARKERS_CLASSES_MAX = 16;
 const ARTILLERY_TYPES_MAX = 8;
@@ -134,6 +135,8 @@ var DHSpawnPointBase    SpawnPoints[SPAWN_POINTS_MAX];
 var DHObjective             DHObjectives[OBJECTIVES_MAX];
 var Hashtable_string_int    DHObjectiveTable; // not replicated, but clients create their own so can be used by both client/server
 
+var DHResupplyAttachment    ResupplyAttachments[RESUPPLY_ATTACHEMENTS_MAX];
+
 var bool                bIsInSetupPhase;
 var bool                bRoundIsOver;
 
@@ -214,6 +217,7 @@ replication
         GameType,
         CurrentAlliedToAxisRatio,
         SpawnPoints,
+        ResupplyAttachments,
         SpawningEnableTime,
         bIsInSetupPhase,
         bRoundIsOver,
@@ -540,6 +544,59 @@ simulated event Timer()
     if (Role < ROLE_Authority && DHPlayer(Level.GetLocalPlayerController()) != none)
     {
         DHPlayer(Level.GetLocalPlayerController()).CheckUnlockWeapons();
+    }
+}
+
+//==============================================================================
+// Resupply Attachements
+//==============================================================================
+// Function to add a ResupplyAttachement to an array which is used for iteration, returns the index it was added (-1 if it wasn't added)
+function int AddResupplyAttachement(DHResupplyAttachment Attachment)
+{
+    local int i;
+
+    if (Attachment == none)
+    {
+        return -1;
+    }
+
+    // Check for a duplicate first
+    for (i = 0; i < arraycount(ResupplyAttachments); ++i)
+    {
+        if (Attachment == ResupplyAttachments[i])
+        {
+            return -1; // Attachement already exists in array (return -1 as it wasn't added)
+        }
+    }
+
+    // Now find the nearest valid spot and add it
+    for (i = 0; i < arraycount(ResupplyAttachments); ++i)
+    {
+        if (ResupplyAttachments[i] == none)
+        {
+            ResupplyAttachments[i] = Attachment;
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+function RemoveResupplyAttachement(DHResupplyAttachment Attachment)
+{
+    local int i;
+
+    if (Attachment == none)
+    {
+        return;
+    }
+
+    for (i = 0; i < arraycount(ResupplyAttachments); ++i)
+    {
+        if (ResupplyAttachments[i] == Attachment)
+        {
+            ResupplyAttachments[i] = none;
+        }
     }
 }
 
