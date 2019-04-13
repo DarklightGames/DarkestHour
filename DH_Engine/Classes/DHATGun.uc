@@ -38,6 +38,8 @@ var String            SentinelString;
 var Rotator           OldRotator;
 var bool              bOldRotating;
 
+var Material        RotationProjectionTexture;
+
 var DHConstructionProxyProjector RotProj;
 var DHActorProxy    ActorProxy;
 Var Projector       Proj;
@@ -259,7 +261,7 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
         return ERROR_Fatal;
     }
 
-
+    /*
     if (PlayersNeededToRotate > 1)
     {
         TeammatesInRadiusCount = GetTeammatesInRadiusCount(Pawn);
@@ -269,6 +271,7 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
             return ERROR_NeedMorePlayers;
         }
     }
+    */
 
     return ERROR_None;
 }
@@ -348,14 +351,45 @@ simulated function ClientEnterRotation()
 {
 
         local vector X, Y, Z;
-
+        local FinalBlend FB;
+        local FadeColor FC;
+        local Combiner C;
         bCollideWorld = false;
         SetCollision(false,false,false);
         SetPhysics(PHYS_None);
         bOldRotating = bIsBeingRotated;
 
         RotProj = Spawn(class'DHConstructionProxyProjector',self, ,Location,Rotation);
-        RotProj.ProjTexture = RotProj.GreenTexture;
+
+        FC = new class'FadeColor';
+        FC.Color1 = class'UColor'.default.White;
+        FC.Color1.A = 50;
+        FC.Color2 = class'UColor'.default.White;
+        FC.Color2.A = 95;
+        FC.FadePeriod = 0.33;
+        FC.ColorFadeType = FC_Sinusoidal;
+
+        C = new class'Combiner';
+        C.CombineOperation = CO_Multiply;
+        C.AlphaOperation = AO_Multiply;
+        C.Material1 = RotationProjectionTexture;
+        C.Material2 = FC;
+        C.Modulate4X = true;
+
+        FB.Material = RotationProjectionTexture;
+        FB.FrameBufferBlending = FB_Translucent;
+
+        FB = new class'FinalBlend';
+        FB.FrameBufferBlending = FB_AlphaBlend;
+        FB.ZWrite = true;
+        FB.ZTest = true;
+        FB.AlphaTest = true;
+        FB.TwoSided = true;
+        FB.Material = C;
+        FB.FallbackMaterial = C;
+
+
+        RotProj.ProjTexture = FB;
         RotProj.GotoState('');
         RotProj.bHidden = false;
         RotProj.Texture = none;
@@ -364,12 +398,12 @@ simulated function ClientEnterRotation()
         RotProj.SetBase(self);
         RotProj.bNoProjectOnOwner = true;
         RotProj.MaterialBlendingOp = PB_AlphaBlend;
-        RotProj.ProjTexture = RotProj.GreenTexture;
         RotProj.FrameBufferBlendingOp = PB_AlphaBlend;
         RotProj.FOV = 1;
         RotProj.MaxTraceDistance = 1024.0;
         RotProj.bGradient = true;
-        RotProj.SetDrawScale(1);
+        Log(CollisionRadius);
+        RotProj.SetDrawScale((2.5 * CollisionRadius)/RotProj.ProjTexture.MaterialUSize());
         GetAxes(Rotation, X, Y, Z);
         RotProj.SetRelativeLocation(Z * 128.0);
         RotProj.SetRelativeRotation(rot(-16384, 0, 0));
@@ -636,6 +670,9 @@ defaultproperties
 
     OldRotator=(Pitch=0,Yaw=0,Roll=0)
     bOldRotating = false;
+
+    RotationProjectionTexture = Material'DH_Construction_tex.ui.rotation_projector'
+    //RotationProjectionTexture = Material'DH_Construction_tex.ui.aura_red'
 
     // Karma properties
     Begin Object Class=KarmaParamsRBFull Name=KParams0
