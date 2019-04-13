@@ -12,20 +12,28 @@ var int   RotationFactor;
 var int   ExpiryTime;
 var float ControlRadius;
 
+var Rotator InitalRotation;
+var Rotator YawRot;
+
 var int   LifespanTime;          // how long something can be hogged for rotation
 var float ControlRadiusInMeters; // how far a controlling player can stray away
 
+
 replication
 {
-    unreliable if (RemoteRole == ROLE_SimulatedProxy && Physics == PHYS_Rotating)
-       UpdateRotation;
+
 }
 
 delegate OnDestroyed(int Time);
 
 simulated event PostBeginPlay()
 {
+    local vector TraceHitLocation;
+    local vector TraceHitNormal;
     DesiredRotation = Rotation;
+
+    InitalRotation = Rotation;
+
     ControlRadius = class'DHUnits'.static.MetersToUnreal(ControlRadiusInMeters);
 }
 
@@ -64,28 +72,46 @@ simulated function Tick(float DeltaTime)
 
 function SetRotationFactor(int RotationFactor)
 {
+    Log("Set Rotation Factor");
     self.RotationFactor = RotationFactor;
 }
 
+
 simulated function UpdateRotation(float DeltaTime)
 {
+
     if (RotationFactor == 0)
     {
         return;
     }
 
-    DesiredRotation.Yaw += RotationFactor * RotationRate.Yaw * DeltaTime;
+
+    YawRot.Pitch =0;
+    YawRot.Yaw += RotationFactor * RotationRate.Yaw * DeltaTime;
+    YawRot.Roll = 0;
+
+    DesiredRotation = QuatToRotator( QuatProduct(  QuatFromRotator(YawRot) , QuatFromRotator(InitalRotation)  )  );
+
+
 }
+
+
+
 
 defaultproperties
 {
     Physics=PHYS_Rotating
     RotationRate=(Pitch=2048,Yaw=2048,Roll=2048)
+    YawRot=(Pitch=0,Yaw=0,Roll=0)
     RemoteRole=ROLE_SimulatedProxy
+
+    Texture = none;
+
     bReplicateMovement=true
     bNetInitialRotation=true
     bAlwaysRelevant=true
     bRotateToDesired=true
+
     LifespanTime=20
     ControlRadiusInMeters=5.0
 }

@@ -57,6 +57,7 @@ simulated function OnEnterRotation()
     }
     else
     {
+        Gun.ClientEnterRotation();
         ServerEnterRotation(Gun, P);
     }
 }
@@ -75,7 +76,6 @@ simulated function OnExitRotation()
     {
         return;
     }
-
 
     ServerExitRotation(Gun);
     Gun = none;
