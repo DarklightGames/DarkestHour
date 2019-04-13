@@ -36,6 +36,11 @@ var float             RotateControlRadiusInMeters;
 var float             RotationsPerSecond;
 var String            SentinelString;
 var Rotator           OldRotator;
+var bool              bOldRotating;
+
+var DHConstructionProxyProjector RotProj;
+var DHActorProxy    ActorProxy;
+Var Projector       Proj;
 
 
 replication
@@ -54,6 +59,7 @@ replication
 simulated function Tick(float DeltaTime)
 {
     Disable('Tick');
+
 }
 
 // Modified so we always use this actor & rely on its modified TryToDrive() function to control entry to the gun
@@ -253,7 +259,7 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
         return ERROR_Fatal;
     }
 
-    /*
+
     if (PlayersNeededToRotate > 1)
     {
         TeammatesInRadiusCount = GetTeammatesInRadiusCount(Pawn);
@@ -263,7 +269,7 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
             return ERROR_NeedMorePlayers;
         }
     }
-    */
+
     return ERROR_None;
 }
 
@@ -335,6 +341,59 @@ function ServerRotate(byte InputRotationFactor)
     HandleRotate(F);
 }
 
+// HACK - This will only make sure the gun visibly rotates on the client
+// that initiates the rotation. It might look stuck to other clients.
+/*Used to set any properties on the client when it enters rotation*/
+simulated function ClientEnterRotation()
+{
+
+        local vector X, Y, Z;
+
+        bCollideWorld = false;
+        SetCollision(false,false,false);
+        SetPhysics(PHYS_None);
+        bOldRotating = bIsBeingRotated;
+
+        RotProj = Spawn(class'DHConstructionProxyProjector',self, ,Location,Rotation);
+        RotProj.ProjTexture = RotProj.GreenTexture;
+        RotProj.GotoState('');
+        RotProj.bHidden = false;
+        RotProj.Texture = none;
+        RotProj.AttachProjector();
+        RotProj.AttachActor(self);
+        RotProj.SetBase(self);
+        RotProj.bNoProjectOnOwner = true;
+        RotProj.MaterialBlendingOp = PB_AlphaBlend;
+        RotProj.ProjTexture = RotProj.GreenTexture;
+        RotProj.FrameBufferBlendingOp = PB_AlphaBlend;
+        RotProj.FOV = 1;
+        RotProj.MaxTraceDistance = 1024.0;
+        RotProj.bGradient = true;
+        RotProj.SetDrawScale(1);
+        GetAxes(Rotation, X, Y, Z);
+        RotProj.SetRelativeLocation(Z * 128.0);
+        RotProj.SetRelativeRotation(rot(-16384, 0, 0));
+}
+
+/*Used to set any properties on the client when it enters rotation*/
+simulated function ClientExitRotation()
+{
+        Log("END ROTATE");
+        bCollideWorld = true;
+        SetCollision(true,true,true);
+        SetPhysics(PHYS_Karma);
+        bOldRotating = bIsBeingRotated;
+        ClientDestroyProjection();
+}
+
+simulated function ClientDestroyProjection()
+{
+    if(RotProj != none){
+        RotProj.Destroy();
+        RotProj = none;
+    }
+}
+
 function HandleRotate(int RotationFactor);
 function OnRotatingActorDestroyed(int Time);
 
@@ -344,11 +403,7 @@ state Rotating
 {
     function BeginState()
     {
-
-
         bIsBeingRotated = true;
-
-
 
         RotatingActor = Spawn(class'DHRotatingActor',,, Location, Rotation);
         RotatingActor.OnDestroyed = OnRotatingActorDestroyed;
@@ -361,9 +416,14 @@ state Rotating
             RotateSoundAttachment.AmbientSound = RotateSound;
             RotateSoundAttachment.SetBase(self);
         }
-        log("  ASDASD ASD ASD BINGO");
-        bCollideWorld = False;
+
         SetPhysics(PHYS_None);
+        bCollideWorld = false;
+
+        // NOTE: This line avoids the hack of calling ClientEnterRotation client
+        // side, but also causes issue where AT Gun falls through the world.
+        //SetCollision(false,true,true);
+
         SetBase(RotatingActor);
     }
 
@@ -405,16 +465,16 @@ state Rotating
 
         SetBase(none);
 
-
         // my addition hoping to force the server in line with the client.
         SetRotation(RotatingActor.DesiredRotation);
 
-
+        if(RotProj != none)
+            RotProj.Destroy();
 
         SentinelString = String(Rotation);
 
-
-        bCollideWorld = False;
+        bCollideWorld = true;
+        SetCollision(true,true,true);
         SetPhysics(PHYS_Karma);
 
         bIsBeingRotated = false;
@@ -443,15 +503,24 @@ simulated event PostNetReceive()
     uncomRotation.Yaw = Int(Left(CutSentinel, secondComma));
     uncomRotation.Roll = Int(Mid(CutSentinel, secondComma + 1));
 
-
     if(OldRotator != unComRotation)
     {
-
         OldRotator = uncomRotation;
-
         SetPhysics(PHYS_None);
         SetRotation(uncomRotation);
         SetPhysics(PHYS_Karma);
+    }
+
+    // End rotating state
+    if (bOldRotating && !bIsBeingRotated)
+    {
+        ClientExitRotation();
+        bOldRotating = bIsBeingRotated;
+    }
+    // start rotating state
+    else if (!bOldRotating && bIsBeingRotated)
+    {
+        bOldRotating = bIsBeingRotated;
     }
 }
 
@@ -564,10 +633,9 @@ defaultproperties
     RotateControlRadiusInMeters=5
     RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     RotateSoundVolume=20.0
-    //SentinelRotator=(Pitch=0,Yaw=0,Roll=0)
+
     OldRotator=(Pitch=0,Yaw=0,Roll=0)
-
-
+    bOldRotating = false;
 
     // Karma properties
     Begin Object Class=KarmaParamsRBFull Name=KParams0

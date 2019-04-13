@@ -57,11 +57,7 @@ simulated function OnEnterRotation()
     }
     else
     {
-        Gun.bCollideWorld = false;
-        //Gun.bCollideActors = false;
-        Gun.SetCollision(false,false,false);
-        Gun.SetPhysics(PHYS_None);
-
+        Gun.ClientEnterRotation();
         ServerEnterRotation(Gun, P);
     }
 }
@@ -80,11 +76,6 @@ simulated function OnExitRotation()
     {
         return;
     }
-
-    Gun.bCollideWorld = true;
-    //Gun.bCollideActors = false;
-    Gun.SetCollision(true,true,true);
-    Gun.SetPhysics(PHYS_Karma);
 
     ServerExitRotation(Gun);
     Gun = none;
@@ -125,9 +116,6 @@ simulated function OnRotate(byte InputRotationFactor)
 {
     if (Gun != none)
     {
-        Log(Gun.bCollideWorld);
-        Log(Gun.Physics);
-
         ServerRotate(Gun, InputRotationFactor);
     }
 }
