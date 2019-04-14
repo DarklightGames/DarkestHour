@@ -18,18 +18,13 @@ var Rotator YawRot;
 var int   LifespanTime;          // how long something can be hogged for rotation
 var float ControlRadiusInMeters; // how far a controlling player can stray away
 
-
-replication
-{
-
-}
-
 delegate OnDestroyed(int Time);
 
 simulated event PostBeginPlay()
 {
     local vector TraceHitLocation;
     local vector TraceHitNormal;
+
     DesiredRotation = Rotation;
 
     InitalRotation = Rotation;
@@ -57,7 +52,7 @@ event Destroyed()
 simulated function Timer()
 {
     // End rotation if the player takes too long or strayed too far
-    // TODO: Notify why he was thrown out of the rotaion mode
+    // TODO: Notify why he was thrown out of the rotation mode
     if ((DHGRI != none && DHGRI.ElapsedTime > ExpiryTime) ||
         (ControllerPawn != none && VSize(ControllerPawn.Location - Location) > ControlRadius))
     {
@@ -72,31 +67,22 @@ simulated function Tick(float DeltaTime)
 
 function SetRotationFactor(int RotationFactor)
 {
-    Log("Set Rotation Factor");
     self.RotationFactor = RotationFactor;
 }
 
-
 simulated function UpdateRotation(float DeltaTime)
 {
-
     if (RotationFactor == 0)
     {
         return;
     }
 
-
     YawRot.Pitch =0;
     YawRot.Yaw += RotationFactor * RotationRate.Yaw * DeltaTime;
     YawRot.Roll = 0;
 
-    DesiredRotation = QuatToRotator( QuatProduct(  QuatFromRotator(YawRot) , QuatFromRotator(InitalRotation)  )  );
-
-
+    DesiredRotation = QuatToRotator(QuatProduct(QuatFromRotator(YawRot), QuatFromRotator(InitalRotation)));
 }
-
-
-
 
 defaultproperties
 {
@@ -105,7 +91,7 @@ defaultproperties
     YawRot=(Pitch=0,Yaw=0,Roll=0)
     RemoteRole=ROLE_SimulatedProxy
 
-    Texture = none;
+    Texture = none
 
     bReplicateMovement=true
     bNetInitialRotation=true
