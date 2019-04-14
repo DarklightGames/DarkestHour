@@ -13,7 +13,7 @@ var int   ExpiryTime;
 var float ControlRadius;
 
 var Rotator InitalRotation;
-var Rotator YawRot;
+var Rotator YawRotation;
 
 var int   LifespanTime;          // how long something can be hogged for rotation
 var float ControlRadiusInMeters; // how far a controlling player can stray away
@@ -77,18 +77,18 @@ simulated function UpdateRotation(float DeltaTime)
         return;
     }
 
-    YawRot.Pitch =0;
-    YawRot.Yaw += RotationFactor * RotationRate.Yaw * DeltaTime;
-    YawRot.Roll = 0;
+    YawRotation.Pitch =0;
+    YawRotation.Yaw += RotationFactor * RotationRate.Yaw * DeltaTime;
+    YawRotation.Roll = 0;
 
-    DesiredRotation = QuatToRotator(QuatProduct(QuatFromRotator(YawRot), QuatFromRotator(InitalRotation)));
+    DesiredRotation = QuatToRotator(QuatProduct(QuatFromRotator(YawRotation), QuatFromRotator(InitalRotation)));
 }
 
 defaultproperties
 {
     Physics=PHYS_Rotating
     RotationRate=(Pitch=2048,Yaw=2048,Roll=2048)
-    YawRot=(Pitch=0,Yaw=0,Roll=0)
+    YawRotation=(Pitch=0,Yaw=0,Roll=0)
     RemoteRole=ROLE_SimulatedProxy
 
     Texture = none
