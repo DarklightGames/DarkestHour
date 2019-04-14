@@ -18,16 +18,29 @@ var     float   SwayProneModifier;
 var     float   SwayTransitionModifier;
 var     float   SwayLeanModifier;
 
-var     bool    bIsMantling;
-var     float   PlayerIronsightFOV;
-var     float   SwayModifyFactor;
-var     float   BobModifyFactor;
+var     bool            bIsMantling;
+var     bool            bUsesIronsightFOV;
+var     private float   PlayerIronsightFOV;
+var     float           SwayModifyFactor;
+var     float           BobModifyFactor;
 
 replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bIsMantling;
+}
+
+simulated function float GetPlayerIronsightFOV()
+{
+    if (bUsesIronsightFOV)
+    {
+        return PlayerIronsightFOV;
+    }
+    else
+    {
+        return class'DHPlayer'.default.DefaultFOV;
+    }
 }
 
 // Modified to reset player's FOV back to default
@@ -846,4 +859,6 @@ defaultproperties
 
     TeamIndex=2
     bCanHaveInitialNumMagsChanged=true
+
+    bUsesIronsightFOV=true
 }

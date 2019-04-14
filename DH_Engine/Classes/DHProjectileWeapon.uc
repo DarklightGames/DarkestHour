@@ -949,7 +949,7 @@ simulated function ZoomIn(optional bool bAnimateTransition)
 
     if (InstigatorIsLocalHuman())
     {
-        SetPlayerFOV(PlayerIronsightFOV);
+        SetPlayerFOV(GetPlayerIronsightFOV());
     }
 
     if (bAnimateTransition)
