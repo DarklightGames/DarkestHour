@@ -34,15 +34,13 @@ var int               PlayersNeededToRotate;
 var int               RotateCooldown;
 var float             RotateControlRadiusInMeters;
 var float             RotationsPerSecond;
+
 var String            SentinelString;
 var Rotator           OldRotator;
-var bool              bOldRotating;
+var bool              bOldIsRotating;
 
-var Material        RotationProjectionTexture;
-
-var DHConstructionProxyProjector RotProj;
-var DHActorProxy    ActorProxy;
-Var Projector       Proj;
+var Material          RotationProjectionTexture;
+var DHConstructionProxyProjector    RotationProjector;
 
 
 replication
@@ -61,7 +59,6 @@ replication
 simulated function Tick(float DeltaTime)
 {
     Disable('Tick');
-
 }
 
 // Modified so we always use this actor & rely on its modified TryToDrive() function to control entry to the gun
@@ -261,7 +258,7 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
         return ERROR_Fatal;
     }
 
-    /*
+
     if (PlayersNeededToRotate > 1)
     {
         TeammatesInRadiusCount = GetTeammatesInRadiusCount(Pawn);
@@ -271,7 +268,7 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
             return ERROR_NeedMorePlayers;
         }
     }
-    */
+
 
     return ERROR_None;
 }
@@ -348,82 +345,80 @@ function ServerRotate(byte InputRotationFactor)
 /*Used to set any properties on the client when it enters rotation*/
 simulated function ClientEnterRotation()
 {
+    local vector X, Y, Z;
+    local FinalBlend FinalMaterial;
+    local FadeColor FadeMaterial;
+    local Combiner CombinerMaterial;
 
-        local vector X, Y, Z;
-        local FinalBlend FB;
-        local FadeColor FC;
-        local Combiner C;
-        bCollideWorld = false;
-        SetCollision(false,false,false);
-        SetPhysics(PHYS_None);
-        bOldRotating = bIsBeingRotated;
-
-        RotProj = Spawn(class'DHConstructionProxyProjector',self, ,Location,Rotation);
-
-        FC = new class'FadeColor';
-        FC.Color1 = class'UColor'.default.White;
-        FC.Color1.A = 50;
-        FC.Color2 = class'UColor'.default.White;
-        FC.Color2.A = 95;
-        FC.FadePeriod = 0.33;
-        FC.ColorFadeType = FC_Sinusoidal;
-
-        C = new class'Combiner';
-        C.CombineOperation = CO_Multiply;
-        C.AlphaOperation = AO_Multiply;
-        C.Material1 = RotationProjectionTexture;
-        C.Material2 = FC;
-        C.Modulate4X = true;
-
-        FB.Material = RotationProjectionTexture;
-        FB.FrameBufferBlending = FB_Translucent;
-
-        FB = new class'FinalBlend';
-        FB.FrameBufferBlending = FB_AlphaBlend;
-        FB.ZWrite = true;
-        FB.ZTest = true;
-        FB.AlphaTest = true;
-        FB.TwoSided = true;
-        FB.Material = C;
-        FB.FallbackMaterial = C;
+    //collision properties hack
+    bCollideWorld = false;
+    SetCollision(false,false,false);
+    SetPhysics(PHYS_None);
+    bOldIsRotating = bIsBeingRotated;
 
 
-        RotProj.ProjTexture = FB;
-        RotProj.GotoState('');
-        RotProj.bHidden = false;
-        RotProj.Texture = none;
-        RotProj.AttachProjector();
-        RotProj.AttachActor(self);
-        RotProj.SetBase(self);
-        RotProj.bNoProjectOnOwner = true;
-        RotProj.MaterialBlendingOp = PB_AlphaBlend;
-        RotProj.FrameBufferBlendingOp = PB_AlphaBlend;
-        RotProj.FOV = 1;
-        RotProj.MaxTraceDistance = 1024.0;
-        RotProj.bGradient = true;
-        Log(CollisionRadius);
-        RotProj.SetDrawScale((2.5 * CollisionRadius)/RotProj.ProjTexture.MaterialUSize());
-        GetAxes(Rotation, X, Y, Z);
-        RotProj.SetRelativeLocation(Z * 128.0);
-        RotProj.SetRelativeRotation(rot(-16384, 0, 0));
+    FadeMaterial = new class'FadeColor';
+    FadeMaterial.Color1 = class'UColor'.default.White;
+    FadeMaterial.Color1.A = 50;
+    FadeMaterial.Color2 = class'UColor'.default.White;
+    FadeMaterial.Color2.A = 95;
+    FadeMaterial.FadePeriod = 0.33;
+    FadeMaterial.ColorFadeType = FC_Sinusoidal;
+
+    CombinerMaterial = new class'Combiner';
+    CombinerMaterial.CombineOperation = CO_Multiply;
+    CombinerMaterial.AlphaOperation = AO_Multiply;
+    CombinerMaterial.Material1 = RotationProjectionTexture;
+    CombinerMaterial.Material2 = FadeMaterial;
+    CombinerMaterial.Modulate4X = true;
+
+    //FB.Material = RotationProjectionTexture;
+    //FB.FrameBufferBlending = FB_Translucent;
+    FinalMaterial = new class'FinalBlend';
+    FinalMaterial.FrameBufferBlending = FB_AlphaBlend;
+    FinalMaterial.ZWrite = true;
+    FinalMaterial.ZTest = true;
+    FinalMaterial.AlphaTest = true;
+    FinalMaterial.TwoSided = true;
+    FinalMaterial.Material = CombinerMaterial;
+    FinalMaterial.FallbackMaterial = CombinerMaterial;
+
+    RotationProjector = Spawn(class'DHConstructionProxyProjector',self, ,Location,Rotation);
+    RotationProjector.ProjTexture = FinalMaterial;
+    RotationProjector.GotoState('');
+    RotationProjector.bHidden = false;
+    RotationProjector.Texture = none;
+    RotationProjector.AttachProjector();
+    RotationProjector.AttachActor(self);
+    RotationProjector.SetBase(self);
+    RotationProjector.bNoProjectOnOwner = true;
+    RotationProjector.MaterialBlendingOp = PB_AlphaBlend;
+    RotationProjector.FrameBufferBlendingOp = PB_AlphaBlend;
+    RotationProjector.FOV = 1;
+    RotationProjector.MaxTraceDistance = 1024.0;
+    RotationProjector.bGradient = true;
+    RotationProjector.SetDrawScale((2.5 * CollisionRadius)/RotationProjector.ProjTexture.MaterialUSize());
+    GetAxes(Rotation, X, Y, Z);
+    RotationProjector.SetRelativeLocation(Z * 128.0);
+    RotationProjector.SetRelativeRotation(rot(-16384, 0, 0));
 }
 
 /*Used to set any properties on the client when it enters rotation*/
 simulated function ClientExitRotation()
 {
-        Log("END ROTATE");
-        bCollideWorld = true;
-        SetCollision(true,true,true);
-        SetPhysics(PHYS_Karma);
-        bOldRotating = bIsBeingRotated;
-        ClientDestroyProjection();
+    bCollideWorld = true;
+    SetCollision(true,true,true);
+    SetPhysics(PHYS_Karma);
+    bOldIsRotating = bIsBeingRotated;
+    ClientDestroyProjection();
 }
 
 simulated function ClientDestroyProjection()
 {
-    if(RotProj != none){
-        RotProj.Destroy();
-        RotProj = none;
+    if(RotationProjector != none)
+    {
+        RotationProjector.Destroy();
+        RotationProjector = none;
     }
 }
 
@@ -466,7 +461,6 @@ state Rotating
 
     function HandleRotate(int RotationFactor)
     {
-        Log("Handle Rotation");
         RotatingActor.SetRotationFactor(RotationFactor);
 
         if (RotateSoundAttachment != none)
@@ -496,11 +490,12 @@ state Rotating
 
         SetBase(none);
 
-        // my addition hoping to force the server in line with the client.
         SetRotation(RotatingActor.DesiredRotation);
 
-        if(RotProj != none)
-            RotProj.Destroy();
+        if(RotationProjector != none)
+        {
+            RotationProjector.Destroy();
+        }
 
         SentinelString = String(Rotation);
 
@@ -521,37 +516,37 @@ state Rotating
 // Used to force the final server rotation onto the clients. Gets around replication ownership issue.
 simulated event PostNetReceive()
 {
-    local Rotator uncomRotation;
-    local int firstComma,secondComma;
+    local Rotator UncompressedRotation;
+    local int FirstComma,SecondComma;
     local String CutSentinel;
     super.PostNetReceive();
 
     // Rotation is sent as string, process.
     firstComma = InStr(SentinelString,",");
-    uncomRotation.Pitch = Int(Left(SentinelString, firstComma));
+    UncompressedRotation.Pitch = Int(Left(SentinelString, FirstComma));
     CutSentinel = Mid(SentinelString,firstComma + 1);
-    secondComma = InStr(CutSentinel, ",");
-    uncomRotation.Yaw = Int(Left(CutSentinel, secondComma));
-    uncomRotation.Roll = Int(Mid(CutSentinel, secondComma + 1));
+    SecondComma = InStr(CutSentinel, ",");
+    UncompressedRotation.Yaw = Int(Left(CutSentinel, SecondComma));
+    UncompressedRotation.Roll = Int(Mid(CutSentinel, SecondComma + 1));
 
-    if(OldRotator != unComRotation)
+    if(OldRotator != UncompressedRotation)
     {
-        OldRotator = uncomRotation;
+        OldRotator = UncompressedRotation;
         SetPhysics(PHYS_None);
-        SetRotation(uncomRotation);
+        SetRotation(UncompressedRotation);
         SetPhysics(PHYS_Karma);
     }
 
     // End rotating state
-    if (bOldRotating && !bIsBeingRotated)
+    if (bOldIsRotating && !bIsBeingRotated)
     {
         ClientExitRotation();
-        bOldRotating = bIsBeingRotated;
+        bOldIsRotating = bIsBeingRotated;
     }
     // start rotating state
-    else if (!bOldRotating && bIsBeingRotated)
+    else if (!bOldIsRotating && bIsBeingRotated)
     {
-        bOldRotating = bIsBeingRotated;
+        bOldIsRotating = bIsBeingRotated;
     }
 }
 
@@ -562,7 +557,6 @@ simulated event NotifySelected(Pawn User)
     if (!bIsBeingRotated)
     {
         super.NotifySelected(User);
-
     }
 }
 
@@ -666,7 +660,7 @@ defaultproperties
     RotateSoundVolume=20.0
 
     OldRotator=(Pitch=0,Yaw=0,Roll=0)
-    bOldRotating = false;
+    bOldIsRotating = false;
 
     RotationProjectionTexture = Material'DH_Construction_tex.ui.rotation_projector'
     //RotationProjectionTexture = Material'DH_Construction_tex.ui.aura_red'
