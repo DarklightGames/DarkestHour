@@ -97,7 +97,24 @@ auto state Working
             return;
         }
 
-        super.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType, HitIndex);
+        if (!ShouldTakeDamage(DamageType))
+        {
+            return;
+        }
+
+        if (InstigatedBy != none)
+        {
+            MakeNoise(1.0);
+        }
+
+        Health -= Damage;
+
+        if (Health <= 0)
+        {
+            TriggerEvent(DestroyedEvent, self, InstigatedBy);
+            BroadcastCriticalMessage(InstigatedBy);
+            BreakApart(HitLocation, Momentum);
+        }
     }
 }
 
