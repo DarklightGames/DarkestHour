@@ -285,8 +285,8 @@ function PostBeginPlay()
 
     if (bIsDangerZoneEnabled && (SquadReplicationInfo.bAreRallyPointsEnabled || class'DH_LevelInfo'.static.DHDebugMode()))
     {
-        GRI.bIsDangerZoneEnabled = DHLevelInfo.bIsDangerZoneInitiallyEnabled;
-        GRI.DangerZoneIntensityScale = DHLevelInfo.DangerZoneIntensityScale;
+        GRI.SetDangerZone(DHLevelInfo.bIsDangerZoneInitiallyEnabled, true);
+        GRI.SetDangerZoneScale(DHLevelInfo.DangerZoneIntensityScale, true);
     }
 
     // Artillery
@@ -3463,26 +3463,24 @@ exec function MidGameVote()
     }
 }
 
-exec function SetDangerZone(bool bOn)
+exec function SetDangerZone(bool bEnabled)
 {
     if (GRI == none)
     {
         return;
     }
 
-    GRI.bIsDangerZoneEnabled = bOn;
-    UpdateRallyPoints();
+    GRI.SetDangerZone(bEnabled);
 }
 
-exec function SetDangerZoneIntensityScale(float Value)
+exec function SetDangerZoneScale(float Value)
 {
     if (GRI == none)
     {
         return;
     }
 
-    GRI.DangerZoneIntensityScale = Value;
-    UpdateRallyPoints();
+    GRI.SetDangerZoneScale(Value);
 }
 
 //***********************************************************************************

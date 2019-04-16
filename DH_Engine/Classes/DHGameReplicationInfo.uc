@@ -15,6 +15,7 @@ const CONSTRUCTION_CLASSES_MAX = 32;
 const VOICEID_MAX = 255;
 const SUPPLY_POINTS_MAX = 15;
 const RESUPPLY_ATTACHEMENTS_MAX = 32;
+const MAP_ICON_ATTACHMENTS_MAX = 32;
 const MAP_MARKERS_MAX = 20;
 const MAP_MARKERS_CLASSES_MAX = 16;
 const ARTILLERY_TYPES_MAX = 8;
@@ -136,6 +137,7 @@ var DHObjective             DHObjectives[OBJECTIVES_MAX];
 var Hashtable_string_int    DHObjectiveTable; // not replicated, but clients create their own so can be used by both client/server
 
 var DHResupplyAttachment    ResupplyAttachments[RESUPPLY_ATTACHEMENTS_MAX];
+var DHMapIconAttachment     MapIconAttachments[MAP_ICON_ATTACHMENTS_MAX];
 
 var bool                bIsInSetupPhase;
 var bool                bRoundIsOver;
@@ -237,7 +239,9 @@ replication
         AlliesVictoryMusicIndex,
         AxisVictoryMusicIndex,
         bIsDangerZoneEnabled,
-        DangerZoneIntensityScale;
+        DangerZoneIntensityScale,
+        ClientOnDangerZoneUpdated,
+        MapIconAttachments;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
@@ -351,6 +355,11 @@ simulated function PostNetBeginPlay()
             }
         }
     }
+}
+
+event OnObjectiveCompleted()
+{
+    OnDangerZoneUpdated();
 }
 
 function bool ObjectiveTreeNodeDepthComparatorFunction(int LHS, int RHS)
@@ -1792,6 +1801,88 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
     return ERROR_None;
 }
 
+//==============================================================================
+// MAP ICON ATTACHMENTS
+//==============================================================================
+
+function UpdateMapIconAttachments()
+{
+    local int i;
+
+    for (i = 0; i < arraycount(MapIconAttachments); ++i)
+    {
+        if (MapIconAttachments[i] != none)
+        {
+            MapIconAttachments[i].OnLazyUpdate();
+        }
+    }
+}
+
+function int AddMapIconAttachment(DHMapIconAttachment MIA)
+{
+    local int i, FreeIndex;
+
+    if (MIA == none)
+    {
+        return -1;
+    }
+
+    for (i = 0; i < arraycount(MapIconAttachments); ++i)
+    {
+        if (MapIconAttachments[i] == none)
+        {
+            FreeIndex = i;
+        }
+        else if (MapIconAttachments[i] == MIA)
+        {
+            return -1;
+        }
+    }
+
+    MapIconAttachments[FreeIndex] = MIA;
+
+    return FreeIndex;
+}
+
+function RemoveMapIconAttachment(int Index)
+{
+    MapIconAttachments[Index] = none;
+}
+
+//==============================================================================
+// DANGER ZONE
+//==============================================================================
+
+function SetDangerZone(bool bEnabled, optional bool bPostponeUpdate)
+{
+    if (bEnabled == bIsDangerZoneEnabled)
+    {
+        return;
+    }
+
+    bIsDangerZoneEnabled = bEnabled;
+
+    if (!bPostponeUpdate)
+    {
+        OnDangerZoneUpdated();
+    }
+}
+
+function SetDangerZoneScale(float Value, optional bool bPostponeUpdate)
+{
+    if (Value == 0.0 || Value == DangerZoneIntensityScale)
+    {
+        return;
+    }
+
+    DangerZoneIntensityScale = Value;
+
+    if (!bPostponeUpdate)
+    {
+        OnDangerZoneUpdated();
+    }
+}
+
 simulated function float GetDangerZoneIntensity(float PointerX, float PointerY, byte TeamIndex)
 {
     return class'DHDangerZone'.static.GetIntensity(self, PointerX, PointerY, TeamIndex);
@@ -1802,16 +1893,14 @@ simulated function bool IsInDangerZone(float PointerX, float PointerY, byte Team
     return class'DHDangerZone'.static.IsIn(self, PointerX, PointerY, TeamIndex);
 }
 
-simulated function PostNetReceive()
+simulated event ClientOnDangerZoneUpdated()
 {
     local DHPlayer PC;
     local DHHud Hud;
 
-    super.PostNetReceive();
-
-    // Notify HUD about changes to Danger Zone
-    if (OldDangerZoneIntensityScale != DangerZoneIntensityScale)
+    if (Level.NetMode == NM_Standalone || Role < ROLE_Authority)
     {
+        // Notify HUD about Danger Zone changes.
         PC = DHPlayer(Level.GetLocalPlayerController());
 
         if (PC != none)
@@ -1823,9 +1912,26 @@ simulated function PostNetReceive()
                 Hud.DangerZoneOverlayUpdateRequest();
             }
         }
-
-        OldDangerZoneIntensityScale = DangerZoneIntensityScale;
     }
+}
+
+event OnDangerZoneUpdated()
+{
+    local DHSquadReplicationInfo SRI;
+
+    // Update rally points
+    SRI = DarkestHourGame(Level.Game).SquadReplicationInfo;
+
+    if (SRI != none)
+    {
+        SRI.UpdateRallyPoints();
+    }
+
+    // Update map icons
+    UpdateMapIconAttachments();
+
+    // Update client
+    ClientOnDangerZoneUpdated();
 }
 
 defaultproperties

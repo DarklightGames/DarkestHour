@@ -3831,6 +3831,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
         }
     }
 
+    DrawMapIconAttachments(C, SubCoords, MyMapScale, MapCenter, Viewport);
     DrawMapMarkersOnMap(C, Subcoords, MyMapScale, MapCenter, Viewport);
     DrawPlayerIconsOnMap(C, SubCoords, MyMapScale, MapCenter, Viewport);
     DrawExposedEnemyRallyPoints(C, SubCoords, MyMapScale, MapCenter, Viewport);
@@ -3848,6 +3849,36 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     if (bShowRelevancyDebugOnMap)
     {
         DrawNetworkActorsOnMap(C, SubCoords, MyMapScale, MapCenter);
+    }
+}
+
+function DrawMapIconAttachments(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
+{
+    local int i;
+    local vector L;
+    local DHPlayer PC;
+
+    PC = DHPlayer(PlayerOwner);
+
+    if (PC == none)
+    {
+        return;
+    }
+
+    for (i = 0; i < arraycount(DHGRI.MapIconAttachments); ++i)
+    {
+        if (DHGRI.MapIconAttachments[i] == none || !DHGRI.MapIconAttachments[i].OnHasPermissions(PC))
+        {
+            continue;
+        }
+
+        L = DHGRI.MapIconAttachments[i].GetPosition();
+
+        MapMarkerIcon.WidgetTexture = DHGRI.MapIconAttachments[i].OnGetIconMaterial(PC);
+        MapMarkerIcon.TextureCoords = DHGRI.MapIconAttachments[i].OnGetIconCoords(PC);
+        MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = DHGRI.MapIconAttachments[i].OnGetIconColor(PC);
+
+        DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, L, MapCenter, Viewport);
     }
 }
 

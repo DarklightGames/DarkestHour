@@ -1199,11 +1199,7 @@ function Timer()
 // Modified to handle neutralizing objectives
 function ObjectiveCompleted(PlayerReplicationInfo CompletePRI, int Team)
 {
-    local DHSquadReplicationInfo SRI;
-    local DHPlayer PC;
-    local DHHud Hud;
-
-    SRI = DarkestHourGame(Level.Game).SquadReplicationInfo;
+    local DHGameReplicationInfo GRI;
 
     if (!IsNeutral() && bNeutralizeBeforeCapture)
     {
@@ -1245,24 +1241,11 @@ function ObjectiveCompleted(PlayerReplicationInfo CompletePRI, int Team)
     // lets see if this tells the bots the objectives is done for
     UnrealMPGameInfo(Level.Game).FindNewObjectives(self);
 
-    if (SRI != none)
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI != none)
     {
-        SRI.UpdateRallyPoints();
-    }
-
-    if (Level.NetMode == NM_Standalone)
-    {
-        PC = DHPlayer(Level.GetLocalPlayerController());
-
-        if (PC != none)
-        {
-            Hud = DHHud(PC.myHUD);
-
-            if (Hud != none)
-            {
-                Hud.OnObjectiveCompleted();
-            }
-        }
+        GRI.OnObjectiveCompleted();
     }
 }
 
