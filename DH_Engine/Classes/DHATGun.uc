@@ -372,8 +372,6 @@ simulated function ClientEnterRotation()
     CombinerMaterial.Material2 = FadeMaterial;
     CombinerMaterial.Modulate4X = true;
 
-    //FB.Material = RotationProjectionTexture;
-    //FB.FrameBufferBlending = FB_Translucent;
     FinalMaterial = new class'FinalBlend';
     FinalMaterial.FrameBufferBlending = FB_AlphaBlend;
     FinalMaterial.ZWrite = true;
@@ -399,7 +397,6 @@ simulated function ClientEnterRotation()
     RotationProjector.bGradient = true;
     RotationProjector.SetDrawScale((2.5 * CollisionRadius)/RotationProjector.ProjTexture.MaterialUSize());
     GetAxes(Rotation, X, Y, Z);
-    RotationProjector.SetRelativeLocation(Z * 128.0);
     RotationProjector.SetRelativeRotation(rot(-16384, 0, 0));
 }
 
@@ -495,6 +492,7 @@ state Rotating
         if(RotationProjector != none)
         {
             RotationProjector.Destroy();
+            RotationProjector = none;
         }
 
         SentinelString = String(Rotation);
