@@ -86,6 +86,9 @@ var     SpriteWidget        SupplyCountWidget;
 var     SpriteWidget        SupplyCountIconWidget;
 var     TextWidget          SupplyCountTextWidget;
 
+// Resupply Attachment
+var     SpriteWidget        ResupplyAttachmentIcon;
+
 // Construction
 var     SpriteWidget        VehicleSuppliesIcon;
 var     TextWidget          VehicleSuppliesText;
@@ -3387,6 +3390,22 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
         }
     }
 
+    // Draw resupply attachments
+    for (i = 0; i < arraycount(DHGRI.ResupplyAttachments); ++i)
+    {
+        if (DHGRI.ResupplyAttachments[i] == none || !DHGRI.ResupplyAttachments[i].bShowOnMap ||
+            (DHGRI.ResupplyAttachments[i].GetTeamIndex() != OwnerTeam && DHGRI.ResupplyAttachments[i].GetTeamIndex() != NEUTRAL_TEAM_INDEX))
+        {
+            continue;
+        }
+
+        // Get the Widget texture
+        ResupplyAttachmentIcon.WidgetTexture = DHGRI.ResupplyAttachments[i].GetAttachmentIcon();
+
+        // Draw the Widget
+        DHDrawIconOnMap(C, SubCoords, ResupplyAttachmentIcon, MyMapScale, DHGRI.ResupplyAttachments[i].Location, MapCenter, Viewport);
+    }
+
     // Draw supply points
     for (i = 0; i < arraycount(DHGRI.SupplyPoints); ++i)
     {
@@ -6088,7 +6107,9 @@ defaultproperties
     MapIconMortarHit=(WidgetTexture=Texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(Y1=64,X2=63,Y2=127),TextureScale=0.05,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
     MapIconEnemyRallyPoint=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.rally_point',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.04,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=0,B=0,A=255),Tints[1]=(R=255,G=0,B=0,A=255))
 
-    SupplyPointIcon=(WidgetTexture=FinalBlend'DH_GUI_tex.GUI.supply_point_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.04,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+    SupplyPointIcon=(WidgetTexture=FinalBlend'DH_GUI_tex.GUI.supply_point_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.03,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
+
+    ResupplyAttachmentIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=0,G=124,B=252,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Map markers
     MapMarkerIcon=(WidgetTexture=none,RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.04,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=0,G=0,B=255,A=255),Tints[1]=(R=0,G=0,B=255,A=255))

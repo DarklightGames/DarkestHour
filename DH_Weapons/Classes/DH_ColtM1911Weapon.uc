@@ -14,28 +14,32 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_ColtM1911Pickup'
 
     Mesh=SkeletalMesh'DH_Colt1911_1st.Colt45'
-    HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.ColtM1911_s'
+    HighDetailOverlay=Shader'DH_ColtM1911_tex.ColtM1911.ColtM1911_S'
     bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=2
+    HighDetailOverlayIndex=0
+    HandNum=1
+    SleeveNum=2
 
-    DisplayFOV=90.0
-    IronSightDisplayFOV=40.0
+    Skins(0)=Shader'DH_ColtM1911_tex.ColtM1911.ColtM1911_S'
+
+    DisplayFOV=70
+    IronSightDisplayFOV=55
 
     MaxNumPrimaryMags=5
     InitialNumPrimaryMags=5
 
     SelectEmptyAnim="Draw_empty"
-    PutDownAnim="putaway"
-    PutDownEmptyAnim="putaway_empty"
+    PutDownAnim="put_away"
+    PutDownEmptyAnim="put_away_empty"
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"
     IronBringUpEmpty="Iron_In_empty"
     IronPutDownEmpty="Iron_Out_empty"
-    SprintStartEmptyAnim="Sprint_Start_Empty"
-    SprintLoopEmptyAnim="Sprint_Middle_Empty"
-    SprintEndEmptyAnim="Sprint_End_Empty"
     CrawlForwardEmptyAnim="crawlF_empty"
     CrawlBackwardEmptyAnim="crawlB_empty"
     CrawlStartEmptyAnim="crawl_in_empty"
     CrawlEndEmptyAnim="crawl_out_empty"
+    SprintStartEmptyAnim="Sprint_Empty_Start"
+    SprintLoopEmptyAnim="Sprint_Empty_Middle"
+    SprintEndEmptyAnim="Sprint_Empty_End"
 }

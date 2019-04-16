@@ -153,4 +153,5 @@ defaultproperties
     DeveloperIDs(2)="76561198043869714" // DirtyBirdy
 
     PatreonIDs(0)=(PatronROID="76561198066643021",PatronLevel=2) // PFC Patison
+    PatreonIDs(1)=(PatronROID="76561198431789713",PatronLevel=0) // Bearnoceros
 }
