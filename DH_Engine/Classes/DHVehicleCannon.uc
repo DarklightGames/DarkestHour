@@ -81,7 +81,7 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerManualReload, ServerUnload, ServerSetPendingAmmo, ServerFireSmokeLauncher, ServerAdjustSmokeLauncher;
+        ServerManualReload, ServerSetPendingAmmo, ServerFireSmokeLauncher, ServerAdjustSmokeLauncher;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -989,12 +989,9 @@ function ServerManualReload()
     {
         AttemptReload();
     }
-}
-
-function ServerUnload()
-{
-    if (ServerPendingAmmoIndex != GetAmmoIndex() && ReloadState == RL_ReadyToFire)
+    else if (ReloadState == RL_ReadyToFire && ServerPendingAmmoIndex != GetAmmoIndex())
     {
+        // Unload the currently loaded shell.
         AttemptReload();
     }
 }

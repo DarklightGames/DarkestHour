@@ -435,23 +435,19 @@ exec function SwitchFireMode()
     }
 }
 
-// Used for unloading the gun
-exec function ROMGOperation()
-{
-    if (Cannon != none)
-    {
-        Cannon.CheckUpdatePendingAmmo();
-        Cannon.ServerUnload();
-    }
-}
-
 // Modified to prevent attempting reload if don't have ammo (saves replicated function call to server) & to use reference to DHVehicleCannon instead of deprecated ROTankCannon
 // Also for net client to pass any changed pending ammo type to server (optimises network as avoids update to server each time player toggles ammo, doing it only when needed)
 simulated exec function ROManualReload()
 {
-    if (Cannon != none && Cannon.ReloadState == RL_Waiting && Cannon.PlayerUsesManualReloading() && Cannon.HasAmmoToReload(Cannon.LocalPendingAmmoIndex))
+    if (Cannon == none || !Cannon.HasAmmoToReload(Cannon.LocalPendingAmmoIndex))
     {
-        if (Role < ROLE_Authority)
+        return;
+    }
+
+    if ((Cannon.ReloadState == RL_Waiting && Cannon.PlayerUsesManualReloading()) ||
+        (Cannon.ReloadState == RL_ReadyToFire && Cannon.LocalPendingAmmoIndex != Cannon.GetAmmoIndex()))
+    {
+        if (Role < ROLE_Authority || Level.NetMode == NM_Standalone)
         {
             Cannon.CheckUpdatePendingAmmo();
         }
