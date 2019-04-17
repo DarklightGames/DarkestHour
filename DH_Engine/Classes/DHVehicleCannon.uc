@@ -81,7 +81,7 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerManualReload, ServerSetPendingAmmo, ServerFireSmokeLauncher, ServerAdjustSmokeLauncher;
+        ServerManualReload, ServerUnload, ServerSetPendingAmmo, ServerFireSmokeLauncher, ServerAdjustSmokeLauncher;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -986,6 +986,14 @@ function byte BestMode()
 function ServerManualReload()
 {
     if (ReloadState == RL_Waiting && PlayerUsesManualReloading())
+    {
+        AttemptReload();
+    }
+}
+
+function ServerUnload()
+{
+    if(ReloadState == RL_ReadyToFire)
     {
         AttemptReload();
     }
