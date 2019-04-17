@@ -297,7 +297,7 @@ defaultproperties
 
     // Overidden & Additional Weapon keybinds
     Bindings_Weapons(9)="ROMGOperation" // renumbered from here so the new vehicle smoke launcher controls are grouped together at the end of the weapons section
-    Captions_Weapons(9)="Change MG Barrel"
+    Captions_Weapons(9)="Change MG Barrel / Unload Cannon"
     Bindings_Weapons(10)="SwitchFireMode"
     Captions_Weapons(10)="Switch Fire Mode"
     Bindings_Weapons(11)="Deploy"
