@@ -993,7 +993,7 @@ function ServerManualReload()
 
 function ServerUnload()
 {
-    if(ReloadState == RL_ReadyToFire)
+    if (ServerPendingAmmoIndex != GetAmmoIndex() && ReloadState == RL_ReadyToFire)
     {
         AttemptReload();
     }
