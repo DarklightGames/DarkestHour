@@ -423,7 +423,13 @@ simulated state Reloading
         if (ReloadState == RS_PreReload)
         {
             Log("Timer PreReload");
-            //
+
+            // give back the unfired round that was in the chamber
+            if(!bWaitingToBolt)
+            {
+                GiveBackAmmo(1);
+            }
+
             PlayReload();
 
             if (Role == ROLE_Authority)
@@ -461,7 +467,7 @@ simulated state Reloading
                 ReloadState = RS_PostReload;
                 PlayPostReload();
             }
-            else if (ReloadState == RS_FullReload && NumRoundsToLoad == 0)
+            else if (ReloadState == RS_FullReload && (NumRoundsToLoad == 0 || bInterruptReload))
             {
                 Log("Timer Final ");
                 PerformReload(GetStripperClipSize());
@@ -499,16 +505,6 @@ simulated state Reloading
                 }
             }
         }
-        /*
-        else if(ReloadState == RS_FullReload)
-        {
-            PerformReload(GetStripperClipSize());
-
-            if(Num)
-
-            GotoState('Idle');
-        }
-        */
         // Just finished post-reload or full-reload anim so we're finished
         else if (ReloadState == RS_PostReload)
         {
@@ -526,10 +522,20 @@ simulated state Reloading
 
         if (ReloadState == RS_None)
         {
-            if (AmmoAmount(0) == 0 && HasAnim(FullReloadAnim))
+            //if (AmmoAmount(0) == 0 && HasAnim(FullReloadAnim))
+            if (NumRoundsToLoad >= GetStripperClipSize() && HasAnim(FullReloadAnim))
             {
+                //give back the unfired round in the chamber
+                if(!bWaitingToBolt)
+                {
+                    GiveBackAmmo(1);
+                }
+
+                Log("Play Full Reload");
                 ReloadState = RS_FullReload;
+                NumRoundsToLoad -= GetStripperClipSize();
                 PlayFullReload();
+
             }
             else
             {
@@ -543,7 +549,7 @@ simulated state Reloading
     {
         if (ReloadState == RS_PostReload || ReloadState == RS_FullReload)
         {
-            Log(" NO MORE BOLT");
+            Log("Current Ammo: "$AmmoAmount(0));
             NumRoundsToLoad = 0;
             bWaitingToBolt = false;
             ReloadState = RS_None;
@@ -663,7 +669,11 @@ simulated function byte GetRoundsToLoad()
         return 0;
     }
 
-    CurrentLoadedRounds = AmmoAmount(0);
+    CurrentLoadedRounds = AmmoAmount(0) - int(!bWaitingToBolt);
+
+    //ensure we haven't dipped below 0
+    CurrentLoadedRounds = Max(0,CurrentLoadedRounds);
+
     MaxLoadedRounds = GetMaxLoadedRounds();
     AmountNeeded = MaxLoadedRounds - CurrentLoadedRounds;
 
@@ -725,6 +735,26 @@ function PerformReload(optional int Count)
     }
 
     AddAmmo(loaded,0);
+
+    // Update the weapon attachment ammo status
+    if (AmmoAmount(0) > 0 && ROWeaponAttachment(ThirdPersonActor) != none)
+    {
+        ROWeaponAttachment(ThirdPersonActor).bOutOfAmmo = false;
+    }
+
+    UpdateResupplyStatus(true);
+}
+
+
+function GiveBackAmmo(int Count)
+{
+    if (CurrentMagCount < 1 || PrimaryAmmoArray.Length <= 1)
+    {
+        return;
+    }
+    Log (PrimaryAmmoArray[0]);
+    PrimaryAmmoArray[1] += Count;
+    PrimaryAmmoArray[0] -= Count;
 
     // Update the weapon attachment ammo status
     if (AmmoAmount(0) > 0 && ROWeaponAttachment(ThirdPersonActor) != none)
