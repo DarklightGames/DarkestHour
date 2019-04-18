@@ -18,8 +18,11 @@ defaultproperties
     // Recoil
     maxVerticalRecoilAngle=450
     maxHorizontalRecoilAngle=250
-    PctBipodDeployRecoil=0.02
-    PctRestDeployRecoil=0.05
+    PctBipodDeployRecoil=0.1
+    PctRestDeployRecoil=0.1
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.33),(InVal=6.0,OutVal=0.66),(InVal=25.0,OutVal=1.5),(InVal=50.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilFallOffExponent=4.0
+    RecoilFallOffFactor=32.0
 
     AmbientFireSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
     FireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'
