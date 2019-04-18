@@ -37,6 +37,7 @@ var     float           RecoilGain;                  // The input for the Recoil
 var     float           RecoilGainIncrementAmount;   // The value to increase RecoilGain by every time recoil happens
 var     float           RecoilFallOffFactor;         // (TimeSinceLastRecoil ^ RecoilFallOffExponent) * RecoilFallOffFactor
 var     float           RecoilFallOffExponent;
+var     float           PctHipMGPenalty;             // Amount of recoil to add when the player firing an MG from the hip
 
 // Tracers
 var     bool            bUsesTracers;                // true if the weapon uses tracers
@@ -173,6 +174,14 @@ function DoFireEffect()
             }
         }
     }
+}
+
+simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
+{
+    Canvas.SetDrawColor(250,180,180);
+    Canvas.DrawText("===FIREMODE===" @ Name @ "RecoilGain:" @ GetEffectiveRecoilGain() @ "IsFiring:" @ bIsFiring @ "In state:" @ GetStateName());
+    YPos += YL;
+    Canvas.SetPos(4,YPos);
 }
 
 // New helper function to check whether player is hip firing
@@ -552,6 +561,12 @@ function PlayFireEnd()
     }
 }
 
+// Function which allows a custom recoil modifier, without having to duplicate HandleRecoil entirely
+simulated function float CustomHandleRecoil()
+{
+    return 1.0;
+}
+
 simulated function HandleRecoil()
 {
     local rotator       NewRecoilRotation;
@@ -625,6 +640,9 @@ simulated function HandleRecoil()
             NewRecoilRotation *= PctLeanPenalty;
         }
 
+        // Custom recoil functionality
+        NewRecoilRotation *= CustomHandleRecoil();
+
         // Falloff the RecoilGain based on how much time has passed since we last had recoil
         RecoilGain -= GetRecoilGainFalloff(Level.TimeSeconds - PC.LastRecoilTime);
         RecoilGain = FMax(0.0, RecoilGain); // Make sure RecoilGain is not below zero
@@ -651,6 +669,17 @@ simulated function HandleRecoil()
             PC.AddBlur(BlurTime, BlurScale);
         }
     }
+}
+
+// Function used for debugging RecoilGain
+simulated function float GetEffectiveRecoilGain()
+{
+    local float EffectiveRecoilGain;
+
+    EffectiveRecoilGain = RecoilGain - GetRecoilGainFalloff(Level.TimeSeconds - DHPlayer(Instigator.Controller).LastRecoilTime);
+    EffectiveRecoilGain = FMax(0.0, EffectiveRecoilGain);
+
+    return EffectiveRecoilGain;
 }
 
 simulated function float GetRecoilGainFalloff(float TimeSeconds)
