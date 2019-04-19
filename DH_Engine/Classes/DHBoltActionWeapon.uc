@@ -305,6 +305,9 @@ function ServerSetInterruptReload()
 }
 
 function PostPreReload() {}
+function PostLoopingReloadEnd() {}
+function PostStripperReloadEnd() {}
+function PostLoop() {}
 
 // Modified to handle substantially different one round at a time reload system
 simulated state Reloading
@@ -335,6 +338,60 @@ simulated state Reloading
 
         if (Role == ROLE_Authority)
         {
+            if (NumRoundsToLoad >= GetStripperClipSize())
+            {
+                NumRoundsToLoad -= GetStripperClipSize();
+                ReloadState = RS_FullReload;
+            }
+            else
+            {
+                --NumRoundsToLoad;
+                ReloadState = RS_ReloadLooped;
+            }
+        }
+    }
+
+    function PostLoopingReloadEnd()
+    {
+        if (Role == ROLE_Authority)
+        {
+            if (ROPawn(Instigator) != none)
+            {
+                ROPawn(Instigator).StopReload();
+            }
+
+            PerformReload();
+        }
+    }
+
+    function PostStripperReloadEnd()
+    {
+        Log("Full End");
+        PerformReload(GetStripperClipSize());
+
+        if (ROPawn(Instigator) != none)
+        {
+            ROPawn(Instigator).StopReload();
+        }
+
+        GotoState('Idle');
+    }
+
+    function PostLoop()
+    {
+        if (Role == ROLE_Authority)
+        {
+            //based on state we just finished animating, give appropriate ammo.
+            if(ReloadState == RS_FullReload)
+            {
+                PerformReload(GetStripperClipSize());
+            }
+            else if (ReloadState == RS_ReloadLooped)
+            {
+                PerformReload();
+            }
+
+            //decide next reload type.
             if (NumRoundsToLoad >= GetStripperClipSize())
             {
                 NumRoundsToLoad -= GetStripperClipSize();
@@ -382,6 +439,11 @@ simulated state Reloading
                 Log("End Of Full Reload Animation");
                 ReloadState = RS_None;
 
+                if(Role == ROLE_Authority)
+                {
+                    PostStripperReloadEnd();
+                }
+
                 GotoState('Idle');
             }
             // Just finished playing a single round reload anim
@@ -401,14 +463,25 @@ simulated state Reloading
                 // Either loaded last round or player stopped the reload (by pressing fire), so now play post-reload anim
                 if (NumRoundsToLoad <= 0 || bInterruptReload)
                 {
+
+
+                    if(Role == ROLE_Authority)
+                    {
+                        PostLoopingReloadEnd();
+                    }
+
                     SetTimer(0.0, false);
-                    bInterruptReload = false;
                     ReloadState = RS_PostReload;
                     PlayPostReload();
                 }
                 // Otherwise start loading the next round
                 else
                 {
+                    if(Role == ROLE_Authority)
+                    {
+                        PostLoop();
+                    }
+
                     PlayReload();
                 }
 
@@ -435,31 +508,15 @@ simulated state Reloading
             if ( (NumRoundsToLoad == 0 || bInterruptReload) && ReloadState == RS_ReloadLooped)
             {
                 Log("Timer Loop End: "$bInterruptReload);
-                if (Role == ROLE_Authority)
-                {
-                    if (ROPawn(Instigator) != none)
-                    {
-                        ROPawn(Instigator).StopReload();
-                    }
 
-                    PerformReload();
-                }
+                PostLoopingReloadEnd();
 
-                bInterruptReload = false;
                 ReloadState = RS_PostReload;
                 PlayPostReload();
             }
             else if (ReloadState == RS_FullReload && (NumRoundsToLoad == 0 || bInterruptReload))
             {
-                Log("Timer Full End");
-                PerformReload(GetStripperClipSize());
-
-                if (ROPawn(Instigator) != none)
-                {
-                    ROPawn(Instigator).StopReload();
-                }
-
-                GotoState('Idle');
+                PostStripperReloadEnd();
             }
             // Otherwise start loading the next round
             else
@@ -467,30 +524,7 @@ simulated state Reloading
                 Log("Timer Continue Reload");
                 PlayReload();
 
-                if (Role == ROLE_Authority)
-                {
-                    //based on state we just finished animating, give appropriate ammo.
-                    if(ReloadState == RS_FullReload)
-                    {
-                        PerformReload(GetStripperClipSize());
-                    }
-                    else if (ReloadState == RS_ReloadLooped)
-                    {
-                       PerformReload();
-                    }
-
-                    //decide next reload type.
-                    if (NumRoundsToLoad >= GetStripperClipSize())
-                    {
-                        NumRoundsToLoad -= GetStripperClipSize();
-                        ReloadState = RS_FullReload;
-                    }
-                    else
-                    {
-                        --NumRoundsToLoad;
-                        ReloadState = RS_ReloadLooped;
-                    }
-                }
+                PostLoop();
             }
         }
         // Just finished post-reload or full-reload anim so we're finished
