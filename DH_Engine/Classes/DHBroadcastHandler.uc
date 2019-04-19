@@ -251,7 +251,6 @@ function BroadcastCommand(Controller Sender, coerce string Msg, optional name Ty
 {
     local Controller C;
     local DHPlayer DHSender, PC;
-    local int i;
 
     if (!AllowsBroadcast(Sender, Len(Msg)))
     {

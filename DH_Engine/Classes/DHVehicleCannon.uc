@@ -989,6 +989,11 @@ function ServerManualReload()
     {
         AttemptReload();
     }
+    else if (ReloadState == RL_ReadyToFire && ServerPendingAmmoIndex != GetAmmoIndex())
+    {
+        // Unload the currently loaded shell.
+        AttemptReload();
+    }
 }
 
 // Modified so before trying to start a new reload, we try to switch to any different ammo type selected by the player
