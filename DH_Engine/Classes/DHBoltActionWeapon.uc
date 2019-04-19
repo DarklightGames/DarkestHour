@@ -43,7 +43,7 @@ replication
 {
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerSetInterruptReload, ServerPreformReload;
+        ServerSetInterruptReload;
 }
 
 // Modified to work the bolt when fire is pressed, if weapon is waiting to bolt
@@ -418,7 +418,7 @@ simulated state Reloading
     // Modified to progress through reload stages
     simulated function Timer()
     {
-        Log("Timer:");
+        //Log("Timer:");
         // Just finished pre-reload anim so now load 1st round
         if (ReloadState == RS_PreReload)
         {
@@ -452,6 +452,7 @@ simulated state Reloading
             // Either loaded last round or player stopped the reload (by pressing fire), so now play post-reload anim
             if ( (NumRoundsToLoad == 0 || bInterruptReload) && ReloadState == RS_ReloadLooped)
             {
+                Log("Timer Loop End: "$bInterruptReload);
                 if (Role == ROLE_Authority)
                 {
                     if (ROPawn(Instigator) != none)
@@ -469,13 +470,14 @@ simulated state Reloading
             }
             else if (ReloadState == RS_FullReload && (NumRoundsToLoad == 0 || bInterruptReload))
             {
-                Log("Timer Final ");
+                Log("Timer Full End");
                 PerformReload(GetStripperClipSize());
                 GotoState('Idle');
             }
             // Otherwise start loading the next round
             else
             {
+                Log("Timer Continue Reload");
                 PlayReload();
 
                 if (Role == ROLE_Authority)
@@ -514,7 +516,7 @@ simulated state Reloading
 
     simulated function BeginState()
     {
-        Log("Entering Reload State");
+        Log("Entering Reload State: "$NumRoundsToLoad);
         if (Role == ROLE_Authority && ROPawn(Instigator) != none)
         {
             ROPawn(Instigator).StartReload();
@@ -592,7 +594,7 @@ simulated function PlayReload()
             Log("SERVER STRIPPER SET TIMER");
 
             //PlayAnimAndSetTimer(StripperReloadAnim, 1.0);
-           SetTimer(GetAnimDuration(StripperReloadAnim,1.0),false);
+           SetTimer(GetAnimDuration(StripperReloadAnim, 1.0), false);
         }
         else
         {
@@ -600,7 +602,7 @@ simulated function PlayReload()
 
             //PlayAnimAndSetTimer(GetSingleReloadAnim(), 1.0);
             Log("SERVER SINGLE SET TIMER");
-            SetTimer(GetAnimDuration(GetSingleReloadAnim(),1.0),false);
+            SetTimer(GetAnimDuration(GetSingleReloadAnim(), 1.0), false);
        }
         //SetTimer(,false);
     }
@@ -681,11 +683,6 @@ simulated function byte GetRoundsToLoad()
 }
 
 
-function ServerPreformReload(optional int Count)
-{
-    PerformReload(Count);
-}
-
 // Modified to load one round each time
 // 'Mags' for this weapon aren't really mags, they are just dummy mags that act as data groupings of individual spare rounds
 // Each dummy mag contains the max no. of rounds that can be loaded into the weapon
@@ -695,7 +692,7 @@ function ServerPreformReload(optional int Count)
 // It's done this way to work with existing mag-based functionality, while allowing one at a time loading up to a max no. limited by the dummy mag size
 function PerformReload(optional int Count)
 {
-    local int loaded,withdraw; // How many rounds have been loaded in so far.
+    local int Loaded, Withdraw; // How many rounds have been loaded in so far.
 
 
 
@@ -710,9 +707,7 @@ function PerformReload(optional int Count)
     Count = Max(1, Count);
     Log("Preform Reload: "$Count);
 
-
-    loaded = 0;
-    while (loaded < Count)
+    while (Loaded < Count)
     {
         // Check if there is a first mag to deduct from
         if(PrimaryAmmoArray.Length == 1)
@@ -720,12 +715,12 @@ function PerformReload(optional int Count)
             break;
         }
 
-        withdraw = 0;
+        Withdraw = 0;
 
         // take all the rounds in the mag as possible.
-        withdraw = Min(Count - loaded, PrimaryAmmoArray[1]);
-        PrimaryAmmoArray[1] -= withdraw;
-        loaded += withdraw;
+        Withdraw = Min(Count - loaded, PrimaryAmmoArray[1]);
+        PrimaryAmmoArray[1] -= Withdraw;
+        Loaded += withdraw;
 
         // If mag is now empty, delete it.
         if(PrimaryAmmoArray[1] == 0)
@@ -734,7 +729,7 @@ function PerformReload(optional int Count)
         }
     }
 
-    AddAmmo(loaded,0);
+    AddAmmo(Loaded, 0);
 
     // Update the weapon attachment ammo status
     if (AmmoAmount(0) > 0 && ROWeaponAttachment(ThirdPersonActor) != none)
@@ -752,9 +747,9 @@ function GiveBackAmmo(int Count)
     {
         return;
     }
-    Log (PrimaryAmmoArray[0]);
+
     PrimaryAmmoArray[1] += Count;
-    PrimaryAmmoArray[0] -= Count;
+    AmmoCharge[0] -= Count;
 
     // Update the weapon attachment ammo status
     if (AmmoAmount(0) > 0 && ROWeaponAttachment(ThirdPersonActor) != none)
