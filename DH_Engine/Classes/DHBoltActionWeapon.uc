@@ -304,6 +304,8 @@ function ServerSetInterruptReload()
 {
 }
 
+function PostPreReload() {}
+
 // Modified to handle substantially different one round at a time reload system
 simulated state Reloading
 {
@@ -323,6 +325,29 @@ simulated state Reloading
         bInterruptReload = true;
     }
 
+    function PostPreReload()
+    {
+        // give back the unfired round that was in the chamber
+        if(!bWaitingToBolt)
+        {
+            GiveBackAmmo(1);
+        }
+
+        if (Role == ROLE_Authority)
+        {
+            if (NumRoundsToLoad >= GetStripperClipSize())
+            {
+                NumRoundsToLoad -= GetStripperClipSize();
+                ReloadState = RS_FullReload;
+            }
+            else
+            {
+                --NumRoundsToLoad;
+                ReloadState = RS_ReloadLooped;
+            }
+        }
+    }
+
     // Modified to progress through reload stages, playing appropriate anims
     simulated function AnimEnd(int Channel)
     {
@@ -330,7 +355,6 @@ simulated state Reloading
         local float Frame, Rate;
         local int ReloadCount;
 
-        //Log("Animation End");
 
         if (InstigatorIsLocallyControlled())
         {
@@ -346,6 +370,11 @@ simulated state Reloading
 
                 PlayReload();
 
+                if(Role == ROLE_Authority)
+                {
+                    PostPreReload();
+                }
+
                 return;
             }
             else if (Anim == FullReloadAnim)
@@ -353,23 +382,12 @@ simulated state Reloading
                 Log("End Of Full Reload Animation");
                 ReloadState = RS_None;
 
-                if (Role == ROLE_Authority)
-                {
-                    if (ROPawn(Instigator) != none)
-                    {
-                        ROPawn(Instigator).StopReload();
-                    }
-
-                    //PerformReload(GetMaxLoadedRounds());
-
-                }
-                //ServerPreformReload(GetMaxLoadedRounds());
                 GotoState('Idle');
             }
             // Just finished playing a single round reload anim
             else if (Anim == SingleReloadAnim || Anim == SingleReloadHalfAnim || Anim == StripperReloadAnim)
             {
-                Log("Finished Single Reload");
+                Log("End Single Reload");
                 // TODO: Alternatively, change this to be some sort of class-level variable.
                 if (Anim == SingleReloadAnim || Anim == SingleReloadHalfAnim)
                 {
@@ -387,27 +405,11 @@ simulated state Reloading
                     bInterruptReload = false;
                     ReloadState = RS_PostReload;
                     PlayPostReload();
-
-                    if (Role == ROLE_Authority)
-                    {
-                        if (ROPawn(Instigator) != none)
-                        {
-                            ROPawn(Instigator).StopReload();
-                        }
-                    }
-
-                    //PerformReload(ReloadCount);
-                    //ServerPreformReload(ReloadCount);
                 }
                 // Otherwise start loading the next round
                 else
                 {
                     PlayReload();
-
-                    if (Role == ROLE_Authority)
-                    {
-                        PerformReload(ReloadCount);
-                    }
                 }
 
                 return;
@@ -418,33 +420,13 @@ simulated state Reloading
     // Modified to progress through reload stages
     simulated function Timer()
     {
-        //Log("Timer:");
+        Log("Timer:");
         // Just finished pre-reload anim so now load 1st round
         if (ReloadState == RS_PreReload)
         {
-            Log("Timer PreReload");
-
-            // give back the unfired round that was in the chamber
-            if(!bWaitingToBolt)
-            {
-                GiveBackAmmo(1);
-            }
-
             PlayReload();
 
-            if (Role == ROLE_Authority)
-            {
-                if (NumRoundsToLoad >= GetStripperClipSize())
-                {
-                    NumRoundsToLoad -= GetStripperClipSize();
-                    ReloadState = RS_FullReload;
-                }
-                else
-                {
-                    --NumRoundsToLoad;
-                    ReloadState = RS_ReloadLooped;
-                }
-            }
+            PostPreReload();
         }
         // Just finished loading some ammo
         else if (ReloadState == RS_ReloadLooped || ReloadState == RS_FullReload)
@@ -460,7 +442,6 @@ simulated state Reloading
                         ROPawn(Instigator).StopReload();
                     }
 
-
                     PerformReload();
                 }
 
@@ -472,6 +453,12 @@ simulated state Reloading
             {
                 Log("Timer Full End");
                 PerformReload(GetStripperClipSize());
+
+                if (ROPawn(Instigator) != none)
+                {
+                    ROPawn(Instigator).StopReload();
+                }
+
                 GotoState('Idle');
             }
             // Otherwise start loading the next round
@@ -482,7 +469,6 @@ simulated state Reloading
 
                 if (Role == ROLE_Authority)
                 {
-
                     //based on state we just finished animating, give appropriate ammo.
                     if(ReloadState == RS_FullReload)
                     {
@@ -510,6 +496,7 @@ simulated state Reloading
         // Just finished post-reload or full-reload anim so we're finished
         else if (ReloadState == RS_PostReload)
         {
+            Log("Timer Post Reload");
             GotoState('Idle');
         }
     }
@@ -533,11 +520,9 @@ simulated state Reloading
                     GiveBackAmmo(1);
                 }
 
-                Log("Play Full Reload");
                 ReloadState = RS_FullReload;
                 NumRoundsToLoad -= GetStripperClipSize();
                 PlayFullReload();
-
             }
             else
             {
@@ -555,6 +540,7 @@ simulated state Reloading
             NumRoundsToLoad = 0;
             bWaitingToBolt = false;
             ReloadState = RS_None;
+            bInterruptReload = false;
         }
     }
 }
@@ -567,11 +553,27 @@ simulated function bool CanLoadStripperClip()
 // Modified to use single reload animation (without adding FastTweenTime to timer), & to decrement the number of rounds to load
 simulated function PlayReload()
 {
-    //Log("Play Reload");
-
-    if (InstigatorIsLocallyControlled())
+    if (InstigatorIsLocallyControlled() && Role == ROLE_Authority)
     {
-        //Log("Local Control");
+        SetTimer(0.0,false);
+        if (CanLoadStripperClip())
+        {
+            //SetTimer(GetAnimDuration(StripperReloadAnim, 1.0), false);
+            PlayAnim(StripperReloadAnim, 1.0);
+            //PlayAnimAndSetTimer(StripperReloadAnim, 1.0);
+        }
+        else
+        {
+            //Log("a ");
+            //Log("SinglePlayer"$GetAnimDuration(GetSingleReloadAnim(), 1.0));
+            //SetTimer(GetAnimDuration(GetSingleReloadAnim(), 1.0), false);
+            PlayAnim(GetSingleReloadAnim(), 1.0);
+            //PlayAnimAndSetTimer(GetSingleReloadAnim(), 1.0);
+        }
+    }
+    else if (InstigatorIsLocallyControlled())
+    {
+        //Log("Client");
         if (CanLoadStripperClip())
         {
             NumRoundsToLoad -= GetStripperClipSize();
@@ -579,32 +581,21 @@ simulated function PlayReload()
         }
         else
         {
-            //Log("Single Animation");
             NumRoundsToLoad -= 1;
-
             PlayAnimAndSetTimer(GetSingleReloadAnim(), 1.0);
         }
     }
     else
     {
-
-        //GetAnimDuration(Anim, AnimRate)
+        //Log("Server");
         if (CanLoadStripperClip())
         {
-            Log("SERVER STRIPPER SET TIMER");
-
-            //PlayAnimAndSetTimer(StripperReloadAnim, 1.0);
-           SetTimer(GetAnimDuration(StripperReloadAnim, 1.0), false);
+            SetTimer(GetAnimDuration(StripperReloadAnim, 1.0), false);
         }
         else
         {
-
-
-            //PlayAnimAndSetTimer(GetSingleReloadAnim(), 1.0);
-            Log("SERVER SINGLE SET TIMER");
             SetTimer(GetAnimDuration(GetSingleReloadAnim(), 1.0), false);
-       }
-        //SetTimer(,false);
+        }
     }
 }
 
@@ -636,7 +627,10 @@ simulated function PlayFullReload()
 
     Level.Game.Broadcast(self, Duration);
 
+    Log("Full "$GetAnimDuration(FullReloadAnim, 1.0));
+
     SetTimer(GetAnimDuration(FullReloadAnim, 1.0), false);
+    //SetTimer(GetAnimDuration(FullReloadAnim, 1.0), false);
 
     if (InstigatorIsLocallyControlled() && HasAnim(FullReloadAnim))
     {
@@ -647,6 +641,7 @@ simulated function PlayFullReload()
 // New function to play PostReloadAnim & set a timer for when it ends (without adding FastTweenTime to timer)
 simulated function PlayPostReload()
 {
+    Log("post "$GetAnimDuration(PostReloadAnim, 1.0));
     SetTimer(GetAnimDuration(PostReloadAnim, 1.0), false);
 
     if (InstigatorIsLocallyControlled() && HasAnim(PostReloadAnim))
