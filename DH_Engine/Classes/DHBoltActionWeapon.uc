@@ -11,6 +11,7 @@ enum EReloadState
     RS_None,
     RS_PreReload,
     RS_ReloadLooped,
+    RS_ReloadStripper,
     RS_PostReload,
     RS_FullReload
 };
@@ -450,6 +451,7 @@ simulated state Reloading
             else if (Anim == SingleReloadAnim || Anim == SingleReloadHalfAnim || Anim == StripperReloadAnim)
             {
                 Log("End Single Reload");
+                /*
                 // TODO: Alternatively, change this to be some sort of class-level variable.
                 if (Anim == SingleReloadAnim || Anim == SingleReloadHalfAnim)
                 {
@@ -459,6 +461,7 @@ simulated state Reloading
                 {
                     ReloadCount = GetStripperClipSize();
                 }
+                */
 
                 // Either loaded last round or player stopped the reload (by pressing fire), so now play post-reload anim
                 if (NumRoundsToLoad <= 0 || bInterruptReload)
