@@ -366,6 +366,7 @@ simulated state Reloading
 
     function PostLoop()
     {
+        Log("Post Loop: "$NumRoundsToLoad);
         //based on state we just finished animating, give appropriate ammo.
         if(ReloadState == RS_ReloadLoopedStripper)
         {
@@ -379,11 +380,13 @@ simulated state Reloading
         //decide next reload type.
         if (NumRoundsToLoad >= GetStripperClipSize())
         {
+            Log("Next Reload Stripper");
             NumRoundsToLoad -= GetStripperClipSize();
             ReloadState = RS_ReloadLoopedStripper;
         }
         else
         {
+
             --NumRoundsToLoad;
             ReloadState = RS_ReloadLooped;
         }
@@ -444,12 +447,11 @@ simulated state Reloading
                 // Otherwise start loading the next round
                 else
                 {
+                    PlayReload();
                     if(Role == ROLE_Authority)
                     {
                         PostLoop();
                     }
-
-                    PlayReload();
                 }
 
                 return;
@@ -460,6 +462,7 @@ simulated state Reloading
     // Modified to progress through reload stages
     simulated function Timer()
     {
+        Log("Timer:");
         // Just finished pre-reload anim so now load 1st round
         if (ReloadState == RS_PreReload)
         {
@@ -500,6 +503,7 @@ simulated state Reloading
 
     simulated function BeginState()
     {
+        Log("Start Reload: "$NumRoundsToLoad);
         if (Role == ROLE_Authority && ROPawn(Instigator) != none)
         {
             ROPawn(Instigator).StartReload();
@@ -540,6 +544,7 @@ simulated state Reloading
 
 simulated function bool CanLoadStripperClip()
 {
+    Log("Can? "$NumRoundsToLoad$", "$GetStripperClipSize());
     return HasAnim(StripperReloadAnim) && NumRoundsToLoad >= GetStripperClipSize();
 }
 
@@ -551,10 +556,12 @@ simulated function PlayReload()
     {
         if (CanLoadStripperClip())
         {
+            Log("Reload Anim Stripper");
             PlayAnim(StripperReloadAnim, 1.0);
         }
         else
         {
+            Log("Reload Anim Single");
             PlayAnim(GetSingleReloadAnim(), 1.0);
         }
     }
