@@ -25,7 +25,7 @@ defaultproperties
         SizeScale(1)=(RelativeTime=0.140000,RelativeSize=0.500000)
         SizeScale(2)=(RelativeTime=1.000000,RelativeSize=1.000000)
         StartSizeRange=(X=(Min=50.000000,Max=50.000000),Y=(Min=50.000000,Max=50.000000),Z=(Min=50.000000,Max=50.000000))
-        Sounds(0)=(Sound=SoundGroup'DH_EventSounds.Easter.Chicken_Clucks',Radius=(Min=128.000000,Max=128.000000),Pitch=(Min=0.950000,Max=1.050000),Volume=(Min=250.000000,Max=255.000000),Probability=(Min=1.000000,Max=1.000000))
+        Sounds(0)=(Sound=SoundGroup'DH_EventSounds.Easter.Chicken_Clucks',Radius=(Min=256.000000,Max=512.000000),Pitch=(Min=0.950000,Max=1.050000),Volume=(Min=250.000000,Max=255.000000),Probability=(Min=1.000000,Max=1.000000))
         SpawningSound=PTSC_LinearGlobal
         SpawningSoundProbability=(Min=1.000000,Max=1.000000)
         InitialParticlesPerSecond=30.000000
