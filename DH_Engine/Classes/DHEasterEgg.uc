@@ -32,6 +32,61 @@ auto state Working
             TakeDamage(default.Health, Vehicle(Other), Location, Vect(0,0,0), class'Crushed');
         }
     }
+
+
+    function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+    {
+        local DarkestHourGame G;
+        local DHMetricsEvent E;
+        local DHPlayer PC;
+
+        if (!bActive)
+        {
+            return;
+        }
+
+        if (TeamCanDamage == TD_Axis && GetDamagingTeamIndex(InstigatedBy) != AXIS_TEAM_INDEX)
+        {
+            return;
+        }
+
+        if (TeamCanDamage == TD_Allies && GetDamagingTeamIndex(InstigatedBy) != ALLIES_TEAM_INDEX)
+        {
+            return;
+        }
+
+        if (!ShouldTakeDamage(DamageType))
+        {
+            return;
+        }
+
+        if (InstigatedBy != none)
+        {
+            MakeNoise(1.0);
+        }
+
+        Health -= Damage;
+
+        if (Health <= 0)
+        {
+            TriggerEvent(DestroyedEvent, self, InstigatedBy);
+            BroadcastCriticalMessage(InstigatedBy);
+            BreakApart(HitLocation, Momentum);
+
+            PC = DHPlayer(InstigatedBy.Controller);
+            G = DarkestHourGame(Level.Game);
+
+            if (PC != none && G != none && G.Metrics != none)
+            {
+                E = new class'DHMetricsEvent';
+                E.Type = "egg_found";
+                E.Data = (new class'JSONObject')
+                    .PutString("player_id", PC.GetPlayerIDHash())
+                    .PutString("damage_type", DamageType.Name);
+                G.Metrics.AddEvent(E);
+            }
+        }
+    }
 }
 
 state Broken
