@@ -93,6 +93,8 @@ var()   config int                  EmptyTankUnlockTime;                    // S
 
 var     DHGameReplicationInfo       GRI;
 
+var     float                       NextEventMessageTime;                   // The next time an event message should be broadcast
+
 // The response types for requests.
 enum EArtilleryResponseType
 {
@@ -2836,6 +2838,13 @@ state RoundInPlay
             }
         }
 
+        // If enough time has passed run code for Egg message
+        if (GRI.ElapsedTime >= NextEventMessageTime)
+        {
+            NextEventMessageTime = GRI.ElapsedTime + 120.0;
+            AnnounceEggFindProgress();
+        }
+
         // Update munition percentages (this will update both team's munitions and set them in GRI)
         UpdateMunitionPercentages();
 
@@ -2866,6 +2875,85 @@ state RoundInPlay
         {
             DHPlayer(Level.GetLocalPlayerController()).CheckUnlockWeapons();
         }
+    }
+}
+
+function AnnounceEggFindProgress()
+{
+    local Controller C;
+    local DHPlayer PC, HighestPC;
+    local DHPlayerReplicationInfo HighestPRI;
+    local DHEasterEgg Egg;
+    local int NumFound, NumTotal;
+    local bool bTied;
+
+    // Find egg progress
+    foreach DynamicActors(class'DHEasterEgg', Egg)
+    {
+        ++NumTotal;
+
+        if (Egg.Health <= 0)
+        {
+            ++NumFound;
+        }
+    }
+
+    // Find player with most eggs found
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        PC = DHPlayer(C);
+
+        if (PC == none)
+        {
+            continue;
+        }
+
+        if (HighestPC == none)
+        {
+            HighestPC = PC;
+        }
+
+        if(PC.NumberOfEggsFound > HighestPC.NumberOfEggsFound)
+        {
+            HighestPC = PC;
+        }
+    }
+
+    // Check for a tie
+    for (C = Level.ControllerList; C != none; C = C.NextController)
+    {
+        PC = DHPlayer(C);
+
+        if (PC != none && HighestPC != none)
+        {
+            if (PC != HighestPC && PC.NumberOfEggsFound == HighestPC.NumberOfEggsFound)
+            {
+                bTied = true;
+            }
+        }
+    }
+
+    if (HighestPC != none)
+    {
+        HighestPRI = DHPlayerReplicationInfo(HighestPC.PlayerReplicationInfo);
+    }
+
+    // Broadcast message
+    if (bTied && NumFound > 0)
+    {
+        Level.Game.Broadcast(self, "Egg Hunt:" @ NumFound @ "of" @ NumTotal @ "eggs have been found. There is a tie between who has the most eggs found in this level!", 'ServerMessage');
+    }
+    else if (NumFound > 0 && HighestPRI != none)
+    {
+        Level.Game.Broadcast(self, "Egg Hunt:" @ NumFound @ "of" @ NumTotal @ "eggs have been found." @ HighestPRI.PlayerName @ "has the most eggs, with" @ HighestPC.NumberOfEggsFound @ "found this level so far.", 'ServerMessage');
+    }
+    else if (NumTotal > 0)
+    {
+        Level.Game.Broadcast(self, "Egg Hunt:" @ "No eggs have been found yet!" @ NumTotal @ "eggs remain to be found.", 'ServerMessage');
+    }
+    else
+    {
+        Level.Game.Broadcast(self, "Egg Hunt:" @ "This level has no eggs!", 'ServerMessage');
     }
 }
 
