@@ -78,6 +78,16 @@ auto state Working
 
             if (PC != none && G != none && G.Metrics != none)
             {
+                // Increase Eggs Found For Player
+                PC.NumberOfEggsFound++;
+
+                // Warn player we don't count eggs with less than 32 players
+                if (G.GetNumPlayers() < 32)
+                {
+                    PC.ClientMessage("Eggs found with under 32 players do not count for event!", 'Say');
+                }
+
+                // Handle Metrics
                 E = new class'DHMetricsEvent';
                 E.Type = "egg_found";
                 E.Data = (new class'JSONObject')
@@ -86,14 +96,6 @@ auto state Working
                 G.Metrics.AddEvent(E);
             }
         }
-    }
-}
-
-state Broken
-{
-    function BeginState()
-    {
-        super.BeginState();
     }
 }
 
@@ -124,4 +126,24 @@ defaultproperties
     MaterialArray(8)=Material'DH_Event_tex.Easter_Egg_Paintings.Egg_FDR'
     MaterialArray(9)=Material'DH_Event_tex.Easter_Egg_Paintings.Egg_Hitler'
     MaterialArray(10)=Material'DH_Event_tex.Easter_Egg_Paintings.Egg_Stalin'
+    MaterialArray(11)=Material'DH_Event_tex.Easter_Egg_Paintings.Ciccseven_DrStrangelove'
+    MaterialArray(12)=Material'DH_Event_tex.Easter_Egg_Paintings.Dan06_DogFace'
+    MaterialArray(13)=Material'DH_Event_tex.Easter_Egg_Paintings.DirtyBirdy_BiteMe'
+    MaterialArray(14)=Material'DH_Event_tex.Easter_Egg_Paintings.DirtyBirdy_Scooby1'
+    MaterialArray(15)=Material'DH_Event_tex.Easter_Egg_Paintings.DirtyBirdy_Scooby2'
+    MaterialArray(16)=Material'DH_Event_tex.Easter_Egg_Paintings.DLG_Logo'
+    MaterialArray(17)=Material'DH_Event_tex.Easter_Egg_Paintings.Doc_Opossum_Possum'
+    MaterialArray(18)=Material'DH_Event_tex.Easter_Egg_Paintings.Mazur_Bear'
+    MaterialArray(19)=Material'DH_Event_tex.Easter_Egg_Paintings.Patison_GetThere'
+    MaterialArray(20)=Material'DH_Event_tex.Easter_Egg_Paintings.Patison_Pinup'
+    MaterialArray(21)=Material'DH_Event_tex.Easter_Egg_Paintings.Saulniv_Camo'
+    MaterialArray(22)=Material'DH_Event_tex.Easter_Egg_Paintings.Saulniv_ConfusedSoldier'
+    MaterialArray(23)=Material'DH_Event_tex.Easter_Egg_Paintings.Space_Cowboy_GooglyEyes'
+    MaterialArray(24)=Material'DH_Event_tex.Easter_Egg_Paintings.Space_Cowboy_Rafterman'
+    MaterialArray(25)=Material'DH_Event_tex.Easter_Egg_Paintings.Space_Cowboy_ScaredFace'
+    MaterialArray(26)=Material'DH_Event_tex.Easter_Egg_Paintings.Space_Cowboy_ScareStance'
+    MaterialArray(27)=Material'DH_Event_tex.Easter_Egg_Paintings.TonkaVD_Pinup'
+    MaterialArray(28)=Material'DH_Event_tex.Easter_Egg_Paintings.WatermelonProtector_DogFace'
+    MaterialArray(29)=Material'DH_Event_tex.Easter_Egg_Paintings.Zahnpastachaf_Bubbles'
+    MaterialArray(30)=Material'DH_Event_tex.Easter_Egg_Paintings.Zodd_Noward_MP40'
 }
