@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2015
 //==============================================================================
 
 class DHMetricsRound extends JSONSerializable;
@@ -12,7 +12,7 @@ var array<DHMetricsFrag>            Frags;
 var array<DHMetricsCapture>         Captures;
 var array<DHMetricsConstruction>    Constructions;
 var array<DHMetricsRallyPoint>      RallyPoints;
-var array<DHMetricsEvent>           Events;
+var array<JSONObject>               Events;
 var int                             Winner;
 
 function JSONValue ToJSON()
@@ -26,7 +26,7 @@ function JSONValue ToJSON()
         .Put("captures", class'JSONArray'.static.FromSerializables(Captures))
         .Put("constructions", class'JSONArray'.static.FromSerializables(Constructions))
         .Put("rally_points", class'JSONArray'.static.FromSerializables(RallyPoints))
-        .Put("events", class'JSONArray'.static.FromSerializables(Events));
+        .Put("events", class'JSONArray'.static.FromValues(Events));
 
     if (EndedAt == none)
     {

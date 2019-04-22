@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2019
+// Darklight Games (c) 2008-2015
 //==============================================================================
 
 class DHMetrics extends Actor
@@ -284,7 +284,7 @@ function OnRallyPointCreated(DHSpawnPoint_SquadRallyPoint RP)
 }
 
 // Adds a generic JSONObject event.
-function AddEvent(DHMetricsEvent Event)
+function AddEvent(JSONObject Event)
 {
     if (Rounds.Length == 0 || Event == none)
     {

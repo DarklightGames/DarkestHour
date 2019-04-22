@@ -151,8 +151,6 @@ var     bool                    bLazyCam;
 var     float                   LazyCamLaziness;
 var     rotator                 LazyCamRotationTarget;
 
-var     int                     NumberOfEggsFound;
-
 replication
 {
     // Variables the server will replicate to the client that owns this actor
