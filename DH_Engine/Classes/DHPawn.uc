@@ -6346,6 +6346,7 @@ exec function BogeyMan()
     }
 }
 
+
 // New debug exec to make bots spawn
 // Team is 0 for axis, 1 for allies, 2 for both
 // Num is optional & limits the number of bots that will be spawned (if not entered, zero is passed & gets used to signify no limit on numbers)
@@ -6626,6 +6627,13 @@ exec function GimmeSupplies()
             DebugSpawnVehicle("DH_GMCTruckSupport", 5.0);
             break;
     }
+}
+
+exec function DebugSpawnPlane()
+{
+    local class<Actor> ActorClass;
+    ActorClass = class<Actor>(DynamicLoadObject("DH_Artillery.DHArtillery_BF109_Airstrike", class'class'));
+    Spawn(ActorClass);
 }
 
 // New debug exec to spawn any vehicle, in front of you

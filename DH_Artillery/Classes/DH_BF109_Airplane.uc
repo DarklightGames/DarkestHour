@@ -5,12 +5,18 @@
 
 class DH_BF109_Airplane extends DHAirplane;
 
+simulated function PostBeginPlay()
+{
+    Super.PostBeginPlay();
+
+}
+
 defaultproperties
 {
-    AirplaneName="Messerschmidt Bf 109"
+    //AirplaneName="Messerschmidt Bf 109"
     Mesh=Mesh'DH_Airplanes_anm.bf109g'
-
-    BombBoneNames(0)="bomb.001" // left wing
-    BombBoneNames(1)="bomb.002" // undercarriage
-    BombBoneNames(2)="bomb.003" // right wing
+    MaxSpeed = 600
+    //BombBoneNames(0)="bomb.001" // left wing
+    //BombBoneNames(1)="bomb.002" // undercarriage
+    //BombBoneNames(2)="bomb.003" // right wing
 }

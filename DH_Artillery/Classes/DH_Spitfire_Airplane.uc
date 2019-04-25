@@ -7,6 +7,6 @@ class DH_Spitfire_Airplane extends DHAirplane;
 
 defaultproperties
 {
-    AirplaneName="Supermarine Spitfire"
-    Mesh=Mesh'DH_Airplanes_anm.Spitfire'
+    //AirplaneName="Supermarine Spitfire"
+    //Mesh=Mesh'DH_Airplanes_anm.Spitfire'
 }

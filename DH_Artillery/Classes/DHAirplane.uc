@@ -10,50 +10,105 @@
 // obvious explosion and sound should indicate that this has happened.
 //==============================================================================
 
+/*
+Structure wise, there will be two main states. The first is the state driving the AI.
+This is the core dicision making for searching for targets, approaching targets.
+Essentially this drives the placement of waypoints.
+
+The second main state is the various movement states. Straightline, turning,
+making an attack run.
+*/
+
+
 class DHAirplane extends Actor
     abstract;
 
 var localized string    AirplaneName;
-var float               Airspeed;       // "Ground" airspeed in meters per second.
+var float               MaxSpeed;
+var float               MinSpeed;
+var float               CurrentSpeed;
+var float               MinTurningRadius; // tightest/smallest circular path this plane can turn on.
 
-var array<name>         BombBoneNames;
-var array<name>         PropellerBoneNames;
-var name                CockpitBoneName;
+struct Waypoint
+{
+    var vector position;
+    var float radius;
+};
 
-var SoundGroup          CloseSound;
-var float               CloseSoundRadius;
-var float               CloseSoundVolume;
-var ROSoundAttachment   CloseSoundAttachment;
+var Waypoint            CurrentWaypoint; // Current waypoint we are traveling to.
+var array<Waypoint>     WaypointQueue;
 
 simulated function PostBeginPlay()
 {
-    if (Level.NetMode != NM_DedicatedServer)
+    CurrentSpeed = class'DHUnits'.static.MetersToUnreal(MaxSpeed);
+}
+
+// Tick needed to make AI decisions on server.
+simulated function Tick(float DeltaTime)
+{
+
+    //Fist Process waypoint status.
+
+    WaypointUpdate();
+    MovementUpdate(DeltaTime);
+}
+
+simulated function WaypointUpdate(float DeltaTime)
+{
+    //Check if there is not current waypoint set.
+    if(CurrentWaypoint == none)
     {
-        // TODO: proper cleanup etc.
-        CloseSoundAttachment = Spawn(class'ROSoundAttachment', self);
-        CloseSoundAttachment.AmbientSound = CloseSound;
-        CloseSoundAttachment.SoundRadius = CloseSoundRadius;
-        CloseSoundAttachment.SoundVolume = CloseSoundVolume;
-        CloseSoundAttachment.SetBase(self);
-        CloseSoundAttachment.SetRelativeLocation(vect(0, 0, 0));
+        Waypoint
     }
 }
 
-function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+// Sets a new current waypoint.
+simulated function SetCurrentWaypoint(Waypoint NewWaypoint)
 {
-    Log("TakeDamage" @ self);
+    CurrentWaypoint = NewWaypoint;
+}
+
+// update position based on current position, velocity, and current waypoint.
+simulated function MovementUpdate(float DeltaTime)
+{
+    local rotator Heading;
+
+    // Move along curve to waypoint.
+    velocity = Normal(Vect(1,1,0)) * CurrentSpeed * DeltaTime;
+
+
+
+    // Make sure plane is always faceing the direction it is traveling.
+    Heading.Pitch = 0;
+    Heading.Roll = 0;
+    Heading.Yaw = Acos( Normal(Vect(1,0,0)) dot Normal(velocity) ) * 10430.378350470452724949566316381;
+    SetRotation(Heading);
+}
+
+// Given A position, and a desired "OnTargetDistance", create a paht of waypoints.
+// The "OnTargetDistance" is the minimum distance away from the path end postion the plane should be
+// when it stops turning.
+function PathFind(vector PathEndPosition, float OnTargetDistance)
+{
+}
+
+// called whenever the plane passes it's current waypoint.
+function OnWaypointPassed()
+{
 }
 
 defaultproperties
 {
     AirplaneName="Airplane"
     DrawType=DT_Mesh
-    Airspeed=50.0
-    AmbientSound=Sound'DH_Airplanes.flybys.flyby_01_ambient'
-    SoundVolume=255
-    SoundRadius=10000.0 // TODO: fiddle with these
     bAlwaysRelevant=true
-    CockpitBoneName="cockpit"
-    PropellerBoneNames(0)="propeller"
+    bReplicateMovement = true
     bCanBeDamaged=true
+    Physics = PHYS_Flying
+    //bRotateToDesired = true;
+    //Rotation
+
+    MaxSpeed = 400;
+    MinSpeed = 10;
+    CurrentSpeed = 0;
 }
