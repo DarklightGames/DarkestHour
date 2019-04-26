@@ -12,15 +12,15 @@ defaultproperties
     AmmoClass=class'DH_Weapons.DH_MG42Ammo'
     FireRate=0.05
     TracerFrequency=7
-    Spread=66.0
+    Spread=70.0
     RecoilRate=0.03125
 
     // Recoil
-    maxVerticalRecoilAngle=450
-    maxHorizontalRecoilAngle=250
+    maxVerticalRecoilAngle=460
+    maxHorizontalRecoilAngle=260
     PctBipodDeployRecoil=0.1
     PctRestDeployRecoil=0.1
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.33),(InVal=6.0,OutVal=0.66),(InVal=25.0,OutVal=1.5),(InVal=50.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.3),(InVal=10.0,OutVal=0.6),(InVal=25.0,OutVal=1.25),(InVal=50.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=32.0
 
