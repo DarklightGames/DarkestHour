@@ -12,14 +12,18 @@ defaultproperties
     AmmoClass=class'ROAmmo.MG50Rd792x57DrumAmmo'
     FireRate=0.070588
     TracerFrequency=7
+    Spread=68.0
     RecoilRate=0.04
-    PctHipMGPenalty=0.66 // TODO: doesn't seem to make sense as is supposed to be a penalty & so must be > 1 (was originally 1.5) (same in semi auto fire class)
+    PctHipMGPenalty=1.0
 
     // Recoil
     maxVerticalRecoilAngle=400
-    maxHorizontalRecoilAngle=200
-    PctBipodDeployRecoil=0.02
-    PctRestDeployRecoil=0.05
+    maxHorizontalRecoilAngle=210
+    PctBipodDeployRecoil=0.1
+    PctRestDeployRecoil=0.1
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.4),(InVal=6.0,OutVal=0.6),(InVal=12.0,OutVal=1.15),(InVal=50.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilFallOffExponent=4.0
+    RecoilFallOffFactor=34.0
 
     AmbientFireSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_loop'
     FireEndSound=SoundGroup'DH_WeaponSounds.mg34.mg34_fire_end'
