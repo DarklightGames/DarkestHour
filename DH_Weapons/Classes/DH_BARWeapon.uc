@@ -32,6 +32,8 @@ simulated function bool UsingAutoFire()
 
 defaultproperties
 {
+    SwayModifyFactor=1.1 // Increased sway because of length, weight, and general awkwardness
+
     ItemName="Browning Automatic Rifle"
     TeamIndex=1
     FireModeClass(0)=class'DH_Weapons.DH_BARFire'
