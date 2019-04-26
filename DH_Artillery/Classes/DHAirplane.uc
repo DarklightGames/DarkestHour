@@ -97,6 +97,38 @@ function OnWaypointPassed()
 {
 }
 
+
+function vector CalculateRotationPosition(bool bIsRightTurn, vector Forward, vector Position, float TurnRadius, float Speed, float DeltaTime)
+{
+    local float DeltaAngle;
+    local float ArcDistance;
+    local vector PlaneSpaceNewPosition;
+    local vector WorldSpaceNewPosition;
+
+    ArcDistance = Speed * DeltaTime;
+
+    DeltaAngle = ArcDistance / TurnRadius;
+
+    // Relative to the rotation center.
+    PlaneSpaceNewPosition.X = Sin(DeltaAngle) * TurnRadius;
+    PlaneSpaceNewPosition.Y = Cos(DeltaAngle) * TurnRadius;
+    PlaneSpaceNewPosition.Z = 0;
+
+    // Make relative to the plane's position.
+    if(bIsRightTurn)
+    {
+        PlaneSpaceNewPosition.Y = TurnRadius - PlaneSpaceNewPosition.Y;
+    }
+    else
+    {
+        PlaneSpaceNewPosition.Y = PlaneSpaceNewPosition.Y - TurnRadius;
+    }
+
+    // Convert to world positon
+
+    return WorldSpaceNewPosition;
+}
+
 defaultproperties
 {
     AirplaneName="Airplane"
