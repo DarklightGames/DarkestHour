@@ -313,6 +313,7 @@ simulated state Reloading
 
     function PostPreReload()
     {
+        Log("Post Pre Reload");
         // give back the unfired round that was in the chamber
         if(!bWaitingToBolt)
         {
@@ -321,8 +322,9 @@ simulated state Reloading
 
         if (Role == ROLE_Authority)
         {
-            if (NumRoundsToLoad >= GetStripperClipSize())
+            if (NumRoundsToLoad >= GetStripperClipSize() && HasAnim(StripperReloadAnim))
             {
+                Log("");
                 NumRoundsToLoad -= GetStripperClipSize();
                 ReloadState = RS_ReloadLoopedStripper;
             }
@@ -336,7 +338,7 @@ simulated state Reloading
 
     function PostLoopingReloadEnd()
     {
-
+        Log("Post Looping Reload End");
         if (ROPawn(Instigator) != none)
         {
             ROPawn(Instigator).StopReload();
@@ -354,6 +356,7 @@ simulated state Reloading
 
     function PostFullReloadEnd()
     {
+        Log("Post Full Reload");
         PerformReload(GetStripperClipSize());
 
         if (ROPawn(Instigator) != none)
@@ -366,6 +369,7 @@ simulated state Reloading
 
     function PostLoop()
     {
+        Log("Post Loop");
         //based on state we just finished animating, give appropriate ammo.
         if(ReloadState == RS_ReloadLoopedStripper)
         {
@@ -377,7 +381,7 @@ simulated state Reloading
         }
 
         //decide next reload type.
-        if (NumRoundsToLoad >= GetStripperClipSize())
+        if (NumRoundsToLoad >= GetStripperClipSize() && HasAnim(StripperReloadAnim))
         {
             NumRoundsToLoad -= GetStripperClipSize();
             ReloadState = RS_ReloadLoopedStripper;
@@ -500,6 +504,7 @@ simulated state Reloading
 
     simulated function BeginState()
     {
+        Log("Begin Reload: "$NumRoundsToLoad);
         if (Role == ROLE_Authority && ROPawn(Instigator) != none)
         {
             ROPawn(Instigator).StartReload();
@@ -514,7 +519,7 @@ simulated state Reloading
                 {
                     GiveBackAmmo(1);
                 }
-
+                Log("Full Reload");
                 ReloadState = RS_FullReload;
                 PlayFullReload();
             }
