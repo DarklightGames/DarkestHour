@@ -61,14 +61,6 @@ struct SupplyPoint
     var class<DHConstructionSupplyAttachment> ActorClass;
 };
 
-// struct MapIcon
-// {
-//     var DHMapIconAttachment Actor;
-//     var class<DHConstructionSupplyAttachment> ActorClass;
-//     var byte TeamIndex;
-//     var int Quantized2DPose;
-// };
-
 // The request error type.
 enum EArtilleryTypeError
 {
