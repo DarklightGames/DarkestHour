@@ -26,4 +26,18 @@ defaultproperties
 
     MaxNumPrimaryMags=13
     InitialNumPrimaryMags=13
+
+    IronBringUp="Scope_in"
+    IronPutDown="Scope_out"
+    IronIdleAnim="Scope_Idle"
+    BoltIronAnim="scope_bolt"
+    BoltHipAnim="bolt_scope"
+    MagEmptyReloadAnim="reload_empty"
+    MagPartialReloadAnim="reload_half"
+
+    SingleReloadAnim="single_insert"
+    SingleReloadHalfAnim="single_inset_half"
+    PreReloadAnim="single_open"
+    PreReloadHalfAnim="single_open_half"
+    PostReloadAnim="single_close"
 }

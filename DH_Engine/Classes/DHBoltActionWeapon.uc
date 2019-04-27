@@ -605,9 +605,11 @@ simulated function name GetSingleReloadAnim()
 {
     if (AmmoAmount(0) > 0 && HasAnim(SingleReloadHalfAnim))
     {
+        Log("Half Single Reload");
         return SingleReloadHalfAnim;
     }
 
+    Log("Empty Single Reload");
     return SingleReloadAnim;
 }
 

@@ -26,4 +26,11 @@ defaultproperties
 
     InitialNumPrimaryMags=10
     MaxNumPrimaryMags=10
+
+    BoltIronAnim="scope_bolt"
+    BoltHipAnim="bolt_scope"
+
+    PreReloadAnim="single_open"
+    SingleReloadAnim="single_insert"
+    PostReloadAnim="single_close"
 }

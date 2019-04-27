@@ -18,7 +18,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_M44Attachment'
     PickupClass=class'DH_Weapons.DH_M44Pickup'
 
-    Mesh=SkeletalMesh'Allies_Nagant_1st.Mosin_Nagant_M44'
+    Mesh=SkeletalMesh'DH_Nagant_1st.Mosin_Nagant_M44'
     HighDetailOverlay=shader'Weapons1st_tex.Rifles.MN9138_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
@@ -33,4 +33,9 @@ defaultproperties
     bHasBayonet=true
     bBayonetMounted=true
     BayonetBoneName="bayonet"
+
+    PreReloadAnim="single_open"
+    FullReloadAnim="reload"
+    SingleReloadAnim="single_insert"
+    PostReloadAnim="single_close"
 }
