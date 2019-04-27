@@ -712,6 +712,7 @@ simulated function name GetPreReloadAnim()
 simulated function name GetSingleReloadAnim()
 {
     //if (AmmoAmount(0) > 0 && HasAnim(SingleReloadHalfAnim))
+    Log("S: "$GetMaxLoadedRounds()$", "$NumRoundsToLoad$", "$HasAnim(SingleReloadHalfAnim));
     if ((GetMaxLoadedRounds() != NumRoundsToLoad) && HasAnim(SingleReloadHalfAnim))
     {
         Log("Half Single Reload");

@@ -29,7 +29,7 @@ defaultproperties
     BayoDetachAnim="Bayonet_off"
     IronBringUpRest="iron_inrest"
     SingleReloadAnim="single_insert"
-    SingleReloadHalfAnim="single_inset_half"
+    SingleReloadHalfAnim="single_insert_half"
     PreReloadAnim="single_open"
     PreReloadHalfAnim="single_open_half"
     PostReloadAnim="single_close"

@@ -33,4 +33,15 @@ defaultproperties
     PutDownAnim="putaway"
     BoltIronAnim="iron_boltrest"
     PostFireIronIdleAnim="Iron_idlerest"
+
+    //BoltIronAnim="scope_bolt"
+    BoltHipAnim="bolt_scope"
+
+    SingleReloadAnim="single_insert"
+    SingleReloadHalfAnim="single_insert_half"
+
+    PreReloadAnim="single_open"
+    PreReloadHalfAnim="single_open_half"
+
+    PostReloadAnim="single_close"
 }
