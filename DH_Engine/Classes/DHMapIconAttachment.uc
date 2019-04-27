@@ -3,194 +3,296 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHMapIconAttachment extends Actor;
+class DHMapIconAttachment extends Actor
+    abstract
+    notplaceable;
 
-var DHGameReplicationInfo DHGRI;
-var int                   MapIconAttachmentsIndex;
-var byte                  TeamIndex;
+var Actor AttachedTo;
+var int   Quantized2DPose;
+var bool  bUpdatePoseChanges; // for moving actors
 
-// Permissions
-enum ETeamPermissions
-{
-    TP_None,
-    TP_All,
-    TP_Same,
-    TP_Opposite,
-};
+var private int AxisAttachmentIndex;
+var private int AlliesAttachmentIndex;
 
-var ETeamPermissions  TeamPermissions;
+var protected byte TeamIndex;
+var protected byte VisibilityIndex;
 
-// Icon style
 var Material IconMaterial;
 var IntBox   IconCoords;
 var color    IconTeamColors[2];
+var float    IconScale;
 
-// Location / Rotation
-var bool     bShowRotation;
-
-simulated function PostBeginPlay()
+replication
 {
-    local DarkestHourGame DHG;
+    reliable if (bNetInitial && Role == ROLE_Authority)
+        AttachedTo;
 
-    super.PostBeginPlay();
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        TeamIndex, VisibilityIndex, Quantized2DPose;
+}
 
-    if (Role == ROLE_Authority)
+// Called after spawning; normally you set the team index after.
+function Setup()
+{
+    SetBase(Owner);
+
+    if (Base != none)
     {
-        DHG = DarkestHourGame(Level.Game);
+        AttachedTo = Base;
+    }
 
-        if (DHG == none)
-        {
-            return;
-        }
+    UpdateQuantized2DPose();
+}
 
-        DHGRI = DHGameReplicationInfo(DHG.GameReplicationInfo);
+function PostBeginPlay()
+{
+    SetTimer(1.0, true);
+}
 
-        if (DHGRI == none)
-        {
-            return;
-        }
+function Destroyed()
+{
+    UnregisterAttachment();
 
-        MapIconAttachmentsIndex = DHGRI.AddMapIconAttachment(self);
+    super.Destroyed();
+}
 
-        OnLazyUpdate();
-        SetTimer(1.0, true);
+function Timer()
+{
+    if (bUpdatePoseChanges)
+    {
+        UpdateQuantized2DPose();
     }
 }
 
-simulated event Destroyed()
+function UpdateQuantized2DPose()
 {
-    if (Role == ROLE_Authority)
+    local DHGameReplicationInfo GRI;
+    local float X, Y;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI != none)
     {
-        if (DHGRI != none)
-        {
-           DHGRI.RemoveMapIconAttachment(MapIconAttachmentsIndex);
-        }
+        GRI.GetMapCoords(Location, X, Y);
+        Quantized2DPose = class'UQuantize'.static.QuantizeClamped2DPose(X, Y, Rotation.Yaw);
     }
 }
 
-function OwnerDied()
+function SetTeamIndex(byte TeamIndex)
 {
-    Destroy();
+    self.TeamIndex = TeamIndex;
+
+    RegisterAttachment();
 }
 
-// TODO:
-simulated function vector GetPosition(optional out float Yaw)
+simulated function byte GetTeamIndex()
+{
+    return TeamIndex;
+}
+
+// Called when registered/updated; override it to set custom visibility rules
+// (e.g. what happens when actor is inside the Danger Zone).
+function UpdateVisibilityIndex()
+{
+    // Visible only to the same team.
+    VisibilityIndex = TeamIndex;
+}
+
+simulated function byte GetVisibilityIndex()
+{
+    return VisibilityIndex;
+}
+
+simulated function vector GetWorldCoords(DHGameReplicationInfo GRI)
 {
     local vector L;
+    local float X, Y;
 
-    if (bShowRotation)
+    if (AttachedTo != none)
     {
-        Yaw = Owner.Rotation.Yaw;
+        L.X = AttachedTo.Location.X;
+        L.Y = AttachedTo.Location.Y;
     }
-
-    L.X = Owner.Location.X;
-    L.Y = Owner.Location.Y;
-    L.Z = 0.0;
+    else if (GRI != none)
+    {
+        class'UQuantize'.static.DequantizeClamped2DPose(Quantized2DPose, X, Y);
+        L = GRI.GetWorldCoords(x, Y);
+    }
 
     return L;
 }
 
-// This delegate is called when a one-time update is required (e.g. on spawn or
-// when danger zone updates).
-//
-// Default behavior:
-// * Flip permissions when inside Danger Zone
-simulated delegate OnLazyUpdate()
+simulated function float GetMapIconYaw(DHGameReplicationInfo GRI)
 {
-    if (Role == ROLE_Authority)
-    {
-        if (DHGRI == none || Owner == none)
-        {
-            return;
-        }
+    local int WorldYaw;
 
-        if (DHGRI.IsInDangerZone(Owner.Location.X, Owner.Location.Y, TeamIndex))
-        {
-            if (TeamPermissions == TP_Same)
-            {
-                TeamPermissions = TP_Opposite;
-            }
-        }
-        else if (TeamPermissions == TP_Opposite)
-        {
-            TeamPermissions = TP_Same;
-        }
-    }
-}
-
-// This one defines who's allowed to see the icon and when.
-//
-// Default behavior:
-// * Show for the friendly team
-// * Hidden for spectator unless both teams can see the icon
-simulated delegate bool OnHasPermissions(DHPlayer PC)
-{
-    if (PC == none)
+    if (AttachedTo != none)
     {
-        return false;
-    }
-
-    if (PC.GetTeamNum() == 255)
-    {
-        return TeamPermissions == TP_All;
-    }
-    else if (PC.GetTeamNum() == TeamIndex)
-    {
-        return TeamPermissions == TP_Same;
+        WorldYaw = AttachedTo.Rotation.Yaw;
     }
     else
     {
-        return TeamPermissions == TP_Opposite;
+        class'UQuantize'.static.DequantizeClamped2DPose(Quantized2DPose,,, WorldYaw);
+    }
+
+    if (GRI != none)
+    {
+        return GRI.GetMapIconYaw(WorldYaw);
     }
 }
 
-// ICON STYLE:
-//
-// Color, material, and all that stuff can be set via their respective variables;
-// For more sophisticated rules assign the delegates.
-//
-// Default behavior:
-// +-----------+-----------+-----------+
-// | TEAM      | SPECTATOR | COLOR     |
-// +-----------+-----------+-----------+
-// | Opposite  | Axis      | Red       |
-// +-----------+-----------+-----------+
-// | Same      | Allies    | Blue      |
-// +-----------+-----------+-----------+
-simulated delegate color OnGetIconColor(optional DHPlayer PC)
+final function RegisterAttachment()
 {
-    if ((PC == none || PC.GetTeamNum() == 255) && TeamIndex <= 1)
+    local DHGameReplicationInfo GRI;
+
+    UpdateVisibilityIndex();
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI == none)
     {
-        return IconTeamColors[0];
+        return;
     }
-    else if (PC.GetTeamNum() == TeamIndex)
+
+    // Register for AXIS || EVERYONE
+    if (VisibilityIndex == AXIS_TEAM_INDEX && AlliesAttachmentIndex != -1)
     {
-        return IconTeamColors[1];
+        GRI.RemoveMapIconAttachment(ALLIES_TEAM_INDEX, AlliesAttachmentIndex);
+        AlliesAttachmentIndex = -1;
     }
-    else
+
+    if (VisibilityIndex != ALLIES_TEAM_INDEX && AxisAttachmentIndex == -1)
     {
-        return IconTeamColors[0];
+        AxisAttachmentIndex = GRI.AddAxisMapIconAttachment(self);
+    }
+
+    // Register for ALLIES || EVERYONE
+    if (VisibilityIndex == ALLIES_TEAM_INDEX && AxisAttachmentIndex != -1)
+    {
+        GRI.RemoveMapIconAttachment(AXIS_TEAM_INDEX, AxisAttachmentIndex);
+        AxisAttachmentIndex = -1;
+    }
+
+    if (VisibilityIndex != AXIS_TEAM_INDEX && AlliesAttachmentIndex == -1)
+    {
+        AlliesAttachmentIndex = GRI.AddAlliesMapIconAttachment(self);
     }
 }
 
-simulated delegate Material OnGetIconMaterial(DHPlayer PC)
+final function UnregisterAttachment()
 {
-    return IconMaterial;
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    if (AxisAttachmentIndex != -1)
+    {
+        GRI.RemoveMapIconAttachment(AXIS_TEAM_INDEX, AxisAttachmentIndex);
+        AxisAttachmentIndex = -1;
+    }
+
+    if (AlliesAttachmentIndex == -1)
+    {
+        GRI.RemoveMapIconAttachment(ALLIES_TEAM_INDEX, AlliesAttachmentIndex);
+        AlliesAttachmentIndex = -1;
+    }
 }
 
-simulated delegate IntBox OnGetIconCoords(DHPlayer PC)
+//==============================================================================
+// ICON APPEARANCE
+//==============================================================================
+
+simulated function color GetIconColor(DHPlayer PC)
 {
-    return IconCoords;
+    if (PC.GetTeamNum() == TeamIndex ||
+        (VisibilityIndex == NEUTRAL_TEAM_INDEX && TeamIndex == ALLIES_TEAM_INDEX))
+    {
+        // Friendly / Allies (for spectator, if icon is visible to both teams)
+        return default.IconTeamColors[1];
+    }
+    else if (PC.GetTeamNum() != TeamIndex ||
+             (VisibilityIndex == NEUTRAL_TEAM_INDEX && TeamIndex == AXIS_TEAM_INDEX))
+    {
+        // Enemy / Axis
+        return default.IconTeamColors[0];
+    }
+}
+
+simulated function Material GetIconMaterial(DHPlayer PC)
+{
+    return default.IconMaterial;
+}
+
+simulated function IntBox GetIconCoords(DHPlayer PC)
+{
+    return default.IconCoords;
+}
+
+simulated function float GetIconScale(DHPlayer PC)
+{
+    return default.IconScale;
+}
+
+//==============================================================================
+// DANGER ZONE HELPERS
+//==============================================================================
+
+function byte GetVisibilityIndexInDangerZone(byte DefaultIndex)
+{
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    // Everything slurped by the Danger Zone becomes visible to the enemy team,
+    // and hidden for friendly troops.
+    if (IsInDangerZone(GRI))
+    {
+        switch(TeamIndex)
+        {
+            case AXIS_TEAM_INDEX:
+                return ALLIES_TEAM_INDEX;
+            case ALLIES_TEAM_INDEX:
+                return AXIS_TEAM_INDEX;
+            default:
+                return NEUTRAL_TEAM_INDEX;
+        }
+    }
+
+    return DefaultIndex;
+}
+
+simulated function bool IsInDangerZone(DHGameReplicationInfo GRI)
+{
+    local vector L;
+
+    if (GRI != none)
+    {
+        L = GetWorldCoords(GRI);
+
+        return GRI.IsInDangerZone(L.X, L.Y, TeamIndex);
+    }
 }
 
 defaultproperties
 {
-    DrawType=DT_None
     RemoteRole=ROLE_DumbProxy
-    MapIconAttachmentsIndex=-1
-    TeamPermissions=TP_Same
+    DrawType=DT_None
+    bAlwaysRelevant=true
+    bReplicateMovement=false
+
+    AlliesAttachmentIndex=-1
+    AxisAttachmentIndex=-1
+
+    TeamIndex=NEUTRAL_TEAM_INDEX
+    VisibilityIndex=NEUTRAL_TEAM_INDEX
 
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     IconTeamColors[0]=(R=255,G=0,B=0,A=255)
     IconTeamColors[1]=(R=0,G=124,B=252,A=255)
+    IconScale=0.04
 }

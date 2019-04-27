@@ -3855,7 +3855,6 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
 function DrawMapIconAttachments(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
 {
     local int i;
-    local vector L;
     local DHPlayer PC;
 
     PC = DHPlayer(PlayerOwner);
@@ -3865,21 +3864,50 @@ function DrawMapIconAttachments(Canvas C, AbsoluteCoordsInfo SubCoords, float My
         return;
     }
 
-    for (i = 0; i < arraycount(DHGRI.MapIconAttachments); ++i)
+    if (PC.GetTeamNum() == AXIS_TEAM_INDEX)
     {
-        if (DHGRI.MapIconAttachments[i] == none || !DHGRI.MapIconAttachments[i].OnHasPermissions(PC))
+        for (i = 0; i < arraycount(DHGRI.AxisMapIconAttachments); ++i)
         {
-            continue;
+            if (DHGRI.AxisMapIconAttachments[i] == none)
+            {
+                continue;
+            }
+
+            DrawMapIconAttachment(DHGRI.AxisMapIconAttachments[i], PC, C, SubCoords, MyMapScale, MapCenter, Viewport);
         }
-
-        L = DHGRI.MapIconAttachments[i].GetPosition();
-
-        MapMarkerIcon.WidgetTexture = DHGRI.MapIconAttachments[i].OnGetIconMaterial(PC);
-        MapMarkerIcon.TextureCoords = DHGRI.MapIconAttachments[i].OnGetIconCoords(PC);
-        MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = DHGRI.MapIconAttachments[i].OnGetIconColor(PC);
-
-        DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, L, MapCenter, Viewport);
     }
+    else
+    {
+        for (i = 0; i < arraycount(DHGRI.AlliesMapIconAttachments); ++i)
+        {
+            if (DHGRI.AlliesMapIconAttachments[i] == none)
+            {
+                continue;
+            }
+
+            DrawMapIconAttachment(DHGRI.AlliesMapIconAttachments[i], PC, C, SubCoords, MyMapScale, MapCenter, Viewport);
+        }
+    }
+}
+
+function DrawMapIconAttachment(DHMapIconAttachment MIA, DHPlayer PC, Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
+{
+    if (MIA == none || PC == none || DHGRI == none)
+    {
+        return;
+    }
+
+    MapMarkerIcon.WidgetTexture = MIA.GetIconMaterial(PC);
+    MapMarkerIcon.TextureCoords = MIA.GetIconCoords(PC);
+    MapMarkerIcon.TextureScale = MIA.GetIconScale(PC);
+    MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = MIA.GetIconColor(PC);
+
+    DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, MIA.GetWorldCoords(DHGRI), MapCenter, Viewport);
+
+    // HACK: This stops the engine from "instancing" the texture,
+    // resulting in the bizarre bug where all the icons share the same
+    // rotation.
+    C.DrawVertical(0.0, 0.0);
 }
 
 function DrawMapMarkerOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport, class<DHMapMarker> MapMarkerClass, vector Target, Pawn P, optional string Caption)
@@ -4239,31 +4267,10 @@ function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
 
 function float GetMapIconYaw(float WorldYaw)
 {
-    local float MapIconYaw;
-
-    MapIconYaw = -WorldYaw;
-
     if (DHGRI != none)
     {
-        switch (DHGRI.OverheadOffset)
-        {
-            case 90:
-                MapIconYaw -= 32768;
-                break;
-
-            case 180:
-                MapIconYaw -= 49152;
-                break;
-
-            case 270:
-                break;
-
-            default:
-                MapIconYaw -= 16384;
-        }
+        return DHGRI.GetMapIconYaw(WorldYaw);
     }
-
-    return MapIconYaw;
 }
 
 function float GetMapMeterScale()

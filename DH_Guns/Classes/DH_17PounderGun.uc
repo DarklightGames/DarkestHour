@@ -11,6 +11,7 @@ defaultproperties
 {
     VehicleNameString="17 Pounder AT gun"
     VehicleTeam=1
+    ATGunType=TYPE_Wheeled
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_17PounderGunCannonPawn',WeaponBone="Turret_placement1")
     Mesh=SkeletalMesh'DH_17PounderGun_anm.17Pounder_body'
     Skins(0)=Texture'DH_Artillery_Tex.17pounder.17Pounder'

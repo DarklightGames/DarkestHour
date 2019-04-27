@@ -61,6 +61,14 @@ struct SupplyPoint
     var class<DHConstructionSupplyAttachment> ActorClass;
 };
 
+// struct MapIcon
+// {
+//     var DHMapIconAttachment Actor;
+//     var class<DHConstructionSupplyAttachment> ActorClass;
+//     var byte TeamIndex;
+//     var int Quantized2DPose;
+// };
+
 // The request error type.
 enum EArtilleryTypeError
 {
@@ -137,7 +145,8 @@ var DHObjective             DHObjectives[OBJECTIVES_MAX];
 var Hashtable_string_int    DHObjectiveTable; // not replicated, but clients create their own so can be used by both client/server
 
 var DHResupplyAttachment    ResupplyAttachments[RESUPPLY_ATTACHEMENTS_MAX];
-var DHMapIconAttachment     MapIconAttachments[MAP_ICON_ATTACHMENTS_MAX];
+var DHMapIconAttachment     AxisMapIconAttachments[MAP_ICON_ATTACHMENTS_MAX];
+var DHMapIconAttachment     AlliesMapIconAttachments[MAP_ICON_ATTACHMENTS_MAX];
 
 var bool                bIsInSetupPhase;
 var bool                bRoundIsOver;
@@ -241,7 +250,8 @@ replication
         bIsDangerZoneEnabled,
         DangerZoneIntensityScale,
         ClientOnDangerZoneUpdated,
-        MapIconAttachments;
+        AxisMapIconAttachments,
+        AlliesMapIconAttachments;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
@@ -1667,6 +1677,32 @@ function ClearMapMarkers()
     }
 }
 
+simulated function float GetMapIconYaw(float WorldYaw)
+{
+    local float MapIconYaw;
+
+    MapIconYaw = -WorldYaw;
+
+    switch (OverheadOffset)
+    {
+        case 90:
+            MapIconYaw -= 32768;
+            break;
+
+        case 180:
+            MapIconYaw -= 49152;
+            break;
+
+        case 270:
+            break;
+
+        default:
+            MapIconYaw -= 16384;
+    }
+
+    return MapIconYaw;
+}
+
 // Gets the map coordindates (0..1) from a world location.
 simulated function GetMapCoords(vector WorldLocation, out float X, out float Y, optional float Width, optional float Height)
 {
@@ -1809,16 +1845,24 @@ function UpdateMapIconAttachments()
 {
     local int i;
 
-    for (i = 0; i < arraycount(MapIconAttachments); ++i)
+    for (i = 0; i < arraycount(AxisMapIconAttachments); ++i)
     {
-        if (MapIconAttachments[i] != none)
+        if (AxisMapIconAttachments[i] != none)
         {
-            MapIconAttachments[i].OnLazyUpdate();
+            AxisMapIconAttachments[i].RegisterAttachment();
+        }
+    }
+
+    for (i = 0; i < arraycount(AlliesMapIconAttachments); ++i)
+    {
+        if (AlliesMapIconAttachments[i] != none)
+        {
+            AlliesMapIconAttachments[i].RegisterAttachment();
         }
     }
 }
 
-function int AddMapIconAttachment(DHMapIconAttachment MIA)
+function int AddAlliesMapIconAttachment(DHMapIconAttachment MIA)
 {
     local int i, FreeIndex;
 
@@ -1827,26 +1871,64 @@ function int AddMapIconAttachment(DHMapIconAttachment MIA)
         return -1;
     }
 
-    for (i = 0; i < arraycount(MapIconAttachments); ++i)
+    for (i = 0; i < arraycount(AlliesMapIconAttachments); ++i)
     {
-        if (MapIconAttachments[i] == none)
+        if (AlliesMapIconAttachments[i] == none)
         {
             FreeIndex = i;
         }
-        else if (MapIconAttachments[i] == MIA)
+        else if (AlliesMapIconAttachments[i] == MIA)
         {
             return -1;
         }
     }
 
-    MapIconAttachments[FreeIndex] = MIA;
+    AlliesMapIconAttachments[FreeIndex] = MIA;
 
     return FreeIndex;
 }
 
-function RemoveMapIconAttachment(int Index)
+function int AddAxisMapIconAttachment(DHMapIconAttachment MIA)
 {
-    MapIconAttachments[Index] = none;
+    local int i, FreeIndex;
+
+    if (MIA == none)
+    {
+        return -1;
+    }
+
+    for (i = 0; i < arraycount(AxisMapIconAttachments); ++i)
+    {
+        if (AxisMapIconAttachments[i] == none)
+        {
+            FreeIndex = i;
+        }
+        else if (AxisMapIconAttachments[i] == MIA)
+        {
+            return -1;
+        }
+    }
+
+    AxisMapIconAttachments[FreeIndex] = MIA;
+
+    return FreeIndex;
+}
+
+function RemoveMapIconAttachment(byte TeamIndex, int Index)
+{
+    if (Index < 0 || Index >= MAP_ICON_ATTACHMENTS_MAX)
+    {
+        return;
+    }
+
+    switch(TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            AxisMapIconAttachments[Index] = none;
+            break;
+        case ALLIES_TEAM_INDEX:
+            AlliesMapIconAttachments[Index] = none;
+    }
 }
 
 //==============================================================================

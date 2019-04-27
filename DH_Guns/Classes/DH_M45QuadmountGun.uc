@@ -11,6 +11,7 @@ defaultproperties
 {
     VehicleNameString="M45 Quadmount"
     VehicleTeam=1
+    ATGunType=TYPE_StationaryAuto
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_M45QuadmountMGPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_M45_anm.m45_base_trailer'
     Skins(0)=Texture'DH_Artillery_tex.m45.m45_trailer'

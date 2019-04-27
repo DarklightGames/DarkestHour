@@ -9,9 +9,19 @@ class DHATGun extends DHVehicle
 #exec OBJ LOAD FILE=..\Textures\DH_Artillery_tex.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_Artillery_stc.usx
 
+enum EATGunType
+{
+    TYPE_None,
+    TYPE_Stationary,
+    TYPE_StationaryAuto,
+    TYPE_Wheeled
+};
+
+var EATGunType ATGunType;
+
 // Map icon
-var DHMapIconAttachment MapIconAttachment;
-var Material            MapIconMaterial;
+var class<DHMapIconAttachment> MapIconAttachmentClass;
+var DHMapIconAttachment        MapIconAttachment;
 
 simulated function PostBeginPlay()
 {
@@ -19,9 +29,8 @@ simulated function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
-        MapIconAttachment = Spawn(class'DHMapIconAttachment', self);
-        MapIconAttachment.TeamIndex = VehicleTeam;
-        MapIconAttachment.IconMaterial = MapIconMaterial;
+        MapIconAttachment = Spawn(MapIconAttachmentClass, self);
+        MapIconAttachment.Setup();
     }
 }
 
@@ -170,7 +179,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 
     if (MapIconAttachment != none)
     {
-        MapIconAttachment.OwnerDied();
+        MapIconAttachment.Destroy();
     }
 }
 
@@ -287,5 +296,5 @@ defaultproperties
     KParams=KarmaParamsRBFull'DH_Engine.DHATGun.KParams0'
 
     // Map icon
-    MapIconMaterial=Texture'DH_InterfaceArt2_tex.Icons.at_small'
+    MapIconAttachmentClass = class'DH_Engine.DHMapIconAttachment_ATGun'
 }

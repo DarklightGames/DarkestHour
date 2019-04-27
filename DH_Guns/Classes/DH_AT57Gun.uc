@@ -11,6 +11,7 @@ defaultproperties
 {
     VehicleNameString="57mm M1 AT gun"
     VehicleTeam=1
+    ATGunType=TYPE_Wheeled
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_AT57CannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_6PounderGun_anm.6pounder_body'
     Skins(0)=Texture'DH_Artillery_Tex.6pounder.6pounder'

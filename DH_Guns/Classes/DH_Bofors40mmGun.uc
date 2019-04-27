@@ -9,6 +9,7 @@ defaultproperties
 {
     VehicleNameString="Bofors 40mm gun"
     VehicleTeam=1
+    ATGunType=TYPE_StationaryAuto
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Bofors40mmCannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_Bofors_anm.Bofors40mm_base'
     Skins(0)=Texture'DH_Bofors_tex.Bofors40mmGun'
