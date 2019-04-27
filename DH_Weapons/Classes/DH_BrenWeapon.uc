@@ -15,6 +15,8 @@ simulated function ToggleFireMode()
 
 defaultproperties
 {
+    SwayModifyFactor=1.0 // Increased sway (0.8 is default otherwise)
+
     ItemName="Bren Mk.IV"
     TeamIndex=1
     FireModeClass(0)=class'DH_Weapons.DH_BrenFire'
