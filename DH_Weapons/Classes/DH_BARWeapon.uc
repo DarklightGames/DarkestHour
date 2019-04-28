@@ -42,7 +42,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_BARPickup'
 
     InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_BrenBarrel'
+    BarrelClass=class'DH_Weapons.DH_BARBarrel'
     BarrelSteamBone="Muzzle"
 
     Mesh=SkeletalMesh'DH_BAR_1st.BAR'
