@@ -847,7 +847,7 @@ defaultproperties
     SwayBayonetModifier=1.02
 
     PlayerIronsightFOV=60.0
-    BobModifyFactor=1.0
+    BobModifyFactor=0.9
     BobDamping=1.6
     SelectAnimRate=1.0
     PutDownAnimRate=1.0
