@@ -3,12 +3,12 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_BrenBarrel extends DHWeaponBarrel;
+class DH_BARBarrel extends DHWeaponBarrel;
 
 defaultproperties
 {
     BarrelCoolingRate=3.0
-    FiringHeatIncrement=3.25
-    CriticalTemperature=250.0
-    FailureTemperature=350.0
+    FiringHeatIncrement=4.35
+    CriticalTemperature=210.0
+    FailureTemperature=300.0
 }

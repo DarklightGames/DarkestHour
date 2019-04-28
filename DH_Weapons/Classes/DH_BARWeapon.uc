@@ -41,12 +41,16 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_BARAttachment'
     PickupClass=class'DH_Weapons.DH_BARPickup'
 
+    InitialBarrels=1
+    BarrelClass=class'DH_Weapons.DH_BrenBarrel'
+    BarrelSteamBone="Muzzle"
+
     Mesh=SkeletalMesh'DH_BAR_1st.BAR'
     HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.BAR_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    IronSightDisplayFOV=25.0
+    IronSightDisplayFOV=40.0
     FreeAimRotationSpeed=2.0
 
     MaxNumPrimaryMags=12
