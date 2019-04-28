@@ -602,8 +602,6 @@ simulated function PlayFullReload()
 
     Duration = GetAnimDuration(FullReloadAnim, 1.0);
 
-    Level.Game.Broadcast(self, Duration);
-
     SetTimer(GetAnimDuration(FullReloadAnim, 1.0), false);
 
     if (InstigatorIsLocallyControlled() && HasAnim(FullReloadAnim))
