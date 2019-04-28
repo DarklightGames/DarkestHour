@@ -14,14 +14,17 @@ defaultproperties
 
     // Spread
     HipSpreadModifier=5.0
-    Spread=160.0
+    Spread=85.0
 
     // Recoil
     RecoilRate=0.06
-    PctBipodDeployRecoil=0.08
+    MaxVerticalRecoilAngle=510
+    MaxHorizontalRecoilAngle=240
+    PctBipodDeployRecoil=0.15
     PctRestDeployRecoil=0.15
-    MaxVerticalRecoilAngle=410
-    MaxHorizontalRecoilAngle=110
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=2.0,OutVal=0.3),(InVal=3.0,OutVal=0.4),(InVal=4.0,OutVal=1.5),(InVal=10.0,OutVal=2.5),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilFallOffExponent=2.0
+    RecoilFallOffFactor=12.0
 
     FireSounds(0)=SoundGroup'DH_WeaponSounds.FG42.FG42_Fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.FG42.FG42_Fire02'
