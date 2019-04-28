@@ -678,7 +678,7 @@ function PerformReload(optional int Count)
     while (Loaded < Count)
     {
         // Check if there is a first mag to deduct from
-        if(PrimaryAmmoArray.Length == 1)
+        if (PrimaryAmmoArray.Length == 1)
         {
             break;
         }
@@ -686,12 +686,12 @@ function PerformReload(optional int Count)
         Withdraw = 0;
 
         // take all the rounds in the mag as possible.
-        Withdraw = Min(Count - loaded, PrimaryAmmoArray[1]);
+        Withdraw = Min(Count - Loaded, PrimaryAmmoArray[1]);
         PrimaryAmmoArray[1] -= Withdraw;
-        Loaded += withdraw;
+        Loaded += Withdraw;
 
         // If mag is now empty, delete it.
-        if(PrimaryAmmoArray[1] == 0)
+        if (PrimaryAmmoArray[1] == 0)
         {
             PrimaryAmmoArray.Remove(0, 1);
         }
