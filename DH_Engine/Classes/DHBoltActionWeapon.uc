@@ -429,7 +429,6 @@ simulated state Reloading
     {
         local name  Anim;
         local float Frame, Rate;
-        local int ReloadCount;
 
         if (InstigatorIsLocallyControlled())
         {
