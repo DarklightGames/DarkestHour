@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHGameType extends Info
@@ -19,6 +19,8 @@ var bool                bOmitTimeAttritionForDefender;          // Whether the d
 var bool                bAreObjectiveSpawnsEnabled;             // Whether this gamemode uses objective spawns
 var bool                bAreRallyPointsEnabled;                 // Whether this gamemode should allow rally points for squads
 var bool                bAreConstructionsEnabled;               // Whether this gamemode should allow constructions
+
+var int                 ObjSpawnMinimumDepth;                   // Used in calculating the nearest objective spawn
 
 var int                 OutOfReinfLimitForTimeChange;           // Threshold for the bTimeCanChangeAtZeroReinf, the team with reinforcements remaining must have <= this amount
 var int                 OutOfReinfRoundTime;                    // The round time to set when a team runs out of reinforcements, if bTimeCanChangeAtZeroReinf

@@ -283,6 +283,17 @@ function OnRallyPointCreated(DHSpawnPoint_SquadRallyPoint RP)
     Rounds[0].RallyPoints[Rounds[0].RallyPoints.Length] = MRP;
 }
 
+// Adds a generic JSONObject event.
+function AddEvent(JSONObject Event)
+{
+    if (Rounds.Length == 0 || Event == none)
+    {
+        return;
+    }
+
+    Rounds[0].Events[Rounds[0].Events.Length] = Event;
+}
+
 static function string TrimPort(string NetworkAddress)
 {
     local int i;

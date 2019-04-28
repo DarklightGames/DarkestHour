@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHConstruction_InventorySpawner extends DHConstruction
@@ -63,7 +63,16 @@ static function UpdateProxy(DHConstructionProxy CP)
 
 static function string GetMenuName(DHConstruction.Context Context)
 {
-    return GetSpawnerClass(Context).static.GetMenuName();
+    local class<DHInventorySpawner> SpawnerClass;
+
+    SpawnerClass = GetSpawnerClass(Context);
+    
+    if (SpawnerClass != none)
+    {
+        return SpawnerClass.static.GetMenuName();
+    }
+    
+    return "";
 }
 
 static function GetCollisionSize(DHConstruction.Context Context, out float NewRadius, out float NewHeight)

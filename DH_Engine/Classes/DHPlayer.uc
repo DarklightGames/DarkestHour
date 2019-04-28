@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHPlayer extends ROPlayer
@@ -16,6 +16,17 @@ enum EMapMode
     MODE_Map,
     MODE_Squads
 };
+
+struct PersonalMapMarker
+{
+    var class<DHMapMarker> MapMarkerClass;
+    var float MapLocationX;
+    var float MapLocationY;
+    var vector WorldLocation;
+};
+
+var     array<class<DHMapMarker> >          PersonalMapMarkerClasses;
+var     private array<PersonalMapMarker>    PersonalMapMarkers;
 
 var     input float             aBaseFire;
 var     bool                    bToggleRun;          // user activated toggle run
@@ -1051,6 +1062,11 @@ simulated function bool IsInArtilleryVehicle()
 simulated function bool IsInSquad()
 {
     return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsInSquad();
+}
+
+simulated function bool IsSLorASL()
+{
+    return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsSLorASL();
 }
 
 // Modified to to spawn a DHArtillerySpawner at the strike co-ords instead of using level's NorthEastBoundsspawn to set its height
@@ -5269,7 +5285,7 @@ exec function Speak(string ChannelTitle)
         // If we are trying to speak in unassigned but we are in a squad, then return out
         return;
     }
-    else if (ChannelTitle ~= VRI.CommandChannelName && !PRI.IsSquadLeader())
+    else if (ChannelTitle ~= VRI.CommandChannelName && !PRI.IsSLorASL())
     {
         // If we are trying to speak in command but we aren't a SL, then return out
         return;
@@ -5511,6 +5527,63 @@ function ServerRemoveMapMarker(int MapMarkerIndex)
     {
         GRI.RemoveMapMarker(GetTeamNum(), MapMarkerIndex);
     }
+}
+
+function array<PersonalMapMarker> GetPersonalMarkers()
+{
+    return PersonalMapMarkers;
+}
+
+function PersonalMapMarker FindPersonalMarker(class<DHMapMarker> MapMarkerClass)
+{
+    local int i;
+
+    for (i = 0; i < PersonalMapMarkers.Length; ++i)
+    {
+        if (PersonalMapMarkers[i].MapMarkerClass == MapMarkerClass)
+        {
+            return PersonalMapMarkers[i];
+        }
+    }
+}
+
+function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY)
+{
+    local DHGameReplicationInfo GRI;
+    local PersonalMapMarker PMM;
+    local int i;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI == none || MapMarkerClass == none || !MapMarkerClass.default.bIsPersonal)
+    {
+        return;
+    }
+
+    if (MapMarkerClass.default.bIsUnique)
+    {
+        for (i = 0; i < PersonalMapMarkers.Length; ++i)
+        {
+            if (PersonalMapMarkers[i].MapMarkerClass == MapMarkerClass)
+            {
+                PersonalMapMarkers.Remove(i, 1);
+                break;
+            }
+        }
+    }
+
+    PMM.MapMarkerClass = MapMarkerClass;
+    PMM.MapLocationX = MapLocationX;
+    PMM.MapLocationY = MapLocationY;
+    PMM.WorldLocation = GRI.GetWorldCoords(MapLocationX, MapLocationY);
+
+    PersonalMapMarkers.Insert(0, 1);
+    PersonalMapMarkers[0] = PMM;
+}
+
+function RemovePersonalMarker(int Index)
+{
+    PersonalMapMarkers.Remove(Index, 1);
 }
 
 simulated function ClientSquadSignal(class<DHSquadSignal> SignalClass, vector L)
@@ -5799,6 +5872,11 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
     else if (!PRI.IsInSquad())
     {
         MenuClassName = "DH_Engine.DHCommandMenu_LoneWolf";
+        return true;
+    }
+    else if (PRI.IsPatron())
+    {
+        MenuClassName = "DH_Engine.DHCommandMenu_Patron";
         return true;
     }
 
@@ -6610,4 +6688,6 @@ defaultproperties
     VoiceChatLANCodec="CODEC_96WB"
 
     ToggleDuckIntervalSeconds=0.5
+
+    PersonalMapMarkerClasses(0)=class'DHMapMarker_Ruler'
 }

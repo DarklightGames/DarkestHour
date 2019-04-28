@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_M2MortarVehicleWeapon extends DHMortarVehicleWeapon;
@@ -18,6 +18,7 @@ defaultproperties
     RotationsPerSecond=0.015625
     MaxPositiveYaw=1274
     MaxNegativeYaw=-1274
+    Elevation=85.0
     ElevationMaximum=85.0
     ElevationMinimum=40.0
     Mesh=SkeletalMesh'DH_Mortars_3rd.M2Mortar_deployed'

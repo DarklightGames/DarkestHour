@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHConstruction extends Actor
@@ -786,15 +786,32 @@ simulated static function int GetSupplyCost(DHConstruction.Context Context)
     return default.SupplyCost;
 }
 
-function static GetCollisionSize(DHConstruction.Context Context, out float NewRadius, out float NewHeight)
+static function GetCollisionSize(DHConstruction.Context Context, out float NewRadius, out float NewHeight)
 {
     NewRadius = default.CollisionRadius;
     NewHeight = default.CollisionHeight;
 }
 
-function static bool ShouldShowOnMenu(DHConstruction.Context Context)
+static function bool ShouldShowOnMenu(DHConstruction.Context Context)
 {
-    return true;
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(Context.PlayerController.PlayerReplicationInfo);
+
+    // Only show constructions the player is allowed to place
+    if (PRI != none)
+    {
+        return IsPlaceableByPlayer(PRI);
+    }
+    else
+    {
+        return false;
+    }
+}
+
+static function bool IsPlaceableByPlayer(DHPlayerReplicationInfo PRI)
+{
+    return PRI.IsSLorASL();
 }
 
 // This function is used for determining if a player is able to build this type
@@ -834,12 +851,6 @@ function static ConstructionError GetPlayerError(DHConstruction.Context Context)
         return E;
     }
 
-    if (static.GetSupplyCost(Context) > 0 && P.TouchingSupplyCount < static.GetSupplyCost(Context))
-    {
-        E.Type = ERROR_InsufficientSupply;
-        return E;
-    }
-
     CM = class'DHConstructionManager'.static.GetInstance(P.Level);
 
     if (CM == none)
@@ -858,9 +869,7 @@ function static ConstructionError GetPlayerError(DHConstruction.Context Context)
     SRI = Context.PlayerController.SquadReplicationInfo;
     PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
 
-    // TODO: in future we may allow non-squad leaders to make constructions.
-    // A static function in the class could take in a PRI and make a decision there instead of it being in here.
-    if (PRI == none || SRI == none || (!PRI.IsSquadLeader() && !PRI.bIsSquadAssistant))
+    if (PRI == none || SRI == none || !IsPlaceableByPlayer(PRI))
     {
         E.Type = ERROR_Fatal;
         return E;
@@ -870,6 +879,12 @@ function static ConstructionError GetPlayerError(DHConstruction.Context Context)
     {
         E.Type = ERROR_SquadTooSmall;
         E.OptionalInteger = default.SquadMemberCountMinimum;
+        return E;
+    }
+
+    if (static.GetSupplyCost(Context) > 0 && P.TouchingSupplyCount < static.GetSupplyCost(Context))
+    {
+        E.Type = ERROR_InsufficientSupply;
         return E;
     }
 

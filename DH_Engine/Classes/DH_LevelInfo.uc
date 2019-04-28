@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_LevelInfo extends ROLevelInfo
@@ -74,6 +74,9 @@ var(DH_GameSettings) InterpCurve                    AttritionRateCurve;
 
 var(DH_GameSettings) bool                           bIsDangerZoneInitiallyEnabled;
 var(DH_GameSettings) float                          DangerZoneIntensityScale;
+
+var(DH_GameSettings) float                          ObjectiveSpawnDistanceThreshold;    // Distance away an objective must be to be considered for an active Obj Spawn
+var(DH_GameSettings) int                            ObjectiveSpawnMinimumDepth;         // Override of gametype's minimum depth for calculating the closest valid Obj Spawn
 
 // Colin: AttritionRateCurve defines the rate of reinforcement drain per minute
 // when the enemy controls more objectives.
@@ -204,4 +207,7 @@ defaultproperties
 
     bIsDangerZoneInitiallyEnabled=true
     DangerZoneIntensityScale=0.8
+
+    ObjectiveSpawnDistanceThreshold=125.0
+    ObjectiveSpawnMinimumDepth=-1
 }

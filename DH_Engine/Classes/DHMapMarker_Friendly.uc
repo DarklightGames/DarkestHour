@@ -1,15 +1,15 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHMapMarker_Friendly extends DHMapMarker
     abstract;
 
-// Allow squad leaders their assistants to mark friendly markers.
+// Allow squad leaders and their assistants to mark friendly markers.
 static function bool CanPlayerUse(DHPlayerReplicationInfo PRI)
 {
-    return PRI != none && (PRI.IsSquadLeader() || PRI.bIsSquadAssistant);
+    return PRI != none && PRI.IsSLorASL();
 }
 
 defaultproperties

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 // Original models, skins & animation by William "Teufelhund" Miller of the AHZ Red Orchestra mod team

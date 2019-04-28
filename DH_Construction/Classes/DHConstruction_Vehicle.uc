@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHConstruction_Vehicle extends DHConstruction
@@ -165,7 +165,14 @@ simulated static function int GetSupplyCost(DHConstruction.Context Context)
 
 static function bool ShouldShowOnMenu(DHConstruction.Context Context)
 {
-    return GetVehicleClass(Context) != none;
+    if (GetVehicleClass(Context) != none)
+    {
+        return super.ShouldShowOnMenu(Context);
+    }
+    else
+    {
+        return false;
+    }
 }
 
 static function vector GetPlacementOffset(DHConstruction.Context Context)
