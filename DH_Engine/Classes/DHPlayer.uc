@@ -58,6 +58,9 @@ var     vector                  FlinchOffsetMag;
 var     vector                  FlinchOffsetRate;
 var     float                   FlinchOffsetTime;
 var     float                   FlinchMaxOffset;
+var     float                   FlinchMeterValue;
+var     float                   FlinchMeterIncrement;
+var     float                   LastFlinchTime;
 
 // Mantling
 var     float                   MantleCheckTimer;           // makes sure client doesn't try to start mantling without the server
@@ -657,6 +660,11 @@ function ChangeName(coerce string S)
     DarkestHourGame(Level.Game).ChangeName(self, S, true);
 }
 
+simulated function float GetFlinchMeterFalloff(float TimeSeconds)
+{
+    return (TimeSeconds ** 2.0) * 0.05;
+}
+
 // Give the player a quick flinch and blur effect
 simulated function PlayerWhizzed(float DistSquared)
 {
@@ -664,6 +672,16 @@ simulated function PlayerWhizzed(float DistSquared)
 
     // The magic number below is 75% of the radius of DHBulletWhipAttachment squared (we don't want a flinch on the more distant shots)
     Intensity = 1.0 - ((FMin(DistSquared, 16875.0)) / 16875.0);
+
+    // Falloff the FlichMeter based on how much time has passed since we last had flinch
+    FlinchMeterValue -= GetFlinchMeterFalloff(Level.TimeSeconds - LastFlinchTime);
+    FlinchMeterValue = FMax(0.0, FlinchMeterValue); // Make sure FlinchMeterValue is not below zero
+
+    // Increment the FlichMeter with a maximum
+    FlinchMeterValue = FMin(FlinchMeterValue + FlinchMeterIncrement, 1.0);
+
+    // Intensity is affected by the FlinchMeterValue, the higher the FlinchMeterValue the lower the Intensity
+    Intensity *= (1.0 - FlinchMeterValue);
 
     AddBlur(0.85, Intensity);
     PlayerFlinched(Intensity);
@@ -678,8 +696,8 @@ simulated function PlayerFlinched(float Intensity)
     {
         FlinchIntensity = Intensity * FlinchMaxOffset;
 
-        AfterFlinchRotation.Pitch = RandRange(FlinchIntensity, FlinchMaxOffset);
-        AfterFlinchRotation.Yaw = RandRange(FlinchIntensity, FlinchMaxOffset);
+        AfterFlinchRotation.Pitch = RandRange((FlinchIntensity / 2), FlinchIntensity);
+        AfterFlinchRotation.Yaw = RandRange((FlinchIntensity / 2), FlinchIntensity);
 
         if (Rand(2) == 1)
         {
@@ -712,6 +730,8 @@ simulated function PlayerFlinched(float Intensity)
 
         ShakeView(FlinchRotMag, FlinchRotRate, FlinchRotTime, FlinchOffsetMag, FlinchOffsetRate, FlinchOffsetTime);
     }
+
+    LastFlinchTime = Level.TimeSeconds;
 }
 
 // Modified to prevent a mistakenly passed negative blur time, which causes the blur to 'freeze' indefinitely, until some other blur effect resets it
@@ -2611,7 +2631,7 @@ simulated function SwayHandler(float DeltaTime)
 {
     local DHPawn P;
     local DHWeapon W;
-    local float  WeaponSwayYawAcc, WeaponSwayPitchAcc, StaminaFactor, TimeFactor, DeltaSwayYaw, DeltaSwayPitch;
+    local float  WeaponSwayYawAcc, WeaponSwayPitchAcc, StaminaFactor, TimeFactor, DeltaSwayYaw, DeltaSwayPitch, FlinchFactor;
 
     P = DHPawn(Pawn);
 
@@ -2696,6 +2716,15 @@ simulated function SwayHandler(float DeltaTime)
     {
         WeaponSwayYawAcc *= W.SwayBayonetModifier;
         WeaponSwayPitchAcc *= W.SwayBayonetModifier;
+    }
+
+    // Increase sway based on Flinch Meter
+    FlinchFactor = FlinchMeterValue - GetFlinchMeterFalloff(Level.TimeSeconds - LastFlinchTime);
+
+    if (FlinchFactor > 0.0)
+    {
+        WeaponSwayYawAcc *= 1.0 + FlinchFactor;
+        WeaponSwayPitchAcc *= 1.0 + FlinchFactor;
     }
 
     // Add an elastic factor to get sway near the original aim-point, & a damping factor to keep elastic factor from causing wild oscillations
@@ -3017,6 +3046,8 @@ function Reset()
     NextChangeTeamTime = default.NextChangeTeamTime;
     LastKilledTime = default.LastKilledTime;
     NextVehicleSpawnTime = default.NextVehicleSpawnTime;
+    FlinchMeterValue = 0.0;
+    LastFlinchTime = 0.0;
 }
 
 function ServerSetIsInSpawnMenu(bool bIsInSpawnMenu)
@@ -3497,6 +3528,12 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
     Canvas.SetPos(4.0, YPos);
     Canvas.SetDrawColor(255, 0, 0);
     Canvas.DrawText("     Location:" @ Location @ " Rotation:" @ Rotation);
+    YPos += YL;
+    Canvas.SetPos(4.0, YPos);
+
+    Canvas.SetPos(4.0, YPos);
+    Canvas.SetDrawColor(0, 0, 255);
+    Canvas.DrawText("     *******FlinchMeterValue*******:" @ FlinchMeterValue);
     YPos += YL;
     Canvas.SetPos(4.0, YPos);
 }
@@ -6534,7 +6571,10 @@ defaultproperties
     DHScopeTurnSpeedFactor=0.2
 
     // Max flinch offset for close snaps
-    FlinchMaxOffset=375.0
+    FlinchMaxOffset=450.0
+
+    // Flinch meter
+    FlinchMeterIncrement=0.08
 
     // Flinch from bullet snaps when deployed
     FlinchRotMag=(X=100.0,Y=0.0,Z=100.0)
