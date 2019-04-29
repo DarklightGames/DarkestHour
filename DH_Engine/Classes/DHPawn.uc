@@ -1,13 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHPawn extends ROPawn
     dependson(DHConstructionSupplyAttachment)
     config(User);
-
-#exec OBJ LOAD FILE=ProjectileSounds.uax
 
 // General
 // TODO: I'm sure we can just use existing OldController ref instead of adding SwitchingController, but want to make certain 1st (Matt)
@@ -67,7 +65,8 @@ var     float               LastNotifyTime;
 var     float   IronsightBobTime;
 var     vector  IronsightBob;
 var     float   IronsightBobAmplitude;
-var     float   IronsightBobFrequency;
+var     float   IronsightBobFrequencyY;
+var     float   IronsightBobFrequencyZ;
 var     float   IronsightBobDecay;
 
 // Hit sounds
@@ -3252,7 +3251,7 @@ function CheckGiveBinocs()
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
         PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-        if (GRI != none && PRI != none && PRI.IsSquadLeader())
+        if (GRI != none && PRI != none && (PRI.IsSquadLeader() || PRI.IsAssistantLeader()))
         {
             CreateInventory("DH_Equipment.DHBinocularsItem");
         }
@@ -5572,18 +5571,33 @@ simulated exec function BobAmplitude(optional float F)
     }
 }
 
-simulated exec function BobFrequency(optional float F)
+simulated exec function BobFrequencyY(optional float F)
 {
     if (IsDebugModeAllowed())
     {
         if (F == 0)
         {
-            Level.Game.Broadcast(self, "IronsightBobFrequency" @ IronsightBobFrequency);
+            Level.Game.Broadcast(self, "IronsightBobFrequencyY" @ IronsightBobFrequencyY);
 
             return;
         }
 
-        IronsightBobFrequency = F;
+        IronsightBobFrequencyY = F;
+    }
+}
+
+simulated exec function BobFrequencyZ(optional float F)
+{
+    if (IsDebugModeAllowed())
+    {
+        if (F == 0)
+        {
+            Level.Game.Broadcast(self, "IronsightBobFrequencyZ" @ IronsightBobFrequencyZ);
+
+            return;
+        }
+
+        IronsightBobFrequencyZ = F;
     }
 }
 
@@ -5608,7 +5622,7 @@ simulated exec function BobDecay(optional float F)
 function CheckBob(float DeltaTime, vector Y)
 {
     local float BobModifier, Speed2D, OldBobTime, IronsightBobAmplitudeModifier, IronsightBobDecayModifier;
-    local int   m, n;
+    local int   M, N;
 
     OldBobTime = BobTime;
 
@@ -5676,24 +5690,24 @@ function CheckBob(float DeltaTime, vector Y)
         {
             if (bIsCrawling)
             {
-                IronsightBobAmplitudeModifier = 0.5;
-                IronsightBobDecayModifier = 1.5;
-            }
-            else if (bIsCrouched)
-            {
                 IronsightBobAmplitudeModifier = 0.75;
                 IronsightBobDecayModifier = 1.25;
             }
+            else if (bIsCrouched)
+            {
+                IronsightBobAmplitudeModifier = 0.9;
+                IronsightBobDecayModifier = 1.1;
+            }
             else
             {
-                IronsightBobAmplitudeModifier = 1.0;
+                IronsightBobAmplitudeModifier = 1.1;
                 IronsightBobDecayModifier = 1.0;
             }
 
             IronsightBobTime += DeltaTime;
 
-            IronsightBob.Y = BobFunction(IronsightBobTime, IronsightBobAmplitude * IronsightBobAmplitudeModifier, IronsightBobFrequency, IronsightBobDecay * IronsightBobDecayModifier);
-            IronsightBob.Z = BobFunction(IronsightBobTime, IronsightBobAmplitude * IronsightBobAmplitudeModifier, IronsightBobFrequency, IronsightBobDecay * IronsightBobDecayModifier);
+            IronsightBob.Y = BobFunction(IronsightBobTime, IronsightBobAmplitude * IronsightBobAmplitudeModifier, IronsightBobFrequencyY, IronsightBobDecay * IronsightBobDecayModifier);
+            IronsightBob.Z = BobFunction(IronsightBobTime, IronsightBobAmplitude * IronsightBobAmplitudeModifier, IronsightBobFrequencyZ, IronsightBobDecay * IronsightBobDecayModifier);
         }
         else
         {
@@ -5742,7 +5756,7 @@ function CheckBob(float DeltaTime, vector Y)
 
         if (Speed2D > 10.0)
         {
-            WalkBob.Z = WalkBob.Z + 0.75 * (Bob * BobModifier) * Speed2D * Sin(16.0 * BobTime);
+            WalkBob.Z += 0.75 * (Bob * BobModifier) * Speed2D * Sin(16.0 * BobTime);
         }
 
         if (LandBob > 0.01)
@@ -5754,10 +5768,10 @@ function CheckBob(float DeltaTime, vector Y)
         // Play footstep effects (if moving fast enough & not crawling)
         if (!bIsCrawling && Speed2D >= 10.0 && !(IsHumanControlled() && PlayerController(Controller).bBehindView))
         {
-            m = int(0.5 * Pi + 9.0 * OldBobTime / Pi);
-            n = int(0.5 * Pi + 9.0 * BobTime / Pi);
+            M = int(0.5 * Pi + 9.0 * OldBobTime / Pi);
+            N = int(0.5 * Pi + 9.0 * BobTime / Pi);
 
-            if (m != n)
+            if (M != N)
             {
                 FootStepping(0);
             }
@@ -7168,8 +7182,9 @@ defaultproperties
 
     // Weapon aim
     IronsightBobAmplitude=1.0
-    IronsightBobFrequency=4.0
-    IronsightBobDecay=6.0
+    IronsightBobFrequencyY=3.75
+    IronsightBobFrequencyZ=5.25
+    IronsightBobDecay=5.0
     DeployedPitchUpLimit=7300 // bipod
     DeployedPitchDownLimit=-7300
 

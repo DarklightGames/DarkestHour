@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHGUISquadComponent extends GUIPanel;
@@ -373,7 +373,7 @@ defaultproperties
         OnActivate=OnSquadNameEditBoxActivate
         OnDeactivate=OnSquadNameEditBoxDeactivate
         OnEnter=OnSquadNameEditBoxEnter
-        MaxWidth=16
+        MaxWidth=20
     End Object
     eb_SquadName=SquadNameEditBox
 

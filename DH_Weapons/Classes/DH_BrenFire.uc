@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_BrenFire extends DHAutomaticFire;
@@ -15,7 +15,7 @@ defaultproperties
     FireRate=0.12
     FAProjSpawnOffset=(X=-28.0)
 
-    Spread=125.0
+    Spread=75.0
 
     // Recoil
     RecoilRate=0.075
@@ -24,8 +24,8 @@ defaultproperties
     PctBipodDeployRecoil=0.15
     PctRestDeployRecoil=0.15
     RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=5.0,OutVal=0.3),(InVal=10.0,OutVal=0.9),(InVal=20.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
-    RecoilFallOffExponent=4.0
-    RecoilFallOffFactor=34.0
+    RecoilFallOffExponent=2.0
+    RecoilFallOffFactor=6.0
 
     FireSounds(0)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.Bren.Bren_Fire02'

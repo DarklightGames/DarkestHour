@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_P08LugerWeapon extends DHPistolWeapon;
@@ -18,8 +18,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    IronSightDisplayFOV=55.0
-    PlayerIronsightFOV=60.0
+    IronSightDisplayFOV=70.0
     ZoomOutTime=0.3
 
     MaxNumPrimaryMags=5

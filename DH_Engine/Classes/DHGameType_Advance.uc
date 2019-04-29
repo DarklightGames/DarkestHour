@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHGameType_Advance extends DHGameType
@@ -22,5 +22,7 @@ defaultproperties
     bKeepSpawningWithoutReinf=true
     OutOfReinfRoundTime=120
     OutOfReinfLimitForTimeChange=50
+
+    ObjSpawnMinimumDepth=1
 }
 

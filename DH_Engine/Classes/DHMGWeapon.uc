@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHMGWeapon extends DHBipodWeapon
@@ -121,50 +121,6 @@ simulated function AnimEnd(int Channel)
     if (!FireMode[0].IsInState('FireLoop'))
     {
         super.AnimEnd(Channel);
-    }
-}
-
-// Modified so works in DHDebugMode, & to log barrels & their current temperature & state
-simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
-{
-    local DHWeaponBarrel Barrel;
-    local int            i;
-
-    if (Level.NetMode != NM_Standalone && !class'DH_LevelInfo'.static.DHDebugMode())
-    {
-        return;
-    }
-
-    super(Weapon).DisplayDebug(Canvas, YL, YPos); // skip over Super in ROWeapon, as it requires RODebugMode
-
-    // The super from ROWeapon, logging the FOV settings
-    Canvas.SetDrawColor(0, 255, 0);
-    Canvas.DrawText("DisplayFOV is" @ DisplayFOV $ ", default is" @ default.DisplayFOV $ ", zoomed default is" @ IronSightDisplayFOV);
-    YPos += YL;
-    Canvas.SetPos(4.0, YPos);
-
-    // Show the barrel info - only works in multi-player as barrel actors don't exist on net clients
-    if (Role == ROLE_Authority)
-    {
-        for (i = 0; i < Barrels.Length; ++i)
-        {
-            Barrel = Barrels[i];
-
-            if (Barrel != none)
-            {
-                if (i == BarrelIndex)
-                {
-                    Canvas.DrawText("Active barrel temp:" @ Barrel.Temperature @ "State:" @ Barrel.GetStateName());
-                }
-                else
-                {
-                    Canvas.DrawText("Hidden barrel temp:" @ Barrel.Temperature @ "State:" @ Barrel.GetStateName());
-                }
-
-                YPos += YL;
-                Canvas.SetPos(4.0, YPos);
-            }
-        }
     }
 }
 

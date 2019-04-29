@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHProjectileFire extends DHWeaponFire;
@@ -503,6 +503,39 @@ function bool PreLaunchTrace(vector Start, vector Direction)
     return true;
 }
 
+function float GetFiringSoundPitch()
+{
+    local float                 Pitch;
+    local DHWeaponBarrel        B;
+    local DHProjectileWeapon    W;
+
+    // Set default pitch
+    Pitch = 1.0;
+
+    W = DHProjectileWeapon(Weapon);
+
+    if (W != none && W.bBarrelDamaged && W.BarrelIndex >= 0 && W.BarrelIndex < W.Barrels.Length)
+    {
+        B = W.Barrels[W.BarrelIndex];
+    }
+
+    if (B != none)
+    {
+        Pitch = FMax(0.8125, 1.0 - ((B.Temperature - B.CriticalTemperature) / (B.FailureTemperature - B.CriticalTemperature)));
+    }
+
+    return Pitch;
+}
+
+// Modified to handle low pitch from barrels
+function ServerPlayFiring()
+{
+    if (FireSounds.Length > 0)
+    {
+        Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_None,FireVolume,,, GetFiringSoundPitch(), false);
+    }
+}
+
 // Modified to handle different firing animations when on sights
 function PlayFiring()
 {
@@ -537,7 +570,7 @@ function PlayFiring()
 
         if (FireSounds.Length > 0)
         {
-            Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
+            Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,, GetFiringSoundPitch(), false);
         }
     }
 

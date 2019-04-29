@@ -3,9 +3,12 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DH_ShermanTank_M4A3105 extends DHDeprecated;
+class DH_FG42Barrel extends DHWeaponBarrel;
 
 defaultproperties
 {
-    bObsolete=true
+    BarrelCoolingRate=3.5
+    FiringHeatIncrement=4.25
+    CriticalTemperature=230.0
+    FailureTemperature=320.0
 }

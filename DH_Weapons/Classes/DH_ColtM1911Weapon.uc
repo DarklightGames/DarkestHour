@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_ColtM1911Weapon extends DHPistolWeapon;
@@ -22,8 +22,8 @@ defaultproperties
 
     Skins(0)=Shader'DH_ColtM1911_tex.ColtM1911.ColtM1911_S'
 
-    DisplayFOV=70
-    IronSightDisplayFOV=55
+    DisplayFOV=70.0
+    IronSightDisplayFOV=55.0
 
     MaxNumPrimaryMags=5
     InitialNumPrimaryMags=5

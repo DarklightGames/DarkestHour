@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHPlayer extends ROPlayer
@@ -16,6 +16,17 @@ enum EMapMode
     MODE_Map,
     MODE_Squads
 };
+
+struct PersonalMapMarker
+{
+    var class<DHMapMarker> MapMarkerClass;
+    var float MapLocationX;
+    var float MapLocationY;
+    var vector WorldLocation;
+};
+
+var     array<class<DHMapMarker> >          PersonalMapMarkerClasses;
+var     private array<PersonalMapMarker>    PersonalMapMarkers;
 
 var     input float             aBaseFire;
 var     bool                    bToggleRun;          // user activated toggle run
@@ -58,6 +69,9 @@ var     vector                  FlinchOffsetMag;
 var     vector                  FlinchOffsetRate;
 var     float                   FlinchOffsetTime;
 var     float                   FlinchMaxOffset;
+var     float                   FlinchMeterValue;
+var     float                   FlinchMeterIncrement;
+var     float                   LastFlinchTime;
 
 // Mantling
 var     float                   MantleCheckTimer;           // makes sure client doesn't try to start mantling without the server
@@ -657,6 +671,11 @@ function ChangeName(coerce string S)
     DarkestHourGame(Level.Game).ChangeName(self, S, true);
 }
 
+simulated function float GetFlinchMeterFalloff(float TimeSeconds)
+{
+    return (TimeSeconds ** 2.0) * 0.05;
+}
+
 // Give the player a quick flinch and blur effect
 simulated function PlayerWhizzed(float DistSquared)
 {
@@ -664,6 +683,16 @@ simulated function PlayerWhizzed(float DistSquared)
 
     // The magic number below is 75% of the radius of DHBulletWhipAttachment squared (we don't want a flinch on the more distant shots)
     Intensity = 1.0 - ((FMin(DistSquared, 16875.0)) / 16875.0);
+
+    // Falloff the FlichMeter based on how much time has passed since we last had flinch
+    FlinchMeterValue -= GetFlinchMeterFalloff(Level.TimeSeconds - LastFlinchTime);
+    FlinchMeterValue = FMax(0.0, FlinchMeterValue); // Make sure FlinchMeterValue is not below zero
+
+    // Increment the FlichMeter with a maximum
+    FlinchMeterValue = FMin(FlinchMeterValue + FlinchMeterIncrement, 1.0);
+
+    // Intensity is affected by the FlinchMeterValue, the higher the FlinchMeterValue the lower the Intensity
+    Intensity *= (1.0 - FlinchMeterValue);
 
     AddBlur(0.85, Intensity);
     PlayerFlinched(Intensity);
@@ -678,8 +707,8 @@ simulated function PlayerFlinched(float Intensity)
     {
         FlinchIntensity = Intensity * FlinchMaxOffset;
 
-        AfterFlinchRotation.Pitch = RandRange(FlinchIntensity, FlinchMaxOffset);
-        AfterFlinchRotation.Yaw = RandRange(FlinchIntensity, FlinchMaxOffset);
+        AfterFlinchRotation.Pitch = RandRange((FlinchIntensity / 2), FlinchIntensity);
+        AfterFlinchRotation.Yaw = RandRange((FlinchIntensity / 2), FlinchIntensity);
 
         if (Rand(2) == 1)
         {
@@ -712,6 +741,8 @@ simulated function PlayerFlinched(float Intensity)
 
         ShakeView(FlinchRotMag, FlinchRotRate, FlinchRotTime, FlinchOffsetMag, FlinchOffsetRate, FlinchOffsetTime);
     }
+
+    LastFlinchTime = Level.TimeSeconds;
 }
 
 // Modified to prevent a mistakenly passed negative blur time, which causes the blur to 'freeze' indefinitely, until some other blur effect resets it
@@ -1031,6 +1062,11 @@ simulated function bool IsInArtilleryVehicle()
 simulated function bool IsInSquad()
 {
     return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsInSquad();
+}
+
+simulated function bool IsSLorASL()
+{
+    return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsSLorASL();
 }
 
 // Modified to to spawn a DHArtillerySpawner at the strike co-ords instead of using level's NorthEastBoundsspawn to set its height
@@ -2611,7 +2647,7 @@ simulated function SwayHandler(float DeltaTime)
 {
     local DHPawn P;
     local DHWeapon W;
-    local float  WeaponSwayYawAcc, WeaponSwayPitchAcc, StaminaFactor, TimeFactor, DeltaSwayYaw, DeltaSwayPitch;
+    local float  WeaponSwayYawAcc, WeaponSwayPitchAcc, StaminaFactor, TimeFactor, DeltaSwayYaw, DeltaSwayPitch, FlinchFactor;
 
     P = DHPawn(Pawn);
 
@@ -2696,6 +2732,15 @@ simulated function SwayHandler(float DeltaTime)
     {
         WeaponSwayYawAcc *= W.SwayBayonetModifier;
         WeaponSwayPitchAcc *= W.SwayBayonetModifier;
+    }
+
+    // Increase sway based on Flinch Meter
+    FlinchFactor = FlinchMeterValue - GetFlinchMeterFalloff(Level.TimeSeconds - LastFlinchTime);
+
+    if (FlinchFactor > 0.0)
+    {
+        WeaponSwayYawAcc *= 1.0 + FlinchFactor;
+        WeaponSwayPitchAcc *= 1.0 + FlinchFactor;
     }
 
     // Add an elastic factor to get sway near the original aim-point, & a damping factor to keep elastic factor from causing wild oscillations
@@ -3017,6 +3062,8 @@ function Reset()
     NextChangeTeamTime = default.NextChangeTeamTime;
     LastKilledTime = default.LastKilledTime;
     NextVehicleSpawnTime = default.NextVehicleSpawnTime;
+    FlinchMeterValue = 0.0;
+    LastFlinchTime = 0.0;
 }
 
 function ServerSetIsInSpawnMenu(bool bIsInSpawnMenu)
@@ -3497,6 +3544,12 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
     Canvas.SetPos(4.0, YPos);
     Canvas.SetDrawColor(255, 0, 0);
     Canvas.DrawText("     Location:" @ Location @ " Rotation:" @ Rotation);
+    YPos += YL;
+    Canvas.SetPos(4.0, YPos);
+
+    Canvas.SetPos(4.0, YPos);
+    Canvas.SetDrawColor(0, 0, 255);
+    Canvas.DrawText("     *******FlinchMeterValue*******:" @ FlinchMeterValue);
     YPos += YL;
     Canvas.SetPos(4.0, YPos);
 }
@@ -5232,7 +5285,7 @@ exec function Speak(string ChannelTitle)
         // If we are trying to speak in unassigned but we are in a squad, then return out
         return;
     }
-    else if (ChannelTitle ~= VRI.CommandChannelName && !PRI.IsSquadLeader())
+    else if (ChannelTitle ~= VRI.CommandChannelName && !PRI.IsSLorASL())
     {
         // If we are trying to speak in command but we aren't a SL, then return out
         return;
@@ -5474,6 +5527,63 @@ function ServerRemoveMapMarker(int MapMarkerIndex)
     {
         GRI.RemoveMapMarker(GetTeamNum(), MapMarkerIndex);
     }
+}
+
+function array<PersonalMapMarker> GetPersonalMarkers()
+{
+    return PersonalMapMarkers;
+}
+
+function PersonalMapMarker FindPersonalMarker(class<DHMapMarker> MapMarkerClass)
+{
+    local int i;
+
+    for (i = 0; i < PersonalMapMarkers.Length; ++i)
+    {
+        if (PersonalMapMarkers[i].MapMarkerClass == MapMarkerClass)
+        {
+            return PersonalMapMarkers[i];
+        }
+    }
+}
+
+function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY)
+{
+    local DHGameReplicationInfo GRI;
+    local PersonalMapMarker PMM;
+    local int i;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI == none || MapMarkerClass == none || !MapMarkerClass.default.bIsPersonal)
+    {
+        return;
+    }
+
+    if (MapMarkerClass.default.bIsUnique)
+    {
+        for (i = 0; i < PersonalMapMarkers.Length; ++i)
+        {
+            if (PersonalMapMarkers[i].MapMarkerClass == MapMarkerClass)
+            {
+                PersonalMapMarkers.Remove(i, 1);
+                break;
+            }
+        }
+    }
+
+    PMM.MapMarkerClass = MapMarkerClass;
+    PMM.MapLocationX = MapLocationX;
+    PMM.MapLocationY = MapLocationY;
+    PMM.WorldLocation = GRI.GetWorldCoords(MapLocationX, MapLocationY);
+
+    PersonalMapMarkers.Insert(0, 1);
+    PersonalMapMarkers[0] = PMM;
+}
+
+function RemovePersonalMarker(int Index)
+{
+    PersonalMapMarkers.Remove(Index, 1);
 }
 
 simulated function ClientSquadSignal(class<DHSquadSignal> SignalClass, vector L)
@@ -5762,6 +5872,11 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
     else if (!PRI.IsInSquad())
     {
         MenuClassName = "DH_Engine.DHCommandMenu_LoneWolf";
+        return true;
+    }
+    else if (PRI.IsPatron())
+    {
+        MenuClassName = "DH_Engine.DHCommandMenu_Patron";
         return true;
     }
 
@@ -6534,7 +6649,10 @@ defaultproperties
     DHScopeTurnSpeedFactor=0.2
 
     // Max flinch offset for close snaps
-    FlinchMaxOffset=375.0
+    FlinchMaxOffset=450.0
+
+    // Flinch meter
+    FlinchMeterIncrement=0.08
 
     // Flinch from bullet snaps when deployed
     FlinchRotMag=(X=100.0,Y=0.0,Z=100.0)
@@ -6570,4 +6688,6 @@ defaultproperties
     VoiceChatLANCodec="CODEC_96WB"
 
     ToggleDuckIntervalSeconds=0.5
+
+    PersonalMapMarkerClasses(0)=class'DHMapMarker_Ruler'
 }
