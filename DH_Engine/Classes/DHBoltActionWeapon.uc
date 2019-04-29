@@ -495,11 +495,6 @@ simulated state Reloading
     simulated function BeginState()
     {
         //Log("Begin Reload: "$NumRoundsToLoad);
-        if (Role == ROLE_Authority && ROPawn(Instigator) != none)
-        {
-            ROPawn(Instigator).StartReload();
-        }
-
         if (ReloadState == RS_None)
         {
             if (NumRoundsToLoad >= GetStripperClipSize() && HasAnim(FullReloadAnim))
@@ -510,12 +505,23 @@ simulated state Reloading
                     GiveBackAmmo(1);
                 }
 
+                if (Role == ROLE_Authority && ROPawn(Instigator) != none)
+                {
+                    ROPawn(Instigator).HandleStandardReload();
+                }
+
                 //Log("Full Reload");
                 ReloadState = RS_FullReload;
                 PlayFullReload();
             }
             else
             {
+                if (Role == ROLE_Authority && ROPawn(Instigator) != none)
+                {
+                    //Log("Attachment Status: "$ROWeaponAttachment(ThirdPersonActor).bOutOfAmmo);
+                    ROPawn(Instigator).StartReload();
+                }
+
                 ReloadState = RS_PreReload;
                 PlayPreReload();
             }
@@ -717,9 +723,9 @@ function GiveBackAmmo(int Count)
     AmmoCharge[0] -= Count;
 
     // Update the weapon attachment ammo status
-    if (AmmoAmount(0) > 0 && ROWeaponAttachment(ThirdPersonActor) != none)
+    if (AmmoAmount(0) <= 0 && ROWeaponAttachment(ThirdPersonActor) != none)
     {
-        ROWeaponAttachment(ThirdPersonActor).bOutOfAmmo = false;
+        ROWeaponAttachment(ThirdPersonActor).bOutOfAmmo = true;
     }
 
     UpdateResupplyStatus(true);

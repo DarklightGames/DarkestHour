@@ -31,8 +31,10 @@ defaultproperties
 
     WA_Idle="Idle_springfield"
     WA_Fire="Idle_springfield"
-    WA_Reload="Insert_springfield"
-    WA_PreReload="Open_springfield"
+    //WA_Reload="Insert_springfield" --TODO Animation is broken and does not line up with reload.
+    WA_Reload="Idle_springfield"
+    //WA_PreReload="Open_springfield" --TODO Animation is broken. Shell stays present.
+    WA_PreReload="Idle_springfield"
     WA_PostReload="Close_springfield"
     WA_WorkBolt="bolt_springfield"
 
