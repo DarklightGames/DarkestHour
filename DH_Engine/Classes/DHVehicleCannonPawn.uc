@@ -439,9 +439,15 @@ exec function SwitchFireMode()
 // Also for net client to pass any changed pending ammo type to server (optimises network as avoids update to server each time player toggles ammo, doing it only when needed)
 simulated exec function ROManualReload()
 {
-    if (Cannon != none && Cannon.ReloadState == RL_Waiting && Cannon.PlayerUsesManualReloading() && Cannon.HasAmmoToReload(Cannon.LocalPendingAmmoIndex))
+    if (Cannon == none || !Cannon.HasAmmoToReload(Cannon.LocalPendingAmmoIndex))
     {
-        if (Role < ROLE_Authority)
+        return;
+    }
+
+    if ((Cannon.ReloadState == RL_Waiting && Cannon.PlayerUsesManualReloading()) ||
+        (Cannon.ReloadState == RL_ReadyToFire && Cannon.LocalPendingAmmoIndex != Cannon.GetAmmoIndex()))
+    {
+        if (Role < ROLE_Authority || Level.NetMode == NM_Standalone)
         {
             Cannon.CheckUpdatePendingAmmo();
         }
