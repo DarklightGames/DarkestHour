@@ -185,10 +185,10 @@ defaultproperties
 {
     ItemName="Wire Cutters"
     AttachmentClass=class'DHWireCuttersAttachment'
+    PickupClass=class'DHWireCuttersPickup'
     InventoryGroup=7
     GroupOffset=2
     Priority=1
-    bCanThrow=false
     CutDistance=100.0
 
     Mesh=SkeletalMesh'DH_Wirecutters_1st.wirecutters'

@@ -3,10 +3,10 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHBinocularsPickup extends DHWeaponPickup;
+class DHWireCuttersPickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    InventoryType=class'DH_Equipment.DHBinocularsItem'
-    StaticMesh=StaticMesh'DetailSM.Military.Binocs'
+    InventoryType=class'DH_Equipment.DHWireCuttersItem'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.CCwirecutters'
 }
