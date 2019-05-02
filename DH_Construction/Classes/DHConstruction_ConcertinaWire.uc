@@ -14,9 +14,7 @@ function CutConstruction(Pawn InstigatedBy)
 {
     if (CanBeCut())
     {
-        TearDownProgress = ProgressMax - (ProgressMax * TakeDownProgressInterval);
-        SetStaticMesh(CutStaticMesh);
-        NetUpdateTime = Level.TimeSeconds - 1.0;
+        GotoState('Cut');
     }
 }
 
@@ -29,6 +27,9 @@ defaultproperties
     CollisionHeight=50
     CutDuration=4.0
     CutStaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_02_cut'
+    CutSound=Sound'DH_Obstacles.Barbed.FenceBreaking'
+    CutSoundRadius=180.0
+    CutSoundVolume=4.0
     bBreakOnTearDown=true
     BrokenStaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_destro_01'
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_02'
@@ -45,5 +46,7 @@ defaultproperties
     GroupClass=class'DHConstructionGroup_Obstacles'
     bShouldSwitchToLastWeaponOnPlacement=false
     TakeDownProgressInterval=0.1666 // 24 hits (ProgressMax / Desired Hits)
+
+    //SquadMemberCountMinimum=1 // DEBUG USE
 }
 

@@ -192,6 +192,9 @@ var StaticMesh                  TatteredStaticMesh;
 // Cut
 var float                       CutDuration;                // Cut duration
 var StaticMesh                  CutStaticMesh;              // Static mesh to display when cut
+var sound                       CutSound;
+var float                       CutSoundVolume;
+var float                       CutSoundRadius;
 
 // Health
 var private int     Health;
@@ -387,6 +390,23 @@ simulated event Destroyed()
 
 auto simulated state Constructing
 {
+    simulated function BeginState()
+    {
+        // Client
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            if (PlacementEmitterClass != none)
+            {
+                Spawn(PlacementEmitterClass);
+            }
+
+            if (PlacementSound != none)
+            {
+                PlaySound(PlacementSound, SLOT_Misc, PlacementSoundVolume,, PlacementSoundRadius,, true);
+            }
+        }
+    }
+
     simulated function bool CanBeBuilt()
     {
         return true;
@@ -454,8 +474,9 @@ auto simulated state Constructing
         }
     }
 
+// This only runs on server/authority
 Begin:
-    if (Role == ROLE_Authority)
+    if (Role == ROLE_Authority) // this is likely unneeded
     {
         // When placed in the SDK, the Owner will be none.
         if (Owner == none && bShouldAutoConstruct)
@@ -478,21 +499,6 @@ Begin:
         }
 
         OnProgressChanged(none);
-    }
-
-    // TODO: these don't actually seem to work in a multiplayer environment.
-    // Client-side effects
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        if (PlacementEmitterClass != none)
-        {
-            Spawn(PlacementEmitterClass);
-        }
-
-        if (PlacementSound != none)
-        {
-            PlaySound(PlacementSound, SLOT_Misc, PlacementSoundVolume,, PlacementSoundRadius,, true);
-        }
     }
 }
 
@@ -647,6 +653,25 @@ simulated state Constructed
 DelayedDamage:
     Sleep(0.1);
     TakeDamage(DelayedDamage, none, vect(0, 0, 0), vect(0, 0, 0), DelayedDamageType);
+}
+
+simulated state Cut extends Constructed
+{
+    simulated function BeginState()
+    {
+        if (Role == ROLE_Authority)
+        {
+            TearDownProgress = ProgressMax - (ProgressMax * TakeDownProgressInterval);
+            SetStaticMesh(CutStaticMesh);
+            NetUpdateTime = Level.TimeSeconds - 1.0;
+        }
+
+        // This is being run on the client only
+        if (CutSound != none)
+        {
+            PlaySound(CutSound, SLOT_Misc, CutSoundVolume,, CutSoundRadius,, true);
+        }
+    }
 }
 
 // Override this for additional functionality when construction breaks.
