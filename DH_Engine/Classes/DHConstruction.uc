@@ -150,9 +150,8 @@ var     float   StagnationLifespan;
 
 // Tear-down
 var     bool    bCanBeTornDownWhenConstructed;      // Whether or not players can tear down the construction after it has been constructed.
-var     bool    bCanBeTornDownWithSupplyTruckNearby;// Whether or not players can tear down the construction if a friendly supply truck is nearby...
-                                                    // (if true, then `bCanBeTornDownWhenConstructed` and 'bCanBeTornDownByFriendlies' are ignored)
 var     bool    bCanBeTornDownByFriendlies;         // Whether or not friendly players can tear down the construction (e.g. to stop griefing of important constructions)
+var     bool    bBreakOnTearDown;                   // If true, the construction breaks when torn down
 var     float   TearDownProgress;
 var     float   TakeDownProgressInterval;
 
@@ -189,6 +188,10 @@ var float                       LastImpactTimeSeconds;
 // Tattered
 var int                         TatteredHealthThreshold;    // The health below which the construction is considered "tattered". -1 for no tattering
 var StaticMesh                  TatteredStaticMesh;
+
+// Cut
+var float                       CutDuration;                // Cut duration
+var StaticMesh                  CutStaticMesh;              // Static mesh to display when cut
 
 // Health
 var private int     Health;
@@ -254,6 +257,7 @@ simulated function bool IsBroken() { return false; }
 simulated function bool IsConstructed() { return false; }
 simulated function bool IsTattered() { return false; }
 simulated function bool CanBeBuilt() { return false; }
+simulated function bool CanBeCut() { return false; }
 
 final simulated function int GetTeamIndex()
 {
@@ -391,7 +395,6 @@ auto simulated state Constructing
     function TakeTearDownDamage(Pawn InstigatedBy)
     {
         Progress -= 1;
-
         OnProgressChanged(InstigatedBy);
     }
 
@@ -592,9 +595,14 @@ simulated state Constructed
 
         if (TearDownProgress >= ProgressMax)
         {
-            if (default.Stages.Length == 0)
+            // If the construction has no stages or is cut, then destroy it
+            if (default.Stages.Length == 0 || StaticMesh == CutStaticMesh)
             {
                 Destroy();
+            }
+            else if (bBreakOnTearDown)
+            {
+                BreakMe();
             }
             else
             {
@@ -629,14 +637,7 @@ simulated state Constructed
 
     simulated function bool CanTakeTearDownDamageFromPawn(Pawn P, optional bool bShouldSendErrorMessage)
     {
-        if (DHPawn(P) != none && bCanBeTornDownWithSupplyTruckNearby)
-        {
-            return IsFriendlySupplyTruckNearby(DHPawn(P));
-        }
-        else
-        {
-            return bCanBeTornDownWhenConstructed && (bCanBeTornDownByFriendlies || (P != none && P.GetTeamNum() != TeamIndex));
-        }
+        return bCanBeTornDownWhenConstructed && (bCanBeTornDownByFriendlies || (P != none && P.GetTeamNum() != TeamIndex));
     }
 
 // This is required because we cannot call TakeDamage within the KImpact
@@ -703,21 +704,6 @@ simulated state Broken
             }
         }
     }
-}
-
-simulated function bool IsFriendlySupplyTruckNearby(DHPawn P)
-{
-    local int i;
-
-    for (i = 0; i < P.TouchingSupplyAttachments.Length; ++i)
-    {
-        if (P.TouchingSupplyAttachments[i] != none && P.TouchingSupplyAttachments[i].bIsAttachedToVehicle)
-        {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 function UpdateAppearance()
@@ -964,6 +950,8 @@ simulated function bool CanTakeTearDownDamageFromPawn(Pawn P, optional bool bSho
 {
     return true;
 }
+
+function CutConstruction(Pawn InstigatedBy);
 
 function TakeTearDownDamage(Pawn InstigatedBy);
 
