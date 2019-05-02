@@ -36,7 +36,7 @@ defaultproperties
     PlacementSound=Sound'DH_ConstructionSounds.ConcertinaWire.ConcertinaWire_Unraveling'
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.barbed_wire'
     MenuDescription="Effective at blocking infantry and light vehicles."
-    SupplyCost=25
+    SupplyCost=100
     HealthMax=250
     bCanBeMantled=false
     bCanTakeImpactDamage=true
