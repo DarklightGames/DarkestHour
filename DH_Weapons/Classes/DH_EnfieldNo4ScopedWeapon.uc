@@ -49,14 +49,10 @@ defaultproperties
     IronBringUp="Scope_in"
     IronPutDown="Scope_out"
     IronIdleAnim="Scope_Idle"
-    //PostFireIronIdleAnim=none
-
     BoltIronAnim="scope_bolt"
     BoltHipAnim="bolt_scope"
-
     MagEmptyReloadAnim="reload_empty"
     MagPartialReloadAnim="reload_half"
-
     PreReloadAnim="reload_start"
     PostReloadAnim="reload_end"
     SingleReloadAnim="reload_single"

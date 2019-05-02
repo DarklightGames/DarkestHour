@@ -28,8 +28,8 @@ defaultproperties
 
     PlayerFOVZoom=24.0 // 3.5x
 
-    ScopePortalFOV=8.0 // 3.5x
-    ScopePortalFOVHigh=8.0
+    ScopePortalFOV=7.0 // 3.5x
+    ScopePortalFOVHigh=7.0
 
     LensMaterialID=4
 

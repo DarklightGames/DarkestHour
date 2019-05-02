@@ -21,20 +21,13 @@ defaultproperties
     bHasScope=true
     bIsSniper=true
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Ger_sniperscope_overlay'
-
     DisplayFOV=70.0
-
     IronSightDisplayFOV=45.0
     IronSightDisplayFOVHigh=45.0
-
     PlayerFOVZoom=22.5
-
-    ScopePortalFOV=7.0
-    ScopePortalFOVHigh=7.0
-
+    ScopePortalFOV=6.0
+    ScopePortalFOVHigh=6.0
     LensMaterialID=5
-
-    bDebugSights=true
     bUsesIronsightFOV=false
 
     MaxNumPrimaryMags=13
@@ -45,6 +38,7 @@ defaultproperties
     IronIdleAnim="Scope_Idle"
     BoltIronAnim="scope_bolt"
     BoltHipAnim="bolt_scope"
+    PostFireIronIdleAnim=none
     SingleReloadAnim="single_insert"
     SingleReloadHalfAnim="single_insert_half"
     PreReloadAnim="single_open"

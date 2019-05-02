@@ -40,10 +40,8 @@ defaultproperties
     IronBringUp="Scope_in"
     IronPutDown="Scope_out"
     IronIdleAnim="Scope_Idle"
-
     BoltIronAnim="scope_bolt"
     BoltHipAnim="bolt_scope"
-
     PreReloadAnim="single_open"
     SingleReloadAnim="single_insert"
     PostReloadAnim="single_close"
