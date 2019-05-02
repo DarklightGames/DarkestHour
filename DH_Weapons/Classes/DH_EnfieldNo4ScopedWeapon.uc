@@ -21,20 +21,20 @@ defaultproperties
     bHasScope=true
     bIsSniper=true
     bPlusOneLoading=true
+
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.EnfieldNo4_Scope_Overlay'
     ScriptedScopeTexture=Texture'DH_EnfieldNo4_tex.EnfieldNo4.EnfieldNo4_Scope_3D'
-    ScopeOverlaySize=0.7
+
+    ScopeOverlaySize=0.7 // size of the scope overlay (1.0 means full screen width, 0.5 means half screen width, etc)
     OverlayCorrectionX=-1.5
-    OverlayCorrectionY=6
-    DisplayFOV=70.0
+    OverlayCorrectionY=6    //pixel value scope overaly correction
+    DisplayFOV=70.0         // idk
     IronSightDisplayFOV=40.0
     IronSightDisplayFOVHigh=40.0
-    PlayerFOVZoom=25.714285 // 3.5x
+    PlayerFOVZoom=25.714285 // 3.5x // The PlayerFOV the player's FOV will change too when using scoped weapons
     ScopePortalFOV=7.0
     ScopePortalFOVHigh=7.0
-    LensMaterialID=5
-
-    Skins(0)=Texture'Weapons1st_tex.Bullets.Stripper_Mesh_K98k'
+    LensMaterialID=3
 
     HandNum=1
     SleeveNum=2
@@ -49,10 +49,14 @@ defaultproperties
     IronBringUp="Scope_in"
     IronPutDown="Scope_out"
     IronIdleAnim="Scope_Idle"
+    //PostFireIronIdleAnim=none
+
     BoltIronAnim="scope_bolt"
     BoltHipAnim="bolt_scope"
+
     MagEmptyReloadAnim="reload_empty"
     MagPartialReloadAnim="reload_half"
+
     PreReloadAnim="reload_start"
     PostReloadAnim="reload_end"
     SingleReloadAnim="reload_single"

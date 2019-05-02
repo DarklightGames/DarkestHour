@@ -23,25 +23,30 @@ defaultproperties
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Springfield_Scope_Overlay'
     OverlayCorrectionX=-0.5
     DisplayFOV=90.0
+
     IronSightDisplayFOV=40.0
+    IronSightDisplayFOVHigh=40.0
+
     PlayerFOVZoom=36.0 // 2.5x
+
     ScopePortalFOV=7.0
+    ScopePortalFOVHigh=7.0
+    LensMaterialID=5
 
     MaxNumPrimaryMags=13
     InitialNumPrimaryMags=13
 
     PutDownAnim="putaway"
     BoltIronAnim="iron_boltrest"
-    PostFireIronIdleAnim="Iron_idlerest"
-
-    //BoltIronAnim="scope_bolt"
     BoltHipAnim="bolt_scope"
+    //PostFireIronIdleAnim="Iron_idlerest"
+    PostFireIronIdleAnim=none
+
+
 
     SingleReloadAnim="single_insert"
     SingleReloadHalfAnim="single_insert_half"
-
     PreReloadAnim="single_open"
     PreReloadHalfAnim="single_open_half"
-
     PostReloadAnim="single_close"
 }
