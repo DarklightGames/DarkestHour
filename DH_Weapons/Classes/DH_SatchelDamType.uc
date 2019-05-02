@@ -11,10 +11,10 @@ defaultproperties
     WeaponClass=class'DH_Weapons.DH_SatchelCharge10lb10sWeapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.satchel'
 
-    VehicleDamageModifier=1.0
-    APCDamageModifier=0.75    // was 1.0 in RO
-    TankDamageModifier=0.45   // was 0.8 in DH 5.1 & was 1.0 in RO
-    TreadDamageModifier=0.85  // was 1.0 in RO
+    VehicleDamageModifier=1.25
+    APCDamageModifier=1.0
+    TankDamageModifier=0.8
+    TreadDamageModifier=1.8
 
     GibModifier=4.0
     KDamageImpulse=5000.0

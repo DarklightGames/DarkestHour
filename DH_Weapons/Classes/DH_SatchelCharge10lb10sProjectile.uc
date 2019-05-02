@@ -76,8 +76,8 @@ defaultproperties
     CollisionHeight=4.0
 
     Speed=300.0
-    Damage=750.0
-    DamageRadius=700.0
+    Damage=800.0
+    DamageRadius=1000.0
     MyDamageType=class'DH_Weapons.DH_SatchelDamType'
 
     ExplosionSoundRadius=4000.0
@@ -89,7 +89,7 @@ defaultproperties
     ExplodeMidAirEffectClass=class'ROEffects.ROSatchelExplosion'
 
     BlurTime=6.0
-    BlurEffectScalar=1.75
+    BlurEffectScalar=2.1
     ShakeRotMag=(X=0.0,Y=0.0,Z=300.0)
     ShakeRotRate=(Z=2500.0)
     ShakeRotTime=3.0
