@@ -294,6 +294,8 @@ simulated function Destroyed()
     DestroyAttachments();
 }
 
+function StartEngineFire(Pawn InstigatedBy);
+
 // Modified to score the vehicle kill, & to subtract the vehicle's reinforcement cost for the loss
 function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
 {
@@ -2226,6 +2228,25 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
     }
 }
 
+function bool IsTreadInRadius(vector Location, float Radius, out int TrackNum)
+{
+    local int           i;
+    local coords        WheelCoords;
+
+    for (i = 0; i < Wheels.Length; ++i)
+    {
+        WheelCoords = GetBoneCoords(Wheels[i].BoneName);
+
+        if (VSize(Location - WheelCoords.Origin) < Radius)
+        {
+            TrackNum = int(Wheels[i].bLeftTrack);
+            return true;
+        }
+    }
+
+    return false;
+}
+
 // Modified to call SetDamagedTracks() for single player or listen server, as we no longer use Tick (net client gets that via PostNetReceive)
 function DamageTrack(bool bLeftTrack)
 {
@@ -3690,6 +3711,12 @@ simulated function bool IsDisabled()
     }
 
     return false;
+}
+
+// New function to get the location of the Engine VehHitPoint
+function vector GetEngineLocation()
+{
+    return GetBoneCoords(VehHitPoints[0].PointBone).Origin;
 }
 
 // New helper function to check whether vehicle is burning

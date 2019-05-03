@@ -5,6 +5,9 @@
 
 class DH_SatchelCharge10lb10sProjectile extends DHThrowableExplosiveProjectile; // incorporating SatchelCharge10lb10sProjectile & ROSatchelChargeProjectile
 
+var float           VehHitPointDamageRadius;   // A radius that determines direct damage to vehicle components
+var float           ComponentDamageStrength;   // If this is > the vehicle's mass, it will set it on fire if placed within VehHitPointDamageRadius distance from the engine
+
 // Modified to record SavedInstigator & SavedPRI
 // RODemolitionChargePlacedMsg from ROSatchelChargeProjectile is omitted
 simulated function PostBeginPlay()
@@ -21,8 +24,10 @@ simulated function PostBeginPlay()
 // Modified to check whether satchel blew up in a special Volume that needs to be triggered
 simulated function BlowUp(vector HitLocation)
 {
+    local DHVehicle     Veh;
     local DH_ObjSatchel SatchelObjActor;
     local Volume        V;
+    local int           TrackNum;
 
     if (Instigator != none)
     {
@@ -30,26 +35,63 @@ simulated function BlowUp(vector HitLocation)
         SavedPRI = Instigator.PlayerReplicationInfo;
     }
 
-    super.BlowUp(HitLocation);
-
-    // TODO: triggering these special actors appears only appears to do stuff on an authority role, so suspect this can be made authority only
-    // Then we can probably remove bAlwaysRelevant from this actor, as doing this on a net client is the only reason I can guess caused bAlwaysRelevant to be set for satchel?
-    foreach TouchingActors(class'Volume', V)
+    if (Role == ROLE_Authority)
     {
-        if (DH_ObjSatchel(V.AssociatedActor) != none)
+        if (bBounce)
         {
-            SatchelObjActor = DH_ObjSatchel(V.AssociatedActor);
+            // If the grenade hasn't landed, do 1/3 less damage
+            // This isn't supposed to be realistic, its supposed to make airbursts less effective so players are more apt to throw grenades more authentically
+            DelayedHurtRadius(Damage * 0.75, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
+        }
+        else
+        {
+            DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
+        }
 
-            if (SatchelObjActor.WithinArea(self))
+        // TODO: triggering these special actors appears only appears to do stuff on an authority role, so suspect this can be made authority only
+        // Then we can probably remove bAlwaysRelevant from this actor, as doing this on a net client is the only reason I can guess caused bAlwaysRelevant to be set for satchel?
+        foreach TouchingActors(class'Volume', V)
+        {
+            if (DH_ObjSatchel(V.AssociatedActor) != none)
             {
-                SatchelObjActor.Trigger(self, SavedInstigator);
+                SatchelObjActor = DH_ObjSatchel(V.AssociatedActor);
+
+                if (SatchelObjActor.WithinArea(self))
+                {
+                    SatchelObjActor.Trigger(self, SavedInstigator);
+                }
+            }
+
+            if (V.IsA('RODemolitionVolume'))
+            {
+                RODemolitionVolume(V).Trigger(self, SavedInstigator);
             }
         }
 
-        if (V.IsA('RODemolitionVolume'))
+        // Handle vehicle component damage
+        foreach RadiusActors(class'DHVehicle', Veh, DamageRadius)
         {
-            RODemolitionVolume(V).Trigger(self, SavedInstigator);
+            if (Veh != none && ComponentDamageStrength > Veh.VehicleMass)
+            {
+                // Handle setting fire to engine
+                if (!Veh.IsVehicleBurning())
+                {
+                    // Check distance from satchel to engine bone
+                    if (VSize(Location - Veh.GetEngineLocation()) < VehHitPointDamageRadius)
+                    {
+                        Veh.StartEngineFire(SavedInstigator);
+                    }
+                }
+
+                // Handle destroying the treads
+                if (Veh.IsTreadInRadius(Location, VehHitPointDamageRadius, TrackNum))
+                {
+                    Veh.DamageTrack(bool(TrackNum));
+                }
+            }
         }
+
+        MakeNoise(1.0);
     }
 }
 
@@ -76,8 +118,11 @@ defaultproperties
     CollisionHeight=4.0
 
     Speed=300.0
-    Damage=800.0
-    DamageRadius=1000.0
+    Damage=750.0
+    DamageRadius=750.0
+    VehHitPointDamageRadius=200.0
+    ComponentDamageStrength=20.0
+
     MyDamageType=class'DH_Weapons.DH_SatchelDamType'
 
     ExplosionSoundRadius=4000.0

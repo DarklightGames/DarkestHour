@@ -9,6 +9,7 @@ defaultproperties
 {
     MyDamageType=class'DH_Weapons.DH_SatchelSmallDamType'
 
-    Damage=750.0
-    DamageRadius=700.0
+    Damage=600.0
+    DamageRadius=600.0
+    ComponentDamageStrength=10.0
 }
