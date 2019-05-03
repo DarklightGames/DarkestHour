@@ -1936,25 +1936,6 @@ function bool ResupplyAmmo()
     return false;
 }
 
-// New function to update the player's resupply status & number of spare mags
-function UpdateResupplyStatus(bool bCurrentWeapon)
-{
-    local DHPawn P;
-
-    P = DHPawn(Instigator);
-
-    if (bCurrentWeapon)
-    {
-        CurrentMagCount = Max(0, PrimaryAmmoArray.Length - 1); // update number of spare mags (replicated)
-    }
-
-    if (P != none)
-    {
-        P.bWeaponNeedsResupply = bCanBeResupplied && bCurrentWeapon && CurrentMagCount < (MaxNumPrimaryMags - 1) && (TeamIndex == 2 || TeamIndex == P.GetTeamNum());
-        P.bWeaponNeedsReload = false;
-    }
-}
-
 // Modified so resupply point gradually replenishes ammo (no full resupply in one go)
 function bool FillAmmo()
 {
@@ -1997,6 +1978,36 @@ function bool FillAmmo()
     }
 
     return bDidFillAmmo;
+}
+
+// Modified to call UpdateResupplyStatus()
+function DropFrom(vector StartLocation)
+{
+    if (bCanThrow)
+    {
+        UpdateResupplyStatus(false);
+    }
+
+    super.DropFrom(StartLocation);
+}
+
+// New function to update the player's resupply status & number of spare mags
+function UpdateResupplyStatus(bool bCurrentWeapon)
+{
+    local DHPawn P;
+
+    P = DHPawn(Instigator);
+
+    if (bCurrentWeapon)
+    {
+        CurrentMagCount = Max(0, PrimaryAmmoArray.Length - 1); // update number of spare mags (replicated)
+    }
+
+    if (P != none)
+    {
+        P.bWeaponNeedsResupply = bCanBeResupplied && bCurrentWeapon && CurrentMagCount < (MaxNumPrimaryMags - 1) && (TeamIndex == 2 || TeamIndex == P.GetTeamNum());
+        P.bWeaponNeedsReload = false;
+    }
 }
 
 function SetNumMags(int M)
@@ -2198,60 +2209,6 @@ function bool HandlePickupQuery(Pickup Item)
     // Didn't do any pick up for this weapon, so pass this query on to the next item in the Inventory chain
     // If we've reached the last Inventory item, returning false will allow pick up of the weapon
     return Inventory != none && Inventory.HandlePickupQuery(Item);
-}
-
-// Modified to reset ironsights, update player's resupply status & add some random fall direction
-function DropFrom(vector StartLocation)
-{
-    local Pickup Pickup;
-    local int    i;
-
-    if (bCanThrow)
-    {
-        UpdateResupplyStatus(false);
-
-        if (bUsingSights)
-        {
-            bUsingSights = false;
-
-            if (ROPawn(Instigator) != none)
-            {
-                ROPawn(Instigator).SetIronSightAnims(false);
-            }
-        }
-
-        ClientWeaponThrown();
-
-        for (i = 0; i < NUM_FIRE_MODES; ++i)
-        {
-            if (FireMode[i].bIsFiring)
-            {
-                StopFire(i);
-            }
-        }
-
-        if (Instigator != none)
-        {
-            DetachFromPawn(Instigator);
-        }
-
-        Pickup = Spawn(PickupClass,,, StartLocation, Rotation);
-
-        if (Pickup != none)
-        {
-            Pickup.InitDroppedPickupFor(self);
-            Pickup.Velocity = Velocity;
-            Pickup.Velocity.X += RandRange(-100.0, 100.0);
-            Pickup.Velocity.Y += RandRange(-100.0, 100.0);
-
-            if (Instigator != none && Instigator.Health > 0)
-            {
-                WeaponPickup(Pickup).bThrown = true;
-            }
-        }
-
-        Destroy();
-    }
 }
 
 // Modified to play the dry-fire sound if you're out of ammo

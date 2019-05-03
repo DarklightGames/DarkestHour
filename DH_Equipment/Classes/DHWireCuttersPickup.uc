@@ -3,15 +3,10 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHAlliedArtilleryOfficerRoles extends DHAlliedRoles
-    abstract;
+class DHWireCuttersPickup extends DHWeaponPickup;
 
 defaultproperties
 {
-    bIsArtilleryOfficer=true
-    MyName="Artillery Officer"
-    AltName="Artillery Officer"
-    Article="an "
-    PluralName="Artillery Officers"
-    Limit=1
+    InventoryType=class'DH_Equipment.DHWireCuttersItem'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.CCwirecutters'
 }

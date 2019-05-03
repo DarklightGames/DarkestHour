@@ -127,7 +127,7 @@ function string Encode()
         {
             Map.Get(Keys[i], V);
 
-            Strings[Strings.Length] = "\"" $ Keys[i] $ "\":" $ V.Encode();
+            Strings[Strings.Length] = "\"" $ GetSanitizedString(Keys[i]) $ "\":" $ V.Encode();
         }
 
         S $= class'UString'.static.Join(",", Strings);

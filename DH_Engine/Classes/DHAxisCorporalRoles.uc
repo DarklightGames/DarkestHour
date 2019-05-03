@@ -10,7 +10,7 @@ defaultproperties
 {
     bRequiresSLorASL=true
     MyName="Corporal"
-    AltName="Obergefreiter"
+    AltName="Gefreiter"
     Article="a "
     PluralName="Corporals"
     Limit=2

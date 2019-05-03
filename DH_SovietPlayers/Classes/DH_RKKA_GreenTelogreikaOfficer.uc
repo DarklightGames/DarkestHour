@@ -3,10 +3,8 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_RKKA_GreenTelogreikaOfficer extends DHSOVArtilleryOfficerRoles;
+class DH_RKKA_GreenTelogreikaOfficer extends DHDeprecated;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietGreenTeloPawn',Weight=1.0)
-    SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves_green'
 }
