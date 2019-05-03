@@ -345,14 +345,14 @@ simulated function string GetMapText();
 // TODO: I don't like this one bit! SEPARATE OUT INTO DIFFERENT FUNCTIONS
 function GetPlayerCountsWithinRadius(float RadiusInMeters, optional int SquadIndex, optional out int SquadmateCount, optional out int EnemyCount, optional out int TeammateCount)
 {
-    local Pawn P;
+    local DHPawn P;
     local DHPlayerReplicationInfo OtherPRI;
 
     SquadmateCount = 0;
     EnemyCount = 0;
     TeammateCount = 0;
 
-    foreach RadiusActors(class'Pawn', P, class'DHUnits'.static.MetersToUnreal(RadiusInMeters))
+    foreach RadiusActors(class'DHPawn', P, class'DHUnits'.static.MetersToUnreal(RadiusInMeters))
     {
         if (P != none && !P.bDeleteMe && P.Health > 0 && P.PlayerReplicationInfo != none)
         {
