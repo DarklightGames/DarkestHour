@@ -248,7 +248,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal)
         return;
     }
 
-    PlaySound(ExplosionSound[Rand(4)],, 6.0 * TransientSoundVolume,, 5248.0);
+    PlaySound(ExplosionSound[Rand(4)],, 6.0 * TransientSoundVolume,, 25000.0);
 
     DoShakeEffect();
 
@@ -620,7 +620,8 @@ simulated function UpdateInstigator()
 
 defaultproperties
 {
-    // All from deprecated ROArtilleryShell class:
+    bAlwaysRelevant=true // always relevant to every net client, so they hear the sounds, etc
+
     Damage=500
     DamageRadius=1000.0
     MyDamageType=class'DHArtillery105DamageType'
@@ -634,7 +635,6 @@ defaultproperties
     Speed=8000.0
     MaxSpeed=8000.0
     LifeSpan=12.0    // was 1500 seconds but way too long & no reason for that
-//  bProjTarget=true // was in RO but removed as makes no sense for a shell be a target for other projectiles & no other projectiles have this
 
     DistantSound=Sound'Artillery.fire_distant'
     CloseSound(0)=Sound'Artillery.zoomin.zoom_in01'
@@ -645,8 +645,6 @@ defaultproperties
     ExplosionSound(2)=Sound'Artillery.explosions.explo03'
     ExplosionSound(3)=Sound'Artillery.explosions.explo04'
     TransientSoundVolume=1.0
-//  SoundVolume=255 // omitted as irrelevant as actor has no ambient sound
-//  SoundRadius=100.0
 
     ShellHitDirtEffectClass=class'ROArtilleryDirtEmitter'
     ShellHitSnowEffectClass=class'ROArtillerySnowEmitter'
