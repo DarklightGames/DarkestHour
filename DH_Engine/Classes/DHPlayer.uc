@@ -169,7 +169,7 @@ replication
     reliable if (Role < ROLE_Authority)
         ServerSetPlayerInfo, ServerSetIsInSpawnMenu, ServerSetLockTankOnEntry,
         ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSetBayonetAtSpawn,
-        ServerSaveArtilleryTarget, ServerClearObstacle,
+        ServerSaveArtilleryTarget, ServerClearObstacle, ServerCutConstruction,
         ServerAddMapMarker, ServerRemoveMapMarker,
         ServerSquadCreate, ServerSquadRename,
         ServerSquadJoin, ServerSquadJoinAuto, ServerSquadLeave,
@@ -2586,6 +2586,14 @@ function ServerClearObstacle(int Index)
     if (G != none && G.ObstacleManager != none)
     {
         G.ObstacleManager.ClearObstacle(Index);
+    }
+}
+
+function ServerCutConstruction(DHConstruction C)
+{
+    if (C != none && Pawn != none)
+    {
+        C.CutConstruction(Pawn);
     }
 }
 

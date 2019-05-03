@@ -3,10 +3,8 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_USOfficer1st extends DHUSArtilleryOfficerRoles;
+class DH_USOfficer1st extends DHDeprecated;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_USPlayers.DH_USOfficer1stPawn',Weight=1.0)
-    Headgear(0)=class'DH_USPlayers.DH_AmericanHelmet1stOfficer'
 }

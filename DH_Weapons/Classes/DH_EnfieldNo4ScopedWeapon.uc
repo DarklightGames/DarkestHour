@@ -16,7 +16,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_EnfieldNo4_1st.EnfieldNo4_Scoped'
     HighDetailOverlay=Shader'DH_EnfieldNo4_tex.EnfieldNo4.No4MainSniper_s'
     bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=3
+    HighDetailOverlayIndex=2
 
     bHasScope=true
     bIsSniper=true
@@ -37,7 +37,7 @@ defaultproperties
     LensMaterialID=3
 
     HandNum=1
-    SleeveNum=2
+    SleeveNum=0
 
     MaxNumPrimaryMags=13
     InitialNumPrimaryMags=13

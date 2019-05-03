@@ -21,6 +21,10 @@ defaultproperties
 
     AmbientFireSound=SoundGroup'DH_WeaponSounds.ppd40.ppd40_fire_loop'
     FireEndSound=SoundGroup'DH_WeaponSounds.ppd40.ppd40_fire_end'
+    FireSounds(0)=SoundGroup'DH_WeaponSounds.ppd40.ppd40_fire_single1'
+    FireSounds(1)=SoundGroup'DH_WeaponSounds.ppd40.ppd40_fire_single2'
+    FireSounds(2)=SoundGroup'DH_WeaponSounds.ppd40.ppd40_fire_single3'
+
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPPSH'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x25mm'
     ShellRotOffsetIron=(Pitch=5000)

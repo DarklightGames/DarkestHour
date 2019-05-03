@@ -66,7 +66,6 @@ defaultproperties
     MaxNumPrimaryMags=3
     InitialNumPrimaryMags=3
 
-
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"
     IronBringUpEmpty="iron_in_empty"

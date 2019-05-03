@@ -3401,6 +3401,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
 
         // Get the Widget texture
         ResupplyAttachmentIcon.WidgetTexture = DHGRI.ResupplyAttachments[i].GetAttachmentIcon();
+        ResupplyAttachmentIcon.TextureScale = DHGRI.ResupplyAttachments[i].GetAttachmentIconScale();
 
         // Draw the Widget
         DHDrawIconOnMap(C, SubCoords, ResupplyAttachmentIcon, MyMapScale, DHGRI.ResupplyAttachments[i].Location, MapCenter, Viewport);
