@@ -34,10 +34,15 @@ defaultproperties
     MaxNumPrimaryMags=13
     InitialNumPrimaryMags=13
 
+    IronBringUp="Scope_in"
+    IronPutDown="Scope_out"
+    IronIdleAnim="Scope_Idle"
+
     PutDownAnim="putaway"
     BoltIronAnim="iron_boltrest"
     BoltHipAnim="bolt_scope"
     PostFireIronIdleAnim=none
+
     SingleReloadAnim="single_insert"
     SingleReloadHalfAnim="single_insert_half"
     PreReloadAnim="single_open"
