@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DarkestHourGame extends ROTeamGame;
@@ -2285,7 +2285,8 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
     local PlayerReplicationInfo KillerPRI, KilledPRI;
     local Controller C;
 
-    if ((DeathMessageMode == DM_None || Killed == none) && DamageType != class'DHInstantObituaryDamageTypes')
+    // (Message mode is none Or Killed doesn't exist) AND DamageType is not type DHInstantObituaryDamageTypes, then return
+    if ((DeathMessageMode == DM_None || Killed == none) && class<DHInstantObituaryDamageTypes>(DamageType) == none)
     {
         return;
     }
@@ -2298,7 +2299,8 @@ function BroadcastDeathMessage(Controller Killer, Controller Killed, class<Damag
     KilledPRI = Killed.PlayerReplicationInfo;
 
     // OnDeath means only send DM to player who is killed, Personal means send DM to both killed & killer
-    if ((DeathMessageMode == DM_OnDeath || DeathMessageMode == DM_Personal) && DamageType != class'DHInstantObituaryDamageTypes')
+    // (If message mode is OnDeath or Personal) AND DamageType is not type DHInstantObituaryDamageTypes
+    if ((DeathMessageMode == DM_OnDeath || DeathMessageMode == DM_Personal) && class<DHInstantObituaryDamageTypes>(DamageType) == none)
     {
         // Send DM to a killed human player
         if (DHPlayer(Killed) != none)
@@ -3111,9 +3113,9 @@ function HandleReinforcementChangeMessages(int Team)
     if (GRI.GameType.default.bUseReinforcementWarning && !GRI.bIsInSetupPhase)
     {
         while (TeamReinforcementMessageIndices[Team] < default.ReinforcementMessagePercentages.Length &&
-                ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[Team]])
+               ReinforcementPercent <= default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[Team]])
         {
-            BroadcastTeamLocalizedMessage(Level, Team, class'DHReinforcementMsg', 100 * default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[ALLIES_TEAM_INDEX]]);
+            BroadcastTeamLocalizedMessage(Level, Team, class'DHReinforcementMsg', 100 * default.ReinforcementMessagePercentages[TeamReinforcementMessageIndices[Team]]);
 
             ++TeamReinforcementMessageIndices[Team];
         }
@@ -5374,9 +5376,9 @@ defaultproperties
     ServerLocation="Unspecified"
 
     Begin Object Class=UVersion Name=VersionObject
-        Major=8
-        Minor=4
-        Patch=5
+        Major=9
+        Minor=0
+        Patch=9
         Prerelease=""
     End Object
     Version=VersionObject

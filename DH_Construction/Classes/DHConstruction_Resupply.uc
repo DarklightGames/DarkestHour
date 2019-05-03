@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHConstruction_Resupply extends DHConstruction
@@ -28,6 +28,7 @@ function PostBeginPlay()
             ResupplyAttachment.SetCollisionSize(ResupplyAttachmentCollisionRadius, ResupplyAttachmentCollisionHeight);
             ResupplyAttachment.SetBase(self);
             ResupplyAttachment.OnPawnResupplied = MyOnPawnResupplied;
+            ResupplyAttachment.bShowOnMap = true;
         }
         else
         {
@@ -81,9 +82,9 @@ defaultproperties
     DuplicateFriendlyDistanceInMeters=25.0
     CollisionRadius=50.0
     CollisionHeight=30.0
-    SupplyCost=250
+    SupplyCost=500
     bCanPlaceIndoors=true
-    ResupplyCount=25
+    ResupplyCount=100
     HealthMax=50
     ConstructionVerb="drop"
     StartRotationMin=(Yaw=-16384)

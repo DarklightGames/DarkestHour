@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHVoiceChatRoom extends UnrealChatRoom;
@@ -84,12 +84,12 @@ simulated event bool IsMember(PlayerReplicationInfo PRI, optional bool bNoCascad
             // If the channel is squad and is the right squad index, then return true
             return true;
         }
-        else if (IsAlliesCommandChannel() && MyPRI.IsSquadLeader() && MyPRI.Team.TeamIndex == ALLIES_TEAM_INDEX)
+        else if (IsAlliesCommandChannel() && MyPRI.IsSLorASL() && MyPRI.Team.TeamIndex == ALLIES_TEAM_INDEX)
         {
             // If its the Allied command channel and player is a SL and player is on Allies, then return true
             return true;
         }
-        else if (IsAxisCommandChannel() && MyPRI.IsSquadLeader() && MyPRI.Team.TeamIndex == AXIS_TEAM_INDEX)
+        else if (IsAxisCommandChannel() && MyPRI.IsSLorASL() && MyPRI.Team.TeamIndex == AXIS_TEAM_INDEX)
         {
             // If its the Axis command channel and player is a SL and player is on Axis, then return true
             return true;

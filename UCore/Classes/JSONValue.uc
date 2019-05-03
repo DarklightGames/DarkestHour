@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class JSONValue extends Object
@@ -21,3 +21,11 @@ function JSONObject AsObject() { return none; }
 function JSONArray AsArray() { return none; }
 
 function string Encode() { return "null"; }
+
+static function string GetSanitizedString(string S)
+{
+    S = Repl(S, "\\", "\\\\");
+    S = Repl(S, "\"", "\\\"");
+    return S;
+}
+

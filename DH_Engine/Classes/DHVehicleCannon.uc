@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHVehicleCannon extends DHVehicleWeapon
@@ -987,6 +987,11 @@ function ServerManualReload()
 {
     if (ReloadState == RL_Waiting && PlayerUsesManualReloading())
     {
+        AttemptReload();
+    }
+    else if (ReloadState == RL_ReadyToFire && ServerPendingAmmoIndex != GetAmmoIndex())
+    {
+        // Unload the currently loaded shell.
         AttemptReload();
     }
 }

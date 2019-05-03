@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHConstruction_Watchtower extends DHConstruction;
@@ -50,7 +50,7 @@ defaultproperties
     DamageTypeScales(2)=(DamageType=class'DHShellHEImpactDamageType',Scale=1.5)     // HE Impact
     DamageTypeScales(3)=(DamageType=class'ROTankShellImpactDamage',Scale=0.4)       // AP Impact
     DamageTypeScales(4)=(DamageType=class'DHRocketImpactDamage',Scale=0.8)          // AT Rocket Impact
-    DamageTypeScales(5)=(DamageType=class'DH_SatchelDamType',Scale=1.4)             // Satchel/Grenades
+    DamageTypeScales(5)=(DamageType=class'DH_SatchelDamType',Scale=1.4)             // Satchels
     DamageTypeScales(6)=(DamageType=class'DHMortarDamageType',Scale=0.5)            // Mortar
 }
 

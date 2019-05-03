@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHSquadReplicationInfo extends ReplicationInfo;
@@ -15,7 +15,7 @@ const TEAM_SQUADS_MAX = 8;                  // SQUAD_SIZE_MIN / TEAM_SQUAD_MEMBE
 const RALLY_POINTS_MAX = 32;                // TEAM_SQUADS_MAX * SQUAD_RALLY_POINTS_MAX * 2
 
 const SQUAD_NAME_LENGTH_MIN = 3;
-const SQUAD_NAME_LENGTH_MAX = 16;
+const SQUAD_NAME_LENGTH_MAX = 20;
 
 const SQUAD_LEADER_INDEX = 0;
 
@@ -39,7 +39,8 @@ var float                           RallyPointChangeLeaderDelaySeconds;
 var float                           RallyPointRadiusInMeters;
 var float                           RallyPointSquadmatePlacementRadiusInMeters;
 var int                             RallyPointInitialSpawnsMinimum;
-var float                           RallyPointInitialSpawnsMemberMultiplier;
+var float                           RallyPointInitialSpawnsMemberFactor;
+var float                           RallyPointInitialSpawnsDangerZoneFactor;
 
 var private DHPlayerReplicationInfo AlliesMembers[TEAM_SQUAD_MEMBERS_MAX];
 var private byte                    AlliesAssistantSquadLeaderMemberIndices[TEAM_SQUADS_MAX];
@@ -194,6 +195,7 @@ function Timer()
     local DHGameReplicationInfo GRI;
     local float X, Y;
     local DHSpawnPoint_SquadRallyPoint RP;
+    local bool bShouldAccrueSpawns;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
@@ -321,7 +323,7 @@ function Timer()
 
             // Count how many active are non-blocked, if it's more than
             // the maximum allowed, block the oldest ones (their block-state
-            // will be overwritten by Step on the next timer pop)
+            // will be overwritten on the next timer pop)
             UnblockedCount = 0;
 
             for (i = ActiveSquadRallyPoints.Length - 1; i >= 0; --i)
@@ -333,17 +335,22 @@ function Timer()
 
                 if (UnblockedCount > SQUAD_RALLY_POINTS_ACTIVE_MAX)
                 {
-                    ActiveSquadRallyPoints[i].BlockReason = SPBR_Full;
-
                     // If a squad rally point is blocked because it isn't the
                     // primary squad rally point at the moment, let's award an
-                    // additional spawn every 30 seconds.
-                    ActiveSquadRallyPoints[i].SpawnAccrualTimer += 1;
+                    // additional spawn at regular intervals.
+                    ActiveSquadRallyPoints[i].BlockReason = SPBR_Full;
 
-                    if (ActiveSquadRallyPoints[i].SpawnAccrualTimer >= ActiveSquadRallyPoints[i].SpawnAccrualThreshold)
+                    bShouldAccrueSpawns = !ActiveSquadRallyPoints[i].bIsExposed;
+
+                    if (bShouldAccrueSpawns)
                     {
-                        ActiveSquadRallyPoints[i].SpawnAccrualTimer = 0;
-                        ActiveSquadRallyPoints[i].SpawnsRemaining = Min(ActiveSquadRallyPoints[i].SpawnsRemaining + 1, GetSquadRallyPointInitialSpawns(TeamIndex, SquadIndex));
+                        ActiveSquadRallyPoints[i].SpawnAccrualTimer += 1;
+
+                        if (ActiveSquadRallyPoints[i].SpawnAccrualTimer >= ActiveSquadRallyPoints[i].SpawnAccrualThreshold)
+                        {
+                            ActiveSquadRallyPoints[i].SpawnAccrualTimer = 0;
+                            ActiveSquadRallyPoints[i].SpawnsRemaining = Min(ActiveSquadRallyPoints[i].SpawnsRemaining + 1, GetSquadRallyPointInitialSpawns(ActiveSquadRallyPoints[i]));
+                        }
                     }
                 }
                 else
@@ -2006,7 +2013,7 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
     RP.SetTeamIndex(PC.GetTeamNum());
     RP.SquadIndex = PRI.SquadIndex;
     RP.RallyPointIndex = RallyPointIndex;
-    RP.SpawnsRemaining = GetSquadRallyPointInitialSpawns(PC.GetTeamNum(), PRI.SquadIndex);
+    RP.SpawnsRemaining = GetSquadRallyPointInitialSpawns(RP);
     RP.InstigatorController = PC;
 
     G = DarkestHourGame(Level.Game);
@@ -2027,9 +2034,29 @@ function DHSpawnPoint_SquadRallyPoint SpawnRallyPoint(DHPlayer PC)
 }
 
 // Returns the initial number of spawns a squad's rally point will have.
-function int GetSquadRallyPointInitialSpawns(int TeamIndex, int SquadIndex)
+function int GetSquadRallyPointInitialSpawns(DHSpawnPoint_SquadRallyPoint RP)
 {
-    return Max(RallyPointInitialSpawnsMinimum, GetMemberCount(TeamIndex, SquadIndex) * RallyPointInitialSpawnsMemberMultiplier);
+    local bool bIsInDangerZone;
+    local DHGameReplicationInfo GRI;
+    local int InitialSpawns;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (RP == none || GRI == none)
+    {
+        return -1;
+    }
+
+    bIsInDangerZone = class'DHDangerZone'.static.IsIn(GRI, RP.Location.X, RP.Location.Y, RP.GetTeamIndex());
+
+    InitialSpawns = GetMemberCount(RP.GetTeamIndex(), RP.SquadIndex) * RallyPointInitialSpawnsMemberFactor;
+
+    if (bIsInDangerZone)
+    {
+        InitialSpawns *= RallyPointInitialSpawnsDangerZoneFactor;
+    }
+
+    return Max(RallyPointInitialSpawnsMinimum, InitialSpawns);
 }
 
 // Function is called when a rally point is destroyed for any reason.
@@ -2776,7 +2803,8 @@ defaultproperties
     SquadLockMemberCountMin=3
     RallyPointSquadmatePlacementRadiusInMeters=15.0
     RallyPointInitialSpawnsMinimum=10
-    RallyPointInitialSpawnsMemberMultiplier=2.5
+    RallyPointInitialSpawnsMemberFactor=2.5
+    RallyPointInitialSpawnsDangerZoneFactor=0.25
 
     SquadMergeRequestResultStrings(0)="Please wait a short time before sending another squad merge request."
     SquadMergeRequestResultStrings(1)="An error occurred while sending the squad merge request."

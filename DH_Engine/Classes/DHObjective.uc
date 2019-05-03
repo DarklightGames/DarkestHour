@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHObjective extends ROObjTerritory
@@ -113,6 +113,7 @@ var     bool                        bDidAwardAxisReinf;
 var     bool                        bDidAwardAlliesReinf;
 var     bool                        bRecentlyControlledByAxis;
 var     bool                        bRecentlyControlledByAllies;
+var     float                       AwardedReinforcementFactor;
 
 // Replicated variables
 var     int                         UnfreezeTime;               // The time at which the objective will be unlocked and ready to be capured again, relative to GRI.ElapsedTime
@@ -158,15 +159,13 @@ replication
         UnfreezeTime;
 }
 
-function PostBeginPlay()
+simulated function PostBeginPlay()
 {
     local DHGameReplicationInfo GRI;
     local RONoArtyVolume        NAV;
 
     // Call super above ROObjective
     super(GameObjective).PostBeginPlay();
-
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
     // Find the volume to use if the mapper set one
     if (VolumeTag != '')
@@ -189,21 +188,26 @@ function PostBeginPlay()
         }
     }
 
-    ObjState = InitialObjState;
-
-    bRecentlyControlledByAxis = InitialObjState == OBJ_Axis;
-    bRecentlyControlledByAllies = InitialObjState == OBJ_Allies;
-
-    // Add self to game objectives
-    if (DarkestHourGame(Level.Game) != none)
+    if (Role == ROLE_Authority)
     {
-        DarkestHourGame(Level.Game).DHObjectives[ObjNum] = self;
-    }
+        ObjState = InitialObjState;
 
-    // Add self to game replication info objectives
-    if (GRI != none)
-    {
-        GRI.DHObjectives[ObjNum] = self;
+        bRecentlyControlledByAxis = InitialObjState == OBJ_Axis;
+        bRecentlyControlledByAllies = InitialObjState == OBJ_Allies;
+
+        // Add self to game objectives
+        if (DarkestHourGame(Level.Game) != none)
+        {
+            DarkestHourGame(Level.Game).DHObjectives[ObjNum] = self;
+        }
+
+        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+        // Add self to game replication info objectives
+        if (GRI != none)
+        {
+            GRI.DHObjectives[ObjNum] = self;
+        }
     }
 }
 
@@ -519,7 +523,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     local DarkestHourGame           G;
     local int                       i;
     local array<string>             PlayerIDs;
-    local int                       RoundTime;
+    local int                       RoundTime, AwardedReinf;
     local int                       NumTotal[2], Num[2], NumForCheck[2];
     local array<Controller>         CapturingControllers;
 
@@ -597,8 +601,9 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
                 }
                 else
                 {
-                    G.ModifyReinforcements(AXIS_TEAM_INDEX, 1 * (G.GetNumPlayers() / 4));
-                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, class'DHReinforcementAwardMsg', 1 * (G.GetNumPlayers() / 2), none, none, self);
+                    AwardedReinf = int(G.GetNumPlayers() * AwardedReinforcementFactor);
+                    G.ModifyReinforcements(AXIS_TEAM_INDEX, AwardedReinf);
+                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, class'DHReinforcementAwardMsg', AwardedReinf, none, none, self);
                 }
             }
 
@@ -657,8 +662,9 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
                 }
                 else
                 {
-                    G.ModifyReinforcements(ALLIES_TEAM_INDEX, 1 * (G.GetNumPlayers() / 4));
-                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, class'DHReinforcementAwardMsg', 1 * (G.GetNumPlayers() / 2), none, none, self);
+                    AwardedReinf = int(G.GetNumPlayers() * AwardedReinforcementFactor);
+                    G.ModifyReinforcements(ALLIES_TEAM_INDEX, AwardedReinf);
+                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, class'DHReinforcementAwardMsg', AwardedReinf, none, none, self);
                 }
             }
 
@@ -1454,4 +1460,5 @@ defaultproperties
     bVehiclesCanCapture=true
     bTankersCanCapture=true
     PlayersNeededToCapture=1
+    AwardedReinforcementFactor=0.25
 }

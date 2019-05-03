@@ -12,6 +12,7 @@ var array<DHMetricsFrag>            Frags;
 var array<DHMetricsCapture>         Captures;
 var array<DHMetricsConstruction>    Constructions;
 var array<DHMetricsRallyPoint>      RallyPoints;
+var array<JSONObject>               Events;
 var int                             Winner;
 
 function JSONValue ToJSON()
@@ -24,7 +25,8 @@ function JSONValue ToJSON()
         .Put("frags", class'JSONArray'.static.FromSerializables(Frags))
         .Put("captures", class'JSONArray'.static.FromSerializables(Captures))
         .Put("constructions", class'JSONArray'.static.FromSerializables(Constructions))
-        .Put("rally_points", class'JSONArray'.static.FromSerializables(RallyPoints));
+        .Put("rally_points", class'JSONArray'.static.FromSerializables(RallyPoints))
+        .Put("events", class'JSONArray'.static.FromValues(Events));
 
     if (EndedAt == none)
     {

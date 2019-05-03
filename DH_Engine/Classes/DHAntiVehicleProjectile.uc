@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHAntiVehicleProjectile extends DHBallisticProjectile
@@ -385,7 +385,6 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 {
     local DHVehicleCannon Cannon;
     local float ModifiedImpactDamage;
-    local bool bCanWallTakeDamage;
 
     // Exit without doing anything if we hit something we don't want to count a hit on
     if (Wall == none || SavedHitActor == Wall || (Wall.Base != none && Wall.Base == Instigator) || Wall.bDeleteMe)
@@ -427,11 +426,9 @@ simulated function HitWall(vector HitNormal, Actor Wall)
 
     if (Role == ROLE_Authority)
     {
-        bCanWallTakeDamage = DHConstruction(Wall) != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none;
-
-        if ((!Wall.bStatic && !Wall.bWorldGeometry) || bCanWallTakeDamage)
+        if ((!Wall.bStatic && !Wall.bWorldGeometry) || Wall.bCanBeDamaged)
         {
-            if (SavedHitActor != none || bCanWallTakeDamage)
+            if (SavedHitActor != none || Wall.bCanBeDamaged)
             {
                 if (ShouldDrawDebugLines())
                 {

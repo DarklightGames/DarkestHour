@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHBroadcastHandler extends ROBroadcastHandler;
@@ -249,48 +249,30 @@ function BroadcastSquad(Controller Sender, coerce string Msg, optional name Type
 
 function BroadcastCommand(Controller Sender, coerce string Msg, optional name Type)
 {
-    local DHPlayer PC;
-    local PlayerController Receiver;
-    local DarkestHourGame G;
-    local DHSquadReplicationInfo SRI;
-    local array<DHPlayerReplicationInfo> SquadLeaders;
-    local int i;
+    local Controller C;
+    local DHPlayer DHSender, PC;
 
     if (!AllowsBroadcast(Sender, Len(Msg)))
     {
         return;
     }
 
-    PC  = DHPlayer(Sender);
+    DHSender  = DHPlayer(Sender);
 
-    if (PC == none || !PC.IsSquadLeader())
+    // Important check here to rule out non SLs and non ASLs
+    if (DHSender == none || !DHSender.IsSLorASL())
     {
         return;
     }
 
-    G = DarkestHourGame(Level.Game);
-
-    if (G == none)
+    // We only need to check for team, because above check rules out non SLorASL
+    for (C = Level.ControllerList; C != none; C = C.NextController)
     {
-        return;
-    }
+        PC = DHPlayer(C);
 
-    SRI = G.SquadReplicationInfo;
-
-    if (SRI == none)
-    {
-        return;
-    }
-
-    SquadLeaders = SRI.GetSquadLeaders(PC.GetTeamNum());
-
-    for (i = 0; i < SquadLeaders.Length; ++i)
-    {
-        Receiver = PlayerController(SquadLeaders[i].Owner);
-
-        if (Receiver != none)
+        if (PC != none && PC.GetTeamNum() == DHSender.GetTeamNum()) // only send to same team as sender
         {
-            BroadcastText(Sender.PlayerReplicationInfo, Receiver, Msg, Type);
+            BroadcastText(DHSender.PlayerReplicationInfo, PC, Msg, Type);
         }
     }
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHConstructionProxy extends DHActorProxy
@@ -405,6 +405,15 @@ function DHConstruction.ConstructionError GetPositionError()
     {
         E.Type = ERROR_InWater;
         return E;
+    }
+
+    if (!ConstructionClass.default.bCanBePlacedInDangerZone)
+    {
+        if (class'DHDangerZone'.static.IsIn(GRI, Location.X, Location.Y, Instigator.GetTeamNum()))
+        {
+            E.Type = ERROR_InDangerZone;
+            return E;
+        }
     }
 
     // Don't allow constructions to overlap restriction volumes that restrict constructions.

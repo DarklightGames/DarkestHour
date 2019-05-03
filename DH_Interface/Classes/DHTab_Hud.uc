@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHTab_Hud extends ROTab_Hud;
@@ -9,10 +9,12 @@ var automated moNumericEdit     nu_MinPacketLoss;
 var int                         NumMinPacketLoss;
 
 var automated moCheckBox    ch_SimpleColours;
+var automated moCheckBox    ch_ShowChatMessages;
 var automated moCheckBox    ch_ShowDeathMessages;
 var automated moCheckBox    ch_ShowIndicators;
 var automated moCheckBox    ch_ShowRallyPoint;
 var bool bSimpleColours;
+var bool bShowChatMessages;
 var bool bShowDeathMessages;
 var bool bShowIndicators;
 var bool bShowRallyPoint;
@@ -26,6 +28,7 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     i_BG1.ManageComponent(ch_ShowRallyPoint);
     i_BG2.ManageComponent(ch_SimpleColours);
+    i_BG2.ManageComponent(ch_ShowChatMessages);
     i_BG1.ManageComponent(ch_ShowDeathMessages);
     i_BG1.ManageComponent(ch_ShowIndicators);
     i_BG1.ManageComponent(nu_MinPacketLoss);
@@ -78,6 +81,17 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
                 bSimpleColours = class'DHHud'.default.bSimpleColours;
             }
             ch_SimpleColours.SetComponentValue(bSimpleColours, true);
+            break;
+        case ch_ShowChatMessages:
+            if (H != none)
+            {
+                bShowChatMessages = bool(H.ConsoleMessageCount);
+            }
+            else
+            {
+                bShowChatMessages = bool(class'DHHud'.default.ConsoleMessageCount);
+            }
+            ch_ShowChatMessages.SetComponentValue(bShowChatMessages,true);
             break;
         case ch_ShowDeathMessages:
              bShowDeathMessages = class'DHHud'.default.bShowDeathMessages;
@@ -313,6 +327,22 @@ function InternalOnChange(GUIComponent Sender)
         case ch_ShowIndicators:
             bShowIndicators = ch_ShowIndicators.IsChecked();
             break;
+        case ch_ShowChatMessages:
+            bShowChatMessages = ch_ShowChatMessages.IsChecked();
+
+            if (!bShowChatMessages)
+            {
+                nu_MsgCount.SetValue(0);
+            }
+            else if (nu_MsgCount.GetValue() == 0)
+            {
+                nu_MsgCount.SetValue(class'DHHud'.default.ConsoleMessageCount);
+            }
+            break;
+        case nu_MsgCount:
+            iCount = nu_MsgCount.GetValue();
+            ch_ShowChatMessages.SetComponentValue(bool(iCount),true);
+            break;
         case nu_MinPacketLoss:
             NumMinPacketLoss = int(nu_MinPacketLoss.GetComponentValue());
             break;
@@ -347,6 +377,22 @@ defaultproperties
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
     ch_SimpleColours=DHmoCheckBox'DH_Interface.DHTab_Hud.GameHudSimpleColours'
+
+    Begin Object Class=DHmoCheckBox Name=ShowChatMessages
+        ComponentJustification=TXTA_Left
+        CaptionWidth=0.9
+        Caption="Show Chat Messages"
+        OnCreateComponent=ShowChatMessages.InternalOnCreateComponent
+        IniOption="@Internal"
+        Hint="Show chat messages from players and server. Messages can still be read in the console."
+        WinTop=0.043906
+        WinLeft=0.379297
+        WinWidth=0.196875
+        TabOrder=1
+        OnChange=DHTab_Hud.InternalOnChange
+        OnLoadINI=DHTab_Hud.InternalOnLoadINI
+    End Object
+    ch_ShowChatMessages=DHmoCheckBox'DH_Interface.DHTab_Hud.ShowChatMessages'
 
     Begin Object Class=DHmoCheckBox Name=GameHudShowDeathMessages
         ComponentJustification=TXTA_Left
@@ -445,6 +491,7 @@ defaultproperties
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
     ch_ShowMapFirstSpawn=DHmoCheckBox'DH_Interface.DHTab_Hud.ShowMapFirstSpawn'
+
     Begin Object Class=DHmoCheckBox Name=UseNativeRoleNames
         ComponentJustification=TXTA_Left
         CaptionWidth=0.9
@@ -460,6 +507,7 @@ defaultproperties
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
     ch_UseNativeRoleNames=DHmoCheckBox'DH_Interface.DHTab_Hud.UseNativeRoleNames'
+
     Begin Object Class=DHmoComboBox Name=HintsCombo
         ComponentJustification=TXTA_Left
         CaptionWidth=0.55
@@ -476,6 +524,7 @@ defaultproperties
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
     co_Hints=DHmoComboBox'DH_Interface.DHTab_Hud.HintsCombo'
+
     Begin Object Class=DHGUISectionBackground Name=GameBK
         Caption="Options"
         WinTop=0.18036
@@ -486,6 +535,7 @@ defaultproperties
         OnPreDraw=GameBK.InternalPreDraw
     End Object
     i_BG1=DHGUISectionBackground'DH_Interface.DHTab_Hud.GameBK'
+
     Begin Object Class=DHGUISectionBackground Name=GameBK1
         Caption="Style"
         WinTop=0.179222
@@ -496,6 +546,7 @@ defaultproperties
         OnPreDraw=GameBK1.InternalPreDraw
     End Object
     i_BG2=DHGUISectionBackground'DH_Interface.DHTab_Hud.GameBK1'
+
     Begin Object Class=moSlider Name=myHudScale
         MaxValue=100.0
         MinValue=50.0
@@ -512,6 +563,7 @@ defaultproperties
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
     sl_Scale=moSlider'DH_Interface.DHTab_Hud.myHudScale'
+
     Begin Object Class=moSlider Name=myGameHudOpacity
         MaxValue=100.0
         MinValue=51.0
@@ -528,6 +580,7 @@ defaultproperties
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
     sl_Opacity=moSlider'DH_Interface.DHTab_Hud.myGameHudOpacity'
+
     Begin Object Class=DHmoNumericEdit Name=GameHudMessageCount
         MinValue=0
         MaxValue=8
@@ -544,6 +597,7 @@ defaultproperties
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
     nu_MsgCount=DHmoNumericEdit'DH_Interface.DHTab_Hud.GameHudMessageCount'
+
     Begin Object Class=DHmoNumericEdit Name=GameHudMessageScale
         MinValue=0
         MaxValue=8
@@ -560,6 +614,7 @@ defaultproperties
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
     nu_MsgScale=DHmoNumericEdit'DH_Interface.DHTab_Hud.GameHudMessageScale'
+
     Begin Object Class=DHmoNumericEdit Name=GameHudMessageOffset
         MinValue=0
         MaxValue=4
@@ -576,6 +631,7 @@ defaultproperties
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
     nu_MsgOffset=DHmoNumericEdit'DH_Interface.DHTab_Hud.GameHudMessageOffset'
+
     Begin Object Class=DHmoCheckBox Name=GameHudVisible
         ComponentJustification=TXTA_Left
         CaptionWidth=0.9
@@ -590,6 +646,7 @@ defaultproperties
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
     ch_Visible=DHmoCheckBox'DH_Interface.DHTab_Hud.GameHudVisible'
+
     Begin Object Class=DHmoCheckBox Name=GameHudShowWeaponInfo
         ComponentJustification=TXTA_Left
         CaptionWidth=0.9
@@ -604,6 +661,7 @@ defaultproperties
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
     ch_Weapons=DHmoCheckBox'DH_Interface.DHTab_Hud.GameHudShowWeaponInfo'
+
     Begin Object Class=DHmoCheckBox Name=GameHudShowPersonalInfo
         ComponentJustification=TXTA_Left
         CaptionWidth=0.9

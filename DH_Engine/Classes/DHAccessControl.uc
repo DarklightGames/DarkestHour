@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHAccessControl extends AccessControlINI;
@@ -150,6 +150,8 @@ defaultproperties
     AdminClass=Class'DH_Engine.DHAdmin'
     DeveloperIDs(0)="76561197961365238" // Theel
     DeveloperIDs(1)="76561197960644559" // Basnett
+    DeveloperIDs(2)="76561198043869714" // DirtyBirdy
 
     PatreonIDs(0)=(PatronROID="76561198066643021",PatronLevel=2) // PFC Patison
+    PatreonIDs(1)=(PatronROID="76561198431789713",PatronLevel=0) // Bearnoceros
 }

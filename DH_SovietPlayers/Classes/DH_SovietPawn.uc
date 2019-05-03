@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_SovietPawn extends DHPawn;
@@ -29,5 +29,5 @@ defaultproperties
     FaceSkins(13)=Texture'Characters_tex.rus_heads.rus_face14'
     FaceSkins(14)=Texture'Characters_tex.rus_heads.rus_face15'
 
-    ShovelClassName="DH_Equipment.DHShovelItem_US" // TODO: make Soviet shovel
+    ShovelClassName="DH_Equipment.DHShovelItem_Russian"
 }
