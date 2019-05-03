@@ -493,7 +493,7 @@ simulated state Reloading
 
     simulated function BeginState()
     {
-        //Log("Begin Reload: "$NumRoundsToLoad);
+        Log("Begin Reload: "$NumRoundsToLoad);
         if (ReloadState == RS_None)
         {
             if (NumRoundsToLoad >= GetStripperClipSize() && HasAnim(FullReloadAnim))
@@ -572,7 +572,7 @@ simulated function PlayPreReload()
 {
     if(InstigatorIsLocallyControlled())
     {
-        PlayAnim(GetPreReloadAnim(), 1.0);
+        PlayAnim(GetPreReloadAnim(), 1.0, FastTweenTime);
     }
 
     if(Role == ROLE_Authority)
@@ -750,6 +750,7 @@ defaultproperties
     FreeAimRotationSpeed=6.0
     BobModifyFactor=0.6
     ZoomOutTime=0.4
+
 
     IronIdleAnim="Iron_idle"
     PostFireIdleAnim="Idle"

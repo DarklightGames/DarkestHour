@@ -51,8 +51,10 @@ defaultproperties
     IronIdleAnim="Scope_Idle"
     BoltIronAnim="scope_bolt"
     BoltHipAnim="bolt_scope"
+
     MagEmptyReloadAnim="reload_empty"
     MagPartialReloadAnim="reload_half"
+
     PreReloadAnim="reload_start"
     PostReloadAnim="reload_end"
     SingleReloadAnim="reload_single"

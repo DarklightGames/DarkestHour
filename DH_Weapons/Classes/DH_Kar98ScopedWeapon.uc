@@ -38,7 +38,7 @@ defaultproperties
     IronIdleAnim="Scope_Idle"
     BoltIronAnim="scope_bolt"
     BoltHipAnim="bolt_scope"
-    PostFireIronIdleAnim=none
+    //PostFireIronIdleAnim=none
     SingleReloadAnim="single_insert"
     SingleReloadHalfAnim="single_insert_half"
     PreReloadAnim="single_open"
