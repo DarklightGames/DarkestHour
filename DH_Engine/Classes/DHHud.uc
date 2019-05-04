@@ -43,7 +43,6 @@ var     SpriteWidget        MapIconMortarSmokeTarget;
 var     SpriteWidget        MapIconMortarArrow;
 var     SpriteWidget        MapIconMortarHit;
 var     SpriteWidget        MapIconObjectiveStatusIcon;
-var     SpriteWidget        MapIconEnemyRallyPoint;
 var     float               PlayerIconScale, PlayerIconLargeScale;
 
 // Screen icons
@@ -3776,7 +3775,6 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     DrawMapIconAttachments(C, SubCoords, MyMapScale, MapCenter, Viewport);
     DrawMapMarkersOnMap(C, Subcoords, MyMapScale, MapCenter, Viewport);
     DrawPlayerIconsOnMap(C, SubCoords, MyMapScale, MapCenter, Viewport);
-    DrawExposedEnemyRallyPoints(C, SubCoords, MyMapScale, MapCenter, Viewport);
 
     // DEBUG:
 
@@ -3928,39 +3926,6 @@ function DrawDangerZoneOverlay(Canvas C, AbsoluteCoordsInfo SubCoords, float MyM
     for (i = 0; i < DangerZoneOverlayContour.Length; ++i)
     {
         DHDrawIconOnMap(C, SubCoords, DangerZoneOverlayPointIcon, MyMapScale, DangerZoneOverlayContour[i], MapCenter, Viewport);
-    }
-}
-
-function DrawExposedEnemyRallyPoints(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
-{
-    local DHPlayer PC;
-    local DHSquadReplicationInfo SRI;
-    local array<DHSpawnPoint_SquadRallyPoint> ExposedEnemyRallyPoints;
-    local int i;
-    local vector L;
-
-    PC = DHPlayer(PlayerOwner);
-
-    if (PC == none)
-    {
-        return;
-    }
-
-    SRI = PC.SquadReplicationInfo;
-
-    if (SRI == none)
-    {
-        return;
-    }
-
-    ExposedEnemyRallyPoints = SRI.GetExposedEnemyRallyPoints(PC.GetTeamNum());
-
-    for (i = 0; i < ExposedEnemyRallyPoints.Length; i++)
-    {
-        L.X = ExposedEnemyRallyPoints[i].Location.X;
-        L.Y = ExposedEnemyRallyPoints[i].Location.Y;
-
-        DHDrawIconOnMap(C, SubCoords, MapIconEnemyRallyPoint, MyMapScale, L, MapCenter, Viewport);
     }
 }
 
@@ -6062,7 +6027,6 @@ defaultproperties
     MapIconMortarSmokeTarget=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=191,Y1=0,X2=255,Y2=64),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconMortarArrow=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.mortar-arrow-final',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.1,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconMortarHit=(WidgetTexture=Texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(Y1=64,X2=63,Y2=127),TextureScale=0.05,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
-    MapIconEnemyRallyPoint=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.rally_point',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.04,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=0,B=0,A=255),Tints[1]=(R=255,G=0,B=0,A=255))
 
     SupplyPointIcon=(WidgetTexture=FinalBlend'DH_GUI_tex.GUI.supply_point_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.03,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 

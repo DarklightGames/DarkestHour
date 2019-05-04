@@ -15,8 +15,10 @@ enum EMapIconAttachmentError
 
 var Actor AttachedTo;
 var int   Quantized2DPose;
-var bool  bUpdatePoseChanges; // for moving actors
+var bool  bUpdatePoseChanges;       // for moving actors
 var bool  bOldUpdatePoseChanges;
+var bool  bIgnoreGRIUpdates;        // set to true when updates are called from
+                                    // somewhere else
 
 var private   byte TeamIndex;
 var protected byte VisibilityIndex; // NEUTRAL_TEAM_INDEX -> all; 255 -> hidden
@@ -34,7 +36,7 @@ replication
         TeamIndex, VisibilityIndex, Quantized2DPose;
 }
 
-// Called after spawning; normally you set the team index after.
+// Called after spawning and setting the base.
 function Setup()
 {
     SetBase(Owner);
@@ -229,11 +231,7 @@ final function byte GetOppositeTeamIndex()
 
 final function ChangeVisibilityInDangerZoneTo(byte InIndex, byte OutIndex)
 {
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-    if (IsInDangerZone(GRI))
+    if (IsInDangerZone())
     {
         VisibilityIndex = InIndex;
         return;
@@ -242,9 +240,14 @@ final function ChangeVisibilityInDangerZoneTo(byte InIndex, byte OutIndex)
     VisibilityIndex = OutIndex;
 }
 
-final simulated function bool IsInDangerZone(DHGameReplicationInfo GRI)
+// To cut down on unnecessary calculations, this can be assigned to get the
+// result from somewhere else.
+delegate bool IsInDangerZone()
 {
+    local DHGameReplicationInfo GRI;
     local vector L;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
     if (GRI != none)
     {

@@ -108,6 +108,7 @@ defaultproperties
     SpawnRadius=60.0
     bCombatSpawn=true
     EstablishmentCounterThreshold=60
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_SpawnPoint_PlatoonHQ'
 
     bCanBeEncroachedUpon=true
     EncroachmentRadiusInMeters=50

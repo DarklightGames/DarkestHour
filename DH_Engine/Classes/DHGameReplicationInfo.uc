@@ -1769,7 +1769,7 @@ function UpdateMapIconAttachments()
 
     foreach AllActors(class'DHMapIconAttachment', MIA)
     {
-        if (MIA != none)
+        if (MIA != none && !MIA.bIgnoreGRIUpdates)
         {
             MIA.Updated();
         }
