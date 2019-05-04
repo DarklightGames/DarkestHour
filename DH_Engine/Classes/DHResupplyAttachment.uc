@@ -18,14 +18,9 @@ var     private int     TeamIndex;      // Team this volume resupplies
 var     EResupplyType   ResupplyType;   // Who this volume will resupply
 var     array<Pawn>     ResupplyActors;
 var     float           UpdateTime;     // How often this thing needs to do it's business
-var     bool            bShowOnMap;
 
-replication
-{
-    // Variables the server will replicate to all clients
-    reliable if (bNetDirty && Role == ROLE_Authority)
-        TeamIndex, ResupplyType, bShowOnMap;
-}
+var     class<DHMapIconAttachment> MapIconAttachmentClass;
+var     DHMapIconAttachment        MapIconAttachment;
 
 delegate OnPawnResupplied(Pawn P);            // Called for every pawn that is resupplied
 
@@ -33,22 +28,28 @@ function OnTeamIndexChanged();
 
 function PostBeginPlay()
 {
-    local DHGameReplicationInfo GRI;
-
     super(Actor).PostBeginPlay();
 
-    GRI = DHGameReplicationInfo(Level.GRI);
+    SetTimer(1.0, true);
+}
 
-    if (GRI != none)
+final function AttachMapIcon()
+{
+    if (MapIconAttachmentClass != none)
     {
-        // Add the attachement to the GRI array, if it fails to add, show a warning in the log
-        if (GRI.AddResupplyAttachement(self) == -1)
+        MapIconAttachment = Spawn(MapIconAttachmentClass, self);
+
+        if (MapIconAttachment != none)
         {
-            Warn("Unable to add a Resupply Attachement to GRI.ResupplyAttachments in DHResupplyAttachment's PostBeginPlay()");
+            MapIconAttachment.Setup();
+            DHMapIconAttachment_Resupply(MapIconAttachment).SetResupplyType(ResupplyType);
+            MapIconAttachment.SetTeamIndex(TeamIndex);
+        }
+        else
+        {
+            MapIconAttachmentClass.static.OnError(ERROR_SpawnFailed);
         }
     }
-
-    SetTimer(1.0, true);
 }
 
 simulated function int GetTeamIndex()
@@ -56,24 +57,26 @@ simulated function int GetTeamIndex()
     return TeamIndex;
 }
 
-simulated function Material GetAttachmentIcon()
-{
-    switch (ResupplyType)
-    {
-        case RT_Players:
-            return Texture'DH_InterfaceArt2_tex.Icons.munitions_infantry';
-        case RT_Vehicles:
-            return Texture'DH_InterfaceArt2_tex.Icons.munitions_vehicle';
-        default:
-            return Texture'DH_InterfaceArt2_tex.Icons.munitions_infantry';
-    }
-}
-
 final function SetTeamIndex(int TeamIndex)
 {
     self.TeamIndex = TeamIndex;
 
+    if (MapIconAttachment != none)
+    {
+        MapIconAttachment.SetTeamIndex(TeamIndex);
+    }
+
     OnTeamIndexChanged();
+}
+
+final function SetResupplyType(EResupplyType ResupplyType)
+{
+    self.ResupplyType = ResupplyType;
+
+    if (MapIconAttachment != none)
+    {
+        DHMapIconAttachment_Resupply(MapIconAttachment).SetResupplyType(ResupplyType);
+    }
 }
 
 function ProcessActorLeave()
@@ -240,6 +243,11 @@ event Destroyed()
     local int i;
     local Pawn P;
 
+    if (MapIconAttachment != none)
+    {
+        MapIconAttachment.Destroy();
+    }
+
     super.Destroyed();
 
     for (i = 0; i < ResupplyActors.Length; ++i)
@@ -317,5 +325,5 @@ defaultproperties
     bDramaticLighting=true
     CollisionRadius=300
     CollisionHeight=100
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Resupply'
 }
-

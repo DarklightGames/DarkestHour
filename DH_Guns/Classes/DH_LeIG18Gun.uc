@@ -13,7 +13,6 @@ defaultproperties
 {
     VehicleNameString="7.5 cm leichtes Infanteriegeschütz 18"
     VehicleTeam=0
-    ATGunType=TYPE_Wheeled
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_LeIG18CannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_LeIG18_anm.leig18_body'
     Skins(0)=Texture'DH_LeIG18_tex.LeIG18.IG18_1'
@@ -28,6 +27,7 @@ defaultproperties
     VehicleHudOccupantsX(1)=0.4
     ExitPositions(1)=(X=-35.00,Y=-65.00,Z=60.00)
     VehicleMass=11.0 // TODO: replace
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

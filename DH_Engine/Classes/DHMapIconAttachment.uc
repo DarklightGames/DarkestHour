@@ -7,19 +7,22 @@ class DHMapIconAttachment extends Actor
     abstract
     notplaceable;
 
+enum EMapIconAttachmentError
+{
+    ERROR_None,
+    ERROR_SpawnFailed
+};
+
 var Actor AttachedTo;
 var int   Quantized2DPose;
 var bool  bUpdatePoseChanges; // for moving actors
+var bool  bOldUpdatePoseChanges;
 
-var private int AxisAttachmentIndex;
-var private int AlliesAttachmentIndex;
-
-var protected byte TeamIndex;
-var protected byte VisibilityIndex;
+var private   byte TeamIndex;
+var protected byte VisibilityIndex; // NEUTRAL_TEAM_INDEX -> all; 255 -> hidden
 
 var Material IconMaterial;
 var IntBox   IconCoords;
-var color    IconTeamColors[2];
 var float    IconScale;
 
 replication
@@ -49,19 +52,35 @@ function PostBeginPlay()
     SetTimer(1.0, true);
 }
 
-function Destroyed()
-{
-    UnregisterAttachment();
-
-    super.Destroyed();
-}
-
 function Timer()
 {
     if (bUpdatePoseChanges)
     {
         UpdateQuantized2DPose();
     }
+}
+
+final function Updated()
+{
+    UpdateVisibilityIndex();
+
+    bOldUpdatePoseChanges = bUpdatePoseChanges;
+
+    if (VisibilityIndex == 255)
+    {
+        bUpdatePoseChanges = false;
+        bAlwaysRelevant = false;
+        return;
+    }
+
+    bUpdatePoseChanges = bOldUpdatePoseChanges;
+
+    if (bUpdatePoseChanges)
+    {
+        UpdateQuantized2DPose();
+    }
+
+    bAlwaysRelevant = true;
 }
 
 function UpdateQuantized2DPose()
@@ -78,32 +97,32 @@ function UpdateQuantized2DPose()
     }
 }
 
-function SetTeamIndex(byte TeamIndex)
-{
-    self.TeamIndex = TeamIndex;
-
-    RegisterAttachment();
-}
-
-simulated function byte GetTeamIndex()
-{
-    return TeamIndex;
-}
-
-// Called when registered/updated; override it to set custom visibility rules
+// Called when attachment is updated; override it to set custom visibility rules
 // (e.g. what happens when actor is inside the Danger Zone).
 function UpdateVisibilityIndex()
 {
-    // Visible only to the same team.
+    // Visible to friendly team.
     VisibilityIndex = TeamIndex;
 }
 
-simulated function byte GetVisibilityIndex()
+final simulated function byte GetVisibilityIndex()
 {
     return VisibilityIndex;
 }
 
-simulated function vector GetWorldCoords(DHGameReplicationInfo GRI)
+final function SetTeamIndex(byte TeamIndex)
+{
+    self.TeamIndex = TeamIndex;
+
+    Updated();
+}
+
+final simulated function byte GetTeamIndex()
+{
+    return TeamIndex;
+}
+
+final simulated function vector GetWorldCoords(DHGameReplicationInfo GRI)
 {
     local vector L;
     local float X, Y;
@@ -122,7 +141,7 @@ simulated function vector GetWorldCoords(DHGameReplicationInfo GRI)
     return L;
 }
 
-simulated function float GetMapIconYaw(DHGameReplicationInfo GRI)
+final simulated function float GetMapIconYaw(DHGameReplicationInfo GRI)
 {
     local int WorldYaw;
 
@@ -141,65 +160,12 @@ simulated function float GetMapIconYaw(DHGameReplicationInfo GRI)
     }
 }
 
-final function RegisterAttachment()
+static function OnError(EMapIconAttachmentError Error)
 {
-    local DHGameReplicationInfo GRI;
-
-    UpdateVisibilityIndex();
-
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-    if (GRI == none)
+    switch(Error)
     {
-        return;
-    }
-
-    // Register for AXIS || EVERYONE
-    if (VisibilityIndex == AXIS_TEAM_INDEX && AlliesAttachmentIndex != -1)
-    {
-        GRI.RemoveMapIconAttachment(ALLIES_TEAM_INDEX, AlliesAttachmentIndex);
-        AlliesAttachmentIndex = -1;
-    }
-
-    if (VisibilityIndex != ALLIES_TEAM_INDEX && AxisAttachmentIndex == -1)
-    {
-        AxisAttachmentIndex = GRI.AddAxisMapIconAttachment(self);
-    }
-
-    // Register for ALLIES || EVERYONE
-    if (VisibilityIndex == ALLIES_TEAM_INDEX && AxisAttachmentIndex != -1)
-    {
-        GRI.RemoveMapIconAttachment(AXIS_TEAM_INDEX, AxisAttachmentIndex);
-        AxisAttachmentIndex = -1;
-    }
-
-    if (VisibilityIndex != AXIS_TEAM_INDEX && AlliesAttachmentIndex == -1)
-    {
-        AlliesAttachmentIndex = GRI.AddAlliesMapIconAttachment(self);
-    }
-}
-
-final function UnregisterAttachment()
-{
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-    if (GRI == none)
-    {
-        return;
-    }
-
-    if (AxisAttachmentIndex != -1)
-    {
-        GRI.RemoveMapIconAttachment(AXIS_TEAM_INDEX, AxisAttachmentIndex);
-        AxisAttachmentIndex = -1;
-    }
-
-    if (AlliesAttachmentIndex == -1)
-    {
-        GRI.RemoveMapIconAttachment(ALLIES_TEAM_INDEX, AlliesAttachmentIndex);
-        AlliesAttachmentIndex = -1;
+        case ERROR_SpawnFailed:
+            Warn("Failed to spawn map icon attachment!");
     }
 }
 
@@ -209,17 +175,23 @@ final function UnregisterAttachment()
 
 simulated function color GetIconColor(DHPlayer PC)
 {
-    if (PC.GetTeamNum() == TeamIndex ||
-        (VisibilityIndex == NEUTRAL_TEAM_INDEX && TeamIndex == ALLIES_TEAM_INDEX))
+    if (PC.GetTeamNum() == TeamIndex)
     {
-        // Friendly / Allies (for spectator, if icon is visible to both teams)
-        return default.IconTeamColors[1];
+        return class'DHColor'.default.FriendlyColor;
     }
-    else if (PC.GetTeamNum() != TeamIndex ||
-             (VisibilityIndex == NEUTRAL_TEAM_INDEX && TeamIndex == AXIS_TEAM_INDEX))
+    else if (PC.GetTeamNum() == 255)
     {
-        // Enemy / Axis
-        return default.IconTeamColors[0];
+        switch(TeamIndex)
+        {
+            case AXIS_TEAM_INDEX:
+                return class'DHColor'.default.TeamColors[0];
+            case ALLIES_TEAM_INDEX:
+                return class'DHColor'.default.TeamColors[1];
+        }
+    }
+    else
+    {
+        return class'UColor'.default.Red;
     }
 }
 
@@ -242,31 +214,35 @@ simulated function float GetIconScale(DHPlayer PC)
 // DANGER ZONE HELPERS
 //==============================================================================
 
-function byte GetVisibilityIndexInDangerZone(byte DefaultIndex)
+final function byte GetOppositeTeamIndex()
+{
+    switch(TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            return ALLIES_TEAM_INDEX;
+        case ALLIES_TEAM_INDEX:
+            return AXIS_TEAM_INDEX;
+        default:
+            return TeamIndex;
+    }
+}
+
+final function ChangeVisibilityInDangerZoneTo(byte InIndex, byte OutIndex)
 {
     local DHGameReplicationInfo GRI;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-    // Everything slurped by the Danger Zone becomes visible to the enemy team,
-    // and hidden for friendly troops.
     if (IsInDangerZone(GRI))
     {
-        switch(TeamIndex)
-        {
-            case AXIS_TEAM_INDEX:
-                return ALLIES_TEAM_INDEX;
-            case ALLIES_TEAM_INDEX:
-                return AXIS_TEAM_INDEX;
-            default:
-                return NEUTRAL_TEAM_INDEX;
-        }
+        VisibilityIndex = InIndex;
+        return;
     }
 
-    return DefaultIndex;
+    VisibilityIndex = OutIndex;
 }
 
-simulated function bool IsInDangerZone(DHGameReplicationInfo GRI)
+final simulated function bool IsInDangerZone(DHGameReplicationInfo GRI)
 {
     local vector L;
 
@@ -285,14 +261,9 @@ defaultproperties
     bAlwaysRelevant=true
     bReplicateMovement=false
 
-    AlliesAttachmentIndex=-1
-    AxisAttachmentIndex=-1
-
     TeamIndex=NEUTRAL_TEAM_INDEX
     VisibilityIndex=NEUTRAL_TEAM_INDEX
 
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
-    IconTeamColors[0]=(R=255,G=0,B=0,A=255)
-    IconTeamColors[1]=(R=0,G=124,B=252,A=255)
     IconScale=0.04
 }

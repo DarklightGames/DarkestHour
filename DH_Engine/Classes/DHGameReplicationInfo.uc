@@ -14,8 +14,6 @@ const OBJECTIVES_MAX = 32;
 const CONSTRUCTION_CLASSES_MAX = 32;
 const VOICEID_MAX = 255;
 const SUPPLY_POINTS_MAX = 15;
-const RESUPPLY_ATTACHEMENTS_MAX = 32;
-const MAP_ICON_ATTACHMENTS_MAX = 32;
 const MAP_MARKERS_MAX = 20;
 const MAP_MARKERS_CLASSES_MAX = 16;
 const ARTILLERY_TYPES_MAX = 8;
@@ -57,7 +55,6 @@ struct SupplyPoint
     var byte bIsActive;
     var byte TeamIndex;
     var DHConstructionSupplyAttachment Actor;
-    var int Quantized2DPose;
     var class<DHConstructionSupplyAttachment> ActorClass;
 };
 
@@ -135,10 +132,6 @@ var DHSpawnPointBase    SpawnPoints[SPAWN_POINTS_MAX];
 
 var DHObjective             DHObjectives[OBJECTIVES_MAX];
 var Hashtable_string_int    DHObjectiveTable; // not replicated, but clients create their own so can be used by both client/server
-
-var DHResupplyAttachment    ResupplyAttachments[RESUPPLY_ATTACHEMENTS_MAX];
-var DHMapIconAttachment     AxisMapIconAttachments[MAP_ICON_ATTACHMENTS_MAX];
-var DHMapIconAttachment     AlliesMapIconAttachments[MAP_ICON_ATTACHMENTS_MAX];
 
 var bool                bIsInSetupPhase;
 var bool                bRoundIsOver;
@@ -220,7 +213,6 @@ replication
         GameType,
         CurrentAlliedToAxisRatio,
         SpawnPoints,
-        ResupplyAttachments,
         SpawningEnableTime,
         bIsInSetupPhase,
         bRoundIsOver,
@@ -241,9 +233,7 @@ replication
         AxisVictoryMusicIndex,
         bIsDangerZoneEnabled,
         DangerZoneIntensityScale,
-        ClientOnDangerZoneUpdated,
-        AxisMapIconAttachments,
-        AlliesMapIconAttachments;
+        ClientDangerZoneUpdated;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
@@ -359,9 +349,9 @@ simulated function PostNetBeginPlay()
     }
 }
 
-event OnObjectiveCompleted()
+function ObjectiveCompleted()
 {
-    OnDangerZoneUpdated();
+    DangerZoneUpdated();
 }
 
 function bool ObjectiveTreeNodeDepthComparatorFunction(int LHS, int RHS)
@@ -559,66 +549,12 @@ simulated event Timer()
 }
 
 //==============================================================================
-// Resupply Attachements
-//==============================================================================
-// Function to add a ResupplyAttachement to an array which is used for iteration, returns the index it was added (-1 if it wasn't added)
-function int AddResupplyAttachement(DHResupplyAttachment Attachment)
-{
-    local int i;
-
-    if (Attachment == none)
-    {
-        return -1;
-    }
-
-    // Check for a duplicate first
-    for (i = 0; i < arraycount(ResupplyAttachments); ++i)
-    {
-        if (Attachment == ResupplyAttachments[i])
-        {
-            return -1; // Attachement already exists in array (return -1 as it wasn't added)
-        }
-    }
-
-    // Now find the nearest valid spot and add it
-    for (i = 0; i < arraycount(ResupplyAttachments); ++i)
-    {
-        if (ResupplyAttachments[i] == none)
-        {
-            ResupplyAttachments[i] = Attachment;
-            return i;
-        }
-    }
-
-    return -1;
-}
-
-function RemoveResupplyAttachement(DHResupplyAttachment Attachment)
-{
-    local int i;
-
-    if (Attachment == none)
-    {
-        return;
-    }
-
-    for (i = 0; i < arraycount(ResupplyAttachments); ++i)
-    {
-        if (ResupplyAttachments[i] == Attachment)
-        {
-            ResupplyAttachments[i] = none;
-        }
-    }
-}
-
-//==============================================================================
 // Supply Points
 //==============================================================================
 
 function int AddSupplyPoint(DHConstructionSupplyAttachment CSA)
 {
     local int i;
-    local float X, Y;
 
     if (CSA != none)
     {
@@ -630,8 +566,6 @@ function int AddSupplyPoint(DHConstructionSupplyAttachment CSA)
                 SupplyPoints[i].Actor = CSA;
                 SupplyPoints[i].TeamIndex = CSA.GetTeamIndex();
                 SupplyPoints[i].ActorClass = CSA.Class;
-                GetMapCoords(CSA.Location, X, Y);
-                SupplyPoints[i].Quantized2DPose = class'UQuantize'.static.QuantizeClamped2DPose(X, Y, CSA.Rotation.Yaw);
                 return i;
             }
         }
@@ -1829,97 +1763,16 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
     return ERROR_None;
 }
 
-//==============================================================================
-// MAP ICON ATTACHMENTS
-//==============================================================================
-
 function UpdateMapIconAttachments()
 {
-    local int i;
+    local DHMapIconAttachment MIA;
 
-    for (i = 0; i < arraycount(AxisMapIconAttachments); ++i)
+    foreach AllActors(class'DHMapIconAttachment', MIA)
     {
-        if (AxisMapIconAttachments[i] != none)
+        if (MIA != none)
         {
-            AxisMapIconAttachments[i].RegisterAttachment();
+            MIA.Updated();
         }
-    }
-
-    for (i = 0; i < arraycount(AlliesMapIconAttachments); ++i)
-    {
-        if (AlliesMapIconAttachments[i] != none)
-        {
-            AlliesMapIconAttachments[i].RegisterAttachment();
-        }
-    }
-}
-
-function int AddAlliesMapIconAttachment(DHMapIconAttachment MIA)
-{
-    local int i, FreeIndex;
-
-    if (MIA == none)
-    {
-        return -1;
-    }
-
-    for (i = 0; i < arraycount(AlliesMapIconAttachments); ++i)
-    {
-        if (AlliesMapIconAttachments[i] == none)
-        {
-            FreeIndex = i;
-        }
-        else if (AlliesMapIconAttachments[i] == MIA)
-        {
-            return -1;
-        }
-    }
-
-    AlliesMapIconAttachments[FreeIndex] = MIA;
-
-    return FreeIndex;
-}
-
-function int AddAxisMapIconAttachment(DHMapIconAttachment MIA)
-{
-    local int i, FreeIndex;
-
-    if (MIA == none)
-    {
-        return -1;
-    }
-
-    for (i = 0; i < arraycount(AxisMapIconAttachments); ++i)
-    {
-        if (AxisMapIconAttachments[i] == none)
-        {
-            FreeIndex = i;
-        }
-        else if (AxisMapIconAttachments[i] == MIA)
-        {
-            return -1;
-        }
-    }
-
-    AxisMapIconAttachments[FreeIndex] = MIA;
-
-    return FreeIndex;
-}
-
-function RemoveMapIconAttachment(byte TeamIndex, int Index)
-{
-    if (Index < 0 || Index >= MAP_ICON_ATTACHMENTS_MAX)
-    {
-        return;
-    }
-
-    switch(TeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            AxisMapIconAttachments[Index] = none;
-            break;
-        case ALLIES_TEAM_INDEX:
-            AlliesMapIconAttachments[Index] = none;
     }
 }
 
@@ -1938,7 +1791,7 @@ function SetDangerZone(bool bEnabled, optional bool bPostponeUpdate)
 
     if (!bPostponeUpdate)
     {
-        OnDangerZoneUpdated();
+        DangerZoneUpdated();
     }
 }
 
@@ -1953,7 +1806,7 @@ function SetDangerZoneScale(float Value, optional bool bPostponeUpdate)
 
     if (!bPostponeUpdate)
     {
-        OnDangerZoneUpdated();
+        DangerZoneUpdated();
     }
 }
 
@@ -1967,7 +1820,7 @@ simulated function bool IsInDangerZone(float PointerX, float PointerY, byte Team
     return class'DHDangerZone'.static.IsIn(self, PointerX, PointerY, TeamIndex);
 }
 
-simulated event ClientOnDangerZoneUpdated()
+simulated function ClientDangerZoneUpdated()
 {
     local DHPlayer PC;
     local DHHud Hud;
@@ -1989,7 +1842,7 @@ simulated event ClientOnDangerZoneUpdated()
     }
 }
 
-event OnDangerZoneUpdated()
+function DangerZoneUpdated()
 {
     local DHSquadReplicationInfo SRI;
 
@@ -2005,7 +1858,7 @@ event OnDangerZoneUpdated()
     UpdateMapIconAttachments();
 
     // Update client
-    ClientOnDangerZoneUpdated();
+    ClientDangerZoneUpdated();
 }
 
 defaultproperties

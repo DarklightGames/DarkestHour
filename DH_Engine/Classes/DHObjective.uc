@@ -1245,7 +1245,7 @@ function ObjectiveCompleted(PlayerReplicationInfo CompletePRI, int Team)
 
     if (GRI != none)
     {
-        GRI.OnObjectiveCompleted();
+        GRI.ObjectiveCompleted();
     }
 }
 

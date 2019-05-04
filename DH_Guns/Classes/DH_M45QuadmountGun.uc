@@ -11,7 +11,6 @@ defaultproperties
 {
     VehicleNameString="M45 Quadmount"
     VehicleTeam=1
-    ATGunType=TYPE_StationaryAuto
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_M45QuadmountMGPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_M45_anm.m45_base_trailer'
     Skins(0)=Texture'DH_Artillery_tex.m45.m45_trailer'
@@ -23,4 +22,5 @@ defaultproperties
     ExitPositions(1)=(X=-100.0,Y=40.0,Z=50.0)  // right of seat
     ExitPositions(2)=(X=-100.0,Y=-40.0,Z=50.0) // left
     SupplyCost=1050
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_StaticAA'
 }

@@ -3,14 +3,11 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHMapIconAttachment_ATGun extends DHMapIconAttachment
-    abstract
+class DHMapIconAttachment_Vehicle_Armored extends DHMapIconAttachment_Vehicle
     notplaceable;
 
-// VISIBILITY
-// Normal -> friendly
-// Danger Zone -> enemy
-function UpdateVisibilityIndex()
+defaultproperties
 {
-    ChangeVisibilityInDangerZoneTo(GetOppositeTeamIndex(), GetTeamIndex());
+    IconMaterial=TexRotator'DH_InterfaceArt2_tex.Icons.tank_topdown_rot'
+    IconScale=0.035
 }

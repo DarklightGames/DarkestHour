@@ -12,7 +12,6 @@ class DH_Flak88Gun extends DHATGun;
 defaultproperties
 {
     VehicleNameString="8.8cm FlaK 36 gun"
-    ATGunType=TYPE_Stationary
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Flak88CannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_Flak88_anm.flak88_base'
     Skins(0)=Texture'MilitaryAxisSMT.Artillery.flak_88'
@@ -25,6 +24,7 @@ defaultproperties
     VehicleMass=20.0
     SupplyCost=2100
     ConstructionPlacementOffset=(Z=0)
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Static'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

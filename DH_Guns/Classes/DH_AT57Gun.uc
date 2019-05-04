@@ -11,7 +11,6 @@ defaultproperties
 {
     VehicleNameString="57mm M1 AT gun"
     VehicleTeam=1
-    ATGunType=TYPE_Wheeled
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_AT57CannonPawn',WeaponBone="Turret_placement")
     Mesh=SkeletalMesh'DH_6PounderGun_anm.6pounder_body'
     Skins(0)=Texture'DH_Artillery_Tex.6pounder.6pounder'
@@ -25,6 +24,7 @@ defaultproperties
     VehicleMass=11.0
     SupplyCost=1050
     ConstructionPlacementOffset=(Z=10.0)
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

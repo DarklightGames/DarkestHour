@@ -3303,7 +3303,6 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     local string                    DistanceString, ObjLabel;
     local float                     MyMapScale, ArrowRotation;
     local int                       OwnerTeam, Distance, i, j;
-    local int                       Yaw;
     local DHObjective               ObjA, ObjB;
     local color                     ObjLineColor;
     local UColor.HSV                HSV;
@@ -3387,63 +3386,6 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
         {
             // Player resupply icon
             DHDrawIconOnMap(C, SubCoords, MapIconResupply, MyMapScale, DHGRI.ResupplyAreas[i].ResupplyVolumeLocation, MapCenter, Viewport);
-        }
-    }
-
-    // Draw resupply attachments
-    for (i = 0; i < arraycount(DHGRI.ResupplyAttachments); ++i)
-    {
-        if (DHGRI.ResupplyAttachments[i] == none || !DHGRI.ResupplyAttachments[i].bShowOnMap ||
-            (DHGRI.ResupplyAttachments[i].GetTeamIndex() != OwnerTeam && DHGRI.ResupplyAttachments[i].GetTeamIndex() != NEUTRAL_TEAM_INDEX))
-        {
-            continue;
-        }
-
-        // Get the Widget texture
-        ResupplyAttachmentIcon.WidgetTexture = DHGRI.ResupplyAttachments[i].GetAttachmentIcon();
-
-        // Draw the Widget
-        DHDrawIconOnMap(C, SubCoords, ResupplyAttachmentIcon, MyMapScale, DHGRI.ResupplyAttachments[i].Location, MapCenter, Viewport);
-    }
-
-    // Draw supply points
-    for (i = 0; i < arraycount(DHGRI.SupplyPoints); ++i)
-    {
-        if (DHGRI.SupplyPoints[i].bIsActive == 1 &&
-            DHGRI.SupplyPoints[i].ActorClass.static.ShouldShowOnMap() &&
-            (DHGRI.SupplyPoints[i].TeamIndex == NEUTRAL_TEAM_INDEX || DHGRI.SupplyPoints[i].TeamIndex == OwnerTeam))
-        {
-            if (DHGRI.SupplyPoints[i].Actor != none)
-            {
-                Temp = DHGRI.SupplyPoints[i].Actor.Location;
-                Yaw = DHGRI.SupplyPoints[i].Actor.Rotation.Yaw;
-            }
-            else
-            {
-                class'UQuantize'.static.DequantizeClamped2DPose(DHGRI.SupplyPoints[i].Quantized2DPose, Temp.X, Temp.Y, Yaw);
-                Temp = DHGRI.GetWorldCoords(Temp.X, Temp.Y);
-            }
-
-            TexRotator(FinalBlend(SupplyPointIcon.WidgetTexture).Material).Material = DHGRI.SupplyPoints[i].ActorClass.default.MapIcon;
-
-            if (DHGRI.SupplyPoints[i].ActorClass.default.bShouldMapIconBeRotated)
-            {
-                TexRotator(FinalBlend(SupplyPointIcon.WidgetTexture).Material).Rotation.Yaw = GetMapIconYaw(Yaw);
-            }
-            else
-            {
-                TexRotator(FinalBlend(SupplyPointIcon.WidgetTexture).Material).Rotation.Yaw = 0.0;
-            }
-
-            // Set the color of the widget
-            SupplyPointIcon.Tints[0] = class'DHColor'.default.FriendlyColor;
-
-            DHDrawIconOnMap(C, SubCoords, SupplyPointIcon, MyMapScale, Temp, MapCenter, Viewport);
-
-            // HACK: This stops the engine from "instancing" the texture,
-            // resulting in the bizarre bug where all the icons share the same
-            // rotation.
-            C.DrawVertical(0.0, 0.0);
         }
     }
 
@@ -3854,60 +3796,37 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
 
 function DrawMapIconAttachments(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
 {
-    local int i;
     local DHPlayer PC;
+    local DHMapIconAttachment MIA;
 
     PC = DHPlayer(PlayerOwner);
 
-    if (PC == none)
+    if (PC == none || DHGRI == none)
     {
         return;
     }
 
-    if (PC.GetTeamNum() == AXIS_TEAM_INDEX)
+    foreach AllActors(class'DHMapIconAttachment', MIA)
     {
-        for (i = 0; i < arraycount(DHGRI.AxisMapIconAttachments); ++i)
+        if (MIA == none || MIA.GetVisibilityIndex() == 255)
         {
-            if (DHGRI.AxisMapIconAttachments[i] == none)
-            {
-                continue;
-            }
+            continue;
+        }
 
-            DrawMapIconAttachment(DHGRI.AxisMapIconAttachments[i], PC, C, SubCoords, MyMapScale, MapCenter, Viewport);
+        if (MIA.GetVisibilityIndex() == PC.GetTeamNum() || MIA.GetVisibilityIndex() == NEUTRAL_TEAM_INDEX)
+        {
+            MapMarkerIcon.WidgetTexture = MIA.GetIconMaterial(PC);
+            MapMarkerIcon.TextureCoords = MIA.GetIconCoords(PC);
+            MapMarkerIcon.TextureScale = MIA.GetIconScale(PC);
+            MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = MIA.GetIconColor(PC);
+
+            DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, MIA.GetWorldCoords(DHGRI), MapCenter, Viewport);
+            // HACK: This stops the engine from "instancing" the texture,
+            // resulting in the bizarre bug where all the icons share the same
+            // rotation.
+            C.DrawVertical(0.0, 0.0);
         }
     }
-    else
-    {
-        for (i = 0; i < arraycount(DHGRI.AlliesMapIconAttachments); ++i)
-        {
-            if (DHGRI.AlliesMapIconAttachments[i] == none)
-            {
-                continue;
-            }
-
-            DrawMapIconAttachment(DHGRI.AlliesMapIconAttachments[i], PC, C, SubCoords, MyMapScale, MapCenter, Viewport);
-        }
-    }
-}
-
-function DrawMapIconAttachment(DHMapIconAttachment MIA, DHPlayer PC, Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
-{
-    if (MIA == none || PC == none || DHGRI == none)
-    {
-        return;
-    }
-
-    MapMarkerIcon.WidgetTexture = MIA.GetIconMaterial(PC);
-    MapMarkerIcon.TextureCoords = MIA.GetIconCoords(PC);
-    MapMarkerIcon.TextureScale = MIA.GetIconScale(PC);
-    MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = MIA.GetIconColor(PC);
-
-    DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, MIA.GetWorldCoords(DHGRI), MapCenter, Viewport);
-
-    // HACK: This stops the engine from "instancing" the texture,
-    // resulting in the bizarre bug where all the icons share the same
-    // rotation.
-    C.DrawVertical(0.0, 0.0);
 }
 
 function DrawMapMarkerOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport, class<DHMapMarker> MapMarkerClass, vector Target, Pawn P, optional string Caption)

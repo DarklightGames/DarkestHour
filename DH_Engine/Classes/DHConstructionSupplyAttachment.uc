@@ -13,13 +13,12 @@ var int                 SupplyPointIndex;
 var private float       SupplyCount;
 var int                 SupplyCountMax;
 var private int         TeamIndex;
-
-var bool                bShouldShowOnMap;
-var bool                bShouldMapIconBeRotated;
 var bool                bIsMainSupplyCache;
-var Material            MapIcon;
 
-var private localized string    HumanReadableName;
+var private localized string   HumanReadableName;
+
+var class<DHMapIconAttachment> MapIconAttachmentClass;
+var DHMapIconAttachment        MapIconAttachment;
 
 // Whether or not this supply attachment can be resupplied from a static resupply point.
 var bool                bCanBeResupplied;
@@ -85,6 +84,20 @@ simulated function PostBeginPlay()
             SupplyPointIndex = GRI.AddSupplyPoint(self);
         }
 
+        if (MapIconAttachmentClass != none)
+        {
+            MapIconAttachment = Spawn(MapIconAttachmentClass, self);
+
+            if (MapIconAttachment != none)
+            {
+                MapIconAttachment.Setup();
+            }
+            else
+            {
+                MapIconAttachmentClass.static.OnError(ERROR_SpawnFailed);
+            }
+        }
+
         SetTimer(1.0, true);
     }
 }
@@ -115,11 +128,6 @@ simulated function bool IsFull()
 simulated function float GetSupplyCount()
 {
     return SupplyCount;
-}
-
-simulated static function bool ShouldShowOnMap()
-{
-    return default.bShouldShowOnMap;
 }
 
 static function StaticMesh GetStaticMesh(LevelInfo Level, int TeamIndex)
@@ -199,6 +207,11 @@ function Destroyed()
         GRI.RemoveSupplyPoint(self);
     }
 
+    if (MapIconAttachment != none)
+    {
+        MapIconAttachment.Destroy();
+    }
+
     super.Destroyed();
 }
 
@@ -210,7 +223,6 @@ function Timer()
     local int i, Index, SuppliesToDeposit, NumOfGeneratingSupplyPoints;
     local array<Pawn> NewTouchingPawns;
     local DHGameReplicationInfo GRI;
-    local float X, Y;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
@@ -218,8 +230,6 @@ function Timer()
     {
         // Update supply point information in game replication info.
         GRI.SupplyPoints[SupplyPointIndex].TeamIndex = TeamIndex;
-        GRI.GetMapCoords(Location, X, Y);
-        GRI.SupplyPoints[SupplyPointIndex].Quantized2DPose = class'UQuantize'.static.QuantizeClamped2DPose(X, Y, Rotation.Yaw);
     }
 
     NewTouchingPawns.Length = 0;
@@ -354,6 +364,11 @@ function SetTeamIndex(int TeamIndex)
 {
     self.TeamIndex = TeamIndex;
     UpdateAppearance();
+
+    if (MapIconAttachment != none)
+    {
+        MapIconAttachment.SetTeamIndex(TeamIndex);
+    }
 }
 
 simulated function string GetHumanReadableName()
@@ -382,6 +397,4 @@ defaultproperties
     bUseLightingFromBase=true
     bNetNotify=true
     HumanReadableName="Supply Cache"
-    bShouldShowOnMap=true
 }
-

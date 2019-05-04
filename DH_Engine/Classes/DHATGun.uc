@@ -9,31 +9,6 @@ class DHATGun extends DHVehicle
 #exec OBJ LOAD FILE=..\Textures\DH_Artillery_tex.utx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_Artillery_stc.usx
 
-enum EATGunType
-{
-    TYPE_None,
-    TYPE_Stationary,
-    TYPE_StationaryAuto,
-    TYPE_Wheeled
-};
-
-var EATGunType ATGunType;
-
-// Map icon
-var class<DHMapIconAttachment> MapIconAttachmentClass;
-var DHMapIconAttachment        MapIconAttachment;
-
-simulated function PostBeginPlay()
-{
-    super.PostBeginPlay();
-
-    if (Role == ROLE_Authority)
-    {
-        MapIconAttachment = Spawn(MapIconAttachmentClass, self);
-        MapIconAttachment.Setup();
-    }
-}
-
 // Disabled as nothing in Tick is relevant to an AT gun (to be on the safe side, MinBrakeFriction is set very high in default properties, so gun won't slide down a hill)
 simulated function Tick(float DeltaTime)
 {
@@ -173,16 +148,6 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 }
 
-function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
-{
-    super.Died(Killer, DamageType, HitLocation);
-
-    if (MapIconAttachment != none)
-    {
-        MapIconAttachment.Destroy();
-    }
-}
-
 // Functions emptied out as AT gun bases cannot be occupied & have no engine or treads:
 simulated function PostNetReceive();
 function Fire(optional float F);
@@ -294,7 +259,4 @@ defaultproperties
         KImpactThreshold=700.0
     End Object
     KParams=KarmaParamsRBFull'DH_Engine.DHATGun.KParams0'
-
-    // Map icon
-    MapIconAttachmentClass = class'DH_Engine.DHMapIconAttachment_ATGun'
 }

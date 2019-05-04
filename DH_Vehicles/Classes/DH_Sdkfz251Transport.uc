@@ -18,6 +18,7 @@ defaultproperties
     ReinforcementCost=3
     MaxDesireability=1.2
     PointValue=500
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_ext'

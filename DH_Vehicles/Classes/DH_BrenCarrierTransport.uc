@@ -16,6 +16,7 @@ defaultproperties
     VehicleMass=5.0
     ReinforcementCost=3
     MaxDesireability=1.2
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_ext'

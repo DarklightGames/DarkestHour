@@ -14,6 +14,7 @@ defaultproperties
     VehicleMass=2.5
     ReinforcementCost=2
     MaxDesireability=0.12
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_GMCTruck_anm.GMCTruck_body'

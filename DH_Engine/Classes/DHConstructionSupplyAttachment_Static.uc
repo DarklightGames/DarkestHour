@@ -12,6 +12,5 @@ defaultproperties
     SupplyDepositInterval=5
     SupplyGenerationRate=300
     HumanReadableName="Supply Cache"
-    MapIcon=Texture'DH_InterfaceArt2_tex.Icons.Supply_Cache'
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_SupplyCache'
 }
-

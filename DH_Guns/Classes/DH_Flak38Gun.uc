@@ -8,7 +8,6 @@ class DH_Flak38Gun extends DHATGun;
 defaultproperties
 {
     VehicleNameString="2cm FlaK 38 gun"
-    ATGunType=TYPE_StationaryAuto
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_Flak38CannonPawn',WeaponBone="turret_placement")
     Mesh=SkeletalMesh'DH_Flak38_anm.Flak38_base_static'
     Skins(0)=Texture'DH_Artillery_tex.Flak38.Flak38_gun'
@@ -18,6 +17,7 @@ defaultproperties
     VehicleHudTurretLook=TexRotator'DH_Artillery_tex.ATGun_Hud.flak38_turret_look'
     ExitPositions(1)=(X=-30.0,Y=70.0,Z=50.0)
     SupplyCost=1050
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

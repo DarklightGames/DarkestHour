@@ -11,7 +11,6 @@ defaultproperties
 {
     VehicleNameString="17 Pounder AT gun"
     VehicleTeam=1
-    ATGunType=TYPE_Wheeled
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_17PounderGunCannonPawn',WeaponBone="Turret_placement1")
     Mesh=SkeletalMesh'DH_17PounderGun_anm.17Pounder_body'
     Skins(0)=Texture'DH_Artillery_Tex.17pounder.17Pounder'
@@ -25,6 +24,7 @@ defaultproperties
     VehicleMass=11.0
     SupplyCost=1600
     ConstructionPlacementOffset=(Z=12.0)
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

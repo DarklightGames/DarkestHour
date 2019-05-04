@@ -9,7 +9,6 @@ defaultproperties
 {
     VehicleNameString="ZiS-3 76mm divisional gun"
     VehicleTeam=1
-    ATGunType=TYPE_Wheeled
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Guns.DH_ZiS3CannonPawn',WeaponBone="Gun_attachment")
     Mesh=SkeletalMesh'DH_ZiS3_76mm_anm.ZiS3_base'
     Skins(0)=Texture'DH_Artillery_tex.ZiS3.ZiS3Gun'
@@ -23,6 +22,7 @@ defaultproperties
     VehicleMass=11.0
     SupplyCost=1050
     ConstructionPlacementOffset=(Z=16)
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
