@@ -1825,6 +1825,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         }
     }
 
+    if (bDebuggingText)
+    {
+        Level.Game.Broadcast(self, "Damaging vehicle with:" @ Damage);
+    }
+
     // Call the Super from Vehicle (skip over others)
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
@@ -1877,6 +1882,11 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
         if (DamageType != VehicleBurningDamType)
         {
             Damage = Level.Game.ReduceDamage(Damage, self, InstigatedBy, HitLocation, Momentum, DamageType);
+        }
+
+        if (bDebuggingText)
+        {
+            Level.Game.Broadcast(self, "Damaging engine with a damage of:" @ Damage);
         }
 
         EngineHealth -= Damage;

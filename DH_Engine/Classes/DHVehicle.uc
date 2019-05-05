@@ -77,6 +77,8 @@ var     sound       VehicleBurningSound;         // ambient sound when vehicle's
 var     sound       DestroyedBurningSound;       // ambient sound when vehicle is destroyed and burning
 var     float       SpawnProtEnds;               // is set when a player spawns the vehicle for damage protection in DarkestHour spawn type maps
 var     float       SpawnKillTimeEnds;           // is set when a player spawns the vehicle for spawn kill protection in DarkestHour spawn type maps
+var     array<int>  TrackHealth[2];              // Amount of health each track has remaining
+var     float       SatchelResistance;           // 1.0 default (0.5 means less resistance to satchels)
 
 // Engine
 var     bool        bEngineOff;                  // vehicle engine is simply switched off
@@ -2057,6 +2059,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         LastHitBy = InstigatedBy.Controller;
     }
 
+    if (bDebuggingText)
+    {
+        Level.Game.Broadcast(self, "Damaging vehicle with:" @ Damage);
+    }
+
     // Call the Super from Vehicle (skip over others)
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
@@ -2066,6 +2073,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     if ((Health <= (default.HealthMax * default.DamagedEffectHealthFireFactor) && Health > 0) ||
         ((bHasTreads || bIsApc) && IsVehicleEmpty() && Damage >= 100))
     {
+        if (bDebuggingText)
+        {
+            Level.Game.Broadcast(self, "Setting fire to spike the vehicle as significant damage was done.");
+        }
+
         EngineHealth = 0;
         bSpikedVehicle = true;
         SetSpikeTimer();
@@ -2149,7 +2161,7 @@ function CheckTreadDamage(vector HitLocation, vector Momentum)
     // Damage the track we hit, if it isn't already damaged
     if ((HitSide == "Right" && !bRightTrackDamaged) || (HitSide == "Left" && !bLeftTrackDamaged))
     {
-        DamageTrack(HitSide == "Left"); // passing true means left track damage
+        DestroyTrack(HitSide == "Left"); // passing true means left track damage
 
         if (bDebuggingText && Role == ROLE_Authority)
         {
@@ -2247,8 +2259,29 @@ function bool IsTreadInRadius(vector Location, float Radius, out int TrackNum)
     return false;
 }
 
-// Modified to call SetDamagedTracks() for single player or listen server, as we no longer use Tick (net client gets that via PostNetReceive)
-function DamageTrack(bool bLeftTrack)
+function DamageTrack(int Damage, bool bLeftTrack)
+{
+    TrackHealth[int(bLeftTrack)] -= Damage;
+
+    if (bDebuggingText)
+    {
+        if (bLeftTrack)
+        {
+            Level.Game.Broadcast(self, "Damaging the left track with" @ Damage @ "damage.");
+        }
+        else
+        {
+            Level.Game.Broadcast(self, "Damaging the right track with" @ Damage @ "damage.");
+        }
+    }
+
+    if (TrackHealth[int(bLeftTrack)] <= 0)
+    {
+        DestroyTrack(bLeftTrack);
+    }
+}
+
+function DestroyTrack(bool bLeftTrack)
 {
     if (bLeftTrack)
     {
@@ -3912,16 +3945,16 @@ exec function DamTrack(string Track)
     {
         if (Track ~= "L" || Track ~= "Left")
         {
-            DamageTrack(true);
+            DestroyTrack(true);
         }
         else if (Track ~= "R" || Track ~= "Right")
         {
-            DamageTrack(false);
+            DestroyTrack(false);
         }
         else if (Track ~= "B" || Track ~= "Both")
         {
-            DamageTrack(true);
-            DamageTrack(false);
+            DestroyTrack(true);
+            DestroyTrack(false);
         }
     }
 }
@@ -4005,10 +4038,13 @@ defaultproperties
     Health=175
     HealthMax=175.0
     EngineHealth=30
+    TrackHealth(0)=100
+    TrackHealth(1)=100
     VehHitpoints(0)=(PointRadius=25.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // no.0 becomes engine instead of driver
     VehHitpoints(1)=(PointRadius=0.0,PointScale=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
     TreadDamageThreshold=0.3
     bCanCrash=true
+    SatchelResistance=1.0
     DirectHEImpactDamageMult=1.0
     DamagedWheelSpeedFactor=0.35
     ImpactDamageThreshold=33.0
@@ -4118,4 +4154,7 @@ defaultproperties
     bDisableThrottle=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
 //  EntryRadius=375.0 // deprecated
+
+    //DEBUG
+    bDebuggingText=true
 }

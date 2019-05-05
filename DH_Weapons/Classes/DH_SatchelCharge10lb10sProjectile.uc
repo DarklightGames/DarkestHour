@@ -6,7 +6,8 @@
 class DH_SatchelCharge10lb10sProjectile extends DHThrowableExplosiveProjectile; // incorporating SatchelCharge10lb10sProjectile & ROSatchelChargeProjectile
 
 var float           VehHitPointDamageRadius;   // A radius that determines direct damage to vehicle components
-var float           ComponentDamageStrength;   // If this is > the vehicle's mass, it will set it on fire if placed within VehHitPointDamageRadius distance from the engine
+var float           ComponentDamageStrength;   // If this is > the vehicle's mass, it will automatically affect the component instead of just doing damage
+var float           ComponentDamageMin;        // How much to damage component if vehicle's mass > ComponentDamageStrength
 
 // Modified to record SavedInstigator & SavedPRI
 // RODemolitionChargePlacedMsg from ROSatchelChargeProjectile is omitted
@@ -48,8 +49,7 @@ simulated function BlowUp(vector HitLocation)
             DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
         }
 
-        // TODO: triggering these special actors appears only appears to do stuff on an authority role, so suspect this can be made authority only
-        // Then we can probably remove bAlwaysRelevant from this actor, as doing this on a net client is the only reason I can guess caused bAlwaysRelevant to be set for satchel?
+        // Handle triggering DH_ObjSatchels
         foreach TouchingActors(class'Volume', V)
         {
             if (DH_ObjSatchel(V.AssociatedActor) != none)
@@ -71,22 +71,31 @@ simulated function BlowUp(vector HitLocation)
         // Handle vehicle component damage
         foreach RadiusActors(class'DHVehicle', Veh, DamageRadius)
         {
-            if (Veh != none && ComponentDamageStrength > Veh.VehicleMass)
+            // Handle engine damage
+            if (!Veh.IsVehicleBurning() && VSize(Location - Veh.GetEngineLocation()) < VehHitPointDamageRadius)
             {
-                // Handle setting fire to engine
-                if (!Veh.IsVehicleBurning())
+                // If enough strength, set the engine on fire
+                if (ComponentDamageStrength > Veh.VehicleMass * Veh.SatchelResistance)
                 {
-                    // Check distance from satchel to engine bone
-                    if (VSize(Location - Veh.GetEngineLocation()) < VehHitPointDamageRadius)
-                    {
-                        Veh.StartEngineFire(SavedInstigator);
-                    }
+                    Veh.StartEngineFire(SavedInstigator);
                 }
-
-                // Handle destroying the treads
-                if (Veh.IsTreadInRadius(Location, VehHitPointDamageRadius, TrackNum))
+                else // Otherwise do minor damage to the engine
                 {
-                    Veh.DamageTrack(bool(TrackNum));
+                    Veh.DamageEngine(ComponentDamageMin, SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);
+                }
+            }
+
+            // Handle destroying the treads
+            if (Veh.bHasTreads && Veh.IsTreadInRadius(Location, VehHitPointDamageRadius, TrackNum))
+            {
+                // If enough strength we can detrack the vehicle instantly
+                if (ComponentDamageStrength > Veh.VehicleMass * Veh.SatchelResistance)
+                {
+                    Veh.DestroyTrack(bool(TrackNum));
+                }
+                else // Otherwise do minor damge to the tracks
+                {
+                    Veh.DamageTrack(ComponentDamageMin, bool(TrackNum));
                 }
             }
         }
@@ -120,8 +129,9 @@ defaultproperties
     Speed=300.0
     Damage=750.0
     DamageRadius=750.0
-    VehHitPointDamageRadius=200.0
+    VehHitPointDamageRadius=150.0
     ComponentDamageStrength=20.0
+    ComponentDamageMin=55.0
 
     MyDamageType=class'DH_Weapons.DH_SatchelDamType'
 
