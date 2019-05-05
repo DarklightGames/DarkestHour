@@ -12,6 +12,6 @@ defaultproperties
     AltName="Stoﬂtruppe"
     Article="an "
     PluralName="Assault Troopers"
-    Limit=4
+    Limit=3
     bSpawnWithExtraAmmo=true
 }

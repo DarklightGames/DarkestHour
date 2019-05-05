@@ -362,40 +362,26 @@ function bool ObjectiveTreeNodeDepthComparatorFunction(int LHS, int RHS)
 // This function returns all objectives (via array of indices) which meets objective spawn criteria
 function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
 {
-    local int i, j;
+    local int i;
     local array<DHObjectiveTreeNode> Roots;
     local DHObjective Obj;
     local array<int> ObjectiveIndices;
     local UComparator_int Comparator;
-    local int Depth;
+    local int Depth, MinDepth;
 
     for (i = 0; i < arraycount(DHObjectives); ++i)
     {
         Obj = DHObjectives[i];
 
-        // If obj is not none && inactive (only inactive objectives can have objective spawns) && objective secured by our team
-        if (Obj == none || Obj.IsActive() || int(Obj.ObjState) != Team)
+        if (Obj == none)
         {
             continue;
         }
 
-        // Loop through Axis required objective to find if linked to active obj
-        for (j = 0; j < Obj.AxisRequiredObjForCapture.Length; ++j)
+        // Root objectives are those that are active
+        if (Obj.IsActive())
         {
-            if (DHObjectives[Obj.AxisRequiredObjForCapture[j]].IsActive())
-            {
-                // We have a root objective, lets check if it has hints defined
-                Roots[Roots.Length] = GetObjectiveTree(Team, Obj, ObjectiveIndices);
-            }
-        }
-        // Loop through Allies required objective to find if linked to active obj
-        for (j = 0; j < Obj.AlliesRequiredObjForCapture.Length; ++j)
-        {
-            if (DHObjectives[Obj.AlliesRequiredObjForCapture[j]].IsActive())
-            {
-                // We have a root objective, lets find the nearest objective with hints
-                Roots[Roots.Length] = GetObjectiveTree(Team, Obj, ObjectiveIndices);
-            }
+            Roots[Roots.Length] = GetObjectiveTree(Team, Obj, ObjectiveIndices);
         }
     }
 
@@ -410,7 +396,17 @@ function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
     Comparator.CompareFunction = ObjectiveTreeNodeDepthComparatorFunction;
     class'USort'.static.ISort(Indices, Comparator);
 
-    // Eliminate all objective indices that do not match the lowest depth.
+    // Eliminate all indices that are below the Minimum Required Depth
+    MinDepth = GetMinRequiredDepth();
+    for (i = Indices.Length - 1; i >= 0; --i)
+    {
+        if ((Indices[i] >> 16) < MinDepth)
+        {
+            Indices.Remove(i, 1);
+        }
+    }
+
+    // Eliminate all objective indices that do not match the lowest depth
     if (Indices.Length > 0)
     {
         Depth = Indices[0] >> 16;
@@ -436,6 +432,7 @@ function TraverseTreeNode(int Team, DHObjectiveTreeNode Root, DHObjectiveTreeNod
     local bool bIsFarEnoughAway;
     local bool bNodeHasHints;
     local bool bAlreadyAdded;
+    local bool bIsActive;
     local DH_LevelInfo LI;
 
     if (Node == none)
@@ -453,18 +450,41 @@ function TraverseTreeNode(int Team, DHObjectiveTreeNode Root, DHObjectiveTreeNod
     bIsFarEnoughAway = VSize(Root.Objective.Location - Node.Objective.Location) > class'DHUnits'.static.MetersToUnreal(LI.ObjectiveSpawnDistanceThreshold);
     bNodeHasHints = Node.Objective.SpawnPointHintTags[Team] != '';
     bAlreadyAdded = class'UArray'.static.IIndexOf(ObjectiveIndices, Node.Objective.ObjNum) == -1;
+    bIsActive = Node.Objective.IsActive();
 
-    if (bNodeHasHints && bIsFarEnoughAway && bAlreadyAdded)
+    if (bNodeHasHints && bIsFarEnoughAway && bAlreadyAdded && !bIsActive)
     {
         ObjectiveIndices[ObjectiveIndices.Length] = (Depth << 16) | Node.Objective.ObjNum;
         return;
     }
 
-
     for (i = 0; i < Node.Children.Length; ++i)
     {
         TraverseTreeNode(Team, Root, Node.Children[i], ObjectiveIndices, Depth + 1);
     }
+}
+
+// Function which determines
+function int GetMinRequiredDepth()
+{
+    local DH_LevelInfo LI;
+
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (LI == none)
+    {
+        Warn("Something has gone very wrong in GetMinDepth in class DHGameReplicationInfo, LevelInfo is none!");
+        return 1; // return with a fair value
+    }
+
+    // If the level overrides the gametype, return the override
+    if (LI.ObjectiveSpawnMinimumDepth != -1)
+    {
+        return LI.ObjectiveSpawnMinimumDepth;
+    }
+
+    // Otherwise return the Gametype's min depth
+    return LI.GameTypeClass.default.ObjSpawnMinimumDepth;
 }
 
 function DHObjectiveTreeNode GetObjectiveTree(int Team, DHObjective Objective, out array<int> ObjectiveIndices)
@@ -473,7 +493,7 @@ function DHObjectiveTreeNode GetObjectiveTree(int Team, DHObjective Objective, o
     local DHObjectiveTreeNode Node;
     local DHObjectiveTreeNode Child;
 
-    if (Objective == none || Objective.IsActive() || int(Objective.ObjState) != Team)
+    if (Objective == none)
     {
         return none;
     }
@@ -487,8 +507,6 @@ function DHObjectiveTreeNode GetObjectiveTree(int Team, DHObjective Objective, o
 
     Node = new class'DHObjectiveTreeNode';
     Node.Objective = Objective;
-
-    ObjectiveIndices[ObjectiveIndices.Length] = Objective.ObjNum;
 
     if (Team == AXIS_TEAM_INDEX)
     {

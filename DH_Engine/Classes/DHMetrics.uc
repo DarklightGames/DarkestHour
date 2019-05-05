@@ -127,6 +127,12 @@ function OnPlayerLogin(PlayerController PC)
 
     OnPlayerChangeName(PC);
 
+    // Finalize existing sessions if they were for some reason not finalized to begin with.
+    if (P.Sessions.Length > 0 && P.Sessions[0].EndedAt == none)
+    {
+        P.Sessions[0].EndedAt = class'DateTime'.static.Now(self);
+    }
+
     // Add a new session to the front of the sessions list.
     P.Sessions.Insert(0, 1);
     P.Sessions[0] = new class'DHMetricsPlayerSession';

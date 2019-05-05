@@ -23,7 +23,7 @@ function int AsInteger()
 
 function string Encode()
 {
-    return "\"" $ String $ "\"";
+    return "\"" $ GetSanitizedString(String) $ "\"";
 }
 
 function bool AsBoolean()
