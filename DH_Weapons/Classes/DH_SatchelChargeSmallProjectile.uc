@@ -12,7 +12,7 @@ defaultproperties
     Damage=600.0
     DamageRadius=600.0
 
-    EngineDamageMassThreshold=20.0
+    EngineDamageMassThreshold=10.0
     EngineDamageRadius=185.0
     EngineDamageMax=75.0
 

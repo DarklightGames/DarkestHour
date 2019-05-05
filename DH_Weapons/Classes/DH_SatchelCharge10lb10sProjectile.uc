@@ -46,7 +46,7 @@ simulated function BlowUp(vector HitLocation)
     local Volume        V;
     local int           TrackNum;
     local float         Distance;
-    local bool          bExplodedOnVehicle;
+    local bool          bExplodedOnVehicle, bExplodedUnderVehicle;
 
     if (Instigator != none)
     {
@@ -90,7 +90,11 @@ simulated function BlowUp(vector HitLocation)
         A = Trace(HitLoc, HitNorm, Location - vect(0.0, 0.0, 16.0), Location, true);
         bExplodedOnVehicle = DHVehicle(A) != none;
 
-        //Level.Game.Broadcast(self, "We exploded on a:" @ A @ "And bExplodedOnVehicle is:" @ bExplodedOnVehicle);
+        if (!bExplodedOnVehicle)
+        {
+            A = Trace(HitLoc, HitNorm, Location + vect(0.0, 0.0, 16.0), Location, true);
+            bExplodedUnderVehicle = DHVehicle(A) != none;
+        }
 
         // Handle vehicle component damage
         foreach RadiusActors(class'DHVehicle', Veh, DamageRadius)
@@ -105,15 +109,17 @@ simulated function BlowUp(vector HitLocation)
                     // If enough strength, set the engine on fire
                     if (EngineDamageMassThreshold > Veh.VehicleMass * Veh.SatchelResistance)
                     {
-                        Level.Game.Broadcast(self, "Setting engine on FIRE!");
                         Veh.StartEngineFire(SavedInstigator);
                     }
                     else // Otherwise do minor damage to the engine
                     {
-                        Level.Game.Broadcast(self, "Doing damage to the engine:" @ EngineDamageMax * (Distance / EngineDamageRadius));
                         Veh.DamageEngine(EngineDamageMax * (Distance / EngineDamageRadius), SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);
                     }
                 }
+            }
+            else if (bExplodedUnderVehicle)
+            {
+                Veh.TakeDamage(Damage * 4, SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);
             }
 
             // Set Distance to TreadDamageRadius, we don't want TreadDamageRadius to change, but want Distance to be changed in IsTreadInRadius()
@@ -125,12 +131,10 @@ simulated function BlowUp(vector HitLocation)
                 // If enough strength we can detrack the vehicle instantly
                 if (TreadDamageMassThreshold > Veh.VehicleMass * Veh.SatchelResistance)
                 {
-                    Level.Game.Broadcast(self, "Destroying a track!");
                     Veh.DestroyTrack(bool(TrackNum));
                 }
                 else // Otherwise do minor damge to the tracks
                 {
-                    Level.Game.Broadcast(self, "Damaging a track with damage:" @ TreadDamageMax);
                     Veh.DamageTrack(TreadDamageMax * (Distance / TreadDamageRadius), bool(TrackNum));
                 }
             }
