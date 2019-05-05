@@ -11,5 +11,12 @@ defaultproperties
 
     Damage=600.0
     DamageRadius=600.0
-    ComponentDamageStrength=10.0
+
+    EngineDamageMassThreshold=20.0
+    EngineDamageRadius=185.0
+    EngineDamageMax=75.0
+
+    TreadDamageMassThreshold=12.0
+    TreadDamageRadius=64.0
+    TreadDamageMax=50.0
 }

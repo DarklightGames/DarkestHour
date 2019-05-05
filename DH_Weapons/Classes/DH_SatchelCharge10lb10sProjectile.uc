@@ -5,9 +5,22 @@
 
 class DH_SatchelCharge10lb10sProjectile extends DHThrowableExplosiveProjectile; // incorporating SatchelCharge10lb10sProjectile & ROSatchelChargeProjectile
 
-var float           VehHitPointDamageRadius;   // A radius that determines direct damage to vehicle components
-var float           ComponentDamageStrength;   // If this is > the vehicle's mass, it will automatically affect the component instead of just doing damage
-var float           ComponentDamageMin;        // How much to damage component if vehicle's mass > ComponentDamageStrength
+var float           ConstructionDamageRadius;   // A radius that will damage Contructions
+var float           ConstructionDamageMax;
+
+var float           ObstacleDamageRadius;       // A radius that will damage Obstacles
+var float           ObstacleDamageMax;
+
+var float           EngineDamageMassThreshold;  // A mass threshold at which a vehicle will take min damage instead of setting the engine on fire
+var float           EngineDamageRadius;         // A radius that will damage Vehicle Engines
+var float           EngineDamageMax;
+
+var float           TreadDamageMassThreshold;   // A mass threshold at which a vehicle will take min damage instead of destroying the tread outright
+var float           TreadDamageRadius;          // A radius that will damage Vehicle Treads
+var float           TreadDamageMax;
+
+//var float           ComponentDamageStrength;    // If this is > the vehicle's mass, it will automatically affect the component instead of just doing damage
+//var float           ComponentDamageMin;         // How much to damage component if vehicle's mass > ComponentDamageStrength
 
 // Modified to record SavedInstigator & SavedPRI
 // RODemolitionChargePlacedMsg from ROSatchelChargeProjectile is omitted
@@ -25,10 +38,15 @@ simulated function PostBeginPlay()
 // Modified to check whether satchel blew up in a special Volume that needs to be triggered
 simulated function BlowUp(vector HitLocation)
 {
+    local Actor         A;
+    local vector        HitLoc, HitNorm;
+
     local DHVehicle     Veh;
     local DH_ObjSatchel SatchelObjActor;
     local Volume        V;
     local int           TrackNum;
+    local float         Distance;
+    local bool          bExplodedOnVehicle;
 
     if (Instigator != none)
     {
@@ -68,34 +86,52 @@ simulated function BlowUp(vector HitLocation)
             }
         }
 
+        // Find out if we are on a vehicle
+        A = Trace(HitLoc, HitNorm, Location - vect(0.0, 0.0, 16.0), Location, true);
+        bExplodedOnVehicle = DHVehicle(A) != none;
+
+        //Level.Game.Broadcast(self, "We exploded on a:" @ A @ "And bExplodedOnVehicle is:" @ bExplodedOnVehicle);
+
         // Handle vehicle component damage
         foreach RadiusActors(class'DHVehicle', Veh, DamageRadius)
         {
             // Handle engine damage
-            if (!Veh.IsVehicleBurning() && VSize(Location - Veh.GetEngineLocation()) < VehHitPointDamageRadius)
+            if (bExplodedOnVehicle && !Veh.IsVehicleBurning())
             {
-                // If enough strength, set the engine on fire
-                if (ComponentDamageStrength > Veh.VehicleMass * Veh.SatchelResistance)
+                Distance = VSize(Location - Veh.GetEngineLocation());
+
+                if (Distance < EngineDamageRadius)
                 {
-                    Veh.StartEngineFire(SavedInstigator);
-                }
-                else // Otherwise do minor damage to the engine
-                {
-                    Veh.DamageEngine(ComponentDamageMin, SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);
+                    // If enough strength, set the engine on fire
+                    if (EngineDamageMassThreshold > Veh.VehicleMass * Veh.SatchelResistance)
+                    {
+                        Level.Game.Broadcast(self, "Setting engine on FIRE!");
+                        Veh.StartEngineFire(SavedInstigator);
+                    }
+                    else // Otherwise do minor damage to the engine
+                    {
+                        Level.Game.Broadcast(self, "Doing damage to the engine:" @ EngineDamageMax * (Distance / EngineDamageRadius));
+                        Veh.DamageEngine(EngineDamageMax * (Distance / EngineDamageRadius), SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);
+                    }
                 }
             }
 
+            // Set Distance to TreadDamageRadius, we don't want TreadDamageRadius to change, but want Distance to be changed in IsTreadInRadius()
+            Distance = TreadDamageRadius;
+
             // Handle destroying the treads
-            if (Veh.bHasTreads && Veh.IsTreadInRadius(Location, VehHitPointDamageRadius, TrackNum))
+            if (Veh.bHasTreads && Veh.IsTreadInRadius(Location, Distance, TrackNum))
             {
                 // If enough strength we can detrack the vehicle instantly
-                if (ComponentDamageStrength > Veh.VehicleMass * Veh.SatchelResistance)
+                if (TreadDamageMassThreshold > Veh.VehicleMass * Veh.SatchelResistance)
                 {
+                    Level.Game.Broadcast(self, "Destroying a track!");
                     Veh.DestroyTrack(bool(TrackNum));
                 }
                 else // Otherwise do minor damge to the tracks
                 {
-                    Veh.DamageTrack(ComponentDamageMin, bool(TrackNum));
+                    Level.Game.Broadcast(self, "Damaging a track with damage:" @ TreadDamageMax);
+                    Veh.DamageTrack(TreadDamageMax * (Distance / TreadDamageRadius), bool(TrackNum));
                 }
             }
         }
@@ -129,9 +165,20 @@ defaultproperties
     Speed=300.0
     Damage=750.0
     DamageRadius=750.0
-    VehHitPointDamageRadius=150.0
-    ComponentDamageStrength=20.0
-    ComponentDamageMin=55.0
+
+    ConstructionDamageRadius=256
+    ConstructionDamageMax=300
+
+    ObstacleDamageRadius=256
+    ObstacleDamageMax=300
+
+    EngineDamageMassThreshold=20.0
+    EngineDamageRadius=200.0
+    EngineDamageMax=150.0
+
+    TreadDamageMassThreshold=20.0
+    TreadDamageRadius=80.0
+    TreadDamageMax=100.0
 
     MyDamageType=class'DH_Weapons.DH_SatchelDamType'
 

@@ -2165,7 +2165,7 @@ function CheckTreadDamage(vector HitLocation, vector Momentum)
 
         if (bDebuggingText && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, HitSide @ "track damaged (hit height =" @ HitLocationRelativeOffset.Z $ ")");
+            Level.Game.Broadcast(self, HitSide @ "track destroyed (hit height =" @ HitLocationRelativeOffset.Z $ ")");
         }
     }
 }
@@ -2240,17 +2240,21 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
     }
 }
 
-function bool IsTreadInRadius(vector Location, float Radius, out int TrackNum)
+function bool IsTreadInRadius(vector Location, out float Radius, out int TrackNum)
 {
     local int           i;
     local coords        WheelCoords;
+    local float         D;
 
     for (i = 0; i < Wheels.Length; ++i)
     {
         WheelCoords = GetBoneCoords(Wheels[i].BoneName);
 
-        if (VSize(Location - WheelCoords.Origin) < Radius)
+        D = VSize(Location - WheelCoords.Origin);
+
+        if (D < Radius)
         {
+            Radius = D;
             TrackNum = int(Wheels[i].bLeftTrack);
             return true;
         }
@@ -4153,8 +4157,6 @@ defaultproperties
     bDesiredBehindView=false
     bDisableThrottle=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
-//  EntryRadius=375.0 // deprecated
 
-    //DEBUG
     bDebuggingText=true
 }
