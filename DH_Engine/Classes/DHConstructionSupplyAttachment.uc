@@ -90,6 +90,7 @@ simulated function PostBeginPlay()
 
             if (MapIconAttachment != none)
             {
+                MapIconAttachment.SetBase(self);
                 MapIconAttachment.Setup();
             }
             else

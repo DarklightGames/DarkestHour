@@ -96,6 +96,7 @@ simulated event PostBeginPlay()
 
             if (MapIconAttachment != none)
             {
+                MapIconAttachment.SetBase(self);
                 MapIconAttachment.Setup();
                 MapIconAttachment.SetTeamIndex(GetTeamIndex());
             }

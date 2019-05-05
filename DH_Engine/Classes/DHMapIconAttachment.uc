@@ -39,8 +39,6 @@ replication
 // Called after spawning and setting the base.
 function Setup()
 {
-    SetBase(Owner);
-
     if (Base != none)
     {
         AttachedTo = Base;

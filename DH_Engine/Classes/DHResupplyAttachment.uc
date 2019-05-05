@@ -41,6 +41,7 @@ final function AttachMapIcon()
 
         if (MapIconAttachment != none)
         {
+            MapIconAttachment.SetBase(self);
             MapIconAttachment.Setup();
             DHMapIconAttachment_Resupply(MapIconAttachment).SetResupplyType(ResupplyType);
             MapIconAttachment.SetTeamIndex(TeamIndex);
