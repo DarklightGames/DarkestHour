@@ -12,6 +12,6 @@ defaultproperties
     AltName="Stürmpioniere"
     Article="a "
     PluralName="Combat Engineers"
-    Limit=3
+    Limit=2
     bSpawnWithExtraAmmo=true
 }
