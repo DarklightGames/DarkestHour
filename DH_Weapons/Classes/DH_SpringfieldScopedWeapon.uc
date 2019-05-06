@@ -21,6 +21,7 @@ defaultproperties
 
     bHasScope=true
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.Springfield_Scope_Overlay'
+    ScriptedScopeTexture=Texture'DH_Springfield_tex.Scopes.Scope3D'
     OverlayCorrectionX=-0.5
     DisplayFOV=90.0
     IronSightDisplayFOV=40.0
