@@ -24,8 +24,8 @@ defaultproperties
     ScriptedScopeTexture=Texture'DH_Springfield_tex.Scopes.Scope3D'
     OverlayCorrectionX=-0.5
     DisplayFOV=90.0
-    IronSightDisplayFOV=40.0
-    IronSightDisplayFOVHigh=40.0
+    IronSightDisplayFOV=55.0
+    IronSightDisplayFOVHigh=55.0
     PlayerFOVZoom=36.0 // 2.5x
     ScopePortalFOV=15.0  // worse zoom than kar98k
     ScopePortalFOVHigh=15.0
