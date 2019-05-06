@@ -454,7 +454,6 @@ function TraverseTreeNode(int Team, DHObjectiveTreeNode Root, DHObjectiveTreeNod
     if (bNodeHasHints && bIsFarEnoughAway && bAlreadyAdded && !bIsActive)
     {
         ObjectiveIndices[ObjectiveIndices.Length] = (Depth << 16) | Node.Objective.ObjNum;
-        return;
     }
 
     for (i = 0; i < Node.Children.Length; ++i)
@@ -511,6 +510,11 @@ function DHObjectiveTreeNode GetObjectiveTree(int Team, DHObjective Objective, o
     {
         for (i = 0; i < Objective.AxisRequiredObjForCapture.Length; ++i)
         {
+            if (DHObjectives[Objective.AxisRequiredObjForCapture[i]].IsActive())
+            {
+                continue;
+            }
+
             Child = GetObjectiveTree(Team, DHObjectives[Objective.AxisRequiredObjForCapture[i]], ObjectiveIndices);
 
             if (Child != none)
@@ -523,6 +527,11 @@ function DHObjectiveTreeNode GetObjectiveTree(int Team, DHObjective Objective, o
     {
         for (i = 0; i < Objective.AlliesRequiredObjForCapture.Length; ++i)
         {
+            if (DHObjectives[Objective.AlliesRequiredObjForCapture[i]].IsActive())
+            {
+                continue;
+            }
+
             Child = GetObjectiveTree(Team, DHObjectives[Objective.AlliesRequiredObjForCapture[i]], ObjectiveIndices);
 
             if (Child != none)
