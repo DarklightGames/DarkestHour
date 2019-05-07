@@ -2009,7 +2009,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             {
                 if (bDebuggingText)
                 {
-                    Level.Game.Broadcast(self, "Hit vehicle engine");
+                    Log("Hit vehicle engine");
                 }
 
                 DamageEngine(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
@@ -2019,7 +2019,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             {
                 if (bDebuggingText)
                 {
-                    Level.Game.Broadcast(self, "Hit vehicle ammo store");
+                    Log("Hit vehicle ammo store");
                 }
 
                 Damage *= VehHitpoints[i].DamageMultiplier;
@@ -2030,7 +2030,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             {
                 if (bDebuggingText)
                 {
-                    Level.Game.Broadcast(self, "Hit vehicle wheel");
+                    Log("Hit vehicle wheel");
                 }
 
                 // If wheel takes enough damage, vehicle has wheel damage
@@ -2061,7 +2061,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     if (bDebuggingText)
     {
-        Level.Game.Broadcast(self, "Damaging vehicle with:" @ Damage);
+        Log("Damaging vehicle with:" @ Damage);
     }
 
     // Call the Super from Vehicle (skip over others)
@@ -2075,7 +2075,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     {
         if (bDebuggingText)
         {
-            Level.Game.Broadcast(self, "Setting fire to spike the vehicle as significant damage was done.");
+            Log("Setting fire to spike the vehicle as significant damage was done.");
         }
 
         EngineHealth = 0;
@@ -2147,11 +2147,6 @@ function CheckTreadDamage(vector HitLocation, vector Momentum)
     {
         if (bDebuggingText || class'DH_LevelInfo'.static.DHDebugMode())
         {
-            if (Role == ROLE_Authority)
-            {
-                Level.Game.Broadcast(self, "Hit detection bug - switching tread hit from" @ HitSide @ "to" @ OppositeSide @ "as 'in angle' to original side was" @ int(InAngleDegrees) @ "degrees");
-            }
-
             Log("Hit detection bug - switching tread hit from" @ HitSide @ "to" @ OppositeSide @ "as 'in angle' to original side was" @ int(InAngleDegrees) @ "degrees");
         }
 
@@ -2165,7 +2160,7 @@ function CheckTreadDamage(vector HitLocation, vector Momentum)
 
         if (bDebuggingText && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, HitSide @ "track destroyed (hit height =" @ HitLocationRelativeOffset.Z $ ")");
+            Log(HitSide @ "track destroyed (hit height =" @ HitLocationRelativeOffset.Z $ ")");
         }
     }
 }
@@ -2222,7 +2217,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
     {
         if (bDebuggingText)
         {
-            Level.Game.Broadcast(self, "Engine is dead");
+            Log("Engine is dead");
         }
 
         if (!bEngineOff)
@@ -2271,11 +2266,11 @@ function DamageTrack(int Damage, bool bLeftTrack)
     {
         if (bLeftTrack)
         {
-            Level.Game.Broadcast(self, "Damaging the left track with" @ Damage @ "damage.");
+            Log("Damaging the left track with" @ Damage @ "damage.");
         }
         else
         {
-            Level.Game.Broadcast(self, "Damaging the right track with" @ Damage @ "damage.");
+            Log("Damaging the right track with" @ Damage @ "damage.");
         }
     }
 
@@ -3532,7 +3527,7 @@ function MaybeDestroyVehicle()
 
         if (bDebuggingText)
         {
-            Level.Game.Broadcast(self, "Initiating" @ VehicleSpikeTime @ "sec spike timer for disabled vehicle" @ VehicleNameString);
+            Log("Initiating" @ VehicleSpikeTime @ "sec spike timer for disabled vehicle" @ VehicleNameString);
         }
     }
 
@@ -3600,7 +3595,7 @@ event CheckReset()
 
                     if (bDebuggingText)
                     {
-                        Level.Game.Broadcast(self, VehicleNameString @ "CheckReset: is empty but set new ResetTime as found nearby friendly player" @ C.Pawn.GetHumanReadableName());
+                        Log(VehicleNameString @ "CheckReset: is empty but set new ResetTime as found nearby friendly player" @ C.Pawn.GetHumanReadableName());
                     }
 
                     return;
@@ -3614,11 +3609,11 @@ event CheckReset()
     {
         if (bKeyVehicle)
         {
-            Level.Game.Broadcast(self, VehicleNameString @ "is empty vehicle & re-spawned as is a key vehicle (no check for nearby friendlies)");
+            Log(VehicleNameString @ "is empty vehicle & re-spawned as is a key vehicle (no check for nearby friendlies)");
         }
         else
         {
-            Level.Game.Broadcast(self, VehicleNameString @ "is empty vehicle & re-spawned as no friendly player nearby that can use vehicle");
+            Log(VehicleNameString @ "is empty vehicle & re-spawned as no friendly player nearby that can use vehicle");
         }
     }
 

@@ -5,6 +5,8 @@
 
 class DH_SatchelCharge10lb10sProjectile extends DHThrowableExplosiveProjectile; // incorporating SatchelCharge10lb10sProjectile & ROSatchelChargeProjectile
 
+var float           UnderneathDamageMultiplier;  // Damage Multiplier for when the satchel dets under a vehicle
+
 var float           ConstructionDamageRadius;   // A radius that will damage Contructions
 var float           ConstructionDamageMax;
 
@@ -38,16 +40,6 @@ simulated function PostBeginPlay()
 // Modified to check whether satchel blew up in a special Volume that needs to be triggered
 simulated function BlowUp(vector HitLocation)
 {
-    local Actor         A;
-    local vector        HitLoc, HitNorm;
-
-    local DHVehicle     Veh;
-    local DH_ObjSatchel SatchelObjActor;
-    local Volume        V;
-    local int           TrackNum;
-    local float         Distance;
-    local bool          bExplodedOnVehicle, bExplodedUnderVehicle;
-
     if (Instigator != none)
     {
         SavedInstigator = Instigator;
@@ -67,37 +59,64 @@ simulated function BlowUp(vector HitLocation)
             DelayedHurtRadius(Damage, DamageRadius, MyDamageType, MomentumTransfer, HitLocation);
         }
 
-        // Handle triggering DH_ObjSatchels
-        foreach TouchingActors(class'Volume', V)
+        HandleObjSatchels(HitLocation);
+        HandleVehicles(HitLocation);
+        HandleObstacles(HitLocation);
+        HandleConstructions(HitLocation);
+        MakeNoise(1.0);
+    }
+}
+
+simulated function HandleObjSatchels(vector HitLocation)
+{
+    local DH_ObjSatchel SatchelObjActor;
+    local Volume        V;
+
+    // Handle triggering DH_ObjSatchels
+    foreach TouchingActors(class'Volume', V)
+    {
+        if (DH_ObjSatchel(V.AssociatedActor) != none)
         {
-            if (DH_ObjSatchel(V.AssociatedActor) != none)
-            {
-                SatchelObjActor = DH_ObjSatchel(V.AssociatedActor);
+            SatchelObjActor = DH_ObjSatchel(V.AssociatedActor);
 
-                if (SatchelObjActor.WithinArea(self))
-                {
-                    SatchelObjActor.Trigger(self, SavedInstigator);
-                }
-            }
-
-            if (V.IsA('RODemolitionVolume'))
+            if (SatchelObjActor.WithinArea(self))
             {
-                RODemolitionVolume(V).Trigger(self, SavedInstigator);
+                SatchelObjActor.Trigger(self, SavedInstigator);
             }
         }
 
-        // Find out if we are on a vehicle
-        A = Trace(HitLoc, HitNorm, Location - vect(0.0, 0.0, 16.0), Location, true);
-        bExplodedOnVehicle = DHVehicle(A) != none;
-
-        if (!bExplodedOnVehicle)
+        if (V.IsA('RODemolitionVolume'))
         {
-            A = Trace(HitLoc, HitNorm, Location + vect(0.0, 0.0, 16.0), Location, true);
-            bExplodedUnderVehicle = DHVehicle(A) != none;
+            RODemolitionVolume(V).Trigger(self, SavedInstigator);
         }
+    }
+}
 
-        // Handle vehicle component damage
-        foreach RadiusActors(class'DHVehicle', Veh, DamageRadius)
+simulated function HandleVehicles(vector HitLocation)
+{
+    local Actor         A;
+    local vector        HitLoc, HitNorm;
+    local DHVehicle     Veh;
+    local int           TrackNum;
+    local float         Distance;
+    local bool          bExplodedOnVehicle, bExplodedUnderVehicle;
+
+    // Find out if we are on a vehicle
+    A = Trace(HitLoc, HitNorm, Location - vect(0.0, 0.0, 16.0), Location, true);
+    bExplodedOnVehicle = DHVehicle(A) != none;
+
+    // Find out if we are under a vehicle
+    if (!bExplodedOnVehicle)
+    {
+        A = Trace(HitLoc, HitNorm, Location + vect(0.0, 0.0, 32.0), Location, true);
+        bExplodedUnderVehicle = DHVehicle(A) != none;
+    }
+
+    // Handle vehicle component damage
+    foreach RadiusActors(class'DHVehicle', Veh, DamageRadius)
+    {
+        // If this is the vehicle we exploded on or under
+        if (Veh == A)
         {
             // Handle engine damage
             if (bExplodedOnVehicle && !Veh.IsVehicleBurning())
@@ -117,31 +136,41 @@ simulated function BlowUp(vector HitLocation)
                     }
                 }
             }
-            else if (bExplodedUnderVehicle)
-            {
-                Veh.TakeDamage(Damage * 4, SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);
-            }
 
-            // Set Distance to TreadDamageRadius, we don't want TreadDamageRadius to change, but want Distance to be changed in IsTreadInRadius()
-            Distance = TreadDamageRadius;
-
-            // Handle destroying the treads
-            if (Veh.bHasTreads && Veh.IsTreadInRadius(Location, Distance, TrackNum))
+            // Handle doing additional damage if exploded underneath vehicle
+            if (bExplodedUnderVehicle)
             {
-                // If enough strength we can detrack the vehicle instantly
-                if (TreadDamageMassThreshold > Veh.VehicleMass * Veh.SatchelResistance)
-                {
-                    Veh.DestroyTrack(bool(TrackNum));
-                }
-                else // Otherwise do minor damge to the tracks
-                {
-                    Veh.DamageTrack(TreadDamageMax * (Distance / TreadDamageRadius), bool(TrackNum));
-                }
+                Veh.TakeDamage(Damage * UnderneathDamageMultiplier, SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);
             }
         }
 
-        MakeNoise(1.0);
+        // Set Distance to TreadDamageRadius, we don't want TreadDamageRadius to change, but want Distance to be changed in IsTreadInRadius()
+        Distance = TreadDamageRadius;
+
+        // Handle destroying the treads
+        if (Veh.bHasTreads && Veh.IsTreadInRadius(Location, Distance, TrackNum))
+        {
+            // If enough strength we can detrack the vehicle instantly
+            if (TreadDamageMassThreshold > Veh.VehicleMass * Veh.SatchelResistance)
+            {
+                Veh.DestroyTrack(bool(TrackNum));
+            }
+            else // Otherwise do minor damge to the tracks
+            {
+                Veh.DamageTrack(TreadDamageMax * (Distance / TreadDamageRadius), bool(TrackNum));
+            }
+        }
     }
+}
+
+simulated function HandleObstacles(vector HitLocation)
+{
+
+}
+
+simulated function HandleConstructions(vector HitLocation)
+{
+
 }
 
 // Implemented here to go to dynamic lighting for a split second, when satchel blows up // TODO: doesn't appear to do anything noticeable?
@@ -169,6 +198,8 @@ defaultproperties
     Speed=300.0
     Damage=750.0
     DamageRadius=750.0
+
+    UnderneathDamageMultiplier=8.0
 
     ConstructionDamageRadius=256
     ConstructionDamageMax=300
