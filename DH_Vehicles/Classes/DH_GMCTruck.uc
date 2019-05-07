@@ -118,6 +118,7 @@ defaultproperties
         WheelRadius=26.0
         SupportBoneName="Axle_F_L"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_GMCTruck.LFWheel'
     Begin Object Class=SVehicleWheel Name=MRWheel
@@ -136,6 +137,7 @@ defaultproperties
         WheelRadius=26.0
         SupportBoneName="Axle_M_L"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_GMCTruck.MLWheel'
     Begin Object Class=SVehicleWheel Name=RRWheel
@@ -156,6 +158,7 @@ defaultproperties
         WheelRadius=26.0
         SupportBoneName="Axle_R_L"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_GMCTruck.LRWheel'
 

@@ -182,6 +182,7 @@ defaultproperties
         WheelRadius=27.5
         SupportBoneName="Axle_LF"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_Sdkfz251Transport.RFWheel'
     Begin Object Class=SVehicleWheel Name=LFWheel
@@ -199,6 +200,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=7.0)
         WheelRadius=30.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_Sdkfz251Transport.FLeft_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=FRight_Drive_Wheel
@@ -215,6 +217,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=-2.0)
         WheelRadius=30.0
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_Sdkfz251Transport.RLeft_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=RRight_Drive_Wheel

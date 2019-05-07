@@ -124,6 +124,7 @@ defaultproperties
         WheelRadius=25.5
         SupportBoneName="Axle_FR" // means left side vertices are rotated around right axle bone - just makes axle move correctly with wheels, purely a visual thing
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_GAZ67Vehicle.Wheel_FrontL'
     Begin Object Class=SVehicleWheel Name=Wheel_FrontR
@@ -144,6 +145,7 @@ defaultproperties
         WheelRadius=25.5
         SupportBoneName="Axle_BR"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_GAZ67Vehicle.Wheel_BackL'
     Begin Object Class=SVehicleWheel Name=Wheel_BackR

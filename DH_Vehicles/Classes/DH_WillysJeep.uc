@@ -125,6 +125,7 @@ defaultproperties
         WheelRadius=25.0
         SupportBoneName="RightFrontSusp00"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_WillysJeep.LFWheel'
     Begin Object Class=SVehicleWheel Name=RFWheel
@@ -147,6 +148,7 @@ defaultproperties
         WheelRadius=25.0
         SupportBoneName="LeftRearAxle"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_WillysJeep.LRWheel'
     Begin Object Class=SVehicleWheel Name=RRWheel
