@@ -9,5 +9,5 @@ class DHMapIconAttachment_SpawnPoint_SquadRallyPoint extends DHMapIconAttachment
 defaultproperties
 {
     bIgnoreGRIUpdates=true
-    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.rally_point'
+    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.rally_point_encircled'
 }

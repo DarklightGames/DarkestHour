@@ -8,5 +8,5 @@ class DHMapIconAttachment_SpawnPoint_PlatoonHQ extends DHMapIconAttachment_Spawn
 
 defaultproperties
 {
-    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.platoon_hq'
+    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.platoon_hq_encircled'
 }
