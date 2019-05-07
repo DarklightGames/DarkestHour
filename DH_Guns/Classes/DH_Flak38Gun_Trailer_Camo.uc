@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_Flak38Gun_Trailer_Camo extends DH_Flak38Gun_Trailer;

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHConstruction_Sandbags_Line extends DHConstruction_Sandbags;
@@ -16,5 +16,5 @@ defaultproperties
     CollisionHeight=100
     CollisionRadius=90
     SupplyCost=100
-    HealthMax=250
+    HealthMax=500
 }

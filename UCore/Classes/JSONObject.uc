@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class JSONObject extends JSONValue;
@@ -127,7 +127,7 @@ function string Encode()
         {
             Map.Get(Keys[i], V);
 
-            Strings[Strings.Length] = "\"" $ Keys[i] $ "\":" $ V.Encode();
+            Strings[Strings.Length] = "\"" $ GetSanitizedString(Keys[i]) $ "\":" $ V.Encode();
         }
 
         S $= class'UString'.static.Join(",", Strings);

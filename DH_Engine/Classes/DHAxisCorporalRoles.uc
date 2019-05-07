@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHAxisCorporalRoles extends DHAxisRoles
@@ -10,7 +10,7 @@ defaultproperties
 {
     bRequiresSLorASL=true
     MyName="Corporal"
-    AltName="Obergefreiter"
+    AltName="Gefreiter"
     Article="a "
     PluralName="Corporals"
     Limit=2

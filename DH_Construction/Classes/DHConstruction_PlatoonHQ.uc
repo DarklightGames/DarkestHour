@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHConstruction_PlatoonHQ extends DHConstruction
@@ -309,6 +309,7 @@ defaultproperties
     SquadMemberCountMinimum=3
     ArcLengthTraceIntervalInMeters=0.5
     CustomErrorString="Cannot {verb} a {name} close to {string} unless within {integer}m of controlled territory."
+    bCanBePlacedInDangerZone=false
 
     StartRotationMin=(Yaw=32768)
     StartRotationMax=(Yaw=32768)

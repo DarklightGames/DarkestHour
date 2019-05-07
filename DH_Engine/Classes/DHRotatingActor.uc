@@ -22,9 +22,6 @@ delegate OnDestroyed(int Time);
 
 simulated event PostBeginPlay()
 {
-    local vector TraceHitLocation;
-    local vector TraceHitNormal;
-
     DesiredRotation = Rotation;
 
     InitalRotation = Rotation;

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHConstruction extends Actor
@@ -34,6 +34,7 @@ enum EConstructionErrorType
     ERROR_TooCloseToObjective,      // Too close to an objective
     ERROR_TooCloseToEnemyObjective, // Too close to enemy controlled objective
     ERROR_MissingRequirement,       // Not close enough to a required friendly construciton
+    ERROR_InDangerZone,             // Cannot place this construction inside enemy territory.
     ERROR_Custom,                   // Custom error type (provide an error message in OptionalString)
     ERROR_Other
 };
@@ -89,6 +90,7 @@ var     float   ObjectiveDistanceMinMeters;             // The minimum distance,
 var     float   EnemyObjectiveDistanceMinMeters;        // The minimum distance, in meters, that this construction must be placed away from enemy objectives.
 var     bool    bShouldSwitchToLastWeaponOnPlacement;
 var     bool    bCanBePlacedWithControlPoints;
+var     bool    bCanBePlacedInDangerZone;
 
 struct ProximityRequirement
 {
@@ -137,9 +139,8 @@ var     float   StagnationLifespan;
 
 // Tear-down
 var     bool    bCanBeTornDownWhenConstructed;      // Whether or not players can tear down the construction after it has been constructed.
-var     bool    bCanBeTornDownWithSupplyTruckNearby;// Whether or not players can tear down the construction if a friendly supply truck is nearby...
-                                                    // (if true, then `bCanBeTornDownWhenConstructed` and 'bCanBeTornDownByFriendlies' are ignored)
 var     bool    bCanBeTornDownByFriendlies;         // Whether or not friendly players can tear down the construction (e.g. to stop griefing of important constructions)
+var     bool    bBreakOnTearDown;                   // If true, the construction breaks when torn down
 var     float   TearDownProgress;
 var     float   TakeDownProgressInterval;
 
@@ -176,6 +177,13 @@ var float                       LastImpactTimeSeconds;
 // Tattered
 var int                         TatteredHealthThreshold;    // The health below which the construction is considered "tattered". -1 for no tattering
 var StaticMesh                  TatteredStaticMesh;
+
+// Cut
+var float                       CutDuration;                // Cut duration
+var StaticMesh                  CutStaticMesh;              // Static mesh to display when cut
+var sound                       CutSound;
+var float                       CutSoundVolume;
+var float                       CutSoundRadius;
 
 // Health
 var private int     Health;
@@ -241,6 +249,7 @@ simulated function bool IsBroken() { return false; }
 simulated function bool IsConstructed() { return false; }
 simulated function bool IsTattered() { return false; }
 simulated function bool CanBeBuilt() { return false; }
+simulated function bool CanBeCut() { return false; }
 
 final simulated function int GetTeamIndex()
 {
@@ -370,6 +379,23 @@ simulated event Destroyed()
 
 auto simulated state Constructing
 {
+    simulated function BeginState()
+    {
+        // Client
+        if (Level.NetMode != NM_DedicatedServer)
+        {
+            if (PlacementEmitterClass != none)
+            {
+                Spawn(PlacementEmitterClass);
+            }
+
+            if (PlacementSound != none)
+            {
+                PlaySound(PlacementSound, SLOT_Misc, PlacementSoundVolume,, PlacementSoundRadius,, true);
+            }
+        }
+    }
+
     simulated function bool CanBeBuilt()
     {
         return true;
@@ -378,7 +404,6 @@ auto simulated state Constructing
     function TakeTearDownDamage(Pawn InstigatedBy)
     {
         Progress -= 1;
-
         OnProgressChanged(InstigatedBy);
     }
 
@@ -438,8 +463,9 @@ auto simulated state Constructing
         }
     }
 
+// This only runs on server/authority
 Begin:
-    if (Role == ROLE_Authority)
+    if (Role == ROLE_Authority) // this is likely unneeded
     {
         // When placed in the SDK, the Owner will be none.
         if (Owner == none && bShouldAutoConstruct)
@@ -462,21 +488,6 @@ Begin:
         }
 
         OnProgressChanged(none);
-    }
-
-    // TODO: these don't actually seem to work in a multiplayer environment.
-    // Client-side effects
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        if (PlacementEmitterClass != none)
-        {
-            Spawn(PlacementEmitterClass);
-        }
-
-        if (PlacementSound != none)
-        {
-            PlaySound(PlacementSound, SLOT_Misc, PlacementSoundVolume,, PlacementSoundRadius,, true);
-        }
     }
 }
 
@@ -579,9 +590,14 @@ simulated state Constructed
 
         if (TearDownProgress >= ProgressMax)
         {
-            if (default.Stages.Length == 0)
+            // If the construction has no stages or is cut, then destroy it
+            if (default.Stages.Length == 0 || StaticMesh == CutStaticMesh)
             {
                 Destroy();
+            }
+            else if (bBreakOnTearDown)
+            {
+                BreakMe();
             }
             else
             {
@@ -616,14 +632,7 @@ simulated state Constructed
 
     simulated function bool CanTakeTearDownDamageFromPawn(Pawn P, optional bool bShouldSendErrorMessage)
     {
-        if (DHPawn(P) != none && bCanBeTornDownWithSupplyTruckNearby)
-        {
-            return IsFriendlySupplyTruckNearby(DHPawn(P));
-        }
-        else
-        {
-            return bCanBeTornDownWhenConstructed && (bCanBeTornDownByFriendlies || (P != none && P.GetTeamNum() != TeamIndex));
-        }
+        return bCanBeTornDownWhenConstructed && (bCanBeTornDownByFriendlies || (P != none && P.GetTeamNum() != TeamIndex));
     }
 
 // This is required because we cannot call TakeDamage within the KImpact
@@ -633,6 +642,25 @@ simulated state Constructed
 DelayedDamage:
     Sleep(0.1);
     TakeDamage(DelayedDamage, none, vect(0, 0, 0), vect(0, 0, 0), DelayedDamageType);
+}
+
+simulated state Cut extends Constructed
+{
+    simulated function BeginState()
+    {
+        if (Role == ROLE_Authority)
+        {
+            TearDownProgress = ProgressMax - (ProgressMax * TakeDownProgressInterval);
+            SetStaticMesh(CutStaticMesh);
+            NetUpdateTime = Level.TimeSeconds - 1.0;
+        }
+
+        // This is being run on the client only
+        if (CutSound != none)
+        {
+            PlaySound(CutSound, SLOT_Misc, CutSoundVolume,, CutSoundRadius,, true);
+        }
+    }
 }
 
 // Override this for additional functionality when construction breaks.
@@ -690,21 +718,6 @@ simulated state Broken
             }
         }
     }
-}
-
-simulated function bool IsFriendlySupplyTruckNearby(DHPawn P)
-{
-    local int i;
-
-    for (i = 0; i < P.TouchingSupplyAttachments.Length; ++i)
-    {
-        if (P.TouchingSupplyAttachments[i] != none && P.TouchingSupplyAttachments[i].bIsAttachedToVehicle)
-        {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 function UpdateAppearance()
@@ -781,7 +794,24 @@ function static GetCollisionSize(DHActorProxy.Context Context, out float NewRadi
 
 function static bool ShouldShowOnMenu(DHActorProxy.Context Context)
 {
-    return true;
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(Context.PlayerController.PlayerReplicationInfo);
+
+    // Only show constructions the player is allowed to place
+    if (PRI != none)
+    {
+        return IsPlaceableByPlayer(PRI);
+    }
+    else
+    {
+        return false;
+    }
+}
+
+static function bool IsPlaceableByPlayer(DHPlayerReplicationInfo PRI)
+{
+    return PRI.IsSLorASL();
 }
 
 // This function is used for determining if a player is able to build this type
@@ -821,12 +851,6 @@ function static ConstructionError GetPlayerError(DHActorProxy.Context Context)
         return E;
     }
 
-    if (static.GetSupplyCost(Context) > 0 && P.TouchingSupplyCount < static.GetSupplyCost(Context))
-    {
-        E.Type = ERROR_InsufficientSupply;
-        return E;
-    }
-
     CM = class'DHConstructionManager'.static.GetInstance(P.Level);
 
     if (CM == none)
@@ -845,9 +869,7 @@ function static ConstructionError GetPlayerError(DHActorProxy.Context Context)
     SRI = Context.PlayerController.SquadReplicationInfo;
     PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
 
-    // TODO: in future we may allow non-squad leaders to make constructions.
-    // A static function in the class could take in a PRI and make a decision there instead of it being in here.
-    if (PRI == none || SRI == none || (!PRI.IsSquadLeader() && !PRI.bIsSquadAssistant))
+    if (PRI == none || SRI == none || !IsPlaceableByPlayer(PRI))
     {
         E.Type = ERROR_Fatal;
         return E;
@@ -857,6 +879,12 @@ function static ConstructionError GetPlayerError(DHActorProxy.Context Context)
     {
         E.Type = ERROR_SquadTooSmall;
         E.OptionalInteger = default.SquadMemberCountMinimum;
+        return E;
+    }
+
+    if (static.GetSupplyCost(Context) > 0 && P.TouchingSupplyCount < static.GetSupplyCost(Context))
+    {
+        E.Type = ERROR_InsufficientSupply;
         return E;
     }
 
@@ -936,6 +964,8 @@ simulated function bool CanTakeTearDownDamageFromPawn(Pawn P, optional bool bSho
 {
     return true;
 }
+
+function CutConstruction(Pawn InstigatedBy);
 
 function TakeTearDownDamage(Pawn InstigatedBy);
 
@@ -1144,6 +1174,7 @@ defaultproperties
     bShouldAlignToGround=true
     ArcLengthTraceIntervalInMeters=1.0
     bShouldSwitchToLastWeaponOnPlacement=true
+    bCanBePlacedInDangerZone=true
 
     // Stagnation
     bCanDieOfStagnation=true

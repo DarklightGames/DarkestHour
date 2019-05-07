@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHConstruction_Foxhole extends DHConstruction;
@@ -85,6 +85,11 @@ static function float GetTerrainScale(TerrainInfo TI)
     }
 
     return 0.0;
+}
+
+static function bool IsPlaceableByPlayer(DHPlayerReplicationInfo PRI)
+{
+    return PRI.IsSLorASL() || PRI.IsPatron();
 }
 
 static function bool IsTerrainScaleLarge(TerrainInfo TI)

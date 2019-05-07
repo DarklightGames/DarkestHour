@@ -222,7 +222,7 @@ simulated function bool HasAmmoToReload(byte AmmoIndex)
         case 2:
             return NumTertiaryMags > 0;
         default:
-            return HasAmmo(AmmoIndex); // coaxial MG or smoke launcher
+            return super.HasAmmoToReload(AmmoIndex); // coaxial MG or smoke launcher
     }
 }
 

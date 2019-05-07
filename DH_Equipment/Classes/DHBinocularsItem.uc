@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHBinocularsItem extends DHProjectileWeapon; // obviously not really a projectile weapon, but that class has most of the necessary functionality, e.g. zoom in for ironsight mode
@@ -196,7 +196,7 @@ simulated function ZoomIn(optional bool bAnimateTransition)
     }
     else if (InstigatorIsLocalHuman())
     {
-        SetPlayerFOV(PlayerIronsightFOV); // if there's no animation, go to zoomed FOV now
+        SetPlayerFOV(GetPlayerIronsightFOV()); // if there's no animation, go to zoomed FOV now
     }
 
     if (ROPawn(Instigator) != none)

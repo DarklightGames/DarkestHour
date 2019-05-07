@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHSpawnManager extends SVehicleFactory;
@@ -169,6 +169,12 @@ function bool SpawnPlayer(DHPlayer PC)
                     P.SpawnPoint = SP;
                     P.bCombatSpawned = bCombatSpawn;
                 }
+            }
+            else
+            {
+                // It's possible that the user attempted to spawn a vehicle,
+                // in which case we need to invalidate the spawn reservation.
+                GRI.UnreserveVehicle(PC);
             }
 
             return bResult;

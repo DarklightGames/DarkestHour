@@ -3,15 +3,10 @@
 // Darklight Games (c) 2008-2018
 //==============================================================================
 
-class DHAxisArtilleryOfficerRoles extends DHAxisRoles
-    abstract;
+class DHShovelAttachment_Russian extends DHShovelAttachment;
 
 defaultproperties
 {
-    bIsArtilleryOfficer=true
-    MyName="Artillery Officer"
-    AltName="Artillerieoffizier"
-    Article="a "
-    PluralName="Artillery Officers"
-    Limit=1
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.Shovel_sov_3rd'
+    Skins(0)=Texture'DH_Equipment_tex.Shovels.sov_shovel_diff'
 }

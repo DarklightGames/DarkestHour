@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHMainMenu extends UT2K4GUIPage;
@@ -419,6 +419,14 @@ event Opened(GUIComponent Sender)
         PlayerOwner().ConsoleCommand("set Engine.PlayerController VoiceChatLANCodec CODEC_96WB");
         PlayerOwner().SaveConfig();
     }
+
+    // Due to a bug introduced in 9.0, the VoiceVolume was being
+    // set to 0.0 upon saving settings. Originally we thought the setting
+    // did *nothing*, but it appears to disable VOIP entirely if you start
+    // the game up with the value as 0.0. To be extra safe, we just
+    // forcibly set the VoiceVolume to 1.0 every time.
+    PlayerOwner().ConsoleCommand("set ini:Engine.Engine.AudioDevice VoiceVolume 1.0");
+    PlayerOwner().SaveConfig();
 
     super.Opened(Sender);
 

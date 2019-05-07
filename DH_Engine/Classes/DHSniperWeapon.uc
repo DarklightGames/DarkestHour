@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHSniperWeapon extends DHProjectileWeapon
@@ -256,7 +256,7 @@ defaultproperties
     bPlusOneLoading=true
     ScopeOverlaySize=0.7
 
-    PlayerIronsightFOV=90.0
+    bUsesIronsightFOV=false
     FreeAimRotationSpeed=6.0
     BobModifyFactor=0.85
 
