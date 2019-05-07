@@ -18,5 +18,5 @@ defaultproperties
 
     TreadDamageMassThreshold=12.0
     TreadDamageRadius=64.0
-    TreadDamageMax=50.0
+    TreadDamageMax=65.0
 }
