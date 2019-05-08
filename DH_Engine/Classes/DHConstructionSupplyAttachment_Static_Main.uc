@@ -10,6 +10,6 @@ defaultproperties
     SupplyCount=8000.0
     SupplyCountMax=8000
     HumanReadableName="Main Supply Cache"
-    bShouldShowOnMap=false
     bIsMainSupplyCache=true
+    MapIconAttachmentClass=none
 }

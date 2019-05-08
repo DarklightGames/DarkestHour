@@ -10,6 +10,7 @@ class DHHud extends ROHud
 #exec OBJ LOAD FILE=..\Textures\DH_Weapon_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
 #exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt2_tex.utx
+#exec OBJ LOAD FILE=..\Textures\DH_Artillery_tex.utx
 
 // Death messages
 struct DHObituary
@@ -43,7 +44,6 @@ var     SpriteWidget        MapIconMortarSmokeTarget;
 var     SpriteWidget        MapIconMortarArrow;
 var     SpriteWidget        MapIconMortarHit;
 var     SpriteWidget        MapIconObjectiveStatusIcon;
-var     SpriteWidget        MapIconEnemyRallyPoint;
 var     float               PlayerIconScale, PlayerIconLargeScale;
 
 // Screen icons
@@ -85,9 +85,6 @@ var     SpriteWidget        SupplyPointIcon;
 var     SpriteWidget        SupplyCountWidget;
 var     SpriteWidget        SupplyCountIconWidget;
 var     TextWidget          SupplyCountTextWidget;
-
-// Resupply Attachment
-var     SpriteWidget        ResupplyAttachmentIcon;
 
 // Construction
 var     SpriteWidget        VehicleSuppliesIcon;
@@ -3303,7 +3300,6 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     local string                    DistanceString, ObjLabel;
     local float                     MyMapScale, ArrowRotation;
     local int                       OwnerTeam, Distance, i, j;
-    local int                       Yaw;
     local DHObjective               ObjA, ObjB;
     local color                     ObjLineColor;
     local UColor.HSV                HSV;
@@ -3387,64 +3383,6 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
         {
             // Player resupply icon
             DHDrawIconOnMap(C, SubCoords, MapIconResupply, MyMapScale, DHGRI.ResupplyAreas[i].ResupplyVolumeLocation, MapCenter, Viewport);
-        }
-    }
-
-    // Draw resupply attachments
-    for (i = 0; i < arraycount(DHGRI.ResupplyAttachments); ++i)
-    {
-        if (DHGRI.ResupplyAttachments[i] == none || !DHGRI.ResupplyAttachments[i].bShowOnMap ||
-            (DHGRI.ResupplyAttachments[i].GetTeamIndex() != OwnerTeam && DHGRI.ResupplyAttachments[i].GetTeamIndex() != NEUTRAL_TEAM_INDEX))
-        {
-            continue;
-        }
-
-        // Get the Widget texture
-        ResupplyAttachmentIcon.WidgetTexture = DHGRI.ResupplyAttachments[i].GetAttachmentIcon();
-        ResupplyAttachmentIcon.TextureScale = DHGRI.ResupplyAttachments[i].GetAttachmentIconScale();
-
-        // Draw the Widget
-        DHDrawIconOnMap(C, SubCoords, ResupplyAttachmentIcon, MyMapScale, DHGRI.ResupplyAttachments[i].Location, MapCenter, Viewport);
-    }
-
-    // Draw supply points
-    for (i = 0; i < arraycount(DHGRI.SupplyPoints); ++i)
-    {
-        if (DHGRI.SupplyPoints[i].bIsActive == 1 &&
-            DHGRI.SupplyPoints[i].ActorClass.static.ShouldShowOnMap() &&
-            (DHGRI.SupplyPoints[i].TeamIndex == NEUTRAL_TEAM_INDEX || DHGRI.SupplyPoints[i].TeamIndex == OwnerTeam))
-        {
-            if (DHGRI.SupplyPoints[i].Actor != none)
-            {
-                Temp = DHGRI.SupplyPoints[i].Actor.Location;
-                Yaw = DHGRI.SupplyPoints[i].Actor.Rotation.Yaw;
-            }
-            else
-            {
-                class'UQuantize'.static.DequantizeClamped2DPose(DHGRI.SupplyPoints[i].Quantized2DPose, Temp.X, Temp.Y, Yaw);
-                Temp = DHGRI.GetWorldCoords(Temp.X, Temp.Y);
-            }
-
-            TexRotator(FinalBlend(SupplyPointIcon.WidgetTexture).Material).Material = DHGRI.SupplyPoints[i].ActorClass.default.MapIcon;
-
-            if (DHGRI.SupplyPoints[i].ActorClass.default.bShouldMapIconBeRotated)
-            {
-                TexRotator(FinalBlend(SupplyPointIcon.WidgetTexture).Material).Rotation.Yaw = GetMapIconYaw(Yaw);
-            }
-            else
-            {
-                TexRotator(FinalBlend(SupplyPointIcon.WidgetTexture).Material).Rotation.Yaw = 0.0;
-            }
-
-            // Set the color of the widget
-            SupplyPointIcon.Tints[0] = class'DHColor'.default.FriendlyColor;
-
-            DHDrawIconOnMap(C, SubCoords, SupplyPointIcon, MyMapScale, Temp, MapCenter, Viewport);
-
-            // HACK: This stops the engine from "instancing" the texture,
-            // resulting in the bizarre bug where all the icons share the same
-            // rotation.
-            C.DrawVertical(0.0, 0.0);
         }
     }
 
@@ -3832,9 +3770,9 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
         }
     }
 
+    DrawMapIconAttachments(C, SubCoords, MyMapScale, MapCenter, Viewport);
     DrawMapMarkersOnMap(C, Subcoords, MyMapScale, MapCenter, Viewport);
     DrawPlayerIconsOnMap(C, SubCoords, MyMapScale, MapCenter, Viewport);
-    DrawExposedEnemyRallyPoints(C, SubCoords, MyMapScale, MapCenter, Viewport);
 
     // DEBUG:
 
@@ -3849,6 +3787,41 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     if (bShowRelevancyDebugOnMap)
     {
         DrawNetworkActorsOnMap(C, SubCoords, MyMapScale, MapCenter);
+    }
+}
+
+function DrawMapIconAttachments(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
+{
+    local DHPlayer PC;
+    local DHMapIconAttachment MIA;
+
+    PC = DHPlayer(PlayerOwner);
+
+    if (PC == none || DHGRI == none)
+    {
+        return;
+    }
+
+    foreach AllActors(class'DHMapIconAttachment', MIA)
+    {
+        if (MIA == none || MIA.GetVisibilityIndex() == 255)
+        {
+            continue;
+        }
+
+        if (MIA.GetVisibilityIndex() == PC.GetTeamNum() || MIA.GetVisibilityIndex() == NEUTRAL_TEAM_INDEX)
+        {
+            MapMarkerIcon.WidgetTexture = MIA.GetIconMaterial(PC);
+            MapMarkerIcon.TextureCoords = MIA.GetIconCoords(PC);
+            MapMarkerIcon.TextureScale = MIA.GetIconScale(PC);
+            MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = MIA.GetIconColor(PC);
+
+            DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, MIA.GetWorldCoords(DHGRI), MapCenter, Viewport);
+            // HACK: This stops the engine from "instancing" the texture,
+            // resulting in the bizarre bug where all the icons share the same
+            // rotation.
+            C.DrawVertical(0.0, 0.0);
+        }
     }
 }
 
@@ -3951,39 +3924,6 @@ function DrawDangerZoneOverlay(Canvas C, AbsoluteCoordsInfo SubCoords, float MyM
     for (i = 0; i < DangerZoneOverlayContour.Length; ++i)
     {
         DHDrawIconOnMap(C, SubCoords, DangerZoneOverlayPointIcon, MyMapScale, DangerZoneOverlayContour[i], MapCenter, Viewport);
-    }
-}
-
-function DrawExposedEnemyRallyPoints(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
-{
-    local DHPlayer PC;
-    local DHSquadReplicationInfo SRI;
-    local array<DHSpawnPoint_SquadRallyPoint> ExposedEnemyRallyPoints;
-    local int i;
-    local vector L;
-
-    PC = DHPlayer(PlayerOwner);
-
-    if (PC == none)
-    {
-        return;
-    }
-
-    SRI = PC.SquadReplicationInfo;
-
-    if (SRI == none)
-    {
-        return;
-    }
-
-    ExposedEnemyRallyPoints = SRI.GetExposedEnemyRallyPoints(PC.GetTeamNum());
-
-    for (i = 0; i < ExposedEnemyRallyPoints.Length; i++)
-    {
-        L.X = ExposedEnemyRallyPoints[i].Location.X;
-        L.Y = ExposedEnemyRallyPoints[i].Location.Y;
-
-        DHDrawIconOnMap(C, SubCoords, MapIconEnemyRallyPoint, MyMapScale, L, MapCenter, Viewport);
     }
 }
 
@@ -4209,31 +4149,10 @@ function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
 
 function float GetMapIconYaw(float WorldYaw)
 {
-    local float MapIconYaw;
-
-    MapIconYaw = -WorldYaw;
-
     if (DHGRI != none)
     {
-        switch (DHGRI.OverheadOffset)
-        {
-            case 90:
-                MapIconYaw -= 32768;
-                break;
-
-            case 180:
-                MapIconYaw -= 49152;
-                break;
-
-            case 270:
-                break;
-
-            default:
-                MapIconYaw -= 16384;
-        }
+        return DHGRI.GetMapIconYaw(WorldYaw);
     }
-
-    return MapIconYaw;
 }
 
 function float GetMapMeterScale()
@@ -6106,11 +6025,8 @@ defaultproperties
     MapIconMortarSmokeTarget=(WidgetTexture=Texture'DH_GUI_Tex.GUI.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(X1=191,Y1=0,X2=255,Y2=64),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconMortarArrow=(WidgetTexture=FinalBlend'DH_GUI_Tex.GUI.mortar-arrow-final',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=127,Y2=127),TextureScale=0.1,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
     MapIconMortarHit=(WidgetTexture=Texture'InterfaceArt_tex.OverheadMap.overheadmap_Icons',RenderStyle=STY_Alpha,TextureCoords=(Y1=64,X2=63,Y2=127),TextureScale=0.05,DrawPivot=DP_LowerMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(B=255,G=255,R=255,A=255),Tints[1]=(B=255,G=255,R=255,A=255))
-    MapIconEnemyRallyPoint=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.rally_point',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.04,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=0,B=0,A=255),Tints[1]=(R=255,G=0,B=0,A=255))
 
     SupplyPointIcon=(WidgetTexture=FinalBlend'DH_GUI_tex.GUI.supply_point_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.03,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
-
-    ResupplyAttachmentIcon=(WidgetTexture=none,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=0,G=124,B=252,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
     // Map markers
     MapMarkerIcon=(WidgetTexture=none,RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.04,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=0,G=0,B=255,A=255),Tints[1]=(R=0,G=0,B=255,A=255))

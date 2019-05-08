@@ -101,7 +101,7 @@ function PlayFiring()
 
         if (FireSounds.Length > 0)
         {
-            Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
+            Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,, GetFiringSoundPitch(), false);
         }
     }
 
@@ -156,6 +156,7 @@ defaultproperties
     // Recoil
     MaxVerticalRecoilAngle=600
     MaxHorizontalRecoilAngle=120
+    PctRestDeployRecoil=0.8
 
     FireAnim="Shoot_Loop"
     FireLoopAnim="Shoot_Loop"

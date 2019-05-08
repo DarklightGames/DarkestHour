@@ -23,4 +23,6 @@ defaultproperties
     ExitPositions(1)=(X=-88.0,Y=-8.0,Z=25.0)
     VehicleMass=8.0
     SupplyCost=1050
+    bCanBeRotated=true
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
 }

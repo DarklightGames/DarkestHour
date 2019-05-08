@@ -55,7 +55,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_PPSH41Attachment'
     PickupClass=class'DH_Weapons.DH_PPSH41Pickup'
 
-    Mesh=SkeletalMesh'Allies_Ppsh_1st.PPSH-41-mesh'
+    Mesh=SkeletalMesh'DH_Ppsh_1st.PPSH-41-meshnew'
     HighDetailOverlay=shader'Weapons1st_tex.SMG.PPSH41_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
@@ -65,4 +65,20 @@ defaultproperties
     bHasSelectFire=true
     MaxNumPrimaryMags=3
     InitialNumPrimaryMags=3
+
+    IdleEmptyAnim="idle_empty"
+    IronIdleEmptyAnim="iron_idle_empty"
+    IronBringUpEmpty="iron_in_empty"
+    IronPutDownEmpty="iron_out_empty"
+    SprintStartEmptyAnim="sprint_start_empty"
+    SprintLoopEmptyAnim="sprint_middle_empty"
+    SprintEndEmptyAnim="sprint_end_empty"
+
+    CrawlForwardEmptyAnim="crawlF_empty"
+    CrawlBackwardEmptyAnim="crawlB_empty"
+    CrawlStartEmptyAnim="crawl_in_empty"
+    CrawlEndEmptyAnim="crawl_out_empty"
+
+    SelectEmptyAnim="draw_empty"
+    PutDownEmptyAnim="put_away_empty"
 }

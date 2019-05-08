@@ -15,11 +15,15 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_Thompson_1st.M1A1_Thompson' // TODO: there is no specularity mask for this weapon
 
-    PlayerIronsightFOV=65.0
-    IronSightDisplayFOV=30.0
+    PlayerIronsightFOV=75.0
+    IronSightDisplayFOV=50.0
 
     MaxNumPrimaryMags=9
     InitialNumPrimaryMags=9
+
+    InitialBarrels=1
+    BarrelClass=class'DH_Weapons.DH_ThompsonBarrel'
+    BarrelSteamBone="Muzzle"
 
     bHasSelectFire=true
     SelectFireAnim="switch_fire"

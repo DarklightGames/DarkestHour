@@ -6,8 +6,54 @@
 class DHATGun extends DHVehicle
     abstract;
 
-#exec OBJ LOAD FILE=..\Textures\DH_Artillery_tex.utx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Artillery_stc.usx
+enum ERotateError
+{
+    ERROR_None,
+    ERROR_EnemyGun,
+    ERROR_CannotBeRotated,
+    ERROR_IsBeingRotated,
+    ERROR_Occupied,
+    ERROR_NeedMorePlayers,
+    ERROR_Fatal,
+    ERROR_Cooldown,
+    ERROR_TooFarAway
+};
+
+var DHPawn            RotateControllerPawn;
+var DHRotatingActor   RotatingActor;
+var Actor             OldBase;
+
+var ROSoundAttachment RotateSoundAttachment;
+var sound             RotateSound;
+var float             RotateSoundVolume;
+
+var bool              bIsBeingRotated;
+var bool              bCanBeRotated;
+var int               NextRotationTime;
+var int               PlayersNeededToRotate;
+var int               RotateCooldown;
+var float             RotateControlRadiusInMeters;
+var float             RotationsPerSecond;
+
+var String            SentinelString;
+var Rotator           OldRotator;
+var bool              bOldIsRotating;
+
+var Material          RotationProjectionTexture;
+var DHConstructionProxyProjector    RotationProjector;
+
+
+replication
+{
+    reliable if (Role == ROLE_Authority)
+        bIsBeingRotated;
+
+    reliable if (Role == ROLE_Authority && !IsInState('Rotating'))
+        NextRotationTime;
+
+    reliable if (bNetDirty && Role == ROLE_Authority)
+        SentinelString;
+}
 
 // Disabled as nothing in Tick is relevant to an AT gun (to be on the safe side, MinBrakeFriction is set very high in default properties, so gun won't slide down a hill)
 simulated function Tick(float DeltaTime)
@@ -29,6 +75,13 @@ function bool TryToDrive(Pawn P)
         P.Controller == none || !P.Controller.bIsPlayer || P.DrivenVehicle != none || P.IsA('Vehicle') || bNonHumanControl || !Level.Game.CanEnterVehicle(self, P) ||
         WeaponPawns.Length == 0 || WeaponPawns[0] == none)
     {
+        return false;
+    }
+
+    // Deny entry if the gun is being rotated.
+    if (bIsBeingRotated)
+    {
+        DisplayVehicleMessage(14, P);
         return false;
     }
 
@@ -148,8 +201,366 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 }
 
+// Rotation
+simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int TeammatesInRadiusCount)
+{
+    local DHPlayer PC;
+    local DHGameReplicationInfo GRI;
+
+    if (Pawn == none)
+    {
+        return ERROR_Fatal;
+    }
+
+    if (VSize(Pawn.Location - Location) > class'DHUnits'.static.MetersToUnreal(RotateControlRadiusInMeters))
+    {
+        return ERROR_TooFarAway;
+    }
+
+    if (Pawn.GetTeamNum() != VehicleTeam)
+    {
+        return ERROR_EnemyGun;
+    }
+
+    if (!bCanBeRotated)
+    {
+        return ERROR_CannotBeRotated;
+    }
+
+    if (bIsBeingRotated)
+    {
+        return ERROR_IsBeingRotated;
+    }
+
+    if (NumPassengers() > 0)
+    {
+        return ERROR_Occupied;
+    }
+
+    PC = DHPlayer(Pawn.Controller);
+
+    if (PC != none)
+    {
+        GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+
+        if (GRI == none)
+        {
+            return ERROR_Fatal;
+        }
+
+        if (GRI.ElapsedTime < NextRotationTime)
+        {
+            return ERROR_Cooldown;
+        }
+    }
+    else
+    {
+        return ERROR_Fatal;
+    }
+
+
+    if (PlayersNeededToRotate > 1)
+    {
+        TeammatesInRadiusCount = GetTeammatesInRadiusCount(Pawn);
+
+        if (TeammatesInRadiusCount < PlayersNeededToRotate)
+        {
+            return ERROR_NeedMorePlayers;
+        }
+    }
+
+
+    return ERROR_None;
+}
+
+simulated function int GetTeammatesInRadiusCount(DHPawn Pawn)
+{
+    local Pawn OtherPawn;
+    local DHPlayerReplicationInfo OtherPRI;
+    local int Count;
+
+    foreach RadiusActors(class'Pawn', OtherPawn, class'DHUnits'.static.MetersToUnreal(RotateControlRadiusInMeters))
+    {
+        if (OtherPawn != none &&
+            OtherPawn.GetTeamNum() == Pawn.GetTeamNum() &&
+            !OtherPawn.bDeleteMe &&
+            OtherPawn.Health > 0 &&
+            (!OtherPawn.IsA('ROVehicle') || !OtherPawn.IsA('ROVehicleWeaponPawn')))
+        {
+            OtherPRI = DHPlayerReplicationInfo(OtherPawn.PlayerReplicationInfo);
+
+            if (OtherPRI != none)
+            {
+                ++Count;
+            }
+        }
+    }
+
+    return Count;
+}
+
+function ServerEnterRotation(DHPawn Instigator)
+{
+    local ERotateError RotateError;
+
+    RotateError = GetRotationError(Instigator);
+
+    if (RotateError != ERROR_None)
+    {
+        // TODO: Send a message to the player
+        Instigator.ClientExitATRotation();
+        return;
+    }
+
+    RotateControllerPawn = Instigator;
+    GotoState('Rotating');
+}
+
+function ServerExitRotation()
+{
+    if (RotatingActor != none && !RotatingActor.bPendingDelete)
+    {
+        RotatingActor.Destroy();
+    }
+}
+
+function ServerRotate(byte InputRotationFactor)
+{
+    local int F;
+
+    if (InputRotationFactor > 127)
+    {
+        F = InputRotationFactor - 256;
+    }
+    else
+    {
+        F = InputRotationFactor;
+    }
+
+    HandleRotate(F);
+}
+
+// HACK - This will only make sure the gun visibly rotates on the client
+// that initiates the rotation. It might look stuck to other clients.
+/*Used to set any properties on the client when it enters rotation*/
+simulated function ClientEnterRotation()
+{
+    local vector X, Y, Z;
+    local FinalBlend FinalMaterial;
+    local FadeColor FadeMaterial;
+    local Combiner CombinerMaterial;
+
+    //collision properties hack
+    bCollideWorld = false;
+    SetCollision(false,false,false);
+    SetPhysics(PHYS_None);
+    bOldIsRotating = bIsBeingRotated;
+
+
+    FadeMaterial = new class'FadeColor';
+    FadeMaterial.Color1 = class'UColor'.default.White;
+    FadeMaterial.Color1.A = 50;
+    FadeMaterial.Color2 = class'UColor'.default.White;
+    FadeMaterial.Color2.A = 95;
+    FadeMaterial.FadePeriod = 0.33;
+    FadeMaterial.ColorFadeType = FC_Sinusoidal;
+
+    CombinerMaterial = new class'Combiner';
+    CombinerMaterial.CombineOperation = CO_Multiply;
+    CombinerMaterial.AlphaOperation = AO_Multiply;
+    CombinerMaterial.Material1 = RotationProjectionTexture;
+    CombinerMaterial.Material2 = FadeMaterial;
+    CombinerMaterial.Modulate4X = true;
+
+    //FB.Material = RotationProjectionTexture;
+    //FB.FrameBufferBlending = FB_Translucent;
+    FinalMaterial = new class'FinalBlend';
+    FinalMaterial.FrameBufferBlending = FB_AlphaBlend;
+    FinalMaterial.ZWrite = true;
+    FinalMaterial.ZTest = true;
+    FinalMaterial.AlphaTest = true;
+    FinalMaterial.TwoSided = true;
+    FinalMaterial.Material = CombinerMaterial;
+    FinalMaterial.FallbackMaterial = CombinerMaterial;
+
+    RotationProjector = Spawn(class'DHConstructionProxyProjector',self, ,Location,Rotation);
+    RotationProjector.ProjTexture = FinalMaterial;
+    RotationProjector.GotoState('');
+    RotationProjector.bHidden = false;
+    RotationProjector.Texture = none;
+    RotationProjector.AttachProjector();
+    RotationProjector.AttachActor(self);
+    RotationProjector.SetBase(self);
+    RotationProjector.bNoProjectOnOwner = true;
+    RotationProjector.MaterialBlendingOp = PB_AlphaBlend;
+    RotationProjector.FrameBufferBlendingOp = PB_AlphaBlend;
+    RotationProjector.FOV = 1;
+    RotationProjector.MaxTraceDistance = 1024.0;
+    RotationProjector.bGradient = true;
+    RotationProjector.SetDrawScale((2.5 * CollisionRadius)/RotationProjector.ProjTexture.MaterialUSize());
+    GetAxes(Rotation, X, Y, Z);
+    RotationProjector.SetRelativeLocation(Z * 128.0);
+    RotationProjector.SetRelativeRotation(rot(-16384, 0, 0));
+}
+
+/*Used to set any properties on the client when it enters rotation*/
+simulated function ClientExitRotation()
+{
+    bCollideWorld = true;
+    SetCollision(true,true,true);
+    SetPhysics(PHYS_Karma);
+    bOldIsRotating = bIsBeingRotated;
+    ClientDestroyProjection();
+}
+
+simulated function ClientDestroyProjection()
+{
+    if(RotationProjector != none)
+    {
+        RotationProjector.Destroy();
+        RotationProjector = none;
+    }
+}
+
+function HandleRotate(int RotationFactor);
+function OnRotatingActorDestroyed(int Time);
+
+state Rotating
+{
+    function BeginState()
+    {
+        bIsBeingRotated = true;
+
+        RotatingActor = Spawn(class'DHRotatingActor',,, Location, Rotation);
+        RotatingActor.OnDestroyed = OnRotatingActorDestroyed;
+        RotatingActor.ControlRadiusInMeters = RotateControlRadiusInMeters;
+        RotatingActor.ControllerPawn = RotateControllerPawn;
+
+        if (RotateSound != none)
+        {
+            RotateSoundAttachment = Spawn(class'ROSoundAttachment');
+            RotateSoundAttachment.AmbientSound = RotateSound;
+            RotateSoundAttachment.SetBase(self);
+        }
+
+        SetPhysics(PHYS_None);
+        bCollideWorld = false;
+
+        // NOTE: This line avoids the hack of calling ClientEnterRotation client
+        // side, but also causes issue where AT Gun falls through the world.
+        //SetCollision(false,true,true);
+
+        SetBase(RotatingActor);
+    }
+
+    function OnRotatingActorDestroyed(int Time)
+    {
+        NextRotationTime = Time + RotateCooldown;
+        GotoState('');
+    }
+
+    function HandleRotate(int RotationFactor)
+    {
+        RotatingActor.SetRotationFactor(RotationFactor);
+
+        if (RotateSoundAttachment != none)
+        {
+            if (RotationFactor == 0)
+            {
+                RotateSoundAttachment.SoundVolume = 0.0;
+            }
+            else
+            {
+                RotateSoundAttachment.SoundVolume = RotateSoundVolume;
+            }
+        }
+    }
+
+    function EndState()
+    {
+        if (RotatingActor != none && !RotatingActor.bPendingDelete)
+        {
+            RotatingActor.Destroy();
+        }
+
+        if (RotateSoundAttachment != none)
+        {
+            RotateSoundAttachment.Destroy();
+        }
+
+        SetBase(none);
+
+        SetRotation(RotatingActor.DesiredRotation);
+
+        if(RotationProjector != none)
+        {
+            RotationProjector.Destroy();
+        }
+
+        SentinelString = String(Rotation);
+
+        bCollideWorld = true;
+        SetCollision(true,true,true);
+        SetPhysics(PHYS_Karma);
+
+        bIsBeingRotated = false;
+
+        if (RotateControllerPawn != none)
+        {
+            RotateControllerPawn.ClientExitATRotation();
+        }
+    }
+}
+
+
+// Used to force the final server rotation onto the clients. Gets around replication ownership issue.
+simulated event PostNetReceive()
+{
+    local Rotator UncompressedRotation;
+    local int FirstComma,SecondComma;
+    local String CutSentinel;
+    super.PostNetReceive();
+
+    // Rotation is sent as string, process.
+    firstComma = InStr(SentinelString,",");
+    UncompressedRotation.Pitch = Int(Left(SentinelString, FirstComma));
+    CutSentinel = Mid(SentinelString,firstComma + 1);
+    SecondComma = InStr(CutSentinel, ",");
+    UncompressedRotation.Yaw = Int(Left(CutSentinel, SecondComma));
+    UncompressedRotation.Roll = Int(Mid(CutSentinel, SecondComma + 1));
+
+    if(OldRotator != UncompressedRotation)
+    {
+        OldRotator = UncompressedRotation;
+        SetPhysics(PHYS_None);
+        SetRotation(UncompressedRotation);
+        SetPhysics(PHYS_Karma);
+    }
+
+    // End rotating state
+    if (bOldIsRotating && !bIsBeingRotated)
+    {
+        ClientExitRotation();
+        bOldIsRotating = bIsBeingRotated;
+    }
+    // start rotating state
+    else if (!bOldIsRotating && bIsBeingRotated)
+    {
+        bOldIsRotating = bIsBeingRotated;
+    }
+}
+
+// Overriden to suppress the touch message when the gun is being rotated
+// TODO: This is probably not the best way to do this
+simulated event NotifySelected(Pawn User)
+{
+    if (!bIsBeingRotated)
+    {
+        super.NotifySelected(User);
+    }
+}
+
 // Functions emptied out as AT gun bases cannot be occupied & have no engine or treads:
-simulated function PostNetReceive();
 function Fire(optional float F);
 function ServerStartEngine();
 simulated function SetEngine();
@@ -160,7 +571,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
 simulated function SetupTreads();
 simulated function DestroyTreads();
 function CheckTreadDamage(vector HitLocation, vector Momentum);
-function DamageTrack(bool bLeftTrack);
+function DestroyTrack(bool bLeftTrack);
 simulated function SetDamagedTracks();
 simulated event DrivingStatusChanged();
 simulated function NextWeapon();
@@ -191,7 +602,7 @@ defaultproperties
 {
     // Key properties
     bNeverReset=true // AT gun never re-spawns if left unattended with no friendlies nearby or is left disabled
-    bNetNotify=false // AT gun doesn't use PostNetReceive() as engine on/off, damaged tracks & hull fires are all irrelevant to it
+    bNetNotify=true // AT gun doesn't use PostNetReceive() as engine on/off, damaged tracks & hull fires are all irrelevant to it
     bHasTreads=false
     bMustBeTankCommander=false
     bMultiPosition=false
@@ -238,6 +649,21 @@ defaultproperties
     ExitPositions(13)=(X=-100.0,Y=0.0,Z=75.0)
     ExitPositions(14)=(X=-100.0,Y=75.0,Z=75.0)
     ExitPositions(15)=(X=-100.0,Y=-75.0,Z=75.0)
+
+    // Rotation
+    PlayersNeededToRotate=1
+    RotationsPerSecond=0.125
+    bFixedRotationDir=false
+    RotateCooldown=5
+    RotateControlRadiusInMeters=5
+    RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
+    RotateSoundVolume=20.0
+
+    OldRotator=(Pitch=0,Yaw=0,Roll=0)
+    bOldIsRotating = false;
+
+    RotationProjectionTexture = Material'DH_Construction_tex.ui.rotation_projector'
+    //RotationProjectionTexture = Material'DH_Construction_tex.ui.aura_red'
 
     // Karma properties
     Begin Object Class=KarmaParamsRBFull Name=KParams0

@@ -195,6 +195,7 @@ defaultproperties
         BoneName="steer_wheel_LF"
         BoneRollAxis=AXIS_Y
         WheelRadius=40.0
+        bLeftTrack=true
     End Object
     Wheels(0)=LF_Steering
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -211,6 +212,7 @@ defaultproperties
         BoneName="steer_wheel_LR"
         BoneRollAxis=AXIS_Y
         WheelRadius=40.0
+        bLeftTrack=true
     End Object
     Wheels(2)=LR_Steering
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -226,6 +228,7 @@ defaultproperties
         BoneName="drive_wheel_L"
         BoneRollAxis=AXIS_Y
         WheelRadius=40.0
+        bLeftTrack=true
     End Object
     Wheels(4)=Left_Drive_Wheel
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel

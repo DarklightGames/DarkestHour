@@ -9,12 +9,12 @@ class DHConstruction_InventorySpawner extends DHConstruction
 var class<DHInventorySpawner>   SpawnerClass;
 var DHInventorySpawner          Spawner;
 
-static function class<DHInventorySpawner> GetSpawnerClass(DHConstruction.Context Context)
+static function class<DHInventorySpawner> GetSpawnerClass(DHActorProxy.Context Context)
 {
     return default.SpawnerClass;
 }
 
-static function DHConstruction.ConstructionError GetPlayerError(DHConstruction.Context Context)
+static function DHConstruction.ConstructionError GetPlayerError(DHActorProxy.Context Context)
 {
     local DHConstruction.ConstructionError Error;
 
@@ -43,12 +43,20 @@ simulated function OnConstructed()
     }
 }
 
-static function UpdateProxy(DHConstructionProxy CP)
+static function UpdateProxy(DHActorProxy AP)
 {
     local int i;
     local class<DHInventorySpawner> SpawnerClass;
+    local DHConstructionProxy CP;
 
-    super.UpdateProxy(CP);
+    super.UpdateProxy(AP);
+
+    CP = DHConstructionProxy(AP);
+
+    if (CP == none)
+    {
+        return;
+    }
 
     SpawnerClass = GetSpawnerClass(CP.GetContext());
 
@@ -61,7 +69,7 @@ static function UpdateProxy(DHConstructionProxy CP)
     }
 }
 
-static function string GetMenuName(DHConstruction.Context Context)
+static function string GetMenuName(DHActorProxy.Context Context)
 {
     local class<DHInventorySpawner> SpawnerClass;
 
@@ -75,7 +83,7 @@ static function string GetMenuName(DHConstruction.Context Context)
     return "";
 }
 
-static function GetCollisionSize(DHConstruction.Context Context, out float NewRadius, out float NewHeight)
+static function GetCollisionSize(DHActorProxy.Context Context, out float NewRadius, out float NewHeight)
 {
     local class<DHInventorySpawner> SpawnerClass;
 

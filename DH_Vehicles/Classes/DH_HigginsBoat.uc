@@ -396,6 +396,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=-6.0)
         WheelRadius=30.0
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_HigginsBoat.LFWheel'
     Begin Object Class=SVehicleWheel Name=RFWheel
@@ -414,6 +415,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=-6.0)
         WheelRadius=30.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_HigginsBoat.LRWheel'
     Begin Object Class=SVehicleWheel Name=RRWheel

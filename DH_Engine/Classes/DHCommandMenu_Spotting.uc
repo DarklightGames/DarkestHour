@@ -63,4 +63,5 @@ function OnSelect(int OptionIndex, vector Location)
 
 defaultproperties
 {
+    Options(0)=(ActionText="Rotate",Material=Texture'DH_InterfaceArt2_tex.Icons.rally_point')
 }

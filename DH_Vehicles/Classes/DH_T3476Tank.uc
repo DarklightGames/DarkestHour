@@ -147,6 +147,7 @@ defaultproperties
          BoneName="Steer_Wheel_LF"
          BoneRollAxis=AXIS_Y
          WheelRadius=33.0
+         bLeftTrack=true
      End Object
      Wheels(0)=SVehicleWheel'DH_Vehicles.DH_T3476Tank.LF_Steering'
      Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -165,6 +166,7 @@ defaultproperties
          BoneName="Steer_Wheel_LR"
          BoneRollAxis=AXIS_Y
          WheelRadius=33.0
+         bLeftTrack=true
      End Object
      Wheels(2)=SVehicleWheel'DH_Vehicles.DH_T3476Tank.LR_Steering'
      Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -182,6 +184,7 @@ defaultproperties
          BoneName="Drive_Wheel_L"
          BoneRollAxis=AXIS_Y
          WheelRadius=33.0
+         bLeftTrack=true
      End Object
      Wheels(4)=SVehicleWheel'DH_Vehicles.DH_T3476Tank.Left_Drive_Wheel'
      Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel

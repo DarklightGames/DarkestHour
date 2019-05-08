@@ -65,7 +65,7 @@ simulated function OnTeamIndexChanged()
     }
 }
 
-static function StaticMesh GetConstructedStaticMesh(DHConstruction.Context Context)
+static function StaticMesh GetConstructedStaticMesh(DHActorProxy.Context Context)
 {
     return default.SupplyAttachmentClass.static.GetStaticMesh(Context.LevelInfo.Level, Context.TeamIndex);
 }
