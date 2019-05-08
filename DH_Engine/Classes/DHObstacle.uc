@@ -44,11 +44,11 @@ simulated function PostBeginPlay()
     // Deduce type index
     for (i = 0; i < Info.Types.Length; ++i)
     {
-         if (Info.Types[i].IntactStaticMesh == StaticMesh)
-         {
-             TypeIndex = i;
-             break;
-         }
+        if (Info.Types[i].IntactStaticMesh == StaticMesh)
+        {
+            TypeIndex = i;
+            break;
+        }
     }
 
     if (TypeIndex == -1)
