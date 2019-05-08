@@ -77,6 +77,8 @@ var     sound       VehicleBurningSound;         // ambient sound when vehicle's
 var     sound       DestroyedBurningSound;       // ambient sound when vehicle is destroyed and burning
 var     float       SpawnProtEnds;               // is set when a player spawns the vehicle for damage protection in DarkestHour spawn type maps
 var     float       SpawnKillTimeEnds;           // is set when a player spawns the vehicle for spawn kill protection in DarkestHour spawn type maps
+var     array<int>  TrackHealth[2];              // Amount of health each track has remaining
+var     float       SatchelResistance;           // 1.0 default (0.5 means less resistance to satchels)
 
 // Engine
 var     bool        bEngineOff;                  // vehicle engine is simply switched off
@@ -293,6 +295,8 @@ simulated function Destroyed()
 
     DestroyAttachments();
 }
+
+function StartEngineFire(Pawn InstigatedBy);
 
 // Modified to score the vehicle kill, & to subtract the vehicle's reinforcement cost for the loss
 function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
@@ -2005,7 +2009,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             {
                 if (bDebuggingText)
                 {
-                    Level.Game.Broadcast(self, "Hit vehicle engine");
+                    Log("Hit vehicle engine");
                 }
 
                 DamageEngine(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
@@ -2015,7 +2019,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             {
                 if (bDebuggingText)
                 {
-                    Level.Game.Broadcast(self, "Hit vehicle ammo store");
+                    Log("Hit vehicle ammo store");
                 }
 
                 Damage *= VehHitpoints[i].DamageMultiplier;
@@ -2026,7 +2030,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             {
                 if (bDebuggingText)
                 {
-                    Level.Game.Broadcast(self, "Hit vehicle wheel");
+                    Log("Hit vehicle wheel");
                 }
 
                 // If wheel takes enough damage, vehicle has wheel damage
@@ -2055,6 +2059,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         LastHitBy = InstigatedBy.Controller;
     }
 
+    if (bDebuggingText)
+    {
+        Log("Damaging vehicle with:" @ Damage);
+    }
+
     // Call the Super from Vehicle (skip over others)
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
@@ -2064,6 +2073,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     if ((Health <= (default.HealthMax * default.DamagedEffectHealthFireFactor) && Health > 0) ||
         ((bHasTreads || bIsApc) && IsVehicleEmpty() && Damage >= 100))
     {
+        if (bDebuggingText)
+        {
+            Log("Setting fire to spike the vehicle as significant damage was done.");
+        }
+
         EngineHealth = 0;
         bSpikedVehicle = true;
         SetSpikeTimer();
@@ -2133,11 +2147,6 @@ function CheckTreadDamage(vector HitLocation, vector Momentum)
     {
         if (bDebuggingText || class'DH_LevelInfo'.static.DHDebugMode())
         {
-            if (Role == ROLE_Authority)
-            {
-                Level.Game.Broadcast(self, "Hit detection bug - switching tread hit from" @ HitSide @ "to" @ OppositeSide @ "as 'in angle' to original side was" @ int(InAngleDegrees) @ "degrees");
-            }
-
             Log("Hit detection bug - switching tread hit from" @ HitSide @ "to" @ OppositeSide @ "as 'in angle' to original side was" @ int(InAngleDegrees) @ "degrees");
         }
 
@@ -2147,11 +2156,11 @@ function CheckTreadDamage(vector HitLocation, vector Momentum)
     // Damage the track we hit, if it isn't already damaged
     if ((HitSide == "Right" && !bRightTrackDamaged) || (HitSide == "Left" && !bLeftTrackDamaged))
     {
-        DamageTrack(HitSide == "Left"); // passing true means left track damage
+        DestroyTrack(HitSide == "Left"); // passing true means left track damage
 
         if (bDebuggingText && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, HitSide @ "track damaged (hit height =" @ HitLocationRelativeOffset.Z $ ")");
+            Log(HitSide @ "track destroyed (hit height =" @ HitLocationRelativeOffset.Z $ ")");
         }
     }
 }
@@ -2208,7 +2217,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
     {
         if (bDebuggingText)
         {
-            Level.Game.Broadcast(self, "Engine is dead");
+            Log("Engine is dead");
         }
 
         if (!bEngineOff)
@@ -2226,8 +2235,52 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
     }
 }
 
-// Modified to call SetDamagedTracks() for single player or listen server, as we no longer use Tick (net client gets that via PostNetReceive)
-function DamageTrack(bool bLeftTrack)
+function bool IsTreadInRadius(vector Location, out float Radius, out int TrackNum)
+{
+    local int           i;
+    local coords        WheelCoords;
+    local float         D;
+
+    for (i = 0; i < Wheels.Length; ++i)
+    {
+        WheelCoords = GetBoneCoords(Wheels[i].BoneName);
+
+        D = VSize(Location - WheelCoords.Origin);
+
+        if (D < Radius)
+        {
+            Radius = D;
+            TrackNum = int(Wheels[i].bLeftTrack);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function DamageTrack(int Damage, bool bLeftTrack)
+{
+    TrackHealth[int(bLeftTrack)] -= Damage;
+
+    if (bDebuggingText)
+    {
+        if (bLeftTrack)
+        {
+            Log("Damaging the left track with" @ Damage @ "damage.");
+        }
+        else
+        {
+            Log("Damaging the right track with" @ Damage @ "damage.");
+        }
+    }
+
+    if (TrackHealth[int(bLeftTrack)] <= 0)
+    {
+        DestroyTrack(bLeftTrack);
+    }
+}
+
+function DestroyTrack(bool bLeftTrack)
 {
     if (bLeftTrack)
     {
@@ -3474,7 +3527,7 @@ function MaybeDestroyVehicle()
 
         if (bDebuggingText)
         {
-            Level.Game.Broadcast(self, "Initiating" @ VehicleSpikeTime @ "sec spike timer for disabled vehicle" @ VehicleNameString);
+            Log("Initiating" @ VehicleSpikeTime @ "sec spike timer for disabled vehicle" @ VehicleNameString);
         }
     }
 
@@ -3542,7 +3595,7 @@ event CheckReset()
 
                     if (bDebuggingText)
                     {
-                        Level.Game.Broadcast(self, VehicleNameString @ "CheckReset: is empty but set new ResetTime as found nearby friendly player" @ C.Pawn.GetHumanReadableName());
+                        Log(VehicleNameString @ "CheckReset: is empty but set new ResetTime as found nearby friendly player" @ C.Pawn.GetHumanReadableName());
                     }
 
                     return;
@@ -3556,11 +3609,11 @@ event CheckReset()
     {
         if (bKeyVehicle)
         {
-            Level.Game.Broadcast(self, VehicleNameString @ "is empty vehicle & re-spawned as is a key vehicle (no check for nearby friendlies)");
+            Log(VehicleNameString @ "is empty vehicle & re-spawned as is a key vehicle (no check for nearby friendlies)");
         }
         else
         {
-            Level.Game.Broadcast(self, VehicleNameString @ "is empty vehicle & re-spawned as no friendly player nearby that can use vehicle");
+            Log(VehicleNameString @ "is empty vehicle & re-spawned as no friendly player nearby that can use vehicle");
         }
     }
 
@@ -3690,6 +3743,12 @@ simulated function bool IsDisabled()
     }
 
     return false;
+}
+
+// New function to get the location of the Engine VehHitPoint
+function vector GetEngineLocation()
+{
+    return GetBoneCoords(VehHitPoints[0].PointBone).Origin;
 }
 
 // New helper function to check whether vehicle is burning
@@ -3885,16 +3944,16 @@ exec function DamTrack(string Track)
     {
         if (Track ~= "L" || Track ~= "Left")
         {
-            DamageTrack(true);
+            DestroyTrack(true);
         }
         else if (Track ~= "R" || Track ~= "Right")
         {
-            DamageTrack(false);
+            DestroyTrack(false);
         }
         else if (Track ~= "B" || Track ~= "Both")
         {
-            DamageTrack(true);
-            DamageTrack(false);
+            DestroyTrack(true);
+            DestroyTrack(false);
         }
     }
 }
@@ -3978,10 +4037,13 @@ defaultproperties
     Health=175
     HealthMax=175.0
     EngineHealth=30
+    TrackHealth(0)=100
+    TrackHealth(1)=100
     VehHitpoints(0)=(PointRadius=25.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // no.0 becomes engine instead of driver
     VehHitpoints(1)=(PointRadius=0.0,PointScale=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
     TreadDamageThreshold=0.3
     bCanCrash=true
+    SatchelResistance=1.0
     DirectHEImpactDamageMult=1.0
     DamagedWheelSpeedFactor=0.35
     ImpactDamageThreshold=33.0
@@ -4090,5 +4152,6 @@ defaultproperties
     bDesiredBehindView=false
     bDisableThrottle=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
-//  EntryRadius=375.0 // deprecated
+
+    //bDebuggingText=true
 }

@@ -148,6 +148,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=35.0,Y=-5.0,Z=6.0)
         WheelRadius=29.0
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_JagdpanzerIVL48Destroyer.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -166,6 +167,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=-7.0,Y=-5.0,Z=6.0)
         WheelRadius=29.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_JagdpanzerIVL48Destroyer.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -183,6 +185,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=6.0)
         WheelRadius=29.0
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_JagdpanzerIVL48Destroyer.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel

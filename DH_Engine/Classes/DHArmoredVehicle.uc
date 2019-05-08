@@ -842,7 +842,7 @@ function StartHullFire(Pawn InstigatedBy)
 
     if (bDebuggingText)
     {
-        Level.Game.Broadcast(self, "Vehicle set on fire");
+        Log("Vehicle set on fire");
     }
 
     // Record the player responsible for starting fire, so score can be awarded later if results in a kill
@@ -877,7 +877,7 @@ function StartEngineFire(Pawn InstigatedBy)
 
     if (bDebuggingText)
     {
-        Level.Game.Broadcast(self, "Engine set on fire");
+        Log("Engine set on fire");
     }
 
     // Record the player responsible for starting fire, so score can be awarded later if results in a kill
@@ -1140,7 +1140,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
 
         if ((bDebugPenetration || class'DH_LevelInfo'.static.DHDebugMode()) && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, "ERROR: hull angles not set up correctly for" @ VehicleNameString @ "(took hit from" @ HitLocationAngle @ "degrees & couldn't resolve which side that was");
+            Log("ERROR: hull angles not set up correctly for" @ VehicleNameString @ "(took hit from" @ HitLocationAngle @ "degrees & couldn't resolve which side that was");
         }
 
         ResetTakeDamageVariables();
@@ -1168,7 +1168,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
 
             if ((bDebugPenetration || class'DH_LevelInfo'.static.DHDebugMode()) && Role == ROLE_Authority)
             {
-                Level.Game.Broadcast(self, "Hit detection bug - switching from" @ HitSide @ "to" @ OppositeSide
+                Log("Hit detection bug - switching from" @ HitSide @ "to" @ OppositeSide
                     @ "as angle of incidence to original side was" @ int(Round(AngleOfIncidence)) @ "degrees");
             }
 
@@ -1199,7 +1199,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
 
             if (bDebugPenetration && Role == ROLE_Authority)
             {
-                Level.Game.Broadcast(self, "Hit hull" @ HitSide $ ": no penetration as extra side armor stops HEAT projectiles");
+                Log("Hit hull" @ HitSide $ ": no penetration as extra side armor stops HEAT projectiles");
             }
 
             ResetTakeDamageVariables();
@@ -1284,8 +1284,8 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         {
             if (Role == ROLE_Authority)
             {
-                Level.Game.Broadcast(self, DebugString1);
-                Level.Game.Broadcast(self, DebugString2);
+                Log(DebugString1);
+                Log(DebugString2);
             }
 
             if (Level.NetMode != NM_DedicatedServer)
@@ -1602,7 +1602,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 {
                     if (bDebuggingText)
                     {
-                        Level.Game.Broadcast(self, "Hit vehicle engine");
+                        Log("Hit vehicle engine");
                     }
 
                     DamageEngine(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
@@ -1623,7 +1623,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     {
                         if (bDebuggingText)
                         {
-                            Level.Game.Broadcast(self, "Hit vehicle ammo store - exploded");
+                            Log("Hit vehicle ammo store - exploded");
                         }
 
                         Damage *= Health;
@@ -1635,7 +1635,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     {
                         if (bDebuggingText)
                         {
-                            Level.Game.Broadcast(self, "Hit vehicle ammo store but did not explode");
+                            Log("Hit vehicle ammo store but did not explode");
                         }
 
                         HullFireChance = FMax(0.75, HullFireChance);
@@ -1675,7 +1675,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     {
                         if (bDebuggingText)
                         {
-                            Level.Game.Broadcast(self, "Hit gunsight optics");
+                            Log("Hit gunsight optics");
                         }
 
                         CannonPawn.DamageCannonOverlay();
@@ -1687,7 +1687,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                         {
                             if (bDebuggingText)
                             {
-                                Level.Game.Broadcast(self, "Hit gun/turret traverse");
+                                Log("Hit gun/turret traverse");
                             }
 
                             CannonPawn.bTurretRingDamaged = true;
@@ -1697,7 +1697,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                         {
                             if (bDebuggingText)
                             {
-                                Level.Game.Broadcast(self, "Hit gun pivot");
+                                Log("Hit gun pivot");
                             }
 
                             CannonPawn.bGunPivotDamaged = true;
@@ -1739,7 +1739,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     {
                         if (bDebuggingText)
                         {
-                            Level.Game.Broadcast(self, "Commander killed by shrapnel");
+                            Log("Commander killed by shrapnel");
                         }
 
                         CannonPawn.Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
@@ -1750,7 +1750,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     {
                         if (bDebuggingText)
                         {
-                            Level.Game.Broadcast(self, "Gunsight optics destroyed by shrapnel");
+                            Log("Gunsight optics destroyed by shrapnel");
                         }
 
                         CannonPawn.DamageCannonOverlay();
@@ -1761,7 +1761,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     {
                         if (bDebuggingText)
                         {
-                            Level.Game.Broadcast(self, "Gun pivot damaged by shrapnel");
+                            Log("Gun pivot damaged by shrapnel");
                         }
 
                         CannonPawn.bGunPivotDamaged = true;
@@ -1772,7 +1772,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     {
                         if (bDebuggingText)
                         {
-                            Level.Game.Broadcast(self, "Gun/turret traverse damaged by shrapnel");
+                            Log("Gun/turret traverse damaged by shrapnel");
                         }
 
                         CannonPawn.bTurretRingDamaged = true;
@@ -1785,7 +1785,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             {
                 if (bDebuggingText)
                 {
-                    Level.Game.Broadcast(self, "Turret ammo detonated by shrapnel");
+                    Log("Turret ammo detonated by shrapnel");
                 }
 
                 Damage *= Health;
@@ -1799,7 +1799,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 {
                     if (bDebuggingText)
                     {
-                        Level.Game.Broadcast(self, "Driver killed by shrapnel");
+                        Log("Driver killed by shrapnel");
                     }
 
                     Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
@@ -1810,7 +1810,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 {
                     if (bDebuggingText)
                     {
-                        Level.Game.Broadcast(self, "Hull gunner killed by shrapnel");
+                        Log("Hull gunner killed by shrapnel");
                     }
 
                     MGun.WeaponPawn.Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
@@ -1823,6 +1823,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         {
             CheckTreadDamage(HitLocation, Momentum);
         }
+    }
+
+    if (bDebuggingText)
+    {
+        Log("Damaging vehicle with:" @ Damage);
     }
 
     // Call the Super from Vehicle (skip over others)
@@ -1879,6 +1884,11 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
             Damage = Level.Game.ReduceDamage(Damage, self, InstigatedBy, HitLocation, Momentum, DamageType);
         }
 
+        if (bDebuggingText)
+        {
+            Log("Damaging engine with a damage of:" @ Damage);
+        }
+
         EngineHealth -= Damage;
     }
 
@@ -1887,7 +1897,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
     {
         if (bDebuggingText)
         {
-            Level.Game.Broadcast(self, "Engine is dead");
+            Log("Engine is dead");
         }
 
         if (!bEngineOff)
@@ -1905,7 +1915,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
         {
             if (bDebuggingText)
             {
-                Level.Game.Broadcast(self, "Engine fire started");
+                Log("Engine fire started");
             }
 
             StartEngineFire(InstigatedBy);
@@ -1955,7 +1965,7 @@ function TakeFireDamage()
         {
             if (bDebuggingText)
             {
-                Level.Game.Broadcast(self, "Fire detonated ammo");
+                Log("Fire detonated ammo");
             }
 
             TakeDamage(Health, PawnWhoSetOnFire, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), VehicleBurningDamType);

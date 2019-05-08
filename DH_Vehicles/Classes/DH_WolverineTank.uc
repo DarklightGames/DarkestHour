@@ -152,6 +152,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=10.0,Z=10.0)
         WheelRadius=33.0
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_WolverineTank.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -170,6 +171,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=-30.0,Z=10.0)
         WheelRadius=33.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_WolverineTank.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -187,6 +189,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=10.0)
         WheelRadius=33.0
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_WolverineTank.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel

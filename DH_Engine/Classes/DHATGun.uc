@@ -160,7 +160,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
 simulated function SetupTreads();
 simulated function DestroyTreads();
 function CheckTreadDamage(vector HitLocation, vector Momentum);
-function DamageTrack(bool bLeftTrack);
+function DestroyTrack(bool bLeftTrack);
 simulated function SetDamagedTracks();
 simulated event DrivingStatusChanged();
 simulated function NextWeapon();

@@ -167,6 +167,7 @@ defaultproperties
         SupportBoneName="axle_F_L"
         SupportBoneAxis=AXIS_X
         BoneOffset=(Y=-22.0,Z=-5.0)
+        bLeftTrack=true
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_M3Halftrack.LFWheel'
     Begin Object Class=SVehicleWheel Name=FLeft_Drive_Wheel
@@ -175,6 +176,7 @@ defaultproperties
         BoneRollAxis=AXIS_Z
         WheelRadius=27.0
         BoneOffset=(Y=-10.0,X=15.0,Z=-5.0)
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_M3Halftrack.FLeft_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=FRight_Drive_Wheel
@@ -191,6 +193,7 @@ defaultproperties
         BoneRollAxis=AXIS_Z
         WheelRadius=27.0
         BoneOffset=(Y=-10.0,X=-15.0,Z=-5.0)
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_M3Halftrack.RLeft_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=RRight_Drive_Wheel
