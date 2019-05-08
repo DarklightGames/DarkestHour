@@ -23,12 +23,12 @@ function PostBeginPlay()
 
         if (ResupplyAttachment != none)
         {
-            ResupplyAttachment.ResupplyType = ResupplyType;
+            ResupplyAttachment.SetResupplyType(ResupplyType);
             ResupplyAttachment.SetTeamIndex(GetTeamIndex());
             ResupplyAttachment.SetCollisionSize(ResupplyAttachmentCollisionRadius, ResupplyAttachmentCollisionHeight);
             ResupplyAttachment.SetBase(self);
             ResupplyAttachment.OnPawnResupplied = MyOnPawnResupplied;
-            ResupplyAttachment.bShowOnMap = true;
+            ResupplyAttachment.AttachMapIcon();
         }
         else
         {

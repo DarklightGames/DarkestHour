@@ -3,13 +3,11 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHConstructionSupplyAttachment_Static_Main extends DHConstructionSupplyAttachment_Static;
+class DHMapIconAttachment_Vehicle_Armored extends DHMapIconAttachment_Vehicle
+    notplaceable;
 
 defaultproperties
 {
-    SupplyCount=8000.0
-    SupplyCountMax=8000
-    HumanReadableName="Main Supply Cache"
-    bIsMainSupplyCache=true
-    MapIconAttachmentClass=none
+    IconMaterial=TexRotator'DH_InterfaceArt2_tex.Icons.tank_topdown_rot'
+    IconScale=0.035
 }

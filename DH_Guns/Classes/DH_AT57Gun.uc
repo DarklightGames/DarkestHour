@@ -23,6 +23,7 @@ defaultproperties
     SupplyCost=1050
     ConstructionPlacementOffset=(Z=10.0)
     bCanBeRotated=true
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

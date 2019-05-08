@@ -62,6 +62,10 @@ var bool    bIsEncroachedUpon;                          // True if there are ene
 
 var bool    bIsLowPriority;                             // When true, this spawn point may be deleted in favor of spawning a newer high priority spawn point if the # of potential spawn points is reached.
 
+// Map icon (used only for showing spotted spawn points)
+var class<DHMapIconAttachment> MapIconAttachmentClass;
+var DHMapIconAttachment        MapIconAttachment;
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -84,6 +88,22 @@ simulated event PostBeginPlay()
         if (SpawnPointIndex == -1)
         {
             Error("Failed to add" @ self @ "to spawn point list!");
+        }
+
+        if (MapIconAttachmentClass != none)
+        {
+            MapIconAttachment = Spawn(MapIconAttachmentClass, self);
+
+            if (MapIconAttachment != none)
+            {
+                MapIconAttachment.SetBase(self);
+                MapIconAttachment.Setup();
+                MapIconAttachment.SetTeamIndex(GetTeamIndex());
+            }
+            else
+            {
+                MapIconAttachmentClass.static.OnError(ERROR_SpawnFailed);
+            }
         }
 
         if (!bShouldDelegateTimer)
@@ -150,6 +170,11 @@ event Destroyed()
     super.Destroyed();
 
     SetIsActive(false);
+
+    if (MapIconAttachment != none)
+    {
+        MapIconAttachment.Destroy();
+    }
 }
 
 // Override to provide the business logic that does the spawning
@@ -393,6 +418,11 @@ final function SetTeamIndex(int TeamIndex)
         self.TeamIndex = TeamIndex;
 
         OnTeamIndexChanged();
+
+        if (MapIconAttachment != none)
+        {
+            MapIconAttachment.SetTeamIndex(GetTeamIndex());
+        }
     }
 }
 
@@ -411,4 +441,3 @@ defaultproperties
     bHidden=true
     SpawnRadiusSegmentCount=8
 }
-

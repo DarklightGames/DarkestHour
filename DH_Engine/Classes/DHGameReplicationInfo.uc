@@ -14,7 +14,6 @@ const OBJECTIVES_MAX = 32;
 const CONSTRUCTION_CLASSES_MAX = 32;
 const VOICEID_MAX = 255;
 const SUPPLY_POINTS_MAX = 15;
-const RESUPPLY_ATTACHEMENTS_MAX = 32;
 const MAP_MARKERS_MAX = 20;
 const MAP_MARKERS_CLASSES_MAX = 16;
 const ARTILLERY_TYPES_MAX = 8;
@@ -56,7 +55,6 @@ struct SupplyPoint
     var byte bIsActive;
     var byte TeamIndex;
     var DHConstructionSupplyAttachment Actor;
-    var int Quantized2DPose;
     var class<DHConstructionSupplyAttachment> ActorClass;
 };
 
@@ -134,8 +132,6 @@ var DHSpawnPointBase    SpawnPoints[SPAWN_POINTS_MAX];
 
 var DHObjective             DHObjectives[OBJECTIVES_MAX];
 var Hashtable_string_int    DHObjectiveTable; // not replicated, but clients create their own so can be used by both client/server
-
-var DHResupplyAttachment    ResupplyAttachments[RESUPPLY_ATTACHEMENTS_MAX];
 
 var bool                bIsInSetupPhase;
 var bool                bRoundIsOver;
@@ -217,7 +213,6 @@ replication
         GameType,
         CurrentAlliedToAxisRatio,
         SpawnPoints,
-        ResupplyAttachments,
         SpawningEnableTime,
         bIsInSetupPhase,
         bRoundIsOver,
@@ -237,7 +232,8 @@ replication
         AlliesVictoryMusicIndex,
         AxisVictoryMusicIndex,
         bIsDangerZoneEnabled,
-        DangerZoneIntensityScale;
+        DangerZoneIntensityScale,
+        ClientDangerZoneUpdated;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
@@ -351,6 +347,11 @@ simulated function PostNetBeginPlay()
             }
         }
     }
+}
+
+function ObjectiveCompleted()
+{
+    DangerZoneUpdated();
 }
 
 function bool ObjectiveTreeNodeDepthComparatorFunction(int LHS, int RHS)
@@ -575,66 +576,12 @@ simulated event Timer()
 }
 
 //==============================================================================
-// Resupply Attachements
-//==============================================================================
-// Function to add a ResupplyAttachement to an array which is used for iteration, returns the index it was added (-1 if it wasn't added)
-function int AddResupplyAttachement(DHResupplyAttachment Attachment)
-{
-    local int i;
-
-    if (Attachment == none)
-    {
-        return -1;
-    }
-
-    // Check for a duplicate first
-    for (i = 0; i < arraycount(ResupplyAttachments); ++i)
-    {
-        if (Attachment == ResupplyAttachments[i])
-        {
-            return -1; // Attachement already exists in array (return -1 as it wasn't added)
-        }
-    }
-
-    // Now find the nearest valid spot and add it
-    for (i = 0; i < arraycount(ResupplyAttachments); ++i)
-    {
-        if (ResupplyAttachments[i] == none)
-        {
-            ResupplyAttachments[i] = Attachment;
-            return i;
-        }
-    }
-
-    return -1;
-}
-
-function RemoveResupplyAttachement(DHResupplyAttachment Attachment)
-{
-    local int i;
-
-    if (Attachment == none)
-    {
-        return;
-    }
-
-    for (i = 0; i < arraycount(ResupplyAttachments); ++i)
-    {
-        if (ResupplyAttachments[i] == Attachment)
-        {
-            ResupplyAttachments[i] = none;
-        }
-    }
-}
-
-//==============================================================================
 // Supply Points
 //==============================================================================
 
 function int AddSupplyPoint(DHConstructionSupplyAttachment CSA)
 {
     local int i;
-    local float X, Y;
 
     if (CSA != none)
     {
@@ -646,8 +593,6 @@ function int AddSupplyPoint(DHConstructionSupplyAttachment CSA)
                 SupplyPoints[i].Actor = CSA;
                 SupplyPoints[i].TeamIndex = CSA.GetTeamIndex();
                 SupplyPoints[i].ActorClass = CSA.Class;
-                GetMapCoords(CSA.Location, X, Y);
-                SupplyPoints[i].Quantized2DPose = class'UQuantize'.static.QuantizeClamped2DPose(X, Y, CSA.Rotation.Yaw);
                 return i;
             }
         }
@@ -1685,6 +1630,32 @@ function ClearMapMarkers()
     }
 }
 
+simulated function float GetMapIconYaw(float WorldYaw)
+{
+    local float MapIconYaw;
+
+    MapIconYaw = -WorldYaw;
+
+    switch (OverheadOffset)
+    {
+        case 90:
+            MapIconYaw -= 32768;
+            break;
+
+        case 180:
+            MapIconYaw -= 49152;
+            break;
+
+        case 270:
+            break;
+
+        default:
+            MapIconYaw -= 16384;
+    }
+
+    return MapIconYaw;
+}
+
 // Gets the map coordindates (0..1) from a world location.
 simulated function GetMapCoords(vector WorldLocation, out float X, out float Y, optional float Width, optional float Height)
 {
@@ -1819,6 +1790,53 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
     return ERROR_None;
 }
 
+function UpdateMapIconAttachments()
+{
+    local DHMapIconAttachment MIA;
+
+    foreach AllActors(class'DHMapIconAttachment', MIA)
+    {
+        if (MIA != none && !MIA.bIgnoreGRIUpdates)
+        {
+            MIA.Updated();
+        }
+    }
+}
+
+//==============================================================================
+// DANGER ZONE
+//==============================================================================
+
+function SetDangerZone(bool bEnabled, optional bool bPostponeUpdate)
+{
+    if (bEnabled == bIsDangerZoneEnabled)
+    {
+        return;
+    }
+
+    bIsDangerZoneEnabled = bEnabled;
+
+    if (!bPostponeUpdate)
+    {
+        DangerZoneUpdated();
+    }
+}
+
+function SetDangerZoneScale(float Value, optional bool bPostponeUpdate)
+{
+    if (Value == 0.0 || Value == DangerZoneIntensityScale)
+    {
+        return;
+    }
+
+    DangerZoneIntensityScale = Value;
+
+    if (!bPostponeUpdate)
+    {
+        DangerZoneUpdated();
+    }
+}
+
 simulated function float GetDangerZoneIntensity(float PointerX, float PointerY, byte TeamIndex)
 {
     return class'DHDangerZone'.static.GetIntensity(self, PointerX, PointerY, TeamIndex);
@@ -1829,16 +1847,14 @@ simulated function bool IsInDangerZone(float PointerX, float PointerY, byte Team
     return class'DHDangerZone'.static.IsIn(self, PointerX, PointerY, TeamIndex);
 }
 
-simulated function PostNetReceive()
+simulated function ClientDangerZoneUpdated()
 {
     local DHPlayer PC;
     local DHHud Hud;
 
-    super.PostNetReceive();
-
-    // Notify HUD about changes to Danger Zone
-    if (OldDangerZoneIntensityScale != DangerZoneIntensityScale)
+    if (Level.NetMode == NM_Standalone || Role < ROLE_Authority)
     {
+        // Notify HUD about Danger Zone changes.
         PC = DHPlayer(Level.GetLocalPlayerController());
 
         if (PC != none)
@@ -1850,9 +1866,26 @@ simulated function PostNetReceive()
                 Hud.DangerZoneOverlayUpdateRequest();
             }
         }
-
-        OldDangerZoneIntensityScale = DangerZoneIntensityScale;
     }
+}
+
+function DangerZoneUpdated()
+{
+    local DHSquadReplicationInfo SRI;
+
+    // Update rally points
+    SRI = DarkestHourGame(Level.Game).SquadReplicationInfo;
+
+    if (SRI != none)
+    {
+        SRI.UpdateRallyPoints();
+    }
+
+    // Update map icons
+    UpdateMapIconAttachments();
+
+    // Update client
+    ClientDangerZoneUpdated();
 }
 
 defaultproperties

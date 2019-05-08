@@ -128,6 +128,10 @@ var     float               VehicleHudTreadsPosX[2]; // 0.0 to 1.0 X positioning
 var     float               VehicleHudTreadsPosY;    // 0.0 to 1.0 Y positioning of tread damage indicators
 var     float               VehicleHudTreadsScale;   // drawing scale of tread damage indicators
 
+// Map icon
+var     class<DHMapIconAttachment>  MapIconAttachmentClass;
+var     DHMapIconAttachment         MapIconAttachment;
+
 // Vehicle attachments
 var     array<VehicleAttachment>    VehicleAttachments;      // vehicle attachments, generally decorative, that won't be spawned on a server
 var     array<VehicleAttachment>    CollisionAttachments;    // collision mesh attachments for a moving part of vehicle that should have collision, e.g. a ramp or driver's armoured visor
@@ -306,6 +310,11 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 
     // Call the super first
     super.Died(Killer, DamageType, HitLocation);
+
+    if (MapIconAttachment != none)
+    {
+        MapIconAttachment.Destroy();
+    }
 
     DHG = DarkestHourGame(Level.Game);
 
@@ -2756,6 +2765,22 @@ simulated function SpawnVehicleAttachments()
             {
                 SupplyAttachment.SetTeamIndex(VehicleTeam);
                 SupplyAttachment.SetInitialSupply();
+            }
+        }
+
+        if (MapIconAttachmentClass != none && SupplyAttachment == none)
+        {
+            MapIconAttachment = Spawn(MapIconAttachmentClass, self);
+
+            if (MapIconAttachment != none)
+            {
+                MapIconAttachment.SetBase(self);
+                MapIconAttachment.Setup();
+                MapIconAttachment.SetTeamIndex(VehicleTeam);
+            }
+            else
+            {
+                MapIconAttachmentClass.static.OnError(ERROR_SpawnFailed);
             }
         }
 

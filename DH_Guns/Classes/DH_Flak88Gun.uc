@@ -20,6 +20,7 @@ defaultproperties
     VehicleMass=20.0
     SupplyCost=2100
     ConstructionPlacementOffset=(Z=0)
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Static'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

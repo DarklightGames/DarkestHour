@@ -2182,22 +2182,6 @@ function UpdateRallyPoints()
     }
 }
 
-simulated function array<DHSpawnPoint_SquadRallyPoint> GetExposedEnemyRallyPoints(int TeamIndex)
-{
-    local int i;
-    local array<DHSpawnPoint_SquadRallyPoint> ExposedEnemyRallyPoints;
-
-    for (i = 0; i < arraycount(RallyPoints); ++i)
-    {
-        if (RallyPoints[i] != none && RallyPoints[i].GetTeamIndex() != TeamIndex && RallyPoints[i].bIsExposed)
-        {
-            ExposedEnemyRallyPoints[ExposedEnemyRallyPoints.Length] = RallyPoints[i];
-        }
-    }
-
-    return ExposedEnemyRallyPoints;
-}
-
 function SetTeamSquadSize(int TeamIndex, int SquadSize)
 {
     local int OldTeamSquadSize, i;

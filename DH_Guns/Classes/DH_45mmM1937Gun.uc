@@ -24,4 +24,5 @@ defaultproperties
     VehicleMass=8.0
     SupplyCost=1050
     bCanBeRotated=true
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
 }

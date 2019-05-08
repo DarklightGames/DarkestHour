@@ -25,4 +25,5 @@ defaultproperties
     ConstructionPlacementOffset=(Z=-2)
     bCanBeRotated=true
     PlayersNeededToRotate=2
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
 }
