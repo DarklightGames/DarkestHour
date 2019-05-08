@@ -4200,8 +4200,12 @@ function DrawPlayerIconOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMap
         PlayerNumberText.PosX = (PlayerNumberText.PosX - Viewport.Min.X) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
         PlayerNumberText.PosY = (PlayerNumberText.PosY - Viewport.Min.Y) * (1.0 / (Viewport.Max.X - Viewport.Min.X));
         PlayerNumberText.text = Text;
-        C.Font = C.TinyFont;
-        DrawTextWidgetClipped(C, PlayerNumberText, SubCoords);
+
+        if (PlayerNumberText.PosX >= 0.0 && PlayerNumberText.PosX <= 1.0 && PlayerNumberText.PosY >= 0.0 && PlayerNumberText.PosY <= 1.0)
+        {
+            C.Font = C.TinyFont;
+            DrawTextWidgetClipped(C, PlayerNumberText, SubCoords);
+        }
     }
 
     C.DrawVertical(0.0, 0.0);
