@@ -159,8 +159,7 @@ function HandleVehicles(vector HitLocation)
     }
 }
 
-// This function does allow satchels to do damage twice to obstacles, however if Satchel.Damage is not > Obstacle.ExplosionDamageThreshold, then its
-// possible that only this will apply assuming this damage is > Obstacle.ExplosionDamageThreshold
+// Allows satchels to damage obstacles when behind world geometry
 function HandleObstacles(vector HitLocation)
 {
     local DHObstacleInstance O;
@@ -168,7 +167,8 @@ function HandleObstacles(vector HitLocation)
 
     foreach RadiusActors(class'DHObstacleInstance', O, ObstacleDamageRadius)
     {
-        if (O != none)
+        // If we cannot trace the obstacle (because of world geometry), then apply special radius damage
+        if (O != none && !FastTrace(O.Location, Location))
         {
             Distance = VSize(Location - O.Location);
             O.TakeDamage(ObstacleDamageMax * (Distance / ObstacleDamageRadius), SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);
@@ -176,15 +176,16 @@ function HandleObstacles(vector HitLocation)
     }
 }
 
-// TODO work on this
+// Allows satchels to do damage to constructions when traces fail (useful if construction is on the otherside of terrain or origin under world)
 function HandleConstructions(vector HitLocation)
 {
-    local DHConstruction C;
-    local float          Distance;
+    local DHConstruction    C;
+    local float             Distance;
 
     foreach RadiusActors(class'DHConstruction', C, ConstructionDamageRadius)
     {
-        if (C != none)
+        // If we cannot trace the construction (because trace hit world geometry), then apply special radius damage
+        if (C != none && !FastTrace(C.Location, Location))
         {
             Distance = VSize(Location - C.Location);
             C.TakeDamage(ConstructionDamageMax * (Distance / ConstructionDamageRadius), SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);
@@ -220,11 +221,11 @@ defaultproperties
 
     UnderneathDamageMultiplier=8.0
 
-    ConstructionDamageRadius=256
-    ConstructionDamageMax=300
+    ConstructionDamageRadius=375
+    ConstructionDamageMax=550
 
-    ObstacleDamageRadius=320
-    ObstacleDamageMax=1500
+    ObstacleDamageRadius=500
+    ObstacleDamageMax=1400
 
     EngineDamageMassThreshold=20.0
     EngineDamageRadius=200.0
