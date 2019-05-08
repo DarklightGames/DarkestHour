@@ -2588,11 +2588,9 @@ simulated function PreTravelCleanUp()
 // Handles initializing and swithing between different scope modes
 simulated function UpdateScopeMode()
 {
-    ScopeDetail = RO_ModelScopeHigh;
-
     if (Level.NetMode != NM_DedicatedServer && Instigator != none && Instigator.IsLocallyControlled() && Instigator.IsHumanControlled())
     {
-        if( ScopeDetail == RO_ModelScope )
+        if (ScopeDetail == RO_ModelScope)
         {
             scopePortalFOV = default.scopePortalFOV;
             IronSightDisplayFOV = default.IronSightDisplayFOV;
