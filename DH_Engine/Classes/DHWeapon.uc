@@ -857,7 +857,7 @@ defaultproperties
     BobDamping=1.6
     SelectAnimRate=1.0
     PutDownAnimRate=1.0
-    ScopeDetail=RO_ModelScopeHigh
+    ScopeDetail=RO_TextureScope
     FireModeClass(0)=class'ROInventory.ROEmptyFireclass'
     FireModeClass(1)=class'ROInventory.ROEmptyFireclass'
     CrawlStartAnim="crawl_in"
