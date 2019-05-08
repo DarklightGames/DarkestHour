@@ -57,7 +57,10 @@ simulated function OnEnterRotation()
     }
     else
     {
-        Gun.ClientEnterRotation();
+        if(InstigatorIsLocallyControlled())
+        {
+            Gun.ClientEnterRotation();
+        }
         ServerEnterRotation(Gun, P);
     }
 }

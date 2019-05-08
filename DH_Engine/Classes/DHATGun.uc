@@ -160,6 +160,8 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     local float DamageModifier;
     local int   i;
 
+    GoToState('');
+
     // Suicide/self-destruction
     if (DamageType == class'Suicided' || DamageType == class'ROSuicided')
     {
@@ -207,6 +209,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 
     if(RotationProjector != none)
     {
+
         RotationProjector.Destroy();
     }
 }
@@ -240,6 +243,11 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
     if (bIsBeingRotated)
     {
         return ERROR_IsBeingRotated;
+    }
+
+    if(bVehicleDestroyed)
+    {
+        return ERROR_Fatal;
     }
 
     if (NumPassengers() > 0)
@@ -362,9 +370,15 @@ simulated function ClientEnterRotation()
 
 
     //collision properties hack
-    bCollideWorld = false;
-    SetCollision(false,false,false);
-    SetPhysics(PHYS_None);
+
+    if(role != ROLE_Authority)
+    {
+        //bCollideWorld = false;
+        //SetCollision(false,false,false);
+        SetPhysics(PHYS_None);
+        //SetPhysics(PHYS_Rotating);
+    }
+
     bOldIsRotating = bIsBeingRotated;
 
 
@@ -434,7 +448,6 @@ simulated function ClientDestroyProjection()
 {
     if(RotationProjector != none)
     {
-        Log("Projection destroyed");
         RotationProjector.Destroy();
     }
 }
@@ -446,6 +459,7 @@ state Rotating
 {
     function BeginState()
     {
+
         bIsBeingRotated = true;
 
         RotatingActor = Spawn(class'DHRotatingActor',,, Location, Rotation);
@@ -462,6 +476,8 @@ state Rotating
 
         SetPhysics(PHYS_None);
         bCollideWorld = false;
+        bBlockNonZeroExtentTraces = true;
+        bBlockZeroExtentTraces = true;
 
         // NOTE: This line avoids the hack of calling ClientEnterRotation client
         // side, but also causes issue where AT Gun falls through the world.
@@ -685,7 +701,7 @@ defaultproperties
 
     OldRotator=(Pitch=0,Yaw=0,Roll=0)
     bOldIsRotating = false;
-
+    bUpdateSimulatedPosition = true
     RotationProjectionTexture = Material'DH_Construction_tex.ui.rotation_projector'
     //RotationProjectionTexture = Material'DH_Construction_tex.ui.aura_red'
 
