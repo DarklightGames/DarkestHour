@@ -12,8 +12,17 @@ defaultproperties
     AmmoClass=class'DH_Weapons.DH_30CalAmmo'
     FireRate=0.12
     TracerFrequency=5
-    Spread=70.0
-    RecoilRate=0.04
+    Spread=75.0
+    RecoilRate=0.06
+
+    // Recoil
+    maxVerticalRecoilAngle=500
+    maxHorizontalRecoilAngle=230
+    PctBipodDeployRecoil=0.1
+    PctRestDeployRecoil=0.1
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.7),(InVal=4.0,OutVal=0.3),(InVal=30.0,OutVal=1.15),(InVal=50.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilFallOffExponent=4.0
+    RecoilFallOffFactor=30.0
 
     AmbientFireSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
     FireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'

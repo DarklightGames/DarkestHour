@@ -13,7 +13,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_M38Attachment'
     PickupClass=class'DH_Weapons.DH_M38Pickup'
 
-    Mesh=SkeletalMesh'Allies_Nagant_1st.Mosin_Nagant_Carbine_mesh'
+    Mesh=SkeletalMesh'DH_Nagant_1st.Mosin_Nagant_Carbine_mesh'
     HighDetailOverlay=shader'Weapons1st_tex.Rifles.MN9138_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
@@ -24,4 +24,9 @@ defaultproperties
 
     MaxNumPrimaryMags=10
     InitialNumPrimaryMags=10
+
+    PreReloadAnim="single_open"
+    FullReloadAnim="reload"
+    SingleReloadAnim="single_insert"
+    PostReloadAnim="single_close"
 }
