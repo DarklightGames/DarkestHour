@@ -17,9 +17,9 @@ defaultproperties
     // Recoil
     RecoilRate=0.07
     MaxVerticalRecoilAngle=290
-    MaxHorizontalRecoilAngle=110
+    MaxHorizontalRecoilAngle=120
     RecoilCurve=(Points=((InVal=0.0,OutVal=0.35),(InVal=3.0,OutVal=0.66),(InVal=8.0,OutVal=1.15),(InVal=15.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
-    RecoilFallOffFactor=16.0
+    RecoilFallOffFactor=18.0
 
     FireSounds(0)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.stg44.stg44_fire02'
