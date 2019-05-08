@@ -5,7 +5,7 @@
 
 class DH_SatchelCharge10lb10sProjectile extends DHThrowableExplosiveProjectile; // incorporating SatchelCharge10lb10sProjectile & ROSatchelChargeProjectile
 
-var float           UnderneathDamageMultiplier;  // Damage Multiplier for when the satchel dets under a vehicle
+var float           UnderneathDamageMultiplier; // Damage Multiplier for when the satchel dets under a vehicle
 
 var float           ConstructionDamageRadius;   // A radius that will damage Contructions
 var float           ConstructionDamageMax;
@@ -20,9 +20,6 @@ var float           EngineDamageMax;
 var float           TreadDamageMassThreshold;   // A mass threshold at which a vehicle will take min damage instead of destroying the tread outright
 var float           TreadDamageRadius;          // A radius that will damage Vehicle Treads
 var float           TreadDamageMax;
-
-//var float           ComponentDamageStrength;    // If this is > the vehicle's mass, it will automatically affect the component instead of just doing damage
-//var float           ComponentDamageMin;         // How much to damage component if vehicle's mass > ComponentDamageStrength
 
 // Modified to record SavedInstigator & SavedPRI
 // RODemolitionChargePlacedMsg from ROSatchelChargeProjectile is omitted
@@ -67,12 +64,11 @@ simulated function BlowUp(vector HitLocation)
     }
 }
 
-simulated function HandleObjSatchels(vector HitLocation)
+function HandleObjSatchels(vector HitLocation)
 {
     local DH_ObjSatchel SatchelObjActor;
     local Volume        V;
 
-    // Handle triggering DH_ObjSatchels
     foreach TouchingActors(class'Volume', V)
     {
         if (DH_ObjSatchel(V.AssociatedActor) != none)
@@ -92,7 +88,7 @@ simulated function HandleObjSatchels(vector HitLocation)
     }
 }
 
-simulated function HandleVehicles(vector HitLocation)
+function HandleVehicles(vector HitLocation)
 {
     local Actor         A;
     local vector        HitLoc, HitNorm;
@@ -163,14 +159,37 @@ simulated function HandleVehicles(vector HitLocation)
     }
 }
 
-simulated function HandleObstacles(vector HitLocation)
+// This function does allow satchels to do damage twice to obstacles, however if Satchel.Damage is not > Obstacle.ExplosionDamageThreshold, then its
+// possible that only this will apply assuming this damage is > Obstacle.ExplosionDamageThreshold
+function HandleObstacles(vector HitLocation)
 {
+    local DHObstacleInstance O;
+    local float              Distance;
 
+    foreach RadiusActors(class'DHObstacleInstance', O, ObstacleDamageRadius)
+    {
+        if (O != none)
+        {
+            Distance = VSize(Location - O.Location);
+            O.TakeDamage(ObstacleDamageMax * (Distance / ObstacleDamageRadius), SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);
+        }
+    }
 }
 
-simulated function HandleConstructions(vector HitLocation)
+// TODO work on this
+function HandleConstructions(vector HitLocation)
 {
+    local DHConstruction C;
+    local float          Distance;
 
+    foreach RadiusActors(class'DHConstruction', C, ConstructionDamageRadius)
+    {
+        if (C != none)
+        {
+            Distance = VSize(Location - C.Location);
+            C.TakeDamage(ConstructionDamageMax * (Distance / ConstructionDamageRadius), SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);
+        }
+    }
 }
 
 // Implemented here to go to dynamic lighting for a split second, when satchel blows up // TODO: doesn't appear to do anything noticeable?
@@ -204,8 +223,8 @@ defaultproperties
     ConstructionDamageRadius=256
     ConstructionDamageMax=300
 
-    ObstacleDamageRadius=256
-    ObstacleDamageMax=300
+    ObstacleDamageRadius=320
+    ObstacleDamageMax=1500
 
     EngineDamageMassThreshold=20.0
     EngineDamageRadius=200.0
