@@ -4153,5 +4153,5 @@ defaultproperties
     bDisableThrottle=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
 
-    bDebuggingText=true
+    //bDebuggingText=true
 }
