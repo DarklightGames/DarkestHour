@@ -5,8 +5,6 @@
 
 class DH_AT57Gun extends DHATGun;
 
-#exec OBJ LOAD FILE=..\Animations\DH_6PounderGun_anm.ukx
-
 defaultproperties
 {
     VehicleNameString="57mm M1 AT gun"
@@ -24,6 +22,7 @@ defaultproperties
     VehicleMass=11.0
     SupplyCost=1050
     ConstructionPlacementOffset=(Z=10.0)
+    bCanBeRotated=true
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

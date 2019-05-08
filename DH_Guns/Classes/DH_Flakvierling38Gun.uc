@@ -5,10 +5,6 @@
 
 class DH_Flakvierling38Gun extends DHATGun;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Flak38_anm.ukx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Artillery_stc.usx
-#exec OBJ LOAD FILE=..\Textures\DH_Artillery_tex.utx
-
 defaultproperties
 {
     VehicleNameString="2cm Flakvierling 38 gun"

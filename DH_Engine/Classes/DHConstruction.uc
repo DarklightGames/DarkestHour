@@ -39,17 +39,6 @@ enum EConstructionErrorType
     ERROR_Other
 };
 
-// A context object used for passing context-relevant values to functions that
-// determine various parameters of the construction.
-struct Context
-{
-    var int TeamIndex;
-    var DH_LevelInfo LevelInfo;
-    var DHPlayer PlayerController;
-    var Actor GroundActor;
-    var Object OptionalObject;
-};
-
 var struct ConstructionError
 {
     var EConstructionErrorType  Type;
@@ -758,7 +747,7 @@ function StaticMesh GetTatteredStaticMesh()
     return default.TatteredStaticMesh;
 }
 
-static function StaticMesh GetConstructedStaticMesh(DHConstruction.Context Context)
+static function StaticMesh GetConstructedStaticMesh(DHActorProxy.Context Context)
 {
     return default.StaticMesh;
 }
@@ -782,28 +771,28 @@ function StaticMesh GetStageStaticMesh(int StageIndex)
     return none;
 }
 
-function static string GetMenuName(DHConstruction.Context Context)
+function static string GetMenuName(DHActorProxy.Context Context)
 {
     return default.MenuName;
 }
 
-function static Material GetMenuIcon(DHConstruction.Context Context)
+function static Material GetMenuIcon(DHActorProxy.Context Context)
 {
     return default.MenuIcon;
 }
 
-simulated static function int GetSupplyCost(DHConstruction.Context Context)
+simulated static function int GetSupplyCost(DHActorProxy.Context Context)
 {
     return default.SupplyCost;
 }
 
-static function GetCollisionSize(DHConstruction.Context Context, out float NewRadius, out float NewHeight)
+function static GetCollisionSize(DHActorProxy.Context Context, out float NewRadius, out float NewHeight)
 {
     NewRadius = default.CollisionRadius;
     NewHeight = default.CollisionHeight;
 }
 
-static function bool ShouldShowOnMenu(DHConstruction.Context Context)
+function static bool ShouldShowOnMenu(DHActorProxy.Context Context)
 {
     local DHPlayerReplicationInfo PRI;
 
@@ -828,7 +817,7 @@ static function bool IsPlaceableByPlayer(DHPlayerReplicationInfo PRI)
 // This function is used for determining if a player is able to build this type
 // of construction. You can override this if you want to have a team or
 // role-specific constructions, for example.
-function static ConstructionError GetPlayerError(DHConstruction.Context Context)
+function static ConstructionError GetPlayerError(DHActorProxy.Context Context)
 {
     local DHPawn P;
     local DHConstructionManager CM;
@@ -921,7 +910,7 @@ simulated function Reset()
 
 // Override to set a new proxy appearance if you require something more
 // complex than a simple static mesh.
-function static UpdateProxy(DHConstructionProxy CP)
+function static UpdateProxy(DHActorProxy CP)
 {
     local int i;
     local array<Material> StaticMeshSkins;
@@ -937,12 +926,12 @@ function static UpdateProxy(DHConstructionProxy CP)
     }
 }
 
-function static StaticMesh GetProxyStaticMesh(DHConstruction.Context Context)
+function static StaticMesh GetProxyStaticMesh(DHActorProxy.Context Context)
 {
     return static.GetConstructedStaticMesh(Context);
 }
 
-function static vector GetPlacementOffset(DHConstruction.Context Context)
+function static vector GetPlacementOffset(DHActorProxy.Context Context)
 {
     return default.PlacementOffset;
 }
@@ -1070,9 +1059,9 @@ simulated function GetTerrainPokeParameters(out int Radius, out int Depth)
     Depth = default.PokeTerrainDepth;
 }
 
-simulated function Context GetContext()
+simulated function DHActorProxy.Context GetContext()
 {
-    local DHConstruction.Context Context;
+    local DHActorProxy.Context Context;
 
     Context.TeamIndex = GetTeamIndex();
     Context.LevelInfo = LevelInfo;
@@ -1081,9 +1070,9 @@ simulated function Context GetContext()
     return Context;
 }
 
-static function DHConstruction.Context ContextFromPlayerController(DHPlayer PC)
+static function DHActorProxy.Context ContextFromPlayerController(DHPlayer PC)
 {
-    local DHConstruction.Context Context;
+    local DHActorProxy.Context Context;
 
     if (PC != none)
     {

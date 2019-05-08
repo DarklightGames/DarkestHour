@@ -5760,9 +5760,10 @@ exec function ShowOrderMenu()
 // Returns the menu that should be displayed when ShowCommandMenu is called.
 function bool GetCommandInteractionMenu(out string MenuClassName, out Object MenuObject)
 {
-    local DHPawn OtherPawn;
+    local DHPawn OtherPawn, P;
     local DHPlayerReplicationInfo PRI;
     local DHRadio Radio;
+    local DHATGun Gun;
     local vector TraceStart, TraceEnd, HitLocation, HitNormal;
     local Actor HitActor;
 
@@ -5787,6 +5788,20 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
             {
                 MenuClassName = "DH_Engine.DHCommandMenu_Radio";
                 MenuObject = Radio;
+                return true;
+            }
+        }
+        else if (HitActor.IsA('DHATGun'))
+        {
+            Gun = DHATGun(HitActor);
+            P = DHPawn(Pawn);
+
+            if (P != none && Gun != none && Gun.GetRotationError(P) != ERROR_TooFarAway)
+            {
+                // TODO: we need some sort of way to check if we're being auto-traced?
+                // perhaps keep tabs on who the tracer was using timeseconds + pawn in the AT gun?
+                MenuClassName = "DH_Engine.DHCommandMenu_ATGun";
+                MenuObject = HitActor;
                 return true;
             }
         }

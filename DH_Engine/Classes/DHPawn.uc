@@ -116,6 +116,9 @@ var     int                 BurnTimeLeft;                  // number of seconds 
 var     float               LastBurnTime;                  // last time we did fire damage to the Pawn
 var     Pawn                FireStarter;                   // who set a player on fire
 
+// DUMB SHIT
+var     DHATGun             GunToRotate;
+
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -136,11 +139,11 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerGiveConstructionWeapon;
+        ServerGiveWeapon;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
-        ClientPawnWhizzed;
+        ClientPawnWhizzed, ClientExitATRotation;
 }
 
 // Modified to use DH version of bullet whip attachment, & to remove its SavedAuxCollision (deprecated as now we simply enable/disable collision in ToggleAuxCollision function)
@@ -6738,16 +6741,16 @@ exec function DebugShootAP(optional string APProjectileClassName)
     }
 }
 
-function ServerGiveConstructionWeapon()
+function ServerGiveWeapon(string WeaponClass)
 {
-    local Weapon ConstructionWeapon;
+    local Weapon NewWeapon;
 
-    GiveWeapon("DH_Construction.DH_ConstructionWeapon");
-    ConstructionWeapon = Weapon(FindInventoryType(class<Weapon>(DynamicLoadObject("DH_Construction.DH_ConstructionWeapon", class'class'))));
+    GiveWeapon(WeaponClass);
+    NewWeapon = Weapon(FindInventoryType(class<Weapon>(DynamicLoadObject(WeaponClass, class'class'))));
 
-    if (ConstructionWeapon != none)
+    if (NewWeapon != none)
     {
-        ConstructionWeapon.ClientWeaponSet(true);
+        NewWeapon.ClientWeaponSet(true);
     }
 }
 
@@ -7061,6 +7064,39 @@ function int RefundSupplies(int SupplyCount)
 simulated function class<DHVoicePack> GetVoicePack()
 {
     return class<DHVoicePack>(VoiceClass);
+}
+
+function EnterATRotation(DHATGun Gun)
+{
+    GunToRotate = Gun;
+    ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon");
+}
+
+simulated function ClientExitATRotation()
+{
+    GunToRotate = none;
+}
+
+exec function RotateAT()
+{
+    local DHATGun Gun;
+
+    foreach RadiusActors(class'DHATGun', Gun, 256.0)
+    {
+        if (Gun != none)
+        {
+            break;
+        }
+    }
+
+    if (Gun == none || Gun.GetRotationError(self) != ERROR_None)
+    {
+        return;
+    }
+
+    GunToRotate = Gun;
+
+    ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon");
 }
 
 defaultproperties

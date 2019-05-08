@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHConstructionProxyAttachment extends Actor
+class DHActorProxyAttachment extends Actor
     notplaceable;
 
 defaultproperties

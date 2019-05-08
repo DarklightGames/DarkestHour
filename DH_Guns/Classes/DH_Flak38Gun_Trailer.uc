@@ -13,6 +13,7 @@ defaultproperties
     DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.Flak38.Flak38_trailer_dest'
     VehicleHudImage=Texture'DH_Artillery_tex.ATGun_Hud.flak38_body_trailer'
     ExitPositions(1)=(X=-30.0,Y=85.0,Z=50.0)
+    bCanBeRotated=true
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

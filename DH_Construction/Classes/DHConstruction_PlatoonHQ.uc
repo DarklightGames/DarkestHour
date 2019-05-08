@@ -110,7 +110,7 @@ simulated state Broken
     }
 }
 
-static function StaticMesh GetConstructedStaticMesh(DHConstruction.Context Context)
+static function StaticMesh GetConstructedStaticMesh(DHActorProxy.Context Context)
 {
     switch (Context.TeamIndex)
     {

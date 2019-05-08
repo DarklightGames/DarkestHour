@@ -6,7 +6,7 @@
 class DHCommandMenu_ConstructionGroups extends DHCommandMenu
     dependson(DHConstruction);
 
-var DHConstruction.Context Context;
+var DHActorProxy.Context Context;
 
 function Setup()
 {

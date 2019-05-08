@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHConstructionProxy extends Actor
+class DHConstructionProxy extends DHActorProxy
     dependson(DHConstruction);
 
 var class<DHConstruction>   ConstructionClass;
@@ -14,50 +14,9 @@ var vector                  GroundNormal;
 
 var DHConstruction.ConstructionError    ProxyError;
 
-var DHPawn                  PawnOwner;
-var DHPlayer                PlayerOwner;
-
-// Rotation
-var rotator                 LocalRotation;
-var rotator                 LocalRotationRate;
-
-// Projector
-var DHConstructionProxyProjector    Projector;
-
-// Attachments
-var array<Actor>                    Attachments;
-
-var bool                    bIsInterpolated;
-
-function PostBeginPlay()
+function DHActorProxy.Context GetContext()
 {
-    super.PostBeginPlay();
-
-    PawnOwner = DHPawn(Owner);
-
-    if (PawnOwner == none)
-    {
-        return;
-    }
-
-    PlayerOwner = DHPlayer(PawnOwner.Controller);
-
-    if (PlayerOwner == none)
-    {
-        Destroy();
-    }
-
-    Projector = Spawn(class'DHConstructionProxyProjector', self);
-
-    if (Projector != none)
-    {
-        Projector.SetBase(self);
-    }
-}
-
-function DHConstruction.Context GetContext()
-{
-    local DHConstruction.Context Context;
+    local DHActorProxy.Context Context;
 
     Context.TeamIndex = Instigator.GetTeamNum();
     Context.LevelInfo = class'DH_LevelInfo'.static.GetInstance(Level);
@@ -65,30 +24,6 @@ function DHConstruction.Context GetContext()
     Context.GroundActor = GroundActor;
 
     return Context;
-}
-
-event Destroyed()
-{
-    super.Destroyed();
-
-    if (Projector != none)
-    {
-        Projector.Destroy();
-    }
-
-    DestroyAttachments();
-}
-
-function DestroyAttachments()
-{
-    local int i;
-
-    for (i = 0; i < Attachments.Length; ++i)
-    {
-        Attachments[i].Destroy();
-    }
-
-    Attachments.Length = 0;
 }
 
 final function SetConstructionClass(class<DHConstruction> ConstructionClass)
@@ -130,93 +65,23 @@ function UpdateCollisionSize()
     SetCollisionSize(NewRadius, NewHeight);
 }
 
-function static Material CreateProxyMaterial(Material M)
+
+function color GetProxyColor()
 {
-    local Combiner C;
-    local FadeColor FC;
-    local FinalBlend FB;
-
-    // HACK: Material cannot be a Combiner, since it doesn't play nice with
-    // the processing we are doing below (Combiners using Combiners I suppose is
-    // a bad thing). To fix this, we'll just use the combiner's fallback
-    // material as the material to work with. If there's no FallbackMaterial,
-    // we'll use the combiner's Material1.
-    C = Combiner(M);
-
-    if (C != none)
+    switch (ProxyError.Type)
     {
-        if (C.FallbackMaterial != none)
-        {
-            M = C.FallbackMaterial;
-        }
-
-        M = C.Material1;
-    }
-
-    FC = new class'FadeColor';
-    FC.Color1 = class'UColor'.default.White;
-    FC.Color1.A = 64;
-    FC.Color2 = class'UColor'.default.White;
-    FC.Color2.A = 128;
-    FC.FadePeriod = 0.25;
-    FC.ColorFadeType = FC_Sinusoidal;
-
-    C = new class'Combiner';
-    C.CombineOperation = CO_Multiply;
-    C.AlphaOperation = AO_Multiply;
-    C.Material1 = M;
-    C.Material2 = FC;
-    C.Modulate4X = true;
-
-    FB = new class'FinalBlend';
-    FB.FrameBufferBlending = FB_AlphaBlend;
-    FB.ZWrite = true;
-    FB.ZTest = true;
-    FB.AlphaTest = true;
-    FB.TwoSided = true;
-    FB.Material = C;
-    FB.FallbackMaterial = M;
-
-    return FB;
-}
-
-function static UpdateProxyMaterialColors(Actor A, color Color)
-{
-    local FinalBlend FB;
-    local Combiner C;
-    local FadeColor FC;
-    local int i;
-
-    for (i = 0; i < A.Skins.Length; ++i)
-    {
-        FB = FinalBlend(A.Skins[i]);
-
-        if (FB != none)
-        {
-            C = Combiner(FB.Material);
-
-            if (C != none)
-            {
-                FC = FadeColor(C.Material2);
-
-                if (FC != none)
-                {
-                    FC.Color1 = Color;
-                    FC.Color1.A = 32;
-
-                    FC.Color2 = Color;
-                    FC.Color2.A = 128;
-                }
-            }
-        }
+        case ERROR_None:
+            return class'UColor'.default.Green;
+        case ERROR_Fatal:
+        case ERROR_PlayerBusy:
+            return class'UColor'.default.Black;
+        default:
+            return class'UColor'.default.Red;
     }
 }
 
 function SetProxyError(DHConstruction.ConstructionError NewProxyError)
 {
-    local int i;
-    local color ProxyColor;
-
     ProxyError = NewProxyError;
 
     if (Projector != none)
@@ -232,43 +97,12 @@ function SetProxyError(DHConstruction.ConstructionError NewProxyError)
         }
     }
 
-    ProxyColor = GetProxyErrorColor(ProxyError.Type);
-
-    UpdateProxyMaterialColors(self, ProxyColor);
-
-    for (i = 0; i < Attachments.Length; ++i)
-    {
-        if (Attachments[i] != none)
-        {
-            UpdateProxyMaterialColors(Attachments[i], ProxyColor);
-        }
-    }
-}
-
-function static color GetProxyErrorColor(DHConstruction.EConstructionErrorType ProxyError)
-{
-    switch (ProxyError)
-    {
-        case ERROR_None:
-            return class'UColor'.default.Green;
-        case ERROR_Fatal:
-        case ERROR_PlayerBusy:
-            return class'UColor'.default.Black;
-        default:
-            return class'UColor'.default.Red;
-    }
+    UpdateColor(GetProxyColor());
 }
 
 function Tick(float DeltaTime)
 {
     super.Tick(DeltaTime);
-
-    if (PawnOwner == none || PawnOwner.Health == 0 || PawnOwner.bDeleteMe || PawnOwner.Controller == none)
-    {
-        Destroy();
-    }
-
-    LocalRotation += LocalRotationRate * DeltaTime;
 
     UpdateError();
 }
@@ -300,35 +134,8 @@ function UpdateError()
         SetProxyError(NewProxyError);
     }
 
+    // This should happen every tick regardless.
     UpdateProjector();
-}
-
-simulated function UpdateProjector()
-{
-    local vector RL;
-
-    // NOTE: The relative location and rotation needs to be set every tick.
-    // Without it, the projector seems to "drift" away from the object it's
-    // attached to. This is probably due to some sort of cumulative floating
-    // point errors.
-    RL.Z = CollisionHeight;
-
-    if (Projector != none)
-    {
-        if (bHidden || bIsInterpolated)
-        {
-            RL.Z -= 2048.0;
-        }
-
-        Projector.MaxTraceDistance = CollisionHeight * 2;
-        Projector.SetDrawScale((CollisionRadius * 2) / Projector.ProjTexture.MaterialUSize());
-        Projector.SetRelativeLocation(RL);
-        Projector.SetRelativeRotation(rot(-16384, 0, 0));
-    }
-}
-
-simulated function TraceAlternate()
-{
 }
 
 // This function gets the provisional location and rotation of the construction.
