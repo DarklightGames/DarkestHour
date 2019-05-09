@@ -160,7 +160,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     local float DamageModifier;
     local int   i;
 
-    GoToState('');
+    ServerExitRotation();
 
     // Suicide/self-destruction
     if (DamageType == class'Suicided' || DamageType == class'ROSuicided')
@@ -209,7 +209,6 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 
     if(RotationProjector != none)
     {
-
         RotationProjector.Destroy();
     }
 }
@@ -337,7 +336,6 @@ function ServerExitRotation()
 {
     if (RotatingActor != none && !RotatingActor.bPendingDelete)
     {
-        Log("ServerExitRotation");
         RotatingActor.Destroy();
     }
 }
@@ -438,7 +436,6 @@ simulated event Destroyed()
 /*Used to set any properties on the client when it enters rotation*/
 simulated function ClientExitRotation()
 {
-    Log("Client Exit Rotation");
     bCollideWorld = true;
     SetCollision(true,true,true);
     SetPhysics(PHYS_Karma);
@@ -513,7 +510,6 @@ state Rotating
 
     function EndState()
     {
-        Log("End State");
         if (RotatingActor != none && !RotatingActor.bPendingDelete)
         {
             RotatingActor.Destroy();

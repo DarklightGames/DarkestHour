@@ -59,13 +59,11 @@ simulated function Timer()
 
 simulated function Tick(float DeltaTime)
 {
-    //Log("Rotation Tick: "$Rotation.Yaw);
     UpdateRotation(DeltaTime);
 }
 
 function SetRotationFactor(int RotationFactor)
 {
-    //Log("Set Rotation");
     self.RotationFactor = RotationFactor;
 }
 

@@ -2698,23 +2698,10 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
         return;
     }
 
-    Log("Pawn death");
-
     if(GunToRotate != none)
     {
-        Log("Pawn death end rotate");
         GunToRotate.ServerExitRotation();
     }
-
-    /*
-    if(Weapon.IsA('DH_ATGunRotateWeapon'))
-    {
-        Log("Pawn death end rotate");
-        DynamicLoadObject(VehicleString, class'class')
-        mine = DH_ATGunRotateWeapon(Weapon);
-        //GunToRotate.GotoState(''); .Gun.ServerExitRotation();
-    }
-    */
 
     // Re-assign killer if death was caused indirectly by them
     if (DamageType != none && DamageType.default.bCausedByWorld && (Killer == none || Killer == Controller) && LastHitBy != none)
