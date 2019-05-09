@@ -311,7 +311,7 @@ function ServerEnterRotation(DHPawn Instigator)
         Instigator.ClientExitATRotation();
         return;
     }
-
+    Instigator.GunToRotate =self;
     RotateControllerPawn = Instigator;
     GotoState('Rotating');
 }
@@ -320,6 +320,7 @@ function ServerExitRotation()
 {
     if (RotatingActor != none && !RotatingActor.bPendingDelete)
     {
+        Log("ServerExitRotation");
         RotatingActor.Destroy();
     }
 }
@@ -388,7 +389,6 @@ simulated function ClientEnterRotation()
     RotationProjector.GotoState('');
     RotationProjector.bHidden = false;
     RotationProjector.Texture = none;
-    RotationProjector.AttachProjector();
     RotationProjector.AttachActor(self);
     RotationProjector.SetBase(self);
     RotationProjector.bNoProjectOnOwner = true;
@@ -406,6 +406,7 @@ simulated function ClientEnterRotation()
 /*Used to set any properties on the client when it enters rotation*/
 simulated function ClientExitRotation()
 {
+    Log("Client Exit Rotation");
     bCollideWorld = true;
     SetCollision(true,true,true);
     SetPhysics(PHYS_Karma);
@@ -478,6 +479,7 @@ state Rotating
 
     function EndState()
     {
+        Log("End State");
         if (RotatingActor != none && !RotatingActor.bPendingDelete)
         {
             RotatingActor.Destroy();
