@@ -40,7 +40,7 @@ var Rotator           OldRotator;
 var bool              bOldIsRotating;
 
 var Material          RotationProjectionTexture;
-var DHConstructionProxyProjector    RotationProjector;
+var DynamicProjector    RotationProjector;
 
 
 replication
@@ -160,6 +160,8 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     local float DamageModifier;
     local int   i;
 
+    GoToState('');
+
     // Suicide/self-destruction
     if (DamageType == class'Suicided' || DamageType == class'ROSuicided')
     {
@@ -201,6 +203,17 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 }
 
+function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
+{
+    super.Died(Killer, DamageType, HitLocation);
+
+    if(RotationProjector != none)
+    {
+
+        RotationProjector.Destroy();
+    }
+}
+
 // Rotation
 simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int TeammatesInRadiusCount)
 {
@@ -230,6 +243,11 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
     if (bIsBeingRotated)
     {
         return ERROR_IsBeingRotated;
+    }
+
+    if(bVehicleDestroyed)
+    {
+        return ERROR_Fatal;
     }
 
     if (NumPassengers() > 0)
@@ -268,7 +286,6 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
             return ERROR_NeedMorePlayers;
         }
     }
-
 
     return ERROR_None;
 }
@@ -345,15 +362,23 @@ function ServerRotate(byte InputRotationFactor)
 /*Used to set any properties on the client when it enters rotation*/
 simulated function ClientEnterRotation()
 {
+
     local vector X, Y, Z;
     local FinalBlend FinalMaterial;
     local FadeColor FadeMaterial;
     local Combiner CombinerMaterial;
 
+
     //collision properties hack
-    bCollideWorld = false;
-    SetCollision(false,false,false);
-    SetPhysics(PHYS_None);
+
+    if(role != ROLE_Authority)
+    {
+        //bCollideWorld = false;
+        //SetCollision(false,false,false);
+        SetPhysics(PHYS_None);
+        //SetPhysics(PHYS_Rotating);
+    }
+
     bOldIsRotating = bIsBeingRotated;
 
 
@@ -372,8 +397,6 @@ simulated function ClientEnterRotation()
     CombinerMaterial.Material2 = FadeMaterial;
     CombinerMaterial.Modulate4X = true;
 
-    //FB.Material = RotationProjectionTexture;
-    //FB.FrameBufferBlending = FB_Translucent;
     FinalMaterial = new class'FinalBlend';
     FinalMaterial.FrameBufferBlending = FB_AlphaBlend;
     FinalMaterial.ZWrite = true;
@@ -388,7 +411,6 @@ simulated function ClientEnterRotation()
     RotationProjector.GotoState('');
     RotationProjector.bHidden = false;
     RotationProjector.Texture = none;
-    RotationProjector.AttachProjector();
     RotationProjector.AttachActor(self);
     RotationProjector.SetBase(self);
     RotationProjector.bNoProjectOnOwner = true;
@@ -399,8 +421,17 @@ simulated function ClientEnterRotation()
     RotationProjector.bGradient = true;
     RotationProjector.SetDrawScale((2.5 * CollisionRadius)/RotationProjector.ProjTexture.MaterialUSize());
     GetAxes(Rotation, X, Y, Z);
-    RotationProjector.SetRelativeLocation(Z * 128.0);
     RotationProjector.SetRelativeRotation(rot(-16384, 0, 0));
+}
+
+simulated event Destroyed()
+{
+    super.Destroyed();
+
+    if (RotationProjector != none)
+    {
+        RotationProjector.Destroy();
+    }
 }
 
 /*Used to set any properties on the client when it enters rotation*/
@@ -418,7 +449,6 @@ simulated function ClientDestroyProjection()
     if(RotationProjector != none)
     {
         RotationProjector.Destroy();
-        RotationProjector = none;
     }
 }
 
@@ -429,6 +459,7 @@ state Rotating
 {
     function BeginState()
     {
+
         bIsBeingRotated = true;
 
         RotatingActor = Spawn(class'DHRotatingActor',,, Location, Rotation);
@@ -445,6 +476,8 @@ state Rotating
 
         SetPhysics(PHYS_None);
         bCollideWorld = false;
+        bBlockNonZeroExtentTraces = true;
+        bBlockZeroExtentTraces = true;
 
         // NOTE: This line avoids the hack of calling ClientEnterRotation client
         // side, but also causes issue where AT Gun falls through the world.
@@ -512,7 +545,6 @@ state Rotating
     }
 }
 
-
 // Used to force the final server rotation onto the clients. Gets around replication ownership issue.
 simulated event PostNetReceive()
 {
@@ -547,6 +579,14 @@ simulated event PostNetReceive()
     else if (!bOldIsRotating && bIsBeingRotated)
     {
         bOldIsRotating = bIsBeingRotated;
+    }
+
+    if(bVehicleDestroyed)
+    {
+        if(RotationProjector != none)
+        {
+            RotationProjector.Destroy();
+        }
     }
 }
 
@@ -661,7 +701,7 @@ defaultproperties
 
     OldRotator=(Pitch=0,Yaw=0,Roll=0)
     bOldIsRotating = false;
-
+    bUpdateSimulatedPosition = true
     RotationProjectionTexture = Material'DH_Construction_tex.ui.rotation_projector'
     //RotationProjectionTexture = Material'DH_Construction_tex.ui.aura_red'
 

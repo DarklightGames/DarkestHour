@@ -5840,7 +5840,7 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
             Gun = DHATGun(HitActor);
             P = DHPawn(Pawn);
 
-            if (P != none && Gun != none && Gun.GetRotationError(P) != ERROR_TooFarAway)
+            if (P != none && Gun != none && Gun.GetRotationError(P) != ERROR_TooFarAway && !Gun.bVehicleDestroyed)
             {
                 // TODO: we need some sort of way to check if we're being auto-traced?
                 // perhaps keep tabs on who the tracer was using timeseconds + pawn in the AT gun?
