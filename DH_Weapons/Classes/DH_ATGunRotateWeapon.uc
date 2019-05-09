@@ -57,7 +57,10 @@ simulated function OnEnterRotation()
     }
     else
     {
-        Gun.ClientEnterRotation();
+        if(InstigatorIsLocallyControlled())
+        {
+            Gun.ClientEnterRotation();
+        }
         ServerEnterRotation(Gun, P);
     }
 }
@@ -77,8 +80,11 @@ simulated function OnExitRotation()
         return;
     }
 
-    ServerExitRotation(Gun);
-    Gun = none;
+    if(Gun != none)
+    {
+        ServerExitRotation(Gun);
+        Gun = none;
+    }
 
     if (Instigator.Weapon.OldWeapon != none)
     {

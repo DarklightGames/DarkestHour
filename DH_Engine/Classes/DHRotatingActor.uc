@@ -59,11 +59,13 @@ simulated function Timer()
 
 simulated function Tick(float DeltaTime)
 {
+    //Log("Rotation Tick: "$Rotation.Yaw);
     UpdateRotation(DeltaTime);
 }
 
 function SetRotationFactor(int RotationFactor)
 {
+    //Log("Set Rotation");
     self.RotationFactor = RotationFactor;
 }
 
@@ -94,6 +96,7 @@ defaultproperties
     bNetInitialRotation=true
     bAlwaysRelevant=true
     bRotateToDesired=true
+    bCollideWorld=false
 
     LifespanTime=20
     ControlRadiusInMeters=5.0
