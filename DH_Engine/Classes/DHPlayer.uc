@@ -5818,6 +5818,11 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
         return false;
     }
 
+    if(DHPawn(Pawn) != none && DHPawn(Pawn).GunToRotate != none)
+    {
+        return false;
+    }
+
     TraceStart = Pawn.Location + Pawn.EyePosition();
     TraceEnd = TraceStart + (GetMaxViewDistance() * vector(Rotation));
 

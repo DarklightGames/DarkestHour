@@ -275,7 +275,7 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
         return ERROR_Fatal;
     }
 
-
+    /*
     if (PlayersNeededToRotate > 1)
     {
         TeammatesInRadiusCount = GetTeammatesInRadiusCount(Pawn);
@@ -285,6 +285,7 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
             return ERROR_NeedMorePlayers;
         }
     }
+    */
 
     return ERROR_None;
 }
@@ -375,7 +376,6 @@ simulated function ClientEnterRotation()
         //bCollideWorld = false;
         //SetCollision(false,false,false);
         SetPhysics(PHYS_None);
-        //SetPhysics(PHYS_Rotating);
     }
 
     bOldIsRotating = bIsBeingRotated;
@@ -510,6 +510,10 @@ state Rotating
 
     function EndState()
     {
+        SetBase(none);
+
+        SetRotation(RotatingActor.DesiredRotation);
+
         if (RotatingActor != none && !RotatingActor.bPendingDelete)
         {
             RotatingActor.Destroy();
@@ -519,10 +523,6 @@ state Rotating
         {
             RotateSoundAttachment.Destroy();
         }
-
-        SetBase(none);
-
-        SetRotation(RotatingActor.DesiredRotation);
 
         if(RotationProjector != none)
         {
