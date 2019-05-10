@@ -3384,6 +3384,11 @@ function ServerChangedWeapon(Weapon OldWeapon, Weapon NewWeapon)
             }
         }
     }
+
+    if(GunToRotate != none)
+    {
+        GunToRotate.ServerExitRotation();
+    }
 }
 
 // Modified to use DH weapon classes to determine the correct put away & draw animations (also to prevent "accessed none" errors on parachute landing)
