@@ -308,7 +308,6 @@ simulated state Reloading
 
     simulated function PostPreReload()
     {
-        //Log("Post Pre Reload");
         // give back the unfired round that was in the chamber
         if (Role == ROLE_Authority)
         {
@@ -344,7 +343,6 @@ simulated state Reloading
 
     simulated function PostFullReloadEnd()
     {
-        //Log("Post Full Reload");
         if(Role == ROLE_Authority)
         {
             PerformReload(GetMaxLoadedRounds());
@@ -360,7 +358,6 @@ simulated state Reloading
 
     simulated function PostLoop()
     {
-        //Log("Post Loop");
         if(Role == ROLE_Authority)
         {
             //based on state we just finished animating, give appropriate ammo.
@@ -387,7 +384,6 @@ simulated state Reloading
         // Check if end of reloading has been reached.
         if(NumRoundsToLoad <= 0 || bInterruptReload)
         {
-            //Log("Post Looping Reload End");
             if (ROPawn(Instigator) != none)
             {
                 ROPawn(Instigator).StopReload();
@@ -463,7 +459,6 @@ simulated state Reloading
     // Modified to progress through reload stages
     simulated function Timer()
     {
-        //Log("Timer");
         if(Role != ROLE_Authority || InstigatorIsLocallyControlled())
         {
             return;
@@ -493,7 +488,6 @@ simulated state Reloading
 
     simulated function BeginState()
     {
-        Log("Begin Reload: "$NumRoundsToLoad);
         if (ReloadState == RS_None)
         {
             if (NumRoundsToLoad >= GetStripperClipSize() && HasAnim(FullReloadAnim))
@@ -509,7 +503,6 @@ simulated state Reloading
                     ROPawn(Instigator).HandleStandardReload();
                 }
 
-                //Log("Full Reload");
                 ReloadState = RS_FullReload;
                 PlayFullReload();
             }
@@ -517,7 +510,6 @@ simulated state Reloading
             {
                 if (Role == ROLE_Authority && ROPawn(Instigator) != none)
                 {
-                    //Log("Attachment Status: "$ROWeaponAttachment(ThirdPersonActor).bOutOfAmmo);
                     ROPawn(Instigator).StartReload();
                 }
 
