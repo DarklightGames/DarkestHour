@@ -419,6 +419,7 @@ simulated function ClientEnterRotation()
     RotationProjector.bGradient = true;
     RotationProjector.SetDrawScale((2.5 * CollisionRadius)/RotationProjector.ProjTexture.MaterialUSize());
     GetAxes(Rotation, X, Y, Z);
+    RotationProjector.SetRelativeLocation(Z * 3);
     RotationProjector.SetRelativeRotation(rot(-16384, 0, 0));
 }
 
@@ -542,7 +543,6 @@ state Rotating
             RotateControllerPawn.ClientExitATRotation();
 
             if(RotateControllerPawn.Weapon.IsA('DH_ATGunRotateWeapon')) {
-                Log("HAS ROTATE WEP");
                 RotateControllerPawn.SwitchToLastWeapon();
                 RotateControllerPawn.ChangedWeapon();
             }

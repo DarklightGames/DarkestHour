@@ -34,33 +34,6 @@ simulated event Tick(float DeltaTime)
             OnExitRotation();
         }
     }
-
-    /*
-    if(Gun != none && !Gun.bIsBeingRotated)
-    {
-        Log("GUN ROTATE END");
-        if (Instigator.Weapon.OldWeapon != none)
-        {
-            // HACK: This stops a standalone client from immediately firing
-            // their previous weapon.
-            if (Level.NetMode == NM_Standalone)
-            {
-                Instigator.Weapon.OldWeapon.ClientState = WS_Hidden;
-            }
-
-            Instigator.SwitchToLastWeapon();
-            Instigator.ChangedWeapon();
-            }
-            else
-            {
-            // We've no weapon to go back to so just put this down, subsequently
-            // destroying it.
-            PutDown();
-            Instigator.Controller.SwitchToBestWeapon();
-        }
-    }
-    */
-
 }
 
 simulated function OnEnterRotation()
@@ -115,7 +88,6 @@ simulated function OnExitRotation()
 
     if (Instigator.Weapon.OldWeapon != none)
     {
-        Log("OLD WEP");
         // HACK: This stops a standalone client from immediately firing
         // their previous weapon.
         if (Level.NetMode == NM_Standalone)
@@ -128,7 +100,6 @@ simulated function OnExitRotation()
     }
     else
     {
-        Log("PUTDOWN");
         // We've no weapon to go back to so just put this down, subsequently
         // destroying it.
         PutDown();
@@ -140,7 +111,6 @@ simulated function OnExitRotation()
 
 function ServerExitRotation(DHATGun Gun)
 {
-
     if (Gun != none)
     {
         Gun.ServerExitRotation();
@@ -243,6 +213,16 @@ simulated function Fire(float F)
 }
 
 simulated function ROIronSights()
+{
+    OnExitRotation();
+}
+
+simulated function Weapon PrevWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
+{
+    OnExitRotation();
+}
+
+simulated function Weapon NextWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
 {
     OnExitRotation();
 }
