@@ -275,7 +275,6 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
         return ERROR_Fatal;
     }
 
-    /*
     if (PlayersNeededToRotate > 1)
     {
         TeammatesInRadiusCount = GetTeammatesInRadiusCount(Pawn);
@@ -285,7 +284,6 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
             return ERROR_NeedMorePlayers;
         }
     }
-    */
 
     return ERROR_None;
 }

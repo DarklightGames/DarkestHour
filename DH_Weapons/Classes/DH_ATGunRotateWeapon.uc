@@ -86,7 +86,7 @@ simulated function OnExitRotation()
         Gun = none;
     }
 
-    if (Instigator.Weapon.OldWeapon != none)
+    if (Instigator.Weapon != none && Instigator.Weapon.OldWeapon != none)
     {
         // HACK: This stops a standalone client from immediately firing
         // their previous weapon.
@@ -105,8 +105,6 @@ simulated function OnExitRotation()
         PutDown();
         Instigator.Controller.SwitchToBestWeapon();
     }
-
-
 }
 
 function ServerExitRotation(DHATGun Gun)
