@@ -34,6 +34,33 @@ simulated event Tick(float DeltaTime)
             OnExitRotation();
         }
     }
+
+    /*
+    if(Gun != none && !Gun.bIsBeingRotated)
+    {
+        Log("GUN ROTATE END");
+        if (Instigator.Weapon.OldWeapon != none)
+        {
+            // HACK: This stops a standalone client from immediately firing
+            // their previous weapon.
+            if (Level.NetMode == NM_Standalone)
+            {
+                Instigator.Weapon.OldWeapon.ClientState = WS_Hidden;
+            }
+
+            Instigator.SwitchToLastWeapon();
+            Instigator.ChangedWeapon();
+            }
+            else
+            {
+            // We've no weapon to go back to so just put this down, subsequently
+            // destroying it.
+            PutDown();
+            Instigator.Controller.SwitchToBestWeapon();
+        }
+    }
+    */
+
 }
 
 simulated function OnEnterRotation()

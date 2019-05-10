@@ -7092,8 +7092,9 @@ simulated function class<DHVoicePack> GetVoicePack()
 
 function EnterATRotation(DHATGun Gun)
 {
-    Log("Pawn enter rotation");
+
     GunToRotate = Gun;
+
     ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon");
 }
 

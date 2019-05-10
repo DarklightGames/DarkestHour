@@ -368,7 +368,6 @@ simulated function ClientEnterRotation()
     local FadeColor FadeMaterial;
     local Combiner CombinerMaterial;
 
-
     //collision properties hack
 
     if(role != ROLE_Authority)
@@ -539,6 +538,7 @@ state Rotating
 
         if (RotateControllerPawn != none)
         {
+            RotateControllerPawn.GunToRotate = none;
             RotateControllerPawn.ClientExitATRotation();
         }
     }
