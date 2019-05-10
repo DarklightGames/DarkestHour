@@ -115,6 +115,7 @@ simulated function OnExitRotation()
 
     if (Instigator.Weapon.OldWeapon != none)
     {
+        Log("OLD WEP");
         // HACK: This stops a standalone client from immediately firing
         // their previous weapon.
         if (Level.NetMode == NM_Standalone)
@@ -127,6 +128,7 @@ simulated function OnExitRotation()
     }
     else
     {
+        Log("PUTDOWN");
         // We've no weapon to go back to so just put this down, subsequently
         // destroying it.
         PutDown();

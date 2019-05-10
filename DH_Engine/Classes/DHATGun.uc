@@ -540,6 +540,12 @@ state Rotating
         {
             RotateControllerPawn.GunToRotate = none;
             RotateControllerPawn.ClientExitATRotation();
+
+            if(RotateControllerPawn.Weapon.IsA('DH_ATGunRotateWeapon')) {
+                Log("HAS ROTATE WEP");
+                RotateControllerPawn.SwitchToLastWeapon();
+                RotateControllerPawn.ChangedWeapon();
+            }
         }
     }
 }
