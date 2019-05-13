@@ -2716,4 +2716,5 @@ defaultproperties
     ScriptedTextureFallback=Material'Weapons1st_tex.Zoomscope.LensShader'
     LensMaterialID=-1
     ScriptedScopeTexture=Texture'ScopeShaders.Zoomblur.Xhair'
+    ScopeOverlaySize=0.7
 }
