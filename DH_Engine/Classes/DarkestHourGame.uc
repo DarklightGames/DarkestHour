@@ -285,8 +285,9 @@ function PostBeginPlay()
 
     if (bIsDangerZoneEnabled && (SquadReplicationInfo.bAreRallyPointsEnabled || class'DH_LevelInfo'.static.DHDebugMode()))
     {
-        GRI.SetDangerZone(DHLevelInfo.bIsDangerZoneInitiallyEnabled, true);
-        GRI.SetDangerZoneScale(DHLevelInfo.DangerZoneIntensityScale, true);
+        GRI.SetDangerZoneEnabled(DHLevelInfo.bIsDangerZoneInitiallyEnabled, true);
+        GRI.SetDangerZoneNeutral(DHLevelInfo.DangerZoneNeutral, true);
+        GRI.SetDangerZoneBalance(DHLevelInfo.DangerZoneBalance, true);
     }
 
     // Artillery
@@ -3470,17 +3471,27 @@ exec function SetDangerZone(bool bEnabled)
         return;
     }
 
-    GRI.SetDangerZone(bEnabled);
+    GRI.SetDangerZoneEnabled(bEnabled);
 }
 
-exec function SetDangerZoneScale(float Value)
+exec function SetDangerZoneNeutral(byte Factor)
 {
     if (GRI == none)
     {
         return;
     }
 
-    GRI.SetDangerZoneScale(Value);
+    GRI.SetDangerZoneNeutral(Factor);
+}
+
+exec function SetDangerZoneBalance(int Factor)
+{
+    if (GRI == none)
+    {
+        return;
+    }
+
+    GRI.SetDangerZoneBalance(Factor);
 }
 
 //***********************************************************************************
