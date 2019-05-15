@@ -54,6 +54,7 @@ defaultproperties
     DrawType=DT_Mesh
     Mesh=Mesh'DH_Airplanes_anm.flybys'
     FlybyAnimationNames(0)="flyby_default"
+    PlaneInitialHeight=200;
     AirplaneBoneName="airplane"
     RemoteRole=ROLE_SimulatedProxy
     PassCount=2

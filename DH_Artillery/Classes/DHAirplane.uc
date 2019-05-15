@@ -75,6 +75,8 @@ simulated function Tick(float DeltaTime)
 }
 
 function TickAI(float DeltaTime){}
+function OnWaypointReached() {}
+function OnTurnEnd() {}
 
 state Entrance
 {
@@ -117,22 +119,40 @@ state Approaching
 {
     function TickAI(float DeltaTime)
     {
+        /*
         local vector X, Y, Z;
+
         GetAxes(Rotation, X, Y, Z);
         if ( 1.0 - (Normal(X) dot Normal(Y)) <  HeadingTolerance)
         {
             Log("Facing Target, continuing straight");
             MovementState = MOVE_Straight;
         }
+        */
+    }
+
+    function OnTurnEnd()
+    {
+        Log("Facing Target, continuing straight");
+        MovementState = MOVE_Straight;
+    }
+
+    function OnWaypointReached()
+    {
+        Log("Waypoint Reached");
+        GotoState('Attacking');
     }
 
     function BeginState()
     {
         AIState = AI_Approaching;
-        MovementState = MOVE_TurnRight;
+        MovementState = MOVE_RightTurn;
 
         // Create a random waypoint.
-        //CurrentWaypoint.Position = vect(Rand());
+        CurrentWaypoint.Position.X = Rand(800);
+        CurrentWaypoint.Position.Y = Rand(800);
+        CurrentWaypoint.Position.Z = Rand(800);
+        CurrentWaypoint.Radius = 1.0;
     }
 
 }
@@ -148,8 +168,35 @@ simulated function MovementUpdate(float DeltaTime)
 {
     local rotator Heading;
 
-    // Move along curve to waypoint.
-    velocity = Normal(Vect(1,1,0)) * CurrentSpeed * DeltaTime;
+
+        // Check if waypoint met.
+    if (VSize(CurrentWaypoint.Position - Location) <= CurrentWaypoint.Radius)
+    {
+        OnWaypointReached();
+    }
+
+    if (MovementState == MOVE_RightTurn)
+    {
+        velocity = Normal(CurrentWaypoint.Position - Location) *  CurrentSpeed;
+
+        if ( 1.0 - (Normal(velocity) dot Normal(CurrentWaypoint.Position - Location)) <  HeadingTolerance)
+        {
+            OnTurnEnd();
+        }
+    }
+    else if (MovementState == MOVE_RightTurn)
+    {
+        velocity = Normal(CurrentWaypoint.Position - Location) *  CurrentSpeed;
+
+        if ( 1.0 - (Normal(velocity) dot Normal(CurrentWaypoint.Position - Location)) <  HeadingTolerance)
+        {
+            OnTurnEnd();
+        }
+    }
+    else if (MovementState == MOVE_Straight)
+    {
+        // Do nothing?
+    }
 
 
 
