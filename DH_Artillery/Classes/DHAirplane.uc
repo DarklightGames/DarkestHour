@@ -27,20 +27,41 @@ var localized string    AirplaneName;
 var float               MaxSpeed;
 var float               MinSpeed;
 var float               CurrentSpeed;
-var float               MinTurningRadius; // tightest/smallest circular path this plane can turn on.
+var float               MinTurningRadius; // Tightest/smallest circular path this plane can turn on.
+var float               HeadingTolerance; // Margin of error for plane facing a certain direction.
+
+enum EMovementState
+{
+    MOVE_Straight,
+    MOVE_RightTurn,
+    MOVE_LeftTurn
+};
+
+var EMovementState MovementState;
+
+enum EAIState
+{
+    AI_Entrance,
+    AI_Searching,
+    AI_Approaching,
+    AI_Attacking,
+    AI_Exiting
+};
+
+var EAIState AIState;
 
 struct Waypoint
 {
-    var vector position;
-    var float radius;
+    var vector Position;
+    var float Radius;       // How close to position you reguarding this as a met checkpoint.
 };
 
 var Waypoint            CurrentWaypoint; // Current waypoint we are traveling to.
-var array<Waypoint>     WaypointQueue;
 
 simulated function PostBeginPlay()
 {
     CurrentSpeed = class'DHUnits'.static.MetersToUnreal(MaxSpeed);
+    GotoState('Entrance');
 }
 
 // Tick needed to make AI decisions on server.
@@ -49,17 +70,71 @@ simulated function Tick(float DeltaTime)
 
     //Fist Process waypoint status.
 
-    WaypointUpdate();
+    TickAI(DeltaTime);
     MovementUpdate(DeltaTime);
 }
 
-simulated function WaypointUpdate(float DeltaTime)
+function TickAI(float DeltaTime){}
+
+state Entrance
 {
-    //Check if there is not current waypoint set.
-    if(CurrentWaypoint == none)
+    function TickAI(float DeltaTime)
     {
-        Waypoint
+
     }
+
+    simulated function Timer()
+    {
+        GotoState('Searching');
+    }
+
+    function BeginState()
+    {
+        AIState = AI_Entrance;
+        MovementState = MOVE_Straight;
+        SetTimer(3,false);
+    }
+
+    function EndState(){}
+}
+
+state Searching
+{
+    simulated function Timer()
+    {
+        GotoState('Approaching');
+    }
+
+    function BeginState()
+    {
+        AIState = AI_Searching;
+        MovementState = MOVE_Straight;
+        SetTimer(1, false);
+    }
+}
+
+state Approaching
+{
+    function TickAI(float DeltaTime)
+    {
+        local vector X, Y, Z;
+        GetAxes(Rotation, X, Y, Z);
+        if ( 1.0 - (Normal(X) dot Normal(Y)) <  HeadingTolerance)
+        {
+            Log("Facing Target, continuing straight");
+            MovementState = MOVE_Straight;
+        }
+    }
+
+    function BeginState()
+    {
+        AIState = AI_Approaching;
+        MovementState = MOVE_TurnRight;
+
+        // Create a random waypoint.
+        //CurrentWaypoint.Position = vect(Rand());
+    }
+
 }
 
 // Sets a new current waypoint.
@@ -84,19 +159,6 @@ simulated function MovementUpdate(float DeltaTime)
     Heading.Yaw = Acos( Normal(Vect(1,0,0)) dot Normal(velocity) ) * 10430.378350470452724949566316381;
     SetRotation(Heading);
 }
-
-// Given A position, and a desired "OnTargetDistance", create a paht of waypoints.
-// The "OnTargetDistance" is the minimum distance away from the path end postion the plane should be
-// when it stops turning.
-function PathFind(vector PathEndPosition, float OnTargetDistance)
-{
-}
-
-// called whenever the plane passes it's current waypoint.
-function OnWaypointPassed()
-{
-}
-
 
 function vector CalculateRotationPosition(bool bIsRightTurn, vector Forward, vector Position, float TurnRadius, float Speed, float DeltaTime)
 {
@@ -134,12 +196,12 @@ defaultproperties
     AirplaneName="Airplane"
     DrawType=DT_Mesh
     bAlwaysRelevant=true
-    bReplicateMovement = true
+    //bReplicateMovement = true
     bCanBeDamaged=true
     Physics = PHYS_Flying
     //bRotateToDesired = true;
     //Rotation
-
+    HeadingTolerance = 0.01;
     MaxSpeed = 400;
     MinSpeed = 10;
     CurrentSpeed = 0;
