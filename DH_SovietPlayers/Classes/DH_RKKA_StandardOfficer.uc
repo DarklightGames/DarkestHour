@@ -3,10 +3,8 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_RKKA_StandardOfficer extends DHSOVArtilleryOfficerRoles;
+class DH_RKKA_StandardOfficer extends DHDeprecated;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietPawn',Weight=1.0)
-    SleeveTexture=Texture'Weapons1st_tex.russian_sleeves'
 }

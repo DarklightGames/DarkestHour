@@ -22,5 +22,7 @@ defaultproperties
     bKeepSpawningWithoutReinf=true
     OutOfReinfRoundTime=120
     OutOfReinfLimitForTimeChange=50
+
+    ObjSpawnMinimumDepth=1
 }
 

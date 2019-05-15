@@ -69,6 +69,19 @@ simulated function Material GetAttachmentIcon()
     }
 }
 
+simulated function float GetAttachmentIconScale()
+{
+    switch (ResupplyType)
+    {
+        case RT_Players:
+            return 0.05;
+        case RT_Vehicles:
+            return 0.038;
+        default:
+            return 0.05;
+    }
+}
+
 final function SetTeamIndex(int TeamIndex)
 {
     self.TeamIndex = TeamIndex;

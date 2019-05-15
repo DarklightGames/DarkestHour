@@ -494,6 +494,11 @@ function bool IsGrenade()
     return true;
 }
 
+function int GetNumberOfDroppedPickups()
+{
+    return AmmoAmount(0);
+}
+
 defaultproperties
 {
     Priority=3

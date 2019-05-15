@@ -367,7 +367,7 @@ function GetPlayerCountsWithinRadius(float RadiusInMeters, optional int SquadInd
                     SquadmateCount += 1;
                 }
             }
-            else
+            else if (Vehicle(P) == none)
             {
                 EnemyCount += 1;
             }

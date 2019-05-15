@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHBinocularsPickup extends DHWeaponPickup
-    notplaceable;
+class DHBinocularsPickup extends DHWeaponPickup;
 
 defaultproperties
 {
     InventoryType=class'DH_Equipment.DHBinocularsItem'
-    StaticMesh=staticmesh'DetailSM.Military.Binocs'
+    StaticMesh=StaticMesh'DetailSM.Military.Binocs'
 }
