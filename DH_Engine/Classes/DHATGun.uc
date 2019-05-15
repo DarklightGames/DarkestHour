@@ -207,7 +207,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 {
     super.Died(Killer, DamageType, HitLocation);
 
-    if(RotationProjector != none)
+    if (RotationProjector != none)
     {
         RotationProjector.Destroy();
     }
@@ -244,7 +244,7 @@ simulated function ERotateError GetRotationError(DHPawn Pawn, optional out int T
         return ERROR_IsBeingRotated;
     }
 
-    if(bVehicleDestroyed)
+    if (bVehicleDestroyed)
     {
         return ERROR_Fatal;
     }
@@ -326,6 +326,7 @@ function ServerEnterRotation(DHPawn Instigator)
         Instigator.ClientExitATRotation();
         return;
     }
+
     Instigator.GunToRotate =self;
     RotateControllerPawn = Instigator;
     GotoState('Rotating');
@@ -368,7 +369,7 @@ simulated function ClientEnterRotation()
 
     //collision properties hack
 
-    if(role != ROLE_Authority)
+    if (Role != ROLE_Authority)
     {
         //bCollideWorld = false;
         //SetCollision(false,false,false);
@@ -443,7 +444,7 @@ simulated function ClientExitRotation()
 
 simulated function ClientDestroyProjection()
 {
-    if(RotationProjector != none)
+    if (RotationProjector != none)
     {
         RotationProjector.Destroy();
     }
@@ -456,7 +457,6 @@ state Rotating
 {
     function BeginState()
     {
-
         bIsBeingRotated = true;
 
         RotatingActor = Spawn(class'DHRotatingActor',,, Location, Rotation);
@@ -522,7 +522,7 @@ state Rotating
             RotateSoundAttachment.Destroy();
         }
 
-        if(RotationProjector != none)
+        if (RotationProjector != none)
         {
             RotationProjector.Destroy();
         }
@@ -540,7 +540,8 @@ state Rotating
             RotateControllerPawn.GunToRotate = none;
             RotateControllerPawn.ClientExitATRotation();
 
-            if(RotateControllerPawn.Weapon.IsA('DH_ATGunRotateWeapon')) {
+            if (RotateControllerPawn.Weapon.IsA('DH_ATGunRotateWeapon'))
+            {
                 RotateControllerPawn.SwitchToLastWeapon();
                 RotateControllerPawn.ChangedWeapon();
             }
@@ -564,7 +565,7 @@ simulated event PostNetReceive()
     UncompressedRotation.Yaw = Int(Left(CutSentinel, SecondComma));
     UncompressedRotation.Roll = Int(Mid(CutSentinel, SecondComma + 1));
 
-    if(OldRotator != UncompressedRotation)
+    if (OldRotator != UncompressedRotation)
     {
         OldRotator = UncompressedRotation;
         SetPhysics(PHYS_None);
@@ -584,9 +585,9 @@ simulated event PostNetReceive()
         bOldIsRotating = bIsBeingRotated;
     }
 
-    if(bVehicleDestroyed)
+    if (bVehicleDestroyed)
     {
-        if(RotationProjector != none)
+        if (RotationProjector != none)
         {
             RotationProjector.Destroy();
         }
