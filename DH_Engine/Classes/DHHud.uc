@@ -144,10 +144,10 @@ var     SpriteWidget        PacketLossIndicator;    // shows up in various color
 
 // Danger Zone
 var     class<DHDangerZone> DangerZoneClass;
-var     array<vector>       DangerZoneOverlayContour;
+var     array<vector>       DangerZoneOverlayAxis;
+var     array<vector>       DangerZoneOverlayAllies;
 var     int                 DangerZoneOverlayResolution;
 var     int                 DangerZoneOverlaySubResolution;
-var     byte                DangerZoneOverlayTeamIndex;
 var     bool                bDangerZoneOverlayUpdatePending;
 var     SpriteWidget        DangerZoneOverlayPointIcon;
 
@@ -3431,7 +3431,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
             RI = DHRoleInfo(PRI.RoleInfo);
         }
 
-        if (DHGRI.bIsDangerZoneEnabled)
+        if (DHGRI.IsDangerZoneEnabled())
         {
             UpdateDangerZoneOverlay();
             DrawDangerZoneOverlay(C, SubCoords, MyMapScale, MapCenter, Viewport);
@@ -3909,10 +3909,18 @@ function UpdateDangerZoneOverlay(optional bool bForce)
         return;
     }
 
-    if (bForce || bDangerZoneOverlayUpdatePending || PC.GetTeamNum() != DangerZoneOverlayTeamIndex)
+    if (bForce || bDangerZoneOverlayUpdatePending)
     {
-        DangerZoneOverlayContour = DangerZoneClass.static.GetContour(DHGRI, PC.GetTeamNum(), DangerZoneOverlayResolution, DangerZoneOverlaySubResolution);
-        DangerZoneOverlayTeamIndex = PC.GetTeamNum();
+        DangerZoneOverlayAxis = DangerZoneClass.static.GetContour(DHGRI,
+                                                                  ALLIES_TEAM_INDEX,
+                                                                  DangerZoneOverlayResolution,
+                                                                  DangerZoneOverlaySubResolution);
+
+        DangerZoneOverlayAllies = DangerZoneClass.static.GetContour(DHGRI,
+                                                                    AXIS_TEAM_INDEX,
+                                                                    DangerZoneOverlayResolution,
+                                                                    DangerZoneOverlaySubResolution);
+
         bDangerZoneOverlayUpdatePending = false;
     }
 }
@@ -3920,10 +3928,27 @@ function UpdateDangerZoneOverlay(optional bool bForce)
 function DrawDangerZoneOverlay(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
 {
     local int i;
+    local DHPlayer PC;
 
-    for (i = 0; i < DangerZoneOverlayContour.Length; ++i)
+    PC = DHPlayer(PlayerOwner);
+
+    if (PC == none || PC.GetTeamNum() > 1)
     {
-        DHDrawIconOnMap(C, SubCoords, DangerZoneOverlayPointIcon, MyMapScale, DangerZoneOverlayContour[i], MapCenter, Viewport);
+        return;
+    }
+
+    DangerZoneOverlayPointIcon.Tints[0] = default.DangerZoneOverlayPointIcon.Tints[class'UMath'.static.SwapFirstPair(PC.GetTeamNum())];
+
+    for (i = 0; i < DangerZoneOverlayAxis.Length; ++i)
+    {
+        DHDrawIconOnMap(C, SubCoords, DangerZoneOverlayPointIcon, MyMapScale, DangerZoneOverlayAxis[i], MapCenter, Viewport);
+    }
+
+    DangerZoneOverlayPointIcon.Tints[0] = default.DangerZoneOverlayPointIcon.Tints[PC.GetTeamNum()];
+
+    for (i = 0; i < DangerZoneOverlayAllies.Length; ++i)
+    {
+        DHDrawIconOnMap(C, SubCoords, DangerZoneOverlayPointIcon, MyMapScale, DangerZoneOverlayAllies[i], MapCenter, Viewport);
     }
 }
 
@@ -6119,7 +6144,6 @@ defaultproperties
     DangerZoneClass=class'DH_Engine.DHDangerZone'
     DangerZoneOverlayResolution=30
     DangerZoneOverlaySubResolution=57
-    DangerZoneOverlayTeamIndex=255
     bDangerZoneOverlayUpdatePending=true
-    DangerZoneOverlayPointIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.Dot',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=7,Y2=7),TextureScale=0.01,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=200,G=0,B=0,A=158),Tints[1]=(R=200,G=0,B=0,A=158))
+    DangerZoneOverlayPointIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.Dot',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=7,Y2=7),TextureScale=0.01,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=200,G=0,B=0,A=158),Tints[1]=(R=0,G=124,B=252,A=79))
 }

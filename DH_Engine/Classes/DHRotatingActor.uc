@@ -94,6 +94,7 @@ defaultproperties
     bNetInitialRotation=true
     bAlwaysRelevant=true
     bRotateToDesired=true
+    bCollideWorld=false
 
     LifespanTime=20
     ControlRadiusInMeters=5.0

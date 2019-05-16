@@ -73,7 +73,9 @@ var(DH_GameSettings) int                            InfantrySpawnVehicleDuration
 var(DH_GameSettings) InterpCurve                    AttritionRateCurve;
 
 var(DH_GameSettings) bool                           bIsDangerZoneInitiallyEnabled;
-var(DH_GameSettings) float                          DangerZoneIntensityScale;
+var(DH_GameSettings) byte                           DangerZoneNeutral;                  // Affects the size of the neutral area
+var(DH_GameSettings) int                            DangerZoneBalance;                  // Shifts the balance between Axis and Allied zones (range: -127..127)
+var(DH_GameSettings) float                          DangerZoneIntensityScale;           // DEPRECATED
 
 var(DH_GameSettings) float                          ObjectiveSpawnDistanceThreshold;    // Distance away an objective must be to be considered for an active Obj Spawn
 var(DH_GameSettings) int                            ObjectiveSpawnMinimumDepth;         // Override of gametype's minimum depth for calculating the closest valid Obj Spawn
@@ -206,7 +208,7 @@ defaultproperties
     FinalMunitionPercentages(1)=40.0
 
     bIsDangerZoneInitiallyEnabled=true
-    DangerZoneIntensityScale=0.8
+    DangerZoneNeutral=128
 
     ObjectiveSpawnDistanceThreshold=125.0
     ObjectiveSpawnMinimumDepth=-1

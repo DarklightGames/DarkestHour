@@ -214,19 +214,6 @@ simulated function float GetIconScale(DHPlayer PC)
 // DANGER ZONE HELPERS
 //==============================================================================
 
-final function byte GetOppositeTeamIndex()
-{
-    switch(TeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            return ALLIES_TEAM_INDEX;
-        case ALLIES_TEAM_INDEX:
-            return AXIS_TEAM_INDEX;
-        default:
-            return TeamIndex;
-    }
-}
-
 final function ChangeVisibilityInDangerZoneTo(byte InIndex, byte OutIndex)
 {
     if (IsInDangerZone())

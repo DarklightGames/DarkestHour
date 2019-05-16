@@ -117,7 +117,7 @@ var     int                 BurnTimeLeft;                  // number of seconds 
 var     float               LastBurnTime;                  // last time we did fire damage to the Pawn
 var     Pawn                FireStarter;                   // who set a player on fire
 
-// DUMB SHIT
+// (not) DUMB SHIT
 var     DHATGun             GunToRotate;
 
 replication
@@ -2691,10 +2691,16 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     local float           DamageBeyondZero;
     local bool            bShouldGib;
 
+
     // Exit if pawn being destroyed or level is being cleaned up
     if (bDeleteMe || Level.bLevelChange || Level.Game == none)
     {
         return;
+    }
+
+    if(GunToRotate != none)
+    {
+        GunToRotate.ServerExitRotation();
     }
 
     // Re-assign killer if death was caused indirectly by them
@@ -2847,6 +2853,8 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
         NetUpdateFrequency = default.NetUpdateFrequency;
         PlayDying(DamageType, HitLocation);
     }
+
+
 }
 
 // Stop damage overlay from overriding burning overlay if necessary
@@ -7084,7 +7092,9 @@ simulated function class<DHVoicePack> GetVoicePack()
 
 function EnterATRotation(DHATGun Gun)
 {
+
     GunToRotate = Gun;
+
     ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon");
 }
 

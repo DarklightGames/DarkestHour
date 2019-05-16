@@ -11,7 +11,7 @@ class DHMapIconAttachment_Vehicle extends DHMapIconAttachment
 // Danger Zone -> enemy
 function UpdateVisibilityIndex()
 {
-    ChangeVisibilityInDangerZoneTo(GetOppositeTeamIndex(), 255);
+    ChangeVisibilityInDangerZoneTo(class'UMath'.static.SwapFirstPair(GetTeamIndex()), 255);
 }
 
 simulated function Material GetIconMaterial(DHPlayer PC)

@@ -57,7 +57,10 @@ simulated function OnEnterRotation()
     }
     else
     {
-        Gun.ClientEnterRotation();
+        if(InstigatorIsLocallyControlled())
+        {
+            Gun.ClientEnterRotation();
+        }
         ServerEnterRotation(Gun, P);
     }
 }
@@ -77,10 +80,13 @@ simulated function OnExitRotation()
         return;
     }
 
-    ServerExitRotation(Gun);
-    Gun = none;
+    if(Gun != none)
+    {
+        ServerExitRotation(Gun);
+        Gun = none;
+    }
 
-    if (Instigator.Weapon.OldWeapon != none)
+    if (Instigator.Weapon != none && Instigator.Weapon.OldWeapon != none)
     {
         // HACK: This stops a standalone client from immediately firing
         // their previous weapon.
@@ -99,13 +105,10 @@ simulated function OnExitRotation()
         PutDown();
         Instigator.Controller.SwitchToBestWeapon();
     }
-
-
 }
 
 function ServerExitRotation(DHATGun Gun)
 {
-
     if (Gun != none)
     {
         Gun.ServerExitRotation();
@@ -208,6 +211,16 @@ simulated function Fire(float F)
 }
 
 simulated function ROIronSights()
+{
+    OnExitRotation();
+}
+
+simulated function Weapon PrevWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
+{
+    OnExitRotation();
+}
+
+simulated function Weapon NextWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
 {
     OnExitRotation();
 }

@@ -2193,6 +2193,12 @@ function ServerUse()
             {
                 EntryVehicle = ROVehicle(LookedAtActor).FindEntryVehicle(Pawn);
 
+                // End AT Rotation action if player is currently preforming one
+                if(DHPawn(Pawn) != none && DHPawn(Pawn).GunToRotate != none)
+                {
+                    DHPawn(Pawn).GunToRotate.ServerExitRotation();
+                }
+
                 if (EntryVehicle != none && EntryVehicle.TryToDrive(Pawn))
                 {
                     return;
@@ -5818,6 +5824,11 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
         return false;
     }
 
+    if(DHPawn(Pawn) != none && DHPawn(Pawn).GunToRotate != none)
+    {
+        return false;
+    }
+
     TraceStart = Pawn.Location + Pawn.EyePosition();
     TraceEnd = TraceStart + (GetMaxViewDistance() * vector(Rotation));
 
@@ -5840,7 +5851,7 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
             Gun = DHATGun(HitActor);
             P = DHPawn(Pawn);
 
-            if (P != none && Gun != none && Gun.GetRotationError(P) != ERROR_TooFarAway)
+            if (P != none && Gun != none && Gun.GetRotationError(P) != ERROR_TooFarAway && !Gun.bVehicleDestroyed)
             {
                 // TODO: we need some sort of way to check if we're being auto-traced?
                 // perhaps keep tabs on who the tracer was using timeseconds + pawn in the AT gun?
