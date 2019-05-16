@@ -29,12 +29,14 @@ var float               MinSpeed;
 var float               CurrentSpeed;
 var float               MinTurningRadius; // Tightest/smallest circular path this plane can turn on.
 var float               HeadingTolerance; // Margin of error for plane facing a certain direction.
+var vector              DesiredLocation;
 
 enum EMovementState
 {
-    MOVE_Straight,
-    MOVE_RightTurn,
-    MOVE_LeftTurn
+    MOVE_Straight,  // Continue straight along current velocity path.
+    MOVE_ToLocation,    // Changes current velocity to point at DesiredLocation. Calls OnReachDesiredLocation when it reaches the location.
+    MOVE_RightTurn, // Right turn To waypoint heading.
+    MOVE_LeftTurn   // Left turn To waypoint heading.
 };
 
 var EMovementState MovementState;
@@ -56,20 +58,54 @@ struct Waypoint
     var float Radius;       // How close to position you reguarding this as a met checkpoint.
 };
 
+// Debug
+var vector              StartLocation;
+var Waypoint            Waypoint1;
+var Waypoint            Waypoint2;
+var Waypoint            Waypoint3;
+var Waypoint            Waypoint4;
+var int                 WaypointCount;
+
 var Waypoint            CurrentWaypoint; // Current waypoint we are traveling to.
 
 simulated function PostBeginPlay()
 {
-    CurrentSpeed = class'DHUnits'.static.MetersToUnreal(MaxSpeed);
-    GotoState('Entrance');
+    local int box;
+    box = 2500;
+    CurrentSpeed = 800;
+    StartLocation = Location;
+    Waypoint1.Radius = 10;
+    Waypoint1.Position = StartLocation;
+    Waypoint1.Position.X +=  box;
+    DrawDebugSphere(Waypoint1.Position, 200, 10, 255,0,255);
+    DrawStayingDebugLine(Waypoint1.Position, Waypoint1.Position + vect(0, 0, 2000), 255,0,255);
+
+    Waypoint2.Radius = 10;
+    Waypoint2.Position = StartLocation;
+    Waypoint2.Position.X += box;
+    Waypoint2.Position.Y += box;
+    DrawDebugSphere(Waypoint2.Position, 200, 10, 255,0,255);
+    DrawStayingDebugLine(Waypoint2.Position, Waypoint2.Position + vect(0, 0, 2000), 255,0,255);
+
+    Waypoint3.Radius = 10;
+    Waypoint3.Position = StartLocation;
+    Waypoint3.Position.Y += box;
+    DrawDebugSphere(Waypoint2.Position, 200, 10, 255,0,255);
+    DrawStayingDebugLine(Waypoint3.Position, Waypoint3.Position + vect(0, 0, 2000), 255,0,255);
+
+    Waypoint4.Radius = 10;
+    Waypoint4.Position = StartLocation;
+    DrawDebugSphere(Waypoint4.Position, 200, 10, 255,0,255);
+    DrawStayingDebugLine(Waypoint4.Position, Waypoint4.Position + vect(0, 0, 2000), 255,0,255);
 }
 
 // Tick needed to make AI decisions on server.
 simulated function Tick(float DeltaTime)
 {
-
-    //Fist Process waypoint status.
-
+    DrawDebugSphere(Waypoint1.Position, 200, 10, 255,0,255);
+    DrawDebugSphere(Waypoint2.Position, 200, 10, 255,0,255);
+    DrawDebugSphere(Waypoint3.Position, 200, 10, 255,0,255);
+    DrawDebugSphere(Waypoint4.Position, 200, 10, 255,0,255);
     TickAI(DeltaTime);
     MovementUpdate(DeltaTime);
 }
@@ -77,14 +113,45 @@ simulated function Tick(float DeltaTime)
 function TickAI(float DeltaTime){}
 function OnWaypointReached() {}
 function OnTurnEnd() {}
+function OnReachDesiredLocation() {}
 
-state Entrance
+function PickTarget()
 {
-    function TickAI(float DeltaTime)
-    {
+        // Create a random waypoint.
+        /*
+        CurrentWaypoint.Position.X = StartLocation.X + Rand(1000);
+        CurrentWaypoint.Position.Y = StartLocation.Y + Rand(1000);
+        CurrentWaypoint.Position.Z = Location.Z;
+        */
 
-    }
+        WaypointCount++;
 
+        switch (WaypointCount % 4)
+        {
+            case 0:
+                Log("1");
+                CurrentWaypoint = Waypoint1;
+                break;
+            case 1:
+                Log("2");
+                CurrentWaypoint = Waypoint2;
+                break;
+            case 2:
+                Log("3");
+                CurrentWaypoint = Waypoint3;
+                break;
+            case 3:
+                Log("4");
+                CurrentWaypoint = Waypoint4;
+                break;
+        }
+
+        CurrentWaypoint.Radius = 10;
+        Log("AT: "$V3ToV2(Location)$" TO: "$V3ToV2(CurrentWaypoint.Position));
+}
+
+auto simulated state Entrance
+{
     simulated function Timer()
     {
         GotoState('Searching');
@@ -92,45 +159,35 @@ state Entrance
 
     function BeginState()
     {
+        Log("Entrance State");
+
         AIState = AI_Entrance;
         MovementState = MOVE_Straight;
-        SetTimer(3,false);
-    }
 
-    function EndState(){}
+        SetTimer(0.1, false);
+        velocity = vect(1,0,0);
+    }
 }
 
-state Searching
+simulated state Searching
 {
     simulated function Timer()
     {
+        PickTarget();
         GotoState('Approaching');
     }
 
     function BeginState()
     {
+        Log("Searching");
         AIState = AI_Searching;
         MovementState = MOVE_Straight;
-        SetTimer(1, false);
+        SetTimer(0.1, false);
     }
 }
 
-state Approaching
+simulated state Approaching
 {
-    function TickAI(float DeltaTime)
-    {
-        /*
-        local vector X, Y, Z;
-
-        GetAxes(Rotation, X, Y, Z);
-        if ( 1.0 - (Normal(X) dot Normal(Y)) <  HeadingTolerance)
-        {
-            Log("Facing Target, continuing straight");
-            MovementState = MOVE_Straight;
-        }
-        */
-    }
-
     function OnTurnEnd()
     {
         Log("Facing Target, continuing straight");
@@ -139,22 +196,33 @@ state Approaching
 
     function OnWaypointReached()
     {
-        Log("Waypoint Reached");
+        Log("Waypoint Reached: "$Location);
         GotoState('Attacking');
     }
 
     function BeginState()
     {
+        Log("Approaching");
         AIState = AI_Approaching;
         MovementState = MOVE_RightTurn;
-
-        // Create a random waypoint.
-        CurrentWaypoint.Position.X = Rand(800);
-        CurrentWaypoint.Position.Y = Rand(800);
-        CurrentWaypoint.Position.Z = Rand(800);
-        CurrentWaypoint.Radius = 1.0;
     }
 
+}
+
+simulated state Attacking
+{
+    simulated function Timer()
+    {
+        GotoState('Searching');
+    }
+
+    function BeginState()
+    {
+        Log("Attacking");
+        AIState = AI_Attacking;
+        MovementState = MOVE_Straight;
+        SetTimer(0.1, false);
+    }
 }
 
 // Sets a new current waypoint.
@@ -168,42 +236,36 @@ simulated function MovementUpdate(float DeltaTime)
 {
     local rotator Heading;
 
-
-        // Check if waypoint met.
-    if (VSize(CurrentWaypoint.Position - Location) <= CurrentWaypoint.Radius)
+        // Check if waypoint met. Restrain from continued movement until new waypoint is set.
+    if (VSize(V3ToV2(CurrentWaypoint.Position - Location)) <= CurrentWaypoint.Radius)
     {
         OnWaypointReached();
     }
 
-    if (MovementState == MOVE_RightTurn)
+    // Turning movement is only thought of in 2D space.
+    if (MovementState == MOVE_RightTurn || MovementState == MOVE_RightTurn)
     {
-        velocity = Normal(CurrentWaypoint.Position - Location) *  CurrentSpeed;
+        velocity = Normal(V3ToV2(CurrentWaypoint.Position - Location)) * CurrentSpeed;
 
-        if ( 1.0 - (Normal(velocity) dot Normal(CurrentWaypoint.Position - Location)) <  HeadingTolerance)
+        if ( 1.0 - (Normal(V3ToV2(velocity)) dot Normal(V3ToV2(CurrentWaypoint.Position - Location))) <=  HeadingTolerance)
         {
             OnTurnEnd();
         }
     }
-    else if (MovementState == MOVE_RightTurn)
-    {
-        velocity = Normal(CurrentWaypoint.Position - Location) *  CurrentSpeed;
-
-        if ( 1.0 - (Normal(velocity) dot Normal(CurrentWaypoint.Position - Location)) <  HeadingTolerance)
-        {
-            OnTurnEnd();
-        }
-    }
+    // Straight Line Movement should be thought of in 3d, as the plane can climb/dive to a desired height.
     else if (MovementState == MOVE_Straight)
     {
-        // Do nothing?
+        velocity = Normal(velocity) * CurrentSpeed;
     }
 
-
-
-    // Make sure plane is always faceing the direction it is traveling.
+    /*
+    // Make sure plane is always facing the direction it is traveling.
     Heading.Pitch = 0;
     Heading.Roll = 0;
-    Heading.Yaw = Acos( Normal(Vect(1,0,0)) dot Normal(velocity) ) * 10430.378350470452724949566316381;
+    Heading.Yaw = class'UUnits'.static.RadiansToUnreal(Acos( Normal(Vect(1,0,0)) dot Normal(velocity) ));
+    */
+    Heading = OrthoRotation(velocity, velocity Cross vect(0, 0, 1), vect(0, 0, 1));
+    Heading.Roll = 0;
     SetRotation(Heading);
 }
 
@@ -238,9 +300,22 @@ function vector CalculateRotationPosition(bool bIsRightTurn, vector Forward, vec
     return WorldSpaceNewPosition;
 }
 
+// Converts 3d vector into 2d vector.
+static function vector V3ToV2(vector InVector)
+{
+    local vector OutVector;
+
+    OutVector.X = InVector.X;
+    OutVector.Y = InVector.Y;
+    OutVector.Z = 0;
+
+    return OutVector;
+}
+
 defaultproperties
 {
     AirplaneName="Airplane"
+    AIState = AI_Entrance;
     DrawType=DT_Mesh
     bAlwaysRelevant=true
     //bReplicateMovement = true
@@ -249,7 +324,7 @@ defaultproperties
     //bRotateToDesired = true;
     //Rotation
     HeadingTolerance = 0.01;
-    MaxSpeed = 400;
+    MaxSpeed = 10;
     MinSpeed = 10;
     CurrentSpeed = 0;
 }
