@@ -11,7 +11,6 @@ defaultproperties
     bHasScope=true
     bIsSniper=true
     bPlusOneLoading=true
-    ScopeOverlaySize=0.7
 
     bUsesIronsightFOV=false
     FreeAimRotationSpeed=6.0

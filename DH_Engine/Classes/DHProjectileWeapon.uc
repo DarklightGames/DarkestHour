@@ -378,7 +378,7 @@ simulated event RenderOverlays(Canvas Canvas)
             Canvas.DrawBoundActor(self, false, false, DisplayFOV, Playa.Rotation, Playa.WeaponBufferRotation, Instigator.CalcZoomedDrawOffset(self));
             bDrawingFirstPerson = false;
         }
-        else if (ScopeDetail == RO_TextureScope)
+        else if (ScopeDetail == RO_TextureScope && bPlayerViewIsZoomed)
         {
             Canvas.DrawColor.A = 255;
             Canvas.Style = ERenderStyle.STY_Alpha;
@@ -410,10 +410,9 @@ simulated event RenderOverlays(Canvas Canvas)
                 Canvas.DrawHorizontal(PosY - 1.0, PosX - 3.0);
                 Canvas.DrawHorizontal(PosY, PosX - 3.0);
             }
-
-            Skins[LensMaterialID] = ScriptedTextureFallback;
-            SetRotation( RollMod );
-
+        }
+        else
+        {
             bDrawingFirstPerson = true;
             Canvas.DrawActor(self, false, false, DisplayFOV);
             bDrawingFirstPerson = false;
@@ -2716,4 +2715,5 @@ defaultproperties
     ScriptedTextureFallback=Material'Weapons1st_tex.Zoomscope.LensShader'
     LensMaterialID=-1
     ScriptedScopeTexture=Texture'ScopeShaders.Zoomblur.Xhair'
+    ScopeOverlaySize=0.7
 }
