@@ -308,7 +308,7 @@ simulated state Reloading
 
     simulated function PostPreReload()
     {
-        // give back the unfired round that was in the chamber
+        // Give back the unfired round that was in the chamber.
         if (Role == ROLE_Authority)
         {
             if(!bWaitingToBolt)
@@ -343,7 +343,7 @@ simulated state Reloading
 
     simulated function PostFullReloadEnd()
     {
-        if(Role == ROLE_Authority)
+        if (Role == ROLE_Authority)
         {
             PerformReload(GetMaxLoadedRounds());
 
@@ -358,10 +358,10 @@ simulated state Reloading
 
     simulated function PostLoop()
     {
-        if(Role == ROLE_Authority)
+        if (Role == ROLE_Authority)
         {
-            //based on state we just finished animating, give appropriate ammo.
-            if(ReloadState == RS_ReloadLoopedStripper)
+            // Based on state we just finished animating, give appropriate ammo.
+            if (ReloadState == RS_ReloadLoopedStripper)
             {
                 PerformReload(GetStripperClipSize());
             }
@@ -372,7 +372,7 @@ simulated state Reloading
         }
 
         // Process reload that has just taken place.
-        if(ReloadState == RS_ReloadLoopedStripper)
+        if (ReloadState == RS_ReloadLoopedStripper)
         {
             NumRoundsToLoad -= GetStripperClipSize();
         }
@@ -382,7 +382,7 @@ simulated state Reloading
         }
 
         // Check if end of reloading has been reached.
-        if(NumRoundsToLoad <= 0 || bInterruptReload)
+        if (NumRoundsToLoad <= 0 || bInterruptReload)
         {
             if (ROPawn(Instigator) != none)
             {
@@ -400,7 +400,7 @@ simulated state Reloading
         {
             ReloadState = RS_ReloadLoopedStripper;
 
-            if(Role == ROLE_Authority)
+            if (Role == ROLE_Authority)
             {
                 SetStripperReloadTimer();
             }
@@ -411,7 +411,7 @@ simulated state Reloading
         {
             ReloadState = RS_ReloadLooped;
 
-            if(Role == ROLE_Authority)
+            if (Role == ROLE_Authority)
             {
                 SetSingleReloadTimer();
             }
@@ -434,7 +434,6 @@ simulated state Reloading
             if (Anim == PreReloadAnim || Anim == PreReloadHalfAnim)
             {
                 PostPreReload();
-
                 return;
             }
             else if (Anim == FullReloadAnim)
@@ -459,7 +458,7 @@ simulated state Reloading
     // Modified to progress through reload stages
     simulated function Timer()
     {
-        if(Role != ROLE_Authority || InstigatorIsLocallyControlled())
+        if (Role != ROLE_Authority || InstigatorIsLocallyControlled())
         {
             return;
         }
@@ -492,8 +491,8 @@ simulated state Reloading
         {
             if (NumRoundsToLoad >= GetStripperClipSize() && HasAnim(FullReloadAnim))
             {
-                //give back the unfired round in the chamber
-                if(!bWaitingToBolt)
+                // Give back the unfired round in the chamber.
+                if (!bWaitingToBolt)
                 {
                     GiveBackAmmo(1);
                 }
@@ -538,7 +537,7 @@ function SetSingleReloadTimer()
 
 function SetStripperReloadTimer()
 {
-    if(HasAnim(StripperReloadAnim))
+    if (HasAnim(StripperReloadAnim))
     {
         SetTimer(GetAnimDuration(StripperReloadAnim, 1.0), false);
     }
@@ -546,7 +545,7 @@ function SetStripperReloadTimer()
 
 simulated function PlaySingleReload()
 {
-    if(InstigatorIsLocallyControlled())
+    if (InstigatorIsLocallyControlled())
     {
         PlayAnim(GetSingleReloadAnim(), 1.0);
     }
@@ -554,7 +553,7 @@ simulated function PlaySingleReload()
 
 simulated function PlayStripperReload()
 {
-    if(InstigatorIsLocallyControlled() && HasAnim(StripperReloadAnim))
+    if (InstigatorIsLocallyControlled() && HasAnim(StripperReloadAnim))
     {
        PlayAnim(StripperReloadAnim, 1.0);
     }
@@ -562,12 +561,12 @@ simulated function PlayStripperReload()
 
 simulated function PlayPreReload()
 {
-    if(InstigatorIsLocallyControlled())
+    if (InstigatorIsLocallyControlled())
     {
         PlayAnim(GetPreReloadAnim(), 1.0, FastTweenTime);
     }
 
-    if(Role == ROLE_Authority)
+    if (Role == ROLE_Authority)
     {
         SetTimer(GetAnimDuration(GetPreReloadAnim(), 1.0), false);
     }
@@ -585,7 +584,7 @@ simulated function name GetPreReloadAnim()
 
 simulated function name GetSingleReloadAnim()
 {
-    if ((GetMaxLoadedRounds() != NumRoundsToLoad) && HasAnim(SingleReloadHalfAnim))
+    if (GetMaxLoadedRounds() != NumRoundsToLoad && HasAnim(SingleReloadHalfAnim))
     {
         return SingleReloadHalfAnim;
     }
@@ -610,7 +609,7 @@ simulated function PlayFullReload()
 // New function to play PostReloadAnim & set a timer for when it ends (without adding FastTweenTime to timer)
 simulated function PlayPostReload()
 {
-    if(Role == ROLE_Authority)
+    if (Role == ROLE_Authority)
     {
         SetTimer(GetAnimDuration(PostReloadAnim, 1.0), false);
     }

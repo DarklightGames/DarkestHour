@@ -12,5 +12,5 @@ class DHMapIconAttachment_ATGun extends DHMapIconAttachment
 // Danger Zone -> enemy
 function UpdateVisibilityIndex()
 {
-    ChangeVisibilityInDangerZoneTo(GetOppositeTeamIndex(), GetTeamIndex());
+    ChangeVisibilityInDangerZoneTo(class'UMath'.static.SwapFirstPair(GetTeamIndex()), GetTeamIndex());
 }

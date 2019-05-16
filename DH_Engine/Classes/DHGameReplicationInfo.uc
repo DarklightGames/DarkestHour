@@ -149,9 +149,11 @@ var bool                bAllChatEnabled;
 var byte                ServerTickHealth;
 var int                 ServerNetHealth;
 
-var bool                bIsDangerZoneEnabled;
-var float               DangerZoneIntensityScale;
-var float               OldDangerZoneIntensityScale;
+var private bool        bIsDangerZoneEnabled;
+var private byte        DangerZoneNeutral;
+var private byte        DangerZoneBalance;
+var private byte        OldDangerZoneNeutral;
+var private byte        OldDangerZoneBalance;
 
 // Map markers
 struct MapMarker
@@ -232,8 +234,8 @@ replication
         AlliesVictoryMusicIndex,
         AxisVictoryMusicIndex,
         bIsDangerZoneEnabled,
-        DangerZoneIntensityScale,
-        ClientDangerZoneUpdated;
+        DangerZoneNeutral,
+        DangerZoneBalance;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
@@ -349,9 +351,12 @@ simulated function PostNetBeginPlay()
     }
 }
 
-function ObjectiveCompleted()
+simulated function ObjectiveCompleted()
 {
-    DangerZoneUpdated();
+    if (bIsDangerZoneEnabled)
+    {
+        DangerZoneUpdated();
+    }
 }
 
 function bool ObjectiveTreeNodeDepthComparatorFunction(int LHS, int RHS)
@@ -1807,13 +1812,8 @@ function UpdateMapIconAttachments()
 // DANGER ZONE
 //==============================================================================
 
-function SetDangerZone(bool bEnabled, optional bool bPostponeUpdate)
+function SetDangerZoneEnabled(bool bEnabled, optional bool bPostponeUpdate)
 {
-    if (bEnabled == bIsDangerZoneEnabled)
-    {
-        return;
-    }
-
     bIsDangerZoneEnabled = bEnabled;
 
     if (!bPostponeUpdate)
@@ -1822,19 +1822,39 @@ function SetDangerZone(bool bEnabled, optional bool bPostponeUpdate)
     }
 }
 
-function SetDangerZoneScale(float Value, optional bool bPostponeUpdate)
+function SetDangerZoneNeutral(byte Factor, optional bool bPostponeUpdate)
 {
-    if (Value == 0.0 || Value == DangerZoneIntensityScale)
-    {
-        return;
-    }
-
-    DangerZoneIntensityScale = Value;
+    DangerZoneNeutral = Factor;
 
     if (!bPostponeUpdate)
     {
         DangerZoneUpdated();
     }
+}
+
+function SetDangerZoneBalance(int Factor, optional bool bPostponeUpdate)
+{
+    DangerZoneBalance = (128 - Clamp(Factor, -127, 127));
+
+    if (!bPostponeUpdate)
+    {
+        DangerZoneUpdated();
+    }
+}
+
+simulated function bool IsDangerZoneEnabled()
+{
+    return bIsDangerZoneEnabled;
+}
+
+simulated function byte GetDangerZoneNeutral()
+{
+    return DangerZoneNeutral;
+}
+
+simulated function byte GetDangerZoneBalance()
+{
+    return DangerZoneBalance;
 }
 
 simulated function float GetDangerZoneIntensity(float PointerX, float PointerY, byte TeamIndex)
@@ -1847,14 +1867,29 @@ simulated function bool IsInDangerZone(float PointerX, float PointerY, byte Team
     return class'DHDangerZone'.static.IsIn(self, PointerX, PointerY, TeamIndex);
 }
 
-simulated function ClientDangerZoneUpdated()
+simulated function DangerZoneUpdated()
 {
+    local DHSquadReplicationInfo SRI;
     local DHPlayer PC;
     local DHHud Hud;
 
-    if (Level.NetMode == NM_Standalone || Role < ROLE_Authority)
+    // Server
+    if (Role == ROLE_Authority)
     {
-        // Notify HUD about Danger Zone changes.
+        SRI = DarkestHourGame(Level.Game).SquadReplicationInfo;
+
+        if (SRI != none)
+        {
+            SRI.UpdateRallyPoints();
+        }
+
+        UpdateMapIconAttachments();
+    }
+
+    // Client
+    if (Role < ROLE_Authority || Level.NetMode == NM_Standalone)
+    {
+        // Notify HUD
         PC = DHPlayer(Level.GetLocalPlayerController());
 
         if (PC != none)
@@ -1869,27 +1904,22 @@ simulated function ClientDangerZoneUpdated()
     }
 }
 
-function DangerZoneUpdated()
+simulated function PostNetReceive()
 {
-    local DHSquadReplicationInfo SRI;
+    super.PostNetReceive();
 
-    // Update rally points
-    SRI = DarkestHourGame(Level.Game).SquadReplicationInfo;
-
-    if (SRI != none)
+    if (OldDangerZoneNeutral != DangerZoneNeutral || OldDangerZoneBalance != DangerZoneBalance)
     {
-        SRI.UpdateRallyPoints();
+        DangerZoneUpdated();
+
+        OldDangerZoneNeutral = DangerZoneNeutral;
+        OldDangerZoneBalance = DangerZoneBalance;
     }
-
-    // Update map icons
-    UpdateMapIconAttachments();
-
-    // Update client
-    ClientDangerZoneUpdated();
 }
 
 defaultproperties
 {
+    bNetNotify=true
     bAllChatEnabled=true
     AlliesVictoryMusicIndex=-1
     AxisVictoryMusicIndex=-1
@@ -1941,4 +1971,10 @@ defaultproperties
     MapMarkerClassNames(8)="DH_Engine.DHMapMarker_Enemy_ATGun"
     MapMarkerClassNames(9)="DH_Engine.DHMapMarker_Friendly_PlatoonHQ"
     MapMarkerClassNames(10)="DH_Engine.DHMapMarker_Friendly_Supplies"
+
+    // Danger Zone
+    // The actual defaults reside in DH_LevelInfo. These are fallbacks in
+    // case we fail to retrieve those values.
+    DangerZoneNeutral=128
+    DangerZoneBalance=128
 }

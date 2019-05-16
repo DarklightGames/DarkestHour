@@ -11,5 +11,5 @@ class DHMapIconAttachment_SpawnPoint extends DHMapIconAttachment
 // Danger Zone -> enemy
 function UpdateVisibilityIndex()
 {
-    ChangeVisibilityInDangerZoneTo(GetOppositeTeamIndex(), 255);
+    ChangeVisibilityInDangerZoneTo(class'UMath'.static.SwapFirstPair(GetTeamIndex()), 255);
 }
