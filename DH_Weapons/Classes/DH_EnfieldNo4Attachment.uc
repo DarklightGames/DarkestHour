@@ -97,9 +97,9 @@ defaultproperties
     PA_IdleCrouchIronWeaponAnim="crouch_idleiron_kar"
 
     PA_ReloadAnim="stand_insert_karscope"
-    PA_ReloadEmptyAnim="stand_reload_kar"
+    PA_ReloadEmptyAnim="stand_insert_karscope"
     PA_ProneReloadAnim="prone_insert_karscope"
-    PA_ProneReloadEmptyAnim="prone_reload_kar"
+    PA_ProneReloadEmptyAnim="prone_insert_karscope"
     PA_PreReloadAnim="stand_open_karscope"
     PA_PronePreReloadAnim="prone_open_karscope"
     PA_PostReloadAnim="stand_close_karscope"

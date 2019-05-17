@@ -487,7 +487,6 @@ simulated state Reloading
 
     simulated function BeginState()
     {
-        local bool TemporaryAmmoState;
         if (ReloadState == RS_None)
         {
             if (NumRoundsToLoad >= GetStripperClipSize() && HasAnim(FullReloadAnim))
@@ -510,18 +509,7 @@ simulated state Reloading
             {
                 if (Role == ROLE_Authority && ROPawn(Instigator) != none)
                 {
-                    // Has stripper reload anim && needs to reload more than stripper rounds.
-                    if (HasAnim(StripperReloadAnim) && NumRoundsToLoad >= GetStripperClipSize())
-                    {
-                        TemporaryAmmoState = ROWeaponAttachment(ThirdPersonActor).bOutOfAmmo;
-                        ROWeaponAttachment(ThirdPersonActor).bOutOfAmmo = true;
-                        ROPawn(Instigator).HandleStandardReload();
-                        ROWeaponAttachment(ThirdPersonActor).bOutOfAmmo = TemporaryAmmoState;
-                    }
-                    else
-                    {
-                        ROPawn(Instigator).StartReload();
-                    }
+                    ROPawn(Instigator).StartReload();
                 }
 
                 ReloadState = RS_PreReload;
