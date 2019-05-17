@@ -52,10 +52,7 @@ replication
         NextRotationTime;
 
     reliable if (bNetDirty && Role == ROLE_Authority)
-        SentinelString;
-
-    reliable if (bNetDirty && Role == ROLE_Authority)
-        RotatingActor;
+        SentinelString, RotatingActor;
 }
 
 // Disabled as nothing in Tick is relevant to an AT gun (to be on the safe side, MinBrakeFriction is set very high in default properties, so gun won't slide down a hill)
