@@ -7,10 +7,12 @@ class DHMapIconAttachment_ATGun extends DHMapIconAttachment
     abstract
     notplaceable;
 
-// VISIBILITY
-// Normal -> friendly
-// Danger Zone -> enemy
-function UpdateVisibilityIndex()
+function EVisibleFor GetVisibility()
 {
-    ChangeVisibilityInDangerZoneTo(GetOppositeTeamIndex(), GetTeamIndex());
+    return VISIBLE_Team;
+}
+
+function EVisibleFor GetVisibilityInDangerZone()
+{
+    return VISIBLE_Enemy;
 }

@@ -13,19 +13,35 @@ enum EMapIconAttachmentError
     ERROR_SpawnFailed
 };
 
-var Actor AttachedTo;
-var int   Quantized2DPose;
-var bool  bUpdatePoseChanges;       // for moving actors
-var bool  bOldUpdatePoseChanges;
-var bool  bIgnoreGRIUpdates;        // set to true when updates are called from
-                                    // somewhere else
+enum EVisibleFor
+{
+    VISIBLE_None,
+    VISIBLE_Team,
+    VISIBLE_Enemy,
+    VISIBLE_All
+};
+
+var Material  IconMaterial;
+var IntBox    IconCoords;
+var float     IconScale;
+
+var Actor     AttachedTo;
+var bool      bTrackMovement;    // for moving actors
+var bool      bIgnoreGRIUpdates; // call updates from somewhere else
+
+var           int  TimerCount;
+var           int  Quantized2DPose;
+var private   int  OldQuantized2DPose;
+var private   int  OldLocationX;
+var private   int  OldLocationY;
 
 var private   byte TeamIndex;
-var protected byte VisibilityIndex; // NEUTRAL_TEAM_INDEX -> all; 255 -> hidden
+var protected byte VisibilityIndex;
 
-var Material IconMaterial;
-var IntBox   IconCoords;
-var float    IconScale;
+var           int  TrackingUpdateIntervalSeconds;
+var           bool bTrackDangerZone;
+var           bool bInDangerZone;
+var private   bool bOldInDangerZone;
 
 replication
 {
@@ -43,66 +59,160 @@ function Setup()
     {
         AttachedTo = Base;
     }
-
-    UpdateQuantized2DPose();
-}
-
-function PostBeginPlay()
-{
-    SetTimer(1.0, true);
 }
 
 function Timer()
 {
-    if (bUpdatePoseChanges)
+    --TimerCount;
+
+    if (TimerCount > 0)
+    {
+        if (bAlwaysRelevant)
+        {
+            UpdateQuantized2DPose();
+            OldQuantized2DPose = Quantized2DPose;
+        }
+
+        return;
+    }
+
+    ResetTimerCount();
+
+    if (IsMoving())
+    {
+        GotoState('Tracking');
+        Updated();
+    }
+    else
+    {
+        GotoState('');
+    }
+}
+
+final function ResetTimerCount()
+{
+    TimerCount = Max(TrackingUpdateIntervalSeconds, 0);
+}
+
+final function bool IsMoving()
+{
+    local int X, Y;
+    local bool bIsMoving;
+
+    // To save on replication and conversions, quantized pose won't be updated
+    // when icon is invisible. When that happens, we fallback to comparing
+    // world locations.
+    if (bAlwaysRelevant)
     {
         UpdateQuantized2DPose();
+
+        bIsMoving = bTrackDangerZone && OldQuantized2DPose != Quantized2DPose;
+
+        OldQuantized2DPose = Quantized2DPose;
+    }
+    else if (Base != none)
+    {
+        X = int(Base.Location.X);
+        Y = int(Base.Location.Y);
+
+        bIsMoving = bTrackDangerZone && (OldLocationX != X || OldLocationY != Y);
+
+        OldLocationX = X;
+        OldLocationY = Y;
+    }
+
+    return bIsMoving;
+}
+
+state Tracking
+{
+    function BeginState()
+    {
+        bIgnoreGRIUpdates = false;
+    }
+
+    function EndState()
+    {
+        Updated();
+        bIgnoreGRIUpdates = default.bIgnoreGRIUpdates;
     }
 }
 
 final function Updated()
 {
-    UpdateVisibilityIndex();
-
-    bOldUpdatePoseChanges = bUpdatePoseChanges;
-
-    if (VisibilityIndex == 255)
+    if (bTrackDangerZone)
     {
-        bUpdatePoseChanges = false;
-        bAlwaysRelevant = false;
-        return;
+        bInDangerZone = IsInDangerZone();
+
+        if (bInDangerZone != bOldInDangerZone)
+        {
+            bOldInDangerZone = bInDangerZone;
+
+            if (bInDangerZone)
+            {
+                // OnDangerZoneEnter();
+                SetVisibilityIndex(GetVisibilityInDangerZone());
+            }
+            else
+            {
+                // OnDangerZoneLeave();
+                SetVisibilityIndex(GetVisibility());
+            }
+
+            return;
+        }
+
+        if (IsInState('Tracking'))
+        {
+            return;
+        }
     }
 
-    bUpdatePoseChanges = bOldUpdatePoseChanges;
+    SetVisibilityIndex(GetVisibility());
+}
 
-    if (bUpdatePoseChanges)
+final function SetVisibilityIndex(EVisibleFor VisibleFor)
+{
+    if (bTrackMovement)
     {
-        UpdateQuantized2DPose();
+        ResetTimerCount();
+        SetTimer(1.0, true);
+    }
+
+    switch (VisibleFor)
+    {
+        case VISIBLE_None:
+            VisibilityIndex = 255;
+            bAlwaysRelevant = false;
+
+            return;
+
+        case VISIBLE_Team:
+            VisibilityIndex = TeamIndex;
+            break;
+
+        case VISIBLE_Enemy:
+            if (TeamIndex < 2)
+            {
+                VisibilityIndex = TeamIndex ^ 1;
+            }
+            else
+            {
+                VisibilityIndex = TeamIndex;
+            }
+            break;
+
+        case VISIBLE_All:
+            VisibilityIndex = NEUTRAL_TEAM_INDEX;
     }
 
     bAlwaysRelevant = true;
-}
 
-function UpdateQuantized2DPose()
-{
-    local DHGameReplicationInfo GRI;
-    local float X, Y;
-
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-    if (GRI != none)
+    if (!IsInState('Tracking'))
     {
-        GRI.GetMapCoords(Location, X, Y);
-        Quantized2DPose = class'UQuantize'.static.QuantizeClamped2DPose(X, Y, Rotation.Yaw);
+        UpdateQuantized2DPose();
+        OldQuantized2DPose = Quantized2DPose;
     }
-}
-
-// Called when attachment is updated; override it to set custom visibility rules
-// (e.g. what happens when actor is inside the Danger Zone).
-function UpdateVisibilityIndex()
-{
-    // Visible to friendly team.
-    VisibilityIndex = TeamIndex;
 }
 
 final simulated function byte GetVisibilityIndex()
@@ -160,6 +270,20 @@ final simulated function float GetMapIconYaw(DHGameReplicationInfo GRI)
     }
 }
 
+final function UpdateQuantized2DPose()
+{
+    local DHGameReplicationInfo GRI;
+    local float X, Y;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI != none)
+    {
+        GRI.GetMapCoords(AttachedTo.Location, X, Y);
+        Quantized2DPose = class'UQuantize'.static.QuantizeClamped2DPose(X, Y, AttachedTo.Rotation.Yaw);
+    }
+}
+
 static function OnError(EMapIconAttachmentError Error)
 {
     switch(Error)
@@ -168,6 +292,26 @@ static function OnError(EMapIconAttachmentError Error)
             Warn("Failed to spawn map icon attachment!");
     }
 }
+
+// Assign to retreive the status from somewhere else
+delegate bool IsInDangerZone()
+{
+    local DHGameReplicationInfo GRI;
+    local vector L;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI != none)
+    {
+        L = GetWorldCoords(GRI);
+
+        return GRI.IsInDangerZone(L.X, L.Y, TeamIndex);
+    }
+}
+
+// Override to define who can see the icon
+function EVisibleFor GetVisibility();
+function EVisibleFor GetVisibilityInDangerZone();
 
 //==============================================================================
 // ICON APPEARANCE
@@ -210,51 +354,6 @@ simulated function float GetIconScale(DHPlayer PC)
     return default.IconScale;
 }
 
-//==============================================================================
-// DANGER ZONE HELPERS
-//==============================================================================
-
-final function byte GetOppositeTeamIndex()
-{
-    switch(TeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            return ALLIES_TEAM_INDEX;
-        case ALLIES_TEAM_INDEX:
-            return AXIS_TEAM_INDEX;
-        default:
-            return TeamIndex;
-    }
-}
-
-final function ChangeVisibilityInDangerZoneTo(byte InIndex, byte OutIndex)
-{
-    if (IsInDangerZone())
-    {
-        VisibilityIndex = InIndex;
-        return;
-    }
-
-    VisibilityIndex = OutIndex;
-}
-
-// To cut down on unnecessary calculations, this can be assigned to get the
-// result from somewhere else.
-delegate bool IsInDangerZone()
-{
-    local DHGameReplicationInfo GRI;
-    local vector L;
-
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-    if (GRI != none)
-    {
-        L = GetWorldCoords(GRI);
-
-        return GRI.IsInDangerZone(L.X, L.Y, TeamIndex);
-    }
-}
-
 defaultproperties
 {
     RemoteRole=ROLE_DumbProxy
@@ -264,6 +363,9 @@ defaultproperties
 
     TeamIndex=NEUTRAL_TEAM_INDEX
     VisibilityIndex=NEUTRAL_TEAM_INDEX
+
+    TrackingUpdateIntervalSeconds=3
+    bTrackDangerZone=true
 
     IconCoords=(X1=0,Y1=0,X2=31,Y2=31)
     IconScale=0.04

@@ -6,12 +6,14 @@
 class DHMapIconAttachment_Vehicle extends DHMapIconAttachment
     notplaceable;
 
-// VISIBILITY
-// Normal -> nobody
-// Danger Zone -> enemy
-function UpdateVisibilityIndex()
+function EVisibleFor GetVisibility()
 {
-    ChangeVisibilityInDangerZoneTo(GetOppositeTeamIndex(), 255);
+    return VISIBLE_None;
+}
+
+function EVisibleFor GetVisibilityInDangerZone()
+{
+    return VISIBLE_Enemy;
 }
 
 simulated function Material GetIconMaterial(DHPlayer PC)
@@ -28,7 +30,7 @@ simulated function Material GetIconMaterial(DHPlayer PC)
 
 defaultproperties
 {
-    bUpdatePoseChanges=true
+    bTrackMovement=true
     IconMaterial=TexRotator'DH_GUI_Tex.GUI.supply_point_rot'
     IconScale=0.03
 }
