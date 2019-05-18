@@ -6,10 +6,12 @@
 class DHMapIconAttachment_SpawnPoint extends DHMapIconAttachment
     notplaceable;
 
-// VISIBILITY
-// Normal -> nobody
-// Danger Zone -> enemy
-function UpdateVisibilityIndex()
+function EVisibleFor GetVisibility()
 {
-    ChangeVisibilityInDangerZoneTo(class'UMath'.static.SwapFirstPair(GetTeamIndex()), 255);
+    return VISIBLE_None;
+}
+
+function EVisibleFor GetVisibilityInDangerZone()
+{
+    return VISIBLE_Enemy;
 }
