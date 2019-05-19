@@ -94,7 +94,7 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
     switch (OptionIndex)
     {
         case 0: // Rally Point
-            if (GRI != none && GRI.IsInDangerZone(PC.Pawn.Location.X, PC.Pawn.Location.Y, PC.GetTeamNum()))
+            if (PC.SquadReplicationInfo.bAreRallyPointsEnabled && GRI != none && GRI.IsInDangerZone(PC.Pawn.Location.X, PC.Pawn.Location.Y, PC.GetTeamNum()))
             {
                 ORI.InfoText = default.InEnemyTerritory;
                 ORI.InfoColor = class'UColor'.default.Yellow;

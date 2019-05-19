@@ -290,6 +290,14 @@ function Mutate(string MutateString, PlayerController Sender)
             {
                 ChangeAxisSquadSize(int(Words[2]));
             }
+            else if (MutateOption ~= "DisableRallyPoints")
+            {
+                SetRallyPoints(false);
+            }
+            else if (MutateOption ~= "EnableRallyPoints")
+            {
+                SetRallyPoints(true);
+            }
         }
 
         // If a menu passed "logout" as the 1st Mutate string word it means the menu logged us in as an admin, so we now log out after the selected task is completed
@@ -1026,6 +1034,70 @@ function ChangeAxisSquadSize(int SquadSize)
     {
         PC.SquadReplicationInfo.SetTeamSquadSize(AXIS_TEAM_INDEX, SquadSize);
         BroadcastMessageToAll(16);
+    }
+}
+
+function SetRallyPoints(bool bEnabled)
+{
+    local DarkestHourGame DHG;
+    local DHGameReplicationInfo DHGRI;
+    local DHSquadReplicationInfo SRI;
+    local bool bAlreadySet;
+
+    if (!bShowRealismMenu || !IsLoggedInAsAdmin())
+    {
+        return;
+    }
+
+    DHG = DarkestHourGame(Level.Game);
+
+    if (DHG == none)
+    {
+        return;
+    }
+
+    DHGRI = DHGameReplicationInfo(DHG.GameReplicationInfo);
+    SRI = DHG.SquadReplicationInfo;
+
+    if (DHGRI == none || SRI == none)
+    {
+        return;
+    }
+
+    if (DHGRI.GameType == none || !DHGRI.GameType.default.bAreRallyPointsEnabled)
+    {
+        ErrorMessageToSelf(25);
+        return;
+    }
+
+    bAlreadySet = SRI.bAreRallyPointsEnabled == bEnabled;
+
+    if (!bAlreadySet)
+    {
+        SRI.bAreRallyPointsEnabled = bEnabled;
+    }
+
+    if (bEnabled)
+    {
+        if (bAlreadySet)
+        {
+            ErrorMessageToSelf(27); // already enabled
+            return;
+        }
+
+        BroadcastMessageToAll(19);
+        Log("DHAdminMenu: admin" @ GetAdminName() @ "enabled rally point placement");
+    }
+    else
+    {
+        if (bAlreadySet)
+        {
+            ErrorMessageToSelf(26); // already disabled
+            return;
+        }
+
+        BroadcastMessageToAll(18);
+        Log("DHAdminMenu: admin" @ GetAdminName() @ "disabled rally point placement");
     }
 }
 
