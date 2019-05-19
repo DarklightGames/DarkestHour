@@ -3329,7 +3329,7 @@ function ClientSaveROIDHash(string ROID)
     {
         PatronRequest = Spawn(class'HTTPRequest');
         PatronRequest.Method = "GET";
-        PatronRequest.Host = "46.101.44.19:80";
+        PatronRequest.Host = "46.101.44.19";
         PatronRequest.Path = "/patrons/?search=" $ ROIDHash;
         PatronRequest.OnResponse = PatronRequestOnResponse;
         PatronRequest.Send();
