@@ -46,6 +46,7 @@ defaultproperties
     GroupClass=class'DHConstructionGroup_Obstacles'
     bShouldSwitchToLastWeaponOnPlacement=false
     TakeDownProgressInterval=0.1666 // 24 hits (ProgressMax / Desired Hits)
+    MinDamagetoHurt=180.0
 
     //SquadMemberCountMinimum=1 // DEBUG USE
 }
