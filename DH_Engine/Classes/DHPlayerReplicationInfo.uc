@@ -6,7 +6,7 @@
 class DHPlayerReplicationInfo extends ROPlayerReplicationInfo;
 
 // Patron status
-enum PatronStatusType
+enum EPatronTier
 {
     PATRON_None,
     PATRON_Lead,
@@ -15,7 +15,7 @@ enum PatronStatusType
     PATRON_Gold
 };
 
-var     PatronStatusType        PatronStatus;
+var     EPatronTier             PatronTier;
 var     bool                    bIsDeveloper;
 
 var     float                   NameDrawStartTime;
@@ -38,7 +38,7 @@ replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        SquadIndex, SquadMemberIndex, PatronStatus, bIsDeveloper, DHKills, bIsSquadAssistant,
+        SquadIndex, SquadMemberIndex, PatronTier, bIsDeveloper, DHKills, bIsSquadAssistant,
         TotalScore, CategoryScores;
 }
 
@@ -82,7 +82,7 @@ simulated function bool IsInSquad()
 
 simulated function bool IsPatron()
 {
-    return PatronStatus > 0;
+    return PatronTier != PATRON_None;
 }
 
 // Will return true if passed two players that are in the same squad.
