@@ -57,10 +57,11 @@ simulated function OnEnterRotation()
     }
     else
     {
-        if(InstigatorIsLocallyControlled())
+        if (InstigatorIsLocallyControlled())
         {
             Gun.ClientEnterRotation();
         }
+
         ServerEnterRotation(Gun, P);
     }
 }
@@ -80,7 +81,7 @@ simulated function OnExitRotation()
         return;
     }
 
-    if(Gun != none)
+    if (Gun != none)
     {
         ServerExitRotation(Gun);
         Gun = none;
@@ -218,11 +219,15 @@ simulated function ROIronSights()
 simulated function Weapon PrevWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
 {
     OnExitRotation();
+
+    return super.PrevWeapon(CurrentChoice, CurrentWeapon);
 }
 
 simulated function Weapon NextWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
 {
     OnExitRotation();
+
+    return super.NextWeapon(CurrentChoice, CurrentWeapon);
 }
 
 simulated function bool PutDown()

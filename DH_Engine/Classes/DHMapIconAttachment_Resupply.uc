@@ -28,12 +28,14 @@ final function SetResupplyType(DHResupplyAttachment.EResupplyType ResupplyType)
     self.ResupplyType = ResupplyType;
 }
 
-// VISIBILITY
-// Normal -> friendly
-// Danger Zone -> nobody
-function UpdateVisibilityIndex()
+function EVisibleFor GetVisibility()
 {
-    ChangeVisibilityInDangerZoneTo(255, GetTeamIndex());
+    return VISIBLE_Team;
+}
+
+function EVisibleFor GetVisibilityInDangerZone()
+{
+    return VISIBLE_None;
 }
 
 simulated function Material GetIconMaterial(DHPlayer PC)

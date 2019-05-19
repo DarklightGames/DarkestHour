@@ -6,10 +6,12 @@
 class DHMapIconAttachment_Vehicle_Supply extends DHMapIconAttachment_Vehicle
     notplaceable;
 
-// VISIBILITY
-// Normal -> friendly
-// Danger Zone -> everyone
-function UpdateVisibilityIndex()
+function EVisibleFor GetVisibility()
 {
-    ChangeVisibilityInDangerZoneTo(NEUTRAL_TEAM_INDEX, GetTeamIndex());
+    return VISIBLE_Team;
+}
+
+function EVisibleFor GetVisibilityInDangerZone()
+{
+    return VISIBLE_All;
 }

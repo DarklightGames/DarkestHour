@@ -20,6 +20,6 @@ simulated function Material GetIconMaterial(DHPlayer PC)
 
 defaultproperties
 {
-    bUpdatePoseChanges=true
+    bTrackMovement=true
     IconMaterial=TexRotator'DH_InterfaceArt2_tex.Icons.at_topdown_rot'
 }

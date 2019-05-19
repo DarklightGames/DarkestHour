@@ -708,7 +708,7 @@ defaultproperties
     RotateCooldown=5
     RotateControlRadiusInMeters=5
     RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    RotateSoundVolume=20.0
+    RotateSoundVolume=200
 
     OldRotator=(Pitch=0,Yaw=0,Roll=0)
     bOldIsRotating=false

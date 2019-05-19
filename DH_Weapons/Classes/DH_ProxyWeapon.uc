@@ -159,7 +159,7 @@ simulated function Fire(float F)
         {
             ProxyCursor.Destroy();
 
-            if (Instigator.Weapon.OldWeapon != none)
+            if (Instigator.Weapon != none && Instigator.Weapon.OldWeapon != none)
             {
                 // HACK: This stops a standalone client from immediately firing
                 // their previous weapon.

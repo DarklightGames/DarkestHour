@@ -122,6 +122,32 @@ exec function ChangeAxisSquadSize()
     BuildMutateCommand("ChangeAxisSquadSize", 29);
 }
 
+exec function ToggleRallyPoints()
+{
+    local DHSquadReplicationInfo SRI;
+
+    if (PC == none)
+    {
+        return;
+    }
+
+    SRI = DHPlayer(PC).SquadReplicationInfo;
+
+    if (SRI == none || !AreRallyPointsAllowed())
+    {
+        return;
+    }
+
+    if (SRI.bAreRallyPointsEnabled)
+    {
+        BuildMutateCommand("DisableRallyPoints", 33); // disable
+    }
+    else
+    {
+        BuildMutateCommand("EnableRallyPoints", 34); // enable
+    }
+}
+
 // Checks if our mutator's Replicator actor has flagged that the realism match mutator is present on the server - gives a message & logout if it is not
 function bool RealismMutatorIsPresent()
 {
@@ -132,6 +158,24 @@ function bool RealismMutatorIsPresent()
 
     AdminLogoutIfNecessary();
     ErrorMessageToSelf(3); // mutator isn't present
+    bKeepMenuOpen = true;  // tells HandleInput not to close this menu if RM mutator isn't enabled, so allowing another realism menu choice
+
+    return false;
+}
+
+function bool AreRallyPointsAllowed()
+{
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+
+    if (GRI != none && GRI.GameType != none && GRI.GameType.default.bAreRallyPointsEnabled)
+    {
+        return true;
+    }
+
+    AdminLogoutIfNecessary();
+    ErrorMessageToSelf(25); // "The game mode does not allow rally points..."
     bKeepMenuOpen = true;  // tells HandleInput not to close this menu if RM mutator isn't enabled, so allowing another realism menu choice
 
     return false;
@@ -164,6 +208,8 @@ defaultproperties
     MenuText(19)="Change allies squad size"
     MenuText(20)="Change axis squad size"
 
+    MenuText(21)="Toggle rally point placement on/off"
+
     MenuCommand(1)="*EnableRealismMatch"
     MenuCommand(2)="*DisableRealismMatch"
     MenuCommand(3)="*ForceRealismMatchLive"
@@ -185,4 +231,5 @@ defaultproperties
 
     MenuCommand(19)="*ChangeAlliesSquadSize"
     MenuCommand(20)="*ChangeAxisSquadSize"
+    MenuCommand(21)="*ToggleRallyPoints"
 }
