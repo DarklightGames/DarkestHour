@@ -8,7 +8,7 @@ class DHMainMenu extends UT2K4GUIPage;
 var()   config string           MenuSong;
 
 var automated       FloatingImage           i_Overlay, i_Announcement;
-var automated       GUIButton               b_QuickPlay, b_MultiPlayer, b_Practice, b_Settings, b_Host, b_Quit, b_LearnToPlay;
+var automated       GUIButton               b_MultiPlayer, b_Practice, b_Settings, b_Host, b_Quit, b_LearnToPlay;
 var automated       GUISectionBackground    sb_MainMenu, sb_HelpMenu, sb_ConfigFixMenu, sb_ShowVersion, sb_Social;
 var automated       GUIButton               b_Credits, b_Manual, b_Demos, b_Website, b_Back, b_MOTDTitle, b_Facebook, b_GitHub, b_SteamCommunity, b_Patreon, b_Discord;
 var automated       GUILabel                l_Version;
@@ -17,10 +17,8 @@ var automated       DHGUIScrollTextBox      tb_MOTDContent;
 var automated       GUIImage                i_MOTDLoading;
 var automated       ROGUIProportionalContainerNoSkin c_MOTD;
 
-var     HTTPRequest             QuickPlayRequest;
 var     HTTPRequest             MOTDRequest;
 
-var     string                  QuickPlayIp;
 var     string                  MOTDURL;
 var     string                  FacebookURL;
 var     string                  GitHubURL;
@@ -29,7 +27,6 @@ var     string                  PatreonURL;
 var     string                  DiscordURL;
 var     string                  ResetINIGuideURL;
 
-var     localized string        QuickPlayString;
 var     localized string        JoinTestServerString;
 var     localized string        ConnectingString;
 var     localized string        SteamMustBeRunningText;
@@ -42,8 +39,6 @@ var     localized string        BadConfigMessage;
 var     bool                    bAllowClose;
 var     int                     EllipseCount;
 var     bool                    bShouldRequestMOTD;
-var     bool                    bShouldRequestQuickPlayIP;
-var     bool                    bIsRequestingQuickPlayIP;
 var     bool                    bShouldPromptBadConfig;
 
 var     config string           SavedVersion;
@@ -55,7 +50,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     super.InitComponent(MyController, MyOwner);
 
-    sb_MainMenu.ManageComponent(b_QuickPlay);
     sb_MainMenu.ManageComponent(b_MultiPlayer);
     sb_MainMenu.ManageComponent(b_Practice);
     sb_MainMenu.ManageComponent(b_Settings);
@@ -74,14 +68,6 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
     c_MOTD.ManageComponent(i_MOTDLoading);
 
     l_Version.Caption = class'DarkestHourGame'.default.Version.ToString();
-
-    b_QuickPlay.Caption = default.JoinTestServerString;
-
-    // Only show the quick-play button in pre-release builds (for easy joining of test server)
-    if (!class'DarkestHourGame'.default.Version.IsPrerelease())
-    {
-        b_QuickPlay.Hide();
-    }
 
     // If they have not changed their name from the default, change their
     // name to their Steam name!
@@ -208,17 +194,6 @@ function bool ButtonClick(GUIComponent Sender)
 
     switch (sender)
     {
-        case b_QuickPlay:
-            if (!Controller.CheckSteam())
-            {
-                Controller.ShowQuestionDialog(SteamMustBeRunningText, QBTN_Ok, QBTN_Ok);
-            }
-            else
-            {
-                GetQuickPlayIp();
-            }
-            break;
-
         case b_Practice:
             if (class'LevelInfo'.static.IsDemoBuild())
             {
@@ -443,25 +418,6 @@ event bool NotifyLevelChange()
     return PlayerOwner().Level.IsPendingConnection();
 }
 
-function OnQuickPlayResponse(int Status, TreeMap_string_string Headers, string Content)
-{
-    bShouldRequestQuickPlayIP = false;
-
-    if (Status == 200)
-    {
-        PlayerOwner().ClientTravel(Content, TRAVEL_Absolute, false);
-        Controller.CloseAll(false, true);
-    }
-    else
-    {
-        Log("OnQuickPlayResponse failed:" @ Status @ Content);
-    }
-
-    b_QuickPlay.Caption = default.JoinTestServerString;
-
-    QuickPlayRequest = none;
-}
-
 function OnMOTDResponse(int Status, TreeMap_string_string Headers, string Content)
 {
     local string Title;
@@ -497,20 +453,6 @@ function OnMOTDResponse(int Status, TreeMap_string_string Headers, string Conten
 // Some logic can't execute too early, so we use timer instead
 event Timer()
 {
-    local int i;
-
-    if (bIsRequestingQuickPlayIP)
-    {
-        b_QuickPlay.Caption = ConnectingString;
-
-        for (i = 0; i <= EllipseCount; ++i)
-        {
-            b_QuickPlay.Caption $= ".";
-        }
-
-        EllipseCount = ++EllipseCount % 3;
-    }
-
     if (bShouldRequestMOTD)
     {
         GetMOTD();
@@ -542,35 +484,12 @@ function GetMOTD()
     i_MOTDLoading.SetVisibility(true);
 }
 
-function GetQuickPlayIp()
-{
-    QuickPlayRequest = PlayerOwner().Spawn(class'HTTPRequest');
-    QuickPlayRequest.Host = "darkesthour.darklightgames.com";
-
-    if (class'DarkestHourGame'.default.Version.IsPrerelease())
-    {
-        QuickPlayRequest.Path = "/client/betaserverip.php";
-    }
-    else
-    {
-        QuickPlayRequest.Path = "/client/quickplayip.php";
-    }
-
-    QuickPlayRequest.OnResponse = OnQuickPlayResponse;
-    QuickPlayRequest.Send();
-
-    bIsRequestingQuickPlayIP = true;
-
-    Timer();
-}
-
 defaultproperties
 {
     // Render Entry.rom instead of background
     bRenderWorld=true
 
     // IP variables
-    QuickPlayString="Quick Join"
     JoinTestServerString="Join Test Server"
     ConnectingString="Joining"
 
@@ -630,20 +549,6 @@ defaultproperties
         NumColumns=5
     End Object
     sb_Social=SocialSection
-
-    Begin Object class=GUIButton Name=QuickPlayButton
-        CaptionAlign=TXTA_Left
-        Caption="Join Test Server"
-        bAutoShrink=false
-        bUseCaptionHeight=true
-        FontScale=FNS_Large
-        StyleName="DHMenuTextButtonWhiteStyleHuge"
-        TabOrder=1
-        bFocusOnWatch=true
-        OnClick=DHMainMenu.ButtonClick
-        OnKeyEvent=QuickPlayButton.InternalOnKeyEvent
-    End Object
-    b_QuickPlay=GUIButton'DH_Interface.DHMainMenu.QuickPlayButton'
 
     Begin Object Class=GUIButton Name=ServerButton
         CaptionAlign=TXTA_Left
