@@ -16,8 +16,8 @@ defaultproperties
     PctHipMGPenalty=0.6
 
     // Recoil
-    maxVerticalRecoilAngle=200
-    maxHorizontalRecoilAngle=100
+    MaxVerticalRecoilAngle=200
+    MaxHorizontalRecoilAngle=100
     PctBipodDeployRecoil=0.02
     PctRestDeployRecoil=0.05
 
