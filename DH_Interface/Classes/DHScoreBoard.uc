@@ -162,9 +162,9 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
             {
                 CRI.Icon = default.DeveloperIconMaterial;
             }
-            else if (PRI.PatronStatus > 0) // TODO expand on this (have array of icons and use the index of the enum)
+            else if (PRI.PatronTier != PATRON_None) // TODO expand on this (have array of icons and use the index of the enum)
             {
-                Switch (PRI.PatronStatus)
+                Switch (PRI.PatronTier)
                 {
                     case PATRON_Lead:
                         CRI.Icon = default.PatronLeadMaterial;
