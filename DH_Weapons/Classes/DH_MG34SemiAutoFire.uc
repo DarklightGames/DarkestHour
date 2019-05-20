@@ -16,10 +16,10 @@ defaultproperties
     PctHipMGPenalty=0.6
 
     // Recoil
-    MaxVerticalRecoilAngle=200
-    MaxHorizontalRecoilAngle=100
-    PctBipodDeployRecoil=0.02
-    PctRestDeployRecoil=0.05
+    MaxVerticalRecoilAngle=250
+    MaxHorizontalRecoilAngle=110
+    PctBipodDeployRecoil=0.075
+    PctRestDeployRecoil=0.075
 
     FireSounds(0)=SoundGroup'Inf_Weapons.mg34.mg34_fire_single'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
