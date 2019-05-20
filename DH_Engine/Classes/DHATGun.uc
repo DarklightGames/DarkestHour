@@ -52,7 +52,7 @@ replication
         NextRotationTime;
 
     reliable if (bNetDirty && Role == ROLE_Authority)
-        SentinelString;
+        SentinelString, RotatingActor;
 }
 
 // Disabled as nothing in Tick is relevant to an AT gun (to be on the safe side, MinBrakeFriction is set very high in default properties, so gun won't slide down a hill)
@@ -439,6 +439,7 @@ simulated function ClientExitRotation()
     SetCollision(true,true,true);
     SetPhysics(PHYS_Karma);
     bOldIsRotating = bIsBeingRotated;
+    SetBase(none);
     ClientDestroyProjection();
 }
 
@@ -582,6 +583,7 @@ simulated event PostNetReceive()
     // start rotating state
     else if (!bOldIsRotating && bIsBeingRotated)
     {
+        SetPhysics(PHYS_None);
         bOldIsRotating = bIsBeingRotated;
     }
 
@@ -591,6 +593,11 @@ simulated event PostNetReceive()
         {
             RotationProjector.Destroy();
         }
+    }
+
+    if (RotatingActor != Base)
+    {
+        SetBase(RotatingActor);
     }
 }
 
@@ -701,13 +708,15 @@ defaultproperties
     RotateCooldown=5
     RotateControlRadiusInMeters=5
     RotateSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
-    RotateSoundVolume=20.0
+    RotateSoundVolume=200
 
     OldRotator=(Pitch=0,Yaw=0,Roll=0)
-    bOldIsRotating = false;
-    bUpdateSimulatedPosition = true
+    bOldIsRotating=false
+    bUpdateSimulatedPosition=true
+    bReplicateMovement=true
+    bSkipActorPropertyReplication=false
+    OldBase=none
     RotationProjectionTexture = Material'DH_Construction_tex.ui.rotation_projector'
-    //RotationProjectionTexture = Material'DH_Construction_tex.ui.aura_red'
 
     // Karma properties
     Begin Object Class=KarmaParamsRBFull Name=KParams0

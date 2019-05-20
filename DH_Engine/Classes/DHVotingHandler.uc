@@ -662,7 +662,7 @@ function float GetPlayerVotePower(PlayerController Player)
     }
 
     NumPlayers = G.GetNumPlayers();
-    VotePower = NumPlayers * PatronVoteModifiers[PRI.PatronStatus]; // Set base vote power for Patrons (NumPlayers * Modifier)
+    VotePower = NumPlayers * PatronVoteModifiers[PRI.PatronTier]; // Set base vote power for Patrons (NumPlayers * Modifier)
     VotePower += Clamp(PRI.Score / 1000, 0, PLAYER_VOTE_POWER_MAX); // Add the clamped vote power from Score
 
     // Everyone gets at least one vote

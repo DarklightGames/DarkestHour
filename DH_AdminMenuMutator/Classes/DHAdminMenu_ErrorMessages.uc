@@ -74,4 +74,8 @@ defaultproperties
     // From the local menu interactions:
     ErrorMessage(23)="To auto-login you must set up your DarkestHour.ini file with your admin login details"
     ErrorMessage(24)="No player found in sights"
+
+    ErrorMessage(25)="This game mode does not allow rally points so you cannot use this option"
+    ErrorMessage(26)="Rally point placement is already disabled"
+    ErrorMessage(27)="Rally point placement is already enabled"
 }

@@ -177,7 +177,7 @@ replication
         ServerSquadMakeAssistant,
         ServerSquadSay, ServerCommandSay, ServerSquadLock, ServerSquadSignal,
         ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
-        ServerSetPatronStatus, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
+        ServerSetPatronTier, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
         ServerSendSquadMergeRequest, ServerAcceptSquadMergeRequest, ServerDenySquadMergeRequest,
         ServerSquadVolunteerToAssist,
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
@@ -3355,26 +3355,26 @@ event ClientProposeMenu(string Menu, optional string Msg1, optional string Msg2)
 function ClientSaveROIDHash(string ROID)
 {
     local HTTPRequest PatronRequest;
-    local int PatronLevel;
+    local string PatronTier;
 
     ROIDHash = ROID;
 
     SaveConfig();
 
     // Get script based patron status (this should be removed once we fix the HTTP issue with MAC)
-    PatronLevel = class'DHAccessControl'.static.GetPatronLevel(ROIDHash);
+    PatronTier = class'DHAccessControl'.static.GetPatronTier(ROIDHash);
 
     // If we have script patron status, then set patron status on server
-    if (PatronLevel >= 0)
+    if (PatronTier != "")
     {
-        ServerSetPatronStatus(PatronLevel);
+        ServerSetPatronTier(PatronTier);
     }
     else // Else, check via HTTP request for patron status
     {
         PatronRequest = Spawn(class'HTTPRequest');
         PatronRequest.Method = "GET";
-        PatronRequest.Host = "darkesthour.darklightgames.com";
-        PatronRequest.Path = "/client/patron.php?steamid64=" $ ROIDHash;
+        PatronRequest.Host = "46.101.44.19";
+        PatronRequest.Path = "/patrons/?search=" $ ROIDHash;
         PatronRequest.OnResponse = PatronRequestOnResponse;
         PatronRequest.Send();
     }
@@ -6224,35 +6224,36 @@ function ServerRequestBanInfo(int PlayerID)
     }
 }
 
+// TODO: this needs ot change!
 function PatronRequestOnResponse(int Status, TreeMap_string_string Headers, string Content)
 {
     local JSONParser Parser;
-    local JSONObject O;
-    local int PatronLevel;
+    local JSONObject O, Patron;
+    local JSONArray Results;
 
     if (Status == 200)
     {
+        Log("Patron status request success (" $ Status  $ ")");
+
         Parser = new class'JSONParser';
         O = Parser.ParseObject(Content);
 
-        Log("Patron status request success (" $ Status  $ ")");
+        Results = O.Get("results").AsArray();
 
-        if (O != none)
+        if (Results.Size() == 1)
         {
-            PatronLevel = O.Get("patreon_tier").AsInteger();
-        }
+            Patron = Results.Get(0).AsObject();
 
-        // No Patron = -1, Lead = 0, Bronze = 1, Silver = 2, Gold = 3
-        if (PatronLevel >= 0)
-        {
-            ServerSetPatronStatus(PatronLevel);
-            return;
+            if (Patron != none)
+            {
+                ServerSetPatronTier(Patron.Get("tier").AsString());
+            }
         }
     }
 }
 
-// Client-to-server function that reports the player's patron status to the server.
-function ServerSetPatronStatus(byte PatronLevel)
+// Client-to-server function that reports the player's patron tier to the server.
+function ServerSetPatronTier(string PatronTier)
 {
     local DHPlayerReplicationInfo PRI;
 
@@ -6260,7 +6261,24 @@ function ServerSetPatronStatus(byte PatronLevel)
 
     if (PRI != none)
     {
-        PRI.PatronStatus = PatronStatusType(PatronLevel + 1); // add 1 to offset the index for the PatronStatusType enum
+        PRI.PatronTier = GetPatronTier(PatronTier);
+    }
+}
+
+function DHPlayerReplicationInfo.EPatronTier GetPatronTier(string Tier)
+{
+    switch (Tier)
+    {
+        case "lead":
+            return PATRON_Lead;
+        case "bronze":
+            return PATRON_Bronze;
+        case "silver":
+            return PATRON_Silver;
+        case "gold":
+            return PATRON_Gold;
+        default:
+            return PATRON_None;
     }
 }
 

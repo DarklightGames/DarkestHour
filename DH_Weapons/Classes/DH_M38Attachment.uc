@@ -14,13 +14,12 @@ defaultproperties
     bAnimNotifiedShellEjects=true
     bRapidFire=false
 
-    WA_Idle="idle_nagant"
-    WA_Fire="shoot_nagant9138"
-    WA_Reload="idle_nagant"
-    WA_ProneReload="idle_nagant"
+    WA_Idle="idle_nagant9138"
+    WA_Fire="idle_nagant9138"
+    WA_Reload="idle_nagant9138"
+    WA_ProneReload="idle_nagant9138"
     WA_ReloadEmpty="stand_reload_nagant9138"
     WA_ProneReloadEmpty="prone_reload_nagant9138"
-    WA_PreReload="open_nagant9138"
     WA_PostReload="close_nagant9138"
     WA_WorkBolt="Bolt_nagant9138"
 

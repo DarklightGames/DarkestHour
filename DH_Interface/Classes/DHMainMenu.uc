@@ -610,9 +610,9 @@ defaultproperties
 
     Begin Object Class=ROGUIContainerNoSkinAlt Name=sbSection1
         Image=Texture'DHEngine_Tex.Transparency.Trans_80'
-        TopPadding=0.2
+        TopPadding=0.25
         LeftPadding=0.1
-        BottomPadding=0.2
+        BottomPadding=0.25
         WinTop=0.0
         WinLeft=0.0
         WinWidth=0.2

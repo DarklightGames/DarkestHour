@@ -205,6 +205,7 @@ function float SuggestDefenseStyle()
 }
 
 // Overridden so we don't play idle empty anims after a reload
+
 simulated state Reloading
 {
     simulated function PlayIdle()
@@ -219,6 +220,8 @@ simulated state Reloading
         }
     }
 }
+
+
 
 defaultproperties
 {

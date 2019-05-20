@@ -6,12 +6,14 @@
 class DHMapIconAttachment_SupplyCache extends DHMapIconAttachment
     notplaceable;
 
-// VISIBILITY
-// Normal -> friendly
-// Danger Zone -> everyone
-function UpdateVisibilityIndex()
+function EVisibleFor GetVisibility()
 {
-    ChangeVisibilityInDangerZoneTo(NEUTRAL_TEAM_INDEX, GetTeamIndex());
+    return VISIBLE_Team;
+}
+
+function EVisibleFor GetVisibilityInDangerZone()
+{
+    return VISIBLE_All;
 }
 
 defaultproperties

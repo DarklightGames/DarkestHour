@@ -20,7 +20,6 @@ defaultproperties
     WA_ProneReload="idle_nagant"
     WA_ReloadEmpty="stand_reload_nagant9130"
     WA_ProneReloadEmpty="prone_reload_nagant9130"
-    WA_PreReload="open_nagant9130"
     WA_PostReload="close_nagant9130"
     WA_BayonetIdle="idle_nagant_bayo"
     WA_BayonetIdleEmpty="idle_nagant_bayo"

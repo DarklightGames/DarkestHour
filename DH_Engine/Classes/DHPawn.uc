@@ -7092,7 +7092,6 @@ simulated function class<DHVoicePack> GetVoicePack()
 
 function EnterATRotation(DHATGun Gun)
 {
-
     GunToRotate = Gun;
 
     ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon");

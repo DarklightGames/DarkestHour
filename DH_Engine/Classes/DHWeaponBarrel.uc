@@ -118,6 +118,11 @@ function UpdateBarrelStatus()
                 {
                     W.SetBarrelFailed(bBarrelFailed);
                 }
+
+                if (W.BarrelTemperature != Temperature)
+                {
+                    W.SetBarrelTemperature(Temperature);
+                }
             }
             else
             {
