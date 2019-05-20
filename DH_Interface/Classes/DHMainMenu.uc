@@ -421,18 +421,20 @@ event bool NotifyLevelChange()
 function OnMOTDResponse(int Status, TreeMap_string_string Headers, string Content)
 {
     local string Title;
+    local JSONParser Parser;
+    local JSONObject Announcement;
+
+    Parser = new class'JSONParser';
 
     if (Status == 200)
     {
+        Announcement = Parser.ParseObject(Content);
+        Title = Announcement.Get("title").AsString();
+        Content = Announcement.Get("content").AsString();
+        MOTDURL = Announcement.Get("url").AsString();
+
         // Remove all \r (carriage return) characters
         Content = Repl(Content, Chr(13), "");
-
-        // Colin: Once we get JSON parsing, we can make this cleaner.
-        // For the time being, we will say that the first line is the title,
-        // second line is the URL, and everything else is the content.
-        Divide(Content, Chr(10), Title, Content);
-        Divide(Content, Chr(10), MOTDURL, Content);
-
         // Replace all \n (line feed) characters with engine equivalent.
         Content = Repl(Content, Chr(10), "|");
 
@@ -474,8 +476,8 @@ function GetMOTD()
     }
 
     MOTDRequest = PlayerOwner().Spawn(class'HTTPRequest');
-    MOTDRequest.Host = "darkesthour.darklightgames.com";
-    MOTDRequest.Path = "/client/motd.php";
+    MOTDRequest.Host = "46.101.44.19";
+    MOTDRequest.Path = "/announcements/latest/";
     MOTDRequest.OnResponse = OnMOTDResponse;
     MOTDRequest.Send();
 
