@@ -118,9 +118,38 @@ simulated function bool StartFire(int Mode)
 // Modified to prevent MG from playing fire end anims while auto firing
 simulated function AnimEnd(int Channel)
 {
-    if (!FireMode[0].IsInState('FireLoop'))
+    local name  Anim;
+    local float Frame, Rate;
+
+    if (FireMode[0].IsInState('FireLoop'))
     {
-        super.AnimEnd(Channel);
+        return;
+    }
+
+    if (ClientState == WS_ReadyToFire)
+    {
+        GetAnimParams(0, Anim, Frame, Rate);
+
+        if (Anim == FireMode[0].FireAnim && HasAnim(FireMode[0].FireEndAnim) && !FireMode[0].bIsFiring) // adds checks that isn't firing
+        {
+            FireMode[0].PlayFireEnd();
+        }
+        else if ((Anim == DHAutomaticFire(FireMode[0]).BipodDeployFireAnim || Anim == DHAutomaticFire(FireMode[0]).BipodDeployFireLoopAnim) && HasAnim(FireMode[0].FireEndAnim) && !FireMode[0].bIsFiring)
+        {
+            FireMode[0].PlayFireEnd();
+        }
+        else if (DHProjectileFire(FireMode[0]) != none && Anim == DHProjectileFire(FireMode[0]).FireIronAnim && !FireMode[0].bIsFiring)
+        {
+            PlayIdle();
+        }
+        else if (Anim == FireMode[1].FireAnim && HasAnim(FireMode[1].FireEndAnim))
+        {
+            PlayAnim(FireMode[1].FireEndAnim, FireMode[1].FireEndAnimRate, 0.0);
+        }
+        else if (!FireMode[0].bIsFiring && !FireMode[1].bIsFiring)
+        {
+            PlayIdle();
+        }
     }
 }
 
