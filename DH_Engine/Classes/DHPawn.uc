@@ -7097,9 +7097,40 @@ function EnterATRotation(DHATGun Gun)
     ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon");
 }
 
+function ServerExitATRotation()
+{
+    GunToRotate = none;
+
+    ClientExitATRotation();
+}
+
 simulated function ClientExitATRotation()
 {
     GunToRotate = none;
+
+    if (Weapon != none && Weapon.OldWeapon != none)
+    {
+        // HACK: This stops a standalone client from immediately firing
+        // their previous weapon.
+        if (Level.NetMode == NM_Standalone)
+        {
+            Instigator.Weapon.OldWeapon.ClientState = WS_Hidden;
+        }
+
+        SwitchToLastWeapon();
+        ChangedWeapon();
+    }
+    else
+    {
+        // We've no weapon to go back to so just put this down, subsequently
+        // destroying it.
+        if (Weapon != none)
+        {
+            Weapon.PutDown();
+        }
+
+        Controller.SwitchToBestWeapon();
+    }
 }
 
 exec function RotateAT()

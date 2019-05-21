@@ -371,13 +371,10 @@ simulated function ClientEnterRotation()
 
     if (Role != ROLE_Authority)
     {
-        //bCollideWorld = false;
-        //SetCollision(false,false,false);
         SetPhysics(PHYS_None);
     }
 
     bOldIsRotating = bIsBeingRotated;
-
 
     FadeMaterial = new class'FadeColor';
     FadeMaterial.Color1 = class'UColor'.default.White;
@@ -539,13 +536,7 @@ state Rotating
         if (RotateControllerPawn != none)
         {
             RotateControllerPawn.GunToRotate = none;
-            RotateControllerPawn.ClientExitATRotation();
-
-            if (RotateControllerPawn.Weapon.IsA('DH_ATGunRotateWeapon'))
-            {
-                RotateControllerPawn.SwitchToLastWeapon();
-                RotateControllerPawn.ChangedWeapon();
-            }
+            RotateControllerPawn.ServerExitATRotation();
         }
     }
 }

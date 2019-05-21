@@ -2197,6 +2197,7 @@ function ServerUse()
                 if(DHPawn(Pawn) != none && DHPawn(Pawn).GunToRotate != none)
                 {
                     DHPawn(Pawn).GunToRotate.ServerExitRotation();
+                    DHPawn(Pawn).SwitchToLastWeapon();
                 }
 
                 if (EntryVehicle != none && EntryVehicle.TryToDrive(Pawn))

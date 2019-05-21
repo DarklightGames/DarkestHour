@@ -86,26 +86,6 @@ simulated function OnExitRotation()
         ServerExitRotation(Gun);
         Gun = none;
     }
-
-    if (Instigator.Weapon != none && Instigator.Weapon.OldWeapon != none)
-    {
-        // HACK: This stops a standalone client from immediately firing
-        // their previous weapon.
-        if (Level.NetMode == NM_Standalone)
-        {
-            Instigator.Weapon.OldWeapon.ClientState = WS_Hidden;
-        }
-
-        Instigator.SwitchToLastWeapon();
-        Instigator.ChangedWeapon();
-    }
-    else
-    {
-        // We've no weapon to go back to so just put this down, subsequently
-        // destroying it.
-        PutDown();
-        Instigator.Controller.SwitchToBestWeapon();
-    }
 }
 
 function ServerExitRotation(DHATGun Gun)
