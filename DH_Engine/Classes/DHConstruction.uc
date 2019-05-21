@@ -648,17 +648,22 @@ simulated state Cut extends Constructed
 {
     simulated function BeginState()
     {
+        // Server
         if (Role == ROLE_Authority)
         {
             TearDownProgress = ProgressMax - (ProgressMax * TakeDownProgressInterval);
             SetStaticMesh(CutStaticMesh);
+            StateName = GetStateName();
             NetUpdateTime = Level.TimeSeconds - 1.0;
         }
 
-        // This is being run on the client only
-        if (CutSound != none)
+        // Client
+        if (Level.NetMode != NM_DedicatedServer)
         {
-            PlaySound(CutSound, SLOT_Misc, CutSoundVolume,, CutSoundRadius,, true);
+            if (CutSound != none)
+            {
+                PlaySound(CutSound, SLOT_Misc, CutSoundVolume,, CutSoundRadius,, true);
+            }
         }
     }
 }
@@ -1225,4 +1230,3 @@ defaultproperties
 
     CompletionPointValue=10
 }
-

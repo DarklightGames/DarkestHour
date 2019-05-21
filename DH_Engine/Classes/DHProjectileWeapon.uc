@@ -75,6 +75,7 @@ var     byte                BarrelIndex;            // index number of current b
 var     name                BarrelChangeAnim;       // anim for bipod barrel changing while deployed
 var     bool                bCallBarrelChangeTimer; // we're in middle of a barrel change, so Timer() should call PerformBarrelChange() instead of exiting state ChangingBarrels
 var     float               BarrelChangeDuration;   // saves duration of barrel change, so Timer() can be called at mid point & then again at end of barrel change animation
+var     float               BarrelTemperature;
 var     class<ROMGSteam>    BarrelSteamEmitterClass;
 var     ROMGSteam           BarrelSteamEmitter;
 var     name                BarrelSteamBone;        // bone we attach the barrel steam emitter to
@@ -113,7 +114,7 @@ replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        CurrentMagCount, bHasSpareBarrel, bBarrelDamaged, bBarrelFailed;
+        CurrentMagCount, bHasSpareBarrel, bBarrelDamaged, bBarrelFailed, BarrelTemperature;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -2456,6 +2457,11 @@ function SetBarrelDamaged(bool bDamaged)
 function SetBarrelFailed(bool bFailed)
 {
     bBarrelFailed = bFailed;
+}
+
+function SetBarrelTemperature(float NewTemp)
+{
+    BarrelTemperature = NewTemp;
 }
 
 // Modified to give barrel actors to player, if relevant

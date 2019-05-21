@@ -29,7 +29,7 @@ defaultproperties
     CutStaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_02_cut'
     CutSound=Sound'DH_Obstacles.Barbed.FenceBreaking'
     CutSoundRadius=180.0
-    CutSoundVolume=4.0
+    CutSoundVolume=1.0
     bBreakOnTearDown=true
     BrokenStaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_destro_01'
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_02'

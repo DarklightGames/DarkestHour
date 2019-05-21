@@ -503,7 +503,7 @@ function bool PreLaunchTrace(vector Start, vector Direction)
     return true;
 }
 
-function float GetFiringSoundPitch()
+simulated function float GetFiringSoundPitch()
 {
     local float                 Pitch;
     local DHWeaponBarrel        B;
@@ -514,14 +514,10 @@ function float GetFiringSoundPitch()
 
     W = DHProjectileWeapon(Weapon);
 
-    if (W != none && W.bBarrelDamaged && W.BarrelIndex >= 0 && W.BarrelIndex < W.Barrels.Length)
+    if (W != none && W.bBarrelDamaged)
     {
-        B = W.Barrels[W.BarrelIndex];
-    }
-
-    if (B != none)
-    {
-        Pitch = FMax(0.8125, 1.0 - ((B.Temperature - B.CriticalTemperature) / (B.FailureTemperature - B.CriticalTemperature)));
+        // 0.8125 is 64/52.0 (the value used for MG overheating (weapons with looping sounds)
+        Pitch = FMax(0.8125, 1.0 - ((W.BarrelTemperature - W.default.BarrelClass.default.CriticalTemperature) / (W.default.BarrelClass.default.FailureTemperature - W.default.BarrelClass.default.CriticalTemperature)));
     }
 
     return Pitch;
