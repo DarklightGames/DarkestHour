@@ -694,7 +694,7 @@ defaultproperties
 
     // Rotation
     PlayersNeededToRotate=1
-    RotationsPerSecond=0.125
+    RotationsPerSecond=0.1
     bFixedRotationDir=false
     RotateCooldown=5
     RotateControlRadiusInMeters=5

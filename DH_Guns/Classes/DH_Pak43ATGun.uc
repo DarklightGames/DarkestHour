@@ -22,6 +22,8 @@ defaultproperties
     VehicleMass=11.0
     SupplyCost=2000
     bCanBeRotated=true
+    PlayersNeededToRotate=2
+    RotationsPerSecond=0.05
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
