@@ -277,7 +277,7 @@ final function UpdateQuantized2DPose()
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-    if (GRI != none)
+    if (GRI != none && AttachedTo != none)
     {
         GRI.GetMapCoords(AttachedTo.Location, X, Y);
         Quantized2DPose = class'UQuantize'.static.QuantizeClamped2DPose(X, Y, AttachedTo.Rotation.Yaw);

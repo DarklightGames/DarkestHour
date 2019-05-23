@@ -3202,6 +3202,11 @@ simulated function DestroyAttachments()
         {
             SupplyAttachment.Destroy();
         }
+
+        if (MapIconAttachment != none)
+        {
+            MapIconAttachment.Destroy();
+        }
     }
 
     for (i = 0; i < VehicleAttachments.Length; ++i)
