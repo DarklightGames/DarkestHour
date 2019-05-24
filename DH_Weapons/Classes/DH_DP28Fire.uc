@@ -22,8 +22,6 @@ defaultproperties
     MaxHorizontalRecoilAngle=240
     PctStandIronRecoil=0.25 // hipfire recoil is very high, this will make it more controlable
     PctCrouchIronRecoil=0.33 // hipfire recoil is very high, this will make it more controlable
-    PctBipodDeployRecoil=0.1
-    PctRestDeployRecoil=0.1
     RecoilCurve=(Points=((InVal=0.0,OutVal=0.6),(InVal=6.0,OutVal=1.0),(InVal=12.0,OutVal=1.5),(InVal=50.0,OutVal=2.5),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffExponent=4.0
     RecoilFallOffFactor=24.0

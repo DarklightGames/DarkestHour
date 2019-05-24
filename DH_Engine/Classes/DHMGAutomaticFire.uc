@@ -52,7 +52,6 @@ defaultproperties
 {
     // Recoil pct
     PctStandIronRecoil=1.0
-    PctBipodDeployRecoil=0.04
 
     PackingThresholdTime=0.12
     bUsesTracers=true
