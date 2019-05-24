@@ -97,8 +97,9 @@ var     float               SignalIconSizeStart;
 var     float               SignalIconSizeEnd;
 var     int                 SignalShrinkTimeSeconds;
 
-// Map Markers
+// Map markers/attachments
 var     SpriteWidget        MapMarkerIcon;
+var     SpriteWidget        MapIconAttachmentIcon;
 
 // Death messages
 var     array<string>       ConsoleDeathMessages;   // paired with DHObituaries array & holds accompanying console death messages
@@ -3811,12 +3812,12 @@ function DrawMapIconAttachments(Canvas C, AbsoluteCoordsInfo SubCoords, float My
 
         if (MIA.GetVisibilityIndex() == PC.GetTeamNum() || MIA.GetVisibilityIndex() == NEUTRAL_TEAM_INDEX)
         {
-            MapMarkerIcon.WidgetTexture = MIA.GetIconMaterial(PC);
-            MapMarkerIcon.TextureCoords = MIA.GetIconCoords(PC);
-            MapMarkerIcon.TextureScale = MIA.GetIconScale(PC);
-            MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = MIA.GetIconColor(PC);
+            MapIconAttachmentIcon.WidgetTexture = MIA.GetIconMaterial(PC);
+            MapIconAttachmentIcon.TextureCoords = MIA.GetIconCoords(PC);
+            MapIconAttachmentIcon.TextureScale = MIA.GetIconScale(PC);
+            MapIconAttachmentIcon.Tints[AXIS_TEAM_INDEX] = MIA.GetIconColor(PC);
 
-            DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, MIA.GetWorldCoords(DHGRI), MapCenter, Viewport);
+            DHDrawIconOnMap(C, SubCoords, MapIconAttachmentIcon, MyMapScale, MIA.GetWorldCoords(DHGRI), MapCenter, Viewport);
             // HACK: This stops the engine from "instancing" the texture,
             // resulting in the bizarre bug where all the icons share the same
             // rotation.
@@ -6057,8 +6058,9 @@ defaultproperties
 
     SupplyPointIcon=(WidgetTexture=FinalBlend'DH_GUI_tex.GUI.supply_point_final',TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.03,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,RenderStyle=STY_Alpha,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
 
-    // Map markers
+    // Map markers/attachments
     MapMarkerIcon=(WidgetTexture=none,RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.04,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=0,G=0,B=255,A=255),Tints[1]=(R=0,G=0,B=255,A=255))
+    MapIconAttachmentIcon=(WidgetTexture=none,RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.04,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=0,G=0,B=255,A=255),Tints[1]=(R=0,G=0,B=255,A=255))
 
     // Map flag icons
     MapIconNeutral=(WidgetTexture=Texture'DH_GUI_Tex.overheadmap_flags',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=31,Y2=31),TextureScale=0.05,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=255,G=255,B=255,A=255),Tints[1]=(R=255,G=255,B=255,A=255))
