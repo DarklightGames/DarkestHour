@@ -15,3 +15,8 @@ function EVisibleFor GetVisibilityInDangerZone()
 {
     return VISIBLE_All;
 }
+
+defaultproperties
+{
+    IconMaterial=TexRotator'DH_GUI_Tex.GUI.supply_point_rot'
+}
