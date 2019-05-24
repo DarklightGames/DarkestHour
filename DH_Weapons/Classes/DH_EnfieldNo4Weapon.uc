@@ -27,8 +27,8 @@ defaultproperties
     MaxNumPrimaryMags=13
     InitialNumPrimaryMags=13
 
-    IronSightDisplayFOV=40.0
-    IronSightDisplayFOVHigh=40.0
+    IronSightDisplayFOV=45.0
+    IronSightDisplayFOVHigh=45.0
 
     bHasBayonet=true
     BayonetBoneName="bayonet"
