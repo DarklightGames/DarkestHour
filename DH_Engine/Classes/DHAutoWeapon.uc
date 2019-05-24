@@ -204,6 +204,25 @@ function float SuggestDefenseStyle()
     return -0.4;
 }
 
+// Overridden so we don't play idle empty anims after a reload
+
+simulated state Reloading
+{
+    simulated function PlayIdle()
+    {
+        if (bUsingSights && HasAnim(IronIdleEmptyAnim))
+        {
+            LoopAnim(IronIdleEmptyAnim, IdleAnimRate, 0.2);
+        }
+        else if (HasAnim(IdleAnim))
+        {
+            LoopAnim(IdleAnim, IdleAnimRate, 0.2);
+        }
+    }
+}
+
+
+
 defaultproperties
 {
     bPlusOneLoading=true

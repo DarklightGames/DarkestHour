@@ -30,6 +30,7 @@ defaultproperties
     ReinforcementCost=2
     MaxDesireability=1.2
     PointValue=500
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_SdKfz10_5_anm.SdKfz10_5_body_ext'
@@ -168,6 +169,7 @@ defaultproperties
         WheelRadius=25.0
         SupportBoneName="Axle_F_L"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_Sdkfz105Transport.Wheel_F_L'
     Begin Object Class=SVehicleWheel Name=Wheel_F_R
@@ -184,6 +186,7 @@ defaultproperties
         BoneName="Tread_drive_wheel_F_L"
         BoneRollAxis=AXIS_Y
         WheelRadius=25.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_Sdkfz105Transport.Tread_drive_wheel_F_L'
     Begin Object Class=SVehicleWheel Name=Tread_drive_wheel_F_R
@@ -198,6 +201,7 @@ defaultproperties
         BoneName="Tread_drive_wheel_R_L"
         BoneRollAxis=AXIS_Y
         WheelRadius=25.0
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_Sdkfz105Transport.Tread_drive_wheel_R_L'
     Begin Object Class=SVehicleWheel Name=Tread_drive_wheel_R_R

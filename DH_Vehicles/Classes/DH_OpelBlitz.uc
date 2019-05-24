@@ -13,6 +13,7 @@ defaultproperties
     VehicleMass=3.0
     ReinforcementCost=2
     MaxDesireability=0.12
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_ext'
@@ -117,6 +118,7 @@ defaultproperties
         WheelRadius=25.0
         SupportBoneName="Axle_F_L"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_OpelBlitz.LFWheel'
     Begin Object Class=SVehicleWheel Name=RRWheel
@@ -137,6 +139,7 @@ defaultproperties
         WheelRadius=26.0
         SupportBoneName="Axle_R_L"
         SupportBoneAxis=AXIS_Z
+        bLeftTrack=true
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_OpelBlitz.LRWheel'
 

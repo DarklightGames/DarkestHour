@@ -156,6 +156,18 @@ simulated state ReloadingBipod extends Reloading
         }
     }
 
+    simulated function PlayIdle()
+    {
+        if (Instigator != none && Instigator.bBipodDeployed && HasAnim(SightUpIronIdleAnim))
+        {
+            LoopAnim(SightUpIronIdleAnim, IdleAnimRate, 0.2);
+        }
+        else
+        {
+            super.PlayIdle();
+        }
+    }
+
 // Take the player out of zoom & then zoom them back in
 Begin:
     if (InstigatorIsLocalHuman() && Instigator.bBipodDeployed)

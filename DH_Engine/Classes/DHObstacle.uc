@@ -15,6 +15,7 @@ var() float         SpawnClearedChance;
 
 var int             TypeIndex;
 var int             Index;
+var bool            bIsDefault;
 
 var config bool     bDebug;
 
@@ -41,19 +42,35 @@ simulated function PostBeginPlay()
         Error("DHObstacleInfo could not be found.");
     }
 
-    // Deduce type index
-    for (i = 0; i < Info.Types.Length; ++i)
+    // Deduce type index (if default)
+    for (i = 0; i < Info.DefaultTypes.Length; ++i)
     {
-         if (Info.Types[i].IntactStaticMesh == StaticMesh)
-         {
-             TypeIndex = i;
-             break;
-         }
+        if (Info.DefaultTypes[i].IntactStaticMesh == StaticMesh)
+        {
+            TypeIndex = i;
+            bIsDefault = true;
+            break;
+        }
+    }
+
+    // If we didn't find a default, try level's custom
+    if (!bIsDefault)
+    {
+        for (i = 0; i < Info.Types.Length; ++i)
+        {
+            if (Info.Types[i].IntactStaticMesh == StaticMesh)
+            {
+                TypeIndex = i;
+                break;
+            }
+        }
     }
 
     if (TypeIndex == -1)
     {
-        Error("DHObstacle could not match to type.");
+        Warn("=============================================");
+        Warn("=== DHObstacle could not match to a type. ===");
+        Warn("=============================================");
     }
 
     // Add to obstacle list
@@ -78,75 +95,18 @@ simulated function PostBeginPlay()
     super.PostBeginPlay();
 }
 
-simulated function StaticMesh GetIntactStaticMesh()
-{
-    return Info.Types[TypeIndex].IntactStaticMesh;
-}
-
-simulated function StaticMesh GetClearedStaticMesh()
-{
-    if (Info.Types[TypeIndex].ClearedStaticMeshes.Length > 0)
-    {
-        return Info.Types[TypeIndex].ClearedStaticMeshes[Index % Info.Types[TypeIndex].ClearedStaticMeshes.Length];
-    }
-
-    return none;
-}
-
-simulated function bool CanBeCut()
-{
-    return Info.Types[TypeIndex].bCanBeCut;
-}
-
-simulated function bool CanBeMantled()
-{
-    return Info.Types[TypeIndex].bCanBeMantled;
-}
-
-simulated function bool CanBeCrushed()
-{
-    return Info.Types[TypeIndex].bCanBeCrushed;
-}
-
-simulated function bool CanBeDestroyedByExplosives()
-{
-    return Info.Types[TypeIndex].bCanBeDestroyedByExplosives;
-}
-
-simulated function bool CanBeDestroyedByWeapons()
-{
-    return Info.Types[TypeIndex].bCanBeDestroyedByWeapons;
-}
-
-simulated function int GetExplosionDamageThreshold()
-{
-    return Info.Types[TypeIndex].ExplosionDamageThreshold;
-}
-
-simulated function int GetDamageThreshold()
-{
-    return Info.Types[TypeIndex].DamageThreshold;
-}
-
-simulated function sound GetClearSound()
-{
-    return Info.Types[TypeIndex].ClearSound;
-}
-
-simulated function float GetCutDuration()
-{
-    return Info.Types[TypeIndex].CutDuration;
-}
-
-simulated function class<Emitter> GetClearEmitterClass()
-{
-    if (Info.Types[TypeIndex].ClearEmitterClasses.Length > 0)
-    {
-        return Info.Types[TypeIndex].ClearEmitterClasses[Index % Info.Types[TypeIndex].ClearEmitterClasses.Length];
-    }
-
-    return none;
-}
+simulated function StaticMesh GetIntactStaticMesh() {return Info.GetIntactStaticMesh(TypeIndex, bIsDefault);}
+simulated function StaticMesh GetClearedStaticMesh() {return Info.GetClearedStaticMesh(TypeIndex, Index, bIsDefault);}
+simulated function bool CanBeCut() {return Info.CanBeCut(TypeIndex, bIsDefault);}
+simulated function bool CanBeMantled() {return Info.CanBeMantled(TypeIndex, bIsDefault);}
+simulated function bool CanBeCrushed() {return Info.CanBeCrushed(TypeIndex, bIsDefault);}
+simulated function bool CanBeDestroyedByExplosives() {return Info.CanBeDestroyedByExplosives(TypeIndex, bIsDefault);}
+simulated function bool CanBeDestroyedByWeapons() {return Info.CanBeDestroyedByWeapons(TypeIndex, bIsDefault);}
+simulated function int GetExplosionDamageThreshold() {return Info.GetExplosionDamageThreshold(TypeIndex, bIsDefault);}
+simulated function int GetDamageThreshold() {return Info.GetDamageThreshold(TypeIndex, bIsDefault);}
+simulated function sound GetClearSound() {return Info.GetClearSound(TypeIndex, bIsDefault);}
+simulated function float GetCutDuration() {return Info.GetCutDuration(TypeIndex, bIsDefault);}
+simulated function class<Emitter> GetClearEmitterClass() {return Info.GetClearEmitterClass(TypeIndex, Index, bIsDefault);}
 
 defaultproperties
 {

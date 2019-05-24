@@ -23,6 +23,6 @@ defaultproperties
     OutOfReinfRoundTime=120
     OutOfReinfLimitForTimeChange=50
 
-    ObjSpawnMinimumDepth=1
+    ObjSpawnMinimumDepth=2
 }
 

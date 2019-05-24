@@ -70,6 +70,11 @@ function PostBeginPlay()
 
     if (Role == ROLE_Authority)
     {
+        if (MapIconAttachment != none)
+        {
+            MapIconAttachment.IsInDangerZone = IsExposed;
+        }
+
         SRI = DarkestHourGame(Level.Game).SquadReplicationInfo;
 
         CreatedTimeSeconds = Level.TimeSeconds;
@@ -249,6 +254,16 @@ function OnUpdated()
 function UpdateExposedStatus()
 {
     bIsExposed = GRI != none && GRI.IsInDangerZone(Location.X, Location.Y, GetTeamIndex());
+
+    if (MapIconAttachment != none)
+    {
+        MapIconAttachment.Updated();
+    }
+}
+
+simulated function bool IsExposed()
+{
+    return bIsExposed;
 }
 
 simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck)
@@ -514,6 +529,7 @@ defaultproperties
     SquadIndex=-1
     RallyPointIndex=-1
     CreationSound=Sound'Inf_Player.Gibimpact.Gibimpact'
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_SpawnPoint_SquadRallyPoint'
 
     bCanBeEncroachedUpon=true
     EncroachmentRadiusInMeters=50

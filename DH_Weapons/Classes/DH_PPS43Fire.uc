@@ -9,9 +9,16 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_PPS43Bullet'
     AmmoClass=class'ROAmmo.PPS43Ammo'
-    FireRate=0.0857
-    Spread=330.0
+    FireRate=0.0857 // 700 rpm
+    Spread=162.0
+
+    // Recoil
     RecoilRate=0.04285
+    MaxVerticalRecoilAngle=260
+    MaxHorizontalRecoilAngle=110
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.33),(InVal=3.0,OutVal=0.5),(InVal=7.0,OutVal=1.25),(InVal=10.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0))))
+    RecoilFallOffFactor=13.0
+
     AmbientFireSound=SoundGroup'DH_WeaponSounds.pps43.pps43_fire_loop'
     FireEndSound=SoundGroup'DH_WeaponSounds.pps43.pps43_fire_end'
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPPSH'

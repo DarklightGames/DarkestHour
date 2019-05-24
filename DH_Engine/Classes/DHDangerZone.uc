@@ -20,16 +20,22 @@ static final function vector GetInterpCoords(float Value, float ValueA, float Va
     return class'UVector'.static.VLerp(FClamp((Value - ValueA) / (ValueB - ValueA), 0.0, 1.0), A, B);
 }
 
-// This function will return a positive number if the pointer is OUTSIDE of
-// `TeamIndex` influence.
+// Returns a positive value when inside the zone
 static function float GetIntensity(DHGameReplicationInfo GRI, float PointerX, float PointerY, byte TeamIndex)
 {
-    local float Intensity, IntensityA, IntensityB;
-    local int TotalA, TotalB, i;
+    local float Intensity, AxisIntensity, AlliedIntensity, NeutralIntensity, NeutralMagnitude;
+    local int AxisCount, AlliedCount, NeutralCount, TeamModifier, i;
     local vector V1, V2;
 
     V2.X = PointerX;
     V2.Y = PointerY;
+
+    if (TeamIndex > 1)
+    {
+        return 0.0;
+    }
+
+    TeamModifier = TeamIndex | (TeamIndex - 1);
 
     for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
     {
@@ -43,24 +49,34 @@ static function float GetIntensity(DHGameReplicationInfo GRI, float PointerX, fl
 
         Intensity = 1.0 / FMax(VSizeSquared(V1 - V2), class'UFloat'.static.Epsilon());
 
-        if (GRI.DHObjectives[i].IsActive() || GRI.DHObjectives[i].IsOwnedByTeam(TeamIndex))
+        if (GRI.DHObjectives[i].IsActive() || GRI.DHObjectives[i].IsOwnedByTeam(NEUTRAL_TEAM_INDEX))
         {
-            ++TotalA;
-            IntensityA += Intensity;
+            ++NeutralCount;
+            NeutralIntensity += Intensity;
+        }
+        else if (GRI.DHObjectives[i].IsOwnedByTeam(AXIS_TEAM_INDEX))
+        {
+            ++AxisCount;
+            AxisIntensity += Intensity;
         }
         else
         {
-            ++TotalB;
-            IntensityB += Intensity;
+            ++AlliedCount;
+            AlliedIntensity += Intensity;
         }
     }
 
-    return FClamp(GRI.DangerZoneIntensityScale, 0.1, 2.0) * IntensityB / Max(TotalB, 1) - IntensityA / Max(TotalA, 1);
+    NeutralMagnitude = GRI.GetDangerZoneNeutral() / Max(NeutralCount, 1);
+
+    return TeamModifier *
+           (AxisIntensity * (GRI.GetDangerZoneBalance() + NeutralMagnitude) / Max(AxisCount, 1) -
+            AlliedIntensity * (256 - GRI.GetDangerZoneBalance() + NeutralMagnitude) / Max(AlliedCount, 1)) -
+           NeutralIntensity * NeutralMagnitude;
 }
 
 static function bool IsIn(DHGameReplicationInfo GRI, float PointerX, float PointerY, byte TeamIndex)
 {
-    if (!GRI.bIsDangerZoneEnabled)
+    if (!GRI.IsDangerZoneEnabled())
     {
         return false;
     }
@@ -179,6 +195,8 @@ static function array<vector> GetContour(DHGameReplicationInfo GRI, byte TeamInd
     Origin.Y = GRI.NorthEastBounds.Y;
 
     // Get the normalized field
+    // TODO: There's some room for optimization here (hint: quadtrees/interval
+    // trees).
     for (i = 0; i < Resolution; ++i)
     {
         for (j = 0; j < Resolution; ++j)
@@ -322,8 +340,4 @@ static function array<vector> GetContour(DHGameReplicationInfo GRI, byte TeamInd
     }
 
     return Contour;
-}
-
-defaultproperties
-{
 }

@@ -325,7 +325,7 @@ Begin:
 }
 
 // Modified for special handling of rocket load status (also removing all stuff irrelevant to rocket, including cycling CurrentMagIndex)
-function PerformReload()
+function PerformReload(optional int Count)
 {
     if (CurrentMagCount > 0)
     {

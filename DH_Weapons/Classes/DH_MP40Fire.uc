@@ -9,16 +9,15 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_MP40Bullet'
     AmmoClass=class'ROAmmo.MP32Rd9x19Ammo'
-    FireRate=0.13
-    Spread=328.0
-    RecoilRate=0.05
-    MaxVerticalRecoilAngle=250
-    MaxHorizontalRecoilAngle=32
+    FireRate=0.13 // 460rpm
+    Spread=160.0
 
-    // Recoil percentages
-    PctStandIronRecoil=0.55
-    PctCrouchIronRecoil=0.45
-    PctProneIronRecoil=0.3
+    // Recoil
+    RecoilRate=0.05
+    MaxVerticalRecoilAngle=235
+    MaxHorizontalRecoilAngle=108
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.35),(InVal=3.0,OutVal=0.35),(InVal=6.0,OutVal=1.15),(InVal=12.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0))))
+    RecoilFallOffFactor=14.0
 
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stMP'
     FireSounds(0)=SoundGroup'DH_WeaponSounds.mp40.mp40_fire01'

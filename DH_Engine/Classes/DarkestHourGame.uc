@@ -285,8 +285,9 @@ function PostBeginPlay()
 
     if (bIsDangerZoneEnabled && (SquadReplicationInfo.bAreRallyPointsEnabled || class'DH_LevelInfo'.static.DHDebugMode()))
     {
-        GRI.bIsDangerZoneEnabled = DHLevelInfo.bIsDangerZoneInitiallyEnabled;
-        GRI.DangerZoneIntensityScale = DHLevelInfo.DangerZoneIntensityScale;
+        GRI.SetDangerZoneEnabled(DHLevelInfo.bIsDangerZoneInitiallyEnabled, true);
+        GRI.SetDangerZoneNeutral(DHLevelInfo.DangerZoneNeutral, true);
+        GRI.SetDangerZoneBalance(DHLevelInfo.DangerZoneBalance, true);
     }
 
     // Artillery
@@ -3463,26 +3464,34 @@ exec function MidGameVote()
     }
 }
 
-exec function SetDangerZone(bool bOn)
+exec function SetDangerZone(bool bEnabled)
 {
     if (GRI == none)
     {
         return;
     }
 
-    GRI.bIsDangerZoneEnabled = bOn;
-    UpdateRallyPoints();
+    GRI.SetDangerZoneEnabled(bEnabled);
 }
 
-exec function SetDangerZoneIntensityScale(float Value)
+exec function SetDangerZoneNeutral(byte Factor)
 {
     if (GRI == none)
     {
         return;
     }
 
-    GRI.DangerZoneIntensityScale = Value;
-    UpdateRallyPoints();
+    GRI.SetDangerZoneNeutral(Factor);
+}
+
+exec function SetDangerZoneBalance(int Factor)
+{
+    if (GRI == none)
+    {
+        return;
+    }
+
+    GRI.SetDangerZoneBalance(Factor);
 }
 
 //***********************************************************************************
@@ -5377,8 +5386,8 @@ defaultproperties
 
     Begin Object Class=UVersion Name=VersionObject
         Major=9
-        Minor=0
-        Patch=9
+        Minor=1
+        Patch=0
         Prerelease=""
     End Object
     Version=VersionObject

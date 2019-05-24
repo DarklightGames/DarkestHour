@@ -19,8 +19,7 @@ defaultproperties
     HighDetailOverlayIndex=2
 
     DisplayFOV=90.0
-    IronSightDisplayFOV=40.0
-    PlayerIronsightFOV=60.0
+    IronSightDisplayFOV=40.0 // Increasing this really shows the ugly wrist bending in insane way
 
     MaxNumPrimaryMags=5
     InitialNumPrimaryMags=5
