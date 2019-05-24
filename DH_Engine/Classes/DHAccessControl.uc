@@ -152,6 +152,6 @@ defaultproperties
     DeveloperIDs(1)="76561197960644559" // Basnett
     DeveloperIDs(2)="76561198043869714" // DirtyBirdy
 
-    Patrons(0)=(ROID="76561198066643021",Tier="gold") // PFC Patison
+    Patrons(0)=(ROID="76561198066643021",Tier="silver") // PFC Patison
     Patrons(1)=(ROID="76561198431789713",Tier="lead") // Bearnoceros
 }
