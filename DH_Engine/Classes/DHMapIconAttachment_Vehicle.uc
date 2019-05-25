@@ -32,4 +32,5 @@ defaultproperties
 {
     bTrackMovement=true
     IconMaterial=TexRotator'DH_InterfaceArt2_tex.Icons.truck_topdown_rot'
+    IconScale=0.035
 }

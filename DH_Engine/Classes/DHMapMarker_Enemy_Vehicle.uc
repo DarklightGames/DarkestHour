@@ -8,6 +8,6 @@ class DHMapMarker_Enemy_Vehicle extends DHMapMarker_Enemy;
 defaultproperties
 {
     MarkerName="Enemy Vehicle"
-    IconMaterial=Texture'DH_GUI_Tex.GUI.supply_point'
+    IconMaterial=Texture'DH_InterfaceArt2_tex.Icons.truck_topdown'
     LifetimeSeconds=120
 }
