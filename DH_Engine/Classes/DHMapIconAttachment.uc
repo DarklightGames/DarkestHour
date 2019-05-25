@@ -319,24 +319,26 @@ function EVisibleFor GetVisibilityInDangerZone();
 
 simulated function color GetIconColor(DHPlayer PC)
 {
-    if (PC.GetTeamNum() == TeamIndex)
+    local byte PlayerTeamIndex;
+
+    if (PC != none)
     {
-        return class'DHColor'.default.FriendlyColor;
-    }
-    else if (PC.GetTeamNum() == 255)
-    {
-        switch(TeamIndex)
+        PlayerTeamIndex = PC.GetTeamNum();
+
+        if (PlayerTeamIndex > 1)
         {
-            case AXIS_TEAM_INDEX:
-                return class'DHColor'.default.TeamColors[0];
-            case ALLIES_TEAM_INDEX:
-                return class'DHColor'.default.TeamColors[1];
+            if (TeamIndex < arraycount(class'DHColor'.default.TeamColors))
+            {
+                return class'DHColor'.default.TeamColors[TeamIndex];
+            }
+        }
+        else if (PlayerTeamIndex != TeamIndex && TeamIndex < 2)
+        {
+            return class'UColor'.default.Red;
         }
     }
-    else
-    {
-        return class'UColor'.default.Red;
-    }
+
+    return class'DHColor'.default.FriendlyColor;
 }
 
 simulated function Material GetIconMaterial(DHPlayer PC)
