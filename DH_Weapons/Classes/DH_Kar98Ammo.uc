@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_Kar98ScopedAmmo extends DHAmmunition;
+class DH_Kar98Ammo extends DHAmmunition;
 
 defaultproperties
 {

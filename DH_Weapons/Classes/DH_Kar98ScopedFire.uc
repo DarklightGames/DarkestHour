@@ -8,7 +8,7 @@ class DH_Kar98ScopedFire extends DH_Kar98Fire;
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_Kar98ScopedBullet'
-    AmmoClass=class'DH_Weapons.DH_Kar98ScopedAmmo'
+    AmmoClass=class'DH_Weapons.DH_Kar98Ammo'
     Spread=30.0
     PctRestDeployRecoil=0.25
     FireIronAnim="Scope_Shoot"
