@@ -8,5 +8,5 @@ class DHATGunTouchMessage extends DHVehicleTouchMessage
 
 defaultproperties
 {
-    TouchMessage="Press [%USE%] to enter {0} ([%SHOWORDERMENU | ONRELEASE HIDEORDERMENU%] to rotate)"
+    TouchMessage="Press [%USE%] to enter {0} (hold [%SHOWORDERMENU | ONRELEASE HIDEORDERMENU%] to rotate)"
 }
