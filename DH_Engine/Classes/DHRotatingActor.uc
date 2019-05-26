@@ -84,7 +84,7 @@ simulated function UpdateRotation(float DeltaTime)
 defaultproperties
 {
     Physics=PHYS_Rotating
-    RotationRate=(Pitch=2048,Yaw=2048,Roll=2048)
+    RotationRate=(Pitch=1400,Yaw=1400,Roll=1400)
     YawRotation=(Pitch=0,Yaw=0,Roll=0)
     RemoteRole=ROLE_SimulatedProxy
 
