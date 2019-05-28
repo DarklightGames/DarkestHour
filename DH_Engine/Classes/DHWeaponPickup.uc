@@ -59,6 +59,11 @@ simulated function Destroyed()
     {
         BarrelSteamEmitter.Destroy();
     }
+
+    if (TouchMessageParameters != none)
+    {
+        TouchMessageParameters.PlayerController = none;
+    }
 }
 
 // Non-owning net clients pick up changed value of bBarrelSteamActive here & it triggers toggling the steam emitter on/off

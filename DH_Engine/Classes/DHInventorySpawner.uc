@@ -355,6 +355,11 @@ simulated event Destroyed()
 
         Proxies.Length = 0;
     }
+
+    if (TouchMessageParameters != none)
+    {
+        TouchMessageParameters.PlayerController = none;
+    }
 }
 
 static function string GetMenuName()
