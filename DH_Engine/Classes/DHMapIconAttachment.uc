@@ -81,7 +81,7 @@ function Timer()
     if (IsMoving())
     {
         GotoState('Tracking');
-        Updated();
+        DangerZoneListener();
     }
     else
     {
@@ -133,8 +133,27 @@ state Tracking
 
     function EndState()
     {
-        Updated();
+        DangerZoneListener();
         bIgnoreGRIUpdates = default.bIgnoreGRIUpdates;
+    }
+}
+
+final function DangerZoneListener(optional bool bNoChangeRequired)
+{
+    bInDangerZone = IsInDangerZone();
+
+    if (bInDangerZone != bOldInDangerZone || bNoChangeRequired)
+    {
+        bOldInDangerZone = bInDangerZone;
+
+        if (bInDangerZone)
+        {
+            SetVisibilityIndex(GetVisibilityInDangerZone());
+        }
+        else
+        {
+            SetVisibilityIndex(GetVisibility());
+        }
     }
 }
 
@@ -142,33 +161,8 @@ final function Updated()
 {
     if (bTrackDangerZone)
     {
-        bInDangerZone = IsInDangerZone();
-
-        if (bInDangerZone != bOldInDangerZone)
-        {
-            bOldInDangerZone = bInDangerZone;
-
-            if (bInDangerZone)
-            {
-                // OnDangerZoneEnter();
-                SetVisibilityIndex(GetVisibilityInDangerZone());
-            }
-            else
-            {
-                // OnDangerZoneLeave();
-                SetVisibilityIndex(GetVisibility());
-            }
-
-            return;
-        }
-
-        if (IsInState('Tracking'))
-        {
-            return;
-        }
+        DangerZoneListener();
     }
-
-    SetVisibilityIndex(GetVisibility());
 }
 
 final function SetVisibilityIndex(EVisibleFor VisibleFor)
@@ -224,7 +218,14 @@ final function SetTeamIndex(byte TeamIndex)
 {
     self.TeamIndex = TeamIndex;
 
-    Updated();
+    if (bTrackDangerZone)
+    {
+        DangerZoneListener(true);
+    }
+    else
+    {
+        SetVisibilityIndex(GetVisibility());
+    }
 }
 
 final simulated function byte GetTeamIndex()
