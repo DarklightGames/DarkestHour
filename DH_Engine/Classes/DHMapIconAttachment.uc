@@ -81,7 +81,7 @@ function Timer()
     if (IsMoving())
     {
         GotoState('Tracking');
-        DangerZoneListener();
+        UpdateDangerZoneStatus();
     }
     else
     {
@@ -133,16 +133,16 @@ state Tracking
 
     function EndState()
     {
-        DangerZoneListener();
+        UpdateDangerZoneStatus();
         bIgnoreGRIUpdates = default.bIgnoreGRIUpdates;
     }
 }
 
-final function DangerZoneListener(optional bool bNoChangeRequired)
+final function UpdateDangerZoneStatus(optional bool bForceUpdateVisibility)
 {
     bInDangerZone = IsInDangerZone();
 
-    if (bInDangerZone != bOldInDangerZone || bNoChangeRequired)
+    if (bInDangerZone != bOldInDangerZone || bForceUpdateVisibility)
     {
         bOldInDangerZone = bInDangerZone;
 
@@ -161,7 +161,7 @@ final function Updated()
 {
     if (bTrackDangerZone)
     {
-        DangerZoneListener();
+        UpdateDangerZoneStatus();
     }
 }
 
@@ -220,7 +220,7 @@ final function SetTeamIndex(byte TeamIndex)
 
     if (bTrackDangerZone)
     {
-        DangerZoneListener(true);
+        UpdateDangerZoneStatus(true);
     }
     else
     {
