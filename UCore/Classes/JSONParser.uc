@@ -338,8 +338,6 @@ function int ReadStringInternal(out string S)
 
 private function SkipWhiteSpace()
 {
-    local int A;
-
     while (true)
     {
         if (class'UString'.static.IsWhitespace(InputBuffer.Peek(1)))
