@@ -5719,6 +5719,18 @@ function ServerCommandSay(string Msg)
     }
 }
 
+function ServerVehicleSay(string Msg)
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none)
+    {
+        G.BroadcastVehicle(self, Level.Game.ParseMessageString(Level.Game.BaseMutator, self, Msg) , 'VehicleSay');
+    }
+}
+
 function ServerForgiveLastFFKiller()
 {
     local DarkestHourGame G;

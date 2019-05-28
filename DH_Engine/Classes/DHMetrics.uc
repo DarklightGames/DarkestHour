@@ -8,6 +8,7 @@ class DHMetrics extends Actor
 
 var private Hashtable_string_Object         Players;
 var private array<DHMetricsRound>           Rounds;
+var private array<DHMetricsTextMessage>     TextMessages;
 
 function PostBeginPlay()
 {
@@ -62,6 +63,7 @@ function WriteToFile()
     Root = (new class'JSONObject')
         .Put("players", class'JSONArray'.static.FromSerializables(PlayersArray))
         .Put("rounds", class'JSONArray'.static.FromSerializables(Rounds))
+        .Put("text_messages", class'JSONArray'.static.FromSerializables(TextMessages))
         .PutString("version", class'DarkestHourGame'.default.Version.ToString())
         .Put("server", (new class'JSONObject')
             .PutString("name", Level.Game.GameReplicationInfo.ServerName))
@@ -192,6 +194,33 @@ function OnPlayerChangeName(PlayerController PC)
     {
         P.Names[P.Names.Length] = PC.PlayerReplicationInfo.PlayerName;
     }
+}
+
+function OnTextMessage(PlayerController PC, string Type, string Message)
+{
+    local DHMetricsTextMessage TextMessage;
+    local DHPlayerReplicationInfo PRI;
+
+    if (PC == none)
+    {
+        return;
+    }
+
+    TextMessage = new class'DHMetricsTextMessage';
+    TextMessage.Type = Type;
+    TextMessage.Message = Message;
+    TextMessage.ROID = PC.GetPlayerIDHash();
+    TextMessage.SentAt = class'DateTime'.static.Now(self);
+    TextMessage.TeamIndex = PC.GetTeamNum();
+
+    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
+
+    if (PRI != none)
+    {
+        TextMessage.SquadIndex = PRI.SquadIndex;
+    }
+
+    TextMessages[TextMessages.Length] = TextMessage;
 }
 
 function OnConstructionBuilt(DHConstruction Construction, int RoundTime)

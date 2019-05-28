@@ -5001,6 +5001,18 @@ function BroadcastCommand(Controller Sender, coerce string Msg, optional name Ty
     }
 }
 
+function BroadcastVehicle(Controller Sender, coerce string Msg, optional name Type)
+{
+    local DHBroadcastHandler BH;
+
+    BH = DHBroadcastHandler(BroadcastHandler);
+
+    if (BH != none)
+    {
+        BH.BroadcastVehicle(Sender, Msg, Type);
+    }
+}
+
 function Pawn SpawnPawn(DHPlayer C, vector SpawnLocation, rotator SpawnRotation, DHSpawnPointBase SP)
 {
     if (C == none)

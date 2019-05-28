@@ -168,6 +168,36 @@ function BroadcastTeam(Controller Sender, coerce string Msg, optional name Type)
             BroadcastText(Sender.PlayerReplicationInfo, P, Msg, Type);
         }
     }
+
+    LogMessage(PlayerController(Sender), Msg, Type);
+}
+
+function BroadcastVehicle(Controller Sender, coerce string Msg, optional name Type)
+{
+    local int i;
+    local DHPlayer PC, Receiver;
+    local array<PlayerController> VehicleOccupants;
+
+    PC = DHPlayer(Sender);
+
+    if (PC == none)
+    {
+        return;
+    }
+
+    VehicleOccupants = PC.GetVehicleOccupants(Sender);
+
+    for (i = 0; i < VehicleOccupants.length; ++i)
+    {
+        Receiver =  DHPlayer(VehicleOccupants[i]);
+
+        if (Receiver != none)
+        {
+            BroadcastText(Sender.PlayerReplicationInfo, Receiver, Msg, Type);
+        }
+    }
+
+    LogMessage(PlayerController(Sender), Msg, Type);
 }
 
 // Modified to allow dead players to chat to everyone (aka remove the SayDead type)
@@ -200,6 +230,8 @@ function Broadcast(Actor Sender, coerce string Msg, optional name Type)
             BroadcastText(PRI, P, Msg, Type);
         }
     }
+
+    LogMessage(PlayerController(Sender), Msg, Type);
 }
 
 function BroadcastSquad(Controller Sender, coerce string Msg, optional name Type)
@@ -245,6 +277,8 @@ function BroadcastSquad(Controller Sender, coerce string Msg, optional name Type
             BroadcastText(Sender.PlayerReplicationInfo, PC, Msg, Type);
         }
     }
+
+    LogMessage(PlayerController(Sender), Msg, Type);
 }
 
 function BroadcastCommand(Controller Sender, coerce string Msg, optional name Type)
@@ -274,6 +308,20 @@ function BroadcastCommand(Controller Sender, coerce string Msg, optional name Ty
         {
             BroadcastText(DHSender.PlayerReplicationInfo, PC, Msg, Type);
         }
+    }
+
+    LogMessage(PlayerController(Sender), Msg, Type);
+}
+
+function LogMessage(PlayerController Sender, string Msg, coerce string Type)
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none && G.Metrics != none)
+    {
+        G.Metrics.OnTextMessage(Sender, Type, Msg);
     }
 }
 
