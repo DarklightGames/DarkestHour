@@ -297,6 +297,11 @@ simulated function Destroyed()
     super.Destroyed();
 
     DestroyAttachments();
+
+    if (NotifyParameters != none)
+    {
+        NotifyParameters.Clear();
+    }
 }
 
 function StartEngineFire(Pawn InstigatedBy);
