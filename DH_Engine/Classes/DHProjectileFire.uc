@@ -506,7 +506,6 @@ function bool PreLaunchTrace(vector Start, vector Direction)
 simulated function float GetFiringSoundPitch()
 {
     local float                 Pitch;
-    local DHWeaponBarrel        B;
     local DHProjectileWeapon    W;
 
     // Set default pitch
