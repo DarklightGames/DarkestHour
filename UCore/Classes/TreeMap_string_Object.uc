@@ -11,6 +11,14 @@ var private int Size;
 var private string RecursiveKey;
 var private Object RecursiveValue;
 
+function Clear()
+{
+    Head = none;
+    Keys.Length = 0;
+    Values.Length = 0;
+    Size = 0;
+}
+
 function int GetSize()
 {
     return Size;
