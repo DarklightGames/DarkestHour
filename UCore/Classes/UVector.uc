@@ -58,3 +58,8 @@ static final function float SignedAngle(vector From, vector To, vector PlaneNorm
 {
     return ATan((From cross To) dot PlaneNormal, From dot To);
 }
+
+static function float InverseSquareLaw(vector PointA, vector PointB)
+{
+    return 1.0 / FMax(VSizeSquared(PointA - PointB), class'UFloat'.static.Epsilon());
+}

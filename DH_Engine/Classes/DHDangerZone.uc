@@ -47,7 +47,7 @@ static function float GetIntensity(DHGameReplicationInfo GRI, float PointerX, fl
         V1.X = GRI.DHObjectives[i].Location.X;
         V1.Y = GRI.DHObjectives[i].Location.Y;
 
-        Intensity = 1.0 / FMax(VSizeSquared(V1 - V2), class'UFloat'.static.Epsilon());
+        Intensity = class'UVector'.static.InverseSquareLaw(V1, V2);
 
         if (GRI.DHObjectives[i].IsActive() || GRI.DHObjectives[i].IsOwnedByTeam(NEUTRAL_TEAM_INDEX))
         {
@@ -63,6 +63,30 @@ static function float GetIntensity(DHGameReplicationInfo GRI, float PointerX, fl
         {
             ++AlliedCount;
             AlliedIntensity += Intensity;
+        }
+    }
+
+    for (i = 0; i < arraycount(GRI.SpawnPoints); ++i)
+    {
+        if (GRI.SpawnPoints[i] == none || !GRI.SpawnPoints[i].IsActive() || !GRI.SpawnPoints[i].bMainSpawn)
+        {
+            continue;
+        }
+
+        V1.X = GRI.SpawnPoints[i].Location.X;
+        V1.Y = GRI.SpawnPoints[i].Location.Y;
+
+        Intensity = class'UVector'.static.InverseSquareLaw(V1, V2);
+
+        switch (GRI.SpawnPoints[i].GetTeamIndex())
+        {
+            case AXIS_TEAM_INDEX:
+                ++AxisCount;
+                AxisIntensity += Intensity;
+                break;
+            case ALLIES_TEAM_INDEX:
+                ++AlliedCount;
+                AlliedIntensity += Intensity;
         }
     }
 
