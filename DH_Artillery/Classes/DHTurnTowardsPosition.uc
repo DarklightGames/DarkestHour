@@ -14,7 +14,8 @@ var vector PositionGoal;
 
 function Tick(float DeltaTime)
 {
-
+    TurnPlane(true, 1000, Airplane.CurrentSpeed, DeltaTime);
+    Log("tick");
 }
 
 DefaultProperties

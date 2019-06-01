@@ -6,6 +6,8 @@
 // Defines Movement information, specifications, helper functions.
 // The code to actually preform movements is done here.
 // Extend this class for each goal driven movement.
+//
+// Movement States differ in their goals, not their implementation of the movement.
 //-----------------------------------------------------------
 class DHMoveState extends Object abstract;
 
@@ -24,13 +26,47 @@ function bool HasMetGoal();
 
 function Tick(float DeltaTime);
 
+function bool DiveOrClimbPlane()
+{
+}
+
+function bool TurnPlane(bool bIsTurnRight, float TurnRadius, float Speed, float DeltaTime)
+{
+    local float DeltaAngle;
+    local rotator DeltaRot;
+    local float ArcDistance;
+    local vector NewPlanePosition;
+
+    // Properly Update Velocity.
+    ArcDistance = Speed * DeltaTime;
+    DeltaAngle = ArcDistance / TurnRadius;
+
+    // Calculate position
+    NewPlanePosition = CalculateRotationPosition(Airplane.Location, Airplane.Velocity, bIsTurnRight, TurnRadius, Speed, DeltaTime);
+
+    DeltaRot.Roll = 0;
+    DeltaRot.Yaw = -1 * class'UUnits'.static.RadiansToUnreal(DeltaAngle);
+    DeltaRot.Pitch = 0;
+
+    Airplane.Velocity = Airplane.Velocity >> DeltaRot;
+    Airplane.SetLocation(NewPlanePosition);
+
+    // Roll plane for banking turns. 0 -> 100 100 ->0. Banking angle realtive to max turn radius. Plane quality.
+
+    // Decide if terminating condition true, rotate plane to that heading and return true.
+    return true;
+}
+
+
 // Many moveStates use circular Rotation. Use this calculation across all of them.
-function vector CalculateRotationPosition(ETurnDirection TurnDirection, float TurnRadius, float Speed, float DeltaTime)
+// TODO: Add in axes variations for the circule, allowing for the creation of elipsoids. This would allow for percise curved movement to any position.
+function vector CalculateRotationPosition(vector CurrentLocation, vector CurrentVelocity, bool bIsClockwise, float TurnRadius, float Speed, float DeltaTime)
 {
     local float DeltaAngle;
     local float ArcDistance;
     local vector PlaneSpaceNewPosition;
     local vector WorldSpaceNewPosition;
+    local rotator Heading;
 
     ArcDistance = Speed * DeltaTime;
 
@@ -42,17 +78,23 @@ function vector CalculateRotationPosition(ETurnDirection TurnDirection, float Tu
     PlaneSpaceNewPosition.Z = 0;
 
     // Make relative to the plane's position.
-    if (TurnDirection == TURN_RIGHT)
+    if (bIsClockwise)
     {
+        // A turn to thr right.
         PlaneSpaceNewPosition.Y = TurnRadius - PlaneSpaceNewPosition.Y;
     }
-    else if (TurnDirection == TURN_LEFT)
+    else if (!bIsClockwise)
     {
         PlaneSpaceNewPosition.Y = PlaneSpaceNewPosition.Y - TurnRadius;
     }
 
+    Heading = OrthoRotation(CurrentVelocity, CurrentVelocity Cross vect(0, 0, 1), vect(0, 0, 1));
+    Heading.Roll = 0;
+
     // Convert to world positon
-    WorldSpaceNewPosition = (PlaneSpaceNewPosition >> Airplane.Rotation) + Airplane.Location;
+    WorldSpaceNewPosition = (PlaneSpaceNewPosition >> Heading) + CurrentLocation;
+
+
 
     return WorldSpaceNewPosition;
 }

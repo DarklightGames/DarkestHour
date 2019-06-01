@@ -84,47 +84,11 @@ var int               TargetCount;
 simulated function PostBeginPlay()
 {
     CurrentSpeed = 800;
-    /*
-    local int box;
-    box = 2500;
-
-    StartLocation = Location;
-    Waypoint1.Radius = 10;
-    Waypoint1.Position = StartLocation;
-    Waypoint1.Position.X +=  box;
-    DrawDebugSphere(Waypoint1.Position, 200, 10, 255,0,255);
-    DrawStayingDebugLine(Waypoint1.Position, Waypoint1.Position + vect(0, 0, 2000), 255,0,255);
-
-    Waypoint2.Radius = 10;
-    Waypoint2.Position = StartLocation;
-    Waypoint2.Position.X += box;
-    Waypoint2.Position.Y += box;
-    DrawDebugSphere(Waypoint2.Position, 200, 10, 255,0,255);
-    DrawStayingDebugLine(Waypoint2.Position, Waypoint2.Position + vect(0, 0, 2000), 255,0,255);
-
-    Waypoint3.Radius = 10;
-    Waypoint3.Position = StartLocation;
-    Waypoint3.Position.Y += box;
-    DrawDebugSphere(Waypoint2.Position, 200, 10, 255,0,255);
-    DrawStayingDebugLine(Waypoint3.Position, Waypoint3.Position + vect(0, 0, 2000), 255,0,255);
-
-    Waypoint4.Radius = 10;
-    Waypoint4.Position = StartLocation;
-    DrawDebugSphere(Waypoint4.Position, 200, 10, 255,0,255);
-    DrawStayingDebugLine(Waypoint4.Position, Waypoint4.Position + vect(0, 0, 2000), 255,0,255);
-    */
 }
 
 // Tick needed to make AI decisions on server.
 simulated function Tick(float DeltaTime)
 {
-    /*
-    DrawDebugSphere(Waypoint1.Position, 200, 10, 255,0,255);
-    DrawDebugSphere(Waypoint2.Position, 200, 10, 255,0,255);
-    DrawDebugSphere(Waypoint3.Position, 200, 10, 255,0,255);
-    DrawDebugSphere(Waypoint4.Position, 200, 10, 255,0,255);
-    */
-
     TickAI(DeltaTime);
     MovementUpdate(DeltaTime);
 }
@@ -140,41 +104,6 @@ function OnMoveEnd() {}
 
 function PickTarget()
 {
-        // Create a random waypoint.
-        /*
-        CurrentWaypoint.Position.X = StartLocation.X + Rand(1000);
-        CurrentWaypoint.Position.Y = StartLocation.Y + Rand(1000);
-        CurrentWaypoint.Position.Z = Location.Z;
-        */
-
-        /*
-        WaypointCount++;
-
-        switch (WaypointCount % 4)
-        {
-            case 0:
-                Log("1");
-                CurrentWaypoint = Waypoint1;
-                break;
-            case 1:
-                Log("2");
-                CurrentWaypoint = Waypoint2;
-                break;
-            case 2:
-                Log("3");
-                CurrentWaypoint = Waypoint3;
-                break;
-            case 3:
-                Log("4");
-                CurrentWaypoint = Waypoint4;
-                break;
-        }
-        */
-
-        /*
-        CurrentWaypoint.Radius = 10;
-        Log("AT: "$V3ToV2(Location)$" TO: "$V3ToV2(CurrentWaypoint.Position));
-        */
 }
 
 auto simulated state Entrance
@@ -189,10 +118,10 @@ auto simulated state Entrance
         Log("Entrance State");
 
         AIState = AI_Entrance;
-        //MovementState = MOVE_Straight;
+
         BeginStraight(vect(1,0,0));
 
-        SetTimer(0.1, false);
+        SetTimer(0.5, false);
     }
 }
 
@@ -231,6 +160,7 @@ simulated state Approaching
     {
         Log("Approaching");
         AIState = AI_Approaching;
+        BeginTurnTowardsPosition(vect(0,0,0),true);
         //MovementState = MOVE_RightTurn;
     }
 
@@ -280,7 +210,14 @@ simulated function MovementUpdate(float DeltaTime)
 // MovementState related functions
 function BeginTurnTowardsPosition(vector TurnPositionGoal, bool bIsTurnRight)
 {
-
+    local DHTurnTowardsPosition TurnTowardsState;
+    local vector VelocityPre;
+    TurnTowardsState = new class'DHTurnTowardsPosition';
+    TurnTowardsState.Airplane = self;
+    MoveState = TurnTowardsState;
+    VelocityPre = Velocity;
+    SetPhysics(PHYS_None);
+    Velocity = VelocityPre;
 }
 
 function BeginStraight(vector Direction)
@@ -288,7 +225,6 @@ function BeginStraight(vector Direction)
     local DHStraight StraightState;
 
     StraightState = new class'DHStraight';
-    //DHStraight(MoveStright).Direction = Normal(Direction);
     StraightState.Direction = Normal(Direction);
     StraightState.Airplane = self;
     MoveState = StraightState;
