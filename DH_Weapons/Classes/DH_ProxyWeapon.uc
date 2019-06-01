@@ -149,10 +149,20 @@ simulated function ROIronSights()
     }
 }
 
+simulated function bool CanConfirmPlacement()
+{
+    return true;
+}
+
 simulated function Fire(float F)
 {
     if (InstigatorIsLocallyControlled())
     {
+        if (!CanConfirmPlacement())
+        {
+            return;
+        }
+
         OnConfirmPlacement();
 
         if (ShouldSwitchToLastWeaponOnPlacement())

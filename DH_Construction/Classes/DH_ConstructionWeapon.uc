@@ -55,12 +55,20 @@ simulated function DHActorProxy CreateProxyCursor()
     return Cursor;
 }
 
+simulated function bool CanConfirmPlacement()
+{
+    local DHConstructionProxy CP;
+
+    CP = DHConstructionProxy(ProxyCursor);
+
+    return CP != none && CP.ProxyError.Type == ERROR_None;
+}
+
 simulated function OnConfirmPlacement()
 {
     local DHConstructionProxy CP;
 
     CP = DHConstructionProxy(ProxyCursor);
-    // TODO: ground actor???
 
     if (CP != none)
     {
