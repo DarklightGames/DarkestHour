@@ -84,6 +84,8 @@ var int               TargetCount;
 simulated function PostBeginPlay()
 {
     CurrentSpeed = 800;
+    //CurrentTarget.Position = Location + vect(-100,0,0);
+    CurrentTarget.Position = Location;
 }
 
 // Tick needed to make AI decisions on server.
@@ -104,6 +106,8 @@ function OnMoveEnd() {}
 
 function PickTarget()
 {
+    //CurrentTarget.Position = Location + vect(-2000, -2000, 0);
+    //CurrentTarget.Position = Location + vect(-1000, 2000, 0);
 }
 
 auto simulated state Entrance
@@ -119,9 +123,9 @@ auto simulated state Entrance
 
         AIState = AI_Entrance;
 
-        BeginStraight(vect(1,0,0));
+        BeginStraight(vect(0,-1,0));
 
-        SetTimer(0.5, false);
+        SetTimer(4, false);
     }
 }
 
@@ -137,17 +141,16 @@ simulated state Searching
     {
         Log("Searching");
         AIState = AI_Searching;
-        BeginStraight(vect(1,0,0));
+        //BeginStraight(vect(1,0,0));
         SetTimer(0.1, false);
     }
 }
 
 simulated state Approaching
 {
-    function OnTurnEnd()
+    function OnMoveEnd()
     {
-        Log("Facing Target, continuing straight");
-        //MovementState = MOVE_Straight;
+        BeginStraight(Velocity);
     }
 
     function OnWaypointReached()
@@ -160,8 +163,7 @@ simulated state Approaching
     {
         Log("Approaching");
         AIState = AI_Approaching;
-        BeginTurnTowardsPosition(vect(0,0,0),true);
-        //MovementState = MOVE_RightTurn;
+        BeginTurnTowardsPosition(CurrentTarget.Position, 1000, false);
     }
 
 }
@@ -208,13 +210,19 @@ simulated function MovementUpdate(float DeltaTime)
 }
 
 // MovementState related functions
-function BeginTurnTowardsPosition(vector TurnPositionGoal, bool bIsTurnRight)
+function BeginTurnTowardsPosition(vector TurnPositionGoal, float TurnRadius, bool bIsTurnRight)
 {
     local DHTurnTowardsPosition TurnTowardsState;
     local vector VelocityPre;
+
     TurnTowardsState = new class'DHTurnTowardsPosition';
     TurnTowardsState.Airplane = self;
+    TurnTowardsState.TurnRadius = TurnRadius;
+    TurnTowardsState.bIsTurningRight = bIsTurnRight;
+    TurnTowardsState.PositionGoal = CurrentTarget.Position;
+
     MoveState = TurnTowardsState;
+
     VelocityPre = Velocity;
     SetPhysics(PHYS_None);
     Velocity = VelocityPre;
@@ -223,11 +231,16 @@ function BeginTurnTowardsPosition(vector TurnPositionGoal, bool bIsTurnRight)
 function BeginStraight(vector Direction)
 {
     local DHStraight StraightState;
+    local vector VelocityPre;
 
     StraightState = new class'DHStraight';
     StraightState.Direction = Normal(Direction);
     StraightState.Airplane = self;
     MoveState = StraightState;
+
+    VelocityPre = Velocity;
+    SetPhysics(PHYS_Flying);
+    Velocity = VelocityPre;
 }
 
 // Converts 3d vector into 2d vector.

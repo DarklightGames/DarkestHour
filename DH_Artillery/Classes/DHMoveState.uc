@@ -19,6 +19,8 @@ enum ETurnDirection
     TURN_LEFT
 };
 
+var float TotalTurned;
+
 // Owning airplane. Movements are done on this actor.
 var DHAirplane Airplane;
 
@@ -45,8 +47,15 @@ function bool TurnPlane(bool bIsTurnRight, float TurnRadius, float Speed, float 
     NewPlanePosition = CalculateRotationPosition(Airplane.Location, Airplane.Velocity, bIsTurnRight, TurnRadius, Speed, DeltaTime);
 
     DeltaRot.Roll = 0;
-    DeltaRot.Yaw = -1 * class'UUnits'.static.RadiansToUnreal(DeltaAngle);
+    if(bIsTurnRight)
+        //DeltaRot.Yaw = -1 * class'UUnits'.static.RadiansToUnreal(-DeltaAngle);
+        DeltaRot.Yaw =class'UUnits'.static.RadiansToUnreal(DeltaAngle);
+    else
+        //DeltaRot.Yaw = -1 * class'UUnits'.static.RadiansToUnreal(DeltaAngle);
+        DeltaRot.Yaw = class'UUnits'.static.RadiansToUnreal(-DeltaAngle);
     DeltaRot.Pitch = 0;
+
+    TotalTurned += Abs(DeltaAngle);
 
     Airplane.Velocity = Airplane.Velocity >> DeltaRot;
     Airplane.SetLocation(NewPlanePosition);
@@ -98,6 +107,7 @@ function vector CalculateRotationPosition(vector CurrentLocation, vector Current
 
     return WorldSpaceNewPosition;
 }
+
 
 DefaultProperties
 {
