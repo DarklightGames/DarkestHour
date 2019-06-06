@@ -15,7 +15,6 @@ defaultproperties
 {
     //AirplaneName="Messerschmidt Bf 109"
     Mesh=Mesh'DH_Airplanes_anm.bf109g'
-    MaxSpeed = 600
     //BombBoneNames(0)="bomb.001" // left wing
     //BombBoneNames(1)="bomb.002" // undercarriage
     //BombBoneNames(2)="bomb.003" // right wing

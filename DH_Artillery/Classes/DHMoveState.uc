@@ -28,10 +28,10 @@ function bool HasMetGoal();
 
 function Tick(float DeltaTime);
 
-function bool DiveOrClimbPlane()
-{
-}
+function bool DiveOrClimbPlane() {}
 
+
+// Turns plane left or right along a circular path.
 function bool TurnPlane(bool bIsTurnRight, float TurnRadius, float Speed, float DeltaTime)
 {
     local float DeltaAngle;
@@ -39,36 +39,34 @@ function bool TurnPlane(bool bIsTurnRight, float TurnRadius, float Speed, float 
     local float ArcDistance;
     local vector NewPlanePosition;
 
-    // Properly Update Velocity.
-    ArcDistance = Speed * DeltaTime;
-    DeltaAngle = ArcDistance / TurnRadius;
-
     // Calculate position
     NewPlanePosition = CalculateRotationPosition(Airplane.Location, Airplane.Velocity, bIsTurnRight, TurnRadius, Speed, DeltaTime);
 
+    // Calculate the amount turned.
+    ArcDistance = Speed * DeltaTime;
+    DeltaAngle = ArcDistance / TurnRadius;
+
     DeltaRot.Roll = 0;
     if(bIsTurnRight)
-        //DeltaRot.Yaw = -1 * class'UUnits'.static.RadiansToUnreal(-DeltaAngle);
         DeltaRot.Yaw =class'UUnits'.static.RadiansToUnreal(DeltaAngle);
     else
-        //DeltaRot.Yaw = -1 * class'UUnits'.static.RadiansToUnreal(DeltaAngle);
         DeltaRot.Yaw = class'UUnits'.static.RadiansToUnreal(-DeltaAngle);
     DeltaRot.Pitch = 0;
 
+    // Add to total angled turned. Used to tell when to stop the turn.
     TotalTurned += Abs(DeltaAngle);
 
+    // Update plane's velocity.
     Airplane.Velocity = Airplane.Velocity >> DeltaRot;
     Airplane.SetLocation(NewPlanePosition);
 
-    // Roll plane for banking turns. 0 -> 100 100 ->0. Banking angle realtive to max turn radius. Plane quality.
-
-    // Decide if terminating condition true, rotate plane to that heading and return true.
+    // TODO Roll plane for banking turns. 0 -> 100 100 ->0. Banking angle realtive to max turn radius. Plane quality.
     return true;
 }
 
-
 // Many moveStates use circular Rotation. Use this calculation across all of them.
-// TODO: Add in axes variations for the circule, allowing for the creation of elipsoids. This would allow for percise curved movement to any position.
+// TODO: Add in axes variations for the circle, allowing for the creation of
+// elipsoids. This would allow for percise curved movement to any position.
 function vector CalculateRotationPosition(vector CurrentLocation, vector CurrentVelocity, bool bIsClockwise, float TurnRadius, float Speed, float DeltaTime)
 {
     local float DeltaAngle;
@@ -103,13 +101,9 @@ function vector CalculateRotationPosition(vector CurrentLocation, vector Current
     // Convert to world positon
     WorldSpaceNewPosition = (PlaneSpaceNewPosition >> Heading) + CurrentLocation;
 
-
-
     return WorldSpaceNewPosition;
 }
 
-
 DefaultProperties
 {
-
 }

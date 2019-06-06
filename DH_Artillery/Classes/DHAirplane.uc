@@ -10,82 +10,52 @@
 // obvious explosion and sound should indicate that this has happened.
 //==============================================================================
 
-/*
-Structure wise, there will be two main states. The first is the state driving the AI.
-This is the core dicision making for searching for targets, approaching targets.
-Essentially this drives the placement of waypoints.
-
-The second main state is the various movement states. Straightline, turning,
-making an attack run.
-*/
-
+// STRUCTURE
+// Airplanes run through a simple state cycle: Searching->Approaching->Attacking.
+// This cycle is repeated until the plane is shot down, or decides to leave.
+//
+// Searching: Picking target.
+// Approaching: Position plane to be ready to preform Attack.
+// Attacking: Preform attack run.
+//
+// The Airplane seeks to find, approach, and attack the Target. The current
+// target is represented by the CurrentTarget variable.
+//
+// DHAirplane is supported by the class DHMoveState. DHMoveState objects move
+// the Airplane, telling the plane when the move is done via the OnMoveEnd()
+// event. The current move state determines what kind of move is done. The
+// current move state object is stored in the MoveState variable. ALL direct
+// movement of the plane should occur in a MoveState object, NOT in Airplane
+// itself. Create a new child of DHMoveState if you want a new movement pattern.
+//
+// Essentially you control the movement of the plane by setting MoveState.
+// Function exist to set MoveState, such as BeginTurnTowardsPosition() and
+// BeginStraight().
 
 class DHAirplane extends Actor
     abstract;
 
 var localized string    AirplaneName;
-var float               MaxSpeed;
-var float               MinSpeed;
+
+// Current Speed of the aircraft. Used in move state calculations. Set this, not the the velocity to effect move speed changes.
 var float               CurrentSpeed;
-var float               MinTurningRadius; // Tightest/smallest circular path this plane can turn on.
-var float               HeadingTolerance; // Margin of error for plane facing a certain direction.
-var vector              DesiredLocation;
 
-
-
-/* All movement states should have a goal, and a OnEnd event. The OnEnd event
-tells the statemachine to move to the next state. For an attack, It could be defined
-by starting a dive-towards-position move, callback event, fire, Level-Out-To-elevation
-*/
-/*
-enum EMovementState
-{
-    MOVE_Straight,  // Continue straight along current velocity path.
-    MOVE_ToLocation,    // Changes current velocity to point at DesiredLocation. Calls OnReachDesiredLocation when it reaches the location.
-    MOVE_TurnTowardsPosition // Turns until facing goal. Once facing, calls OnMoveEnd
-};
-
-var EMovementState MovementState;
-*/
-
+// The current MoveState. What this variable is set to determines the movement pattern the plane preforms.
 var DHMoveState MoveState;
 
-enum EAIState
-{
-    AI_Entrance,
-    AI_Searching,
-    AI_Approaching,
-    AI_Attacking,
-    AI_Exiting
-};
-
-var EAIState AIState;
-
-/* Represents a Attack Target that needs to be approached. */
+// Represents an Attack Target that needs to be approached and attacked.
 struct Target
 {
     var vector Position;
     var float Radius;       // How far from target to be before starting attack run. Must be facing the target by this distance.
-    // TODO: var AttackType // Type of attack run to be carried out on this target.
+    // TODO: var AttackType // Type of attack run to be carried out on this target, after it has been approached.
 };
 
-var Target            CurrentTarget; // Current waypoint we are traveling to.
-
-// Debug
-var vector            StartLocation;
-var Target            Target1;
-var Target            Target2;
-var Target            Target3;
-var Target            Target4;
-var int               TargetCount;
-
-
+var Target  CurrentTarget; // Current target.
 
 simulated function PostBeginPlay()
 {
     CurrentSpeed = 800;
-    //CurrentTarget.Position = Location + vect(-100,0,0);
-    CurrentTarget.Position = Location;
 }
 
 // Tick needed to make AI decisions on server.
@@ -95,7 +65,7 @@ simulated function Tick(float DeltaTime)
     MovementUpdate(DeltaTime);
 }
 
-// Tick function for state machines.
+// Tick function for the individual states.
 function TickAI(float DeltaTime){}
 
 // Event for when the approach to the target has been finished.
@@ -104,12 +74,14 @@ function OnTargetReached() {}
 // Called when a Movement has reached it's predefined goal. Overridden by states.
 function OnMoveEnd() {}
 
+// This function is used by the Searching state to decide which target is next.
+// CurrentTarget should be set here.
 function PickTarget()
 {
-    //CurrentTarget.Position = Location + vect(-2000, -2000, 0);
-    //CurrentTarget.Position = Location + vect(-1000, 2000, 0);
+    CurrentTarget.Position = Location + vect(-2000, -2000, 0);
 }
 
+// Initial State. The plane enters into the combat area.
 auto simulated state Entrance
 {
     simulated function Timer()
@@ -120,15 +92,12 @@ auto simulated state Entrance
     function BeginState()
     {
         Log("Entrance State");
-
-        AIState = AI_Entrance;
-
-        BeginStraight(vect(0,-1,0));
-
+        BeginStraight(vect(1,0,0));
         SetTimer(4, false);
     }
 }
 
+// This step simulates the plane looking for a new target to attack. When the state ends, a target is picked.
 simulated state Searching
 {
     simulated function Timer()
@@ -140,34 +109,27 @@ simulated state Searching
     function BeginState()
     {
         Log("Searching");
-        AIState = AI_Searching;
-        //BeginStraight(vect(1,0,0));
         SetTimer(0.1, false);
     }
 }
 
-simulated state Approaching
+// Positions the airplane to be ready to preform the attack run. Typcally ends
+// when plane has reached the proper distance to the target to begin the run.
+state Approaching
 {
     function OnMoveEnd()
     {
         BeginStraight(Velocity);
     }
 
-    function OnWaypointReached()
-    {
-        Log("Waypoint Reached: "$Location);
-        GotoState('Attacking');
-    }
-
     function BeginState()
     {
         Log("Approaching");
-        AIState = AI_Approaching;
         BeginTurnTowardsPosition(CurrentTarget.Position, 1000, false);
     }
-
 }
 
+// Preform attack Run on the target.
 simulated state Attacking
 {
     simulated function Timer()
@@ -178,8 +140,6 @@ simulated state Attacking
     function BeginState()
     {
         Log("Attacking");
-        AIState = AI_Attacking;
-        //MovementState = MOVE_Straight;
         SetTimer(0.1, false);
     }
 }
@@ -210,6 +170,9 @@ simulated function MovementUpdate(float DeltaTime)
 }
 
 // MovementState related functions
+
+// This function begins a turn that stops when the plane is aligned with TurnPositionGoal.
+// It sets MoveState.
 function BeginTurnTowardsPosition(vector TurnPositionGoal, float TurnRadius, bool bIsTurnRight)
 {
     local DHTurnTowardsPosition TurnTowardsState;
@@ -228,6 +191,8 @@ function BeginTurnTowardsPosition(vector TurnPositionGoal, float TurnRadius, boo
     Velocity = VelocityPre;
 }
 
+// This begins the straight movement state. The plane will move in Direction
+// forever.
 function BeginStraight(vector Direction)
 {
     local DHStraight StraightState;
@@ -258,15 +223,11 @@ static function vector V3ToV2(vector InVector)
 defaultproperties
 {
     AirplaneName="Airplane"
-    AIState = AI_Entrance;
     DrawType=DT_Mesh
     bAlwaysRelevant=true
     bReplicateMovement = true
     bCanBeDamaged=true
     Physics = PHYS_Flying
 
-    HeadingTolerance = 0.01;
-    MaxSpeed = 10;
-    MinSpeed = 10;
     CurrentSpeed = 0;
 }
