@@ -1,22 +1,16 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_JagdtigerTank extends DHArmoredVehicle;
-
-#exec OBJ LOAD FILE=..\Animations\DH_Jagdtiger_anm.ukx
-#exec OBJ LOAD FILE=..\Sounds\DH_GerVehicleSounds2.uax
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex3.utx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc2.usx
 
 defaultproperties
 {
     // Vehicle properties
     VehicleNameString="Jagdpanzer VI 'Jagdtiger' Ausf.B"
     VehicleMass=16.5
-    ReinforcementCost=16
+    ReinforcementCost=10
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Jagdtiger_anm.JagdTiger_body_ext'
@@ -166,6 +160,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=25.0,Y=-10.0,Z=1.0)
         WheelRadius=38.0
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_JagdtigerTank.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -184,6 +179,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=-7.0,Y=-10.0,Z=1.0)
         WheelRadius=38.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_JagdtigerTank.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -201,6 +197,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(Y=-10.0,Z=1.0)
         WheelRadius=38.0
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_JagdtigerTank.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel

@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_Stug3GDestroyer_Snow extends DH_Stug3GDestroyer;
-
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex3.utx
 
 defaultproperties
 {

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHObjective extends ROObjTerritory
@@ -63,6 +63,10 @@ var(ROObjTerritory) bool            bUseHardBaseRate;           // Tells the cap
 var(ROObjective) bool               bIsInitiallyActive;         // Purpose is mainly to consolidate the variables of actors into one area (less confusing to new levelers)
 var(ROObjective) name               NoArtyVolumeProtectionTag;  // optional Tag for associated no arty volume that protects this SP only when the SP is active
 
+// Objective Spawn variables
+var(DHObjectiveSpawn) name          SpawnPointHintTags[2];      // Tags of hints for obj spawns (0 = Axis, 1 = Allies)
+var DHSpawnPoint_Objective          SpawnPoint;                 // Reference to the attached DHSpawnPoint_Objective if one exists
+
 // Capture/Actions variables
 var(DHObjectiveCapture) bool        bLockDownOnCapture;
 var(DHObjectiveCapture) bool        bUsePostCaptureOperations;  // Enables below variables to be used for post capture clear check/calls
@@ -109,6 +113,7 @@ var     bool                        bDidAwardAxisReinf;
 var     bool                        bDidAwardAlliesReinf;
 var     bool                        bRecentlyControlledByAxis;
 var     bool                        bRecentlyControlledByAllies;
+var     float                       AwardedReinforcementFactor;
 
 // Replicated variables
 var     int                         UnfreezeTime;               // The time at which the objective will be unlocked and ready to be capured again, relative to GRI.ElapsedTime
@@ -144,6 +149,9 @@ var(DH_GroupedActions)      array<VehiclePoolAction>    AxisGroupVehiclePoolActi
 var(DH_GroupedActions)      array<name>                 AlliesGroupCaptureEvents;
 var(DH_GroupedActions)      array<name>                 AxisGroupCaptureEvents;
 
+// Replication
+var                         EObjectiveState             OldObjState;
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -151,15 +159,13 @@ replication
         UnfreezeTime;
 }
 
-function PostBeginPlay()
+simulated function PostBeginPlay()
 {
     local DHGameReplicationInfo GRI;
     local RONoArtyVolume        NAV;
 
     // Call super above ROObjective
     super(GameObjective).PostBeginPlay();
-
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
     // Find the volume to use if the mapper set one
     if (VolumeTag != '')
@@ -182,21 +188,26 @@ function PostBeginPlay()
         }
     }
 
-    ObjState = InitialObjState;
-
-    bRecentlyControlledByAxis = InitialObjState == OBJ_Axis;
-    bRecentlyControlledByAllies = InitialObjState == OBJ_Allies;
-
-    // Add self to game objectives
-    if (DarkestHourGame(Level.Game) != none)
+    if (Role == ROLE_Authority)
     {
-        DarkestHourGame(Level.Game).DHObjectives[ObjNum] = self;
-    }
+        ObjState = InitialObjState;
 
-    // Add self to game replication info objectives
-    if (GRI != none)
-    {
-        GRI.DHObjectives[ObjNum] = self;
+        bRecentlyControlledByAxis = InitialObjState == OBJ_Axis;
+        bRecentlyControlledByAllies = InitialObjState == OBJ_Allies;
+
+        // Add self to game objectives
+        if (DarkestHourGame(Level.Game) != none)
+        {
+            DarkestHourGame(Level.Game).DHObjectives[ObjNum] = self;
+        }
+
+        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+        // Add self to game replication info objectives
+        if (GRI != none)
+        {
+            GRI.DHObjectives[ObjNum] = self;
+        }
     }
 }
 
@@ -512,7 +523,7 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
     local DarkestHourGame           G;
     local int                       i;
     local array<string>             PlayerIDs;
-    local int                       RoundTime;
+    local int                       RoundTime, AwardedReinf;
     local int                       NumTotal[2], Num[2], NumForCheck[2];
     local array<Controller>         CapturingControllers;
 
@@ -590,8 +601,9 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
                 }
                 else
                 {
-                    G.ModifyReinforcements(AXIS_TEAM_INDEX, 1 * (G.GetNumPlayers() / 4));
-                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, class'DHReinforcementAwardMsg', 1 * (G.GetNumPlayers() / 2), none, none, self);
+                    AwardedReinf = int(G.GetNumPlayers() * AwardedReinforcementFactor);
+                    G.ModifyReinforcements(AXIS_TEAM_INDEX, AwardedReinf);
+                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, AXIS_TEAM_INDEX, class'DHReinforcementAwardMsg', AwardedReinf, none, none, self);
                 }
             }
 
@@ -650,8 +662,9 @@ function HandleCompletion(PlayerReplicationInfo CompletePRI, int Team)
                 }
                 else
                 {
-                    G.ModifyReinforcements(ALLIES_TEAM_INDEX, 1 * (G.GetNumPlayers() / 4));
-                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, class'DHReinforcementAwardMsg', 1 * (G.GetNumPlayers() / 2), none, none, self);
+                    AwardedReinf = int(G.GetNumPlayers() * AwardedReinforcementFactor);
+                    G.ModifyReinforcements(ALLIES_TEAM_INDEX, AwardedReinf);
+                    class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, ALLIES_TEAM_INDEX, class'DHReinforcementAwardMsg', AwardedReinf, none, none, self);
                 }
             }
 
@@ -1186,6 +1199,8 @@ function Timer()
 // Modified to handle neutralizing objectives
 function ObjectiveCompleted(PlayerReplicationInfo CompletePRI, int Team)
 {
+    local DHGameReplicationInfo GRI;
+
     if (!IsNeutral() && bNeutralizeBeforeCapture)
     {
         // If the objective is not neutral, has completed progress, & is set to bNeutralizedBeforeCaptured
@@ -1225,6 +1240,13 @@ function ObjectiveCompleted(PlayerReplicationInfo CompletePRI, int Team)
 
     // lets see if this tells the bots the objectives is done for
     UnrealMPGameInfo(Level.Game).FindNewObjectives(self);
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI != none)
+    {
+        GRI.ObjectiveCompleted();
+    }
 }
 
 // New function to implement the bNeutralizeBeforeCapture option
@@ -1323,6 +1345,16 @@ simulated function bool IsFrozen(GameReplicationInfo GRI)
     return GRI != none && UnfreezeTime > GRI.ElapsedTime;
 }
 
+simulated function bool IsOwnedByTeam(byte TeamIndex)
+{
+    if (TeamIndex == AXIS_TEAM_INDEX)
+        return IsAxis();
+    else if (TeamIndex == ALLIES_TEAM_INDEX)
+        return IsAllies();
+
+    return false;
+}
+
 // Clients/Server can run this function very fast because of the hashtable
 simulated function bool HasRequiredObjectives(coerce DHGameReplicationInfo GRI, int TeamIndex)
 {
@@ -1374,6 +1406,36 @@ function UpdateCompressedCapProgress()
     }
 }
 
+// Overridden to notify the HUD to update the danger zone contour.
+simulated function PostNetReceive()
+{
+    local DHPlayer PC;
+    local DHHud Hud;
+
+    super.PostNetReceive();
+
+    // Listen for state changes so we can notify the HUD!
+    if (ObjState != OldObjState)
+    {
+        if (ObjState != OBJ_Neutral)
+        {
+            PC = DHPlayer(Level.GetLocalPlayerController());
+
+            if (PC != none)
+            {
+                Hud = DHHud(PC.myHUD);
+
+                if (Hud != none)
+                {
+                    Hud.OnObjectiveCompleted();
+                }
+            }
+        }
+
+        OldObjState = ObjState;
+    }
+}
+
 defaultproperties
 {
     bDoNotUseLabelShiftingOnSituationMap=true
@@ -1381,4 +1443,5 @@ defaultproperties
     bVehiclesCanCapture=true
     bTankersCanCapture=true
     PlayersNeededToCapture=1
+    AwardedReinforcementFactor=0.25
 }

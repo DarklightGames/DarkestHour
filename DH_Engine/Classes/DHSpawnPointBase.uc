@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHSpawnPointBase extends Actor
@@ -27,6 +27,7 @@ var     private int     TeamIndex;       // which team this spawn point belongs 
 var     int             SpawnPointIndex; // spawn point's index number in the GRI's SpawnPoints array
 var     bool            bCombatSpawn;    // is a combat spawn point (MDV, squad rally, HQ)
 var()   bool            bMainSpawn;      // is a main spawn for gametype: Advance
+var     string          SpawnPointStyle; // style name to use for spawnpoints (main spawns require an override in GetMapStyleName())
 
 var     int             BaseSpawnTimePenalty;    // how many seconds a player will have to addtionally wait to spawn on this spawn point
 var     float           SpawnProtectionTime;     // how many seconds a player will be invulnerable after spawning on this spawn point
@@ -61,6 +62,10 @@ var bool    bIsEncroachedUpon;                          // True if there are ene
 
 var bool    bIsLowPriority;                             // When true, this spawn point may be deleted in favor of spawning a newer high priority spawn point if the # of potential spawn points is reached.
 
+// Map icon (used only for showing spotted spawn points)
+var class<DHMapIconAttachment> MapIconAttachmentClass;
+var DHMapIconAttachment        MapIconAttachment;
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -85,6 +90,21 @@ simulated event PostBeginPlay()
             Error("Failed to add" @ self @ "to spawn point list!");
         }
 
+        if (MapIconAttachmentClass != none)
+        {
+            MapIconAttachment = Spawn(MapIconAttachmentClass, self);
+
+            if (MapIconAttachment != none)
+            {
+                MapIconAttachment.SetBase(self);
+                MapIconAttachment.Setup();
+            }
+            else
+            {
+                MapIconAttachmentClass.static.OnError(ERROR_SpawnFailed);
+            }
+        }
+
         if (!bShouldDelegateTimer)
         {
             SetTimer(1.0, true);
@@ -92,7 +112,7 @@ simulated event PostBeginPlay()
     }
 }
 
-function OnOverrun();
+function OnOverrunByEncroachment();
 
 function Timer()
 {
@@ -122,7 +142,7 @@ function Timer()
 
         if (bCanEncroachmentOverrun && EncroachmentPenaltyCounter >= EncroachmentPenaltyOverrunThreshold)
         {
-            OnOverrun();
+            OnOverrunByEncroachment();
             Destroy();
         }
         else if (EncroachmentPenaltyCounter >= EncroachmentPenaltyBlockThreshold)
@@ -149,6 +169,11 @@ event Destroyed()
     super.Destroyed();
 
     SetIsActive(false);
+
+    if (MapIconAttachment != none)
+    {
+        MapIconAttachment.Destroy();
+    }
 }
 
 // Override to provide the business logic that does the spawning
@@ -334,7 +359,7 @@ simulated function string GetMapStyleName()
     }
     else
     {
-        return "DHSpawnButtonStyle";
+        return SpawnPointStyle;
     }
 }
 
@@ -366,7 +391,7 @@ function GetPlayerCountsWithinRadius(float RadiusInMeters, optional int SquadInd
                     SquadmateCount += 1;
                 }
             }
-            else
+            else if (Vehicle(P) == none)
             {
                 EnemyCount += 1;
             }
@@ -392,6 +417,11 @@ final function SetTeamIndex(int TeamIndex)
         self.TeamIndex = TeamIndex;
 
         OnTeamIndexChanged();
+
+        if (MapIconAttachment != none)
+        {
+            MapIconAttachment.SetTeamIndex(GetTeamIndex());
+        }
     }
 }
 
@@ -399,6 +429,7 @@ function OnTeamIndexChanged();
 
 defaultproperties
 {
+    SpawnPointStyle="DHSpawnButtonStyle"
     BaseSpawnTimePenalty=0
     TeamIndex=-1
     SpawnProtectionTime=2.0
@@ -409,4 +440,3 @@ defaultproperties
     bHidden=true
     SpawnRadiusSegmentCount=8
 }
-

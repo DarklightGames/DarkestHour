@@ -1,12 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_JacksonTank extends DHArmoredVehicle; // later version with HVAP instead of AP shot & with muzzle brake
-
-#exec OBJ LOAD FILE=..\Animations\DH_Jackson_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex4.utx
 
 defaultproperties
 {
@@ -14,7 +11,7 @@ defaultproperties
     VehicleNameString="M36 Jackson"
     VehicleTeam=1
     VehicleMass=13.0
-    ReinforcementCost=10
+    ReinforcementCost=7
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Jackson_anm.Jackson_body_ext'
@@ -156,6 +153,7 @@ defaultproperties
         BoneName="steer_wheel_LF"
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=10.0,Z=10.0)
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_JacksonTank.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -172,6 +170,7 @@ defaultproperties
         BoneName="steer_wheel_LR"
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=-30.0,Z=10.0)
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_JacksonTank.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -187,6 +186,7 @@ defaultproperties
         BoneName="drive_wheel_L"
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=10.0)
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_JacksonTank.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel

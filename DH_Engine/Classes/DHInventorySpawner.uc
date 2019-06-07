@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHInventorySpawner extends Actor
@@ -354,6 +354,11 @@ simulated event Destroyed()
         }
 
         Proxies.Length = 0;
+    }
+
+    if (TouchMessageParameters != none)
+    {
+        TouchMessageParameters.PlayerController = none;
     }
 }
 

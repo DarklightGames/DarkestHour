@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHRoundOverMessage extends RORoundOverMsg
@@ -113,4 +113,5 @@ defaultproperties
     // These are still defined as a backup in case some idiot uses ROLevelInfo
     AxisWinsSound=Sound'DH_win.German.DH_German_Win_Theme'
     AlliesWinsSound=Sound'DH_win.Allies.DH_Allies_Win_Theme'
+    LifeTime=15
 }

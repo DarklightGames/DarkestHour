@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_PantherDTank extends DHArmoredVehicle;
-
-#exec OBJ LOAD FILE=..\Animations\DH_Panther_anm.ukx
 
 // Hack to stop panther camo variants without a matching schurzen texture from spawning schurzen
 simulated function SpawnVehicleAttachments()
@@ -23,7 +21,7 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="Panzer V 'Panther' Ausf.D"
     VehicleMass=14.0
-    ReinforcementCost=10
+    ReinforcementCost=5
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Panther_anm.Panther_body_ext'
@@ -167,6 +165,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=32.0,Y=-15.0,Z=-1.0)
         WheelRadius=33.0
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -185,6 +184,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=-14.0,Y=-15.0,Z=-1.0)
         WheelRadius=33.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -202,6 +202,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(Y=-15.0,Z=-1.0)
         WheelRadius=33.0
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_PantherDTank.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel

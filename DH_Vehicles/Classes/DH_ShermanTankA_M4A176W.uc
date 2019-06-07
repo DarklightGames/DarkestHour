@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_ShermanTankA_M4A176W extends DH_ShermanTank; // later 76mm version with HVAP instead of smoke rounds (but still without muzzle brake or sandbags)
-
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc2.usx
 
 defaultproperties
 {

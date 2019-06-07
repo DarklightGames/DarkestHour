@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHGUIController extends UT2K4GUIController;
@@ -420,11 +420,14 @@ defaultproperties
     DefaultStyleNames(92)="DH_Interface.DHStyle_PlatoonHQButton"
     DefaultStyleNames(93)="DH_Interface.DHStyle_ListLargeHighlight"
     DefaultStyleNames(94)="DH_Interface.DHStyle_ParatroopersButton"
+    DefaultStyleNames(95)="DH_Interface.DHStyle_ListSelectionGrey"
+    DefaultStyleNames(96)="DH_Interface.DHStyle_ObjectiveSpawnButton"
     RequestDataMenu="DH_Interface.DHGetDataMenu"
     DynArrayPropertyMenu="DH_Interface.DHGUIDynArrayPage"
     FilterMenu="DH_Interface.DHFilterListPage"
     MapVotingMenu="DH_Interface.DHMapVotingPage"
     EditFavoriteMenu="DH_Interface.DHEditFavoritePage"
+    NetworkMsgMenu="DH_Interface.DHNetworkStatusMsg"
     MainMenuOptions(0)="DH_Interface.DHServerBrowser"
     MainMenuOptions(1)="DH_Interface.DHGamePageMP"
     MainMenuOptions(2)="DH_Interface.DHGamePageSP"

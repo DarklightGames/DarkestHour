@@ -1,18 +1,20 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_SatchelCharge10lb10sWeapon extends DHExplosiveWeapon;
 
 defaultproperties
 {
-    ItemName="10lb Satchel Charge"
+    ItemName="Large Satchel Charge"
     FireModeClass(0)=class'DH_Weapons.DH_SatchelCharge10lb10sFire'
     AttachmentClass=class'DH_Weapons.DH_SatchelCharge10lb10sAttachment'
     PickupClass=class'DH_Weapons.DH_SatchelCharge10lb10sPickup'
 
     InventoryGroup=7
+    GroupOffset=1
+    Priority=2
 
     Mesh=SkeletalMesh'Common_Satchel_1st.Sachel_Charge'
     Skins(2)=Texture'Weapons1st_tex.Grenades.SatchelCharge'

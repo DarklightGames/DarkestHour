@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHConstruction_Vehicle extends DHConstruction
@@ -56,52 +56,51 @@ simulated state Dummy
     }
 }
 
-function static UpdateProxy(DHConstructionProxy CP)
+// TODO: do we put this in the vehicle itself???
+function static UpdateProxy(DHActorProxy AP)
 {
     local int i, j;
-    local DHConstructionProxyAttachment CPA;
+    local DHActorProxyAttachment APA;
     local class<DHVehicle> VehicleClass;
 
-    VehicleClass = GetVehicleClass(CP.GetContext());
+    VehicleClass = GetVehicleClass(AP.GetContext());
 
-    CP.SetDrawType(DT_Mesh);
-    CP.LinkMesh(VehicleClass.default.Mesh);
+    AP.SetDrawType(DT_Mesh);
+    AP.LinkMesh(VehicleClass.default.Mesh);
 
     for (j = 0; j < VehicleClass.default.Skins.Length; ++j)
     {
         if (VehicleClass.default.Skins[j] != none)
         {
-            CP.Skins[j] = CP.CreateProxyMaterial(VehicleClass.default.Skins[j]);
+            AP.Skins[j] = AP.CreateProxyMaterial(VehicleClass.default.Skins[j]);
         }
     }
 
     for (i = 0; i < VehicleClass.default.PassengerWeapons.Length; ++i)
     {
-        CPA = CP.Spawn(class'DHConstructionProxyAttachment', CP);
+        APA = AP.Spawn(class'DHActorProxyAttachment', AP);
 
-        if (CPA != none)
+        if (APA != none)
         {
-            CP.AttachToBone(CPA, VehicleClass.default.PassengerWeapons[i].WeaponBone);
+            AP.AttachToBone(APA, VehicleClass.default.PassengerWeapons[i].WeaponBone);
 
-            CPA.SetDrawType(DT_Mesh);
-            CPA.LinkMesh(VehicleClass.default.PassengerWeapons[i].WeaponPawnClass.default.GunClass.default.Mesh);
-
-            j = 0;
+            APA.SetDrawType(DT_Mesh);
+            APA.LinkMesh(VehicleClass.default.PassengerWeapons[i].WeaponPawnClass.default.GunClass.default.Mesh);
 
             for (j = 0; j < VehicleClass.default.PassengerWeapons[i].WeaponPawnClass.default.GunClass.default.Skins.Length; ++j)
             {
                 if (VehicleClass.default.PassengerWeapons[i].WeaponPawnClass.default.GunClass.default.Skins[j] != none)
                 {
-                    CPA.Skins[j] = CP.CreateProxyMaterial(VehicleClass.default.PassengerWeapons[i].WeaponPawnClass.default.GunClass.default.Skins[j]);
+                    APA.Skins[j] = AP.CreateProxyMaterial(VehicleClass.default.PassengerWeapons[i].WeaponPawnClass.default.GunClass.default.Skins[j]);
                 }
             }
 
-            CP.Attachments[CP.Attachments.Length] = CPA;
+            AP.Attachments[AP.Attachments.Length] = APA;
         }
     }
 }
 
-function static string GetMenuName(DHConstruction.Context Context)
+function static string GetMenuName(DHActorProxy.Context Context)
 {
     local class<DHVehicle> VC;
 
@@ -122,7 +121,7 @@ function UpdateAppearance()
     SetCollisionSize(VehicleClass.default.CollisionRadius, VehicleClass.default.CollisionHeight);
 }
 
-function static GetCollisionSize(DHConstruction.Context Context, out float NewRadius, out float NewHeight)
+function static GetCollisionSize(DHActorProxy.Context Context, out float NewRadius, out float NewHeight)
 {
     local class<DHVehicle> VehicleClass;
 
@@ -140,12 +139,12 @@ function static GetCollisionSize(DHConstruction.Context Context, out float NewRa
 }
 
 // Override to get a different vehicle class based on scenario (eg. snow camo etc.)
-function static class<DHVehicle> GetVehicleClass(DHConstruction.Context Context)
+function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
 {
     return default.VehicleClass;
 }
 
-function static DHConstruction.ConstructionError GetPlayerError(DHConstruction.Context Context)
+function static DHConstruction.ConstructionError GetPlayerError(DHActorProxy.Context Context)
 {
     local DHConstruction.ConstructionError E;
 
@@ -158,17 +157,24 @@ function static DHConstruction.ConstructionError GetPlayerError(DHConstruction.C
     return super.GetPlayerError(Context);
 }
 
-simulated static function int GetSupplyCost(DHConstruction.Context Context)
+simulated static function int GetSupplyCost(DHActorProxy.Context Context)
 {
     return GetVehicleClass(Context).default.SupplyCost;
 }
 
-static function bool ShouldShowOnMenu(DHConstruction.Context Context)
+static function bool ShouldShowOnMenu(DHActorProxy.Context Context)
 {
-    return GetVehicleClass(Context) != none;
+    if (GetVehicleClass(Context) != none)
+    {
+        return super.ShouldShowOnMenu(Context);
+    }
+    else
+    {
+        return false;
+    }
 }
 
-static function vector GetPlacementOffset(DHConstruction.Context Context)
+static function vector GetPlacementOffset(DHActorProxy.Context Context)
 {
     local class<DHVehicle> VehicleClass;
 
@@ -185,7 +191,7 @@ defaultproperties
     ConstructionVerb="emplace"
     GroupClass=class'DHConstructionGroup_Guns'
     bCanBeDamaged=false
-
+    DuplicateFriendlyDistanceInMeters=15.0
     CompletionPointValue=100
 }
 

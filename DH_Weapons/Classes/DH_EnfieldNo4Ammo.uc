@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_EnfieldNo4Ammo extends DHAmmunition;
@@ -8,6 +8,6 @@ class DH_EnfieldNo4Ammo extends DHAmmunition;
 defaultproperties
 {
     MaxAmmo=10
-    InitialAmount=5
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo4_ammo'
+    InitialAmount=10
+    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.EnfieldNo4Sniper_ammo'
 }

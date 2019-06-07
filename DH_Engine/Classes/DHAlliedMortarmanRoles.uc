@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHAlliedMortarmanRoles extends DHAlliedRoles
@@ -14,4 +14,5 @@ defaultproperties
     Article="a "
     PluralName="Mortar Operators"
     Limit=1
+    AddedRoleRespawnTime=10
 }

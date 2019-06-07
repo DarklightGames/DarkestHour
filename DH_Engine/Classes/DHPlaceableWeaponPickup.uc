@@ -1,11 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHPlaceableWeaponPickup extends DHWeaponPickup
     placeable;
 
+var(Pickup) bool    bRespawn;         // the pickup will respawn the weapon in RespawnTime seconds if true
 var() class<Weapon> WeaponType;       // the pickup weapon class - either specify in weapon-specific subclass, or leveller can place this generic class & set weapon in editor
 var   bool          bIsOneShotWeapon; // pickup weapon is a one shot weapon, e.g. a grenade, satchel or faust
 
@@ -160,7 +161,7 @@ state Sleeping
 ignores Touch;
 
 Begin:
-    if (GetReSpawnTime() > 0.0)
+    if (bRespawn && GetReSpawnTime() > 0.0)
     {
         Sleep(GetReSpawnTime() - RespawnEffectTime - 1.0);
         GoTo('Respawn');
@@ -193,7 +194,8 @@ simulated function UpdatePrecacheMaterials()
 
 defaultproperties
 {
-    RespawnTime=60.0 // leveller can override
+    bRespawn=false
+    RespawnTime=120.0 // leveller can override
     Physics=PHYS_None
     bWeaponStay=false
     bIgnoreEncroachers=false

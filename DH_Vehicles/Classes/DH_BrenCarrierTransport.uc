@@ -1,14 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_BrenCarrierTransport extends DHVehicle;
-
-#exec OBJ LOAD FILE=..\Animations\DH_BrenCarrier_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\allies_vehicles_tex2.utx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUK_tex.utx
-#exec OBJ LOAD FILE=..\Sounds\Vehicle_EnginesTwo.uax
 
 defaultproperties
 {
@@ -19,9 +14,9 @@ defaultproperties
     bHasTreads=true
     bSpecialTankTurning=true // because Bren Carrier is fully tracked
     VehicleMass=5.0
-    ReinforcementCost=4
+    ReinforcementCost=3
     MaxDesireability=1.2
-    bMustBeInSquadToSpawn=true
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_ext'
@@ -70,7 +65,7 @@ defaultproperties
     // Damage
     Health=2000
     HealthMax=2000.0
-    DamagedEffectHealthFireFactor=0.7
+    DamagedEffectHealthFireFactor=0.9
     EngineHealth=50
     VehHitpoints(0)=(PointRadius=20.0,PointOffset=(X=-15.0,Y=0.0,Z=0.0)) // engine
     VehHitpoints(1)=(PointRadius=20.0,PointScale=1.0,PointBone="Engine",PointOffset=(X=22.0,Y=0.0,Z=0.0),DamageMultiplier=1.0,HitPointType=HP_Engine)
@@ -168,6 +163,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=-34.5,Y=0.0,Z=3.5)
         WheelRadius=28.0
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -186,6 +182,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=23.5,Y=0.0,Z=3.5)
         WheelRadius=28.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering

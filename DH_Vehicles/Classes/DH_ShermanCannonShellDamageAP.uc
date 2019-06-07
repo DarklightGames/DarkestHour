@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_ShermanCannonShellDamageAP extends DHShellImpactDamageType
+class DH_ShermanCannonShellDamageAP extends DHShellAPImpactDamageType
     abstract;
 
 defaultproperties

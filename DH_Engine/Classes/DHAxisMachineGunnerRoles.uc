@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHAxisMachineGunnerRoles extends DHAxisRoles
@@ -15,4 +15,5 @@ defaultproperties
     PluralName="Machine-Gunners"
     Limit=2
     bCanCarryExtraAmmo=false
+    AddedRoleRespawnTime=10
 }

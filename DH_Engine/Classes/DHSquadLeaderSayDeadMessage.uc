@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHSquadLeaderSayDeadMessage extends DHLocalMessage
@@ -24,7 +24,7 @@ static function color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int 
 defaultproperties
 {
     DrawColor=(R=0,G=204,B=204,A=255)
-    MessagePrefix="(DEAD) *SQUAD LEADER*"
+    MessagePrefix="(DEAD) [SQUAD LEADER]"
     bComplexString=true
     bBeep=true
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_Cromwell6PdrCannonShellHE extends DHCannonShellHE;
@@ -46,7 +46,6 @@ defaultproperties
     ShellDiameter=5.7
     bHasTracer=true
     PenetrationMag=630.0
-    ShellImpactDamage=class'DH_Vehicles.DH_Cromwell6PdrCannonShellDamageAP'
     ImpactDamage=295
     ShellHitDirtEffectClass=class'ROEffects.TankHEHitDirtEffect'
     ShellHitSnowEffectClass=class'ROEffects.TankHEHitSnowEffect'

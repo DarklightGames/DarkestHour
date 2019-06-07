@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 // Since array types are copied when passed to these functions, frequent use of
 // these functions is not recommended on large datasets.
@@ -162,13 +162,13 @@ static final function IShuffle(out array<int> _Array)
     }
 }
 
-static final function int IndexOf(array<Object> _Array, Object O)
+static final function int IndexOf(array<Object> Haystack, Object Needle)
 {
     local int i;
 
-    for (i = 0; i < _Array.Length; ++i)
+    for (i = 0; i < Haystack.Length; ++i)
     {
-        if (_Array[i] == O)
+        if (Haystack[i] == Needle)
         {
             return i;
         }
@@ -177,13 +177,13 @@ static final function int IndexOf(array<Object> _Array, Object O)
     return -1;
 }
 
-static final function int SIndexOf(array<string> _Array, string O)
+static final function int SIndexOf(array<string> Haystack, string Needle)
 {
     local int i;
 
-    for (i = 0; i < _Array.Length; ++i)
+    for (i = 0; i < Haystack.Length; ++i)
     {
-        if (_Array[i] ~= O)
+        if (Haystack[i] ~= Needle)
         {
             return i;
         }
@@ -192,13 +192,13 @@ static final function int SIndexOf(array<string> _Array, string O)
     return -1;
 }
 
-static final function int IIndexOf(array<int> _Array, int O)
+static final function int IIndexOf(array<int> Haystack, int Needle)
 {
     local int i;
 
-    for (i = 0; i < _Array.Length; ++i)
+    for (i = 0; i < Haystack.Length; ++i)
     {
-        if (_Array[i] ~= O)
+        if (Haystack[i] == Needle)
         {
             return i;
         }
@@ -336,4 +336,9 @@ static final function array<int> Range(int Min, int Max)
     }
 
     return A;
+}
+
+static final function int RavelIndices(int X, int Y, int Width)
+{
+    return X * Width + Y;
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_MG34SemiAutoFire extends DHMGSingleFire;
@@ -16,10 +16,8 @@ defaultproperties
     PctHipMGPenalty=0.6
 
     // Recoil
-    maxVerticalRecoilAngle=200
-    maxHorizontalRecoilAngle=100
-    PctBipodDeployRecoil=0.02
-    PctRestDeployRecoil=0.05
+    MaxVerticalRecoilAngle=250
+    MaxHorizontalRecoilAngle=110
 
     FireSounds(0)=SoundGroup'Inf_Weapons.mg34.mg34_fire_single'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'

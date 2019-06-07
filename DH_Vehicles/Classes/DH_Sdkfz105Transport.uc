@@ -1,12 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_Sdkfz105Transport extends DHVehicle;
-
-#exec OBJ LOAD FILE=..\Animations\DH_SdKfz10_5_anm.ukx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc4.usx
 
 // Modified to set cannon pawn class, as can't be done in default properties, since as DH_Guns code package isn't compiled until after this package
 simulated function PostBeginPlay()
@@ -30,10 +27,10 @@ defaultproperties
     VehicleNameString="Sd.Kfz. 10/5"
     bHasTreads=true
     VehicleMass=6.5
-    ReinforcementCost=4
+    ReinforcementCost=2
     MaxDesireability=1.2
-    bMustBeInSquadToSpawn=true
     PointValue=500
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_SdKfz10_5_anm.SdKfz10_5_body_ext'
@@ -60,14 +57,17 @@ defaultproperties
 
     // Movement
     MaxCriticalSpeed=674.0 // 40 kph
-    GearRatios(0)=-0.25
-    GearRatios(3)=0.5
-    GearRatios(4)=0.72
+    GearRatios(0)=-0.3
+    GearRatios(1)=0.3
+    GearRatios(2)=0.5
+    GearRatios(3)=0.7
+    GearRatios(4)=0.9
     TorqueCurve=(Points=((InVal=0.0,OutVal=10.0),(InVal=200.0,OutVal=1.0),(InVal=1500.0,OutVal=2.5),(InVal=2200.0,OutVal=0.0)))
     MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=35.0),(InVal=1500.0,OutVal=30.0),(InVal=1000000000.0,OutVal=15.0)))
 
     // Physics wheels properties
-    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
+    WheelLongFrictionScale=1.25
+    WheelLongFrictionFunc=(Points=(,(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
     WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=45.0,OutVal=0.0),(InVal=10000000000.0,OutVal=0.0)))
     WheelSuspensionTravel=8.0
     WheelSuspensionMaxRenderTravel=8.0
@@ -75,7 +75,7 @@ defaultproperties
     // Damage
     Health=2000
     HealthMax=2000.0
-    DamagedEffectHealthFireFactor=0.7
+    DamagedEffectHealthFireFactor=0.9
     EngineHealth=50
     VehHitpoints(0)=(PointRadius=20.0,PointBone="Body",PointOffset=(X=93.0,Y=0.0,Z=9.0)) // engine
     VehHitpoints(1)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_F_R",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
@@ -169,6 +169,7 @@ defaultproperties
         WheelRadius=25.0
         SupportBoneName="Axle_F_L"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_Sdkfz105Transport.Wheel_F_L'
     Begin Object Class=SVehicleWheel Name=Wheel_F_R
@@ -185,6 +186,7 @@ defaultproperties
         BoneName="Tread_drive_wheel_F_L"
         BoneRollAxis=AXIS_Y
         WheelRadius=25.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_Sdkfz105Transport.Tread_drive_wheel_F_L'
     Begin Object Class=SVehicleWheel Name=Tread_drive_wheel_F_R
@@ -199,6 +201,7 @@ defaultproperties
         BoneName="Tread_drive_wheel_R_L"
         BoneRollAxis=AXIS_Y
         WheelRadius=25.0
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_Sdkfz105Transport.Tread_drive_wheel_R_L'
     Begin Object Class=SVehicleWheel Name=Tread_drive_wheel_R_R

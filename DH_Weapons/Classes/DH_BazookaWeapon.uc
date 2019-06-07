@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_BazookaWeapon extends DHRocketWeapon;
-
-#exec OBJ LOAD FILE=..\Animations\DH_Bazooka_1st.ukx
 
 defaultproperties
 {

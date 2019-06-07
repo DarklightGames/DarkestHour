@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHMinefield_ATMine extends ROMine;
@@ -39,11 +39,11 @@ singular function Touch(Actor Other)
             {
                 if (vector(Other.Rotation) dot Normal(Location - Other.Location) > 0.0)
                 {
-                    DHVehicle(Other).DamageTrack(true);
+                    DHVehicle(Other).DestroyTrack(true);
                 }
                 else
                 {
-                    DHVehicle(Other).DamageTrack(false);
+                    DHVehicle(Other).DestroyTrack(false);
                 }
             }
         }

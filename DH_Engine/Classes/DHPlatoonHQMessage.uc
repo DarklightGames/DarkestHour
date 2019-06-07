@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHPlatoonHQMessage extends ROGameMessage
@@ -35,7 +35,7 @@ static function string GetString(
 
 defaultproperties
 {
-    DrawColor=(R=252,G=0,B=126,A=255)
+    DrawColor=(R=225,G=105,B=45,A=255)
     ActivatedMessage="A Platoon HQ has been established."
     OverrunMessage="A Platoon HQ has been overrun by the enemy."
     DestroyedMessage="A Platoon HQ has been destroyed."

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHConstruction_Foxhole extends DHConstruction;
@@ -87,12 +87,17 @@ static function float GetTerrainScale(TerrainInfo TI)
     return 0.0;
 }
 
+static function bool IsPlaceableByPlayer(DHPlayerReplicationInfo PRI)
+{
+    return PRI.IsSLorASL() || PRI.IsPatron();
+}
+
 static function bool IsTerrainScaleLarge(TerrainInfo TI)
 {
     return TI != none && GetTerrainScale(TI) > default.LargeTerrainScaleThreshold;
 }
 
-static function StaticMesh GetConstructedStaticMesh(DHConstruction.Context Context)
+static function StaticMesh GetConstructedStaticMesh(DHActorProxy.Context Context)
 {
     if (IsTerrainScaleLarge(TerrainInfo(Context.GroundActor)))
     {
@@ -112,7 +117,7 @@ simulated event Destroyed()
     }
 }
 
-function static GetCollisionSize(DHConstruction.Context Context, out float NewRadius, out float NewHeight)
+function static GetCollisionSize(DHActorProxy.Context Context, out float NewRadius, out float NewHeight)
 {
     super.GetCollisionSize(Context, NewRadius, NewHeight);
 

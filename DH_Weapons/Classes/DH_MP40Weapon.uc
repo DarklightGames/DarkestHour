@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_MP40Weapon extends DHAutoWeapon;
@@ -19,9 +19,26 @@ defaultproperties
     HighDetailOverlayIndex=2
 
     PlayerIronsightFOV=65.0
-    IronSightDisplayFOV=35.0
+    IronSightDisplayFOV=45.0
     ZoomOutTime=0.15
 
     MaxNumPrimaryMags=9
     InitialNumPrimaryMags=9
+
+    bPlusOneLoading=false
+
+    IdleEmptyAnim="idle_empty"
+    IronIdleEmptyAnim="Iron_idle_empty"
+    IronBringUpEmpty="Iron_in_empty"
+    IronPutDownEmpty="Iron_out_empty"
+    SprintStartEmptyAnim="Sprint_Start_Empty"
+    SprintLoopEmptyAnim="Sprint_Middle_Empty"
+    SprintEndEmptyAnim="Sprint_End_Empty"
+    CrawlForwardEmptyAnim="crawlF_empty"
+    CrawlBackwardEmptyAnim="crawlB_empty"
+    CrawlStartEmptyAnim="crawl_in_empty"
+    CrawlEndEmptyAnim="crawl_out_empty"
+    SelectEmptyAnim="Draw_empty"
+    PutDownEmptyAnim="put_away_empty"
+
 }

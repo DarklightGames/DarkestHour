@@ -1,20 +1,16 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_IS2Tank extends DHArmoredVehicle;
-
-#exec OBJ LOAD FILE=..\Animations\DH_IS2_anm.ukx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Soviet_vehicles_stc.usx
-#exec OBJ LOAD FILE=..\Textures\allies_vehicles_tex.utx
 
 defaultproperties
 {
     // Vehicle properties
     VehicleNameString="IS2"
     VehicleTeam=1
-    ReinforcementCost=10
+    ReinforcementCost=8
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_IS2_anm.IS2-body_ext'
@@ -156,6 +152,7 @@ defaultproperties
          BoneName="Steer_Wheel_LF"
          BoneRollAxis=AXIS_Y
          WheelRadius=30.000000
+         bLeftTrack=true
      End Object
      Wheels(0)=SVehicleWheel'DH_Vehicles.DH_IS2Tank.LF_Steering'
 
@@ -176,6 +173,7 @@ defaultproperties
          BoneName="Steer_Wheel_LR"
          BoneRollAxis=AXIS_Y
          WheelRadius=30.000000
+         bLeftTrack=true
      End Object
      Wheels(2)=SVehicleWheel'DH_Vehicles.DH_IS2Tank.LR_Steering'
      Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -193,6 +191,7 @@ defaultproperties
          BoneName="Drive_Wheel_L"
          BoneRollAxis=AXIS_Y
          WheelRadius=30.000000
+         bLeftTrack=true
      End Object
      Wheels(4)=SVehicleWheel'DH_Vehicles.DH_IS2Tank.Left_Drive_Wheel'
      Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel

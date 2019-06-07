@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_PIATWeapon extends DHRocketWeapon;
-
-#exec OBJ LOAD FILE=..\Animations\DH_PIAT_1st.ukx
 
 // Modified to prevent reloading unless prone or rested (with message) or if weapon is not empty
 simulated function bool AllowReload()

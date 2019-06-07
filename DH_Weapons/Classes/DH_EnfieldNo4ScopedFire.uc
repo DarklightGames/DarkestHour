@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_EnfieldNo4ScopedFire extends DHBoltFire;
@@ -18,7 +18,10 @@ defaultproperties
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
     FireAnim="shoot_last"
     FireIronAnim="Scope_shoot"
+    ShellRotOffsetIron=(Pitch=8000)
+    ShellRotOffsetHip=(Pitch=-8000)
     ShakeRotMag=(X=50.0,Y=50.0,Z=400.0)
     ShakeRotTime=5.0
     AimError=500.0
+    ShellIronSightOffset=(X=10.0,Y=3.0,Z=-5.0)
 }

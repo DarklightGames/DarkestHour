@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_Sdkfz2342CannonShellHE extends DHCannonShellHE;
@@ -42,7 +42,6 @@ defaultproperties
     ShellDiameter=5.0
     bDebugInImperial=false
     PenetrationMag=565.0
-    ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIILCannonShellDamageAP'
     ImpactDamage=315
     ShellHitDirtEffectClass=class'ROEffects.TankHEHitDirtEffect'
     ShellHitSnowEffectClass=class'ROEffects.TankHEHitSnowEffect'

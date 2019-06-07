@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHConstructionSupplyAttachment_Vehicle extends DHConstructionSupplyAttachment;
@@ -48,7 +48,5 @@ defaultproperties
     SupplyCount=2000.0
     SupplyCountMax=2000
     bCanBeResupplied=true
-    bShouldMapIconBeRotated=true
-    MapIcon=Texture'DH_GUI_Tex.GUI.supply_point'
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle_Supply'
 }
-

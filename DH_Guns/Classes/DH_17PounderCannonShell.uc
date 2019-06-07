@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_17PounderCannonShell extends DHCannonShell;
@@ -41,7 +41,7 @@ defaultproperties
     DHPenetrationTable(9)=10.3
     DHPenetrationTable(10)=8.7
     ShellDiameter=7.62
-    ShellImpactDamage=class'DH_Engine.DHShellATImpactDamageType'
+    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
     ImpactDamage=580
     BallisticCoefficient=2.45
     Speed=53351.0

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_FG42Fire extends DHAutomaticFire; // TODO: could maybe use DHFastAutoFire/DHHighROFWeaponAttachment as fires at 750 rpm (higher than PPs-43 SMG's 700 rpm, which does use fast auto)
@@ -12,19 +12,17 @@ defaultproperties
     FireRate=0.08
     FAProjSpawnOffset=(X=-28.0)
 
-    Spread=160.0
-    RecoilRate=0.06
+    // Spread
+    HipSpreadModifier=5.0
+    Spread=85.0
 
     // Recoil
-    PctStandIronRecoil=0.55
-    PctCrouchRecoil=0.8
-    PctCrouchIronRecoil=0.45
-    PctProneIronRecoil=0.35
-    PctBipodDeployRecoil=0.08
-    PctRestDeployRecoil=0.15
-
-    MaxVerticalRecoilAngle=360
-    MaxHorizontalRecoilAngle=80
+    RecoilRate=0.06
+    MaxVerticalRecoilAngle=510
+    MaxHorizontalRecoilAngle=240
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=2.0,OutVal=0.3),(InVal=3.0,OutVal=0.4),(InVal=4.0,OutVal=1.5),(InVal=10.0,OutVal=2.5),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilFallOffExponent=2.0
+    RecoilFallOffFactor=12.0
 
     FireSounds(0)=SoundGroup'DH_WeaponSounds.FG42.FG42_Fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.FG42.FG42_Fire02'

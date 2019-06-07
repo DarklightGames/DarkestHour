@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class TreeMap_string_Object extends Object;
@@ -10,6 +10,14 @@ var private array<Object> Values;
 var private int Size;
 var private string RecursiveKey;
 var private Object RecursiveValue;
+
+function Clear()
+{
+    Head = none;
+    Keys.Length = 0;
+    Values.Length = 0;
+    Size = 0;
+}
 
 function int GetSize()
 {

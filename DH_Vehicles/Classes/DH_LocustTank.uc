@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_LocustTank extends DHArmoredVehicle;
@@ -74,8 +74,8 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="M22 Locust **WIP**"
     VehicleTeam=1
-    VehicleMass=5.0
-    ReinforcementCost=6
+    VehicleMass=8.0
+    ReinforcementCost=4
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Locust_anm.Locust_body'
@@ -210,6 +210,7 @@ defaultproperties
         BoneName="steer_wheel_LF"
         BoneRollAxis=AXIS_Y
         WheelRadius=26.0
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_LocustTank.LF_Steering'
 
@@ -228,6 +229,7 @@ defaultproperties
         BoneName="steer_wheel_LR"
         BoneRollAxis=AXIS_Y
         WheelRadius=26.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_LocustTank.LR_Steering'
 
@@ -245,6 +247,7 @@ defaultproperties
         BoneName="drive_wheel_L"
         BoneRollAxis=AXIS_Y
         WheelRadius=26.0
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_LocustTank.Left_Drive_Wheel'
 

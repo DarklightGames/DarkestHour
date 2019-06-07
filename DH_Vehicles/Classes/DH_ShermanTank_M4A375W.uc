@@ -1,14 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_ShermanTank_M4A375W extends DHArmoredVehicle;
-
-#exec OBJ LOAD FILE=..\Animations\DH_ShermanM4A3_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex3.utx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc3.usx
 
 defaultproperties
 {
@@ -16,7 +11,7 @@ defaultproperties
     VehicleNameString="M4A3(75)W Sherman"
     VehicleTeam=1
     VehicleMass=13.5
-    ReinforcementCost=8
+    ReinforcementCost=4
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_ShermanM4A3_anm.M4A3_body_ext'
@@ -158,6 +153,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=20.0,Z=17.0)
         WheelRadius=36.0
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_ShermanTank_M4A375W.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -176,6 +172,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=-30.0,Z=17.0)
         WheelRadius=37.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_ShermanTank_M4A375W.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -193,6 +190,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=17.0)
         WheelRadius=36.0
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_ShermanTank_M4A375W.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel

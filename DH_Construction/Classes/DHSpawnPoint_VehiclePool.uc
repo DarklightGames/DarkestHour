@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHSpawnPoint_VehiclePool extends DHSpawnPoint;
@@ -54,6 +54,8 @@ function OnSpawnKill(Pawn VictimPawn, Controller KillerController)
 
     if (Construction != none)
     {
+        // If our tank was spawn killed, just destroy the vehicle pool as it's
+        // likely being spawn-camped from afar.
         Construction.BreakMe();
     }
 }

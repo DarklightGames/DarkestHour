@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHServerBrowser extends ROUT2k4ServerBrowser;
@@ -46,6 +46,7 @@ function InternalOnButtonClick(byte bButton)
 defaultproperties
 {
     CurrentGameType="DH_Engine.DarkestHourGame"
+
     Begin Object Class=DHmoComboBox Name=GameTypeCombo
         bReadOnly=true
         CaptionWidth=0.1
@@ -62,6 +63,7 @@ defaultproperties
         OnLoadINI=DHServerBrowser.InternalOnLoadINI
     End Object
     co_GameType=DHmoComboBox'DH_Interface.DHServerBrowser.GameTypeCombo'
+
     Begin Object Class=DHGUITabControl Name=PageTabs
         bFillSpace=false
         bDockPanels=true
@@ -75,12 +77,14 @@ defaultproperties
         OnChange=DHServerBrowser.InternalOnChange
     End Object
     c_Tabs=DHGUITabControl'DH_Interface.DHServerBrowser.PageTabs'
+
     Begin Object Class=DHGUIHeader Name=ServerBrowserHeader
         bUseTextHeight=true
         Caption="Server Browser"
         StyleName="DHTopper"
     End Object
     t_Header=DHGUIHeader'DH_Interface.DHServerBrowser.ServerBrowserHeader'
+
     Begin Object Class=DHBrowser_Footer Name=FooterPanel
         Spacer=0.01
         StyleName="DHFooter"
@@ -89,6 +93,7 @@ defaultproperties
         OnPreDraw=FooterPanel.InternalOnPreDraw
     End Object
     t_Footer=DHBrowser_Footer'DH_Interface.DHServerBrowser.FooterPanel'
+
     Begin Object Class=BackgroundImage Name=PageBackground
         Image=Texture'DH_GUI_Tex.Menu.MultiMenuBack'
         ImageStyle=ISTY_Scaled
@@ -99,6 +104,7 @@ defaultproperties
         Y2=1024
     End Object
     i_Background=BackgroundImage'DH_Interface.DHServerBrowser.PageBackground'
+
     PanelClass(0)="DH_Interface.DHBrowser_ServerListPageFavorites"
     PanelClass(1)="DH_Interface.DHBrowser_ServerListPageLAN"
     PanelClass(2)="DH_Interface.DHBrowser_ServerListPageInternet"
@@ -112,7 +118,7 @@ defaultproperties
     PanelCaption(1)="LAN"
     PanelCaption(2)="Internet"
 
-    BetaMessageText="Welcome to the Darkest Hour: Europe '44-'45 v8.0 live beta!  This update adds a number of exciting new features such as squads, constructions, and more! Since this is the largest single update the game has ever seen, we are making sure to get it right: this is why we are doing a \"soft\" beta release for our community to play while we work out the remaining kinks. Be sure to join the 500+ strong Discord community to discuss the game, make suggestions, or report any bugs! See you on the battlefield!"
+    BetaMessageText="Welcome to the Darkest Hour: Europe '44-'45 live beta! Be sure to join the 500+ strong Discord community to discuss the game, make suggestions, or report any bugs! See you on the battlefield!"
     OnOpen=InternalOnOpen
 }
 

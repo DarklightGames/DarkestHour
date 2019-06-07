@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHExplosiveWeapon extends DHWeapon
@@ -453,7 +453,7 @@ simulated state WeaponSprinting
     }
 }
 
-// Modified to allow same InventoryGroup items (grenades + satchels are on same inventory group)
+// Modified to allow same InventoryGroup items (frag grenades are on same inventory group) (satchel shares slot with shovel/wirecutters too)
 function bool HandlePickupQuery(Pickup Item)
 {
     local int i;
@@ -492,6 +492,11 @@ function bool HandlePickupQuery(Pickup Item)
 function bool IsGrenade()
 {
     return true;
+}
+
+function int GetNumberOfDroppedPickups()
+{
+    return AmmoAmount(0);
 }
 
 defaultproperties

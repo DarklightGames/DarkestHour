@@ -23,7 +23,8 @@ Red Orchestra.app
 /Sounds/
 /StaticMeshes/
 /Textures/
-/Web/
+/Web/images
+/Web/ServerAdmin
 AHZ_ROVehicles/
 CC/
 Core/
@@ -102,3 +103,4 @@ XWebAdmin/
 /DarkestHourDev/Maps/Archive/
 */UCPP
 UserLogs
+*.rus

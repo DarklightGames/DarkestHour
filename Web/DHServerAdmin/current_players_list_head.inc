@@ -1,0 +1,1 @@
+<td>&nbsp;<%HeadTitle%>&nbsp;</td>

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 // Implementation is based on minimal-json (github.com/ralfstx/minimal-json)
 //==============================================================================
@@ -45,6 +45,48 @@ static function JSONLiteral Create(string Value)
     return L;
 }
 
+static function JSONLiteral CreateNull()
+{
+    local JSONLiteral L;
+
+    L = new class'JSONLiteral';
+    L.Type = JLT_Null;
+
+    return L;
+}
+
+static function JSONLiteral CreateBoolean(bool Value)
+{
+    if (Value)
+    {
+        return CreateTrue();
+    }
+    else
+    {
+        return CreateFalse();
+    }
+}
+
+static function JSONLiteral CreateTrue()
+{
+    local JSONLiteral L;
+
+    L = new class'JSONLiteral';
+    L.Type = JLT_True;
+
+    return L;
+}
+
+static function JSONLiteral CreateFalse()
+{
+    local JSONLiteral L;
+
+    L = new class'JSONLiteral';
+    L.Type = JLT_False;
+
+    return L;
+}
+
 function bool IsNull()
 {
     return Type == JLT_Null;
@@ -78,3 +120,4 @@ function string Encode()
             return NULL_STRING;
     }
 }
+

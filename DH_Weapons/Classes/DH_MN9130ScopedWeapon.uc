@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_MN9130ScopedWeapon extends DHBoltSniperWeapon;
-
-#exec OBJ LOAD FILE=..\Animations\Allies_Nagantscope_1st.ukx
+class DH_MN9130ScopedWeapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
@@ -19,12 +17,32 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
+    bHasScope=true
+    bIsSniper=true
     ScopeOverlay=Texture'DH_Weapon_tex.Scopes.USSR_PU_Scope_Overlay'
+
+    ScopeOverlaySize=0.7 // size of the scope overlay (1.0 means full screen width, 0.5 means half screen width, etc)
+    DisplayFOV=70.0         // idk
+
     IronSightDisplayFOV=40.0
-    PlayerFOVZoom=24.0
-    ScopePortalFOV=7.0 // 3.5x
-    ZoomOutTime=0.35
+    IronSightDisplayFOVHigh=40.0
+
+    PlayerFOVZoom=24.0 // 3.5x // The PlayerFOV the player's FOV will change too when using scoped weapons
+    ScopePortalFOV=7.0
+    ScopePortalFOVHigh=7.0
+    LensMaterialID=5
 
     InitialNumPrimaryMags=10
     MaxNumPrimaryMags=10
+
+    bUsesIronsightFOV=false
+
+    IronBringUp="Scope_in"
+    IronPutDown="Scope_out"
+    IronIdleAnim="Scope_Idle"
+    BoltIronAnim="scope_bolt"
+    BoltHipAnim="bolt_scope"
+    PreReloadAnim="single_open"
+    SingleReloadAnim="single_insert"
+    PostReloadAnim="single_close"
 }

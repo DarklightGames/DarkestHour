@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_PanzerFaustWeapon extends DHRocketWeapon;
-
-#exec OBJ LOAD FILE=..\Animations\Axis_Panzerfaust_1st.ukx
 
 // Modified to revert to Super from DHWeapon, as faust is a one-shot weapon
 function DropFrom(vector StartLocation)

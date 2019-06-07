@@ -1,10 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_HigginsBoat extends DHBoatVehicle;
 
+#exec OBJ LOAD FILE=..\Sounds\DH_AlliedVehicleSounds.uax
 #exec OBJ LOAD FILE=..\Animations\DH_HigginsBoat_anm.ukx
 #exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
 
@@ -395,6 +396,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=-6.0)
         WheelRadius=30.0
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_HigginsBoat.LFWheel'
     Begin Object Class=SVehicleWheel Name=RFWheel
@@ -413,6 +415,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=-6.0)
         WheelRadius=30.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_HigginsBoat.LRWheel'
     Begin Object Class=SVehicleWheel Name=RRWheel

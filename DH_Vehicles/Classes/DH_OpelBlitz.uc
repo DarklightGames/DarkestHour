@@ -1,21 +1,19 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_OpelBlitz extends DHVehicle
     abstract;
-
-#exec OBJ LOAD FILE=..\Animations\DH_OpelBlitz_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx
 
 defaultproperties
 {
     // Vehicle properties
     VehicleNameString="Opel Blitz"
     VehicleMass=3.0
-    ReinforcementCost=3
+    ReinforcementCost=2
     MaxDesireability=0.12
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_OpelBlitz_anm.OpelBlitz_body_ext'
@@ -60,8 +58,8 @@ defaultproperties
     // Damage
     Health=2000
     HealthMax=2000.0
-    DamagedEffectHealthFireFactor=0.75
-    EngineHealth=30
+    DamagedEffectHealthFireFactor=0.9
+    EngineHealth=20
     VehHitpoints(0)=(PointRadius=32.0,PointScale=1.0,PointBone="Engine",PointOffset=(X=16.0,Y=0.0,Z=0.0),bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
     VehHitpoints(1)=(PointRadius=24.0,PointScale=1.0,PointBone="Wheel_FR",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     VehHitpoints(2)=(PointRadius=24.0,PointScale=1.0,PointBone="Wheel_FL",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
@@ -70,7 +68,6 @@ defaultproperties
     EngineDamageFromGrenadeModifier=0.15
     DirectHEImpactDamageMult=9.0
     ImpactWorldDamageMult=1.0
-    HeavyEngineDamageThreshold=0.33
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=115.0,Y=0.0,Z=70.0)
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Trucks.OpelBlitz_dest'
@@ -121,6 +118,7 @@ defaultproperties
         WheelRadius=25.0
         SupportBoneName="Axle_F_L"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_OpelBlitz.LFWheel'
     Begin Object Class=SVehicleWheel Name=RRWheel
@@ -141,6 +139,7 @@ defaultproperties
         WheelRadius=26.0
         SupportBoneName="Axle_R_L"
         SupportBoneAxis=AXIS_Z
+        bLeftTrack=true
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_OpelBlitz.LRWheel'
 

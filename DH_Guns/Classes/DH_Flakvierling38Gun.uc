@@ -1,13 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_Flakvierling38Gun extends DHATGun;
-
-#exec OBJ LOAD FILE=..\Animations\DH_Flak38_anm.ukx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Artillery_stc.usx
-#exec OBJ LOAD FILE=..\Textures\DH_Artillery_tex.utx
 
 defaultproperties
 {
@@ -21,4 +17,5 @@ defaultproperties
     VehicleHudTurretLook=TexRotator'DH_Artillery_tex.ATGun_Hud.flakv38_turret_look'
     ExitPositions(1)=(X=-100.0,Y=40.0,Z=50.0)  // right of seat
     ExitPositions(2)=(X=-100.0,Y=-40.0,Z=50.0) // left
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_StaticAA'
 }

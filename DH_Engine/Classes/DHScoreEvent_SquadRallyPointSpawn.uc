@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHScoreEvent_SquadRallyPointSpawn extends DHScoreEvent;
@@ -14,7 +14,7 @@ defaultproperties
 {
     HumanReadableName="Squad Rally Point Spawn"
     CategoryClass=class'DHScoreCategory_Support'
-    Value=50
+    Value=25
     LimitPerDuration=10
 }
 

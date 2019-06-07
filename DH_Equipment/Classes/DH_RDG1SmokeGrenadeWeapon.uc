@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_RDG1SmokeGrenadeWeapon extends DHExplosiveWeapon;
@@ -15,5 +15,7 @@ defaultproperties
     Mesh=SkeletalMesh'Allies_RGD1_1st.RGD1_mesh'
     PutDownAnim="putaway"
 
-    GroupOffset=6
+    InventoryGroup=4
+    GroupOffset=1
+    Priority=2
 }

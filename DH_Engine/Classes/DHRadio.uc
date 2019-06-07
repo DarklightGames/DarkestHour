@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHRadio extends Actor;
@@ -181,6 +181,16 @@ function RequestArtillery(Pawn Sender, int ArtilleryTypeIndex)
     Request.Location = PC.SavedArtilleryCoords;
 
     GotoState('Requesting');
+}
+
+simulated function Destroyed()
+{
+    super.Destroyed();
+
+    if (Request != none)
+    {
+        Request.Sender = none;
+    }
 }
 
 auto state Idle

@@ -1,13 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_Sdkfz2341ArmoredCar extends DHArmoredVehicle;
-
-#exec OBJ LOAD FILE=..\Animations\DH_Sdkfz234ArmoredCar_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex6.utx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc3.usx
 
 defaultproperties
 {
@@ -17,7 +13,7 @@ defaultproperties
     bHasTreads=false
     bSpecialTankTurning=false
     VehicleMass=5.0
-    ReinforcementCost=6
+    ReinforcementCost=3
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Sdkfz234ArmoredCar_anm.Sdkfz234_body_ext'
@@ -84,7 +80,6 @@ defaultproperties
     Health=300
     HealthMax=300.0
     EngineHealth=100
-    HeavyEngineDamageThreshold=0.25
     VehHitpoints(0)=(PointOffset=(X=-150.0,Z=52.0)) // engine
     VehHitpoints(1)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=30.0,Y=-30.0,Z=52.0),DamageMultiplier=3.0,HitPointType=HP_AmmoStore)
     DamagedEffectScale=0.8
@@ -152,6 +147,7 @@ defaultproperties
         WheelRadius=32.0
         SupportBoneName="Axel_LF"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.LFWheel'
     Begin Object Class=SVehicleWheel Name=MFRWheel
@@ -172,6 +168,7 @@ defaultproperties
         WheelRadius=32.0
         SupportBoneName="Axel_L_1"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.MFLWheel'
     Begin Object Class=SVehicleWheel Name=MRRWheel
@@ -192,6 +189,7 @@ defaultproperties
         WheelRadius=32.0
         SupportBoneName="Axel_R_2"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.MRLWheel'
     Begin Object Class=SVehicleWheel Name=RRWheel
@@ -212,6 +210,7 @@ defaultproperties
         WheelRadius=32.0
         SupportBoneName="Axel_LR"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(7)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.RLWheel'
 

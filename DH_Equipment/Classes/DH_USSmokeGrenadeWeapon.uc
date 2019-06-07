@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_USSmokeGrenadeWeapon extends DHExplosiveWeapon;
@@ -12,7 +12,13 @@ defaultproperties
     PickupClass=class'DH_Equipment.DH_USSmokeGrenadePickup'
     AttachmentClass=class'DH_Equipment.DH_USSmokeGrenadeAttachment'
     ItemName="M8 Smoke Grenade"
-    Mesh=SkeletalMesh'DH_USSmokeGrenade_1st.smokegrenade'
+    Mesh=SkeletalMesh'DH_M8Grenade_1st.M8'
 
-    GroupOffset=7
+    HandNum=0
+    SleeveNum=2
+
+    InventoryGroup=4
+    GroupOffset=2
+    Priority=2
 }
+

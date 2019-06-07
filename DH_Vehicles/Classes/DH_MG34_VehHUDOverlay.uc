@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_MG34_VehHUDOverlay extends VehicleHUDOverlay;
-
-#exec OBJ LOAD FILE=..\Animations\Axis_Mg34_1st.ukx
 
 defaultproperties
 {

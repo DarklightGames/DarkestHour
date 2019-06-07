@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_Sdkfz2341CannonShellHE extends DHCannonShellHE;
@@ -34,7 +34,7 @@ defaultproperties
     BlurTime=2.0
     BlurEffectScalar=0.9
     PenetrationMag=110.0
-    ShellImpactDamage=class'DH_Vehicles.DH_Sdkfz2341CannonShellDamageAP'
+    ShellImpactDamage=class'DH_Vehicles.DH_Sdkfz2341CannonShellDamageHE'
     ImpactDamage=125
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
     ShellHitDirtEffectClass=class'ROEffects.GrenadeExplosion'

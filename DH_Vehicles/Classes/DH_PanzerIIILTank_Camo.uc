@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_PanzerIIILTank_Camo extends DH_PanzerIIILTank;
-
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx
 
 defaultproperties
 {

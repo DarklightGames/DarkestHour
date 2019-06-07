@@ -1,12 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_CromwellTank extends DHArmoredVehicle;
-
-#exec OBJ LOAD FILE=..\Animations\DH_Cromwell_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUK_tex.utx
 
 // Modified to adjust size/proportions of texture overlay to match driver's glass vision block
 simulated function DrawPeriscopeOverlay(Canvas C)
@@ -24,7 +21,7 @@ defaultproperties
     VehicleNameString="Cromwell Mk.IV"
     VehicleTeam=1
     VehicleMass=13.0
-    ReinforcementCost=8
+    ReinforcementCost=4
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Cromwell_anm.Cromwell_body_ext'
@@ -164,6 +161,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=35.0,Y=-10.0,Z=2.0)
         WheelRadius=33.0
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_CromwellTank.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -182,6 +180,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=-12.0,Y=-10.0,Z=2.0)
         WheelRadius=33.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_CromwellTank.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -199,6 +198,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(Y=10.0,Z=2.0)
         WheelRadius=33.0
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_CromwellTank.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel

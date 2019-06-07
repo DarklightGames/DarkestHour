@@ -1,26 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_Winchester1897Weapon extends DHBoltSniperWeapon;
-
-#exec OBJ LOAD FILE=..\Animations\DH_Winchester1897_1st.ukx
-
-// This obviously isn't a bolt-action sniper rifle, but extending DHBoltSniperWeapon gives us most of the functionality we need:
-// 1) The pump action after firing is equivalent to bolting a rifle, i.e. a 2nd 'fire' press is required to work the post-fire action
-// 2) The shotgun is loaded one round at a time & reload can be interrupted by again pressing fire (just like a bolt sniper rifle)
-// We just have to neutralise the inherited scope functionality, which is easy
-
-// Empty out or revert unwanted inherited functions from DHSniperWeapon class:
-simulated function PostBeginPlay() { super(DHProjectileWeapon).PostBeginPlay(); }
-simulated function Destroyed() { super(DHProjectileWeapon).Destroyed(); }
-simulated event RenderOverlays(Canvas Canvas) { super(DHProjectileWeapon).RenderOverlays(Canvas); }
-simulated event RenderTexture(ScriptedTexture Tex);
-simulated function bool ShouldDrawPortal() { return false; }
-simulated function UpdateScopeMode();
-simulated function PreTravelCleanUp();
-simulated function ClearScopeObjects();
+class DH_Winchester1897Weapon extends DHBoltActionWeapon;
 
 defaultproperties
 {

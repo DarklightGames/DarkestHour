@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_PTRDWeapon extends DHBipodWeapon;
-
-#exec OBJ LOAD FILE=..\Animations\Allies_Ptrd_1st.ukx
 
 // Modified so can't reload unless empty
 simulated function bool AllowReload()

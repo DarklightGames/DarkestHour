@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_RPG43GrenadeProjectile extends DHCannonShellHEAT;
@@ -247,7 +247,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
                     {
                         // We hit top armor and at the right angle
                         bFailedToPenetrate = false;
-                        ImpactDamageMultiplier = 2.0;
+                        ImpactDamageMultiplier = 3.0;
                     }
                 }
 
@@ -271,7 +271,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     }
 
     // Check & record whether we hit a world object we can penetrate
-    if (Wall != none && (Wall.bStatic || Wall.bWorldGeometry) && !Wall.IsA('RODestroyableStaticMesh') && !Wall.IsA('Mover'))
+    if (Wall != none && (Wall.bStatic || Wall.bWorldGeometry) && !Wall.bCanBeDamaged)
     {
         bHitWorldObject = true;
     }
@@ -280,7 +280,7 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     {
         if (!bHitWorldObject)
         {
-            if (SavedHitActor != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
+            if (SavedHitActor != none || Wall.bCanBeDamaged)
             {
                 if (ShouldDrawDebugLines())
                 {
@@ -519,8 +519,8 @@ defaultproperties
     DHPenetrationTable(10)=7.5
 
     // Damage
-    ImpactDamage=250
-    Damage=200.0
+    ImpactDamage=200
+    Damage=180.0
     DamageRadius=180.0
     ShellImpactDamage=class'DH_Weapons.DH_RPG43GrenadeImpactDamType'
     MyDamageType=class'DH_Weapons.DH_RPG43GrenadeDamType'

@@ -1,13 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_GreyhoundArmoredCar extends DHArmoredVehicle;
-
-#exec OBJ LOAD FILE=..\Animations\DH_Greyhound_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex4.utx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc3.usx
 
 defaultproperties
 {
@@ -17,8 +13,8 @@ defaultproperties
     bIsApc=true
     bHasTreads=false
     bSpecialTankTurning=false
-    VehicleMass=5.0
-    ReinforcementCost=5
+    VehicleMass=8.0
+    ReinforcementCost=4
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Greyhound_anm.Greyhound_body_ext'
@@ -74,7 +70,6 @@ defaultproperties
     Health=300
     HealthMax=300.0
     EngineHealth=100
-    HeavyEngineDamageThreshold=0.25
     VehHitpoints(0)=(PointBone="Engine",PointOffset=(Z=-10.0)) // engine
     DamagedEffectScale=0.75
     DamagedEffectOffset=(X=-130.0,Y=0.0,Z=100.0)
@@ -137,6 +132,7 @@ defaultproperties
         BoneOffset=(Y=-11.0)
         SupportBoneName="axel_F_L"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_GreyhoundArmoredCar.LFWheel'
     Begin Object Class=SVehicleWheel Name=MRWheel
@@ -155,6 +151,7 @@ defaultproperties
         BoneOffset=(Y=-11.0)
         SupportBoneName="axel_M_L"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_GreyhoundArmoredCar.MLWheel'
     Begin Object Class=SVehicleWheel Name=RRWheel
@@ -173,6 +170,7 @@ defaultproperties
         BoneOffset=(Y=-11.0)
         SupportBoneName="axel_R_L"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_GreyhoundArmoredCar.LRWheel'
 

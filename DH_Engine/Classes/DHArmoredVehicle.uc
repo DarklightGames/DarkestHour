@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHArmoredVehicle extends DHVehicle
@@ -615,13 +615,6 @@ function UpdateVehicleLockOnPlayerEntering(Vehicle EntryPosition)
 
     if (bVehicleLocked)
     {
-        // If player isn't registered as allowed crew, but was allowed to enter entered a locked crew position, then register him as allowed crew
-        // This can happen if he was allowed in because he's in same squad as one of the allowed crew
-        if (bEnteredTankCrewPosition && !IsAnAllowedCrewman(Player))
-        {
-            Player.SetCrewedLockedVehicle(self);
-        }
-
         // If an allowed crewman just entered (any vehicle position), cancel any unlock timer that's been set
         if (IsAnAllowedCrewman(Player))
         {
@@ -759,13 +752,8 @@ simulated function bool CanPlayerLockVehicle(Vehicle PlayersVehiclePosition)
         LI = PC.GetLevelInfo();
     }
 
-    // Not if the map has been set to disallow tank locking
-    if (LI != none && LI.bDisableTankLocking)
-    {
-        FailMessageNumber = 24; // this map doesn't allow vehicles to be locked
-    }
     // Not if this armored vehicle isn't for tank crew only (very unlikely for an armored vehicle, but possible - perhaps for a scenario map)
-    else if (!bMustBeTankCommander)
+    if (!bMustBeTankCommander)
     {
         FailMessageNumber = 25; // can't lock vehicle as it can be driven by non-tank crew roles
     }
@@ -807,13 +795,9 @@ simulated function bool CanPlayerLockVehicle(Vehicle PlayersVehiclePosition)
 
 // Implemented here to check whether a player is prevented from entering a tank crew position in an armored vehicle that has been locked
 // If vehicle is locked, entry is allowed if player is registered as an 'allowed' crewman, i.e. they were in it when it was locked
-// Also allowed if player is in the same squad as one of the allowed crew in the vehicle
 // Displays a screen message if player isn't allowed in, unless that is flagged to be avoided
 function bool AreCrewPositionsLockedForPlayer(Pawn P, optional bool bNoMessageToPlayer)
 {
-    local DHPlayerReplicationInfo EnteringPlayerPRI;
-    local int                     i;
-
     if (bVehicleLocked && P != none)
     {
         // Player is one of the allowed crew, so allow him in
@@ -822,30 +806,7 @@ function bool AreCrewPositionsLockedForPlayer(Pawn P, optional bool bNoMessageTo
             return false;
         }
 
-        EnteringPlayerPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
-
-        // Player is in a squad, so check whether he's in the same squad as one of the allowed crew present in the vehicle - if he is, allow him in
-        if (EnteringPlayerPRI != none && EnteringPlayerPRI.IsInSquad())
-        {
-            if (IsAnAllowedCrewman(Driver) && class'DHPlayerReplicationInfo'.static.IsInSameSquad(EnteringPlayerPRI, DHPlayerReplicationInfo(PlayerReplicationInfo)))
-            {
-                return false;
-            }
-            else
-            {
-                for (i = 0; i < WeaponPawns.Length; ++i)
-                {
-                    if (IsAnAllowedCrewman(WeaponPawns[i]) &&
-                        class'DHPlayerReplicationInfo'.static.IsInSameSquad(EnteringPlayerPRI, DHPlayerReplicationInfo(WeaponPawns[i].PlayerReplicationInfo)))
-                    {
-                        return false;
-
-                    }
-                }
-            }
-        }
-
-        // PLayer is locked out of this vehicle's crew positions, so display screen message to notify him (unless flagged not to show message)
+        // Player is locked out of this vehicle's crew positions, so display screen message to notify him (unless flagged not to show message)
         if (!bNoMessageToPlayer)
         {
             DisplayVehicleMessage(22, P); // this vehicle has been locked by its crew
@@ -881,7 +842,7 @@ function StartHullFire(Pawn InstigatedBy)
 
     if (bDebuggingText)
     {
-        Level.Game.Broadcast(self, "Vehicle set on fire");
+        Log("Vehicle set on fire");
     }
 
     // Record the player responsible for starting fire, so score can be awarded later if results in a kill
@@ -916,7 +877,7 @@ function StartEngineFire(Pawn InstigatedBy)
 
     if (bDebuggingText)
     {
-        Level.Game.Broadcast(self, "Engine set on fire");
+        Log("Engine set on fire");
     }
 
     // Record the player responsible for starting fire, so score can be awarded later if results in a kill
@@ -1179,7 +1140,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
 
         if ((bDebugPenetration || class'DH_LevelInfo'.static.DHDebugMode()) && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, "ERROR: hull angles not set up correctly for" @ VehicleNameString @ "(took hit from" @ HitLocationAngle @ "degrees & couldn't resolve which side that was");
+            Log("ERROR: hull angles not set up correctly for" @ VehicleNameString @ "(took hit from" @ HitLocationAngle @ "degrees & couldn't resolve which side that was");
         }
 
         ResetTakeDamageVariables();
@@ -1207,7 +1168,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
 
             if ((bDebugPenetration || class'DH_LevelInfo'.static.DHDebugMode()) && Role == ROLE_Authority)
             {
-                Level.Game.Broadcast(self, "Hit detection bug - switching from" @ HitSide @ "to" @ OppositeSide
+                Log("Hit detection bug - switching from" @ HitSide @ "to" @ OppositeSide
                     @ "as angle of incidence to original side was" @ int(Round(AngleOfIncidence)) @ "degrees");
             }
 
@@ -1238,7 +1199,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
 
             if (bDebugPenetration && Role == ROLE_Authority)
             {
-                Level.Game.Broadcast(self, "Hit hull" @ HitSide $ ": no penetration as extra side armor stops HEAT projectiles");
+                Log("Hit hull" @ HitSide $ ": no penetration as extra side armor stops HEAT projectiles");
             }
 
             ResetTakeDamageVariables();
@@ -1323,8 +1284,8 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
         {
             if (Role == ROLE_Authority)
             {
-                Level.Game.Broadcast(self, DebugString1);
-                Level.Game.Broadcast(self, DebugString2);
+                Log(DebugString1);
+                Log(DebugString2);
             }
 
             if (Level.NetMode != NM_DedicatedServer)
@@ -1641,7 +1602,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 {
                     if (bDebuggingText)
                     {
-                        Level.Game.Broadcast(self, "Hit vehicle engine");
+                        Log("Hit vehicle engine");
                     }
 
                     DamageEngine(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
@@ -1662,7 +1623,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     {
                         if (bDebuggingText)
                         {
-                            Level.Game.Broadcast(self, "Hit vehicle ammo store - exploded");
+                            Log("Hit vehicle ammo store - exploded");
                         }
 
                         Damage *= Health;
@@ -1674,7 +1635,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     {
                         if (bDebuggingText)
                         {
-                            Level.Game.Broadcast(self, "Hit vehicle ammo store but did not explode");
+                            Log("Hit vehicle ammo store but did not explode");
                         }
 
                         HullFireChance = FMax(0.75, HullFireChance);
@@ -1714,7 +1675,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     {
                         if (bDebuggingText)
                         {
-                            Level.Game.Broadcast(self, "Hit gunsight optics");
+                            Log("Hit gunsight optics");
                         }
 
                         CannonPawn.DamageCannonOverlay();
@@ -1726,7 +1687,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                         {
                             if (bDebuggingText)
                             {
-                                Level.Game.Broadcast(self, "Hit gun/turret traverse");
+                                Log("Hit gun/turret traverse");
                             }
 
                             CannonPawn.bTurretRingDamaged = true;
@@ -1736,7 +1697,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                         {
                             if (bDebuggingText)
                             {
-                                Level.Game.Broadcast(self, "Hit gun pivot");
+                                Log("Hit gun pivot");
                             }
 
                             CannonPawn.bGunPivotDamaged = true;
@@ -1778,7 +1739,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     {
                         if (bDebuggingText)
                         {
-                            Level.Game.Broadcast(self, "Commander killed by shrapnel");
+                            Log("Commander killed by shrapnel");
                         }
 
                         CannonPawn.Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
@@ -1789,7 +1750,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     {
                         if (bDebuggingText)
                         {
-                            Level.Game.Broadcast(self, "Gunsight optics destroyed by shrapnel");
+                            Log("Gunsight optics destroyed by shrapnel");
                         }
 
                         CannonPawn.DamageCannonOverlay();
@@ -1800,7 +1761,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     {
                         if (bDebuggingText)
                         {
-                            Level.Game.Broadcast(self, "Gun pivot damaged by shrapnel");
+                            Log("Gun pivot damaged by shrapnel");
                         }
 
                         CannonPawn.bGunPivotDamaged = true;
@@ -1811,7 +1772,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                     {
                         if (bDebuggingText)
                         {
-                            Level.Game.Broadcast(self, "Gun/turret traverse damaged by shrapnel");
+                            Log("Gun/turret traverse damaged by shrapnel");
                         }
 
                         CannonPawn.bTurretRingDamaged = true;
@@ -1824,7 +1785,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             {
                 if (bDebuggingText)
                 {
-                    Level.Game.Broadcast(self, "Turret ammo detonated by shrapnel");
+                    Log("Turret ammo detonated by shrapnel");
                 }
 
                 Damage *= Health;
@@ -1838,7 +1799,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 {
                     if (bDebuggingText)
                     {
-                        Level.Game.Broadcast(self, "Driver killed by shrapnel");
+                        Log("Driver killed by shrapnel");
                     }
 
                     Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
@@ -1849,7 +1810,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 {
                     if (bDebuggingText)
                     {
-                        Level.Game.Broadcast(self, "Hull gunner killed by shrapnel");
+                        Log("Hull gunner killed by shrapnel");
                     }
 
                     MGun.WeaponPawn.Driver.TakeDamage(150, InstigatedBy, Location, vect(0.0, 0.0, 0.0), DamageType);
@@ -1862,6 +1823,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         {
             CheckTreadDamage(HitLocation, Momentum);
         }
+    }
+
+    if (bDebuggingText)
+    {
+        Log("Damaging vehicle with:" @ Damage);
     }
 
     // Call the Super from Vehicle (skip over others)
@@ -1918,6 +1884,11 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
             Damage = Level.Game.ReduceDamage(Damage, self, InstigatedBy, HitLocation, Momentum, DamageType);
         }
 
+        if (bDebuggingText)
+        {
+            Log("Damaging engine with a damage of:" @ Damage);
+        }
+
         EngineHealth -= Damage;
     }
 
@@ -1926,7 +1897,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
     {
         if (bDebuggingText)
         {
-            Level.Game.Broadcast(self, "Engine is dead");
+            Log("Engine is dead");
         }
 
         if (!bEngineOff)
@@ -1944,7 +1915,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
         {
             if (bDebuggingText)
             {
-                Level.Game.Broadcast(self, "Engine fire started");
+                Log("Engine fire started");
             }
 
             StartEngineFire(InstigatedBy);
@@ -1994,7 +1965,7 @@ function TakeFireDamage()
         {
             if (bDebuggingText)
             {
-                Level.Game.Broadcast(self, "Fire detonated ammo");
+                Log("Fire detonated ammo");
             }
 
             TakeDamage(Health, PawnWhoSetOnFire, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), VehicleBurningDamType);
@@ -2297,6 +2268,8 @@ defaultproperties
     EngineRestartFailChance=0.1
     MinRunOverSpeed=83.82 // decreased to 5 kph, as players should be easier to run over with armored vehicles
     PointValue=1000
+    WeaponLockTimeForTK=30
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle_Armored'
 
     // Driver & positions
     bMustBeTankCommander=true

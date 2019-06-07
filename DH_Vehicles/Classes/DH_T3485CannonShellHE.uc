@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_T3485CannonShellHE extends DHCannonShellHE;
@@ -15,7 +15,6 @@ defaultproperties
     Damage=430.0
     DamageRadius=1300.0
     ImpactDamage=510
-    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
     PenetrationMag=1000.0
     Tag="O-365"
     bDebugInImperial=false

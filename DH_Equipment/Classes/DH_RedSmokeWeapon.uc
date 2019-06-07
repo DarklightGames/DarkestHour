@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_RedSmokeWeapon extends DHExplosiveWeapon;
@@ -30,5 +30,7 @@ defaultproperties
     PickupClass=class'DH_Equipment.DH_RedSmokePickup'
     Mesh=SkeletalMesh'DH_USSmokeGrenade_1st.RedSmokeGrenade'
 
-    GroupOffset=9
+    InventoryGroup=4
+    GroupOffset=3
+    Priority=1
 }

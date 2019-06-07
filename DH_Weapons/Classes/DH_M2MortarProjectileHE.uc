@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_M2MortarProjectileHE extends DHMortarProjectileHE;
-
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Mortars_stc.usx
 
 defaultproperties
 {

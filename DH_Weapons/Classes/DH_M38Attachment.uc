@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_M38Attachment extends DHWeaponAttachment;
@@ -16,9 +16,12 @@ defaultproperties
 
     WA_Idle="idle_nagant9138"
     WA_Fire="idle_nagant9138"
-    WA_Reload="stand_reload_nagant9138"
-    WA_ProneReload="prone_reload_nagant9138"
-    WA_WorkBolt="bolt_nagant9138"
+    WA_Reload="idle_nagant9138"
+    WA_ProneReload="idle_nagant9138"
+    WA_ReloadEmpty="stand_reload_nagant9138"
+    WA_ProneReloadEmpty="prone_reload_nagant9138"
+    WA_PostReload="close_nagant9138"
+    WA_WorkBolt="Bolt_nagant9138"
 
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
@@ -85,9 +88,14 @@ defaultproperties
     PA_IdleIronRestAnim="stand_idleiron_kar"
     PA_IdleIronWeaponAnim="stand_idleiron_kar"
     PA_IdleCrouchIronWeaponAnim="crouch_idleiron_kar"
-    PA_ReloadAnim="stand_reload_kar"
+    PA_ReloadAnim="stand_insert_karscope"
     PA_ReloadEmptyAnim="stand_reload_kar"
+    PA_ProneReloadAnim="prone_insert_karscope"
     PA_ProneReloadEmptyAnim="prone_reload_kar"
+    PA_PreReloadAnim="stand_open_karscope"
+    PA_PostReloadAnim="stand_close_karscope"
+    PA_PronePreReloadAnim="prone_open_karscope"
+    PA_PronePostReloadAnim="prone_close_karscope"
     PA_Fire="stand_shoothip_kar"
     PA_IronFire="stand_shootiron_kar"
     PA_CrouchFire="crouch_shoot_kar"

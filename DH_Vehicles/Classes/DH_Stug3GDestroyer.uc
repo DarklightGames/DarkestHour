@@ -1,19 +1,16 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_Stug3GDestroyer extends DHArmoredVehicle; // earlier version without remote-controlled MG & with boxy mantlet
-
-#exec OBJ LOAD FILE=..\Animations\DH_Stug3G_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx
 
 defaultproperties
 {
     // Vehicle properties
     VehicleNameString="StuG III Ausf.G"
     VehicleMass=12.0
-    ReinforcementCost=9
+    ReinforcementCost=4
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Stug3G_anm.Stug3g_body_ext'
@@ -156,6 +153,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=35.0,Y=-5.0,Z=6.0)
         WheelRadius=30.0
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_Stug3GDestroyer.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -174,6 +172,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=-7.0,Y=-5.0,Z=6.0)
         WheelRadius=30.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_Stug3GDestroyer.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -191,6 +190,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=6.0)
         WheelRadius=30.0
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_Stug3GDestroyer.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel

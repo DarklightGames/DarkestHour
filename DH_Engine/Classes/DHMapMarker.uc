@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHMapMarker extends Object
@@ -16,6 +16,8 @@ var int                 LifetimeSeconds;        // Lifetime, in seconds, of the 
 var int                 GroupIndex;             // Used for grouping map markers (e.g. in the context menu when placing them).
 var bool                bShouldOverwriteGroup;  // If true, adding this map marker will overwrite any existing markers that are in the same group.
 var bool                bIsUnique;              // If true, only one of this type may be active for the team or squad (if squad specific)
+var bool                bShouldDrawBeeLine;     // If true, draw a line from the player to this marker on the situation map.
+var bool                bIsPersonal;
 
 // Override this function to determine if this map marker can be used. This
 // function evaluated once at the beginning of the map.
@@ -31,8 +33,50 @@ static function bool CanPlayerUse(DHPlayerReplicationInfo PRI)
     return false;
 }
 
+static function color GetBeeLineColor()
+{
+    return default.IconColor;
+}
+
 // Override to run specific logic when this marker is placed.
 static function OnMapMarkerPlaced(DHPlayer PC);
+
+// Override these 2 functions to determine how the marker should be handled when
+// added/removed.
+static function AddMarker(DHPlayer PC, float MapLocationX, float MapLocationY)
+{
+    if (default.bIsPersonal)
+    {
+        PC.AddPersonalMarker(default.Class, MapLocationX, MapLocationY);
+    }
+    else
+    {
+        PC.ServerAddMapMarker(default.Class, MapLocationX, MapLocationY);
+    }
+}
+
+static function RemoveMarker(DHPlayer PC, optional int Index)
+{
+    if (Index < 0)
+    {
+        return;
+    }
+
+    if (default.bIsPersonal)
+    {
+        PC.RemovePersonalMarker(Index);
+    }
+    else
+    {
+        PC.ServerRemoveMapMarker(Index);
+    }
+}
+
+// Override this to have a caption accompany the marker.
+static function string GetCaptionString(DHPlayer PC, vector WorldLocation)
+{
+    return "";
+}
 
 defaultproperties
 {
@@ -40,4 +84,3 @@ defaultproperties
     LifetimeSeconds=-1
     GroupIndex=-1
 }
-

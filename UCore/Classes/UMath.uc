@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class UMath extends Object
@@ -23,4 +23,15 @@ static final function float FSign(float F)
     }
 
     return -1.0;
+}
+
+// Swaps 0 and 1
+static final function byte SwapFirstPair(byte Num)
+{
+    if (Num < 2)
+    {
+        return Num ^ 1;
+    }
+
+    return Num;
 }

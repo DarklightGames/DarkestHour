@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_Sdkfz251Transport extends DHVehicle;
@@ -15,11 +15,10 @@ defaultproperties
     bIsApc=true
     bHasTreads=true
     VehicleMass=8.5
-    IdleTimeBeforeReset=300.0
-    ReinforcementCost=4
+    ReinforcementCost=3
     MaxDesireability=1.2
-    bMustBeInSquadToSpawn=true
     PointValue=500
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_ext'
@@ -56,20 +55,24 @@ defaultproperties
     // Movement & physics wheels properties
     MaxCriticalSpeed=838.22 // 50 kph
     GearRatios(0)=-0.3
-    GearRatios(3)=0.55
-    GearRatios(4)=1.15
-    TorqueCurve=(Points=((InVal=0.0,OutVal=24.0),(InVal=200.0,OutVal=12.0),(InVal=600.0,OutVal=5.0),(InVal=1200.0,OutVal=2.0),(InVal=2000.0,OutVal=0.5)))
-    SteerSpeed=64.0
+    GearRatios(1)=0.3
+    GearRatios(2)=0.5
+    GearRatios(3)=0.7
+    GearRatios(4)=0.9
+    TorqueCurve=(Points=((InVal=0.0,OutVal=16.0),(InVal=200.0,OutVal=8.0),(InVal=600.0,OutVal=5.0),(InVal=1200.0,OutVal=2.0),(InVal=2000.0,OutVal=0.5)))
+    SteerSpeed=85.0
     MaxSteerAngleCurve=(Points=((InVal=0.0,OutVal=64.0),(InVal=200.0,OutVal=32.0),(InVal=600.0,OutVal=5.0),(InVal=1000000000.0,OutVal=0.0)))
 
     // Physics wheels properties
-    WheelLongFrictionFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.2),(InVal=600.0,OutVal=0.001),(InVal=10000000000.0,OutVal=0.0)))
+    WheelLongFrictionScale=1.25
+    WheelLongFrictionFunc=(Points=(,(InVal=100.0,OutVal=1.0),(InVal=200.0,OutVal=0.9),(InVal=10000000000.0,OutVal=0.9)))
     WheelLatSlipFunc=(Points=((InVal=0.0,OutVal=0.0),(InVal=30.0,OutVal=0.009),(InVal=45.0,OutVal=0.0),(InVal=10000000000.0,OutVal=0.0)))
+    WheelLatFrictionScale=1.5
 
     // Damage
     Health=2000
     HealthMax=2000.0
-    DamagedEffectHealthFireFactor=0.7
+    DamagedEffectHealthFireFactor=0.9
     EngineHealth=50
     VehHitpoints(0)=(PointRadius=35.0,PointOffset=(X=15.0,Y=0.0,Z=-15.0)) // engine
     VehHitpoints(1)=(PointRadius=22.0,PointScale=1.0,PointBone="Wheel_F_R",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
@@ -180,6 +183,7 @@ defaultproperties
         WheelRadius=27.5
         SupportBoneName="Axle_LF"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_Sdkfz251Transport.RFWheel'
     Begin Object Class=SVehicleWheel Name=LFWheel
@@ -197,6 +201,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=7.0)
         WheelRadius=30.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_Sdkfz251Transport.FLeft_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=FRight_Drive_Wheel
@@ -213,6 +218,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=-2.0)
         WheelRadius=30.0
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_Sdkfz251Transport.RLeft_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=RRight_Drive_Wheel

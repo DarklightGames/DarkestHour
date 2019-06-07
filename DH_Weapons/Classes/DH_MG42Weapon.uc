@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_MG42Weapon extends DHMGWeapon;
-
-#exec OBJ LOAD FILE=..\Animations\Axis_Mg42_1st.ukx
 
 // Modified so we do faster net updated when we're down to the last few rounds
 simulated function bool ConsumeAmmo(int Mode, float Load, optional bool bAmountNeededIsMax)

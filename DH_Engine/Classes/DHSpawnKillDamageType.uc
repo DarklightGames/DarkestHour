@@ -1,9 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHSpawnKillDamageType extends ROWeaponDamageType
+class DHSpawnKillDamageType extends DHInstantObituaryDamageTypes
     abstract;
 
 defaultproperties
@@ -12,6 +12,4 @@ defaultproperties
     DeathString="%o was spawn killed by %k."
     MaleSuicide="%o spawn killed himself."
     FemaleSuicide="%o spawn killed herself."
-    bLocationalHit=false
-    GibModifier=0.0
 }

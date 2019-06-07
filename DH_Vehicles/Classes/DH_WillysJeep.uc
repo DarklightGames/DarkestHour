@@ -1,23 +1,18 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_WillysJeep extends DHVehicle;
-
-#exec OBJ LOAD FILE=..\Animations\DH_WillysJeep_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex2.utx
-#exec OBJ LOAD FILE=..\Sounds\DH_AlliedVehicleSounds.uax
-#exec OBJ LOAD FILE=..\Sounds\DH_GerVehicleSounds2.uax
 
 defaultproperties
 {
     // Vehicle properties
     VehicleNameString="Willys Jeep MB"
     VehicleTeam=1
-    VehicleMass=3.5
-    ReinforcementCost=2
-    bMustBeInSquadToSpawn=true
+    VehicleMass=2.0
+    ReinforcementCost=1
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_WillysJeep_anm.jeep_body_ext'
@@ -68,8 +63,8 @@ defaultproperties
     // Damage
     Health=2000
     HealthMax=2000.0
-    DamagedEffectHealthFireFactor=0.8
-    EngineHealth=25
+    DamagedEffectHealthFireFactor=0.95
+    EngineHealth=10
     DamagedWheelSpeedFactor=0.3
     VehHitpoints(0)=(PointRadius=32.0,PointBone="body",PointOffset=(X=65.0,Y=0.0,Z=15.0),DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
     VehHitpoints(1)=(PointRadius=24.0,PointScale=1.0,PointBone="LeftFrontWheel",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
@@ -80,7 +75,6 @@ defaultproperties
     DirectHEImpactDamageMult=10.0
     ImpactDamageMult=0.5
     ImpactWorldDamageMult=0.006
-    HeavyEngineDamageThreshold=0.4
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=75.0,Y=5.0,Z=45.0)
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Jeep.WillysJeep_dest1'
@@ -132,6 +126,7 @@ defaultproperties
         WheelRadius=25.0
         SupportBoneName="RightFrontSusp00"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_WillysJeep.LFWheel'
     Begin Object Class=SVehicleWheel Name=RFWheel
@@ -154,6 +149,7 @@ defaultproperties
         WheelRadius=25.0
         SupportBoneName="LeftRearAxle"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_WillysJeep.LRWheel'
     Begin Object Class=SVehicleWheel Name=RRWheel

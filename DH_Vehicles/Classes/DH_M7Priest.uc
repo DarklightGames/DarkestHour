@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_M7Priest extends DHArmoredVehicle;
@@ -12,7 +12,7 @@ defaultproperties
     VehicleTeam=1
     VehicleMass=11.5
     MaxDesireability=0.1
-    ReinforcementCost=8
+    ReinforcementCost=5
 
     // Artillery
     bIsArtilleryVehicle=true
@@ -166,6 +166,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=0.0,Y=0.0,Z=9.0)
         WheelRadius=33.0
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_M7Priest.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -184,6 +185,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=0.0,Y=0.0,Z=9.0)
         WheelRadius=33.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_M7Priest.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -201,6 +203,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=0.0,Y=0.0,Z=9.0)
         WheelRadius=33.0
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_M7Priest.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel

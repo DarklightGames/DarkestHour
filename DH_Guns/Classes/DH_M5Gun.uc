@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_M5Gun extends DHATGun;
@@ -21,6 +21,9 @@ defaultproperties
     ShadowZOffset=20.0
     ExitPositions(1)=(X=-100.00,Y=-30.00,Z=35.00)
     VehicleMass=11.0
-    SupplyCost=1500
+    SupplyCost=1650
     ConstructionPlacementOffset=(Z=-2)
+    bCanBeRotated=true
+    PlayersNeededToRotate=2
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
 }

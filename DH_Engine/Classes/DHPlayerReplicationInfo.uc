@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHPlayerReplicationInfo extends ROPlayerReplicationInfo;
 
 // Patron status
-enum PatronStatusType
+enum EPatronTier
 {
     PATRON_None,
     PATRON_Lead,
@@ -15,7 +15,7 @@ enum PatronStatusType
     PATRON_Gold
 };
 
-var     PatronStatusType        PatronStatus;
+var     EPatronTier             PatronTier;
 var     bool                    bIsDeveloper;
 
 var     float                   NameDrawStartTime;
@@ -29,14 +29,16 @@ var     bool                    bIsSquadAssistant;
 
 // Scoring
 var     int                     TotalScore;
-var     float                   StashedScore;
 var     int                     CategoryScores[2];
+
+var     localized string        SquadLeaderAbbreviation;
+var     localized string        AssistantAbbreviation;
 
 replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        SquadIndex, SquadMemberIndex, PatronStatus, bIsDeveloper, DHKills, bIsSquadAssistant,
+        SquadIndex, SquadMemberIndex, PatronTier, bIsDeveloper, DHKills, bIsSquadAssistant,
         TotalScore, CategoryScores;
 }
 
@@ -44,11 +46,11 @@ simulated function string GetNamePrefix()
 {
     if (IsSquadLeader())
     {
-        return "SL";
+        return default.SquadLeaderAbbreviation;
     }
     else if (bIsSquadAssistant)
     {
-        return "A";
+        return default.AssistantAbbreviation;
     }
     else if (IsInSquad())
     {
@@ -78,6 +80,11 @@ simulated function bool IsInSquad()
     return Team != none && (Team.TeamIndex == AXIS_TEAM_INDEX || Team.TeamIndex == ALLIES_TEAM_INDEX) && SquadIndex != -1;
 }
 
+simulated function bool IsPatron()
+{
+    return PatronTier != PATRON_None;
+}
+
 // Will return true if passed two players that are in the same squad.
 simulated static function bool IsInSameSquad(DHPlayerReplicationInfo A, DHPlayerReplicationInfo B)
 {
@@ -92,6 +99,11 @@ simulated static function bool IsPlayerTankCrew(Pawn P)
 {
     return P != none && ROPlayerReplicationInfo(P.PlayerReplicationInfo) != none && ROPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo != none
         && ROPlayerReplicationInfo(P.PlayerReplicationInfo).RoleInfo.bCanBeTankCrew;
+}
+
+simulated static function bool IsPlayerLicensedToDrive(DHPlayer C)
+{
+    return C != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo) != none && DHPlayerReplicationInfo(C.PlayerReplicationInfo).IsSLorASL();
 }
 
 // Modified to fix bug where the last line was being drawn at top of screen, instead of in vertical sequence, so overwriting info in the 1st screen line
@@ -128,4 +140,6 @@ defaultproperties
 {
     SquadIndex=-1
     SquadMemberIndex=-1
+    SquadLeaderAbbreviation="SL"
+    AssistantAbbreviation="A"
 }

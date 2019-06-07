@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_PanzerFaustRocket extends DHRocketProjectile;
-
-#exec OBJ LOAD FILE=..\Staticmeshes\DH_Military_Axis.usx
 
 defaultproperties
 {

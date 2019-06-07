@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHSpawnPoint_Parachute extends DHSpawnPointBase;
@@ -19,13 +19,10 @@ function OnPawnSpawned(Pawn P)
     super.OnPawnSpawned(P);
 }
 
-simulated function string GetMapStyleName()
-{
-    return "DHParatroopersButtonStyle";
-}
-
 defaultproperties
 {
+    SpawnPointStyle="DHParatroopersButtonStyle"
+
     SpawnLocationOffset=(Z=10000)
     SpawnRadius=1024.0
 }

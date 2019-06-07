@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_Sdkfz2342ArmoredCar extends DH_Sdkfz2341ArmoredCar;
 
 defaultproperties
 {
-    ReinforcementCost=8
+    ReinforcementCost=4
     VehicleNameString="Sd.Kfz.234/2 Armored Car"
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_Sdkfz2342CannonPawn')
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc3.Puma.Puma_dest'

@@ -1,21 +1,16 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_JagdpanzerIVL48Destroyer extends DHArmoredVehicle;
-
-#exec OBJ LOAD FILE=..\Animations\DH_Jagdpanzer4_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex4.utx
-#exec OBJ LOAD FILE=..\Textures\axis_vehicles_tex.utx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc4.usx
 
 defaultproperties
 {
     // Vehicle properties
     VehicleNameString="Jagdpanzer IV/48"
     VehicleMass=12.0
-    ReinforcementCost=10
+    ReinforcementCost=7
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Jagdpanzer4_anm.jagdpanzer4L48_body_ext'
@@ -153,6 +148,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=35.0,Y=-5.0,Z=6.0)
         WheelRadius=29.0
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_JagdpanzerIVL48Destroyer.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -171,6 +167,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=-7.0,Y=-5.0,Z=6.0)
         WheelRadius=29.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_JagdpanzerIVL48Destroyer.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -188,6 +185,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=6.0)
         WheelRadius=29.0
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_JagdpanzerIVL48Destroyer.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel

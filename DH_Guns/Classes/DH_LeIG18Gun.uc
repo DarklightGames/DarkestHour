@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 // This gun still need a bunch of work, and it's utility is extremely limited
 // because the gun has such a limited yaw range. This gun can be implemented
@@ -17,13 +17,18 @@ defaultproperties
     Mesh=SkeletalMesh'DH_LeIG18_anm.leig18_body'
     Skins(0)=Texture'DH_LeIG18_tex.LeIG18.IG18_1'
     Skins(1)=Texture'DH_LeIG18_tex.LeIG18.IG18_2'
-    DestroyedVehicleMesh=StaticMesh'DH_Artillery_stc.57mmGun.AT57mm_destroyed'  // TODO: replace
+    DestroyedVehicleMesh=StaticMesh'DH_LeIG18_stc.Destroyed.leig18_destro'
+    DestroyedMeshSkins(0)=Material'DH_LeIG18_tex.LeIG18.IG18_2_dest'
+    DestroyedMeshSkins(1)=Material'DH_LeIG18_tex.LeIG18.IG18_1_dest'
+    DestroyedMeshSkins(2)=Material'DH_LeIG18_tex.LeIG18.IG18_1_dest'
     VehicleHudImage=Texture'DH_LeIG18_tex.HUD.leig18_body'
     VehicleHudTurret=TexRotator'DH_LeIG18_tex.HUD.leig18_turret_rot'
     VehicleHudTurretLook=TexRotator'DH_LeIG18_tex.HUD.leig18_turret_look'
     VehicleHudOccupantsX(1)=0.4
     ExitPositions(1)=(X=-35.00,Y=-65.00,Z=60.00)
-    VehicleMass=11.0                                                            // TODO: replace
+    VehicleMass=11.0 // TODO: replace
+    bCanBeRotated=true
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

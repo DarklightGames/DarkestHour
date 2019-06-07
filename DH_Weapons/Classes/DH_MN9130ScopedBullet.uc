@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_MN9130ScopedBullet extends DHBullet;
 
 defaultproperties
 {
-    Speed=52204.0
+    Speed=52204.0 // 2838 fps
     BallisticCoefficient=0.511
     Damage=115.0
     MyDamageType=class'DH_Weapons.DH_MN9130ScopedDamType'

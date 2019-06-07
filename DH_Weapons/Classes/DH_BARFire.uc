@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_BARFire extends DHAutomaticFire;
@@ -24,16 +24,15 @@ defaultproperties
 
     // Spread
     HipSpreadModifier=6.0
-    Spread=130.0
-
-    // Recoil pct
-    PctBipodDeployRecoil=0.05
-    PctRestDeployRecoil=0.1
+    Spread=80.0
 
     // Recoil
     RecoilRate=0.1
-    MaxVerticalRecoilAngle=500
-    MaxHorizontalRecoilAngle=90
+    MaxVerticalRecoilAngle=650
+    MaxHorizontalRecoilAngle=260
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=3.0,OutVal=0.3),(InVal=4.0,OutVal=0.9),(InVal=8.0,OutVal=1.33),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilFallOffExponent=4.0
+    RecoilFallOffFactor=40.0
 
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stPistol'
     FireSounds(0)=SoundGroup'DH_WeaponSounds.BAR.BAR_Fire01'

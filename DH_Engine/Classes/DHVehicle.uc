@@ -1,12 +1,12 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHVehicle extends ROWheeledVehicle
     abstract;
 
-#exec OBJ LOAD FILE=..\Textures\DH_InterfaceArt_tex.utx
+#exec OBJ LOAD FILE=..\Sounds\DHMenuSounds.uax
 
 // Structs
 struct PassengerPawn
@@ -48,8 +48,11 @@ var     float       FriendlyResetDistance;       // used in CheckReset() as maxi
 var     bool        bClientInitialized;          // clientside flag that replicated actor has completed initialization (set at end of PostNetBeginPlay)
                                                  // (allows client code to determine whether actor is just being received through replication, e.g. in PostNetReceive)
 var     TreeMap_string_Object  NotifyParameters; // an object that can hold references to several other objects, which can be used by messages to build a tailored message
+var     int         WeaponLockTimeForTK;         // Number of seconds a player's weapons are locked for TKing this vehicle
+var     int         PreventTeamChangeForTK;      // Number of seconds a player cannot team change after TKing this vehicle
 
 // Driver & driving
+var     bool        bRequiresDriverLicense;      // Vehicle requires player to have a driver license to be in driver position
 var     bool        bNeedToInitializeDriver;     // clientside flag that we need to do some driver set up, once we receive the Driver actor
 var     float       MaxCriticalSpeed;            // if vehicle goes over max speed, it forces player to pull back on throttle
                                                  // ... calculated as (desired kph * 1000 * 60.352 / 3600)
@@ -73,6 +76,8 @@ var     sound       VehicleBurningSound;         // ambient sound when vehicle's
 var     sound       DestroyedBurningSound;       // ambient sound when vehicle is destroyed and burning
 var     float       SpawnProtEnds;               // is set when a player spawns the vehicle for damage protection in DarkestHour spawn type maps
 var     float       SpawnKillTimeEnds;           // is set when a player spawns the vehicle for spawn kill protection in DarkestHour spawn type maps
+var     array<int>  TrackHealth[2];              // Amount of health each track has remaining
+var     float       SatchelResistance;           // 1.0 default (0.5 means less resistance to satchels)
 
 // Engine
 var     bool        bEngineOff;                  // vehicle engine is simply switched off
@@ -123,6 +128,10 @@ var     float               VehicleHudTreadsPosX[2]; // 0.0 to 1.0 X positioning
 var     float               VehicleHudTreadsPosY;    // 0.0 to 1.0 Y positioning of tread damage indicators
 var     float               VehicleHudTreadsScale;   // drawing scale of tread damage indicators
 
+// Map icon
+var     class<DHMapIconAttachment>  MapIconAttachmentClass;
+var     DHMapIconAttachment         MapIconAttachment;
+
 // Vehicle attachments
 var     array<VehicleAttachment>    VehicleAttachments;      // vehicle attachments, generally decorative, that won't be spawned on a server
 var     array<VehicleAttachment>    CollisionAttachments;    // collision mesh attachments for a moving part of vehicle that should have collision, e.g. a ramp or driver's armoured visor
@@ -159,7 +168,6 @@ var     vector                                  ConstructionPlacementOffset;
 var     int                     VehiclePoolIndex;     // the vehicle pool index that this was spawned from
 var     DHSpawnPoint_Vehicle    SpawnPointAttachment; // a spawn vehicle's spawn point attachment
 var     DHSpawnPointBase        SpawnPoint;           // the spawn point that was used to spawn this vehicle
-var     bool                    bMustBeInSquadToSpawn;
 
 // Debugging
 var     bool        bDebuggingText;
@@ -289,30 +297,75 @@ simulated function Destroyed()
     super.Destroyed();
 
     DestroyAttachments();
+
+    if (NotifyParameters != none)
+    {
+        NotifyParameters.Clear();
+    }
 }
+
+function StartEngineFire(Pawn InstigatedBy);
 
 // Modified to score the vehicle kill, & to subtract the vehicle's reinforcement cost for the loss
 function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
 {
     local DarkestHourGame DHG;
+    local DHGameReplicationInfo GRI;
+    local DHPlayer DHKiller;
 
+    // Call the super first
     super.Died(Killer, DamageType, HitLocation);
+
+    if (MapIconAttachment != none)
+    {
+        MapIconAttachment.Destroy();
+    }
 
     DHG = DarkestHourGame(Level.Game);
 
     if (DHG != none)
     {
-        if (ReinforcementCost != 0)
-        {
-            // Deducts reinforcements based on the vehicle's "reinforcement cost"
-            DHG.ModifyReinforcements(VehicleTeam, -ReinforcementCost);
-        }
+        GRI = DHGameReplicationInfo(DHG.GameReplicationInfo);
+    }
 
-        if (Killer != none &&
-            Killer.GetTeamNum() != GetTeamNum() &&
-            !IsSpawnProtected())
+    DHKiller = DHPlayer(Killer);
+
+    if (DHG == none || GRI == none || DHKiller == none)
+    {
+        return;
+    }
+
+    // Handle reinforcement loss for the vehicle
+    if (ReinforcementCost != 0)
+    {
+        // Deducts reinforcements based on the vehicle's "reinforcement cost"
+        DHG.ModifyReinforcements(VehicleTeam, -ReinforcementCost);
+    }
+
+    // If is not a team kill and the vehicle is NOT spawn protected, then +score for killer
+    if (DHKiller.GetTeamNum() != GetTeamNum() && !IsSpawnProtected())
+    {
+        DHG.SendScoreEvent(DHKiller, class'DHScoreEvent_VehicleKill'.static.Create(Class));
+    }
+
+    // If killed by a friendly
+    if (DHKiller.GetTeamNum() == GetTeamNum())
+    {
+        if (DHKiller.PlayerReplicationInfo != none)
         {
-            DHG.SendScoreEvent(Killer, class'DHScoreEvent_VehicleKill'.static.Create(Class));
+            // Broadcast a message to all players
+            Level.Game.BroadcastLocalizedMessage(class'DHGameMessage', 23, DHKiller.PlayerReplicationInfo,, self); // "[instigator] killed a friendly [vehiclename]"
+
+            // Death message icon
+            Level.Game.BroadcastDeathMessage(DHKiller, DHKiller, class'DHVehicleTeamKillDamageType');
+
+            // Lock weapons
+            DHKiller.WeaponLockViolations++;
+            DHKiller.LockWeapons(WeaponLockTimeForTK);
+            DHKiller.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 4); // "Your weapons have been locked due to friendly fire!"
+
+            // Prevent team change
+            DHKiller.NextChangeTeamTime = GRI.ElapsedTime + PreventTeamChangeForTK;
         }
     }
 }
@@ -791,7 +844,7 @@ function Vehicle FindEntryVehicle(Pawn P)
         }
 
         // Select driver position if it's empty, & player isn't barred by tank crew restriction, & it isn't a locked armored vehicle that player can't enter
-        if (Driver == none && (!bMustBeTankCommander || bCanEnterTankCrewPositions))
+        if (Driver == none && (!bMustBeTankCommander || bCanEnterTankCrewPositions) && (!default.bRequiresDriverLicense || class'DHPlayerReplicationInfo'.static.IsPlayerLicensedToDrive(DHPlayer(P.Controller))))
         {
             return self;
         }
@@ -815,7 +868,11 @@ function Vehicle FindEntryVehicle(Pawn P)
         // There are no empty, usable vehicle positions for this player, so give him a screen message (only if vehicle is his team's) & don't let him enter
         if (P.GetTeamNum() == VehicleTeam || !bTeamLocked)
         {
-            if (!bHasTankCrewPositions || bPlayerIsTankCrew)
+            if (default.bRequiresDriverLicense && !class'DHPlayerReplicationInfo'.static.IsPlayerLicensedToDrive(DHPlayer(P.Controller)))
+            {
+                DisplayVehicleMessage(3, P); // all rider positions full (if non-tanker tries to enter a tank that has rider positions)
+            }
+            else if (!bHasTankCrewPositions || bPlayerIsTankCrew)
             {
                 DisplayVehicleMessage(2, P); // vehicle is full (this simple message if vehicle isn't a tank or if player is a tank crewman)
             }
@@ -930,7 +987,6 @@ function bool TryToDrive(Pawn P)
         if (!class'DHPlayerReplicationInfo'.static.IsPlayerTankCrew(P) && P.IsHumanControlled())
         {
             DisplayVehicleMessage(0, P); // not qualified to operate vehicle
-
             return false;
         }
 
@@ -939,6 +995,12 @@ function bool TryToDrive(Pawn P)
         {
             return false;
         }
+    }
+
+    if (default.bRequiresDriverLicense && !class'DHPlayerReplicationInfo'.static.IsPlayerLicensedToDrive(DHPlayer(P.Controller)) && P.IsHumanControlled())
+    {
+        DisplayVehicleMessage(0, P); // not qualified to operate vehicle
+        return false;
     }
 
     // Deny entry if vehicle has a driver
@@ -1879,13 +1941,10 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         return;
     }
 
-    // Prevent griefer players from damaging own team's vehicles that haven't yet been entered, i.e. are sitting in a spawn area (not applicable in single player)
-    if (!bDriverAlreadyEntered && Level.NetMode != NM_Standalone)
+    // Check for friendly damage
+    if (InstigatedBy != none)
     {
-        if (InstigatedBy != none)
-        {
-            InstigatorController = InstigatedBy.Controller;
-        }
+        InstigatorController = InstigatedBy.Controller;
 
         if (InstigatorController == none && DamageType.default.bDelayedDamage)
         {
@@ -1896,9 +1955,20 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         {
             InstigatorTeam = InstigatorController.GetTeamNum();
 
+            // Is this friendly damage
             if (GetTeamNum() != 255 && InstigatorTeam != 255 && GetTeamNum() == InstigatorTeam)
             {
-                return;
+                // Inform the instigator they are doing something wrong
+                if (PlayerController(InstigatorController) != none)
+                {
+                    PlayerController(InstigatorController).ClientPlaySound(Sound'DHMenuSounds.BuzzBuzz',,, SLOT_Interface);
+                }
+
+                // If no one has ever entered the vehicle, then don't allow team damage
+                if (!bDriverAlreadyEntered)
+                {
+                    return;
+                }
             }
         }
     }
@@ -1952,7 +2022,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             {
                 if (bDebuggingText)
                 {
-                    Level.Game.Broadcast(self, "Hit vehicle engine");
+                    Log("Hit vehicle engine");
                 }
 
                 DamageEngine(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
@@ -1962,7 +2032,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             {
                 if (bDebuggingText)
                 {
-                    Level.Game.Broadcast(self, "Hit vehicle ammo store");
+                    Log("Hit vehicle ammo store");
                 }
 
                 Damage *= VehHitpoints[i].DamageMultiplier;
@@ -1973,7 +2043,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             {
                 if (bDebuggingText)
                 {
-                    Level.Game.Broadcast(self, "Hit vehicle wheel");
+                    Log("Hit vehicle wheel");
                 }
 
                 // If wheel takes enough damage, vehicle has wheel damage
@@ -1997,13 +2067,18 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         CheckTreadDamage(HitLocation, Momentum);
     }
 
-    // Call the Super from Vehicle (skip over others)
-    super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
-
     if (InstigatedBy != none && InstigatedBy != self)
     {
         LastHitBy = InstigatedBy.Controller;
     }
+
+    if (bDebuggingText)
+    {
+        Log("Damaging vehicle with:" @ Damage);
+    }
+
+    // Call the Super from Vehicle (skip over others)
+    super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
     // If a vehicle's health is lower than DamagedEffectHealthFireFactor OR
     // If the vehicle is APC or Treaded and is empty and damage is significant, just set fire the engine (and spike the vehicle)
@@ -2011,6 +2086,11 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     if ((Health <= (default.HealthMax * default.DamagedEffectHealthFireFactor) && Health > 0) ||
         ((bHasTreads || bIsApc) && IsVehicleEmpty() && Damage >= 100))
     {
+        if (bDebuggingText)
+        {
+            Log("Setting fire to spike the vehicle as significant damage was done.");
+        }
+
         EngineHealth = 0;
         bSpikedVehicle = true;
         SetSpikeTimer();
@@ -2080,11 +2160,6 @@ function CheckTreadDamage(vector HitLocation, vector Momentum)
     {
         if (bDebuggingText || class'DH_LevelInfo'.static.DHDebugMode())
         {
-            if (Role == ROLE_Authority)
-            {
-                Level.Game.Broadcast(self, "Hit detection bug - switching tread hit from" @ HitSide @ "to" @ OppositeSide @ "as 'in angle' to original side was" @ int(InAngleDegrees) @ "degrees");
-            }
-
             Log("Hit detection bug - switching tread hit from" @ HitSide @ "to" @ OppositeSide @ "as 'in angle' to original side was" @ int(InAngleDegrees) @ "degrees");
         }
 
@@ -2094,11 +2169,11 @@ function CheckTreadDamage(vector HitLocation, vector Momentum)
     // Damage the track we hit, if it isn't already damaged
     if ((HitSide == "Right" && !bRightTrackDamaged) || (HitSide == "Left" && !bLeftTrackDamaged))
     {
-        DamageTrack(HitSide == "Left"); // passing true means left track damage
+        DestroyTrack(HitSide == "Left"); // passing true means left track damage
 
         if (bDebuggingText && Role == ROLE_Authority)
         {
-            Level.Game.Broadcast(self, HitSide @ "track damaged (hit height =" @ HitLocationRelativeOffset.Z $ ")");
+            Log(HitSide @ "track destroyed (hit height =" @ HitLocationRelativeOffset.Z $ ")");
         }
     }
 }
@@ -2137,6 +2212,12 @@ event TakeImpactDamage(float AccelMag)
 // Modified to kill engine if zero health
 function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType)
 {
+    // Don't let friendlies damage engines
+    if (InstigatedBy != none && InstigatedBy.Controller != none && InstigatedBy.Controller.GetTeamNum() == GetTeamNum())
+    {
+        return;
+    }
+
     // Apply new damage
     if (EngineHealth > 0)
     {
@@ -2149,7 +2230,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
     {
         if (bDebuggingText)
         {
-            Level.Game.Broadcast(self, "Engine is dead");
+            Log("Engine is dead");
         }
 
         if (!bEngineOff)
@@ -2167,8 +2248,52 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
     }
 }
 
-// Modified to call SetDamagedTracks() for single player or listen server, as we no longer use Tick (net client gets that via PostNetReceive)
-function DamageTrack(bool bLeftTrack)
+function bool IsTreadInRadius(vector Location, out float Radius, out int TrackNum)
+{
+    local int           i;
+    local coords        WheelCoords;
+    local float         D;
+
+    for (i = 0; i < Wheels.Length; ++i)
+    {
+        WheelCoords = GetBoneCoords(Wheels[i].BoneName);
+
+        D = VSize(Location - WheelCoords.Origin);
+
+        if (D < Radius)
+        {
+            Radius = D;
+            TrackNum = int(Wheels[i].bLeftTrack);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function DamageTrack(int Damage, bool bLeftTrack)
+{
+    TrackHealth[int(bLeftTrack)] -= Damage;
+
+    if (bDebuggingText)
+    {
+        if (bLeftTrack)
+        {
+            Log("Damaging the left track with" @ Damage @ "damage.");
+        }
+        else
+        {
+            Log("Damaging the right track with" @ Damage @ "damage.");
+        }
+    }
+
+    if (TrackHealth[int(bLeftTrack)] <= 0)
+    {
+        DestroyTrack(bLeftTrack);
+    }
+}
+
+function DestroyTrack(bool bLeftTrack)
 {
     if (bLeftTrack)
     {
@@ -2648,6 +2773,22 @@ simulated function SpawnVehicleAttachments()
             }
         }
 
+        if (MapIconAttachmentClass != none && SupplyAttachment == none)
+        {
+            MapIconAttachment = Spawn(MapIconAttachmentClass, self);
+
+            if (MapIconAttachment != none)
+            {
+                MapIconAttachment.SetBase(self);
+                MapIconAttachment.Setup();
+                MapIconAttachment.SetTeamIndex(VehicleTeam);
+            }
+            else
+            {
+                MapIconAttachmentClass.static.OnError(ERROR_SpawnFailed);
+            }
+        }
+
         // If vehicle has possible random decorative attachments, select which one (if any at all, depending on specified chances)
         if (RandomAttachOptions.Length > 0 && RandomAttachmentIndex >= RandomAttachOptions.Length)
         {
@@ -3066,6 +3207,11 @@ simulated function DestroyAttachments()
         {
             SupplyAttachment.Destroy();
         }
+
+        if (MapIconAttachment != none)
+        {
+            MapIconAttachment.Destroy();
+        }
     }
 
     for (i = 0; i < VehicleAttachments.Length; ++i)
@@ -3390,33 +3536,32 @@ function MaybeDestroyVehicle()
 {
     local bool bDeactivatedFactoryWantsToDestroy;
 
-    // Do nothing if vehicle is a spawn vehicle
-    if (ParentFactory == none || IsSpawnVehicle())
+    // If the vehicle is not on fire, then do the following checks
+    if (!IsDisabled())
     {
-        return;
+        // Check whether was spawned by a vehicle factory that has since been deactivated & wants to destroy its vehicle when empty
+        if (ParentFactory != none)
+        {
+            bDeactivatedFactoryWantsToDestroy = ParentFactory.IsA('ROVehicleFactory') && !ROVehicleFactory(ParentFactory).bFactoryActive
+                && ROVehicleFactory(ParentFactory).bDestroyVehicleWhenInactive;
+        }
+
+        // (If the vehicle was spawned by a vehicle factory that has since been deactivated & wants to destroy its vehicle when empty
+        // AND is not meant to reset)
+        // OR is a spawn vehicle, return
+        if ((!bDeactivatedFactoryWantsToDestroy && bNeverReset) || IsSpawnVehicle())
+        {
+            return;
+        }
     }
-
-    // Check whether was spawned by a vehicle factory that has since been deactivated & wants to destroy its vehicle when empty
-    bDeactivatedFactoryWantsToDestroy = ParentFactory.IsA('ROVehicleFactory') && !ROVehicleFactory(ParentFactory).bFactoryActive
-        && ROVehicleFactory(ParentFactory).bDestroyVehicleWhenInactive;
-
-    // We don't set a CheckReset timer for vehicles that have bNeverReset (e.g. AT guns), so they don't get reset if left empty
-    // Or if it's a factory's last vehicle, as no point destroying/recycling vehicle if factory won't spawn replacement
-    // The exception is if a factory has deactivated & should destroy its vehicle if it's empty
-    if (!bDeactivatedFactoryWantsToDestroy && (bNeverReset || IsFactorysLastVehicle()))
-    {
-        return;
-    }
-
-    // If vehicle is classed as disabled, set a spike timer to destroy it after a set period if still empty
-    if (IsDisabled())
+    else // If vehicle is classed as disabled, set a spike timer to destroy it after a set period if still empty
     {
         bSpikedVehicle = true;
         SetSpikeTimer(); // separate function for easy subclassing
 
         if (bDebuggingText)
         {
-            Level.Game.Broadcast(self, "Initiating" @ VehicleSpikeTime @ "sec spike timer for disabled vehicle" @ VehicleNameString);
+            Log("Initiating" @ VehicleSpikeTime @ "sec spike timer for disabled vehicle" @ VehicleNameString);
         }
     }
 
@@ -3424,8 +3569,8 @@ function MaybeDestroyVehicle()
     // But if spawned by vehicle factory, make sure vehicle has moved some way from spawning location (> 83m or out of sight) as no point making it re-spawn nearby
     // Skip that check if spawned by DH spawn manager system as it doesn't spawn an empty vehicle that just sits there as a factory does
     // Also skip the check if our factory has deactivated & should destroy an empty vehicle
-    if (ParentFactory.IsA('DHSpawnManager') || bDeactivatedFactoryWantsToDestroy
-        || VSizeSquared(Location - ParentFactory.Location) > 25000000.0 || !FastTrace(ParentFactory.Location, Location)) // changed to VSizeSquared for efficiency
+    if (ParentFactory != none && (ParentFactory.IsA('DHSpawnManager') || bDeactivatedFactoryWantsToDestroy
+        || VSizeSquared(Location - ParentFactory.Location) > 25000000.0 || !FastTrace(ParentFactory.Location, Location))) // changed to VSizeSquared for efficiency
     {
         ResetTime = Level.TimeSeconds + IdleTimeBeforeReset;
     }
@@ -3484,7 +3629,7 @@ event CheckReset()
 
                     if (bDebuggingText)
                     {
-                        Level.Game.Broadcast(self, VehicleNameString @ "CheckReset: is empty but set new ResetTime as found nearby friendly player" @ C.Pawn.GetHumanReadableName());
+                        Log(VehicleNameString @ "CheckReset: is empty but set new ResetTime as found nearby friendly player" @ C.Pawn.GetHumanReadableName());
                     }
 
                     return;
@@ -3498,11 +3643,11 @@ event CheckReset()
     {
         if (bKeyVehicle)
         {
-            Level.Game.Broadcast(self, VehicleNameString @ "is empty vehicle & re-spawned as is a key vehicle (no check for nearby friendlies)");
+            Log(VehicleNameString @ "is empty vehicle & re-spawned as is a key vehicle (no check for nearby friendlies)");
         }
         else
         {
-            Level.Game.Broadcast(self, VehicleNameString @ "is empty vehicle & re-spawned as no friendly player nearby that can use vehicle");
+            Log(VehicleNameString @ "is empty vehicle & re-spawned as no friendly player nearby that can use vehicle");
         }
     }
 
@@ -3632,6 +3777,12 @@ simulated function bool IsDisabled()
     }
 
     return false;
+}
+
+// New function to get the location of the Engine VehHitPoint
+function vector GetEngineLocation()
+{
+    return GetBoneCoords(VehHitPoints[0].PointBone).Origin;
 }
 
 // New helper function to check whether vehicle is burning
@@ -3827,16 +3978,16 @@ exec function DamTrack(string Track)
     {
         if (Track ~= "L" || Track ~= "Left")
         {
-            DamageTrack(true);
+            DestroyTrack(true);
         }
         else if (Track ~= "R" || Track ~= "Right")
         {
-            DamageTrack(false);
+            DestroyTrack(false);
         }
         else if (Track ~= "B" || Track ~= "Both")
         {
-            DamageTrack(true);
-            DamageTrack(false);
+            DestroyTrack(true);
+            DestroyTrack(false);
         }
     }
 }
@@ -3880,6 +4031,8 @@ defaultproperties
 {
     // Miscellaneous
     VehicleMass=3.0
+    WeaponLockTimeForTK=5
+    PreventTeamChangeForTK=1500 // 25 minutes
     PointValue=250
     CollisionRadius=175.0
     CollisionHeight=40.0
@@ -3918,10 +4071,13 @@ defaultproperties
     Health=175
     HealthMax=175.0
     EngineHealth=30
+    TrackHealth(0)=100
+    TrackHealth(1)=100
     VehHitpoints(0)=(PointRadius=25.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // no.0 becomes engine instead of driver
     VehHitpoints(1)=(PointRadius=0.0,PointScale=0.0,PointBone="",HitPointType=) // no.1 is no longer engine (neutralised by default, or overridden as required in subclass)
     TreadDamageThreshold=0.3
     bCanCrash=true
+    SatchelResistance=1.0
     DirectHEImpactDamageMult=1.0
     DamagedWheelSpeedFactor=0.35
     ImpactDamageThreshold=33.0
@@ -3931,7 +4087,7 @@ defaultproperties
     DamagedTreadPanner=Texture'DH_VehiclesGE_tex2.ext_vehicles.Alpha'
 
     // Smoking/burning engine effect
-    HeavyEngineDamageThreshold=0.25
+    HeavyEngineDamageThreshold=0.5
     DamagedEffectHealthSmokeFactor=0.75
     DamagedEffectHealthMediumSmokeFactor=0.5
     DamagedEffectHealthHeavySmokeFactor=0.25
@@ -4030,5 +4186,6 @@ defaultproperties
     bDesiredBehindView=false
     bDisableThrottle=false
     bKeepDriverAuxCollision=true // necessary for new player hit detection system, which basically uses normal hit detection as for an infantry player pawn
-//  EntryRadius=375.0 // deprecated
+
+    //bDebuggingText=true
 }

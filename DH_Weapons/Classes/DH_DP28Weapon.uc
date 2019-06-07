@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_DP28Weapon extends DHMGWeapon;
-
-#exec OBJ LOAD FILE=..\Animations\Allies_Dp28_1st.ukx
 
 // Modified to fix graphics bug where a Mac computer doesn't draw the specularity shader, leaving most of the 1st person weapon invisible to the user
 simulated function PostNetBeginPlay()

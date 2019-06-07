@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHCommandMenu_ConstructionGroup extends DHCommandMenu
@@ -15,7 +15,7 @@ var localized string TeamLimitText;
 var localized string BusyText;
 
 var class<DHConstructionGroup> GroupClass;
-var DHConstruction.Context Context;
+var DHActorProxy.Context Context;
 
 function Setup()
 {
@@ -63,10 +63,16 @@ function OnSelect(int OptionIndex, vector Location)
     local DHPawn P;
     local DH_ConstructionWeapon CW;
     local class<DHConstruction> ConstructionClass;
+    local DHConstructionProxy CP;
 
     P = DHPawn(Interaction.ViewportOwner.Actor.Pawn);
 
-    if (Interaction == none || Interaction.ViewportOwner == none || OptionIndex < 0 || OptionIndex >= Options.Length || Options[OptionIndex].OptionalObject == none || P == none)
+    if (P == none ||
+        Interaction == none ||
+        Interaction.ViewportOwner == none ||
+        OptionIndex < 0 ||
+        OptionIndex >= Options.Length ||
+        Options[OptionIndex].OptionalObject == none)
     {
         return;
     }
@@ -78,14 +84,18 @@ function OnSelect(int OptionIndex, vector Location)
     else if (Options[OptionIndex].OptionalObject.IsA('Class'))
     {
         ConstructionClass = class<DHConstruction>(Options[OptionIndex].OptionalObject);
-        class'DH_ConstructionWeapon'.default.ConstructionClass = ConstructionClass;
+
         CW = DH_ConstructionWeapon(P.FindInventoryType(class'DH_ConstructionWeapon'.default.Class));
 
         if (CW != none)
         {
-            if (CW.GetProxyCursor() != none)
+            // We already have the construction weapon in our inventory, so let's
+            // simply update the construction class of the existing proxy cursor.
+            CP = DHConstructionProxy(CW.ProxyCursor);
+
+            if (CP != none)
             {
-                CW.GetProxyCursor().SetConstructionClass(ConstructionClass);
+                CP.SetConstructionClass(ConstructionClass);
             }
         }
         else
@@ -96,7 +106,13 @@ function OnSelect(int OptionIndex, vector Location)
             }
 
             P.PendingWeapon = none;
-            P.ServerGiveConstructionWeapon();
+
+            // This call prepares the construction weapon with the correct
+            // construction class on the client upon instantiation.
+            class'DH_ConstructionWeapon'.default.ConstructionClass = ConstructionClass;
+
+            // Tell the server to give us the construction weapon.
+            P.ServerGiveWeapon("DH_Construction.DH_ConstructionWeapon");
         }
 
         Interaction.Hide();

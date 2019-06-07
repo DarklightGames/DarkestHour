@@ -1,12 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHWireCuttersItem extends DHWeapon;
 
 var     float               CutDistance;
 var     DHObstacleInstance  ObstacleBeingCut;
+var     DHConstruction      ConstructionBeingCut;
 
 // Functions emptied out or returning false, as wire cutters aren't a real weapon
 simulated function bool IsFiring(){return false;}
@@ -16,7 +17,7 @@ simulated exec function ROManualReload() {return;}
 simulated function bool IsBusy() {return false;}
 simulated function bool ShouldUseFreeAim() {return false;}
 
-// Modified to allow same InventoryGroup item (this shares same slot as binocs, will allow player to have both wirecutters and binocs)
+// Modified to allow same InventoryGroup item (this shares same slot as shovel/satchel, each item on the slot requires multi-item support)
 function bool HandlePickupQuery(Pickup Item)
 {
     local int i;
@@ -63,7 +64,14 @@ simulated state Cutting
 
         PlayAnim('cutStart');
 
-        SetTimer(ObstacleBeingCut.Info.GetCutDuration(), false);
+        if (ObstacleBeingCut != none)
+        {
+            SetTimer(ObstacleBeingCut.Info.GetCutDuration(), false);
+        }
+        else if (ConstructionBeingCut != none)
+        {
+            SetTimer(ConstructionBeingCut.default.CutDuration, false);
+        }
     }
 
     simulated function EndState()
@@ -82,7 +90,10 @@ simulated state Cutting
     {
         super.Tick(DeltaTime);
 
-        if (ObstacleBeingCut == none || ObstacleBeingCut.Info.IsCleared())
+        // A fail safe to get out of this state if either something went wrong or somehow we shouldn't continue
+        if ((ConstructionBeingCut == none && ObstacleBeingCut == none) ||
+            (ObstacleBeingCut != none && ObstacleBeingCut.Info.IsCleared()) ||
+            (ConstructionBeingCut != none && !ConstructionBeingCut.CanBeCut()))
         {
             GotoState('');
             PlayAnim('cutEnd', 1.0, 0.2);
@@ -98,9 +109,13 @@ simulated state Cutting
             P = DHPlayer(Instigator.Controller);
         }
 
-        if (P != none)
+        if (ObstacleBeingCut != none && P != none)
         {
             P.ServerClearObstacle(ObstacleBeingCut.Info.Index);
+        }
+        else if (ConstructionBeingCut != none && P != none)
+        {
+            P.ServerCutConstruction(ConstructionBeingCut);
         }
 
         GotoState('');
@@ -156,13 +171,15 @@ simulated state Cutting
 
 simulated function Fire(float F)
 {
+    local DHConstruction C;
     local DHObstacleInstance O;
     local vector HitLocation, HitNormal, TraceEnd, TraceStart;
 
     if (Instigator == none ||
         Instigator.Controller == none ||
         Instigator.IsProneTransitioning() ||
-        Instigator.Velocity != vect(0.0, 0.0, 0.0))
+        Instigator.Velocity != vect(0.0, 0.0, 0.0) ||
+        IsInState('Cutting'))
     {
         return;
     }
@@ -170,11 +187,23 @@ simulated function Fire(float F)
     TraceStart = Instigator.Location;
     TraceEnd = TraceStart + (vector(Instigator.Controller.Rotation) * CutDistance);
 
+    // Support for obstacles
     foreach TraceActors(class'DHObstacleInstance', O, HitLocation, HitNormal, TraceEnd, TraceStart, vect(1.0, 1.0, 1.0))
     {
         if (O != none && !O.Info.IsCleared() && O.Info.CanBeCut())
         {
             ObstacleBeingCut = O;
+            GotoState('Cutting');
+            break;
+        }
+    }
+
+    // Support for constructions
+    foreach TraceActors(class'DHConstruction', C, HitLocation, HitNormal, TraceEnd, TraceStart, vect(1.0, 1.0, 1.0))
+    {
+        if (C != none && C.CanBeCut())
+        {
+            ConstructionBeingCut = C;
             GotoState('Cutting');
             break;
         }
@@ -185,10 +214,10 @@ defaultproperties
 {
     ItemName="Wire Cutters"
     AttachmentClass=class'DHWireCuttersAttachment'
-    InventoryGroup=4
+    PickupClass=class'DHWireCuttersPickup'
+    InventoryGroup=7
     GroupOffset=2
     Priority=1
-    bCanThrow=false
     CutDistance=100.0
 
     Mesh=SkeletalMesh'DH_Wirecutters_1st.wirecutters'

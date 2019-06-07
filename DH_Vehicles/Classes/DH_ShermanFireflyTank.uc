@@ -1,14 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_ShermanFireflyTank extends DHArmoredVehicle;
-
-#exec OBJ LOAD FILE=..\Animations\DH_ShermanFirefly_anm.ukx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc.usx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUK_tex.utx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
 
 defaultproperties
 {
@@ -16,7 +11,7 @@ defaultproperties
     VehicleNameString="Sherman Mk.VC 'Firefly'"
     VehicleTeam=1
     VehicleMass=13.5
-    ReinforcementCost=12
+    ReinforcementCost=8
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_ShermanFirefly_anm.ShermanFirefly_body_ext'
@@ -155,6 +150,7 @@ defaultproperties
         BoneName="steer_wheel_LF"
         BoneRollAxis=AXIS_Y
         WheelRadius=35.0
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_ShermanFireflyTank.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -171,6 +167,7 @@ defaultproperties
         BoneName="steer_wheel_LR"
         BoneRollAxis=AXIS_Y
         WheelRadius=35.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_ShermanFireflyTank.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -186,6 +183,7 @@ defaultproperties
         BoneName="drive_wheel_L"
         BoneRollAxis=AXIS_Y
         WheelRadius=35.0
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_ShermanFireflyTank.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel

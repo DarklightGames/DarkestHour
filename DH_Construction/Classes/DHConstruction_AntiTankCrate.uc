@@ -1,11 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHConstruction_AntiTankCrate extends DHConstruction_InventorySpawner;
 
-static function class<DHInventorySpawner> GetSpawnerClass(DHConstruction.Context Context)
+static function class<DHInventorySpawner> GetSpawnerClass(DHActorProxy.Context Context)
 {
     switch (Context.TeamIndex)
     {
@@ -22,7 +22,7 @@ defaultproperties
 {
     StartRotationMin=(Yaw=16384)
     StartRotationMax=(Yaw=16384)
-    SupplyCost=750
+    SupplyCost=850
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.at_crate'
 }
 

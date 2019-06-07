@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_P38Weapon extends DHPistolWeapon;
-
-#exec OBJ LOAD FILE=..\Animations\Axis_P38_1st.ukx
 
 defaultproperties
 {
@@ -20,8 +18,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    IronSightDisplayFOV=35.0
-    PlayerIronsightFOV=60.0
+    IronSightDisplayFOV=70.0
     ZoomOutTime=0.4
 
     MaxNumPrimaryMags=5

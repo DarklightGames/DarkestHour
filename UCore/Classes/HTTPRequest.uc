@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class HTTPRequest extends Actor;
@@ -223,7 +223,14 @@ function Timer()
         OnResponse(408, none, "");
     }
 
-    Timeout -= 1;
+    --Timeout;
+
+    if (Timeout < 0)
+    {
+        Log("HTTP Request timed out");
+        Destroy();
+        return;
+    }
 }
 
 function int GetTimeout()

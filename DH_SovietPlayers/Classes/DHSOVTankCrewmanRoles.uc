@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHSOVTankCrewmanRoles extends DHAlliedTankCrewmanRoles
@@ -16,4 +16,6 @@ defaultproperties
     DetachedArmClass=class'ROEffects.SeveredArmSovTanker'
     DetachedLegClass=class'ROEffects.SeveredLegSovTanker'
     Headgear(0)=class'DH_SovietPlayers.DH_SovietTankerHat'
+    VoiceType="DH_SovietPlayers.DHSovietVoice"
+    AltVoiceType="DH_SovietPlayers.DHSovietVoice"
 }

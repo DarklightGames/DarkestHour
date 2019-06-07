@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHAlliedSniperRoles extends DHAlliedRoles
@@ -13,4 +13,6 @@ defaultproperties
     Article="a "
     PluralName="Snipers"
     Limit=1
+    AddedRoleRespawnTime=15
+    bExemptSquadRequirement=true
 }

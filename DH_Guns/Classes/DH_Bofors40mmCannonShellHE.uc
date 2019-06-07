@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_Bofors40mmCannonShellHE extends DHCannonShellHE;
@@ -17,7 +17,7 @@ defaultproperties
     DamageRadius=500.0
     MyDamageType=class'DH_Engine.DHShellHE37mmATDamageType'
     ImpactDamage=200
-    ShellImpactDamage=class'DH_Engine.DHShellATImpactDamageType'
+    ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
 
     DHPenetrationTable(0)=1.3 // penetration slightly better than US 37mm HE
     DHPenetrationTable(1)=1.2

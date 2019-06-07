@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 //=====================================================================
@@ -10,17 +10,13 @@
 
 class DH_ISU152Destroyer extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_ISU152_anm.ukx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_Soviet_vehicles_stc.usx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesSOV_tex.utx
-
 defaultproperties
 {
     // Vehicle properties
     VehicleNameString="ISU-152"
     VehicleTeam=1
     VehicleMass=13.5
-    ReinforcementCost=15
+    ReinforcementCost=7
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_ISU152_anm.ISU152-body_ext'
@@ -159,6 +155,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=30.0,Y=-10.0)
         WheelRadius=27.0
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_ISU152Destroyer.LF_Steering'
 
@@ -179,6 +176,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=-18.0,Y=-10.0)
         WheelRadius=26.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_ISU152Destroyer.LR_Steering'
 
@@ -198,6 +196,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(Y=-10.0)
         WheelRadius=28.0
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_ISU152Destroyer.Left_Drive_Wheel'
 

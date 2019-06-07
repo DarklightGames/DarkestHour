@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_Sdkfz2341Cannon extends DHVehicleAutoCannon;
-
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_German_vehicles_stc3.usx
 
 // Extra collision static mesh actors for the mesh covers over turret, which open & close like a hatch:
 var     DHCollisionMeshActor  TurretCoverColMeshLeft;

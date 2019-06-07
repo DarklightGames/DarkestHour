@@ -1,9 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHVotingHandler extends xVotingHandler;
+
+var private float       PatronVoteModifiers[5];
 
 var localized string    lmsgMapVotedTooRecently;
 var localized string    SwapAndRestartText;
@@ -99,7 +101,7 @@ function AddMap(string MapName, string Mutators, string GameOptions) // called f
 
     MapCount++;
 
-    /*
+    /* Commented out to instead support per map vote repeat limit (this might be moved later)
     if(Mutators != "" && Mutators != MapInfo.U)
     {
         MapInfo.U = Mutators;
@@ -139,10 +141,12 @@ function string SetupGameMap(MapVoteMapList MapInfo, int GameIndex, MapHistoryIn
     }
 
     // Add Per-Map Mutators
+    /* Commented out for support of per-map vote repeat limit
     if (MapHistoryInfo.U != "")
     {
         MutatorString = MutatorString $ "," $ MapHistoryInfo.U;
     }
+    */
 
     // Add Per-GameType Game Options
     if(GameConfig[GameIndex].Options != "")
@@ -644,47 +648,24 @@ function TallyVotes(bool bForceMapSwitch)
 function float GetPlayerVotePower(PlayerController Player)
 {
     const PLAYER_VOTE_POWER_MAX = 15;
-    const PATRON_LEAD_REWARD = 3;
-    const PATRON_BRONZE_REWARD = 7;
-    const PATRON_SILVER_REWARD = 15;
-    const PATRON_GOLD_REWARD = 25;
 
-    local int VotePower;
+    local int VotePower, NumPlayers;
     local DHPlayerReplicationInfo PRI;
+    local DarkestHourGame G;
 
     PRI = DHPlayerReplicationInfo(Player.PlayerReplicationInfo);
+    G = DarkestHourGame(Level.Game);
 
-    if (PRI == none)
+    if (PRI == none || G == none)
     {
         return 0;
     }
 
-    // If game has not ended, make the vote power only 1
-    if (!Level.Game.bGameEnded)
-    {
-        VotePower = 1;
-    }
-    else
-    {
-        Switch (PRI.PatronStatus)
-        {
-            case PATRON_Lead:
-                VotePower = PATRON_LEAD_REWARD;
-                break;
-            case PATRON_Bronze:
-                VotePower = PATRON_BRONZE_REWARD;
-                break;
-            case PATRON_Silver:
-                VotePower = PATRON_SILVER_REWARD;
-                break;
-            case PATRON_Gold:
-                VotePower = PATRON_GOLD_REWARD;
-                break;
-        }
+    NumPlayers = G.GetNumPlayers();
+    VotePower = NumPlayers * PatronVoteModifiers[PRI.PatronTier]; // Set base vote power for Patrons (NumPlayers * Modifier)
+    VotePower += Clamp(PRI.Score / 1000, 0, PLAYER_VOTE_POWER_MAX); // Add the clamped vote power from Score
 
-        VotePower += Clamp(PRI.Score / 1000, 0, PLAYER_VOTE_POWER_MAX);
-    }
-
+    // Everyone gets at least one vote
     if (VotePower < 1)
     {
         VotePower = 1;
@@ -731,6 +712,28 @@ function ResetMapVotes()
                 {
                     UpdateVoteCount(MapVoteCount[x].MapIndex, MapVoteCount[x].GameConfigIndex, -MVRI[i].VoteCount);
                     MVRI[i].MapVote = -1;
+                    break;
+                }
+            }
+        }
+    }
+}
+
+// Updates all map votes that have been cast
+function ReapplyMapVotes()
+{
+    local int i, x;
+
+    // Reapply votes
+    for (i = 0; i < MVRI.Length; ++i)
+    {
+        if (MVRI[i] != none && MVRI[i].MapVote > -1 && MVRI[i].GameVote > -1) // Did the player vote
+        {
+            for (x = 0; x < MapVoteCount.Length; x++)
+            {
+                if (MVRI[i].MapVote == MapVoteCount[x].MapIndex && MVRI[i].GameVote == MapVoteCount[x].GameConfigIndex)
+                {
+                    SubmitMapVote(MapVoteCount[x].MapIndex, MapVoteCount[x].GameConfigIndex, MVRI[i].PlayerOwner);
                     break;
                 }
             }
@@ -841,7 +844,13 @@ static function FillPlayInfo(PlayInfo PlayInfo)
 defaultproperties
 {
     bUseSwapVote=true
-    MapVoteIntervalDuration=5.0
-    lmsgMapVotedTooRecently="Please wait %seconds% seconds before voting for another map!"
+    MapVoteIntervalDuration=3.0
+    lmsgMapVotedTooRecently="Please wait %seconds% seconds before voting another map!"
     SwapAndRestartText="DH-[Swap Teams and Restart]"
+
+    PatronVoteModifiers(0)=0.0  //Not Patron
+    PatronVoteModifiers(1)=0.15 //Lead
+    PatronVoteModifiers(2)=0.25  //Bronze
+    PatronVoteModifiers(3)=0.35  //Silver
+    PatronVoteModifiers(4)=0.5  //Gold
 }

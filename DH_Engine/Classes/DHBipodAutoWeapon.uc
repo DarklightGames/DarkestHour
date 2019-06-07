@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHBipodAutoWeapon extends DHAutoWeapon
@@ -156,6 +156,18 @@ simulated state ReloadingBipod extends Reloading
         }
     }
 
+    simulated function PlayIdle()
+    {
+        if (Instigator != none && Instigator.bBipodDeployed && HasAnim(SightUpIronIdleAnim))
+        {
+            LoopAnim(SightUpIronIdleAnim, IdleAnimRate, 0.2);
+        }
+        else
+        {
+            super.PlayIdle();
+        }
+    }
+
 // Take the player out of zoom & then zoom them back in
 Begin:
     if (InstigatorIsLocalHuman() && Instigator.bBipodDeployed)
@@ -174,7 +186,7 @@ Begin:
             Sleep(GetAnimDuration(SightUpMagPartialReloadAnim, 1.0) - default.ZoomInTime - default.ZoomOutTime);
         }
 
-        SetPlayerFOV(PlayerIronsightFOV);
+        SetPlayerFOV(GetPlayerIronsightFOV());
         SmoothZoom(true);
     }
 }
@@ -311,7 +323,7 @@ simulated state DeployingBipod extends WeaponBusy
 
         PlayAnimAndSetTimer(Anim, IronSwitchAnimRate, 0.1);
 
-        SetPlayerFOV(PlayerIronsightFOV);
+        SetPlayerFOV(GetPlayerIronsightFOV());
     }
 
     simulated function EndState()
@@ -323,7 +335,7 @@ Begin:
     if (bUsingSights)
     {
         ZoomOut();
-        SetPlayerFOV(PlayerIronsightFOV);
+        SetPlayerFOV(GetPlayerIronsightFOV());
     }
 
     if (InstigatorIsLocalHuman())

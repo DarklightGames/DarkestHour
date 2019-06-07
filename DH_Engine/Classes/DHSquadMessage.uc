@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHSquadMessage extends LocalMessage
@@ -38,6 +38,8 @@ var localized string RallyPointAbandonmentWarning;
 var localized string RallyPointSwapped;
 var localized string RallyPointTooCloseToConstruction;
 var localized string RallyPointDestroyed;
+var localized string RallyPointInUncontrolledObjective;
+var localized string RallyPointExposed;
 var localized string BannedPlayer;
 var localized string BannedCannotJoin;
 var localized string AutoJoinFailed;
@@ -50,11 +52,19 @@ var localized string YouAreNowAssistantMessage;
 var localized string YouAreNoLongerAssistantMessage;
 var localized string NewAssistantMessage;
 var localized string NotInSquadMessage;
+var localized string SquadMergedSourceMessage;
+var localized string SquadMergedSourceGenericMessage;
+var localized string SquadMergedDestinationMessage;
+var localized string SquadMergeRequestDeniedMessage;
+var localized string SquadMergeRequestDeniedGenericMessage;
+var localized string SquadMergeFailedMessage;
 
 static function string GetString(optional int S, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
     local int ExtraValue;
     local DHConstruction C;
+    local DHSquadReplicationInfo SRI;
+    local string SquadName;
 
     class'UInteger'.static.ToShorts(S, S, ExtraValue);
 
@@ -156,6 +166,33 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
             return Repl(default.NewAssistantMessage, "{0}", RelatedPRI_1.PlayerName);
         case 73:
             return class'ROTeamGame'.static.ParseLoadingHintNoColor(default.NotInSquadMessage, PlayerController(OptionalObject));
+        case 74:
+            SRI = DHSquadReplicationInfo(OptionalObject);
+            if (SRI != none || RelatedPRI_1 != none || RelatedPRI_1.Team != none)
+            {
+                SquadName = SRI.GetSquadName(RelatedPRI_1.Team.TeamIndex, ExtraValue);
+                return Repl(Repl(default.SquadMergedSourceMessage, "{0}", SquadName), "{1}", RelatedPRI_1.PlayerName);
+            }
+            else
+            {
+                return default.SquadMergedSourceGenericMessage;
+            }
+        case 75:
+            return default.SquadMergedDestinationMessage;
+        case 76:
+            SRI = DHSquadReplicationInfo(OptionalObject);
+            if (SRI != none)
+            {
+                SquadName = SRI.GetSquadName(RelatedPRI_1.Team.TeamIndex, ExtraValue);
+                return Repl(default.SquadMergeRequestDeniedMessage, "{0}", SquadName);
+            }
+            return default.SquadMergeRequestDeniedGenericMessage;
+        case 77:
+            return default.SquadMergeFailedMessage;
+        case 78:
+            return default.RallyPointInUncontrolledObjective;
+        case 79:
+            return default.RallyPointExposed;
         default:
             break;
     }
@@ -198,6 +235,8 @@ defaultproperties
     RallyPointSwapped="The squad leader has forcibly changed the currently active rally point."
     RallyPointTooCloseToConstruction="You cannot create a squad rally point so close to a {0}."
     RallyPointDestroyed="A squad rally point has been destroyed."
+    RallyPointInUncontrolledObjective="You cannot create a squad rally point inside an uncontrolled objective."
+    RallyPointExposed="A squad rally point has been spotted by the enemy!"
     BannedPlayer="{0} has been banned from the squad."
     BannedCannotJoin="You are unable to join this squad as you have been banned."
     AutoJoinFailed="There are no squads that you are eligible to join."
@@ -210,6 +249,12 @@ defaultproperties
     YouAreNoLongerAssistantMessage="You are no longer the squad leader's assistant."
     NewAssistantMessage="{0} has been promoted to squad leader's assistant."
     NotInSquadMessage="You are not in a squad. Press [%SQUADMENU%] to enter the squad menu or press [%SQUADJOINAUTO%] to automatically join a squad."
+    SquadMergedSourceMessage="Your squad has been merged into {0} squad. Your new squad leader is {1}."
+    SquadMergedDestinationMessage="Another squad has been merged into your squad."
+    SquadMergedSourceGenericMessage="Your squad has been merged into another squad."
+    SquadMergeRequestDeniedMessage="Your squad merge request was denied by {0} squad."
+    SquadMergeRequestDeniedGenericMessage="Your squad merge was denied."
+    SquadMergeFailedMessage="The squad merge failed,"
 
     bIsSpecial=false
     bIsConsoleMessage=true

@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_ShermanTank_M4A376W_Snow extends DH_ShermanTank_M4A376W;
-
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex2.utx
 
 defaultproperties
 {

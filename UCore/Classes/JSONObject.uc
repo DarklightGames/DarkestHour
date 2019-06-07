@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class JSONObject extends JSONValue;
@@ -50,6 +50,11 @@ function JSONObject PutInteger(string Key, int Value)
     return Put(Key, class'JSONNumber'.static.Create(string(Value)));
 }
 
+function JSONObject PutBoolean(string Key, bool Value)
+{
+    return Put(Key, class'JSONLiteral'.static.CreateBoolean(Value));
+}
+
 function JSONObject PutFloat(string Key, float Value)
 {
     return Put(Key, class'JSONNumber'.static.Create(string(Value)));
@@ -58,6 +63,11 @@ function JSONObject PutFloat(string Key, float Value)
 function JSONObject PutVector(string Key, vector Value)
 {
     return Put(Key, class'JSONArray'.static.FromVector(Value));
+}
+
+function JSONObject PutNull(string Key)
+{
+    return Put(Key, class'JSONLiteral'.static.CreateNull());
 }
 
 function JSONObject PutIVector(string Key, vector Value)
@@ -117,7 +127,7 @@ function string Encode()
         {
             Map.Get(Keys[i], V);
 
-            Strings[Strings.Length] = "\"" $ Keys[i] $ "\":" $ V.Encode();
+            Strings[Strings.Length] = "\"" $ GetSanitizedString(Keys[i]) $ "\":" $ V.Encode();
         }
 
         S $= class'UString'.static.Join(",", Strings);

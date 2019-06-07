@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHResupplyAttachment extends RODummyAttachment
@@ -15,22 +15,45 @@ enum EResupplyType
 };
 
 var     private int     TeamIndex;      // Team this volume resupplies
-var     EResupplyType   ResupplyType;   //Who this volume will resupply
+var     EResupplyType   ResupplyType;   // Who this volume will resupply
 var     array<Pawn>     ResupplyActors;
 var     float           UpdateTime;     // How often this thing needs to do it's business
+
+var     class<DHMapIconAttachment> MapIconAttachmentClass;
+var     DHMapIconAttachment        MapIconAttachment;
 
 delegate OnPawnResupplied(Pawn P);            // Called for every pawn that is resupplied
 
 function OnTeamIndexChanged();
 
-simulated function PostBeginPlay()
+function PostBeginPlay()
 {
     super(Actor).PostBeginPlay();
 
     SetTimer(1.0, true);
 }
 
-function int GetTeamIndex()
+final function AttachMapIcon()
+{
+    if (MapIconAttachmentClass != none)
+    {
+        MapIconAttachment = Spawn(MapIconAttachmentClass, self);
+
+        if (MapIconAttachment != none)
+        {
+            MapIconAttachment.SetBase(self);
+            MapIconAttachment.Setup();
+            DHMapIconAttachment_Resupply(MapIconAttachment).SetResupplyType(ResupplyType);
+            MapIconAttachment.SetTeamIndex(TeamIndex);
+        }
+        else
+        {
+            MapIconAttachmentClass.static.OnError(ERROR_SpawnFailed);
+        }
+    }
+}
+
+simulated function int GetTeamIndex()
 {
     return TeamIndex;
 }
@@ -39,7 +62,22 @@ final function SetTeamIndex(int TeamIndex)
 {
     self.TeamIndex = TeamIndex;
 
+    if (MapIconAttachment != none)
+    {
+        MapIconAttachment.SetTeamIndex(TeamIndex);
+    }
+
     OnTeamIndexChanged();
+}
+
+final function SetResupplyType(EResupplyType ResupplyType)
+{
+    self.ResupplyType = ResupplyType;
+
+    if (MapIconAttachment != none)
+    {
+        DHMapIconAttachment_Resupply(MapIconAttachment).SetResupplyType(ResupplyType);
+    }
 }
 
 function ProcessActorLeave()
@@ -206,6 +244,11 @@ event Destroyed()
     local int i;
     local Pawn P;
 
+    if (MapIconAttachment != none)
+    {
+        MapIconAttachment.Destroy();
+    }
+
     super.Destroyed();
 
     for (i = 0; i < ResupplyActors.Length; ++i)
@@ -275,11 +318,13 @@ event UnTouch(Actor Other)
 
 defaultproperties
 {
-    TeamIndex=NEUTRAL_TEAM_INDEX
+    RemoteRole=ROLE_DumbProxy
+
+    TeamIndex=-1
     UpdateTime=2.5
     ResupplyType=RT_All
     bDramaticLighting=true
     CollisionRadius=300
     CollisionHeight=100
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Resupply'
 }
-

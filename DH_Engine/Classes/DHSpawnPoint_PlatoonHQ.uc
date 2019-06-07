@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHSpawnPoint_PlatoonHQ extends DHSpawnPointBase
@@ -41,11 +41,6 @@ function OnTeamIndexChanged()
     {
         Construction.SetTeamIndex(GetTeamIndex());
     }
-}
-
-simulated function string GetMapStyleName()
-{
-    return "DHPlatoonHQButtonStyle";
 }
 
 function OnSpawnKill(Pawn VictimPawn, Controller KillerController)
@@ -108,9 +103,12 @@ function Timer()
 
 defaultproperties
 {
+    SpawnPointStyle="DHPlatoonHQButtonStyle"
+
     SpawnRadius=60.0
     bCombatSpawn=true
     EstablishmentCounterThreshold=60
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_SpawnPoint_PlatoonHQ'
 
     bCanBeEncroachedUpon=true
     EncroachmentRadiusInMeters=50
@@ -120,11 +118,11 @@ defaultproperties
     EncroachmentEnemyCountMin=3
     EncroachmentPenaltyForgivenessPerSecond=10
 
-    BaseSpawnTimePenalty=10
+    BaseSpawnTimePenalty=15
 
     CaptureRadiusInMeters=5
     EnemiesNeededToDeconstruct=2
 
-    SpawnKillPenalty=15
+    SpawnKillPenalty=30
     SpawnKillPenaltyForgivenessPerSecond=1
 }

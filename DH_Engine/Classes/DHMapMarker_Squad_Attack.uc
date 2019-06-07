@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHMapMarker_Squad_Attack extends DHMapMarker_Squad
@@ -20,4 +20,5 @@ defaultproperties
     IconColor=(R=255,G=211,B=0,A=255)
     MarkerName="Squad Attack"
     bIsUnique=true
+    bShouldDrawBeeLine=true
 }

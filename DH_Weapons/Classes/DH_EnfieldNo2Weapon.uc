@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_EnfieldNo2Weapon extends DHPistolWeapon;
-
-#exec OBJ LOAD FILE=..\Animations\DH_EnfieldNo2_1st.ukx
 
 defaultproperties
 {
@@ -21,8 +19,7 @@ defaultproperties
     HighDetailOverlayIndex=2
 
     DisplayFOV=90.0
-    IronSightDisplayFOV=40.0
-    PlayerIronsightFOV=60.0
+    IronSightDisplayFOV=40.0 // Increasing this really shows the ugly wrist bending in insane way
 
     MaxNumPrimaryMags=5
     InitialNumPrimaryMags=5

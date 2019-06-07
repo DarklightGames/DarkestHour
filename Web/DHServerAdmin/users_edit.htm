@@ -1,0 +1,19 @@
+<!-- #include file="header.inc" -->
+    <form method="post" action="<%PostAction%>">
+    <!-- Form Content Goes Here -->
+		 <span class="small"><table>
+		  <tr>
+		   <td nowrap>Username :</td>
+		   <td>
+		    <input class="textbox" type="text" name="Username" size="12" value="<%NameValue%>" maxlength="16">
+		    <input type="hidden" name="edit" value="<%NameValue%>">
+		   </td>
+		  </tr>
+		  <tr><td nowrap>Password :</td><td><input class="textbox" type="text" name="Password" size="12" value="<%PassValue%>" maxlength="16"></td></tr>
+		  <tr><td class="location" nowrap>Privileges</td><td><%PrivTable%></td></tr>
+		  <%GroupLinks%>
+		 </table><br><br>
+		 <input class="button" type="submit" name="<%SubmitName%>" value="<%SubmitValue%>">&nbsp;&nbsp;<input class="button" type="reset" value="Reset"></span>
+    <!-- End of form content -->
+    </form>
+<!-- #include file="footer.inc" -->

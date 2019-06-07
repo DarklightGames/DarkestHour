@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class UString extends Object;
@@ -36,17 +36,29 @@ static final function string Join(string Divider, array<string> Strings)
     return S;
 }
 
-static final function int FindFirstOf(string S, string T)
+static final function int FindLastOf(string Haystack, string Needle)
 {
     local int i, j;
 
-    for (i = 0; i < Len(T); ++i)
+    if (Len(Needle) > Len(Haystack))
     {
-        j = InStr(S, Mid(T, i, 1));
+        return -1;
+    }
 
-        if (j != -1)
+    for (i = Len(Haystack) - 1; i >= 0; --i)
+    {
+        if (Mid(Haystack, i, 1) == Mid(Needle, Len(Needle) - 1 - j, 1))
         {
-            return j;
+            ++j;
+        }
+        else
+        {
+            j = 0;
+        }
+
+        if (j == Len(Needle))
+        {
+            return i;
         }
     }
 
@@ -168,8 +180,8 @@ static final function string CRLF()
 }
 
 // This is essentially a redeclaration of the same function found in GameInfo.
-// Unfortunately, the dingus who wrote it didn't make it static, which is why
-// this one is necessary.
+// Unfortunately, that function is not static, which is why this one is
+// necessary.
 static final function string StripColor(string S)
 {
     local int i;

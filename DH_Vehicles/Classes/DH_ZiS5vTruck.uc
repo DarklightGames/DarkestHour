@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_ZiS5vTruck extends DHVehicle
@@ -11,9 +11,10 @@ defaultproperties
     // Vehicle properties
     VehicleNameString="ZiS-5V"
     VehicleTeam=1
-    VehicleMass=3.0
-    ReinforcementCost=3
+    VehicleMass=2.5
+    ReinforcementCost=2
     MaxDesireability=0.12
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_ZiS5V_anm.ZiS5V_ext'
@@ -55,8 +56,8 @@ defaultproperties
     // Damage
     Health=2000
     HealthMax=2000.0
-    DamagedEffectHealthFireFactor=0.75
-    EngineHealth=30
+    DamagedEffectHealthFireFactor=0.9
+    EngineHealth=20
     VehHitpoints(0)=(PointRadius=32.0,PointScale=1.0,PointBone="Body",PointOffset=(X=100.0,Y=0.0,Z=11.0),bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
     VehHitpoints(1)=(PointRadius=24.0,PointScale=1.0,PointBone="Axle_FR",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
     VehHitpoints(2)=(PointRadius=24.0,PointScale=1.0,PointBone="Axle_FL",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
@@ -65,7 +66,6 @@ defaultproperties
     EngineDamageFromGrenadeModifier=0.15
     DirectHEImpactDamageMult=9.0
     ImpactWorldDamageMult=1.0
-    HeavyEngineDamageThreshold=0.33
     DamagedEffectScale=0.7
     DamagedEffectOffset=(X=105.0,Y=0.0,Z=20.0)
     DestroyedVehicleMesh=StaticMesh'DH_Soviet_vehicles_stc.ZiS5.ZiS5V_destroyed'
@@ -108,6 +108,7 @@ defaultproperties
         WheelRadius=23.5
         SupportBoneName="Axle_FR" // means left side vertices are rotated around right axle bone - just makes axle move correctly with wheels, purely a visual thing
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_ZiS5vTruck.Wheel_FrontL'
     Begin Object Class=SVehicleWheel Name=Wheel_FrontR
@@ -138,6 +139,7 @@ defaultproperties
         WheelRadius=23.5
         SupportBoneName="Axle_BL"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_ZiS5vTruck.Wheel_BackR'
 

@@ -1,21 +1,16 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_Tiger2BTank extends DHArmoredVehicle;
-
-#exec OBJ LOAD FILE=..\Animations\DH_Tiger2B_anm.ukx
-#exec OBJ LOAD FILE=..\Sounds\DH_GerVehicleSounds2.uax
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex2.utx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesGE_tex3.utx
 
 defaultproperties
 {
     // Vehicle properties
     VehicleNameString="Panzer VI 'King Tiger' Ausf.B"
     VehicleMass=16.0
-    ReinforcementCost=14
+    ReinforcementCost=9
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Tiger2B_anm.tiger2B_body_ext'
@@ -157,6 +152,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=25.0,Y=-10.0,Z=1.0)
         WheelRadius=38.0
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_Tiger2BTank.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -175,6 +171,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=-7.0,Y=-10.0,Z=1.0)
         WheelRadius=38.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_Tiger2BTank.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -192,6 +189,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(Y=-10.0,Z=1.0)
         WheelRadius=38.0
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_Tiger2BTank.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel

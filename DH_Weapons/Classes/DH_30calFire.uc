@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_30calFire extends DHMGAutomaticFire;
@@ -12,8 +12,15 @@ defaultproperties
     AmmoClass=class'DH_Weapons.DH_30CalAmmo'
     FireRate=0.12
     TracerFrequency=5
-    Spread=70.0
-    RecoilRate=0.04
+    Spread=75.0
+    RecoilRate=0.06
+
+    // Recoil
+    MaxVerticalRecoilAngle=500
+    MaxHorizontalRecoilAngle=225
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.3),(InVal=6.0,OutVal=0.4),(InVal=12.0,OutVal=0.8),(InVal=50.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilFallOffExponent=4.0
+    RecoilFallOffFactor=30.0
 
     AmbientFireSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireLoop01'
     FireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHCannonShellHEAT extends DHCannonShell
@@ -64,17 +64,16 @@ simulated function HitWall(vector HitNormal, Actor Wall)
     }
 
     // Check & record whether we hit a world object we can penetrate (added in HEAT)
-    if ((Wall.bStatic || Wall.bWorldGeometry) && DHConstruction(Wall) == none && RODestroyableStaticMesh(Wall) == none && Mover(Wall) == none)
+    if ((Wall.bStatic || Wall.bWorldGeometry) && !Wall.bCanBeDamaged)
     {
         bHitWorldObject = true;
     }
 
     if (Role == ROLE_Authority)
     {
-//      if ((!Wall.bStatic && !Wall.bWorldGeometry) || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
-        if (!bHitWorldObject) // using this instead of above, as as we've already done this check earlier on
+        if (!bHitWorldObject)
         {
-            if (SavedHitActor != none || DHConstruction(Wall) != none || RODestroyableStaticMesh(Wall) != none || Mover(Wall) != none)
+            if (SavedHitActor != none || Wall.bCanBeDamaged)
             {
                 if (ShouldDrawDebugLines())
                 {

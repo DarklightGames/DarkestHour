@@ -1,12 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_StuartTank extends DHArmoredVehicle;
-
-#exec OBJ LOAD FILE=..\Animations\DH_Stuart_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex.utx
 
 defaultproperties
 {
@@ -14,7 +11,7 @@ defaultproperties
     VehicleNameString="M5 Stuart"
     VehicleTeam=1
     VehicleMass=7.0
-    ReinforcementCost=7
+    ReinforcementCost=4
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Stuart_anm.Stuart_body_ext'
@@ -148,6 +145,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=11.0)
         WheelRadius=33.0
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_StuartTank.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -166,6 +164,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=-50.0,Z=11.0)
         WheelRadius=33.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_StuartTank.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -183,6 +182,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=-20.0,Z=11.0)
         WheelRadius=33.0
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_StuartTank.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel

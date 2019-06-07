@@ -1,13 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_HellcatTank extends DHArmoredVehicle;
-
-#exec OBJ LOAD FILE=..\Animations\DH_Hellcat_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUS_tex5.utx
-#exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc3
 
 defaultproperties
 {
@@ -15,7 +11,7 @@ defaultproperties
     VehicleNameString="M18 Hellcat"
     VehicleTeam=1
     VehicleMass=11.0
-    ReinforcementCost=10
+    ReinforcementCost=8
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Hellcat_anm.hellcat_body_ext'
@@ -155,6 +151,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=10.0,Z=10.0)
         WheelRadius=38.0
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_HellcatTank.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -173,6 +170,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=-30.0,Z=10.0)
         WheelRadius=38.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_HellcatTank.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -190,6 +188,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=10.0)
         WheelRadius=38.0
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_HellcatTank.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel

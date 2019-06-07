@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_GAZ67Vehicle extends DHVehicle;
@@ -11,8 +11,8 @@ defaultproperties
     VehicleNameString="GAZ-67"
     VehicleTeam=1
     VehicleMass=3.5
-    ReinforcementCost=2
-    bMustBeInSquadToSpawn=true
+    ReinforcementCost=1
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_GAZ67_anm.GAZ67_ext'
@@ -63,8 +63,8 @@ defaultproperties
     // Damage
     Health=2000
     HealthMax=2000.0
-    DamagedEffectHealthFireFactor=0.8
-    EngineHealth=25
+    DamagedEffectHealthFireFactor=0.95
+    EngineHealth=10
     DamagedWheelSpeedFactor=0.3
     VehHitpoints(0)=(PointRadius=32.0,PointBone="Engine",bPenetrationPoint=false,DamageMultiplier=1.0,HitPointType=HP_Engine) // engine
     VehHitpoints(1)=(PointRadius=18.0,PointScale=1.0,PointBone="wheel_FL",DamageMultiplier=1.0,HitPointType=HP_Driver) // wheel
@@ -75,7 +75,6 @@ defaultproperties
     EngineDamageFromGrenadeModifier=0.125
     ImpactDamageMult=0.5
     ImpactWorldDamageMult=0.008
-    HeavyEngineDamageThreshold=0.33
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=60.0,Y=0.0,Z=25.0)
     DestroyedVehicleMesh=StaticMesh'DH_Soviet_vehicles_stc.GAZ67.GAZ67_destroyed'
@@ -126,6 +125,7 @@ defaultproperties
         WheelRadius=25.5
         SupportBoneName="Axle_FR" // means left side vertices are rotated around right axle bone - just makes axle move correctly with wheels, purely a visual thing
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_GAZ67Vehicle.Wheel_FrontL'
     Begin Object Class=SVehicleWheel Name=Wheel_FrontR
@@ -146,6 +146,7 @@ defaultproperties
         WheelRadius=25.5
         SupportBoneName="Axle_BR"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_GAZ67Vehicle.Wheel_BackL'
     Begin Object Class=SVehicleWheel Name=Wheel_BackR

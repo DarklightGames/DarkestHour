@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHCWEngineerRoles extends DHAlliedEngineerRoles
@@ -11,7 +11,7 @@ defaultproperties
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     Grenades(0)=(Item=class'DH_Weapons.DH_MillsBombWeapon')
     Grenades(1)=(Item=class'DH_Equipment.DH_USSmokeGrenadeWeapon')
-    GivenItems(0)="DH_Weapons.DH_SatchelCharge10lb10sWeapon"
+    GivenItems(0)="DH_Weapons.DH_SatchelChargeSmallWeapon"
     GivenItems(1)="DH_Equipment.DHWireCuttersItem"
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHPlayer extends ROPlayer
@@ -17,9 +17,20 @@ enum EMapMode
     MODE_Squads
 };
 
+struct PersonalMapMarker
+{
+    var class<DHMapMarker> MapMarkerClass;
+    var float MapLocationX;
+    var float MapLocationY;
+    var vector WorldLocation;
+};
+
+var     array<class<DHMapMarker> >          PersonalMapMarkerClasses;
+var     private array<PersonalMapMarker>    PersonalMapMarkers;
+
 var     input float             aBaseFire;
-var     bool                    bUsingController;
-var     bool                    bIsGagged;
+var     bool                    bToggleRun;          // user activated toggle run
+var     bool                    bIsGagged;           // player is gagged from chatting
 
 var     EMapMode                DeployMenuStartMode; // what the deploy menu is supposed to start out on
 var     DH_LevelInfo            ClientLevelInfo;
@@ -58,6 +69,9 @@ var     vector                  FlinchOffsetMag;
 var     vector                  FlinchOffsetRate;
 var     float                   FlinchOffsetTime;
 var     float                   FlinchMaxOffset;
+var     float                   FlinchMeterValue;
+var     float                   FlinchMeterIncrement;
+var     float                   LastFlinchTime;
 
 // Mantling
 var     float                   MantleCheckTimer;           // makes sure client doesn't try to start mantling without the server
@@ -91,8 +105,11 @@ var     int                     WeaponLockViolations;       // the number of vio
 var     DHSquadReplicationInfo  SquadReplicationInfo;
 var     bool                    bIgnoreSquadInvitations;
 var     bool                    bIgnoreSquadLeaderVolunteerPrompts;
+var     bool                    bIgnoreSquadLeaderAssistantVolunteerPrompts;
+var     bool                    bIgnoreSquadMergeRequestPrompts;
 var     int                     SquadMemberLocations[12];   // SQUAD_SIZE_MAX
 var     int                     SquadLeaderLocations[8];    // TEAM_SQUADS_MAX
+var     float                   NextSquadMergeRequestTimeSeconds;  // The time (relative to TimeSeconds) that this player can send another squad merge request.
 
 var     DHCommandInteraction    CommandInteraction;
 
@@ -103,6 +120,7 @@ var     FileLog                 ClientLogFile;
 
 var     bool                    bHasReceivedSquadJoinRecommendationMessage; // True when we have displayed the "you should probably join a squad" message.
 
+// Squad Things
 struct SquadSignal
 {
     var class<DHSquadSignal> SignalClass;
@@ -111,6 +129,11 @@ struct SquadSignal
 };
 
 var     SquadSignal             SquadSignals[SQUAD_SIGNALS_MAX];
+
+// Squad Leader HUD Info
+var     DHSquadReplicationInfo.RallyPointPlacementResult    RallyPointPlacementResult;
+var     int                                                 NextSquadRallyPointTime;
+var     byte                                                SquadRallyPointCount;
 
 // This is used to skip ResetInput calls in the GUIController.
 // Useful when you want to show a menu over top of the game (e.g. situation map)
@@ -126,6 +149,11 @@ var     bool                    bSpectateAllowViewPoints;
 
 var     DHScoreManager          ScoreManager;
 
+// "Lazy" camera controls
+var     bool                    bLazyCam;
+var     float                   LazyCamLaziness;
+var     rotator                 LazyCamRotationTarget;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -134,22 +162,25 @@ replication
         NextSpawnTime, NextVehicleSpawnTime, NextChangeTeamTime, LastKilledTime,
         DHPrimaryWeapon, DHSecondaryWeapon, bSpectateAllowViewPoints,
         SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled,
-        SquadLeaderLocations, bIsGagged;
+        SquadLeaderLocations, bIsGagged,
+        NextSquadRallyPointTime, SquadRallyPointCount;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
         ServerSetPlayerInfo, ServerSetIsInSpawnMenu, ServerSetLockTankOnEntry,
         ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSetBayonetAtSpawn,
-        ServerSaveArtilleryTarget, ServerClearObstacle,
+        ServerSaveArtilleryTarget, ServerClearObstacle, ServerCutConstruction,
         ServerAddMapMarker, ServerRemoveMapMarker,
         ServerSquadCreate, ServerSquadRename,
         ServerSquadJoin, ServerSquadJoinAuto, ServerSquadLeave,
         ServerSquadInvite, ServerSquadPromote, ServerSquadKick, ServerSquadBan,
         ServerSquadMakeAssistant, ServerSendVote,
-        ServerSquadSay, ServerSquadLock, ServerSquadSignal,
+        ServerSquadSay, ServerCommandSay, ServerSquadLock, ServerSquadSignal,
         ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
-        ServerSetPatronStatus, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
-        ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery,
+        ServerSetPatronTier, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
+        ServerSendSquadMergeRequest, ServerAcceptSquadMergeRequest, ServerDenySquadMergeRequest,
+        ServerSquadVolunteerToAssist,
+        ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
         ServerSurrender;
 
@@ -160,7 +191,12 @@ replication
         ClientConsoleCommand, ClientCopyToClipboard, ClientSaveROIDHash,
         ClientSquadInvite, ClientSquadSignal, ClientSquadLeaderVolunteerPrompt, ClientTeamSurrenderPrompt,
         ClientTeamKillPrompt, ClientOpenLogFile, ClientLogToFile, ClientCloseLogFile,
+        ClientSquadAssistantVolunteerPrompt,
+        ClientReceieveSquadMergeRequest, ClientSendSquadMergeRequestResult,
         ClientTeamSurrenderResponse;
+
+    unreliable if (Role < ROLE_Authority)
+        VehicleVoiceMessage;
 }
 
 function ServerChangePlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte NewWeapon2) { } // no longer used
@@ -195,9 +231,6 @@ simulated event PostBeginPlay()
         {
             break;
         }
-
-        // Set bUsingController based on the UseJoystick setting
-        bUsingController = bool(ConsoleCommand("get ini:Engine.Engine.ViewportManager UseJoystick"));
     }
 
     // This forces the player to choose a valid spectator mode instead of
@@ -288,14 +321,14 @@ simulated function PostNetReceive()
 {
     if (PendingWeaponLockSeconds > 0 && GameReplicationInfo != none)
     {
-        LockWeapons(PendingWeaponLockSeconds );
+        LockWeapons(PendingWeaponLockSeconds);
         PendingWeaponLockSeconds = 0;
     }
 
     super.PostNetReceive();
 }
 
-// Modified so we don't disable PostNetReceive() until we've received the GRI, which allows PendingWeaponLockSeconds  functionality to work
+// Modified so we don't disable PostNetReceive() until we've received the GRI, which allows PendingWeaponLockSeconds functionality to work
 simulated function bool NeedNetNotify()
 {
     return super.NeedNetNotify() || GameReplicationInfo == none;
@@ -510,16 +543,6 @@ function rotator AdjustAim(FireProperties FiredAmmunition, vector ProjStart, int
     return Rotation;
 }
 
-// Developer login
-exec function DevLogin()
-{
-    // If is a client and client checks his own ROID, then ask server for dev login
-    if (Level.NetMode != NM_DedicatedServer && class'DHAccessControl'.static.IsDeveloper(ROIDHash))
-    {
-        ServerAdminLoginSilent("Dev");
-    }
-}
-
 // Menu for the player's entire selection process
 exec function PlayerMenu(optional int Tab)
 {
@@ -534,6 +557,11 @@ exec function PlayerMenu(optional int Tab)
         DeployMenuStartMode = MODE_Map;
         ClientReplaceMenu("DH_Interface.DHDeployMenu");
     }
+}
+
+exec function PlaceRallyPoint()
+{
+    ServerSquadSpawnRallyPoint();
 }
 
 exec function SquadJoinAuto()
@@ -645,6 +673,11 @@ function ChangeName(coerce string S)
     DarkestHourGame(Level.Game).ChangeName(self, S, true);
 }
 
+simulated function float GetFlinchMeterFalloff(float TimeSeconds)
+{
+    return (TimeSeconds ** 2.0) * 0.05;
+}
+
 // Give the player a quick flinch and blur effect
 simulated function PlayerWhizzed(float DistSquared)
 {
@@ -652,6 +685,16 @@ simulated function PlayerWhizzed(float DistSquared)
 
     // The magic number below is 75% of the radius of DHBulletWhipAttachment squared (we don't want a flinch on the more distant shots)
     Intensity = 1.0 - ((FMin(DistSquared, 16875.0)) / 16875.0);
+
+    // Falloff the FlichMeter based on how much time has passed since we last had flinch
+    FlinchMeterValue -= GetFlinchMeterFalloff(Level.TimeSeconds - LastFlinchTime);
+    FlinchMeterValue = FMax(0.0, FlinchMeterValue); // Make sure FlinchMeterValue is not below zero
+
+    // Increment the FlichMeter with a maximum
+    FlinchMeterValue = FMin(FlinchMeterValue + FlinchMeterIncrement, 1.0);
+
+    // Intensity is affected by the FlinchMeterValue, the higher the FlinchMeterValue the lower the Intensity
+    Intensity *= (1.0 - FlinchMeterValue);
 
     AddBlur(0.85, Intensity);
     PlayerFlinched(Intensity);
@@ -666,8 +709,8 @@ simulated function PlayerFlinched(float Intensity)
     {
         FlinchIntensity = Intensity * FlinchMaxOffset;
 
-        AfterFlinchRotation.Pitch = RandRange(FlinchIntensity, FlinchMaxOffset);
-        AfterFlinchRotation.Yaw = RandRange(FlinchIntensity, FlinchMaxOffset);
+        AfterFlinchRotation.Pitch = RandRange((FlinchIntensity / 2), FlinchIntensity);
+        AfterFlinchRotation.Yaw = RandRange((FlinchIntensity / 2), FlinchIntensity);
 
         if (Rand(2) == 1)
         {
@@ -700,6 +743,8 @@ simulated function PlayerFlinched(float Intensity)
 
         ShakeView(FlinchRotMag, FlinchRotRate, FlinchRotTime, FlinchOffsetMag, FlinchOffsetRate, FlinchOffsetTime);
     }
+
+    LastFlinchTime = Level.TimeSeconds;
 }
 
 // Modified to prevent a mistakenly passed negative blur time, which causes the blur to 'freeze' indefinitely, until some other blur effect resets it
@@ -708,6 +753,35 @@ simulated function AddBlur(float NewBlurTime, float NewBlurScale)
     if (NewBlurTime > 0.0)
     {
         super.AddBlur(NewBlurTime, NewBlurScale);
+    }
+}
+
+// LAZY CAM
+exec function LazyCam(float Laziness)
+{
+    if (Level.NetMode != NM_Standalone && !PlayerReplicationInfo.bSilentAdmin && !PlayerReplicationInfo.bAdmin)
+    {
+        return;
+    }
+
+    if (Laziness == 0.0)
+    {
+        SetLazyCam(false);
+    }
+    else
+    {
+        SetLazyCam(true);
+        LazyCamLaziness = Laziness;
+    }
+}
+
+function SetLazyCam(bool bLazyCam)
+{
+    self.bLazyCam = bLazyCam;
+
+    if (bLazyCam)
+    {
+        LazyCamRotationTarget = Rotation;
     }
 }
 
@@ -720,6 +794,7 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
     local ROVehicle ROVeh;
     local rotator   NewRotation, ViewRotation;
     local float     TurnSpeedFactor;
+    local Quat      A, B;
 
     if (Pawn != none)
     {
@@ -770,6 +845,36 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
         {
             CameraDeltaRotation.Yaw += DHStandardTurnSpeedFactor * DeltaTime * aTurn;
             CameraDeltaRotation.Pitch += DHStandardTurnSpeedFactor * DeltaTime * aLookUp;
+        }
+    }
+    else if (bLazyCam)
+    {
+        LazyCamRotationTarget.Yaw += FClamp(DeltaTime * aTurn * DHStandardTurnSpeedFactor, -10000.0, 10000.0);
+        LazyCamRotationTarget.Pitch += FClamp(DeltaTime * aLookUp * DHStandardTurnSpeedFactor, -10000.0, 10000.0);
+
+        A = QuatFromRotator(Rotation);
+        B = QuatFromRotator(LazyCamRotationTarget);
+
+        if (class'UQuaternion'.static.Angle(A, B) < class'UUnits'.static.DegreesToRadians(0.125))
+        {
+            ViewRotation = LazyCamRotationTarget;
+        }
+        else
+        {
+            ViewRotation = QuatToRotator(QuatSlerp(A, B, DeltaTime * ((1.0 - FClamp(LazyCamLaziness, 0.0, 1.0)) * 32.0)));
+        }
+
+        SetRotation(ViewRotation);
+
+        ViewShake(DeltaTime);
+        ViewFlash(DeltaTime);
+
+        // Make pawn face towards new view rotation (applied only to a DHPawn as vehicles ignore FaceRotation)
+        if (!bRotateToDesired && DHPwn != none && (!bFreeCamera || !bBehindView))
+        {
+            NewRotation = ViewRotation;
+            NewRotation.Roll = Rotation.Roll;
+            DHPwn.FaceRotation(NewRotation, DeltaTime);
         }
     }
     else
@@ -959,6 +1064,11 @@ simulated function bool IsInArtilleryVehicle()
 simulated function bool IsInSquad()
 {
     return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsInSquad();
+}
+
+simulated function bool IsSLorASL()
+{
+    return DHPlayerReplicationInfo(PlayerReplicationInfo) != none && DHPlayerReplicationInfo(PlayerReplicationInfo).IsSLorASL();
 }
 
 // Modified to to spawn a DHArtillerySpawner at the strike co-ords instead of using level's NorthEastBoundsspawn to set its height
@@ -1189,7 +1299,7 @@ function ClientSetBehindView(bool B)
 // Modified to edit an if state in Timer()
 auto state PlayerWaiting
 {
-ignores SeePlayer, HearNoise, NotifyBump, TakeDamage, PhysicsVolumeChange, SwitchToBestWeapon;
+    ignores SeePlayer, HearNoise, NotifyBump, TakeDamage, PhysicsVolumeChange, SwitchToBestWeapon;
 
     // In the else if() statement, PRI != none was added so if the player isn't knowledgeable of their PRI yet it doesn't even open a menu
     // This actually works quite well because now players will actually see the server's MOTD text
@@ -1219,7 +1329,7 @@ ignores SeePlayer, HearNoise, NotifyBump, TakeDamage, PhysicsVolumeChange, Switc
 
 state PlayerWalking
 {
-ignores SeePlayer, HearNoise, Bump;
+    ignores SeePlayer, HearNoise, Bump;
 
     // Modified to allow behind view, if server has called this (restrictions on use of behind view are handled in ServerToggleBehindView)
     function ClientSetBehindView(bool B)
@@ -1341,7 +1451,20 @@ ignores SeePlayer, HearNoise, Bump;
 
         GetAxes(Pawn.Rotation, X, Y, Z);
 
-        // Update acceleration
+        // Handle toggle run
+        if (bToggleRun)
+        {
+            if (aForward == 6000.0 || aForward == -6000.0 || aStrafe != 0.0)
+            {
+                bToggleRun = false; // If any movement input (WASD), then cancel toggle run
+            }
+            else
+            {
+                aForward = 5999.9; // If toggle run, then make aForward as close as possible to 6000.0, but not
+            }
+        }
+
+        // Calculate acceleration (movement)
         NewAccel = aForward * X + aStrafe * Y;
         NewAccel.Z = 0.0;
 
@@ -1428,6 +1551,7 @@ ignores SeePlayer, HearNoise, Bump;
     function EndState()
     {
         GroundPitch = 0;
+        bToggleRun = false;
 
         if (Pawn != none)
         {
@@ -2071,6 +2195,13 @@ function ServerUse()
             {
                 EntryVehicle = ROVehicle(LookedAtActor).FindEntryVehicle(Pawn);
 
+                // End AT Rotation action if player is currently preforming one
+                if(DHPawn(Pawn) != none && DHPawn(Pawn).GunToRotate != none)
+                {
+                    DHPawn(Pawn).GunToRotate.ServerExitRotation();
+                    DHPawn(Pawn).SwitchToLastWeapon();
+                }
+
                 if (EntryVehicle != none && EntryVehicle.TryToDrive(Pawn))
                 {
                     return;
@@ -2258,6 +2389,11 @@ exec function ToggleDuck()
 function ClientToggleDuck()
 {
     ToggleDuck();
+}
+
+exec function ToggleRun()
+{
+    bToggleRun = !bToggleRun;
 }
 
 // Modified to network optimise by removing automatic call to replicated server function in a VehicleWeaponPawn
@@ -2462,6 +2598,14 @@ function ServerClearObstacle(int Index)
     }
 }
 
+function ServerCutConstruction(DHConstruction C)
+{
+    if (C != none && Pawn != none)
+    {
+        C.CutConstruction(Pawn);
+    }
+}
+
 // Keep this function as it's used as a control to show communication page allowing fast muting of players
 exec function CommunicationMenu()
 {
@@ -2497,7 +2641,7 @@ simulated function int GetNextSpawnTime(int SpawnPointIndex, DHRoleInfo RI, int 
     {
         // LastKilledTime is 0 the first time a player joins a server, but if he leaves, the time is stored (using the sessions thing)
         // this means the player can pretty much spawn right away the first time connecting, but from then on he will be subject to the respawn time factors
-        T = LastKilledTime + GRI.ReinforcementInterval[PlayerReplicationInfo.Team.TeamIndex] + RI.AddedReinforcementTime + GRI.SpawnPoints[SpawnPointIndex].GetSpawnTimePenalty();
+        T = LastKilledTime + GRI.ReinforcementInterval[PlayerReplicationInfo.Team.TeamIndex] + RI.AddedRoleRespawnTime + GRI.SpawnPoints[SpawnPointIndex].GetSpawnTimePenalty();
     }
 
     if (VehiclePoolIndex != -1)
@@ -2520,7 +2664,7 @@ simulated function SwayHandler(float DeltaTime)
 {
     local DHPawn P;
     local DHWeapon W;
-    local float  WeaponSwayYawAcc, WeaponSwayPitchAcc, StaminaFactor, TimeFactor, DeltaSwayYaw, DeltaSwayPitch;
+    local float  WeaponSwayYawAcc, WeaponSwayPitchAcc, StaminaFactor, TimeFactor, DeltaSwayYaw, DeltaSwayPitch, FlinchFactor;
 
     P = DHPawn(Pawn);
 
@@ -2598,6 +2742,22 @@ simulated function SwayHandler(float DeltaTime)
     {
         WeaponSwayYawAcc *= W.SwayLeanModifier;
         WeaponSwayPitchAcc *= W.SwayLeanModifier;
+    }
+
+    // Increase sway if bayonet attached
+    if (W.bBayonetMounted)
+    {
+        WeaponSwayYawAcc *= W.SwayBayonetModifier;
+        WeaponSwayPitchAcc *= W.SwayBayonetModifier;
+    }
+
+    // Increase sway based on Flinch Meter
+    FlinchFactor = FlinchMeterValue - GetFlinchMeterFalloff(Level.TimeSeconds - LastFlinchTime);
+
+    if (FlinchFactor > 0.0)
+    {
+        WeaponSwayYawAcc *= 1.0 + FlinchFactor;
+        WeaponSwayPitchAcc *= 1.0 + FlinchFactor;
     }
 
     // Add an elastic factor to get sway near the original aim-point, & a damping factor to keep elastic factor from causing wild oscillations
@@ -2919,6 +3079,8 @@ function Reset()
     NextChangeTeamTime = default.NextChangeTeamTime;
     LastKilledTime = default.LastKilledTime;
     NextVehicleSpawnTime = default.NextVehicleSpawnTime;
+    FlinchMeterValue = 0.0;
+    LastFlinchTime = 0.0;
 }
 
 function ServerSetIsInSpawnMenu(bool bIsInSpawnMenu)
@@ -2955,7 +3117,7 @@ state DeadSpectating
 
 state Dead
 {
-ignores SeePlayer, HearNoise, KilledBy, SwitchWeapon, NextWeapon, PrevWeapon;
+    ignores SeePlayer, HearNoise, KilledBy, SwitchWeapon, NextWeapon, PrevWeapon;
 
     function BeginState()
     {
@@ -2971,6 +3133,9 @@ ignores SeePlayer, HearNoise, KilledBy, SwitchWeapon, NextWeapon, PrevWeapon;
             {
                 LastKilledTime = GRI.ElapsedTime;
             }
+
+            // Apply personal message from server strings
+            //ClientMessage(DarkestHourGame(Level.Game).GetServerMessage(PlayerReplicationInfo.Deaths - 1), 'ServerMessage');
         }
     }
 }
@@ -3193,18 +3358,29 @@ event ClientProposeMenu(string Menu, optional string Msg1, optional string Msg2)
 function ClientSaveROIDHash(string ROID)
 {
     local HTTPRequest PatronRequest;
+    local string PatronTier;
 
     ROIDHash = ROID;
 
     SaveConfig();
 
-    // Now send the patron status request.
-    PatronRequest = Spawn(class'HTTPRequest');
-    PatronRequest.Method = "GET";
-    PatronRequest.Host = "darkesthour.darklightgames.com";
-    PatronRequest.Path = "/client/patron.php?steamid64=" $ ROIDHash;
-    PatronRequest.OnResponse = PatronRequestOnResponse;
-    PatronRequest.Send();
+    // Get script based patron status (this should be removed once we fix the HTTP issue with MAC)
+    PatronTier = class'DHAccessControl'.static.GetPatronTier(ROIDHash);
+
+    // If we have script patron status, then set patron status on server
+    if (PatronTier != "")
+    {
+        ServerSetPatronTier(PatronTier);
+    }
+    else // Else, check via HTTP request for patron status
+    {
+        PatronRequest = Spawn(class'HTTPRequest');
+        PatronRequest.Method = "GET";
+        PatronRequest.Host = "46.101.44.19";
+        PatronRequest.Path = "/patrons/?search=" $ ROIDHash;
+        PatronRequest.OnResponse = PatronRequestOnResponse;
+        PatronRequest.Send();
+    }
 }
 
 // Modified so if we just switched off manual reloading & player is in a cannon that's waiting to reload, we pass any different pending ammo type to the server
@@ -3292,24 +3468,22 @@ function ServerSetLockTankOnEntry(bool bEnabled)
 }
 
 // New function to put player into 'weapon lock' for a specified number of seconds, during which time he won't be allowed to fire
-// In multi-player it is initially called on server & then on owning net client, via a replicated function call
-simulated function LockWeapons(int Seconds, optional int Reason)
+simulated function LockWeapons(int Seconds)
 {
     if (Seconds > 0 && GameReplicationInfo != none)
     {
         WeaponUnlockTime = GameReplicationInfo.ElapsedTime + Seconds;
 
-        // If this is the local player, show him a warning screen message & release his fire buttons
+        // If this is the local player, release his fire buttons
         if (Viewport(Player) != none)
         {
-            ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', Reason);
             bFire = 0; // 'releases' fire button if being held down, which stops automatic weapon fire from continuing & avoids spamming repeated messages & buzz sounds
             bAltFire = 0;
         }
         // Or a server calls replicated function to do similar on an owning net client (passing seconds as a byte for efficient replication)
         else if (Role == ROLE_Authority)
         {
-            ClientLockWeapons(Seconds);
+            ClientLockWeapons(Seconds); // Force weapon lock on client
         }
     }
     // Hacky fix for problem where player re-joins server with an active weapon lock saved in his DHPlayerSession, but client doesn't yet have GRI
@@ -3387,6 +3561,12 @@ simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
     Canvas.SetPos(4.0, YPos);
     Canvas.SetDrawColor(255, 0, 0);
     Canvas.DrawText("     Location:" @ Location @ " Rotation:" @ Rotation);
+    YPos += YL;
+    Canvas.SetPos(4.0, YPos);
+
+    Canvas.SetPos(4.0, YPos);
+    Canvas.SetDrawColor(0, 0, 255);
+    Canvas.DrawText("     *******FlinchMeterValue*******:" @ FlinchMeterValue);
     YPos += YL;
     Canvas.SetPos(4.0, YPos);
 }
@@ -4994,6 +5174,39 @@ simulated function ClientTeamKillPrompt(string LastFFKillerString)
     Player.InteractionMaster.AddInteraction("DH_Engine.DHTeamKillInteraction", Player);
 }
 
+function ServerSquadVolunteerToAssist()
+{
+    local int TeamIndex, SquadIndex;
+    local DHPlayerReplicationInfo PRI, SLPRI;
+    local DHPlayer SLPC;
+
+    TeamIndex = GetTeamNum();
+    SquadIndex = GetSquadIndex();
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    SLPRI = SquadReplicationInfo.GetSquadLeader(TeamIndex, SquadIndex);
+
+    if (PRI == none || SLPRI == none)
+    {
+        return;
+    }
+
+    SLPC = DHPlayer(SLPRI.Owner);
+
+    if (SLPC == none)
+    {
+        return;
+    }
+
+    if (SquadReplicationInfo.HasAssistant(TeamIndex, SquadIndex))
+    {
+        // Squad assistant already exists.
+        return;
+    }
+
+    SLPC.ClientSquadAssistantVolunteerPrompt(TeamIndex, SquadIndex, PRI);
+}
+
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 // START SQUAD FUNCTIONS
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -5020,6 +5233,17 @@ simulated function ClientSquadLeaderVolunteerPrompt(int TeamIndex, int SquadInde
         class'DHSquadLeaderVolunteerInteraction'.default.ExpirationTime = ExpirationTime;
 
         Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadLeaderVolunteerInteraction", Player);
+    }
+}
+
+simulated function ClientSquadAssistantVolunteerPrompt(int TeamIndex, int SquadIndex, DHPlayerReplicationInfo VolunteerPRI)
+{
+    if (!bIgnoreSquadLeaderAssistantVolunteerPrompts)
+    {
+        class'DHSquadLeaderAssistantVolunteerInteraction'.default.TeamIndex = TeamIndex;
+        class'DHSquadLeaderAssistantVolunteerInteraction'.default.SquadIndex = SquadIndex;
+        class'DHSquadLeaderAssistantVolunteerInteraction'.default.VolunteerPRI = VolunteerPRI;
+        Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadLeaderAssistantVolunteerInteraction", Player);
     }
 }
 
@@ -5061,7 +5285,7 @@ exec function Speak(string ChannelTitle)
         // If we are trying to speak in unassigned but we are in a squad, then return out
         return;
     }
-    else if (ChannelTitle ~= VRI.CommandChannelName && !PRI.IsSquadLeader())
+    else if (ChannelTitle ~= VRI.CommandChannelName && !PRI.IsSLorASL())
     {
         // If we are trying to speak in command but we aren't a SL, then return out
         return;
@@ -5305,6 +5529,63 @@ function ServerRemoveMapMarker(int MapMarkerIndex)
     }
 }
 
+function array<PersonalMapMarker> GetPersonalMarkers()
+{
+    return PersonalMapMarkers;
+}
+
+function PersonalMapMarker FindPersonalMarker(class<DHMapMarker> MapMarkerClass)
+{
+    local int i;
+
+    for (i = 0; i < PersonalMapMarkers.Length; ++i)
+    {
+        if (PersonalMapMarkers[i].MapMarkerClass == MapMarkerClass)
+        {
+            return PersonalMapMarkers[i];
+        }
+    }
+}
+
+function AddPersonalMarker(class<DHMapMarker> MapMarkerClass, float MapLocationX, float MapLocationY)
+{
+    local DHGameReplicationInfo GRI;
+    local PersonalMapMarker PMM;
+    local int i;
+
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+
+    if (GRI == none || MapMarkerClass == none || !MapMarkerClass.default.bIsPersonal)
+    {
+        return;
+    }
+
+    if (MapMarkerClass.default.bIsUnique)
+    {
+        for (i = 0; i < PersonalMapMarkers.Length; ++i)
+        {
+            if (PersonalMapMarkers[i].MapMarkerClass == MapMarkerClass)
+            {
+                PersonalMapMarkers.Remove(i, 1);
+                break;
+            }
+        }
+    }
+
+    PMM.MapMarkerClass = MapMarkerClass;
+    PMM.MapLocationX = MapLocationX;
+    PMM.MapLocationY = MapLocationY;
+    PMM.WorldLocation = GRI.GetWorldCoords(MapLocationX, MapLocationY);
+
+    PersonalMapMarkers.Insert(0, 1);
+    PersonalMapMarkers[0] = PMM;
+}
+
+function RemovePersonalMarker(int Index)
+{
+    PersonalMapMarkers.Remove(Index, 1);
+}
+
 simulated function ClientSquadSignal(class<DHSquadSignal> SignalClass, vector L)
 {
     local int i;
@@ -5389,10 +5670,6 @@ function ServerSquadSwapRallyPoints()
     }
 }
 
-//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-// END SQUAD DEBUG FUNCTIONS
-//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
 exec function SquadSay(string Msg)
 {
     Msg = Left(Msg, 128);
@@ -5400,6 +5677,42 @@ exec function SquadSay(string Msg)
     if (AllowTextMessage(Msg))
     {
         ServerSquadSay(Msg);
+    }
+}
+
+exec function CommandSay(string Msg)
+{
+    Msg = Left(Msg, 128);
+
+    if (AllowTextMessage(Msg))
+    {
+        ServerCommandSay(Msg);
+    }
+}
+
+function ServerCommandSay(string Msg)
+{
+    local DarkestHourGame G;
+
+    LastActiveTime = Level.TimeSeconds;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none)
+    {
+        G.BroadcastCommand(self, Level.Game.ParseMessageString(Level.Game.BaseMutator, self, Msg) , 'CommandSay');
+    }
+}
+
+function ServerVehicleSay(string Msg)
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none)
+    {
+        G.BroadcastVehicle(self, Level.Game.ParseMessageString(Level.Game.BaseMutator, self, Msg) , 'VehicleSay');
     }
 }
 
@@ -5420,10 +5733,11 @@ function ServerForgiveLastFFKiller()
 
     KillerPC = DHPlayer(LastFFKiller.Owner);
 
-    // If LastFFKiller's weapons are locked and no longer has FF kills, unlock the player's weapons
-    if (KillerPC != none && KillerPC.AreWeaponsLocked(true) && LastFFKiller.FFKills < 1)
+    // If LastFFKiller's weapons are locked, unlock that player's weapons
+    if (KillerPC != none && KillerPC.AreWeaponsLocked(true))
     {
-        KillerPC.LockWeapons(1, 2);
+        KillerPC.LockWeapons(1); // Unlock weapons as soon as possible
+        KillerPC.ReceiveLocalizedMessage(class'DHWeaponsLockedMessage', 2); // "Weapons are now unlocked"
     }
 
     // Set none as we have handled the current LastFFKiller
@@ -5494,15 +5808,21 @@ exec function ShowOrderMenu()
 // Returns the menu that should be displayed when ShowCommandMenu is called.
 function bool GetCommandInteractionMenu(out string MenuClassName, out Object MenuObject)
 {
-    local DHPawn OtherPawn;
+    local DHPawn OtherPawn, P;
     local DHPlayerReplicationInfo PRI;
     local DHRadio Radio;
+    local DHATGun Gun;
     local vector TraceStart, TraceEnd, HitLocation, HitNormal;
     local Actor HitActor;
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
     if (PRI == none)
+    {
+        return false;
+    }
+
+    if(DHPawn(Pawn) != none && DHPawn(Pawn).GunToRotate != none)
     {
         return false;
     }
@@ -5521,6 +5841,20 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
             {
                 MenuClassName = "DH_Engine.DHCommandMenu_Radio";
                 MenuObject = Radio;
+                return true;
+            }
+        }
+        else if (HitActor.IsA('DHATGun'))
+        {
+            Gun = DHATGun(HitActor);
+            P = DHPawn(Pawn);
+
+            if (P != none && Gun != none && Gun.GetRotationError(P) != ERROR_TooFarAway && !Gun.bVehicleDestroyed)
+            {
+                // TODO: we need some sort of way to check if we're being auto-traced?
+                // perhaps keep tabs on who the tracer was using timeseconds + pawn in the AT gun?
+                MenuClassName = "DH_Engine.DHCommandMenu_ATGun";
+                MenuObject = HitActor;
                 return true;
             }
         }
@@ -5570,6 +5904,11 @@ function bool GetCommandInteractionMenu(out string MenuClassName, out Object Men
     else if (!PRI.IsInSquad())
     {
         MenuClassName = "DH_Engine.DHCommandMenu_LoneWolf";
+        return true;
+    }
+    else if (PRI.IsPatron())
+    {
+        MenuClassName = "DH_Engine.DHCommandMenu_Patron";
         return true;
     }
 
@@ -5883,38 +6222,36 @@ function ServerRequestBanInfo(int PlayerID)
     }
 }
 
+// TODO: this needs ot change!
 function PatronRequestOnResponse(int Status, TreeMap_string_string Headers, string Content)
 {
     local JSONParser Parser;
-    local JSONObject O;
-    local byte PatronLevel;
+    local JSONObject O, Patron;
+    local JSONArray Results;
 
     if (Status == 200)
     {
+        Log("Patron status request success (" $ Status  $ ")");
+
         Parser = new class'JSONParser';
         O = Parser.ParseObject(Content);
 
-        Log("Patron status request success (" $ Status  $ ")");
+        Results = O.Get("results").AsArray();
 
-        if (O != none)
+        if (Results.Size() == 1)
         {
-            PatronLevel = O.Get("patreon_tier").AsInteger();
-        }
+            Patron = Results.Get(0).AsObject();
 
-        // No Patron = -1, Lead = 0, Bronze = 1, Silver = 2, Gold = 3
-        if (PatronLevel >= 0)
-        {
-            ServerSetPatronStatus(PatronLevel);
+            if (Patron != none)
+            {
+                ServerSetPatronTier(Patron.Get("tier").AsString());
+            }
         }
-    }
-    else
-    {
-        Warn("Patron status request failed (" $ Status $ ")");
     }
 }
 
-// Client-to-server function that reports the player's patron status to the server.
-function ServerSetPatronStatus(byte PatronLevel)
+// Client-to-server function that reports the player's patron tier to the server.
+function ServerSetPatronTier(string PatronTier)
 {
     local DHPlayerReplicationInfo PRI;
 
@@ -5922,7 +6259,24 @@ function ServerSetPatronStatus(byte PatronLevel)
 
     if (PRI != none)
     {
-        PRI.PatronStatus = PatronStatusType(PatronLevel + 1); // add 1 to offset the index for the PatronStatusType enum
+        PRI.PatronTier = GetPatronTier(PatronTier);
+    }
+}
+
+function DHPlayerReplicationInfo.EPatronTier GetPatronTier(string Tier)
+{
+    switch (Tier)
+    {
+        case "lead":
+            return PATRON_Lead;
+        case "bronze":
+            return PATRON_Bronze;
+        case "silver":
+            return PATRON_Silver;
+        case "gold":
+            return PATRON_Gold;
+        default:
+            return PATRON_None;
     }
 }
 
@@ -6098,6 +6452,293 @@ exec function Jump(optional float F)
     }
 }
 
+//==============================================================================
+// SQUAD MERGE REQUESTS
+//==============================================================================
+function ServerSendSquadMergeRequest(int RecipientSquadIndex)
+{
+    local DHSquadReplicationInfo.ESquadMergeRequestResult Result;
+
+    if (SquadReplicationInfo != none)
+    {
+        Result = SquadReplicationInfo.SendSquadMergeRequest(self, GetTeamNum(), GetSquadIndex(), RecipientSquadIndex);
+
+        ClientSendSquadMergeRequestResult(Result);
+    }
+}
+
+function ServerAcceptSquadMergeRequest(int SquadMergeRequestID)
+{
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.AcceptSquadMergeRequest(self, SquadMergeRequestID);
+    }
+}
+
+function ServerDenySquadMergeRequest(int SquadMergeRequestID)
+{
+    if (SquadReplicationInfo != none)
+    {
+        SquadReplicationInfo.DenySquadMergeRequest(self, SquadMergeRequestID);
+    }
+}
+
+function ClientReceieveSquadMergeRequest(int SquadMergeRequestID, string SenderPlayerName, string SenderSquadName)
+{
+    if (bIgnoreSquadMergeRequestPrompts)
+    {
+        ServerDenySquadMergeRequest(SquadMergeRequestID);
+        return;
+    }
+
+    class'DHSquadMergeRequestInteraction'.default.SquadMergeRequestID = SquadMergeRequestID;
+    class'DHSquadMergeRequestInteraction'.default.SenderPlayerName = SenderPlayerName;
+    class'DHSquadMergeRequestInteraction'.default.SenderSquadName = SenderSquadName;
+
+    Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadMergeRequestInteraction", Player);
+}
+
+function ClientSendSquadMergeRequestResult(DHSquadReplicationInfo.ESquadMergeRequestResult Result)
+{
+    local UT2K4GUIController GUIController;
+    local GUIPage Page;
+
+    // Find the currently open ROGUIRoleSelection menu and notify it
+    GUIController = UT2K4GUIController(Player.GUIController);
+
+    if (GUIController == none)
+    {
+        return;
+    }
+
+    Page = GUIController.FindMenuByClass(class'GUIPage');
+
+    if (Page != none)
+    {
+        Page.OnMessage("SQUAD_MERGE_REQUEST_RESULT", int(Result));
+    }
+}
+
+simulated function bool IsSquadLeader()
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    return PRI != none && PRI.IsSquadLeader();
+}
+
+function ClientLocationalVoiceMessage(PlayerReplicationInfo Sender,
+                                      PlayerReplicationInfo Recipient,
+                                      name messagetype, byte messageID,
+                                      optional Pawn senderPawn, optional vector senderLocation)
+{
+    local VoicePack Voice;
+    local ROVoicePack V;
+    local bool bIsTeamVoice;
+    local class<ROVoicePack> ROV;
+    local ROPlayerReplicationInfo PRI;
+
+    if (Sender == none || Sender.VoiceType == none || Sender.Team == none || Player.Console == none || Level.NetMode == NM_DedicatedServer)
+    {
+        return;
+    }
+
+    // If the sender is receiving the sound then allow them to hear the
+    // voicepack from their settings instead of the regular voicepack
+    PRI = ROPlayerReplicationInfo(Sender);
+
+    if (PRI != none && PRI.RoleInfo != none)
+    {
+        if (Level.GetLocalPlayerController().PlayerReplicationInfo.Team == none ||
+            Sender.Team.TeamIndex == Level.GetLocalPlayerController().PlayerReplicationInfo.Team.TeamIndex)
+        {
+            ROV = class<ROVoicePack>(DynamicLoadObject(PRI.RoleInfo.AltVoiceType, class'Class'));
+            bIsTeamVoice = true;
+            V = Spawn(ROV, self);
+        }
+        else
+        {
+            ROV = class<ROVoicePack>(DynamicLoadObject(PRI.RoleInfo.VoiceType, class'Class'));
+            V = Spawn(ROV, self);
+
+            if (V != none)
+            {
+                V.bUseLocationalVoice = true;
+                V.bIsFromDifferentTeam = true;
+            }
+        }
+
+        if (V != none)
+        {
+            V.ClientInitializeLocational(Sender, Recipient, MessageType, MessageID, SenderPawn, SenderLocation);
+
+            if (bIsTeamVoice)
+            {
+                if (MessageType == 'VEH_ORDERS' || MessageType == 'VEH_ALERTS' || MessageType == 'VEH_GOTO')
+                {
+                    VehicleVoiceMessage(Sender, V.getClientParsedMessage());
+                }
+                else if (MessageType == 'TAUNT')
+                {
+                    TeamMessage(Sender, V.getClientParsedMessage(), 'VOICESAY');
+                }
+                else
+                {
+                    TeamMessage(Sender, V.getClientParsedMessage(), 'VOICESAY');
+                }
+            }
+        }
+    }
+    else
+    {
+        Voice = Spawn(Sender.VoiceType, self);
+
+        if (Voice != none)
+        {
+            Log("Fallback: voice.ClientInitialize(Sender, Recipient, messagetype, messageID);");
+            Voice.ClientInitialize(Sender, Recipient, MessageType, MessageID);
+        }
+    }
+}
+
+function VehicleVoiceMessage(PlayerReplicationInfo Sender, string Msg)
+{
+    local ROBroadcastHandler Handler;
+
+    if (Level != none &&
+        Level.Game != none &&
+        Level.Game.BroadcastHandler != none &&
+        Level.Game.BroadcastHandler.IsA('ROBroadcastHandler'))
+    {
+        Handler = ROBroadcastHandler(Level.Game.BroadcastHandler);
+        Handler.BroadcastText(Sender, self, Msg, 'VehicleVoiceSay');
+    }
+}
+
+function SendVoiceMessage(PlayerReplicationInfo Sender,
+                          PlayerReplicationInfo Recipient,
+                          name MessageType,
+                          byte MessageID,
+                          name BroadcastType,
+                          optional Pawn SoundSender,
+                          optional vector SenderLocation)
+{
+    local Controller P;
+    local ROPlayer ROP;
+    local ROBot ROB;
+    local float DistanceToOther;
+    local array<Controller> VehicleOccupants;
+    local int i;
+
+    Log("SendVoiceMessage" @ Sender @ Sender @ MessageType @ MessageID @ BroadcastType);
+
+    if (!AllowVoiceMessage(MessageType))
+    {
+        return;
+    }
+
+    if (MessageType == 'VEH_ORDERS' || MessageType == 'VEH_ALERTS' || MessageType == 'VEH_GOTO')
+    {
+        SendVehicleVoiceMessage(Sender, Recipient, MessageType, MessageID, BroadcastType);
+        ROP = ROPlayer(Sender.Owner);
+        VehicleOccupants = GetBotVehicleOccupants(ROP);
+
+        for (i = 0; i < VehicleOccupants.length; ++i)
+        {
+            ROB = ROBot(VehicleOccupants[i]);
+
+            if (ROB != none)
+            {
+                ROB.BotVoiceMessage(MessageType, MessageID, self);
+            }
+        }
+
+        return;
+    }
+
+    for (P = Level.ControllerList; P != none; P = P.NextController)
+    {
+        ROP = ROPlayer(P);
+
+        if (ROP != none)
+        {
+            if (Pawn != none)
+            {
+                // do we want people who are dead to hear voice commands? - Antarian
+                if (ROP.Pawn != none && Pawn != ROP.Pawn)
+                {
+                    DistanceToOther = VSize(Pawn.Location - ROP.Pawn.Location);
+
+                    if (class'ROVoicePack'.static.isValidDistanceForMessageType(messagetype,distanceToOther))
+                    {
+                        if (ROP.PlayerReplicationInfo.Team.TeamIndex == PlayerReplicationInfo.Team.TeamIndex)
+                        {
+                            ROP.ClientLocationalVoiceMessage(Sender, Recipient, MessageType, MessageID, none, SenderLocation);
+                        }
+                        else
+                        {
+                            ROP.ClientLocationalVoiceMessage(Sender, Recipient, MessageType, MessageID, SoundSender, SenderLocation);
+                        }
+                    }
+                }
+                else
+                {
+                    // Sending to self
+                   ROP.ClientLocationalVoiceMessage(Sender, Recipient, MessageType, MessageID, SoundSender, SenderLocation);
+                }
+            }
+        }
+        else if ((MessageType == 'ORDER' || MessageType == 'ATTACK' || MessageType == 'DEFEND') &&
+                 (Recipient == none || Recipient == P.PlayerReplicationInfo ||
+                 (Bot(P) != none && Bot(P).Squad != none && Bot(P).Squad.SquadLeader != none && Bot(P).Squad.SquadLeader.PlayerReplicationInfo == Recipient)))
+        {
+            P.BotVoiceMessage(MessageType, MessageID, self);
+        }
+    }
+
+    // Lets make the bots attack/defend particular objectives
+    if (MessageType == 'ATTACK' || MessageType == 'DEFEND')
+    {
+        if (Recipient == none)
+        {
+            ROTeamGame(Level.Game).SetTeamAIObjectives(messageID, PlayerReplicationInfo.Team.TeamIndex);
+        }
+        else
+        {
+            ROTeamGame(Level.Game).SetSquadObjectives(messageID, PlayerReplicationInfo.Team.TeamIndex, Recipient);
+        }
+    }
+
+    // Add to 'help request' array if needed
+    if (MessageType == 'ATTACK')
+    {
+        AttemptToAddHelpRequest(PlayerReplicationInfo, MessageID, 1, GetObjectiveLocation(MessageID)); // Send locations all the time (easier on hud drawing code)
+    }
+    else if (MessageType == 'DEFEND')
+    {
+        AttemptToAddHelpRequest(PlayerReplicationInfo, MessageID, 2, GetObjectiveLocation(MessageID)); // Ditto
+    }
+    else if (MessageType == 'HELPAT')
+    {
+        AttemptToAddHelpRequest(PlayerReplicationInfo, MessageID, 0, GetObjectiveLocation(MessageID)); // Idem
+    }
+    else if (MessageType == 'SUPPORT' && MessageID == 0) // need help at coords
+    {
+        if (Pawn != none)
+        {
+            AttemptToAddHelpRequest(PlayerReplicationInfo, MessageID, 4, Pawn.location);
+        }
+    }
+    else if (MessageType == 'SUPPORT' && MessageID == 2) // need mg ammo
+    {
+        if (Pawn != none)
+        {
+            AttemptToAddHelpRequest(PlayerReplicationInfo, MessageID, 3, Pawn.location);
+        }
+    }
+}
+
 defaultproperties
 {
     CorpseStayTime=15
@@ -6118,7 +6759,10 @@ defaultproperties
     DHScopeTurnSpeedFactor=0.2
 
     // Max flinch offset for close snaps
-    FlinchMaxOffset=375.0
+    FlinchMaxOffset=450.0
+
+    // Flinch meter
+    FlinchMeterIncrement=0.08
 
     // Flinch from bullet snaps when deployed
     FlinchRotMag=(X=100.0,Y=0.0,Z=100.0)
@@ -6154,4 +6798,6 @@ defaultproperties
     VoiceChatLANCodec="CODEC_96WB"
 
     ToggleDuckIntervalSeconds=0.5
+
+    PersonalMapMarkerClasses(0)=class'DHMapMarker_Ruler'
 }

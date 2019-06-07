@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHVehicleWeaponPawn extends ROVehicleWeaponPawn
@@ -1092,7 +1092,7 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
     local Vehicle          NewVehiclePosition;
     local bool             bMustBeTankerToSwitch;
 
-    if (F == 0 || VehicleBase == none) // pressing zero is an invalid switch choice
+    if (F == 0 || DHVehicle(VehicleBase) == none) // pressing zero is an invalid switch choice
     {
         return false;
     }
@@ -1102,6 +1102,12 @@ simulated function bool CanSwitchToVehiclePosition(byte F)
     {
         NewVehiclePosition = VehicleBase;
         bMustBeTankerToSwitch = VehicleBase.bMustBeTankCommander;
+
+        if (DHVehicle(VehicleBase).default.bRequiresDriverLicense && !class'DHPlayerReplicationInfo'.static.IsPlayerLicensedToDrive(DHPlayer(Self.Controller)) && IsHumanControlled())
+        {
+            DisplayVehicleMessage(0); // not qualified to operate vehicle
+            return false;
+        }
     }
     // Trying to switch to non-driver position
     else

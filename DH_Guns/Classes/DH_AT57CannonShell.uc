@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_AT57CannonShell extends DHCannonShell;
@@ -22,7 +22,7 @@ defaultproperties
     bShatterProne=true
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
     CoronaClass=class'DH_Effects.DHShellTracer_Red'
-    ShellImpactDamage=class'DH_Engine.DHShellATImpactDamageType'
+    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
     ImpactDamage=350
     BallisticCoefficient=1.19
     Speed=50152.0

@@ -1,5 +1,5 @@
 //==============================================================================
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class JSONString extends JSONValue;
@@ -23,7 +23,7 @@ function int AsInteger()
 
 function string Encode()
 {
-    return "\"" $ String $ "\"";
+    return "\"" $ GetSanitizedString(String) $ "\"";
 }
 
 function bool AsBoolean()

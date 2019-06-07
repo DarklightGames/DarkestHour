@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHWeapon extends ROWeapon
@@ -17,17 +17,31 @@ var     float   SwayCrouchedModifier;
 var     float   SwayProneModifier;
 var     float   SwayTransitionModifier;
 var     float   SwayLeanModifier;
+var     float   SwayBayonetModifier;
 
-var     bool    bIsMantling;
-var     float   PlayerIronsightFOV;
-var     float   SwayModifyFactor;
-var     float   BobModifyFactor;
+var     bool            bIsMantling;
+var     bool            bUsesIronsightFOV;
+var     private float   PlayerIronsightFOV;
+var     float           SwayModifyFactor;
+var     float           BobModifyFactor;
 
 replication
 {
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         bIsMantling;
+}
+
+simulated function float GetPlayerIronsightFOV()
+{
+    if (bUsesIronsightFOV)
+    {
+        return PlayerIronsightFOV;
+    }
+    else
+    {
+        return class'DHPlayer'.default.DefaultFOV;
+    }
 }
 
 // Modified to reset player's FOV back to default
@@ -73,7 +87,13 @@ simulated function bool StartFire(int Mode)
     return false;
 }
 
-// Modified to take player out of ironsights if necessary, & to allow for multiple copies of weapon to drop with spread (so they aren't inside each other)
+// Function which should return how many pickups this weapon should drop
+function int GetNumberOfDroppedPickups()
+{
+    return 1;
+}
+
+// Modfied to add randomize to a drop and to be more modular (please try to avoid duplicating this function everywhere)
 function DropFrom(vector StartLocation)
 {
     local Pickup  Pickup;
@@ -107,14 +127,14 @@ function DropFrom(vector StartLocation)
             DetachFromPawn(Instigator);
         }
 
-        for (i = 0; i < AmmoAmount(0); ++i)
+        for (i = 0; i < GetNumberOfDroppedPickups(); ++i)
         {
-            R.Yaw = Rand(16000) - 8000; // about 45 degrees to either side, so roughly in the direction player is facing
-
-            Pickup = Spawn(PickupClass,,, StartLocation, R);
+            Pickup = Spawn(PickupClass,,, StartLocation, Rotation);
 
             if (Pickup != none)
             {
+                R.Yaw = Rand(8000) - 4000; // about 23 degrees to either side, so roughly in the direction player is facing
+
                 Pickup.InitDroppedPickupFor(self);
                 Pickup.Velocity = Velocity >> R;
                 Pickup.Velocity.X += RandRange(-100.0, 100.0);
@@ -124,9 +144,9 @@ function DropFrom(vector StartLocation)
                 {
                     WeaponPickup(Pickup).bThrown = true;
                 }
-
-                Pickup = none;
             }
+
+            Pickup = none; // Make sure pickup is none (this probably isn't needed)
         }
 
         Destroy();
@@ -830,9 +850,10 @@ defaultproperties
     SwayProneModifier=0.5
     SwayTransitionModifier=4.5
     SwayLeanModifier=1.25
+    SwayBayonetModifier=1.02
 
     PlayerIronsightFOV=60.0
-    BobModifyFactor=1.0
+    BobModifyFactor=0.9
     BobDamping=1.6
     SelectAnimRate=1.0
     PutDownAnimRate=1.0
@@ -846,4 +867,6 @@ defaultproperties
 
     TeamIndex=2
     bCanHaveInitialNumMagsChanged=true
+
+    bUsesIronsightFOV=true
 }

@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_FG42Weapon extends DHBipodAutoWeapon;
-
-#exec OBJ LOAD FILE=..\Animations\DH_Fallschirmgewehr42_1st.ukx
 
 defaultproperties
 {
@@ -16,9 +14,13 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_FG42Attachment'
     PickupClass=class'DH_Weapons.DH_FG42Pickup'
 
+    InitialBarrels=1
+    BarrelClass=class'DH_Weapons.DH_FG42Barrel'
+    BarrelSteamBone="Muzzle"
+
     Mesh=SkeletalMesh'DH_Fallschirmgewehr42_1st.FG42' // TODO: there is no specularity mask for this weapon
 
-    IronSightDisplayFOV=28.0
+    IronSightDisplayFOV=50.0
 
     MaxNumPrimaryMags=11
     InitialNumPrimaryMags=11

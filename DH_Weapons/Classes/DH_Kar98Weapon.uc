@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_Kar98Weapon extends DHBoltActionWeapon;
-
-#exec OBJ LOAD FILE=..\Animations\DH_Kar98_1st.ukx
 
 defaultproperties
 {
@@ -30,4 +28,11 @@ defaultproperties
     BayoAttachAnim="Bayonet_on"
     BayoDetachAnim="Bayonet_off"
     IronBringUpRest="iron_inrest"
+    SingleReloadAnim="single_insert"
+    SingleReloadHalfAnim="single_insert_half"
+    PreReloadAnim="single_open"
+    PreReloadHalfAnim="single_open_half"
+    PostReloadAnim="single_close"
+    FullReloadAnim="reload"
 }
+

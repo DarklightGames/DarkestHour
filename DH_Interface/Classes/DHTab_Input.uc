@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHTab_Input extends ROTab_Input;
@@ -108,11 +108,6 @@ function SaveSettings()
     if (bool(PC.ConsoleCommand("get ini:Engine.Engine.ViewportManager UseJoystick")) != bJoystick)
     {
         PC.ConsoleCommand("set ini:Engine.Engine.ViewportManager UseJoystick" @ bJoystick);
-
-        if (DHPlayer(PC) != none)
-        {
-            DHPlayer(PC).bUsingController = bJoystick;
-        }
     }
 
     if (bool(PC.ConsoleCommand("get ini:Engine.Engine.RenderDevice ReduceMouseLag")) != bLag)

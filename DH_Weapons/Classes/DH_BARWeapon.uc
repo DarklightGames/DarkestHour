@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_BARWeapon extends DHBipodAutoWeapon;
-
-#exec OBJ LOAD FILE=..\Animations\DH_BAR_1st.ukx
 
 var     bool    bSlowFireRate; // flags that the slower firing rate is currently selected
 
@@ -34,6 +32,8 @@ simulated function bool UsingAutoFire()
 
 defaultproperties
 {
+    SwayModifyFactor=1.1 // Increased sway because of length, weight, and general awkwardness
+
     ItemName="Browning Automatic Rifle"
     TeamIndex=1
     FireModeClass(0)=class'DH_Weapons.DH_BARFire'
@@ -41,12 +41,16 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_BARAttachment'
     PickupClass=class'DH_Weapons.DH_BARPickup'
 
+    InitialBarrels=1
+    BarrelClass=class'DH_Weapons.DH_BARBarrel'
+    BarrelSteamBone="Muzzle"
+
     Mesh=SkeletalMesh'DH_BAR_1st.BAR'
     HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.BAR_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    IronSightDisplayFOV=25.0
+    IronSightDisplayFOV=30.0
     FreeAimRotationSpeed=2.0
 
     MaxNumPrimaryMags=12

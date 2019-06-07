@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHWeaponBarrel extends Actor
@@ -117,6 +117,11 @@ function UpdateBarrelStatus()
                 if (W.bBarrelFailed != bBarrelFailed)
                 {
                     W.SetBarrelFailed(bBarrelFailed);
+                }
+
+                if (W.BarrelTemperature != Temperature)
+                {
+                    W.SetBarrelTemperature(Temperature);
                 }
             }
             else

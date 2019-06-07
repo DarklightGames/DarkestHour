@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 // The purpose of this class is to optimize both server and client performance using FogDistance and FogRatio
@@ -12,7 +12,7 @@ const FOG_CHANGE_TIME =             20.0;                       // Time in chang
 const MIN_DESIRED_UPDATE_TIME =     60.0;                       // After changing min deisred FPS, how quickly its change takes affect
 const CLIENTFRAMERATE_UPDATETIME =  5.0;                        // How often to calculate the average fps
 
-var()   bool            bUsesDynamicFogDistance;                // Indicates for the server to dynamically change its and the client's view distance based on server health
+var()   bool            bUseDynamicFogDistance;                 // ...
 
 var     float           OriginalFogDistanceEnd,                 // Saves at the beginning of the level, but only then
                         TargetDistanceFog,                      // Target fog distance for both the client and server, this is replicated to all clients
@@ -203,9 +203,18 @@ function SetNewTargetFogDistance(float NewDistance)
     }
 }
 
+// Will set the server's target fog distance based on a ratio (min being DistanceFogEndMin and max being OriginalFogDistanceEnd)
+function SetFogDistanceWithRatio(float Ratio)
+{
+    if (Ratio >= 0.0 && Ratio <= 1.0)
+    {
+        SetNewTargetFogDistance(DistanceFogEndMin + ((OriginalFogDistanceEnd - DistanceFogEndMin) * Ratio));
+    }
+}
+
 defaultproperties
 {
-    bUsesDynamicFogDistance=true
+    bUseDynamicFogDistance=true
     ClientFogRatioCurve=(Points=((InVal=0.0,OutVal=0.0),(InVal=0.5,OutVal=0.0),(InVal=1.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     ClientFogRatio=1.0
     bNetNotify=true

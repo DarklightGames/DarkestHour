@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_MG42Fire extends DHMGAutomaticFire;
@@ -12,14 +12,15 @@ defaultproperties
     AmmoClass=class'DH_Weapons.DH_MG42Ammo'
     FireRate=0.05
     TracerFrequency=7
-    Spread=66.0
+    Spread=70.0
     RecoilRate=0.03125
 
     // Recoil
-    maxVerticalRecoilAngle=450
-    maxHorizontalRecoilAngle=250
-    PctBipodDeployRecoil=0.02
-    PctRestDeployRecoil=0.05
+    MaxVerticalRecoilAngle=460
+    MaxHorizontalRecoilAngle=215
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.3),(InVal=10.0,OutVal=0.6),(InVal=25.0,OutVal=1.0),(InVal=50.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilFallOffExponent=4.0
+    RecoilFallOffFactor=32.0
 
     AmbientFireSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireLoop01'
     FireEndSound=SoundGroup'DH_WeaponSounds.mg42.Mg42_FireEnd01'

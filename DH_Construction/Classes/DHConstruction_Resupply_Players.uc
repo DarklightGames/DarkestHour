@@ -1,13 +1,13 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHConstruction_Resupply_Players extends DHConstruction_Resupply;
 
 #exec OBJ LOAD FILE=../StaticMeshes/DH_Construction_stc.usx
 
-static function StaticMesh GetConstructedStaticMesh(DHConstruction.Context Context)
+static function StaticMesh GetConstructedStaticMesh(DHActorProxy.Context Context)
 {
     switch (Context.TeamIndex)
     {

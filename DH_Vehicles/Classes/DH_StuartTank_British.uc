@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_StuartTank_British extends DH_StuartTank;
-
-#exec OBJ LOAD FILE=..\Textures\DH_VehiclesUK_tex.utx
 
 defaultproperties
 {

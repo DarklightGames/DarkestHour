@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHScoreManager extends Actor;
@@ -182,7 +182,7 @@ function int GetEventScoreIndex(class<DHScoreEvent> EventClass)
     return -1;
 }
 
-function string Serialize()
+function JSONObject Serialize()
 {
     local int i;
     local JSONObject Root, EventScoreObject, CategoryScoreObject;
@@ -193,7 +193,7 @@ function string Serialize()
     for (i = 0; i < arraycount(CategoryScores); ++i)
     {
         CategoryScoreObject = new class'JSONObject';
-        CategoryScoreObject.PutString("class", GetCategoryClassByIndex(i));
+        CategoryScoreObject.PutString("type", GetCategoryClassByIndex(i));
         CategoryScoreObject.PutInteger("score", CategoryScores[i]);
         CategoryScoresArray.Add(CategoryScoreObject);
     }
@@ -203,18 +203,18 @@ function string Serialize()
     for (i = 0; i < EventScores.Length; ++i)
     {
         EventScoreObject = new class'JSONObject';
-        EventScoreObject.PutString("class", string(EventScores[i].EventClass));
+        EventScoreObject.PutString("type", string(EventScores[i].EventClass));
         EventScoreObject.PutInteger("count", EventScores[i].Count);
         EventScoreObject.PutInteger("score", EventScores[i].Score);
         EventScoresArray.Add(EventScoreObject);
     }
 
     Root = new class'JSONObject';
-    Root.Put("total_score", class'JSONNumber'.static.ICreate(TotalScore));
+    Root.Put("total", class'JSONNumber'.static.ICreate(TotalScore));
     Root.Put("categories", CategoryScoresArray);
     Root.Put("events", EventScoresArray);
 
-    return Root.Encode();
+    return Root;
 }
 
 defaultproperties

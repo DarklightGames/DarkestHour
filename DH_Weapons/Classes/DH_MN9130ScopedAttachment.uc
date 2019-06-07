@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_MN9130ScopedAttachment extends DHWeaponAttachment;
@@ -165,6 +165,7 @@ defaultproperties
     PA_MoveWalkFire(5)="stand_shootFRwalk_kar"
     PA_MoveWalkFire(6)="stand_shootFRwalk_kar"
     PA_MoveWalkFire(7)="stand_shootFLwalk_kar"
+
     PA_ReloadAnim="stand_insert_karscope"
     PA_ReloadEmptyAnim="stand_insert_karscope"
     PA_ProneReloadAnim="prone_insert_karscope"
@@ -173,6 +174,7 @@ defaultproperties
     PA_PostReloadAnim="stand_close_karscope"
     PA_PronePreReloadAnim="prone_open_karscope"
     PA_PronePostReloadAnim="prone_close_karscope"
+
     PA_AltFire="stand_idlestrike_kar"
     PA_CrouchAltFire="stand_idlestrike_kar"
     PA_ProneAltFire="prone_idlestrike_bayo"

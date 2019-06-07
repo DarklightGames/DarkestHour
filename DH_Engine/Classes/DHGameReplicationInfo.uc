@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHGameReplicationInfo extends ROGameReplicationInfo;
@@ -29,7 +29,7 @@ enum VehicleReservationError
     ERROR_PoolInactive,
     ERROR_PoolMaxActive,
     ERROR_NoReservations,
-    ERROR_NoSquad
+    ERROR_NoLicense
 };
 
 struct ArtilleryTarget
@@ -55,7 +55,6 @@ struct SupplyPoint
     var byte bIsActive;
     var byte TeamIndex;
     var DHConstructionSupplyAttachment Actor;
-    var int Quantized2DPose;
     var class<DHConstructionSupplyAttachment> ActorClass;
 };
 
@@ -148,7 +147,13 @@ var bool                bAreConstructionsEnabled;
 var bool                bAllChatEnabled;
 
 var byte                ServerTickHealth;
-var byte                ServerNetHealth;
+var int                 ServerNetHealth;
+
+var private bool        bIsDangerZoneEnabled;
+var private byte        DangerZoneNeutral;
+var private byte        DangerZoneBalance;
+var private byte        OldDangerZoneNeutral;
+var private byte        OldDangerZoneBalance;
 
 // Map markers
 struct MapMarker
@@ -227,7 +232,10 @@ replication
         DHArtillery,
         TeamMunitionPercentages,
         AlliesVictoryMusicIndex,
-        AxisVictoryMusicIndex;
+        AxisVictoryMusicIndex,
+        bIsDangerZoneEnabled,
+        DangerZoneNeutral,
+        DangerZoneBalance;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
@@ -282,7 +290,7 @@ simulated function PostBeginPlay()
 
         if (LI != none)
         {
-            bAreConstructionsEnabled = LI.bAreConstructionsEnabled;
+            bAreConstructionsEnabled = LI.GameTypeClass.default.bAreConstructionsEnabled;
         }
 
         // Add usable map markers to the class list to be replicated!
@@ -343,6 +351,205 @@ simulated function PostNetBeginPlay()
     }
 }
 
+simulated function ObjectiveCompleted()
+{
+    if (bIsDangerZoneEnabled)
+    {
+        DangerZoneUpdated();
+    }
+}
+
+function bool ObjectiveTreeNodeDepthComparatorFunction(int LHS, int RHS)
+{
+    return (LHS >> 16) > (RHS >> 16);
+}
+
+// This function returns all objectives (via array of indices) which meets objective spawn criteria
+function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
+{
+    local int i;
+    local array<DHObjectiveTreeNode> Roots;
+    local DHObjective Obj;
+    local array<int> ObjectiveIndices;
+    local UComparator_int Comparator;
+    local int Depth, MinDepth;
+
+    for (i = 0; i < arraycount(DHObjectives); ++i)
+    {
+        Obj = DHObjectives[i];
+
+        if (Obj == none)
+        {
+            continue;
+        }
+
+        // Root objectives are those that are active
+        if (Obj.IsActive())
+        {
+            Roots[Roots.Length] = GetObjectiveTree(Team, Obj, ObjectiveIndices);
+        }
+    }
+
+    // We have the root objectives, lets tranverse the trees to find the nearest objective with spawnpoint hints defined
+    for (i = 0; i < Roots.Length; ++i)
+    {
+        TraverseTreeNode(Team, Roots[i], Roots[i], Indices);
+    }
+
+    // Sort the indices by depth.
+    Comparator = new class'UComparator_int';
+    Comparator.CompareFunction = ObjectiveTreeNodeDepthComparatorFunction;
+    class'USort'.static.ISort(Indices, Comparator);
+
+    // Eliminate all indices that are below the Minimum Required Depth
+    MinDepth = GetMinRequiredDepth();
+    for (i = Indices.Length - 1; i >= 0; --i)
+    {
+        if ((Indices[i] >> 16) < MinDepth)
+        {
+            Indices.Remove(i, 1);
+        }
+    }
+
+    // Eliminate all objective indices that do not match the lowest depth
+    if (Indices.Length > 0)
+    {
+        Depth = Indices[0] >> 16;
+    }
+
+    for (i = Indices.Length - 1; i >= 0; --i)
+    {
+        if ((Indices[i] >> 16) != Depth)
+        {
+            Indices.Remove(i, 1);
+        }
+    }
+
+    for (i = 0; i < Indices.Length; ++i)
+    {
+        Indices[i] = Indices[i] & 0xFFFF;
+    }
+}
+
+function TraverseTreeNode(int Team, DHObjectiveTreeNode Root, DHObjectiveTreeNode Node, out array<int> ObjectiveIndices, optional int Depth)
+{
+    local int i;
+    local bool bIsFarEnoughAway;
+    local bool bNodeHasHints;
+    local bool bAlreadyAdded;
+    local bool bIsActive;
+    local DH_LevelInfo LI;
+
+    if (Node == none)
+    {
+        return;
+    }
+
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (LI == none)
+    {
+        return;
+    }
+
+    bIsFarEnoughAway = VSize(Root.Objective.Location - Node.Objective.Location) > class'DHUnits'.static.MetersToUnreal(LI.ObjectiveSpawnDistanceThreshold);
+    bNodeHasHints = Node.Objective.SpawnPointHintTags[Team] != '';
+    bAlreadyAdded = class'UArray'.static.IIndexOf(ObjectiveIndices, Node.Objective.ObjNum) == -1;
+    bIsActive = Node.Objective.IsActive();
+
+    if (bNodeHasHints && bIsFarEnoughAway && bAlreadyAdded && !bIsActive)
+    {
+        ObjectiveIndices[ObjectiveIndices.Length] = (Depth << 16) | Node.Objective.ObjNum;
+    }
+
+    for (i = 0; i < Node.Children.Length; ++i)
+    {
+        TraverseTreeNode(Team, Root, Node.Children[i], ObjectiveIndices, Depth + 1);
+    }
+}
+
+// Function which determines
+function int GetMinRequiredDepth()
+{
+    local DH_LevelInfo LI;
+
+    LI = class'DH_LevelInfo'.static.GetInstance(Level);
+
+    if (LI == none)
+    {
+        Warn("Something has gone very wrong in GetMinDepth in class DHGameReplicationInfo, LevelInfo is none!");
+        return 1; // return with a fair value
+    }
+
+    // If the level overrides the gametype, return the override
+    if (LI.ObjectiveSpawnMinimumDepth != -1)
+    {
+        return LI.ObjectiveSpawnMinimumDepth;
+    }
+
+    // Otherwise return the Gametype's min depth
+    return LI.GameTypeClass.default.ObjSpawnMinimumDepth;
+}
+
+function DHObjectiveTreeNode GetObjectiveTree(int Team, DHObjective Objective, out array<int> ObjectiveIndices)
+{
+    local int i;
+    local DHObjectiveTreeNode Node;
+    local DHObjectiveTreeNode Child;
+
+    if (Objective == none)
+    {
+        return none;
+    }
+
+    if (class'UArray'.static.IIndexOf(ObjectiveIndices, Objective.ObjNum) != -1)
+    {
+        return none;
+    }
+
+    ObjectiveIndices[ObjectiveIndices.Length] = Objective.ObjNum;
+
+    Node = new class'DHObjectiveTreeNode';
+    Node.Objective = Objective;
+
+    if (Team == AXIS_TEAM_INDEX)
+    {
+        for (i = 0; i < Objective.AxisRequiredObjForCapture.Length; ++i)
+        {
+            if (DHObjectives[Objective.AxisRequiredObjForCapture[i]].IsActive())
+            {
+                continue;
+            }
+
+            Child = GetObjectiveTree(Team, DHObjectives[Objective.AxisRequiredObjForCapture[i]], ObjectiveIndices);
+
+            if (Child != none)
+            {
+                Node.Children[Node.Children.Length] = Child;
+            }
+        }
+    }
+    else if (Team == ALLIES_TEAM_INDEX)
+    {
+        for (i = 0; i < Objective.AlliesRequiredObjForCapture.Length; ++i)
+        {
+            if (DHObjectives[Objective.AlliesRequiredObjForCapture[i]].IsActive())
+            {
+                continue;
+            }
+
+            Child = GetObjectiveTree(Team, DHObjectives[Objective.AlliesRequiredObjForCapture[i]], ObjectiveIndices);
+
+            if (Child != none)
+            {
+                Node.Children[Node.Children.Length] = Child;
+            }
+        }
+    }
+
+    return Node;
+}
+
 function int AddConstructionClass(class<DHConstruction> ConstructionClass)
 {
     local int i;
@@ -380,7 +587,6 @@ simulated event Timer()
 function int AddSupplyPoint(DHConstructionSupplyAttachment CSA)
 {
     local int i;
-    local float X, Y;
 
     if (CSA != none)
     {
@@ -392,8 +598,6 @@ function int AddSupplyPoint(DHConstructionSupplyAttachment CSA)
                 SupplyPoints[i].Actor = CSA;
                 SupplyPoints[i].TeamIndex = CSA.GetTeamIndex();
                 SupplyPoints[i].ActorClass = CSA.Class;
-                GetMapCoords(CSA.Location, X, Y);
-                SupplyPoints[i].Quantized2DPose = class'UQuantize'.static.QuantizeClamped2DPose(X, Y, CSA.Rotation.Yaw);
                 return i;
             }
         }
@@ -594,9 +798,7 @@ simulated function bool CanSpawnWithParameters(int SpawnPointIndex, int TeamInde
     {
         VehicleClass = class<DHVehicle>(GetVehiclePoolVehicleClass(VehiclePoolIndex));
 
-        if (VehicleClass == none ||
-            VehicleClass.default.bMustBeInSquadToSpawn && SquadIndex == -1 ||
-            !CanSpawnVehicle(VehiclePoolIndex, bSkipTimeCheck))
+        if (VehicleClass == none || !CanSpawnVehicle(VehiclePoolIndex, bSkipTimeCheck))
         {
             return false;
         }
@@ -1120,9 +1322,9 @@ simulated function VehicleReservationError GetVehicleReservationError(DHPlayer P
         return ERROR_NoReservations;
     }
 
-    if (VC.default.bMustBeInSquadToSpawn && !PC.IsInSquad())
+    if (VC.default.bRequiresDriverLicense && !DHPlayerReplicationInfo(PC.PlayerReplicationInfo).IsPlayerLicensedToDrive(PC))
     {
-        return ERROR_NoSquad;
+        return ERROR_NoLicense;
     }
 
     if (!IgnoresMaxTeamVehiclesFlags(VehiclePoolIndex) && GetReservableTankCount(TeamIndex) <= 0)
@@ -1433,6 +1635,32 @@ function ClearMapMarkers()
     }
 }
 
+simulated function float GetMapIconYaw(float WorldYaw)
+{
+    local float MapIconYaw;
+
+    MapIconYaw = -WorldYaw;
+
+    switch (OverheadOffset)
+    {
+        case 90:
+            MapIconYaw -= 32768;
+            break;
+
+        case 180:
+            MapIconYaw -= 49152;
+            break;
+
+        case 270:
+            break;
+
+        default:
+            MapIconYaw -= 16384;
+    }
+
+    return MapIconYaw;
+}
+
 // Gets the map coordindates (0..1) from a world location.
 simulated function GetMapCoords(vector WorldLocation, out float X, out float Y, optional float Width, optional float Height)
 {
@@ -1544,10 +1772,6 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
     {
         return ERROR_Unavailable;
     }
-    else if (ATI.UsedCount >= ATI.Limit)
-    {
-        return ERROR_Exhausted;
-    }
     else if (ATI.ArtilleryActor != none)
     {
         if (ATI.ArtilleryActor.bCanBeCancelled && PC == ATI.ArtilleryActor.Requester)
@@ -1559,6 +1783,10 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
             return ERROR_Ongoing;
         }
     }
+    else if (ATI.UsedCount >= ATI.Limit)
+    {
+        return ERROR_Exhausted;
+    }
     else if (ElapsedTime < ATI.NextConfirmElapsedTime)
     {
         return ERROR_Cooldown;
@@ -1567,8 +1795,131 @@ simulated function EArtilleryTypeError GetArtilleryTypeError(DHPlayer PC, int Ar
     return ERROR_None;
 }
 
+function UpdateMapIconAttachments()
+{
+    local DHMapIconAttachment MIA;
+
+    foreach AllActors(class'DHMapIconAttachment', MIA)
+    {
+        if (MIA != none && !MIA.bIgnoreGRIUpdates)
+        {
+            MIA.Updated();
+        }
+    }
+}
+
+//==============================================================================
+// DANGER ZONE
+//==============================================================================
+
+function SetDangerZoneEnabled(bool bEnabled, optional bool bPostponeUpdate)
+{
+    bIsDangerZoneEnabled = bEnabled;
+
+    if (!bPostponeUpdate)
+    {
+        DangerZoneUpdated();
+    }
+}
+
+function SetDangerZoneNeutral(byte Factor, optional bool bPostponeUpdate)
+{
+    DangerZoneNeutral = Factor;
+
+    if (!bPostponeUpdate)
+    {
+        DangerZoneUpdated();
+    }
+}
+
+function SetDangerZoneBalance(int Factor, optional bool bPostponeUpdate)
+{
+    DangerZoneBalance = (128 - Clamp(Factor, -127, 127));
+
+    if (!bPostponeUpdate)
+    {
+        DangerZoneUpdated();
+    }
+}
+
+simulated function bool IsDangerZoneEnabled()
+{
+    return bIsDangerZoneEnabled;
+}
+
+simulated function byte GetDangerZoneNeutral()
+{
+    return DangerZoneNeutral;
+}
+
+simulated function byte GetDangerZoneBalance()
+{
+    return DangerZoneBalance;
+}
+
+simulated function float GetDangerZoneIntensity(float PointerX, float PointerY, byte TeamIndex)
+{
+    return class'DHDangerZone'.static.GetIntensity(self, PointerX, PointerY, TeamIndex);
+}
+
+simulated function bool IsInDangerZone(float PointerX, float PointerY, byte TeamIndex)
+{
+    return class'DHDangerZone'.static.IsIn(self, PointerX, PointerY, TeamIndex);
+}
+
+simulated function DangerZoneUpdated()
+{
+    local DHSquadReplicationInfo SRI;
+    local DHPlayer PC;
+    local DHHud Hud;
+
+    // Server
+    if (Role == ROLE_Authority)
+    {
+        SRI = DarkestHourGame(Level.Game).SquadReplicationInfo;
+
+        if (SRI != none)
+        {
+            SRI.UpdateRallyPoints();
+        }
+
+        UpdateMapIconAttachments();
+    }
+
+    // Client
+    if (Role < ROLE_Authority || Level.NetMode == NM_Standalone)
+    {
+        // Notify HUD
+        PC = DHPlayer(Level.GetLocalPlayerController());
+
+        if (PC != none)
+        {
+            Hud = DHHud(PC.myHUD);
+
+            if (Hud != none)
+            {
+                Hud.DangerZoneOverlayUpdateRequest();
+            }
+        }
+    }
+}
+
+simulated function PostNetReceive()
+{
+    super.PostNetReceive();
+
+    if (OldDangerZoneNeutral != DangerZoneNeutral || OldDangerZoneBalance != DangerZoneBalance)
+    {
+        DangerZoneUpdated();
+
+        OldDangerZoneNeutral = DangerZoneNeutral;
+        OldDangerZoneBalance = DangerZoneBalance;
+    }
+}
+
 defaultproperties
 {
+    bNetNotify=true
     bAllChatEnabled=true
     AlliesVictoryMusicIndex=-1
     AxisVictoryMusicIndex=-1
@@ -1612,11 +1963,18 @@ defaultproperties
     MapMarkerClassNames(0)="DH_Engine.DHMapMarker_Squad_Move"
     MapMarkerClassNames(1)="DH_Engine.DHMapMarker_Squad_Attack"
     MapMarkerClassNames(2)="DH_Engine.DHMapMarker_Squad_Defend"
-    MapMarkerClassNames(3)="DH_Engine.DHMapMarker_Enemy_PlatoonHQ"
-    MapMarkerClassNames(4)="DH_Engine.DHMapMarker_Enemy_Infantry"
-    MapMarkerClassNameS(5)="DH_Engine.DHMapMarker_Enemy_Vehicle"
-    MapMarkerClassNames(6)="DH_Engine.DHMapMarker_Enemy_Tank"
-    MapMarkerClassNames(7)="DH_Engine.DHMapMarker_Enemy_ATGun"
-    MapMarkerClassNames(8)="DH_Engine.DHMapMarker_Friendly_PlatoonHQ"
-    MapMarkerClassNames(9)="DH_Engine.DHMapMarker_Friendly_Supplies"
+    MapMarkerClassNames(3)="DH_Engine.DHMapMarker_Squad_Attention"
+    MapMarkerClassNames(4)="DH_Engine.DHMapMarker_Enemy_PlatoonHQ"
+    MapMarkerClassNames(5)="DH_Engine.DHMapMarker_Enemy_Infantry"
+    MapMarkerClassNameS(6)="DH_Engine.DHMapMarker_Enemy_Vehicle"
+    MapMarkerClassNames(7)="DH_Engine.DHMapMarker_Enemy_Tank"
+    MapMarkerClassNames(8)="DH_Engine.DHMapMarker_Enemy_ATGun"
+    MapMarkerClassNames(9)="DH_Engine.DHMapMarker_Friendly_PlatoonHQ"
+    MapMarkerClassNames(10)="DH_Engine.DHMapMarker_Friendly_Supplies"
+
+    // Danger Zone
+    // The actual defaults reside in DH_LevelInfo. These are fallbacks in
+    // case we fail to retrieve those values.
+    DangerZoneNeutral=128
+    DangerZoneBalance=128
 }

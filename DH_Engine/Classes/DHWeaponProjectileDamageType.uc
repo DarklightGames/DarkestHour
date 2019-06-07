@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHWeaponProjectileDamageType extends ROWeaponProjectileDamageType
@@ -14,7 +14,7 @@ defaultproperties
     // But we do not use ROVehicleDamageType's APCDamageModifier (0.025) as we don't want bullets to damage APCs or anti-tank guns (which use the APC modifier)
     // Previously APCs or AT guns relied on a minimum APCDamageModifier threshold in the TakeDamage() function, preventing damage by bullets
     // But it's much cleaner simply to give bullets a zero APCDamageModifier (& override if required for more powerful bullets, e.g. armour piercing bullets)
-    VehicleDamageModifier=0.05
+    VehicleDamageModifier=0.1
 
     DeathString="%o was killed by %k's %w."
     MaleSuicide="%o was killed by his own %w."

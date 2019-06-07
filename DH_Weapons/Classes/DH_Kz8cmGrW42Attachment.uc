@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_Kz8cmGrW42Attachment extends DHWeaponAttachment;
-
-#exec OBJ LOAD FILE=..\Textures\DH_Mortars_tex.utx
 
 defaultproperties
 {

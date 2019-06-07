@@ -1,11 +1,10 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_ChurchillMkVIITank extends DHArmoredVehicle;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Churchill_anm.ukx
 #exec OBJ LOAD FILE=..\StaticMeshes\DH_Churchill_stc.usx
 #exec OBJ LOAD FILE=..\Textures\DH_Churchill_tex.utx
 
@@ -44,7 +43,7 @@ defaultproperties
     VehicleNameString="Churchill Mk.VII"
     VehicleTeam=1
     VehicleMass=13.5
-    ReinforcementCost=10
+    ReinforcementCost=8
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Churchill_anm.ChurchillMkVII_body_ext'
@@ -196,6 +195,7 @@ defaultproperties
         BoneName="steer_wheel_LF"
         BoneRollAxis=AXIS_Y
         WheelRadius=40.0
+        bLeftTrack=true
     End Object
     Wheels(0)=LF_Steering
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -212,6 +212,7 @@ defaultproperties
         BoneName="steer_wheel_LR"
         BoneRollAxis=AXIS_Y
         WheelRadius=40.0
+        bLeftTrack=true
     End Object
     Wheels(2)=LR_Steering
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -227,6 +228,7 @@ defaultproperties
         BoneName="drive_wheel_L"
         BoneRollAxis=AXIS_Y
         WheelRadius=40.0
+        bLeftTrack=true
     End Object
     Wheels(4)=Left_Drive_Wheel
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel

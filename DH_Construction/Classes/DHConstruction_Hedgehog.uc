@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHConstruction_Hedgehog extends DHConstruction;
@@ -24,4 +24,5 @@ defaultproperties
     ProgressMax=3
     GroupClass=class'DHConstructionGroup_Obstacles'
     bShouldSwitchToLastWeaponOnPlacement=false
+    MinDamagetoHurt=180.0
 }

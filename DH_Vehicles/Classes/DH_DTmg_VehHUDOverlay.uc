@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_DTmg_VehHUDOverlay extends VehicleHUDOverlay;
-
-#exec OBJ LOAD FILE=..\Animations\Allies_Dt_1st.ukx
 
 defaultproperties
 {

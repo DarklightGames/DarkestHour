@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHScoreBoard extends ROScoreBoard;
@@ -22,13 +22,11 @@ var localized string MunitionPercentageText;
 var localized string PlayersText;
 var localized string TickHealthText;
 var localized string NetHealthText;
-var localized string PoorText;
-var localized string FairText;
-var localized string GoodText;
 
 var string TabSpaces;
 var string LargeTabSpaces;
 
+var color ScoreboardLabelColor;
 var color SquadHeaderColor;
 var color PlayerBackgroundColor;
 var color SelfBackgroundColor;
@@ -164,9 +162,9 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
             {
                 CRI.Icon = default.DeveloperIconMaterial;
             }
-            else if (PRI.PatronStatus > 0) // TODO expand on this (have array of icons and use the index of the enum)
+            else if (PRI.PatronTier != PATRON_None) // TODO expand on this (have array of icons and use the index of the enum)
             {
-                Switch (PRI.PatronStatus)
+                Switch (PRI.PatronTier)
                 {
                     case PATRON_Lead:
                         CRI.Icon = default.PatronLeadMaterial;
@@ -407,83 +405,58 @@ simulated function UpdateScoreBoard(Canvas C)
     MaxTeamWidth = NameLength + RoleLength + ScoreLength + PingLength;
 
     //////////// DRAW SCOREBOARD HEADER ////////////
-
-    //C.Font = HUD.static.GetConsoleFont(C);
-    //C.DrawTextJustified(Left(DHGRI.ServerName, 64), 1, 0.0, 0.0, C.ClipX, Y);
-
-    // TODO: draw server name somewhere
-
-    // Now set standard font & line height
+    // Set standard font & line height
     C.Font = HUD.static.GetConsoleFont(C);
     C.TextSize("Text", XL, BaseLineHeight);
     LineHeight = BaseLineHeight * 1.25;
 
-    // Construct a line with various information about the round & the server
-    s = HUD.default.TimeRemainingText; // start with the round timer (time remaining)
+    // Construct a line with various information about the round & the server (start with "time remaining")
+    S = class'GameInfo'.static.MakeColorCode(ScoreboardLabelColor) $ HUD.default.TimeRemainingText;                          // Label
+    S $= class'GameInfo'.static.MakeColorCode(HUD.default.WhiteColor);
 
     if (DHGRI.DHRoundDuration == 0)
     {
-        s $= HUD.default.NoTimeLimitText;
+        S $= HUD.default.NoTimeLimitText;                                                                                    // Value
     }
     else
     {
-        s $= class'TimeSpan'.static.ToString(DHGRI.GetRoundTimeRemaining());
+        S $= class'TimeSpan'.static.ToString(DHGRI.GetRoundTimeRemaining());                                                 // Or Value
     }
 
-    // Add time elapsed (extra in DH)
-    S $= HUD.default.SpacingText $ HUD.default.TimeElapsedText $ HUD.static.GetTimeString(GRI.ElapsedTime - DHGRI.RoundStartTime);
+    // Add time elapsed (useful if time remaining changes)
+    S $= HUD.default.SpacingText $ class'GameInfo'.static.MakeColorCode(ScoreboardLabelColor) $ HUD.default.TimeElapsedText;              // Label
+    S $= class'GameInfo'.static.MakeColorCode(HUD.default.WhiteColor) $ HUD.static.GetTimeString(GRI.ElapsedTime - DHGRI.RoundStartTime); // Value
+
+    // Add server name (if not standalone)
+    if (Level.NetMode != NM_Standalone)
+    {
+        S $= HUD.default.SpacingText $ class'GameInfo'.static.MakeColorCode(ScoreboardLabelColor) $ HUD.default.ServerNameText;           // Label
+        S $= class'GameInfo'.static.MakeColorCode(HUD.default.WhiteColor) $ Left(DHGRI.ServerName, 12);                                   // Value
+    }
 
     // Add server IP (optional)
     if (DHGRI.bShowServerIPOnScoreboard && Level.NetMode != NM_Standalone)
     {
-        S $= HUD.default.SpacingText $ HUD.default.IPText $ PlayerController(Owner).GetServerIP();
+        S $= HUD.default.SpacingText $ class'GameInfo'.static.MakeColorCode(ScoreboardLabelColor) $ HUD.default.IPText;      // Label
+        S $= class'GameInfo'.static.MakeColorCode(HUD.default.WhiteColor) $ PlayerController(Owner).GetServerIP();           // Value
     }
 
     // Add level name (extra in DH)
-    s $= HUD.default.SpacingText $ HUD.default.MapNameText $ class'DHLib'.static.GetMapName(Level);
+    S $= HUD.default.SpacingText $ class'GameInfo'.static.MakeColorCode(ScoreboardLabelColor) $ HUD.default.MapNameText;     // Label
+    S $= class'GameInfo'.static.MakeColorCode(HUD.default.WhiteColor) $ class'DHLib'.static.GetMapName(Level);               // Value
 
     // Add game type
-    S $= HUD.default.SpacingText $ HUD.default.MapGameTypeText $ DHGRI.GameType.default.GameTypeName;
+    S $= HUD.default.SpacingText $ class'GameInfo'.static.MakeColorCode(ScoreboardLabelColor) $ HUD.default.MapGameTypeText; // Label
+    S $= class'GameInfo'.static.MakeColorCode(HUD.default.WhiteColor) $ DHGRI.GameType.default.GameTypeName;                 // Value
 
-    // Server Tick Health
-    if (DHGRI.ServerTickHealth < 10)
-    {
-        HealthString = default.PoorText;
-        HealthColor = class'UColor'.default.Red;
-    }
-    else if (DHGRI.ServerTickHealth < 20)
-    {
-        HealthString = default.FairText;
-        HealthColor = class'UColor'.default.Orange;
-    }
-    else
-    {
-        HealthString = default.GoodText;
-        HealthColor = class'UColor'.default.Green;
-    }
+    // Add Server Tick Health
+    HealthString = class'DHLib'.static.GetServerHealthString(DHGRI.ServerTickHealth, HealthColor);
+    S $= HUD.default.SpacingText $ class'GameInfo'.static.MakeColorCode(ScoreboardLabelColor) $ default.TickHealthText;      // Label
+    S $= class'GameInfo'.static.MakeColorCode(HealthColor) $ HealthString @ "(" $ DHGRI.ServerTickHealth $ ")";              // Value
 
-    // Add tickrate health
-    S $= HUD.default.SpacingText $ default.TickHealthText $ ":" @ class'GameInfo'.static.MakeColorCode(HealthColor) $ HealthString @ "(" $ DHGRI.ServerTickHealth $ ")";
-
-    // Server Tick Health
-    if (DHGRI.ServerNetHealth > 10)
-    {
-        HealthString = default.PoorText;
-        HealthColor = class'UColor'.default.Red;
-    }
-    else if (DHGRI.ServerNetHealth > 1)
-    {
-        HealthString = default.FairText;
-        HealthColor = class'UColor'.default.Orange;
-    }
-    else
-    {
-        HealthString = default.GoodText;
-        HealthColor = class'UColor'.default.Green;
-    }
-
-    // Add network health, added in white color code
-    S $= HUD.default.SpacingText $ class'GameInfo'.static.MakeColorCode(HUD.default.WhiteColor) $ default.NetHealthText $ ":" @ class'GameInfo'.static.MakeColorCode(HealthColor) $ HealthString @ "(" $ DHGRI.ServerNetHealth $ ")";
+    // Add Server Loss Health
+    S $= HUD.default.SpacingText $ class'GameInfo'.static.MakeColorCode(ScoreboardLabelColor) $ default.NetHealthText;       // Label
+    S $= class'GameInfo'.static.MakeColorCode(HUD.default.WhiteColor) $ "(" $ DHGRI.ServerNetHealth $ ")";                   // Value
 
     Y = CalcY(0.25, C);
 
@@ -929,6 +902,7 @@ defaultproperties
     ScoreboardColumns(7)=(Title="Score",Type=COLUMN_Score,Width=1.5,Justification=1)
     ScoreboardColumns(8)=(Title="Ping",Type=COLUMN_Ping,Width=1.0,Justification=1)
 
+    ScoreboardLabelColor=(R=128,G=128,B=128)
     SquadHeaderColor=(R=64,G=64,B=64,A=192)
     PlayerBackgroundColor=(R=0,G=0,B=0,A=192)
     SelfBackgroundColor=(R=32,G=32,B=32,A=192)
@@ -942,11 +916,8 @@ defaultproperties
     PingLength=1.5
     MyTeamIndex=2
     PlayersText="Players"
-    TickHealthText="Tick"
-    NetHealthText="Loss"
-    PoorText="Poor"
-    FairText="Fair"
-    GoodText="Good"
+    TickHealthText="Tick: "
+    NetHealthText="Loss: "
     MunitionPercentageText="Munitions"
     PatronLeadMaterial=Texture'DH_InterfaceArt2_tex.Patron_Icons.PATRON_Lead'
     PatronBronzeMaterial=Texture'DH_InterfaceArt2_tex.Patron_Icons.PATRON_Bronze'

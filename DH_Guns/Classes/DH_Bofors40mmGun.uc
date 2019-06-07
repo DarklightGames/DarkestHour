@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_Bofors40mmGun extends DHATGun;
@@ -20,4 +20,5 @@ defaultproperties
     ExitPositions(1)=(X=-35.0,Y=-90.0,Z=60.0)
     VehicleMass=11.0
     SupplyCost=1250
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_StaticAA'
 }

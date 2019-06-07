@@ -1,11 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHConstruction_ATGun_Heavy extends DHConstruction_Vehicle;
 
-function static class<DHVehicle> GetVehicleClass(DHConstruction.Context Context)
+function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
 {
     switch (Context.TeamIndex)
     {
@@ -74,5 +74,5 @@ defaultproperties
     MenuIcon=Texture'DH_InterfaceArt2_tex.Icons.at_large'
     Stages(0)=(Progress=0)
     ProgressMax=14
-    SupplyCost=1750
+    DuplicateFriendlyDistanceInMeters=30.0
 }

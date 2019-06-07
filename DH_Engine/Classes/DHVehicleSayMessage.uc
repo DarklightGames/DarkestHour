@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHVehicleSayMessage extends DHLocalMessage
@@ -13,7 +13,7 @@ static function string AssembleString(HUD myHUD, optional int Switch, optional P
         return "";
     }
 
-    return default.MessagePrefix @ RelatedPRI_1.PlayerName @ ":" @ MessageString;
+    return default.MessagePrefix @ RelatedPRI_1.PlayerName @ ":" @ class'GameInfo'.static.MakeColorCode(class'UColor'.default.White) $ MessageString;
 }
 
 static function color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int AlliedNationID, bool bSimpleColours)
@@ -24,7 +24,7 @@ static function color GetDHConsoleColor(PlayerReplicationInfo RelatedPRI_1, int 
 defaultproperties
 {
     DrawColor=(B=170,G=30,R=170,A=255)
-    MessagePrefix="*VEHICLE*"
+    MessagePrefix="[VEHICLE]"
     bComplexString=true
     bBeep=true
 }

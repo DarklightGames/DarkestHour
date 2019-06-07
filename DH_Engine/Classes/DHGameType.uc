@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHGameType extends Info
@@ -14,8 +14,13 @@ var bool                bTimeCanChangeAtZeroReinf;              // Whether this 
 var bool                bSquadSpecialRolesOnly;                 // Whether this gamemode restricts roles to squad members and leaders
 var bool                bKeepSpawningWithoutReinf;              // Whether this gamemode alls spawning once out of reinforcements
 var bool                bHasTemporarySpawnVehicles;             // Whether this gamemode treats all vehicles as temporary spawn vehicles after their spawn
-var bool                bMunitionsDrainOverTime;                // Whether this gamemode should drain munitions over time
 var bool                bOmitTimeAttritionForDefender;          // Whether the defender can take attrition over time from ElapsedTimeAttritionCurve
+
+var bool                bAreObjectiveSpawnsEnabled;             // Whether this gamemode uses objective spawns
+var bool                bAreRallyPointsEnabled;                 // Whether this gamemode should allow rally points for squads
+var bool                bAreConstructionsEnabled;               // Whether this gamemode should allow constructions
+
+var int                 ObjSpawnMinimumDepth;                   // Used in calculating the nearest objective spawn
 
 var int                 OutOfReinfLimitForTimeChange;           // Threshold for the bTimeCanChangeAtZeroReinf, the team with reinforcements remaining must have <= this amount
 var int                 OutOfReinfRoundTime;                    // The round time to set when a team runs out of reinforcements, if bTimeCanChangeAtZeroReinf

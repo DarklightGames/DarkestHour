@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHConstruction_SupplyCache extends DHConstruction;
@@ -65,7 +65,7 @@ simulated function OnTeamIndexChanged()
     }
 }
 
-static function StaticMesh GetConstructedStaticMesh(DHConstruction.Context Context)
+static function StaticMesh GetConstructedStaticMesh(DHActorProxy.Context Context)
 {
     return default.SupplyAttachmentClass.static.GetStaticMesh(Context.LevelInfo.Level, Context.TeamIndex);
 }
@@ -114,8 +114,8 @@ defaultproperties
     MenuName="Supply Cache"
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.supply_cache'
     MenuDescription="Stores and generates supplies over time."
-    SupplyCost=250
-    InitialSupplyCount=250
+    SupplyCost=500
+    InitialSupplyCount=500
     StaticMesh=StaticMesh'DH_Military_stc.Ammo.cratepile1'
     DrawType=DT_StaticMesh
     DuplicateFriendlyDistanceInMeters=300

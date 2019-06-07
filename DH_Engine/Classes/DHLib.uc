@@ -1,10 +1,19 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHLib extends Object
     abstract;
+
+struct ServerHealthStage
+{
+    var byte                    MinTick;
+    var localized string        Text;
+    var color                   TextColor;
+};
+
+var ServerHealthStage           ServerHealthStages[6];
 
 // Returns current map name, stripping any ".rom" suffix to the name
 // The map name returned by the native GetURLMap() function includes the suffix on a server, but not in single player mode or on a net client
@@ -169,4 +178,27 @@ static final function DrawStayingDebugCylinder(Actor A, vector Base, vector X, v
             LastVertex = Vertex;
         }
     }
+}
+
+static final function String GetServerHealthString(byte Tick, optional out color TextColor)
+{
+    local int i;
+
+    for (i = 0; i < arraycount(default.ServerHealthStages); ++i)
+    {
+        if (Tick >= default.ServerHealthStages[i].MinTick)
+        {
+            TextColor = default.ServerHealthStages[i].TextColor;
+            return default.ServerHealthStages[i].Text;
+        }
+    }
+}
+
+defaultproperties
+{
+    ServerHealthStages(0)=(MinTick=26,Text="Excellent",TextColor=(R=15,G=146,B=70))
+    ServerHealthStages(1)=(MinTick=20,Text="Good",TextColor=(R=125,G=187,B=66))
+    ServerHealthStages(2)=(MinTick=18,Text="Fair",TextColor=(R=254,G=204,B=9))
+    ServerHealthStages(3)=(MinTick=15,Text="Poor",TextColor=(R=239,G=71,B=35))
+    ServerHealthStages(4)=(MinTick=0,Text="Abysmal",TextColor=(R=188,G=32,B=38))
 }

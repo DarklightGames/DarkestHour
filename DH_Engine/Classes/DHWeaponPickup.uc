@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHWeaponPickup extends ROWeaponPickup
@@ -58,6 +58,11 @@ simulated function Destroyed()
     if (BarrelSteamEmitter != none)
     {
         BarrelSteamEmitter.Destroy();
+    }
+
+    if (TouchMessageParameters != none)
+    {
+        TouchMessageParameters.PlayerController = none;
     }
 }
 
@@ -145,9 +150,6 @@ function InitDroppedPickupFor(Inventory Inv)
                 AmmoMags[AmmoMags.Length] = W.PrimaryAmmoArray[i];
             }
         }
-
-        // Ensure that AmmoMags has at least 1 item (otherwise it bugs other things)
-        AmmoMags.Length = Max(AmmoMags.Length, 1);
 
         // If weapon has barrels, transfer over any barrels
         if (W.Barrels.Length > 0)

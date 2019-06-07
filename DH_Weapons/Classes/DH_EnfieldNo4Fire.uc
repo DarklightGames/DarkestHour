@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_EnfieldNo4Fire extends DHBoltFire;
@@ -22,4 +22,6 @@ defaultproperties
     ShakeOffsetMag=(X=3.0,Y=1.0,Z=3.0)
     ShakeRotMag=(X=50.0,Y=50.0,Z=200.0)
     ShakeRotRate=(X=12500.0,Y=10000.0,Z=10000.0)
+    FireAnim="shoot_last"
+    FireIronAnim="Iron_shootrest"
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_GreyhoundCannonShellHE extends DHCannonShellHE;
@@ -13,7 +13,6 @@ defaultproperties
     DHPenetrationTable(3)=1.0
     DHPenetrationTable(4)=1.0
     ShellDiameter=3.7
-    ShellImpactDamage=class'DH_Vehicles.DH_StuartCannonShellDamageAP'
     ImpactDamage=185
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'

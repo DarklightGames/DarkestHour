@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHConstruction_Resupply extends DHConstruction
@@ -23,11 +23,12 @@ function PostBeginPlay()
 
         if (ResupplyAttachment != none)
         {
-            ResupplyAttachment.ResupplyType = ResupplyType;
+            ResupplyAttachment.SetResupplyType(ResupplyType);
             ResupplyAttachment.SetTeamIndex(GetTeamIndex());
             ResupplyAttachment.SetCollisionSize(ResupplyAttachmentCollisionRadius, ResupplyAttachmentCollisionHeight);
             ResupplyAttachment.SetBase(self);
             ResupplyAttachment.OnPawnResupplied = MyOnPawnResupplied;
+            ResupplyAttachment.AttachMapIcon();
         }
         else
         {
@@ -81,16 +82,10 @@ defaultproperties
     DuplicateFriendlyDistanceInMeters=25.0
     CollisionRadius=50.0
     CollisionHeight=30.0
-    SupplyCost=250
+    SupplyCost=500
     bCanPlaceIndoors=true
-    ResupplyCount=25
+    ResupplyCount=100
     HealthMax=50
-    HarmfulDamageTypes(0)=class'DHArtilleryDamageType'
-    HarmfulDamageTypes(1)=class'DHThrowableExplosiveDamageType'
-    HarmfulDamageTypes(2)=class'DHShellExplosionDamageType'
-    HarmfulDamageTypes(3)=class'DHShellImpactDamageType'
-    HarmfulDamageTypes(4)=class'DHMortarDamageType'
-    HarmfulDamageTypes(5)=class'DHBurningDamageType'
     ConstructionVerb="drop"
     StartRotationMin=(Yaw=-16384)
     StartRotationMax=(Yaw=-16384)

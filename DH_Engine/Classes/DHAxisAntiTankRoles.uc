@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHAxisAntiTankRoles extends DHAxisRoles
@@ -14,4 +14,6 @@ defaultproperties
     PluralName="Tank Hunters"
     Limit=1
     bCanCarryExtraAmmo=false
+    AddedRoleRespawnTime=5
+    bExemptSquadRequirement=true
 }

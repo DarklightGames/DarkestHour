@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_G43Weapon extends DHSemiAutoWeapon;
-
-#exec OBJ LOAD FILE=..\Animations\Axis_G43_1st.ukx
 
 defaultproperties
 {

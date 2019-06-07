@@ -1,19 +1,15 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_PanzerIVGLateTank extends DHArmoredVehicle;
-
-#exec OBJ LOAD FILE=..\Animations\axis_panzer4H_anm.ukx
-#exec OBJ LOAD FILE=..\Textures\axis_vehicles_tex.utx
-#exec OBJ LOAD FILE=..\Textures\axis_vehicles_tex2.utx
 
 defaultproperties
 {
     // Vehicle properties
     VehicleNameString="Panzer IV Ausf.G"
-    ReinforcementCost=9
+    ReinforcementCost=4
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_body_ext'
@@ -149,6 +145,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=30.0,Y=-7.0,Z=10.0)
         WheelRadius=30.0
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_PanzerIVGLateTank.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -167,6 +164,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=-12.0,Y=-7.0,Z=10.0)
         WheelRadius=30.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_PanzerIVGLateTank.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -184,6 +182,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=10.0)
         WheelRadius=30.0
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_PanzerIVGLateTank.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel

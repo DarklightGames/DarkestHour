@@ -1,11 +1,9 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_MN9130Weapon extends DHBoltActionWeapon;
-
-#exec OBJ LOAD FILE=..\Animations\Allies_Nagant_1st.ukx
 
 defaultproperties
 {
@@ -15,7 +13,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_MN9130Attachment'
     PickupClass=class'DH_Weapons.DH_MN9130Pickup'
 
-    Mesh=SkeletalMesh'Allies_Nagant_1st.Mosin-Nagant-9130-mesh'
+    Mesh=SkeletalMesh'DH_Nagant_1st.Mosin-Nagant-9130-mesh'
     HighDetailOverlay=shader'Weapons1st_tex.Rifles.MN9130_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
@@ -30,4 +28,9 @@ defaultproperties
     BayonetBoneName="bayonet"
     BayoAttachAnim="Bayonet_on"
     BayoDetachAnim="Bayonet_off"
+
+    PreReloadAnim="single_open"
+    FullReloadAnim="reload"
+    SingleReloadAnim="single_insert"
+    PostReloadAnim="single_close"
 }

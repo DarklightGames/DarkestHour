@@ -1,9 +1,11 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DH_WolverineCannon_British extends DH_WolverineCannon_Early; // British Wolverine won't have HVAP
+
+#exec OBJ LOAD FILE=..\StaticMeshes\DH_allies_vehicles_stc.usx
 
 var     RODummyAttachment   StowageAttachment;
 

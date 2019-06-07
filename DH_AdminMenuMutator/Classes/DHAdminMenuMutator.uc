@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2018
+// Darklight Games (c) 2008-2019
 //==============================================================================
 
 class DHAdminMenuMutator extends Mutator;
@@ -289,6 +289,14 @@ function Mutate(string MutateString, PlayerController Sender)
             else if (MutateOption ~= "ChangeAxisSquadSize")
             {
                 ChangeAxisSquadSize(int(Words[2]));
+            }
+            else if (MutateOption ~= "DisableRallyPoints")
+            {
+                SetRallyPoints(false);
+            }
+            else if (MutateOption ~= "EnableRallyPoints")
+            {
+                SetRallyPoints(true);
             }
         }
 
@@ -1029,6 +1037,70 @@ function ChangeAxisSquadSize(int SquadSize)
     }
 }
 
+function SetRallyPoints(bool bEnabled)
+{
+    local DarkestHourGame DHG;
+    local DHGameReplicationInfo DHGRI;
+    local DHSquadReplicationInfo SRI;
+    local bool bAlreadySet;
+
+    if (!bShowRealismMenu || !IsLoggedInAsAdmin())
+    {
+        return;
+    }
+
+    DHG = DarkestHourGame(Level.Game);
+
+    if (DHG == none)
+    {
+        return;
+    }
+
+    DHGRI = DHGameReplicationInfo(DHG.GameReplicationInfo);
+    SRI = DHG.SquadReplicationInfo;
+
+    if (DHGRI == none || SRI == none)
+    {
+        return;
+    }
+
+    if (DHGRI.GameType == none || !DHGRI.GameType.default.bAreRallyPointsEnabled)
+    {
+        ErrorMessageToSelf(25);
+        return;
+    }
+
+    bAlreadySet = SRI.bAreRallyPointsEnabled == bEnabled;
+
+    if (!bAlreadySet)
+    {
+        SRI.bAreRallyPointsEnabled = bEnabled;
+    }
+
+    if (bEnabled)
+    {
+        if (bAlreadySet)
+        {
+            ErrorMessageToSelf(27); // already enabled
+            return;
+        }
+
+        BroadcastMessageToAll(19);
+        Log("DHAdminMenu: admin" @ GetAdminName() @ "enabled rally point placement");
+    }
+    else
+    {
+        if (bAlreadySet)
+        {
+            ErrorMessageToSelf(26); // already disabled
+            return;
+        }
+
+        BroadcastMessageToAll(18);
+        Log("DHAdminMenu: admin" @ GetAdminName() @ "disabled rally point placement");
+    }
+}
+
 ////////////////////////////  GENERAL HELPER FUNCTIONS (messaging, true/false checks, find things, etc)  //////////////////////////////////////
 
 function BroadcastMessageToAll(int MessageNumber)
@@ -1065,17 +1137,10 @@ function ErrorMessageToSelf(byte MessageNumber, optional string InsertedName)
 // A check if the sending player is an admin - if not displays a message to say "you must be logged in as an admin ..."
 function bool IsLoggedInAsAdmin(optional bool bEnforceAdminLogin)
 {
-    local DHPlayer P;
-
     // Do an admin login check
-    if (Admin != none && Admin.PlayerReplicationInfo != none)
+    if (Admin != none && Admin.PlayerReplicationInfo != none && (Admin.PlayerReplicationInfo.bAdmin || Admin.PlayerReplicationInfo.bSilentAdmin))
     {
-        P = DHPlayer(Admin);
-
-        if (P != none && (Admin.PlayerReplicationInfo.bAdmin || Admin.PlayerReplicationInfo.bSilentAdmin || class'DHAccessControl'.static.IsDeveloper(P.GetPlayerIDHash())))
-        {
-            return true;
-        }
+        return true;
     }
 
     // Otherwise, if bBypassAdminLogin has been set to true in the config file, we effectively bypass the usual admin check (e.g. for use on a test server)
