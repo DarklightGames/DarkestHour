@@ -63,8 +63,8 @@ defaultproperties
     IronSightDisplayFOV=30.0
 
     bHasSelectFire=true
-    MaxNumPrimaryMags=3
-    InitialNumPrimaryMags=3
+    MaxNumPrimaryMags=4
+    InitialNumPrimaryMags=4
 
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"
