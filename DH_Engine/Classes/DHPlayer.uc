@@ -789,6 +789,7 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
 {
     local DHPawn    DHPwn;
     local ROWeapon  ROWeap;
+    local DHProjectileWeapon  DHPW;
     local ROVehicle ROVeh;
     local rotator   NewRotation, ViewRotation;
     local float     TurnSpeedFactor;
@@ -798,6 +799,7 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
     {
         DHPwn = DHPawn(Pawn);
         ROWeap = ROWeapon(Pawn.Weapon);
+        DHPW = DHProjectileWeapon(Pawn.Weapon);
         ROVeh = ROVehicle(Pawn);
     }
 
@@ -908,7 +910,7 @@ function UpdateRotation(float DeltaTime, float MaxPitch)
             TurnSpeedFactor = DHStandardTurnSpeedFactor;
         }
 
-        if (ROWeap != none && ROWeap.bPlayerViewIsZoomed)
+        if (DHPW != none && DHPW.bHasScope && DHPW.bUsingSights)
         {
             TurnSpeedFactor *= DHScopeTurnSpeedFactor; // reduce if player is using a sniper scope or binocs
         }
