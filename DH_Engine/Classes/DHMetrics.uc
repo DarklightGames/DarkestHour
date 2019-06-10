@@ -201,7 +201,7 @@ function OnTextMessage(PlayerController PC, string Type, string Message)
     local DHMetricsTextMessage TextMessage;
     local DHPlayerReplicationInfo PRI;
 
-    if (PC == none)
+    if (PC == none || Type == "None" || Message == "")
     {
         return;
     }
