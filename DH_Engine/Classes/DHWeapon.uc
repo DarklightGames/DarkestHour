@@ -840,6 +840,16 @@ simulated function Weapon NextWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
     }
 }
 
+simulated exec function SetPlayerViewOffset(float X, float Y, float Z)
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        default.PlayerViewOffset.X = X;
+        default.PlayerViewOffset.Y = Y;
+        default.PlayerViewOffset.Z = Z;
+    }
+}
+
 defaultproperties
 {
     // Sway modifiers
