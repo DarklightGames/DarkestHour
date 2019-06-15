@@ -154,6 +154,9 @@ var     bool                    bLazyCam;
 var     float                   LazyCamLaziness;
 var     rotator                 LazyCamRotationTarget;
 
+// Surrender
+var     bool                    bSurrendered;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -163,7 +166,8 @@ replication
         DHPrimaryWeapon, DHSecondaryWeapon, bSpectateAllowViewPoints,
         SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled,
         SquadLeaderLocations, bIsGagged,
-        NextSquadRallyPointTime, SquadRallyPointCount;
+        NextSquadRallyPointTime, SquadRallyPointCount,
+        bSurrendered;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -182,7 +186,7 @@ replication
         ServerSquadVolunteerToAssist,
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
-        ServerSurrender;
+        ServerTeamSurrender;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -2838,9 +2842,12 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
     local DHRoleInfo RI;
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
+    local byte OldTeamIndex;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    OldTeamIndex = GetTeamNum();
 
     // Attempt to change teams
     if (newTeam != 255)
@@ -2984,6 +2991,12 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
     // Set weapons
     ChangeWeapons(NewWeapon1, NewWeapon2, 0);
 
+    // Team change event
+    if (NewTeam != OldTeamIndex)
+    {
+        OnTeamChanged();
+    }
+
     // Return result to client
     if (NewTeam == AXIS_TEAM_INDEX)
     {
@@ -3051,6 +3064,22 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
         else
         {
             ClientChangePlayerInfoResult(0);
+        }
+    }
+}
+
+function OnTeamChanged()
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none && G.VoteManager != none)
+    {
+        // Reset player's surrender status
+        if (bSurrendered)
+        {
+            G.VoteManager.RemoveNomination(self, class'DHVoteInfo_TeamSurrender');
         }
     }
 }
@@ -6332,6 +6361,13 @@ simulated function ClientTeamSurrenderResponse(int Result)
     local UT2K4GUIController GC;
     local GUIPage Page;
 
+    bSurrendered = Result < 0;
+
+    if (bSurrendered)
+    {
+        return;
+    }
+
     // Find the currently open ROGUIRoleSelection menu and notify it
     GC = UT2K4GUIController(Player.GUIController);
 
@@ -6348,27 +6384,42 @@ simulated function ClientTeamSurrenderResponse(int Result)
     }
 }
 
-function ServerSurrender()
+function ServerTeamSurrender()
 {
     local DarkestHourGame G;
 
     G = DarkestHourGame(Level.Game);
 
-    if (G != none)
+    if (G == none || G.VoteManager == none)
     {
-        G.PlayerSurrendered(self);
+        return;
+    }
+
+    if (bSurrendered)
+    {
+        G.VoteManager.RemoveNomination(self, class'DHVoteInfo_TeamSurrender');
+    }
+    else
+    {
+        G.VoteManager.NominateVote(self, class'DHVoteInfo_TeamSurrender');
     }
 }
 
 function ServerSendVote(int VoteId, int OptionIndex)
 {
     local DarkestHourGame G;
+    local DHVoteManager VM;
 
     G = DarkestHourGame(Level.Game);
 
     if (G != none)
     {
-        G.PlayerVoted(self, VoteId, OptionIndex);
+        VM = G.VoteManager;
+
+        if (VM != none)
+        {
+            VM.PlayerVoted(self, VoteId, OptionIndex);
+        }
     }
 }
 

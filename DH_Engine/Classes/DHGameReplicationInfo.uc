@@ -182,6 +182,12 @@ var class<DHMapMarker>                  MapMarkerClasses[MAP_MARKERS_CLASSES_MAX
 var MapMarker                           AxisMapMarkers[MAP_MARKERS_MAX];
 var MapMarker                           AlliesMapMarkers[MAP_MARKERS_MAX];
 
+// Delayed round ending
+var byte   RoundWinnerTeamIndex;
+var string RoundEndReason;
+
+var bool   bSurrenderVoteInProgress;
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -235,7 +241,9 @@ replication
         AxisVictoryMusicIndex,
         bIsDangerZoneEnabled,
         DangerZoneNeutral,
-        DangerZoneBalance;
+        DangerZoneBalance,
+        RoundWinnerTeamIndex,
+        bSurrenderVoteInProgress;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
@@ -1926,6 +1934,7 @@ defaultproperties
     ArtilleryTargetDistanceThreshold=15088 //250 meters in UU
     ForceScaleText="Size"
     ReinforcementsInfiniteText="Infinite"
+    RoundWinnerTeamIndex=255
 
     // Constructions
 

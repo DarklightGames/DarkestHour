@@ -23,6 +23,13 @@ var array<Option>                   Options;
 var array<PlayerController>         Voters;
 var int                             VoterCount;
 
+var int                             CooldownSeconds;
+var int                             TeamIndex;
+var int                             TeamSizeMin;
+var int                             NominationCountThreshold;
+
+var bool                            bIsGlobal; // ignore voter's team index
+
 // Gets the list of eligible voters.
 function array<PlayerController>    GetEligibleVoters();
 
@@ -141,7 +148,15 @@ function array<Option> GetOptions()
     return default.Options;
 }
 
+static function bool CanNominate(PlayerController Player, DarkestHourGame Game)
+{
+    return true;
+}
+
 function OnVoteEnded();
+
+static function OnNominated(PlayerController Player);
+static function OnNominationRemoved(PlayerController Player);
 
 defaultproperties
 {
@@ -149,4 +164,7 @@ defaultproperties
     DurationSeconds=30
     Options(0)=(Text="Yes")
     Options(1)=(Text="No")
+
+    bIsGlobal=true
+    TeamIndex=-1
 }

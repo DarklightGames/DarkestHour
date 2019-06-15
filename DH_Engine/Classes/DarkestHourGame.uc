@@ -8,6 +8,7 @@ class DarkestHourGame extends ROTeamGame;
 var     Hashtable_string_Object     PlayerSessions; // When a player leaves the server this info is stored for the session so if they return these values won't reset
 
 var     DH_LevelInfo                DHLevelInfo;
+var     DHGameReplicationInfo       GRI;
 
 var     DHAmmoResupplyVolume        DHResupplyAreas[10];
 
@@ -20,6 +21,7 @@ var     DHObjective                 DHObjectives[OBJECTIVES_MAX];
 var     DHSpawnManager              SpawnManager;
 var     DHObstacleManager           ObstacleManager;
 var     DHConstructionManager       ConstructionManager;
+var     DHVoteManager               VoteManager;
 
 var     array<string>               FFViolationIDs;                         // Array of ROIDs that have been kicked once this session
 var()   config bool                 bSessionKickOnSecondFFViolation;
@@ -89,15 +91,7 @@ var     DHSquadReplicationInfo      SquadReplicationInfo;
 
 var()   config int                  EmptyTankUnlockTime;                    // Server config option for how long (secs) before unlocking a locked armored vehicle if abandoned by its crew
 
-// Voting
-var     DHVoteManager               VoteManager;
-
-var     DHGameReplicationInfo       GRI;
-
-var     float                       TeamSurrenderVoteTimes[2];  // The next time a team surrender vote can be initiated
-var     array<PlayerController>     SurrenderNominators;
-var     int                         SurrenderNominationsThreshold;
-var     int                         SurrenderTeamSizeMin;
+var     int                         SurrenderRoundTime;
 
 // The response types for requests.
 enum EArtilleryResponseType
@@ -441,7 +435,15 @@ function PostBeginPlay()
         Metrics = Spawn(MetricsClass);
     }
 
+
     PlayerSessions = class'Hashtable_string_Object'.static.Create(128);
+
+    VoteManager = Spawn(class'DHVoteManager', self);
+
+    if (VoteManager == none)
+    {
+        Warn("Failed to spawn vote manager");
+    }
 }
 
 // Modified to remove any return on # of bots (and to remove chance of negative)
@@ -3968,6 +3970,34 @@ function UpdateMunitionPercentages()
     }
 }
 
+function DelayedEndRound(int Delay, string Reason, byte WinnerTeamIndex, class<LocalMessage> WinnerMessageClass, int WinnerMessageOption, class<LocalMessage> LoserMessageClass, int LoserMessageOption)
+{
+    local string WinnerTeamName;
+
+    if (GRI == none || !IsInState('RoundInPlay'))
+    {
+        return;
+    }
+
+    switch (WinnerTeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            WinnerTeamName = "Axis";
+            break;
+        case ALLIES_TEAM_INDEX:
+            WinnerTeamName = "Allies";
+    }
+
+    GRI.RoundWinnerTeamIndex = WinnerTeamIndex;
+    GRI.RoundEndReason = Repl(Reason, "{0}", WinnerTeamName); // "The {0} has won the round because..."
+
+    ModifyRoundTime(Delay, 2);
+
+    // Inform the teams
+    BroadcastTeamLocalizedMessage(Level, int(!bool(WinnerTeamIndex)), LoserMessageClass, LoserMessageOption);
+    BroadcastTeamLocalizedMessage(Level, WinnerTeamIndex, WinnerMessageClass, WinnerMessageOption);
+}
+
 // Modified for DHObjectives
 function ChooseWinner()
 {
@@ -3979,6 +4009,14 @@ function ChooseWinner()
 
     if (GRI == none)
     {
+        return;
+    }
+
+    // Delayed round ending
+    if (GRI.RoundWinnerTeamIndex < 2)
+    {
+        Level.Game.Broadcast(self, GRI.RoundEndReason, 'Say');
+        EndRound(GRI.RoundWinnerTeamIndex);
         return;
     }
 
@@ -5269,176 +5307,6 @@ function ArtilleryResponse RequestArtillery(DHArtilleryRequest Request)
     return Response;
 }
 
-// The consumer of this function is expected to initialize the DHVoteInfo
-// actor prior to this being called.
-function StartVote(DHVoteInfo Vote)
-{
-    local int i;
-
-    for (i = 0; i < Votes.Length; ++i)
-    {
-        if (Votes[i] == Vote)
-        {
-            Warn("Attempted to start a vote that was already in progress.");
-            return;
-        }
-    }
-
-    Vote.VoteId = ++NextVoteId;
-    Votes[Votes.Length] = Vote;
-    Vote.StartVote();
-}
-
-function int GetVoteIndexById(int VoteId)
-{
-    local int i;
-
-    for (i = 0; i < Votes.Length; ++i)
-    {
-        if (Votes[i].VoteId == VoteId)
-        {
-            return i;
-        }
-    }
-
-    return -1;
-}
-
-function PlayerVoted(PlayerController Voter, int VoteId, int OptionIndex)
-{
-    local int VoteIndex;
-
-    VoteIndex = GetVoteIndexById(VoteId);
-
-    if (Voter == none || VoteIndex == -1)
-    {
-        return;
-    }
-
-    Votes[VoteIndex].RecieveVote(Voter, OptionIndex);
-}
-
-// TODO: called when a player
-function PlayerSurrendered(PlayerController Player)
-{
-    local DHPlayer PC;
-    local int i, TeamIndex;
-    local int TeamSizes[2];
-    local DHVoteInfo_TeamSurrender Vote;
-    local int SurrenderNominatorCount;
-
-    PC = DHPlayer(Player);
-
-    if (PC == none || GRI == none)
-    {
-        return;
-    }
-
-    TeamIndex = PC.GetTeamNum();
-
-    Log("PC" @ PC);
-    Log("GRI" @ GRI);
-    Log("TeamIndex" @ TeamIndex);
-
-    if (TeamIndex < 0 || TeamIndex >= arraycount(TeamSurrenderVoteTimes))
-    {
-        PC.ClientTeamSurrenderResponse(1);
-        return;
-    }
-
-    if (!IsInState('RoundInPlay'))
-    {
-        // Round is not in play.
-        PC.ClientTeamSurrenderResponse(2);
-        return;
-    }
-
-    // TODO: remove player from SurrenderNominators when they switch teams
-    for (i = 0; i < SurrenderNominators.Length; ++i)
-    {
-        if (Player == SurrenderNominators[i])
-        {
-            // Already voted to surender.
-            PC.ClientTeamSurrenderResponse(3);
-            return;
-        }
-    }
-
-    if (TeamSurrenderVoteTimes[TeamIndex] > GRI.ElapsedTime)
-    {
-        Log("B");
-        // You cannot vote to surrender yet.
-        PC.ClientTeamSurrenderResponse(4);
-        return;
-    }
-
-    // Surrendering can only be voted for with ~16+ people on a team.
-    GetTeamSizes(TeamSizes);
-
-    if (Level.NetMode != NM_Client && TeamSizes[TeamIndex] < default.SurrenderTeamSizeMin)
-    {
-        PC.ClientTeamSurrenderResponse(5);
-        return;
-    }
-
-    SurrenderNominators.Insert(0, 1);
-    SurrenderNominators[0] = Player;
-
-    for (i = 0; i < SurrenderNominators.Length; ++i)
-    {
-        if (SurrenderNominators[i] != none && SurrenderNominators[i].GetTeamNum() == TeamIndex)
-        {
-            ++SurrenderNominatorCount;
-        }
-    }
-
-    if (SurrenderNominatorCount >= default.SurrenderNominationsThreshold)
-    {
-        // Start the vote!
-        Vote = Spawn(class'DHVoteInfo_TeamSurrender');
-
-        if (Vote != none)
-        {
-            Vote.TeamIndex = TeamIndex;
-            Vote.StartVote();
-        }
-
-        for (i = SurrenderNominators.Length - 1; i >= 0; --i)
-        {
-            if (SurrenderNominators[i] != none && SurrenderNominators[i].GetTeamNum() == TeamIndex)
-            {
-                SurrenderNominators.Remove(i, 1);
-            }
-        }
-
-        PC.ClientTeamSurrenderResponse(5);
-        return;
-    }
-
-    PC.ClientTeamSurrenderResponse(0);
-}
-
-// Overriden to stop the addition of duplicate keys into the server info array.
-static function AddServerDetail(out ServerResponseLine ServerState, string RuleName, coerce string RuleValue)
-{
-    local int i;
-
-    for (i = 0; i < ServerState.ServerInfo.Length; ++i)
-    {
-        if (ServerState.ServerInfo[i].Key == RuleName)
-        {
-            ServerState.ServerInfo[i].Value = RuleValue;
-            return;
-        }
-    }
-
-    i = ServerState.ServerInfo.Length;
-    ServerState.ServerInfo.Length = i + 1;
-
-    ServerState.ServerInfo[i].Key = RuleName;
-    ServerState.ServerInfo[i].Value = RuleValue;
-}
-
 defaultproperties
 {
     ServerTickForInfraction=17.0
@@ -5558,9 +5426,6 @@ defaultproperties
     DisableAllChatThreshold=50
     bAllowAllChat=true
     bIsAttritionEnabled=true
-
     bIsDangerZoneEnabled=true
-
-    SurrenderNominationsThreshold=5
-    SurrenderTeamSizeMin=16
+    SurrenderRoundTime=15
 }
