@@ -5,7 +5,9 @@
 
 class DHVoteInfo_TeamSurrender extends DHVoteInfo;
 
-var bool bOldAllowSurrender;
+var bool  bOldAllowSurrender;
+var float ReinforcementPercentageLimit;
+var int   RoundTimeLimit;
 
 function StartVote()
 {
@@ -173,6 +175,28 @@ static function bool CanNominate(PlayerController Player, DarkestHourGame Game)
         return false;
     }
 
+    // You cannot vote to surrender during the setup phase.
+    if (GRI.bIsInSetupPhase)
+    {
+        PC.ClientTeamSurrenderResponse(10);
+        return false;
+    }
+
+    // You cannot vote to surrender this early.
+    if (default.RoundTimeLimit >= GRI.ElapsedTime)
+    {
+        PC.ClientTeamSurrenderResponse(9);
+        return false;
+    }
+
+    // Reinforcements are above the limit.
+    if (GRI.SpawnsRemaining[TeamIndex] >= 0 &&
+        GRI.SpawnsRemaining[TeamIndex] >= Game.SpawnsAtRoundStart[TeamIndex] * default.ReinforcementPercentageLimit)
+    {
+        PC.ClientTeamSurrenderResponse(8);
+        return false;
+    }
+
     // Vote in play.
     if (VM.GetVoteIndex(default.Class, TeamIndex) >= 0)
     {
@@ -187,24 +211,24 @@ static function bool CanNominate(PlayerController Player, DarkestHourGame Game)
         return false;
     }
 
-    // You cannot vote to surrender yet.
+    // The team has voted to surrender recently.
     if (VM.GetVoteTime(class'DHVoteInfo_TeamSurrender', TeamIndex) > GRI.ElapsedTime)
     {
         PC.ClientTeamSurrenderResponse(6);
         return false;
     }
 
-    // TODO: Add reinforcements requirement
-
     return true;
 }
 
 defaultproperties
 {
-    QuestionText="Do you want to throw down your weapons and surrendered?"
+    QuestionText="Do you want to throw down your weapons and surrender?"
 
     bIsGlobal=false
     NominationCountThreshold=6
     CooldownSeconds=300
     TeamSizeMin=16
+    ReinforcementPercentageLimit=0.5
+    RoundTimeLimit=900
 }

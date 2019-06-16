@@ -436,7 +436,9 @@ function UpdateStatus()
     ChangeButtonState(1, PC.Pawn != none);
 
     // Surrender
-    ChangeButtonState(2, GRI.RoundWinnerTeamIndex > 1 && !GRI.bSurrenderVoteInProgress);
+    ChangeButtonState(2, GRI.RoundWinnerTeamIndex > 1 &&
+                         !GRI.bSurrenderVoteInProgress &&
+                         !GRI.bIsInSetupPhase);
     b_MenuOptions[2].Caption = SurrenderButtonText[int(PC.bSurrendered)];
 }
 
@@ -1156,11 +1158,16 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
             switch (Result)
             {
                 case 3:
-                    Controller.ShowQuestionDialog(Repl(SurrenderResponseMessages[Result], "{0}", class'DHVoteInfo_TeamSurrender'.default.TeamSizeMin), QBTN_OK, QBTN_OK);
+                    ErrorMessage = Repl(SurrenderResponseMessages[Result], "{0}", class'DHVoteInfo_TeamSurrender'.default.TeamSizeMin);
+                    break;
+                case 8:
+                    ErrorMessage = Repl(SurrenderResponseMessages[Result], "{0}", int(class'DHVoteInfo_TeamSurrender'.default.ReinforcementPercentageLimit * 100));
                     break;
                 default:
-                    Controller.ShowQuestionDialog(SurrenderResponseMessages[Result], QBTN_OK, QBTN_OK);
+                    ErrorMessage = SurrenderResponseMessages[Result];
             }
+
+            Controller.ShowQuestionDialog(ErrorMessage, QBTN_OK, QBTN_OK);
         }
         else
         {
@@ -1806,8 +1813,11 @@ defaultproperties
     SurrenderResponseMessages[3]="Not enough players to initiate the vote ({0} is required).";
     SurrenderResponseMessages[4]="Vote is already in progress.";
     SurrenderResponseMessages[5]="You've already voted.";
-    SurrenderResponseMessages[6]="The team has voted to surrender recently. Try again later.";
-    SurrenderResponseMessages[7]="Can't surrender after the round is over.";
+    SurrenderResponseMessages[6]="Your team already had a vote to surrender earlier. Try again later.";
+    SurrenderResponseMessages[7]="You cannot surrender after the round is over.";
+    SurrenderResponseMessages[8]="You cannot surrender when reinforcements are above {0}%.";
+    SurrenderResponseMessages[9]="You cannot surrender this early.";
+    SurrenderResponseMessages[10]="You cannot surrender during the setup phase.";
 
     MapMode=MODE_Map
     bButtonsEnabled=true
