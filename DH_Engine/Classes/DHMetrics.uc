@@ -201,7 +201,7 @@ function OnTextMessage(PlayerController PC, string Type, string Message)
     local DHMetricsTextMessage TextMessage;
     local DHPlayerReplicationInfo PRI;
 
-    if (PC == none)
+    if (PC == none || Type == "None" || Message == "")
     {
         return;
     }
@@ -319,14 +319,16 @@ function OnRallyPointCreated(DHSpawnPoint_SquadRallyPoint RP)
 }
 
 // Adds a generic JSONObject event.
-function AddEvent(JSONObject Event)
+function AddEvent(string Type, JSONObject Data)
 {
-    if (Rounds.Length == 0 || Event == none)
+    if (Rounds.Length == 0 || Type == "" || Data == none)
     {
         return;
     }
 
-    Rounds[0].Events[Rounds[0].Events.Length] = Event;
+    Rounds[0].Events[Rounds[0].Events.Length] = (new class'JSONObject')
+        .PutString("type", Type)
+        .Put("data", Data);
 }
 
 static function string TrimPort(string NetworkAddress)
