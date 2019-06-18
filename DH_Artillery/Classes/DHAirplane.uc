@@ -55,7 +55,8 @@ var Target  CurrentTarget; // Current target.
 
 simulated function PostBeginPlay()
 {
-    CurrentSpeed = 800;
+    //800
+    CurrentSpeed = 900;
 }
 
 // Tick needed to make AI decisions on server.
@@ -78,7 +79,8 @@ function OnMoveEnd() {}
 // CurrentTarget should be set here.
 function PickTarget()
 {
-    CurrentTarget.Position = Location + vect(-2000, -2000, 0);
+    //CurrentTarget.Position = Location + vect(2000, -200, -200);
+    CurrentTarget.Position = Location + vect(1000, 0, -3000);
 }
 
 // Initial State. The plane enters into the combat area.
@@ -92,7 +94,7 @@ auto simulated state Entrance
     function BeginState()
     {
         Log("Entrance State");
-        BeginStraight(vect(1,0,0));
+        BeginStraight(vect(1,1,0));
         SetTimer(4, false);
     }
 }
@@ -125,7 +127,8 @@ state Approaching
     function BeginState()
     {
         Log("Approaching");
-        BeginTurnTowardsPosition(CurrentTarget.Position, 1000, false);
+        //BeginTurnTowardsPosition(CurrentTarget.Position, 1000, false);
+        BeginDiveClimbTowardsPosition(CurrentTarget.Position, 1000, false);
     }
 }
 
@@ -162,7 +165,7 @@ simulated function MovementUpdate(float DeltaTime)
     Heading.Roll = 0;
     SetRotation(Heading);
 
-    // Check if waypoint met. Restrain from continued movement until new waypoint is set.
+    // Check if target met. Restrain from continued movement until new waypoint is set.
     if (VSize(V3ToV2(CurrentTarget.Position - Location)) <= CurrentTarget.Radius)
     {
         OnTargetReached();
@@ -190,6 +193,26 @@ function BeginTurnTowardsPosition(vector TurnPositionGoal, float TurnRadius, boo
     SetPhysics(PHYS_None);
     Velocity = VelocityPre;
 }
+
+// Save as turnTowardsPosition, but with diving and climbing.
+function BeginDiveClimbTowardsPosition(vector TurnPositionGoal, float TurnRadius, bool bIsClimbing)
+{
+    local DHDiveClimbTowardsPosition DiveClimbState;
+    local vector VelocityPre;
+
+    DiveClimbState = new class'DHDiveClimbTowardsPosition';
+    DiveClimbState.Airplane = self;
+    DiveClimbState.TurnRadius = TurnRadius;
+    DiveClimbState.bIsClimbing = bIsClimbing;
+    DiveClimbState.PositionGoal = TurnPositionGoal;
+
+    MoveState = DiveClimbState;
+
+    VelocityPre = Velocity;
+    SetPhysics(PHYS_None);
+    Velocity = VelocityPre;
+}
+
 
 // This begins the straight movement state. The plane will move in Direction
 // forever.
