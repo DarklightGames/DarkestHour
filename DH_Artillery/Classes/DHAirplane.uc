@@ -56,7 +56,7 @@ var Target  CurrentTarget; // Current target.
 simulated function PostBeginPlay()
 {
     //800
-    CurrentSpeed = 900;
+    CurrentSpeed = 500;
 }
 
 // Tick needed to make AI decisions on server.
@@ -80,7 +80,9 @@ function OnMoveEnd() {}
 function PickTarget()
 {
     //CurrentTarget.Position = Location + vect(2000, -200, -200);
-    CurrentTarget.Position = Location + vect(1000, 0, -3000);
+    //CurrentTarget.Position = Location + vect(0, 2000, 2000);
+    CurrentTarget.Position = vect(21543, -39272, -1040);
+    CurrentTarget.Radius = 8000;
 }
 
 // Initial State. The plane enters into the combat area.
@@ -94,7 +96,7 @@ auto simulated state Entrance
     function BeginState()
     {
         Log("Entrance State");
-        BeginStraight(vect(1,1,0));
+        BeginStraight(vect(1,0,0));
         SetTimer(4, false);
     }
 }
@@ -111,7 +113,7 @@ simulated state Searching
     function BeginState()
     {
         Log("Searching");
-        SetTimer(0.1, false);
+        SetTimer(2, false);
     }
 }
 
@@ -119,6 +121,12 @@ simulated state Searching
 // when plane has reached the proper distance to the target to begin the run.
 state Approaching
 {
+    function OnTargetReached()
+    {
+        Log("Reached Target");
+        GotoState('Attacking');
+    }
+
     function OnMoveEnd()
     {
         BeginStraight(Velocity);
@@ -127,8 +135,8 @@ state Approaching
     function BeginState()
     {
         Log("Approaching");
-        //BeginTurnTowardsPosition(CurrentTarget.Position, 1000, false);
-        BeginDiveClimbTowardsPosition(CurrentTarget.Position, 1000, false);
+        BeginTurnTowardsPosition(CurrentTarget.Position, 1000, false);
+        //BeginDiveClimbTowardsPosition(CurrentTarget.Position, 1000, true);
     }
 }
 
@@ -140,10 +148,16 @@ simulated state Attacking
         GotoState('Searching');
     }
 
+    function OnMoveEnd()
+    {
+        BeginStraight(Velocity);
+    }
+
     function BeginState()
     {
         Log("Attacking");
-        SetTimer(0.1, false);
+        //SetTimer(0.1, false);
+        BeginDiveClimbTowardsPosition(CurrentTarget.Position, 1000, false);
     }
 }
 

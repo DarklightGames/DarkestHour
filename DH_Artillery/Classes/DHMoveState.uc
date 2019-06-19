@@ -37,7 +37,7 @@ function bool DiveOrClimbPlane(bool bIsClimbing, float TurnRadius, float Speed, 
     local rotator DeltaRot;
     local float ArcDistance;
     local vector NewPlanePosition;
-    local rotator Heading;
+    local rotator Heading, JustYaw;
 
     // Calculate position
     NewPlanePosition = CalculateRotationPosition(Airplane.Location, Airplane.Velocity, bIsClimbing, TurnRadius, Speed, DeltaTime);
@@ -62,12 +62,15 @@ function bool DiveOrClimbPlane(bool bIsClimbing, float TurnRadius, float Speed, 
         DeltaRot.Pitch = class'UUnits'.static.RadiansToUnreal(-DeltaAngle);
     DeltaRot.Yaw = 0;
 
-
     // Add to total angled turned. Used to tell when to stop the turn.
     TotalTurned += Abs(DeltaAngle);
 
+    JustYaw = Heading;
+    JustYaw.Pitch = 0;
+    JustYaw.Roll = 0;
+
     // Update plane's velocity.
-    Airplane.Velocity = Airplane.Velocity >> DeltaRot;
+    Airplane.Velocity = ((Airplane.Velocity << JustYaw) >> DeltaRot) >> JustYaw;
     Airplane.SetLocation(NewPlanePosition);
 
     return true;
@@ -151,8 +154,8 @@ function vector CalculateDiveClimbEndPoint(vector WorldGoal, vector CurrentVeloc
     local vector LocalGoal, LocalGoalToCircle, LocalTangent, WorldTangent;
     local rotator HeadingRotator;
 
-    WorldGoal.Y = 0;
-    CurrentPlanePosition.Y = 0;
+    //WorldGoal.Y = 0;
+    //CurrentPlanePosition.Y = 0;
 
     // Convert world position goal to airplane velocity space, relative to the turn circle.
     HeadingRotator = OrthoRotation(CurrentVelocity, CurrentVelocity Cross vect(0, 0, 1), vect(0, 0, 1));
@@ -184,8 +187,6 @@ function vector CalculateDiveClimbEndPoint(vector WorldGoal, vector CurrentVeloc
 
     // Convert To World Space.
     WorldTangent = (LocalTangent >> HeadingRotator) + CurrentPlanePosition;
-    //WorldTangent.Z = CurrentPlanePosition.Z;
-    WorldTangent.Y = CurrentPlanePosition.Y;
 
     return WorldTangent;
 }

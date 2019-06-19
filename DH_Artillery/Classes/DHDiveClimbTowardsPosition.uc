@@ -5,7 +5,6 @@
 //-----------------------------------------------------------
 // Dives/Climbs the plane until it's velocity points at the PositionGoal.
 // The GOAL is to be aligned with the PositionGoal.
-// Only the X and Z coordinates are taken into account, Y is ignored.
 // For lack of a better term, I keep using the term "Turn".
 //-----------------------------------------------------------
 
@@ -26,7 +25,6 @@ function Tick(float DeltaTime)
     // Find the Turn End Point. This also sets the TangentAngle, so that we can detect the turn end.
     if (!bIsInitialized)
     {
-        Log("bingo");
         TurnEndPoint = CalculateDiveClimbEndPoint(PositionGoal, Airplane.Velocity, Airplane.Location, bIsClimbing, TurnRadius);
         bIsInitialized = true;
     }
@@ -34,21 +32,18 @@ function Tick(float DeltaTime)
     DiveOrClimbPlane(bIsClimbing, TurnRadius, Airplane.CurrentSpeed, DeltaTime);
 
     TangentVelocity = Normal(PositionGoal - TurnEndPoint);
-    TangentVelocity.Y = 0;
-    TangentVelocity = Normal(TangentVelocity);
+    //TangentVelocity.Y = 0;
+    //TangentVelocity = Normal(TangentVelocity);
 
-    /*
     // Test if the TurnEndPoint has been passed. If so, set to proper endpoint and end the turn.
     if(TotalTurned >= TangentAngle)
     {
         Log("Done: "$TotalTurned);
-        TurnEndPoint.Y = Airplane.Location.Y;
+        //TurnEndPoint.Y = Airplane.Location.Y;
         Airplane.SetLocation(TurnEndPoint);
         Airplane.Velocity = Normal(TangentVelocity) * Airplane.CurrentSpeed;
         Airplane.OnMoveEnd(); // tell Airplane that move is done.
     }
-    */
-
 }
 
 DefaultProperties
