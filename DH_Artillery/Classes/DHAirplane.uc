@@ -48,15 +48,21 @@ struct Target
 {
     var vector Position;
     var float Radius;       // How far from target to be before starting attack run. Must be facing the target by this distance.
+    var float MinimumHeight; // Minimum height above the target before pulling up when dive attacking. This is the bottom of the
     // TODO: var AttackType // Type of attack run to be carried out on this target, after it has been approached.
 };
 
+var bool bIsPullingUp;
+
 var Target  CurrentTarget; // Current target.
+
+// DEBUG
+var vector Center;
 
 simulated function PostBeginPlay()
 {
     //800
-    CurrentSpeed = 500;
+    CurrentSpeed = 2100;
 }
 
 // Tick needed to make AI decisions on server.
@@ -82,7 +88,8 @@ function PickTarget()
     //CurrentTarget.Position = Location + vect(2000, -200, -200);
     //CurrentTarget.Position = Location + vect(0, 2000, 2000);
     CurrentTarget.Position = vect(21543, -39272, -1040);
-    CurrentTarget.Radius = 8000;
+    CurrentTarget.Radius = 10000;
+    CurrentTarget.MinimumHeight = 1000;
 }
 
 // Initial State. The plane enters into the combat area.
@@ -95,9 +102,9 @@ auto simulated state Entrance
 
     function BeginState()
     {
-        Log("Entrance State");
-        BeginStraight(vect(1,0,0));
-        SetTimer(4, false);
+        //Log("Entrance State");
+        BeginStraight(vect(1,2,0));
+        SetTimer(3, false);
     }
 }
 
@@ -112,8 +119,8 @@ simulated state Searching
 
     function BeginState()
     {
-        Log("Searching");
-        SetTimer(2, false);
+        //Log("Searching");
+        SetTimer(1, false);
     }
 }
 
@@ -123,7 +130,7 @@ state Approaching
 {
     function OnTargetReached()
     {
-        Log("Reached Target");
+        //Log("Reached Target");
         GotoState('Attacking');
     }
 
@@ -132,18 +139,35 @@ state Approaching
         BeginStraight(Velocity);
     }
 
+    function TickAI(float DeltaTime)
+    {
+    }
+
     function BeginState()
     {
-        Log("Approaching");
-        BeginTurnTowardsPosition(CurrentTarget.Position, 1000, false);
-        //BeginDiveClimbTowardsPosition(CurrentTarget.Position, 1000, true);
+        //Log("Approaching");
+        Center = Location;
+        Center.Y = Location.Y - 1000;
+        BeginTurnTowardsPosition(CurrentTarget.Position, 5000, true);
+        //BeginDiveClimbTowardsPosition(CurrentTarget.Position, 3000, true);
     }
 }
 
 // Preform attack Run on the target.
 simulated state Attacking
 {
-    simulated function Timer()
+    function TickAI(float DeltaTime)
+    {
+        local vector PullUpTarget;
+        // Check if we have dipped below the min hight above target
+        if(!bIsPullingUp && Location.Z < (CurrentTarget.Position.Z + CurrentTarget.MinimumHeight)) {
+            Log("Dipped Below Min Hight");
+            BeginDiveClimbToAngle(Pi/3, 2500, true);
+            bIsPullingUp = true;
+        }
+    }
+
+    function Timer()
     {
         GotoState('Searching');
     }
@@ -155,9 +179,10 @@ simulated state Attacking
 
     function BeginState()
     {
-        Log("Attacking");
+        //Log("Attacking");
         //SetTimer(0.1, false);
-        BeginDiveClimbTowardsPosition(CurrentTarget.Position, 1000, false);
+        bIsPullingUp = false;
+        BeginDiveClimbTowardsPosition(CurrentTarget.Position, 5000, false);
     }
 }
 
@@ -208,7 +233,7 @@ function BeginTurnTowardsPosition(vector TurnPositionGoal, float TurnRadius, boo
     Velocity = VelocityPre;
 }
 
-// Save as turnTowardsPosition, but with diving and climbing.
+// Same as turnTowardsPosition, but with diving and climbing.
 function BeginDiveClimbTowardsPosition(vector TurnPositionGoal, float TurnRadius, bool bIsClimbing)
 {
     local DHDiveClimbTowardsPosition DiveClimbState;
@@ -227,6 +252,25 @@ function BeginDiveClimbTowardsPosition(vector TurnPositionGoal, float TurnRadius
     Velocity = VelocityPre;
 }
 
+// Save as turnTowardsPosition, but with diving and climbing.
+function BeginDiveClimbToAngle(float TurnAngleGoal, float TurnRadius, bool bIsClimbing)
+{
+    local DHDiveClimbToAngle DiveClimbState;
+    local vector VelocityPre;
+
+    DiveClimbState = new class'DHDiveClimbToAngle';
+    DiveClimbState.Airplane = self;
+    DiveClimbState.TurnRadius = TurnRadius;
+    DiveClimbState.bIsClimbing = bIsClimbing;
+    DiveClimbState.DesiredAngle = TurnAngleGoal;
+    DiveClimbState.TurnSpeed = CurrentSpeed;
+
+    MoveState = DiveClimbState;
+
+    VelocityPre = Velocity;
+    SetPhysics(PHYS_None);
+    Velocity = VelocityPre;
+}
 
 // This begins the straight movement state. The plane will move in Direction
 // forever.

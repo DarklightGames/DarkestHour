@@ -27,6 +27,8 @@ function PostBeginPlay()
     PlaneStartLocation.Z = class'DHUnits'.static.MetersToUnreal(PlaneInitialHeight);    // TODO: magic number
     PlaneStartLocation += Location;
 
+    //PlaneStartLocation = vect(0,0,0);
+
     Airplane = Spawn(AirplaneClass, self);
 
     Airplane.SetLocation(PlaneStartLocation);
@@ -54,7 +56,7 @@ defaultproperties
     DrawType=DT_Mesh
     Mesh=Mesh'DH_Airplanes_anm.flybys'
     FlybyAnimationNames(0)="flyby_default"
-    PlaneInitialHeight=200;
+    PlaneInitialHeight=600;
     AirplaneBoneName="airplane"
     RemoteRole=ROLE_SimulatedProxy
     PassCount=2

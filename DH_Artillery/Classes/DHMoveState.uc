@@ -1,4 +1,4 @@
- //==============================================================================
+//==============================================================================
 // Darkest Hour: Europe '44-'45
 // Darklight Games (c) 2008-2019
 //==============================================================================
@@ -25,8 +25,9 @@ var float TotalTurned;
 var DHAirplane Airplane;
 
 var float TangentAngle;     // Angle of the tangent point to the initial position of the plane. Used to check for end of the turn.
-
-function bool HasMetGoal();
+var vector InitialVelocity;
+var vector InitialLocation;
+var bool bIsTurnInitialized;
 
 function Tick(float DeltaTime);
 
@@ -39,17 +40,24 @@ function bool DiveOrClimbPlane(bool bIsClimbing, float TurnRadius, float Speed, 
     local vector NewPlanePosition;
     local rotator Heading, JustYaw;
 
+    if (!bIsTurnInitialized)
+    {
+        InitialVelocity = Airplane.Velocity;
+        InitialLocation = Airplane.Location;
+        bIsTurnInitialized = true;
+    }
+
     // Calculate position
-    NewPlanePosition = CalculateRotationPosition(Airplane.Location, Airplane.Velocity, bIsClimbing, TurnRadius, Speed, DeltaTime);
+    NewPlanePosition = CalculateRotationPosition(bIsClimbing, TurnRadius, Speed, DeltaTime);
 
     // convert to pitch change - local
     NewPlanePosition.Z = NewPlanePosition.Y;
     NewPlanePosition.Y = 0;
 
     // Convert to world positon
-    Heading = OrthoRotation(Airplane.Velocity, Airplane.Velocity Cross vect(0, 0, 1), vect(0, 0, 1));
+    Heading = OrthoRotation( InitialVelocity,  InitialVelocity Cross vect(0, 0, 1), vect(0, 0, 1));
     Heading.Roll = 0;
-    NewPlanePosition = (NewPlanePosition >> Heading) + Airplane.Location;
+    NewPlanePosition = (NewPlanePosition >> Heading) + InitialLocation;
 
     // Calculate the amount turned.
     ArcDistance = Speed * DeltaTime;
@@ -57,20 +65,17 @@ function bool DiveOrClimbPlane(bool bIsClimbing, float TurnRadius, float Speed, 
 
     DeltaRot.Roll = 0;
     if(bIsClimbing)
-        DeltaRot.Pitch = class'UUnits'.static.RadiansToUnreal(DeltaAngle);
+        DeltaRot.Pitch = class'UUnits'.static.RadiansToUnreal(TotalTurned);
     else
-        DeltaRot.Pitch = class'UUnits'.static.RadiansToUnreal(-DeltaAngle);
+        DeltaRot.Pitch = class'UUnits'.static.RadiansToUnreal(-TotalTurned);
     DeltaRot.Yaw = 0;
-
-    // Add to total angled turned. Used to tell when to stop the turn.
-    TotalTurned += Abs(DeltaAngle);
 
     JustYaw = Heading;
     JustYaw.Pitch = 0;
     JustYaw.Roll = 0;
 
     // Update plane's velocity.
-    Airplane.Velocity = ((Airplane.Velocity << JustYaw) >> DeltaRot) >> JustYaw;
+    Airplane.Velocity = ((InitialVelocity << JustYaw) >> DeltaRot) >> JustYaw;
     Airplane.SetLocation(NewPlanePosition);
 
     return true;
@@ -85,13 +90,20 @@ function bool TurnPlane(bool bIsTurnRight, float TurnRadius, float Speed, float 
     local vector NewPlanePosition;
     local rotator Heading;
 
+    if (!bIsTurnInitialized)
+    {
+        InitialVelocity = Airplane.Velocity;
+        InitialLocation = Airplane.Location;
+        bIsTurnInitialized = true;
+    }
+
     // Calculate position
-    NewPlanePosition = CalculateRotationPosition(Airplane.Location, Airplane.Velocity, bIsTurnRight, TurnRadius, Speed, DeltaTime);
+    NewPlanePosition = CalculateRotationPosition(bIsTurnRight, TurnRadius, Speed, DeltaTime);
 
     // Convert to world positon
-    Heading = OrthoRotation(Airplane.Velocity, Airplane.Velocity Cross vect(0, 0, 1), vect(0, 0, 1));
+    Heading = OrthoRotation( InitialVelocity,  InitialVelocity Cross vect(0, 0, 1), vect(0, 0, 1));
     Heading.Roll = 0;
-    NewPlanePosition = (NewPlanePosition >> Heading) + Airplane.Location;
+    NewPlanePosition = (NewPlanePosition >> Heading) + InitialLocation;
 
     // Calculate the amount turned.
     ArcDistance = Speed * DeltaTime;
@@ -99,16 +111,18 @@ function bool TurnPlane(bool bIsTurnRight, float TurnRadius, float Speed, float 
 
     DeltaRot.Roll = 0;
     if(bIsTurnRight)
-        DeltaRot.Yaw =class'UUnits'.static.RadiansToUnreal(DeltaAngle);
+        DeltaRot.Yaw = class'UUnits'.static.RadiansToUnreal(TotalTurned);
     else
-        DeltaRot.Yaw = class'UUnits'.static.RadiansToUnreal(-DeltaAngle);
+        DeltaRot.Yaw = class'UUnits'.static.RadiansToUnreal(-TotalTurned);
     DeltaRot.Pitch = 0;
 
     // Add to total angled turned. Used to tell when to stop the turn.
-    TotalTurned += Abs(DeltaAngle);
+    //TotalTurned += Abs(DeltaAngle);
 
     // Update plane's velocity.
-    Airplane.Velocity = Airplane.Velocity >> DeltaRot;
+    //Airplane.Velocity = Airplane.Velocity >> DeltaRot;
+    Airplane.Velocity = InitialVelocity >> DeltaRot;
+    //Log("Dog Lad: "$NewPlanePosition);
     Airplane.SetLocation(NewPlanePosition);
 
     // TODO Roll plane for banking turns. 0 -> 100 100 ->0. Banking angle realtive to max turn radius. Plane quality.
@@ -118,21 +132,20 @@ function bool TurnPlane(bool bIsTurnRight, float TurnRadius, float Speed, float 
 // Many moveStates use circular Rotation. Use this calculation across all of them.
 // TODO: Add in axes variations for the circle, allowing for the creation of
 // elipsoids. This would allow for percise curved movement to any position.
-function vector CalculateRotationPosition(vector CurrentLocation, vector CurrentVelocity, bool bIsClockwise, float TurnRadius, float Speed, float DeltaTime)
+function vector CalculateRotationPosition(bool bIsClockwise, float TurnRadius, float Speed, float DeltaTime)
 {
     local float DeltaAngle;
     local float ArcDistance;
     local vector PlaneSpaceNewPosition;
-    local vector WorldSpaceNewPosition;
     local rotator Heading;
 
     ArcDistance = Speed * DeltaTime;
-
     DeltaAngle = ArcDistance / TurnRadius;
+    TotalTurned += Abs(DeltaAngle);
 
     // Relative to the rotation center.
-    PlaneSpaceNewPosition.X = Sin(DeltaAngle) * TurnRadius;
-    PlaneSpaceNewPosition.Y = Cos(DeltaAngle) * TurnRadius;
+    PlaneSpaceNewPosition.X = Sin(TotalTurned) * TurnRadius;
+    PlaneSpaceNewPosition.Y = Cos(TotalTurned) * TurnRadius;
     PlaneSpaceNewPosition.Z = 0;
 
     // Make relative to the plane's position.
@@ -207,7 +220,7 @@ function vector CalculateTurnEndPoint(vector WorldGoal, vector CurrentVelocity, 
     LocalGoal.Z = 0;
 
     LocalGoalToCircle = LocalGoal;
-        if (bIsClockwise)
+    if (bIsClockwise)
         LocalGoalToCircle.Y -= TurnRadius;
     else
         LocalGoalToCircle.Y += TurnRadius;

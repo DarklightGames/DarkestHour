@@ -32,14 +32,11 @@ function Tick(float DeltaTime)
     DiveOrClimbPlane(bIsClimbing, TurnRadius, Airplane.CurrentSpeed, DeltaTime);
 
     TangentVelocity = Normal(PositionGoal - TurnEndPoint);
-    //TangentVelocity.Y = 0;
-    //TangentVelocity = Normal(TangentVelocity);
 
     // Test if the TurnEndPoint has been passed. If so, set to proper endpoint and end the turn.
     if(TotalTurned >= TangentAngle)
     {
         Log("Done: "$TotalTurned);
-        //TurnEndPoint.Y = Airplane.Location.Y;
         Airplane.SetLocation(TurnEndPoint);
         Airplane.Velocity = Normal(TangentVelocity) * Airplane.CurrentSpeed;
         Airplane.OnMoveEnd(); // tell Airplane that move is done.

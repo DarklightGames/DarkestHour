@@ -24,19 +24,25 @@ function Tick(float DeltaTime)
     if (!bIsInitialized)
     {
         TurnEndPoint = CalculateTurnEndPoint(PositionGoal, Airplane.Velocity, Airplane.Location, bIsTurningRight, TurnRadius);
+        TurnEndPoint.Z = Airplane.Location.Z;
+        Log(VSize(TurnEndPoint - Airplane.Center));
         bIsInitialized = true;
     }
 
     TurnPlane(bIsTurningRight, TurnRadius, Airplane.CurrentSpeed, DeltaTime);
 
-    TangentVelocity = Normal(PositionGoal - TurnEndPoint);
-    TangentVelocity.Z = 0;
-    TangentVelocity = Normal(TangentVelocity);
-
     // Test if the TurnEndPoint has been passed. If so, set to proper endpoint and end the turn.
     if(TotalTurned >= TangentAngle)
     {
+        TangentVelocity = PositionGoal - TurnEndPoint;
+        TangentVelocity.Z = 0;
+        TangentVelocity = Normal(TangentVelocity);
+
         TurnEndPoint.Z = Airplane.Location.Z;
+        Log("End "$VSize(TurnEndPoint - Airplane.Center));
+        Log(VSize(Airplane.Location - Airplane.Center));
+        //Log("Old Lad: "$Airplane.Location);
+        Log("Fat Lad: "$TurnEndPoint);
         Airplane.SetLocation(TurnEndPoint);
         Airplane.Velocity = Normal(TangentVelocity) * Airplane.CurrentSpeed;
         Airplane.OnMoveEnd(); // tell Airplane that move is done.
