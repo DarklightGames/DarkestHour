@@ -595,54 +595,78 @@ function ShowMidGameMenu(bool bPause)
     }
 }
 
-// Override for player gag functionality
 function bool AllowTextMessage(string Msg)
 {
-    local int i;
+    local int i, ReasonFailedNum;
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
 
-    if (PlayerReplicationInfo.bSilentAdmin || Level.NetMode == NM_Standalone || PlayerReplicationInfo.bAdmin)
-    {
-        return true;
-    }
-    if (Level.Pauser == none && Level.TimeSeconds - LastBroadcastTime < 2 || bIsGagged)
+    GRI = DHGameReplicationInfo(GameReplicationInfo);
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    if (GRI == none || PRI == none)
     {
         return false;
     }
 
-    // If same text, then lower the allowed frequency
-    if (Level.TimeSeconds - LastBroadcastTime < 5)
+    // If all chat is not allowed AND if Player is NOT a patron, then don't allow
+    if (!GRI.bAllChatEnabled && !PRI.IsPatron())
     {
-        Msg = Left(Msg,Clamp(len(Msg) - 4, 8, 64));
+        ReasonFailedNum = 1;
+    }
 
-        for (i = 0; i < 4; ++i)
+    // Prevent quickly repeated broadcasts
+    if (Level.Pauser == none && Level.TimeSeconds - LastBroadcastTime < 1)
+    {
+        ReasonFailedNum = 2;
+    }
+
+    // Prevent gagged players
+    if (bIsGagged)
+    {
+        ReasonFailedNum = 3;
+    }
+
+    // This should be after all failed reasons
+    // If is admin, silent admin, or in standalone, then allow message (regardless of restrictions above)
+    if (PRI.bSilentAdmin || Level.NetMode == NM_Standalone || PRI.bAdmin)
+    {
+        ReasonFailedNum = 0;
+    }
+
+    // If message is disallowed, provide a local message as to why
+    if (ReasonFailedNum > 0)
+    {
+        ReceiveLocalizedMessage(class'DHCommunicationMessage', ReasonFailedNum); // Sends a local message to the player with a reason why their message was not broadcast
+        return false;
+    }
+    else
+    {
+        // Shifts LastBroadcastString array over by 1 (clearing the oldest one)
+        for (i = 3; i > 0; --i)
         {
-            if (LastBroadcastString[i] ~= Msg)
-            {
-                return false;
-            }
+            LastBroadcastString[i] = LastBroadcastString[i-1];
         }
-    }
-    for (i = 3; i > 0; --i)
-    {
-        LastBroadcastString[i] = LastBroadcastString[i-1];
-    }
 
-    LastBroadcastTime = Level.TimeSeconds;
-    return true;
+        // Update the last broadcast time
+        LastBroadcastTime = Level.TimeSeconds;
+        return true; // Allow message
+    }
 }
 
-// Modified to prevent broadcast of public chat if "all chat" is disabled
 exec function Say(string Msg)
 {
+    // Prune message to 128 characters
     Msg = Left(Msg,128);
 
-    // If all chat is not allowed, then don't broadcast (serversay) and tell the user
-    if (DHGameReplicationInfo(GameReplicationInfo) != none && !DHGameReplicationInfo(GameReplicationInfo).bAllChatEnabled)
+    // If Msg is a specific command
+    if (Msg ~= "/patron")
     {
-        ReceiveLocalizedMessage(class'DHCommunicationMessage', 0); // "Public chat is currently disabled"
+        // Prompt user with Patron Info window
         return;
     }
 
+    // If message is allowed, have server broadcast message
     if (AllowTextMessage(Msg))
     {
         ServerSay(Msg);
