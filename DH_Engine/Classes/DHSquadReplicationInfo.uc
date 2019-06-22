@@ -748,20 +748,6 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
     PRI.SquadMemberIndex = -1;
     PRI.bIsSquadAssistant = false;
 
-    // Unreserve role, if gametype restricts specials roles only to squads
-    if (GRI.GameType.default.bSquadSpecialRolesOnly && PRI.RoleInfo != none && PRI.RoleInfo.Limit != 255)
-    {
-        PC.bSpawnPointInvalidated = true;
-        PC.DesiredRole = -1;
-
-        RoleIndex = G.GetUnlimitedRoleIndex(TeamIndex);
-
-        if (RoleIndex != -1)
-        {
-            PC.ChangeRole(i);
-        }
-    }
-
     // Clear squad leader volunteer application.
     ClearSquadLeaderVolunteer(PRI, TeamIndex, SquadIndex);
 
