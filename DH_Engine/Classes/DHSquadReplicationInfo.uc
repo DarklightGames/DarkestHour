@@ -704,7 +704,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
     local DHVoiceReplicationInfo VRI;
     local DHGameReplicationInfo GRI;
     local VoiceChatRoom SquadVCR;
-    local int i, RoleIndex;
+    local int i;
     local array<DHPlayerReplicationInfo> Volunteers;
     local DHPlayerReplicationInfo Assistant;
     local DarkestHourGame G;
