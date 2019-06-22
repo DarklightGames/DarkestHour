@@ -3203,11 +3203,6 @@ exec function SetServerViewDistance(int NewDistance)
     }
 }
 
-exec function SetAllChat(bool bOn)
-{
-    GRI.bAllChatEnabled = bOn;
-}
-
 exec function SetAllChatThreshold(int NewThreshold)
 {
     DisableAllChatThreshold = NewThreshold;
@@ -5414,7 +5409,7 @@ defaultproperties
 
     bUseIdleKickingThreshold=true
     EnableIdleKickingThreshold=50
-    DisableAllChatThreshold=50
+    DisableAllChatThreshold=32
     bAllowAllChat=true
     bIsAttritionEnabled=true
     bIsDangerZoneEnabled=true
