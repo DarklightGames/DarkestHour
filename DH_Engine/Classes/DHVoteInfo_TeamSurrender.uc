@@ -226,6 +226,7 @@ defaultproperties
     QuestionText="Do you want to throw down your weapons and surrender?"
 
     bIsGlobal=false
+    bNominatorsVoteAutomatically=true
     NominationCountThreshold=6
     CooldownSeconds=300
     TeamSizeMin=16

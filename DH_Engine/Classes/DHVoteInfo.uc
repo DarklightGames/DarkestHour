@@ -21,13 +21,16 @@ var float                           DurationSeconds;
 
 var array<Option>                   Options;
 var array<PlayerController>         Voters;
+var array<PlayerController>         Nominators;
 var int                             VoterCount;
 
 var int                             CooldownSeconds;
 var int                             TeamIndex;
 var int                             TeamSizeMin;
 var int                             NominationCountThreshold;
+var int                             NominatorsDefaultOption;
 
+var bool                            bNominatorsVoteAutomatically;
 var bool                            bIsGlobal; // ignore voter's team index
 
 // Gets the list of eligible voters.
@@ -40,7 +43,7 @@ function string GetQuestionText()
 
 function StartVote()
 {
-    local int i;
+    local int i, VoterIndex;
     local DHPlayer PC;
 
     if (VoteId == -1)
@@ -69,6 +72,17 @@ function StartVote()
 
     for (i = 0; i < Voters.Length; ++i)
     {
+        // Accept the nominations as valid votes
+        if (bNominatorsVoteAutomatically && Voters[i] != none)
+        {
+            VoterIndex = class'UArray'.static.IndexOf(Nominators, Voters[i]);
+
+            if (VoterIndex >= 0)
+            {
+                RecieveVote(Voters[i], NominatorsDefaultOption);
+            }
+        }
+
         PC = DHPlayer(Voters[i]);
 
         if (PC != none)

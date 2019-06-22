@@ -27,7 +27,8 @@ function NominateVote(PlayerController Player, class<DHVoteInfo> VoteClass)
 {
     local DarkestHourGame G;
     local byte TeamIndex;
-    local int i, NominationCount;
+    local int i;
+    local array<PlayerController> Nominators;
 
     G = DarkestHourGame(Level.Game);
 
@@ -48,7 +49,8 @@ function NominateVote(PlayerController Player, class<DHVoteInfo> VoteClass)
     if (VoteClass.default.NominationCountThreshold < 2)
     {
         // Skip the nomination process
-        StartVote(VoteClass, TeamIndex);
+        Nominators[Nominators.Length] = Player;
+        StartVote(VoteClass, TeamIndex, Nominators);
     }
     else
     {
@@ -63,9 +65,11 @@ function NominateVote(PlayerController Player, class<DHVoteInfo> VoteClass)
         {
             if (Nominations[i].VoteClass == VoteClass && Nominations[i].TeamIndex == TeamIndex)
             {
-                if (Nominations[i].VoteClass.default.bIsGlobal || Nominations[i].Player.GetTeamNum() == Nominations[i].TeamIndex)
+                if (Nominations[i].VoteClass.default.bIsGlobal ||
+                    (Nominations[i].Player != none &&
+                     Nominations[i].Player.GetTeamNum() == Nominations[i].TeamIndex))
                 {
-                    ++NominationCount;
+                    Nominators[Nominators.Length] = Nominations[i].Player;
                 }
                 else
                 {
@@ -75,10 +79,9 @@ function NominateVote(PlayerController Player, class<DHVoteInfo> VoteClass)
         }
 
         // Start the vote!
-        // TODO: Should nominators vote automaticallY?
-        if (NominationCount >= VoteClass.default.NominationCountThreshold)
+        if (Nominators.Length >= VoteClass.default.NominationCountThreshold)
         {
-            StartVote(VoteClass, TeamIndex);
+            StartVote(VoteClass, TeamIndex, Nominators);
             ClearNominations(VoteClass, TeamIndex);
         }
     }
@@ -160,9 +163,7 @@ function ClearNominations(class<DHVoteInfo> VoteClass, byte TeamIndex)
     }
 }
 
-// The consumer of this function is expected to initialize the DHVoteInfo
-// actor prior to this being called.
-function StartVote(class<DHVoteInfo> VoteClass, byte TeamIndex)
+function StartVote(class<DHVoteInfo> VoteClass, byte TeamIndex, optional array<PlayerController> Nominators)
 {
     local int i, FreeIndex;
     local DHVoteInfo Vote;
@@ -194,10 +195,10 @@ function StartVote(class<DHVoteInfo> VoteClass, byte TeamIndex)
 
         Vote.VoteId = FreeIndex;
         Vote.TeamIndex = TeamIndex;
+        Vote.Nominators = Nominators;
+
         Votes[FreeIndex] = Vote;
-
         AddVoteTime(Vote);
-
         Vote.StartVote();
     }
     else
