@@ -50,6 +50,7 @@ function OnVoteEnded()
     local DHPlayer PC;
     local Controller C;
     local DHGameReplicationInfo GRI;
+    local bool bVotePassed;
 
     G = DarkestHourGame(Level.Game);
 
@@ -59,8 +60,9 @@ function OnVoteEnded()
     }
 
     VotesNeededToWin = Ceil(VoterCount * 0.5);
+    bVotePassed = Options[0].Voters.Length >= VotesNeededToWin;
 
-    if (Options[0].Votes >= VotesNeededToWin)
+    if (bVotePassed)
     {
         // Inform both teams and end the round after a brief delay.
         G.DelayedEndRound(G.default.SurrenderRoundTime,
@@ -93,6 +95,8 @@ function OnVoteEnded()
     {
         GRI.bSurrenderVoteInProgress = false;
     }
+
+    SendMetricsEvent("surrender", int(!bVotePassed));
 }
 
 static function OnNominated(PlayerController Player)

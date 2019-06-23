@@ -9,7 +9,7 @@ class DHVoteInfo extends Info
 struct Option
 {
     var localized string Text;
-    var int Votes;
+    var array<PlayerController> Voters;
 };
 
 var int                             VoteId;
@@ -32,6 +32,9 @@ var int                             NominatorsDefaultOption;
 
 var bool                            bNominatorsVoteAutomatically;
 var bool                            bIsGlobal; // ignore voter's team index
+
+var DateTime                        StartedAt;
+var DateTime                        FinishedAt;
 
 // Gets the list of eligible voters.
 function array<PlayerController>    GetEligibleVoters();
@@ -113,7 +116,7 @@ function RecieveVote(PlayerController Voter, int OptionIndex)
 
     Voters.Remove(VoterIndex, 1);
 
-    Options[OptionIndex].Votes += 1;
+    Options[OptionIndex].Voters[Voters.Length] = Voter;
 
     OnVoteReceieved(Voter, OptionIndex);
 
@@ -135,11 +138,13 @@ state Open
 {
     event BeginState()
     {
+        StartedAt = class'DateTime'.static.Now(self);
         SetTimer(DurationSeconds, false);
     }
 
     function Timer()
     {
+        FinishedAt = class'DateTime'.static.Now(self);
         OnVoteEnded();
         Destroy();
     }
@@ -151,7 +156,7 @@ function int GetTotalVotes()
 
     for (i = 0; i < Options.Length; ++i)
     {
-        TotalVotes += Options[i].Votes;
+        TotalVotes += Options[i].Voters.Length;
     }
 
     return TotalVotes;
@@ -167,8 +172,61 @@ static function bool CanNominate(PlayerController Player, DarkestHourGame Game)
     return true;
 }
 
-function OnVoteEnded();
+function SendMetricsEvent(string VoteType, int Result)
+{
+    local DarkestHourGame G;
+    local array<string> VoterIDs;
+    local array<string> NominatorIDs;
+    local JSONArray Votes;
+    local int i, j;
 
+    G = DarkestHourGame(Level.Game);
+
+    if (G == none || StartedAt == none || FinishedAt == none)
+    {
+        return;
+    }
+
+    // Get voter IDs
+    Votes = new class'JSONArray';
+
+    for (i = 0; i < Options.Length; ++i)
+    {
+        VoterIDs.Length = 0;
+
+        for (j = 0; j < Options[i].Voters.Length; ++j)
+        {
+            if (Options[i].Voters[j] != none)
+            {
+                VoterIDs[VoterIDs.Length] = Options[i].Voters[j].GetPlayerIDHash();
+            }
+        }
+
+        Votes.Add((new class'JSONObject')
+                      .PutInteger("option_id", i)
+                      .Put("voter_ids", class'JSONArray'.static.FromStrings(VoterIDs)));
+    }
+
+    // Get nominator IDs
+    for (i = 0; i < Nominators.Length; ++i)
+    {
+        if (Nominators[i] != none)
+        {
+            NominatorIDs[NominatorIDs.Length] = Nominators[i].GetPlayerIDHash();
+        }
+    }
+
+    G.Metrics.AddEvent("vote", (new class'JSONObject')
+                                   .PutString("vote_type", VoteType)
+                                   .PutString("started_at", StartedAt.IsoFormat())
+                                   .PutString("finished_at", FinishedAt.IsoFormat())
+                                   .PutInteger("team_index", TeamIndex)
+                                   .PutInteger("result_id", Result)
+                                   .Put("votes", Votes)
+                                   .Put("nominators_ids", class'JSONArray'.static.FromStrings(NominatorIDs)));
+}
+
+function OnVoteEnded();
 static function OnNominated(PlayerController Player);
 static function OnNominationRemoved(PlayerController Player);
 
