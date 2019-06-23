@@ -26,6 +26,7 @@ const SQUAD_MERGE_REQUEST_INTERVAL = 15.0;
 
 // This nightmare is necessary because UnrealScript cannot replicate large
 // arrays of structs.
+var private class<DHSquad>          AxisSquadTypes[TEAM_SQUADS_MAX];
 var private DHPlayerReplicationInfo AxisMembers[TEAM_SQUAD_MEMBERS_MAX];
 var private byte                    AxisAssistantSquadLeaderMemberIndices[TEAM_SQUADS_MAX];
 var private string                  AxisNames[TEAM_SQUADS_MAX];
@@ -42,6 +43,7 @@ var int                             RallyPointInitialSpawnsMinimum;
 var float                           RallyPointInitialSpawnsMemberFactor;
 var float                           RallyPointInitialSpawnsDangerZoneFactor;
 
+var private class<DHSquad>          AlliesSquadTypes[TEAM_SQUADS_MAX];
 var private DHPlayerReplicationInfo AlliesMembers[TEAM_SQUAD_MEMBERS_MAX];
 var private byte                    AlliesAssistantSquadLeaderMemberIndices[TEAM_SQUADS_MAX];
 var private string                  AlliesNames[TEAM_SQUADS_MAX];
@@ -50,9 +52,6 @@ var private int                     AlliesNextRallyPointTimes[TEAM_SQUADS_MAX]; 
 
 var private array<string>           AlliesDefaultSquadNames;
 var private array<string>           AxisDefaultSquadNames;
-
-var globalconfig private int        AxisSquadSize;
-var globalconfig private int        AlliesSquadSize;
 
 var class<LocalMessage>             SquadMessageClass;
 
@@ -142,9 +141,6 @@ struct RallyPointPlacementResult
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
-        AxisSquadSize, AlliesSquadSize;
-
-    reliable if (bNetDirty && Role == ROLE_Authority)
         AxisMembers, AxisNames, AxisLocked, AlliesMembers, AlliesNames,
         AlliesLocked, bAreRallyPointsEnabled, RallyPoints,
         AxisNextRallyPointTimes, AlliesNextRallyPointTimes;
@@ -161,9 +157,6 @@ function PostBeginPlay()
         // TODO: make sure invitations can't be sent so damned frequently!
         InvitationExpirations = new class'TreeMap_string_int';
 
-        SetTeamSquadSize(AXIS_TEAM_INDEX, AxisSquadSize);
-        SetTeamSquadSize(ALLIES_TEAM_INDEX, AlliesSquadSize);
-
         foreach AllActors(class'DH_LevelInfo', LI)
         {
             bAreRallyPointsEnabled = LI.GameTypeClass.default.bAreRallyPointsEnabled;
@@ -179,6 +172,40 @@ function PostNetBeginPlay()
     if (Role == ROLE_Authority)
     {
         SetTimer(1.0, true);
+    }
+}
+
+simulated function int GetSquadSize(int TeamIndex, int SquadIndex)
+{
+    local class<DHSquad> SquadClass;
+
+    // TODO: get the squad size from the battlegroup etc.
+    // get the squad type from the
+    SquadClass = GetSquadType(TeamIndex, SquadIndex);
+
+    if (SquadClass == none)
+    {
+        return 0;
+    }
+
+    return SquadClass.static.GetSquadSize();
+}
+
+simulated function class<DHSquad> GetSquadType(int TeamIndex, int SquadIndex)
+{
+    if (SquadIndex < 0 || SquadIndex >= GetTeamSquadLimit(TeamIndex))
+    {
+        return none;
+    }
+
+    switch (TeamIndex)
+    {
+        case AXIS_TEAM_INDEX:
+            return AxisSquadTypes[SquadIndex];
+        case ALLIES_TEAM_INDEX:
+            return AlliesSquadTypes[SquadIndex];
+        default:
+            return none;
     }
 }
 
@@ -262,7 +289,7 @@ function Timer()
         //
         // The method below sends the position (X, Y) and rotation (Z) of each
         // member in the players' squad every 2 seconds.
-        for (i = 0; i < GetTeamSquadSize(PC.GetTeamNum()); ++i)
+        for (i = 0; i < GetSquadSize(PC.GetTeamNum(), PRI.SquadIndex); ++i)
         {
             OtherPRI = GetMember(PC.GetTeamNum(), PRI.SquadIndex, i);
 
@@ -409,20 +436,6 @@ function Timer()
             // New squad leader has been selected, remove draw from the list.
             SquadLeaderDraws.Remove(i, 1);
         }
-    }
-}
-
-// Gets the maximum size of a squad for a given team.
-simulated function int GetTeamSquadSize(int TeamIndex)
-{
-    switch (TeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            return AxisSquadSize;
-        case ALLIES_TEAM_INDEX:
-            return AlliesSquadSize;
-        default:
-            return 0;
     }
 }
 
@@ -2182,59 +2195,6 @@ function UpdateRallyPoints()
     }
 }
 
-function SetTeamSquadSize(int TeamIndex, int SquadSize)
-{
-    local int OldTeamSquadSize, i;
-    local array<DHPlayerReplicationInfo> Members;
-
-    if (SquadSize == 0)
-    {
-        // If a zero is passed, reset squad sizes back to the default.
-        switch (TeamIndex)
-        {
-            case AXIS_TEAM_INDEX:
-                SquadSize = default.AxisSquadSize;
-                break;
-            case ALLIES_TEAM_INDEX:
-                SquadSize = default.AlliesSquadSize;
-                break;
-            default:
-                break;
-        }
-    }
-
-    OldTeamSquadSize = GetTeamSquadSize(TeamIndex);
-    SquadSize = Clamp(SquadSize, SQUAD_SIZE_MIN, SQUAD_SIZE_MAX);
-
-    if (SquadSize < OldTeamSquadSize)
-    {
-        // The squad size is now less than it was previously!
-        // Let's do a check to make sure that existing squads on this team
-        // do not exceed the size limit. If they do, we will kick the players
-        // from the squads until they are all within the size limit.
-        for (i = 0; i < GetTeamSquadLimit(TeamIndex); ++i)
-        {
-            GetMembers(TeamIndex, i, Members);
-
-            while (Members.Length > SquadSize)
-            {
-                LeaveSquad(Members[Members.Length - 1], true);
-                Members.Remove(Members.Length - 1, 1);
-            }
-        }
-    }
-
-    switch (TeamIndex)
-    {
-        case AXIS_TEAM_INDEX:
-            AxisSquadSize = SquadSize;
-            break;
-        case ALLIES_TEAM_INDEX:
-            AlliesSquadSize = SquadSize;
-            break;
-    }
-}
-
 // Squad leader volunteer functionality
 function int GetSquadLeaderVolunteersIndex(int TeamIndex, int SquadIndex)
 {
@@ -2520,7 +2480,7 @@ simulated function bool CanMergeSquads(int TeamIndex, int SenderSquadIndex, int 
 
     TotalMemberCount = GetMemberCount(TeamIndex, SenderSquadIndex) + GetMemberCount(TeamIndex, RecipientSquadIndex);
 
-    if (TotalMemberCount > GetTeamSquadSize(TeamIndex))
+    if (TotalMemberCount > GetSquadSize(TeamIndex, SenderSquadIndex))
     {
         // Merged squad would exceed the squad size limit.
         return false;

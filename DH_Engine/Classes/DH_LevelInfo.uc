@@ -80,6 +80,9 @@ var(DH_GameSettings) float                          DangerZoneIntensityScale;   
 var(DH_GameSettings) float                          ObjectiveSpawnDistanceThreshold;    // Distance away an objective must be to be considered for an active Obj Spawn
 var(DH_GameSettings) int                            ObjectiveSpawnMinimumDepth;         // Override of gametype's minimum depth for calculating the closest valid Obj Spawn
 
+var(DH_BattleGroup) class<DHBattleGroup_Axis>       AxisBattleGroup;
+var(DH_BattleGroup) class<DHBattleGroup_Allies>     AlliesBattleGroup;
+
 // Colin: AttritionRateCurve defines the rate of reinforcement drain per minute
 // when the enemy controls more objectives.
 // For example, an in value of 1.0 should return the reinforcement
