@@ -223,7 +223,7 @@ function SendMetricsEvent(string VoteType, int Result)
                                    .PutInteger("team_index", TeamIndex)
                                    .PutInteger("result_id", Result)
                                    .Put("votes", Votes)
-                                   .Put("nominators_ids", class'JSONArray'.static.FromStrings(NominatorIDs)));
+                                   .Put("nominator_ids", class'JSONArray'.static.FromStrings(NominatorIDs)));
 }
 
 function OnVoteEnded();
