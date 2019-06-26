@@ -186,7 +186,8 @@ var MapMarker                           AlliesMapMarkers[MAP_MARKERS_MAX];
 var byte   RoundWinnerTeamIndex;
 var string RoundEndReason;
 
-var bool   bSurrenderVoteInProgress;
+var bool   bIsSurrenderVoteEnabled;
+var bool   bIsSurrenderVoteInProgress;
 
 replication
 {
@@ -243,7 +244,8 @@ replication
         DangerZoneNeutral,
         DangerZoneBalance,
         RoundWinnerTeamIndex,
-        bSurrenderVoteInProgress;
+        bIsSurrenderVoteEnabled,
+        bIsSurrenderVoteInProgress;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;

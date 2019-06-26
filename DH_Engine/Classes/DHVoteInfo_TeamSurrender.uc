@@ -20,7 +20,7 @@ function StartVote()
     if (GRI != none)
     {
         // TODO: It's quite likely that client already has this information
-        GRI.bSurrenderVoteInProgress = true;
+        GRI.bIsSurrenderVoteInProgress = true;
     }
 }
 
@@ -93,7 +93,7 @@ function OnVoteEnded()
 
     if (GRI != none)
     {
-        GRI.bSurrenderVoteInProgress = false;
+        GRI.bIsSurrenderVoteInProgress = false;
     }
 
     SendMetricsEvent("surrender", int(!bVotePassed));
@@ -144,6 +144,13 @@ static function bool CanNominate(PlayerController Player, DarkestHourGame Game)
     if (VM == none || GRI == none)
     {
         PC.ClientTeamSurrenderResponse(0);
+        return false;
+    }
+
+    // Surrender vote is disabled.
+    if (!GRI.bIsSurrenderVoteEnabled)
+    {
+        PC.ClientTeamSurrenderResponse(11);
         return false;
     }
 

@@ -436,8 +436,9 @@ function UpdateStatus()
     ChangeButtonState(1, PC.Pawn != none);
 
     // Surrender
-    ChangeButtonState(2, GRI.RoundWinnerTeamIndex > 1 &&
-                         !GRI.bSurrenderVoteInProgress &&
+    ChangeButtonState(2, GRI.bIsSurrenderVoteEnabled &&
+                         GRI.RoundWinnerTeamIndex > 1 &&
+                         !GRI.bIsSurrenderVoteInProgress &&
                          !GRI.bIsInSetupPhase);
     b_MenuOptions[2].Caption = SurrenderButtonText[int(PC.bSurrendered)];
 }
@@ -1818,6 +1819,7 @@ defaultproperties
     SurrenderResponseMessages[8]="You cannot surrender when reinforcements are above {0}%.";
     SurrenderResponseMessages[9]="You cannot surrender this early.";
     SurrenderResponseMessages[10]="You cannot surrender during the setup phase.";
+    SurrenderResponseMessages[11]="Surrender vote is disabled.";
 
     MapMode=MODE_Map
     bButtonsEnabled=true

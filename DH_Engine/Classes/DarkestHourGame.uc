@@ -91,6 +91,7 @@ var     DHSquadReplicationInfo      SquadReplicationInfo;
 
 var()   config int                  EmptyTankUnlockTime;                    // Server config option for how long (secs) before unlocking a locked armored vehicle if abandoned by its crew
 
+var     bool                        bIsSurrenderVoteEnabled;
 var     int                         SurrenderRoundTime;
 
 // The response types for requests.
@@ -289,6 +290,8 @@ function PostBeginPlay()
         GRI.SetDangerZoneNeutral(DHLevelInfo.DangerZoneNeutral, true);
         GRI.SetDangerZoneBalance(DHLevelInfo.DangerZoneBalance, true);
     }
+
+    GRI.bIsSurrenderVoteEnabled = bIsSurrenderVoteEnabled;
 
     // Artillery
     GRI.ArtilleryStrikeLimit[AXIS_TEAM_INDEX] = LevelInfo.Axis.ArtilleryStrikeLimit;
@@ -3501,6 +3504,16 @@ exec function SetDangerZoneBalance(int Factor)
     GRI.SetDangerZoneBalance(Factor);
 }
 
+exec function SetSurrenderVote(bool bEnabled)
+{
+    if (GRI == none)
+    {
+        return;
+    }
+
+    GRI.bIsSurrenderVoteEnabled = bEnabled;
+}
+
 //***********************************************************************************
 // END exec Functions!!!
 //***********************************************************************************
@@ -5427,5 +5440,7 @@ defaultproperties
     bAllowAllChat=true
     bIsAttritionEnabled=true
     bIsDangerZoneEnabled=true
+
+    bIsSurrenderVoteEnabled=false
     SurrenderRoundTime=15
 }
