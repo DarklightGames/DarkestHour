@@ -29,6 +29,8 @@ function NominateVote(PlayerController Player, class<DHVoteInfo> VoteClass)
     local byte TeamIndex;
     local int i;
     local array<PlayerController> Nominators;
+    local int TeamSizes[2];
+    local int NominationThresholdCount;
 
     G = DarkestHourGame(Level.Game);
 
@@ -40,13 +42,24 @@ function NominateVote(PlayerController Player, class<DHVoteInfo> VoteClass)
     if (VoteClass.default.bIsGlobal)
     {
         TeamIndex = -1;
+        NominationThresholdCount = Ceil(G.GetNumPlayers() * VoteClass.default.NominationThresholdPercent);
     }
     else
     {
         TeamIndex = Player.GetTeamNum();
+        G.GetTeamSizes(TeamSizes);
+
+        if (TeamIndex < arraycount(TeamSizes))
+        {
+            NominationThresholdCount = Ceil(TeamSizes[TeamIndex] * VoteClass.default.NominationThresholdPercent);
+        }
+        else
+        {
+            Warn("Failed to nominate the vote. Invalid team index.");
+        }
     }
 
-    if (VoteClass.default.NominationCountThreshold < 2)
+    if (NominationThresholdCount < 2)
     {
         // Skip the nomination process
         Nominators[Nominators.Length] = Player;
@@ -79,7 +92,7 @@ function NominateVote(PlayerController Player, class<DHVoteInfo> VoteClass)
         }
 
         // Start the vote!
-        if (Nominators.Length >= VoteClass.default.NominationCountThreshold)
+        if (Nominators.Length >= NominationThresholdCount)
         {
             StartVote(VoteClass, TeamIndex, Nominators);
             ClearNominations(VoteClass, TeamIndex);
@@ -181,13 +194,14 @@ function StartVote(class<DHVoteInfo> VoteClass, byte TeamIndex, optional array<P
 
         for (i = 0; i < FreeIndex; ++i)
         {
-            if (Votes[i] == Vote)
+            // TODO: Allow multiple votes of the same type
+            if (Votes[i] == Vote && (Vote.bIsGlobal || Votes[i].TeamIndex == TeamIndex))
             {
                 Warn("Attempted to start a vote that was already in progress");
                 return;
             }
 
-            if (Votes[i] == none)
+            if (Votes[i] == none || Votes[i].bDeleteMe)
             {
                 FreeIndex = i;
             }
@@ -213,7 +227,7 @@ function int GetVoteIndexById(int VoteId)
 
     for (i = 0; i < Votes.Length; ++i)
     {
-        if (Votes[i] != none && Votes[i].VoteId == VoteId)
+        if (Votes[i] != none && Votes[i].VoteId == VoteId && !Votes[i].bDeleteMe)
         {
             return i;
         }
@@ -230,6 +244,7 @@ function int GetVoteIndex(class<DHVoteInfo> VoteClass, optional byte TeamIndex)
     {
         if (Votes[i] != none &&
             Votes[i].Class == VoteClass &&
+            !Votes[i].bDeleteMe &&
             (Votes[i].default.bIsGlobal || Votes[i].TeamIndex == TeamIndex))
         {
             return i;

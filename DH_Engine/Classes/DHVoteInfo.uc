@@ -34,7 +34,10 @@ var bool                            bNominatorsVoteAutomatically;
 var bool                            bIsGlobal; // ignore voter's team index
 
 var DateTime                        StartedAt;
-var DateTime                        FinishedAt;
+var DateTime                        EndedAt;
+
+var float                           VotePassedThresholdPercent;
+var float                           NominationThresholdPercent;
 
 // Gets the list of eligible voters.
 function array<PlayerController>    GetEligibleVoters();
@@ -44,9 +47,15 @@ function string GetQuestionText()
     return default.QuestionText;
 }
 
+function Destroyed()
+{
+    EndedAt = class'DateTime'.static.Now(self);
+    OnVoteEnded();
+}
+
 function StartVote()
 {
-    local int i, VoterIndex;
+    local int i, TempVoterCount;
     local DHPlayer PC;
 
     if (VoteId == -1)
@@ -73,19 +82,31 @@ function StartVote()
 
     VoterCount = Voters.Length;
 
+    StartedAt = class'DateTime'.static.Now(self);
+    OnVoteStarted();
+
+    if (bNominatorsVoteAutomatically)
+    {
+        i = 0; while (i < Voters.Length)
+        {
+            if (Voters[i] != none && class'UArray'.static.IndexOf(Nominators, Voters[i]) >= 0)
+            {
+                TempVoterCount = Voters.Length;
+
+                RecieveVote(Voters[i], NominatorsDefaultOption);
+
+                if (Voters.Length < TempVoterCount)
+                {
+                    continue;
+                }
+            }
+
+            ++i;
+        }
+    }
+
     for (i = 0; i < Voters.Length; ++i)
     {
-        // Accept the nominations as valid votes
-        if (bNominatorsVoteAutomatically && Voters[i] != none)
-        {
-            VoterIndex = class'UArray'.static.IndexOf(Nominators, Voters[i]);
-
-            if (VoterIndex >= 0)
-            {
-                RecieveVote(Voters[i], NominatorsDefaultOption);
-            }
-        }
-
         PC = DHPlayer(Voters[i]);
 
         if (PC != none)
@@ -123,7 +144,6 @@ function RecieveVote(PlayerController Voter, int OptionIndex)
     if (Voters.Length == 0)
     {
         // All eligible voters have voted, end the voting!
-        OnVoteEnded();
         Destroy();
     }
 }
@@ -131,21 +151,18 @@ function RecieveVote(PlayerController Voter, int OptionIndex)
 function OnVoteReceieved(PlayerController Voter, int OptionIndex)
 {
     // "Your vote has been receieved."
-    Voter.ReceiveLocalizedMessage(class'DHVoteMessage', 0,,, class'UInteger'.static.Create(OptionIndex));
+    Voter.ReceiveLocalizedMessage(class'DHVoteMessage', 0);
 }
 
 state Open
 {
     event BeginState()
     {
-        StartedAt = class'DateTime'.static.Now(self);
         SetTimer(DurationSeconds, false);
     }
 
     function Timer()
     {
-        FinishedAt = class'DateTime'.static.Now(self);
-        OnVoteEnded();
         Destroy();
     }
 }
@@ -182,13 +199,13 @@ function SendMetricsEvent(string VoteType, int Result)
 
     G = DarkestHourGame(Level.Game);
 
-    if (G == none || StartedAt == none || FinishedAt == none)
+    if (G == none || StartedAt == none || EndedAt == none)
     {
         return;
     }
 
     // Get voter IDs
-    Votes = new class'JSONArray';
+    Votes = class'JSONArray'.static.Create();
 
     for (i = 0; i < Options.Length; ++i)
     {
@@ -219,13 +236,14 @@ function SendMetricsEvent(string VoteType, int Result)
     G.Metrics.AddEvent("vote", (new class'JSONObject')
                                    .PutString("vote_type", VoteType)
                                    .PutString("started_at", StartedAt.IsoFormat())
-                                   .PutString("finished_at", FinishedAt.IsoFormat())
+                                   .PutString("ended_at", EndedAt.IsoFormat())
                                    .PutInteger("team_index", TeamIndex)
                                    .PutInteger("result_id", Result)
                                    .Put("votes", Votes)
                                    .Put("nominator_ids", class'JSONArray'.static.FromStrings(NominatorIDs)));
 }
 
+function OnVoteStarted();
 function OnVoteEnded();
 static function OnNominated(PlayerController Player);
 static function OnNominationRemoved(PlayerController Player);

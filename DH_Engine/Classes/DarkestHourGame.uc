@@ -3987,7 +3987,7 @@ function DelayedEndRound(int Delay, string Reason, byte WinnerTeamIndex, class<L
 {
     local string WinnerTeamName;
 
-    if (GRI == none || !IsInState('RoundInPlay'))
+    if (GRI == none || !IsInState('RoundInPlay') || GRI.RoundWinnerTeamIndex < 2)
     {
         return;
     }
@@ -5441,6 +5441,6 @@ defaultproperties
     bIsAttritionEnabled=true
     bIsDangerZoneEnabled=true
 
-    bIsSurrenderVoteEnabled=false
+    bIsSurrenderVoteEnabled=true
     SurrenderRoundTime=15
 }

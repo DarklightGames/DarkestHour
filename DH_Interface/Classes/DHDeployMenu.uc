@@ -1158,11 +1158,8 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
         {
             switch (Result)
             {
-                case 3:
-                    ErrorMessage = Repl(SurrenderResponseMessages[Result], "{0}", class'DHVoteInfo_TeamSurrender'.default.TeamSizeMin);
-                    break;
                 case 8:
-                    ErrorMessage = Repl(SurrenderResponseMessages[Result], "{0}", int(class'DHVoteInfo_TeamSurrender'.default.ReinforcementPercentageLimit * 100));
+                    ErrorMessage = Repl(SurrenderResponseMessages[Result], "{0}", int(class'DHVoteInfo_TeamSurrender'.default.ReinforcementsRequiredPercent * 100));
                     break;
                 default:
                     ErrorMessage = SurrenderResponseMessages[Result];
@@ -1811,7 +1808,7 @@ defaultproperties
     SurrenderResponseMessages[0]="Fatal error!";
     SurrenderResponseMessages[1]="You haven't picked a team.";
     SurrenderResponseMessages[2]="Round hasn't started yet.";
-    SurrenderResponseMessages[3]="Not enough players to initiate the vote ({0} is required).";
+    SurrenderResponseMessages[3]="Surrender vote is disabled.";
     SurrenderResponseMessages[4]="Vote is already in progress.";
     SurrenderResponseMessages[5]="You've already voted.";
     SurrenderResponseMessages[6]="Your team already had a vote to surrender earlier. Try again later.";
@@ -1819,7 +1816,6 @@ defaultproperties
     SurrenderResponseMessages[8]="You cannot surrender when reinforcements are above {0}%.";
     SurrenderResponseMessages[9]="You cannot surrender this early.";
     SurrenderResponseMessages[10]="You cannot surrender during the setup phase.";
-    SurrenderResponseMessages[11]="Surrender vote is disabled.";
 
     MapMode=MODE_Map
     bButtonsEnabled=true

@@ -6,23 +6,8 @@
 class DHVoteInfo_TeamSurrender extends DHVoteInfo;
 
 var bool  bOldAllowSurrender;
-var float ReinforcementPercentageLimit;
-var int   RoundTimeLimit;
-
-function StartVote()
-{
-    local DHGameReplicationInfo GRI;
-
-    super.StartVote();
-
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-    if (GRI != none)
-    {
-        // TODO: It's quite likely that client already has this information
-        GRI.bIsSurrenderVoteInProgress = true;
-    }
-}
+var int   RoundTimeRequiredSeconds;
+var float ReinforcementsRequiredPercent;
 
 function array<PlayerController> GetEligibleVoters()
 {
@@ -43,10 +28,22 @@ function array<PlayerController> GetEligibleVoters()
     return EligibleVoters;
 }
 
+function OnVoteStarted()
+{
+    local DHGameReplicationInfo GRI;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI != none)
+    {
+        GRI.bIsSurrenderVoteInProgress = true;
+    }
+}
+
 function OnVoteEnded()
 {
     local DarkestHourGame G;
-    local int VotesNeededToWin;
+    local int VoteResults;
     local DHPlayer PC;
     local Controller C;
     local DHGameReplicationInfo GRI;
@@ -59,8 +56,23 @@ function OnVoteEnded()
         return;
     }
 
-    VotesNeededToWin = Ceil(VoterCount * 0.5);
-    bVotePassed = Options[0].Voters.Length >= VotesNeededToWin;
+    bVotePassed = Options[0].Voters.Length >= Ceil(VoterCount * VotePassedThresholdPercent);
+    VoteResults = class'UInteger'.static.FromShorts(int(!bVotePassed),
+                                                    Ceil(Options[0].Voters.Length / VoterCount * 100));
+
+    // Inform the team that the vote has concluded.
+    for (C = Level.ControllerList; C != none; C = C.nextController)
+    {
+        PC = DHPlayer(C);
+
+        if (PC != none && C.GetTeamNum() == TeamIndex)
+        {
+            PC.ReceiveLocalizedMessage(class'DHTeamSurrenderVoteMessage', VoteResults);
+            PC.bSurrendered = false;
+        }
+    }
+
+    SendMetricsEvent("surrender", int(!bVotePassed));
 
     if (bVotePassed)
     {
@@ -73,21 +85,6 @@ function OnVoteEnded()
                           class'DHFriendlyinformationmsg',
                           0);
     }
-    else
-    {
-        // Inform the team that the surrender vote failed.
-        for (C = Level.ControllerList; C != none; C = C.nextController)
-        {
-            PC = DHPlayer(C);
-
-            if (PC != none && C.GetTeamNum() == TeamIndex)
-            {
-                // "Your team voted to continue fighting."
-                PC.ReceiveLocalizedMessage(class'DHTeamSurrenderVoteMessage', 0);
-                PC.bSurrendered = false;
-            }
-        }
-    }
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
@@ -95,8 +92,6 @@ function OnVoteEnded()
     {
         GRI.bIsSurrenderVoteInProgress = false;
     }
-
-    SendMetricsEvent("surrender", int(!bVotePassed));
 }
 
 static function OnNominated(PlayerController Player)
@@ -129,7 +124,6 @@ static function bool CanNominate(PlayerController Player, DarkestHourGame Game)
     local DHVoteManager VM;
     local DHPlayer PC;
     local byte TeamIndex;
-    local int TeamSizes[2];
 
     PC = DHPlayer(Player);
 
@@ -150,7 +144,7 @@ static function bool CanNominate(PlayerController Player, DarkestHourGame Game)
     // Surrender vote is disabled.
     if (!GRI.bIsSurrenderVoteEnabled)
     {
-        PC.ClientTeamSurrenderResponse(11);
+        PC.ClientTeamSurrenderResponse(3);
         return false;
     }
 
@@ -168,18 +162,8 @@ static function bool CanNominate(PlayerController Player, DarkestHourGame Game)
     }
 
     TeamIndex = PC.GetTeamNum();
-    Game.GetTeamSizes(TeamSizes);
 
-    if (TeamIndex < 2 && TeamIndex < arraycount(TeamSizes))
-    {
-        // Surrendering can only be voted for with ~16+ people on a team.
-        if (TeamSizes[TeamIndex] < default.TeamSizeMin)
-        {
-            PC.ClientTeamSurrenderResponse(3);
-            return false;
-        }
-    }
-    else
+    if (TeamIndex > 1)
     {
         // Invalid team.
         PC.ClientTeamSurrenderResponse(1);
@@ -194,7 +178,7 @@ static function bool CanNominate(PlayerController Player, DarkestHourGame Game)
     }
 
     // You cannot vote to surrender this early.
-    if (default.RoundTimeLimit >= GRI.ElapsedTime)
+    if (default.RoundTimeRequiredSeconds >= GRI.ElapsedTime)
     {
         PC.ClientTeamSurrenderResponse(9);
         return false;
@@ -202,7 +186,7 @@ static function bool CanNominate(PlayerController Player, DarkestHourGame Game)
 
     // Reinforcements are above the limit.
     if (GRI.SpawnsRemaining[TeamIndex] >= 0 &&
-        GRI.SpawnsRemaining[TeamIndex] >= Game.SpawnsAtRoundStart[TeamIndex] * default.ReinforcementPercentageLimit)
+        GRI.SpawnsRemaining[TeamIndex] >= Game.SpawnsAtRoundStart[TeamIndex] * default.ReinforcementsRequiredPercent)
     {
         PC.ClientTeamSurrenderResponse(8);
         return false;
@@ -238,9 +222,11 @@ defaultproperties
 
     bIsGlobal=false
     bNominatorsVoteAutomatically=true
-    NominationCountThreshold=6
+
     CooldownSeconds=300
-    TeamSizeMin=16
-    ReinforcementPercentageLimit=0.5
-    RoundTimeLimit=900
+    RoundTimeRequiredSeconds=900
+    ReinforcementsRequiredPercent=0.5
+
+    NominationThresholdPercent=0.25
+    VotePassedThresholdPercent=0.6
 }
