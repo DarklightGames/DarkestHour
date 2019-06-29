@@ -117,6 +117,9 @@ var             EMapMode                    MapMode;
 var Texture LockIcon;
 var Texture UnlockIcon;
 
+var localized string        SurrenderButtonText[2];
+var localized array<string> SurrenderResponseMessages;
+
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     local int i;
@@ -415,24 +418,45 @@ function UpdateStatus()
 {
     local int TeamSizes[2];
 
-    if (GRI != none)
+    if (GRI == none || PC == none)
     {
-        GRI.GetTeamSizes(TeamSizes);
-
-        l_Axis.Caption = string(TeamSizes[AXIS_TEAM_INDEX]);
-        l_Allies.Caption = string(TeamSizes[ALLIES_TEAM_INDEX]);
+        return;
     }
+
+    GRI.GetTeamSizes(TeamSizes);
+
+    l_Axis.Caption = string(TeamSizes[AXIS_TEAM_INDEX]);
+    l_Allies.Caption = string(TeamSizes[ALLIES_TEAM_INDEX]);
 
     l_Status.Caption = GetStatusText();
 
-    // Suicide button status
-    if (PC != none && PC.Pawn != none)
+    // TODO: This results in buttons doing weird blinks when hovered over
+
+    // Suicide
+    ChangeButtonState(1, PC.Pawn != none);
+
+    // Surrender
+    ChangeButtonState(2, GRI.bIsSurrenderVoteEnabled &&
+                         GRI.RoundWinnerTeamIndex > 1 &&
+                         !GRI.bIsSurrenderVoteInProgress &&
+                         !GRI.bIsInSetupPhase);
+    b_MenuOptions[2].Caption = SurrenderButtonText[int(PC.bSurrendered)];
+}
+
+function ChangeButtonState(int Index, bool bEnabled)
+{
+    if (Index >= b_MenuOptions.Length)
     {
-        b_MenuOptions[1].MenuStateChange(MSAT_Blurry);
+        return;
+    }
+
+    if (bEnabled)
+    {
+        b_MenuOptions[Index].MenuStateChange(MSAT_Blurry);
     }
     else
     {
-        b_MenuOptions[1].MenuStateChange(MSAT_Disabled);
+        b_MenuOptions[Index].MenuStateChange(MSAT_Disabled);
     }
 }
 
@@ -649,11 +673,13 @@ function bool OnClick(GUIComponent Sender)
     local GUIQuestionPage ConfirmWindow;
     local string          ConfirmMessage;
 
+    PC = DHPlayer(PlayerOwner());
+
     switch (Sender)
     {
         // Disconnect
         case b_MenuOptions[0]:
-            PlayerOwner().ConsoleCommand("DISCONNECT");
+            PC.ConsoleCommand("DISCONNECT");
             CloseMenu();
             break;
 
@@ -662,9 +688,12 @@ function bool OnClick(GUIComponent Sender)
             PlayerOwner().ConsoleCommand("SUICIDE");
             break;
 
-        // Kick vote
+        // Surrender
         case b_MenuOptions[2]:
-            Controller.OpenMenu(Controller.KickVotingMenu);
+            if (PC != none)
+            {
+                PC.ServerTeamSurrender();
+            }
             break;
 
         // Map vote
@@ -1086,7 +1115,7 @@ function AutoSelectVehicle()
 
 function InternalOnMessage(coerce string Msg, float MsgLife)
 {
-    local int    Result;
+    local int Result;
     local string ErrorMessage;
 
     Result = int(MsgLife);
@@ -1121,6 +1150,26 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
                 ErrorMessage = class'ROGUIRoleSelection'.static.GetErrorMessageForID(Result);
                 Controller.ShowQuestionDialog(ErrorMessage, QBTN_OK, QBTN_OK);
                 break;
+        }
+    }
+    else if (Msg ~= "NOTIFY_GUI_SURRENDER_RESULT")
+    {
+        if (Result < SurrenderResponseMessages.Length)
+        {
+            switch (Result)
+            {
+                case 8:
+                    ErrorMessage = Repl(SurrenderResponseMessages[Result], "{0}", int(class'DHVoteInfo_TeamSurrender'.default.ReinforcementsRequiredPercent * 100));
+                    break;
+                default:
+                    ErrorMessage = SurrenderResponseMessages[Result];
+            }
+
+            Controller.ShowQuestionDialog(ErrorMessage, QBTN_OK, QBTN_OK);
+        }
+        else
+        {
+            Warn("Received invalid result code");
         }
     }
     else if (Msg ~= "SQUAD_MERGE_REQUEST_RESULT")
@@ -1753,6 +1802,21 @@ defaultproperties
     SquadLeadershipOnlyText="LEADERS ONLY"
     RecommendJoiningSquadText="It it HIGHLY RECOMMENDED that you JOIN A SQUAD before deploying! Joining a squad grants you additional deployment options and lets you get to the fight faster.||Do you want to automatically join a squad now?"
 
+    SurrenderButtonText[0]="Surrender"
+    SurrenderButtonText[1]="Keep fighting"
+
+    SurrenderResponseMessages[0]="Fatal error!";
+    SurrenderResponseMessages[1]="You haven't picked a team.";
+    SurrenderResponseMessages[2]="Round hasn't started yet.";
+    SurrenderResponseMessages[3]="Surrender vote is disabled.";
+    SurrenderResponseMessages[4]="Vote is already in progress.";
+    SurrenderResponseMessages[5]="You've already voted.";
+    SurrenderResponseMessages[6]="Your team already had a vote to surrender earlier. Try again later.";
+    SurrenderResponseMessages[7]="You cannot surrender after the round is over.";
+    SurrenderResponseMessages[8]="You cannot surrender when reinforcements are above {0}%.";
+    SurrenderResponseMessages[9]="You cannot surrender this early.";
+    SurrenderResponseMessages[10]="You cannot surrender during the setup phase.";
+
     MapMode=MODE_Map
     bButtonsEnabled=true
     SpawnPointIndex=-1
@@ -2148,7 +2212,7 @@ defaultproperties
     b_MenuOptions(1)=SuicideButtonObject
 
     Begin Object Class=DHGUIButton Name=KickVoteButtonObject
-        Caption="Kick Vote"
+        Caption="Surrender"
         CaptionAlign=TXTA_Center
         StyleName="DHSmallTextButtonStyle"
         WinHeight=1.0
@@ -2423,4 +2487,3 @@ defaultproperties
     LockIcon=Texture'DH_InterfaceArt2_tex.Icons.lock'
     UnlockIcon=Texture'DH_InterfaceArt2_tex.Icons.unlock'
 }
-

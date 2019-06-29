@@ -154,6 +154,9 @@ var     bool                    bLazyCam;
 var     float                   LazyCamLaziness;
 var     rotator                 LazyCamRotationTarget;
 
+// Surrender
+var     bool                    bSurrendered;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -163,7 +166,8 @@ replication
         DHPrimaryWeapon, DHSecondaryWeapon, bSpectateAllowViewPoints,
         SquadReplicationInfo, SquadMemberLocations, bSpawnedKilled,
         SquadLeaderLocations, bIsGagged,
-        NextSquadRallyPointTime, SquadRallyPointCount;
+        NextSquadRallyPointTime, SquadRallyPointCount,
+        bSurrendered;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -174,14 +178,15 @@ replication
         ServerSquadCreate, ServerSquadRename,
         ServerSquadJoin, ServerSquadJoinAuto, ServerSquadLeave,
         ServerSquadInvite, ServerSquadPromote, ServerSquadKick, ServerSquadBan,
-        ServerSquadMakeAssistant,
+        ServerSquadMakeAssistant, ServerSendVote,
         ServerSquadSay, ServerCommandSay, ServerSquadLock, ServerSquadSignal,
         ServerSquadSpawnRallyPoint, ServerSquadDestroyRallyPoint, ServerSquadSwapRallyPoints,
         ServerSetPatronTier, ServerSquadLeaderVolunteer, ServerForgiveLastFFKiller,
         ServerSendSquadMergeRequest, ServerAcceptSquadMergeRequest, ServerDenySquadMergeRequest,
         ServerSquadVolunteerToAssist,
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
-        ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons; // these ones in debug mode only
+        ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
+        ServerTeamSurrender;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -191,7 +196,8 @@ replication
         ClientSquadInvite, ClientSquadSignal, ClientSquadLeaderVolunteerPrompt, ClientTeamSurrenderPrompt,
         ClientTeamKillPrompt, ClientOpenLogFile, ClientLogToFile, ClientCloseLogFile,
         ClientSquadAssistantVolunteerPrompt,
-        ClientReceieveSquadMergeRequest, ClientSendSquadMergeRequestResult;
+        ClientReceieveSquadMergeRequest, ClientSendSquadMergeRequestResult,
+        ClientTeamSurrenderResponse;
 
     unreliable if (Role < ROLE_Authority)
         VehicleVoiceMessage;
@@ -2862,9 +2868,12 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
     local DHRoleInfo RI;
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
+    local byte OldTeamIndex;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    OldTeamIndex = GetTeamNum();
 
     // Attempt to change teams
     if (newTeam != 255)
@@ -3008,6 +3017,12 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
     // Set weapons
     ChangeWeapons(NewWeapon1, NewWeapon2, 0);
 
+    // Team change event
+    if (NewTeam != OldTeamIndex)
+    {
+        OnTeamChanged();
+    }
+
     // Return result to client
     if (NewTeam == AXIS_TEAM_INDEX)
     {
@@ -3075,6 +3090,22 @@ function ServerSetPlayerInfo(byte newTeam, byte newRole, byte NewWeapon1, byte N
         else
         {
             ClientChangePlayerInfoResult(0);
+        }
+    }
+}
+
+function OnTeamChanged()
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none && G.VoteManager != none)
+    {
+        // Reset player's surrender status
+        if (bSurrendered)
+        {
+            G.VoteManager.RemoveNomination(self, class'DHVoteInfo_TeamSurrender');
         }
     }
 }
@@ -5198,11 +5229,6 @@ simulated function ClientTeamKillPrompt(string LastFFKillerString)
     Player.InteractionMaster.AddInteraction("DH_Engine.DHTeamKillInteraction", Player);
 }
 
-simulated function ClientTeamSurrenderPrompt()
-{
-    Player.InteractionMaster.AddInteraction("DH_Engine.DHTeamSurrenderInteraction", Player);
-}
-
 function ServerSquadVolunteerToAssist()
 {
     local int TeamIndex, SquadIndex;
@@ -5234,18 +5260,6 @@ function ServerSquadVolunteerToAssist()
     }
 
     SLPC.ClientSquadAssistantVolunteerPrompt(TeamIndex, SquadIndex, PRI);
-}
-
-function ServerVote(bool bVote, DHPromptInteraction Interaction)
-{
-    local DarkestHourGame G;
-
-    G = DarkestHourGame(Level.Game);
-
-    if (G != none)
-    {
-        G.PlayerVoted(self, bVote, Interaction);
-    }
 }
 
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -6361,6 +6375,88 @@ function ReceiveScoreEvent(DHScoreEvent ScoreEvent)
     {
         ScoreManager.HandleScoreEvent(ScoreEvent);
     }
+}
+
+simulated function ClientTeamSurrenderPrompt()
+{
+    Player.InteractionMaster.AddInteraction("DH_Engine.DHTeamSurrenderInteraction", Player);
+}
+
+simulated function ClientTeamSurrenderResponse(int Result)
+{
+    local UT2K4GUIController GC;
+    local GUIPage Page;
+
+    bSurrendered = Result < 0;
+
+    if (bSurrendered)
+    {
+        return;
+    }
+
+    // Find the currently open ROGUIRoleSelection menu and notify it
+    GC = UT2K4GUIController(Player.GUIController);
+
+    if (GC == none)
+    {
+        return;
+    }
+
+    Page = GC.FindMenuByClass(class'GUIPage');
+
+    if (Page != none)
+    {
+        Page.OnMessage("NOTIFY_GUI_SURRENDER_RESULT", Result);
+    }
+}
+
+function ServerTeamSurrender()
+{
+    local DarkestHourGame G;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G == none || G.VoteManager == none)
+    {
+        return;
+    }
+
+    if (bSurrendered)
+    {
+        G.VoteManager.RemoveNomination(self, class'DHVoteInfo_TeamSurrender');
+    }
+    else
+    {
+        G.VoteManager.NominateVote(self, class'DHVoteInfo_TeamSurrender');
+    }
+}
+
+function ServerSendVote(int VoteId, int OptionIndex)
+{
+    local DarkestHourGame G;
+    local DHVoteManager VM;
+
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none)
+    {
+        VM = G.VoteManager;
+
+        if (VM != none)
+        {
+            VM.PlayerVoted(self, VoteId, OptionIndex);
+        }
+    }
+}
+
+simulated function ClientRecieveVotePrompt(class<DHVoteInfo> VoteInfoClass, int VoteId, optional string OptionalString)
+{
+    // TODO: display the interaction prompt!
+    // TODO: how are we showing other interactions?
+    class'DHVoteInteraction'.default.VoteInfoClass = VoteInfoClass;
+    class'DHVoteInteraction'.default.VoteId = VoteId;
+
+    Player.InteractionMaster.AddInteraction("DH_Engine.DHVoteInteraction", Player);
 }
 
 simulated function Destroyed()
