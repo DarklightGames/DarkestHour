@@ -430,34 +430,15 @@ function UpdateStatus()
 
     l_Status.Caption = GetStatusText();
 
-    // TODO: This results in buttons doing weird blinks when hovered over
-
     // Suicide
-    ChangeButtonState(1, PC.Pawn != none);
+    SetEnabled(b_MenuOptions[1], PC.Pawn != none);
 
     // Surrender
-    ChangeButtonState(2, GRI.bIsSurrenderVoteEnabled &&
-                         GRI.RoundWinnerTeamIndex > 1 &&
-                         !GRI.bIsSurrenderVoteInProgress &&
-                         !GRI.bIsInSetupPhase);
+    SetEnabled(b_MenuOptions[2], GRI.bIsSurrenderVoteEnabled &&
+                                 GRI.RoundWinnerTeamIndex > 1 &&
+                                 !GRI.bIsSurrenderVoteInProgress &&
+                                 !GRI.bIsInSetupPhase);
     b_MenuOptions[2].Caption = SurrenderButtonText[int(PC.bSurrendered)];
-}
-
-function ChangeButtonState(int Index, bool bEnabled)
-{
-    if (Index >= b_MenuOptions.Length)
-    {
-        return;
-    }
-
-    if (bEnabled)
-    {
-        b_MenuOptions[Index].MenuStateChange(MSAT_Blurry);
-    }
-    else
-    {
-        b_MenuOptions[Index].MenuStateChange(MSAT_Disabled);
-    }
 }
 
 function string GetStatusText()
@@ -1765,13 +1746,11 @@ function UpdateSquads()
     }
 }
 
-function static SetVisible(GUIComponent C, bool bVisible)
+static function SetEnabled(GUIComponent C, bool bEnabled)
 {
     if (C != none)
     {
-        C.SetVisibility(bVisible);
-
-        if (bVisible)
+        if (bEnabled)
         {
             C.EnableMe();
         }
@@ -1779,6 +1758,15 @@ function static SetVisible(GUIComponent C, bool bVisible)
         {
             C.DisableMe();
         }
+    }
+}
+
+static function SetVisible(GUIComponent C, bool bVisible)
+{
+    if (C != none)
+    {
+        C.SetVisibility(bVisible);
+        SetEnabled(C, bVisible);
     }
 }
 
