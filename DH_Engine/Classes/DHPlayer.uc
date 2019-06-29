@@ -6363,13 +6363,6 @@ simulated function ClientTeamSurrenderResponse(int Result)
     local UT2K4GUIController GC;
     local GUIPage Page;
 
-    bSurrendered = Result < 0;
-
-    if (bSurrendered)
-    {
-        return;
-    }
-
     // Find the currently open ROGUIRoleSelection menu and notify it
     GC = UT2K4GUIController(Player.GUIController);
 

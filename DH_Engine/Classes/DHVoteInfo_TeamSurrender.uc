@@ -102,7 +102,7 @@ static function OnNominated(PlayerController Player)
 
     if (PC != none)
     {
-        PC.ClientTeamSurrenderResponse(-1);
+        PC.bSurrendered = true;
     }
 }
 
