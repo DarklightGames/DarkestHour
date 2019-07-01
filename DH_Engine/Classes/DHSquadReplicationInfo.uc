@@ -2602,7 +2602,7 @@ function ESquadMergeRequestResult SendSquadMergeRequest(DHPlayer SenderPC, int T
     SquadMergeRequests[SquadMergeRequests.Length] = MR;
 
     // Send the merge request to the recipient.
-    RecipientPC.ClientReceieveSquadMergeRequest(MR.ID, SenderPRI.PlayerName, GetSquadName(TeamIndex, SenderSquadIndex));
+    RecipientPC.ClientReceiveSquadMergeRequest(MR.ID, SenderPRI.PlayerName, GetSquadName(TeamIndex, SenderSquadIndex));
 
     // Set the next merge request time for the sender.
     SenderPC.NextSquadMergeRequestTimeSeconds = Level.TimeSeconds + SQUAD_MERGE_REQUEST_INTERVAL;

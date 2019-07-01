@@ -111,7 +111,7 @@ function StartVote()
 
         if (PC != none)
         {
-            PC.ClientRecieveVotePrompt(Class, VoteId);
+            PC.ClientReceiveVotePrompt(Class, VoteId);
         }
     }
 

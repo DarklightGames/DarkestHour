@@ -193,11 +193,12 @@ replication
         ClientProne, ClientToggleDuck, ClientLockWeapons,
         ClientAddHudDeathMessage, ClientFadeFromBlack, ClientProposeMenu,
         ClientConsoleCommand, ClientCopyToClipboard, ClientSaveROIDHash,
-        ClientSquadInvite, ClientSquadSignal, ClientSquadLeaderVolunteerPrompt, ClientTeamSurrenderPrompt,
+        ClientSquadInvite, ClientSquadSignal, ClientSquadLeaderVolunteerPrompt,
         ClientTeamKillPrompt, ClientOpenLogFile, ClientLogToFile, ClientCloseLogFile,
         ClientSquadAssistantVolunteerPrompt,
-        ClientReceieveSquadMergeRequest, ClientSendSquadMergeRequestResult,
-        ClientTeamSurrenderResponse, ClientRecieveVotePrompt;
+        ClientReceiveSquadMergeRequest, ClientSendSquadMergeRequestResult,
+        ClientTeamSurrenderResponse,
+        ClientReceiveVotePrompt;
 
     unreliable if (Role < ROLE_Authority)
         VehicleVoiceMessage;
@@ -6353,11 +6354,6 @@ function ReceiveScoreEvent(DHScoreEvent ScoreEvent)
     }
 }
 
-simulated function ClientTeamSurrenderPrompt()
-{
-    Player.InteractionMaster.AddInteraction("DH_Engine.DHTeamSurrenderInteraction", Player);
-}
-
 simulated function ClientTeamSurrenderResponse(int Result)
 {
     local UT2K4GUIController GC;
@@ -6418,7 +6414,7 @@ function ServerSendVote(int VoteId, int OptionIndex)
     }
 }
 
-simulated function ClientRecieveVotePrompt(class<DHVoteInfo> VoteInfoClass, int VoteId, optional string OptionalString)
+simulated function ClientReceiveVotePrompt(class<DHVoteInfo> VoteInfoClass, int VoteId, optional string OptionalString)
 {
     // TODO: display the interaction prompt!
     // TODO: how are we showing other interactions?
@@ -6529,7 +6525,7 @@ function ServerDenySquadMergeRequest(int SquadMergeRequestID)
     }
 }
 
-function ClientReceieveSquadMergeRequest(int SquadMergeRequestID, string SenderPlayerName, string SenderSquadName)
+function ClientReceiveSquadMergeRequest(int SquadMergeRequestID, string SenderPlayerName, string SenderSquadName)
 {
     if (bIgnoreSquadMergeRequestPrompts)
     {
