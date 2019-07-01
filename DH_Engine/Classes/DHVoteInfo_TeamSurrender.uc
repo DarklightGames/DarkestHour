@@ -21,7 +21,7 @@ function array<PlayerController> GetEligibleVoters()
 
         if (PC != none && PC.GetTeamNum() == TeamIndex)
         {
-            EligibleVoters[Voters.Length] = PC;
+            EligibleVoters[EligibleVoters.Length] = PC;
         }
     }
 

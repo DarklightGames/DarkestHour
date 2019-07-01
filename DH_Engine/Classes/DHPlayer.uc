@@ -197,7 +197,7 @@ replication
         ClientTeamKillPrompt, ClientOpenLogFile, ClientLogToFile, ClientCloseLogFile,
         ClientSquadAssistantVolunteerPrompt,
         ClientReceieveSquadMergeRequest, ClientSendSquadMergeRequestResult,
-        ClientTeamSurrenderResponse;
+        ClientTeamSurrenderResponse, ClientRecieveVotePrompt;
 
     unreliable if (Role < ROLE_Authority)
         VehicleVoiceMessage;

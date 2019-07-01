@@ -137,7 +137,7 @@ function RecieveVote(PlayerController Voter, int OptionIndex)
 
     Voters.Remove(VoterIndex, 1);
 
-    Options[OptionIndex].Voters[Voters.Length] = Voter;
+    Options[OptionIndex].Voters[Options[OptionIndex].Voters.Length] = Voter;
 
     OnVoteReceieved(Voter, OptionIndex);
 
