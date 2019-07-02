@@ -186,7 +186,7 @@ replication
         ServerSquadVolunteerToAssist,
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
-        ServerTeamSurrender;
+        ServerTeamSurrenderRequest;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -6375,7 +6375,7 @@ simulated function ClientTeamSurrenderResponse(int Result)
     }
 }
 
-function ServerTeamSurrender()
+function ServerTeamSurrenderRequest(optional bool bAskForConfirmation)
 {
     local DarkestHourGame G;
 
@@ -6386,9 +6386,21 @@ function ServerTeamSurrender()
         return;
     }
 
+    // Keep fighting
     if (bSurrendered)
     {
         G.VoteManager.RemoveNomination(self, class'DHVoteInfo_TeamSurrender');
+        return;
+    }
+
+    // Surrender
+    if (bAskForConfirmation)
+    {
+        if (class'DHVoteInfo_TeamSurrender'.static.CanNominate(self, G))
+        {
+            // Send the confirmation prompt
+            ClientTeamSurrenderResponse(-1);
+        }
     }
     else
     {

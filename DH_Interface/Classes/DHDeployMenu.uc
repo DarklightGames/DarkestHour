@@ -117,6 +117,9 @@ var             EMapMode                    MapMode;
 var Texture LockIcon;
 var Texture UnlockIcon;
 
+var localized string        SurrenderConfirmBaseText;
+var localized string        SurrenderConfirmNominationText;
+var localized string        SurrenderConfirmEndRoundText;
 var localized string        SurrenderButtonText[2];
 var localized array<string> SurrenderResponseMessages;
 
@@ -673,7 +676,7 @@ function bool OnClick(GUIComponent Sender)
         case b_MenuOptions[2]:
             if (PC != none)
             {
-                PC.ServerTeamSurrender();
+                PC.ServerTeamSurrenderRequest(true);
             }
             break;
 
@@ -784,6 +787,14 @@ function bool OnClick(GUIComponent Sender)
     }
 
     return false;
+}
+
+function OnSurrenderConfirmButtonClick(byte Button)
+{
+    if (Button == QBTN_YES && PC != none)
+    {
+        PC.ServerTeamSurrenderRequest();
+    }
 }
 
 function OnRecommendJoiningSquadButtonClick(byte Button)
@@ -1097,7 +1108,10 @@ function AutoSelectVehicle()
 function InternalOnMessage(coerce string Msg, float MsgLife)
 {
     local int Result;
-    local string ErrorMessage;
+    local string MessageText;
+    local GUIQuestionPage ConfirmWindow;
+    local int TeamSizes[2];
+    local byte TeamIndex;
 
     Result = int(MsgLife);
 
@@ -1128,25 +1142,51 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
                 break;
 
             default:
-                ErrorMessage = class'ROGUIRoleSelection'.static.GetErrorMessageForID(Result);
-                Controller.ShowQuestionDialog(ErrorMessage, QBTN_OK, QBTN_OK);
+                MessageText = class'ROGUIRoleSelection'.static.GetErrorMessageForID(Result);
+                Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
                 break;
         }
     }
     else if (Msg ~= "NOTIFY_GUI_SURRENDER_RESULT")
     {
-        if (Result < SurrenderResponseMessages.Length)
+        if (Result == -1)
         {
+            // Player can surrender; show the confirmation prompt
+
+            if (PC != none && GRI != none)
+            {
+                GRI.GetTeamSizes(TeamSizes);
+                TeamIndex = PC.GetTeamNum();
+
+                if (TeamIndex < arraycount(TeamSizes) && TeamSizes[TeamIndex] == 1)
+                {
+                    // The round will end immediately
+                    MessageText = default.SurrenderConfirmBaseText @ default.SurrenderConfirmEndRoundText;
+                }
+                else
+                {
+                    // The vote will be nominated
+                    MessageText = default.SurrenderConfirmBaseText @ Repl(default.SurrenderConfirmNominationText, "{0}", int(class'DHVoteInfo_TeamSurrender'.default.NominationThresholdPercent * 100));
+                }
+
+                ConfirmWindow = Controller.ShowQuestionDialog(MessageText, QBTN_YesNo, QBTN_Yes);
+                ConfirmWindow.OnButtonClick = OnSurrenderConfirmButtonClick;
+            }
+        }
+        else if (Result >= 0 && Result < SurrenderResponseMessages.Length)
+        {
+            // The request was denied by the server
+
             switch (Result)
             {
                 case 8:
-                    ErrorMessage = Repl(SurrenderResponseMessages[Result], "{0}", int(class'DHVoteInfo_TeamSurrender'.default.ReinforcementsRequiredPercent * 100));
+                    MessageText = Repl(SurrenderResponseMessages[Result], "{0}", int(class'DHVoteInfo_TeamSurrender'.default.ReinforcementsRequiredPercent * 100));
                     break;
                 default:
-                    ErrorMessage = SurrenderResponseMessages[Result];
+                    MessageText = SurrenderResponseMessages[Result];
             }
 
-            Controller.ShowQuestionDialog(ErrorMessage, QBTN_OK, QBTN_OK);
+            Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
         }
         else
         {
@@ -1155,8 +1195,8 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
     }
     else if (Msg ~= "SQUAD_MERGE_REQUEST_RESULT")
     {
-        ErrorMessage = class'DHSquadReplicationInfo'.static.GetSquadMergeRequestResultString(Result);
-        Controller.ShowQuestionDialog(ErrorMessage, QBTN_OK, QBTN_OK);
+        MessageText = class'DHSquadReplicationInfo'.static.GetSquadMergeRequestResultString(Result);
+        Controller.ShowQuestionDialog(MessageText, QBTN_OK, QBTN_OK);
     }
 
     SetButtonsEnabled(true);
@@ -1789,6 +1829,10 @@ defaultproperties
     SquadOnlyText="SQUADS ONLY"
     SquadLeadershipOnlyText="LEADERS ONLY"
     RecommendJoiningSquadText="It it HIGHLY RECOMMENDED that you JOIN A SQUAD before deploying! Joining a squad grants you additional deployment options and lets you get to the fight faster.||Do you want to automatically join a squad now?"
+
+    SurrenderConfirmBaseText="Are you sure you want to surrender?"
+    SurrenderConfirmNominationText="This action will count your choice and propose to initiate the vote for the rest of your team. The vote will begin after {0}% of the team has opted to forfeit."
+    SurrenderConfirmEndRoundText="This will immediately end the round in favor of the opposite team."
 
     SurrenderButtonText[0]="Surrender"
     SurrenderButtonText[1]="Keep fighting"
