@@ -2921,6 +2921,11 @@ state ResetGameCountdown
                 Spawn(class'DHClientResetGame');
             }
 
+            if (GRI != none)
+            {
+                GRI.RoundWinnerTeamIndex = GRI.default.RoundWinnerTeamIndex;
+            }
+
             Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 11);
             ResetScores();
             OpenPlayerMenus();
