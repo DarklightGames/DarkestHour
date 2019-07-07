@@ -10,7 +10,6 @@
 class DHTurnTowardsPosition extends DHMoveState;
 
 var float TurnRadius;       // Radius of circular turn.
-var float TurnSpeed;        // Desired Speed of turn.
 var bool bIsTurningRight;   // Is this a right turn?
 var vector PositionGoal;    // When the plane's velocity is aligned with this position, end the turn.
 var bool bIsInitialized;    // keeps track if the initialization has been automatically preformed.
@@ -19,17 +18,62 @@ var vector TurnEndPoint;    // Point in world space that the plane should be at 
 function Tick(float DeltaTime)
 {
     local vector TangentVelocity;
+    local float TimeToBankBack;
+    local float BankBackAngle;
+
+    UpdateSpeed(DeltaTime);
 
     // Find the Turn End Point. This also sets the TangentAngle, so that we can detect the turn end.
     if (!bIsInitialized)
     {
         TurnEndPoint = CalculateTurnEndPoint(PositionGoal, Airplane.Velocity, Airplane.Location, bIsTurningRight, TurnRadius);
         TurnEndPoint.Z = Airplane.Location.Z;
-        Log(VSize(TurnEndPoint - Airplane.Center));
+
         bIsInitialized = true;
     }
 
     TurnPlane(bIsTurningRight, TurnRadius, Airplane.CurrentSpeed, DeltaTime);
+
+
+    Log(Airplane.BankAngle$", "$Airplane.MaxBankAngle);
+
+    TimeToBankBack = Abs(Airplane.BankAngle) / Airplane.BankRate;
+    BankBackAngle = TangentAngle - ((TimeToBankBack * Airplane.CurrentSpeed) / TurnRadius);
+
+    // Bank to max bank.
+    if (Abs(Airplane.BankAngle) < class'UUnits'.static.DegreesToRadians(Airplane.MaxBankAngle) && TotalTurned <= BankBackAngle)
+    {
+        if (bIsTurningRight)
+        {
+            Airplane.BankAngle += DeltaTime * Airplane.BankRate;
+        }
+        else
+        {
+            Airplane.BankAngle -= DeltaTime * Airplane.BankRate;
+        }
+    }
+    // Start banking back to 0, normal flight roll.
+    else if (Abs(Airplane.BankAngle) > 0 && TotalTurned > BankBackAngle)
+    {
+        if (bIsTurningRight)
+        {
+            Airplane.BankAngle -= DeltaTime * Airplane.BankRate;
+
+            if (Airplane.BankAngle < 0)
+            {
+                Airplane.BankAngle = 0;
+            }
+        }
+        else
+        {
+            Airplane.BankAngle += DeltaTime * Airplane.BankRate;
+
+            if(Airplane.BankAngle > 0)
+            {
+                Airplane.BankAngle = 0;
+            }
+        }
+    }
 
     // Test if the TurnEndPoint has been passed. If so, set to proper endpoint and end the turn.
     if(TotalTurned >= TangentAngle)
@@ -39,12 +83,11 @@ function Tick(float DeltaTime)
         TangentVelocity = Normal(TangentVelocity);
 
         TurnEndPoint.Z = Airplane.Location.Z;
-        Log("End "$VSize(TurnEndPoint - Airplane.Center));
-        Log(VSize(Airplane.Location - Airplane.Center));
-        //Log("Old Lad: "$Airplane.Location);
+
         Log("Fat Lad: "$TurnEndPoint);
         Airplane.SetLocation(TurnEndPoint);
         Airplane.Velocity = Normal(TangentVelocity) * Airplane.CurrentSpeed;
+        Airplane.BankAngle = 0;
         Airplane.OnMoveEnd(); // tell Airplane that move is done.
     }
 }

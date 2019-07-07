@@ -40,6 +40,26 @@ var localized string    AirplaneName;
 // Current Speed of the aircraft. Used in move state calculations. Set this, not the the velocity to effect move speed changes.
 var float               CurrentSpeed;
 
+// Bank roll values for when turning
+var float               MaxBankAngle;
+var float               BankRate;
+var float               BankAngle;
+
+// Turn speed control
+var float               TurnSpeed; // desired turn speed
+var float               TurnAcceleration; // Rate of velocity change to TurnSpeed.
+var float               MinTurnRadius;
+
+// Straight speed control - MoveStates should not reference these directly, they should be passed as parameters.
+var float               StandardSpeed; // Desired speed for straight movement.
+var float               ApproachingSpeed; // Desired speed for straight movement when approuching a target to attack, This will be the starting speed durring the attack run.
+var float               StraightAcceleration; // Plane acceleration for straight movement;
+
+var float               DivingSpeed;      // When diving the plane, this is the top speed. Makes the dive attacks look more beliveable.
+var float               DivingAcceleration;
+
+
+
 // The current MoveState. What this variable is set to determines the movement pattern the plane preforms.
 var DHMoveState MoveState;
 
@@ -56,13 +76,10 @@ var bool bIsPullingUp;
 
 var Target  CurrentTarget; // Current target.
 
-// DEBUG
-var vector Center;
-
 simulated function PostBeginPlay()
 {
     //800
-    CurrentSpeed = 2100;
+    CurrentSpeed = StandardSpeed;
 }
 
 // Tick needed to make AI decisions on server.
@@ -85,8 +102,6 @@ function OnMoveEnd() {}
 // CurrentTarget should be set here.
 function PickTarget()
 {
-    //CurrentTarget.Position = Location + vect(2000, -200, -200);
-    //CurrentTarget.Position = Location + vect(0, 2000, 2000);
     CurrentTarget.Position = vect(21543, -39272, -1040);
     CurrentTarget.Radius = 10000;
     CurrentTarget.MinimumHeight = 1000;
@@ -102,9 +117,8 @@ auto simulated state Entrance
 
     function BeginState()
     {
-        //Log("Entrance State");
-        BeginStraight(vect(1,2,0));
-        SetTimer(3, false);
+        BeginStraight(vect(1,2,0), StandardSpeed, StraightAcceleration);
+        SetTimer(10, false);
     }
 }
 
@@ -119,7 +133,7 @@ simulated state Searching
 
     function BeginState()
     {
-        //Log("Searching");
+        BeginStraight(Normal(velocity), StandardSpeed, StraightAcceleration);
         SetTimer(1, false);
     }
 }
@@ -130,13 +144,12 @@ state Approaching
 {
     function OnTargetReached()
     {
-        //Log("Reached Target");
         GotoState('Attacking');
     }
 
     function OnMoveEnd()
     {
-        BeginStraight(Velocity);
+        BeginStraight(Velocity, StandardSpeed, StraightAcceleration);
     }
 
     function TickAI(float DeltaTime)
@@ -145,11 +158,7 @@ state Approaching
 
     function BeginState()
     {
-        //Log("Approaching");
-        Center = Location;
-        Center.Y = Location.Y - 1000;
-        BeginTurnTowardsPosition(CurrentTarget.Position, 5000, true);
-        //BeginDiveClimbTowardsPosition(CurrentTarget.Position, 3000, true);
+        BeginTurnTowardsPosition(CurrentTarget.Position, MinTurnRadius, true);
     }
 }
 
@@ -174,13 +183,11 @@ simulated state Attacking
 
     function OnMoveEnd()
     {
-        BeginStraight(Velocity);
+        BeginStraight(Velocity, DivingSpeed, DivingAcceleration);
     }
 
     function BeginState()
     {
-        //Log("Attacking");
-        //SetTimer(0.1, false);
         bIsPullingUp = false;
         BeginDiveClimbTowardsPosition(CurrentTarget.Position, 5000, false);
     }
@@ -201,7 +208,7 @@ simulated function MovementUpdate(float DeltaTime)
 
     // Make sure plane is always facing the direction it is traveling.
     Heading = OrthoRotation(velocity, velocity Cross vect(0, 0, 1), vect(0, 0, 1));
-    Heading.Roll = 0;
+    Heading.Roll = class'UUnits'.static.RadiansToUnreal(BankAngle);
     SetRotation(Heading);
 
     // Check if target met. Restrain from continued movement until new waypoint is set.
@@ -225,6 +232,8 @@ function BeginTurnTowardsPosition(vector TurnPositionGoal, float TurnRadius, boo
     TurnTowardsState.TurnRadius = TurnRadius;
     TurnTowardsState.bIsTurningRight = bIsTurnRight;
     TurnTowardsState.PositionGoal = CurrentTarget.Position;
+    TurnTowardsState.DesiredSpeed = TurnSpeed;
+    TurnTowardsState.Acceleration = TurnAcceleration;
 
     MoveState = TurnTowardsState;
 
@@ -274,7 +283,7 @@ function BeginDiveClimbToAngle(float TurnAngleGoal, float TurnRadius, bool bIsCl
 
 // This begins the straight movement state. The plane will move in Direction
 // forever.
-function BeginStraight(vector Direction)
+function BeginStraight(vector Direction, float Speed, float Acceleration)
 {
     local DHStraight StraightState;
     local vector VelocityPre;
@@ -282,6 +291,9 @@ function BeginStraight(vector Direction)
     StraightState = new class'DHStraight';
     StraightState.Direction = Normal(Direction);
     StraightState.Airplane = self;
+    StraightState.DesiredSpeed = Speed;
+    StraightState.Acceleration = Acceleration;
+
     MoveState = StraightState;
 
     VelocityPre = Velocity;
@@ -309,6 +321,19 @@ defaultproperties
     bReplicateMovement = true
     bCanBeDamaged=true
     Physics = PHYS_Flying
+
+    BankAngle = 0
+    MinTurnRadius = 4000
+
+    StandardSpeed = 1400
+    StraightAcceleration = 150
+
+    DivingSpeed = 3000
+    DivingAcceleration = 200
+
+    TurnSpeed = 1000
+    TurnAcceleration = 150
+
 
     CurrentSpeed = 0;
 }

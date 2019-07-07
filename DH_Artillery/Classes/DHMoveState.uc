@@ -28,8 +28,41 @@ var float TangentAngle;     // Angle of the tangent point to the initial positio
 var vector InitialVelocity;
 var vector InitialLocation;
 var bool bIsTurnInitialized;
+var float DesiredSpeed;
+var float Acceleration;
 
 function Tick(float DeltaTime);
+
+// Updates the airplane's current speed based on desired speed and acceleration.
+function UpdateSpeed(float DeltaTime)
+{
+    // Stright line speed change
+    if (VSize(Airplane.Velocity) < DesiredSpeed)
+    {
+        if (Abs(Airplane.CurrentSpeed - DesiredSpeed) <= DeltaTime * Acceleration)
+        {
+            Airplane.CurrentSpeed = DesiredSpeed;
+            //Airplane.Velocity = Normal(Airplane.Velocity) * DesiredSpeed;
+            //Airplane.Acceleration = vect(0,0,0);
+        }
+        else
+        {
+            Airplane.CurrentSpeed += DeltaTime * Acceleration;
+        }
+    }
+    else if (Airplane.CurrentSpeed > DesiredSpeed)
+    {
+        if (Abs(Airplane.CurrentSpeed - DesiredSpeed) <= DeltaTime * Acceleration)
+        {
+
+            Airplane.CurrentSpeed = DesiredSpeed;
+        }
+        else
+        {
+            Airplane.CurrentSpeed -= DeltaTime * Acceleration;
+        }
+    }
+}
 
 // Dives or Climbs the plane. Similar to TurnPlane, just up and down.
 function bool DiveOrClimbPlane(bool bIsClimbing, float TurnRadius, float Speed, float DeltaTime)
@@ -82,7 +115,7 @@ function bool DiveOrClimbPlane(bool bIsClimbing, float TurnRadius, float Speed, 
 }
 
 // Turns plane left or right along a circular path.
-function bool TurnPlane(bool bIsTurnRight, float TurnRadius, float Speed, float DeltaTime)
+function TurnPlane(bool bIsTurnRight, float TurnRadius, float Speed, float DeltaTime)
 {
     local float DeltaAngle;
     local rotator DeltaRot;
@@ -124,9 +157,6 @@ function bool TurnPlane(bool bIsTurnRight, float TurnRadius, float Speed, float 
     Airplane.Velocity = InitialVelocity >> DeltaRot;
     //Log("Dog Lad: "$NewPlanePosition);
     Airplane.SetLocation(NewPlanePosition);
-
-    // TODO Roll plane for banking turns. 0 -> 100 100 ->0. Banking angle realtive to max turn radius. Plane quality.
-    return true;
 }
 
 // Many moveStates use circular Rotation. Use this calculation across all of them.

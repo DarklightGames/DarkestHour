@@ -11,6 +11,8 @@ var vector Direction;
 
 function Tick(float DeltaTime)
 {
+    UpdateSpeed(DeltaTime);
+
     Airplane.Velocity = Normal(Direction) * Airplane.CurrentSpeed;
 }
 
