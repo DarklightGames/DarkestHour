@@ -5,11 +5,10 @@
 
 class DH_HetzerDestroyer extends DHArmoredVehicle;
 
-//#exec OBJ LOAD FILE=..\Animations\DH_Hetzer_anm.ukx
-//#exec OBJ LOAD FILE=..\StaticMeshes\DH_Hetzer_stc.usx
-//#exec OBJ LOAD FILE=..\Textures\DH_Hetzer_tex.utx
+#exec OBJ LOAD FILE=..\Animations\DH_Hetzer_anm.ukx
+#exec OBJ LOAD FILE=..\StaticMeshes\DH_Hetzer_stc.usx
+#exec OBJ LOAD FILE=..\Textures\DH_Hetzer_tex.utx
 
-/*
 simulated event DestroyAppearance()
 {
     local Combiner DestroyedSkin;
@@ -30,7 +29,6 @@ simulated event DestroyAppearance()
 
     super.DestroyAppearance();
 }
-*/
 
 defaultproperties
 {
@@ -76,8 +74,8 @@ defaultproperties
      RightWheelBones(6)="Wheel_R_7"
      WheelRotationScale=20000.000000
      TreadHitMaxHeight=8.000000
-     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.JPIVL48_turret_rot'
-     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.JPIVL48_turret_look'
+     VehicleHudTurret=TexRotator'DH_InterfaceArt_tex.Tank_Hud.hetzer_turret_rot'
+     VehicleHudTurretLook=TexRotator'DH_InterfaceArt_tex.Tank_Hud.hetzer_turret_look'
      VehicleHudTreadsPosX(0)=0.375000
      VehicleHudTreadsPosX(1)=0.605000
      VehicleHudTreadsPosY=0.465000
@@ -184,7 +182,7 @@ defaultproperties
      ExitPositions(4)=(X=-50.000000,Y=150.000000,Z=50.000000)
      ExitPositions(5)=(X=-160.000000,Y=20.000000,Z=50.000000)
      VehicleNameString="Jagdpanzer 38(t) 'Hetzer'"
-     //SpawnOverlay(0)=Texture'DH_Vehicles.Hetzer_SpawnOverlay'
+     SpawnOverlay(0)=Texture'DH_InterfaceArt_tex.Vehicles.hetzer'
      HealthMax=450.000000
      Health=450
      Mesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_body_ext'
