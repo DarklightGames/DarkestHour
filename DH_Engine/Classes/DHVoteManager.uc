@@ -69,6 +69,7 @@ function NominateVote(PlayerController Player, class<DHVoteInfo> VoteClass)
     {
         Nominations.Insert(0, 1);
         Nominations[0].Player = Player;
+        Nominations[0].TeamIndex = TeamIndex;
         Nominations[0].VoteClass = VoteClass;
 
         VoteClass.static.OnNominated(Player);
@@ -89,7 +90,11 @@ function NominateVote(PlayerController Player, class<DHVoteInfo> VoteClass)
                 {
                     Nominations.Remove(i, 1);
                 }
+
+                continue;
             }
+
+            ++i;
         }
 
         // Start the vote!
