@@ -21,7 +21,7 @@ function Tick(float DeltaTime)
     local float TimeToBankBack;
     local float BankBackAngle;
 
-    UpdateSpeed(DeltaTime);
+
 
     // Find the Turn End Point. This also sets the TangentAngle, so that we can detect the turn end.
     if (!bIsInitialized)
@@ -32,10 +32,11 @@ function Tick(float DeltaTime)
         bIsInitialized = true;
     }
 
+    UpdateSpeed(DeltaTime);
+
     TurnPlane(bIsTurningRight, TurnRadius, Airplane.CurrentSpeed, DeltaTime);
 
-
-    Log(Airplane.BankAngle$", "$Airplane.MaxBankAngle);
+    //Log(Airplane.BankAngle$", "$Airplane.MaxBankAngle);
 
     TimeToBankBack = Abs(Airplane.BankAngle) / Airplane.BankRate;
     BankBackAngle = TangentAngle - ((TimeToBankBack * Airplane.CurrentSpeed) / TurnRadius);

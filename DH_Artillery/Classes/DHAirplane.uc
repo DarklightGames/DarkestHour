@@ -58,6 +58,8 @@ var float               StraightAcceleration; // Plane acceleration for straight
 var float               DivingSpeed;      // When diving the plane, this is the top speed. Makes the dive attacks look more beliveable.
 var float               DivingAcceleration;
 
+var float               ClimbingSpeed;      // Desired speed to use when climbing.
+
 
 
 // The current MoveState. What this variable is set to determines the movement pattern the plane preforms.
@@ -108,7 +110,7 @@ function PickTarget()
 }
 
 // Initial State. The plane enters into the combat area.
-auto simulated state Entrance
+auto state Entrance
 {
     simulated function Timer()
     {
@@ -123,7 +125,7 @@ auto simulated state Entrance
 }
 
 // This step simulates the plane looking for a new target to attack. When the state ends, a target is picked.
-simulated state Searching
+state Searching
 {
     simulated function Timer()
     {
@@ -163,7 +165,7 @@ state Approaching
 }
 
 // Preform attack Run on the target.
-simulated state Attacking
+state Attacking
 {
     function TickAI(float DeltaTime)
     {
@@ -171,7 +173,7 @@ simulated state Attacking
         // Check if we have dipped below the min hight above target
         if(!bIsPullingUp && Location.Z < (CurrentTarget.Position.Z + CurrentTarget.MinimumHeight)) {
             Log("Dipped Below Min Hight");
-            BeginDiveClimbToAngle(Pi/3, 2500, true);
+            BeginDiveClimbToAngle(Pi/4, 2500, true);
             bIsPullingUp = true;
         }
     }
@@ -183,6 +185,7 @@ simulated state Attacking
 
     function OnMoveEnd()
     {
+
         BeginStraight(Velocity, DivingSpeed, DivingAcceleration);
     }
 
@@ -218,7 +221,7 @@ simulated function MovementUpdate(float DeltaTime)
     }
 }
 
-// MovementState related functions
+// MovementState related functions ---------------------------------------------
 
 // This function begins a turn that stops when the plane is aligned with TurnPositionGoal.
 // It sets MoveState.
@@ -254,6 +257,10 @@ function BeginDiveClimbTowardsPosition(vector TurnPositionGoal, float TurnRadius
     DiveClimbState.bIsClimbing = bIsClimbing;
     DiveClimbState.PositionGoal = TurnPositionGoal;
 
+    DiveClimbState.DesiredSpeedClimb = ClimbingSpeed;
+    DiveClimbState.DesiredSpeedDive = DivingSpeed;
+    DiveClimbState.Acceleration = DivingAcceleration;
+
     MoveState = DiveClimbState;
 
     VelocityPre = Velocity;
@@ -271,7 +278,7 @@ function BeginDiveClimbToAngle(float TurnAngleGoal, float TurnRadius, bool bIsCl
     DiveClimbState.Airplane = self;
     DiveClimbState.TurnRadius = TurnRadius;
     DiveClimbState.bIsClimbing = bIsClimbing;
-    DiveClimbState.DesiredAngle = TurnAngleGoal;
+    DiveClimbState.DesiredAngleWorld = TurnAngleGoal;
     DiveClimbState.TurnSpeed = CurrentSpeed;
 
     MoveState = DiveClimbState;
@@ -331,9 +338,10 @@ defaultproperties
     DivingSpeed = 3000
     DivingAcceleration = 200
 
+    ClimbingSpeed = 800
+
     TurnSpeed = 1000
     TurnAcceleration = 150
-
 
     CurrentSpeed = 0;
 }
