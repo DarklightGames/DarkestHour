@@ -9,6 +9,8 @@ class DHTeamSurrenderVoteMessage extends GameMessage
 var localized string VoteSucceededText;
 var localized string VoteFailedText;
 var localized string VoteSummaryText;
+var localized string VoteNominatedText;
+var localized string VoteNominationsRemainingText;
 
 static function string GetString(
     optional int Data,
@@ -17,32 +19,62 @@ static function string GetString(
     optional Object OptionalObject
     )
 {
-    local string Output, VoteSummary;
-    local int Switch, VotePercentage;
+    local byte Switch, Bytes[2];
+    local string Output, VoteSummary, S;
 
-    class'UInteger'.static.ToShorts(Data, Switch, VotePercentage);
+    class'UInteger'.static.ToBytes(Data, Switch, Bytes[0], Bytes[1]);
 
     switch (Switch)
     {
         case 0:
-            Output = default.VoteSucceededText;
-            break;
         case 1:
-            Output = default.VoteFailedText;
-            break;
+            // The vote has concluded
+
+            if (!bool(Switch))
+            {
+                Output = default.VoteSucceededText;
+            }
+            else
+            {
+                Output = default.VoteFailedText;
+            }
+
+            VoteSummary = Repl(Repl(default.VoteSummaryText, "{0}", Bytes[0]), "{1}", Bytes[1]);
+
+            return Repl(Output, "{0}", VoteSummary);
+
+        case 2:
+            // The vote was nominated
+
+            if (RelatedPRI_1 == none)
+            {
+                break;
+            }
+
+            Output = Repl(default.VoteNominatedText, "{0}", RelatedPRI_1.PlayerName);
+
+            if (Bytes[0] > 0)
+            {
+                if (Bytes[0] > 1)
+                {
+                    S = "s";
+                }
+
+                Output @= Repl(Repl(default.VoteNominationsRemainingText, "{0}", Bytes[0]), "{1}", S);
+            }
+
+            return Output;
+
         default:
             return "";
     }
-
-    VoteSummary = Repl(default.VoteSummaryText, "{0}", VotePercentage);
-    VoteSummary = Repl(VoteSummary, "{1}", int(class'DHVoteInfo_TeamSurrender'.default.VotePassedThresholdPercent * 100));
-
-    return Repl(Output, "{0}", VoteSummary);
 }
 
 defaultproperties
 {
-    VoteSucceededText="The vote to surrender has succeeded ({0})"
-    VoteFailedText="The vote to surrender has failed ({0})"
-    VoteSummaryText="Yes: {0}%, Needed: {1}%"
+    VoteSucceededText="The vote to surrender has succeeded ({0})."
+    VoteFailedText="The vote to surrender has failed ({0})."
+    VoteSummaryText="Yes: {0}, Needed: {1}"
+    VoteNominatedText="{0} has nominated to surrender."
+    VoteNominationsRemainingText="Need {0} more nomination{1} to start the vote."
 }

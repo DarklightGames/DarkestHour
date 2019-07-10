@@ -12,35 +12,31 @@ struct Option
     var array<PlayerController> Voters;
 };
 
-var int                             VoteId;
+var int                        VoteId;
+var int                        TeamIndex;
+var int                        VoterCount;
+var array<Option>              Options;
+var array<PlayerController>    Voters;
+var array<PlayerController>    Nominators;
+var DateTime                   StartedAt;
+var DateTime                   EndedAt;
 
-var class<DHPromptInteraction>      VoteInteractionClass;
+var class<DHPromptInteraction> VoteInteractionClass;
+var localized string           QuestionText;
 
-var localized string                QuestionText;
-var float                           DurationSeconds;
+// Rules
+var bool  bIsGlobalVote;               // Do both teams participate?
+var int   CooldownSeconds;             // The time between the votes
+var float DurationSeconds;             // How until the vote closes
+var float VotesThresholdPercent;       // votes needed to pass
+var float NominationsThresholdPercent; // Nominations needed to start the vote
 
-var array<Option>                   Options;
-var array<PlayerController>         Voters;
-var array<PlayerController>         Nominators;
-var int                             VoterCount;
-
-var int                             CooldownSeconds;
-var int                             TeamIndex;
-var int                             TeamSizeMin;
-var int                             NominationCountThreshold;
-var int                             NominatorsDefaultOption;
-
-var bool                            bNominatorsVoteAutomatically;
-var bool                            bIsGlobal; // ignore voter's team index
-
-var DateTime                        StartedAt;
-var DateTime                        EndedAt;
-
-var float                           VotePassedThresholdPercent;
-var float                           NominationThresholdPercent;
+// Should nominators receive the prompt or vote automatically?
+var bool  bNominatorsVoteAutomatically;
+var int   NominatorsDefaultOption;
 
 // Gets the list of eligible voters.
-function array<PlayerController>    GetEligibleVoters();
+function array<PlayerController> GetEligibleVoters();
 
 function string GetQuestionText()
 {
@@ -243,10 +239,57 @@ function SendMetricsEvent(string VoteType, int Result)
                                    .Put("nominator_ids", class'JSONArray'.static.FromStrings(NominatorIDs)));
 }
 
+function int GetVotesThresholdCount(DarkestHourGame Game)
+{
+    if (Game == none)
+    {
+        return -1;
+    }
+
+    if (StartedAt != none)
+    {
+        return Ceil(VoterCount * GetVotesThresholdPercent());
+    }
+    else
+    {
+        Warn("Vote hasn't started yet; voter count is invalid.");
+        return -1;
+    }
+}
+
+static function int GetNominationsThresholdCount(DarkestHourGame Game, byte TeamIndex)
+{
+    local int TeamSizes[2];
+
+    if (Game == none)
+    {
+        return -1;
+    }
+
+    if (default.bIsGlobalVote)
+    {
+        return Ceil(GetNominationsThresholdPercent() * Game.GetNumPlayers());
+    }
+
+    if (TeamIndex < arraycount(TeamSizes))
+    {
+        Game.GetTeamSizes(TeamSizes);
+        return Ceil(GetNominationsThresholdPercent() * TeamSizes[TeamIndex]);
+    }
+    else
+    {
+        Warn("Invalid team index.");
+        return -1;
+    }
+}
+
 function OnVoteStarted();
 function OnVoteEnded();
-static function OnNominated(PlayerController Player);
+static function OnNominated(PlayerController Player, LevelInfo Level, optional int NominationsRemaining);
 static function OnNominationRemoved(PlayerController Player);
+static function int GetCooldownSeconds() { return default.CooldownSeconds; }
+static function float GetVotesThresholdPercent() { return default.VotesThresholdPercent; }
+static function float GetNominationsThresholdPercent() { return default.NominationsThresholdPercent; }
 
 defaultproperties
 {
@@ -255,6 +298,8 @@ defaultproperties
     Options(0)=(Text="Yes")
     Options(1)=(Text="No")
 
-    bIsGlobal=true
+    bIsGlobalVote=true
     TeamIndex=-1
+
+    VotesThresholdPercent=0.5
 }

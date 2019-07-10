@@ -122,6 +122,8 @@ var localized string        SurrenderConfirmNominationText;
 var localized string        SurrenderConfirmEndRoundText;
 var localized string        SurrenderButtonText[2];
 var localized array<string> SurrenderResponseMessages;
+var int                     SurrenderButtonUnlockTime;
+var int                     SurrenderButtonCooldownSeconds;
 
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
@@ -420,6 +422,7 @@ function UpdateSpawnPoints()
 function UpdateStatus()
 {
     local int TeamSizes[2];
+    local bool bSurrenderButtonEnabled;
 
     if (GRI == none || PC == none)
     {
@@ -437,11 +440,25 @@ function UpdateStatus()
     SetEnabled(b_MenuOptions[1], PC.Pawn != none);
 
     // Surrender
-    SetEnabled(b_MenuOptions[2], GRI.bIsSurrenderVoteEnabled &&
-                                 GRI.RoundWinnerTeamIndex > 1 &&
-                                 !GRI.bIsSurrenderVoteInProgress &&
-                                 !GRI.bIsInSetupPhase);
-    b_MenuOptions[2].Caption = SurrenderButtonText[int(PC.bSurrendered)];
+    bSurrenderButtonEnabled = GRI.bIsSurrenderVoteEnabled;
+
+    if (bSurrenderButtonEnabled)
+    {
+        b_MenuOptions[2].Caption = SurrenderButtonText[int(PC.bSurrendered)];
+
+        if (!PC.bSurrendered && GRI.ElapsedTime < SurrenderButtonUnlockTime)
+        {
+            bSurrenderButtonEnabled = false;
+            b_MenuOptions[2].Caption @= "(" $ class'TimeSpan'.static.ToString(SurrenderButtonUnlockTime - GRI.ElapsedTime) $ ")";
+        }
+
+        bSurrenderButtonEnabled = bSurrenderButtonEnabled &&
+                                  (class'DH_LevelInfo'.static.DHDebugMode() || !GRI.bIsInSetupPhase) &&
+                                  !GRI.IsSurrenderVoteInProgress(PC.GetTeamNum()) &&
+                                  GRI.RoundWinnerTeamIndex > 1;
+    }
+
+    SetEnabled(b_MenuOptions[2], bSurrenderButtonEnabled);
 }
 
 function string GetStatusText()
@@ -791,9 +808,10 @@ function bool OnClick(GUIComponent Sender)
 
 function OnSurrenderConfirmButtonClick(byte Button)
 {
-    if (Button == QBTN_YES && PC != none)
+    if (Button == QBTN_YES && PC != none && GRI != none)
     {
         PC.ServerTeamSurrenderRequest();
+        SurrenderButtonUnlockTime = GRI.ElapsedTime + SurrenderButtonCooldownSeconds;
     }
 }
 
@@ -1158,15 +1176,17 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
                 GRI.GetTeamSizes(TeamSizes);
                 TeamIndex = PC.GetTeamNum();
 
+                MessageText = default.SurrenderConfirmBaseText;
+
                 if (TeamIndex < arraycount(TeamSizes) && TeamSizes[TeamIndex] == 1)
                 {
                     // The round will end immediately
-                    MessageText = default.SurrenderConfirmBaseText @ default.SurrenderConfirmEndRoundText;
+                    MessageText @= default.SurrenderConfirmEndRoundText;
                 }
                 else
                 {
                     // The vote will be nominated
-                    MessageText = default.SurrenderConfirmBaseText @ Repl(default.SurrenderConfirmNominationText, "{0}", int(class'DHVoteInfo_TeamSurrender'.default.NominationThresholdPercent * 100));
+                    MessageText @= Repl(default.SurrenderConfirmNominationText, "{0}", int(class'DHVoteInfo_TeamSurrender'.static.GetNominationsThresholdPercent() * 100));
                 }
 
                 ConfirmWindow = Controller.ShowQuestionDialog(MessageText, QBTN_YesNo, QBTN_Yes);
@@ -1180,7 +1200,7 @@ function InternalOnMessage(coerce string Msg, float MsgLife)
             switch (Result)
             {
                 case 8:
-                    MessageText = Repl(SurrenderResponseMessages[Result], "{0}", int(class'DHVoteInfo_TeamSurrender'.default.ReinforcementsRequiredPercent * 100));
+                    MessageText = Repl(SurrenderResponseMessages[Result], "{0}", int(class'DarkestHourGame'.default.SurrenderReinforcementsRequiredPercent * 100));
                     break;
                 default:
                     MessageText = SurrenderResponseMessages[Result];
@@ -1830,8 +1850,9 @@ defaultproperties
     SquadLeadershipOnlyText="LEADERS ONLY"
     RecommendJoiningSquadText="It it HIGHLY RECOMMENDED that you JOIN A SQUAD before deploying! Joining a squad grants you additional deployment options and lets you get to the fight faster.||Do you want to automatically join a squad now?"
 
+    SurrenderButtonCooldownSeconds=30
     SurrenderConfirmBaseText="Are you sure you want to surrender?"
-    SurrenderConfirmNominationText="This action will count your choice and propose to initiate the vote for the rest of your team. The vote will begin after {0}% of the team has opted to forfeit."
+    SurrenderConfirmNominationText="This action will nominate the team wide vote. The vote will begin after {0}% of the team has opted to forfeit."
     SurrenderConfirmEndRoundText="This will immediately end the round in favor of the opposite team."
 
     SurrenderButtonText[0]="Surrender"
@@ -1842,7 +1863,7 @@ defaultproperties
     SurrenderResponseMessages[2]="Round hasn't started yet.";
     SurrenderResponseMessages[3]="Surrender vote is disabled.";
     SurrenderResponseMessages[4]="Vote is already in progress.";
-    SurrenderResponseMessages[5]="You've already voted.";
+    SurrenderResponseMessages[5]="You've already surrendered.";
     SurrenderResponseMessages[6]="Your team already had a vote to surrender earlier. Try again later.";
     SurrenderResponseMessages[7]="You cannot surrender after the round is over.";
     SurrenderResponseMessages[8]="You cannot surrender when reinforcements are above {0}%.";

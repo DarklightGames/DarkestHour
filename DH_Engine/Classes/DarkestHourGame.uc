@@ -91,8 +91,13 @@ var     DHSquadReplicationInfo      SquadReplicationInfo;
 
 var()   config int                  EmptyTankUnlockTime;                    // Server config option for how long (secs) before unlocking a locked armored vehicle if abandoned by its crew
 
-var     bool                        bIsSurrenderVoteEnabled;
-var     int                         SurrenderRoundTime;
+var()   config bool                 bIsSurrenderVoteEnabled;
+var()   config int                  SurrenderCooldownSeconds;               // The time between the votes
+var()   config int                  SurrenderEndRoundDelaySeconds;          // The time delay before the round ends
+var()   config int                  SurrenderRoundTimeRequiredSeconds;      // How soon the vote can be nominated
+var()   config float                SurrenderReinforcementsRequiredPercent; // How short on tickets the team needs to be
+var()   config float                SurrenderNominationsThresholdPercent;   // Nominations needed to start the vote
+var()   config float                SurrenderVotesThresholdPercent;         // "Yes" votes needed for the vote to pass
 
 // The response types for requests.
 enum EArtilleryResponseType
@@ -5442,5 +5447,10 @@ defaultproperties
     bIsDangerZoneEnabled=true
 
     bIsSurrenderVoteEnabled=true
-    SurrenderRoundTime=15
+    SurrenderCooldownSeconds=300
+    SurrenderEndRoundDelaySeconds=15
+    SurrenderRoundTimeRequiredSeconds=900
+    SurrenderReinforcementsRequiredPercent=0.40
+    SurrenderNominationsThresholdPercent=0.15
+    SurrenderVotesThresholdPercent=0.6
 }
