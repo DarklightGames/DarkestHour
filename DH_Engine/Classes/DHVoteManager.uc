@@ -28,7 +28,7 @@ function NominateVote(PlayerController Player, class<DHVoteInfo> VoteClass)
     local DarkestHourGame G;
     local byte TeamIndex;
     local int i;
-    local array<PlayerController> Nominators;
+    local array<PlayerController> PlayerNominators;
     local int TeamSizes[2];
     local int NominationThresholdCount;
 
@@ -62,39 +62,45 @@ function NominateVote(PlayerController Player, class<DHVoteInfo> VoteClass)
     if (NominationThresholdCount < 2)
     {
         // Skip the nomination process
-        Nominators[Nominators.Length] = Player;
-        StartVote(VoteClass, TeamIndex, Nominators);
+        PlayerNominators[PlayerNominators.Length] = Player;
+        StartVote(VoteClass, TeamIndex, PlayerNominators);
     }
     else
     {
         Nominations.Insert(0, 1);
         Nominations[0].Player = Player;
+        Nominations[0].TeamIndex = TeamIndex;
         Nominations[0].VoteClass = VoteClass;
 
         VoteClass.static.OnNominated(Player);
 
-        // Count the nominations and clean up invalid ones while we at it
-        for (i = 0; i < Nominations.Length; ++i)
+        // Count the nominations and clean up the invalid ones while we at it
+        i = 0; while (i < Nominations.Length)
         {
             if (Nominations[i].VoteClass == VoteClass && Nominations[i].TeamIndex == TeamIndex)
             {
-                if (Nominations[i].VoteClass.default.bIsGlobal ||
-                    (Nominations[i].Player != none &&
+                if (Nominations[i].Player != none &&
+                    (Nominations[i].VoteClass.default.bIsGlobal ||
                      Nominations[i].Player.GetTeamNum() == Nominations[i].TeamIndex))
                 {
-                    Nominators[Nominators.Length] = Nominations[i].Player;
+                    PlayerNominators[PlayerNominators.Length] = Nominations[i].Player;
+                    ++i;
                 }
                 else
                 {
                     Nominations.Remove(i, 1);
                 }
+
+                continue;
             }
+
+            ++i;
         }
 
         // Start the vote!
-        if (Nominators.Length >= NominationThresholdCount)
+        if (PlayerNominators.Length >= NominationThresholdCount)
         {
-            StartVote(VoteClass, TeamIndex, Nominators);
+            StartVote(VoteClass, TeamIndex, PlayerNominators);
             ClearNominations(VoteClass, TeamIndex);
         }
     }

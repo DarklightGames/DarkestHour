@@ -2921,6 +2921,11 @@ state ResetGameCountdown
                 Spawn(class'DHClientResetGame');
             }
 
+            if (GRI != none)
+            {
+                GRI.RoundWinnerTeamIndex = GRI.default.RoundWinnerTeamIndex;
+            }
+
             Level.Game.BroadcastLocalized(none, class'ROResetGameMsg', 11);
             ResetScores();
             OpenPlayerMenus();
@@ -3211,11 +3216,6 @@ exec function SetServerViewDistance(int NewDistance)
     {
         Z.SetNewTargetFogDistance(NewDistance);
     }
-}
-
-exec function SetAllChat(bool bOn)
-{
-    GRI.bAllChatEnabled = bOn;
 }
 
 exec function SetAllChatThreshold(int NewThreshold)
@@ -5421,7 +5421,7 @@ defaultproperties
     Begin Object Class=UVersion Name=VersionObject
         Major=9
         Minor=1
-        Patch=7
+        Patch=10
         Prerelease=""
     End Object
     Version=VersionObject
@@ -5436,7 +5436,7 @@ defaultproperties
 
     bUseIdleKickingThreshold=true
     EnableIdleKickingThreshold=50
-    DisableAllChatThreshold=50
+    DisableAllChatThreshold=32
     bAllowAllChat=true
     bIsAttritionEnabled=true
     bIsDangerZoneEnabled=true

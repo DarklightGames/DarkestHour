@@ -619,7 +619,7 @@ simulated function HandleRecoil()
         NewRecoilRotation.Yaw = RandRange(MaxHorizontalRecoilAngle * 0.75, MaxHorizontalRecoilAngle);
 
         // Randomize the horizontal recoil (so it goes left or right)
-        if( Rand(2) == 1)
+        if (Rand(2) == 1)
         {
             NewRecoilRotation.Yaw *= -1;
         }

@@ -186,18 +186,19 @@ replication
         ServerSquadVolunteerToAssist,
         ServerPunishLastFFKiller, ServerRequestArtillery, ServerCancelArtillery, /*ServerVote,*/
         ServerDoLog, ServerLeaveBody, ServerPossessBody, ServerDebugObstacles, ServerLockWeapons, // these ones in debug mode only
-        ServerTeamSurrender;
+        ServerTeamSurrenderRequest;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
         ClientProne, ClientToggleDuck, ClientLockWeapons,
         ClientAddHudDeathMessage, ClientFadeFromBlack, ClientProposeMenu,
         ClientConsoleCommand, ClientCopyToClipboard, ClientSaveROIDHash,
-        ClientSquadInvite, ClientSquadSignal, ClientSquadLeaderVolunteerPrompt, ClientTeamSurrenderPrompt,
+        ClientSquadInvite, ClientSquadSignal, ClientSquadLeaderVolunteerPrompt,
         ClientTeamKillPrompt, ClientOpenLogFile, ClientLogToFile, ClientCloseLogFile,
         ClientSquadAssistantVolunteerPrompt,
-        ClientReceieveSquadMergeRequest, ClientSendSquadMergeRequestResult,
-        ClientTeamSurrenderResponse;
+        ClientReceiveSquadMergeRequest, ClientSendSquadMergeRequestResult,
+        ClientTeamSurrenderResponse,
+        ClientReceiveVotePrompt;
 
     unreliable if (Role < ROLE_Authority)
         VehicleVoiceMessage;
@@ -6353,22 +6354,10 @@ function ReceiveScoreEvent(DHScoreEvent ScoreEvent)
     }
 }
 
-simulated function ClientTeamSurrenderPrompt()
-{
-    Player.InteractionMaster.AddInteraction("DH_Engine.DHTeamSurrenderInteraction", Player);
-}
-
 simulated function ClientTeamSurrenderResponse(int Result)
 {
     local UT2K4GUIController GC;
     local GUIPage Page;
-
-    bSurrendered = Result < 0;
-
-    if (bSurrendered)
-    {
-        return;
-    }
 
     // Find the currently open ROGUIRoleSelection menu and notify it
     GC = UT2K4GUIController(Player.GUIController);
@@ -6386,7 +6375,7 @@ simulated function ClientTeamSurrenderResponse(int Result)
     }
 }
 
-function ServerTeamSurrender()
+function ServerTeamSurrenderRequest(optional bool bAskForConfirmation)
 {
     local DarkestHourGame G;
 
@@ -6397,9 +6386,21 @@ function ServerTeamSurrender()
         return;
     }
 
+    // Keep fighting
     if (bSurrendered)
     {
         G.VoteManager.RemoveNomination(self, class'DHVoteInfo_TeamSurrender');
+        return;
+    }
+
+    // Surrender
+    if (bAskForConfirmation)
+    {
+        if (class'DHVoteInfo_TeamSurrender'.static.CanNominate(self, G))
+        {
+            // Send the confirmation prompt
+            ClientTeamSurrenderResponse(-1);
+        }
     }
     else
     {
@@ -6425,7 +6426,7 @@ function ServerSendVote(int VoteId, int OptionIndex)
     }
 }
 
-simulated function ClientRecieveVotePrompt(class<DHVoteInfo> VoteInfoClass, int VoteId, optional string OptionalString)
+simulated function ClientReceiveVotePrompt(class<DHVoteInfo> VoteInfoClass, int VoteId, optional string OptionalString)
 {
     // TODO: display the interaction prompt!
     // TODO: how are we showing other interactions?
@@ -6536,7 +6537,7 @@ function ServerDenySquadMergeRequest(int SquadMergeRequestID)
     }
 }
 
-function ClientReceieveSquadMergeRequest(int SquadMergeRequestID, string SenderPlayerName, string SenderSquadName)
+function ClientReceiveSquadMergeRequest(int SquadMergeRequestID, string SenderPlayerName, string SenderSquadName)
 {
     if (bIgnoreSquadMergeRequestPrompts)
     {

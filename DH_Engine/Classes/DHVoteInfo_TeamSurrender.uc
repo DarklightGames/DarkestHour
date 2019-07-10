@@ -21,7 +21,7 @@ function array<PlayerController> GetEligibleVoters()
 
         if (PC != none && PC.GetTeamNum() == TeamIndex)
         {
-            EligibleVoters[Voters.Length] = PC;
+            EligibleVoters[EligibleVoters.Length] = PC;
         }
     }
 
@@ -102,7 +102,7 @@ static function OnNominated(PlayerController Player)
 
     if (PC != none)
     {
-        PC.ClientTeamSurrenderResponse(-1);
+        PC.bSurrendered = true;
     }
 }
 
