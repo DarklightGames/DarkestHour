@@ -27,9 +27,13 @@ function PostBeginPlay()
     PlaneStartLocation.Z = class'DHUnits'.static.MetersToUnreal(PlaneInitialHeight);    // TODO: magic number
     PlaneStartLocation += Location;
 
+
     Airplane = Spawn(AirplaneClass, self);
 
     Airplane.SetLocation(PlaneStartLocation);
+    Airplane.CruisingHeight = PlaneStartLocation.Z;
+
+    Log(PlaneStartLocation.Z);
 
     if (Airplane == none)
     {

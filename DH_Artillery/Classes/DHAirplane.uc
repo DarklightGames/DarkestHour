@@ -60,10 +60,10 @@ var float               DivingAcceleration;
 
 var float               ClimbingSpeed;      // Desired speed to use when climbing.
 
-
+var float               CruisingHeight;     // This is the hight of the plane when flying normally. The hight it starts attack runs from and returns to.
 
 // The current MoveState. What this variable is set to determines the movement pattern the plane preforms.
-var DHMoveState MoveState;
+var DHMoveState         MoveState;
 
 // Represents an Attack Target that needs to be approached and attacked.
 struct Target
@@ -74,14 +74,16 @@ struct Target
     // TODO: var AttackType // Type of attack run to be carried out on this target, after it has been approached.
 };
 
-var bool bIsPullingUp;
+var bool            bIsPullingUp;
+var bool            bIsLevelingOut;
 
-var Target  CurrentTarget; // Current target.
+var Target          CurrentTarget; // Current target.
 
 simulated function PostBeginPlay()
 {
     //800
     CurrentSpeed = StandardSpeed;
+    //CruisingHeight = Location.Z;
 }
 
 // Tick needed to make AI decisions on server.
@@ -106,7 +108,7 @@ function PickTarget()
 {
     CurrentTarget.Position = vect(21543, -39272, -1040);
     CurrentTarget.Radius = 10000;
-    CurrentTarget.MinimumHeight = 1000;
+    CurrentTarget.MinimumHeight = 1200;
 }
 
 // Initial State. The plane enters into the combat area.
@@ -119,8 +121,8 @@ auto state Entrance
 
     function BeginState()
     {
-        BeginStraight(vect(1,2,0), StandardSpeed, StraightAcceleration);
-        SetTimer(10, false);
+        BeginStraight(vect(1,-2,0), StandardSpeed, StraightAcceleration);
+        SetTimer(4, false);
     }
 }
 
@@ -136,7 +138,7 @@ state Searching
     function BeginState()
     {
         BeginStraight(Normal(velocity), StandardSpeed, StraightAcceleration);
-        SetTimer(1, false);
+        SetTimer(2, false);
     }
 }
 
@@ -160,7 +162,28 @@ state Approaching
 
     function BeginState()
     {
-        BeginTurnTowardsPosition(CurrentTarget.Position, MinTurnRadius, true);
+        local rotator HeadingRotator;
+        local vector TargetInPlaneSpace;
+        local bool bIsTurningRight;
+
+        // Decide to turn left or right towards target.
+        HeadingRotator = OrthoRotation(Velocity, Velocity Cross vect(0, 0, 1), vect(0, 0, 1));
+        HeadingRotator.Roll = 0;
+
+        TargetInPlaneSpace = (CurrentTarget.Position - Location) << HeadingRotator;
+
+        // If the planeSpace target location has a positive Y value, turn right.
+        if (TargetInPlaneSpace.Y >= 0)
+        {
+            bIsTurningRight = true;
+        }
+        // Otherwise, if the target location in planespace is negative, turn left.
+        else
+        {
+            bIsTurningRight = false;
+        }
+
+        BeginTurnTowardsPosition(CurrentTarget.Position, MinTurnRadius, bIsTurningRight);
     }
 }
 
@@ -170,12 +193,22 @@ state Attacking
     function TickAI(float DeltaTime)
     {
         local vector PullUpTarget;
+
         // Check if we have dipped below the min hight above target
-        if(!bIsPullingUp && Location.Z < (CurrentTarget.Position.Z + CurrentTarget.MinimumHeight)) {
-            Log("Dipped Below Min Hight");
-            BeginDiveClimbToAngle(Pi/4, 2500, true);
+        if (!bIsPullingUp && Location.Z < (CurrentTarget.Position.Z + CurrentTarget.MinimumHeight))
+        {
+            Log("Begin Pullup");
+            BeginDiveClimbToAngle(Pi/4, 2500);
             bIsPullingUp = true;
         }
+        // Check if we need to level out and stop pulling up
+        else if (bIsPullingUp && !bIsLevelingOut && Location.Z >= CruisingHeight)
+        {
+            Log("Begin Levelout, "$CruisingHeight);
+            BeginDiveClimbToAngle(0, 2500);
+            bIsLevelingOut = true;
+        }
+
     }
 
     function Timer()
@@ -185,13 +218,23 @@ state Attacking
 
     function OnMoveEnd()
     {
-
-        BeginStraight(Velocity, DivingSpeed, DivingAcceleration);
+        // Moving Straight after angling down to target.
+        if (!bIsPullingUp && !bIsLevelingOut)
+            BeginStraight(Velocity, DivingSpeed, DivingAcceleration);
+        // Moving Straight after pulling up.
+        else if (bIsPullingUp && !bIsLevelingOut)
+            BeginStraight(Velocity, ClimbingSpeed, DivingAcceleration);
+        // Finished Leveling out, end attack run and start searching again.
+        else if (bIsLevelingOut) {
+            BeginStraight(Velocity, StandardSpeed, StraightAcceleration);
+            GotoState('Searching');
+        }
     }
 
     function BeginState()
     {
         bIsPullingUp = false;
+        bIsLevelingOut = false;
         BeginDiveClimbTowardsPosition(CurrentTarget.Position, 5000, false);
     }
 }
@@ -269,7 +312,7 @@ function BeginDiveClimbTowardsPosition(vector TurnPositionGoal, float TurnRadius
 }
 
 // Save as turnTowardsPosition, but with diving and climbing.
-function BeginDiveClimbToAngle(float TurnAngleGoal, float TurnRadius, bool bIsClimbing)
+function BeginDiveClimbToAngle(float TurnAngleGoal, float TurnRadius)
 {
     local DHDiveClimbToAngle DiveClimbState;
     local vector VelocityPre;
@@ -277,9 +320,11 @@ function BeginDiveClimbToAngle(float TurnAngleGoal, float TurnRadius, bool bIsCl
     DiveClimbState = new class'DHDiveClimbToAngle';
     DiveClimbState.Airplane = self;
     DiveClimbState.TurnRadius = TurnRadius;
-    DiveClimbState.bIsClimbing = bIsClimbing;
     DiveClimbState.DesiredAngleWorld = TurnAngleGoal;
-    DiveClimbState.TurnSpeed = CurrentSpeed;
+
+    DiveClimbState.DesiredSpeedClimb = ClimbingSpeed;
+    DiveClimbState.DesiredSpeedDive = DivingSpeed;
+    DiveClimbState.Acceleration = DivingAcceleration;
 
     MoveState = DiveClimbState;
 
@@ -343,5 +388,7 @@ defaultproperties
     TurnSpeed = 1000
     TurnAcceleration = 150
 
-    CurrentSpeed = 0;
+    CurrentSpeed = 0
+
+    CruisingHeight = 100
 }

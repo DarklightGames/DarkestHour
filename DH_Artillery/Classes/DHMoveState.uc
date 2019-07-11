@@ -42,8 +42,6 @@ function UpdateSpeed(float DeltaTime)
         if (Abs(Airplane.CurrentSpeed - DesiredSpeed) <= DeltaTime * Acceleration)
         {
             Airplane.CurrentSpeed = DesiredSpeed;
-            //Airplane.Velocity = Normal(Airplane.Velocity) * DesiredSpeed;
-            //Airplane.Acceleration = vect(0,0,0);
         }
         else
         {

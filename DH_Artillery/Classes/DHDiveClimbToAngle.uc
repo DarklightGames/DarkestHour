@@ -10,12 +10,8 @@
 //------------------------------------------------------------------------------
 class DHDiveClimbToAngle extends DHDiveClimbTowardsPosition;
 
-var float TurnRadius;       // Radius of circular turn.
-var float TurnSpeed;        // Desired Speed of turn.
-var bool bIsClimbing;   // Is this a right turn?
 var float DesiredAngleWorld; // Goal angle to turn to, in plane space. SET THIS.
 var float TurnAmount; // Amount of angle we want to turn. Do not set this.
-var bool bIsInitialized; // Has this movestate been initialized yet?
 
 function Tick(float DeltaTime)
 {

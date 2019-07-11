@@ -21,8 +21,6 @@ function Tick(float DeltaTime)
     local float TimeToBankBack;
     local float BankBackAngle;
 
-
-
     // Find the Turn End Point. This also sets the TangentAngle, so that we can detect the turn end.
     if (!bIsInitialized)
     {
