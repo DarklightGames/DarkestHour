@@ -29,7 +29,7 @@
 // itself. Create a new child of DHMoveState if you want a new movement pattern.
 //
 // Essentially you control the movement of the plane by setting MoveState.
-// Function exist to set MoveState, such as BeginTurnTowardsPosition() and
+// Functions exist to set MoveState, such as BeginTurnTowardsPosition() and
 // BeginStraight().
 
 class DHAirplane extends Actor
@@ -74,16 +74,18 @@ struct Target
     // TODO: var AttackType // Type of attack run to be carried out on this target, after it has been approached.
 };
 
+var Target          CurrentTarget; // Current target.
+
 var bool            bIsPullingUp;
 var bool            bIsLevelingOut;
+var bool            bIsTurningTowardsTarget;
 
-var Target          CurrentTarget; // Current target.
+// Debug---
+//var int pick;
 
 simulated function PostBeginPlay()
 {
-    //800
     CurrentSpeed = StandardSpeed;
-    //CruisingHeight = Location.Z;
 }
 
 // Tick needed to make AI decisions on server.
@@ -91,6 +93,7 @@ simulated function Tick(float DeltaTime)
 {
     TickAI(DeltaTime);
     MovementUpdate(DeltaTime);
+
 }
 
 // Tick function for the individual states.
@@ -106,7 +109,17 @@ function OnMoveEnd() {}
 // CurrentTarget should be set here.
 function PickTarget()
 {
-    CurrentTarget.Position = vect(21543, -39272, -1040);
+    local int pick;
+    pick = Rand(100);
+    if (pick % 3 == 0)
+        CurrentTarget.Position = vect(21543, -39272, -1040);
+    else if (pick % 3 == 1)
+        CurrentTarget.Position = vect(-14667, -21146, -1040);
+    else if (pick % 3 == 2)
+        CurrentTarget.Position = vect(-2596, -27184, -1040);
+
+    pick++;
+
     CurrentTarget.Radius = 10000;
     CurrentTarget.MinimumHeight = 1200;
 }
@@ -137,6 +150,7 @@ state Searching
 
     function BeginState()
     {
+        Log("Searching");
         BeginStraight(Normal(velocity), StandardSpeed, StraightAcceleration);
         SetTimer(2, false);
     }
@@ -148,7 +162,11 @@ state Approaching
 {
     function OnTargetReached()
     {
-        GotoState('Attacking');
+        if(bIsTurningTowardsTarget)
+        {
+            Log("Attack bank: "$BankAngle);
+            GotoState('Attacking');
+        }
     }
 
     function OnMoveEnd()
@@ -157,10 +175,6 @@ state Approaching
     }
 
     function TickAI(float DeltaTime)
-    {
-    }
-
-    function BeginState()
     {
         local rotator HeadingRotator;
         local vector TargetInPlaneSpace;
@@ -183,7 +197,17 @@ state Approaching
             bIsTurningRight = false;
         }
 
-        BeginTurnTowardsPosition(CurrentTarget.Position, MinTurnRadius, bIsTurningRight);
+
+        if (!bIsTurningTowardsTarget && VSize(CurrentTarget.Position - Location) >= (CurrentTarget.Radius + MinTurnRadius))
+        {
+            bIsTurningTowardsTarget = true;
+            BeginTurnTowardsPosition(CurrentTarget.Position, MinTurnRadius, bIsTurningRight);
+        }
+    }
+
+    function BeginState()
+    {
+        bIsTurningTowardsTarget = false;
     }
 }
 
@@ -208,12 +232,6 @@ state Attacking
             BeginDiveClimbToAngle(0, 2500);
             bIsLevelingOut = true;
         }
-
-    }
-
-    function Timer()
-    {
-        GotoState('Searching');
     }
 
     function OnMoveEnd()
@@ -377,16 +395,16 @@ defaultproperties
     BankAngle = 0
     MinTurnRadius = 4000
 
-    StandardSpeed = 1400
+    StandardSpeed = 2000
     StraightAcceleration = 150
 
-    DivingSpeed = 3000
+    DivingSpeed = 3200
     DivingAcceleration = 200
 
     ClimbingSpeed = 800
 
-    TurnSpeed = 1000
-    TurnAcceleration = 150
+    TurnSpeed = 1200
+    TurnAcceleration = 220
 
     CurrentSpeed = 0
 

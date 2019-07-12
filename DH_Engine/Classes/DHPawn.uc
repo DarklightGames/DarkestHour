@@ -6632,6 +6632,7 @@ exec function GimmeSupplies()
 exec function DebugSpawnPlane()
 {
     local class<Actor> ActorClass;
+    local Actor Airplane;
     ActorClass = class<Actor>(DynamicLoadObject("DH_Artillery.DHArtillery_BF109_Airstrike", class'class'));
     Spawn(ActorClass);
 }
