@@ -188,15 +188,29 @@ static function bool CanNominate(PlayerController Player, DarkestHourGame Game)
 function SendMetricsEvent(string VoteType, int Result)
 {
     local DarkestHourGame G;
+    local DHGameReplicationInfo GRI;
     local array<string> VoterIDs;
     local array<string> NominatorIDs;
-    local JSONArray Votes;
-    local int i, j;
+    local JSONArray Votes, TeamStats;
+    local JSONObject RoundState;
+    local int i, j, TeamSizes[2], ObjectiveCount[2];
+    local byte ObjTeamIndex;
 
     G = DarkestHourGame(Level.Game);
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-    if (G == none || StartedAt == none || EndedAt == none)
+    if (G == none || GRI == none || StartedAt == none || EndedAt == none)
     {
+        return;
+    }
+
+    GRI.GetTeamSizes(TeamSizes);
+
+    if (arraycount(TeamSizes) > arraycount(GRI.SpawnsRemaining) ||
+        arraycount(TeamSizes) > arraycount(GRI.TeamMunitionPercentages) ||
+        arraycount(TeamSizes) > arraycount(ObjectiveCount))
+    {
+        Warn("Trying to access an invalid array index");
         return;
     }
 
@@ -229,6 +243,41 @@ function SendMetricsEvent(string VoteType, int Result)
         }
     }
 
+    // Get the amount of objectives each team controls
+    for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
+    {
+        if (GRI.DHObjectives[i] == none)
+        {
+            continue;
+        }
+
+        ObjTeamIndex = GRI.DHObjectives[i].GetTeamIndex();
+
+        if (TeamIndex < arraycount(ObjectiveCount))
+        {
+            ++ObjectiveCount[ObjTeamIndex];
+        }
+    }
+
+    // Get the current round situation
+    // TODO: Make this a generic object that can be attached to other events.
+    TeamStats = class'JSONArray'.static.Create();
+
+    for (i = 0; i < arraycount(TeamSizes); ++i)
+    {
+        TeamStats.Add((new class'JSONObject')
+                  .PutInteger("team_index", i)
+                  .PutInteger("size", TeamSizes[i])
+                  .PutInteger("reinforcements", GRI.SpawnsRemaining[i])
+                  .PutFloat("munitions", GRI.TeamMunitionPercentages[i])
+                  .PutInteger("objectives_owned", ObjectiveCount[i]));
+    }
+
+    RoundState = (new class'JSONObject')
+                     .PutInteger("round_time", GRI.ElapsedTime)
+                     .Put("teams", TeamStats);
+
+    // Send away
     G.Metrics.AddEvent("vote", (new class'JSONObject')
                                    .PutString("vote_type", VoteType)
                                    .PutString("started_at", StartedAt.IsoFormat())
@@ -236,7 +285,8 @@ function SendMetricsEvent(string VoteType, int Result)
                                    .PutInteger("team_index", TeamIndex)
                                    .PutInteger("result_id", Result)
                                    .Put("votes", Votes)
-                                   .Put("nominator_ids", class'JSONArray'.static.FromStrings(NominatorIDs)));
+                                   .Put("nominator_ids", class'JSONArray'.static.FromStrings(NominatorIDs))
+                                   .Put("round_state", RoundState));
 }
 
 function int GetVotesThresholdCount(DarkestHourGame Game)
