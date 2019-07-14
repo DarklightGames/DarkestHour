@@ -5,8 +5,6 @@
 
 class DH_M45QuadmountGun extends DHATGun;
 
-#exec OBJ LOAD FILE=..\Animations\DH_M45_anm.ukx
-
 defaultproperties
 {
     VehicleNameString="M45 Quadmount"
