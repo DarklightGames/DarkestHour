@@ -6793,6 +6793,86 @@ function SendVoiceMessage(PlayerReplicationInfo Sender,
     }
 }
 
+// REMOVE: HEAPS / CLUSTERING DEBUG STUFF
+
+function float GetItemPriority(Object O)
+{
+    if (O != none)
+    {
+        // Whatever
+        return 1.0;
+    }
+}
+
+exec function TestClusters()
+{
+    local class<Actor> ActorClass;
+    local float RadiusInMeters;
+    local UClusters Targets;
+    local UClusters.DataPoint P;
+    local Actor OtherActor, A;
+
+    Log("================");
+
+    ActorClass = class'DHPawn';
+    RadiusInMeters = 1000;
+
+    Targets = new class'UClusters';
+    Targets.GetItemPriority = GetItemPriority;
+
+    // Collect the potential targets
+    foreach Pawn.RadiusActors(ActorClass, OtherActor, class'DHUnits'.static.MetersToUnreal(RadiusInMeters))
+    {
+        P.Item = OtherActor;
+        P.Location = OtherActor.Location;
+
+        Targets.Data[Targets.Data.Length] = P;
+    }
+
+    // Process the data
+    Targets.DBSCAN(class'DHUnits'.static.MetersToUnreal(20), 1);
+
+    Targets.DebugLog();
+
+    // Do the magic
+    A = Actor(Targets.FindHighestPriorityItem());
+
+    if (A != none)
+    {
+        Log("PRIORITY TARGET:" @ A.Class @ A.Location);
+    }
+    else
+    {
+        Warn("Fatal error");
+    }
+
+    Log("================");
+}
+
+exec function TestHeap()
+{
+    local class<Actor> ActorClass;
+    local float RadiusInMeters;
+    local Actor OtherActor;
+    local UHeap Heap;
+
+    Log("================");
+
+    ActorClass = class'DHPawn';
+    RadiusInMeters = 1000;
+
+    Heap = new class'UHeap';
+
+    foreach Pawn.RadiusActors(ActorClass, OtherActor, class'DHUnits'.static.MetersToUnreal(RadiusInMeters))
+    {
+        Heap.Insert(OtherActor, VSize(Pawn.Location - OtherActor.Location));
+    }
+
+    Heap.DebugSortedLog();
+
+    Log("================");
+}
+
 defaultproperties
 {
     CorpseStayTime=15
