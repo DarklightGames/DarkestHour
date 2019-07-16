@@ -6404,7 +6404,7 @@ function ServerTeamSurrenderRequest(optional bool bAskForConfirmation)
     }
     else
     {
-        G.VoteManager.NominateVote(self, class'DHVoteInfo_TeamSurrender');
+        G.VoteManager.AddNomination(self, class'DHVoteInfo_TeamSurrender');
     }
 }
 

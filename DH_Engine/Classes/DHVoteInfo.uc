@@ -12,35 +12,31 @@ struct Option
     var array<PlayerController> Voters;
 };
 
-var int                             VoteId;
+var int                        VoteId;
+var int                        TeamIndex;
+var int                        VoterCount;
+var array<Option>              Options;
+var array<PlayerController>    Voters;
+var array<PlayerController>    Nominators;
+var DateTime                   StartedAt;
+var DateTime                   EndedAt;
 
-var class<DHPromptInteraction>      VoteInteractionClass;
+var class<DHPromptInteraction> VoteInteractionClass;
+var localized string           QuestionText;
 
-var localized string                QuestionText;
-var float                           DurationSeconds;
+// Rules
+var bool  bIsGlobalVote;               // Do both teams participate?
+var int   CooldownSeconds;             // The time between the votes
+var float DurationSeconds;             // How until the vote closes
+var float VotesThresholdPercent;       // votes needed to pass
+var float NominationsThresholdPercent; // Nominations needed to start the vote
 
-var array<Option>                   Options;
-var array<PlayerController>         Voters;
-var array<PlayerController>         Nominators;
-var int                             VoterCount;
-
-var int                             CooldownSeconds;
-var int                             TeamIndex;
-var int                             TeamSizeMin;
-var int                             NominationCountThreshold;
-var int                             NominatorsDefaultOption;
-
-var bool                            bNominatorsVoteAutomatically;
-var bool                            bIsGlobal; // ignore voter's team index
-
-var DateTime                        StartedAt;
-var DateTime                        EndedAt;
-
-var float                           VotePassedThresholdPercent;
-var float                           NominationThresholdPercent;
+// Should nominators receive the prompt or vote automatically?
+var bool  bNominatorsVoteAutomatically;
+var int   NominatorsDefaultOption;
 
 // Gets the list of eligible voters.
-function array<PlayerController>    GetEligibleVoters();
+function array<PlayerController> GetEligibleVoters();
 
 function string GetQuestionText()
 {
@@ -192,15 +188,29 @@ static function bool CanNominate(PlayerController Player, DarkestHourGame Game)
 function SendMetricsEvent(string VoteType, int Result)
 {
     local DarkestHourGame G;
+    local DHGameReplicationInfo GRI;
     local array<string> VoterIDs;
     local array<string> NominatorIDs;
-    local JSONArray Votes;
-    local int i, j;
+    local JSONArray Votes, TeamStats;
+    local JSONObject RoundState;
+    local int i, j, TeamSizes[2], ObjectiveCount[2];
+    local byte ObjTeamIndex;
 
     G = DarkestHourGame(Level.Game);
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-    if (G == none || StartedAt == none || EndedAt == none)
+    if (G == none || GRI == none || StartedAt == none || EndedAt == none)
     {
+        return;
+    }
+
+    GRI.GetTeamSizes(TeamSizes);
+
+    if (arraycount(TeamSizes) > arraycount(GRI.SpawnsRemaining) ||
+        arraycount(TeamSizes) > arraycount(GRI.TeamMunitionPercentages) ||
+        arraycount(TeamSizes) > arraycount(ObjectiveCount))
+    {
+        Warn("Trying to access an invalid array index");
         return;
     }
 
@@ -233,6 +243,41 @@ function SendMetricsEvent(string VoteType, int Result)
         }
     }
 
+    // Get the amount of objectives each team controls
+    for (i = 0; i < arraycount(GRI.DHObjectives); ++i)
+    {
+        if (GRI.DHObjectives[i] == none)
+        {
+            continue;
+        }
+
+        ObjTeamIndex = GRI.DHObjectives[i].GetTeamIndex();
+
+        if (TeamIndex < arraycount(ObjectiveCount))
+        {
+            ++ObjectiveCount[ObjTeamIndex];
+        }
+    }
+
+    // Get the current round situation
+    // TODO: Make this a generic object that can be attached to other events.
+    TeamStats = class'JSONArray'.static.Create();
+
+    for (i = 0; i < arraycount(TeamSizes); ++i)
+    {
+        TeamStats.Add((new class'JSONObject')
+                  .PutInteger("team_index", i)
+                  .PutInteger("size", TeamSizes[i])
+                  .PutInteger("reinforcements", GRI.SpawnsRemaining[i])
+                  .PutFloat("munitions", GRI.TeamMunitionPercentages[i])
+                  .PutInteger("objectives_owned", ObjectiveCount[i]));
+    }
+
+    RoundState = (new class'JSONObject')
+                     .PutInteger("round_time", GRI.ElapsedTime)
+                     .Put("teams", TeamStats);
+
+    // Send away
     G.Metrics.AddEvent("vote", (new class'JSONObject')
                                    .PutString("vote_type", VoteType)
                                    .PutString("started_at", StartedAt.IsoFormat())
@@ -240,13 +285,61 @@ function SendMetricsEvent(string VoteType, int Result)
                                    .PutInteger("team_index", TeamIndex)
                                    .PutInteger("result_id", Result)
                                    .Put("votes", Votes)
-                                   .Put("nominator_ids", class'JSONArray'.static.FromStrings(NominatorIDs)));
+                                   .Put("nominator_ids", class'JSONArray'.static.FromStrings(NominatorIDs))
+                                   .Put("round_state", RoundState));
+}
+
+function int GetVotesThresholdCount(DarkestHourGame Game)
+{
+    if (Game == none)
+    {
+        return -1;
+    }
+
+    if (StartedAt != none)
+    {
+        return Ceil(VoterCount * GetVotesThresholdPercent());
+    }
+    else
+    {
+        Warn("Vote hasn't started yet; voter count is invalid.");
+        return -1;
+    }
+}
+
+static function int GetNominationsThresholdCount(DarkestHourGame Game, byte TeamIndex)
+{
+    local int TeamSizes[2];
+
+    if (Game == none)
+    {
+        return -1;
+    }
+
+    if (default.bIsGlobalVote)
+    {
+        return Ceil(GetNominationsThresholdPercent() * Game.GetNumPlayers());
+    }
+
+    if (TeamIndex < arraycount(TeamSizes))
+    {
+        Game.GetTeamSizes(TeamSizes);
+        return Ceil(GetNominationsThresholdPercent() * TeamSizes[TeamIndex]);
+    }
+    else
+    {
+        Warn("Invalid team index.");
+        return -1;
+    }
 }
 
 function OnVoteStarted();
 function OnVoteEnded();
-static function OnNominated(PlayerController Player);
+static function OnNominated(PlayerController Player, LevelInfo Level, optional int NominationsRemaining);
 static function OnNominationRemoved(PlayerController Player);
+static function int GetCooldownSeconds() { return default.CooldownSeconds; }
+static function float GetVotesThresholdPercent() { return default.VotesThresholdPercent; }
+static function float GetNominationsThresholdPercent() { return default.NominationsThresholdPercent; }
 
 defaultproperties
 {
@@ -255,6 +348,8 @@ defaultproperties
     Options(0)=(Text="Yes")
     Options(1)=(Text="No")
 
-    bIsGlobal=true
+    bIsGlobalVote=true
     TeamIndex=-1
+
+    VotesThresholdPercent=0.5
 }
