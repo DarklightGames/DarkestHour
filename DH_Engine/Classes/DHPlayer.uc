@@ -71,6 +71,7 @@ var     float                   FlinchOffsetTime;
 var     float                   FlinchMaxOffset;
 var     float                   FlinchMeterValue;
 var     float                   FlinchMeterIncrement;
+var     float                   FlinchMeterFallOffStrength;
 var     float                   LastFlinchTime;
 
 // Mantling
@@ -680,7 +681,7 @@ function ChangeName(coerce string S)
 
 simulated function float GetFlinchMeterFalloff(float TimeSeconds)
 {
-    return (TimeSeconds ** 2.0) * 0.05;
+    return (TimeSeconds ** 2.0) * FlinchMeterFallOffStrength;
 }
 
 // Give the player a quick flinch and blur effect
@@ -6817,6 +6818,7 @@ defaultproperties
 
     // Flinch meter
     FlinchMeterIncrement=0.08
+    FlinchMeterFallOffStrength=0.04
 
     // Flinch from bullet snaps when deployed
     FlinchRotMag=(X=100.0,Y=0.0,Z=100.0)
