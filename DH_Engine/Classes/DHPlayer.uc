@@ -69,6 +69,7 @@ var     vector                  FlinchOffsetMag;
 var     vector                  FlinchOffsetRate;
 var     float                   FlinchOffsetTime;
 var     float                   FlinchMaxOffset;
+var     float                   FlinchMeterSwayMultiplier;
 var     float                   FlinchMeterValue;
 var     float                   FlinchMeterIncrement;
 var     float                   FlinchMeterFallOffStrength;
@@ -2764,8 +2765,8 @@ simulated function SwayHandler(float DeltaTime)
 
     if (FlinchFactor > 0.0)
     {
-        WeaponSwayYawAcc *= 1.0 + FlinchFactor;
-        WeaponSwayPitchAcc *= 1.0 + FlinchFactor;
+        WeaponSwayYawAcc *= 1.0 + (FlinchFactor * FlinchMeterSwayMultiplier);
+        WeaponSwayPitchAcc *= 1.0 + (FlinchFactor * FlinchMeterSwayMultiplier);
     }
 
     // Add an elastic factor to get sway near the original aim-point, & a damping factor to keep elastic factor from causing wild oscillations
@@ -6817,6 +6818,7 @@ defaultproperties
     FlinchMaxOffset=450.0
 
     // Flinch meter
+    FlinchMeterSwayMultiplier=1.05
     FlinchMeterIncrement=0.08
     FlinchMeterFallOffStrength=0.04
 
