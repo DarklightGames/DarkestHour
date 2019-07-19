@@ -55,6 +55,7 @@ var float               StandardSpeed; // Desired speed for straight movement.
 var float               ApproachingSpeed; // Desired speed for straight movement when approuching a target to attack, This will be the starting speed durring the attack run.
 var float               StraightAcceleration; // Plane acceleration for straight movement;
 
+var float               DiveClimbeRadius;   // Turn radius of the dive and climb.
 var float               DivingSpeed;      // When diving the plane, this is the top speed. Makes the dive attacks look more beliveable.
 var float               DivingAcceleration;
 
@@ -83,6 +84,16 @@ var bool            bIsTurningTowardsTarget;
 // Debug---
 //var int pick;
 
+/*
+var bool DebugPrintOnClient;
+
+replication
+{
+    reliable if (bNetInitial || bNetDirty)
+        DebugPrintOnClient;
+}
+*/
+
 simulated function PostBeginPlay()
 {
     CurrentSpeed = StandardSpeed;
@@ -91,13 +102,26 @@ simulated function PostBeginPlay()
 // Tick needed to make AI decisions on server.
 simulated function Tick(float DeltaTime)
 {
-    TickAI(DeltaTime);
-    MovementUpdate(DeltaTime);
+    if (Role == ROLE_Authority)
+    {
+        TickAI(DeltaTime);
+        MovementUpdate(DeltaTime);
+        //Log(VSize(Velocity));
+        TickAIPostMove(DeltaTime);
+    }
+    else
+    {
+        //Log("NOT OWNED");
+        Log(Velocity);
+    }
 
 }
 
 // Tick function for the individual states.
 function TickAI(float DeltaTime){}
+
+// Tick function for the states after MovementUpdate has completed.
+function TickAIPostMove(float DeltaTime){}
 
 // Event for when the approach to the target has been finished.
 function OnTargetReached() {}
@@ -109,18 +133,30 @@ function OnMoveEnd() {}
 // CurrentTarget should be set here.
 function PickTarget()
 {
+
     local int pick;
     pick = Rand(100);
+    /*
     if (pick % 3 == 0)
+    {
         CurrentTarget.Position = vect(21543, -39272, -1040);
+    }
     else if (pick % 3 == 1)
+    {
         CurrentTarget.Position = vect(-14667, -21146, -1040);
+    }
     else if (pick % 3 == 2)
+    {
         CurrentTarget.Position = vect(-2596, -27184, -1040);
+    }
+    */
 
-    pick++;
 
+
+    //CurrentTarget.Position = Location - vect(0, 3000, 0);
+    CurrentTarget.Position = vect(21543, -39272, -1040);
     CurrentTarget.Radius = 10000;
+    //CurrentTarget.Radius = 10;
     CurrentTarget.MinimumHeight = 1200;
 }
 
@@ -134,7 +170,7 @@ auto state Entrance
 
     function BeginState()
     {
-        BeginStraight(vect(1,-2,0), StandardSpeed, StraightAcceleration);
+        BeginStraight(vect(-1,0,0), StandardSpeed, StraightAcceleration);
         SetTimer(4, false);
     }
 }
@@ -164,7 +200,7 @@ state Approaching
     {
         if(bIsTurningTowardsTarget)
         {
-            Log("Attack bank: "$BankAngle);
+            //Log("Attack bank: "$BankAngle);
             GotoState('Attacking');
         }
     }
@@ -179,6 +215,8 @@ state Approaching
         local rotator HeadingRotator;
         local vector TargetInPlaneSpace;
         local bool bIsTurningRight;
+        local vector TurnCriclePosition;
+        local vector PlaneLocalTurnCriclePosition;
 
         // Decide to turn left or right towards target.
         HeadingRotator = OrthoRotation(Velocity, Velocity Cross vect(0, 0, 1), vect(0, 0, 1));
@@ -197,16 +235,39 @@ state Approaching
             bIsTurningRight = false;
         }
 
+        // Only start turning is the turn circle and the target radius circle do
+        // not overlap. This makes sure the plane will have enough room to finish
+        // it's turn before hitting the target attack start radius.
+        // Check now to see if we can turn immediately, or check after velocity
+        // has been updated to ensure FPS independant logic.
 
-        if (!bIsTurningTowardsTarget && VSize(CurrentTarget.Position - Location) >= (CurrentTarget.Radius + MinTurnRadius))
+        if (bIsTurningRight)
+        {
+            //TurnCriclePosition = MinTurnRadius >> HeadingRotator * (Normal(Velocity) Cross vect(0,0,1)) + Location;
+            //TurnCriclePosition = (MinTurnRadius) >> HeadingRotator + Location;
+            PlaneLocalTurnCriclePosition.Y = MinTurnRadius;
+
+        }
+        else
+        {
+            //TurnCriclePosition = (-1 * MinTurnRadius) >> HeadingRotator + Location;
+            PlaneLocalTurnCriclePosition.Y = -1 * MinTurnRadius;
+        }
+
+        TurnCriclePosition = (PlaneLocalTurnCriclePosition >> HeadingRotator) + Location;
+        TurnCriclePosition.Z = 0;
+
+        if (!bIsTurningTowardsTarget && VSize( V3ToV2(TurnCriclePosition - CurrentTarget.Position) ) > (CurrentTarget.Radius + MinTurnRadius))
         {
             bIsTurningTowardsTarget = true;
             BeginTurnTowardsPosition(CurrentTarget.Position, MinTurnRadius, bIsTurningRight);
         }
     }
 
+
     function BeginState()
     {
+        Log("Approuching");
         bIsTurningTowardsTarget = false;
     }
 }
@@ -217,19 +278,20 @@ state Attacking
     function TickAI(float DeltaTime)
     {
         local vector PullUpTarget;
-
+        //DebugPrintOnClient = false;
         // Check if we have dipped below the min hight above target
         if (!bIsPullingUp && Location.Z < (CurrentTarget.Position.Z + CurrentTarget.MinimumHeight))
         {
             Log("Begin Pullup");
-            BeginDiveClimbToAngle(Pi/4, 2500);
+            BeginDiveClimbToAngle(Pi/4, DiveClimbeRadius);
             bIsPullingUp = true;
+            //DebugPrintOnClient = true;
         }
         // Check if we need to level out and stop pulling up
         else if (bIsPullingUp && !bIsLevelingOut && Location.Z >= CruisingHeight)
         {
             Log("Begin Levelout, "$CruisingHeight);
-            BeginDiveClimbToAngle(0, 2500);
+            BeginDiveClimbToAngle(0, DiveClimbeRadius);
             bIsLevelingOut = true;
         }
     }
@@ -253,6 +315,7 @@ state Attacking
     {
         bIsPullingUp = false;
         bIsLevelingOut = false;
+        Log("Diving");
         BeginDiveClimbTowardsPosition(CurrentTarget.Position, 5000, false);
     }
 }
@@ -270,10 +333,13 @@ simulated function MovementUpdate(float DeltaTime)
 
     MoveState.Tick(DeltaTime);
 
+    Velocity = Normal(Velocity) * CurrentSpeed;
+
     // Make sure plane is always facing the direction it is traveling.
     Heading = OrthoRotation(velocity, velocity Cross vect(0, 0, 1), vect(0, 0, 1));
     Heading.Roll = class'UUnits'.static.RadiansToUnreal(BankAngle);
     SetRotation(Heading);
+    //DesiredRotation = Heading;
 
     // Check if target met. Restrain from continued movement until new waypoint is set.
     if (VSize(V3ToV2(CurrentTarget.Position - Location)) <= CurrentTarget.Radius)
@@ -329,7 +395,7 @@ function BeginDiveClimbTowardsPosition(vector TurnPositionGoal, float TurnRadius
     Velocity = VelocityPre;
 }
 
-// Save as turnTowardsPosition, but with diving and climbing.
+// Diving and climbing to a specific angle.
 function BeginDiveClimbToAngle(float TurnAngleGoal, float TurnRadius)
 {
     local DHDiveClimbToAngle DiveClimbState;
@@ -388,25 +454,36 @@ defaultproperties
     AirplaneName="Airplane"
     DrawType=DT_Mesh
     bAlwaysRelevant=true
-    bReplicateMovement = true
+    bReplicateMovement=true
+    bUpdateSimulatedPosition=true
     bCanBeDamaged=true
+    bRotateToDesired=true
+    RotationRate={Pitch=2000,Yaw=2000,Roll=2000}
     Physics = PHYS_Flying
+    RemoteRole=ROLE_SimulatedProxy
 
     BankAngle = 0
-    MinTurnRadius = 4000
+    MaxBankAngle = 65
+    BankRate = 0.65
 
-    StandardSpeed = 2000
+    MinTurnRadius = 3000
+
+    StandardSpeed = 1000
     StraightAcceleration = 150
 
-    DivingSpeed = 3200
-    DivingAcceleration = 200
+    DivingSpeed = 10200
+    DivingAcceleration = 1000
 
     ClimbingSpeed = 800
 
-    TurnSpeed = 1200
+    TurnSpeed = 700
     TurnAcceleration = 220
 
     CurrentSpeed = 0
 
     CruisingHeight = 100
+
+    DiveClimbeRadius = 3500
+
+    //DebugPrintOnClient=false
 }

@@ -15,6 +15,5 @@ defaultproperties
 {
     //AirplaneName="Messerschmidt Bf 109"
     Mesh=Mesh'DH_Airplanes_anm.bf109g'
-    MaxBankAngle = 65
-    BankRate = 0.65
+
 }

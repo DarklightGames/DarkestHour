@@ -37,7 +37,7 @@ function Tick(float DeltaTime);
 function UpdateSpeed(float DeltaTime)
 {
     // Stright line speed change
-    if (VSize(Airplane.Velocity) < DesiredSpeed)
+    if (Airplane.CurrentSpeed < DesiredSpeed)
     {
         if (Abs(Airplane.CurrentSpeed - DesiredSpeed) <= DeltaTime * Acceleration)
         {
@@ -73,7 +73,7 @@ function bool DiveOrClimbPlane(bool bIsClimbing, float TurnRadius, float Speed, 
 
     if (!bIsTurnInitialized)
     {
-        InitialVelocity = Airplane.Velocity;
+        InitialVelocity = Normal(Airplane.Velocity);
         InitialLocation = Airplane.Location;
         bIsTurnInitialized = true;
     }
@@ -123,7 +123,7 @@ function TurnPlane(bool bIsTurnRight, float TurnRadius, float Speed, float Delta
 
     if (!bIsTurnInitialized)
     {
-        InitialVelocity = Airplane.Velocity;
+        InitialVelocity = Normal(Airplane.Velocity);
         InitialLocation = Airplane.Location;
         bIsTurnInitialized = true;
     }
@@ -198,6 +198,8 @@ function vector CalculateDiveClimbEndPoint(vector WorldGoal, vector CurrentVeloc
     //WorldGoal.Y = 0;
     //CurrentPlanePosition.Y = 0;
 
+    CurrentVelocity = Normal(CurrentVelocity);
+
     // Convert world position goal to airplane velocity space, relative to the turn circle.
     HeadingRotator = OrthoRotation(CurrentVelocity, CurrentVelocity Cross vect(0, 0, 1), vect(0, 0, 1));
     HeadingRotator.Roll = 0;
@@ -239,6 +241,8 @@ function vector CalculateTurnEndPoint(vector WorldGoal, vector CurrentVelocity, 
 
     WorldGoal.Z = 0;
     CurrentPlanePosition.Z = 0;
+
+    CurrentVelocity = Normal(CurrentVelocity);
 
     // Convert world position goal to airplane velocity space, relative to the turn circle.
     HeadingRotator = OrthoRotation(CurrentVelocity, CurrentVelocity Cross vect(0, 0, 1), vect(0, 0, 1));

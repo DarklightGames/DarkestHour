@@ -136,11 +136,12 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerGiveConstructionWeapon;
+        ServerGiveConstructionWeapon, ServerSpawnPlane;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
         ClientPawnWhizzed;
+
 }
 
 // Modified to use DH version of bullet whip attachment, & to remove its SavedAuxCollision (deprecated as now we simply enable/disable collision in ToggleAuxCollision function)
@@ -6629,13 +6630,20 @@ exec function GimmeSupplies()
     }
 }
 
-exec function DebugSpawnPlane()
+function ServerSpawnPlane()
 {
     local class<Actor> ActorClass;
     local Actor Airplane;
     ActorClass = class<Actor>(DynamicLoadObject("DH_Artillery.DHArtillery_BF109_Airstrike", class'class'));
     Spawn(ActorClass);
+    Log("Plane Spawned");
 }
+
+exec function DebugSpawnPlane()
+{
+    ServerSpawnPlane();
+}
+
 
 // New debug exec to spawn any vehicle, in front of you
 exec function DebugSpawnVehicle(string VehicleString, int Distance, optional int Degrees)

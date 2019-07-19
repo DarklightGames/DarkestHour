@@ -42,7 +42,7 @@ function Tick(float DeltaTime)
     // Find the Turn End Point. This also sets the TangentAngle, so that we can detect the turn end.
     if (!bIsInitialized)
     {
-        TurnEndPoint = CalculateDiveClimbEndPoint(PositionGoal, Airplane.Velocity, Airplane.Location, bIsClimbing, TurnRadius);
+        TurnEndPoint = CalculateDiveClimbEndPoint(PositionGoal, Normal(Airplane.Velocity), Airplane.Location, bIsClimbing, TurnRadius);
         bIsInitialized = true;
     }
 
