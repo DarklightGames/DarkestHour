@@ -17,6 +17,7 @@ defaultproperties
     Mesh=Mesh'DH_Airplanes_anm.bf109g'
     AutoCannonProjectileClass=class'DHAirplaneAutoCannonShell'
     AutoCannonRPM = 700
-    AutoCannonSpread = 0.05;
+    AutoCannonSpread = 0.05
+    AutoCannonFireOffset={X=5000,Y=0,Z=-200}
 
 }

@@ -88,6 +88,8 @@ var class<Projectile>   AutoCannonProjectileClass;
 var bool                bIsShootingAutoCannon;
 var float               AutoCannonSpread;
 
+var vector              AutoCannonFireOffset;
+
 // Debug---
 //var int pick;
 
@@ -208,7 +210,7 @@ state Approaching
         if(bIsTurningTowardsTarget)
         {
             //Log("Attack bank: "$BankAngle);
-            GotoState('Attacking');
+            GotoState('DiveAttacking');
         }
     }
 
@@ -280,7 +282,7 @@ state Approaching
 }
 
 // Preform attack Run on the target.
-state Attacking
+state DiveAttacking
 {
     function TickAI(float DeltaTime)
     {
@@ -308,8 +310,8 @@ state Attacking
         if (bIsShootingAutoCannon && AutoCannonTime > ( (1.0f / AutoCannonRPM) * 60) )
         {
             AutoCannonTime = 0;
-            Log("Fire Auto Cannon");
-            Spawn(AutoCannonProjectileClass,self,,Location, GetProjectileFireRotation(AutoCannonSpread));
+            //Log(AutoCannonFireOffset >> Rotation);
+            //Spawn(AutoCannonProjectileClass,self,,Location + (AutoCannonFireOffset >> Rotation), GetProjectileFireRotation(AutoCannonSpread));
         }
     }
 
@@ -479,6 +481,18 @@ static function vector V3ToV2(vector InVector)
     return OutVector;
 }
 
+//event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex);
+function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
+{
+    Log("Hit");
+}
+
+/*
+event Touch( Actor Other )
+{
+    Log("Hit");
+}
+*/
 defaultproperties
 {
     AirplaneName="Airplane"
@@ -486,8 +500,20 @@ defaultproperties
     bAlwaysRelevant=true
     bReplicateMovement=true
     bUpdateSimulatedPosition=true
+
     bCanBeDamaged=true
+
     bRotateToDesired=true
+
+    bCollideActors=true
+    bCollideWorld=true
+    bBlockActors=true
+    bBlockKarma=true
+    bProjTarget=true
+    bBlockNonZeroExtentTraces=True
+    bBlockZeroExtentTraces=True
+    bWorldGeometry=False
+
     RotationRate={Pitch=2000,Yaw=2000,Roll=2000}
     Physics = PHYS_Flying
     RemoteRole=ROLE_SimulatedProxy
@@ -495,6 +521,8 @@ defaultproperties
     BankAngle = 0
     MaxBankAngle = 65
     BankRate = 0.65
+
+    AutoCannonFireOffset={X=5000,Y=0,Z=-200}
 
     MinTurnRadius = 6000
 
@@ -514,6 +542,7 @@ defaultproperties
     CruisingHeight = 100
 
     DiveClimbRadius = 3800
+
 
     //DebugPrintOnClient=false
 }
