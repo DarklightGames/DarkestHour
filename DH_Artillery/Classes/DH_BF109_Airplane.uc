@@ -15,5 +15,8 @@ defaultproperties
 {
     //AirplaneName="Messerschmidt Bf 109"
     Mesh=Mesh'DH_Airplanes_anm.bf109g'
+    AutoCannonProjectileClass=class'DHAirplaneAutoCannonShell'
+    AutoCannonRPM = 700
+    AutoCannonSpread = 0.05;
 
 }

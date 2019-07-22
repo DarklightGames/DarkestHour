@@ -55,7 +55,7 @@ var float               StandardSpeed; // Desired speed for straight movement.
 var float               ApproachingSpeed; // Desired speed for straight movement when approuching a target to attack, This will be the starting speed durring the attack run.
 var float               StraightAcceleration; // Plane acceleration for straight movement;
 
-var float               DiveClimbeRadius;   // Turn radius of the dive and climb.
+var float               DiveClimbRadius;   // Turn radius of the dive and climb.
 var float               DivingSpeed;      // When diving the plane, this is the top speed. Makes the dive attacks look more beliveable.
 var float               DivingAcceleration;
 
@@ -80,6 +80,13 @@ var Target          CurrentTarget; // Current target.
 var bool            bIsPullingUp;
 var bool            bIsLevelingOut;
 var bool            bIsTurningTowardsTarget;
+
+// Guns, Cannons, and bombs
+var float               AutoCannonRPM;    // Rounds per minute for auto cannon.
+var float               AutoCannonTime;   // Time since last shot.
+var class<Projectile>   AutoCannonProjectileClass;
+var bool                bIsShootingAutoCannon;
+var float               AutoCannonSpread;
 
 // Debug---
 //var int pick;
@@ -112,7 +119,7 @@ simulated function Tick(float DeltaTime)
     else
     {
         //Log("NOT OWNED");
-        Log(Velocity);
+        //Log(Physics$"/t"$VSize(Velocity));
     }
 
 }
@@ -155,9 +162,9 @@ function PickTarget()
 
     //CurrentTarget.Position = Location - vect(0, 3000, 0);
     CurrentTarget.Position = vect(21543, -39272, -1040);
-    CurrentTarget.Radius = 10000;
+    CurrentTarget.Radius = 13000;
     //CurrentTarget.Radius = 10;
-    CurrentTarget.MinimumHeight = 1200;
+    CurrentTarget.MinimumHeight = 2200;
 }
 
 // Initial State. The plane enters into the combat area.
@@ -171,7 +178,7 @@ auto state Entrance
     function BeginState()
     {
         BeginStraight(vect(-1,0,0), StandardSpeed, StraightAcceleration);
-        SetTimer(4, false);
+        SetTimer(1, false);
     }
 }
 
@@ -188,7 +195,7 @@ state Searching
     {
         Log("Searching");
         BeginStraight(Normal(velocity), StandardSpeed, StraightAcceleration);
-        SetTimer(2, false);
+        SetTimer(0.1, false);
     }
 }
 
@@ -283,24 +290,36 @@ state Attacking
         if (!bIsPullingUp && Location.Z < (CurrentTarget.Position.Z + CurrentTarget.MinimumHeight))
         {
             Log("Begin Pullup");
-            BeginDiveClimbToAngle(Pi/4, DiveClimbeRadius);
+            BeginDiveClimbToAngle(Pi/5, DiveClimbRadius);
             bIsPullingUp = true;
+            bIsShootingAutoCannon = false;
             //DebugPrintOnClient = true;
         }
         // Check if we need to level out and stop pulling up
         else if (bIsPullingUp && !bIsLevelingOut && Location.Z >= CruisingHeight)
         {
             Log("Begin Levelout, "$CruisingHeight);
-            BeginDiveClimbToAngle(0, DiveClimbeRadius);
+            BeginDiveClimbToAngle(0, DiveClimbRadius);
             bIsLevelingOut = true;
+        }
+
+        AutoCannonTime += DeltaTime;
+        // Auto Cannon Shooting Logic
+        if (bIsShootingAutoCannon && AutoCannonTime > ( (1.0f / AutoCannonRPM) * 60) )
+        {
+            AutoCannonTime = 0;
+            Log("Fire Auto Cannon");
+            Spawn(AutoCannonProjectileClass,self,,Location, GetProjectileFireRotation(AutoCannonSpread));
         }
     }
 
     function OnMoveEnd()
     {
         // Moving Straight after angling down to target.
-        if (!bIsPullingUp && !bIsLevelingOut)
+        if (!bIsPullingUp && !bIsLevelingOut) {
             BeginStraight(Velocity, DivingSpeed, DivingAcceleration);
+            bIsShootingAutoCannon = true;
+        }
         // Moving Straight after pulling up.
         else if (bIsPullingUp && !bIsLevelingOut)
             BeginStraight(Velocity, ClimbingSpeed, DivingAcceleration);
@@ -437,6 +456,17 @@ function BeginStraight(vector Direction, float Speed, float Acceleration)
     Velocity = VelocityPre;
 }
 
+// Attack related functions
+function rotator GetProjectileFireRotation(float Spread)
+{
+    if (Spread > 0.0)
+    {
+        return rotator(vector(Rotation) + (VRand() * FRand() * Spread));
+    }
+
+    return Rotation;
+}
+
 // Converts 3d vector into 2d vector.
 static function vector V3ToV2(vector InVector)
 {
@@ -466,24 +496,24 @@ defaultproperties
     MaxBankAngle = 65
     BankRate = 0.65
 
-    MinTurnRadius = 3000
+    MinTurnRadius = 6000
 
-    StandardSpeed = 1000
+    StandardSpeed = 4000
     StraightAcceleration = 150
 
-    DivingSpeed = 10200
-    DivingAcceleration = 1000
+    DivingSpeed = 5000
+    DivingAcceleration = 300
 
-    ClimbingSpeed = 800
+    ClimbingSpeed = 1000
 
-    TurnSpeed = 700
+    TurnSpeed = 2000
     TurnAcceleration = 220
 
     CurrentSpeed = 0
 
     CruisingHeight = 100
 
-    DiveClimbeRadius = 3500
+    DiveClimbRadius = 3800
 
     //DebugPrintOnClient=false
 }
