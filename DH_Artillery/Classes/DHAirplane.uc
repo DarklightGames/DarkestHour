@@ -508,11 +508,12 @@ defaultproperties
     bCollideActors=true
     bCollideWorld=true
     bBlockActors=true
-    bBlockKarma=true
+    bBlockKarma=false
     bProjTarget=true
     bBlockNonZeroExtentTraces=True
     bBlockZeroExtentTraces=True
     bWorldGeometry=False
+    bUseCylinderCollision=false
 
     RotationRate={Pitch=2000,Yaw=2000,Roll=2000}
     Physics = PHYS_Flying
@@ -527,6 +528,8 @@ defaultproperties
     MinTurnRadius = 6000
 
     StandardSpeed = 4000
+    //StandardSpeed = 2000
+    //StandardSpeed = 0
     StraightAcceleration = 150
 
     DivingSpeed = 5000
