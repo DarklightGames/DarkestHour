@@ -60,6 +60,9 @@ defaultproperties
      InitialSecondaryAmmo=10
      PrimaryProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
      SecondaryProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellHE'
+     MaxPrimaryAmmo=30
+     MaxSecondaryAmmo=15
+     MaxTertiaryAmmo=5
      Mesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_turret'
      Skins(0)=Texture'DH_Hetzer_tex.hetzer_body'
 }
