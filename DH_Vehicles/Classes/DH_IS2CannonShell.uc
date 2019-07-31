@@ -15,17 +15,17 @@ defaultproperties
     StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
     Tag="BR-471" // earlier AP round without ballistic cap
 
-    DHPenetrationTable(0)=16.5  // 100m
-    DHPenetrationTable(1)=16.0  // 250m
-    DHPenetrationTable(2)=15.0  // 500m
-    DHPenetrationTable(3)=14.0
-    DHPenetrationTable(4)=13.0  // 1000m
-    DHPenetrationTable(5)=12.25
-    DHPenetrationTable(6)=11.5  // 1500m
-    DHPenetrationTable(7)=10.75
-    DHPenetrationTable(8)=10.0  // 2000m
-    DHPenetrationTable(9)=8.75
-    DHPenetrationTable(10)=7.5  // 3000m
+    DHPenetrationTable(0)=19.6  // 100m
+    DHPenetrationTable(1)=18.9  // 250m
+    DHPenetrationTable(2)=17.9  // 500m
+    DHPenetrationTable(3)=16.8
+    DHPenetrationTable(4)=15.8  // 1000m
+    DHPenetrationTable(5)=15.0
+    DHPenetrationTable(6)=14.1  // 1500m
+    DHPenetrationTable(7)=13.4
+    DHPenetrationTable(8)=12.5 // 2000m
+    DHPenetrationTable(9)=11.1
+    DHPenetrationTable(10)=9.9  // 3000m
 
     bMechanicalAiming=true
     MechanicalRanges(0)=(Range=0,RangeValue=0.0)

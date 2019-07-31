@@ -42,8 +42,8 @@ defaultproperties
     HUDOverlayFOV=85.0
 
     // Hull armor
-    FrontArmor(0)=(Thickness=9.0,Slope=-30.0,MaxRelativeHeight=-11.0,LocationName="lower") // note: sources agree IS2 (our base hull) had 100mm, but show ISU-152 having 90mm
-    FrontArmor(1)=(Thickness=6.0,Slope=72.0,MaxRelativeHeight=0.1,LocationName="upper")
+    FrontArmor(0)=(Thickness=9.0,Slope=-30.0,MaxRelativeHeight=-15.0,LocationName="lower") // note: sources agree IS2 (our base hull) had 100mm, but show ISU-152 having 90mm
+    FrontArmor(1)=(Thickness=6.0,Slope=78.0,MaxRelativeHeight=1.0,LocationName="upper")
     FrontArmor(2)=(Thickness=9.0,Slope=30.0,LocationName="superstructure")
     RightArmor(0)=(Thickness=9.0,MaxRelativeHeight=0.8,LocationName="lower")
     RightArmor(1)=(Thickness=7.5,Slope=15.0,LocationName="superstructure")

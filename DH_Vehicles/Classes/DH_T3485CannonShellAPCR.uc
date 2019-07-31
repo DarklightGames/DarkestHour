@@ -3,30 +3,30 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_T3485CannonShell extends DHSovietCannonShell;
+class DH_T3485CannonShellAPCR extends DHSovietCannonShell;
 
 defaultproperties
 {
-    RoundType=RT_APBC
+    RoundType=RT_HVAP
     ShellDiameter=8.5
     BallisticCoefficient=2.0
     Speed=47797.0 // 792 m/s
     MaxSpeed=47797.0
-    ImpactDamage=700
-    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
-    Tag="BR-365"
+    ImpactDamage=450
+    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageHVAP'
+    Tag="BR-365P"
 
-    DHPenetrationTable(0)=13.9 // 100m
-    DHPenetrationTable(1)=13.3 // 250m
-    DHPenetrationTable(2)=12.3 // 500m
-    DHPenetrationTable(3)=11.4
-    DHPenetrationTable(4)=10.5  // 1000m
-    DHPenetrationTable(5)=9.8
-    DHPenetrationTable(6)=9.1  // 1500m
-    DHPenetrationTable(7)=8.7
-    DHPenetrationTable(8)=8.1  // 2000m
-    DHPenetrationTable(9)=7.3
-    DHPenetrationTable(10)=6.5 // 3000m
+    DHPenetrationTable(0)=17.5 // 100m
+    DHPenetrationTable(1)=15.9 // 250m
+    DHPenetrationTable(2)=13.6 // 500m
+    DHPenetrationTable(3)=11.7
+    DHPenetrationTable(4)=10.0  // 1000m
+    DHPenetrationTable(5)=8.5
+    DHPenetrationTable(6)=7.3  // 1500m
+    DHPenetrationTable(7)=6.6
+    DHPenetrationTable(8)=5.4  // 2000m
+    DHPenetrationTable(9)=3.9
+    DHPenetrationTable(10)=2.9 // 3000m
 
     bMechanicalAiming=true
     MechanicalRanges(0)=(Range=0,RangeValue=0.0)
