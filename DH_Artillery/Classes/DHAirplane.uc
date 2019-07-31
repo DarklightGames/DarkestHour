@@ -90,38 +90,46 @@ var float               AutoCannonSpread;
 
 var vector              AutoCannonFireOffset;
 
-// Debug---
-//var int pick;
+// Damage and crashing
+var     class<VehicleDamagedEffect> DamageEffectClass;
+var     name DamageEffectBone;
+var     VehicleDamagedEffect DamageEffect;
+var     float CrashAngle;
+var     class<ROVehicleDestroyedEmitter> DestructionEffectClass;
 
-/*
-var bool DebugPrintOnClient;
+// Rotation
+var DHAirplaneRotator AirplaneModel;
 
 replication
 {
-    reliable if (bNetInitial || bNetDirty)
-        DebugPrintOnClient;
-}
-*/
+     unreliable if (Role==ROLE_Authority)
+        AirplaneModel, CurrentTarget;
 
-simulated function PostBeginPlay()
-{
-    CurrentSpeed = StandardSpeed;
 }
 
-// Tick needed to make AI decisions on server.
-simulated function Tick(float DeltaTime)
+
+function PostBeginPlay()
 {
     if (Role == ROLE_Authority)
     {
-        TickAI(DeltaTime);
-        MovementUpdate(DeltaTime);
-        //Log(VSize(Velocity));
-        TickAIPostMove(DeltaTime);
+        AirplaneModel = Spawn(class'DHAirplaneRotator', Self);
+        AirplaneModel.SetPhysics(PHYS_None);
+        AirplaneModel.SetLocation(Location);
+        AirplaneModel.SetPhysics(PHYS_Rotating);
+        AirplaneModel.SetBase(self);
+
+        CurrentSpeed = StandardSpeed;
     }
-    else
+}
+
+// Tick needed to make AI decisions on server.
+function Tick(float DeltaTime)
+{
+    if (Role == ROLE_Authority)
     {
-        //Log("NOT OWNED");
-        //Log(Physics$"/t"$VSize(Velocity));
+    TickAI(DeltaTime);
+    MovementUpdate(DeltaTime);
+    TickAIPostMove(DeltaTime);
     }
 
 }
@@ -172,54 +180,59 @@ function PickTarget()
 // Initial State. The plane enters into the combat area.
 auto state Entrance
 {
-    simulated function Timer()
+     function Timer()
     {
         GotoState('Searching');
     }
 
-    function BeginState()
+     function BeginState()
     {
+
+        Log("Entrance");
         BeginStraight(vect(-1,0,0), StandardSpeed, StraightAcceleration);
-        SetTimer(1, false);
+        SetTimer(3, false);
+
     }
 }
 
 // This step simulates the plane looking for a new target to attack. When the state ends, a target is picked.
-state Searching
+ state Searching
 {
-    simulated function Timer()
+     function Timer()
     {
-        PickTarget();
+        if (Role == ROLE_Authority)
+            PickTarget();
+
         GotoState('Approaching');
     }
 
-    function BeginState()
+     function BeginState()
     {
         Log("Searching");
         BeginStraight(Normal(velocity), StandardSpeed, StraightAcceleration);
-        SetTimer(0.1, false);
+
+        SetTimer(3, false);
     }
 }
 
 // Positions the airplane to be ready to preform the attack run. Typcally ends
 // when plane has reached the proper distance to the target to begin the run.
-state Approaching
+ state Approaching
 {
-    function OnTargetReached()
+     function OnTargetReached()
     {
         if(bIsTurningTowardsTarget)
         {
-            //Log("Attack bank: "$BankAngle);
             GotoState('DiveAttacking');
         }
     }
 
-    function OnMoveEnd()
+     function OnMoveEnd()
     {
         BeginStraight(Velocity, StandardSpeed, StraightAcceleration);
     }
 
-    function TickAI(float DeltaTime)
+     function TickAI(float DeltaTime)
     {
         local rotator HeadingRotator;
         local vector TargetInPlaneSpace;
@@ -273,18 +286,17 @@ state Approaching
         }
     }
 
-
-    function BeginState()
+     function BeginState()
     {
-        Log("Approuching");
+        Log("Approuching: "$CurrentTarget.Position);
         bIsTurningTowardsTarget = false;
     }
 }
 
 // Preform attack Run on the target.
-state DiveAttacking
+ state DiveAttacking
 {
-    function TickAI(float DeltaTime)
+     function TickAI(float DeltaTime)
     {
         local vector PullUpTarget;
         //DebugPrintOnClient = false;
@@ -305,17 +317,20 @@ state DiveAttacking
             bIsLevelingOut = true;
         }
 
-        AutoCannonTime += DeltaTime;
-        // Auto Cannon Shooting Logic
-        if (bIsShootingAutoCannon && AutoCannonTime > ( (1.0f / AutoCannonRPM) * 60) )
+        if (Role == ROLE_Authority)
         {
-            AutoCannonTime = 0;
-            //Log(AutoCannonFireOffset >> Rotation);
-            //Spawn(AutoCannonProjectileClass,self,,Location + (AutoCannonFireOffset >> Rotation), GetProjectileFireRotation(AutoCannonSpread));
+            AutoCannonTime += DeltaTime;
+            // Auto Cannon Shooting Logic
+            if (bIsShootingAutoCannon && AutoCannonTime > ( (1.0f / AutoCannonRPM) * 60) )
+            {
+                AutoCannonTime = 0;
+                //Log(AutoCannonFireOffset >> Rotation);
+                //Spawn(AutoCannonProjectileClass,self,,Location + (AutoCannonFireOffset >> Rotation), GetProjectileFireRotation(AutoCannonSpread));
+            }
         }
     }
 
-    function OnMoveEnd()
+     function OnMoveEnd()
     {
         // Moving Straight after angling down to target.
         if (!bIsPullingUp && !bIsLevelingOut) {
@@ -332,7 +347,7 @@ state DiveAttacking
         }
     }
 
-    function BeginState()
+     function BeginState()
     {
         bIsPullingUp = false;
         bIsLevelingOut = false;
@@ -341,16 +356,30 @@ state DiveAttacking
     }
 }
 
+state Crashing
+{
+    function OnMoveEnd()
+    {
+        BeginStraight(Normal(velocity), DivingSpeed, DivingAcceleration);
+    }
+    function BeginState()
+    {
+        Log("Crashing. God help me.");
+        BeginDiveClimbToAngle(Pi * (CrashAngle / 180.0), 1500);
+    }
+}
+
 // Sets a new current waypoint.
-simulated function SetCurrentTarget(Target NewTarget)
+ function SetCurrentTarget(Target NewTarget)
 {
     CurrentTarget = NewTarget;
 }
 
 // update position based on current position, velocity, and current waypoint.
-simulated function MovementUpdate(float DeltaTime)
+ function MovementUpdate(float DeltaTime)
 {
     local rotator Heading;
+    local float   DeltaTimeToUse;
 
     MoveState.Tick(DeltaTime);
 
@@ -359,9 +388,27 @@ simulated function MovementUpdate(float DeltaTime)
     // Make sure plane is always facing the direction it is traveling.
     Heading = OrthoRotation(velocity, velocity Cross vect(0, 0, 1), vect(0, 0, 1));
     Heading.Roll = class'UUnits'.static.RadiansToUnreal(BankAngle);
-    SetRotation(Heading);
-    //DesiredRotation = Heading;
+    //SetRotation(Heading);
 
+    AirplaneModel.DesiredRotation = Heading;
+    //AirplaneModel.RotationRate = (Heading - AirplaneModel.Rotation);
+
+    if (DeltaTime < 0.05)
+    {
+        DeltaTimeToUse = 0.05;
+    }
+    else
+        DeltaTimeToUse = DeltaTime;
+
+    //Log(Velocity);
+    // Correct one
+    //AirplaneModel.RotationRate = QuatToRotator( QuatProduct(  QuatFromRotator(Heading) , QuatInvert(QuatFromRotator(AirplaneModel.Rotation)) ) ) / DeltaTimeToUse;
+    //AirplaneModel.RotationRate = QuatToRotator( QuatProduct(  QuatFromRotator(Heading) , QuatInvert(QuatFromRotator(AirplaneModel.Rotation)) ) );
+
+    //AirplaneModel.RotationRate = QuatToRotator( QuatProduct(  QuatInvert(QuatFromRotator(AirplaneModel.Rotation)), QuatFromRotator(Heading)  ) ) ;
+    //AirplaneModel.RotationRate = QuatToRotator( QuatProduct( QuatFromRotator(AirplaneModel.Rotation), QuatInvert(QuatFromRotator(Heading))) ) / DeltaTime; // no
+    //AirplaneModel.RotationRate = QuatToRotator( QuatProduct( QuatInvert(QuatFromRotator(Heading)), QuatFromRotator(AirplaneModel.Rotation)) ) / DeltaTime;
+    //Log(AirplaneModel.RotationRate$" --- "$DeltaTime$"---"$DeltaTimeToUse);
     // Check if target met. Restrain from continued movement until new waypoint is set.
     if (VSize(V3ToV2(CurrentTarget.Position - Location)) <= CurrentTarget.Radius)
     {
@@ -373,7 +420,7 @@ simulated function MovementUpdate(float DeltaTime)
 
 // This function begins a turn that stops when the plane is aligned with TurnPositionGoal.
 // It sets MoveState.
-function BeginTurnTowardsPosition(vector TurnPositionGoal, float TurnRadius, bool bIsTurnRight)
+ function BeginTurnTowardsPosition(vector TurnPositionGoal, float TurnRadius, bool bIsTurnRight)
 {
     local DHTurnTowardsPosition TurnTowardsState;
     local vector VelocityPre;
@@ -394,7 +441,7 @@ function BeginTurnTowardsPosition(vector TurnPositionGoal, float TurnRadius, boo
 }
 
 // Same as turnTowardsPosition, but with diving and climbing.
-function BeginDiveClimbTowardsPosition(vector TurnPositionGoal, float TurnRadius, bool bIsClimbing)
+ function BeginDiveClimbTowardsPosition(vector TurnPositionGoal, float TurnRadius, bool bIsClimbing)
 {
     local DHDiveClimbTowardsPosition DiveClimbState;
     local vector VelocityPre;
@@ -417,7 +464,7 @@ function BeginDiveClimbTowardsPosition(vector TurnPositionGoal, float TurnRadius
 }
 
 // Diving and climbing to a specific angle.
-function BeginDiveClimbToAngle(float TurnAngleGoal, float TurnRadius)
+ function BeginDiveClimbToAngle(float TurnAngleGoal, float TurnRadius)
 {
     local DHDiveClimbToAngle DiveClimbState;
     local vector VelocityPre;
@@ -440,7 +487,7 @@ function BeginDiveClimbToAngle(float TurnAngleGoal, float TurnRadius)
 
 // This begins the straight movement state. The plane will move in Direction
 // forever.
-function BeginStraight(vector Direction, float Speed, float Acceleration)
+ function BeginStraight(vector Direction, float Speed, float Acceleration)
 {
     local DHStraight StraightState;
     local vector VelocityPre;
@@ -470,7 +517,7 @@ function rotator GetProjectileFireRotation(float Spread)
 }
 
 // Converts 3d vector into 2d vector.
-static function vector V3ToV2(vector InVector)
+static  function vector V3ToV2(vector InVector)
 {
     local vector OutVector;
 
@@ -481,29 +528,65 @@ static function vector V3ToV2(vector InVector)
     return OutVector;
 }
 
+function StartDamageEffect()
+{
+
+    if(DamageEffect == none)
+    {
+        DamageEffect = Spawn(DamageEffectClass, self);
+        //AttachToBone(DamageEffect, DamageEffectBone);
+        DamageEffect.SetBase(self);
+        DamageEffect.UpdateDamagedEffect(false, 0.0, true, false);
+        DamageEffect.SetEffectScale(1.0);
+        Log('Effect created');
+        //DamageEffect.SetPhysics(PHYS_Flying);
+
+    }
+    if (DamageEffect != none)
+    {
+
+    }
+}
+
 //event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex);
 function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     Log("Hit");
+    StartDamageEffect();
+    GoToState('Crashing');
+}
+
+
+event HitWall( vector HitNormal, Actor HitWall )
+{
+    Log("Ground Hit");
+    Spawn(DestructionEffectClass);
+    DamageEffect.Destroy();
+    Destroy();
 }
 
 /*
 event Touch( Actor Other )
 {
+    // when vehicle hits level geometry ROVehicleDestroyedEmitter
     Log("Hit");
 }
 */
+
+
 defaultproperties
 {
     AirplaneName="Airplane"
     DrawType=DT_Mesh
+
     bAlwaysRelevant=true
     bReplicateMovement=true
     bUpdateSimulatedPosition=true
+    RemoteRole=ROLE_SimulatedProxy
 
     bCanBeDamaged=true
 
-    bRotateToDesired=true
+
 
     bCollideActors=true
     bCollideWorld=true
@@ -515,36 +598,57 @@ defaultproperties
     bWorldGeometry=False
     bUseCylinderCollision=false
 
-    RotationRate={Pitch=2000,Yaw=2000,Roll=2000}
+    //bRotateToDesired=true
+    //RotationRate={Pitch=2000,Yaw=2000,Roll=2000}
     Physics = PHYS_Flying
-    RemoteRole=ROLE_SimulatedProxy
+
 
     BankAngle = 0
     MaxBankAngle = 65
     BankRate = 0.65
 
+    DamageEffectClass=class'ROEngine.VehicleDamagedEffect'
+    DamageEffectBone="body"
+    CrashAngle=-60;
+    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
+
     AutoCannonFireOffset={X=5000,Y=0,Z=-200}
 
     MinTurnRadius = 6000
 
-    StandardSpeed = 4000
+    //StandardSpeed = 4000
     //StandardSpeed = 2000
+    //StandardSpeed = 500
     //StandardSpeed = 0
+    /*
     StraightAcceleration = 150
 
     DivingSpeed = 5000
-    DivingAcceleration = 300
+    DivingAcceleration = 400
 
     ClimbingSpeed = 1000
 
-    TurnSpeed = 2000
+    TurnSpeed = 1200
     TurnAcceleration = 220
+    */
 
-    CurrentSpeed = 0
+    CurrentSpeed = 2000
 
     CruisingHeight = 100
 
     DiveClimbRadius = 3800
+
+    // MAX SPEED FOR DEBUG
+    StandardSpeed = 5000
+    DivingSpeed = 5000
+    ClimbingSpeed = 5000
+    TurnSpeed = 5000
+
+    StraightAcceleration = 150
+
+    DivingAcceleration = 400
+
+    TurnAcceleration = 220
 
 
     //DebugPrintOnClient=false

@@ -13,7 +13,7 @@ class DHDiveClimbToAngle extends DHDiveClimbTowardsPosition;
 var float DesiredAngleWorld; // Goal angle to turn to, in plane space. SET THIS.
 var float TurnAmount; // Amount of angle we want to turn. Do not set this.
 
-function Tick(float DeltaTime)
+simulated function Tick(float DeltaTime)
 {
     local vector Heading;
     local float PlaneAngle;

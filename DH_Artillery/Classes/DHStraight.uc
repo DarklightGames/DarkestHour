@@ -9,14 +9,15 @@ class DHStraight extends DHMoveState;
 
 var vector Direction;
 
-function Tick(float DeltaTime)
+simulated function Tick(float DeltaTime)
 {
+    //Log("Straight Tick");
     UpdateSpeed(DeltaTime);
 
     Airplane.Velocity = Normal(Direction) * Airplane.CurrentSpeed;
 }
 
-function bool HasMetGoal()
+simulated function bool HasMetGoal()
 {
     return true;
 }

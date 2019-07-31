@@ -15,7 +15,7 @@ var vector PositionGoal;    // When the plane's velocity is aligned with this po
 var bool bIsInitialized;    // keeps track if the initialization has been automatically preformed.
 var vector TurnEndPoint;    // Point in world space that the plane should be at when the turn ends.
 
-function Tick(float DeltaTime)
+simulated function Tick(float DeltaTime)
 {
     local vector TangentVelocity;
     local float TimeToBankBack;
@@ -24,6 +24,7 @@ function Tick(float DeltaTime)
     // Find the Turn End Point. This also sets the TangentAngle, so that we can detect the turn end.
     if (!bIsInitialized)
     {
+        Log("Start Turn Towards Position");
         TurnEndPoint = CalculateTurnEndPoint(PositionGoal, Airplane.Velocity, Airplane.Location, bIsTurningRight, TurnRadius);
         TurnEndPoint.Z = Airplane.Location.Z;
 
@@ -83,7 +84,7 @@ function Tick(float DeltaTime)
 
         TurnEndPoint.Z = Airplane.Location.Z;
 
-        Log("Fat Lad: "$TurnEndPoint);
+        Log("End Turn Towards Position: "$TurnEndPoint);
         Airplane.SetLocation(TurnEndPoint);
         Airplane.Velocity = Normal(TangentVelocity) * Airplane.CurrentSpeed;
         Airplane.BankAngle = 0;

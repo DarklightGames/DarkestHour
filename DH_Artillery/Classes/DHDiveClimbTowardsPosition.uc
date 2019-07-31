@@ -20,7 +20,7 @@ var vector TurnEndPoint;        // Point in world space that the plane should be
 var float DesiredSpeedClimb;    // Desired speed when climbing. Should be slower than standard speed.
 var float DesiredSpeedDive;     // Desired speed when diving. Should be faster than standard.
 
-function UpdateSpeed(float DeltaTime)
+simulated function UpdateSpeed(float DeltaTime)
 {
         //Decide which speed change to use
         if (bIsClimbing)
@@ -35,7 +35,7 @@ function UpdateSpeed(float DeltaTime)
         super.UpdateSpeed(DeltaTime);
 }
 
-function Tick(float DeltaTime)
+simulated function Tick(float DeltaTime)
 {
     local vector TangentVelocity;
 
