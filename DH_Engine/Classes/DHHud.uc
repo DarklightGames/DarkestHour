@@ -159,6 +159,13 @@ var     bool                bDebugVehicleWheels;    // show all vehicle's physic
 var     bool                bDebugCamera;           // in behind view, draws a red dot & white sphere to show current camera location, with a red line showing camera rotation
 var     SkyZoneInfo         SavedSkyZone;           // saves original SkyZone for player's current ZoneInfo if sky is turned off for debugging, so can be restored when sky is turned back on
 
+// Clustering debug
+var     bool                bShowClusterDebug;
+var     float               DebugClusterSearchRadiusInMeters;
+var     float               DebugClusterEpsilonInMeters;
+var     UClusters           DebugClusterData;
+var     color               DebugClusterColors[6];
+
 // Squad Rally Point
 var     globalconfig bool   bShowRallyPoint;
 var     SpriteWidget        RallyPointWidget;
@@ -3784,6 +3791,11 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
         DHDrawIconOnMap(C, SubCoords, MapIconTeam[AXIS_TEAM_INDEX], MyMapScale, DHGRI.SouthWestBounds, MapCenter, Viewport);
     }
 
+    if (bShowClusterDebug)
+    {
+        DrawClustersDebug(C, SubCoords, MyMapScale, MapCenter, Viewport);
+    }
+
     // Show specified network actors, based on NetDebugMode - toggle using console command: ShowNetDebugMap [optional int DebugMode]
     if (bShowRelevancyDebugOnMap)
     {
@@ -5926,6 +5938,185 @@ function DHDrawTypingPrompt(Canvas C)
     C.DrawTextClipped(SayTypeText @ "(>" @ Left(Console.TypedStr, Console.TypedStrPos) $ Chr(4) $ Eval(Console.TypedStrPos < Len(Console.TypedStr), Mid(Console.TypedStr, Console.TypedStrPos), "_"), true);
 }
 
+// Clustering debug
+
+function float GetItemPriority(Object O)
+{
+    if (O != none)
+    {
+        // Whatever
+        return 1.0;
+    }
+}
+
+function DrawClustersDebug(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapScale, vector MapCenter, Box Viewport)
+{
+    local UHeap GroupedData;
+    local vector A, B;
+    local int i;
+    local color Color;
+    local Actor Actor;
+    local DHPlayer PC;
+    local DHPawn OtherPawn;
+    local UClusters.DataPoint P;
+    local int ClId;
+
+    PC = DHPlayer(PlayerOwner);
+
+    if (PC.Pawn == none)
+    {
+        return;
+    }
+
+    if (DebugClusterData == none)
+    {
+        DebugClusterData = new class'UClusters';
+    }
+    else
+    {
+        DebugClusterData.Clear();
+    }
+
+    // Collect the potential targets
+    foreach PC.Pawn.RadiusActors(class'DHPawn', OtherPawn, class'DHUnits'.static.MetersToUnreal(DebugClusterSearchRadiusInMeters))
+    {
+        P.Item = OtherPawn;
+        P.Location = OtherPawn.Location;
+
+        DebugClusterData.Data[DebugClusterData.Data.Length] = P;
+    }
+
+    // Process the data
+    DebugClusterData.DBSCAN(class'DHUnits'.static.MetersToUnreal(DebugClusterEpsilonInMeters), 1);
+
+    // Draw actors
+    for (i = 0; i < DebugClusterData.Data.Length; ++i)
+    {
+        ClId = DebugClusterData.Data[i].ClId;
+
+        if (ClId == -1)
+        {
+            Color = class'UColor'.default.Gray;
+        }
+        else if (ClId > 0)
+        {
+            Color = DebugClusterColors[ClId - 1 % arraycount(DebugClusterColors)];
+        }
+        else
+        {
+            continue;
+        }
+
+        Color.A = 100;
+        Actor = Actor(DebugClusterData.Data[i].Item);
+
+        if (Actor != none)
+        {
+            DrawPlayerIconOnMap(C, SubCoords, MyMapScale, Actor.Location, MapCenter, Viewport, Actor.Rotation.Yaw, Color, PlayerIconScale);
+        }
+    }
+
+    // Draw cluster regressions
+    GroupedData = DebugClusterData.ToHeap();
+    Color = class'UColor'.default.Red;
+
+    while (GroupedData.GetLength() > 0)
+    {
+        if (!class'UClusters'.static.GetPriorityVector(GroupedData, A, B))
+        {
+            break;
+        }
+
+        DrawMapLine(C, SubCoords, MyMapScale, MapCenter, Viewport, A, B, Color);
+
+        GroupedData.Remove();
+    }
+}
+
+exec function ShowClusterDebug(optional float EpsilonInMeters)
+{
+    if (EpsilonInMeters == 0.0)
+    {
+        DebugClusterEpsilonInMeters = default.DebugClusterEpsilonInMeters;
+    }
+    else
+    {
+        DebugClusterEpsilonInMeters = class'DHUnits'.static.MetersToUnreal(EpsilonInMeters);
+    }
+
+    Log(DebugClusterEpsilonInMeters);
+    bShowClusterDebug = true;
+}
+
+exec function HideClusterDebug()
+{
+    bShowClusterDebug = false;
+}
+
+exec function ClusterDebugLog()
+{
+    local class<Actor> ActorClass;
+    local float RadiusInMeters;
+    local UClusters Targets;
+    local UClusters.DataPoint P;
+    local Actor OtherActor;
+    local DHPlayer PC;
+    local UHeap Heap;
+
+    Log("================");
+
+    PC = DHPlayer(PlayerOwner);
+    ActorClass = class'DHPawn';
+    RadiusInMeters = 1000;
+
+    Targets = new class'UClusters';
+    Targets.GetItemPriority = GetItemPriority;
+
+    // Collect the potential targets
+    foreach PC.Pawn.RadiusActors(ActorClass, OtherActor, class'DHUnits'.static.MetersToUnreal(RadiusInMeters))
+    {
+        P.Item = OtherActor;
+        P.Location = OtherActor.Location;
+
+        Targets.Data[Targets.Data.Length] = P;
+    }
+
+    // Process the data
+    Targets.DBSCAN(class'DHUnits'.static.MetersToUnreal(20), 1);
+    Targets.DebugLog();
+    Heap = Targets.ToHeap();
+    Heap.DebugLog();
+
+    Log("================");
+
+}
+
+exec function HeapDebugLog()
+{
+    local class<Actor> ActorClass;
+    local float RadiusInMeters;
+    local Actor OtherActor;
+    local UHeap Heap;
+    local DHPlayer PC;
+
+    Log("================");
+
+    PC = DHPlayer(PlayerOwner);
+    ActorClass = class'DHPawn';
+    RadiusInMeters = 1000;
+
+    Heap = new class'UHeap';
+
+    foreach PC.Pawn.RadiusActors(ActorClass, OtherActor, class'DHUnits'.static.MetersToUnreal(RadiusInMeters))
+    {
+        Heap.Insert(OtherActor, VSize(PC.Pawn.Location - OtherActor.Location));
+    }
+
+    Heap.DebugSortedLog();
+
+    Log("================");
+}
+
 defaultproperties
 {
     // General
@@ -6152,4 +6343,14 @@ defaultproperties
     DangerZoneOverlaySubResolution=57
     bDangerZoneOverlayUpdatePending=true
     DangerZoneOverlayPointIcon=(WidgetTexture=Texture'DH_InterfaceArt2_tex.Icons.Dot',RenderStyle=STY_Alpha,TextureCoords=(X1=0,Y1=0,X2=7,Y2=7),TextureScale=0.01,DrawPivot=DP_MiddleMiddle,ScaleMode=SM_Left,Scale=1.0,Tints[0]=(R=200,G=0,B=0,A=158),Tints[1]=(R=0,G=124,B=252,A=79))
+
+    // Clustering debug
+    DebugClusterEpsilonInMeters=20
+    DebugClusterSearchRadiusInMeters=1000
+    DebugClusterColors[0]=(R=255,G=255,B=0,A=255)
+    DebugClusterColors[1]=(R=0,G=128,B=0,A=255)
+    DebugClusterColors[2]=(R=0,G=0,B=255,A=255)
+    DebugClusterColors[3]=(R=0,G=255,B=255,A=255)
+    DebugClusterColors[4]=(R=255,G=0,B=255,A=255)
+    DebugClusterColors[5]=(R=255,G=255,B=255,A=255)
 }

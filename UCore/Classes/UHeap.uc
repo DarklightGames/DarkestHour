@@ -8,6 +8,7 @@ struct DataPoint
 {
     var Object Item;
     var float  Priority;
+    var int Tag; // can be used for mapping the data to something
 };
 
 var array<DataPoint> Data;
@@ -16,12 +17,38 @@ var bool             bMinHeap; // the heap is max by default
 final function Clear() { Data.Length = 0; }
 final function int GetLength() { return Data.Length; }
 
-final function Insert(Object Item, float Priority)
+// Clear any nested heaps
+final function ClearNested()
+{
+    local UHeap H;
+    local int i;
+
+    for (i = 0; i < Data.Length; ++i)
+    {
+        if (Data[i].Item.IsA('UHeap'))
+        {
+            H = UHeap(Data[i].Item);
+
+            if (H == none)
+            {
+                Warn("Fatal error");
+                continue;
+            }
+
+            H.ClearNested();
+        }
+    }
+
+    Data.Length = 0;
+}
+
+final function Insert(Object Item, float Priority, optional int Tag)
 {
     local DataPoint P;
 
     P.Item = Item;
     P.Priority = Priority;
+    P.Tag = Tag;
 
     Data[Data.Length] = P;
     SiftUp(Data.Length - 1);
@@ -41,8 +68,7 @@ final function Remove()
 
     if (EndIndex > 1)
     {
-        class'UCore'.static.Swap(Data[0].Item, Data[EndIndex].Item);
-        class'UCore'.static.FSwap(Data[0].Priority, Data[EndIndex].Priority);
+        Swap(0, EndIndex);
         SiftDown(0, EndIndex - 1);
     }
 
@@ -71,6 +97,18 @@ final function Object Peek()
     }
 }
 
+final function bool RootIsHeap(optional out UHeap Heap)
+{
+    if (Data.Length > 0)
+    {
+        if (Data[0].Item.IsA('UHeap'))
+        {
+            Heap = UHeap(Data[0].Item);
+            return Heap != none;
+        }
+    }
+}
+
 final function Heapify()
 {
     local int i;
@@ -94,8 +132,7 @@ final function array<DataPoint> GetSorted()
 
     while (EndIndex > 0)
     {
-        class'UCore'.static.Swap(Data[0].Item, Data[EndIndex].Item);
-        class'UCore'.static.FSwap(Data[0].Priority, Data[EndIndex].Priority);
+        Swap(0, EndIndex);
         --EndIndex;
         SiftDown(0, EndIndex);
     }
@@ -119,10 +156,9 @@ final function SiftUp(int StartIndex)
     {
         ParentIndex = GetParentIndex(i);
 
-        if (ShouldSwap(Data[i].Priority, Data[ParentIndex].Priority))
+        if (ShouldSwap(i, ParentIndex))
         {
-            class'UCore'.static.Swap(Data[i].Item, Data[ParentIndex].Item);
-            class'UCore'.static.FSwap(Data[i].Priority, Data[ParentIndex].Priority);
+            Swap(i, ParentIndex);
             i = ParentIndex;
             continue;
         }
@@ -148,22 +184,21 @@ final function SiftDown(int StartIndex, int EndIndex)
         ChildIndex = GetLeftChildIndex(RootIndex);
         SwapIndex = RootIndex;
 
-        if (ShouldSwap(Data[ChildIndex].Priority, Data[SwapIndex].Priority))
+        if (ShouldSwap(ChildIndex, SwapIndex))
         {
             SwapIndex = ChildIndex;
         }
 
         RightChildIndex = ChildIndex + 1;
 
-        if (RightChildIndex <= EndIndex && ShouldSwap(Data[RightChildIndex].Priority, Data[SwapIndex].Priority))
+        if (RightChildIndex <= EndIndex && ShouldSwap(RightChildIndex, SwapIndex))
         {
             SwapIndex = RightChildIndex;
         }
 
         if (SwapIndex != RootIndex)
         {
-            class'UCore'.static.Swap(Data[RootIndex].Item, Data[SwapIndex].Item);
-            class'UCore'.static.FSwap(Data[RootIndex].Priority, Data[SwapIndex].Priority);
+            Swap(RootIndex, SwapIndex);
             RootIndex = SwapIndex;
             continue;
         }
@@ -172,20 +207,29 @@ final function SiftDown(int StartIndex, int EndIndex)
     }
 }
 
-protected final function bool ShouldSwap(float A, float B)
+protected function bool ShouldSwap(int A, int B)
 {
     if (bMinHeap)
     {
-        return A < B;
+        return Data[A].Priority < Data[B].Priority;
     }
 
-    return A > B;
+    return Data[A].Priority > Data[B].Priority;
+}
+
+protected final function Swap(int A, int B)
+{
+    local DataPoint T;
+
+    T = Data[A];
+    Data[A] = Data[B];
+    Data[B] = T;
 }
 
 static final function Heapsort(out array<DataPoint> Data, optional bool bDescending)
 {
     local UHeap Heap;
-    local int i, EndIndex;
+    local int i;
 
     Heap = new class'UHeap';
     Heap.bMinHeap = bDescending;
@@ -205,7 +249,7 @@ static final function OHeapsort(out array<Object> Data, Functor_float_Object Pri
     local UHeap Heap;
     local DataPoint P;
     local array<DataPoint> Sorted;
-    local int i, EndIndex;
+    local int i;
 
     Heap = new class'UHeap';
     Heap.bMinHeap = bDescending;
@@ -234,7 +278,7 @@ static final function Object OSortAndPeek(array<Object> Data, Functor_float_Obje
     local UHeap Heap;
     local DataPoint P;
     local Object O;
-    local int i, EndIndex;
+    local int i;
 
     Heap = new class'UHeap';
     Heap.bMinHeap = bDescending;
@@ -268,7 +312,7 @@ function DebugLog(optional int IndentLevel)
 
     for (i = 0; i < IndentLevel; ++i)
     {
-        Indent $= "--";
+        Indent $= "|  ";
     }
 
     Log(Indent $ "HEAP CONTENTS:");
@@ -302,7 +346,7 @@ function DebugSortedLog(optional int IndentLevel)
 
     for (i = 0; i < IndentLevel; ++i)
     {
-        Indent $= "-- ";
+        Indent $= "|  ";
     }
 
     Log(Indent $ "HEAP CONTENTS (SORTED):");
