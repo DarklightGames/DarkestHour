@@ -186,8 +186,8 @@ var MapMarker                           AlliesMapMarkers[MAP_MARKERS_MAX];
 var byte   RoundWinnerTeamIndex;
 var string RoundEndReason;
 
-var bool   bIsSurrenderVoteEnabled;
-var bool   bIsSurrenderVoteInProgress;
+var         bool bIsSurrenderVoteEnabled;
+var private byte SurrenderVotesInProgress[2];
 
 replication
 {
@@ -245,7 +245,7 @@ replication
         DangerZoneBalance,
         RoundWinnerTeamIndex,
         bIsSurrenderVoteEnabled,
-        bIsSurrenderVoteInProgress;
+        SurrenderVotesInProgress;
 
     reliable if (bNetInitial && Role == ROLE_Authority)
         AlliedNationID, ConstructionClasses, MapMarkerClasses;
@@ -358,6 +358,19 @@ simulated function PostNetBeginPlay()
                 }
             }
         }
+    }
+}
+
+simulated function PostNetReceive()
+{
+    super.PostNetReceive();
+
+    if (OldDangerZoneNeutral != DangerZoneNeutral || OldDangerZoneBalance != DangerZoneBalance)
+    {
+        DangerZoneUpdated();
+
+        OldDangerZoneNeutral = DangerZoneNeutral;
+        OldDangerZoneBalance = DangerZoneBalance;
     }
 }
 
@@ -1914,16 +1927,23 @@ simulated function DangerZoneUpdated()
     }
 }
 
-simulated function PostNetReceive()
+//==============================================================================
+// SURRENDER VOTE
+//==============================================================================
+
+simulated function bool IsSurrenderVoteInProgress(byte TeamIndex)
 {
-    super.PostNetReceive();
-
-    if (OldDangerZoneNeutral != DangerZoneNeutral || OldDangerZoneBalance != DangerZoneBalance)
+    if (TeamIndex < arraycount(SurrenderVotesInProgress))
     {
-        DangerZoneUpdated();
+        return bool(SurrenderVotesInProgress[TeamIndex]);
+    }
+}
 
-        OldDangerZoneNeutral = DangerZoneNeutral;
-        OldDangerZoneBalance = DangerZoneBalance;
+function SetSurrenderVoteInProgress(byte TeamIndex, bool bInProgress)
+{
+    if (TeamIndex < arraycount(SurrenderVotesInProgress))
+    {
+        SurrenderVotesInProgress[TeamIndex] = byte(bInProgress);
     }
 }
 

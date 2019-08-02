@@ -1355,6 +1355,21 @@ simulated function bool IsOwnedByTeam(byte TeamIndex)
     return false;
 }
 
+simulated function byte GetTeamIndex()
+{
+    switch (ObjState)
+    {
+        case OBJ_Axis:
+            return AXIS_TEAM_INDEX;
+        case OBJ_Allies:
+            return ALLIES_TEAM_INDEX;
+        case OBJ_Neutral:
+            return NEUTRAL_TEAM_INDEX;
+        default:
+            return -1;
+    }
+}
+
 // Clients/Server can run this function very fast because of the hashtable
 simulated function bool HasRequiredObjectives(coerce DHGameReplicationInfo GRI, int TeamIndex)
 {

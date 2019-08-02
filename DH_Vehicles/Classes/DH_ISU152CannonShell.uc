@@ -11,21 +11,21 @@ defaultproperties
     BallisticCoefficient=4.4
     Speed=36211.0 // 600 m/s
     MaxSpeed=36211.0
-    ImpactDamage=3500
+    ImpactDamage=3000
     StaticMesh=StaticMesh'WeaponPickupSM.shells.122mm_shell'
     Tag="BR-540" // earlier AP round without ballistic cap
 
-    DHPenetrationTable(0)=12.5 // 100m
-    DHPenetrationTable(1)=12.5 // 250m
-    DHPenetrationTable(2)=12.5 // 500m
-    DHPenetrationTable(3)=12.0
-    DHPenetrationTable(4)=11.5 // 1000m
-    DHPenetrationTable(5)=11.0
-    DHPenetrationTable(6)=10.5 // 1500m
-    DHPenetrationTable(7)=9.75
-    DHPenetrationTable(8)=9.0  // 2000m
-    DHPenetrationTable(9)=7.5
-    DHPenetrationTable(10)=6.0 // 3000m
+    DHPenetrationTable(0)=16.5 // 100m
+    DHPenetrationTable(1)=16.0 // 250m
+    DHPenetrationTable(2)=15.2 // 500m
+    DHPenetrationTable(3)=14.5
+    DHPenetrationTable(4)=13.7 // 1000m
+    DHPenetrationTable(5)=13.0
+    DHPenetrationTable(6)=12.4 // 1500m
+    DHPenetrationTable(7)=11.7
+    DHPenetrationTable(8)=11.1  // 2000m
+    DHPenetrationTable(9)=10.0
+    DHPenetrationTable(10)=9.0 // 3000m
 
     bOpticalAiming=true
     OpticalRanges(0)=(Range=0,RangeValue=0.411)

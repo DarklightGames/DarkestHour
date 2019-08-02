@@ -69,8 +69,10 @@ var     vector                  FlinchOffsetMag;
 var     vector                  FlinchOffsetRate;
 var     float                   FlinchOffsetTime;
 var     float                   FlinchMaxOffset;
+var     float                   FlinchMeterSwayMultiplier;
 var     float                   FlinchMeterValue;
 var     float                   FlinchMeterIncrement;
+var     float                   FlinchMeterFallOffStrength;
 var     float                   LastFlinchTime;
 
 // Mantling
@@ -680,7 +682,7 @@ function ChangeName(coerce string S)
 
 simulated function float GetFlinchMeterFalloff(float TimeSeconds)
 {
-    return (TimeSeconds ** 2.0) * 0.05;
+    return (TimeSeconds ** 2.0) * FlinchMeterFallOffStrength;
 }
 
 // Give the player a quick flinch and blur effect
@@ -2763,8 +2765,8 @@ simulated function SwayHandler(float DeltaTime)
 
     if (FlinchFactor > 0.0)
     {
-        WeaponSwayYawAcc *= 1.0 + FlinchFactor;
-        WeaponSwayPitchAcc *= 1.0 + FlinchFactor;
+        WeaponSwayYawAcc *= 1.0 + (FlinchFactor * FlinchMeterSwayMultiplier);
+        WeaponSwayPitchAcc *= 1.0 + (FlinchFactor * FlinchMeterSwayMultiplier);
     }
 
     // Add an elastic factor to get sway near the original aim-point, & a damping factor to keep elastic factor from causing wild oscillations
@@ -6404,7 +6406,7 @@ function ServerTeamSurrenderRequest(optional bool bAskForConfirmation)
     }
     else
     {
-        G.VoteManager.NominateVote(self, class'DHVoteInfo_TeamSurrender');
+        G.VoteManager.AddNomination(self, class'DHVoteInfo_TeamSurrender');
     }
 }
 
@@ -6816,7 +6818,9 @@ defaultproperties
     FlinchMaxOffset=450.0
 
     // Flinch meter
+    FlinchMeterSwayMultiplier=1.05
     FlinchMeterIncrement=0.08
+    FlinchMeterFallOffStrength=0.04
 
     // Flinch from bullet snaps when deployed
     FlinchRotMag=(X=100.0,Y=0.0,Z=100.0)

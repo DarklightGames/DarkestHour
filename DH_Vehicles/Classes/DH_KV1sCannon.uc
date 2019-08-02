@@ -33,6 +33,12 @@ defaultproperties
     CustomPitchUpLimit=5097 // +28/-5 degrees
     CustomPitchDownLimit=64626
 
+    //Sounds
+    ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_01')
+    ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_02')
+    ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_03')
+    ReloadStages(3)=(Sound=Sound'DH_Vehicle_Reloads.Reloads.reload_02s_04')
+
     // Cannon ammo
     InitialPrimaryAmmo=50
     InitialSecondaryAmmo=30

@@ -23,14 +23,15 @@ var private array<DHVoteInfo>        Votes;
 var private array<NominationBase>    Nominations;
 var private array<CooldownTimesBase> CooldownTimes;
 
-function NominateVote(PlayerController Player, class<DHVoteInfo> VoteClass)
+// NOMINATIONS
+
+function AddNomination(PlayerController Player, class<DHVoteInfo> VoteClass)
 {
     local DarkestHourGame G;
     local byte TeamIndex;
     local int i;
     local array<PlayerController> PlayerNominators;
-    local int TeamSizes[2];
-    local int NominationThresholdCount;
+    local int NominationsThresholdCount;
 
     G = DarkestHourGame(Level.Game);
 
@@ -39,40 +40,37 @@ function NominateVote(PlayerController Player, class<DHVoteInfo> VoteClass)
         return;
     }
 
-    if (VoteClass.default.bIsGlobal)
+    if (VoteClass.default.bIsGlobalVote)
     {
         TeamIndex = -1;
-        NominationThresholdCount = Ceil(G.GetNumPlayers() * VoteClass.default.NominationThresholdPercent);
     }
     else
     {
         TeamIndex = Player.GetTeamNum();
-        G.GetTeamSizes(TeamSizes);
 
-        if (TeamIndex < arraycount(TeamSizes))
-        {
-            NominationThresholdCount = Ceil(TeamSizes[TeamIndex] * VoteClass.default.NominationThresholdPercent);
-        }
-        else
+        if (TeamIndex > 1)
         {
             Warn("Failed to nominate the vote. Invalid team index.");
+            return;
         }
     }
 
-    if (NominationThresholdCount < 2)
+    NominationsThresholdCount = VoteClass.static.GetNominationsThresholdCount(G, TeamIndex);
+
+    if (NominationsThresholdCount < 2)
     {
-        // Skip the nomination process
+        // Start the vote right away!
         PlayerNominators[PlayerNominators.Length] = Player;
+        VoteClass.static.OnNominated(Player, Level);
         StartVote(VoteClass, TeamIndex, PlayerNominators);
     }
     else
     {
+        // Add the nomination
         Nominations.Insert(0, 1);
         Nominations[0].Player = Player;
         Nominations[0].TeamIndex = TeamIndex;
         Nominations[0].VoteClass = VoteClass;
-
-        VoteClass.static.OnNominated(Player);
 
         // Count the nominations and clean up the invalid ones while we at it
         i = 0; while (i < Nominations.Length)
@@ -80,7 +78,7 @@ function NominateVote(PlayerController Player, class<DHVoteInfo> VoteClass)
             if (Nominations[i].VoteClass == VoteClass && Nominations[i].TeamIndex == TeamIndex)
             {
                 if (Nominations[i].Player != none &&
-                    (Nominations[i].VoteClass.default.bIsGlobal ||
+                    (Nominations[i].VoteClass.default.bIsGlobalVote ||
                      Nominations[i].Player.GetTeamNum() == Nominations[i].TeamIndex))
                 {
                     PlayerNominators[PlayerNominators.Length] = Nominations[i].Player;
@@ -97,43 +95,19 @@ function NominateVote(PlayerController Player, class<DHVoteInfo> VoteClass)
             ++i;
         }
 
-        // Start the vote!
-        if (PlayerNominators.Length >= NominationThresholdCount)
+        if (PlayerNominators.Length >= NominationsThresholdCount)
         {
+            // Start the vote!
+            VoteClass.static.OnNominated(Player, Level);
             StartVote(VoteClass, TeamIndex, PlayerNominators);
             ClearNominations(VoteClass, TeamIndex);
         }
-    }
-}
-
-function bool HasPlayerNominatedVote(PlayerController Player)
-{
-    local int i;
-    local bool bResult;
-
-    if (Player == none)
-    {
-        return false;
-    }
-
-    for (i = 0; i < Nominations.Length; ++i)
-    {
-        if (Nominations[i].Player == Player)
+        else
         {
-            if (Nominations[i].VoteClass.default.bIsGlobal || Nominations[i].TeamIndex == Player.GetTeamNum())
-            {
-                bResult = true;
-            }
-            else
-            {
-                // Player already nominated this vote but must've switched
-                // teams. Clean it up.
-                RemoveNomination(Player, Nominations[i].VoteClass);
-            }
+            // The nomination was successfuly added
+            VoteClass.static.OnNominated(Player, Level, NominationsThresholdCount - PlayerNominators.Length);
         }
     }
-
-    return bResult;
 }
 
 function RemoveNomination(PlayerController Player, class<DHVoteInfo> VoteClass)
@@ -146,7 +120,7 @@ function RemoveNomination(PlayerController Player, class<DHVoteInfo> VoteClass)
        return;
    }
 
-   for (i = Nominations.Length - 1; i >= 0; --i)
+   i = 0; while (i < Nominations.Length)
    {
        if (Nominations[i].VoteClass == VoteClass && Nominations[i].Player == Player)
        {
@@ -159,7 +133,10 @@ function RemoveNomination(PlayerController Player, class<DHVoteInfo> VoteClass)
            }
 
            Nominations.Remove(i, 1);
+           continue;
        }
+
+       ++i;
    }
 }
 
@@ -172,14 +149,51 @@ function ClearNominations(class<DHVoteInfo> VoteClass, byte TeamIndex)
         return;
     }
 
-    for (i = Nominations.Length - 1; i >= 0; --i)
+    i = 0; while (i < Nominations.Length)
     {
         if (Nominations[i].VoteClass == VoteClass && Nominations[i].TeamIndex == TeamIndex)
         {
             VoteClass.static.OnNominationRemoved(Nominations[i].Player);
             Nominations.Remove(i, 1);
+            continue;
+        }
+
+        ++i;
+    }
+}
+
+function bool HasPlayerNominatedVote(PlayerController Player)
+{
+    local int i;
+
+    if (Player == none)
+    {
+        return false;
+    }
+
+    for (i = 0; i < Nominations.Length; ++i)
+    {
+        if (Nominations[i].Player == Player && (Nominations[i].VoteClass.default.bIsGlobalVote || Nominations[i].TeamIndex == Player.GetTeamNum()))
+        {
+            return true;
         }
     }
+}
+
+// VOTES
+
+function PlayerVoted(PlayerController Voter, int VoteId, int OptionIndex)
+{
+    local int VoteIndex;
+
+    VoteIndex = GetVoteIndexById(VoteId);
+
+    if (Voter == none || VoteIndex == -1)
+    {
+        return;
+    }
+
+    Votes[VoteIndex].RecieveVote(Voter, OptionIndex);
 }
 
 function StartVote(class<DHVoteInfo> VoteClass, byte TeamIndex, optional array<PlayerController> Nominators)
@@ -201,7 +215,7 @@ function StartVote(class<DHVoteInfo> VoteClass, byte TeamIndex, optional array<P
         for (i = 0; i < FreeIndex; ++i)
         {
             // TODO: Allow multiple votes of the same type
-            if (Votes[i] == Vote && (Vote.bIsGlobal || Votes[i].TeamIndex == TeamIndex))
+            if (Votes[i] == Vote && (Vote.bIsGlobalVote || Votes[i].TeamIndex == TeamIndex))
             {
                 Warn("Attempted to start a vote that was already in progress");
                 return;
@@ -251,7 +265,7 @@ function int GetVoteIndex(class<DHVoteInfo> VoteClass, optional byte TeamIndex)
         if (Votes[i] != none &&
             Votes[i].Class == VoteClass &&
             !Votes[i].bDeleteMe &&
-            (Votes[i].default.bIsGlobal || Votes[i].TeamIndex == TeamIndex))
+            (Votes[i].default.bIsGlobalVote || Votes[i].TeamIndex == TeamIndex))
         {
             return i;
         }
@@ -260,35 +274,29 @@ function int GetVoteIndex(class<DHVoteInfo> VoteClass, optional byte TeamIndex)
     return -1;
 }
 
-function PlayerVoted(PlayerController Voter, int VoteId, int OptionIndex)
-{
-    local int VoteIndex;
-
-    VoteIndex = GetVoteIndexById(VoteId);
-
-    if (Voter == none || VoteIndex == -1)
-    {
-        return;
-    }
-
-    Votes[VoteIndex].RecieveVote(Voter, OptionIndex);
-}
+// VOTE COOLDOWN TIMES
 
 protected function AddVoteTime(DHVoteInfo Vote)
 {
     local DHGameReplicationInfo GRI;
-    local int i, AddToIndex, TeamIndex;
+    local int i, AddToIndex, TeamIndex, CooldownSeconds;
     local bool bVoteFound;
 
     GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
 
-    if (GRI == none || Vote.default.CooldownSeconds == 0)
+    if (GRI == none || Vote == none)
     {
         return;
     }
 
-    // Timestamps for global votes are saved at index 0
-    if (Vote.default.bIsGlobal)
+    CooldownSeconds = Vote.GetCooldownSeconds();
+
+    if (CooldownSeconds <= 0)
+    {
+        return;
+    }
+
+    if (Vote.default.bIsGlobalVote)
     {
         TeamIndex = 0;
     }
@@ -316,12 +324,11 @@ protected function AddVoteTime(DHVoteInfo Vote)
 
     if (TeamIndex < arraycount(CooldownTimes[AddToIndex].Timestamps))
     {
-        // CooldownTimes[AddToIndex].Timestamps[TeamIndex] = 1;
-        CooldownTimes[AddToIndex].Timestamps[TeamIndex] = GRI.ElapsedTime + Vote.default.CooldownSeconds;
+        CooldownTimes[AddToIndex].Timestamps[TeamIndex] = GRI.ElapsedTime + CooldownSeconds;
     }
     else
     {
-        Warn("Failed to add vote timestamp");
+        Warn("Failed to add the timestamp");
     }
 }
 
@@ -336,7 +343,7 @@ function int GetVoteTime(class<DHVoteInfo> VoteClass, byte TeamIndex)
             continue;
         }
 
-        if (VoteClass.default.bIsGlobal || TeamIndex > 1)
+        if (VoteClass.default.bIsGlobalVote || TeamIndex > 1)
         {
             TeamIndex = 0;
         }
