@@ -42,8 +42,8 @@ defaultproperties
     HUDOverlayFOV=85.0
 
     // Hull armor
-    FrontArmor(0)=(Thickness=9.0,Slope=-30.0,MaxRelativeHeight=-11.0,LocationName="lower") // note: sources agree IS2 (our base hull) had 100mm, but show ISU-152 having 90mm
-    FrontArmor(1)=(Thickness=6.0,Slope=72.0,MaxRelativeHeight=0.1,LocationName="upper")
+    FrontArmor(0)=(Thickness=9.0,Slope=-30.0,MaxRelativeHeight=-15.0,LocationName="lower") // note: sources agree IS2 (our base hull) had 100mm, but show ISU-152 having 90mm
+    FrontArmor(1)=(Thickness=6.0,Slope=78.0,MaxRelativeHeight=1.0,LocationName="upper")
     FrontArmor(2)=(Thickness=9.0,Slope=30.0,LocationName="superstructure")
     RightArmor(0)=(Thickness=9.0,MaxRelativeHeight=0.8,LocationName="lower")
     RightArmor(1)=(Thickness=7.5,Slope=15.0,LocationName="superstructure")
@@ -155,6 +155,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=30.0,Y=-10.0)
         WheelRadius=27.0
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_ISU152Destroyer.LF_Steering'
 
@@ -175,6 +176,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=-18.0,Y=-10.0)
         WheelRadius=26.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_ISU152Destroyer.LR_Steering'
 
@@ -194,6 +196,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(Y=-10.0)
         WheelRadius=28.0
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_ISU152Destroyer.Left_Drive_Wheel'
 

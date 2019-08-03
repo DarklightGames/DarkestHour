@@ -8,7 +8,7 @@ class DHMortarVehicle extends ROVehicle
 
 var     DHPawn      OwningPawn;       // reference to the player pawn that owns this mortar (the current operator or the last player to man it)
 var     bool        bCanBeResupplied; // flags that the mortar doesn't have full ammo & so can receive passed ammo
-var     TreeMap_string_Object   NotifyParameters; // an object that can hold references to several other objects, which can be used by messages to build a tailored message
+var     TreeMap_string_Object NotifyParameters; // an object that can hold references to several other objects, which can be used by messages to build a tailored message
 
 replication
 {
@@ -34,6 +34,16 @@ Begin:
 function ServerDestroyMortar()
 {
     Destroy();
+}
+
+simulated function Destroyed()
+{
+    super.Destroyed();
+
+    if (NotifyParameters != none)
+    {
+        NotifyParameters.Clear();
+    }
 }
 
 // Modified to set up new NotifyParameters object, including this vehicle class, which gets passed to screen messages & allows them to display vehicle name

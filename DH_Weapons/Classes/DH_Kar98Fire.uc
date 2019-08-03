@@ -8,7 +8,7 @@ class DH_Kar98Fire extends DHBoltFire;
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_Kar98Bullet'
-    AmmoClass=class'ROAmmo.Kar792x57Ammo'
+    AmmoClass=class'DH_Weapons.DH_Kar98Ammo'
     FireRate=2.6
     FAProjSpawnOffset=(X=-30.0)
     Spread=50.0

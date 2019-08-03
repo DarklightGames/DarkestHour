@@ -178,7 +178,8 @@ simulated function Fire(float F)
     if (Instigator == none ||
         Instigator.Controller == none ||
         Instigator.IsProneTransitioning() ||
-        Instigator.Velocity != vect(0.0, 0.0, 0.0))
+        Instigator.Velocity != vect(0.0, 0.0, 0.0) ||
+        IsInState('Cutting'))
     {
         return;
     }

@@ -31,6 +31,14 @@ var     float           HipSpreadModifier;           // modifier applied when pl
 var     float           LeanSpreadModifier;          // modifier applied when player is firing while leaning
 var     bool            bDebugSpread;                // debug option to show limits of spread as red lines
 
+// Recoil system
+var     InterpCurve     RecoilCurve;                 // A curve to determine the recoil modifier for RecoilGain (shots fired recently)
+var     float           RecoilGain;                  // The input for the RecoilCurve, RecoilGain is higher if a lot of rounds have been fired recently
+var     float           RecoilGainIncrementAmount;   // The value to increase RecoilGain by every time recoil happens
+var     float           RecoilFallOffFactor;         // (TimeSinceLastRecoil ^ RecoilFallOffExponent) * RecoilFallOffFactor
+var     float           RecoilFallOffExponent;
+var     float           PctHipMGPenalty;             // Amount of recoil to add when the player firing an MG from the hip
+
 // Tracers
 var     bool            bUsesTracers;                // true if the weapon uses tracers
 var     int             TracerFrequency;             // how often a tracer is loaded in (as in, 1 in TracerFrequency)
@@ -166,6 +174,14 @@ function DoFireEffect()
             }
         }
     }
+}
+
+simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
+{
+    Canvas.SetDrawColor(250,180,180);
+    Canvas.DrawText("===FIREMODE===" @ Name @ "RecoilGain:" @ GetEffectiveRecoilGain() @ "IsFiring:" @ bIsFiring @ "In state:" @ GetStateName());
+    YPos += YL;
+    Canvas.SetPos(4,YPos);
 }
 
 // New helper function to check whether player is hip firing
@@ -487,6 +503,34 @@ function bool PreLaunchTrace(vector Start, vector Direction)
     return true;
 }
 
+simulated function float GetFiringSoundPitch()
+{
+    local float                 Pitch;
+    local DHProjectileWeapon    W;
+
+    // Set default pitch
+    Pitch = 1.0;
+
+    W = DHProjectileWeapon(Weapon);
+
+    if (W != none && W.bBarrelDamaged)
+    {
+        // 0.8125 is 64/52.0 (the value used for MG overheating (weapons with looping sounds)
+        Pitch = FMax(0.8125, 1.0 - ((W.BarrelTemperature - W.default.BarrelClass.default.CriticalTemperature) / (W.default.BarrelClass.default.FailureTemperature - W.default.BarrelClass.default.CriticalTemperature)));
+    }
+
+    return Pitch;
+}
+
+// Modified to handle low pitch from barrels
+function ServerPlayFiring()
+{
+    if (FireSounds.Length > 0)
+    {
+        Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)],SLOT_None,FireVolume,,, GetFiringSoundPitch(), false);
+    }
+}
+
 // Modified to handle different firing animations when on sights
 function PlayFiring()
 {
@@ -521,7 +565,7 @@ function PlayFiring()
 
         if (FireSounds.Length > 0)
         {
-            Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,,, false);
+            Weapon.PlayOwnedSound(FireSounds[Rand(FireSounds.Length)], SLOT_None, FireVolume,,, GetFiringSoundPitch(), false);
         }
     }
 
@@ -545,21 +589,130 @@ function PlayFireEnd()
     }
 }
 
+// Function which allows a custom recoil modifier, without having to duplicate HandleRecoil entirely
+simulated function float CustomHandleRecoil()
+{
+    return 1.0;
+}
+
 simulated function HandleRecoil()
 {
-    super.HandleRecoil();
+    local rotator       NewRecoilRotation;
+    local DHPlayer      PC;
+    local DHPawn        P;
 
+    if (Instigator != none)
+    {
+        PC = DHPlayer(Instigator.Controller);
+        P = DHPawn(Instigator);
+    }
+
+    if (PC == none || P == none)
+    {
+        return;
+    }
+
+    if (!PC.bFreeCamera)
+    {
+        // Initial recoil values (random range from 75% of max to max)
+        NewRecoilRotation.Pitch = RandRange(MaxVerticalRecoilAngle * 0.75, MaxVerticalRecoilAngle);
+        NewRecoilRotation.Yaw = RandRange(MaxHorizontalRecoilAngle * 0.75, MaxHorizontalRecoilAngle);
+
+        // Randomize the horizontal recoil (so it goes left or right)
+        if (Rand(2) == 1)
+        {
+            NewRecoilRotation.Yaw *= -1;
+        }
+
+        // If falling, increase recoil significantly
+        if (Instigator.Physics == PHYS_Falling)
+        {
+            NewRecoilRotation *= 3;
+        }
+
+        if (Instigator.bIsCrouched)
+        {
+            NewRecoilRotation *= PctCrouchRecoil;
+
+            if (Weapon.bUsingSights)
+            {
+                NewRecoilRotation *= PctCrouchIronRecoil;
+            }
+        }
+        else if (Instigator.bIsCrawling)
+        {
+            NewRecoilRotation *= PctProneRecoil;
+
+            if (Weapon.bUsingSights)
+            {
+                NewRecoilRotation *= PctProneIronRecoil;
+            }
+        }
+        else if (Weapon.bUsingSights)
+        {
+            NewRecoilRotation *= PctStandIronRecoil;
+        }
+
+        if (P.bRestingWeapon)
+        {
+            NewRecoilRotation *= PctRestDeployRecoil;
+        }
+
+        if (Instigator.bBipodDeployed)
+        {
+            NewRecoilRotation *= PctBipodDeployRecoil;
+        }
+
+        if (P.LeanAmount != 0)
+        {
+            NewRecoilRotation *= PctLeanPenalty;
+        }
+
+        // Custom recoil functionality
+        NewRecoilRotation *= CustomHandleRecoil();
+
+        // Falloff the RecoilGain based on how much time has passed since we last had recoil
+        RecoilGain -= GetRecoilGainFalloff(Level.TimeSeconds - PC.LastRecoilTime);
+        RecoilGain = FMax(0.0, RecoilGain); // Make sure RecoilGain is not below zero
+
+        // This interps the recoil curve based on RecoilGain, which is based on # of shots fired recently
+        NewRecoilRotation *= InterpCurveEval(RecoilCurve, RecoilGain);
+
+        // Increment the RecoilGain as recoil has been handled
+        RecoilGain += RecoilGainIncrementAmount;
+
+        // Set the recoil in the DHPlayer
+        PC.SetRecoil(NewRecoilRotation, RecoilRate);
+    }
+
+    // Handle blur from the recoil
     if (Level.NetMode != NM_DedicatedServer && default.bShouldBlurOnFire && Instigator != none && ROPlayer(Instigator.Controller) != none)
     {
         if (Weapon.bUsingSights)
         {
-            ROPlayer(Instigator.Controller).AddBlur(BlurTimeIronsight, BlurScaleIronsight);
+            PC.AddBlur(BlurTimeIronsight, BlurScaleIronsight);
         }
         else
         {
-            ROPlayer(Instigator.Controller).AddBlur(BlurTime, BlurScale);
+            PC.AddBlur(BlurTime, BlurScale);
         }
     }
+}
+
+// Function used for debugging RecoilGain
+simulated function float GetEffectiveRecoilGain()
+{
+    local float EffectiveRecoilGain;
+
+    EffectiveRecoilGain = RecoilGain - GetRecoilGainFalloff(Level.TimeSeconds - DHPlayer(Instigator.Controller).LastRecoilTime);
+    EffectiveRecoilGain = FMax(0.0, EffectiveRecoilGain);
+
+    return EffectiveRecoilGain;
+}
+
+simulated function float GetRecoilGainFalloff(float TimeSeconds)
+{
+    return (TimeSeconds ** RecoilFallOffExponent) * RecoilFallOffFactor;
 }
 
 // Modified to use the IsPlayerHipFiring() helper function, which makes this function generic & avoids re-stating in subclasses to make minor changes
@@ -622,9 +775,13 @@ defaultproperties
     PctCrouchIronRecoil=0.6
     PctProneRecoil=0.7
     PctProneIronRecoil=0.4
-    PctBipodDeployRecoil=0.1
     PctRestDeployRecoil=0.5
+    PctBipodDeployRecoil=0.1
     PctLeanPenalty=1.25
+    RecoilCurve=(Points=((InVal=0.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0))) // Default curve has no impact on recoil
+    RecoilGainIncrementAmount=1.0
+    RecoilFallOffFactor=5.0
+    RecoilFallOffExponent=2.0
 
     // Spread
     CrouchSpreadModifier=0.9

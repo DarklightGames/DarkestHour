@@ -7,14 +7,14 @@ class DHAccessControl extends AccessControlINI;
 
 // WARNING: Changing anything in here would be a great way to get your server blacklisted.
 
-struct PatronInfo
+struct Patron
 {
-    var string PatronROID;
-    var int PatronLevel;
+    var string ROID;
+    var string Tier;
 };
 
 var private array<string>           DeveloperIDs;
-var private array<PatronInfo>       PatreonIDs; // A list of patreon ROIDs for users that are on MAC and don't work with normal system
+var private array<Patron>           Patrons; // A list of patreon ROIDs for users that are on MAC and don't work with normal system
 
 function bool AdminLogin(PlayerController P, string Username, string Password)
 {
@@ -127,19 +127,19 @@ static function bool IsDeveloper(string ROID)
 
 // This only gets the patron level off the PatreonIDs array in the default properties below, not from the webserver
 // This is used to fix an issue with MAC/Linux not being able to properly use the HTTP request function
-static function int GetPatronLevel(string ROID)
+static function string GetPatronTier(string ROID)
 {
     local int i;
 
-    for (i = 0; i < default.PatreonIDs.Length; ++i)
+    for (i = 0; i < default.Patrons.Length; ++i)
     {
-        if (ROID ~= default.PatreonIDs[i].PatronROID)
+        if (ROID ~= default.Patrons[i].ROID)
         {
-            return default.PatreonIDs[i].PatronLevel;
+            return default.Patrons[i].Tier;
         }
     }
 
-    return -1;
+    return "";
 }
 
 defaultproperties
@@ -152,6 +152,7 @@ defaultproperties
     DeveloperIDs(1)="76561197960644559" // Basnett
     DeveloperIDs(2)="76561198043869714" // DirtyBirdy
 
-    PatreonIDs(0)=(PatronROID="76561198066643021",PatronLevel=2) // PFC Patison
-    PatreonIDs(1)=(PatronROID="76561198431789713",PatronLevel=0) // Bearnoceros
+    Patrons(0)=(ROID="76561198066643021",Tier="silver") // PFC Patison
+    Patrons(1)=(ROID="76561198431789713",Tier="lead") // Bearnoceros
+    Patrons(2)=(ROID="76561198018980127",Tier="lead") // MacEwan
 }

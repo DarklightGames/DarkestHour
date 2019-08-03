@@ -132,6 +132,7 @@ defaultproperties
         BoneOffset=(Y=-11.0)
         SupportBoneName="axel_F_L"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_GreyhoundArmoredCar.LFWheel'
     Begin Object Class=SVehicleWheel Name=MRWheel
@@ -150,6 +151,7 @@ defaultproperties
         BoneOffset=(Y=-11.0)
         SupportBoneName="axel_M_L"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_GreyhoundArmoredCar.MLWheel'
     Begin Object Class=SVehicleWheel Name=RRWheel
@@ -168,6 +170,7 @@ defaultproperties
         BoneOffset=(Y=-11.0)
         SupportBoneName="axel_R_L"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_GreyhoundArmoredCar.LRWheel'
 

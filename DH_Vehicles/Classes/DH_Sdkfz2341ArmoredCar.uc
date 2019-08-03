@@ -147,6 +147,7 @@ defaultproperties
         WheelRadius=32.0
         SupportBoneName="Axel_LF"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.LFWheel'
     Begin Object Class=SVehicleWheel Name=MFRWheel
@@ -167,6 +168,7 @@ defaultproperties
         WheelRadius=32.0
         SupportBoneName="Axel_L_1"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.MFLWheel'
     Begin Object Class=SVehicleWheel Name=MRRWheel
@@ -187,6 +189,7 @@ defaultproperties
         WheelRadius=32.0
         SupportBoneName="Axel_R_2"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.MRLWheel'
     Begin Object Class=SVehicleWheel Name=RRWheel
@@ -207,6 +210,7 @@ defaultproperties
         WheelRadius=32.0
         SupportBoneName="Axel_LR"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(7)=SVehicleWheel'DH_Vehicles.DH_Sdkfz2341ArmoredCar.RLWheel'
 

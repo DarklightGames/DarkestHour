@@ -35,15 +35,17 @@ defaultproperties
     bDrawDriverInTP=false
 
     // Hull armor
-    FrontArmor(0)=(Thickness=2.0,Slope=-75.0,MaxRelativeHeight=-26.5,LocationName="lower nose")
-    FrontArmor(1)=(Thickness=8.0,Slope=-20.0,MaxRelativeHeight=5.5,LocationName="nose")
+    FrontArmor(0)=(Thickness=3.0,Slope=-75.0,MaxRelativeHeight=-26.5,LocationName="lower nose")
+    FrontArmor(1)=(Thickness=8.0,Slope=-21.0,MaxRelativeHeight=5.5,LocationName="nose")
     FrontArmor(2)=(Thickness=8.0,Slope=52.0,MaxRelativeHeight=22.5,LocationName="upper nose")
-    FrontArmor(3)=(Thickness=8.0,Slope=10.0,MaxRelativeHeight=42.0,LocationName="lower super")
-    FrontArmor(4)=(Thickness=3.0,Slope=68.0,LocationName="upper super")
-    RightArmor(0)=(Thickness=3.0,MaxRelativeHeight=28.6,LocationName="lower")
-    RightArmor(1)=(Thickness=3.0,Slope=11.0,LocationName="superstructure")
-    LeftArmor(0)=(Thickness=3.0,MaxRelativeHeight=28.6,LocationName="lower")
-    LeftArmor(1)=(Thickness=3.0,Slope=11.0,LocationName="superstructure")
+    FrontArmor(3)=(Thickness=8.0,Slope=9.0,MaxRelativeHeight=42.0,LocationName="DFP")
+    FrontArmor(4)=(Thickness=3.0,Slope=70.0,LocationName="upper super")
+    RightArmor(0)=(Thickness=3.0,MaxRelativeHeight=27.0,LocationName="lower")
+    RightArmor(1)=(Thickness=3.0,Slope=10.0,MaxRelativeHeight=61.0,LocationName="lower_super")
+    RightArmor(2)=(Thickness=1.0,Slope=75.0,LocationName="upper_super")
+    LeftArmor(0)=(Thickness=3.0,MaxRelativeHeight=27.0,LocationName="lower")
+    LeftArmor(1)=(Thickness=3.0,Slope=10.0,MaxRelativeHeight=61.0,LocationName="lower_super")
+    LeftArmor(2)=(Thickness=1.0,Slope=75.0,LocationName="upper_super")
     RearArmor(0)=(Thickness=5.0,Slope=-10.0,MaxRelativeHeight=2.5,LocationName="lower")
     RearArmor(1)=(Thickness=5.0,Slope=17.0,MaxRelativeHeight=29.0,LocationName="upper")
     RearArmor(2)=(Thickness=1.7,Slope=78.0,MaxRelativeHeight=43.3,LocationName="deck")
@@ -153,6 +155,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=35.0,Y=-5.0,Z=6.0)
         WheelRadius=30.0
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_Stug3GDestroyer.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -171,6 +174,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=-7.0,Y=-5.0,Z=6.0)
         WheelRadius=30.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_Stug3GDestroyer.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering
@@ -188,6 +192,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(Z=6.0)
         WheelRadius=30.0
+        bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_Stug3GDestroyer.Left_Drive_Wheel'
     Begin Object Class=SVehicleWheel Name=Right_Drive_Wheel

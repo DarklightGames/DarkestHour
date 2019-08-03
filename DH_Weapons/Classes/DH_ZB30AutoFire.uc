@@ -5,6 +5,7 @@
 
 class DH_ZB30AutoFire extends DHAutomaticFire;
 
+// WIP (not used in game yet)
 defaultproperties
 {
     ProjectileClass=Class'DH_Weapons.DH_ZB30Bullet'
@@ -14,11 +15,6 @@ defaultproperties
 
     // Spread
     Spread=100.0
-
-    // Recoil pct
-    PctBipodDeployRecoil=0.02
-
-    PctRestDeployRecoil=0.05
 
     // Recoil
     RecoilRate=0.05

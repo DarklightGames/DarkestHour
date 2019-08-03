@@ -704,7 +704,7 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
     local DHVoiceReplicationInfo VRI;
     local DHGameReplicationInfo GRI;
     local VoiceChatRoom SquadVCR;
-    local int i, RoleIndex;
+    local int i;
     local array<DHPlayerReplicationInfo> Volunteers;
     local DHPlayerReplicationInfo Assistant;
     local DarkestHourGame G;
@@ -747,20 +747,6 @@ function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowL
     PRI.SquadIndex = -1;
     PRI.SquadMemberIndex = -1;
     PRI.bIsSquadAssistant = false;
-
-    // Unreserve role, if gametype restricts specials roles only to squads
-    if (GRI.GameType.default.bSquadSpecialRolesOnly && PRI.RoleInfo != none && PRI.RoleInfo.Limit != 255)
-    {
-        PC.bSpawnPointInvalidated = true;
-        PC.DesiredRole = -1;
-
-        RoleIndex = G.GetUnlimitedRoleIndex(TeamIndex);
-
-        if (RoleIndex != -1)
-        {
-            PC.ChangeRole(i);
-        }
-    }
 
     // Clear squad leader volunteer application.
     ClearSquadLeaderVolunteer(PRI, TeamIndex, SquadIndex);
@@ -2182,22 +2168,6 @@ function UpdateRallyPoints()
     }
 }
 
-simulated function array<DHSpawnPoint_SquadRallyPoint> GetExposedEnemyRallyPoints(int TeamIndex)
-{
-    local int i;
-    local array<DHSpawnPoint_SquadRallyPoint> ExposedEnemyRallyPoints;
-
-    for (i = 0; i < arraycount(RallyPoints); ++i)
-    {
-        if (RallyPoints[i] != none && RallyPoints[i].GetTeamIndex() != TeamIndex && RallyPoints[i].bIsExposed)
-        {
-            ExposedEnemyRallyPoints[ExposedEnemyRallyPoints.Length] = RallyPoints[i];
-        }
-    }
-
-    return ExposedEnemyRallyPoints;
-}
-
 function SetTeamSquadSize(int TeamIndex, int SquadSize)
 {
     local int OldTeamSquadSize, i;
@@ -2632,7 +2602,7 @@ function ESquadMergeRequestResult SendSquadMergeRequest(DHPlayer SenderPC, int T
     SquadMergeRequests[SquadMergeRequests.Length] = MR;
 
     // Send the merge request to the recipient.
-    RecipientPC.ClientReceieveSquadMergeRequest(MR.ID, SenderPRI.PlayerName, GetSquadName(TeamIndex, SenderSquadIndex));
+    RecipientPC.ClientReceiveSquadMergeRequest(MR.ID, SenderPRI.PlayerName, GetSquadName(TeamIndex, SenderSquadIndex));
 
     // Set the next merge request time for the sender.
     SenderPC.NextSquadMergeRequestTimeSeconds = Level.TimeSeconds + SQUAD_MERGE_REQUEST_INTERVAL;

@@ -24,6 +24,8 @@ var     localized string    BroadcastSetTimeRemaining;
 var     localized string    NotifyToggleAdminCanPause;
 var     localized string    BroadcastAlliesSquadSizeChanged;
 var     localized string    BroadcastAxisSquadSizeChanged;
+var     localized string    BroadcastRallyPointsDisabled;
+var     localized string    BroadcastRallyPointsEnabled;
 
 static function string GetString(optional int Switch, optional PlayerReplicationInfo RelatedPRI_1, optional PlayerReplicationInfo RelatedPRI_2, optional Object OptionalObject)
 {
@@ -99,6 +101,12 @@ static function string GetString(optional int Switch, optional PlayerReplication
             case 17:
                 MessageString = default.NotifyGag;
                 break;
+            case 18:
+                MessageString = default.BroadcastRallyPointsDisabled;
+                break;
+            case 19:
+                MessageString = default.BroadcastRallyPointsEnabled;
+                break;
 
             default: // just in case something goes wrong we'll return a blank string
                 return "";
@@ -137,4 +145,6 @@ defaultproperties
     NotifyToggleAdminCanPause="You toggled 'admin can pause' setting to #bAdminCanPause#"
     BroadcastAlliesSquadSizeChanged="Allies squad size has been changed by admin"
     BroadcastAxisSquadSizeChanged="Axis squad size has been changed by admin"
+    BroadcastRallyPointsDisabled="Rally point placement is DISABLED by admin"
+    BroadcastRallyPointsEnabled="Rally point placement is ENABLED by admin"
 }

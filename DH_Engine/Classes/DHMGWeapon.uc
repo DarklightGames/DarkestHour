@@ -118,52 +118,29 @@ simulated function bool StartFire(int Mode)
 // Modified to prevent MG from playing fire end anims while auto firing
 simulated function AnimEnd(int Channel)
 {
-    if (!FireMode[0].IsInState('FireLoop'))
-    {
-        super.AnimEnd(Channel);
-    }
-}
+    local name  Anim;
+    local float Frame, Rate;
 
-// Modified so works in DHDebugMode, & to log barrels & their current temperature & state
-simulated function DisplayDebug(Canvas Canvas, out float YL, out float YPos)
-{
-    local DHWeaponBarrel Barrel;
-    local int            i;
-
-    if (Level.NetMode != NM_Standalone && !class'DH_LevelInfo'.static.DHDebugMode())
+    if (FireMode[0].IsInState('FireLoop'))
     {
         return;
     }
 
-    super(Weapon).DisplayDebug(Canvas, YL, YPos); // skip over Super in ROWeapon, as it requires RODebugMode
-
-    // The super from ROWeapon, logging the FOV settings
-    Canvas.SetDrawColor(0, 255, 0);
-    Canvas.DrawText("DisplayFOV is" @ DisplayFOV $ ", default is" @ default.DisplayFOV $ ", zoomed default is" @ IronSightDisplayFOV);
-    YPos += YL;
-    Canvas.SetPos(4.0, YPos);
-
-    // Show the barrel info - only works in multi-player as barrel actors don't exist on net clients
-    if (Role == ROLE_Authority)
+    if (ClientState == WS_ReadyToFire)
     {
-        for (i = 0; i < Barrels.Length; ++i)
+        GetAnimParams(0, Anim, Frame, Rate);
+
+        if ((Anim == FireMode[0].FireAnim || Anim == DHAutomaticFire(FireMode[0]).BipodDeployFireLoopAnim) && !FireMode[0].bIsFiring)
         {
-            Barrel = Barrels[i];
-
-            if (Barrel != none)
-            {
-                if (i == BarrelIndex)
-                {
-                    Canvas.DrawText("Active barrel temp:" @ Barrel.Temperature @ "State:" @ Barrel.GetStateName());
-                }
-                else
-                {
-                    Canvas.DrawText("Hidden barrel temp:" @ Barrel.Temperature @ "State:" @ Barrel.GetStateName());
-                }
-
-                YPos += YL;
-                Canvas.SetPos(4.0, YPos);
-            }
+            FireMode[0].PlayFireEnd();
+        }
+        else if (DHProjectileFire(FireMode[0]) != none && Anim == DHProjectileFire(FireMode[0]).FireIronAnim && !FireMode[0].bIsFiring)
+        {
+            PlayIdle();
+        }
+        else if (!FireMode[0].bIsFiring && !FireMode[1].bIsFiring)
+        {
+            PlayIdle();
         }
     }
 }

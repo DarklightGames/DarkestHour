@@ -65,7 +65,8 @@ var     float               LastNotifyTime;
 var     float   IronsightBobTime;
 var     vector  IronsightBob;
 var     float   IronsightBobAmplitude;
-var     float   IronsightBobFrequency;
+var     float   IronsightBobFrequencyY;
+var     float   IronsightBobFrequencyZ;
 var     float   IronsightBobDecay;
 
 // Hit sounds
@@ -116,6 +117,9 @@ var     int                 BurnTimeLeft;                  // number of seconds 
 var     float               LastBurnTime;                  // last time we did fire damage to the Pawn
 var     Pawn                FireStarter;                   // who set a player on fire
 
+// (not) DUMB SHIT
+var     DHATGun             GunToRotate;
+
 replication
 {
     // Variables the server will replicate to clients when this actor is 1st replicated
@@ -136,12 +140,11 @@ replication
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
-        ServerGiveConstructionWeapon, ServerSpawnPlane;
+        ServerGiveWeapon, ServerSpawnPlane;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
-        ClientPawnWhizzed;
-
+        ClientPawnWhizzed, ClientExitATRotation;
 }
 
 // Modified to use DH version of bullet whip attachment, & to remove its SavedAuxCollision (deprecated as now we simply enable/disable collision in ToggleAuxCollision function)
@@ -2688,10 +2691,16 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     local float           DamageBeyondZero;
     local bool            bShouldGib;
 
+
     // Exit if pawn being destroyed or level is being cleaned up
     if (bDeleteMe || Level.bLevelChange || Level.Game == none)
     {
         return;
+    }
+
+    if(GunToRotate != none)
+    {
+        GunToRotate.ServerExitRotation();
     }
 
     // Re-assign killer if death was caused indirectly by them
@@ -2844,6 +2853,8 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
         NetUpdateFrequency = default.NetUpdateFrequency;
         PlayDying(DamageType, HitLocation);
     }
+
+
 }
 
 // Stop damage overlay from overriding burning overlay if necessary
@@ -5571,18 +5582,33 @@ simulated exec function BobAmplitude(optional float F)
     }
 }
 
-simulated exec function BobFrequency(optional float F)
+simulated exec function BobFrequencyY(optional float F)
 {
     if (IsDebugModeAllowed())
     {
         if (F == 0)
         {
-            Level.Game.Broadcast(self, "IronsightBobFrequency" @ IronsightBobFrequency);
+            Level.Game.Broadcast(self, "IronsightBobFrequencyY" @ IronsightBobFrequencyY);
 
             return;
         }
 
-        IronsightBobFrequency = F;
+        IronsightBobFrequencyY = F;
+    }
+}
+
+simulated exec function BobFrequencyZ(optional float F)
+{
+    if (IsDebugModeAllowed())
+    {
+        if (F == 0)
+        {
+            Level.Game.Broadcast(self, "IronsightBobFrequencyZ" @ IronsightBobFrequencyZ);
+
+            return;
+        }
+
+        IronsightBobFrequencyZ = F;
     }
 }
 
@@ -5607,7 +5633,7 @@ simulated exec function BobDecay(optional float F)
 function CheckBob(float DeltaTime, vector Y)
 {
     local float BobModifier, Speed2D, OldBobTime, IronsightBobAmplitudeModifier, IronsightBobDecayModifier;
-    local int   m, n;
+    local int   M, N;
 
     OldBobTime = BobTime;
 
@@ -5675,24 +5701,24 @@ function CheckBob(float DeltaTime, vector Y)
         {
             if (bIsCrawling)
             {
-                IronsightBobAmplitudeModifier = 0.5;
-                IronsightBobDecayModifier = 1.5;
-            }
-            else if (bIsCrouched)
-            {
                 IronsightBobAmplitudeModifier = 0.75;
                 IronsightBobDecayModifier = 1.25;
             }
+            else if (bIsCrouched)
+            {
+                IronsightBobAmplitudeModifier = 0.9;
+                IronsightBobDecayModifier = 1.1;
+            }
             else
             {
-                IronsightBobAmplitudeModifier = 1.0;
+                IronsightBobAmplitudeModifier = 1.1;
                 IronsightBobDecayModifier = 1.0;
             }
 
             IronsightBobTime += DeltaTime;
 
-            IronsightBob.Y = BobFunction(IronsightBobTime, IronsightBobAmplitude * IronsightBobAmplitudeModifier, IronsightBobFrequency, IronsightBobDecay * IronsightBobDecayModifier);
-            IronsightBob.Z = BobFunction(IronsightBobTime, IronsightBobAmplitude * IronsightBobAmplitudeModifier, IronsightBobFrequency, IronsightBobDecay * IronsightBobDecayModifier);
+            IronsightBob.Y = BobFunction(IronsightBobTime, IronsightBobAmplitude * IronsightBobAmplitudeModifier, IronsightBobFrequencyY, IronsightBobDecay * IronsightBobDecayModifier);
+            IronsightBob.Z = BobFunction(IronsightBobTime, IronsightBobAmplitude * IronsightBobAmplitudeModifier, IronsightBobFrequencyZ, IronsightBobDecay * IronsightBobDecayModifier);
         }
         else
         {
@@ -5741,7 +5767,7 @@ function CheckBob(float DeltaTime, vector Y)
 
         if (Speed2D > 10.0)
         {
-            WalkBob.Z = WalkBob.Z + 0.75 * (Bob * BobModifier) * Speed2D * Sin(16.0 * BobTime);
+            WalkBob.Z += 0.75 * (Bob * BobModifier) * Speed2D * Sin(16.0 * BobTime);
         }
 
         if (LandBob > 0.01)
@@ -5753,10 +5779,10 @@ function CheckBob(float DeltaTime, vector Y)
         // Play footstep effects (if moving fast enough & not crawling)
         if (!bIsCrawling && Speed2D >= 10.0 && !(IsHumanControlled() && PlayerController(Controller).bBehindView))
         {
-            m = int(0.5 * Pi + 9.0 * OldBobTime / Pi);
-            n = int(0.5 * Pi + 9.0 * BobTime / Pi);
+            M = int(0.5 * Pi + 9.0 * OldBobTime / Pi);
+            N = int(0.5 * Pi + 9.0 * BobTime / Pi);
 
-            if (m != n)
+            if (M != N)
             {
                 FootStepping(0);
             }
@@ -6755,16 +6781,16 @@ exec function DebugShootAP(optional string APProjectileClassName)
     }
 }
 
-function ServerGiveConstructionWeapon()
+function ServerGiveWeapon(string WeaponClass)
 {
-    local Weapon ConstructionWeapon;
+    local Weapon NewWeapon;
 
-    GiveWeapon("DH_Construction.DH_ConstructionWeapon");
-    ConstructionWeapon = Weapon(FindInventoryType(class<Weapon>(DynamicLoadObject("DH_Construction.DH_ConstructionWeapon", class'class'))));
+    GiveWeapon(WeaponClass);
+    NewWeapon = Weapon(FindInventoryType(class<Weapon>(DynamicLoadObject(WeaponClass, class'class'))));
 
-    if (ConstructionWeapon != none)
+    if (NewWeapon != none)
     {
-        ConstructionWeapon.ClientWeaponSet(true);
+        NewWeapon.ClientWeaponSet(true);
     }
 }
 
@@ -7080,6 +7106,147 @@ simulated function class<DHVoicePack> GetVoicePack()
     return class<DHVoicePack>(VoiceClass);
 }
 
+function EnterATRotation(DHATGun Gun)
+{
+    GunToRotate = Gun;
+
+    ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon");
+}
+
+function ServerExitATRotation()
+{
+    GunToRotate = none;
+
+    ClientExitATRotation();
+}
+
+simulated function ClientExitATRotation()
+{
+    GunToRotate = none;
+
+    if (Weapon != none && Weapon.OldWeapon != none)
+    {
+        // HACK: This stops a standalone client from immediately firing
+        // their previous weapon.
+        if (Level.NetMode == NM_Standalone)
+        {
+            Instigator.Weapon.OldWeapon.ClientState = WS_Hidden;
+        }
+
+        SwitchToLastWeapon();
+        ChangedWeapon();
+    }
+    else
+    {
+        // We've no weapon to go back to so just put this down, subsequently
+        // destroying it.
+        if (Weapon != none)
+        {
+            Weapon.PutDown();
+        }
+
+        Controller.SwitchToBestWeapon();
+    }
+}
+
+exec function RotateAT()
+{
+    local DHATGun Gun;
+
+    foreach RadiusActors(class'DHATGun', Gun, 256.0)
+    {
+        if (Gun != none)
+        {
+            break;
+        }
+    }
+
+    if (Gun == none || Gun.GetRotationError(self) != ERROR_None)
+    {
+        return;
+    }
+
+    GunToRotate = Gun;
+
+    ServerGiveWeapon("DH_Weapons.DH_ATGunRotateWeapon");
+}
+
+simulated exec function IronSightDisplayFOV(float FOV)
+{
+    local DHProjectileWeapon W;
+
+    if (IsDebugModeAllowed())
+    {
+        W = DHProjectileWeapon(Weapon);
+
+        if (W != none)
+        {
+            W.default.IronSightDisplayFOV = FOV;
+            W.default.IronSightDisplayFOVHigh = FOV;
+            W.SetIronSightFOV();
+        }
+    }
+}
+
+simulated exec function ShellRotOffsetIron(int Pitch, int Yaw, int Roll)
+{
+    local ROWeaponFire WF;
+
+    if (IsDebugModeAllowed())
+    {
+        WF = ROWeaponFire(Weapon.GetFireMode(0));
+
+        if (WF != none)
+        {
+            WF.ShellRotOffsetIron.Pitch = Pitch;
+            WF.ShellRotOffsetIron.Yaw = Yaw;
+            WF.ShellRotOffsetIron.Roll = Roll;
+        }
+    }
+}
+
+simulated exec function ShellRotOffsetHip(int Pitch, int Yaw, int Roll)
+{
+    local ROWeaponFire WF;
+
+    if (IsDebugModeAllowed())
+    {
+        WF = ROWeaponFire(Weapon.GetFireMode(0));
+
+        if (WF != none)
+        {
+            WF.ShellRotOffsetHip.Pitch = Pitch;
+            WF.ShellRotOffsetHip.Yaw = Yaw;
+            WF.ShellRotOffsetHip.Roll = Roll;
+        }
+    }
+}
+
+simulated exec function ShellIronSightOffset(float X, float Y, float Z)
+{
+    local ROWeaponFire WF;
+
+    if (IsDebugModeAllowed())
+    {
+        WF = ROWeaponFire(Weapon.GetFireMode(0));
+
+        if (WF != none)
+        {
+            WF.ShellIronSightOffset.X = X;
+            WF.ShellIronSightOffset.Y = Y;
+            WF.ShellIronSightOffset.Z = Z;
+        }
+    }
+}
+
+simulated exec function DebugGiveWeapon(string ClassName)
+{
+    if (IsDebugModeAllowed())
+    {
+        GiveWeapon(ClassName);
+    }
+}
+
 defaultproperties
 {
     // General class & interaction stuff
@@ -7106,9 +7273,10 @@ defaultproperties
     SlowStaminaRecoveryRate=0.5
 
     // Weapon aim
-    IronsightBobAmplitude=4.0
-    IronsightBobFrequency=4.0
-    IronsightBobDecay=6.0
+    IronsightBobAmplitude=1.0
+    IronsightBobFrequencyY=3.75
+    IronsightBobFrequencyZ=5.25
+    IronsightBobDecay=5.0
     DeployedPitchUpLimit=7300 // bipod
     DeployedPitchDownLimit=-7300
 

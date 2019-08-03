@@ -16,6 +16,7 @@ defaultproperties
     VehicleMass=5.0
     ReinforcementCost=3
     MaxDesireability=1.2
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_ext'
@@ -162,6 +163,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=-34.5,Y=0.0,Z=3.5)
         WheelRadius=28.0
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.LF_Steering'
     Begin Object Class=SVehicleWheel Name=RF_Steering
@@ -180,6 +182,7 @@ defaultproperties
         BoneRollAxis=AXIS_Y
         BoneOffset=(X=23.5,Y=0.0,Z=3.5)
         WheelRadius=28.0
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_BrenCarrierTransport.LR_Steering'
     Begin Object Class=SVehicleWheel Name=RR_Steering

@@ -5,8 +5,6 @@
 
 class DH_Pak43ATGun extends DHATGun;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Pak43_anm.ukx
-
 defaultproperties
 {
     VehicleNameString="8.8 cm Pak43/41 AT gun"
@@ -23,6 +21,10 @@ defaultproperties
     ExitPositions(1)=(X=-105.00,Y=-37.00,Z=28.00)
     VehicleMass=11.0
     SupplyCost=2000
+    bCanBeRotated=true
+    PlayersNeededToRotate=2
+    RotationsPerSecond=0.05
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0

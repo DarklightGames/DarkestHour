@@ -14,6 +14,7 @@ defaultproperties
     VehicleMass=2.5
     ReinforcementCost=2
     MaxDesireability=0.12
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_ZiS5V_anm.ZiS5V_ext'
@@ -107,6 +108,7 @@ defaultproperties
         WheelRadius=23.5
         SupportBoneName="Axle_FR" // means left side vertices are rotated around right axle bone - just makes axle move correctly with wheels, purely a visual thing
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_ZiS5vTruck.Wheel_FrontL'
     Begin Object Class=SVehicleWheel Name=Wheel_FrontR
@@ -137,6 +139,7 @@ defaultproperties
         WheelRadius=23.5
         SupportBoneName="Axle_BL"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_ZiS5vTruck.Wheel_BackR'
 

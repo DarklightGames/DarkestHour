@@ -17,6 +17,7 @@ var     float   SwayCrouchedModifier;
 var     float   SwayProneModifier;
 var     float   SwayTransitionModifier;
 var     float   SwayLeanModifier;
+var     float   SwayBayonetModifier;
 
 var     bool            bIsMantling;
 var     bool            bUsesIronsightFOV;
@@ -839,6 +840,16 @@ simulated function Weapon NextWeapon(Weapon CurrentChoice, Weapon CurrentWeapon)
     }
 }
 
+simulated exec function SetPlayerViewOffset(float X, float Y, float Z)
+{
+    if (Level.NetMode == NM_Standalone || class'DH_LevelInfo'.static.DHDebugMode())
+    {
+        default.PlayerViewOffset.X = X;
+        default.PlayerViewOffset.Y = Y;
+        default.PlayerViewOffset.Z = Z;
+    }
+}
+
 defaultproperties
 {
     // Sway modifiers
@@ -849,9 +860,10 @@ defaultproperties
     SwayProneModifier=0.5
     SwayTransitionModifier=4.5
     SwayLeanModifier=1.25
+    SwayBayonetModifier=1.02
 
     PlayerIronsightFOV=60.0
-    BobModifyFactor=1.0
+    BobModifyFactor=0.9
     BobDamping=1.6
     SelectAnimRate=1.0
     PutDownAnimRate=1.0

@@ -13,15 +13,18 @@ defaultproperties
     FireRate=0.1
     TracerFrequency=5
     FAProjSpawnOffset=(X=-20.0)
+    Spread=80.0
 
-    Spread=175.0
-    CrouchSpreadModifier=0.85
-    ProneSpreadModifier=0.7
-    BipodDeployedSpreadModifier=0.5
-    RestDeploySpreadModifier=0.75
+
+    // Recoil
     RecoilRate=0.05
-    MaxVerticalRecoilAngle=450
-    MaxHorizontalRecoilAngle=200
+    MaxVerticalRecoilAngle=510
+    MaxHorizontalRecoilAngle=240
+    PctStandIronRecoil=0.25 // hipfire recoil is very high, this will make it more controlable
+    PctCrouchIronRecoil=0.33 // hipfire recoil is very high, this will make it more controlable
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.6),(InVal=6.0,OutVal=1.0),(InVal=12.0,OutVal=1.5),(InVal=50.0,OutVal=2.5),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilFallOffExponent=4.0
+    RecoilFallOffFactor=24.0
 
     AmbientFireSound=SoundGroup'DH_WeaponSounds.DP28.DP28_fire_loop'
     FireEndSound=SoundGroup'DH_WeaponSounds.DP28.DP28_fire_end'

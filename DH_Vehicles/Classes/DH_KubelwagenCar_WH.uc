@@ -11,6 +11,7 @@ defaultproperties
     VehicleNameString="Volkswagen Type 82"
     VehicleMass=2.0
     ReinforcementCost=1
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Kubelwagen_anm.kubelwagen_body_ext'
@@ -125,6 +126,7 @@ defaultproperties
         WheelRadius=23.0
         SupportBoneName="LeftFrontSusp00"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_KubelwagenCar_WH.LFWheel'
     Begin Object Class=SVehicleWheel Name=RFWheel
@@ -144,6 +146,7 @@ defaultproperties
         WheelRadius=23.0
         SupportBoneName="LeftRearAxle"
         SupportBoneAxis=AXIS_X
+        bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_KubelwagenCar_WH.LRWheel'
     Begin Object Class=SVehicleWheel Name=RRWheel

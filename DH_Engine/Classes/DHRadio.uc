@@ -183,6 +183,16 @@ function RequestArtillery(Pawn Sender, int ArtilleryTypeIndex)
     GotoState('Requesting');
 }
 
+simulated function Destroyed()
+{
+    super.Destroyed();
+
+    if (Request != none)
+    {
+        Request.Sender = none;
+    }
+}
+
 auto state Idle
 {
     function BeginState()

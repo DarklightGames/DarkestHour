@@ -97,7 +97,7 @@ static function bool IsTerrainScaleLarge(TerrainInfo TI)
     return TI != none && GetTerrainScale(TI) > default.LargeTerrainScaleThreshold;
 }
 
-static function StaticMesh GetConstructedStaticMesh(DHConstruction.Context Context)
+static function StaticMesh GetConstructedStaticMesh(DHActorProxy.Context Context)
 {
     if (IsTerrainScaleLarge(TerrainInfo(Context.GroundActor)))
     {
@@ -117,7 +117,7 @@ simulated event Destroyed()
     }
 }
 
-function static GetCollisionSize(DHConstruction.Context Context, out float NewRadius, out float NewHeight)
+function static GetCollisionSize(DHActorProxy.Context Context, out float NewRadius, out float NewHeight)
 {
     super.GetCollisionSize(Context, NewRadius, NewHeight);
 

@@ -23,20 +23,20 @@ static private final function byte ComputeOutCode(float X, float Y, Box Viewport
     local byte Code;
 
     const INSIDE = 0;
-    const LEFT = 1;
-    const RIGHT = 2;
+    const _LEFT = 1;
+    const _RIGHT = 2;
     const BOTTOM = 4;
     const TOP = 8;
 
     if (X < Viewport.Min.X)
     {
         // to the left of clip window
-        Code = Code | LEFT;
+        Code = Code | _LEFT;
     }
     else if (X > Viewport.Max.X)
     {
         // to the right of clip window
-        Code = Code | RIGHT;
+        Code = Code | _RIGHT;
     }
 
     if (Y < Viewport.Min.Y)
@@ -115,13 +115,13 @@ static final function bool ClipLineToViewport(out float X0, out float Y0, out fl
                 X = X0 + (X1 - X0) * (Viewport.Min.Y - Y0) / (Y1 - Y0);
                 Y = Viewport.Min.Y;
             }
-            else if ((OutCodeOut & RIGHT) != 0)
+            else if ((OutCodeOut & _RIGHT) != 0)
             {
                 // point is to the right of clip window
                 Y = Y0 + (Y1 - Y0) * (Viewport.Max.X - X0) / (X1 - X0);
                 X = Viewport.Max.X;
             }
-            else if ((OutCodeOut & LEFT) != 0)
+            else if ((OutCodeOut & _LEFT) != 0)
             {
                 // point is to the left of clip window
                 Y = Y0 + (Y1 - Y0) * (Viewport.Min.X - X0) / (X1 - X0);

@@ -29,7 +29,7 @@ defaultproperties
     CutStaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_02_cut'
     CutSound=Sound'DH_Obstacles.Barbed.FenceBreaking'
     CutSoundRadius=180.0
-    CutSoundVolume=4.0
+    CutSoundVolume=1.0
     bBreakOnTearDown=true
     BrokenStaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_destro_01'
     StaticMesh=StaticMesh'DH_Construction_stc.Obstacles.barricade_wire_02'
@@ -37,7 +37,7 @@ defaultproperties
     PlacementSound=Sound'DH_ConstructionSounds.ConcertinaWire.ConcertinaWire_Unraveling'
     MenuIcon=Texture'DH_InterfaceArt2_tex.icons.barbed_wire'
     MenuDescription="Effective at blocking infantry and light vehicles."
-    SupplyCost=100
+    SupplyCost=50
     HealthMax=250
     bCanBeMantled=false
     bCanTakeImpactDamage=true
@@ -46,6 +46,7 @@ defaultproperties
     GroupClass=class'DHConstructionGroup_Obstacles'
     bShouldSwitchToLastWeaponOnPlacement=false
     TakeDownProgressInterval=0.1666 // 24 hits (ProgressMax / Desired Hits)
+    MinDamagetoHurt=180.0
 
     //SquadMemberCountMinimum=1 // DEBUG USE
 }

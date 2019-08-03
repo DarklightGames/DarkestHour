@@ -16,17 +16,17 @@ defaultproperties
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
     Tag="BR-365"
 
-    DHPenetrationTable(0)=12.6 // 100m
-    DHPenetrationTable(1)=12.0 // 250m
-    DHPenetrationTable(2)=11.0 // 500m
-    DHPenetrationTable(3)=10.25
-    DHPenetrationTable(4)=9.5  // 1000m
-    DHPenetrationTable(5)=8.5
-    DHPenetrationTable(6)=7.5  // 1500m
-    DHPenetrationTable(7)=7.0
-    DHPenetrationTable(8)=6.5  // 2000m
-    DHPenetrationTable(9)=5.5
-    DHPenetrationTable(10)=4.5 // 3000m
+    DHPenetrationTable(0)=13.9 // 100m
+    DHPenetrationTable(1)=13.3 // 250m
+    DHPenetrationTable(2)=12.3 // 500m
+    DHPenetrationTable(3)=11.4
+    DHPenetrationTable(4)=10.5  // 1000m
+    DHPenetrationTable(5)=9.8
+    DHPenetrationTable(6)=9.1  // 1500m
+    DHPenetrationTable(7)=8.7
+    DHPenetrationTable(8)=8.1  // 2000m
+    DHPenetrationTable(9)=7.3
+    DHPenetrationTable(10)=6.5 // 3000m
 
     bMechanicalAiming=true
     MechanicalRanges(0)=(Range=0,RangeValue=0.0)

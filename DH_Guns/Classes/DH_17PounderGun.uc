@@ -5,8 +5,6 @@
 
 class DH_17PounderGun extends DHATGun;
 
-#exec OBJ LOAD FILE=..\Animations\DH_17PounderGun_anm.ukx
-
 defaultproperties
 {
     VehicleNameString="17 Pounder AT gun"
@@ -24,6 +22,9 @@ defaultproperties
     VehicleMass=11.0
     SupplyCost=1600
     ConstructionPlacementOffset=(Z=12.0)
+    bCanBeRotated=true
+    PlayersNeededToRotate=2
+    MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_ATGun_Rotating'
 
     Begin Object Class=KarmaParamsRBFull Name=KParams0
         KInertiaTensor(0)=1.0
