@@ -146,13 +146,91 @@ function OnTargetReached() {}
 // Called when a Movement has reached it's predefined goal. Overridden by states.
 function OnMoveEnd() {}
 
+// This function computes the priority of each individual target (highest
+// first). It is passed into the cluster object to sort the targets out.
+function float GetTargetPriority(Object O)
+{
+    if (O != none)
+    {
+        // TODO: Things to take into account:
+        //       * Target type
+        //       * Distance to target
+        //       * Available ammo
+        //       * ...
+        return 1.0;
+    }
+}
+
 // This function is used by the Searching state to decide which target is next.
 // CurrentTarget should be set here.
 function PickTarget()
 {
+    // local int pick;
+    local UClusters Targets;
+    local UHeap TargetHeap;
+    local UClusters.DataPoint P;
+    local DHPawn OtherPawn;
+    local vector A, B;
+    local Object TargetItem;
+    local string TargetClassName;
 
-    local int pick;
-    pick = Rand(100);
+    Targets = new class'UClusters';
+    Targets.GetItemPriority = GetTargetPriority;
+
+    // Collect the potential targets.
+    // TODO: Set the scan radius and conditions to something meaningful.
+    foreach RadiusActors(class'DHPawn', OtherPawn, class'DHUnits'.static.MetersToUnreal(10000))
+    {
+        P.Item = OtherPawn;
+        P.Location = OtherPawn.Location;
+
+        Targets.Data[Targets.Data.Length] = P;
+    }
+
+    // Look for clusters.
+    // TODO: Figure out how close points need to be to form optimal clusters
+    //       (epsilon).
+    Targets.DBSCAN(class'DHUnits'.static.MetersToUnreal(20), 1);
+
+    // Convert the cluster data into a priority queue.
+    // The most lucious target will bubble up to the top. It can be either a
+    // single actor or a heap of actors (if it's a cluster).
+    TargetHeap = Targets.ToHeap();
+
+    // Get target's class name (for logging).
+    TargetItem = TargetHeap.Peek();
+
+    if (TargetItem != none)
+    {
+        TargetClassName = string(TargetItem.Class);
+    }
+
+    // Get coordinates to the target.
+    // TODO: Without course correction, target might drift away.
+    if (TargetItem != none && Targets.GetPriorityVector(TargetHeap, A, B))
+    {
+        if (A != B)
+        {
+            // Strafe line.
+            // TODO: Since the plane can't do strafes at the moment, we use cluster
+            // midpoints for targets.
+            CurrentTarget.Position = (A + B) * 0.5;
+        }
+        else
+        {
+            // Point target.
+            CurrentTarget.Position = A;
+        }
+
+        Log("Target acquired:" @ TargetClassName @ "@" @ CurrentTarget.Position);
+    }
+    else
+    {
+        Log("No target!");
+    }
+
+    // pick = Rand(100);
+
     /*
     if (pick % 3 == 0)
     {
@@ -168,10 +246,8 @@ function PickTarget()
     }
     */
 
-
-
     //CurrentTarget.Position = Location - vect(0, 3000, 0);
-    CurrentTarget.Position = vect(21543, -39272, -1040);
+    // CurrentTarget.Position = vect(21543, -39272, -1040);
     CurrentTarget.Radius = 13000;
     //CurrentTarget.Radius = 10;
     CurrentTarget.MinimumHeight = 2200;
