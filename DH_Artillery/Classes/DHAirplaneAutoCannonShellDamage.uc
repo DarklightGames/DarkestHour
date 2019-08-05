@@ -1,10 +1,12 @@
-//-----------------------------------------------------------
-//
-//-----------------------------------------------------------
-class DHAirplaneAutoCannonShellDamage extends DHShellImpactDamageType
-abstract;
+ //==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2019
+//==============================================================================
 
-DefaultProperties
+class DHAirplaneAutoCannonShellDamage extends DHShellImpactDamageType
+    abstract;
+
+defaultproperties
 {
     TankDamageModifier=1.0
     APCDamageModifier=0.35
