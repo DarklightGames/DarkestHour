@@ -2323,7 +2323,7 @@ defaultproperties
     // Vehicle destruction
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
-    DisintegrationEffectClass=class'ROEffects.ROVehicleObliteratedEmitter'
+    DisintegrationEffectClass=class'DH_Effects.DHVehicleObliteratedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
     DisintegrationHealth=-1000.0 // unlike other vehicles, an armoured vehicle disintegrates by default if health falls bellow this threshold, due to explosive ammo
     ExplosionDamage=200.0
