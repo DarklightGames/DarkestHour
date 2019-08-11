@@ -27,7 +27,7 @@ defaultproperties
     SecondaryProjectileClass=class'DH_Guns.DH_ZiS3CannonShellHE'
     TertiaryProjectileClass=class'DH_Guns.DH_ZiS3CannonShellAPCR'
     ProjectileDescriptions(0)="APBC"
-    ProjectileDescriptions(0)="APCR"
+    ProjectileDescriptions(2)="APCR"
     InitialPrimaryAmmo=10
     InitialSecondaryAmmo=20
     InitialTertiaryAmmo=4
