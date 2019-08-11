@@ -12,7 +12,7 @@ defaultproperties
     ImpactDamage=320
 
     DHPenetrationTable(0)=7.1  // 100m // TODO: confirm penetration
-    DHPenetrationTable(1)=6.3  // 250m
+    DHPenetrationTable(1)=6.4  // 250m
     DHPenetrationTable(2)=5.4  // 500m
     DHPenetrationTable(3)=4.6
     DHPenetrationTable(4)=4.0  // 1000m

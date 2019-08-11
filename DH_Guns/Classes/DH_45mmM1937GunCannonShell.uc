@@ -22,7 +22,7 @@ defaultproperties
     Tag="BR-240"
 
     DHPenetrationTable(0)=6.1  // 100m // TODO: confirm penetration
-    DHPenetrationTable(1)=5.4  // 250m
+    DHPenetrationTable(1)=5.5  // 250m
     DHPenetrationTable(2)=4.6  // 500m
     DHPenetrationTable(3)=3.9
     DHPenetrationTable(4)=3.2  // 1000m

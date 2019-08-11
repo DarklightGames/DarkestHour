@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHVehicleObliteratedEmitter extends Emitter; // this class is not used (as at December 2016) & vehicles use the 'ROVehicleDestroyedEmitter' effectclass DHVehicleObliteratedEmtter extends Emitter;
+class DHVehicleObliteratedEmitter extends Emitter; //
 
 defaultproperties
 {
@@ -26,7 +26,7 @@ defaultproperties
         UseSizeScale=True
         UseRegularSizeScale=False
         UniformSize=True
-        Acceleration=(X=100.000000,Z=500.000000)
+        Acceleration=(Y=-100.000000,Z=500.000000)
         ColorScale(0)=(Color=(B=198,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=0.100000,Color=(B=108,G=182,R=255,A=255))
         ColorScale(2)=(RelativeTime=0.157143,Color=(B=107,G=129,R=148,A=255))
@@ -299,31 +299,25 @@ defaultproperties
     Begin Object Class=SpriteEmitter Name=SpriteEmitter8
         UseDirectionAs=PTDU_Normal
         FadeOut=True
-        FadeIn=True
         RespawnDeadParticles=False
         UseSizeScale=True
         UseRegularSizeScale=False
         UniformSize=True
         AutomaticInitialSpawning=False
-        Acceleration=(Z=5.000000)
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        Opacity=0.440000
-        FadeOutStartTime=2.400000
-        FadeInEndTime=0.080000
-        MaxParticles=1
-        StartLocationOffset=(X=-50.000000)
-        UseRotationFrom=PTRS_Normal
-        RotationNormal=(Z=1.000000)
-        SizeScale(1)=(RelativeTime=0.500000,RelativeSize=4.000000)
-        SizeScale(2)=(RelativeTime=1.000000,RelativeSize=8.000000)
-        StartSizeRange=(X=(Min=500.000000,Max=500.000000),Y=(Min=500.000000,Max=500.000000),Z=(Min=500.000000,Max=500.000000))
-        InitialParticlesPerSecond=1000.000000
-        DrawStyle=PTDS_Translucent
+        Opacity=0.280000
+        FadeOutStartTime=1.640000
+        MaxParticles=2
+
+        StartLocationOffset=(Z=5.000000)
+        SizeScale(0)=(RelativeSize=1.000000)
+        SizeScale(1)=(RelativeTime=0.500000,RelativeSize=5.000000)
+        SizeScale(2)=(RelativeTime=1.000000,RelativeSize=10.000000)
+        StartSizeRange=(X=(Min=100.000000,Max=300.000000),Y=(Min=100.000000,Max=300.000000),Z=(Min=100.000000,Max=300.000000))
+        InitialParticlesPerSecond=500.000000
         Texture=Texture'Placeholder_T.Effects.splashring'
-        LifetimeRange=(Min=3.000000,Max=3.000000)
-        StartVelocityRange=(Z=(Min=10.000000,Max=10.000000))
-        StartVelocityRadialRange=(Min=100.000000,Max=100.000000)
+        StartVelocityRange=(Z=(Min=10.000000,Max=25.000000))
     End Object
     Emitters(8)=SpriteEmitter'SpriteEmitter8'
 }
