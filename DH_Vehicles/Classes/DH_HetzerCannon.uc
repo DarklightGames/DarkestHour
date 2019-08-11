@@ -6,7 +6,7 @@ defaultproperties
      GunMantletSlope=40.000000
      TertiaryProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellSmoke'
      ProjectileDescriptions(2)="Smoke"
-
+     InitialTertiaryAmmo=5
      SecondarySpread=0.001270
      TertiarySpread=0.003570
      CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire01'
@@ -57,11 +57,7 @@ defaultproperties
      MaxNegativeYaw=-910
      bLimitYaw=True
      InitialPrimaryAmmo=30
-     InitialSecondaryAmmo=8
-     InitialTertiaryAmmo=3
-     MaxPrimaryAmmo=30
-     MaxSecondaryAmmo=15
-     MaxTertiaryAmmo=5
+     InitialSecondaryAmmo=10
      PrimaryProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonShell'
      SecondaryProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellHE'
      Mesh=SkeletalMesh'DH_Hetzer_anm.Hetzer_turret'

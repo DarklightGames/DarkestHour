@@ -3,35 +3,35 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_45mmM1937GunCannonShell extends DHSovietCannonShell;
+class DH_45mmM1937GunCannonShellAPCR extends DHSovietCannonShell;
 
 defaultproperties
 {
-    RoundType=RT_APBC
-    ShellDiameter=4.5
+    RoundType=RT_HVAP
+    ShellDiameter=3.7 //sub-caliber round
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
     CoronaClass=class'DH_Effects.DHShellTracer_Green'
     ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
-    ImpactDamage=290
+    ImpactDamage=225 // just a tungsten slug; no explosive filler
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
     BallisticCoefficient=0.7 // TODO: try to find an accurate BC (this is from AHZ)
     Speed=45868.0 // 760 m/s
     MaxSpeed=45868.0
-    Tag="BR-240"
+    Tag="BR-240P"
 
-    DHPenetrationTable(0)=6.1  // 100m // TODO: confirm penetration
-    DHPenetrationTable(1)=5.4  // 250m
-    DHPenetrationTable(2)=4.6  // 500m
-    DHPenetrationTable(3)=3.9
-    DHPenetrationTable(4)=3.2  // 1000m
-    DHPenetrationTable(5)=2.7
-    DHPenetrationTable(6)=2.2  // 1500m
-    DHPenetrationTable(7)=1.8
-    DHPenetrationTable(8)=1.5  // 2000m
-    DHPenetrationTable(9)=1.0
-    DHPenetrationTable(10)=0.6 // 3000m
+    DHPenetrationTable(0)=9.4  // 100m // TODO: confirm penetration
+    DHPenetrationTable(1)=8.1  // 250m
+    DHPenetrationTable(2)=6.4  // 500m
+    DHPenetrationTable(3)=5.0
+    DHPenetrationTable(4)=4.0  // 1000m
+    DHPenetrationTable(5)=3.2
+    DHPenetrationTable(6)=2.7  // 1500m
+    DHPenetrationTable(7)=1.6
+    DHPenetrationTable(8)=1.3  // 2000m
+    DHPenetrationTable(9)=0.9
+    DHPenetrationTable(10)=0.5 // 3000m
 
     bOpticalAiming=true
     OpticalRanges(0)=(Range=0,RangeValue=0.471)

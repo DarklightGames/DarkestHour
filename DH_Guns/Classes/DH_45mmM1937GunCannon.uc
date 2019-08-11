@@ -25,11 +25,15 @@ defaultproperties
     ProjectileClass=class'DH_Guns.DH_45mmM1937GunCannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_45mmM1937GunCannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_45mmM1937GunCannonShellHE'
+    TertiaryProjectileClass=class'DH_Guns.DH_45mmM1937GunCannonShellAPCR'
     ProjectileDescriptions(0)="APBC"
+    ProjectileDescriptions(2)="APCR"
     InitialPrimaryAmmo=20
     InitialSecondaryAmmo=10
+    InitialTertiaryAmmo=4
     MaxPrimaryAmmo=60
     MaxSecondaryAmmo=30
+    MaxTertiaryAmmo=6
     SecondarySpread=0.002
 
     // Weapon fire
