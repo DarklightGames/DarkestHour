@@ -300,26 +300,31 @@ defaultproperties
     Begin Object Class=SpriteEmitter Name=SpriteEmitter8
         UseDirectionAs=PTDU_Normal
         FadeOut=True
+        FadeIn=True
         RespawnDeadParticles=False
         UseSizeScale=True
         UseRegularSizeScale=False
         UniformSize=True
         AutomaticInitialSpawning=False
+        Acceleration=(Z=5.000000)
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
-        Opacity=0.280000
-        FadeOutStartTime=1.640000
+        Opacity=0.390000
+        FadeOutStartTime=2.400000
+        FadeInEndTime=0.080000
         MaxParticles=2
-
-        StartLocationOffset=(Z=5.000000)
-        SizeScale(0)=(RelativeSize=1.000000)
-        SizeScale(1)=(RelativeTime=0.500000,RelativeSize=5.000000)
-        SizeScale(2)=(RelativeTime=1.000000,RelativeSize=10.000000)
-        StartSizeRange=(X=(Min=100.000000,Max=300.000000),Y=(Min=100.000000,Max=300.000000),Z=(Min=100.000000,Max=300.000000))
-        InitialParticlesPerSecond=500.000000
+        StartLocationOffset=(X=-50.000000)
+        UseRotationFrom=PTRS_Normal
+        RotationNormal=(Z=1.000000)
+        SizeScale(1)=(RelativeTime=0.500000,RelativeSize=4.000000)
+        SizeScale(2)=(RelativeTime=1.000000,RelativeSize=8.000000)
+        StartSizeRange=(X=(Min=500.000000,Max=500.000000),Y=(Min=500.000000,Max=500.000000),Z=(Min=500.000000,Max=500.000000))
+        InitialParticlesPerSecond=1000.000000
+        DrawStyle=PTDS_AlphaBlend
         Texture=Texture'Effects_Tex.Smoke.grenadesmoke_fill'
         LifetimeRange=(Min=3.000000,Max=3.000000)
-        StartVelocityRange=(Z=(Min=10.000000,Max=25.000000))
+        StartVelocityRange=(Z=(Min=10.000000,Max=10.000000))
+        StartVelocityRadialRange=(Min=100.000000,Max=100.000000)
     End Object
     Emitters(8)=SpriteEmitter'SpriteEmitter8'
 }
