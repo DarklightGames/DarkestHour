@@ -97,6 +97,9 @@ var     VehicleDamagedEffect DamageEffect;
 var     float CrashAngle;
 var     class<ROVehicleDestroyedEmitter> DestructionEffectClass;
 
+// Bombs
+var class<Projectile>   BombClass;
+
 // Rotation
 var DHAirplaneRotator AirplaneModel;
 
@@ -104,7 +107,6 @@ replication
 {
      unreliable if (Role==ROLE_Authority)
         AirplaneModel, CurrentTarget;
-
 }
 
 
@@ -272,7 +274,7 @@ auto state Entrance
 }
 
 // This step simulates the plane looking for a new target to attack. When the state ends, a target is picked.
- state Searching
+state Searching
 {
      function Timer()
     {
@@ -293,7 +295,7 @@ auto state Entrance
 
 // Positions the airplane to be ready to preform the attack run. Typcally ends
 // when plane has reached the proper distance to the target to begin the run.
- state Approaching
+state Approaching
 {
      function OnTargetReached()
     {
@@ -423,7 +425,7 @@ auto state Entrance
         }
     }
 
-     function BeginState()
+    function BeginState()
     {
         bIsPullingUp = false;
         bIsLevelingOut = false;
@@ -431,6 +433,16 @@ auto state Entrance
         BeginDiveClimbTowardsPosition(CurrentTarget.Position, 5000, false);
     }
 }
+
+state FlyOverAttack
+{
+    function BeginState()
+    {
+        Log("Fly Over");
+
+    }
+}
+
 
 state Crashing
 {
@@ -446,13 +458,13 @@ state Crashing
 }
 
 // Sets a new current waypoint.
- function SetCurrentTarget(Target NewTarget)
+function SetCurrentTarget(Target NewTarget)
 {
     CurrentTarget = NewTarget;
 }
 
 // update position based on current position, velocity, and current waypoint.
- function MovementUpdate(float DeltaTime)
+function MovementUpdate(float DeltaTime)
 {
     local rotator Heading;
     local float   DeltaTimeToUse;
@@ -496,7 +508,7 @@ state Crashing
 
 // This function begins a turn that stops when the plane is aligned with TurnPositionGoal.
 // It sets MoveState.
- function BeginTurnTowardsPosition(vector TurnPositionGoal, float TurnRadius, bool bIsTurnRight)
+function BeginTurnTowardsPosition(vector TurnPositionGoal, float TurnRadius, bool bIsTurnRight)
 {
     local DHTurnTowardsPosition TurnTowardsState;
     local vector VelocityPre;
@@ -517,7 +529,7 @@ state Crashing
 }
 
 // Same as turnTowardsPosition, but with diving and climbing.
- function BeginDiveClimbTowardsPosition(vector TurnPositionGoal, float TurnRadius, bool bIsClimbing)
+function BeginDiveClimbTowardsPosition(vector TurnPositionGoal, float TurnRadius, bool bIsClimbing)
 {
     local DHDiveClimbTowardsPosition DiveClimbState;
     local vector VelocityPre;
@@ -540,7 +552,7 @@ state Crashing
 }
 
 // Diving and climbing to a specific angle.
- function BeginDiveClimbToAngle(float TurnAngleGoal, float TurnRadius)
+function BeginDiveClimbToAngle(float TurnAngleGoal, float TurnRadius)
 {
     local DHDiveClimbToAngle DiveClimbState;
     local vector VelocityPre;
