@@ -66,13 +66,29 @@ var float               CruisingHeight;     // This is the hight of the plane wh
 // The current MoveState. What this variable is set to determines the movement pattern the plane preforms.
 var DHMoveState         MoveState;
 
+
+// Attack Control variables-----------------------------------------------------
+enum AttackType
+{
+    AT_DIVE_BOMB,
+    AT_FLY_OVER_BOMB,
+    AT_STRAFE
+};
+
+var AttackType CurrentAttackType; // Type of attack run to be carried out on the current target.
+
+var float StrafePullUpHeight; // Minimum height above the target before pulling up when strafe dive attacking.
+var float DiveBombPullUpHeight; // Pull up hight for dive bomb attacks.
+
+var float StrafeRadius; // Target radius for strafe attacks.
+var float DiveBombRadius; // Target radius for dive bomb attacks.
+var float FlyOverBombRadius; // Target radius for attacks.
+
 // Represents an Attack Target that needs to be approached and attacked.
 struct Target
 {
     var vector Position;
     var float Radius;       // How far from target to be before starting attack run. Must be facing the target by this distance.
-    var float MinimumHeight; // Minimum height above the target before pulling up when dive attacking. This is the bottom of the
-    // TODO: var AttackType // Type of attack run to be carried out on this target, after it has been approached.
 };
 
 var Target          CurrentTarget; // Current target.
@@ -81,7 +97,7 @@ var bool            bIsPullingUp;
 var bool            bIsLevelingOut;
 var bool            bIsTurningTowardsTarget;
 
-// Guns, Cannons, and bombs
+// Guns, Cannons
 var float               AutoCannonRPM;    // Rounds per minute for auto cannon.
 var float               AutoCannonTime;   // Time since last shot.
 var class<Projectile>   AutoCannonProjectileClass;
@@ -99,6 +115,8 @@ var     class<ROVehicleDestroyedEmitter> DestructionEffectClass;
 
 // Bombs
 var class<Projectile>   BombClass;
+var float BombDropHeight; // how far above the pull up height to drop the bomb. Relative to pull up height.
+var bool bHasDroppedBomb; // Set true after the plane has dropped its bomb durring the attack. RESET AFTER ATTACK RUN DONE.
 
 // Rotation
 var DHAirplaneRotator AirplaneModel;
@@ -121,6 +139,7 @@ function PostBeginPlay()
         AirplaneModel.SetBase(self);
 
         CurrentSpeed = StandardSpeed;
+        CruisingHeight = Location.Z;
     }
 }
 
@@ -231,6 +250,8 @@ function PickTarget()
         Log("No target!");
     }
 
+    StartDiveBomb();
+
     // pick = Rand(100);
 
     /*
@@ -248,11 +269,7 @@ function PickTarget()
     }
     */
 
-    //CurrentTarget.Position = Location - vect(0, 3000, 0);
     // CurrentTarget.Position = vect(21543, -39272, -1040);
-    CurrentTarget.Radius = 13000;
-    //CurrentTarget.Radius = 10;
-    CurrentTarget.MinimumHeight = 2200;
 }
 
 // Initial State. The plane enters into the combat area.
@@ -301,7 +318,10 @@ state Approaching
     {
         if(bIsTurningTowardsTarget)
         {
-            GotoState('DiveAttacking');
+            if (CurrentAttackType == AT_STRAFE || CurrentAttackType == AT_DIVE_BOMB)
+                GotoState('DiveAttacking');
+            else if (CurrentAttackType == AT_FLY_OVER_BOMB)
+                GotoState('FlyOverAttack');
         }
     }
 
@@ -371,47 +391,57 @@ state Approaching
     }
 }
 
+
+
 // Preform attack Run on the target.
+// Used for dive bombing and gun strafes.
  state DiveAttacking
 {
      function TickAI(float DeltaTime)
     {
         local vector PullUpTarget;
-        //DebugPrintOnClient = false;
+        local float PullUpStartHeight;
+
+        if(CurrentAttackType == AT_DIVE_BOMB)
+            PullUpStartHeight = DiveBombPullUpHeight;
+        else if (CurrentAttackType == AT_STRAFE)
+            PullUpStartHeight = StrafePullUpHeight;
+
         // Check if we have dipped below the min hight above target
-        if (!bIsPullingUp && Location.Z < (CurrentTarget.Position.Z + CurrentTarget.MinimumHeight))
+        if (!bIsPullingUp && Location.Z < (CurrentTarget.Position.Z + PullUpStartHeight))
         {
             Log("Begin Pullup");
             BeginDiveClimbToAngle(Pi/5, DiveClimbRadius);
             bIsPullingUp = true;
             bIsShootingAutoCannon = false;
-            //DebugPrintOnClient = true;
         }
         // Check if we need to level out and stop pulling up
         else if (bIsPullingUp && !bIsLevelingOut && Location.Z >= CruisingHeight)
         {
-            Log("Begin Levelout, "$CruisingHeight);
             BeginDiveClimbToAngle(0, DiveClimbRadius);
             bIsLevelingOut = true;
         }
 
+        // Shoot Logic.
         if (Role == ROLE_Authority)
         {
-            AutoCannonTime += DeltaTime;
-            // Auto Cannon Shooting Logic
-            if (bIsShootingAutoCannon && AutoCannonTime > ( (1.0f / AutoCannonRPM) * 60) )
+            if (CurrentAttackType == AT_DIVE_BOMB && !bHasDroppedBomb && Location.Z < (CurrentTarget.Position.Z + PullUpStartHeight + BombDropHeight))
             {
-                AutoCannonTime = 0;
-                //Log(AutoCannonFireOffset >> Rotation);
-                //Spawn(AutoCannonProjectileClass,self,,Location + (AutoCannonFireOffset >> Rotation), GetProjectileFireRotation(AutoCannonSpread));
+                bHasDroppedBomb = true;
+                Log("DIVE BOMB");
+            }
+            else if (CurrentAttackType == AT_STRAFE && bIsShootingAutoCannon)
+            {
+                Log("SHOOT");
             }
         }
     }
 
-     function OnMoveEnd()
+    function OnMoveEnd()
     {
         // Moving Straight after angling down to target.
-        if (!bIsPullingUp && !bIsLevelingOut) {
+        if (!bIsPullingUp && !bIsLevelingOut)
+        {
             BeginStraight(Velocity, DivingSpeed, DivingAcceleration);
             bIsShootingAutoCannon = true;
         }
@@ -419,7 +449,8 @@ state Approaching
         else if (bIsPullingUp && !bIsLevelingOut)
             BeginStraight(Velocity, ClimbingSpeed, DivingAcceleration);
         // Finished Leveling out, end attack run and start searching again.
-        else if (bIsLevelingOut) {
+        else if (bIsLevelingOut)
+        {
             BeginStraight(Velocity, StandardSpeed, StraightAcceleration);
             GotoState('Searching');
         }
@@ -439,10 +470,8 @@ state FlyOverAttack
     function BeginState()
     {
         Log("Fly Over");
-
     }
 }
-
 
 state Crashing
 {
@@ -503,6 +532,30 @@ function MovementUpdate(float DeltaTime)
         OnTargetReached();
     }
 }
+
+function StartStrafe()
+{
+    CurrentAttackType = AT_STRAFE;
+    CurrentTarget.Radius = StrafeRadius;
+    GotoState('Approuching');
+}
+
+function StartDiveBomb()
+{
+    CurrentAttackType = AT_DIVE_BOMB;
+    CurrentTarget.Radius = DiveBombRadius;
+    bHasDroppedBomb = false;
+    GotoState('Approuching');
+}
+
+function StartFlyOverBomb()
+{
+    CurrentAttackType = AT_FLY_OVER_BOMB;
+    CurrentTarget.Radius = FlyOverBombRadius;
+    bHasDroppedBomb = false;
+    GotoState('Approuching');
+}
+
 
 // MovementState related functions ---------------------------------------------
 
@@ -636,7 +689,6 @@ function StartDamageEffect()
     }
 }
 
-//event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex);
 function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     Log("Hit");
@@ -674,8 +726,6 @@ defaultproperties
 
     bCanBeDamaged=true
 
-
-
     bCollideActors=true
     bCollideWorld=true
     bBlockActors=true
@@ -690,7 +740,6 @@ defaultproperties
     //RotationRate={Pitch=2000,Yaw=2000,Roll=2000}
     Physics = PHYS_Flying
 
-
     BankAngle = 0
     MaxBankAngle = 65
     BankRate = 0.65
@@ -704,11 +753,8 @@ defaultproperties
 
     MinTurnRadius = 6000
 
-    //StandardSpeed = 4000
-    //StandardSpeed = 2000
-    //StandardSpeed = 500
-    //StandardSpeed = 0
-    /*
+    StandardSpeed = 4000
+
     StraightAcceleration = 150
 
     DivingSpeed = 5000
@@ -718,26 +764,29 @@ defaultproperties
 
     TurnSpeed = 1200
     TurnAcceleration = 220
-    */
+
 
     CurrentSpeed = 2000
 
-    CruisingHeight = 100
+    //CruisingHeight = 100
 
     DiveClimbRadius = 3800
 
     // MAX SPEED FOR DEBUG
+    /*
     StandardSpeed = 5000
     DivingSpeed = 5000
     ClimbingSpeed = 5000
     TurnSpeed = 5000
-
-    StraightAcceleration = 150
-
-    DivingAcceleration = 400
-
-    TurnAcceleration = 220
+    */
 
 
-    //DebugPrintOnClient=false
+    StrafePullUpHeight=2000
+    DiveBombPullUpHeight=2000
+
+    StrafeRadius=13000
+    DiveBombRadius=7000
+    FlyOverBombRadius=13000
+
+    BombDropHeight=300
 }
