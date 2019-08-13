@@ -40,8 +40,7 @@ static function DHAirplaneTarget CreateTargetFromActors(array<Actor> Actors)
     local DHAirplaneTarget Target;
 
     Target = new class'DHAirplaneTarget';
-
-    // TODO: inspect the composition of the targets
+    Target.Actors = Actors;
 
     return Target;
 }
@@ -50,7 +49,6 @@ static function DHAirplaneTarget CreateTargetFromActors(array<Actor> Actors)
 function bool IsValid()
 {
     local int i;
-    local bool bHasValidTargetActors;
 
     for (i = 0; i < Actors.Length; ++i)
     {
@@ -80,7 +78,7 @@ function bool IsTargetActorValid(Actor A)
         }
     }
 
-    return false;
+    return true;
 }
 
 // Gets the average velocity of all actors.
@@ -111,6 +109,7 @@ function vector GetLocation()
         if (IsTargetActorValid(Actors[i]))
         {
             Location += Actors[i].Location;
+            ++Count;
         }
     }
 

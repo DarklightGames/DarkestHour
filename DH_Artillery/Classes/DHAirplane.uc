@@ -35,6 +35,7 @@
 class DHAirplane extends Actor
     abstract;
 
+var int                 TeamIndex;
 var localized string    AirplaneName;
 
 // Current Speed of the aircraft. Used in move state calculations. Set this, not the the velocity to effect move speed changes.
@@ -186,7 +187,7 @@ function CreateCannons()
             Warn("Failed to create cannon!");
         }
 
-        Cannon.SetBase(self);
+        Cannon.SetBase(AirplaneModel);
         Cannon.SetRelativeRotation(CannonInfos[i].RotationOffset);
         Cannon.SetRelativeLocation(CannonInfos[i].LocationOffset);
 
@@ -257,8 +258,8 @@ function PickTarget()
     local UHeap TargetHeap;
     local UClusters.DataPoint P;
     local DHPawn OtherPawn;
-    local vector A, B;
-    local Object TargetItem;
+    local Actor TargetActor;
+    local array<Actor> TargetActors;
     local string TargetClassName;
 
     Targets = new class'UClusters';
@@ -282,27 +283,31 @@ function PickTarget()
     TargetHeap = Targets.ToHeap();
 
     // Get target's class name (for logging).
-    TargetItem = TargetHeap.Peek();
+    TargetActor = Actor(TargetHeap.Peek());
 
-    if (TargetItem != none)
+    if (TargetActor != none)
     {
-        TargetClassName = string(TargetItem.Class);
+        // TODO: don't deal with single targets, necessarily.
+        TargetActors[TargetActors.Length] = TargetActor;
+        Target = class'DHAirplaneTarget'.static.CreateTargetFromActors(TargetActors);
+
+        TargetClassName = string(TargetActor.Class);
     }
 
     // Get coordinates to the target.
     // TODO: Without course correction, target might drift away.
-    if (TargetItem != none && Targets.GetPriorityVector(TargetHeap, TargetCoordinates.Start, TargetCoordinates.End))
+    if (Target != none && Targets.GetPriorityVector(TargetHeap, TargetCoordinates.Start, TargetCoordinates.End))
     {
         Log("Target acquired:" @ TargetClassName @ "@" @ TargetCoordinates.Start);
+
+        // TODO: Get rid of magic numbers.
+        TargetApproach.Radius = 13000;
+        TargetApproach.MinimumHeight = 2200;
     }
     else
     {
         Log("No target!");
     }
-
-    // TODO: Get rid of magic numbers.
-    TargetApproach.Radius = 13000;
-    TargetApproach.MinimumHeight = 2200;
 }
 
 // Initial State. The plane enters into the combat area.
@@ -482,6 +487,7 @@ state Crashing
     {
         BeginStraight(Normal(velocity), DivingSpeed, DivingAcceleration);
     }
+
     function BeginState()
     {
         Log("Crashing. God help me.");
@@ -526,7 +532,7 @@ function MovementUpdate(float DeltaTime)
     //AirplaneModel.RotationRate = QuatToRotator( QuatProduct( QuatInvert(QuatFromRotator(Heading)), QuatFromRotator(AirplaneModel.Rotation)) ) / DeltaTime;
     //Log(AirplaneModel.RotationRate$" --- "$DeltaTime$"---"$DeltaTimeToUse);
     // Check if target met. Restrain from continued movement until new waypoint is set.
-    if (VSize(V3ToV2(Target.GetLocation() - Location)) <= TargetApproach.Radius)
+    if (Target != none && VSize(V3ToV2(Target.GetLocation() - Location)) <= TargetApproach.Radius)
     {
         OnTargetReached();
     }
@@ -633,7 +639,7 @@ static  function vector V3ToV2(vector InVector)
     return OutVector;
 }
 
-function StartDamageEffect()
+simulated function StartDamageEffect()
 {
     if (DamageEffect == none)
     {
@@ -644,16 +650,20 @@ function StartDamageEffect()
         DamageEffect.SetEffectScale(1.0);
         Log('Effect created');
         //DamageEffect.SetPhysics(PHYS_Flying);
-
     }
 }
 
 function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     Log("Hit");
+
     // TODO: this won't work server-to-client
     StartDamageEffect();
-    GoToState('Crashing');
+
+    if (!IsInState('Crashing'))
+    {
+        GoToState('Crashing');
+    }
 }
 
 event HitWall( vector HitNormal, Actor HitWall )

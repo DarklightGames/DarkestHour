@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHMG151Bullet extends DHBallisticProjectile;
+class DHMG151Bullet extends DH_MG34Bullet;  // TODO: do proper stuff here!!
 
 defaultproperties
 {

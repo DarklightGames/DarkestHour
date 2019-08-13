@@ -10,8 +10,8 @@ var DHAirplane          Airplane;
 
 var Sound               FiringSound;
 var class<Projectile>   ProjectileClass;
+var vector              ProjectileOffset;
 var class<Emitter>      EmitterClass;
-var bool                bIsFiring;
 
 var bool                bHasInfiniteAmmo;
 var float               RoundsPerMinute;
@@ -21,38 +21,28 @@ var float               NextFireTime;
 var rotator             SpreadMin;
 var rotator             SpreadMax;
 
-function bool HasAmmo()
+var bool                bIsFiring;
+
+replication
 {
-    return AmmoCount > 0;
+    reliable if (Role == ROLE_Authority)
+        bIsFiring;
 }
 
-function bool IsFiring()
+function bool HasAmmo()
 {
-    return bIsFiring;
+    return bHasInfiniteAmmo || AmmoCount > 0;
 }
 
 function StartFiring()
 {
-    if (bIsFiring)
+    if (CanFire())
     {
-        return;
+        GotoState('Firing');
     }
-
-    AmbientSound = FiringSound;
-
-    bIsFiring = true;
 }
 
-function StopFiring()
-{
-    if (bIsFiring == false)
-    {
-        return;
-    }
-
-    bIsFiring = true;
-    AmbientSound = none;
-}
+function StopFiring();
 
 function bool CanFire()
 {
@@ -62,19 +52,50 @@ function bool CanFire()
 
 function float GetFiringInterval()
 {
+    if (RoundsPerMinute == 0)
+    {
+        // Avoid divide-by-zero errors.
+        return 1.0;
+    }
+
     return 60.0 / RoundsPerMinute;
 }
 
-function Tick(float DeltaTime)
+state Firing
 {
-    local int i, ProjectileCount;
-
-    if (bIsFiring && HasAmmo())
+    function StopFiring()
     {
+        GotoState('');
+    }
+
+    function BeginState()
+    {
+        bIsFiring = true;
+        NextFireTime = Level.TimeSeconds;
+        AmbientSound = FiringSound;
+    }
+
+    function EndState()
+    {
+        AmbientSound = none;
+        bIsFiring = false;
+    }
+
+    function Tick(float DeltaTime)
+    {
+        local int i;
+        local int ProjectileCount;
+
+        if (HasAmmo() == false)
+        {
+            StopFiring();
+            return;
+        }
+
         if (Level.TimeSeconds >= NextFireTime)
         {
             // Calculate the number of projectiles to fire in this tick.
-            ProjectileCount = Ceil((NextFireTime - Level.TimeSeconds) / GetFiringInterval());
+            ProjectileCount = Ceil((Level.TimeSeconds - NextFireTime) / GetFiringInterval());
 
             // Spawn the projectiles.
             for (i = 0; i < ProjectileCount; ++i)
@@ -100,9 +121,26 @@ function Tick(float DeltaTime)
     }
 }
 
+function bool IsFiring()
+{
+    return IsInState('Firing');
+}
+
 function SpawnProjectile()
 {
-    Spawn(ProjectileClass,,, Location, GetProjectileRotation());
+    local vector ProjectileLocation;
+    local rotator ProjectileRotation;
+    local RODebugTracer DT;
+
+    ProjectileLocation = Location + (ProjectileOffset >> Rotation);
+    ProjectileRotation = GetProjectileRotation();
+
+    Log("(ProjectileOffset >> Rotation)" @ (ProjectileOffset >> Rotation));
+
+    DT = Spawn(class'RODebugTracer',,, ProjectileLocation, ProjectileRotation);
+    DT.LifeSpan = 10.0;
+
+    Spawn(ProjectileClass,,, ProjectileLocation, ProjectileRotation);
 }
 
 function rotator GetProjectileRotation()
@@ -116,5 +154,7 @@ function rotator GetProjectileRotation()
 
 defaultproperties
 {
+    bHasInfiniteAmmo=true
+    ProjectileOffset=(X=512,Y=0,Z=0)
 }
 

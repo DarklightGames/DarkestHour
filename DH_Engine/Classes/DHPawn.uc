@@ -6656,18 +6656,45 @@ exec function GimmeSupplies()
     }
 }
 
-function ServerSpawnPlane()
+function class<Actor> GetAirplaneClassByName(name AirplaneName)
+{
+    switch (AirplaneName)
+    {
+        case 'me109':
+            return class<Actor>(DynamicLoadObject("DH_Artillery.DHArtillery_BF109_Airstrike", class'class'));
+        // TODO: fill in more types as add them so we can quickly spawn different types for testing.
+        case '':
+        default:
+            return class<Actor>(DynamicLoadObject("DH_Artillery.DHArtillery_BF109_Airstrike", class'class'));
+    }
+
+    return none;
+}
+
+function ServerSpawnPlane(name AirplaneName)
 {
     local class<Actor> ActorClass;
     local Actor Airplane;
-    ActorClass = class<Actor>(DynamicLoadObject("DH_Artillery.DHArtillery_BF109_Airstrike", class'class'));
-    Spawn(ActorClass);
-    Log("Plane Spawned");
+
+    ActorClass = GetAirplaneClassByName(AirplaneName);
+
+    if (ActorClass == none)
+    {
+        return;
+    }
+
+    Airplane = Spawn(ActorClass);
+
+    if (Airplane != none)
+    {
+        Log("Airplane Spawned:" @ Airplane);
+    }
 }
 
-exec function DebugSpawnPlane()
+exec function DebugSpawnPlane(name AirplaneType)
 {
-    ServerSpawnPlane();
+
+    ServerSpawnPlane(AirplaneType);
 }
 
 

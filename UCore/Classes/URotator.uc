@@ -7,16 +7,16 @@ class URotator extends Object
 
 static function rotator RandomRange(rotator Min, rotator Max)
 {
-    return RLerp(Min, Max, FRand());
+    return RLerp(Min, Max, FRand(), FRand(), FRand());
 }
 
-static function rotator RLerp(rotator A, rotator B, float T)
+static function rotator RLerp(rotator A, rotator B, float PT, float YT, float RT)
 {
     local rotator R;
 
-    R.Pitch = A.Pitch + ((B.Pitch - A.Pitch) * T);
-    R.Yaw = A.Yaw + ((B.Yaw - A.Yaw) * T);
-    R.Roll = A.Roll + ((B.Roll - A.Roll) * T);
+    R.Pitch = A.Pitch + ((B.Pitch - A.Pitch) * PT);
+    R.Yaw = A.Yaw + ((B.Yaw - A.Yaw) * YT);
+    R.Roll = A.Roll + ((B.Roll - A.Roll) * RT);
 
     return R;
 }

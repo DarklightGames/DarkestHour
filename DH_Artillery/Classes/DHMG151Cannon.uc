@@ -8,7 +8,7 @@ class DHMG151Cannon extends DHAirplaneCannon;
 defaultproperties
 {
     RoundsPerMinute=680
-    SpreadMax=(Pitch=10,Yaw=10)
+    SpreadMax=(Pitch=400,Yaw=210)
     ProjectileClass=class'DHMG151Bullet'
 }
 
