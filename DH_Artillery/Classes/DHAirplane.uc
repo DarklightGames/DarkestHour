@@ -35,6 +35,7 @@
 class DHAirplane extends Actor
     abstract;
 
+var int                 TeamIndex;
 var localized string    AirplaneName;
 
 // Current Speed of the aircraft. Used in move state calculations. Set this, not the the velocity to effect move speed changes.
@@ -57,7 +58,7 @@ var float               StraightAcceleration; // Plane acceleration for straight
 
 var float               DiveClimbRadius;   // Turn radius of the dive and climb.
 var float               DivingSpeed;      // When diving the plane, this is the top speed. Makes the dive attacks look more beliveable.
-var float               DivingAcceleration;
+var float               DiveClimbAcceleration;
 
 var float               ClimbingSpeed;      // Desired speed to use when climbing.
 
@@ -66,16 +67,19 @@ var float               CruisingHeight;     // This is the hight of the plane wh
 // The current MoveState. What this variable is set to determines the movement pattern the plane preforms.
 var DHMoveState         MoveState;
 
+var bool            bIsPullingUp;
+var bool            bIsLevelingOut;
+var bool            bIsTurningTowardsTarget;
 
 // Attack Control variables-----------------------------------------------------
-enum AttackType
+enum EAttackType
 {
     AT_DIVE_BOMB,
     AT_FLY_OVER_BOMB,
     AT_STRAFE
 };
 
-var AttackType CurrentAttackType; // Type of attack run to be carried out on the current target.
+var EAttackType CurrentAttackType; // Type of attack run to be carried out on the current target.
 
 var float StrafePullUpHeight; // Minimum height above the target before pulling up when strafe dive attacking.
 var float DiveBombPullUpHeight; // Pull up hight for dive bomb attacks.
@@ -85,26 +89,32 @@ var float DiveBombRadius; // Target radius for dive bomb attacks.
 var float FlyOverBombRadius; // Target radius for attacks.
 
 // Represents an Attack Target that needs to be approached and attacked.
-struct Target
+// TODO: target will need to keep track of clustering info!
+struct STargetApproach
 {
-    var vector Position;
     var float Radius;       // How far from target to be before starting attack run. Must be facing the target by this distance.
+    var float MinimumHeight; // Minimum height above the target before pulling up when dive attacking. This is the bottom of the
 };
 
-var Target          CurrentTarget; // Current target.
+struct STargetCoordinates
+{
+    var vector Start;
+    var vector End;
+};
 
-var bool            bIsPullingUp;
-var bool            bIsLevelingOut;
-var bool            bIsTurningTowardsTarget;
+var DHAirplaneTarget    Target; // Current target.
+var STargetApproach     TargetApproach;
+var STargetCoordinates  TargetCoordinates;
 
-// Guns, Cannons
-var float               AutoCannonRPM;    // Rounds per minute for auto cannon.
-var float               AutoCannonTime;   // Time since last shot.
-var class<Projectile>   AutoCannonProjectileClass;
-var bool                bIsShootingAutoCannon;
-var float               AutoCannonSpread;
+struct CannonInfo
+{
+    var class<DHAirplaneCannon> CannonClass;
+    var rotator RotationOffset;
+    var vector LocationOffset;
+};
 
-var vector              AutoCannonFireOffset;
+var array<CannonInfo>       CannonInfos;
+var array<DHAirplaneCannon> Cannons;
 
 // Damage and crashing
 var     class<VehicleDamagedEffect> DamageEffectClass;
@@ -123,10 +133,9 @@ var DHAirplaneRotator AirplaneModel;
 
 replication
 {
-     unreliable if (Role==ROLE_Authority)
-        AirplaneModel, CurrentTarget;
+     unreliable if (Role == ROLE_Authority)
+        AirplaneModel, Target;
 }
-
 
 function PostBeginPlay()
 {
@@ -138,69 +147,148 @@ function PostBeginPlay()
         AirplaneModel.SetPhysics(PHYS_Rotating);
         AirplaneModel.SetBase(self);
 
+        CreateCannons();
+
         CurrentSpeed = StandardSpeed;
         CruisingHeight = Location.Z;
+    }
+}
+
+function DestroyCannons()
+{
+    local int i;
+
+    for (i = 0; i < Cannons.Length; ++i)
+    {
+        if (Cannons[i] != none)
+        {
+            Cannons[i].Destroy();
+        }
+    }
+
+    Cannons.Length = 0;
+}
+
+// Gets an array of cannons that are suitable for the.
+function array<DHAirplaneCannon> GetCannonsForTarget()
+{
+    local int i;
+    local array<DHAirplaneCannon> CannonsForTarget;
+
+    if (Target == none)
+    {
+        return CannonsForTarget;
+    }
+
+    // TODO: for now, all cannons; in future, pick
+    for (i = 0 ; i < Cannons.Length; ++i)
+    {
+        CannonsForTarget[CannonsForTarget.Length] = Cannons[i];
+    }
+
+    return CannonsForTarget;
+}
+
+function CreateCannons()
+{
+    local int i;
+    local DHAirplaneCannon Cannon;
+
+    DestroyCannons();
+
+    for (i = 0; i < CannonInfos.Length; ++i)
+    {
+        if (CannonInfos[i].CannonClass == none)
+        {
+            continue;
+        }
+
+        Cannon = Spawn(CannonInfos[i].CannonClass, self,, Location, Rotation);
+
+        if (Cannon == none)
+        {
+            Warn("Failed to create cannon!");
+        }
+
+        Cannon.SetBase(AirplaneModel);
+        Cannon.SetRelativeRotation(CannonInfos[i].RotationOffset);
+        Cannon.SetRelativeLocation(CannonInfos[i].LocationOffset);
+
+        Cannons[Cannons.Length] = Cannon;
     }
 }
 
 // Tick needed to make AI decisions on server.
 function Tick(float DeltaTime)
 {
+    // TODO: I think we can simply disable tick on the client instead of
+    // checking the role. (ie. Disable('Tick');)
     if (Role == ROLE_Authority)
     {
-    TickAI(DeltaTime);
-    MovementUpdate(DeltaTime);
-    TickAIPostMove(DeltaTime);
+        TickAI(DeltaTime);
+        MovementUpdate(DeltaTime);
+        TickAIPostMove(DeltaTime);
     }
-
 }
 
 // Tick function for the individual states.
-function TickAI(float DeltaTime){}
+function TickAI(float DeltaTime);
 
 // Tick function for the states after MovementUpdate has completed.
-function TickAIPostMove(float DeltaTime){}
+function TickAIPostMove(float DeltaTime);
 
 // Event for when the approach to the target has been finished.
-function OnTargetReached() {}
+function OnTargetReached();
 
 // Called when a Movement has reached it's predefined goal. Overridden by states.
-function OnMoveEnd() {}
+function OnMoveEnd();
 
 // This function computes the priority of each individual target (highest
 // first). It is passed into the cluster object to sort the targets out.
 function float GetTargetPriority(Object O)
 {
-    if (O != none)
+    if (O == none)
     {
-        // TODO: Things to take into account:
-        //       * Target type
-        //       * Distance to target
-        //       * Available ammo
-        //       * ...
-        return 1.0;
+        return 0.0;
     }
+
+    // TODO: Things to take into account:
+    //       * Target type
+    //       * Distance to target
+    //       * Available ammo
+    //       * ...
+    return 1.0;
+}
+
+function float GetTargetScanRadius()
+{
+    // TODO: Set the scan radius and conditions to something meaningful.
+    return class'DHUnits'.static.MetersToUnreal(10000);
+}
+
+function float GetTargetClusterEpsilon()
+{
+    // TODO: Figure out how close points need to be to form optimal clusters
+    //       (epsilon).
+    return class'DHUnits'.static.MetersToUnreal(20);
 }
 
 // This function is used by the Searching state to decide which target is next.
-// CurrentTarget should be set here.
 function PickTarget()
 {
-    // local int pick;
     local UClusters Targets;
     local UHeap TargetHeap;
     local UClusters.DataPoint P;
     local DHPawn OtherPawn;
-    local vector A, B;
-    local Object TargetItem;
+    local Actor TargetActor;
+    local array<Actor> TargetActors;
     local string TargetClassName;
 
     Targets = new class'UClusters';
     Targets.GetItemPriority = GetTargetPriority;
 
     // Collect the potential targets.
-    // TODO: Set the scan radius and conditions to something meaningful.
-    foreach RadiusActors(class'DHPawn', OtherPawn, class'DHUnits'.static.MetersToUnreal(10000))
+    foreach RadiusActors(class'DHPawn', OtherPawn, GetTargetScanRadius())
     {
         P.Item = OtherPawn;
         P.Location = OtherPawn.Location;
@@ -209,9 +297,7 @@ function PickTarget()
     }
 
     // Look for clusters.
-    // TODO: Figure out how close points need to be to form optimal clusters
-    //       (epsilon).
-    Targets.DBSCAN(class'DHUnits'.static.MetersToUnreal(20), 1);
+    Targets.DBSCAN(GetTargetClusterEpsilon(), 1);
 
     // Convert the cluster data into a priority queue.
     // The most lucious target will bubble up to the top. It can be either a
@@ -219,93 +305,66 @@ function PickTarget()
     TargetHeap = Targets.ToHeap();
 
     // Get target's class name (for logging).
-    TargetItem = TargetHeap.Peek();
+    TargetActor = Actor(TargetHeap.Peek());
 
-    if (TargetItem != none)
+    if (TargetActor != none)
     {
-        TargetClassName = string(TargetItem.Class);
+        // TODO: don't deal with single targets, necessarily.
+        TargetActors[TargetActors.Length] = TargetActor;
+        Target = class'DHAirplaneTarget'.static.CreateTargetFromActors(TargetActors);
+
+        TargetClassName = string(TargetActor.Class);
     }
 
     // Get coordinates to the target.
     // TODO: Without course correction, target might drift away.
-    if (TargetItem != none && Targets.GetPriorityVector(TargetHeap, A, B))
+    if (Target != none && Targets.GetPriorityVector(TargetHeap, TargetCoordinates.Start, TargetCoordinates.End))
     {
-        if (A != B)
-        {
-            // Strafe line.
-            // TODO: Since the plane can't do strafes at the moment, we use cluster
-            // midpoints for targets.
-            CurrentTarget.Position = (A + B) * 0.5;
-        }
-        else
-        {
-            // Point target.
-            CurrentTarget.Position = A;
-        }
-
-        Log("Target acquired:" @ TargetClassName @ "@" @ CurrentTarget.Position);
+        Log("Target acquired:" @ TargetClassName @ "@" @ TargetCoordinates.Start);
     }
     else
     {
         Log("No target!");
     }
 
-    StartDiveBomb();
-
-    // pick = Rand(100);
-
-    /*
-    if (pick % 3 == 0)
-    {
-        CurrentTarget.Position = vect(21543, -39272, -1040);
-    }
-    else if (pick % 3 == 1)
-    {
-        CurrentTarget.Position = vect(-14667, -21146, -1040);
-    }
-    else if (pick % 3 == 2)
-    {
-        CurrentTarget.Position = vect(-2596, -27184, -1040);
-    }
-    */
-
-    // CurrentTarget.Position = vect(21543, -39272, -1040);
+    //StartDiveBomb();
+    StartStrafe();
 }
 
 // Initial State. The plane enters into the combat area.
 auto state Entrance
 {
-     function Timer()
+    function Timer()
     {
         GotoState('Searching');
     }
 
-     function BeginState()
+    function BeginState()
     {
 
         Log("Entrance");
         BeginStraight(vect(-1,0,0), StandardSpeed, StraightAcceleration);
         SetTimer(3, false);
-
     }
 }
 
 // This step simulates the plane looking for a new target to attack. When the state ends, a target is picked.
 state Searching
 {
-     function Timer()
+    function Timer()
     {
         if (Role == ROLE_Authority)
+        {
             PickTarget();
+        }
 
         GotoState('Approaching');
     }
 
-     function BeginState()
+    function BeginState()
     {
         Log("Searching");
         BeginStraight(Normal(velocity), StandardSpeed, StraightAcceleration);
-
         SetTimer(3, false);
     }
 }
@@ -314,9 +373,9 @@ state Searching
 // when plane has reached the proper distance to the target to begin the run.
 state Approaching
 {
-     function OnTargetReached()
+    function OnTargetReached()
     {
-        if(bIsTurningTowardsTarget)
+        if (bIsTurningTowardsTarget)
         {
             if (CurrentAttackType == AT_STRAFE || CurrentAttackType == AT_DIVE_BOMB)
                 GotoState('DiveAttacking');
@@ -325,12 +384,12 @@ state Approaching
         }
     }
 
-     function OnMoveEnd()
+    function OnMoveEnd()
     {
         BeginStraight(Velocity, StandardSpeed, StraightAcceleration);
     }
 
-     function TickAI(float DeltaTime)
+    function TickAI(float DeltaTime)
     {
         local rotator HeadingRotator;
         local vector TargetInPlaneSpace;
@@ -339,10 +398,10 @@ state Approaching
         local vector PlaneLocalTurnCriclePosition;
 
         // Decide to turn left or right towards target.
-        HeadingRotator = OrthoRotation(Velocity, Velocity Cross vect(0, 0, 1), vect(0, 0, 1));
+        HeadingRotator = OrthoRotation(Velocity, Velocity cross vect(0, 0, 1), vect(0, 0, 1));
         HeadingRotator.Roll = 0;
 
-        TargetInPlaneSpace = (CurrentTarget.Position - Location) << HeadingRotator;
+        TargetInPlaneSpace = (Target.GetLocation() - Location) << HeadingRotator;
 
         // If the planeSpace target location has a positive Y value, turn right.
         if (TargetInPlaneSpace.Y >= 0)
@@ -377,43 +436,35 @@ state Approaching
         TurnCriclePosition = (PlaneLocalTurnCriclePosition >> HeadingRotator) + Location;
         TurnCriclePosition.Z = 0;
 
-        if (!bIsTurningTowardsTarget && VSize( V3ToV2(TurnCriclePosition - CurrentTarget.Position) ) > (CurrentTarget.Radius + MinTurnRadius))
+        if (!bIsTurningTowardsTarget && VSize(V3ToV2(TurnCriclePosition - Target.GetLocation()) ) > (TargetApproach.Radius + MinTurnRadius))
         {
             bIsTurningTowardsTarget = true;
-            BeginTurnTowardsPosition(CurrentTarget.Position, MinTurnRadius, bIsTurningRight);
+            BeginTurnTowardsPosition(Target.GetLocation(), MinTurnRadius, bIsTurningRight);
         }
     }
 
-     function BeginState()
+    function BeginState()
     {
-        Log("Approuching: "$CurrentTarget.Position);
+        Log("Approaching: " $ Target.GetLocation());
         bIsTurningTowardsTarget = false;
     }
 }
 
-
-
-// Preform attack Run on the target.
-// Used for dive bombing and gun strafes.
- state DiveAttacking
+state DiveAttacking
 {
-     function TickAI(float DeltaTime)
+    function TickAI(float DeltaTime)
     {
         local vector PullUpTarget;
-        local float PullUpStartHeight;
-
-        if(CurrentAttackType == AT_DIVE_BOMB)
-            PullUpStartHeight = DiveBombPullUpHeight;
-        else if (CurrentAttackType == AT_STRAFE)
-            PullUpStartHeight = StrafePullUpHeight;
 
         // Check if we have dipped below the min hight above target
-        if (!bIsPullingUp && Location.Z < (CurrentTarget.Position.Z + PullUpStartHeight))
+        if (!bIsPullingUp && Location.Z < (Target.GetLocation().Z + TargetApproach.MinimumHeight))
         {
             Log("Begin Pullup");
-            BeginDiveClimbToAngle(Pi/5, DiveClimbRadius);
+            // TODO: magic number, Pi / 5???
+            BeginDiveClimbToAngle(Pi / 5, DiveClimbRadius);
             bIsPullingUp = true;
-            bIsShootingAutoCannon = false;
+
+            StopFiringCannons();
         }
         // Check if we need to level out and stop pulling up
         else if (bIsPullingUp && !bIsLevelingOut && Location.Z >= CruisingHeight)
@@ -425,12 +476,12 @@ state Approaching
         // Shoot Logic.
         if (Role == ROLE_Authority)
         {
-            if (CurrentAttackType == AT_DIVE_BOMB && !bHasDroppedBomb && Location.Z < (CurrentTarget.Position.Z + PullUpStartHeight + BombDropHeight))
+            if (CurrentAttackType == AT_DIVE_BOMB && !bHasDroppedBomb)
             {
                 bHasDroppedBomb = true;
                 Log("DIVE BOMB");
             }
-            else if (CurrentAttackType == AT_STRAFE && bIsShootingAutoCannon)
+            else if (CurrentAttackType == AT_STRAFE)
             {
                 Log("SHOOT");
             }
@@ -442,12 +493,15 @@ state Approaching
         // Moving Straight after angling down to target.
         if (!bIsPullingUp && !bIsLevelingOut)
         {
-            BeginStraight(Velocity, DivingSpeed, DivingAcceleration);
-            bIsShootingAutoCannon = true;
+            BeginStraight(Velocity, DivingSpeed, DiveClimbAcceleration);
+
+            StartFiringCannons();
         }
         // Moving Straight after pulling up.
         else if (bIsPullingUp && !bIsLevelingOut)
-            BeginStraight(Velocity, ClimbingSpeed, DivingAcceleration);
+        {
+            BeginStraight(Velocity, ClimbingSpeed, DiveClimbAcceleration);
+        }
         // Finished Leveling out, end attack run and start searching again.
         else if (bIsLevelingOut)
         {
@@ -461,7 +515,7 @@ state Approaching
         bIsPullingUp = false;
         bIsLevelingOut = false;
         Log("Diving");
-        BeginDiveClimbTowardsPosition(CurrentTarget.Position, 5000, false);
+        BeginDiveClimbTowardsPosition(TargetCoordinates.Start, 5000, false);
     }
 }
 
@@ -477,19 +531,14 @@ state Crashing
 {
     function OnMoveEnd()
     {
-        BeginStraight(Normal(velocity), DivingSpeed, DivingAcceleration);
+        BeginStraight(Normal(velocity), DivingSpeed, DiveClimbAcceleration);
     }
+
     function BeginState()
     {
         Log("Crashing. God help me.");
         BeginDiveClimbToAngle(Pi * (CrashAngle / 180.0), 1500);
     }
-}
-
-// Sets a new current waypoint.
-function SetCurrentTarget(Target NewTarget)
-{
-    CurrentTarget = NewTarget;
 }
 
 // update position based on current position, velocity, and current waypoint.
@@ -505,29 +554,26 @@ function MovementUpdate(float DeltaTime)
     // Make sure plane is always facing the direction it is traveling.
     Heading = OrthoRotation(velocity, velocity Cross vect(0, 0, 1), vect(0, 0, 1));
     Heading.Roll = class'UUnits'.static.RadiansToUnreal(BankAngle);
-    //SetRotation(Heading);
 
     AirplaneModel.DesiredRotation = Heading;
-    //AirplaneModel.RotationRate = (Heading - AirplaneModel.Rotation);
 
+    // TODO: Using rotation rate instead of bRotateToDesired could produce smoother replicated rotation.
+    /*
     if (DeltaTime < 0.05)
     {
         DeltaTimeToUse = 0.05;
     }
     else
+    {
         DeltaTimeToUse = DeltaTime;
+    }
 
-    //Log(Velocity);
     // Correct one
-    //AirplaneModel.RotationRate = QuatToRotator( QuatProduct(  QuatFromRotator(Heading) , QuatInvert(QuatFromRotator(AirplaneModel.Rotation)) ) ) / DeltaTimeToUse;
-    //AirplaneModel.RotationRate = QuatToRotator( QuatProduct(  QuatFromRotator(Heading) , QuatInvert(QuatFromRotator(AirplaneModel.Rotation)) ) );
+    AirplaneModel.RotationRate = QuatToRotator( QuatProduct(  QuatFromRotator(Heading) , QuatInvert(QuatFromRotator(AirplaneModel.Rotation)) ) ) / DeltaTimeToUse;
+    */
 
-    //AirplaneModel.RotationRate = QuatToRotator( QuatProduct(  QuatInvert(QuatFromRotator(AirplaneModel.Rotation)), QuatFromRotator(Heading)  ) ) ;
-    //AirplaneModel.RotationRate = QuatToRotator( QuatProduct( QuatFromRotator(AirplaneModel.Rotation), QuatInvert(QuatFromRotator(Heading))) ) / DeltaTime; // no
-    //AirplaneModel.RotationRate = QuatToRotator( QuatProduct( QuatInvert(QuatFromRotator(Heading)), QuatFromRotator(AirplaneModel.Rotation)) ) / DeltaTime;
-    //Log(AirplaneModel.RotationRate$" --- "$DeltaTime$"---"$DeltaTimeToUse);
-    // Check if target met. Restrain from continued movement until new waypoint is set.
-    if (VSize(V3ToV2(CurrentTarget.Position - Location)) <= CurrentTarget.Radius)
+    // Check if target met.
+    if (Target != none && VSize(V3ToV2(Target.GetLocation() - Location)) <= TargetApproach.Radius)
     {
         OnTargetReached();
     }
@@ -536,14 +582,16 @@ function MovementUpdate(float DeltaTime)
 function StartStrafe()
 {
     CurrentAttackType = AT_STRAFE;
-    CurrentTarget.Radius = StrafeRadius;
+    TargetApproach.Radius = StrafeRadius;
+    TargetApproach.MinimumHeight = StrafePullUpHeight;
     GotoState('Approuching');
 }
 
 function StartDiveBomb()
 {
     CurrentAttackType = AT_DIVE_BOMB;
-    CurrentTarget.Radius = DiveBombRadius;
+    TargetApproach.Radius = DiveBombRadius;
+    TargetApproach.MinimumHeight = DiveBombPullUpHeight;
     bHasDroppedBomb = false;
     GotoState('Approuching');
 }
@@ -551,11 +599,10 @@ function StartDiveBomb()
 function StartFlyOverBomb()
 {
     CurrentAttackType = AT_FLY_OVER_BOMB;
-    CurrentTarget.Radius = FlyOverBombRadius;
+    TargetApproach.Radius = FlyOverBombRadius;
     bHasDroppedBomb = false;
     GotoState('Approuching');
 }
-
 
 // MovementState related functions ---------------------------------------------
 
@@ -570,7 +617,7 @@ function BeginTurnTowardsPosition(vector TurnPositionGoal, float TurnRadius, boo
     TurnTowardsState.Airplane = self;
     TurnTowardsState.TurnRadius = TurnRadius;
     TurnTowardsState.bIsTurningRight = bIsTurnRight;
-    TurnTowardsState.PositionGoal = CurrentTarget.Position;
+    TurnTowardsState.PositionGoal = Target.GetLocation();
     TurnTowardsState.DesiredSpeed = TurnSpeed;
     TurnTowardsState.Acceleration = TurnAcceleration;
 
@@ -595,7 +642,7 @@ function BeginDiveClimbTowardsPosition(vector TurnPositionGoal, float TurnRadius
 
     DiveClimbState.DesiredSpeedClimb = ClimbingSpeed;
     DiveClimbState.DesiredSpeedDive = DivingSpeed;
-    DiveClimbState.Acceleration = DivingAcceleration;
+    DiveClimbState.Acceleration = DiveClimbAcceleration;
 
     MoveState = DiveClimbState;
 
@@ -617,7 +664,7 @@ function BeginDiveClimbToAngle(float TurnAngleGoal, float TurnRadius)
 
     DiveClimbState.DesiredSpeedClimb = ClimbingSpeed;
     DiveClimbState.DesiredSpeedDive = DivingSpeed;
-    DiveClimbState.Acceleration = DivingAcceleration;
+    DiveClimbState.Acceleration = DiveClimbAcceleration;
 
     MoveState = DiveClimbState;
 
@@ -628,7 +675,7 @@ function BeginDiveClimbToAngle(float TurnAngleGoal, float TurnRadius)
 
 // This begins the straight movement state. The plane will move in Direction
 // forever.
- function BeginStraight(vector Direction, float Speed, float Acceleration)
+function BeginStraight(vector Direction, float Speed, float Acceleration)
 {
     local DHStraight StraightState;
     local vector VelocityPre;
@@ -646,17 +693,6 @@ function BeginDiveClimbToAngle(float TurnAngleGoal, float TurnRadius)
     Velocity = VelocityPre;
 }
 
-// Attack related functions
-function rotator GetProjectileFireRotation(float Spread)
-{
-    if (Spread > 0.0)
-    {
-        return rotator(vector(Rotation) + (VRand() * FRand() * Spread));
-    }
-
-    return Rotation;
-}
-
 // Converts 3d vector into 2d vector.
 static  function vector V3ToV2(vector InVector)
 {
@@ -669,10 +705,9 @@ static  function vector V3ToV2(vector InVector)
     return OutVector;
 }
 
-function StartDamageEffect()
+simulated function StartDamageEffect()
 {
-
-    if(DamageEffect == none)
+    if (DamageEffect == none)
     {
         DamageEffect = Spawn(DamageEffectClass, self);
         //AttachToBone(DamageEffect, DamageEffectBone);
@@ -681,38 +716,66 @@ function StartDamageEffect()
         DamageEffect.SetEffectScale(1.0);
         Log('Effect created');
         //DamageEffect.SetPhysics(PHYS_Flying);
-
-    }
-    if (DamageEffect != none)
-    {
-
     }
 }
 
 function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     Log("Hit");
-    StartDamageEffect();
-    GoToState('Crashing');
-}
 
+    // TODO: this won't work server-to-client
+    StartDamageEffect();
+
+    if (!IsInState('Crashing'))
+    {
+        GoToState('Crashing');
+    }
+}
 
 event HitWall( vector HitNormal, Actor HitWall )
 {
     Log("Ground Hit");
     Spawn(DestructionEffectClass);
-    DamageEffect.Destroy();
     Destroy();
 }
 
-/*
-event Touch( Actor Other )
+simulated function Destroyed()
 {
-    // when vehicle hits level geometry ROVehicleDestroyedEmitter
-    Log("Hit");
-}
-*/
+    super.Destroyed();
 
+    DestroyCannons();
+
+    if (DamageEffect != none)
+    {
+        DamageEffect.Destroy();
+    }
+}
+
+function StartFiringCannons()
+{
+    local int i;
+
+    for (i = 0; i < Cannons.Length; ++i)
+    {
+        if (Cannons[i] != none)
+        {
+            Cannons[i].StartFiring();
+        }
+    }
+}
+
+function StopFiringCannons()
+{
+    local int i;
+
+    for (i = 0; i < Cannons.Length; ++i)
+    {
+        if (Cannons[i] != none)
+        {
+            Cannons[i].StopFiring();
+        }
+    }
+}
 
 defaultproperties
 {
@@ -749,26 +812,20 @@ defaultproperties
     CrashAngle=-60;
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
 
-    AutoCannonFireOffset={X=5000,Y=0,Z=-200}
+    //AutoCannonFireOffset=(X=5000,Y=0,Z=-200)
 
     MinTurnRadius = 6000
 
     StandardSpeed = 4000
-
     StraightAcceleration = 150
 
     DivingSpeed = 5000
-    DivingAcceleration = 400
+    DiveClimbAcceleration = 400
 
     ClimbingSpeed = 1000
 
     TurnSpeed = 1200
     TurnAcceleration = 220
-
-
-    CurrentSpeed = 2000
-
-    //CruisingHeight = 100
 
     DiveClimbRadius = 3800
 
@@ -779,7 +836,6 @@ defaultproperties
     ClimbingSpeed = 5000
     TurnSpeed = 5000
     */
-
 
     StrafePullUpHeight=2000
     DiveBombPullUpHeight=2000

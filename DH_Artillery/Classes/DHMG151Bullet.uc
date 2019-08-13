@@ -3,10 +3,10 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_BF109_Airplane extends DHAirplane;
+class DHMG151Bullet extends DH_MG34Bullet;  // TODO: do proper stuff here!!
 
 defaultproperties
 {
-    AirplaneName="Messerschmidt Bf 109"
-    CannonInfos(0)=(CannonClass=class'DHMG151Cannon')
+    // TODO: fill this in.
 }
+

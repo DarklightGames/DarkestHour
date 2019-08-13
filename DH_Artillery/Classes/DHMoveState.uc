@@ -165,7 +165,7 @@ function vector CalculateRotationPosition(bool bIsClockwise, float TurnRadius, f
     local float DeltaAngle;
     local float ArcDistance;
     local vector PlaneSpaceNewPosition;
-    local rotator Heading;
+    //local rotator Heading;
 
     ArcDistance = Speed * DeltaTime;
     DeltaAngle = ArcDistance / TurnRadius;

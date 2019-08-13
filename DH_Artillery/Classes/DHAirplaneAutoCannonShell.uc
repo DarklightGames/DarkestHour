@@ -1,9 +1,11 @@
-//-----------------------------------------------------------
-//
-//-----------------------------------------------------------
+ //==============================================================================
+// Darkest Hour: Europe '44-'45
+// Darklight Games (c) 2008-2019
+//==============================================================================
+
 class DHAirplaneAutoCannonShell extends DHCannonShell;
 
-DefaultProperties
+defaultproperties
 {
     //TracerEffectClass=class'DH_Effects.DHBulletTracer_Red'
         bDebugInImperial=false
