@@ -7,11 +7,13 @@ class DH_45mmM1937GunCannonShellAPCR extends DHSovietCannonShell;
 
 defaultproperties
 {
-    RoundType=RT_HVAP
+    RoundType=RT_APDS
+    bShatterProne=true
+    SpeedFudgeScale=0.4
+    ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
     ShellDiameter=3.7 //sub-caliber round
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
     CoronaClass=class'DH_Effects.DHShellTracer_Green'
-    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
     ImpactDamage=225 // just a tungsten slug; no explosive filler
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'

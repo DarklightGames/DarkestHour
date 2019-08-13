@@ -11,8 +11,8 @@ enum ERoundType
 {
     RT_APC,   // either APC (with just armor-piercing cap) or APCBC (with both armor-piercing cap & ballistic cap)
     RT_HE,
-    RT_HVAP,  // HVAP in US parlance, known elsewhere as APCR (same thing)
-    RT_APDS,
+    RT_HVAP,  // HVAP in US parlance - full caliber APCR round
+    RT_APDS,  // Sub-caliber tungsten round, discarding sabot; APCR (same thing, without sabot - Used by Sovs and Germans)
     RT_HEAT,  // includes infantry AT HEAT weapons (e.g. rockets & PIAT)
     RT_Smoke,
     RT_AP,    // basic armor-piercing round, without any cap

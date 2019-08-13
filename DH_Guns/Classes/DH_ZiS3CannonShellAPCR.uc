@@ -7,14 +7,17 @@ class DH_ZiS3CannonShellAPCR extends DHSovietCannonShell;
 
 defaultproperties
 {
-    RoundType=RT_HVAP
+    RoundType=RT_APDS
+    bShatterProne=true
+    SpeedFudgeScale=0.4
+    ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
     ShellDiameter=4.5 //sub-caliber round
+    CoronaClass=class'DH_Effects.DHShellTracer_Green'
     BallisticCoefficient=1.55
     Speed=39953.0 // 662 m/s
     MaxSpeed=39953.0
     ImpactDamage=400 // just a tungsten slug; no explosive filler
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect'
-    ShellImpactDamage=class'DH_Vehicles.DH_ShermanCannonShellDamageAP'
     Tag="BR-350P"
 
     DHPenetrationTable(0)=13.0  // 100m

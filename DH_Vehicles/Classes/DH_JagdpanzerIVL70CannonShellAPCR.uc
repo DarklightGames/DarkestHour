@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_JagdpanzerIVL70CannonShellAPCR extends DHCannonShellHVAP;
+class DH_JagdpanzerIVL70CannonShellAPCR extends DHGermanCannonShell;
 
 defaultproperties
 {
@@ -44,10 +44,13 @@ defaultproperties
     DHPenetrationTable(8)=10.6
     DHPenetrationTable(9)=9.2
     DHPenetrationTable(10)=7.8
-    ShellDiameter=7.5
+    RoundType=RT_APDS
+    bShatterProne=true
+    SpeedFudgeScale=0.4
+    ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
+    ShellDiameter=5.0 //sub-caliber round
     bDebugInImperial=false
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    ShellImpactDamage=class'DH_Vehicles.DH_PantherCannonShellDamageAPCR'
     ImpactDamage=475
     BallisticCoefficient=1.52
     Speed=67594.0

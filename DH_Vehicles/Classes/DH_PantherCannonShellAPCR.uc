@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_PantherCannonShellAPCR extends DHCannonShellHVAP;
+class DH_PantherCannonShellAPCR extends DHGermanCannonShell;
 
 defaultproperties
 {
@@ -44,7 +44,10 @@ defaultproperties
     DHPenetrationTable(8)=10.6
     DHPenetrationTable(9)=9.2
     DHPenetrationTable(10)=7.8
-    ShellDiameter=7.5
+    RoundType=RT_APDS
+    bShatterProne=true
+    SpeedFudgeScale=0.4
+    ShellDiameter=5.0 //sub-caliber round
     bDebugInImperial=false
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
     ShellImpactDamage=class'DH_Vehicles.DH_PantherCannonShellDamageAPCR'

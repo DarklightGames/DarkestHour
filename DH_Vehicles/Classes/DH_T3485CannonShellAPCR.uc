@@ -7,14 +7,14 @@ class DH_T3485CannonShellAPCR extends DHSovietCannonShell;
 
 defaultproperties
 {
-    RoundType=RT_HVAP
+    RoundType=RT_APDS
     ShellDiameter=5.7 //sub-caliber round
     BallisticCoefficient=2.0
     Speed=47797.0 // 792 m/s
     MaxSpeed=47797.0
     ImpactDamage=450 // just a tungsten slug; no explosive filler
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect'
-    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageHVAP'
+    ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
     Tag="BR-365P"
 
     DHPenetrationTable(0)=17.5 // 100m
