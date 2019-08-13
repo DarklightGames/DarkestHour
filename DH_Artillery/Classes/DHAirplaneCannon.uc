@@ -130,15 +130,9 @@ function SpawnProjectile()
 {
     local vector ProjectileLocation;
     local rotator ProjectileRotation;
-    local RODebugTracer DT;
 
     ProjectileLocation = Location + (ProjectileOffset >> Rotation);
     ProjectileRotation = GetProjectileRotation();
-
-    Log("(ProjectileOffset >> Rotation)" @ (ProjectileOffset >> Rotation));
-
-    DT = Spawn(class'RODebugTracer',,, ProjectileLocation, ProjectileRotation);
-    DT.LifeSpan = 10.0;
 
     Spawn(ProjectileClass,,, ProjectileLocation, ProjectileRotation);
 }
