@@ -31,6 +31,8 @@ function Resolved(IpAddr Addr)
 
     BindPortResult = BindPort();
 
+    Log("============================================= BINDPORT returns:" @ BindPortResult);
+
     // Bind the local port.
     if (BindPortResult == 0)
     {

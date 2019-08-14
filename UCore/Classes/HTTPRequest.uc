@@ -25,6 +25,7 @@ function PostBeginPlay()
 
     MyLink = Spawn(class'UCoreBufferedTCPLink');
     MyLink.ResetBuffer();
+    //MyLink.ReceiveMode = RMODE_Event;
 }
 
 function Send()
@@ -32,6 +33,9 @@ function Send()
     MyLink.ServerIpAddr.Port = 0;
     MyLink.Resolve(Host);
 
+    Log(" ");
+    Log("Setting timer in HTTPRequest...");
+    Log(" ");
     SetTimer(1.0, true);
 }
 
@@ -98,11 +102,34 @@ function Timer()
     local HTTPRequest R;
     local Object O;
 
+    Log(" ");
+    Log("=============================================================");
+    Log(" ");
+    Log("Running timer, Timeout is:" @ Timeout);
+    Log(" ");
+    Log("MyLink.ReceiveState is:" @ MyLink.ReceiveState);
+    Log(" ");
+    Log("MyLink.Match is:" @ MyLink.Match);
+    Log(" ");
+    Log("MyLink.ServerIpAddr.Port is:" @ MyLink.ServerIpAddr.Port);
+    Log(" ");
+    Log("MyLink.IsConnected() is:" @ MyLink.IsConnected());
+    Log(" ");
+    Log("MyLink.LinkState is:" @ MyLink.LinkState @ MyLink.LinkState == STATE_Connected);
+    Log(" ");
+    Log("=============================================================");
+
     if (MyLink.ReceiveState == MyLink.Match)
     {
+        Log("MyLink.ReceiveState == MyLink.Match");
+
         if (MyLink.PeekChar() != 0)
         {
+            Log("MyLink.PeekChar() != 0");
+
             Response = MyLink.InputBuffer;
+
+            Log("Response:" @ Response);
 
             Divide(Response, MyLink.CRLF, StatusString, Response);
             Divide(Response, MyLink.CRLF $ MyLink.CRLF, HeadersString, Response);
@@ -125,6 +152,8 @@ function Timer()
                 case 302:   // Found
                 case 307:   // Temporary Redirect
                 case 308:   // Permanent Redirect
+                    Log(" doing a redirect, but probably can't");
+
                     if (bAllowRedirects && ResponseHeaders.Get("Location", Loc) && !OnRedirect(self, Status, Loc))
                     {
                         U = class'URL'.static.FromString(Loc);
@@ -145,6 +174,8 @@ function Timer()
                             Warn("Could not parse URL for redirection (" $ Loc $ ")");
                         }
                     }
+
+                    Log("Redirect failed, destroying");
                     Destroy();
                     return;
                 default:
@@ -178,6 +209,7 @@ function Timer()
                 Content = Response;
             }
 
+            Log(" Calling OnResponse !!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             OnResponse(Status, ResponseHeaders, Content);
 
             MyLink.DestroyLink();
@@ -185,8 +217,22 @@ function Timer()
             Destroy();
         }
     }
+    else if (!MyLink.IsConnected())
+    {
+        Log(" ");
+        Log("Not Connected to host:" @ Host);
+        //Log("Changing MyLink.Port to Port 80!");
+
+        //MyLink.BindPort(80);
+
+        //Log("MyLink.Port is:" @ MyLink.Port);
+
+        //MyLink.Resolve(Host);
+    }
     else if (MyLink.ReceiveState == "" && MyLink.ServerIpAddr.Port != 0 && MyLink.IsConnected())
     {
+        Log("in the first else if");
+
         Command = Method @ Path @ Protocol $ MyLink.CRLF $
                   "Host:" @ Host $ MyLink.CRLF;
 
@@ -220,6 +266,8 @@ function Timer()
     }
     else if (MyLink.ReceiveState == MyLink.Timeout)
     {
+        Log("in the last else if");
+
         OnResponse(408, none, "");
     }
 
@@ -227,7 +275,7 @@ function Timer()
 
     if (Timeout < 0)
     {
-        Log("HTTP Request timed out");
+        Log("Destroying HTTPRequest... Timed out!!!!");
         Destroy();
         return;
     }
@@ -241,7 +289,7 @@ function int GetTimeout()
 defaultproperties
 {
     Method="GET"
-    Timeout=30
+    Timeout=5
     Protocol="HTTP/1.1"
     bHidden=true
 }
