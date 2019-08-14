@@ -70,6 +70,7 @@ var DHMoveState         MoveState;
 var bool            bIsPullingUp;
 var bool            bIsLevelingOut;
 var bool            bIsTurningTowardsTarget;
+var float           PullUpAngle; // Angle in degrees to pull up towards durring a diving attack.
 
 // Attack Control variables-----------------------------------------------------
 enum EAttackType
@@ -122,6 +123,8 @@ var     name DamageEffectBone;
 var     VehicleDamagedEffect DamageEffect;
 var     float CrashAngle;
 var     class<ROVehicleDestroyedEmitter> DestructionEffectClass;
+var     float DeathSpiralVelocity;
+var     float DeathSpiralAcceleration;
 
 // Bombs
 var class<Projectile>   BombClass;
@@ -273,6 +276,12 @@ function float GetTargetClusterEpsilon()
     return class'DHUnits'.static.MetersToUnreal(20);
 }
 
+// TODO: This is the link between the Target weapon type recomendations and the actual attack parameters
+// Decide what attack to do on the target. Produces control signals.
+function DecideAttack()
+{
+}
+
 // This function is used by the Searching state to decide which target is next.
 function PickTarget()
 {
@@ -327,7 +336,7 @@ function PickTarget()
         Log("No target!");
     }
 
-    //StartDiveBomb();
+    // Debug
     StartStrafe();
 }
 
@@ -356,6 +365,7 @@ state Searching
         if (Role == ROLE_Authority)
         {
             PickTarget();
+            DecideAttack();
         }
 
         GotoState('Approaching');
@@ -460,8 +470,7 @@ state DiveAttacking
         if (!bIsPullingUp && Location.Z < (Target.GetLocation().Z + TargetApproach.MinimumHeight))
         {
             Log("Begin Pullup");
-            // TODO: magic number, Pi / 5???
-            BeginDiveClimbToAngle(Pi / 5, DiveClimbRadius);
+            BeginDiveClimbToAngle(class'UUnits'.static.DegreesToRadians(PullUpAngle), DiveClimbRadius);
             bIsPullingUp = true;
 
             StopFiringCannons();
@@ -471,20 +480,6 @@ state DiveAttacking
         {
             BeginDiveClimbToAngle(0, DiveClimbRadius);
             bIsLevelingOut = true;
-        }
-
-        // Shoot Logic.
-        if (Role == ROLE_Authority)
-        {
-            if (CurrentAttackType == AT_DIVE_BOMB && !bHasDroppedBomb)
-            {
-                bHasDroppedBomb = true;
-                Log("DIVE BOMB");
-            }
-            else if (CurrentAttackType == AT_STRAFE)
-            {
-                Log("SHOOT");
-            }
         }
     }
 
@@ -534,10 +529,17 @@ state Crashing
         BeginStraight(Normal(velocity), DivingSpeed, DiveClimbAcceleration);
     }
 
+    function TickAI(float DeltaTime)
+    {
+        DeathSpiralVelocity += DeltaTime * DeathSpiralAcceleration;
+        BankAngle += DeltaTime * DeathSpiralVelocity;
+    }
+
     function BeginState()
     {
         Log("Crashing. God help me.");
-        BeginDiveClimbToAngle(Pi * (CrashAngle / 180.0), 1500);
+        DeathSpiralVelocity = 0;
+        BeginDiveClimbToAngle(class'UUnits'.static.DegreesToRadians(CrashAngle), 1500);
     }
 }
 
@@ -815,6 +817,7 @@ defaultproperties
     //AutoCannonFireOffset=(X=5000,Y=0,Z=-200)
 
     MinTurnRadius = 6000
+    PullUpAngle = 30
 
     StandardSpeed = 4000
     StraightAcceleration = 150
@@ -836,11 +839,11 @@ defaultproperties
     ClimbingSpeed = 5000
     TurnSpeed = 5000
     */
-
+    DeathSpiralAcceleration=100
     StrafePullUpHeight=2000
     DiveBombPullUpHeight=2000
 
-    StrafeRadius=13000
+    StrafeRadius=15000
     DiveBombRadius=7000
     FlyOverBombRadius=13000
 
