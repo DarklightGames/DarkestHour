@@ -95,7 +95,7 @@ simulated function StopFiringEffects()
     {
         return;
     }
-    
+
     if (FiringEmitter != none)
     {
         FiringEmitter.Destroy();
@@ -239,4 +239,5 @@ defaultproperties
     bHasInfiniteAmmo=true
     ProjectileOffset=(X=512,Y=0,Z=0)
     RemoteRole=ROLE_SimulatedProxy
+    bNetNotify=true
 }
