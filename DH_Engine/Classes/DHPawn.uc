@@ -6663,6 +6663,8 @@ function class<Actor> GetAirplaneClassByName(name AirplaneName)
         case 'me109':
             return class<Actor>(DynamicLoadObject("DH_Artillery.DHArtillery_BF109_Airstrike", class'class'));
         // TODO: fill in more types as add them so we can quickly spawn different types for testing.
+        case 'spitfire':
+            return class<Actor>(DynamicLoadObject("DH_Artillery.DHArtillery_Spitfire_Airstrike", class'class'));
         case '':
         default:
             return class<Actor>(DynamicLoadObject("DH_Artillery.DHArtillery_BF109_Airstrike", class'class'));

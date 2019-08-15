@@ -6,6 +6,8 @@
 class DHAirplaneCannon extends Actor
     abstract;
 
+var int                 CannonIndex;
+
 var DHAirplane          Airplane;
 
 var Sound               FiringSound;
