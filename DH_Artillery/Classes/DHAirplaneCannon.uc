@@ -6,27 +6,102 @@
 class DHAirplaneCannon extends Actor
     abstract;
 
-var DHAirplane          Airplane;
+var int                 CannonIndex;
 
-var Sound               FiringSound;
+// Projectile
 var class<Projectile>   ProjectileClass;
 var vector              ProjectileOffset;
-var class<Emitter>      EmitterClass;
 
+// Ammunition
 var bool                bHasInfiniteAmmo;
 var float               RoundsPerMinute;
 var int                 AmmoCount;
 var float               NextFireTime;
 
+// Spread
 var rotator             SpreadMin;
 var rotator             SpreadMax;
 
-var bool                bIsFiring;
+// Firing effects
+var Sound               FiringAmbientSound;
+var Emitter             FiringEmitter;
+var class<Emitter>      FiringEmitterClass;
+var vector              FiringEmitterOffset;
+
+var bool                bIsPlayingFiringEffects;
+var private bool        bIsFiring;  // Replicated variable used to signal to the client to begin playing firing effects.
 
 replication
 {
     reliable if (Role == ROLE_Authority)
         bIsFiring;
+}
+
+simulated function DHAirplane GetAirplane()
+{
+    return DHAirplane(Owner);
+}
+
+simulated function PostNetReceive()
+{
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        if (bIsFiring && !bIsPlayingFiringEffects)
+        {
+            PlayFiringEffects();
+        }
+        else if (!bIsFiring && bIsPlayingFiringEffects)
+        {
+            StopFiringEffects();
+        }
+    }
+}
+
+simulated function PlayFiringEffects()
+{
+    if (Level.NetMode == NM_DedicatedServer)
+    {
+        return;
+    }
+
+    if (bIsPlayingFiringEffects)
+    {
+        return;
+    }
+
+    if (FiringEmitter != none)
+    {
+        FiringEmitter.Destroy();
+    }
+
+    if (FiringEmitterClass != none)
+    {
+        FiringEmitter = Spawn(FiringEmitterClass, self);
+
+        if (FiringEmitter != none)
+        {
+            FiringEmitter.SetBase(self);
+            FiringEmitter.SetRelativeLocation(FiringEmitterOffset);
+            FiringEmitter.SetRelativeRotation(rot(0, 0, 0));
+        }
+    }
+
+    bIsPlayingFiringEffects = true;
+}
+
+simulated function StopFiringEffects()
+{
+    if (Level.NetMode == NM_DedicatedServer)
+    {
+        return;
+    }
+
+    if (FiringEmitter != none)
+    {
+        FiringEmitter.Destroy();
+    }
+
+    bIsPlayingFiringEffects = false;
 }
 
 function bool HasAmmo()
@@ -72,7 +147,7 @@ state Firing
     {
         bIsFiring = true;
         NextFireTime = Level.TimeSeconds;
-        AmbientSound = FiringSound;
+        AmbientSound = FiringAmbientSound;
     }
 
     function EndState()
@@ -97,6 +172,12 @@ state Firing
             // Calculate the number of projectiles to fire in this tick.
             ProjectileCount = Ceil((Level.TimeSeconds - NextFireTime) / GetFiringInterval());
 
+            if (bHasInfiniteAmmo == false)
+            {
+                // Ensure that we do not fire more projectiles than we have available.
+                ProjectileCount = Min(AmmoCount, ProjectileCount);
+            }
+
             // Spawn the projectiles.
             for (i = 0; i < ProjectileCount; ++i)
             {
@@ -109,7 +190,7 @@ state Firing
             if (bHasInfiniteAmmo == false)
             {
                 // Decrement ammo count.
-                AmmoCount -= 1;
+                AmmoCount -= ProjectileCount;
 
                 if (AmmoCount == 0)
                 {
@@ -121,9 +202,9 @@ state Firing
     }
 }
 
-function bool IsFiring()
+simulated function bool IsFiring()
 {
-    return IsInState('Firing');
+    return bIsFiring;
 }
 
 function SpawnProjectile()
@@ -146,9 +227,17 @@ function rotator GetProjectileRotation()
     return QuatToRotator(QuatProduct(QuatFromRotator(Spread), QuatFromRotator(Rotation)));
 }
 
+simulated function Destroyed()
+{
+    super.Destroyed();
+
+    StopFiringEffects();
+}
+
 defaultproperties
 {
     bHasInfiniteAmmo=true
     ProjectileOffset=(X=512,Y=0,Z=0)
+    RemoteRole=ROLE_SimulatedProxy
+    bNetNotify=true
 }
-

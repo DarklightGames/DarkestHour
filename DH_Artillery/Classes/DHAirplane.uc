@@ -112,6 +112,7 @@ struct CannonInfo
     var class<DHAirplaneCannon> CannonClass;
     var rotator RotationOffset;
     var vector LocationOffset;
+    var name CannonBone;
 };
 
 var array<CannonInfo>       CannonInfos;
@@ -219,9 +220,11 @@ function CreateCannons()
             Warn("Failed to create cannon!");
         }
 
-        Cannon.SetBase(AirplaneModel);
+        AirplaneModel.AttachToBone(Cannon, CannonInfos[i].CannonBone);
         Cannon.SetRelativeRotation(CannonInfos[i].RotationOffset);
         Cannon.SetRelativeLocation(CannonInfos[i].LocationOffset);
+
+        Cannon.CannonIndex = Cannons.Length;
 
         Cannons[Cannons.Length] = Cannon;
     }
@@ -470,8 +473,6 @@ state DiveAttacking
 {
     function TickAI(float DeltaTime)
     {
-        local vector PullUpTarget;
-
         // Check if we have dipped below the min hight above target
         if (!bIsPullingUp && Location.Z < (Target.GetLocation().Z + TargetApproach.MinimumHeight))
         {
@@ -479,7 +480,7 @@ state DiveAttacking
             BeginDiveClimbToAngle(class'UUnits'.static.DegreesToRadians(PullUpAngle), DiveClimbRadius);
             bIsPullingUp = true;
 
-            StopFiringCannons();
+            StopFiringCannons(-1);
         }
         // Check if we need to level out and stop pulling up
         else if (bIsPullingUp && !bIsLevelingOut && Location.Z >= CruisingHeight)
@@ -496,7 +497,7 @@ state DiveAttacking
         {
             BeginStraight(Velocity, DivingSpeed, DiveClimbAcceleration);
 
-            StartFiringCannons();
+            StartFiringCannons(GetCannonFlagsForTarget());
         }
         // Moving Straight after pulling up.
         else if (bIsPullingUp && !bIsLevelingOut)
@@ -558,7 +559,6 @@ state Crashing
 function MovementUpdate(float DeltaTime)
 {
     local rotator Heading;
-    local float   DeltaTimeToUse;
 
     MoveState.Tick(DeltaTime);
 
@@ -761,26 +761,40 @@ simulated function Destroyed()
     }
 }
 
-function StartFiringCannons()
+function int GetCannonFlagsForTarget()
+{
+    local int CannonFlags, i;
+
+    for (i = 0; i < Cannons.Length; ++i)
+    {
+        // TODO: fill this in with something that looks at target composition and
+        // builds the cannon flags.
+        CannonFlags = CannonFlags | (1 << i);
+    }
+
+    return CannonFlags;
+}
+
+function StartFiringCannons(int CannonFlags)
 {
     local int i;
 
     for (i = 0; i < Cannons.Length; ++i)
     {
-        if (Cannons[i] != none)
+        if (Cannons[i] != none && (CannonFlags & (1 << i)) != 0)
         {
             Cannons[i].StartFiring();
         }
     }
 }
 
-function StopFiringCannons()
+function StopFiringCannons(int CannonFlags)
 {
     local int i;
 
     for (i = 0; i < Cannons.Length; ++i)
     {
-        if (Cannons[i] != none)
+        if (Cannons[i] != none && (CannonFlags & (1 << i)) != 0)
         {
             Cannons[i].StopFiring();
         }
@@ -833,8 +847,10 @@ defaultproperties
     DamageEffectBone="body"
     CrashAngle=-60;
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
+
     bIsCrashing=false
     DeathSpiralAcceleration=5
+
 
     MinTurnRadius = 6000
     PullUpAngle = 45
@@ -852,6 +868,8 @@ defaultproperties
     TurnSpeed = 1200
     TurnAcceleration = 220
 
+    CurrentSpeed = 2000
+    CruisingHeight = 100
     DiveClimbRadius = 3800
 
     // MAX SPEED FOR DEBUG

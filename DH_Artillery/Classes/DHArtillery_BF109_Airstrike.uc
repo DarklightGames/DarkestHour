@@ -9,6 +9,7 @@ defaultproperties
 {
     MenuName="Airstrike (Bf109G)"
     AirplaneClass=class'DH_Bf109_Airplane'
-    PlaneInitialHeight = 100;
+
+    PlaneInitialHeight=120
 }
 

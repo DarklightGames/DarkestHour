@@ -7,6 +7,8 @@ class DHArtillery_Spitfire_Airstrike extends DHArtillery_Airstrike;
 
 defaultproperties
 {
+    MenuName="Airstrike (Spitfire)"
     AirplaneClass=class'DH_Spitfire_Airplane'
+    PlaneInitialHeight=120
 }
 
