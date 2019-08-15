@@ -125,6 +125,7 @@ var     float CrashAngle;
 var     class<ROVehicleDestroyedEmitter> DestructionEffectClass;
 var     float DeathSpiralVelocity;
 var     float DeathSpiralAcceleration;
+var     bool bIsCrashing;   // Used for triggering the crashing effects on client side.
 
 // Bombs
 var class<Projectile>   BombClass;
@@ -136,11 +137,15 @@ var DHAirplaneRotator AirplaneModel;
 
 replication
 {
-     unreliable if (Role == ROLE_Authority)
+    unreliable if (Role == ROLE_Authority)
         AirplaneModel, Target;
+
+    reliable if (Role == ROLE_Authority)
+        bIsCrashing;
 }
 
-function PostBeginPlay()
+
+simulated function PostBeginPlay()
 {
     if (Role == ROLE_Authority)
     {
@@ -155,6 +160,7 @@ function PostBeginPlay()
         CurrentSpeed = StandardSpeed;
         CruisingHeight = Location.Z;
     }
+    bIsCrashing = false;
 }
 
 function DestroyCannons()
@@ -222,7 +228,7 @@ function CreateCannons()
 }
 
 // Tick needed to make AI decisions on server.
-function Tick(float DeltaTime)
+simulated function Tick(float DeltaTime)
 {
     // TODO: I think we can simply disable tick on the client instead of
     // checking the role. (ie. Disable('Tick');)
@@ -510,6 +516,7 @@ state DiveAttacking
         bIsPullingUp = false;
         bIsLevelingOut = false;
         Log("Diving");
+
         BeginDiveClimbTowardsPosition(TargetCoordinates.Start, 5000, false);
     }
 }
@@ -527,18 +534,22 @@ state Crashing
     function OnMoveEnd()
     {
         BeginStraight(Normal(velocity), DivingSpeed, DiveClimbAcceleration);
+        Log("b: "$bIsCrashing);
     }
 
     function TickAI(float DeltaTime)
     {
         DeathSpiralVelocity += DeltaTime * DeathSpiralAcceleration;
         BankAngle += DeltaTime * DeathSpiralVelocity;
+
     }
 
     function BeginState()
     {
         Log("Crashing. God help me.");
+        //StartDamageEffect();
         DeathSpiralVelocity = 0;
+        bIsCrashing = true;
         BeginDiveClimbToAngle(class'UUnits'.static.DegreesToRadians(CrashAngle), 1500);
     }
 }
@@ -725,9 +736,6 @@ function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector
 {
     Log("Hit");
 
-    // TODO: this won't work server-to-client
-    StartDamageEffect();
-
     if (!IsInState('Crashing'))
     {
         GoToState('Crashing');
@@ -779,6 +787,19 @@ function StopFiringCannons()
     }
 }
 
+simulated event PostNetReceive()
+{
+    Log("post net recevie");
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        if (bIsCrashing && DamageEffect != none)
+        {
+            Log("StartDamageEffect");
+            StartDamageEffect();
+        }
+    }
+}
+
 defaultproperties
 {
     AirplaneName="Airplane"
@@ -788,7 +809,6 @@ defaultproperties
     bReplicateMovement=true
     bUpdateSimulatedPosition=true
     RemoteRole=ROLE_SimulatedProxy
-
     bCanBeDamaged=true
 
     bCollideActors=true
@@ -813,16 +833,18 @@ defaultproperties
     DamageEffectBone="body"
     CrashAngle=-60;
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
-
-    //AutoCannonFireOffset=(X=5000,Y=0,Z=-200)
+    bIsCrashing=false
+    DeathSpiralAcceleration=5
 
     MinTurnRadius = 6000
-    PullUpAngle = 30
+    PullUpAngle = 45
 
-    StandardSpeed = 4000
+    StandardSpeed = 2000
+    //StandardSpeed = 500
     StraightAcceleration = 150
 
-    DivingSpeed = 5000
+    //DivingSpeed = 5000
+    DivingSpeed = 800
     DiveClimbAcceleration = 400
 
     ClimbingSpeed = 1000
@@ -839,7 +861,7 @@ defaultproperties
     ClimbingSpeed = 5000
     TurnSpeed = 5000
     */
-    DeathSpiralAcceleration=100
+
     StrafePullUpHeight=2000
     DiveBombPullUpHeight=2000
 
