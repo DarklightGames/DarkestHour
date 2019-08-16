@@ -548,7 +548,6 @@ state Crashing
     function BeginState()
     {
         Log("Crashing. God help me.");
-        //StartDamageEffect();
         DeathSpiralVelocity = 0;
         bIsCrashing = true;
         BeginDiveClimbToAngle(class'UUnits'.static.DegreesToRadians(CrashAngle), 1500);
@@ -803,10 +802,10 @@ function StopFiringCannons(int CannonFlags)
 
 simulated event PostNetReceive()
 {
-    Log("post net recevie");
+    //Log("post net recevie");
     if (Level.NetMode != NM_DedicatedServer)
     {
-        if (bIsCrashing && DamageEffect != none)
+        if (bIsCrashing && DamageEffect == none)
         {
             Log("StartDamageEffect");
             StartDamageEffect();
@@ -819,6 +818,7 @@ defaultproperties
     AirplaneName="Airplane"
     DrawType=DT_Mesh
 
+    bNetNotify=true
     bAlwaysRelevant=true
     bReplicateMovement=true
     bUpdateSimulatedPosition=true
@@ -851,16 +851,13 @@ defaultproperties
     bIsCrashing=false
     DeathSpiralAcceleration=5
 
-
     MinTurnRadius = 6000
     PullUpAngle = 45
 
-    StandardSpeed = 2000
-    //StandardSpeed = 500
+    StandardSpeed = 4000
     StraightAcceleration = 150
 
-    //DivingSpeed = 5000
-    DivingSpeed = 800
+    DivingSpeed = 5000
     DiveClimbAcceleration = 400
 
     ClimbingSpeed = 1000
