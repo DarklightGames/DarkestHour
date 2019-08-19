@@ -119,12 +119,22 @@ var array<CannonInfo>       CannonInfos;
 var array<DHAirplaneCannon> Cannons;
 
 // Damage and crashing
-var     class<VehicleDamagedEffect> DamageEffectClass;
-var     name DamageEffectBone;
-var     VehicleDamagedEffect DamageEffect;
+struct DamageEffectInfo
+{
+    var class<Emitter> DamageEffectClass;
+    // TODO: Disabled because I could not get AttachToBone to work.
+    //var name DamageEffectBone;
+    var rotator RotationOffset;
+    var vector LocationOffset;
+};
+
+var     array<DamageEffectInfo> DamageEffectInfos;
+var     array<Emitter> DamageEffects;
+
+var     class<Emitter> DestructionEffectClass;
 var     float CrashAngle;
-var     class<ROVehicleDestroyedEmitter> DestructionEffectClass;
 var     float DeathSpiralVelocity;
+var     float DeathSpiralMaxVelocity;
 var     float DeathSpiralAcceleration;
 var     bool bIsCrashing;   // Used for triggering the crashing effects on client side.
 
@@ -138,7 +148,7 @@ var DHAirplaneRotator AirplaneModel;
 
 replication
 {
-    unreliable if (Role == ROLE_Authority)
+    reliable if (Role == ROLE_Authority)
         AirplaneModel, Target;
 
     reliable if (Role == ROLE_Authority)
@@ -161,7 +171,6 @@ simulated function PostBeginPlay()
         CurrentSpeed = StandardSpeed;
         CruisingHeight = Location.Z;
     }
-    bIsCrashing = false;
 }
 
 function DestroyCannons()
@@ -235,6 +244,8 @@ simulated function Tick(float DeltaTime)
 {
     // TODO: I think we can simply disable tick on the client instead of
     // checking the role. (ie. Disable('Tick');)
+    // I know but right know I like to use it for debugging.
+
     if (Role == ROLE_Authority)
     {
         TickAI(DeltaTime);
@@ -377,7 +388,8 @@ state Searching
             DecideAttack();
         }
 
-        GotoState('Approaching');
+        //GotoState('Approaching');
+                GoToState('Crashing');
     }
 
     function BeginState()
@@ -541,8 +553,15 @@ state Crashing
     function TickAI(float DeltaTime)
     {
         DeathSpiralVelocity += DeltaTime * DeathSpiralAcceleration;
+
+        if (DeathSpiralVelocity > DeathSpiralMaxVelocity)
+            DeathSpiralVelocity = DeathSpiralMaxVelocity;
+
         BankAngle += DeltaTime * DeathSpiralVelocity;
 
+
+        if (BankAngle > 2 * Pi)
+            BankAngle = BankAngle - (2 * Pi);
     }
 
     function BeginState()
@@ -719,16 +738,47 @@ static  function vector V3ToV2(vector InVector)
 
 simulated function StartDamageEffect()
 {
-    if (DamageEffect == none)
+    local int i;
+    local Emitter DamageEffect;
+
+    if(DamageEffects.Length != 0)
+        return;
+
+    for (i = 0; i < DamageEffectInfos.Length; i++)
     {
-        DamageEffect = Spawn(DamageEffectClass, self);
-        //AttachToBone(DamageEffect, DamageEffectBone);
-        DamageEffect.SetBase(self);
-        DamageEffect.UpdateDamagedEffect(false, 0.0, true, false);
-        DamageEffect.SetEffectScale(1.0);
-        Log('Effect created');
-        //DamageEffect.SetPhysics(PHYS_Flying);
+        if (DamageEffectInfos[i].DamageEffectClass == none)
+        {
+            continue;
+        }
+
+        DamageEffect = Spawn(DamageEffectInfos[i].DamageEffectClass, self,,Location,Rotation);
+
+        if (DamageEffect == none)
+        {
+            Warn("Failed to spawn damage effect emitter.");
+            continue;
+        }
+
+        //AirplaneModel.AttachToBone(DamageEffect, DamageEffectInfos[i].DamageEffectBone);
+        DamageEffect.SetBase(AirplaneModel);
+        DamageEffect.SetRelativeLocation(DamageEffectInfos[i].LocationOffset);
+        DamageEffect.SetRelativeRotation(DamageEffectInfos[i].RotationOffset);
+
+        DamageEffects[DamageEffects.Length] = DamageEffect;
     }
+}
+
+simulated function DestroyDamageEffects()
+{
+    local int i;
+    Log(AirplaneModel.Location);
+    for(i = 0; i < DamageEffects.Length; i++)
+    {
+        Log(DamageEffects[i].Location);
+        DamageEffects[i].Destroy();
+    }
+
+    DamageEffects.Length = 0;
 }
 
 function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
@@ -754,10 +804,7 @@ simulated function Destroyed()
 
     DestroyCannons();
 
-    if (DamageEffect != none)
-    {
-        DamageEffect.Destroy();
-    }
+    DestroyDamageEffects();
 }
 
 function int GetCannonFlagsForTarget()
@@ -802,10 +849,9 @@ function StopFiringCannons(int CannonFlags)
 
 simulated event PostNetReceive()
 {
-    //Log("post net recevie");
     if (Level.NetMode != NM_DedicatedServer)
     {
-        if (bIsCrashing && DamageEffect == none)
+        if (bIsCrashing && DamageEffects.Length == 0)
         {
             Log("StartDamageEffect");
             StartDamageEffect();
@@ -835,30 +881,30 @@ defaultproperties
     bWorldGeometry=False
     bUseCylinderCollision=false
 
-    //bRotateToDesired=true
-    //RotationRate={Pitch=2000,Yaw=2000,Roll=2000}
     Physics = PHYS_Flying
 
     BankAngle = 0
     MaxBankAngle = 65
     BankRate = 0.65
 
-    DamageEffectClass=class'ROEngine.VehicleDamagedEffect'
-    DamageEffectBone="body"
+    DamageEffectInfos(0)=(DamageEffectClass=class'ROEngine.VehicleDamagedEffect')
+    DamageEffectInfos(1)=(DamageEffectClass=class'ROEffects.ROVehicleDestroyedEmitter',LocationOffset=(X=-1000,Y=0,Z=0))
+
     CrashAngle=-60;
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
 
     bIsCrashing=false
-    DeathSpiralAcceleration=5
+    DeathSpiralAcceleration=10
+    DeathSpiralMaxVelocity=100;
 
     MinTurnRadius = 6000
     PullUpAngle = 45
 
-    StandardSpeed = 4000
+    StandardSpeed = 2000
     StraightAcceleration = 150
 
-    DivingSpeed = 5000
-    DiveClimbAcceleration = 400
+    DivingSpeed = 500
+    DiveClimbAcceleration = 1000
 
     ClimbingSpeed = 1000
 

@@ -10,7 +10,7 @@ defaultproperties
     DrawType=DT_Mesh
     Mesh=Mesh'DH_Airplanes_anm.bf109g'
     bRotateToDesired=true
-    Physics=PHYS_Rotation
+    Physics=PHYS_Rotating
     //RotationRate=(Pitch=0,Yaw=0,Roll=-50000)
 
     bFixedRotationDir=false
