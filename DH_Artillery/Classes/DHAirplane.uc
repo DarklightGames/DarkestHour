@@ -124,7 +124,6 @@ struct DamageEffectInfo
     var class<Emitter> DamageEffectClass;
     // TODO: Disabled because I could not get AttachToBone to work.
     //var name DamageEffectBone;
-    var rotator RotationOffset;
     var vector LocationOffset;
 };
 
@@ -388,8 +387,7 @@ state Searching
             DecideAttack();
         }
 
-        //GotoState('Approaching');
-                GoToState('Crashing');
+        GotoState('Approaching');
     }
 
     function BeginState()
@@ -547,30 +545,78 @@ state Crashing
     function OnMoveEnd()
     {
         BeginStraight(Normal(velocity), DivingSpeed, DiveClimbAcceleration);
-        Log("b: "$bIsCrashing);
+
+        AirplaneModel.bRotateToDesired = false;
+        AirplaneModel.bFixedRotationDir = true;
+
+        AirplaneModel.RotationRate.Roll = 0;
+        AirplaneModel.RotationRate.Pitch = 0;
+        AirplaneModel.RotationRate.Yaw = 0;
     }
 
     function TickAI(float DeltaTime)
     {
-        DeathSpiralVelocity += DeltaTime * DeathSpiralAcceleration;
+        AirplaneModel.RotationRate.Roll += DeltaTime * DeathSpiralAcceleration;
 
-        if (DeathSpiralVelocity > DeathSpiralMaxVelocity)
-            DeathSpiralVelocity = DeathSpiralMaxVelocity;
+        if(AirplaneModel.RotationRate.Roll > DeathSpiralMaxVelocity)
+            AirplaneModel.RotationRate.Roll = DeathSpiralMaxVelocity;
 
-        BankAngle += DeltaTime * DeathSpiralVelocity;
-
-
-        if (BankAngle > 2 * Pi)
-            BankAngle = BankAngle - (2 * Pi);
+        Log(AirplaneModel.RotationRate.Roll);
     }
 
     function BeginState()
     {
         Log("Crashing. God help me.");
-        DeathSpiralVelocity = 0;
         bIsCrashing = true;
-        BeginDiveClimbToAngle(class'UUnits'.static.DegreesToRadians(CrashAngle), 1500);
+
+        BeginDiveClimbToAngle(class'UUnits'.static.DegreesToRadians(CrashAngle), DiveClimbRadius);
     }
+}
+
+simulated function StartDamageEffect()
+{
+    local int i;
+    local Emitter DamageEffect;
+
+    if(DamageEffects.Length != 0)
+        return;
+
+    for (i = 0; i < DamageEffectInfos.Length; i++)
+    {
+        if (DamageEffectInfos[i].DamageEffectClass == none)
+        {
+            continue;
+        }
+
+        DamageEffect = Spawn(DamageEffectInfos[i].DamageEffectClass, self,,AirplaneModel.Location + (DamageEffectInfos[i].LocationOffset << AirplaneModel.Rotation),AirplaneModel.Rotation);
+
+        if (DamageEffect == none)
+        {
+            Warn("Failed to spawn damage effect emitter.");
+            continue;
+        }
+
+        //AirplaneModel.AttachToBone(DamageEffect, DamageEffectInfos[i].DamageEffectBone);
+
+        DamageEffect.SetRelativeLocation(DamageEffectInfos[i].LocationOffset);
+        //DamageEffect.SetRelativeRotation(DamageEffectInfos[i].RotationOffset);
+        DamageEffect.SetBase(AirplaneModel);
+
+        DamageEffects[DamageEffects.Length] = DamageEffect;
+    }
+}
+
+simulated function DestroyDamageEffects()
+{
+    local int i;
+    Log(AirplaneModel.Location);
+    for(i = 0; i < DamageEffects.Length; i++)
+    {
+        Log(DamageEffects[i].Location);
+        DamageEffects[i].Destroy();
+    }
+
+    DamageEffects.Length = 0;
 }
 
 // update position based on current position, velocity, and current waypoint.
@@ -736,50 +782,7 @@ static  function vector V3ToV2(vector InVector)
     return OutVector;
 }
 
-simulated function StartDamageEffect()
-{
-    local int i;
-    local Emitter DamageEffect;
 
-    if(DamageEffects.Length != 0)
-        return;
-
-    for (i = 0; i < DamageEffectInfos.Length; i++)
-    {
-        if (DamageEffectInfos[i].DamageEffectClass == none)
-        {
-            continue;
-        }
-
-        DamageEffect = Spawn(DamageEffectInfos[i].DamageEffectClass, self,,Location,Rotation);
-
-        if (DamageEffect == none)
-        {
-            Warn("Failed to spawn damage effect emitter.");
-            continue;
-        }
-
-        //AirplaneModel.AttachToBone(DamageEffect, DamageEffectInfos[i].DamageEffectBone);
-        DamageEffect.SetBase(AirplaneModel);
-        DamageEffect.SetRelativeLocation(DamageEffectInfos[i].LocationOffset);
-        DamageEffect.SetRelativeRotation(DamageEffectInfos[i].RotationOffset);
-
-        DamageEffects[DamageEffects.Length] = DamageEffect;
-    }
-}
-
-simulated function DestroyDamageEffects()
-{
-    local int i;
-    Log(AirplaneModel.Location);
-    for(i = 0; i < DamageEffects.Length; i++)
-    {
-        Log(DamageEffects[i].Location);
-        DamageEffects[i].Destroy();
-    }
-
-    DamageEffects.Length = 0;
-}
 
 function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
@@ -801,6 +804,8 @@ event HitWall( vector HitNormal, Actor HitWall )
 simulated function Destroyed()
 {
     super.Destroyed();
+
+    AirplaneModel.Destroy();
 
     DestroyCannons();
 
@@ -888,22 +893,22 @@ defaultproperties
     BankRate = 0.65
 
     DamageEffectInfos(0)=(DamageEffectClass=class'ROEngine.VehicleDamagedEffect')
-    DamageEffectInfos(1)=(DamageEffectClass=class'ROEffects.ROVehicleDestroyedEmitter',LocationOffset=(X=-1000,Y=0,Z=0))
+    DamageEffectInfos(1)=(DamageEffectClass=class'ROEngine.VehicleDamagedEffect',LocationOffset=(X=0,Y=500,Z=0))
 
     CrashAngle=-60;
     DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
 
     bIsCrashing=false
-    DeathSpiralAcceleration=10
-    DeathSpiralMaxVelocity=100;
+    DeathSpiralAcceleration=80000
+    DeathSpiralMaxVelocity=37000
 
     MinTurnRadius = 6000
     PullUpAngle = 45
 
-    StandardSpeed = 2000
+    StandardSpeed = 4000
     StraightAcceleration = 150
 
-    DivingSpeed = 500
+    DivingSpeed = 5000
     DiveClimbAcceleration = 1000
 
     ClimbingSpeed = 1000

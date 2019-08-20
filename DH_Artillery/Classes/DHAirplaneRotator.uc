@@ -15,6 +15,7 @@ defaultproperties
 
     bFixedRotationDir=false
     RotationRate=(Pitch=30000,Yaw=30000,Roll=30000)
+    //RotationRate=(Pitch=0,Yaw=0,Roll=30000)
     //DesiredRotation=(Roll=30000)
 
     bReplicateMovement=true
