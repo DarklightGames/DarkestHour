@@ -52,5 +52,5 @@ defaultproperties
     Speed=71313.0
     MaxSpeed=71313.0
     StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
-    Tag="PzGr.40"
+
 }

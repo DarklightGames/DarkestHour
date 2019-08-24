@@ -7,7 +7,7 @@ class DH_6PounderCannonShellHE extends DH_AT57CannonShellHE;
 
 defaultproperties
 {
-    Tag="Mk.X HE-T"
+
     bMechanicalAiming=true
 
     MechanicalRanges(1)=(Range=100,RangeValue=1.0)

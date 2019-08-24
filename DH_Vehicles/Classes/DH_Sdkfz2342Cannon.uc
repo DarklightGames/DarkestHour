@@ -36,8 +36,14 @@ defaultproperties
     ProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Sdkfz2342CannonShellHE'
+
+    nProjectileDescriptions(0)="PzGr.39"
+    nProjectileDescriptions(1)="Sprgr.Patr.38"
+
     InitialPrimaryAmmo=35
     InitialSecondaryAmmo=20
+
+
     MaxPrimaryAmmo=35
     MaxSecondaryAmmo=20
     SecondarySpread=0.0013

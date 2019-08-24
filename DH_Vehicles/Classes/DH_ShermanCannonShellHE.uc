@@ -26,5 +26,5 @@ defaultproperties
     MaxSpeed=27943.0
     Damage=415.0
     DamageRadius=1550.0
-    Tag="M48 HE"
+
 }

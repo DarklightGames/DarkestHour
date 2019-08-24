@@ -33,7 +33,13 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_Stug3GCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Stug3GCannonShellHE'
     TertiaryProjectileClass=class'DH_Vehicles.DH_Stug3GCannonShellSmoke'
+
     ProjectileDescriptions(2)="Smoke"
+
+    nProjectileDescriptions(0)="PzGr.39"
+    nProjectileDescriptions(1)="Sprgr.Patr.34"
+    nProjectileDescriptions(2)="Nbgr.Kw.K"
+
     InitialPrimaryAmmo=25
     InitialSecondaryAmmo=16
     InitialTertiaryAmmo=4

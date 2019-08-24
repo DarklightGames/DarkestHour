@@ -27,5 +27,4 @@ defaultproperties
     BallisticCoefficient=1.19
     Speed=50152.0
     MaxSpeed=50152.0
-    Tag="M86 APC"
 }

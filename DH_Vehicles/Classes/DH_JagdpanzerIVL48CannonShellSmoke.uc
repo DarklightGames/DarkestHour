@@ -38,5 +38,4 @@ defaultproperties
     BallisticCoefficient=2.1
     Speed=33073.0
     MaxSpeed=33073.0
-    Tag="Nbgr.Kw.K"
 }

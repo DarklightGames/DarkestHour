@@ -41,6 +41,11 @@ defaultproperties
     TraverseControlBone="traverse_control"
     ElevationControlBone="elevation_control"
 
+    // Sounds (HUDProportion overrides to better suit magazine reload)
+    CannonFireSound(0)=SoundGroup'DH_ArtillerySounds.AAGuns.40mmBofors_fire01'
+    CannonFireSound(1)=SoundGroup'DH_ArtillerySounds.AAGuns.40mmBofors_fire02'
+    CannonFireSound(2)=SoundGroup'DH_ArtillerySounds.AAGuns.40mmBofors_fire03'
+
     // Cannon ammo
     ProjectileClass=class'DH_Guns.DH_Bofors40mmCannonShellHE'
     PrimaryProjectileClass=class'DH_Guns.DH_Bofors40mmCannonShellHE'

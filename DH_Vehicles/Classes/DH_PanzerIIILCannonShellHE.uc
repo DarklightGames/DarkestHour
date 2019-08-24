@@ -54,5 +54,4 @@ defaultproperties
     Damage=260.0
     DamageRadius=565.0
     MyDamageType=class'DH_Engine.DHShellHE50mmDamageType'
-    Tag="Sprgr.Patr.38"
 }

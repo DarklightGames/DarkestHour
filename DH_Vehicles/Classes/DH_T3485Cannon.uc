@@ -40,9 +40,15 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_T3485CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_T3485CannonShellAPCR'
     TertiaryProjectileClass=class'DH_Vehicles.DH_T3485CannonShellHE'
+
     ProjectileDescriptions(0)="APBC"
     ProjectileDescriptions(1)="APCR"
     ProjectileDescriptions(2)="HE"
+
+    nProjectileDescriptions(0)="BR-365"
+    nProjectileDescriptions(1)="BR-365P"
+    nProjectileDescriptions(2)="O-365"
+
     InitialPrimaryAmmo=28
     InitialSecondaryAmmo=4
     InitialTertiaryAmmo=16

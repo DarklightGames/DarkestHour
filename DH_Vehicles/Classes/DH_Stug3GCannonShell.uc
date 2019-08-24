@@ -49,5 +49,5 @@ defaultproperties
     BallisticCoefficient=2.52
     Speed=45270.0
     MaxSpeed=45270.0
-    Tag="PzGr.39"
+
 }

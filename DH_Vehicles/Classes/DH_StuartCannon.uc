@@ -35,7 +35,13 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_StuartCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_StuartCannonShellHE'
     TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'
+
     ProjectileDescriptions(2)="Canister"
+
+    nProjectileDescriptions(0)="APC M51B1"
+    nProjectileDescriptions(1)="HE M63"
+    nProjectileDescriptions(2)="Canister M2"
+
     InitialPrimaryAmmo=60
     InitialSecondaryAmmo=30
     InitialTertiaryAmmo=15

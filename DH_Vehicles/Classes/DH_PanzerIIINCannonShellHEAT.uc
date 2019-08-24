@@ -55,5 +55,4 @@ defaultproperties
     Damage=450.0
     DamageRadius=200.0
     StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
-    Tag="Gr.38 Hl/C"
 }

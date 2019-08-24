@@ -25,6 +25,5 @@ defaultproperties
     MaxSpeed=22994.0
     Damage=415.0
     DamageRadius=700.0
-    Tag="M67 HEAT"
     DrawScale=1.3
 }

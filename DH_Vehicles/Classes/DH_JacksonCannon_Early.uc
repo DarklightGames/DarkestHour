@@ -11,7 +11,13 @@ defaultproperties
     ProjectileClass=class'DH_Vehicles.DH_JacksonCannonShell_Early'
     PrimaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShell_Early'
     SecondaryProjectileClass=class'DH_Vehicles.DH_JacksonCannonShellAP'
+
     ProjectileDescriptions(1)="AP"
+
+    nProjectileDescriptions(0)="APC M82"
+    nProjectileDescriptions(1)="AP-T M77"
+    nProjectileDescriptions(2)="HE M71"
+
     InitialPrimaryAmmo=25
     InitialSecondaryAmmo=12
     MaxPrimaryAmmo=25

@@ -35,6 +35,5 @@ defaultproperties
     MaxSpeed=19916.0
     Damage=415.0       // as 105mm howitzers
     DamageRadius=615.0 // between 75mm (P3N) & 105mm howitzers
-    Tag="Mk.I HE/AT"
     DrawScale=1.2
 }

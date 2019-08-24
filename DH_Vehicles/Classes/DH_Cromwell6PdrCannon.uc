@@ -13,7 +13,14 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_Cromwell6PdrCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Cromwell6PdrCannonShellHE'
     TertiaryProjectileClass=none
+
+
     ProjectileDescriptions(2)=""
+
+    nProjectileDescriptions(0)="APC Mk.IX"
+    nProjectileDescriptions(1)="HE-T Mk.X"
+    nProjectileDescriptions(2)=""
+
     InitialPrimaryAmmo=28
     InitialSecondaryAmmo=16
     InitialTertiaryAmmo=0

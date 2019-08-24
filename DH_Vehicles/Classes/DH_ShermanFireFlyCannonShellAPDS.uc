@@ -40,5 +40,4 @@ defaultproperties
     BallisticCoefficient=1.47
     Speed=77492.0
     MaxSpeed=77492.0
-    Tag="Mk.I APDS"
 }

@@ -28,5 +28,4 @@ defaultproperties
     Damage=150.0
     DamageRadius=800.0
     MyDamageType=class'DH_Engine.DHShellHE37mmDamageType'
-    Tag="M63 HE"
 }

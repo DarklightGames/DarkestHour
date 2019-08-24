@@ -53,8 +53,14 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellHVAP'
     TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellHE'
+
     ProjectileDescriptions(1)="HVAP"
     ProjectileDescriptions(2)="HE"
+
+    nProjectileDescriptions(0)="APC M62"
+    nProjectileDescriptions(1)="HVAP M93"
+    nProjectileDescriptions(2)="HE M42A1"
+
     InitialPrimaryAmmo=40
     InitialSecondaryAmmo=2
     InitialTertiaryAmmo=13

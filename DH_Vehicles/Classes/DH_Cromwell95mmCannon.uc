@@ -20,9 +20,15 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_Cromwell95mmCannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Cromwell95mmCannonShellSmoke'
     TertiaryProjectileClass=class'DH_Vehicles.DH_Cromwell95mmCannonShellHEAT'
+
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="Smoke"
     ProjectileDescriptions(2)="HEAT"
+
+    nProjectileDescriptions(0)="HE-T Mk.IA"
+    nProjectileDescriptions(1)="HEAT Mk.I"
+    nProjectileDescriptions(2)="SMK-BE Mk.IA"
+
     InitialPrimaryAmmo=14
     InitialSecondaryAmmo=8
     InitialTertiaryAmmo=4

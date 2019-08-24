@@ -16,9 +16,9 @@ defaultproperties
     MyDamageType=class'DH_Engine.DHShellHE105mmDamageType' // a 152mm shell, but 105mm is close enough (it's a very big shell that will throw stuff around more)
     ImpactDamage=3600
     PenetrationMag=1500.0
-    Tag="OF-540"
+
     StaticMesh=StaticMesh'WeaponPickupSM.shells.122mm_shell'
-    BlurEffectScalar=3.0
+    BlurEffectScalar=3.0 // gives this large HE shell more screen blur
     bDebugInImperial=false
 
     DHPenetrationTable(0)=9.0  // 100m

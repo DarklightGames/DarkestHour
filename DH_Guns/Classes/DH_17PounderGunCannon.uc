@@ -28,6 +28,10 @@ defaultproperties
     ProjectileClass=class'DH_Guns.DH_17PounderCannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_17PounderCannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_17PounderCannonShellHE'
+
+    nProjectileDescriptions(0)="APC Mk.IV"
+    nProjectileDescriptions(1)="HE-T Mk.I"
+
     InitialPrimaryAmmo=20
     InitialSecondaryAmmo=8
     MaxPrimaryAmmo=60

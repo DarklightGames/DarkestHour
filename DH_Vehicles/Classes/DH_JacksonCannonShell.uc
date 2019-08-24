@@ -23,5 +23,4 @@ defaultproperties
     BallisticCoefficient=2.134
     Speed=49127.0
     MaxSpeed=49127.0
-    Tag="M82 APC"
 }

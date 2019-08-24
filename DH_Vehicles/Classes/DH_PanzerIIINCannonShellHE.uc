@@ -54,5 +54,5 @@ defaultproperties
     MaxSpeed=25348.0
     Damage=415.0
     DamageRadius=1350.0
-    Tag="Sprgr.Kw.K."
+
 }

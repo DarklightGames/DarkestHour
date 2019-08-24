@@ -24,5 +24,4 @@ defaultproperties
     BallisticCoefficient=1.735
     Speed=37358.0
     MaxSpeed=37358.0
-    Tag="M61 APC"
 }

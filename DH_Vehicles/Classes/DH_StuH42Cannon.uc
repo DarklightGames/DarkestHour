@@ -14,9 +14,15 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellSmoke'
     TertiaryProjectileClass=class'DH_Vehicles.DH_StuH42CannonShellHEAT'
+
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="Smoke"
     ProjectileDescriptions(2)="HEAT"
+
+    nProjectileDescriptions(0)="Sprgr.Patr."
+    nProjectileDescriptions(1)="F.H.Gr.Nb."
+    nProjectileDescriptions(2)="Gr.38 Hl/C"
+
     InitialPrimaryAmmo=18
     InitialSecondaryAmmo=5
     InitialTertiaryAmmo=8

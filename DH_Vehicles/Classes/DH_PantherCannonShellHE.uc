@@ -53,5 +53,4 @@ defaultproperties
     MaxSpeed=42245.0
     Damage=415.0
     DamageRadius=1350.0
-    Tag="Sprgr.Patr.42"
 }

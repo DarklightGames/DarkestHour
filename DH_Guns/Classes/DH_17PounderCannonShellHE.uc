@@ -51,5 +51,4 @@ defaultproperties
     Damage=400.0
     DamageRadius=1140.0
     MyDamageType=class'DH_Engine.DHShellHE75mmATDamageType'
-    Tag="Mk.I HE-T"
 }

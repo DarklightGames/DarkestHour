@@ -30,5 +30,4 @@ defaultproperties
     BallisticCoefficient=0.984
     Speed=53291.0
     MaxSpeed=53291.0
-    Tag="M51B1 APC"
 }

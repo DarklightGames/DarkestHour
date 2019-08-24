@@ -26,5 +26,5 @@ defaultproperties
     MaxSpeed=47799.0
     Damage=400.0
     DamageRadius=1140.0
-    Tag="M42A1 HE"
+
 }

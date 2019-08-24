@@ -33,8 +33,13 @@ defaultproperties
     ProjectileClass=class'DH_Vehicles.DH_ISU152CannonShellHE'
     PrimaryProjectileClass=class'DH_Vehicles.DH_ISU152CannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ISU152CannonShell'
-    ProjectileDescriptions(0)="HE"
+
     ProjectileDescriptions(1)="AP"
+    ProjectileDescriptions(0)="HE" // HE is primary
+
+    nProjectileDescriptions(1)="BR-540" // earlier AP round without ballistic cap
+    nProjectileDescriptions(0)="OF-540"
+
     InitialPrimaryAmmo=11
     InitialSecondaryAmmo=7
     MaxPrimaryAmmo=13

@@ -15,7 +15,7 @@ defaultproperties
     ImpactDamage=450 // just a tungsten slug; no explosive filler
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect'
     ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
-    Tag="BR-365P"
+
 
     DHPenetrationTable(0)=17.5 // 100m
     DHPenetrationTable(1)=15.9 // 250m

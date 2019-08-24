@@ -40,5 +40,5 @@ defaultproperties
     BallisticCoefficient=2.45
     Speed=53351.0
     MaxSpeed=53351.0
-    Tag="Mk.IV APC"
+
 }

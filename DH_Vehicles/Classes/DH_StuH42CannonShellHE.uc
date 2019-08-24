@@ -65,6 +65,6 @@ defaultproperties
     Damage=500.0
     DamageRadius=1250.0
     MyDamageType=class'DH_Engine.DHShellHE105mmDamageType'
-    Tag="Sprgr.Patr."
+
     DrawScale=1.3
 }

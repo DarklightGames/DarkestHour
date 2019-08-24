@@ -7,7 +7,6 @@ class DH_6PounderCannonShell extends DH_AT57CannonShell;
 
 defaultproperties
 {
-    Tag="Mk.IX APC"
     bMechanicalAiming=true
 
     MechanicalRanges(1)=(Range=100,RangeValue=1.0)

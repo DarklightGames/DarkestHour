@@ -23,5 +23,4 @@ defaultproperties
     BallisticCoefficient=1.564
     Speed=61619.0
     MaxSpeed=61619.0
-    Tag="M304 HVAP"
 }

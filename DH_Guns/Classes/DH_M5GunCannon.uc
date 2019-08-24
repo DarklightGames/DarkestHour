@@ -26,6 +26,10 @@ defaultproperties
     ProjectileClass=class'DH_Guns.DH_M5CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_M5CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_M5CannonShellHE'
+
+    nProjectileDescriptions(0)="APC M62"
+    nProjectileDescriptions(1)="HE M42A1"
+
     InitialPrimaryAmmo=20
     InitialSecondaryAmmo=10
     MaxPrimaryAmmo=60

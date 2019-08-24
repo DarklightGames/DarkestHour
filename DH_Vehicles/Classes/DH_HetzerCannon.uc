@@ -2,10 +2,18 @@ class DH_HetzerCannon extends DHVehicleCannon;
 
 defaultproperties
 {
-     GunMantletArmorFactor=6.000000
-     GunMantletSlope=40.000000
-     TertiaryProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellSmoke'
-     ProjectileDescriptions(2)="Smoke"
+    GunMantletArmorFactor=6.000000
+    GunMantletSlope=40.000000
+    TertiaryProjectileClass=Class'DH_Vehicles.DH_JagdpanzerIVL48CannonShellSmoke'
+
+
+
+    ProjectileDescriptions(2)="Smoke"
+
+    nProjectileDescriptions(0)="PzGr.39"
+    nProjectileDescriptions(1)="Sprgr.Patr.34"
+    nProjectileDescriptions(2)="Nbgr.Kw.K"
+
      SecondarySpread=0.001270
      TertiarySpread=0.003570
      CannonFireSound(0)=SoundGroup'Vehicle_Weapons.PanzerIV_F2.75mm_L_fire01'

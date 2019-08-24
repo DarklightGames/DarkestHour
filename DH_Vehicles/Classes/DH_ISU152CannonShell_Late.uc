@@ -9,7 +9,6 @@ defaultproperties
 {
     RoundType=RT_APBC
     ImpactDamage=3600 // has explosive filler - so higher than solid AP round
-    Tag="BR-540B" // APBC-HE round adopted in late 1944
 
     DHPenetrationTable(0)=13.5  // 100m
     DHPenetrationTable(1)=13.1  // 250m

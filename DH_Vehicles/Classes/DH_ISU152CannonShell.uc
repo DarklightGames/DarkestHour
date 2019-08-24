@@ -13,7 +13,6 @@ defaultproperties
     MaxSpeed=36211.0
     ImpactDamage=3000
     StaticMesh=StaticMesh'WeaponPickupSM.shells.122mm_shell'
-    Tag="BR-540" // earlier AP round without ballistic cap
 
     DHPenetrationTable(0)=16.5 // 100m
     DHPenetrationTable(1)=16.0 // 250m

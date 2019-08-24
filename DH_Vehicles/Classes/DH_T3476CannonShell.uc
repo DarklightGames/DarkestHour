@@ -14,7 +14,7 @@ defaultproperties
     MaxSpeed=39953.0
     ImpactDamage=560
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanCannonShellDamageAP'
-    Tag="BR-350B" // standard mid-late war APBC shell
+
 
     DHPenetrationTable(0)=8.4  // 100m (all penetration from Bird & Livingstone, for 662 m/s muzzle velocity vs face hardened armor)
     DHPenetrationTable(1)=8.1  // 250m

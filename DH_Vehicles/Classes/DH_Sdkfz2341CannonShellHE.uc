@@ -52,7 +52,7 @@ defaultproperties
     ExplosionDecalSnow=class'ROEffects.GrenadeMarkSnow'
     StaticMesh=StaticMesh'EffectsSM.Weapons.Ger_Tracer' // static mesh shows as tracer so we see one, even thought HE shell inherits bHasTracer & has no CoronaClass
     AmbientSound=SoundGroup'DH_ProjectileSounds.Bullets.Bullet_Whiz'
-    Tag="Sprgr.39"
+
     SoundRadius=350.0
     TransientSoundRadius=600.0
 }

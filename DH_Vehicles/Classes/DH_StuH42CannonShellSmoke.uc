@@ -13,6 +13,6 @@ defaultproperties
     BallisticCoefficient=2.96 // same as 105mm HE or HEAT shells
     Speed=29874.0 // same as 105mm HE or HEAT shells
     MaxSpeed=29874.0
-    Tag="10cm F.H.Gr.Nb."
+
     DrawScale=1.3
 }

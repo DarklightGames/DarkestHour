@@ -24,5 +24,4 @@ defaultproperties
     BallisticCoefficient=0.888
     Speed=62525.0
     MaxSpeed=62525.0
-    Tag="M93 HVAP"
 }

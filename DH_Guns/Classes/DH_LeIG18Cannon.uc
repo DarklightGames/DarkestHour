@@ -23,10 +23,14 @@ defaultproperties
 
     // Cannon ammo
     ProjectileDescriptions(0)="HE"
-    ProjectileDescriptions(1)="AP"
+    ProjectileDescriptions(1)="HEAT"
+
+    nProjectileDescriptions(0)="Igr.38 Sprgr"
+    nProjectileDescriptions(1)="Igr.38 HL/A"
+
     ProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'
     PrimaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'
-    SecondaryProjectileClass=class'DH_Guns.DH_AT57CannonShellHE'  // TODO: REPLACE
+    SecondaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHEAT'  // TODO: REPLACE
     InitialPrimaryAmmo=60  // TODO: REPLACE
     InitialSecondaryAmmo=25  // TODO: REPLACE
     MaxPrimaryAmmo=60

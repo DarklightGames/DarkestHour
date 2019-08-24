@@ -35,9 +35,15 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellSmoke'
     TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A3105CannonShellHEAT'
+
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="Smoke"
     ProjectileDescriptions(2)="HEAT"
+
+    nProjectileDescriptions(0)="HE M1"
+    nProjectileDescriptions(1)="WP M60"
+    nProjectileDescriptions(2)="HEAT M67"
+
     InitialPrimaryAmmo=30
     InitialSecondaryAmmo=5
     InitialTertiaryAmmo=12

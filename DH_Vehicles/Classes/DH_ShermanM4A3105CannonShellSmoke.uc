@@ -13,6 +13,5 @@ defaultproperties
     BallisticCoefficient=2.96 // same as 105mm HE or HEAT shells
     Speed=28486.0 // same as 105mm HE shell
     MaxSpeed=28486.0
-    Tag="M60 WP"
     DrawScale=1.3
 }

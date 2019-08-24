@@ -46,5 +46,4 @@ defaultproperties
     Speed=50392.0
     MaxSpeed=50392.0
     StaticMesh=StaticMesh'WeaponPickupSM.shells.76mm_shell'
-    Tag="PzGr.39"
 }

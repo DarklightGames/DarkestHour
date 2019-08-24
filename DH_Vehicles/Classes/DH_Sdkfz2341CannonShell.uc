@@ -56,7 +56,7 @@ defaultproperties
     StaticMesh=StaticMesh'EffectsSM.Weapons.Ger_Tracer'
     bHasTracer=false // actually has a tracer but we use a tracer static mesh for the projectile, so no need for extra tracer effect (normally the CoronaClass)
     AmbientSound=SoundGroup'DH_ProjectileSounds.Bullets.Bullet_Whiz'
-    Tag="PzGr."
+
     SoundRadius=350.0
     TransientSoundRadius=600.0
 }

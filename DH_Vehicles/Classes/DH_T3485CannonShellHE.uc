@@ -16,7 +16,7 @@ defaultproperties
     DamageRadius=1300.0
     ImpactDamage=510
     PenetrationMag=1000.0
-    Tag="O-365"
+
     bDebugInImperial=false
 
     DHPenetrationTable(0)=4.0

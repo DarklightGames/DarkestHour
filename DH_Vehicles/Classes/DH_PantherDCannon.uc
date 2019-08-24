@@ -41,8 +41,14 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_PantherCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_PantherCannonShellAPCR'
     TertiaryProjectileClass=class'DH_Vehicles.DH_PantherCannonShellHE'
+
     ProjectileDescriptions(1)="APCR"
     ProjectileDescriptions(2)="HE"
+
+    nProjectileDescriptions(0)="PzGr.39/42"
+    nProjectileDescriptions(1)="PzGr.40/42"
+    nProjectileDescriptions(2)="Sprgr.Patr.42"
+
     InitialPrimaryAmmo=38
     InitialSecondaryAmmo=4
     InitialTertiaryAmmo=15

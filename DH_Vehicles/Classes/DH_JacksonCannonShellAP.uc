@@ -24,5 +24,4 @@ defaultproperties
     BallisticCoefficient=1.564
     Speed=49609.0
     MaxSpeed=49609.0
-    Tag="M77 AP"
 }

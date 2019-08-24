@@ -16,5 +16,4 @@ defaultproperties
     BallisticCoefficient=1.19
     Speed=37357.0
     MaxSpeed=37357.0
-    Tag="M89 WP"
 }

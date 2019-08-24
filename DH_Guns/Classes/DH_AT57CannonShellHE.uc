@@ -34,5 +34,5 @@ defaultproperties
     Damage=250.0
     DamageRadius=600.0
     MyDamageType=class'DH_Engine.DHShellHE50mmATDamageType'
-    Tag="M303 HE"
+
 }

@@ -36,6 +36,10 @@ defaultproperties
     ProjectileClass=class'DH_Vehicles.DH_TigerCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_TigerCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_TigerCannonShellHE'
+
+    nProjectileDescriptions(0)="PzGr.39"
+    nProjectileDescriptions(1)="Schw.Sprgr.Patr."
+
     InitialPrimaryAmmo=40
     InitialSecondaryAmmo=22
     MaxPrimaryAmmo=48

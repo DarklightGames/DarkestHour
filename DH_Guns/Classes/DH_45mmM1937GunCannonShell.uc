@@ -19,7 +19,7 @@ defaultproperties
     BallisticCoefficient=0.7 // TODO: try to find an accurate BC (this is from AHZ)
     Speed=45868.0 // 760 m/s
     MaxSpeed=45868.0
-    Tag="BR-240"
+
 
     DHPenetrationTable(0)=6.1  // 100m // TODO: confirm penetration
     DHPenetrationTable(1)=5.4  // 250m

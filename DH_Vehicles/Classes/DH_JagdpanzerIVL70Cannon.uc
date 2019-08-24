@@ -18,8 +18,14 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShellAPCR'
     TertiaryProjectileClass=class'DH_Vehicles.DH_JagdpanzerIVL70CannonShellHE'
+
     ProjectileDescriptions(1)="APCR"
     ProjectileDescriptions(2)="HE"
+
+    nProjectileDescriptions(0)="PzGr.39/42"
+    nProjectileDescriptions(1)="PzGr.40/42"
+    nProjectileDescriptions(2)="Sprgr.Patr.42"
+
     InitialPrimaryAmmo=30
     InitialSecondaryAmmo=4
     InitialTertiaryAmmo=7

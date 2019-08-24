@@ -14,7 +14,7 @@ defaultproperties
     MaxSpeed=47797.0
     ImpactDamage=700
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
-    Tag="BR-365"
+
 
     DHPenetrationTable(0)=13.9 // 100m
     DHPenetrationTable(1)=13.3 // 250m
