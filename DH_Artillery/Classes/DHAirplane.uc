@@ -305,12 +305,13 @@ function DecideAttack()
 function PickTarget()
 {
     local UClusters Targets;
-    local UHeap TargetHeap;
+    local UHeap QueuedTargets, TargetCluster;
     local UClusters.DataPoint P;
     local DHPawn OtherPawn;
     local Actor TargetActor;
     local array<Actor> TargetActors;
     local string TargetClassName;
+    local int i;
 
     Targets = new class'UClusters';
     Targets.GetItemPriority = GetTargetPriority;
@@ -330,30 +331,55 @@ function PickTarget()
     // Convert the cluster data into a priority queue.
     // The most lucious target will bubble up to the top. It can be either a
     // single actor or a heap of actors (if it's a cluster).
-    TargetHeap = Targets.ToHeap();
+    QueuedTargets = Targets.ToHeap();
 
     // Get target's class name (for logging).
-    TargetActor = Actor(TargetHeap.Peek());
+    TargetClassName = string(QueuedTargets.Peek());
 
-    if (TargetActor != none)
+    if (QueuedTargets.RootIsHeap(TargetCluster))
     {
-        // TODO: don't deal with single targets, necessarily.
-        TargetActors[TargetActors.Length] = TargetActor;
-        Target = class'DHAirplaneTarget'.static.CreateTargetFromActors(TargetActors);
+        // Target is a cluster
+        for (i = 0; i < TargetCluster.GetLength(); ++i)
+        {
+            TargetActor = Actor(TargetCluster.Data[i].Item);
 
-        TargetClassName = string(TargetActor.Class);
+            if (TargetActor != none)
+            {
+                TargetActors[TargetActors.Length] = TargetActor;
+            }
+        }
+    }
+    else if (QueuedTargets.GetLength() > 0)
+    {
+        // Target is a single actor
+        TargetActor = Actor(QueuedTargets.Peek());
+
+        if (TargetActor != none)
+        {
+            TargetActors[TargetActors.Length] = TargetActor;
+        }
+    }
+
+    if (TargetActors.Length > 0)
+    {
+        Target = class'DHAirplaneTarget'.static.CreateTargetFromActors(TargetActors);
     }
 
     // Get coordinates to the target.
     // TODO: Without course correction, target might drift away.
-    if (Target != none && Targets.GetPriorityVector(TargetHeap, TargetCoordinates.Start, TargetCoordinates.End))
+    if (Target != none && Target.IsValid() && Targets.GetPriorityVector(QueuedTargets, TargetCoordinates.Start, TargetCoordinates.End))
     {
         Log("Target acquired:" @ TargetClassName @ "@" @ TargetCoordinates.Start);
     }
     else
     {
+        // TODO: The plane still gets a null vector for the target, because the
+        // flight logic always expects a target. This might result in some
+        // violent smashing into the ground.
         Log("No target!");
     }
+
+    QueuedTargets.ClearNested();
 
     // Debug
     StartStrafe();
