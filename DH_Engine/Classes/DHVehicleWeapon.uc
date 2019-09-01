@@ -831,7 +831,7 @@ simulated function AttemptAltReload()
 // Using PlayOwnedSound() to avoid broadcasting over network to owning net client as it will play locally there anyway
 simulated function PlayStageReloadSound()
 {
-    PlayOwnedSound(ReloadStages[ReloadState].Sound, SLOT_Misc, 2.0,, 25.0,, true);
+    PlayOwnedSound(ReloadStages[ReloadState].Sound, SLOT_Misc, 1.0,, 25.0,, true); //reduced volume to 1.0 as do not want players outside tank to hear
 }
 
 // New helper function to remove 1 spare mag, used when we begin a new mag reload (a separate function to allow easy subclassing)

@@ -21,5 +21,8 @@ defaultproperties
     Speed=4967.0
     MaxSpeed=4967.0
     MyDamageType=class'DH_Weapons.DH_BazookaDamType'
+    DrawScale=1.33
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.Bazooka_shell'
+    bHasSmokeTrail=false // removes the smoke trail, as it should be
+    bHasTracer=true
 }

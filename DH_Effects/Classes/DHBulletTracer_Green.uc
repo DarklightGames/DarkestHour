@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHBulletTracer_Red extends Emitter;
+class DHBulletTracer_Green extends Emitter;
 
 defaultproperties
 {
@@ -24,8 +24,8 @@ defaultproperties
         UseRegularSizeScale=false
         RespawnDeadParticles=False //added to kill tracer element at end of Lifetime
         AutomaticInitialSpawning=false
-        ColorScale(0)=(Color=(R=255))
-        ColorScale(1)=(RelativeTime=1.000000,Color=(R=255))
+        ColorScale(0)=(Color=(G=255,R=108))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(G=255,R=108))
         Opacity=0.5//0.65
         MaxParticles=1
         SizeScale(0)=(RelativeSize=1.0)

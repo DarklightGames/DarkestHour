@@ -17,7 +17,8 @@ defaultproperties
     ImpactDamage=3600
     PenetrationMag=1500.0
 
-    StaticMesh=StaticMesh'WeaponPickupSM.shells.122mm_shell'
+    StaticMesh=StaticMesh'WeaponPickupSM.shells.76mm_shell'
+    DrawScale=2.1
     BlurEffectScalar=3.0 // gives this large HE shell more screen blur
     bDebugInImperial=false
 

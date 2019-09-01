@@ -214,11 +214,6 @@ function SaveSettings()
         }
     }
 
-    if (bUseTechnicalAmmoNamesD != bUseTechnicalAmmoNames)
-    {
-
-    }
-
     if (bShowMapOnFirstSpawnD != bShowMapOnFirstSpawn)
     {
         if (DHPlayer(PC) != none)
@@ -385,6 +380,7 @@ function InternalOnChange(GUIComponent Sender)
             break;
         case ch_UseTechnicalAmmoNames:
             bUseTechnicalAmmoNames = ch_UseTechnicalAmmoNames.IsChecked();
+            break;
         default:
             super.InternalOnChange(Sender);
     }

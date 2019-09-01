@@ -8,6 +8,7 @@ class DHRocketProjectile extends DHCannonShellHEAT // originally extended DHAnti
 
 #exec OBJ LOAD FILE=Inf_Weapons.uax
 
+var     bool                bHasSmokeTrail; // some rockets - like the PIAT bomb - don't issue smoke trails
 var     float               StraightFlightTime; // how long the rocket has propellant & flies straight
 var     PanzerfaustTrail    SmokeTrail;         // smoke trail emitter
 
@@ -18,10 +19,13 @@ simulated function PostBeginPlay()
 
     if (Level.NetMode != NM_DedicatedServer && bHasTracer)
     {
+        Corona = Spawn(CoronaClass, self);
+    }
+
+    if (Level.NetMode != NM_DedicatedServer && bHasSmokeTrail)
+    {
         SmokeTrail = Spawn(class'PanzerfaustTrail', self);
         SmokeTrail.SetBase(self);
-
-        Corona = Spawn(CoronaClass, self);
     }
 
     if (PhysicsVolume.bWaterVolume)
@@ -142,6 +146,7 @@ defaultproperties
     ExplosionSoundVolume=5.0 // seems high but TransientSoundVolume is only 0.3, compared to 1.0 for a shell
 
 //  Override unwanted defaults now inherited from DHCannonShellHEAT & DHCannonShell:
+    bHasSmokeTrail=true
     ShakeRotMag=(Y=50.0,Z=200.0)
     ShakeRotRate=(Y=500.0,Z=1500.0)
     BlurEffectScalar=1.9

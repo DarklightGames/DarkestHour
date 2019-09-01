@@ -12,7 +12,8 @@ defaultproperties
     Speed=36211.0 // 600 m/s
     MaxSpeed=36211.0
     ImpactDamage=3000
-    StaticMesh=StaticMesh'WeaponPickupSM.shells.122mm_shell'
+    StaticMesh=StaticMesh'WeaponPickupSM.shells.76mm_shell'
+    DrawScale=2.1
 
     DHPenetrationTable(0)=16.5 // 100m
     DHPenetrationTable(1)=16.0 // 250m

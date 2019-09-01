@@ -297,13 +297,13 @@ defaultproperties
     WaterHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Water'
     WoodHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Wood'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrate'
-    ShellDeflectEffectClass=class'ROEffects.TankAPHitDeflect'
+    ShellDeflectEffectClass=class'DH_Effects.DHTankAPHitDeflect'
     ShellHitDirtEffectClass=class'ROEffects.TankAPHitDirtEffect'
     ShellHitSnowEffectClass=class'ROEffects.TankAPHitSnowEffect'
     ShellHitWoodEffectClass=class'ROEffects.TankAPHitWoodEffect'
     ShellHitRockEffectClass=class'ROEffects.TankAPHitRockEffect'
     ShellHitWaterEffectClass=class'DH_Effects.DHShellSplashEffect'
-    AmbientVolumeScale=5.0
+
     Speed=500.0
     MaxSpeed=22000.0
     Damage=100.0
@@ -316,15 +316,20 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Tracers.shells.Allied_shell'
     bNetTemporary=false
     bUpdateSimulatedPosition=true
-    AmbientSound=Sound'Vehicle_Weapons.Misc.projectile_whistle01'
+
     LifeSpan=7.5
     AmbientGlow=96
     FluidSurfaceShootStrengthMod=10.0
-    SoundVolume=255
-    SoundRadius=700.0
-    TransientSoundVolume=1.0
+
+    //Sound
+    AmbientSound=Sound'DH_ProjectileSounds.Shells.shell_med_whiz'
+    AmbientVolumeScale=5.0 //5.0
+    SoundVolume=255 // full volume
+    SoundRadius=250.0 // about 300m - was SoundRadius=700 or about 1,1 km
+    TransientSoundVolume=1.0 //full volume
     TransientSoundRadius=1000.0
-    ExplosionSoundVolume=1.0
+    ExplosionSoundVolume=1.0 //full volume
+
     bFixedRotationDir=true
     RotationRate=(Roll=50000)
     DesiredRotation=(Roll=30000)
