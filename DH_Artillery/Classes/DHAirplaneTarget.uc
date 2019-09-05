@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHAirplaneTarget extends Object;
+class DHAirplaneTarget extends Info;
 
 enum ETargetType
 {
@@ -35,15 +35,15 @@ function array<EWeaponType> GetRecommendedWeaponTypes()
 }
 
 // Returns whether this target is still valid (eg. all target actors may have died).
-static function DHAirplaneTarget CreateTargetFromActors(array<Actor> Actors)
-{
-    local DHAirplaneTarget Target;
+// static function DHAirplaneTarget CreateTargetFromActors(array<Actor> Actors)
+// {
+//     local DHAirplaneTarget Target;
 
-    Target = new class'DHAirplaneTarget';
-    Target.Actors = Actors;
+//     Target = new class'DHAirplaneTarget';
+//     Target.Actors = Actors;
 
-    return Target;
-}
+//     return Target;
+// }
 
 // Returns true if any of the target actors are valid.
 function bool IsValid()
@@ -85,35 +85,41 @@ function bool IsTargetActorValid(Actor A)
 function vector GetVelocity()
 {
     local int i, Count;
-    local vector Velocity;
+    local vector Vel;
 
     for (i = 0; i < Actors.Length; ++i)
     {
         if (IsTargetActorValid(Actors[i]))
         {
-            Velocity += Actors[i].Velocity;
+            Vel += Actors[i].Velocity;
         }
     }
 
-    return Velocity * (1.0 / Count);
+    if (Count > 0)
+    {
+        return Vel * (1.0 / Count);
+    }
 }
 
 // Gets the average location of all actors.
 function vector GetLocation()
 {
     local int i, Count;
-    local vector Location;
+    local vector Loc;
 
     for (i = 0; i < Actors.Length; ++i)
     {
         if (IsTargetActorValid(Actors[i]))
         {
-            Location += Actors[i].Location;
+            Loc += Actors[i].Location;
             ++Count;
         }
     }
 
-    return Location * (1.0 / Count);
+    if (Count > 0)
+    {
+        return Loc * (1.0 / Count);
+    }
 }
 
 // Gets the predicted location of the target after a certain duration of time
@@ -123,3 +129,7 @@ function vector GetLocationPrediction(float DurationTimeSeconds)
     return GetLocation() + (GetVelocity() * DurationTimeSeconds);
 }
 
+defaultproperties
+{
+    DrawType=DT_None
+}

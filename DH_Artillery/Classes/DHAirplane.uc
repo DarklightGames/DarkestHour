@@ -118,6 +118,17 @@ struct CannonInfo
 var array<CannonInfo>       CannonInfos;
 var array<DHAirplaneCannon> Cannons;
 
+struct HardpointInfo
+{
+    var class<DHAirplaneHardpoint> HardpointClass;
+    var rotator RotationOffset;
+    var vector LocationOffset;
+    var name HardpointBone;
+};
+
+var array<HardpointInfo>       HardpointInfos;
+var array<DHAirplaneHardpoint> Hardpoints;
+
 // Damage and crashing
 struct DamageEffectInfo
 {
@@ -166,6 +177,7 @@ simulated function PostBeginPlay()
         AirplaneModel.SetBase(self);
 
         CreateCannons();
+        CreateHardpoints();
 
         CurrentSpeed = StandardSpeed;
         CruisingHeight = Location.Z;
@@ -187,7 +199,23 @@ function DestroyCannons()
     Cannons.Length = 0;
 }
 
+function DestroyHardpoints()
+{
+    local int i;
+
+    for (i = 0; i < Hardpoints.Length; ++i)
+    {
+        if (Hardpoints[i] != none)
+        {
+            Hardpoints[i].Destroy();
+        }
+    }
+
+    Hardpoints.Length = 0;
+}
+
 // Gets an array of cannons that are suitable for the.
+// TODO: Off-axis cannons (wing mounted, etc.) should be paired together.
 function array<DHAirplaneCannon> GetCannonsForTarget()
 {
     local int i;
@@ -235,6 +263,37 @@ function CreateCannons()
         Cannon.CannonIndex = Cannons.Length;
 
         Cannons[Cannons.Length] = Cannon;
+    }
+}
+
+function CreateHardpoints()
+{
+    local int i;
+    local DHAirplaneHardpoint Hardpoint;
+
+    DestroyHardpoints();
+
+    for (i = 0; i < HardpointInfos.Length; ++i)
+    {
+        if (HardpointInfos[i].HardpointClass == none)
+        {
+            continue;
+        }
+
+        Hardpoint = Spawn(HardpointInfos[i].HardpointClass, self,, Location, Rotation);
+
+        if (Hardpoint == none)
+        {
+            Warn("Failed to create cannon!");
+        }
+
+        AirplaneModel.AttachToBone(Hardpoint, HardpointInfos[i].HardpointBone);
+        Hardpoint.SetRelativeRotation(HardpointInfos[i].RotationOffset);
+        Hardpoint.SetRelativeLocation(HardpointInfos[i].LocationOffset);
+
+        Hardpoint.HardpointIndex = Hardpoints.Length;
+
+        Hardpoints[Hardpoints.Length] = Hardpoint;
     }
 }
 
@@ -362,7 +421,21 @@ function PickTarget()
 
     if (TargetActors.Length > 0)
     {
-        Target = class'DHAirplaneTarget'.static.CreateTargetFromActors(TargetActors);
+        // Target = class'DHAirplaneTarget'.static.CreateTargetFromActors(TargetActors);
+
+        if (Target == none)
+        {
+            Target = Spawn(class'DHAirplaneTarget');
+        }
+
+        if (Target == none)
+        {
+            Warn("Failed to create the target info");
+        }
+        else
+        {
+            Target.Actors = TargetActors;
+        }
     }
 
     // Get coordinates to the target.
@@ -550,11 +623,19 @@ state DiveAttacking
 
     function BeginState()
     {
+        local int i;
+
         bIsPullingUp = false;
         bIsLevelingOut = false;
         Log("Diving");
 
         BeginDiveClimbTowardsPosition(TargetCoordinates.Start, 5000, false);
+
+        for (i = 0; i < Hardpoints.Length; ++i)
+        {
+            Hardpoints[i].TargetLocation = Target.GetLocation();
+            Hardpoints[i].Arm();
+        }
     }
 }
 
@@ -834,8 +915,11 @@ simulated function Destroyed()
     AirplaneModel.Destroy();
 
     DestroyCannons();
+    DestroyHardpoints();
 
     DestroyDamageEffects();
+
+    Target.Destroy();
 }
 
 function int GetCannonFlagsForTarget()
