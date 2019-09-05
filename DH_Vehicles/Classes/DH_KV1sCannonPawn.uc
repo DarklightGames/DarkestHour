@@ -9,9 +9,17 @@ defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_KV1sCannon'
     DriverPositions(0)=(ViewLocation=(X=24.0,Y=-13.0,Z=0.0),ViewFOV=34.0,PositionMesh=SkeletalMesh'DH_KV_anm.KV1S_turret_int',bDrawOverlays=true)
-    DriverPositions(1)=(ViewFOV=75.0,PositionMesh=SkeletalMesh'DH_KV_anm.KV1S_turret_int',TransitionUpAnim="com_open",DriverTransitionAnim="VKV1_com_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=65000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_KV_anm.KV1S_turret_int',TransitionDownAnim="com_close",DriverTransitionAnim="VKV1_com_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bExposed=true)
-    DriverPositions(3)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_KV_anm.KV1S_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
+    DriverPositions(1)=(ViewLocation=(X=49.0,Y=-4.0,Z=5.0),ViewFOV=75.0,PositionMesh=SkeletalMesh'DH_KV_anm.KV1S_turret_ext',ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=65536,ViewNegativeYawLimit=-65536,bDrawOverlays=true)
+    //
+    DriverPositions(2)=(ViewFOV=75.0,PositionMesh=SkeletalMesh'DH_KV_anm.KV1S_turret_int',TransitionUpAnim="com_open",DriverTransitionAnim="VKV1_com_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=65000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000)
+    DriverPositions(3)=(PositionMesh=SkeletalMesh'DH_KV_anm.KV1S_turret_int',TransitionDownAnim="com_close",DriverTransitionAnim="VKV1_com_open",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bExposed=true)
+    DriverPositions(4)=(ViewFOV=12.0,PositionMesh=SkeletalMesh'DH_KV_anm.KV1S_turret_int',DriverTransitionAnim="stand_idleiron_binoc",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-10000,bDrawOverlays=true,bExposed=true)
+
+    PeriscopePositionIndex=1
+    UnbuttonedPositionIndex=3
+    BinocPositionIndex=4
+
+
     DriveAnim="VKV1_com_idle_close"
     bLockCameraDuringTransition=true
     GunsightOverlay=Texture'DH_VehicleOptics_tex.Soviet.T3476_sight_background' // using same sight as T34/76 instead of RO's different KV-1 sight

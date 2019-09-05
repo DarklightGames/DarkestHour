@@ -16,4 +16,5 @@ defaultproperties
     PitchUpLimit=3000
     PitchDownLimit=63500
     VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.DT_ammo_reload'
+    FirstPersonGunShakeScale=0.5 //1.0
 }
