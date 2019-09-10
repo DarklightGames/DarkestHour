@@ -2739,6 +2739,22 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     // Destroy some possible DH special carried/owned actors
     DestroyRadio();
 
+    // Metrics
+    // NOTE: This must be called before the pawn is unpossessed!
+    G = DarkestHourGame(Level.Game);
+
+    if (G != none && G.Metrics != none)
+    {
+        GRI = DHGameReplicationInfo(G.GameReplicationInfo);
+
+        if (GRI != none)
+        {
+            RoundTime = GRI.ElapsedTime - GRI.RoundStartTime;
+        }
+
+        G.Metrics.OnPlayerFragged(PlayerController(Killer), PlayerController(Controller), DamageType, HitLocation, LastHitIndex, RoundTime);
+    }
+
     if (OwnedMortar != none)
     {
         OwnedMortar.GotoState('PendingDestroy');
@@ -2809,7 +2825,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     {
         HitDirection = Location - HitLocation;
         HitDirection.Z = 0.0;
-        HitDirection = normal(HitDirection);
+        HitDirection = Normal(HitDirection);
 
         DHPlayer(Controller).PlayerJarred(HitDirection, 3.0);
     }
@@ -2837,22 +2853,6 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     {
         NetUpdateFrequency = default.NetUpdateFrequency;
         PlayDying(DamageType, HitLocation);
-    }
-
-
-    // Metrics
-    G = DarkestHourGame(Level.Game);
-
-    if (G != none && G.Metrics != none)
-    {
-        GRI = DHGameReplicationInfo(G.GameReplicationInfo);
-
-        if (GRI != none)
-        {
-            RoundTime = GRI.ElapsedTime - GRI.RoundStartTime;
-        }
-
-        G.Metrics.OnPlayerFragged(PlayerController(Killer), PlayerController(Controller), DamageType, HitLocation, LastHitIndex, RoundTime);
     }
 }
 
