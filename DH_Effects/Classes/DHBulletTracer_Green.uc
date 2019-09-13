@@ -29,7 +29,8 @@ defaultproperties
         Opacity=0.5//0.65
         MaxParticles=1
         SizeScale(0)=(RelativeSize=1.0)
-        SizeScale(1)=(RelativeTime=1.0,RelativeSize=0.75)
+        SizeScale(1)=(RelativeTime=0.5,RelativeSize=0.5)
+        SizeScale(2)=(RelativeTime=1.0,RelativeSize=0.25)
         StartSizeRange=(X=(Min=3.0,Max=4.0))
         InitialParticlesPerSecond=2000.0
         Texture=Texture'DH_FX_Tex.effects.dhtrailblur'

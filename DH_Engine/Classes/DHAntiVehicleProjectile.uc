@@ -12,7 +12,7 @@ enum ERoundType
     RT_APC,   // either APC (with just armor-piercing cap) or APCBC (with both armor-piercing cap & ballistic cap)
     RT_HE,
     RT_HVAP,  // HVAP in US parlance - full caliber APCR round
-    RT_APDS,  // Sub-caliber tungsten round, discarding sabot; APCR (same thing, without sabot - Used by Sovs and Germans)
+    RT_APDS,  // Sub-caliber tungsten round, discarding sabot; also, APCR (sabot'd round that does not discard - Used by Sovs and Germans)
     RT_HEAT,  // includes infantry AT HEAT weapons (e.g. rockets & PIAT)
     RT_Smoke,
     RT_AP,    // basic armor-piercing round, without any cap
@@ -852,7 +852,7 @@ simulated function Deflect(vector HitLocation, vector HitNormal, Actor Wall)
     if (Level.NetMode != NM_DedicatedServer)
     {
         SetPhysics(PHYS_Falling);
-        AmbientSound = none;
+        AmbientSound = none; //want to have some kind of deflecting whiz here
     }
 
     bTrueBallistics = false;
@@ -861,6 +861,7 @@ simulated function Deflect(vector HitLocation, vector HitNormal, Actor Wall)
 
     // Reflect off hit surface, with damping
     VNorm = (Velocity dot HitNormal) * HitNormal;
+    VNorm = VNorm + VRand() * FRand() * 10000.0; // add random spread 5000.0
     Velocity = -VNorm * DampenFactor + (Velocity - VNorm) * DampenFactorParallel;
     Speed = VSize(Velocity);
 }
@@ -1090,8 +1091,8 @@ defaultproperties
 
     // From deprecated ROAntiVehicleProjectile class:
     VehicleDeflectSound=Sound'ProjectileSounds.cannon_rounds.AP_deflect'
-    DampenFactor=0.5
-    DampenFactorParallel=0.2
+    DampenFactor=1.0 //0.5
+    DampenFactorParallel=0.5 //0.2
     DestroyTime=0.2
     bFirstHit=true
 }

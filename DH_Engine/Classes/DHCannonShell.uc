@@ -10,12 +10,17 @@ struct RangePoint
 {
     var() int               Range;                // the distance for this range setting
     var() float             RangeValue;           // the adjustment value for this range setting
+
 };
 
 var()   bool                bMechanicalAiming;    // uses the mechanical range settings for this projectile
 var()   array<RangePoint>   MechanicalRanges;     // the range setting values for tank cannons that do mechanical pitch adjustments for aiming
 var()   bool                bOpticalAiming;       // uses the optical range settings for this projectile
 var()   array<RangePoint>   OpticalRanges;        // the range setting values for tank cannons that do optical sight adjustments for aiming
+
+//New Effects
+var     bool                    bHasShellTrail;     //
+var     TankShellTrailClass     ShellTrail;         // smoke trail emitter
 
 simulated function PostBeginPlay()
 {
@@ -41,6 +46,12 @@ simulated function PostBeginPlay()
     if (Level.NetMode != NM_DedicatedServer && bHasTracer)
     {
         Corona = Spawn(CoronaClass, self);
+    }
+
+    if (Level.NetMode != NM_DedicatedServer && bHasShellTrail)
+    {
+        ShellTrail = Spawn(TankShellTrailClass, self);
+        ShellTrail.SetBase(self);
     }
 
     if (PhysicsVolume != none && PhysicsVolume.bWaterVolume)
@@ -83,6 +94,11 @@ simulated function Destroyed()
         }
 
         bDidExplosionFX = true;
+    }
+
+    if (ShellTrail != none)
+    {
+        ShellTrail.Destroy();
     }
 
     super.Destroyed();
@@ -150,6 +166,11 @@ simulated function Explode(vector HitLocation, vector HitNormal)
             HandleShellDebug(HitLocation); // simpler to call this here than in the tank cannon class, as we have saved TraceHitLoc in PostBeginPlay if bDebugBallistics is true
         }
 
+        if (ShellTrail != none)
+        {
+            ShellTrail.Destroy();
+        }
+
         super.Explode(HitLocation, HitNormal);
     }
 }
@@ -162,6 +183,11 @@ simulated function BlowUp(vector HitLocation)
         HurtWall = none; // reset after HurtRadius, which is the only thing that uses HurtWall
 
         MakeNoise(1.0);
+    }
+
+    if (ShellTrail != none)
+    {
+        ShellTrail.Destroy();
     }
 
     super.BlowUp(HitLocation);
@@ -288,7 +314,9 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
 defaultproperties
 {
     bHasTracer=true
+    bHasShellTrail=true
     CoronaClass=class'DH_Effects.DHShellTracer_RedLarge'
+    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_Med'
     ShellImpactDamage=class'DH_Engine.DHShellImpactDamageType'
     ImpactDamage=400
     VehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_penetrate'
@@ -322,7 +350,7 @@ defaultproperties
     FluidSurfaceShootStrengthMod=10.0
 
     //Sound
-    AmbientSound=Sound'DH_ProjectileSounds.Shells.shell_med_whiz'
+    AmbientSound=sound'Vehicle_Weapons.Misc.projectile_whistle01' //TODO: replace this
     AmbientVolumeScale=5.0 //5.0
     SoundVolume=255 // full volume
     SoundRadius=250.0 // about 300m - was SoundRadius=700 or about 1,1 km
