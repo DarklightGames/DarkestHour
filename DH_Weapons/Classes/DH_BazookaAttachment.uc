@@ -121,7 +121,7 @@ defaultproperties
     PA_MoveWalkFire(6)="stand_shootFRwalk_kar"
     PA_MoveWalkFire(7)="stand_shootFLwalk_kar"
     PA_MoveStandIronFire(0)="stand_shootiron_kar"
-    PA_MoveStandIronFire(1)="stand_shootiron_fausr"
+    PA_MoveStandIronFire(1)="stand_shootiron_faust"
     PA_MoveStandIronFire(2)="stand_shootLRiron_kar"
     PA_MoveStandIronFire(3)="stand_shootLRiron_kar"
     PA_MoveStandIronFire(4)="stand_shootFLiron_kar"

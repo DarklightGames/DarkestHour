@@ -89,8 +89,8 @@ defaultproperties
         SphereRadiusRange=(Max=1.000000)
         InitialParticlesPerSecond=5000.000000
         Texture=Texture'Effects_Tex.BulletHits.sparkfinal2'
-        LifetimeRange=(Min=1.0,Max=1.5)
-        StartVelocityRange=(X=(Min=-200,Max=300.000000),Y=(Min=-100.000000,Max=100.000000),Z=(Min=-50.000000,Max=900.000000))
+        LifetimeRange=(Min=0.5,Max=0.75)
+        StartVelocityRange=(X=(Min=-200,Max=300.000000),Y=(Min=-100.000000,Max=100.000000),Z=(Min=-50.000000,Max=500.000000))
     End Object
     Emitters(2)=SparkEmitter'SparkEmitter1'
 
@@ -134,6 +134,7 @@ defaultproperties
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         FadeOutStartTime=1.600000
         FadeInEndTime=0.08
+        name="embers"
         StartLocationRange=(Z=(Min=100.000000,Max=150.000000))
         SizeScale(0)=(RelativeSize=1.00000)
         SizeScale(1)=(RelativeTime=0.500000,RelativeSize=2.000000)
@@ -147,6 +148,33 @@ defaultproperties
         StartVelocityRange=(X=(Min=100.000000,Max=400.000000),Y=(Min=-400.000000,Max=400.000000),Z=(Min=-150.000000,Max=-100.000000))
     End Object
     Emitters(7)=SpriteEmitter'SpriteEmitter7'
+
+    Begin Object Class=SpriteEmitter Name=SpriteEmitter8
+        UseCollision=false
+        FadeOut=True
+        FadeIn=True
+        RespawnDeadParticles=False
+        UniformSize=True
+        AutomaticInitialSpawning=False
+        UseRandomSubdivision=True
+        Acceleration=(Z=-100.000000)
+        ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
+        ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
+        FadeOutStartTime=0.750000
+        Opacity=0.75
+        MaxParticles=40
+        Name="SpriteEmitter38"
+        UseRotationFrom=PTRS_Actor
+        StartSizeRange=(X=(Min=1.00000,Max=1.250000))
+        InitialParticlesPerSecond=300.000000
+        DrawStyle=PTDS_Brighten
+        Texture=Texture'Effects_Tex.Smoke.Sparks'
+        TextureUSubdivisions=2
+        TextureVSubdivisions=2
+        LifetimeRange=(Min=1.500000,Max=2.500000)
+        StartVelocityRange=(X=(Min=150.000000,Max=250.000000),Y=(Min=-150.000000,Max=150.000000),Z=(Min=-150.000000,Max=250.000000))
+    End Object
+    Emitters(8)=SpriteEmitter'SpriteEmitter8'
 
 
     bLightChanged=True

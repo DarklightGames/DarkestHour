@@ -115,21 +115,30 @@ defaultproperties
 {
     bExplodesOnHittingBody=true
     bExplodesOnHittingWater=false
-    ExplosionSound(0)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
-    ExplosionSound(1)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
-    ExplosionSound(2)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode03'
+
     StraightFlightTime=0.2
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
     PenetrationMag=250.0
     ShellImpactDamage=class'ROGame.RORocketImpactDamage'
     ImpactDamage=675
+
     VehicleHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
+    DirtHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
+    RockHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
+    WoodHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
+    WaterHitSound=Sound'ProjectileSounds.cannon_rounds.AP_Impact_Water'
+
+    ExplosionSound(0)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
+    ExplosionSound(1)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
+    ExplosionSound(2)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode03'
+
     ShellHitVehicleEffectClass=class'ROEffects.PanzerfaustHitTank'
     ShellHitDirtEffectClass=class'ROEffects.PanzerfaustHitDirt'
     ShellHitSnowEffectClass=class'ROEffects.PanzerfaustHitSnow'
     ShellHitWoodEffectClass=class'ROEffects.PanzerfaustHitWood'
     ShellHitRockEffectClass=class'ROEffects.PanzerfaustHitConcrete'
     ShellHitWaterEffectClass=class'ROEffects.PanzerfaustHitWater'
+
     BallisticCoefficient=0.05
     Damage=300.0
     DamageRadius=180.0
