@@ -1468,6 +1468,9 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 {
     local int        ActualDamage;
     local Controller Killer;
+    local DarkestHourGame G;
+    local DHGameReplicationInfo GRI;
+    local int RoundTime;
 
     if (DamageType == none)
     {
@@ -1588,6 +1591,20 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         if (bPhysicsAnimUpdate && !DamageType.default.bRagdollBullet)
         {
             SetTearOffMomemtum(Momentum);
+        }
+
+        G = DarkestHourGame(Level.Game);
+
+        if (G != none && G.Metrics != none)
+        {
+            GRI = DHGameReplicationInfo(G.GameReplicationInfo);
+
+            if (GRI != none)
+            {
+                RoundTime = GRI.ElapsedTime - GRI.RoundStartTime;
+            }
+
+            G.Metrics.OnPlayerFragged(PlayerController(Killer), PlayerController(Controller), DamageType, HitLocation, HitIndex, RoundTime);
         }
 
         Died(Killer, DamageType, HitLocation);
@@ -2673,9 +2690,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     local vector          HitDirection;
     local float           DamageBeyondZero;
     local bool            bShouldGib;
-    local int             RoundTime;
-    local DarkestHourGame G;
-    local DHGameReplicationInfo GRI;
+
 
     // Exit if pawn being destroyed or level is being cleaned up
     if (bDeleteMe || Level.bLevelChange || Level.Game == none)
@@ -2683,7 +2698,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
         return;
     }
 
-    if (GunToRotate != none)
+    if(GunToRotate != none)
     {
         GunToRotate.ServerExitRotation();
     }
@@ -2738,22 +2753,6 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 
     // Destroy some possible DH special carried/owned actors
     DestroyRadio();
-
-    // Metrics
-    // NOTE: This must be called before the pawn is unpossessed!
-    G = DarkestHourGame(Level.Game);
-
-    if (G != none && G.Metrics != none)
-    {
-        GRI = DHGameReplicationInfo(G.GameReplicationInfo);
-
-        if (GRI != none)
-        {
-            RoundTime = GRI.ElapsedTime - GRI.RoundStartTime;
-        }
-
-        G.Metrics.OnPlayerFragged(PlayerController(Killer), PlayerController(Controller), DamageType, HitLocation, LastHitIndex, RoundTime);
-    }
 
     if (OwnedMortar != none)
     {
@@ -2825,7 +2824,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     {
         HitDirection = Location - HitLocation;
         HitDirection.Z = 0.0;
-        HitDirection = Normal(HitDirection);
+        HitDirection = normal(HitDirection);
 
         DHPlayer(Controller).PlayerJarred(HitDirection, 3.0);
     }
@@ -2854,6 +2853,8 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
         NetUpdateFrequency = default.NetUpdateFrequency;
         PlayDying(DamageType, HitLocation);
     }
+
+
 }
 
 // Stop damage overlay from overriding burning overlay if necessary
