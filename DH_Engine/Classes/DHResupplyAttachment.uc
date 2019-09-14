@@ -117,7 +117,7 @@ function bool CanResupplyPawn(Pawn P)
         return false;
     }
 
-    if (SquadIndex > 0)
+    if (SquadIndex >= 0)
     {
         PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
 
