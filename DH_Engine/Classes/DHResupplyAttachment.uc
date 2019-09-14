@@ -15,9 +15,11 @@ enum EResupplyType
 };
 
 var     private int     TeamIndex;      // Team this volume resupplies
+var     private int     SquadIndex;
 var     EResupplyType   ResupplyType;   // Who this volume will resupply
 var     array<Pawn>     ResupplyActors;
 var     float           UpdateTime;     // How often this thing needs to do it's business
+var     private bool    bCanResupplyMortars;
 
 var     class<DHMapIconAttachment> MapIconAttachmentClass;
 var     DHMapIconAttachment        MapIconAttachment;
@@ -70,14 +72,59 @@ final function SetTeamIndex(int TeamIndex)
     OnTeamIndexChanged();
 }
 
+simulated function int GetSquadIndex()
+{
+    return SquadIndex;
+}
+
+final function SetSquadIndex(int SquadIndex)
+{
+    self.SquadIndex = SquadIndex;
+}
+
 final function SetResupplyType(EResupplyType ResupplyType)
 {
     self.ResupplyType = ResupplyType;
+    bCanResupplyMortars = CanResupplyType(RT_Mortars);
 
     if (MapIconAttachment != none)
     {
         DHMapIconAttachment_Resupply(MapIconAttachment).SetResupplyType(ResupplyType);
     }
+}
+
+final function bool CanResupplyType(EResupplyType T)
+{
+    switch (T)
+    {
+        case RT_Players:
+            return ResupplyType == RT_Players || ResupplyType == RT_All;
+        case RT_Vehicles:
+            return ResupplyType == RT_Vehicles || ResupplyType == RT_All;
+        case RT_Mortars:
+            return ResupplyType == RT_Players || ResupplyType == RT_Mortars || ResupplyType == RT_All;
+        default:
+            return ResupplyType == RT_All;
+    }
+}
+
+function bool CanResupplyPawn(Pawn P)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    if (P == none || (TeamIndex != NEUTRAL_TEAM_INDEX && P.GetTeamNum() != TeamIndex))
+    {
+        return false;
+    }
+
+    if (SquadIndex > 0)
+    {
+        PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+
+        return PRI != none && PRI.SquadIndex == SquadIndex;
+    }
+
+    return true;
 }
 
 function ProcessActorLeave()
@@ -138,18 +185,20 @@ function Timer()
     foreach RadiusActors(class'Pawn', recvr, CollisionRadius)
     {
         // This stops us from the vehicle resupplying itself.
-        if (Base != none && Base == P)
+        if (Base != none && Base == recvr)
         {
             continue;
         }
 
-        if (TeamIndex == NEUTRAL_TEAM_INDEX || recvr.GetTeamNum() == TeamIndex)
+        if (CanResupplyPawn(recvr))
         {
             bResupplied = false;
             P = DHPawn(recvr);
             V = Vehicle(recvr);
 
-            if (P != none && (ResupplyType == RT_Players || ResupplyType == RT_All))
+            if (P != none && (ResupplyType == RT_Players ||
+                              ResupplyType == RT_All ||
+                              (bCanResupplyMortars && P.Weapon != none && P.Weapon.IsA('DHMortarWeapon'))))
             {
                 //Add him into our resupply list.
                 ResupplyActors[ResupplyActors.Length] = P;
@@ -157,6 +206,7 @@ function Timer()
             }
             else if (V != none && V != Base && (ResupplyType == RT_Vehicles || ResupplyType == RT_All))
             {
+                // TODO: Make this work for mortars when RT_Mortars is on.
                 ResupplyActors[ResupplyActors.Length] = V;
                 V.bTouchingResupply = true;
             }
@@ -203,7 +253,7 @@ function Timer()
                 }
 
                 //Mortar specific resupplying.
-                if (ResupplyType == RT_Players || ResupplyType == RT_Mortars || ResupplyType == RT_All)
+                if (bCanResupplyMortars)
                 {
                     // Resupply player carrying a mortar
                     if (P != none)
@@ -280,12 +330,12 @@ event Touch(Actor Other)
     ROP = ROPawn(Other);
     V = Vehicle(Other);
 
-    if (ROP != none && (ROP.GetTeamNum() == TeamIndex || TeamIndex == NEUTRAL_TEAM_INDEX))
+    if (CanResupplyPawn(ROP))
     {
         ROP.bTouchingResupply = true;
     }
 
-    if (V != none && (V.GetTeamNum() == TeamIndex || TeamIndex == NEUTRAL_TEAM_INDEX))
+    if (CanResupplyPawn(V))
     {
         V.EnteredResupply();
     }
@@ -321,6 +371,7 @@ defaultproperties
     RemoteRole=ROLE_DumbProxy
 
     TeamIndex=-1
+    SquadIndex=-1
     UpdateTime=2.5
     ResupplyType=RT_All
     bDramaticLighting=true
