@@ -124,8 +124,8 @@ defaultproperties
 
     VehicleHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
     DirtHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
-    RockHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
-    WoodHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode03'
+    RockHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
+    WoodHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
     WaterHitSound=Sound'ProjectileSounds.cannon_rounds.AP_Impact_Water'
 
     ExplosionSound(0)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
@@ -163,7 +163,7 @@ defaultproperties
     ShellDeflectEffectClass=none
     MyDamageType=class'DamageType'
     AmbientSound=none
-    TransientSoundVolume=1.0 //0.3
+    TransientSoundVolume=0.3
     TransientSoundRadius=300.0
     SpeedFudgeScale=1.0
     InitialAccelerationTime=0.1

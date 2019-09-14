@@ -7,13 +7,6 @@ class DH_50CalVehicleBullet extends DHBullet_ArmorPiercing;
 
 defaultproperties
 {
-    Speed=53268.0 // 880 m/s
-    MaxSpeed=53268.0
-    ShellDiameter=1.27
-    BallisticCoefficient=0.65 // sources vary (as do actual round apparently), but this is about the consensus, with AP rounds a little lower than standard ball ammo
-    Damage=125.0 // same as PTRD, normal MG and rifle bullets are 115
-    MyDamageType=class'DH_Vehicles.DH_50CalDamType'
-
     DHPenetrationTable(0)=2.09 // 100m
     DHPenetrationTable(1)=1.93 // 250m
     DHPenetrationTable(2)=1.65 // 500m
@@ -25,4 +18,11 @@ defaultproperties
     DHPenetrationTable(8)=0.0  // 2000m
     DHPenetrationTable(9)=0.0  // 2500m
     DHPenetrationTable(10)=0.0 // 3000m
+
+    ShellDiameter=1.27
+    BallisticCoefficient=0.65 // sources vary (as do actual round apparently), but this is about the consensus, with AP rounds a little lower than standard ball ammo
+    Damage=125.0 // same as PTRD, normal MG and rifle bullets are 115
+    MyDamageType=class'DH_Vehicles.DH_50CalDamType'
+    Speed=53268.0 // 880 m/s
+    MaxSpeed=53268.0
 }
