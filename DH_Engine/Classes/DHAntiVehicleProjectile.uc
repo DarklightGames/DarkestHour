@@ -46,8 +46,8 @@ var     Effects         Corona;                  // shell tracer
 
 //New Effects
 var     bool                    bHasShellTrail;
-var     class<Effects>          TankShellTrailClass;         // shell "streak" emitter
-var     Effects                 ShellTrail;
+var     class<Emitter>          TankShellTrailClass;         // shell "streak" emitter
+var     Emitter                 ShellTrail;
 
 // Camera shakes
 var     vector          ShakeRotMag;             // how far to rot view
