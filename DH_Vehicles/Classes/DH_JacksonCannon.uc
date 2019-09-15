@@ -47,9 +47,9 @@ defaultproperties
     ProjectileDescriptions(1)="HVAP"
     ProjectileDescriptions(2)="HE"
 
-    nProjectileDescriptions(0)="APC M82"
+    nProjectileDescriptions(0)="M82 APC"
     nProjectileDescriptions(1)="M304 HVAP"
-    nProjectileDescriptions(2)="HE M71"
+    nProjectileDescriptions(2)="M71 HE-T"
 
     InitialPrimaryAmmo=30
     InitialSecondaryAmmo=4
@@ -62,7 +62,7 @@ defaultproperties
 
     // Weapon fire
     WeaponFireOffset=33.0
-    AddedPitch=145
+    AddedPitch=190//145
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.IS2.122mm_fire01'

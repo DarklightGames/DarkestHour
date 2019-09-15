@@ -33,6 +33,11 @@ defaultproperties
     Skins(0)=Texture'DH_Bofors_tex.Bofors40mmGun'
     Skins(1)=Texture'Weapons1st_tex.Bullets.Bullet_Shell_Rifle'
 
+    //Fire Effects
+    FlashEmitterClass=class'ROEffects.MuzzleFlash3rdSTG'
+    //EffectEmitterClass=class'ROEffects.TankCannonFireEffectTypeB'
+    CannonDustEmitterClass=class'ROEffects.TankCannonDust'
+
     // Turret movement
     RotationsPerSecond=0.138888 // 50 degrees per sec
     PitchUpLimit=16384
@@ -50,8 +55,13 @@ defaultproperties
     ProjectileClass=class'DH_Guns.DH_Bofors40mmCannonShellHE'
     PrimaryProjectileClass=class'DH_Guns.DH_Bofors40mmCannonShellHE'
     SecondaryProjectileClass=class'DH_Guns.DH_Bofors40mmCannonShell'
+
     ProjectileDescriptions(0)="HE-T"
     ProjectileDescriptions(1)="AP"
+
+    nProjectileDescriptions(0)="Mk.II HE-T"
+    nProjectileDescriptions(1)="M81A1 AP"
+
     NumPrimaryMags=20
     NumSecondaryMags=20
     InitialPrimaryAmmo=8

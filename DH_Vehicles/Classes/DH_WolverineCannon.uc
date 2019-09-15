@@ -44,9 +44,9 @@ defaultproperties
     ProjectileDescriptions(1)="HVAP"
     ProjectileDescriptions(2)="HE"
 
-    nProjectileDescriptions(0)="APC M62"
-    nProjectileDescriptions(1)="HVAP M93"
-    nProjectileDescriptions(2)="HE M42A1"
+    nProjectileDescriptions(0)="M62 APC"
+    nProjectileDescriptions(1)="M93 HVAP"
+    nProjectileDescriptions(2)="M42A1 HE-T"
 
     InitialPrimaryAmmo=22
     InitialSecondaryAmmo=4

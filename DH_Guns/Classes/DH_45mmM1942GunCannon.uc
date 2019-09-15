@@ -12,5 +12,4 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Guns.DH_45mmM1942GunCannonShell'
     TertiaryProjectileClass=class'DH_Guns.DH_45mmM1942GunCannonShellAPCR'
     WeaponFireOffset=42.9
-
 }

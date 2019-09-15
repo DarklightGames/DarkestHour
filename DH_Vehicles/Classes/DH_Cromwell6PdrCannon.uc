@@ -17,8 +17,8 @@ defaultproperties
 
     ProjectileDescriptions(2)=""
 
-    nProjectileDescriptions(0)="APC Mk.IX"
-    nProjectileDescriptions(1)="HE-T Mk.X"
+    nProjectileDescriptions(0)="Mk.IX APC"
+    nProjectileDescriptions(1)="Mk.X HE-T"
     nProjectileDescriptions(2)=""
 
     InitialPrimaryAmmo=28

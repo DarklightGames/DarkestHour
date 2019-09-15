@@ -21,10 +21,12 @@ defaultproperties
     LeftArmorFactor=9.0
     RightArmorFactor=9.0
     RearArmorFactor=9.0
+
     LeftArmorSlope=20.0
     FrontArmorSlope=10.0
     RightArmorSlope=20.0
     RearArmorSlope=30.0
+
     FrontLeftAngle=340.0
     FrontRightAngle=20.0
     RearRightAngle=143.0

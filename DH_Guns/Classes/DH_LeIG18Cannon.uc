@@ -30,7 +30,7 @@ defaultproperties
 
     ProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'
     PrimaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHE'
-    SecondaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHEAT'  // TODO: REPLACE
+    SecondaryProjectileClass=class'DH_Guns.DH_LeIG18CannonShellHEAT'
     InitialPrimaryAmmo=60  // TODO: REPLACE
     InitialSecondaryAmmo=25  // TODO: REPLACE
     MaxPrimaryAmmo=60

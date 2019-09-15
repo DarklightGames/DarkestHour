@@ -14,9 +14,9 @@ defaultproperties
 
     ProjectileDescriptions(1)="AP"
 
-    nProjectileDescriptions(0)="APC M82"
-    nProjectileDescriptions(1)="AP-T M77"
-    nProjectileDescriptions(2)="HE M71"
+    nProjectileDescriptions(0)="M82 APC"
+    nProjectileDescriptions(1)="M77 AP-T"
+    nProjectileDescriptions(2)="M71 HE-T"
 
     InitialPrimaryAmmo=25
     InitialSecondaryAmmo=12

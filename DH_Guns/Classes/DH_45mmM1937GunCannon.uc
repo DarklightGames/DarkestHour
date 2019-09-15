@@ -31,8 +31,8 @@ defaultproperties
     ProjectileDescriptions(2)="APCR"
 
     nProjectileDescriptions(0)="BR-240"
-    nProjectileDescriptions(1)="BR-240P"
-    nProjectileDescriptions(2)="O-240"
+    nProjectileDescriptions(1)="O-240"
+    nProjectileDescriptions(2)="BR-240P"
 
 
     InitialPrimaryAmmo=20

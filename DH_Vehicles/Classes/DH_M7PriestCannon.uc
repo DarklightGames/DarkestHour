@@ -36,9 +36,9 @@ defaultproperties
     ProjectileDescriptions(1)="Smoke"
     ProjectileDescriptions(2)="HEAT"
 
-    nProjectileDescriptions(0)="HE M1"
-    nProjectileDescriptions(1)="WP M60"
-    nProjectileDescriptions(2)="HEAT M67"
+    nProjectileDescriptions(0)="M1 HE-T"
+    nProjectileDescriptions(1)="M60 WP"
+    nProjectileDescriptions(2)="M67 HEAT"
 
 
     InitialPrimaryAmmo=58

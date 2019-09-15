@@ -42,9 +42,9 @@ defaultproperties
     ProjectileDescriptions(1)="APDS"
     ProjectileDescriptions(2)="HE"
 
-    nProjectileDescriptions(0)="APC Mk.IV"
-    nProjectileDescriptions(1)="APDS Mk.I"
-    nProjectileDescriptions(2)="HE-T Mk.I"
+    nProjectileDescriptions(0)="Mk.IV APC"
+    nProjectileDescriptions(1)="Mk.I APDS"
+    nProjectileDescriptions(2)="Mk.I HE-T"
 
     InitialPrimaryAmmo=40
     InitialSecondaryAmmo=4

@@ -14,8 +14,8 @@ defaultproperties
     ProjectileDescriptions(1)="HE"
     ProjectileDescriptions(2)="Smoke"
 
-    nProjectileDescriptions(1)="HE M42A1"
-    nProjectileDescriptions(2)="WP M89"
+    nProjectileDescriptions(1)="M42A1 HE-T"
+    nProjectileDescriptions(2)="M89 WP"
 
     InitialPrimaryAmmo=30
     InitialSecondaryAmmo=12

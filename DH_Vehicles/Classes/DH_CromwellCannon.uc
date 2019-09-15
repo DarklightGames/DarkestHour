@@ -40,7 +40,7 @@ defaultproperties
     ProjectileDescriptions(2)="Smoke"
 
     nProjectileDescriptions(0)="M61 APC"
-    nProjectileDescriptions(1)="M48 HE"
+    nProjectileDescriptions(1)="M48 HE-T"
     nProjectileDescriptions(2)="M89 WP"
 
     InitialPrimaryAmmo=25

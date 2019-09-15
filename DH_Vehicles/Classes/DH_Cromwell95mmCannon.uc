@@ -25,9 +25,9 @@ defaultproperties
     ProjectileDescriptions(1)="Smoke"
     ProjectileDescriptions(2)="HEAT"
 
-    nProjectileDescriptions(0)="HE-T Mk.IA"
-    nProjectileDescriptions(1)="HEAT Mk.I"
-    nProjectileDescriptions(2)="SMK-BE Mk.IA"
+    nProjectileDescriptions(0)="Mk.IA HE-T"
+    nProjectileDescriptions(1)="Mk.IA SMK-BE"
+    nProjectileDescriptions(2)="Mk.I HEAT"
 
     InitialPrimaryAmmo=14
     InitialSecondaryAmmo=8

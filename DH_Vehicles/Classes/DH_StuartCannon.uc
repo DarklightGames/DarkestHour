@@ -38,9 +38,9 @@ defaultproperties
 
     ProjectileDescriptions(2)="Canister"
 
-    nProjectileDescriptions(0)="APC M51B1"
-    nProjectileDescriptions(1)="HE M63"
-    nProjectileDescriptions(2)="Canister M2"
+    nProjectileDescriptions(0)="M51B1 APC"
+    nProjectileDescriptions(1)="M63 HE-T"
+    nProjectileDescriptions(2)="M2 Canister"
 
     InitialPrimaryAmmo=60
     InitialSecondaryAmmo=30
