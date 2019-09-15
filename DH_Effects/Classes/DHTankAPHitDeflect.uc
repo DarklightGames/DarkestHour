@@ -127,7 +127,7 @@ defaultproperties
         UseRegularSizeScale=False
         UniformSize=True
         AutomaticInitialSpawning=False
-        Acceleration=(Z=-50.000000)
+        Acceleration=(Z=-250.000000)
         MaxCollisions=(Min=1.000000,Max=2.000000)
         DampingFactorRange=(X=(Min=0.7,Max=0.7),Y=(Min=0.7,Max=0.7),Z=(Min=0.7,Max=0.7))
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
@@ -145,7 +145,7 @@ defaultproperties
         UseRotationFrom=PTRS_Actor
         Texture=Texture'DH_FX_Tex.Effects.FlareOrange'
         LifetimeRange=(Min=1.000000,Max=2.5)
-        StartVelocityRange=(X=(Min=100.000000,Max=400.000000),Y=(Min=-400.000000,Max=400.000000),Z=(Min=-150.000000,Max=-100.000000))
+        StartVelocityRange=(X=(Min=100.000000,Max=400.000000),Y=(Min=-400.000000,Max=400.000000),Z=(Min=-150.000000,Max=500.000000))
     End Object
     Emitters(7)=SpriteEmitter'SpriteEmitter7'
 
@@ -157,7 +157,7 @@ defaultproperties
         UniformSize=True
         AutomaticInitialSpawning=False
         UseRandomSubdivision=True
-        Acceleration=(Z=-100.000000)
+        Acceleration=(Z=-250.000000)
         ColorScale(0)=(Color=(B=255,G=255,R=255,A=255))
         ColorScale(1)=(RelativeTime=1.000000,Color=(B=255,G=255,R=255,A=255))
         FadeOutStartTime=0.750000
@@ -165,14 +165,14 @@ defaultproperties
         MaxParticles=40
         Name="SpriteEmitter38"
         UseRotationFrom=PTRS_Actor
-        StartSizeRange=(X=(Min=1.00000,Max=1.250000))
+        StartSizeRange=(X=(Min=2.00000,Max=3.0000))
         InitialParticlesPerSecond=300.000000
         DrawStyle=PTDS_Brighten
         Texture=Texture'Effects_Tex.Smoke.Sparks'
         TextureUSubdivisions=2
         TextureVSubdivisions=2
         LifetimeRange=(Min=1.500000,Max=2.500000)
-        StartVelocityRange=(X=(Min=150.000000,Max=250.000000),Y=(Min=-150.000000,Max=150.000000),Z=(Min=-150.000000,Max=250.000000))
+        StartVelocityRange=(X=(Min=150.000000,Max=250.000000),Y=(Min=-150.000000,Max=150.000000),Z=(Min=-150.000000,Max=500.000000))
     End Object
     Emitters(8)=SpriteEmitter'SpriteEmitter8'
 
