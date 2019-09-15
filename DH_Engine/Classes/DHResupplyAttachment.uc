@@ -15,10 +15,15 @@ enum EResupplyType
 };
 
 var     private int     TeamIndex;      // Team this volume resupplies
-var     private int     SquadIndex;
+var     private int     SquadIndex;     // Squad this volume resupplies. When
+                                        // set, vehicles are only resupplied
+                                        // when controlled by a squad memeber.
 var     EResupplyType   ResupplyType;   // Who this volume will resupply
 var     array<Pawn>     ResupplyActors;
 var     float           UpdateTime;     // How often this thing needs to do it's business
+
+var     private bool    bCanResupplyPlayers;
+var     private bool    bCanResupplyVehicles;
 var     private bool    bCanResupplyMortars;
 
 var     class<DHMapIconAttachment> MapIconAttachmentClass;
@@ -85,6 +90,9 @@ final function SetSquadIndex(int SquadIndex)
 final function SetResupplyType(EResupplyType ResupplyType)
 {
     self.ResupplyType = ResupplyType;
+
+    bCanResupplyPlayers = CanResupplyType(RT_Players);
+    bCanResupplyVehicles = CanResupplyType(RT_Vehicles);
     bCanResupplyMortars = CanResupplyType(RT_Mortars);
 
     if (MapIconAttachment != none)
@@ -93,7 +101,7 @@ final function SetResupplyType(EResupplyType ResupplyType)
     }
 }
 
-final function bool CanResupplyType(EResupplyType T)
+function bool CanResupplyType(EResupplyType T)
 {
     switch (T)
     {
@@ -111,20 +119,35 @@ final function bool CanResupplyType(EResupplyType T)
 function bool CanResupplyPawn(Pawn P)
 {
     local DHPlayerReplicationInfo PRI;
+    local ROVehicle ROV;
+    local int i;
 
-    if (P == none || (TeamIndex != NEUTRAL_TEAM_INDEX && P.GetTeamNum() != TeamIndex))
+    if (P != none && (TeamIndex == NEUTRAL_TEAM_INDEX || P.GetTeamNum() == TeamIndex))
     {
-        return false;
+        if (SquadIndex >= 0)
+        {
+            ROV = ROVehicle(P);
+
+            if (ROV != none)
+            {
+                // Check if any of the weapons are manned by a squad member.
+                for (i = 0; i < ROV.WeaponPawns.Length; ++i)
+                {
+                    PRI = DHPlayerReplicationInfo(ROV.WeaponPawns[i].PlayerReplicationInfo);
+
+                    if (PRI != none && PRI.SquadIndex == SquadIndex)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
+            return PRI != none && PRI.SquadIndex == SquadIndex;
+        }
+
+        return true;
     }
-
-    if (SquadIndex >= 0)
-    {
-        PRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
-
-        return PRI != none && PRI.SquadIndex == SquadIndex;
-    }
-
-    return true;
 }
 
 function ProcessActorLeave()
@@ -196,29 +219,26 @@ function Timer()
             P = DHPawn(recvr);
             V = Vehicle(recvr);
 
-            if (P != none && (ResupplyType == RT_Players ||
-                              ResupplyType == RT_All ||
-                              (bCanResupplyMortars && P.Weapon != none && P.Weapon.IsA('DHMortarWeapon'))))
+            if (P != none)
+            {
+                RI = P.GetRoleInfo();
+            }
+
+            if (P != none && (bCanResupplyPlayers || (bCanResupplyMortars && RI != none && RI.bCanUseMortars)))
             {
                 //Add him into our resupply list.
                 ResupplyActors[ResupplyActors.Length] = P;
                 P.bTouchingResupply = true;
             }
-            else if (V != none && V != Base && (ResupplyType == RT_Vehicles || ResupplyType == RT_All))
+            else if (V != none && V != Base && (bCanResupplyVehicles || (bCanResupplyMortars && V.IsA('DHMortarVehicleWeaponPawn'))))
             {
-                // TODO: Make this work for mortars when RT_Mortars is on.
                 ResupplyActors[ResupplyActors.Length] = V;
                 V.bTouchingResupply = true;
             }
 
             if (Level.TimeSeconds - recvr.LastResupplyTime >= UpdateTime)
             {
-                if (P != none)
-                {
-                    RI = P.GetRoleInfo();
-                }
-
-                if (P != none && (ResupplyType == RT_Players || ResupplyType == RT_All))
+                if (P != none && bCanResupplyPlayers)
                 {
                     //Resupply weapons
                     for (recvr_inv = P.Inventory; recvr_inv != none; recvr_inv = recvr_inv.Inventory)
@@ -243,7 +263,7 @@ function Timer()
                     }
                 }
 
-                if (V != none && (ResupplyType == RT_Vehicles || ResupplyType == RT_All) && !V.IsA('DHMortarVehicle'))
+                if (V != none && bCanResupplyVehicles && !V.IsA('DHMortarVehicle'))
                 {
                     // Resupply vehicles
                     if (V.ResupplyAmmo())
@@ -263,7 +283,7 @@ function Timer()
                             bResupplied = true;
                         }
 
-                        if (P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo)
+                        if (bCanResupplyPlayers && P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo)
                         {
                             P.bUsedCarriedMGAmmo = false;
                             bResupplied = true;
