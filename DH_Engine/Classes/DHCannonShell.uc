@@ -43,6 +43,12 @@ simulated function PostBeginPlay()
         Corona = Spawn(CoronaClass, self);
     }
 
+    if (Level.NetMode != NM_DedicatedServer && bHasShellTrail)
+    {
+        ShellTrail = Spawn(TankShellTrailClass, self);
+        ShellTrail.SetBase(self);
+    }
+
     if (PhysicsVolume != none && PhysicsVolume.bWaterVolume)
     {
         Velocity *= 0.6;
@@ -288,7 +294,9 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
 defaultproperties
 {
     bHasTracer=true
+    bHasShellTrail=true
     CoronaClass=class'DH_Effects.DHShellTracer_RedLarge'
+    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_Med'
     ShellImpactDamage=class'DH_Engine.DHShellImpactDamageType'
     ImpactDamage=400
     VehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_penetrate'
@@ -322,7 +330,7 @@ defaultproperties
     FluidSurfaceShootStrengthMod=10.0
 
     //Sound
-    AmbientSound=Sound'DH_ProjectileSounds.Shells.shell_med_whiz'
+    AmbientSound=Sound'Vehicle_Weapons.Misc.projectile_whistle01' //TODO: replace this
     AmbientVolumeScale=5.0 //5.0
     SoundVolume=255 // full volume
     SoundRadius=250.0 // about 300m - was SoundRadius=700 or about 1,1 km
