@@ -449,8 +449,8 @@ defaultproperties
 
     DamageMin=30
     DamageMax=40
-    BayonetDamageMin=38
-    BayonetDamageMax=52
+    BayonetDamageMin=75
+    BayonetDamageMax=85
     VulnerableDamageFactor=3.0
 
     PlayerBashSound=SoundGroup'Inf_Weapons_Foley.melee.butt_hit'
