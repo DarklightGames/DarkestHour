@@ -11,7 +11,7 @@ defaultproperties
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4ScopedWeapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo2Weapon')
     Grenades(0)=(Item=class'DH_Weapons.DH_MillsBombWeapon')
-    GivenItems(0)="DH_Equipment.DHBinocularsItem"
+    GivenItems(0)="DH_Equipment.DHBinocularsItemAllied"
     Headgear(0)=class'DH_BritishPlayers.DH_BritishTurtleHelmet'
     Headgear(1)=class'DH_BritishPlayers.DH_BritishTurtleHelmetNet'
     Headgear(2)=class'DH_BritishPlayers.DH_BritishTommyHelmet'

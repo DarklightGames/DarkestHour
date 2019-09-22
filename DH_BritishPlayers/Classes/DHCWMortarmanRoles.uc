@@ -10,7 +10,7 @@ defaultproperties
 {
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_EnfieldNo4Weapon')
     GivenItems(0)="DH_Weapons.DH_M2MortarWeapon"
-    GivenItems(1)="DH_Equipment.DHBinocularsItem"
+    GivenItems(1)="DH_Equipment.DHBinocularsItemAllied"
     HeadgearProbabilities(0)=0.1
     HeadgearProbabilities(1)=0.1
     HeadgearProbabilities(2)=0.8
