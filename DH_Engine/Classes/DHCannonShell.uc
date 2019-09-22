@@ -314,8 +314,8 @@ defaultproperties
 
     Speed=500.0
     MaxSpeed=22000.0
-    Damage=100.0
-    DamageRadius=5.0
+    Damage=125.0
+    DamageRadius=200 //about 3 meters
     MomentumTransfer=10000.0
     MyDamageType=class'DH_Engine.DHShellAPExplosionDamageType'
     ExplosionDecal=class'ROEffects.TankAPMarkDirt'
