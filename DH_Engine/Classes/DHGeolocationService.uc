@@ -169,7 +169,7 @@ static function GetIpData(DHPlayer PC)
     if (Index >= 0)
     {
         // Country code has already been cached, used it!
-        PRI.CountryCode = default.IpCountryCodes[Index].CountryCode;
+        PRI.CountryIndex = GetCountryCodeIndex(default.IpCountryCodes[Index].CountryCode);
         return;
     }
 
@@ -235,7 +235,7 @@ static function OnResponse(HTTPRequest Request, int Status, TreeMap_string_strin
         if (PRI != none)
         {
             // TODO: make this an index instead (so we don't have to do more string lookups later)
-            PRI.CountryCode = CountryCode;
+            PRI.CountryIndex = GetCountryCodeIndex(CountryCode);
         }
     }
 }
@@ -250,26 +250,6 @@ static function DumpCache()
     {
         Log(default.IpCountryCodes[i].IpAddress $ ":" @ default.IpCountryCodes[i].CountryCode);
     }
-}
-
-// TODO: Move elsewhere.
-static function GetUvCoordinates(int CountryIndex, out float U, out float V, out float UL, out float VL)
-{
-    const FLAG_WIDTH = 24;
-    const FLAG_HEIGHT = 16;
-    const COLUMN_COUNT = 16;
-    const ATLAS_WIDTH = 512;
-    const ATLAS_HEIGHT = 256;
-
-    local int RowIndex, ColumnIndex;
-
-    RowIndex = CountryIndex / COLUMN_COUNT;
-    ColumnIndex = CountryIndex % COLUMN_COUNT;
-
-    U = ColumnIndex * FLAG_WIDTH;
-    V = RowIndex * FLAG_HEIGHT;
-    UL = FLAG_WIDTH - 1;
-    VL = FLAG_HEIGHT - 1;
 }
 
 defaultproperties

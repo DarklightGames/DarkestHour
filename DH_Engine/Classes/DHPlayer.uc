@@ -6805,6 +6805,15 @@ exec function IpCache()
     class'DHGeolocationService'.static.DumpCache();
 }
 
+exec function SetCountry(string CountryCode)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+    PRI.CountryIndex = class'DHGeoLocationService'.static.GetCountryCodeIndex(CountryCode);
+}
+
 defaultproperties
 {
     CorpseStayTime=15
