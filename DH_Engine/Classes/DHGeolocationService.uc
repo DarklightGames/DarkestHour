@@ -363,7 +363,7 @@ defaultproperties
     CountryCodes(96)="HK"   // Hong Kong
     CountryCodes(97)="HU"   // Hungary
     CountryCodes(98)="IS"   // Iceland
-    CountryCodes(99)="IN"  // India
+    CountryCodes(99)="IN"   // India
     CountryCodes(100)="ID"  // Indonesia
     CountryCodes(101)="IR"  // Iran
     CountryCodes(102)="IQ"  // Iraq
