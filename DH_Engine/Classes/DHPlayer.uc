@@ -6795,6 +6795,16 @@ function SendVoiceMessage(PlayerReplicationInfo Sender,
     }
 }
 
+exec function TestIp(string IpAddress)
+{
+    class'DHGeolocationService'.static.GetIpDataTest(self, IpAddress);
+}
+
+exec function IpCache()
+{
+    class'DHGeolocationService'.static.DumpCache();
+}
+
 defaultproperties
 {
     CorpseStayTime=15

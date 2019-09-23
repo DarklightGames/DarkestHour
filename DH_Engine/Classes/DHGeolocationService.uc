@@ -7,16 +7,16 @@ class DHGeolocationService extends Object;
 
 struct IpCountryCode
 {
-    var string IPAddress;
+    var string IpAddress;
     var string CountryCode;
 };
 
-var globalconfig string     ApiHost;
-var globalconfig string     ApiPath;
-var globalconfig string     ApiKey;
+var config string     ApiHost;
+var config string     ApiPath;
+var config string     ApiKey;
 
-var array<string>           CountryCodes;
-var array<IPCountryCode>    IPCountryCodes;
+var array<string>               CountryCodes;
+var config array<IPCountryCode> IpCountryCodes;
 
 static function int GetCountryCodeIndex(string CountryCode)
 {
@@ -33,74 +33,115 @@ static function int GetCountryCodeIndex(string CountryCode)
     return -1;
 }
 
-static function int GetIpCountryCodeIndex(string IPAddress, int StartIndex, int EndIndex)
+static function int GetIpCountryCodeIndex(string IpAddress)
 {
-    local int MiddleIndex, CmpResult;
+    local int StartIndex, EndIndex, MiddleIndex;
 
-    if (StartIndex > EndIndex)
+    EndIndex = default.IpCountryCodes.Length - 1;
+
+    while (StartIndex <= EndIndex)
     {
-        // We've exhausted the search and found nothing.
-        return -1;
+        MiddleIndex = (StartIndex + EndIndex) / 2;
+
+        if (default.IpCountryCodes[MiddleIndex].IpAddress == IpAddress)
+        {
+            return MiddleIndex;
+        }
+        else
+        {
+            if (IpAddress < default.IpCountryCodes[MiddleIndex].IpAddress)
+            {
+                EndIndex = MiddleIndex - 1;
+            }
+            else
+            {
+                StartIndex = MiddleIndex + 1;
+            }
+        }
     }
 
-    MiddleIndex = (EndIndex - StartIndex) / 2;
-    CmpResult = StrCmp(default.IPCountryCodes[MiddleIndex].IPAddress, IPAddress);
-
-    if (CmpResult < 0)
-    {
-        return GetIpCountryCodeIndex(IPAddress, MiddleIndex + 1, EndIndex);
-    }
-    else if (CmpResult > 0)
-    {
-        return GetIpCountryCodeIndex(IPAddress, StartIndex, MiddleIndex - 1);
-    }
-    else
-    {
-        return MiddleIndex;
-    }
+    return -1;
 }
 
-static function int GetIpCountryCodeInsertionIndex(string IPAddress, int StartIndex, int EndIndex)
+static function int GetIpCountryCodeInsertionIndex(string IpAddress, int StartIndex, int EndIndex)
 {
     local int MiddleIndex, CmpResult;
 
     if (StartIndex == EndIndex)
     {
+        // Insertion sort.
+    }
+    else if (StartIndex > EndIndex)
+    {
         return StartIndex;
     }
 
-    MiddleIndex = (EndIndex - StartIndex) / 2;
-    CmpResult = StrCmp(default.IPCountryCodes[MiddleIndex].IPAddress, IPAddress);
+    MiddleIndex = (StartIndex + EndIndex) / 2;
+    CmpResult = StrCmp(IpAddress, default.IpCountryCodes[MiddleIndex].IpAddress);
 
     if (CmpResult < 0)
     {
-        return GetIpCountryCodeInsertionIndex(IPAddress, MiddleIndex + 1, EndIndex);
+        return GetIpCountryCodeInsertionIndex(IpAddress, MiddleIndex + 1, EndIndex);
     }
     else if (CmpResult > 0)
     {
-        return GetIpCountryCodeInsertionIndex(IPAddress, StartIndex, MiddleIndex - 1);
+        return GetIpCountryCodeInsertionIndex(IpAddress, StartIndex, MiddleIndex - 1);
     }
 
-    // Address already exists in the list, no insertion!
-    return -1;
+    return MiddleIndex;
 }
 
-static function bool AddIpCountryCode(string IPAddress, string CountryCode)
+static function bool AddIpCountryCode(string IpAddress, string CountryCode)
 {
-    // TODO: bisect index.
     local int Index;
 
-    Index = GetIpCountryCodeInsertionIndex(IPAddress, 0, default.IPCountryCodes.Length - 1);
+    Index = GetIpCountryCodeInsertionIndex(IpAddress, 0, default.IpCountryCodes.Length - 1);
 
     if (Index >= 0)
     {
-        default.IPCountryCodes.Insert(Index, 1);
-        default.IPCountryCodes[Index].IPAddress = IPAddress;
-        default.IPCountryCodes[Index].CountryCode = CountryCode;
+        if (default.IpCountryCodes.Length > 0 &&
+            Index < default.IpCountryCodes.Length &&
+            default.IpCountryCodes[Index].IpAddress == IpAddress)
+        {
+            // Record already written.
+            return true;
+        }
+
+        default.IpCountryCodes.Insert(Index, 1);
+        default.IpCountryCodes[Index].IpAddress = IpAddress;
+        default.IpCountryCodes[Index].CountryCode = CountryCode;
+
         return true;
     }
 
     return false;
+}
+
+static function GetIpDataTest(Actor A, string IpAddress)
+{
+    local int Index;
+    local HTTPRequest R;
+
+    // Check if country code has already been determined.
+    Index = GetIpCountryCodeIndex(IpAddress);
+
+    if (Index >= 0)
+    {
+        // Country code has already been cached, used it!
+        Log("Already have country code for" @ IpAddress);
+        return;
+    }
+
+    // Fetch country code from the API.
+    R = A.Spawn(class'HTTPRequest');
+    R.Host = default.ApiHost;
+    R.Path = default.ApiPath;
+    R.Path = Repl(R.Path, "{ip}", IpAddress);
+    R.Path = Repl(R.Path, "{key}", default.ApiKey);
+
+    R.OnResponse = OnResponse;
+    R.UserString = IpAddress;
+    R.Send();
 }
 
 static function GetIpData(DHPlayer PC)
@@ -123,12 +164,12 @@ static function GetIpData(DHPlayer PC)
     }
 
     // Check if country code has already been determined.
-    Index = GetIpCountryCodeIndex(IPAddress, 0, default.IPCountryCodes.Length - 1);
+    Index = GetIpCountryCodeIndex(IpAddress);
 
     if (Index >= 0)
     {
         // Country code has already been cached, used it!
-        PRI.CountryCode = default.IPCountryCodes[Index].CountryCode;
+        PRI.CountryCode = default.IpCountryCodes[Index].CountryCode;
         return;
     }
 
@@ -154,6 +195,9 @@ static function OnResponse(HTTPRequest Request, int Status, TreeMap_string_strin
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
     local string CountryCode;
+    local string IpAddress;
+
+    Log("Status:" @ Status);
 
     if (Status != 200)
     {
@@ -175,7 +219,12 @@ static function OnResponse(HTTPRequest Request, int Status, TreeMap_string_strin
         return;
     }
 
+    IpAddress = ResponseObject.Get("ip").AsString();
     CountryCode = ResponseObject.Get("country_code").AsString();
+
+    AddIpCountryCode(IpAddress, CountryCode);
+
+    StaticSaveConfig();
 
     PC = DHPlayer(Request.UserObject);
 
@@ -185,18 +234,29 @@ static function OnResponse(HTTPRequest Request, int Status, TreeMap_string_strin
 
         if (PRI != none)
         {
-            AddIpCountryCode(Request.UserString, CountryCode);
-
+            // TODO: make this an index instead (so we don't have to do more string lookups later)
             PRI.CountryCode = CountryCode;
         }
     }
 }
 
+static function DumpCache()
+{
+    local int i;
+
+    Log("-----------------------------------");
+
+    for (i = 0; i < default.IpCountryCodes.Length; ++i)
+    {
+        Log(default.IpCountryCodes[i].IpAddress $ ":" @ default.IpCountryCodes[i].CountryCode);
+    }
+}
+
 defaultproperties
 {
-    ApiHost="api.ipdata.co"
-    ApiPath="/{ip}?api-key={key}"
-    ApiKey="865e237eeda65b386befc55c4fa78f34ae5a7550d3e682c484b26493"
+    ApiHost="api.ipstack.com"
+    ApiPath="/{ip}?access_key={key}"
+    ApiKey="YOUR_API_KEY"
 
     CountryCodes(0)="AF"    // Afghanistan
     CountryCodes(1)="AX"    // Aland Islands
