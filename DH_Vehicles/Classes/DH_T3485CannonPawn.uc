@@ -16,8 +16,10 @@ defaultproperties
 
     DriveAnim="VT3485_com_idle_close"
     PeriscopePositionIndex=1
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_Allied'
     BinocPositionIndex=3
+
+    //PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.MG_sight'
+    //PeriscopeSize=0.5
 
     GunsightOverlay=Texture'Vehicle_Optic.t3485_sight'
     GunsightSize=0.753 // 16 degrees visible FOV at 4x magnification (TSh-16 sight)
@@ -27,8 +29,10 @@ defaultproperties
     ScopeCenterScaleX=2.0
     ScopeCenterScaleY=1.0
     DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed' // matches size of gunsight
+
     AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.T3485shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.T3485shell_reload'
+
     PoweredRotateSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
     PoweredPitchSound=Sound'Vehicle_Weapons.Turret.manual_turret_elevate'
     PoweredRotateAndPitchSound=Sound'Vehicle_Weapons.Turret.hydraul_turret_traverse'
