@@ -252,6 +252,26 @@ static function DumpCache()
     }
 }
 
+// TODO: Move elsewhere.
+static function GetUvCoordinates(int CountryIndex, out float U, out float V, out float UL, out float VL)
+{
+    const FLAG_WIDTH = 24;
+    const FLAG_HEIGHT = 16;
+    const COLUMN_COUNT = 16;
+    const ATLAS_WIDTH = 512;
+    const ATLAS_HEIGHT = 256;
+
+    local int RowIndex, ColumnIndex;
+
+    RowIndex = CountryIndex / COLUMN_COUNT;
+    ColumnIndex = CountryIndex % COLUMN_COUNT;
+
+    U = ColumnIndex * FLAG_WIDTH;
+    V = RowIndex * FLAG_HEIGHT;
+    UL = FLAG_WIDTH - 1;
+    VL = FLAG_HEIGHT - 1;
+}
+
 defaultproperties
 {
     ApiHost="api.ipstack.com"
