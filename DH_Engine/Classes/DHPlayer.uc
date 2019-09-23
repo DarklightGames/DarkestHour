@@ -6257,7 +6257,7 @@ function ServerRequestBanInfo(int PlayerID)
 }
 
 // TODO: this needs ot change!
-function PatronRequestOnResponse(int Status, TreeMap_string_string Headers, string Content)
+function PatronRequestOnResponse(HTTPRequest Request, int Status, TreeMap_string_string Headers, string Content)
 {
     local JSONParser Parser;
     local JSONObject O, Patron;

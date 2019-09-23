@@ -139,7 +139,7 @@ function OnPlayerLogin(PlayerController PC)
     P.Sessions.Insert(0, 1);
     P.Sessions[0] = new class'DHMetricsPlayerSession';
     P.Sessions[0].StartedAt = class'DateTime'.static.Now(self);
-    P.Sessions[0].NetworkAddress = TrimPort(PC.GetPlayerNetworkAddress());
+    P.Sessions[0].NetworkAddress = class'INet4Address'.static.TrimPort(PC.GetPlayerNetworkAddress());
 }
 
 function OnPlayerLogout(DHPlayer PC)
@@ -329,20 +329,6 @@ function AddEvent(string Type, JSONObject Data)
     Rounds[0].Events[Rounds[0].Events.Length] = (new class'JSONObject')
         .PutString("type", Type)
         .Put("data", Data);
-}
-
-static function string TrimPort(string NetworkAddress)
-{
-    local int i;
-
-    i = InStr(NetworkAddress, ":");
-
-    if (i >= 0)
-    {
-        NetworkAddress = Left(NetworkAddress, i);
-    }
-
-    return NetworkAddress;
 }
 
 defaultproperties

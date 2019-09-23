@@ -50,6 +50,7 @@ enum EScoreboardColumnType
     COLUMN_PointsCombat,
     COLUMN_PointsSupport,
     COLUMN_Deaths,
+    COLUMN_Flag,
     COLUMN_Ping
 };
 
@@ -215,6 +216,11 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
             break;
         case COLUMN_Deaths:
             CRI.Text = string(int(PRI.Deaths));
+        case COLUMN_Flag:
+            // TODO:
+            CRI.Icon = none;
+            break;
+        default:
             break;
     }
 }
@@ -870,6 +876,7 @@ simulated function DHDrawCell(Canvas C, coerce string Text, byte Align, float XP
     if (Icon != none)
     {
         C.DrawColor = class'UColor'.default.White;
+        // TODO: this is going to pose a problem!
         XL = Height * class'UMaterial'.static.AspectRatio(Icon);
         C.SetPos(0.0, 0.0);
         C.DrawTile(Icon, XL, Height, 0, 0, Icon.MaterialUSize() - 1, Icon.MaterialVSize() - 1);
