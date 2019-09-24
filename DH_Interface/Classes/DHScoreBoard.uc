@@ -164,6 +164,8 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
             if (PRI.bIsDeveloper)
             {
                 CRI.Icon = default.DeveloperIconMaterial;
+                CRI.U = 0;
+                CRI.V = 0;
                 CRI.UL = default.DeveloperIconMaterial.MaterialUSize() - 1;
                 CRI.VL = default.DeveloperIconMaterial.MaterialVSize() - 1;
             }
@@ -185,6 +187,8 @@ function GetScoreboardColumnRenderInfo(int ScoreboardColumnIndex, DHPlayerReplic
                         break;
                 }
 
+                CRI.U = 0;
+                CRI.V = 0;
                 CRI.UL = CRI.Icon.MaterialUSize() - 1;
                 CRI.VL = CRI.Icon.MaterialVSize() - 1;
             }
