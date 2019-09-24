@@ -4958,6 +4958,8 @@ event PostLogin(PlayerController NewPlayer)
     {
         PC.bSpectateAllowViewPoints = bSpectateAllowViewPoints && ViewPoints.Length > 0;
     }
+
+    class'DHGeolocationService'.static.GetIpData(PC);
 }
 
 // Override to leave hash and info in PlayerData, basically to save PRI data for the session

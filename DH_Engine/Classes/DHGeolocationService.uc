@@ -11,9 +11,11 @@ struct IpCountryCode
     var string CountryCode;
 };
 
-var config string     ApiHost;
-var config string     ApiPath;
-var config string     ApiKey;
+var config bool     bIsEnabled;
+
+var config string   ApiHost;
+var config string   ApiPath;
+var config string   ApiKey;
 
 var array<string>               CountryCodes;
 var config array<IPCountryCode> IpCountryCodes;
@@ -151,6 +153,12 @@ static function GetIpData(DHPlayer PC)
     local DHPlayerReplicationInfo PRI;
     local string IpAddress;
 
+    if (default.bIsEnabled == false)
+    {
+        // Service is disabled, ignore.
+        return;
+    }
+
     if (PC == none)
     {
         return;
@@ -254,6 +262,7 @@ static function DumpCache()
 
 defaultproperties
 {
+    bIsEnabled=false
     ApiHost="api.ipstack.com"
     ApiPath="/{ip}?access_key={key}"
     ApiKey="YOUR_API_KEY"
