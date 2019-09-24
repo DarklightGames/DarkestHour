@@ -6797,21 +6797,30 @@ function SendVoiceMessage(PlayerReplicationInfo Sender,
 
 exec function TestIp(string IpAddress)
 {
-    class'DHGeolocationService'.static.GetIpDataTest(self, IpAddress);
+    if (Level.NetMode == NM_Standalone)
+    {
+        class'DHGeolocationService'.static.GetIpDataTest(self, IpAddress);
+    }
 }
 
 exec function IpCache()
 {
-    class'DHGeolocationService'.static.DumpCache();
+    if (Level.NetMode == NM_Standalone)
+    {
+        class'DHGeolocationService'.static.DumpCache();
+    }
 }
 
 exec function SetCountry(string CountryCode)
 {
     local DHPlayerReplicationInfo PRI;
 
-    PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    if (Level.NetMode == NM_Standalone)
+    {
+        PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
-    PRI.CountryIndex = class'DHGeoLocationService'.static.GetCountryCodeIndex(CountryCode);
+        PRI.CountryIndex = class'DHGeoLocationService'.static.GetCountryCodeIndex(CountryCode);
+    }
 }
 
 defaultproperties

@@ -205,8 +205,6 @@ static function OnResponse(HTTPRequest Request, int Status, TreeMap_string_strin
     local string CountryCode;
     local string IpAddress;
 
-    Log("Status:" @ Status);
-
     if (Status != 200)
     {
         return;
@@ -251,8 +249,6 @@ static function OnResponse(HTTPRequest Request, int Status, TreeMap_string_strin
 static function DumpCache()
 {
     local int i;
-
-    Log("-----------------------------------");
 
     for (i = 0; i < default.IpCountryCodes.Length; ++i)
     {
