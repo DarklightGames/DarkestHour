@@ -166,7 +166,7 @@ static function GetIpData(DHPlayer PC)
 
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
-    if (PRI != none)
+    if (PRI == none)
     {
         return;
     }
@@ -227,6 +227,11 @@ static function OnResponse(HTTPRequest Request, int Status, TreeMap_string_strin
 
     IpAddress = ResponseObject.Get("ip").AsString();
     CountryCode = ResponseObject.Get("country_code").AsString();
+
+    if (CountryCode == "")
+    {
+        return;
+    }
 
     AddIpCountryCode(IpAddress, CountryCode);
 
