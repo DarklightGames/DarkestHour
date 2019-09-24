@@ -418,7 +418,7 @@ event bool NotifyLevelChange()
     return PlayerOwner().Level.IsPendingConnection();
 }
 
-function OnMOTDResponse(int Status, TreeMap_string_string Headers, string Content)
+function OnMOTDResponse(HTTPRequest Request, int Status, TreeMap_string_string Headers, string Content)
 {
     local string Title;
     local JSONParser Parser;

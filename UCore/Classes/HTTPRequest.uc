@@ -13,9 +13,11 @@ var string Protocol;
 var bool bAllowRedirects;
 var TreeMap_string_string Headers;
 var private int Timeout;
+var Object UserObject;
+var string UserString;
 
 delegate bool OnRedirect(HTTPRequest Request, int Status, string Location);
-delegate OnResponse(int Status, TreeMap_string_string Headers, string Content);
+delegate OnResponse(HTTPRequest Request, int Status, TreeMap_string_string Headers, string Content);
 
 function PostBeginPlay()
 {
@@ -178,7 +180,7 @@ function Timer()
                 Content = Response;
             }
 
-            OnResponse(Status, ResponseHeaders, Content);
+            OnResponse(self, Status, ResponseHeaders, Content);
 
             MyLink.DestroyLink();
 
@@ -220,7 +222,7 @@ function Timer()
     }
     else if (MyLink.ReceiveState == MyLink.Timeout)
     {
-        OnResponse(408, none, "");
+        OnResponse(self, 408, none, "");
     }
 
     --Timeout;
