@@ -135,9 +135,14 @@ event InitGame(string Options, out string Error)
         AccessControl = Spawn(class'DH_Engine.DHAccessControl');
     }
 
-    // Force the server to update the MaxClientRate, setting it in config file doesn't work as intended (something bugged in native)
-    // This command will unlock a server so it can allow clients to have more than 10000 netspeed
+    // Force the server to update the MaxClientRate, setting it in config file
+    // doesn't work as intended (something bugged in native)
+    // This command will unlock a server so it can allow clients to have more
+    // than 10000 netspeed.
     ConsoleCommand("set IpDrv.TcpNetDriver MaxClientRate 30000");
+
+    // Initialize geolocation service (verifies cache integrity)
+    class'DHGeolocationService'.static.Initialize();
 }
 
 function PreBeginPlay()
