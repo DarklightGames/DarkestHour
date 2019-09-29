@@ -175,7 +175,7 @@ replication
     reliable if (Role < ROLE_Authority)
         ServerSetPlayerInfo, ServerSetIsInSpawnMenu, ServerSetLockTankOnEntry,
         ServerLoadATAmmo, ServerThrowMortarAmmo, ServerSetBayonetAtSpawn,
-        ServerSaveArtilleryTarget, ServerClearObstacle, ServerCutConstruction,
+        ServerClearObstacle, ServerCutConstruction,
         ServerAddMapMarker, ServerRemoveMapMarker,
         ServerSquadCreate, ServerSquadRename,
         ServerSquadJoin, ServerSquadJoinAuto, ServerSquadLeave,
@@ -1087,114 +1087,6 @@ function ServerArtyStrike()
     if (Spawn(class'DHArtillerySpawner', self,, SavedArtilleryCoords, rotator(PhysicsVolume.Gravity)) == none)
     {
         Log("Error spawning artillery shell spawner!");
-    }
-}
-
-// New function for artillery observer role to mark an artillery target on the map
-function ServerSaveArtilleryTarget(bool bIsSmoke)
-{
-    local DHGameReplicationInfo GRI;
-    local DHVolumeTest VT;
-    local vector       HitLocation, HitNormal, TraceStart, TraceEnd;
-    local int          TeamIndex, i;
-    local bool         bValidTarget, bArtilleryTargetMarked;
-
-    TraceStart = Pawn.Location + Pawn.EyePosition();
-    TraceEnd = TraceStart + (GetMaxViewDistance() * vector(Rotation));
-
-    // First check that the artillery target is not in a no arty volume
-    if (Trace(HitLocation, HitNormal, TraceEnd, TraceStart, true) != none)
-    {
-        VT = Spawn(class'DHVolumeTest', self,, HitLocation);
-
-        if (VT != none)
-        {
-            bValidTarget = !VT.IsInNoArtyVolume();
-            VT.Destroy();
-        }
-    }
-
-    if (!bValidTarget)
-    {
-        ReceiveLocalizedMessage(class'DHArtilleryTargetMessage', 0); // "Invalid artillery target"
-        return;
-    }
-
-    TeamIndex = GetTeamNum();
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    HitLocation.Z = 0.0; // zero out the z coordinate for 2D distance checking on round hits
-
-    // Axis team - go through team's artillery targets list to make sure we are able to mark a target & there's an available slot
-    if (TeamIndex == AXIS_TEAM_INDEX)
-    {
-        for (i = 0; i < arraycount(GRI.GermanArtilleryTargets); ++i)
-        {
-            // Make sure this player hasn't set an artillery target in the last 30 seconds
-            if (GRI.GermanArtilleryTargets[i].Controller == self && (Level.TimeSeconds - GRI.GermanArtilleryTargets[i].Time) < MORTAR_TARGET_TIME_INTERVAL)
-            {
-                ReceiveLocalizedMessage(class'DHArtilleryTargetMessage', 4); // "You cannot mark another artillery target marker yet"
-
-                return;
-            }
-
-            // Find an available slot in our team's artillery targets list (an empty slot or our own current marked target)
-            if (GRI.GermanArtilleryTargets[i].Controller == none || GRI.GermanArtilleryTargets[i].Controller == self || !GRI.GermanArtilleryTargets[i].bIsActive)
-            {
-                GRI.GermanArtilleryTargets[i].bIsActive = true;
-                GRI.GermanArtilleryTargets[i].Controller = self;
-                GRI.GermanArtilleryTargets[i].HitLocation = vect(0.0, 0.0, 0.0);
-                GRI.GermanArtilleryTargets[i].Location = HitLocation;
-                GRI.GermanArtilleryTargets[i].Time = Level.TimeSeconds;
-                GRI.GermanArtilleryTargets[i].bIsSmoke = bIsSmoke;
-
-                bArtilleryTargetMarked = true;
-                break;
-            }
-        }
-    }
-    // Allies team - go through team's artillery targets list to make sure we are able to mark a target & there's an available slot
-    else if (TeamIndex == ALLIES_TEAM_INDEX)
-    {
-        for (i = 0; i < arraycount(GRI.AlliedArtilleryTargets); ++i)
-        {
-            if (GRI.AlliedArtilleryTargets[i].Controller == self && (Level.TimeSeconds - GRI.AlliedArtilleryTargets[i].Time) < MORTAR_TARGET_TIME_INTERVAL)
-            {
-                ReceiveLocalizedMessage(class'DHArtilleryTargetMessage', 4);
-
-                return;
-            }
-
-            if (GRI.AlliedArtilleryTargets[i].Controller == none || GRI.AlliedArtilleryTargets[i].Controller == self || !GRI.AlliedArtilleryTargets[i].bIsActive)
-            {
-                GRI.AlliedArtilleryTargets[i].bIsActive = true;
-                GRI.AlliedArtilleryTargets[i].Controller = self;
-                GRI.AlliedArtilleryTargets[i].HitLocation = vect(0.0, 0.0, 0.0);
-                GRI.AlliedArtilleryTargets[i].Location = HitLocation;
-                GRI.AlliedArtilleryTargets[i].Time = Level.TimeSeconds;
-                GRI.AlliedArtilleryTargets[i].bIsSmoke = bIsSmoke;
-
-                bArtilleryTargetMarked = true;
-                break;
-            }
-        }
-    }
-
-    // Display success or failure screen message to player
-    if (bArtilleryTargetMarked)
-    {
-        if (bIsSmoke)
-        {
-            Level.Game.BroadcastLocalizedMessage(class'DHArtilleryTargetMessage', 3, PlayerReplicationInfo); // "PlayerName has marked a mortar high-explosive target"
-        }
-        else
-        {
-            Level.Game.BroadcastLocalizedMessage(class'DHArtilleryTargetMessage', 2, PlayerReplicationInfo); // "PlayerName has marked a mortar smoke target"
-        }
-    }
-    else
-    {
-        ReceiveLocalizedMessage(class'DHArtilleryTargetMessage', 6); // "There are too many active artillery targets"
     }
 }
 

@@ -32,17 +32,6 @@ enum VehicleReservationError
     ERROR_NoLicense
 };
 
-struct ArtilleryTarget
-{
-    var bool            bIsActive;
-    var DHPlayer        Controller;
-    var byte            TeamIndex;
-    var vector          Location;
-    var vector          HitLocation;
-    var float           Time;
-    var bool            bIsSmoke;   // TODO: convert to enum
-};
-
 struct SpawnVehicle
 {
     var int             SpawnPointIndex;
@@ -100,13 +89,6 @@ var byte                DHAlliesRoleCount[ROLES_MAX];
 var byte                DHAxisRoleLimit[ROLES_MAX];
 var byte                DHAxisRoleBotCount[ROLES_MAX];
 var byte                DHAxisRoleCount[ROLES_MAX];
-
-// The maximum distance an artillery strike can be away from a marked target for
-// a hit indicator to show on the map
-var float               ArtilleryTargetDistanceThreshold;
-
-var ArtilleryTarget     AlliedArtilleryTargets[MORTAR_TARGETS_MAX];
-var ArtilleryTarget     GermanArtilleryTargets[MORTAR_TARGETS_MAX];
 
 var int                 SpawnsRemaining[2];
 var float               AttritionRate[2];
@@ -204,8 +186,6 @@ replication
         DHAlliesRoleBotCount,
         DHAxisRoleBotCount,
         Radios,
-        AlliedArtilleryTargets,
-        GermanArtilleryTargets,
         VehiclePoolVehicleClasses,
         VehiclePoolIsActives,
         VehiclePoolNextAvailableTimes,
@@ -1062,49 +1042,6 @@ simulated function GetRoleCounts(RORoleInfo RI, out int Count, out int BotCount,
 // Artillery Functions
 //------------------------------------------------------------------------------
 
-function ClearAllArtilleryTargets()
-{
-    local int i;
-
-    for (i = 0; i < arraycount(GermanArtilleryTargets); ++i)
-    {
-        GermanArtilleryTargets[i].bIsActive = false;
-    }
-
-    for (i = 0; i < arraycount(AlliedArtilleryTargets); ++i)
-    {
-        AlliedArtilleryTargets[i].bIsActive = false;
-    }
-}
-
-function ClearArtilleryTarget(DHPlayer PC)
-{
-    local int i;
-
-    if (PC == none)
-    {
-        return;
-    }
-
-    for (i = 0; i < arraycount(GermanArtilleryTargets); ++i)
-    {
-        if (GermanArtilleryTargets[i].Controller == PC)
-        {
-            GermanArtilleryTargets[i].bIsActive = false;
-            break;
-        }
-    }
-
-    for (i = 0; i < arraycount(AlliedArtilleryTargets); ++i)
-    {
-        if (AlliedArtilleryTargets[i].Controller == PC)
-        {
-            AlliedArtilleryTargets[i].bIsActive = false;
-            break;
-        }
-    }
-}
-
 function AddArtillery(DHArtillery Artillery)
 {
     local int i;
@@ -1953,7 +1890,6 @@ defaultproperties
     bAllChatEnabled=true
     AlliesVictoryMusicIndex=-1
     AxisVictoryMusicIndex=-1
-    ArtilleryTargetDistanceThreshold=15088 //250 meters in UU
     ForceScaleText="Size"
     ReinforcementsInfiniteText="Infinite"
     RoundWinnerTeamIndex=255

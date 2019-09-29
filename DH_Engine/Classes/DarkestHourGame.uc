@@ -330,8 +330,6 @@ function PostBeginPlay()
         GRI.AxisHelpRequests[k].RequestType = 255;
     }
 
-    ResetArtilleryTargets();
-
     if (LevelInfo.OverheadOffset == OFFSET_90)
     {
         GRI.OverheadOffset = 90;
@@ -1997,8 +1995,6 @@ function ChangeRole(Controller aPlayer, int i, optional bool bForceMenu)
 
             // Since we're changing roles, clear all associated requests/rally points
             ClearSavedRequestsAndRallyPoints(Playa, false);
-
-            GRI.ClearArtilleryTarget(DHPlayer(aPlayer));
         }
         else
         {
@@ -2530,7 +2526,6 @@ state RoundInPlay
         // Notify players that the map has been updated
         NotifyPlayersOfMapInfoChange(NEUTRAL_TEAM_INDEX, none, true);
 
-        ResetArtilleryTargets();
         GRI.ClearMapMarkers();
 
         // Set reinforcements
@@ -3090,11 +3085,6 @@ function ModifyReinforcements(int Team, int Amount, optional bool bSetReinforcem
             return;
         }
     }
-}
-
-function ResetArtilleryTargets()
-{
-    GRI.ClearAllArtilleryTargets();
 }
 
 // Handle reinforcment checks, this function is called when a player spawns and subtracts a reinforcement, also handles messages
@@ -3849,7 +3839,6 @@ function PlayerLeftTeam(PlayerController P)
     }
 
     GRI.UnreserveVehicle(PC);
-    GRI.ClearArtilleryTarget(PC);
 
     if (SquadReplicationInfo != none)
     {
@@ -4671,7 +4660,6 @@ function NotifyLogout(Controller Exiting)
 
     if (PC != none)
     {
-        GRI.ClearArtilleryTarget(PC);
         GRI.UnreserveVehicle(PC);
 
         PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);

@@ -115,30 +115,9 @@ simulated function Fire(float F)
             return;
         }
 
-        // TODO: remove/change mortar observer functionality
-        if (RI.bIsMortarObserver)
-        {
-            PC.ServerSaveArtilleryTarget(false);
-        }
-        else if (RI.bIsArtilleryOfficer || PRI.IsSquadLeader())
+        if (RI.bIsArtilleryOfficer || PRI.IsSquadLeader())
         {
             PC.ServerSaveArtilleryPosition();
-        }
-    }
-}
-
-// Modified to add alt fire button functionality for artillery observer to mark smoke targets
-simulated function AltFire(float F)
-{
-    local DHRoleInfo RI;
-
-    if (bUsingSights && DHPawn(Instigator) != none && Instigator.IsLocallyControlled())
-    {
-        RI = DHPawn(Instigator).GetRoleInfo();
-
-        if (RI != none && RI.bIsMortarObserver && DHPlayer(Instigator.Controller) != none)
-        {
-            DHPlayer(Instigator.Controller).ServerSaveArtilleryTarget(true);
         }
     }
 }
@@ -154,11 +133,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
     if (P != none && P.GetRoleInfo() != none && InstigatorIsLocallyControlled() && DHPlayer(Instigator.Controller) != none)
     {
-        if (P.GetRoleInfo().bIsMortarObserver)
-        {
-            DHPlayer(Instigator.Controller).QueueHint(11, true);
-        }
-        else if (P.GetRoleInfo().bIsArtilleryOfficer)
+        if (P.GetRoleInfo().bIsArtilleryOfficer)
         {
             DHPlayer(Instigator.Controller).QueueHint(12, true);
         }

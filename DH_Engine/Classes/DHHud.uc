@@ -3317,9 +3317,9 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     local DHRoleInfo                RI;
     local SpriteWidget              Widget;
     local vector                    Temp, MapCenter;
-    local string                    DistanceString, ObjLabel;
-    local float                     MyMapScale, ArrowRotation;
-    local int                       OwnerTeam, Distance, i, j;
+    local string                    ObjLabel;
+    local float                     MyMapScale;
+    local int                       OwnerTeam, i, j;
     local DHObjective               ObjA, ObjB;
     local color                     ObjLineColor;
     local UColor.HSV                HSV;
@@ -3519,52 +3519,6 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
                         Log("Unknown requestType found in AxisHelpRequests[" $ i $ "]:" @ DHGRI.AxisHelpRequests[i].RequestType);
                 }
             }
-
-            // Draw all artillery targets on the map
-            if (RI != none && (RI.bIsMortarObserver || RI.bCanUseMortars || DHPlayer(PlayerOwner).IsInArtilleryVehicle()))
-            {
-                for (i = 0; i < arraycount(DHGRI.GermanArtilleryTargets); ++i)
-                {
-                    if (DHGRI.GermanArtilleryTargets[i].bIsActive)
-                    {
-                        if (DHGRI.GermanArtilleryTargets[i].HitLocation.X != 0.0 &&
-                            DHGRI.GermanArtilleryTargets[i].HitLocation.Y != 0.0 &&
-                            DHGRI.GermanArtilleryTargets[i].HitLocation.Z == 0.0)
-                        {
-                            // Artillery targets have an arrow that points in the
-                            // direction of player's mortar hit.
-                            Temp = Normal(DHGRI.GermanArtilleryTargets[i].Location - DHGRI.GermanArtilleryTargets[i].HitLocation);
-                            ArrowRotation = class'UUnits'.static.RadiansToUnreal(Atan(Temp.X, Temp.Y));
-                            ArrowRotation -= class'UUnits'.static.DegreesToUnreal(DHGRI.OverheadOffset);
-                            TexRotator(FinalBlend(MapIconMortarArrow.WidgetTexture).Material).Rotation.Yaw = ArrowRotation;
-
-                            DHDrawIconOnMap(C, SubCoords, MapIconMortarArrow, MyMapScale, DHGRI.GermanArtilleryTargets[i].Location, MapCenter, Viewport);
-                        }
-
-                        if (RI.bCanUseMortars && PlayerOwner.Pawn != none)
-                        {
-                            Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(PlayerOwner.Pawn.Location - DHGRI.GermanArtilleryTargets[i].Location)));
-                            Distance = (Distance / 5) * 5;  // round to the nearest 5 meters
-                            DistanceString = string(Distance) @ "m";
-                        }
-
-                        if (DHGRI.GermanArtilleryTargets[i].bIsSmoke)
-                        {
-                            DHDrawIconOnMap(C, SubCoords, MapIconMortarSmokeTarget, MyMapScale, DHGRI.GermanArtilleryTargets[i].Location, MapCenter, Viewport,, DistanceString);
-                        }
-                        else
-                        {
-                            DHDrawIconOnMap(C, SubCoords, MapIconMortarHETarget, MyMapScale, DHGRI.GermanArtilleryTargets[i].Location, MapCenter, Viewport,, DistanceString);
-                        }
-
-                        // Draw hit location
-                        if (DHGRI.GermanArtilleryTargets[i].HitLocation.Z != 0.0)
-                        {
-                            DHDrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, DHGRI.GermanArtilleryTargets[i].HitLocation, MapCenter, Viewport);
-                        }
-                    }
-                }
-            }
         }
         else if (OwnerTeam == ALLIES_TEAM_INDEX)
         {
@@ -3600,52 +3554,6 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
 
                     default:
                         Log("Unknown requestType found in AlliedHelpRequests[" $ i $ "]:" @ DHGRI.AlliedHelpRequests[i].RequestType);
-                }
-            }
-
-            // Draw all artillery targets on the map
-            if (RI != none && (RI.bIsMortarObserver || RI.bCanUseMortars || DHPlayer(PlayerOwner).IsInArtilleryVehicle()))
-            {
-                for (i = 0; i < arraycount(DHGRI.AlliedArtilleryTargets); ++i)
-                {
-                    if (DHGRI.AlliedArtilleryTargets[i].bIsActive)
-                    {
-                        if (DHGRI.AlliedArtilleryTargets[i].HitLocation.X != 0.0 &&
-                            DHGRI.AlliedArtilleryTargets[i].HitLocation.Y != 0.0 &&
-                            DHGRI.AlliedArtilleryTargets[i].HitLocation.Z == 0.0)
-                        {
-                            // Artillery targets have an arrow that points in the
-                            // direction of player's mortar hit.
-                            Temp = Normal(DHGRI.AlliedArtilleryTargets[i].Location - DHGRI.AlliedArtilleryTargets[i].HitLocation);
-                            ArrowRotation = class'UUnits'.static.RadiansToUnreal(Atan(Temp.X, Temp.Y));
-                            ArrowRotation -= class'UUnits'.static.DegreesToUnreal(DHGRI.OverheadOffset);
-                            TexRotator(FinalBlend(MapIconMortarArrow.WidgetTexture).Material).Rotation.Yaw = ArrowRotation;
-
-                            DHDrawIconOnMap(C, SubCoords, MapIconMortarArrow, MyMapScale, DHGRI.AlliedArtilleryTargets[i].Location, MapCenter, Viewport);
-                        }
-
-                        if (RI.bCanUseMortars && PlayerOwner.Pawn != none)
-                        {
-                            Distance = int(class'DHUnits'.static.UnrealToMeters(VSize(PlayerOwner.Pawn.Location - DHGRI.AlliedArtilleryTargets[i].Location)));
-                            Distance = (Distance / 5) * 5;  // round to the nearest 5 meters
-                            DistanceString = string(Distance) @ "m";
-                        }
-
-                        if (DHGRI.AlliedArtilleryTargets[i].bIsSmoke)
-                        {
-                            DHDrawIconOnMap(C, SubCoords, MapIconMortarSmokeTarget, MyMapScale, DHGRI.AlliedArtilleryTargets[i].Location, MapCenter, Viewport,, DistanceString);
-                        }
-                        else
-                        {
-                            DHDrawIconOnMap(C, SubCoords, MapIconMortarHETarget, MyMapScale, DHGRI.AlliedArtilleryTargets[i].Location, MapCenter, Viewport,, DistanceString);
-                        }
-
-                        // Draw hit location
-                        if (DHGRI.AlliedArtilleryTargets[i].HitLocation.Z != 0.0)
-                        {
-                            DHDrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, DHGRI.AlliedArtilleryTargets[i].HitLocation, MapCenter, Viewport);
-                        }
-                    }
                 }
             }
         }
