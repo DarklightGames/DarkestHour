@@ -3323,6 +3323,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     local DHObjective               ObjA, ObjB;
     local color                     ObjLineColor;
     local UColor.HSV                HSV;
+    local DHVehicleWeapon           VW;
 
     if (DHGRI == none)
     {
@@ -3556,6 +3557,17 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
                         Log("Unknown requestType found in AlliedHelpRequests[" $ i $ "]:" @ DHGRI.AlliedHelpRequests[i].RequestType);
                 }
             }
+        }
+    }
+
+    // Draw artillery hit location for players manning artillery weapons.
+    if (PlayerOwner.Pawn != none && PlayerOwner.Pawn.IsA('DHVehicleWeaponPawn'))
+    {
+        VW = DHVehicleWeaponPawn(PlayerOwner.Pawn).VehWep;
+
+        if (VW != none && VW.ArtilleryHitLocation.ElapsedTime != 0)
+        {
+            DHDrawIconOnMap(C, SubCoords, MapIconMortarHit, MyMapScale, VW.ArtilleryHitLocation.HitLocation, MapCenter, Viewport);
         }
     }
 

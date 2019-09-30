@@ -104,12 +104,9 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
         }
 
         // Debug option
-        if (bDebug && P.IsA('DHMortarProjectile'))
+        if (P.IsA('DHMortarProjectile'))
         {
-            R = Rotation - CurrentAim;
-            R.Pitch = 0;
-            DHMortarProjectile(P).DebugForward = vector(R);
-            DHMortarProjectile(P).DebugRight = vect(0.0, 0.0, 1.0) cross vector(R);
+            DHMortarProjectile(P).VehicleWeapon = self;
         }
     }
 

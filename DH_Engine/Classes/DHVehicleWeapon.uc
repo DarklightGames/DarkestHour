@@ -34,12 +34,12 @@ var     byte                TracerFrequency;       // how often a tracer is load
 // Reloading
 struct ReloadStage
 {
-var     sound   Sound;         // part reload sound to play at this stage (set to 'none' if using a HUD reload animation that plays sounds via anim notifies)
-var     float   Duration;      // optional Timer duration for reload stage - if omitted or zero, Timer uses duration of part reload sound for the stage
-var     float   HUDProportion; // proportion of HUD reload indicator (the red bar) to show for this stage (0.0 to 1.0) - allows easy subclassing without overriding functions
+    var     sound   Sound;         // part reload sound to play at this stage (set to 'none' if using a HUD reload animation that plays sounds via anim notifies)
+    var     float   Duration;      // optional Timer duration for reload stage - if omitted or zero, Timer uses duration of part reload sound for the stage
+    var     float   HUDProportion; // proportion of HUD reload indicator (the red bar) to show for this stage (0.0 to 1.0) - allows easy subclassing without overriding functions
 };
 
-enum    EReloadState
+enum EReloadState
 {
     RL_ReloadingPart1,
     RL_ReloadingPart2,
@@ -62,11 +62,20 @@ var     name                        FireAttachBone;
 var     vector                      FireEffectOffset;
 var     float                       FireEffectScale;
 
+// Artillery Hit Location
+struct SArtilleryHitLocation
+{
+    var vector HitLocation;
+    var int ElapsedTime;
+};
+
+var     SArtilleryHitLocation       ArtilleryHitLocation;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
     reliable if (bNetOwner && bNetDirty && Role == ROLE_Authority)
-        NumMGMags;
+        NumMGMags, ArtilleryHitLocation;
 
     // Functions the server can call on the client that owns this actor
     reliable if (Role == ROLE_Authority)
@@ -352,7 +361,7 @@ function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
     {
         if (bIsArtillery && P.IsA('DHBallisticProjectile'))
         {
-            DHBallisticProjectile(P).bIsArtilleryProjectile = true;
+            DHBallisticProjectile(P).VehicleWeapon = self;
         }
 
         // Play firing effect & sound (unless flagged not to because we're firing multiple projectiles & only want to do this once)
