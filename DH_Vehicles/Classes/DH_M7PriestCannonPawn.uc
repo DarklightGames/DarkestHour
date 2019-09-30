@@ -20,8 +20,6 @@ function HandleTurretRotation(float DeltaTime, float YawChange, float PitchChang
     }
 }
 
-//ViewLocation=(X=21.0,Y=19.0,Z=4.0)
-
 defaultproperties
 {
     GunClass=class'DH_Vehicles.DH_M7PriestCannon'

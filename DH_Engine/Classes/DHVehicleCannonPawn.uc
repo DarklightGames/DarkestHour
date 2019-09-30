@@ -270,6 +270,7 @@ simulated function DrawHUD(Canvas C)
 simulated function DrawGunsightOverlay(Canvas C)
 {
     local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
+    local float XL, YL;
 
     if (GunsightOverlay != none)
     {
@@ -294,6 +295,14 @@ simulated function DrawGunsightOverlay(Canvas C)
             C.SetPos(0.0, 0.0);
             C.DrawTile(CannonScopeCenter, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
         }
+
+        // TODO: debug draw in the info
+        C.TextSize("E", XL, YL);
+
+        C.SetPos(0.0, 0.0);
+        C.DrawText("E:" @ int(class'UUnits'.static.UnrealToMils(VehWep.GetWeaponFireRotation().Pitch)) @ "mil");
+        C.SetPos(0.0, YL);
+        C.DrawText("T:" @ int(class'UUnits'.static.UnrealToMils(VehWep.GetWeaponFireRotation().Yaw)) @ "mil");
     }
 }
 
@@ -1038,6 +1047,32 @@ exec function LogCannon() // DEBUG (Matt: please use & report the logged result 
     {
         Log("SmokeLauncherReloadState =" @ GetEnum(enum'EReloadState', Cannon.SmokeLauncherReloadState) @ " bSmokeLauncherReloadPaused =" @ Cannon.bSmokeLauncherReloadPaused
             @ " NumSmokeLauncherRounds =" @ Cannon.NumSmokeLauncherRounds);
+    }
+}
+
+exec function CalibrateFire(int MilsMin, int MilsMax)
+{
+    local int Mils;
+    local DHBallisticProjectile BP;
+
+    if (Level.NetMode == NM_Standalone)
+    {
+        for (Mils = MilsMin; Mils < MilsMax; Mils += 10)
+        {
+            VehWep.CurrentAim.Pitch = class'UUnits'.static.MilsToUnreal(Mils);
+            VehWep.CurrentAim.Yaw = 0;
+
+            VehWep.CalcWeaponFire(false);
+            BP = DHBallisticProjectile(VehWep.SpawnProjectile(VehWep.ProjectileClass, false));
+
+            if (BP != none)
+            {
+                BP.bIsCalibrating = true;
+                BP.LifeStart = Level.TimeSeconds;
+                BP.DebugMils = Mils;
+                BP.StartLocation = BP.Location;
+            }
+        }
     }
 }
 

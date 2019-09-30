@@ -52,4 +52,5 @@ defaultproperties
     SpeedFudgeScale=1.0
     MyDamageType=class'DH_Engine.DHShellHE75mmATDamageType'
     Tag="Sprgr.Patr.34"
+    LifeSpan=20.0
 }

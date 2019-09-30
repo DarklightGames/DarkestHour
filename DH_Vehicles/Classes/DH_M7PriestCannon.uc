@@ -40,7 +40,6 @@ defaultproperties
     nProjectileDescriptions(1)="M60 WP"
     nProjectileDescriptions(2)="M67 HEAT"
 
-
     InitialPrimaryAmmo=58
     InitialSecondaryAmmo=3
     InitialTertiaryAmmo=8

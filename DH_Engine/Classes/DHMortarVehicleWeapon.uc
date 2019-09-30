@@ -91,7 +91,6 @@ function ServerSetFiringSettings(byte PackedSettings)
 function Projectile SpawnProjectile(class<Projectile> ProjClass, bool bAltFire)
 {
     local Projectile P;
-    local rotator    R;
 
     P = super.SpawnProjectile(ProjClass, bAltFire);
 

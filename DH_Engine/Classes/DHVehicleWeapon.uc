@@ -71,6 +71,15 @@ struct SArtilleryHitLocation
 
 var     SArtilleryHitLocation       ArtilleryHitLocation;
 
+struct SRangeTableRecord
+{
+    var float Pitch;    // Pitch, in unreal rotation units
+    var float Range;    // Range, in unreal units
+    var float TTI;      // Time-to-impact in seconds
+};
+
+var array<SRangeTableRecord>    RangeTable;
+
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -426,6 +435,11 @@ function vector GetProjectileFireLocation(class<Projectile> ProjClass)
     }
 
     return WeaponFireLocation;
+}
+
+simulated function rotator GetWeaponFireRotation()
+{
+    return rotator(vector(CurrentAim) >> Rotation);
 }
 
 // New function to calculate the firing direction for a projectile, including any random spread (allows easy subclassing)
