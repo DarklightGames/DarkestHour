@@ -5,8 +5,31 @@
 
 class DHCommandMenu_SquadLeader extends DHCommandMenu;
 
-var localized string NoPlayerInLineOfSight;
-var localized string InEnemyTerritory;
+var localized string   InEnemyTerritory;
+var localized string   FireSupportText;
+var           Material FireSupportIcon;
+
+function bool IsPlayerInSight()
+{
+    local DHPlayer PC;
+    local DHPawn P;
+
+    PC = GetPlayerController();
+    P = DHPawn(MenuObject);
+
+    return PC != none && P != none && P != PC.Pawn && P.Health > 0 && PC.GetTeamNum() == P.GetTeamNum();
+}
+
+function Setup()
+{
+    super.Setup();
+
+    if (Options.Length >= 4 && !IsPlayerInSight())
+    {
+        Options[3].ActionText = FireSupportText;
+        Options[3].Material = FireSupportIcon;
+    }
+}
 
 function OnSelect(int Index, vector Location)
 {
@@ -47,8 +70,9 @@ function OnSelect(int Index, vector Location)
         case 3:
             P = DHPawn(MenuObject);
 
-            if (P != none)
+            if (P != none && P.PlayerReplicationInfo != none)
             {
+                // Player Menu
                 OtherPRI = DHPlayerReplicationInfo(P.PlayerReplicationInfo);
 
                 if (class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, OtherPRI))
@@ -60,6 +84,12 @@ function OnSelect(int Index, vector Location)
                     Interaction.PushMenu("DH_Engine.DHCommandMenu_SquadManageNonMember", MenuObject);
                 }
             }
+            else
+            {
+                // Fire Support
+                Interaction.PushMenu("DH_Engine.DHCommandMenu_FireSupport");
+            }
+
             return;
         case 4:
             Interaction.PushMenu("DH_Engine.DHCommandMenu_Spotting", MenuObject);
@@ -100,16 +130,10 @@ function GetOptionRenderInfo(int OptionIndex, out OptionRenderInfo ORI)
                 ORI.InfoColor = class'UColor'.default.Yellow;
             }
             break;
-        case 3: // Player Menu
+        case 3: // Player Menu / Fire Support
             if (OtherPawn != none && OtherPawn.PlayerReplicationInfo != none)
             {
                 ORI.OptionName = OtherPawn.PlayerReplicationInfo.PlayerName;
-            }
-            else
-            {
-                ORI.OptionName = "";
-                ORI.InfoText = default.NoPlayerInLineOfSight;
-                ORI.InfoColor = class'UColor'.default.Yellow;
             }
             break;
         default:
@@ -137,8 +161,6 @@ function bool IsOptionDisabled(int OptionIndex)
         return DHPawn(PC.Pawn) == none || PC.SquadReplicationInfo == none || !PC.SquadReplicationInfo.bAreRallyPointsEnabled;
     case 2: // Construction
         return DHPawn(PC.Pawn) == none || GRI == none || !GRI.bAreConstructionsEnabled;
-    case 3: // Player
-        return DHPawn(MenuObject) == none || DHPawn(MenuObject) == PC.Pawn || DHPawn(MenuObject).Health <= 0 || PC.GetTeamNum() != DHPawn(MenuObject).GetTeamNum();
     default:
         return false;
     }
@@ -146,8 +168,9 @@ function bool IsOptionDisabled(int OptionIndex)
 
 defaultproperties
 {
-    NoPlayerInLineOfSight="No player in sights"
     InEnemyTerritory="In enemy territory"
+    FireSupportText="Fire Support"
+    FireSupportIcon=Texture'DH_InterfaceArt2_tex.Icons.fire' // TODO: !
     Options(0)=(ActionText="Create Rally Point",Material=Texture'DH_InterfaceArt2_tex.Icons.rally_point')
     Options(1)=(ActionText="Fire",Material=Texture'DH_InterfaceArt2_tex.Icons.fire')
     Options(2)=(ActionText="Construction",Material=Texture'DH_InterfaceArt2_tex.Icons.construction')
