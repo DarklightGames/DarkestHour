@@ -8,28 +8,16 @@ class DHMapMarker_Ruler extends DHMapMarker
 
 static function bool CanPlayerUse(DHPlayerReplicationInfo PRI)
 {
-    local DHRoleInfo RI;
-    local DHPlayer PC;
-
-    RI = DHRoleInfo(PRI.RoleInfo);
-    PC = DHPlayer(PRI.Owner);
-
-    /*
-    if (RI.bCanUseMortars || RI.bCanBeTankCrew)
-    {
-        return true;
-    }
-    */
-
     return true;
 }
 
+// Override this to have a caption accompany the marker.
 static function string GetCaptionString(DHPlayer PC, vector WorldLocation)
 {
     local vector PlayerLocation;
     local int Distance;
 
-    if (PC == none || PC.Pawn != none)
+    if (PC != none && PC.Pawn != none)
     {
         PlayerLocation = PC.Pawn.Location;
         PlayerLocation.Z = 0.0;
@@ -54,3 +42,4 @@ defaultproperties
     bIsUnique=true
     bIsPersonal=true
 }
+
