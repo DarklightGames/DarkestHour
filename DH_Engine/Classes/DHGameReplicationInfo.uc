@@ -1385,7 +1385,7 @@ simulated function GetMapMarkerIndices(out array<int> Indices, int TeamIndex, in
             {
                 if (AxisMapMarkers[i].MapMarkerClass != none &&
                     (AxisMapMarkers[i].ExpiryTime == -1 || AxisMapMarkers[i].ExpiryTime > ElapsedTime) &&
-                    (AxisMapMarkers[i].SquadIndex == 255 || AxisMapMarkers[i].SquadIndex == SquadIndex))
+                    (AxisMapMarkers[i].MapMarkerClass.default.bIsVisibleToTeam || AxisMapMarkers[i].SquadIndex == 255 || AxisMapMarkers[i].SquadIndex == SquadIndex))
                 {
                     Indices[Indices.Length] = i;
                 }
@@ -1396,7 +1396,7 @@ simulated function GetMapMarkerIndices(out array<int> Indices, int TeamIndex, in
             {
                 if (AlliesMapMarkers[i].MapMarkerClass != none &&
                     (AlliesMapMarkers[i].ExpiryTime == -1 || AlliesMapMarkers[i].ExpiryTime > ElapsedTime) &&
-                    (AlliesMapMarkers[i].SquadIndex == 255 || AlliesMapMarkers[i].SquadIndex == SquadIndex))
+                    (AlliesMapMarkers[i].MapMarkerClass.default.bIsVisibleToTeam || AlliesMapMarkers[i].SquadIndex == 255 || AlliesMapMarkers[i].SquadIndex == SquadIndex))
                 {
                     Indices[Indices.Length] = i;
                 }
@@ -1938,6 +1938,7 @@ defaultproperties
     MapMarkerClassNames(8)="DH_Engine.DHMapMarker_Enemy_ATGun"
     MapMarkerClassNames(9)="DH_Engine.DHMapMarker_Friendly_PlatoonHQ"
     MapMarkerClassNames(10)="DH_Engine.DHMapMarker_Friendly_Supplies"
+    MapMarkerClassNames(11)="DH_Engine.DHMapMarker_FireSupport"
 
     // Danger Zone
     // The actual defaults reside in DH_LevelInfo. These are fallbacks in

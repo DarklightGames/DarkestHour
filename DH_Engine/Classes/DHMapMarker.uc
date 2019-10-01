@@ -18,6 +18,7 @@ var bool                bShouldOverwriteGroup;  // If true, adding this map mark
 var bool                bIsUnique;              // If true, only one of this type may be active for the team or squad (if squad specific)
 var bool                bShouldDrawBeeLine;     // If true, draw a line from the player to this marker on the situation map.
 var bool                bIsPersonal;
+var bool                bIsVisibleToTeam;       // If true, this marker is visible to everyone on the team (used for squad markers that we want everyone to see)
 
 // Override this function to determine if this map marker can be used. This
 // function evaluated once at the beginning of the map.

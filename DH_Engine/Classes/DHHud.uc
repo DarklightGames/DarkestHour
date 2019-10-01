@@ -3771,7 +3771,7 @@ function DrawMapMarkerOnMap(Canvas C, AbsoluteCoordsInfo SubCoords, float MyMapS
     MapMarkerIcon.TextureCoords = MapMarkerClass.default.IconCoords;
     MapMarkerIcon.Tints[AXIS_TEAM_INDEX] = MapMarkerClass.default.IconColor;
 
-    DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, Target, MapCenter, Viewport,, Caption);
+    DHDrawIconOnMap(C, SubCoords, MapMarkerIcon, MyMapScale, Target, MapCenter, Viewport,, Caption,, -1);
 
     if (P != none && MapMarkerClass.default.bShouldDrawBeeLine)
     {
@@ -5096,8 +5096,12 @@ function DHDrawIconOnMap(
     DrawSpriteWidgetClipped(C, Icon, LevelCoords, true, XL, YL, true);
 
     // Draw title
-    if (Title != "" && DHGRI != none && ObjectiveIndex < arraycount(DHGRI.DHObjectives) && ObjectiveIndex >= 0
-        && DHGRI.DHObjectives[ObjectiveIndex] != none && !DHGRI.DHObjectives[ObjectiveIndex].bDoNotDisplayTitleOnSituationMap)
+    if (Title != "" &&
+        DHGRI != none &&
+        (ObjectiveIndex == -1 ||
+        (ObjectiveIndex < arraycount(DHGRI.DHObjectives) &&
+        ObjectiveIndex >= 0 && DHGRI.DHObjectives[ObjectiveIndex] != none &&
+        !DHGRI.DHObjectives[ObjectiveIndex].bDoNotDisplayTitleOnSituationMap)))
     {
         // Setup text info
         MapTexts.text = Title;
@@ -5119,7 +5123,10 @@ function DHDrawIconOnMap(
         UpdateMapIconLabelCoords(label_coords, GRI, ObjectiveIndex);
 
         // Update Y offset
-        MapTexts.OffsetY += DHGRI.DHObjectives[ObjectiveIndex].LabelCoords.Y1 - label_coords.Y1;
+        if (ObjectiveIndex >= 0)
+        {
+            MapTexts.OffsetY += DHGRI.DHObjectives[ObjectiveIndex].LabelCoords.Y1 - label_coords.Y1;
+        }
 
         // Hack to make the text smaller on the overview for objectives
         OldFontXScale = C.FontScaleX;

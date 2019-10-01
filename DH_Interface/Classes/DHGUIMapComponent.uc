@@ -79,6 +79,11 @@ function SetViewport(vector Origin, int ZoomLevel)
     Viewport = ConstrainViewport(class'UBox'.static.Create(Origin, GetZoomScale(ZoomLevel)), vect(0, 0, 0), vect(1, 1, 0));
 }
 
+function vector GetViewportOrigin()
+{
+    return (Viewport.Min + Viewport.Max) / 2.0;
+}
+
 function UpdateSpawnPointPositions()
 {
     local int i;
