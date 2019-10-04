@@ -11,8 +11,8 @@ class DHRocketProjectile extends DHCannonShellHEAT // originally extended DHAnti
 
 var     float               StraightFlightTime; // how long the rocket has propellant & flies straight
 var     bool                bHasSmokeTrail; // some rockets - like the PIAT bomb - don't issue smoke trails
-var     class<Effects>      RocketSmokeTrailClass;         //modifying RO code here to allow custom smoke trails
-var     Effects             SmokeTrail;
+var     class<Emitter>      RocketSmokeTrailClass;         //modifying RO code here to allow custom smoke trails
+var     Emitter             SmokeTrail;
 
 // Modified to spawn a rocket smoke trail & set a timer to cut off the rocket after a set time
 simulated function PostBeginPlay()
@@ -158,6 +158,7 @@ defaultproperties
     ExplosionSoundVolume=5.0 // seems high but TransientSoundVolume is only 0.3, compared to 1.0 for a shell
 
 //  Override unwanted defaults now inherited from DHCannonShellHEAT & DHCannonShell:
+    bHasTracer=true
     bHasSmokeTrail=true
     bHasShellTrail=false
     ShakeRotMag=(Y=50.0,Z=200.0)
