@@ -289,6 +289,12 @@ function SendMetricsEvent(string VoteType, int Result)
                                    .Put("round_state", RoundState));
 }
 
+// The number of players that cast a vote.
+function int GetVoterCount()
+{
+    return VoterCount;
+}
+
 function int GetVotesThresholdCount(DarkestHourGame Game)
 {
     if (Game == none)
@@ -298,7 +304,7 @@ function int GetVotesThresholdCount(DarkestHourGame Game)
 
     if (StartedAt != none)
     {
-        return Ceil(VoterCount * GetVotesThresholdPercent());
+        return Ceil(GetVoterCount() * GetVotesThresholdPercent());
     }
     else
     {
