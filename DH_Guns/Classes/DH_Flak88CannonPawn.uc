@@ -17,7 +17,6 @@ defaultproperties
     GunsightSize=0.778 // 17.5 degrees visible FOV at 4x magnification (ZF20e sight)
     OverlayCorrectionX=-3
     RangePositionX=0.02
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Germ'
     AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.Tigershell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.Tigershell_reload'
 }

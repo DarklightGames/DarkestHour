@@ -20,7 +20,6 @@ defaultproperties
     DriveAnim="crouch_idle_binoc"
     GunsightOverlay=Texture'DH_VehicleOptics_tex.US.57mmGun_sight_background'    // TODO: REPLACE
     GunsightSize=0.542    // TODO: REPLACE
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Germ'
     AmmoShellTexture=Texture'DH_LeIG18_tex.HUD.leig18_he'
     AmmoShellReloadTexture=Texture'DH_LeIG18_tex.HUD.leig18_he_reload'
 }
