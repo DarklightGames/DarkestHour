@@ -263,6 +263,31 @@ simulated function DrawHUD(Canvas C)
     }
 }
 
+simulated function DrawRangeTable(Canvas C)
+{
+    local int i;
+    local float X, Y;
+    local float XL, YL;
+
+    if (Cannon == none || Cannon.RangeTable.Length == 0)
+    {
+        return;
+    }
+
+    C.TextSize("A", XL, YL);
+
+    Y = (C.SizeY / 2) - (Cannon.RangeTable.Length * YL / 2);
+
+    for (i = 0; i < Cannon.RangeTable.Length; ++i)
+    {
+        C.SetPos(X, Y);
+
+        C.DrawText(string(int(Cannon.RangeTable[i].Mils)) @ "mils" @ "-" @ int(Cannon.RangeTable[i].Range) $ "m");
+
+        Y += YL;
+    }
+}
+
 // New function to draw the gunsight overlay plus any additional overlay for aiming reticle - using a different drawing method to RO
 // The setting for GunsightSize is used to calculate how much of the gunsight texture to draw, with 1.0 meaning it's expanded to fill the screen width
 // The DrawTile arguments are manipulated so whole screen gets drawn over, without need for separately drawing black rectangles to fill the edges, as in RO
@@ -303,6 +328,8 @@ simulated function DrawGunsightOverlay(Canvas C)
         C.DrawText("E:" @ int(class'UUnits'.static.UnrealToMils(VehWep.GetWeaponFireRotation().Pitch)) @ "mil");
         C.SetPos(0.0, YL);
         C.DrawText("T:" @ int(class'UUnits'.static.UnrealToMils(VehWep.GetWeaponFireRotation().Yaw)) @ "mil");
+
+        DrawRangeTable(C);
     }
 }
 

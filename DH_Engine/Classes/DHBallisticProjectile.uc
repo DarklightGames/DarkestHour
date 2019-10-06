@@ -26,7 +26,6 @@ simulated function BlowUp(vector HitLocation)
 function SetHitLocation(vector HitLocation)
 {
     local float Distance;
-    local float TTI;
 
     if (VehicleWeapon != none)
     {

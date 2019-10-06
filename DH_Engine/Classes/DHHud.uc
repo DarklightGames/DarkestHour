@@ -3380,10 +3380,6 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
     // Get smaller font to draw the map scale in
     C.Font = C.TinyFont;
 
-    // Draw map scale indicator
-    MapScaleText.Text = "Grid Square: ~" $ string(int(GetMapMeterScale())) $ "m";
-    DrawTextWidgetClipped(C, MapScaleText, SubCoords);
-
     // Set the font to be used to draw objective text
     C.Font = GetSmallMenuFont(C);
 

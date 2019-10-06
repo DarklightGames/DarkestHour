@@ -73,8 +73,8 @@ var     SArtilleryHitLocation       ArtilleryHitLocation;
 
 struct SRangeTableRecord
 {
-    var float Pitch;    // Pitch, in unreal rotation units
-    var float Range;    // Range, in unreal units
+    var float Mils;     // Pitch, in mils.
+    var float Range;    // Range, in meters.
     var float TTI;      // Time-to-impact in seconds
 };
 
