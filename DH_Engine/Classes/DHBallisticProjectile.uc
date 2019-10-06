@@ -10,10 +10,6 @@ var bool    bIsArtilleryProjectile; // Whether or not we report our hits to be t
                                     // This should not be set in defaultproperties, but should instead be
                                     // set in whatever logic block that spawns the projectile.
 
-
-var float   HullFireChance;
-var float   EngineFireChance;
-
 simulated function BlowUp(vector HitLocation)
 {
     if (Role == ROLE_Authority && bIsArtilleryProjectile)
@@ -194,7 +190,5 @@ function Controller GetClosestArtilleryTargetController()
 
 defaultproperties
 {
-    HullFireChance=0.0
-    EngineFireChance=0.0
 }
 

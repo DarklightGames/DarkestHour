@@ -118,7 +118,7 @@ defaultproperties
     bExplodesOnHittingBody=true
     bExplodesOnHittingWater=false
 
-    StraightFlightTime=0.2
+    StraightFlightTime=0.2 //time that smoke trail and corona (tracer) effect are activated after launch
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'
     RocketSmokeTrailClass=class'ROEffects.PanzerfaustTrail'
     PenetrationMag=250.0
@@ -145,6 +145,10 @@ defaultproperties
     BallisticCoefficient=0.05
     Damage=300.0
     DamageRadius=180.0
+
+    HullFireChance=0.5
+    EngineFireChance=0.75
+
     ExplosionDecal=class'ROEffects.RocketMarkDirt'
     ExplosionDecalSnow=class'ROEffects.RocketMarkSnow'
     LightType=LT_Steady
