@@ -3405,6 +3405,35 @@ exec function ChangeRoundTime(int Minutes, optional string Type)
     }
 }
 
+exec function ChangeSetupPhaseTime(int Minutes, int Seconds, optional string OperationType)
+{
+    local DHSetupPhaseManager SPM;
+    local int TimeInSeconds;
+
+    if (GRI == none || !GRI.bIsInSetupPhase)
+    {
+        return;
+    }
+
+    TimeInSeconds = Max(0, Minutes) * 60 + Max(0, Seconds);
+
+    foreach AllActors(class'DHSetupPhaseManager', SPM)
+    {
+        switch (OperationType)
+        {
+            case "Add":
+                SPM.ModifySetupPhaseDuration(TimeInSeconds);
+                break;
+            case "Subtract":
+                SPM.ModifySetupPhaseDuration(-TimeInSeconds);
+                break;
+            default:
+                SPM.ModifySetupPhaseDuration(TimeInSeconds, true);
+                break;
+        }
+    }
+}
+
 // Override to allow more than 32 bots (but not too many, 128 max)
 exec function AddBots(int num)
 {
