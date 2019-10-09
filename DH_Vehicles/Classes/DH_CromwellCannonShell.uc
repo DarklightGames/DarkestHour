@@ -7,6 +7,31 @@ class DH_CromwellCannonShell extends DHCannonShell;
 
 defaultproperties
 {
+    Speed=37358.0 //TODO: pls, check
+    MaxSpeed=37358.0
+    ShellDiameter=7.5
+    BallisticCoefficient=1.735 //TODO: double check with Sherman 75
+
+    //Damage
+    ImpactDamage=540
+    ShellImpactDamage=class'DH_Vehicles.DH_ShermanCannonShellDamageAP'
+    HullFireChance=0.37
+    EngineFireChance=0.55
+
+    //Penetration
+    DHPenetrationTable(0)=8.8
+    DHPenetrationTable(1)=8.5
+    DHPenetrationTable(2)=8.1
+    DHPenetrationTable(3)=7.7
+    DHPenetrationTable(4)=7.3
+    DHPenetrationTable(5)=6.9
+    DHPenetrationTable(6)=6.5
+    DHPenetrationTable(7)=6.2
+    DHPenetrationTable(8)=5.9
+    DHPenetrationTable(9)=5.3
+    DHPenetrationTable(10)=4.7
+
+    //Gunsight adjustment
     MechanicalRanges(0)=(RangeValue=16.0)
     MechanicalRanges(1)=(Range=200,RangeValue=36.0)
     MechanicalRanges(2)=(Range=400,RangeValue=68.0)
@@ -25,21 +50,4 @@ defaultproperties
     MechanicalRanges(15)=(Range=3000,RangeValue=938.0)
     MechanicalRanges(16)=(Range=3200,RangeValue=1064.0)
     bMechanicalAiming=true
-    DHPenetrationTable(0)=8.8
-    DHPenetrationTable(1)=8.5
-    DHPenetrationTable(2)=8.1
-    DHPenetrationTable(3)=7.7
-    DHPenetrationTable(4)=7.3
-    DHPenetrationTable(5)=6.9
-    DHPenetrationTable(6)=6.5
-    DHPenetrationTable(7)=6.2
-    DHPenetrationTable(8)=5.9
-    DHPenetrationTable(9)=5.3
-    DHPenetrationTable(10)=4.7
-    ShellDiameter=7.5
-    ShellImpactDamage=class'DH_Vehicles.DH_ShermanCannonShellDamageAP'
-    ImpactDamage=540
-    BallisticCoefficient=1.735
-    Speed=37358.0
-    MaxSpeed=37358.0
 }

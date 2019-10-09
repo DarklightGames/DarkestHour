@@ -7,6 +7,35 @@ class DH_LeIG18CannonShellHEAT extends DHCannonShellHEAT;
 
 defaultproperties
 {
+    Speed=12674.0      // 210 m/s
+    MaxSpeed=12674.0
+    SpeedFudgeScale=1.0
+    ShellDiameter=7.5
+    BallisticCoefficient=2.1 //TODO: pls, check
+
+    //Damage
+    ImpactDamage=650 //same as Panzer III M HEAT
+    Damage=450.0
+    DamageRadius=200.0
+    HullFireChance=50.0
+    EngineFireChance=75.0
+
+    bDebugInImperial=false
+
+    //Penetration
+    DHPenetrationTable(0)=7.5
+    DHPenetrationTable(1)=7.5
+    DHPenetrationTable(2)=7.5
+    DHPenetrationTable(3)=7.5
+    DHPenetrationTable(4)=7.5
+    DHPenetrationTable(5)=7.5
+    DHPenetrationTable(6)=7.5
+    DHPenetrationTable(7)=7.5
+    DHPenetrationTable(8)=7.5
+    DHPenetrationTable(9)=7.5
+    DHPenetrationTable(10)=7.5
+
+    //Gunsight adjustments
     MechanicalRanges(1)=(Range=100,RangeValue=28.0)
     MechanicalRanges(2)=(Range=200,RangeValue=40.0)
     MechanicalRanges(3)=(Range=300,RangeValue=58.0)
@@ -28,25 +57,4 @@ defaultproperties
     MechanicalRanges(19)=(Range=1900,RangeValue=438.0)
     MechanicalRanges(20)=(Range=2000,RangeValue=468.0)
     bMechanicalAiming=true
-    DHPenetrationTable(0)=7.5
-    DHPenetrationTable(1)=7.5
-    DHPenetrationTable(2)=7.5
-    DHPenetrationTable(3)=7.5
-    DHPenetrationTable(4)=7.5
-    DHPenetrationTable(5)=7.5
-    DHPenetrationTable(6)=7.5
-    DHPenetrationTable(7)=7.5
-    DHPenetrationTable(8)=7.5
-    DHPenetrationTable(9)=7.5
-    DHPenetrationTable(10)=7.5
-    ShellDiameter=7.5
-    bDebugInImperial=false
-    PenetrationMag=1000.0
-    ImpactDamage=455
-    BallisticCoefficient=2.1
-    Speed=5552.384      // 92 m/s
-    MaxSpeed=5552.384
-    Damage=415.0
-    DamageRadius=1350.0
-    SpeedFudgeScale=1.0
 }

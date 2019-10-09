@@ -7,6 +7,7 @@ class DH_JacksonCannonShell_Early extends DH_JacksonCannonShell;
 
 defaultproperties
 {
+    //Penetration
     DHPenetrationTable(0)=16.4
     DHPenetrationTable(1)=15.6
     DHPenetrationTable(2)=15.0

@@ -12,8 +12,8 @@ defaultproperties
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
 
     VehicleDamageModifier=0.75
-    TankDamageModifier=0.75
-    APCDamageModifier=0.5
+    TankDamageModifier=0.50
+    APCDamageModifier=0.75
     TreadDamageModifier=0.5
 
     PawnDamageEmitter=class'ROEffects.ROBloodPuffLarge'

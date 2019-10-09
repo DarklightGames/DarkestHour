@@ -7,6 +7,38 @@ class DH_PantherCannonShellAPCR extends DHGermanCannonShell;
 
 defaultproperties
 {
+    RoundType=RT_APDS
+    Speed=67594.0
+    MaxSpeed=67594.0
+    ShellDiameter=5.0 //sub-caliber round
+    BallisticCoefficient=1.52
+    SpeedFudgeScale=0.4
+
+    //Damage
+    ImpactDamage=475
+    ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
+    bShatterProne=true
+    HullFireChance=0.34
+    EngineFireChance=0.48
+
+    //Effects
+    bDebugInImperial=false
+    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
+    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
+
+    //Penetration
+    DHPenetrationTable(0)=25.3
+    DHPenetrationTable(1)=23.4
+    DHPenetrationTable(2)=21.6
+    DHPenetrationTable(3)=19.9
+    DHPenetrationTable(4)=16.4
+    DHPenetrationTable(5)=15.0
+    DHPenetrationTable(6)=13.5
+    DHPenetrationTable(7)=11.4
+    DHPenetrationTable(8)=10.6
+    DHPenetrationTable(9)=9.2
+    DHPenetrationTable(10)=7.8
+
     MechanicalRanges(1)=(Range=100,RangeValue=4.0)
     MechanicalRanges(2)=(Range=200,RangeValue=12.0)
     MechanicalRanges(3)=(Range=300,RangeValue=18.0)
@@ -33,27 +65,4 @@ defaultproperties
     MechanicalRanges(24)=(Range=2800,RangeValue=227.0)
     MechanicalRanges(25)=(Range=3000,RangeValue=252.0)
     bMechanicalAiming=true
-    DHPenetrationTable(0)=25.3
-    DHPenetrationTable(1)=23.4
-    DHPenetrationTable(2)=21.6
-    DHPenetrationTable(3)=19.9
-    DHPenetrationTable(4)=16.4
-    DHPenetrationTable(5)=15.0
-    DHPenetrationTable(6)=13.5
-    DHPenetrationTable(7)=11.4
-    DHPenetrationTable(8)=10.6
-    DHPenetrationTable(9)=9.2
-    DHPenetrationTable(10)=7.8
-    RoundType=RT_APDS
-    bShatterProne=true
-    SpeedFudgeScale=0.4
-    ShellDiameter=5.0 //sub-caliber round
-    bDebugInImperial=false
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    ShellImpactDamage=class'DH_Vehicles.DH_PantherCannonShellDamageAPCR'
-    ImpactDamage=475
-    BallisticCoefficient=1.52
-    Speed=67594.0
-    MaxSpeed=67594.0
-    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
 }

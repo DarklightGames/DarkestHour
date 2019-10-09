@@ -6,7 +6,41 @@
 class DH_Tiger2BCannonShellAPCR extends DHCannonShellHVAP;
 
 defaultproperties
+
 {
+    Speed=68198.0
+    MaxSpeed=68198.0
+    SpeedFudgeScale=0.4
+    ShellDiameter=8.8
+    BallisticCoefficient=1.527 //TODO: find correct BC - this is grossly incorrect
+
+    //Damage
+    bShatterProne=true
+    ImpactDamage=545
+    HullFireChance=0.38
+    EngineFireChance=0.55
+
+    //Effects
+    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
+    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
+
+    bDebugInImperial=false
+
+    //Penetration
+    DHPenetrationTable(0)=29.9
+    DHPenetrationTable(1)=29.8
+    DHPenetrationTable(2)=29.6
+    DHPenetrationTable(3)=27.6
+    DHPenetrationTable(4)=26.9
+    DHPenetrationTable(5)=24.4
+    DHPenetrationTable(6)=22.1
+    DHPenetrationTable(7)=21.3
+    DHPenetrationTable(8)=19.4
+    DHPenetrationTable(9)=18.3
+    DHPenetrationTable(10)=17.6
+
+    //Gunsight adjustments
+    bMechanicalAiming=true
     MechanicalRanges(0)=(RangeValue=8.0)
     MechanicalRanges(1)=(Range=100,RangeValue=12.0)
     MechanicalRanges(2)=(Range=200,RangeValue=16.0)
@@ -38,25 +72,4 @@ defaultproperties
     MechanicalRanges(28)=(Range=3600,RangeValue=262.0)
     MechanicalRanges(29)=(Range=3800,RangeValue=282.0)
     MechanicalRanges(30)=(Range=4000,RangeValue=304.0)
-    bMechanicalAiming=true
-    DHPenetrationTable(0)=29.9
-    DHPenetrationTable(1)=29.8
-    DHPenetrationTable(2)=29.6
-    DHPenetrationTable(3)=27.6
-    DHPenetrationTable(4)=26.9
-    DHPenetrationTable(5)=24.4
-    DHPenetrationTable(6)=22.1
-    DHPenetrationTable(7)=21.3
-    DHPenetrationTable(8)=19.4
-    DHPenetrationTable(9)=18.3
-    DHPenetrationTable(10)=17.6
-    ShellDiameter=8.8
-    bDebugInImperial=false
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    ImpactDamage=545
-    BallisticCoefficient=1.527
-    Speed=68198.0
-    MaxSpeed=68198.0
-    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
-    //nProjectileDescription="PzGr.40/43"
 }

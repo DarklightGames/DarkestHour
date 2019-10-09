@@ -7,6 +7,43 @@ class DH_Sdkfz2342CannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
+    Speed=50392.0
+    MaxSpeed=50392.0
+    ShellDiameter=5.0
+    BallisticCoefficient=1.19
+
+    //Damage
+    PenetrationMag=565.0
+    ImpactDamage=315
+    Damage=260.0
+    DamageRadius=565.0
+    MyDamageType=class'DH_Engine.DHShellHE50mmDamageType'
+    HullFireChance=0.25
+    EngineFireChance=0.32
+
+    bDebugInImperial=false
+
+    //Effects
+    ShellHitDirtEffectClass=class'ROEffects.TankHEHitDirtEffect'
+    ShellHitSnowEffectClass=class'ROEffects.TankHEHitSnowEffect'
+    ShellHitWoodEffectClass=class'ROEffects.TankHEHitWoodEffect'
+    ShellHitRockEffectClass=class'ROEffects.TankHEHitRockEffect'
+    ShellHitWaterEffectClass=class'ROEffects.TankHEHitWaterEffect'
+
+    //Penetration
+    DHPenetrationTable(0)=2.7
+    DHPenetrationTable(1)=2.5
+    DHPenetrationTable(2)=2.1
+    DHPenetrationTable(3)=1.9
+    DHPenetrationTable(4)=1.6
+    DHPenetrationTable(5)=1.3
+    DHPenetrationTable(6)=1.0
+    DHPenetrationTable(7)=0.9
+    DHPenetrationTable(8)=0.7
+    DHPenetrationTable(9)=0.5
+    DHPenetrationTable(10)=0.3
+
+    //Gunsight adjustments
     MechanicalRanges(1)=(Range=100,RangeValue=8.0)
     MechanicalRanges(2)=(Range=200,RangeValue=18.0)
     MechanicalRanges(3)=(Range=300,RangeValue=29.0)
@@ -28,30 +65,4 @@ defaultproperties
     MechanicalRanges(19)=(Range=1900,RangeValue=228.0)
     MechanicalRanges(20)=(Range=2000,RangeValue=248.0)
     bMechanicalAiming=true
-    DHPenetrationTable(0)=2.7
-    DHPenetrationTable(1)=2.5
-    DHPenetrationTable(2)=2.1
-    DHPenetrationTable(3)=1.9
-    DHPenetrationTable(4)=1.6
-    DHPenetrationTable(5)=1.3
-    DHPenetrationTable(6)=1.0
-    DHPenetrationTable(7)=0.9
-    DHPenetrationTable(8)=0.7
-    DHPenetrationTable(9)=0.5
-    DHPenetrationTable(10)=0.3
-    ShellDiameter=5.0
-    bDebugInImperial=false
-    PenetrationMag=565.0
-    ImpactDamage=315
-    ShellHitDirtEffectClass=class'ROEffects.TankHEHitDirtEffect'
-    ShellHitSnowEffectClass=class'ROEffects.TankHEHitSnowEffect'
-    ShellHitWoodEffectClass=class'ROEffects.TankHEHitWoodEffect'
-    ShellHitRockEffectClass=class'ROEffects.TankHEHitRockEffect'
-    ShellHitWaterEffectClass=class'ROEffects.TankHEHitWaterEffect'
-    BallisticCoefficient=1.19
-    Speed=50392.0
-    MaxSpeed=50392.0
-    Damage=260.0
-    DamageRadius=565.0
-    MyDamageType=class'DH_Engine.DHShellHE50mmDamageType'
 }

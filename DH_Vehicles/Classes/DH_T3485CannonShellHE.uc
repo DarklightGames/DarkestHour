@@ -7,18 +7,22 @@ class DH_T3485CannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
-    // Have changed several damage & similar properties to broadly comparable DH HE shells, as the RO values were at odds with them
-    ShellDiameter=7.62
-    BallisticCoefficient=1.55
     Speed=39832.0 // 660 m/s
     MaxSpeed=39832.0
+    ShellDiameter=7.62
+    BallisticCoefficient=1.55 //find correct BC
+
+    //Damage
+    ImpactDamage=510
     Damage=430.0
     DamageRadius=1300.0
-    ImpactDamage=510
     PenetrationMag=1000.0
+    HullFireChance=0.35
+    EngineFireChance=0.5
 
     bDebugInImperial=false
 
+    //Penetration
     DHPenetrationTable(0)=4.0
     DHPenetrationTable(1)=3.8
     DHPenetrationTable(2)=3.4

@@ -7,9 +7,8 @@ class DH_6PounderCannonShellHE extends DH_AT57CannonShellHE;
 
 defaultproperties
 {
-
+    //Gunsight adjustments
     bMechanicalAiming=true
-
     MechanicalRanges(1)=(Range=100,RangeValue=1.0)
     MechanicalRanges(2)=(Range=200,RangeValue=2.0)
     MechanicalRanges(3)=(Range=300,RangeValue=3.0)
