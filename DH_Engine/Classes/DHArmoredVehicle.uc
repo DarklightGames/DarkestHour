@@ -2305,10 +2305,6 @@ defaultproperties
     AmmoIgnitionProbability=0.75
 
     // Vehicle fires
-    //HullFireChance=0.25
-    //HullFireHEATChance=0.5
-    //EngineFireChance=0.5
-    //EngineFireHEATChance=0.85
     EngineToHullFireChance=0.05
     PlayerFireDamagePer2Secs=15.0
     FireDetonationChance=0.07
