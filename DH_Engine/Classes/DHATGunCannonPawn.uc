@@ -32,6 +32,9 @@ function ServerToggleVehicleLock();
 defaultproperties
 {
     bMustBeTankCrew=false
+    bManualTraverseOnly=true
+    ManualMinRotateThreshold=0.5
+    ManualMaxRotateThreshold=3.0
     UnbuttonedPositionIndex=0
     RaisedPositionIndex=1
     BinocPositionIndex=2
