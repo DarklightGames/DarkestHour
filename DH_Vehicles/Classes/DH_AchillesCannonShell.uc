@@ -7,6 +7,30 @@ class DH_AchillesCannonShell extends DHCannonShell;
 
 defaultproperties
 {
+    Speed=53351.0
+    MaxSpeed=53351.0
+    ShellDiameter=7.62
+    BallisticCoefficient=2.45
+
+    //Damage
+    ImpactDamage=580
+    HullFireChance=0.40
+    EngineFireChance=0.60
+
+    //Penetration
+    DHPenetrationTable(0)=18.5
+    DHPenetrationTable(1)=17.7
+    DHPenetrationTable(2)=16.6
+    DHPenetrationTable(3)=15.8
+    DHPenetrationTable(4)=15.1
+    DHPenetrationTable(5)=14.3
+    DHPenetrationTable(6)=13.7
+    DHPenetrationTable(7)=13.1
+    DHPenetrationTable(8)=12.6
+    DHPenetrationTable(9)=10.3
+    DHPenetrationTable(10)=8.7
+
+    //Gunsight adjustment
     MechanicalRanges(0)=(RangeValue=32.0)
     MechanicalRanges(1)=(Range=100,RangeValue=34.0)
     MechanicalRanges(2)=(Range=200,RangeValue=36.0)
@@ -29,20 +53,4 @@ defaultproperties
     MechanicalRanges(19)=(Range=1900,RangeValue=175.0)
     MechanicalRanges(20)=(Range=2000,RangeValue=184.0)
     bMechanicalAiming=true
-    DHPenetrationTable(0)=18.5
-    DHPenetrationTable(1)=17.7
-    DHPenetrationTable(2)=16.6
-    DHPenetrationTable(3)=15.8
-    DHPenetrationTable(4)=15.1
-    DHPenetrationTable(5)=14.3
-    DHPenetrationTable(6)=13.7
-    DHPenetrationTable(7)=13.1
-    DHPenetrationTable(8)=12.6
-    DHPenetrationTable(9)=10.3
-    DHPenetrationTable(10)=8.7
-    ShellDiameter=7.62
-    ImpactDamage=580
-    BallisticCoefficient=2.45
-    Speed=53351.0
-    MaxSpeed=53351.0
 }

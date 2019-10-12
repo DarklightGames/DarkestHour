@@ -7,6 +7,36 @@ class DH_JagdpantherCannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
+    Speed=45264.0
+    MaxSpeed=45264.0
+    ShellDiameter=8.8
+    BallisticCoefficient=3.25
+
+    //Damage
+    ImpactDamage=550
+    Damage=475.0
+    DamageRadius=1550.0
+    MyDamageType=class'DH_Engine.DHShellHE88mmDamageType'
+    PenetrationMag=1020.0
+    HullFireChance=0.4
+    EngineFireChance=0.55
+
+    //Penetration
+    DHPenetrationTable(0)=5.2
+    DHPenetrationTable(1)=4.9
+    DHPenetrationTable(2)=4.3
+    DHPenetrationTable(3)=4.0
+    DHPenetrationTable(4)=3.8
+    DHPenetrationTable(5)=3.2
+    DHPenetrationTable(6)=3.0
+    DHPenetrationTable(7)=2.7
+    DHPenetrationTable(8)=2.3
+    DHPenetrationTable(9)=1.9
+    DHPenetrationTable(10)=1.5
+
+    bDebugInImperial=false
+
+    bMechanicalAiming=true
     MechanicalRanges(3)=(Range=300,RangeValue=12.0)
     MechanicalRanges(4)=(Range=400,RangeValue=24.0)
     MechanicalRanges(5)=(Range=500,RangeValue=32.0)
@@ -35,26 +65,4 @@ defaultproperties
     MechanicalRanges(28)=(Range=3600,RangeValue=292.0)
     MechanicalRanges(29)=(Range=3800,RangeValue=304.0)
     MechanicalRanges(30)=(Range=4000,RangeValue=316.0)
-    bMechanicalAiming=true
-    DHPenetrationTable(0)=5.2
-    DHPenetrationTable(1)=4.9
-    DHPenetrationTable(2)=4.3
-    DHPenetrationTable(3)=4.0
-    DHPenetrationTable(4)=3.8
-    DHPenetrationTable(5)=3.2
-    DHPenetrationTable(6)=3.0
-    DHPenetrationTable(7)=2.7
-    DHPenetrationTable(8)=2.3
-    DHPenetrationTable(9)=1.9
-    DHPenetrationTable(10)=1.5
-    ShellDiameter=8.8
-    bDebugInImperial=false
-    PenetrationMag=1020.0
-    ImpactDamage=550
-    BallisticCoefficient=3.25
-    Speed=45264.0
-    MaxSpeed=45264.0
-    Damage=475.0
-    DamageRadius=1550.0
-    MyDamageType=class'DH_Engine.DHShellHE88mmDamageType'
 }

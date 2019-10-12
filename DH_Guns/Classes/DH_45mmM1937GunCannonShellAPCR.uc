@@ -3,27 +3,33 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_45mmM1937GunCannonShellAPCR extends DHSovietCannonShell;
+class DH_45mmM1937GunCannonShellAPCR extends DHCannonShellAPDS;
 
 defaultproperties
 {
-    RoundType=RT_APDS
-    bShatterProne=true
-    SpeedFudgeScale=0.4
-    ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
+    RoundType=RT_APDS //RT_APDS since APCR uses the same pen calcs
+    Speed=45868.0 // 760 m/s
+    MaxSpeed=45868.0
     ShellDiameter=3.7 //sub-caliber round
+    BallisticCoefficient=0.7 // TODO: pls check accurate BC (this is from AHZ)
+
+    //Damage
+    ImpactDamage=225 // just a tungsten slug; no explosive filler
+    ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
+    HullFireChance=0.20
+    EngineFireChance=0.35
+
+    bShatterProne=true
+
+    //Effects
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
     CoronaClass=class'DH_Effects.DHShellTracer_Green'
-    ImpactDamage=225 // just a tungsten slug; no explosive filler
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
-    BallisticCoefficient=0.7 // TODO: try to find an accurate BC (this is from AHZ)
-    Speed=45868.0 // 760 m/s
-    MaxSpeed=45868.0
 
-
-    DHPenetrationTable(0)=9.4  // 100m // TODO: confirm penetration
+    //Penetration
+    DHPenetrationTable(0)=9.4  // 100m
     DHPenetrationTable(1)=8.1  // 250m
     DHPenetrationTable(2)=6.4  // 500m
     DHPenetrationTable(3)=5.0
@@ -35,6 +41,7 @@ defaultproperties
     DHPenetrationTable(9)=0.9
     DHPenetrationTable(10)=0.5 // 3000m
 
+    //Gunsight adjustments
     bOpticalAiming=true
     OpticalRanges(0)=(Range=0,RangeValue=0.471)
     OpticalRanges(1)=(Range=500,RangeValue=0.505)

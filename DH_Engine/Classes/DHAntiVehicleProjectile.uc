@@ -77,6 +77,10 @@ var     bool            bDidExplosionFX;            // already did the explosion
 var class<DamageType>   ShellImpactDamage;
 var     int             ImpactDamage;
 
+// Fire variables (new)
+var float   HullFireChance;
+var float   EngineFireChance;
+
 // Deflection
 var     int             NumDeflections;             // so it won't infinitely deflect, getting stuck in a loop
 var     float           DampenFactor;
@@ -1103,6 +1107,9 @@ defaultproperties
     BlurTime=3.0
     BlurEffectScalar=1.9
     PenetrationMag=100.0
+
+    HullFireChance=0.0
+    EngineFireChance=0.0
 
     // From deprecated ROAntiVehicleProjectile class:
     VehicleDeflectSound=Sound'ProjectileSounds.cannon_rounds.AP_deflect'

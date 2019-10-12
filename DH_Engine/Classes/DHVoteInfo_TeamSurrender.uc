@@ -93,6 +93,19 @@ function OnVoteEnded()
     }
 }
 
+// Overriden to ignore non-voters in the final results.
+function int GetVoterCount()
+{
+    local int i, Count;
+
+    for (i = 0; i < Options.Length; ++i)
+    {
+        Count += Options[i].Voters.Length;
+    }
+
+    return Count;
+}
+
 static function OnNominated(PlayerController Player, LevelInfo Level, optional int NominationsRemaining)
 {
     local DHPlayer PC;

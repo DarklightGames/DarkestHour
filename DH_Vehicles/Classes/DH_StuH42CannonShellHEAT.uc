@@ -7,6 +7,40 @@ class DH_StuH42CannonShellHEAT extends DHCannonShellHEAT;
 
 defaultproperties
 {
+    Speed=29874.0
+    MaxSpeed=29874.0
+    ShellDiameter=10.5
+    BallisticCoefficient=2.96
+
+    //Damage
+    ImpactDamage=650
+    Damage=415.0
+    DamageRadius=700.0
+    DrawScale=1.3
+    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
+    HullFireChance=0.55
+    EngineFireChance=0.85
+
+    bDebugInImperial=false
+
+    //Effects
+    CoronaClass=class'DH_Effects.DHShellTracer_OrangeLarge'
+
+    //Penetration
+    DHPenetrationTable(0)=11.5
+    DHPenetrationTable(1)=11.5
+    DHPenetrationTable(2)=11.5
+    DHPenetrationTable(3)=11.5
+    DHPenetrationTable(4)=11.5
+    DHPenetrationTable(5)=11.5
+    DHPenetrationTable(6)=11.5
+    DHPenetrationTable(7)=11.5
+    DHPenetrationTable(8)=11.5
+    DHPenetrationTable(9)=11.5
+    DHPenetrationTable(10)=11.5
+
+    //Gunsight adjustments
+    bMechanicalAiming=true
     MechanicalRanges(0)=(RangeValue=16.0)
     MechanicalRanges(1)=(Range=100,RangeValue=32.0)
     MechanicalRanges(2)=(Range=200,RangeValue=64.0)
@@ -33,28 +67,4 @@ defaultproperties
     MechanicalRanges(23)=(Range=2600,RangeValue=898.0)
     MechanicalRanges(24)=(Range=2800,RangeValue=938.0)
     MechanicalRanges(25)=(Range=3000,RangeValue=976.0)
-    bMechanicalAiming=true
-    DHPenetrationTable(0)=11.5
-    DHPenetrationTable(1)=11.5
-    DHPenetrationTable(2)=11.5
-    DHPenetrationTable(3)=11.5
-    DHPenetrationTable(4)=11.5
-    DHPenetrationTable(5)=11.5
-    DHPenetrationTable(6)=11.5
-    DHPenetrationTable(7)=11.5
-    DHPenetrationTable(8)=11.5
-    DHPenetrationTable(9)=11.5
-    DHPenetrationTable(10)=11.5
-    ShellDiameter=10.5
-    bDebugInImperial=false
-    CoronaClass=class'DH_Effects.DHShellTracer_OrangeLarge'
-    ImpactDamage=650
-    BallisticCoefficient=2.96
-    Speed=29874.0
-    MaxSpeed=29874.0
-    Damage=415.0
-    DamageRadius=700.0
-    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
-
-    DrawScale=1.3
 }

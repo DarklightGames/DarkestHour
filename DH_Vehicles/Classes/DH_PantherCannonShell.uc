@@ -7,6 +7,29 @@ class DH_PantherCannonShell extends DHGermanCannonShell;
 
 defaultproperties
 {
+    Speed=55826.0
+    MaxSpeed=55826.0
+    ShellDiameter=7.5
+    BallisticCoefficient=2.52
+
+    //Damage
+    ImpactDamage=650
+    HullFireChance=0.45
+    EngineFireChance=0.65
+
+    //Penetration
+    DHPenetrationTable(0)=18.3
+    DHPenetrationTable(1)=17.9
+    DHPenetrationTable(2)=16.8
+    DHPenetrationTable(3)=15.8
+    DHPenetrationTable(4)=14.9
+    DHPenetrationTable(5)=14.0
+    DHPenetrationTable(6)=13.2
+    DHPenetrationTable(7)=12.5
+    DHPenetrationTable(8)=11.6
+    DHPenetrationTable(9)=10.3
+    DHPenetrationTable(10)=9.1
+
     MechanicalRanges(1)=(Range=100,RangeValue=4.0)
     MechanicalRanges(2)=(Range=200,RangeValue=12.0)
     MechanicalRanges(3)=(Range=300,RangeValue=18.0)
@@ -33,21 +56,4 @@ defaultproperties
     MechanicalRanges(24)=(Range=2800,RangeValue=227.0)
     MechanicalRanges(25)=(Range=3000,RangeValue=252.0)
     bMechanicalAiming=true
-    DHPenetrationTable(0)=18.3
-    DHPenetrationTable(1)=17.9
-    DHPenetrationTable(2)=16.8
-    DHPenetrationTable(3)=15.8
-    DHPenetrationTable(4)=14.9
-    DHPenetrationTable(5)=14.0
-    DHPenetrationTable(6)=13.2
-    DHPenetrationTable(7)=12.5
-    DHPenetrationTable(8)=11.6
-    DHPenetrationTable(9)=10.3
-    DHPenetrationTable(10)=9.1
-    ShellDiameter=7.5
-    ImpactDamage=650
-    BallisticCoefficient=2.52
-    Speed=55826.0
-    MaxSpeed=55826.0
-
 }

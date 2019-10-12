@@ -7,6 +7,19 @@ class DH_ShermanM4A176WCannonShell extends DHCannonShell;
 
 defaultproperties
 {
+    Speed=47799.0
+    MaxSpeed=47799.0
+    ShellDiameter=7.62
+    BallisticCoefficient=1.627 //TODO: pls check
+
+    //Damage
+    bShatterProne=true
+    ImpactDamage=580
+    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
+    HullFireChance=0.3
+    EngineFireChance=0.58
+
+    //Penetration
     DHPenetrationTable(0)=12.5
     DHPenetrationTable(1)=12.1
     DHPenetrationTable(2)=11.6
@@ -18,11 +31,4 @@ defaultproperties
     DHPenetrationTable(8)=8.9
     DHPenetrationTable(9)=8.7
     DHPenetrationTable(10)=7.4
-    ShellDiameter=7.62
-    bShatterProne=true
-    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
-    ImpactDamage=580
-    BallisticCoefficient=1.627
-    Speed=47799.0
-    MaxSpeed=47799.0
 }

@@ -7,7 +7,55 @@ class DH_Sdkfz2341CannonShell extends DHGermanCannonShell;
 
 defaultproperties
 {
-    bNetTemporary=true // so is torn off straight after actor replication, like a bullet instead of a shell, due to volume of fire adding to net load (each shell is a net channel)
+    bNetTemporary=true // so its torn off straight after actor replication, like a bullet instead of a shell, due to volume of fire adding to net load (each shell is a net channel)
+
+    Speed=47075.0
+    MaxSpeed=47075.0
+    ShellDiameter=2.0
+    BallisticCoefficient=0.68 //G1 figure based on JBM calculation for US M95 20mm AP
+
+    //Damage
+    ImpactDamage=175
+    ShellImpactDamage=class'DH_Vehicles.DH_Sdkfz2341CannonShellDamageAP'
+    HullFireChance=0.15
+    EngineFireChance=0.20
+
+    //Effects
+    bHasTracer=false // actually has a tracer but we use a tracer static mesh for the projectile, so no need for extra tracer effect (normally the CoronaClass)
+    StaticMesh=StaticMesh'EffectsSM.Weapons.Ger_Tracer'
+
+    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.Impact_Metal'
+    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
+    DirtHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Grass'
+    RockHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Asphalt'
+    WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
+    WoodHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Wood'
+
+    ShellDeflectEffectClass=class'ROEffects.TankAPHitDeflect'
+    ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
+    ShellHitDirtEffectClass=class'ROEffects.ROBulletHitDirtEffect'
+    ShellHitSnowEffectClass=class'ROEffects.ROBulletHitSnowEffect'
+    ShellHitWoodEffectClass=class'ROEffects.ROBulletHitWoodEffect'
+    ShellHitRockEffectClass=class'ROEffects.ROBulletHitConcreteEffect'
+    ShellHitWaterEffectClass=class'ROEffects.ROBulletHitWaterEffect'
+
+    ExplosionDecal=class'ROEffects.BulletHoleConcrete'
+    ExplosionDecalSnow=class'ROEffects.BulletHoleSnow'
+
+    //Penetration
+    DHPenetrationTable(0)=2.5
+    DHPenetrationTable(1)=2.1
+    DHPenetrationTable(2)=1.8
+    DHPenetrationTable(3)=1.3
+    DHPenetrationTable(4)=1.1
+    DHPenetrationTable(5)=0.8
+    DHPenetrationTable(6)=0.6
+    DHPenetrationTable(7)=0.4
+    DHPenetrationTable(8)=0.2
+    DHPenetrationTable(9)=0.1
+    DHPenetrationTable(10)=0.1
+
+    //Gunsight adjustments
     MechanicalRanges(1)=(Range=100,RangeValue=33.0)
     MechanicalRanges(2)=(Range=200,RangeValue=37.0)
     MechanicalRanges(3)=(Range=300,RangeValue=41.0)
@@ -21,42 +69,4 @@ defaultproperties
     MechanicalRanges(11)=(Range=1100,RangeValue=122.0)
     MechanicalRanges(12)=(Range=1200,RangeValue=131.0)
     bMechanicalAiming=true
-    DHPenetrationTable(0)=2.5
-    DHPenetrationTable(1)=2.1
-    DHPenetrationTable(2)=1.8
-    DHPenetrationTable(3)=1.3
-    DHPenetrationTable(4)=1.1
-    DHPenetrationTable(5)=0.8
-    DHPenetrationTable(6)=0.6
-    DHPenetrationTable(7)=0.4
-    DHPenetrationTable(8)=0.2
-    DHPenetrationTable(9)=0.1
-    DHPenetrationTable(10)=0.1
-    ShellDiameter=2.0
-    ShellImpactDamage=class'DH_Vehicles.DH_Sdkfz2341CannonShellDamageAP'
-    ImpactDamage=175
-    VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.Impact_Metal'
-    VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
-    DirtHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Grass'
-    RockHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Asphalt'
-    WaterHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Water'
-    WoodHitSound=SoundGroup'ProjectileSounds.Bullets.Impact_Wood'
-    ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
-    ShellHitDirtEffectClass=class'ROEffects.ROBulletHitDirtEffect'
-    ShellHitSnowEffectClass=class'ROEffects.ROBulletHitSnowEffect'
-    ShellHitWoodEffectClass=class'ROEffects.ROBulletHitWoodEffect'
-    ShellHitRockEffectClass=class'ROEffects.ROBulletHitConcreteEffect'
-    ShellHitWaterEffectClass=class'ROEffects.ROBulletHitWaterEffect'
-    AmbientVolumeScale=2.0
-    BallisticCoefficient=0.77
-    Speed=47075.0
-    MaxSpeed=47075.0
-    ExplosionDecal=class'ROEffects.BulletHoleConcrete'
-    ExplosionDecalSnow=class'ROEffects.BulletHoleSnow'
-    StaticMesh=StaticMesh'EffectsSM.Weapons.Ger_Tracer'
-    bHasTracer=false // actually has a tracer but we use a tracer static mesh for the projectile, so no need for extra tracer effect (normally the CoronaClass)
-    AmbientSound=SoundGroup'DH_ProjectileSounds.Bullets.Bullet_Whiz'
-
-    SoundRadius=350.0
-    TransientSoundRadius=600.0
 }

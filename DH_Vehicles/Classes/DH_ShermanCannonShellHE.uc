@@ -7,6 +7,20 @@ class DH_ShermanCannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
+    Speed=27943.0
+    MaxSpeed=27943.0
+    ShellDiameter=7.5
+    BallisticCoefficient=1.686 //TODO: double check
+
+    //Damage
+    ImpactDamage=475
+    PenetrationMag=1000.0
+    Damage=415.0
+    DamageRadius=1550.0
+    HullFireChance=0.34
+    EngineFireChance=0.48
+
+    //Penetration
     DHPenetrationTable(0)=3.3
     DHPenetrationTable(1)=3.1
     DHPenetrationTable(2)=2.8
@@ -18,13 +32,4 @@ defaultproperties
     DHPenetrationTable(8)=0.9
     DHPenetrationTable(9)=0.5
     DHPenetrationTable(10)=0.3
-    ShellDiameter=7.5
-    PenetrationMag=1000.0
-    ImpactDamage=475
-    BallisticCoefficient=1.686
-    Speed=27943.0
-    MaxSpeed=27943.0
-    Damage=415.0
-    DamageRadius=1550.0
-
 }

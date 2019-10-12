@@ -3,23 +3,27 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_ZiS3CannonShellAPCR extends DHSovietCannonShell;
+class DH_ZiS3CannonShellAPCR extends DHCannonShellAPDS;
 
 defaultproperties
 {
-    RoundType=RT_APDS
-    bShatterProne=true
-    SpeedFudgeScale=0.4
-    ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
-    ShellDiameter=4.5 //sub-caliber round
-    CoronaClass=class'DH_Effects.DHShellTracer_Green'
-    BallisticCoefficient=1.55
+    RoundType=RT_APDS //RT_APDS because APCR uses same pen calcs
     Speed=39953.0 // 662 m/s
     MaxSpeed=39953.0
-    ImpactDamage=400 // just a tungsten slug; no explosive filler
-    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect'
-    Tag="BR-350P"
+    ShellDiameter=5.0 //sub-caliber round
+    BallisticCoefficient=1.55 //TODO: pls, check
 
+    //Damage
+    ImpactDamage=375 // just a tungsten slug; no explosive filler
+    ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
+    HullFireChance=0.29
+    EngineFireChance=0.38
+
+    //Effects
+    CoronaClass=class'DH_Effects.DHShellTracer_Green'
+    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect'
+
+    //Penetration
     DHPenetrationTable(0)=13.0  // 100m
     DHPenetrationTable(1)=11.4  // 250m
     DHPenetrationTable(2)=9.2   // 500m
@@ -32,6 +36,7 @@ defaultproperties
     DHPenetrationTable(9)=1.7
     DHPenetrationTable(10)=1.1  // 3000m
 
+    //Gunsight adjustments
     bMechanicalAiming=true
     MechanicalRanges(1)=(Range=200,RangeValue=47.0)
     MechanicalRanges(2)=(Range=400,RangeValue=63.0)

@@ -48,7 +48,7 @@ defaultproperties
     // Hull armor
     FrontArmor(0)=(Thickness=6.5,Slope=-55.0,MaxRelativeHeight=56.8,LocationName="lower")
     FrontArmor(1)=(Thickness=8.2,Slope=55.0,LocationName="superstructure")
-    RightArmor(0)=(Thickness=4.0,MaxRelativeHeight=84.0,LocationName="lower")
+    RightArmor(0)=(Thickness=4.3,MaxRelativeHeight=84.0,LocationName="lower") //add a little for road wheels/schurzen
     RightArmor(1)=(Thickness=5.0,Slope=30.0,LocationName="superstructure")
     LeftArmor(0)=(Thickness=4.0,MaxRelativeHeight=84.0,LocationName="lower")
     LeftArmor(1)=(Thickness=5.0,Slope=30.0,LocationName="superstructure")

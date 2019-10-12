@@ -67,7 +67,6 @@ defaultproperties
     VehHitpoints(2)=(PointRadius=25.0,PointScale=1.0,PointBone="body",PointOffset=(X=16.0,Y=25.0,Z=-5.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=8.0
     DamagedEffectOffset=(X=-135.0,Y=0.0,Z=35.0) // repositioned to engine deck grille
-    HullFireChance=0.55
     FireAttachBone="Body"
     FireEffectOffset=(X=170.0,Y=0.0,Z=25.0)
     DestroyedVehicleMesh=StaticMesh'allies_vehicles_stc.Is2_destroyed'

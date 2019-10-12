@@ -7,6 +7,10 @@ class DH_CromwellCannonShellSmoke extends DHCannonShellSmoke;
 
 defaultproperties
 {
+    Speed=27943.0
+    MaxSpeed=27943.0
+
+    //Gunsight adjustment
     MechanicalRanges(0)=(RangeValue=16.0)
     MechanicalRanges(1)=(Range=200,RangeValue=36.0)
     MechanicalRanges(2)=(Range=400,RangeValue=68.0)
@@ -32,7 +36,6 @@ defaultproperties
     DHPenetrationTable(4)=0.1
     ShellDiameter=7.5
     BallisticCoefficient=1.686
-    Speed=27943.0
-    MaxSpeed=27943.0
+
 
 }

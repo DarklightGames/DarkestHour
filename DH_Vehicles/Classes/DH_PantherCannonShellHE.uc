@@ -7,6 +7,34 @@ class DH_PantherCannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
+    Speed=42245.0
+    MaxSpeed=42245.0
+    ShellDiameter=7.5
+    BallisticCoefficient=2.0
+
+    //Damage
+    ImpactDamage=455
+    Damage=415.0
+    DamageRadius=1350.0
+    PenetrationMag=920.0
+    HullFireChance=0.33
+    EngineFireChance=0.46
+
+    bDebugInImperial=false
+
+    //Penetration
+    DHPenetrationTable(0)=4.5
+    DHPenetrationTable(1)=4.2
+    DHPenetrationTable(2)=3.5
+    DHPenetrationTable(3)=3.2
+    DHPenetrationTable(4)=2.8
+    DHPenetrationTable(5)=2.4
+    DHPenetrationTable(6)=2.2
+    DHPenetrationTable(7)=1.9
+    DHPenetrationTable(8)=1.5
+    DHPenetrationTable(9)=1.2
+    DHPenetrationTable(10)=1.0
+
     MechanicalRanges(1)=(Range=100,RangeValue=8.0)
     MechanicalRanges(2)=(Range=200,RangeValue=20.0)
     MechanicalRanges(3)=(Range=300,RangeValue=33.0)
@@ -33,24 +61,4 @@ defaultproperties
     MechanicalRanges(24)=(Range=2800,RangeValue=470.0)
     MechanicalRanges(25)=(Range=3000,RangeValue=524.0)
     bMechanicalAiming=true
-    DHPenetrationTable(0)=4.5
-    DHPenetrationTable(1)=4.2
-    DHPenetrationTable(2)=3.5
-    DHPenetrationTable(3)=3.2
-    DHPenetrationTable(4)=2.8
-    DHPenetrationTable(5)=2.4
-    DHPenetrationTable(6)=2.2
-    DHPenetrationTable(7)=1.9
-    DHPenetrationTable(8)=1.5
-    DHPenetrationTable(9)=1.2
-    DHPenetrationTable(10)=1.0
-    ShellDiameter=7.5
-    bDebugInImperial=false
-    PenetrationMag=920.0
-    ImpactDamage=455
-    BallisticCoefficient=2.0
-    Speed=42245.0
-    MaxSpeed=42245.0
-    Damage=415.0
-    DamageRadius=1350.0
 }

@@ -135,7 +135,6 @@ defaultproperties
     DamagedTrackStaticMeshRight=StaticMesh'DH_allies_vehicles_stc2.Locust.Locust_DamagedTrack_right'
     DamagedEffectScale=0.8
     DamagedEffectOffset=(X=-60.0,Y=13.5,Z=30.0)
-    HullFireChance=0.45
     FireAttachBone="body"
     FireEffectOffset=(X=60.0,Y=-30.0,Z=50.0)
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc2.Locust.Locust_dest' // TODO: get a proper destroyed mesh made & a new destroyed overlay texture shaped for the treads

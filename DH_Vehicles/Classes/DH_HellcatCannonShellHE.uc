@@ -7,6 +7,20 @@ class DH_HellcatCannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
+    Speed=47799.0
+    MaxSpeed=47799.0
+    ShellDiameter=7.62
+    BallisticCoefficient=1.368 //TODO: pls find correct BC
+
+    //Damage
+    ImpactDamage=450
+    PenetrationMag=780.0
+    Damage=400.0
+    DamageRadius=1140.0
+    HullFireChance=0.32
+    EngineFireChance=0.45
+
+    //Penetration
     DHPenetrationTable(0)=4.2
     DHPenetrationTable(1)=3.8
     DHPenetrationTable(2)=3.2
@@ -18,12 +32,4 @@ defaultproperties
     DHPenetrationTable(8)=1.1
     DHPenetrationTable(9)=1.0
     DHPenetrationTable(10)=0.8
-    ShellDiameter=7.62
-    PenetrationMag=780.0
-    ImpactDamage=450
-    BallisticCoefficient=1.368
-    Speed=47799.0
-    MaxSpeed=47799.0
-    Damage=400.0
-    DamageRadius=1140.0
 }

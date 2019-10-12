@@ -7,33 +7,24 @@ class DH_ISU152CannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
-    ShellDiameter=15.2
-    BallisticCoefficient=5.5
     Speed=36211.0 // 600 m/s
     MaxSpeed=36211.0
+    ShellDiameter=15.2
+    BallisticCoefficient=5.5 //TODO: find correct BC
+
+    //Damage
+    ImpactDamage=2250
     Damage=2000.0
     DamageRadius=3000.0
     MyDamageType=class'DH_Engine.DHShellHE105mmDamageType' // a 152mm shell, but 105mm is close enough (it's a very big shell that will throw stuff around more)
-    ImpactDamage=3600
     PenetrationMag=1500.0
+    HullFireChance=1.0
+    EngineFireChance=1.0
 
+    //Effects
     StaticMesh=StaticMesh'WeaponPickupSM.shells.76mm_shell'
     DrawScale=2.1
     BlurEffectScalar=3.0 // gives this large HE shell more screen blur
-    bDebugInImperial=false
-
-    DHPenetrationTable(0)=9.0  // 100m
-    DHPenetrationTable(1)=8.4  // 250m
-    DHPenetrationTable(2)=7.9  // 500m
-    DHPenetrationTable(3)=7.4
-    DHPenetrationTable(4)=7.0  // 1000m
-    DHPenetrationTable(5)=6.6
-    DHPenetrationTable(6)=6.2  // 1500m
-    DHPenetrationTable(7)=5.8
-    DHPenetrationTable(8)=5.2  // 2000m
-    DHPenetrationTable(9)=4.6
-    DHPenetrationTable(10)=4.0 // 3000m
-
     TransientSoundRadius=3000.0
     ExplosionSound(0)=SoundGroup'Artillery.explosions.explo01'
     ExplosionSound(1)=SoundGroup'Artillery.explosions.explo02'
@@ -47,6 +38,21 @@ defaultproperties
     ShellHitWaterEffectClass=class'ROEffects.ROArtilleryWaterEmitter'
     ExplosionDecal=class'ROEffects.ArtilleryMarkDirt'
     ExplosionDecalSnow=class'ROEffects.ArtilleryMarkSnow'
+
+    bDebugInImperial=false
+
+    //Penetration
+    DHPenetrationTable(0)=9.0  // 100m
+    DHPenetrationTable(1)=8.4  // 250m
+    DHPenetrationTable(2)=7.9  // 500m
+    DHPenetrationTable(3)=7.4
+    DHPenetrationTable(4)=7.0  // 1000m
+    DHPenetrationTable(5)=6.6
+    DHPenetrationTable(6)=6.2  // 1500m
+    DHPenetrationTable(7)=5.8
+    DHPenetrationTable(8)=5.2  // 2000m
+    DHPenetrationTable(9)=4.6
+    DHPenetrationTable(10)=4.0 // 3000m
 
     bOpticalAiming=true
     OpticalRanges(0)=(Range=0,RangeValue=0.411)

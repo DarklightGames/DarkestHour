@@ -8,7 +8,7 @@ class DH_MN9130Fire extends DHBoltFire;
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_MN9130Bullet'
-    AmmoClass=class'ROAmmo.MN762x54RAmmo'
+    AmmoClass=class'DH_Weapons.DH_MN9130Ammo'
     Spread=40.0
     MaxVerticalRecoilAngle=1500
     FireSounds(0)=SoundGroup'Inf_Weapons.nagant9130.nagant9130_fire01'

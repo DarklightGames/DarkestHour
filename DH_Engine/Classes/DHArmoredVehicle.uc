@@ -75,14 +75,12 @@ var     class<VehicleDamagedEffect> FireEffectClass;
 var     VehicleDamagedEffect        DriverHatchFireEffect;
 var     name        FireAttachBone;
 var     vector      FireEffectOffset;
-var     float       HullFireChance;
-var     float       HullFireHEATChance;
+var     float       HullFirePercent; //helper variable
 var     bool        bOnFire;               // the vehicle itself is on fire
 var     float       HullFireDamagePer2Secs;
 var     float       PlayerFireDamagePer2Secs;
 var     float       NextHullFireDamageTime;
-var     float       EngineFireChance;
-var     float       EngineFireHEATChance;
+var     float       EngineFirePercent; //helper variable
 var     bool        bEngineOnFire;
 var     float       EngineFireDamagePer3Secs;
 var     float       NextEngineFireDamageTime;
@@ -1263,6 +1261,8 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     bHEATPenetration = P.RoundType == RT_HEAT && bProjectilePenetrated;
     bRearHullPenetration = bRearHit && bProjectilePenetrated;
     bTurretPenetration = false;
+    HullFirePercent = P.HullFireChance;
+    EngineFirePercent = P.EngineFireChance;
 
     // Debugging options
     if ((bLogDebugPenetration || bDebugPenetration) && P.NumDeflections == 0)
@@ -1554,6 +1554,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     if (WepDamageType != none)
     {
+
         if (bIsApc)
         {
             DamageModifier = WepDamageType.default.APCDamageModifier;
@@ -1626,7 +1627,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                             Log("Hit vehicle ammo store - exploded");
                         }
 
-                        Damage *= Health;
+                        Damage *= Health; //obliterate vehicle
                         bAmmoDetonation = true;
                         break;
                     }
@@ -1638,8 +1639,8 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                             Log("Hit vehicle ammo store but did not explode");
                         }
 
-                        HullFireChance = FMax(0.75, HullFireChance);
-                        HullFireHEATChance = FMax(0.90, HullFireHEATChance);
+                        HullFirePercent = FMax(0.75, HullFirePercent);
+                        //HullFireHEATChance = FMax(0.90, HullFireHEATChance);
                     }
                 }
             }
@@ -1717,13 +1718,13 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 {
                     if (bTurretPenetration)
                     {
-                        HullChanceModifier = 0.5;   // half usual chance of damage to things in the hull
+                        HullChanceModifier = 0.25;   // 25% usual chance of damage to things in the hull
                         TurretChanceModifier = 1.0;
                     }
                     else
                     {
                         HullChanceModifier = 1.0;
-                        TurretChanceModifier = 0.5; // half usual chance of damage to things in the turret
+                        TurretChanceModifier = 0.35; // 35% usual chance of damage to things in the turret
                     }
                 }
                 else // normal chance of damage to everything in vehicles without a turret (e.g. casemate-style tank destroyers)
@@ -1780,7 +1781,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 }
             }
 
-            // Random chance of shrapnel detonating turret ammo & destroying the vehicle
+            // Random chance of shrapnel detonating turret ammo & destroying the vehicle - this should really be based on if turret stores ammo or not
             if (FRand() < (float(Damage) / TurretDetonationThreshold * TurretChanceModifier))
             {
                 if (bDebuggingText)
@@ -1822,6 +1823,8 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         if (bHasTreads && TreadDamageMod >= TreadDamageThreshold && !bTurretPenetration && !bRearHullPenetration)
         {
             CheckTreadDamage(HitLocation, Momentum);
+
+            Damage *= 0.35; // reduce overall damage to vehicle itself if tread area hit (wheels and bottom treads usually below critical areas)
         }
     }
 
@@ -1833,22 +1836,23 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // Call the Super from Vehicle (skip over others)
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
-    // Vehicle is still alive, so check for possibility of a fire breaking out
+    // Vehicle is still alive, so check for possibility of a fire breaking out in hull
     if (Health > 0)
     {
         if (bProjectilePenetrated && !bEngineStoppedProjectile && !bOnFire)
         {
             // Random chance of penetration causing a hull fire // TODO: relate probability to damage, as currently even tiny damage has a high chance of starting a fire
-            if ((bHEATPenetration && FRand() < HullFireHEATChance) || (!bHEATPenetration && FRand() < HullFireChance))
+            if (FRand() < HullFirePercent)
             {
                 StartHullFire(InstigatedBy);
             }
             // If we didn't start a fire & this is the 1st time a projectile has penetrated, increase the chance of causing a hull fire for any future penetrations
+            // WHY? Each penetration should be a fresh "normal" chance to randomly start a fire -- leaving this for now (Shurek)
             else if (bFirstPenetratingHit)
             {
                 bFirstPenetratingHit = false;
-                HullFireChance = FMax(0.75, HullFireChance);
-                HullFireHEATChance = FMax(0.90, HullFireHEATChance);
+                HullFirePercent = FMax(0.75, HullFirePercent);
+                //HullFireHEATChance = FMax(0.90, HullFireHEATChance);
             }
         }
 
@@ -1871,11 +1875,13 @@ function ResetTakeDamageVariables()
     bTurretPenetration = false;
     bRearHullPenetration = false;
     bHEATPenetration = false;
+    HullFirePercent = 0.0;
 }
 
 // Modified to add random chance of engine fire breaking out
 function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType)
 {
+
     // Apply new damage
     if (EngineHealth > 0)
     {
@@ -1911,7 +1917,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
     // Or if engine still alive, a random chance of engine fire breaking out // TODO: relate probability to damage, as currently even tiny damage has a high chance of starting a fire
     else if (DamageType != VehicleBurningDamType && !bEngineOnFire && Damage > 0 && Health > 0)
     {
-        if ((bHEATPenetration && FRand() < EngineFireHEATChance) || (!bHEATPenetration && FRand() < EngineFireChance))
+        if (FRand() < EngineFirePercent)
         {
             if (bDebuggingText)
             {
@@ -2299,10 +2305,6 @@ defaultproperties
     AmmoIgnitionProbability=0.75
 
     // Vehicle fires
-    HullFireChance=0.25
-    HullFireHEATChance=0.5
-    EngineFireChance=0.5
-    EngineFireHEATChance=0.85
     EngineToHullFireChance=0.05
     PlayerFireDamagePer2Secs=15.0
     FireDetonationChance=0.07

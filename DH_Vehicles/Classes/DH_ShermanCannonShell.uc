@@ -7,6 +7,18 @@ class DH_ShermanCannonShell extends DHCannonShell;
 
 defaultproperties
 {
+    Speed=37358.0
+    MaxSpeed=37358.0
+    ShellDiameter=7.5
+    BallisticCoefficient=1.735 //TODO: double check
+
+    //Damage
+    ImpactDamage=540
+    ShellImpactDamage=class'DH_Vehicles.DH_ShermanCannonShellDamageAP'
+    HullFireChance=0.37
+    EngineFireChance=0.54
+
+    //Penetration
     DHPenetrationTable(0)=8.8
     DHPenetrationTable(1)=8.5
     DHPenetrationTable(2)=8.1
@@ -18,10 +30,4 @@ defaultproperties
     DHPenetrationTable(8)=5.9
     DHPenetrationTable(9)=5.3
     DHPenetrationTable(10)=4.7
-    ShellDiameter=7.5
-    ShellImpactDamage=class'DH_Vehicles.DH_ShermanCannonShellDamageAP'
-    ImpactDamage=540
-    BallisticCoefficient=1.735
-    Speed=37358.0
-    MaxSpeed=37358.0
 }

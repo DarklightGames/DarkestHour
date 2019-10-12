@@ -299,6 +299,15 @@ defaultproperties
     TankShellTrailClass=class'DH_Effects.DHTankShellTrail_Med'
     ShellImpactDamage=class'DH_Engine.DHShellImpactDamageType'
     ImpactDamage=400
+
+    Speed=22000.0
+    MaxSpeed=22000.0
+    Damage=200.0 //default - this really needs to be custom set per AP shell class
+    DamageRadius=250.0 //default - this really needs to be custom set per AP shell class
+
+    HullFireChance=0.25 // defaults here - customize per shell class
+    EngineFireChance=0.5 // defaults here - customize per shell class
+
     VehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_penetrate'
     DirtHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Dirt'
     RockHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Rock'
@@ -312,10 +321,6 @@ defaultproperties
     ShellHitRockEffectClass=class'ROEffects.TankAPHitRockEffect'
     ShellHitWaterEffectClass=class'DH_Effects.DHShellSplashEffect'
 
-    Speed=500.0
-    MaxSpeed=22000.0
-    Damage=125.0
-    DamageRadius=200 //about 3 meters
     MomentumTransfer=10000.0
     MyDamageType=class'DH_Engine.DHShellAPExplosionDamageType'
     ExplosionDecal=class'ROEffects.TankAPMarkDirt'

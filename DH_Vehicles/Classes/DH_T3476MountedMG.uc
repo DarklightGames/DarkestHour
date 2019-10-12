@@ -38,6 +38,7 @@ defaultproperties
     FireEndSound=SoundGroup'DH_WeaponSounds.dt.dt_fire_end'
 
     // Reload
+    HUDOverlayReloadAnim="reload_tankmg"
     ReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty01_000',Duration=1.76)
     ReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty02_052',Duration=2.29,HUDProportion=0.65)
     ReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty03_121',Duration=2.35)

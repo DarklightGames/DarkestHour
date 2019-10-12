@@ -9,8 +9,8 @@ defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Panzerschreck_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Panzerschreck_icon'
-    mExhFlashClass=class'DH_Effects.DH3rdPersonBazookaExhaustFX'
-    mMuzFlashClass=class'ROEffects.RO3rdPersonPanzerfaustFX'
+    mExhFlashClass=class'DH_Effects.DH3rdPersonPSchreckExhaustFX'
+    mMuzFlashClass=none//class'ROEffects.RO3rdPersonPanzerfaustFX'
     MuzzleBoneName="Muzzle"
     ExhaustBoneName="ejector"
 
@@ -90,10 +90,10 @@ defaultproperties
     PA_ReloadEmptyAnim="crouch_reloadS_Panzerschreck"
     PA_ProneReloadEmptyAnim="prone_reload_kar"
     PA_ProneIdleRestAnim="prone_idle_kar"
-    PA_Fire="stand_shootiron_kar"
-    PA_IronFire="stand_shootiron_kar"
+    PA_Fire="stand_shootiron_stg44"
+    PA_IronFire="stand_shootiron_stg44"
     PA_CrouchFire="crouch_shoot_kar"
-    PA_CrouchIronFire="crouch_shoot_bazooka"
+    PA_CrouchIronFire="crouch_shoot_stg44"
     PA_ProneFire="prone_shoot_kar"
     PA_MoveStandFire(0)="stand_shootiron_kar"
     PA_MoveStandFire(1)="stand_shootiron_kar"
@@ -131,7 +131,7 @@ defaultproperties
     PA_CrouchAltFire="stand_idlestrike_kar"
     PA_ProneAltFire="prone_idlestrike_bayo"
     PA_FireLastShot="stand_shoothip_kar"
-    PA_IronFireLastShot="crouch_shoot_bazooka"
-    PA_CrouchFireLastShot="crouch_shoot_bazooka"
+    PA_IronFireLastShot="crouch_shoot_stg44"
+    PA_CrouchFireLastShot="crouch_shoot_stg44"
     PA_ProneFireLastShot="prone_shoot_kar"
 }
