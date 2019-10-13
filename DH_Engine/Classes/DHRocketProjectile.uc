@@ -146,9 +146,6 @@ defaultproperties
     Damage=300.0
     DamageRadius=180.0
 
-    HullFireChance=0.5
-    EngineFireChance=0.75
-
     ExplosionDecal=class'ROEffects.RocketMarkDirt'
     ExplosionDecalSnow=class'ROEffects.RocketMarkSnow'
     LightType=LT_Steady
