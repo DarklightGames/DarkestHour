@@ -1926,6 +1926,9 @@ defaultproperties
     ConstructionClassNames(19)="DH_Construction.DHConstruction_AntiTankCrate"
     //ConstructionClassNames(19)="DH_Construction.DHConstruction_WoodFence"
 
+    // Artillery
+    ConstructionClassNames(20)="DH_Construction.DHConstruction_Artillery"
+
     // Map Markers
     MapMarkerClassNames(0)="DH_Engine.DHMapMarker_Squad_Move"
     MapMarkerClassNames(1)="DH_Engine.DHMapMarker_Squad_Attack"
