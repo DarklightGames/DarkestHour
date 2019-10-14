@@ -63,6 +63,11 @@ simulated function string GetNamePrefix()
     return "";
 }
 
+simulated function bool IsLoggedInAsAdmin()
+{
+    return bAdmin || bSilentAdmin || Level.NetMode == NM_Standalone;
+}
+
 simulated function bool IsSquadLeader()
 {
     return IsInSquad() && SquadMemberIndex == 0;
