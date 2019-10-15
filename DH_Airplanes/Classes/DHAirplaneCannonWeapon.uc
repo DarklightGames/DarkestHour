@@ -3,24 +3,8 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHAirplaneCannon extends Actor
+class DHAirplaneCannonWeapon extends DHAirplaneWeapon
     abstract;
-
-var int                 CannonIndex;
-
-// Projectile
-var class<Projectile>   ProjectileClass;
-var vector              ProjectileOffset;
-
-// Ammunition
-var bool                bHasInfiniteAmmo;
-var float               RoundsPerMinute;
-var int                 AmmoCount;
-var float               NextFireTime;
-
-// Spread
-var rotator             SpreadMin;
-var rotator             SpreadMax;
 
 // Firing effects
 var Sound               FiringAmbientSound;
@@ -30,16 +14,12 @@ var vector              FiringEmitterOffset;
 
 var bool                bIsPlayingFiringEffects;
 var private bool        bIsFiring;  // Replicated variable used to signal to the client to begin playing firing effects.
+var float               NextFireTime;
 
 replication
 {
     reliable if (Role == ROLE_Authority)
         bIsFiring;
-}
-
-simulated function DHAirplane GetAirplane()
-{
-    return DHAirplane(Owner);
 }
 
 simulated function PostNetReceive()
@@ -118,12 +98,6 @@ function StartFiring()
 }
 
 function StopFiring();
-
-function bool CanFire()
-{
-    // TODO: in future, we could check if the gun is damaged in some way and unable to fire.
-    return HasAmmo();
-}
 
 function float GetFiringInterval()
 {
@@ -205,26 +179,6 @@ state Firing
 simulated function bool IsFiring()
 {
     return bIsFiring;
-}
-
-function SpawnProjectile()
-{
-    local vector ProjectileLocation;
-    local rotator ProjectileRotation;
-
-    ProjectileLocation = Location + (ProjectileOffset >> Rotation);
-    ProjectileRotation = GetProjectileRotation();
-
-    Spawn(ProjectileClass,,, ProjectileLocation, ProjectileRotation);
-}
-
-function rotator GetProjectileRotation()
-{
-    local rotator Spread;
-
-    Spread = class'URotator'.static.RandomRange(SpreadMin, SpreadMax);
-
-    return QuatToRotator(QuatProduct(QuatFromRotator(Spread), QuatFromRotator(Rotation)));
 }
 
 simulated function Destroyed()

@@ -9,7 +9,7 @@ defaultproperties
 {
     AirplaneName="Supermarine Spitfire"
     Mesh=Mesh'DH_Airplanes_anm.Spitfire'
-    CannonInfos(0)=(CannonClass=class'DH_HS404Cannon',CannonBone="cannon.001")
-    CannonInfos(1)=(CannonClass=class'DH_HS404Cannon',CannonBone="cannon.002")
+    LeftWeaponInfos(0)=(WeaponClass=class'DHHS404CannonWeapon',WeaponBone="cannon.001")
+    RightWeaponInfos(0)=(WeaponClass=class'DHHS404CannonWeapon',WeaponBone="cannon.002")
 }
 

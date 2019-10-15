@@ -97,6 +97,85 @@ final function Object Peek()
     }
 }
 
+// Returns an array with all the items. Nulls are ignored.
+final function array<Object> ToObjects()
+{
+    local array<Object> Result;
+    local int i;
+
+    for (i = 0; i < Data.Length; ++i)
+    {
+        if (Data[i].Item != none)
+        {
+            Result[Result.Length] = Data[i].Item;
+        }
+    }
+
+    return Result;
+}
+
+final function array<Actor> ToActors()
+{
+    local array<Actor> Result;
+    local Object O;
+    local int i;
+
+    for (i = 0; i < Data.Length; ++i)
+    {
+        O = Data[i].Item;
+
+        if (O != none && O.IsA('Actor'))
+        {
+            Result[Result.Length] = Actor(O);
+        }
+    }
+
+    return Result;
+}
+
+// Converts the root item into an array. If the root item is a heap, this function
+// will return all of it's elements. Null items are ignored.
+final function array<Object> RootToObjects()
+{
+    local array<Object> Result;
+    local UHeap RootHeap;
+    local Object O;
+
+    if (Data.Length > 0)
+    {
+        if (RootIsHeap(RootHeap))
+        {
+            return RootHeap.ToObjects();
+        }
+
+        if (Data[0].Item != none)
+        {
+            Result[Result.Length] = Data[0].Item;
+        }
+    }
+}
+
+final function array<Actor> RootToActors()
+{
+    local array<Actor> A;
+    local UHeap RootHeap;
+
+    if (Data.Length > 0)
+    {
+        if (RootIsHeap(RootHeap))
+        {
+            return RootHeap.ToActors();
+        }
+
+        if (Data[0].Item.IsA('Actor'))
+        {
+            A[A.Length] = Actor(Data[0].Item);
+        }
+    }
+
+    return A;
+}
+
 final function bool RootIsHeap(optional out UHeap Heap)
 {
     if (Data.Length > 0)
