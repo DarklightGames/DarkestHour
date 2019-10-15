@@ -269,10 +269,10 @@ function array<Actor> GetPriorityActors()
     return A;
 }
 
-
 static function UClusters CreateFromActors(array<Actor> A, Functor_float_Object PriorityFunction, float Epsilon, int MinPoints)
 {
     local UClusters Clusters;
+    local DataPoint DP;
     local int i;
 
     if (PriorityFunction == none || A.Length <= 0)
@@ -284,8 +284,15 @@ static function UClusters CreateFromActors(array<Actor> A, Functor_float_Object 
 
     for (i = 0; i < A.Length; ++i)
     {
-        Clusters.Data[Clusters.Data.Length].Item = A[i];
-        Clusters.Data[Clusters.Data.Length].Location = A[i].Location;
+        if (A[i] == none)
+        {
+            continue;
+        }
+
+        DP.Item = A[i];
+        DP.Location = A[i].Location;
+
+        Clusters.Data[Clusters.Data.Length] = DP;
     }
 
     Clusters.GetItemPriority = PriorityFunction.DelegateFunction;

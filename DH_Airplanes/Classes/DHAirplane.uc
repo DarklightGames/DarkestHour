@@ -207,11 +207,13 @@ function DestroyWeapons()
 }
 
 // Gets an array of cannons that are suitable for the target.
-function array<DHAirplaneWeapon> GetWeaponForTarget()
+function array<DHAirplaneWeapon> GetWeaponsForTarget()
 {
+    local array<DHAirplaneWeapon> ValidWeapons;
+
     if (Target != none)
     {
-        return class'DHAirplaneWeapon'.static.GetWeaponsForCluster(Weapons, Target.Actors);
+        ValidWeapons = class'DHAirplaneWeapon'.static.GetWeaponsForCluster(Weapons, Target.Actors);
     }
 }
 
@@ -485,41 +487,56 @@ function DecideAttack()
 
 static function array<Actor> GetPotentialTargets(Actor ForActor, float Radius)
 {
-    local Pawn P;
+    local Actor A;
     local array<Actor> Targets;
+    local int i;
 
-    foreach ForActor.RadiusActors(class'Pawn', P, Radius)
+    foreach ForActor.RadiusActors(class'Actor', A, Radius)
     {
-        if (P.IsA('ROVehicleWeaponPawn'))
+        if (A.IsA('DHPawn') ||
+            A.IsA('DHVehicle') ||
+            A.IsA('DHArmoredVehicle') ||
+            A.IsA('DHATGun') ||
+            A.IsA('DHConstruction'))
         {
-            continue;
+            Targets[Targets.Length] = A;
         }
-
-        Targets[Targets.Length] = P;
     }
+
+    // DEBUG
+    Log("Found potential targets:" @ Targets.Length);
+
+    return Targets;
 }
 
 // This function is used by the Searching state to decide which target is next.
 function PickTarget()
 {
-    local UClusters Targets;
-    local UHeap QueuedTargets, TargetCluster;
+    local UClusters ClusteringData;
+    local UHeap TargetQueue, TopCluster;
     local UClusters.DataPoint P;
     local DHPawn OtherPawn;
     local Actor TargetActor;
     local array<Actor> TargetActors;
-    local string TargetClassName;
+    local string TargetDebugString;
     local Functor_float_Object PriorityFunction;
     local int i;
 
     PriorityFunction = new class'Functor_float_Object';
     PriorityFunction.DelegateFunction = GetTargetPriority;
 
-    Targets = class'UClusters'.static.CreateFromActors(GetPotentialTargets(self, 10000),
-                                                       PriorityFunction,
-                                                       class'DHUnits'.static.MetersToUnreal(ClusterEpsilonInMeters),
-                                                       ClusterMinPoints);
-    TargetActors = Targets.GetPriorityActors();
+    ClusteringData = class'UClusters'.static.CreateFromActors(GetPotentialTargets(self, 100000),
+                                                              PriorityFunction,
+                                                              class'DHUnits'.static.MetersToUnreal(ClusterEpsilonInMeters),
+                                                              ClusterMinPoints);
+
+    if (ClusteringData == none)
+    {
+        Log("No targets!");
+        return;
+    }
+
+    TargetActors = ClusteringData.GetPriorityActors();
 
     if (TargetActors.Length > 0)
     {
@@ -539,14 +556,23 @@ function PickTarget()
     }
 
     // DEBUG: Get target's class name (for logging).
-    QueuedTargets = Targets.ToHeap();
-    TargetClassName = string(QueuedTargets.Peek());
+    TargetQueue = ClusteringData.ToHeap();
+
+    if (TargetQueue.RootIsHeap(TopCluster))
+    {
+        TargetDebugString = "Cluster (size:" @ TopCluster.GetLength() $ ")";
+    }
+    else
+    {
+        TargetDebugString = string(TargetQueue.Peek());
+    }
 
     // Get coordinates to the target.
     // TODO: Without course correction, target might drift away.
-    if (Target != none && Target.IsValid() && Targets.GetPriorityVector(QueuedTargets, TargetCoordinates.Start, TargetCoordinates.End))
+    if (Target != none && Target.IsValid() && ClusteringData.GetPriorityVector(TargetQueue, TargetCoordinates.Start, TargetCoordinates.End))
     {
-        Log("Target acquired:" @ TargetClassName @ "@" @ TargetCoordinates.Start);
+        Log("Target acquired:" @ TargetDebugString @ "@" @ TargetCoordinates.Start);
+        StartStrafe();
     }
     else
     {
@@ -555,9 +581,6 @@ function PickTarget()
         // violent smashing into the ground.
         Log("No target!");
     }
-
-    // Debug
-    StartStrafe();
 }
 
 // Initial State. The plane enters into the combat area.
@@ -627,6 +650,11 @@ state Approaching
         local vector TurnCriclePosition;
         local vector PlaneLocalTurnCriclePosition;
 
+        if (Target == none)
+        {
+            return;
+        }
+
         // Decide to turn left or right towards target.
         HeadingRotator = OrthoRotation(Velocity, Velocity cross vect(0, 0, 1), vect(0, 0, 1));
         HeadingRotator.Roll = 0;
@@ -675,7 +703,11 @@ state Approaching
 
     function BeginState()
     {
-        Log("Approaching: " $ Target.GetLocation());
+        if (Target != none)
+        {
+            Log("Approaching: " $ Target.GetLocation());
+        }
+
         bIsTurningTowardsTarget = false;
     }
 }
@@ -725,6 +757,7 @@ state DiveAttacking
 
     function BeginState()
     {
+        local array<DHAirplaneWeapon> WeaponsToArm;
         local int i;
 
         bIsPullingUp = false;
@@ -733,7 +766,16 @@ state DiveAttacking
 
         BeginDiveClimbTowardsPosition(TargetCoordinates.Start, 5000, false);
 
-        // ARM WEAPONS HERE
+        WeaponsToArm = GetWeaponsForTarget();
+        class'DHAirplaneWeapon'.static.ArmWeapons(WeaponsToArm);
+
+        // DEBUG:
+        Log("Arming weapons...");
+
+        for (i = 0; i < WeaponsToArm.Length; ++i)
+        {
+            Log("Armed:" @ WeaponsToArm[i].GetHumanReadableName());
+        }
     }
 }
 
@@ -866,7 +908,7 @@ function StartStrafe()
     CurrentAttackType = AT_STRAFE;
     TargetApproach.Radius = StrafeRadius;
     TargetApproach.MinimumHeight = StrafePullUpHeight;
-    GotoState('Approuching');
+    GotoState('Approaching');
 }
 
 function StartDiveBomb()
@@ -875,7 +917,7 @@ function StartDiveBomb()
     TargetApproach.Radius = DiveBombRadius;
     TargetApproach.MinimumHeight = DiveBombPullUpHeight;
     bHasDroppedBomb = false;
-    GotoState('Approuching');
+    GotoState('Approaching');
 }
 
 function StartFlyOverBomb()
@@ -883,7 +925,7 @@ function StartFlyOverBomb()
     CurrentAttackType = AT_FLY_OVER_BOMB;
     TargetApproach.Radius = FlyOverBombRadius;
     bHasDroppedBomb = false;
-    GotoState('Approuching');
+    GotoState('Approaching');
 }
 
 // MovementState related functions ---------------------------------------------
@@ -986,8 +1028,6 @@ static  function vector V3ToV2(vector InVector)
 
     return OutVector;
 }
-
-
 
 function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
