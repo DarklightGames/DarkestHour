@@ -18,7 +18,7 @@ defaultproperties
     DamageRadius=1300.0 // similar to other howitzers
     PenetrationMag=965.0 // between 75mm (P3N) & 105mm howitzers
     HullFireChance=0.38
-    EngineFireChance=0.6
+    EngineFireChance=0.80
 
     //Effects
     DrawScale=1.2

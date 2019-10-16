@@ -21,7 +21,7 @@ defaultproperties
     DamageRadius=250
     MyDamageType=class'DH_Engine.DHShellHE20mmDamageType'
     HullFireChance=0.10
-    EngineFireChance=0.15
+    EngineFireChance=0.30
 
     //Penetration
     DHPenetrationTable(0)=1.9

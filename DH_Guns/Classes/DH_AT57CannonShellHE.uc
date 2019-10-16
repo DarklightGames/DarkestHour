@@ -18,12 +18,11 @@ defaultproperties
     Damage=250.0
     DamageRadius=600.0
     MyDamageType=class'DH_Engine.DHShellHE50mmATDamageType'
+    PenetrationMag=630.0
     HullFireChance=0.25
-    EngineFireChance=0.40
+    EngineFireChance=0.50
 
     //Effects
-    bHasTracer=true
-    PenetrationMag=630.0
     ShellHitDirtEffectClass=class'ROEffects.TankHEHitDirtEffect'
     ShellHitSnowEffectClass=class'ROEffects.TankHEHitSnowEffect'
     ShellHitWoodEffectClass=class'ROEffects.TankHEHitWoodEffect'

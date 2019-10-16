@@ -16,8 +16,6 @@ defaultproperties
     ImpactDamage=650
     Damage=415.0
     DamageRadius=700.0
-    HullFireChance=0.43
-    EngineFireChance=0.85
 
     //Effects
     DrawScale=1.3

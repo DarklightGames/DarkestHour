@@ -19,10 +19,9 @@ defaultproperties
     DamageRadius=500.0
     MyDamageType=class'DH_Engine.DHShellHE37mmATDamageType'
     HullFireChance=0.20
-    EngineFireChance=0.30
+    EngineFireChance=0.40
 
     //Effects
-    bHasTracer=true
     CoronaClass=class'DH_Effects.DHShellTracer_Red'
     BlurTime=4.0
     BlurEffectScalar=1.5

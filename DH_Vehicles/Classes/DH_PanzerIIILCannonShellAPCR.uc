@@ -19,7 +19,7 @@ defaultproperties
     ImpactDamage=250
     ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIILCannonShellDamageAPCR'
     HullFireChance=0.22
-    EngineFireChance=0.25
+    EngineFireChance=0.45
 
     //Penetration
     DHPenetrationTable(0)=14.9

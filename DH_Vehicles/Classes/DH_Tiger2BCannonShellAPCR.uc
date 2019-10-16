@@ -18,7 +18,7 @@ defaultproperties
     bShatterProne=true
     ImpactDamage=545
     HullFireChance=0.38
-    EngineFireChance=0.55
+    EngineFireChance=0.75
 
     //Effects
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'

@@ -7,16 +7,16 @@ class DH_JacksonCannonShellHVAP extends DHCannonShellHVAP;
 
 defaultproperties
 {
-    Speed=61619.0
+    Speed=61619.0 // 3350 fps or 1021 m/s
     MaxSpeed=61619.0
     SpeedFudgeScale=0.4
     ShellDiameter=9.0 //full caliber
-    BallisticCoefficient=1.564 //TODO: find correct BC
+    BallisticCoefficient=2.55 // Correct - verified on range at 1000 yards
 
     //Damage
     ImpactDamage=525
     HullFireChance=0.38
-    EngineFireChance=0.52
+    EngineFireChance=0.73
 
     //Penetration
     DHPenetrationTable(0)=30.6

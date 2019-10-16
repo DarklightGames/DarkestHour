@@ -16,8 +16,6 @@ defaultproperties
     ImpactDamage=650
     Damage=450.0
     DamageRadius=200.0
-    HullFireChance=0.42
-    EngineFireChance=0.65
 
     //Effects
     StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'

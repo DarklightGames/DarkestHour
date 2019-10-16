@@ -17,7 +17,7 @@ defaultproperties
     ImpactDamage=450 // just a tungsten slug; no explosive filler
     ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
     HullFireChance=0.33
-    EngineFireChance=0.45
+    EngineFireChance=0.65
 
     //Effects
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect'

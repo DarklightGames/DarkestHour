@@ -20,7 +20,7 @@ defaultproperties
     MyDamageType=class'DH_Engine.DHShellHE105mmDamageType'
     PenetrationMag=1000.0
     HullFireChance=0.43
-    EngineFireChance=0.65
+    EngineFireChance=0.85
 
     //Effects
     ExplosionSound(0)=SoundGroup'Artillery.explosions.explo01'

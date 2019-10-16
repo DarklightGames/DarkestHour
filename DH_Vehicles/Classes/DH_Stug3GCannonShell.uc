@@ -15,7 +15,7 @@ defaultproperties
     ImpactDamage=650
     BallisticCoefficient=2.52 //compare to other 75mm Pzgr39
     HullFireChance=0.45
-    EngineFireChance=0.65
+    EngineFireChance=0.85
 
     //Penetration
     DHPenetrationTable(0)=13.5

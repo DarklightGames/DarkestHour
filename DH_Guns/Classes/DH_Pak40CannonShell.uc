@@ -16,7 +16,7 @@ defaultproperties
     ImpactDamage=650
     ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
     HullFireChance=0.45
-    EngineFireChance=0.65
+    EngineFireChance=0.85
 
     //Penetration
     DHPenetrationTable(0)=13.5

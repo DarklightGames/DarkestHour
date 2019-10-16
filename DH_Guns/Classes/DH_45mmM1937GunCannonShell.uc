@@ -17,7 +17,7 @@ defaultproperties
     ImpactDamage=290
     ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
     HullFireChance=0.25
-    EngineFireChance=0.40
+    EngineFireChance=0.50
 
     //Effects
     CoronaClass=class'DH_Effects.DHShellTracer_Green'

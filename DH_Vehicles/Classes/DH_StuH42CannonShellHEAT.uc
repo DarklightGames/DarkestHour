@@ -16,14 +16,12 @@ defaultproperties
     ImpactDamage=650
     Damage=415.0
     DamageRadius=700.0
-    DrawScale=1.3
-    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
-    HullFireChance=0.55
-    EngineFireChance=0.85
 
     bDebugInImperial=false
 
     //Effects
+    DrawScale=1.3
+    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
     CoronaClass=class'DH_Effects.DHShellTracer_OrangeLarge'
 
     //Penetration

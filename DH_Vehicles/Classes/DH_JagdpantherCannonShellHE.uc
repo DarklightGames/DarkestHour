@@ -21,6 +21,9 @@ defaultproperties
     HullFireChance=0.4
     EngineFireChance=0.55
 
+    //Effects
+    bHasTracer=false
+
     //Penetration
     DHPenetrationTable(0)=5.2
     DHPenetrationTable(1)=4.9

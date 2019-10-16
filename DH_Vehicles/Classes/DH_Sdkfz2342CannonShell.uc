@@ -16,7 +16,7 @@ defaultproperties
     ImpactDamage=390
     ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIILCannonShellDamageAP'
     HullFireChance=0.3
-    EngineFireChance=0.4
+    EngineFireChance=0.60
 
     //Effects
     StaticMesh=StaticMesh'WeaponPickupSM.shells.76mm_shell'

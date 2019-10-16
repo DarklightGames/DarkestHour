@@ -16,7 +16,7 @@ defaultproperties
     ImpactDamage=390
     ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIILCannonShellDamageAP'
     HullFireChance=0.30
-    EngineFireChance=0.40
+    EngineFireChance=0.60
 
     //Effects
     CoronaClass=class'DH_Effects.DHShellTracer_Orange'

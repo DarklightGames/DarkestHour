@@ -18,7 +18,7 @@ defaultproperties
     ImpactDamage=175
     ShellImpactDamage=class'DH_Vehicles.DH_Sdkfz2341CannonShellDamageAP'
     HullFireChance=0.15
-    EngineFireChance=0.20
+    EngineFireChance=0.35
 
     //Effects
     bHasTracer=false // actually has a tracer but we use a tracer static mesh for the projectile, so no need for extra tracer effect (normally the CoronaClass)

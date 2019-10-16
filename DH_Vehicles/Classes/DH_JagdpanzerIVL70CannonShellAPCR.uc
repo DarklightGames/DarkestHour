@@ -19,7 +19,7 @@ defaultproperties
     ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
     bShatterProne=true
     HullFireChance=0.34
-    EngineFireChance=0.48
+    EngineFireChance=0.68
 
     //Effects
     bDebugInImperial=false

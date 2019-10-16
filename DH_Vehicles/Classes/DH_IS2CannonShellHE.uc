@@ -19,7 +19,7 @@ defaultproperties
     MyDamageType=class'DH_Engine.DHShellHE105mmDamageType' // a 122mm shell, but 105mm is close enough (it's a very big shell that will throw stuff around more)
     PenetrationMag=1250.0
     HullFireChance=0.50
-    EngineFireChance=0.9
+    EngineFireChance=1.0
 
     //Effects
     StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'

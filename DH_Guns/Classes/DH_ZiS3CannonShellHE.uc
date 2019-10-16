@@ -20,7 +20,7 @@ defaultproperties
     MyDamageType=class'DH_Engine.DHShellHE75mmATDamageType'
     PenetrationMag=780.0
     HullFireChance=0.33
-    EngineFireChance=0.45
+    EngineFireChance=0.65
 
     bDebugInImperial=false
 

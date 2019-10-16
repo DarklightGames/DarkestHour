@@ -7,6 +7,11 @@ class DH_JacksonCannonShell_Early extends DH_JacksonCannonShell;
 
 defaultproperties
 {
+    Speed=49127.0 //2670 fps or 814 m/s
+    MaxSpeed=49127.0
+    ShellDiameter=9.0
+    BallisticCoefficient=3.85 // Correct - verified on range at 1000 yards
+
     //Penetration
     DHPenetrationTable(0)=16.4
     DHPenetrationTable(1)=15.6

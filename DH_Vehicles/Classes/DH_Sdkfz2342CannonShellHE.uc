@@ -13,17 +13,18 @@ defaultproperties
     BallisticCoefficient=1.19
 
     //Damage
-    PenetrationMag=565.0
     ImpactDamage=315
     Damage=260.0
     DamageRadius=565.0
     MyDamageType=class'DH_Engine.DHShellHE50mmDamageType'
+    PenetrationMag=565.0
     HullFireChance=0.25
-    EngineFireChance=0.32
+    EngineFireChance=0.50
 
     bDebugInImperial=false
 
     //Effects
+    bHasTracer=false
     ShellHitDirtEffectClass=class'ROEffects.TankHEHitDirtEffect'
     ShellHitSnowEffectClass=class'ROEffects.TankHEHitSnowEffect'
     ShellHitWoodEffectClass=class'ROEffects.TankHEHitWoodEffect'

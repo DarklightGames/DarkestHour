@@ -7,18 +7,18 @@ class DH_ShermanCannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
-    Speed=27943.0
-    MaxSpeed=27943.0
+    Speed=37358.0 // 2030 fps or 619 m/s -using APC shells Mv
+    MaxSpeed=37358.0
     ShellDiameter=7.5
-    BallisticCoefficient=1.686 //TODO: double check
+    BallisticCoefficient=2.8 //TODO: pls check - this is the APC shell's BC
 
     //Damage
     ImpactDamage=475
-    PenetrationMag=1000.0
     Damage=415.0
     DamageRadius=1550.0
+    PenetrationMag=1000.0
     HullFireChance=0.34
-    EngineFireChance=0.48
+    EngineFireChance=0.68
 
     //Penetration
     DHPenetrationTable(0)=3.3

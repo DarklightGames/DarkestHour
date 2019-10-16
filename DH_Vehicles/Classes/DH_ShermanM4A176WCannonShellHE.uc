@@ -18,7 +18,7 @@ defaultproperties
     DamageRadius=1140.0
     PenetrationMag=780.0
     HullFireChance=0.3
-    EngineFireChance=0.45
+    EngineFireChance=0.65
 
     //Penetration
     DHPenetrationTable(0)=4.2

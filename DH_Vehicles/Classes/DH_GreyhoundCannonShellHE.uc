@@ -18,7 +18,7 @@ defaultproperties
     DamageRadius=800.0
     MyDamageType=class'DH_Engine.DHShellHE37mmDamageType'
     HullFireChance=0.15
-    EngineFireChance=0.20
+    EngineFireChance=0.40
 
     //Effects
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'

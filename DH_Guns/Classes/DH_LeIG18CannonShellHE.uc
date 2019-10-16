@@ -21,9 +21,12 @@ defaultproperties
     DamageRadius=1350.0
     MyDamageType=class'DH_Engine.DHShellHE75mmATDamageType'
     HullFireChance=33.0
-    EngineFireChance=0.45
+    EngineFireChance=0.65
 
     bDebugInImperial=false
+
+    //Effects
+    bHasTracer=false
 
     //Penetration
     DHPenetrationTable(0)=3.3

@@ -18,10 +18,7 @@ defaultproperties
     Damage=400.0
     DamageRadius=1140.0
     HullFireChance=0.35
-    EngineFireChance=0.55
-
-    //Effects
-    bHasTracer=true
+    EngineFireChance=0.65
 
     //Penetration
     DHPenetrationTable(0)=4.5

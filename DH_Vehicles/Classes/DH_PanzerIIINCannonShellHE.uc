@@ -20,6 +20,9 @@ defaultproperties
     HullFireChance=0.33
     EngineFireChance=0.46
 
+    //Effects
+    bHasTracer=false
+
     bDebugInImperial=false
 
     //Penetration

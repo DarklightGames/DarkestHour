@@ -12,12 +12,13 @@ defaultproperties
     ShellDiameter=7.62
     BallisticCoefficient=1.368 //TODO: find correct BC
 
+    //Damage
     ImpactDamage=450
     Damage=400.0
     DamageRadius=1140.0
     PenetrationMag=780.0
     HullFireChance=0.32
-    EngineFireChance=0.45
+    EngineFireChance=0.65
 
     //Penetration
     DHPenetrationTable(0)=4.2

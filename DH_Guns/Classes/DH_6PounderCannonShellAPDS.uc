@@ -15,7 +15,7 @@ defaultproperties
     //Damage
     ImpactDamage=300
     HullFireChance=0.25
-    EngineFireChance=0.40
+    EngineFireChance=0.50
 
     //Effects
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'

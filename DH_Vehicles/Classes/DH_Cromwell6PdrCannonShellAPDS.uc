@@ -16,7 +16,7 @@ defaultproperties
     ImpactDamage=300
     ShellImpactDamage=class'DH_Vehicles.DH_Cromwell6PdrCannonShellDamageAPDS'
     HullFireChance=0.25
-    EngineFireChance=0.40
+    EngineFireChance=0.50
 
     //Effects
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'

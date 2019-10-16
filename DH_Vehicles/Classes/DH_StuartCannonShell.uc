@@ -17,13 +17,12 @@ defaultproperties
     ImpactDamage=250
     ShellImpactDamage=class'DH_Vehicles.DH_StuartCannonShellDamageAP'
     HullFireChance=0.15
-    EngineFireChance=0.25
+    EngineFireChance=0.45
 
     //Effects
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
-
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
     CoronaClass=class'DH_Effects.DHShellTracer_Red'
 

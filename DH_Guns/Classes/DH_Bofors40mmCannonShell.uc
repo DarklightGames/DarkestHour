@@ -16,7 +16,7 @@ defaultproperties
     ImpactDamage=265
     ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
     HullFireChance=0.23
-    EngineFireChance=0.35
+    EngineFireChance=0.47
 
     bShatterProne=true
 

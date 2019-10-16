@@ -18,9 +18,12 @@ defaultproperties
     DamageRadius=1350.0
     PenetrationMag=920.0
     HullFireChance=0.33
-    EngineFireChance=0.46
+    EngineFireChance=0.65
 
     bDebugInImperial=false
+
+    //Effects
+    bHasTracer=false
 
     //Penetration
     DHPenetrationTable(0)=4.5

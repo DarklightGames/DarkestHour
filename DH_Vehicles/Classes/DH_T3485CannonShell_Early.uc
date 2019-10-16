@@ -17,7 +17,7 @@ defaultproperties
     ImpactDamage=700
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
     HullFireChance=0.45
-    EngineFireChance=0.70
+    EngineFireChance=0.90
 
     //Penetration
     DHPenetrationTable(0)=13.1 // 100m

@@ -16,8 +16,6 @@ defaultproperties
     ImpactDamage=585         // between 75mm (P3N) & 105mm howitzers
     Damage=415.0       // as 105mm howitzers
     DamageRadius=615.0 // between 75mm (P3N) & 105mm howitzers
-    HullFireChance=0.48
-    EngineFireChance=0.80
 
     //Effects
     DrawScale=1.2

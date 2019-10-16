@@ -13,12 +13,12 @@ defaultproperties
     BallisticCoefficient=1.55 //TODO: find correct BC
 
     //Damage
+    ImpactDamage=450
     Damage=400.0
     DamageRadius=1140.0
-    ImpactDamage=450
     PenetrationMag=780.0
     HullFireChance=0.33
-    EngineFireChance=0.45
+    EngineFireChance=0.65
 
     bDebugInImperial=false
 

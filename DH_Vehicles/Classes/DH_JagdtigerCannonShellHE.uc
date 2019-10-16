@@ -19,9 +19,12 @@ defaultproperties
     MyDamageType=class'DH_Engine.DHShellHE105mmDamageType' // a 128mm shell, but 105mm is close enough (it's a very big shell that will throw stuff around more)
     PenetrationMag=1500.0
     HullFireChance=0.55
-    EngineFireChance=0.90
+    EngineFireChance=1.0
 
     bDebugInImperial=false
+
+    //Effects
+    bHasTracer=false
 
     //Effects
     ShellDeflectEffectClass=class'ROEffects.ROArtilleryDirtEmitter'

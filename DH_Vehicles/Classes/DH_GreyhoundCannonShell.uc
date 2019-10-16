@@ -16,7 +16,7 @@ defaultproperties
     ImpactDamage=250
     ShellImpactDamage=class'DH_Vehicles.DH_StuartCannonShellDamageAP'
     HullFireChance=0.2
-    EngineFireChance=0.25
+    EngineFireChance=0.45
 
     //Effects
     bShatterProne=true

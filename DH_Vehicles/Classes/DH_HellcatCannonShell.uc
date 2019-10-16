@@ -16,7 +16,7 @@ defaultproperties
     ImpactDamage=580
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
     HullFireChance=0.4
-    EngineFireChance=0.6
+    EngineFireChance=0.80
 
     //Effects
     bShatterProne=true
