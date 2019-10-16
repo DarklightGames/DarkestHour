@@ -16,10 +16,9 @@ defaultproperties
     Mesh=SkeletalMesh'DH_EnfieldNo2_1st.EnfieldNo2'
     HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.EnfieldNo2_s'
     bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=2
+    HighDetailOverlayIndex=1
 
-    DisplayFOV=90.0
-    IronSightDisplayFOV=40.0 // Increasing this really shows the ugly wrist bending in insane way
+    IronSightDisplayFOV=70.0
 
     MaxNumPrimaryMags=5
     InitialNumPrimaryMags=5
@@ -38,4 +37,10 @@ defaultproperties
     PutDownAnim="putaway"
     SelectEmptyAnim="Draw"
     PutDownEmptyAnim="putaway"
+
+    MagPartialReloadAnim="reload_empty" // There is no alternate reload.
+
+    HandNum=0
+    SleeveNum=3
+    bDiscardMagOnReload=true
 }
