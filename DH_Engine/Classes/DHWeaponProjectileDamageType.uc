@@ -19,7 +19,19 @@ defaultproperties
     DeathString="%o was killed by %k's %w."
     MaleSuicide="%o was killed by his own %w."
     FemaleSuicide="%o was killed by her own %w."
-    KDamageImpulse=2250.0 // default for full power rifle ammo
-    GibModifier=0.0
     PawnDamageEmitter=class'ROEffects.ROBloodPuff'
+
+    bRagdollBullet=false // turns off the override that forces simple bullet ragdoll values
+    //todo remove all child overrides!
+
+    bAlwaysSevers=true
+    bThrowRagdoll=true
+    bLocationalHit=true
+    bKUseOwnDeathVel=true
+
+    GibModifier=200.0
+    GibPerterbation=0.06
+    KDamageImpulse=4500.0
+    KDeathVel=512.0
+    KDeathUpKick=200.0
 }
