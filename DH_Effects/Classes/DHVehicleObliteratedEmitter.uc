@@ -293,7 +293,7 @@ defaultproperties
         DrawStyle=PTDS_Translucent
         Texture=Texture'DH_FX_Tex.effects.dhweaponspark'
         LifetimeRange=(Min=2.0)
-        StartVelocityRange=(X=(Min=-600.000000,Max=600.000000),Y=(Min=-600.000000,Max=600.000000),Z=(Min=400.000000,Max=900.000000))
+        StartVelocityRange=(X=(Min=-600.000000,Max=600.000000),Y=(Min=-600.000000,Max=600.000000),Z=(Min=50.000000,Max=900.000000))
     End Object
     Emitters(7)=SpriteEmitter'SpriteEmitter7'
 
