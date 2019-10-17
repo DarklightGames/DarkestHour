@@ -8,7 +8,7 @@ class DHSC250BombWeapon extends DHAirplaneMissileWeapon;
 defaultproperties
 {
     StaticMesh=StaticMesh'DH_Airplanes_stc.Bombs.sc250'
-    ProjectileClass=class'DHAirplaneBomb_SC250'
+    ProjectileClass=class'DHSC250Bomb'
     WeaponType=WEAPON_Bomb
 
     TargetTypes(0)=TARGET_Infantry

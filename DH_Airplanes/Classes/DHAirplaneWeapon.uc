@@ -22,9 +22,6 @@ enum EMountAxis
     MOUNT_Right
 };
 
-var DHAirplane          Airplane;
-var DHAirplaneTarget    Target;
-
 var EWeaponType         WeaponType;
 var int                 WeaponInfo;
 
@@ -47,20 +44,7 @@ var EMountAxis          MountAxis;
 var DHAirplaneWeapon    WeaponPair;
 
 // Targetting
-var array<DHAirplaneTarget.ETargetType> TargetTypes;
-
-simulated function PostBeginPlay()
-{
-    if (Role == ROLE_Authority)
-    {
-        Airplane = DHAirplane(Owner);
-
-        if (Airplane != none)
-        {
-            Target = Airplane.Target;
-        }
-    }
-}
+var array<DHAirplane.ETargetType> TargetTypes;
 
 simulated function DHAirplane GetAirplane()
 {
@@ -110,33 +94,7 @@ function StartFiring();
 
 // WEAPON ARRAYS
 
-static final function array<DHAirplaneWeapon> GetWeaponsForCluster(array<DHAirplaneWeapon> Weapons, array<Actor> Targets)
-{
-    local array<DHAirplaneWeapon> ValidWeapons;
-    local int i;
-
-    if (Targets.Length == 0)
-    {
-        return ValidWeapons;
-    }
-
-    for (i = 0; i < Weapons.Length; ++i)
-    {
-        if (Weapons[i] == none)
-        {
-            continue;
-        }
-
-        if (Weapons[i].CanDamageCluster(Targets))
-        {
-            ValidWeapons[ValidWeapons.Length] = Weapons[i];
-        }
-    }
-
-    return ValidWeapons;
-}
-
-static final function ArmWeapons(array<DHAirplaneWeapon> Weapons)
+final static final function ArmWeapons(array<DHAirplaneWeapon> Weapons)
 {
     local int i;
 
@@ -166,38 +124,7 @@ static function bool CanDamageTargetType(DHAirplane.ETargetType TargetType)
 
 static function bool CanDamageActor(Actor A)
 {
-    local DHAirplane.ETargetType TargetType;
-
-    if (A == none)
-    {
-        return false;
-    }
-
-    TargetType = class'DHAirplane'.static.GetTargetType(A);
-
-    if (CanDamageTargetType(TargetType))
-    {
-        return true;
-    }
-}
-
-// Returns true, if cluster contains at least 1 valid target.
-static function bool CanDamageCluster(array<Actor> Actors)
-{
-    local int i;
-
-    for (i = 0; i < Actors.Length; ++i)
-    {
-        if (Actors[i] == none)
-        {
-            continue;
-        }
-
-        if (CanDamageActor(Actors[i]))
-        {
-            return true;
-        }
-    }
+    return true;
 }
 
 defaultproperties

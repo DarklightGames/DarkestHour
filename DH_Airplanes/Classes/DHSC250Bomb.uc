@@ -3,10 +3,10 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHAirplaneBomb_GP250 extends DHAirplaneBomb;
+class DHSC250Bomb extends DHAirplaneBomb;
 
 defaultproperties
 {
-    StaticMesh=StaticMesh'DH_Airplanes_stc.Bombs.gp250'
+    StaticMesh=StaticMesh'DH_Airplanes_stc.Bombs.sc250'
     MyDamageType=class'DH250kgBombDamage'
 }

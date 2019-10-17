@@ -10,6 +10,7 @@ var bool   bHideWhenEmpty;
 
 function Disarm();
 function Resupply();
+function bool HasAmmo() { return true; }
 
 simulated function PostBeginPlay()
 {
@@ -26,11 +27,23 @@ function Timer()
     Fire();
 }
 
+function SpawnProjectile()
+{
+    local vector ProjectileLocation;
+    local rotator ProjectileRotation;
+
+    ProjectileLocation = Location + (ProjectileOffset >> Rotation);
+    ProjectileRotation = Rotation;
+
+    Spawn(ProjectileClass, self,, ProjectileLocation, ProjectileRotation);
+}
+
 function Fire()
 {
     Log("BOMBS AWAY! WOO!");
-    GotoState('Empty');
+
     SpawnProjectile();
+    GotoState('Empty');
 }
 
 function Arm()
@@ -108,6 +121,9 @@ state Empty
 {
     ignores Fire, Arm;
 
+    function bool HasAmmo() { return false; }
+    function Resupply() { GotoState(''); }
+
     function Timer()
     {
         Resupply();
@@ -115,10 +131,7 @@ state Empty
 
     function BeginState()
     {
-        if (bHideWhenEmpty)
-        {
-            bHidden = true;
-        }
+        bHidden = bHideWhenEmpty;
 
         // DEBUG: Resuppy the bombs for testing
         SetTimer(5, false);
@@ -126,17 +139,7 @@ state Empty
 
     function EndState()
     {
-        if (bHideWhenEmpty)
-        {
-            bHidden = false;
-        }
-    }
-
-    function Resupply()
-    {
-        super.Resupply();
-
-        GotoState('');
+        bHidden = !bHideWhenEmpty;
     }
 }
 
@@ -181,10 +184,4 @@ defaultproperties
 {
     DrawType=DT_StaticMesh
     bHideWhenEmpty=true
-
-    StaticMesh=StaticMesh'DH_Airplanes_stc.Bombs.sc250'
-    ProjectileClass=class'DHAirplaneBomb_SC250'
-
-    MaxAmmo=1
-    AmmoCount=1
 }

@@ -104,7 +104,6 @@ enum ETargetType
     TARGET_Vehicle,
     TARGET_ArmoredVehicle,
     TARGET_Gun,
-    TARGET_Construction
 };
 
 struct STargetCoordinates
@@ -116,6 +115,7 @@ struct STargetCoordinates
 var array<ETargetType>  TargetTypes;
 var array<float>        TargetTypeModifiers;
 var float               TargetPriorityFalloffStepInMeters;
+var bool                bTargetMustBeManned;
 
 var DHAirplaneTarget    Target; // Current target.
 var STargetApproach     TargetApproach;
@@ -210,11 +210,31 @@ function DestroyWeapons()
 function array<DHAirplaneWeapon> GetWeaponsForTarget()
 {
     local array<DHAirplaneWeapon> ValidWeapons;
+    local int i, j;
 
-    if (Target != none)
+    if (Target == none)
     {
-        ValidWeapons = class'DHAirplaneWeapon'.static.GetWeaponsForCluster(Weapons, Target.Actors);
+        return ValidWeapons;
     }
+
+    for (i = 0; i < Weapons.Length; ++i)
+    {
+        if (Weapons[i] == none)
+        {
+            continue;
+        }
+
+        for (j = 0; j < Target.Actors.Length; ++j)
+        {
+            if (Weapons[i].CanDamageActor(Target.Actors[i]))
+            {
+                ValidWeapons[ValidWeapons.Length] = Weapons[i];
+                break;
+            }
+        }
+    }
+
+    return ValidWeapons;
 }
 
 function CreateWeapons()
@@ -228,14 +248,12 @@ function CreateWeapons()
     {
         Weapon = CreateWeapon(CenterWeaponInfos[i]);
 
-        if (Weapon == none)
+        if (Weapon != none)
         {
-            continue;
+            Weapon.WeaponInfo = CenterWeaponInfos.Length;
+            Weapon.MountAxis = MOUNT_Center;
+            Weapons[Weapons.Length] = Weapon;
         }
-
-        Weapon.WeaponInfo = CenterWeaponInfos.Length;
-        Weapon.MountAxis = MOUNT_Center;
-        Weapons[Weapons.Length] = Weapon;
     }
 
     for (i = 0; i < LeftWeaponInfos.Length || i < RightWeaponInfos.Length; ++i)
@@ -296,6 +314,8 @@ function DHAirplaneWeapon CreateWeapon(WeaponInfo WI)
     AirplaneModel.AttachToBone(Weapon, WI.WeaponBone);
     Weapon.SetRelativeRotation(WI.RotationOffset);
     Weapon.SetRelativeLocation(WI.LocationOffset);
+
+    return Weapon;
 }
 
 // Tick needed to make AI decisions on server.
@@ -325,61 +345,10 @@ function OnTargetReached();
 // Called when a Movement has reached it's predefined goal. Overridden by states.
 function OnMoveEnd();
 
-// This function computes the priority of each individual target (highest
-// first). It is passed into the cluster object to sort the targets out.
-function float GetTargetPriority(Object O)
+// TODO: This is the link between the Target weapon type recomendations and the actual attack parameters
+// Decide what attack to do on the target. Produces control signals.
+function DecideAttack()
 {
-    local Actor A;
-    local float Priority;
-    local bool bAirplaneCanDamageTarget;
-    local int i, DistanceModifier;
-    local ETargetType TargetType;
-
-    A = Actor(O);
-
-    if (A == none)
-    {
-        return 0.0;
-    }
-
-    TargetType = GetTargetType(A);
-
-    // First we check if we have appropriate guns and ammo to damage the target
-    for (i = 0; i < Weapons.Length; ++i)
-    {
-        if (Weapons[i].CanFire() && Weapons[i].CanDamageTargetType(TargetType))
-        {
-            bAirplaneCanDamageTarget = true;
-            break;
-        }
-    }
-
-    if (!bAirplaneCanDamageTarget)
-    {
-        return 0.0;
-    }
-
-    switch (TargetType)
-    {
-        case TARGET_ArmoredVehicle:
-        case TARGET_Vehicle:
-        case TARGET_Gun:
-            Priority = GetTargetTypeModifier(TargetType) + GetTargetCrewCount(A) * GetTargetTypeModifier(TARGET_Infantry);
-        default:
-            Priority = GetTargetTypeModifier(TargetType);
-    }
-
-    // Give closer targets a higher priority
-    DistanceModifier = int(VSize(Location - A.Location) / class'DHUnits'.static.MetersToUnreal(TargetPriorityFalloffStepInMeters));
-
-    if (DistanceModifier > 0)
-    {
-        Priority /= DistanceModifier;
-    }
-
-    // TODO: Add proximity-to-airstrike-marker modifier to allow squad leaders
-    // select priority targets.
-    return Priority;
 }
 
 // TODO: Move this to DHVehicle
@@ -411,21 +380,8 @@ function int GetTargetCrewCount(Actor A)
     return Count;
 }
 
-static function float GetTargetTypeModifier(ETargetType TargetType)
-{
-    local int Index;
-
-    Index = int(TargetType);
-
-    if (Index < default.TargetTypeModifiers.Length)
-    {
-        return default.TargetTypeModifiers[Index];
-    }
-}
-
 static function ETargetType GetTargetType(Actor A)
 {
-    local name TargetClass;
     local DHPawn P;
 
     if (A == none)
@@ -448,22 +404,133 @@ static function ETargetType GetTargetType(Actor A)
         return TARGET_Vehicle;
     }
 
-    if (A.IsA('DHConstruction'))
-    {
-        return TARGET_Construction;
-    }
-
     // Infantry
-    // TODO: Add a case for crewed mortars
 
     P = DHPawn(A);
 
-    if (P != none && P.PlayerReplicationInfo != none)
+    if ((P != none && P.PlayerReplicationInfo != none) || A.IsA('DHMortarVehicle'))
     {
         return TARGET_Infantry;
     }
 
     return TARGET_None;
+}
+
+function float GetTargetTypeModifier(ETargetType TargetType)
+{
+    local int Index;
+
+    Index = int(TargetType);
+
+    if (Index < default.TargetTypeModifiers.Length)
+    {
+        return default.TargetTypeModifiers[Index];
+    }
+}
+
+// TODO: Add team check
+function bool IsTargetActorValid(Actor A)
+{
+    local DHPawn DHP;
+    local Pawn P;
+
+    P = Pawn(A);
+
+    if (P == none || P.bDeleteMe || P.Health <= 0 || A.IsA('VehicleWeaponPawn'))
+    {
+        return false;
+    }
+
+    // Mortars (target only when manned)
+    if (A.IsA('DHMortarVehicle') && GetTargetCrewCount(A) > 0)
+    {
+        return true;
+    }
+
+    // Vehicles / AT guns
+    if (A.IsA('DHVehicle') || A.IsA('DHATGun'))
+    {
+        return !bTargetMustBeManned || GetTargetCrewCount(A) > 0;
+    }
+
+    // Infantry
+    DHP = DHPawn(A);
+
+    return DHP != none && DHP.PlayerReplicationInfo != none;
+}
+
+function array<Actor> GetValidTargets(Actor ForActor, float Radius)
+{
+    local Actor A;
+    local array<Actor> Targets;
+    local int i;
+
+    foreach ForActor.RadiusActors(class'Actor', A, Radius)
+    {
+        if (IsTargetActorValid(A))
+        {
+            // Check if we have appropriate guns and ammo to damage the target
+            for (i = 0; i < Weapons.Length; ++i)
+            {
+                if (Weapons[i].CanFire() && Weapons[i].CanDamageActor(A))
+                {
+                    Targets[Targets.Length] = A;
+                    break;
+                }
+            }
+        }
+    }
+
+    // DEBUG:
+    Log("Found valid targets:" @ Targets.Length);
+
+    return Targets;
+}
+
+// This function computes the priority of each individual target (highest
+// first). It is passed into the cluster object to sort the targets out.
+function float GetTargetPriority(Object O)
+{
+    local Actor A;
+    local float Priority;
+    local int DistanceModifier;
+    local ETargetType TargetType;
+
+    A = Actor(O);
+
+    if (A == none)
+    {
+        return 0.0;
+    }
+
+    TargetType = GetTargetType(A);
+
+    switch (TargetType)
+    {
+        case TARGET_ArmoredVehicle:
+        case TARGET_Vehicle:
+        case TARGET_Gun:
+            Priority = GetTargetTypeModifier(TargetType) + GetTargetCrewCount(A) * GetTargetTypeModifier(TARGET_Infantry);
+            break;
+        default:
+            Priority = GetTargetTypeModifier(TargetType);
+    }
+
+    // Give closer targets a higher priority
+    DistanceModifier = int(VSize(Location - A.Location) / class'DHUnits'.static.MetersToUnreal(TargetPriorityFalloffStepInMeters));
+
+    if (DistanceModifier > 0)
+    {
+        Priority /= DistanceModifier;
+    }
+
+    // TODO: Add proximity-to-airstrike-marker modifier to allow squad leaders
+    // select priority targets.
+
+    // DEBUG:
+    Log("PRIORITY" @ Priority @ "FOR" @ A.GetHumanReadableName() @ "OF TYPE" @ GetTargetType(A));
+
+    return Priority;
 }
 
 function float GetTargetScanRadius()
@@ -476,37 +543,7 @@ function float GetTargetClusterEpsilon()
 {
     // TODO: Figure out how close points need to be to form optimal clusters
     //       (epsilon).
-    return class'DHUnits'.static.MetersToUnreal(20);
-}
-
-// TODO: This is the link between the Target weapon type recomendations and the actual attack parameters
-// Decide what attack to do on the target. Produces control signals.
-function DecideAttack()
-{
-}
-
-static function array<Actor> GetPotentialTargets(Actor ForActor, float Radius)
-{
-    local Actor A;
-    local array<Actor> Targets;
-    local int i;
-
-    foreach ForActor.RadiusActors(class'Actor', A, Radius)
-    {
-        if (A.IsA('DHPawn') ||
-            A.IsA('DHVehicle') ||
-            A.IsA('DHArmoredVehicle') ||
-            A.IsA('DHATGun') ||
-            A.IsA('DHConstruction'))
-        {
-            Targets[Targets.Length] = A;
-        }
-    }
-
-    // DEBUG
-    Log("Found potential targets:" @ Targets.Length);
-
-    return Targets;
+    return class'DHUnits'.static.MetersToUnreal(ClusterEpsilonInMeters);
 }
 
 // This function is used by the Searching state to decide which target is next.
@@ -514,20 +551,16 @@ function PickTarget()
 {
     local UClusters ClusteringData;
     local UHeap TargetQueue, TopCluster;
-    local UClusters.DataPoint P;
-    local DHPawn OtherPawn;
-    local Actor TargetActor;
     local array<Actor> TargetActors;
     local string TargetDebugString;
     local Functor_float_Object PriorityFunction;
-    local int i;
 
     PriorityFunction = new class'Functor_float_Object';
     PriorityFunction.DelegateFunction = GetTargetPriority;
 
-    ClusteringData = class'UClusters'.static.CreateFromActors(GetPotentialTargets(self, 100000),
+    ClusteringData = class'UClusters'.static.CreateFromActors(GetValidTargets(self, GetTargetScanRadius()),
                                                               PriorityFunction,
-                                                              class'DHUnits'.static.MetersToUnreal(ClusterEpsilonInMeters),
+                                                              GetTargetClusterEpsilon(),
                                                               ClusterMinPoints);
 
     if (ClusteringData == none)
@@ -1190,6 +1223,7 @@ defaultproperties
     ClusterMinPoints=1
     ClusterEpsilonInMeters=20
     TargetPriorityFalloffStepInMeters=500
+    bTargetMustBeManned=true
 
     // TargetTypeModifiers define in which order the plane will target things.
     // All crewed targets will have an infantry modifiers added for each crew memeber.
@@ -1206,8 +1240,5 @@ defaultproperties
     TargetTypeModifiers(3)=8.3
 
     TargetTypes(4)=TARGET_Gun // crewed
-    TargetTypeModifiers(4)=0.0
-
-    TargetTypes(5)=TARGET_Contruction
-    TargetTypeModifiers(5)=0.0
+    TargetTypeModifiers(4)=2.0
 }
