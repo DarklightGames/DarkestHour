@@ -1420,7 +1420,7 @@ simulated function DHPlayerReplicationInfo GetMember(int TeamIndex, int SquadInd
     return none;
 }
 
-simulated function int GetUnassignedPlayerCount(int TeamIndex, int SquadIndex)
+simulated function int GetUnassignedPlayerCount(int TeamIndex)
 {
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
