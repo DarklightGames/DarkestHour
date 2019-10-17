@@ -20,6 +20,7 @@ var automated   GUIImage            i_Locked;       // Show this when the squad 
 var automated   DHGUIEditBox        eb_SquadName;
 var automated   GUIImage            i_Background;
 
+var localized string    InviteText;
 var localized string    KickText;
 var localized string    BanText;
 var localized string    PromoteText;
@@ -180,6 +181,14 @@ function bool MembersListContextMenuOpen(GUIContextMenu Sender)
             }
         }
     }
+    else if (SquadIndex == -1)
+    {
+        if (MyPRI.IsSquadLeader())
+        {
+            // Invite the unassigned player.
+            Sender.AddItem(Repl(default.InviteText, "{0}", OtherPRI.PlayerName));
+        }
+    }
     else
     {
         // We have selected another squad.
@@ -254,6 +263,18 @@ function MembersListContextMenuSelect(GUIContextMenu Sender, int ClickIndex)
             {
                 case 0: // volunteer
                     PC.ServerSquadVolunteerToAssist();
+                    break;
+            }
+        }
+    }
+    else if (SquadIndex == -1)
+    {
+        if (MyPRI.IsSquadLeader())
+        {
+            switch (ClickIndex)
+            {
+                case 0:
+                    PC.ServerSquadInvite(PRI);
                     break;
             }
         }
@@ -403,6 +424,7 @@ defaultproperties
 
     OnShow=InternalOnShow
 
+    InviteText="Invite {0}"
     KickText="Kick {0}"
     BanText="Ban {0}"
     PromoteText="Promote {0} to squad leader"

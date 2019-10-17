@@ -1420,6 +1420,57 @@ simulated function DHPlayerReplicationInfo GetMember(int TeamIndex, int SquadInd
     return none;
 }
 
+simulated function int GetUnassignedPlayerCount(int TeamIndex, int SquadIndex)
+{
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
+    local int i, Count;
+
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI == none)
+    {
+        return 0;
+    }
+
+    for (i = 0; i < GRI.PRIArray.Length; ++i)
+    {
+        PRI = DHPlayerReplicationInfo(GRI.PRIArray[i]);
+
+        if (PRI != none && PRI.Team != none && PRI.Team.TeamIndex == TeamIndex && PRI.SquadIndex == -1)
+        {
+            ++Count;
+        }
+    }
+
+    return Count;
+}
+
+simulated function GetUnassignedPlayers(int TeamIndex, out array<DHPlayerReplicationInfo> UnassignedPlayers)
+{
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
+    local int i;
+
+    UnassignedPlayers.Length = 0;
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    for (i = 0; i < GRI.PRIArray.Length; ++i)
+    {
+        PRI = DHPlayerReplicationInfo(GRI.PRIArray[i]);
+
+        if (PRI != none && PRI.Team != none && PRI.Team.TeamIndex == TeamIndex && PRI.SquadIndex == -1)
+        {
+            UnassignedPlayers[UnassignedPlayers.Length] = PRI;
+        }
+    }
+}
+
 // Returns the number of members in the specified squad.
 // TODO: Sort of inefficient. Rewrite if you're bored.
 simulated function int GetMemberCount(int TeamIndex, int SquadIndex)

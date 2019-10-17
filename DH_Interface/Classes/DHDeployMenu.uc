@@ -1679,6 +1679,51 @@ function UpdateSquads()
 
     bIsInASquad = PRI.IsInSquad();
 
+    // Show the unassigned category
+    SRI.GetUnassignedPlayers(TeamIndex, Members);
+
+    if (Members.Length > 0)
+    {
+        C = p_Squads.SquadComponents[j];
+        C.l_SquadName.Caption = "Unassigned";
+        C.SquadIndex = -1;
+
+        SetVisible(C.lb_Members, true);
+        SetVisible(C.li_Members, true);
+        SetVisible(C.l_SquadName, true);
+        SetVisible(C.eb_SquadName, false);
+        SetVisible(C.b_CreateSquad, false);
+        SetVisible(C.b_JoinSquad, false);
+        SetVisible(C.b_LeaveSquad, false);
+        SetVisible(C.b_LockSquad, false);
+        SetVisible(C.i_LockSquad, false);
+
+        SavedPRI = DHPlayerReplicationInfo(C.li_Members.GetObject());
+
+        // Add or remove entries to match the member count.
+        while (C.li_Members.ItemCount < Members.Length)
+        {
+            C.li_Members.Add("");
+        }
+
+        while (C.li_Members.ItemCount > Members.Length)
+        {
+            C.li_Members.Remove(0, 1);
+        }
+
+        // Update the text and associated object for each item.
+        for (k = 0; k < Members.Length; ++k)
+        {
+            C.li_Members.SetItemAtIndex(k, Members[k].PlayerName);
+            C.li_Members.SetObjectAtIndex(k, Members[k]);
+        }
+
+        // Re-select the previous selection.
+        C.li_Members.SelectByObject(SavedPRI);
+
+        ++j;
+    }
+
     // Go through the active squads
     for (i = 0; i < SRI.GetTeamSquadLimit(TeamIndex); ++i)
     {
