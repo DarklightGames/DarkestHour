@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_EnfieldNo2Pickup'
 
     Mesh=SkeletalMesh'DH_EnfieldNo2_1st.EnfieldNo2'
-    HighDetailOverlay=shader'DH_Weapon_tex.Spec_Maps.EnfieldNo2_s'
+    HighDetailOverlay=Shader'DH_Weapon_tex.Spec_Maps.EnfieldNo2_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1
 
@@ -27,9 +27,12 @@ defaultproperties
     IronIdleEmptyAnim="Iron_idle"
     IronBringUpEmpty="iron_in"
     IronPutDownEmpty="iron_out"
-    SprintStartEmptyAnim="Sprint_Start"
-    SprintLoopEmptyAnim="Sprint_Middle"
-    SprintEndEmptyAnim="Sprint_end"
+    SprintStartAnim="sprint_in"
+    SprintLoopAnim="sprint_idle"
+    SprintEndAnim="sprint_out"
+    SprintStartEmptyAnim="sprint_in"
+    SprintLoopEmptyAnim="sprint_idle"
+    SprintEndEmptyAnim="sprint_out"
     CrawlForwardEmptyAnim="crawlF"
     CrawlBackwardEmptyAnim="crawlB"
     CrawlStartEmptyAnim="crawl_in"
