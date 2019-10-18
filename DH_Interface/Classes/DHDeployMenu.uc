@@ -96,7 +96,8 @@ var localized   string                      NoneText,
                                             BotsText,
                                             SquadOnlyText,
                                             SquadLeadershipOnlyText,
-                                            RecommendJoiningSquadText;
+                                            RecommendJoiningSquadText,
+                                            UnassignedPlayersCaptionText;
 
 // NOTE: The reason this variable is needed is because the PlayerController's
 // GetTeamNum function is not reliable after receiving a successful team change
@@ -1685,7 +1686,7 @@ function UpdateSquads()
     if (Members.Length > 0)
     {
         C = p_Squads.SquadComponents[j];
-        C.l_SquadName.Caption = "Unassigned";
+        C.l_SquadName.Caption = default.UnassignedPlayersCaptionText;
         C.SquadIndex = -1;
 
         SetVisible(C.lb_Members, true);
@@ -1894,6 +1895,7 @@ defaultproperties
     SquadOnlyText="SQUADS ONLY"
     SquadLeadershipOnlyText="LEADERS ONLY"
     RecommendJoiningSquadText="It it HIGHLY RECOMMENDED that you JOIN A SQUAD before deploying! Joining a squad grants you additional deployment options and lets you get to the fight faster.||Do you want to automatically join a squad now?"
+    UnassignedPlayersCaptionText="Unassigned"
 
     SurrenderButtonCooldownSeconds=30
     SurrenderConfirmBaseText="Are you sure you want to surrender?"

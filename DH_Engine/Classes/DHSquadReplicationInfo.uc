@@ -1424,9 +1424,22 @@ simulated function int GetUnassignedPlayerCount(int TeamIndex)
 {
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
+    local PlayerController PC;
     local int i, Count;
 
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        PC = Level.GetLocalPlayerController();
+
+        if (PC != none)
+        {
+            GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+        }
+    }
+    else
+    {
+        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+    }
 
     if (GRI == none)
     {
@@ -1450,10 +1463,24 @@ simulated function GetUnassignedPlayers(int TeamIndex, out array<DHPlayerReplica
 {
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
+    local PlayerController PC;
     local int i;
 
     UnassignedPlayers.Length = 0;
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        PC = Level.GetLocalPlayerController();
+
+        if (PC != none)
+        {
+            GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+        }
+    }
+    else
+    {
+        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+    }
 
     if (GRI == none)
     {
