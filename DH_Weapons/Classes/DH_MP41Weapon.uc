@@ -25,4 +25,8 @@ defaultproperties
 
     MaxNumPrimaryMags=9
     InitialNumPrimaryMags=9
+    
+    bHasSelectFire=true
+    SelectFireAnim="select_fire"
+    SelectFireIronAnim="Iron_select_fire"
 }
