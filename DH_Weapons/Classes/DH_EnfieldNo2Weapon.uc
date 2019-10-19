@@ -14,7 +14,7 @@ defaultproperties
     PickupClass=class'DH_Weapons.DH_EnfieldNo2Pickup'
 
     Mesh=SkeletalMesh'DH_EnfieldNo2_1st.EnfieldNo2'
-    HighDetailOverlay=Shader'DH_Weapon_tex.Spec_Maps.EnfieldNo2_s'
+    HighDetailOverlay=Shader'DH_EnfieldNo2_tex.EnfieldNo2.EnfieldNo2S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=1
 
