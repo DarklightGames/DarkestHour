@@ -6678,7 +6678,7 @@ exec function DebugSpawnVehicle(string VehicleString, int Distance, optional int
             SpawnDirection.Yaw = Rotation.Yaw;
             SpawnLocation = Location + (vector(SpawnDirection) * class'DHUnits'.static.MetersToUnreal(Max(Distance, 5.0))); // distance is raised to 5 if <5
 
-            // Add the vehicel's desired rotation (90 will be perpendicular)
+            // Add the vehicle's desired rotation (90 will be perpendicular)
             SpawnDirection.Yaw += class'UUnits'.static.DegreesToUnreal(Degrees);
 
             V = Spawn(VehicleClass,,, SpawnLocation, SpawnDirection);
