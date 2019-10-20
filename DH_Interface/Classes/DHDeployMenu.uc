@@ -1682,7 +1682,7 @@ function UpdateSquads()
     SquadLimit = SRI.GetTeamSquadLimit(TeamIndex);
 
     // Go through the active squads
-    for (i = 0; i < SquadLimit && j < p_Squads.SquadComponents.Length - 1; ++i)
+    for (i = 0; i < SquadLimit && j < p_Squads.SquadComponents.Length; ++i)
     {
         if (!SRI.IsSquadActive(TeamIndex, i))
         {
@@ -1785,7 +1785,7 @@ function UpdateSquads()
         ++j;
     }
 
-    if (!bIsInASquad && j < SquadLimit && j < p_Squads.SquadComponents.Length - 1)
+    if (!bIsInASquad && j < SquadLimit && j < p_Squads.SquadComponents.Length)
     {
         C = p_Squads.SquadComponents[j++];
 
@@ -1810,7 +1810,7 @@ function UpdateSquads()
     // Show the unassigned category
     SRI.GetUnassignedPlayers(TeamIndex, Members);
 
-    if (Members.Length > 0)
+    if (Members.Length > 0 && j < p_Squads.SquadComponents.Length)
     {
         C = p_Squads.SquadComponents[j];
         C.l_SquadName.Caption = default.UnassignedPlayersCaptionText;
