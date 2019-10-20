@@ -30,6 +30,8 @@ var     bool    bReversedSkinsSlots;      // some player meshes have the typical
 var     string  ShovelClassName;          // name of shovel class, so can be set for different nations (string name not class, due to build order)
 var     bool    bShovelHangsOnLeftHip;    // shovel hangs on player's left hip, which is the default position - otherwise it goes on player's backpack (e.g. US shovel)
 
+var     string  BinocsClassName;
+
 // Mortars
 var     Actor   OwnedMortar;              // mortar vehicle associated with this actor, used to destroy mortar when player dies
 var     bool    bIsDeployingMortar;       // whether or not the pawn is deploying his mortar - used for disabling movement
@@ -3257,14 +3259,14 @@ function CheckGiveBinocs()
     local DHGameReplicationInfo GRI;
     local DHPlayerReplicationInfo PRI;
 
-    if (Level.Game != none)
+    if (BinocsClassName != "" && Level.Game != none)
     {
         GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
         PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
 
         if (GRI != none && PRI != none && (PRI.IsSquadLeader() || PRI.IsAssistantLeader()))
         {
-            CreateInventory("DH_Equipment.DHBinocularsItem");
+            CreateInventory(BinocsClassName);
         }
     }
 }
