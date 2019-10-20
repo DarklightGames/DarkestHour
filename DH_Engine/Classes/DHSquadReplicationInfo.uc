@@ -10,7 +10,7 @@ const SQUAD_SIZE_MAX = 12;
 const SQUAD_RALLY_POINTS_MAX = 2;           // The number of squad rally points that can be exist at one time.
 const SQUAD_RALLY_POINTS_ACTIVE_MAX = 1;    // The number of squad rally points that are "active" at one time.
 const TEAM_SQUAD_MEMBERS_MAX = 64;
-const TEAM_SQUADS_MAX = 8;                  // SQUAD_SIZE_MIN / TEAM_SQUAD_MEMBERS_MAX
+const TEAM_SQUADS_MAX = 7;                  // SQUAD_SIZE_MIN / TEAM_SQUAD_MEMBERS_MAX
 
 const RALLY_POINTS_MAX = 32;                // TEAM_SQUADS_MAX * SQUAD_RALLY_POINTS_MAX * 2
 
@@ -439,7 +439,7 @@ simulated function int GetTeamSquadLimit(int TeamIndex)
         return 0;
     }
 
-    return TEAM_SQUAD_MEMBERS_MAX / GetTeamSquadSize(TeamIndex);
+    return Min(TEAM_SQUADS_MAX, TEAM_SQUAD_MEMBERS_MAX / GetTeamSquadSize(TeamIndex));
 }
 
 // Returns true when there are members in the squad.
