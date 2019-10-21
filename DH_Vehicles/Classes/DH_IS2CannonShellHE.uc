@@ -22,6 +22,7 @@ defaultproperties
     EngineFireChance=1.0
 
     //Effects
+    CoronaClass=class'DH_Effects.DHShellTracer_Green'
     StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
     ShellDeflectEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
     ShellHitDirtEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
