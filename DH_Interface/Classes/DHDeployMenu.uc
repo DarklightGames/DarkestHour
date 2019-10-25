@@ -1810,12 +1810,18 @@ function UpdateSquads()
     // Show the unassigned category
     SRI.GetUnassignedPlayers(TeamIndex, Members);
 
-    if (Members.Length > 0 && j < p_Squads.SquadComponents.Length)
+    if (j >= p_Squads.SquadComponents.Length)
+    {
+        return;
+    }
+
+    if (Members.Length > 0)
     {
         C = p_Squads.SquadComponents[j];
         C.l_SquadName.Caption = default.UnassignedPlayersCaptionText;
         C.SquadIndex = -1;
 
+        SetVisible(C, true);
         SetVisible(C.lb_Members, true);
         SetVisible(C.li_Members, true);
         SetVisible(C.l_SquadName, true);
@@ -1848,6 +1854,10 @@ function UpdateSquads()
 
         // Re-select the previous selection.
         C.li_Members.SelectByObject(SavedPRI);
+    }
+    else
+    {
+        SetVisible(p_Squads.SquadComponents[j], false);
     }
 }
 
