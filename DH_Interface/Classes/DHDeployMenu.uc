@@ -91,6 +91,7 @@ var localized   string                      NoneText,
                                             CantChangeTeamYetText,
                                             LockText,
                                             UnlockText,
+                                            CantLock,
                                             VehicleUnavailableString,
                                             LockedText,
                                             BotsText,
@@ -1707,7 +1708,7 @@ function UpdateSquads()
         SetVisible(C.b_CreateSquad, false);
         SetVisible(C.b_JoinSquad, !bIsInSquad);
         SetVisible(C.b_LeaveSquad, bIsInSquad);
-        SetVisible(C.b_LockSquad, bIsSquadLeader && bCanSquadBeLocked);
+        SetVisible(C.b_LockSquad, bIsSquadLeader);
         SetVisible(C.i_LockSquad, bIsSquadLocked || bIsSquadLeader);
 
         if (bIsSquadLeader)
@@ -1725,10 +1726,12 @@ function UpdateSquads()
                 if (bCanSquadBeLocked)
                 {
                     C.i_LockSquad.ImageColor.A = 255;
+                    C.b_LockSquad.SetHint(default.LockText);
                 }
                 else
                 {
                     C.i_LockSquad.ImageColor.A = 128;
+                    C.b_LockSquad.SetHint(default.CantLock);
                 }
             }
         }
@@ -1898,6 +1901,7 @@ defaultproperties
     VehicleUnavailableString="The vehicle you had selected is no longer available."
     LockText="Lock"
     UnlockText="Unlock"
+    CantLock="Squad can be locked only if it has more than 3 members"
     NoneText="None"
     LockedText="Locked"
     BotsText="BOTS"
