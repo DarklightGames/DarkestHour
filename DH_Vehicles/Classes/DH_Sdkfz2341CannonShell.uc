@@ -23,6 +23,7 @@ defaultproperties
     //Effects
     bHasTracer=false // actually has a tracer but we use a tracer static mesh for the projectile, so no need for extra tracer effect (normally the CoronaClass)
     StaticMesh=StaticMesh'EffectsSM.Weapons.Ger_Tracer'
+    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_YellowOrange'
 
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.Impact_Metal'
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'

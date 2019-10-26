@@ -23,6 +23,10 @@ defaultproperties
     HullFireChance=0.10
     EngineFireChance=0.30
 
+    //Effects
+    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_YellowOrange'
+    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
+
     //Penetration
     DHPenetrationTable(0)=1.9
     DHPenetrationTable(1)=1.6

@@ -23,6 +23,7 @@ defaultproperties
 
     //Effects
     CoronaClass=class'DH_Effects.DHShellTracer_Red'
+    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_Red'
     BlurTime=4.0
     BlurEffectScalar=1.5
     ShellHitDirtEffectClass=class'ROEffects.GrenadeExplosion'
