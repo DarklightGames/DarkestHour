@@ -41,7 +41,7 @@ defaultproperties
     SelectEmptyAnim="Draw"
     PutDownEmptyAnim="putaway"
 
-    MagPartialReloadAnim="reload_empty" // There is no alternate reload.
+    MagPartialReloadAnim="reload_half"
 
     HandNum=0
     SleeveNum=3
