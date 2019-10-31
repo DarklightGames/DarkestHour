@@ -10,7 +10,4 @@ defaultproperties
 {
     WeaponClass=class'DH_Weapons.DH_PPSH41Weapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
-    KDamageImpulse=1000.0
-    KDeathVel=100.0
-    KDeathUpKick=0.0
 }

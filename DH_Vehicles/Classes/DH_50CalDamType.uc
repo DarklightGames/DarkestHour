@@ -17,10 +17,5 @@ defaultproperties
     DeathString="%o was killed by %k's .50 cal machine gun."
     FemaleSuicide="%o was killed by her own .50 cal machine gun."
     MaleSuicide="%o was killed by his own .50 cal machine gun."
-    GibModifier=2.0            // 0 in 30cal, 4 in PTRD
-    GibPerterbation=0.09       // weapon default is 0.06, 0.15 in PTRD (but that value is used by explosives, so is too high)
     VehicleMomentumScaling=0.2 // 0.3 in 234/1, 0.6 in PTRD, 1.3 is default for tank cannon
-    KDamageImpulse=3000.0      // 2250 in 30cal, 4500 in PTRD
-    KDeathVel=175.0            // 115 in 30 cal, 200 in PTRD
-    KDeathUpKick=20.0          // 5 in 30 cal, 25 in PTRD
 }

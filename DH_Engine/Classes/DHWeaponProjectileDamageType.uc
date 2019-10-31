@@ -22,7 +22,6 @@ defaultproperties
     PawnDamageEmitter=class'ROEffects.ROBloodPuff'
 
     bRagdollBullet=false // turns off the override that forces simple bullet ragdoll values
-    //todo remove all child overrides!
 
     bAlwaysSevers=true
     bThrowRagdoll=true

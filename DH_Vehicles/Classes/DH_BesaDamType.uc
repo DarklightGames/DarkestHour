@@ -13,5 +13,4 @@ defaultproperties
     DeathString="%o was killed by %k's Besa machine gun."
     FemaleSuicide="%o was killed by her own Besa machine gun."
     MaleSuicide="%o was killed by his own Besa machine gun."
-    KDamageImpulse=2250.0
 }

@@ -10,5 +10,4 @@ defaultproperties
 {
     WeaponClass=class'DH_Weapons.DH_Kar98ScopedWeapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b792mm'
-    KDamageImpulse=2500.0
 }

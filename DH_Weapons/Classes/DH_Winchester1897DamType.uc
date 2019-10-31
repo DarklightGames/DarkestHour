@@ -10,5 +10,4 @@ defaultproperties
 {
     WeaponClass=class'DH_Weapons.DH_Winchester1897Weapon'
     HUDIcon=Texture'DH_InterfaceArt_tex.deathicons.canisterkill'
-    KDamageImpulse=2500.0
 }

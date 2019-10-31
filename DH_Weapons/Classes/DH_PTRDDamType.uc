@@ -18,10 +18,5 @@ defaultproperties
 
     PawnDamageEmitter=class'ROEffects.ROBloodPuffLarge'
     bThrowRagdoll=true
-    GibModifier=4.0
-    GibPerterbation=0.15
-    KDamageImpulse=4500.0
-    KDeathVel=200.0
-    KDeathUpKick=25.0
     VehicleMomentumScaling=0.1
 }
