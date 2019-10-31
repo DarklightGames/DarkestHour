@@ -294,7 +294,7 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
 defaultproperties
 {
     bHasTracer=true
-    bHasShellTrail=true
+    bHasShellTrail=false
     CoronaClass=class'DH_Effects.DHShellTracer_RedLarge'
     TankShellTrailClass=class'DH_Effects.DHTankShellTrail_Med'
     ShellImpactDamage=class'DH_Engine.DHShellImpactDamageType'

@@ -22,6 +22,7 @@ defaultproperties
 
     //Effects
     bHasTracer=true
+    bHasShellTrail=true
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'WeaponPickupSM.Ammo.76mm_Shell'
     DeflectedMesh=StaticMesh'WeaponPickupSM.Ammo.76mm_Shell'

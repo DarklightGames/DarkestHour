@@ -22,6 +22,7 @@ defaultproperties
     EngineFireChance=0.40
 
     //Effects
+    bHasShellTrail=true
     CoronaClass=class'DH_Effects.DHShellTracer_Red'
     TankShellTrailClass=class'DH_Effects.DHTankShellTrail_Red'
     BlurTime=4.0
