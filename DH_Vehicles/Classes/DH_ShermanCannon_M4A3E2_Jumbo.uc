@@ -42,7 +42,7 @@ defaultproperties
 
     nProjectileDescriptions(0)="M61 APC"
     nProjectileDescriptions(1)="M48 HE-T"
-    nProjectileDescriptions(2)="M89 WP"
+    nProjectileDescriptions(2)="M64 WP"
 
     InitialPrimaryAmmo=32
     InitialSecondaryAmmo=25

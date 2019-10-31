@@ -22,6 +22,7 @@ defaultproperties
     EngineFireChance=1.0
 
     //Effects
+    CoronaClass=class'DH_Effects.DHShellTracer_Green'
     StaticMesh=StaticMesh'WeaponPickupSM.shells.76mm_shell'
     DrawScale=2.1
     BlurEffectScalar=3.0 // gives this large HE shell more screen blur

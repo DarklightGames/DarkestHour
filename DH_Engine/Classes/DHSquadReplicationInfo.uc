@@ -10,7 +10,7 @@ const SQUAD_SIZE_MAX = 12;
 const SQUAD_RALLY_POINTS_MAX = 2;           // The number of squad rally points that can be exist at one time.
 const SQUAD_RALLY_POINTS_ACTIVE_MAX = 1;    // The number of squad rally points that are "active" at one time.
 const TEAM_SQUAD_MEMBERS_MAX = 64;
-const TEAM_SQUADS_MAX = 8;                  // SQUAD_SIZE_MIN / TEAM_SQUAD_MEMBERS_MAX
+const TEAM_SQUADS_MAX = 7;                  // SQUAD_SIZE_MIN / TEAM_SQUAD_MEMBERS_MAX
 
 const RALLY_POINTS_MAX = 32;                // TEAM_SQUADS_MAX * SQUAD_RALLY_POINTS_MAX * 2
 
@@ -439,7 +439,7 @@ simulated function int GetTeamSquadLimit(int TeamIndex)
         return 0;
     }
 
-    return TEAM_SQUAD_MEMBERS_MAX / GetTeamSquadSize(TeamIndex);
+    return Min(TEAM_SQUADS_MAX, TEAM_SQUAD_MEMBERS_MAX / GetTeamSquadSize(TeamIndex));
 }
 
 // Returns true when there are members in the squad.
@@ -1418,6 +1418,84 @@ simulated function DHPlayerReplicationInfo GetMember(int TeamIndex, int SquadInd
     }
 
     return none;
+}
+
+simulated function int GetUnassignedPlayerCount(int TeamIndex)
+{
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
+    local PlayerController PC;
+    local int i, Count;
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        PC = Level.GetLocalPlayerController();
+
+        if (PC != none)
+        {
+            GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+        }
+    }
+    else
+    {
+        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+    }
+
+    if (GRI == none)
+    {
+        return 0;
+    }
+
+    for (i = 0; i < GRI.PRIArray.Length; ++i)
+    {
+        PRI = DHPlayerReplicationInfo(GRI.PRIArray[i]);
+
+        if (PRI != none && PRI.Team != none && PRI.Team.TeamIndex == TeamIndex && PRI.SquadIndex == -1)
+        {
+            ++Count;
+        }
+    }
+
+    return Count;
+}
+
+simulated function GetUnassignedPlayers(int TeamIndex, out array<DHPlayerReplicationInfo> UnassignedPlayers)
+{
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo PRI;
+    local PlayerController PC;
+    local int i;
+
+    UnassignedPlayers.Length = 0;
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        PC = Level.GetLocalPlayerController();
+
+        if (PC != none)
+        {
+            GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+        }
+    }
+    else
+    {
+        GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+    }
+
+    if (GRI == none)
+    {
+        return;
+    }
+
+    for (i = 0; i < GRI.PRIArray.Length; ++i)
+    {
+        PRI = DHPlayerReplicationInfo(GRI.PRIArray[i]);
+
+        if (PRI != none && PRI.Team != none && PRI.Team.TeamIndex == TeamIndex && PRI.SquadIndex == -1)
+        {
+            UnassignedPlayers[UnassignedPlayers.Length] = PRI;
+        }
+    }
 }
 
 // Returns the number of members in the specified squad.

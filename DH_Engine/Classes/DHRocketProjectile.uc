@@ -115,21 +115,16 @@ simulated function Destroyed()
 
 defaultproperties
 {
-    bExplodesOnHittingBody=true
-    bExplodesOnHittingWater=false
-
-    StraightFlightTime=0.2 //time that smoke trail and corona (tracer) effect are activated after launch
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    RocketSmokeTrailClass=class'ROEffects.PanzerfaustTrail'
-    PenetrationMag=250.0
-    ShellImpactDamage=class'ROGame.RORocketImpactDamage'
-    ImpactDamage=675
+    //From RORocketProj
+    //Physics = PHYS_Projectile
+    //bTrueBallistics=false
 
     VehicleHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
     DirtHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
     RockHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
     WoodHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode03'
     WaterHitSound=Sound'ProjectileSounds.cannon_rounds.AP_Impact_Water'
+    VehicleDeflectSound=sound'ProjectileSounds.PTRD_deflect' //temp
 
     ExplosionSound(0)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
     ExplosionSound(1)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
@@ -141,6 +136,18 @@ defaultproperties
     ShellHitWoodEffectClass=class'ROEffects.PanzerfaustHitWood'
     ShellHitRockEffectClass=class'ROEffects.PanzerfaustHitConcrete'
     ShellHitWaterEffectClass=class'ROEffects.PanzerfaustHitWater'
+    ShellDeflectEffectClass=class'ROEffects.ROBulletHitMetalArmorEffect' //temp
+
+    //Start DH defaults
+    bExplodesOnHittingBody=true
+    bExplodesOnHittingWater=false
+
+    StraightFlightTime=0.2 //time that smoke trail and corona (tracer) effect are activated after launch
+    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
+    RocketSmokeTrailClass=class'ROEffects.PanzerfaustTrail'
+    PenetrationMag=250.0
+    ShellImpactDamage=class'ROGame.RORocketImpactDamage'
+    ImpactDamage=675
 
     BallisticCoefficient=0.05
     Damage=300.0
@@ -165,8 +172,6 @@ defaultproperties
     ShakeRotMag=(Y=50.0,Z=200.0)
     ShakeRotRate=(Y=500.0,Z=1500.0)
     BlurEffectScalar=1.9
-    VehicleDeflectSound=Sound'ProjectileSounds.cannon_rounds.AP_deflect'
-    ShellDeflectEffectClass=none
     MyDamageType=class'DamageType'
     AmbientSound=none //TODO: need passby sound!
     TransientSoundVolume=1.0 //0.3

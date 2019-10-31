@@ -18,7 +18,7 @@ defaultproperties
     HUDOverlayFOV=45 //size of DT mesh in your face
 
     CameraBone="T34_mg"
-    FPCamPos=(X=0.0,Y=0.0,Z=0.0)
+    FPCamPos=(X=4.0,Y=0.0,Z=3.5)
     PitchUpLimit=3000
     PitchDownLimit=63500
     VehicleMGReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.DT_ammo_reload'

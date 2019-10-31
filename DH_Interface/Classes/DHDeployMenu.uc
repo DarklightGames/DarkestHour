@@ -96,7 +96,8 @@ var localized   string                      NoneText,
                                             BotsText,
                                             SquadOnlyText,
                                             SquadLeadershipOnlyText,
-                                            RecommendJoiningSquadText;
+                                            RecommendJoiningSquadText,
+                                            UnassignedPlayersCaptionText;
 
 // NOTE: The reason this variable is needed is because the PlayerController's
 // GetTeamNum function is not reliable after receiving a successful team change
@@ -1630,7 +1631,7 @@ function UpdateSquads()
     local array<DHPlayerReplicationInfo> Members;
     local DHPlayerReplicationInfo        SavedPRI;
     local DHGUISquadComponent            C;
-    local int  TeamIndex, i, j, k;
+    local int TeamIndex, SquadLimit, i, j, k;
     local bool bIsInSquad, bIsInASquad, bIsSquadLeader, bIsSquadFull, bIsSquadLocked, bCanJoinSquad, bCanSquadBeLocked;
 
     super.Timer();
@@ -1678,9 +1679,10 @@ function UpdateSquads()
     }
 
     bIsInASquad = PRI.IsInSquad();
+    SquadLimit = SRI.GetTeamSquadLimit(TeamIndex);
 
     // Go through the active squads
-    for (i = 0; i < SRI.GetTeamSquadLimit(TeamIndex); ++i)
+    for (i = 0; i < SquadLimit && j < p_Squads.SquadComponents.Length; ++i)
     {
         if (!SRI.IsSquadActive(TeamIndex, i))
         {
@@ -1783,7 +1785,7 @@ function UpdateSquads()
         ++j;
     }
 
-    if (!bIsInASquad && j < p_Squads.SquadComponents.Length)
+    if (!bIsInASquad && j < SquadLimit && j < p_Squads.SquadComponents.Length)
     {
         C = p_Squads.SquadComponents[j++];
 
@@ -1799,10 +1801,63 @@ function UpdateSquads()
         SetVisible(C.eb_SquadName, false);
     }
 
-    while (j < p_Squads.SquadComponents.Length)
+    while (j < p_Squads.SquadComponents.Length - 1)
     {
         SetVisible(p_Squads.SquadComponents[j], false);
         ++j;
+    }
+
+    // Show the unassigned category
+    SRI.GetUnassignedPlayers(TeamIndex, Members);
+
+    if (j >= p_Squads.SquadComponents.Length)
+    {
+        return;
+    }
+
+    if (Members.Length > 0)
+    {
+        C = p_Squads.SquadComponents[j];
+        C.l_SquadName.Caption = default.UnassignedPlayersCaptionText;
+        C.SquadIndex = -1;
+
+        SetVisible(C, true);
+        SetVisible(C.lb_Members, true);
+        SetVisible(C.li_Members, true);
+        SetVisible(C.l_SquadName, true);
+        SetVisible(C.eb_SquadName, false);
+        SetVisible(C.b_CreateSquad, false);
+        SetVisible(C.b_JoinSquad, false);
+        SetVisible(C.b_LeaveSquad, false);
+        SetVisible(C.b_LockSquad, false);
+        SetVisible(C.i_LockSquad, false);
+
+        SavedPRI = DHPlayerReplicationInfo(C.li_Members.GetObject());
+
+        // Add or remove entries to match the member count.
+        while (C.li_Members.ItemCount < Members.Length)
+        {
+            C.li_Members.Add("");
+        }
+
+        while (C.li_Members.ItemCount > Members.Length)
+        {
+            C.li_Members.Remove(0, 1);
+        }
+
+        // Update the text and associated object for each item.
+        for (k = 0; k < Members.Length; ++k)
+        {
+            C.li_Members.SetItemAtIndex(k, Members[k].PlayerName);
+            C.li_Members.SetObjectAtIndex(k, Members[k]);
+        }
+
+        // Re-select the previous selection.
+        C.li_Members.SelectByObject(SavedPRI);
+    }
+    else
+    {
+        SetVisible(p_Squads.SquadComponents[j], false);
     }
 }
 
@@ -1849,6 +1904,7 @@ defaultproperties
     SquadOnlyText="SQUADS ONLY"
     SquadLeadershipOnlyText="LEADERS ONLY"
     RecommendJoiningSquadText="It it HIGHLY RECOMMENDED that you JOIN A SQUAD before deploying! Joining a squad grants you additional deployment options and lets you get to the fight faster.||Do you want to automatically join a squad now?"
+    UnassignedPlayersCaptionText="Unassigned"
 
     SurrenderButtonCooldownSeconds=30
     SurrenderConfirmBaseText="Are you sure you want to surrender?"

@@ -24,6 +24,7 @@ defaultproperties
     bDebugInImperial=false
 
     //Effects
+    CoronaClass=class'DH_Effects.DHShellTracer_Green'
     BlurTime=4.0
     BlurEffectScalar=1.5
     ShellHitDirtEffectClass=class'ROEffects.GrenadeExplosion'

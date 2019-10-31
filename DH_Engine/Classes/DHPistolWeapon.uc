@@ -24,7 +24,7 @@ simulated state Reloading
 
 defaultproperties
 {
-    SwayModifyFactor=1.5 // More sway for pistols
+    SwayModifyFactor=1.1 // More sway for pistols
 
     BobModifyFactor=0.2 // Less weapon bob for pistols
 

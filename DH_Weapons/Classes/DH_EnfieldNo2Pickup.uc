@@ -10,4 +10,5 @@ defaultproperties
     InventoryType=class'DH_Weapons.DH_EnfieldNo2Weapon'
     StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.EnfieldNo2'
     CollisionRadius=15.0 // as is a pistol, which is small
+    DrawScale=0.75
 }

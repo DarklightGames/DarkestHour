@@ -22,11 +22,13 @@ defaultproperties
 
     //Effects
     bHasTracer=true
+    bHasShellTrail=true
     DrawType=DT_StaticMesh
     StaticMesh=StaticMesh'WeaponPickupSM.Ammo.76mm_Shell'
     DeflectedMesh=StaticMesh'WeaponPickupSM.Ammo.76mm_Shell'
     ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
     TracerEffectClass=class'DH_Effects.DHBulletTracer_RedLarge'
+    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_Red'
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'

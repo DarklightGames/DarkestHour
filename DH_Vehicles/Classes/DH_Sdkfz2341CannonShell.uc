@@ -21,8 +21,11 @@ defaultproperties
     EngineFireChance=0.35
 
     //Effects
-    bHasTracer=false // actually has a tracer but we use a tracer static mesh for the projectile, so no need for extra tracer effect (normally the CoronaClass)
+    bHasTracer=true
+    bHasShellTrail=true
     StaticMesh=StaticMesh'EffectsSM.Weapons.Ger_Tracer'
+    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
+    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_YellowOrange'
 
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.Impact_Metal'
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
