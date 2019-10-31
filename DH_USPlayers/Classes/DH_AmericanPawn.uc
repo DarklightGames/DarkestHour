@@ -15,11 +15,11 @@ defaultproperties
 
     bReversedSkinsSlots=true
 
-    FaceSkins(0)=Texture'DHUSCharactersTex.us_heads.US_AB_Face1'
-    FaceSkins(1)=Texture'DHUSCharactersTex.us_heads.US_AB_Face2'
-    FaceSkins(2)=Texture'DHUSCharactersTex.us_heads.US_AB_Face3'
-    FaceSkins(3)=Texture'DHUSCharactersTex.us_heads.US_AB_Face4'
-    FaceSkins(4)=Texture'DHUSCharactersTex.us_heads.US_AB_Face5'
+    FaceSkins(0)=Texture'DH_Halloween_Masks.us_heads.US_AB_Face1'
+    FaceSkins(1)=Texture'DH_Halloween_Masks.us_heads.US_AB_Face2'
+    FaceSkins(2)=Texture'DH_Halloween_Masks.us_heads.US_AB_Face3'
+    FaceSkins(3)=Texture'DH_Halloween_Masks.us_heads.US_AB_Face4'
+    FaceSkins(4)=Texture'DH_Halloween_Masks.us_heads.US_AB_Face5'
 
     ShovelClassName="DH_Equipment.DHShovelItem_US"
     bShovelHangsOnLeftHip=false // US shovel goes on the player's backpack

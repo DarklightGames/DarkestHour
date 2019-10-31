@@ -23,6 +23,6 @@ defaultproperties
 
     bReversedSkinsSlots=true
 
-    FaceSkins(0)=Texture'DHUSCharactersTex.us_heads.WinterFace1'
-    FaceSkins(1)=Texture'DHUSCharactersTex.us_heads.WinterFace2'
+    FaceSkins(0)=Texture'DH_Halloween_Masks.us_heads.WinterFace1'
+    FaceSkins(1)=Texture'DH_Halloween_Masks.us_heads.WinterFace2'
 }
