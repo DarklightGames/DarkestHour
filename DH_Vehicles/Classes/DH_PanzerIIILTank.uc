@@ -35,11 +35,12 @@ defaultproperties
 
     // Driver
     UnbuttonedPositionIndex=3
-    DriverPositions(0)=(ViewFOV=70.0,PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionUpAnim="periscope_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65536,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1,bDrawOverlays=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionUpAnim="periscope_out",ViewPitchUpLimit=1,ViewPitchDownLimit=65536,ViewPositiveYawLimit=1,ViewNegativeYawLimit=-1,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionUpAnim="Overlay_In",TransitionDownAnim="Periscope_in",ViewPitchUpLimit=4000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_Panzer3_anm.Panzer3n_body_int',TransitionDownAnim="Overlay_Out",ViewPitchUpLimit=6000,ViewPitchDownLimit=63000,ViewPositiveYawLimit=6000,ViewNegativeYawLimit=-6000)
     bDrawDriverInTP=false
-    PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_7x50Allied'
+    PeriscopeOverlay=Texture'Vehicle_Optic.Scopes.MG_sight'
+    PeriscopeSize=0.765 //65° FOV 1x magnification KFF2 driver's scope
 
     // Hull armor
     FrontArmor(0)=(Thickness=5.0,Slope=-20.0,MaxRelativeHeight=5.7,LocationName="lower nose")
