@@ -18,5 +18,5 @@ defaultproperties
     FaceSkins(2)=Texture'DHBritishCharactersTex.Faces.BritParaFace3'
 
     ShovelClassName="DH_Equipment.DHShovelItem_US" // TODO: make British shovel
-    BinocsClassName="DH_Equipment.BinocularsItemAllied"
+    BinocsClassName="DH_Equipment.DHBinocularsItemAllied"
 }
