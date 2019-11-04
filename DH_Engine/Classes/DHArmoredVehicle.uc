@@ -2364,7 +2364,7 @@ defaultproperties
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
 
     // Vehicle destruction
-    DestructionEffectClass=class'DH_Effects.DHVehicleDestroyedEmitter'
+    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
     DisintegrationEffectClass=class'DH_Effects.DHVehicleObliteratedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
