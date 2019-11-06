@@ -2898,6 +2898,11 @@ state ResetGameCountdown
     {
         local DHArtillerySpawner AS;
 
+        if (SquadReplicationInfo != none)
+        {
+            SquadReplicationInfo.ResetSquadInfo();
+        }
+
         if (bSwapTeams)
         {
             ChangeSides(); // Change sides if bSwapTeams is true
