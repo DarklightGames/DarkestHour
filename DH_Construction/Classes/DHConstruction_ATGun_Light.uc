@@ -35,9 +35,9 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
                     switch (Context.LevelInfo.Weather)
                     {
                         case WEATHER_Snowy:
-                            return class'DH_Guns.DH_45mmM1942Gun_Snow';
+                            return class'DH_Guns.DH_45mmM1937Gun_Snow';
                         default:
-                            return class'DH_Guns.DH_45mmM1942Gun';
+                            return class'DH_Guns.DH_45mmM1937Gun';
                     }
                 default:
                     break; //return class'DH_Guns.DH_AT57Gun';
