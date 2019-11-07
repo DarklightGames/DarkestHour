@@ -87,6 +87,7 @@ var     float       IgnitionSwitchInterval;      // how frequently the engine ca
 var     float       EngineRestartFailChance;     // chance of engine failing to re-start (only temporarily) after it has been switched off (0 to 1 value)
 
 // Driving effects
+var     bool        bIsWinterVariant;            // Notes in the defaults if a vehicle uses Winter or Snow skins to force use of the white dust emitter (saves levelers from remembering to set the right dust color in Level Properties)
 var     bool        bEmittersOn;                 // dust & exhaust effects are enabled
 var     float       MaxPitchSpeed;               // used to set movement sounds volume, based on vehicle's speed
 var     sound       RumbleSound;                 // interior rumble sound
@@ -1828,17 +1829,20 @@ simulated function StartEmitters()
 
             WheelCoords = GetBoneCoords(Wheels[i].BoneName);
             Dust[i] = Spawn(class'VehicleWheelDustEffect', self,, WheelCoords.Origin + ((vect(0.0, 0.0, -1.0) * Wheels[i].WheelRadius) >> Rotation));
+            Dust[i].CullDistance = 12000; // ~200m
 
             if (bLowDetail)
             {
                 Dust[i].MaxSpritePPS = 3;
                 Dust[i].MaxMeshPPS = 3;
+                Dust[i].CullDistance = 5000;
             }
 
             Dust[i].SetBase(self);
 
             // Boat vehicle uses different 'dirt' colour (white-grey) to simulate a spray effect instead of the usual wheel dust
-            if (IsA('DHBoatVehicle'))
+            // This also forces vehicles in snow camo skins to use the white-grey dust, which should save levelers from forgetting to set the correct color on Winter maps
+            if (IsA('DHBoatVehicle') || bIsWinterVariant)
             {
                 Dust[i].SetDirtColor(Level.WaterDustColor);
             }
@@ -1863,6 +1867,7 @@ simulated function StartEmitters()
             else
             {
                 ExhaustPipes[i].ExhaustEffect = Spawn(ExhaustEffectClass, self,, Location + (ExhaustPipes[i].ExhaustPosition >> Rotation), ExhaustPipes[i].ExhaustRotation + Rotation);
+                ExhaustPipes[i].ExhaustEffect.CullDistance = 12000; // ~200m
             }
 
             ExhaustPipes[i].ExhaustEffect.SetBase(self);
@@ -4122,6 +4127,7 @@ defaultproperties
     EngineRPMSoundRange=5000.0 // range of engine sound relative to current RPM (presumably max engine sound at IdleRPM + EngineRPMSoundRange)
 
     // Visual effects
+    bIsWinterVariant=false
     ExhaustEffectClass=class'ROEffects.ExhaustPetrolEffect'
     ExhaustEffectLowClass=class'ROEffects.ExhaustPetrolEffect_simple'
     SparkEffectClass=none // removes the odd spark effects when vehicle drags bottom on ground
