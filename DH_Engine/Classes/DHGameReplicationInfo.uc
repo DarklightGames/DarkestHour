@@ -1973,21 +1973,22 @@ defaultproperties
     ConstructionClassNames(6)="DH_Construction.DHConstruction_Hedgehog"
 
     // Guns
-    ConstructionClassNames(7)="DH_Construction.DHConstruction_ATGun_Medium"
-    ConstructionClassNames(8)="DH_Construction.DHConstruction_ATGun_Heavy"
-    ConstructionClassNames(9)="DH_Construction.DHConstruction_AAGun_Light"
-    ConstructionClassNames(10)="DH_Construction.DHConstruction_AAGun_Medium"
+    ConstructionClassNames(7)="DH_Construction.DHConstruction_ATGun_Light"
+    ConstructionClassNames(8)="DH_Construction.DHConstruction_ATGun_Medium"
+    ConstructionClassNames(9)="DH_Construction.DHConstruction_ATGun_Heavy"
+    ConstructionClassNames(10)="DH_Construction.DHConstruction_AAGun_Light"
+    ConstructionClassNames(11)="DH_Construction.DHConstruction_AAGun_Medium"
 
     // Defenses
-    ConstructionClassNames(11)="DH_Construction.DHConstruction_Foxhole"
-    ConstructionClassNames(12)="DH_Construction.DHConstruction_Sandbags_Line"
-    ConstructionClassNames(13)="DH_Construction.DHConstruction_Sandbags_Crescent"
-    ConstructionClassNames(14)="DH_Construction.DHConstruction_Sandbags_Bunker"
-    ConstructionClassNames(15)="DH_Construction.DHConstruction_Watchtower"
-    ConstructionClassNames(16)="DH_Construction.DHConstruction_GrenadeCrate"
+    ConstructionClassNames(12)="DH_Construction.DHConstruction_Foxhole"
+    ConstructionClassNames(13)="DH_Construction.DHConstruction_Sandbags_Line"
+    ConstructionClassNames(14)="DH_Construction.DHConstruction_Sandbags_Crescent"
+    ConstructionClassNames(15)="DH_Construction.DHConstruction_Sandbags_Bunker"
+    ConstructionClassNames(16)="DH_Construction.DHConstruction_Watchtower"
+    ConstructionClassNames(17)="DH_Construction.DHConstruction_GrenadeCrate"
     //ConstructionClassNames(17)="DH_Construction.DHConstruction_MortarPit"
-    ConstructionClassNames(17)="DH_Construction.DHConstruction_DragonsTooth"
-    ConstructionClassNames(18)="DH_Construction.DHConstruction_AntiTankCrate"
+    ConstructionClassNames(18)="DH_Construction.DHConstruction_DragonsTooth"
+    ConstructionClassNames(19)="DH_Construction.DHConstruction_AntiTankCrate"
     //ConstructionClassNames(19)="DH_Construction.DHConstruction_WoodFence"
 
     // Map Markers
