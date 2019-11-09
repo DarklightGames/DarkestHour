@@ -22,6 +22,19 @@ var class<DHRadioHQAttachment> RadioClass;
 var vector                     RadioLocationOffset;
 var rotator                    RadioRotationOffset;
 
+auto simulated state Constructing
+{
+    simulated function BeginState()
+    {
+        super.BeginState();
+
+        if (Radio != none)
+        {
+            Radio.MakeInvisible();
+        }
+    }
+}
+
 simulated state Constructed
 {
     simulated function bool CanTakeTearDownDamageFromPawn(Pawn P, optional bool bShouldSendErrorMessage)
@@ -102,6 +115,11 @@ simulated function OnConstructed()
         }
 
         // TODO: Find any nearby friendly "Build Platoon HQ" icons within 50m and remove them.
+    }
+
+    if (Radio != none)
+    {
+        Radio.MakeVisible();
     }
 }
 

@@ -12,6 +12,9 @@ var DHRadio        Radio;
 var class<DHRadio> RadioClass;
 var vector         RadioOffset;
 
+simulated function MakeVisible();
+simulated function MakeInvisible() { GotoState('Invisible'); }
+
 function Setup()
 {
     if (Radio == none)
@@ -39,6 +42,34 @@ simulated function Destroyed()
     if (Radio != none)
     {
         Radio.Destroy();
+    }
+}
+
+simulated state Invisible
+{
+    simulated function MakeVisible() { GotoState(''); }
+    simulated function MakeInvisible();
+
+    simulated function BeginState()
+    {
+        if (Radio != none)
+        {
+            Radio.bHidden = true;
+            Radio.AmbientSound = none;
+        }
+
+        bHidden = true;
+    }
+
+    simulated function EndState()
+    {
+        if (Radio != none)
+        {
+            Radio.bHidden = false;
+            Radio.AmbientSound = Radio.default.AmbientSound;
+        }
+
+        bHidden = false;
     }
 }
 
