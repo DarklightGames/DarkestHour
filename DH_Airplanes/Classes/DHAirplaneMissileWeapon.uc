@@ -3,32 +3,20 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHAirplaneHardpoint extends Actor;
+class DHAirplaneMissileWeapon extends DHAirplaneWeapon;
 
-var int HardpointIndex;
-
-// Projectile
-var class<DHProjectile> ProjectileClass;
-var vector              ProjectileOffset;
-
-var bool  bUseProjectileMesh; // for mounted projectiles (bombs, rockets, etc.)
-var bool  bInitiallyEmpty;
 var vector TargetLocation;
-
-var RODebugTracerGreen DebugActor;
+var bool   bHideWhenEmpty;
 
 function Disarm();
 function Resupply();
+function bool HasAmmo() { return true; }
 
 simulated function PostBeginPlay()
 {
-    if (bUseProjectileMesh)
-    {
-        // SetDrawType(DT_Mesh);
-        // LinkMesh(ProjectileClass.default.Mesh);
-    }
+    super.PostBeginPlay();
 
-    if (bInitiallyEmpty)
+    if (!HasAmmo())
     {
         InitialState = 'Empty';
     }
@@ -53,49 +41,43 @@ function SpawnProjectile()
 function Fire()
 {
     Log("BOMBS AWAY! WOO!");
-    GotoState('Empty');
+
     SpawnProjectile();
+    GotoState('Empty');
 }
 
-state Empty
+function Arm()
 {
-    ignores Fire;
+    local DHAirplane Airplane;
+    local DHAirplaneTarget Target;
 
-    function Timer()
+    if (!CanFire())
     {
-        Resupply();
+        return;
     }
 
-    function BeginState()
-    {
-        if (bUseProjectileMesh)
-        {
-            bHidden = true;
-        }
+    Airplane = GetAirplane();
 
-        // DEBUG: Resuppy the bombs for testing
-        SetTimer(5, false);
+    if (Airplane == none)
+    {
+        return;
     }
 
-    function EndState()
-    {
-        if (bUseProjectileMesh)
-        {
-            bHidden = false;
-        }
-    }
+    Target = Airplane.Target;
 
-    function Resupply()
+    if (Target != none && Target.IsValid())
     {
-        GotoState('');
+        TargetLocation = Target.GetLocation();
+        GotoState('Armed');
     }
 }
-
-function Arm() { GotoState('Armed'); }
 
 state Armed
 {
-    function Disarm() { GotoState(''); }
+    function Disarm()
+    {
+        GotoState('');
+    }
 
     simulated function Tick(float DeltaTime)
     {
@@ -128,9 +110,36 @@ state Armed
                 // actually helps.
                 Log("BOMB ERROR:" @ Error);
                 Fire();
+
                 return;
             }
         }
+    }
+}
+
+state Empty
+{
+    ignores Fire, Arm;
+
+    function bool HasAmmo() { return false; }
+    function Resupply() { GotoState(''); }
+
+    function Timer()
+    {
+        Resupply();
+    }
+
+    function BeginState()
+    {
+        bHidden = bHideWhenEmpty;
+
+        // DEBUG: Resuppy the bombs for testing
+        SetTimer(5, false);
+    }
+
+    function EndState()
+    {
+        bHidden = !bHideWhenEmpty;
     }
 }
 
@@ -171,62 +180,8 @@ static function bool GetFiringPosition(out vector FiringPosition, Actor Instigat
     return true;
 }
 
-// Returns the time to the firing position, given that velocity remains constant
-// and pointed towards the target.
-// TODO: Results are off
-static function float GetTimeToFiringPosition(Actor Instigator, vector TargetLocation)
-{
-    local float G, Slope, Radicand, Speed;
-    local vector InitVelocity, Target, RelativeFiringPosition;
-
-    if (Instigator == none)
-    {
-        return 0.0;
-    }
-
-    Target = ProjectToVerticalPlane(TargetLocation - Instigator.Location);
-    InitVelocity = ProjectToVerticalPlane(Instigator.Velocity);
-    Speed = VSize(InitVelocity);
-    G = -Instigator.PhysicsVolume.Gravity.Z;
-
-    if (G == 0 || InitVelocity.X == 0.0 || Speed == 0.0)
-    {
-        return 0.0;
-    }
-
-    Slope = InitVelocity.Y / InitVelocity.X;
-    Radicand = 2 * G * (Slope * Target.X - Target.Y);
-
-    if (Radicand >= 0.0)
-    {
-        RelativeFiringPosition.X = Target.X - (InitVelocity.X * Sqrt(Radicand)) / G;
-        RelativeFiringPosition.Y = Slope * RelativeFiringPosition.X;
-
-        return VSize(RelativeFiringPosition) / Speed;
-    }
-}
-
-// TODO: Move to UVector
-static function vector ProjectToVerticalPlane(vector V)
-{
-    local vector Temp, Result;
-
-    Temp = V;
-    Temp.Z = 0.0;
-
-    Result.X = VSize(Temp);
-    Result.Y = V.Z;
-
-    return Result;
-}
-
 defaultproperties
 {
-    // TODO: !
     DrawType=DT_StaticMesh
-    StaticMesh=StaticMesh'DH_Airplanes_stc.Bombs.sc250'
-        
-    RemoteRole=ROLE_SimulatedProxy
-    ProjectileClass=class'DHAirplaneBomb_SC250'
-    bUseProjectileMesh=true
+    bHideWhenEmpty=true
 }

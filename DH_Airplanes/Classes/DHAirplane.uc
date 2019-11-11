@@ -97,37 +97,45 @@ struct STargetApproach
     var float MinimumHeight; // Minimum height above the target before pulling up when dive attacking. This is the bottom of the
 };
 
+enum ETargetType
+{
+    TARGET_None,
+    TARGET_Infantry,
+    TARGET_Vehicle,
+    TARGET_ArmoredVehicle,
+    TARGET_Gun,
+};
+
 struct STargetCoordinates
 {
     var vector Start;
     var vector End;
 };
 
+var array<ETargetType>  TargetTypes;
+var array<float>        TargetTypeModifiers;
+var float               TargetPriorityFalloffStepInMeters;
+var bool                bTargetMustBeManned;
+
 var DHAirplaneTarget    Target; // Current target.
 var STargetApproach     TargetApproach;
 var STargetCoordinates  TargetCoordinates;
 
-struct CannonInfo
+var float               ClusterEpsilonInMeters;
+var int                 ClusterMinPoints;
+
+struct WeaponInfo
 {
-    var class<DHAirplaneCannon> CannonClass;
+    var class<DHAirplaneWeapon> WeaponClass;
     var rotator RotationOffset;
     var vector LocationOffset;
-    var name CannonBone;
+    var name WeaponBone;
 };
 
-var array<CannonInfo>       CannonInfos;
-var array<DHAirplaneCannon> Cannons;
-
-struct HardpointInfo
-{
-    var class<DHAirplaneHardpoint> HardpointClass;
-    var rotator RotationOffset;
-    var vector LocationOffset;
-    var name HardpointBone;
-};
-
-var array<HardpointInfo>       HardpointInfos;
-var array<DHAirplaneHardpoint> Hardpoints;
+var array<WeaponInfo>       LeftWeaponInfos;
+var array<WeaponInfo>       RightWeaponInfos;
+var array<WeaponInfo>       CenterWeaponInfos;
+var array<DHAirplaneWeapon> Weapons;
 
 // Damage and crashing
 struct DamageEffectInfo
@@ -176,125 +184,138 @@ simulated function PostBeginPlay()
         AirplaneModel.SetPhysics(PHYS_Rotating);
         AirplaneModel.SetBase(self);
 
-        CreateCannons();
-        CreateHardpoints();
+        CreateWeapons();
 
         CurrentSpeed = StandardSpeed;
         CruisingHeight = Location.Z;
     }
 }
 
-function DestroyCannons()
+function DestroyWeapons()
 {
     local int i;
 
-    for (i = 0; i < Cannons.Length; ++i)
+    for (i = 0; i < Weapons.Length; ++i)
     {
-        if (Cannons[i] != none)
+        if (Weapons[i] != none)
         {
-            Cannons[i].Destroy();
+            Weapons[i].Destroy();
         }
     }
 
-    Cannons.Length = 0;
+    Weapons.Length = 0;
 }
 
-function DestroyHardpoints()
+// Gets an array of cannons that are suitable for the target.
+function array<DHAirplaneWeapon> GetWeaponsForTarget()
 {
-    local int i;
-
-    for (i = 0; i < Hardpoints.Length; ++i)
-    {
-        if (Hardpoints[i] != none)
-        {
-            Hardpoints[i].Destroy();
-        }
-    }
-
-    Hardpoints.Length = 0;
-}
-
-// Gets an array of cannons that are suitable for the.
-// TODO: Off-axis cannons (wing mounted, etc.) should be paired together.
-function array<DHAirplaneCannon> GetCannonsForTarget()
-{
-    local int i;
-    local array<DHAirplaneCannon> CannonsForTarget;
+    local array<DHAirplaneWeapon> ValidWeapons;
+    local int i, j;
 
     if (Target == none)
     {
-        return CannonsForTarget;
+        return ValidWeapons;
     }
 
-    // TODO: for now, all cannons; in future, pick
-    for (i = 0 ; i < Cannons.Length; ++i)
+    for (i = 0; i < Weapons.Length; ++i)
     {
-        CannonsForTarget[CannonsForTarget.Length] = Cannons[i];
-    }
-
-    return CannonsForTarget;
-}
-
-function CreateCannons()
-{
-    local int i;
-    local DHAirplaneCannon Cannon;
-
-    DestroyCannons();
-
-    for (i = 0; i < CannonInfos.Length; ++i)
-    {
-        if (CannonInfos[i].CannonClass == none)
+        if (Weapons[i] == none)
         {
             continue;
         }
 
-        Cannon = Spawn(CannonInfos[i].CannonClass, self,, Location, Rotation);
-
-        if (Cannon == none)
+        for (j = 0; j < Target.Actors.Length; ++j)
         {
-            Warn("Failed to create cannon!");
+            if (Weapons[i].CanDamageActor(Target.Actors[i]))
+            {
+                ValidWeapons[ValidWeapons.Length] = Weapons[i];
+                break;
+            }
         }
+    }
 
-        AirplaneModel.AttachToBone(Cannon, CannonInfos[i].CannonBone);
-        Cannon.SetRelativeRotation(CannonInfos[i].RotationOffset);
-        Cannon.SetRelativeLocation(CannonInfos[i].LocationOffset);
+    return ValidWeapons;
+}
 
-        Cannon.CannonIndex = Cannons.Length;
+function CreateWeapons()
+{
+    local int i;
+    local DHAirplaneWeapon Weapon, WeaponPair;
 
-        Cannons[Cannons.Length] = Cannon;
+    DestroyWeapons();
+
+    for (i = 0; i < CenterWeaponInfos.Length; ++i)
+    {
+        Weapon = CreateWeapon(CenterWeaponInfos[i]);
+
+        if (Weapon != none)
+        {
+            Weapon.WeaponInfo = CenterWeaponInfos.Length;
+            Weapon.MountAxis = MOUNT_Center;
+            Weapons[Weapons.Length] = Weapon;
+        }
+    }
+
+    for (i = 0; i < LeftWeaponInfos.Length || i < RightWeaponInfos.Length; ++i)
+    {
+        if (i < LeftWeaponInfos.Length)
+        {
+            Weapon = CreateWeapon(LeftWeaponInfos[i]);
+
+            if (Weapon != none)
+            {
+                Weapon.WeaponInfo = LeftWeaponInfos.Length;
+                Weapon.MountAxis = MOUNT_Left;
+                Weapons[Weapons.Length] = Weapon;
+
+                if (i < RightWeaponInfos.Length)
+                {
+                    WeaponPair = CreateWeapon(RightWeaponInfos[i]);
+
+                    if (WeaponPair != none)
+                    {
+                        WeaponPair.WeaponInfo = RightWeaponInfos.Length;
+                        WeaponPair.MountAxis = MOUNT_Right;
+                        Weapon.WeaponPair = WeaponPair;
+                    }
+                }
+            }
+        }
+        else
+        {
+            Weapon = CreateWeapon(RightWeaponInfos[i]);
+
+            if (Weapon != none)
+            {
+                Weapon.WeaponInfo = RightWeaponInfos.Length;
+                Weapon.MountAxis = MOUNT_Right;
+                Weapons[Weapons.Length] = Weapon;
+            }
+        }
     }
 }
 
-function CreateHardpoints()
+function DHAirplaneWeapon CreateWeapon(WeaponInfo WI)
 {
-    local int i;
-    local DHAirplaneHardpoint Hardpoint;
+    local DHAirplaneWeapon Weapon;
 
-    DestroyHardpoints();
-
-    for (i = 0; i < HardpointInfos.Length; ++i)
+    if (WI.WeaponClass == none)
     {
-        if (HardpointInfos[i].HardpointClass == none)
-        {
-            continue;
-        }
-
-        Hardpoint = Spawn(HardpointInfos[i].HardpointClass, self,, Location, Rotation);
-
-        if (Hardpoint == none)
-        {
-            Warn("Failed to create cannon!");
-        }
-
-        AirplaneModel.AttachToBone(Hardpoint, HardpointInfos[i].HardpointBone);
-        Hardpoint.SetRelativeRotation(HardpointInfos[i].RotationOffset);
-        Hardpoint.SetRelativeLocation(HardpointInfos[i].LocationOffset);
-
-        Hardpoint.HardpointIndex = Hardpoints.Length;
-
-        Hardpoints[Hardpoints.Length] = Hardpoint;
+        return none;
     }
+
+    Weapon = Spawn(WI.WeaponClass, self,, Location, Rotation);
+
+    if (Weapon == none)
+    {
+        Warn("Failed to create weapon!");
+    }
+
+    AirplaneModel.AttachToBone(Weapon, WI.WeaponBone);
+    Weapon.SetRelativeRotation(WI.RotationOffset);
+    Weapon.SetRelativeLocation(WI.LocationOffset);
+
+    return Weapon;
 }
 
 // Tick needed to make AI decisions on server.
@@ -324,21 +345,192 @@ function OnTargetReached();
 // Called when a Movement has reached it's predefined goal. Overridden by states.
 function OnMoveEnd();
 
-// This function computes the priority of each individual target (highest
-// first). It is passed into the cluster object to sort the targets out.
-function float GetTargetPriority(Object O)
+// TODO: This is the link between the Target weapon type recomendations and the actual attack parameters
+// Decide what attack to do on the target. Produces control signals.
+function DecideAttack()
 {
-    if (O == none)
+}
+
+// TODO: Move this to DHVehicle
+function int GetTargetCrewCount(Actor A)
+{
+    local int Count;
+    local DHVehicle V;
+    local VehicleWeaponPawn WP;
+    local int i;
+
+    V = DHVehicle(A);
+
+    if (V == none)
     {
         return 0.0;
     }
 
-    // TODO: Things to take into account:
-    //       * Target type
-    //       * Distance to target
-    //       * Available ammo
-    //       * ...
-    return 1.0;
+    if (V.Driver != none && !V.Driver.bDeleteMe && V.Driver.Health > 0)
+    {
+        ++Count;
+    }
+
+    for (i = 0; i < V.WeaponPawns.Length; ++i)
+    {
+        WP = V.WeaponPawns[i];
+        Count += int(WP != none && WP.Driver != none && !WP.Driver.bDeleteMe && WP.Driver.Health > 0);
+    }
+
+    return Count;
+}
+
+static function ETargetType GetTargetType(Actor A)
+{
+    local DHPawn P;
+
+    if (A == none)
+    {
+        return TARGET_None;
+    }
+
+    if (A.IsA('DHATGun'))
+    {
+        return TARGET_Gun;
+    }
+
+    if (A.IsA('DHArmoredVehicle'))
+    {
+        return TARGET_ArmoredVehicle;
+    }
+
+    if (A.IsA('DHVehicle'))
+    {
+        return TARGET_Vehicle;
+    }
+
+    // Infantry
+
+    P = DHPawn(A);
+
+    if ((P != none && P.PlayerReplicationInfo != none) || A.IsA('DHMortarVehicle'))
+    {
+        return TARGET_Infantry;
+    }
+
+    return TARGET_None;
+}
+
+function float GetTargetTypeModifier(ETargetType TargetType)
+{
+    local int Index;
+
+    Index = int(TargetType);
+
+    if (Index < default.TargetTypeModifiers.Length)
+    {
+        return default.TargetTypeModifiers[Index];
+    }
+}
+
+// TODO: Add team check
+function bool IsTargetActorValid(Actor A)
+{
+    local DHPawn DHP;
+    local Pawn P;
+
+    P = Pawn(A);
+
+    if (P == none || P.bDeleteMe || P.Health <= 0 || A.IsA('VehicleWeaponPawn'))
+    {
+        return false;
+    }
+
+    // Mortars (target only when manned)
+    if (A.IsA('DHMortarVehicle') && GetTargetCrewCount(A) > 0)
+    {
+        return true;
+    }
+
+    // Vehicles / AT guns
+    if (A.IsA('DHVehicle') || A.IsA('DHATGun'))
+    {
+        return !bTargetMustBeManned || GetTargetCrewCount(A) > 0;
+    }
+
+    // Infantry
+    DHP = DHPawn(A);
+
+    return DHP != none && DHP.PlayerReplicationInfo != none;
+}
+
+function array<Actor> GetValidTargets(Actor ForActor, float Radius)
+{
+    local Actor A;
+    local array<Actor> Targets;
+    local int i;
+
+    foreach ForActor.RadiusActors(class'Actor', A, Radius)
+    {
+        if (IsTargetActorValid(A))
+        {
+            // Check if we have appropriate guns and ammo to damage the target
+            for (i = 0; i < Weapons.Length; ++i)
+            {
+                if (Weapons[i].CanFire() && Weapons[i].CanDamageActor(A))
+                {
+                    Targets[Targets.Length] = A;
+                    break;
+                }
+            }
+        }
+    }
+
+    // DEBUG:
+    Log("Found valid targets:" @ Targets.Length);
+
+    return Targets;
+}
+
+// This function computes the priority of each individual target (highest
+// first). It is passed into the cluster object to sort the targets out.
+function float GetTargetPriority(Object O)
+{
+    local Actor A;
+    local float Priority;
+    local int DistanceModifier;
+    local ETargetType TargetType;
+
+    A = Actor(O);
+
+    if (A == none)
+    {
+        return 0.0;
+    }
+
+    TargetType = GetTargetType(A);
+
+    switch (TargetType)
+    {
+        case TARGET_ArmoredVehicle:
+        case TARGET_Vehicle:
+        case TARGET_Gun:
+            Priority = GetTargetTypeModifier(TargetType) + GetTargetCrewCount(A) * GetTargetTypeModifier(TARGET_Infantry);
+            break;
+        default:
+            Priority = GetTargetTypeModifier(TargetType);
+    }
+
+    // Give closer targets a higher priority
+    DistanceModifier = int(VSize(Location - A.Location) / class'DHUnits'.static.MetersToUnreal(TargetPriorityFalloffStepInMeters));
+
+    if (DistanceModifier > 0)
+    {
+        Priority /= DistanceModifier;
+    }
+
+    // TODO: Add proximity-to-airstrike-marker modifier to allow squad leaders
+    // select priority targets.
+
+    // DEBUG:
+    Log("PRIORITY" @ Priority @ "FOR" @ A.GetHumanReadableName() @ "OF TYPE" @ GetTargetType(A));
+
+    return Priority;
 }
 
 function float GetTargetScanRadius()
@@ -351,78 +543,36 @@ function float GetTargetClusterEpsilon()
 {
     // TODO: Figure out how close points need to be to form optimal clusters
     //       (epsilon).
-    return class'DHUnits'.static.MetersToUnreal(20);
-}
-
-// TODO: This is the link between the Target weapon type recomendations and the actual attack parameters
-// Decide what attack to do on the target. Produces control signals.
-function DecideAttack()
-{
+    return class'DHUnits'.static.MetersToUnreal(ClusterEpsilonInMeters);
 }
 
 // This function is used by the Searching state to decide which target is next.
 function PickTarget()
 {
-    local UClusters Targets;
-    local UHeap QueuedTargets, TargetCluster;
-    local UClusters.DataPoint P;
-    local DHPawn OtherPawn;
-    local Actor TargetActor;
+    local UClusters ClusteringData;
+    local UHeap TargetQueue, TopCluster;
     local array<Actor> TargetActors;
-    local string TargetClassName;
-    local int i;
+    local string TargetDebugString;
+    local Functor_float_Object PriorityFunction;
 
-    Targets = new class'UClusters';
-    Targets.GetItemPriority = GetTargetPriority;
+    PriorityFunction = new class'Functor_float_Object';
+    PriorityFunction.DelegateFunction = GetTargetPriority;
 
-    // Collect the potential targets.
-    foreach RadiusActors(class'DHPawn', OtherPawn, GetTargetScanRadius())
+    ClusteringData = class'UClusters'.static.CreateFromActors(GetValidTargets(self, GetTargetScanRadius()),
+                                                              PriorityFunction,
+                                                              GetTargetClusterEpsilon(),
+                                                              ClusterMinPoints);
+
+    if (ClusteringData == none)
     {
-        P.Item = OtherPawn;
-        P.Location = OtherPawn.Location;
-
-        Targets.Data[Targets.Data.Length] = P;
+        Log("No targets!");
+        return;
     }
 
-    // Look for clusters.
-    Targets.DBSCAN(GetTargetClusterEpsilon(), 1);
-
-    // Convert the cluster data into a priority queue.
-    // The most lucious target will bubble up to the top. It can be either a
-    // single actor or a heap of actors (if it's a cluster).
-    QueuedTargets = Targets.ToHeap();
-
-    // Get target's class name (for logging).
-    TargetClassName = string(QueuedTargets.Peek());
-
-    if (QueuedTargets.RootIsHeap(TargetCluster))
-    {
-        // Target is a cluster
-        for (i = 0; i < TargetCluster.GetLength(); ++i)
-        {
-            TargetActor = Actor(TargetCluster.Data[i].Item);
-
-            if (TargetActor != none)
-            {
-                TargetActors[TargetActors.Length] = TargetActor;
-            }
-        }
-    }
-    else if (QueuedTargets.GetLength() > 0)
-    {
-        // Target is a single actor
-        TargetActor = Actor(QueuedTargets.Peek());
-
-        if (TargetActor != none)
-        {
-            TargetActors[TargetActors.Length] = TargetActor;
-        }
-    }
+    TargetActors = ClusteringData.GetPriorityActors();
 
     if (TargetActors.Length > 0)
     {
-        // Target = class'DHAirplaneTarget'.static.CreateTargetFromActors(TargetActors);
-
         if (Target == none)
         {
             Target = Spawn(class'DHAirplaneTarget');
@@ -438,11 +588,24 @@ function PickTarget()
         }
     }
 
+    // DEBUG: Get target's class name (for logging).
+    TargetQueue = ClusteringData.ToHeap();
+
+    if (TargetQueue.RootIsHeap(TopCluster))
+    {
+        TargetDebugString = "Cluster (size:" @ TopCluster.GetLength() $ ")";
+    }
+    else
+    {
+        TargetDebugString = string(TargetQueue.Peek());
+    }
+
     // Get coordinates to the target.
     // TODO: Without course correction, target might drift away.
-    if (Target != none && Target.IsValid() && Targets.GetPriorityVector(QueuedTargets, TargetCoordinates.Start, TargetCoordinates.End))
+    if (Target != none && Target.IsValid() && ClusteringData.GetPriorityVector(TargetQueue, TargetCoordinates.Start, TargetCoordinates.End))
     {
-        Log("Target acquired:" @ TargetClassName @ "@" @ TargetCoordinates.Start);
+        Log("Target acquired:" @ TargetDebugString @ "@" @ TargetCoordinates.Start);
+        StartStrafe();
     }
     else
     {
@@ -451,11 +614,6 @@ function PickTarget()
         // violent smashing into the ground.
         Log("No target!");
     }
-
-    QueuedTargets.ClearNested();
-
-    // Debug
-    StartStrafe();
 }
 
 // Initial State. The plane enters into the combat area.
@@ -525,6 +683,11 @@ state Approaching
         local vector TurnCriclePosition;
         local vector PlaneLocalTurnCriclePosition;
 
+        if (Target == none)
+        {
+            return;
+        }
+
         // Decide to turn left or right towards target.
         HeadingRotator = OrthoRotation(Velocity, Velocity cross vect(0, 0, 1), vect(0, 0, 1));
         HeadingRotator.Roll = 0;
@@ -573,7 +736,11 @@ state Approaching
 
     function BeginState()
     {
-        Log("Approaching: " $ Target.GetLocation());
+        if (Target != none)
+        {
+            Log("Approaching: " $ Target.GetLocation());
+        }
+
         bIsTurningTowardsTarget = false;
     }
 }
@@ -623,6 +790,7 @@ state DiveAttacking
 
     function BeginState()
     {
+        local array<DHAirplaneWeapon> WeaponsToArm;
         local int i;
 
         bIsPullingUp = false;
@@ -631,10 +799,15 @@ state DiveAttacking
 
         BeginDiveClimbTowardsPosition(TargetCoordinates.Start, 5000, false);
 
-        for (i = 0; i < Hardpoints.Length; ++i)
+        WeaponsToArm = GetWeaponsForTarget();
+        class'DHAirplaneWeapon'.static.ArmWeapons(WeaponsToArm);
+
+        // DEBUG:
+        Log("Arming weapons...");
+
+        for (i = 0; i < WeaponsToArm.Length; ++i)
         {
-            Hardpoints[i].TargetLocation = Target.GetLocation();
-            Hardpoints[i].Arm();
+            Log("Armed:" @ WeaponsToArm[i].GetHumanReadableName());
         }
     }
 }
@@ -768,7 +941,7 @@ function StartStrafe()
     CurrentAttackType = AT_STRAFE;
     TargetApproach.Radius = StrafeRadius;
     TargetApproach.MinimumHeight = StrafePullUpHeight;
-    GotoState('Approuching');
+    GotoState('Approaching');
 }
 
 function StartDiveBomb()
@@ -777,7 +950,7 @@ function StartDiveBomb()
     TargetApproach.Radius = DiveBombRadius;
     TargetApproach.MinimumHeight = DiveBombPullUpHeight;
     bHasDroppedBomb = false;
-    GotoState('Approuching');
+    GotoState('Approaching');
 }
 
 function StartFlyOverBomb()
@@ -785,7 +958,7 @@ function StartFlyOverBomb()
     CurrentAttackType = AT_FLY_OVER_BOMB;
     TargetApproach.Radius = FlyOverBombRadius;
     bHasDroppedBomb = false;
-    GotoState('Approuching');
+    GotoState('Approaching');
 }
 
 // MovementState related functions ---------------------------------------------
@@ -889,8 +1062,6 @@ static  function vector V3ToV2(vector InVector)
     return OutVector;
 }
 
-
-
 function TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Momentum, class<DamageType> DamageType, optional int HitIndex)
 {
     Log("Hit");
@@ -914,9 +1085,7 @@ simulated function Destroyed()
 
     AirplaneModel.Destroy();
 
-    DestroyCannons();
-    DestroyHardpoints();
-
+    DestroyWeapons();
     DestroyDamageEffects();
 
     Target.Destroy();
@@ -926,7 +1095,7 @@ function int GetCannonFlagsForTarget()
 {
     local int CannonFlags, i;
 
-    for (i = 0; i < Cannons.Length; ++i)
+    for (i = 0; i < Weapons.Length; ++i)
     {
         // TODO: fill this in with something that looks at target composition and
         // builds the cannon flags.
@@ -940,11 +1109,12 @@ function StartFiringCannons(int CannonFlags)
 {
     local int i;
 
-    for (i = 0; i < Cannons.Length; ++i)
+    for (i = 0; i < Weapons.Length; ++i)
     {
-        if (Cannons[i] != none && (CannonFlags & (1 << i)) != 0)
+        // TODO: !
+        if (Weapons[i] != none && (CannonFlags & (1 << i)) != 0)
         {
-            Cannons[i].StartFiring();
+            Weapons[i].StartFiring();
         }
     }
 }
@@ -953,11 +1123,12 @@ function StopFiringCannons(int CannonFlags)
 {
     local int i;
 
-    for (i = 0; i < Cannons.Length; ++i)
+    for (i = 0; i < Weapons.Length; ++i)
     {
-        if (Cannons[i] != none && (CannonFlags & (1 << i)) != 0)
+        // TODO: !
+        if (Weapons[i] != none && (CannonFlags & (1 << i)) != 0)
         {
-            Cannons[i].StopFiring();
+            Weapons[i].StopFiring();
         }
     }
 }
@@ -1046,4 +1217,28 @@ defaultproperties
     FlyOverBombRadius=13000
 
     BombDropHeight=300
+
+    // TARGETTING:
+
+    ClusterMinPoints=1
+    ClusterEpsilonInMeters=20
+    TargetPriorityFalloffStepInMeters=500
+    bTargetMustBeManned=true
+
+    // TargetTypeModifiers define in which order the plane will target things.
+    // All crewed targets will have an infantry modifiers added for each crew memeber.
+    TargetTypes(0)=TARGET_None
+    TargetTypeModifiers(0)=0.0
+
+    TargetTypes(1)=TARGET_Infantry
+    TargetTypeModifiers(1)=1.0
+
+    TargetTypes(2)=TARGET_Vehicle // crewed
+    TargetTypeModifiers(2)=4.1
+
+    TargetTypes(3)=TARGET_ArmoredVehicle // crewed
+    TargetTypeModifiers(3)=8.3
+
+    TargetTypes(4)=TARGET_Gun // crewed
+    TargetTypeModifiers(4)=2.0
 }

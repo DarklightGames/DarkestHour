@@ -256,6 +256,51 @@ static function bool GetPriorityVector(UHeap Clusters, out vector PointA, out ve
     }
 }
 
+// Returns a list of actors in the largest cluster
+function array<Actor> GetPriorityActors()
+{
+    local UHeap Queue;
+    local array<Actor> A;
+
+    Queue = ToHeap();
+    A = Queue.RootToActors();
+    Queue.ClearNested();
+
+    return A;
+}
+
+static function UClusters CreateFromActors(array<Actor> A, Functor_float_Object PriorityFunction, float Epsilon, int MinPoints)
+{
+    local UClusters Clusters;
+    local DataPoint DP;
+    local int i;
+
+    if (PriorityFunction == none || A.Length <= 0)
+    {
+        return none;
+    }
+
+    Clusters = new class'UClusters';
+
+    for (i = 0; i < A.Length; ++i)
+    {
+        if (A[i] == none)
+        {
+            continue;
+        }
+
+        DP.Item = A[i];
+        DP.Location = A[i].Location;
+
+        Clusters.Data[Clusters.Data.Length] = DP;
+    }
+
+    Clusters.GetItemPriority = PriorityFunction.DelegateFunction;
+    Clusters.DBSCAN(Epsilon, MinPoints);
+
+    return Clusters;
+}
+
 // DEBUG
 
 function DebugLog()

@@ -7,12 +7,12 @@ class DHAirplaneBomb extends DHArtilleryShell;
 
 simulated function PostBeginPlay()
 {
-    if (Owner == none)
+    if (Owner == none || Owner.Owner == none)
     {
         return;
     }
 
-    Velocity = Owner.Owner.Velocity;
+    Velocity = Owner.Owner.Velocity; // TODO: This isn't nice.
     Speed = VSize(Velocity);
     Acceleration = PhysicsVolume.Gravity;
 }

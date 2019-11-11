@@ -5,10 +5,15 @@
 // https://en.wikipedia.org/wiki/Hispano-Suiza_HS.404
 //==============================================================================
 
-class DH_HS404Cannon extends DHAirplaneCannon;
+class DHHS404CannonWeapon extends DHAirplaneCannonWeapon;
 
 defaultproperties
 {
     RoundsPerMinute=700
     //ProjectileClass=class'DH_HS404CannonShell'
+    WeaponType=WEAPON_AutoCannon
+
+    TargetTypes(0)=TARGET_Infantry
+    TargetTypes(1)=TARGET_Vehicle
+    TargetTypes(2)=TARGET_Gun
 }

@@ -7,7 +7,7 @@ class DH_BF109_Airplane extends DHAirplane;
 
 defaultproperties
 {
-    AirplaneName="Messerschmidt Bf 109"
-    CannonInfos(0)=(CannonClass=class'DHMG151Cannon')
-    HardpointInfos(0)=(HardpointClass=class'DHAirplaneHardpoint',HardpointBone="bomb.002",LocationOffset=(X=0.0,y=0.0,Z=-5.0))
+    AirplaneName="Messerschmitt Bf 109"
+    CenterWeaponInfos(0)=(WeaponClass=class'DHMG151CannonWeapon')
+    CenterWeaponInfos(1)=(WeaponClass=class'DHSC250BombWeapon',WeaponBone="bomb.002",LocationOffset=(X=0.0,y=0.0,Z=-5.0))
 }
