@@ -8,8 +8,11 @@ class DHRocketProjectile extends DHCannonShellHEAT // originally extended DHAnti
 
 #exec OBJ LOAD FILE=Inf_Weapons.uax
 
+
 var     float               StraightFlightTime; // how long the rocket has propellant & flies straight
-var     PanzerfaustTrail    SmokeTrail;         // smoke trail emitter
+var     bool                bHasSmokeTrail; // some rockets - like the PIAT bomb - don't issue smoke trails
+var     class<Emitter>      RocketSmokeTrailClass;         //modifying RO code here to allow custom smoke trails
+var     Emitter             SmokeTrail;
 
 // Modified to spawn a rocket smoke trail & set a timer to cut off the rocket after a set time
 simulated function PostBeginPlay()
@@ -18,10 +21,13 @@ simulated function PostBeginPlay()
 
     if (Level.NetMode != NM_DedicatedServer && bHasTracer)
     {
-        SmokeTrail = Spawn(class'PanzerfaustTrail', self);
-        SmokeTrail.SetBase(self);
-
         Corona = Spawn(CoronaClass, self);
+    }
+
+    if (Level.NetMode != NM_DedicatedServer && bHasSmokeTrail)
+    {
+        SmokeTrail = Spawn(RocketSmokeTrailClass, self);
+        SmokeTrail.SetBase(self);
     }
 
     if (PhysicsVolume.bWaterVolume)
@@ -78,7 +84,7 @@ simulated function Timer()
 
     if (SmokeTrail != none)
     {
-        SmokeTrail.HandleOwnerDestroyed();
+        SmokeTrail.Destroy();
     }
 
     if (Corona != none)
@@ -93,7 +99,7 @@ simulated function BlowUp(vector HitLocation)
 
     if (SmokeTrail != none)
     {
-        SmokeTrail.HandleOwnerDestroyed();
+        SmokeTrail.Destroy();
     }
 }
 
@@ -103,32 +109,50 @@ simulated function Destroyed()
 
     if (SmokeTrail != none)
     {
-        SmokeTrail.HandleOwnerDestroyed();
+        SmokeTrail.Destroy();
     }
 }
 
 defaultproperties
 {
-    bExplodesOnHittingBody=true
-    bExplodesOnHittingWater=false
+    //From RORocketProj
+    //Physics = PHYS_Projectile
+    //bTrueBallistics=false
+
+    VehicleHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
+    DirtHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
+    RockHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
+    WoodHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode03'
+    WaterHitSound=Sound'ProjectileSounds.cannon_rounds.AP_Impact_Water'
+    VehicleDeflectSound=sound'ProjectileSounds.PTRD_deflect' //temp
+
     ExplosionSound(0)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
     ExplosionSound(1)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode02'
     ExplosionSound(2)=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode03'
-    StraightFlightTime=0.2
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    PenetrationMag=250.0
-    ShellImpactDamage=class'ROGame.RORocketImpactDamage'
-    ImpactDamage=675
-    VehicleHitSound=SoundGroup'Inf_Weapons.panzerfaust60.faust_explode01'
+
     ShellHitVehicleEffectClass=class'ROEffects.PanzerfaustHitTank'
     ShellHitDirtEffectClass=class'ROEffects.PanzerfaustHitDirt'
     ShellHitSnowEffectClass=class'ROEffects.PanzerfaustHitSnow'
     ShellHitWoodEffectClass=class'ROEffects.PanzerfaustHitWood'
     ShellHitRockEffectClass=class'ROEffects.PanzerfaustHitConcrete'
     ShellHitWaterEffectClass=class'ROEffects.PanzerfaustHitWater'
+    ShellDeflectEffectClass=class'ROEffects.ROBulletHitMetalArmorEffect' //temp
+
+    //Start DH defaults
+    bExplodesOnHittingBody=true
+    bExplodesOnHittingWater=false
+
+    StraightFlightTime=0.2 //time that smoke trail and corona (tracer) effect are activated after launch
+    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
+    RocketSmokeTrailClass=class'ROEffects.PanzerfaustTrail'
+    PenetrationMag=250.0
+    ShellImpactDamage=class'ROGame.RORocketImpactDamage'
+    ImpactDamage=675
+
     BallisticCoefficient=0.05
     Damage=300.0
     DamageRadius=180.0
+
     ExplosionDecal=class'ROEffects.RocketMarkDirt'
     ExplosionDecalSnow=class'ROEffects.RocketMarkSnow'
     LightType=LT_Steady
@@ -142,14 +166,15 @@ defaultproperties
     ExplosionSoundVolume=5.0 // seems high but TransientSoundVolume is only 0.3, compared to 1.0 for a shell
 
 //  Override unwanted defaults now inherited from DHCannonShellHEAT & DHCannonShell:
+    bHasTracer=true
+    bHasSmokeTrail=true
+    bHasShellTrail=false
     ShakeRotMag=(Y=50.0,Z=200.0)
     ShakeRotRate=(Y=500.0,Z=1500.0)
     BlurEffectScalar=1.9
-    VehicleDeflectSound=Sound'ProjectileSounds.cannon_rounds.AP_deflect'
-    ShellDeflectEffectClass=none
     MyDamageType=class'DamageType'
-    AmbientSound=none
-    TransientSoundVolume=0.3
+    AmbientSound=none //TODO: need passby sound!
+    TransientSoundVolume=1.0 //0.3
     TransientSoundRadius=300.0
     SpeedFudgeScale=1.0
     InitialAccelerationTime=0.1

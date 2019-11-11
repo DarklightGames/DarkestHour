@@ -15,7 +15,6 @@ defaultproperties
     GunsightOverlay=Texture'DH_VehicleOptics_tex.Soviet.PG1_sight_background'
     GunsightSize=0.441 // 10.5 degrees visible FOV at 3.7x magnification (PG1 sight)
     DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed' // matches size of gunsight
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_7x50Sov'
     AmmoShellTexture=Texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell'
     AmmoShellReloadTexture=Texture'InterfaceArt_tex.Tank_Hud.T3476_SU76_Kv1shell_reload'
 }

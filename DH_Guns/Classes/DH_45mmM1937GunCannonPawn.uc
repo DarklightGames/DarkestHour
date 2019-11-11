@@ -54,7 +54,6 @@ defaultproperties
     ScopeCenterScaleX=2.2
     ScopeCenterScaleY=2.0
     DestroyedGunsightOverlay=Texture'DH_VehicleOpticsDestroyed_tex.German.PZ4_sight_destroyed' // matches size of gunsight
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_7x50Sov'
     AmmoShellTexture=Texture'InterfaceArt_ahz_tex.Tank_Hud.45mmShell' // TODO: get new ammo icons made so the "X" text matches the position of the ammo count
     AmmoShellReloadTexture=Texture'InterfaceArt_ahz_tex.Tank_Hud.45mmShell_reload'
 }

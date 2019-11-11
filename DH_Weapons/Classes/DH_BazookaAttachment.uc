@@ -10,7 +10,7 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.Bazooka_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Bazooka_icon'
     mExhFlashClass=class'DH_Effects.DH3rdPersonBazookaExhaustFX'
-    mMuzFlashClass=class'ROEffects.RO3rdPersonPanzerfaustFX'
+    mMuzFlashClass=class'DH_Effects.DHMuzzleFlash3rdBazooka'
     ExhaustBoneName="ejector"
     MuzzleBoneName="Muzzle"
 
@@ -121,7 +121,7 @@ defaultproperties
     PA_MoveWalkFire(6)="stand_shootFRwalk_kar"
     PA_MoveWalkFire(7)="stand_shootFLwalk_kar"
     PA_MoveStandIronFire(0)="stand_shootiron_kar"
-    PA_MoveStandIronFire(1)="stand_shootiron_fausr"
+    PA_MoveStandIronFire(1)="stand_shootiron_faust"
     PA_MoveStandIronFire(2)="stand_shootLRiron_kar"
     PA_MoveStandIronFire(3)="stand_shootLRiron_kar"
     PA_MoveStandIronFire(4)="stand_shootFLiron_kar"

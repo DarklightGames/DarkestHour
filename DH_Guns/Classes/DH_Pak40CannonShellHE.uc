@@ -7,6 +7,40 @@ class DH_Pak40CannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
+    Speed=33073.0
+    MaxSpeed=33073.0
+    ShellDiameter=7.5
+    BallisticCoefficient=2.1
+
+    //Damage
+    ImpactDamage=455
+    ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
+    Damage=415.0
+    DamageRadius=1350.0
+    MyDamageType=class'DH_Engine.DHShellHE75mmATDamageType'
+    PenetrationMag=1000.0
+    HullFireChance=0.33
+    EngineFireChance=0.65
+
+    bDebugInImperial=false
+
+    //Effects
+    bHasTracer=false
+
+    //Penetration
+    DHPenetrationTable(0)=3.3
+    DHPenetrationTable(1)=3.1
+    DHPenetrationTable(2)=2.8
+    DHPenetrationTable(3)=2.4
+    DHPenetrationTable(4)=2.0
+    DHPenetrationTable(5)=1.7
+    DHPenetrationTable(6)=1.3
+    DHPenetrationTable(7)=1.1
+    DHPenetrationTable(8)=0.9
+    DHPenetrationTable(9)=0.5
+    DHPenetrationTable(10)=0.3
+
+    //Gunsight adjustments
     MechanicalRanges(1)=(Range=100,RangeValue=28.0)
     MechanicalRanges(2)=(Range=200,RangeValue=40.0)
     MechanicalRanges(3)=(Range=300,RangeValue=58.0)
@@ -28,27 +62,4 @@ defaultproperties
     MechanicalRanges(19)=(Range=1900,RangeValue=438.0)
     MechanicalRanges(20)=(Range=2000,RangeValue=468.0)
     bMechanicalAiming=true
-    DHPenetrationTable(0)=3.3
-    DHPenetrationTable(1)=3.1
-    DHPenetrationTable(2)=2.8
-    DHPenetrationTable(3)=2.4
-    DHPenetrationTable(4)=2.0
-    DHPenetrationTable(5)=1.7
-    DHPenetrationTable(6)=1.3
-    DHPenetrationTable(7)=1.1
-    DHPenetrationTable(8)=0.9
-    DHPenetrationTable(9)=0.5
-    DHPenetrationTable(10)=0.3
-    ShellDiameter=7.5
-    bDebugInImperial=false
-    PenetrationMag=1000.0
-    ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
-    ImpactDamage=455
-    BallisticCoefficient=2.1
-    Speed=33073.0
-    MaxSpeed=33073.0
-    Damage=415.0
-    DamageRadius=1350.0
-    MyDamageType=class'DH_Engine.DHShellHE75mmATDamageType'
-    Tag="Sprgr.Patr.34"
 }

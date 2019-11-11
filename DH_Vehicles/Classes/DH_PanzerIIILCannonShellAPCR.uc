@@ -3,10 +3,44 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_PanzerIIILCannonShellAPCR extends DHCannonShellHVAP;
+class DH_PanzerIIILCannonShellAPCR extends DHGermanCannonShell;
 
 defaultproperties
 {
+    RoundType=RT_APDS
+    Speed=71313.0
+    MaxSpeed=71313.0
+    ShellDiameter=3.7 //sub-caliber round
+    BallisticCoefficient=0.95
+    SpeedFudgeScale=0.4
+
+    //Damage
+    bShatterProne=true
+    ImpactDamage=250
+    ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIILCannonShellDamageAPCR'
+    HullFireChance=0.22
+    EngineFireChance=0.45
+
+    //Penetration
+    DHPenetrationTable(0)=14.9
+    DHPenetrationTable(1)=13.2
+    DHPenetrationTable(2)=10.8
+    DHPenetrationTable(3)=8.8
+    DHPenetrationTable(4)=7.2
+    DHPenetrationTable(5)=5.9
+    DHPenetrationTable(6)=4.8
+    DHPenetrationTable(7)=4.1
+    DHPenetrationTable(8)=3.2
+    DHPenetrationTable(9)=2.1
+    DHPenetrationTable(10)=1.4
+
+    //Effects
+    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
+    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
+    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
+
+    bDebugInImperial=false
+
     MechanicalRanges(1)=(Range=100,RangeValue=4.0)
     MechanicalRanges(2)=(Range=200,RangeValue=10.0)
     MechanicalRanges(3)=(Range=300,RangeValue=15.0)
@@ -28,26 +62,4 @@ defaultproperties
     MechanicalRanges(19)=(Range=1900,RangeValue=685.0)
     MechanicalRanges(20)=(Range=2000,RangeValue=772.0)
     bMechanicalAiming=true
-    DHPenetrationTable(0)=14.9
-    DHPenetrationTable(1)=13.2
-    DHPenetrationTable(2)=10.8
-    DHPenetrationTable(3)=8.8
-    DHPenetrationTable(4)=7.2
-    DHPenetrationTable(5)=5.9
-    DHPenetrationTable(6)=4.8
-    DHPenetrationTable(7)=4.1
-    DHPenetrationTable(8)=3.2
-    DHPenetrationTable(9)=2.1
-    DHPenetrationTable(10)=1.4
-    ShellDiameter=5.0
-    bDebugInImperial=false
-    CoronaClass=class'DH_Effects.DHShellTracer_Orange'
-    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
-    ShellImpactDamage=class'DH_Vehicles.DH_PanzerIIILCannonShellDamageAPCR'
-    ImpactDamage=325
-    BallisticCoefficient=0.95
-    Speed=71313.0
-    MaxSpeed=71313.0
-    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
-    Tag="PzGr.40"
 }

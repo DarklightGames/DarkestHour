@@ -43,10 +43,17 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShellHE'
     TertiaryProjectileClass=class'DH_Vehicles.DH_PanzerIVCannonShellHEAT'
+
     ProjectileDescriptions(2)="HEAT"
+
+    nProjectileDescriptions(0)="PzGr.39"
+    nProjectileDescriptions(1)="Sprgr.Patr.34"
+    nProjectileDescriptions(2)="Gr.38 Hl/C"
+
     InitialPrimaryAmmo=40
     InitialSecondaryAmmo=16
     InitialTertiaryAmmo=7
+
     MaxPrimaryAmmo=44
     MaxSecondaryAmmo=35
     MaxTertiaryAmmo=8

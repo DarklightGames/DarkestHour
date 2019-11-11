@@ -19,6 +19,7 @@ var     name        PlayerCameraBone;            // just to avoid using literal 
 var     bool        bCamOffsetRelToGunPitch;     // camera position offset (ViewLocation) is always relative to cannon's pitch, e.g. for open sights in some AT guns
 var     bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during transitions
 var     texture     PeriscopeOverlay;            // overlay for commander's periscope
+var     float       PeriscopeSize;               // so we can adjust the "exterior" FOV of the periscope overlay, just like Gunsights, if needed
 var     texture     AltAmmoReloadTexture;        // used to show coaxial MG reload progress on the HUD, like the cannon reload
 
 // Gunsight overlay
@@ -296,19 +297,27 @@ simulated function DrawGunsightOverlay(Canvas C)
     }
 }
 
-// New function to draw any textured commander's periscope overlay
+// New function to draw any textured commander's periscope overlay; modified 2019 to act like Gunsight draw function, since we may eventually have ballistic periscopes
 simulated function DrawPeriscopeOverlay(Canvas C)
 {
-    local float ScreenRatio;
+    local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
 
     if (PeriscopeOverlay != none)
     {
-        ScreenRatio = float(C.SizeY) / float(C.SizeX);
+        // The drawn portion of the gunsight texture is 'zoomed' in or out to suit the desired scaling
+        // This is inverse to the specified GunsightSize, i.e. the drawn portion is reduced to 'zoom in', so sight is drawn bigger on screen
+        // The draw start position (in the texture, not the screen position) is often negative, meaning it starts drawing from outside of the texture edges
+        // Draw areas outside the texture edges are drawn black, so this handily blacks out all the edges around the scaled gunsight, in 1 draw operation
+        TextureSize = float(PeriscopeOverlay.MaterialUSize());
+        TilePixelWidth = TextureSize / PeriscopeSize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
+        TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
+        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0) - OverlayCorrectionX;
+        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0) - OverlayCorrectionY;
+
+        // Draw the periscope overlay
         C.SetPos(0.0, 0.0);
 
-        C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY,                            // screen drawing area (to fill screen)
-            0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2.0,       // position in texture to begin drawing tile (from left edge, with vertical position to suit screen aspect ratio)
-            PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio); // width & height of tile within texture
+        C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
     }
 }
 
@@ -1056,6 +1065,9 @@ defaultproperties
     RangeText="metres"
     RangePositionX=0.16
     RangePositionY=0.2
+
+    //Periscope overlay
+    PeriscopeSize=0.955 //default for most peri's
 
     // Turret/cannon movement
     MaxRotateThreshold=1.5

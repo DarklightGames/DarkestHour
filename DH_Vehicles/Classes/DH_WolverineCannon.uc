@@ -39,8 +39,15 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_WolverineCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_WolverineCannonShellHVAP'
     TertiaryProjectileClass=class'DH_Vehicles.DH_WolverineCannonShellHE'
+
+
     ProjectileDescriptions(1)="HVAP"
     ProjectileDescriptions(2)="HE"
+
+    nProjectileDescriptions(0)="M62 APC"
+    nProjectileDescriptions(1)="M93 HVAP"
+    nProjectileDescriptions(2)="M42A1 HE-T"
+
     InitialPrimaryAmmo=22
     InitialSecondaryAmmo=4
     InitialTertiaryAmmo=12

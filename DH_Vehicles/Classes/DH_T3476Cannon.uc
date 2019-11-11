@@ -41,6 +41,10 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_T3476CannonShellHE'
     ProjectileDescriptions(0)="APBC"
+
+    nProjectileDescriptions(0)="BR-350B" // standard mid-late war APBC shell
+    nProjectileDescriptions(1)="OF-350"
+
     InitialPrimaryAmmo=25
     InitialSecondaryAmmo=25
     MaxPrimaryAmmo=27

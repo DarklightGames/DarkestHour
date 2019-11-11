@@ -27,6 +27,10 @@ defaultproperties
     ProjectileClass=class'DH_Guns.DH_Pak40CannonShell'
     PrimaryProjectileClass=class'DH_Guns.DH_Pak40CannonShell'
     SecondaryProjectileClass=class'DH_Guns.DH_Pak40CannonShellHE'
+
+    nProjectileDescriptions(0)="PzGr.39"
+    nProjectileDescriptions(1)="Sprgr.Patr.34"
+
     InitialPrimaryAmmo=20
     InitialSecondaryAmmo=10
     MaxPrimaryAmmo=50

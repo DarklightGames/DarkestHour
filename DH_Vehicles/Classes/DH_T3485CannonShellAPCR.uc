@@ -3,19 +3,27 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_T3485CannonShellAPCR extends DHSovietCannonShell;
+class DH_T3485CannonShellAPCR extends DHCannonShellAPDS;
 
 defaultproperties
 {
-    RoundType=RT_HVAP
-    ShellDiameter=8.5
-    BallisticCoefficient=2.0
+    RoundType=RT_APDS
     Speed=47797.0 // 792 m/s
     MaxSpeed=47797.0
-    ImpactDamage=450
-    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageHVAP'
-    Tag="BR-365P"
+    ShellDiameter=5.7 //sub-caliber round
+    BallisticCoefficient=2.0 //TODO: find correct BC
 
+    //Damage
+    ImpactDamage=450 // just a tungsten slug; no explosive filler
+    ShellImpactDamage=class'DH_Engine.DHShellSubCalibreImpactDamageType'
+    HullFireChance=0.33
+    EngineFireChance=0.65
+
+    //Effects
+    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect'
+    CoronaClass=class'DH_Effects.DHShellTracer_Green'
+
+    //Penetration
     DHPenetrationTable(0)=17.5 // 100m
     DHPenetrationTable(1)=15.9 // 250m
     DHPenetrationTable(2)=13.6 // 500m
@@ -28,6 +36,7 @@ defaultproperties
     DHPenetrationTable(9)=3.9
     DHPenetrationTable(10)=2.9 // 3000m
 
+    //Gunsight adjustments
     bMechanicalAiming=true
     MechanicalRanges(0)=(Range=0,RangeValue=0.0)
     MechanicalRanges(1)=(Range=400,RangeValue=33.0)

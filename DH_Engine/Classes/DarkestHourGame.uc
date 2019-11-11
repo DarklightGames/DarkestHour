@@ -135,9 +135,14 @@ event InitGame(string Options, out string Error)
         AccessControl = Spawn(class'DH_Engine.DHAccessControl');
     }
 
-    // Force the server to update the MaxClientRate, setting it in config file doesn't work as intended (something bugged in native)
-    // This command will unlock a server so it can allow clients to have more than 10000 netspeed
+    // Force the server to update the MaxClientRate, setting it in config file
+    // doesn't work as intended (something bugged in native)
+    // This command will unlock a server so it can allow clients to have more
+    // than 10000 netspeed.
     ConsoleCommand("set IpDrv.TcpNetDriver MaxClientRate 30000");
+
+    // Initialize geolocation service (verifies cache integrity)
+    class'DHGeolocationService'.static.Initialize();
 }
 
 function PreBeginPlay()
@@ -2893,6 +2898,11 @@ state ResetGameCountdown
     {
         local DHArtillerySpawner AS;
 
+        if (SquadReplicationInfo != none)
+        {
+            SquadReplicationInfo.ResetSquadInfo();
+        }
+
         if (bSwapTeams)
         {
             ChangeSides(); // Change sides if bSwapTeams is true
@@ -3397,6 +3407,35 @@ exec function ChangeRoundTime(int Minutes, optional string Type)
     default:
         ModifyRoundTime(Minutes * 60, 2);
         break;
+    }
+}
+
+exec function ChangeSetupPhaseTime(int Minutes, int Seconds, optional string OperationType)
+{
+    local DHSetupPhaseManager SPM;
+    local int TimeInSeconds;
+
+    if (GRI == none || !GRI.bIsInSetupPhase)
+    {
+        return;
+    }
+
+    TimeInSeconds = Max(0, Minutes) * 60 + Max(0, Seconds);
+
+    foreach AllActors(class'DHSetupPhaseManager', SPM)
+    {
+        switch (OperationType)
+        {
+            case "Add":
+                SPM.ModifySetupPhaseDuration(TimeInSeconds);
+                break;
+            case "Subtract":
+                SPM.ModifySetupPhaseDuration(-TimeInSeconds);
+                break;
+            default:
+                SPM.ModifySetupPhaseDuration(TimeInSeconds, true);
+                break;
+        }
     }
 }
 
@@ -4958,6 +4997,8 @@ event PostLogin(PlayerController NewPlayer)
     {
         PC.bSpectateAllowViewPoints = bSpectateAllowViewPoints && ViewPoints.Length > 0;
     }
+
+    class'DHGeolocationService'.static.GetIpData(PC);
 }
 
 // Override to leave hash and info in PlayerData, basically to save PRI data for the session
@@ -5425,8 +5466,8 @@ defaultproperties
 
     Begin Object Class=UVersion Name=VersionObject
         Major=9
-        Minor=1
-        Patch=13
+        Minor=3
+        Patch=3
         Prerelease=""
     End Object
     Version=VersionObject
@@ -5450,7 +5491,7 @@ defaultproperties
     SurrenderCooldownSeconds=300
     SurrenderEndRoundDelaySeconds=15
     SurrenderRoundTimeRequiredSeconds=900
-    SurrenderReinforcementsRequiredPercent=0.40
+    SurrenderReinforcementsRequiredPercent=0.50
     SurrenderNominationsThresholdPercent=0.15
-    SurrenderVotesThresholdPercent=0.6
+    SurrenderVotesThresholdPercent=0.5
 }

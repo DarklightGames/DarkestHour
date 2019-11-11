@@ -11,9 +11,9 @@ class DH_M7PriestCannonShellHE extends DH_ShermanM4A3105CannonShellHE;
 
 defaultproperties
 {
-    SpeedFudgeScale=1.0
     Speed=8962.5         // 198m/s x 75%
     MaxSpeed=8962.5
     LifeSpan=20.0
+    SpeedFudgeScale=1.0
 }
 

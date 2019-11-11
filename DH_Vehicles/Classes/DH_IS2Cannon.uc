@@ -21,10 +21,12 @@ defaultproperties
     LeftArmorFactor=9.0
     RightArmorFactor=9.0
     RearArmorFactor=9.0
+
     LeftArmorSlope=20.0
     FrontArmorSlope=10.0
     RightArmorSlope=20.0
     RearArmorSlope=30.0
+
     FrontLeftAngle=340.0
     FrontRightAngle=20.0
     RearRightAngle=143.0
@@ -40,7 +42,12 @@ defaultproperties
     ProjectileClass=class'DH_Vehicles.DH_IS2CannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_IS2CannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_IS2CannonShellHE'
+
     ProjectileDescriptions(0)="AP"
+
+    nProjectileDescriptions(0)="BR-471" // earlier AP round without ballistic cap
+    nProjectileDescriptions(1)="OF-471"
+
     InitialPrimaryAmmo=18
     InitialSecondaryAmmo=6
     MaxPrimaryAmmo=18
@@ -66,10 +73,12 @@ defaultproperties
     CannonFireSound(2)=Sound'Vehicle_Weapons.IS2.122mm_fire02'
     AltFireSoundClass=Sound'DH_WeaponSounds.dt_fire_loop'
     AltFireEndSound=Sound'DH_WeaponSounds.dt.dt_fire_end'
-    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.Tiger_reload_01') //Historical Practical RoF - 4-5 rpm
-    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.Tiger_reload_02')
-    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.Tiger_reload_03')
-    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.Tiger_reload_04')
+
+    ReloadStages(0)=(Sound=Sound'Vehicle_reloads.Reloads.IS2_reload_01') //Early model 2-3 rounds per minute
+    ReloadStages(1)=(Sound=Sound'Vehicle_reloads.Reloads.IS2_reload_02')
+    ReloadStages(2)=(Sound=Sound'Vehicle_reloads.Reloads.IS2_reload_03')
+    ReloadStages(3)=(Sound=Sound'Vehicle_reloads.Reloads.IS2_reload_04')
+
     AltReloadStages(0)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty01_000',Duration=1.76)
     AltReloadStages(1)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty02_052',Duration=2.29,HUDProportion=0.65)
     AltReloadStages(2)=(Sound=Sound'Inf_Weapons_Foley.dt.DT_reloadempty03_121',Duration=2.35)

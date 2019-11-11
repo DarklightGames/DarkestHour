@@ -26,9 +26,15 @@ defaultproperties
     PrimaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHE'
     SecondaryProjectileClass=class'DH_Vehicles.DH_PanzerIIINCannonShellHEAT'
     TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'
+
     ProjectileDescriptions(0)="HE"
     ProjectileDescriptions(1)="HEAT"
     ProjectileDescriptions(2)="Canister"
+
+    nProjectileDescriptions(0)="Sprgr.Kw.K."
+    nProjectileDescriptions(1)="Gr.38 Hl/C"
+    nProjectileDescriptions(2)="Kt.Kw.K"
+
     InitialPrimaryAmmo=24
     InitialTertiaryAmmo=14
     MaxPrimaryAmmo=40

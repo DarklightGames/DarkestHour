@@ -65,7 +65,6 @@ defaultproperties
     DamagedTrackStaticMeshRight=StaticMesh'DH_allies_vehicles_stc.Sherman.M4A1_DamagedTrack_right'
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-120.0,Y=0.0,Z=95.0)
-    HullFireChance=0.45
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.Sherman.Sherman_Dest'
 
     // Exit

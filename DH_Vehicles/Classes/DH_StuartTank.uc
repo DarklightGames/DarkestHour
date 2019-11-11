@@ -63,7 +63,6 @@ defaultproperties
     TreadHitMaxHeight=59.0
     TreadDamageThreshold=0.5
     DamagedEffectOffset=(X=-78.5,Y=20.0,Z=100.0)
-    HullFireChance=0.45
     FireAttachBone="Player_Driver"
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc.M5_Stuart.M5_Stuart_dest1'
 

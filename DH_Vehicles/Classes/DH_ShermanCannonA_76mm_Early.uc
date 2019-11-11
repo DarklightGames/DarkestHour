@@ -9,8 +9,14 @@ defaultproperties
 {
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellHE'
     TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellSmoke'
+
+
     ProjectileDescriptions(1)="HE"
     ProjectileDescriptions(2)="Smoke"
+
+    nProjectileDescriptions(1)="M42A1 HE-T"
+    nProjectileDescriptions(2)="M88 HC"
+
     InitialPrimaryAmmo=30
     InitialSecondaryAmmo=12
     InitialTertiaryAmmo=3

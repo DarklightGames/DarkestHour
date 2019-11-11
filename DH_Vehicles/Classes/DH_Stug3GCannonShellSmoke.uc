@@ -7,6 +7,15 @@ class DH_Stug3GCannonShellSmoke extends DHCannonShellSmoke;
 
 defaultproperties
 {
+    Speed=33073.0
+    MaxSpeed=33073.0
+    ShellDiameter=7.5
+    BallisticCoefficient=2.1
+
+    bDebugInImperial=false
+
+    //Gunsight adjustments
+    bMechanicalAiming=true
     MechanicalRanges(1)=(Range=100,RangeValue=28.0)
     MechanicalRanges(2)=(Range=200,RangeValue=40.0)
     MechanicalRanges(3)=(Range=300,RangeValue=58.0)
@@ -32,11 +41,4 @@ defaultproperties
     MechanicalRanges(23)=(Range=2600,RangeValue=648.0)
     MechanicalRanges(24)=(Range=2800,RangeValue=708.0)
     MechanicalRanges(25)=(Range=3000,RangeValue=768.0)
-    bMechanicalAiming=true
-    ShellDiameter=7.5
-    bDebugInImperial=false
-    BallisticCoefficient=2.1
-    Speed=33073.0
-    MaxSpeed=33073.0
-    Tag="Nbgr.Kw.K"
 }

@@ -7,6 +7,35 @@ class DH_Cromwell6PdrCannonShell extends DHCannonShell;
 
 defaultproperties
 {
+    Speed=50152.0
+    MaxSpeed=50152.0
+    ShellDiameter=5.7
+    BallisticCoefficient=1.19 //pls check
+
+    //Damage
+    ImpactDamage=350
+    ShellImpactDamage=class'DH_Vehicles.DH_Cromwell6PdrCannonShellDamageAP'
+    HullFireChance=0.30
+    EngineFireChance=0.55
+
+    //Effects
+    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
+    CoronaClass=class'DH_Effects.DHShellTracer_Red'
+
+    //Penetration
+    DHPenetrationTable(0)=11.5
+    DHPenetrationTable(1)=11.0
+    DHPenetrationTable(2)=10.3
+    DHPenetrationTable(3)=9.6
+    DHPenetrationTable(4)=9.0
+    DHPenetrationTable(5)=8.4
+    DHPenetrationTable(6)=7.8
+    DHPenetrationTable(7)=7.3
+    DHPenetrationTable(8)=6.8
+    DHPenetrationTable(9)=6.0
+    DHPenetrationTable(10)=5.2
+
+    //Gunsight adjustment
     MechanicalRanges(1)=(Range=100,RangeValue=1.0)
     MechanicalRanges(2)=(Range=200,RangeValue=2.0)
     MechanicalRanges(3)=(Range=300,RangeValue=3.0)
@@ -32,24 +61,4 @@ defaultproperties
     MechanicalRanges(23)=(Range=2600,RangeValue=354.0)
     MechanicalRanges(24)=(Range=2800,RangeValue=402.0)
     bMechanicalAiming=true
-    DHPenetrationTable(0)=11.5
-    DHPenetrationTable(1)=11.0
-    DHPenetrationTable(2)=10.3
-    DHPenetrationTable(3)=9.6
-    DHPenetrationTable(4)=9.0
-    DHPenetrationTable(5)=8.4
-    DHPenetrationTable(6)=7.8
-    DHPenetrationTable(7)=7.3
-    DHPenetrationTable(8)=6.8
-    DHPenetrationTable(9)=6.0
-    DHPenetrationTable(10)=5.2
-    ShellDiameter=5.7
-    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
-    CoronaClass=class'DH_Effects.DHShellTracer_Red'
-    ShellImpactDamage=class'DH_Vehicles.DH_Cromwell6PdrCannonShellDamageAP'
-    ImpactDamage=350
-    BallisticCoefficient=1.19
-    Speed=50152.0
-    MaxSpeed=50152.0
-    Tag="Mk.IX APC"
 }

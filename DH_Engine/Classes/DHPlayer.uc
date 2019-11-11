@@ -6257,7 +6257,7 @@ function ServerRequestBanInfo(int PlayerID)
 }
 
 // TODO: this needs ot change!
-function PatronRequestOnResponse(int Status, TreeMap_string_string Headers, string Content)
+function PatronRequestOnResponse(HTTPRequest Request, int Status, TreeMap_string_string Headers, string Content)
 {
     local JSONParser Parser;
     local JSONObject O, Patron;
@@ -6792,6 +6792,66 @@ function SendVoiceMessage(PlayerReplicationInfo Sender,
         {
             AttemptToAddHelpRequest(PlayerReplicationInfo, MessageID, 3, Pawn.location);
         }
+    }
+}
+
+exec function TestIp(string IpAddress)
+{
+    if (Level.NetMode == NM_Standalone)
+    {
+        class'DHGeolocationService'.static.GetIpDataTest(self, IpAddress);
+    }
+}
+
+exec function IpCache()
+{
+    if (Level.NetMode == NM_Standalone)
+    {
+        class'DHGeolocationService'.static.DumpCache();
+    }
+}
+
+exec function SetCountry(string CountryCode)
+{
+    local DHPlayerReplicationInfo PRI;
+
+    if (Level.NetMode == NM_Standalone)
+    {
+        PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+
+        PRI.CountryIndex = class'DHGeoLocationService'.static.GetCountryCodeIndex(CountryCode);
+    }
+}
+
+exec function IpFuzz(int Iterations)
+{
+    local int Result;
+    local string IpAddress, CountryCode;
+
+    if (Level.NetMode == NM_Standalone)
+    {
+        if (Iterations == 0)
+        {
+            Iterations = 1000;
+        }
+
+        while (Iterations-- > 0)
+        {
+            IpAddress = Rand(256) $ "." $ Rand(256) $ "." $ Rand(256) $ "." $ Rand(256);
+            CountryCode = class'DHGeolocationService'.default.CountryCodes[Rand(class'DHGeolocationService'.default.CountryCodes.Length)];
+
+            class'DHGeolocationService'.static.AddIpCountryCode(IpAddress, CountryCode);
+
+            // Once more to test that it can't be inserted twice!
+            Result = class'DHGeolocationService'.static.AddIpCountryCode(IpAddress, CountryCode);
+
+            if (Result != -1)
+            {
+                Warn("BAD RESULT" @ RESULT);
+            }
+        }
+
+        class'DHGeolocationService'.static.StaticSaveConfig();
     }
 }
 

@@ -16,6 +16,25 @@ var localized string                CustomErrorString;
 var float                           EnemySecuredObjectiveDistanceMinMeters;     // The minimum distance, in meters, that this construction must be placed away from inactive enemy objectives. Can be overriden by PermittedFriendlyControlledDistanceMeters.
 var float                           PermittedFriendlyControlledDistanceMeters;  // The distance, in meters, that will allow this construction to be placed closer to inactive enemy objectives, if a friendly duplicate exists in
 
+// Radio attachment
+var DHRadioHQAttachment        Radio;
+var class<DHRadioHQAttachment> RadioClass;
+var vector                     RadioLocationOffset;
+var rotator                    RadioRotationOffset;
+
+auto simulated state Constructing
+{
+    simulated function BeginState()
+    {
+        super.BeginState();
+
+        if (Radio != none)
+        {
+            Radio.MakeInvisible();
+        }
+    }
+}
+
 simulated state Constructed
 {
     simulated function bool CanTakeTearDownDamageFromPawn(Pawn P, optional bool bShouldSendErrorMessage)
@@ -77,7 +96,30 @@ simulated function OnConstructed()
             SpawnPoint.ResetEstablishmentTimer();
         }
 
+        if (Radio == none)
+        {
+            Radio = Spawn(RadioClass, self);
+        }
+
+        if (Radio != none)
+        {
+            Radio.TeamIndex = GetTeamIndex();
+            Radio.SetBase(self);
+            Radio.SetRelativeLocation(RadioLocationOffset);
+            Radio.SetRelativeRotation(RadioRotationOffset);
+            Radio.Setup();
+        }
+        else
+        {
+            Warn("Failed to spawn a radio attachment!");
+        }
+
         // TODO: Find any nearby friendly "Build Platoon HQ" icons within 50m and remove them.
+    }
+
+    if (Radio != none)
+    {
+        Radio.MakeVisible();
     }
 }
 
@@ -86,6 +128,11 @@ simulated function DestroyAttachments()
     if (SpawnPoint != none)
     {
         SpawnPoint.Destroy();
+    }
+
+    if (Radio != none)
+    {
+        Radio.Destroy();
     }
 }
 
@@ -342,5 +389,9 @@ defaultproperties
     CompletionPointValue=1000
 
     BrokenLifespan=30.0
-}
 
+    // Radio attachment
+    RadioClass=class'DHRadioHQAttachment'
+    RadioLocationOffset=(X=65,Y=-115,Z=2)
+    RadioRotationOffset=(Roll=0,Pitch=0,Yaw=16384)
+}

@@ -7,14 +7,21 @@ class DH_ISU152CannonShell extends DHSovietCannonShell;
 
 defaultproperties
 {
-    ShellDiameter=15.2
-    BallisticCoefficient=4.4
     Speed=36211.0 // 600 m/s
     MaxSpeed=36211.0
-    ImpactDamage=3000
-    StaticMesh=StaticMesh'WeaponPickupSM.shells.122mm_shell'
-    Tag="BR-540" // earlier AP round without ballistic cap
+    ShellDiameter=15.2
+    BallisticCoefficient=4.4 //TODO: find correct BC
 
+    //Damage
+    ImpactDamage=2750
+    HullFireChance=1.0
+    EngineFireChance=1.0
+
+    //Effects
+    StaticMesh=StaticMesh'WeaponPickupSM.shells.76mm_shell'
+    DrawScale=2.1
+
+    //Penetration
     DHPenetrationTable(0)=16.5 // 100m
     DHPenetrationTable(1)=16.0 // 250m
     DHPenetrationTable(2)=15.2 // 500m

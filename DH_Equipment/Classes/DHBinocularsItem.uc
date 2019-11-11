@@ -9,7 +9,7 @@ class DHBinocularsItem extends DHProjectileWeapon; // obviously not really a pro
 #exec OBJ LOAD FILE=..\Animations\Common_Binoc_1st.ukx
 
 var     texture     BinocsOverlay;
-var     float       BinocsEnlargementFactor;
+//var     float       BinocsEnlargementFactor;  --Deprecating this; not needed with new draw function
 
 // Functions emptied out or returning false, as binoculars aren't a real weapon
 simulated function bool IsFiring() {return false;}
@@ -206,12 +206,13 @@ simulated function ZoomIn(optional bool bAnimateTransition)
 }
 
 // Modified to draw the binoculars overlay when player has them raised
-simulated event RenderOverlays(Canvas Canvas)
+simulated event RenderOverlays(Canvas C)
 {
     local ROPawn  RPawn;
     local rotator RollMod;
     local int     LeanAngle;
-    local float   PosX, Overlap;
+    //local float   PosX, Overlap;
+    local float   ScreenRatio;
 
     if (Instigator == none)
     {
@@ -239,30 +240,23 @@ simulated event RenderOverlays(Canvas Canvas)
 
     SetRotation(RollMod);
 
-    if (bPlayerViewIsZoomed)
+    if (bPlayerViewIsZoomed && BinocsOverlay != none)
     {
-        Canvas.DrawColor.A = 255;
-        Canvas.Style = ERenderStyle.STY_Alpha;
+        ScreenRatio = float(C.SizeY) / float(C.SizeX);
+        C.SetPos(0.0, 0.0);
 
-        // Draw the binoculars overlay
-        PosX = float(Canvas.SizeX - Canvas.SizeY) / 2.0 - Canvas.SizeY * BinocsEnlargementFactor;
-        Canvas.SetPos(PosX, -BinocsEnlargementFactor * Canvas.SizeY);
-        Canvas.DrawTile(BinocsOverlay, Canvas.SizeY * (1.0 + 2.0 * BinocsEnlargementFactor), Canvas.SizeY * (1.0 + 2.0 * BinocsEnlargementFactor), 0.0, 0.0, BinocsOverlay.USize, BinocsOverlay.VSize);
-
-        // Draw black bars on the sides
-        Overlap = 58.0 / float(BinocsOverlay.VSize) * Canvas.SizeY * (1.0 + BinocsEnlargementFactor);
-        Canvas.SetPos(0.0, 0.0);
-        Canvas.DrawTile(Texture'Engine.BlackTexture', PosX + Overlap, Canvas.SizeY, 0.0, 0.0, 8.0, 8.0);
-        Canvas.SetPos(Canvas.SizeX - PosX - Overlap, 0.0);
-        Canvas.DrawTile(Texture'Engine.BlackTexture', PosX + Overlap, Canvas.SizeY, 0.0, 0.0, 8.0, 8.0);
+        C.DrawTile(BinocsOverlay, C.SizeX, C.SizeY,                         // screen drawing area (to fill screen)
+            0.0, (1.0 - ScreenRatio) * float(BinocsOverlay.VSize) / 2.0,    // position in texture to begin drawing tile (from left edge, with vertical position to suit screen aspect ratio)
+            BinocsOverlay.USize, float(BinocsOverlay.VSize) * ScreenRatio); // width & height of tile within texture
     }
     else
     {
         bDrawingFirstPerson = true;
-        Canvas.DrawActor(self, false, false, DisplayFOV);
+        C.DrawActor(self, false, false, DisplayFOV);
         bDrawingFirstPerson = false;
     }
 }
+
 
 function bool CanDeadThrow()
 {
@@ -285,7 +279,7 @@ defaultproperties
     HighDetailOverlayIndex=2
 
     BinocsOverlay=Texture'Weapon_overlays.Scopes.BINOC_overlay'
-    BinocsEnlargementFactor=0.2
+    //BinocsEnlargementFactor=0.2 -- deprecating; don't need
     IronSightDisplayFOV=70.0
     bPlayerFOVZooms=true
     PlayerFOVZoom=12.0

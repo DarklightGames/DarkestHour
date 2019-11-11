@@ -7,12 +7,13 @@ class DH_ShermanM4A3105CannonShellSmoke extends DH_ShermanCannonShellSmoke;
 
 defaultproperties
 {
-    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_LargeShell'
-    ShellDiameter=10.5
-    ImpactDamage=175 // 75mm smoke shells are 125, so increased as this is a larger, heavier shell
-    BallisticCoefficient=2.96 // same as 105mm HE or HEAT shells
     Speed=28486.0 // same as 105mm HE shell
     MaxSpeed=28486.0
-    Tag="M60 WP"
+    ShellDiameter=10.5
     DrawScale=1.3
+    ImpactDamage=175 // 75mm smoke shells are 125, so increased as this is a larger, heavier shell
+    BallisticCoefficient=2.96 // same as 105mm HE or HEAT shells
+
+    //Effects
+    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_LargeShell'
 }

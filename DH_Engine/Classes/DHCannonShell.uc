@@ -43,6 +43,12 @@ simulated function PostBeginPlay()
         Corona = Spawn(CoronaClass, self);
     }
 
+    if (Level.NetMode != NM_DedicatedServer && bHasShellTrail)
+    {
+        ShellTrail = Spawn(TankShellTrailClass, self);
+        ShellTrail.SetBase(self);
+    }
+
     if (PhysicsVolume != none && PhysicsVolume.bWaterVolume)
     {
         Velocity *= 0.6;
@@ -288,26 +294,33 @@ simulated function SpawnExplosionEffects(vector HitLocation, vector HitNormal, o
 defaultproperties
 {
     bHasTracer=true
+    bHasShellTrail=false
     CoronaClass=class'DH_Effects.DHShellTracer_RedLarge'
+    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_Med'
     ShellImpactDamage=class'DH_Engine.DHShellImpactDamageType'
     ImpactDamage=400
+
+    Speed=22000.0
+    MaxSpeed=22000.0
+    Damage=200.0 //default - this really needs to be custom set per AP shell class
+    DamageRadius=250.0 //default - this really needs to be custom set per AP shell class
+
+    HullFireChance=0.25 // defaults here - customize per shell class
+    EngineFireChance=0.5 // defaults here - customize per shell class
+
     VehicleHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_penetrate'
     DirtHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Dirt'
     RockHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Rock'
     WaterHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Water'
     WoodHitSound=SoundGroup'ProjectileSounds.cannon_rounds.AP_Impact_Wood'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrate'
-    ShellDeflectEffectClass=class'ROEffects.TankAPHitDeflect'
+    ShellDeflectEffectClass=class'DH_Effects.DHTankAPHitDeflect'
     ShellHitDirtEffectClass=class'ROEffects.TankAPHitDirtEffect'
     ShellHitSnowEffectClass=class'ROEffects.TankAPHitSnowEffect'
     ShellHitWoodEffectClass=class'ROEffects.TankAPHitWoodEffect'
     ShellHitRockEffectClass=class'ROEffects.TankAPHitRockEffect'
     ShellHitWaterEffectClass=class'DH_Effects.DHShellSplashEffect'
-    AmbientVolumeScale=5.0
-    Speed=500.0
-    MaxSpeed=22000.0
-    Damage=100.0
-    DamageRadius=5.0
+
     MomentumTransfer=10000.0
     MyDamageType=class'DH_Engine.DHShellAPExplosionDamageType'
     ExplosionDecal=class'ROEffects.TankAPMarkDirt'
@@ -316,15 +329,20 @@ defaultproperties
     StaticMesh=StaticMesh'DH_Tracers.shells.Allied_shell'
     bNetTemporary=false
     bUpdateSimulatedPosition=true
-    AmbientSound=Sound'Vehicle_Weapons.Misc.projectile_whistle01'
+
     LifeSpan=7.5
     AmbientGlow=96
     FluidSurfaceShootStrengthMod=10.0
-    SoundVolume=255
-    SoundRadius=700.0
-    TransientSoundVolume=1.0
+
+    //Sound
+    AmbientSound=Sound'Vehicle_Weapons.Misc.projectile_whistle01' //TODO: replace this
+    AmbientVolumeScale=5.0 //5.0
+    SoundVolume=255 // full volume
+    SoundRadius=250.0 // about 300m - was SoundRadius=700 or about 1,1 km
+    TransientSoundVolume=1.0 //full volume
     TransientSoundRadius=1000.0
-    ExplosionSoundVolume=1.0
+    ExplosionSoundVolume=1.0 //full volume
+
     bFixedRotationDir=true
     RotationRate=(Roll=50000)
     DesiredRotation=(Roll=30000)

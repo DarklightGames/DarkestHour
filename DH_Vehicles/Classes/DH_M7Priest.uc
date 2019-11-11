@@ -74,7 +74,6 @@ defaultproperties
     TreadHitMaxHeight=-30.0
     DamagedEffectScale=0.9
     DamagedEffectOffset=(X=-85.0,Y=0.0,Z=40.0)
-    HullFireChance=0.45
     FireAttachBone="Body"
     FireEffectOffset=(X=105.0,Y=-35.0,Z=50.0)
     DestroyedVehicleMesh=StaticMesh'DH_allies_vehicles_stc2.priest.priest_destro'
