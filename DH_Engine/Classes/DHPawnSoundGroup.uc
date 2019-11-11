@@ -7,6 +7,7 @@ class DHPawnSoundGroup extends ROPawnSoundGroup
     abstract;
 
 var     sound   BurningPainSoundGroup;
+var     sound   GaggingPainSoundGroup; //exposure to WP and other poisonous gases
 
 static function sound GetHitSound(optional class<DamageType> DamageType)
 {
@@ -22,6 +23,12 @@ static function sound GetHitSound(optional class<DamageType> DamageType)
         return default.BurningPainSoundGroup;
     }
 
+    // If they are taking damage because they are standing in WP gas, return a choking / coughing sound
+    if (DamageType.Name == 'DHShellSmokeWPGasDamageType')
+    {
+        return default.GaggingPainSoundGroup;
+    }
+
     // Otherwise, return a wounding pain sound
     return default.WoundingPainSoundGroup;
 }
@@ -29,4 +36,5 @@ static function sound GetHitSound(optional class<DamageType> DamageType)
 defaultproperties
 {
     BurningPainSoundGroup=SoundGroup'DH_Inf_Player.playerhurt.Burning'
+    GaggingPainSoundGroup=SoundGroup'DH_Inf_Player.playerhurt.Gagging'
 }

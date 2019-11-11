@@ -52,6 +52,7 @@ var     array<ArmorSection> FrontArmor;        // array of armor properties (div
 var     array<ArmorSection> RightArmor;
 var     array<ArmorSection> LeftArmor;
 var     array<ArmorSection> RearArmor;
+var     bool        bVehicleHit;                // A simple check used in TakeDamage to inflict non-penetrating damage; when we don't want to use radius damage
 var     bool        bHasAddedSideArmor;         // this vehicle has added side armour skirts (schurzen) that will stop HEAT rounds
 var     bool        bProjectilePenetrated;      // shell has passed penetration tests & has entered the vehicle (used in TakeDamage)
 var     bool        bTurretPenetration;         // shell has penetrated the turret (used in TakeDamage)
@@ -1299,6 +1300,7 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     bHEATPenetration = P.RoundType == RT_HEAT && bProjectilePenetrated;
     bRearHullPenetration = bRearHit && bProjectilePenetrated;
     bTurretPenetration = false;
+    bVehicleHit = true;
     HullFirePercent = P.HullFireChance;
     EngineFirePercent = P.EngineFireChance;
 
@@ -1604,12 +1606,22 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
         if (DamageType != VehicleBurningDamType)
         {
-            DamageModifier *= RandRange(0.75, 1.08);
+            DamageModifier *= RandRange(0.85, 1.25);
         }
 
         if (bHasTreads)
         {
             TreadDamageMod = WepDamageType.default.TreadDamageModifier;
+        }
+
+        //A chance that a non-penetrating WP shell impact sets the engine on fire
+        if (WepDamageType == class'DHShellSmokeWPDamageType' && bVehicleHit)
+        {
+
+            if (FRand() < (EngineFirePercent**0.25))
+            {
+                StartEngineFire(InstigatedBy);
+            }
         }
     }
 
@@ -1747,7 +1759,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             }
         }
 
-        // Random damage to crew or vehicle components, caused by shrapnel etc flying around inside the vehicle from penetration, regardless of where it hit
+        // Random damage to crew or vehicle components, caused by shrapnel etc flying around inside the vehicle from penetration or large HE shell hit
         if (bProjectilePenetrated)
         {
             if (Cannon != none)
@@ -1914,6 +1926,7 @@ function ResetTakeDamageVariables()
     bRearHullPenetration = false;
     bHEATPenetration = false;
     HullFirePercent = 0.0;
+    bVehicleHit = false;
 }
 
 // Modified to add random chance of engine fire breaking out

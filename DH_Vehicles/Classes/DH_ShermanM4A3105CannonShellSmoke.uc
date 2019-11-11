@@ -16,4 +16,6 @@ defaultproperties
 
     //Effects
     SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_LargeShell'
+
+    GasRadius=1100.0
 }
