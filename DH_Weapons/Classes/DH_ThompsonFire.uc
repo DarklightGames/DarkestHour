@@ -10,7 +10,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_ThompsonBullet'
     AmmoClass=class'DH_Weapons.DH_ThompsonAmmo'
     FireRate=0.092307 // 650rpm
-    Spread=175.0
+    Spread=140.0
 
     // Recoil
     RecoilRate=0.05

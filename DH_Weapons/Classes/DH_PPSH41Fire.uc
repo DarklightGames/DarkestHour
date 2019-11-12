@@ -10,7 +10,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_PPSH41Bullet'
     AmmoClass=class'ROAmmo.SMG71Rd762x25Ammo'
     FireRate=0.0667 // 900rpm
-    Spread=180.0
+    Spread=135.0
 
     // Recoil
     RecoilRate=0.03335

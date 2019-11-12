@@ -9,7 +9,7 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_SVT40Bullet'
     AmmoClass=class'ROAmmo.SVT40Ammo'
-    Spread=100.0
+    Spread=80.0
     MaxVerticalRecoilAngle=1000
     MaxHorizontalRecoilAngle=210
 

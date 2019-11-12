@@ -10,7 +10,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_GreaseGunBullet'
     AmmoClass=class'DH_Weapons.DH_GreaseGunAmmo'
     FireRate=0.15 // 400rpm
-    Spread=178.0
+    Spread=148.0
 
     // Recoil
     RecoilRate=0.075

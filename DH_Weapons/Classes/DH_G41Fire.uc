@@ -10,7 +10,7 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_G41Bullet'
     AmmoClass=class'ROAmmo.G41Ammo'
     FireRate=0.28
-    Spread=100.0
+    Spread=70.0
     FireSounds(0)=SoundGroup'DH_WeaponSounds.g41.g41_fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.g41.g41_fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.g41.g41_fire03'
