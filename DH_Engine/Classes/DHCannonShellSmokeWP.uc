@@ -9,6 +9,7 @@ class DHCannonShellSmokeWP extends DHCannonShellSmoke
 var int   GasDamage;
 var float   GasRadius; //
 var class   <damagetype>    GasDamageClass;
+var float   GasEffectDuration;
 
 // Modified to add gas damage
 simulated function Explode(vector HitLocation, vector HitNormal)
@@ -36,8 +37,28 @@ state ReleasingGas
 
     begin:
     settimer(0.5,false);
-    sleep(50.0);
+    sleep(GasEffectDuration);
     destroy();
+}
+
+// Modified so actor is torn off & then destroyed on server, but persists for its LifeSpan on clients to play the smoke sound
+simulated function HandleDestruction()
+{
+    bCollided = true;
+
+    bTearOff = true; // stops any further replication, but client copies of actor persist to play the smoke sound
+
+    if (Level.NetMode == NM_DedicatedServer)
+    {
+        LifeSpan = 1.0; // on a server this actor will be destroyed in 1 second, allowing time for bTearOff to replicate to clients
+    }
+    else
+    {
+        LifeSpan = GasEffectDuration; // gas effect will stick around as long as the actor is active
+    }
+
+    SetCollision(false, false);
+    bCollideWorld = false;
 }
 
 
@@ -48,7 +69,7 @@ defaultproperties
     bExplodesOnHittingBody=true
 
     //The smoke screen effect
-    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_Shell'
+    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_ShellWP'
 
     //In all cases we want an impact to result in the WP explosion effect
     ShellHitVehicleEffectClass=class'DH_Effects.DHShellExplosion_MediumWP'
@@ -76,6 +97,8 @@ defaultproperties
     //Damage Chances - Upon penetration
     HullFireChance=0.65// defaults here - customize per shell class
     EngineFireChance=0.90 // defaults here - customize per shell class
+
+    GasEffectDuration=50.0
 
     Damage=100.0
     DamageRadius=480.0

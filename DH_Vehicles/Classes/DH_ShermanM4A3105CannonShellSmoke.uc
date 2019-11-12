@@ -15,7 +15,7 @@ defaultproperties
     BallisticCoefficient=2.96 // same as 105mm HE or HEAT shells
 
     //Effects
-    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_LargeShell'
+    SmokeEmitterClass=class'DH_Effects.DHSmokeEffect_LargeShellWP'
 
     GasRadius=1100.0
 }

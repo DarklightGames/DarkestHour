@@ -15,6 +15,9 @@ defaultproperties
     bLocationalHit=false
     GibModifier=0.0
 
+    DeathOverlayMaterial=none
+    DamageOverlayMaterial=none
+
     TankDamageModifier=0.0
     VehicleMomentumScaling=1.0
     KDamageImpulse=1000.0
