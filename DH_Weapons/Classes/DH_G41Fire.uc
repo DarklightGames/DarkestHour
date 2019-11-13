@@ -11,6 +11,8 @@ defaultproperties
     AmmoClass=class'ROAmmo.G41Ammo'
     FireRate=0.28
     Spread=70.0
+	MaxVerticalRecoilAngle=1000
+    MaxHorizontalRecoilAngle=110
     FireSounds(0)=SoundGroup'DH_WeaponSounds.g41.g41_fire01'
     FireSounds(1)=SoundGroup'DH_WeaponSounds.g41.g41_fire02'
     FireSounds(2)=SoundGroup'DH_WeaponSounds.g41.g41_fire03'
