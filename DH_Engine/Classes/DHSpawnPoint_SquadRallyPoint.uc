@@ -573,7 +573,7 @@ defaultproperties
 
     OverrunRadiusInMeters=15
     EstablishmentRadiusInMeters=25
-    EstablishmentCounterThreshold=15
+    EstablishmentCounterThreshold=10
     OverrunMinimumTimeSeconds=15
     SpawnAccrualThreshold=30
     bHidden=false
