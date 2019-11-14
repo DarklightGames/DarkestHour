@@ -17,7 +17,7 @@ defaultproperties
     // Recoil
     RecoilRate=0.07
     MaxVerticalRecoilAngle=400
-    MaxHorizontalRecoilAngle=145
+    MaxHorizontalRecoilAngle=140
     RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=2.0,OutVal=0.66),(InVal=6.0,OutVal=1.2),(InVal=15.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=18.0
 
