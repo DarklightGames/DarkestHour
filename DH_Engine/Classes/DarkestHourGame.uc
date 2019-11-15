@@ -3558,6 +3558,14 @@ exec function SetSurrenderVote(bool bEnabled)
     GRI.bIsSurrenderVoteEnabled = bEnabled;
 }
 
+// TODO: This function won't have an effect until the next NotifyObjStateChanged()
+// call (e.g. you won't be able to enable/disable the attrition after the last
+// objective has been captured). Use with care.
+exec function SetAttrition(bool bEnabled)
+{
+    bIsAttritionEnabled = bEnabled;
+}
+
 //***********************************************************************************
 // END exec Functions!!!
 //***********************************************************************************
