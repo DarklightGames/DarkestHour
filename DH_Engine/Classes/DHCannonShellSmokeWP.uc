@@ -104,6 +104,6 @@ defaultproperties
     DamageRadius=480.0
     MyDamageType=class'DH_Engine.DHShellSmokeWPDamageType' // new dam type that sets nearby players on fire upon "explosion"
     GasDamageClass=class'DH_Engine.DHShellSmokeWPGasDamageType'
-    GasDamage=25
+    GasDamage=60.0
     GasRadius=800.0
 }

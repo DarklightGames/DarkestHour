@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_CromwellCannonShellSmoke extends DHCannonShellSmoke;
+class DH_CromwellCannonShellSmoke extends DHCannonShellSmokeWP;
 
 defaultproperties
 {
