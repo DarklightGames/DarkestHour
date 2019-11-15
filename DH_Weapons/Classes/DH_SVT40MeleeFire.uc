@@ -9,7 +9,6 @@ defaultproperties
 {
     DamageType=class'DH_Weapons.DH_SVT40BashDamType'
     BayonetDamageType=class'DH_Weapons.DH_SVT40BayonetDamType'
-    BayonetTraceRange=115.0
     BayoBackAnim="stab_pullback"
     BayoHoldAnim="stab_hold"
     BayoStabAnim="stab_attack"

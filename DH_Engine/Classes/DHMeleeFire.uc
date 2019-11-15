@@ -441,8 +441,8 @@ defaultproperties
     FireRate=0.25
     MinHoldtime=0.1
     FullHeldTime=0.3
-    TraceRange=75.0
-    BayonetTraceRange=125.0
+    TraceRange=85.0
+    BayonetTraceRange=155.0
     MeleeAttackSpread=8.0
     RearAngleArc=16000.0
     MomentumTransfer=0.0 // was 100 in RO
