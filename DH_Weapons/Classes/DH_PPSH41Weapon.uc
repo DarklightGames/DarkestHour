@@ -48,6 +48,7 @@ simulated function ToggleFireMode()
 
 defaultproperties
 {
+    SwayModifyFactor=0.9 // +0.1
     ItemName="PPSh-41"
 
     FireModeClass(0)=class'DH_Weapons.DH_PPSH41Fire'
