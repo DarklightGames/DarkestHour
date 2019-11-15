@@ -19,7 +19,7 @@ simulated function BringUp(optional Weapon PrevWeapon)
 defaultproperties
 {
     ItemName="Gewehr 41(W)"
-    SwayModifyFactor=9.2 // +1.2 because it was a heavy, disbalanced and awkward rifle
+    SwayModifyFactor=0.93 // +0.13 because it was a heavy, disbalanced and awkward rifle
     FireModeClass(0)=class'DH_Weapons.DH_G41Fire'
     FireModeClass(1)=class'DH_Weapons.DH_G41MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_G41Attachment'

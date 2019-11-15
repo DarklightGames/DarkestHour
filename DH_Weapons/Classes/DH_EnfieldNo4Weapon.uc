@@ -8,7 +8,7 @@ class DH_EnfieldNo4Weapon extends DHBoltActionWeapon;
 defaultproperties
 {
     ItemName="Lee Enfield No.4 Rifle"
-	SwayModifyFactor=6.5 // +0.5 
+	SwayModifyFactor=0.65 // +0.05 
     FireModeClass(0)=class'DH_Weapons.DH_EnfieldNo4Fire'
     FireModeClass(1)=class'DH_Weapons.DH_EnfieldNo4MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_EnfieldNo4Attachment'

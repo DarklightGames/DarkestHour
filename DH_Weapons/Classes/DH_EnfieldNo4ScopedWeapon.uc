@@ -8,7 +8,7 @@ class DH_EnfieldNo4ScopedWeapon extends DHBoltActionWeapon;
 defaultproperties
 {
     ItemName="Scoped Enfield No.4"
-	SwayModifyFactor=6.5 // +0.5 
+	SwayModifyFactor=0.65 // +0.05 
     FireModeClass(0)=class'DH_Weapons.DH_EnfieldNo4ScopedFire'
     FireModeClass(1)=class'DH_Weapons.DH_EnfieldNo4ScopedMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_EnfieldNo4ScopedAttachment'
