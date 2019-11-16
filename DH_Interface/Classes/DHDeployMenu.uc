@@ -1901,7 +1901,7 @@ defaultproperties
     VehicleUnavailableString="The vehicle you had selected is no longer available."
     LockText="Lock"
     UnlockText="Unlock"
-    CantLock="Squad can be locked only if it has more than 3 members"
+    CantLock="Squad can be locked only if it has 3 or more members"
     NoneText="None"
     LockedText="Locked"
     BotsText="BOTS"
