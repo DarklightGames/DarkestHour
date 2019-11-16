@@ -6,12 +6,15 @@
 class DHBrowser_Footer extends UT2k4Browser_Footer;
 
 var automated GUIButton b_Main;
+var DHPlayer            PC;
 
 function bool InternalOnClick(GUIComponent Sender)
 {
     if (Sender == b_Main)
     {
         //Open main menu
+        PC = DHPlayer(PlayerOwner());
+        PC.ConsoleCommand("DISCONNECT");
         Controller.CloseAll(false, true);
         Controller.OpenMenu("DH_Interface.DHMainMenu");
         return true;
