@@ -14,16 +14,15 @@ function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
 
     switch (Context.TeamIndex)
     {
-        /*
+
         case AXIS_TEAM_INDEX: // Need the Pak38 from MN
             switch (Context.LevelInfo.Season)
             {
                 case SEASON_Autumn:
-                    return class'DH_Guns.DH_Pak40ATGun_CamoOne';
+                    return class'DH_Guns.DH_Pak38ATGun';
                 default:
-                    return class'DH_Guns.DH_Pak40ATGun';
+                    return class'DH_Guns.DH_Pak38ATGun';
             }
-        */
         case ALLIES_TEAM_INDEX:
             switch (Context.LevelInfo.AlliedNation)
             {
