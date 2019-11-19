@@ -2324,8 +2324,10 @@ function DrawPlayerNames(Canvas C)
         {
             bCurrentlyValid = true;
         }
-        // Player is talking or is in our squad, so will be valid if he's not hidden behind an obstruction (we'll do a line of sight check next)
-        else if (P.PlayerReplicationInfo == PortraitPRI || class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, OtherPRI))
+        // Player is a leader, talking, or he's in our squad; he will be valid if he's not hidden behind an obstruction (we'll do a line of sight check next)
+        else if (P.PlayerReplicationInfo == PortraitPRI ||
+                 class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, OtherPRI) ||
+                 (PRI.IsSLorASL() && OtherPRI.IsSLorASL()))
         {
             bMayBeValid = true;
         }
