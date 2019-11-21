@@ -56,6 +56,7 @@ var DHResupplyAttachment                ResupplyAttachment;
 var DHResupplyAttachment.EResupplyType  ResupplyType;
 var float                               ResupplyAttachmentCollisionRadius;
 var float                               ResupplyAttachmentCollisionHeight;
+var float                               ResupplyTime;
 
 replication
 {
@@ -232,6 +233,7 @@ state Active
             ResupplyAttachment.SetSquadIndex(SquadIndex);
             ResupplyAttachment.SetCollisionSize(ResupplyAttachmentCollisionRadius, ResupplyAttachmentCollisionHeight);
             ResupplyAttachment.SetBase(self);
+            ResupplyAttachment.UpdateTime = ResupplyTime;
         }
         else
         {
@@ -600,4 +602,5 @@ defaultproperties
     ResupplyType=RT_Mortars
     ResupplyAttachmentCollisionRadius=300
     ResupplyAttachmentCollisionHeight=100
+    ResupplyTime=30
 }
