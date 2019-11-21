@@ -8,6 +8,7 @@ class DH_GreaseGunWeapon extends DHAutoWeapon;
 defaultproperties
 {
     ItemName="M3 Grease Gun"
+	SwayModifyFactor=0.75 // -0.05 
     FireModeClass(0)=class'DH_Weapons.DH_GreaseGunFire'
     FireModeClass(1)=class'DH_Weapons.DH_GreaseGunMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_GreaseGunAttachment'

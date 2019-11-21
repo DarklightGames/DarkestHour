@@ -10,13 +10,13 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_PPSH41Bullet'
     AmmoClass=class'ROAmmo.SMG71Rd762x25Ammo'
     FireRate=0.0667 // 900rpm
-    Spread=180.0
+    Spread=135.0
 
     // Recoil
     RecoilRate=0.03335
-    MaxVerticalRecoilAngle=280
-    MaxHorizontalRecoilAngle=120
-    RecoilCurve=(Points=((InVal=0.0,OutVal=0.5),(InVal=5.0,OutVal=0.66),(InVal=10.0,OutVal=1.3),(InVal=15.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
+    MaxVerticalRecoilAngle=245
+    MaxHorizontalRecoilAngle=85
+    RecoilCurve=(Points=((InVal=0.0,OutVal=0.4),(InVal=5.0,OutVal=0.7),(InVal=10.0,OutVal=1.3),(InVal=15.0,OutVal=1.0),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffFactor=18.0
 
     AmbientFireSound=SoundGroup'DH_WeaponSounds.ppsh41.ppsh41_fire_loop'
