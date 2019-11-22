@@ -3,15 +3,21 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_SVT40Fire extends DHSemiAutoFire;
+class DH_SVT40Fire extends DHAutomaticFire;
 
 defaultproperties
 {
-    ProjectileClass=class'DH_Weapons.DH_SVT40Bullet'
+    ProjectileClass=class'DH_Weapons.DH_AVT40Bullet'
     AmmoClass=class'ROAmmo.SVT40Ammo'
-    Spread=80.0
+	FireRate=0,085 // ~700rpm
+    Spread=90.0
+	
+    RecoilRate=0.06
     MaxVerticalRecoilAngle=480
     MaxHorizontalRecoilAngle=210
+	RecoilCurve=(Points=((InVal=0.0,OutVal=0.6),(InVal=5.0,OutVal=1.0),(InVal=12.0,OutVal=1.3),(InVal=10000000000.0,OutVal=1.0)))
+    RecoilFallOffExponent=2.0
+    RecoilFallOffFactor=12.0
 
     FireSounds(0)=Sound'Inf_Weapons.svt40.svt40_fire01'
     FireSounds(1)=Sound'Inf_Weapons.svt40.svt40_fire02'
