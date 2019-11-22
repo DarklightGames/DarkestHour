@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_SVT40Fire extends DHAutomaticFire;
+class DH_AVT40Fire extends DHAutomaticFire;
 
 defaultproperties
 {
