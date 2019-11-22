@@ -9,13 +9,13 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_AVT40Bullet'
     AmmoClass=class'ROAmmo.SVT40Ammo'
-	FireRate=0,085 // ~700rpm
+	FireRate=0.085 // ~700rpm
     Spread=90.0
 	
     RecoilRate=0.06
-    MaxVerticalRecoilAngle=480
+    MaxVerticalRecoilAngle=700
     MaxHorizontalRecoilAngle=210
-	RecoilCurve=(Points=((InVal=0.0,OutVal=0.6),(InVal=5.0,OutVal=1.0),(InVal=12.0,OutVal=1.3),(InVal=10000000000.0,OutVal=1.0)))
+	RecoilCurve=(Points=((InVal=0.0,OutVal=0.7),(InVal=4.0,OutVal=1.0),(InVal=12.0,OutVal=1.8),(InVal=10000000000.0,OutVal=1.0)))
     RecoilFallOffExponent=2.0
     RecoilFallOffFactor=12.0
 
@@ -32,4 +32,7 @@ defaultproperties
     ShakeRotMag=(X=50.0,Y=50.0,Z=200.0)
     ShakeRotRate=(X=12500.0,Y=10000.0,Z=10000.0)
     ShakeRotTime=2.0
+	
+	FireAnim="Shoot"
+    FireIronAnim="Iron_Shoot"
 }
