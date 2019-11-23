@@ -3,37 +3,34 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_MN9130Attachment extends DHWeaponAttachment;
+class DH_AVT40Attachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.Nagant9130'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.nagant9130_icon'
-    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
-    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mmGreen'
-    bAnimNotifiedShellEjects=true
+    Mesh=SkeletalMesh'Weapons3rd_anm.svt40'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.svt40_icon'
+    mMuzFlashClass=class'ROEffects.MuzzleFlash3rdSVT'
+    ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x54mm'
     bRapidFire=false
 
-    WA_Idle="idle_nagant"
-    WA_Fire="shoot_nagant9130"
-    WA_Reload="idle_nagant"
-    WA_ProneReload="idle_nagant"
-    WA_ReloadEmpty="stand_reload_nagant9130"
-    WA_ProneReloadEmpty="prone_reload_nagant9130"
-    WA_PostReload="close_nagant9130"
-    WA_BayonetIdle="idle_nagant_bayo"
-    WA_BayonetIdleEmpty="idle_nagant_bayo"
-    WA_BayonetFire="shoot_nagant9130_bayo"
-    WA_BayonetReload="idle_nagant_bayo"
-    WA_BayonetProneReload="idle_nagant_bayo"
-    WA_BayonetReloadEmpty="stand_reload_nagant9130_bayo"
-    WA_BayonetProneReloadEmpty="prone_reload_nagant9130_bayo"
-    WA_BayonetAttach="bayattach_nagant9130"
-    WA_BayonetDetach="bayremove_nagant9130"
-    WA_BayonetAttachProne="prone_bayattach_nagant9130"
-    WA_BayonetDetachProne="prone_bayremove_nagant9130"
-    WA_WorkBolt="Bolt_nagant9130"
-    WA_BayonetWorkBolt="Bolt_nagant9130_bayo"
+    WA_Idle="idle_svt40"
+    WA_IdleEmpty="idle_svt40"
+    WA_Fire="shoot_svt40"
+    WA_Reload="reloadhalf_svt40"
+    WA_ReloadEmpty="reloadempty_svt40"
+    WA_ProneReload="prone_reloadhalf_svt40"
+    WA_ProneReloadEmpty="prone_reloadempty_svt40"
+    WA_BayonetIdle="idle_svt40_bayo"
+    WA_BayonetIdleEmpty="idle_svt40_bayo"
+    WA_BayonetFire="idle_svt40_bayo"
+    WA_BayonetReload="reloadhalf_svt40_bayo"
+    WA_BayonetReloadEmpty="reloadempty_svt40_bayo"
+    WA_BayonetProneReload="prone_reloadhalf_svt40_bayo"
+    WA_BayonetProneReloadEmpty="prone_reloadempty_svt40_bayo"
+    WA_BayonetAttach="bayattach_svt40"
+    WA_BayonetDetach="bayremove_svt40"
+    WA_BayonetAttachProne="prone_bayattach_svt40"
+    WA_BayonetDetachProne="prone_bayremove_svt40"
 
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
@@ -65,6 +62,7 @@ defaultproperties
     PA_ProneToStandAnim="PronetoStand_kar"
     PA_CrouchToProneAnim="CrouchtoProne_kar"
     PA_ProneToCrouchAnim="PronetoCrouch_kar"
+    PA_ProneIdleRestAnim="prone_idle_kar"
     PA_DiveToProneStartAnim="prone_divef_kar"
     PA_DiveToProneEndAnim="prone_diveend_kar"
     PA_SprintAnims(0)="stand_sprintF_kar"
@@ -164,14 +162,10 @@ defaultproperties
     PA_MoveWalkFire(5)="stand_shootFRwalk_kar"
     PA_MoveWalkFire(6)="stand_shootFRwalk_kar"
     PA_MoveWalkFire(7)="stand_shootFLwalk_kar"
-    PA_ReloadAnim="stand_insert_karscope"
-    PA_ReloadEmptyAnim="stand_reload_kar"
-    PA_ProneReloadAnim="prone_insert_karscope"
-    PA_ProneReloadEmptyAnim="prone_reload_kar"
-    PA_PreReloadAnim="stand_open_karscope"
-    PA_PostReloadAnim="stand_close_karscope"
-    PA_PronePreReloadAnim="prone_open_karscope"
-    PA_PronePostReloadAnim="prone_close_karscope"
+    PA_ReloadAnim="stand_reloadhalf_svt40"
+    PA_ProneReloadAnim="prone_reloadhalf_svt40"
+    PA_ReloadEmptyAnim="stand_reloadempty_svt40"
+    PA_ProneReloadEmptyAnim="prone_reloadempty_svt40"
     PA_AltFire="stand_idlestrike_kar"
     PA_CrouchAltFire="stand_idlestrike_kar"
     PA_ProneAltFire="prone_idlestrike_bayo"
