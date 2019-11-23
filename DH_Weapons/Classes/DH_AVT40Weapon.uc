@@ -35,6 +35,11 @@ defaultproperties
     MaxNumPrimaryMags=9
     InitialNumPrimaryMags=9
 	
+	InitialBarrels=1
+    BarrelClass=class'DH_Weapons.DH_AVT40Barrel'
+    BarrelSteamBone="Muzzle"
+
+	
     bHasSelectFire=true
     SelectFireAnim=null
     SelectFireIronAnim=null
