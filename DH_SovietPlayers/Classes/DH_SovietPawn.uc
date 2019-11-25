@@ -30,4 +30,5 @@ defaultproperties
     FaceSkins(14)=Texture'Characters_tex.rus_heads.rus_face15'
 
     ShovelClassName="DH_Equipment.DHShovelItem_Russian"
+    BinocsClassName="DH_Equipment.DHBinocularsItemSoviet"
 }

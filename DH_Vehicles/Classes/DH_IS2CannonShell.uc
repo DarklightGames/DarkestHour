@@ -7,24 +7,29 @@ class DH_IS2CannonShell extends DHSovietCannonShell;
 
 defaultproperties
 {
-    ShellDiameter=12.2
-    BallisticCoefficient=2.3
     Speed=47073.0 // 780 m/s
     MaxSpeed=47073.0
+    ShellDiameter=12.2
+    BallisticCoefficient=2.3
+
+    //Damage
     ImpactDamage=900
     StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
+    HullFireChance=0.55
+    EngineFireChance=1.0
 
-    DHPenetrationTable(0)=19.6  // 100m
-    DHPenetrationTable(1)=18.9  // 250m
-    DHPenetrationTable(2)=17.9  // 500m
-    DHPenetrationTable(3)=16.8
-    DHPenetrationTable(4)=15.8  // 1000m
-    DHPenetrationTable(5)=15.0
-    DHPenetrationTable(6)=14.1  // 1500m
-    DHPenetrationTable(7)=13.4
-    DHPenetrationTable(8)=12.5 // 2000m
-    DHPenetrationTable(9)=11.1
-    DHPenetrationTable(10)=9.9  // 3000m
+    //Penetration - BR-471 (uncapped)
+    DHPenetrationTable(0)=17.4  // 100m
+    DHPenetrationTable(1)=16.8  // 250m
+    DHPenetrationTable(2)=15.8  // 500m
+    DHPenetrationTable(3)=14.9
+    DHPenetrationTable(4)=14.0  // 1000m
+    DHPenetrationTable(5)=13.2
+    DHPenetrationTable(6)=12.5  // 1500m
+    DHPenetrationTable(7)=11.8
+    DHPenetrationTable(8)=11.1 // 2000m
+    DHPenetrationTable(9)=9.8
+    DHPenetrationTable(10)=8.7  // 3000m
 
     bMechanicalAiming=true
     MechanicalRanges(0)=(Range=0,RangeValue=0.0)

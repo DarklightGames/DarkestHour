@@ -7,6 +7,32 @@ class DH_ShermanFireFlyCannonShellAPDS extends DHCannonShellAPDS;
 
 defaultproperties
 {
+    Speed=77492.0
+    MaxSpeed=77492.0
+    ShellDiameter=5.7 //subcaliber tungsten projectile
+    BallisticCoefficient=1.47 //TODO: pls check
+
+    //Damage
+    ImpactDamage=400
+    ShellImpactDamage=class'DH_Vehicles.DH_ShermanFireFlyCannonShellDamageAPDS'
+    HullFireChance=0.3
+    EngineFireChance=0.60
+
+    //Penetration
+    DHPenetrationTable(0)=27.5
+    DHPenetrationTable(1)=26.8
+    DHPenetrationTable(2)=25.6
+    DHPenetrationTable(3)=23.2
+    DHPenetrationTable(4)=21.6
+    DHPenetrationTable(5)=17.2
+    DHPenetrationTable(6)=16.7
+    DHPenetrationTable(7)=15.9
+    DHPenetrationTable(8)=15.1
+    DHPenetrationTable(9)=14.0
+    DHPenetrationTable(10)=12.7
+
+    //Gunsight adjustments
+    bMechanicalAiming=true
     MechanicalRanges(0)=(RangeValue=32.0)
     MechanicalRanges(1)=(Range=200,RangeValue=36.0)
     MechanicalRanges(2)=(Range=400,RangeValue=40.0)
@@ -23,21 +49,4 @@ defaultproperties
     MechanicalRanges(13)=(Range=3200,RangeValue=304.0)
     MechanicalRanges(14)=(Range=3600,RangeValue=344.0)
     MechanicalRanges(15)=(Range=4000,RangeValue=392.0)
-    bMechanicalAiming=true
-    DHPenetrationTable(0)=27.5
-    DHPenetrationTable(1)=26.8
-    DHPenetrationTable(2)=25.6
-    DHPenetrationTable(3)=23.2
-    DHPenetrationTable(4)=21.6
-    DHPenetrationTable(5)=17.2
-    DHPenetrationTable(6)=16.7
-    DHPenetrationTable(7)=15.9
-    DHPenetrationTable(8)=15.1
-    DHPenetrationTable(9)=14.0
-    DHPenetrationTable(10)=12.7
-    ShellDiameter=5.7
-    ShellImpactDamage=class'DH_Vehicles.DH_ShermanFireFlyCannonShellDamageAPDS'
-    BallisticCoefficient=1.47
-    Speed=77492.0
-    MaxSpeed=77492.0
 }

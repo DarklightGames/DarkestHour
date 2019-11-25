@@ -9,15 +9,16 @@ defaultproperties
 {
     RoundType=RT_APBC
 
-    DHPenetrationTable(0)=20.1  // 100m
-    DHPenetrationTable(1)=19.4  // 250m
-    DHPenetrationTable(2)=18.3  // 500m
-    DHPenetrationTable(3)=17.2
-    DHPenetrationTable(4)=16.2  // 1000m
-    DHPenetrationTable(5)=15.2
+    //Penetration - BR-471B (capped)
+    DHPenetrationTable(0)=17.5  // 100m
+    DHPenetrationTable(1)=17.2  // 250m
+    DHPenetrationTable(2)=16.6  // 500m
+    DHPenetrationTable(3)=16.0
+    DHPenetrationTable(4)=15.5  // 1000m
+    DHPenetrationTable(5)=15.0
     DHPenetrationTable(6)=14.4  // 1500m
-    DHPenetrationTable(7)=13.6
-    DHPenetrationTable(8)=12.9  // 2000m
-    DHPenetrationTable(9)=11.8
-    DHPenetrationTable(10)=10.8 // 3000m
+    DHPenetrationTable(7)=13.9
+    DHPenetrationTable(8)=13.5  // 2000m
+    DHPenetrationTable(9)=12.6
+    DHPenetrationTable(10)=11.7 // 3000m
 }

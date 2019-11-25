@@ -59,7 +59,6 @@ defaultproperties
     CameraBone="loader_cam"
     HUDOverlayClass=class'DH_Vehicles.DH_MG34_VehHUDOverlay'
     HUDOverlayFOV=45.0
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Germ'
     FirstPersonGunRefBone="firstperson_wep"
     FirstPersonGunShakeScale=2.0
     FirstPersonOffsetZScale=3.0

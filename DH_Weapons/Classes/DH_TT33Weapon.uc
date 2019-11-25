@@ -13,7 +13,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_TT33Attachment'
     PickupClass=class'DH_Weapons.DH_TT33Pickup'
 
-    Mesh=SkeletalMesh'Allies_Tt33_1st.TT-33-Mesh'
+    Mesh=SkeletalMesh'DH_Tt33_1st.TT-33-Mesh'
     HighDetailOverlay=shader'Weapons1st_tex.Pistols.TT33_S'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2

@@ -1945,6 +1945,7 @@ function DrawSignals(Canvas C)
 {
     local int i, Distance;
     local DHPlayer PC;
+    local DHProjectileWeapon MyProjWeapon;
     local vector    Direction;
     local vector    TraceStart, TraceEnd;
     local vector    ScreenLocation;
@@ -1958,6 +1959,14 @@ function DrawSignals(Canvas C)
     PC = DHPlayer(PlayerOwner);
 
     if (PawnOwner == none || PC == none || PC.Pawn == none)
+    {
+        return;
+    }
+
+    MyProjWeapon = DHProjectileWeapon(PawnOwner.Weapon);
+
+    // Hide signals when looking through a 3D scope.
+    if (MyProjWeapon != none && MyProjWeapon.bHasModelScope && MyProjWeapon.bUsingSights)
     {
         return;
     }
@@ -2150,6 +2159,7 @@ function DrawPlayerNames(Canvas C)
     local DHPlayerReplicationInfo PRI, OtherPRI;
     local ROVehicle               OwnVehicle, VehicleBase;
     local VehicleWeaponPawn       WepPawn;
+    local DHProjectileWeapon      MyProjWeapon;
     local DHMortarVehicle         Mortar;
     local Actor                   A;
     local Pawn                    LookedAtPawn, PawnForLocation, P;
@@ -2160,7 +2170,7 @@ function DrawPlayerNames(Canvas C)
     local float                   Now, NameFadeTime, HighestFadeInReached;
     local int                     NumOtherOccupants, i, j;
     local byte                    Alpha;
-    local bool                    bMayBeValid, bCurrentlyValid, bFoundMatch;
+    local bool                    bMayBeValid, bCurrentlyValid, bFoundMatch, bForceHideAllNames;
     local color                   IconMaterialColor;
 
     if (PawnOwner == none || PlayerOwner == none)
@@ -2181,6 +2191,13 @@ function DrawPlayerNames(Canvas C)
     {
         OwnVehicle = VehicleWeaponPawn(PawnOwner).VehicleBase;
     }
+    else
+    {
+        MyProjWeapon = DHProjectileWeapon(PawnOwner.Weapon);
+    }
+
+    // Hide all names when looking through a 3D scope.
+    bForceHideAllNames = MyProjWeapon != none && MyProjWeapon.bHasModelScope && MyProjWeapon.bUsingSights;
 
     // STAGE 1: check if we are looking directly at player (or a vehicle with a player) within 50m, who is not behind something
     foreach TraceActors(class'Actor', A, HitLocation, HitNormal, ViewLocation + (class'DHUnits'.static.MetersToUnreal(50.0) * vector(PlayerOwner.CalcViewRotation)), ViewLocation)
@@ -2307,8 +2324,10 @@ function DrawPlayerNames(Canvas C)
         {
             bCurrentlyValid = true;
         }
-        // Player is talking or is in our squad, so will be valid if he's not hidden behind an obstruction (we'll do a line of sight check next)
-        else if (P.PlayerReplicationInfo == PortraitPRI || class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, OtherPRI))
+        // Player is a leader, talking, or he's in our squad; he will be valid if he's not hidden behind an obstruction (we'll do a line of sight check next)
+        else if (P.PlayerReplicationInfo == PortraitPRI ||
+                 class'DHPlayerReplicationInfo'.static.IsInSameSquad(PRI, OtherPRI) ||
+                 (PRI.IsSLorASL() && OtherPRI.IsSLorASL()))
         {
             bMayBeValid = true;
         }
@@ -2407,7 +2426,7 @@ function DrawPlayerNames(Canvas C)
             }
         }
 
-        if (bCurrentlyValid)
+        if (bCurrentlyValid && !bForceHideAllNames)
         {
             // Player has just become valid, as his name wasn't drawn last frame (his LastNameDrawTime was prior to the recorded HUDLastNameDrawTime)
             if (OtherPRI.LastNameDrawTime < HUDLastNameDrawTime)

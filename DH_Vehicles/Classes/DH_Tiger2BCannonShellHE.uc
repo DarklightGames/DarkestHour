@@ -7,6 +7,41 @@ class DH_Tiger2BCannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
+    Speed=45264.0
+    MaxSpeed=45264.0
+    ShellDiameter=8.8
+    BallisticCoefficient=3.25 //TODO: find correct BC
+
+    //Damage
+    ImpactDamage=550
+
+    Damage=475.0
+    DamageRadius=1550.0
+    MyDamageType=class'DH_Engine.DHShellHE88mmDamageType'
+    PenetrationMag=1020.0
+    HullFireChance=0.4
+    EngineFireChance=0.75
+
+    //Effects
+    bHasTracer=false
+
+    bDebugInImperial=false
+
+    //Penetration
+    DHPenetrationTable(0)=5.2
+    DHPenetrationTable(1)=4.9
+    DHPenetrationTable(2)=4.3
+    DHPenetrationTable(3)=4.0
+    DHPenetrationTable(4)=3.8
+    DHPenetrationTable(5)=3.2
+    DHPenetrationTable(6)=3.0
+    DHPenetrationTable(7)=2.7
+    DHPenetrationTable(8)=2.3
+    DHPenetrationTable(9)=1.9
+    DHPenetrationTable(10)=1.5
+
+    //Gunsight adjustments
+    bMechanicalAiming=true
     MechanicalRanges(0)=(RangeValue=8.0)
     MechanicalRanges(1)=(Range=100,RangeValue=12.0)
     MechanicalRanges(2)=(Range=200,RangeValue=16.0)
@@ -38,27 +73,4 @@ defaultproperties
     MechanicalRanges(28)=(Range=3600,RangeValue=262.0)
     MechanicalRanges(29)=(Range=3800,RangeValue=282.0)
     MechanicalRanges(30)=(Range=4000,RangeValue=304.0)
-    bMechanicalAiming=true
-    DHPenetrationTable(0)=5.2
-    DHPenetrationTable(1)=4.9
-    DHPenetrationTable(2)=4.3
-    DHPenetrationTable(3)=4.0
-    DHPenetrationTable(4)=3.8
-    DHPenetrationTable(5)=3.2
-    DHPenetrationTable(6)=3.0
-    DHPenetrationTable(7)=2.7
-    DHPenetrationTable(8)=2.3
-    DHPenetrationTable(9)=1.9
-    DHPenetrationTable(10)=1.5
-    ShellDiameter=8.8
-    bDebugInImperial=false
-    PenetrationMag=1020.0
-    ImpactDamage=550
-    BallisticCoefficient=3.25
-    Speed=45264.0
-    MaxSpeed=45264.0
-    Damage=475.0
-    DamageRadius=1550.0
-    MyDamageType=class'DH_Engine.DHShellHE88mmDamageType'
-
 }

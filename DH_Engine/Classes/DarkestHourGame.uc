@@ -135,9 +135,14 @@ event InitGame(string Options, out string Error)
         AccessControl = Spawn(class'DH_Engine.DHAccessControl');
     }
 
-    // Force the server to update the MaxClientRate, setting it in config file doesn't work as intended (something bugged in native)
-    // This command will unlock a server so it can allow clients to have more than 10000 netspeed
+    // Force the server to update the MaxClientRate, setting it in config file
+    // doesn't work as intended (something bugged in native)
+    // This command will unlock a server so it can allow clients to have more
+    // than 10000 netspeed.
     ConsoleCommand("set IpDrv.TcpNetDriver MaxClientRate 30000");
+
+    // Initialize geolocation service (verifies cache integrity)
+    class'DHGeolocationService'.static.Initialize();
 }
 
 function PreBeginPlay()
@@ -2893,6 +2898,11 @@ state ResetGameCountdown
     {
         local DHArtillerySpawner AS;
 
+        if (SquadReplicationInfo != none)
+        {
+            SquadReplicationInfo.ResetSquadInfo();
+        }
+
         if (bSwapTeams)
         {
             ChangeSides(); // Change sides if bSwapTeams is true
@@ -3400,6 +3410,35 @@ exec function ChangeRoundTime(int Minutes, optional string Type)
     }
 }
 
+exec function ChangeSetupPhaseTime(int Minutes, int Seconds, optional string OperationType)
+{
+    local DHSetupPhaseManager SPM;
+    local int TimeInSeconds;
+
+    if (GRI == none || !GRI.bIsInSetupPhase)
+    {
+        return;
+    }
+
+    TimeInSeconds = Max(0, Minutes) * 60 + Max(0, Seconds);
+
+    foreach AllActors(class'DHSetupPhaseManager', SPM)
+    {
+        switch (OperationType)
+        {
+            case "Add":
+                SPM.ModifySetupPhaseDuration(TimeInSeconds);
+                break;
+            case "Subtract":
+                SPM.ModifySetupPhaseDuration(-TimeInSeconds);
+                break;
+            default:
+                SPM.ModifySetupPhaseDuration(TimeInSeconds, true);
+                break;
+        }
+    }
+}
+
 // Override to allow more than 32 bots (but not too many, 128 max)
 exec function AddBots(int num)
 {
@@ -3517,6 +3556,14 @@ exec function SetSurrenderVote(bool bEnabled)
     }
 
     GRI.bIsSurrenderVoteEnabled = bEnabled;
+}
+
+// TODO: This function won't have an effect until the next NotifyObjStateChanged()
+// call (e.g. you won't be able to enable/disable the attrition after the last
+// objective has been captured). Use with care.
+exec function SetAttrition(bool bEnabled)
+{
+    bIsAttritionEnabled = bEnabled;
 }
 
 //***********************************************************************************
@@ -5427,8 +5474,8 @@ defaultproperties
 
     Begin Object Class=UVersion Name=VersionObject
         Major=9
-        Minor=2
-        Patch=6
+        Minor=4
+        Patch=0
         Prerelease=""
     End Object
     Version=VersionObject

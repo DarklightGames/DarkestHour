@@ -95,25 +95,8 @@ simulated function DrawHUD(Canvas C)
         // Player is in a position where an overlay should be drawn
         if (!bMultiPosition || (DriverPositions[DriverPositionIndex].bDrawOverlays && (!IsInState('ViewTransition') || DriverPositions[LastPositionIndex].bDrawOverlays)))
         {
-            // Draw any gun HUD overlay
-            if (HUDOverlay != none && DriverPositionIndex != BinocPositionIndex)
-            {
-                if (!Level.IsSoftwareRendering())
-                {
-                    GunOffset = HUDOverlayOffset + (PC.ShakeOffset * FirstPersonGunShakeScale);
-
-                    // This makes the first person gun appear lower if player raises his head above the gun
-                    if (FirstPersonGunRefBone != '' && Gun != none)
-                    {
-                        GunOffset.Z += ((Gun.GetBoneCoords(FirstPersonGunRefBone).Origin.Z - PC.CalcViewLocation.Z) * FirstPersonOffsetZScale);
-                    }
-
-                    HUDOverlay.SetLocation(PC.CalcViewLocation);
-                    C.DrawBoundActor(HUDOverlay, false, true, HUDOverlayFOV, PC.CalcViewRotation, PC.ShakeRot * FirstPersonGunShakeScale, -GunOffset);
-                }
-            }
             // Draw any texture overlay
-            else
+            if (!PC.bBehindView)
             {
                 // Save current HUD opacity & then set up for drawing overlays
                 SavedOpacity = C.ColorModulate.W;
@@ -131,6 +114,24 @@ simulated function DrawHUD(Canvas C)
                 }
 
                 C.ColorModulate.W = SavedOpacity; // reset HUD opacity to original value
+            }
+
+            // Draw any gun HUD overlay
+            if (HUDOverlay != none && DriverPositionIndex != BinocPositionIndex)
+            {
+                if (!Level.IsSoftwareRendering())
+                {
+                    GunOffset = HUDOverlayOffset + (PC.ShakeOffset * FirstPersonGunShakeScale);
+
+                    // This makes the first person gun appear lower if player raises his head above the gun
+                    if (FirstPersonGunRefBone != '' && Gun != none)
+                    {
+                        GunOffset.Z += ((Gun.GetBoneCoords(FirstPersonGunRefBone).Origin.Z - PC.CalcViewLocation.Z) * FirstPersonOffsetZScale);
+                    }
+
+                    HUDOverlay.SetLocation(PC.CalcViewLocation);
+                    C.DrawBoundActor(HUDOverlay, false, true, HUDOverlayFOV, PC.CalcViewRotation, PC.ShakeRot * FirstPersonGunShakeScale, -GunOffset);
+                }
             }
         }
 

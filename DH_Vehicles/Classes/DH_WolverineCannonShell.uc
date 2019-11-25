@@ -7,6 +7,19 @@ class DH_WolverineCannonShell extends DHCannonShell;
 
 defaultproperties
 {
+    Speed=47799.0
+    MaxSpeed=47799.0
+    ShellDiameter=7.62
+    BallisticCoefficient=1.627//TODO: find correct BC //1.627 G6
+
+    //Damage
+    ImpactDamage=580
+    bShatterProne=true
+    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
+    HullFireChance=0.4
+    EngineFireChance=0.80
+
+    //Penetration
     DHPenetrationTable(0)=12.4
     DHPenetrationTable(1)=12.1
     DHPenetrationTable(2)=11.5
@@ -18,12 +31,4 @@ defaultproperties
     DHPenetrationTable(8)=8.4
     DHPenetrationTable(9)=7.6
     DHPenetrationTable(10)=6.8
-    ShellDiameter=7.62
-    bShatterProne=true
-    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageAP'
-    ImpactDamage=580
-    BallisticCoefficient=1.627
-    Speed=47799.0
-    MaxSpeed=47799.0
-
 }

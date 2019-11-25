@@ -6823,6 +6823,38 @@ exec function SetCountry(string CountryCode)
     }
 }
 
+exec function IpFuzz(int Iterations)
+{
+    local int Result;
+    local string IpAddress, CountryCode;
+
+    if (Level.NetMode == NM_Standalone)
+    {
+        if (Iterations == 0)
+        {
+            Iterations = 1000;
+        }
+
+        while (Iterations-- > 0)
+        {
+            IpAddress = Rand(256) $ "." $ Rand(256) $ "." $ Rand(256) $ "." $ Rand(256);
+            CountryCode = class'DHGeolocationService'.default.CountryCodes[Rand(class'DHGeolocationService'.default.CountryCodes.Length)];
+
+            class'DHGeolocationService'.static.AddIpCountryCode(IpAddress, CountryCode);
+
+            // Once more to test that it can't be inserted twice!
+            Result = class'DHGeolocationService'.static.AddIpCountryCode(IpAddress, CountryCode);
+
+            if (Result != -1)
+            {
+                Warn("BAD RESULT" @ RESULT);
+            }
+        }
+
+        class'DHGeolocationService'.static.StaticSaveConfig();
+    }
+}
+
 defaultproperties
 {
     CorpseStayTime=15

@@ -1965,14 +1965,15 @@ defaultproperties
     ConstructionClassNames(1)="DH_Construction.DHConstruction_PlatoonHQ"
     ConstructionClassNames(2)="DH_Construction.DHConstruction_Resupply_Players"
     ConstructionClassNames(3)="DH_Construction.DHConstruction_Resupply_Vehicles"
-    ConstructionClassNames(4)="DH_Construction.DHConstruction_Radio"
-    ConstructionClassNames(5)="DH_Construction.DHConstruction_VehiclePool"
+    // ConstructionClassNames(4)="DH_Construction.DHConstruction_Radio"
+    ConstructionClassNames(4)="DH_Construction.DHConstruction_VehiclePool"
 
     // Obstacles
-    ConstructionClassNames(6)="DH_Construction.DHConstruction_ConcertinaWire"
-    ConstructionClassNames(7)="DH_Construction.DHConstruction_Hedgehog"
+    ConstructionClassNames(5)="DH_Construction.DHConstruction_ConcertinaWire"
+    ConstructionClassNames(6)="DH_Construction.DHConstruction_Hedgehog"
 
     // Guns
+    ConstructionClassNames(7)="DH_Construction.DHConstruction_ATGun_Light"
     ConstructionClassNames(8)="DH_Construction.DHConstruction_ATGun_Medium"
     ConstructionClassNames(9)="DH_Construction.DHConstruction_ATGun_Heavy"
     ConstructionClassNames(10)="DH_Construction.DHConstruction_AAGun_Light"

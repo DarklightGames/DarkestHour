@@ -40,6 +40,7 @@ struct NewHitpoint
 var     int         UnbuttonedPositionIndex;    // lowest DriverPositions index where driver is unbuttoned & exposed
 var     vector      OverlayFPCamPos;            // optional camera offset for overlay position, so can snap to exterior view position, avoiding camera anims passing through hull
 var     texture     PeriscopeOverlay;           // driver's periscope overlay texture
+var     float       PeriscopeSize;              // so we can adjust the "exterior" FOV of the periscope overlay, just like Gunsights, if needed
 var     texture     DamagedPeriscopeOverlay;    // periscope overlay to show if optics have been broken
 
 // Vehicle locking
@@ -51,6 +52,7 @@ var     array<ArmorSection> FrontArmor;        // array of armor properties (div
 var     array<ArmorSection> RightArmor;
 var     array<ArmorSection> LeftArmor;
 var     array<ArmorSection> RearArmor;
+var     bool        bVehicleHit;                // A simple check used in TakeDamage to inflict non-penetrating damage; when we don't want to use radius damage
 var     bool        bHasAddedSideArmor;         // this vehicle has added side armour skirts (schurzen) that will stop HEAT rounds
 var     bool        bProjectilePenetrated;      // shell has passed penetration tests & has entered the vehicle (used in TakeDamage)
 var     bool        bTurretPenetration;         // shell has penetrated the turret (used in TakeDamage)
@@ -75,14 +77,12 @@ var     class<VehicleDamagedEffect> FireEffectClass;
 var     VehicleDamagedEffect        DriverHatchFireEffect;
 var     name        FireAttachBone;
 var     vector      FireEffectOffset;
-var     float       HullFireChance;
-var     float       HullFireHEATChance;
+var     float       HullFirePercent; //helper variable
 var     bool        bOnFire;               // the vehicle itself is on fire
 var     float       HullFireDamagePer2Secs;
 var     float       PlayerFireDamagePer2Secs;
 var     float       NextHullFireDamageTime;
-var     float       EngineFireChance;
-var     float       EngineFireHEATChance;
+var     float       EngineFirePercent; //helper variable
 var     bool        bEngineOnFire;
 var     float       EngineFireDamagePer3Secs;
 var     float       NextEngineFireDamageTime;
@@ -166,15 +166,15 @@ simulated function PostNetReceive()
     else if (bEngineOnFire)
     {
         // Engine fire has started (DEHFireFactor of 1.0 would flag that the engine fire effect is already on)
-        if (DamagedEffectHealthFireFactor != 1.0 && Health > 0)
+        if (DamagedEffectHealthFireFactor != 1.0 && Health > 0 && EngineHealth > 0)
         {
-            SetFireEffects();
+            SetEngineFireEffects();
         }
     }
     // Engine is dead & engine fire has burned out, so set it to smoke instead of burn
     else if (EngineHealth <= 0 && (DamagedEffectHealthFireFactor != 0.0 || DamagedEffectHealthHeavySmokeFactor != 1.0) && Health > 0)
     {
-        SetFireEffects();
+        SetEngineFireEffects();
     }
 }
 
@@ -259,9 +259,9 @@ simulated function Timer()
     }
 
     // Engine is dead, but there's no fire, so make sure it is set to smoke instead of burn
-    if (EngineHealth <= 0 && !IsVehicleBurning() && (DamagedEffectHealthFireFactor != 0.0 || DamagedEffectHealthHeavySmokeFactor != 1.0))
+    if (EngineHealth <= 0 && !IsEngineBurning() && (DamagedEffectHealthFireFactor != 0.0 || DamagedEffectHealthHeavySmokeFactor != 1.0))
     {
-        SetFireEffects();
+        SetEngineFireEffects();
     }
 
     SetNextTimer(Now);
@@ -372,10 +372,10 @@ simulated function DrawHUD(Canvas C)
     }
 }
 
-// New function to draw any textured driver's periscope overlay
+// New function to draw any textured driver's periscope overlay - updated in 2019 to add PeriscopeSize so that we can adjust FOV's
 simulated function DrawPeriscopeOverlay(Canvas C)
 {
-    local float ScreenRatio;
+    /*local float ScreenRatio;
 
     if (PeriscopeOverlay != none)
     {
@@ -386,6 +386,26 @@ simulated function DrawPeriscopeOverlay(Canvas C)
             0.0, (1.0 - ScreenRatio) * float(PeriscopeOverlay.VSize) / 2.0,       // position in texture to begin drawing tile (from left edge, with vertical position to suit screen aspect ratio)
             PeriscopeOverlay.USize, float(PeriscopeOverlay.VSize) * ScreenRatio); // width & height of tile within texture
     }
+    */
+    local float TextureSize, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight;
+
+    if (PeriscopeOverlay != none)
+    {
+        // The drawn portion of the gunsight texture is 'zoomed' in or out to suit the desired scaling
+        // This is inverse to the specified GunsightSize, i.e. the drawn portion is reduced to 'zoom in', so sight is drawn bigger on screen
+        // The draw start position (in the texture, not the screen position) is often negative, meaning it starts drawing from outside of the texture edges
+        // Draw areas outside the texture edges are drawn black, so this handily blacks out all the edges around the scaled gunsight, in 1 draw operation
+        TextureSize = float(PeriscopeOverlay.MaterialUSize());
+        TilePixelWidth = TextureSize / PeriscopeSize * 0.955; // width based on vehicle's GunsightSize (0.955 factor widens visible FOV to full screen for 'standard' overlay if GS=1.0)
+        TilePixelHeight = TilePixelWidth * float(C.SizeY) / float(C.SizeX); // height proportional to width, maintaining screen aspect ratio
+        TileStartPosU = ((TextureSize - TilePixelWidth) / 2.0);// - OverlayCorrectionX;
+        TileStartPosV = ((TextureSize - TilePixelHeight) / 2.0);// - OverlayCorrectionY;
+
+        // Draw the periscope overlay
+        C.SetPos(0.0, 0.0);
+
+        C.DrawTile(PeriscopeOverlay, C.SizeX, C.SizeY, TileStartPosU, TileStartPosV, TilePixelWidth, TilePixelHeight);
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -395,7 +415,7 @@ simulated function DrawPeriscopeOverlay(Canvas C)
 // Modified to prevent entry if either vehicle or engine is on fire (with message if own team's vehicle)
 function Vehicle FindEntryVehicle(Pawn P)
 {
-    if (IsVehicleBurning())
+    if ((IsVehicleBurning()) || (IsEngineBurning()))
     {
         if (P != none && (P.GetTeamNum() == VehicleTeam || !bTeamLocked))
         {
@@ -901,7 +921,7 @@ function StartEngineFire(Pawn InstigatedBy)
     Timer();
 
     // Engine fire effect
-    SetFireEffects();
+    SetEngineFireEffects();
 }
 
 // Set up for spawning various hatch fire effects, but randomise start times to desync them
@@ -911,19 +931,6 @@ simulated function SetFireEffects()
     {
         if (IsVehicleBurning())
         {
-            // Engine fire effect
-            if (DamagedEffectHealthFireFactor != 1.0)
-            {
-                DamagedEffectHealthFireFactor = 1.0;
-                DamagedEffectHealthSmokeFactor = 1.0; // appears necessary to get native code to spawn a DamagedEffect if it doesn't already exist
-                                                      // (presumably doesn't check for fire unless vehicle is at least damaged enough to smoke)
-
-                if (DamagedEffect == none && Health == HealthMax) // clientside Health hack to get native code to spawn DamagedEffect (it won't unless vehicle has taken some damage)
-                {
-                    Health--;
-                }
-            }
-
             // Hatch fire effects
             if (bOnFire && !bSetHullFireEffects)
             {
@@ -958,6 +965,29 @@ simulated function SetFireEffects()
                 }
             }
         }
+    }
+}
+
+// Set up for spawning the engine fire effects, but randomise start times to desync them
+simulated function SetEngineFireEffects()
+{
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        if (IsEngineBurning())
+        {
+            // Engine fire effect
+            if (DamagedEffectHealthFireFactor != 1.0)
+            {
+                DamagedEffectHealthFireFactor = 1.0;
+                DamagedEffectHealthSmokeFactor = 1.0; // appears necessary to get native code to spawn a DamagedEffect if it doesn't already exist
+                                                      // (presumably doesn't check for fire unless vehicle is at least damaged enough to smoke)
+
+                if (DamagedEffect == none && Health == HealthMax) // clientside Health hack to get native code to spawn DamagedEffect (it won't unless vehicle has taken some damage)
+                {
+                    Health--;
+                }
+            }
+        }
         // Engine is dead, but there's no fire, so make sure it is set to smoke instead of burn
         else if (EngineHealth <= 0 && (DamagedEffectHealthFireFactor != 0.0 || DamagedEffectHealthHeavySmokeFactor != 1.0))
         {
@@ -983,6 +1013,7 @@ simulated function SetFireEffects()
         SetEngine();
     }
 }
+
 
 // New function to start a driver's hatch fire effect
 simulated function StartDriverHatchFire()
@@ -1010,7 +1041,13 @@ simulated function StartDriverHatchFire()
 // Modified to use more sophisticated burning vehicle system for armored vehicles
 simulated function bool IsVehicleBurning()
 {
-    return bOnFire || bEngineOnFire;
+    return bOnFire;
+}
+
+// Modified to use more sophisticated burning vehicle system for armored vehicles
+simulated function bool IsEngineBurning()
+{
+    return bEngineOnFire;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -1263,6 +1300,9 @@ simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLoc
     bHEATPenetration = P.RoundType == RT_HEAT && bProjectilePenetrated;
     bRearHullPenetration = bRearHit && bProjectilePenetrated;
     bTurretPenetration = false;
+    bVehicleHit = true;
+    HullFirePercent = P.HullFireChance;
+    EngineFirePercent = P.EngineFireChance;
 
     // Debugging options
     if ((bLogDebugPenetration || bDebugPenetration) && P.NumDeflections == 0)
@@ -1554,6 +1594,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
     if (WepDamageType != none)
     {
+
         if (bIsApc)
         {
             DamageModifier = WepDamageType.default.APCDamageModifier;
@@ -1565,12 +1606,22 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
 
         if (DamageType != VehicleBurningDamType)
         {
-            DamageModifier *= RandRange(0.75, 1.08);
+            DamageModifier *= RandRange(0.85, 1.25);
         }
 
         if (bHasTreads)
         {
             TreadDamageMod = WepDamageType.default.TreadDamageModifier;
+        }
+
+        //A chance that a non-penetrating WP shell impact sets the engine on fire
+        if (WepDamageType == class'DHShellSmokeWPDamageType' && bVehicleHit)
+        {
+
+            if (FRand() < (EngineFirePercent**0.15))
+            {
+                StartEngineFire(InstigatedBy);
+            }
         }
     }
 
@@ -1605,13 +1656,14 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                         Log("Hit vehicle engine");
                     }
 
-                    DamageEngine(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
                     Damage *= 0.55; // reduce damage to vehicle itself if hit engine
+                    DamageEngine(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
                     // Shot from the rear that hits engine will stop shell from passing through to cabin, so don't check any more VehHitpoints
                     if (bRearHullPenetration)
                     {
                         bEngineStoppedProjectile = true;
+                        HullFirePercent=0.0; //the projectile has not passed into the hull compartment, thus no danger of setting ammo or other internal flammables on fire
                         break;
                     }
                 }
@@ -1626,7 +1678,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                             Log("Hit vehicle ammo store - exploded");
                         }
 
-                        Damage *= Health;
+                        Damage *= Health; //obliterate vehicle
                         bAmmoDetonation = true;
                         break;
                     }
@@ -1638,8 +1690,8 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                             Log("Hit vehicle ammo store but did not explode");
                         }
 
-                        HullFireChance = FMax(0.75, HullFireChance);
-                        HullFireHEATChance = FMax(0.90, HullFireHEATChance);
+                        HullFirePercent = FMax(0.75, HullFirePercent);
+                        //HullFireHEATChance = FMax(0.90, HullFireHEATChance);
                     }
                 }
             }
@@ -1707,7 +1759,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             }
         }
 
-        // Random damage to crew or vehicle components, caused by shrapnel etc flying around inside the vehicle from penetration, regardless of where it hit
+        // Random damage to crew or vehicle components, caused by shrapnel etc flying around inside the vehicle from penetration or large HE shell hit
         if (bProjectilePenetrated)
         {
             if (Cannon != none)
@@ -1717,13 +1769,13 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 {
                     if (bTurretPenetration)
                     {
-                        HullChanceModifier = 0.5;   // half usual chance of damage to things in the hull
+                        HullChanceModifier = 0.25;   // 25% usual chance of damage to things in the hull
                         TurretChanceModifier = 1.0;
                     }
                     else
                     {
                         HullChanceModifier = 1.0;
-                        TurretChanceModifier = 0.5; // half usual chance of damage to things in the turret
+                        TurretChanceModifier = 0.35; // 35% usual chance of damage to things in the turret
                     }
                 }
                 else // normal chance of damage to everything in vehicles without a turret (e.g. casemate-style tank destroyers)
@@ -1780,7 +1832,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 }
             }
 
-            // Random chance of shrapnel detonating turret ammo & destroying the vehicle
+            // Random chance of shrapnel detonating turret ammo & destroying the vehicle - this should really be based on if turret stores ammo or not
             if (FRand() < (float(Damage) / TurretDetonationThreshold * TurretChanceModifier))
             {
                 if (bDebuggingText)
@@ -1792,7 +1844,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             }
             else if (bTurretPenetration)
             {
-                Damage *= 0.55; // reduce damage to vehicle itself from a turret hit, if the turret ammo didn't detonate
+                Damage *= 0.75; // reduce damage to vehicle itself from a turret hit, if the turret ammo didn't detonate
 
                 // Random chance of shrapnel killing driver
                 if (Driver != none && FRand() < (float(Damage) / DriverKillChance * HullChanceModifier))
@@ -1822,6 +1874,8 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         if (bHasTreads && TreadDamageMod >= TreadDamageThreshold && !bTurretPenetration && !bRearHullPenetration)
         {
             CheckTreadDamage(HitLocation, Momentum);
+
+            Damage *= 0.55; // reduce overall damage to vehicle itself if tread area hit (wheels and bottom treads usually below critical areas)
         }
     }
 
@@ -1833,22 +1887,22 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     // Call the Super from Vehicle (skip over others)
     super(Vehicle).TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
 
-    // Vehicle is still alive, so check for possibility of a fire breaking out
+    // Vehicle is still alive, so check for possibility of a fire breaking out in hull
     if (Health > 0)
     {
         if (bProjectilePenetrated && !bEngineStoppedProjectile && !bOnFire)
         {
             // Random chance of penetration causing a hull fire // TODO: relate probability to damage, as currently even tiny damage has a high chance of starting a fire
-            if ((bHEATPenetration && FRand() < HullFireHEATChance) || (!bHEATPenetration && FRand() < HullFireChance))
+            if (FRand() < HullFirePercent)
             {
                 StartHullFire(InstigatedBy);
             }
-            // If we didn't start a fire & this is the 1st time a projectile has penetrated, increase the chance of causing a hull fire for any future penetrations
+            // If we didn't start a fire & this is the 1st time a projectile has penetrated, increase the chance of causing a hull fire for any future penetrations (spilled fuel, loose electrical circuits, etc)
             else if (bFirstPenetratingHit)
             {
                 bFirstPenetratingHit = false;
-                HullFireChance = FMax(0.75, HullFireChance);
-                HullFireHEATChance = FMax(0.90, HullFireHEATChance);
+                HullFirePercent = FMax(0.75, HullFirePercent);
+                //HullFireHEATChance = FMax(0.90, HullFireHEATChance);
             }
         }
 
@@ -1864,18 +1918,21 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     ResetTakeDamageVariables();
 }
 
-// New function to reset all variables used in TakeDamage, ready for next time
+// New function to reset all variables used in TakeDamage, ready for next penetration
 function ResetTakeDamageVariables()
 {
     bProjectilePenetrated = false;
     bTurretPenetration = false;
     bRearHullPenetration = false;
     bHEATPenetration = false;
+    HullFirePercent = 0.0;
+    bVehicleHit = false;
 }
 
 // Modified to add random chance of engine fire breaking out
 function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector Momentum, class<DamageType> DamageType)
 {
+
     // Apply new damage
     if (EngineHealth > 0)
     {
@@ -1911,7 +1968,7 @@ function DamageEngine(int Damage, Pawn InstigatedBy, vector HitLocation, vector 
     // Or if engine still alive, a random chance of engine fire breaking out // TODO: relate probability to damage, as currently even tiny damage has a high chance of starting a fire
     else if (DamageType != VehicleBurningDamType && !bEngineOnFire && Damage > 0 && Health > 0)
     {
-        if ((bHEATPenetration && FRand() < EngineFireHEATChance) || (!bHEATPenetration && FRand() < EngineFireChance))
+        if (FRand() < EngineFirePercent)
         {
             if (bDebuggingText)
             {
@@ -2277,6 +2334,9 @@ defaultproperties
     BeginningIdleAnim="driver_hatch_idle_close"
     PeriscopeOverlay=Texture'DH_VehicleOptics_tex.General.PERISCOPE_overlay_Allied'
 
+    //Periscope overlay
+    PeriscopeSize=0.955 //default for most peri's
+
     // Damage
     Health=525
     HealthMax=525.0
@@ -2299,29 +2359,25 @@ defaultproperties
     AmmoIgnitionProbability=0.75
 
     // Vehicle fires
-    HullFireChance=0.25
-    HullFireHEATChance=0.5
-    EngineFireChance=0.5
-    EngineFireHEATChance=0.85
     EngineToHullFireChance=0.05
-    PlayerFireDamagePer2Secs=15.0
+    PlayerFireDamagePer2Secs=15.0 // roughly 12 seconds from full health to death
     FireDetonationChance=0.07
     bFirstPenetratingHit=true
     VehicleBurningDamType=class'DHVehicleBurningDamageType'
 
     // Burning/smoking vehicle effects
     DamagedEffectOffset=(X=-40.0,Y=10.0,Z=10.0) // position of engine smoke or fire
-    HeavyEngineDamageThreshold=0.5
+    HeavyEngineDamageThreshold=0.5 // causes the engine icon in the HUD to flash red at this engine health level
     DamagedEffectHealthSmokeFactor=0.85
     DamagedEffectHealthMediumSmokeFactor=0.65
     DamagedEffectHealthHeavySmokeFactor=0.35
     DamagedEffectHealthFireFactor=0.0
-    FireEffectClass=class'ROEngine.VehicleDamagedEffect' // driver's hatch fire
+    FireEffectClass=class'ROEngine.VehicleDamagedEffect' //'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
     FireAttachBone="driver_player"
-    FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0)
+    FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
 
     // Vehicle destruction
-    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'
+    DestructionEffectClass=class'ROEffects.ROVehicleDestroyedEmitter'//'DH_Effects.DHVehicleDestroyedEmitter'//
     DestructionEffectLowClass=class'ROEffects.ROVehicleDestroyedEmitter_simple'
     DisintegrationEffectClass=class'DH_Effects.DHVehicleObliteratedEmitter'
     DisintegrationEffectLowClass=class'ROEffects.ROVehicleObliteratedEmitter_simple'
@@ -2331,7 +2387,7 @@ defaultproperties
     ExplosionSoundRadius=1000.0
 
     // Vehicle reset/respawn
-    TimeTilDissapear=120.0    // after destroyed
+    TimeTilDissapear=120.0    // time from tank kill until its destroyed mesh and emitter disappear
     IdleTimeBeforeReset=200.0 // if empty & no friendlies nearby
 
     // Treads & track wheels

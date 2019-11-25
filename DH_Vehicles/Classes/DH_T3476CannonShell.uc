@@ -8,14 +8,18 @@ class DH_T3476CannonShell extends DHSovietCannonShell;
 defaultproperties
 {
     RoundType=RT_APBC
-    ShellDiameter=7.62
-    BallisticCoefficient=1.55
     Speed=39953.0 // 662 m/s
     MaxSpeed=39953.0
+    ShellDiameter=7.62
+    BallisticCoefficient=1.55 //TODO: pls, check
+
+    //Damage
     ImpactDamage=560
     ShellImpactDamage=class'DH_Vehicles.DH_ShermanCannonShellDamageAP'
+    HullFireChance=0.38
+    EngineFireChance=0.75
 
-
+    //Penetration
     DHPenetrationTable(0)=8.4  // 100m (all penetration from Bird & Livingstone, for 662 m/s muzzle velocity vs face hardened armor)
     DHPenetrationTable(1)=8.1  // 250m
     DHPenetrationTable(2)=7.6  // 500m

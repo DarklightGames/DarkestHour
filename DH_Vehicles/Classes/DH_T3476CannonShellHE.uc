@@ -7,18 +7,25 @@ class DH_T3476CannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
-    // Have matched several damage & similar properties to Sherman 76mm HE shell, as the RO values were at odds with comparable DH shells
-    ShellDiameter=7.62
-    BallisticCoefficient=1.55
     Speed=39953.0 // 662 m/s
     MaxSpeed=39953.0
+    ShellDiameter=7.62
+    BallisticCoefficient=1.55 //TODO: find correct BC
+
+    //Damage
+    ImpactDamage=450
     Damage=400.0
     DamageRadius=1140.0
-    ImpactDamage=450
     PenetrationMag=780.0
+    HullFireChance=0.33
+    EngineFireChance=0.65
 
     bDebugInImperial=false
 
+    //Effects
+    CoronaClass=class'DH_Effects.DHShellTracer_Green'
+
+    //Penetration
     DHPenetrationTable(0)=3.3
     DHPenetrationTable(1)=3.1
     DHPenetrationTable(2)=2.8

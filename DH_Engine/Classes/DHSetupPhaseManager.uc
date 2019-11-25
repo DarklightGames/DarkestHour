@@ -32,6 +32,8 @@ var int                 TimerCount;
 var int                 SetupPhaseDurationActual;
 var int                 SpawningEnabledTimeActual;
 
+function ModifySetupPhaseDuration(int Seconds, optional bool bSetToValue);
+
 event PreBeginPlay()
 {
     local DarkestHourGame G;
@@ -58,6 +60,7 @@ event PreBeginPlay()
 
 function Reset()
 {
+    SetupPhaseDurationActual = SetupPhaseDuration;
     TimerCount = 0;
     bPlayersOpenedMenus = false;
     GotoState('Timing');
@@ -237,6 +240,19 @@ auto state Timing
         GRI.bIsInSetupPhase = false;
 
         GotoState('Done');
+    }
+
+    function ModifySetupPhaseDuration(int Seconds, optional bool bSetToValue)
+    {
+        if (bSetToValue)
+        {
+            TimerCount = 0;
+            SetupPhaseDurationActual = Max(0, Seconds);
+        }
+        else
+        {
+            SetupPhaseDurationActual += Seconds;
+        }
     }
 }
 

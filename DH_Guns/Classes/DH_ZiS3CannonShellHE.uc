@@ -7,17 +7,27 @@ class DH_ZiS3CannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
+    Speed=39953.0 // 662 m/s TODO: fix this
+    MaxSpeed=39953.0
     ShellDiameter=7.62
     BallisticCoefficient=1.55
-    Speed=39953.0 // 662 m/s
-    MaxSpeed=39953.0
+
+    //Damage
+    ImpactDamage=450
+    ShellImpactDamage=class'DH_Engine.DHShellHEGunImpactDamageType'
     Damage=400.0
     DamageRadius=1140.0
-    ImpactDamage=450
+    MyDamageType=class'DH_Engine.DHShellHE75mmATDamageType'
     PenetrationMag=780.0
-    Tag="OF-350"
+    HullFireChance=0.33
+    EngineFireChance=0.65
+
     bDebugInImperial=false
 
+    //Effects
+    CoronaClass=class'DH_Effects.DHShellTracer_Green'
+
+    //Penetration
     DHPenetrationTable(0)=3.3
     DHPenetrationTable(1)=3.1
     DHPenetrationTable(2)=2.8
@@ -30,6 +40,7 @@ defaultproperties
     DHPenetrationTable(9)=0.5
     DHPenetrationTable(10)=0.3
 
+    //Gunsight adjustments
     bMechanicalAiming=true
     MechanicalRanges(1)=(Range=200,RangeValue=47.0)
     MechanicalRanges(2)=(Range=400,RangeValue=63.0)

@@ -7,6 +7,21 @@ class DH_JacksonCannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
+    Speed=49667.0 //2700 fps or 823 m/s
+    MaxSpeed=49667.0
+    ShellDiameter=9.0
+    BallisticCoefficient=3.35 //Correct - verified on range at 1000 yards
+
+    //Damage
+    ImpactDamage=510
+    Damage=450.0
+    DamageRadius=1570.0
+    MyDamageType=class'DH_Engine.DHShellHE88mmDamageType'
+    PenetrationMag=1020.0
+    HullFireChance=0.35
+    EngineFireChance=0.81
+
+    //Penetration
     DHPenetrationTable(0)=5.2
     DHPenetrationTable(1)=4.9
     DHPenetrationTable(2)=4.3
@@ -18,13 +33,4 @@ defaultproperties
     DHPenetrationTable(8)=2.3
     DHPenetrationTable(9)=1.9
     DHPenetrationTable(10)=1.5
-    ShellDiameter=9.0
-    PenetrationMag=1020.0
-    ImpactDamage=510
-    BallisticCoefficient=1.79
-    Speed=49609.0
-    MaxSpeed=49609.0
-    Damage=450.0
-    DamageRadius=1570.0
-    MyDamageType=class'DH_Engine.DHShellHE88mmDamageType'
 }

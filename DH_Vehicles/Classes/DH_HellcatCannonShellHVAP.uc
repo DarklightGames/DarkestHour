@@ -7,6 +7,19 @@ class DH_HellcatCannonShellHVAP extends DHCannonShellHVAP;
 
 defaultproperties
 {
+    Speed=62525.0
+    MaxSpeed=62525.0
+    DHPenetrationTable(10)=6.7
+    ShellDiameter=7.62
+    BallisticCoefficient=0.888 //TODO: pls find correct BC
+
+    //Damage
+    ImpactDamage=425
+    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageHVAP'
+    HullFireChance=0.3
+    EngineFireChance=0.63
+
+    //Penetration
     DHPenetrationTable(0)=19.2
     DHPenetrationTable(1)=17.7
     DHPenetrationTable(2)=16.5
@@ -17,11 +30,4 @@ defaultproperties
     DHPenetrationTable(7)=10.6
     DHPenetrationTable(8)=9.4
     DHPenetrationTable(9)=8.0
-    DHPenetrationTable(10)=6.7
-    ShellDiameter=7.62
-    ShellImpactDamage=class'DH_Vehicles.DH_ShermanM4A176WCannonShellDamageHVAP'
-    ImpactDamage=450
-    BallisticCoefficient=0.888
-    Speed=62525.0
-    MaxSpeed=62525.0
 }

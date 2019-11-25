@@ -8,19 +8,25 @@ class DH_45mmM1937GunCannonShell extends DHSovietCannonShell;
 defaultproperties
 {
     RoundType=RT_APBC
+    Speed=45868.0 // 760 m/s
+    MaxSpeed=45868.0
     ShellDiameter=4.5
-    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
-    CoronaClass=class'DH_Effects.DHShellTracer_Green'
-    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
+    BallisticCoefficient=0.7 // TODO: try to find an accurate BC (this is from AHZ)
+
+    //Damage
     ImpactDamage=290
+    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
+    HullFireChance=0.25
+    EngineFireChance=0.50
+
+    //Effects
+    CoronaClass=class'DH_Effects.DHShellTracer_Green'
+    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
-    BallisticCoefficient=0.7 // TODO: try to find an accurate BC (this is from AHZ)
-    Speed=45868.0 // 760 m/s
-    MaxSpeed=45868.0
 
-
+    //Penetration
     DHPenetrationTable(0)=6.1  // 100m // TODO: confirm penetration
     DHPenetrationTable(1)=5.4  // 250m
     DHPenetrationTable(2)=4.6  // 500m
@@ -33,6 +39,7 @@ defaultproperties
     DHPenetrationTable(9)=1.0
     DHPenetrationTable(10)=0.6 // 3000m
 
+    //Gunsight adjustments
     bOpticalAiming=true
     OpticalRanges(0)=(Range=0,RangeValue=0.471)
     OpticalRanges(1)=(Range=500,RangeValue=0.505)

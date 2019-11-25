@@ -17,13 +17,15 @@ defaultproperties
     CollisionStaticMesh=StaticMesh'DH_Soviet_vehicles_stc.T34-85_turret_col'
 
     // Turret armor
-    FrontArmorFactor=9.0
+    FrontArmorFactor=8.4 //9.0 cm reduced by cast armor modifier 93%
     LeftArmorFactor=7.5
     RightArmorFactor=7.5
     RearArmorFactor=5.2
+
     LeftArmorSlope=18.0
     RightArmorSlope=18.0
     RearArmorSlope=10.0
+
     FrontLeftAngle=342.0
     FrontRightAngle=18.0
     RearRightAngle=162.0
@@ -36,8 +38,8 @@ defaultproperties
     CustomPitchDownLimit=64626
 
     // Cannon ammo
-    ProjectileClass=class'DH_Vehicles.DH_T3485CannonShell'
-    PrimaryProjectileClass=class'DH_Vehicles.DH_T3485CannonShell'
+    ProjectileClass=class'DH_Vehicles.DH_T3485CannonShell_Early'
+    PrimaryProjectileClass=class'DH_Vehicles.DH_T3485CannonShell_Early'
     SecondaryProjectileClass=class'DH_Vehicles.DH_T3485CannonShellAPCR'
     TertiaryProjectileClass=class'DH_Vehicles.DH_T3485CannonShellHE'
 

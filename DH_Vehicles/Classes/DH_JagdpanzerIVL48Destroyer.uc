@@ -19,7 +19,7 @@ defaultproperties
     Skins(2)=Texture'DH_VehiclesGE_tex4.ext_vehicles.jagdpanzeriv_wheels_camo1'
     Skins(3)=Texture'axis_vehicles_tex.Treads.panzer4F2_treads'
     Skins(4)=Texture'axis_vehicles_tex.Treads.panzer4F2_treads'
-    Skins(5)=Texture'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_int'
+    Skins(5)=FinalBlend'DH_VehiclesGE_tex4.int_vehicles.jagdpanzeriv_body_intFB'
     BeginningIdleAnim="Overlay_Idle"
     FireEffectOffset=(X=55.0,Y=0.0,Z=-25.0)
 

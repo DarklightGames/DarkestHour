@@ -32,4 +32,5 @@ defaultproperties
     FaceSkins(14)=Texture'Characters_tex.ger_heads.ger_face15'
 
     ShovelClassName="DH_Equipment.DHShovelItem_German"
+    BinocsClassName="DH_Equipment.DHBinocularsItemGerman"
 }

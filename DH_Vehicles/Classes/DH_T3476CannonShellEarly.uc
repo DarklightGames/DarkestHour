@@ -8,8 +8,10 @@ class DH_T3476CannonShellEarly extends DH_T3476CannonShell;
 defaultproperties
 {
     ImpactDamage=550.0
-    Tag="BR-350A" // early war APBC round
 
+    bShatterProne=true
+
+    //Penetration
     DHPenetrationTable(0)=8.0  // 100m (all penetration from Bird & Livingstone, for 662 m/s muzzle velocity vs face hardened armor)
     DHPenetrationTable(1)=7.7  // 250m
     DHPenetrationTable(2)=7.2  // 500m

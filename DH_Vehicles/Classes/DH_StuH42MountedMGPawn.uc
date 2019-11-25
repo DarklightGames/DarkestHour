@@ -56,5 +56,4 @@ defaultproperties
     GunsightCameraBone="Gun"
     GunsightOverlay=Texture'DH_VehicleOptics_tex.German.KZF2_MGSight'
     GunsightSize=0.381 // 18 degrees visible FOV at 1.8x magnification (KFZ2 sight)
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Germ'
 }

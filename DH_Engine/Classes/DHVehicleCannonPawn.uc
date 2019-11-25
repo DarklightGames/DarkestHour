@@ -1067,7 +1067,7 @@ defaultproperties
     RangePositionY=0.2
 
     //Periscope overlay
-    PeriscopeSize=1.0 //default for most peri's
+    PeriscopeSize=0.955 //default for most peri's
 
     // Turret/cannon movement
     MaxRotateThreshold=1.5

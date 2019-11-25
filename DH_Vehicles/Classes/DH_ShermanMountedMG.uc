@@ -13,9 +13,11 @@ defaultproperties
     FireAttachBone="mg_placement"
     FireEffectOffset=(X=-40.0,Y=0.0,Z=30.0) // positions fire on co-driver's hatch
 
+    WeaponAttachOffset=(X=1.5,Y=1.0,Z=1.5) // this is for M4A1 (as the MG mesh is off-kilter when not adjusted
+
     // Movement
     MaxPositiveYaw=4000
-    MaxNegativeYaw=-8000
+    MaxNegativeYaw=-4500
     PitchBone="mg_yaw"
     CustomPitchUpLimit=3000
     CustomPitchDownLimit=63000
@@ -34,4 +36,6 @@ defaultproperties
     FireEndSound=SoundGroup'DH_WeaponSounds.30Cal.30cal_FireEnd01'
     ShakeRotMag=(X=20.0,Y=20.0,Z=20.0)
     ShakeOffsetMag=(X=0.01,Y=0.01,Z=0.01)
+
+    //HUDOverlayReloadAnim="Reloads"
 }

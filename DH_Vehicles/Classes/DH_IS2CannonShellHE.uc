@@ -7,18 +7,33 @@ class DH_IS2CannonShellHE extends DHCannonShellHE;
 
 defaultproperties
 {
-    ShellDiameter=12.2
-    BallisticCoefficient=2.35
     Speed=45866.0 // 760 m/s
     MaxSpeed=45866.0
+    ShellDiameter=12.2
+    BallisticCoefficient=2.35
+
+    //Damage
+    ImpactDamage=800
     Damage=600.0
     DamageRadius=2000.0
     MyDamageType=class'DH_Engine.DHShellHE105mmDamageType' // a 122mm shell, but 105mm is close enough (it's a very big shell that will throw stuff around more)
-    ImpactDamage=900
     PenetrationMag=1250.0
+    HullFireChance=0.50
+    EngineFireChance=1.0
+
+    //Effects
+    CoronaClass=class'DH_Effects.DHShellTracer_Green'
     StaticMesh=StaticMesh'WeaponPickupSM.Ammo.122mm_Shell'
+    ShellDeflectEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
+    ShellHitDirtEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
+    ShellHitSnowEffectClass=class'ROEffects.ROArtillerySnowEmitter'
+    ShellHitWoodEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
+    ShellHitRockEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
+    ShellHitWaterEffectClass=class'ROEffects.ROArtilleryWaterEmitter'
+
     bDebugInImperial=false
 
+    //Penetration
     DHPenetrationTable(0)=9.5  // 100m
     DHPenetrationTable(1)=8.9  // 250m
     DHPenetrationTable(2)=8.5  // 500m
@@ -30,13 +45,6 @@ defaultproperties
     DHPenetrationTable(8)=6.1  // 2000m
     DHPenetrationTable(9)=5.6
     DHPenetrationTable(10)=5.3 // 3000m
-
-    ShellDeflectEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitDirtEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitSnowEffectClass=class'ROEffects.ROArtillerySnowEmitter'
-    ShellHitWoodEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitRockEffectClass=class'ROEffects.ROArtilleryDirtEmitter'
-    ShellHitWaterEffectClass=class'ROEffects.ROArtilleryWaterEmitter'
 
     bMechanicalAiming=true
     MechanicalRanges(0)=(Range=0,RangeValue=0.0)

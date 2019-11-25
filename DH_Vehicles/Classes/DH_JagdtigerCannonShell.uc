@@ -7,6 +7,29 @@ class DH_JagdtigerCannonShell extends DHGermanCannonShell;
 
 defaultproperties
 {
+    Speed=53110.0
+    MaxSpeed=53110.0
+    ShellDiameter=12.8
+    BallisticCoefficient=3.9
+
+    //Damage
+    ImpactDamage=950
+    HullFireChance=0.60
+    EngineFireChance=1.0
+
+    //Penetration
+    DHPenetrationTable(0)=26.7
+    DHPenetrationTable(1)=26.2
+    DHPenetrationTable(2)=25.3
+    DHPenetrationTable(3)=24.5
+    DHPenetrationTable(4)=23.7
+    DHPenetrationTable(5)=23.0
+    DHPenetrationTable(6)=22.2
+    DHPenetrationTable(7)=21.5
+    DHPenetrationTable(8)=20.8
+    DHPenetrationTable(9)=19.5
+    DHPenetrationTable(10)=18.2
+
     MechanicalRanges(1)=(Range=100,RangeValue=16.0)
     MechanicalRanges(2)=(Range=200,RangeValue=20.0)
     MechanicalRanges(3)=(Range=300,RangeValue=26.0)
@@ -33,20 +56,4 @@ defaultproperties
     MechanicalRanges(24)=(Range=2800,RangeValue=212.0)
     MechanicalRanges(25)=(Range=3000,RangeValue=227.0)
     bMechanicalAiming=true
-    DHPenetrationTable(0)=26.7
-    DHPenetrationTable(1)=26.2
-    DHPenetrationTable(2)=25.3
-    DHPenetrationTable(3)=24.5
-    DHPenetrationTable(4)=23.7
-    DHPenetrationTable(5)=23.0
-    DHPenetrationTable(6)=22.2
-    DHPenetrationTable(7)=21.5
-    DHPenetrationTable(8)=20.8
-    DHPenetrationTable(9)=19.5
-    DHPenetrationTable(10)=18.2
-    ShellDiameter=12.8
-    ImpactDamage=950
-    BallisticCoefficient=3.9
-    Speed=53110.0
-    MaxSpeed=53110.0
 }

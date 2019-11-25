@@ -71,7 +71,6 @@ defaultproperties
     VehHitpoints(3)=(PointRadius=15.0,PointScale=1.0,PointBone="body",PointOffset=(X=-20.0,Y=10.0,Z=-20.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=-5.0
     DamagedEffectOffset=(X=-210.0,Y=0.0,Z=40.0) // adjusted from original
-    HullFireChance=0.55
     FireAttachBone="Body"
     FireEffectOffset=(X=90.0,Y=-28.0,Z=15.0)
     DestroyedVehicleMesh=StaticMesh'DH_Soviet_vehicles_stc.ISU152.ISU152_dest'

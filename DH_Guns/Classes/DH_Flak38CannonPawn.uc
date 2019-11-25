@@ -32,7 +32,6 @@ defaultproperties
     GunsightOverlay=Texture'DH_VehicleOptics_tex.German.ZF_3x8_Flak2cm'
     GunsightSize=0.282 // 8 degrees visible FOV at 3x magnification (ZF 3x8 Flak sight)
     OverlayCorrectionX=-6
-    BinocsOverlay=Texture'DH_VehicleOptics_tex.General.BINOC_overlay_6x30Germ'
     AmmoShellTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag'
     AmmoShellReloadTexture=Texture'DH_InterfaceArt_tex.Tank_Hud.2341Mag_reload'
 }

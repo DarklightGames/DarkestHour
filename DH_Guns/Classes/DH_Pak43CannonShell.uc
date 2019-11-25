@@ -7,6 +7,31 @@ class DH_Pak43CannonShell extends DHGermanCannonShell;
 
 defaultproperties
 {
+    Speed=60352.0
+    MaxSpeed=60352.0
+    ShellDiameter=8.8
+    BallisticCoefficient=3.8 //TODO: pls, check
+
+    //Damage
+    ImpactDamage=775
+    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
+    HullFireChance=0.5
+    EngineFireChance=0.98
+
+    //Penetration
+    DHPenetrationTable(0)=25.7
+    DHPenetrationTable(1)=24.9
+    DHPenetrationTable(2)=23.5
+    DHPenetrationTable(3)=22.2
+    DHPenetrationTable(4)=21.0
+    DHPenetrationTable(5)=19.6
+    DHPenetrationTable(6)=18.8
+    DHPenetrationTable(7)=18.3
+    DHPenetrationTable(8)=17.6
+    DHPenetrationTable(9)=16.4
+    DHPenetrationTable(10)=15.3
+
+    //Gunsight adjustments
     MechanicalRanges(1)=(Range=100,RangeValue=8.0)
     MechanicalRanges(2)=(Range=200,RangeValue=10.0)
     MechanicalRanges(3)=(Range=300,RangeValue=22.0)
@@ -33,22 +58,4 @@ defaultproperties
     MechanicalRanges(24)=(Range=2800,RangeValue=164.0)
     MechanicalRanges(25)=(Range=3000,RangeValue=179.0)
     bMechanicalAiming=true
-    DHPenetrationTable(0)=25.7
-    DHPenetrationTable(1)=24.9
-    DHPenetrationTable(2)=23.5
-    DHPenetrationTable(3)=22.2
-    DHPenetrationTable(4)=21.0
-    DHPenetrationTable(5)=19.6
-    DHPenetrationTable(6)=18.8
-    DHPenetrationTable(7)=18.3
-    DHPenetrationTable(8)=17.6
-    DHPenetrationTable(9)=16.4
-    DHPenetrationTable(10)=15.3
-    ShellDiameter=8.8
-    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
-    ImpactDamage=775
-    BallisticCoefficient=3.8
-    Speed=60352.0
-    MaxSpeed=60352.0
-    Tag="PzGr.39/43"
 }

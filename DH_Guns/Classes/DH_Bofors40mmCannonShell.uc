@@ -3,24 +3,37 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_Bofors40mmCannonShell extends DHCannonShell;
+class DH_Bofors40mmCannonShell extends DHBullet_ArmorPiercing;
 
 defaultproperties
 {
+    Speed=53170.0
+    MaxSpeed=53170.0
     ShellDiameter=4.0
-    bShatterProne=true
-    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
-    CoronaClass=class'DH_Effects.DHShellTracer_Red'
-    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
+    BallisticCoefficient=0.984 // TODO: try to find an accurate BC (this is same as US 37mm)
+
+    //Damage
     ImpactDamage=265
+    ShellImpactDamage=class'DH_Engine.DHShellAPGunImpactDamageType'
+    HullFireChance=0.23
+    EngineFireChance=0.47
+
+    bShatterProne=true
+
+    //Effects
+    bHasTracer=true
+    bHasShellTrail=true
+    DrawType=DT_StaticMesh
+    StaticMesh=StaticMesh'WeaponPickupSM.Ammo.76mm_Shell'
+    DeflectedMesh=StaticMesh'WeaponPickupSM.Ammo.76mm_Shell'
+    ShellShatterEffectClass=class'DH_Effects.DHShellShatterEffect_Small'
+    TracerEffectClass=class'DH_Effects.DHBulletTracer_RedLarge'
+    TankShellTrailClass=class'DH_Effects.DHTankShellTrail_Red'
     VehicleDeflectSound=SoundGroup'ProjectileSounds.Bullets.PTRD_deflect'
     VehicleHitSound=SoundGroup'ProjectileSounds.Bullets.PTRD_penetrate'
     ShellHitVehicleEffectClass=class'ROEffects.TankAPHitPenetrateSmall'
-    BallisticCoefficient=0.984 // TODO: try to find an accurate BC (this is same as US 37mm)
-    Speed=53170.0
-    MaxSpeed=53170.0
-    Tag="AP-T" // TODO: add shell designation (although tbh it isn't used anywhere)
 
+    //Penetration
     DHPenetrationTable(0)=6.0  // 100m // TODO: try to get some accurate penetration data (this uses reported penetration at 100, 500, 1k & 2k ranges, with the gaps then estimated)
     DHPenetrationTable(1)=5.5  // 250m
     DHPenetrationTable(2)=4.9  // 500m

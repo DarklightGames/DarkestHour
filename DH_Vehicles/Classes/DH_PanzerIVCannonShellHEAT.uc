@@ -7,6 +7,35 @@ class DH_PanzerIVCannonShellHEAT extends DHCannonShellHEAT;
 
 defaultproperties
 {
+    Speed=33073.0
+    MaxSpeed=33073.0
+    ShellDiameter=7.5
+    BallisticCoefficient=2.1
+
+    //Damage
+    ImpactDamage=650
+    Damage=450.0
+    DamageRadius=200.0
+
+    //Effects
+    CoronaClass=class'DH_Effects.DHShellTracer_OrangeLarge'
+    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
+
+    bDebugInImperial=false
+
+    //Penetration
+    DHPenetrationTable(0)=10.0
+    DHPenetrationTable(1)=10.0
+    DHPenetrationTable(2)=10.0
+    DHPenetrationTable(3)=10.0
+    DHPenetrationTable(4)=10.0
+    DHPenetrationTable(5)=10.0
+    DHPenetrationTable(6)=10.0
+    DHPenetrationTable(7)=10.0
+    DHPenetrationTable(8)=10.0
+    DHPenetrationTable(9)=10.0
+    DHPenetrationTable(10)=10.0
+
     MechanicalRanges(1)=(Range=100,RangeValue=28.0)
     MechanicalRanges(2)=(Range=200,RangeValue=40.0)
     MechanicalRanges(3)=(Range=300,RangeValue=58.0)
@@ -33,26 +62,4 @@ defaultproperties
     MechanicalRanges(24)=(Range=2800,RangeValue=708.0)
     MechanicalRanges(25)=(Range=3000,RangeValue=768.0)
     bMechanicalAiming=true
-    DHPenetrationTable(0)=10.0
-    DHPenetrationTable(1)=10.0
-    DHPenetrationTable(2)=10.0
-    DHPenetrationTable(3)=10.0
-    DHPenetrationTable(4)=10.0
-    DHPenetrationTable(5)=10.0
-    DHPenetrationTable(6)=10.0
-    DHPenetrationTable(7)=10.0
-    DHPenetrationTable(8)=10.0
-    DHPenetrationTable(9)=10.0
-    DHPenetrationTable(10)=10.0
-    ShellDiameter=7.5
-    bDebugInImperial=false
-    CoronaClass=class'DH_Effects.DHShellTracer_OrangeLarge'
-    ImpactDamage=650
-    BallisticCoefficient=2.1
-    Speed=33073.0
-    MaxSpeed=33073.0
-    Damage=450.0
-    DamageRadius=200.0
-    StaticMesh=StaticMesh'DH_Tracers.shells.German_shell'
-
 }

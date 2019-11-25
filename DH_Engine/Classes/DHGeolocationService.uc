@@ -65,13 +65,68 @@ static function int GetIpCountryCodeIndex(string IpAddress)
     return -1;
 }
 
+// Checks the ordering of the cache and repairs it if necessary.
+static function Initialize()
+{
+    if (IsCacheCorrupt())
+    {
+        // Cache is corrupt, let's repair it.
+        RepairCache();
+
+        // Now save the repaired cache.
+        StaticSaveConfig();
+    }
+}
+
+static function RepairCache()
+{
+    local int i;
+    local array<IpCountryCode> NewIpCountryCodes;
+
+    Warn("IP/country cache has been corrupted and will now be repaired.");
+
+    // Keep old cach records so we can re-insert them.
+    NewIpCountryCodes = default.IpCountryCodes;
+
+    // Remove all cache records.
+    default.IpCountryCodes.Length = 0;
+
+
+    for (i = 0; i < NewIpCountryCodes.Length; ++i)
+    {
+        AddIpCountryCode(NewIpCountryCodes[i].IpAddress, NewIpCountryCodes[i].CountryCode);
+    }
+}
+
+static function bool IsCacheCorrupt()
+{
+    local int i;
+
+    for (i = 1; i < default.IpCountryCodes.Length; ++i)
+    {
+        if (default.IpCountryCodes[i - 1].IpAddress >= default.IpCountryCodes[i].IpAddress)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 static function int GetIpCountryCodeInsertionIndex(string IpAddress, int StartIndex, int EndIndex)
 {
-    local int MiddleIndex, CmpResult;
+    local int MiddleIndex;
 
     if (StartIndex == EndIndex)
     {
-        // Insertion sort.
+        if (default.IpCountryCodes[StartIndex].IpAddress > IpAddress)
+        {
+            return StartIndex;
+        }
+        else
+        {
+            return StartIndex + 1;
+        }
     }
     else if (StartIndex > EndIndex)
     {
@@ -79,13 +134,12 @@ static function int GetIpCountryCodeInsertionIndex(string IpAddress, int StartIn
     }
 
     MiddleIndex = (StartIndex + EndIndex) / 2;
-    CmpResult = StrCmp(IpAddress, default.IpCountryCodes[MiddleIndex].IpAddress);
 
-    if (CmpResult < 0)
+    if (default.IpCountryCodes[MiddleIndex].IpAddress < IpAddress)
     {
         return GetIpCountryCodeInsertionIndex(IpAddress, MiddleIndex + 1, EndIndex);
     }
-    else if (CmpResult > 0)
+    else if (default.IpCountryCodes[MiddleIndex].IpAddress > IpAddress)
     {
         return GetIpCountryCodeInsertionIndex(IpAddress, StartIndex, MiddleIndex - 1);
     }
@@ -93,30 +147,27 @@ static function int GetIpCountryCodeInsertionIndex(string IpAddress, int StartIn
     return MiddleIndex;
 }
 
-static function bool AddIpCountryCode(string IpAddress, string CountryCode)
+static function int AddIpCountryCode(string IpAddress, string CountryCode)
 {
     local int Index;
+
+    if (GetIpCountryCodeIndex(IpAddress) != -1)
+    {
+        // IP address is already cached.
+        return -1;
+    }
 
     Index = GetIpCountryCodeInsertionIndex(IpAddress, 0, default.IpCountryCodes.Length - 1);
 
     if (Index >= 0)
     {
-        if (default.IpCountryCodes.Length > 0 &&
-            Index < default.IpCountryCodes.Length &&
-            default.IpCountryCodes[Index].IpAddress == IpAddress)
-        {
-            // Record already written.
-            return true;
-        }
-
         default.IpCountryCodes.Insert(Index, 1);
         default.IpCountryCodes[Index].IpAddress = IpAddress;
         default.IpCountryCodes[Index].CountryCode = CountryCode;
-
-        return true;
+        return Index;
     }
 
-    return false;
+    return -1;
 }
 
 static function GetIpDataTest(Actor A, string IpAddress)
