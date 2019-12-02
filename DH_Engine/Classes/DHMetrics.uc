@@ -294,7 +294,7 @@ function OnPlayerFragged(PlayerController Killer, PlayerController Victim, class
     Rounds[0].Frags[Rounds[0].Frags.Length] = F;
 }
 
-function OnVehicleFragged(PlayerController Killer, DHVehicle Vehicle, class<DamageType> DamageType, vector HitLocation, int HitIndex, int RoundTime)
+function OnVehicleFragged(PlayerController Killer, DHVehicle Vehicle, class<DamageType> DamageType, vector HitLocation, int RoundTime)
 {
     local DHMetricsVehicleFrag F;
     local DHVehicle KillerVehicle;
@@ -306,7 +306,6 @@ function OnVehicleFragged(PlayerController Killer, DHVehicle Vehicle, class<Dama
 
     F = new class'DHMetricsVehicleFrag';
     F.DamageType = DamageType;
-    F.HitIndex  = HitIndex;
     F.RoundTime = RoundTime;
 
     // Killer

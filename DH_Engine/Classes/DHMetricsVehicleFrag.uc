@@ -6,7 +6,6 @@
 class DHMetricsVehicleFrag extends JSONSerializable;
 
 var class<DamageType>   DamageType;
-var int                 HitIndex;
 var int                 RoundTime;
 
 var string              KillerID;
@@ -24,7 +23,6 @@ function JSONValue ToJSON()
 {
     return (new class'JSONObject')
         .PutString("damage_type", DamageType.Name)
-        .PutInteger("hit_index", HitIndex)
         .PutInteger("time", RoundTime)
         .Put("killer", (new class'JSONObject')
             .PutString("id", KillerID)
