@@ -5,8 +5,6 @@
 
 class DH_Flak38Cannon extends DHVehicleAutoCannon;
 
-#exec OBJ LOAD FILE=..\Animations\DH_Flak38_anm.ukx
-
 var     name        SightBone;
 var     name        TraverseWheelBone;
 var     name        ElevationWheelBone;
@@ -24,12 +22,6 @@ simulated function UpdateSightAndWheelRotation()
 
     TraverseWheelRotation.Yaw = -CurrentAim.Yaw * 32;
     SetBoneRotation(TraverseWheelBone, TraverseWheelRotation);
-}
-
-// From DHATGunCannon, as gun will always be penetrated by a shell
-simulated function bool ShouldPenetrate(DHAntiVehicleProjectile P, vector HitLocation, vector ProjectileDirection, float MaxArmorPenetration)
-{
-   return true;
 }
 
 defaultproperties
@@ -82,4 +74,10 @@ defaultproperties
     SightBone="Sight_arm"
     TraverseWheelBone="Traverse_wheel"
     ElevationWheelBone="Elevation_wheel"
+
+    // Penetration (no defense against any AT weaponry)
+    FrontArmorFactor=0.0
+    RearArmorFactor=0.0
+    LeftArmorFactor=0.0
+    RightArmorFactor=0.0
 }
