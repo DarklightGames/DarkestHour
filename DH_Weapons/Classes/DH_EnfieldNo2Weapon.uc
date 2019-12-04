@@ -20,8 +20,8 @@ defaultproperties
 
     IronSightDisplayFOV=70.0
 
-    MaxNumPrimaryMags=5
-    InitialNumPrimaryMags=5
+    MaxNumPrimaryMags=10
+    InitialNumPrimaryMags=10
 
     IdleEmptyAnim="Idle"
     IronIdleEmptyAnim="Iron_idle"
@@ -45,5 +45,5 @@ defaultproperties
 
     HandNum=0
     SleeveNum=3
-    bDiscardMagOnReload=true
+    bDiscardMagOnReload=false
 }
