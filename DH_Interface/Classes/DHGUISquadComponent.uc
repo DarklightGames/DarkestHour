@@ -29,6 +29,10 @@ var localized string    RescindAssistantText;
 var localized string    VolunteerToAssistText;
 var localized string    MergeRequestText;
 
+var localized string    SquadLeaderIsInactiveText;
+var localized string    SquadLeaderIsTankCrewText;
+var localized string    JoinSquadConfirmText;
+
 function InitComponent(GUIController MyController, GUIComponent MyOwner)
 {
     super.InitComponent(MyController, MyOwner);
@@ -47,6 +51,9 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 function bool OnClick(GUIComponent Sender)
 {
     local DHPlayer PC;
+    local DHSquadReplicationInfo SRI;
+    local GUIQuestionPage ConfirmWindow;
+    local DHSquadReplicationInfo.EJoinSquadWarning JoinSquadWarning;
 
     PC = DHPlayer(PlayerOwner());
 
@@ -61,6 +68,27 @@ function bool OnClick(GUIComponent Sender)
             PC.ServerSquadCreate();
             return true;
         case b_JoinSquad:
+            SRI = PC.SquadReplicationInfo;
+
+            if (SRI != none)
+            {
+                JoinSquadWarning = SRI.GetJoinSquadWarning(PC.GetTeamNum(), SquadIndex);
+
+                switch (JoinSquadWarning)
+                {
+                    case WARN_SquadLeaderIsTankCrew:
+                        if (DHPlayerReplicationInfo(PC.PlayerReplicationInfo).IsTankCrew())
+                        {
+                            break;
+                        }
+
+                    case WARN_SquadLeaderIsInactive:
+                        ConfirmWindow = Controller.ShowQuestionDialog(GetJoinSquadConfirmMessage(JoinSquadWarning), QBTN_YesNo, QBTN_No);
+                        ConfirmWindow.OnButtonClick = OnJoinSquadConfirmButtonClick;
+                        return true;
+                }
+            }
+
             PC.ServerSquadJoin(PC.GetTeamNum(), SquadIndex);
             return true;
         case b_LeaveSquad:
@@ -74,6 +102,32 @@ function bool OnClick(GUIComponent Sender)
             return true;
         default:
             break;
+    }
+}
+
+function OnJoinSquadConfirmButtonClick(byte Button)
+{
+    local DHPlayer PC;
+
+    if (Button == QBTN_YES)
+    {
+        PC = DHPlayer(PlayerOwner());
+
+        if (PC != none)
+        {
+            PC.ServerSquadJoin(PC.GetTeamNum(), SquadIndex);
+        }
+    }
+}
+
+function string GetJoinSquadConfirmMessage(DHSquadReplicationInfo.EJoinSquadWarning MessageType)
+{
+    switch (MessageType)
+    {
+        case WARN_SquadLeaderIsInactive:
+            return SquadLeaderIsInactiveText $ "||" $ JoinSquadConfirmText;
+        case WARN_SquadLeaderIsTankCrew:
+            return SquadLeaderIsTankCrewText $ "||" $ JoinSquadConfirmText;
     }
 }
 
@@ -432,5 +486,8 @@ defaultproperties
     RescindAssistantText="Unassign {0} as assistant"
     VolunteerToAssistText="Volunteer as assistant"
     MergeRequestText="Request to merge squads"
-}
 
+    SquadLeaderIsInactiveText="This squad is led by an INCOMPETENT SQUAD LEADER||It appears this squad leader hasn't placed a rally point in a while. Rally points are crucial to infantry, as they allow you to spawn closer to the fight. Joining this squad can hinder your experience."
+    SquadLeaderIsTankCrewText="This squad is led by a TANK CREWMAN||It's possible you won't receive any rally points in this squad. Rally points are crucial to infantry, as they allow you to spawn closer to the fight. Joining this squad as an infantryman can hinder your experience."
+    JoinSquadConfirmText="Are you sure you want to continue?"
+}

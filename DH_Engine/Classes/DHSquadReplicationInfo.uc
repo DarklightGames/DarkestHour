@@ -139,6 +139,16 @@ struct RallyPointPlacementResult
     var vector  HitNormal;
 };
 
+// Squad leader performance
+enum EJoinSquadWarning
+{
+    WARN_None,
+    WARN_SquadLeaderIsInactive,
+    WARN_SquadLeaderIsTankCrew
+};
+
+var float SquadLeaderInactivityThresholdSeconds;
+
 replication
 {
     reliable if (bNetDirty && Role == ROLE_Authority)
@@ -1622,6 +1632,11 @@ function SetMember(int TeamIndex, int SquadIndex, int MemberIndex, DHPlayerRepli
     {
         PRI.SquadIndex = SquadIndex;
         PRI.SquadMemberIndex = MemberIndex;
+
+        if (MemberIndex == SQUAD_LEADER_INDEX)
+        {
+            UpdateLostAllRallyPointsTime(TeamIndex, SquadIndex);
+        }
     }
 }
 
@@ -2195,6 +2210,10 @@ function int GetSquadRallyPointInitialSpawns(DHSpawnPoint_SquadRallyPoint RP)
 // Function is called when a rally point is destroyed for any reason.
 function OnSquadRallyPointDestroyed(DHSpawnPoint_SquadRallyPoint SRP)
 {
+    if (SRP != none)
+    {
+        UpdateLostAllRallyPointsTime(SRP.GetTeamIndex(), SRP.SquadIndex);
+    }
 }
 
 function DestroySquadRallyPoint(DHPlayerReplicationInfo PRI, DHSpawnPoint_SquadRallyPoint SRP)
@@ -2892,6 +2911,62 @@ simulated function array<DHPlayerReplicationInfo> GetSquadLeaders(int TeamIndex)
     return SquadLeaders;
 }
 
+//==============================================================================
+// SQUAD LEADER PERFORMANCE
+//==============================================================================
+
+function UpdateLostAllRallyPointsTime(int TeamIndex, int SquadIndex)
+{
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo SL;
+
+    SL = GetSquadLeader(TeamIndex, SquadIndex);
+    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+
+    if (SL != none && GRI != none && GetSquadRallyPointCount(TeamIndex, SquadIndex) == 0)
+    {
+        SL.LostAllRallyPointsTime = GRI.ElapsedTime;
+    }
+}
+
+simulated function bool IsSquadLeaderInactive(int TeamIndex, int SquadIndex)
+{
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo SL;
+
+    GRI = class'DHGameReplicationInfo'.static.GetLocal(Level);
+    SL = GetSquadLeader(TeamIndex, SquadIndex);
+
+    return SL != none &&
+           GRI != none &&
+           GRI.ElapsedTime >= SL.LostAllRallyPointsTime + SquadLeaderInactivityThresholdSeconds &&
+           GetSquadRallyPointCount(TeamIndex, SquadIndex) == 0;
+}
+
+simulated function EJoinSquadWarning GetJoinSquadWarning(int TeamIndex, int SquadIndex)
+{
+    local DHGameReplicationInfo GRI;
+    local DHPlayerReplicationInfo SL;
+
+    GRI = class'DHGameReplicationInfo'.static.GetLocal(Level);
+    SL = GetSquadLeader(TeamIndex, SquadIndex);
+
+    if (SL == none)
+    {
+        return WARN_None;
+    }
+
+    if (SL.IsTankCrew())
+    {
+        return WARN_SquadLeaderIsTankCrew;
+    }
+
+    if (IsSquadLeaderInactive(TeamIndex, SquadIndex))
+    {
+        return WARN_SquadLeaderIsInactive;
+    }
+}
+
 defaultproperties
 {
     AlliesSquadSize=10
@@ -2922,6 +2997,7 @@ defaultproperties
     RallyPointInitialSpawnsMinimum=10
     RallyPointInitialSpawnsMemberFactor=2.5
     RallyPointInitialSpawnsDangerZoneFactor=0.25
+    SquadLeaderInactivityThresholdSeconds=180.0
 
     SquadMergeRequestResultStrings(0)="Please wait a short time before sending another squad merge request."
     SquadMergeRequestResultStrings(1)="An error occurred while sending the squad merge request."

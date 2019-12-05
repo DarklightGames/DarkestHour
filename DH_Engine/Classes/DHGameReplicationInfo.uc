@@ -603,6 +603,28 @@ simulated event Timer()
     }
 }
 
+simulated static function DHGameReplicationInfo GetLocal(LevelInfo Level)
+{
+    local PlayerController PC;
+
+    if (Level == none)
+    {
+        return none;
+    }
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        PC = Level.GetLocalPlayerController();
+
+        if (PC != none)
+        {
+            return DHGameReplicationInfo(PC.GameReplicationInfo);
+        }
+    }
+
+    return DHGameReplicationInfo(Level.Game.GameReplicationInfo);
+}
+
 //==============================================================================
 // Supply Points
 //==============================================================================
