@@ -487,7 +487,7 @@ defaultproperties
     VolunteerToAssistText="Volunteer as assistant"
     MergeRequestText="Request to merge squads"
 
-    SquadLeaderIsInactiveText="It appears this squad leader hasn't placed a RALLY POINT in a while. RALLY POINTS are crucial to infantry, as they allow you to spawn closer to the fight. Joining this squad can hinder your experience."
-    SquadLeaderIsTankCrewText="This squad is led by a TANK CREWMAN||It's possible you won't receive any RALLY POINTS in this squad. RALLY POINTS are crucial to infantry, as they allow you to spawn closer to the fight. Joining this squad as an infantryman can hinder your experience."
+    SquadLeaderIsInactiveText="This squad is led by an INCOMPETENT SQUAD LEADER||It appears this squad leader hasn't placed a rally point in a while. Rally points are crucial to infantry, as they allow you to spawn closer to the fight. Joining this squad can hinder your experience."
+    SquadLeaderIsTankCrewText="This squad is led by a TANK CREWMAN||It's possible you won't receive any rally points in this squad. Rally points are crucial to infantry, as they allow you to spawn closer to the fight. Joining this squad as an infantryman can hinder your experience."
     JoinSquadConfirmText="Are you sure you want to continue?"
 }
