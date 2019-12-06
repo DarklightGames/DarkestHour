@@ -3,10 +3,11 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_Flak38CannonShellHE extends DH_Sdkfz2341CannonShellHE;
+class DH_WirbelwindFactory extends DH_GermanVehicles;
 
 defaultproperties
 {
-    ShellImpactDamage=class'DH_Guns.DH_Flak38CannonShellDamageHE'
-    MyDamageType=class'DH_Engine.DHShellHE20mmATDamageType'
+    VehicleClass=Class'DH_Vehicles.DH_WirbelwindTank'
+    Mesh=SkeletalMesh'DH_PanzerIV_anm.Panzer4Glate_body_ext'
 }
+
