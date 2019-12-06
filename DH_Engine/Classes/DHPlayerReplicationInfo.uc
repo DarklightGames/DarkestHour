@@ -26,7 +26,6 @@ var     int                     DHKills;
 var     int                     SquadIndex;
 var     int                     SquadMemberIndex;
 var     bool                    bIsSquadAssistant;
-var     int                     LostAllRallyPointsTime;
 
 // Scoring
 var     int                     TotalScore;
@@ -43,7 +42,7 @@ replication
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
         SquadIndex, SquadMemberIndex, PatronTier, bIsDeveloper, DHKills, bIsSquadAssistant,
-        TotalScore, CategoryScores, CountryIndex, LostAllRallyPointsTime;
+        TotalScore, CategoryScores, CountryIndex;
 }
 
 simulated function string GetNamePrefix()
@@ -87,11 +86,6 @@ simulated function bool IsInSquad()
 simulated function bool IsPatron()
 {
     return PatronTier != PATRON_None;
-}
-
-simulated function bool IsTankCrew()
-{
-    return RoleInfo != none && RoleInfo.bCanBeTankCrew;
 }
 
 // Will return true if passed two players that are in the same squad.
