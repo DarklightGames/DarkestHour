@@ -313,20 +313,38 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
     local DarkestHourGame DHG;
     local DHGameReplicationInfo GRI;
     local DHPlayer DHKiller;
-
-    // Call the super first
-    super.Died(Killer, DamageType, HitLocation);
-
-    if (MapIconAttachment != none)
-    {
-        MapIconAttachment.Destroy();
-    }
+    local int RoundTime;
 
     DHG = DarkestHourGame(Level.Game);
 
     if (DHG != none)
     {
         GRI = DHGameReplicationInfo(DHG.GameReplicationInfo);
+    }
+
+    // Log driver and vehicle kills before calling the super.
+    // NOTE: We match the conditions in the super function
+    // instead of overriding it completely.
+    if (GRI != none &&
+        !bDeleteMe &&
+        !Level.bLevelChange &&
+        !bVehicleDestroyed &&
+        !Level.Game.PreventDeath(self, Killer, damageType, HitLocation))
+    {
+        RoundTime = GRI.ElapsedTime - GRI.RoundStartTime;
+        DHG.Metrics.OnVehicleFragged(PlayerController(Killer), self, DamageType, HitLocation, RoundTime);
+
+        if (Controller != none && !bRemoteControlled && !bEjectDriver)
+        {
+            DHG.Metrics.OnPlayerFragged(PlayerController(Killer), PlayerController(Controller), class'RODiedInTankDamType', HitLocation, 0, RoundTime);
+        }
+    }
+
+    super.Died(Killer, DamageType, HitLocation);
+
+    if (MapIconAttachment != none)
+    {
+        MapIconAttachment.Destroy();
     }
 
     DHKiller = DHPlayer(Killer);
@@ -3845,6 +3863,37 @@ simulated function int NumPassengers()
     }
 
     return Num;
+}
+
+// Returns pawn's base vehicle. The pawn can either be driving the vehicle
+// (has DrivenVehicle set), or be the vehicle/vehicle weapon pawn itself.
+simulated static function DHVehicle GetDrivenVehicleBase(Pawn P)
+{
+    local Vehicle V;
+
+    if (P == none)
+    {
+        return none;
+    }
+
+    if (P.DrivenVehicle != none)
+    {
+        V = P.DrivenVehicle;
+    }
+    else
+    {
+        V = Vehicle(P);
+    }
+
+    if (V != none)
+    {
+        if (V.IsA('VehicleWeaponPawn'))
+        {
+            return DHVehicle(VehicleWeaponPawn(V).GetVehicleBase());
+        }
+
+        return DHVehicle(V);
+    }
 }
 
 // Functions emptied out as not relevant to a vehicle in RO/DH (that doesn't have any DriverWeapons):

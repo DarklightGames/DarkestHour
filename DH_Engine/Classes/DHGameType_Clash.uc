@@ -18,7 +18,7 @@ defaultproperties
     bSquadSpecialRolesOnly=true
     bHasTemporarySpawnVehicles=true
 
-    bTimeCanChangeAtZeroReinf=true
+    bTimeCanChangeAtZeroReinf=false
     bKeepSpawningWithoutReinf=true
     OutOfReinfRoundTime=120
     OutOfReinfLimitForTimeChange=50
