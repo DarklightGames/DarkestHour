@@ -13,7 +13,6 @@ var class<Pawn>         KillerPawn;
 var vector              KillerLocation;
 var byte                KillerTeam;
 var class<DHVehicle>    KillerVehicle;
-var class<Vehicle>      KillerVehicleSeat;
 
 var class<DHVehicle>    Vehicle;
 var byte                VehicleTeam;
