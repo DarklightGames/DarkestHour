@@ -329,7 +329,9 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
         !bDeleteMe &&
         !Level.bLevelChange &&
         !bVehicleDestroyed &&
-        !Level.Game.PreventDeath(self, Killer, damageType, HitLocation))
+        !Level.Game.PreventDeath(self, Killer, damageType, HitLocation) &&
+        DamageType != class'Suicided' &&
+        DamageType != class'ROSuicided')
     {
         RoundTime = GRI.ElapsedTime - GRI.RoundStartTime;
         DHG.Metrics.OnVehicleFragged(PlayerController(Killer), self, DamageType, HitLocation, RoundTime);
