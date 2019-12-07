@@ -7,7 +7,7 @@ class DH_ColtM1911Weapon extends DHPistolWeapon;
 
 defaultproperties
 {
-    ItemName="Colt M1911"
+    ItemName="Colt M1911A1"
     FireModeClass(0)=class'DH_Weapons.DH_ColtM1911Fire'
     FireModeClass(1)=class'DH_Weapons.DH_ColtM1911MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_ColtM1911Attachment'

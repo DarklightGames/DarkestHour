@@ -3,11 +3,11 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_ThompsonAmmo extends DHAmmunition;
+class DH_M1928_20rndAmmo extends DHAmmunition;
 
 defaultproperties
 {
-    MaxAmmo=30
-    InitialAmount=30
+    MaxAmmo=20
+    InitialAmount=20
     IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Thompson_ammo'
 }

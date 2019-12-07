@@ -3,20 +3,20 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_ThompsonWeapon extends DHAutoWeapon;
+class DH_M1928_30rndWeapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    ItemName="M1A1 Thompson"
-    FireModeClass(0)=class'DH_Weapons.DH_ThompsonFire'
+    ItemName="M1928 Thompson /30rnd"
+    FireModeClass(0)=class'DH_Weapons.DH_M1928Fire'
     FireModeClass(1)=class'DH_Weapons.DH_ThompsonMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_ThompsonAttachment'
-    PickupClass=class'DH_Weapons.DH_ThompsonPickup'
+    AttachmentClass=class'DH_Weapons.DH_M1928_30rndAttachment'
+    PickupClass=class'DH_Weapons.DH_M1928_30rndPickup'
 
-    Mesh=SkeletalMesh'DH_Thompson_1st.M1A1_Thompson' // TODO: there is no specularity mask for this weapon
+    Mesh=SkeletalMesh'DH_Thompson_1st.M1928_30rnd' // TODO: there is no specularity mask for this weapon
 
     PlayerIronsightFOV=75.0
-    IronSightDisplayFOV=70.0
+    IronSightDisplayFOV=60.0
 
     MaxNumPrimaryMags=9
     InitialNumPrimaryMags=9
