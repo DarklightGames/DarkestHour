@@ -19,7 +19,7 @@ defaultproperties
     bHasTemporarySpawnVehicles=true
 
     bTimeCanChangeAtZeroReinf=false
-    bKeepSpawningWithoutReinf=true
+    bKeepSpawningWithoutReinf=false
     OutOfReinfRoundTime=120
     OutOfReinfLimitForTimeChange=50
 
