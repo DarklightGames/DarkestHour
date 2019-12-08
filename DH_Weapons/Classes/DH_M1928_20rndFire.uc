@@ -3,12 +3,12 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_ThompsonFire extends DHAutomaticFire;
+class DH_M1928_20rndFire extends DHAutomaticFire;
 
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_ThompsonBullet'
-    AmmoClass=class'DH_Weapons.DH_ThompsonAmmo'
+    AmmoClass=class'DH_Weapons.DH_M1928_20rndAmmo'
     FireRate=0.073 // ~800rpm
     Spread=140.0
 

@@ -8,7 +8,7 @@ class DH_M1928_30rndWeapon extends DHAutoWeapon;
 defaultproperties
 {
     ItemName="M1928 Thompson /30rnd"
-    FireModeClass(0)=class'DH_Weapons.DH_M1928Fire'
+    FireModeClass(0)=class'DH_Weapons.DH_M1928_30rndFire'
     FireModeClass(1)=class'DH_Weapons.DH_ThompsonMeleeFire'
     AttachmentClass=class'DH_Weapons.DH_M1928_30rndAttachment'
     PickupClass=class'DH_Weapons.DH_M1928_30rndPickup'
@@ -27,9 +27,13 @@ defaultproperties
 
     bHasSelectFire=true
     SelectFireAnim="fire_select"
-    SelectFireIronAnim="Iron_switch_fire"
+    SelectFireIronAnim="Iron_fire_select"
     PutDownAnim="put_away"
 	
 	MagEmptyReloadAnim="reload_m1a1"
     MagPartialReloadAnim="reload_m1a1"
+	
+	HandNum=1
+    SleeveNum=0
+	HighDetailOverlayIndex=2
 }
