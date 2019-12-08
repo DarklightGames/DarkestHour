@@ -3,10 +3,10 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_ShermanCannonPawn_M4A3E8_Fury extends DH_ShermanCannonPawnA_76mm;
+class DH_ShermanMountedMGPawn_M4A3E8 extends DH_ShermanMountedMGPawn;
 
 defaultproperties
 {
-    GunClass=class'DH_ShermanCannon_M4A3E8_Fury'
+    GunClass=class'DH_ShermanMountedMG_M4A3E8'
 }
 
