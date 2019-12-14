@@ -21,6 +21,8 @@ defaultproperties
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3E8_anm.body_ext',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3E8_anm.body_ext',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
 
+    DrivePos=(X=0,Y=0,Z=0)
+
     LeftTreadIndex=2
     RightTreadIndex=3
 
