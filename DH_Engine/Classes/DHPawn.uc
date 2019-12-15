@@ -6374,7 +6374,7 @@ exec function BogeyMan()
         return;
     }
 
-    if (G.IsAdmin(PC) && class'DHAccessControl'.static.IsDeveloper(PC.ROIDHash))
+    if (G.IsAdmin(PC) || class'DHAccessControl'.static.IsDeveloper(PC.ROIDHash))
     {
         PC.bGodMode = true;
         bHidden = true;
