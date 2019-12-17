@@ -60,6 +60,7 @@ defaultproperties
     HighDetailOverlay=shader'Weapons1st_tex.SMG.PPSH41_S'
     bUseHighDetailOverlayIndex=true
     //HighDetailOverlayIndex=3
+	Skins(0)=Shader'Weapons1st_tex.SMG.MP40_s'
 	handnum=1
 
     IronSightDisplayFOV=60
