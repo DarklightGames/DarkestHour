@@ -1853,7 +1853,7 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
     local RallyPointPlacementResult Result;
     local DHGameReplicationInfo GRI;
     local Pawn OtherPawn;
-    local bool bIsNearSquadmate;
+    local bool bIsNearSquadmate, bIsInFriendlyZone;
     local DHRestrictionVolume RV;
     local DHMineVolume MineVolume;
     local PhysicsVolume PV;
@@ -1889,7 +1889,16 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
     }
 
     // Determine whether or not we are in the danger zone.
-    Result.bIsInDangerZone = class'DHDangerZone'.static.IsIn(GRI, P.Location.X, P.Location.Y, PC.GetTeamNum());
+    bIsInFriendlyZone = class'DHDangerZone'.static.IsIn(GRI, P.Location.X, P.Location.Y, class'UMath'.static.SwapFirstPair(PC.GetTeamNum()));
+
+    if (bIsInFriendlyZone)
+    {
+        Result.bIsInDangerZone = false;
+    }
+    else
+    {
+        Result.bIsInDangerZone = class'DHDangerZone'.static.IsIn(GRI, P.Location.X, P.Location.Y, PC.GetTeamNum());
+    }
 
     // Must be on foot.
     if (P.Physics != PHYS_Walking)
@@ -1949,7 +1958,7 @@ simulated function RallyPointPlacementResult GetRallyPointPlacementResult(DHPlay
         return Result;
     }
 
-    if (Level.NetMode != NM_Standalone)
+    if (Level.NetMode != NM_Standalone && !bIsInFriendlyZone)
     {
         // Must have a teammate nearby.
         // For single-player testing, we can ignore this check.
