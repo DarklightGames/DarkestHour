@@ -361,7 +361,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 
         if (Controller != none && !bRemoteControlled && !bEjectDriver)
         {
-            DHG.Metrics.OnPlayerFragged(PlayerController(Killer), PlayerController(Controller), class'RODiedInTankDamType', HitLocation, 0, RoundTime);
+            DHG.Metrics.OnPlayerFragged(PlayerController(Killer), PlayerController(Controller), DamageType, HitLocation, 0, RoundTime);
         }
     }
 
