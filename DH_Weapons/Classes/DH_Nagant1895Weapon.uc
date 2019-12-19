@@ -16,18 +16,18 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Nagant1895_1st.Nagant1895'
 
     bUseHighDetailOverlayIndex=false
-	Skins(0)=Texture'DH_Nagant1895_tex.Nagant1895.Nagant1895'
-	Skins(1)=Texture'Weapons1st_tex.Arms.hands'
-	sleevenum=2
+    Skins(0)=Texture'DH_Nagant1895_tex.Nagant1895.Nagant1895'
+    Skins(1)=Texture'Weapons1st_tex.Arms.hands'
+    sleevenum=2
 
     IronSightDisplayFOV=65.0
 
-    InitialNumPrimaryMags=10 
+    InitialNumPrimaryMags=10
     MaxNumPrimaryMags=10
 
-	SwayModifyFactor=1.4 //very hard double action trigger
-	 
-	InventoryGroup=3
+    SwayModifyFactor=1.4 //very hard double action trigger
+
+    InventoryGroup=3
     Priority=5
     FreeAimRotationSpeed=8.0
     AIRating=0.35
@@ -35,4 +35,5 @@ defaultproperties
     bSniping=false
     bUsesIronsightFOV=false
 
+    bShouldSkipBolt=true
 }

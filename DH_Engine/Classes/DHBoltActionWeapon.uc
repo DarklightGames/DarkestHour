@@ -33,6 +33,8 @@ var     name            FullReloadAnim;     // full reload animation (takes prec
 
 var     int             NumRoundsToLoad;    // how many rounds to be loaded to fill the weapon
 
+var     bool            bShouldSkipBolt;
+
 // TODO: for refactoring this, when we try to do a reload,
 // check if the magazine is empty enough for a full stripper clip to be
 // reloaded. if so, do the full stripper clip (N times if need be, unless cancelled!)
@@ -50,7 +52,7 @@ replication
 // Modified to work the bolt when fire is pressed, if weapon is waiting to bolt
 simulated function Fire(float F)
 {
-    if (bWaitingToBolt && !IsBusy())
+    if (!bShouldSkipBolt && bWaitingToBolt && !IsBusy())
     {
         WorkBolt();
     }
