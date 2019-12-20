@@ -109,41 +109,7 @@ simulated function ProcessTouch(Actor Other, vector HitLocation)
     HitWall(HitNormal, Other);
 }
 
-// From DHThrowableExplosiveProjectile, modified so when projectile lands without having detonated it becomes a pickup
-// Also to adjust rotation on ground to compensate for static mesh being modelled facing forwards instead of up (required due to nature of this grenade's flight)
-// Also to remove 'Fear' stuff, as grenade does not explode after landing (if fails to detonate on impact)
-// Makes use of inherited NumDeflections variable as replacement for grenade's Bounces (works in reverse, counting up to 5 instead of down from 5)
-simulated function Landed(vector HitNormal)
-{
-    local rotator NewRotation;
-    local WeaponPickup P;
 
-    if (NumDeflections > 5)
-    {
-        if (Role == ROLE_Authority)
-        {
-            bOrientToVelocity = false; // disable this after grenade lands as it will have no velocity & we want to preserve its rotation on the ground
-            SetPhysics(PHYS_None);
-            NewRotation = QuatToRotator(QuatProduct(QuatFromRotator(rotator(HitNormal)), QuatFromAxisAndAngle(HitNormal, class'UUnits'.static.UnrealToRadians(Rotation.Yaw))));
-            NewRotation.Pitch -= 16384; // somewhat hacky fix for static mesh rotation
-            SetRotation(NewRotation);
-
-            P = Spawn(default.PickupClass,,, Location + vect(0.0, 0.0, 2.0), Rotation);
-
-            if (P != none)
-            {
-                P.InitDroppedPickupFor(none);
-                P.AmmoAmount[0] = 1;
-            }
-        }
-
-        Destroy();
-    }
-    else
-    {
-        HitWall(HitNormal, none);
-    }
-}
 
 // Based on DHCannonShellHEAT with elements from DHGrenadeProjectile
 // Modified to handle possible explosion on impact, depending on impact speed
@@ -498,9 +464,9 @@ simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 defaultproperties
 {
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.RPG43Grenade_throw' // TODO: add trailing 'mini chute' to thrown static mesh
-    Speed=900.0
+    Speed=900.0  //slightly reduced from 1100 as it was heavy grenade
     bOrientToVelocity=true // so grenade doesn't spin & faces the way it's travelling, as was stablised by trailing crude 'minute chute'
-    LifeSpan=15.0          // used in case the grenade fails to detonate on impact (will lie around for a bit for effect, then disappear)
+    LifeSpan=10.0          // used in case the grenade fails to detonate on impact (will lie around for a bit for effect, then disappear)
     bExplodesOnHittingWater=false
     bHasTracer=false
 
@@ -520,8 +486,8 @@ defaultproperties
 
     // Damage
     ImpactDamage=200
-    Damage=180.0
-    DamageRadius=180.0
+    Damage=500.0  //significantly increased as grenade was powerful, 600-650 gramms of TNT
+    DamageRadius=500.0  //a little bit less then potato masher, mostly for gameplay purposes but also because it didnt have anti-personnel fragmentation designed
     ShellImpactDamage=class'DH_Weapons.DH_RPG43GrenadeImpactDamType'
     MyDamageType=class'DH_Weapons.DH_RPG43GrenadeDamType'
 
@@ -551,7 +517,7 @@ defaultproperties
     // Properties from usual grenade parent classes (DHGrenadeProjectile & DHThrowableExplosiveProjectile)
     Physics=PHYS_Falling
     bBounce=true
-    MaxSpeed=1500.0
+    MaxSpeed=1500.0 
     TossZ=150.0
     DampenFactor=0.05
     DampenFactorParallel=0.8
@@ -588,8 +554,8 @@ defaultproperties
     ForceType=FT_None
 
     // RPG-43 specific variables
-    MaxImpactAOIToExplode=45.0
-    MinImpactSpeedToExplode=450.0
+    MaxImpactAOIToExplode=70.0
+    MinImpactSpeedToExplode=100.0
     MaxVerticalAOIForTopArmor=33.0
     PickupClass=class'DH_Weapons.DH_RPG43GrenadePickup'
 }
