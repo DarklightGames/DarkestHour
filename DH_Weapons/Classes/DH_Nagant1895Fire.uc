@@ -8,7 +8,7 @@ class DH_Nagant1895Fire extends DHPistolFire;
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_Nagant1895Bullet'
-    AmmoClass=class'ROAmmo.TT33Ammo'
+    AmmoClass=class'DH_Weapons.DH_Nagant1895Ammo'
     FireRate=0.3
 
     Spread=220

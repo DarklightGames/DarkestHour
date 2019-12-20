@@ -13,13 +13,29 @@ defaultproperties //this should probably be significantly modified due to differ
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'
     bRapidFire=false
 
-    WA_Idle="idle_tt33"
-    WA_IdleEmpty="empty_tt33"
-    WA_Fire="shoot_tt33"
-    WA_Reload="reloadhalf_tt33"
-    WA_ReloadEmpty="reloadempty_tt33"
-    WA_ProneReload="prone_reloadhalf_tt33"
-    WA_ProneReloadEmpty="prone_reloadempty_tt33"
+    WA_Idle="idle_p38"
+    WA_IdleEmpty="empty_p38"
+    WA_Fire="shoot_p38"
+    
+   
+   
+	WA_Reload="idle_p38"
+    WA_ProneReload="idle_p38"
+    WA_ReloadEmpty="idle_p38"
+    WA_ProneReloadEmpty="idle_p38"
+    WA_PostReload="idle_p38"
+	
+	PA_ReloadAnim="idle_p38"
+    PA_ReloadEmptyAnim="idle_p38"
+    PA_ProneReloadAnim="prone_idle_pistol"
+    PA_ProneReloadEmptyAnim="prone_idle_pistol"
+    PA_PreReloadAnim="reloadhalf_p38"
+    PA_PostReloadAnim="idle_p38"
+    PA_PronePreReloadAnim="prone_idle_pistol"
+    PA_PronePostReloadAnim="prone_idle_pistol"
+	
+	
+   
 
     PA_MovementAnims(0)="stand_jogF_pistol"
     PA_MovementAnims(1)="stand_jogB_pistol"
@@ -151,10 +167,9 @@ defaultproperties //this should probably be significantly modified due to differ
     PA_MoveWalkFire(5)="stand_shootFRwalk_pistol"
     PA_MoveWalkFire(6)="stand_shootFRwalk_pistol"
     PA_MoveWalkFire(7)="stand_shootFLwalk_pistol"
-    PA_ReloadAnim="stand_reloadhalf_tt33"
-    PA_ProneReloadAnim="prone_reloadhalf_tt33"
-    PA_ReloadEmptyAnim="stand_reloadempty_tt33"
-    PA_ProneReloadEmptyAnim="prone_reloadempty_tt33"
+
+
+
     PA_AltFire="stand_idlestrike_kar"
     PA_CrouchAltFire="stand_idlestrike_kar"
     PA_ProneAltFire="prone_idlestrike_bayo"
