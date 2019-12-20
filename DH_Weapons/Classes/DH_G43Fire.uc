@@ -11,8 +11,8 @@ defaultproperties
     AmmoClass=class'ROAmmo.G43Ammo'
     Spread=70.0
     MaxVerticalRecoilAngle=840
-    MaxHorizontalRecoilAngle=300
-	FireRate=0.22
+    MaxHorizontalRecoilAngle=280
+	FireRate=0.215
 	
     FireSounds(0)=Sound'DH_WeaponSounds.g43.newg43fire'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
