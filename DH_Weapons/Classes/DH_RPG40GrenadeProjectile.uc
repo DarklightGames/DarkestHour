@@ -3,9 +3,10 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_RPG43GrenadeProjectile extends DHCannonShellHEAT;
-// Obviously not a cannon shell but it is a HEAT explosive & by extending this we can make use of HEAT functionality & DH armour penetration calculations
+class DH_RPG40GrenadeProjectile extends DHCannonShellHEAT;
 
+//this entire code is a placeholder, right now its basically a very weak RPG-43 that doesnt penetrate anything anyhow unless its a light armor
+//dont put this on any maps or role loadouts untill its implemented properly
 //TO DO: implement proper mechanic for penetration of top armor. Currently it thinks its top armor hit if grenade falls vertically downwards, which isnt really a good assumption at all.
 //A much better method would be looking at the angle of the armor, if armor is horizontal or close to horizontal - consider it to be top armor
 //If this new method gets implemented it should be used for RPG-40, RPG-43, other similar weapons and may be even satchels
@@ -469,7 +470,7 @@ simulated function PhysicsVolumeChange(PhysicsVolume NewVolume)
 defaultproperties
 {
     StaticMesh=StaticMesh'DH_WeaponPickups.Ammo.RPG43Grenade_throw' // TODO: add trailing 'mini chute' to thrown static mesh
-    Speed=800.0  // reduced from 1100 as it was heavy grenade
+    Speed=700.0  // reduced from 1100 as it was heavy grenade
     bOrientToVelocity=true // so grenade doesn't spin & faces the way it's travelling, as was stablised by trailing crude 'minute chute'
     LifeSpan=10.0          // used in case the grenade fails to detonate on impact (will lie around for a bit for effect, then disappear)
     bExplodesOnHittingWater=false
@@ -477,22 +478,22 @@ defaultproperties
 
     // Armour penetration
     ShellDiameter=9.5
-    DHPenetrationTable(0)=7.5
-    DHPenetrationTable(1)=7.5
-    DHPenetrationTable(2)=7.5
-    DHPenetrationTable(3)=7.5
-    DHPenetrationTable(4)=7.5
-    DHPenetrationTable(5)=7.5
-    DHPenetrationTable(6)=7.5
-    DHPenetrationTable(7)=7.5
-    DHPenetrationTable(8)=7.5
-    DHPenetrationTable(9)=7.5
-    DHPenetrationTable(10)=7.5
+    DHPenetrationTable(0)=2.7
+    DHPenetrationTable(1)=2.7
+    DHPenetrationTable(2)=2.7
+    DHPenetrationTable(3)=2.7
+    DHPenetrationTable(4)=2.7
+    DHPenetrationTable(5)=2.7
+    DHPenetrationTable(6)=2.7
+    DHPenetrationTable(7)=2.7
+    DHPenetrationTable(8)=2.7
+    DHPenetrationTable(9)=2.7
+    DHPenetrationTable(10)=2.7
 
     // Damage
-    ImpactDamage=200
-    Damage=500.0  //significantly increased as grenade was powerful, 600-650 gramms of TNT
-    DamageRadius=500.0  //a little bit less then potato masher, mostly for gameplay purposes but also because it didnt have anti-personnel fragmentation designed
+    ImpactDamage=400
+    Damage=760.0  //760 gramms of TNT
+    DamageRadius=700.0  //should make this weapon tricky to use, throw from as far as you can or throw from cover
     ShellImpactDamage=class'DH_Weapons.DH_RPG43GrenadeImpactDamType'
     MyDamageType=class'DH_Weapons.DH_RPG43GrenadeDamType'
 
@@ -559,8 +560,8 @@ defaultproperties
     ForceType=FT_None
 
     // RPG-43 specific variables
-    MaxImpactAOIToExplode=70.0
-    MinImpactSpeedToExplode=1.0
+    MaxImpactAOIToExplode=82.0
+    MinImpactSpeedToExplode=0.0
     MaxVerticalAOIForTopArmor=33.0
-    PickupClass=class'DH_Weapons.DH_RPG43GrenadePickup'
+    PickupClass=class'DH_Weapons.DH_RPG40GrenadePickup'
 }
