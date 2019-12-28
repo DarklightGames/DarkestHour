@@ -6,47 +6,42 @@
 class DHCannonShellSmokeWP extends DHCannonShellSmoke
     abstract;
 
-var int   GasDamage;
-var float   GasRadius; //
-var class   <damagetype>    GasDamageClass;
-var float   GasEffectDuration;
+var int                    GasDamage;
+var float                  GasRadius;
+var class<Damagetype>      GasDamageClass;
+var float                  GasEffectDuration;
 
 // Modified to add gas damage
 simulated function Explode(vector HitLocation, vector HitNormal)
 {
-        super.Explode(HitLocation, HitNormal);
+    super.Explode(HitLocation, HitNormal);
 
-    gotostate('ReleasingGas');
+    GotoState('ReleasingGas');
 }
 
 state ReleasingGas
 {
-   function ProcessTouch(actor other,vector hitlocation)
-   {}
-   function BlowUp(vector hitlocation)
-   {}
-   function Explode(vector hitlocation,vector hitnormal)
-   {}
-   function Timer()
-   {
-      HurtRadius(GasDamage,GasRadius,GasDamageClass,0,location);
-      settimer(2.0,false);
-   }
-   //function TakeDamage(Damage, FireStarter, Location, vect(0.0, 0.0, 0.0), GasDamageClass);
-   //{}
+    function ProcessTouch(Actor Other,vector HitLocation) {}
+    function BlowUp(vector HitLocation) {}
+    function Explode(vector HitLocation, vector HitNormal) {}
 
-    begin:
-    settimer(0.5,false);
-    sleep(GasEffectDuration);
-    destroy();
+    function Timer()
+    {
+        HurtRadius(GasDamage, GasRadius, GasDamageClass, 0, Location);
+        SetTimer(2.0, false);
+    }
+
+Begin:
+    SetTimer(0.5, false);
+    Sleep(GasEffectDuration);
+    Destroy();
 }
 
 // Modified so actor is torn off & then destroyed on server, but persists for its LifeSpan on clients to play the smoke sound
 simulated function HandleDestruction()
 {
     bCollided = true;
-
-    bTearOff = true; // stops any further replication, but client copies of actor persist to play the smoke sound
+    bTearOff = true; // Stops any further replication, but client copies of actor persist to play the smoke sound
 
     if (Level.NetMode == NM_DedicatedServer)
     {
@@ -60,7 +55,6 @@ simulated function HandleDestruction()
     SetCollision(false, false);
     bCollideWorld = false;
 }
-
 
 defaultproperties
 {

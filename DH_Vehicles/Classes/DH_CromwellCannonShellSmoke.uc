@@ -36,6 +36,4 @@ defaultproperties
     DHPenetrationTable(4)=0.1
     ShellDiameter=7.5
     BallisticCoefficient=1.686
-
-
 }
