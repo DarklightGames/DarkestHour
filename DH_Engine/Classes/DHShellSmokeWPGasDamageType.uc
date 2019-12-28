@@ -23,6 +23,7 @@ defaultproperties
     bCausesBlood=false
 
     TankDamageModifier=0.0
+    VehicleDamageScaling=0.0
     VehicleMomentumScaling=1.0
     KDamageImpulse=1000.0
     KDeathVel=150.0

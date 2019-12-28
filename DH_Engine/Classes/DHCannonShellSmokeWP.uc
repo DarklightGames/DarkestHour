@@ -8,52 +8,26 @@ class DHCannonShellSmokeWP extends DHCannonShellSmoke
 
 var int                    GasDamage;
 var float                  GasRadius;
-var class<Damagetype>      GasDamageClass;
+var class<DamageType>      GasDamageClass;
 var float                  GasEffectDuration;
-
-// Modified to add gas damage
-simulated function Explode(vector HitLocation, vector HitNormal)
-{
-    super.Explode(HitLocation, HitNormal);
-
-    GotoState('ReleasingGas');
-}
-
-state ReleasingGas
-{
-    function ProcessTouch(Actor Other,vector HitLocation) {}
-    function BlowUp(vector HitLocation) {}
-    function Explode(vector HitLocation, vector HitNormal) {}
-
-    function Timer()
-    {
-        HurtRadius(GasDamage, GasRadius, GasDamageClass, 0, Location);
-        SetTimer(2.0, false);
-    }
-
-Begin:
-    SetTimer(0.5, false);
-    Sleep(GasEffectDuration);
-    Destroy();
-}
 
 // Modified so actor is torn off & then destroyed on server, but persists for its LifeSpan on clients to play the smoke sound
 simulated function HandleDestruction()
 {
-    bCollided = true;
-    bTearOff = true; // Stops any further replication, but client copies of actor persist to play the smoke sound
+    local DHHurtRadius HurtRadius;
 
-    if (Level.NetMode == NM_DedicatedServer)
-    {
-        LifeSpan = 1.0; // on a server this actor will be destroyed in 1 second, allowing time for bTearOff to replicate to clients
-    }
-    else
-    {
-        LifeSpan = GasEffectDuration; // gas effect will stick around as long as the actor is active
-    }
+    super.HandleDestruction();
 
-    SetCollision(false, false);
-    bCollideWorld = false;
+    if (Role == ROLE_Authority)
+    {
+        // Spawn a hurt radius actor.
+        HurtRadius = Spawn(class'DHHurtRadius',,, Location);
+        HurtRadius.DamageAmount = GasDamage;
+        HurtRadius.DamageRadius = GasRadius;
+        HurtRadius.LifeSpan = GasEffectDuration;
+        HurtRadius.DamageType = GasDamageClass;
+        HurtRadius.SetDamageTimerRate(2.0);
+    }
 }
 
 defaultproperties
@@ -89,7 +63,7 @@ defaultproperties
     WoodHitSound=SoundGroup'ProjectileSounds.cannon_rounds.OUT_HE_explode04'
 
     //Damage Chances - Upon penetration
-    HullFireChance=0.65// defaults here - customize per shell class
+    HullFireChance=0.65 // defaults here - customize per shell class
     EngineFireChance=0.90 // defaults here - customize per shell class
 
     GasEffectDuration=50.0
@@ -98,6 +72,6 @@ defaultproperties
     DamageRadius=480.0
     MyDamageType=class'DH_Engine.DHShellSmokeWPDamageType' // new dam type that sets nearby players on fire upon "explosion"
     GasDamageClass=class'DH_Engine.DHShellSmokeWPGasDamageType'
-    GasDamage=60.0
+    GasDamage=10.0
     GasRadius=800.0
 }
