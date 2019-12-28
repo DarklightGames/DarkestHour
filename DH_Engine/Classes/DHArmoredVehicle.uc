@@ -1617,8 +1617,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
         //A chance that a non-penetrating WP shell impact sets the engine on fire
         if (WepDamageType == class'DHShellSmokeWPDamageType' && bVehicleHit)
         {
-
-            if (FRand() < (EngineFirePercent**0.15))
+            if (FRand() < (EngineFirePercent * 0.15))
             {
                 StartEngineFire(InstigatedBy);
             }
