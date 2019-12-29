@@ -59,7 +59,7 @@ defaultproperties
     VehHitpoints(3)=(PointRadius=15.0,PointHeight=20.0,PointScale=1.0,PointBone="body",PointOffset=(X=-30.0,Y=25.0,Z=10.0),DamageMultiplier=5.0,HitPointType=HP_AmmoStore)
     TreadHitMaxHeight=14.0
     DamagedEffectScale=0.9
-    DamagedEffectOffset=(X=-110.0,Y=0.0,Z=95.0)
+    DamagedEffectOffset=(X=-110.0,Y=0.0,Z=60.0)
     DestroyedVehicleMesh=StaticMesh'DH_German_vehicles_stc.Panzer4H.Panzer4H_NoSkirts_Destroyed'
     DestroyedMeshSkins(0)=combiner'DH_VehiclesGE_tex.Destroyed.PanzerIV_body_dest'
     DestroyedMeshSkins(2)=combiner'DH_VehiclesGE_tex.Destroyed.PanzerIV_armor_dest'

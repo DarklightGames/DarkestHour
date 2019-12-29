@@ -8,7 +8,7 @@ class DH_PPSh41_stickAttachment extends DHHighROFWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.PPSH_stick_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.ppsh_stick'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.ppsh41_stick_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'
 

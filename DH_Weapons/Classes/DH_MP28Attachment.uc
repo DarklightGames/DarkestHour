@@ -8,7 +8,7 @@ class DH_MP28Attachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_CC_anm.mp28_world'
-    MenuImage=Texture'InterfaceArt_tex.Menu_weapons.mp40'  //PLACEHOLDER
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.mp28_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdMP'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
 

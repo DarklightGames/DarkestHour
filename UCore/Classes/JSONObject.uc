@@ -30,6 +30,11 @@ function JSONValue Get(string Key)
 
 function JSONObject Put(string Key, JSONValue Value)
 {
+    if (Value == none)
+    {
+        return PutNull(Key);
+    }
+
     if (Map == none)
     {
         Map = new class'TreeMap_string_JSONValue';

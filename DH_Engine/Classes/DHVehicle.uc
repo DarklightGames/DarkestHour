@@ -78,6 +78,8 @@ var     float       SpawnProtEnds;               // is set when a player spawns 
 var     float       SpawnKillTimeEnds;           // is set when a player spawns the vehicle for spawn kill protection in DarkestHour spawn type maps
 var     array<int>  TrackHealth[2];              // Amount of health each track has remaining
 var     float       SatchelResistance;           // 1.0 default (0.5 means less resistance to satchels)
+var class<DamageType> LastHitByDamageType;       // Stores the last damage type this vehicle was hit by.
+                                                 // Unlike `HitDamageType`, this variable is not replicated.
 
 // Engine
 var     bool        bEngineOff;                  // vehicle engine is simply switched off
@@ -307,6 +309,28 @@ simulated function Destroyed()
 
 function StartEngineFire(Pawn InstigatedBy);
 
+function KilledBy(Pawn EventInstigator)
+{
+    local Controller Killer;
+    local class<DamageType> DT;
+
+    if (EventInstigator != None)
+    {
+        Killer = EventInstigator.Controller;
+    }
+
+    if (LastHitByDamageType == none || EventInstigator == self)
+    {
+        DT = class'Suicided';
+    }
+    else
+    {
+        DT = LastHitByDamageType;
+    }
+
+    Died(Killer, DT, Location);
+}
+
 // Modified to score the vehicle kill, & to subtract the vehicle's reinforcement cost for the loss
 function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
 {
@@ -329,14 +353,15 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
         !bDeleteMe &&
         !Level.bLevelChange &&
         !bVehicleDestroyed &&
-        !Level.Game.PreventDeath(self, Killer, damageType, HitLocation))
+        !Level.Game.PreventDeath(self, Killer, damageType, HitLocation) &&
+        DamageType != class'Suicided')
     {
         RoundTime = GRI.ElapsedTime - GRI.RoundStartTime;
         DHG.Metrics.OnVehicleFragged(PlayerController(Killer), self, DamageType, HitLocation, RoundTime);
 
         if (Controller != none && !bRemoteControlled && !bEjectDriver)
         {
-            DHG.Metrics.OnPlayerFragged(PlayerController(Killer), PlayerController(Controller), class'RODiedInTankDamType', HitLocation, 0, RoundTime);
+            DHG.Metrics.OnPlayerFragged(PlayerController(Killer), PlayerController(Controller), DamageType, HitLocation, 0, RoundTime);
         }
     }
 
@@ -2093,6 +2118,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     if (InstigatedBy != none && InstigatedBy != self)
     {
         LastHitBy = InstigatedBy.Controller;
+        LastHitByDamageType = DamageType;
     }
 
     if (bDebuggingText)

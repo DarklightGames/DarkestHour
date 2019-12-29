@@ -8,7 +8,7 @@ class DH_Nagant1895Attachment extends DHWeaponAttachment;
 defaultproperties //this should probably be significantly modified due to different weapon class
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.nagant1895_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.nagant1895'
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.m1895_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject762x25mm'
     bRapidFire=false
