@@ -60,8 +60,8 @@ defaultproperties
     HighDetailOverlay=shader'Weapons1st_tex.SMG.PPSH41_S'
     bUseHighDetailOverlayIndex=true
     //HighDetailOverlayIndex=3
-	Skins(0)=Shader'Weapons1st_tex.SMG.MP40_s'
-	handnum=1
+    Skins(0)=Shader'Weapons1st_tex.SMG.MP40_s'
+    handnum=1
 
     IronSightDisplayFOV=60
 
@@ -84,7 +84,7 @@ defaultproperties
 
     SelectEmptyAnim="draw_empty"
     PutDownEmptyAnim="put_away_empty"
-	
-	MagEmptyReloadAnim="reload_empty_mp41r"
+
+    MagEmptyReloadAnim="reload_empty_mp41r"
     MagPartialReloadAnim="reload_half_mp41r"
 }

@@ -20,9 +20,9 @@ defaultproperties
     RecoilFallOffFactor=14.0
 
     FlashEmitterClass=class'ROEffects.MuzzleFlash1stMP'
-    FireSounds(0)=SoundGroup'MNInfantryWeapons_sound.Sten.StenFire01'
-    FireSounds(1)=SoundGroup'MNInfantryWeapons_sound.Sten.StenFire02'
-    FireSounds(2)=SoundGroup'MNInfantryWeapons_sound.Sten.StenFire03'
+    FireSounds(0)=SoundGroup'DH_MN_InfantryWeapons_sound.Sten.StenFire01'
+    FireSounds(1)=SoundGroup'DH_MN_InfantryWeapons_sound.Sten.StenFire02'
+    FireSounds(2)=SoundGroup'DH_MN_InfantryWeapons_sound.Sten.StenFire03'
     NoAmmoSound=Sound'Inf_Weapons_Foley.Misc.dryfire_smg'
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
 }

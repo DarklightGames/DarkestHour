@@ -5,6 +5,8 @@
 
 class DH_Nagant1895Weapon extends DHBoltActionWeapon;
 
+
+
 defaultproperties
 {
     ItemName="Nagant 1895 revolver"
@@ -17,7 +19,7 @@ defaultproperties
 
     bUseHighDetailOverlayIndex=false
     Skins(0)=Texture'DH_Nagant1895_tex.Nagant1895.Nagant1895'
-    Skins(1)=Texture'Weapons1st_tex.Arms.hands'
+    handnum=1
     sleevenum=2
 
     IronSightDisplayFOV=65.0
@@ -25,7 +27,12 @@ defaultproperties
     InitialNumPrimaryMags=10
     MaxNumPrimaryMags=10
 
-    SwayModifyFactor=1.4 //very hard double action trigger
+    SwayModifyFactor=2.0	//very hard double action trigger
+	
+	PreReloadAnim="single_open"
+
+    SingleReloadAnim="single_insert"
+    PostReloadAnim="single_close"
 
     InventoryGroup=3
     Priority=5
@@ -36,4 +43,7 @@ defaultproperties
     bUsesIronsightFOV=false
 
     bShouldSkipBolt=true
+	
+	
 }
+
