@@ -5499,7 +5499,7 @@ defaultproperties
     SurrenderCooldownSeconds=300
     SurrenderEndRoundDelaySeconds=15
     SurrenderRoundTimeRequiredSeconds=900
-    SurrenderReinforcementsRequiredPercent=0.50
+    SurrenderReinforcementsRequiredPercent=0.80
     SurrenderNominationsThresholdPercent=0.15
-    SurrenderVotesThresholdPercent=0.5
+    SurrenderVotesThresholdPercent=0.4
 }
