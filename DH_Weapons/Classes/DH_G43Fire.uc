@@ -14,7 +14,9 @@ defaultproperties
     MaxHorizontalRecoilAngle=280
 	FireRate=0.2
 	
-    FireSounds(0)=Sound'DH_WeaponSounds.g43.newg43fire'
+    FireSounds(0)=SoundGroup'DH_old_inf_Weapons.g43.g43shot1'
+	FireSounds(1)=SoundGroup'DH_old_inf_Weapons.g43.g43shot2'
+    FireSounds(2)=SoundGroup'DH_old_inf_Weapons.g43.g43shot3'
     ShellEjectClass=class'ROAmmo.ShellEject1st762x54mm'
     ShellRotOffsetHip=(Pitch=-3000,Yaw=-3000)
 }
