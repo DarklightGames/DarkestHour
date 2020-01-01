@@ -23,6 +23,8 @@ defaultproperties
 	Skins(0)=Texture'DH_c96_tex.c96.c96'
     handnum=2
     sleevenum=1
+	
+    SwayModifyFactor=1.4 //+0.3 as it was rather awkward to hold
 
     DisplayFOV=75.0
     IronSightDisplayFOV=70

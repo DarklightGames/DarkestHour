@@ -13,7 +13,7 @@ defaultproperties
 	FireSounds(1)=SoundGroup'DH_old_inf_weapons.C96.c96_shot2'
 
     Spread=200.0
-    MaxVerticalRecoilAngle=770
+    MaxVerticalRecoilAngle=870
     MaxHorizontalRecoilAngle=350
 
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
