@@ -9,5 +9,5 @@ defaultproperties
 {
     MaxAmmo=50
     InitialAmount=50
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Thompson_ammo'  //change
+    IconMaterial=Material'InterfaceArt_tex.HUD.ppsh_ammo'
 }
