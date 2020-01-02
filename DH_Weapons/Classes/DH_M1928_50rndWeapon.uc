@@ -13,7 +13,7 @@ defaultproperties
     AttachmentClass=class'DH_Weapons.DH_M1928_50rndAttachment'
     PickupClass=class'DH_Weapons.DH_M1928_50rndPickup'
 
-    Mesh=SkeletalMesh'DH_Thompson_1st.M1928_50rnd' 
+    Mesh=SkeletalMesh'DH_Thompson_1st.M1928_50rnd'
 
     PlayerIronsightFOV=75.0
     IronSightDisplayFOV=60.0
@@ -29,15 +29,15 @@ defaultproperties
     SelectFireAnim="fire_select"
     SelectFireIronAnim="Iron_fire_select"
     PutDownAnim="put_away"
-	
-	MagEmptyReloadAnim="reload_empty"
+
+    MagEmptyReloadAnim="reload_empty"
     MagPartialReloadAnim="reload_half"
-	
-	HandNum=1
+
+    HandNum=1
     SleeveNum=0
-	HighDetailOverlayIndex=2
-	
-	 bPlusOneLoading=false
+    HighDetailOverlayIndex=2
+
+    bPlusOneLoading=false
 
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="Iron_idle_empty"
