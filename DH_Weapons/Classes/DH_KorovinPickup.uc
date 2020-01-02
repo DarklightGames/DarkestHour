@@ -3,13 +3,10 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_C96Ammo extends DHAmmunition;
+class DH_KorovinPickup extends DHWeaponPickup;
 
 defaultproperties
-
-//supposed to work like g41 with half reload, so one visual stripper clip works like 2
 {
-    MaxAmmo=10
-    InitialAmount=5
-    IconMaterial=Texture'DH_InterfaceArt_CC_tex.HUD.steyr_ammo'
+    InventoryType=class'DH_Weapons.DH_KorovinWeapon'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.Korovin'
 }

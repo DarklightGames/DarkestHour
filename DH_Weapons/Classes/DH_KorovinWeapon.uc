@@ -3,30 +3,28 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_PPS43Weapon extends DHFastAutoWeapon;
+class DH_KorovinWeapon extends DHFastAutoWeapon;
 
 defaultproperties
 {
-    ItemName="PPS-43"
-    SwayModifyFactor=0.65 // -0.15 because its a light SMG
-    FireModeClass(0)=class'DH_Weapons.DH_PPS43Fire'
-    FireModeClass(1)=class'DH_Weapons.DH_PPS43MeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_PPS43Attachment'
-    PickupClass=class'DH_Weapons.DH_PPS43Pickup'
+    ItemName="Korovin 1941"
+    SwayModifyFactor=0.67 // -0.13 because its a light SMG
+    FireModeClass(0)=class'DH_Weapons.dh_korovinFire'
+    FireModeClass(1)=class'DH_Weapons.dh_korovinMeleeFire'
+    AttachmentClass=class'DH_Weapons.dh_korovinAttachment'
+    PickupClass=class'DH_Weapons.dh_korovinPickup'
 
-    Mesh=SkeletalMesh'DH_Pps43_1st.PPS-43-Meshnew'
-    HighDetailOverlay=shader'Weapons1st_tex.SMG.PPS43_S'
-    bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=2
+    Mesh=SkeletalMesh'DH_korovin_1st.korovin_mesh'
+
+    bUseHighDetailOverlayIndex=false
+	HandNum=0
+    SleeveNum=3
+	HighDetailOverlayIndex=2
 
     IronSightDisplayFOV=50.0
 
-    MaxNumPrimaryMags=10
-    InitialNumPrimaryMags=10
-	
-    InitialBarrels=1
-    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
-    BarrelSteamBone="Muzzle"
+    MaxNumPrimaryMags=7
+    InitialNumPrimaryMags=7
 
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"

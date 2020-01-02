@@ -3,13 +3,13 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_C96Ammo extends DHAmmunition;
+class DH_korovinBullet extends DHBullet;
 
 defaultproperties
-
-//supposed to work like g41 with half reload, so one visual stripper clip works like 2
 {
-    MaxAmmo=10
-    InitialAmount=5
-    IconMaterial=Texture'DH_InterfaceArt_CC_tex.HUD.steyr_ammo'
+    Speed=24000.0
+    BallisticCoefficient=0.15
+    WhizType=2
+    Damage=55.0
+    MyDamageType=class'DH_Weapons.DH_korovinDamType'
 }

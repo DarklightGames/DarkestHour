@@ -77,6 +77,10 @@ defaultproperties
     SprintStartEmptyAnim="sprint_start_empty"
     SprintLoopEmptyAnim="sprint_middle_empty"
     SprintEndEmptyAnim="sprint_end_empty"
+	
+	InitialBarrels=1
+    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelSteamBone="Muzzle"
 
     CrawlForwardEmptyAnim="crawlF_empty"
     CrawlBackwardEmptyAnim="crawlB_empty"
