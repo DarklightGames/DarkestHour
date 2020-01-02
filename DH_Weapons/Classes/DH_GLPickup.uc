@@ -8,6 +8,5 @@ class DH_GLPickup extends DH_SatchelCharge10lb10sPickup;
 defaultproperties
 {
     InventoryType=class'DH_Weapons.DH_GLWeapon'
-	
-    StaticMesh=StaticMesh'DH_CCWeaponPickupSM.Projectile.gl_pickup'
+    //StaticMesh=StaticMesh'DH_CCWeaponPickupSM.Projectile.gl_pickup'
 }
