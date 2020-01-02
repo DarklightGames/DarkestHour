@@ -45,10 +45,10 @@ defaultproperties
 
     bUseHighDetailOverlayIndex=false
 	
-	Skins(3)=Texture'DH_ViS_tex.ViS.ViS_texture'
+	Skins(1)=Texture'DH_ViS_tex.ViS.ViS_texture'
 	Skins(2)=Texture'Weapons1st_tex.Pistols.p38'
-	sleevenum=0
-	handnum=1
+	sleevenum=4
+	handnum=0
 	
 	FirstSelectAnim=draw2
 
