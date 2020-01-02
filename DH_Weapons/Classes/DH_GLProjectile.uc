@@ -8,7 +8,7 @@ class DH_GLProjectile extends DH_SatchelCharge10lb10sProjectile;
 defaultproperties
 {
     MyDamageType=class'DH_Weapons.DH_GLDamType'
-    //StaticMesh=StaticMesh'DH_CCWeaponPickupSM.Projectile.GL_pickup'
+    StaticMesh=StaticMesh'DH_WeaponPickups.Weapons.GL_pickup'
 
     Damage=1260.0 // 1260 gramms TNT +some fragmentation, since its a bundle of potato mashers
     DamageRadius=1200 // about 21 meters, a lot because its powerful and its made from hand grenades with some fragmentation
