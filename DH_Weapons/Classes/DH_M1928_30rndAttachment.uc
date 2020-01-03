@@ -8,7 +8,7 @@ class DH_M1928_30rndAttachment extends DHWeaponAttachment;
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_Weapons3rd_anm.M1928_30rnd_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Thompson_icon' //PLACEHOLDER needs its own icon from mare nostrum (with 30rnd magazine)
+    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.m1928_30rnd_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPPSH'
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
     MuzzleBoneName="Muzzle"
