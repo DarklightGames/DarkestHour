@@ -16,12 +16,12 @@ defaultproperties
     Mesh=SkeletalMesh'DH_EnfieldNo2_1st.EnfieldNo2'
     HighDetailOverlay=Shader'DH_EnfieldNo2_tex.EnfieldNo2.EnfieldNo2S'
     bUseHighDetailOverlayIndex=true
-    HighDetailOverlayIndex=1
+    HighDetailOverlayIndex=2
 
     IronSightDisplayFOV=70.0
 
-    MaxNumPrimaryMags=10
-    InitialNumPrimaryMags=10
+    MaxNumPrimaryMags=12
+    InitialNumPrimaryMags=12
 
     IdleEmptyAnim="Idle"
     IronIdleEmptyAnim="Iron_idle"
@@ -44,6 +44,6 @@ defaultproperties
     MagPartialReloadAnim="reload_half"
 
     HandNum=0
-    SleeveNum=3
-    bDiscardMagOnReload=false
+    SleeveNum=1
+    bDiscardMagOnReload=true
 }
