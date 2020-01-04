@@ -51,7 +51,7 @@ defaultproperties
     Skins(0)=Shader'DH_ColtM1911_tex.ColtM1911.ColtM1911_S'
 
     DisplayFOV=70.0
-    IronSightDisplayFOV=55.0
+    IronSightDisplayFOV=64.0
 
     MaxNumPrimaryMags=5
     InitialNumPrimaryMags=5
@@ -71,5 +71,5 @@ defaultproperties
     SprintLoopEmptyAnim="Sprint_Middle_Empty"
     SprintEndEmptyAnim="Sprint_End_Empty"
 
-    FirstSelectAnim="Draw"  // TODO: replace this with the hammer cocking animation
+    FirstSelectAnim="Draw2"  
 }

@@ -3,11 +3,13 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_Winchester1897Ammo extends DHAmmunition;
+class DH_BHPBullet extends DHBullet;
 
 defaultproperties
 {
-    MaxAmmo=6
-    InitialAmount=6
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Winchester1897_ammo'
+    Speed=22029.0
+    BallisticCoefficient=0.15
+    WhizType=2
+    Damage=55.0
+    MyDamageType=class'DH_Weapons.DH_BHPDamType'
 }

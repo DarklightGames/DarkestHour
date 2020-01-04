@@ -3,28 +3,23 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_C96Attachment extends DHHighROFWeaponAttachment;
+class DH_BHPAttachment extends DHWeaponAttachment;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.C96_3rd'
-    MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.C96_icon'
+    Mesh=SkeletalMesh'DH_Weapons3rd_anm.BHP_3rd'
+    //MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.vis_icon'
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdPistol'
-    MuzzleBoneName="tip"
     ROShellCaseClass=class'ROAmmo.RO3rdShellEject9x19mm'
-    ShellEjectionBoneName="weapon_eject"
+    bRapidFire=false
 
-    ClientProjectileClass=class'DH_Weapons.DH_C96Bullet'
-
-
-
-    WA_Idle="Idle_Colt"
-    WA_IdleEmpty="idle_empty_Colt"
-    WA_Fire="shoot_Colt"
-    WA_Reload="reload_half_Colt"
-    WA_ReloadEmpty="reload_empty_Colt"
-    WA_ProneReload="prone_reload_half_Colt"
-    WA_ProneReloadEmpty="prone_reload_empty_Colt"
+    WA_Idle="idle_p38"
+    WA_IdleEmpty="empty_p38"
+    WA_Fire="shoot_p38"
+    WA_Reload="reloadhalf_p38"
+    WA_ReloadEmpty="reloadempty_p38"
+    WA_ProneReload="prone_reloadhalf_p38"
+    WA_ProneReloadEmpty="prone_reloadempty_p38"
 
     PA_MovementAnims(0)="stand_jogF_pistol"
     PA_MovementAnims(1)="stand_jogB_pistol"

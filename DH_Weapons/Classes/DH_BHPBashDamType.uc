@@ -3,11 +3,10 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_Winchester1897Ammo extends DHAmmunition;
+class DH_BHPBashDamType extends DHWeaponBashDamageType
+    abstract;
 
 defaultproperties
 {
-    MaxAmmo=6
-    InitialAmount=6
-    IconMaterial=Texture'DH_InterfaceArt_tex.weapon_icons.Winchester1897_ammo'
+    WeaponClass=class'DH_Weapons.DH_BHPWeapon'
 }

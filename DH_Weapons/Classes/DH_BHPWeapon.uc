@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_ViSWeapon extends DHPistolWeapon;
+class DH_BHPWeapon extends DHPistolWeapon;
 
 // This weapon has a special bit of logic that plays an alternate animation
 // when it's first drawn.
@@ -35,25 +35,23 @@ simulated function name GetSelectAnim()
 
 defaultproperties
 {
-    ItemName="ViS wz.35"
-    FireModeClass(0)=class'DH_Weapons.DH_ViSFire'
-    FireModeClass(1)=class'DH_Weapons.DH_ViSMeleeFire'
-    AttachmentClass=class'DH_Weapons.DH_ViSAttachment'
-    PickupClass=class'DH_Weapons.DH_ViSPickup'
+    ItemName="Browning High-Power"
+    FireModeClass(0)=class'DH_Weapons.DH_BHPFire'
+    FireModeClass(1)=class'DH_Weapons.DH_BHPMeleeFire'
+    AttachmentClass=class'DH_Weapons.DH_BHPAttachment'
+    PickupClass=class'DH_Weapons.DH_BHPPickup'
 
-    Mesh=SkeletalMesh'DH_ViS_1st.ViS_Mesh'
-
-    bUseHighDetailOverlayIndex=false
+    Mesh=SkeletalMesh'DH_BHP_1st.BHP-Mesh'
+    HighDetailOverlay=Shader'DH_MN_Weapons1st_tex.M1935.m1935_s'
+    bUseHighDetailOverlayIndex=true
+    HighDetailOverlayIndex=0
 	
-	Skins(1)=Texture'DH_ViS_tex.ViS.ViS_texture'
-	Skins(2)=Texture'Weapons1st_tex.Pistols.p38'
-	sleevenum=4
-	handnum=0
+    Skins(0)=Shader'DH_MN_Weapons1st_tex.M1935.m1935_s'
 	
-	FirstSelectAnim="draw2"
+	HandNum=1
+    SleeveNum=2
 
-    DisplayFOV=70.0
-    IronSightDisplayFOV=64.0
+    IronSightDisplayFOV=70.0
     ZoomOutTime=0.4
 
     MaxNumPrimaryMags=5
@@ -72,4 +70,6 @@ defaultproperties
     CrawlBackwardEmptyAnim="crawlB_empty"
     CrawlStartEmptyAnim="crawl_in_empty"
     CrawlEndEmptyAnim="crawl_out_empty"
+	
+	FirstSelectAnim="Draw2"  
 }

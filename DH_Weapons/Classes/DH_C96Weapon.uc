@@ -37,7 +37,7 @@ defaultproperties
     bPlusOneLoading=false
 
     SelectEmptyAnim="Draw_empty"
-    PutDownAnim="putaway"
+    PutDownAnim="put_away"
     PutDownEmptyAnim="putaway_empty"
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"
