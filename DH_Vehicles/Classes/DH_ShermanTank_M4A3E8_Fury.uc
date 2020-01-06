@@ -15,8 +15,6 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn_M4A3E8_Fury')
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanMountedMGPawn_M4A3E8')
 
-    //CollisionStaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.body.body_collision'
-
     DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3E8_anm.body_ext',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true)
     DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3E8_anm.body_ext',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000)
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3E8_anm.body_ext',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
@@ -67,7 +65,7 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="steer.L.F"
         BoneRollAxis=AXIS_Y
-        WheelRadius=30.0
+        WheelRadius=32.0
         bLeftTrack=true
     End Object
     Wheels(0)=SVehicleWheel'DH_Vehicles.DH_ShermanTank_M4A3E8_Fury.LF_Steering'
@@ -76,7 +74,7 @@ defaultproperties
         SteerType=VST_Steered
         BoneName="steer.R.F"
         BoneRollAxis=AXIS_Y
-        WheelRadius=30.0
+        WheelRadius=32.0
     End Object
     Wheels(1)=SVehicleWheel'DH_Vehicles.DH_ShermanTank_M4A3E8_Fury.RF_Steering'
     Begin Object Class=SVehicleWheel Name=LR_Steering
@@ -84,7 +82,7 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer.L.B"
         BoneRollAxis=AXIS_Y
-        WheelRadius=30.0
+        WheelRadius=32.0
         bLeftTrack=true
     End Object
     Wheels(2)=SVehicleWheel'DH_Vehicles.DH_ShermanTank_M4A3E8_Fury.LR_Steering'
@@ -93,14 +91,14 @@ defaultproperties
         SteerType=VST_Inverted
         BoneName="steer.R.B"
         BoneRollAxis=AXIS_Y
-        WheelRadius=30.0
+        WheelRadius=32.0
     End Object
     Wheels(3)=SVehicleWheel'DH_Vehicles.DH_ShermanTank_M4A3E8_Fury.RR_Steering'
     Begin Object Class=SVehicleWheel Name=Left_Drive_Wheel
         bPoweredWheel=true
         BoneName="drive.L"
         BoneRollAxis=AXIS_Y
-        WheelRadius=30.0
+        WheelRadius=32.0
         bLeftTrack=true
     End Object
     Wheels(4)=SVehicleWheel'DH_Vehicles.DH_ShermanTank_M4A3E8_Fury.Left_Drive_Wheel'
@@ -108,7 +106,7 @@ defaultproperties
         bPoweredWheel=true
         BoneName="drive.R"
         BoneRollAxis=AXIS_Y
-        WheelRadius=30.0
+        WheelRadius=32.0
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_ShermanTank_M4A3E8_Fury.Right_Drive_Wheel'
 
