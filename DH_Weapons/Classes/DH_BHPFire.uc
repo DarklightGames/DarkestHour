@@ -8,7 +8,7 @@ class DH_BHPFire extends DHPistolFire;
 defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_BHPBullet'
-    AmmoClass=class'ROAmmo.P38Ammo'
+    AmmoClass=class'DH_BHPammo'
 
     Spread=185.0
     MaxVerticalRecoilAngle=380
