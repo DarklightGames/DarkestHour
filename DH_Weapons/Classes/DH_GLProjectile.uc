@@ -15,7 +15,7 @@ defaultproperties
     ExplosionSound(2)=SoundGroup'DH_MN_InfantryWeapons_sound.Geballte_Ladung.GeballteLadungExp01'
 
     Damage=1260.0 // 1260 gramms TNT +some fragmentation, since its a bundle of potato mashers
-    DamageRadius=1200 // about 21 meters, a lot because its powerful and its made from hand grenades with some fragmentation
+    DamageRadius=1300 // about 22 meters, a lot because its powerful and its made from hand grenades with some fragmentation
                       // practically, user has to either throw from cover or run away immediately
     EngineDamageMassThreshold=10.0
     EngineDamageRadius=185.0
@@ -24,5 +24,5 @@ defaultproperties
     TreadDamageMassThreshold=12.0
     TreadDamageRadius=64.0
     TreadDamageMax=100.0
-    FuzeLengthTimer=5.7
+    FuzeLengthTimer=5.7 //doesnt seem to work here
 }

@@ -15,7 +15,9 @@ defaultproperties
     AddedPitch=250
     MinimumThrowSpeed=200.0
     MaximumThrowSpeed=350.0
+	
+	 AddedFuseTime=1.0  //doesnt seem to work here
 
-    SpeedFromHoldingPerSec=450.0
+    SpeedFromHoldingPerSec=700.0
 
 }

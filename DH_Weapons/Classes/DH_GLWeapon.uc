@@ -12,7 +12,7 @@ defaultproperties
     FireModeClass(0)=class'DH_Weapons.DH_GLFire'
     AttachmentClass=class'DH_Weapons.DH_GLAttachment'
     PickupClass=class'DH_Weapons.DH_GLPickup'
-	FuzeLength=5.0
+    FuzeLength=6.0
 	
     Mesh=SkeletalMesh'DH_GL_1st.geballteLadung_mesh'
     Skins(2)=Texture'DH_Weapon_CC2_tex.Grenades.gl_skin'
