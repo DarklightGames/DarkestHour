@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHConstruction_ATGun_Heavy2 extends DHConstruction_Vehicle;
+class DHConstruction_ATGun_HeavyTwo extends DHConstruction_Vehicle;
 
 function static class<DHVehicle> GetVehicleClass(DHActorProxy.Context Context)
 {

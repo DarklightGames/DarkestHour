@@ -1976,7 +1976,7 @@ defaultproperties
     ConstructionClassNames(7)="DH_Construction.DHConstruction_ATGun_Light"
     ConstructionClassNames(8)="DH_Construction.DHConstruction_ATGun_Medium"
     ConstructionClassNames(9)="DH_Construction.DHConstruction_ATGun_Heavy"
-	ConstructionClassNames(10)="DH_Construction.DHConstruction_ATGun_Heavy2"
+    ConstructionClassNames(10)="DH_Construction.DHConstruction_ATGun_HeavyTwo"
     ConstructionClassNames(11)="DH_Construction.DHConstruction_AAGun_Light"
     ConstructionClassNames(12)="DH_Construction.DHConstruction_AAGun_Medium"
 
