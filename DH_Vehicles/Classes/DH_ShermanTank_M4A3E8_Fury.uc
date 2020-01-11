@@ -25,9 +25,9 @@ simulated function CreateAttachments()
 {
     local DHDestroyableStaticMesh DSM;
 
-    // Left logs
     if (Role == ROLE_Authority)
     {
+        // Left logs
         DSM = Spawn(class'DHDestroyableStaticMesh', self);
 
         if (DSM != none)
@@ -37,7 +37,15 @@ simulated function CreateAttachments()
             Attachments[Attachments.Length] = DSM;
         }
 
-        // TODO: do the right logs too
+        // Right logs
+        DSM = Spawn(class'DHDestroyableStaticMesh', self);
+
+        if (DSM != none)
+        {
+            DSM.SetStaticMesh(LogsRightStaticMesh);
+            AttachToBone(DSM, 'body');
+            Attachments[Attachments.Length] = DSM;
+        }
     }
 
     if (Level.NetMode != NM_DedicatedServer)
@@ -79,8 +87,12 @@ defaultproperties
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3E8_anm.body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
 
     LogsLeftStaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.body.logs_L'
+    LogsRightStaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.body.logs_R'
 
     DrivePos=(X=0,Y=0,Z=0)
+
+    DamagedTrackAttachBone="body"
+    DamagedTrackStaticMeshLeft=StaticMesh'DH_ShermanM4A3E8_stc.body.tracks_L'
 
     LeftTreadIndex=2
     RightTreadIndex=3

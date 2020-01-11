@@ -81,7 +81,7 @@ defaultproperties
     bNoDelete=false
     bCanBeDamaged=true
     bUseCylinderCollision=false
-    bCollideActors=truea
+    bCollideActors=true
     bCollideWorld=false
     bBlockActors=true
     bBlockKarma=true
