@@ -860,7 +860,7 @@ defaultproperties
     SwayProneModifier=0.5
     SwayTransitionModifier=4.5
     SwayLeanModifier=1.25
-    SwayBayonetModifier=1.02
+    SwayBayonetModifier=1.1
 
     PlayerIronsightFOV=60.0
     BobModifyFactor=0.9

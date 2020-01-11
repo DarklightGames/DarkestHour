@@ -9,8 +9,8 @@ defaultproperties
 {
     ProjectileClass=class'DH_Weapons.DH_SVT40Bullet'
     AmmoClass=class'ROAmmo.SVT40Ammo'
-    Spread=100.0
-    MaxVerticalRecoilAngle=1000
+    Spread=80.0
+    MaxVerticalRecoilAngle=480
     MaxHorizontalRecoilAngle=210
 
     FireSounds(0)=Sound'Inf_Weapons.svt40.svt40_fire01'

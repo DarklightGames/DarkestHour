@@ -1505,6 +1505,138 @@ function bool PlaceExitingDriver()
     return false;
 }
 
+// Overriden to support metrics.
+function Died(Controller Killer, class<DamageType> damageType, vector HitLocation)
+{
+    local PlayerController PC;
+    local Controller C;
+    local DarkestHourGame G;
+    local DHGameReplicationInfo GRI;
+    local int RoundTime;
+
+    if (bDeleteMe || Level.bLevelChange)
+    {
+        return; // already destroyed, or level is being cleaned up
+    }
+
+    if (Level.Game.PreventDeath(self, Killer, damageType, HitLocation))
+    {
+        Health = Max(Health, 1); //mutator should set this higher
+        return;
+    }
+
+    Health = Min(0, Health);
+
+    if (Controller != none)
+    {
+        C = Controller;
+        C.WasKilledBy(Killer);
+        Level.Game.Killed(Killer, C, self, damageType);
+
+        if (C.bIsPlayer)
+        {
+            PC = PlayerController(C);
+
+            if (PC != none)
+            {
+                ClientKDriverLeave(PC); // Just to reset HUD etc.
+            }
+            else
+            {
+                ClientClearController();
+            }
+
+            if ((bRemoteControlled || bEjectDriver) && Driver != none && Driver.Health > 0)
+            {
+                C.Unpossess();
+                C.Possess(Driver);
+
+                if (bEjectDriver)
+                {
+                    EjectDriver();
+                }
+
+                Driver = none;
+            }
+            else
+            {
+                G = DarkestHourGame(Level.Game);
+
+                if (G != none && G.Metrics != none)
+                {
+                    GRI = DHGameReplicationInfo(G.GameReplicationInfo);
+
+                    if (GRI != none)
+                    {
+                        RoundTime = GRI.ElapsedTime - GRI.RoundStartTime;
+                    }
+
+                    // Log the crew/passenger kill.
+                    G.Metrics.OnPlayerFragged(PlayerController(Killer), PC, DamageType, HitLocation, 0, RoundTime);
+                }
+
+                if (PC != none && VehicleBase != none)
+                {
+                    PC.SetViewTarget(VehicleBase);
+                    PC.ClientSetViewTarget(VehicleBase);
+                }
+
+                C.PawnDied(self);
+            }
+        }
+        else
+        {
+            C.Destroy();
+        }
+
+        if (Driver != none)
+        {
+            if (!bRemoteControlled && !bEjectDriver)
+            {
+                if (!bDrawDriverInTP && PlaceExitingDriver())
+                {
+                    Driver.StopDriving(self);
+                    Driver.DrivenVehicle = self;
+                }
+
+                Driver.SetTearOffMomemtum(Velocity * 0.25);
+                Driver.Died(Controller, class'RODiedInTankDamType', Driver.Location);
+            }
+            else
+            {
+                if (bEjectDriver)
+                {
+                    EjectDriver();
+                }
+                else
+                {
+                    KDriverLeave(false);
+                }
+            }
+        }
+    }
+    else
+    {
+        Level.Game.Killed(Killer, Controller(Owner), self, damageType);
+    }
+
+    if (Killer != none)
+    {
+        TriggerEvent(Event, self, Killer.Pawn);
+    }
+    else
+    {
+        TriggerEvent(Event, self, none);
+    }
+
+    if (IsHumanControlled())
+    {
+        PlayerController(Controller).ForceDeathUpdate();
+    }
+
+    Destroy();
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *************************  SETUP, UPDATE, CLEAN UP  ***************************  //
 ///////////////////////////////////////////////////////////////////////////////////////

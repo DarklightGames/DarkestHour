@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_CromwellCannonShellSmoke extends DHCannonShellSmoke;
+class DH_CromwellCannonShellSmoke extends DHCannonShellSmokeWP;
 
 defaultproperties
 {
@@ -36,6 +36,4 @@ defaultproperties
     DHPenetrationTable(4)=0.1
     ShellDiameter=7.5
     BallisticCoefficient=1.686
-
-
 }

@@ -22,6 +22,16 @@ var class<DHRadioHQAttachment> RadioClass;
 var vector                     RadioLocationOffset;
 var rotator                    RadioRotationOffset;
 
+simulated state Dummy
+{
+    simulated function BeginState()
+    {
+        super.BeginState();
+
+        DestroyAttachments();
+    }
+}
+
 auto simulated state Constructing
 {
     simulated function BeginState()

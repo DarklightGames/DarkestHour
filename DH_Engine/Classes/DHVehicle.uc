@@ -78,6 +78,8 @@ var     float       SpawnProtEnds;               // is set when a player spawns 
 var     float       SpawnKillTimeEnds;           // is set when a player spawns the vehicle for spawn kill protection in DarkestHour spawn type maps
 var     array<int>  TrackHealth[2];              // Amount of health each track has remaining
 var     float       SatchelResistance;           // 1.0 default (0.5 means less resistance to satchels)
+var class<DamageType> LastHitByDamageType;       // Stores the last damage type this vehicle was hit by.
+                                                 // Unlike `HitDamageType`, this variable is not replicated.
 
 // Engine
 var     bool        bEngineOff;                  // vehicle engine is simply switched off
@@ -307,26 +309,67 @@ simulated function Destroyed()
 
 function StartEngineFire(Pawn InstigatedBy);
 
+function KilledBy(Pawn EventInstigator)
+{
+    local Controller Killer;
+    local class<DamageType> DT;
+
+    if (EventInstigator != None)
+    {
+        Killer = EventInstigator.Controller;
+    }
+
+    if (LastHitByDamageType == none || EventInstigator == self)
+    {
+        DT = class'Suicided';
+    }
+    else
+    {
+        DT = LastHitByDamageType;
+    }
+
+    Died(Killer, DT, Location);
+}
+
 // Modified to score the vehicle kill, & to subtract the vehicle's reinforcement cost for the loss
 function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
 {
     local DarkestHourGame DHG;
     local DHGameReplicationInfo GRI;
     local DHPlayer DHKiller;
-
-    // Call the super first
-    super.Died(Killer, DamageType, HitLocation);
-
-    if (MapIconAttachment != none)
-    {
-        MapIconAttachment.Destroy();
-    }
+    local int RoundTime;
 
     DHG = DarkestHourGame(Level.Game);
 
     if (DHG != none)
     {
         GRI = DHGameReplicationInfo(DHG.GameReplicationInfo);
+    }
+
+    // Log driver and vehicle kills before calling the super.
+    // NOTE: We match the conditions in the super function
+    // instead of overriding it completely.
+    if (GRI != none &&
+        !bDeleteMe &&
+        !Level.bLevelChange &&
+        !bVehicleDestroyed &&
+        !Level.Game.PreventDeath(self, Killer, damageType, HitLocation) &&
+        DamageType != class'Suicided')
+    {
+        RoundTime = GRI.ElapsedTime - GRI.RoundStartTime;
+        DHG.Metrics.OnVehicleFragged(PlayerController(Killer), self, DamageType, HitLocation, RoundTime);
+
+        if (Controller != none && !bRemoteControlled && !bEjectDriver)
+        {
+            DHG.Metrics.OnPlayerFragged(PlayerController(Killer), PlayerController(Controller), DamageType, HitLocation, 0, RoundTime);
+        }
+    }
+
+    super.Died(Killer, DamageType, HitLocation);
+
+    if (MapIconAttachment != none)
+    {
+        MapIconAttachment.Destroy();
     }
 
     DHKiller = DHPlayer(Killer);
@@ -2075,6 +2118,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     if (InstigatedBy != none && InstigatedBy != self)
     {
         LastHitBy = InstigatedBy.Controller;
+        LastHitByDamageType = DamageType;
     }
 
     if (bDebuggingText)
@@ -3845,6 +3889,37 @@ simulated function int NumPassengers()
     }
 
     return Num;
+}
+
+// Returns pawn's base vehicle. The pawn can either be driving the vehicle
+// (has DrivenVehicle set), or be the vehicle/vehicle weapon pawn itself.
+simulated static function DHVehicle GetDrivenVehicleBase(Pawn P)
+{
+    local Vehicle V;
+
+    if (P == none)
+    {
+        return none;
+    }
+
+    if (P.DrivenVehicle != none)
+    {
+        V = P.DrivenVehicle;
+    }
+    else
+    {
+        V = Vehicle(P);
+    }
+
+    if (V != none)
+    {
+        if (V.IsA('VehicleWeaponPawn'))
+        {
+            return DHVehicle(VehicleWeaponPawn(V).GetVehicleBase());
+        }
+
+        return DHVehicle(V);
+    }
 }
 
 // Functions emptied out as not relevant to a vehicle in RO/DH (that doesn't have any DriverWeapons):

@@ -94,8 +94,8 @@ defaultproperties
         MaxParticles=5
 
         StartLocationRange=(X=(Min=-350.000000,Max=350.000000),Y=(Min=-350.000000,Max=350.000000),Z=(Max=100.000000))
-        SpinsPerSecondRange=(X=(Min=0.02000,Max=0.02000))
-        StartSpinRange=(X=(Min=-0.050000,Max=0.050000))
+        SpinsPerSecondRange=(X=(Min=0.01000,Max=0.01000))
+        StartSpinRange=(X=(Min=-0.030000,Max=0.030000))
         SizeScale(0)=(RelativeSize=1.500000)
         SizeScale(1)=(RelativeTime=1.000000,RelativeSize=1.800000)
         SizeScale(2)=(RelativeTime=1.000000,RelativeSize=2.000000)

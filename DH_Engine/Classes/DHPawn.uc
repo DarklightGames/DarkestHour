@@ -1473,6 +1473,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
     local DarkestHourGame G;
     local DHGameReplicationInfo GRI;
     local int RoundTime;
+    local Controller C;
 
     if (DamageType == none)
     {
@@ -1606,7 +1607,15 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
                 RoundTime = GRI.ElapsedTime - GRI.RoundStartTime;
             }
 
-            G.Metrics.OnPlayerFragged(PlayerController(Killer), PlayerController(Controller), DamageType, HitLocation, HitIndex, RoundTime);
+            C = Controller;
+
+            // Controller might be possessing a vehicle pawn.
+            if (Controller == none && DrivenVehicle != none && DrivenVehicle.Controller != none)
+            {
+                C = DrivenVehicle.Controller;
+            }
+
+            G.Metrics.OnPlayerFragged(PlayerController(Killer), PlayerController(C), DamageType, HitLocation, HitIndex, RoundTime);
         }
 
         Died(Killer, DamageType, HitLocation);
@@ -6365,7 +6374,7 @@ exec function BogeyMan()
         return;
     }
 
-    if (G.IsAdmin(PC) && class'DHAccessControl'.static.IsDeveloper(PC.ROIDHash))
+    if (G.IsAdmin(PC) || class'DHAccessControl'.static.IsDeveloper(PC.ROIDHash))
     {
         PC.bGodMode = true;
         bHidden = true;
