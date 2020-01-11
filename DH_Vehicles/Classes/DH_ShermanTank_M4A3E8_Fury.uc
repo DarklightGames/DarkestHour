@@ -8,6 +8,65 @@
 
 class DH_ShermanTank_M4A3E8_Fury extends DH_ShermanTank_M4A376W;
 
+var StaticMesh LogsLeftStaticMesh;
+var StaticMesh LogsRightStaticMesh;
+var array<Actor> Attachments;
+
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    CreateAttachments();
+}
+
+// In the movie, Fury has some protective logs that absorb a Panzerfaust strike
+// at one point, but then fall off as a result. Our Fury will do the same!
+simulated function CreateAttachments()
+{
+    local DHDestroyableStaticMesh DSM;
+
+    // Left logs
+    if (Role == ROLE_Authority)
+    {
+        DSM = Spawn(class'DHDestroyableStaticMesh', self);
+
+        if (DSM != none)
+        {
+            DSM.SetStaticMesh(LogsLeftStaticMesh);
+            AttachToBone(DSM, 'body');
+            Attachments[Attachments.Length] = DSM;
+        }
+
+        // TODO: do the right logs too
+    }
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        // TODO: attach decoratives! dhdecoattachment?
+    }
+}
+
+function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
+{
+    super.Died(Killer, DamageType, HitLocation);
+
+    // TODO: i don't think this gets run on the client
+    DestroyAttachments();
+}
+
+simulated function DestroyAttachments()
+{
+    local int i;
+
+    for (i = 0; i < Attachments.Length; ++i)
+    {
+        if (Attachments[i] != none)
+        {
+            Attachments[i].Destroy();
+        }
+    }
+}
+
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_ShermanM4A3E8_anm.body_ext'
@@ -15,9 +74,11 @@ defaultproperties
     PassengerWeapons(0)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanCannonPawn_M4A3E8_Fury')
     PassengerWeapons(1)=(WeaponPawnClass=class'DH_Vehicles.DH_ShermanMountedMGPawn_M4A3E8')
 
-    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3E8_anm.body_ext',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true)
-    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3E8_anm.body_ext',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000)
-    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3E8_anm.body_ext',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
+    DriverPositions(0)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3E8_anm.body_int',TransitionUpAnim="Overlay_Out",ViewPitchUpLimit=1,ViewPitchDownLimit=65535,ViewPositiveYawLimit=5500,ViewNegativeYawLimit=-5500,bDrawOverlays=true)
+    DriverPositions(1)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3E8_anm.body_int',TransitionUpAnim="driver_hatch_open",TransitionDownAnim="Overlay_In",ViewPitchUpLimit=3000,ViewPitchDownLimit=61922,ViewPositiveYawLimit=8000,ViewNegativeYawLimit=-8000)
+    DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3E8_anm.body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=62000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
+
+    LogsLeftStaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.body.logs_L'
 
     DrivePos=(X=0,Y=0,Z=0)
 
@@ -28,9 +89,13 @@ defaultproperties
     Skins(1)=Texture'DH_ShermanM4A3E8_tex.wheels_ext'
     Skins(2)=Texture'DH_ShermanM4A3E8_tex.tread'
     Skins(3)=Texture'DH_ShermanM4A3E8_tex.tread'
+    Skins(4)=Texture'DH_ShermanM4A3E8_tex.body_int'
 
     LeftTreadPanDirection=(Pitch=1,Yaw=0,Roll=0)
     RightTreadPanDirection=(Pitch=1,Yaw=0,Roll=0)
+
+    LeftLeverBoneName="lever.L"
+    RightLeverBoneName="lever.R"
 
     LeftWheelBones(0)="wheel.L.001"
     LeftWheelBones(1)="wheel.L.002"

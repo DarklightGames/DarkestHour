@@ -5,8 +5,23 @@
 
 class DH_ShermanCannon_M4A3E8_Fury extends DH_ShermanCannonA_76mm;
 
-// TODO: remove weird overrides for shit
+simulated function PostBeginPlay()
+{
+    local StaticMeshActor StowageAttachment;
 
+    super.PostBeginPlay();
+
+    if (Level.NetMode != NM_DedicatedServer)
+    {
+        StowageAttachment = Spawn(class'StaticMeshActor', self);
+
+        if (StowageAttachment != none)
+        {
+            //StowageAttachment.StaticMesh = StaticMesh'';
+            StowageAttachment.AttachToBone(StowageAttachment, 'turret');
+        }
+    }
+}
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_ShermanM4A3E8_anm.turret_ext'
