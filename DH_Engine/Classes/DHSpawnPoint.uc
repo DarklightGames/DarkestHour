@@ -12,8 +12,8 @@ enum ESpawnPointType
     ESPT_Infantry,
     ESPT_Vehicles,
     ESPT_Mortars,
-    ESPT_VehicleCrewOnly,
-    ESPT_All
+    ESPT_All,
+    ESPT_VehicleCrewOnly
 };
 
 var()   ESpawnPointType Type;
