@@ -27,8 +27,13 @@ event TakeDamage(int Damage, Pawn EventInstigator, vector HitLocation, vector Mo
 
     if (Health <= 0)
     {
-        GotoState('Broken');
+        BreakMe();
     }
+}
+
+function BreakMe()
+{
+    GotoState('Broken');
 }
 
 state Broken // NOTE: can't name it "Destroyed" because that's the name of a function
@@ -69,6 +74,8 @@ simulated function ClientPlayDestroyedEffects()
     {
         SpawnLocation = Location + (DestroyedEmitterOffset << Rotation);
         DestroyedEmitter = Spawn(DestroyedEmitterClass,,, SpawnLocation, Rotation);
+
+        Spawn(class'RODebugTracer',,, SpawnLocation, Rotation);
     }
 }
 

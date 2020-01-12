@@ -10,6 +10,9 @@ class DH_ShermanTank_M4A3E8_Fury extends DH_ShermanTank_M4A376W;
 
 var StaticMesh LogsLeftStaticMesh;
 var StaticMesh LogsRightStaticMesh;
+var DHDestroyableStaticMesh LogsLeft;
+var DHDestroyableStaticMesh LogsRight;
+
 var array<Actor> Attachments;
 
 simulated function PostBeginPlay()
@@ -17,6 +20,21 @@ simulated function PostBeginPlay()
     super.PostBeginPlay();
 
     CreateAttachments();
+}
+
+exec function BreakLogs(string Side)
+{
+    if (Role == ROLE_Authority)
+    {
+        if (Side ~= "L")
+        {
+            LogsLeft.BreakMe();
+        }
+        else if (Side ~= "R")
+        {
+            LogsRight.BreakMe();
+        }
+    }
 }
 
 // In the movie, Fury has some protective logs that absorb a Panzerfaust strike
@@ -28,23 +46,25 @@ simulated function CreateAttachments()
     if (Role == ROLE_Authority)
     {
         // Left logs
-        DSM = Spawn(class'DHDestroyableStaticMesh', self);
+        LogsLeft = Spawn(class'DHDestroyableStaticMesh', self);
 
-        if (DSM != none)
+        if (LogsLeft != none)
         {
-            DSM.SetStaticMesh(LogsLeftStaticMesh);
-            AttachToBone(DSM, 'body');
-            Attachments[Attachments.Length] = DSM;
+            LogsLeft.DestroyedEmitterClass = class'DH_Effects.DHFuryLogsLeftEmitter';
+            LogsLeft.SetStaticMesh(LogsLeftStaticMesh);
+            AttachToBone(LogsLeft, 'body');
+            Attachments[Attachments.Length] = LogsLeft;
         }
 
         // Right logs
-        DSM = Spawn(class'DHDestroyableStaticMesh', self);
+        LogsRight = Spawn(class'DHDestroyableStaticMesh', self);
 
-        if (DSM != none)
+        if (LogsRight != none)
         {
-            DSM.SetStaticMesh(LogsRightStaticMesh);
-            AttachToBone(DSM, 'body');
-            Attachments[Attachments.Length] = DSM;
+            LogsRight.SetStaticMesh(LogsRightStaticMesh);
+            LogsRight.DestroyedEmitterClass = class'DH_Effects.DHFuryLogsRightEmitter';
+            AttachToBone(LogsRight, 'body');
+            Attachments[Attachments.Length] = LogsRight;
         }
     }
 
@@ -58,7 +78,7 @@ function Died(Controller Killer, class<DamageType> DamageType, vector HitLocatio
 {
     super.Died(Killer, DamageType, HitLocation);
 
-    // TODO: i don't think this gets run on the client
+    // TODO: i don't think this gets run on the client?
     DestroyAttachments();
 }
 
@@ -93,6 +113,7 @@ defaultproperties
 
     DamagedTrackAttachBone="body"
     DamagedTrackStaticMeshLeft=StaticMesh'DH_ShermanM4A3E8_stc.body.tracks_L'
+    DamagedTrackStaticMeshRight=StaticMesh'DH_ShermanM4A3E8_stc.body.tracks_R'
 
     LeftTreadIndex=2
     RightTreadIndex=3

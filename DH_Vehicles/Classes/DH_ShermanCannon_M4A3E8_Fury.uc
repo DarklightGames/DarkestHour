@@ -22,6 +22,7 @@ simulated function PostBeginPlay()
         }
     }
 }
+
 defaultproperties
 {
     Mesh=SkeletalMesh'DH_ShermanM4A3E8_anm.turret_ext'
