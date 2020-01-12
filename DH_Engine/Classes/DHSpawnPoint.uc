@@ -13,6 +13,7 @@ enum ESpawnPointType
     ESPT_Vehicles,
     ESPT_Mortars,
     ESPT_All,
+    ESPT_VehicleCrewOnly
 };
 
 var()   ESpawnPointType Type;
@@ -252,7 +253,14 @@ simulated function bool CanSpawnWithParameters(DHGameReplicationInfo GRI, int Te
 
     if (VehicleClass == none)
     {
-        return CanSpawnInfantry() || (RI.default.bCanBeTankCrew && CanSpawnVehicles());
+        if (Type == ESPT_VehicleCrewOnly)
+        {
+            return RI.default.bCanBeTankCrew;
+        }
+        else
+        {
+            return CanSpawnInfantry() || (RI.default.bCanBeTankCrew && CanSpawnVehicles());
+        }
     }
     else
     {
