@@ -66,6 +66,9 @@ var bool    bIsLowPriority;                             // When true, this spawn
 var class<DHMapIconAttachment> MapIconAttachmentClass;
 var DHMapIconAttachment        MapIconAttachment;
 
+// Danger zone
+var(DHDangerZone) float BaseInfluenceModifier;
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -439,4 +442,7 @@ defaultproperties
     bIsActive=false
     bHidden=true
     SpawnRadiusSegmentCount=8
+
+    // Danger zone
+    BaseInfluenceModifier=1
 }
