@@ -47,22 +47,22 @@ static function float GetIntensity(DHGameReplicationInfo GRI, float PointerX, fl
         V1.X = GRI.DHObjectives[i].Location.X;
         V1.Y = GRI.DHObjectives[i].Location.Y;
 
-        Intensity = class'UVector'.static.InverseSquareLaw(V1, V2) * GRI.DHObjectives[i].BaseInfluenceModifier;
+        Intensity = class'UVector'.static.InverseSquareLaw(V1, V2) * FMax(0.0, GRI.DHObjectives[i].BaseInfluenceModifier);
 
         if (GRI.DHObjectives[i].IsActive() || GRI.DHObjectives[i].IsOwnedByTeam(NEUTRAL_TEAM_INDEX))
         {
             ++NeutralCount;
-            NeutralIntensity += Intensity * GRI.DHObjectives[i].NeutralInfluenceModifier;
+            NeutralIntensity += Intensity * FMax(0.0, GRI.DHObjectives[i].NeutralInfluenceModifier);
         }
         else if (GRI.DHObjectives[i].IsOwnedByTeam(AXIS_TEAM_INDEX))
         {
             ++AxisCount;
-            AxisIntensity += Intensity * GRI.DHObjectives[i].AxisInfluenceModifier;
+            AxisIntensity += Intensity * FMax(0.0, GRI.DHObjectives[i].AxisInfluenceModifier);
         }
         else
         {
             ++AlliedCount;
-            AlliedIntensity += Intensity * GRI.DHObjectives[i].AlliesInfluenceModifier;
+            AlliedIntensity += Intensity * FMax(0.0, GRI.DHObjectives[i].AlliesInfluenceModifier);
         }
     }
 
@@ -76,7 +76,7 @@ static function float GetIntensity(DHGameReplicationInfo GRI, float PointerX, fl
         V1.X = GRI.SpawnPoints[i].Location.X;
         V1.Y = GRI.SpawnPoints[i].Location.Y;
 
-        Intensity = class'UVector'.static.InverseSquareLaw(V1, V2) * GRI.SpawnPoints[i].BaseInfluenceModifier;
+        Intensity = class'UVector'.static.InverseSquareLaw(V1, V2) * FMax(0.0, GRI.SpawnPoints[i].BaseInfluenceModifier);
 
         switch (GRI.SpawnPoints[i].GetTeamIndex())
         {
