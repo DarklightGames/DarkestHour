@@ -23,7 +23,6 @@ simulated function SpecialCalcFirstPersonView(PlayerController PC, out Actor Vie
     }
 }
 
-
 // Modified to draw pericope texture over the mesh gun overlay
 simulated function DrawHUD(Canvas C)
 {
