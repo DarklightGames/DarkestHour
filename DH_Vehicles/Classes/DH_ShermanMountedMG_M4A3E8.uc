@@ -11,6 +11,9 @@ defaultproperties
     Mesh=SkeletalMesh'DH_ShermanM4A3E8_anm.mg_ext'
     Skins(0)=Texture'DH_ShermanM4A3E8_tex.body_ext'
 
+    WeaponFireAttachmentBone="muzzle"
+    WeaponFireOffset=(X=0,Y=0,Z=0)
     WeaponAttachOffset=(X=0,Y=0,Z=0)
+    FireAttachBone="muzzle"
 }
 
