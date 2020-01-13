@@ -22,7 +22,7 @@ simulated function PostBeginPlay()
 
 defaultproperties
 {
-    VehicleNameString="Sd.Kfz.251/22 'pakwagen'"
+    VehicleNameString="Sd.Kfz.251/22 Halftrack"
     PassengerWeapons(0)=(WeaponBone="body") // cannon pawn class has to be set in PostBeginPlay() due to build order
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.Sdkfz251_22_body_ext'
     Skins(0)=Texture'DH_VehiclesGE_tex.ext_vehicles.Halftrack_body_camo2'
@@ -35,5 +35,5 @@ defaultproperties
     VehicleHudTurretLook=TexRotator'DH_Artillery_Tex.ATGun_Hud.Pak40_turret_look'
     VehicleHudOccupantsX(1)=0.45
     VehicleHudOccupantsY(1)=0.65
-//  SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.Pakwagen' // TODO - get this icon made
+    SpawnOverlay(0)=Material'DH_InterfaceArt_tex.Vehicles.sdkfz_251_22'
 }
