@@ -77,6 +77,16 @@ simulated function PostBeginPlay()
     }
 }
 
+exec function SetCamPos(float X, float Y, float Z)
+{
+    if (IsDebugModeAllowed())
+    {
+        FPCamPos.X = X;
+        FPCamPos.Y = Y;
+        FPCamPos.Z = Z;
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //  *******************************  VIEW/DISPLAY  ********************************  //
 ///////////////////////////////////////////////////////////////////////////////////////
