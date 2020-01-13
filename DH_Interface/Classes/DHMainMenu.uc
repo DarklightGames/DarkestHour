@@ -476,7 +476,7 @@ function GetMOTD()
     }
 
     MOTDRequest = PlayerOwner().Spawn(class'HTTPRequest');
-    MOTDRequest.Host = "46.101.44.19";
+    MOTDRequest.Host = "api.darklightgames.com";
     MOTDRequest.Path = "/announcements/latest/";
     MOTDRequest.OnResponse = OnMOTDResponse;
     MOTDRequest.Send();
