@@ -5,20 +5,22 @@
 
 class DH_ShermanCannon_M4A3E8_Fury extends DH_ShermanCannonA_76mm;
 
+var StaticMesh StowageStaticMesh;
+
 simulated function PostBeginPlay()
 {
-    local StaticMeshActor StowageAttachment;
+    local DHDecoAttachment StowageAttachment;
 
     super.PostBeginPlay();
 
     if (Level.NetMode != NM_DedicatedServer)
     {
-        StowageAttachment = Spawn(class'StaticMeshActor', self);
+        StowageAttachment = Spawn(class'DHDecoAttachment', self);
 
         if (StowageAttachment != none)
         {
-            //StowageAttachment.StaticMesh = StaticMesh'';
-            StowageAttachment.AttachToBone(StowageAttachment, 'turret');
+            StowageAttachment.SetStaticMesh(StowageStaticMesh);
+            AttachToBone(StowageAttachment, 'turret');
         }
     }
 }
@@ -35,5 +37,7 @@ defaultproperties
     AltFireAttachmentBone="coax"
     AltFireOffset=(X=-8,Y=0,Z=0)
     AltFireSpawnOffsetX=0.0
+
+    StowageStaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.turret.turret_stowage'
 }
 

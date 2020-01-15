@@ -109,8 +109,8 @@ defaultproperties
     DriverPositions(2)=(PositionMesh=SkeletalMesh'DH_ShermanM4A3E8_anm.body_int',TransitionDownAnim="driver_hatch_close",ViewPitchUpLimit=5000,ViewPitchDownLimit=65000,ViewPositiveYawLimit=16000,ViewNegativeYawLimit=-16000,bExposed=true)
 
     PassengerPawns(0)=(AttachBone="body",DrivePos=(X=-80.0,Y=-60.0,Z=105.0),DriveRot=(Yaw=-16384),DriveAnim="VHalftrack_Rider4_idle")
-    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-140.0,Y=-30.0,Z=105.0),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider4_idle")
-    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-140.0,Y=30.0,Z=105.),DriveRot=(Yaw=32768),DriveAnim="VHalftrack_Rider5_idle")
+    PassengerPawns(1)=(AttachBone="body",DrivePos=(X=-110.0,Y=-30.0,Z=160.0),DriveRot=(Yaw=-16384),DriveAnim="crouch_idle_binoc")
+    PassengerPawns(2)=(AttachBone="body",DrivePos=(X=-100.0,Y=40.0,Z=160.0),DriveRot=(Yaw=16384),DriveAnim="crouch_idle_binoc")
     PassengerPawns(3)=(AttachBone="body",DrivePos=(X=-80.0,Y=60.0,Z=105.0),DriveRot=(Yaw=16384),DriveAnim="VHalftrack_Rider5_idle")
 
     LogsLeftStaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.body.logs_L'
@@ -218,5 +218,6 @@ defaultproperties
     End Object
     Wheels(5)=SVehicleWheel'DH_Vehicles.DH_ShermanTank_M4A3E8_Fury.Right_Drive_Wheel'
 
-    // TODO: we need to add drive wheels (or maybe just remove them for now?)
+    VehicleAttachments(0)=(AttachClass=class'DHDecoAttachment',AttachBone="body",StaticMesh=StaticMesh'DH_ShermanM4A3E8_stc.body.body_stowage',bHasCollision=false)
 }
+
