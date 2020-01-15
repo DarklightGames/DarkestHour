@@ -3,14 +3,9 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_RKKA_StandardAntiTank extends DHSOVAntiTankRoles;
+class DH_RKKA_StandardAntiTank extends DH_RKKA_StandardAntiTankEarly; //to be removed
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietPawn',Weight=1.0)
-    Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'
-    Headgear(1)=class'DH_SovietPlayers.DH_SovietHelmet'
-    HeadgearProbabilities(0)=0.5
-    HeadgearProbabilities(1)=0.5
-    SleeveTexture=Texture'Weapons1st_tex.russian_sleeves'
+ 
 }
