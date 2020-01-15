@@ -19,7 +19,7 @@ defaultproperties
     MaxDesireability=1.2
     PointValue=500
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
-    PrioritizeweaponPawnEntryFromIndex=1
+    PrioritizeWeaponPawnEntryFromIndex=1
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_Sdkfz251Halftrack_anm.halftrack_body_ext'
