@@ -5,11 +5,9 @@
 
 class DH_Nagant1895Weapon extends DHBoltActionWeapon;
 
-
-
 defaultproperties
 {
-    ItemName="Nagant 1895 revolver"
+    ItemName="Nagant M1895 Revolver"
     FireModeClass(0)=class'DH_Weapons.DH_Nagant1895Fire'
     FireModeClass(1)=class'DH_Weapons.DH_Nagant1895MeleeFire'
     AttachmentClass=class'DH_Weapons.DH_Nagant1895Attachment'
