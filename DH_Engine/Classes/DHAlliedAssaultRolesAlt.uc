@@ -3,17 +3,15 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHAlliedMachineGunnerRoles extends DHAlliedRoles
+class DHAlliedAssaultRolesAlt extends DHAlliedRoles
     abstract;
 
 defaultproperties
 {
-    bIsGunner=true
-    MyName="Machine-Gunner"
-    AltName="Machine-Gunner"
-    Article="a "
-    PluralName="Machine-Gunners"
-    Limit=1
-    bCanCarryExtraAmmo=false
-    AddedRoleRespawnTime=20
+    MyName="Assault Trooper"
+    AltName="Assault Trooper"
+    Article="an "
+    PluralName="Assault Troops"
+    Limit=3
+    bSpawnWithExtraAmmo=true
 }

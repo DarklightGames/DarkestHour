@@ -17,6 +17,8 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_Nagant1895_1st.Nagant1895'
 
+    bCanAttachOnBack=false
+
     bUseHighDetailOverlayIndex=false
     Skins(0)=Texture'DH_Nagant1895_tex.Nagant1895.Nagant1895'
     handnum=1
@@ -27,9 +29,9 @@ defaultproperties
     InitialNumPrimaryMags=10
     MaxNumPrimaryMags=10
 
-    SwayModifyFactor=2.0	//very hard double action trigger
-	
-	PreReloadAnim="single_open"
+    SwayModifyFactor=2.0    //very hard double action trigger
+
+    PreReloadAnim="single_open"
 
     SingleReloadAnim="single_insert"
     PostReloadAnim="single_close"
@@ -43,7 +45,7 @@ defaultproperties
     bUsesIronsightFOV=false
 
     bShouldSkipBolt=true
-	
-	
+
+
 }
 

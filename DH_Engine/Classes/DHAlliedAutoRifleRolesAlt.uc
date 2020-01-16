@@ -3,17 +3,16 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHAlliedMachineGunnerRoles extends DHAlliedRoles
+class DHAlliedAutoRifleRolesAlt extends DHAlliedRoles
     abstract;
 
 defaultproperties
 {
     bIsGunner=true
-    MyName="Machine-Gunner"
-    AltName="Machine-Gunner"
+    MyName="Light Machine-Gunner"
+    AltName="Light Machine-Gunner"
     Article="a "
-    PluralName="Machine-Gunners"
-    Limit=1
-    bCanCarryExtraAmmo=false
-    AddedRoleRespawnTime=20
+    PluralName="Light Machine-Gunners"
+    Limit=2
+    AddedRoleRespawnTime=5
 }

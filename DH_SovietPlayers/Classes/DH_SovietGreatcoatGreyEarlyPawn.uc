@@ -11,4 +11,7 @@ defaultproperties
     Skins(0)=Texture'Characters_tex.rus_heads.rus_face01'
 	Skins(1)=Texture'Characters_tex.rus_uniforms.rus_snowcamo'
 	Skins(2)=Texture'DHSovietCharactersTex.RussianTunics.DH_rus_greatcoat_grey'
+	
+	bReversedSkinsSlots=true
+	
 }

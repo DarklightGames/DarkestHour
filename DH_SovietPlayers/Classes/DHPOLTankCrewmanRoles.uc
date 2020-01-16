@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHPOLTankCrewmanRoles extends DHAlliedTankCrewmanRoles
+class DHPOLTankCrewmanRoles extends DHAlliedTankCrewmanRolesAlt
     abstract;
 
 defaultproperties

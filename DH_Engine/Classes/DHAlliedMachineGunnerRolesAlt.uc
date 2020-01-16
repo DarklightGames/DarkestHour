@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHAlliedMachineGunnerRoles extends DHAlliedRoles
+class DHAlliedMachineGunnerRolesAlt extends DHAlliedRoles
     abstract;
 
 defaultproperties

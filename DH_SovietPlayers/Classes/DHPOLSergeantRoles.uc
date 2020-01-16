@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHPOLSergeantRoles extends DHAlliedSergeantRoles
+class DHPOLSergeantRoles extends DHAlliedSergeantRolesAlt
     abstract;
 
 defaultproperties

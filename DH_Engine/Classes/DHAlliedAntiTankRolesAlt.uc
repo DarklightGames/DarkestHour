@@ -3,17 +3,18 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHAlliedMachineGunnerRoles extends DHAlliedRoles
+class DHAlliedAntiTankRolesAlt extends DHAlliedRoles
     abstract;
 
 defaultproperties
 {
     bIsGunner=true
-    MyName="Machine-Gunner"
-    AltName="Machine-Gunner"
-    Article="a "
-    PluralName="Machine-Gunners"
+    MyName="Anti-Tank Soldier"
+    AltName="Anti-Tank Soldier"
+    Article="an "
+    PluralName="Anti-Tank Soldiers"
     Limit=1
     bCanCarryExtraAmmo=false
-    AddedRoleRespawnTime=20
+    AddedRoleRespawnTime=5
+    bExemptSquadRequirement=true
 }

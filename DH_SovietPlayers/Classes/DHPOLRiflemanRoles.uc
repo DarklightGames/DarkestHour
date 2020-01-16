@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHPOLRiflemanRoles extends DHAlliedRiflemanRoles
+class DHPOLRiflemanRoles extends DHAlliedRiflemanRolesAlt
     abstract;
 
 defaultproperties

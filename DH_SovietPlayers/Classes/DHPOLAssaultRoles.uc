@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHPOLAssaultRoles extends DHAlliedAssaultRoles
+class DHPOLAssaultRoles extends DHAlliedAssaultRolesAlt
     abstract;
 
 defaultproperties

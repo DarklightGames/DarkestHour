@@ -3,12 +3,12 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHPOLMachineGunnerRoles extends DHAlliedMachineGunnerRoles
+class DHPOLMachineGunnerRoles extends DHAlliedMachineGunnerRolesAlt
     abstract;
 
 defaultproperties
 {
-    AltName="Pulemetchik"
+    AltName="KM strzelec"
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_DP28Weapon')
     SecondaryWeapons(0)=(Item=class'DH_Weapons.DH_Nagant1895Weapon')
     VoiceType="DH_SovietPlayers.DHPolishVoice"
