@@ -67,13 +67,6 @@ simulated function CreateAttachments()
             Attachments[Attachments.Length] = LogsRight;
         }
     }
-
-    // BUG: fire emitter stays around after death?
-
-    if (Level.NetMode != NM_DedicatedServer)
-    {
-        // TODO: attach decoratives! dhdecoattachment?
-    }
 }
 
 function Died(Controller Killer, class<DamageType> DamageType, vector HitLocation)
