@@ -184,4 +184,6 @@ defaultproperties //this should probably be significantly modified due to differ
     PA_DodgeAnims(1)="jumpB_mid_pistol"
     PA_DodgeAnims(2)="jumpL_mid_pistol"
     PA_DodgeAnims(3)="jumpR_mid_pistol"
+
+    ShellEjectionBoneName="" // no rounds are ejected upon firing
 }
