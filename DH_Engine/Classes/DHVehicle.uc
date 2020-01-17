@@ -59,6 +59,7 @@ var     float       MaxCriticalSpeed;            // if vehicle goes over max spe
 var     name        PlayerCameraBone;            // just to avoid using literal references to 'Camera_driver' bone & allow extra flexibility
 var     float       ViewTransitionDuration;      // used to control the time we stay in state ViewTransition
 var     bool        bLockCameraDuringTransition; // lock the camera's rotation to the camera bone during view transitions
+var     int         PrioritizeWeaponPawnEntryFromIndex; // index from which passenger/crew seats will be filled (unless the driver's seat is available)
 
 // Damage
 var     float       FrontLeftAngle, FrontRightAngle, RearRightAngle, RearLeftAngle; // used by the hit detection system to determine which side of the vehicle was hit
@@ -873,6 +874,7 @@ function Vehicle FindEntryVehicle(Pawn P)
     local Vehicle             VehicleGoal;
     local bool                bPlayerIsTankCrew, bCanEnterTankCrewPositions, bHasTankCrewPositions;
     local int                 i;
+    local Vehicle             LowPriorityEntry;
 
     if (P == none)
     {
@@ -904,10 +906,27 @@ function Vehicle FindEntryVehicle(Pawn P)
             // Select weapon pawn if it's empty, & player isn't barred by tank crew restriction, & this isn't a locked armored vehicle that player can't enter
             if (WP != none && WP.Driver == none && (!WP.bMustBeTankCrew || bCanEnterTankCrewPositions))
             {
-                return WP;
+                if (i >= PrioritizeWeaponPawnEntryFromIndex)
+                {
+                    return WP;
+                }
+
+                if (LowPriorityEntry == none)
+                {
+                    LowPriorityEntry = WP;
+                    continue;
+                }
             }
 
-            bHasTankCrewPositions = bHasTankCrewPositions || WP.bMustBeTankCrew;
+            if (LowPriorityEntry == none)
+            {
+                bHasTankCrewPositions = bHasTankCrewPositions || WP.bMustBeTankCrew;
+            }
+        }
+
+        if (LowPriorityEntry != none)
+        {
+            return LowPriorityEntry;
         }
 
         // There are no empty, usable vehicle positions for this player, so give him a screen message (only if vehicle is his team's) & don't let him enter

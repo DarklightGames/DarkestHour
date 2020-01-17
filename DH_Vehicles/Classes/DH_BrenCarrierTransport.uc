@@ -17,6 +17,7 @@ defaultproperties
     ReinforcementCost=3
     MaxDesireability=1.2
     MapIconAttachmentClass=class'DH_Engine.DHMapIconAttachment_Vehicle'
+    PrioritizeWeaponPawnEntryFromIndex=1
 
     // Hull mesh
     Mesh=SkeletalMesh'DH_BrenCarrier_anm.BrenCarrier_body_ext'
