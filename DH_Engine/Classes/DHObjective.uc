@@ -152,6 +152,12 @@ var(DH_GroupedActions)      array<name>                 AxisGroupCaptureEvents;
 // Replication
 var                         EObjectiveState             OldObjState;
 
+// Danger zone
+var(DHDangerZone) float BaseInfluenceModifier;
+var(DHDangerZone) float AxisInfluenceModifier;
+var(DHDangerZone) float AlliesInfluenceModifier;
+var(DHDangerZone) float NeutralInfluenceModifier;
+
 replication
 {
     // Variables the server will replicate to all clients
@@ -1459,4 +1465,10 @@ defaultproperties
     bTankersCanCapture=true
     PlayersNeededToCapture=1
     AwardedReinforcementFactor=0.25
+
+    // Danger zone
+    BaseInfluenceModifier=1
+    AxisInfluenceModifier=1
+    AlliesInfluenceModifier=1
+    NeutralInfluenceModifier=1
 }
