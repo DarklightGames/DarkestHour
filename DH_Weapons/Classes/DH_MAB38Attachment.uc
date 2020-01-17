@@ -148,4 +148,6 @@ defaultproperties
     PA_IronFireLastShot="stand_shootiron_stg44"
     PA_CrouchFireLastShot="crouch_shoot_stg44"
     PA_ProneFireLastShot="prone_shoot_stg44"
+    MuzzleBoneName="Muzzle"
+    ShellEjectionBoneName="ejector"
 }
