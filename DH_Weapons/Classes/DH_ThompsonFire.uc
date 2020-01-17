@@ -27,6 +27,5 @@ defaultproperties
     PreFireAnim="Shoot1_start"
     ShellEjectClass=class'ROAmmo.ShellEject1st9x19mm'
     ShellRotOffsetIron=(Pitch=5000)
-
-
+    ShellIronSightOffset=(X=20)
 }
