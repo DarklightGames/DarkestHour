@@ -43,5 +43,7 @@ defaultproperties
     bUsesIronsightFOV=false
 
     bShouldSkipBolt=true
+
+    bCanUseUnfiredRounds=false
 }
 
