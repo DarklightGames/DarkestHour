@@ -12,6 +12,6 @@ defaultproperties
    Skins(1)=Texture'DH_Weapon_CC_tex.SmallArms_3rdP.gl_low'
    Skins(2)=Texture'DH_Weapon_CC_tex.SmallArms_3rdP.gl_low'
    MenuImage=Texture'DH_InterfaceArt_CC_tex.Menu_weapons.Geballt'
-   WA_Idle="idle_potato"
-   WA_Fire="idle_potato"
+   WA_Idle="idle_gl"
+   WA_Fire="idle_gl"
 }
