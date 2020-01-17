@@ -19,8 +19,8 @@ defaultproperties
 
     bUseHighDetailOverlayIndex=false
     Skins(0)=Texture'DH_Nagant1895_tex.Nagant1895.Nagant1895'
-    handnum=1
-    sleevenum=2
+    HandNum=1
+    SleeveNum=2
 
     IronSightDisplayFOV=65.0
 
@@ -43,7 +43,5 @@ defaultproperties
     bUsesIronsightFOV=false
 
     bShouldSkipBolt=true
-
-
 }
 

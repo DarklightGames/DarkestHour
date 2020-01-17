@@ -15,7 +15,7 @@ defaultproperties //this should probably be significantly modified due to differ
 
     WA_Idle="idle_p38"
     WA_IdleEmpty="empty_p38"
-    WA_Fire="shoot_p38"
+    WA_Fire="idle_p38"
 
     WA_Reload="idle_p38"
     WA_ProneReload="idle_p38"
@@ -23,14 +23,15 @@ defaultproperties //this should probably be significantly modified due to differ
     WA_ProneReloadEmpty="idle_p38"
     WA_PostReload="idle_p38"
 
-    PA_ReloadAnim="idle_p38"
-    PA_ReloadEmptyAnim="idle_p38"
-    PA_ProneReloadAnim="prone_idle_pistol"
-    PA_ProneReloadEmptyAnim="prone_idle_pistol"
-    PA_PreReloadAnim="reloadhalf_p38"
-    PA_PostReloadAnim="idle_p38"
-    PA_PronePreReloadAnim="prone_idle_pistol"
-    PA_PronePostReloadAnim="prone_idle_pistol"
+    PA_ReloadAnim="stand_reloadhalf_tt33"
+    PA_ReloadEmptyAnim="stand_reloadempty_tt33"
+    PA_ProneReloadAnim="prone_reloadhalf_tt33"
+
+    // TODO: these are to be filled in later
+    PA_PreReloadAnim="stand_reloadhalf_tt33"
+    PA_PostReloadAnim="stand_reloadhalf_tt33"
+    PA_PronePreReloadAnim="prone_reloadhalf_tt33"
+    PA_PronePostReloadAnim="prone_reloadhalf_tt33"
 
     PA_MovementAnims(0)="stand_jogF_pistol"
     PA_MovementAnims(1)="stand_jogB_pistol"
