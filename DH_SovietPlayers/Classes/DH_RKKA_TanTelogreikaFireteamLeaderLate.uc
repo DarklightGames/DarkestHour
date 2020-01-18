@@ -7,7 +7,7 @@ class DH_RKKA_TanTelogreikaFireteamLeaderLate extends DHSOVCorporalRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietTanTeloSLLatePawn',Weight=1.0)
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietTanTeloLatePawn',Weight=1.0)
     Headgear(0)=class'DH_SovietPlayers.DH_SovietSidecap'
     SleeveTexture=Texture'DHSovietCharactersTex.RussianSleeves.DH_rus_sleeves_tan'
 	
