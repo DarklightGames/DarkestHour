@@ -8,6 +8,35 @@ class DH_C96Weapon extends DHPistolWeapon;
 //completely replaces old full auto c96
 //will possibly make proper m712 in the future as a separate weapon
 
+
+// This weapon has a special bit of logic that plays an alternate animation
+// when it's first drawn.
+var bool bHasBeenDrawn;
+var name FirstSelectAnim;
+
+simulated state RaisingWeapon
+{
+    simulated function EndState()
+    {
+        // Marks the weapon as being drawn already.
+        super.EndState();
+
+        bHasBeenDrawn = true;
+    }
+}
+
+simulated function name GetSelectAnim()
+{
+    if (bHasBeenDrawn)
+    {
+        return SelectAnim;
+    }
+    else
+    {
+        return FirstSelectAnim;
+    }
+}
+
 defaultproperties
 {
     ItemName="Mauser C96"
@@ -51,4 +80,6 @@ defaultproperties
     CrawlBackwardEmptyAnim="crawlB_empty"
     CrawlStartEmptyAnim="crawl_in_empty"
     CrawlEndEmptyAnim="crawl_out_empty"
+	
+    FirstSelectAnim="Draw2"  
 }

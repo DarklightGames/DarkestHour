@@ -7,13 +7,11 @@ class DH_LWP_StandardSquadLeaderLate extends DHPOLSergeantRoles;
 
 defaultproperties
 {
-    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_SovietTunicSergeantEarlyPawn',Weight=1.0)
-    Headgear(0)=class'DH_SovietPlayers.DH_SovietHelmet'
+    RolePawns(0)=(PawnClass=class'DH_SovietPlayers.DH_LWPTunicSLLatePawn',Weight=1.0)
+    Headgear(0)=class'DH_SovietPlayers.DH_LWPcap'
+
 	
-	//to do: proper LWP uniform
-	//Wojsko Polskie did use red army uniform, but they also (at least occisionally) used elements of polish uniform, and most importantly, used their own insignia (their own collartabs)
-	//in the future there should at least be polish collartabs and polish army cap
-	//for now, early soviet tunic resembles LWP the most, and incorrect insignia is somewhat covered by folded greatcoat
+    SleeveTexture=Texture'Weapons1st_tex.russian_sleeves'
 
     PrimaryWeapons(0)=(Item=class'DH_Weapons.DH_PPSH41_stickWeapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')
     PrimaryWeapons(1)=(Item=class'DH_Weapons.DH_PPS43Weapon',AssociatedAttachment=class'ROInventory.ROPPSh41AmmoPouch')

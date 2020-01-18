@@ -3,10 +3,10 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_SovietTanTeloEarlyPawn extends DH_SovietPawn;
+class DH_LWPcap extends DH_SovietHeadgear;
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DHCharacters_anm.sov_tunic_nocoat_early'
-    Skins(0)=Texture'DHSovietCharactersTex.RussianTunics.DH_rus_telogreika_tan01'
+    Mesh=SkeletalMesh'DHgear_anm.LWPcap'
+    Skins(0)=Texture'DHSovietCharactersTex.soviet_gear.Pol_gear'
 }

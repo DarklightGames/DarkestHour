@@ -59,9 +59,13 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Ppsh_1st.MP41R'
     HighDetailOverlay=shader'Weapons1st_tex.SMG.PPSH41_S'
     bUseHighDetailOverlayIndex=true
-    //HighDetailOverlayIndex=3
-    Skins(0)=Shader'Weapons1st_tex.SMG.MP40_s'
+    HighDetailOverlayIndex=3
+    Skins(0)=Texture'Weapons1st_tex.Arms.german_sleeves'
+    Skins(1)=Texture'Weapons1st_tex.Arms.hands'
+    Skins(2)=Shader'Weapons1st_tex.SMG.MP40_s'
+    Skins(3)=Shader'Weapons1st_tex.SMG.PPSH_s'
     handnum=1
+	sleevenum=0
 
     IronSightDisplayFOV=60
 
