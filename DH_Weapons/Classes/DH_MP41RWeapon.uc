@@ -63,9 +63,9 @@ defaultproperties
     Skins(0)=Texture'Weapons1st_tex.Arms.german_sleeves'
     Skins(1)=Texture'Weapons1st_tex.Arms.hands'
     Skins(2)=Shader'Weapons1st_tex.SMG.MP40_s'
-    Skins(3)=Shader'Weapons1st_tex.SMG.PPSH_s'
+    //Skins(3)=shader'Weapons1st_tex.SMG.PPSH41_S'
     handnum=1
-	sleevenum=0
+    sleevenum=0
 
     IronSightDisplayFOV=60
 
@@ -91,6 +91,6 @@ defaultproperties
 
     MagEmptyReloadAnim="reload_empty_mp41r"
     MagPartialReloadAnim="reload_half_mp41r"
-	
-	
+
+
 }
