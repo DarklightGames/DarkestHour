@@ -7217,6 +7217,23 @@ simulated exec function ShellRotOffsetHip(int Pitch, int Yaw, int Roll)
     }
 }
 
+simulated exec function ShellHipOffset(float X, float Y, float Z)
+{
+    local ROWeaponFire WF;
+
+    if (IsDebugModeAllowed())
+    {
+        WF = ROWeaponFire(Weapon.GetFireMode(0));
+
+        if (WF != none)
+        {
+            WF.ShellHipOffset.X = X;
+            WF.ShellHipOffset.Y = Y;
+            WF.ShellHipOffset.Z = Z;
+        }
+    }
+}
+
 simulated exec function ShellIronSightOffset(float X, float Y, float Z)
 {
     local ROWeaponFire WF;

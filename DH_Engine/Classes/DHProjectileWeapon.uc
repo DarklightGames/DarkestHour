@@ -700,7 +700,7 @@ simulated state RaisingWeapon
         }
         else
         {
-            Anim = SelectAnim;
+            Anim = GetSelectAnim();
         }
 
         if (ClientState == WS_Hidden)
@@ -786,9 +786,9 @@ simulated state LoweringWeapon
 
                 if (ClientState == WS_BringUp)
                 {
-                    if (HasAnim(SelectAnim))
+                    if (HasAnim(GetSelectAnim()))
                     {
-                        TweenAnim(SelectAnim, PutDownTime);
+                        TweenAnim(GetSelectAnim(), PutDownTime);
                     }
                 }
                 else if (HasAnim(Anim))

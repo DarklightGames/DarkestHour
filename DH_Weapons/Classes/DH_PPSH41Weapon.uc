@@ -66,6 +66,10 @@ defaultproperties
     bHasSelectFire=true
     MaxNumPrimaryMags=3
     InitialNumPrimaryMags=3
+	
+	InitialBarrels=1
+    BarrelClass=class'DH_Weapons.DH_GenericSMGBarrel'
+    BarrelSteamBone="Muzzle"
 
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="iron_idle_empty"
@@ -82,4 +86,6 @@ defaultproperties
 
     SelectEmptyAnim="draw_empty"
     PutDownEmptyAnim="put_away_empty"
+	
+	
 }
