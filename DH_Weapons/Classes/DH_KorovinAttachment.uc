@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_korovinAttachment extends DHHighROFWeaponAttachment;
+class DH_KorovinAttachment extends DHHighROFWeaponAttachment;
 
 defaultproperties
 {

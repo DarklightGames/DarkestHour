@@ -3,12 +3,12 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_korovinDamType extends DHSmallCaliberDamageType
+class DH_KorovinDamType extends DHSmallCaliberDamageType
     abstract;
 
 defaultproperties
 {
-    WeaponClass=class'DH_Weapons.DH_korovinWeapon'
+    WeaponClass=class'DH_Weapons.DH_KorovinWeapon'
     HUDIcon=Texture'InterfaceArt_tex.deathicons.b762mm'
     KDamageImpulse=1000.0
     KDeathVel=100.0

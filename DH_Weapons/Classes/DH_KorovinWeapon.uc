@@ -9,12 +9,12 @@ defaultproperties
 {
     ItemName="Korovin 1941"
     SwayModifyFactor=0.67 // -0.13 because its a light SMG
-    FireModeClass(0)=class'DH_Weapons.dh_korovinFire'
-    FireModeClass(1)=class'DH_Weapons.dh_korovinMeleeFire'
-    AttachmentClass=class'DH_Weapons.dh_korovinAttachment'
-    PickupClass=class'DH_Weapons.dh_korovinPickup'
+    FireModeClass(0)=class'DH_Weapons.DH_KorovinFire'
+    FireModeClass(1)=class'DH_Weapons.DH_KorovinMeleeFire'
+    AttachmentClass=class'DH_Weapons.DH_KorovinAttachment'
+    PickupClass=class'DH_Weapons.DH_KorovinPickup'
 
-    Mesh=SkeletalMesh'DH_korovin_1st.korovin_mesh'
+    Mesh=SkeletalMesh'DH_Korovin_1st.korovin_mesh'
 
     bUseHighDetailOverlayIndex=false
 	HandNum=0
