@@ -19,10 +19,10 @@ defaultproperties
                       // practically, user has to either throw from cover or run away immediately
     EngineDamageMassThreshold=10.0
     EngineDamageRadius=185.0
-    EngineDamageMax=200.0
+    EngineDamageMax=400.0
 
     TreadDamageMassThreshold=12.0
     TreadDamageRadius=64.0
-    TreadDamageMax=100.0
+    TreadDamageMax=200.0
     FuzeLengthTimer=5.7 //doesnt seem to work here
 }

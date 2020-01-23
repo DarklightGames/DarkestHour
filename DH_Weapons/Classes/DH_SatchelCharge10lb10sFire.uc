@@ -29,10 +29,10 @@ defaultproperties
     ProjectileClass=class'DH_Weapons.DH_SatchelCharge10lb10sProjectile'
     AmmoClass=class'DH_Weapons.DH_SachelChargeAmmo'
     ProjSpawnOffset=(X=-5.0)
-    AddedPitch=250
-    MinimumThrowSpeed=400.0
-    MaximumThrowSpeed=550.0
-    MaxHoldTime=2.5
+    AddedPitch=150
+    MinimumThrowSpeed=200.0
+    MaximumThrowSpeed=400.0
+    MaxHoldTime=6
     SpeedFromHoldingPerSec=450.0
     PreFireAnim="Plant"
 }

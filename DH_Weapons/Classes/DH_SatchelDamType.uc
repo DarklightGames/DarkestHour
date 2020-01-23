@@ -13,7 +13,7 @@ defaultproperties
 
     VehicleDamageModifier=1.0
     APCDamageModifier=1.0
-    TankDamageModifier=0.15
+    TankDamageModifier=0.25
     TreadDamageModifier=1.0
 
     GibModifier=4.0
