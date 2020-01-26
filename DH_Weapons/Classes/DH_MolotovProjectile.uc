@@ -7,7 +7,7 @@ class DH_MolotovProjectile extends DHGrenadeProjectile;
 
 defaultproperties
 {
-    MyDamageType = class'DH_Weapons.DH_MolotovDamType'
+    MyDamageType = class'DH_Weapons.DHBurningDamageType'
     
     StaticMesh = StaticMesh'WeaponPickupSM.Projectile.Stielhandgranate_throw'
     ExplosionSound(0) = SoundGroup'Inf_Weapons.stielhandgranate24.stielhandgranate24_explode01'
@@ -21,7 +21,7 @@ defaultproperties
 
     FuzeLengthTimer = 4.5
     Speed = 800.0
-    // ExplodeDirtEffectClass = class'GrenadeExplosion'
-    // ExplodeSnowEffectClass = class'GrenadeExplosionSnow' // added instead of using same as ExplodeDirtEffectClass, as there is an RO snow effect available
-    // ExplodeMidAirEffectClass = class'GrenadeExplosion_midair'
+    ExplodeDirtEffectClass = class'GrenadeExplosion'
+    ExplodeSnowEffectClass = class'GrenadeExplosionSnow'
+    ExplodeMidAirEffectClass = class'GrenadeExplosion_midair'
 }
