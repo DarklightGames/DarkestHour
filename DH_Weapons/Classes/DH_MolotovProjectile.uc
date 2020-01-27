@@ -3,7 +3,15 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DH_MolotovProjectile extends DHGrenadeProjectile;
+class DH_MolotovProjectile extends DH_M34GrenadeProjectile;
+
+simulated function PostBeginPlay()
+{
+    super.PostBeginPlay();
+
+    RotationRate.Pitch = -( 90000 + Rand(30000) );
+    // RandSpin( 100000.0 );
+}
 
 defaultproperties
 {
@@ -11,14 +19,7 @@ defaultproperties
     
     StaticMesh = StaticMesh'DH_WeaponPickups.Projectile.MolotovCocktail_throw'
     
-    Damage = 180.0
-    DamageRadius = 639.0
-    bIsStickGrenade = true
-    Bounces = 0
-
-    FuzeLengthTimer = 4.5
+    Damage = 80.0
+    DamageRadius = 160.0
     Speed = 800.0
-    ExplodeDirtEffectClass = class'GrenadeExplosion'
-    ExplodeSnowEffectClass = class'GrenadeExplosionSnow'
-    ExplodeMidAirEffectClass = class'GrenadeExplosion_midair'
 }
