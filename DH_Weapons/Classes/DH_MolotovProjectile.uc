@@ -7,7 +7,7 @@ class DH_MolotovProjectile extends DHGrenadeProjectile;
 
 defaultproperties
 {
-    MyDamageType = class'DH_Weapons.DHBurningDamageType'
+    MyDamageType = class'DHBurningDamageType'
     
     StaticMesh = StaticMesh'WeaponPickupSM.Projectile.Stielhandgranate_throw'
     ExplosionSound(0) = SoundGroup'Inf_Weapons.stielhandgranate24.stielhandgranate24_explode01'
