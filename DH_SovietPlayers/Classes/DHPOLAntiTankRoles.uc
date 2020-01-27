@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHPOLAntiTankRoles extends DHAlliedAntiTankRolesAlt
+class DHPOLAntiTankRoles extends DHAlliedAntiTankRoles
     abstract;
 
 defaultproperties

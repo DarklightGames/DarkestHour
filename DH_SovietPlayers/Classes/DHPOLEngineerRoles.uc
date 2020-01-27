@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHPOLEngineerRoles extends DHAlliedEngineerRolesAlt
+class DHPOLEngineerRoles extends DHAlliedEngineerRoles
     abstract;
 
 defaultproperties

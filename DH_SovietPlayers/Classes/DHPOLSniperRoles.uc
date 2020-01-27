@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHPOLSniperRoles extends DHAlliedSniperRolesAlt
+class DHPOLSniperRoles extends DHAlliedSniperRoles
     abstract;
 
 defaultproperties

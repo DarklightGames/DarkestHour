@@ -3,7 +3,7 @@
 // Darklight Games (c) 2008-2019
 //==============================================================================
 
-class DHPOLCorporalRoles extends DHAlliedCorporalRolesAlt
+class DHPOLCorporalRoles extends DHAlliedCorporalRoles
     abstract;
 
 defaultproperties
